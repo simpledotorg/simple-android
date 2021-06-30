@@ -11,6 +11,7 @@ import junitparams.Parameters
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
@@ -25,7 +26,8 @@ import java.util.UUID
 @RunWith(JUnitParamsRunner::class)
 class NewMedicalHistoryUpdateTest {
 
-  private val defaultModel = NewMedicalHistoryModel.default()
+  private val country = TestData.country(isoCountryCode = Country.INDIA)
+  private val defaultModel = NewMedicalHistoryModel.default(country)
   private val facilityWithDiabetesManagementEnabled = TestData.facility(
       uuid = UUID.fromString("3c7bc1c8-1bb6-4c3a-b6d0-52700bdaac5c"),
       facilityConfig = FacilityConfig(diabetesManagementEnabled = true)

@@ -124,7 +124,7 @@ class NewMedicalHistoryScreen(
 
     MobiusDelegate.forView(
         events = events,
-        defaultModel = NewMedicalHistoryModel.default(),
+        defaultModel = NewMedicalHistoryModel.default(country),
         update = NewMedicalHistoryUpdate(),
         init = NewMedicalHistoryInit(),
         effectHandler = effectHandlerFactory.create(this).build(),

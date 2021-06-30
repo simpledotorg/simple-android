@@ -31,7 +31,8 @@ class NewMedicalHistoryUiRendererTest {
           facilityConfig = FacilityConfig(diabetesManagementEnabled = false)
       )
 
-  private val defaultModel = NewMedicalHistoryModel.default()
+  private val country = TestData.country(isoCountryCode = Country.INDIA)
+  private val defaultModel = NewMedicalHistoryModel.default(country)
 
   private val ui = mock<NewMedicalHistoryUi>()
   private val uiRenderer = NewMedicalHistoryUiRenderer(ui, TestData.country(isoCountryCode = Country.INDIA))

@@ -304,9 +304,11 @@ class NewMedicalHistoryScreenLogicTest {
         dateOfBirthFormatter = dateOfBirthFormatter
     ).build()
 
+    val country = TestData.country(isoCountryCode = Country.INDIA)
+
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = NewMedicalHistoryModel.default(),
+        defaultModel = NewMedicalHistoryModel.default(country),
         init = NewMedicalHistoryInit(),
         update = NewMedicalHistoryUpdate(),
         effectHandler = effectHandler,

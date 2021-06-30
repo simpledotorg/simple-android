@@ -2,6 +2,7 @@ package org.simple.clinic.medicalhistory.newentry
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.Answer.Unanswered
@@ -12,6 +13,7 @@ import org.simple.clinic.patient.OngoingNewPatientEntry
 
 @Parcelize
 data class NewMedicalHistoryModel(
+    val country: Country,
     val ongoingPatientEntry: OngoingNewPatientEntry?,
     val ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry,
     val currentFacility: Facility?,
@@ -44,7 +46,8 @@ data class NewMedicalHistoryModel(
     get() = ongoingMedicalHistoryEntry.isOnHypertensionTreatment != Unanswered
 
   companion object {
-    fun default(): NewMedicalHistoryModel = NewMedicalHistoryModel(
+    fun default(country: Country): NewMedicalHistoryModel = NewMedicalHistoryModel(
+        country = country,
         ongoingPatientEntry = null,
         ongoingMedicalHistoryEntry = OngoingMedicalHistoryEntry(),
         currentFacility = null,

@@ -49,7 +49,7 @@ class NewMedicalHistoryScreenLogicTest {
 
   private val screen: NewMedicalHistoryUi = mock()
   private val uiActions: NewMedicalHistoryUiActions = mock()
-  private val viewRenderer = NewMedicalHistoryUiRenderer(screen, TestData.country(isoCountryCode = Country.INDIA))
+  private val viewRenderer = NewMedicalHistoryUiRenderer(screen)
   private val medicalHistoryRepository: MedicalHistoryRepository = mock()
   private val patientRepository: PatientRepository = mock()
 

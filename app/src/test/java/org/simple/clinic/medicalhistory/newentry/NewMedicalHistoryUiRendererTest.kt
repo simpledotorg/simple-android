@@ -35,7 +35,7 @@ class NewMedicalHistoryUiRendererTest {
   private val defaultModel = NewMedicalHistoryModel.default(country)
 
   private val ui = mock<NewMedicalHistoryUi>()
-  private val uiRenderer = NewMedicalHistoryUiRenderer(ui, TestData.country(isoCountryCode = Country.INDIA))
+  private val uiRenderer = NewMedicalHistoryUiRenderer(ui)
 
   @Test
   fun `the medical history answers must be rendered`() {

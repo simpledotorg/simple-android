@@ -23,13 +23,11 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.sync.PatientPayload
-import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toOptional
-import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -719,19 +717,4 @@ class PatientRepository @Inject constructor(
       val metaData: String,
       val metaDataVersion: MetaDataVersion
   )
-}
-
-private inline fun <reified T> reportTimeTaken(
-    clock: UtcClock,
-    operation: String,
-    block: () -> T
-): T {
-  val start = Instant.now(clock)
-  val result = block()
-  val end = Instant.now(clock)
-
-  val timeTaken = Duration.between(start, end)
-  Analytics.reportTimeTaken(operation, timeTaken)
-
-  return result
 }

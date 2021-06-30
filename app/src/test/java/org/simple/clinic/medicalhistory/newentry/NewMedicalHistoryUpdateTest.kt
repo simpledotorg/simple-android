@@ -188,7 +188,7 @@ class NewMedicalHistoryUpdateTest {
   }
 
   @Test
-  fun `when save is clicked and patient is diagnosed with hypertension and ongoing hypertension treatment question is not answered, then show error`() {
+  fun `when save is clicked and patient is diagnosed with hypertension and ongoing hypertension treatment question is not answered and selected country is india, then show error`() {
     val model = defaultModel
         .ongoingPatientEntryLoaded(patientEntry)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
@@ -203,6 +203,27 @@ class NewMedicalHistoryUpdateTest {
             assertThatNext(
                 hasNoModel(),
                 hasEffects(ShowOngoingHypertensionTreatmentError)
+            )
+        )
+  }
+
+  @Test
+  fun `when save is clicked and patient is diagnosed with hypertension and ongoing hypertension treatment question is not answered and selected country is not india, then register patient`() {
+    val bangladesh = TestData.country(isoCountryCode = Country.BANGLADESH)
+    val model = NewMedicalHistoryModel.default(country = bangladesh)
+        .ongoingPatientEntryLoaded(patientEntry)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
+        .answerChanged(DIAGNOSED_WITH_DIABETES, No)
+        .answerChanged(IS_ON_HYPERTENSION_TREATMENT, Unanswered)
+
+    updateSpec
+        .given(model)
+        .whenEvent(SaveMedicalHistoryClicked())
+        .then(
+            assertThatNext(
+                hasModel(model.registeringPatient()),
+                hasEffects(RegisterPatient(model.ongoingMedicalHistoryEntry))
             )
         )
   }

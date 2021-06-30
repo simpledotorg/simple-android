@@ -6,7 +6,6 @@ import com.spotify.mobius.Update
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -33,7 +32,7 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
       model.facilityDiabetesManagementEnabled && !model.hasAnsweredBothDiagnosisQuestions -> {
         dispatch(ShowDiagnosisRequiredError)
       }
-      model.diagnosedWithHypertension && !model.answeredIsOnHypertensionTreatment -> {
+      model.showOngoingHypertensionTreatment && !model.answeredIsOnHypertensionTreatment -> {
         dispatch(ShowOngoingHypertensionTreatmentError)
       }
       else -> {

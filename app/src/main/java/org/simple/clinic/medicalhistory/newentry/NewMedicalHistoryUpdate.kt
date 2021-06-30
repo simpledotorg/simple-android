@@ -13,8 +13,6 @@ import org.simple.clinic.mobius.next
 
 class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistoryEvent, NewMedicalHistoryEffect> {
 
-  private val diagnosisQuestions = setOf(DIAGNOSED_WITH_HYPERTENSION, DIAGNOSED_WITH_DIABETES)
-
   override fun update(
       model: NewMedicalHistoryModel,
       event: NewMedicalHistoryEvent

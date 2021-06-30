@@ -237,11 +237,6 @@ class NewMedicalHistoryScreen(
     }
   }
 
-  override fun showDiagnosisRequiredError(showError: Boolean) {
-    if (showError)
-      SelectDiagnosisErrorDialog.show(activity.supportFragmentManager)
-  }
-
   override fun showNextButtonProgress() {
     nextButton.setButtonState(InProgress)
   }

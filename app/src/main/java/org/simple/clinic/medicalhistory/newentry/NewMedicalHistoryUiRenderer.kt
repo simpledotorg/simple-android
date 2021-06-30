@@ -37,8 +37,6 @@ class NewMedicalHistoryUiRenderer(
       renderHypertensionTreatmentQuestion(model)
     }
 
-    ui.showDiagnosisRequiredError(model.showDiagnosisRequiredError)
-
     renderNextButton(model)
   }
 

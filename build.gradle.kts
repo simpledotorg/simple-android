@@ -25,15 +25,6 @@ allprojects {
   repositories {
     google()
     mavenCentral()
-
-    // Left to support migration away from JCenter, do not add any new dependency inclusions here.
-    // See: https://jeroenmols.com/blog/2021/02/04/migratingjcenter/
-    jcenter {
-      content {
-        // :app
-        includeModule("ru.egslava", "MaskedEditText")
-      }
-    }
   }
 }
 

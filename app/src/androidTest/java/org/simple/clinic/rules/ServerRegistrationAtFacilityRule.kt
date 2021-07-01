@@ -23,10 +23,14 @@ import org.simple.clinic.util.toNullable
 import javax.inject.Inject
 import javax.inject.Named
 
+private typealias PickRegistrationFacility = (List<Facility>) -> Facility
+
 /**
  * Runs every test with an actual user on the server at a specific facility.
  **/
-class ServerRegistrationAtFacilityRule : TestRule {
+class ServerRegistrationAtFacilityRule(
+    private val pickRegistrationFacility: PickRegistrationFacility
+) : TestRule {
 
   @Inject
   lateinit var userSession: UserSession
@@ -85,7 +89,8 @@ class ServerRegistrationAtFacilityRule : TestRule {
   }
 
   private fun register() {
-    val registerFacilityAt = getFirstStoredFacility()
+    val allFacilities = appDatabase.facilityDao().all().blockingFirst()
+    val registerFacilityAt = pickRegistrationFacility.invoke(allFacilities)
 
     val registrationResult = registerUserAtFacility(registerFacilityAt)
     if (registrationResult !is RegistrationResult.Success) {
@@ -94,14 +99,6 @@ class ServerRegistrationAtFacilityRule : TestRule {
 
     verifyAccessTokenIsPresent()
     verifyUserCanSyncData()
-  }
-
-  private fun getFirstStoredFacility(): Facility {
-    return appDatabase
-        .facilityDao()
-        .all()
-        .blockingFirst()
-        .first()
   }
 
   private fun registerUserAtFacility(facility: Facility): RegistrationResult {

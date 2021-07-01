@@ -54,7 +54,7 @@ object Versions {
   const val guava = "28.1-jre" // Used by the "mobius-migration" library ONLY in tests
   const val uuidGenerator = "3.2.0"
   const val flipper = "0.37.0"
-  const val soloader = "0.5.1"
+  const val soloader = "0.10.1"
   const val asm = "7.2"
   const val ktlint = "0.36.0"
   const val quarantine = "0.3.0"

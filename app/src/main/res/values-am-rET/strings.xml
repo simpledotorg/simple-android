@@ -277,6 +277,8 @@
   <string name="overduelist_visited">ጎብኝተዋል</string>
   <string name="overduelist_high_risk">ከፍተኛ ተጋላጭነት</string>
   <string name="overduelist_transferred">ተላልፏል ወደ</string>
+  <string name="overdue_download">አውርድ</string>
+  <string name="overdue_share">ያጋሩ</string>
 
   <!-- Facility change -->
 
@@ -332,7 +334,6 @@
   <string name="newmedicalhistory_no">አይ</string>
   <string name="newmedicalhistory_history">ታሪክ</string>
   <string name="newmedicalhistory_diagnosis">ምርመራ (አስፈላጊ)</string>
-
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ምንም</string>
   <string name="prescribed_drugs_dosage_remove">ያስወግዱ</string>

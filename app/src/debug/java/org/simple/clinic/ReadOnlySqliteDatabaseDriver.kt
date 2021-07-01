@@ -1,10 +1,11 @@
 package org.simple.clinic
 
 import android.content.Context
-import android.database.sqlite.SQLiteDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.facebook.flipper.plugins.databases.impl.SqliteDatabaseConnectionProvider
 import com.facebook.flipper.plugins.databases.impl.SqliteDatabaseDriver
 import com.facebook.flipper.plugins.databases.impl.SqliteDatabaseProvider
+import io.requery.android.database.sqlite.SQLiteDatabase
 import java.io.File
 
 class ReadOnlySqliteDatabaseDriver(
@@ -27,7 +28,7 @@ private class ContextBasedDatabaseProvider(private val context: Context) : Sqlit
 
 private class ReadOnlySqliteDatabaseConnectionProvider : SqliteDatabaseConnectionProvider {
 
-  override fun openDatabase(databaseFile: File): SQLiteDatabase {
+  override fun openDatabase(databaseFile: File): SupportSQLiteDatabase {
     // We are setting this to READONLY for a couple of reasons:
     //
     // Room sets all databases to WAL by default, which means that they need to

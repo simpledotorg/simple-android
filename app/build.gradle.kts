@@ -418,7 +418,7 @@ dependencies {
   implementation("com.squareup.moshi:moshi-adapters:${versions.moshi}")
   implementation("com.f2prateek.rx.preferences2:rx-preferences:${versions.rxPreference}")
   implementation("com.github.qoqa:Traceur:${versions.traceur}")
-  implementation("ru.egslava:MaskedEditText:${versions.maskedEditText}")
+  implementation("com.github.egslava:edittext-mask:${versions.maskedEditText}")
   implementation("io.sentry:sentry-android:${versions.sentry}") {
     exclude(group = "com.fasterxml.jackson.core", module = "jackson-core")
   }

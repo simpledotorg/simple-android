@@ -31,8 +31,6 @@ allprojects {
     jcenter {
       content {
         // :app
-        includeModule("com.facebook.flipper", "flipper")
-        includeModule("com.facebook.flipper", "flipper-network-plugin")
         includeModule("ru.egslava", "MaskedEditText")
       }
     }

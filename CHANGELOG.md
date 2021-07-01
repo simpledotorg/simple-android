@@ -18,6 +18,7 @@
 - Increase tappable area of overdue call button
 - Add `retainUntil` column to the `Patient` table
 - Remove unnecessary method from `Analytics`
+- Bump dependencies for [Flipper](https://fbflipper.com)
 
 ### Changes
 - Updated translations: `pa-IN`, `hi-IN`, `te-IN`, `kn-IN`, `mr-IN`, `te-IN`, `sid-ET`, `kn-IN`, `ta-IN`, `bn-BD`, `bn_IN`, `so-ET`, `ti-ET`

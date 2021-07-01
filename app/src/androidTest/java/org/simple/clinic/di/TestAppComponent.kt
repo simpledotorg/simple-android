@@ -21,6 +21,7 @@ import org.simple.clinic.protocolv2.sync.ProtocolSyncAndroidTest
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.rules.RegisterPatientRule
 import org.simple.clinic.rules.ServerAuthenticationRule
+import org.simple.clinic.rules.ServerRegistrationAtFacilityRule
 import org.simple.clinic.security.pin.BruteForceProtectionAndroidTest
 import org.simple.clinic.signature.SignatureRepositoryAndroidTest
 import org.simple.clinic.storage.DaoWithUpsertAndroidTest
@@ -110,4 +111,5 @@ interface TestAppComponent {
   fun inject(target: TeleconsultRecordRepositoryAndroidTest)
   fun inject(target: TeleconsultRecordSyncIntegrationTest)
   fun inject(target: DeleteSyncGroupDatabaseAndroidTest)
+  fun inject(target: ServerRegistrationAtFacilityRule)
 }

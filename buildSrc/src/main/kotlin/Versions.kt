@@ -27,7 +27,7 @@ object Versions {
   const val rxKotlin = "2.4.0"
   const val rxPreference = "2.0.0"
   const val traceur = "2.2.12"
-  const val maskedEditText = "1.0.5"
+  const val maskedEditText = "1.0.7"
   const val itemAnimators = "1.0.2"
   const val jbcrypt = "0.3m"
   const val workManager = "2.5.0"

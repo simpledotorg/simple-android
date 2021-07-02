@@ -20,7 +20,6 @@
 - Remove unnecessary method from `Analytics`
 - Bump dependencies for [Flipper](https://fbflipper.com)
 - Bump `com.github.egslava:edittext-mask` -> '1.0.7'
-- Use single list adapter in `InstantSearchScreen`
 
 ### Changes
 - Updated translations: `pa-IN`, `hi-IN`, `te-IN`, `kn-IN`, `mr-IN`, `te-IN`, `sid-ET`, `kn-IN`, `ta-IN`, `bn-BD`, `bn_IN`, `so-ET`, `ti-ET`, `am-ET`, `ta-LK`
@@ -29,16 +28,22 @@
 - Show progress when loading overdue patient contact information
 - Tap outside or swipe to dismiss the bottom sheets
 - Tap outside to dismiss the dialogs
-- Added a question about hypertension treatment when creating patient
 - [In Progress: 17 Jun 2021] Overdue list improvements
   - Change overdue list UI
   - Load overdue patients without phone number
   - Add option to download & share overdue list
 
+## 2021-07-02-7847
+### Internal
+- Use single list adapter in `InstantSearchScreen`
+
+### Changes
+- Added a question about hypertension treatment when creating patient
+
 ### Fixes
 - Fix random crashes when instant search screen is in background
 
-## On Demo
+## 2021-06-28-7839
 ### Internal
 - Use `ExperimentalGetImage` for `BitmapUtils#getBitmap`
 - Bump Annotation library to v1.2.0

@@ -193,6 +193,7 @@ class InstantSearchScreen :
         hideKeyboardOnImeAction()
     )
 
+    searchResultsView.adapter = searchResultsAdapter
     searchResultsAdapter.addLoadStateListener(::searchResultsAdapterLoadStateListener)
   }
 
@@ -208,8 +209,6 @@ class InstantSearchScreen :
         currentFacility = facility,
         searchQuery = null
     ))
-
-    searchResultsView.adapter = searchResultsAdapter
   }
 
   override fun showPatientsSearchResults(
@@ -222,8 +221,6 @@ class InstantSearchScreen :
         currentFacility = facility,
         searchQuery = searchQuery
     ))
-
-    searchResultsView.adapter = searchResultsAdapter
   }
 
   override fun openPatientSummary(patientId: UUID) {

@@ -14,7 +14,8 @@ data class InstantSearchModel(
     val searchQuery: String?,
     val additionalIdentifier: Identifier?,
     val scannedQrCodeSheetAlreadyOpened: Boolean,
-    val patientPrefillInfo: PatientPrefillInfo?
+    val patientPrefillInfo: PatientPrefillInfo?,
+    val instantSearchProgressState: InstantSearchProgressState?
 ) : Parcelable {
 
   val hasFacility: Boolean
@@ -45,7 +46,8 @@ data class InstantSearchModel(
         searchQuery = searchQuery,
         additionalIdentifier = additionalIdentifier,
         scannedQrCodeSheetAlreadyOpened = false,
-        patientPrefillInfo = patientPrefillInfo
+        patientPrefillInfo = patientPrefillInfo,
+        instantSearchProgressState = null
     )
   }
 

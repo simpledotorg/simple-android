@@ -73,6 +73,7 @@ class InstantSearchScreen :
         InstantSearchModel,
         InstantSearchEvent,
         InstantSearchEffect>(),
+    InstantSearchUi,
     InstantSearchUiActions,
     ExpectsResult {
 
@@ -264,6 +265,39 @@ class InstantSearchScreen :
     searchQueryEditText.setTextAndCursor(initialSearchQuery)
   }
 
+  override fun showProgress() {
+    instantSearchProgressIndicator.visibility = View.VISIBLE
+  }
+
+  override fun hideProgress() {
+    instantSearchProgressIndicator.visibility = View.GONE
+  }
+
+  override fun showNoPatientsInFacility(facilityName: String) {
+    noPatientsInFacilityContainer.visibility = View.VISIBLE
+    noPatientsInFacilityTextView.text = getString(R.string.patientsearch_error_no_patients_in_facility_heading, facilityName)
+  }
+
+  override fun hideNoPatientsInFacility() {
+    noPatientsInFacilityContainer.visibility = View.GONE
+  }
+
+  override fun showNoSearchResults() {
+    noSearchResultsContainer.visibility = View.VISIBLE
+  }
+
+  override fun hideNoSearchResults() {
+    noSearchResultsContainer.visibility = View.GONE
+  }
+
+  override fun showResults() {
+    searchResultsView.visibility = View.VISIBLE
+  }
+
+  override fun hideResults() {
+    searchResultsView.visibility = View.GONE
+  }
+
   override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
     if (requestType == BlankScannedQrCode && result is Succeeded) {
       val scannedQrCodeResult = ScannedQrCodeSheet.blankScannedQrCodeResult(result)
@@ -276,10 +310,6 @@ class InstantSearchScreen :
     searchResultsAdapter.removeLoadStateListener(::searchResultsAdapterLoadStateListener)
   }
 
-  private fun hideNoPatientsInFacility() {
-    noPatientsInFacilityContainer.visibility = View.GONE
-    searchResultsView.visibility = View.VISIBLE
-  }
 
   private fun showNoPatientsInFacility(facility: Facility) {
     searchResultsView.visibility = View.GONE
@@ -303,16 +333,6 @@ class InstantSearchScreen :
     }
   }
 
-  private fun showNoSearchResults() {
-    searchResultsView.visibility = View.GONE
-    noPatientsInFacilityContainer.visibility = View.GONE
-    noSearchResultsContainer.visibility = View.VISIBLE
-  }
-
-  private fun hideNoSearchResults() {
-    noSearchResultsContainer.visibility = View.GONE
-    searchResultsView.visibility = View.VISIBLE
-  }
 
   private fun searchResultsAdapterLoadStateListener(loadStates: CombinedLoadStates) {
     val isNotLoading = loadStates.refresh is NotLoading

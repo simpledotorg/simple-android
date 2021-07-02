@@ -6,9 +6,9 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.scanid.scannedqrcode.BlankScannedQRCodeResult
-import java.util.Optional
 import org.simple.clinic.util.RequiresPermission
 import org.simple.clinic.widgets.UiEvent
+import java.util.Optional
 import java.util.UUID
 
 sealed class InstantSearchEvent : UiEvent
@@ -51,3 +51,5 @@ data class OpenQrCodeScannerClicked(
 object PatientAlreadyHasAnExistingNHID : InstantSearchEvent()
 
 data class PatientDoesNotHaveAnExistingNHID(val patientId: UUID) : InstantSearchEvent()
+
+data class SearchResultsLoadStateChanged(val instantSearchProgressState: InstantSearchProgressState) : InstantSearchEvent()

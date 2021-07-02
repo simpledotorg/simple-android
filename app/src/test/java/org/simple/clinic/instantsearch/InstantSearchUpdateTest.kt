@@ -3,11 +3,13 @@ package org.simple.clinic.instantsearch
 import androidx.paging.PagingData
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
+import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.instantsearch.InstantSearchProgressState.IN_PROGRESS
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientSearchCriteria
@@ -426,6 +428,17 @@ class InstantSearchUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenLinkIdWithPatientScreen(patientUuid, identifier))
+        ))
+  }
+
+  @Test
+  fun `when search results are being loaded, then update the ui to show progress`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(SearchResultsLoadStateChanged(IN_PROGRESS))
+        .then(assertThatNext(
+            hasModel(defaultModel.loadStateChanged(IN_PROGRESS)),
+            hasNoEffects()
         ))
   }
 }

@@ -46,10 +46,21 @@ class InstantSearchUpdate @Inject constructor(
       RegisterNewPatientClicked -> registerNewPatient(model)
       is BlankScannedQrCodeResultReceived -> blankScannedQrCodeResult(model, event)
       is OpenQrCodeScannerClicked -> dispatch(OpenQrCodeScanner)
+      is SearchResultsLoadStateChanged -> searchResultsLoadStateChanged(model, event)
     }
   }
 
-  private fun currentFacilityLoaded(model: InstantSearchModel, event: CurrentFacilityLoaded): Next<InstantSearchModel, InstantSearchEffect> {
+  private fun searchResultsLoadStateChanged(
+      model: InstantSearchModel,
+      event: SearchResultsLoadStateChanged
+  ): Next<InstantSearchModel, InstantSearchEffect> {
+    return next(model.loadStateChanged(event.instantSearchProgressState))
+  }
+
+  private fun currentFacilityLoaded(
+      model: InstantSearchModel,
+      event: CurrentFacilityLoaded
+  ): Next<InstantSearchModel, InstantSearchEffect> {
     val facilityLoadedModel = model.facilityLoaded(event.facility)
     val effect = if (model.hasSearchQuery) {
       PrefillSearchQuery(model.searchQuery!!)

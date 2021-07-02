@@ -15,6 +15,7 @@
 - Fix instant search error views overlapping each other
 - Remove usage of deprecated constructor from `MobiusDelegate`
 - Migrate `OverdueAppointment` to add patients without phone number
+- Use single list adapter in `InstantSearchScreen`
 
 ### Changes
 - Updated translations: `hi-IN`, `bn-BD`, `te-IN`, `bn-IN`, `am-ET`, `pa-IN`, `ti-ET`, `kn-IN`, `mr-IN`, `ta-IN`, `so-ET`, `om-ET`
@@ -24,7 +25,8 @@
 
 ### Fixes
 - Fix confirm reset pin error text is not hidden by default
-- Show invalid json error when `NHID` number is empty or less than 14 digits   
+- Show invalid json error when `NHID` number is empty or less than 14 digits
+- Fix confirm reset pin error text is not hidden by default
 
 ## 2021-06-16-7826
 ### Internal

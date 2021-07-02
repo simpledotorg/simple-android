@@ -70,4 +70,8 @@ data class InstantSearchModel(
   fun patientPrefillInfoUpdated(patientPrefillInfo: PatientPrefillInfo): InstantSearchModel {
     return copy(patientPrefillInfo = patientPrefillInfo)
   }
+
+  fun loadStateChanged(instantSearchProgressState: InstantSearchProgressState): InstantSearchModel {
+    return copy(instantSearchProgressState = instantSearchProgressState)
+  }
 }

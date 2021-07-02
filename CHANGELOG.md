@@ -26,7 +26,7 @@
 ### Fixes
 - Fix confirm reset pin error text is not hidden by default
 - Show invalid json error when `NHID` number is empty or less than 14 digits
-- Fix confirm reset pin error text is not hidden by default
+- Fix random crashes when instant search screen is in background
 
 ## 2021-06-16-7826
 ### Internal

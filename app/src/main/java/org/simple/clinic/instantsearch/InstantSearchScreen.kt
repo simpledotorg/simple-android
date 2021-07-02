@@ -9,8 +9,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.paging.CombinedLoadStates
-import androidx.paging.LoadState
-import androidx.paging.LoadState.NotLoading
+import androidx.paging.LoadState.Loading
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
@@ -35,6 +34,9 @@ import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation
 import org.simple.clinic.feature.Feature.InstantSearchQrCode
 import org.simple.clinic.feature.Features
+import org.simple.clinic.instantsearch.InstantSearchProgressState.DONE
+import org.simple.clinic.instantsearch.InstantSearchProgressState.IN_PROGRESS
+import org.simple.clinic.instantsearch.InstantSearchProgressState.NO_RESULTS
 import org.simple.clinic.navigation.v2.ExpectsResult
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenResult
@@ -103,6 +105,7 @@ class InstantSearchScreen :
   lateinit var dateTimeFormatter: DateTimeFormatter
 
   private val subscriptions = CompositeDisposable()
+  private val loadStateChanges = PublishSubject.create<SearchResultsLoadStateChanged>()
 
   private val instantSearchToolbar
     get() = binding.instantSearchToolbar
@@ -156,7 +159,8 @@ class InstantSearchScreen :
           searchQueryChanges(),
           registerNewPatientClicks(),
           blankScannedQrCodeResults,
-          openQrCodeScannerClicks()
+          openQrCodeScannerClicks(),
+          loadStateChanges
       )
       .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
       .compose(ReportAnalyticsEvents())
@@ -188,6 +192,8 @@ class InstantSearchScreen :
         hideKeyboardOnSearchResultsScroll(),
         hideKeyboardOnImeAction()
     )
+
+    searchResultsAdapter.addLoadStateListener(::searchResultsAdapterLoadStateListener)
   }
 
   override fun onDestroyView() {
@@ -335,19 +341,16 @@ class InstantSearchScreen :
     }
   }
 
-
   private fun searchResultsAdapterLoadStateListener(loadStates: CombinedLoadStates) {
-    val isNotLoading = loadStates.refresh is NotLoading
+    val isLoading = loadStates.refresh is Loading
     val endOfPaginationReached = loadStates.append.endOfPaginationReached
     val hasAdapterItems = searchResultsAdapter.itemCount > 0
+    val showNoSearchResults = !isLoading && endOfPaginationReached && !hasAdapterItems
 
-    instantSearchProgressIndicator.visibleOrGone(loadStates.refresh is LoadState.Loading)
-
-    val showNoSearchResults = isNotLoading && endOfPaginationReached && !hasAdapterItems
-    if (showNoSearchResults) {
-      showNoSearchResults()
-    } else {
-      hideNoSearchResults()
+    when {
+      isLoading -> loadStateChanges.onNext(SearchResultsLoadStateChanged(IN_PROGRESS))
+      showNoSearchResults -> loadStateChanges.onNext(SearchResultsLoadStateChanged(NO_RESULTS))
+      else -> loadStateChanges.onNext(SearchResultsLoadStateChanged(DONE))
     }
   }
 

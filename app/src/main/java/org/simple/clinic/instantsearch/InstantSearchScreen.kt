@@ -168,6 +168,8 @@ class InstantSearchScreen :
 
   override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 
+  override fun uiRenderer() = InstantSearchUiRenderer(this)
+
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)

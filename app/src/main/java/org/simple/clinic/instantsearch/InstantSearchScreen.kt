@@ -211,9 +211,9 @@ class InstantSearchScreen :
 
   override fun showAllPatients(patients: PagingData<PatientSearchResult>, facility: Facility) {
     searchResultsAdapter.removeLoadStateListener(::searchResultsAdapterLoadStateListener)
-    allPatientsAdapter.addLoadStateListener(::allPatientsAdapterLoadStateListener)
+    searchResultsAdapter.addLoadStateListener(::allPatientsAdapterLoadStateListener)
 
-    allPatientsAdapter.submitData(lifecycle, InstantSearchResultsItemType.from(
+    searchResultsAdapter.submitData(lifecycle, InstantSearchResultsItemType.from(
         patientSearchResults = patients,
         currentFacility = facility,
         searchQuery = null
@@ -221,7 +221,7 @@ class InstantSearchScreen :
 
     searchResultsView.visibility = View.VISIBLE
 
-    searchResultsView.adapter = allPatientsAdapter
+    searchResultsView.adapter = searchResultsAdapter
   }
 
   override fun showPatientsSearchResults(

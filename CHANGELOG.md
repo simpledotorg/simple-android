@@ -1,6 +1,16 @@
 # CHANGELOG
 
-## On Demo
+## 2021-07-02-7847
+### Internal
+- Use single list adapter in `InstantSearchScreen`
+
+### Changes
+- Added a question about hypertension treatment when creating patient
+
+### Fixes
+- Fix random crashes when instant search screen is in background
+
+## 2021-06-28-7839
 ### Internal
 - Use `ExperimentalGetImage` for `BitmapUtils#getBitmap`
 - Bump Annotation library to v1.2.0
@@ -14,19 +24,17 @@
 - Paginate overdue appointments list
 - Fix instant search error views overlapping each other
 - Remove usage of deprecated constructor from `MobiusDelegate`
-- Migrate `OverdueAppointment` to add patients without phone number
-- Use single list adapter in `InstantSearchScreen`
+
+### Features
+- Add training videos depending on language for `Amharic` and `Oromo`
 
 ### Changes
 - Updated translations: `hi-IN`, `bn-BD`, `te-IN`, `bn-IN`, `am-ET`, `pa-IN`, `ti-ET`, `kn-IN`, `mr-IN`, `ta-IN`, `so-ET`, `om-ET`
 - New supported language: Sidama [`sid-ET`]
 - Updated home screen illustrations
-- Added a question about hypertension treatment when creating patient
 
 ### Fixes
 - Fix confirm reset pin error text is not hidden by default
-- Show invalid json error when `NHID` number is empty or less than 14 digits
-- Fix random crashes when instant search screen is in background
 
 ## 2021-06-16-7826
 ### Internal

@@ -190,15 +190,10 @@ class InstantSearchScreen :
   override fun onDestroyView() {
     super.onDestroyView()
     subscriptions.clear()
-
-    searchResultsAdapter.removeLoadStateListener(::allPatientsAdapterLoadStateListener)
-    searchResultsAdapter.removeLoadStateListener(::searchResultsAdapterLoadStateListener)
+    removeAdapterLoadStateListeners()
   }
 
   override fun showAllPatients(patients: PagingData<PatientSearchResult>, facility: Facility) {
-    searchResultsAdapter.removeLoadStateListener(::searchResultsAdapterLoadStateListener)
-    searchResultsAdapter.addLoadStateListener(::allPatientsAdapterLoadStateListener)
-
     searchResultsAdapter.submitData(lifecycle, InstantSearchResultsItemType.from(
         patientSearchResults = patients,
         currentFacility = facility,
@@ -215,9 +210,6 @@ class InstantSearchScreen :
       facility: Facility,
       searchQuery: String
   ) {
-    searchResultsAdapter.removeLoadStateListener(::allPatientsAdapterLoadStateListener)
-    searchResultsAdapter.addLoadStateListener(::searchResultsAdapterLoadStateListener)
-
     searchResultsAdapter.submitData(lifecycle, InstantSearchResultsItemType.from(
         patientSearchResults = patients,
         currentFacility = facility,
@@ -277,6 +269,11 @@ class InstantSearchScreen :
       val scannedQrCodeResult = ScannedQrCodeSheet.blankScannedQrCodeResult(result)
       blankScannedQrCodeResults.onNext(BlankScannedQrCodeResultReceived(scannedQrCodeResult))
     }
+  }
+
+  private fun removeAdapterLoadStateListeners() {
+    searchResultsAdapter.removeLoadStateListener(::allPatientsAdapterLoadStateListener)
+    searchResultsAdapter.removeLoadStateListener(::searchResultsAdapterLoadStateListener)
   }
 
   private fun hideNoPatientsInFacility() {

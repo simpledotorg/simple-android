@@ -9,8 +9,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.paging.CombinedLoadStates
-import androidx.paging.LoadState
-import androidx.paging.LoadState.NotLoading
+import androidx.paging.LoadState.Loading
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
@@ -35,6 +34,9 @@ import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation
 import org.simple.clinic.feature.Feature.InstantSearchQrCode
 import org.simple.clinic.feature.Features
+import org.simple.clinic.instantsearch.InstantSearchProgressState.DONE
+import org.simple.clinic.instantsearch.InstantSearchProgressState.IN_PROGRESS
+import org.simple.clinic.instantsearch.InstantSearchProgressState.NO_RESULTS
 import org.simple.clinic.navigation.v2.ExpectsResult
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenResult
@@ -73,6 +75,7 @@ class InstantSearchScreen :
         InstantSearchModel,
         InstantSearchEvent,
         InstantSearchEffect>(),
+    InstantSearchUi,
     InstantSearchUiActions,
     ExpectsResult {
 
@@ -101,8 +104,8 @@ class InstantSearchScreen :
   @Named("date_for_user_input")
   lateinit var dateTimeFormatter: DateTimeFormatter
 
-
   private val subscriptions = CompositeDisposable()
+  private val loadStateChanges = PublishSubject.create<SearchResultsLoadStateChanged>()
 
   private val instantSearchToolbar
     get() = binding.instantSearchToolbar
@@ -131,18 +134,6 @@ class InstantSearchScreen :
   private val qrCodeScannerButton
     get() = binding.qrCodeScannerButton
 
-  private val allPatientsAdapter = PagingItemAdapter(
-      diffCallback = InstantSearchResultsItemType.DiffCallback(),
-      bindings = mapOf(
-          R.layout.list_patient_search_header to { layoutInflater, parent ->
-            ListPatientSearchHeaderBinding.inflate(layoutInflater, parent, false)
-          },
-          R.layout.list_patient_search to { layoutInflater, parent ->
-            ListPatientSearchBinding.inflate(layoutInflater, parent, false)
-          }
-      )
-  )
-
   private val searchResultsAdapter = PagingItemAdapter(
       diffCallback = InstantSearchResultsItemType.DiffCallback(),
       bindings = mapOf(
@@ -164,12 +155,12 @@ class InstantSearchScreen :
 
   override fun events() = Observable
       .mergeArray(
-          allPatientsItemClicks(),
           searchItemClicks(),
           searchQueryChanges(),
           registerNewPatientClicks(),
           blankScannedQrCodeResults,
-          openQrCodeScannerClicks()
+          openQrCodeScannerClicks(),
+          loadStateChanges
       )
       .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
       .compose(ReportAnalyticsEvents())
@@ -180,6 +171,8 @@ class InstantSearchScreen :
   override fun createInit() = InstantSearchInit()
 
   override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+
+  override fun uiRenderer() = InstantSearchUiRenderer(this)
 
   override fun onAttach(context: Context) {
     super.onAttach(context)
@@ -199,29 +192,23 @@ class InstantSearchScreen :
         hideKeyboardOnSearchResultsScroll(),
         hideKeyboardOnImeAction()
     )
+
+    searchResultsView.adapter = searchResultsAdapter
+    searchResultsAdapter.addLoadStateListener(::searchResultsAdapterLoadStateListener)
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
     subscriptions.clear()
-
-    allPatientsAdapter.removeLoadStateListener(::allPatientsAdapterLoadStateListener)
     searchResultsAdapter.removeLoadStateListener(::searchResultsAdapterLoadStateListener)
   }
 
   override fun showAllPatients(patients: PagingData<PatientSearchResult>, facility: Facility) {
-    searchResultsAdapter.removeLoadStateListener(::searchResultsAdapterLoadStateListener)
-    allPatientsAdapter.addLoadStateListener(::allPatientsAdapterLoadStateListener)
-
-    allPatientsAdapter.submitData(lifecycle, InstantSearchResultsItemType.from(
+    searchResultsAdapter.submitData(lifecycle, InstantSearchResultsItemType.from(
         patientSearchResults = patients,
         currentFacility = facility,
         searchQuery = null
     ))
-
-    searchResultsView.visibility = View.VISIBLE
-
-    searchResultsView.adapter = allPatientsAdapter
   }
 
   override fun showPatientsSearchResults(
@@ -229,18 +216,11 @@ class InstantSearchScreen :
       facility: Facility,
       searchQuery: String
   ) {
-    allPatientsAdapter.removeLoadStateListener(::allPatientsAdapterLoadStateListener)
-    searchResultsAdapter.addLoadStateListener(::searchResultsAdapterLoadStateListener)
-
     searchResultsAdapter.submitData(lifecycle, InstantSearchResultsItemType.from(
         patientSearchResults = patients,
         currentFacility = facility,
         searchQuery = searchQuery
     ))
-
-    searchResultsView.visibility = View.VISIBLE
-
-    searchResultsView.adapter = searchResultsAdapter
   }
 
   override fun openPatientSummary(patientId: UUID) {
@@ -286,6 +266,39 @@ class InstantSearchScreen :
     searchQueryEditText.setTextAndCursor(initialSearchQuery)
   }
 
+  override fun showProgress() {
+    instantSearchProgressIndicator.visibility = View.VISIBLE
+  }
+
+  override fun hideProgress() {
+    instantSearchProgressIndicator.visibility = View.GONE
+  }
+
+  override fun showNoPatientsInFacility(facilityName: String) {
+    noPatientsInFacilityContainer.visibility = View.VISIBLE
+    noPatientsInFacilityTextView.text = getString(R.string.patientsearch_error_no_patients_in_facility_heading, facilityName)
+  }
+
+  override fun hideNoPatientsInFacility() {
+    noPatientsInFacilityContainer.visibility = View.GONE
+  }
+
+  override fun showNoSearchResults() {
+    noSearchResultsContainer.visibility = View.VISIBLE
+  }
+
+  override fun hideNoSearchResults() {
+    noSearchResultsContainer.visibility = View.GONE
+  }
+
+  override fun showResults() {
+    searchResultsView.visibility = View.VISIBLE
+  }
+
+  override fun hideResults() {
+    searchResultsView.visibility = View.GONE
+  }
+
   override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
     if (requestType == BlankScannedQrCode && result is Succeeded) {
       val scannedQrCodeResult = ScannedQrCodeSheet.blankScannedQrCodeResult(result)
@@ -293,64 +306,17 @@ class InstantSearchScreen :
     }
   }
 
-  private fun hideNoPatientsInFacility() {
-    noPatientsInFacilityContainer.visibility = View.GONE
-    searchResultsView.visibility = View.VISIBLE
-  }
-
-  private fun showNoPatientsInFacility(facility: Facility) {
-    searchResultsView.visibility = View.GONE
-    noSearchResultsContainer.visibility = View.GONE
-    noPatientsInFacilityContainer.visibility = View.VISIBLE
-    noPatientsInFacilityTextView.text = getString(R.string.patientsearch_error_no_patients_in_facility_heading, facility.name)
-  }
-
-  private fun allPatientsAdapterLoadStateListener(loadStates: CombinedLoadStates) {
-    val isNotLoading = loadStates.refresh is NotLoading
-    val endOfPaginationReached = loadStates.append.endOfPaginationReached
-    val hasAdapterItems = allPatientsAdapter.itemCount > 0
-
-    instantSearchProgressIndicator.visibleOrGone(loadStates.refresh is LoadState.Loading)
-
-    val showNoPatientsInFacility = isNotLoading && endOfPaginationReached && !hasAdapterItems
-    if (showNoPatientsInFacility) {
-      showNoPatientsInFacility(currentModel.facility!!)
-    } else {
-      hideNoPatientsInFacility()
-    }
-  }
-
-  private fun showNoSearchResults() {
-    searchResultsView.visibility = View.GONE
-    noPatientsInFacilityContainer.visibility = View.GONE
-    noSearchResultsContainer.visibility = View.VISIBLE
-  }
-
-  private fun hideNoSearchResults() {
-    noSearchResultsContainer.visibility = View.GONE
-    searchResultsView.visibility = View.VISIBLE
-  }
-
   private fun searchResultsAdapterLoadStateListener(loadStates: CombinedLoadStates) {
-    val isNotLoading = loadStates.refresh is NotLoading
+    val isLoading = loadStates.refresh is Loading
     val endOfPaginationReached = loadStates.append.endOfPaginationReached
     val hasAdapterItems = searchResultsAdapter.itemCount > 0
+    val showNoSearchResults = !isLoading && endOfPaginationReached && !hasAdapterItems
 
-    instantSearchProgressIndicator.visibleOrGone(loadStates.refresh is LoadState.Loading)
-
-    val showNoSearchResults = isNotLoading && endOfPaginationReached && !hasAdapterItems
-    if (showNoSearchResults) {
-      showNoSearchResults()
-    } else {
-      hideNoSearchResults()
+    when {
+      isLoading -> loadStateChanges.onNext(SearchResultsLoadStateChanged(IN_PROGRESS))
+      showNoSearchResults -> loadStateChanges.onNext(SearchResultsLoadStateChanged(NO_RESULTS))
+      else -> loadStateChanges.onNext(SearchResultsLoadStateChanged(DONE))
     }
-  }
-
-  private fun allPatientsItemClicks(): Observable<UiEvent> {
-    return allPatientsAdapter
-        .itemEvents
-        .ofType<InstantSearchResultsItemType.Event.ResultClicked>()
-        .map { SearchResultClicked(it.patientUuid) }
   }
 
   private fun searchItemClicks(): Observable<UiEvent> {

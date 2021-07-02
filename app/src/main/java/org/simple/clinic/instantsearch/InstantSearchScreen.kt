@@ -199,7 +199,7 @@ class InstantSearchScreen :
   override fun onDestroyView() {
     super.onDestroyView()
     subscriptions.clear()
-    removeAdapterLoadStateListeners()
+    searchResultsAdapter.removeLoadStateListener(::searchResultsAdapterLoadStateListener)
   }
 
   override fun showAllPatients(patients: PagingData<PatientSearchResult>, facility: Facility) {
@@ -208,8 +208,6 @@ class InstantSearchScreen :
         currentFacility = facility,
         searchQuery = null
     ))
-
-    searchResultsView.visibility = View.VISIBLE
 
     searchResultsView.adapter = searchResultsAdapter
   }
@@ -224,8 +222,6 @@ class InstantSearchScreen :
         currentFacility = facility,
         searchQuery = searchQuery
     ))
-
-    searchResultsView.visibility = View.VISIBLE
 
     searchResultsView.adapter = searchResultsAdapter
   }
@@ -310,34 +306,6 @@ class InstantSearchScreen :
     if (requestType == BlankScannedQrCode && result is Succeeded) {
       val scannedQrCodeResult = ScannedQrCodeSheet.blankScannedQrCodeResult(result)
       blankScannedQrCodeResults.onNext(BlankScannedQrCodeResultReceived(scannedQrCodeResult))
-    }
-  }
-
-  private fun removeAdapterLoadStateListeners() {
-    searchResultsAdapter.removeLoadStateListener(::allPatientsAdapterLoadStateListener)
-    searchResultsAdapter.removeLoadStateListener(::searchResultsAdapterLoadStateListener)
-  }
-
-
-  private fun showNoPatientsInFacility(facility: Facility) {
-    searchResultsView.visibility = View.GONE
-    noSearchResultsContainer.visibility = View.GONE
-    noPatientsInFacilityContainer.visibility = View.VISIBLE
-    noPatientsInFacilityTextView.text = getString(R.string.patientsearch_error_no_patients_in_facility_heading, facility.name)
-  }
-
-  private fun allPatientsAdapterLoadStateListener(loadStates: CombinedLoadStates) {
-    val isNotLoading = loadStates.refresh is NotLoading
-    val endOfPaginationReached = loadStates.append.endOfPaginationReached
-    val hasAdapterItems = searchResultsAdapter.itemCount > 0
-
-    instantSearchProgressIndicator.visibleOrGone(loadStates.refresh is LoadState.Loading)
-
-    val showNoPatientsInFacility = isNotLoading && endOfPaginationReached && !hasAdapterItems
-    if (showNoPatientsInFacility) {
-      showNoPatientsInFacility(currentModel.facility!!)
-    } else {
-      hideNoPatientsInFacility()
     }
   }
 

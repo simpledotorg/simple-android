@@ -59,48 +59,7 @@ class LookupPatientOnline @Inject constructor(
   private fun convertResponseToMedicalRecord(
       response: CompleteMedicalRecordPayload
   ): CompleteMedicalRecord {
-    val age = if (response.age != null) Age(response.age, response.ageUpdatedAt!!) else null
-    val retainUntil = response.retention.computeRetainUntilTimestamp(
-        instant = Instant.now(clock),
-        fallbackRetentionDuration = fallbackRecordRetentionDuration
-    )
-
-    val phoneNumbers = response
-        .phoneNumbers
-        ?.map { payload ->
-          payload.toDatabaseModel(response.id)
-        } ?: emptyList()
-
-    val businessIds = response
-        .businessIds
-        .map { payload ->
-          payload.toDatabaseModel(response.id)
-        }
-
-    val patientProfile = PatientProfile(
-        patient = Patient(
-            uuid = response.id,
-            fullName = response.fullName,
-            gender = response.gender,
-            dateOfBirth = response.dateOfBirth,
-            age = age,
-            createdAt = response.createdAt,
-            updatedAt = response.updatedAt,
-            deletedAt = response.deletedAt,
-            addressUuid = response.address.uuid,
-            status = response.status,
-            recordedAt = response.recordedAt,
-            syncStatus = SyncStatus.DONE,
-            reminderConsent = response.reminderConsent,
-            deletedReason = response.deletedReason,
-            registeredFacilityId = response.registeredFacilityId,
-            assignedFacilityId = response.assignedFacilityId,
-            retainUntil = retainUntil
-        ),
-        address = response.address.toDatabaseModel(),
-        phoneNumbers = phoneNumbers,
-        businessIds = businessIds
-    )
+    val patientProfile = readPatientProfileFromResponse(response)
 
     val medicalHistory = if (response.medicalHistory != null) {
       MedicalHistory(
@@ -158,6 +117,53 @@ class LookupPatientOnline @Inject constructor(
         bloodSugars = bloodSugars,
         bloodPressures = bloodPressures,
         prescribedDrugs = prescribedDrugs
+    )
+  }
+
+  private fun readPatientProfileFromResponse(
+      response: CompleteMedicalRecordPayload,
+  ): PatientProfile {
+    val age = if (response.age != null) Age(response.age, response.ageUpdatedAt!!) else null
+    val retainUntil = response.retention.computeRetainUntilTimestamp(
+        instant = Instant.now(clock),
+        fallbackRetentionDuration = fallbackRecordRetentionDuration
+    )
+
+    val phoneNumbers = response
+        .phoneNumbers
+        ?.map { payload ->
+          payload.toDatabaseModel(response.id)
+        } ?: emptyList()
+
+    val businessIds = response
+        .businessIds
+        .map { payload ->
+          payload.toDatabaseModel(response.id)
+        }
+
+    return PatientProfile(
+        patient = Patient(
+            uuid = response.id,
+            fullName = response.fullName,
+            gender = response.gender,
+            dateOfBirth = response.dateOfBirth,
+            age = age,
+            createdAt = response.createdAt,
+            updatedAt = response.updatedAt,
+            deletedAt = response.deletedAt,
+            addressUuid = response.address.uuid,
+            status = response.status,
+            recordedAt = response.recordedAt,
+            syncStatus = SyncStatus.DONE,
+            reminderConsent = response.reminderConsent,
+            deletedReason = response.deletedReason,
+            registeredFacilityId = response.registeredFacilityId,
+            assignedFacilityId = response.assignedFacilityId,
+            retainUntil = retainUntil
+        ),
+        address = response.address.toDatabaseModel(),
+        phoneNumbers = phoneNumbers,
+        businessIds = businessIds
     )
   }
 

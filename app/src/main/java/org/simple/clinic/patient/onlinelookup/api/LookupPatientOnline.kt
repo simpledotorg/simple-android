@@ -61,24 +61,7 @@ class LookupPatientOnline @Inject constructor(
   ): CompleteMedicalRecord {
     val patientProfile = readPatientProfileFromResponse(response)
 
-    val medicalHistory = if (response.medicalHistory != null) {
-      MedicalHistory(
-          uuid = response.medicalHistory.uuid,
-          patientUuid = response.medicalHistory.patientUuid,
-          diagnosedWithHypertension = response.medicalHistory.hasHypertension ?: Answer.Unanswered,
-          isOnHypertensionTreatment = response.medicalHistory.isOnTreatmentForHypertension,
-          hasHadHeartAttack = response.medicalHistory.hasHadHeartAttack,
-          hasHadStroke = response.medicalHistory.hasHadStroke,
-          hasHadKidneyDisease = response.medicalHistory.hasHadKidneyDisease,
-          diagnosedWithDiabetes = response.medicalHistory.hasDiabetes,
-          syncStatus = SyncStatus.DONE,
-          createdAt = response.medicalHistory.createdAt,
-          updatedAt = response.medicalHistory.updatedAt,
-          deletedAt = response.medicalHistory.deletedAt
-      )
-    } else {
-      null
-    }
+    val medicalHistory = readMedicalHistoryFromResponse(response)
 
     val appointments = response.appointments.map { payload ->
       Appointment(
@@ -165,6 +148,29 @@ class LookupPatientOnline @Inject constructor(
         phoneNumbers = phoneNumbers,
         businessIds = businessIds
     )
+  }
+
+  private fun readMedicalHistoryFromResponse(
+      response: CompleteMedicalRecordPayload,
+  ): MedicalHistory? {
+    return if (response.medicalHistory != null) {
+      MedicalHistory(
+          uuid = response.medicalHistory.uuid,
+          patientUuid = response.medicalHistory.patientUuid,
+          diagnosedWithHypertension = response.medicalHistory.hasHypertension ?: Answer.Unanswered,
+          isOnHypertensionTreatment = response.medicalHistory.isOnTreatmentForHypertension,
+          hasHadHeartAttack = response.medicalHistory.hasHadHeartAttack,
+          hasHadStroke = response.medicalHistory.hasHadStroke,
+          hasHadKidneyDisease = response.medicalHistory.hasHadKidneyDisease,
+          diagnosedWithDiabetes = response.medicalHistory.hasDiabetes,
+          syncStatus = SyncStatus.DONE,
+          createdAt = response.medicalHistory.createdAt,
+          updatedAt = response.medicalHistory.updatedAt,
+          deletedAt = response.medicalHistory.deletedAt
+      )
+    } else {
+      null
+    }
   }
 
   sealed class Result {

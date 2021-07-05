@@ -61,28 +61,14 @@ class LookupPatientOnline @Inject constructor(
 
   private fun convertResponseToMedicalRecord(
       response: CompleteMedicalRecordPayload
-  ): CompleteMedicalRecord {
-    val patientProfile = readPatientProfileFromResponse(response)
-
-    val medicalHistory = readMedicalHistoryFromResponse(response)
-
-    val appointments = readAppointmentsFromResponse(response)
-
-    val bloodPressures = readBloodPressuresFromResponse(response)
-
-    val bloodSugars = readBloodSugarsFromResponse(response)
-
-    val prescribedDrugs = readPrescribedDrugsFromResponse(response)
-
-    return CompleteMedicalRecord(
-        patient = patientProfile,
-        medicalHistory = medicalHistory,
-        appointments = appointments,
-        bloodSugars = bloodSugars,
-        bloodPressures = bloodPressures,
-        prescribedDrugs = prescribedDrugs
-    )
-  }
+  ) = CompleteMedicalRecord(
+      patient = readPatientProfileFromResponse(response),
+      medicalHistory = readMedicalHistoryFromResponse(response),
+      appointments = readAppointmentsFromResponse(response),
+      bloodSugars = readBloodSugarsFromResponse(response),
+      bloodPressures = readBloodPressuresFromResponse(response),
+      prescribedDrugs = readPrescribedDrugsFromResponse(response)
+  )
 
   private fun readPatientProfileFromResponse(
       response: CompleteMedicalRecordPayload,

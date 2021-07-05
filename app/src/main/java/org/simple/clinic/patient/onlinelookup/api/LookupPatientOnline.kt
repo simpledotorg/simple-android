@@ -8,10 +8,13 @@ import org.simple.clinic.patient.CompleteMedicalRecord
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.Found
+import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.NotFound
 import org.simple.clinic.patient.sync.ForPatientSync
 import org.simple.clinic.patient.sync.ForPatientSync.Type.RecordRetentionFallbackDuration
 import org.simple.clinic.patient.sync.PatientSyncApi
 import org.simple.clinic.util.UtcClock
+import retrofit2.Response
 import java.time.Duration
 import java.time.Instant
 import javax.inject.Inject
@@ -23,11 +26,22 @@ class LookupPatientOnline @Inject constructor(
 ) {
 
   fun lookupWithIdentifier(identifier: String): Result {
-    val response = patientSyncApi.lookup(PatientOnlineLookupRequest(identifier)).execute().body()!!
+    val response = patientSyncApi.lookup(PatientOnlineLookupRequest(identifier)).execute()
 
-    val medicalRecords = response.patients.map(::convertResponseToMedicalRecord)
+    return when (response.code()) {
+      200 -> readSuccessResponse(response, identifier)
+      else -> NotFound(identifier)
+    }
+  }
 
-    return Result.Found(medicalRecords)
+  private fun readSuccessResponse(
+      response: Response<OnlineLookupResponsePayload>,
+      identifier: String
+  ): Result {
+    val responseBody = response.body()!!
+    val medicalRecords = responseBody.patients.map(::convertResponseToMedicalRecord)
+
+    return if (medicalRecords.isNotEmpty()) Found(medicalRecords) else NotFound(identifier)
   }
 
   private fun convertResponseToMedicalRecord(
@@ -137,5 +151,6 @@ class LookupPatientOnline @Inject constructor(
 
   sealed class Result {
     data class Found(val medicalRecords: List<CompleteMedicalRecord>) : Result()
+    data class NotFound(val identifier: String) : Result()
   }
 }

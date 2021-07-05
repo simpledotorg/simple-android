@@ -10,9 +10,11 @@ import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.Found
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.NotFound
+import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.OtherError
 import org.simple.clinic.patient.sync.ForPatientSync
 import org.simple.clinic.patient.sync.ForPatientSync.Type.RecordRetentionFallbackDuration
 import org.simple.clinic.patient.sync.PatientSyncApi
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.util.UtcClock
 import retrofit2.Response
 import java.time.Duration
@@ -26,11 +28,21 @@ class LookupPatientOnline @Inject constructor(
 ) {
 
   fun lookupWithIdentifier(identifier: String): Result {
+    return try {
+      lookupPatientOnServer(identifier)
+    } catch (e: Exception) {
+      CrashReporter.report(e)
+      OtherError
+    }
+  }
+
+  private fun lookupPatientOnServer(identifier: String): Result {
     val response = patientSyncApi.lookup(PatientOnlineLookupRequest(identifier)).execute()
 
     return when (response.code()) {
       200 -> readSuccessResponse(response, identifier)
-      else -> NotFound(identifier)
+      404 -> NotFound(identifier)
+      else -> OtherError
     }
   }
 
@@ -152,5 +164,6 @@ class LookupPatientOnline @Inject constructor(
   sealed class Result {
     data class Found(val medicalRecords: List<CompleteMedicalRecord>) : Result()
     data class NotFound(val identifier: String) : Result()
+    object OtherError : Result()
   }
 }

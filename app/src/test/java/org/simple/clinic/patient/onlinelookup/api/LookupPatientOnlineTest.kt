@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Test
 import org.simple.clinic.FakeCall
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.NotFound
+import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.OtherError
 import org.simple.clinic.patient.sync.PatientSyncApi
 import org.simple.clinic.util.TestUtcClock
 import java.time.Duration
@@ -56,5 +57,38 @@ class LookupPatientOnlineTest {
 
     // then
     assertThat(result).isEqualTo(NotFound(identifier))
+  }
+
+  @Test
+  fun `when any response code apart from 200, 404 is received, the other error result must be returned`() {
+    // given
+    val call = FakeCall.error<OnlineLookupResponsePayload>(
+        data = "",
+        responseCode = 500
+    )
+    val identifier = "ec1286b8-6603-4eef-8576-9777cd989502"
+    val lookupRequest = PatientOnlineLookupRequest(identifier)
+    whenever(patientSyncApi.lookup(lookupRequest)).thenReturn(call)
+
+    // when
+    val result = lookupPatientOnline.lookupWithIdentifier(identifier)
+
+    // then
+    assertThat(result).isEqualTo(OtherError)
+  }
+
+  @Test
+  fun `when the network call fails, the other error result must be returned`() {
+    // given
+    val call = FakeCall.failure<OnlineLookupResponsePayload>(RuntimeException())
+    val identifier = "ec1286b8-6603-4eef-8576-9777cd989502"
+    val lookupRequest = PatientOnlineLookupRequest(identifier)
+    whenever(patientSyncApi.lookup(lookupRequest)).thenReturn(call)
+
+    // when
+    val result = lookupPatientOnline.lookupWithIdentifier(identifier)
+
+    // then
+    assertThat(result).isEqualTo(OtherError)
   }
 }

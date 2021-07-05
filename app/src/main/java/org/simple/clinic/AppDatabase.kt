@@ -55,6 +55,7 @@ import org.simple.clinic.util.room.InstantRoomTypeConverter
 import org.simple.clinic.util.room.LocalDateRoomTypeConverter
 import org.simple.clinic.util.room.UuidRoomTypeConverter
 import org.simple.clinic.drugs.Answer as DrugAnswer
+import java.time.Instant
 
 @Database(
     entities = [
@@ -201,6 +202,7 @@ abstract class AppDatabase : RoomDatabase() {
         purgeDeleted()
         purgeDeletedPhoneNumbers()
         purgeDeletedBusinessIds()
+        purgeDeletedPatientAfterRetentionTime(Instant.now())
       }
       bloodPressureDao().purgeDeleted()
       bloodSugarDao().purgeDeleted()

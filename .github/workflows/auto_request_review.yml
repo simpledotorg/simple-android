@@ -16,5 +16,5 @@ jobs:
       - name: Request Android Devs for review
         uses: necojackarc/auto-request-review@v0.7.0
         with:
-          token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+          token: ${{ secrets.SERVICES_ACCESS_TOKEN }}
           config: .github/reviewers.yml

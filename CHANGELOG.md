@@ -21,6 +21,7 @@
 - Bump dependencies for [Flipper](https://fbflipper.com)
 - Bump `com.github.egslava:edittext-mask` -> '1.0.7'
 - Bump AGP to v4.2.2
+- Replace `GITHUB_ACCESS_TOKEN` with `SERVICES_ACCESS_TOKEN`
 
 ### Changes
 - Updated translations: `pa-IN`, `hi-IN`, `te-IN`, `kn-IN`, `mr-IN`, `te-IN`, `sid-ET`, `kn-IN`, `ta-IN`, `bn-BD`, `bn_IN`, `so-ET`, `ti-ET`, `am-ET`, `ta-LK`, `om-ET`

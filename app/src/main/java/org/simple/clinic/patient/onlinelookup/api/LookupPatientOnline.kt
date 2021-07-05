@@ -2,6 +2,7 @@ package org.simple.clinic.patient.onlinelookup.api
 
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
+import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.CompleteMedicalRecord
 import org.simple.clinic.patient.Patient
@@ -94,13 +95,43 @@ class LookupPatientOnline @Inject constructor(
       null
     }
 
+    val appointments = response.appointments.map { payload ->
+      Appointment(
+          uuid = payload.uuid,
+          patientUuid = payload.patientUuid,
+          facilityUuid = payload.facilityUuid,
+          scheduledDate = payload.date,
+          status = payload.status,
+          cancelReason = payload.cancelReason,
+          remindOn = payload.remindOn,
+          agreedToVisit = payload.agreedToVisit,
+          appointmentType = payload.appointmentType,
+          syncStatus = SyncStatus.DONE,
+          createdAt = payload.createdAt,
+          updatedAt = payload.updatedAt,
+          deletedAt = payload.deletedAt,
+          creationFacilityUuid = payload.creationFacilityUuid)
+    }
+
+    val bloodPressures = response.bloodPressures.map { payload ->
+      payload.toDatabaseModel(SyncStatus.DONE)
+    }
+
+    val bloodSugars = response.bloodSugars.map { payload ->
+      payload.toDatabaseModel(SyncStatus.DONE)
+    }
+
+    val prescribedDrugs = response.prescribedDrugs.map { payload ->
+      payload.toDatabaseModel(SyncStatus.DONE)
+    }
+
     return CompleteMedicalRecord(
         patient = patientProfile,
         medicalHistory = medicalHistory,
-        appointments = emptyList(),
-        bloodSugars = emptyList(),
-        bloodPressures = emptyList(),
-        prescribedDrugs = emptyList()
+        appointments = appointments,
+        bloodSugars = bloodSugars,
+        bloodPressures = bloodPressures,
+        prescribedDrugs = prescribedDrugs
     )
   }
 

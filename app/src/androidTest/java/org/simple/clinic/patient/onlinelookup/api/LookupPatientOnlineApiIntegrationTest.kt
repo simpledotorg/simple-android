@@ -7,9 +7,19 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
+import org.simple.clinic.bloodsugar.sync.BloodSugarPushRequest
+import org.simple.clinic.bloodsugar.sync.BloodSugarSyncApi
+import org.simple.clinic.bp.sync.BloodPressurePushRequest
+import org.simple.clinic.bp.sync.BloodPressureSyncApi
+import org.simple.clinic.drugs.sync.PrescriptionPushRequest
+import org.simple.clinic.drugs.sync.PrescriptionSyncApi
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.medicalhistory.sync.MedicalHistoryPushRequest
 import org.simple.clinic.medicalhistory.sync.MedicalHistorySyncApi
+import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.overdue.AppointmentPushRequest
+import org.simple.clinic.overdue.AppointmentSyncApi
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientStatus
@@ -17,6 +27,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.sync.PatientPushRequest
 import org.simple.clinic.patient.sync.PatientSyncApi
 import org.simple.clinic.rules.ServerRegistrationAtFacilityRule
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUtcClock
 import java.time.Instant
@@ -32,6 +43,9 @@ class LookupPatientOnlineApiIntegrationTest {
       .around(ServerRegistrationAtFacilityRule(::pickFacilityWithTwoDifferentSyncGroups))
 
   @Inject
+  lateinit var userSession: UserSession
+
+  @Inject
   lateinit var facilityRepository: FacilityRepository
 
   @Inject
@@ -44,7 +58,21 @@ class LookupPatientOnlineApiIntegrationTest {
   lateinit var medicalHistorySyncApi: MedicalHistorySyncApi
 
   @Inject
+  lateinit var bloodPressureSyncApi: BloodPressureSyncApi
+
+  @Inject
+  lateinit var bloodSugarSyncApi: BloodSugarSyncApi
+
+  @Inject
+  lateinit var appointmentSyncApi: AppointmentSyncApi
+
+  @Inject
+  lateinit var prescribedDrugSyncApi: PrescriptionSyncApi
+
+  @Inject
   lateinit var lookupPatientOnline: LookupPatientOnline
+
+  private val currentUser by lazy { userSession.loggedInUserImmediate()!! }
 
   private val currentFacility by lazy { facilityRepository.currentFacilityImmediate()!! }
 
@@ -107,7 +135,14 @@ class LookupPatientOnlineApiIntegrationTest {
 
     val facilityFromOtherSyncGroup = facilitiesInOtherSyncGroup.random()
 
-    registerPatientAtFacility(identifier, patientId, facilityFromOtherSyncGroup)
+    registerPatientAtFacility(
+        identifier = identifier,
+        patientId = patientId,
+        facility = facilityFromOtherSyncGroup,
+        numberOfBloodPressures = 2,
+        numberOfBloodSugars = 3,
+        numberOfPrescribedDrugs = 4
+    )
 
     // when
     val result = lookupPatientOnline.lookupWithIdentifier(identifier) as LookupPatientOnline.Result.Found
@@ -119,12 +154,21 @@ class LookupPatientOnlineApiIntegrationTest {
     assertThat(medicalRecord.patient.patientUuid).isEqualTo(patientId)
     assertThat(medicalRecord.patient.businessIds.first().identifier.value).isEqualTo(identifier)
     assertThat(medicalRecord.patient.patient.retainUntil).isNotNull()
+    assertThat(medicalRecord.medicalHistory).isNotNull()
+    assertThat(medicalRecord.appointments).hasSize(1)
+    assertThat(medicalRecord.bloodPressures).hasSize(2)
+    assertThat(medicalRecord.bloodSugars).hasSize(3)
+    assertThat(medicalRecord.prescribedDrugs).hasSize(4)
   }
 
+  @Suppress("SameParameterValue")
   private fun registerPatientAtFacility(
       identifier: String,
       patientId: UUID,
-      facility: Facility
+      facility: Facility,
+      numberOfBloodPressures: Int,
+      numberOfBloodSugars: Int,
+      numberOfPrescribedDrugs: Int
   ) {
     val instant = Instant.now(clock)
 
@@ -166,5 +210,70 @@ class LookupPatientOnlineApiIntegrationTest {
     )
     val patientSyncResponse = patientSyncApi.push(PatientPushRequest(listOf(patientPayload))).execute()
     assertThat(patientSyncResponse.isSuccessful).isTrue()
+
+    val medicalHistoryPayload = TestData.medicalHistoryPayload(
+        uuid = UUID.randomUUID(),
+        patientUuid = patientId,
+        createdAt = instant,
+        updatedAt = instant
+    )
+    val medicalHistorySyncResponse = medicalHistorySyncApi.push(MedicalHistoryPushRequest(listOf(medicalHistoryPayload))).execute()
+    assertThat(medicalHistorySyncResponse.isSuccessful).isTrue()
+
+    val appointmentPayloads = listOf(
+        TestData.appointmentPayload(
+            uuid = UUID.randomUUID(),
+            patientUuid = patientId,
+            date = LocalDate.now(clock).plusDays(7),
+            status = Appointment.Status.Scheduled,
+            facilityUuid = facility.uuid,
+            creationFacilityUuid = facility.uuid,
+            cancelReason = null,
+            createdAt = instant,
+            updatedAt = instant
+        )
+    )
+    val appointmentSyncResponse = appointmentSyncApi.push(AppointmentPushRequest(appointmentPayloads)).execute()
+    assertThat(appointmentSyncResponse.isSuccessful).isTrue()
+
+    val bloodPressurePayloads = (1..numberOfBloodPressures).map {
+      TestData.bpPayload(
+          uuid = UUID.randomUUID(),
+          patientUuid = patientId,
+          userUuid = currentUser.uuid,
+          facilityUuid = facility.uuid,
+          createdAt = instant,
+          updatedAt = instant,
+          recordedAt = instant
+      )
+    }
+    val bloodPressureSyncResponse = bloodPressureSyncApi.push(BloodPressurePushRequest(bloodPressurePayloads)).execute()
+    assertThat(bloodPressureSyncResponse.isSuccessful).isTrue()
+
+    val bloodSugarPayloads = (1..numberOfBloodSugars).map {
+      TestData.bloodSugarPayload(
+          uuid = UUID.randomUUID(),
+          patientUuid = patientId,
+          userUuid = currentUser.uuid,
+          facilityUuid = facility.uuid,
+          createdAt = instant,
+          updatedAt = instant,
+          recordedAt = instant
+      )
+    }
+    val bloodSugarSyncResponse = bloodSugarSyncApi.push(BloodSugarPushRequest(bloodSugarPayloads)).execute()
+    assertThat(bloodSugarSyncResponse.isSuccessful).isTrue()
+
+    val prescribedDrugPayloads = (1..numberOfPrescribedDrugs).map {
+      TestData.prescriptionPayload(
+          uuid = UUID.randomUUID(),
+          patientUuid = patientId,
+          facilityUuid = facility.uuid,
+          createdAt = instant,
+          updatedAt = instant
+      )
+    }
+    val prescribedDrugSyncResponse = prescribedDrugSyncApi.push(PrescriptionPushRequest(prescribedDrugPayloads)).execute()
+    assertThat(prescribedDrugSyncResponse.isSuccessful).isTrue()
   }
 }

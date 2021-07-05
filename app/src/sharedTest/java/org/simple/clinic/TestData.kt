@@ -658,7 +658,7 @@ object TestData {
       facilityUuid: UUID = UUID.fromString("faec54dc-1c5d-4768-83c5-80e7f272f8fe"),
       creationFacilityUuid: UUID? = UUID.fromString("faec54dc-1c5d-4768-83c5-80e7f272f8fe"),
       status: Appointment.Status = Appointment.Status.random(),
-      cancelReason: AppointmentCancelReason = AppointmentCancelReason.random(),
+      cancelReason: AppointmentCancelReason? = AppointmentCancelReason.random(),
       remindOn: LocalDate? = null,
       agreedToVisit: Boolean? = null,
       appointmentType: Appointment.AppointmentType = Appointment.AppointmentType.random(),

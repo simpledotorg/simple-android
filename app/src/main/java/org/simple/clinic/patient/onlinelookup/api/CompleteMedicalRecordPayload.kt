@@ -84,7 +84,7 @@ data class CompleteMedicalRecordPayload(
     val bloodSugars: List<BloodSugarMeasurementPayload>,
 
     @Json(name = "medical_history")
-    val medicalHistory: MedicalHistoryPayload,
+    val medicalHistory: MedicalHistoryPayload?,
 
     @Json(name = "prescribed_drugs")
     val prescribedDrugs: List<PrescribedDrugPayload>,

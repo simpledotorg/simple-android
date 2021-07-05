@@ -8,7 +8,7 @@ import org.simple.clinic.overdue.Appointment
 
 data class CompleteMedicalRecord(
     val patient: PatientProfile,
-    val medicalHistory: MedicalHistory,
+    val medicalHistory: MedicalHistory?,
     val appointments: List<Appointment>,
     val bloodPressures: List<BloodPressureMeasurement>,
     val bloodSugars: List<BloodSugarMeasurement>,

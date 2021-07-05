@@ -705,7 +705,9 @@ class PatientRepository @Inject constructor(
   fun saveCompleteMedicalRecord(medicalRecord: CompleteMedicalRecord) {
     database.runInTransaction {
       saveRecords(listOf(medicalRecord.patient))
-      database.medicalHistoryDao().save(medicalRecord.medicalHistory)
+      if (medicalRecord.medicalHistory != null) {
+        database.medicalHistoryDao().save(medicalRecord.medicalHistory)
+      }
       database.bloodPressureDao().save(medicalRecord.bloodPressures)
       database.bloodSugarDao().save(medicalRecord.bloodSugars)
       database.appointmentDao().save(medicalRecord.appointments)

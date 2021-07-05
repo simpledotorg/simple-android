@@ -433,5 +433,11 @@ data class Patient(
       )
     """)
     abstract fun deletePatientsNotInFacilities(facilityIds: List<UUID>)
+
+    @Query("""
+        DELETE FROM Patient
+        WHERE deletedAt IS NOT NULL AND retainUntil > :now
+    """)
+    abstract fun purgeDeletedPatientAfterRetentionTime(now: Instant)
   }
 }

@@ -16,6 +16,7 @@ import org.simple.clinic.login.LoginUserWithOtpServerIntegrationTest
 import org.simple.clinic.medicalhistory.MedicalHistoryRepositoryAndroidTest
 import org.simple.clinic.overdue.AppointmentRepositoryAndroidTest
 import org.simple.clinic.patient.PatientRepositoryAndroidTest
+import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnlineApiIntegrationTest
 import org.simple.clinic.protocolv2.ProtocolRepositoryAndroidTest
 import org.simple.clinic.protocolv2.sync.ProtocolSyncAndroidTest
 import org.simple.clinic.rules.LocalAuthenticationRule
@@ -112,4 +113,5 @@ interface TestAppComponent {
   fun inject(target: TeleconsultRecordSyncIntegrationTest)
   fun inject(target: DeleteSyncGroupDatabaseAndroidTest)
   fun inject(target: ServerRegistrationAtFacilityRule)
+  fun inject(target: LookupPatientOnlineApiIntegrationTest)
 }

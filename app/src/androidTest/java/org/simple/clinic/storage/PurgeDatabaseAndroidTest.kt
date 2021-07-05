@@ -410,4 +410,41 @@ class PurgeDatabaseAndroidTest {
     assertThat(appointmentDao.getOne(visitedButUnsyncedAppointment.uuid)).isEqualTo(visitedButUnsyncedAppointment)
     assertThat(appointmentDao.getOne(appointmentWithUnknownStatus.uuid)).isEqualTo(appointmentWithUnknownStatus)
   }
+
+  @Test
+  fun purging_the_database_should_delete_soft_patients_when_retention_time_has_passed() {
+    // given
+    val patientWithPassedRetentionTime = TestData.patientProfile(
+        patientUuid = UUID.fromString("c3c84410-02f5-430e-a067-1830683a4d27"),
+        retainUntil = Instant.parse("2021-05-21T00:00:00Z"),
+        generateBusinessId = true,
+        generatePhoneNumber = true,
+        syncStatus = SyncStatus.DONE,
+        patientDeletedAt = Instant.parse("2021-02-21T00:00:00Z"),
+        patientAddressUuid = UUID.fromString("a5b8a711-a9e0-4474-8b9f-3b6193ec6001")
+    )
+
+    val patientWithNotPassedRetentionTime = TestData.patientProfile(
+        patientUuid = UUID.fromString("afaea7ee-22cc-4a27-9906-309a377f83be"),
+        retainUntil = Instant.parse("2022-01-05T00:00:00Z"),
+        syncStatus = SyncStatus.PENDING,
+        generateBusinessId = true,
+        generatePhoneNumber = true,
+    )
+
+    patientAddressDao.save(listOf(patientWithPassedRetentionTime.address, patientWithNotPassedRetentionTime.address))
+    patientDao.save(listOf(patientWithPassedRetentionTime.patient, patientWithNotPassedRetentionTime.patient))
+    phoneNumberDao.save(patientWithPassedRetentionTime.phoneNumbers + patientWithNotPassedRetentionTime.phoneNumbers)
+    businessIdDao.save(patientWithPassedRetentionTime.businessIds + patientWithNotPassedRetentionTime.businessIds )
+
+    assertThat(patientDao.patientProfileImmediate(patientWithPassedRetentionTime.patientUuid)).isEqualTo(patientWithPassedRetentionTime)
+    assertThat(patientDao.patientProfileImmediate(patientWithNotPassedRetentionTime.patientUuid)).isEqualTo(patientWithNotPassedRetentionTime)
+
+    // when
+    appDatabase.purge()
+
+    // then
+    assertThat(patientDao.patientProfileImmediate(patientWithPassedRetentionTime.patientUuid)).isNull()
+    assertThat(patientDao.patientProfileImmediate(patientWithNotPassedRetentionTime.patientUuid)).isEqualTo(patientWithNotPassedRetentionTime)
+  }
 }

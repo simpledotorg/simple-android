@@ -63,23 +63,7 @@ class LookupPatientOnline @Inject constructor(
 
     val medicalHistory = readMedicalHistoryFromResponse(response)
 
-    val appointments = response.appointments.map { payload ->
-      Appointment(
-          uuid = payload.uuid,
-          patientUuid = payload.patientUuid,
-          facilityUuid = payload.facilityUuid,
-          scheduledDate = payload.date,
-          status = payload.status,
-          cancelReason = payload.cancelReason,
-          remindOn = payload.remindOn,
-          agreedToVisit = payload.agreedToVisit,
-          appointmentType = payload.appointmentType,
-          syncStatus = SyncStatus.DONE,
-          createdAt = payload.createdAt,
-          updatedAt = payload.updatedAt,
-          deletedAt = payload.deletedAt,
-          creationFacilityUuid = payload.creationFacilityUuid)
-    }
+    val appointments = readAppointmentsFromResponse(response)
 
     val bloodPressures = response.bloodPressures.map { payload ->
       payload.toDatabaseModel(SyncStatus.DONE)
@@ -170,6 +154,26 @@ class LookupPatientOnline @Inject constructor(
       )
     } else {
       null
+    }
+  }
+
+  private fun readAppointmentsFromResponse(response: CompleteMedicalRecordPayload): List<Appointment> {
+    return response.appointments.map { payload ->
+      Appointment(
+          uuid = payload.uuid,
+          patientUuid = payload.patientUuid,
+          facilityUuid = payload.facilityUuid,
+          scheduledDate = payload.date,
+          status = payload.status,
+          cancelReason = payload.cancelReason,
+          remindOn = payload.remindOn,
+          agreedToVisit = payload.agreedToVisit,
+          appointmentType = payload.appointmentType,
+          syncStatus = SyncStatus.DONE,
+          createdAt = payload.createdAt,
+          updatedAt = payload.updatedAt,
+          deletedAt = payload.deletedAt,
+          creationFacilityUuid = payload.creationFacilityUuid)
     }
   }
 

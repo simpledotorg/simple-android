@@ -2,6 +2,7 @@ package org.simple.clinic.patient.onlinelookup.api
 
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
@@ -71,9 +72,7 @@ class LookupPatientOnline @Inject constructor(
 
     val bloodSugars = readBloodSugarsFromResponse(response)
 
-    val prescribedDrugs = response.prescribedDrugs.map { payload ->
-      payload.toDatabaseModel(SyncStatus.DONE)
-    }
+    val prescribedDrugs = readPrescribedDrugsFromResponse(response)
 
     return CompleteMedicalRecord(
         patient = patientProfile,
@@ -183,6 +182,12 @@ class LookupPatientOnline @Inject constructor(
 
   private fun readBloodSugarsFromResponse(response: CompleteMedicalRecordPayload): List<BloodSugarMeasurement> {
     return response.bloodSugars.map { payload ->
+      payload.toDatabaseModel(SyncStatus.DONE)
+    }
+  }
+
+  private fun readPrescribedDrugsFromResponse(response: CompleteMedicalRecordPayload): List<PrescribedDrug> {
+    return response.prescribedDrugs.map { payload ->
       payload.toDatabaseModel(SyncStatus.DONE)
     }
   }

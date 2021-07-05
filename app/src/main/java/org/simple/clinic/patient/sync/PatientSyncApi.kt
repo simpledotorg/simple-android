@@ -1,7 +1,7 @@
 package org.simple.clinic.patient.sync
 
 import org.simple.clinic.patient.onlinelookup.api.PatientOnlineLookupRequest
-import org.simple.clinic.patient.onlinelookup.api.PatientOnlineLookupResponsePayload
+import org.simple.clinic.patient.onlinelookup.api.CompleteMedicalRecordPayload
 import org.simple.clinic.sync.DataPushResponse
 import retrofit2.Call
 import retrofit2.http.Body
@@ -27,5 +27,5 @@ interface PatientSyncApi {
   @POST("v4/patients/lookup")
   fun lookup(
       @Body body: PatientOnlineLookupRequest
-  ): Call<PatientOnlineLookupResponsePayload>
+  ): Call<CompleteMedicalRecordPayload>
 }

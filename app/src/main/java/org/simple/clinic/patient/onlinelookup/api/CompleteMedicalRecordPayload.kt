@@ -19,7 +19,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 @JsonClass(generateAdapter = true)
-data class PatientOnlineLookupResponsePayload(
+data class CompleteMedicalRecordPayload(
     @Json(name = "id")
     val id: UUID,
 

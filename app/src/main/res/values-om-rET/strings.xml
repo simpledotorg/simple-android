@@ -278,6 +278,8 @@
   <string name="overduelist_visited">Daawwatameera</string>
   <string name="overduelist_high_risk">Saaxilbahii ol aanaa</string>
   <string name="overduelist_transferred">Dabarfameera gara</string>
+  <string name="overdue_download">Buusicha</string>
+  <string name="overdue_share">Raabsi</string>
 
   <!-- Facility change -->
 
@@ -333,7 +335,6 @@
   <string name="newmedicalhistory_no">Lakki</string>
   <string name="newmedicalhistory_history">Seenaa</string>
   <string name="newmedicalhistory_diagnosis">Qorannoo (Barbaadameera)</string>
-
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">Hin jiru</string>
   <string name="prescribed_drugs_dosage_remove">Balleessi</string>

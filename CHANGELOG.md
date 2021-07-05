@@ -4,6 +4,13 @@
 ### Features
 - [In Progress: 29 Jun 2021] Add support for finding a patient online from ID scan
 
+### Changes
+- [In Progress: 17 Jun 2021] Overdue list improvements
+  - Change overdue list UI
+  - Load overdue patients without phone number
+  - Add option to download & share overdue list
+
+## On Demo
 ### Internal
 - Migrate `OverdueAppointment` to add patients without phone number
 - Migrate `kotlinx.android.parcel` usage to `kotlinx.parcelize`
@@ -30,10 +37,6 @@
 - Show progress when loading overdue patient contact information
 - Tap outside or swipe to dismiss the bottom sheets
 - Tap outside to dismiss the dialogs
-- [In Progress: 17 Jun 2021] Overdue list improvements
-  - Change overdue list UI
-  - Load overdue patients without phone number
-  - Add option to download & share overdue list
 
 ## 2021-07-02-7847
 ### Internal

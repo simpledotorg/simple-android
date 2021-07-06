@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## Next Release
+### Internal
+- Bump Sentry Gradle plugin to v2.0.1
+
 ### Features
 - [In Progress: 06 Jul 2021] Add support for finding a patient online from ID scan
 

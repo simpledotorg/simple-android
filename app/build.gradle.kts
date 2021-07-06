@@ -18,9 +18,7 @@ plugins {
 }
 
 sentry {
-  autoProguardConfig = false
-  // We can disable auto upload of proguard mappings since we use -dontobfuscate when running proguard
-  autoUpload = false
+  autoUpload.set(false)
 }
 
 kapt {

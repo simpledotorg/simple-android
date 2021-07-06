@@ -4,6 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.simple.clinic.patient.onlinelookup.api.RetentionType.Permanent
 import org.simple.clinic.patient.onlinelookup.api.RetentionType.Temporary
+import org.simple.clinic.patient.onlinelookup.api.RetentionType.Unknown
 import java.time.Duration
 import java.time.Instant
 
@@ -21,6 +22,7 @@ data class RecordRetention(
     return when (type) {
       Temporary -> instant + retainFor!!
       Permanent -> null
+      Unknown -> null
     }
   }
 }

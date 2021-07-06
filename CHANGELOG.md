@@ -31,6 +31,7 @@
 - Replace `GITHUB_ACCESS_TOKEN` with `SERVICES_ACCESS_TOKEN`
 - Bump Sentry Gradle plugin to v2.0.1
 - Clean up `gradle.properties`
+- Extract product flavor build config fields into `defaultConfig`
 
 ### Changes
 - Updated translations: `pa-IN`, `hi-IN`, `te-IN`, `kn-IN`, `mr-IN`, `te-IN`, `sid-ET`, `kn-IN`, `ta-IN`, `bn-BD`, `bn_IN`, `so-ET`, `ti-ET`, `am-ET`, `ta-LK`, `om-ET`

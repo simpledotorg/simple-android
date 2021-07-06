@@ -19,7 +19,7 @@ object Versions {
   const val retrofit = "2.9.0"
   const val okHttp = "4.9.1"
   const val sentry = "4.3.0"
-  const val sentryGradlePlugin = "1.7.36"
+  const val sentryGradlePlugin = "2.0.1"
   const val flow = "1.0.0-alpha3"
   const val rxJava = "2.2.16"
   const val rxAndroid = "2.1.1"

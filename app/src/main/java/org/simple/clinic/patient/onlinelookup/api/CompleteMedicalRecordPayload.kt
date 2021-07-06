@@ -19,7 +19,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 @JsonClass(generateAdapter = true)
-data class PatientOnlineLookupResponsePayload(
+data class CompleteMedicalRecordPayload(
     @Json(name = "id")
     val id: UUID,
 
@@ -84,9 +84,9 @@ data class PatientOnlineLookupResponsePayload(
     val bloodSugars: List<BloodSugarMeasurementPayload>,
 
     @Json(name = "medical_history")
-    val medicalHistory: MedicalHistoryPayload,
+    val medicalHistory: MedicalHistoryPayload?,
 
-    @Json(name = "prescribed_drugs")
+    @Json(name = "prescription_drugs")
     val prescribedDrugs: List<PrescribedDrugPayload>,
 
     @Json(name = "retention")

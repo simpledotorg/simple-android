@@ -18,7 +18,7 @@ class RecordRetentionTest {
     val currentTime = Instant.parse("2018-01-01T09:33:05Z")
 
     // when
-    val retainUntil = retention.computeRetainUntilTimestamp(currentTime)
+    val retainUntil = retention.computeRetainUntilTimestamp(currentTime, Duration.ZERO)
 
     // then
     assertThat(retainUntil).isNotNull()
@@ -35,9 +35,27 @@ class RecordRetentionTest {
     val currentTime = Instant.parse("2018-01-01T00:00:00Z")
 
     // when
-    val retainUntil = retention.computeRetainUntilTimestamp(currentTime)
+    val retainUntil = retention.computeRetainUntilTimestamp(currentTime, Duration.ZERO)
 
     // then
     assertThat(retainUntil).isNull()
+  }
+
+  @Test
+  fun `when computing the time to retain a record of unknown retention type, the fallback retention period must be used`() {
+    // given
+    val retention = RecordRetention(
+        type = RetentionType.Unknown,
+        retainFor = Duration.ofHours(1)
+    )
+    val currentTime = Instant.parse("2018-01-01T00:00:00Z")
+    val fallbackRetentionDuration = Duration.ofMinutes(1)
+
+    // when
+    val retainUntil = retention.computeRetainUntilTimestamp(currentTime, fallbackRetentionDuration)
+
+    // then
+    assertThat(retainUntil).isNotNull()
+    assertThat(retainUntil).isEqualTo(Instant.parse("2018-01-01T00:01:00Z"))
   }
 }

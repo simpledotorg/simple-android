@@ -18,11 +18,11 @@ data class RecordRetention(
     val retainFor: Duration?
 ) {
 
-  fun computeRetainUntilTimestamp(instant: Instant): Instant? {
+  fun computeRetainUntilTimestamp(instant: Instant, fallbackRetentionDuration: Duration): Instant? {
     return when (type) {
       Temporary -> instant + retainFor!!
       Permanent -> null
-      Unknown -> null
+      Unknown -> instant + fallbackRetentionDuration
     }
   }
 }

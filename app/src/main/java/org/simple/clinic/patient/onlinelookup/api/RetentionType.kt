@@ -8,5 +8,8 @@ enum class RetentionType {
   Temporary,
 
   @Json(name = "permanent")
-  Permanent
+  Permanent,
+
+  // Fallback value for newly added enum types for older app versions
+  Unknown
 }

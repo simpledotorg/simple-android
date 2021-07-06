@@ -139,10 +139,6 @@ android {
     val fallbackApiEndpoint: String by project
 
     create("qa") {
-      val qaManifestEndpoint: String by project
-      val qaFallbackApiEndpoint: String by project
-      val qaMixpanelToken: String by project
-
       dimension = "track"
       applicationIdSuffix = ".qa"
       versionNameSuffix = "-qa"
@@ -154,10 +150,6 @@ android {
     }
 
     create("staging") {
-      val stagingManifestEndpoint: String by project
-      val stagingFallbackApiEndpoint: String by project
-      val stagingMixpanelToken: String by project
-
       dimension = "track"
       applicationIdSuffix = ".staging"
       versionNameSuffix = "-demo"
@@ -169,10 +161,6 @@ android {
     }
 
     create("sandbox") {
-      val sandboxManifestEndpoint: String by project
-      val sandboxFallbackApiEndpoint: String by project
-      val sandboxMixpanelToken: String by project
-
       dimension = "track"
       applicationIdSuffix = ".sandbox"
       versionNameSuffix = "-sandbox"
@@ -184,10 +172,6 @@ android {
     }
 
     create("security") {
-      val securityManifestEndpoint: String by project
-      val securityFallbackApiEndpoint: String by project
-      val securityMixpanelToken: String by project
-
       dimension = "track"
       applicationIdSuffix = ".security"
       versionNameSuffix = "-security"
@@ -199,10 +183,6 @@ android {
     }
 
     create("production") {
-      val productionManifestEndpoint: String by project
-      val productionFallbackApiEndpoint: String by project
-      val productionMixpanelToken: String by project
-
       dimension = "track"
       buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
       buildConfigField("String", "FALLBACK_ENDPOINT", "\"$fallbackApiEndpoint\"")

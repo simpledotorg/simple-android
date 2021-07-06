@@ -468,7 +468,8 @@ class ContactPatientUpdateTest {
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       remindAppointmentsIn: List<TimeToAppointment> = this.timeToAppointments,
-      mode: UiMode = UiMode.CallPatient
+      mode: UiMode = UiMode.CallPatient,
+      overdueListChangesFeatureEnabled: Boolean = false
   ): ContactPatientModel {
     val appointmentConfig = AppointmentConfig(
         appointmentDuePeriodForDefaulters = Period.ZERO,
@@ -483,7 +484,8 @@ class ContactPatientUpdateTest {
         appointmentConfig = appointmentConfig,
         userClock = clock,
         mode = mode,
-        secureCallFeatureEnabled = phoneMaskFeatureEnabled
+        secureCallFeatureEnabled = phoneMaskFeatureEnabled,
+        overdueListChangesFeatureEnabled = overdueListChangesFeatureEnabled
     )
   }
 }

@@ -136,75 +136,59 @@ android {
   flavorDimensions("track")
 
   productFlavors {
-    create("qa") {
-      val qaManifestEndpoint: String by project
-      val qaFallbackApiEndpoint: String by project
-      val qaMixpanelToken: String by project
+    val mixpanelToken: String by project
+    val manifestEndpoint: String by project
+    val fallbackApiEndpoint: String by project
 
+    create("qa") {
       dimension = "track"
       applicationIdSuffix = ".qa"
       versionNameSuffix = "-qa"
-      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$qaManifestEndpoint\"")
-      buildConfigField("String", "FALLBACK_ENDPOINT", "\"$qaFallbackApiEndpoint\"")
-      buildConfigField("String", "MIXPANEL_TOKEN", "\"$qaMixpanelToken\"")
+      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
+      buildConfigField("String", "FALLBACK_ENDPOINT", "\"$fallbackApiEndpoint\"")
+      buildConfigField("String", "MIXPANEL_TOKEN", "\"$mixpanelToken\"")
       buildConfigField("boolean", "DISABLE_SCREENSHOT", "false")
       buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", "true")
     }
 
     create("staging") {
-      val stagingManifestEndpoint: String by project
-      val stagingFallbackApiEndpoint: String by project
-      val stagingMixpanelToken: String by project
-
       dimension = "track"
       applicationIdSuffix = ".staging"
       versionNameSuffix = "-demo"
-      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$stagingManifestEndpoint\"")
-      buildConfigField("String", "FALLBACK_ENDPOINT", "\"$stagingFallbackApiEndpoint\"")
-      buildConfigField("String", "MIXPANEL_TOKEN", "\"$stagingMixpanelToken\"")
+      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
+      buildConfigField("String", "FALLBACK_ENDPOINT", "\"$fallbackApiEndpoint\"")
+      buildConfigField("String", "MIXPANEL_TOKEN", "\"$mixpanelToken\"")
       buildConfigField("boolean", "DISABLE_SCREENSHOT", "false")
       buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", "true")
     }
 
     create("sandbox") {
-      val sandboxManifestEndpoint: String by project
-      val sandboxFallbackApiEndpoint: String by project
-      val sandboxMixpanelToken: String by project
-
       dimension = "track"
       applicationIdSuffix = ".sandbox"
       versionNameSuffix = "-sandbox"
-      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$sandboxManifestEndpoint\"")
-      buildConfigField("String", "FALLBACK_ENDPOINT", "\"$sandboxFallbackApiEndpoint\"")
-      buildConfigField("String", "MIXPANEL_TOKEN", "\"$sandboxMixpanelToken\"")
+      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
+      buildConfigField("String", "FALLBACK_ENDPOINT", "\"$fallbackApiEndpoint\"")
+      buildConfigField("String", "MIXPANEL_TOKEN", "\"$mixpanelToken\"")
       buildConfigField("boolean", "DISABLE_SCREENSHOT", "false")
       buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", "true")
     }
 
     create("security") {
-      val securityManifestEndpoint: String by project
-      val securityFallbackApiEndpoint: String by project
-      val securityMixpanelToken: String by project
-
       dimension = "track"
       applicationIdSuffix = ".security"
       versionNameSuffix = "-security"
-      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$securityManifestEndpoint\"")
-      buildConfigField("String", "FALLBACK_ENDPOINT", "\"$securityFallbackApiEndpoint\"")
-      buildConfigField("String", "MIXPANEL_TOKEN", "\"$securityMixpanelToken\"")
+      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
+      buildConfigField("String", "FALLBACK_ENDPOINT", "\"$fallbackApiEndpoint\"")
+      buildConfigField("String", "MIXPANEL_TOKEN", "\"$mixpanelToken\"")
       buildConfigField("boolean", "DISABLE_SCREENSHOT", "true")
       buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", "false")
     }
 
     create("production") {
-      val productionManifestEndpoint: String by project
-      val productionFallbackApiEndpoint: String by project
-      val productionMixpanelToken: String by project
-
       dimension = "track"
-      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$productionManifestEndpoint\"")
-      buildConfigField("String", "FALLBACK_ENDPOINT", "\"$productionFallbackApiEndpoint\"")
-      buildConfigField("String", "MIXPANEL_TOKEN", "\"$productionMixpanelToken\"")
+      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
+      buildConfigField("String", "FALLBACK_ENDPOINT", "\"$fallbackApiEndpoint\"")
+      buildConfigField("String", "MIXPANEL_TOKEN", "\"$mixpanelToken\"")
       buildConfigField("boolean", "DISABLE_SCREENSHOT", "true")
       buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", "false")
     }

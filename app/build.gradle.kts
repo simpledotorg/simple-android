@@ -106,6 +106,7 @@ android {
     val sentryDsn: String by project
     val sentryEnvironment: String by project
     val mixpanelToken: String by project
+    val manifestEndpoint: String by project
 
     addManifestPlaceholders(mapOf(
         "sentryDsn" to sentryDsn,
@@ -113,6 +114,7 @@ android {
     ))
 
     buildConfigField("String", "MIXPANEL_TOKEN", "\"$mixpanelToken\"")
+    buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
   }
 
   buildTypes {
@@ -137,14 +139,12 @@ android {
   flavorDimensions("track")
 
   productFlavors {
-    val manifestEndpoint: String by project
     val fallbackApiEndpoint: String by project
 
     create("qa") {
       dimension = "track"
       applicationIdSuffix = ".qa"
       versionNameSuffix = "-qa"
-      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
       buildConfigField("String", "FALLBACK_ENDPOINT", "\"$fallbackApiEndpoint\"")
       buildConfigField("boolean", "DISABLE_SCREENSHOT", "false")
       buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", "true")
@@ -154,7 +154,6 @@ android {
       dimension = "track"
       applicationIdSuffix = ".staging"
       versionNameSuffix = "-demo"
-      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
       buildConfigField("String", "FALLBACK_ENDPOINT", "\"$fallbackApiEndpoint\"")
       buildConfigField("boolean", "DISABLE_SCREENSHOT", "false")
       buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", "true")
@@ -164,7 +163,6 @@ android {
       dimension = "track"
       applicationIdSuffix = ".sandbox"
       versionNameSuffix = "-sandbox"
-      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
       buildConfigField("String", "FALLBACK_ENDPOINT", "\"$fallbackApiEndpoint\"")
       buildConfigField("boolean", "DISABLE_SCREENSHOT", "false")
       buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", "true")
@@ -174,7 +172,6 @@ android {
       dimension = "track"
       applicationIdSuffix = ".security"
       versionNameSuffix = "-security"
-      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
       buildConfigField("String", "FALLBACK_ENDPOINT", "\"$fallbackApiEndpoint\"")
       buildConfigField("boolean", "DISABLE_SCREENSHOT", "true")
       buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", "false")
@@ -182,7 +179,6 @@ android {
 
     create("production") {
       dimension = "track"
-      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
       buildConfigField("String", "FALLBACK_ENDPOINT", "\"$fallbackApiEndpoint\"")
       buildConfigField("boolean", "DISABLE_SCREENSHOT", "true")
       buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", "false")

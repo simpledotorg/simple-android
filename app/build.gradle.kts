@@ -109,6 +109,7 @@ android {
     val manifestEndpoint: String by project
     val fallbackApiEndpoint: String by project
     val disableScreenshot: String by project
+    val allowRootedDevice: String by project
 
     addManifestPlaceholders(mapOf(
         "sentryDsn" to sentryDsn,
@@ -119,6 +120,7 @@ android {
     buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
     buildConfigField("String", "FALLBACK_ENDPOINT", "\"$fallbackApiEndpoint\"")
     buildConfigField("boolean", "DISABLE_SCREENSHOT", disableScreenshot)
+    buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", allowRootedDevice)
   }
 
   buildTypes {
@@ -147,33 +149,28 @@ android {
       dimension = "track"
       applicationIdSuffix = ".qa"
       versionNameSuffix = "-qa"
-      buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", "true")
     }
 
     create("staging") {
       dimension = "track"
       applicationIdSuffix = ".staging"
       versionNameSuffix = "-demo"
-      buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", "true")
     }
 
     create("sandbox") {
       dimension = "track"
       applicationIdSuffix = ".sandbox"
       versionNameSuffix = "-sandbox"
-      buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", "true")
     }
 
     create("security") {
       dimension = "track"
       applicationIdSuffix = ".security"
       versionNameSuffix = "-security"
-      buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", "false")
     }
 
     create("production") {
       dimension = "track"
-      buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", "false")
     }
   }
 

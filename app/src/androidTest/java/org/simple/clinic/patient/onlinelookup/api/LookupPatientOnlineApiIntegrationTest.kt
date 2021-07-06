@@ -3,16 +3,25 @@ package org.simple.clinic.patient.onlinelookup.api
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.TestData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.sync.MedicalHistorySyncApi
+import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.PatientPhoneNumberType
+import org.simple.clinic.patient.PatientStatus
+import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.sync.PatientPushRequest
 import org.simple.clinic.patient.sync.PatientSyncApi
 import org.simple.clinic.rules.ServerRegistrationAtFacilityRule
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUtcClock
+import java.time.Instant
 import java.time.LocalDate
+import java.util.UUID
 import javax.inject.Inject
 
 class LookupPatientOnlineApiIntegrationTest {
@@ -88,5 +97,74 @@ class LookupPatientOnlineApiIntegrationTest {
     return facilities
         .filter { it.groupUuid == registrationFacilityGroup }
         .random()
+  }
+
+  @Test
+  fun patient_registered_in_other_sync_group_should_be_fetched_in_online_lookup() {
+    // given
+    val patientId = UUID.randomUUID()
+    val identifier = UUID.randomUUID().toString()
+
+    val facilityFromOtherSyncGroup = facilitiesInOtherSyncGroup.random()
+
+    registerPatientAtFacility(identifier, patientId, facilityFromOtherSyncGroup)
+
+    // when
+    val result = lookupPatientOnline.lookupWithIdentifier(identifier) as LookupPatientOnline.Result.Found
+
+    // then
+    assertThat(result.medicalRecords).hasSize(1)
+
+    val medicalRecord = result.medicalRecords.first()
+    assertThat(medicalRecord.patient.patientUuid).isEqualTo(patientId)
+    assertThat(medicalRecord.patient.businessIds.first().identifier.value).isEqualTo(identifier)
+    assertThat(medicalRecord.patient.patient.retainUntil).isNotNull()
+  }
+
+  private fun registerPatientAtFacility(
+      identifier: String,
+      patientId: UUID,
+      facility: Facility
+  ) {
+    val instant = Instant.now(clock)
+
+    val patientAddressPayload = TestData.addressPayload(
+        uuid = UUID.randomUUID(),
+        createdAt = instant,
+        updatedAt = instant
+    )
+    val phoneNumbers = TestData.phoneNumberPayload(
+        uuid = UUID.randomUUID(),
+        type = PatientPhoneNumberType.Mobile,
+        createdAt = instant,
+        updatedAt = instant
+    )
+    val businessId = TestData.businessIdPayload(
+        uuid = UUID.randomUUID(),
+        identifier = identifier,
+        identifierType = Identifier.IdentifierType.BpPassport,
+        createdAt = instant,
+        updatedAt = instant
+    )
+    val patientPayload = TestData.patientPayload(
+        uuid = patientId,
+        fullName = "Anish Acharya",
+        gender = Gender.Male,
+        dateOfBirth = LocalDate.parse("1942-04-01"),
+        age = null,
+        ageUpdatedAt = null,
+        status = PatientStatus.Active,
+        createdAt = instant,
+        updatedAt = instant,
+        recordedAt = instant,
+        deletedReason = null,
+        registeredFacilityId = facility.uuid,
+        assignedFacilityId = facility.uuid,
+        address = patientAddressPayload,
+        phoneNumbers = listOf(phoneNumbers),
+        businessIds = listOf(businessId)
+    )
+    val patientSyncResponse = patientSyncApi.push(PatientPushRequest(listOf(patientPayload))).execute()
+    assertThat(patientSyncResponse.isSuccessful).isTrue()
   }
 }

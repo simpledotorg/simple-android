@@ -1,6 +1,7 @@
 package org.simple.clinic.di.network
 
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapters.EnumJsonAdapter
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -18,6 +19,7 @@ import org.simple.clinic.patient.ReminderConsent
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.onlinelookup.api.DurationFromSecondsMoshiAdapter
+import org.simple.clinic.patient.onlinelookup.api.RetentionType
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.scanid.IndiaNHIDDateOfBirthMoshiAdapter
@@ -68,6 +70,7 @@ class NetworkModule {
         .add(IndiaNHIDDateOfBirthMoshiAdapter())
         .add(IndiaNHIDGender.MoshiTypeAdapter())
         .add(DurationFromSecondsMoshiAdapter())
+        .add(RetentionType::class.java, EnumJsonAdapter.create(RetentionType::class.java).withUnknownFallback(RetentionType.Unknown))
         .build()
 
     val patientPayloadNullSerializingAdapter = moshi.adapter(PatientPayload::class.java).serializeNulls()

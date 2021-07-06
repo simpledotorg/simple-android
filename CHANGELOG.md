@@ -2,7 +2,7 @@
 
 ## Next Release
 ### Features
-- [In Progress: 29 Jun 2021] Add support for finding a patient online from ID scan
+- [In Progress: 06 Jul 2021] Add support for finding a patient online from ID scan
 
 ### Changes
 - [In Progress: 17 Jun 2021] Overdue list improvements

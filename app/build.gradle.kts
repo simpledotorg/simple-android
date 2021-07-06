@@ -135,6 +135,7 @@ android {
 
   productFlavors {
     val mixpanelToken: String by project
+    val manifestEndpoint: String by project
 
     create("qa") {
       val qaManifestEndpoint: String by project
@@ -144,7 +145,7 @@ android {
       dimension = "track"
       applicationIdSuffix = ".qa"
       versionNameSuffix = "-qa"
-      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$qaManifestEndpoint\"")
+      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
       buildConfigField("String", "FALLBACK_ENDPOINT", "\"$qaFallbackApiEndpoint\"")
       buildConfigField("String", "MIXPANEL_TOKEN", "\"$mixpanelToken\"")
       buildConfigField("boolean", "DISABLE_SCREENSHOT", "false")
@@ -159,7 +160,7 @@ android {
       dimension = "track"
       applicationIdSuffix = ".staging"
       versionNameSuffix = "-demo"
-      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$stagingManifestEndpoint\"")
+      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
       buildConfigField("String", "FALLBACK_ENDPOINT", "\"$stagingFallbackApiEndpoint\"")
       buildConfigField("String", "MIXPANEL_TOKEN", "\"$mixpanelToken\"")
       buildConfigField("boolean", "DISABLE_SCREENSHOT", "false")
@@ -174,7 +175,7 @@ android {
       dimension = "track"
       applicationIdSuffix = ".sandbox"
       versionNameSuffix = "-sandbox"
-      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$sandboxManifestEndpoint\"")
+      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
       buildConfigField("String", "FALLBACK_ENDPOINT", "\"$sandboxFallbackApiEndpoint\"")
       buildConfigField("String", "MIXPANEL_TOKEN", "\"$mixpanelToken\"")
       buildConfigField("boolean", "DISABLE_SCREENSHOT", "false")
@@ -189,7 +190,7 @@ android {
       dimension = "track"
       applicationIdSuffix = ".security"
       versionNameSuffix = "-security"
-      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$securityManifestEndpoint\"")
+      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
       buildConfigField("String", "FALLBACK_ENDPOINT", "\"$securityFallbackApiEndpoint\"")
       buildConfigField("String", "MIXPANEL_TOKEN", "\"$mixpanelToken\"")
       buildConfigField("boolean", "DISABLE_SCREENSHOT", "true")
@@ -202,7 +203,7 @@ android {
       val productionMixpanelToken: String by project
 
       dimension = "track"
-      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$productionManifestEndpoint\"")
+      buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
       buildConfigField("String", "FALLBACK_ENDPOINT", "\"$productionFallbackApiEndpoint\"")
       buildConfigField("String", "MIXPANEL_TOKEN", "\"$mixpanelToken\"")
       buildConfigField("boolean", "DISABLE_SCREENSHOT", "true")

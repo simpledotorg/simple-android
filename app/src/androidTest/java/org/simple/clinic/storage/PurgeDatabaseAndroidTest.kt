@@ -447,4 +447,45 @@ class PurgeDatabaseAndroidTest {
     assertThat(patientDao.patientProfileImmediate(patientWithPassedRetentionTime.patientUuid)).isNull()
     assertThat(patientDao.patientProfileImmediate(patientWithNotPassedRetentionTime.patientUuid)).isEqualTo(patientWithNotPassedRetentionTime)
   }
+
+  @Test
+  fun purging_the_database_should_hard_delete_blood_pressure_measurements_when_patient_is_null() {
+    // given
+    val deletedPatientUuid = UUID.fromString("1f86c321-5539-44f8-8708-3bcc0e44feed")
+    val syncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("73f22e49-669e-4959-843e-7684622c4184"),
+        generateBusinessId = false,
+        syncStatus = SyncStatus.DONE
+    )
+    val notSyncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("ee60db3e-9ecb-49aa-829c-474f707b3739"),
+        generateBusinessId = false,
+        syncStatus = SyncStatus.PENDING
+    )
+    val deletedBloodPressureMeasurement = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("aa2c81ce-236c-4e4a-9ebd-f88a31afb15d"),
+        patientUuid = deletedPatientUuid,
+        syncStatus = SyncStatus.DONE
+    )
+    val notDeletedBloodPressureMeasurement = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("34ab2f90-9332-4743-925e-3088a23a933d"),
+        patientUuid = syncedPatientProfile.patientUuid,
+        syncStatus = SyncStatus.DONE,
+        deletedAt = null
+    )
+
+    patientAddressDao.save(listOf(syncedPatientProfile.address, notSyncedPatientProfile.address))
+    patientDao.save(listOf(syncedPatientProfile.patient, notSyncedPatientProfile.patient))
+    bloodPressureDao.save(listOf(deletedBloodPressureMeasurement, notDeletedBloodPressureMeasurement))
+
+    assertThat(bloodPressureDao.getOne(deletedBloodPressureMeasurement.uuid)).isEqualTo(deletedBloodPressureMeasurement)
+    assertThat(bloodPressureDao.getOne(notDeletedBloodPressureMeasurement.uuid)).isEqualTo(notDeletedBloodPressureMeasurement)
+
+    // when
+    appDatabase.purge()
+
+    // then
+    assertThat(bloodPressureDao.getOne(deletedBloodPressureMeasurement.uuid)).isNull()
+    assertThat(bloodPressureDao.getOne(notDeletedBloodPressureMeasurement.uuid)).isEqualTo(notDeletedBloodPressureMeasurement)
+  }
 }

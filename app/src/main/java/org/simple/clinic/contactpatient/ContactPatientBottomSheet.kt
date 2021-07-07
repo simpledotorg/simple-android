@@ -14,6 +14,7 @@ import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetContactPatientBinding
 import org.simple.clinic.datepicker.DatePickerKeyFactory
@@ -23,6 +24,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature.OverdueListChanges
 import org.simple.clinic.feature.Feature.SecureCalling
 import org.simple.clinic.feature.Features
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.navigation.v2.ExpectsResult
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -40,11 +42,16 @@ import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.util.valueOrEmpty
+import java.time.Instant
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Named
 
 class ContactPatientBottomSheet : BaseBottomSheet<
     ContactPatientBottomSheet.Key,
@@ -73,6 +80,10 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
   @Inject
   lateinit var appointmentConfig: AppointmentConfig
+
+  @Inject
+  @Named("date_for_user_input")
+  lateinit var dateTimeFormatter: DateTimeFormatter
 
   @Inject
   lateinit var features: Features
@@ -174,6 +185,41 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
   override fun renderPatientDetails_Old(name: String, gender: Gender, age: Int, phoneNumber: String) {
     callPatientView_Old.renderPatientDetails(name, gender, age, phoneNumber)
+  }
+
+  override fun renderPatientDetails(
+      name: String,
+      gender: Gender,
+      age: Int,
+      phoneNumber: String?,
+      patientAddress: String,
+      registeredFacility: String,
+      diagnosedWithDiabetes: Answer?,
+      diagnosisWithHypertension: Answer?,
+      lastVisited: Instant
+  ) {
+    callPatientView.renderPatientDetails(
+        name,
+        gender,
+        age,
+        phoneNumber.valueOrEmpty(),
+        patientAddress,
+        registeredFacility,
+        diagnosisText(diagnosedWithDiabetes, diagnosisWithHypertension),
+        dateTimeFormatter.format(lastVisited.toLocalDateAtZone(userClock.zone)),
+        if(phoneNumber.isNullOrEmpty()) getString(R.string.contactpatient_result) else getString(R.string.contactpatient_result_of_call)
+    )
+  }
+
+  private fun diagnosisText(diagnosedWithDiabetes: Answer?, diagnosedWithHypertension: Answer?): String {
+    return listOf(
+        diagnosedWithDiabetes to getString(R.string.contactpatient_diagnosis_diabetes),
+        diagnosedWithHypertension to getString(R.string.contactpatient_diagnosis_hypertension)
+    )
+        .filter { (answer, _) -> answer is Answer.Yes }
+        .map { (_, diagnosisTitle) -> diagnosisTitle }
+        .ifEmpty { listOf(getString(R.string.contactpatient_diagnosis_none)) }
+        .joinToString()
   }
 
   override fun showCallResultSection_Old() {

@@ -329,6 +329,7 @@
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s day overdue</item>
     <item quantity="other">%s days overdue</item>
+
   </plurals>
   <string name="overdue_list_item_village">Village</string>
   <string name="overduelist_diagnosis_label">Dx</string>
@@ -606,6 +607,10 @@
   <string name="contactpatient_call_later_in">Call later in</string>
   <string name="contactpatient_change">Change</string>
   <string name="contactpatient_done">Done</string>
+  <string name="contactpatient_diagnosis_diabetes">Diabetes</string>
+  <string name="contactpatient_diagnosis_hypertension">Hypertension</string>
+  <string name="contactpatient_diagnosis_none">None</string>
+  <string name="contactpatient_result">Result</string>
   <plurals name="contactpatient_days">
     <item quantity="one">%s day</item>
     <item quantity="other">%s days</item>

@@ -11,6 +11,7 @@ import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureHistoryListItemDataSourceFactory
@@ -24,6 +25,7 @@ import org.simple.clinic.databinding.ScreenBpHistoryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
@@ -211,5 +213,14 @@ class BloodPressureHistoryScreen(
         .ofType<BloodPressureHistoryItemClicked>()
         .map { it.measurement }
         .map(::BloodPressureClicked)
+  }
+
+  @Parcelize
+  data class Key(
+      val patientId: UUID,
+      override val analyticsName: String = "Blood Pressure History"
+  ) : ScreenKey() {
+
+    override fun instantiateFragment() = BloodPressureHistoryScreen()
   }
 }

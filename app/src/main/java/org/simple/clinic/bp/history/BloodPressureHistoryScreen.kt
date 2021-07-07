@@ -189,11 +189,11 @@ class BloodPressureHistoryScreen : BaseScreen<
 
   private fun setupBloodPressureHistoryList() {
     val dividerMargin = 8.dp
-    val divider = DividerItemDecorator(context = context, marginStart = dividerMargin, marginEnd = dividerMargin)
+    val divider = DividerItemDecorator(context = requireContext(), marginStart = dividerMargin, marginEnd = dividerMargin)
 
     bpHistoryList.apply {
       setHasFixedSize(true)
-      layoutManager = LinearLayoutManager(context)
+      layoutManager = LinearLayoutManager(requireContext())
       addItemDecoration(divider)
       adapter = bloodPressureHistoryAdapter
     }
@@ -211,13 +211,13 @@ class BloodPressureHistoryScreen : BaseScreen<
   }
 
   override fun openBloodPressureEntrySheet(patientUuid: UUID) {
-    val intent = BloodPressureEntrySheet.intentForNewBp(context, patientUuid)
-    context.startActivity(intent)
+    val intent = BloodPressureEntrySheet.intentForNewBp(requireContext(), patientUuid)
+    requireContext().startActivity(intent)
   }
 
   override fun openBloodPressureUpdateSheet(bpUuid: UUID) {
-    val intent = BloodPressureEntrySheet.intentForUpdateBp(context, bpUuid)
-    context.startActivity(intent)
+    val intent = BloodPressureEntrySheet.intentForUpdateBp(requireContext(), bpUuid)
+    requireContext().startActivity(intent)
   }
 
   @SuppressLint("CheckResult")

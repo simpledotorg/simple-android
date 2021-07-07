@@ -11,6 +11,7 @@ interface ContactPatientUi {
   fun switchToCallPatientView()
 
   fun switchToSetAppointmentReminderView_Old()
+  fun switchToSetAppointmentReminderView()
 
   fun renderPatientDetails_Old(name: String, gender: Gender, age: Int, phoneNumber: String)
   fun renderPatientDetails(

@@ -7,6 +7,7 @@
 - Extract product flavor build config fields into `defaultConfig`
 - Bump Material Design Components to v1.4.0
 - Add ADRs for SQL performance profiling
+- Bump sqlite-android version to 3.36.0
 
 ### Features
 - [In Progress: 06 Jul 2021] Add support for finding a patient online from ID scan

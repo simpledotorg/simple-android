@@ -7,7 +7,7 @@ object Versions {
 
   const val supportLib = "1.0.0"
   const val recyclerView = "1.0.0"
-  const val material = "1.3.0"
+  const val material = "1.4.0"
   const val cardview = "1.0.0"
   const val room = "2.3.0"
   const val androidXTestExt = "1.1.1"

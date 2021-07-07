@@ -5,6 +5,7 @@
 - Bump Sentry Gradle plugin to v2.0.1
 - Clean up `gradle.properties`
 - Extract product flavor build config fields into `defaultConfig`
+- Bump Material Design Components to v1.4.0
 
 ### Features
 - [In Progress: 06 Jul 2021] Add support for finding a patient online from ID scan

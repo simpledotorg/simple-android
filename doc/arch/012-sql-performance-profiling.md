@@ -1,7 +1,7 @@
 # ADR 012: SQL Performance Profiling
 
 ## Status
-Accepted on 2021-05-17.
+Superceded by [013](./013-sql-performance-profiling-v2.md) on 2021-06-14.
 
 ## Context
 The Simple Android app is driven almost entirely by the local database. While this is great for the application's reliability in inconsistent or poor network conditions, this can also be a problem in the event of running expensive database queries when the amount of data being queried is large.

@@ -3,7 +3,6 @@ package org.simple.clinic.bp.history
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +24,6 @@ import org.simple.clinic.databinding.ListBpHistoryItemBinding
 import org.simple.clinic.databinding.ListNewBpButtonBinding
 import org.simple.clinic.databinding.ScreenBpHistoryBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -37,7 +35,6 @@ import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.PagingItemAdapter_old
 import org.simple.clinic.widgets.dp
@@ -95,30 +92,6 @@ class BloodPressureHistoryScreen : BaseScreen<
       )
   )
 
-  private val events: Observable<BloodPressureHistoryScreenEvent> by unsafeLazy {
-    Observable
-        .merge(
-            addNewBpClicked(),
-            bloodPressureClicked()
-        )
-        .compose(ReportAnalyticsEvents())
-        .cast()
-  }
-
-  private val uiRenderer = BloodPressureHistoryScreenUiRenderer(this)
-
-  private val delegate: MobiusDelegate<BloodPressureHistoryScreenModel, BloodPressureHistoryScreenEvent, BloodPressureHistoryScreenEffect> by unsafeLazy {
-    val screenKey = screenKeyProvider.keyFor<BloodPressureHistoryScreenKey>(this)
-    MobiusDelegate.forView(
-        events = events,
-        defaultModel = BloodPressureHistoryScreenModel.create(screenKey.patientUuid),
-        init = BloodPressureHistoryScreenInit(),
-        update = BloodPressureHistoryScreenUpdate(),
-        effectHandler = effectHandler.create(this).build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
-
   private val bpHistoryList
     get() = binding.bpHistoryList
 
@@ -158,33 +131,6 @@ class BloodPressureHistoryScreen : BaseScreen<
 
     setupBloodPressureHistoryList()
     handleToolbarBackClick()
-  }
-
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
-    context.injector<BloodPressureHistoryScreenInjector>().inject(this)
-
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun setupBloodPressureHistoryList() {

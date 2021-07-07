@@ -1,17 +1,20 @@
 package org.simple.clinic.bp.history
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.asFlow
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.rx2.asObservable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -98,6 +101,8 @@ class BloodPressureHistoryScreen : BaseScreen<
   private val toolbar
     get() = binding.toolbar
 
+  private val disposable = CompositeDisposable()
+
   override fun events() = Observable
       .merge(
           addNewBpClicked(),
@@ -133,6 +138,11 @@ class BloodPressureHistoryScreen : BaseScreen<
     handleToolbarBackClick()
   }
 
+  override fun onDestroyView() {
+    super.onDestroyView()
+    disposable.dispose()
+  }
+
   private fun setupBloodPressureHistoryList() {
     val dividerMargin = 8.dp
     val divider = DividerItemDecorator(context = requireContext(), marginStart = dividerMargin, marginEnd = dividerMargin)
@@ -166,13 +176,18 @@ class BloodPressureHistoryScreen : BaseScreen<
     requireContext().startActivity(intent)
   }
 
-  @SuppressLint("CheckResult")
   override fun showBloodPressures(dataSourceFactory: BloodPressureHistoryListItemDataSourceFactory) {
-    val detaches = detaches()
+    // TODO: Remove this once Paging 3 implementation is added for blood pressure history.
+    val detaches = viewLifecycleOwnerLiveData
+        .asFlow()
+        .mapNotNull { it }
+        .asObservable()
+        .filter { it.lifecycle.currentState == Lifecycle.State.DESTROYED }
+        .map { Unit }
+
     // Initial load size hint should be a multiple of page size
-    dataSourceFactory.toObservable(config = measurementHistoryPaginationConfig, detaches = detaches)
-        .takeUntil(detaches)
-        .subscribe(bloodPressureHistoryAdapter::submitList)
+    disposable.add(dataSourceFactory.toObservable(config = measurementHistoryPaginationConfig, detaches = detaches)
+        .subscribe(bloodPressureHistoryAdapter::submitList))
   }
 
   private fun displayNameGenderAge(name: String, gender: Gender, age: Int) {

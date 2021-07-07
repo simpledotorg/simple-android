@@ -65,7 +65,7 @@ class ScanSimpleIdEffectHandlerTest {
     // given
     val expectedJson = """
     {
-    "hidn":"1234123456785678",
+    "hidn":"12-3412-3456-7856",
     "hid":"Mohit",
     "name":"Mohit Ahuja",
     "gender":"M",
@@ -75,17 +75,19 @@ class ScanSimpleIdEffectHandlerTest {
     "address":"Obvious HQ"
      }
      """
-    val indiaNHIDInfoPayload = TestData.indiaNHIDInfoPayload()
+    val indiaNHIDInfoPayload = TestData.indiaNHIDInfoPayload(
+        healthIdNumber = "12-3412-3456-7856"
+    )
 
     whenever(qrCodeJsonParser.parseQRCodeJson(expectedJson)) doReturn indiaNHIDInfoPayload
     val patientPrefillInfo = indiaNHIDInfoPayload.toPatientPrefillInfo()
-    val indiaNHIDInfo = indiaNHIDInfoPayload.healthIdNumber
+    val healthIdNumber = "12341234567856"
 
     // when
     testCase.dispatch(ParseScannedJson(expectedJson))
 
     // then
-    testCase.assertOutgoingEvents(ScannedQRCodeJsonParsed(patientPrefillInfo, indiaNHIDInfo))
+    testCase.assertOutgoingEvents(ScannedQRCodeJsonParsed(patientPrefillInfo, healthIdNumber))
     verifyZeroInteractions(uiActions)
   }
 

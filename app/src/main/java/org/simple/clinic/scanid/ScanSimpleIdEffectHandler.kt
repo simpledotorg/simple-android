@@ -67,7 +67,9 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
     return when (country.isoCountryCode) {
       Country.INDIA -> {
         val payload = qrCodeJsonParser.parseQRCodeJson(effect.text)
-        ScannedQRCodeJsonParsed(payload?.toPatientPrefillInfo(), payload?.healthIdNumber)
+        val healthIdNumber = payload?.healthIdNumber?.filter { it.isDigit() }
+
+        ScannedQRCodeJsonParsed(payload?.toPatientPrefillInfo(), healthIdNumber)
       }
       else -> InvalidQrCode
     }

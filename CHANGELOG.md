@@ -38,6 +38,9 @@
 - Tap outside or swipe to dismiss the bottom sheets
 - Tap outside to dismiss the dialogs
 
+### Fixes
+- Fix invalid qr code error when scanning a valid Indian NHID
+
 ## 2021-07-02-7847
 ### Internal
 - Use single list adapter in `InstantSearchScreen`

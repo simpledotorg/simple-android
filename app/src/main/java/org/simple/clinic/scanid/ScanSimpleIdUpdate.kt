@@ -55,7 +55,7 @@ class ScanSimpleIdUpdate @Inject constructor(
       model: ScanSimpleIdModel
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> =
       if (healthIdNumberIsValid(healthIdNumber)) {
-        val identifier = Identifier(healthIdNumber.filter { it.isDigit() }, IndiaNationalHealthId)
+        val identifier = Identifier(healthIdNumber, IndiaNationalHealthId)
         next(model = model.searching().patientPrefillInfoChanged(patientPrefillInfo), SearchPatientByIdentifier(identifier))
       } else {
         next(model = model.notSearching().invalidQrCode())

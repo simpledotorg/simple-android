@@ -15,7 +15,8 @@
   - Change overdue list UI
   - Load overdue patients without phone number
   - Add option to download & share overdue list
-  
+  - Update `ContactPatientBottomSheet` Behaviour
+
 ## On Demo
 ### Internal
 - Migrate `OverdueAppointment` to add patients without phone number

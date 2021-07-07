@@ -235,6 +235,10 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     callPatientView_Old.secureCallingSectionVisible = false
   }
 
+  override fun hideSecureCallUi() {
+    callPatientView.secureCallingSectionVisible = false
+  }
+
   override fun showPatientWithNoPhoneNumberUi() {
     callPatientView.showPatientWithNoPhoneNumberLayout = true
   }

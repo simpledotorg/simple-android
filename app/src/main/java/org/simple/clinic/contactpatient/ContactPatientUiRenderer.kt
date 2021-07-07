@@ -84,8 +84,11 @@ class ContactPatientUiRenderer(
   }
 
   private fun loadSecureCallingUi(model: ContactPatientModel) {
-    if (model.secureCallingFeatureEnabled)
+    if (model.secureCallingFeatureEnabled) {
       ui.showSecureCallUi()
+    } else {
+      ui.hideSecureCallUi()
+    }
   }
 
   private fun toggleStateOfReminderDateSteppers(model: ContactPatientModel) {

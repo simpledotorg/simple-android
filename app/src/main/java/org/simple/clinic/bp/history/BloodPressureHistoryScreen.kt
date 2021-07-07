@@ -1,10 +1,9 @@
 package org.simple.clinic.bp.history
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Parcelable
-import android.util.AttributeSet
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.detaches
@@ -26,6 +25,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
@@ -43,10 +43,12 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class BloodPressureHistoryScreen(
-    context: Context,
-    attrs: AttributeSet
-) : ConstraintLayout(context, attrs), BloodPressureHistoryScreenUi, BloodPressureHistoryScreenUiActions {
+class BloodPressureHistoryScreen : BaseScreen<
+    BloodPressureHistoryScreen.Key,
+    ScreenBpHistoryBinding,
+    BloodPressureHistoryScreenModel,
+    BloodPressureHistoryScreenEvent,
+    BloodPressureHistoryScreenEffect>(), BloodPressureHistoryScreenUi, BloodPressureHistoryScreenUiActions {
 
   @Inject
   lateinit var utcClock: UtcClock
@@ -114,20 +116,40 @@ class BloodPressureHistoryScreen(
     )
   }
 
-  private var binding: ScreenBpHistoryBinding? = null
-
   private val bpHistoryList
-    get() = binding!!.bpHistoryList
+    get() = binding.bpHistoryList
 
   private val toolbar
-    get() = binding!!.toolbar
+    get() = binding.toolbar
+
+  override fun events() = Observable
+      .merge(
+          addNewBpClicked(),
+          bloodPressureClicked()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<BloodPressureHistoryScreenEvent>()
+
+  override fun defaultModel() = BloodPressureHistoryScreenModel.create(screenKey.patientId)
+
+  override fun createInit() = BloodPressureHistoryScreenInit()
+
+  override fun createUpdate() = BloodPressureHistoryScreenUpdate()
+
+  override fun createEffectHandler() = effectHandler.create(this).build()
+
+  override fun uiRenderer() = BloodPressureHistoryScreenUiRenderer(this)
+
+  override fun bindView(
+      layoutInflater: LayoutInflater,
+      container: ViewGroup?
+  ) = ScreenBpHistoryBinding.inflate(layoutInflater, container, false)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
       return
     }
-    binding = ScreenBpHistoryBinding.bind(this)
     context.injector<BloodPressureHistoryScreenInjector>().inject(this)
 
     setupBloodPressureHistoryList()
@@ -140,7 +162,6 @@ class BloodPressureHistoryScreen(
   }
 
   override fun onDetachedFromWindow() {
-    binding = null
     delegate.stop()
     super.onDetachedFromWindow()
   }

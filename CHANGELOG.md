@@ -16,6 +16,9 @@
   - Load overdue patients without phone number
   - Add option to download & share overdue list
   
+### Fixes
+- Fix invalid qr code error when scanning a valid Indian NHID
+  
 ## On Demo
 ### Internal
 - Migrate `OverdueAppointment` to add patients without phone number

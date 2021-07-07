@@ -1,8 +1,11 @@
 package org.simple.clinic.bp.history
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -145,6 +148,18 @@ class BloodPressureHistoryScreen : BaseScreen<
       container: ViewGroup?
   ) = ScreenBpHistoryBinding.inflate(layoutInflater, container, false)
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<BloodPressureHistoryScreenInjector>().inject(this)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+
+    setupBloodPressureHistoryList()
+    handleToolbarBackClick()
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -152,8 +167,6 @@ class BloodPressureHistoryScreen : BaseScreen<
     }
     context.injector<BloodPressureHistoryScreenInjector>().inject(this)
 
-    setupBloodPressureHistoryList()
-    handleToolbarBackClick()
   }
 
   override fun onAttachedToWindow() {

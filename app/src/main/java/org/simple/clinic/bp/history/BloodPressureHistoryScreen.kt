@@ -218,4 +218,8 @@ class BloodPressureHistoryScreen : BaseScreen<
 
     override fun instantiateFragment() = BloodPressureHistoryScreen()
   }
+
+  interface Injector {
+    fun inject(target: BloodPressureHistoryScreen)
+  }
 }

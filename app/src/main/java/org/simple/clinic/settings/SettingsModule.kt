@@ -35,7 +35,8 @@ class SettingsModule {
         ProvidedLanguage(displayName = "ትግርኛ", languageCode = "ti-ET"),
         ProvidedLanguage(displayName = "Afan Oromo", languageCode = "om-ET"),
         ProvidedLanguage(displayName = "አማርኛ", languageCode = "am-ET"),
-        ProvidedLanguage(displayName = "தமிழ்", languageCode = "ta-IN"),
+        ProvidedLanguage(displayName = "தமிழ் (இந்தியா)", languageCode = "ta-IN"),
+        ProvidedLanguage(displayName = "தமிழ் (இலங்கை)", languageCode = "ta-LK"),
         ProvidedLanguage(displayName = "Soomaali", languageCode = "so-ET"),
         ProvidedLanguage(displayName = "Sidama", languageCode = "sid-ET")
     )

@@ -128,7 +128,7 @@ class BloodPressureHistoryScreen : BaseScreen<
 
   override fun onAttach(context: Context) {
     super.onAttach(context)
-    context.injector<BloodPressureHistoryScreenInjector>().inject(this)
+    context.injector<Injector>().inject(this)
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

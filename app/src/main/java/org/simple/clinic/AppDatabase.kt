@@ -209,7 +209,11 @@ abstract class AppDatabase : RoomDatabase() {
         purgeDeletedBloodPressureMeasurementWhenPatientIsNull()
       }
 
-      bloodSugarDao().purgeDeleted()
+      with(bloodSugarDao()) {
+        purgeDeleted()
+        purgeDeletedBloodSugarMeasurementWhenPatientIsNull()
+      }
+
       prescriptionDao().purgeDeleted()
       medicalHistoryDao().purgeDeleted()
 

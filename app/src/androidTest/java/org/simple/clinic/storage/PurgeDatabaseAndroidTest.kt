@@ -488,4 +488,43 @@ class PurgeDatabaseAndroidTest {
     assertThat(bloodPressureDao.getOne(deletedBloodPressureMeasurement.uuid)).isNull()
     assertThat(bloodPressureDao.getOne(notDeletedBloodPressureMeasurement.uuid)).isEqualTo(notDeletedBloodPressureMeasurement)
   }
+
+  @Test
+  fun purging_the_database_should_hard_delete_blood_sugar_measurements_when_patient_is_null() {
+    // given
+    val deletedPatientUuid = UUID.fromString("1f86c321-5539-44f8-8708-3bcc0e44feed")
+    val syncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("b5ae0427-4513-41f9-87ad-127166f35916"),
+        syncStatus = SyncStatus.DONE
+    )
+    val notSyncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("1bd41323-9abc-4c3a-908f-6902a19fe26b"),
+        syncStatus = SyncStatus.PENDING
+    )
+    val deletedBloodSugarMeasurement = TestData.bloodSugarMeasurement(
+        uuid = UUID.fromString("d6530f41-c4be-455c-b5c3-c388e451d3c4"),
+        patientUuid = deletedPatientUuid,
+        deletedAt = Instant.parse("2021-07-01T00:00:00Z"),
+        syncStatus = SyncStatus.DONE
+    )
+    val notDeletedBloodSugarMeasurement = TestData.bloodSugarMeasurement(
+        uuid = UUID.fromString("489b6439-b424-487e-a01a-7ebd48628421"),
+        patientUuid = syncedPatientProfile.patientUuid,
+        syncStatus = SyncStatus.PENDING
+    )
+
+    patientAddressDao.save(listOf(syncedPatientProfile.address, notSyncedPatientProfile.address))
+    patientDao.save(listOf(syncedPatientProfile.patient, notSyncedPatientProfile.patient))
+    bloodSugarDao.save(listOf(deletedBloodSugarMeasurement, notDeletedBloodSugarMeasurement))
+
+    assertThat(bloodSugarDao.getOne(deletedBloodSugarMeasurement.uuid)).isEqualTo(deletedBloodSugarMeasurement)
+    assertThat(bloodSugarDao.getOne(notDeletedBloodSugarMeasurement.uuid)).isEqualTo(notDeletedBloodSugarMeasurement)
+
+    // when
+    appDatabase.purge()
+
+    // then
+    assertThat(bloodSugarDao.getOne(deletedBloodSugarMeasurement.uuid)).isNull()
+    assertThat(bloodSugarDao.getOne(notDeletedBloodSugarMeasurement.uuid)).isEqualTo(notDeletedBloodSugarMeasurement)
+  }
 }

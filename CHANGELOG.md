@@ -32,6 +32,7 @@
 - Bump Rx preferences to v2.0.1
 - Bump Lottie to v3.7.2
 - Bump Lint to v27.2.2.
+- Support compression of HTTP request bodies using Gzip
 - [In Progress: 22 Jul 2021] Use `MobiusLoopViewModel` for sending view effects that are lifecycle aware
   - Replace `MobiusLoop.Controller` with `MobiusLoopViewModel` in base screens
   - Add new interface for handling received view effects

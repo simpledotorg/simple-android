@@ -94,8 +94,8 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   private val contentFlipper
     get() = binding.contentFlipper
 
-  private val callPatientView
-    get() = binding.callPatientView
+  private val callPatientView_Old
+    get() = binding.callPatientViewOld
 
   private val setAppointmentReminderView
     get() = binding.setAppointmentReminderView
@@ -177,27 +177,27 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   }
 
   override fun renderPatientDetails(name: String, gender: Gender, age: Int, phoneNumber: String) {
-    callPatientView.renderPatientDetails(name, gender, age, phoneNumber)
+    callPatientView_Old.renderPatientDetails(name, gender, age, phoneNumber)
   }
 
   override fun showCallResultSection() {
     fadeIn(contentFlipper)
 
-    callPatientView.callResultSectionVisible = true
+    callPatientView_Old.callResultSectionVisible = true
   }
 
   override fun hideCallResultSection() {
     fadeIn(contentFlipper)
 
-    callPatientView.callResultSectionVisible = false
+    callPatientView_Old.callResultSectionVisible = false
   }
 
   override fun showSecureCallUi() {
-    callPatientView.secureCallingSectionVisible = true
+    callPatientView_Old.secureCallingSectionVisible = true
   }
 
   override fun hideSecureCallUi() {
-    callPatientView.secureCallingSectionVisible = false
+    callPatientView_Old.secureCallingSectionVisible = false
   }
 
   override fun directlyCallPatient(patientPhoneNumber: String, dialer: Dialer) {
@@ -252,14 +252,14 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   }
 
   override fun switchToCallPatientView() {
-    callPatientView.visibility = VISIBLE
+    callPatientView_Old.visibility = VISIBLE
     setAppointmentReminderView.visibility = GONE
   }
 
   override fun switchToSetAppointmentReminderView() {
     sharedAxis(contentFlipper)
 
-    callPatientView.visibility = GONE
+    callPatientView_Old.visibility = GONE
     setAppointmentReminderView.visibility = VISIBLE
   }
 
@@ -284,33 +284,33 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
   private fun normalCallClicks(): Observable<ContactPatientEvent> {
     return Observable.create { emitter ->
-      emitter.setCancellable { callPatientView.normalCallButtonClicked = null }
+      emitter.setCancellable { callPatientView_Old.normalCallButtonClicked = null }
 
-      callPatientView.normalCallButtonClicked = { emitter.onNext(NormalCallClicked()) }
+      callPatientView_Old.normalCallButtonClicked = { emitter.onNext(NormalCallClicked()) }
     }
   }
 
   private fun secureCallClicks(): Observable<ContactPatientEvent> {
     return Observable.create { emitter ->
-      emitter.setCancellable { callPatientView.secureCallButtonClicked = null }
+      emitter.setCancellable { callPatientView_Old.secureCallButtonClicked = null }
 
-      callPatientView.secureCallButtonClicked = { emitter.onNext(SecureCallClicked()) }
+      callPatientView_Old.secureCallButtonClicked = { emitter.onNext(SecureCallClicked()) }
     }
   }
 
   private fun agreedToVisitClicks(): Observable<ContactPatientEvent> {
     return Observable.create { emitter ->
-      emitter.setCancellable { callPatientView.agreedToVisitClicked = null }
+      emitter.setCancellable { callPatientView_Old.agreedToVisitClicked = null }
 
-      callPatientView.agreedToVisitClicked = { emitter.onNext(PatientAgreedToVisitClicked) }
+      callPatientView_Old.agreedToVisitClicked = { emitter.onNext(PatientAgreedToVisitClicked) }
     }
   }
 
   private fun remindToCallLaterClicks(): Observable<ContactPatientEvent> {
     return Observable.create { emitter ->
-      emitter.setCancellable { callPatientView.remindToCallLaterClicked = null }
+      emitter.setCancellable { callPatientView_Old.remindToCallLaterClicked = null }
 
-      callPatientView.remindToCallLaterClicked = { emitter.onNext(RemindToCallLaterClicked) }
+      callPatientView_Old.remindToCallLaterClicked = { emitter.onNext(RemindToCallLaterClicked) }
     }
   }
 
@@ -348,9 +348,9 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
   private fun removeFromOverdueListClicks(): Observable<ContactPatientEvent> {
     return Observable.create { emitter ->
-      emitter.setCancellable { callPatientView.removeFromOverdueListClicked = null }
+      emitter.setCancellable { callPatientView_Old.removeFromOverdueListClicked = null }
 
-      callPatientView.removeFromOverdueListClicked = { emitter.onNext(RemoveFromOverdueListClicked) }
+      callPatientView_Old.removeFromOverdueListClicked = { emitter.onNext(RemoveFromOverdueListClicked) }
     }
   }
 

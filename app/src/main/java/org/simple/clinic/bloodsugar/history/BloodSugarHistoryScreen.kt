@@ -1,6 +1,5 @@
 package org.simple.clinic.bloodsugar.history
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -175,7 +174,6 @@ class BloodSugarHistoryScreen : BaseScreen<
     activity.startActivity(intent)
   }
 
-  @SuppressLint("CheckResult")
   override fun showBloodSugars(dataSourceFactory: BloodSugarHistoryListItemDataSourceFactory) {
     // TODO: Remove this once Paging 3 implementation is added for blood sugar history.
     val detaches = viewLifecycleOwnerLiveData
@@ -186,9 +184,8 @@ class BloodSugarHistoryScreen : BaseScreen<
         .map { Unit }
 
     // Initial load size hint should be a multiple of page size
-    dataSourceFactory.toObservable(config = measurementHistoryPaginationConfig, detaches = detaches)
-        .takeUntil(detaches)
-        .subscribe(bloodSugarHistoryAdapter::submitList)
+    disposable.add(dataSourceFactory.toObservable(config = measurementHistoryPaginationConfig, detaches = detaches)
+        .subscribe(bloodSugarHistoryAdapter::submitList))
   }
 
   private fun displayNameGenderAge(name: String, gender: Gender, age: Int) {

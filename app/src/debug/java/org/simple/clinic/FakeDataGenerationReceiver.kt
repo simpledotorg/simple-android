@@ -119,7 +119,7 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
     return (1..recordsToGenerate)
         .map {
           val facility = if (Random.nextFloat() > 0.5) currentFacility else otherFacility
-          generatePatientRecord(user, facility)
+          generatePatientRecord(user, currentFacility)
         }
         .toList()
   }
@@ -221,7 +221,7 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
         updatedAt = timestamp,
         deletedAt = null,
         recordedAt = timestamp,
-        syncStatus = SyncStatus.DONE,
+        syncStatus = SyncStatus.PENDING,
         reminderConsent = ReminderConsent.Granted,
         deletedReason = null,
         registeredFacilityId = null,

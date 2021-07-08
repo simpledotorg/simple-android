@@ -8,12 +8,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.asFlow
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.rx2.asObservable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -177,7 +180,13 @@ class BloodSugarHistoryScreen : BaseScreen<
 
     context.injector<Injector>().inject(this)
 
-    val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
+    val screenDestroys: Observable<ScreenDestroyed> = viewLifecycleOwnerLiveData
+        .asFlow()
+        .mapNotNull { it }
+        .asObservable()
+        .filter { it.lifecycle.currentState == Lifecycle.State.DESTROYED }
+        .map { ScreenDestroyed() }
+
     openEntrySheetAfterTypeIsSelected(screenDestroys)
 
     handleToolbarBackClick()
@@ -220,7 +229,14 @@ class BloodSugarHistoryScreen : BaseScreen<
 
   @SuppressLint("CheckResult")
   override fun showBloodSugars(dataSourceFactory: BloodSugarHistoryListItemDataSourceFactory) {
-    val detaches = detaches()
+    // TODO: Remove this once Paging 3 implementation is added for blood sugar history.
+    val detaches = viewLifecycleOwnerLiveData
+        .asFlow()
+        .mapNotNull { it }
+        .asObservable()
+        .filter { it.lifecycle.currentState == Lifecycle.State.DESTROYED }
+        .map { Unit }
+
     // Initial load size hint should be a multiple of page size
     dataSourceFactory.toObservable(config = measurementHistoryPaginationConfig, detaches = detaches)
         .takeUntil(detaches)

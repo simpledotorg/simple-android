@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +31,6 @@ import org.simple.clinic.databinding.ListBloodSugarHistoryItemBinding
 import org.simple.clinic.databinding.ListNewBloodSugarButtonBinding
 import org.simple.clinic.databinding.ScreenBloodSugarHistoryBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -48,7 +46,6 @@ import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryConfig
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.extractSuccessful
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.PagingItemAdapter_old
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -101,17 +98,11 @@ class BloodSugarHistoryScreen : BaseScreen<
   @Inject
   lateinit var screenKeyProvider: ScreenKeyProvider
 
-  private var binding: ScreenBloodSugarHistoryBinding? = null
-
   private val toolbar
-    get() = binding!!.toolbar
+    get() = binding.toolbar
 
   private val bloodSugarHistoryList
-    get() = binding!!.bloodSugarHistoryList
-
-  private val screenKey by unsafeLazy {
-    screenKeyProvider.keyFor<BloodSugarHistoryScreenKey>(this)
-  }
+    get() = binding.bloodSugarHistoryList
 
   private val bloodSugarHistoryAdapter = PagingItemAdapter_old(
       diffCallback = BloodSugarHistoryListItemDiffCallback(),
@@ -125,30 +116,7 @@ class BloodSugarHistoryScreen : BaseScreen<
       )
   )
 
-  private val events: Observable<BloodSugarHistoryScreenEvent> by unsafeLazy {
-    Observable
-        .merge(
-            addNewBloodSugarClicked(),
-            bloodPressureClicked()
-        )
-        .compose(ReportAnalyticsEvents())
-        .cast<BloodSugarHistoryScreenEvent>()
-  }
-
-  private val uiRenderer = BloodSugarHistoryScreenUiRenderer(this)
-
-  private val delegate: MobiusDelegate<BloodSugarHistoryScreenModel, BloodSugarHistoryScreenEvent, BloodSugarHistoryScreenEffect> by unsafeLazy {
-    MobiusDelegate.forView(
-        events = events,
-        defaultModel = BloodSugarHistoryScreenModel.create(screenKey.patientUuid),
-        init = BloodSugarHistoryScreenInit(),
-        update = BloodSugarHistoryScreenUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
-
-  override fun defaultModel() = BloodSugarHistoryScreenModel.create(screenKey.patientUuid)
+  override fun defaultModel() = BloodSugarHistoryScreenModel.create(screenKey.patientId)
 
   override fun createInit() = BloodSugarHistoryScreenInit()
 
@@ -189,34 +157,6 @@ class BloodSugarHistoryScreen : BaseScreen<
 
     handleToolbarBackClick()
     setupBloodSugarHistoryList()
-  }
-
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
-
-    binding = ScreenBloodSugarHistoryBinding.bind(this)
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    binding = null
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   override fun showPatientInformation(patient: Patient) {
@@ -284,7 +224,7 @@ class BloodSugarHistoryScreen : BaseScreen<
   }
 
   private fun showBloodSugarEntrySheet(intent: Intent) {
-    val patientUuid = screenKey.patientUuid
+    val patientUuid = screenKey.patientId
 
     val intentForNewBloodSugar = BloodSugarEntrySheet.intentForNewBloodSugar(
         requireContext(),

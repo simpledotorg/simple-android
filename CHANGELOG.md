@@ -9,6 +9,7 @@
 - Add ADRs for SQL performance profiling
 - Bump sqlite-android version to 3.36.0
 - Add `minWidth` for phone number text input layout in `screen_registration_phone`
+- Add `Drug`s table
 
 ### Features
 - [In Progress: 06 Jul 2021] Add support for finding a patient online from ID scan

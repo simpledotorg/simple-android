@@ -1,6 +1,7 @@
 package org.simple.clinic.bloodsugar.history
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
@@ -170,16 +171,13 @@ class BloodSugarHistoryScreen : BaseScreen<
       container: ViewGroup?
   ) = ScreenBloodSugarHistoryBinding.inflate(layoutInflater, container, false)
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
-
-    binding = ScreenBloodSugarHistoryBinding.bind(this)
-
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     val screenDestroys: Observable<ScreenDestroyed> = viewLifecycleOwnerLiveData
         .asFlow()
         .mapNotNull { it }
@@ -191,6 +189,15 @@ class BloodSugarHistoryScreen : BaseScreen<
 
     handleToolbarBackClick()
     setupBloodSugarHistoryList()
+  }
+
+  override fun onFinishInflate() {
+    super.onFinishInflate()
+    if (isInEditMode) {
+      return
+    }
+
+    binding = ScreenBloodSugarHistoryBinding.bind(this)
   }
 
   override fun onAttachedToWindow() {

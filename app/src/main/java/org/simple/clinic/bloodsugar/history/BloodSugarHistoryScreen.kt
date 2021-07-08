@@ -13,6 +13,7 @@ import androidx.lifecycle.asFlow
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.coroutines.flow.mapNotNull
@@ -48,7 +49,6 @@ import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.PagingItemAdapter_old
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.dp
 import java.time.format.DateTimeFormatter
 import java.util.UUID
@@ -116,6 +116,8 @@ class BloodSugarHistoryScreen : BaseScreen<
       )
   )
 
+  private val disposable = CompositeDisposable()
+
   override fun defaultModel() = BloodSugarHistoryScreenModel.create(screenKey.patientId)
 
   override fun createInit() = BloodSugarHistoryScreenInit()
@@ -146,17 +148,16 @@ class BloodSugarHistoryScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    val screenDestroys: Observable<ScreenDestroyed> = viewLifecycleOwnerLiveData
-        .asFlow()
-        .mapNotNull { it }
-        .asObservable()
-        .filter { it.lifecycle.currentState == Lifecycle.State.DESTROYED }
-        .map { ScreenDestroyed() }
 
-    openEntrySheetAfterTypeIsSelected(screenDestroys)
-
+    openEntrySheetAfterTypeIsSelected()
     handleToolbarBackClick()
     setupBloodSugarHistoryList()
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    disposable.dispose()
+    disposable.clear()
   }
 
   override fun showPatientInformation(patient: Patient) {
@@ -213,14 +214,12 @@ class BloodSugarHistoryScreen : BaseScreen<
     }
   }
 
-  @SuppressLint("CheckResult")
-  private fun openEntrySheetAfterTypeIsSelected(onDestroys: Observable<ScreenDestroyed>) {
-    screenResults
+  private fun openEntrySheetAfterTypeIsSelected() {
+    disposable.add(screenResults
         .streamResults()
         .ofType<ActivityResult>()
         .extractSuccessful(TYPE_PICKER_SHEET) { intent -> intent }
-        .takeUntil(onDestroys)
-        .subscribe(::showBloodSugarEntrySheet)
+        .subscribe(::showBloodSugarEntrySheet))
   }
 
   private fun showBloodSugarEntrySheet(intent: Intent) {

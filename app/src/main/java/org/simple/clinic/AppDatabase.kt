@@ -8,6 +8,8 @@ import androidx.room.TypeConverters
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.drugs.Drug
+import org.simple.clinic.drugs.DrugCategory
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
@@ -52,6 +54,7 @@ import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.room.InstantRoomTypeConverter
 import org.simple.clinic.util.room.LocalDateRoomTypeConverter
 import org.simple.clinic.util.room.UuidRoomTypeConverter
+import org.simple.clinic.drugs.Answer as DrugAnswer
 
 @Database(
     entities = [
@@ -74,13 +77,14 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
       TeleconsultationFacilityInfo::class,
       MedicalOfficer::class,
       TeleconsultationFacilityMedicalOfficersCrossRef::class,
-      TeleconsultRecord::class
+      TeleconsultRecord::class,
+      Drug::class
     ],
     views = [
       OverdueAppointment::class,
       PatientSearchResult::class
     ],
-    version = 91,
+    version = 92,
     exportSchema = true
 )
 @TypeConverters(
@@ -107,7 +111,9 @@ import org.simple.clinic.util.room.UuidRoomTypeConverter
     TeleconsultationType.RoomTypeConverter::class,
     RoomTypeConverter::class,
     User.CapabilityStatus.RoomTypeConverter::class,
-    TeleconsultStatus.RoomTypeConverter::class
+    TeleconsultStatus.RoomTypeConverter::class,
+    DrugCategory.RoomTypeConverter::class,
+    DrugAnswer.RoomTypeConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
 

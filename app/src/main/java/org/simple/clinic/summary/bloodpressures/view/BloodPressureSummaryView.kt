@@ -18,7 +18,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
-import org.simple.clinic.bp.history.BloodPressureHistoryScreenKey
+import org.simple.clinic.bp.history.BloodPressureHistoryScreen
 import org.simple.clinic.databinding.PatientsummaryBpsummaryContentBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
@@ -26,7 +26,6 @@ import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
@@ -231,7 +230,7 @@ class BloodPressureSummaryView(
   }
 
   override fun showBloodPressureHistoryScreen(patientUuid: UUID) {
-    router.push(BloodPressureHistoryScreenKey(patientUuid).wrap())
+    router.push(BloodPressureHistoryScreen.Key(patientUuid))
   }
 
   override fun registerSummaryModelUpdateCallback(callback: PatientSummaryModelUpdateCallback?) {

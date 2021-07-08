@@ -294,4 +294,8 @@ class BloodSugarHistoryScreen : BaseScreen<
 
     override fun instantiateFragment() = BloodSugarHistoryScreen()
   }
+
+  interface Injector {
+    fun inject(target: BloodSugarHistoryScreen)
+  }
 }

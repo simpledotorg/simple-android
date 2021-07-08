@@ -88,7 +88,8 @@
         <com.google.android.material.textfield.TextInputLayout
           style="@style/Widget.Simple.TextField.Layout.Large"
           android:layout_width="match_parent"
-          android:layout_height="wrap_content">
+          android:layout_height="wrap_content"
+          android:minWidth="@dimen/spacing_150">
 
           <com.google.android.material.textfield.TextInputEditText
             android:id="@id/phoneNumberEditText"
@@ -99,7 +100,8 @@
             android:inputType="phone"
             android:maxLength="10"
             android:minEms="6"
-            tools:ignore="Autofill" />
+            tools:ignore="Autofill"
+            tools:text="1234567890" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

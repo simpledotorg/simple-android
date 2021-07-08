@@ -1,12 +1,11 @@
 package org.simple.clinic.bloodsugar.history
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.os.Parcelable
-import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.detaches
@@ -30,6 +29,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
@@ -52,10 +52,12 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class BloodSugarHistoryScreen(
-    context: Context,
-    attrs: AttributeSet
-) : ConstraintLayout(context, attrs), BloodSugarHistoryScreenUi, BloodSugarHistoryScreenUiActions {
+class BloodSugarHistoryScreen : BaseScreen<
+    BloodSugarHistoryScreen.Key,
+    ScreenBloodSugarHistoryBinding,
+    BloodSugarHistoryScreenModel,
+    BloodSugarHistoryScreenEvent,
+    BloodSugarHistoryScreenEffect>(), BloodSugarHistoryScreenUi, BloodSugarHistoryScreenUiActions {
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -139,6 +141,29 @@ class BloodSugarHistoryScreen(
         modelUpdateListener = uiRenderer::render
     )
   }
+
+  override fun defaultModel() = BloodSugarHistoryScreenModel.create(screenKey.patientUuid)
+
+  override fun createInit() = BloodSugarHistoryScreenInit()
+
+  override fun createUpdate() = BloodSugarHistoryScreenUpdate()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+
+  override fun uiRenderer() = BloodSugarHistoryScreenUiRenderer(this)
+
+  override fun events() = Observable
+      .merge(
+          addNewBloodSugarClicked(),
+          bloodPressureClicked()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<BloodSugarHistoryScreenEvent>()
+
+  override fun bindView(
+      layoutInflater: LayoutInflater,
+      container: ViewGroup?
+  ) = ScreenBloodSugarHistoryBinding.inflate(layoutInflater, container, false)
 
   override fun onFinishInflate() {
     super.onFinishInflate()

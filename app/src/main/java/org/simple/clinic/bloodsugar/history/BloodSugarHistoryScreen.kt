@@ -2,8 +2,10 @@ package org.simple.clinic.bloodsugar.history
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.paging.PagedList
@@ -207,12 +209,12 @@ class BloodSugarHistoryScreen : BaseScreen<
   }
 
   override fun openBloodSugarEntrySheet(patientUuid: UUID) {
-    val intent = BloodSugarTypePickerSheet.intent(context)
+    val intent = BloodSugarTypePickerSheet.intent(requireContext())
     activity.startActivityForResult(intent, TYPE_PICKER_SHEET)
   }
 
   override fun openBloodSugarUpdateSheet(measurement: BloodSugarMeasurement) {
-    val intent = BloodSugarEntrySheet.intentForUpdateBloodSugar(context, measurement.uuid, measurement.reading.type)
+    val intent = BloodSugarEntrySheet.intentForUpdateBloodSugar(requireContext(), measurement.uuid, measurement.reading.type)
     activity.startActivity(intent)
   }
 
@@ -238,11 +240,11 @@ class BloodSugarHistoryScreen : BaseScreen<
 
   private fun setupBloodSugarHistoryList() {
     val dividerMargin = 8.dp
-    val divider = DividerItemDecorator(context = context, marginStart = dividerMargin, marginEnd = dividerMargin)
+    val divider = DividerItemDecorator(context = requireContext(), marginStart = dividerMargin, marginEnd = dividerMargin)
 
     bloodSugarHistoryList.apply {
       setHasFixedSize(true)
-      layoutManager = LinearLayoutManager(context)
+      layoutManager = LinearLayoutManager(requireContext())
       addItemDecoration(divider)
       adapter = bloodSugarHistoryAdapter
     }
@@ -262,7 +264,7 @@ class BloodSugarHistoryScreen : BaseScreen<
     val patientUuid = screenKey.patientUuid
 
     val intentForNewBloodSugar = BloodSugarEntrySheet.intentForNewBloodSugar(
-        context,
+        requireContext(),
         patientUuid,
         BloodSugarTypePickerSheet.selectedBloodSugarType(intent)
     )

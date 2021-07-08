@@ -220,6 +220,7 @@ abstract class AppDatabase : RoomDatabase() {
       with(appointmentDao()) {
         purgeDeleted()
         purgeUnusedAppointments()
+        purgeDeletedAppointmentsWhenPatientIsNull()
       }
     }
   }

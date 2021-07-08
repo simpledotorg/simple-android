@@ -527,4 +527,43 @@ class PurgeDatabaseAndroidTest {
     assertThat(bloodSugarDao.getOne(deletedBloodSugarMeasurement.uuid)).isNull()
     assertThat(bloodSugarDao.getOne(notDeletedBloodSugarMeasurement.uuid)).isEqualTo(notDeletedBloodSugarMeasurement)
   }
+
+  @Test
+  fun purging_the_database_should_hard_delete_appointments_when_patient_is_null() {
+    // given
+    val deletedPatientUuid = UUID.fromString("1f86c321-5539-44f8-8708-3bcc0e44feed")
+    val syncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("4913a16c-9ae8-4f20-9c0b-f13c8b61d8ed"),
+        syncStatus = SyncStatus.DONE
+    )
+    val notSyncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("a96e1db3-e958-44f7-8d15-b4fed44d3cf6"),
+        syncStatus = SyncStatus.PENDING
+    )
+    val deletedAppointment = TestData.appointment(
+        uuid = UUID.fromString("efdbcafb-91ac-4902-854f-3a2f61af77f8"),
+        patientUuid = deletedPatientUuid,
+        deletedAt = Instant.parse("2021-07-01T00:00:00Z"),
+        syncStatus = SyncStatus.DONE
+    )
+    val notDeletedAppointment = TestData.appointment(
+        uuid = UUID.fromString("dd7b94dd-5dc7-465b-a040-ca5e14571274"),
+        patientUuid = syncedPatientProfile.patientUuid,
+        syncStatus = SyncStatus.PENDING
+    )
+
+    patientAddressDao.save(listOf(syncedPatientProfile.address, notSyncedPatientProfile.address))
+    patientDao.save(listOf(syncedPatientProfile.patient, notSyncedPatientProfile.patient))
+    appointmentDao.save(listOf(deletedAppointment, notDeletedAppointment))
+
+    assertThat(appointmentDao.getOne(deletedAppointment.uuid)).isEqualTo(deletedAppointment)
+    assertThat(appointmentDao.getOne(notDeletedAppointment.uuid)).isEqualTo(notDeletedAppointment)
+
+    // when
+    appDatabase.purge()
+
+    // then
+    assertThat(appointmentDao.getOne(deletedAppointment.uuid)).isNull()
+    assertThat(appointmentDao.getOne(notDeletedAppointment.uuid)).isEqualTo(notDeletedAppointment)
+  }
 }

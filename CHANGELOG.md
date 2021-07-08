@@ -16,6 +16,7 @@
 - [In Progress: 06 Jul 2021] Add support for finding a patient online from ID scan
 
 ### Changes
+- New supported language: Tamil (Sri Lanka) [`ta-LK`], Sinhala [`si-LK`]
 - [In Progress: 17 Jun 2021] Overdue list improvements
   - Change overdue list UI
   - Load overdue patients without phone number
@@ -47,7 +48,6 @@
 
 ### Changes
 - Updated translations: `pa-IN`, `hi-IN`, `te-IN`, `kn-IN`, `mr-IN`, `te-IN`, `sid-ET`, `kn-IN`, `ta-IN`, `bn-BD`, `bn_IN`, `so-ET`, `ti-ET`, `am-ET`, `ta-LK`, `om-ET`
-- New supported language: Tamil (Sri Lanka) [`ta-LK`]
 - Click on overdue patient to open patient summary
 - Show progress when loading overdue patient contact information
 - Tap outside or swipe to dismiss the bottom sheets

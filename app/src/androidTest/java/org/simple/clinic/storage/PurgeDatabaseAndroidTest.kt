@@ -605,4 +605,43 @@ class PurgeDatabaseAndroidTest {
     assertThat(medicalHistoryDao.getOne(deletedMedicalHistory.uuid)).isNull()
     assertThat(medicalHistoryDao.getOne(notDeletedMedicalHistory.uuid)).isEqualTo(notDeletedMedicalHistory)
   }
+
+  @Test
+  fun purging_the_database_should_hard_delete_prescribed_drug_when_patient_is_null() {
+    // given
+    val deletedPatientUuid = UUID.fromString("1f86c321-5539-44f8-8708-3bcc0e44feed")
+    val syncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("de68afab-4a8b-449a-a2b5-34cce216c5c8"),
+        syncStatus = SyncStatus.DONE
+    )
+    val notSyncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("a0af7179-e214-486f-96a7-273bb9492390"),
+        syncStatus = SyncStatus.PENDING
+    )
+    val deletedPrescribedDrug = TestData.prescription(
+        uuid = UUID.fromString("f96ca4e2-75d6-4de4-b3ff-84dbaeb61c0a"),
+        patientUuid = deletedPatientUuid,
+        deletedAt = Instant.parse("2021-06-04T00:00:00Z"),
+        syncStatus = SyncStatus.DONE
+    )
+    val notDeletedPrescribedDrug = TestData.prescription(
+        uuid = UUID.fromString("b7d1280a-535f-4342-89ef-e2ec7b639da3"),
+        patientUuid = syncedPatientProfile.patientUuid,
+        syncStatus = SyncStatus.PENDING
+    )
+
+    patientAddressDao.save(listOf(syncedPatientProfile.address, notSyncedPatientProfile.address))
+    patientDao.save(listOf(syncedPatientProfile.patient, notSyncedPatientProfile.patient))
+    prescribedDrugsDao.save(listOf(deletedPrescribedDrug, notDeletedPrescribedDrug))
+
+    assertThat(prescribedDrugsDao.getOne(deletedPrescribedDrug.uuid)).isEqualTo(deletedPrescribedDrug)
+    assertThat(prescribedDrugsDao.getOne(notDeletedPrescribedDrug.uuid)).isEqualTo(notDeletedPrescribedDrug)
+
+    // when
+    appDatabase.purge()
+
+    // then
+    assertThat(prescribedDrugsDao.getOne(deletedPrescribedDrug.uuid)).isNull()
+    assertThat(prescribedDrugsDao.getOne(notDeletedPrescribedDrug.uuid)).isEqualTo(notDeletedPrescribedDrug)
+  }
 }

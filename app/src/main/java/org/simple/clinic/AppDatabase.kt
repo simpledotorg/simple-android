@@ -215,12 +215,16 @@ abstract class AppDatabase : RoomDatabase() {
       }
 
       prescriptionDao().purgeDeleted()
-      medicalHistoryDao().purgeDeleted()
 
       with(appointmentDao()) {
         purgeDeleted()
         purgeUnusedAppointments()
         purgeDeletedAppointmentsWhenPatientIsNull()
+      }
+
+      with(medicalHistoryDao()){
+        purgeDeleted()
+        purgeDeletedMedicalHistoryWhenPatientIsNull()
       }
     }
   }

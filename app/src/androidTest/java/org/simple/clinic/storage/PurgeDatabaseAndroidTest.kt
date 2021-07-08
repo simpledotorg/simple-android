@@ -566,4 +566,43 @@ class PurgeDatabaseAndroidTest {
     assertThat(appointmentDao.getOne(deletedAppointment.uuid)).isNull()
     assertThat(appointmentDao.getOne(notDeletedAppointment.uuid)).isEqualTo(notDeletedAppointment)
   }
+
+  @Test
+  fun purging_the_database_should_hard_delete_medical_history_when_patient_is_null() {
+    // given
+    val deletedPatientUuid = UUID.fromString("1f86c321-5539-44f8-8708-3bcc0e44feed")
+    val syncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("baab44dc-84df-4fa5-b445-14e8ab2d5488"),
+        syncStatus = SyncStatus.DONE
+    )
+    val notSyncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("1a758240-fe2e-4a93-a84f-c7481e09aff6"),
+        syncStatus = SyncStatus.PENDING
+    )
+    val deletedMedicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("04ad54d5-e561-4629-ab3f-d4d6cd7a7500"),
+        patientUuid = deletedPatientUuid,
+        deletedAt = Instant.parse("2021-07-01T00:00:00Z"),
+        syncStatus = SyncStatus.DONE
+    )
+    val notDeletedMedicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("45497481-17d0-4bac-9dd6-2656258b957a"),
+        patientUuid = syncedPatientProfile.patientUuid,
+        syncStatus = SyncStatus.PENDING
+    )
+
+    patientAddressDao.save(listOf(syncedPatientProfile.address, notSyncedPatientProfile.address))
+    patientDao.save(listOf(syncedPatientProfile.patient, notSyncedPatientProfile.patient))
+    medicalHistoryDao.saveHistories(listOf(deletedMedicalHistory, notDeletedMedicalHistory))
+
+    assertThat(medicalHistoryDao.getOne(deletedMedicalHistory.uuid)).isEqualTo(deletedMedicalHistory)
+    assertThat(medicalHistoryDao.getOne(notDeletedMedicalHistory.uuid)).isEqualTo(notDeletedMedicalHistory)
+
+    // when
+    appDatabase.purge()
+
+    // then
+    assertThat(medicalHistoryDao.getOne(deletedMedicalHistory.uuid)).isNull()
+    assertThat(medicalHistoryDao.getOne(notDeletedMedicalHistory.uuid)).isEqualTo(notDeletedMedicalHistory)
+  }
 }

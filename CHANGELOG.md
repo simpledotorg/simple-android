@@ -12,6 +12,7 @@
 - Add `Drug`s table
 - Migrate `BloodPressureHistoryScreen` to a fragment
 - Migrate `BloodSugarHistoryScreen` to a fragment
+- Support compression of HTTP request bodies using Gzip
 
 ### Features
 - [In Progress: 06 Jul 2021] Add support for finding a patient online from ID scan

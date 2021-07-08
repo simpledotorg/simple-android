@@ -175,7 +175,7 @@ class BloodSugarHistoryScreen : BaseScreen<
 
     binding = ScreenBloodSugarHistoryBinding.bind(this)
 
-    context.injector<BloodSugarHistoryScreenInjector>().inject(this)
+    context.injector<Injector>().inject(this)
 
     val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
     openEntrySheetAfterTypeIsSelected(screenDestroys)

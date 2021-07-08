@@ -64,3 +64,14 @@ private fun Configuration.isLocaleAlreadyOverriden(): Boolean {
     else -> false
   }
 }
+
+inline fun Dialog.onBackPressed(crossinline backPressed: () -> Unit) {
+  setOnKeyListener { _, keyCode, event ->
+    if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+      backPressed()
+      true
+    } else {
+      false
+    }
+  }
+}

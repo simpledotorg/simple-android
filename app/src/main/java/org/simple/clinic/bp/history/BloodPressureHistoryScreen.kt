@@ -1,16 +1,21 @@
 package org.simple.clinic.bp.history
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Parcelable
-import android.util.AttributeSet
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.asFlow
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.rx2.asObservable
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureHistoryListItemDataSourceFactory
@@ -22,8 +27,9 @@ import org.simple.clinic.databinding.ListBpHistoryItemBinding
 import org.simple.clinic.databinding.ListNewBpButtonBinding
 import org.simple.clinic.databinding.ScreenBpHistoryBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
@@ -32,7 +38,6 @@ import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.PagingItemAdapter_old
 import org.simple.clinic.widgets.dp
@@ -41,10 +46,12 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class BloodPressureHistoryScreen(
-    context: Context,
-    attrs: AttributeSet
-) : ConstraintLayout(context, attrs), BloodPressureHistoryScreenUi, BloodPressureHistoryScreenUiActions {
+class BloodPressureHistoryScreen : BaseScreen<
+    BloodPressureHistoryScreen.Key,
+    ScreenBpHistoryBinding,
+    BloodPressureHistoryScreenModel,
+    BloodPressureHistoryScreenEvent,
+    BloodPressureHistoryScreenEffect>(), BloodPressureHistoryScreenUi, BloodPressureHistoryScreenUiActions {
 
   @Inject
   lateinit var utcClock: UtcClock
@@ -88,76 +95,61 @@ class BloodPressureHistoryScreen(
       )
   )
 
-  private val events: Observable<BloodPressureHistoryScreenEvent> by unsafeLazy {
-    Observable
-        .merge(
-            addNewBpClicked(),
-            bloodPressureClicked()
-        )
-        .compose(ReportAnalyticsEvents())
-        .cast()
-  }
-
-  private val uiRenderer = BloodPressureHistoryScreenUiRenderer(this)
-
-  private val delegate: MobiusDelegate<BloodPressureHistoryScreenModel, BloodPressureHistoryScreenEvent, BloodPressureHistoryScreenEffect> by unsafeLazy {
-    val screenKey = screenKeyProvider.keyFor<BloodPressureHistoryScreenKey>(this)
-    MobiusDelegate.forView(
-        events = events,
-        defaultModel = BloodPressureHistoryScreenModel.create(screenKey.patientUuid),
-        init = BloodPressureHistoryScreenInit(),
-        update = BloodPressureHistoryScreenUpdate(),
-        effectHandler = effectHandler.create(this).build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
-
-  private var binding: ScreenBpHistoryBinding? = null
-
   private val bpHistoryList
-    get() = binding!!.bpHistoryList
+    get() = binding.bpHistoryList
 
   private val toolbar
-    get() = binding!!.toolbar
+    get() = binding.toolbar
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
-    binding = ScreenBpHistoryBinding.bind(this)
-    context.injector<BloodPressureHistoryScreenInjector>().inject(this)
+  private val disposable = CompositeDisposable()
+
+  override fun events() = Observable
+      .merge(
+          addNewBpClicked(),
+          bloodPressureClicked()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<BloodPressureHistoryScreenEvent>()
+
+  override fun defaultModel() = BloodPressureHistoryScreenModel.create(screenKey.patientId)
+
+  override fun createInit() = BloodPressureHistoryScreenInit()
+
+  override fun createUpdate() = BloodPressureHistoryScreenUpdate()
+
+  override fun createEffectHandler() = effectHandler.create(this).build()
+
+  override fun uiRenderer() = BloodPressureHistoryScreenUiRenderer(this)
+
+  override fun bindView(
+      layoutInflater: LayoutInflater,
+      container: ViewGroup?
+  ) = ScreenBpHistoryBinding.inflate(layoutInflater, container, false)
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
 
     setupBloodPressureHistoryList()
     handleToolbarBackClick()
   }
 
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    binding = null
-    delegate.stop()
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
+  override fun onDestroyView() {
+    super.onDestroyView()
+    disposable.dispose()
   }
 
   private fun setupBloodPressureHistoryList() {
     val dividerMargin = 8.dp
-    val divider = DividerItemDecorator(context = context, marginStart = dividerMargin, marginEnd = dividerMargin)
+    val divider = DividerItemDecorator(context = requireContext(), marginStart = dividerMargin, marginEnd = dividerMargin)
 
     bpHistoryList.apply {
       setHasFixedSize(true)
-      layoutManager = LinearLayoutManager(context)
+      layoutManager = LinearLayoutManager(requireContext())
       addItemDecoration(divider)
       adapter = bloodPressureHistoryAdapter
     }
@@ -175,22 +167,27 @@ class BloodPressureHistoryScreen(
   }
 
   override fun openBloodPressureEntrySheet(patientUuid: UUID) {
-    val intent = BloodPressureEntrySheet.intentForNewBp(context, patientUuid)
-    context.startActivity(intent)
+    val intent = BloodPressureEntrySheet.intentForNewBp(requireContext(), patientUuid)
+    requireContext().startActivity(intent)
   }
 
   override fun openBloodPressureUpdateSheet(bpUuid: UUID) {
-    val intent = BloodPressureEntrySheet.intentForUpdateBp(context, bpUuid)
-    context.startActivity(intent)
+    val intent = BloodPressureEntrySheet.intentForUpdateBp(requireContext(), bpUuid)
+    requireContext().startActivity(intent)
   }
 
-  @SuppressLint("CheckResult")
   override fun showBloodPressures(dataSourceFactory: BloodPressureHistoryListItemDataSourceFactory) {
-    val detaches = detaches()
+    // TODO: Remove this once Paging 3 implementation is added for blood pressure history.
+    val detaches = viewLifecycleOwnerLiveData
+        .asFlow()
+        .mapNotNull { it }
+        .asObservable()
+        .filter { it.lifecycle.currentState == Lifecycle.State.DESTROYED }
+        .map { Unit }
+
     // Initial load size hint should be a multiple of page size
-    dataSourceFactory.toObservable(config = measurementHistoryPaginationConfig, detaches = detaches)
-        .takeUntil(detaches)
-        .subscribe(bloodPressureHistoryAdapter::submitList)
+    disposable.add(dataSourceFactory.toObservable(config = measurementHistoryPaginationConfig, detaches = detaches)
+        .subscribe(bloodPressureHistoryAdapter::submitList))
   }
 
   private fun displayNameGenderAge(name: String, gender: Gender, age: Int) {
@@ -211,5 +208,18 @@ class BloodPressureHistoryScreen(
         .ofType<BloodPressureHistoryItemClicked>()
         .map { it.measurement }
         .map(::BloodPressureClicked)
+  }
+
+  @Parcelize
+  data class Key(
+      val patientId: UUID,
+      override val analyticsName: String = "Blood Pressure History"
+  ) : ScreenKey() {
+
+    override fun instantiateFragment() = BloodPressureHistoryScreen()
+  }
+
+  interface Injector {
+    fun inject(target: BloodPressureHistoryScreen)
   }
 }

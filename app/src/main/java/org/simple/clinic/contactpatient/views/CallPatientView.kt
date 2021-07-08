@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import org.simple.clinic.R
-import org.simple.clinic.databinding.ContactpatientCallpatientBinding
+import org.simple.clinic.databinding.ContactpatientCallpatientOldBinding
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.displayLetterRes
 
@@ -22,7 +22,7 @@ class CallPatientView(
     attributeSet: AttributeSet
 ) : ConstraintLayout(context, attributeSet) {
 
-  private var binding: ContactpatientCallpatientBinding? = null
+  private var binding: ContactpatientCallpatientOldBinding? = null
 
   private val callResultsGroup
     get() = binding!!.callResultsGroup
@@ -77,7 +77,7 @@ class CallPatientView(
     super.onFinishInflate()
 
     val layoutInflater = LayoutInflater.from(context)
-    binding = ContactpatientCallpatientBinding.inflate(layoutInflater, this)
+    binding = ContactpatientCallpatientOldBinding.inflate(layoutInflater, this)
 
     agreedToVisitTextView.setOnClickListener { agreedToVisitClicked?.invoke() }
     remindToCallLaterTextView.setOnClickListener { remindToCallLaterClicked?.invoke() }

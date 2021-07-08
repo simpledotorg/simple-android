@@ -17,7 +17,8 @@ class HttpInterceptorsModule {
   fun providerInterceptors(
       loggedInInterceptor: LoggedInUserHttpInterceptor,
       appInfoHttpInterceptor: AppInfoHttpInterceptor,
-      networkPlugin: NetworkFlipperPlugin
+      networkPlugin: NetworkFlipperPlugin,
+      compressRequestInterceptor: CompressRequestInterceptor
   ): List<Interceptor> {
     val loggingInterceptor = HttpLoggingInterceptor().apply {
       level = BASIC
@@ -27,6 +28,7 @@ class HttpInterceptorsModule {
         loggedInInterceptor,
         appInfoHttpInterceptor,
         loggingInterceptor,
+        compressRequestInterceptor,
         FlipperOkhttpInterceptor(networkPlugin)
     )
   }

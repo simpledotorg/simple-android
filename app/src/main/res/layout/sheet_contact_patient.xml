@@ -17,7 +17,7 @@
     tools:progress="100"
     tools:visibility="visible" />
 
-  <org.simple.clinic.contactpatient.views.CallPatientView
+  <org.simple.clinic.contactpatient.views.CallPatientView_Old
     android:id="@+id/callPatientView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

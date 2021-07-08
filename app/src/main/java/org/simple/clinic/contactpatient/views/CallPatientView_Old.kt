@@ -11,13 +11,13 @@ import org.simple.clinic.databinding.ContactpatientCallpatientOldBinding
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.displayLetterRes
 
-private typealias AgreedToVisitClicked = () -> Unit
-private typealias RemindToCallLaterClicked = () -> Unit
-private typealias RemoveFromOverdueListClicked = () -> Unit
-private typealias NormalCallButtonClicked = () -> Unit
-private typealias SecureCallButtonClicked = () -> Unit
+private typealias AgreedToVisitClicked_Old = () -> Unit
+private typealias RemindToCallLaterClicked_Old = () -> Unit
+private typealias RemoveFromOverdueListClicked_Old = () -> Unit
+private typealias NormalCallButtonClicked_Old = () -> Unit
+private typealias SecureCallButtonClicked_Old = () -> Unit
 
-class CallPatientView(
+class CallPatientView_Old(
     context: Context,
     attributeSet: AttributeSet
 ) : ConstraintLayout(context, attributeSet) {
@@ -63,15 +63,15 @@ class CallPatientView(
       secureCallingGroup.visibility = if (field) View.VISIBLE else View.GONE
     }
 
-  var agreedToVisitClicked: AgreedToVisitClicked? = null
+  var agreedToVisitClicked: AgreedToVisitClicked_Old? = null
 
-  var remindToCallLaterClicked: RemindToCallLaterClicked? = null
+  var remindToCallLaterClicked: RemindToCallLaterClicked_Old? = null
 
-  var removeFromOverdueListClicked: RemoveFromOverdueListClicked? = { Toast.makeText(context, "WIP", Toast.LENGTH_SHORT).show() }
+  var removeFromOverdueListClicked: RemoveFromOverdueListClicked_Old? = { Toast.makeText(context, "WIP", Toast.LENGTH_SHORT).show() }
 
-  var normalCallButtonClicked: NormalCallButtonClicked? = null
+  var normalCallButtonClicked: NormalCallButtonClicked_Old? = null
 
-  var secureCallButtonClicked: SecureCallButtonClicked? = null
+  var secureCallButtonClicked: SecureCallButtonClicked_Old? = null
 
   override fun onFinishInflate() {
     super.onFinishInflate()

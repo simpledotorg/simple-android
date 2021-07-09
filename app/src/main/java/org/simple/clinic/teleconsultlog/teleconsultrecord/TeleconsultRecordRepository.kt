@@ -116,7 +116,12 @@ class TeleconsultRecordRepository @Inject constructor(
   }
 
   override fun pendingSyncRecords(limit: Int, offset: Int): List<TeleconsultRecord> {
-    return emptyList()
+    return teleconsultRecordDao
+        .recordsWithSyncStatusBatched(
+            syncStatus = SyncStatus.PENDING,
+            limit = limit,
+            offset = offset
+        )
   }
 
   fun clear() {

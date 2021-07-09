@@ -25,7 +25,8 @@ class TeleconsultRecordSync @Inject constructor(
 
   override fun push() {
     syncCoordinator.push(
-        teleconsultRecordRepository
+        teleconsultRecordRepository,
+        config.batchSize
     ) { teleconsultRecordApi.push(toRequest(it)).execute().read()!! }
   }
 

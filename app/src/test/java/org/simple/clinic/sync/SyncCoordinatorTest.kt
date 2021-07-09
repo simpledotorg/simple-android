@@ -9,9 +9,9 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.patient.SyncStatus
-import java.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import java.time.Instant
+import java.util.Optional
 import java.util.UUID
 
 class SyncCoordinatorTest {
@@ -37,7 +37,10 @@ class SyncCoordinatorTest {
 
     var networkCallMade = false
 
-    syncCoordinator.push(repository) {
+    syncCoordinator.push(
+        repository = repository,
+        batchSize = 0
+    ) {
       networkCallMade = true
       DataPushResponse(emptyList())
     }
@@ -54,7 +57,10 @@ class SyncCoordinatorTest {
         ValidationErrors(uuid = UUID.randomUUID(), schemaErrorMessages = listOf("error-2"))
     )
 
-    syncCoordinator.push(repository) {
+    syncCoordinator.push(
+        repository = repository,
+        batchSize = 0
+    ) {
       DataPushResponse(validationErrors)
     }
 

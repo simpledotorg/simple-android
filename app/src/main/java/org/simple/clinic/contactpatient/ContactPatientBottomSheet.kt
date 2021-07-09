@@ -1,6 +1,8 @@
 package org.simple.clinic.contactpatient
 
+import android.app.Dialog
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View.GONE
@@ -39,6 +41,7 @@ import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.onBackPressed
 import org.simple.clinic.util.unsafeLazy
 import java.time.LocalDate
 import java.util.Locale
@@ -141,6 +144,12 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     super.onAttach(context)
 
     context.injector<Injector>().inject(this)
+  }
+
+  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    return super.onCreateDialog(savedInstanceState).apply {
+      onBackPressed(::backPressed)
+    }
   }
 
   override fun onRequestPermissionsResult(

@@ -100,7 +100,7 @@ class PatientRepository @Inject constructor(
         )
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<PatientProfile> {
+  fun recordsWithSyncStatus(syncStatus: SyncStatus): List<PatientProfile> {
     return database.patientDao().recordsWithSyncStatus(syncStatus)
   }
 

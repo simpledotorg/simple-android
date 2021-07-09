@@ -6,8 +6,8 @@ import org.simple.clinic.di.AppScope
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.User
-import java.util.Optional
 import org.simple.clinic.util.toOptional
+import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
 
@@ -83,10 +83,6 @@ class FacilityRepository @Inject constructor(
 
   override fun save(records: List<Facility>): Completable {
     return Completable.fromAction { facilityDao.save(records) }
-  }
-
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<Facility> {
-    return facilityDao.withSyncStatus(syncStatus)
   }
 
   override fun setSyncStatus(from: SyncStatus, to: SyncStatus) {

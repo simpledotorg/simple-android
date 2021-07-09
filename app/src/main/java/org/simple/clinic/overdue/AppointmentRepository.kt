@@ -173,7 +173,7 @@ class AppointmentRepository @Inject constructor(
 
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<Appointment> {
+  fun recordsWithSyncStatus(syncStatus: SyncStatus): List<Appointment> {
     return appointmentDao.recordsWithSyncStatus(syncStatus)
   }
 

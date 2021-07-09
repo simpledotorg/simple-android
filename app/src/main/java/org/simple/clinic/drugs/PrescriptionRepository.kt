@@ -93,7 +93,7 @@ class PrescriptionRepository @Inject constructor(
     }
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<PrescribedDrug> {
+  fun recordsWithSyncStatus(syncStatus: SyncStatus): List<PrescribedDrug> {
     return dao.withSyncStatus(syncStatus)
   }
 

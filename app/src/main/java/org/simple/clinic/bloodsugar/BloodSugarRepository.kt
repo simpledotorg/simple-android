@@ -74,7 +74,7 @@ class BloodSugarRepository @Inject constructor(
   override fun save(records: List<BloodSugarMeasurement>): Completable =
       Completable.fromAction { dao.save(records) }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<BloodSugarMeasurement> {
+  fun recordsWithSyncStatus(syncStatus: SyncStatus): List<BloodSugarMeasurement> {
     return dao.withSyncStatus(syncStatus)
   }
 

@@ -86,11 +86,6 @@ class TeleconsultRecordRepository @Inject constructor(
     return Completable.fromAction { teleconsultRecordDao.save(records) }
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<TeleconsultRecord> {
-    return teleconsultRecordDao
-        .recordsWithSyncStatus(syncStatus)
-  }
-
   override fun setSyncStatus(from: SyncStatus, to: SyncStatus) {
     teleconsultRecordDao.updateSyncStates(oldStatus = from, newStatus = to)
   }

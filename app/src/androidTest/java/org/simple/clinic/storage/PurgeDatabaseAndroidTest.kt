@@ -178,20 +178,33 @@ class PurgeDatabaseAndroidTest {
   @Test
   fun purging_the_database_should_delete_soft_deleted_blood_pressure_measurements() {
     // given
+    val syncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
+        generateBusinessId = false,
+        syncStatus = SyncStatus.DONE
+    )
+    val notSyncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
+        generateBusinessId = false,
+        syncStatus = SyncStatus.PENDING
+    )
     val deletedBloodPressureMeasurement = TestData.bloodPressureMeasurement(
         uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
         deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        patientUuid = syncedPatientProfile.patientUuid
     )
     val notDeletedBloodPressureMeasurement = TestData.bloodPressureMeasurement(
         uuid = UUID.fromString("25492f9e-865d-4296-ab31-e5cc6141cd58"),
         deletedAt = null,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        patientUuid = syncedPatientProfile.patientUuid
     )
     val deletedButUnsyncedBloodPressureMeasurement = TestData.bloodPressureMeasurement(
         uuid = UUID.fromString("13333a77-f20d-4b96-9c11-c0b38ae99ce5"),
         deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
-        syncStatus = SyncStatus.PENDING
+        syncStatus = SyncStatus.PENDING,
+        patientUuid = notSyncedPatientProfile.patientUuid
     )
 
     bloodPressureDao.save(listOf(deletedBloodPressureMeasurement, deletedButUnsyncedBloodPressureMeasurement, notDeletedBloodPressureMeasurement))
@@ -212,20 +225,33 @@ class PurgeDatabaseAndroidTest {
   @Test
   fun purging_the_database_should_delete_soft_deleted_blood_sugar_measurements() {
     // given
+    val syncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
+        generateBusinessId = false,
+        syncStatus = SyncStatus.DONE
+    )
+    val notSyncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
+        generateBusinessId = false,
+        syncStatus = SyncStatus.PENDING
+    )
     val deletedBloodSugarMeasurement = TestData.bloodSugarMeasurement(
         uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
         deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        patientUuid = syncedPatientProfile.patientUuid
     )
     val notDeletedBloodSugarMeasurement = TestData.bloodSugarMeasurement(
         uuid = UUID.fromString("25492f9e-865d-4296-ab31-e5cc6141cd58"),
         deletedAt = null,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        patientUuid = syncedPatientProfile.patientUuid
     )
     val deletedButUnsyncedBloodSugarMeasurement = TestData.bloodSugarMeasurement(
         uuid = UUID.fromString("13333a77-f20d-4b96-9c11-c0b38ae99ce5"),
         deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
-        syncStatus = SyncStatus.PENDING
+        syncStatus = SyncStatus.PENDING,
+        patientUuid = notSyncedPatientProfile.patientUuid
     )
 
     bloodSugarDao.save(listOf(deletedBloodSugarMeasurement, deletedButUnsyncedBloodSugarMeasurement, notDeletedBloodSugarMeasurement))
@@ -246,20 +272,33 @@ class PurgeDatabaseAndroidTest {
   @Test
   fun purging_the_database_should_delete_soft_deleted_prescriptions() {
     // given
+    val syncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
+        generateBusinessId = false,
+        syncStatus = SyncStatus.DONE
+    )
+    val notSyncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
+        generateBusinessId = false,
+        syncStatus = SyncStatus.PENDING
+    )
     val deletedPrescription = TestData.prescription(
         uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
         isDeleted = true,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        patientUuid = syncedPatientProfile.patientUuid
     )
     val notDeletedPrescription = TestData.prescription(
         uuid = UUID.fromString("25492f9e-865d-4296-ab31-e5cc6141cd58"),
         isDeleted = false,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        patientUuid = syncedPatientProfile.patientUuid
     )
     val deletedButUnsyncedPrescripion = TestData.prescription(
         uuid = UUID.fromString("13333a77-f20d-4b96-9c11-c0b38ae99ce5"),
         isDeleted = true,
-        syncStatus = SyncStatus.PENDING
+        syncStatus = SyncStatus.PENDING,
+        patientUuid = notSyncedPatientProfile.patientUuid
     )
 
     prescribedDrugsDao.save(listOf(deletedPrescription, deletedButUnsyncedPrescripion, notDeletedPrescription))
@@ -280,23 +319,37 @@ class PurgeDatabaseAndroidTest {
   @Test
   fun purging_the_database_should_delete_soft_deleted_appointments() {
     // given
+    val syncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
+        generateBusinessId = false,
+        syncStatus = SyncStatus.DONE
+    )
+    val notSyncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
+        generateBusinessId = false,
+        syncStatus = SyncStatus.PENDING
+    )
+
     val deletedAppointment = TestData.appointment(
         uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
         deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
         syncStatus = SyncStatus.DONE,
-        status = Appointment.Status.Scheduled
+        status = Appointment.Status.Scheduled,
+        patientUuid = syncedPatientProfile.patientUuid
     )
     val notDeletedAppointment = TestData.appointment(
         uuid = UUID.fromString("25492f9e-865d-4296-ab31-e5cc6141cd58"),
         deletedAt = null,
         syncStatus = SyncStatus.DONE,
-        status = Appointment.Status.Scheduled
+        status = Appointment.Status.Scheduled,
+        patientUuid = syncedPatientProfile.patientUuid
     )
     val deletedButUnsyncedAppointment = TestData.appointment(
         uuid = UUID.fromString("13333a77-f20d-4b96-9c11-c0b38ae99ce5"),
         deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
         syncStatus = SyncStatus.PENDING,
-        status = Appointment.Status.Scheduled
+        status = Appointment.Status.Scheduled,
+        patientUuid = notSyncedPatientProfile.patientUuid
     )
 
     appointmentDao.save(listOf(deletedAppointment, deletedButUnsyncedAppointment, notDeletedAppointment))
@@ -317,20 +370,33 @@ class PurgeDatabaseAndroidTest {
   @Test
   fun purging_the_database_should_delete_soft_deleted_medical_histories() {
     // given
+    val syncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
+        generateBusinessId = false,
+        syncStatus = SyncStatus.DONE
+    )
+    val notSyncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
+        generateBusinessId = false,
+        syncStatus = SyncStatus.PENDING
+    )
     val deletedMedicalHistory = TestData.medicalHistory(
         uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
         deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        patientUuid = syncedPatientProfile.patientUuid
     )
     val notDeletedMedicalHistory = TestData.medicalHistory(
         uuid = UUID.fromString("25492f9e-865d-4296-ab31-e5cc6141cd58"),
         deletedAt = null,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        patientUuid = syncedPatientProfile.patientUuid
     )
     val deletedButUnsyncedMedicalHistory = TestData.medicalHistory(
         uuid = UUID.fromString("13333a77-f20d-4b96-9c11-c0b38ae99ce5"),
         deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
-        syncStatus = SyncStatus.PENDING
+        syncStatus = SyncStatus.PENDING,
+        patientUuid = notSyncedPatientProfile.patientUuid
     )
 
     medicalHistoryDao.saveHistories(listOf(deletedMedicalHistory, deletedButUnsyncedMedicalHistory, notDeletedMedicalHistory))
@@ -351,41 +417,57 @@ class PurgeDatabaseAndroidTest {
   @Test
   fun purging_the_database_should_delete_cancelled_and_visited_appointments() {
     // given
+    val syncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
+        generateBusinessId = false,
+        syncStatus = SyncStatus.DONE
+    )
+    val notSyncedPatientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
+        generateBusinessId = false,
+        syncStatus = SyncStatus.PENDING
+    )
     val scheduledAppointment = TestData.appointment(
         uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
         deletedAt = null,
         syncStatus = SyncStatus.DONE,
-        status = Appointment.Status.Scheduled
+        status = Appointment.Status.Scheduled,
+        patientUuid = syncedPatientProfile.patientUuid
     )
     val cancelledAppointment = TestData.appointment(
         uuid = UUID.fromString("25492f9e-865d-4296-ab31-e5cc6141cd58"),
         deletedAt = null,
         syncStatus = SyncStatus.DONE,
-        status = Appointment.Status.Cancelled
+        status = Appointment.Status.Cancelled,
+        patientUuid = syncedPatientProfile.patientUuid
     )
     val cancelledButUnsyncedAppointment = TestData.appointment(
         uuid = UUID.fromString("e17b4fed-a2cd-453d-b717-d60ca184892b"),
         deletedAt = null,
         syncStatus = SyncStatus.PENDING,
-        status = Appointment.Status.Cancelled
+        status = Appointment.Status.Cancelled,
+        patientUuid = notSyncedPatientProfile.patientUuid
     )
     val visitedAppointment = TestData.appointment(
         uuid = UUID.fromString("13333a77-f20d-4b96-9c11-c0b38ae99ce5"),
         deletedAt = null,
         syncStatus = SyncStatus.DONE,
-        status = Appointment.Status.Visited
+        status = Appointment.Status.Visited,
+        patientUuid = syncedPatientProfile.patientUuid
     )
     val visitedButUnsyncedAppointment = TestData.appointment(
         uuid = UUID.fromString("927b08d3-b19e-4231-8d0b-dcf28e240474"),
         deletedAt = null,
         syncStatus = SyncStatus.PENDING,
-        status = Appointment.Status.Visited
+        status = Appointment.Status.Visited,
+        patientUuid = notSyncedPatientProfile.patientUuid
     )
     val appointmentWithUnknownStatus = TestData.appointment(
         uuid = UUID.fromString("a89a3a34-8395-4a55-89b6-562146369ad1"),
         deletedAt = null,
         syncStatus = SyncStatus.DONE,
-        status = Appointment.Status.Unknown("rescheduled")
+        status = Appointment.Status.Unknown("rescheduled"),
+        patientUuid = syncedPatientProfile.patientUuid
     )
 
     appointmentDao.save(listOf(

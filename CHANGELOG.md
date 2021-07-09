@@ -23,6 +23,7 @@
   
 ### Fixes
 - Fix invalid qr code error when scanning a valid Indian NHID
+- Fix `ContactPatientBottomSheet` not going back to call patient view on back click in call later mode
   
 ## On Demo
 ### Internal

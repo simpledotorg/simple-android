@@ -511,6 +511,15 @@ class PurgeDatabaseAndroidTest {
         patientAddressUuid = UUID.fromString("a5b8a711-a9e0-4474-8b9f-3b6193ec6001")
     )
 
+    val patientWithNullRetentionTime = TestData.patientProfile(
+        patientUuid = UUID.fromString("6f8ae9d8-522e-4eed-8a0d-4be393669945"),
+        generateBusinessId = false,
+        generatePhoneNumber = true,
+        syncStatus = SyncStatus.DONE,
+        patientAddressUuid = UUID.fromString("8e0f0203-b7e3-4d4a-91be-3bd3385a7ee5"),
+        retainUntil = null
+    )
+
     val patientWithNotPassedRetentionTime = TestData.patientProfile(
         patientUuid = UUID.fromString("afaea7ee-22cc-4a27-9906-309a377f83be"),
         retainUntil = Instant.parse("2022-01-05T00:00:00Z"),
@@ -519,13 +528,14 @@ class PurgeDatabaseAndroidTest {
         generatePhoneNumber = true,
     )
 
-    patientAddressDao.save(listOf(patientWithPassedRetentionTime.address, patientWithNotPassedRetentionTime.address))
-    patientDao.save(listOf(patientWithPassedRetentionTime.patient, patientWithNotPassedRetentionTime.patient))
-    phoneNumberDao.save(patientWithPassedRetentionTime.phoneNumbers + patientWithNotPassedRetentionTime.phoneNumbers)
-    businessIdDao.save(patientWithPassedRetentionTime.businessIds + patientWithNotPassedRetentionTime.businessIds )
+    patientAddressDao.save(listOf(patientWithPassedRetentionTime.address, patientWithNotPassedRetentionTime.address, patientWithNullRetentionTime.address))
+    patientDao.save(listOf(patientWithPassedRetentionTime.patient, patientWithNotPassedRetentionTime.patient, patientWithNullRetentionTime.patient))
+    phoneNumberDao.save(patientWithPassedRetentionTime.phoneNumbers + patientWithNotPassedRetentionTime.phoneNumbers + patientWithNullRetentionTime.phoneNumbers)
+    businessIdDao.save(patientWithPassedRetentionTime.businessIds + patientWithNotPassedRetentionTime.businessIds + patientWithNullRetentionTime.businessIds)
 
     assertThat(patientDao.patientProfileImmediate(patientWithPassedRetentionTime.patientUuid)).isEqualTo(patientWithPassedRetentionTime)
     assertThat(patientDao.patientProfileImmediate(patientWithNotPassedRetentionTime.patientUuid)).isEqualTo(patientWithNotPassedRetentionTime)
+    assertThat(patientDao.patientProfileImmediate(patientWithNullRetentionTime.patientUuid)).isEqualTo(patientWithNullRetentionTime)
 
     // when
     appDatabase.purge(testUserClock)
@@ -533,6 +543,7 @@ class PurgeDatabaseAndroidTest {
     // then
     assertThat(patientDao.patientProfileImmediate(patientWithPassedRetentionTime.patientUuid)).isNull()
     assertThat(patientDao.patientProfileImmediate(patientWithNotPassedRetentionTime.patientUuid)).isEqualTo(patientWithNotPassedRetentionTime)
+    assertThat(patientDao.patientProfileImmediate(patientWithNullRetentionTime.patientUuid)).isEqualTo(patientWithNullRetentionTime)
   }
 
   @Test

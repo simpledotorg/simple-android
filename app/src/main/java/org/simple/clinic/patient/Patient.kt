@@ -436,7 +436,8 @@ data class Patient(
 
     @Query("""
         DELETE FROM Patient
-        WHERE retainUntil < :now 
+        WHERE retainUntil IS NOT NULL 
+        AND retainUntil < :now
         AND syncStatus == 'DONE'
     """)
     abstract fun purgeDeletedPatientAfterRetentionTime(now: Instant)

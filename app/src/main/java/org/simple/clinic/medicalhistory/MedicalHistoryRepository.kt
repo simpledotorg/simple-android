@@ -169,6 +169,11 @@ class MedicalHistoryRepository @Inject constructor(
   }
 
   override fun pendingSyncRecords(limit: Int, offset: Int): List<MedicalHistory> {
-    return emptyList()
+    return dao
+        .recordsWithSyncStatusBatched(
+            syncStatus = SyncStatus.PENDING,
+            limit = limit,
+            offset = offset
+        )
   }
 }

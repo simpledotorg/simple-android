@@ -7,8 +7,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import org.simple.clinic.R
+import org.simple.clinic.contactpatient.PatientDetails
 import org.simple.clinic.databinding.ContactpatientCallpatientBinding
-import org.simple.clinic.patient.Gender
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.patient.displayLetterRes
 
 private typealias AgreedToVisitClicked = () -> Unit
@@ -23,9 +24,6 @@ class CallPatientView(
 ) : ConstraintLayout(context, attributeSet) {
 
   private var binding: ContactpatientCallpatientBinding? = null
-
-  private val callResultsGroup
-    get() = binding!!.callResultsGroup
 
   private val secureCallingGroup
     get() = binding!!.secureCallingGroup
@@ -51,16 +49,43 @@ class CallPatientView(
   private val phoneNumberTextView
     get() = binding!!.phoneNumberTextView
 
-  var callResultSectionVisible: Boolean = false
-    set(value) {
-      field = value
-      callResultsGroup.visibility = if (field) View.VISIBLE else View.GONE
-    }
+  private val patientAddressTextView
+    get() = binding!!.patientAddressTextView
+
+  private val registeredFacilityTextView
+    get() = binding!!.registeredFacilityTextView
+
+  private val diagnosisTextView
+    get() = binding!!.diagnosisTextView
+
+  private val lastVisitedTextView
+    get() = binding!!.lastVisitedTextView
+
+  private val patientWithPhoneNumberGroup
+    get() = binding!!.patientWithPhoneNumberGroup
+
+  private val patientWithoutPhoneNumberGroup
+    get() = binding!!.patientWithNoPhoneNumberGroup
+
+  private val resultOfCallLabelTextView
+    get() = binding!!.resultOfCallLabel
 
   var secureCallingSectionVisible: Boolean = false
     set(value) {
       field = value
       secureCallingGroup.visibility = if (field) View.VISIBLE else View.GONE
+    }
+
+  var showPatientWithPhoneNumberLayout: Boolean = false
+    set(value) {
+      field = value
+      patientWithPhoneNumberGroup.visibility = if (field) View.VISIBLE else View.GONE
+    }
+
+  var showPatientWithNoPhoneNumberLayout: Boolean = false
+    set(value) {
+      field = value
+      patientWithoutPhoneNumberGroup.visibility = if (field) View.VISIBLE else View.GONE
     }
 
   var agreedToVisitClicked: AgreedToVisitClicked? = null
@@ -91,9 +116,29 @@ class CallPatientView(
     super.onDetachedFromWindow()
   }
 
-  fun renderPatientDetails(name: String, gender: Gender, age: Int, phoneNumber: String) {
-    val genderLetter = resources.getString(gender.displayLetterRes)
-    nameTextView.text = resources.getString(R.string.contactpatient_patientdetails, name, genderLetter, age.toString())
-    phoneNumberTextView.text = phoneNumber
+  fun renderPatientDetails(
+      patientDetails: PatientDetails,
+      lastVisited: String
+  ) {
+    val genderLetter = resources.getString(patientDetails.gender.displayLetterRes)
+    val diagnosis = diagnosisText(patientDetails.diagnosedWithDiabetes, patientDetails.diagnosedWithHypertension)
+
+    nameTextView.text = resources.getString(R.string.contactpatient_patientdetails, patientDetails.name, genderLetter, patientDetails.age.toString())
+    phoneNumberTextView.text = patientDetails.phoneNumber
+    patientAddressTextView.text = patientDetails.patientAddress
+    registeredFacilityTextView.text = patientDetails.registeredFacility
+    diagnosisTextView.text = diagnosis
+    lastVisitedTextView.text = lastVisited
+  }
+
+  private fun diagnosisText(diagnosedWithDiabetes: Answer?, diagnosedWithHypertension: Answer?): String {
+    return listOf(
+        diagnosedWithDiabetes to resources.getString(R.string.contactpatient_diagnosis_diabetes),
+        diagnosedWithHypertension to resources.getString(R.string.contactpatient_diagnosis_hypertension)
+    )
+        .filter { (answer, _) -> answer is Answer.Yes }
+        .map { (_, diagnosisTitle) -> diagnosisTitle }
+        .ifEmpty { listOf(resources.getString(R.string.contactpatient_diagnosis_none)) }
+        .joinToString()
   }
 }

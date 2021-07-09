@@ -626,6 +626,14 @@
   <string name="contactpatient_moved_to_private">Moved to private practitioner</string>
   <string name="contactpatient_patient_died">Died</string>
   <string name="contactpatient_other_reason">Other reason</string>
+  <string name="contactpatient_patient_registered_at">Registered at</string>
+  <string name="contactpatient_phone">Phone</string>
+  <string name="contactpatient_dx">Dx</string>
+  <string name="contactpatient_visited">Visited</string>
+  <string name="contactpatient_no_phone_number">No Phone Number</string>
+  <string name="contactpatient_diagnosis_diabetes">Diabetes</string>
+  <string name="contactpatient_diagnosis_hypertension">Hypertension</string>
+  <string name="contactpatient_diagnosis_none">None</string>
 
   <!-- Deep link -->
   <string name="deeplink_patient_profile_not_found">Patient profile not found</string>

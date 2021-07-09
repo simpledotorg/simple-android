@@ -33,13 +33,13 @@ class SyncCoordinatorTest {
 
   @Test
   fun `when pending sync records are empty, then the push network call should not be made`() {
-    whenever(repository.recordsWithSyncStatus(SyncStatus.PENDING)).thenReturn(emptyList())
+    whenever(repository.pendingSyncRecords(10, 0)).thenReturn(emptyList())
 
     var networkCallMade = false
 
     syncCoordinator.push(
         repository = repository,
-        batchSize = 0
+        batchSize = 10
     ) {
       networkCallMade = true
       DataPushResponse(emptyList())
@@ -50,7 +50,7 @@ class SyncCoordinatorTest {
 
   @Test
   fun `if there are validation errors in push, then the failing records should be marked as invalid`() {
-    whenever(repository.recordsWithSyncStatus(SyncStatus.PENDING)).thenReturn(listOf(1, 2, 3))
+    whenever(repository.pendingSyncRecords(10, 0)).thenReturn(listOf(1, 2, 3))
 
     val validationErrors = listOf(
         ValidationErrors(uuid = UUID.randomUUID(), schemaErrorMessages = listOf("error-1")),
@@ -59,7 +59,7 @@ class SyncCoordinatorTest {
 
     syncCoordinator.push(
         repository = repository,
-        batchSize = 0
+        batchSize = 10
     ) {
       DataPushResponse(validationErrors)
     }

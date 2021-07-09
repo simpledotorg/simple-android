@@ -48,7 +48,7 @@ class TeleconsultationFacilityRepository @Inject constructor(
         .save(records.map { it.teleconsultationFacilityInfo })
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<TeleconsultationFacilityWithMedicalOfficers> {
+  fun recordsWithSyncStatus(syncStatus: SyncStatus): List<TeleconsultationFacilityWithMedicalOfficers> {
     return appDatabase
         .teleconsultFacilityInfoDao()
         .recordsWithSyncStatus(syncStatus)

@@ -34,7 +34,7 @@ class ProtocolRepository @Inject constructor(
     }
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<ProtocolAndProtocolDrugs> {
+  fun recordsWithSyncStatus(syncStatus: SyncStatus): List<ProtocolAndProtocolDrugs> {
     val protocolDao = appDatabase.protocolDao()
     val protocolDrugDao = appDatabase.protocolDrugDao()
 

@@ -110,7 +110,7 @@ class MedicalHistoryRepository @Inject constructor(
     }
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<MedicalHistory> {
+  fun recordsWithSyncStatus(syncStatus: SyncStatus): List<MedicalHistory> {
     return dao.recordsWithSyncStatus(syncStatus)
   }
 

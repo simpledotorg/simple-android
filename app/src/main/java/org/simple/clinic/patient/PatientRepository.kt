@@ -504,7 +504,13 @@ class PatientRepository @Inject constructor(
   }
 
   override fun pendingSyncRecords(limit: Int, offset: Int): List<PatientProfile> {
-    return emptyList()
+    return database
+        .patientDao()
+        .profilesWithSyncStatusBatched(
+            syncStatus = PENDING,
+            limit = limit,
+            offset = offset
+        )
   }
 
   fun addIdentifierToPatient(

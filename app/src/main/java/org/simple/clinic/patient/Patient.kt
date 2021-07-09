@@ -201,6 +201,18 @@ data class Patient(
     @Query("$patientProfileQuery WHERE P.syncStatus == :syncStatus")
     protected abstract fun loadPatientQueryModelsWithSyncStatus(syncStatus: SyncStatus): List<PatientQueryModel>
 
+    @Query("""
+      $patientProfileQuery 
+        WHERE P.syncStatus == :syncStatus
+        LIMIT :limit OFFSET :offset
+     """
+    )
+    protected abstract fun loadPatientQueryModelsWithSyncStatusBatched(
+        syncStatus: SyncStatus,
+        limit: Int,
+        offset: Int
+    ): List<PatientQueryModel>
+
     @Query("$patientProfileQuery WHERE P.uuid == :patientUuid")
     protected abstract fun loadPatientQueryModelsForPatientUuid(patientUuid: UUID): Flowable<List<PatientQueryModel>>
 
@@ -263,6 +275,20 @@ data class Patient(
       val patientQueryModels = loadAllPatientQueryModels()
 
       return queryModelsToPatientProfiles(patientQueryModels)
+    }
+
+    fun profilesWithSyncStatusBatched(
+        syncStatus: SyncStatus,
+        limit: Int,
+        offset: Int
+    ): List<PatientProfile> {
+      val queryModels = loadPatientQueryModelsWithSyncStatusBatched(
+          syncStatus = syncStatus,
+          limit = limit,
+          offset = offset
+      )
+
+      return queryModelsToPatientProfiles(queryModels)
     }
 
     private fun queryModelsToPatientProfiles(patientQueryModels: List<PatientQueryModel>): List<PatientProfile> {

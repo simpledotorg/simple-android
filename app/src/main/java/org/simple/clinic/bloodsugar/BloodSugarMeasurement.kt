@@ -91,6 +91,17 @@ data class BloodSugarMeasurement(
     @Query("SELECT * FROM BloodSugarMeasurements WHERE syncStatus = :status")
     fun withSyncStatus(status: SyncStatus): List<BloodSugarMeasurement>
 
+    @Query("""
+      SELECT * FROM bloodsugarmeasurements
+      WHERE syncStatus = :syncStatus
+      LIMIT :limit OFFSET :offset
+    """)
+    fun withSyncStatusBatched(
+        syncStatus: SyncStatus,
+        limit: Int,
+        offset: Int
+    ): List<BloodSugarMeasurement>
+
     @Query("UPDATE BloodSugarMeasurements SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")
     fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
 

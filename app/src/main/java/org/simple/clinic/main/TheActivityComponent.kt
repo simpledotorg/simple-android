@@ -9,7 +9,7 @@ import dagger.Subcomponent
 import io.reactivex.Observable
 import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.RxActivityLifecycle
-import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreenInjector
+import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreen
 import org.simple.clinic.bp.history.BloodPressureHistoryScreen
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.contactpatient.views.SetAppointmentReminderView
@@ -81,7 +81,7 @@ interface TheActivityComponent :
     BloodSugarSummaryViewInjector,
     BloodPressureHistoryScreen.Injector,
     BloodPressureSummaryViewInjector,
-    BloodSugarHistoryScreenInjector,
+    BloodSugarHistoryScreen.Injector,
     AccessDeniedScreenInjector,
     PinEntryCardView.Injector,
     EnterOtpScreen.Injector,

@@ -1,18 +1,23 @@
 package org.simple.clinic.bloodsugar.history
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.os.Parcelable
-import android.util.AttributeSet
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.asFlow
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.jakewharton.rxbinding3.view.detaches
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.rx2.asObservable
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bloodsugar.BloodSugarHistoryListItemDataSourceFactory
@@ -26,8 +31,9 @@ import org.simple.clinic.databinding.ListBloodSugarHistoryItemBinding
 import org.simple.clinic.databinding.ListNewBloodSugarButtonBinding
 import org.simple.clinic.databinding.ScreenBloodSugarHistoryBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
@@ -40,20 +46,20 @@ import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryConfig
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.extractSuccessful
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.PagingItemAdapter_old
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.dp
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class BloodSugarHistoryScreen(
-    context: Context,
-    attrs: AttributeSet
-) : ConstraintLayout(context, attrs), BloodSugarHistoryScreenUi, BloodSugarHistoryScreenUiActions {
+class BloodSugarHistoryScreen : BaseScreen<
+    BloodSugarHistoryScreen.Key,
+    ScreenBloodSugarHistoryBinding,
+    BloodSugarHistoryScreenModel,
+    BloodSugarHistoryScreenEvent,
+    BloodSugarHistoryScreenEffect>(), BloodSugarHistoryScreenUi, BloodSugarHistoryScreenUiActions {
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -91,17 +97,11 @@ class BloodSugarHistoryScreen(
   @Inject
   lateinit var screenKeyProvider: ScreenKeyProvider
 
-  private var binding: ScreenBloodSugarHistoryBinding? = null
-
   private val toolbar
-    get() = binding!!.toolbar
+    get() = binding.toolbar
 
   private val bloodSugarHistoryList
-    get() = binding!!.bloodSugarHistoryList
-
-  private val screenKey by unsafeLazy {
-    screenKeyProvider.keyFor<BloodSugarHistoryScreenKey>(this)
-  }
+    get() = binding.bloodSugarHistoryList
 
   private val bloodSugarHistoryAdapter = PagingItemAdapter_old(
       diffCallback = BloodSugarHistoryListItemDiffCallback(),
@@ -115,63 +115,48 @@ class BloodSugarHistoryScreen(
       )
   )
 
-  private val events: Observable<BloodSugarHistoryScreenEvent> by unsafeLazy {
-    Observable
-        .merge(
-            addNewBloodSugarClicked(),
-            bloodPressureClicked()
-        )
-        .compose(ReportAnalyticsEvents())
-        .cast<BloodSugarHistoryScreenEvent>()
+  private val disposable = CompositeDisposable()
+
+  override fun defaultModel() = BloodSugarHistoryScreenModel.create(screenKey.patientId)
+
+  override fun createInit() = BloodSugarHistoryScreenInit()
+
+  override fun createUpdate() = BloodSugarHistoryScreenUpdate()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+
+  override fun uiRenderer() = BloodSugarHistoryScreenUiRenderer(this)
+
+  override fun events() = Observable
+      .merge(
+          addNewBloodSugarClicked(),
+          bloodPressureClicked()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<BloodSugarHistoryScreenEvent>()
+
+  override fun bindView(
+      layoutInflater: LayoutInflater,
+      container: ViewGroup?
+  ) = ScreenBloodSugarHistoryBinding.inflate(layoutInflater, container, false)
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
   }
 
-  private val uiRenderer = BloodSugarHistoryScreenUiRenderer(this)
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
 
-  private val delegate: MobiusDelegate<BloodSugarHistoryScreenModel, BloodSugarHistoryScreenEvent, BloodSugarHistoryScreenEffect> by unsafeLazy {
-    MobiusDelegate.forView(
-        events = events,
-        defaultModel = BloodSugarHistoryScreenModel.create(screenKey.patientUuid),
-        init = BloodSugarHistoryScreenInit(),
-        update = BloodSugarHistoryScreenUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
-
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
-
-    binding = ScreenBloodSugarHistoryBinding.bind(this)
-
-    context.injector<BloodSugarHistoryScreenInjector>().inject(this)
-
-    val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
-    openEntrySheetAfterTypeIsSelected(screenDestroys)
-
+    openEntrySheetAfterTypeIsSelected()
     handleToolbarBackClick()
     setupBloodSugarHistoryList()
   }
 
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    binding = null
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
+  override fun onDestroyView() {
+    super.onDestroyView()
+    disposable.dispose()
+    disposable.clear()
   }
 
   override fun showPatientInformation(patient: Patient) {
@@ -180,22 +165,27 @@ class BloodSugarHistoryScreen(
   }
 
   override fun openBloodSugarEntrySheet(patientUuid: UUID) {
-    val intent = BloodSugarTypePickerSheet.intent(context)
+    val intent = BloodSugarTypePickerSheet.intent(requireContext())
     activity.startActivityForResult(intent, TYPE_PICKER_SHEET)
   }
 
   override fun openBloodSugarUpdateSheet(measurement: BloodSugarMeasurement) {
-    val intent = BloodSugarEntrySheet.intentForUpdateBloodSugar(context, measurement.uuid, measurement.reading.type)
+    val intent = BloodSugarEntrySheet.intentForUpdateBloodSugar(requireContext(), measurement.uuid, measurement.reading.type)
     activity.startActivity(intent)
   }
 
-  @SuppressLint("CheckResult")
   override fun showBloodSugars(dataSourceFactory: BloodSugarHistoryListItemDataSourceFactory) {
-    val detaches = detaches()
+    // TODO: Remove this once Paging 3 implementation is added for blood sugar history.
+    val detaches = viewLifecycleOwnerLiveData
+        .asFlow()
+        .mapNotNull { it }
+        .asObservable()
+        .filter { it.lifecycle.currentState == Lifecycle.State.DESTROYED }
+        .map { Unit }
+
     // Initial load size hint should be a multiple of page size
-    dataSourceFactory.toObservable(config = measurementHistoryPaginationConfig, detaches = detaches)
-        .takeUntil(detaches)
-        .subscribe(bloodSugarHistoryAdapter::submitList)
+    disposable.add(dataSourceFactory.toObservable(config = measurementHistoryPaginationConfig, detaches = detaches)
+        .subscribe(bloodSugarHistoryAdapter::submitList))
   }
 
   private fun displayNameGenderAge(name: String, gender: Gender, age: Int) {
@@ -211,31 +201,29 @@ class BloodSugarHistoryScreen(
 
   private fun setupBloodSugarHistoryList() {
     val dividerMargin = 8.dp
-    val divider = DividerItemDecorator(context = context, marginStart = dividerMargin, marginEnd = dividerMargin)
+    val divider = DividerItemDecorator(context = requireContext(), marginStart = dividerMargin, marginEnd = dividerMargin)
 
     bloodSugarHistoryList.apply {
       setHasFixedSize(true)
-      layoutManager = LinearLayoutManager(context)
+      layoutManager = LinearLayoutManager(requireContext())
       addItemDecoration(divider)
       adapter = bloodSugarHistoryAdapter
     }
   }
 
-  @SuppressLint("CheckResult")
-  private fun openEntrySheetAfterTypeIsSelected(onDestroys: Observable<ScreenDestroyed>) {
-    screenResults
+  private fun openEntrySheetAfterTypeIsSelected() {
+    disposable.add(screenResults
         .streamResults()
         .ofType<ActivityResult>()
         .extractSuccessful(TYPE_PICKER_SHEET) { intent -> intent }
-        .takeUntil(onDestroys)
-        .subscribe(::showBloodSugarEntrySheet)
+        .subscribe(::showBloodSugarEntrySheet))
   }
 
   private fun showBloodSugarEntrySheet(intent: Intent) {
-    val patientUuid = screenKey.patientUuid
+    val patientUuid = screenKey.patientId
 
     val intentForNewBloodSugar = BloodSugarEntrySheet.intentForNewBloodSugar(
-        context,
+        requireContext(),
         patientUuid,
         BloodSugarTypePickerSheet.selectedBloodSugarType(intent)
     )
@@ -255,5 +243,18 @@ class BloodSugarHistoryScreen(
         .ofType<BloodSugarHistoryItemClicked>()
         .map { it.measurement }
         .map(::BloodSugarClicked)
+  }
+
+  @Parcelize
+  data class Key(
+      val patientId: UUID,
+      override val analyticsName: String = "Blood Sugar History"
+  ) : ScreenKey() {
+
+    override fun instantiateFragment() = BloodSugarHistoryScreen()
+  }
+
+  interface Injector {
+    fun inject(target: BloodSugarHistoryScreen)
   }
 }

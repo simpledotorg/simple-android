@@ -4,10 +4,10 @@ import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
-import java.util.Optional
 import org.simple.clinic.util.preference.LocalePreferenceConverter
 import org.simple.clinic.util.preference.getOptional
 import java.util.Locale
+import java.util.Optional
 import javax.inject.Named
 
 @Module
@@ -35,9 +35,11 @@ class SettingsModule {
         ProvidedLanguage(displayName = "ትግርኛ", languageCode = "ti-ET"),
         ProvidedLanguage(displayName = "Afan Oromo", languageCode = "om-ET"),
         ProvidedLanguage(displayName = "አማርኛ", languageCode = "am-ET"),
-        ProvidedLanguage(displayName = "தமிழ்", languageCode = "ta-IN"),
+        ProvidedLanguage(displayName = "தமிழ் (இந்தியா)", languageCode = "ta-IN"),
+        ProvidedLanguage(displayName = "தமிழ் (இலங்கை)", languageCode = "ta-LK"),
         ProvidedLanguage(displayName = "Soomaali", languageCode = "so-ET"),
-        ProvidedLanguage(displayName = "Sidama", languageCode = "sid-ET")
+        ProvidedLanguage(displayName = "Sidama", languageCode = "sid-ET"),
+        ProvidedLanguage(displayName = "සිංහල", languageCode = "si-LK")
     )
 
     return PreferencesSettingsRepository(

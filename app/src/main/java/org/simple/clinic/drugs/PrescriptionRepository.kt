@@ -145,7 +145,12 @@ class PrescriptionRepository @Inject constructor(
   }
 
   override fun pendingSyncRecords(limit: Int, offset: Int): List<PrescribedDrug> {
-    return emptyList()
+    return dao
+        .withSyncStatusBatched(
+            syncStatus = SyncStatus.PENDING,
+            limit = limit,
+            offset = offset
+        )
   }
 
   fun updateDrugDuration(id: UUID, duration: Duration) {

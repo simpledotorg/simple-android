@@ -23,7 +23,7 @@ import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.bloodsugar.Unknown
 import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet
-import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreenKey
+import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreen
 import org.simple.clinic.bloodsugar.selection.type.BloodSugarTypePickerSheet
 import org.simple.clinic.databinding.PatientsummaryBloodsugarsummaryContentBinding
 import org.simple.clinic.di.injector
@@ -34,7 +34,6 @@ import org.simple.clinic.feature.Feature.EditBloodSugar
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
@@ -239,7 +238,7 @@ class BloodSugarSummaryView(
   }
 
   override fun showBloodSugarHistoryScreen(patientUuid: UUID) {
-    router.push(BloodSugarHistoryScreenKey(patientUuid).wrap())
+    router.push(BloodSugarHistoryScreen.Key(patientUuid))
   }
 
   override fun openBloodSugarUpdateSheet(

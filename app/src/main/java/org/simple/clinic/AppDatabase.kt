@@ -51,10 +51,12 @@ import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.room.InstantRoomTypeConverter
 import org.simple.clinic.util.room.LocalDateRoomTypeConverter
 import org.simple.clinic.util.room.UuidRoomTypeConverter
 import java.time.Instant
+import javax.inject.Inject
 import org.simple.clinic.drugs.Answer as DrugAnswer
 
 @Database(
@@ -164,6 +166,9 @@ abstract class AppDatabase : RoomDatabase() {
 
   abstract fun teleconsultRecordDao(): TeleconsultRecord.RoomDao
 
+  @Inject
+  lateinit var userClock: UserClock
+
   fun clearAppData() {
     runInTransaction {
       patientDao().clear()
@@ -183,7 +188,7 @@ abstract class AppDatabase : RoomDatabase() {
 
   fun prune() {
     optimizeWithAnalytics(PurgeDeleted) {
-      purge()
+      purge(userClock = userClock)
       try {
         vacuumDatabase()
       } catch (e: Exception) {
@@ -196,13 +201,13 @@ abstract class AppDatabase : RoomDatabase() {
   }
 
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-  fun purge() {
+  fun purge(userClock: UserClock) {
     runInTransaction {
       with(patientDao()) {
         purgeDeleted()
         purgeDeletedPhoneNumbers()
         purgeDeletedBusinessIds()
-        purgeDeletedPatientAfterRetentionTime(Instant.now())
+        purgeDeletedPatientAfterRetentionTime(Instant.now(userClock))
       }
       with(bloodPressureDao()) {
         purgeDeleted()

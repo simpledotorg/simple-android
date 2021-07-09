@@ -146,6 +146,11 @@ class BloodPressureRepository @Inject constructor(
   }
 
   override fun pendingSyncRecords(limit: Int, offset: Int): List<BloodPressureMeasurement> {
-    return emptyList()
+    return dao
+        .withSyncStatusBatched(
+            syncStatus = SyncStatus.PENDING,
+            limit = limit,
+            offset = offset
+        )
   }
 }

@@ -18,10 +18,11 @@
 
 ### Changes
 - New supported language: Tamil (Sri Lanka) [`ta-LK`], Sinhala [`si-LK`]
-- [In Progress: 17 Jun 2021] Overdue list improvements
+- [In Progress: 7 Jul 2021] Overdue list improvements
   - Change overdue list UI
   - Load overdue patients without phone number
   - Add option to download & share overdue list
+  - Updated contact patient bottom sheet UI
   
 ### Fixes
 - Fix invalid qr code error when scanning a valid Indian NHID

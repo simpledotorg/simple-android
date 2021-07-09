@@ -11,6 +11,7 @@ class SyncCoordinator @Inject constructor() {
 
   fun <T : Any, P> push(
       repository: SynceableRepository<T, P>,
+      batchSize: Int,
       pushNetworkCall: (List<T>) -> DataPushResponse
   ) {
     val pendingSyncRecords = repository.recordsWithSyncStatus(SyncStatus.PENDING)

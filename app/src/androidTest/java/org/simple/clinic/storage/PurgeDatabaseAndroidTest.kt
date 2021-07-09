@@ -412,7 +412,7 @@ class PurgeDatabaseAndroidTest {
   }
 
   @Test
-  fun purging_the_database_should_delete_soft_patients_when_retention_time_has_passed() {
+  fun purging_the_database_should_hard_delete_patients_when_retention_time_has_passed() {
     // given
     val patientWithPassedRetentionTime = TestData.patientProfile(
         patientUuid = UUID.fromString("c3c84410-02f5-430e-a067-1830683a4d27"),

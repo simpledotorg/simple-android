@@ -136,6 +136,17 @@ data class Appointment(
     @Query("SELECT * FROM Appointment WHERE syncStatus = :status")
     fun recordsWithSyncStatus(status: SyncStatus): List<Appointment>
 
+    @Query("""
+        SELECT * FROM appointment
+        WHERE syncStatus = :syncStatus
+        LIMIT :limit OFFSET :offset
+    """)
+    fun recordsWithSyncStatusBatched(
+        syncStatus: SyncStatus,
+        limit: Int,
+        offset: Int
+    ): List<Appointment>
+
     @Query("UPDATE Appointment SET syncStatus = :to WHERE syncStatus = :from")
     fun updateSyncStatus(from: SyncStatus, to: SyncStatus)
 

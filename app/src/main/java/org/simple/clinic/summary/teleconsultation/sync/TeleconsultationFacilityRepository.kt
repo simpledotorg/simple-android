@@ -93,6 +93,11 @@ class TeleconsultationFacilityRepository @Inject constructor(
     }
   }
 
+  override fun pendingSyncRecords(limit: Int, offset: Int): List<TeleconsultationFacilityWithMedicalOfficers> {
+    // No implementation needed because this resource is never pushed
+    return emptyList()
+  }
+
   fun medicalOfficersForFacility(facilityId: UUID): List<MedicalOfficer> {
     return appDatabase
         .teleconsultFacilityWithMedicalOfficersDao()

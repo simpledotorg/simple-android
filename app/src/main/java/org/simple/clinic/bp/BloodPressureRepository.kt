@@ -144,4 +144,8 @@ class BloodPressureRepository @Inject constructor(
         .countWithStatus(SyncStatus.PENDING)
         .toObservable()
   }
+
+  override fun pendingSyncRecords(limit: Int, offset: Int): List<BloodPressureMeasurement> {
+    return emptyList()
+  }
 }

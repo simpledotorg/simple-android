@@ -115,6 +115,10 @@ class TeleconsultRecordRepository @Inject constructor(
         .toObservable()
   }
 
+  override fun pendingSyncRecords(limit: Int, offset: Int): List<TeleconsultRecord> {
+    return emptyList()
+  }
+
   fun clear() {
     teleconsultRecordDao.clear()
   }

@@ -503,6 +503,10 @@ class PatientRepository @Inject constructor(
         .toObservable()
   }
 
+  override fun pendingSyncRecords(limit: Int, offset: Int): List<PatientProfile> {
+    return emptyList()
+  }
+
   fun addIdentifierToPatient(
       uuid: UUID,
       patientUuid: UUID,

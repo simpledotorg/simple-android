@@ -109,6 +109,11 @@ class FacilityRepository @Inject constructor(
     return facilityDao.countWithStatus(SyncStatus.PENDING).toObservable()
   }
 
+  override fun pendingSyncRecords(limit: Int, offset: Int): List<Facility> {
+    // No implementation needed because this record is never pushed
+    return emptyList()
+  }
+
   fun facility(uuid: UUID): Optional<Facility> {
     return facilityDao.getOne(uuid).toOptional()
   }

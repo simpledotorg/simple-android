@@ -167,4 +167,8 @@ class MedicalHistoryRepository @Inject constructor(
         .countWithStatus(SyncStatus.PENDING)
         .toObservable()
   }
+
+  override fun pendingSyncRecords(limit: Int, offset: Int): List<MedicalHistory> {
+    return emptyList()
+  }
 }

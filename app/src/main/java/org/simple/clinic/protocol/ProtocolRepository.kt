@@ -71,6 +71,11 @@ class ProtocolRepository @Inject constructor(
     return protocolDao.countWithStatus(SyncStatus.PENDING).toObservable()
   }
 
+  override fun pendingSyncRecords(limit: Int, offset: Int): List<ProtocolAndProtocolDrugs> {
+    // No implementation needed because this resource is never pushed
+    return emptyList()
+  }
+
   private fun payloadToProtocolAndDrugs(payload: ProtocolPayload): ProtocolAndProtocolDrugs {
     return ProtocolAndProtocolDrugs(
         protocol = payload.toDatabaseModel(newStatus = SyncStatus.DONE),

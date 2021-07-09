@@ -225,6 +225,10 @@ class AppointmentRepository @Inject constructor(
         .toObservable()
   }
 
+  override fun pendingSyncRecords(limit: Int, offset: Int): List<Appointment> {
+    return emptyList()
+  }
+
   fun latestOverdueAppointmentForPatient(
       patientUuid: UUID,
       date: LocalDate

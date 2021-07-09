@@ -144,6 +144,10 @@ class PrescriptionRepository @Inject constructor(
         .toObservable()
   }
 
+  override fun pendingSyncRecords(limit: Int, offset: Int): List<PrescribedDrug> {
+    return emptyList()
+  }
+
   fun updateDrugDuration(id: UUID, duration: Duration) {
     dao.updateDrugDuration(
         id = id,

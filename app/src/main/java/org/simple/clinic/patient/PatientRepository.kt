@@ -100,7 +100,7 @@ class PatientRepository @Inject constructor(
         )
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<PatientProfile> {
+  fun recordsWithSyncStatus(syncStatus: SyncStatus): List<PatientProfile> {
     return database.patientDao().recordsWithSyncStatus(syncStatus)
   }
 
@@ -501,6 +501,16 @@ class PatientRepository @Inject constructor(
     return database.patientDao()
         .patientCountWithStatus(PENDING)
         .toObservable()
+  }
+
+  override fun pendingSyncRecords(limit: Int, offset: Int): List<PatientProfile> {
+    return database
+        .patientDao()
+        .profilesWithSyncStatusBatched(
+            syncStatus = PENDING,
+            limit = limit,
+            offset = offset
+        )
   }
 
   fun addIdentifierToPatient(

@@ -74,7 +74,7 @@ class BloodSugarRepository @Inject constructor(
   override fun save(records: List<BloodSugarMeasurement>): Completable =
       Completable.fromAction { dao.save(records) }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<BloodSugarMeasurement> {
+  fun recordsWithSyncStatus(syncStatus: SyncStatus): List<BloodSugarMeasurement> {
     return dao.withSyncStatus(syncStatus)
   }
 
@@ -105,6 +105,15 @@ class BloodSugarRepository @Inject constructor(
 
   override fun pendingSyncRecordCount(): Observable<Int> =
       dao.countWithStatus(PENDING).toObservable()
+
+  override fun pendingSyncRecords(limit: Int, offset: Int): List<BloodSugarMeasurement> {
+    return dao
+        .recordsWithSyncStatusBatched(
+            syncStatus = PENDING,
+            limit = limit,
+            offset = offset
+        )
+  }
 
   fun measurement(bloodSugarMeasurementUuid: UUID): BloodSugarMeasurement? =
       dao.getOne(bloodSugarMeasurementUuid)

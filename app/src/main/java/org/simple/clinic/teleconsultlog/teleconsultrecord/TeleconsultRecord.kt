@@ -63,6 +63,17 @@ data class TeleconsultRecord(
     @Query("SELECT * FROM TeleconsultRecord WHERE syncStatus = :syncStatus")
     fun recordsWithSyncStatus(syncStatus: SyncStatus): List<TeleconsultRecord>
 
+    @Query("""
+      SELECT * FROM TeleconsultRecord
+      WHERE syncStatus = :syncStatus
+      LIMIT :limit OFFSET :offset
+    """)
+    fun recordsWithSyncStatusBatched(
+        syncStatus: SyncStatus,
+        limit: Int,
+        offset: Int
+    ): List<TeleconsultRecord>
+
     @Query("SELECT COUNT(id) FROM TeleconsultRecord")
     fun count(): Flowable<Int>
 

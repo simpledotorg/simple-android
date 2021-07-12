@@ -65,7 +65,7 @@ class BloodPressureRepository @Inject constructor(
     dao.save(listOf(updatedMeasurement))
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<BloodPressureMeasurement> {
+  fun recordsWithSyncStatus(syncStatus: SyncStatus): List<BloodPressureMeasurement> {
     return dao.withSyncStatus(syncStatus)
   }
 
@@ -143,5 +143,14 @@ class BloodPressureRepository @Inject constructor(
     return dao
         .countWithStatus(SyncStatus.PENDING)
         .toObservable()
+  }
+
+  override fun pendingSyncRecords(limit: Int, offset: Int): List<BloodPressureMeasurement> {
+    return dao
+        .withSyncStatusBatched(
+            syncStatus = SyncStatus.PENDING,
+            limit = limit,
+            offset = offset
+        )
   }
 }

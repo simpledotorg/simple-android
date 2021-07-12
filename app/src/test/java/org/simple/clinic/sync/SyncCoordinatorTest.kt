@@ -9,9 +9,9 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.patient.SyncStatus
-import java.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import java.time.Instant
+import java.util.Optional
 import java.util.UUID
 
 class SyncCoordinatorTest {
@@ -33,11 +33,14 @@ class SyncCoordinatorTest {
 
   @Test
   fun `when pending sync records are empty, then the push network call should not be made`() {
-    whenever(repository.recordsWithSyncStatus(SyncStatus.PENDING)).thenReturn(emptyList())
+    whenever(repository.pendingSyncRecords(10, 0)).thenReturn(emptyList())
 
     var networkCallMade = false
 
-    syncCoordinator.push(repository) {
+    syncCoordinator.push(
+        repository = repository,
+        batchSize = 10
+    ) {
       networkCallMade = true
       DataPushResponse(emptyList())
     }
@@ -47,14 +50,17 @@ class SyncCoordinatorTest {
 
   @Test
   fun `if there are validation errors in push, then the failing records should be marked as invalid`() {
-    whenever(repository.recordsWithSyncStatus(SyncStatus.PENDING)).thenReturn(listOf(1, 2, 3))
+    whenever(repository.pendingSyncRecords(10, 0)).thenReturn(listOf(1, 2, 3))
 
     val validationErrors = listOf(
         ValidationErrors(uuid = UUID.randomUUID(), schemaErrorMessages = listOf("error-1")),
         ValidationErrors(uuid = UUID.randomUUID(), schemaErrorMessages = listOf("error-2"))
     )
 
-    syncCoordinator.push(repository) {
+    syncCoordinator.push(
+        repository = repository,
+        batchSize = 10
+    ) {
       DataPushResponse(validationErrors)
     }
 

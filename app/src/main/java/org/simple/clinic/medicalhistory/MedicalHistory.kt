@@ -177,6 +177,6 @@ data class MedicalHistory(
 			      WHERE P.uuid IS NULL AND MH.syncStatus == 'DONE'
 		    )
     """)
-    fun purgeDeletedMedicalHistoryWhenPatientIsNull()
+    fun purgeMedicalHistoryWhenPatientIsNull()
   }
 }

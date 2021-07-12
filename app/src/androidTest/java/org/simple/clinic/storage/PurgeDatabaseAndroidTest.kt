@@ -8,8 +8,6 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.util.TestUserClock
-import org.simple.clinic.util.TestUtcClock
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -36,9 +34,6 @@ class PurgeDatabaseAndroidTest {
   private val appointmentDao by lazy { appDatabase.appointmentDao() }
 
   private val prescribedDrugsDao by lazy { appDatabase.prescriptionDao() }
-
-  @Inject
-  lateinit var testUserClock: TestUserClock
 
   @Before
   fun setUp() {
@@ -79,7 +74,7 @@ class PurgeDatabaseAndroidTest {
     assertThat(patientDao.patientProfileImmediate(deletedButUnsyncedPatientProfile.patientUuid)).isEqualTo(deletedButUnsyncedPatientProfile)
 
     // when
-    appDatabase.purge(testUserClock)
+    appDatabase.purge(Instant.parse("2021-06-01T00:00:00Z"))
 
     // then
     assertThat(patientDao.patientProfileImmediate(deletedPatientProfile.patientUuid)).isNull()
@@ -123,7 +118,7 @@ class PurgeDatabaseAndroidTest {
     assertThat(phoneNumberDao.phoneNumber(notSyncedPatientProfile.patientUuid).blockingFirst()).containsExactly(deletedButUnsyncedPhoneNumber)
 
     // when
-    appDatabase.purge(testUserClock)
+    appDatabase.purge(Instant.parse("2021-06-01T00:00:00Z"))
 
     // then
     assertThat(phoneNumberDao.phoneNumber(syncedPatientProfile.patientUuid).blockingFirst()).containsExactly(notDeletedPhoneNumber)
@@ -167,7 +162,7 @@ class PurgeDatabaseAndroidTest {
     assertThat(businessIdDao.get(deletedButUnsyncedBusinessId.uuid)).isEqualTo(deletedButUnsyncedBusinessId)
 
     // when
-    appDatabase.purge(testUserClock)
+    appDatabase.purge(Instant.parse("2021-06-01T00:00:00Z"))
 
     // then
     assertThat(businessIdDao.get(deletedBusinessId.uuid)).isNull()
@@ -214,7 +209,7 @@ class PurgeDatabaseAndroidTest {
     assertThat(bloodPressureDao.getOne(deletedButUnsyncedBloodPressureMeasurement.uuid)).isEqualTo(deletedButUnsyncedBloodPressureMeasurement)
 
     // when
-    appDatabase.purge(testUserClock)
+    appDatabase.purge(Instant.parse("2021-06-01T00:00:00Z"))
 
     // then
     assertThat(bloodPressureDao.getOne(deletedBloodPressureMeasurement.uuid)).isNull()
@@ -261,7 +256,7 @@ class PurgeDatabaseAndroidTest {
     assertThat(bloodSugarDao.getOne(deletedButUnsyncedBloodSugarMeasurement.uuid)).isEqualTo(deletedButUnsyncedBloodSugarMeasurement)
 
     // when
-    appDatabase.purge(testUserClock)
+    appDatabase.purge(Instant.parse("2021-06-01T00:00:00Z"))
 
     // then
     assertThat(bloodSugarDao.getOne(deletedBloodSugarMeasurement.uuid)).isNull()
@@ -308,7 +303,7 @@ class PurgeDatabaseAndroidTest {
     assertThat(prescribedDrugsDao.getOne(deletedButUnsyncedPrescripion.uuid)).isEqualTo(deletedButUnsyncedPrescripion)
 
     // when
-    appDatabase.purge(testUserClock)
+    appDatabase.purge(Instant.parse("2021-06-01T00:00:00Z"))
 
     // then
     assertThat(prescribedDrugsDao.getOne(deletedPrescription.uuid)).isNull()
@@ -359,7 +354,7 @@ class PurgeDatabaseAndroidTest {
     assertThat(appointmentDao.getOne(deletedButUnsyncedAppointment.uuid)).isEqualTo(deletedButUnsyncedAppointment)
 
     // when
-    appDatabase.purge(testUserClock)
+    appDatabase.purge(Instant.parse("2021-06-01T00:00:00Z"))
 
     // then
     assertThat(appointmentDao.getOne(deletedAppointment.uuid)).isNull()
@@ -406,7 +401,7 @@ class PurgeDatabaseAndroidTest {
     assertThat(medicalHistoryDao.getOne(deletedButUnsyncedMedicalHistory.uuid)).isEqualTo(deletedButUnsyncedMedicalHistory)
 
     // when
-    appDatabase.purge(testUserClock)
+    appDatabase.purge(Instant.parse("2021-06-01T00:00:00Z"))
 
     // then
     assertThat(medicalHistoryDao.getOne(deletedMedicalHistory.uuid)).isNull()
@@ -487,7 +482,7 @@ class PurgeDatabaseAndroidTest {
     assertThat(appointmentDao.getOne(appointmentWithUnknownStatus.uuid)).isEqualTo(appointmentWithUnknownStatus)
 
     // when
-    appDatabase.purge(testUserClock)
+    appDatabase.purge(Instant.parse("2021-06-01T00:00:00Z"))
 
     // then
     assertThat(appointmentDao.getOne(scheduledAppointment.uuid)).isEqualTo(scheduledAppointment)
@@ -538,7 +533,7 @@ class PurgeDatabaseAndroidTest {
     assertThat(patientDao.patientProfileImmediate(patientWithNullRetentionTime.patientUuid)).isEqualTo(patientWithNullRetentionTime)
 
     // when
-    appDatabase.purge(testUserClock)
+    appDatabase.purge(Instant.parse("2021-06-01T00:00:00Z"))
 
     // then
     assertThat(patientDao.patientProfileImmediate(patientWithPassedRetentionTime.patientUuid)).isNull()
@@ -580,7 +575,7 @@ class PurgeDatabaseAndroidTest {
     assertThat(bloodPressureDao.getOne(notDeletedBloodPressureMeasurement.uuid)).isEqualTo(notDeletedBloodPressureMeasurement)
 
     // when
-    appDatabase.purge(testUserClock)
+    appDatabase.purge(Instant.parse("2021-06-01T00:00:00Z"))
 
     // then
     assertThat(bloodPressureDao.getOne(deletedBloodPressureMeasurement.uuid)).isNull()
@@ -619,7 +614,7 @@ class PurgeDatabaseAndroidTest {
     assertThat(bloodSugarDao.getOne(notDeletedBloodSugarMeasurement.uuid)).isEqualTo(notDeletedBloodSugarMeasurement)
 
     // when
-    appDatabase.purge(testUserClock)
+    appDatabase.purge(Instant.parse("2021-06-01T00:00:00Z"))
 
     // then
     assertThat(bloodSugarDao.getOne(deletedBloodSugarMeasurement.uuid)).isNull()
@@ -658,7 +653,7 @@ class PurgeDatabaseAndroidTest {
     assertThat(appointmentDao.getOne(notDeletedAppointment.uuid)).isEqualTo(notDeletedAppointment)
 
     // when
-    appDatabase.purge(testUserClock)
+    appDatabase.purge(Instant.parse("2021-06-01T00:00:00Z"))
 
     // then
     assertThat(appointmentDao.getOne(deletedAppointment.uuid)).isNull()
@@ -697,7 +692,7 @@ class PurgeDatabaseAndroidTest {
     assertThat(medicalHistoryDao.getOne(notDeletedMedicalHistory.uuid)).isEqualTo(notDeletedMedicalHistory)
 
     // when
-    appDatabase.purge(testUserClock)
+    appDatabase.purge(Instant.parse("2021-06-01T00:00:00Z"))
 
     // then
     assertThat(medicalHistoryDao.getOne(deletedMedicalHistory.uuid)).isNull()
@@ -736,7 +731,7 @@ class PurgeDatabaseAndroidTest {
     assertThat(prescribedDrugsDao.getOne(notDeletedPrescribedDrug.uuid)).isEqualTo(notDeletedPrescribedDrug)
 
     // when
-    appDatabase.purge(testUserClock)
+    appDatabase.purge(Instant.parse("2021-06-01T00:00:00Z"))
 
     // then
     assertThat(prescribedDrugsDao.getOne(deletedPrescribedDrug.uuid)).isNull()

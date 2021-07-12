@@ -182,6 +182,6 @@ data class BloodSugarMeasurement(
 			      WHERE P.uuid IS NULL AND BS.syncStatus == 'DONE'
 		    )
     """)
-    fun purgeDeletedBloodSugarMeasurementWhenPatientIsNull()
+    fun purgeBloodSugarMeasurementWhenPatientIsNull()
   }
 }

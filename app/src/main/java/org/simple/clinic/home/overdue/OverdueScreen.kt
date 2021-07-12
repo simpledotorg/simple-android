@@ -189,14 +189,20 @@ class OverdueScreen : BaseScreen<
   private fun overdueListAdapterLoadStateListener(loadStates: CombinedLoadStates) {
     val isSyncingPatientData = lastSyncedState.get().lastSyncProgress == SyncProgress.SYNCING
     val isLoadingInitialData = loadStates.refresh is LoadState.Loading
-    val endOfPaginationReached = loadStates.append.endOfPaginationReached
-    val hasNoAdapterItems = overdueListAdapter.itemCount == 0
 
-    val shouldShowEmptyView = endOfPaginationReached && hasNoAdapterItems
+    if (isSyncingPatientData || isLoadingInitialData) {
+      overdueProgressBar.visibility = View.VISIBLE
+      viewForEmptyList.visibility = View.GONE
+      overdueRecyclerView.visibility = View.GONE
+    } else {
+      val endOfPaginationReached = loadStates.append.endOfPaginationReached
+      val hasNoAdapterItems = overdueListAdapter.itemCount == 0
+      val shouldShowEmptyView = endOfPaginationReached && hasNoAdapterItems
 
-    overdueProgressBar.visibleOrGone(isVisible = (isLoadingInitialData || isSyncingPatientData) && hasNoAdapterItems)
-    viewForEmptyList.visibleOrGone(isVisible = shouldShowEmptyView && !isLoadingInitialData && !isSyncingPatientData)
-    overdueRecyclerView.visibleOrGone(isVisible = !shouldShowEmptyView)
+      overdueProgressBar.visibility = View.GONE
+      viewForEmptyList.visibleOrGone(isVisible = shouldShowEmptyView)
+      overdueRecyclerView.visibleOrGone(isVisible = !shouldShowEmptyView)
+    }
   }
 
   private fun downloadOverdueListClicks(): Observable<UiEvent> {

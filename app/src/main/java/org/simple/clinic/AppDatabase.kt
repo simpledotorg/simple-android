@@ -203,37 +203,57 @@ abstract class AppDatabase : RoomDatabase() {
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
   fun purge(userClock: UserClock) {
     runInTransaction {
-      with(patientDao()) {
-        purgeDeleted()
-        purgeDeletedPhoneNumbers()
-        purgeDeletedBusinessIds()
-        purgeDeletedPatientAfterRetentionTime(Instant.now(userClock))
-      }
-      with(bloodPressureDao()) {
-        purgeDeleted()
-        purgeDeletedBloodPressureMeasurementWhenPatientIsNull()
-      }
+      withPatientDao(userClock)
+      withBloodPressureDao()
+      withBloodSugarDao()
+      withAppointmentDao()
+      withMedicalHistoryDao()
+      withPrescriptionDao()
+    }
+  }
 
-      with(bloodSugarDao()) {
-        purgeDeleted()
-        purgeDeletedBloodSugarMeasurementWhenPatientIsNull()
-      }
+  private fun withPrescriptionDao() {
+    with(prescriptionDao()) {
+      purgeDeleted()
+      purgeDeletedPrescribedDrugWhenPatientIsNull()
+    }
+  }
 
-      with(appointmentDao()) {
-        purgeDeleted()
-        purgeUnusedAppointments()
-        purgeDeletedAppointmentsWhenPatientIsNull()
-      }
+  private fun withMedicalHistoryDao() {
+    with(medicalHistoryDao()) {
+      purgeDeleted()
+      purgeDeletedMedicalHistoryWhenPatientIsNull()
+    }
+  }
 
-      with(medicalHistoryDao()) {
-        purgeDeleted()
-        purgeDeletedMedicalHistoryWhenPatientIsNull()
-      }
+  private fun withAppointmentDao() {
+    with(appointmentDao()) {
+      purgeDeleted()
+      purgeUnusedAppointments()
+      purgeDeletedAppointmentsWhenPatientIsNull()
+    }
+  }
 
-      with(prescriptionDao()) {
-        purgeDeleted()
-        purgeDeletedPrescribedDrugWhenPatientIsNull()
-      }
+  private fun withBloodSugarDao() {
+    with(bloodSugarDao()) {
+      purgeDeleted()
+      purgeDeletedBloodSugarMeasurementWhenPatientIsNull()
+    }
+  }
+
+  private fun withBloodPressureDao() {
+    with(bloodPressureDao()) {
+      purgeDeleted()
+      purgeDeletedBloodPressureMeasurementWhenPatientIsNull()
+    }
+  }
+
+  private fun withPatientDao(userClock: UserClock) {
+    with(patientDao()) {
+      purgeDeleted()
+      purgeDeletedPhoneNumbers()
+      purgeDeletedBusinessIds()
+      purgeDeletedPatientAfterRetentionTime(Instant.now(userClock))
     }
   }
 

@@ -255,6 +255,6 @@ data class PrescribedDrug(
 			      WHERE P.uuid IS NULL AND PD.syncStatus == 'DONE'
 		    )
     """)
-    fun purgeDeletedPrescribedDrugWhenPatientIsNull()
+    fun purgePrescribedDrugWhenPatientIsNull()
   }
 }

@@ -211,14 +211,14 @@ abstract class AppDatabase : RoomDatabase() {
   private fun withPrescriptionDao() {
     with(prescriptionDao()) {
       purgeDeleted()
-      purgeDeletedPrescribedDrugWhenPatientIsNull()
+      purgePrescribedDrugWhenPatientIsNull()
     }
   }
 
   private fun withMedicalHistoryDao() {
     with(medicalHistoryDao()) {
       purgeDeleted()
-      purgeDeletedMedicalHistoryWhenPatientIsNull()
+      purgeMedicalHistoryWhenPatientIsNull()
     }
   }
 
@@ -226,21 +226,21 @@ abstract class AppDatabase : RoomDatabase() {
     with(appointmentDao()) {
       purgeDeleted()
       purgeUnusedAppointments()
-      purgeDeletedAppointmentsWhenPatientIsNull()
+      purgeAppointmentsWhenPatientIsNull()
     }
   }
 
   private fun withBloodSugarDao() {
     with(bloodSugarDao()) {
       purgeDeleted()
-      purgeDeletedBloodSugarMeasurementWhenPatientIsNull()
+      purgeBloodSugarMeasurementWhenPatientIsNull()
     }
   }
 
   private fun withBloodPressureDao() {
     with(bloodPressureDao()) {
       purgeDeleted()
-      purgeDeletedBloodPressureMeasurementWhenPatientIsNull()
+      purgeBloodPressureMeasurementWhenPatientIsNull()
     }
   }
 
@@ -249,7 +249,7 @@ abstract class AppDatabase : RoomDatabase() {
       purgeDeleted()
       purgeDeletedPhoneNumbers()
       purgeDeletedBusinessIds()
-      purgeDeletedPatientAfterRetentionTime(now)
+      purgePatientAfterRetentionTime(now)
     }
   }
 

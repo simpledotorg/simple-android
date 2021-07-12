@@ -291,6 +291,6 @@ data class Appointment(
 			      WHERE P.uuid IS NULL AND A.syncStatus == 'DONE'
 		    )
     """)
-    fun purgeDeletedAppointmentsWhenPatientIsNull()
+    fun purgeAppointmentsWhenPatientIsNull()
   }
 }

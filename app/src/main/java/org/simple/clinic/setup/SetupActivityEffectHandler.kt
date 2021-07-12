@@ -17,6 +17,7 @@ import org.simple.clinic.main.TypedPreference.Type.FallbackCountry
 import org.simple.clinic.main.TypedPreference.Type.OnboardingComplete
 import org.simple.clinic.setup.runcheck.AllowApplicationToRun
 import org.simple.clinic.user.User
+import org.simple.clinic.util.UserClock
 import java.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -33,7 +34,8 @@ class SetupActivityEffectHandler @AssistedInject constructor(
     private val allowApplicationToRun: AllowApplicationToRun,
     @TypedPreference(OnboardingComplete) private val onboardingCompletePreference: Preference<Boolean>,
     @TypedPreference(FallbackCountry) private val fallbackCountry: Country,
-    @TypedPreference(DatabaseMaintenanceRunAt) private val databaseMaintenanceRunAt: Preference<Optional<Instant>>
+    @TypedPreference(DatabaseMaintenanceRunAt) private val databaseMaintenanceRunAt: Preference<Optional<Instant>>,
+    private val userClock: UserClock
 ) {
 
   @AssistedFactory
@@ -109,7 +111,7 @@ class SetupActivityEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .doOnNext { appDatabase.prune() }
+          .doOnNext { appDatabase.prune(now = Instant.now(userClock)) }
           .doOnNext { databaseMaintenanceRunAt.set(Optional.of(Instant.now(clock))) }
           .map { DatabaseMaintenanceCompleted }
     }

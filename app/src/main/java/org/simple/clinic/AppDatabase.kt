@@ -182,9 +182,9 @@ abstract class AppDatabase : RoomDatabase() {
     }
   }
 
-  fun prune() {
+  fun prune(now: Instant) {
     optimizeWithAnalytics(PurgeDeleted) {
-      purge(userClock = userClock)
+      purge(now)
       try {
         vacuumDatabase()
       } catch (e: Exception) {
@@ -197,9 +197,9 @@ abstract class AppDatabase : RoomDatabase() {
   }
 
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-  fun purge(userClock: UserClock) {
+  fun purge(now: Instant) {
     runInTransaction {
-      withPatientDao(userClock)
+      withPatientDao(now)
       withBloodPressureDao()
       withBloodSugarDao()
       withAppointmentDao()
@@ -244,12 +244,12 @@ abstract class AppDatabase : RoomDatabase() {
     }
   }
 
-  private fun withPatientDao(userClock: UserClock) {
+  private fun withPatientDao(now: Instant) {
     with(patientDao()) {
       purgeDeleted()
       purgeDeletedPhoneNumbers()
       purgeDeletedBusinessIds()
-      purgeDeletedPatientAfterRetentionTime(Instant.now(userClock))
+      purgeDeletedPatientAfterRetentionTime(now)
     }
   }
 

@@ -18,6 +18,7 @@ import org.simple.clinic.setup.runcheck.AllowApplicationToRun
 import org.simple.clinic.setup.runcheck.Allowed
 import org.simple.clinic.setup.runcheck.Disallowed.Reason
 import org.simple.clinic.user.User
+import org.simple.clinic.util.TestUserClock
 import java.util.Optional
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
@@ -35,6 +36,7 @@ class SetupActivityEffectHandlerTest {
   private val appDatabase = mock<org.simple.clinic.AppDatabase>()
   private val databaseMaintenanceRunAtPreference = mock<Preference<Optional<Instant>>>()
   private val clock = TestUtcClock(Instant.parse("2018-01-01T00:00:00Z"))
+  private val userClock = TestUserClock(Instant.parse("2021-07-11T00:00:00Z"))
   private val allowApplicationToRun = mock<AllowApplicationToRun>()
 
   private val effectHandler = SetupActivityEffectHandler(
@@ -47,7 +49,8 @@ class SetupActivityEffectHandlerTest {
       allowApplicationToRun = allowApplicationToRun,
       onboardingCompletePreference = onboardingCompletePreference,
       fallbackCountry = fallbackCountry,
-      databaseMaintenanceRunAt = databaseMaintenanceRunAtPreference
+      databaseMaintenanceRunAt = databaseMaintenanceRunAtPreference,
+      userClock = userClock
   ).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -145,7 +148,7 @@ class SetupActivityEffectHandlerTest {
     testCase.dispatch(RunDatabaseMaintenance)
 
     // then
-    verify(appDatabase).prune()
+    verify(appDatabase).prune(Instant.now(userClock))
     verify(databaseMaintenanceRunAtPreference).set(Optional.of(Instant.now(clock)))
     testCase.assertOutgoingEvents(DatabaseMaintenanceCompleted)
     verifyZeroInteractions(uiActions)

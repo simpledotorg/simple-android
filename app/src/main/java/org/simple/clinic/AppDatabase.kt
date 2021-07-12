@@ -8,8 +8,8 @@ import androidx.room.TypeConverters
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.bp.BloodPressureMeasurement
-import org.simple.clinic.drugs.Drug
-import org.simple.clinic.drugs.DrugCategory
+import org.simple.clinic.drugs.search.Drug
+import org.simple.clinic.drugs.search.DrugCategory
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment

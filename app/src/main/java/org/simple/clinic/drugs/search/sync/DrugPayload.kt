@@ -2,9 +2,9 @@ package org.simple.clinic.drugs.search.sync
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import org.simple.clinic.drugs.Answer
-import org.simple.clinic.drugs.Drug
-import org.simple.clinic.drugs.DrugCategory
+import org.simple.clinic.drugs.search.Answer
+import org.simple.clinic.drugs.search.Drug
+import org.simple.clinic.drugs.search.DrugCategory
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import java.time.Instant

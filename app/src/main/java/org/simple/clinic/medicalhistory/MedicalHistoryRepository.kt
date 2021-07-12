@@ -110,7 +110,7 @@ class MedicalHistoryRepository @Inject constructor(
     }
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<MedicalHistory> {
+  fun recordsWithSyncStatus(syncStatus: SyncStatus): List<MedicalHistory> {
     return dao.recordsWithSyncStatus(syncStatus)
   }
 
@@ -166,5 +166,14 @@ class MedicalHistoryRepository @Inject constructor(
     return dao
         .countWithStatus(SyncStatus.PENDING)
         .toObservable()
+  }
+
+  override fun pendingSyncRecords(limit: Int, offset: Int): List<MedicalHistory> {
+    return dao
+        .recordsWithSyncStatusBatched(
+            syncStatus = SyncStatus.PENDING,
+            limit = limit,
+            offset = offset
+        )
   }
 }

@@ -30,7 +30,7 @@ class BloodPressureSync @Inject constructor(
           Completable.fromAction { pull() }
       )
 
-  override fun push() = syncCoordinator.push(repository) { api.push(toRequest(it)).execute().read()!! }
+  override fun push() = syncCoordinator.push(repository, config.batchSize) { api.push(toRequest(it)).execute().read()!! }
 
   override fun pull() {
     val batchSize = config.batchSize

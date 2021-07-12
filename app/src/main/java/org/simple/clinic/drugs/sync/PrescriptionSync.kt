@@ -31,7 +31,7 @@ class PrescriptionSync @Inject constructor(
       )
 
   override fun push() {
-    syncCoordinator.push(repository) { api.push(toRequest(it)).execute().read()!! }
+    syncCoordinator.push(repository, config.batchSize) { api.push(toRequest(it)).execute().read()!! }
   }
 
   override fun pull() {

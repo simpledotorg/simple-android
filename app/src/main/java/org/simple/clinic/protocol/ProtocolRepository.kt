@@ -34,7 +34,7 @@ class ProtocolRepository @Inject constructor(
     }
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<ProtocolAndProtocolDrugs> {
+  fun recordsWithSyncStatus(syncStatus: SyncStatus): List<ProtocolAndProtocolDrugs> {
     val protocolDao = appDatabase.protocolDao()
     val protocolDrugDao = appDatabase.protocolDrugDao()
 
@@ -69,6 +69,11 @@ class ProtocolRepository @Inject constructor(
 
   override fun pendingSyncRecordCount(): Observable<Int> {
     return protocolDao.countWithStatus(SyncStatus.PENDING).toObservable()
+  }
+
+  override fun pendingSyncRecords(limit: Int, offset: Int): List<ProtocolAndProtocolDrugs> {
+    // No implementation needed because this resource is never pushed
+    return emptyList()
   }
 
   private fun payloadToProtocolAndDrugs(payload: ProtocolPayload): ProtocolAndProtocolDrugs {

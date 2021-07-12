@@ -6,8 +6,8 @@ import org.simple.clinic.di.AppScope
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.User
-import java.util.Optional
 import org.simple.clinic.util.toOptional
+import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
 
@@ -85,10 +85,6 @@ class FacilityRepository @Inject constructor(
     return Completable.fromAction { facilityDao.save(records) }
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<Facility> {
-    return facilityDao.withSyncStatus(syncStatus)
-  }
-
   override fun setSyncStatus(from: SyncStatus, to: SyncStatus) {
     facilityDao.updateSyncStatus(oldStatus = from, newStatus = to)
   }
@@ -107,6 +103,11 @@ class FacilityRepository @Inject constructor(
 
   override fun pendingSyncRecordCount(): Observable<Int> {
     return facilityDao.countWithStatus(SyncStatus.PENDING).toObservable()
+  }
+
+  override fun pendingSyncRecords(limit: Int, offset: Int): List<Facility> {
+    // No implementation needed because this record is never pushed
+    return emptyList()
   }
 
   fun facility(uuid: UUID): Optional<Facility> {

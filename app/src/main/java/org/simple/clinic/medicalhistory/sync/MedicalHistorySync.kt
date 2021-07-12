@@ -2,7 +2,6 @@ package org.simple.clinic.medicalhistory.sync
 
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
-import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.sync.ModelSync
@@ -32,7 +31,7 @@ class MedicalHistorySync @Inject constructor(
       )
 
   override fun push() {
-    syncCoordinator.push(repository, pushNetworkCall = { api.push(toRequest(it)).execute().read()!! })
+    syncCoordinator.push(repository, config.batchSize) { api.push(toRequest(it)).execute().read()!! }
   }
 
   override fun pull() {

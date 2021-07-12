@@ -122,6 +122,17 @@ data class PrescribedDrug(
     @Query("SELECT * FROM prescribeddrug WHERE syncStatus = :status")
     fun withSyncStatus(status: SyncStatus): List<PrescribedDrug>
 
+    @Query("""
+      SELECT * FROM prescribeddrug
+      WHERE syncStatus = :syncStatus
+      LIMIT :limit OFFSET :offset
+    """)
+    fun withSyncStatusBatched(
+        syncStatus: SyncStatus,
+        limit: Int,
+        offset: Int
+    ): List<PrescribedDrug>
+
     @Query("UPDATE prescribeddrug SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")
     fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
 

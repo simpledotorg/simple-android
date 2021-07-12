@@ -13,8 +13,6 @@ interface SynceableRepository<T, P> {
 
   fun save(records: List<T>): Completable
 
-  fun recordsWithSyncStatus(syncStatus: SyncStatus): List<T>
-
   fun setSyncStatus(from: SyncStatus, to: SyncStatus)
 
   fun setSyncStatus(ids: List<UUID>, to: SyncStatus)
@@ -24,4 +22,6 @@ interface SynceableRepository<T, P> {
   fun recordCount(): Observable<Int>
 
   fun pendingSyncRecordCount(): Observable<Int>
+
+  fun pendingSyncRecords(limit: Int, offset: Int): List<T>
 }

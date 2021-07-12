@@ -72,6 +72,17 @@ data class MedicalHistory(
     @Query("SELECT * FROM MedicalHistory WHERE syncStatus = :status")
     fun recordsWithSyncStatus(status: SyncStatus): List<MedicalHistory>
 
+    @Query("""
+      SELECT * FROM MedicalHistory
+      WHERE syncStatus = :syncStatus
+      LIMIT :limit offset :offset
+    """)
+    fun recordsWithSyncStatusBatched(
+        syncStatus: SyncStatus,
+        limit: Int,
+        offset: Int
+    ): List<MedicalHistory>
+
     @Query("UPDATE MedicalHistory SET syncStatus = :to WHERE syncStatus = :from")
     fun updateSyncStatus(from: SyncStatus, to: SyncStatus)
 

@@ -56,7 +56,6 @@ import org.simple.clinic.util.room.InstantRoomTypeConverter
 import org.simple.clinic.util.room.LocalDateRoomTypeConverter
 import org.simple.clinic.util.room.UuidRoomTypeConverter
 import java.time.Instant
-import javax.inject.Inject
 import org.simple.clinic.drugs.Answer as DrugAnswer
 
 @Database(
@@ -165,9 +164,6 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun teleconsultFacilityWithMedicalOfficersDao(): TeleconsultationFacilityWithMedicalOfficers.RoomDao
 
   abstract fun teleconsultRecordDao(): TeleconsultRecord.RoomDao
-
-  @Inject
-  lateinit var userClock: UserClock
 
   fun clearAppData() {
     runInTransaction {

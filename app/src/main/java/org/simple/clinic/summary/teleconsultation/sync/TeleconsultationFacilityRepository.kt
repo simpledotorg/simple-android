@@ -98,6 +98,11 @@ class TeleconsultationFacilityRepository @Inject constructor(
     return emptyList()
   }
 
+  override fun extractIds(records: List<TeleconsultationFacilityWithMedicalOfficers>): List<UUID> {
+    // No implementation needed because this resource is never pushed
+    return emptyList()
+  }
+
   fun medicalOfficersForFacility(facilityId: UUID): List<MedicalOfficer> {
     return appDatabase
         .teleconsultFacilityWithMedicalOfficersDao()

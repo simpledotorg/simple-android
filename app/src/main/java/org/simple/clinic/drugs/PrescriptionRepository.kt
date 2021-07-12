@@ -153,6 +153,8 @@ class PrescriptionRepository @Inject constructor(
         )
   }
 
+  override fun extractIds(records: List<PrescribedDrug>) = records.map(PrescribedDrug::uuid)
+
   fun updateDrugDuration(id: UUID, duration: Duration) {
     dao.updateDrugDuration(
         id = id,

@@ -24,4 +24,6 @@ interface SynceableRepository<T, P> {
   fun pendingSyncRecordCount(): Observable<Int>
 
   fun pendingSyncRecords(limit: Int, offset: Int): List<T>
+
+  fun extractIds(records: List<T>): List<UUID>
 }

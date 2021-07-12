@@ -234,6 +234,8 @@ class AppointmentRepository @Inject constructor(
         )
   }
 
+  override fun extractIds(records: List<Appointment>) = records.map(Appointment::uuid)
+
   fun latestOverdueAppointmentForPatient(
       patientUuid: UUID,
       date: LocalDate

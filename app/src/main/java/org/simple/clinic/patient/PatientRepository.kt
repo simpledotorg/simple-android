@@ -513,6 +513,8 @@ class PatientRepository @Inject constructor(
         )
   }
 
+  override fun extractIds(records: List<PatientProfile>) = records.map(PatientProfile::patientUuid)
+
   fun addIdentifierToPatient(
       uuid: UUID,
       patientUuid: UUID,

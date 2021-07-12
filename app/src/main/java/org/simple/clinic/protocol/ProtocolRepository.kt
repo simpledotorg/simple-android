@@ -76,6 +76,11 @@ class ProtocolRepository @Inject constructor(
     return emptyList()
   }
 
+  override fun extractIds(records: List<ProtocolAndProtocolDrugs>): List<UUID> {
+    // No implementation needed because this resource is never pushed
+    return emptyList()
+  }
+
   private fun payloadToProtocolAndDrugs(payload: ProtocolPayload): ProtocolAndProtocolDrugs {
     return ProtocolAndProtocolDrugs(
         protocol = payload.toDatabaseModel(newStatus = SyncStatus.DONE),

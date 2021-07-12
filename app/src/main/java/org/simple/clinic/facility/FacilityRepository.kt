@@ -110,6 +110,11 @@ class FacilityRepository @Inject constructor(
     return emptyList()
   }
 
+  override fun extractIds(records: List<Facility>): List<UUID> {
+    // No implementation needed because this resource is never pushed
+    return emptyList()
+  }
+
   fun facility(uuid: UUID): Optional<Facility> {
     return facilityDao.getOne(uuid).toOptional()
   }

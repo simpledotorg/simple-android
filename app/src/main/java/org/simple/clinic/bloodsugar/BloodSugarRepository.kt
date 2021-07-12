@@ -115,6 +115,8 @@ class BloodSugarRepository @Inject constructor(
         )
   }
 
+  override fun extractIds(records: List<BloodSugarMeasurement>) = records.map(BloodSugarMeasurement::uuid)
+
   fun measurement(bloodSugarMeasurementUuid: UUID): BloodSugarMeasurement? =
       dao.getOne(bloodSugarMeasurementUuid)
 

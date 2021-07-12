@@ -176,4 +176,6 @@ class MedicalHistoryRepository @Inject constructor(
             offset = offset
         )
   }
+
+  override fun extractIds(records: List<MedicalHistory>) = records.map(MedicalHistory::uuid)
 }

@@ -153,4 +153,6 @@ class BloodPressureRepository @Inject constructor(
             offset = offset
         )
   }
+
+  override fun extractIds(records: List<BloodPressureMeasurement>) = records.map(BloodPressureMeasurement::uuid)
 }

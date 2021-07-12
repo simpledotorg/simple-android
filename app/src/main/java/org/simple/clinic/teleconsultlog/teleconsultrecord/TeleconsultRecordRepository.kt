@@ -119,6 +119,8 @@ class TeleconsultRecordRepository @Inject constructor(
         )
   }
 
+  override fun extractIds(records: List<TeleconsultRecord>) = records.map(TeleconsultRecord::id)
+
   fun clear() {
     teleconsultRecordDao.clear()
   }

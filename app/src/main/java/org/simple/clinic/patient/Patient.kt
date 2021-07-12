@@ -16,9 +16,9 @@ import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.storage.DaoWithUpsert
-import java.util.Optional
 import java.time.Instant
 import java.time.LocalDate
+import java.util.Optional
 import java.util.UUID
 
 @Entity(
@@ -433,5 +433,13 @@ data class Patient(
       )
     """)
     abstract fun deletePatientsNotInFacilities(facilityIds: List<UUID>)
+
+    @Query("""
+        DELETE FROM Patient
+        WHERE retainUntil IS NOT NULL 
+        AND retainUntil < :now
+        AND syncStatus == 'DONE'
+    """)
+    abstract fun purgeDeletedPatientAfterRetentionTime(now: Instant)
   }
 }

@@ -51,9 +51,12 @@ import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.room.InstantRoomTypeConverter
 import org.simple.clinic.util.room.LocalDateRoomTypeConverter
 import org.simple.clinic.util.room.UuidRoomTypeConverter
+import java.time.Instant
+import javax.inject.Inject
 import org.simple.clinic.drugs.Answer as DrugAnswer
 
 @Database(
@@ -163,6 +166,9 @@ abstract class AppDatabase : RoomDatabase() {
 
   abstract fun teleconsultRecordDao(): TeleconsultRecord.RoomDao
 
+  @Inject
+  lateinit var userClock: UserClock
+
   fun clearAppData() {
     runInTransaction {
       patientDao().clear()
@@ -182,7 +188,7 @@ abstract class AppDatabase : RoomDatabase() {
 
   fun prune() {
     optimizeWithAnalytics(PurgeDeleted) {
-      purge()
+      purge(userClock = userClock)
       try {
         vacuumDatabase()
       } catch (e: Exception) {
@@ -195,22 +201,59 @@ abstract class AppDatabase : RoomDatabase() {
   }
 
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-  fun purge() {
+  fun purge(userClock: UserClock) {
     runInTransaction {
-      with(patientDao()) {
-        purgeDeleted()
-        purgeDeletedPhoneNumbers()
-        purgeDeletedBusinessIds()
-      }
-      bloodPressureDao().purgeDeleted()
-      bloodSugarDao().purgeDeleted()
-      prescriptionDao().purgeDeleted()
-      medicalHistoryDao().purgeDeleted()
+      withPatientDao(userClock)
+      withBloodPressureDao()
+      withBloodSugarDao()
+      withAppointmentDao()
+      withMedicalHistoryDao()
+      withPrescriptionDao()
+    }
+  }
 
-      with(appointmentDao()) {
-        purgeDeleted()
-        purgeUnusedAppointments()
-      }
+  private fun withPrescriptionDao() {
+    with(prescriptionDao()) {
+      purgeDeleted()
+      purgeDeletedPrescribedDrugWhenPatientIsNull()
+    }
+  }
+
+  private fun withMedicalHistoryDao() {
+    with(medicalHistoryDao()) {
+      purgeDeleted()
+      purgeDeletedMedicalHistoryWhenPatientIsNull()
+    }
+  }
+
+  private fun withAppointmentDao() {
+    with(appointmentDao()) {
+      purgeDeleted()
+      purgeUnusedAppointments()
+      purgeDeletedAppointmentsWhenPatientIsNull()
+    }
+  }
+
+  private fun withBloodSugarDao() {
+    with(bloodSugarDao()) {
+      purgeDeleted()
+      purgeDeletedBloodSugarMeasurementWhenPatientIsNull()
+    }
+  }
+
+  private fun withBloodPressureDao() {
+    with(bloodPressureDao()) {
+      purgeDeleted()
+      purgeDeletedBloodPressureMeasurementWhenPatientIsNull()
+    }
+  }
+
+  private fun withPatientDao(userClock: UserClock) {
+    with(patientDao()) {
+      purgeDeleted()
+      purgeDeletedPhoneNumbers()
+      purgeDeletedBusinessIds()
+      purgeDeletedPatientAfterRetentionTime(Instant.now(userClock))
     }
   }
 

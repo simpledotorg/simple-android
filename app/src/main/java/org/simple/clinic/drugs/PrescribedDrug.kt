@@ -234,5 +234,16 @@ data class PrescribedDrug(
             syncStatus == 'DONE'
     """)
     fun deleteWithoutLinkedPatient()
+
+    @Query("""
+        DELETE FROM PrescribedDrug
+        WHERE patientUuid IN (
+		        SELECT PD.patientUuid 
+			      FROM PrescribedDrug PD
+			      LEFT JOIN Patient P ON P.uuid == PD.patientUuid
+			      WHERE P.uuid IS NULL AND PD.syncStatus == 'DONE'
+		    )
+    """)
+    fun purgeDeletedPrescribedDrugWhenPatientIsNull()
   }
 }

@@ -269,5 +269,17 @@ data class Appointment(
             syncStatus == 'DONE'
     """)
     fun deleteWithoutLinkedPatient()
+
+
+    @Query("""
+        DELETE FROM Appointment
+        WHERE patientUuid IN (
+		        SELECT A.patientUuid 
+			      FROM Appointment A
+			      LEFT JOIN Patient P ON P.uuid == A.patientUuid
+			      WHERE P.uuid IS NULL AND A.syncStatus == 'DONE'
+		    )
+    """)
+    fun purgeDeletedAppointmentsWhenPatientIsNull()
   }
 }

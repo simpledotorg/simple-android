@@ -4,17 +4,17 @@ import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import javax.inject.Provider
 
 class OverdueEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val appointmentRepository: AppointmentRepository,
-    private val currentFacility: Provider<Facility>,
+    private val currentFacilityStream: Observable<Facility>,
     private val pagerFactory: PagerFactory,
     private val overdueAppointmentsConfig: OverdueAppointmentsConfig,
     @Assisted private val uiActions: OverdueUiActions
@@ -47,7 +47,7 @@ class OverdueEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulers.io())
-          .map { currentFacility.get() }
+          .switchMap { currentFacilityStream }
           .map(::CurrentFacilityLoaded)
     }
   }

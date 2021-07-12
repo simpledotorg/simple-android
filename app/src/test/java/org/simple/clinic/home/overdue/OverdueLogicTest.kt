@@ -91,7 +91,7 @@ class OverdueLogicTest {
     val effectHandler = OverdueEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
         appointmentRepository = repository,
-        currentFacility = { facility },
+        currentFacilityStream = Observable.just(facility),
         pagerFactory = pagerFactory,
         overdueAppointmentsConfig = OverdueAppointmentsConfig(
             overdueAppointmentsLoadSize = 10

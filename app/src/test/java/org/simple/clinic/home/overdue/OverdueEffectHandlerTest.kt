@@ -39,7 +39,7 @@ class OverdueEffectHandlerTest {
   private val effectHandler = OverdueEffectHandler(
       schedulers = TestSchedulersProvider.trampoline(),
       appointmentRepository = mock(),
-      currentFacility = { facility },
+      currentFacilityStream = Observable.just(facility),
       pagerFactory = pagerFactory,
       overdueAppointmentsConfig = overdueAppointmentsConfig,
       uiActions = uiActions

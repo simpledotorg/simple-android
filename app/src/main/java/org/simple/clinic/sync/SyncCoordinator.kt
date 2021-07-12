@@ -5,7 +5,6 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.toNullable
 import timber.log.Timber
 import java.util.Optional
-import java.util.UUID
 import javax.inject.Inject
 
 class SyncCoordinator @Inject constructor() {
@@ -20,15 +19,13 @@ class SyncCoordinator @Inject constructor() {
         limit = batchSize,
         offset = 0
     )
-    val recordIdsWithErrors = mutableListOf<UUID>()
 
     while (recordsToSync.isNotEmpty()) {
       val response = pushNetworkCall(recordsToSync)
 
       val validationErrors = response.validationErrors
-      recordIdsWithErrors.addAll(validationErrors.map { it.uuid })
-
       logValidationErrors(validationErrors, recordsToSync)
+      markInvalidSyncRecords(validationErrors, repository)
 
       offset += recordsToSync.size
       recordsToSync = repository.pendingSyncRecords(
@@ -38,10 +35,6 @@ class SyncCoordinator @Inject constructor() {
     }
 
     repository.setSyncStatus(SyncStatus.PENDING, SyncStatus.DONE)
-
-    if (recordIdsWithErrors.isNotEmpty()) {
-      repository.setSyncStatus(recordIdsWithErrors, SyncStatus.INVALID)
-    }
   }
 
   private fun <T : Any> logValidationErrors(
@@ -51,6 +44,17 @@ class SyncCoordinator @Inject constructor() {
     if (validationErrors.isNotEmpty()) {
       val recordType = pendingSyncRecords.first().javaClass.simpleName
       Timber.e("Server sent validation errors when syncing $recordType : $validationErrors")
+    }
+  }
+
+  private fun <T : Any, P> markInvalidSyncRecords(
+      validationErrors: List<ValidationErrors>,
+      repository: SynceableRepository<T, P>
+  ) {
+    val recordIdsWithErrors = validationErrors.map { it.uuid }
+
+    if (recordIdsWithErrors.isNotEmpty()) {
+      repository.setSyncStatus(recordIdsWithErrors, SyncStatus.INVALID)
     }
   }
 

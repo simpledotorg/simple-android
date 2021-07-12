@@ -48,7 +48,7 @@ class TeleconsultationFacilityRepository @Inject constructor(
         .save(records.map { it.teleconsultationFacilityInfo })
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<TeleconsultationFacilityWithMedicalOfficers> {
+  fun recordsWithSyncStatus(syncStatus: SyncStatus): List<TeleconsultationFacilityWithMedicalOfficers> {
     return appDatabase
         .teleconsultFacilityInfoDao()
         .recordsWithSyncStatus(syncStatus)
@@ -91,6 +91,11 @@ class TeleconsultationFacilityRepository @Inject constructor(
           .teleconsultFacilityInfoDao()
           .countWithStatus(PENDING)
     }
+  }
+
+  override fun pendingSyncRecords(limit: Int, offset: Int): List<TeleconsultationFacilityWithMedicalOfficers> {
+    // No implementation needed because this resource is never pushed
+    return emptyList()
   }
 
   fun medicalOfficersForFacility(facilityId: UUID): List<MedicalOfficer> {

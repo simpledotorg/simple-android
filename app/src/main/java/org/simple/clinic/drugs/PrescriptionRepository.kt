@@ -93,7 +93,7 @@ class PrescriptionRepository @Inject constructor(
     }
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<PrescribedDrug> {
+  fun recordsWithSyncStatus(syncStatus: SyncStatus): List<PrescribedDrug> {
     return dao.withSyncStatus(syncStatus)
   }
 
@@ -142,6 +142,15 @@ class PrescriptionRepository @Inject constructor(
     return dao
         .countWithStatus(SyncStatus.PENDING)
         .toObservable()
+  }
+
+  override fun pendingSyncRecords(limit: Int, offset: Int): List<PrescribedDrug> {
+    return dao
+        .withSyncStatusBatched(
+            syncStatus = SyncStatus.PENDING,
+            limit = limit,
+            offset = offset
+        )
   }
 
   fun updateDrugDuration(id: UUID, duration: Duration) {

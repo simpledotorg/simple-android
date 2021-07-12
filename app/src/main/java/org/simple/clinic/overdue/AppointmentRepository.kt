@@ -173,7 +173,7 @@ class AppointmentRepository @Inject constructor(
 
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): List<Appointment> {
+  fun recordsWithSyncStatus(syncStatus: SyncStatus): List<Appointment> {
     return appointmentDao.recordsWithSyncStatus(syncStatus)
   }
 
@@ -223,6 +223,15 @@ class AppointmentRepository @Inject constructor(
     return appointmentDao
         .countWithStatus(SyncStatus.PENDING)
         .toObservable()
+  }
+
+  override fun pendingSyncRecords(limit: Int, offset: Int): List<Appointment> {
+    return appointmentDao
+        .recordsWithSyncStatusBatched(
+            syncStatus = SyncStatus.PENDING,
+            limit = limit,
+            offset = offset
+        )
   }
 
   fun latestOverdueAppointmentForPatient(

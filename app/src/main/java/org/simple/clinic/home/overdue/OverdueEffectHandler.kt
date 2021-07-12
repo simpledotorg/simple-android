@@ -47,7 +47,7 @@ class OverdueEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulers.io())
-          .map { currentFacility.get() }
+          .switchMap { currentFacilityStream }
           .map(::CurrentFacilityLoaded)
     }
   }

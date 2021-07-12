@@ -466,6 +466,6 @@ data class Patient(
         AND retainUntil < :now
         AND syncStatus == 'DONE'
     """)
-    abstract fun purgeDeletedPatientAfterRetentionTime(now: Instant)
+    abstract fun purgePatientAfterRetentionTime(now: Instant)
   }
 }

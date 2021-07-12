@@ -56,7 +56,6 @@ import org.simple.clinic.util.room.InstantRoomTypeConverter
 import org.simple.clinic.util.room.LocalDateRoomTypeConverter
 import org.simple.clinic.util.room.UuidRoomTypeConverter
 import java.time.Instant
-import javax.inject.Inject
 import org.simple.clinic.drugs.Answer as DrugAnswer
 
 @Database(
@@ -166,9 +165,6 @@ abstract class AppDatabase : RoomDatabase() {
 
   abstract fun teleconsultRecordDao(): TeleconsultRecord.RoomDao
 
-  @Inject
-  lateinit var userClock: UserClock
-
   fun clearAppData() {
     runInTransaction {
       patientDao().clear()
@@ -186,9 +182,9 @@ abstract class AppDatabase : RoomDatabase() {
     }
   }
 
-  fun prune() {
+  fun prune(now: Instant) {
     optimizeWithAnalytics(PurgeDeleted) {
-      purge(userClock = userClock)
+      purge(now)
       try {
         vacuumDatabase()
       } catch (e: Exception) {
@@ -201,9 +197,9 @@ abstract class AppDatabase : RoomDatabase() {
   }
 
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-  fun purge(userClock: UserClock) {
+  fun purge(now: Instant) {
     runInTransaction {
-      withPatientDao(userClock)
+      withPatientDao(now)
       withBloodPressureDao()
       withBloodSugarDao()
       withAppointmentDao()
@@ -215,14 +211,14 @@ abstract class AppDatabase : RoomDatabase() {
   private fun withPrescriptionDao() {
     with(prescriptionDao()) {
       purgeDeleted()
-      purgeDeletedPrescribedDrugWhenPatientIsNull()
+      purgePrescribedDrugWhenPatientIsNull()
     }
   }
 
   private fun withMedicalHistoryDao() {
     with(medicalHistoryDao()) {
       purgeDeleted()
-      purgeDeletedMedicalHistoryWhenPatientIsNull()
+      purgeMedicalHistoryWhenPatientIsNull()
     }
   }
 
@@ -230,30 +226,30 @@ abstract class AppDatabase : RoomDatabase() {
     with(appointmentDao()) {
       purgeDeleted()
       purgeUnusedAppointments()
-      purgeDeletedAppointmentsWhenPatientIsNull()
+      purgeAppointmentsWhenPatientIsNull()
     }
   }
 
   private fun withBloodSugarDao() {
     with(bloodSugarDao()) {
       purgeDeleted()
-      purgeDeletedBloodSugarMeasurementWhenPatientIsNull()
+      purgeBloodSugarMeasurementWhenPatientIsNull()
     }
   }
 
   private fun withBloodPressureDao() {
     with(bloodPressureDao()) {
       purgeDeleted()
-      purgeDeletedBloodPressureMeasurementWhenPatientIsNull()
+      purgeBloodPressureMeasurementWhenPatientIsNull()
     }
   }
 
-  private fun withPatientDao(userClock: UserClock) {
+  private fun withPatientDao(now: Instant) {
     with(patientDao()) {
       purgeDeleted()
       purgeDeletedPhoneNumbers()
       purgeDeletedBusinessIds()
-      purgeDeletedPatientAfterRetentionTime(Instant.now(userClock))
+      purgePatientAfterRetentionTime(now)
     }
   }
 

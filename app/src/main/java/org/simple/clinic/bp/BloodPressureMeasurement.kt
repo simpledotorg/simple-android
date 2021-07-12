@@ -210,6 +210,6 @@ data class BloodPressureMeasurement(
 			      WHERE P.uuid IS NULL AND BP.syncStatus == 'DONE'
 		    )
     """)
-    fun purgeDeletedBloodPressureMeasurementWhenPatientIsNull()
+    fun purgeBloodPressureMeasurementWhenPatientIsNull()
   }
 }

@@ -188,14 +188,14 @@ class OverdueScreen : BaseScreen<
 
   private fun overdueListAdapterLoadStateListener(loadStates: CombinedLoadStates) {
     val isSyncingPatientData = lastSyncedState.get().lastSyncProgress == SyncProgress.SYNCING
-    val isLoading = loadStates.refresh is LoadState.Loading
+    val isLoadingInitialData = loadStates.refresh is LoadState.Loading
     val endOfPaginationReached = loadStates.append.endOfPaginationReached
     val hasNoAdapterItems = overdueListAdapter.itemCount == 0
 
     val shouldShowEmptyView = endOfPaginationReached && hasNoAdapterItems
 
-    overdueProgressBar.visibleOrGone(isVisible = (isLoading || isSyncingPatientData) && hasNoAdapterItems)
-    viewForEmptyList.visibleOrGone(isVisible = shouldShowEmptyView && !isLoading && !isSyncingPatientData)
+    overdueProgressBar.visibleOrGone(isVisible = (isLoadingInitialData || isSyncingPatientData) && hasNoAdapterItems)
+    viewForEmptyList.visibleOrGone(isVisible = shouldShowEmptyView && !isLoadingInitialData && !isSyncingPatientData)
     overdueRecyclerView.visibleOrGone(isVisible = !shouldShowEmptyView)
   }
 

@@ -156,5 +156,16 @@ data class MedicalHistory(
             syncStatus == 'DONE'
     """)
     fun deleteWithoutLinkedPatient()
+
+    @Query("""
+        DELETE FROM MedicalHistory
+        WHERE patientUuid IN (
+		        SELECT MH.patientUuid 
+			      FROM MedicalHistory MH
+			      LEFT JOIN Patient P ON P.uuid == MH.patientUuid
+			      WHERE P.uuid IS NULL AND MH.syncStatus == 'DONE'
+		    )
+    """)
+    fun purgeDeletedMedicalHistoryWhenPatientIsNull()
   }
 }

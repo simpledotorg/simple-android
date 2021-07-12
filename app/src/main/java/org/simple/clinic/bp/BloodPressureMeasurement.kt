@@ -189,5 +189,16 @@ data class BloodPressureMeasurement(
             syncStatus == 'DONE'
     """)
     fun deleteWithoutLinkedPatient()
+
+    @Query("""
+        DELETE FROM BloodPressureMeasurement
+        WHERE patientUuid IN (
+		        SELECT BP.patientUuid 
+			      FROM BloodPressureMeasurement BP
+			      LEFT JOIN Patient P ON P.uuid == BP.patientUuid
+			      WHERE P.uuid IS NULL AND BP.syncStatus == 'DONE'
+		    )
+    """)
+    fun purgeDeletedBloodPressureMeasurementWhenPatientIsNull()
   }
 }

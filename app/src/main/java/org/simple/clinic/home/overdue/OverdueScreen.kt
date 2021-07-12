@@ -189,8 +189,9 @@ class OverdueScreen : BaseScreen<
   private fun overdueListAdapterLoadStateListener(loadStates: CombinedLoadStates) {
     val isSyncingPatientData = lastSyncedState.get().lastSyncProgress == SyncProgress.SYNCING
     val isLoadingInitialData = loadStates.refresh is LoadState.Loading
+    val hasOverdueListFullyLoaded = isSyncingPatientData || isLoadingInitialData
 
-    if (isSyncingPatientData || isLoadingInitialData) {
+    if (hasOverdueListFullyLoaded) {
       overdueProgressBar.visibility = View.VISIBLE
       viewForEmptyList.visibility = View.GONE
       overdueRecyclerView.visibility = View.GONE

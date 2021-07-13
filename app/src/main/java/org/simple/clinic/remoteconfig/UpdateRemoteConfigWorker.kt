@@ -7,6 +7,7 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import org.simple.clinic.ClinicApp
+import org.simple.clinic.platform.crash.CrashReporter
 import javax.inject.Inject
 
 class UpdateRemoteConfigWorker(
@@ -40,6 +41,7 @@ class UpdateRemoteConfigWorker(
       remoteConfigService.update()
       Result.success()
     } catch (e: Exception) {
+      CrashReporter.report(e)
       Result.failure()
     }
   }

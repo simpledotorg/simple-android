@@ -44,8 +44,8 @@ import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.sync.DataSync
-import org.simple.clinic.sync.UpdateRemoteConfigWorker
-import org.simple.clinic.sync.UpdateRemoteConfigWorker.Companion.REMOTE_CONFIG_SYNC_WORKER
+import org.simple.clinic.remoteconfig.UpdateRemoteConfigWorker
+import org.simple.clinic.remoteconfig.UpdateRemoteConfigWorker.Companion.REMOTE_CONFIG_SYNC_WORKER
 import org.simple.clinic.sync.SyncSetup
 import org.simple.clinic.user.UnauthorizeUser
 import org.simple.clinic.user.User

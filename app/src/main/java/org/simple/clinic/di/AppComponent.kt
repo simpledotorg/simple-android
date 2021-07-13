@@ -17,7 +17,7 @@ import org.simple.clinic.signature.SignatureComponent
 import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorComponent
 import org.simple.clinic.summary.teleconsultation.status.TeleconsultStatusComponent
 import org.simple.clinic.sync.DataSync
-import org.simple.clinic.sync.UpdateRemoteConfigWorker
+import org.simple.clinic.remoteconfig.UpdateRemoteConfigWorker
 import org.simple.clinic.sync.SyncWorker
 import org.simple.clinic.teleconsultlog.drugduration.di.DrugDurationComponent
 import org.simple.clinic.teleconsultlog.medicinefrequency.di.MedicineFrequencyComponent

@@ -1,4 +1,4 @@
-package org.simple.clinic.sync
+package org.simple.clinic.remoteconfig
 
 import android.content.Context
 import androidx.work.Constraints
@@ -7,7 +7,6 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import org.simple.clinic.ClinicApp
-import org.simple.clinic.remoteconfig.RemoteConfigService
 import javax.inject.Inject
 
 class UpdateRemoteConfigWorker(

@@ -15,7 +15,7 @@ class TestSyncConfigModule {
   fun frequentSyncConfig(): SyncConfig {
     return SyncConfig(
         syncInterval = SyncInterval.FREQUENT,
-        batchSize = 1000,
+        pullBatchSize = 1000,
         syncGroup = SyncGroup.FREQUENT
     )
   }
@@ -25,7 +25,7 @@ class TestSyncConfigModule {
   fun dailySyncConfig(): SyncConfig {
     return SyncConfig(
         syncInterval = SyncInterval.DAILY,
-        batchSize = 1000,
+        pullBatchSize = 1000,
         syncGroup = SyncGroup.DAILY
     )
   }

@@ -15,7 +15,7 @@ class SyncConfigModule {
   fun frequentSyncConfig(syncModuleConfig: SyncModuleConfig): SyncConfig {
     return SyncConfig(
         syncInterval = SyncInterval.FREQUENT,
-        batchSize = syncModuleConfig.frequentSyncBatchSize,
+        pullBatchSize = syncModuleConfig.frequentSyncBatchSize,
         syncGroup = SyncGroup.FREQUENT
     )
   }
@@ -25,7 +25,7 @@ class SyncConfigModule {
   fun dailySyncConfig(syncModuleConfig: SyncModuleConfig): SyncConfig {
     return SyncConfig(
         syncInterval = SyncInterval.DAILY,
-        batchSize = syncModuleConfig.dailySyncBatchSize,
+        pullBatchSize = syncModuleConfig.dailySyncBatchSize,
         syncGroup = SyncGroup.DAILY
     )
   }
@@ -46,7 +46,7 @@ class SyncConfigModule {
 
     return SyncConfig(
         syncInterval = SyncInterval.DAILY,
-        batchSize = drugsBatchSize.toInt(),
+        pullBatchSize = drugsBatchSize.toInt(),
         syncGroup = SyncGroup.DAILY
     )
   }

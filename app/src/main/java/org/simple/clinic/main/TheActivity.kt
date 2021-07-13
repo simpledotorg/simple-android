@@ -8,6 +8,8 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
+import androidx.work.ExistingWorkPolicy.REPLACE
+import androidx.work.WorkManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
@@ -42,6 +44,8 @@ import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.sync.DataSync
+import org.simple.clinic.sync.RemoteConfigSyncWorker
+import org.simple.clinic.sync.RemoteConfigSyncWorker.Companion.REMOTE_CONFIG_SYNC_WORKER
 import org.simple.clinic.sync.SyncSetup
 import org.simple.clinic.user.UnauthorizeUser
 import org.simple.clinic.user.User
@@ -52,7 +56,6 @@ import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
-import java.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.finishWithoutAnimations
@@ -61,6 +64,7 @@ import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
 import java.time.Instant
 import java.util.Locale
+import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
 
@@ -168,6 +172,9 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   @Inject
   lateinit var dataSync: DataSync
 
+  @Inject
+  lateinit var workManager: WorkManager
+
   private lateinit var component: TheActivityComponent
 
   private val disposables = CompositeDisposable()
@@ -236,6 +243,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
           unauthorizeUser.listen()
       )
       dataSync.fireAndForgetSync()
+      workManager.enqueueUniqueWork(REMOTE_CONFIG_SYNC_WORKER, REPLACE, RemoteConfigSyncWorker.createWorkRequest())
     }
 
     if (intent.hasExtra(EXTRA_DEEP_LINK_RESULT)) {

@@ -72,13 +72,11 @@ class ScanSimpleIdUpdate @Inject constructor(
       model: ScanSimpleIdModel,
       event: PatientSearchByIdentifierCompleted
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
-    val effect = if (event.patients.isEmpty()) {
-      OpenPatientSearch(event.identifier, null, model.patientPrefillInfo)
+    return if (event.patients.isEmpty()) {
+      dispatch(OnlinePatientLookupWithIdentifier(event.identifier))
     } else {
-      patientFoundByIdentifierSearch(patients = event.patients, identifier = event.identifier)
+      next(model = model.notSearching(), patientFoundByIdentifierSearch(patients = event.patients, identifier = event.identifier))
     }
-
-    return next(model = model.notSearching(), effect)
   }
 
   private fun patientFoundByIdentifierSearch(

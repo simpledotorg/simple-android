@@ -133,7 +133,7 @@ class ScanSimpleIdUpdateTest {
   }
 
   @Test
-  fun `when identifier is scanned and patient is not found, then open patient search`() {
+  fun `when identifier is scanned and patient is not found, then lookup patient online`() {
     val patients = emptyList<Patient>()
     val identifier = Identifier("123456", BpPassport)
 
@@ -141,8 +141,8 @@ class ScanSimpleIdUpdateTest {
         .given(defaultModel)
         .whenEvent(PatientSearchByIdentifierCompleted(patients, identifier))
         .then(assertThatNext(
-            hasModel(defaultModel.notSearching()),
-            hasEffects(OpenPatientSearch(identifier, null, null))
+            hasNoModel(),
+            hasEffects(OnlinePatientLookupWithIdentifier(identifier))
         ))
   }
 

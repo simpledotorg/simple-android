@@ -36,14 +36,11 @@ class UpdateRemoteConfigWorker(
   override fun doWork(): Result {
     ClinicApp.appComponent.inject(this)
 
-    try {
+    return try {
       remoteConfigService.update()
+      Result.success()
     } catch (e: Exception) {
-      // Individual syncs report their errors internally so we can just
-      // ignore this caught error. This is a good place for future
-      // improvements like attempting a backoff based retry.
+      Result.failure()
     }
-
-    return Result.success()
   }
 }

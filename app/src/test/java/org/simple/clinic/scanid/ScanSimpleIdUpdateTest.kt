@@ -165,8 +165,8 @@ class ScanSimpleIdUpdateTest {
         .given(patientPrefillInfoChangedModel)
         .whenEvent(PatientSearchByIdentifierCompleted(patients, identifier))
         .then(assertThatNext(
-            hasModel(patientPrefillInfoChangedModel.notSearching()),
-            hasEffects(OpenPatientSearch(identifier, null, patientPrefillInfo))
+            hasNoModel(),
+            hasEffects(OnlinePatientLookupWithIdentifier(identifier))
         ))
   }
 

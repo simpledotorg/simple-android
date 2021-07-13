@@ -192,10 +192,7 @@ class ScanSimpleIdEffectHandlerTest {
   fun `when open patient search effect is received with NHID, then open patient search with patient prefill info`() {
     // given
     val indiaNationalHealthID = "12341234123412"
-    val indiaNHIDInfoPayload = TestData.indiaNHIDInfoPayload(
-        healthIdNumber = indiaNationalHealthID
-    )
-    val patientPrefillInfo = indiaNHIDInfoPayload.toPatientPrefillInfo()
+    val patientPrefillInfo = TestData.patientPrefillInfo()
 
     val identifier = Identifier(indiaNationalHealthID, IndiaNationalHealthId)
 

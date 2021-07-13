@@ -36,6 +36,7 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType
+import org.simple.clinic.patient.PatientPrefillInfo
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.PatientStatus
@@ -1284,5 +1285,17 @@ object TestData {
           updatedAt = updatedAt,
           deletedAt = deletedAt
       )
+  )
+
+  fun patientPrefillInfo(
+      fullName : String = "Christi Joe",
+      gender : Gender = Gender.Female,
+      dateOfBirth : LocalDate = LocalDate.parse("2021-05-12"),
+      address : String = "Obvious HQ"
+  ) = PatientPrefillInfo(
+      fullName = fullName,
+      gender = gender,
+      dateOfBirth = dateOfBirth,
+      address = address
   )
 }

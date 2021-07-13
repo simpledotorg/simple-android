@@ -12,22 +12,26 @@ class SyncConfigModule {
 
   @Provides
   @Named("sync_config_frequent")
-  fun frequentSyncConfig(syncModuleConfig: SyncModuleConfig): SyncConfig {
+  fun frequentSyncConfig(
+      reader: ConfigReader
+  ): SyncConfig {
     return SyncConfig(
         syncInterval = SyncInterval.FREQUENT,
-        pullBatchSize = syncModuleConfig.frequentSyncBatchSize,
-        pushBatchSize = 500,
+        pullBatchSize = reader.long("sync_pull_batch_size", 1000).toInt(),
+        pushBatchSize = reader.long("sync_push_batch_size", 500).toInt(),
         syncGroup = SyncGroup.FREQUENT
     )
   }
 
   @Provides
   @Named("sync_config_daily")
-  fun dailySyncConfig(syncModuleConfig: SyncModuleConfig): SyncConfig {
+  fun dailySyncConfig(
+      reader: ConfigReader
+  ): SyncConfig {
     return SyncConfig(
         syncInterval = SyncInterval.DAILY,
-        pullBatchSize = syncModuleConfig.dailySyncBatchSize,
-        pushBatchSize = 500,
+        pullBatchSize = reader.long("sync_pull_batch_size", 1000).toInt(),
+        pushBatchSize = reader.long("sync_push_batch_size", 500).toInt(),
         syncGroup = SyncGroup.DAILY
     )
   }
@@ -37,7 +41,7 @@ class SyncConfigModule {
    * API loop if the payloads size is greater than the batch size. So, to avoid that issue and also
    * support batching in case server implements batching support for this API in future, we will have
    * a separate `SyncConfig` for the `DrugSync`.
-   * 
+   *
    * We can remove this once medications API has added the batching support and replace this usage
    * with our default sync configs.
    */
@@ -49,14 +53,9 @@ class SyncConfigModule {
     return SyncConfig(
         syncInterval = SyncInterval.DAILY,
         pullBatchSize = drugsBatchSize.toInt(),
-        pushBatchSize = 500,
+        pushBatchSize = 0, // We don't push drugs to server, so this is unused
         syncGroup = SyncGroup.DAILY
     )
-  }
-
-  @Provides
-  fun syncModuleConfig(reader: ConfigReader): SyncModuleConfig {
-    return SyncModuleConfig.read(reader)
   }
 
   data class SyncModuleConfig(

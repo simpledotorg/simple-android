@@ -15,8 +15,8 @@ import org.simple.clinic.protocol.ProtocolSyncApi
 import org.simple.clinic.protocol.sync.ProtocolSync
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.user.UserSession
-import java.util.Optional
 import org.simple.clinic.util.Rules
+import java.util.Optional
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -49,6 +49,7 @@ class ProtocolSyncIntegrationTest {
   private val config = SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
       pullBatchSize = batchSize,
+      pushBatchSize = batchSize,
       syncGroup = SyncGroup.FREQUENT
   )
 

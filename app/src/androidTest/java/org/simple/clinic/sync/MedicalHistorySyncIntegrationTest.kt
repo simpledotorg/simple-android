@@ -19,8 +19,8 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.RegisterPatientRule
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.user.UserSession
-import java.util.Optional
 import org.simple.clinic.util.Rules
+import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -58,6 +58,7 @@ class MedicalHistorySyncIntegrationTest {
   private val config = SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
       pullBatchSize = batchSize,
+      pushBatchSize = batchSize,
       syncGroup = SyncGroup.FREQUENT
   )
 

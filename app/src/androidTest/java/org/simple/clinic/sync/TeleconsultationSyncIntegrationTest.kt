@@ -42,6 +42,7 @@ class TeleconsultationSyncIntegrationTest {
   private val config = SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
       pullBatchSize = batchSize,
+      pushBatchSize = batchSize,
       syncGroup = SyncGroup.FREQUENT
   )
 

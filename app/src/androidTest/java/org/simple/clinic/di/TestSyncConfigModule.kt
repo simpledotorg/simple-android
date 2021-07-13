@@ -16,6 +16,7 @@ class TestSyncConfigModule {
     return SyncConfig(
         syncInterval = SyncInterval.FREQUENT,
         pullBatchSize = 1000,
+        pushBatchSize = 500,
         syncGroup = SyncGroup.FREQUENT
     )
   }
@@ -26,6 +27,7 @@ class TestSyncConfigModule {
     return SyncConfig(
         syncInterval = SyncInterval.DAILY,
         pullBatchSize = 1000,
+        pushBatchSize = 500,
         syncGroup = SyncGroup.DAILY
     )
   }

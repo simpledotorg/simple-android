@@ -16,6 +16,7 @@ class SyncConfigModule {
     return SyncConfig(
         syncInterval = SyncInterval.FREQUENT,
         pullBatchSize = syncModuleConfig.frequentSyncBatchSize,
+        pushBatchSize = 500,
         syncGroup = SyncGroup.FREQUENT
     )
   }
@@ -26,6 +27,7 @@ class SyncConfigModule {
     return SyncConfig(
         syncInterval = SyncInterval.DAILY,
         pullBatchSize = syncModuleConfig.dailySyncBatchSize,
+        pushBatchSize = 500,
         syncGroup = SyncGroup.DAILY
     )
   }
@@ -47,6 +49,7 @@ class SyncConfigModule {
     return SyncConfig(
         syncInterval = SyncInterval.DAILY,
         pullBatchSize = drugsBatchSize.toInt(),
+        pushBatchSize = 500,
         syncGroup = SyncGroup.DAILY
     )
   }

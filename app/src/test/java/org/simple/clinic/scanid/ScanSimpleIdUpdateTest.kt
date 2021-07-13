@@ -261,4 +261,19 @@ class ScanSimpleIdUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when online patient lookup is completed and had other error, show patient search`() {
+    val identifier = Identifier("fe1487af-024f-4448-8361-325913e6db81", BpPassport)
+
+    spec
+        .given(defaultModel)
+        .whenEvent(OnlinePatientLookupWithIdentifierCompleted(LookupPatientOnline.Result.OtherError, identifier))
+        .then(
+            assertThatNext(
+                hasModel(defaultModel.notSearching()),
+                hasEffects(OpenPatientSearch(identifier, null, null))
+            )
+        )
+  }
 }

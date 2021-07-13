@@ -33,6 +33,7 @@
 - Clean up `gradle.properties`
 - Extract product flavor build config fields into `defaultConfig`
 - Push records to server during sync in batches
+- Allow push and pull sync batch sizes to be configured separately
 
 ### Changes
 - Updated translations: `pa-IN`, `hi-IN`, `te-IN`, `kn-IN`, `mr-IN`, `te-IN`, `sid-ET`, `kn-IN`, `ta-IN`, `bn-BD`, `bn_IN`, `so-ET`, `ti-ET`, `am-ET`, `ta-LK`, `om-ET`

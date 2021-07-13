@@ -44,8 +44,8 @@ import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.sync.DataSync
-import org.simple.clinic.sync.RemoteConfigSyncWorker
-import org.simple.clinic.sync.RemoteConfigSyncWorker.Companion.REMOTE_CONFIG_SYNC_WORKER
+import org.simple.clinic.sync.UpdateRemoteConfigWorker
+import org.simple.clinic.sync.UpdateRemoteConfigWorker.Companion.REMOTE_CONFIG_SYNC_WORKER
 import org.simple.clinic.sync.SyncSetup
 import org.simple.clinic.user.UnauthorizeUser
 import org.simple.clinic.user.User
@@ -243,7 +243,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
           unauthorizeUser.listen()
       )
       dataSync.fireAndForgetSync()
-      workManager.enqueueUniqueWork(REMOTE_CONFIG_SYNC_WORKER, REPLACE, RemoteConfigSyncWorker.createWorkRequest())
+      workManager.enqueueUniqueWork(REMOTE_CONFIG_SYNC_WORKER, REPLACE, UpdateRemoteConfigWorker.createWorkRequest())
     }
 
     if (intent.hasExtra(EXTRA_DEEP_LINK_RESULT)) {

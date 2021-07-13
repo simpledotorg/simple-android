@@ -10,7 +10,7 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.remoteconfig.RemoteConfigService
 import javax.inject.Inject
 
-class RemoteConfigSyncWorker(
+class UpdateRemoteConfigWorker(
     context: Context,
     workerParams: WorkerParameters
 ) : Worker(context, workerParams) {
@@ -25,7 +25,7 @@ class RemoteConfigSyncWorker(
           .build()
 
       return OneTimeWorkRequest
-          .Builder(RemoteConfigSyncWorker::class.java)
+          .Builder(UpdateRemoteConfigWorker::class.java)
           .setConstraints(constraints)
           .build()
     }

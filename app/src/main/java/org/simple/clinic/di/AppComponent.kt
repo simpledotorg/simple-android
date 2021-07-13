@@ -17,7 +17,7 @@ import org.simple.clinic.signature.SignatureComponent
 import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorComponent
 import org.simple.clinic.summary.teleconsultation.status.TeleconsultStatusComponent
 import org.simple.clinic.sync.DataSync
-import org.simple.clinic.sync.RemoteConfigSyncWorker
+import org.simple.clinic.sync.UpdateRemoteConfigWorker
 import org.simple.clinic.sync.SyncWorker
 import org.simple.clinic.teleconsultlog.drugduration.di.DrugDurationComponent
 import org.simple.clinic.teleconsultlog.medicinefrequency.di.MedicineFrequencyComponent
@@ -29,7 +29,7 @@ interface AppComponent {
 
   fun inject(target: ClinicApp)
   fun inject(target: SyncWorker)
-  fun inject(target: RemoteConfigSyncWorker)
+  fun inject(target: UpdateRemoteConfigWorker)
   fun inject(target: OtpSmsReceiver)
   fun inject(target: DataSync)
 

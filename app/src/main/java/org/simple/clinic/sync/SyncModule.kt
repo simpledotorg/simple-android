@@ -31,16 +31,15 @@ import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncModule
 import org.simple.clinic.protocol.ProtocolModule
 import org.simple.clinic.protocol.sync.ProtocolSync
-import org.simple.clinic.remoteconfig.RemoteConfigSync
 import org.simple.clinic.reports.ReportsModule
 import org.simple.clinic.reports.ReportsSync
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationSync
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordSync
-import java.util.Optional
 import org.simple.clinic.util.preference.InstantRxPreferencesConverter
 import org.simple.clinic.util.preference.getOptional
 import java.time.Instant
+import java.util.Optional
 import javax.inject.Named
 
 @Module(includes = [
@@ -67,7 +66,6 @@ class SyncModule {
       appointmentSync: AppointmentSync,
       prescriptionSync: PrescriptionSync,
       reportsSync: ReportsSync,
-      remoteConfigSync: RemoteConfigSync,
       helpSync: HelpSync,
       bloodSugarSync: BloodSugarSync,
       teleconsultationMedicalOfficersSync: TeleconsultationSync,
@@ -76,7 +74,7 @@ class SyncModule {
     return listOf(
         facilitySync, protocolSync, patientSync,
         bloodPressureSync, medicalHistorySync, appointmentSync,
-        prescriptionSync, reportsSync, remoteConfigSync, helpSync,
+        prescriptionSync, reportsSync, helpSync,
         bloodSugarSync, teleconsultationMedicalOfficersSync,
         teleconsultRecordSync
     )

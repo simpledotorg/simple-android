@@ -16,6 +16,7 @@
 - Push records to server during sync in batches
 - Implement `DrugSync`
 - Update default protocol drugs
+- Allow push and pull sync batch sizes to be configured separately
 
 ### Features
 - [In Progress: 06 Jul 2021] Add support for finding a patient online from ID scan

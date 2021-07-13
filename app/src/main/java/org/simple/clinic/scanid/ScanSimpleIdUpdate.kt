@@ -11,6 +11,10 @@ import org.simple.clinic.patient.PatientPrefillInfo
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
+import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline
+import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.Found
+import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.NotFound
+import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.OtherError
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Success
@@ -35,6 +39,18 @@ class ScanSimpleIdUpdate @Inject constructor(
       is PatientSearchByIdentifierCompleted -> patientSearchByIdentifierCompleted(model, event)
       is ScannedQRCodeJsonParsed -> scannedQRCodeParsed(model, event)
       InvalidQrCode -> next(model.notSearching().invalidQrCode())
+      is OnlinePatientLookupWithIdentifierCompleted -> onlinePatientLookupWithIdentifierCompleted(model, event)
+    }
+  }
+
+  private fun onlinePatientLookupWithIdentifierCompleted(
+      model: ScanSimpleIdModel,
+      event: OnlinePatientLookupWithIdentifierCompleted
+  ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+    return when(event.result) {
+      is NotFound -> next(model.notSearching(), OpenPatientSearch(event.identifier, null, model.patientPrefillInfo))
+      is OtherError -> noChange()
+      else -> noChange() // update the list of patients or patient received here
     }
   }
 

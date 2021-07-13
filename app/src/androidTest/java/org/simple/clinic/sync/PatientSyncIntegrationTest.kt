@@ -19,9 +19,9 @@ import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncApi
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.user.UserSession
-import java.util.Optional
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.unsafeLazy
+import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -54,7 +54,8 @@ class PatientSyncIntegrationTest {
   private val batchSize = 3
   private val config = SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
-      batchSize = batchSize,
+      pullBatchSize = batchSize,
+      pushBatchSize = batchSize,
       syncGroup = SyncGroup.FREQUENT
   )
 

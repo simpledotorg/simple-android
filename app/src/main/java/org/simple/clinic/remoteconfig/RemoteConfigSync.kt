@@ -27,9 +27,10 @@ class RemoteConfigSync @Inject constructor(
 
   override fun syncConfig(): SyncConfig {
     return SyncConfig(
-        syncInterval = SyncInterval.FREQUENT,
-        batchSize = 0, // Unused for remote config sync
-        syncGroup = SyncGroup.FREQUENT
+      syncInterval = SyncInterval.FREQUENT,
+      pullBatchSize = 0, // Unused for remote config sync
+      pushBatchSize = 0, // Unused for remote config sync
+      syncGroup = SyncGroup.FREQUENT
     )
   }
 }

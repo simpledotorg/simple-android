@@ -31,7 +31,7 @@ class MedicalHistorySync @Inject constructor(
       )
 
   override fun push() {
-    syncCoordinator.push(repository, config.pullBatchSize) { api.push(toRequest(it)).execute().read()!! }
+    syncCoordinator.push(repository, config.pushBatchSize) { api.push(toRequest(it)).execute().read()!! }
   }
 
   override fun pull() {

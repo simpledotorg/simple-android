@@ -3,13 +3,14 @@ package org.simple.clinic.reports
 import io.reactivex.Completable
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
+import org.simple.clinic.sync.SyncConfigType
+import org.simple.clinic.sync.SyncConfigType.Type.Frequent
 import javax.inject.Inject
-import javax.inject.Named
 
 class ReportsSync @Inject constructor(
     private val reportsApi: ReportsApi,
     private val reportsRepository: ReportsRepository,
-    @Named("sync_config_frequent") private val config: SyncConfig
+    @SyncConfigType(Frequent) private val config: SyncConfig
 ) : ModelSync {
 
   override val name: String = "Reports"

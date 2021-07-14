@@ -7,9 +7,11 @@ import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
+import org.simple.clinic.sync.SyncConfigType
+import org.simple.clinic.sync.SyncConfigType.Type.Frequent
 import org.simple.clinic.sync.SyncCoordinator
-import java.util.Optional
 import org.simple.clinic.util.read
+import java.util.Optional
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -18,7 +20,7 @@ class PatientSync @Inject constructor(
     private val repository: PatientRepository,
     private val api: PatientSyncApi,
     @Named("last_patient_pull_token") private val lastPullToken: Preference<Optional<String>>,
-    @Named("sync_config_frequent") private val config: SyncConfig
+    @SyncConfigType(Frequent) private val config: SyncConfig
 ) : ModelSync {
 
   override val name: String = "Patient"

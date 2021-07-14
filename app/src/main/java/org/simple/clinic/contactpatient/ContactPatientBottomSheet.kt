@@ -333,6 +333,7 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   override fun switchToSetAppointmentReminderView() {
     sharedAxis(contentFlipper)
 
+    callPatientView.visibility = GONE
     callPatientView_Old.visibility = GONE
     setAppointmentReminderView.visibility = VISIBLE
   }

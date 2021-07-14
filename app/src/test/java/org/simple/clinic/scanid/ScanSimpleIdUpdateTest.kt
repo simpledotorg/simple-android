@@ -316,4 +316,26 @@ class ScanSimpleIdUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `When complete medical records are saved and more than 1 patient is found with id then open patient search`() {
+    val identifier = Identifier("8c76b646-c03f-4d9c-8140-ec08e1945051", BpPassport)
+    val commonIdentifier = TestData.businessId(identifier = identifier)
+
+    val patientUuid1 = TestData.patientProfile(patientUuid = UUID.fromString("69beb7f2-b97f-452b-8faa-d98dfa33ce82"), businessId = commonIdentifier)
+    val patientUuid2 = TestData.patientProfile(patientUuid = UUID.fromString("17817ea4-f6d0-453d-b739-648000f1db97"), businessId = commonIdentifier)
+
+    val completeMedicalRecord = TestData.completeMedicalRecord(patient = patientUuid1)
+    val completeMedicalRecord2 = TestData.completeMedicalRecord(patient = patientUuid2)
+
+    spec
+        .given(defaultModel)
+        .whenEvent(CompleteMedicalRecordsSaved(listOf(completeMedicalRecord, completeMedicalRecord2)))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(OpenPatientSearch(additionalIdentifier = null, "8766460", null))
+            )
+        )
+  }
 }

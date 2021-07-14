@@ -3,7 +3,6 @@ package org.simple.clinic.sync
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.remoteconfig.ConfigReader
-import org.simple.clinic.sync.SyncConfigType.Type.Daily
 import org.simple.clinic.sync.SyncConfigType.Type.Drugs
 import org.simple.clinic.sync.SyncConfigType.Type.Frequent
 
@@ -20,19 +19,6 @@ class SyncConfigModule {
         pullBatchSize = reader.long("sync_pull_batch_size", 1000).toInt(),
         pushBatchSize = reader.long("sync_push_batch_size", 500).toInt(),
         syncGroup = SyncGroup.FREQUENT
-    )
-  }
-
-  @Provides
-  @SyncConfigType(Daily)
-  fun dailySyncConfig(
-      reader: ConfigReader
-  ): SyncConfig {
-    return SyncConfig(
-        syncInterval = SyncInterval.DAILY,
-        pullBatchSize = reader.long("sync_pull_batch_size", 1000).toInt(),
-        pushBatchSize = reader.long("sync_push_batch_size", 500).toInt(),
-        syncGroup = SyncGroup.DAILY
     )
   }
 

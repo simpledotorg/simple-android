@@ -57,8 +57,13 @@ class ScanSimpleIdUpdate @Inject constructor(
   }
 
   private fun patientsFoundByOnlineLookup(completeMedicalRecords: List<CompleteMedicalRecord>): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
-    val patientId = completeMedicalRecords.first().patient.patientUuid
-    return dispatch(OpenPatientSummary(patientId))
+    val effect = if (completeMedicalRecords.isNotEmpty() && completeMedicalRecords.size > 1) {
+      multiplePatientsWithId(completeMedicalRecords.first().patient.businessIds.first().identifier)
+    } else {
+      val patientId = completeMedicalRecords.first().patient.patientUuid
+      OpenPatientSummary(patientId)
+    }
+    return dispatch(effect)
   }
 
   private fun scannedQRCodeParsed(

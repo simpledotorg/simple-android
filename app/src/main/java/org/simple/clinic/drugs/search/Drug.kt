@@ -52,8 +52,11 @@ data class Drug(
 
     @Query("""
       SELECT drugs.* FROM Drug drugs
-      WHERE drugs.name LIKE '%' || :query || '%' COLLATE NOCASE
+      LEFT JOIN ProtocolDrug PD ON PD.protocolUuid == :protocolId AND PD.rxNormCode == drugs.rxNormCode
+      WHERE drugs.name LIKE '%' || :query || '%' COLLATE NOCASE AND PD.uuid IS NULL
+      GROUP BY drugs.id
+      ORDER BY drugs.name COLLATE NOCASE, drugs.dosage ASC
     """)
-    fun search(query: String): PagingSource<Int, Drug>
+    fun searchForNonProtocolDrugs(query: String, protocolId: UUID?): PagingSource<Int, Drug>
   }
 }

@@ -44,8 +44,8 @@ class DrugRepository @Inject constructor(
     return drugDao.getAll()
   }
 
-  fun search(query: String): PagingSource<Int, Drug> {
-    return drugDao.search(query)
+  fun searchForNonProtocolDrugs(query: String, protocolId: UUID?): PagingSource<Int, Drug> {
+    return drugDao.searchForNonProtocolDrugs(query, protocolId)
   }
 
   private fun saveRecords(records: List<Drug>) {

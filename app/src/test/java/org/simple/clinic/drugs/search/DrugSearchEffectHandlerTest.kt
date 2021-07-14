@@ -25,12 +25,15 @@ class DrugSearchEffectHandlerTest {
   private val pagerFactory = mock<PagerFactory>()
   private val uiActions = mock<UiActions>()
   private val drugsSearchResultsPageSize = 10
+  private val facility = TestData.facility(uuid = UUID.fromString("6718d30a-a755-4422-b0a1-802c989c56ce"),
+      name = "PHC Obvious")
 
   private val testCase = EffectHandlerTestCase(DrugSearchEffectHandler(
       schedulersProvider = TestSchedulersProvider.trampoline(),
       drugsRepository = repository,
       pagerFactory = pagerFactory,
       drugsSearchResultsPageSize = drugsSearchResultsPageSize,
+      currentFacility = { facility },
       uiActions = uiActions
   ).build())
 

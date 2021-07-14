@@ -1,12 +1,14 @@
 package org.simple.clinic.drugs.search
 
 import com.spotify.mobius.rx2.RxMobius
+import dagger.Lazy
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.di.PagingSize
 import org.simple.clinic.di.PagingSize.Page.DrugsSearchResults
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
@@ -14,6 +16,7 @@ class DrugSearchEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val drugsRepository: DrugRepository,
     private val pagerFactory: PagerFactory,
+    private val currentFacility: Lazy<Facility>,
     @PagingSize(DrugsSearchResults) private val drugsSearchResultsPageSize: Int,
     @Assisted private val uiActions: UiActions
 ) {
@@ -40,8 +43,9 @@ class DrugSearchEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulersProvider.io())
           .switchMap {
+            val currentFacilityProtocolId = currentFacility.get().protocolUuid
             pagerFactory.createPager(
-                sourceFactory = { drugsRepository.search(it.searchQuery) },
+                sourceFactory = { drugsRepository.searchForNonProtocolDrugs(it.searchQuery, currentFacilityProtocolId) },
                 pageSize = drugsSearchResultsPageSize
             )
           }

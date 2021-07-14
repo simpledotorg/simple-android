@@ -4,10 +4,12 @@ import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
+import org.simple.clinic.sync.SyncConfigType
+import org.simple.clinic.sync.SyncConfigType.Type.Daily
 import org.simple.clinic.sync.SyncCoordinator
-import java.util.Optional
 import org.simple.clinic.util.read
 import java.io.IOException
+import java.util.Optional
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -16,7 +18,7 @@ class FacilitySync @Inject constructor(
     private val repository: FacilityRepository,
     private val api: FacilitySyncApi,
     @Named("last_facility_pull_token") private val lastPullToken: Preference<Optional<String>>,
-    @Named("sync_config_daily") private val config: SyncConfig
+    @SyncConfigType(Daily) private val config: SyncConfig
 ) : ModelSync {
 
   override val name: String = "Facility"

@@ -3,9 +3,9 @@ package org.simple.clinic.sync
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.remoteconfig.ConfigReader
+import org.simple.clinic.sync.SyncConfigType.Type.Daily
 import org.simple.clinic.sync.SyncConfigType.Type.Drugs
 import org.simple.clinic.sync.SyncConfigType.Type.Frequent
-import javax.inject.Named
 
 @Module
 class SyncConfigModule {
@@ -24,7 +24,7 @@ class SyncConfigModule {
   }
 
   @Provides
-  @Named("sync_config_daily")
+  @SyncConfigType(Daily)
   fun dailySyncConfig(
       reader: ConfigReader
   ): SyncConfig {

@@ -194,6 +194,7 @@ class CallPatientUiRendererTest {
     verify(ui).showPatientWithPhoneNumberUi()
     verify(ui).hidePatientWithNoPhoneNumberUi()
     verify(ui).showSecureCallUi()
+    verify(ui).setResultOfCallLabelText()
     verifyNoMoreInteractions(ui)
   }
 
@@ -249,6 +250,7 @@ class CallPatientUiRendererTest {
         lastVisited = overdueAppointment.patientLastSeen))
     verify(ui).showPatientWithPhoneNumberUi()
     verify(ui).hidePatientWithNoPhoneNumberUi()
+    verify(ui).setResultOfCallLabelText()
     verify(ui).hideSecureCallUi()
     verifyNoMoreInteractions(ui)
   }
@@ -363,6 +365,7 @@ class CallPatientUiRendererTest {
         lastVisited = overdueAppointment.patientLastSeen))
     verify(ui).showSecureCallUi()
     verify(ui).switchToCallPatientView()
+    verify(ui).setResultOfCallLabelText()
     verifyNoMoreInteractions(ui)
   }
 

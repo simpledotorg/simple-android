@@ -16,6 +16,7 @@ import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetContactPatientBinding
 import org.simple.clinic.datepicker.DatePickerKeyFactory
@@ -258,6 +259,10 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
   override fun hidePatientWithPhoneNumberUi() {
     callPatientView.showPatientWithPhoneNumberLayout = false
+  }
+
+  override fun setResultOfCallLabelText() {
+    callPatientView.setResultOfCallLabelText = getString(R.string.contactpatient_result_of_call)
   }
 
   override fun directlyCallPatient(patientPhoneNumber: String, dialer: Dialer) {

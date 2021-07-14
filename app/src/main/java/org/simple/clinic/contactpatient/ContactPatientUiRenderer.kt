@@ -73,6 +73,7 @@ class ContactPatientUiRenderer(
     if (model.patientProfileHasPhoneNumber && model.hasLoadedAppointment) {
       ui.showPatientWithPhoneNumberUi()
       ui.hidePatientWithNoPhoneNumberUi()
+      ui.setResultOfCallLabelText()
 
       loadSecureCallingUi(model)
     } else {

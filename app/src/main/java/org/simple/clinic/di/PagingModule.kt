@@ -5,6 +5,8 @@ import androidx.paging.PagedList
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.di.PagingSize.Page.AllRecentPatients
+import org.simple.clinic.di.PagingSize.Page.DrugsSearchResults
+import org.simple.clinic.remoteconfig.ConfigReader
 import javax.inject.Named
 
 @Module
@@ -25,5 +27,11 @@ class PagingModule {
   @PagingSize(AllRecentPatients)
   fun providesAllRecentPatientsPageSize(): Int {
     return 25
+  }
+
+  @Provides
+  @PagingSize(DrugsSearchResults)
+  fun providesDrugSearchResultsPageSize(configReader: ConfigReader): Int {
+    return configReader.long("custom_drugs_search_results_page_size", 25).toInt()
   }
 }

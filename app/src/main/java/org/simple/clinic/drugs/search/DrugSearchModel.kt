@@ -1,9 +1,17 @@
 package org.simple.clinic.drugs.search
 
-class DrugSearchModel {
+data class DrugSearchModel(
+    val searchQuery: String
+) {
 
   companion object {
 
-    fun create() = DrugSearchModel()
+    fun create() = DrugSearchModel(
+        searchQuery = ""
+    )
+  }
+
+  fun searchQueryChanged(searchQuery: String): DrugSearchModel {
+    return copy(searchQuery = searchQuery)
   }
 }

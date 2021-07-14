@@ -5,3 +5,5 @@ import androidx.paging.PagingData
 sealed class DrugSearchEvent
 
 data class DrugsSearchResultsLoaded(val searchResults: PagingData<Drug>) : DrugSearchEvent()
+
+data class SearchQueryChanged(val searchQuery: String) : DrugSearchEvent()

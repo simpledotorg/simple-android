@@ -2,6 +2,7 @@ package org.simple.clinic.drugs.search
 
 import androidx.paging.PagingData
 import com.spotify.mobius.test.NextMatchers.hasEffects
+import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
@@ -11,9 +12,11 @@ import java.util.UUID
 
 class DrugSearchUpdateTest {
 
+  private val defaultModel = DrugSearchModel.create()
+  private val updateSpec = UpdateSpec(DrugSearchUpdate())
+
   @Test
   fun `when drugs search results are loaded, then show drug search results`() {
-    val defaultModel = DrugSearchModel.create()
     val searchResults = PagingData.from(listOf(
         TestData.drug(id = UUID.fromString("6604240d-c83d-4476-978f-06af96750719"),
             name = "Amlodipine",
@@ -23,12 +26,25 @@ class DrugSearchUpdateTest {
             dosage = "20mg")
     ))
 
-    UpdateSpec(DrugSearchUpdate())
+    updateSpec
         .given(defaultModel)
         .whenEvent(DrugsSearchResultsLoaded(searchResults))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(SetDrugsSearchResults(searchResults))
+        ))
+  }
+
+  @Test
+  fun `when search query is changed, then update model and search drugs`() {
+    val searchQuery = "Amlodipine"
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(SearchQueryChanged(searchQuery))
+        .then(assertThatNext(
+            hasModel(defaultModel.searchQueryChanged(searchQuery)),
+            hasEffects(SearchDrugs(searchQuery))
         ))
   }
 }

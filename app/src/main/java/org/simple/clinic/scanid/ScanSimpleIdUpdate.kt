@@ -6,6 +6,7 @@ import com.spotify.mobius.Update
 import org.simple.clinic.INDIA_NHID_LENGTH
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
+import org.simple.clinic.patient.CompleteMedicalRecord
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientPrefillInfo
 import org.simple.clinic.patient.businessid.Identifier
@@ -40,6 +41,7 @@ class ScanSimpleIdUpdate @Inject constructor(
       is ScannedQRCodeJsonParsed -> scannedQRCodeParsed(model, event)
       InvalidQrCode -> next(model.notSearching().invalidQrCode())
       is OnlinePatientLookupWithIdentifierCompleted -> onlinePatientLookupWithIdentifierCompleted(model, event)
+      is CompleteMedicalRecordsSaved -> patientsFoundByOnlineLookup(event.completeMedicalRecords)
     }
   }
 
@@ -47,10 +49,16 @@ class ScanSimpleIdUpdate @Inject constructor(
       model: ScanSimpleIdModel,
       event: OnlinePatientLookupWithIdentifierCompleted
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
-    return when(event.result) {
-      is NotFound, is OtherError -> next(model.notSearching(), OpenPatientSearch(event.identifier, null, model.patientPrefillInfo))
-      else -> noChange() // update the list of patients or patient received here
+    return when (event.result) {
+      is NotFound -> next(model.notSearching(), OpenPatientSearch(event.identifier, null, model.patientPrefillInfo))
+      is OtherError -> next(model.notSearching(), OpenPatientSearch(event.identifier, null, model.patientPrefillInfo))
+      is Found -> next(model.notSearching(), SaveCompleteMedicalRecords(event.result.medicalRecords))
     }
+  }
+
+  private fun patientsFoundByOnlineLookup(completeMedicalRecords: List<CompleteMedicalRecord>): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+    val patientId = completeMedicalRecords.first().patient.patientUuid
+    return dispatch(OpenPatientSummary(patientId))
   }
 
   private fun scannedQRCodeParsed(

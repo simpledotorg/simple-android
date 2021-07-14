@@ -276,4 +276,20 @@ class ScanSimpleIdUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `When complete medical records are saved and one patient is found, open patient summary`() {
+    val completeMedicalRecord = TestData.completeMedicalRecord()
+    val patientUuid = completeMedicalRecord.patient.patientUuid
+
+    spec
+        .given(defaultModel)
+        .whenEvent(CompleteMedicalRecordsSaved(listOf(completeMedicalRecord)))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(OpenPatientSummary(patientUuid))
+            )
+        )
+  }
 }

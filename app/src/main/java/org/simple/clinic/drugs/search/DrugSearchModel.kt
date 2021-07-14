@@ -11,6 +11,9 @@ data class DrugSearchModel(
     )
   }
 
+  val hasSearchQuery
+    get() = searchQuery.isNotBlank()
+
   fun searchQueryChanged(searchQuery: String): DrugSearchModel {
     return copy(searchQuery = searchQuery)
   }

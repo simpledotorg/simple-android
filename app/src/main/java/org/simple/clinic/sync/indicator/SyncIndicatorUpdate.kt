@@ -112,13 +112,12 @@ class SyncIndicatorUpdate(
     val lastSucceededSyncTimestamp = syncState.lastSyncSucceededAt ?: return SyncPending
 
     val timeSinceLastSync = Duration.between(lastSucceededSyncTimestamp, currentTime)
-    val mostFrequentSyncIntervalDuration = SyncInterval.mostFrequent()
 
     // This check is added for cases where the device time is changed to be in the future.
     val syncHappenedInTheFuture = timeSinceLastSync.isNegative
 
     val hasLastSyncTimeExceededFailureThreshold = timeSinceLastSync > maxFailureThresholdSinceLastSync
-    val isLastFrequentSyncPending = timeSinceLastSync > mostFrequentSyncIntervalDuration
+    val isLastFrequentSyncPending = timeSinceLastSync > syncInterval.frequency
 
     return when {
       hasLastSyncTimeExceededFailureThreshold -> ConnectToSync

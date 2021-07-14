@@ -22,6 +22,12 @@ class DrugSearchUpdate : Update<DrugSearchModel, DrugSearchEvent, DrugSearchEffe
       event: SearchQueryChanged
   ): Next<DrugSearchModel, DrugSearchEffect> {
     val searchQuery = event.searchQuery
-    return next(model.searchQueryChanged(searchQuery), SearchDrugs(searchQuery))
+    val searchQueryChangedModel = model.searchQueryChanged(searchQuery)
+
+    return if (searchQuery.isNotBlank()) {
+      next(searchQueryChangedModel, SearchDrugs(searchQuery))
+    } else {
+      next(searchQueryChangedModel)
+    }
   }
 }

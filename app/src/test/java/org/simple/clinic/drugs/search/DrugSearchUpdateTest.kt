@@ -3,6 +3,7 @@ package org.simple.clinic.drugs.search
 import androidx.paging.PagingData
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
+import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
@@ -45,6 +46,19 @@ class DrugSearchUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.searchQueryChanged(searchQuery)),
             hasEffects(SearchDrugs(searchQuery))
+        ))
+  }
+
+  @Test
+  fun `when search query is empty, then update model`() {
+    val searchQuery = ""
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(SearchQueryChanged(searchQuery))
+        .then(assertThatNext(
+            hasModel(defaultModel.searchQueryChanged(searchQuery)),
+            hasNoEffects()
         ))
   }
 }

@@ -43,11 +43,15 @@ import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.onBackPressed
+import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.util.valueOrEmpty
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Named
 
 class ContactPatientBottomSheet : BaseBottomSheet<
     ContactPatientBottomSheet.Key,
@@ -76,6 +80,10 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
   @Inject
   lateinit var appointmentConfig: AppointmentConfig
+
+  @Inject
+  @Named("date_for_user_input")
+  lateinit var dateTimeFormatter: DateTimeFormatter
 
   @Inject
   lateinit var features: Features
@@ -183,6 +191,24 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
   override fun renderPatientDetails_Old(name: String, gender: Gender, age: Int, phoneNumber: String) {
     callPatientView_Old.renderPatientDetails(name, gender, age, phoneNumber)
+  }
+
+  override fun renderPatientDetails(patientDetails: PatientDetails) {
+    callPatientView.renderPatientDetails(
+        PatientDetails(
+            patientDetails.name,
+            patientDetails.gender,
+            patientDetails.age,
+            patientDetails.phoneNumber.valueOrEmpty(),
+            patientDetails.patientAddress,
+            patientDetails.registeredFacility,
+            patientDetails.diagnosedWithDiabetes,
+            patientDetails.diagnosedWithHypertension,
+            patientDetails.lastVisited
+        ),
+        dateTimeFormatter,
+        userClock
+    )
   }
 
   override fun showCallResultSection_Old() {

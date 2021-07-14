@@ -11,6 +11,9 @@ import org.simple.clinic.contactpatient.PatientDetails
 import org.simple.clinic.databinding.ContactpatientCallpatientBinding
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.patient.displayLetterRes
+import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.toLocalDateAtZone
+import java.time.format.DateTimeFormatter
 
 private typealias AgreedToVisitClicked = () -> Unit
 private typealias RemindToCallLaterClicked = () -> Unit
@@ -118,7 +121,8 @@ class CallPatientView(
 
   fun renderPatientDetails(
       patientDetails: PatientDetails,
-      lastVisited: String
+      dateTimeFormatter: DateTimeFormatter,
+      userClock: UserClock
   ) {
     val genderLetter = resources.getString(patientDetails.gender.displayLetterRes)
     val diagnosis = diagnosisText(patientDetails.diagnosedWithDiabetes, patientDetails.diagnosedWithHypertension)
@@ -128,7 +132,7 @@ class CallPatientView(
     patientAddressTextView.text = patientDetails.patientAddress
     registeredFacilityTextView.text = patientDetails.registeredFacility
     diagnosisTextView.text = diagnosis
-    lastVisitedTextView.text = lastVisited
+    lastVisitedTextView.text = dateTimeFormatter.format(patientDetails.lastVisited.toLocalDateAtZone(userClock.zone))
   }
 
   private fun diagnosisText(diagnosedWithDiabetes: Answer?, diagnosedWithHypertension: Answer?): String {

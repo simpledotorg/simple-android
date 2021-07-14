@@ -3,16 +3,17 @@ package org.simple.clinic.teleconsultlog.teleconsultrecord
 import io.reactivex.Completable
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
+import org.simple.clinic.sync.SyncConfigType
+import org.simple.clinic.sync.SyncConfigType.Type.Frequent
 import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.util.read
 import javax.inject.Inject
-import javax.inject.Named
 
 class TeleconsultRecordSync @Inject constructor(
     private val teleconsultRecordApi: TeleconsultRecordApi,
     private val teleconsultRecordRepository: TeleconsultRecordRepository,
     private val syncCoordinator: SyncCoordinator,
-    @Named("sync_config_frequent") private val config: SyncConfig
+    @SyncConfigType(Frequent) private val config: SyncConfig
 ) : ModelSync {
 
   override val name: String = "TeleconsultRecord"

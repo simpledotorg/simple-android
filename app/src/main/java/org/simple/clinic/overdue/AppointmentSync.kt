@@ -4,9 +4,11 @@ import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
+import org.simple.clinic.sync.SyncConfigType
+import org.simple.clinic.sync.SyncConfigType.Type.Frequent
 import org.simple.clinic.sync.SyncCoordinator
-import java.util.Optional
 import org.simple.clinic.util.read
+import java.util.Optional
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -15,7 +17,7 @@ class AppointmentSync @Inject constructor(
     private val repository: AppointmentRepository,
     private val api: AppointmentSyncApi,
     @Named("last_appointment_pull_token") private val lastPullToken: Preference<Optional<String>>,
-    @Named("sync_config_frequent") private val config: SyncConfig
+    @SyncConfigType(Frequent) private val config: SyncConfig
 ) : ModelSync {
 
   override val name: String = "Appointment"

@@ -6,9 +6,11 @@ import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
+import org.simple.clinic.sync.SyncConfigType
+import org.simple.clinic.sync.SyncConfigType.Type.Frequent
 import org.simple.clinic.sync.SyncCoordinator
-import java.util.Optional
 import org.simple.clinic.util.read
+import java.util.Optional
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -17,7 +19,7 @@ class MedicalHistorySync @Inject constructor(
     private val repository: MedicalHistoryRepository,
     private val api: MedicalHistorySyncApi,
     @Named("last_medicalhistory_pull_token") private val lastPullToken: Preference<Optional<String>>,
-    @Named("sync_config_frequent") private val config: SyncConfig
+    @SyncConfigType(Frequent) private val config: SyncConfig
 ) : ModelSync {
 
   override val name: String = "Medical History"

@@ -19,6 +19,7 @@
 - Allow push and pull sync batch sizes to be configured separately
 - Remove remote config sync worker from the regular sync resources
 - Enqueue `UpdateRemoteConfigWorker` on app cold starts
+- Use `SyncConfigType` qualifier for daily and frequent sync configs
 
 ### Features
 - [In Progress: 06 Jul 2021] Add support for finding a patient online from ID scan

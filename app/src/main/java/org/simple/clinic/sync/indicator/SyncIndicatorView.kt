@@ -17,6 +17,9 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SyncIndicatorBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.sync.SyncConfig
+import org.simple.clinic.sync.SyncConfigType
+import org.simple.clinic.sync.SyncConfigType.Type.Frequent
 import org.simple.clinic.sync.indicator.SyncIndicatorState.ConnectToSync
 import org.simple.clinic.sync.indicator.SyncIndicatorState.SyncPending
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Synced
@@ -42,6 +45,10 @@ class SyncIndicatorView(
   @Inject
   lateinit var effectHandlerFactory: SyncIndicatorEffectHandler.Factory
 
+  @Inject
+  @SyncConfigType(Frequent)
+  lateinit var syncConfig: SyncConfig
+
   private val events by unsafeLazy {
     viewClicks()
         .compose(ReportAnalyticsEvents())
@@ -53,7 +60,7 @@ class SyncIndicatorView(
     MobiusDelegate.forView(
         events = events.ofType(),
         defaultModel = SyncIndicatorModel.create(),
-        update = SyncIndicatorUpdate(),
+        update = SyncIndicatorUpdate(syncConfig.syncInterval),
         effectHandler = effectHandlerFactory.create(this).build(),
         init = SyncIndicatorInit(),
         modelUpdateListener = uiRenderer::render

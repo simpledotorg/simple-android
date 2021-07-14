@@ -23,7 +23,10 @@ import java.time.Duration
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
-class SyncIndicatorUpdate : Update<SyncIndicatorModel, SyncIndicatorEvent, SyncIndicatorEffect> {
+class SyncIndicatorUpdate(
+    private val syncInterval: SyncInterval
+) : Update<SyncIndicatorModel, SyncIndicatorEvent, SyncIndicatorEffect> {
+
   override fun update(model: SyncIndicatorModel, event: SyncIndicatorEvent):
       Next<SyncIndicatorModel, SyncIndicatorEffect> {
 

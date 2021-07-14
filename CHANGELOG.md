@@ -20,6 +20,7 @@
 - Remove remote config sync worker from the regular sync resources
 - Enqueue `UpdateRemoteConfigWorker` on app cold starts
 - Use `SyncConfigType` qualifier for daily and frequent sync configs
+- Bump Kotlin to v1.5.21
 
 ### Features
 - [In Progress: 06 Jul 2021] Add support for finding a patient online from ID scan

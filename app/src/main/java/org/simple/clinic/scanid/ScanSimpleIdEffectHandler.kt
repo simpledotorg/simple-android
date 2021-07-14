@@ -38,7 +38,24 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
       .addConsumer(OpenPatientSummary::class.java, ::openPatientSummary, schedulersProvider.ui())
       .addConsumer(OpenPatientSearch::class.java, ::openPatientSearch, schedulersProvider.ui())
       .addTransformer(OnlinePatientLookupWithIdentifier::class.java, onlinePatientLookupWithIdentifier())
+      .addTransformer(SaveCompleteMedicalRecords::class.java, saveCompleteMedicalRecords())
       .build()
+
+  private fun saveCompleteMedicalRecords(): ObservableTransformer<SaveCompleteMedicalRecords, ScanSimpleIdEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map(SaveCompleteMedicalRecords::completeMedicalRecords)
+          .map { completeMedicalRecords ->
+            completeMedicalRecords to completeMedicalRecords.map { medicalRecord ->
+              patientRepository.saveCompleteMedicalRecord(medicalRecord)
+            }
+          }
+          .map { (completeMedicalRecords, Unit)  ->
+            CompleteMedicalRecordsSaved(completeMedicalRecords)
+          }
+    }
+  }
 
   private fun onlinePatientLookupWithIdentifier(): ObservableTransformer<OnlinePatientLookupWithIdentifier, ScanSimpleIdEvent> {
     return ObservableTransformer { effects ->

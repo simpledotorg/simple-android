@@ -1,5 +1,6 @@
 package org.simple.clinic.scanid
 
+import org.simple.clinic.patient.CompleteMedicalRecord
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientPrefillInfo
 import org.simple.clinic.patient.businessid.Identifier
@@ -51,4 +52,8 @@ object InvalidQrCode : ScanSimpleIdEvent() {
 data class OnlinePatientLookupWithIdentifierCompleted(
     val result: LookupPatientOnline.Result,
     val identifier: Identifier
+) : ScanSimpleIdEvent()
+
+data class CompleteMedicalRecordsSaved(
+    val completeMedicalRecords: List<CompleteMedicalRecord>
 ) : ScanSimpleIdEvent()

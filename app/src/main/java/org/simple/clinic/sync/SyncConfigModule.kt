@@ -37,10 +37,10 @@ class SyncConfigModule {
     val drugsBatchSize = reader.long("syncmodule_drugsync_batchsize", default = 1000)
 
     return SyncConfig(
-        syncInterval = SyncInterval.DAILY,
+        syncInterval = SyncInterval.FREQUENT,
         pullBatchSize = drugsBatchSize.toInt(),
         pushBatchSize = 0, // We don't push drugs to server, so this is unused
-        syncGroup = SyncGroup.DAILY
+        syncGroup = SyncGroup.FREQUENT
     )
   }
 }

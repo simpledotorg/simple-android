@@ -7,7 +7,7 @@ import org.simple.clinic.protocol.ProtocolSyncApi
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncConfigType
-import org.simple.clinic.sync.SyncConfigType.Type.Daily
+import org.simple.clinic.sync.SyncConfigType.Type.Frequent
 import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.util.read
 import java.util.Optional
@@ -19,7 +19,7 @@ class ProtocolSync @Inject constructor(
     private val repository: ProtocolRepository,
     private val api: ProtocolSyncApi,
     @Named("last_protocol_pull_token") private val lastPullToken: Preference<Optional<String>>,
-    @SyncConfigType(Daily) private val config: SyncConfig
+    @SyncConfigType(Frequent) private val config: SyncConfig
 ) : ModelSync {
 
   override val name: String = "Protocol"

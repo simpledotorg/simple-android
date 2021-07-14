@@ -43,6 +43,9 @@ class BloodPressureSyncIntegrationTest {
   @Inject
   lateinit var userSession: UserSession
 
+  @Inject
+  lateinit var syncInterval: SyncInterval
+
   private val patientUuid = UUID.fromString("cc5b560e-60fe-44fb-882b-1d2408d5eec3")
 
   @get:Rule
@@ -55,12 +58,7 @@ class BloodPressureSyncIntegrationTest {
   private lateinit var sync: BloodPressureSync
 
   private val batchSize = 3
-  private val config = SyncConfig(
-      syncInterval = SyncInterval.FREQUENT,
-      pullBatchSize = batchSize,
-      pushBatchSize = batchSize,
-      syncGroup = SyncGroup.FREQUENT
-  )
+  private lateinit var config: SyncConfig
 
   private val currentFacilityUuid: UUID by unsafeLazy { userSession.loggedInUserImmediate()!!.currentFacilityUuid }
 
@@ -71,6 +69,13 @@ class BloodPressureSyncIntegrationTest {
     TestClinicApp.appComponent().inject(this)
 
     resetLocalData()
+
+    config = SyncConfig(
+        syncInterval = syncInterval,
+        pullBatchSize = batchSize,
+        pushBatchSize = batchSize,
+        syncGroup = SyncGroup.FREQUENT
+    )
 
     sync = BloodPressureSync(
         syncCoordinator = SyncCoordinator(),

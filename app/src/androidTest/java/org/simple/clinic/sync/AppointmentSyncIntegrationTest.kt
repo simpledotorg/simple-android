@@ -43,6 +43,9 @@ class AppointmentSyncIntegrationTest {
   @Inject
   lateinit var userSession: UserSession
 
+  @Inject
+  lateinit var syncInterval: SyncInterval
+
   private val patientUuid = UUID.fromString("f12f5be1-16d5-44dd-8f2b-4155ea991904")
 
   @get:Rule
@@ -55,12 +58,7 @@ class AppointmentSyncIntegrationTest {
   private lateinit var sync: AppointmentSync
 
   private val batchSize = 3
-  private val config = SyncConfig(
-      syncInterval = SyncInterval.FREQUENT,
-      pullBatchSize = batchSize,
-      pushBatchSize = batchSize,
-      syncGroup = SyncGroup.FREQUENT
-  )
+  private lateinit var config: SyncConfig
 
   private val currentFacilityUuid: UUID by unsafeLazy { userSession.loggedInUserImmediate()!!.currentFacilityUuid }
 
@@ -69,6 +67,13 @@ class AppointmentSyncIntegrationTest {
     TestClinicApp.appComponent().inject(this)
 
     resetLocalData()
+
+    config = SyncConfig(
+        syncInterval = syncInterval,
+        pullBatchSize = batchSize,
+        pushBatchSize = batchSize,
+        syncGroup = SyncGroup.FREQUENT
+    )
 
     sync = AppointmentSync(
         syncCoordinator = SyncCoordinator(),

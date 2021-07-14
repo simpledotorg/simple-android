@@ -43,6 +43,9 @@ class MedicalHistorySyncIntegrationTest {
   @Inject
   lateinit var userSession: UserSession
 
+  @Inject
+  lateinit var syncInterval: SyncInterval
+
   private val patientUuid = UUID.fromString("a635445b-16aa-49cb-af4b-fab766a5f11e")
 
   @get:Rule
@@ -55,18 +58,20 @@ class MedicalHistorySyncIntegrationTest {
   private lateinit var sync: MedicalHistorySync
 
   private val batchSize = 3
-  private val config = SyncConfig(
-      syncInterval = SyncInterval.FREQUENT,
-      pullBatchSize = batchSize,
-      pushBatchSize = batchSize,
-      syncGroup = SyncGroup.FREQUENT
-  )
+  private lateinit var config: SyncConfig
 
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
 
     resetLocalData()
+
+    config = SyncConfig(
+        syncInterval = syncInterval,
+        pullBatchSize = batchSize,
+        pushBatchSize = batchSize,
+        syncGroup = SyncGroup.FREQUENT
+    )
 
     sync = MedicalHistorySync(
         syncCoordinator = SyncCoordinator(),

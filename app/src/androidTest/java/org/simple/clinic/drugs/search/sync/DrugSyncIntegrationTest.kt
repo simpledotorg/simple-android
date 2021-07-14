@@ -35,6 +35,9 @@ class DrugSyncIntegrationTest {
   @Inject
   lateinit var syncApi: DrugSyncApi
 
+  @Inject
+  lateinit var syncInterval: SyncInterval
+
   @get:Rule
   val ruleChain: RuleChain = Rules
       .global()
@@ -46,18 +49,20 @@ class DrugSyncIntegrationTest {
   // support for batch sizes. So setting a small batch size causes the API
   // call to loop.
   private val batchSize = 1000
-  private val config = SyncConfig(
-      syncInterval = SyncInterval.FREQUENT,
-      pullBatchSize = batchSize,
-      pushBatchSize = batchSize,
-      syncGroup = SyncGroup.FREQUENT
-  )
+  private lateinit var config: SyncConfig
 
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
 
     resetLocalData()
+
+    config = SyncConfig(
+        syncInterval = syncInterval,
+        pullBatchSize = batchSize,
+        pushBatchSize = batchSize,
+        syncGroup = SyncGroup.FREQUENT
+    )
 
     sync = DrugSync(
         syncCoordinator = SyncCoordinator(),

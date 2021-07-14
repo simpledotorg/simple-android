@@ -218,11 +218,16 @@ class SyncIndicatorLogicTest {
         indicatorUiActions
     )
 
+    val syncInterval = SyncInterval(
+        frequency = Duration.ofMinutes(16),
+        backOffDelay = Duration.ofMinutes(5)
+    )
+
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = SyncIndicatorModel.create(),
         init = SyncIndicatorInit(),
-        update = SyncIndicatorUpdate(SyncInterval.FREQUENT),
+        update = SyncIndicatorUpdate(syncInterval),
         effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )

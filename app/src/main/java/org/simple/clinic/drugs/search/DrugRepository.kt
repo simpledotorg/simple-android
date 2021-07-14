@@ -1,5 +1,6 @@
 package org.simple.clinic.drugs.search
 
+import androidx.paging.PagingSource
 import io.reactivex.Completable
 import io.reactivex.Observable
 import org.simple.clinic.drugs.search.sync.DrugPayload
@@ -41,6 +42,10 @@ class DrugRepository @Inject constructor(
 
   fun drugs(): List<Drug> {
     return drugDao.getAll()
+  }
+
+  fun search(query: String): PagingSource<Int, Drug> {
+    return drugDao.search(query)
   }
 
   private fun saveRecords(records: List<Drug>) {

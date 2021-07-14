@@ -1,5 +1,6 @@
 package org.simple.clinic.drugs.search
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Entity
@@ -48,5 +49,11 @@ data class Drug(
 
     @Query("SELECT COUNT(uuid) FROM Protocol")
     fun count(): Observable<Int>
+
+    @Query("""
+      SELECT drugs.* FROM Drug drugs
+      WHERE drugs.name LIKE '%' || :query || '%' COLLATE NOCASE
+    """)
+    fun search(query: String): PagingSource<Int, Drug>
   }
 }

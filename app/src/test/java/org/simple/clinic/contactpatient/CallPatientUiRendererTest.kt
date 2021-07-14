@@ -267,6 +267,7 @@ class CallPatientUiRendererTest {
     verify(ui).switchToCallPatientView()
     verify(ui).showPatientWithNoPhoneNumberUi()
     verify(ui).hidePatientWithPhoneNumberUi()
+    verify(ui).setResultLabelText()
     verifyNoMoreInteractions(ui)
   }
 
@@ -323,6 +324,7 @@ class CallPatientUiRendererTest {
         diagnosedWithHypertension = overdueAppointment.diagnosedWithHypertension,
         lastVisited = overdueAppointment.patientLastSeen))
     verify(ui).switchToCallPatientView()
+    verify(ui).setResultLabelText()
     verifyNoMoreInteractions(ui)
   }
 

@@ -29,6 +29,7 @@ interface ContactPatientUi {
   fun hidePatientWithPhoneNumberUi()
 
   fun setResultOfCallLabelText()
+  fun setResultLabelText()
 
   fun renderSelectedAppointmentDate(
       selectedAppointmentReminderPeriod: TimeToAppointment,

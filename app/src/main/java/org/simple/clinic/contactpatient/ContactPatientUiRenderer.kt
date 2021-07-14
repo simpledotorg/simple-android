@@ -79,6 +79,7 @@ class ContactPatientUiRenderer(
     } else {
       ui.showPatientWithNoPhoneNumberUi()
       ui.hidePatientWithPhoneNumberUi()
+      ui.setResultLabelText()
     }
 
     ui.switchToCallPatientView()

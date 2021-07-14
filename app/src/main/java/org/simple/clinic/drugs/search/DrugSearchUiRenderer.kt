@@ -7,6 +7,8 @@ class DrugSearchUiRenderer(private val ui: DrugSearchUi) : ViewRenderer<DrugSear
   override fun render(model: DrugSearchModel) {
     if (!model.hasSearchQuery) {
       ui.hideSearchResults()
+    } else {
+      ui.showSearchResults()
     }
   }
 }

@@ -25,4 +25,18 @@ class DrugSearchUiRendererTest {
     verify(ui).hideSearchResults()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when search query is not empty, then show search results`() {
+    // given
+    val searchQueryModel = defaultModel
+        .searchQueryChanged(searchQuery = "Amlodipine")
+
+    // when
+    uiRenderer.render(searchQueryModel)
+
+    // then
+    verify(ui).showSearchResults()
+    verifyNoMoreInteractions(ui)
+  }
 }

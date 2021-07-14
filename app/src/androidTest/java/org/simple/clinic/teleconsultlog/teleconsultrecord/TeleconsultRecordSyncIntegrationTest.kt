@@ -38,6 +38,9 @@ class TeleconsultRecordSyncIntegrationTest {
   @Inject
   lateinit var testUtcClock: TestUtcClock
 
+  @Inject
+  lateinit var syncInterval: SyncInterval
+
   private lateinit var teleconsultRecordSync: TeleconsultRecordSync
 
   @get:Rule
@@ -47,7 +50,7 @@ class TeleconsultRecordSyncIntegrationTest {
 
   private val batchSize = 0
   private val config = SyncConfig(
-      syncInterval = SyncInterval.FREQUENT,
+      syncInterval = syncInterval,
       pullBatchSize = batchSize,
       pushBatchSize = batchSize,
       syncGroup = SyncGroup.FREQUENT

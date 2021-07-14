@@ -35,6 +35,9 @@ class DrugSyncIntegrationTest {
   @Inject
   lateinit var syncApi: DrugSyncApi
 
+  @Inject
+  lateinit var syncInterval: SyncInterval
+
   @get:Rule
   val ruleChain: RuleChain = Rules
       .global()
@@ -47,7 +50,7 @@ class DrugSyncIntegrationTest {
   // call to loop.
   private val batchSize = 1000
   private val config = SyncConfig(
-      syncInterval = SyncInterval.FREQUENT,
+      syncInterval = syncInterval,
       pullBatchSize = batchSize,
       pushBatchSize = batchSize,
       syncGroup = SyncGroup.FREQUENT

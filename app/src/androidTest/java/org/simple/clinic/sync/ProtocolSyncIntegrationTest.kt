@@ -38,6 +38,9 @@ class ProtocolSyncIntegrationTest {
   @Inject
   lateinit var userSession: UserSession
 
+  @Inject
+  lateinit var syncInterval: SyncInterval
+
   @get:Rule
   val ruleChain: RuleChain = Rules
       .global()
@@ -47,7 +50,7 @@ class ProtocolSyncIntegrationTest {
 
   private val batchSize = 3
   private val config = SyncConfig(
-      syncInterval = SyncInterval.FREQUENT,
+      syncInterval = syncInterval,
       pullBatchSize = batchSize,
       pushBatchSize = batchSize,
       syncGroup = SyncGroup.FREQUENT

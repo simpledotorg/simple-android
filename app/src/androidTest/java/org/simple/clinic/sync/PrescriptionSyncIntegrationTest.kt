@@ -43,6 +43,9 @@ class PrescriptionSyncIntegrationTest {
   @Inject
   lateinit var userSession: UserSession
 
+  @Inject
+  lateinit var syncInterval: SyncInterval
+
   private val patientUuid = UUID.fromString("49b90530-28e5-43bd-a673-b144a2e90727")
 
   @get:Rule
@@ -56,7 +59,7 @@ class PrescriptionSyncIntegrationTest {
 
   private val batchSize = 3
   private val config = SyncConfig(
-      syncInterval = SyncInterval.FREQUENT,
+      syncInterval = syncInterval,
       pullBatchSize = batchSize,
       pushBatchSize = batchSize,
       syncGroup = SyncGroup.FREQUENT

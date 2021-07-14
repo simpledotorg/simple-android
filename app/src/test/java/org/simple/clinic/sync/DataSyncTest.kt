@@ -18,6 +18,7 @@ import org.simple.clinic.util.ResolvedError
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.io.IOException
+import java.time.Duration
 import java.util.UUID
 
 class DataSyncTest {
@@ -29,14 +30,20 @@ class DataSyncTest {
   private val userSession = mock<UserSession>()
 
   private val frequentSyncConfig = SyncConfig(
-      syncInterval = SyncInterval.FREQUENT,
+      syncInterval = SyncInterval(
+          frequency = Duration.ofMinutes(16),
+          backOffDelay = Duration.ofMinutes(5)
+      ),
       pullBatchSize = 10,
       pushBatchSize = 10,
       syncGroup = SyncGroup.FREQUENT
   )
 
   private val dailySyncConfig = SyncConfig(
-      syncInterval = SyncInterval.DAILY,
+      syncInterval = SyncInterval(
+          frequency = Duration.ofMinutes(16),
+          backOffDelay = Duration.ofMinutes(5)
+      ),
       pullBatchSize = 10,
       pushBatchSize = 10,
       syncGroup = SyncGroup.DAILY

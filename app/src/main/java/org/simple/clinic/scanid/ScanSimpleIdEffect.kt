@@ -27,3 +27,5 @@ data class OpenPatientSearch(
     val initialSearchQuery: String?,
     val patientPrefillInfo: PatientPrefillInfo?
 ) : ScanSimpleIdEffect()
+
+data class OnlinePatientLookupWithIdentifier(val identifier: Identifier): ScanSimpleIdEffect()

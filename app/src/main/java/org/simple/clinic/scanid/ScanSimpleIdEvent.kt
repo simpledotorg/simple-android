@@ -3,6 +3,7 @@ package org.simple.clinic.scanid
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientPrefillInfo
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline
 import org.simple.clinic.widgets.UiEvent
 
 sealed class ScanSimpleIdEvent : UiEvent
@@ -46,3 +47,8 @@ data class ScannedQRCodeJsonParsed(
 object InvalidQrCode : ScanSimpleIdEvent() {
   override val analyticsName = "Scan Simple Card:Invalid QR Code scanned"
 }
+
+data class OnlinePatientLookupWithIdentifierCompleted(
+    val result: LookupPatientOnline.Result,
+    val identifier: Identifier
+) : ScanSimpleIdEvent()

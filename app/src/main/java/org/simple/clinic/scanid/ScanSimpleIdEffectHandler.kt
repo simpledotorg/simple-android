@@ -9,6 +9,7 @@ import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class ScanSimpleIdEffectHandler @AssistedInject constructor(
@@ -16,6 +17,7 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val qrCodeJsonParser: QRCodeJsonParser,
     private val country: Country,
+    private val lookupPatientOnline: LookupPatientOnline,
     @Assisted private val uiActions: ScanSimpleIdUiActions
 ) {
 
@@ -35,7 +37,19 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
       .addTransformer(ParseScannedJson::class.java, parseJsonIntoObject())
       .addConsumer(OpenPatientSummary::class.java, ::openPatientSummary, schedulersProvider.ui())
       .addConsumer(OpenPatientSearch::class.java, ::openPatientSearch, schedulersProvider.ui())
+      .addTransformer(OnlinePatientLookupWithIdentifier::class.java, onlinePatientLookupWithIdentifier())
       .build()
+
+  private fun onlinePatientLookupWithIdentifier(): ObservableTransformer<OnlinePatientLookupWithIdentifier, ScanSimpleIdEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map {
+            val results = lookupPatientOnline.lookupWithIdentifier(it.identifier.value)
+            OnlinePatientLookupWithIdentifierCompleted(results, it.identifier)
+          }
+    }
+  }
 
   private fun openPatientSearch(openPatientSearch: OpenPatientSearch) {
     uiActions.openPatientSearch(openPatientSearch.additionalIdentifier,

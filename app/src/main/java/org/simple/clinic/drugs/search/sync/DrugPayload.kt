@@ -5,8 +5,8 @@ import com.squareup.moshi.JsonClass
 import org.simple.clinic.drugs.search.Answer
 import org.simple.clinic.drugs.search.Drug
 import org.simple.clinic.drugs.search.DrugCategory
+import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.storage.Timestamps
-import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import java.time.Instant
 import java.util.UUID
 
@@ -23,7 +23,7 @@ data class DrugPayload(
     val category: DrugCategory?,
 
     @Json(name = "frequency")
-    val frequency: MedicineFrequency?,
+    val frequency: DrugFrequency?,
 
     @Json(name = "composition")
     val composition: String?,

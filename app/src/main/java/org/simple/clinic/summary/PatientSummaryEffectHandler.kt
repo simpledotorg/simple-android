@@ -224,7 +224,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
   private fun triggerSync(): ObservableTransformer<TriggerSync, PatientSummaryEvent> {
     return ObservableTransformer { effects ->
       effects
-          .doOnNext { dataSync.fireAndForgetSync(FREQUENT) }
+          .doOnNext { dataSync.fireAndForgetSync() }
           .map { SyncTriggered(it.sheetOpenedFrom) }
     }
   }

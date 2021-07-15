@@ -74,7 +74,6 @@ class SyncScheduler @Inject constructor(
         )
         .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, syncBackoffIntervalMillis, TimeUnit.MILLISECONDS)
         .setConstraints(constraints)
-        .setInputData(SyncWorker.createWorkDataForSyncConfig(syncConfig))
         .build()
   }
 }

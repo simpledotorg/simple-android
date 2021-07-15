@@ -38,6 +38,9 @@ class TeleconsultRecordSyncIntegrationTest {
   @Inject
   lateinit var testUtcClock: TestUtcClock
 
+  @Inject
+  lateinit var syncInterval: SyncInterval
+
   private lateinit var teleconsultRecordSync: TeleconsultRecordSync
 
   @get:Rule
@@ -46,12 +49,7 @@ class TeleconsultRecordSyncIntegrationTest {
       .around(ServerAuthenticationRule())
 
   private val batchSize = 0
-  private val config = SyncConfig(
-      syncInterval = SyncInterval.FREQUENT,
-      pullBatchSize = batchSize,
-      pushBatchSize = batchSize,
-      syncGroup = SyncGroup.FREQUENT
-  )
+  private lateinit var config: SyncConfig
 
   @Before
   fun setUp() {
@@ -59,6 +57,13 @@ class TeleconsultRecordSyncIntegrationTest {
     testUtcClock.setDate(LocalDate.of(2020, Month.SEPTEMBER, 28))
     resetLocalData()
 
+    config = SyncConfig(
+        syncInterval = syncInterval,
+        pullBatchSize = batchSize,
+        pushBatchSize = batchSize,
+        syncGroup = SyncGroup.FREQUENT
+    )
+    
     teleconsultRecordSync = TeleconsultRecordSync(
         syncCoordinator = SyncCoordinator(),
         teleconsultRecordApi = teleconsultRecordApi,

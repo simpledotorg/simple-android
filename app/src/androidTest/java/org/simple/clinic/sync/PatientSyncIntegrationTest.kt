@@ -44,6 +44,9 @@ class PatientSyncIntegrationTest {
   @Inject
   lateinit var userSession: UserSession
 
+  @Inject
+  lateinit var syncInterval: SyncInterval
+
   @get:Rule
   val ruleChain: RuleChain = Rules
       .global()
@@ -52,12 +55,7 @@ class PatientSyncIntegrationTest {
   private lateinit var patientSync: PatientSync
 
   private val batchSize = 3
-  private val config = SyncConfig(
-      syncInterval = SyncInterval.FREQUENT,
-      pullBatchSize = batchSize,
-      pushBatchSize = batchSize,
-      syncGroup = SyncGroup.FREQUENT
-  )
+  private lateinit var config: SyncConfig
 
   private val currentFacilityUuid: UUID by unsafeLazy { userSession.loggedInUserImmediate()!!.currentFacilityUuid }
 
@@ -66,6 +64,13 @@ class PatientSyncIntegrationTest {
     TestClinicApp.appComponent().inject(this)
 
     resetLocalData()
+
+    config = SyncConfig(
+        syncInterval = syncInterval,
+        pullBatchSize = batchSize,
+        pushBatchSize = batchSize,
+        syncGroup = SyncGroup.FREQUENT
+    )
 
     patientSync = PatientSync(
         syncCoordinator = SyncCoordinator(),

@@ -1,0 +1,146 @@
+package org.simple.clinic.drugs.search
+
+import android.content.Context
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
+import androidx.paging.PagingData
+import com.jakewharton.rxbinding3.widget.textChanges
+import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
+import kotlinx.parcelize.Parcelize
+import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.databinding.ListItemDrugSearchBinding
+import org.simple.clinic.databinding.ListItemDrugSearchDividerBinding
+import org.simple.clinic.databinding.ScreenDrugsSearchBinding
+import org.simple.clinic.di.injector
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.widgets.PagingItemAdapter
+import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.showKeyboard
+import org.simple.clinic.widgets.visibleOrGone
+import java.util.UUID
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+
+class DrugsSearchScreen : BaseScreen<
+    DrugsSearchScreen.Key,
+    ScreenDrugsSearchBinding,
+    DrugSearchModel,
+    DrugSearchEvent,
+    DrugSearchEffect>(), DrugSearchUi, UiActions {
+
+  @Inject
+  lateinit var effectHandlerFactory: DrugSearchEffectHandler.Factory
+
+  @Inject
+  lateinit var router: Router
+
+  private val adapter = PagingItemAdapter(
+      diffCallback = DrugSearchListItem.DiffCallback(),
+      bindings = mapOf(
+          R.layout.list_item_drug_search to { layoutInflater, parent ->
+            ListItemDrugSearchBinding.inflate(layoutInflater, parent, false)
+          },
+          R.layout.list_item_drug_search_divider to { layoutInflater, parent ->
+            ListItemDrugSearchDividerBinding.inflate(layoutInflater, parent, false)
+          }
+      )
+  )
+
+  private val drugSearchToolbar
+    get() = binding.drugSearchToolbar
+
+  private val progressIndicator
+    get() = binding.drugSearchProgressIndicator
+
+  private val drugSearchResultsList
+    get() = binding.drugSearchResultsList
+
+  private val searchQueryEditText
+    get() = binding.searchQueryEditText
+
+  override fun defaultModel() = DrugSearchModel.create()
+
+  override fun createUpdate() = DrugSearchUpdate()
+
+  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+
+  override fun uiRenderer() = DrugSearchUiRenderer(this)
+
+  override fun events() = searchQueryChanges()
+      .compose(ReportAnalyticsEvents())
+      .cast<DrugSearchEvent>()
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
+  override fun bindView(
+      layoutInflater: LayoutInflater,
+      container: ViewGroup?
+  ) = ScreenDrugsSearchBinding.inflate(layoutInflater, container, false)
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+
+    drugSearchToolbar.setNavigationOnClickListener {
+      router.pop()
+    }
+
+    drugSearchResultsList.adapter = adapter
+    adapter.addLoadStateListener(::drugSearchLoadStateListener)
+
+    searchQueryEditText.showKeyboard()
+  }
+
+  override fun hideSearchResults() {
+    drugSearchResultsList.visibility = View.GONE
+    adapter.submitData(lifecycle, PagingData.empty())
+  }
+
+  override fun showSearchResults() {
+    drugSearchResultsList.visibility = View.VISIBLE
+  }
+
+  override fun setDrugSearchResults(searchResults: PagingData<Drug>) {
+    drugSearchResultsList.scrollToPosition(0)
+    adapter.submitData(lifecycle, DrugSearchListItem.from(searchResults, searchQuery))
+  }
+
+  private fun drugSearchLoadStateListener(combinedLoadStates: CombinedLoadStates) {
+    val isLoading = combinedLoadStates.refresh is LoadState.Loading
+    progressIndicator.visibleOrGone(isLoading)
+  }
+
+  private fun searchQueryChanges(): Observable<UiEvent> {
+    return searchQueryEditText
+        .textChanges()
+        .skipInitialValue()
+        .debounce(500, TimeUnit.MILLISECONDS)
+        .map(CharSequence::trim)
+        .map { searchQuery ->
+          SearchQueryChanged(searchQuery.toString())
+        }
+  }
+
+  interface Injector {
+    fun inject(target: DrugsSearchScreen)
+  }
+
+  @Parcelize
+  data class Key(
+      val patientId: UUID,
+      override val analyticsName: String = "Drug Search"
+  ) : ScreenKey() {
+
+    override fun instantiateFragment() = DrugsSearchScreen()
+  }
+}

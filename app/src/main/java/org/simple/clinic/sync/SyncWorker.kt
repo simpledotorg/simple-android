@@ -9,11 +9,10 @@ import javax.inject.Inject
 
 class SyncWorker(
     context: Context,
-    private val workerParams: WorkerParameters
+    workerParams: WorkerParameters
 ) : Worker(context, workerParams) {
 
   companion object {
-    private const val NO_GROUP = "no_group_id"
     private const val SYNC_GROUP = "sync_group_id"
 
     fun createWorkDataForSyncConfig(syncConfig: SyncConfig): Data {
@@ -22,10 +21,6 @@ class SyncWorker(
           .putString(SYNC_GROUP, syncConfig.syncGroup.name)
           .build()
     }
-
-    private fun readSyncGroup(workerParams: WorkerParameters): String {
-      return workerParams.inputData.getString(SYNC_GROUP) ?: NO_GROUP
-    }
   }
 
   @Inject
@@ -33,10 +28,9 @@ class SyncWorker(
 
   override fun doWork(): Result {
     ClinicApp.appComponent.inject(this)
-    val syncGroup = readSyncGroup(workerParams = workerParams)
 
     try {
-      performSync(syncGroup)
+      dataSync.syncTheWorld()
     } catch (e: Exception) {
       // Individual syncs report their errors internally so we can just
       // ignore this caught error. This is a good place for future
@@ -44,14 +38,5 @@ class SyncWorker(
     }
 
     return Result.success()
-  }
-
-  private fun performSync(syncGroup: String) {
-    if (syncGroup == NO_GROUP) {
-      dataSync.syncTheWorld()
-    } else {
-      SyncGroup.valueOf(syncGroup)
-      dataSync.syncTheWorld()
-    }
   }
 }

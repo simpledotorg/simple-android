@@ -72,7 +72,8 @@ class AppointmentSyncIntegrationTest {
         syncInterval = syncInterval,
         pullBatchSize = batchSize,
         pushBatchSize = batchSize,
-        syncGroup = SyncGroup.FREQUENT
+        syncGroup = SyncGroup.FREQUENT,
+        name = ""
     )
 
     sync = AppointmentSync(

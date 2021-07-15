@@ -19,12 +19,6 @@ class HelpSync @Inject constructor(
 
   override val requiresSyncApprovedUser = false
 
-  override fun sync(): Completable = Completable
-      .mergeArrayDelayError(
-          Completable.fromAction { push() },
-          Completable.fromAction { pull() }
-      )
-
   override fun push() {
     /* Nothing to do here */
   }

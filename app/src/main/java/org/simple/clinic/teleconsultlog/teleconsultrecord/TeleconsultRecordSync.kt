@@ -1,6 +1,5 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord
 
-import io.reactivex.Completable
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncConfigType
@@ -19,10 +18,6 @@ class TeleconsultRecordSync @Inject constructor(
   override val name: String = "TeleconsultRecord"
 
   override val requiresSyncApprovedUser: Boolean = true
-
-  override fun sync(): Completable {
-    return Completable.fromAction { push() } // Api endpoint is push only
-  }
 
   override fun push() {
     syncCoordinator.push(

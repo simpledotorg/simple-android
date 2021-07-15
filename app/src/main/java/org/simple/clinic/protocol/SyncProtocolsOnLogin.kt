@@ -1,6 +1,7 @@
 package org.simple.clinic.protocol
 
 import android.annotation.SuppressLint
+import io.reactivex.Completable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers.io
@@ -23,7 +24,7 @@ class SyncProtocolsOnLogin @Inject constructor(
         .withLatestFrom(protocolRepository.recordCount())
         .subscribeOn(io())
         .filter { (user, drugCount) -> user.isNotEmpty() && drugCount == 0 }
-        .flatMapCompletable { protocolSync.sync() }
+        .flatMapCompletable { Completable.fromAction(protocolSync::pull) }
         .onErrorComplete()
         .subscribe()
   }

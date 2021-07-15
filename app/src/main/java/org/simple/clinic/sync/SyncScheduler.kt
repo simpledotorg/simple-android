@@ -29,13 +29,14 @@ class SyncScheduler @Inject constructor(
   }
 
   /*
-   * This is meant to cancel the old periodic work that
-   * was scheduled and persisted before we moved to the
-   * "unique" work system.
-   * TODO 2019-09-02: Remove once the unique work feature has been deployed to enough devices
+   * This is meant to cancel the periodic work that was scheduled using the `SyncGroup` enum
+   * until enough devices have migrated over to the system where we schedule only one periodic
+   * sync
+   * TODO vs(2021-07-15): Remove once the single unique sync work has been deployed to enough devices
    **/
   private fun cancelPreviouslyScheduledPeriodicWork() {
-    workManager.cancelAllWorkByTag("patient-sync")
+    workManager.cancelUniqueWork("FREQUENT")
+    workManager.cancelUniqueWork("DAILY")
   }
 
   private fun scheduleWorkRequests(workRequests: List<Pair<PeriodicWorkRequest, String>>): Completable {

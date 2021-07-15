@@ -22,6 +22,7 @@
 - Use `SyncConfigType` qualifier for daily and frequent sync configs
 - Bump Kotlin to v1.5.21
 - Updated `ContactPatientBottomSheet` behaviour for supporting patients with and without phone number
+- [In Progress: 13 Jul 2021] Load online lookup API if patient not found locally
 
 ### Features
 - [In Progress: 06 Jul 2021] Add support for finding a patient online from ID scan

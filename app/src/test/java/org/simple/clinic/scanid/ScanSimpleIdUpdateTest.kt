@@ -12,6 +12,7 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
+import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline
 import java.util.UUID
 
 class ScanSimpleIdUpdateTest {
@@ -133,16 +134,16 @@ class ScanSimpleIdUpdateTest {
   }
 
   @Test
-  fun `when identifier is scanned and patient is not found, then open patient search`() {
+  fun `when identifier is scanned and patient is not found, then lookup patient online`() {
     val patients = emptyList<Patient>()
-    val identifier = Identifier("123456", BpPassport)
+    val identifier = Identifier("6e2a631f-dc39-45c3-8608-160d0cc1e36b", BpPassport)
 
     spec
         .given(defaultModel)
         .whenEvent(PatientSearchByIdentifierCompleted(patients, identifier))
         .then(assertThatNext(
-            hasModel(defaultModel.notSearching()),
-            hasEffects(OpenPatientSearch(identifier, null, null))
+            hasNoModel(),
+            hasEffects(OnlinePatientLookupWithIdentifier(identifier))
         ))
   }
 
@@ -164,8 +165,8 @@ class ScanSimpleIdUpdateTest {
         .given(patientPrefillInfoChangedModel)
         .whenEvent(PatientSearchByIdentifierCompleted(patients, identifier))
         .then(assertThatNext(
-            hasModel(patientPrefillInfoChangedModel.notSearching()),
-            hasEffects(OpenPatientSearch(identifier, null, patientPrefillInfo))
+            hasNoModel(),
+            hasEffects(OnlinePatientLookupWithIdentifier(identifier))
         ))
   }
 
@@ -244,5 +245,35 @@ class ScanSimpleIdUpdateTest {
             hasModel(model.clearInvalidQrCodeError()),
             hasEffects(HideEnteredCodeValidationError)
         ))
+  }
+
+  @Test
+  fun `when online patient lookup is completed and patient is not found, show patient search`() {
+    val identifier = Identifier("e96c20ec-2518-4774-a92d-ee8d5c02b875", BpPassport)
+
+    spec
+        .given(defaultModel)
+        .whenEvent(OnlinePatientLookupWithIdentifierCompleted(LookupPatientOnline.Result.NotFound(identifier.value), identifier))
+        .then(
+            assertThatNext(
+                hasModel(defaultModel.notSearching()),
+                hasEffects(OpenPatientSearch(identifier, null, null))
+            )
+        )
+  }
+
+  @Test
+  fun `when online patient lookup is completed and had other error, show patient search`() {
+    val identifier = Identifier("fe1487af-024f-4448-8361-325913e6db81", BpPassport)
+
+    spec
+        .given(defaultModel)
+        .whenEvent(OnlinePatientLookupWithIdentifierCompleted(LookupPatientOnline.Result.OtherError, identifier))
+        .then(
+            assertThatNext(
+                hasModel(defaultModel.notSearching()),
+                hasEffects(OpenPatientSearch(identifier, null, null))
+            )
+        )
   }
 }

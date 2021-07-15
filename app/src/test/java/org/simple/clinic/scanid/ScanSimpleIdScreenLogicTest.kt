@@ -14,6 +14,7 @@ import org.simple.clinic.appconfig.Country
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.first
+import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline
 import org.simple.clinic.remoteconfig.DefaultValueConfigReader
 import org.simple.clinic.remoteconfig.NoOpRemoteConfigService
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.Empty
@@ -26,6 +27,7 @@ class ScanSimpleIdScreenLogicTest {
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val uiActions = mock<ScanSimpleIdUiActions>()
+  private val lookupPatientOnline = mock<LookupPatientOnline>()
 
   private lateinit var testFixture: MobiusTestFixture<ScanSimpleIdModel, ScanSimpleIdEvent, ScanSimpleIdEffect>
 
@@ -135,7 +137,8 @@ class ScanSimpleIdScreenLogicTest {
         patientRepository = mock(),
         qrCodeJsonParser = mock(),
         country = TestData.country(isoCountryCode = Country.INDIA),
-        uiActions = uiActions
+        uiActions = uiActions,
+        lookupPatientOnline = lookupPatientOnline
     )
 
     val features = Features(

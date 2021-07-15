@@ -3,8 +3,6 @@
 ## Next Release
 ### Internal
 - Bump Sentry Gradle plugin to v2.0.1
-- Clean up `gradle.properties`
-- Extract product flavor build config fields into `defaultConfig`
 - Bump Material Design Components to v1.4.0
 - Add ADRs for SQL performance profiling
 - Bump sqlite-android version to 3.36.0
@@ -38,11 +36,10 @@
   - Updated contact patient bottom sheet UI
   
 ### Fixes
-- Fix invalid qr code error when scanning a valid Indian NHID
 - Fix `ContactPatientBottomSheet` not going back to call patient view on back click in call later mode
 - Fix overdue list not changing when switching facility from overdue screen
   
-## On Demo
+## 2021-07-13-7862
 ### Internal
 - Migrate `OverdueAppointment` to add patients without phone number
 - Migrate `kotlinx.android.parcel` usage to `kotlinx.parcelize`
@@ -61,6 +58,8 @@
 - Bump `com.github.egslava:edittext-mask` -> '1.0.7'
 - Bump AGP to v4.2.2
 - Replace `GITHUB_ACCESS_TOKEN` with `SERVICES_ACCESS_TOKEN`
+- Clean up `gradle.properties`
+- Extract product flavor build config fields into `defaultConfig`
 
 ### Changes
 - Updated translations: `pa-IN`, `hi-IN`, `te-IN`, `kn-IN`, `mr-IN`, `te-IN`, `sid-ET`, `kn-IN`, `ta-IN`, `bn-BD`, `bn_IN`, `so-ET`, `ti-ET`, `am-ET`, `ta-LK`, `om-ET`
@@ -68,6 +67,9 @@
 - Show progress when loading overdue patient contact information
 - Tap outside or swipe to dismiss the bottom sheets
 - Tap outside to dismiss the dialogs
+
+### Fixes
+- Fix invalid qr code error when scanning a valid Indian NHID
 
 ## 2021-07-02-7847
 ### Internal

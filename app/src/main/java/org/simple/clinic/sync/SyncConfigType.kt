@@ -6,8 +6,6 @@ import javax.inject.Qualifier
 annotation class SyncConfigType(val type: Type) {
 
   enum class Type {
-    Daily,
-    Drugs,
     Frequent
   }
 }

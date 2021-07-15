@@ -8,19 +8,22 @@ import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 import org.simple.clinic.databinding.ListItemDrugSearchBinding
+import org.simple.clinic.drugs.search.DrugSearchListItem.Event
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 
-sealed class DrugSearchListItem : PagingItemAdapter.Item<DrugSearchListItem.DrugClicked> {
+sealed class DrugSearchListItem : PagingItemAdapter.Item<Event> {
 
   companion object {
 
-    fun from(searchResults: PagingData<Drug>): PagingData<DrugSearchListItem> {
+    fun from(searchResults: PagingData<Drug>, searchQuery: String): PagingData<DrugSearchListItem> {
       return searchResults
           .map(::DrugSearchResult)
           .insertSeparators(SOURCE_COMPLETE) { oldItem, newItem ->
             if (oldItem != null && newItem != null) {
               Divider
+            } else if (oldItem == null && newItem == null) {
+              NewCustomDrug(name = searchQuery)
             } else {
               null
             }
@@ -28,16 +31,14 @@ sealed class DrugSearchListItem : PagingItemAdapter.Item<DrugSearchListItem.Drug
     }
   }
 
-  data class DrugClicked(val drug: Drug)
-
   data class DrugSearchResult(val drug: Drug) : DrugSearchListItem() {
 
     override fun layoutResId() = R.layout.list_item_drug_search
 
-    override fun render(holder: BindingViewHolder, subject: Subject<DrugClicked>) {
+    override fun render(holder: BindingViewHolder, subject: Subject<Event>) {
       val binding = holder.binding as ListItemDrugSearchBinding
 
-      binding.drugItemCard.setOnClickListener { subject.onNext(DrugClicked(drug)) }
+      binding.drugItemCard.setOnClickListener { subject.onNext(Event.DrugClicked(drug)) }
 
       binding.drugNameTextView.text = drugName(drug)
     }
@@ -61,9 +62,32 @@ sealed class DrugSearchListItem : PagingItemAdapter.Item<DrugSearchListItem.Drug
 
     override fun layoutResId() = R.layout.list_item_drug_search_divider
 
-    override fun render(holder: BindingViewHolder, subject: Subject<DrugClicked>) {
+    override fun render(holder: BindingViewHolder, subject: Subject<Event>) {
 
     }
+  }
+
+  data class NewCustomDrug(val name: String) : DrugSearchListItem() {
+
+    override fun layoutResId() = R.layout.list_item_drug_search
+
+    override fun render(
+        holder: BindingViewHolder,
+        subject: Subject<Event>
+    ) {
+      val binding = holder.binding as ListItemDrugSearchBinding
+
+      binding.drugItemCard.setOnClickListener { subject.onNext(Event.NewCustomDrugClicked(name)) }
+
+      binding.drugNameTextView.text = name
+    }
+  }
+
+  sealed class Event {
+
+    data class DrugClicked(val drug: Drug) : Event()
+
+    data class NewCustomDrugClicked(val name: String) : Event()
   }
 
   class DiffCallback : DiffUtil.ItemCallback<DrugSearchListItem>() {
@@ -75,6 +99,7 @@ sealed class DrugSearchListItem : PagingItemAdapter.Item<DrugSearchListItem.Drug
       return when {
         oldItem is DrugSearchResult && newItem is DrugSearchResult -> oldItem.drug.id == newItem.drug.id
         oldItem is Divider && newItem is Divider -> false
+        oldItem is NewCustomDrug && newItem is NewCustomDrug -> true
         else -> false
       }
     }

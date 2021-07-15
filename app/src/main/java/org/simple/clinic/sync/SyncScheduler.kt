@@ -21,8 +21,9 @@ class SyncScheduler @Inject constructor(
   fun schedule(): Completable {
     return Single.just(syncConfig)
         .map { config -> createWorkRequest(config.syncInterval) }
-        .flatMapCompletable { scheduleWorkRequests(listOf(it)) }
-        .doOnComplete(::cancelPreviouslyScheduledPeriodicWork)
+        .doOnSuccess { request -> workManager.enqueueUniquePeriodicWork("sync-patient-resources", REPLACE, request) }
+        .doOnSuccess { cancelPreviouslyScheduledPeriodicWork() }
+        .ignoreElement()
   }
 
   /*
@@ -34,15 +35,6 @@ class SyncScheduler @Inject constructor(
   private fun cancelPreviouslyScheduledPeriodicWork() {
     workManager.cancelUniqueWork("FREQUENT")
     workManager.cancelUniqueWork("DAILY")
-  }
-
-  private fun scheduleWorkRequests(workRequests: List<PeriodicWorkRequest>): Completable {
-    return Completable.fromAction {
-
-      workRequests.forEach { request ->
-        workManager.enqueueUniquePeriodicWork("sync-patient-resources", REPLACE, request)
-      }
-    }
   }
 
   private fun createWorkRequest(syncInterval: SyncInterval): PeriodicWorkRequest {

@@ -1,23 +1,17 @@
 package org.simple.clinic.sync.indicator
 
 import com.f2prateek.rx.preferences2.Preference
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import junitparams.JUnitParamsRunner
-import junitparams.Parameters
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.DataSync.SyncGroupResult
 import org.simple.clinic.sync.LastSyncedState
-import org.simple.clinic.sync.SyncGroup.DAILY
-import org.simple.clinic.sync.SyncGroup.FREQUENT
-import org.simple.clinic.sync.SyncProgress
 import org.simple.clinic.sync.SyncProgress.FAILURE
 import org.simple.clinic.sync.SyncProgress.SUCCESS
 import org.simple.clinic.sync.SyncProgress.SYNCING
@@ -44,7 +38,7 @@ class SyncIndicatorStatusCalculatorTest {
     // given
     val initialState = LastSyncedState()
     whenever(syncResultPreference.get()).thenReturn(initialState)
-    whenever(dataSync.streamSyncResults()).thenReturn(Observable.just(SyncGroupResult(FREQUENT, SUCCESS)))
+    whenever(dataSync.streamSyncResults()).thenReturn(Observable.just(SyncGroupResult(SUCCESS)))
 
     // when
     syncCalculator.updateSyncResults()
@@ -59,7 +53,7 @@ class SyncIndicatorStatusCalculatorTest {
     val lastSyncSucceededAt = Instant.now(clock).minusSeconds(1)
     val initialState = LastSyncedState(lastSyncProgress = SUCCESS, lastSyncSucceededAt = lastSyncSucceededAt)
     whenever(syncResultPreference.get()).thenReturn(initialState)
-    whenever(dataSync.streamSyncResults()).thenReturn(Observable.just(SyncGroupResult(FREQUENT, FAILURE)))
+    whenever(dataSync.streamSyncResults()).thenReturn(Observable.just(SyncGroupResult(FAILURE)))
 
     // when
     syncCalculator.updateSyncResults()
@@ -74,30 +68,12 @@ class SyncIndicatorStatusCalculatorTest {
     val lastSyncSucceededAt = Instant.now(clock).minusSeconds(1)
     val initialState = LastSyncedState(lastSyncProgress = SUCCESS, lastSyncSucceededAt = lastSyncSucceededAt)
     whenever(syncResultPreference.get()).thenReturn(initialState)
-    whenever(dataSync.streamSyncResults()).thenReturn(Observable.just(SyncGroupResult(FREQUENT, SYNCING)))
+    whenever(dataSync.streamSyncResults()).thenReturn(Observable.just(SyncGroupResult(SYNCING)))
 
     // when
     syncCalculator.updateSyncResults()
 
     // then
     verify(syncResultPreference).set(LastSyncedState(SYNCING, lastSyncSucceededAt))
-  }
-
-  @Test
-  @Parameters(value = ["SUCCESS", "FAILURE", "SYNCING"])
-  fun `when the daily sync group sync status changes, the last synced state preference should not be affected`(
-      progress: SyncProgress
-  ) {
-    // given
-    val lastSyncSucceededAt = Instant.now(clock).minusSeconds(1)
-    val initialState = LastSyncedState(lastSyncProgress = SUCCESS, lastSyncSucceededAt = lastSyncSucceededAt)
-    whenever(syncResultPreference.get()).thenReturn(initialState)
-    whenever(dataSync.streamSyncResults()).thenReturn(Observable.just(SyncGroupResult(DAILY, progress)))
-
-    // when
-    syncCalculator.updateSyncResults()
-
-    // then
-    verify(syncResultPreference, never()).set(any())
   }
 }

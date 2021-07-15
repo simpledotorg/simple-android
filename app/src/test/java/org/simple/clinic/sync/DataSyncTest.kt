@@ -546,8 +546,8 @@ class DataSyncTest {
 
     syncResults
         .assertValues(
-            DataSync.SyncGroupResult(SyncGroup.FREQUENT, SyncProgress.SYNCING),
-            DataSync.SyncGroupResult(SyncGroup.FREQUENT, SyncProgress.FAILURE)
+            DataSync.SyncGroupResult(SyncProgress.SYNCING),
+            DataSync.SyncGroupResult(SyncProgress.FAILURE)
         )
         .assertNoErrors()
         .dispose()

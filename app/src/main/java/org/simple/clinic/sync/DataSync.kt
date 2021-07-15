@@ -63,16 +63,6 @@ class DataSync(
 
   private val syncErrors = PublishSubject.create<ResolvedError>()
 
-  private fun allSyncs(): Single<List<SyncResult>> {
-    val syncAllGroups = SyncGroup
-        .values()
-        .map { executeAllSyncs() }
-
-    return Single
-        .merge(syncAllGroups)
-        .reduce(listOf(), { list, results -> list + results })
-  }
-
   private fun executeAllSyncs(): Single<List<SyncResult>> {
     return Single
         .fromCallable { userSession.loggedInUserImmediate().toOptional() }
@@ -196,14 +186,14 @@ class DataSync(
   @WorkerThread
   @Throws(IOException::class) // This is only needed so Mockito can generate mocks for this method correctly
   fun syncTheWorld() {
-    allSyncs()
+    executeAllSyncs()
         .compose(purgeOnCompletedSyncs())
         .ignoreElement()
         .blockingAwait()
   }
 
   fun fireAndForgetSync() {
-    allSyncs()
+    executeAllSyncs()
         .compose(purgeOnCompletedSyncs())
         .subscribe()
   }

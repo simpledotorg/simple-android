@@ -8,26 +8,21 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import io.reactivex.Completable
-import io.reactivex.Observable
+import io.reactivex.Single
 import org.simple.clinic.sync.SyncConfigType.Type.Frequent
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class SyncScheduler @Inject constructor(
     private val workManager: WorkManager,
-    private val syncs: List<@JvmSuppressWildcards ModelSync>,
     @SyncConfigType(Frequent) private val syncConfig: SyncConfig
 ) {
 
   fun schedule(): Completable {
-    return Observable
-        .fromIterable(syncs)
-        .map { it.syncConfig() }
-        .distinct { it.syncGroup }
+    return Single.just(syncConfig)
         .map { config -> createWorkRequest(config.syncInterval) to config.syncGroup.name }
-        .toList()
-        .doOnSuccess { cancelPreviouslyScheduledPeriodicWork() }
-        .flatMapCompletable(this::scheduleWorkRequests)
+        .flatMapCompletable { scheduleWorkRequests(listOf(it)) }
+        .doOnComplete(::cancelPreviouslyScheduledPeriodicWork)
   }
 
   /*

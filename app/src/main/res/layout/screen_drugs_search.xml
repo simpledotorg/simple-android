@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <com.google.android.material.appbar.AppBarLayout
+    android:id="@+id/drugSearchAppBar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:theme="@style/ThemeOverlay.Simple.SurfacePrimary"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <com.google.android.material.appbar.MaterialToolbar
+      android:id="@+id/drugSearchToolbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:contentInsetStartWithNavigation="@dimen/spacing_56"
+      app:navigationIcon="@drawable/ic_arrow_back_24dp"
+      app:navigationIconTint="?attr/colorOnPrimary">
+
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/searchQueryTextInputLayout"
+        style="@style/Widget.Simple.TextField.Layout.Search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:theme="@style/ThemeOverlay.Simple.Blue1Primary"
+        app:endIconMode="clear_text">
+
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/searchQueryEditText"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="@string/customdrugssearch_hint"
+          android:imeOptions="actionSearch"
+          android:importantForAutofill="no"
+          android:inputType="textPersonName|textCapWords|textFilter|textNoSuggestions"
+          android:textAppearance="?attr/textAppearanceBody0"
+          android:textColor="?attr/colorOnSurface"
+          android:textColorHint="@color/color_on_surface_67" />
+
+      </com.google.android.material.textfield.TextInputLayout>
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+      android:id="@+id/drugSearchProgressIndicator"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="bottom"
+      android:indeterminate="true"
+      android:theme="@style/ThemeOverlay.Simple.Blue1Primary"
+      android:visibility="gone"
+      tools:visibility="visible" />
+
+  </com.google.android.material.appbar.AppBarLayout>
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/drugSearchResultsList"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:clipToPadding="false"
+    android:padding="@dimen/spacing_8"
+    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/drugSearchAppBar"
+    tools:listitem="@layout/list_item_drug_search" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

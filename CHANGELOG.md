@@ -22,6 +22,7 @@
 - Updated `ContactPatientBottomSheet` behaviour for supporting patients with and without phone number
 - Change `SyncInterval` from an enum to a data class
 - [In Progress: 13 Jul 2021] Load online lookup API if patient not found locally
+- [In Progress: 14 Jul 2021] Implement `DrugsSearchScreen`
 
 ### Features
 - [In Progress: 06 Jul 2021] Add support for finding a patient online from ID scan
@@ -35,6 +36,8 @@
   - Load overdue patients without phone number
   - Add option to download & share overdue list
   - Updated contact patient bottom sheet UI
+- [In Progress: 14 Jul 2021] Medical screen improvements
+  - Search for commonly used drugs
   
 ### Fixes
 - Fix `ContactPatientBottomSheet` not going back to call patient view on back click in call later mode

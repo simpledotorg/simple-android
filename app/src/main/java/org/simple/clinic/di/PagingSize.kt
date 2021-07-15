@@ -6,7 +6,8 @@ import javax.inject.Qualifier
 annotation class PagingSize(val value: Page) {
 
   enum class Page {
-    AllRecentPatients
+    AllRecentPatients,
+    DrugsSearchResults
   }
 }
 

@@ -49,8 +49,8 @@ class PatientSummaryEffectHandlerTest {
   private val teleconsultFacilityRepository = mock<TeleconsultationFacilityRepository>()
 
   private val patientSummaryConfig = PatientSummaryConfig(
-      bpEditableDuration = Duration.ofMinutes(10),
-      numberOfMeasurementsForTeleconsultation = 3
+    bpEditableDuration = Duration.ofMinutes(10),
+    numberOfMeasurementsForTeleconsultation = 3
   )
 
   private val patientUuid = UUID.fromString("67bde563-2cde-4f43-91b4-ba450f0f4d8a")
@@ -60,23 +60,23 @@ class PatientSummaryEffectHandlerTest {
   private val uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid)
 
   private val effectHandler = PatientSummaryEffectHandler(
-      schedulersProvider = TrampolineSchedulersProvider(),
-      patientRepository = patientRepository,
-      bloodPressureRepository = bloodPressureRepository,
-      appointmentRepository = mock(),
-      missingPhoneReminderRepository = missingPhoneReminderRepository,
-      bloodSugarRepository = bloodSugarRepository,
-      dataSync = dataSync,
-      medicalHistoryRepository = medicalHistoryRepository,
-      prescriptionRepository = prescriptionRepository,
-      country = TestData.country(),
-      patientSummaryConfig = patientSummaryConfig,
-      currentUser = Lazy { user },
-      currentFacility = Lazy { facility },
-      uuidGenerator = uuidGenerator,
-      facilityRepository = facilityRepository,
-      teleconsultationFacilityRepository = teleconsultFacilityRepository,
-      uiActions = uiActions
+    schedulersProvider = TrampolineSchedulersProvider(),
+    patientRepository = patientRepository,
+    bloodPressureRepository = bloodPressureRepository,
+    appointmentRepository = mock(),
+    missingPhoneReminderRepository = missingPhoneReminderRepository,
+    bloodSugarRepository = bloodSugarRepository,
+    dataSync = dataSync,
+    medicalHistoryRepository = medicalHistoryRepository,
+    prescriptionRepository = prescriptionRepository,
+    country = TestData.country(),
+    patientSummaryConfig = patientSummaryConfig,
+    currentUser = Lazy { user },
+    currentFacility = Lazy { facility },
+    uuidGenerator = uuidGenerator,
+    facilityRepository = facilityRepository,
+    teleconsultationFacilityRepository = teleconsultFacilityRepository,
+    uiActions = uiActions
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
 
@@ -100,23 +100,23 @@ class PatientSummaryEffectHandlerTest {
     // given
     val bangladesh = TestData.country(isoCountryCode = "BD")
     val effectHandler = PatientSummaryEffectHandler(
-        schedulersProvider = TrampolineSchedulersProvider(),
-        patientRepository = patientRepository,
-        bloodPressureRepository = bloodPressureRepository,
-        appointmentRepository = mock(),
-        missingPhoneReminderRepository = missingPhoneReminderRepository,
-        bloodSugarRepository = bloodSugarRepository,
-        dataSync = dataSync,
-        medicalHistoryRepository = medicalHistoryRepository,
-        prescriptionRepository = prescriptionRepository,
-        country = bangladesh,
-        patientSummaryConfig = patientSummaryConfig,
-        currentUser = Lazy { user },
-        currentFacility = Lazy { facility },
-        uuidGenerator = uuidGenerator,
-        facilityRepository = facilityRepository,
-        teleconsultationFacilityRepository = teleconsultFacilityRepository,
-        uiActions = uiActions
+      schedulersProvider = TrampolineSchedulersProvider(),
+      patientRepository = patientRepository,
+      bloodPressureRepository = bloodPressureRepository,
+      appointmentRepository = mock(),
+      missingPhoneReminderRepository = missingPhoneReminderRepository,
+      bloodSugarRepository = bloodSugarRepository,
+      dataSync = dataSync,
+      medicalHistoryRepository = medicalHistoryRepository,
+      prescriptionRepository = prescriptionRepository,
+      country = bangladesh,
+      patientSummaryConfig = patientSummaryConfig,
+      currentUser = Lazy { user },
+      currentFacility = Lazy { facility },
+      uuidGenerator = uuidGenerator,
+      facilityRepository = facilityRepository,
+      teleconsultationFacilityRepository = teleconsultFacilityRepository,
+      uiActions = uiActions
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
     val registeredFacilityUuid = UUID.fromString("1b359ec9-02e2-4f50-bebd-6001f96df57f")
@@ -126,8 +126,8 @@ class PatientSummaryEffectHandlerTest {
     val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", BpPassport))
     val bangladeshNationId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", BangladeshNationalId))
     val facility = TestData.facility(
-        uuid = registeredFacilityUuid,
-        name = "CHC Obvious"
+      uuid = registeredFacilityUuid,
+      name = "CHC Obvious"
     )
 
     val patientProfile = PatientProfile(patient, patientAddress, listOf(patientPhoneNumber), listOf(bangladeshNationId, bpPassport))
@@ -138,16 +138,18 @@ class PatientSummaryEffectHandlerTest {
     testCase.dispatch(LoadPatientSummaryProfile(patientUuid))
 
     // then
-    testCase.assertOutgoingEvents(PatientSummaryProfileLoaded(
+    testCase.assertOutgoingEvents(
+      PatientSummaryProfileLoaded(
         PatientSummaryProfile(
-            patient = patient,
-            address = patientAddress,
-            phoneNumber = patientPhoneNumber,
-            bpPassport = bpPassport,
-            alternativeId = bangladeshNationId,
-            facility = facility
+          patient = patient,
+          address = patientAddress,
+          phoneNumber = patientPhoneNumber,
+          bpPassport = bpPassport,
+          alternativeId = bangladeshNationId,
+          facility = facility
         )
-    ))
+      )
+    )
   }
 
   @Test
@@ -155,23 +157,23 @@ class PatientSummaryEffectHandlerTest {
     // given
     val bangladesh = TestData.country(isoCountryCode = "BD")
     val effectHandler = PatientSummaryEffectHandler(
-        schedulersProvider = TrampolineSchedulersProvider(),
-        patientRepository = patientRepository,
-        bloodPressureRepository = bloodPressureRepository,
-        appointmentRepository = mock(),
-        missingPhoneReminderRepository = missingPhoneReminderRepository,
-        bloodSugarRepository = bloodSugarRepository,
-        dataSync = dataSync,
-        medicalHistoryRepository = medicalHistoryRepository,
-        prescriptionRepository = prescriptionRepository,
-        country = bangladesh,
-        patientSummaryConfig = patientSummaryConfig,
-        currentUser = Lazy { user },
-        currentFacility = Lazy { facility },
-        uuidGenerator = uuidGenerator,
-        facilityRepository = facilityRepository,
-        teleconsultationFacilityRepository = teleconsultFacilityRepository,
-        uiActions = uiActions
+      schedulersProvider = TrampolineSchedulersProvider(),
+      patientRepository = patientRepository,
+      bloodPressureRepository = bloodPressureRepository,
+      appointmentRepository = mock(),
+      missingPhoneReminderRepository = missingPhoneReminderRepository,
+      bloodSugarRepository = bloodSugarRepository,
+      dataSync = dataSync,
+      medicalHistoryRepository = medicalHistoryRepository,
+      prescriptionRepository = prescriptionRepository,
+      country = bangladesh,
+      patientSummaryConfig = patientSummaryConfig,
+      currentUser = Lazy { user },
+      currentFacility = Lazy { facility },
+      uuidGenerator = uuidGenerator,
+      facilityRepository = facilityRepository,
+      teleconsultationFacilityRepository = teleconsultFacilityRepository,
+      uiActions = uiActions
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
     val patient = TestData.patient(patientUuid)
@@ -187,32 +189,34 @@ class PatientSummaryEffectHandlerTest {
     testCase.dispatch(LoadPatientSummaryProfile(patientUuid))
 
     // then
-    testCase.assertOutgoingEvents(PatientSummaryProfileLoaded(
+    testCase.assertOutgoingEvents(
+      PatientSummaryProfileLoaded(
         PatientSummaryProfile(
-            patient = patient,
-            address = patientAddress,
-            phoneNumber = patientPhoneNumber,
-            bpPassport = bpPassport,
-            alternativeId = bangladeshNationId,
-            facility = null
+          patient = patient,
+          address = patientAddress,
+          phoneNumber = patientPhoneNumber,
+          bpPassport = bpPassport,
+          alternativeId = bangladeshNationId,
+          facility = null
         )
-    ))
+      )
+    )
   }
 
   @Test
   fun `when edit click effect is received then show edit patient screen`() {
     //given
     val patientProfile = TestData.patientProfile(
-        patientUuid = patientUuid,
-        patientAddressUuid = UUID.fromString("d261cde2-b0cb-436e-9612-8b3b7bde0c63")
+      patientUuid = patientUuid,
+      patientAddressUuid = UUID.fromString("d261cde2-b0cb-436e-9612-8b3b7bde0c63")
     )
     val patientSummaryProfile = PatientSummaryProfile(
-        patient = patientProfile.patient,
-        address = patientProfile.address,
-        phoneNumber = null,
-        bpPassport = null,
-        alternativeId = null,
-        facility = facility
+      patient = patientProfile.patient,
+      address = patientProfile.address,
+      phoneNumber = null,
+      bpPassport = null,
+      alternativeId = null,
+      facility = facility
     )
     val facility = TestData.facility(uuid = UUID.fromString("94db5d90-d483-4755-892a-97fde5a870fe"))
 
@@ -231,8 +235,8 @@ class PatientSummaryEffectHandlerTest {
     val screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
 
     val medicalHistory = TestData.medicalHistory(
-        uuid = UUID.fromString("47a70ee3-0d33-4404-9668-59af72390bfd"),
-        patientUuid = patientUuid
+      uuid = UUID.fromString("47a70ee3-0d33-4404-9668-59af72390bfd"),
+      patientUuid = patientUuid
     )
 
     whenever(patientRepository.hasPatientDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
@@ -244,11 +248,13 @@ class PatientSummaryEffectHandlerTest {
     testCase.dispatch(LoadDataForBackClick(patientUuid, screenCreatedTimestamp))
 
     // then
-    testCase.assertOutgoingEvents(DataForBackClickLoaded(
+    testCase.assertOutgoingEvents(
+      DataForBackClickLoaded(
         hasPatientDataChangedSinceScreenCreated = true,
         countOfRecordedMeasurements = 5,
         diagnosisRecorded = medicalHistory.diagnosisRecorded
-    ))
+      )
+    )
     verifyZeroInteractions(uiActions)
   }
 
@@ -256,8 +262,8 @@ class PatientSummaryEffectHandlerTest {
   fun `when the load data for done click effect is received, load the data`() {
     // given
     val medicalHistory = TestData.medicalHistory(
-        uuid = UUID.fromString("47a70ee3-0d33-4404-9668-59af72390bfd"),
-        patientUuid = patientUuid
+      uuid = UUID.fromString("47a70ee3-0d33-4404-9668-59af72390bfd"),
+      patientUuid = patientUuid
     )
 
     whenever(bloodPressureRepository.bloodPressureCountImmediate(patientUuid)) doReturn 2
@@ -268,10 +274,12 @@ class PatientSummaryEffectHandlerTest {
     testCase.dispatch(LoadDataForDoneClick(patientUuid))
 
     // then
-    testCase.assertOutgoingEvents(DataForDoneClickLoaded(
+    testCase.assertOutgoingEvents(
+      DataForDoneClickLoaded(
         countOfRecordedMeasurements = 5,
         diagnosisRecorded = medicalHistory.diagnosisRecorded
-    ))
+      )
+    )
     verifyZeroInteractions(uiActions)
   }
 
@@ -281,7 +289,7 @@ class PatientSummaryEffectHandlerTest {
     testCase.dispatch(TriggerSync(BACK_CLICK))
 
     // then
-    verify(dataSync).fireAndForgetSync(FREQUENT)
+    verify(dataSync).fireAndForgetSync()
     verifyNoMoreInteractions(dataSync)
     testCase.assertOutgoingEvents(SyncTriggered(BACK_CLICK))
     verifyZeroInteractions(uiActions)
@@ -353,10 +361,12 @@ class PatientSummaryEffectHandlerTest {
     val teleconsultRecordId = UUID.fromString("4d317b9a-9db4-4477-b022-360701db0ddb")
 
     // when
-    testCase.dispatch(NavigateToTeleconsultRecordScreen(
+    testCase.dispatch(
+      NavigateToTeleconsultRecordScreen(
         patientUuid = patientUuid,
         teleconsultRecordId = teleconsultRecordId
-    ))
+      )
+    )
 
     // then
     verify(uiActions).navigateToTeleconsultRecordScreen(patientUuid, teleconsultRecordId)
@@ -368,8 +378,8 @@ class PatientSummaryEffectHandlerTest {
   fun `when load medical officers effect is received, then load medical officers`() {
     // given
     val medicalOfficers = listOf(
-        TestData.medicalOfficer(id = UUID.fromString("7e59677b-568d-4381-8d21-931208088262")),
-        TestData.medicalOfficer(id = UUID.fromString("3ae9c956-5a96-4734-a4d6-c79f341d09a6"))
+      TestData.medicalOfficer(id = UUID.fromString("7e59677b-568d-4381-8d21-931208088262")),
+      TestData.medicalOfficer(id = UUID.fromString("3ae9c956-5a96-4734-a4d6-c79f341d09a6"))
     )
 
     whenever(teleconsultFacilityRepository.medicalOfficersForFacility(facilityId = facility.uuid)) doReturn medicalOfficers

@@ -92,7 +92,7 @@ class SyncIndicatorEffectHandler @AssistedInject constructor(
   private fun startDataSync(): ObservableTransformer<InitiateDataSync, SyncIndicatorEvent> {
     return ObservableTransformer { effect ->
       effect
-          .doOnNext { dataSync.fireAndForgetSync(SyncGroup.FREQUENT) }
+          .doOnNext { dataSync.fireAndForgetSync() }
           // We are listening for errors here after the data sync is initiated.
           // This is applicable for manual sync triggers only.
           .switchMap { dataSync.streamSyncErrors() }

@@ -211,10 +211,6 @@ class DataSync(
         .subscribe()
   }
 
-  fun fireAndForgetSync(syncGroup: SyncGroup) {
-    syncsForGroup(syncGroup).subscribe()
-  }
-
   fun streamSyncResults(): Observable<SyncGroupResult> = syncProgress
 
   fun streamSyncErrors(): Observable<ResolvedError> = syncErrors

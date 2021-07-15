@@ -1,8 +1,12 @@
 package org.simple.clinic.drugs.search
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class DrugSearchModel(
     val searchQuery: String
-) {
+) : Parcelable {
 
   companion object {
 

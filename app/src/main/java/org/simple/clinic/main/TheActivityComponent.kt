@@ -16,6 +16,7 @@ import org.simple.clinic.contactpatient.views.SetAppointmentReminderView
 import org.simple.clinic.datepicker.calendar.CalendarDatePicker
 import org.simple.clinic.deniedaccess.AccessDeniedScreenInjector
 import org.simple.clinic.di.PagingModule
+import org.simple.clinic.drugs.search.DrugsSearchScreen
 import org.simple.clinic.drugs.selection.EditMedicinesScreen
 import org.simple.clinic.editpatient.ConfirmDiscardChangesDialog
 import org.simple.clinic.editpatient.EditPatientScreen
@@ -131,7 +132,8 @@ interface TheActivityComponent :
     ScheduleAppointmentSheet.Injector,
     CalendarDatePicker.Injector,
     TextInputDatePickerSheet.Injector,
-    RemoveOverdueAppointmentScreen.Injector {
+    RemoveOverdueAppointmentScreen.Injector,
+    DrugsSearchScreen.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory

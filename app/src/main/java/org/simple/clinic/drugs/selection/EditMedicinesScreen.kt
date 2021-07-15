@@ -36,8 +36,11 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescribedDrugsDoneClicked
 import org.simple.clinic.drugs.PresribedDrugsRefillClicked
 import org.simple.clinic.drugs.ProtocolDrugClicked
+import org.simple.clinic.drugs.search.DrugsSearchScreen
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.UserClock
@@ -71,6 +74,9 @@ class EditMedicinesScreen :
 
   @Inject
   lateinit var userClock: UserClock
+
+  @Inject
+  lateinit var features: Features
 
   private val toolbar
     get() = binding.prescribeddrugsToolbar
@@ -188,7 +194,11 @@ class EditMedicinesScreen :
   }
 
   override fun showNewPrescriptionEntrySheet(patientUuid: UUID) {
-    activity.startActivity(CustomPrescriptionEntrySheet.intentForAddNewPrescription(requireContext(), patientUuid))
+    if (features.isEnabled(Feature.CustomDrugSearchScreen)) {
+      router.push(DrugsSearchScreen.Key(patientId = patientUuid))
+    } else {
+      activity.startActivity(CustomPrescriptionEntrySheet.intentForAddNewPrescription(requireContext(), patientUuid))
+    }
   }
 
   override fun goBackToPatientSummary() {

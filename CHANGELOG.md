@@ -26,6 +26,7 @@
 - Fix home screen memory leaks
   - Use `childFragmentManager` & `viewLifecycleOwner.lifecycle` when creating `FragmentStateAdapter`
   - Remove overdue list adapter from recycler view when `OverdueScreen` view is about to be destroyed
+- Implement transferred from and registered at facility in `ContactPatientBottomSheet`
 - Load online lookup API if patient not found locally
 - Implement `DrugsSearchScreen`
 - Don't show progress if overdue list already has items

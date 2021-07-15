@@ -43,6 +43,9 @@ class BloodSugarSyncIntegrationTest {
   @Inject
   lateinit var userSession: UserSession
 
+  @Inject
+  lateinit var syncInterval: SyncInterval
+
   private val patientUuid = UUID.fromString("2acc8a43-526d-44c7-a362-3caea8f09dd3")
 
   @get:Rule
@@ -55,12 +58,7 @@ class BloodSugarSyncIntegrationTest {
   private lateinit var sync: BloodSugarSync
 
   private val batchSize = 3
-  private val config = SyncConfig(
-      syncInterval = SyncInterval.FREQUENT,
-      pullBatchSize = batchSize,
-      pushBatchSize = batchSize,
-      syncGroup = SyncGroup.FREQUENT
-  )
+  private lateinit var config: SyncConfig
 
   private val currentFacilityUuid: UUID by unsafeLazy { userSession.loggedInUserImmediate()!!.currentFacilityUuid }
 
@@ -71,6 +69,13 @@ class BloodSugarSyncIntegrationTest {
     TestClinicApp.appComponent().inject(this)
 
     resetLocalData()
+
+    config = SyncConfig(
+        syncInterval = syncInterval,
+        pullBatchSize = batchSize,
+        pushBatchSize = batchSize,
+        syncGroup = SyncGroup.FREQUENT
+    )
 
     sync = BloodSugarSync(
         syncCoordinator = SyncCoordinator(),

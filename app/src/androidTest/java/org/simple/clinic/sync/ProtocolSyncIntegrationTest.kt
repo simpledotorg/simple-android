@@ -38,6 +38,9 @@ class ProtocolSyncIntegrationTest {
   @Inject
   lateinit var userSession: UserSession
 
+  @Inject
+  lateinit var syncInterval: SyncInterval
+
   @get:Rule
   val ruleChain: RuleChain = Rules
       .global()
@@ -46,18 +49,20 @@ class ProtocolSyncIntegrationTest {
   private lateinit var sync: ProtocolSync
 
   private val batchSize = 3
-  private val config = SyncConfig(
-      syncInterval = SyncInterval.FREQUENT,
-      pullBatchSize = batchSize,
-      pushBatchSize = batchSize,
-      syncGroup = SyncGroup.FREQUENT
-  )
+  private lateinit var config: SyncConfig
 
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
 
     resetLocalData()
+
+    config = SyncConfig(
+        syncInterval = syncInterval,
+        pullBatchSize = batchSize,
+        pushBatchSize = batchSize,
+        syncGroup = SyncGroup.FREQUENT
+    )
 
     sync = ProtocolSync(
         syncCoordinator = SyncCoordinator(),

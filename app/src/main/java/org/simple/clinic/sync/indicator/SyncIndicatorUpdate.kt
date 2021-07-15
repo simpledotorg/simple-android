@@ -23,7 +23,10 @@ import java.time.Duration
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
-class SyncIndicatorUpdate : Update<SyncIndicatorModel, SyncIndicatorEvent, SyncIndicatorEffect> {
+class SyncIndicatorUpdate(
+    private val syncInterval: SyncInterval
+) : Update<SyncIndicatorModel, SyncIndicatorEvent, SyncIndicatorEffect> {
+
   override fun update(model: SyncIndicatorModel, event: SyncIndicatorEvent):
       Next<SyncIndicatorModel, SyncIndicatorEffect> {
 
@@ -109,13 +112,12 @@ class SyncIndicatorUpdate : Update<SyncIndicatorModel, SyncIndicatorEvent, SyncI
     val lastSucceededSyncTimestamp = syncState.lastSyncSucceededAt ?: return SyncPending
 
     val timeSinceLastSync = Duration.between(lastSucceededSyncTimestamp, currentTime)
-    val mostFrequentSyncIntervalDuration = SyncInterval.mostFrequent()
 
     // This check is added for cases where the device time is changed to be in the future.
     val syncHappenedInTheFuture = timeSinceLastSync.isNegative
 
     val hasLastSyncTimeExceededFailureThreshold = timeSinceLastSync > maxFailureThresholdSinceLastSync
-    val isLastFrequentSyncPending = timeSinceLastSync > mostFrequentSyncIntervalDuration
+    val isLastFrequentSyncPending = timeSinceLastSync > syncInterval.frequency
 
     return when {
       hasLastSyncTimeExceededFailureThreshold -> ConnectToSync

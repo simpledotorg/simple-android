@@ -23,6 +23,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.LastSyncedState
 import org.simple.clinic.sync.SyncGroup.FREQUENT
+import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.sync.SyncProgress.FAILURE
 import org.simple.clinic.sync.SyncProgress.SUCCESS
 import org.simple.clinic.sync.SyncProgress.SYNCING
@@ -217,11 +218,16 @@ class SyncIndicatorLogicTest {
         indicatorUiActions
     )
 
+    val syncInterval = SyncInterval(
+        frequency = Duration.ofMinutes(16),
+        backOffDelay = Duration.ofMinutes(5)
+    )
+
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = SyncIndicatorModel.create(),
         init = SyncIndicatorInit(),
-        update = SyncIndicatorUpdate(),
+        update = SyncIndicatorUpdate(syncInterval),
         effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )

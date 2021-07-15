@@ -66,14 +66,14 @@ class DataSync(
   private fun allSyncs(): Single<List<SyncResult>> {
     val syncAllGroups = SyncGroup
         .values()
-        .map { syncsForGroup() }
+        .map { executeAllSyncs() }
 
     return Single
         .merge(syncAllGroups)
         .reduce(listOf(), { list, results -> list + results })
   }
 
-  private fun syncsForGroup(): Single<List<SyncResult>> {
+  private fun executeAllSyncs(): Single<List<SyncResult>> {
     return Single
         .fromCallable { userSession.loggedInUserImmediate().toOptional() }
         .subscribeOn(schedulersProvider.io())

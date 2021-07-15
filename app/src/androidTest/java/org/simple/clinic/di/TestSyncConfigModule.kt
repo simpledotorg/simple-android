@@ -5,7 +5,6 @@ import dagger.Provides
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncConfigType
 import org.simple.clinic.sync.SyncConfigType.Type.Frequent
-import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncInterval
 import java.time.Duration
 
@@ -29,7 +28,6 @@ class TestSyncConfigModule {
         syncInterval = syncInterval,
         pullBatchSize = 1000,
         pushBatchSize = 500,
-        syncGroup = SyncGroup.FREQUENT,
         name = "sync-patient-resources"
     )
   }

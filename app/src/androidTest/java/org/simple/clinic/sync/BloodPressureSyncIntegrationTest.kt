@@ -74,7 +74,6 @@ class BloodPressureSyncIntegrationTest {
         syncInterval = syncInterval,
         pullBatchSize = batchSize,
         pushBatchSize = batchSize,
-        syncGroup = SyncGroup.FREQUENT,
         name = ""
     )
 

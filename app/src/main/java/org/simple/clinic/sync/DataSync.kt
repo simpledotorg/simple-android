@@ -66,32 +66,30 @@ class DataSync(
   private fun allSyncs(): Single<List<SyncResult>> {
     val syncAllGroups = SyncGroup
         .values()
-        .map(::syncsForGroup)
+        .map { syncsForGroup() }
 
     return Single
         .merge(syncAllGroups)
         .reduce(listOf(), { list, results -> list + results })
   }
 
-  private fun syncsForGroup(syncGroup: SyncGroup): Single<List<SyncResult>> {
-    val syncsInGroup = modelSyncs.filter { it.syncConfig().syncGroup == syncGroup }
-
+  private fun syncsForGroup(): Single<List<SyncResult>> {
     return Single
         .fromCallable { userSession.loggedInUserImmediate().toOptional() }
         .subscribeOn(schedulersProvider.io())
-        .compose(filterSyncsThatRequireAuthentication(syncsInGroup))
+        .compose(filterSyncsThatRequireAuthentication(modelSyncs))
         .compose(prepareTasksFromSyncs())
         .doOnSubscribe { syncProgress.onNext(SyncGroupResult(SyncProgress.SYNCING)) }
         .doOnSuccess(::syncCompleted)
   }
 
   private fun filterSyncsThatRequireAuthentication(
-      syncsInGroup: List<ModelSync>
+      syncs: List<ModelSync>
   ): SingleTransformer<Optional<User>, List<ModelSync>> {
     return SingleTransformer { userSingle ->
       userSingle
           .flatMap { user ->
-            combineSyncsWithCurrentUser(syncsInGroup, user)
+            combineSyncsWithCurrentUser(syncs, user)
                 .filter { (user, modelSync) -> shouldSyncBeRun(modelSync, user) }
                 .map { (_, modelSync) -> modelSync }
                 .toList()

@@ -1,6 +1,5 @@
 package org.simple.clinic.summary.teleconsultation.sync
 
-import io.reactivex.Completable
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncConfigType
@@ -17,14 +16,6 @@ class TeleconsultationSync @Inject constructor(
   override val name: String = "TeleconsultationFacilityInfo"
 
   override val requiresSyncApprovedUser = true
-
-  override fun sync(): Completable {
-    return Completable
-        .mergeArrayDelayError(
-            Completable.fromAction { push() },
-            Completable.fromAction { pull() }
-        )
-  }
 
   override fun push() {
     /* Nothing to do here */

@@ -1,7 +1,6 @@
 package org.simple.clinic.facility
 
 import com.f2prateek.rx.preferences2.Preference
-import io.reactivex.Completable
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncConfigType
@@ -24,12 +23,6 @@ class FacilitySync @Inject constructor(
   override val name: String = "Facility"
 
   override val requiresSyncApprovedUser = false
-
-  override fun sync() = Completable
-      .mergeArrayDelayError(
-          Completable.fromAction { push() },
-          Completable.fromAction { pull() }
-      )
 
   override fun push() {
     /* Nothing to do here */

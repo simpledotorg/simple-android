@@ -1,7 +1,6 @@
 package org.simple.clinic.drugs.sync
 
 import com.f2prateek.rx.preferences2.Preference
-import io.reactivex.Completable
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.sync.ModelSync
@@ -25,12 +24,6 @@ class PrescriptionSync @Inject constructor(
   override val name: String = "Prescribed Drug"
 
   override val requiresSyncApprovedUser = true
-
-  override fun sync(): Completable = Completable
-      .mergeArrayDelayError(
-          Completable.fromAction { push() },
-          Completable.fromAction { pull() }
-      )
 
   override fun push() {
     syncCoordinator.push(repository, config.pushBatchSize) { api.push(toRequest(it)).execute().read()!! }

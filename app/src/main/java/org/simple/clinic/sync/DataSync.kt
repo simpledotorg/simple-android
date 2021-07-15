@@ -81,8 +81,8 @@ class DataSync(
         .subscribeOn(schedulersProvider.io())
         .compose(filterSyncsThatRequireAuthentication(syncsInGroup))
         .compose(prepareTasksFromSyncs())
-        .doOnSubscribe { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SYNCING)) }
-        .doOnSuccess { syncResults -> syncCompleted(syncResults, syncGroup) }
+        .doOnSubscribe { syncProgress.onNext(SyncGroupResult(SyncProgress.SYNCING)) }
+        .doOnSuccess(::syncCompleted)
   }
 
   private fun filterSyncsThatRequireAuthentication(
@@ -128,18 +128,17 @@ class DataSync(
   }
 
   private fun syncCompleted(
-      syncResults: List<SyncResult>,
-      syncGroup: SyncGroup
+      syncResults: List<SyncResult>
   ) {
     val firstFailure = syncResults.firstOrNull { it is SyncResult.Failed }
 
     if (firstFailure != null) {
-      syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.FAILURE))
+      syncProgress.onNext(SyncGroupResult(SyncProgress.FAILURE))
 
       val resolvedError = (firstFailure as SyncResult.Failed).error
       syncErrors.onNext(resolvedError)
     } else {
-      syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SUCCESS))
+      syncProgress.onNext(SyncGroupResult(SyncProgress.SUCCESS))
     }
   }
 
@@ -215,7 +214,7 @@ class DataSync(
 
   fun streamSyncErrors(): Observable<ResolvedError> = syncErrors
 
-  data class SyncGroupResult(val syncGroup: SyncGroup, val syncProgress: SyncProgress)
+  data class SyncGroupResult(val syncProgress: SyncProgress)
 
   private sealed class SyncResult(val sync: ModelSync) {
 

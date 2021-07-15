@@ -29,7 +29,8 @@ class TestSyncConfigModule {
         syncInterval = syncInterval,
         pullBatchSize = 1000,
         pushBatchSize = 500,
-        syncGroup = SyncGroup.FREQUENT
+        syncGroup = SyncGroup.FREQUENT,
+        name = "sync-patient-resources"
     )
   }
 }

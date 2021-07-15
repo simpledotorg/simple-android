@@ -62,7 +62,8 @@ class PrescriptionSyncIntegrationTest {
       syncInterval = syncInterval,
       pullBatchSize = batchSize,
       pushBatchSize = batchSize,
-      syncGroup = SyncGroup.FREQUENT
+      syncGroup = SyncGroup.FREQUENT,
+      name = ""
   )
 
   private val currentFacilityUuid: UUID by unsafeLazy { userSession.loggedInUserImmediate()!!.currentFacilityUuid }

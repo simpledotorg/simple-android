@@ -4,5 +4,6 @@ data class SyncConfig(
     val syncInterval: SyncInterval,
     val pullBatchSize: Int,
     val pushBatchSize: Int,
-    val syncGroup: SyncGroup
+    val syncGroup: SyncGroup,
+    val name: String
 )

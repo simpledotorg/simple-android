@@ -35,7 +35,6 @@ class DataSyncTest {
       ),
       pullBatchSize = 10,
       pushBatchSize = 10,
-      syncGroup = SyncGroup.FREQUENT,
       name = ""
   )
 

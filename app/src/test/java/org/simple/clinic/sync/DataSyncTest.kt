@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import org.junit.Rule
@@ -123,91 +122,6 @@ class DataSyncTest {
     syncErrors
         .assertValue(ResolvedError.Unexpected(runtimeException))
         .assertNoErrors()
-        .dispose()
-  }
-
-  @Test
-  fun `when syncing a particular group, only the syncs which are a part of that group must be synced`() {
-    val modelSync1 = FakeModelSync(
-        _name = "sync1",
-        config = frequentSyncConfig
-    )
-    val modelSync2 = FakeModelSync(
-        _name = "sync2",
-        config = dailySyncConfig,
-        pushError = RuntimeException()
-    )
-    val modelSync3 = FakeModelSync(
-        _name = "sync3",
-        config = dailySyncConfig,
-        pullError = RuntimeException()
-    )
-    val modelSync4 = FakeModelSync(
-        _name = "sync4",
-        config = frequentSyncConfig
-    )
-
-    val dataSync = DataSync(
-        modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3, modelSync4),
-        userSession = userSession,
-        schedulersProvider = schedulersProvider,
-        syncScheduler = schedulersProvider.io(),
-        purgeOnSync = mock()
-    )
-
-    val syncErrors = dataSync
-        .streamSyncErrors()
-        .test()
-
-    dataSync.sync(SyncGroup.FREQUENT)
-
-    syncErrors
-        .assertNoErrors()
-        .assertNoValues()
-        .dispose()
-  }
-
-  @Test
-  fun `when syncing a particular group, errors in syncing any should not affect another syncs`() {
-    val modelSync1 = FakeModelSync(
-        _name = "sync1",
-        config = frequentSyncConfig
-    )
-
-    val runtimeException = RuntimeException("TEST")
-    val modelSync2 = FakeModelSync(
-        _name = "sync2",
-        config = dailySyncConfig,
-        pushError = runtimeException
-    )
-
-    val modelSync3 = FakeModelSync(
-        _name = "sync3",
-        config = dailySyncConfig,
-    )
-
-    val modelSync4 = FakeModelSync(
-        _name = "sync4",
-        config = frequentSyncConfig
-    )
-
-    val dataSync = DataSync(
-        modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3, modelSync4),
-        userSession = userSession,
-        schedulersProvider = schedulersProvider,
-        syncScheduler = schedulersProvider.io(),
-        purgeOnSync = mock()
-    )
-
-    val syncErrors = dataSync
-        .streamSyncErrors()
-        .test()
-        .assertNoErrors()
-
-    dataSync.sync(SyncGroup.DAILY)
-
-    syncErrors
-        .assertValue(ResolvedError.Unexpected(runtimeException))
         .dispose()
   }
 
@@ -623,7 +537,7 @@ class DataSyncTest {
         .test()
         .assertNoErrors()
 
-    dataSync.sync(SyncGroup.FREQUENT)
+    dataSync.syncTheWorld()
 
     syncErrors
         .assertValue(ErrorResolver.resolve(ioException)) // IOException because it is a push error and pushes are executed first
@@ -637,42 +551,6 @@ class DataSyncTest {
         )
         .assertNoErrors()
         .dispose()
-  }
-
-  @Test
-  fun `when syncing a group, the unused data must never be purged`() {
-    // given
-    whenever(userSession.isUserPresentLocally()).thenReturn(true)
-
-    val modelSync1 = FakeModelSync(
-        _name = "sync1",
-        config = frequentSyncConfig
-    )
-
-    val modelSync2 = FakeModelSync(
-        _name = "sync2",
-        config = frequentSyncConfig
-    )
-
-    val modelSync3 = FakeModelSync(
-        _name = "sync3",
-        config = frequentSyncConfig
-    )
-
-    val purgeOnSync = mock<PurgeOnSync>()
-    val dataSync = DataSync(
-        modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
-        userSession = userSession,
-        schedulersProvider = schedulersProvider,
-        syncScheduler = schedulersProvider.io(),
-        purgeOnSync = purgeOnSync
-    )
-
-    // when
-    dataSync.sync(SyncGroup.FREQUENT)
-
-    // then
-    verifyZeroInteractions(purgeOnSync)
   }
 
   @Test

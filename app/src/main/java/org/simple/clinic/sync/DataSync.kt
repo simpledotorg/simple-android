@@ -205,11 +205,6 @@ class DataSync(
         .blockingAwait()
   }
 
-  @WorkerThread
-  fun sync(syncGroup: SyncGroup) {
-    syncsForGroup(syncGroup).ignoreElement().blockingAwait()
-  }
-
   fun fireAndForgetSync() {
     allSyncs()
         .compose(purgeOnCompletedSyncs())

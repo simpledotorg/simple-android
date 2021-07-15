@@ -9,12 +9,14 @@ import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import io.reactivex.Completable
 import io.reactivex.Observable
+import org.simple.clinic.sync.SyncConfigType.Type.Frequent
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class SyncScheduler @Inject constructor(
     private val workManager: WorkManager,
-    private val syncs: List<@JvmSuppressWildcards ModelSync>
+    private val syncs: List<@JvmSuppressWildcards ModelSync>,
+    @SyncConfigType(Frequent) private val syncConfig: SyncConfig
 ) {
 
   fun schedule(): Completable {

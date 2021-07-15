@@ -11,10 +11,8 @@
 - Migrate `BloodPressureHistoryScreen` to a fragment
 - Migrate `BloodSugarHistoryScreen` to a fragment
 - Delete patients and it's complete medical records when the retention time has passed
-- Push records to server during sync in batches
 - Implement `DrugSync`
 - Update default protocol drugs
-- Allow push and pull sync batch sizes to be configured separately
 - Remove remote config sync worker from the regular sync resources
 - Enqueue `UpdateRemoteConfigWorker` on app cold starts
 - Use `SyncConfigType` qualifier for daily and frequent sync configs
@@ -50,6 +48,11 @@
 ### Fixes
 - Fix `ContactPatientBottomSheet` not going back to call patient view on back click in call later mode
 - Fix overdue list not changing when switching facility from overdue screen
+
+## 2021-07-15-7866
+### Internal
+- Push records to server during sync in batches
+- Allow push and pull sync batch sizes to be configured separately
   
 ## 2021-07-13-7862
 ### Internal

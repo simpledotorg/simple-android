@@ -1,7 +1,6 @@
 package org.simple.clinic.sync
 
 import android.content.Context
-import androidx.work.Data
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import org.simple.clinic.ClinicApp
@@ -11,17 +10,6 @@ class SyncWorker(
     context: Context,
     workerParams: WorkerParameters
 ) : Worker(context, workerParams) {
-
-  companion object {
-    private const val SYNC_GROUP = "sync_group_id"
-
-    fun createWorkDataForSyncConfig(syncConfig: SyncConfig): Data {
-      return Data
-          .Builder()
-          .putString(SYNC_GROUP, syncConfig.syncGroup.name)
-          .build()
-    }
-  }
 
   @Inject
   lateinit var dataSync: DataSync

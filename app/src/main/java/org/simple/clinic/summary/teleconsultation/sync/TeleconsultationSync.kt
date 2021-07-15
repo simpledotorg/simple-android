@@ -35,5 +35,4 @@ class TeleconsultationSync @Inject constructor(
     repository.mergeWithLocalData(teleconsultationInfoPullResponse.payloads)
   }
 
-  override fun syncConfig() = config
 }

@@ -42,8 +42,6 @@ class PatientSync @Inject constructor(
     syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().read()!! }
   }
 
-  override fun syncConfig(): SyncConfig = config
-
   private fun toRequest(patients: List<PatientProfile>): PatientPushRequest {
     return PatientPushRequest(
         patients.map { (patient, address, phoneNumbers, businessIds) ->

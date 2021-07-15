@@ -39,8 +39,6 @@ class BloodPressureSync @Inject constructor(
     syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().read()!! }
   }
 
-  override fun syncConfig(): SyncConfig = config
-
   private fun toRequest(measurements: List<BloodPressureMeasurement>): BloodPressurePushRequest {
     val payloads = measurements.map { it.toPayload() }
     return BloodPressurePushRequest(payloads)

@@ -41,8 +41,6 @@ class MedicalHistorySync @Inject constructor(
     syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().read()!! }
   }
 
-  override fun syncConfig(): SyncConfig = config
-
   private fun toRequest(histories: List<MedicalHistory>): MedicalHistoryPushRequest {
     val payloads = histories
         .map {

@@ -35,8 +35,6 @@ class TeleconsultRecordSync @Inject constructor(
     /* Nothing to do here */
   }
 
-  override fun syncConfig(): SyncConfig = config
-
   private fun toRequest(teleconsultRecord: List<TeleconsultRecord>): TeleconsultPushRequest {
     val payloads = teleconsultRecord.map { recordToPayload(it) }
     return TeleconsultPushRequest(payloads)

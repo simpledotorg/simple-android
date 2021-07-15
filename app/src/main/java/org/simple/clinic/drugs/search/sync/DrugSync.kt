@@ -39,5 +39,4 @@ class DrugSync @Inject constructor(
     }
   }
 
-  override fun syncConfig() = config
 }

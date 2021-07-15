@@ -40,8 +40,6 @@ class FacilitySync @Inject constructor(
     syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().read()!! }
   }
 
-  override fun syncConfig(): SyncConfig = config
-
   fun pullWithResult(): FacilityPullResult {
     return try {
       pull()

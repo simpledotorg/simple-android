@@ -41,8 +41,6 @@ class PrescriptionSync @Inject constructor(
     syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().read()!! }
   }
 
-  override fun syncConfig(): SyncConfig = config
-
   private fun toRequest(drugs: List<PrescribedDrug>): PrescriptionPushRequest {
     val payloads = drugs.map { it.toPayload() }
     return PrescriptionPushRequest(payloads)

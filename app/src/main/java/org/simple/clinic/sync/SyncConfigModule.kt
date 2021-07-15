@@ -3,7 +3,6 @@ package org.simple.clinic.sync
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.remoteconfig.ConfigReader
-import org.simple.clinic.sync.SyncConfigType.Type.Daily
 import org.simple.clinic.sync.SyncConfigType.Type.Drugs
 import org.simple.clinic.sync.SyncConfigType.Type.Frequent
 
@@ -23,19 +22,6 @@ class SyncConfigModule {
     )
   }
 
-  @Provides
-  @SyncConfigType(Daily)
-  fun dailySyncConfig(
-      reader: ConfigReader
-  ): SyncConfig {
-    return SyncConfig(
-        syncInterval = SyncInterval.DAILY,
-        pullBatchSize = reader.long("sync_pull_batch_size", 1000).toInt(),
-        pushBatchSize = reader.long("sync_push_batch_size", 500).toInt(),
-        syncGroup = SyncGroup.DAILY
-    )
-  }
-
   /**
    * Drug sync doesn't support batch size at API level yet. So using the normal batch size can cause
    * API loop if the payloads size is greater than the batch size. So, to avoid that issue and also
@@ -51,10 +37,10 @@ class SyncConfigModule {
     val drugsBatchSize = reader.long("syncmodule_drugsync_batchsize", default = 1000)
 
     return SyncConfig(
-        syncInterval = SyncInterval.DAILY,
+        syncInterval = SyncInterval.FREQUENT,
         pullBatchSize = drugsBatchSize.toInt(),
         pushBatchSize = 0, // We don't push drugs to server, so this is unused
-        syncGroup = SyncGroup.DAILY
+        syncGroup = SyncGroup.FREQUENT
     )
   }
 }

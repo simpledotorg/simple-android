@@ -5,14 +5,14 @@ import io.reactivex.Single
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncConfigType
-import org.simple.clinic.sync.SyncConfigType.Type.Daily
+import org.simple.clinic.sync.SyncConfigType.Type.Frequent
 import java.io.IOException
 import javax.inject.Inject
 
 class HelpSync @Inject constructor(
     private val syncApi: HelpApi,
     private val syncRepository: HelpRepository,
-    @SyncConfigType(Daily) private val config: SyncConfig
+    @SyncConfigType(Frequent) private val config: SyncConfig
 ) : ModelSync {
 
   override val name: String = "Help"

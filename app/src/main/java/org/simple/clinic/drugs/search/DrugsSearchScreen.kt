@@ -15,6 +15,7 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ListItemDrugSearchBinding
+import org.simple.clinic.databinding.ListItemDrugSearchCornerCapBinding
 import org.simple.clinic.databinding.ListItemDrugSearchDividerBinding
 import org.simple.clinic.databinding.ScreenDrugsSearchBinding
 import org.simple.clinic.di.injector
@@ -50,6 +51,9 @@ class DrugsSearchScreen : BaseScreen<
           },
           R.layout.list_item_drug_search_divider to { layoutInflater, parent ->
             ListItemDrugSearchDividerBinding.inflate(layoutInflater, parent, false)
+          },
+          R.layout.list_item_drug_search_corner_cap to { layoutInflater, parent ->
+            ListItemDrugSearchCornerCapBinding.inflate(layoutInflater, parent, false)
           }
       )
   )

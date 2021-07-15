@@ -5,7 +5,7 @@ import io.reactivex.Completable
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncConfigType
-import org.simple.clinic.sync.SyncConfigType.Type.Daily
+import org.simple.clinic.sync.SyncConfigType.Type.Frequent
 import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.util.read
 import java.io.IOException
@@ -18,7 +18,7 @@ class FacilitySync @Inject constructor(
     private val repository: FacilityRepository,
     private val api: FacilitySyncApi,
     @Named("last_facility_pull_token") private val lastPullToken: Preference<Optional<String>>,
-    @SyncConfigType(Daily) private val config: SyncConfig
+    @SyncConfigType(Frequent) private val config: SyncConfig
 ) : ModelSync {
 
   override val name: String = "Facility"

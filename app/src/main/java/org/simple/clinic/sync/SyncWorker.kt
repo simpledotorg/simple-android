@@ -50,7 +50,8 @@ class SyncWorker(
     if (syncGroup == NO_GROUP) {
       dataSync.syncTheWorld()
     } else {
-      dataSync.sync(SyncGroup.valueOf(syncGroup))
+      SyncGroup.valueOf(syncGroup)
+      dataSync.syncTheWorld()
     }
   }
 }

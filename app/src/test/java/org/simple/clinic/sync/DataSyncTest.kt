@@ -38,26 +38,16 @@ class DataSyncTest {
       syncGroup = SyncGroup.FREQUENT
   )
 
-  private val dailySyncConfig = SyncConfig(
-      syncInterval = SyncInterval(
-          frequency = Duration.ofMinutes(16),
-          backOffDelay = Duration.ofMinutes(5)
-      ),
-      pullBatchSize = 10,
-      pushBatchSize = 10,
-      syncGroup = SyncGroup.DAILY
-  )
-
   @Test
-  fun `when syncing everything, all the model syncs should be invoked`() {
+  fun `when syncing, all the model syncs should be invoked`() {
     val modelSync1 = FakeModelSync(
         _name = "sync1",
-        config = dailySyncConfig
+        config = frequentSyncConfig
     )
 
     val modelSync2 = FakeModelSync(
         _name = "sync2",
-        config = dailySyncConfig
+        config = frequentSyncConfig
     )
 
     val modelSync3 = FakeModelSync(
@@ -86,16 +76,16 @@ class DataSyncTest {
   }
 
   @Test
-  fun `when syncing everything, if any of the syncs throws an error, the other syncs must not be affected`() {
+  fun `when syncing, if any of the syncs throws an error, the other syncs must not be affected`() {
     val modelSync1 = FakeModelSync(
         _name = "sync1",
-        config = dailySyncConfig
+        config = frequentSyncConfig
     )
 
     val runtimeException = RuntimeException("TEST")
     val modelSync2 = FakeModelSync(
         _name = "sync2",
-        config = dailySyncConfig,
+        config = frequentSyncConfig,
         pullError = runtimeException
     )
 
@@ -126,18 +116,18 @@ class DataSyncTest {
   }
 
   @Test
-  fun `when syncing everything, syncs which require a sync approved user should be skipped if there is no user present`() {
+  fun `when syncing, syncs which require a sync approved user should be skipped if there is no user present`() {
     whenever(userSession.loggedInUserImmediate()).thenReturn(null)
 
     val modelSync1 = FakeModelSync(
         _name = "sync1",
-        config = dailySyncConfig
+        config = frequentSyncConfig
     )
 
     val modelSync2 = FakeModelSync(
         _name = "sync2",
         _requiresSyncApprovedUser = true,
-        config = dailySyncConfig,
+        config = frequentSyncConfig,
         pullError = RuntimeException("TEST"),
     )
 
@@ -168,7 +158,7 @@ class DataSyncTest {
   }
 
   @Test
-  fun `when syncing everything, syncs which require a sync approved user should be skipped if there is a user present and they are waiting for login OTP`() {
+  fun `when syncing, syncs which require a sync approved user should be skipped if there is a user present and they are waiting for login OTP`() {
     val user = TestData.loggedInUser(
         uuid = UUID.fromString("54cb095a-71f3-412d-8587-dc450a7a47b9"),
         loggedInStatus = User.LoggedInStatus.OTP_REQUESTED,
@@ -178,13 +168,13 @@ class DataSyncTest {
 
     val modelSync1 = FakeModelSync(
         _name = "sync1",
-        config = dailySyncConfig
+        config = frequentSyncConfig
     )
 
     val modelSync2 = FakeModelSync(
         _name = "sync2",
         _requiresSyncApprovedUser = true,
-        config = dailySyncConfig,
+        config = frequentSyncConfig,
         pullError = RuntimeException("TEST"),
     )
 
@@ -215,7 +205,7 @@ class DataSyncTest {
   }
 
   @Test
-  fun `when syncing everything, syncs which require a sync approved user should be skipped if there is a user present and they are resetting the login pin`() {
+  fun `when syncing, syncs which require a sync approved user should be skipped if there is a user present and they are resetting the login pin`() {
     val user = TestData.loggedInUser(
         uuid = UUID.fromString("54cb095a-71f3-412d-8587-dc450a7a47b9"),
         loggedInStatus = User.LoggedInStatus.RESETTING_PIN,
@@ -225,13 +215,13 @@ class DataSyncTest {
 
     val modelSync1 = FakeModelSync(
         _name = "sync1",
-        config = dailySyncConfig
+        config = frequentSyncConfig
     )
 
     val modelSync2 = FakeModelSync(
         _name = "sync2",
         _requiresSyncApprovedUser = true,
-        config = dailySyncConfig,
+        config = frequentSyncConfig,
         pullError = RuntimeException("TEST"),
     )
 
@@ -262,7 +252,7 @@ class DataSyncTest {
   }
 
   @Test
-  fun `when syncing everything, syncs which require a sync approved user should be skipped if there is a user present and they requested a login PIN reset`() {
+  fun `when syncing, syncs which require a sync approved user should be skipped if there is a user present and they requested a login PIN reset`() {
     val user = TestData.loggedInUser(
         uuid = UUID.fromString("54cb095a-71f3-412d-8587-dc450a7a47b9"),
         loggedInStatus = User.LoggedInStatus.RESET_PIN_REQUESTED,
@@ -272,13 +262,13 @@ class DataSyncTest {
 
     val modelSync1 = FakeModelSync(
         _name = "sync1",
-        config = dailySyncConfig
+        config = frequentSyncConfig
     )
 
     val modelSync2 = FakeModelSync(
         _name = "sync2",
         _requiresSyncApprovedUser = true,
-        config = dailySyncConfig,
+        config = frequentSyncConfig,
         pullError = RuntimeException("TEST"),
     )
 
@@ -309,7 +299,7 @@ class DataSyncTest {
   }
 
   @Test
-  fun `when syncing everything, syncs which require a sync approved user should be skipped if there is a user present and they have logged in on another device`() {
+  fun `when syncing, syncs which require a sync approved user should be skipped if there is a user present and they have logged in on another device`() {
     val user = TestData.loggedInUser(
         uuid = UUID.fromString("54cb095a-71f3-412d-8587-dc450a7a47b9"),
         loggedInStatus = User.LoggedInStatus.UNAUTHORIZED,
@@ -319,13 +309,13 @@ class DataSyncTest {
 
     val modelSync1 = FakeModelSync(
         _name = "sync1",
-        config = dailySyncConfig
+        config = frequentSyncConfig
     )
 
     val modelSync2 = FakeModelSync(
         _name = "sync2",
         _requiresSyncApprovedUser = true,
-        config = dailySyncConfig,
+        config = frequentSyncConfig,
         pullError = RuntimeException("TEST"),
     )
 
@@ -356,7 +346,7 @@ class DataSyncTest {
   }
 
   @Test
-  fun `when syncing everything, syncs which require a sync approved user should be executed if there is a user present and they are logged in and approved for syncing`() {
+  fun `when syncing, syncs which require a sync approved user should be executed if there is a user present and they are logged in and approved for syncing`() {
     val user = TestData.loggedInUser(
         uuid = UUID.fromString("54cb095a-71f3-412d-8587-dc450a7a47b9"),
         loggedInStatus = User.LoggedInStatus.LOGGED_IN,
@@ -366,14 +356,14 @@ class DataSyncTest {
 
     val modelSync1 = FakeModelSync(
         _name = "sync1",
-        config = dailySyncConfig
+        config = frequentSyncConfig
     )
 
     val exception = RuntimeException("TEST")
     val modelSync2 = FakeModelSync(
         _name = "sync2",
         _requiresSyncApprovedUser = true,
-        config = dailySyncConfig,
+        config = frequentSyncConfig,
         pullError = exception,
     )
 
@@ -404,7 +394,7 @@ class DataSyncTest {
   }
 
   @Test
-  fun `when syncing everything, syncs which require a sync approved user should be skipped if there is a user present and they are logged in and waiting for approval`() {
+  fun `when syncing, syncs which require a sync approved user should be skipped if there is a user present and they are logged in and waiting for approval`() {
     val user = TestData.loggedInUser(
         uuid = UUID.fromString("54cb095a-71f3-412d-8587-dc450a7a47b9"),
         loggedInStatus = User.LoggedInStatus.LOGGED_IN,
@@ -414,13 +404,13 @@ class DataSyncTest {
 
     val modelSync1 = FakeModelSync(
         _name = "sync1",
-        config = dailySyncConfig
+        config = frequentSyncConfig
     )
 
     val modelSync2 = FakeModelSync(
         _name = "sync2",
         _requiresSyncApprovedUser = true,
-        config = dailySyncConfig,
+        config = frequentSyncConfig,
         pullError = RuntimeException("TEST"),
     )
 
@@ -451,7 +441,7 @@ class DataSyncTest {
   }
 
   @Test
-  fun `when syncing everything, syncs which require a sync approved user should be skipped if there is a user present and they are logged in and disapproved for syncing`() {
+  fun `when syncing, syncs which require a sync approved user should be skipped if there is a user present and they are logged in and disapproved for syncing`() {
     val user = TestData.loggedInUser(
         uuid = UUID.fromString("54cb095a-71f3-412d-8587-dc450a7a47b9"),
         loggedInStatus = User.LoggedInStatus.LOGGED_IN,
@@ -461,13 +451,13 @@ class DataSyncTest {
 
     val modelSync1 = FakeModelSync(
         _name = "sync1",
-        config = dailySyncConfig
+        config = frequentSyncConfig
     )
 
     val modelSync2 = FakeModelSync(
         _name = "sync2",
         _requiresSyncApprovedUser = true,
-        config = dailySyncConfig,
+        config = frequentSyncConfig,
         pullError = RuntimeException("TEST"),
     )
 
@@ -554,7 +544,7 @@ class DataSyncTest {
   }
 
   @Test
-  fun `when syncing everything and there is a user present locally, the unused data must be purged if all syncs completed successfully`() {
+  fun `when syncing and there is a user present locally, the unused data must be purged if all syncs completed successfully`() {
     // given
     whenever(userSession.isUserPresentLocally()).thenReturn(true)
     val modelSync1 = FakeModelSync(
@@ -569,7 +559,7 @@ class DataSyncTest {
 
     val modelSync3 = FakeModelSync(
         _name = "sync3",
-        config = dailySyncConfig
+        config = frequentSyncConfig
     )
 
     val purgeOnSync = mock<PurgeOnSync>()
@@ -590,7 +580,7 @@ class DataSyncTest {
   }
 
   @Test
-  fun `when syncing everything and there is no user present locally, the unused data must not be purged even if all syncs completed successfully`() {
+  fun `when syncing and there is no user present locally, the unused data must not be purged even if all syncs completed successfully`() {
     // given
     whenever(userSession.isUserPresentLocally()).thenReturn(false)
     val modelSync1 = FakeModelSync(
@@ -605,7 +595,7 @@ class DataSyncTest {
 
     val modelSync3 = FakeModelSync(
         _name = "sync3",
-        config = dailySyncConfig
+        config = frequentSyncConfig
     )
 
     val purgeOnSync = mock<PurgeOnSync>()
@@ -626,7 +616,7 @@ class DataSyncTest {
   }
 
   @Test
-  fun `if a pull operation fails when syncing everything, the unused data must not be purged`() {
+  fun `if a pull operation fails when syncing, the unused data must not be purged`() {
     // given
     whenever(userSession.isUserPresentLocally()).thenReturn(true)
     val modelSync1 = FakeModelSync(
@@ -642,7 +632,7 @@ class DataSyncTest {
 
     val modelSync3 = FakeModelSync(
         _name = "sync3",
-        config = dailySyncConfig
+        config = frequentSyncConfig
     )
 
     val purgeOnSync = mock<PurgeOnSync>()
@@ -663,7 +653,7 @@ class DataSyncTest {
   }
 
   @Test
-  fun `if a push operation fails when syncing everything, the unused data must not be purged`() {
+  fun `if a push operation fails when syncing, the unused data must not be purged`() {
     // given
     whenever(userSession.isUserPresentLocally()).thenReturn(true)
     val modelSync1 = FakeModelSync(
@@ -678,7 +668,7 @@ class DataSyncTest {
 
     val modelSync3 = FakeModelSync(
         _name = "sync3",
-        config = dailySyncConfig,
+        config = frequentSyncConfig,
         pushError = RuntimeException()
     )
 

@@ -34,8 +34,6 @@ class HelpSync @Inject constructor(
     syncRepository.updateHelp(helpText)
   }
 
-  override fun syncConfig(): SyncConfig = config
-
   fun pullWithResult(): Single<HelpPullResult> {
     return Completable
         .fromAction { pull() }

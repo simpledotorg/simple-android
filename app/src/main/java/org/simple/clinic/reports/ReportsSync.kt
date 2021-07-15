@@ -33,5 +33,4 @@ class ReportsSync @Inject constructor(
     reportsRepository.updateReports(reportsText)
   }
 
-  override fun syncConfig(): SyncConfig = config
 }

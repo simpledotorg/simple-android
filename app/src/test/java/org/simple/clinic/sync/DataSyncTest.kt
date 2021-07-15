@@ -717,6 +717,5 @@ class DataSyncTest {
       if (pullError != null) throw pullError
     }
 
-    override fun syncConfig(): SyncConfig = config
   }
 }

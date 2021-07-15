@@ -170,7 +170,7 @@ class CallPatientUiRendererTest {
             colonyOrVillage = null,
             district = "Bhatinda",
             state = "Punjab"),
-        appointmentFacilityName = "Bhatinda",
+        patientRegisteredFacilityName = "Bhatinda",
         diagnosedWithDiabetes = Answer.Yes,
         diagnosedWithHypertension = Answer.No
     )
@@ -188,7 +188,7 @@ class CallPatientUiRendererTest {
         age = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock),
         phoneNumber = patientProfile.phoneNumbers.first().number,
         patientAddress = patientAddress,
-        registeredFacility = overdueAppointment.appointmentFacilityName!!,
+        registeredFacility = overdueAppointment.patientRegisteredFacilityName!!,
         diagnosedWithDiabetes = overdueAppointment.diagnosedWithDiabetes,
         diagnosedWithHypertension = overdueAppointment.diagnosedWithHypertension,
         lastVisited = overdueAppointment.patientLastSeen))
@@ -226,7 +226,7 @@ class CallPatientUiRendererTest {
             colonyOrVillage = null,
             district = "Bhatinda",
             state = "Punjab"),
-        appointmentFacilityName = "Bhatinda",
+        patientRegisteredFacilityName = "Bhatinda",
         diagnosedWithDiabetes = Answer.Yes,
         diagnosedWithHypertension = Answer.No
     )
@@ -245,7 +245,7 @@ class CallPatientUiRendererTest {
         age = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock),
         phoneNumber = patientProfile.phoneNumbers.first().number,
         patientAddress = patientAddress,
-        registeredFacility = overdueAppointment.appointmentFacilityName!!,
+        registeredFacility = overdueAppointment.patientRegisteredFacilityName!!,
         diagnosedWithDiabetes = overdueAppointment.diagnosedWithDiabetes,
         diagnosedWithHypertension = overdueAppointment.diagnosedWithHypertension,
         lastVisited = overdueAppointment.patientLastSeen))
@@ -300,7 +300,7 @@ class CallPatientUiRendererTest {
             colonyOrVillage = null,
             district = "Bhatinda",
             state = "Punjab"),
-        appointmentFacilityName = "Bhatinda",
+        patientRegisteredFacilityName = "Bhatinda",
         diagnosedWithDiabetes = Answer.Yes,
         diagnosedWithHypertension = Answer.No
     )
@@ -320,7 +320,7 @@ class CallPatientUiRendererTest {
         age = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock),
         phoneNumber = null,
         patientAddress = patientAddress,
-        registeredFacility = overdueAppointment.appointmentFacilityName!!,
+        registeredFacility = overdueAppointment.patientRegisteredFacilityName!!,
         diagnosedWithDiabetes = overdueAppointment.diagnosedWithDiabetes,
         diagnosedWithHypertension = overdueAppointment.diagnosedWithHypertension,
         lastVisited = overdueAppointment.patientLastSeen))
@@ -342,7 +342,7 @@ class CallPatientUiRendererTest {
             colonyOrVillage = null,
             district = "Bhatinda",
             state = "Punjab"),
-        appointmentFacilityName = "Bhatinda",
+        patientRegisteredFacilityName = "Bhatinda",
         diagnosedWithDiabetes = Answer.Yes,
         diagnosedWithHypertension = Answer.No
     )
@@ -362,7 +362,7 @@ class CallPatientUiRendererTest {
         age = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock),
         phoneNumber = patientProfile.phoneNumbers.first().number,
         patientAddress = patientAddress,
-        registeredFacility = overdueAppointment.appointmentFacilityName!!,
+        registeredFacility = overdueAppointment.patientRegisteredFacilityName!!,
         diagnosedWithDiabetes = overdueAppointment.diagnosedWithDiabetes,
         diagnosedWithHypertension = overdueAppointment.diagnosedWithHypertension,
         lastVisited = overdueAppointment.patientLastSeen))

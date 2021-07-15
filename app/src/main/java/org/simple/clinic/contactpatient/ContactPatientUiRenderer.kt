@@ -180,7 +180,7 @@ class ContactPatientUiRenderer(
         age = patientAge,
         phoneNumber = patientProfile.phoneNumbers.firstOrNull()?.number,
         patientAddress = patientAddressText(appointment.get().patientAddress),
-        registeredFacility = appointment.get().appointmentFacilityName.orEmpty(),
+        registeredFacility = appointment.get().patientRegisteredFacilityName.orEmpty(),
         diagnosedWithDiabetes = appointment.get().diagnosedWithDiabetes,
         diagnosedWithHypertension = appointment.get().diagnosedWithHypertension,
         lastVisited = appointment.get().patientLastSeen

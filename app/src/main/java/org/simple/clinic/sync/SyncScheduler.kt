@@ -22,7 +22,7 @@ class SyncScheduler @Inject constructor(
         .fromIterable(syncs)
         .map { it.syncConfig() }
         .distinct { it.syncGroup }
-        .map { config -> createWorkRequest(config) to config.syncGroup.name }
+        .map { config -> createWorkRequest(config.syncInterval) to config.syncGroup.name }
         .toList()
         .doOnSuccess { cancelPreviouslyScheduledPeriodicWork() }
         .flatMapCompletable(this::scheduleWorkRequests)
@@ -47,13 +47,11 @@ class SyncScheduler @Inject constructor(
     }
   }
 
-  private fun createWorkRequest(syncConfig: SyncConfig): PeriodicWorkRequest {
+  private fun createWorkRequest(syncInterval: SyncInterval): PeriodicWorkRequest {
     val constraints = Constraints.Builder()
         .setRequiredNetworkType(NetworkType.CONNECTED)
         .setRequiresBatteryNotLow(true)
         .build()
-
-    val syncInterval = syncConfig.syncInterval
 
     val syncRepeatIntervalMillis = syncInterval
         .frequency

@@ -1,13 +1,15 @@
 package org.simple.clinic.home
 
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
 class HomeScreenTabPagerAdapter(
-    activity: AppCompatActivity,
+    fragmentManager: FragmentManager,
+    lifecycle: Lifecycle,
     private val screens: List<HomeTab>
-) : FragmentStateAdapter(activity) {
+) : FragmentStateAdapter(fragmentManager, lifecycle) {
 
   override fun getItemCount(): Int = screens.size
 

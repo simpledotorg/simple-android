@@ -813,5 +813,6 @@
 
   <!-- Custom drugs search -->
   <string name="customdrugssearch_hint">Enter medicine name</string>
+  <string name="customdrugssearch_item_name_separator">, </string>
 
 </resources>

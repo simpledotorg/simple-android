@@ -1,5 +1,6 @@
 package org.simple.clinic.drugs.search
 
+import android.content.Context
 import androidx.annotation.VisibleForTesting
 import androidx.paging.PagingData
 import androidx.paging.TerminalSeparatorType.SOURCE_COMPLETE
@@ -53,23 +54,25 @@ sealed class DrugSearchListItem : PagingItemAdapter.Item<Event> {
     override fun layoutResId() = R.layout.list_item_drug_search
 
     override fun render(holder: BindingViewHolder, subject: Subject<Event>) {
+      val context = holder.itemView.context
       val binding = holder.binding as ListItemDrugSearchBinding
 
       binding.drugItemCard.setOnClickListener { subject.onNext(Event.DrugClicked(drug)) }
 
-      binding.drugNameTextView.text = drugName(drug)
+      binding.drugNameTextView.text = drugName(context, drug)
     }
 
-    private fun drugName(drug: Drug): String {
+    private fun drugName(context: Context, drug: Drug): String {
+      val drugNameSeparator = context.getString(R.string.customdrugssearch_item_name_separator)
       return buildString {
         append(drug.name)
 
         if (!drug.dosage.isNullOrBlank()) {
-          append(", ${drug.dosage}")
+          append("$drugNameSeparator${drug.dosage}")
         }
 
         if (drug.frequency != null) {
-          append(", ${drug.frequency}")
+          append("$drugNameSeparator${drug.frequency}")
         }
       }
     }

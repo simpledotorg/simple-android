@@ -154,6 +154,7 @@ class OverdueScreen : BaseScreen<
   }
 
   override fun onDestroyView() {
+    overdueRecyclerView.adapter = null
     super.onDestroyView()
     overdueListAdapter.removeLoadStateListener(::overdueListAdapterLoadStateListener)
     screenDestroys.onNext(Unit)

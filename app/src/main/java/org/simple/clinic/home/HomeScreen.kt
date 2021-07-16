@@ -115,7 +115,9 @@ class HomeScreen :
     // Keyboard stays open after login finishes, not sure why.
     homeScreenRootLayout.hideKeyboard()
 
-    viewPager.adapter = HomeScreenTabPagerAdapter(activity, tabs)
+    viewPager.adapter = HomeScreenTabPagerAdapter(fragmentManager = childFragmentManager,
+        lifecycle = viewLifecycleOwner.lifecycle,
+        screens = tabs)
     TabLayoutMediator(homeTabLayout, viewPager) { tab, position ->
       tab.text = resources.getString(tabs[position].title)
     }.attach()
@@ -123,6 +125,11 @@ class HomeScreen :
     // The WebView in "Progress" tab is expensive to load. Pre-instantiating
     // it when the app starts reduces its time-to-display.
     viewPager.offscreenPageLimit = REPORTS.ordinal - PATIENTS.ordinal
+  }
+
+  override fun onDestroyView() {
+    viewPager.adapter = null
+    super.onDestroyView()
   }
 
   override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {

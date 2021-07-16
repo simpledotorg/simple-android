@@ -115,7 +115,9 @@ class HomeScreen :
     // Keyboard stays open after login finishes, not sure why.
     homeScreenRootLayout.hideKeyboard()
 
-    viewPager.adapter = HomeScreenTabPagerAdapter(activity, tabs)
+    viewPager.adapter = HomeScreenTabPagerAdapter(fragmentManager = childFragmentManager,
+        lifecycle = viewLifecycleOwner.lifecycle,
+        screens = tabs)
     TabLayoutMediator(homeTabLayout, viewPager) { tab, position ->
       tab.text = resources.getString(tabs[position].title)
     }.attach()

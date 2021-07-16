@@ -263,34 +263,6 @@ data class Patient(
         offset: Int
     ): List<PatientProfile>
 
-    private fun queryModelsToPatientProfiles(patientQueryModels: List<PatientQueryModel>): List<PatientProfile> {
-      return patientQueryModels
-          .groupBy { it.patient.uuid }
-          .map { (_, patientQueryModels) ->
-            val patient = patientQueryModels.first().patient
-            val patientAddress = patientQueryModels.first().address
-
-            val patientPhoneNumbers = patientQueryModels
-                .filter { it.phoneNumber != null }
-                .map { it.phoneNumber as PatientPhoneNumber }
-                .distinctBy { it.uuid }
-                .toList()
-
-            val businessIds = patientQueryModels
-                .filter { it.businessId != null }
-                .map { it.businessId as BusinessId }
-                .distinctBy { it.uuid }
-                .toList()
-
-            PatientProfile(
-                patient = patient,
-                address = patientAddress,
-                phoneNumbers = patientPhoneNumbers,
-                businessIds = businessIds
-            )
-          }
-    }
-
     protected data class PatientQueryModel(
 
         @Embedded(prefix = "patient_")

@@ -28,6 +28,7 @@
   - Remove overdue list adapter from recycler view when `OverdueScreen` view is about to be destroyed
 - Load online lookup API if patient not found locally
 - Implement `DrugsSearchScreen`
+- Don't show progress if overdue list already has items
 
 ### Features
 - [In Progress: 06 Jul 2021] Add support for finding a patient online from ID scan

@@ -194,9 +194,6 @@ data class Patient(
         pendingStatus: SyncStatus
     )
 
-    @Query(patientProfileQuery)
-    protected abstract fun loadAllPatientQueryModels(): List<PatientQueryModel>
-
     @Query("""
       UPDATE Patient
       SET
@@ -250,11 +247,9 @@ data class Patient(
     """)
     abstract fun patientProfileImmediate(patientUuid: UUID): PatientProfile?
 
-    fun allPatientProfiles(): List<PatientProfile> {
-      val patientQueryModels = loadAllPatientQueryModels()
-
-      return queryModelsToPatientProfiles(patientQueryModels)
-    }
+    @Transaction
+    @Query("SELECT * FROM Patient")
+    abstract fun allPatientProfiles(): List<PatientProfile>
 
     @Transaction
     @Query("""

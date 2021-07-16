@@ -194,18 +194,6 @@ data class Patient(
         pendingStatus: SyncStatus
     )
 
-    @Query("""
-      $patientProfileQuery 
-        WHERE P.syncStatus == :syncStatus
-        LIMIT :limit OFFSET :offset
-     """
-    )
-    protected abstract fun loadPatientQueryModelsWithSyncStatusBatched(
-        syncStatus: SyncStatus,
-        limit: Int,
-        offset: Int
-    ): List<PatientQueryModel>
-
     @Query("$patientProfileQuery WHERE P.uuid == :patientUuid")
     protected abstract fun loadPatientQueryModelsForPatientUuidImmediate(patientUuid: UUID): List<PatientQueryModel>
 
@@ -270,19 +258,17 @@ data class Patient(
       return queryModelsToPatientProfiles(patientQueryModels)
     }
 
-    fun profilesWithSyncStatusBatched(
+    @Transaction
+    @Query("""
+      SELECT * FROM Patient
+      WHERE syncStatus = :syncStatus
+      LIMIT :limit OFFSET :offset
+    """)
+    abstract fun profilesWithSyncStatusBatched(
         syncStatus: SyncStatus,
         limit: Int,
         offset: Int
-    ): List<PatientProfile> {
-      val queryModels = loadPatientQueryModelsWithSyncStatusBatched(
-          syncStatus = syncStatus,
-          limit = limit,
-          offset = offset
-      )
-
-      return queryModelsToPatientProfiles(queryModels)
-    }
+    ): List<PatientProfile>
 
     private fun queryModelsToPatientProfiles(patientQueryModels: List<PatientQueryModel>): List<PatientProfile> {
       return patientQueryModels

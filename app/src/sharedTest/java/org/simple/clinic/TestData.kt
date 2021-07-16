@@ -29,6 +29,7 @@ import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentPayload
 import org.simple.clinic.patient.Age
+import org.simple.clinic.patient.CompleteMedicalRecord
 import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
@@ -1297,5 +1298,21 @@ object TestData {
       gender = gender,
       dateOfBirth = dateOfBirth,
       address = address
+  )
+
+  fun completeMedicalRecord(
+      patient: PatientProfile = patientProfile(patientRegisteredFacilityId = UUID.fromString("a3ae4eac-7cad-4b3f-bf32-f0002a3e9eef")),
+      medicalHistory: MedicalHistory = medicalHistory(),
+      appointments: List<Appointment> = listOf(appointment(facilityUuid = UUID.fromString("a3ae4eac-7cad-4b3f-bf32-f0002a3e9eef"))),
+      bloodPressures: List<BloodPressureMeasurement> = listOf(bloodPressureMeasurement(facilityUuid = UUID.fromString("a3ae4eac-7cad-4b3f-bf32-f0002a3e9eef"))),
+      bloodSugars: List<BloodSugarMeasurement> = listOf(bloodSugarMeasurement(facilityUuid = UUID.fromString("a3ae4eac-7cad-4b3f-bf32-f0002a3e9eef"))),
+      prescribedDrugs: List<PrescribedDrug> = listOf(prescription(facilityUuid = UUID.fromString("a3ae4eac-7cad-4b3f-bf32-f0002a3e9eef")))
+  ) = CompleteMedicalRecord(
+      patient = patient,
+      medicalHistory = medicalHistory,
+      appointments = appointments,
+      bloodPressures = bloodPressures,
+      bloodSugars = bloodSugars,
+      prescribedDrugs = prescribedDrugs
   )
 }

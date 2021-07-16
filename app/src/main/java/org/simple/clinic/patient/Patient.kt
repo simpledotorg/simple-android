@@ -194,14 +194,6 @@ data class Patient(
         pendingStatus: SyncStatus
     )
 
-    // Patient can have multiple phone numbers, and Room's support for @Relation annotations doesn't
-    // support loading into constructor parameters and needs a settable property. Room does fix
-    // this limitation in 2.1.0, but it requires migration to AndroidX. For now, we create a
-    // transient query model whose only job is to represent this and process it in memory.
-    // TODO: Remove this when we migrate to Room 2.1.0.
-    @Query("$patientProfileQuery WHERE P.syncStatus == :syncStatus")
-    protected abstract fun loadPatientQueryModelsWithSyncStatus(syncStatus: SyncStatus): List<PatientQueryModel>
-
     @Query("""
       $patientProfileQuery 
         WHERE P.syncStatus == :syncStatus
@@ -252,9 +244,12 @@ data class Patient(
         pendingStatus: SyncStatus
     )
 
-    fun recordsWithSyncStatus(syncStatus: SyncStatus): List<PatientProfile> {
-      return queryModelsToPatientProfiles(loadPatientQueryModelsWithSyncStatus(syncStatus))
-    }
+    @Transaction
+    @Query("""
+      SELECT * FROM Patient
+      WHERE syncStatus = :syncStatus
+    """)
+    abstract fun recordsWithSyncStatus(syncStatus: SyncStatus): List<PatientProfile>
 
     @Transaction
     @Query("""

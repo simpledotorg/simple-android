@@ -8,6 +8,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.Transaction
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
@@ -214,9 +215,6 @@ data class Patient(
     ): List<PatientQueryModel>
 
     @Query("$patientProfileQuery WHERE P.uuid == :patientUuid")
-    protected abstract fun loadPatientQueryModelsForPatientUuid(patientUuid: UUID): Flowable<List<PatientQueryModel>>
-
-    @Query("$patientProfileQuery WHERE P.uuid == :patientUuid")
     protected abstract fun loadPatientQueryModelsForPatientUuidImmediate(patientUuid: UUID): List<PatientQueryModel>
 
     @Query(patientProfileQuery)
@@ -258,11 +256,12 @@ data class Patient(
       return queryModelsToPatientProfiles(loadPatientQueryModelsWithSyncStatus(syncStatus))
     }
 
-    fun patientProfile(patientUuid: UUID): Observable<List<PatientProfile>> {
-      return loadPatientQueryModelsForPatientUuid(patientUuid)
-          .map { queryModelsToPatientProfiles(it) }
-          .toObservable()
-    }
+    @Transaction
+    @Query("""
+      SELECT * FROM Patient
+      WHERE uuid = :patientUuid
+    """)
+    abstract fun patientProfile(patientUuid: UUID): Observable<List<PatientProfile>>
 
     fun patientProfileImmediate(patientUuid: UUID): PatientProfile? {
       val patientQueryModels = loadPatientQueryModelsForPatientUuidImmediate(patientUuid)

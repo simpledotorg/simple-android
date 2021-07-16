@@ -258,10 +258,9 @@ data class Patient(
       return queryModelsToPatientProfiles(loadPatientQueryModelsWithSyncStatus(syncStatus))
     }
 
-    fun patientProfile(patientUuid: UUID): Observable<Optional<PatientProfile>> {
+    fun patientProfile(patientUuid: UUID): Observable<List<PatientProfile>> {
       return loadPatientQueryModelsForPatientUuid(patientUuid)
           .map { queryModelsToPatientProfiles(it) }
-          .map { if (it.isEmpty()) Optional.empty() else Optional.of(it.first()) }
           .toObservable()
     }
 

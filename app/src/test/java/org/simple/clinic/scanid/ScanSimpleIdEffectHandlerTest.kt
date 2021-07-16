@@ -241,4 +241,27 @@ class ScanSimpleIdEffectHandlerTest {
     testCase.assertOutgoingEvents(OnlinePatientLookupWithIdentifierCompleted(results, identifier))
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when save complete medical records effect is received, then save the patient medical records`() {
+    // given
+    val identifier = Identifier("4f1cea37-70ff-498e-bd09-ad0ca75628ff", BpPassport)
+    val commonIdentifier = TestData.businessId(identifier = identifier)
+
+    val patientUuid1 = TestData.patientProfile(patientUuid = UUID.fromString("0b78c024-f527-4306-9e20-6ae6d7251e9b"), businessId = commonIdentifier)
+    val patientUuid2 = TestData.patientProfile(patientUuid = UUID.fromString("47fdb968-9512-4e50-b95f-cc83c6de4b0a"), businessId = commonIdentifier)
+
+    val completeMedicalRecord = TestData.completeMedicalRecord(patient = patientUuid1)
+    val completeMedicalRecord2 = TestData.completeMedicalRecord(patient = patientUuid2)
+
+    val medicalRecords = listOf(completeMedicalRecord, completeMedicalRecord2)
+
+    // when
+    testCase.dispatch(SaveCompleteMedicalRecords(medicalRecords))
+
+    // then
+    verify(patientRepository).saveCompleteMedicalRecord(medicalRecords)
+    testCase.assertOutgoingEvents(CompleteMedicalRecordsSaved(medicalRecords))
+    verifyNoMoreInteractions(uiActions)
+  }
 }

@@ -3140,17 +3140,17 @@ class PatientRepositoryAndroidTest {
         )
     )
 
-    val medicalRecord = CompleteMedicalRecord(
+    val medicalRecords = listOf(CompleteMedicalRecord(
         patient = patientProfile,
         medicalHistory = medicalHistory,
         appointments = appointments,
         bloodPressures = bloodPressures,
         bloodSugars = bloodSugars,
         prescribedDrugs = prescribedDrugs
-    )
+    ))
 
     // when
-    patientRepository.saveCompleteMedicalRecord(medicalRecord)
+    patientRepository.saveCompleteMedicalRecord(medicalRecords)
 
     // then
     val savedPatient = patientRepository.patientProfileImmediate(patientId).get()

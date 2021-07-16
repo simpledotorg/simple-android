@@ -31,6 +31,7 @@
 - Change `PatientProfile` to be a Room relation model
 - Add gradle-versions-plugin for checking dependency updates
 - Bump AndroidX Core Testing to v2.1.0
+- [In Progress: 16 Jul 2021] Remove the daily and frequent sync separation
 
 ### Features
 - Add support for finding a patient online from ID scan

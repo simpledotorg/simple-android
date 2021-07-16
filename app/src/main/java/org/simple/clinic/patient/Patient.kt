@@ -194,9 +194,6 @@ data class Patient(
         pendingStatus: SyncStatus
     )
 
-    @Query("$patientProfileQuery WHERE P.uuid == :patientUuid")
-    protected abstract fun loadPatientQueryModelsForPatientUuidImmediate(patientUuid: UUID): List<PatientQueryModel>
-
     @Query(patientProfileQuery)
     protected abstract fun loadAllPatientQueryModels(): List<PatientQueryModel>
 
@@ -246,11 +243,12 @@ data class Patient(
     """)
     abstract fun patientProfile(patientUuid: UUID): Observable<List<PatientProfile>>
 
-    fun patientProfileImmediate(patientUuid: UUID): PatientProfile? {
-      val patientQueryModels = loadPatientQueryModelsForPatientUuidImmediate(patientUuid)
-
-      return if (patientQueryModels.isNotEmpty()) queryModelsToPatientProfiles(patientQueryModels).first() else null
-    }
+    @Transaction
+    @Query("""
+      SELECT * FROM Patient
+      WHERE uuid = :patientUuid
+    """)
+    abstract fun patientProfileImmediate(patientUuid: UUID): PatientProfile?
 
     fun allPatientProfiles(): List<PatientProfile> {
       val patientQueryModels = loadAllPatientQueryModels()

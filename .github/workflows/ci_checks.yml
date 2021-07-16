@@ -65,7 +65,7 @@ jobs:
       - name: QA Android Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
+          api-level: 27
           script: ./gradlew connectedQaDebugAndroidTest
 
   mobius_migration_tests:

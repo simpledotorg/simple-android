@@ -22,12 +22,13 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.util.debounce
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.showKeyboard
 import org.simple.clinic.widgets.visibleOrGone
+import java.time.Duration
 import java.util.UUID
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class DrugsSearchScreen : BaseScreen<
@@ -129,7 +130,7 @@ class DrugsSearchScreen : BaseScreen<
     return searchQueryEditText
         .textChanges()
         .skipInitialValue()
-        .debounce(500, TimeUnit.MILLISECONDS)
+        .debounce(Duration.ofMillis(500))
         .map(CharSequence::trim)
         .map { searchQuery ->
           SearchQueryChanged(searchQuery.toString())

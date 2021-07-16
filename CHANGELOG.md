@@ -21,6 +21,10 @@
 - Bump Kotlin to v1.5.21
 - Updated `ContactPatientBottomSheet` behaviour for supporting patients with and without phone number
 - Change `SyncInterval` from an enum to a data class
+- Fix home screen memory leaks
+  - Use `childFragmentManager` & `viewLifecycleOwner.lifecycle` when creating `FragmentStateAdapter`
+  - Detach `TabLayoutMediator` when `HomeScreen` view is destroyed
+  - Remove overdue list adapter from recycler view when `OverdueScreen` view is about to be destroyed
 - [In Progress: 13 Jul 2021] Load online lookup API if patient not found locally
 - [In Progress: 14 Jul 2021] Implement `DrugsSearchScreen`
 

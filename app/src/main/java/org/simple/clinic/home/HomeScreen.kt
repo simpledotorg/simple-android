@@ -127,6 +127,11 @@ class HomeScreen :
     viewPager.offscreenPageLimit = REPORTS.ordinal - PATIENTS.ordinal
   }
 
+  override fun onDestroyView() {
+    viewPager.adapter = null
+    super.onDestroyView()
+  }
+
   override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
 
   }

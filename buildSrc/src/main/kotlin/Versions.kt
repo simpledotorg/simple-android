@@ -4,6 +4,7 @@ object Versions {
   const val kotlin = "1.5.21"
   const val agp = "4.2.2"
   const val roomMetadataGenerator = "1.2.0"
+  const val gradleVersions = "0.38.0"
 
   const val supportLib = "1.0.0"
   const val recyclerView = "1.0.0"

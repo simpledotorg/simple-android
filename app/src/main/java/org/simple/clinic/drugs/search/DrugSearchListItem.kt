@@ -1,5 +1,6 @@
 package org.simple.clinic.drugs.search
 
+import androidx.annotation.VisibleForTesting
 import androidx.paging.PagingData
 import androidx.paging.TerminalSeparatorType.SOURCE_COMPLETE
 import androidx.paging.insertSeparators
@@ -23,18 +24,27 @@ sealed class DrugSearchListItem : PagingItemAdapter.Item<Event> {
       return searchResults
           .map(::DrugSearchResult)
           .insertSeparators(SOURCE_COMPLETE) { oldItem, newItem ->
-            if (oldItem != null && newItem != null) {
-              Divider
-            } else if (oldItem == null && newItem == null) {
-              NewCustomDrug(name = searchQuery)
-            } else if (oldItem == null && newItem != null) {
-              TopCornerCapItem
-            } else if (oldItem != null && newItem == null) {
-              BottomCornerCapItem
-            } else {
-              null
-            }
+            insertSeparators(oldItem, newItem, searchQuery)
           }
+    }
+
+    @VisibleForTesting
+    fun insertSeparators(
+        oldItem: DrugSearchListItem?,
+        newItem: DrugSearchListItem?,
+        searchQuery: String
+    ): DrugSearchListItem? {
+      return if (oldItem != null && newItem != null) {
+        Divider
+      } else if (oldItem == null && newItem == null) {
+        NewCustomDrug(name = searchQuery)
+      } else if (oldItem == null && newItem != null) {
+        TopCornerCapItem
+      } else if (oldItem != null && newItem == null) {
+        BottomCornerCapItem
+      } else {
+        null
+      }
     }
   }
 

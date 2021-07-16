@@ -85,6 +85,8 @@ class HomeScreen :
 
   private val tabs = listOf(PATIENTS, OVERDUE, REPORTS)
 
+  private lateinit var mediator: TabLayoutMediator
+
   override fun defaultModel() = HomeScreenModel.create()
 
   override fun uiRenderer() = HomeScreenUiRenderer(this)
@@ -118,13 +120,20 @@ class HomeScreen :
     viewPager.adapter = HomeScreenTabPagerAdapter(fragmentManager = childFragmentManager,
         lifecycle = viewLifecycleOwner.lifecycle,
         screens = tabs)
-    TabLayoutMediator(homeTabLayout, viewPager) { tab, position ->
+    mediator = TabLayoutMediator(homeTabLayout, viewPager) { tab, position ->
       tab.text = resources.getString(tabs[position].title)
-    }.attach()
+    }.also { it.attach() }
 
     // The WebView in "Progress" tab is expensive to load. Pre-instantiating
     // it when the app starts reduces its time-to-display.
     viewPager.offscreenPageLimit = REPORTS.ordinal - PATIENTS.ordinal
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    if (::mediator.isInitialized && mediator.isAttached) {
+      mediator.detach()
+    }
   }
 
   override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {

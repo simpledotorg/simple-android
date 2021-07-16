@@ -261,21 +261,6 @@ data class Patient(
         offset: Int
     ): List<PatientProfile>
 
-    protected data class PatientQueryModel(
-
-        @Embedded(prefix = "patient_")
-        val patient: Patient,
-
-        @Embedded(prefix = "addr_")
-        val address: PatientAddress,
-
-        @Embedded(prefix = "phone_")
-        val phoneNumber: PatientPhoneNumber?,
-
-        @Embedded(prefix = "businessid_")
-        val businessId: BusinessId?
-    )
-
     @Query("""
           SELECT (
             CASE

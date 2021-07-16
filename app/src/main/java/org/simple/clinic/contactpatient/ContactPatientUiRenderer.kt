@@ -92,6 +92,8 @@ class ContactPatientUiRenderer(
   private fun renderPatientFacilityLabel(appointmentIsInRegisteredFacility: Boolean) {
     if (appointmentIsInRegisteredFacility) {
       ui.setRegisterAtLabelText()
+    } else {
+      ui.setTransferredFromLabelText()
     }
   }
 

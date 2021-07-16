@@ -405,6 +405,40 @@ class CallPatientUiRendererTest {
     verifyNoMoreInteractions(ui)
   }
 
+  @Test
+  fun `display transferred from facility label text when patient's registered facility is not the same as user's current facility`() {
+    // given
+    val currentFacility = TestData.facility(uuid = UUID.fromString("1749461e-0ff7-47d9-95e0-fa4337d118b3"), name = "Bhatinda")
+    val overdueAppointment = TestData.overdueAppointment(
+        facilityUuid = UUID.fromString("a607a97f-4bf6-4ce6-86a3-b266059c7734"),
+        patientUuid = patientUuid,
+        patientAddress = TestData.overduePatientAddress(
+            streetAddress = null,
+            colonyOrVillage = null,
+            district = "Bhatinda",
+            state = "Punjab"),
+        patientRegisteredFacilityName = "Rajasthan",
+        diagnosedWithDiabetes = Answer.Yes,
+        diagnosedWithHypertension = Answer.No,
+        patientRegisteredFacilityID = UUID.fromString("10f066d7-892a-42af-9fae-7991c3f699bb")
+    )
+
+    // when
+    uiRenderer.render(defaultModel(overdueListChangesFeatureEnabled = true)
+        .overdueAppointmentLoaded(Optional.of(overdueAppointment))
+        .contactPatientInfoLoaded()
+        .currentFacilityLoaded(currentFacility))
+
+    // then
+    verify(ui).hideProgress()
+    verify(ui).setTransferredFromLabelText()
+    verify(ui).switchToCallPatientView()
+    verify(ui).showPatientWithNoPhoneNumberUi()
+    verify(ui).hidePatientWithPhoneNumberUi()
+    verify(ui).setResultLabelText()
+    verifyNoMoreInteractions(ui)
+  }
+
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       timeToAppointments: List<TimeToAppointment> = this.timeToAppointments,

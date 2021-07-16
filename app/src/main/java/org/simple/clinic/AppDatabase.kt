@@ -11,6 +11,7 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.search.Drug
 import org.simple.clinic.drugs.search.DrugCategory
+import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.medicalhistory.Answer
@@ -114,7 +115,8 @@ import org.simple.clinic.drugs.search.Answer as DrugAnswer
     User.CapabilityStatus.RoomTypeConverter::class,
     TeleconsultStatus.RoomTypeConverter::class,
     DrugCategory.RoomTypeConverter::class,
-    DrugAnswer.RoomTypeConverter::class
+    DrugAnswer.RoomTypeConverter::class,
+    DrugFrequency.RoomTypeConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
 

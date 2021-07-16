@@ -10,7 +10,6 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Observable
 import org.simple.clinic.storage.Timestamps
-import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import java.util.UUID
 
 @Entity
@@ -22,7 +21,7 @@ data class Drug(
 
     val category: DrugCategory?,
 
-    val frequency: MedicineFrequency?,
+    val frequency: DrugFrequency?,
 
     val composition: String?,
 

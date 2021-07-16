@@ -21,8 +21,8 @@
 - Bump Kotlin to v1.5.21
 - Updated `ContactPatientBottomSheet` behaviour for supporting patients with and without phone number
 - Change `SyncInterval` from an enum to a data class
+- Implement `DrugsSearchScreen`
 - [In Progress: 13 Jul 2021] Load online lookup API if patient not found locally
-- [In Progress: 14 Jul 2021] Implement `DrugsSearchScreen`
 
 ### Features
 - [In Progress: 06 Jul 2021] Add support for finding a patient online from ID scan

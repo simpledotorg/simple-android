@@ -29,5 +29,6 @@ enum class Feature(
   EthiopianCalendar(true, "ethiopian_calendar"),
   IndiaNationalHealthID(true, "india_national_health_id"),
   OverdueListChanges(false, "overdue_list_changes"),
-  OverdueListDownloadAndShare(false, "overdue_list_download_and_share")
+  OverdueListDownloadAndShare(false, "overdue_list_download_and_share"),
+  CustomDrugSearchScreen(false, "custom_drug_search_screen")
 }

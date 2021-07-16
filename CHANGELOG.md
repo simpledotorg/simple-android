@@ -23,6 +23,9 @@
 - Change `SyncInterval` from an enum to a data class
 - Timeout instrumented tests after 30 minutes
 - Change Android emulator API level to 27 in `ci_checks`
+- Fix home screen memory leaks
+  - Use `childFragmentManager` & `viewLifecycleOwner.lifecycle` when creating `FragmentStateAdapter`
+  - Remove overdue list adapter from recycler view when `OverdueScreen` view is about to be destroyed
 - [In Progress: 13 Jul 2021] Load online lookup API if patient not found locally
 - [In Progress: 14 Jul 2021] Implement `DrugsSearchScreen`
 

@@ -161,7 +161,7 @@
   </style>
 
   <!-- Simple App Views -->
-  <style name="Widget.Simple.PatientContactCallResultItem" parent="">
+  <style name="Widget.Simple.PatientContactCallResultItem_Old" parent="">
     <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     <item name="android:textColor">?attr/colorPrimary</item>
     <item name="android:paddingStart">@dimen/spacing_16</item>

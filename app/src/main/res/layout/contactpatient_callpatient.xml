@@ -190,7 +190,7 @@
 
   <TextView
     android:id="@+id/agreedToVisitTextView"
-    style="@style/Widget.Simple.PatientContactCallResultItem"
+    style="@style/Widget.Simple.PatientContactCallResultItem_Old"
     android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/spacing_16"
@@ -213,7 +213,7 @@
 
   <TextView
     android:id="@+id/remindToCallLaterTextView"
-    style="@style/Widget.Simple.PatientContactCallResultItem"
+    style="@style/Widget.Simple.PatientContactCallResultItem_Old"
     android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
     android:text="@string/contactpatient_remind_call_later"
@@ -236,7 +236,7 @@
 
   <TextView
     android:id="@+id/removeFromOverdueListTextView"
-    style="@style/Widget.Simple.PatientContactCallResultItem"
+    style="@style/Widget.Simple.PatientContactCallResultItem_Old"
     android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
     android:text="@string/contactpatient_remove_from_list"

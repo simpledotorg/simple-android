@@ -87,7 +87,7 @@ android {
 
   defaultConfig {
     applicationId = "org.simple.clinic"
-    minSdkVersion(versions.minSdk)
+    minSdkVersion(26)
     targetSdkVersion(versions.compileSdk)
     versionCode = 1
     versionName = "0.1"

@@ -13,6 +13,7 @@ import org.simple.clinic.bp.sync.BloodPressureSync
 import org.simple.clinic.drugs.PrescriptionModule
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.search.DrugModule
+import org.simple.clinic.drugs.search.sync.DrugSync
 import org.simple.clinic.drugs.sync.PrescriptionSync
 import org.simple.clinic.facility.FacilityModule
 import org.simple.clinic.facility.FacilitySync
@@ -69,14 +70,15 @@ class SyncModule {
       helpSync: HelpSync,
       bloodSugarSync: BloodSugarSync,
       teleconsultationMedicalOfficersSync: TeleconsultationSync,
-      teleconsultRecordSync: TeleconsultRecordSync
+      teleconsultRecordSync: TeleconsultRecordSync,
+      drugSync: DrugSync
   ): List<ModelSync> {
     return listOf(
         facilitySync, protocolSync, patientSync,
         bloodPressureSync, medicalHistorySync, appointmentSync,
         prescriptionSync, reportsSync, helpSync,
         bloodSugarSync, teleconsultationMedicalOfficersSync,
-        teleconsultRecordSync
+        teleconsultRecordSync, drugSync
     )
   }
 

@@ -15,6 +15,8 @@ import org.simple.clinic.drugs.search.Answer.Yes
 import org.simple.clinic.drugs.search.Drug
 import org.simple.clinic.drugs.search.DrugCategory
 import org.simple.clinic.drugs.search.DrugCategory.Hypertension.CCB
+import org.simple.clinic.drugs.search.DrugFrequency
+import org.simple.clinic.drugs.search.DrugFrequency.OD
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityConfig
@@ -68,7 +70,6 @@ import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityI
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityMedicalOfficersCrossRef
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityWithMedicalOfficers
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
-import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency.OD
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecord
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordInfo
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRequestInfo
@@ -1262,7 +1263,7 @@ object TestData {
       id: UUID = UUID.randomUUID(),
       name: String = "Amolodipine",
       category: DrugCategory? = CCB,
-      frequency: MedicineFrequency? = OD,
+      frequency: DrugFrequency? = OD,
       composition: String? = null,
       dosage: String? = "10 mg",
       rxNormCode: String? = "329526",

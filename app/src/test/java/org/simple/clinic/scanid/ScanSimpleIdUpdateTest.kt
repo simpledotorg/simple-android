@@ -276,4 +276,66 @@ class ScanSimpleIdUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `When complete medical records are saved and one patient is found, open patient summary`() {
+    val completeMedicalRecord = TestData.completeMedicalRecord()
+    val patientUuid = completeMedicalRecord.patient.patientUuid
+
+    spec
+        .given(defaultModel)
+        .whenEvent(CompleteMedicalRecordsSaved(listOf(completeMedicalRecord)))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(OpenPatientSummary(patientUuid))
+            )
+        )
+  }
+
+  @Test
+  fun `when online patient lookup is completed and had found medical records, save complete medical records`() {
+    val identifier = Identifier("fe1487af-024f-4448-8361-325913e6db81", BpPassport)
+    val commonIdentifier = TestData.businessId(identifier = identifier)
+
+    val patientUuid1 = TestData.patientProfile(patientUuid = UUID.fromString("da01a72e-cc74-4e74-86ff-59d730dfc2eb"), businessId = commonIdentifier)
+    val patientUuid2 = TestData.patientProfile(patientUuid = UUID.fromString("a09acec5-7cab-4b1a-a99a-ef673b29e024"), businessId = commonIdentifier)
+
+    val completeMedicalRecord = TestData.completeMedicalRecord(patient = patientUuid1)
+    val completeMedicalRecord2 = TestData.completeMedicalRecord(patient = patientUuid2)
+
+    val medicalRecords = listOf(completeMedicalRecord, completeMedicalRecord2)
+
+    spec
+        .given(defaultModel)
+        .whenEvent(OnlinePatientLookupWithIdentifierCompleted(LookupPatientOnline.Result.Found(medicalRecords = medicalRecords), identifier))
+        .then(
+            assertThatNext(
+                hasModel(defaultModel.notSearching()),
+                hasEffects(SaveCompleteMedicalRecords(medicalRecords))
+            )
+        )
+  }
+
+  @Test
+  fun `When complete medical records are saved and more than 1 patient is found with id then open patient search`() {
+    val identifier = Identifier("8c76b646-c03f-4d9c-8140-ec08e1945051", BpPassport)
+    val commonIdentifier = TestData.businessId(identifier = identifier)
+
+    val patientUuid1 = TestData.patientProfile(patientUuid = UUID.fromString("69beb7f2-b97f-452b-8faa-d98dfa33ce82"), businessId = commonIdentifier)
+    val patientUuid2 = TestData.patientProfile(patientUuid = UUID.fromString("17817ea4-f6d0-453d-b739-648000f1db97"), businessId = commonIdentifier)
+
+    val completeMedicalRecord = TestData.completeMedicalRecord(patient = patientUuid1)
+    val completeMedicalRecord2 = TestData.completeMedicalRecord(patient = patientUuid2)
+
+    spec
+        .given(defaultModel)
+        .whenEvent(CompleteMedicalRecordsSaved(listOf(completeMedicalRecord, completeMedicalRecord2)))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(OpenPatientSearch(additionalIdentifier = null, "8766460", null))
+            )
+        )
+  }
 }

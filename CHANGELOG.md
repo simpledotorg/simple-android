@@ -30,6 +30,7 @@
 - Load online lookup API if patient not found locally
 - Implement `DrugsSearchScreen`
 - Don't show progress if overdue list already has items
+- Change `PatientProfile` to be a Room relation model
 
 ### Features
 - [In Progress: 06 Jul 2021] Add support for finding a patient online from ID scan

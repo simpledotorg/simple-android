@@ -684,7 +684,10 @@ class PatientRepository @Inject constructor(
   }
 
   fun patientProfile(patientUuid: UUID): Observable<Optional<PatientProfile>> {
-    return database.patientDao().patientProfile(patientUuid)
+    return database
+        .patientDao()
+        .patientProfile(patientUuid)
+        .map { patientProfiles -> Optional.ofNullable(patientProfiles.firstOrNull()) }
   }
 
   fun deletePatient(patientUuid: UUID, deletedReason: DeletedReason) {

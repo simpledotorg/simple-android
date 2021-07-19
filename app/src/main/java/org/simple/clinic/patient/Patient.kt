@@ -8,17 +8,16 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.Transaction
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
-import org.intellij.lang.annotations.Language
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.storage.DaoWithUpsert
 import java.time.Instant
 import java.time.LocalDate
-import java.util.Optional
 import java.util.UUID
 
 @Entity(
@@ -193,35 +192,6 @@ data class Patient(
         pendingStatus: SyncStatus
     )
 
-    // Patient can have multiple phone numbers, and Room's support for @Relation annotations doesn't
-    // support loading into constructor parameters and needs a settable property. Room does fix
-    // this limitation in 2.1.0, but it requires migration to AndroidX. For now, we create a
-    // transient query model whose only job is to represent this and process it in memory.
-    // TODO: Remove this when we migrate to Room 2.1.0.
-    @Query("$patientProfileQuery WHERE P.syncStatus == :syncStatus")
-    protected abstract fun loadPatientQueryModelsWithSyncStatus(syncStatus: SyncStatus): List<PatientQueryModel>
-
-    @Query("""
-      $patientProfileQuery 
-        WHERE P.syncStatus == :syncStatus
-        LIMIT :limit OFFSET :offset
-     """
-    )
-    protected abstract fun loadPatientQueryModelsWithSyncStatusBatched(
-        syncStatus: SyncStatus,
-        limit: Int,
-        offset: Int
-    ): List<PatientQueryModel>
-
-    @Query("$patientProfileQuery WHERE P.uuid == :patientUuid")
-    protected abstract fun loadPatientQueryModelsForPatientUuid(patientUuid: UUID): Flowable<List<PatientQueryModel>>
-
-    @Query("$patientProfileQuery WHERE P.uuid == :patientUuid")
-    protected abstract fun loadPatientQueryModelsForPatientUuidImmediate(patientUuid: UUID): List<PatientQueryModel>
-
-    @Query(patientProfileQuery)
-    protected abstract fun loadAllPatientQueryModels(): List<PatientQueryModel>
-
     @Query("""
       UPDATE Patient
       SET
@@ -254,85 +224,42 @@ data class Patient(
         pendingStatus: SyncStatus
     )
 
-    fun recordsWithSyncStatus(syncStatus: SyncStatus): List<PatientProfile> {
-      return queryModelsToPatientProfiles(loadPatientQueryModelsWithSyncStatus(syncStatus))
-    }
+    @Transaction
+    @Query("""
+      SELECT * FROM Patient
+      WHERE syncStatus = :syncStatus
+    """)
+    abstract fun recordsWithSyncStatus(syncStatus: SyncStatus): List<PatientProfile>
 
-    fun patientProfile(patientUuid: UUID): Observable<Optional<PatientProfile>> {
-      return loadPatientQueryModelsForPatientUuid(patientUuid)
-          .map { queryModelsToPatientProfiles(it) }
-          .map { if (it.isEmpty()) Optional.empty() else Optional.of(it.first()) }
-          .toObservable()
-    }
+    @Transaction
+    @Query("""
+      SELECT * FROM Patient
+      WHERE uuid = :patientUuid
+    """)
+    abstract fun patientProfile(patientUuid: UUID): Observable<List<PatientProfile>>
 
-    fun patientProfileImmediate(patientUuid: UUID): PatientProfile? {
-      val patientQueryModels = loadPatientQueryModelsForPatientUuidImmediate(patientUuid)
+    @Transaction
+    @Query("""
+      SELECT * FROM Patient
+      WHERE uuid = :patientUuid
+    """)
+    abstract fun patientProfileImmediate(patientUuid: UUID): PatientProfile?
 
-      return if (patientQueryModels.isNotEmpty()) queryModelsToPatientProfiles(patientQueryModels).first() else null
-    }
+    @Transaction
+    @Query("SELECT * FROM Patient")
+    abstract fun allPatientProfiles(): List<PatientProfile>
 
-    fun allPatientProfiles(): List<PatientProfile> {
-      val patientQueryModels = loadAllPatientQueryModels()
-
-      return queryModelsToPatientProfiles(patientQueryModels)
-    }
-
-    fun profilesWithSyncStatusBatched(
+    @Transaction
+    @Query("""
+      SELECT * FROM Patient
+      WHERE syncStatus = :syncStatus
+      LIMIT :limit OFFSET :offset
+    """)
+    abstract fun profilesWithSyncStatusBatched(
         syncStatus: SyncStatus,
         limit: Int,
         offset: Int
-    ): List<PatientProfile> {
-      val queryModels = loadPatientQueryModelsWithSyncStatusBatched(
-          syncStatus = syncStatus,
-          limit = limit,
-          offset = offset
-      )
-
-      return queryModelsToPatientProfiles(queryModels)
-    }
-
-    private fun queryModelsToPatientProfiles(patientQueryModels: List<PatientQueryModel>): List<PatientProfile> {
-      return patientQueryModels
-          .groupBy { it.patient.uuid }
-          .map { (_, patientQueryModels) ->
-            val patient = patientQueryModels.first().patient
-            val patientAddress = patientQueryModels.first().address
-
-            val patientPhoneNumbers = patientQueryModels
-                .filter { it.phoneNumber != null }
-                .map { it.phoneNumber as PatientPhoneNumber }
-                .distinctBy { it.uuid }
-                .toList()
-
-            val businessIds = patientQueryModels
-                .filter { it.businessId != null }
-                .map { it.businessId as BusinessId }
-                .distinctBy { it.uuid }
-                .toList()
-
-            PatientProfile(
-                patient = patient,
-                address = patientAddress,
-                phoneNumbers = patientPhoneNumbers,
-                businessIds = businessIds
-            )
-          }
-    }
-
-    protected data class PatientQueryModel(
-
-        @Embedded(prefix = "patient_")
-        val patient: Patient,
-
-        @Embedded(prefix = "addr_")
-        val address: PatientAddress,
-
-        @Embedded(prefix = "phone_")
-        val phoneNumber: PatientPhoneNumber?,
-
-        @Embedded(prefix = "businessid_")
-        val businessId: BusinessId?
-    )
+    ): List<PatientProfile>
 
     @Query("""
           SELECT (
@@ -379,36 +306,6 @@ data class Patient(
         instantToCompare: Instant,
         pendingStatus: SyncStatus
     ): Boolean
-
-    companion object {
-      @Language("RoomSql")
-      const val patientProfileQuery = """
-        SELECT
-          P.uuid patient_uuid, P.addressUuid patient_addressUuid, P.fullName patient_fullName,
-          P.gender patient_gender, P.dateOfBirth patient_dateOfBirth,
-          P.age_value patient_age_value, P.age_updatedAt patient_age_updatedAt, P.status patient_status,
-          P.createdAt patient_createdAt, P.updatedAt patient_updatedAt, P.deletedAt patient_deletedAt,
-          P.syncStatus patient_syncStatus, P.recordedAt patient_recordedAt, P.reminderConsent patient_reminderConsent, P.deletedReason patient_deletedReason,
-          P.registeredFacilityId patient_registeredFacilityId, P.assignedFacilityId patient_assignedFacilityId, P.retainUntil patient_retainUntil,
-
-          PA.uuid addr_uuid, PA.colonyOrVillage addr_colonyOrVillage, PA.district addr_district,
-          PA.state addr_state, PA.country addr_country,
-          PA.createdAt addr_createdAt,PA.updatedAt addr_updatedAt, PA.deletedAt addr_deletedAt,
-          PA.streetAddress addr_streetAddress, PA.zone addr_zone,
-
-          PPN.uuid phone_uuid, PPN.patientUuid phone_patientUuid, PPN.number phone_number,
-          PPN.phoneType phone_phoneType, PPN.active phone_active,
-          PPN.createdAt phone_createdAt, PPN.updatedAt phone_updatedAt, PPN.deletedAt phone_deletedAt,
-
-          BI.uuid businessid_uuid, BI.patientUuid businessid_patientUuid, BI.identifier businessid_identifier,
-          BI.identifierType businessid_identifierType, BI.meta businessid_meta, BI.metaVersion businessid_metaVersion,
-          BI.createdAt businessid_createdAt, BI.updatedAt businessid_updatedAt, BI.deletedAt businessid_deletedAt, BI.searchHelp businessid_searchHelp
-        FROM Patient P
-        INNER JOIN PatientAddress PA ON P.addressUuid == PA.uuid
-        LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid == P.uuid
-        LEFT JOIN BusinessId BI ON BI.patientUuid == P.uuid
-      """
-    }
 
     // This depends on the foreign key references between address, patient
     // phone numbers, and business IDs to cascade the deletes.

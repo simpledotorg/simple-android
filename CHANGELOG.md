@@ -31,7 +31,7 @@
 - Change `PatientProfile` to be a Room relation model
 
 ### Features
-- [In Progress: 06 Jul 2021] Add support for finding a patient online from ID scan
+- Add support for finding a patient online from ID scan
 
 ### Changes
 - New supported language: Tamil (Sri Lanka) [`ta-LK`], Sinhala [`si-LK`]

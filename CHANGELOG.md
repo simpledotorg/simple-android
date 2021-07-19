@@ -31,6 +31,11 @@
 - Change `PatientProfile` to be a Room relation model
 - Add gradle-versions-plugin for checking dependency updates
 - Bump AndroidX Core Testing to v2.1.0
+- Bump Firebase dependencies
+    - Performance monitoring plugin -> 1.4.0
+    - Performance monitoring -> 20.0.2
+    - Remote config -> 21.0.0
+- Disable Firebase Performance Monitoring for development builds
 - [In Progress: 16 Jul 2021] Remove the daily and frequent sync separation
 
 ### Features

@@ -269,6 +269,10 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     callPatientView.setResultOfCallLabelText = getString(R.string.contactpatient_result)
   }
 
+  override fun setRegisterAtLabelText() {
+    callPatientView.setRegisteredFacilityLabelText = getString(R.string.contactpatient_patient_registered_at)
+  }
+
   override fun directlyCallPatient(patientPhoneNumber: String, dialer: Dialer) {
     phoneCaller.normalCall(patientPhoneNumber, dialer)
   }

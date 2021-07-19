@@ -70,6 +70,10 @@ class ContactPatientUiRenderer(
       renderPatientProfile(model.patientProfile!!, model.appointment!!)
     }
 
+    if (model.hasRegisteredFacility && model.hasCurrentFacility) {
+      renderPatientFacilityLabel(model.appointmentIsInRegisteredFacility)
+    }
+
     if (model.patientProfileHasPhoneNumber && model.hasLoadedAppointment) {
       ui.showPatientWithPhoneNumberUi()
       ui.hidePatientWithNoPhoneNumberUi()
@@ -83,6 +87,12 @@ class ContactPatientUiRenderer(
     }
 
     ui.switchToCallPatientView()
+  }
+
+  private fun renderPatientFacilityLabel(appointmentIsInRegisteredFacility: Boolean) {
+    if (appointmentIsInRegisteredFacility) {
+      ui.setRegisterAtLabelText()
+    }
   }
 
   private fun loadSecureCallingUi(model: ContactPatientModel) {

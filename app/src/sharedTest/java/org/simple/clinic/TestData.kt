@@ -964,7 +964,9 @@ object TestData {
       diagnosedWithHypertension: Answer? = null,
       patientAddress: OverduePatientAddress = overduePatientAddress(),
       patientAssignedFacilityId: UUID? = null,
-      appointmentFacilityName: String? = null
+      appointmentFacilityName: String? = null,
+      patientRegisteredFacilityName: String? = null,
+      patientRegisteredFacilityID: UUID? = null
   ): OverdueAppointment {
     return OverdueAppointment(
         fullName = name,
@@ -979,7 +981,9 @@ object TestData {
         diagnosedWithDiabetes = diagnosedWithDiabetes,
         diagnosedWithHypertension = diagnosedWithHypertension,
         patientAssignedFacilityUuid = patientAssignedFacilityId,
-        appointmentFacilityName = appointmentFacilityName
+        appointmentFacilityName = appointmentFacilityName,
+        patientRegisteredFacilityName = patientRegisteredFacilityName,
+        patientRegisteredFacilityID = patientRegisteredFacilityID
     )
   }
 

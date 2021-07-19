@@ -8,6 +8,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
@@ -462,6 +463,27 @@ class ContactPatientUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenRemoveOverdueAppointmentScreen(appointmentUuid, patientUuid))
+        ))
+  }
+
+  @Test
+  fun `when current facility is loaded, then update the model with the current facility`(){
+    val facility = TestData.facility(
+        uuid = UUID.fromString("251deca2-d219-4863-80fc-e7d48cb22b1b"),
+        name = "PHC Obvious",
+        facilityConfig = FacilityConfig(
+            diabetesManagementEnabled = true,
+            teleconsultationEnabled = false
+        )
+    )
+    val defaultModel = defaultModel(overdueListChangesFeatureEnabled = true)
+
+    spec
+        .given(defaultModel)
+        .whenEvent(CurrentFacilityLoaded(facility))
+        .then(assertThatNext(
+            hasModel(defaultModel.currentFacilityLoaded(facility)),
+            hasNoEffects()
         ))
   }
 

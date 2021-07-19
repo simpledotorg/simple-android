@@ -4,6 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.contactpatient.ContactPatientInfoProgressState.DONE
 import org.simple.clinic.contactpatient.ContactPatientInfoProgressState.IN_PROGRESS
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.PotentialAppointmentDate
@@ -26,7 +27,8 @@ data class ContactPatientModel(
     val selectedAppointmentDate: LocalDate,
     val selectedRemoveAppointmentReason: RemoveAppointmentReason?,
     val contactPatientInfoProgressState: ContactPatientInfoProgressState?,
-    val overdueListChangesFeatureEnabled: Boolean
+    val overdueListChangesFeatureEnabled: Boolean,
+    val currentFacility: Facility? = null
 ) : Parcelable {
 
   companion object {
@@ -53,6 +55,9 @@ data class ContactPatientModel(
     }
   }
 
+  val hasCurrentFacility: Boolean
+    get() = currentFacility != null
+
   val hasLoadedPatientProfile: Boolean
     get() = patientProfile != null
 
@@ -61,6 +66,12 @@ data class ContactPatientModel(
 
   val hasLoadedAppointment: Boolean
     get() = appointment != null
+
+  val hasRegisteredFacility: Boolean
+    get() = appointment?.get()?.patientRegisteredFacilityID != null
+
+  val appointmentIsInRegisteredFacility: Boolean
+    get() = appointment?.get()?.patientRegisteredFacilityID == currentFacility?.uuid
 
   val hasSelectedARemoveAppointmentReason: Boolean
     get() = selectedRemoveAppointmentReason != null
@@ -97,5 +108,9 @@ data class ContactPatientModel(
 
   fun contactPatientInfoLoading(): ContactPatientModel {
     return copy(contactPatientInfoProgressState = IN_PROGRESS)
+  }
+
+  fun currentFacilityLoaded(currentFacility: Facility): ContactPatientModel {
+    return copy(currentFacility = currentFacility)
   }
 }

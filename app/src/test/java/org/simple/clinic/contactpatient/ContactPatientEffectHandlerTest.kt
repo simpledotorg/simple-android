@@ -10,6 +10,7 @@ import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
@@ -33,12 +34,22 @@ class ContactPatientEffectHandlerTest {
 
   private val clock = TestUserClock(LocalDate.parse("2018-01-01"))
 
+  private val facility = TestData.facility(
+      uuid = UUID.fromString("251deca2-d219-4863-80fc-e7d48cb22b1b"),
+      name = "PHC Obvious",
+      facilityConfig = FacilityConfig(
+          diabetesManagementEnabled = true,
+          teleconsultationEnabled = false
+      )
+  )
+
   private val effectHandler = ContactPatientEffectHandler(
       patientRepository = patientRepository,
       appointmentRepository = appointmentRepository,
       clock = clock,
       schedulers = TrampolineSchedulersProvider(),
-      uiActions = uiActions
+      uiActions = uiActions,
+      currentFacility = { facility }
   ).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -202,5 +213,15 @@ class ContactPatientEffectHandlerTest {
 
     verify(uiActions).openRemoveOverdueAppointmentScreen(appointmentId, patientUuid)
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the load current facility effect is received, then the current facility must be loaded`() {
+    // when
+    testCase.dispatch(LoadCurrentFacility)
+
+    // then
+    testCase.assertOutgoingEvents(CurrentFacilityLoaded(facility))
+    verifyZeroInteractions(uiActions)
   }
 }

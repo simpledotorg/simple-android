@@ -103,4 +103,8 @@ data class ContactPatientModel(
   fun contactPatientInfoLoading(): ContactPatientModel {
     return copy(contactPatientInfoProgressState = IN_PROGRESS)
   }
+
+  fun currentFacilityLoaded(currentFacility: Facility): ContactPatientModel {
+    return copy(currentFacility = currentFacility)
+  }
 }

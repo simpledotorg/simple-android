@@ -2,6 +2,34 @@
 
 ## Next Release
 ### Internal
+- Add gradle-versions-plugin for checking dependency updates
+- Bump AndroidX Core Testing to v2.1.0
+- Bump Firebase dependencies
+    - Performance monitoring plugin -> 1.4.0
+    - Performance monitoring -> 20.0.2
+    - Remote config -> 21.0.0
+- Disable Firebase Performance Monitoring for development builds
+- Use full date formatter when rendering last visited date in contact patient sheet
+- Bump CameraX dependencies
+  - Bump `camera-core`, `camera-camera2` to v1.0.0
+  - Bump `camera-lifecycle` to v1.0.0
+  - Bump `camera-view` to v1.0.0-alpha26
+- [In Progress: 16 Jul 2021] Remove the daily and frequent sync separation
+
+### Changes
+- [In Progress: 7 Jul 2021] Overdue list improvements
+  - Change overdue list UI
+  - Load overdue patients without phone number
+  - Add option to download & share overdue list
+  - Updated contact patient bottom sheet UI
+- [In Progress: 14 Jul 2021] Medical screen improvements
+  - Search for commonly used drugs
+  
+### Fixes
+- Fix `ContactPatientBottomSheet` UI spacing and styling
+  
+## Demo
+### Internal
 - Bump Sentry Gradle plugin to v2.0.1
 - Bump Material Design Components to v1.4.0
 - Add ADRs for SQL performance profiling
@@ -29,19 +57,6 @@
 - Implement `DrugsSearchScreen`
 - Don't show progress if overdue list already has items
 - Change `PatientProfile` to be a Room relation model
-- Add gradle-versions-plugin for checking dependency updates
-- Bump AndroidX Core Testing to v2.1.0
-- Bump Firebase dependencies
-    - Performance monitoring plugin -> 1.4.0
-    - Performance monitoring -> 20.0.2
-    - Remote config -> 21.0.0
-- Disable Firebase Performance Monitoring for development builds
-- Use full date formatter when rendering last visited date in contact patient sheet
-- Bump CameraX dependencies
-  - Bump `camera-core`, `camera-camera2` to v1.0.0
-  - Bump `camera-lifecycle` to v1.0.0
-  - Bump `camera-view` to v1.0.0-alpha26
-- [In Progress: 16 Jul 2021] Remove the daily and frequent sync separation
 
 ### Features
 - Add support for finding a patient online from ID scan
@@ -50,18 +65,10 @@
 - New supported language: Tamil (Sri Lanka) [`ta-LK`], Sinhala [`si-LK`]
 - Show "Change" button in BP and blood sugar entry sheets for changing date
 - Move all daily syncs to the frequent sync group
-- [In Progress: 7 Jul 2021] Overdue list improvements
-  - Change overdue list UI
-  - Load overdue patients without phone number
-  - Add option to download & share overdue list
-  - Updated contact patient bottom sheet UI
-- [In Progress: 14 Jul 2021] Medical screen improvements
-  - Search for commonly used drugs
   
 ### Fixes
 - Fix `ContactPatientBottomSheet` not going back to call patient view on back click in call later mode
 - Fix overdue list not changing when switching facility from overdue screen
-- Fix `ContactPatientBottomSheet` UI spacing and styling
 
 ## 2021-07-15-7866
 ### Internal

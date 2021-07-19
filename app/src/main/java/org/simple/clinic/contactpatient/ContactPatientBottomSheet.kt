@@ -82,7 +82,7 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   lateinit var appointmentConfig: AppointmentConfig
 
   @Inject
-  @Named("date_for_user_input")
+  @Named("full_date")
   lateinit var dateTimeFormatter: DateTimeFormatter
 
   @Inject

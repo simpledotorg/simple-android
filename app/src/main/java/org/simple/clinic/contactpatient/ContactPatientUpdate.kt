@@ -26,6 +26,7 @@ class ContactPatientUpdate(
     return when (event) {
       is PatientProfileLoaded -> patientProfileLoaded(model, event)
       is OverdueAppointmentLoaded -> overdueAppointmentLoaded(model, event)
+      is CurrentFacilityLoaded -> noChange()
       is NormalCallClicked -> directlyCallPatient(model, event)
       is SecureCallClicked -> maskedCallPatient(model, event)
       PatientAgreedToVisitClicked -> dispatch(MarkPatientAsAgreedToVisit(model.appointmentUuid))

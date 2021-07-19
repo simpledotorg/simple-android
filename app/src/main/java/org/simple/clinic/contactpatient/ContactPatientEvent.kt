@@ -1,6 +1,7 @@
 package org.simple.clinic.contactpatient
 
 import android.Manifest
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.platform.util.RuntimePermissionResult
@@ -17,6 +18,10 @@ data class PatientProfileLoaded(
 
 data class OverdueAppointmentLoaded(
     val overdueAppointment: Optional<OverdueAppointment>
+) : ContactPatientEvent()
+
+data class CurrentFacilityLoaded(
+    val currentFacility: Facility
 ) : ContactPatientEvent()
 
 data class NormalCallClicked(

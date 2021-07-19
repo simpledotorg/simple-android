@@ -13,6 +13,8 @@ data class DirectCallWithAutomaticDialer(val patientPhoneNumber: String) : Conta
 
 data class DirectCallWithManualDialer(val patientPhoneNumber: String) : ContactPatientEffect()
 
+object LoadCurrentFacility : ContactPatientEffect()
+
 data class MaskedCallWithAutomaticDialer(
     val patientPhoneNumber: String,
     val proxyPhoneNumber: String

@@ -19,7 +19,7 @@ import java.util.UUID
 
 @DatabaseView(
     """
-      SELECT P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.assignedFacilityId patientAssignedFacilityUuid,
+      SELECT P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.assignedFacilityId patientAssignedFacilityUuid, P.registeredFacilityId patientRegisteredFacilityID,
 
           A.uuid appt_uuid, A.patientUuid appt_patientUuid, A.facilityUuid appt_facilityUuid, A.scheduledDate appt_scheduledDate, A.status appt_status,
           A.cancelReason appt_cancelReason, A.remindOn appt_remindOn, A.agreedToVisit appt_agreedToVisit, A.appointmentType appt_appointmentType,
@@ -54,7 +54,8 @@ import java.util.UUID
           PA.streetAddress patient_address_streetAddress, PA.colonyOrVillage patient_address_colonyOrVillage,
           PA.district patient_address_district, PA.state patient_address_state,
           
-          AF.name appointmentFacilityName
+          AF.name appointmentFacilityName,
+          RF.name patientRegisteredFacilityName
 
           FROM Patient P
 
@@ -72,6 +73,7 @@ import java.util.UUID
           ) BloodSugar ON BloodSugar.patientUuid = P.uuid
           
           LEFT JOIN Facility AF ON AF.uuid == A.facilityUuid
+          LEFT JOIN Facility RF ON RF.uuid == P.registeredFacilityId
           
           WHERE 
             P.deletedAt IS NULL
@@ -113,8 +115,12 @@ data class OverdueAppointment(
 
     val patientAssignedFacilityUuid: UUID?,
 
-    val appointmentFacilityName: String?
-) : Parcelable {
+    val appointmentFacilityName: String?,
+
+    val patientRegisteredFacilityName: String?,
+
+    val patientRegisteredFacilityID: UUID?,
+    ) : Parcelable {
 
   val isAppointmentAtAssignedFacility: Boolean
     get() = patientAssignedFacilityUuid == appointment.facilityUuid

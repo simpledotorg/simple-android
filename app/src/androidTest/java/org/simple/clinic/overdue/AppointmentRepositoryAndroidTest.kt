@@ -1552,7 +1552,8 @@ class AppointmentRepositoryAndroidTest {
     ): RecordAppointment {
       val patientProfile = testData.patientProfile(
           patientUuid = patientUuid,
-          generatePhoneNumber = true
+          generatePhoneNumber = true,
+          patientRegisteredFacilityId = facility.uuid
       )
 
       val bloodPressureMeasurement = testData.bloodPressureMeasurement(
@@ -1622,7 +1623,7 @@ class AppointmentRepositoryAndroidTest {
         .blockingFirst()
 
     // then
-    val expectedAppointments = listOf(oneWeekBeforeCurrentDate, oneDayBeforeCurrentDate).map { it.toOverdueAppointment(facility.name) }
+    val expectedAppointments = listOf(oneWeekBeforeCurrentDate, oneDayBeforeCurrentDate).map { it.toOverdueAppointment(appointmentFacilityName = facility.name, registeredFacilityName = facility.name) }
 
     assertThat(overdueAppointments).containsExactlyElementsIn(expectedAppointments)
   }
@@ -1640,7 +1641,8 @@ class AppointmentRepositoryAndroidTest {
     ): RecordAppointment {
       val patientProfile = testData.patientProfile(
           patientUuid = patientUuid,
-          generatePhoneNumber = true
+          generatePhoneNumber = true,
+          patientRegisteredFacilityId = facility.uuid
       )
 
       val bloodPressureMeasurement = testData.bloodPressureMeasurement(
@@ -1708,7 +1710,7 @@ class AppointmentRepositoryAndroidTest {
         .blockingFirst()
 
     // then
-    val expectedAppointments = listOf(remindOneWeekBeforeCurrentDate, remindOneDayBeforeCurrentDate).map { it.toOverdueAppointment(facility.name) }
+    val expectedAppointments = listOf(remindOneWeekBeforeCurrentDate, remindOneDayBeforeCurrentDate).map { it.toOverdueAppointment(appointmentFacilityName = facility.name, registeredFacilityName = facility.name) }
 
     assertThat(overdueAppointments).containsExactlyElementsIn(expectedAppointments)
   }
@@ -1724,7 +1726,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentUuid: UUID,
         patientPhoneNumber: PatientPhoneNumber?
     ): RecordAppointment {
-      val patientProfile = with(testData.patientProfile(patientUuid = patientUuid, generatePhoneNumber = false)) {
+      val patientProfile = with(testData.patientProfile(patientUuid = patientUuid, generatePhoneNumber = false, patientRegisteredFacilityId = facility.uuid)) {
         val phoneNumbers = if (patientPhoneNumber == null) emptyList() else listOf(patientPhoneNumber.withPatientUuid(patientUuid))
 
         this.copy(phoneNumbers = phoneNumbers)
@@ -1788,7 +1790,7 @@ class AppointmentRepositoryAndroidTest {
         .blockingFirst()
 
     // then
-    val expectedAppointments = listOf(withPhoneNumber).map { it.toOverdueAppointment(facility.name) }
+    val expectedAppointments = listOf(withPhoneNumber).map { it.toOverdueAppointment(appointmentFacilityName = facility.name, registeredFacilityName = facility.name) }
 
     assertThat(overdueAppointments).containsExactlyElementsIn(expectedAppointments)
   }
@@ -1804,7 +1806,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentUuid: UUID,
         patientPhoneNumber: PatientPhoneNumber?
     ): RecordAppointment {
-      val patientProfile = with(testData.patientProfile(patientUuid = patientUuid, generatePhoneNumber = false)) {
+      val patientProfile = with(testData.patientProfile(patientUuid = patientUuid, generatePhoneNumber = false, patientRegisteredFacilityId = facility.uuid)) {
         val phoneNumbers = if (patientPhoneNumber == null) emptyList() else listOf(patientPhoneNumber.withPatientUuid(patientUuid))
 
         this.copy(phoneNumbers = phoneNumbers)
@@ -1868,7 +1870,7 @@ class AppointmentRepositoryAndroidTest {
         .blockingFirst()
 
     // then
-    val expectedAppointments = listOf(withPhoneNumber, withoutPhoneNumber).map { it.toOverdueAppointment(facility.name) }
+    val expectedAppointments = listOf(withPhoneNumber, withoutPhoneNumber).map { it.toOverdueAppointment(appointmentFacilityName = facility.name, registeredFacilityName = facility.name) }
 
     assertThat(overdueAppointments).containsExactlyElementsIn(expectedAppointments)
   }
@@ -1883,7 +1885,7 @@ class AppointmentRepositoryAndroidTest {
         bpUuid: UUID?,
         appointmentUuid: UUID
     ): RecordAppointment {
-      val patientProfile = testData.patientProfile(patientUuid = patientUuid, generatePhoneNumber = true)
+      val patientProfile = testData.patientProfile(patientUuid = patientUuid, generatePhoneNumber = true, patientRegisteredFacilityId = facility.uuid)
 
       val bloodPressureMeasurement = if (bpUuid != null) {
         testData.bloodPressureMeasurement(
@@ -1936,7 +1938,7 @@ class AppointmentRepositoryAndroidTest {
         .blockingFirst()
 
     // then
-    val expectedAppointments = listOf(withBloodPressure).map { it.toOverdueAppointment(facility.name) }
+    val expectedAppointments = listOf(withBloodPressure).map { it.toOverdueAppointment(appointmentFacilityName = facility.name, registeredFacilityName = facility.name) }
 
     assertThat(overdueAppointments).containsExactlyElementsIn(expectedAppointments)
   }
@@ -1951,7 +1953,7 @@ class AppointmentRepositoryAndroidTest {
         bloodSugarUuid: UUID?,
         appointmentUuid: UUID
     ): RecordAppointment {
-      val patientProfile = testData.patientProfile(patientUuid = patientUuid, generatePhoneNumber = true)
+      val patientProfile = testData.patientProfile(patientUuid = patientUuid, generatePhoneNumber = true, patientRegisteredFacilityId = facility.uuid)
 
       val bloodSugarMeasurement = if (bloodSugarUuid != null) {
         testData.bloodSugarMeasurement(
@@ -2003,7 +2005,7 @@ class AppointmentRepositoryAndroidTest {
         .blockingFirst()
 
     // then
-    val expectedAppointments = listOf(withBloodSugar).map { it.toOverdueAppointment(facility.name) }
+    val expectedAppointments = listOf(withBloodSugar).map { it.toOverdueAppointment(appointmentFacilityName = facility.name, registeredFacilityName = facility.name) }
 
     assertThat(overdueAppointments).containsExactlyElementsIn(expectedAppointments)
   }
@@ -2883,7 +2885,7 @@ class AppointmentRepositoryAndroidTest {
           .blockingAwait()
     }
 
-    fun toOverdueAppointment(appointmentFacilityName: String?): OverdueAppointment {
+    fun toOverdueAppointment(appointmentFacilityName: String?, registeredFacilityName: String?): OverdueAppointment {
       if (bloodPressureMeasurement == null && bloodSugarMeasurement == null) {
         throw AssertionError("Need a Blood Pressure Measurement or Blood Sugar Measurement to create an Overdue Appointment")
       } else {
@@ -2911,7 +2913,9 @@ class AppointmentRepositoryAndroidTest {
             diagnosedWithDiabetes = null,
             diagnosedWithHypertension = null,
             patientAssignedFacilityUuid = patientProfile.patient.assignedFacilityId,
-            appointmentFacilityName = appointmentFacilityName
+            appointmentFacilityName = appointmentFacilityName,
+            patientRegisteredFacilityName = registeredFacilityName,
+            patientRegisteredFacilityID = patientProfile.patient.registeredFacilityId
         )
       }
     }

@@ -7,6 +7,7 @@ import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.overdue.TimeToAppointment.Days
@@ -37,15 +38,25 @@ class ContactPatientInitTest {
         .whenInit(defaultModel)
         .then(assertThatFirst(
             hasModel(defaultModel.contactPatientInfoLoading()),
-            hasEffects(LoadPatientProfile(patientUuid), LoadLatestOverdueAppointment(patientUuid))
+            hasEffects(LoadPatientProfile(patientUuid), LoadLatestOverdueAppointment(patientUuid), LoadCurrentFacility)
         ))
   }
 
   @Test
-  fun `when the screen is restored, do not load the patient profile and latest appointment if they are already loaded`() {
+  fun `when the screen is restored, do not load the patient profile, latest appointment and current facility if they are already loaded`() {
+    val facility = TestData.facility(
+        uuid = UUID.fromString("251deca2-d219-4863-80fc-e7d48cb22b1b"),
+        name = "PHC Obvious",
+        facilityConfig = FacilityConfig(
+            diabetesManagementEnabled = true,
+            teleconsultationEnabled = false
+        )
+    )
+
     val model = defaultModel()
         .patientProfileLoaded(TestData.patientProfile(patientUuid = patientUuid))
         .overdueAppointmentLoaded(Optional.empty())
+        .currentFacilityLoaded(currentFacility = facility)
 
     spec
         .whenInit(model)

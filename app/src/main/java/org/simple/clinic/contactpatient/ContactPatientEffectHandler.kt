@@ -1,11 +1,13 @@
 package org.simple.clinic.contactpatient
 
 import com.spotify.mobius.rx2.RxMobius
+import dagger.Lazy
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.phone.Dialer
@@ -19,6 +21,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     private val appointmentRepository: AppointmentRepository,
     private val clock: UserClock,
     private val schedulers: SchedulersProvider,
+    private val currentFacility: Lazy<Facility>,
     @Assisted private val uiActions: ContactPatientUiActions
 ) {
 
@@ -41,7 +44,17 @@ class ContactPatientEffectHandler @AssistedInject constructor(
         .addConsumer(ShowManualDatePicker::class.java, { uiActions.showManualDatePicker(it.preselectedDate, it.datePickerBounds) }, schedulers.ui())
         .addTransformer(SetReminderForAppointment::class.java, setReminderForAppointment(schedulers.io()))
         .addConsumer(OpenRemoveOverdueAppointmentScreen::class.java, ::openRemoveOverdueAppointmentScreen, schedulers.ui())
+        .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
         .build()
+  }
+
+  private fun loadCurrentFacility(): ObservableTransformer<LoadCurrentFacility, ContactPatientEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulers.io())
+          .map { currentFacility.get() }
+          .map(::CurrentFacilityLoaded)
+    }
   }
 
   private fun openRemoveOverdueAppointmentScreen(effect: OpenRemoveOverdueAppointmentScreen) {

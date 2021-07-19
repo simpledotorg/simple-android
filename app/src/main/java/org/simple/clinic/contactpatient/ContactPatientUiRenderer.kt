@@ -70,6 +70,10 @@ class ContactPatientUiRenderer(
       renderPatientProfile(model.patientProfile!!, model.appointment!!)
     }
 
+    if (model.hasRegisteredFacility && model.hasCurrentFacility) {
+      renderPatientFacilityLabel(model.appointmentIsInRegisteredFacility)
+    }
+
     if (model.patientProfileHasPhoneNumber && model.hasLoadedAppointment) {
       ui.showPatientWithPhoneNumberUi()
       ui.hidePatientWithNoPhoneNumberUi()
@@ -83,6 +87,14 @@ class ContactPatientUiRenderer(
     }
 
     ui.switchToCallPatientView()
+  }
+
+  private fun renderPatientFacilityLabel(appointmentIsInRegisteredFacility: Boolean) {
+    if (appointmentIsInRegisteredFacility) {
+      ui.setRegisterAtLabelText()
+    } else {
+      ui.setTransferredFromLabelText()
+    }
   }
 
   private fun loadSecureCallingUi(model: ContactPatientModel) {
@@ -168,7 +180,7 @@ class ContactPatientUiRenderer(
         age = patientAge,
         phoneNumber = patientProfile.phoneNumbers.firstOrNull()?.number,
         patientAddress = patientAddressText(appointment.get().patientAddress),
-        registeredFacility = appointment.get().appointmentFacilityName.orEmpty(),
+        registeredFacility = appointment.get().patientRegisteredFacilityName.orEmpty(),
         diagnosedWithDiabetes = appointment.get().diagnosedWithDiabetes,
         diagnosedWithHypertension = appointment.get().diagnosedWithHypertension,
         lastVisited = appointment.get().patientLastSeen

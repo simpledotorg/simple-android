@@ -31,6 +31,9 @@ interface ContactPatientUi {
   fun setResultOfCallLabelText()
   fun setResultLabelText()
 
+  fun setRegisterAtLabelText()
+  fun setTransferredFromLabelText()
+
   fun renderSelectedAppointmentDate(
       selectedAppointmentReminderPeriod: TimeToAppointment,
       selectedDate: LocalDate

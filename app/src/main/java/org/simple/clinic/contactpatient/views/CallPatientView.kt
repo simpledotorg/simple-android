@@ -58,6 +58,9 @@ class CallPatientView(
   private val registeredFacilityTextView
     get() = binding!!.registeredFacilityTextView
 
+  private val registeredFacilityLabel
+    get() = binding!!.registeredFacilityLabel
+
   private val diagnosisTextView
     get() = binding!!.diagnosisTextView
 
@@ -95,6 +98,12 @@ class CallPatientView(
     set(value) {
       field = value
       resultOfCallLabelTextView.text = field
+    }
+
+  var setRegisteredFacilityLabelText: String = resources.getString(R.string.contactpatient_patient_registered_at)
+    set(value) {
+      field = value
+      registeredFacilityLabel.text = field
     }
 
   var agreedToVisitClicked: AgreedToVisitClicked? = null

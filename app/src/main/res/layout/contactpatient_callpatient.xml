@@ -14,11 +14,12 @@
     android:id="@+id/nameTextView"
     android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/spacing_24"
+    android:layout_marginHorizontal="@dimen/spacing_24"
     android:layout_marginTop="@dimen/spacing_24"
     android:gravity="start"
     android:textAppearance="?attr/textAppearanceHeadline6"
     android:textColor="?attr/colorOnSurface"
+    app:layout_constraintBottom_toTopOf="@id/patientAddressTextView"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
@@ -28,7 +29,7 @@
     android:id="@+id/patientAddressTextView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/spacing_24"
+    android:layout_marginHorizontal="@dimen/spacing_24"
     android:layout_marginTop="@dimen/spacing_16"
     android:maxLines="2"
     android:textAppearance="?attr/textAppearanceBody2"
@@ -54,25 +55,25 @@
 
   <TextView
     android:id="@+id/registeredFacilityTextView"
-    android:layout_width="wrap_content"
+    android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_8"
     android:layout_marginTop="@dimen/spacing_10"
+    android:layout_marginEnd="@dimen/spacing_24"
     android:maxLines="1"
     android:textAppearance="?attr/textAppearanceBody2"
     android:textColor="@color/color_on_surface_67"
+    app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toEndOf="@id/registeredFacilityLabel"
     app:layout_constraintTop_toBottomOf="@id/patientAddressTextView"
     tools:text="CHC Bhatinda" />
 
   <View
-    android:id="@+id/divider"
+    android:id="@+id/patientInfoSeparator"
     android:layout_width="@dimen/spacing_0"
     android:layout_height="@dimen/spacing_1"
-    android:layout_marginStart="@dimen/spacing_16"
-    android:layout_marginTop="@dimen/spacing_16"
-    android:layout_marginEnd="@dimen/spacing_16"
-    android:layout_marginBottom="@dimen/spacing_16"
+    android:layout_marginHorizontal="@dimen/spacing_24"
+    android:layout_marginVertical="@dimen/spacing_16"
     android:background="@drawable/divider"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -83,27 +84,29 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_24"
-    android:layout_marginTop="@dimen/spacing_8"
+    android:layout_marginTop="@dimen/spacing_16"
     android:maxLines="1"
     android:text="@string/contactpatient_phone"
     android:textAppearance="?attr/textAppearanceBody2Bold"
     android:textColor="@color/color_on_surface_67"
     android:visibility="visible"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/divider" />
+    app:layout_constraintTop_toBottomOf="@+id/patientInfoSeparator" />
 
   <TextView
     android:id="@+id/phoneNumberTextView"
-    android:layout_width="wrap_content"
+    android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_8"
-    android:layout_marginTop="@dimen/spacing_8"
+    android:layout_marginEnd="@dimen/spacing_24"
     android:maxLines="1"
     android:textAppearance="?attr/textAppearanceBody2"
     android:textColor="@color/color_on_surface_67"
     android:visibility="visible"
+    app:layout_constraintBottom_toBottomOf="@id/phoneNumberLabel"
+    app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toEndOf="@id/phoneNumberLabel"
-    app:layout_constraintTop_toBottomOf="@id/divider"
+    app:layout_constraintTop_toTopOf="@id/phoneNumberLabel"
     tools:text="9898989898" />
 
   <TextView
@@ -118,19 +121,22 @@
     android:textColor="@color/color_on_surface_67"
     app:layout_constraintBottom_toTopOf="@id/lastVisitedLabel"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/phoneNumberLabel" />
+    app:layout_constraintTop_toBottomOf="@+id/phoneNumberLabel"
+    app:layout_goneMarginTop="@dimen/spacing_16" />
 
   <TextView
     android:id="@+id/diagnosisTextView"
-    android:layout_width="wrap_content"
+    android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_8"
-    android:layout_marginTop="@dimen/spacing_8"
+    android:layout_marginEnd="@dimen/spacing_24"
     android:maxLines="1"
     android:textAppearance="?attr/textAppearanceBody2"
     android:textColor="@color/color_on_surface_67"
+    app:layout_constraintBottom_toBottomOf="@id/diagnosisLabel"
+    app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toEndOf="@id/diagnosisLabel"
-    app:layout_constraintTop_toBottomOf="@id/phoneNumberLabel"
+    app:layout_constraintTop_toTopOf="@id/diagnosisLabel"
     tools:text="Hypertension, Diabetes" />
 
   <TextView
@@ -143,31 +149,31 @@
     android:text="@string/contactpatient_visited"
     android:textAppearance="?attr/textAppearanceBody2Bold"
     android:textColor="@color/color_on_surface_67"
-    app:layout_constraintBottom_toTopOf="@id/divider2"
+    app:layout_constraintBottom_toTopOf="@id/diagnosisSeparator"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/diagnosisLabel" />
 
   <TextView
     android:id="@+id/lastVisitedTextView"
-    android:layout_width="wrap_content"
+    android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_8"
-    android:layout_marginTop="@dimen/spacing_8"
+    android:layout_marginEnd="@dimen/spacing_24"
     android:maxLines="1"
     android:textAppearance="?attr/textAppearanceBody2"
     android:textColor="@color/color_on_surface_67"
+    app:layout_constraintBottom_toBottomOf="@id/lastVisitedLabel"
+    app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toEndOf="@id/lastVisitedLabel"
-    app:layout_constraintTop_toBottomOf="@id/diagnosisLabel"
+    app:layout_constraintTop_toTopOf="@id/lastVisitedLabel"
     tools:text="15-May-2021" />
 
   <View
-    android:id="@+id/divider2"
+    android:id="@+id/diagnosisSeparator"
     android:layout_width="@dimen/spacing_0"
     android:layout_height="@dimen/spacing_1"
-    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginHorizontal="@dimen/spacing_24"
     android:layout_marginTop="@dimen/spacing_16"
-    android:layout_marginEnd="@dimen/spacing_16"
-    android:layout_marginBottom="@dimen/spacing_24"
     android:background="@drawable/divider"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -178,7 +184,7 @@
     android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_24"
-    android:layout_marginTop="@dimen/spacing_24"
+    android:layout_marginTop="@dimen/spacing_16"
     android:layout_marginEnd="@dimen/spacing_24"
     android:text="@string/contactpatient_result_of_call"
     android:textAllCaps="true"
@@ -186,11 +192,11 @@
     android:textColor="@color/color_on_surface_67"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/divider2" />
+    app:layout_constraintTop_toBottomOf="@id/diagnosisSeparator" />
 
   <TextView
     android:id="@+id/agreedToVisitTextView"
-    style="@style/Widget.Simple.PatientContactCallResultItem_Old"
+    style="@style/Widget.Simple.PatientContactCallResultItem"
     android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/spacing_16"
@@ -204,8 +210,7 @@
     android:id="@+id/agreedToVisitSeparator"
     android:layout_width="@dimen/spacing_0"
     android:layout_height="@dimen/spacing_1"
-    android:layout_marginStart="@dimen/spacing_16"
-    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginHorizontal="@dimen/spacing_24"
     android:background="@drawable/divider"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -213,7 +218,7 @@
 
   <TextView
     android:id="@+id/remindToCallLaterTextView"
-    style="@style/Widget.Simple.PatientContactCallResultItem_Old"
+    style="@style/Widget.Simple.PatientContactCallResultItem"
     android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
     android:text="@string/contactpatient_remind_call_later"
@@ -227,8 +232,7 @@
     android:id="@+id/remindToCallLaterSeparator"
     android:layout_width="@dimen/spacing_0"
     android:layout_height="@dimen/spacing_1"
-    android:layout_marginStart="@dimen/spacing_16"
-    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginHorizontal="@dimen/spacing_24"
     android:background="@drawable/divider"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -236,7 +240,7 @@
 
   <TextView
     android:id="@+id/removeFromOverdueListTextView"
-    style="@style/Widget.Simple.PatientContactCallResultItem_Old"
+    style="@style/Widget.Simple.PatientContactCallResultItem"
     android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
     android:text="@string/contactpatient_remove_from_list"
@@ -250,11 +254,10 @@
     android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_16"
-    android:layout_marginTop="@dimen/spacing_32"
+    android:layout_marginTop="@dimen/spacing_24"
     android:layout_marginEnd="@dimen/spacing_16"
-    android:layout_marginBottom="@dimen/spacing_8"
-    android:gravity="center|center_horizontal"
     android:text="@string/contactpatient_help_text"
+    android:textAlignment="center"
     android:textAppearance="?attr/textAppearanceBody2"
     android:textColor="@color/color_on_surface_67"
     app:layout_constraintEnd_toEndOf="parent"
@@ -267,13 +270,13 @@
     android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_16"
-    android:layout_marginEnd="@dimen/spacing_16"
     android:layout_marginTop="@dimen/spacing_8"
-    android:paddingStart="@dimen/spacing_8"
-    android:paddingEnd="@dimen/spacing_24"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginBottom="@dimen/spacing_12"
     android:text="@string/contactpatient_call_normal"
     android:theme="@style/ThemeOverlay.Simple.Blue2Primary"
     app:icon="@drawable/ic_call_16dp"
+    app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toStartOf="@+id/secureCallButton"
     app:layout_constraintHorizontal_chainStyle="spread"
     app:layout_constraintStart_toStartOf="parent"
@@ -285,8 +288,6 @@
     android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
     android:layout_marginEnd="@dimen/spacing_16"
-    android:paddingStart="@dimen/spacing_8"
-    android:paddingEnd="@dimen/spacing_24"
     android:text="@string/contactpatient_call_secure"
     app:icon="@drawable/ic_call_16dp"
     app:layout_constraintEnd_toEndOf="parent"
@@ -294,18 +295,12 @@
     app:layout_constraintTop_toTopOf="@id/normalCallButton"
     tools:visibility="visible" />
 
-  <Space
-    android:id="@+id/spaceAboveNormalCallButton"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/spacing_12"
-    app:layout_constraintTop_toBottomOf="@id/normalCallButton" />
-
-  <RelativeLayout
+  <FrameLayout
     android:id="@+id/noPhoneNumberBottomTextViewLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/spacing_32"
-    android:background="@color/simple_light_grey"
+    android:layout_height="@dimen/spacing_60"
+    android:layout_marginTop="@dimen/spacing_24"
+    android:background="?android:attr/colorBackground"
     android:visibility="gone"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -315,15 +310,14 @@
       android:id="@+id/noPhoneNumberBottomTextView"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_centerHorizontal="true"
-      android:drawablePadding="@dimen/spacing_12"
-      android:gravity="center|center_horizontal"
-      android:paddingVertical="@dimen/spacing_24"
+      android:layout_gravity="center"
+      android:drawablePadding="@dimen/spacing_8"
       android:text="@string/contactpatient_no_phone_number"
       android:textAppearance="?attr/textAppearanceButtonBig"
       android:textColor="@color/color_on_surface_67"
       app:drawableStartCompat="@drawable/ic_contact_patient_bottom_sheet_no_phone_number" />
-  </RelativeLayout>
+
+  </FrameLayout>
 
   <androidx.constraintlayout.widget.Group
     android:id="@+id/secureCallingGroup"
@@ -337,7 +331,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:visibility="gone"
-    app:constraint_referenced_ids="phoneNumberLabel, phoneNumberTextView, remindToCallLaterTextView, remindToCallLaterSeparator, helpTextView, normalCallButton, secureCallButton, spaceAboveNormalCallButton" />
+    app:constraint_referenced_ids="phoneNumberLabel, phoneNumberTextView, remindToCallLaterTextView, remindToCallLaterSeparator, helpTextView, normalCallButton, secureCallButton" />
 
   <androidx.constraintlayout.widget.Group
     android:id="@+id/patientWithNoPhoneNumberGroup"
@@ -345,4 +339,5 @@
     android:layout_height="wrap_content"
     android:visibility="gone"
     app:constraint_referenced_ids="patientAddressTextView, noPhoneNumberBottomTextViewLayout" />
+
 </merge>

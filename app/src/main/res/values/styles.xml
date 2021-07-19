@@ -161,7 +161,7 @@
   </style>
 
   <!-- Simple App Views -->
-  <style name="Widget.Simple.PatientContactCallResultItem" parent="">
+  <style name="Widget.Simple.PatientContactCallResultItem_Old" parent="">
     <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     <item name="android:textColor">?attr/colorPrimary</item>
     <item name="android:paddingStart">@dimen/spacing_16</item>
@@ -170,6 +170,18 @@
     <item name="android:gravity">center_vertical</item>
     <item name="android:paddingBottom">@dimen/spacing_12</item>
     <item name="android:paddingTop">@dimen/spacing_12</item>
+  </style>
+
+  <style name="Widget.Simple.PatientContactCallResultItem" parent="">
+    <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+    <item name="android:textColor">?attr/colorPrimary</item>
+    <item name="android:paddingStart">@dimen/spacing_24</item>
+    <item name="android:paddingEnd">@dimen/spacing_24</item>
+    <item name="android:paddingTop">@dimen/spacing_8</item>
+    <item name="android:paddingBottom">@dimen/spacing_8</item>
+    <item name="android:background">?attr/selectableItemBackground</item>
+    <item name="android:drawablePadding">@dimen/spacing_8</item>
+    <item name="android:gravity">center_vertical</item>
   </style>
 
   <style name="Widget.Simple.ExpandedToolbar.FacilityName" parent="">
@@ -291,7 +303,7 @@
     <item name="android:minWidth">@dimen/spacing_56</item>
     <item name="android:textAlignment">center</item>
   </style>
-  
+
   <style name="Widget.Simple.TextField.Large.DateInput">
     <item name="android:minWidth">64dp</item>
     <item name="android:minEms">1</item>

@@ -45,7 +45,7 @@ object Versions {
   const val constraintLayout = "2.0.4"
   const val playServicesLocation = "16.0.0"
   const val firebaseConfig = "19.2.0"
-  const val firebasePerformance = "19.0.8"
+  const val firebasePerformance = "20.0.2"
   const val firebasePerformancePlugin = "1.4.0"
   const val googleServices = "4.3.3"
   const val playCore = "1.10.0"

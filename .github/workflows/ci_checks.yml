@@ -62,18 +62,11 @@ jobs:
       - name: Turn on capturing of flaky tests
         run: cat app/src/androidTest/resources/quarantine_ci.properties > app/src/androidTest/resources/quarantine.properties
 
-      - name: Build APKs
-        run: ./gradlew assembleQaDebug assembleQaDebugAndroidTest
-
       - name: QA Android Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 27
-          script: export PATH="$HOME/Library/Android/sdk/platform-tools:$PATH" && \
-                  which adb && \
-                  adb install app/build/outputs/apk/qa/debug/app-qa-debug.apk && \
-                  adb install app/build/outputs/apk/androidTest/qa/debug/app-qa-debug-androidTest.apk && \
-            adb shell am instrument -w -m -e debug false org.simple.clinic.qa.debug.test/org.simple.clinic.AndroidTestJUnitRunner
+          script: ./gradlew connectedQaDebugAndroidTest
 
   mobius_migration_tests:
     runs-on: [ ubuntu-latest ]

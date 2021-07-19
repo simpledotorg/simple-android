@@ -44,7 +44,6 @@ import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.onBackPressed
-import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.valueOrEmpty
 import java.time.LocalDate
@@ -274,7 +273,7 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   }
 
   override fun setTransferredFromLabelText() {
-    callPatientView.setRegisteredFacilityLabelText = getString(R.string.contactpatient_patient_transferred_from)
+    callPatientView.setRegisteredFacilityLabelText = getString(R.string.contactpatient_patient_transfer_from)
   }
 
   override fun directlyCallPatient(patientPhoneNumber: String, dialer: Dialer) {

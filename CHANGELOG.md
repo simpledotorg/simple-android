@@ -26,9 +26,8 @@
 - Fix home screen memory leaks
   - Use `childFragmentManager` & `viewLifecycleOwner.lifecycle` when creating `FragmentStateAdapter`
   - Remove overdue list adapter from recycler view when `OverdueScreen` view is about to be destroyed
-- [In Progress: 13 Jul 2021] Load online lookup API if patient not found locally
-- [In Progress: 14 Jul 2021] Implement `DrugsSearchScreen`
 - Load online lookup API if patient not found locally
+- Implement `DrugsSearchScreen`
 
 ### Features
 - [In Progress: 06 Jul 2021] Add support for finding a patient online from ID scan

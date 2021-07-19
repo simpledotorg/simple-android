@@ -811,4 +811,8 @@
   <string name="select_ongoing_hypertension_treatment_message">Select yes or no.</string>
   <string name="select_ongoing_hypertension_treatment_positive_action">OK</string>
 
+  <!-- Custom drugs search -->
+  <string name="customdrugssearch_hint">Enter medicine name</string>
+  <string name="customdrugssearch_item_name_separator">, </string>
+
 </resources>

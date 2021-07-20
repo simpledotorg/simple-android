@@ -22,6 +22,7 @@
     <ignore path="src/main/res/drawable/illustration_homescreen_india" />
     <ignore path="src/main/res/drawable/illustration_homescreen_bangladesh" />
     <ignore path="src/main/res/drawable/illustration_homescreen_ethiopia" />
+    <ignore path="src/main/res/drawable/ic_syncing" />
   </issue>
 
   <issue id="UnusedResources">

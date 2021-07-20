@@ -62,6 +62,7 @@ import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet
 import org.simple.clinic.summary.medicalhistory.MedicalHistorySummaryViewInjector
 import org.simple.clinic.summary.prescribeddrugs.DrugSummaryViewInjector
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
+import org.simple.clinic.sync.indicator.SyncIndicatorView
 import org.simple.clinic.sync.indicator.SyncIndicatorView_Old
 import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionScreen
 import org.simple.clinic.teleconsultlog.prescription.doctorinfo.TeleconsultDoctorInfoView
@@ -133,7 +134,8 @@ interface TheActivityComponent :
     CalendarDatePicker.Injector,
     TextInputDatePickerSheet.Injector,
     RemoveOverdueAppointmentScreen.Injector,
-    DrugsSearchScreen.Injector {
+    DrugsSearchScreen.Injector,
+    SyncIndicatorView.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory

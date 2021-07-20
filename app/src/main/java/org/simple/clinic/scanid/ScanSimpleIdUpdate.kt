@@ -4,7 +4,6 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.INDIA_NHID_LENGTH
-import org.simple.clinic.feature.Feature
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.patient.CompleteMedicalRecord
@@ -102,14 +101,22 @@ class ScanSimpleIdUpdate @Inject constructor(
       event: PatientSearchByIdentifierCompleted
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     return if (event.patients.isEmpty()) {
-      if (isOnlinePatientLookupEnabled) {
-        dispatch(OnlinePatientLookupWithIdentifier(event.identifier))
-      } else {
-        dispatch(OpenPatientSearch(event.identifier, null, model.patientPrefillInfo))
-      }
+      searchPatientOnlineWhenOnlinePatientLookupEnabled(event, model)
     } else {
       next(model = model.notSearching(), patientFoundByIdentifierSearch(patients = event.patients, identifier = event.identifier))
     }
+  }
+
+  private fun searchPatientOnlineWhenOnlinePatientLookupEnabled(
+      event: PatientSearchByIdentifierCompleted,
+      model: ScanSimpleIdModel
+  ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+    val effect = if (isOnlinePatientLookupEnabled) {
+      OnlinePatientLookupWithIdentifier(event.identifier)
+    } else {
+      OpenPatientSearch(event.identifier, null, model.patientPrefillInfo)
+    }
+    return dispatch(effect)
   }
 
   private fun patientFoundByIdentifierSearch(

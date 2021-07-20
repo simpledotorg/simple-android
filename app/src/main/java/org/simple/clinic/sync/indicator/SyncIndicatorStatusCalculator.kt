@@ -31,7 +31,6 @@ class SyncIndicatorStatusCalculator @Inject constructor(
 
     return syncResultsStream
         .subscribeOn(schedulersProvider.io())
-        .filter { it.syncGroup == FREQUENT }
         .map { it.syncProgress }
         .map(this::updateLastSyncedState)
         .subscribe(lastSyncedStatePreference::set)

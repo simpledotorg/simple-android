@@ -63,35 +63,23 @@ class DataSync(
 
   private val syncErrors = PublishSubject.create<ResolvedError>()
 
-  private fun allSyncs(): Single<List<SyncResult>> {
-    val syncAllGroups = SyncGroup
-        .values()
-        .map(::syncsForGroup)
-
-    return Single
-        .merge(syncAllGroups)
-        .reduce(listOf(), { list, results -> list + results })
-  }
-
-  private fun syncsForGroup(syncGroup: SyncGroup): Single<List<SyncResult>> {
-    val syncsInGroup = modelSyncs.filter { it.syncConfig().syncGroup == syncGroup }
-
+  private fun executeAllSyncs(): Single<List<SyncResult>> {
     return Single
         .fromCallable { userSession.loggedInUserImmediate().toOptional() }
         .subscribeOn(schedulersProvider.io())
-        .compose(filterSyncsThatRequireAuthentication(syncsInGroup))
+        .compose(filterSyncsThatRequireAuthentication(modelSyncs))
         .compose(prepareTasksFromSyncs())
-        .doOnSubscribe { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SYNCING)) }
-        .doOnSuccess { syncResults -> syncCompleted(syncResults, syncGroup) }
+        .doOnSubscribe { syncProgress.onNext(SyncGroupResult(SyncProgress.SYNCING)) }
+        .doOnSuccess(::syncCompleted)
   }
 
   private fun filterSyncsThatRequireAuthentication(
-      syncsInGroup: List<ModelSync>
+      syncs: List<ModelSync>
   ): SingleTransformer<Optional<User>, List<ModelSync>> {
     return SingleTransformer { userSingle ->
       userSingle
           .flatMap { user ->
-            combineSyncsWithCurrentUser(syncsInGroup, user)
+            combineSyncsWithCurrentUser(syncs, user)
                 .filter { (user, modelSync) -> shouldSyncBeRun(modelSync, user) }
                 .map { (_, modelSync) -> modelSync }
                 .toList()
@@ -128,18 +116,17 @@ class DataSync(
   }
 
   private fun syncCompleted(
-      syncResults: List<SyncResult>,
-      syncGroup: SyncGroup
+      syncResults: List<SyncResult>
   ) {
     val firstFailure = syncResults.firstOrNull { it is SyncResult.Failed }
 
     if (firstFailure != null) {
-      syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.FAILURE))
+      syncProgress.onNext(SyncGroupResult(SyncProgress.FAILURE))
 
       val resolvedError = (firstFailure as SyncResult.Failed).error
       syncErrors.onNext(resolvedError)
     } else {
-      syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SUCCESS))
+      syncProgress.onNext(SyncGroupResult(SyncProgress.SUCCESS))
     }
   }
 
@@ -199,32 +186,23 @@ class DataSync(
   @WorkerThread
   @Throws(IOException::class) // This is only needed so Mockito can generate mocks for this method correctly
   fun syncTheWorld() {
-    allSyncs()
+    executeAllSyncs()
         .compose(purgeOnCompletedSyncs())
         .ignoreElement()
         .blockingAwait()
   }
 
-  @WorkerThread
-  fun sync(syncGroup: SyncGroup) {
-    syncsForGroup(syncGroup).ignoreElement().blockingAwait()
-  }
-
   fun fireAndForgetSync() {
-    allSyncs()
+    executeAllSyncs()
         .compose(purgeOnCompletedSyncs())
         .subscribe()
-  }
-
-  fun fireAndForgetSync(syncGroup: SyncGroup) {
-    syncsForGroup(syncGroup).subscribe()
   }
 
   fun streamSyncResults(): Observable<SyncGroupResult> = syncProgress
 
   fun streamSyncErrors(): Observable<ResolvedError> = syncErrors
 
-  data class SyncGroupResult(val syncGroup: SyncGroup, val syncProgress: SyncProgress)
+  data class SyncGroupResult(val syncProgress: SyncProgress)
 
   private sealed class SyncResult(val sync: ModelSync) {
 

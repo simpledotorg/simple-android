@@ -63,7 +63,7 @@ class NewMedicalHistoryEffectHandlerTest {
     testCase.dispatch(TriggerSync(patientUuid))
 
     // then
-    verify(dataSync).fireAndForgetSync(FREQUENT)
+    verify(dataSync).fireAndForgetSync()
     verifyNoMoreInteractions(dataSync)
     testCase.assertOutgoingEvents(SyncTriggered(patientUuid))
     verifyZeroInteractions(uiActions)

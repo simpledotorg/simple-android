@@ -77,7 +77,7 @@ object Versions {
   const val lint = "27.1.1"
   const val rootbeer = "0.0.9"
   const val mlKitBarcode = "16.1.4"
-  const val fragment = "1.2.5"
+  const val fragment = "1.3.6"
   const val androidXCoreKtx = "1.3.2"
   const val threetenExtra = "1.6.0"
   const val spotless = "5.6.1"

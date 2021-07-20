@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:clickable="true"
+  android:focusable="true"
+  tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+  <ImageView
+    android:id="@+id/statusImageView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    tools:src="@drawable/ic_sync_completed" />
+
+  <com.google.android.material.textview.MaterialTextView
+    android:id="@+id/statusTextView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_4"
+    android:textAppearance="?attr/textAppearanceBody2"
+    android:textColor="@color/color_on_surface_67"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/statusImageView"
+    tools:text="Synced just now" />
+
+</merge>

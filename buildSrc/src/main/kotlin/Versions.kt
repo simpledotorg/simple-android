@@ -11,7 +11,7 @@ object Versions {
   const val material = "1.4.0"
   const val cardview = "1.0.0"
   const val room = "2.3.0"
-  const val androidXTestExt = "1.1.1"
+  const val androidXTestExt = "1.1.3"
   const val androidXTest = "1.4.0"
   const val timber = "4.7.0"
   const val dagger = "2.35.1"

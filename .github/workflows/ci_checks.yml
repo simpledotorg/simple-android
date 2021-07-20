@@ -11,6 +11,7 @@ on:
 
 jobs:
   qa_lint:
+    if: ${{ false }}
     runs-on: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v2
@@ -34,6 +35,7 @@ jobs:
         run: ./gradlew --build-cache --no-daemon lintQaDebug
 
   qa_unit_tests:
+    if: ${{ false }}
     runs-on: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v2
@@ -57,6 +59,7 @@ jobs:
         run: ./gradlew --build-cache --no-daemon testQaDebugUnitTest
 
   qa_purge_env:
+    if: ${{ false }}
     runs-on: [ ubuntu-latest ]
     steps:
       - name: Purge QA server
@@ -114,6 +117,7 @@ jobs:
         run: cat app/src/androidTest/resources/quarantine_ci.properties > app/src/androidTest/resources/quarantine.properties
 
       - name: QA Android Tests
+        if: ${{ false }}
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ env.AVD_API_LEVEL }}
@@ -123,6 +127,7 @@ jobs:
           script: ./gradlew --build-cache --no-daemon connectedQaDebugAndroidTest
 
   mobius_migration_tests:
+    if: ${{ false }}
     runs-on: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v2
@@ -136,6 +141,7 @@ jobs:
         run: ./gradlew :mobius-migration:test
 
   verify_release_bundles:
+    if: ${{ false }}
     runs-on: [ ubuntu-latest ]
     strategy:
       matrix:
@@ -156,6 +162,7 @@ jobs:
           bundle${{ matrix.buildType }}Release
 
   verify_room_schemas:
+    if: ${{ false }}
     runs-on: [ ubuntu-latest ]
     steps:
       - name: Checkout master
@@ -174,7 +181,7 @@ jobs:
 
   verify_pr_description:
     runs-on: [ ubuntu-latest ]
-    if: github.event_name == 'pull_request'
+    if: ${{ false }}
     steps:
       - name: Verify PR description
         run: |
@@ -191,7 +198,7 @@ jobs:
 
   verify_changelog_updated:
     runs-on: [ ubuntu-latest ]
-    if: github.event_name == 'pull_request'
+    if: ${{ false }}
     steps:
       - name: Checkout master
         uses: actions/checkout@v2
@@ -209,7 +216,7 @@ jobs:
 
   fix_strings_ellipsise:
     runs-on: [ ubuntu-latest ]
-    if: github.event_name == 'pull_request'
+    if: ${{ false }}
     steps:
       - uses: actions/checkout@v2
         with:

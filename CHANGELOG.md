@@ -14,6 +14,7 @@
   - Bump `camera-core`, `camera-camera2` to v1.0.0
   - Bump `camera-lifecycle` to v1.0.0
   - Bump `camera-view` to v1.0.0-alpha26
+- Fix UI inconsistencies in overdue list and contact patient sheet
 - [In Progress: 16 Jul 2021] Remove the daily and frequent sync separation
 
 ### Changes

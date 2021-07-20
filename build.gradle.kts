@@ -1,4 +1,5 @@
 import com.diffplug.spotless.LineEnding.UNIX
+import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 buildscript {
   repositories {
@@ -51,4 +52,16 @@ subprojects {
 
 tasks.named<Delete>("clean") {
   delete(rootProject.buildDir)
+}
+
+fun String.isNonStable(): Boolean {
+  val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { this.toUpperCase().contains(it) }
+  val regex = "^[0-9,.v-]+(-r)?$".toRegex()
+  val isStable = stableKeyword || regex.matches(this)
+  return isStable.not()
+}
+
+tasks.withType<DependencyUpdatesTask> {
+  // Reject all non-stable versions
+  rejectVersionIf { candidate.version.isNonStable() }
 }

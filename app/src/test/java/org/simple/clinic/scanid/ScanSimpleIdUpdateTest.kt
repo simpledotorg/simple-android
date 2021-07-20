@@ -32,7 +32,8 @@ class ScanSimpleIdUpdateTest {
      """
 
   private val spec = UpdateSpec(ScanSimpleIdUpdate(
-      isIndianNHIDSupportEnabled = true
+      isIndianNHIDSupportEnabled = true,
+      isOnlinePatientLookupEnabled = true
   ))
 
   @Test

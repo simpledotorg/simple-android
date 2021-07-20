@@ -8,7 +8,6 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.settings.SettingsRepository
 import org.simple.clinic.sync.DataSync
-import org.simple.clinic.sync.SyncGroup.DAILY
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class ChangeLanguageEffectHandler @AssistedInject constructor(
@@ -31,7 +30,7 @@ class ChangeLanguageEffectHandler @AssistedInject constructor(
         .addTransformer(UpdateCurrentLanguageEffect::class.java, updateCurrentLanguage(settingsRepository, schedulersProvider.io()))
         .addAction(GoBack::class.java, uiActions::goBackToPreviousScreen, schedulersProvider.ui())
         .addAction(RestartActivity::class.java, uiActions::restartActivity, schedulersProvider.ui())
-        .addAction(TriggerSync::class.java) { dataSync.fireAndForgetSync(DAILY) }
+        .addAction(TriggerSync::class.java) { dataSync.fireAndForgetSync() }
         .build()
   }
 

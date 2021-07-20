@@ -64,4 +64,7 @@ fun String.isNonStable(): Boolean {
 tasks.withType<DependencyUpdatesTask> {
   // Reject all non-stable versions
   rejectVersionIf { candidate.version.isNonStable() }
+
+  // Dependency updates report
+  outputFormatter = "html"
 }

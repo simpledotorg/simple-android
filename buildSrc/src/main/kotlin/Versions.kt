@@ -15,7 +15,7 @@ object Versions {
   const val androidXTest = "1.2.0"
   const val timber = "4.7.0"
   const val dagger = "2.35.1"
-  const val coreTesting = "2.0.0"
+  const val coreTesting = "2.1.0"
   const val moshi = "1.12.0"
   const val retrofit = "2.9.0"
   const val okHttp = "4.9.1"

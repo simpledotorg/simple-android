@@ -39,9 +39,9 @@
       android:layout_height="wrap_content"
       android:background="?selectableItemBackgroundBorderless"
       android:padding="@dimen/spacing_12"
-      android:tint="@color/appointment_date_stepper"
       android:tintMode="src_in"
       app:srcCompat="@drawable/ic_remove_circle_outline_32dp"
+      app:tint="@color/appointment_date_stepper"
       tools:ignore="ContentDescription" />
 
     <TextView
@@ -62,9 +62,9 @@
       android:layout_height="wrap_content"
       android:background="?selectableItemBackgroundBorderless"
       android:padding="@dimen/spacing_12"
-      android:tint="@color/appointment_date_stepper"
       android:tintMode="src_in"
       app:srcCompat="@drawable/ic_add_circle_outline_32dp"
+      app:tint="@color/appointment_date_stepper"
       tools:ignore="ContentDescription" />
 
   </LinearLayout>

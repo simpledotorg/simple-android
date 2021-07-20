@@ -13,8 +13,8 @@
     android:background="?attr/selectableItemBackgroundBorderless"
     android:contentDescription="@string/patiententry_contentdescription_up_button"
     android:padding="@dimen/spacing_12"
-    android:tint="@color/color_on_surface_67"
-    app:srcCompat="@drawable/ic_arrow_back_24dp" />
+    app:srcCompat="@drawable/ic_arrow_back_24dp"
+    app:tint="@color/color_on_surface_67" />
 
   <ScrollView
     android:id="@+id/formScrollView"

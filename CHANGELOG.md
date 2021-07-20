@@ -36,6 +36,7 @@
     - Performance monitoring -> 20.0.2
     - Remote config -> 21.0.0
 - Disable Firebase Performance Monitoring for development builds
+- Use full date formatter when rendering last visited date in contact patient sheet
 - [In Progress: 16 Jul 2021] Remove the daily and frequent sync separation
 
 ### Features

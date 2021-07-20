@@ -45,7 +45,7 @@ object Versions {
   const val pinEntryEditText = "2.0.6"
   const val leakCanary = "2.6"
   const val constraintLayout = "2.0.4"
-  const val playServicesLocation = "16.0.0"
+  const val playServicesLocation = "18.0.0"
   const val firebaseConfig = "21.0.0"
   const val firebasePerformance = "20.0.2"
   const val firebasePerformancePlugin = "1.4.0"

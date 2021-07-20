@@ -70,7 +70,7 @@ object Versions {
   // When bumping this dependency verify whether `org.simple.clinic.feature.Feature.ChangeLanguage`
   // can be enabled again.
   const val appcompat = "1.3.0"
-  const val lottie = "3.4.0"
+  const val lottie = "3.7.2"
   const val desugarJdk = "1.0.9"
   const val signaturePad = "1.3.1"
   const val viewpager2 = "1.0.0"

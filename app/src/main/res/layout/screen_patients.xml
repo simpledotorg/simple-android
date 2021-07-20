@@ -38,7 +38,7 @@
           android:textAppearance="?attr/textAppearanceTag"
           android:textColor="@color/color_on_surface_67" />
 
-        <org.simple.clinic.sync.indicator.SyncIndicatorView
+        <org.simple.clinic.sync.indicator.SyncIndicatorView_Old
           android:id="@+id/syncIndicator"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"

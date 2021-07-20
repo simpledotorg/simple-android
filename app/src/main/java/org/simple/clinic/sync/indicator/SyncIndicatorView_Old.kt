@@ -34,7 +34,7 @@ import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import javax.inject.Inject
 
-class SyncIndicatorView(
+class SyncIndicatorView_Old(
     context: Context,
     attrs: AttributeSet
 ) : LinearLayout(context, attrs), SyncIndicatorUi, SyncIndicatorUiActions {
@@ -147,6 +147,6 @@ class SyncIndicatorView(
   }
 
   interface Injector {
-    fun inject(target: SyncIndicatorView)
+    fun inject(target: SyncIndicatorView_Old)
   }
 }

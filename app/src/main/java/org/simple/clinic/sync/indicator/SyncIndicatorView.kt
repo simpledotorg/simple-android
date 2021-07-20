@@ -5,8 +5,8 @@ import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
@@ -37,7 +37,7 @@ import javax.inject.Inject
 class SyncIndicatorView(
     context: Context,
     attrs: AttributeSet
-) : LinearLayout(context, attrs), SyncIndicatorUi, SyncIndicatorUiActions {
+) : ConstraintLayout(context, attrs), SyncIndicatorUi, SyncIndicatorUiActions {
 
   @Inject
   lateinit var activity: AppCompatActivity

@@ -29,6 +29,7 @@
 - Implement `DrugsSearchScreen`
 - Don't show progress if overdue list already has items
 - Change `PatientProfile` to be a Room relation model
+- Add gradle-versions-plugin for checking dependency updates
 
 ### Features
 - Add support for finding a patient online from ID scan

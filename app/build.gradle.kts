@@ -2,6 +2,7 @@ import com.android.build.api.variant.VariantFilter
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.simple.rmg.RoomMetadataGenerator
+import com.google.firebase.perf.plugin.FirebasePerfExtension
 
 repositories {
   maven(url = "https://jitpack.io")
@@ -128,6 +129,7 @@ android {
       applicationIdSuffix = ".debug"
       isMinifyEnabled = false
       isShrinkResources = false
+      configure<FirebasePerfExtension> { setInstrumentationEnabled(false) }
     }
 
     val runProguard: String by project

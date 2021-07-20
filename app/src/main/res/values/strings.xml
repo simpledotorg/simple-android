@@ -413,7 +413,7 @@
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">Sync pending</string>
   <string name="syncindicator_status_failed">Sync failed</string>
-  <string name="syncindicator_status_syncing">Syncing…</string>
+  <string name="syncindicator_status_syncing">Syncing</string>
   <string name="syncindicator_status_synced_just_now">Synced just now</string>
   <string name="syncindicator_status_synced_min_ago">Synced %s min ago</string>
   <string name="syncindicator_dialog_error_network">Make sure you have a working internet connection to sync patient records.</string>

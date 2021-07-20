@@ -72,15 +72,20 @@ jobs:
   # https://github.com/ReactiveCircus/android-emulator-runner
   qa_android_tests:
     runs-on: [ macos-latest ]
-    timeout-minutes: 30
-    needs: [ qa_purge_env ]
+    timeout-minutes: 120
     env:
       AVD_API_LEVEL: 27
+      HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
+      HEROKU_APP_NAME: simple-android-test-app-${{ github.run_number }}
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout android app source
+        uses: actions/checkout@v2
+        with:
+          path: android-app
 
       - name: Cache Gradle build
         uses: actions/cache@v2
+        if: always()
         with:
           path: |
             ~/.gradle/caches
@@ -91,6 +96,7 @@ jobs:
 
       - name: Cache AVD
         uses: actions/cache@v2
+        if: always()
         id: avd-cache
         with:
           path: |
@@ -108,23 +114,82 @@ jobs:
           disable-animations: false
           script: echo "Generated AVD snapshot for caching."
 
-      - name: set up JDK
+      - name: Checkout server app source
+        uses: actions/checkout@v2
+        with:
+          repository: simpledotorg/simple-server
+          ref: empty-seeds
+          fetch-depth: 0
+          path: server-app
+
+      - name: Set up JDK
         uses: actions/setup-java@v1
         with:
           java-version: 11
 
+      - name: Create node dependency hash
+        id: create_node_modules_hash
+        run: android-app/.github/scripts/compute_node_dependency_hash.sh
+
+      - name: Cache node modules
+        id: node-dependency-cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            package-lock.json
+          key: ${{ runner.os }}-npm-${{ steps.create_node_modules_hash.outputs.node_dep_hash }}
+
+      - name: Install Heroku CLI
+        if: steps.node-dependency-cache.outputs.cache-hit != 'true'
+        run: npm install heroku
+
+      - name: Link Heroku CLI globally
+        run: npm link heroku
+
+      - name: Set up Python dependencies
+        run: pip3 install requests
+
+      - name: Create Heroku app
+        run: (cd server-app && heroku apps:create --team resolvetosavelives ${{ env.HEROKU_APP_NAME }})
+
       - name: Turn on capturing of flaky tests
-        run: cat app/src/androidTest/resources/quarantine_ci.properties > app/src/androidTest/resources/quarantine.properties
+        run: cat android-app/app/src/androidTest/resources/quarantine_ci.properties > android-app/app/src/androidTest/resources/quarantine.properties
+
+      - name: Set up default Heroku env variables
+        run: android-app/.github/scripts/server_heroku_env_setup.py server-app/app.json ${{ env.HEROKU_APP_NAME }} ${{ env.HEROKU_API_KEY }}
+
+      - name: Set up other Heroku env variables
+        run: (cd server-app && heroku config:set --app=${{ env.HEROKU_APP_NAME }} SIMPLE_SERVER_HOST=${{ env.HEROKU_APP_NAME }}.herokuapp.com SENDGRID_USERNAME=apikey SENDGRID_PASSWORD=${{ secrets.SENDGRID_PASSWORD }} SENTRY_DSN=https://67a72e806c7a427db73a0342ddc3f965:bffc4497d5fb48f9a4e2cc02fde297df@sentry.io/1217715 SENTRY_SECURITY_HEADER_ENDPOINT=${{ secrets.SENTRY_SECURITY_HEADER_ENDPOINT }} EXOTEL_TOKEN=${{ secrets.EXOTEL_TOKEN }} SEED_GENERATED_ACTIVE_USER_ROLE="Seed User | Active" SEED_GENERATED_ADMIN_PASSWORD="trying to fix hypertension" SEED_GENERATED_INACTIVE_USER_ROLE="Seed User | Inactive" SIMPLE_APP_SIGNATURE=WYtx91vzvQO TWILIO_ACCOUNT_SID=AC01b2bf552fe4e38d77eba27f37e24a1f TWILIO_AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }} TWILIO_PHONE_NUMBER=${{ secrets.TWILIO_PHONE_NUMBER }} TWILIO_REMINDERS_ACCOUNT_AUTH_TOKEN=${{ secrets.TWILIO_REMINDERS_ACCOUNT_AUTH_TOKEN }} TWILIO_REMINDERS_ACCOUNT_PHONE_NUMBER=${{ secrets.TWILIO_REMINDERS_ACCOUNT_PHONE_NUMBER }} TWILIO_REMINDERS_ACCOUNT_SID=AC50508c075c2a5075e2e06797a170b85d SEED_TYPE=empty)
+
+      - name: Setup Heroku redis
+        run: (cd server-app && heroku addons:create --app=${{ env.HEROKU_APP_NAME }} --wait --name=${{ env.HEROKU_APP_NAME }}-redis heroku-redis:hobby-dev)
+
+      - name: Setup Heroku postgres
+        run: (cd server-app && heroku addons:create --app=${{ env.HEROKU_APP_NAME }} --wait --name=${{ env.HEROKU_APP_NAME }}-postgres heroku-postgresql:hobby-dev)
+
+      - name: Setup Heroku buildpacks
+        run: (cd server-app && heroku buildpacks:add --index 1 --app=${{ env.HEROKU_APP_NAME }} heroku/nodejs && heroku buildpacks:add --index 2 --app=${{ env.HEROKU_APP_NAME }} heroku/ruby)
+
+      - name: Start the Heroku server
+        env:
+          HEROKU_GIT_URL: https://heroku:${{ env.HEROKU_API_KEY }}@git.heroku.com/${{ env.HEROKU_APP_NAME }}.git
+        run: (cd server-app && git push ${{ env.HEROKU_GIT_URL }} empty-seeds:master)
+
+      - name: Setup server seed data
+        run: (cd server-app && heroku run rails db:schema:load db:seed)
 
       - name: QA Android Tests
-        if: ${{ false }}
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ env.AVD_API_LEVEL }}
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: ./gradlew --build-cache --no-daemon connectedQaDebugAndroidTest
+          script: android-app/gradlew -p android-app --build-cache --no-daemon -PmanifestEndpoint=https://${{ env.HEROKU_APP_NAME }}.herokuapp.com/api/ connectedQaDebugAndroidTest
+
+      - name: Clean up Heroku instance
+        run: (cd server-app && heroku apps:destroy --app=${{ env.HEROKU_APP_NAME }} --confirm=${{ env.HEROKU_APP_NAME }})
 
   mobius_migration_tests:
     if: ${{ false }}

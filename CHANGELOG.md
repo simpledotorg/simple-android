@@ -37,6 +37,10 @@
     - Remote config -> 21.0.0
 - Disable Firebase Performance Monitoring for development builds
 - Use full date formatter when rendering last visited date in contact patient sheet
+- Bump CameraX dependencies
+  - Bump `camera-core`, `camera-camera2` to v1.0.0
+  - Bump `camera-lifecycle` to v1.0.0
+  - Bump `camera-view` to v1.0.0-alpha26
 - [In Progress: 16 Jul 2021] Remove the daily and frequent sync separation
 
 ### Features

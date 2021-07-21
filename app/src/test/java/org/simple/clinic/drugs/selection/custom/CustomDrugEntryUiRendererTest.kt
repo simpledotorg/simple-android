@@ -1,0 +1,29 @@
+package org.simple.clinic.drugs.selection.custom
+
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import org.junit.Test
+import org.simple.clinic.drugs.search.DrugFrequency
+
+class CustomDrugEntryUiRendererTest {
+
+  private val ui = mock<CustomDrugEntryUi>()
+  private val uiRenderer = CustomDrugEntryUiRenderer(ui)
+
+  private val defaultModel = CustomDrugEntryModel.default()
+
+  @Test
+  fun `when drug frequency is changed, then set the new drug frequency`() {
+    // given
+    val frequency = DrugFrequency.OD
+    val drugFrequencyChangedModel = defaultModel.frequencyEdited(frequency)
+
+    // when
+    uiRenderer.render(drugFrequencyChangedModel)
+
+    // then
+    verify(ui).setDrugFrequency(frequency)
+    verifyNoMoreInteractions(ui)
+  }
+}

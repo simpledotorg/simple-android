@@ -10,6 +10,9 @@ data class CustomDrugEntryModel(
     fun default() = CustomDrugEntryModel(dosage = null, frequency = DrugFrequency.Unknown("None"))
   }
 
+  val hasDrugFrequency
+    get() = frequency != null
+
   fun dosageEdited(dosage: String?): CustomDrugEntryModel {
     return copy(dosage = dosage)
   }

@@ -1,0 +1,7 @@
+package org.simple.clinic.drugs.selection.custom
+
+import org.simple.clinic.drugs.search.DrugFrequency
+
+interface CustomDrugEntryUi {
+  fun setDrugFrequency(drugFrequency: DrugFrequency)
+}

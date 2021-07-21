@@ -36,7 +36,8 @@ class DrugsSearchScreen : BaseScreen<
     ScreenDrugsSearchBinding,
     DrugSearchModel,
     DrugSearchEvent,
-    DrugSearchEffect>(), DrugSearchUi, UiActions {
+    DrugSearchEffect,
+    Unit>(), DrugSearchUi, UiActions {
 
   @Inject
   lateinit var effectHandlerFactory: DrugSearchEffectHandler.Factory

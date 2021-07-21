@@ -26,7 +26,8 @@ class RegistrationPinScreen :
         ScreenRegistrationPinBinding,
         RegistrationPinModel,
         RegistrationPinEvent,
-        RegistrationPinEffect>(),
+        RegistrationPinEffect,
+        Unit>(),
     RegistrationPinUi,
     RegistrationPinUiActions {
 

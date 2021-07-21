@@ -30,7 +30,8 @@ class RegistrationConfirmPinScreen :
         ScreenRegistrationConfirmPinBinding,
         RegistrationConfirmPinModel,
         RegistrationConfirmPinEvent,
-        RegistrationConfirmPinEffect>(),
+        RegistrationConfirmPinEffect,
+        Unit>(),
     RegistrationConfirmPinUi,
     RegistrationConfirmPinUiActions {
 

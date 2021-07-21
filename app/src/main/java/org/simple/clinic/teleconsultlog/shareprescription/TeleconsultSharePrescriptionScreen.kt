@@ -52,7 +52,8 @@ class TeleconsultSharePrescriptionScreen :
         ScreenTeleconsultSharePrescriptionBinding,
         TeleconsultSharePrescriptionModel,
         TeleconsultSharePrescriptionEvent,
-        TeleconsultSharePrescriptionEffect>(),
+        TeleconsultSharePrescriptionEffect,
+        Unit>(),
     TeleconsultSharePrescriptionUi, TeleconsultSharePrescriptionUiActions {
 
   private val medicinesRecyclerView

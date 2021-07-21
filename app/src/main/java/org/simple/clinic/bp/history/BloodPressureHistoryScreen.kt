@@ -51,7 +51,8 @@ class BloodPressureHistoryScreen : BaseScreen<
     ScreenBpHistoryBinding,
     BloodPressureHistoryScreenModel,
     BloodPressureHistoryScreenEvent,
-    BloodPressureHistoryScreenEffect>(), BloodPressureHistoryScreenUi, BloodPressureHistoryScreenUiActions {
+    BloodPressureHistoryScreenEffect,
+    Unit>(), BloodPressureHistoryScreenUi, BloodPressureHistoryScreenUiActions {
 
   @Inject
   lateinit var utcClock: UtcClock

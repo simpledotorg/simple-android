@@ -39,7 +39,8 @@ class HomeScreen :
         ScreenHomeBinding,
         HomeScreenModel,
         HomeScreenEvent,
-        HomeScreenEffect>(),
+        HomeScreenEffect,
+        Unit>(),
     HomeScreenUi,
     HomeScreenUiActions,
     ExpectsResult {

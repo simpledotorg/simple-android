@@ -61,7 +61,8 @@ class ScanSimpleIdScreen : BaseScreen<
     ScreenScanSimpleBinding,
     ScanSimpleIdModel,
     ScanSimpleIdEvent,
-    ScanSimpleIdEffect>(), ScanSimpleIdUi, ScanSimpleIdUiActions {
+    ScanSimpleIdEffect,
+    Unit>(), ScanSimpleIdUi, ScanSimpleIdUiActions {
 
   companion object {
     private const val RATIO_4_3_VALUE = 4.0 / 3.0

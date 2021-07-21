@@ -29,7 +29,8 @@ class RegistrationFullNameScreen :
         ScreenRegistrationNameBinding,
         RegistrationNameModel,
         RegistrationNameEvent,
-        RegistrationNameEffect>(),
+        RegistrationNameEffect,
+        Unit>(),
     RegistrationNameUi,
     RegistrationNameUiActions {
 

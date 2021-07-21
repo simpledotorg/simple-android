@@ -74,7 +74,8 @@ class InstantSearchScreen :
         ScreenInstantSearchBinding,
         InstantSearchModel,
         InstantSearchEvent,
-        InstantSearchEffect>(),
+        InstantSearchEffect,
+        Unit>(),
     InstantSearchUi,
     InstantSearchUiActions,
     ExpectsResult {

@@ -52,7 +52,8 @@ class OverdueScreen : BaseScreen<
     ScreenOverdueBinding,
     OverdueModel,
     OverdueEvent,
-    OverdueEffect>(), OverdueUiActions {
+    OverdueEffect,
+    Unit>(), OverdueUiActions {
 
   @Inject
   lateinit var activity: AppCompatActivity

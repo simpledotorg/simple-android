@@ -40,7 +40,8 @@ class RecentPatientsScreen : BaseScreen<
     ScreenRecentPatientsBinding,
     AllRecentPatientsModel,
     AllRecentPatientsEvent,
-    AllRecentPatientsEffect>(), AllRecentPatientsUiActions {
+    AllRecentPatientsEffect,
+    Unit>(), AllRecentPatientsUiActions {
 
   @Inject
   lateinit var router: Router

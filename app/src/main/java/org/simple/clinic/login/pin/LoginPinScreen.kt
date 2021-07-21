@@ -32,7 +32,8 @@ class LoginPinScreen :
         ScreenLoginPinBinding,
         LoginPinModel,
         LoginPinEvent,
-        LoginPinEffect>(),
+        LoginPinEffect,
+        Unit>(),
     LoginPinScreenUi,
     UiActions,
     HandlesBack {

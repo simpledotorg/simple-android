@@ -28,8 +28,8 @@ class AppLockScreen :
         ScreenAppLockBinding,
         AppLockModel,
         AppLockEvent,
-        AppLockEffect
-        >(),
+        AppLockEffect,
+        Unit>(),
     AppLockScreenUi,
     AppLockUiActions,
     HandlesBack {

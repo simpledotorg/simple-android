@@ -32,7 +32,8 @@ class RemoveOverdueAppointmentScreen : BaseScreen<
     ScreenRemoveOverdueAppointmentBinding,
     RemoveOverdueModel,
     RemoveOverdueEvent,
-    RemoveOverdueEffect>(), RemoveOverdueUi, RemoveOverdueUiActions {
+    RemoveOverdueEffect,
+    Unit>(), RemoveOverdueUi, RemoveOverdueUiActions {
 
   @Inject
   lateinit var router: Router

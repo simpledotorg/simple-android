@@ -58,7 +58,8 @@ class EditMedicinesScreen :
         ScreenPatientPrescribedDrugsEntryBinding,
         EditMedicinesModel,
         EditMedicinesEvent,
-        EditMedicinesEffect>(), EditMedicinesUi, EditMedicinesUiActions {
+        EditMedicinesEffect,
+        Unit>(), EditMedicinesUi, EditMedicinesUiActions {
 
   @Inject
   lateinit var router: Router

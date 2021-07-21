@@ -59,7 +59,8 @@ class BloodSugarHistoryScreen : BaseScreen<
     ScreenBloodSugarHistoryBinding,
     BloodSugarHistoryScreenModel,
     BloodSugarHistoryScreenEvent,
-    BloodSugarHistoryScreenEffect>(), BloodSugarHistoryScreenUi, BloodSugarHistoryScreenUiActions {
+    BloodSugarHistoryScreenEffect,
+    Unit>(), BloodSugarHistoryScreenUi, BloodSugarHistoryScreenUiActions {
 
   @Inject
   lateinit var activity: AppCompatActivity

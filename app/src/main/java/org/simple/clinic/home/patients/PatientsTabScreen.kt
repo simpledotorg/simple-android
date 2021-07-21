@@ -56,7 +56,8 @@ class PatientsTabScreen : BaseScreen<
     ScreenPatientsBinding,
     PatientsTabModel,
     PatientsTabEvent,
-    PatientsTabEffect>(), PatientsTabUi, PatientsTabUiActions {
+    PatientsTabEffect,
+    Unit>(), PatientsTabUi, PatientsTabUiActions {
 
   @Inject
   lateinit var router: Router

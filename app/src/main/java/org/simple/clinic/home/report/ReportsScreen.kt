@@ -24,7 +24,8 @@ class ReportsScreen : BaseScreen<
     ScreenReportBinding,
     ReportsModel,
     ReportsEvent,
-    ReportsEffect>(), ReportsUi {
+    ReportsEffect,
+    Unit>(), ReportsUi {
 
   @Inject
   lateinit var effectHandler: ReportsEffectHandler

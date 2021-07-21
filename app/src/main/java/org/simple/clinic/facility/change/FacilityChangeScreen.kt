@@ -32,7 +32,8 @@ class FacilityChangeScreen :
         ScreenFacilityChangeBinding,
         FacilityChangeModel,
         FacilityChangeEvent,
-        FacilityChangeEffect>(),
+        FacilityChangeEffect,
+        Unit>(),
     FacilityChangeUi,
     FacilityChangeUiActions,
     ExpectsResult {

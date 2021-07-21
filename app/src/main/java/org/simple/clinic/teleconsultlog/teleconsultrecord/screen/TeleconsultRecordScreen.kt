@@ -40,7 +40,8 @@ class TeleconsultRecordScreen :
         ScreenTeleconsultRecordBinding,
         TeleconsultRecordModel,
         TeleconsultRecordEvent,
-        TeleconsultRecordEffect>(),
+        TeleconsultRecordEffect,
+        Unit>(),
     TeleconsultRecordUi,
     UiActions,
     HandlesBack {

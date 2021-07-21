@@ -19,6 +19,7 @@ import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import io.reactivex.disposables.CompositeDisposable
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.mobius.eventSources
 import org.simple.clinic.mobius.first
@@ -39,6 +40,8 @@ abstract class BaseScreen<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, 
 
   protected val binding: B
     get() = _binding!!
+
+  private val disposable = CompositeDisposable()
 
   abstract fun defaultModel(): M
 
@@ -85,11 +88,16 @@ abstract class BaseScreen<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, 
         ) as T
       }
     }).get()
+
+    disposable.add(events().subscribe { event ->
+      _viewModel.dispatchEvent(event!!)
+    })
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
     _binding = null
+    disposable.dispose()
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

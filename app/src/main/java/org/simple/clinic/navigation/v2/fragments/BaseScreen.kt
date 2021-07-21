@@ -55,7 +55,7 @@ abstract class BaseScreen<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, 
 
   open fun createInit(): Init<M, F> = Init { model -> first(model) }
 
-  open fun createEffectHandler(): ObservableTransformer<F, E> = ObservableTransformer { Observable.never() }
+  open fun createEffectHandler(viewEffectsConsumer: Consumer<V>): ObservableTransformer<F, E> = ObservableTransformer { Observable.never() }
 
   open fun additionalEventSources(): List<EventSource<E>> = emptyList()
 
@@ -76,7 +76,7 @@ abstract class BaseScreen<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, 
 
     _viewModel = ViewModelProvider(viewModelStore, object : ViewModelProvider.Factory {
       private fun loop(viewEffectsConsumer: Consumer<V>) = RxMobius
-          .loop(createUpdate(), createEffectHandler())
+          .loop(createUpdate(), createEffectHandler(viewEffectsConsumer))
           .eventSources(additionalEventSources())
 
       @Suppress("UNCHECKED_CAST")

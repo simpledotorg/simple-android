@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
@@ -158,7 +159,7 @@ class TeleconsultSharePrescriptionScreen :
 
   override fun createInit() = TeleconsultSharePrescriptionInit()
 
-  override fun createEffectHandler() = effectHandler.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandler.create(this).build()
 
   override fun onAttach(context: Context) {
     context.injector<Injector>().inject(this)

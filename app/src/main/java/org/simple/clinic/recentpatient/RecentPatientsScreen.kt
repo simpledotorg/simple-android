@@ -9,6 +9,7 @@ import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState.Loading
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
@@ -87,7 +88,7 @@ class RecentPatientsScreen : BaseScreen<
 
   override fun createUpdate() = AllRecentPatientsUpdate()
 
-  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
 
   override fun defaultModel() = AllRecentPatientsModel
 

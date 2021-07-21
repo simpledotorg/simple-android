@@ -17,6 +17,7 @@ import androidx.core.text.inSpans
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.Init
 import com.spotify.mobius.Update
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.CompositeDisposable
@@ -224,7 +225,7 @@ class PatientSummaryScreen :
     return PatientSummaryInit()
   }
 
-  override fun createEffectHandler(): ObservableTransformer<PatientSummaryEffect, PatientSummaryEvent> {
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>): ObservableTransformer<PatientSummaryEffect, PatientSummaryEvent> {
     return effectHandlerFactory.create(this).build()
   }
 

@@ -29,11 +29,11 @@
     android:layout_height="wrap_content"
     android:background="?selectableItemBackgroundBorderless"
     android:padding="@dimen/spacing_16"
-    android:tint="?attr/colorPrimary"
     app:layout_constraintBottom_toBottomOf="@id/enterDateTextView"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="@id/enterDateTextView"
     app:srcCompat="@drawable/ic_close_24dp"
+    app:tint="?attr/colorPrimary"
     tools:ignore="ContentDescription" />
 
   <androidx.constraintlayout.widget.Barrier

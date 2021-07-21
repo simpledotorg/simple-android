@@ -27,8 +27,8 @@
       android:background="?selectableItemBackgroundBorderless"
       android:contentDescription="@string/patientsummary_contentdescription_up_button"
       android:padding="@dimen/spacing_12"
-      android:tint="?attr/colorOnToolbarPrimary"
-      app:srcCompat="@drawable/ic_arrow_back_24dp" />
+      app:srcCompat="@drawable/ic_arrow_back_24dp"
+      app:tint="?attr/colorOnToolbarPrimary" />
 
     <com.google.android.material.button.MaterialButton
       android:id="@+id/editPatientButton"

@@ -116,7 +116,6 @@ interface TheActivityComponent :
     NewMedicalHistoryScreen.Injector,
     ConfirmDiscardChangesDialog.Injector,
     EditMedicinesScreen.Injector,
-    SyncIndicatorView.Injector,
     SettingsScreen.Injector,
     ChangeLanguageScreen.Injector,
     TeleconsultSharePrescriptionScreen.Injector,
@@ -133,7 +132,8 @@ interface TheActivityComponent :
     CalendarDatePicker.Injector,
     TextInputDatePickerSheet.Injector,
     RemoveOverdueAppointmentScreen.Injector,
-    DrugsSearchScreen.Injector {
+    DrugsSearchScreen.Injector,
+    SyncIndicatorView.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory

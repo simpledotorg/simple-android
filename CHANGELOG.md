@@ -21,6 +21,7 @@
 - [In Progress: 16 Jul 2021] Remove the daily and frequent sync separation
 
 ### Changes
+- Redesign sync indicator view
 - [In Progress: 7 Jul 2021] Overdue list improvements
   - Change overdue list UI
   - Load overdue patients without phone number

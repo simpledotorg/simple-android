@@ -31,8 +31,6 @@
   <color name="scrim_color">#52000000</color>
   <color name="translucent_background">#52000000</color>
 
-  <color name="transparent">#00000000</color>
-
   <color name="search_query_highlight">#52FFC800</color>
 
 </resources>

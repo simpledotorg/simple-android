@@ -5,16 +5,16 @@ import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding3.view.clicks
-import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.cast
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.databinding.SyncIndicatorBinding
+import org.simple.clinic.databinding.ViewSyncIndicatorBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.sync.SyncConfig
@@ -31,13 +31,12 @@ import org.simple.clinic.util.ResolvedError.ServerError
 import org.simple.clinic.util.ResolvedError.Unauthenticated
 import org.simple.clinic.util.ResolvedError.Unexpected
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.setCompoundDrawableStart
 import javax.inject.Inject
 
 class SyncIndicatorView(
     context: Context,
     attrs: AttributeSet
-) : LinearLayout(context, attrs), SyncIndicatorUi, SyncIndicatorUiActions {
+) : ConstraintLayout(context, attrs), SyncIndicatorUi, SyncIndicatorUiActions {
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -52,13 +51,14 @@ class SyncIndicatorView(
   private val events by unsafeLazy {
     viewClicks()
         .compose(ReportAnalyticsEvents())
+        .cast<SyncIndicatorEvent>()
   }
 
   private val uiRenderer = SyncIndicatorUiRenderer(this)
 
   private val delegate: MobiusDelegate<SyncIndicatorModel, SyncIndicatorEvent, SyncIndicatorEffect> by unsafeLazy {
     MobiusDelegate.forView(
-        events = events.ofType(),
+        events = events,
         defaultModel = SyncIndicatorModel.create(),
         update = SyncIndicatorUpdate(syncConfig.syncInterval),
         effectHandler = effectHandlerFactory.create(this).build(),
@@ -67,17 +67,17 @@ class SyncIndicatorView(
     )
   }
 
-  private val binding = SyncIndicatorBinding.inflate(LayoutInflater.from(context),
-      this,
-      true)
+  private val binding = ViewSyncIndicatorBinding.inflate(LayoutInflater.from(context), this)
 
   private val rootLayout
-    get() = binding.rootLayout
+    get() = binding.root
+
+  private val statusImageView
+    get() = binding.statusImageView
 
   private val statusTextView
     get() = binding.statusTextView
 
-  @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
 
@@ -94,7 +94,7 @@ class SyncIndicatorView(
     super.onDetachedFromWindow()
   }
 
-  override fun onSaveInstanceState(): Parcelable? {
+  override fun onSaveInstanceState(): Parcelable {
     return delegate.onSaveInstanceState(super.onSaveInstanceState())
   }
 
@@ -114,7 +114,7 @@ class SyncIndicatorView(
     when (syncState) {
       ConnectToSync -> {
         statusTextView.text = context.getString(R.string.syncindicator_status_failed)
-        statusTextView.setCompoundDrawableStart(R.drawable.ic_round_warning_16px)
+        statusImageView.setImageResource(R.drawable.ic_sync_failed)
       }
       is Synced -> {
         val durationToMinsAgo = syncState.durationSince.toMinutes().toInt()
@@ -123,15 +123,15 @@ class SyncIndicatorView(
         } else {
           context.getString(R.string.syncindicator_status_synced_min_ago, "$durationToMinsAgo")
         }
-        statusTextView.setCompoundDrawableStart(R.drawable.ic_cloud_done_16dp)
+        statusImageView.setImageResource((R.drawable.ic_sync_completed))
       }
       SyncPending -> {
         statusTextView.text = context.getString(R.string.syncindicator_status_pending)
-        statusTextView.setCompoundDrawableStart(R.drawable.ic_cloud_upload_16dp)
+        statusImageView.setImageResource((R.drawable.ic_sync_pending))
       }
       Syncing -> {
         statusTextView.text = context.getString(R.string.syncindicator_status_syncing)
-        statusTextView.setCompoundDrawableStart(R.drawable.ic_round_sync_16px)
+        statusImageView.setImageResource((R.drawable.ic_syncing))
         rootLayout.isEnabled = false
       }
     }

@@ -1,9 +1,6 @@
 # CHANGELOG
 
 ## Next Release
-### Features
-- [In Progress: 06 Jul 2021] Add support for finding a patient online from ID scan
-
 ### Changes
 [In Progress: 7 Jul 2021] Overdue list improvements
   - Change overdue list UI
@@ -42,6 +39,10 @@
 - Implement `DrugsSearchScreen`
 - Don't show progress if overdue list already has items
 - Change `PatientProfile` to be a Room relation model
+- Move online patient lookup behind a feature flag
+
+### Features
+- Add support for finding a patient online from ID scan within the states
 
 ### Changes
 - New supported language: Tamil (Sri Lanka) [`ta-LK`], Sinhala [`si-LK`]

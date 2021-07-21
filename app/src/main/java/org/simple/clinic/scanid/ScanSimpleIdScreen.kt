@@ -127,7 +127,7 @@ class ScanSimpleIdScreen : BaseScreen<
       .compose(ReportAnalyticsEvents())
       .cast<ScanSimpleIdEvent>()
 
-  override fun createUpdate() = ScanSimpleIdUpdate(features.isEnabled(IndiaNationalHealthID))
+  override fun createUpdate() = ScanSimpleIdUpdate(features.isEnabled(IndiaNationalHealthID), features.isEnabled(Feature.OnlinePatientLookup))
 
   override fun createEffectHandler() = effectHandlerFactory.create(this).build()
 

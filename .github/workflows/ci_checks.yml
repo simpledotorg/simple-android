@@ -54,7 +54,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/cache@v2
+      - name: Cache Gradle build
+        uses: actions/cache@v2
         with:
           path: |
             ~/.gradle/caches
@@ -62,6 +63,25 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/buildSrc/**/*.kt') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
+
+      - name: Cache AVD
+        uses: actions/cache@v2
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: ${{ runner.os }}-avd-27
+
+      - name: create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 27
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
 
       - name: set up JDK
         uses: actions/setup-java@v1
@@ -75,6 +95,9 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 27
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
           script: ./gradlew --build-cache --no-daemon connectedQaDebugAndroidTest
 
   mobius_migration_tests:

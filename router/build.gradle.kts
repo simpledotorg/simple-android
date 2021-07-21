@@ -22,7 +22,7 @@ android {
 }
 
 dependencies {
-  implementation("androidx.appcompat:appcompat:${versions.supportLib}")
+  implementation("androidx.appcompat:appcompat:${versions.appcompat}")
   implementation("com.squareup.flow:flow:${versions.flow}")
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}")
   implementation("io.reactivex.rxjava2:rxjava:${versions.rxJava}")

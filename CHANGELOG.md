@@ -15,6 +15,8 @@
   - Bump `camera-lifecycle` to v1.0.0
   - Bump `camera-view` to v1.0.0-alpha26
 - Fix UI inconsistencies in overdue list and contact patient sheet
+- Add gradle-versions-plugin for checking dependency updates
+- Bump AppCompat to v1.3.0
 - [In Progress: 16 Jul 2021] Remove the daily and frequent sync separation
 
 ### Changes

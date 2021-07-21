@@ -13,9 +13,9 @@
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackgroundBorderless"
     android:padding="@dimen/spacing_16"
-    android:tint="@color/color_on_surface_67"
     android:tintMode="src_in"
     app:srcCompat="@drawable/ic_close_24dp"
+    app:tint="@color/color_on_surface_67"
     tools:ignore="ContentDescription" />
 
   <ScrollView

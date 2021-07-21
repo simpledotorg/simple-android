@@ -38,13 +38,23 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Cache Gradle build
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/buildSrc/**/*.kt') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - name: set up JDK
         uses: actions/setup-java@v1
         with:
           java-version: 11
 
       - name: QA Unit Tests
-        run: ./gradlew testQaDebugUnitTest
+        run: ./gradlew --build-cache --no-daemon testQaDebugUnitTest
 
   qa_purge_env:
     runs-on: [ ubuntu-latest ]

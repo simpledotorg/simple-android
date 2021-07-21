@@ -22,7 +22,8 @@ import java.util.UUID
 import javax.inject.Inject
 
 class ScanSimpleIdUpdate @Inject constructor(
-    private val isIndianNHIDSupportEnabled: Boolean
+    private val isIndianNHIDSupportEnabled: Boolean,
+    private var isOnlinePatientLookupEnabled: Boolean
 ) : Update<ScanSimpleIdModel, ScanSimpleIdEvent, ScanSimpleIdEffect> {
 
   override fun update(
@@ -100,10 +101,22 @@ class ScanSimpleIdUpdate @Inject constructor(
       event: PatientSearchByIdentifierCompleted
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     return if (event.patients.isEmpty()) {
-      dispatch(OnlinePatientLookupWithIdentifier(event.identifier))
+      searchPatientOnlineWhenOnlinePatientLookupEnabled(event, model)
     } else {
       next(model = model.notSearching(), patientFoundByIdentifierSearch(patients = event.patients, identifier = event.identifier))
     }
+  }
+
+  private fun searchPatientOnlineWhenOnlinePatientLookupEnabled(
+      event: PatientSearchByIdentifierCompleted,
+      model: ScanSimpleIdModel
+  ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+    val effect = if (isOnlinePatientLookupEnabled) {
+      OnlinePatientLookupWithIdentifier(event.identifier)
+    } else {
+      OpenPatientSearch(event.identifier, null, model.patientPrefillInfo)
+    }
+    return dispatch(effect)
   }
 
   private fun patientFoundByIdentifierSearch(

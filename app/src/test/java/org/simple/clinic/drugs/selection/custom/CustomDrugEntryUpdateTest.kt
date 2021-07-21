@@ -166,4 +166,15 @@ class CustomDrugEntryUpdateTest {
             hasEffects(RemoveDrugFromPrescription(drugUuid = prescribedDrugId))
         ))
   }
+
+  @Test
+  fun `when the drug is removed from the custom drug list, then close the bottom sheet`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(ExistingDrugRemoved)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CloseBottomSheet)
+        ))
+  }
 }

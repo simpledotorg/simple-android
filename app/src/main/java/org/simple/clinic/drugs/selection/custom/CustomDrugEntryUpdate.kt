@@ -2,7 +2,6 @@ package org.simple.clinic.drugs.selection.custom
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.search.DrugFrequency
@@ -18,8 +17,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       is EditFrequencyClicked -> dispatch(ShowEditFrequencyDialog(event.frequency))
       is FrequencyEdited -> next(model.frequencyEdited(event.frequency))
       is AddMedicineButtonClicked -> createOrUpdatePrescriptionEntry(model)
-      is CustomDrugSaved -> dispatch(CloseBottomSheet)
-      ExistingDrugRemoved -> noChange()
+      is CustomDrugSaved, ExistingDrugRemoved -> dispatch(CloseBottomSheet)
       is RemoveDrugButtonClicked -> {
         val update = model.openAs as OpenAs.Update
         dispatch(RemoveDrugFromPrescription(update.prescribedDrugUuid))

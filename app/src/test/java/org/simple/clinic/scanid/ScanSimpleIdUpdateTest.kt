@@ -339,4 +339,23 @@ class ScanSimpleIdUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when identifier is scanned and patient is not found and lookup patient online is disabled, then open patient search`() {
+    val spec = UpdateSpec(ScanSimpleIdUpdate(
+        isIndianNHIDSupportEnabled = true,
+        isOnlinePatientLookupEnabled = false
+    ))
+
+    val patients = emptyList<Patient>()
+    val identifier = Identifier("0486cdb8-b617-41bf-9b9f-4a89434c68cf", BpPassport)
+
+    spec
+        .given(defaultModel)
+        .whenEvent(PatientSearchByIdentifierCompleted(patients, identifier))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenPatientSearch(additionalIdentifier = identifier, initialSearchQuery = null, patientPrefillInfo = null))
+        ))
+  }
 }

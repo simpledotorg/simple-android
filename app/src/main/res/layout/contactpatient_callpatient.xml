@@ -199,7 +199,7 @@
     style="@style/Widget.Simple.PatientContactCallResultItem"
     android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/spacing_16"
+    android:layout_marginTop="@dimen/spacing_8"
     android:text="@string/contactpatient_agreed_to_visit"
     app:drawableStartCompat="@drawable/ic_radio_button_unchecked_green"
     app:layout_constraintEnd_toEndOf="parent"

@@ -59,7 +59,7 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/buildSrc/**/*.kt') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
 
@@ -75,7 +75,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 27
-          script: ./gradlew connectedQaDebugAndroidTest
+          script: ./gradlew --build-cache --no-daemon connectedQaDebugAndroidTest
 
   mobius_migration_tests:
     runs-on: [ ubuntu-latest ]

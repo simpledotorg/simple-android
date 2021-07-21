@@ -24,7 +24,7 @@
 - [In Progress: 22 Jul 2021] Use `MobiusLoopViewModel` for sending view effects that are lifecycle aware
   - Replace `MobiusLoop.Controller` with `MobiusLoopViewModel` in base screens
   - Add new interface for handling received view effects
-- [In Progress: 16 Jul 2021] Remove the daily and frequent sync separation
+- [In Progress: 21 Jul 2021] Remove the daily and frequent sync separation
 
 ### Changes
 - Redesign sync indicator view

@@ -51,6 +51,8 @@ jobs:
     runs-on: [ macos-latest ]
     timeout-minutes: 30
     needs: [ qa_purge_env ]
+    env:
+      AVD_API_LEVEL: 27
     steps:
       - uses: actions/checkout@v2
 
@@ -71,13 +73,13 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: ${{ runner.os }}-avd-27
+          key: ${{ runner.os }}-avd-${{ env.AVD_API_LEVEL }}
 
       - name: create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 27
+          api-level: ${{ env.AVD_API_LEVEL }}
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
@@ -94,7 +96,7 @@ jobs:
       - name: QA Android Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 27
+          api-level: ${{ env.AVD_API_LEVEL }}
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true

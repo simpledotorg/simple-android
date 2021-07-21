@@ -92,6 +92,9 @@ abstract class BaseScreen<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, 
     disposable.add(events().subscribe { event ->
       _viewModel.dispatchEvent(event!!)
     })
+
+    val uiRenderer = uiRenderer()
+    _viewModel.models.observe(viewLifecycleOwner, uiRenderer::render)
   }
 
   override fun onDestroyView() {

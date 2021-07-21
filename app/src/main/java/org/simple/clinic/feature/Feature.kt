@@ -30,5 +30,6 @@ enum class Feature(
   IndiaNationalHealthID(true, "india_national_health_id"),
   OverdueListChanges(false, "overdue_list_changes"),
   OverdueListDownloadAndShare(false, "overdue_list_download_and_share"),
-  CustomDrugSearchScreen(false, "custom_drug_search_screen")
+  CustomDrugSearchScreen(false, "custom_drug_search_screen"),
+  OnlinePatientLookup(true, "online_patient_lookup")
 }

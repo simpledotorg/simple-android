@@ -17,6 +17,7 @@
 - Fix UI inconsistencies in overdue list and contact patient sheet
 - Add gradle-versions-plugin for checking dependency updates
 - Bump AppCompat to v1.3.0
+- Move online patient lookup behind a feature flag
 - [In Progress: 16 Jul 2021] Remove the daily and frequent sync separation
 
 ### Changes
@@ -62,7 +63,7 @@
 - Change `PatientProfile` to be a Room relation model
 
 ### Features
-- Add support for finding a patient online from ID scan
+- Add support for finding a patient online from ID scan within the states
 
 ### Changes
 - New supported language: Tamil (Sri Lanka) [`ta-LK`], Sinhala [`si-LK`]

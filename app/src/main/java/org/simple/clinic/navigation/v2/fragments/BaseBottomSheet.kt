@@ -8,6 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -18,6 +21,8 @@ import com.spotify.mobius.MobiusLoop
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import com.spotify.mobius.android.MobiusAndroid
+import com.spotify.mobius.android.MobiusLoopViewModel
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
@@ -32,6 +37,8 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
   companion object {
     private const val KEY_MODEL = "org.simple.clinic.navigation.v2.fragments.BaseScreen.KEY_MODEL"
   }
+
+  private lateinit var viewModel: MobiusLoopViewModel<M, E, F, V>
 
   private val loop: MobiusLoop.Builder<M, E, F> by unsafeLazy {
     RxMobius
@@ -106,6 +113,23 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
+    val startModel = savedInstanceState?.getParcelable(KEY_MODEL) ?: defaultModel()
+
+    viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
+      private fun loop(viewEffectsConsumer: Consumer<V>) = RxMobius
+          .loop(createUpdate(), createEffectHandler())
+          .eventSources(additionalEventSources())
+
+      @Suppress("UNCHECKED_CAST")
+      override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        return MobiusLoopViewModel.create<M, E, F, V>(
+            ::loop,
+            startModel,
+            createInit()
+        ) as T
+      }
+    }).get()
+
     val rxBridge = RxMobiusBridge(events(), uiRenderer())
     controller.connect(rxBridge)
 
@@ -136,6 +160,7 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
     outState.putParcelable(KEY_MODEL, controller.model)
+    outState.putParcelable(KEY_MODEL, viewModel.model)
   }
 
   override fun onCancel(dialog: DialogInterface) {

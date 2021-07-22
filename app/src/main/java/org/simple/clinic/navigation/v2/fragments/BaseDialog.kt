@@ -77,6 +77,9 @@ abstract class BaseDialog<K : ScreenKey, M : Parcelable, E, F, V> : DialogFragme
         ) as T
       }
     }).get()
+
+    val uiRenderer = uiRenderer()
+    viewModel.models.observe(viewLifecycleOwner, uiRenderer::render)
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

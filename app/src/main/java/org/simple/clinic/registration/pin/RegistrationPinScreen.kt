@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import com.jakewharton.rxbinding3.widget.editorActions
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import org.simple.clinic.R
@@ -26,7 +27,8 @@ class RegistrationPinScreen :
         ScreenRegistrationPinBinding,
         RegistrationPinModel,
         RegistrationPinEvent,
-        RegistrationPinEffect>(),
+        RegistrationPinEffect,
+        Unit>(),
     RegistrationPinUi,
     RegistrationPinUiActions {
 
@@ -60,7 +62,7 @@ class RegistrationPinScreen :
 
   override fun createInit() = RegistrationPinInit()
 
-  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
 
   override fun defaultModel() = RegistrationPinModel.create(screenKey.registrationEntry)
 

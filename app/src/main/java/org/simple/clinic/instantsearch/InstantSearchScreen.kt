@@ -16,6 +16,7 @@ import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -74,7 +75,8 @@ class InstantSearchScreen :
         ScreenInstantSearchBinding,
         InstantSearchModel,
         InstantSearchEvent,
-        InstantSearchEffect>(),
+        InstantSearchEffect,
+        Unit>(),
     InstantSearchUi,
     InstantSearchUiActions,
     ExpectsResult {
@@ -170,7 +172,7 @@ class InstantSearchScreen :
 
   override fun createInit() = InstantSearchInit()
 
-  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
 
   override fun uiRenderer() = InstantSearchUiRenderer(this)
 

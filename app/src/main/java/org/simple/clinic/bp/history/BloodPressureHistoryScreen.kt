@@ -9,6 +9,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.asFlow
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.cast
@@ -51,7 +52,8 @@ class BloodPressureHistoryScreen : BaseScreen<
     ScreenBpHistoryBinding,
     BloodPressureHistoryScreenModel,
     BloodPressureHistoryScreenEvent,
-    BloodPressureHistoryScreenEffect>(), BloodPressureHistoryScreenUi, BloodPressureHistoryScreenUiActions {
+    BloodPressureHistoryScreenEffect,
+    Unit>(), BloodPressureHistoryScreenUi, BloodPressureHistoryScreenUiActions {
 
   @Inject
   lateinit var utcClock: UtcClock
@@ -117,7 +119,7 @@ class BloodPressureHistoryScreen : BaseScreen<
 
   override fun createUpdate() = BloodPressureHistoryScreenUpdate()
 
-  override fun createEffectHandler() = effectHandler.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandler.create(this).build()
 
   override fun uiRenderer() = BloodPressureHistoryScreenUiRenderer(this)
 

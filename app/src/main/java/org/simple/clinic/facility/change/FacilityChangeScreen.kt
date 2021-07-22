@@ -6,6 +6,7 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.parcelize.Parcelize
@@ -32,7 +33,8 @@ class FacilityChangeScreen :
         ScreenFacilityChangeBinding,
         FacilityChangeModel,
         FacilityChangeEvent,
-        FacilityChangeEffect>(),
+        FacilityChangeEffect,
+        Unit>(),
     FacilityChangeUi,
     FacilityChangeUiActions,
     ExpectsResult {
@@ -67,7 +69,7 @@ class FacilityChangeScreen :
 
   override fun uiRenderer() = FacilityChangeUiRenderer(this)
 
-  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
 
   private val facilityPickerView
     get() = binding.facilityPickerView

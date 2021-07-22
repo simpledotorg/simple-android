@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import org.simple.clinic.ReportAnalyticsEvents
@@ -30,7 +31,8 @@ class RegistrationConfirmPinScreen :
         ScreenRegistrationConfirmPinBinding,
         RegistrationConfirmPinModel,
         RegistrationConfirmPinEvent,
-        RegistrationConfirmPinEffect>(),
+        RegistrationConfirmPinEffect,
+        Unit>(),
     RegistrationConfirmPinUi,
     RegistrationConfirmPinUiActions {
 
@@ -75,7 +77,7 @@ class RegistrationConfirmPinScreen :
 
   override fun createInit() = RegistrationConfirmPinInit()
 
-  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
@@ -32,7 +33,8 @@ class RemoveOverdueAppointmentScreen : BaseScreen<
     ScreenRemoveOverdueAppointmentBinding,
     RemoveOverdueModel,
     RemoveOverdueEvent,
-    RemoveOverdueEffect>(), RemoveOverdueUi, RemoveOverdueUiActions {
+    RemoveOverdueEffect,
+    Unit>(), RemoveOverdueUi, RemoveOverdueUiActions {
 
   @Inject
   lateinit var router: Router
@@ -73,7 +75,7 @@ class RemoveOverdueAppointmentScreen : BaseScreen<
 
   override fun createUpdate() = RemoveOverdueUpdate()
 
-  override fun createEffectHandler() = effectHandlerFactory
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
       .create(this)
       .build()
 

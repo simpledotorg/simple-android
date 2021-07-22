@@ -13,6 +13,7 @@ import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
@@ -56,7 +57,8 @@ class PatientsTabScreen : BaseScreen<
     ScreenPatientsBinding,
     PatientsTabModel,
     PatientsTabEvent,
-    PatientsTabEffect>(), PatientsTabUi, PatientsTabUiActions {
+    PatientsTabEffect,
+    Unit>(), PatientsTabUi, PatientsTabUiActions {
 
   @Inject
   lateinit var router: Router
@@ -160,7 +162,7 @@ class PatientsTabScreen : BaseScreen<
 
   override fun createInit() = PatientsInit()
 
-  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
 
   override fun additionalEventSources() = listOf(deferredEvents)
 

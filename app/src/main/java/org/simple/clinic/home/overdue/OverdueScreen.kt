@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.f2prateek.rx.preferences2.Preference
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.Update
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
@@ -52,7 +53,8 @@ class OverdueScreen : BaseScreen<
     ScreenOverdueBinding,
     OverdueModel,
     OverdueEvent,
-    OverdueEffect>(), OverdueUiActions {
+    OverdueEffect,
+    Unit>(), OverdueUiActions {
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -136,7 +138,7 @@ class OverdueScreen : BaseScreen<
 
   override fun createInit() = OverdueInit()
 
-  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

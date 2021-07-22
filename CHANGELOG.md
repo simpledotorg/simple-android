@@ -19,6 +19,9 @@
 - Bump AppCompat to v1.3.0
 - Move online patient lookup behind a feature flag
 - Cache build dependencies and intermediates in CI workflows
+- [In Progress: 21 Jul 2021] Use `MobiusLoopViewModel` for sending view effects that are lifecycle aware
+  - Replace `MobiusLoop.Controller` with `MobiusLoopViewModel` in base screens
+  - Add new interface for handling received view effects
 - [In Progress: 16 Jul 2021] Remove the daily and frequent sync separation
 
 ### Changes

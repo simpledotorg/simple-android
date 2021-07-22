@@ -11,6 +11,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.asFlow
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.cast
@@ -59,7 +60,8 @@ class BloodSugarHistoryScreen : BaseScreen<
     ScreenBloodSugarHistoryBinding,
     BloodSugarHistoryScreenModel,
     BloodSugarHistoryScreenEvent,
-    BloodSugarHistoryScreenEffect>(), BloodSugarHistoryScreenUi, BloodSugarHistoryScreenUiActions {
+    BloodSugarHistoryScreenEffect,
+    Unit>(), BloodSugarHistoryScreenUi, BloodSugarHistoryScreenUiActions {
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -123,7 +125,7 @@ class BloodSugarHistoryScreen : BaseScreen<
 
   override fun createUpdate() = BloodSugarHistoryScreenUpdate()
 
-  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
 
   override fun uiRenderer() = BloodSugarHistoryScreenUiRenderer(this)
 

@@ -10,6 +10,7 @@ import android.view.inputmethod.EditorInfo
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import org.simple.clinic.R
@@ -29,7 +30,8 @@ class RegistrationFullNameScreen :
         ScreenRegistrationNameBinding,
         RegistrationNameModel,
         RegistrationNameEvent,
-        RegistrationNameEffect>(),
+        RegistrationNameEffect,
+        Unit>(),
     RegistrationNameUi,
     RegistrationNameUiActions {
 
@@ -73,7 +75,7 @@ class RegistrationFullNameScreen :
 
   override fun createInit() = RegistrationNameInit()
 
-  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

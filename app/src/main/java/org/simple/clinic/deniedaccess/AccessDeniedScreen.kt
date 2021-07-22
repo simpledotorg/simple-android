@@ -16,7 +16,8 @@ class AccessDeniedScreen : BaseScreen<
     ScreenAccessDeniedBinding,
     AccessDeniedModel,
     AccessDeniedEvent,
-    AccessDeniedEffect>() {
+    AccessDeniedEffect,
+    Unit>() {
 
   @Inject
   lateinit var activity: AppCompatActivity

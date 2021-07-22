@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
@@ -24,7 +25,8 @@ class ReportsScreen : BaseScreen<
     ScreenReportBinding,
     ReportsModel,
     ReportsEvent,
-    ReportsEffect>(), ReportsUi {
+    ReportsEffect,
+    Unit>(), ReportsUi {
 
   @Inject
   lateinit var effectHandler: ReportsEffectHandler
@@ -53,7 +55,7 @@ class ReportsScreen : BaseScreen<
 
   override fun createInit() = ReportsInit()
 
-  override fun createEffectHandler() = effectHandler.build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandler.build()
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

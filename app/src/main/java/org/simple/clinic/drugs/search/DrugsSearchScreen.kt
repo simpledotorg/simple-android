@@ -9,6 +9,7 @@ import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import com.jakewharton.rxbinding3.widget.textChanges
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.parcelize.Parcelize
@@ -36,7 +37,8 @@ class DrugsSearchScreen : BaseScreen<
     ScreenDrugsSearchBinding,
     DrugSearchModel,
     DrugSearchEvent,
-    DrugSearchEffect>(), DrugSearchUi, UiActions {
+    DrugSearchEffect,
+    Unit>(), DrugSearchUi, UiActions {
 
   @Inject
   lateinit var effectHandlerFactory: DrugSearchEffectHandler.Factory
@@ -75,7 +77,7 @@ class DrugsSearchScreen : BaseScreen<
 
   override fun createUpdate() = DrugSearchUpdate()
 
-  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
 
   override fun uiRenderer() = DrugSearchUiRenderer(this)
 

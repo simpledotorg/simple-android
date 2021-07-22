@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayoutMediator
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.rxkotlin.cast
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
@@ -39,7 +40,8 @@ class HomeScreen :
         ScreenHomeBinding,
         HomeScreenModel,
         HomeScreenEvent,
-        HomeScreenEffect>(),
+        HomeScreenEffect,
+        Unit>(),
     HomeScreenUi,
     HomeScreenUiActions,
     ExpectsResult {
@@ -100,7 +102,7 @@ class HomeScreen :
 
   override fun createInit() = HomeScreenInit()
 
-  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

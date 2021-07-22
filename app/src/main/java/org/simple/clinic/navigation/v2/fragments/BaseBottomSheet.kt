@@ -27,7 +27,7 @@ import org.simple.clinic.mobius.first
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.util.unsafeLazy
 
-abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F> : BottomSheetDialogFragment() {
+abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, V> : BottomSheetDialogFragment() {
 
   companion object {
     private const val KEY_MODEL = "org.simple.clinic.navigation.v2.fragments.BaseScreen.KEY_MODEL"

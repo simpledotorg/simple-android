@@ -23,6 +23,7 @@
     <ignore path="src/main/res/drawable/illustration_homescreen_bangladesh" />
     <ignore path="src/main/res/drawable/illustration_homescreen_ethiopia" />
     <ignore path="src/main/res/drawable/ic_syncing" />
+    <ignore path="src/main/res/drawable/ic_video_illustration_default" />
   </issue>
 
   <issue id="UnusedResources">
@@ -67,5 +68,6 @@
     <ignore path="src/main/res/drawable/illustration_homescreen_india" />
     <ignore path="src/main/res/drawable/illustration_homescreen_bangladesh" />
     <ignore path="src/main/res/drawable/illustration_homescreen_ethiopia" />
+    <ignore path="src/main/res/drawable/ic_video_illustration_default" />
   </issue>
 </lint>

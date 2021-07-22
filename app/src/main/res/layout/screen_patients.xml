@@ -18,7 +18,7 @@
 
       <com.google.android.material.button.MaterialButton
         android:id="@+id/searchPatientsButton"
-        style="?attr/materialButtonOutlinedStyle"
+        style="@style/Widget.Simple.Button.OutlinedButton.Big"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_16"
@@ -32,6 +32,7 @@
 
       <com.google.android.material.button.MaterialButton
         android:id="@+id/scanSimpleCardButton"
+        style="@style/Widget.Simple.Button.Big"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_16"

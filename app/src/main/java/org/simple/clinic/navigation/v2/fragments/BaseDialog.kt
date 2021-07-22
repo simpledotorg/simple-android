@@ -15,7 +15,7 @@ import com.spotify.mobius.android.MobiusAndroid
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
-import org.simple.clinic.R
+import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.mobius.eventSources
 import org.simple.clinic.mobius.first
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -41,9 +41,9 @@ abstract class BaseDialog<K : ScreenKey, M : Parcelable, E, F> : DialogFragment(
 
   abstract fun defaultModel(): M
 
-  abstract fun uiRenderer(): R
-
   abstract fun createDialog(savedInstanceState: Bundle?): Dialog
+
+  open fun uiRenderer(): ViewRenderer<M> = NoopViewRenderer()
 
   open fun events(): Observable<E> = Observable.never()
 

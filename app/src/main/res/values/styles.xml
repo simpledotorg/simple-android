@@ -30,6 +30,10 @@
     <item name="android:textAppearance">?attr/textAppearanceButtonBig</item>
   </style>
 
+  <style name="Widget.Simple.Button.Big">
+    <item name="android:minHeight">@dimen/spacing_56</item>
+  </style>
+
   <style name="Widget.Simple.Button.Blue2">
     <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.Blue2Primary</item>
   </style>
@@ -59,6 +63,10 @@
     <item name="iconGravity">textStart</item>
     <item name="strokeColor">@color/mtrl_btn_stroke_color_selector</item>
     <item name="android:textAppearance">?attr/textAppearanceButtonBig</item>
+  </style>
+
+  <style name="Widget.Simple.Button.OutlinedButton.Big">
+    <item name="android:minHeight">@dimen/spacing_56</item>
   </style>
 
   <style name="Widget.Simple.Button.TextButton.Dialog" parent="Widget.MaterialComponents.Button.TextButton.Dialog" />

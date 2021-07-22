@@ -18,6 +18,7 @@
 - Add gradle-versions-plugin for checking dependency updates
 - Bump AppCompat to v1.3.0
 - Move online patient lookup behind a feature flag
+- Cache build dependencies and intermediates in CI workflows
 - [In Progress: 16 Jul 2021] Remove the daily and frequent sync separation
 
 ### Changes

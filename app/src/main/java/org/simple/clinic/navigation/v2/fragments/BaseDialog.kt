@@ -18,6 +18,7 @@ import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.mobius.ViewEffectsHandler
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.mobius.eventSources
 import org.simple.clinic.mobius.first
@@ -39,6 +40,8 @@ abstract class BaseDialog<K : ScreenKey, M : Parcelable, E, F, V> : DialogFragme
   abstract fun createDialog(savedInstanceState: Bundle?): Dialog
 
   open fun uiRenderer(): ViewRenderer<M> = NoopViewRenderer()
+
+  open fun viewEffectHandler(): ViewEffectsHandler<V> = NoopViewEffectsHandler()
 
   open fun events(): Observable<E> = Observable.never()
 
@@ -80,6 +83,13 @@ abstract class BaseDialog<K : ScreenKey, M : Parcelable, E, F, V> : DialogFragme
 
     val uiRenderer = uiRenderer()
     viewModel.models.observe(viewLifecycleOwner, uiRenderer::render)
+
+    val viewEffectHandler = viewEffectHandler()
+    viewModel.viewEffects.setObserver(
+        viewLifecycleOwner,
+        { liveViewEffect -> viewEffectHandler.handle(liveViewEffect) },
+        { pausedViewEffects -> pausedViewEffects.forEach(viewEffectHandler::handle) }
+    )
   }
 
   override fun onSaveInstanceState(outState: Bundle) {

@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.transition.TransitionManager
 import com.google.android.material.transition.MaterialFade
 import com.google.android.material.transition.MaterialSharedAxis
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
@@ -156,7 +157,7 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
   override fun createInit() = ContactPatientInit()
 
-  override fun createEffectHandler() = effectHandlerFactory.create(this)
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this)
       .build()
 
   override fun onAttach(context: Context) {

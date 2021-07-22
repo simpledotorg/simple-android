@@ -11,6 +11,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
@@ -156,7 +157,7 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
 
   override fun createInit() = ScheduleAppointmentInit()
 
-  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
 
   override fun additionalEventSources() = listOf(facilityChanges)
 

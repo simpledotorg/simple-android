@@ -73,7 +73,7 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
 
   open fun createInit(): Init<M, F> = Init { model -> first(model) }
 
-  open fun createEffectHandler(): ObservableTransformer<F, E> = ObservableTransformer { Observable.never() }
+  open fun createEffectHandler(viewEffectsConsumer: Consumer<V>): ObservableTransformer<F, E> = ObservableTransformer { Observable.never() }
 
   open fun additionalEventSources(): List<EventSource<E>> = emptyList()
 
@@ -107,7 +107,7 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
 
     viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
       private fun loop(viewEffectsConsumer: Consumer<V>) = RxMobius
-          .loop(createUpdate(), createEffectHandler())
+          .loop(createUpdate(), createEffectHandler(viewEffectsConsumer))
           .eventSources(additionalEventSources())
 
       @Suppress("UNCHECKED_CAST")

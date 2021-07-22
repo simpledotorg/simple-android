@@ -120,6 +120,9 @@ class PatientsTabScreen : BaseScreen<
   private val scanSimpleCardButton
     get() = binding.scanSimpleCardButton
 
+  private val simpleVideoIllustration
+    get() = binding.simpleVideoIllustration
+
   private val simpleVideoLayout
     get() = binding.simpleVideoLayout
 
@@ -206,8 +209,8 @@ class PatientsTabScreen : BaseScreen<
 
   private fun scanCardIdButtonClicks() = scanSimpleCardButton.clicks().map { ScanCardIdButtonClicked() }
 
-  private fun simpleVideoClicked() = videoTitleText.clicks()
-      .mergeWith(simpleVideoImage.clicks())
+  private fun simpleVideoClicked() = simpleVideoIllustration
+      .clicks()
       .map { SimpleVideoClicked }
 
   override fun openPatientSearchScreen(additionalIdentifier: Identifier?) {
@@ -290,7 +293,7 @@ class PatientsTabScreen : BaseScreen<
     // we are not sure if we will have variations of this training video.
     // We should make the title, duration and video thumbnail configurable in order to improve this.
     simpleVideoDuration.text = resources.getString(R.string.simple_video_duration, "5:07")
-    showHomeScreenBackground(R.id.simpleVideoLayout)
+    showHomeScreenBackground(R.id.simpleVideoIllustration)
   }
 
   override fun showIllustration() {

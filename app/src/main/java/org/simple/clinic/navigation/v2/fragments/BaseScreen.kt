@@ -33,7 +33,7 @@ abstract class BaseScreen<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, 
     private const val KEY_MODEL = "org.simple.clinic.navigation.v2.fragments.BaseScreen.KEY_MODEL"
   }
 
-  private lateinit var _viewModel: MobiusLoopViewModel<M, E, F, V>
+  private lateinit var viewModel: MobiusLoopViewModel<M, E, F, V>
 
   protected val screenKey by unsafeLazy { ScreenKey.key<K>(this) }
 
@@ -77,7 +77,7 @@ abstract class BaseScreen<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, 
 
     val startModel = savedInstanceState?.getParcelable(KEY_MODEL) ?: defaultModel()
 
-    _viewModel = ViewModelProvider(viewModelStore, object : ViewModelProvider.Factory {
+    viewModel = ViewModelProvider(viewModelStore, object : ViewModelProvider.Factory {
       private fun loop(viewEffectsConsumer: Consumer<V>) = RxMobius
           .loop(createUpdate(), createEffectHandler(viewEffectsConsumer))
           .eventSources(additionalEventSources())
@@ -93,17 +93,17 @@ abstract class BaseScreen<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, 
     }).get()
 
     val uiRenderer = uiRenderer()
-    _viewModel.models.observe(viewLifecycleOwner, uiRenderer::render)
+    viewModel.models.observe(viewLifecycleOwner, uiRenderer::render)
 
     val viewEffectHandler = viewEffectHandler()
-    _viewModel.viewEffects.setObserver(
+    viewModel.viewEffects.setObserver(
         viewLifecycleOwner,
         { liveViewEffect -> viewEffectHandler.handle(liveViewEffect) },
         { pausedViewEffects -> pausedViewEffects.forEach(viewEffectHandler::handle) }
     )
 
     eventsDisposable = events().subscribe {
-      _viewModel.dispatchEvent(it!!)
+      viewModel.dispatchEvent(it!!)
     }
   }
 
@@ -115,6 +115,6 @@ abstract class BaseScreen<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, 
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    outState.putParcelable(KEY_MODEL, _viewModel.model)
+    outState.putParcelable(KEY_MODEL, viewModel.model)
   }
 }

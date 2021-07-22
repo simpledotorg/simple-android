@@ -25,6 +25,7 @@ import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.Disposable
+import org.simple.clinic.mobius.ViewEffectsHandler
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.mobius.eventSources
 import org.simple.clinic.mobius.first
@@ -66,6 +67,8 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
   abstract fun bindView(inflater: LayoutInflater, container: ViewGroup?): B
 
   open fun uiRenderer(): ViewRenderer<M> = NoopViewRenderer()
+
+  open fun viewEffectsHandler(): ViewEffectsHandler<V> = NoopViewEffectsHandler()
 
   open fun events(): Observable<E> = Observable.never()
 
@@ -124,6 +127,13 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
 
     val uiRenderer = uiRenderer()
     viewModel.models.observe(viewLifecycleOwner, uiRenderer::render)
+
+    val viewEffectsHandler = viewEffectsHandler()
+    viewModel.viewEffects.setObserver(
+        viewLifecycleOwner,
+        { liveViewEffect -> viewEffectsHandler.handle(liveViewEffect) },
+        { pausedViewEffects -> pausedViewEffects.forEach(viewEffectsHandler::handle) }
+    )
   }
 
   override fun onDestroyView() {

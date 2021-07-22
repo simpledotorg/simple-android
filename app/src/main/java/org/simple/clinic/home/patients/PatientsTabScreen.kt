@@ -123,18 +123,6 @@ class PatientsTabScreen : BaseScreen<
   private val simpleVideoIllustration
     get() = binding.simpleVideoIllustration
 
-  private val simpleVideoLayout
-    get() = binding.simpleVideoLayout
-
-  private val videoTitleText
-    get() = simpleVideoLayout.videoTitleText
-
-  private val simpleVideoImage
-    get() = simpleVideoLayout.simpleVideoImage
-
-  private val simpleVideoDuration
-    get() = simpleVideoLayout.simpleVideoDuration
-
   private val syncIndicator
     get() = binding.syncIndicator
 
@@ -289,10 +277,6 @@ class PatientsTabScreen : BaseScreen<
   }
 
   override fun showSimpleVideo() {
-    // Hard-coding to show this simple video view exists because, as of now,
-    // we are not sure if we will have variations of this training video.
-    // We should make the title, duration and video thumbnail configurable in order to improve this.
-    simpleVideoDuration.text = resources.getString(R.string.simple_video_duration, "5:07")
     showHomeScreenBackground(R.id.simpleVideoIllustration)
   }
 

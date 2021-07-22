@@ -84,6 +84,15 @@ option to import an existing project, navigate to the `simple-android` directory
 When building for the first time, gradle will download all dependencies so it'll take a few minutes to complete.
 Subsequent builds will be faster.
 
+If during the build process you see the message:
+"Warning: License for package Android SDK Build-Tools 30.0.2 not accepted."
+Then you may need to install the Google Play Licensing Library:
+
+* Open the SDK Manager through Tools -> SDK Manager
+* Select Appearance & Behavior -> System Settings -> Android SDK in the left sidebar
+* Select the SDK Tools tab in the main window
+* Activate Google Play Licensing Library and click Apply
+
 ## Running locally
 
 The Simple App can be run locally on an Android emulator using Android Studio. To do this,

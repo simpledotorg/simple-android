@@ -6,12 +6,17 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import com.spotify.mobius.EventSource
 import com.spotify.mobius.Init
 import com.spotify.mobius.MobiusLoop
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import com.spotify.mobius.android.MobiusAndroid
+import com.spotify.mobius.android.MobiusLoopViewModel
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
@@ -26,6 +31,8 @@ abstract class BaseDialog<K : ScreenKey, M : Parcelable, E, F, V> : DialogFragme
   companion object {
     private const val KEY_MODEL = "org.simple.clinic.navigation.v2.fragments.BaseScreen.KEY_MODEL"
   }
+
+  private lateinit var viewModel: MobiusLoopViewModel<M, E, F, V>
 
   private val loop: MobiusLoop.Builder<M, E, F> by unsafeLazy {
     RxMobius
@@ -66,6 +73,23 @@ abstract class BaseDialog<K : ScreenKey, M : Parcelable, E, F, V> : DialogFragme
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
+    val startModel = savedInstanceState?.getParcelable(KEY_MODEL) ?: defaultModel()
+
+    viewModel = ViewModelProvider(viewModelStore, object : ViewModelProvider.Factory {
+      private fun loop(viewEffectsConsumer: Consumer<V>) = RxMobius
+          .loop(createUpdate(), createEffectHandler())
+          .eventSources(additionalEventSources())
+
+      @Suppress("UNCHECKED_CAST")
+      override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        return MobiusLoopViewModel.create<M, E, F, V>(
+            ::loop,
+            startModel,
+            createInit()
+        ) as T
+      }
+    }).get()
+
     val rxBridge = RxMobiusBridge(events(), uiRenderer())
     controller.connect(rxBridge)
 
@@ -93,6 +117,7 @@ abstract class BaseDialog<K : ScreenKey, M : Parcelable, E, F, V> : DialogFragme
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
     outState.putParcelable(KEY_MODEL, controller.model)
+    outState.putParcelable(KEY_MODEL, viewModel.model)
   }
 
   override fun onCancel(dialog: DialogInterface) {

@@ -17,10 +17,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.spotify.mobius.EventSource
 import com.spotify.mobius.Init
-import com.spotify.mobius.MobiusLoop
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
-import com.spotify.mobius.android.MobiusAndroid
 import com.spotify.mobius.android.MobiusLoopViewModel
 import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
@@ -39,16 +37,6 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
   }
 
   private lateinit var viewModel: MobiusLoopViewModel<M, E, F, V>
-
-  private val loop: MobiusLoop.Builder<M, E, F> by unsafeLazy {
-    RxMobius
-        .loop(createUpdate()::update, createEffectHandler())
-        .eventSources(additionalEventSources())
-  }
-
-  private val controller: MobiusLoop.Controller<M, E> by unsafeLazy {
-    MobiusAndroid.controller(loop, defaultModel(), createInit())
-  }
 
   protected val screenKey by unsafeLazy { ScreenKey.key<K>(this) }
 
@@ -129,37 +117,17 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
         ) as T
       }
     }).get()
-
-    val rxBridge = RxMobiusBridge(events(), uiRenderer())
-    controller.connect(rxBridge)
-
-    if (savedInstanceState != null) {
-      val savedModel = savedInstanceState.getParcelable<M>(KEY_MODEL)!!
-      controller.replaceModel(savedModel)
-    }
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
-    controller.disconnect()
     _binding = null
     behavior?.removeBottomSheetCallback(bottomSheetCallback)
     behavior = null
   }
 
-  override fun onResume() {
-    super.onResume()
-    controller.start()
-  }
-
-  override fun onPause() {
-    super.onPause()
-    controller.stop()
-  }
-
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    outState.putParcelable(KEY_MODEL, controller.model)
     outState.putParcelable(KEY_MODEL, viewModel.model)
   }
 

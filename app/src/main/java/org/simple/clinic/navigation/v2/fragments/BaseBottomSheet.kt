@@ -24,6 +24,7 @@ import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import io.reactivex.disposables.Disposable
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.mobius.eventSources
 import org.simple.clinic.mobius.first
@@ -37,6 +38,7 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
   }
 
   private lateinit var viewModel: MobiusLoopViewModel<M, E, F, V>
+  private lateinit var eventsDisposable: Disposable
 
   protected val screenKey by unsafeLazy { ScreenKey.key<K>(this) }
 
@@ -117,10 +119,13 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
         ) as T
       }
     }).get()
+
+    eventsDisposable = events().subscribe { viewModel.dispatchEvent(it!!) }
   }
 
   override fun onDestroyView() {
     super.onDestroyView()
+    eventsDisposable.dispose()
     _binding = null
     behavior?.removeBottomSheetCallback(bottomSheetCallback)
     behavior = null

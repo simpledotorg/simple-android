@@ -121,6 +121,9 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
     }).get()
 
     eventsDisposable = events().subscribe { viewModel.dispatchEvent(it!!) }
+
+    val uiRenderer = uiRenderer()
+    viewModel.models.observe(viewLifecycleOwner, uiRenderer::render)
   }
 
   override fun onDestroyView() {

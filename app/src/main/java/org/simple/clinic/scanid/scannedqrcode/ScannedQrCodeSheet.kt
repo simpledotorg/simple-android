@@ -24,7 +24,8 @@ class ScannedQrCodeSheet :
         SheetScannedQrCodeBinding,
         ScannedQrCodeModel,
         ScannedQrCodeEvent,
-        ScannedQrCodeEffect>(), ScannedQrCodeUiActions, ScannedQrCodeUi {
+        ScannedQrCodeEffect,
+        Unit>(), ScannedQrCodeUiActions, ScannedQrCodeUi {
 
   companion object {
 

@@ -53,7 +53,8 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
     SheetScheduleAppointmentBinding,
     ScheduleAppointmentModel,
     ScheduleAppointmentEvent,
-    ScheduleAppointmentEffect>(), ScheduleAppointmentUi, ScheduleAppointmentUiActions, ExpectsResult {
+    ScheduleAppointmentEffect,
+    Unit>(), ScheduleAppointmentUi, ScheduleAppointmentUiActions, ExpectsResult {
 
   companion object {
     private const val REQCODE_FACILITY_SELECT = 100

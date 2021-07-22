@@ -31,7 +31,8 @@ class ConfirmFacilityChangeSheet :
         SheetConfirmFacilityChangeBinding,
         ConfirmFacilityChangeModel,
         ConfirmFacilityChangeEvent,
-        ConfirmFacilityChangeEffect>(),
+        ConfirmFacilityChangeEffect,
+        Unit>(),
     ConfirmFacilityChangeUiActions {
 
   companion object {

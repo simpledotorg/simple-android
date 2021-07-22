@@ -58,7 +58,8 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     SheetContactPatientBinding,
     ContactPatientModel,
     ContactPatientEvent,
-    ContactPatientEffect>(), ContactPatientUi, ContactPatientUiActions, ExpectsResult {
+    ContactPatientEffect,
+    Unit>(), ContactPatientUi, ContactPatientUiActions, ExpectsResult {
 
   @Inject
   lateinit var phoneCaller: PhoneCaller

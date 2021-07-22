@@ -29,8 +29,8 @@ class LinkIdWithPatientSheet :
         LinkIdWithPatientViewBinding,
         LinkIdWithPatientModel,
         LinkIdWithPatientEvent,
-        LinkIdWithPatientEffect
-        >(),
+        LinkIdWithPatientEffect,
+        Unit>(),
     LinkIdWithPatientViewUi,
     LinkIdWithPatientUiActions {
 

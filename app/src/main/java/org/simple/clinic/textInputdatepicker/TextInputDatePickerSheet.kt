@@ -33,8 +33,8 @@ class TextInputDatePickerSheet : BaseBottomSheet<
     SheetTextInputDatePickerBinding,
     TextInputDatePickerModel,
     TextInputDatePickerEvent,
-    TextInputDatePickerEffect
-    >(),
+    TextInputDatePickerEffect,
+    Unit>(),
     TextInputDatePickerUiActions {
 
   @Inject

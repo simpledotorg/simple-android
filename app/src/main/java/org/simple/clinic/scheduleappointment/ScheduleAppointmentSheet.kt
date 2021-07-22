@@ -180,9 +180,11 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
 
   override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
     if (requestType == DatePickerResult && result is Succeeded) {
-      val selectedDate = result.result as SelectedDate
-      val event = AppointmentCalendarDateSelected(selectedDate = selectedDate.date)
-      calendarDateSelectedEvents.onNext(event)
+      val selectedDate = result.result
+      if (selectedDate is SelectedDate) {
+        val event = AppointmentCalendarDateSelected(selectedDate = selectedDate.date)
+        calendarDateSelectedEvents.onNext(event)
+      }
     }
   }
 

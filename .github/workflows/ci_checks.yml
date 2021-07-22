@@ -15,18 +15,38 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Cache Gradle build
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/buildSrc/**/*.kt') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - name: set up JDK
         uses: actions/setup-java@v1
         with:
           java-version: 11
 
       - name: QA Lint
-        run: ./gradlew lintQaDebug
+        run: ./gradlew --build-cache --no-daemon lintQaDebug
 
   qa_unit_tests:
     runs-on: [ ubuntu-latest ]
     steps:
       - uses: actions/checkout@v2
+
+      - name: Cache Gradle build
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/buildSrc/**/*.kt') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
 
       - name: set up JDK
         uses: actions/setup-java@v1
@@ -34,7 +54,7 @@ jobs:
           java-version: 11
 
       - name: QA Unit Tests
-        run: ./gradlew testQaDebugUnitTest
+        run: ./gradlew --build-cache --no-daemon testQaDebugUnitTest
 
   qa_purge_env:
     runs-on: [ ubuntu-latest ]
@@ -51,8 +71,39 @@ jobs:
     runs-on: [ macos-latest ]
     timeout-minutes: 30
     needs: [ qa_purge_env ]
+    env:
+      AVD_API_LEVEL: 27
     steps:
       - uses: actions/checkout@v2
+
+      - name: Cache Gradle build
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/buildSrc/**/*.kt') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Cache AVD
+        uses: actions/cache@v2
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: ${{ runner.os }}-avd-${{ env.AVD_API_LEVEL }}
+
+      - name: create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ env.AVD_API_LEVEL }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
 
       - name: set up JDK
         uses: actions/setup-java@v1
@@ -65,8 +116,11 @@ jobs:
       - name: QA Android Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 27
-          script: ./gradlew connectedQaDebugAndroidTest
+          api-level: ${{ env.AVD_API_LEVEL }}
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: ./gradlew --build-cache --no-daemon connectedQaDebugAndroidTest
 
   mobius_migration_tests:
     runs-on: [ ubuntu-latest ]

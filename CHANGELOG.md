@@ -17,7 +17,6 @@
 - Fix UI inconsistencies in overdue list and contact patient sheet
 - Add gradle-versions-plugin for checking dependency updates
 - Bump AppCompat to v1.3.0
-- Move online patient lookup behind a feature flag
 - Cache build dependencies and intermediates in CI workflows
 - Bump Fragment to v1.3.6
 - Disable new `FragmentStateManager`
@@ -30,12 +29,8 @@
 - Redesign sync indicator view
 - Increase the search and scan button height in patients screen
 - Show new video illustration in patients screen
-- [In Progress: 7 Jul 2021] Overdue list improvements
-  - Change overdue list UI
-  - Load overdue patients without phone number
-  - Add option to download & share overdue list
-  - Updated contact patient bottom sheet UI
-- [In Progress: 14 Jul 2021] Medical screen improvements
+- [In Progress: 22 Jul 2021] Add option to download & share overdue list
+- [In Progress: 14 Jul 2021] Medication screen improvements
   - Search for commonly used drugs
   
 ### Fixes
@@ -70,6 +65,7 @@
 - Implement `DrugsSearchScreen`
 - Don't show progress if overdue list already has items
 - Change `PatientProfile` to be a Room relation model
+- Move online patient lookup behind a feature flag
 
 ### Features
 - Add support for finding a patient online from ID scan within the states
@@ -78,6 +74,10 @@
 - New supported language: Tamil (Sri Lanka) [`ta-LK`], Sinhala [`si-LK`]
 - Show "Change" button in BP and blood sugar entry sheets for changing date
 - Move all daily syncs to the frequent sync group
+- Overdue list improvements
+  - Change overdue list UI
+  - Load overdue patients without phone number
+  - Updated contact patient bottom sheet UI
   
 ### Fixes
 - Fix `ContactPatientBottomSheet` not going back to call patient view on back click in call later mode

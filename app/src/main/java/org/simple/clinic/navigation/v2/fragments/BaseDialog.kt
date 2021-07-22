@@ -15,13 +15,13 @@ import com.spotify.mobius.android.MobiusAndroid
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
-import org.simple.clinic.mobius.ViewRenderer
+import org.simple.clinic.R
 import org.simple.clinic.mobius.eventSources
 import org.simple.clinic.mobius.first
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.util.unsafeLazy
 
-abstract class BaseDialog<K : ScreenKey, M : Parcelable, E, F, R : ViewRenderer<M>> : DialogFragment() {
+abstract class BaseDialog<K : ScreenKey, M : Parcelable, E, F> : DialogFragment() {
 
   companion object {
     private const val KEY_MODEL = "org.simple.clinic.navigation.v2.fragments.BaseScreen.KEY_MODEL"

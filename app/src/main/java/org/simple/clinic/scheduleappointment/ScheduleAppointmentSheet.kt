@@ -184,6 +184,8 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
       if (selectedDate is SelectedDate) {
         val event = AppointmentCalendarDateSelected(selectedDate = selectedDate.date)
         calendarDateSelectedEvents.onNext(event)
+      } else {
+        closeSheet()
       }
     }
   }

@@ -398,8 +398,6 @@
   <!-- Short code search -->
 
   <!-- Simple video -->
-  <string name="simple_video_watch_video">Daawo Fiidyawga</string>
-  <string name="simple_video_how_to_use_the_simple_app">Sida loo isticmaalo app ka Simple</string>
   <string name="simple_video_duration">%s daqiiqo</string>
 
   <!-- Settings -->

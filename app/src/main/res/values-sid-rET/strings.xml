@@ -377,8 +377,6 @@
   <string name="registrationloader_retry">Lede wonali</string>
 
   <!-- Short code search -->
-  <string name="simple_video_watch_video">Vedio la’a</string>
-  <string name="simple_video_how_to_use_the_simple_app">Simple app hitoni horosinaniro</string>
   <string name="simple_video_duration">%s Bixilisa</string>
 
   <!-- Settings -->

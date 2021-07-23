@@ -399,8 +399,6 @@
   <!-- Short code search -->
 
   <!-- Simple video -->
-  <string name="simple_video_watch_video">Viidiyoo daawwadhu</string>
-  <string name="simple_video_how_to_use_the_simple_app">Appii salpha akkamitti fayyadamuu danda’a</string>
   <string name="simple_video_duration">Daqiiqaawwan %s</string>
 
   <!-- Settings -->

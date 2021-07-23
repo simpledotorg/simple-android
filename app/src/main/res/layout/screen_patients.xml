@@ -59,13 +59,19 @@
           app:srcCompat="@drawable/illustration_homescreen_default"
           tools:ignore="ContentDescription" />
 
-        <include
-          android:id="@+id/simpleVideoLayout"
-          layout="@layout/view_simple_video"
+        <ImageView
+          android:id="@+id/simpleVideoIllustration"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/spacing_24"
-          android:layout_marginBottom="@dimen/spacing_16" />
+          android:layout_marginHorizontal="@dimen/spacing_16"
+          android:layout_marginTop="@dimen/spacing_16"
+          android:layout_marginBottom="@dimen/spacing_8"
+          android:adjustViewBounds="true"
+          android:clickable="true"
+          android:focusable="true"
+          android:foreground="?attr/selectableItemBackgroundBorderless"
+          app:srcCompat="@drawable/ic_video_illustration_default"
+          tools:ignore="UnusedAttribute" />
 
       </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
 

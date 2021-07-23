@@ -398,8 +398,6 @@
   <!-- Short code search -->
 
   <!-- Simple video -->
-  <string name="simple_video_watch_video">ቪድዮ ተመልከት</string>
-  <string name="simple_video_how_to_use_the_simple_app">ነዛ ቀላል ኣፕሊኬሽን ከመይ ከም ትጥቀመላ</string>
   <string name="simple_video_duration">%s ደቓይቕ</string>
 
   <!-- Settings -->

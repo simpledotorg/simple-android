@@ -29,6 +29,7 @@
 ### Changes
 - Redesign sync indicator view
 - Increase the search and scan button height in patients screen
+- Show new video illustration in patients screen
 - [In Progress: 7 Jul 2021] Overdue list improvements
   - Change overdue list UI
   - Load overdue patients without phone number

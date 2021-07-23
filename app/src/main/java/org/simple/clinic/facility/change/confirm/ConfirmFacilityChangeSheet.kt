@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.parcelize.Parcelize
@@ -31,7 +32,8 @@ class ConfirmFacilityChangeSheet :
         SheetConfirmFacilityChangeBinding,
         ConfirmFacilityChangeModel,
         ConfirmFacilityChangeEvent,
-        ConfirmFacilityChangeEffect>(),
+        ConfirmFacilityChangeEffect,
+        Unit>(),
     ConfirmFacilityChangeUiActions {
 
   companion object {
@@ -69,7 +71,7 @@ class ConfirmFacilityChangeSheet :
 
   override fun createInit() = ConfirmFacilityChangeInit()
 
-  override fun createEffectHandler() = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
 
   private val selectedFacility: Facility by unsafeLazy { screenKey.facility }
 

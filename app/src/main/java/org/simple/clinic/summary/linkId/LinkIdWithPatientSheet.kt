@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.parcelize.Parcelize
@@ -29,8 +30,8 @@ class LinkIdWithPatientSheet :
         LinkIdWithPatientViewBinding,
         LinkIdWithPatientModel,
         LinkIdWithPatientEvent,
-        LinkIdWithPatientEffect
-        >(),
+        LinkIdWithPatientEffect,
+        Unit>(),
     LinkIdWithPatientViewUi,
     LinkIdWithPatientUiActions {
 
@@ -68,7 +69,7 @@ class LinkIdWithPatientSheet :
 
   override fun createInit() = LinkIdWithPatientInit()
 
-  override fun createEffectHandler() = effectHandlerFactory
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
       .create(this)
       .build()
 

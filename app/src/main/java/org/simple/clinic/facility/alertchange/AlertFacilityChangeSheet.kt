@@ -38,7 +38,8 @@ class AlertFacilityChangeSheet :
         SheetAlertFacilityChangeBinding,
         AlertFacilityChangeModel,
         AlertFacilityChangeEvent,
-        AlertFacilityChangeEffect>(),
+        AlertFacilityChangeEffect,
+        Unit>(),
     ExpectsResult {
 
   @Inject

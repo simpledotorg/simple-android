@@ -167,6 +167,14 @@ class PatientsTabScreen : BaseScreen<
     setupApprovalStatusAnimations()
 
     homeIllustration.setImageResource(illustrationResourceId())
+    simpleVideoIllustration.setImageResource(videoIllustrationResourceId())
+  }
+
+  private fun videoIllustrationResourceId() = when (country.isoCountryCode) {
+    Country.INDIA -> R.drawable.ic_video_illustration_india
+    Country.BANGLADESH -> R.drawable.ic_video_illustration_bangladesh
+    Country.ETHIOPIA -> R.drawable.ic_video_illustration_ethiopia
+    else -> R.drawable.ic_video_illustration_default
   }
 
   private fun illustrationResourceId(): Int =

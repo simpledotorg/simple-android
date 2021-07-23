@@ -270,12 +270,11 @@ class Router(
       fragment: Fragment,
       lastButOneScreen: NavRequest?
   ) {
-    val isNeitherTopNorLastButOneScreen = navRequest != newTopScreen && navRequest != lastButOneScreen
     val isLastButOneScreenCompletelyObscured = navRequest == lastButOneScreen && !newTopScreen.key.isModal
 
     // Don't hide the last but one screen if the incoming screen is a modal since we want whatever changes the user has
     // made in this screen to be visible in the background of the modal
-    if (isNeitherTopNorLastButOneScreen || isLastButOneScreenCompletelyObscured) {
+    if (isLastButOneScreenCompletelyObscured) {
       transaction.detach(fragment)
     }
   }

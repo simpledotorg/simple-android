@@ -160,7 +160,7 @@ jobs:
         run: android-app/.github/scripts/server_heroku_env_setup.py server-app/app.json ${{ env.HEROKU_APP_NAME }} ${{ env.HEROKU_API_KEY }}
 
       - name: Set up other Heroku env variables
-        run: (cd server-app && heroku config:set --app=${{ env.HEROKU_APP_NAME }} SIMPLE_SERVER_HOST=${{ env.HEROKU_APP_NAME }}.herokuapp.com SENDGRID_USERNAME=apikey SENDGRID_PASSWORD=${{ secrets.SENDGRID_PASSWORD }} SENTRY_DSN=https://67a72e806c7a427db73a0342ddc3f965:bffc4497d5fb48f9a4e2cc02fde297df@sentry.io/1217715 SENTRY_SECURITY_HEADER_ENDPOINT=${{ secrets.SENTRY_SECURITY_HEADER_ENDPOINT }} EXOTEL_TOKEN=${{ secrets.EXOTEL_TOKEN }} SEED_GENERATED_ACTIVE_USER_ROLE="Seed User | Active" SEED_GENERATED_ADMIN_PASSWORD="trying to fix hypertension" SEED_GENERATED_INACTIVE_USER_ROLE="Seed User | Inactive" SIMPLE_APP_SIGNATURE=WYtx91vzvQO TWILIO_ACCOUNT_SID=AC01b2bf552fe4e38d77eba27f37e24a1f TWILIO_AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }} TWILIO_PHONE_NUMBER=${{ secrets.TWILIO_PHONE_NUMBER }} TWILIO_REMINDERS_ACCOUNT_AUTH_TOKEN=${{ secrets.TWILIO_REMINDERS_ACCOUNT_AUTH_TOKEN }} TWILIO_REMINDERS_ACCOUNT_PHONE_NUMBER=${{ secrets.TWILIO_REMINDERS_ACCOUNT_PHONE_NUMBER }} TWILIO_REMINDERS_ACCOUNT_SID=AC50508c075c2a5075e2e06797a170b85d SEED_TYPE=empty)
+        run: (cd server-app && heroku config:set --app=${{ env.HEROKU_APP_NAME }} SIMPLE_SERVER_HOST=${{ env.HEROKU_APP_NAME }}.herokuapp.com SENDGRID_USERNAME=apikey SENDGRID_PASSWORD=${{ secrets.SENDGRID_PASSWORD }} SENTRY_DSN=https://67a72e806c7a427db73a0342ddc3f965:bffc4497d5fb48f9a4e2cc02fde297df@sentry.io/1217715 SENTRY_SECURITY_HEADER_ENDPOINT=${{ secrets.SENTRY_SECURITY_HEADER_ENDPOINT }} EXOTEL_TOKEN=${{ secrets.EXOTEL_TOKEN }} SEED_GENERATED_ACTIVE_USER_ROLE="Seed User | Active" SEED_GENERATED_ADMIN_PASSWORD="trying to fix hypertension" SEED_GENERATED_INACTIVE_USER_ROLE="Seed User | Inactive" SIMPLE_APP_SIGNATURE=WYtx91vzvQO TWILIO_ACCOUNT_SID=AC01b2bf552fe4e38d77eba27f37e24a1f TWILIO_AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }} TWILIO_PHONE_NUMBER=${{ secrets.TWILIO_PHONE_NUMBER }} TWILIO_REMINDERS_ACCOUNT_AUTH_TOKEN=${{ secrets.TWILIO_REMINDERS_ACCOUNT_AUTH_TOKEN }} TWILIO_REMINDERS_ACCOUNT_PHONE_NUMBER=${{ secrets.TWILIO_REMINDERS_ACCOUNT_PHONE_NUMBER }} TWILIO_REMINDERS_ACCOUNT_SID=AC50508c075c2a5075e2e06797a170b85d SEED_TYPE=empty SHARED_BUILD_CACHE_APP_NAME=server-build-cache HEROKU_API_KEY=${{ env.HEROKU_API_KEY }})
 
       - name: Setup Heroku redis
         run: (cd server-app && heroku addons:create --app=${{ env.HEROKU_APP_NAME }} --wait --name=${{ env.HEROKU_APP_NAME }}-redis heroku-redis:hobby-dev)
@@ -169,7 +169,7 @@ jobs:
         run: (cd server-app && heroku addons:create --app=${{ env.HEROKU_APP_NAME }} --wait --name=${{ env.HEROKU_APP_NAME }}-postgres heroku-postgresql:hobby-dev)
 
       - name: Setup Heroku buildpacks
-        run: (cd server-app && heroku buildpacks:add --index 1 --app=${{ env.HEROKU_APP_NAME }} heroku/nodejs && heroku buildpacks:add --index 2 --app=${{ env.HEROKU_APP_NAME }} heroku/ruby)
+        run: (cd server-app && heroku buildpacks:add --index 1 --app=${{ env.HEROKU_APP_NAME }} https://github.com/commonlit/heroku-buildpack-shared-build-cache.git && heroku buildpacks:add --index 2 --app=${{ env.HEROKU_APP_NAME }} heroku/nodejs && heroku buildpacks:add --index 3 --app=${{ env.HEROKU_APP_NAME }} heroku/ruby)
 
       - name: Start the Heroku server
         env:

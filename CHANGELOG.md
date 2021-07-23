@@ -39,6 +39,7 @@
   
 ### Fixes
 - Fix `ContactPatientBottomSheet` UI spacing and styling
+- Fix race condition for screen results in `ScheduleAppointmentSheet`
   
 ## Demo
 ### Internal

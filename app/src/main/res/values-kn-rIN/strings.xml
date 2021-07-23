@@ -400,8 +400,6 @@
   <!-- Short code search -->
 
   <!-- Simple video -->
-  <string name="simple_video_watch_video">ವೀಡಿಯೋವನ್ನು ವೀಕ್ಷಿಸಿ</string>
-  <string name="simple_video_how_to_use_the_simple_app">ಸಿಂಪಲ್ ಆ್ಯಪ್ ಅನ್ನು ಹೇಗೆ ಬಳಸುವುದು</string>
   <string name="simple_video_duration">%s ನಿಮಿಷಗಳು</string>
 
   <!-- Settings -->

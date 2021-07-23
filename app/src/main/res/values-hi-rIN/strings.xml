@@ -400,8 +400,6 @@
   <!-- Short code search -->
 
   <!-- Simple video -->
-  <string name="simple_video_watch_video">वीडियो देखें</string>
-  <string name="simple_video_how_to_use_the_simple_app">सिंपल ऐप का इस्तेमाल कैसे करें</string>
   <string name="simple_video_duration">%s मिनट</string>
 
   <!-- Settings -->

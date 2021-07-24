@@ -8,7 +8,7 @@ import org.simple.clinic.main.TypedPreference.Type.LastDrugPullToken
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncConfigType
-import org.simple.clinic.sync.SyncConfigType.Type.Drugs
+import org.simple.clinic.sync.SyncConfigType.Type.Frequent
 import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.util.read
 import java.util.Optional
@@ -19,7 +19,7 @@ class DrugSync @Inject constructor(
     private val repository: DrugRepository,
     private val api: DrugSyncApi,
     @TypedPreference(LastDrugPullToken) private val lastPullToken: Preference<Optional<String>>,
-    @SyncConfigType(Drugs) private val config: SyncConfig
+    @SyncConfigType(Frequent) private val config: SyncConfig
 ) : ModelSync {
 
   override val name = "Medication"

@@ -8,52 +8,40 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import io.reactivex.Completable
-import io.reactivex.Observable
+import io.reactivex.Single
+import org.simple.clinic.sync.SyncConfigType.Type.Frequent
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class SyncScheduler @Inject constructor(
     private val workManager: WorkManager,
-    private val syncs: List<@JvmSuppressWildcards ModelSync>
+    @SyncConfigType(Frequent) private val syncConfig: SyncConfig
 ) {
 
   fun schedule(): Completable {
-    return Observable
-        .fromIterable(syncs)
-        .map { it.syncConfig() }
-        .distinct { it.syncGroup }
-        .map { config -> createWorkRequest(config) to config.syncGroup.name }
-        .toList()
+    return Single.just(syncConfig)
+        .map { config -> createWorkRequest(config.syncInterval) }
+        .doOnSuccess { request -> workManager.enqueueUniquePeriodicWork("sync-patient-resources", REPLACE, request) }
         .doOnSuccess { cancelPreviouslyScheduledPeriodicWork() }
-        .flatMapCompletable(this::scheduleWorkRequests)
+        .ignoreElement()
   }
 
   /*
-   * This is meant to cancel the old periodic work that
-   * was scheduled and persisted before we moved to the
-   * "unique" work system.
-   * TODO 2019-09-02: Remove once the unique work feature has been deployed to enough devices
+   * This is meant to cancel the periodic work that was scheduled using the `SyncGroup` enum
+   * until enough devices have migrated over to the system where we schedule only one periodic
+   * sync
+   * TODO vs(2021-07-15): Remove once the single unique sync work has been deployed to enough devices
    **/
   private fun cancelPreviouslyScheduledPeriodicWork() {
-    workManager.cancelAllWorkByTag("patient-sync")
+    workManager.cancelUniqueWork("FREQUENT")
+    workManager.cancelUniqueWork("DAILY")
   }
 
-  private fun scheduleWorkRequests(workRequests: List<Pair<PeriodicWorkRequest, String>>): Completable {
-    return Completable.fromAction {
-
-      workRequests.forEach { (request, name) ->
-        workManager.enqueueUniquePeriodicWork(name, REPLACE, request)
-      }
-    }
-  }
-
-  private fun createWorkRequest(syncConfig: SyncConfig): PeriodicWorkRequest {
+  private fun createWorkRequest(syncInterval: SyncInterval): PeriodicWorkRequest {
     val constraints = Constraints.Builder()
         .setRequiredNetworkType(NetworkType.CONNECTED)
         .setRequiresBatteryNotLow(true)
         .build()
-
-    val syncInterval = syncConfig.syncInterval
 
     val syncRepeatIntervalMillis = syncInterval
         .frequency
@@ -74,7 +62,6 @@ class SyncScheduler @Inject constructor(
         )
         .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, syncBackoffIntervalMillis, TimeUnit.MILLISECONDS)
         .setConstraints(constraints)
-        .setInputData(SyncWorker.createWorkDataForSyncConfig(syncConfig))
         .build()
   }
 }

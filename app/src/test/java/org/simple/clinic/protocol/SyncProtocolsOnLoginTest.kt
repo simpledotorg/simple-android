@@ -41,7 +41,7 @@ class SyncProtocolsOnLoginTest {
 
     syncProtocolOnLogin.listen()
 
-    verify(protocolSync, never()).sync()
+    verify(protocolSync, never()).pull()
   }
 
   @Test
@@ -53,7 +53,7 @@ class SyncProtocolsOnLoginTest {
 
     syncProtocolOnLogin.listen()
 
-    verify(protocolSync, times(1)).sync()
+    verify(protocolSync, times(1)).pull()
   }
 
   @Test
@@ -65,6 +65,6 @@ class SyncProtocolsOnLoginTest {
 
     syncProtocolOnLogin.listen()
 
-    verify(protocolSync, never()).sync()
+    verify(protocolSync, never()).pull()
   }
 }

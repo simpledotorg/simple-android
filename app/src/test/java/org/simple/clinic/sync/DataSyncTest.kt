@@ -5,7 +5,6 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Completable
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -35,7 +34,7 @@ class DataSyncTest {
       ),
       pullBatchSize = 10,
       pushBatchSize = 10,
-      syncGroup = SyncGroup.FREQUENT
+      name = ""
   )
 
   @Test
@@ -701,14 +700,6 @@ class DataSyncTest {
 
     override val requiresSyncApprovedUser: Boolean = _requiresSyncApprovedUser
 
-    override fun sync(): Completable {
-      return Completable
-          .mergeArrayDelayError(
-              Completable.fromAction { push() },
-              Completable.fromAction { pull() }
-          )
-    }
-
     override fun push() {
       if (pushError != null) throw pushError
     }
@@ -717,6 +708,5 @@ class DataSyncTest {
       if (pullError != null) throw pullError
     }
 
-    override fun syncConfig(): SyncConfig = config
   }
 }

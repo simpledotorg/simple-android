@@ -11,7 +11,6 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.combineLatest
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.LastSyncedState
-import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.interval

@@ -1,6 +1,5 @@
 package org.simple.clinic.reports
 
-import io.reactivex.Completable
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncConfigType
@@ -17,12 +16,6 @@ class ReportsSync @Inject constructor(
 
   override val requiresSyncApprovedUser = true
 
-  override fun sync(): Completable = Completable
-      .mergeArrayDelayError(
-          Completable.fromAction { push() },
-          Completable.fromAction { pull() }
-      )
-
   override fun push() {
     /* Nothing to do here */
   }
@@ -33,5 +26,4 @@ class ReportsSync @Inject constructor(
     reportsRepository.updateReports(reportsText)
   }
 
-  override fun syncConfig(): SyncConfig = config
 }

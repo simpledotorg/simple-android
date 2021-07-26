@@ -21,7 +21,7 @@ class SyncScheduler @Inject constructor(
   fun schedule(): Completable {
     return Single.just(syncConfig)
         .map { config -> createWorkRequest(config.syncInterval) }
-        .doOnSuccess { request -> workManager.enqueueUniquePeriodicWork("sync-patient-resources", REPLACE, request) }
+        .doOnSuccess { request -> workManager.enqueueUniquePeriodicWork(syncConfig.name, REPLACE, request) }
         .doOnSuccess { cancelPreviouslyScheduledPeriodicWork() }
         .ignoreElement()
   }

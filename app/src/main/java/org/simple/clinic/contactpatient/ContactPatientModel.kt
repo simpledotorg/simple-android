@@ -9,9 +9,8 @@ import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.patient.PatientProfile
-import org.simple.clinic.util.ParcelableOptional
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.parcelable
+import org.simple.clinic.util.toNullable
 import java.time.LocalDate
 import java.util.Optional
 import java.util.UUID
@@ -21,7 +20,7 @@ data class ContactPatientModel(
     val patientUuid: UUID,
     val uiMode: UiMode,
     val patientProfile: PatientProfile? = null,
-    val appointment: ParcelableOptional<OverdueAppointment>? = null,
+    val appointment: OverdueAppointment? = null,
     val secureCallingFeatureEnabled: Boolean,
     val potentialAppointments: List<PotentialAppointmentDate>,
     val selectedAppointmentDate: LocalDate,
@@ -68,16 +67,16 @@ data class ContactPatientModel(
     get() = appointment != null
 
   val hasRegisteredFacility: Boolean
-    get() = appointment?.get()?.patientRegisteredFacilityID != null
+    get() = appointment?.patientRegisteredFacilityID != null
 
   val appointmentIsInRegisteredFacility: Boolean
-    get() = appointment?.get()?.patientRegisteredFacilityID == currentFacility?.uuid
+    get() = appointment?.patientRegisteredFacilityID == currentFacility?.uuid
 
   val hasSelectedARemoveAppointmentReason: Boolean
     get() = selectedRemoveAppointmentReason != null
 
   val appointmentUuid: UUID
-    get() = appointment!!.get().appointment.uuid
+    get() = appointment!!.appointment.uuid
 
   val isPatientContactInfoLoaded: Boolean
     get() = contactPatientInfoProgressState == DONE
@@ -87,7 +86,7 @@ data class ContactPatientModel(
   }
 
   fun overdueAppointmentLoaded(appointment: Optional<OverdueAppointment>): ContactPatientModel {
-    return copy(appointment = appointment.parcelable())
+    return copy(appointment = appointment.toNullable())
   }
 
   fun reminderDateSelected(date: PotentialAppointmentDate): ContactPatientModel {

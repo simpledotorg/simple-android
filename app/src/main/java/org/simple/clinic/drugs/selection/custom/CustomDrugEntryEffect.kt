@@ -14,3 +14,5 @@ data class SaveCustomDrugToPrescription(
     val rxNormCode: String?,
     val frequency: DrugFrequency?
 ) : CustomDrugEntryEffect()
+
+object CloseBottomSheet : CustomDrugEntryEffect()

@@ -4,4 +4,5 @@ import org.simple.clinic.drugs.search.DrugFrequency
 
 interface CustomDrugEntrySheetUiActions {
   fun showEditFrequencyDialog(frequency: DrugFrequency)
+  fun close()
 }

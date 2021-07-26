@@ -65,7 +65,7 @@ class ContactPatientUiRenderer(
   }
 
   private fun renderCallPatientView(model: ContactPatientModel) {
-    if (model.hasLoadedPatientProfile && model.hasLoadedAppointment) {
+    if (model.hasLoadedPatientProfile) {
       renderPatientProfile(model.patientProfile!!)
     }
 

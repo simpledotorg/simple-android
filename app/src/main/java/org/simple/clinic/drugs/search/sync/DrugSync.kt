@@ -1,7 +1,6 @@
 package org.simple.clinic.drugs.search.sync
 
 import com.f2prateek.rx.preferences2.Preference
-import io.reactivex.Completable
 import org.simple.clinic.drugs.search.DrugRepository
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.LastDrugPullToken
@@ -26,8 +25,6 @@ class DrugSync @Inject constructor(
 
   override val requiresSyncApprovedUser = false
 
-  override fun sync() = Completable.fromAction { pull() }
-
   override fun push() {
     // no-op
   }
@@ -39,5 +36,4 @@ class DrugSync @Inject constructor(
     }
   }
 
-  override fun syncConfig() = config
 }

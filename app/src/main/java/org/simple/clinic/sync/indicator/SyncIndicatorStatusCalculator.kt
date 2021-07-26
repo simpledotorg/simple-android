@@ -5,7 +5,6 @@ import io.reactivex.disposables.Disposable
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.LastSyncedState
-import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.sync.SyncProgress
 import org.simple.clinic.sync.SyncProgress.FAILURE
 import org.simple.clinic.sync.SyncProgress.SUCCESS

@@ -16,7 +16,6 @@ import org.simple.clinic.settings.ProvidedLanguage
 import org.simple.clinic.settings.SettingsRepository
 import org.simple.clinic.settings.SystemDefaultLanguage
 import org.simple.clinic.sync.DataSync
-import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 
 class ChangeLanguageEffectHandlerTest {

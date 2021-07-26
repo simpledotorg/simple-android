@@ -27,7 +27,7 @@ class SyncConfigModule {
         syncInterval = syncInterval,
         pullBatchSize = reader.long("sync_pull_batch_size", 1000).toInt(),
         pushBatchSize = reader.long("sync_push_batch_size", 500).toInt(),
-        syncGroup = SyncGroup.FREQUENT
+        name = "sync-patient-resources"
     )
   }
 }

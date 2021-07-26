@@ -2,13 +2,9 @@
 
 ## Next Release
 ### Changes
-[In Progress: 7 Jul 2021] Overdue list improvements
-  - Change overdue list UI
-  - Load overdue patients without phone number
-  - Add option to download & share overdue list
-  - Updated contact patient bottom sheet UI
-- [In Progress: 14 Jul 2021] Medical screen improvements
+- [In Progress: 14 Jul 2021] Medication screen improvements
   - Search for commonly used drugs
+- [In Progress: 22 Jul 2021] Add option to download & share overdue list
   
 ## Demo
 ### Internal
@@ -48,7 +44,11 @@
 - New supported language: Tamil (Sri Lanka) [`ta-LK`], Sinhala [`si-LK`]
 - Show "Change" button in BP and blood sugar entry sheets for changing date
 - Move all daily syncs to the frequent sync group
-  
+- Overdue list improvements
+  - Change overdue list UI
+  - Load overdue patients without phone number
+  - Updated contact patient bottom sheet UI
+
 ### Fixes
 - Fix `ContactPatientBottomSheet` not going back to call patient view on back click in call later mode
 - Fix overdue list not changing when switching facility from overdue screen

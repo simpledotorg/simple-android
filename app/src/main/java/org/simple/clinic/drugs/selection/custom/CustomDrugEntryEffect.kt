@@ -33,3 +33,5 @@ data class UpdatePrescription(
     val rxNormCode: String?,
     val frequency: DrugFrequency?
 ) : CustomDrugEntryEffect()
+
+object CloseBottomSheet : CustomDrugEntryEffect()

@@ -38,6 +38,7 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
         .addConsumer(SetSheetTitle::class.java, ::setSheetTitle, schedulersProvider.ui())
         .addTransformer(SaveCustomDrugToPrescription::class.java, saveCustomDrugToPrescription())
         .addTransformer(UpdatePrescription::class.java, updatePrescription())
+        .addAction(CloseBottomSheet::class.java, uiActions::close, schedulersProvider.ui())
         .build()
   }
 

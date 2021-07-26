@@ -7,4 +7,5 @@ interface CustomDrugEntrySheetUiActions {
   fun setDrugFrequency(frequency: DrugFrequency?)
   fun setDrugDosage(dosage: String?)
   fun setSheetTitle(drugName: String)
+  fun close()
 }

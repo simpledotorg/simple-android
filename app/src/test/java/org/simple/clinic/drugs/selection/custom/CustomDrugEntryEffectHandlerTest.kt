@@ -184,4 +184,15 @@ class CustomDrugEntryEffectHandlerTest {
     verifyNoMoreInteractions(prescriptionRepository)
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when close custom drug entry sheet effect is receieved, then close the sheet`() {
+    // when
+    testCase.dispatch(CloseBottomSheet)
+
+    // then
+    verify(uiActions).close()
+    verifyNoMoreInteractions(uiActions)
+    testCase.assertNoOutgoingEvents()
+  }
 }

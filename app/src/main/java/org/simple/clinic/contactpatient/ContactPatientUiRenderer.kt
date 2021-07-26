@@ -9,7 +9,6 @@ import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.PatientProfile
-import org.simple.clinic.util.ParcelableOptional
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.daysTill
 import java.time.LocalDate
@@ -170,7 +169,7 @@ class ContactPatientUiRenderer(
 
   private fun renderPatientProfile(
       patientProfile: PatientProfile,
-      appointment: ParcelableOptional<OverdueAppointment>
+      appointment: OverdueAppointment
   ) {
     val patientAge = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock)
 
@@ -179,11 +178,11 @@ class ContactPatientUiRenderer(
         gender = patientProfile.patient.gender,
         age = patientAge,
         phoneNumber = patientProfile.phoneNumbers.firstOrNull()?.number,
-        patientAddress = patientAddressText(appointment.get().patientAddress),
-        registeredFacility = appointment.get().patientRegisteredFacilityName.orEmpty(),
-        diagnosedWithDiabetes = appointment.get().diagnosedWithDiabetes,
-        diagnosedWithHypertension = appointment.get().diagnosedWithHypertension,
-        lastVisited = appointment.get().patientLastSeen
+        patientAddress = patientAddressText(appointment.patientAddress),
+        registeredFacility = appointment.patientRegisteredFacilityName.orEmpty(),
+        diagnosedWithDiabetes = appointment.diagnosedWithDiabetes,
+        diagnosedWithHypertension = appointment.diagnosedWithHypertension,
+        lastVisited = appointment.patientLastSeen
     ))
   }
 

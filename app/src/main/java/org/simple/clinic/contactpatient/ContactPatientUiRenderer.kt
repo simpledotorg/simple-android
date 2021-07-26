@@ -66,7 +66,7 @@ class ContactPatientUiRenderer(
 
   private fun renderCallPatientView(model: ContactPatientModel) {
     if (model.hasLoadedPatientProfile && model.hasLoadedAppointment) {
-      renderPatientProfile(model.patientProfile!!, model.appointment!!)
+      renderPatientProfile(model.patientProfile!!)
     }
 
     if (model.hasRegisteredFacility && model.hasCurrentFacility) {
@@ -168,8 +168,7 @@ class ContactPatientUiRenderer(
   }
 
   private fun renderPatientProfile(
-      patientProfile: ContactPatientProfile,
-      appointment: ParcelableOptional<OverdueAppointment>
+      patientProfile: ContactPatientProfile
   ) {
     val patientAge = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock)
 

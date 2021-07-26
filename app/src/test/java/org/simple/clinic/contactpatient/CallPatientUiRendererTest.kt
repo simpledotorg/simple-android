@@ -69,6 +69,7 @@ class CallPatientUiRendererTest {
     verify(ui).hideProgress()
     verify(ui).hideSecureCallUi_Old()
     verify(ui).switchToCallPatientView_Old()
+    verify(ui).hideCallResultSection_Old()
 
     val expectedAge = 48 // difference between clock date and DOB
     verify(ui).renderPatientDetails_Old(name, gender, expectedAge, phoneNumber)
@@ -100,6 +101,7 @@ class CallPatientUiRendererTest {
     verify(ui).hideProgress()
     verify(ui).hideSecureCallUi_Old()
     verify(ui).switchToCallPatientView_Old()
+    verify(ui).hideCallResultSection_Old()
 
     val expectedAge = 48 // difference between clock date and Age
     verify(ui).renderPatientDetails_Old(name, gender, expectedAge, phoneNumber)
@@ -152,6 +154,7 @@ class CallPatientUiRendererTest {
     // then
     verify(ui).hideProgress()
     verify(ui).switchToCallPatientView_Old()
+    verify(ui).hideCallResultSection_Old()
 
     verify(ui).showSecureCallUi_Old()
     verifyNoMoreInteractions(ui)
@@ -209,6 +212,7 @@ class CallPatientUiRendererTest {
     // then
     verify(ui).hideProgress()
     verify(ui).switchToCallPatientView_Old()
+    verify(ui).hideCallResultSection_Old()
 
     verify(ui).hideSecureCallUi_Old()
     verifyNoMoreInteractions(ui)
@@ -284,6 +288,7 @@ class CallPatientUiRendererTest {
     verify(ui).hideProgress()
     verify(ui).switchToCallPatientView_Old()
     verify(ui).hideSecureCallUi_Old()
+    verify(ui).hideCallResultSection_Old()
     verifyNoMoreInteractions(ui)
   }
 

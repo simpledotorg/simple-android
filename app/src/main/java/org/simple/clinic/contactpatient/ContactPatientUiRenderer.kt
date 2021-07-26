@@ -50,10 +50,7 @@ class ContactPatientUiRenderer(
     if (model.hasLoadedPatientProfile) {
       renderPatientProfile_Old(model.patientProfile!!)
     }
-
-    if (model.hasLoadedAppointment) {
-      toggleCallResultSection(model.appointment!!)
-    }
+    toggleCallResultSection(model.hasLoadedAppointment)
 
     if (model.secureCallingFeatureEnabled) {
       ui.showSecureCallUi_Old()
@@ -146,8 +143,8 @@ class ContactPatientUiRenderer(
     return potentialAppointmentDates.firstOrNull { it.scheduledFor == date }?.timeToAppointment
   }
 
-  private fun toggleCallResultSection(appointment: ParcelableOptional<OverdueAppointment>) {
-    if (appointment.isEmpty()) {
+  private fun toggleCallResultSection(isAppointmentLoaded: Boolean) {
+    if (!isAppointmentLoaded) {
       ui.hideCallResultSection_Old()
     } else {
       ui.showCallResultSection_Old()

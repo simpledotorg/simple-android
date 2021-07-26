@@ -53,7 +53,7 @@
           android:id="@+id/homeIllustration"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/spacing_8"
+          android:layout_marginTop="@dimen/spacing_16"
           android:adjustViewBounds="true"
           android:scaleType="fitXY"
           app:srcCompat="@drawable/illustration_homescreen_default"

@@ -120,14 +120,20 @@ class PatientsTabScreen : BaseScreen<
   private val scanSimpleCardButton
     get() = binding.scanSimpleCardButton
 
-  private val simpleVideoIllustration
-    get() = binding.simpleVideoIllustration
-
   private val syncIndicator
     get() = binding.syncIndicator
 
   private val illustrationLayout
     get() = binding.illustrationLayout
+
+  private val simpleVideoLayout
+    get() = binding.simpleVideoLayout
+
+  private val simpleVideoIllustration
+    get() = simpleVideoLayout.simpleVideoIllustration
+
+  private val simpleVideoDurationTextView
+    get() = simpleVideoLayout.simpleVideoDurationTextView
 
   override fun defaultModel() = PatientsTabModel.create()
 
@@ -205,7 +211,8 @@ class PatientsTabScreen : BaseScreen<
 
   private fun scanCardIdButtonClicks() = scanSimpleCardButton.clicks().map { ScanCardIdButtonClicked() }
 
-  private fun simpleVideoClicked() = simpleVideoIllustration
+  private fun simpleVideoClicked() = simpleVideoLayout
+      .root
       .clicks()
       .map { SimpleVideoClicked }
 
@@ -285,7 +292,11 @@ class PatientsTabScreen : BaseScreen<
   }
 
   override fun showSimpleVideo() {
-    showHomeScreenBackground(R.id.simpleVideoIllustration)
+    // Hard-coding to show this simple video view exists because, as of now,
+    // we are not sure if we will have variations of this training video.
+    // We should make the title, duration and video thumbnail configurable in order to improve this.
+    simpleVideoDurationTextView.text = resources.getString(R.string.simple_video_duration, "5:07")
+    showHomeScreenBackground(R.id.simpleVideoLayout)
   }
 
   override fun showIllustration() {

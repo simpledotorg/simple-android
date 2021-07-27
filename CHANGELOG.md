@@ -22,6 +22,7 @@
 - Disable new `FragmentStateManager`
 - Remove the daily and frequent sync separation
 - Update home screen illustrations for Bangladesh & Ethiopia
+- Update Simple video view to be translatable
 - [In Progress: 22 Jul 2021] Use `MobiusLoopViewModel` for sending view effects that are lifecycle aware
   - Replace `MobiusLoop.Controller` with `MobiusLoopViewModel` in base screens
   - Add new interface for handling received view effects

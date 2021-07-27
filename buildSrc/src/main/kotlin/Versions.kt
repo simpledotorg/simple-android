@@ -74,7 +74,7 @@ object Versions {
   const val desugarJdk = "1.0.9"
   const val signaturePad = "1.3.1"
   const val viewpager2 = "1.0.0"
-  const val lint = "27.1.1"
+  const val lint = "27.2.2"
   const val rootbeer = "0.0.9"
   const val mlKitBarcode = "16.1.4"
   const val fragment = "1.3.6"

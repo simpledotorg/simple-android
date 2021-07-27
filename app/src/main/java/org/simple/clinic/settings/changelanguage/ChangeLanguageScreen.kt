@@ -2,13 +2,9 @@ package org.simple.clinic.settings.changelanguage
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
@@ -20,13 +16,11 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ListChangeLanguageViewBinding
 import org.simple.clinic.databinding.ScreenChangeLanguageBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.settings.Language
 import org.simple.clinic.settings.changelanguage.ChangeLanguageListItem.Event.ListItemClicked
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import javax.inject.Inject
 
@@ -42,21 +36,16 @@ class ChangeLanguageScreen : BaseScreen<
   lateinit var router: Router
 
   @Inject
-  lateinit var activity: AppCompatActivity
-
-  @Inject
   lateinit var effectHandlerFactory: ChangeLanguageEffectHandler.Factory
 
-  private var binding: ScreenChangeLanguageBinding? = null
-
   private val toolbar
-    get() = binding!!.toolbar
+    get() = binding.toolbar
 
   private val languagesList
-    get() = binding!!.languagesList
+    get() = binding.languagesList
 
   private val doneButton
-    get() = binding!!.doneButton
+    get() = binding.doneButton
 
   private val languagesAdapter = ItemAdapter(
       diffCallback = ChangeLanguageListItem.DiffCallback(),
@@ -66,29 +55,6 @@ class ChangeLanguageScreen : BaseScreen<
           }
       )
   )
-
-  private val events: Observable<ChangeLanguageEvent> by unsafeLazy {
-    Observable
-        .merge(
-            doneButtonClicks(),
-            languageSelections()
-        )
-        .compose(ReportAnalyticsEvents())
-        .cast<ChangeLanguageEvent>()
-  }
-
-  private val uiRenderer = ChangeLanguageUiRenderer(this)
-
-  private val delegate: MobiusDelegate<ChangeLanguageModel, ChangeLanguageEvent, ChangeLanguageEffect> by unsafeLazy {
-    MobiusDelegate.forView(
-        events = events,
-        defaultModel = ChangeLanguageModel.FETCHING_LANGUAGES,
-        init = ChangeLanguageInit(),
-        update = ChangeLanguageUpdate(),
-        effectHandler = effectHandlerFactory.create(uiActions = this).build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
 
   override fun defaultModel() = ChangeLanguageModel.FETCHING_LANGUAGES
 
@@ -126,17 +92,6 @@ class ChangeLanguageScreen : BaseScreen<
     toolbar.setNavigationOnClickListener { router.pop() }
   }
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
-
-    binding = ScreenChangeLanguageBinding.bind(this)
-
-    context.injector<Injector>().inject(this)
-  }
-
   private fun setupLanguagesList() {
     languagesList.apply {
       setHasFixedSize(true)
@@ -156,25 +111,6 @@ class ChangeLanguageScreen : BaseScreen<
     return doneButton
         .clicks()
         .map { SaveCurrentLanguageEvent }
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    binding = null
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   override fun displayLanguages(supportedLanguages: List<Language>, selectedLanguage: Language?) {

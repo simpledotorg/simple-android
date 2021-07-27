@@ -92,6 +92,11 @@ class ChangeLanguageScreen : BaseScreen<
     toolbar.setNavigationOnClickListener { router.pop() }
   }
 
+  override fun onDestroyView() {
+    languagesList.adapter = null
+    super.onDestroyView()
+  }
+
   private fun setupLanguagesList() {
     languagesList.apply {
       setHasFixedSize(true)

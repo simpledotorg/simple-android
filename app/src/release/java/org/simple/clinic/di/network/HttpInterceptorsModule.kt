@@ -13,8 +13,14 @@ class HttpInterceptorsModule {
   fun providerInterceptors(
       loggedInInterceptor: LoggedInUserHttpInterceptor,
       appInfoHttpInterceptor: AppInfoHttpInterceptor,
-      networkAnalyticsInterceptor: NetworkAnalyticsInterceptor
+      networkAnalyticsInterceptor: NetworkAnalyticsInterceptor,
+      compressRequestInterceptor: CompressRequestInterceptor
   ): List<Interceptor> {
-    return listOf(loggedInInterceptor, appInfoHttpInterceptor, networkAnalyticsInterceptor)
+    return listOf(
+        loggedInInterceptor,
+        appInfoHttpInterceptor,
+        compressRequestInterceptor,
+        networkAnalyticsInterceptor
+    )
   }
 }

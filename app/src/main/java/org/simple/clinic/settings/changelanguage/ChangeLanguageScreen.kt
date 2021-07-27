@@ -1,7 +1,10 @@
 package org.simple.clinic.settings.changelanguage
 
+import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -111,6 +114,18 @@ class ChangeLanguageScreen : BaseScreen<
       container: ViewGroup?
   ) = ScreenChangeLanguageBinding.inflate(layoutInflater, container, false)
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+
+    setupLanguagesList()
+    toolbar.setNavigationOnClickListener { router.pop() }
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -120,9 +135,6 @@ class ChangeLanguageScreen : BaseScreen<
     binding = ScreenChangeLanguageBinding.bind(this)
 
     context.injector<Injector>().inject(this)
-
-    setupLanguagesList()
-    toolbar.setNavigationOnClickListener { router.pop() }
   }
 
   private fun setupLanguagesList() {

@@ -194,7 +194,7 @@ class ChangeLanguageScreen : BaseScreen<
   }
 
   override fun restartActivity() {
-    activity.recreate()
+    requireActivity().recreate()
   }
 
   interface Injector {

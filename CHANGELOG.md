@@ -40,11 +40,15 @@
 - [In Progress: 22 Jul 2021] Add option to download & share overdue list
 - [In Progress: 14 Jul 2021] Medication screen improvements
   - Search for commonly used drugs
+- [In Progress: 27 Jul 2021] Overdue list improvements
+  - Change overdue list UI
+  - Load overdue patients without phone number
+  - Updated contact patient bottom sheet UI
   
 ### Fixes
 - Fix `ContactPatientBottomSheet` UI spacing and styling
   
-## Demo
+## 2021-07-26-7883
 ### Internal
 - Bump Sentry Gradle plugin to v2.0.1
 - Bump Material Design Components to v1.4.0
@@ -82,10 +86,6 @@
 - New supported language: Tamil (Sri Lanka) [`ta-LK`], Sinhala [`si-LK`]
 - Show "Change" button in BP and blood sugar entry sheets for changing date
 - Move all daily syncs to the frequent sync group
-- Overdue list improvements
-  - Change overdue list UI
-  - Load overdue patients without phone number
-  - Updated contact patient bottom sheet UI
   
 ### Fixes
 - Fix `ContactPatientBottomSheet` not going back to call patient view on back click in call later mode

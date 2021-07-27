@@ -76,12 +76,15 @@ jobs:
     env:
       AVD_API_LEVEL: 27
       HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
-      HEROKU_APP_NAME: simple-android-test-app-${{ github.run_number }}
     steps:
       - name: Checkout android app source
         uses: actions/checkout@v2
         with:
           path: android-app
+
+      - name: Generate server test app name
+        id: generate-server-app-name
+        run: android-app/.github/scripts/generate_heroku_app_name.sh ${{ github.ref }}
 
       - name: Cache Gradle build
         uses: actions/cache@v2
@@ -118,8 +121,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: simpledotorg/simple-server
-          ref: empty-seeds
-          fetch-depth: 0
+          fetch-depth: 0 # Full clone needed for Heroku
           path: server-app
 
       - name: Set up JDK
@@ -147,36 +149,45 @@ jobs:
       - name: Link Heroku CLI globally
         run: npm link heroku
 
+      - name: Check if server app exists
+        id: check-server-app-exists
+        run: android-app/.github/scripts/check_heroku_app_exists.sh resolvetosavelives ${{ steps.generate-server-app-name.outputs.heroku_app_name }}
+
       - name: Set up Python dependencies
         run: pip3 install requests
 
       - name: Create Heroku app
-        run: (cd server-app && heroku apps:create --team resolvetosavelives ${{ env.HEROKU_APP_NAME }})
+        if: ${{ !steps.check-server-app-exists.outputs.heroku_app_exists }}
+        run: (cd server-app && heroku apps:create --team resolvetosavelives ${{ steps.generate-server-app-name.outputs.heroku_app_name }})
 
       - name: Turn on capturing of flaky tests
         run: cat android-app/app/src/androidTest/resources/quarantine_ci.properties > android-app/app/src/androidTest/resources/quarantine.properties
 
       - name: Set up default Heroku env variables
-        run: android-app/.github/scripts/server_heroku_env_setup.py server-app/app.json ${{ env.HEROKU_APP_NAME }} ${{ env.HEROKU_API_KEY }}
+        run: android-app/.github/scripts/server_heroku_env_setup.py server-app/app.json ${{ steps.generate-server-app-name.outputs.heroku_app_name }} ${{ env.HEROKU_API_KEY }}
 
       - name: Set up other Heroku env variables
-        run: (cd server-app && heroku config:set --app=${{ env.HEROKU_APP_NAME }} SIMPLE_SERVER_HOST=${{ env.HEROKU_APP_NAME }}.herokuapp.com SENDGRID_USERNAME=apikey SENDGRID_PASSWORD=${{ secrets.SENDGRID_PASSWORD }} SENTRY_DSN=https://67a72e806c7a427db73a0342ddc3f965:bffc4497d5fb48f9a4e2cc02fde297df@sentry.io/1217715 SENTRY_SECURITY_HEADER_ENDPOINT=${{ secrets.SENTRY_SECURITY_HEADER_ENDPOINT }} EXOTEL_TOKEN=${{ secrets.EXOTEL_TOKEN }} SEED_GENERATED_ACTIVE_USER_ROLE="Seed User | Active" SEED_GENERATED_ADMIN_PASSWORD="trying to fix hypertension" SEED_GENERATED_INACTIVE_USER_ROLE="Seed User | Inactive" SIMPLE_APP_SIGNATURE=WYtx91vzvQO TWILIO_ACCOUNT_SID=AC01b2bf552fe4e38d77eba27f37e24a1f TWILIO_AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }} TWILIO_PHONE_NUMBER=${{ secrets.TWILIO_PHONE_NUMBER }} TWILIO_REMINDERS_ACCOUNT_AUTH_TOKEN=${{ secrets.TWILIO_REMINDERS_ACCOUNT_AUTH_TOKEN }} TWILIO_REMINDERS_ACCOUNT_PHONE_NUMBER=${{ secrets.TWILIO_REMINDERS_ACCOUNT_PHONE_NUMBER }} TWILIO_REMINDERS_ACCOUNT_SID=AC50508c075c2a5075e2e06797a170b85d SEED_TYPE=empty SHARED_BUILD_CACHE_APP_NAME=server-build-cache HEROKU_API_KEY=${{ env.HEROKU_API_KEY }})
+        run: (cd server-app && heroku config:set --app=${{ steps.generate-server-app-name.outputs.heroku_app_name }} SIMPLE_SERVER_HOST=${{ steps.generate-server-app-name.outputs.heroku_app_name }}.herokuapp.com SENDGRID_USERNAME=apikey SENDGRID_PASSWORD=${{ secrets.SENDGRID_PASSWORD }} SENTRY_DSN=https://67a72e806c7a427db73a0342ddc3f965:bffc4497d5fb48f9a4e2cc02fde297df@sentry.io/1217715 SENTRY_SECURITY_HEADER_ENDPOINT=${{ secrets.SENTRY_SECURITY_HEADER_ENDPOINT }} EXOTEL_TOKEN=${{ secrets.EXOTEL_TOKEN }} SEED_GENERATED_ACTIVE_USER_ROLE="Seed User | Active" SEED_GENERATED_ADMIN_PASSWORD="trying to fix hypertension" SEED_GENERATED_INACTIVE_USER_ROLE="Seed User | Inactive" SIMPLE_APP_SIGNATURE=WYtx91vzvQO TWILIO_ACCOUNT_SID=AC01b2bf552fe4e38d77eba27f37e24a1f TWILIO_AUTH_TOKEN=${{ secrets.TWILIO_AUTH_TOKEN }} TWILIO_PHONE_NUMBER=${{ secrets.TWILIO_PHONE_NUMBER }} TWILIO_REMINDERS_ACCOUNT_AUTH_TOKEN=${{ secrets.TWILIO_REMINDERS_ACCOUNT_AUTH_TOKEN }} TWILIO_REMINDERS_ACCOUNT_PHONE_NUMBER=${{ secrets.TWILIO_REMINDERS_ACCOUNT_PHONE_NUMBER }} TWILIO_REMINDERS_ACCOUNT_SID=AC50508c075c2a5075e2e06797a170b85d SEED_TYPE=empty SHARED_BUILD_CACHE_APP_NAME=server-build-cache HEROKU_API_KEY=${{ env.HEROKU_API_KEY }})
 
       - name: Setup Heroku redis
-        run: (cd server-app && heroku addons:create --app=${{ env.HEROKU_APP_NAME }} --wait --name=${{ env.HEROKU_APP_NAME }}-redis heroku-redis:hobby-dev)
+        if: ${{ !steps.check-server-app-exists.outputs.heroku_app_exists }}
+        run: (cd server-app && heroku addons:create --app=${{ steps.generate-server-app-name.outputs.heroku_app_name }} --wait --name=${{ steps.generate-server-app-name.outputs.heroku_app_name }}-redis heroku-redis:hobby-dev)
 
       - name: Setup Heroku postgres
-        run: (cd server-app && heroku addons:create --app=${{ env.HEROKU_APP_NAME }} --wait --name=${{ env.HEROKU_APP_NAME }}-postgres heroku-postgresql:hobby-dev)
+        if: ${{ !steps.check-server-app-exists.outputs.heroku_app_exists }}
+        run: (cd server-app && heroku addons:create --app=${{ steps.generate-server-app-name.outputs.heroku_app_name }} --wait --name=${{ steps.generate-server-app-name.outputs.heroku_app_name }}-postgres heroku-postgresql:hobby-dev)
 
       - name: Setup Heroku buildpacks
-        run: (cd server-app && heroku buildpacks:add --index 1 --app=${{ env.HEROKU_APP_NAME }} https://github.com/commonlit/heroku-buildpack-shared-build-cache.git && heroku buildpacks:add --index 2 --app=${{ env.HEROKU_APP_NAME }} heroku/nodejs && heroku buildpacks:add --index 3 --app=${{ env.HEROKU_APP_NAME }} heroku/ruby)
+        if: ${{ !steps.check-server-app-exists.outputs.heroku_app_exists }}
+        run: (cd server-app && heroku buildpacks:add --index 1 --app=${{ steps.generate-server-app-name.outputs.heroku_app_name }} heroku/nodejs && heroku buildpacks:add --index 2 --app=${{ steps.generate-server-app-name.outputs.heroku_app_name }} heroku/ruby)
 
       - name: Start the Heroku server
         env:
-          HEROKU_GIT_URL: https://heroku:${{ env.HEROKU_API_KEY }}@git.heroku.com/${{ env.HEROKU_APP_NAME }}.git
-        run: (cd server-app && git push ${{ env.HEROKU_GIT_URL }} empty-seeds:master)
+          HEROKU_GIT_URL: https://heroku:${{ env.HEROKU_API_KEY }}@git.heroku.com/${{ steps.generate-server-app-name.outputs.heroku_app_name }}.git
+        run: (cd server-app && git push ${{ env.HEROKU_GIT_URL }} master)
 
       - name: Setup server seed data
+        if: ${{ !steps.check-server-app-exists.outputs.heroku_app_exists }}
         run: (cd server-app && heroku run rails db:schema:load db:seed)
 
       - name: QA Android Tests
@@ -186,10 +197,11 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: android-app/gradlew -p android-app --build-cache --no-daemon -PmanifestEndpoint=https://${{ env.HEROKU_APP_NAME }}.herokuapp.com/api/ connectedQaDebugAndroidTest
+          script: android-app/gradlew -p android-app --build-cache --no-daemon -PmanifestEndpoint=https://${{ steps.generate-server-app-name.outputs.heroku_app_name }}.herokuapp.com/api/ connectedQaDebugAndroidTest
 
       - name: Clean up Heroku instance
-        run: (cd server-app && heroku apps:destroy --app=${{ env.HEROKU_APP_NAME }} --confirm=${{ env.HEROKU_APP_NAME }})
+        if: ${{ false }}
+        run: (cd server-app && heroku apps:destroy --app=${{ steps.generate-server-app-name.outputs.heroku_app_name }} --confirm=${{ steps.generate-server-app-name.outputs.heroku_app_name }})
 
   mobius_migration_tests:
     if: ${{ false }}

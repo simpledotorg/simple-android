@@ -271,10 +271,11 @@ class Router(
       fragment: Fragment,
       lastFullScreen: NavRequest?
   ) {
+    val isNeitherTopNorLastFullScreen = navRequest != lastFullScreen && navRequest != newTopScreen
     val isLastFullScreenCompletelyObscured = navRequest == lastFullScreen && !newTopScreen.key.isModal
 
     // Don't hide the last full screen that is behind a modal.
-    if (isLastFullScreenCompletelyObscured) {
+    if (isNeitherTopNorLastFullScreen || isLastFullScreenCompletelyObscured) {
       transaction.detach(fragment)
     }
   }

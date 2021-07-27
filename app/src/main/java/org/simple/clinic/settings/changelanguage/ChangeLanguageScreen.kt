@@ -16,6 +16,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ListChangeLanguageViewBinding
 import org.simple.clinic.databinding.ScreenChangeLanguageBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -135,7 +136,10 @@ class ChangeLanguageScreen : BaseScreen<
   }
 
   override fun restartActivity() {
-    requireActivity().recreate()
+    // We are setting `isFreshAuthentication` as true to prevent from showing app lock screen
+    // after restarting `TheActivity`
+    startActivity(TheActivity.newIntent(requireContext(), isFreshAuthentication = true))
+    requireActivity().finish()
   }
 
   interface Injector {

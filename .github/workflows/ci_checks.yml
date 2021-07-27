@@ -120,7 +120,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: ./gradlew --build-cache --no-daemon connectedQaDebugAndroidTest
+          script: ./gradlew -Dorg.gradle.jvmargs=-Xmx12g --build-cache --no-daemon connectedQaDebugAndroidTest
 
   mobius_migration_tests:
     runs-on: [ ubuntu-latest ]

@@ -1,0 +1,30 @@
+name: Teardown Heroku Instances
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  # reactivecircus/android-emulator-runner@v2 requires MacOS to run on
+  # https://github.com/ReactiveCircus/android-emulator-runner
+  teardown_heroku_instance:
+    runs-on: [ ubuntu-latest ]
+    env:
+      HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
+    steps:
+      - name: Checkout Android app source
+        uses: actions/checkout@v2
+        with:
+          ref: add-heroku-teardown-script
+
+      - name: Generate server test app name
+        id: generate-server-app-name
+        run: .github/scripts/generate_heroku_app_name.sh ${{ github.ref }}
+
+      - name: Check if server app exists
+        id: check-server-app-exists
+        run: .github/scripts/check_heroku_app_exists.sh resolvetosavelives ${{ steps.generate-server-app-name.outputs.heroku_app_name }}
+
+      - name: Clean up Heroku instance
+        if: ${{ steps.check-server-app-exists.outputs.heroku_app_exists }}
+        run: heroku apps:destroy --app=${{ steps.generate-server-app-name.outputs.heroku_app_name }} --confirm=${{ steps.generate-server-app-name.outputs.heroku_app_name }}

@@ -26,6 +26,9 @@
 - Bump Logback to v1.2.4
 - Bump Core KTX to v1.6.0
 - Stop triggering syncing of protocols on user login
+- Bump AndroidX Test dependencies
+  - Bump AndroidX Test to v1.4.0
+  - Bump AndroidX Test Ext to v1.1.3
 - [In Progress: 22 Jul 2021] Use `MobiusLoopViewModel` for sending view effects that are lifecycle aware
   - Replace `MobiusLoop.Controller` with `MobiusLoopViewModel` in base screens
   - Add new interface for handling received view effects

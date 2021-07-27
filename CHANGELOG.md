@@ -30,6 +30,7 @@
   - Bump AndroidX Test to v1.4.0
   - Bump AndroidX Test Ext to v1.1.3
 - Bump Rx preferences to v2.0.1
+- Bump Lottie to v3.7.2
 - [In Progress: 22 Jul 2021] Use `MobiusLoopViewModel` for sending view effects that are lifecycle aware
   - Replace `MobiusLoop.Controller` with `MobiusLoopViewModel` in base screens
   - Add new interface for handling received view effects

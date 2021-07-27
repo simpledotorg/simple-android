@@ -26,7 +26,7 @@ object Versions {
   const val rxAndroid = "2.1.1"
   const val rxBinding3 = "3.1.0"
   const val rxKotlin = "2.4.0"
-  const val rxPreference = "2.0.0"
+  const val rxPreference = "2.0.1"
   const val traceur = "2.2.12"
   const val maskedEditText = "1.0.7"
   const val itemAnimators = "1.0.2"

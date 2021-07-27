@@ -1,13 +1,13 @@
 package org.simple.clinic.settings.changelanguage
 
-import android.content.Context
 import android.os.Parcelable
-import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
@@ -20,16 +20,20 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.settings.Language
 import org.simple.clinic.settings.changelanguage.ChangeLanguageListItem.Event.ListItemClicked
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import javax.inject.Inject
 
-class ChangeLanguageScreen(
-    context: Context,
-    attributeSet: AttributeSet
-) : ConstraintLayout(context, attributeSet), ChangeLanguageUi, UiActions {
+class ChangeLanguageScreen : BaseScreen<
+    ChangeLanguageScreen.Key,
+    ScreenChangeLanguageBinding,
+    ChangeLanguageModel,
+    ChangeLanguageEvent,
+    ChangeLanguageEffect,
+    Unit>(), ChangeLanguageUi, UiActions {
 
   @Inject
   lateinit var router: Router
@@ -38,7 +42,7 @@ class ChangeLanguageScreen(
   lateinit var activity: AppCompatActivity
 
   @Inject
-  lateinit var effectHandler: ChangeLanguageEffectHandler.Factory
+  lateinit var effectHandlerFactory: ChangeLanguageEffectHandler.Factory
 
   private var binding: ScreenChangeLanguageBinding? = null
 
@@ -78,10 +82,34 @@ class ChangeLanguageScreen(
         defaultModel = ChangeLanguageModel.FETCHING_LANGUAGES,
         init = ChangeLanguageInit(),
         update = ChangeLanguageUpdate(),
-        effectHandler = effectHandler.create(uiActions = this).build(),
+        effectHandler = effectHandlerFactory.create(uiActions = this).build(),
         modelUpdateListener = uiRenderer::render
     )
   }
+
+  override fun defaultModel() = ChangeLanguageModel.FETCHING_LANGUAGES
+
+  override fun createInit() = ChangeLanguageInit()
+
+  override fun createUpdate() = ChangeLanguageUpdate()
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) =
+      effectHandlerFactory.create(this).build()
+
+  override fun uiRenderer() = ChangeLanguageUiRenderer(this)
+
+  override fun events() = Observable
+      .merge(
+          doneButtonClicks(),
+          languageSelections()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<ChangeLanguageEvent>()
+
+  override fun bindView(
+      layoutInflater: LayoutInflater,
+      container: ViewGroup?
+  ) = ScreenChangeLanguageBinding.inflate(layoutInflater, container, false)
 
   override fun onFinishInflate() {
     super.onFinishInflate()

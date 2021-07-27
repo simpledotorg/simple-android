@@ -179,22 +179,23 @@ class Router(
     val newNavRequests = newHistory.requests
     val newTopScreen = newNavRequests.last()
     val currentTopScreen = currentNavRequests.last()
-    val lastButOneScreen = if (newNavRequests.size > 1) newNavRequests[newNavRequests.lastIndex - 1] else null
+    val lastFullScreen = newNavRequests
+        .dropLast(1) // Ignoring current top screen
+        .lastOrNull { !it.key.isModal }
 
     clearCurrentHistory(
         currentNavRequests = currentNavRequests,
         newNavRequests = newNavRequests,
         transaction = transaction,
         newTopScreen = newTopScreen,
-        lastButOneScreen = lastButOneScreen
+        lastFullScreen = lastFullScreen
     )
 
     addNewHistory(
         newNavRequests = newNavRequests,
         newTopScreen = newTopScreen,
         transaction = transaction,
-        lastButOneScreen = lastButOneScreen,
-        currentTopScreen = currentTopScreen
+        lastFullScreen = lastFullScreen
     )
 
     transaction.commitNow()
@@ -224,7 +225,7 @@ class Router(
       newNavRequests: List<NavRequest>,
       transaction: FragmentTransaction,
       newTopScreen: NavRequest,
-      lastButOneScreen: NavRequest?
+      lastFullScreen: NavRequest?
   ) {
     // Remove old fragments if they are no longer present in the new set of screens
     currentNavRequests.forEach { navRequest ->
@@ -237,7 +238,7 @@ class Router(
             transaction = transaction,
             fragment = fragment,
             newTopScreen = newTopScreen,
-            lastButOneScreen = lastButOneScreen
+            lastFullScreen = lastFullScreen
         )
       }
     }
@@ -249,7 +250,7 @@ class Router(
       transaction: FragmentTransaction,
       fragment: Fragment,
       newTopScreen: NavRequest,
-      lastButOneScreen: NavRequest?
+      lastFullScreen: NavRequest?
   ) {
     if (!newNavRequests.contains(navRequest))
       transaction.remove(fragment)
@@ -259,7 +260,7 @@ class Router(
           newTopScreen = newTopScreen,
           transaction = transaction,
           fragment = fragment,
-          lastButOneScreen = lastButOneScreen
+          lastFullScreen = lastFullScreen
       )
   }
 
@@ -268,13 +269,12 @@ class Router(
       newTopScreen: NavRequest,
       transaction: FragmentTransaction,
       fragment: Fragment,
-      lastButOneScreen: NavRequest?
+      lastFullScreen: NavRequest?
   ) {
-    val isLastButOneScreenCompletelyObscured = navRequest == lastButOneScreen && !newTopScreen.key.isModal
+    val isLastFullScreenCompletelyObscured = navRequest == lastFullScreen && !newTopScreen.key.isModal
 
-    // Don't hide the last but one screen if the incoming screen is a modal since we want whatever changes the user has
-    // made in this screen to be visible in the background of the modal
-    if (isLastButOneScreenCompletelyObscured) {
+    // Don't hide the last full screen that is behind a modal.
+    if (isLastFullScreenCompletelyObscured) {
       transaction.detach(fragment)
     }
   }
@@ -283,14 +283,13 @@ class Router(
       newNavRequests: List<NavRequest>,
       newTopScreen: NavRequest,
       transaction: FragmentTransaction,
-      lastButOneScreen: NavRequest?,
-      currentTopScreen: NavRequest
+      lastFullScreen: NavRequest?
   ) {
     newNavRequests.forEach { navRequest ->
       val existingFragment = fragmentManager.findFragmentByTag(navRequest.key.fragmentTag)
       when (navRequest) {
         newTopScreen -> handleAddingTopFragment(navRequest, existingFragment, transaction)
-        else -> handleRemovingOlderFragments(newTopScreen, existingFragment, transaction, navRequest, lastButOneScreen, currentTopScreen)
+        else -> handleRemovingOlderFragments(newTopScreen, existingFragment, transaction, navRequest, lastFullScreen)
       }
     }
   }
@@ -357,15 +356,13 @@ class Router(
       existingFragment: Fragment?,
       transaction: FragmentTransaction,
       navRequest: NavRequest,
-      lastButOneScreen: NavRequest?,
-      currentTopScreen: NavRequest
+      lastFullScreen: NavRequest?
   ) {
     when {
       newTopScreen.key.isModal -> handleRemovingOlderFragmentForModalTop(navRequest,
-          lastButOneScreen,
+          lastFullScreen,
           existingFragment,
-          transaction,
-          currentTopScreen)
+          transaction)
       else -> handleRemovingOlderFragmentForFullscreenTop(existingFragment, transaction)
     }
   }
@@ -381,15 +378,14 @@ class Router(
 
   private fun handleRemovingOlderFragmentForModalTop(
       navRequest: NavRequest,
-      lastButOneScreen: NavRequest?,
+      lastFullScreen: NavRequest?,
       existingFragment: Fragment?,
-      transaction: FragmentTransaction,
-      currentTopScreen: NavRequest
+      transaction: FragmentTransaction
   ) {
-    // Last but one key should not be detached since the topmost key is a modal
-    // and we want the previous screen to be visible
+    // We want to show the last full screen behind modal(s).
+    // Even if there are multiple modals, we show the last full screen and add modals on top of that.
     when {
-      navRequest == lastButOneScreen || currentTopScreen.key.isModal -> ensureFragmentIsPresent(existingFragment, transaction, navRequest)
+      navRequest == lastFullScreen || !history.isNavRequestBeforeAnother(navRequest, lastFullScreen) -> ensureFragmentIsPresent(existingFragment, transaction, navRequest)
       existingFragment != null && existingFragment.isShowing -> transaction.detach(existingFragment)
     }
   }

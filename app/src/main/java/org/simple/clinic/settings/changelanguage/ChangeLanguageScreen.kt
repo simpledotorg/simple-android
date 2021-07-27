@@ -140,7 +140,6 @@ class ChangeLanguageScreen : BaseScreen<
   private fun setupLanguagesList() {
     languagesList.apply {
       setHasFixedSize(true)
-      layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
       adapter = languagesAdapter
     }
   }

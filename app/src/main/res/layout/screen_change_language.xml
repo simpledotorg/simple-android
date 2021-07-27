@@ -41,6 +41,7 @@
     android:layout_height="0dp"
     android:clipToPadding="false"
     android:paddingBottom="@dimen/spacing_16"
+    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
     app:layout_constraintBottom_toTopOf="@id/doneButton"
     app:layout_constraintTop_toBottomOf="@id/appbar"
     tools:listitem="@layout/list_change_language_view" />

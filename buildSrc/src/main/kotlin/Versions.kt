@@ -53,7 +53,7 @@ object Versions {
   const val mixpanel = "5.6.4"
   const val mobius = "1.5.3"
   const val guava = "28.1-jre" // Used by the "mobius-migration" library ONLY in tests
-  const val uuidGenerator = "3.2.0"
+  const val uuidGenerator = "4.0.1"
   const val flipper = "0.98.0"
   const val soloader = "0.10.1"
   const val asm = "7.2"

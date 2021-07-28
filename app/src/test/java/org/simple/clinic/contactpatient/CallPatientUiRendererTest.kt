@@ -14,6 +14,7 @@ import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.util.TestUserClock
 import java.time.Instant
 import java.time.LocalDate
@@ -160,7 +161,6 @@ class CallPatientUiRendererTest {
   @Test
   fun `if the secure call feature is enabled and overdue list changes is enabled, show the secure call ui`() {
     // given
-    val patientAddress = "Bhatinda, Punjab"
     val patientProfile = TestData.contactPatientProfile(patientUuid = patientUuid, generatePhoneNumber = true)
     val overdueAppointment = TestData.overdueAppointment(
         facilityUuid = UUID.fromString("a607a97f-4bf6-4ce6-86a3-b266059c7734"),
@@ -187,11 +187,11 @@ class CallPatientUiRendererTest {
         gender = patientProfile.patient.gender,
         age = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock),
         phoneNumber = patientProfile.phoneNumbers.first().number,
-        patientAddress = patientAddress,
-        registeredFacility = overdueAppointment.patientRegisteredFacilityName!!,
-        diagnosedWithDiabetes = overdueAppointment.diagnosedWithDiabetes,
-        diagnosedWithHypertension = overdueAppointment.diagnosedWithHypertension,
-        lastVisited = overdueAppointment.patientLastSeen))
+        patientAddress = patientAddressText(patientProfile.address)!!,
+        registeredFacility = patientProfile.registeredFacility.name,
+        diagnosedWithDiabetes = patientProfile.medicalHistory?.diagnosedWithDiabetes,
+        diagnosedWithHypertension = patientProfile.medicalHistory?.diagnosedWithHypertension,
+        lastVisited = patientProfile.patientLastSeen))
     verify(ui).showPatientWithPhoneNumberUi()
     verify(ui).hidePatientWithNoPhoneNumberUi()
     verify(ui).showSecureCallUi()
@@ -244,11 +244,11 @@ class CallPatientUiRendererTest {
         gender = patientProfile.patient.gender,
         age = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock),
         phoneNumber = patientProfile.phoneNumbers.first().number,
-        patientAddress = patientAddress,
-        registeredFacility = overdueAppointment.patientRegisteredFacilityName!!,
-        diagnosedWithDiabetes = overdueAppointment.diagnosedWithDiabetes,
-        diagnosedWithHypertension = overdueAppointment.diagnosedWithHypertension,
-        lastVisited = overdueAppointment.patientLastSeen))
+        patientAddress = patientAddressText(patientProfile.address)!!,
+        registeredFacility = patientProfile.registeredFacility.name,
+        diagnosedWithDiabetes = patientProfile.medicalHistory?.diagnosedWithDiabetes,
+        diagnosedWithHypertension = patientProfile.medicalHistory?.diagnosedWithHypertension,
+        lastVisited = patientProfile.patientLastSeen))
     verify(ui).showPatientWithPhoneNumberUi()
     verify(ui).hidePatientWithNoPhoneNumberUi()
     verify(ui).setResultOfCallLabelText()
@@ -319,11 +319,11 @@ class CallPatientUiRendererTest {
         gender = patientProfile.patient.gender,
         age = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock),
         phoneNumber = null,
-        patientAddress = patientAddress,
-        registeredFacility = overdueAppointment.patientRegisteredFacilityName!!,
-        diagnosedWithDiabetes = overdueAppointment.diagnosedWithDiabetes,
-        diagnosedWithHypertension = overdueAppointment.diagnosedWithHypertension,
-        lastVisited = overdueAppointment.patientLastSeen))
+        patientAddress = patientAddressText(patientProfile.address)!!,
+        registeredFacility = patientProfile.registeredFacility.name,
+        diagnosedWithDiabetes = patientProfile.medicalHistory?.diagnosedWithDiabetes,
+        diagnosedWithHypertension = patientProfile.medicalHistory?.diagnosedWithHypertension,
+        lastVisited = patientProfile.patientLastSeen))
     verify(ui).switchToCallPatientView()
     verify(ui).setResultLabelText()
     verifyNoMoreInteractions(ui)
@@ -361,11 +361,11 @@ class CallPatientUiRendererTest {
         gender = patientProfile.patient.gender,
         age = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock),
         phoneNumber = patientProfile.phoneNumbers.first().number,
-        patientAddress = patientAddress,
-        registeredFacility = overdueAppointment.patientRegisteredFacilityName!!,
-        diagnosedWithDiabetes = overdueAppointment.diagnosedWithDiabetes,
-        diagnosedWithHypertension = overdueAppointment.diagnosedWithHypertension,
-        lastVisited = overdueAppointment.patientLastSeen))
+        patientAddress = patientAddressText(patientProfile.address)!!,
+        registeredFacility = patientProfile.registeredFacility.name,
+        diagnosedWithDiabetes = patientProfile.medicalHistory?.diagnosedWithDiabetes,
+        diagnosedWithHypertension = patientProfile.medicalHistory?.diagnosedWithHypertension,
+        lastVisited = patientProfile.patientLastSeen))
     verify(ui).showSecureCallUi()
     verify(ui).switchToCallPatientView()
     verify(ui).setResultOfCallLabelText()
@@ -461,5 +461,14 @@ class CallPatientUiRendererTest {
         secureCallFeatureEnabled = phoneMaskFeatureEnabled,
         overdueListChangesFeatureEnabled = overdueListChangesFeatureEnabled
     )
+  }
+
+  private fun patientAddressText(patientAddress: PatientAddress) = when {
+    !patientAddress.streetAddress.isNullOrBlank() && !patientAddress.colonyOrVillage.isNullOrBlank() -> {
+      "${patientAddress.streetAddress}, ${patientAddress.colonyOrVillage}"
+    }
+    !patientAddress.streetAddress.isNullOrBlank() -> patientAddress.streetAddress
+    !patientAddress.colonyOrVillage.isNullOrBlank() -> patientAddress.colonyOrVillage
+    else -> "${patientAddress.district}, ${patientAddress.state}"
   }
 }

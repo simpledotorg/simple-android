@@ -43,6 +43,7 @@
 - Migrate `ChangeLanguageScreen` to a fragment
 - Bump Flipper to v0.98.0
 - Bump UUID generator to v4.0.1
+- Bump Jackson to v2.12.4
 
 ### Changes
 - Redesign sync indicator view

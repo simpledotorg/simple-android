@@ -59,7 +59,7 @@ object Versions {
   const val asm = "7.2"
   const val ktlint = "0.36.0"
   const val quarantine = "0.3.0"
-  const val jackson = "2.10.2"
+  const val jackson = "2.12.4"
   const val logback = "1.2.4"
   const val camerax = "1.0.0"
   const val cameraView = "1.0.0-alpha26"

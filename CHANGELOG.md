@@ -44,11 +44,13 @@
 - Bump Flipper to v0.98.0
 - Bump UUID generator to v4.0.1
 - Bump Jackson to v2.12.4
+- Restart `TheActivity` after changing language
 
 ### Changes
 - Redesign sync indicator view
 - Increase the search and scan button height in patients screen
 - Show new video illustration in patients screen
+- After language is changed app will go back to home screen
 - [In Progress: 22 Jul 2021] Add option to download & share overdue list
 - [In Progress: 14 Jul 2021] Medication screen improvements
   - Search for commonly used drugs

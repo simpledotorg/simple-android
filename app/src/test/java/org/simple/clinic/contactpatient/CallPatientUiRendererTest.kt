@@ -52,7 +52,7 @@ class CallPatientUiRendererTest {
     val phoneNumber = "1234567890"
     val gender = Gender.Female
 
-    val patientProfile = TestData.patientProfile(
+    val patientProfile = TestData.contactPatientProfile(
         patientUuid = patientUuid,
         patientName = name,
         patientPhoneNumber = phoneNumber,
@@ -83,7 +83,7 @@ class CallPatientUiRendererTest {
     val phoneNumber = "1234567890"
     val gender = Gender.Male
 
-    val patientProfile = TestData.patientProfile(
+    val patientProfile = TestData.contactPatientProfile(
         patientUuid = patientUuid,
         patientName = name,
         patientPhoneNumber = phoneNumber,
@@ -161,7 +161,7 @@ class CallPatientUiRendererTest {
   fun `if the secure call feature is enabled and overdue list changes is enabled, show the secure call ui`() {
     // given
     val patientAddress = "Bhatinda, Punjab"
-    val patientProfile = TestData.patientProfile(patientUuid = patientUuid, generatePhoneNumber = true)
+    val patientProfile = TestData.contactPatientProfile(patientUuid = patientUuid, generatePhoneNumber = true)
     val overdueAppointment = TestData.overdueAppointment(
         facilityUuid = UUID.fromString("a607a97f-4bf6-4ce6-86a3-b266059c7734"),
         patientUuid = patientUuid,
@@ -217,7 +217,7 @@ class CallPatientUiRendererTest {
   @Test
   fun `if the secure call feature is disabled and overdue list feature is enabled, hide the secure call ui`() {
     val patientAddress = "Bhatinda, Punjab"
-    val patientProfile = TestData.patientProfile(patientUuid = patientUuid, generatePhoneNumber = true)
+    val patientProfile = TestData.contactPatientProfile(patientUuid = patientUuid, generatePhoneNumber = true)
     val overdueAppointment = TestData.overdueAppointment(
         facilityUuid = UUID.fromString("a607a97f-4bf6-4ce6-86a3-b266059c7734"),
         patientUuid = patientUuid,
@@ -291,7 +291,7 @@ class CallPatientUiRendererTest {
   fun `display patient with no phone number layout and render patient details for patient with no phone number`() {
     // given
     val patientAddress = "Bhatinda, Punjab"
-    val patientProfile = TestData.patientProfile(patientUuid = patientUuid, generatePhoneNumber = false)
+    val patientProfile = TestData.contactPatientProfile(patientUuid = patientUuid, generatePhoneNumber = false)
     val overdueAppointment = TestData.overdueAppointment(
         facilityUuid = UUID.fromString("a607a97f-4bf6-4ce6-86a3-b266059c7734"),
         patientUuid = patientUuid,
@@ -333,7 +333,7 @@ class CallPatientUiRendererTest {
   fun `display patient with phone number layout and render patient details for patient with phone number`() {
     // given
     val patientAddress = "Bhatinda, Punjab"
-    val patientProfile = TestData.patientProfile(patientUuid = patientUuid, generatePhoneNumber = true)
+    val patientProfile = TestData.contactPatientProfile(patientUuid = patientUuid, generatePhoneNumber = true)
     val overdueAppointment = TestData.overdueAppointment(
         facilityUuid = UUID.fromString("a607a97f-4bf6-4ce6-86a3-b266059c7734"),
         patientUuid = patientUuid,

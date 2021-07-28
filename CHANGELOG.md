@@ -37,6 +37,9 @@
   - Replace `MobiusLoop.Controller` with `MobiusLoopViewModel` in base screens
   - Add new interface for handling received view effects
   - Remove `RxMobiusBridge`
+- Fix navigation issues in `Router`
+  - Support multiple modals
+  - Fix crash when using new `FragmentStateManager`
 
 ### Changes
 - Redesign sync indicator view

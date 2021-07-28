@@ -17,7 +17,7 @@ abstract class ScreenKey : Parcelable {
   abstract val analyticsName: String
 
   open val fragmentTag: String
-    get() = javaClass.name
+    get() = "${javaClass.name}-${hashCode()}"
 
   open val type: ScreenType = ScreenType.FullScreen
 

@@ -41,6 +41,7 @@
   - Support multiple modals
   - Fix crash when using new `FragmentStateManager`
 - Migrate `ChangeLanguageScreen` to a fragment
+- Bump Flipper to v0.98.0
 
 ### Changes
 - Redesign sync indicator view

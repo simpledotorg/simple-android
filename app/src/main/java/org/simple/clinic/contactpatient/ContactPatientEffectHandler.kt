@@ -12,7 +12,6 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.time.LocalDate
 
@@ -67,8 +66,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .map { patientRepository.patientProfileImmediate(it.patientUuid) }
-          .filterAndUnwrapJust()
+          .map { patientRepository.contactPatientProfileImmediate(it.patientUuid) }
           .map { it.withoutDeletedPhoneNumbers().withoutDeletedBusinessIds() }
           .map(::PatientProfileLoaded)
     }

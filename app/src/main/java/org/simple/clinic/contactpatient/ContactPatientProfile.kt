@@ -59,4 +59,13 @@ data class ContactPatientProfile(
         entityColumn = "patientUuid"
     )
     val bloodPressureMeasurement: BloodPressureMeasurement?
-) : Parcelable
+) : Parcelable {
+
+  fun withoutDeletedBusinessIds(): ContactPatientProfile {
+    return copy(businessIds = businessIds.filter { it.deletedAt == null })
+  }
+
+  fun withoutDeletedPhoneNumbers(): ContactPatientProfile {
+    return copy(phoneNumbers = phoneNumbers.filter { it.deletedAt == null })
+  }
+}

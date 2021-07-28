@@ -10,6 +10,7 @@ import org.simple.clinic.bloodsugar.sync.BloodSugarMeasurementPayload
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureReading
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
+import org.simple.clinic.contactpatient.ContactPatientProfile
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.search.Answer.Yes
 import org.simple.clinic.drugs.search.Drug
@@ -1320,4 +1321,67 @@ object TestData {
       bloodSugars = bloodSugars,
       prescribedDrugs = prescribedDrugs
   )
+
+
+  fun contactPatientProfile(
+      patientUuid: UUID = UUID.randomUUID(),
+      patientAddressUuid: UUID = UUID.randomUUID(),
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
+      generatePhoneNumber: Boolean = faker.bool.bool(),
+      generateBusinessId: Boolean = faker.bool.bool(),
+      patientStatus: PatientStatus = PatientStatus.Active,
+      patientDeletedAt: Instant? = null,
+      patientName: String = faker.name.name(),
+      patientPhoneNumber: String? = if (generatePhoneNumber) faker.phoneNumber.phoneNumber() else null,
+      businessId: BusinessId? = if (generateBusinessId) businessId(patientUuid = patientUuid) else null,
+      generateDateOfBirth: Boolean = faker.bool.bool(),
+      dateOfBirth: LocalDate? = if (generateDateOfBirth) LocalDate.parse("1980-01-01") else null,
+      age: Age? = if (!generateDateOfBirth) Age(value = kotlin.random.Random.nextInt(30..100), updatedAt = Instant.parse("2018-01-01T00:00:00Z")) else null,
+      gender: Gender = randomGender(),
+      patientDeletedReason: DeletedReason? = null,
+      patientCreatedAt: Instant = Instant.parse("2021-07-01T00:00:00Z"),
+      patientUpdatedAt: Instant = Instant.parse("2021-07-05T00:00:00Z"),
+      patientRecordedAt: Instant = Instant.parse("2021-07-01T00:00:00Z"),
+      patientRegisteredFacilityId: UUID = UUID.randomUUID(),
+      patientAssignedFacilityId: UUID? = null,
+      retainUntil: Instant? = null
+  ): ContactPatientProfile {
+    val phoneNumbers = if (!patientPhoneNumber.isNullOrBlank()) {
+      listOf(patientPhoneNumber(patientUuid = patientUuid, number = patientPhoneNumber, phoneType = PatientPhoneNumberType.Mobile))
+    } else {
+      emptyList()
+    }
+    val businessIds = if (businessId != null) {
+      listOf(businessId)
+    } else {
+      emptyList()
+    }
+
+    return ContactPatientProfile(
+        patient = patient(
+            uuid = patientUuid,
+            fullName = patientName,
+            syncStatus = syncStatus,
+            addressUuid = patientAddressUuid,
+            status = patientStatus,
+            deletedAt = patientDeletedAt,
+            age = age,
+            dateOfBirth = dateOfBirth,
+            gender = gender,
+            deletedReason = patientDeletedReason,
+            createdAt = patientCreatedAt,
+            updatedAt = patientUpdatedAt,
+            recordedAt = patientRecordedAt,
+            registeredFacilityId = patientRegisteredFacilityId,
+            assignedFacilityId = patientAssignedFacilityId,
+            retainUntil = retainUntil
+        ),
+        address = patientAddress(uuid = patientAddressUuid),
+        phoneNumbers = phoneNumbers,
+        businessIds = businessIds,
+        registeredFacility = facility(uuid = patientRegisteredFacilityId),
+        medicalHistory = medicalHistory(patientUuid = patientUuid),
+        bloodSugarMeasurement = bloodSugarMeasurement(patientUuid = patientUuid),
+        bloodPressureMeasurement = bloodPressureMeasurement(patientUuid = patientUuid))
+  }
 }

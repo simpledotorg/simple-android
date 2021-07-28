@@ -21,6 +21,8 @@ object CloseBottomSheet : CustomDrugEntryEffect()
 
 data class FetchPrescription(val prescriptionUuid: UUID) : CustomDrugEntryEffect()
 
+data class RemoveDrugFromPrescription(val drugUuid: UUID) : CustomDrugEntryEffect()
+
 data class UpdatePrescription(
     val patientUuid: UUID,
     val prescribedDrugUuid: UUID,

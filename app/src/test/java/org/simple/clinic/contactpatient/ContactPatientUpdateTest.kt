@@ -27,7 +27,7 @@ class ContactPatientUpdateTest {
   private val patientUuid = UUID.fromString("b5eccb67-6425-4d48-9c17-65e9b267f9eb")
   private val appointmentUuid = UUID.fromString("f1b11fa6-3622-4f82-b74b-dd08dd563f1a")
   private val patientPhoneNumber = "1234567890"
-  private val patientProfile = TestData.patientProfile(
+  private val patientProfile = TestData.contactPatientProfile(
       patientUuid = patientUuid,
       patientPhoneNumber = patientPhoneNumber
   )

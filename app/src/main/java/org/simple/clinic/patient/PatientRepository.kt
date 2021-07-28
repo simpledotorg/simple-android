@@ -7,6 +7,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.contactpatient.ContactPatientProfile
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
@@ -728,6 +729,10 @@ class PatientRepository @Inject constructor(
         database.prescriptionDao().save(medicalRecord.prescribedDrugs)
       }
     }
+  }
+
+  fun contactPatientProfileImmediate(patientUuid: UUID): ContactPatientProfile {
+    return database.patientDao().contactPatientProfileImmediate(patientUuid)
   }
 
   private data class BusinessIdMetaAndVersion(

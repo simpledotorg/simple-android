@@ -54,7 +54,7 @@ class ContactPatientInitTest {
     )
 
     val model = defaultModel()
-        .patientProfileLoaded(TestData.patientProfile(patientUuid = patientUuid))
+        .patientProfileLoaded(TestData.contactPatientProfile(patientUuid = patientUuid))
         .overdueAppointmentLoaded(Optional.empty())
         .currentFacilityLoaded(currentFacility = facility)
 

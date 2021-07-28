@@ -12,6 +12,7 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
+import java.time.Instant
 
 @Parcelize
 data class ContactPatientProfile(
@@ -60,6 +61,11 @@ data class ContactPatientProfile(
     )
     val bloodPressureMeasurement: BloodPressureMeasurement?
 ) : Parcelable {
+
+  val patientLastSeen: Instant?
+    get() = if (bloodSugarMeasurement != null && bloodPressureMeasurement != null) {
+      bloodSugarMeasurement.recordedAt.coerceAtLeast(bloodPressureMeasurement.recordedAt)
+    } else bloodPressureMeasurement?.recordedAt ?: bloodSugarMeasurement?.recordedAt
 
   fun withoutDeletedBusinessIds(): ContactPatientProfile {
     return copy(businessIds = businessIds.filter { it.deletedAt == null })

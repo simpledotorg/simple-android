@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.settings.changelanguage.ChangeLanguageScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/changeLanguageScreen"
@@ -41,8 +41,9 @@
     android:layout_height="0dp"
     android:clipToPadding="false"
     android:paddingBottom="@dimen/spacing_16"
+    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
     app:layout_constraintBottom_toTopOf="@id/doneButton"
     app:layout_constraintTop_toBottomOf="@id/appbar"
     tools:listitem="@layout/list_change_language_view" />
 
-</org.simple.clinic.settings.changelanguage.ChangeLanguageScreen>
+</androidx.constraintlayout.widget.ConstraintLayout>

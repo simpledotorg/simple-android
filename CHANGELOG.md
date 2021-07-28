@@ -40,6 +40,7 @@
 - Fix navigation issues in `Router`
   - Support multiple modals
   - Fix crash when using new `FragmentStateManager`
+- Migrate `ChangeLanguageScreen` to a fragment
 
 ### Changes
 - Redesign sync indicator view

@@ -12,7 +12,7 @@ class ContactPatientInit : Init<ContactPatientModel, ContactPatientEffect> {
     val effects = mutableSetOf<ContactPatientEffect>()
 
     if (!model.hasLoadedPatientProfile) {
-      effects.add(LoadPatientProfile(model.patientUuid))
+      effects.add(LoadContactPatientProfile(model.patientUuid))
     }
 
     if (!model.hasLoadedAppointment) {

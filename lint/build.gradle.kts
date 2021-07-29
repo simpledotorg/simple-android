@@ -1,6 +1,6 @@
 plugins {
-  id("com.android.lint")
   kotlin("jvm")
+  id("com.android.lint")
 }
 
 dependencies {

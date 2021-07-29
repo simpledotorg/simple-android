@@ -5,18 +5,16 @@ plugins {
 }
 
 android {
-  compileSdkVersion(versions.compileSdk)
+  compileSdk = versions.compileSdk
 
   defaultConfig {
-    minSdkVersion(versions.minSdk)
-    targetSdkVersion(versions.compileSdk)
-    versionCode = 1
-    versionName = "1.0"
+    minSdk = versions.minSdk
+    targetSdk = versions.compileSdk
   }
 
   buildTypes {
     getByName("release") {
-      minifyEnabled(false)
+      isMinifyEnabled = false
     }
   }
 }

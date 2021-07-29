@@ -4,29 +4,33 @@ plugins {
 }
 
 android {
-  compileSdkVersion(versions.compileSdk)
+  compileSdk = versions.compileSdk
 
   defaultConfig {
-    minSdkVersion(versions.minSdk)
-    targetSdkVersion(versions.compileSdk)
-    versionCode = 1
-    versionName = "0.1"
+    minSdk = versions.minSdk
+    targetSdk = versions.compileSdk
 
     consumerProguardFiles("consumer-rules.pro")
   }
 
   buildTypes {
     getByName("release") {
-      minifyEnabled(false)
+      isMinifyEnabled = false
       proguardFiles(
           getDefaultProguardFile("proguard-android-optimize.txt"),
           "proguard-rules.pro"
       )
     }
   }
+
+  compileOptions {
+    isCoreLibraryDesugaringEnabled = true
+  }
 }
 
 dependencies {
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}")
   api("com.jakewharton.timber:timber:${versions.timber}")
+
+  coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${versions.desugarJdk}")
 }

@@ -4,20 +4,18 @@ plugins {
 }
 
 android {
-  compileSdkVersion(versions.compileSdk)
+  compileSdk = versions.compileSdk
 
   defaultConfig {
-    minSdkVersion(versions.minSdk)
-    targetSdkVersion(versions.compileSdk)
-    versionCode = 1
-    versionName = "0.1"
+    minSdk = versions.minSdk
+    targetSdk = versions.compileSdk
 
     consumerProguardFiles("consumer-rules.pro")
   }
 
   buildTypes {
     getByName("release") {
-      minifyEnabled(false)
+      isMinifyEnabled = false
       proguardFiles(
           getDefaultProguardFile("proguard-android-optimize.txt"),
           "proguard-rules.pro"

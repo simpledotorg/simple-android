@@ -25,6 +25,7 @@ class CustomDrugEntryUiRendererTest {
     uiRenderer.render(drugFrequencyChangedModel)
 
     // then
+    verify(ui).setDrugName(drugName)
     verify(ui).setDrugFrequency(frequency)
     verifyNoMoreInteractions(ui)
   }
@@ -39,7 +40,19 @@ class CustomDrugEntryUiRendererTest {
     uiRenderer.render(drugDosageChangedModel)
 
     //then
+    verify(ui).setDrugName(drugName)
     verify(ui).setDrugDosage(dosage)
+    verify(ui).setDrugFrequency(DrugFrequency.Unknown("None"))
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when the screen is loaded, then render the drug name`() {
+    // when
+    uiRenderer.render(defaultModel)
+
+    // then
+    verify(ui).setDrugName(drugName)
     verify(ui).setDrugFrequency(DrugFrequency.Unknown("None"))
     verifyNoMoreInteractions(ui)
   }

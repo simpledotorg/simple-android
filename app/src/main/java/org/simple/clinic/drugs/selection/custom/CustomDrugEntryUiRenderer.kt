@@ -10,6 +10,8 @@ class CustomDrugEntryUiRenderer(
   private val drugFrequencyValueCallBack = ValueChangedCallback<DrugFrequency>()
   private val drugDosageValueCallBack = ValueChangedCallback<String>()
   override fun render(model: CustomDrugEntryModel) {
+    ui.setDrugName(model.drugName)
+
     if (model.hasDrugFrequency) {
       drugFrequencyValueCallBack.pass(model.frequency!!, ui::setDrugFrequency)
     }

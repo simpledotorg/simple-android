@@ -23,8 +23,11 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
     }
   }
 
-  private fun drugFetched(model: CustomDrugEntryModel, prescription: PrescribedDrug): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
-    return if(prescription.isDeleted) {
+  private fun drugFetched(
+      model: CustomDrugEntryModel,
+      prescription: PrescribedDrug
+  ): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
+    return if (prescription.isDeleted) {
       dispatch(CloseBottomSheet)
     } else {
       next(model.dosageEdited(prescription.dosage).frequencyEdited(DrugFrequency.fromMedicineFrequencyToDrugFrequency(prescription.frequency)))
@@ -34,7 +37,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
   private fun createOrUpdatePrescriptionEntry(model: CustomDrugEntryModel): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
     return when (model.openAs) {
       is OpenAs.New -> dispatch(SaveCustomDrugToPrescription(model.openAs.patientUuid, model.drugName, model.dosage, model.rxNormCode, model.frequency))
-      is OpenAs.Update -> noChange()
+      is OpenAs.Update -> dispatch(UpdatePrescription(model.openAs.patientUuid, model.openAs.prescribedDrugUuid, model.drugName, model.dosage, model.rxNormCode, model.frequency))
     }
   }
 }

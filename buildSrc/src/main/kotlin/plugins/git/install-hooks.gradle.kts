@@ -1,9 +1,14 @@
 package plugins.git
 
+import org.gradle.internal.os.OperatingSystem
+
 // Git hooks have to be manually copied and made executable. This task automates that.
 val gitExecutableHooks: Task = tasks.create("gitExecutableHooks") {
   doLast {
-    Runtime.getRuntime().exec("chmod -R +x .git/hooks/")
+    val operatingSystem = OperatingSystem.current()
+    if (operatingSystem.isMacOsX || operatingSystem.isLinux) {
+      Runtime.getRuntime().exec("chmod -R +x .git/hooks/")
+    }
   }
 }
 

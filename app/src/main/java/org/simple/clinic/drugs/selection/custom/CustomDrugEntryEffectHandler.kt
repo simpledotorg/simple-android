@@ -38,7 +38,27 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
         .addTransformer(SaveCustomDrugToPrescription::class.java, saveCustomDrugToPrescription())
         .addAction(CloseBottomSheet::class.java, uiActions::close, schedulersProvider.ui())
         .addTransformer(FetchPrescription::class.java, fetchPrescription())
+        .addTransformer(UpdatePrescription::class.java, updatePrescription())
         .build()
+  }
+
+  private fun updatePrescription(): ObservableTransformer<UpdatePrescription, CustomDrugEntryEvent>? {
+    return ObservableTransformer { effects ->
+      effects
+          .flatMap { effect ->
+            prescriptionRepository
+                .softDeletePrescription(effect.prescribedDrugUuid)
+                .andThen(savePrescription(
+                    prescribedDrugUuid = effect.prescribedDrugUuid,
+                    patientUuid = effect.patientUuid,
+                    drugName = effect.drugName,
+                    dosage = effect.dosage,
+                    rxNormCode = effect.rxNormCode,
+                    frequency = effect.frequency
+                ))
+                .andThen(Observable.just(CustomDrugSaved))
+          }
+    }
   }
 
   private fun fetchPrescription(): ObservableTransformer<FetchPrescription, CustomDrugEntryEvent>? {
@@ -55,6 +75,7 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
       effects
           .flatMap { savePrescription ->
             savePrescription(
+                prescribedDrugUuid = uuidGenerator.v4(),
                 patientUuid = savePrescription.patientUuid,
                 drugName = savePrescription.drugName,
                 dosage = savePrescription.dosage,
@@ -66,6 +87,7 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
   }
 
   private fun savePrescription(
+      prescribedDrugUuid: UUID,
       patientUuid: UUID,
       drugName: String,
       dosage: String?,
@@ -76,7 +98,7 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
 
     return prescriptionRepository
         .savePrescription(
-            uuid = uuidGenerator.v4(),
+            uuid = prescribedDrugUuid,
             patientUuid = patientUuid,
             name = drugName,
             dosage = dosage.nullIfBlank(),

@@ -1,5 +1,7 @@
 package org.simple.clinic.drugs.selection.custom
 
+import org.simple.clinic.drugs.PrescribedDrug
+import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.search.DrugFrequency
 import java.util.UUID
 
@@ -18,3 +20,12 @@ data class SaveCustomDrugToPrescription(
 object CloseBottomSheet : CustomDrugEntryEffect()
 
 data class FetchPrescription(val prescriptionUuid: UUID) : CustomDrugEntryEffect()
+
+data class UpdatePrescription(
+    val patientUuid: UUID,
+    val prescribedDrugUuid: UUID,
+    val drugName: String,
+    val dosage: String?,
+    val rxNormCode: String?,
+    val frequency: DrugFrequency?
+) : CustomDrugEntryEffect()

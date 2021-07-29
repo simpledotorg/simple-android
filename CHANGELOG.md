@@ -45,6 +45,7 @@
 - Bump UUID generator to v4.0.1
 - Bump Jackson to v2.12.4
 - Restart `TheActivity` after changing language
+- Don't push to new screen if the top screen is same as the new screen
 
 ### Changes
 - Redesign sync indicator view

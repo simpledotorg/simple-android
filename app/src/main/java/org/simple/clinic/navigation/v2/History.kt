@@ -41,4 +41,8 @@ data class History(val requests: List<NavRequest>) : Parcelable {
   fun isNavRequestBeforeAnother(first: NavRequest, second: NavRequest?): Boolean {
     return requests.indexOf(first) < requests.indexOf(second)
   }
+
+  fun matchesTop(navRequest: NavRequest): Boolean {
+    return requests.lastOrNull() == navRequest
+  }
 }

@@ -26,4 +26,19 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).setDrugFrequency(frequency)
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when drug dosage is changed, then set the new drug dosage`() {
+    // given
+    val dosage = "15 mg"
+    val drugDosageChangedModel = defaultModel.dosageEdited(dosage)
+
+    // when
+    uiRenderer.render(drugDosageChangedModel)
+
+    //then
+    verify(ui).setDrugDosage(dosage)
+    verify(ui).setDrugFrequency(DrugFrequency.Unknown("None"))
+    verifyNoMoreInteractions(ui)
+  }
 }

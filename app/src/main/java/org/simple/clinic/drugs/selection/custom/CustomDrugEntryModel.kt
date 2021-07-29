@@ -13,6 +13,9 @@ data class CustomDrugEntryModel(
   val hasDrugFrequency
     get() = frequency != null
 
+  val hasDrugDosage
+    get() = !dosage.isNullOrEmpty()
+
   fun dosageEdited(dosage: String?): CustomDrugEntryModel {
     return copy(dosage = dosage)
   }

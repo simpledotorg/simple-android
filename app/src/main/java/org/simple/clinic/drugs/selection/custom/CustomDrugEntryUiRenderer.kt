@@ -10,7 +10,7 @@ class CustomDrugEntryUiRenderer(
   private val drugFrequencyValueCallBack = ValueChangedCallback<DrugFrequency>()
   private val drugDosageValueCallBack = ValueChangedCallback<String>()
   override fun render(model: CustomDrugEntryModel) {
-    initialSetup()
+    initialSetup(model.openAs)
 
     ui.setDrugName(model.drugName)
 
@@ -23,12 +23,20 @@ class CustomDrugEntryUiRenderer(
     }
   }
 
-  private fun initialSetup() {
-      setUpUIForCreatingDrugEntry()
+  private fun initialSetup(openAs: OpenAs) {
+    when (openAs) {
+      is OpenAs.New -> setUpUIForCreatingDrugEntry()
+      is OpenAs.Update -> setUpUIForUpdatingDrugEntry()
     }
+  }
 
   fun setUpUIForCreatingDrugEntry() {
     ui.hideRemoveButton()
     ui.setButtonTextAsAdd()
+  }
+
+  fun setUpUIForUpdatingDrugEntry() {
+    ui.showRemoveButton()
+    ui.setButtonTextAsSave()
   }
 }

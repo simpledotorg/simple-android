@@ -6,6 +6,8 @@ interface CustomDrugEntryUi {
   fun setDrugFrequency(drugFrequency: DrugFrequency)
   fun setDrugDosage(dosage: String)
   fun setDrugName(drugName: String)
+  fun showRemoveButton()
   fun hideRemoveButton()
+  fun setButtonTextAsSave()
   fun setButtonTextAsAdd()
 }

@@ -66,9 +66,24 @@ class Router(
   }
 
   fun push(screenKey: ScreenKey) {
-    val newHistory = history.add(Normal(screenKey))
+    val navRequest = Normal(screenKey)
+    if (!history.matchesTop(navRequest)) {
+      val newHistory = history.add(navRequest)
 
-    executeStateChange(newHistory, Direction.Forward, null)
+      executeStateChange(newHistory, Direction.Forward, null)
+    }
+  }
+
+  fun pushExpectingResult(
+      requestType: Parcelable,
+      key: ScreenKey
+  ) {
+    val navRequest = ExpectingResult(requestType, key)
+    if (!history.matchesTop(navRequest)) {
+      val newHistory = history.add(navRequest)
+
+      executeStateChange(newHistory, Direction.Forward, null)
+    }
   }
 
   fun replaceTop(screenKey: ScreenKey) {
@@ -83,15 +98,6 @@ class Router(
     val newHistory = history
         .removeLast()
         .add(ExpectingResult(requestType, screenKey))
-
-    executeStateChange(newHistory, Direction.Forward, null)
-  }
-
-  fun pushExpectingResult(
-      requestType: Parcelable,
-      key: ScreenKey
-  ) {
-    val newHistory = history.add(ExpectingResult(requestType, key))
 
     executeStateChange(newHistory, Direction.Forward, null)
   }

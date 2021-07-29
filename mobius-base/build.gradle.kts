@@ -25,7 +25,7 @@ android {
 }
 
 dependencies {
-  implementation(project(":simple-platform"))
+  implementation(projects.simplePlatform)
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}")
 
   api("com.spotify.mobius:mobius-core:${versions.mobius}")

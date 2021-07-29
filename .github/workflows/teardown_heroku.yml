@@ -8,6 +8,7 @@ jobs:
   # reactivecircus/android-emulator-runner@v2 requires MacOS to run on
   # https://github.com/ReactiveCircus/android-emulator-runner
   teardown_heroku_instance:
+    if: ${{ false }}
     runs-on: [ ubuntu-latest ]
     env:
       HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}

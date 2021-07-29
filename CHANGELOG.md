@@ -62,6 +62,7 @@
   - Change overdue list UI
   - Load overdue patients without phone number
   - Updated contact patient bottom sheet UI
+- [In Progress: 29 Jul 2021] Implement `CustomDrugEntrySheet`  
   
 ### Fixes
 - Fix `ContactPatientBottomSheet` UI spacing and styling

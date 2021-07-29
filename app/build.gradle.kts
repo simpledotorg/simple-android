@@ -193,6 +193,7 @@ android {
     isWarningsAsErrors = true
     isAbortOnError = true
     isCheckReleaseBuilds = false
+    isCheckDependencies = true
   }
 
   compileOptions {

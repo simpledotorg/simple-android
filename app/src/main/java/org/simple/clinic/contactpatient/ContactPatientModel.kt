@@ -73,9 +73,6 @@ data class ContactPatientModel(
   val appointmentIsInRegisteredFacility: Boolean
     get() = appointment?.get()?.patientRegisteredFacilityID == currentFacility?.uuid
 
-  val hasSelectedARemoveAppointmentReason: Boolean
-    get() = selectedRemoveAppointmentReason != null
-
   val appointmentUuid: UUID
     get() = appointment!!.get().appointment.uuid
 

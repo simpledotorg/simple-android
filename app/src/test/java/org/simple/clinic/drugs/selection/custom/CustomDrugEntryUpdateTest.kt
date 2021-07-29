@@ -37,4 +37,15 @@ class CustomDrugEntryUpdateTest {
             hasEffects(ShowEditFrequencyDialog(frequency))
         ))
   }
+
+  @Test
+  fun `when frequency is edited, then update the model`(){
+    val frequency = DrugFrequency.OD
+    updateSpec.given(defaultModel)
+        .whenEvent(FrequencyEdited(frequency))
+        .then(assertThatNext(
+            hasModel(defaultModel.frequencyEdited(frequency)),
+            hasNoEffects()
+        ))
+  }
 }

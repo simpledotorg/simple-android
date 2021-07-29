@@ -13,6 +13,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
     return when (event) {
       is DosageEdited -> next(model.dosageEdited(event.dosage))
       is EditFrequencyClicked -> dispatch(ShowEditFrequencyDialog(event.frequency))
+      is FrequencyEdited -> next(model.frequencyEdited(event.frequency))
     }
   }
 }

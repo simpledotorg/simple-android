@@ -12,8 +12,8 @@ class CustomDrugEntryUiRendererTest {
   private val ui = mock<CustomDrugEntryUi>()
   private val uiRenderer = CustomDrugEntryUiRenderer(ui)
   private val drugName = "Amlodipine"
-
-  private val defaultModel = CustomDrugEntryModel.default(drug = null, drugName = drugName)
+  private val patientUuid = UUID.fromString("77f1d870-5c60-49f7-a4e2-2f1d60e4218c")
+  private val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.New(patientUuid), drug = null, drugName = drugName)
 
   @Test
   fun `when drug frequency is changed, then set the new drug frequency`() {

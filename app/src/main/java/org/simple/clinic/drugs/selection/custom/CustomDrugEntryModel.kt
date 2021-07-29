@@ -5,6 +5,7 @@ import org.simple.clinic.drugs.search.DrugFrequency
 import java.util.UUID
 
 data class CustomDrugEntryModel(
+    val openAs: OpenAs,
     val drugName: String,
     val dosage: String?,
     val frequency: DrugFrequency?,
@@ -12,9 +13,11 @@ data class CustomDrugEntryModel(
 ) {
   companion object {
     fun default(
+        openAs: OpenAs,
         drug: Drug?,
         drugName: String,
     ) = CustomDrugEntryModel(
+        openAs = openAs,
         drugName = drug?.name ?: drugName,
         dosage = drug?.dosage,
         frequency = drug?.frequency ?: DrugFrequency.Unknown("None"),

@@ -1351,11 +1351,6 @@ object TestData {
     } else {
       emptyList()
     }
-    val businessIds = if (businessId != null) {
-      listOf(businessId)
-    } else {
-      emptyList()
-    }
 
     return ContactPatientProfile(
         patient = patient(
@@ -1378,7 +1373,6 @@ object TestData {
         ),
         address = patientAddress(uuid = patientAddressUuid),
         phoneNumbers = phoneNumbers,
-        businessIds = businessIds,
         registeredFacility = facility(uuid = patientRegisteredFacilityId),
         medicalHistory = medicalHistory(patientUuid = patientUuid),
         bloodSugarMeasurement = bloodSugarMeasurement(patientUuid = patientUuid),

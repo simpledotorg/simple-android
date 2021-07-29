@@ -32,12 +32,6 @@ data class ContactPatientProfile(
     val phoneNumbers: List<PatientPhoneNumber>,
 
     @Relation(
-        parentColumn = "uuid",
-        entityColumn = "patientUuid"
-    )
-    val businessIds: List<BusinessId>,
-
-    @Relation(
         parentColumn = "registeredFacilityId",
         entityColumn = "uuid"
     )
@@ -66,10 +60,6 @@ data class ContactPatientProfile(
     get() = if (bloodSugarMeasurement != null && bloodPressureMeasurement != null) {
       bloodSugarMeasurement.recordedAt.coerceAtLeast(bloodPressureMeasurement.recordedAt)
     } else bloodPressureMeasurement?.recordedAt ?: bloodSugarMeasurement?.recordedAt
-
-  fun withoutDeletedBusinessIds(): ContactPatientProfile {
-    return copy(businessIds = businessIds.filter { it.deletedAt == null })
-  }
 
   fun withoutDeletedPhoneNumbers(): ContactPatientProfile {
     return copy(phoneNumbers = phoneNumbers.filter { it.deletedAt == null })

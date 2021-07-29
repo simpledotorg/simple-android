@@ -67,7 +67,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
       effects
           .observeOn(scheduler)
           .map { patientRepository.contactPatientProfileImmediate(it.patientUuid) }
-          .map { it.withoutDeletedPhoneNumbers().withoutDeletedBusinessIds() }
+          .map { it.withoutDeletedPhoneNumbers() }
           .map(::PatientProfileLoaded)
     }
   }

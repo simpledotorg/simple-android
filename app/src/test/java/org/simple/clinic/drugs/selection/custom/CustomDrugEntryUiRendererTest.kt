@@ -25,6 +25,8 @@ class CustomDrugEntryUiRendererTest {
     uiRenderer.render(drugFrequencyChangedModel)
 
     // then
+    verify(ui).hideRemoveButton()
+    verify(ui).setButtonTextAsAdd()
     verify(ui).setDrugName(drugName)
     verify(ui).setDrugFrequency(frequency)
     verifyNoMoreInteractions(ui)
@@ -40,6 +42,8 @@ class CustomDrugEntryUiRendererTest {
     uiRenderer.render(drugDosageChangedModel)
 
     //then
+    verify(ui).hideRemoveButton()
+    verify(ui).setButtonTextAsAdd()
     verify(ui).setDrugName(drugName)
     verify(ui).setDrugDosage(dosage)
     verify(ui).setDrugFrequency(DrugFrequency.Unknown("None"))
@@ -47,11 +51,13 @@ class CustomDrugEntryUiRendererTest {
   }
 
   @Test
-  fun `when the screen is loaded, then render the drug name`() {
+  fun `when the screen is loaded in create mode, then render the drug name and setup ui for creating drug entry`() {
     // when
     uiRenderer.render(defaultModel)
 
     // then
+    verify(ui).hideRemoveButton()
+    verify(ui).setButtonTextAsAdd()
     verify(ui).setDrugName(drugName)
     verify(ui).setDrugFrequency(DrugFrequency.Unknown("None"))
     verifyNoMoreInteractions(ui)

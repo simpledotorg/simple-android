@@ -224,5 +224,4 @@ jobs:
         env:
           USER_NAME: ${{ secrets.USER_NAME }}
           USER_EMAIL: ${{ secrets.USER_EMAIL }}
-          BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
         run: .github/scripts/commit_and_push_string_fixes.sh

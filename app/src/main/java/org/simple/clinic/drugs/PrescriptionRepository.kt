@@ -5,6 +5,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
+import org.simple.clinic.drugs.search.Drug
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
@@ -49,6 +50,7 @@ class PrescriptionRepository @Inject constructor(
       dosage: String?,
       rxNormCode: String?,
       isProtocolDrug: Boolean,
+      frequency: MedicineFrequency? = null,
       facility: Facility
   ): Completable {
     if (dosage != null && dosage.isBlank()) {
@@ -68,7 +70,7 @@ class PrescriptionRepository @Inject constructor(
               facilityUuid = facility.uuid,
               syncStatus = SyncStatus.PENDING,
               timestamps = Timestamps(now, now, null),
-              frequency = null,
+              frequency = frequency,
               durationInDays = null,
               teleconsultationId = null
           )

@@ -82,7 +82,7 @@ data class ContactPatientModel(
   val isPatientContactInfoLoaded: Boolean
     get() = contactPatientInfoProgressState == DONE
 
-  fun patientProfileLoaded(contactPatientProfile: ContactPatientProfile): ContactPatientModel {
+  fun contactPatientProfileLoaded(contactPatientProfile: ContactPatientProfile): ContactPatientModel {
     return copy(patientProfile = contactPatientProfile)
   }
 

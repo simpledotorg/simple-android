@@ -63,7 +63,7 @@ class CallPatientUiRendererTest {
     )
 
     // when
-    uiRenderer.render(defaultModel().patientProfileLoaded(patientProfile)
+    uiRenderer.render(defaultModel().contactPatientProfileLoaded(patientProfile)
         .contactPatientInfoLoaded())
 
     // then
@@ -94,7 +94,7 @@ class CallPatientUiRendererTest {
     )
 
     // when
-    uiRenderer.render(defaultModel().patientProfileLoaded(patientProfile)
+    uiRenderer.render(defaultModel().contactPatientProfileLoaded(patientProfile)
         .contactPatientInfoLoaded())
 
     // then
@@ -177,7 +177,7 @@ class CallPatientUiRendererTest {
 
     // when
     val model = defaultModel(phoneMaskFeatureEnabled = true, overdueListChangesFeatureEnabled = true)
-        .contactPatientInfoLoaded().patientProfileLoaded(patientProfile).overdueAppointmentLoaded(Optional.of(overdueAppointment))
+        .contactPatientInfoLoaded().contactPatientProfileLoaded(patientProfile).overdueAppointmentLoaded(Optional.of(overdueAppointment))
     uiRenderer.render(model)
 
     // then
@@ -233,7 +233,7 @@ class CallPatientUiRendererTest {
 
     // when
     val model = defaultModel(phoneMaskFeatureEnabled = false, overdueListChangesFeatureEnabled = true)
-        .contactPatientInfoLoaded().patientProfileLoaded(patientProfile).overdueAppointmentLoaded(Optional.of(overdueAppointment))
+        .contactPatientInfoLoaded().contactPatientProfileLoaded(patientProfile).overdueAppointmentLoaded(Optional.of(overdueAppointment))
 
     uiRenderer.render(model)
 
@@ -309,7 +309,7 @@ class CallPatientUiRendererTest {
     uiRenderer.render(defaultModel(overdueListChangesFeatureEnabled = true)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
         .contactPatientInfoLoaded()
-        .patientProfileLoaded(patientProfile))
+        .contactPatientProfileLoaded(patientProfile))
 
     // then
     verify(ui).hideProgress()
@@ -351,7 +351,7 @@ class CallPatientUiRendererTest {
     uiRenderer.render(defaultModel(overdueListChangesFeatureEnabled = true, phoneMaskFeatureEnabled = true)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
         .contactPatientInfoLoaded()
-        .patientProfileLoaded(patientProfile))
+        .contactPatientProfileLoaded(patientProfile))
 
     // then
     verify(ui).hideProgress()

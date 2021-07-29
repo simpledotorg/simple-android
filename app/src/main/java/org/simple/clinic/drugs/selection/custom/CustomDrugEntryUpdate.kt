@@ -19,6 +19,11 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       is FrequencyEdited -> next(model.frequencyEdited(event.frequency))
       is AddMedicineButtonClicked -> createOrUpdatePrescriptionEntry(model)
       is CustomDrugSaved -> dispatch(CloseBottomSheet)
+      ExistingDrugRemoved -> noChange()
+      is RemoveDrugButtonClicked -> {
+        val update = model.openAs as OpenAs.Update
+        dispatch(RemoveDrugFromPrescription(update.prescribedDrugUuid))
+      }
       is CustomDrugFetched -> drugFetched(model, event.prescription)
     }
   }

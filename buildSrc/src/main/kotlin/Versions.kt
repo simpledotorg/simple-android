@@ -13,6 +13,8 @@ object Versions {
   const val room = "2.3.0"
   const val androidXTestExt = "1.1.3"
   const val androidXTest = "1.4.0"
+  // Enable Lint partial analysis (android.enableParallelLint) in gradle.properties
+  // once Timber supports it.
   const val timber = "4.7.0"
   const val dagger = "2.35.1"
   const val coreTesting = "2.1.0"

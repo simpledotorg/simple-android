@@ -36,6 +36,7 @@
   - Load overdue patients without phone number
   - Updated contact patient bottom sheet UI
 - [In Progress: 06 Aug 2021] Add support for Sri Lanka
+- [In Progress: 5 Aug 2021] Implement `CustomDrugEntrySheet`  
 
 ## On Demo
 ### Internal

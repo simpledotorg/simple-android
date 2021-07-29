@@ -5,13 +5,15 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.drugs.search.DrugFrequency
+import java.util.UUID
 
 class CustomDrugEntryUiRendererTest {
 
   private val ui = mock<CustomDrugEntryUi>()
   private val uiRenderer = CustomDrugEntryUiRenderer(ui)
+  private val drugName = "Amlodipine"
 
-  private val defaultModel = CustomDrugEntryModel.default()
+  private val defaultModel = CustomDrugEntryModel.default(drug = null, drugName = drugName)
 
   @Test
   fun `when drug frequency is changed, then set the new drug frequency`() {

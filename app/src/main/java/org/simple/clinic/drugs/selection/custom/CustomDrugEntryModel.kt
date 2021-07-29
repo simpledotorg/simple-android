@@ -1,13 +1,24 @@
 package org.simple.clinic.drugs.selection.custom
 
+import org.simple.clinic.drugs.search.Drug
 import org.simple.clinic.drugs.search.DrugFrequency
+import java.util.UUID
 
 data class CustomDrugEntryModel(
+    val drugName: String,
     val dosage: String?,
-    val frequency: DrugFrequency?
+    val frequency: DrugFrequency?,
+    val rxNormCode: String?
 ) {
   companion object {
-    fun default() = CustomDrugEntryModel(dosage = null, frequency = DrugFrequency.Unknown("None"))
+    fun default(
+        drug: Drug?,
+        drugName: String,
+    ) = CustomDrugEntryModel(
+        drugName = drug?.name ?: drugName,
+        dosage = drug?.dosage,
+        frequency = drug?.frequency ?: DrugFrequency.Unknown("None"),
+        rxNormCode = drug?.rxNormCode)
   }
 
   val hasDrugFrequency

@@ -12,7 +12,8 @@ import org.simple.clinic.drugs.search.DrugFrequency
 class CustomDrugEntryUpdateTest {
 
   private val updateSpec = UpdateSpec(CustomDrugEntryUpdate())
-  private val defaultModel = CustomDrugEntryModel.default()
+  private val drugName = "Amlodipine"
+  private val defaultModel = CustomDrugEntryModel.default(drug = null, drugName = drugName)
 
   @Test
   fun `when dosage is edited, then update the model with the new dosage`() {
@@ -39,7 +40,7 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
-  fun `when frequency is edited, then update the model`(){
+  fun `when frequency is edited, then update the model`() {
     val frequency = DrugFrequency.OD
     updateSpec.given(defaultModel)
         .whenEvent(FrequencyEdited(frequency))

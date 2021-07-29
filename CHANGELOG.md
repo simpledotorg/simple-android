@@ -45,6 +45,7 @@
 - Bump UUID generator to v4.0.1
 - Bump Jackson to v2.12.4
 - Restart `TheActivity` after changing language
+- Bump Lint to v30.0.0
 
 ### Changes
 - Redesign sync indicator view

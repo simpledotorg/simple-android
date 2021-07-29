@@ -10,4 +10,6 @@ data class EditFrequencyClicked(val frequency: DrugFrequency) : CustomDrugEntryE
 
 data class FrequencyEdited(val frequency: DrugFrequency) : CustomDrugEntryEvent()
 
+object AddMedicineButtonClicked : CustomDrugEntryEvent()
+
 object CustomDrugSaved : CustomDrugEntryEvent()

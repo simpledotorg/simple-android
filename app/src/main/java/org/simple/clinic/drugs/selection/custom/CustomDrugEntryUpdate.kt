@@ -17,6 +17,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       is FrequencyEdited -> next(model.frequencyEdited(event.frequency))
       is AddMedicineButtonClicked -> createOrUpdatePrescriptionEntry(model)
       is CustomDrugSaved -> dispatch(CloseBottomSheet)
+      is CustomDrugFetched -> noChange()
     }
   }
 

@@ -16,3 +16,5 @@ data class SaveCustomDrugToPrescription(
 ) : CustomDrugEntryEffect()
 
 object CloseBottomSheet : CustomDrugEntryEffect()
+
+data class FetchPrescription(val prescriptionUuid: UUID) : CustomDrugEntryEffect()

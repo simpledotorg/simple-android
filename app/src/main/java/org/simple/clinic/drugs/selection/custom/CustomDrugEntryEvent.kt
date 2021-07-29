@@ -9,3 +9,5 @@ data class DosageEdited(val dosage: String) : CustomDrugEntryEvent()
 data class EditFrequencyClicked(val frequency: DrugFrequency) : CustomDrugEntryEvent()
 
 data class FrequencyEdited(val frequency: DrugFrequency) : CustomDrugEntryEvent()
+
+object CustomDrugSaved : CustomDrugEntryEvent()

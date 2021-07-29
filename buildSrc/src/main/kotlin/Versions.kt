@@ -2,7 +2,7 @@ object Versions {
   const val minSdk = 21
   const val compileSdk = 30
   const val kotlin = "1.5.21"
-  const val agp = "4.2.2"
+  const val agp = "7.0.0"
   const val roomMetadataGenerator = "1.2.0"
   const val gradleVersions = "0.38.0"
 
@@ -13,6 +13,8 @@ object Versions {
   const val room = "2.3.0"
   const val androidXTestExt = "1.1.3"
   const val androidXTest = "1.4.0"
+  // Enable Lint partial analysis (android.enableParallelLint) in gradle.properties
+  // once Timber supports it.
   const val timber = "4.7.0"
   const val dagger = "2.35.1"
   const val coreTesting = "2.1.0"
@@ -74,7 +76,7 @@ object Versions {
   const val desugarJdk = "1.0.9"
   const val signaturePad = "1.3.1"
   const val viewpager2 = "1.0.0"
-  const val lint = "27.2.2"
+  const val lint = "30.0.0"
   const val rootbeer = "0.0.9"
   const val mlKitBarcode = "16.2.0"
   const val fragment = "1.3.6"

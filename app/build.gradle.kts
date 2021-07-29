@@ -1,8 +1,7 @@
-import com.android.build.api.variant.VariantFilter
+import com.google.firebase.perf.plugin.FirebasePerfExtension
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.simple.rmg.RoomMetadataGenerator
-import com.google.firebase.perf.plugin.FirebasePerfExtension
 
 repositories {
   maven(url = "https://jitpack.io")
@@ -75,7 +74,7 @@ tasks.withType<Test> {
 }
 
 android {
-  compileSdkVersion(versions.compileSdk)
+  compileSdk = versions.compileSdk
   // Needed to switch NDK versions on the CI server since they have different
   // NDK versions on macOS and Linux environments. Gradle plugin 3.6+ requires
   // us to pin an NDK version if we package native libs.
@@ -88,8 +87,8 @@ android {
 
   defaultConfig {
     applicationId = "org.simple.clinic"
-    minSdkVersion(versions.minSdk)
-    targetSdkVersion(versions.compileSdk)
+    minSdk = versions.minSdk
+    targetSdk = versions.compileSdk
     versionCode = 1
     versionName = "0.1"
     multiDexEnabled = true
@@ -144,7 +143,7 @@ android {
     viewBinding = true
   }
 
-  flavorDimensions("track")
+  flavorDimensions.add("track")
 
   productFlavors {
     create("qa") {
@@ -176,19 +175,25 @@ android {
     }
   }
 
-  val filteredVariants = setOf(
-      "qaRelease", "stagingDebug", "sandboxDebug", "productionDebug", "securityDebug"
-  )
-  variantFilter = Action<VariantFilter> {
-    if (name in filteredVariants) {
-      ignore = true
+  androidComponents {
+    val filteredVariants = setOf(
+        "qaRelease",
+        "stagingDebug",
+        "sandboxDebug",
+        "productionDebug",
+        "securityDebug"
+    )
+
+    beforeVariants { variant ->
+      variant.enabled = variant.name !in filteredVariants
     }
   }
 
-  lintOptions {
+  lint {
     isWarningsAsErrors = true
     isAbortOnError = true
     isCheckReleaseBuilds = false
+    isCheckDependencies = true
   }
 
   compileOptions {
@@ -218,9 +223,9 @@ android {
 
   packagingOptions {
     // Deprecated ABIs. See https://developer.android.com/ndk/guides/abis
-    exclude("lib/mips/libsqlite3x.so")
-    exclude("lib/mips64/libsqlite3x.so")
-    exclude("lib/armeabi/libsqlite3x.so")
+    jniLibs.excludes.add("lib/mips/libsqlite3x.so")
+    jniLibs.excludes.add("lib/mips64/libsqlite3x.so")
+    jniLibs.excludes.add("lib/armeabi/libsqlite3x.so")
   }
 
   bundle {

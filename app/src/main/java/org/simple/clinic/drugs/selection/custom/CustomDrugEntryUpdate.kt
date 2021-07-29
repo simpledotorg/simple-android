@@ -4,6 +4,7 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.mobius.dispatch
 
 class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent, CustomDrugEntryEffect> {
@@ -17,8 +18,12 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       is FrequencyEdited -> next(model.frequencyEdited(event.frequency))
       is AddMedicineButtonClicked -> createOrUpdatePrescriptionEntry(model)
       is CustomDrugSaved -> dispatch(CloseBottomSheet)
-      is CustomDrugFetched -> noChange()
+      is CustomDrugFetched -> drugFetched(event.prescription)
     }
+  }
+
+  private fun drugFetched(prescription: PrescribedDrug): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
+    return dispatch(CloseBottomSheet)
   }
 
   private fun createOrUpdatePrescriptionEntry(model: CustomDrugEntryModel): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {

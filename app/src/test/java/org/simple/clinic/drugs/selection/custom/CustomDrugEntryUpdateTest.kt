@@ -91,4 +91,21 @@ class CustomDrugEntryUpdateTest {
             hasEffects(CloseBottomSheet)
         ))
   }
+
+  @Test
+  fun `when the drug is fetched but it is deleted, then close the bottom sheet`() {
+    val prescribedDrugUuid = UUID.fromString("96633994-6e4d-4528-b796-f03ae016553a")
+    val prescribedDrug = TestData.prescription(uuid = prescribedDrugUuid, isDeleted = true)
+    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.Update(patientUuid, prescribedDrugUuid), drug = null, drugName = drugName)
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(CustomDrugFetched(prescribedDrug))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(CloseBottomSheet)
+            )
+        )
+  }
 }

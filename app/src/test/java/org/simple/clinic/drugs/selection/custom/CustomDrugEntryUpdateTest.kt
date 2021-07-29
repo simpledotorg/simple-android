@@ -80,4 +80,15 @@ class CustomDrugEntryUpdateTest {
             hasEffects(SaveCustomDrugToPrescription(patientUuid, drugName, dosage, null, frequency))
         ))
   }
+
+  @Test
+  fun `when the new drug is added to the list, then close the bottom sheet`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(CustomDrugSaved)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CloseBottomSheet)
+        ))
+  }
 }

@@ -4,6 +4,7 @@
 ### Internal
 - Set Simple video and duration based on locale
 - Fix incorrect test in `TheActivityControllerTest`
+- Commit and push string formatting changes
 - [In Progress: 30 Jul 2021] Support `ContactPatientSheet` with no appointment
 
 ### Changes

@@ -22,9 +22,15 @@ android {
       )
     }
   }
+
+  compileOptions {
+    isCoreLibraryDesugaringEnabled = true
+  }
 }
 
 dependencies {
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}")
   api("com.jakewharton.timber:timber:${versions.timber}")
+
+  coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${versions.desugarJdk}")
 }

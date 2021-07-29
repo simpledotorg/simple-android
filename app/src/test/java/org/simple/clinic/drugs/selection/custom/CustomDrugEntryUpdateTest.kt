@@ -108,4 +108,22 @@ class CustomDrugEntryUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when the drug is fetched and is not deleted, then update the model`() {
+    val prescribedDrugUuid = UUID.fromString("96633994-6e4d-4528-b796-f03ae016553a")
+    val prescribedDrug = TestData.prescription(uuid = prescribedDrugUuid, isDeleted = false)
+    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.Update(patientUuid, prescribedDrugUuid), drug = null, drugName = drugName)
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(CustomDrugFetched(prescribedDrug))
+        .then(
+            assertThatNext(
+                hasModel(defaultModel
+                    .dosageEdited(dosage = prescribedDrug.dosage)
+                    .frequencyEdited(frequency = DrugFrequency.fromMedicineFrequencyToDrugFrequency(prescribedDrug.frequency))),
+                hasNoEffects())
+        )
+  }
 }

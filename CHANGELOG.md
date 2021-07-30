@@ -49,6 +49,7 @@
 - Bump ML Kit Barcode to v16.2.0
 - Bump Lint to v30.0.0
 - Bump AGP to v7.0.0
+- Run `chmod` for git hooks only if the OS is Linux or MacOS
 
 ### Changes
 - Redesign sync indicator view

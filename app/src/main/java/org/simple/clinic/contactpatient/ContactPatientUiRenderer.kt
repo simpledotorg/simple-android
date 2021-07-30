@@ -79,6 +79,13 @@ class ContactPatientUiRenderer(
       ui.setResultOfCallLabelText()
 
       loadSecureCallingUi(model)
+    } else if (model.patientProfileHasPhoneNumber && model.hasLoadedAppointment) {
+      ui.showPatientWithCallResultUi()
+      ui.setResultOfCallLabelText()
+      ui.showPatientWithPhoneNumberUi()
+      ui.hidePatientWithNoPhoneNumberUi()
+
+      loadSecureCallingUi(model)
     } else {
       ui.showPatientWithNoPhoneNumberUi()
       ui.hidePatientWithPhoneNumberUi()

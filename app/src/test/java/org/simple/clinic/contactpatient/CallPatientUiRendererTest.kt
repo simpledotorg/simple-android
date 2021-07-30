@@ -192,10 +192,55 @@ class CallPatientUiRendererTest {
         diagnosedWithDiabetes = patientProfile.medicalHistory?.diagnosedWithDiabetes,
         diagnosedWithHypertension = patientProfile.medicalHistory?.diagnosedWithHypertension,
         lastVisited = patientProfile.patientLastSeen))
+    verify(ui).showPatientWithCallResultUi()
     verify(ui).showPatientWithPhoneNumberUi()
     verify(ui).hidePatientWithNoPhoneNumberUi()
-    verify(ui).showSecureCallUi()
     verify(ui).setResultOfCallLabelText()
+    verify(ui).showSecureCallUi()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `if overdue list changes is enabled and there is overdue appointment, show the call result section`() {
+    // given
+    val patientProfile = TestData.contactPatientProfile(patientUuid = patientUuid, generatePhoneNumber = true)
+    val overdueAppointment = TestData.overdueAppointment(
+        facilityUuid = UUID.fromString("a607a97f-4bf6-4ce6-86a3-b266059c7734"),
+        patientUuid = patientUuid,
+        patientAddress = TestData.overduePatientAddress(
+            streetAddress = null,
+            colonyOrVillage = null,
+            district = "Bhatinda",
+            state = "Punjab"),
+        patientRegisteredFacilityName = "Bhatinda",
+        diagnosedWithDiabetes = Answer.Yes,
+        diagnosedWithHypertension = Answer.No
+    )
+
+    // when
+    val model = defaultModel(phoneMaskFeatureEnabled = true, overdueListChangesFeatureEnabled = true)
+        .contactPatientInfoLoaded()
+        .contactPatientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Optional.of(overdueAppointment))
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).hideProgress()
+    verify(ui).switchToCallPatientView()
+    verify(ui).renderPatientDetails(PatientDetails(name = patientProfile.patient.fullName,
+        gender = patientProfile.patient.gender,
+        age = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock),
+        phoneNumber = patientProfile.phoneNumbers.first().number,
+        patientAddress = patientAddressText(patientProfile.address)!!,
+        registeredFacility = patientProfile.registeredFacility.name,
+        diagnosedWithDiabetes = patientProfile.medicalHistory?.diagnosedWithDiabetes,
+        diagnosedWithHypertension = patientProfile.medicalHistory?.diagnosedWithHypertension,
+        lastVisited = patientProfile.patientLastSeen))
+    verify(ui).hidePatientWithNoPhoneNumberUi()
+    verify(ui).showPatientWithPhoneNumberUi()
+    verify(ui).showPatientWithCallResultUi()
+    verify(ui).setResultOfCallLabelText()
+    verify(ui).showSecureCallUi()
     verifyNoMoreInteractions(ui)
   }
 
@@ -253,6 +298,7 @@ class CallPatientUiRendererTest {
     verify(ui).hidePatientWithNoPhoneNumberUi()
     verify(ui).setResultOfCallLabelText()
     verify(ui).hideSecureCallUi()
+    verify(ui).showPatientWithCallResultUi()
     verifyNoMoreInteractions(ui)
   }
 
@@ -369,6 +415,7 @@ class CallPatientUiRendererTest {
     verify(ui).showSecureCallUi()
     verify(ui).switchToCallPatientView()
     verify(ui).setResultOfCallLabelText()
+    verify(ui).showPatientWithCallResultUi()
     verifyNoMoreInteractions(ui)
   }
 

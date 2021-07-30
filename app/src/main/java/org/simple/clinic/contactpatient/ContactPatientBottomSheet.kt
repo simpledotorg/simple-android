@@ -354,6 +354,10 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     )
   }
 
+  override fun showPatientWithCallResultUi() {
+    callPatientView.showPatientWithCallResultLayout = true
+  }
+
   override fun showProgress() {
     progressIndicator.visibility = VISIBLE
   }

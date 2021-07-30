@@ -38,7 +38,7 @@ class ContactPatientInitTest {
         .whenInit(defaultModel)
         .then(assertThatFirst(
             hasModel(defaultModel.contactPatientInfoLoading()),
-            hasEffects(LoadPatientProfile(patientUuid), LoadLatestOverdueAppointment(patientUuid), LoadCurrentFacility)
+            hasEffects(LoadContactPatientProfile(patientUuid), LoadLatestOverdueAppointment(patientUuid), LoadCurrentFacility)
         ))
   }
 
@@ -54,7 +54,7 @@ class ContactPatientInitTest {
     )
 
     val model = defaultModel()
-        .patientProfileLoaded(TestData.patientProfile(patientUuid = patientUuid))
+        .contactPatientProfileLoaded(TestData.contactPatientProfile(patientUuid = patientUuid))
         .overdueAppointmentLoaded(Optional.empty())
         .currentFacilityLoaded(currentFacility = facility)
 

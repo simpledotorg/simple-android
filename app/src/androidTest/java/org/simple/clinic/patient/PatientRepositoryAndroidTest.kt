@@ -21,6 +21,7 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.Answer.No
@@ -3170,5 +3171,84 @@ class PatientRepositoryAndroidTest {
 
     val savedPrescribedDrugs = database.prescriptionDao().getAllPrescribedDrugs()
     assertThat(savedPrescribedDrugs).containsExactlyElementsIn(prescribedDrugs)
+  }
+
+  @Test
+  fun when_a_patient_is_called_then_it_should_be_retrieving_contact_patient_profile_correctly() {
+    // given
+    val patientUuid = UUID.fromString("6190e46d-718e-4c21-ad0d-63a86df7c2bc")
+    val facility = UUID.fromString("6d875f1e-3d96-4caa-abd6-0f5746edd65d")
+    val addressUuid = UUID.fromString("123a16fa-5767-4f83-8fd0-ce4cbb5e4f6d")
+
+    val savedFacility = testData.facility(
+        uuid = facility,
+        name = "PHC Obvious",
+        facilityConfig = FacilityConfig(
+            diabetesManagementEnabled = true,
+            teleconsultationEnabled = false
+        ),
+        syncStatus = DONE)
+
+    val savedAddress = testData.patientAddress(uuid = addressUuid)
+
+    val savedBusinessId = testData.businessId(uuid = UUID.fromString("1f099ca9-2366-42f1-89fd-10a42092f163"),
+        patientUuid = patientUuid,
+        identifier = Identifier(
+            value = "21a0dc98-8023-42d4-9ca6-723eb708358a",
+            type = BpPassport
+        ))
+
+    val savedPhoneNumber = listOf(testData.patientPhoneNumber(
+        uuid = UUID.fromString("032ba6fc-b8e2-4bfb-b6ca-b60dbfd5d7a0"),
+        patientUuid = patientUuid,
+        number = "1234567891"))
+
+    val savedPatient = testData.patient(
+        uuid = patientUuid,
+        addressUuid = savedAddress.uuid,
+        registeredFacilityId = facility
+    )
+
+    val newPatient =
+        testData.contactPatientProfile(
+            patientUuid = savedPatient.uuid,
+            patientAddressUuid = savedPatient.addressUuid,
+            patientRegisteredFacilityId = savedPatient.registeredFacilityId!!,
+            patientPhoneNumber = savedPhoneNumber.first().toString(),
+            businessId = savedBusinessId,
+            retainUntil = Instant.parse("2018-01-07T00:00:00Z"))
+
+    val savedBloodPressureMeasurement = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid
+    )
+
+    val savedBloodSugarMeasurement = testData.bloodSugarMeasurement(
+        patientUuid = patientUuid
+    )
+
+    val savedMedicalHistory = testData.medicalHistory(
+        patientUuid = patientUuid
+    )
+
+    // when
+    database.facilityDao().save(listOf(savedFacility))
+    database.addressDao().save(savedAddress)
+    database.patientDao().save(savedPatient)
+    database.phoneNumberDao().save(savedPhoneNumber)
+    database.bloodPressureDao().save(listOf(savedBloodPressureMeasurement))
+    database.bloodSugarDao().save(listOf(savedBloodSugarMeasurement))
+    database.medicalHistoryDao().save(savedMedicalHistory)
+
+    val contactPatientProfile = patientRepository
+        .contactPatientProfileImmediate(newPatient.patient.uuid)
+
+    // then
+    assertThat(contactPatientProfile.patient.uuid).isEqualTo(patientUuid)
+    assertThat(savedBloodPressureMeasurement).isEqualTo(contactPatientProfile.bloodPressureMeasurement)
+    assertThat(savedBloodSugarMeasurement).isEqualTo(contactPatientProfile.bloodSugarMeasurement)
+    assertThat(savedMedicalHistory).isEqualTo(contactPatientProfile.medicalHistory)
+    assertThat(savedFacility).isEqualTo(contactPatientProfile.registeredFacility)
+    assertThat(savedAddress).isEqualTo(contactPatientProfile.address)
+    assertThat(savedPhoneNumber).isEqualTo(contactPatientProfile.phoneNumbers)
   }
 }

@@ -3,12 +3,11 @@ package org.simple.clinic.contactpatient
 import org.simple.clinic.contactpatient.UiMode.CallPatient
 import org.simple.clinic.contactpatient.UiMode.SetAppointmentReminder
 import org.simple.clinic.home.overdue.OverdueAppointment
-import org.simple.clinic.home.overdue.OverduePatientAddress
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.patient.DateOfBirth
-import org.simple.clinic.patient.PatientProfile
+import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.util.ParcelableOptional
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.daysTill
@@ -156,7 +155,7 @@ class ContactPatientUiRenderer(
   }
 
   private fun renderPatientProfile_Old(
-      patientProfile: PatientProfile
+      patientProfile: ContactPatientProfile
   ) {
     val patientAge = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock)
 
@@ -169,7 +168,7 @@ class ContactPatientUiRenderer(
   }
 
   private fun renderPatientProfile(
-      patientProfile: PatientProfile,
+      patientProfile: ContactPatientProfile,
       appointment: ParcelableOptional<OverdueAppointment>
   ) {
     val patientAge = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock)
@@ -179,15 +178,15 @@ class ContactPatientUiRenderer(
         gender = patientProfile.patient.gender,
         age = patientAge,
         phoneNumber = patientProfile.phoneNumbers.firstOrNull()?.number,
-        patientAddress = patientAddressText(appointment.get().patientAddress),
-        registeredFacility = appointment.get().patientRegisteredFacilityName.orEmpty(),
-        diagnosedWithDiabetes = appointment.get().diagnosedWithDiabetes,
-        diagnosedWithHypertension = appointment.get().diagnosedWithHypertension,
-        lastVisited = appointment.get().patientLastSeen
+        patientAddress = patientAddressText(patientProfile.address),
+        registeredFacility = patientProfile.registeredFacility.name,
+        diagnosedWithDiabetes = patientProfile.medicalHistory?.diagnosedWithDiabetes,
+        diagnosedWithHypertension = patientProfile.medicalHistory?.diagnosedWithHypertension,
+        lastVisited = patientProfile.patientLastSeen
     ))
   }
 
-  private fun patientAddressText(patientAddress: OverduePatientAddress) = when {
+  private fun patientAddressText(patientAddress: PatientAddress) = when {
     !patientAddress.streetAddress.isNullOrBlank() && !patientAddress.colonyOrVillage.isNullOrBlank() -> {
       "${patientAddress.streetAddress}, ${patientAddress.colonyOrVillage}"
     }

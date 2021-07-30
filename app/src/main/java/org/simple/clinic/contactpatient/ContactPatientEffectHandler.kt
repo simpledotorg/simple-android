@@ -12,7 +12,6 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.time.LocalDate
 
@@ -33,7 +32,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<ContactPatientEffect, ContactPatientEvent> {
     return RxMobius
         .subtypeEffectHandler<ContactPatientEffect, ContactPatientEvent>()
-        .addTransformer(LoadPatientProfile::class.java, loadPatientProfile(schedulers.io()))
+        .addTransformer(LoadContactPatientProfile::class.java, loadContactPatientProfile(schedulers.io()))
         .addTransformer(LoadLatestOverdueAppointment::class.java, loadLatestOverdueAppointment(schedulers.io()))
         .addConsumer(DirectCallWithAutomaticDialer::class.java, { uiActions.directlyCallPatient(it.patientPhoneNumber, Dialer.Automatic) }, schedulers.ui())
         .addConsumer(DirectCallWithManualDialer::class.java, { uiActions.directlyCallPatient(it.patientPhoneNumber, Dialer.Manual) }, schedulers.ui())
@@ -61,15 +60,14 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     uiActions.openRemoveOverdueAppointmentScreen(effect.appointmentId, effect.patientId)
   }
 
-  private fun loadPatientProfile(
+  private fun loadContactPatientProfile(
       scheduler: Scheduler
-  ): ObservableTransformer<LoadPatientProfile, ContactPatientEvent> {
+  ): ObservableTransformer<LoadContactPatientProfile, ContactPatientEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .map { patientRepository.patientProfileImmediate(it.patientUuid) }
-          .filterAndUnwrapJust()
-          .map { it.withoutDeletedPhoneNumbers().withoutDeletedBusinessIds() }
+          .map { patientRepository.contactPatientProfileImmediate(it.patientUuid) }
+          .map { it.withoutDeletedPhoneNumbers() }
           .map(::PatientProfileLoaded)
     }
   }

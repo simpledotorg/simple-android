@@ -15,11 +15,11 @@ import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.phone.Dialer
-import java.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.time.LocalDate
+import java.util.Optional
 import java.util.UUID
 
 class ContactPatientEffectHandlerTest {
@@ -62,14 +62,14 @@ class ContactPatientEffectHandlerTest {
   @Test
   fun `when the load patient profile effect is received, the patient profile must be loaded`() {
     // given
-    val patientProfile = TestData.patientProfile(patientUuid = patientUuid)
-    whenever(patientRepository.patientProfileImmediate(patientUuid)) doReturn Optional.of(patientProfile)
+    val contactPatientProfile = TestData.contactPatientProfile(patientUuid = patientUuid)
+    whenever(patientRepository.contactPatientProfileImmediate(patientUuid)) doReturn contactPatientProfile
 
     // when
-    testCase.dispatch(LoadPatientProfile(patientUuid))
+    testCase.dispatch(LoadContactPatientProfile(patientUuid))
 
     // then
-    testCase.assertOutgoingEvents(PatientProfileLoaded(patientProfile))
+    testCase.assertOutgoingEvents(PatientProfileLoaded(contactPatientProfile))
     verifyZeroInteractions(uiActions)
   }
 

@@ -27,7 +27,7 @@ class ContactPatientUpdateTest {
   private val patientUuid = UUID.fromString("b5eccb67-6425-4d48-9c17-65e9b267f9eb")
   private val appointmentUuid = UUID.fromString("f1b11fa6-3622-4f82-b74b-dd08dd563f1a")
   private val patientPhoneNumber = "1234567890"
-  private val patientProfile = TestData.patientProfile(
+  private val patientProfile = TestData.contactPatientProfile(
       patientUuid = patientUuid,
       patientPhoneNumber = patientPhoneNumber
   )
@@ -58,7 +58,7 @@ class ContactPatientUpdateTest {
         .given(defaultModel)
         .whenEvent(PatientProfileLoaded(patientProfile))
         .then(assertThatNext(
-            hasModel(defaultModel.patientProfileLoaded(patientProfile)),
+            hasModel(defaultModel.contactPatientProfileLoaded(patientProfile)),
             hasNoEffects()
         ))
   }
@@ -72,7 +72,7 @@ class ContactPatientUpdateTest {
         .given(defaultModel)
         .whenEvent(PatientProfileLoaded(patientProfile))
         .then(assertThatNext(
-            hasModel(defaultModel.patientProfileLoaded(patientProfile)
+            hasModel(defaultModel.contactPatientProfileLoaded(patientProfile)
                 .contactPatientInfoLoaded()),
             hasNoEffects()
         ))
@@ -96,7 +96,7 @@ class ContactPatientUpdateTest {
   fun `when the overdue appointment is loaded and patient profile is loaded, the ui must be updated`() {
     val appointment = Optional.of(overdueAppointment)
     val defaultModel = defaultModel()
-        .patientProfileLoaded(patientProfile)
+        .contactPatientProfileLoaded(patientProfile)
 
     spec
         .given(defaultModel)
@@ -111,7 +111,7 @@ class ContactPatientUpdateTest {
   @Test
   fun `when normal call is selected and the call permission is granted, directly call the patient with auto dial`() {
     val model = defaultModel()
-        .patientProfileLoaded(patientProfile)
+        .contactPatientProfileLoaded(patientProfile)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
 
     spec
@@ -126,7 +126,7 @@ class ContactPatientUpdateTest {
   @Test
   fun `when normal call is selected and the call permission is denied, directly call the patient with manual dial`() {
     val model = defaultModel()
-        .patientProfileLoaded(patientProfile)
+        .contactPatientProfileLoaded(patientProfile)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
 
     spec
@@ -141,7 +141,7 @@ class ContactPatientUpdateTest {
   @Test
   fun `when secure call is selected and the call permission is granted, masked call the patient with auto dial`() {
     val model = defaultModel(phoneMaskFeatureEnabled = true)
-        .patientProfileLoaded(patientProfile)
+        .contactPatientProfileLoaded(patientProfile)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
 
     spec
@@ -156,7 +156,7 @@ class ContactPatientUpdateTest {
   @Test
   fun `when secure call is selected and the call permission is denied, masked call the patient with manual dial`() {
     val model = defaultModel(phoneMaskFeatureEnabled = true)
-        .patientProfileLoaded(patientProfile)
+        .contactPatientProfileLoaded(patientProfile)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
 
     spec
@@ -171,7 +171,7 @@ class ContactPatientUpdateTest {
   @Test
   fun `when the patient has been marked as agreed to visit, close the screen`() {
     val model = defaultModel(phoneMaskFeatureEnabled = true)
-        .patientProfileLoaded(patientProfile)
+        .contactPatientProfileLoaded(patientProfile)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
 
     spec
@@ -186,7 +186,7 @@ class ContactPatientUpdateTest {
   @Test
   fun `when patient agreed to visit is clicked, the patient details must be updated`() {
     val model = defaultModel()
-        .patientProfileLoaded(patientProfile)
+        .contactPatientProfileLoaded(patientProfile)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
 
     spec
@@ -206,7 +206,7 @@ class ContactPatientUpdateTest {
     )
 
     val model = defaultModel(remindAppointmentsIn = remindAppointmentsIn)
-        .patientProfileLoaded(patientProfile)
+        .contactPatientProfileLoaded(patientProfile)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
 
     val expectedReminderDate = PotentialAppointmentDate(
@@ -234,7 +234,7 @@ class ContactPatientUpdateTest {
     )
 
     val model = defaultModel(remindAppointmentsIn = remindAppointmentsIn)
-        .patientProfileLoaded(patientProfile)
+        .contactPatientProfileLoaded(patientProfile)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
         .reminderDateSelected(currentReminderDate)
 
@@ -259,7 +259,7 @@ class ContactPatientUpdateTest {
     )
 
     val model = defaultModel(remindAppointmentsIn = remindAppointmentsIn)
-        .patientProfileLoaded(patientProfile)
+        .contactPatientProfileLoaded(patientProfile)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
         .reminderDateSelected(currentReminderDate)
 
@@ -288,7 +288,7 @@ class ContactPatientUpdateTest {
     )
 
     val model = defaultModel(remindAppointmentsIn = remindAppointmentsIn)
-        .patientProfileLoaded(patientProfile)
+        .contactPatientProfileLoaded(patientProfile)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
         .reminderDateSelected(currentReminderDate)
 
@@ -304,7 +304,7 @@ class ContactPatientUpdateTest {
   @Test
   fun `when a reminder date is manually selected, the selected date must be set to an existing potential date if it matches`() {
     val model = defaultModel()
-        .patientProfileLoaded(patientProfile)
+        .contactPatientProfileLoaded(patientProfile)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
 
     val date = LocalDate.parse("2018-01-08")
@@ -320,7 +320,7 @@ class ContactPatientUpdateTest {
   @Test
   fun `when a reminder date is manually selected, the selected date must be set to a default date if there is no match`() {
     val model = defaultModel()
-        .patientProfileLoaded(patientProfile)
+        .contactPatientProfileLoaded(patientProfile)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
 
     val date = LocalDate.parse("2018-01-06")
@@ -347,7 +347,7 @@ class ContactPatientUpdateTest {
     )
 
     val model = defaultModel(remindAppointmentsIn = remindAppointmentsIn)
-        .patientProfileLoaded(patientProfile)
+        .contactPatientProfileLoaded(patientProfile)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
         .reminderDateSelected(currentReminderDate)
 
@@ -373,7 +373,7 @@ class ContactPatientUpdateTest {
     )
 
     val model = defaultModel()
-        .patientProfileLoaded(patientProfile)
+        .contactPatientProfileLoaded(patientProfile)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
         .reminderDateSelected(currentReminderDate)
 
@@ -393,7 +393,7 @@ class ContactPatientUpdateTest {
   @Test
   fun `when the reminder for appointment has been set, the sheet must be closed`() {
     val model = defaultModel()
-        .patientProfileLoaded(patientProfile)
+        .contactPatientProfileLoaded(patientProfile)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
 
     spec
@@ -408,7 +408,7 @@ class ContactPatientUpdateTest {
   @Test
   fun `when remind to call later is clicked, the set appointment reminder view must be shown`() {
     val model = defaultModel()
-        .patientProfileLoaded(patientProfile)
+        .contactPatientProfileLoaded(patientProfile)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
 
     spec
@@ -423,7 +423,7 @@ class ContactPatientUpdateTest {
   @Test
   fun `when back is clicked on the call patient view, then the sheet must be closed`() {
     val model = defaultModel()
-        .patientProfileLoaded(patientProfile)
+        .contactPatientProfileLoaded(patientProfile)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
 
     spec
@@ -438,7 +438,7 @@ class ContactPatientUpdateTest {
   @Test
   fun `when back is clicked while on the set appointment reminder view, then the call patient view must be shown`() {
     val model = defaultModel()
-        .patientProfileLoaded(patientProfile)
+        .contactPatientProfileLoaded(patientProfile)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
         .changeUiModeTo(UiMode.SetAppointmentReminder)
 
@@ -454,7 +454,7 @@ class ContactPatientUpdateTest {
   @Test
   fun `when remove from overdue list is clicked, then open remove overdue appointment screen`() {
     val model = defaultModel()
-        .patientProfileLoaded(patientProfile)
+        .contactPatientProfileLoaded(patientProfile)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
 
     spec

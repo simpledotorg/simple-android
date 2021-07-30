@@ -7,6 +7,7 @@ annotation class SimpleVideoConfig(val value: Type) {
 
   enum class Type {
     TrainingVideoYoutubeId,
+    TrainingVideo,
     NumberOfPatientsRegistered
   }
 }

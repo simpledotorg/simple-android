@@ -79,6 +79,9 @@ class CallPatientView(
   private val lastVisitedLabel
     get() = binding!!.lastVisitedLabel
 
+  private val patientWithCallResultGroup
+  get() = binding!!.patientWithCallResultGroup
+
   var secureCallingSectionVisible: Boolean = false
     set(value) {
       field = value
@@ -107,6 +110,12 @@ class CallPatientView(
     set(value) {
       field = value
       registeredFacilityLabel.text = field
+    }
+
+  var showPatientWithCallResultLayout: Boolean = false
+    set(value) {
+      field = value
+      patientWithCallResultGroup.visibility = if (field) View.VISIBLE else View.GONE
     }
 
   var agreedToVisitClicked: AgreedToVisitClicked? = null

@@ -331,7 +331,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:visibility="gone"
-    app:constraint_referenced_ids="phoneNumberLabel, phoneNumberTextView, remindToCallLaterTextView, remindToCallLaterSeparator, helpTextView, normalCallButton, secureCallButton" />
+    app:constraint_referenced_ids="phoneNumberLabel, phoneNumberTextView, helpTextView, normalCallButton, secureCallButton" />
 
   <androidx.constraintlayout.widget.Group
     android:id="@+id/patientWithNoPhoneNumberGroup"
@@ -340,4 +340,10 @@
     android:visibility="gone"
     app:constraint_referenced_ids="patientAddressTextView, noPhoneNumberBottomTextViewLayout" />
 
+  <androidx.constraintlayout.widget.Group
+    android:id="@+id/patientWithCallResultGroup"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:visibility="gone"
+    app:constraint_referenced_ids="resultOfCallLabel, agreedToVisitTextView, agreedToVisitSeparator, remindToCallLaterTextView, remindToCallLaterSeparator, removeFromOverdueListTextView" />
 </merge>

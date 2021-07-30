@@ -34,8 +34,8 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.patient.SimpleVideo
-import org.simple.clinic.patient.SimpleVideo.Type.TrainingVideoYoutubeId
+import org.simple.clinic.patient.SimpleVideoConfig
+import org.simple.clinic.patient.SimpleVideoConfig.Type.TrainingVideoYoutubeId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.ScreenResultBus
@@ -76,7 +76,7 @@ class PatientsTabScreen : BaseScreen<
   lateinit var country: Country
 
   @Inject
-  @SimpleVideo(TrainingVideoYoutubeId)
+  @SimpleVideoConfig(TrainingVideoYoutubeId)
   lateinit var youTubeVideoId: String
 
   @Inject

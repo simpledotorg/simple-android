@@ -4,11 +4,15 @@ plugins {
 }
 
 android {
-  compileSdk = versions.compileSdk
+  val compileSdkVersion: Int by rootProject.extra
+  val minSdkVersion: Int by rootProject.extra
+  val targetSdkVersion: Int by rootProject.extra
+
+  compileSdk = compileSdkVersion
 
   defaultConfig {
-    minSdk = versions.minSdk
-    targetSdk = versions.compileSdk
+    minSdk = minSdkVersion
+    targetSdk = targetSdkVersion
 
     consumerProguardFiles("consumer-rules.pro")
   }
@@ -25,9 +29,11 @@ android {
 }
 
 dependencies {
-  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}")
-  implementation("io.reactivex.rxjava2:rxjava:${versions.rxJava}")
+  implementation(libs.kotlin.stdlib)
 
-  testImplementation("junit:junit:${versions.junit}")
-  testImplementation("com.google.truth:truth:${versions.truth}")
+  implementation(libs.rx.java)
+
+  testImplementation(libs.junit)
+
+  testImplementation(libs.truth)
 }

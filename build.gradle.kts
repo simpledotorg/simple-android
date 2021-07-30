@@ -2,6 +2,12 @@ import com.diffplug.spotless.LineEnding.UNIX
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 buildscript {
+  extra.apply {
+    set("compileSdkVersion", 30)
+    set("minSdkVersion", 21)
+    set("targetSdkVersion", 30)
+  }
+
   repositories {
     google()
     mavenCentral()
@@ -9,12 +15,15 @@ buildscript {
   }
 
   dependencies {
-    classpath("com.android.tools.build:gradle:${versions.agp}")
-    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}")
-    classpath("io.sentry:sentry-android-gradle-plugin:${versions.sentryGradlePlugin}")
-    classpath("com.google.gms:google-services:${versions.googleServices}")
-    classpath("com.google.firebase:perf-plugin:${versions.firebasePerformancePlugin}")
-    classpath(files("./buildTooling/room-metadata-generator-${versions.roomMetadataGenerator}.jar"))
+    val libs = project.extensions.getByType<VersionCatalogsExtension>().named("libs") as org.gradle.accessors.dm.LibrariesForLibs
+    val roomMetaDataGeneratorVersion = libs.versions.room.metadataGenerator.get()
+
+    classpath(libs.android.gradle.plugin)
+    classpath(libs.firebase.performance.plugin)
+    classpath(libs.google.services)
+    classpath(libs.kotlin.gradle.plugin)
+    classpath(libs.sentry.gradle.plugin)
+    classpath(files("./buildTooling/room-metadata-generator-${roomMetaDataGeneratorVersion}.jar"))
   }
 }
 
@@ -38,7 +47,9 @@ subprojects {
     lineEndings = UNIX
 
     kotlin {
-      ktlint(versions.ktlint).userData(mapOf(
+      val ktLintVersion = libs.versions.ktlint.get()
+
+      ktlint(ktLintVersion).userData(mapOf(
           "indent_style" to "space",
           "indent_size" to "2",
           "continuation_indent_size" to "4"

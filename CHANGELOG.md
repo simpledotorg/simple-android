@@ -49,6 +49,7 @@
 - Bump ML Kit Barcode to v16.2.0
 - Bump Lint to v30.0.0
 - Bump AGP to v7.0.0
+- Bump Play Services Location to v18.0.0
 
 ### Changes
 - Redesign sync indicator view

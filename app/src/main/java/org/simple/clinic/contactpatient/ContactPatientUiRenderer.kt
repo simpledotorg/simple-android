@@ -74,16 +74,10 @@ class ContactPatientUiRenderer(
     }
 
     if (model.patientProfileHasPhoneNumber && !model.hasLoadedAppointment) {
-      ui.showPatientWithPhoneNumberUi()
-      ui.hidePatientWithNoPhoneNumberUi()
-      ui.hidePatientWithCallResultUi()
+      loadPatientWithPhoneNumber()
       loadSecureCallingUi(model)
     } else if (model.patientProfileHasPhoneNumber && model.hasLoadedAppointment) {
-      ui.showPatientWithCallResultUi()
-      ui.setResultOfCallLabelText()
-      ui.showPatientWithPhoneNumberUi()
-      ui.hidePatientWithNoPhoneNumberUi()
-
+      showPatientCallResult()
       loadSecureCallingUi(model)
     } else {
       ui.showPatientWithNoPhoneNumberUi()
@@ -92,6 +86,19 @@ class ContactPatientUiRenderer(
     }
 
     ui.switchToCallPatientView()
+  }
+
+  private fun showPatientCallResult() {
+    ui.showPatientWithCallResultUi()
+    ui.setResultOfCallLabelText()
+    ui.showPatientWithPhoneNumberUi()
+    ui.hidePatientWithNoPhoneNumberUi()
+  }
+
+  private fun loadPatientWithPhoneNumber() {
+    ui.showPatientWithPhoneNumberUi()
+    ui.hidePatientWithNoPhoneNumberUi()
+    ui.hidePatientWithCallResultUi()
   }
 
   private fun renderPatientFacilityLabel(appointmentIsInRegisteredFacility: Boolean) {

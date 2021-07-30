@@ -41,8 +41,8 @@ import org.simple.clinic.patient.PatientEntryValidationError.PhoneNumberLengthTo
 import org.simple.clinic.patient.PatientEntryValidationError.PhoneNumberNonNullButBlank
 import org.simple.clinic.patient.PatientEntryValidationError.StateEmpty
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.SimpleVideoConfig
-import org.simple.clinic.patient.SimpleVideoConfig.Type.NumberOfPatientsRegistered
+import org.simple.clinic.simplevideo.SimpleVideoConfig
+import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.NumberOfPatientsRegistered
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.util.ValueChangedCallback
 import org.simple.clinic.util.scheduler.SchedulersProvider

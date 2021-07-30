@@ -1,4 +1,4 @@
-package org.simple.clinic.patient
+package org.simple.clinic.simplevideo
 
 import javax.inject.Qualifier
 

@@ -12,8 +12,8 @@ import io.reactivex.ObservableTransformer
 import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.SimpleVideoConfig
-import org.simple.clinic.patient.SimpleVideoConfig.Type.NumberOfPatientsRegistered
+import org.simple.clinic.simplevideo.SimpleVideoConfig
+import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.NumberOfPatientsRegistered
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.refreshuser.RefreshCurrentUser
 import org.simple.clinic.util.UserClock

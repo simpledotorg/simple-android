@@ -34,8 +34,8 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.patient.SimpleVideoConfig
-import org.simple.clinic.patient.SimpleVideoConfig.Type.TrainingVideoYoutubeId
+import org.simple.clinic.simplevideo.SimpleVideoConfig
+import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.TrainingVideoYoutubeId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.ScreenResultBus

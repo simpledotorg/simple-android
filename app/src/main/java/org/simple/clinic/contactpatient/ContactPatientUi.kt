@@ -47,4 +47,5 @@ interface ContactPatientUi {
   fun hideProgress()
 
   fun showPatientWithCallResultUi()
+  fun hidePatientWithCallResultUi()
 }

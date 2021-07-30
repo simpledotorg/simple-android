@@ -13,7 +13,7 @@ import java.time.LocalDate
 sealed class ContactPatientEvent : UiEvent
 
 data class PatientProfileLoaded(
-    val patientProfile: PatientProfile
+    val patientProfile: ContactPatientProfile
 ) : ContactPatientEvent()
 
 data class OverdueAppointmentLoaded(

@@ -147,7 +147,7 @@ class CallPatientView(
     patientAddressTextView.text = patientDetails.patientAddress
     registeredFacilityTextView.text = patientDetails.registeredFacility
     diagnosisTextView.text = diagnosis
-    lastVisitedTextView.text = dateTimeFormatter.format(patientDetails.lastVisited.toLocalDateAtZone(userClock.zone))
+    lastVisitedTextView.text = dateTimeFormatter.format(patientDetails.lastVisited?.toLocalDateAtZone(userClock.zone))
   }
 
   private fun diagnosisText(diagnosedWithDiabetes: Answer?, diagnosedWithHypertension: Answer?): String {

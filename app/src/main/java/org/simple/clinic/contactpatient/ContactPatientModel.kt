@@ -20,7 +20,7 @@ import java.util.UUID
 data class ContactPatientModel(
     val patientUuid: UUID,
     val uiMode: UiMode,
-    val patientProfile: PatientProfile? = null,
+    val patientProfile: ContactPatientProfile? = null,
     val appointment: ParcelableOptional<OverdueAppointment>? = null,
     val secureCallingFeatureEnabled: Boolean,
     val potentialAppointments: List<PotentialAppointmentDate>,
@@ -73,17 +73,14 @@ data class ContactPatientModel(
   val appointmentIsInRegisteredFacility: Boolean
     get() = appointment?.get()?.patientRegisteredFacilityID == currentFacility?.uuid
 
-  val hasSelectedARemoveAppointmentReason: Boolean
-    get() = selectedRemoveAppointmentReason != null
-
   val appointmentUuid: UUID
     get() = appointment!!.get().appointment.uuid
 
   val isPatientContactInfoLoaded: Boolean
     get() = contactPatientInfoProgressState == DONE
 
-  fun patientProfileLoaded(patientProfile: PatientProfile): ContactPatientModel {
-    return copy(patientProfile = patientProfile)
+  fun contactPatientProfileLoaded(contactPatientProfile: ContactPatientProfile): ContactPatientModel {
+    return copy(patientProfile = contactPatientProfile)
   }
 
   fun overdueAppointmentLoaded(appointment: Optional<OverdueAppointment>): ContactPatientModel {

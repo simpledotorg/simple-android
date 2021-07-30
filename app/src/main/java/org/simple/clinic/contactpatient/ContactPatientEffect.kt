@@ -5,7 +5,7 @@ import java.util.UUID
 
 sealed class ContactPatientEffect
 
-data class LoadPatientProfile(val patientUuid: UUID) : ContactPatientEffect()
+data class LoadContactPatientProfile(val patientUuid: UUID) : ContactPatientEffect()
 
 data class LoadLatestOverdueAppointment(val patientUuid: UUID) : ContactPatientEffect()
 

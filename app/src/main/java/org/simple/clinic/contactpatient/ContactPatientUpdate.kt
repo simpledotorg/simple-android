@@ -60,9 +60,9 @@ class ContactPatientUpdate(
 
   private fun patientProfileLoaded(model: ContactPatientModel, event: PatientProfileLoaded): Next<ContactPatientModel, ContactPatientEffect> {
     val updatedModel = if (!model.hasLoadedAppointment) {
-      model.patientProfileLoaded(event.patientProfile)
+      model.contactPatientProfileLoaded(event.patientProfile)
     } else {
-      model.patientProfileLoaded(event.patientProfile)
+      model.contactPatientProfileLoaded(event.patientProfile)
           .contactPatientInfoLoaded()
     }
 

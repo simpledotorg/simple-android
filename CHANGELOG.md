@@ -50,6 +50,7 @@
 - Bump Lint to v30.0.0
 - Bump AGP to v7.0.0
 - Bump Play Services Location to v18.0.0
+- [In Progress: 30 Jul 2021] Support `ContactPatientSheet` with no appointment
 
 ### Changes
 - Redesign sync indicator view

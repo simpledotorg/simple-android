@@ -12,9 +12,9 @@ import androidx.room.Transaction
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.contactpatient.ContactPatientProfile
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
-import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.storage.DaoWithUpsert
 import java.time.Instant
 import java.time.LocalDate
@@ -364,5 +364,12 @@ data class Patient(
         AND syncStatus == 'DONE'
     """)
     abstract fun purgePatientAfterRetentionTime(now: Instant)
+
+    @Transaction
+    @Query("""
+      SELECT * FROM Patient
+      WHERE uuid = :patientUuid
+    """)
+    abstract fun contactPatientProfileImmediate(patientUuid: UUID): ContactPatientProfile
   }
 }

@@ -13,5 +13,5 @@ data class PatientDetails(
     val registeredFacility: String,
     val diagnosedWithDiabetes: Answer?,
     val diagnosedWithHypertension: Answer?,
-    val lastVisited: Instant
+    val lastVisited: Instant?
 )

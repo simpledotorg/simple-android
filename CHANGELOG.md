@@ -2,6 +2,21 @@
 
 ## Next Release
 ### Internal
+- Set Simple video and duration based on locale
+- Fix incorrect test in `TheActivityControllerTest`
+- [In Progress: 30 Jul 2021] Support `ContactPatientSheet` with no appointment
+
+### Changes
+- [In Progress: 22 Jul 2021] Add option to download & share overdue list
+- [In Progress: 14 Jul 2021] Medication screen improvements
+  - Search for commonly used drugs
+- [In Progress: 27 Jul 2021] Overdue list improvements
+  - Change overdue list UI
+  - Load overdue patients without phone number
+  - Updated contact patient bottom sheet UI
+
+## On Demo
+### Internal
 - Add gradle-versions-plugin for checking dependency updates
 - Bump AndroidX Core Testing to v2.1.0
 - Bump Firebase dependencies
@@ -15,7 +30,6 @@
   - Bump `camera-lifecycle` to v1.0.0
   - Bump `camera-view` to v1.0.0-alpha26
 - Fix UI inconsistencies in overdue list and contact patient sheet
-- Add gradle-versions-plugin for checking dependency updates
 - Bump AppCompat to v1.3.0
 - Cache build dependencies and intermediates in CI workflows
 - Bump Fragment to v1.3.6
@@ -50,22 +64,12 @@
 - Bump Lint to v30.0.0
 - Bump AGP to v7.0.0
 - Bump Play Services Location to v18.0.0
-- Set Simple video and duration based on locale
-- Fix incorrect test in `TheActivityControllerTest`
-- [In Progress: 30 Jul 2021] Support `ContactPatientSheet` with no appointment
 
 ### Changes
 - Redesign sync indicator view
 - Increase the search and scan button height in patients screen
 - Show new video illustration in patients screen
 - After language is changed app will go back to home screen
-- [In Progress: 22 Jul 2021] Add option to download & share overdue list
-- [In Progress: 14 Jul 2021] Medication screen improvements
-  - Search for commonly used drugs
-- [In Progress: 27 Jul 2021] Overdue list improvements
-  - Change overdue list UI
-  - Load overdue patients without phone number
-  - Updated contact patient bottom sheet UI
   
 ### Fixes
 - Fix `ContactPatientBottomSheet` UI spacing and styling

@@ -2867,13 +2867,15 @@ class PatientRepositoryAndroidTest {
     fun createPatientWithNameAndAssignedFacilityID(
         patientUuid: UUID,
         patientName: String,
-        assignedFacilityId: UUID?
+        assignedFacilityId: UUID?,
+        businessIds: List<BusinessId>
     ) {
       val patientProfile = TestData
           .patientProfile(
               patientUuid = patientUuid,
               patientName = patientName,
-              patientAssignedFacilityId = assignedFacilityId
+              patientAssignedFacilityId = assignedFacilityId,
+              businessIds = businessIds
           )
 
       patientRepository.save(listOf(patientProfile)).blockingAwait()
@@ -2905,26 +2907,48 @@ class PatientRepositoryAndroidTest {
     createPatientWithNameAndAssignedFacilityID(
         patientUuid = patientWithCurrentFacilityAsAssigned1,
         patientName = "Mohan Ramesh",
-        assignedFacilityId = currentFacility.uuid)
+        assignedFacilityId = currentFacility.uuid,
+        businessIds = emptyList()
+    )
 
     val patientWithCurrentFacilityAsAssigned2 = UUID.fromString("41fb570f-2993-439d-81f4-ac8434d0a6d9")
     createPatientWithNameAndAssignedFacilityID(
         patientUuid = patientWithCurrentFacilityAsAssigned2,
         patientName = "Ramesh Rao",
-        assignedFacilityId = currentFacility.uuid)
+        assignedFacilityId = currentFacility.uuid,
+        businessIds = listOf(
+            TestData.businessId(
+                uuid = UUID.fromString("5da435b9-da46-42ca-9000-d20f4ba4d475"),
+                patientUuid = patientWithCurrentFacilityAsAssigned2,
+                identifier = TestData.identifier(
+                    value = "12345678901234",
+                    type = BangladeshNationalId
+                )
+            ),
+            TestData.businessId(
+                uuid = UUID.fromString("77f51781-8d87-464a-aa28-1d4dcc5b01f9"),
+                patientUuid = patientWithCurrentFacilityAsAssigned2,
+                identifier = TestData.identifier(
+                    value = "70b18c4f-8454-420a-9cf7-2f33ab064907",
+                    type = BpPassport
+                )
+            ))
+    )
 
     val patientWithOtherFacilityAssigned1 = UUID.fromString("306fa09d-8b71-4b08-9681-5fddc40deffa")
     createPatientWithNameAndAssignedFacilityID(
         patientUuid = patientWithOtherFacilityAssigned1,
         patientName = "Mohan",
-        assignedFacilityId = otherFacility.uuid
+        assignedFacilityId = otherFacility.uuid,
+        businessIds = emptyList()
     )
 
     val patientWithOtherFacilityAssigned2 = UUID.fromString("b60d955b-4ef9-4ace-8a9e-94c6f72c3db6")
     createPatientWithNameAndAssignedFacilityID(
         patientUuid = patientWithOtherFacilityAssigned2,
         patientName = "Sai Ramesh",
-        assignedFacilityId = otherFacility.uuid
+        assignedFacilityId = otherFacility.uuid,
+        businessIds = emptyList()
     )
 
     //when

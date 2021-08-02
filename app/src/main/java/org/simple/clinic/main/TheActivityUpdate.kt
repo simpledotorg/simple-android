@@ -21,7 +21,11 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
       event: TheActivityEvent
   ): Next<TheActivityModel, TheActivityEffect> {
     return when (event) {
-      is InitialScreenInfoLoaded -> handleScreenLock(event)
+      is InitialScreenInfoLoaded -> decideInitialScreen(
+          currentTimestamp = event.currentTimestamp,
+          lockAtTimestamp = event.lockAtTimestamp,
+          user = event.user
+      )
       UserWasJustVerified -> dispatch(ShowUserLoggedOutOnOtherDeviceAlert)
       UserWasUnauthorized -> dispatch(RedirectToLoginScreen)
       UserWasDisapproved -> dispatch(ClearPatientData)
@@ -29,28 +33,18 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
     }
   }
 
-  private fun handleScreenLock(event: InitialScreenInfoLoaded): Next<TheActivityModel, TheActivityEffect> {
-    val effect = screenLockEffect(
-        currentTimestamp = event.currentTimestamp,
-        lockAtTimestamp = event.lockAtTimestamp,
-        user = event.user
-    )
-
-    return dispatch(effect)
-  }
-
-  private fun screenLockEffect(
+  private fun decideInitialScreen(
       currentTimestamp: Instant,
       lockAtTimestamp: Optional<Instant>,
       user: User
-  ): TheActivityEffect {
+  ): Next<TheActivityModel, TheActivityEffect> {
     val hasAppLockTimerExpired = lockAtTimestamp
         .map(currentTimestamp::isAfter)
         .orElse(true) // Handle the case where the app is opened after a cold start
 
     val shouldShowAppLockScreen = shouldShowAppLockScreenForUser(user) && hasAppLockTimerExpired
 
-    return if (shouldShowAppLockScreen) ShowAppLockScreen else ClearLockAfterTimestamp
+    return if (shouldShowAppLockScreen) dispatch(ShowAppLockScreen) else dispatch(ClearLockAfterTimestamp)
   }
 
   private fun shouldShowAppLockScreenForUser(

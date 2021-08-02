@@ -183,7 +183,7 @@ class TheActivityControllerTest {
     ))
     val lockAfterTimestamp = MemoryValue(
         defaultValue = Optional.empty(),
-        currentValue = Optional.of(Instant.now().minusSeconds(TimeUnit.MINUTES.toSeconds(5)))
+        currentValue = Optional.of(currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(5)))
     )
 
     // when
@@ -191,6 +191,7 @@ class TheActivityControllerTest {
 
     // then
     assertThat(lockAfterTimestamp.hasValue).isTrue()
+    verify(ui).showAppLockScreen()
     verifyNoMoreInteractions(ui)
   }
 

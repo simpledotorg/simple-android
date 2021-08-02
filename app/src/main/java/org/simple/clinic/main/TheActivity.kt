@@ -358,6 +358,10 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
     router.clearHistoryAndPush(AccessDeniedScreenKey(fullName))
   }
 
+  override fun showHomeScreen() {
+    router.clearHistoryAndPush(HomeScreenKey)
+  }
+
   private fun showPatientSummaryForDeepLink(deepLinkResult: OpenPatientSummary) {
     router.push(
         PatientSummaryScreenKey(

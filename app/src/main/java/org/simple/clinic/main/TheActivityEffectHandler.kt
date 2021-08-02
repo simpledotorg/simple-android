@@ -53,7 +53,7 @@ class TheActivityEffectHandler @AssistedInject constructor(
           .observeOn(schedulers.io())
           .map { userSession.loggedInUserImmediate().toOptional() }
           .map {
-            AppLockInfoLoaded(
+            InitialScreenInfoLoaded(
                 user = it,
                 currentTimestamp = Instant.now(utcClock),
                 lockAtTimestamp = lockAfterTimestamp.get()

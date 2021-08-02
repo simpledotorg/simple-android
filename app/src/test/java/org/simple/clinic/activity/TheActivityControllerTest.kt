@@ -176,9 +176,14 @@ class TheActivityControllerTest {
   @Test
   fun `when app is started locked and lock timer hasn't expired yet then the timer should not be unset`() {
     // given
+    whenever(userSession.loggedInUserImmediate()).thenReturn(TestData.loggedInUser(
+        uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
+        loggedInStatus = LOGGED_IN,
+        status = UserStatus.ApprovedForSyncing
+    ))
     val lockAfterTimestamp = MemoryValue(
         defaultValue = Optional.empty(),
-        currentValue = Optional.of(Instant.now().minusSeconds(TimeUnit.MINUTES.toSeconds(5)))
+        currentValue = Optional.of(currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(5)))
     )
 
     // when
@@ -186,6 +191,7 @@ class TheActivityControllerTest {
 
     // then
     assertThat(lockAfterTimestamp.hasValue).isTrue()
+    verify(ui).showAppLockScreen()
     verifyNoMoreInteractions(ui)
   }
 

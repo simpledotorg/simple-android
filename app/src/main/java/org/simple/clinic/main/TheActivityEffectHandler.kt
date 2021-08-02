@@ -34,7 +34,7 @@ class TheActivityEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<TheActivityEffect, TheActivityEvent> {
     return RxMobius
         .subtypeEffectHandler<TheActivityEffect, TheActivityEvent>()
-        .addTransformer(LoadInitialScreenInfo::class.java, loadShowAppLockInto())
+        .addTransformer(LoadInitialScreenInfo::class.java, loadInitialScreenInfo())
         .addAction(ClearLockAfterTimestamp::class.java, lockAfterTimestamp::clear)
         .addAction(ShowAppLockScreen::class.java, uiActions::showAppLockScreen, schedulers.ui())
         .addTransformer(ListenForUserVerifications::class.java, listenForUserVerifications())
@@ -47,7 +47,7 @@ class TheActivityEffectHandler @AssistedInject constructor(
         .build()
   }
 
-  private fun loadShowAppLockInto(): ObservableTransformer<LoadInitialScreenInfo, TheActivityEvent> {
+  private fun loadInitialScreenInfo(): ObservableTransformer<LoadInitialScreenInfo, TheActivityEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulers.io())

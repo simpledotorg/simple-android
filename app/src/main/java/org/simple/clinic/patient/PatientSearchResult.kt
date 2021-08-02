@@ -164,8 +164,6 @@ data class PatientSearchResult(
     ): PagingSource<Int, PatientSearchResult>
   }
 
-  data class PatientNameAndId(val uuid: UUID, val fullName: String)
-
   @Parcelize
   data class LastSeen(
       val lastSeenOn: Instant,

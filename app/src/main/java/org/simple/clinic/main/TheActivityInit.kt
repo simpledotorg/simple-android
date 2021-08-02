@@ -14,7 +14,7 @@ class TheActivityInit : Init<TheActivityModel, TheActivityEffect> {
     )
 
     if (!model.isFreshLogin) {
-      effects.add(LoadAppLockInfo)
+      effects.add(LoadInitialScreenInfo)
     }
 
     return first(model, effects)

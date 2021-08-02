@@ -19,7 +19,7 @@ class TheActivityInitTest {
         .whenInit(model)
         .then(assertThatFirst(
             hasModel(model),
-            hasEffects(LoadAppLockInfo)
+            hasEffects(LoadInitialScreenInfo)
         ))
   }
 
@@ -31,7 +31,7 @@ class TheActivityInitTest {
         .whenInit(model)
         .then(assertThatFirst(
             hasModel(model),
-            doesNotHaveEffectOfType(LoadAppLockInfo::class.java)
+            doesNotHaveEffectOfType(LoadInitialScreenInfo::class.java)
         ))
   }
 }

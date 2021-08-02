@@ -315,7 +315,7 @@ class TheActivityControllerTest {
   }
 
   private fun setupController(
-      userStream: Observable<Optional<User>> = Observable.just(Optional.empty()),
+      userStream: Observable<Optional<User>> = Observable.just(Optional.of(user)),
       userUnauthorizedStream: Observable<Boolean> = Observable.just(false),
       userDisapprovedStream: Observable<Boolean> = Observable.just(false),
       lockAfterTimestamp: MemoryValue<Optional<Instant>>

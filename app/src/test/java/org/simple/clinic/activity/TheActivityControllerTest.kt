@@ -1,6 +1,7 @@
 package org.simple.clinic.activity
 
 import com.google.common.truth.Truth.assertThat
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
@@ -59,6 +60,11 @@ class TheActivityControllerTest {
 
   private val currentTimestamp = Instant.parse("2018-01-01T00:00:00Z")
   private val clock = TestUtcClock(currentTimestamp)
+  private val user = TestData.loggedInUser(
+      uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
+      loggedInStatus = LOGGED_IN,
+      status = UserStatus.ApprovedForSyncing
+  )
 
   private lateinit var testFixture: MobiusTestFixture<TheActivityModel, TheActivityEvent, TheActivityEffect>
 
@@ -80,11 +86,8 @@ class TheActivityControllerTest {
   @Test
   fun `when activity is started, user has requested an OTP, and user was inactive then app lock should be shown`() {
     // given
-    whenever(userSession.loggedInUserImmediate()).thenReturn(TestData.loggedInUser(
-        uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
-        loggedInStatus = OTP_REQUESTED,
-        status = UserStatus.ApprovedForSyncing
-    ))
+
+    whenever(userSession.loggedInUserImmediate()).thenReturn(user.otpRequested())
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
 
     // when
@@ -98,11 +101,7 @@ class TheActivityControllerTest {
   @Test
   fun `when activity is started, user is logged in, and user was inactive then app lock should be shown`() {
     // given
-    whenever(userSession.loggedInUserImmediate()).thenReturn(TestData.loggedInUser(
-        uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
-        loggedInStatus = LOGGED_IN,
-        status = UserStatus.ApprovedForSyncing
-    ))
+    whenever(userSession.loggedInUserImmediate()).thenReturn(user)
 
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
 
@@ -117,11 +116,7 @@ class TheActivityControllerTest {
   @Test
   fun `when activity is started, user has requested a PIN reset, and user was inactive then app lock should be shown`() {
     // given
-    whenever(userSession.loggedInUserImmediate()).thenReturn(TestData.loggedInUser(
-        uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
-        loggedInStatus = RESET_PIN_REQUESTED,
-        status = UserStatus.ApprovedForSyncing
-    ))
+    whenever(userSession.loggedInUserImmediate()).thenReturn(user.resetPinRequested())
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
 
     // when
@@ -135,11 +130,7 @@ class TheActivityControllerTest {
   @Test
   fun `when activity is started, user is resetting the PIN, and user was inactive then app lock should not be shown`() {
     // given
-    whenever(userSession.loggedInUserImmediate()).thenReturn(TestData.loggedInUser(
-        uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
-        loggedInStatus = RESETTING_PIN,
-        status = UserStatus.ApprovedForSyncing
-    ))
+    whenever(userSession.loggedInUserImmediate()).thenReturn(user.resettingPin())
 
     val lockAfterTime = currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(1))
 
@@ -154,11 +145,7 @@ class TheActivityControllerTest {
   @Test
   fun `when app is started unlocked and lock timer hasn't expired yet then the timer should be unset`() {
     // given
-    whenever(userSession.loggedInUserImmediate()).thenReturn(TestData.loggedInUser(
-        uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
-        loggedInStatus = LOGGED_IN,
-        status = UserStatus.ApprovedForSyncing
-    ))
+    whenever(userSession.loggedInUserImmediate()).thenReturn(user)
 
     val lockAfterTimestamp = MemoryValue(
         defaultValue = Optional.empty(),
@@ -198,16 +185,10 @@ class TheActivityControllerTest {
   @Test
   fun `the logged out alert must be shown only at the instant when a user gets verified for login`() {
     // given
-    val user = TestData.loggedInUser(
-        uuid = UUID.fromString("bed4a670-7f03-44ab-87ca-f297ca35375a"),
-        status = UserStatus.ApprovedForSyncing,
-        loggedInStatus = OTP_REQUESTED
-    )
-
     val userStream: Observable<Optional<User>> = Observable.just(
+        Optional.of(user.otpRequested()),
         Optional.of(user),
-        Optional.of(user.copy(loggedInStatus = LOGGED_IN)),
-        Optional.of(user.copy(loggedInStatus = LOGGED_IN))
+        Optional.of(user)
     )
 
     // when
@@ -224,16 +205,11 @@ class TheActivityControllerTest {
   @Test
   fun `the logged out alert must not be shown if the user is already logged in when the screen is opened`() {
     // given
-    val user = TestData.loggedInUser(
-        uuid = UUID.fromString("bed4a670-7f03-44ab-87ca-f297ca35375a"),
-        status = UserStatus.ApprovedForSyncing,
-        loggedInStatus = LOGGED_IN
-    )
     whenever(userSession.loggedInUser()).thenReturn(
         Observable.just(
             Optional.of(user),
-            Optional.of(user.copy(loggedInStatus = LOGGED_IN)),
-            Optional.of(user.copy(loggedInStatus = LOGGED_IN)))
+            Optional.of(user),
+            Optional.of(user))
     )
 
     // when
@@ -248,15 +224,12 @@ class TheActivityControllerTest {
   fun `when user is denied access then access denied screen should show`() {
     //given
     val fullName = "Anish Acharya"
-    val loggedInUser = TestData.loggedInUser(
-        uuid = UUID.fromString("0b350f89-ed0e-4922-b384-7f7a9bf3aba0"),
-        name = fullName,
-        status = UserStatus.DisapprovedForSyncing,
-        loggedInStatus = LOGGED_IN
-    )
+    val loggedInUser = user
+        .withFullName(fullName)
+        .disapprovedForSyncing()
+
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
     whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
-    whenever(userSession.loggedInUserImmediate()).thenReturn(loggedInUser)
     val userDisapprovedSubject = PublishSubject.create<Boolean>()
 
     //when
@@ -275,20 +248,13 @@ class TheActivityControllerTest {
   @Test
   fun `when user has access then the access denied screen should not appear`() {
     //given
-    val fullName = "Anish Acharya"
-    val loggedInUser = TestData.loggedInUser(
-        uuid = UUID.fromString("0b350f89-ed0e-4922-b384-7f7a9bf3aba0"),
-        name = fullName,
-        status = UserStatus.ApprovedForSyncing,
-        loggedInStatus = LOGGED_IN
-    )
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(user.toOptional()))
 
     //when
     setupController(lockAtTime = Instant.now(clock))
 
     //then
-    verify(ui, never()).showAccessDeniedScreen(fullName)
+    verify(ui, never()).showAccessDeniedScreen(any())
     verifyNoMoreInteractions(ui)
     verify(patientRepository, never()).clearPatientData()
   }
@@ -378,4 +344,12 @@ class TheActivityControllerTest {
     )
     testFixture.start()
   }
+
+  private fun User.otpRequested(): User = copy(loggedInStatus = OTP_REQUESTED)
+
+  private fun User.resetPinRequested(): User = copy(loggedInStatus = RESET_PIN_REQUESTED)
+
+  private fun User.resettingPin(): User = copy(loggedInStatus = RESETTING_PIN)
+
+  private fun User.disapprovedForSyncing(): User = copy(status = UserStatus.DisapprovedForSyncing)
 }

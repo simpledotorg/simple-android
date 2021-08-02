@@ -362,6 +362,10 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
     router.clearHistoryAndPush(HomeScreenKey)
   }
 
+  override fun showForgotPinScreen() {
+    router.clearHistoryAndPush(ForgotPinCreateNewPinScreenKey().wrap())
+  }
+
   private fun showPatientSummaryForDeepLink(deepLinkResult: OpenPatientSummary) {
     router.push(
         PatientSummaryScreenKey(

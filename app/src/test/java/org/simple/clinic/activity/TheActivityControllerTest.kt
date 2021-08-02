@@ -74,16 +74,6 @@ class TheActivityControllerTest {
   }
 
   @Test
-  fun `when activity is started and user is logged out then app lock shouldn't be shown`() {
-    // when
-    setupController()
-
-    // then
-    verify(ui, never()).showAppLockScreen()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
   fun `when activity is started, user has requested an OTP, and user was inactive then app lock should be shown`() {
     // given
 
@@ -163,11 +153,7 @@ class TheActivityControllerTest {
   @Test
   fun `when app is started locked and lock timer hasn't expired yet then the timer should not be unset`() {
     // given
-    whenever(userSession.loggedInUserImmediate()).thenReturn(TestData.loggedInUser(
-        uuid = UUID.fromString("049ee3e0-f5a8-4ba6-9270-b20231d3fe50"),
-        loggedInStatus = LOGGED_IN,
-        status = UserStatus.ApprovedForSyncing
-    ))
+    whenever(userSession.loggedInUserImmediate()).thenReturn(user)
     val lockAfterTimestamp = MemoryValue(
         defaultValue = Optional.empty(),
         currentValue = Optional.of(currentTimestamp.minusSeconds(TimeUnit.MINUTES.toSeconds(5)))
@@ -185,6 +171,7 @@ class TheActivityControllerTest {
   @Test
   fun `the logged out alert must be shown only at the instant when a user gets verified for login`() {
     // given
+    whenever(userSession.loggedInUserImmediate()).thenReturn(user)
     val userStream: Observable<Optional<User>> = Observable.just(
         Optional.of(user.otpRequested()),
         Optional.of(user),
@@ -205,6 +192,7 @@ class TheActivityControllerTest {
   @Test
   fun `the logged out alert must not be shown if the user is already logged in when the screen is opened`() {
     // given
+    whenever(userSession.loggedInUserImmediate()).thenReturn(user)
     whenever(userSession.loggedInUser()).thenReturn(
         Observable.just(
             Optional.of(user),
@@ -216,6 +204,7 @@ class TheActivityControllerTest {
     setupController()
 
     // then
+    verify(ui).showAppLockScreen()
     verify(ui, never()).showUserLoggedOutOnOtherDeviceAlert()
     verifyNoMoreInteractions(ui)
   }
@@ -227,7 +216,7 @@ class TheActivityControllerTest {
     val loggedInUser = user
         .withFullName(fullName)
         .disapprovedForSyncing()
-
+    whenever(userSession.loggedInUserImmediate()).thenReturn(loggedInUser)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
     whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
     val userDisapprovedSubject = PublishSubject.create<Boolean>()
@@ -248,6 +237,7 @@ class TheActivityControllerTest {
   @Test
   fun `when user has access then the access denied screen should not appear`() {
     //given
+    whenever(userSession.loggedInUserImmediate()).thenReturn(user)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(user.toOptional()))
 
     //when
@@ -262,6 +252,7 @@ class TheActivityControllerTest {
   @Test
   fun `the sign in screen must be shown only at the moment where the user gets logged out`() {
     // given
+    whenever(userSession.loggedInUserImmediate()).thenReturn(user)
     val userUnauthorizedSubject = PublishSubject.create<Boolean>()
 
     // when

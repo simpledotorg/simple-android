@@ -1,13 +1,12 @@
 package org.simple.clinic.main
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus
-import java.util.Optional
 import java.time.Instant
+import java.util.Optional
 
 private val SHOW_APP_LOCK_FOR_USER_STATES = setOf(
     LoggedInStatus.OTP_REQUESTED,
@@ -31,19 +30,13 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
   }
 
   private fun handleScreenLock(event: InitialScreenInfoLoaded): Next<TheActivityModel, TheActivityEffect> {
-    val userOptional = event.user
+    val effect = screenLockEffect(
+        currentTimestamp = event.currentTimestamp,
+        lockAtTimestamp = event.lockAtTimestamp,
+        user = event.user
+    )
 
-    return if (userOptional.isPresent()) {
-      val effect = screenLockEffect(
-          currentTimestamp = event.currentTimestamp,
-          lockAtTimestamp = event.lockAtTimestamp,
-          user = userOptional.get()
-      )
-
-      dispatch(effect)
-    } else {
-      noChange()
-    }
+    return dispatch(effect)
   }
 
   private fun screenLockEffect(

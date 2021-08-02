@@ -51,7 +51,7 @@ class TheActivityEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulers.io())
-          .map { userSession.loggedInUserImmediate().toOptional() }
+          .map { userSession.loggedInUserImmediate()!! }
           .map {
             InitialScreenInfoLoaded(
                 user = it,

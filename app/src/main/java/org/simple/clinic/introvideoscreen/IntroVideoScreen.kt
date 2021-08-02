@@ -17,10 +17,11 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
-import org.simple.clinic.patient.SimpleVideo
-import org.simple.clinic.patient.SimpleVideo.Type.TrainingVideoYoutubeId
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.register.RegistrationLoadingScreenKey
+import org.simple.clinic.simplevideo.SimpleVideo
+import org.simple.clinic.simplevideo.SimpleVideoConfig
+import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.TrainingVideo
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
@@ -50,8 +51,8 @@ class IntroVideoScreen(
   lateinit var screenKeyProvider: ScreenKeyProvider
 
   @Inject
-  @SimpleVideo(TrainingVideoYoutubeId)
-  lateinit var youTubeVideoId: String
+  @SimpleVideoConfig(TrainingVideo)
+  lateinit var simpleVideo: SimpleVideo
 
   @Inject
   lateinit var introVideoEffectHandler: IntroVideoEffectHandler.Factory
@@ -82,10 +83,7 @@ class IntroVideoScreen(
 
     context.injector<IntroVideoScreenInjector>().inject(this)
 
-    // Hard-coding to show this simple video view exists because, as of now,
-    // we are not sure if we will have variations of this training video.
-    // We should make the title, duration and video thumbnail configurable in order to improve this.
-    introVideoSubtitle.text = resources.getString(R.string.simple_video_duration, "5:07")
+    introVideoSubtitle.text = resources.getString(R.string.simple_video_duration, simpleVideo.duration)
   }
 
   override fun onAttachedToWindow() {
@@ -125,16 +123,10 @@ class IntroVideoScreen(
 
   private fun openYoutubeLinkForSimpleVideo() {
     val packageManager = context.packageManager
-    val appUri = "vnd.youtube:$youTubeVideoId"
-    val webUri = "http://www.youtube.com/watch?v=$youTubeVideoId"
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(simpleVideo.url))
 
-    val resolvedIntent = listOf(appUri, webUri)
-        .map { Uri.parse(it) }
-        .map { Intent(Intent.ACTION_VIEW, it) }
-        .firstOrNull { it.resolveActivity(packageManager) != null }
-
-    if (resolvedIntent != null) {
-      context.startActivity(resolvedIntent)
+    if (intent.resolveActivity(packageManager) != null) {
+      context.startActivity(intent)
     } else {
       CrashReporter.report(ActivityNotFoundException("Unable to play simple video because no supporting apps were found."))
     }

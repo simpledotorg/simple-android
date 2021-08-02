@@ -34,13 +34,14 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.patient.SimpleVideo
-import org.simple.clinic.patient.SimpleVideo.Type.TrainingVideoYoutubeId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
+import org.simple.clinic.simplevideo.SimpleVideo
+import org.simple.clinic.simplevideo.SimpleVideoConfig
+import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.TrainingVideo
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RequestPermissions
@@ -76,8 +77,8 @@ class PatientsTabScreen : BaseScreen<
   lateinit var country: Country
 
   @Inject
-  @SimpleVideo(TrainingVideoYoutubeId)
-  lateinit var youTubeVideoId: String
+  @SimpleVideoConfig(TrainingVideo)
+  lateinit var simpleVideo: SimpleVideo
 
   @Inject
   lateinit var runtimePermissions: RuntimePermissions
@@ -292,10 +293,7 @@ class PatientsTabScreen : BaseScreen<
   }
 
   override fun showSimpleVideo() {
-    // Hard-coding to show this simple video view exists because, as of now,
-    // we are not sure if we will have variations of this training video.
-    // We should make the title, duration and video thumbnail configurable in order to improve this.
-    simpleVideoDurationTextView.text = resources.getString(R.string.simple_video_duration, "5:07")
+    simpleVideoDurationTextView.text = resources.getString(R.string.simple_video_duration, simpleVideo.duration)
     showHomeScreenBackground(R.id.simpleVideoLayout)
   }
 
@@ -305,16 +303,10 @@ class PatientsTabScreen : BaseScreen<
 
   override fun openYouTubeLinkForSimpleVideo() {
     val packageManager = requireContext().packageManager
-    val appUri = "vnd.youtube:$youTubeVideoId"
-    val webUri = "http://www.youtube.com/watch?v=$youTubeVideoId"
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(simpleVideo.url))
 
-    val resolvedIntent = listOf(appUri, webUri)
-        .map { Uri.parse(it) }
-        .map { Intent(Intent.ACTION_VIEW, it) }
-        .firstOrNull { it.resolveActivity(packageManager) != null }
-
-    if (resolvedIntent != null) {
-      requireContext().startActivity(resolvedIntent)
+    if (intent.resolveActivity(packageManager) != null) {
+      requireContext().startActivity(intent)
     } else {
       CrashReporter.report(ActivityNotFoundException("Unable to play simple video because no supporting apps were found."))
     }

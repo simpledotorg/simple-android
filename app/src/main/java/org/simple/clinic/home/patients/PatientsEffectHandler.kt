@@ -12,8 +12,8 @@ import io.reactivex.ObservableTransformer
 import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.SimpleVideo
-import org.simple.clinic.patient.SimpleVideo.Type.NumberOfPatientsRegistered
+import org.simple.clinic.simplevideo.SimpleVideoConfig
+import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.NumberOfPatientsRegistered
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.refreshuser.RefreshCurrentUser
 import org.simple.clinic.util.UserClock
@@ -35,7 +35,7 @@ class PatientsEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
     @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>,
-    @SimpleVideo(NumberOfPatientsRegistered) private val numberOfPatientsRegisteredPref: Preference<Int>,
+    @SimpleVideoConfig(NumberOfPatientsRegistered) private val numberOfPatientsRegisteredPref: Preference<Int>,
     @Named("app_update_last_shown_at") private val appUpdateDialogShownAtPref: Preference<Instant>,
     @Assisted private val uiActions: PatientsTabUiActions
 ) {

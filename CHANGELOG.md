@@ -51,6 +51,7 @@
 - Bump AGP to v7.0.0
 - Bump Play Services Location to v18.0.0
 - Set Simple video and duration based on locale
+- Fix incorrect test in `TheActivityControllerTest`
 - [In Progress: 30 Jul 2021] Support `ContactPatientSheet` with no appointment
 
 ### Changes

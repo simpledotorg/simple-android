@@ -14,6 +14,7 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Bangladesh
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
@@ -49,6 +50,7 @@ data class Identifier(
 
         "$prefix${Unicode.nonBreakingSpace}$subString1${Unicode.nonBreakingSpace}$subString2${Unicode.nonBreakingSpace}$suffix"
       }
+      SriLankaNationalId -> value
       is Unknown -> value
     }
   }
@@ -59,6 +61,7 @@ data class Identifier(
       BangladeshNationalId -> resources.getString(R.string.identifiertype_bangladesh_national_id)
       EthiopiaMedicalRecordNumber -> resources.getString(R.string.identifiertype_ethiopia_medical_record_number)
       IndiaNationalHealthId -> resources.getString(R.string.identifiertype_india_national_health_id)
+      SriLankaNationalId -> resources.getString(R.string.identifiertype_sri_lanka_national_id)
       is Unknown -> resources.getString(R.string.identifiertype_unknown)
     }
   }
@@ -90,6 +93,9 @@ data class Identifier(
     object IndiaNationalHealthId : IdentifierType()
 
     @Parcelize
+    object SriLankaNationalId : IdentifierType()
+
+    @Parcelize
     data class Unknown(val actual: String) : IdentifierType()
 
     object TypeAdapter : SafeEnumTypeAdapter<IdentifierType>(
@@ -97,7 +103,8 @@ data class Identifier(
             BpPassport to "simple_bp_passport",
             BangladeshNationalId to "bangladesh_national_id",
             EthiopiaMedicalRecordNumber to "ethiopia_medical_record",
-            IndiaNationalHealthId to "india_national_health_id"
+            IndiaNationalHealthId to "india_national_health_id",
+            SriLankaNationalId to "sri_lanka_national_id"
         ),
         unknownStringToEnumConverter = { Unknown(it) },
         unknownEnumToStringConverter = { (it as Unknown).actual }

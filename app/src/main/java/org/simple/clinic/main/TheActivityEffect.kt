@@ -8,8 +8,6 @@ object LoadInitialScreenInfo : TheActivityEffect()
 
 object ClearLockAfterTimestamp : TheActivityEffect()
 
-object ShowAppLockScreen : TheActivityEffect()
-
 object ListenForUserVerifications : TheActivityEffect()
 
 object ShowUserLoggedOutOnOtherDeviceAlert : TheActivityEffect()
@@ -23,9 +21,5 @@ object ListenForUserDisapprovals : TheActivityEffect()
 object ClearPatientData : TheActivityEffect()
 
 object ShowAccessDeniedScreen : TheActivityEffect()
-
-object ShowHomeScreen: TheActivityEffect()
-
-object ShowForgotPinScreen: TheActivityEffect()
 
 data class ShowInitialScreen(val screen: ScreenKey): TheActivityEffect()

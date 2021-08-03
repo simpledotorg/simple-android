@@ -13,7 +13,6 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.filterTrue
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import org.simple.clinic.util.toOptional
 import java.time.Instant
 import java.util.Optional
 
@@ -36,7 +35,6 @@ class TheActivityEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<TheActivityEffect, TheActivityEvent>()
         .addTransformer(LoadInitialScreenInfo::class.java, loadInitialScreenInfo())
         .addAction(ClearLockAfterTimestamp::class.java, lockAfterTimestamp::clear)
-        .addAction(ShowAppLockScreen::class.java, uiActions::showAppLockScreen, schedulers.ui())
         .addTransformer(ListenForUserVerifications::class.java, listenForUserVerifications())
         .addAction(ShowUserLoggedOutOnOtherDeviceAlert::class.java, uiActions::showUserLoggedOutOnOtherDeviceAlert, schedulers.ui())
         .addTransformer(ListenForUserUnauthorizations::class.java, listenForUserUnauthorizations())
@@ -44,8 +42,6 @@ class TheActivityEffectHandler @AssistedInject constructor(
         .addTransformer(ListenForUserDisapprovals::class.java, listenForUserDisapprovals())
         .addTransformer(ClearPatientData::class.java, clearPatientData())
         .addTransformer(ShowAccessDeniedScreen::class.java, openAccessDeniedScreen())
-        .addAction(ShowHomeScreen::class.java, uiActions::showHomeScreen, schedulers.ui())
-        .addAction(ShowForgotPinScreen::class.java, uiActions::showForgotPinScreen, schedulers.ui())
         .addConsumer(ShowInitialScreen::class.java, { uiActions.showInitialScreen(it.screen) }, schedulers.ui())
         .build()
   }

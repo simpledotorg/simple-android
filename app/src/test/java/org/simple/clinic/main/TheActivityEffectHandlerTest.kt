@@ -36,28 +36,6 @@ class TheActivityEffectHandlerTest {
   }
 
   @Test
-  fun `when the show home screen effect is received, the home screen must be shown`() {
-    // when
-    testCase.dispatch(ShowHomeScreen)
-
-    // then
-    testCase.assertNoOutgoingEvents()
-    verify(uiActions).showHomeScreen()
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
-  fun `when the show forgot PIN screen effect is received, the forgot PIN screen must be shown`() {
-    // when
-    testCase.dispatch(ShowForgotPinScreen)
-
-    // then
-    testCase.assertNoOutgoingEvents()
-    verify(uiActions).showForgotPinScreen()
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
   fun `when the show initial screen effect is received, the initial screen must be shown`() {
     // when
     testCase.dispatch(ShowInitialScreen(HomeScreenKey))

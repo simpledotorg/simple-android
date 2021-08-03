@@ -296,10 +296,6 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
     disposables.clear()
   }
 
-  override fun showAppLockScreen() {
-    router.push(AppLockScreenKey(EmptyScreenKey().wrap()))
-  }
-
   // This is here because we need to show the same alert in multiple
   // screens when the user gets verified in the background.
   override fun showUserLoggedOutOnOtherDeviceAlert() {
@@ -317,14 +313,6 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
 
   override fun showAccessDeniedScreen(fullName: String) {
     router.clearHistoryAndPush(AccessDeniedScreenKey(fullName))
-  }
-
-  override fun showHomeScreen() {
-    router.clearHistoryAndPush(HomeScreenKey)
-  }
-
-  override fun showForgotPinScreen() {
-    router.clearHistoryAndPush(ForgotPinCreateNewPinScreenKey.wrap())
   }
 
   override fun showInitialScreen(screenKey: ScreenKey) {

@@ -5,6 +5,7 @@ import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
+import com.spotify.mobius.test.NextMatchers.hasNothing
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -247,6 +248,24 @@ class InstantSearchUpdateTest {
         .then(assertThatNext(
             hasModel(facilityLoadedModel.searchQueryChanged("Pat")),
             hasEffects(ValidateSearchQuery("Pat"))
+        ))
+  }
+
+  @Test
+  fun `when search query is changed and is same as search query in model, then do nothing`() {
+    val facility = TestData.facility(
+        uuid = UUID.fromString("76b89c39-1bc4-4560-9a44-0381c59b58d0"),
+        name = "PHC Obvious"
+    )
+    val facilityLoadedModel = defaultModel
+        .facilityLoaded(facility)
+        .searchQueryChanged("Pat")
+
+    updateSpec
+        .given(facilityLoadedModel)
+        .whenEvent(SearchQueryChanged("Pat"))
+        .then(assertThatNext(
+            hasNothing()
         ))
   }
 

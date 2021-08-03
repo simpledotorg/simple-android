@@ -57,14 +57,16 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
     }
 
     val initialScreen = when {
-      shouldShowAppLockScreen -> AppLockScreenKey()
       userDisapproved -> AccessDeniedScreenKey(user.fullName)
       canMoveToHomeScreen && !userDisapproved -> HomeScreenKey
       user.loggedInStatus == LoggedInStatus.RESETTING_PIN -> ForgotPinCreateNewPinScreenKey.wrap()
       else -> throw IllegalStateException("Unknown user status combinations: [${user.loggedInStatus}, ${user.status}]")
     }
 
-    return if (shouldShowAppLockScreen) dispatch(ShowInitialScreen(initialScreen)) else dispatch(ShowInitialScreen(initialScreen), ClearLockAfterTimestamp)
+    return if (shouldShowAppLockScreen)
+      dispatch(ShowInitialScreen(AppLockScreenKey(initialScreen)))
+    else
+      dispatch(ShowInitialScreen(initialScreen), ClearLockAfterTimestamp)
   }
 
   private fun shouldShowAppLockScreenForUser(

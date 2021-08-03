@@ -111,6 +111,7 @@ object TestData {
       patientName: String = faker.name.name(),
       patientPhoneNumber: String? = if (generatePhoneNumber) faker.phoneNumber.phoneNumber() else null,
       businessId: BusinessId? = if (generateBusinessId) businessId(patientUuid = patientUuid) else null,
+      businessIds: List<BusinessId> = if (businessId != null) listOf(businessId) else emptyList(),
       generateDateOfBirth: Boolean = faker.bool.bool(),
       dateOfBirth: LocalDate? = if (generateDateOfBirth) LocalDate.parse("1980-01-01") else null,
       age: Age? = if (!generateDateOfBirth) Age(value = kotlin.random.Random.nextInt(30..100), updatedAt = Instant.parse("2018-01-01T00:00:00Z")) else null,
@@ -125,11 +126,6 @@ object TestData {
   ): PatientProfile {
     val phoneNumbers = if (!patientPhoneNumber.isNullOrBlank()) {
       listOf(patientPhoneNumber(patientUuid = patientUuid, number = patientPhoneNumber, phoneType = PatientPhoneNumberType.Mobile))
-    } else {
-      emptyList()
-    }
-    val businessIds = if (businessId != null) {
-      listOf(businessId)
     } else {
       emptyList()
     }

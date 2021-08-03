@@ -52,6 +52,7 @@
 ### Fixes
 - Fix `ContactPatientBottomSheet` not going back to call patient view on back click in call later mode
 - Fix overdue list not changing when switching facility from overdue screen
+- Fix showing duplicate patients in search results
 
 ## 2021-07-15-7866
 ### Internal

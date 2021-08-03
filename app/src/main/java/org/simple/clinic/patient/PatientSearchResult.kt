@@ -120,6 +120,7 @@ data class PatientSearchResult(
       PatientSearchResult searchResult
       LEFT JOIN Patient P ON P.uuid = searchResult.uuid
       WHERE P.status = :status AND P.deletedAt IS NULL AND P.assignedFacilityId = :facilityId
+      GROUP BY P.uuid
       ORDER BY fullName COLLATE NOCASE
     """)
     fun allPatientsInFacility(facilityId: UUID, status: PatientStatus): PagingSource<Int, PatientSearchResult>
@@ -136,6 +137,7 @@ data class PatientSearchResult(
             INSTR(lower(P.fullName), lower(:name)) namePosition FROM PatientSearchResult searchResult
         LEFT JOIN Patient P ON P.uuid = searchResult.uuid
         WHERE P.deletedAt IS NULL AND namePosition > 0
+        GROUP BY P.uuid
         ORDER BY priority ASC, namePosition ASC
     """)
     fun searchByNamePagingSource(name: String, facilityId: UUID): PagingSource<Int, PatientSearchResult>
@@ -161,8 +163,6 @@ data class PatientSearchResult(
         facilityId: UUID
     ): PagingSource<Int, PatientSearchResult>
   }
-
-  data class PatientNameAndId(val uuid: UUID, val fullName: String)
 
   @Parcelize
   data class LastSeen(

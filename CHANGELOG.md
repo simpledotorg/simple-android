@@ -15,6 +15,9 @@
   - Load overdue patients without phone number
   - Updated contact patient bottom sheet UI
 
+### Fixes
+- Fix showing duplicate patients in search results
+
 ## On Demo
 ### Internal
 - Add gradle-versions-plugin for checking dependency updates

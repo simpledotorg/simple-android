@@ -12,9 +12,9 @@ git diff --quiet; GIT_DIFF_STATUS=$?
 # them to new branch
 if [[ ${GIT_DIFF_STATUS} -eq ${GIT_HAS_CHANGES} ]]; then
   git add -A
-  git commit --amend --no-edit
+  git commit -m "String formatting fixes"
 
-  git push -f
+  git push
 
 exit 0
 fi

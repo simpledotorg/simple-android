@@ -24,10 +24,11 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Bangladesh
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaNationalId
 import org.simple.clinic.patient.sync.BusinessIdPayload
-import java.util.Optional
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 import java.time.Instant
+import java.util.Optional
 import java.util.UUID
 
 @Entity(
@@ -101,6 +102,7 @@ data class BusinessId(
           BangladeshNationalId -> BangladeshNationalIdMetaDataV1
           EthiopiaMedicalRecordNumber -> MedicalRecordNumberMetaDataV1
           IndiaNationalHealthId -> IndiaNationalHealthIdMetaDataV1
+          SriLankaNationalId -> SriLankaNationIdMetaDataV1
           is IdentifierType.Unknown -> null
         }
 
@@ -119,6 +121,9 @@ data class BusinessId(
 
     @Parcelize
     object IndiaNationalHealthIdMetaDataV1 : MetaDataVersion()
+
+    @Parcelize
+    object SriLankaNationIdMetaDataV1 : MetaDataVersion()
 
     @Parcelize
     data class Unknown(val actual: String) : MetaDataVersion()

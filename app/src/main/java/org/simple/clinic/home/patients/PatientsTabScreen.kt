@@ -181,6 +181,7 @@ class PatientsTabScreen : BaseScreen<
     Country.INDIA -> R.drawable.ic_video_illustration_india
     Country.BANGLADESH -> R.drawable.ic_video_illustration_bangladesh
     Country.ETHIOPIA -> R.drawable.ic_video_illustration_ethiopia
+    Country.SRI_LANKA -> R.drawable.ic_video_illustration_sri_lanka
     else -> R.drawable.ic_video_illustration_default
   }
 
@@ -189,6 +190,7 @@ class PatientsTabScreen : BaseScreen<
         Country.INDIA -> R.drawable.illustration_homescreen_india
         Country.BANGLADESH -> R.drawable.illustration_homescreen_bangladesh
         Country.ETHIOPIA -> R.drawable.illustration_homescreen_ethiopia
+        Country.SRI_LANKA -> R.drawable.illustration_homescreen_sri_lanka
         else -> R.drawable.illustration_homescreen_default
       }
 

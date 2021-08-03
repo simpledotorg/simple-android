@@ -73,10 +73,10 @@ class ContactPatientUiRenderer(
       renderPatientFacilityLabel(model.appointmentIsInRegisteredFacility)
     }
 
-    if (model.patientProfileHasPhoneNumber && !model.hasLoadedAppointment) {
+    if (model.patientProfileHasPhoneNumber && model.isAppointmentPresent.not()) {
       loadPatientWithPhoneNumber()
       loadSecureCallingUi(model)
-    } else if (model.patientProfileHasPhoneNumber && model.hasLoadedAppointment) {
+    } else if (model.patientProfileHasPhoneNumber && model.isAppointmentPresent) {
       showPatientCallResult()
       loadSecureCallingUi(model)
     } else {

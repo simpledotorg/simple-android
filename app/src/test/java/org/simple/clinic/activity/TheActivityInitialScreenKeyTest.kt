@@ -8,14 +8,13 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
-import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
 import org.simple.clinic.main.ClearLockAfterTimestamp
 import org.simple.clinic.main.InitialScreenInfoLoaded
+import org.simple.clinic.main.ShowForgotPinScreen
 import org.simple.clinic.main.ShowHomeScreen
 import org.simple.clinic.main.TheActivityModel
 import org.simple.clinic.main.TheActivityUpdate
 import org.simple.clinic.main.initialScreenKey
-import org.simple.clinic.navigation.v2.compat.ScreenKeyCompat
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
 import java.time.Instant
@@ -136,16 +135,26 @@ class TheActivityInitialScreenKeyTest {
   fun `when the local user is waiting for approval and is resetting the PIN, the create new PIN screen must be shown`() {
     val user = TestData.loggedInUser(loggedInStatus = User.LoggedInStatus.RESETTING_PIN, status = UserStatus.WaitingForApproval)
 
-    val screenKey = initialScreenKey(user) as ScreenKeyCompat
-    assertThat(screenKey.key).isInstanceOf(ForgotPinCreateNewPinScreenKey::class.java)
+    spec
+        .given(model)
+        .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowForgotPinScreen, ClearLockAfterTimestamp)
+        ))
   }
 
   @Test
   fun `when the local user is approved for syncing and is resetting the PIN, the create new PIN screen must be shown`() {
     val user = TestData.loggedInUser(loggedInStatus = User.LoggedInStatus.RESETTING_PIN, status = UserStatus.ApprovedForSyncing)
 
-    val screenKey = initialScreenKey(user) as ScreenKeyCompat
-    assertThat(screenKey.key).isInstanceOf(ForgotPinCreateNewPinScreenKey::class.java)
+    spec
+        .given(model)
+        .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowForgotPinScreen, ClearLockAfterTimestamp)
+        ))
   }
 
   @Test

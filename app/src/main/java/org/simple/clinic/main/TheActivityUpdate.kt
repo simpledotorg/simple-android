@@ -54,6 +54,7 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
     val initialScreenEffect = when {
       shouldShowAppLockScreen -> ShowAppLockScreen
       canMoveToHomeScreen && !userDisapproved -> ShowHomeScreen
+      user.loggedInStatus == LoggedInStatus.RESETTING_PIN -> ShowForgotPinScreen
       else -> throw IllegalStateException("Unknown user status combinations: [${user.loggedInStatus}, ${user.status}]")
     }
 

@@ -72,7 +72,6 @@ fun initialScreenKey(
 
   return when {
     userDisapproved -> AccessDeniedScreenKey(user.fullName)
-    user.loggedInStatus == RESETTING_PIN -> ForgotPinCreateNewPinScreenKey().wrap()
     else -> throw IllegalStateException("Unknown user status combinations: [${user.loggedInStatus}, ${user.status}]")
   }
 }

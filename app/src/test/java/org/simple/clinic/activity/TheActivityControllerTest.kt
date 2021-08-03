@@ -129,6 +129,7 @@ class TheActivityControllerTest {
 
     // then
     verify(ui, never()).showAppLockScreen()
+    verify(ui).showForgotPinScreen()
     verifyNoMoreInteractions(ui)
   }
 

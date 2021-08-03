@@ -5,7 +5,6 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
@@ -35,7 +34,6 @@ import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
-import java.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -44,6 +42,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Duration
 import java.time.Instant
+import java.util.Optional
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 
@@ -219,9 +218,7 @@ class TheActivityControllerTest {
     val fullName = "Anish Acharya"
     val loggedInUser = user
         .withFullName(fullName)
-        .disapprovedForSyncing()
     whenever(userSession.loggedInUserImmediate()).thenReturn(loggedInUser)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser.toOptional()))
     whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
     val userDisapprovedSubject = PublishSubject.create<Boolean>()
 
@@ -230,12 +227,17 @@ class TheActivityControllerTest {
         userDisapprovedStream = userDisapprovedSubject,
         lockAtTime = Instant.now(clock)
     )
+    // then
+    verify(ui).showHomeScreen()
+    verifyNoMoreInteractions(ui)
+    verify(patientRepository, never()).clearPatientData()
+
+    // when
     userDisapprovedSubject.onNext(true)
 
-    //then
+    // then
     verify(patientRepository).clearPatientData()
-    // TODO vs(2021-08-02): Set up the test so that only the user getting denied access later is verified
-    verify(ui, times(2)).showAccessDeniedScreen(fullName)
+    verify(ui).showAccessDeniedScreen(fullName)
     verifyNoMoreInteractions(ui)
   }
 

@@ -324,7 +324,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   }
 
   override fun showForgotPinScreen() {
-    router.clearHistoryAndPush(ForgotPinCreateNewPinScreenKey().wrap())
+    router.clearHistoryAndPush(ForgotPinCreateNewPinScreenKey.wrap())
   }
 
   override fun showInitialScreen(screenKey: ScreenKey) {

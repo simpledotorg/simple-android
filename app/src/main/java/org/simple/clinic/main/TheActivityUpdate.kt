@@ -60,7 +60,7 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
       shouldShowAppLockScreen -> AppLockScreenKey()
       userDisapproved -> AccessDeniedScreenKey(user.fullName)
       canMoveToHomeScreen && !userDisapproved -> HomeScreenKey
-      user.loggedInStatus == LoggedInStatus.RESETTING_PIN -> ForgotPinCreateNewPinScreenKey().wrap()
+      user.loggedInStatus == LoggedInStatus.RESETTING_PIN -> ForgotPinCreateNewPinScreenKey.wrap()
       else -> throw IllegalStateException("Unknown user status combinations: [${user.loggedInStatus}, ${user.status}]")
     }
 

@@ -43,7 +43,7 @@ class ConfirmResetPinDialog : AppCompatDialogFragment() {
     return MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_Simple_MaterialAlertDialog_Destructive)
         .setTitle(R.string.applock_reset_pin_alert_title)
         .setMessage(R.string.applock_reset_pin_alert_message)
-        .setPositiveButton(R.string.applock_reset_pin_alert_confirm) { _, _ -> router.push(ForgotPinCreateNewPinScreenKey().wrap()) }
+        .setPositiveButton(R.string.applock_reset_pin_alert_confirm) { _, _ -> router.push(ForgotPinCreateNewPinScreenKey.wrap()) }
         .setNegativeButton(R.string.applock_reset_pin_alert_cancel, null)
         .create()
   }

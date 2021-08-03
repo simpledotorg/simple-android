@@ -9,9 +9,11 @@ import org.simple.clinic.login.applock.AppLockScreenKey
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.user.User
-import org.simple.clinic.user.User.LoggedInStatus
-import org.simple.clinic.user.User.LoggedInStatus.*
-import org.simple.clinic.user.UserStatus
+import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
+import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
+import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
+import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import java.time.Instant
 import java.util.Optional
 
@@ -50,7 +52,6 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
         .orElse(true) // Handle the case where the app is opened after a cold start
 
     val shouldShowAppLockScreen = shouldShowAppLockScreenForUser(user) && hasAppLockTimerExpired
-    val userDisapproved = user.status == UserStatus.DisapprovedForSyncing
 
     val canMoveToHomeScreen = when (user.loggedInStatus) {
       RESETTING_PIN -> false
@@ -58,9 +59,9 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
     }
 
     val initialScreen = when {
-      userDisapproved -> AccessDeniedScreenKey(user.fullName)
-      canMoveToHomeScreen && !userDisapproved -> HomeScreenKey
-      user.loggedInStatus == RESETTING_PIN -> ForgotPinCreateNewPinScreenKey.wrap()
+      user.isDisapprovedForSyncing -> AccessDeniedScreenKey(user.fullName)
+      canMoveToHomeScreen && user.isNotDisapprovedForSyncing -> HomeScreenKey
+      user.isResettingPin -> ForgotPinCreateNewPinScreenKey.wrap()
       else -> throw IllegalStateException("Unknown user status combinations: [${user.loggedInStatus}, ${user.status}]")
     }
 

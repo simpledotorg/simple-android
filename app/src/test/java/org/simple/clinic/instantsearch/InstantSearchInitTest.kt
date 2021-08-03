@@ -8,7 +8,6 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.util.matchers.IterableNotContaining.Companion.doesNotContain
-import java.util.UUID
 
 class InstantSearchInitTest {
 
@@ -20,14 +19,14 @@ class InstantSearchInitTest {
   private val defaultModel = InstantSearchModel.create(identifier, null, null)
 
   @Test
-  fun `when screen is created, then load current facility and show keyboard`() {
+  fun `when screen is created, then load current facility`() {
     val model = InstantSearchModel.create(additionalIdentifier = null, patientPrefillInfo = null, searchQuery = null)
 
     initSpec
         .whenInit(model)
         .then(assertThatFirst(
             hasModel(model),
-            hasEffects(LoadCurrentFacility, ShowKeyboard)
+            hasEffects(LoadCurrentFacility)
         ))
   }
 
@@ -38,25 +37,6 @@ class InstantSearchInitTest {
         .then(assertThatFirst(
             hasModel(defaultModel.scannedQrCodeSheetOpened()),
             hasEffects(LoadCurrentFacility, OpenScannedQrCodeSheet(identifier))
-        ))
-  }
-
-  @Test
-  fun `when screen is restored and facility is loaded, then prefill search query`() {
-    val facility = TestData.facility(
-        uuid = UUID.fromString("df98a72b-3392-4364-80b3-c73328bafed3"),
-        name = "PHC Obvious"
-    )
-    val facilityLoadedModel = defaultModel
-        .scannedQrCodeSheetOpened()
-        .facilityLoaded(facility)
-        .searchQueryChanged("Pa")
-
-    initSpec
-        .whenInit(facilityLoadedModel)
-        .then(assertThatFirst(
-            hasModel(facilityLoadedModel),
-            hasEffects(PrefillSearchQuery("Pa"))
         ))
   }
 

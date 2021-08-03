@@ -12,6 +12,7 @@ import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.EthiopiaInputFieldsProvider
 import org.simple.clinic.newentry.country.IndiaInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFieldsProvider
+import org.simple.clinic.newentry.country.SriLankaInputFieldsProvider
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.remoteconfig.RemoteConfigService
 import org.simple.clinic.util.UserClock
@@ -37,6 +38,7 @@ class InputFieldsFactoryModule {
       Country.INDIA -> IndiaInputFieldsProvider(dateTimeFormatter, date, currentFacility, chennaiFacilityGroupIds)
       Country.BANGLADESH -> BangladeshInputFieldsProvider(dateTimeFormatter, date)
       Country.ETHIOPIA -> EthiopiaInputFieldsProvider(dateTimeFormatter, date)
+      Country.SRI_LANKA -> SriLankaInputFieldsProvider(dateTimeFormatter, date)
       else -> throw IllegalArgumentException("Unknown country code: $isoCountryCode")
     }
   }

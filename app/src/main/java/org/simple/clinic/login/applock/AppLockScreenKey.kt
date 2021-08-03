@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.navigation.v2.ScreenKey
 
 @Parcelize
-object AppLockScreenKey : ScreenKey(), Parcelable {
+class AppLockScreenKey : ScreenKey(), Parcelable {
 
   @IgnoredOnParcel
   override val analyticsName = "App Lock"

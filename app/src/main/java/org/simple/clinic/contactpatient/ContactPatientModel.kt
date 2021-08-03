@@ -8,7 +8,6 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.PotentialAppointmentDate
-import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.util.ParcelableOptional
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.parcelable
@@ -68,7 +67,7 @@ data class ContactPatientModel(
     get() = appointment != null
 
   val hasRegisteredFacility: Boolean
-    get() = appointment?.get()?.patientRegisteredFacilityID != null
+    get() = appointment?.isPresent() == true && appointment.get().patientRegisteredFacilityID != null
 
   val appointmentIsInRegisteredFacility: Boolean
     get() = appointment?.get()?.patientRegisteredFacilityID == currentFacility?.uuid

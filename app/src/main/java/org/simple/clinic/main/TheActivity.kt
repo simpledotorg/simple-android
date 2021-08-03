@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.WindowManager
-import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.work.ExistingWorkPolicy.REPLACE
 import androidx.work.WorkManager
@@ -34,7 +33,6 @@ import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.login.applock.AppLockScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.registerorlogin.AuthenticationActivity
 import org.simple.clinic.remoteconfig.UpdateRemoteConfigWorker
@@ -48,10 +46,7 @@ import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncSetup
 import org.simple.clinic.user.UnauthorizeUser
-import org.simple.clinic.user.User
-import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.finishWithoutAnimations
@@ -63,16 +58,6 @@ import java.util.Locale
 import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
-
-@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-fun initialScreenKey(
-    user: User
-): ScreenKey {
-
-  return when {
-    else -> throw IllegalStateException("Unknown user status combinations: [${user.loggedInStatus}, ${user.status}]")
-  }
-}
 
 class TheActivity : AppCompatActivity(), TheActivityUi {
 
@@ -202,18 +187,6 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
     super.onCreate(savedInstanceState)
     router.onReady(savedInstanceState)
     delegate.onRestoreInstanceState(savedInstanceState)
-
-    if (savedInstanceState == null) {
-      loadInitialScreen()
-    }
-  }
-
-  private fun loadInitialScreen() {
-    val currentUser = userSession.loggedInUser().blockingFirst().get()
-
-    val initialScreen = initialScreenKey(currentUser)
-
-    router.clearHistoryAndPush(initialScreen)
   }
 
   @SuppressLint("CheckResult")

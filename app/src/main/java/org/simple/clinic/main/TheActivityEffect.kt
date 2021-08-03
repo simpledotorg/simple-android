@@ -1,5 +1,7 @@
 package org.simple.clinic.main
 
+import org.simple.clinic.navigation.v2.ScreenKey
+
 sealed class TheActivityEffect
 
 object LoadInitialScreenInfo : TheActivityEffect()
@@ -25,3 +27,5 @@ object ShowAccessDeniedScreen : TheActivityEffect()
 object ShowHomeScreen: TheActivityEffect()
 
 object ShowForgotPinScreen: TheActivityEffect()
+
+data class ShowInitialScreen(val screen: ScreenKey): TheActivityEffect()

@@ -1,5 +1,7 @@
 package org.simple.clinic.main
 
+import org.simple.clinic.navigation.v2.ScreenKey
+
 interface TheActivityUiActions {
   fun showAppLockScreen()
 
@@ -10,4 +12,5 @@ interface TheActivityUiActions {
   fun showAccessDeniedScreen(fullName: String)
   fun showHomeScreen()
   fun showForgotPinScreen()
+  fun showInitialScreen(screenKey: ScreenKey)
 }

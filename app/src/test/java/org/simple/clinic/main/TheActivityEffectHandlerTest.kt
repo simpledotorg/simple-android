@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.util.TestUtcClock
@@ -53,6 +54,17 @@ class TheActivityEffectHandlerTest {
     // then
     testCase.assertNoOutgoingEvents()
     verify(uiActions).showForgotPinScreen()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the show initial screen effect is received, the initial screen must be shown`() {
+    // when
+    testCase.dispatch(ShowInitialScreen(HomeScreenKey))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).showInitialScreen(HomeScreenKey)
     verifyNoMoreInteractions(uiActions)
   }
 }

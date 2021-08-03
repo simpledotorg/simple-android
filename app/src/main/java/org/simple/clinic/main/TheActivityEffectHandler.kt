@@ -10,12 +10,12 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.user.NewlyVerifiedUser
 import org.simple.clinic.user.UserSession
-import java.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.filterTrue
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
 import java.time.Instant
+import java.util.Optional
 
 class TheActivityEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
@@ -46,6 +46,7 @@ class TheActivityEffectHandler @AssistedInject constructor(
         .addTransformer(ShowAccessDeniedScreen::class.java, openAccessDeniedScreen())
         .addAction(ShowHomeScreen::class.java, uiActions::showHomeScreen, schedulers.ui())
         .addAction(ShowForgotPinScreen::class.java, uiActions::showForgotPinScreen, schedulers.ui())
+        .addConsumer(ShowInitialScreen::class.java, { uiActions.showInitialScreen(it.screen) }, schedulers.ui())
         .build()
   }
 

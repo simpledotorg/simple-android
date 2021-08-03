@@ -33,6 +33,7 @@ import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.login.applock.AppLockScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.registerorlogin.AuthenticationActivity
 import org.simple.clinic.remoteconfig.UpdateRemoteConfigWorker
@@ -324,6 +325,10 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
 
   override fun showForgotPinScreen() {
     router.clearHistoryAndPush(ForgotPinCreateNewPinScreenKey().wrap())
+  }
+
+  override fun showInitialScreen(screenKey: ScreenKey) {
+    router.clearHistoryAndPush(screenKey)
   }
 
   private fun showPatientSummaryForDeepLink(deepLinkResult: OpenPatientSummary) {

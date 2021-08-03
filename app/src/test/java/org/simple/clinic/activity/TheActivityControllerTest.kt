@@ -17,6 +17,9 @@ import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
+import org.simple.clinic.home.HomeScreenKey
+import org.simple.clinic.login.applock.AppLockScreenKey
 import org.simple.clinic.main.TheActivityEffect
 import org.simple.clinic.main.TheActivityEffectHandler
 import org.simple.clinic.main.TheActivityEvent
@@ -25,6 +28,7 @@ import org.simple.clinic.main.TheActivityModel
 import org.simple.clinic.main.TheActivityUi
 import org.simple.clinic.main.TheActivityUiRenderer
 import org.simple.clinic.main.TheActivityUpdate
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.user.User
@@ -84,7 +88,7 @@ class TheActivityControllerTest {
     setupController(lockAtTime = lockAfterTime)
 
     // then
-    verify(ui).showAppLockScreen()
+    verify(ui).showInitialScreen(AppLockScreenKey())
     verifyNoMoreInteractions(ui)
   }
 
@@ -99,7 +103,7 @@ class TheActivityControllerTest {
     setupController(lockAtTime = lockAfterTime)
 
     // then
-    verify(ui).showAppLockScreen()
+    verify(ui).showInitialScreen(AppLockScreenKey())
     verifyNoMoreInteractions(ui)
   }
 
@@ -113,7 +117,7 @@ class TheActivityControllerTest {
     setupController(lockAtTime = lockAfterTime)
 
     // then
-    verify(ui).showAppLockScreen()
+    verify(ui).showInitialScreen(AppLockScreenKey())
     verifyNoMoreInteractions(ui)
   }
 
@@ -128,8 +132,7 @@ class TheActivityControllerTest {
     setupController(lockAtTime = lockAfterTime)
 
     // then
-    verify(ui, never()).showAppLockScreen()
-    verify(ui).showForgotPinScreen()
+    verify(ui).showInitialScreen(ForgotPinCreateNewPinScreenKey().wrap())
     verifyNoMoreInteractions(ui)
   }
 
@@ -148,7 +151,7 @@ class TheActivityControllerTest {
 
     // then
     assertThat(lockAfterTimestamp.hasValue).isFalse()
-    verify(ui).showHomeScreen()
+    verify(ui).showInitialScreen(HomeScreenKey)
     verifyNoMoreInteractions(ui)
   }
 
@@ -166,7 +169,7 @@ class TheActivityControllerTest {
 
     // then
     assertThat(lockAfterTimestamp.hasValue).isTrue()
-    verify(ui).showAppLockScreen()
+    verify(ui).showInitialScreen(AppLockScreenKey())
     verifyNoMoreInteractions(ui)
   }
 
@@ -187,7 +190,7 @@ class TheActivityControllerTest {
     )
 
     // then
-    verify(ui).showHomeScreen()
+    verify(ui).showInitialScreen(HomeScreenKey)
     verify(ui).showUserLoggedOutOnOtherDeviceAlert()
     verifyNoMoreInteractions(ui)
   }
@@ -207,7 +210,7 @@ class TheActivityControllerTest {
     setupController()
 
     // then
-    verify(ui).showAppLockScreen()
+    verify(ui).showInitialScreen(AppLockScreenKey())
     verify(ui, never()).showUserLoggedOutOnOtherDeviceAlert()
     verifyNoMoreInteractions(ui)
   }
@@ -228,7 +231,7 @@ class TheActivityControllerTest {
         lockAtTime = Instant.now(clock)
     )
     // then
-    verify(ui).showHomeScreen()
+    verify(ui).showInitialScreen(HomeScreenKey)
     verifyNoMoreInteractions(ui)
     verify(patientRepository, never()).clearPatientData()
 
@@ -251,8 +254,7 @@ class TheActivityControllerTest {
     setupController(lockAtTime = Instant.now(clock))
 
     //then
-    verify(ui, never()).showAccessDeniedScreen(any())
-    verify(ui).showHomeScreen()
+    verify(ui).showInitialScreen(HomeScreenKey)
     verifyNoMoreInteractions(ui)
     verify(patientRepository, never()).clearPatientData()
   }

@@ -2,7 +2,12 @@ package org.simple.clinic.main
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
+import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
+import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
+import org.simple.clinic.home.HomeScreenKey
+import org.simple.clinic.login.applock.AppLockScreenKey
 import org.simple.clinic.mobius.dispatch
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus
 import org.simple.clinic.user.UserStatus
@@ -51,15 +56,15 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
       LoggedInStatus.LOGGED_IN, LoggedInStatus.OTP_REQUESTED, LoggedInStatus.RESET_PIN_REQUESTED, LoggedInStatus.UNAUTHORIZED -> true
     }
 
-    val initialScreenEffect = when {
-      shouldShowAppLockScreen -> ShowAppLockScreen
-      userDisapproved -> ShowAccessDeniedScreen
-      canMoveToHomeScreen && !userDisapproved -> ShowHomeScreen
-      user.loggedInStatus == LoggedInStatus.RESETTING_PIN -> ShowForgotPinScreen
+    val initialScreen = when {
+      shouldShowAppLockScreen -> AppLockScreenKey()
+      userDisapproved -> AccessDeniedScreenKey(user.fullName)
+      canMoveToHomeScreen && !userDisapproved -> HomeScreenKey
+      user.loggedInStatus == LoggedInStatus.RESETTING_PIN -> ForgotPinCreateNewPinScreenKey().wrap()
       else -> throw IllegalStateException("Unknown user status combinations: [${user.loggedInStatus}, ${user.status}]")
     }
 
-    return if (shouldShowAppLockScreen) dispatch(initialScreenEffect) else dispatch(initialScreenEffect, ClearLockAfterTimestamp)
+    return if (shouldShowAppLockScreen) dispatch(ShowInitialScreen(initialScreen)) else dispatch(ShowInitialScreen(initialScreen), ClearLockAfterTimestamp)
   }
 
   private fun shouldShowAppLockScreenForUser(

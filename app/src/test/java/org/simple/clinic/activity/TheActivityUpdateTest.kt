@@ -6,13 +6,15 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
+import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
+import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.main.ClearLockAfterTimestamp
 import org.simple.clinic.main.InitialScreenInfoLoaded
-import org.simple.clinic.main.ShowAccessDeniedScreen
-import org.simple.clinic.main.ShowForgotPinScreen
-import org.simple.clinic.main.ShowHomeScreen
+import org.simple.clinic.main.ShowInitialScreen
 import org.simple.clinic.main.TheActivityModel
 import org.simple.clinic.main.TheActivityUpdate
+import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
 import java.time.Instant
@@ -34,7 +36,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowHomeScreen, ClearLockAfterTimestamp)
+            hasEffects(ShowInitialScreen(HomeScreenKey), ClearLockAfterTimestamp)
         ))
   }
 
@@ -47,7 +49,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowHomeScreen, ClearLockAfterTimestamp)
+            hasEffects(ShowInitialScreen(HomeScreenKey), ClearLockAfterTimestamp)
         ))
   }
 
@@ -60,7 +62,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowHomeScreen, ClearLockAfterTimestamp)
+            hasEffects(ShowInitialScreen(HomeScreenKey), ClearLockAfterTimestamp)
         ))
   }
 
@@ -73,7 +75,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowHomeScreen, ClearLockAfterTimestamp)
+            hasEffects(ShowInitialScreen(HomeScreenKey), ClearLockAfterTimestamp)
         ))
   }
 
@@ -86,7 +88,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowHomeScreen, ClearLockAfterTimestamp)
+            hasEffects(ShowInitialScreen(HomeScreenKey), ClearLockAfterTimestamp)
         ))
   }
 
@@ -99,7 +101,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowHomeScreen, ClearLockAfterTimestamp)
+            hasEffects(ShowInitialScreen(HomeScreenKey), ClearLockAfterTimestamp)
         ))
   }
 
@@ -112,7 +114,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowHomeScreen, ClearLockAfterTimestamp)
+            hasEffects(ShowInitialScreen(HomeScreenKey), ClearLockAfterTimestamp)
         ))
   }
 
@@ -125,7 +127,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowHomeScreen, ClearLockAfterTimestamp)
+            hasEffects(ShowInitialScreen(HomeScreenKey), ClearLockAfterTimestamp)
         ))
   }
 
@@ -138,7 +140,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowForgotPinScreen, ClearLockAfterTimestamp)
+            hasEffects(ShowInitialScreen(ForgotPinCreateNewPinScreenKey().wrap()), ClearLockAfterTimestamp)
         ))
   }
 
@@ -151,7 +153,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowForgotPinScreen, ClearLockAfterTimestamp)
+            hasEffects(ShowInitialScreen(ForgotPinCreateNewPinScreenKey().wrap()), ClearLockAfterTimestamp)
         ))
   }
 
@@ -164,7 +166,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowAccessDeniedScreen, ClearLockAfterTimestamp)
+            hasEffects(ShowInitialScreen(AccessDeniedScreenKey(user.fullName)), ClearLockAfterTimestamp)
         ))
   }
 
@@ -177,7 +179,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowAccessDeniedScreen, ClearLockAfterTimestamp)
+            hasEffects(ShowInitialScreen(AccessDeniedScreenKey(user.fullName)), ClearLockAfterTimestamp)
         ))
   }
 
@@ -190,7 +192,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowAccessDeniedScreen, ClearLockAfterTimestamp)
+            hasEffects(ShowInitialScreen(AccessDeniedScreenKey(user.fullName)), ClearLockAfterTimestamp)
         ))
   }
 
@@ -203,7 +205,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowAccessDeniedScreen, ClearLockAfterTimestamp)
+            hasEffects(ShowInitialScreen(AccessDeniedScreenKey(user.fullName)), ClearLockAfterTimestamp)
         ))
   }
 
@@ -216,7 +218,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowAccessDeniedScreen, ClearLockAfterTimestamp)
+            hasEffects(ShowInitialScreen(AccessDeniedScreenKey(user.fullName)), ClearLockAfterTimestamp)
         ))
   }
 }

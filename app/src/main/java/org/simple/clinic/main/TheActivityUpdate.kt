@@ -5,6 +5,7 @@ import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus
+import org.simple.clinic.user.UserStatus
 import java.time.Instant
 import java.util.Optional
 
@@ -43,8 +44,20 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
         .orElse(true) // Handle the case where the app is opened after a cold start
 
     val shouldShowAppLockScreen = shouldShowAppLockScreenForUser(user) && hasAppLockTimerExpired
+    val userDisapproved = user.status == UserStatus.DisapprovedForSyncing
 
-    return if (shouldShowAppLockScreen) dispatch(ShowAppLockScreen) else dispatch(ClearLockAfterTimestamp)
+    val canMoveToHomeScreen = when (user.loggedInStatus) {
+      LoggedInStatus.RESETTING_PIN -> false
+      LoggedInStatus.LOGGED_IN, LoggedInStatus.OTP_REQUESTED, LoggedInStatus.RESET_PIN_REQUESTED, LoggedInStatus.UNAUTHORIZED -> true
+    }
+
+    val initialScreenEffect = when {
+      shouldShowAppLockScreen -> ShowAppLockScreen
+      canMoveToHomeScreen && !userDisapproved -> ShowHomeScreen
+      else -> throw IllegalStateException("Unknown user status combinations: [${user.loggedInStatus}, ${user.status}]")
+    }
+
+    return if (shouldShowAppLockScreen) dispatch(initialScreenEffect) else dispatch(initialScreenEffect, ClearLockAfterTimestamp)
   }
 
   private fun shouldShowAppLockScreenForUser(

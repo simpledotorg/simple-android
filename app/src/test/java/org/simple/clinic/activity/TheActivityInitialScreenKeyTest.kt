@@ -1,72 +1,135 @@
 package org.simple.clinic.activity
 
 import com.google.common.truth.Truth.assertThat
+import com.spotify.mobius.test.NextMatchers.hasEffects
+import com.spotify.mobius.test.NextMatchers.hasNoModel
+import com.spotify.mobius.test.UpdateSpec
+import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
-import org.simple.clinic.home.HomeScreenKey
+import org.simple.clinic.main.ClearLockAfterTimestamp
+import org.simple.clinic.main.InitialScreenInfoLoaded
+import org.simple.clinic.main.ShowHomeScreen
+import org.simple.clinic.main.TheActivityModel
+import org.simple.clinic.main.TheActivityUpdate
 import org.simple.clinic.main.initialScreenKey
 import org.simple.clinic.navigation.v2.compat.ScreenKeyCompat
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
+import java.time.Instant
+import java.util.Optional
 
 class TheActivityInitialScreenKeyTest {
+
+  private val currentTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+  private val lockAtTime = Optional.of(Instant.parse("2018-01-01T00:00:01Z"))
+  private val model = TheActivityModel.createForAlreadyLoggedInUser()
+  private val spec = UpdateSpec(TheActivityUpdate())
 
   @Test
   fun `when the local user is waiting for approval and has requested a login OTP, the home screen must be shown`() {
     val user = TestData.loggedInUser(loggedInStatus = User.LoggedInStatus.OTP_REQUESTED, status = UserStatus.WaitingForApproval)
 
-    assertThat(initialScreenKey(user)).isEqualTo(HomeScreenKey)
+    spec
+        .given(model)
+        .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowHomeScreen, ClearLockAfterTimestamp)
+        ))
   }
 
   @Test
   fun `when the local user is waiting for approval and has requested a PIN reset, the home screen must be shown`() {
     val user = TestData.loggedInUser(loggedInStatus = User.LoggedInStatus.RESET_PIN_REQUESTED, status = UserStatus.WaitingForApproval)
 
-    assertThat(initialScreenKey(user)).isEqualTo(HomeScreenKey)
+    spec
+        .given(model)
+        .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowHomeScreen, ClearLockAfterTimestamp)
+        ))
   }
 
   @Test
   fun `when the local user is waiting for approval and has logged in, the home screen must be shown`() {
     val user = TestData.loggedInUser(loggedInStatus = User.LoggedInStatus.LOGGED_IN, status = UserStatus.WaitingForApproval)
 
-    assertThat(initialScreenKey(user)).isEqualTo(HomeScreenKey)
+    spec
+        .given(model)
+        .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowHomeScreen, ClearLockAfterTimestamp)
+        ))
   }
 
   @Test
   fun `when the local user is approved for syncing and has requested a login OTP, the home screen must be shown`() {
     val user = TestData.loggedInUser(loggedInStatus = User.LoggedInStatus.OTP_REQUESTED, status = UserStatus.ApprovedForSyncing)
 
-    assertThat(initialScreenKey(user)).isEqualTo(HomeScreenKey)
+    spec
+        .given(model)
+        .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowHomeScreen, ClearLockAfterTimestamp)
+        ))
   }
 
   @Test
   fun `when the local user is approved for syncing and has requested a PIN reset, the home screen must be shown`() {
     val user = TestData.loggedInUser(loggedInStatus = User.LoggedInStatus.RESET_PIN_REQUESTED, status = UserStatus.ApprovedForSyncing)
 
-    assertThat(initialScreenKey(user)).isEqualTo(HomeScreenKey)
+    spec
+        .given(model)
+        .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowHomeScreen, ClearLockAfterTimestamp)
+        ))
   }
 
   @Test
   fun `when the local user is approved for syncing and has logged in, the home screen must be shown`() {
     val user = TestData.loggedInUser(loggedInStatus = User.LoggedInStatus.LOGGED_IN, status = UserStatus.ApprovedForSyncing)
 
-    assertThat(initialScreenKey(user)).isEqualTo(HomeScreenKey)
+    spec
+        .given(model)
+        .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowHomeScreen, ClearLockAfterTimestamp)
+        ))
   }
 
   @Test
   fun `when the local user is waiting for approval and has been unauthorized, the login screen must be shown`() {
     val user = TestData.loggedInUser(loggedInStatus = User.LoggedInStatus.UNAUTHORIZED, status = UserStatus.WaitingForApproval)
 
-    assertThat(initialScreenKey(user)).isEqualTo(HomeScreenKey)
+    spec
+        .given(model)
+        .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowHomeScreen, ClearLockAfterTimestamp)
+        ))
   }
 
   @Test
   fun `when the local user is approved for syncing and has been unauthorized, the login screen must be shown`() {
     val user = TestData.loggedInUser(loggedInStatus = User.LoggedInStatus.UNAUTHORIZED, status = UserStatus.ApprovedForSyncing)
 
-    assertThat(initialScreenKey(user)).isEqualTo(HomeScreenKey)
+    spec
+        .given(model)
+        .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowHomeScreen, ClearLockAfterTimestamp)
+        ))
   }
 
   @Test

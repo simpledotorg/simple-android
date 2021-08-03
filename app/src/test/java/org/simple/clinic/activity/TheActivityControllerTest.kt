@@ -147,6 +147,7 @@ class TheActivityControllerTest {
 
     // then
     assertThat(lockAfterTimestamp.hasValue).isFalse()
+    verify(ui).showHomeScreen()
     verifyNoMoreInteractions(ui)
   }
 
@@ -185,6 +186,7 @@ class TheActivityControllerTest {
     )
 
     // then
+    verify(ui).showHomeScreen()
     verify(ui).showUserLoggedOutOnOtherDeviceAlert()
     verifyNoMoreInteractions(ui)
   }
@@ -245,6 +247,7 @@ class TheActivityControllerTest {
 
     //then
     verify(ui, never()).showAccessDeniedScreen(any())
+    verify(ui).showHomeScreen()
     verifyNoMoreInteractions(ui)
     verify(patientRepository, never()).clearPatientData()
   }

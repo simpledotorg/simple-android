@@ -67,6 +67,7 @@
   
 ### Fixes
 - Fix `ContactPatientBottomSheet` UI spacing and styling
+- Fix showing duplicate patients in search results
   
 ## 2021-07-26-7883
 ### Internal

@@ -18,7 +18,7 @@ import org.simple.clinic.user.UserStatus
 import java.time.Instant
 import java.util.Optional
 
-class TheActivityInitialScreenKeyTest {
+class TheActivityUpdateTest {
 
   private val currentTimestamp = Instant.parse("2018-01-01T00:00:00Z")
   private val lockAtTime = Optional.of(Instant.parse("2018-01-01T00:00:01Z"))

@@ -53,3 +53,5 @@ object PatientAlreadyHasAnExistingNHID : InstantSearchEvent()
 data class PatientDoesNotHaveAnExistingNHID(val patientId: UUID) : InstantSearchEvent()
 
 data class SearchResultsLoadStateChanged(val instantSearchProgressState: InstantSearchProgressState) : InstantSearchEvent()
+
+object InstantSearchScreenShown : InstantSearchEvent()

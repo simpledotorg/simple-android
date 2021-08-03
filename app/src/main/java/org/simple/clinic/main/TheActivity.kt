@@ -68,10 +68,8 @@ import javax.inject.Inject
 fun initialScreenKey(
     user: User
 ): ScreenKey {
-  val userDisapproved = user.status == UserStatus.DisapprovedForSyncing
 
   return when {
-    userDisapproved -> AccessDeniedScreenKey(user.fullName)
     else -> throw IllegalStateException("Unknown user status combinations: [${user.loggedInStatus}, ${user.status}]")
   }
 }

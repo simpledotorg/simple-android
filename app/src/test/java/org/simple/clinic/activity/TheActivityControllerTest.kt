@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
@@ -233,7 +234,8 @@ class TheActivityControllerTest {
 
     //then
     verify(patientRepository).clearPatientData()
-    verify(ui).showAccessDeniedScreen(fullName)
+    // TODO vs(2021-08-02): Set up the test so that only the user getting denied access later is verified
+    verify(ui, times(2)).showAccessDeniedScreen(fullName)
     verifyNoMoreInteractions(ui)
   }
 

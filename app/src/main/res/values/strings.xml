@@ -49,6 +49,7 @@
   <string name="patiententry_phone_number">Phone number</string>
   <string name="patiententry_bangladesh_national_id">National ID number</string>
   <string name="patiententry_ethiopia_medical_record_number">Medical Record Number</string>
+  <string name="patiententry_sri_lanka_national_id">National ID number</string>
   <string name="patiententry_date_of_birth_unfocused">Date of birth</string>
   <string name="patiententry_date_of_birth_focused">D.O.B: DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">Or</string>
@@ -89,6 +90,8 @@
   <string name="patiententry_consent_sms_reminders">SMS Reminders</string>
   <string name="patiententry_age_exceeds_max_limit_error">Age cannot be more than 120 years</string>
   <string name="patiententry_age_exceeds_min_limit_error">Age cannot be equal to 0 years</string>
+  <string name="patiententry_town_area">Town / Area</string>
+  <string name="patiententry_province">Province</string>
 
   <!-- Edit patient -->
   <string name="patientedit_full_name" translatable="false">@string/patiententry_full_name</string>

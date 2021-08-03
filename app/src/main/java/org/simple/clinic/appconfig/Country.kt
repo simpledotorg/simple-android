@@ -33,6 +33,7 @@ data class Country(
         BANGLADESH -> Identifier.IdentifierType.BangladeshNationalId
         ETHIOPIA -> Identifier.IdentifierType.EthiopiaMedicalRecordNumber
         INDIA -> Identifier.IdentifierType.IndiaNationalHealthId
+        SRI_LANKA -> Identifier.IdentifierType.SriLankaNationalId
         else -> null
       }
     }

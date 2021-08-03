@@ -1,6 +1,7 @@
 package org.simple.clinic.instantsearch
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.dispatch
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.instantsearch.InstantSearchValidator.Result.Empty
@@ -47,7 +48,23 @@ class InstantSearchUpdate @Inject constructor(
       is BlankScannedQrCodeResultReceived -> blankScannedQrCodeResult(model, event)
       is OpenQrCodeScannerClicked -> dispatch(OpenQrCodeScanner)
       is SearchResultsLoadStateChanged -> searchResultsLoadStateChanged(model, event)
+      InstantSearchScreenShown -> instantSearchScreenShown(model)
     }
+  }
+
+  private fun instantSearchScreenShown(model: InstantSearchModel): Next<InstantSearchModel, InstantSearchEffect> {
+    val effects = mutableSetOf<InstantSearchEffect>()
+
+    if (model.hasFacility) effects.add(PrefillSearchQuery(model.searchQuery.orEmpty()))
+
+    // When a scanned BP Passport does not result in a match, we bring up a bottom sheet which asks
+    // whether this is a new registration or an existing patient. If we show the keyboard in these
+    // cases, the UI is janky since the keyboard pops up and immediately another bottom sheet pops up.
+    // This improves the experience by showing the keyboard only if we have arrived here by searching
+    // for a patient by the name
+    if (!model.hasAdditionalIdentifier) effects.add(ShowKeyboard)
+
+    return dispatch(effects)
   }
 
   private fun searchResultsLoadStateChanged(

@@ -108,6 +108,7 @@ class InstantSearchScreen :
 
   private val subscriptions = CompositeDisposable()
   private val loadStateChanges = PublishSubject.create<SearchResultsLoadStateChanged>()
+  private val lifecycleEvents = PublishSubject.create<UiEvent>()
 
   private val instantSearchToolbar
     get() = binding.instantSearchToolbar
@@ -162,7 +163,8 @@ class InstantSearchScreen :
           registerNewPatientClicks(),
           blankScannedQrCodeResults,
           openQrCodeScannerClicks(),
-          loadStateChanges
+          loadStateChanges,
+          lifecycleEvents
       )
       .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
       .compose(ReportAnalyticsEvents())
@@ -197,6 +199,11 @@ class InstantSearchScreen :
 
     searchResultsView.adapter = searchResultsAdapter
     searchResultsAdapter.addLoadStateListener(::searchResultsAdapterLoadStateListener)
+  }
+
+  override fun onStart() {
+    super.onStart()
+    lifecycleEvents.onNext(InstantSearchScreenShown)
   }
 
   override fun onDestroyView() {

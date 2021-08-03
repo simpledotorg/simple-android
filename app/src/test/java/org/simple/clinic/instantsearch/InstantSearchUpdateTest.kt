@@ -441,4 +441,25 @@ class InstantSearchUpdateTest {
             hasNoEffects()
         ))
   }
+
+  @Test
+  fun `when instant search screen is shown, then prefill search query if facility is loaded and show keyboard if there is no additional identifier`() {
+    val facility = TestData.facility(
+        uuid = UUID.fromString("1c3c133a-47f4-4616-9cc9-5c00b0115bd1"),
+        name = "PHC Obvious"
+    )
+    val modelWithoutIdentifier = InstantSearchModel.create(
+        additionalIdentifier = null,
+        patientPrefillInfo = null,
+        searchQuery = "Ram"
+    ).facilityLoaded(facility)
+
+    updateSpec
+        .given(modelWithoutIdentifier)
+        .whenEvent(InstantSearchScreenShown)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowKeyboard, PrefillSearchQuery("Ram"))
+        ))
+  }
 }

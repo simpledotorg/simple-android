@@ -10,14 +10,15 @@ import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus
+import org.simple.clinic.user.User.LoggedInStatus.*
 import org.simple.clinic.user.UserStatus
 import java.time.Instant
 import java.util.Optional
 
 private val SHOW_APP_LOCK_FOR_USER_STATES = setOf(
-    LoggedInStatus.OTP_REQUESTED,
-    LoggedInStatus.LOGGED_IN,
-    LoggedInStatus.RESET_PIN_REQUESTED
+    OTP_REQUESTED,
+    LOGGED_IN,
+    RESET_PIN_REQUESTED
 )
 
 class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivityEffect> {
@@ -52,14 +53,14 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
     val userDisapproved = user.status == UserStatus.DisapprovedForSyncing
 
     val canMoveToHomeScreen = when (user.loggedInStatus) {
-      LoggedInStatus.RESETTING_PIN -> false
-      LoggedInStatus.LOGGED_IN, LoggedInStatus.OTP_REQUESTED, LoggedInStatus.RESET_PIN_REQUESTED, LoggedInStatus.UNAUTHORIZED -> true
+      RESETTING_PIN -> false
+      LOGGED_IN, OTP_REQUESTED, RESET_PIN_REQUESTED, UNAUTHORIZED -> true
     }
 
     val initialScreen = when {
       userDisapproved -> AccessDeniedScreenKey(user.fullName)
       canMoveToHomeScreen && !userDisapproved -> HomeScreenKey
-      user.loggedInStatus == LoggedInStatus.RESETTING_PIN -> ForgotPinCreateNewPinScreenKey.wrap()
+      user.loggedInStatus == RESETTING_PIN -> ForgotPinCreateNewPinScreenKey.wrap()
       else -> throw IllegalStateException("Unknown user status combinations: [${user.loggedInStatus}, ${user.status}]")
     }
 

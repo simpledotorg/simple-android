@@ -70,6 +70,9 @@
 - Increase the search and scan button height in patients screen
 - Show new video illustration in patients screen
 - After language is changed app will go back to home screen
+- Instant search screen improvements
+  - Show keyboard and prefill search query when instant search screen is shown
+  - Don't load search results if search query is not changed from previous search query
   
 ### Fixes
 - Fix `ContactPatientBottomSheet` UI spacing and styling

@@ -41,12 +41,23 @@ class InstantSearchUpdate @Inject constructor(
       is SearchResultClicked -> searchResultClicked(model, event)
       is PatientAlreadyHasAnExistingNHID -> dispatch(ShowNHIDErrorDialog)
       is PatientDoesNotHaveAnExistingNHID -> dispatch(OpenLinkIdWithPatientScreen(event.patientId, model.additionalIdentifier!!))
-      is SearchQueryChanged -> next(model.searchQueryChanged(event.searchQuery), ValidateSearchQuery(event.searchQuery))
+      is SearchQueryChanged -> searchQueryChanged(model, event)
       SavedNewOngoingPatientEntry -> dispatch(OpenPatientEntryScreen(model.facility!!))
       RegisterNewPatientClicked -> registerNewPatient(model)
       is BlankScannedQrCodeResultReceived -> blankScannedQrCodeResult(model, event)
       is OpenQrCodeScannerClicked -> dispatch(OpenQrCodeScanner)
       is SearchResultsLoadStateChanged -> searchResultsLoadStateChanged(model, event)
+    }
+  }
+
+  private fun searchQueryChanged(
+      model: InstantSearchModel,
+      event: SearchQueryChanged
+  ): Next<InstantSearchModel, InstantSearchEffect> {
+    return if (event.searchQuery != model.searchQuery) {
+      next(model.searchQueryChanged(event.searchQuery), ValidateSearchQuery(event.searchQuery))
+    } else {
+      noChange()
     }
   }
 

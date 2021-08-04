@@ -7,16 +7,11 @@ import com.spotify.mobius.Init
 class TheActivityInit : Init<TheActivityModel, TheActivityEffect> {
 
   override fun init(model: TheActivityModel): First<TheActivityModel, TheActivityEffect> {
-    val effects = mutableSetOf(
+    return first(model, setOf(
         ListenForUserVerifications,
         ListenForUserUnauthorizations,
-        ListenForUserDisapprovals
-    )
-
-    if (!model.isFreshLogin) {
-      effects.add(LoadInitialScreenInfo)
-    }
-
-    return first(model, effects)
+        ListenForUserDisapprovals,
+        LoadInitialScreenInfo
+    ))
   }
 }

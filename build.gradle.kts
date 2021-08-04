@@ -28,8 +28,8 @@ buildscript {
 }
 
 plugins {
-  id("com.diffplug.spotless") version versions.spotless
-  id("com.github.ben-manes.versions") version versions.gradleVersions
+  id("com.diffplug.spotless")
+  id("com.github.ben-manes.versions")
 }
 
 allprojects {

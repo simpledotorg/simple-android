@@ -31,6 +31,7 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
   ): Next<TheActivityModel, TheActivityEffect> {
     return when (event) {
       is InitialScreenInfoLoaded -> decideInitialScreen(
+          model = model,
           currentTimestamp = event.currentTimestamp,
           lockAtTimestamp = event.lockAtTimestamp,
           user = event.user
@@ -43,6 +44,7 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
   }
 
   private fun decideInitialScreen(
+      model: TheActivityModel,
       currentTimestamp: Instant,
       lockAtTimestamp: Optional<Instant>,
       user: User
@@ -65,7 +67,7 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
       else -> throw IllegalStateException("Unknown user status combinations: [${user.loggedInStatus}, ${user.status}]")
     }
 
-    return if (shouldShowAppLockScreen)
+    return if (shouldShowAppLockScreen && !model.isFreshLogin)
       dispatch(ShowInitialScreen(AppLockScreenKey(initialScreen)))
     else
       dispatch(ShowInitialScreen(initialScreen), ClearLockAfterTimestamp)

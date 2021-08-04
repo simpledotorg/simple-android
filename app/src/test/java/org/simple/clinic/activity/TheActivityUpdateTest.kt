@@ -9,6 +9,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
 import org.simple.clinic.home.HomeScreenKey
+import org.simple.clinic.login.applock.AppLockScreenKey
 import org.simple.clinic.main.ClearLockAfterTimestamp
 import org.simple.clinic.main.InitialScreenInfoLoaded
 import org.simple.clinic.main.ShowInitialScreen
@@ -19,6 +20,7 @@ import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
 import java.time.Instant
 import java.util.Optional
+import java.util.UUID
 
 class TheActivityUpdateTest {
 
@@ -219,6 +221,52 @@ class TheActivityUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ShowInitialScreen(AccessDeniedScreenKey(user.fullName)), ClearLockAfterTimestamp)
+        ))
+  }
+
+  @Test
+  fun `when the user is already logged in and the screen is opened, show the lock screen`() {
+    val user = TestData.loggedInUser(
+        uuid = UUID.fromString("233204e2-d64f-4fd6-ab64-a99d9289609f"),
+        loggedInStatus = User.LoggedInStatus.LOGGED_IN,
+        status = UserStatus.ApprovedForSyncing
+    )
+
+    val model = TheActivityModel.createForAlreadyLoggedInUser()
+
+    spec
+        .given(model)
+        .whenEvent(InitialScreenInfoLoaded(
+            user = user,
+            currentTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+            lockAtTimestamp = Optional.empty()
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowInitialScreen(AppLockScreenKey(HomeScreenKey)))
+        ))
+  }
+
+  @Test
+  fun `when the user has just logged in and the screen is opened, don't show the lock screen`() {
+    val user = TestData.loggedInUser(
+        uuid = UUID.fromString("233204e2-d64f-4fd6-ab64-a99d9289609f"),
+        loggedInStatus = User.LoggedInStatus.LOGGED_IN,
+        status = UserStatus.ApprovedForSyncing
+    )
+
+    val model = TheActivityModel.createForNewlyLoggedInUser()
+
+    spec
+        .given(model)
+        .whenEvent(InitialScreenInfoLoaded(
+            user = user,
+            currentTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+            lockAtTimestamp = Optional.empty()
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowInitialScreen(HomeScreenKey))
         ))
   }
 }

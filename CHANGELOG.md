@@ -5,6 +5,7 @@
 - Set Simple video and duration based on locale
 - Fix incorrect test in `TheActivityControllerTest`
 - Commit and push string formatting changes
+- Add `.gitattributes` for specifying eol for `strings.xml`  
 - [In Progress: 30 Jul 2021] Support `ContactPatientSheet` with no appointment
 
 ### Changes

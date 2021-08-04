@@ -48,6 +48,7 @@
   <string name="patiententry_phone_number">Lakkoofsa bilbilaa</string>
   <string name="patiententry_bangladesh_national_id">Lakkoosa eenyummeessaa biyyaalessa</string>
   <string name="patiententry_ethiopia_medical_record_number">Lakkoofsa Galmee Fayya</string>
+  <string name="patiententry_sri_lanka_national_id">Lakkoosa eenyummeessaa biyyaalessa</string>
   <string name="patiententry_date_of_birth_unfocused">Guyyaa dhaloota</string>
   <string name="patiententry_date_of_birth_focused">G,Dh GG/JJ/WWWW</string>
   <string name="patiententry_dateofbirth_and_age_separator">Yookan</string>
@@ -85,6 +86,8 @@
   <string name="patiententry_consent_sms_reminders">Yaadachiistuwwan SMS</string>
   <string name="patiententry_age_exceeds_max_limit_error">Umriin waggoota 120 ol ta’uu hin danda’u</string>
   <string name="patiententry_age_exceeds_min_limit_error">Umriin 0 wajjiin wall qixa ta’uu hin danda’u</string>
+  <string name="patiententry_town_area">Magaalaa / Bakka</string>
+  <string name="patiententry_province">Kutaa</string>
 
   <string name="patientedit_save_patient">Ol kaa’i</string>
   <string name="patientedit_bp_passports_label">Paaspoortii Dhiibbaa Dhiigaa</string>
@@ -144,6 +147,7 @@
   <string name="bloodpressureentry_remove_bp_message">Galmee dhiibbaa dhiigaa kana balleessuu barbaaddaa?</string>
   <string name="bloodpressureentry_remove_bp_confirm">Balleessi</string>
   <string name="bloodpressureentry_remove_bp_cancel">Adda kuti</string>
+  <string name="bloodpressureentry_date_change">Jijjiiri</string>
 
   <!-- Patient summary -->
   <string name="patientsummary_contentdescription_up_button">Duuba deebi’i</string>
@@ -274,6 +278,7 @@
     <item quantity="one">Guyyaa %s irra darbe</item>
     <item quantity="other">Guyyoota %s irra darbe</item>
   </plurals>
+  <string name="overdue_list_item_village">Ganda</string>
   <string name="overduelist_diagnosis_label">Dx</string>
   <string name="overduelist_visited">Daawwatameera</string>
   <string name="overduelist_high_risk">Saaxilbahii ol aanaa</string>
@@ -335,6 +340,8 @@
   <string name="newmedicalhistory_no">Lakki</string>
   <string name="newmedicalhistory_history">Seenaa</string>
   <string name="newmedicalhistory_diagnosis">Qorannoo (Barbaadameera)</string>
+  <string name="medicalhistory_question_is_on_hypertension_treatment">Dhukubsataan ji\'a darbe yeroo ta\'e keessa dawaa BP fudhateeraa? (Barbaadamaa)</string>
+
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">Hin jiru</string>
   <string name="prescribed_drugs_dosage_remove">Balleessi</string>
@@ -351,7 +358,7 @@
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">Mirkana ilaalamaa jira</string>
   <string name="syncindicator_status_failed">Mirkanni kufeera</string>
-  <string name="syncindicator_status_syncing">Mirkaneeffacha…</string>
+  <string name="syncindicator_status_syncing">Mirkaneessaa</string>
   <string name="syncindicator_status_synced_just_now">Amma mirkaneeffameera</string>
   <string name="syncindicator_status_synced_min_ago">Daqiiqaa %s dura mirkanaa’e</string>
   <string name="syncindicator_dialog_error_network">Galmeeewwan dhukkubsattoottaa mirkaneeffachuudhaaf hidhata intarneetaa qabaachuu kee mirkaneeffadhu.</string>
@@ -400,6 +407,8 @@
 
   <!-- Simple video -->
   <string name="simple_video_duration">Daqiiqaawwan %s</string>
+  <string name="simple_video_watch">Viidiyoo daawwadhu</string>
+  <string name="simple_video_how_to_use">Hedda kana akkamiin fayyadama</string>
 
   <!-- Settings -->
   <string name="settings_title">Teessuma</string>
@@ -462,6 +471,7 @@
   <string name="bloodsugarentry_edit_post_prandial_title">Sukkaara dhiigaa turtii booddee sirreessi</string>
   <string name="bloodsugarentry_edit_fasting_title">Sukkaara dhiigaa soomaa sirreessi</string>
   <string name="bloodsugarentry_edit_hba1c_title">HbA1c sirreessi</string>
+  <string name="bloodsugarentry_date_change">Jijjiiri</string>
 
   <!-- Confirm remove blood sugar dialog -->
   <string name="bloodsugarentry_remove_blood_sugar_title">Sukkaara Dhiigaa Balleesi</string>
@@ -523,6 +533,7 @@
   <string name="contactpatient_call_later_in">Booda ol waami</string>
   <string name="contactpatient_change">Jijjiiri</string>
   <string name="contactpatient_done">Taasifameera</string>
+  <string name="contactpatient_result">Bu\'a</string>
   <plurals name="contactpatient_days">
     <item quantity="one">Guyyaa %s</item>
     <item quantity="other">Guyyoota %s</item>
@@ -543,6 +554,15 @@
   <string name="contactpatient_moved_to_private">Eeggumsa dhuunfaatti sochoofameera</string>
   <string name="contactpatient_patient_died">Boqateera</string>
   <string name="contactpatient_other_reason">Sababa biraa</string>
+  <string name="contactpatient_patient_registered_at">Kan galmaa\'e</string>
+  <string name="contactpatient_patient_transfer_from">Kan dabarfame</string>
+  <string name="contactpatient_phone">Bilbila</string>
+  <string name="contactpatient_dx">Dx</string>
+  <string name="contactpatient_visited">Daawwatameera</string>
+  <string name="contactpatient_no_phone_number">Lakkoofsi Bilbilaa Hin Jiru</string>
+  <string name="contactpatient_diagnosis_diabetes">Sukkaara</string>
+  <string name="contactpatient_diagnosis_hypertension">Baayyina dhiiga</string>
+  <string name="contactpatient_diagnosis_none">Hin jiru</string>
 
   <!-- Deep link -->
   <string name="deeplink_patient_profile_not_found">Galmeen dhukkubsataa hin argamne.</string>
@@ -694,5 +714,14 @@
   <!-- National Health Id -->
   <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">Waraqaa Eenyummaa Fayyaa Biyyaalessaa Waraqaa Eenyummaa Biyyaalessaa Amma Jiru Kanaan Dhukkubsataaf Hin Kennamu</string>
   <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">Tole</string>
+
+  <!-- Select ongoing hypertension treatment dialog -->
+  <string name="select_ongoing_hypertension_treatment_title">Dhukkubsataan ji\'a darbe keessa yeroo ta\'etti dawaa BP fudhateera?</string>
+  <string name="select_ongoing_hypertension_treatment_message">Eeyyee yookan lakkii filadhu</string>
+  <string name="select_ongoing_hypertension_treatment_positive_action">Tole</string>
+
+  <!-- Custom drugs search -->
+  <string name="customdrugssearch_hint">Maqaa dawaa galchi</string>
+  <string name="customdrugssearch_item_name_separator">, </string>
 
 </resources>

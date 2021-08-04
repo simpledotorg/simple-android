@@ -1,0 +1,2 @@
+# we are currently adding carriage return in string formatting fixes GH Action
+strings.xml eol=crlf

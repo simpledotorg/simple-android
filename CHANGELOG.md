@@ -6,6 +6,7 @@
 - Fix incorrect test in `TheActivityControllerTest`
 - Commit and push string formatting changes
 - Add `.gitattributes` for specifying eol for `strings.xml`  
+- [In Progress: 04 Aug 2021] Add support for Sri Lanka 
 - [In Progress: 30 Jul 2021] Support `ContactPatientSheet` with no appointment
 
 ### Changes

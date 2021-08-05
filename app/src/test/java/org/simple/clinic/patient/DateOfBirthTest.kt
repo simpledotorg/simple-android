@@ -106,4 +106,20 @@ class DateOfBirthTest {
     // then
     assertThat(estimatedAge).isEqualTo(32)
   }
+
+  @Test
+  fun `the date of birth must be estimated from the recorded age correctly`() {
+    // given
+    val currentTime = Instant.parse("2020-01-01T00:00:00Z")
+    val clock = TestUserClock(currentTime)
+
+    val age = Age(value = 30, updatedAt = Instant.parse("2018-01-01T00:00:00Z"))
+    val dateOfBirth = DateOfBirth.fromAge(age, clock)
+
+    // when
+    val estimatedDateOfBirth = dateOfBirth.approximateDateOfBirth(clock)
+
+    // then
+    assertThat(estimatedDateOfBirth).isEqualTo(LocalDate.parse("1988-01-01"))
+  }
 }

@@ -51,6 +51,16 @@ data class DateOfBirth(
     return ageValue!! + Period.between(ageRecordedAtDate, currentDate).years
   }
 
+  fun approximateDateOfBirth(userClock: UserClock): LocalDate {
+    return when (type) {
+      EXACT -> dateOfBirth!!
+      FROM_AGE -> {
+        val ageRecordedAtDate = ageUpdatedAt!!.atZone(userClock.zone)
+        ageRecordedAtDate.minusYears(ageValue!!.toLong()).toLocalDate()
+      }
+    }
+  }
+
   // TODO: VS (24 Sep 2019) - Remove these when DateOfBirth becomes an embedded Room model
   companion object {
     fun fromDate(date: LocalDate): DateOfBirth {

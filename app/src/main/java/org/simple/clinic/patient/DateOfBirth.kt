@@ -1,5 +1,6 @@
 package org.simple.clinic.patient
 
+import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.patient.DateOfBirth.Type.EXACT
@@ -20,8 +21,13 @@ import java.time.Period
  * as an [Embedded] model.
  **/
 data class DateOfBirth(
+    @ColumnInfo(name = "age_value")
     val ageValue: Int?,
+
+    @ColumnInfo(name = "age_updatedAt")
     val ageUpdatedAt: Instant?,
+
+    @ColumnInfo(name = "dateOfBirth")
     val dateOfBirth: LocalDate?
 ) {
 

@@ -23,8 +23,8 @@ class DateOfBirthTest {
     )
 
     // when
-    val `dob from age recorded on the same day` = DateOfBirth.fromAge(`age recorded on the same day`, clock)
-    val `dob from age recorded a year earlier` = DateOfBirth.fromAge(`age recorded a year earlier`, clock)
+    val `dob from age recorded on the same day` = DateOfBirth(`age recorded on the same day`.value, `age recorded on the same day`.updatedAt, null)
+    val `dob from age recorded a year earlier` = DateOfBirth(`age recorded a year earlier`.value, `age recorded a year earlier`.updatedAt, null)
 
     // the
     assertThat(`dob from age recorded on the same day`)
@@ -48,7 +48,7 @@ class DateOfBirthTest {
 
     fun estimateAgeAtDate(date: LocalDate): Int {
       val clock = TestUserClock(date)
-      return DateOfBirth.fromAge(age, clock).estimateAge(clock)
+      return DateOfBirth(age.value, age.updatedAt, null).estimateAge(clock)
     }
 
     // then
@@ -81,7 +81,7 @@ class DateOfBirthTest {
     val clock = TestUserClock(currentTime)
 
     val age = Age(value = 30, updatedAt = Instant.parse("2018-01-01T00:00:00Z"))
-    val dateOfBirth = DateOfBirth.fromAge(age, clock)
+    val dateOfBirth = DateOfBirth(age.value, age.updatedAt, null)
 
     // when
     val estimatedAge = dateOfBirth.estimateAge(clock)
@@ -116,7 +116,7 @@ class DateOfBirthTest {
     val clock = TestUserClock(currentTime)
 
     val age = Age(value = 30, updatedAt = Instant.parse("2018-01-01T00:00:00Z"))
-    val dateOfBirth = DateOfBirth.fromAge(age, clock)
+    val dateOfBirth = DateOfBirth(age.value, age.updatedAt, null)
 
     // when
     val estimatedDateOfBirth = dateOfBirth.approximateDateOfBirth(clock)

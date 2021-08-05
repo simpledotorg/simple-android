@@ -63,7 +63,7 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
     val initialScreen = when {
       user.isDisapprovedForSyncing -> AccessDeniedScreenKey(user.fullName)
       canMoveToHomeScreen && user.isNotDisapprovedForSyncing -> HomeScreenKey
-      user.isResettingPin -> ForgotPinCreateNewPinScreenKey.wrap()
+      user.isResettingPin -> ForgotPinCreateNewPinScreenKey().wrap()
       else -> throw IllegalStateException("Unknown user status combinations: [${user.loggedInStatus}, ${user.status}]")
     }
 

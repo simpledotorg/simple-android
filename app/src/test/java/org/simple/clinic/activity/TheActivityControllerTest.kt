@@ -132,7 +132,7 @@ class TheActivityControllerTest {
     setupController(lockAtTime = lockAfterTime)
 
     // then
-    verify(ui).showInitialScreen(ForgotPinCreateNewPinScreenKey.wrap())
+    verify(ui).showInitialScreen(ForgotPinCreateNewPinScreenKey().wrap())
     verifyNoMoreInteractions(ui)
   }
 

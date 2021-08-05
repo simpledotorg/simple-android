@@ -142,7 +142,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowInitialScreen(ForgotPinCreateNewPinScreenKey.wrap()), ClearLockAfterTimestamp)
+            hasEffects(ShowInitialScreen(ForgotPinCreateNewPinScreenKey().wrap()), ClearLockAfterTimestamp)
         ))
   }
 
@@ -155,7 +155,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowInitialScreen(ForgotPinCreateNewPinScreenKey.wrap()), ClearLockAfterTimestamp)
+            hasEffects(ShowInitialScreen(ForgotPinCreateNewPinScreenKey().wrap()), ClearLockAfterTimestamp)
         ))
   }
 

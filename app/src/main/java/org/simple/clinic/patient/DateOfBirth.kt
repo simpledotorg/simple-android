@@ -21,11 +21,17 @@ import java.time.Period
  **/
 data class DateOfBirth(
     val date: LocalDate,
-    val type: Type,
     val ageValue: Int?,
     val ageUpdatedAt: Instant?,
     val dateOfBirth: LocalDate?
 ) {
+
+  val type: Type
+    get() = when {
+      dateOfBirth != null -> EXACT
+      ageValue != null && ageUpdatedAt != null -> FROM_AGE
+      else -> throw IllegalStateException("Could not infer type from [Age: $ageValue, Age updated: $ageUpdatedAt, DOB: $dateOfBirth]")
+    }
 
   fun estimateAge(userClock: UserClock): Int {
     return Period.between(date, LocalDate.now(userClock)).years
@@ -36,7 +42,6 @@ data class DateOfBirth(
     fun fromDate(date: LocalDate): DateOfBirth {
       return DateOfBirth(
           date = date,
-          type = EXACT,
           ageValue = null,
           ageUpdatedAt = null,
           dateOfBirth = date
@@ -50,7 +55,6 @@ data class DateOfBirth(
 
       return DateOfBirth(
           date = guessedDateOfBirth,
-          type = FROM_AGE,
           ageValue = age.value,
           ageUpdatedAt = age.updatedAt,
           dateOfBirth = null

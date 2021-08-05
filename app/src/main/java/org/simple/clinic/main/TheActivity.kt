@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.WindowManager
-import androidx.annotation.VisibleForTesting
 import androidx.appcompat.app.AppCompatActivity
 import androidx.work.ExistingWorkPolicy.REPLACE
 import androidx.work.WorkManager
@@ -37,6 +36,8 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.registerorlogin.AuthenticationActivity
+import org.simple.clinic.remoteconfig.UpdateRemoteConfigWorker
+import org.simple.clinic.remoteconfig.UpdateRemoteConfigWorker.Companion.REMOTE_CONFIG_SYNC_WORKER
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
@@ -44,18 +45,9 @@ import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.sync.DataSync
-import org.simple.clinic.remoteconfig.UpdateRemoteConfigWorker
-import org.simple.clinic.remoteconfig.UpdateRemoteConfigWorker.Companion.REMOTE_CONFIG_SYNC_WORKER
 import org.simple.clinic.sync.SyncSetup
 import org.simple.clinic.user.UnauthorizeUser
-import org.simple.clinic.user.User
-import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
-import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
-import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
-import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
-import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.finishWithoutAnimations
@@ -67,25 +59,6 @@ import java.util.Locale
 import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
-
-@VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-fun initialScreenKey(
-    user: User
-): ScreenKey {
-  val userDisapproved = user.status == UserStatus.DisapprovedForSyncing
-
-  val canMoveToHomeScreen = when (user.loggedInStatus) {
-    RESETTING_PIN -> false
-    LOGGED_IN, OTP_REQUESTED, RESET_PIN_REQUESTED, UNAUTHORIZED -> true
-  }
-
-  return when {
-    canMoveToHomeScreen && !userDisapproved -> HomeScreenKey
-    userDisapproved -> AccessDeniedScreenKey(user.fullName)
-    user.loggedInStatus == RESETTING_PIN -> ForgotPinCreateNewPinScreenKey().wrap()
-    else -> throw IllegalStateException("Unknown user status combinations: [${user.loggedInStatus}, ${user.status}]")
-  }
-}
 
 class TheActivity : AppCompatActivity(), TheActivityUi {
 
@@ -215,18 +188,6 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
     super.onCreate(savedInstanceState)
     router.onReady(savedInstanceState)
     delegate.onRestoreInstanceState(savedInstanceState)
-
-    if (savedInstanceState == null) {
-      loadInitialScreen()
-    }
-  }
-
-  private fun loadInitialScreen() {
-    val currentUser = userSession.loggedInUser().blockingFirst().get()
-
-    val initialScreen = initialScreenKey(currentUser)
-
-    router.clearHistoryAndPush(initialScreen)
   }
 
   @SuppressLint("CheckResult")
@@ -335,10 +296,6 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
     disposables.clear()
   }
 
-  override fun showAppLockScreen() {
-    router.push(AppLockScreenKey)
-  }
-
   // This is here because we need to show the same alert in multiple
   // screens when the user gets verified in the background.
   override fun showUserLoggedOutOnOtherDeviceAlert() {
@@ -356,6 +313,10 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
 
   override fun showAccessDeniedScreen(fullName: String) {
     router.clearHistoryAndPush(AccessDeniedScreenKey(fullName))
+  }
+
+  override fun showInitialScreen(screenKey: ScreenKey) {
+    router.clearHistoryAndPush(screenKey)
   }
 
   private fun showPatientSummaryForDeepLink(deepLinkResult: OpenPatientSummary) {

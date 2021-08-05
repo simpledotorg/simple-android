@@ -1,15 +1,14 @@
 package org.simple.clinic.login.applock
 
 import android.os.Parcelable
-import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.navigation.v2.ScreenKey
 
 @Parcelize
-object AppLockScreenKey : ScreenKey(), Parcelable {
-
-  @IgnoredOnParcel
-  override val analyticsName = "App Lock"
+data class AppLockScreenKey(
+    val nextScreen: ScreenKey,
+    override val analyticsName: String = "App Lock"
+) : ScreenKey(), Parcelable {
 
   override fun instantiateFragment() = AppLockScreen()
 }

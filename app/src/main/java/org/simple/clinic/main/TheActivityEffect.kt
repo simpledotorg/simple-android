@@ -1,12 +1,12 @@
 package org.simple.clinic.main
 
+import org.simple.clinic.navigation.v2.ScreenKey
+
 sealed class TheActivityEffect
 
-object LoadAppLockInfo : TheActivityEffect()
+object LoadInitialScreenInfo : TheActivityEffect()
 
 object ClearLockAfterTimestamp : TheActivityEffect()
-
-object ShowAppLockScreen : TheActivityEffect()
 
 object ListenForUserVerifications : TheActivityEffect()
 
@@ -21,3 +21,5 @@ object ListenForUserDisapprovals : TheActivityEffect()
 object ClearPatientData : TheActivityEffect()
 
 object ShowAccessDeniedScreen : TheActivityEffect()
+
+data class ShowInitialScreen(val screen: ScreenKey): TheActivityEffect()

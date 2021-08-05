@@ -127,7 +127,7 @@ class AppLockScreen :
   }
 
   override fun restorePreviousScreen() {
-    router.pop()
+    router.clearHistoryAndPush(screenKey.nextScreen)
   }
 
   override fun exitApp() {

@@ -126,7 +126,7 @@ class TeleConsultSuccessScreen(
   }
 
   override fun showPatientInfo(patient: Patient) {
-    val ageValue = DateOfBirth.fromPatient(patient, userClock).estimateAge(userClock)
+    val ageValue = patient.ageDetails.estimateAge(userClock)
     val genderInitial: Gender = patient.gender
     toolbar.title = resources.getString(
         R.string.screen_teleconsult_success_patient_information,

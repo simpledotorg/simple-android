@@ -106,7 +106,7 @@ class TeleconsultPatientInfoView constructor(
   }
 
   private fun displayPatientNameGenderAge(patient: Patient) {
-    val ageValue = DateOfBirth.fromPatient(patient, userClock).estimateAge(userClock)
+    val ageValue = patient.ageDetails.estimateAge(userClock)
     val patientGender = patient.gender
 
     patientNameTextView.text = context.getString(

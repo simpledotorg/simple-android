@@ -234,15 +234,12 @@ class PatientRepository @Inject constructor(
           addressUuid = addressUuid,
           fullName = personalDetails.fullName,
           gender = personalDetails.gender!!,
-          dateOfBirth = dateOfBirth?.let {
-            dateOfBirthFormatter.parse(dateOfBirth, LocalDate::from)
-          },
-          age = personalDetails.age?.let { ageString ->
+          ageDetails = DateOfBirth.fromAgeOrDate(personalDetails.age?.let { ageString ->
             Age(ageString.toInt(), Instant.now(utcClock))
-          },
-
+          }, dateOfBirth?.let {
+            dateOfBirthFormatter.parse(dateOfBirth, LocalDate::from)
+          }),
           status = PatientStatus.Active,
-
           createdAt = Instant.now(utcClock),
           updatedAt = Instant.now(utcClock),
           deletedAt = null,

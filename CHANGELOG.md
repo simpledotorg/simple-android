@@ -6,8 +6,8 @@
 - Fix incorrect test in `TheActivityControllerTest`
 - Commit and push string formatting changes
 - Add `.gitattributes` for specifying eol for `strings.xml`  
+- Support `ContactPatientSheet` with no appointment
 - [In Progress: 04 Aug 2021] Add support for Sri Lanka 
-- [In Progress: 30 Jul 2021] Support `ContactPatientSheet` with no appointment
 
 ### Changes
 - Don't load search results if search query is not changed from previous search query

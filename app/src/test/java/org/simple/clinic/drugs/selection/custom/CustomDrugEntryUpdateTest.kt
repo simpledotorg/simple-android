@@ -1,10 +1,13 @@
 package org.simple.clinic.drugs.selection.custom
 
+import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.drugs.search.DrugFrequency
 
 class CustomDrugEntryUpdateTest {
 
@@ -35,5 +38,17 @@ class CustomDrugEntryUpdateTest {
                 hasNoEffects()
             )
         )
+  }
+
+   @Test
+  fun `when edit frequency is clicked, then show edit frequency dialog`() {
+    val frequency = DrugFrequency.OD
+
+    updateSpec.given(defaultModel)
+        .whenEvent(EditFrequencyClicked(frequency))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowEditFrequencyDialog(frequency))
+        ))
   }
 }

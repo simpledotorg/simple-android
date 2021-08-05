@@ -96,7 +96,11 @@ class DateOfBirthTest {
     val currentTime = Instant.parse("2020-01-01T00:00:00Z")
     val clock = TestUserClock(currentTime)
 
-    val dateOfBirth = DateOfBirth.fromDate(LocalDate.parse("1988-01-01"))
+    val dateOfBirth = DateOfBirth(
+        ageValue = null,
+        ageUpdatedAt = null,
+        dateOfBirth = LocalDate.parse("1988-01-01")
+    )
 
     // when
     val estimatedAge = dateOfBirth.estimateAge(clock)

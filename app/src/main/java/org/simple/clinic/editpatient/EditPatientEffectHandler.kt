@@ -118,7 +118,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
 
     val dateOfBirth = DateOfBirth.fromPatient(patient, userClock)
     when (dateOfBirth.type) {
-      EXACT -> ui.setPatientDateOfBirth(dateOfBirth.date)
+      EXACT -> ui.setPatientDateOfBirth(dateOfBirth.approximateDateOfBirth(userClock))
       FROM_AGE -> ui.setPatientAge(dateOfBirth.estimateAge(userClock))
     }
   }

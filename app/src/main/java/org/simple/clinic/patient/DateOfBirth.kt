@@ -20,6 +20,12 @@ import java.time.Period
  * as an [Embedded] model.
  **/
 data class DateOfBirth(
+    @Deprecated(
+        message = "",
+        replaceWith = ReplaceWith(
+            expression = "approximateDateOfBirth(userClock)"
+        )
+    )
     val date: LocalDate,
     val ageValue: Int?,
     val ageUpdatedAt: Instant?,

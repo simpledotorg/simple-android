@@ -64,13 +64,6 @@ data class DateOfBirth(
 
   // TODO: VS (24 Sep 2019) - Remove these when DateOfBirth becomes an embedded Room model
   companion object {
-    fun fromDate(date: LocalDate): DateOfBirth {
-      return DateOfBirth(
-          ageValue = null,
-          ageUpdatedAt = null,
-          dateOfBirth = date
-      )
-    }
 
     fun fromAge(age: Age, userClock: UserClock): DateOfBirth {
       val ageRecordedAtDate = age.updatedAt.atZone(userClock.zone)
@@ -108,7 +101,7 @@ data class DateOfBirth(
 
     private fun fromAgeOrDate(age: Age?, date: LocalDate?, clock: UserClock): DateOfBirth {
       return when {
-        date != null -> fromDate(date)
+        date != null -> DateOfBirth(null, null, date)
         age != null -> fromAge(age, clock)
         else -> throw IllegalStateException("Both age AND dateOfBirth cannot be null!")
       }

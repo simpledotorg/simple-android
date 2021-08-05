@@ -546,12 +546,12 @@ class PatientRepositoryAndroidTest {
     val updatedAfter = Duration.ofDays(1L)
     clock.advanceBy(updatedAfter)
 
-    val newPatientToSave = originalSavedPatient.copy(
-        fullName = "New Name",
-        gender = Gender.Transgender,
-        age = Age(35, Instant.now(clock)),
-        dateOfBirth = LocalDate.now(clock)
-    )
+    val newPatientToSave = originalSavedPatient.
+        withNameAndGender(
+            fullName = "New Name",
+            gender = Gender.Transgender
+        )
+        .withDateOfBirth(LocalDate.now(clock))
 
     patientRepository.updatePatient(newPatientToSave).blockingAwait()
 

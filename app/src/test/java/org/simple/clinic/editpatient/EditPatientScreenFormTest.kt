@@ -795,11 +795,11 @@ class EditPatientScreenFormTest {
     }.let { profile ->
       if (ageValue != null) {
         val age = Age(ageValue, Instant.now(utcClock))
-        return@let profile.copy(patient = profile.patient.copy(age = age, dateOfBirth = null))
+        return@let profile.copy(patient = profile.patient.withAge(age))
 
       } else if (dateOfBirthString != null) {
         val dateOfBirth = LocalDate.parse(dateOfBirthString)
-        return@let profile.copy(patient = profile.patient.copy(age = null, dateOfBirth = dateOfBirth))
+        return@let profile.copy(patient = profile.patient.withDateOfBirth(dateOfBirth))
       }
       profile
     }

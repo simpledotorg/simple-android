@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import org.simple.clinic.platform.analytics.Analytics
+import org.simple.clinic.util.setFragmentResult
+import org.simple.clinic.util.setFragmentResultListener
 
 /**
  * Class that maintains a history of screens and is used to perform
@@ -415,12 +417,18 @@ class Router(
   ) {
     val newTopNavRequest = history.top()
     if (currentTopScreen is ExpectingResult && screenResult != null) {
+      val requestType = currentTopScreen.requestType
       val targetFragment = fragmentManager.findFragmentByTag(newTopNavRequest.key.fragmentTag)
 
       require(targetFragment != null) { "Could not find fragment for key: [${newTopNavRequest.key}]" }
       require(targetFragment is ExpectsResult) { "Key [${newTopNavRequest.key}] was pushed expecting results, but fragment [${targetFragment.javaClass.name}] does not implement [${ExpectsResult::class.java.name}]!" }
 
-      handler.post { targetFragment.onScreenResult(currentTopScreen.requestType, screenResult) }
+      fragmentManager.setFragmentResult(requestType, screenResult)
+      with(targetFragment) {
+        setFragmentResultListener(requestType) { _, result ->
+          onScreenResult(requestType, result)
+        }
+      }
     }
   }
 

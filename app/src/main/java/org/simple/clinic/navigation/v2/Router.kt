@@ -48,9 +48,6 @@ class Router(
       containerId = containerId
   )
 
-  // Used for posting screen results
-  private val handler = Handler(Looper.getMainLooper())
-
   fun onReady(savedInstanceState: Bundle?) {
     history = savedInstanceState?.getParcelable(HISTORY_STATE_KEY) ?: history
 

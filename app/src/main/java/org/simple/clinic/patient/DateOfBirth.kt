@@ -35,14 +35,20 @@ data class DateOfBirth(
 
   fun estimateAge(userClock: UserClock): Int {
     return when (type) {
-      EXACT -> Period.between(dateOfBirth, LocalDate.now(userClock)).years
-      FROM_AGE -> {
-        val ageRecordedAtDate = ageUpdatedAt!!.atZone(userClock.zone).toLocalDate()
-        val currentDate = LocalDate.now(userClock)
-
-        ageValue!! + Period.between(ageRecordedAtDate, currentDate).years
-      }
+      EXACT -> computeCurrentAgeFromRecordedDateOfBirth(userClock)
+      FROM_AGE -> computeCurrentAgeFromRecordedAge(userClock)
     }
+  }
+
+  private fun computeCurrentAgeFromRecordedDateOfBirth(userClock: UserClock): Int {
+    return Period.between(dateOfBirth, LocalDate.now(userClock)).years
+  }
+
+  private fun computeCurrentAgeFromRecordedAge(userClock: UserClock): Int {
+    val ageRecordedAtDate = ageUpdatedAt!!.atZone(userClock.zone).toLocalDate()
+    val currentDate = LocalDate.now(userClock)
+
+    return ageValue!! + Period.between(ageRecordedAtDate, currentDate).years
   }
 
   // TODO: VS (24 Sep 2019) - Remove these when DateOfBirth becomes an embedded Room model

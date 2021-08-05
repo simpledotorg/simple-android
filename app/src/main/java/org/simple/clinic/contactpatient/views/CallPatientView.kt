@@ -76,6 +76,12 @@ class CallPatientView(
   private val resultOfCallLabelTextView
     get() = binding!!.resultOfCallLabel
 
+  private val lastVisitedLabel
+    get() = binding!!.lastVisitedLabel
+
+  private val patientWithCallResultGroup
+  get() = binding!!.patientWithCallResultGroup
+
   var secureCallingSectionVisible: Boolean = false
     set(value) {
       field = value
@@ -104,6 +110,12 @@ class CallPatientView(
     set(value) {
       field = value
       registeredFacilityLabel.text = field
+    }
+
+  var showPatientWithCallResultLayout: Boolean = false
+    set(value) {
+      field = value
+      patientWithCallResultGroup.visibility = if (field) View.VISIBLE else View.GONE
     }
 
   var agreedToVisitClicked: AgreedToVisitClicked? = null
@@ -147,7 +159,17 @@ class CallPatientView(
     patientAddressTextView.text = patientDetails.patientAddress
     registeredFacilityTextView.text = patientDetails.registeredFacility
     diagnosisTextView.text = diagnosis
-    lastVisitedTextView.text = dateTimeFormatter.format(patientDetails.lastVisited?.toLocalDateAtZone(userClock.zone))
+    showLastVisitedIfNotNull(dateTimeFormatter, patientDetails, userClock)
+  }
+
+  private fun showLastVisitedIfNotNull(dateTimeFormatter: DateTimeFormatter, patientDetails: PatientDetails, userClock: UserClock) {
+    if (patientDetails.lastVisited != null) {
+      lastVisitedTextView.visibility = View.VISIBLE
+      lastVisitedTextView.text = dateTimeFormatter.format(patientDetails.lastVisited.toLocalDateAtZone(userClock.zone))
+    } else {
+      lastVisitedTextView.visibility = View.GONE
+      lastVisitedLabel.visibility = View.GONE
+    }
   }
 
   private fun diagnosisText(diagnosedWithDiabetes: Answer?, diagnosedWithHypertension: Answer?): String {

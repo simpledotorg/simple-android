@@ -23,12 +23,6 @@ class ContactPatientInit : Init<ContactPatientModel, ContactPatientEffect> {
       effects.add(LoadCurrentFacility)
     }
 
-    val updatedModel = if (model.hasLoadedAppointment && model.hasLoadedPatientProfile) {
-      model.contactPatientInfoLoaded()
-    } else {
-      model.contactPatientInfoLoading()
-    }
-
-    return first(updatedModel, effects)
+    return first(model, effects)
   }
 }

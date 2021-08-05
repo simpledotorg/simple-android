@@ -65,19 +65,19 @@ class ContactPatientUiRenderer(
   }
 
   private fun renderCallPatientView(model: ContactPatientModel) {
-    if (model.hasLoadedPatientProfile && model.hasLoadedAppointment) {
-      renderPatientProfile(model.patientProfile!!, model.appointment!!)
+    if (model.hasLoadedPatientProfile) {
+      renderPatientProfile(model.patientProfile!!)
     }
 
     if (model.hasRegisteredFacility && model.hasCurrentFacility) {
       renderPatientFacilityLabel(model.appointmentIsInRegisteredFacility)
     }
 
-    if (model.patientProfileHasPhoneNumber && model.hasLoadedAppointment) {
-      ui.showPatientWithPhoneNumberUi()
-      ui.hidePatientWithNoPhoneNumberUi()
-      ui.setResultOfCallLabelText()
-
+    if (model.patientProfileHasPhoneNumber && model.isAppointmentPresent.not()) {
+      loadPatientWithPhoneNumber()
+      loadSecureCallingUi(model)
+    } else if (model.patientProfileHasPhoneNumber && model.isAppointmentPresent) {
+      showPatientCallResult()
       loadSecureCallingUi(model)
     } else {
       ui.showPatientWithNoPhoneNumberUi()
@@ -86,6 +86,19 @@ class ContactPatientUiRenderer(
     }
 
     ui.switchToCallPatientView()
+  }
+
+  private fun showPatientCallResult() {
+    ui.showPatientWithCallResultUi()
+    ui.setResultOfCallLabelText()
+    ui.showPatientWithPhoneNumberUi()
+    ui.hidePatientWithNoPhoneNumberUi()
+  }
+
+  private fun loadPatientWithPhoneNumber() {
+    ui.showPatientWithPhoneNumberUi()
+    ui.hidePatientWithNoPhoneNumberUi()
+    ui.hidePatientWithCallResultUi()
   }
 
   private fun renderPatientFacilityLabel(appointmentIsInRegisteredFacility: Boolean) {
@@ -168,8 +181,7 @@ class ContactPatientUiRenderer(
   }
 
   private fun renderPatientProfile(
-      patientProfile: ContactPatientProfile,
-      appointment: ParcelableOptional<OverdueAppointment>
+      patientProfile: ContactPatientProfile
   ) {
     val patientAge = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock)
 

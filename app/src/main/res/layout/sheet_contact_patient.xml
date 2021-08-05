@@ -22,14 +22,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:visibility="invisible" />
+    android:visibility="gone"
+    tools:visibility="gone"/>
 
   <org.simple.clinic.contactpatient.views.CallPatientView
     android:id="@+id/callPatientView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
-    android:visibility="gone"
+    android:visibility="invisible"
     tools:visibility="gone" />
 
   <org.simple.clinic.contactpatient.views.SetAppointmentReminderView

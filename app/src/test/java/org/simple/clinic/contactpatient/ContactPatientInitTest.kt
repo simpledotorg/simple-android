@@ -8,6 +8,7 @@ import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityConfig
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.overdue.TimeToAppointment.Days
@@ -37,7 +38,7 @@ class ContactPatientInitTest {
     spec
         .whenInit(defaultModel)
         .then(assertThatFirst(
-            hasModel(defaultModel.contactPatientInfoLoading()),
+            hasModel(defaultModel),
             hasEffects(LoadContactPatientProfile(patientUuid), LoadLatestOverdueAppointment(patientUuid), LoadCurrentFacility)
         ))
   }
@@ -52,16 +53,28 @@ class ContactPatientInitTest {
             teleconsultationEnabled = false
         )
     )
+    val overdueAppointment = TestData.overdueAppointment(
+        facilityUuid = UUID.fromString("a607a97f-4bf6-4ce6-86a3-b266059c7734"),
+        patientUuid = patientUuid,
+        patientAddress = TestData.overduePatientAddress(
+            streetAddress = null,
+            colonyOrVillage = null,
+            district = "Bhatinda",
+            state = "Punjab"),
+        patientRegisteredFacilityName = "Bhatinda",
+        diagnosedWithDiabetes = Answer.Yes,
+        diagnosedWithHypertension = Answer.No
+    )
 
     val model = defaultModel()
         .contactPatientProfileLoaded(TestData.contactPatientProfile(patientUuid = patientUuid))
-        .overdueAppointmentLoaded(Optional.empty())
+        .overdueAppointmentLoaded(Optional.of(overdueAppointment))
         .currentFacilityLoaded(currentFacility = facility)
 
     spec
         .whenInit(model)
         .then(assertThatFirst(
-            hasModel(model.contactPatientInfoLoaded()),
+            hasModel(model),
             hasNoEffects()
         ))
   }

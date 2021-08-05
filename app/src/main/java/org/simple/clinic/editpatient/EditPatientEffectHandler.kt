@@ -187,7 +187,6 @@ class EditPatientEffectHandler @AssistedInject constructor(
   ): Patient {
     val patientWithoutAgeOrDateOfBirth = patient
         .withNameAndGender(ongoingEntry.name, ongoingEntry.gender)
-        .withoutAgeAndDateOfBirth()
 
     return when (ongoingEntry.ageOrDateOfBirth) {
       is EntryWithAge -> {

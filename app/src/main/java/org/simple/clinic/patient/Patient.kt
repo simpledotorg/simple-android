@@ -83,14 +83,9 @@ data class Patient(
   fun withNameAndGender(fullName: String, gender: Gender): Patient =
       copy(fullName = fullName, gender = gender)
 
-  fun withoutAgeAndDateOfBirth(): Patient =
-      copy(age = null, dateOfBirth = null)
+  fun withAge(age: Age): Patient = copy(ageDetails = ageDetails.withAge(age))
 
-  fun withAge(age: Age): Patient =
-      copy(age = age)
-
-  fun withDateOfBirth(dateOfBirth: LocalDate): Patient =
-      copy(dateOfBirth = dateOfBirth)
+  fun withDateOfBirth(dateOfBirth: LocalDate): Patient = copy(ageDetails = ageDetails.withDateOfBirth(dateOfBirth))
 
   @Dao
   abstract class RoomDao : DaoWithUpsert<Patient>() {

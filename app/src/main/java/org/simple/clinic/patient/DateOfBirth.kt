@@ -71,6 +71,22 @@ data class DateOfBirth(
     return ageRecordedAtDate.minusYears(ageValue!!.toLong()).toLocalDate()
   }
 
+  fun withAge(age: Age): DateOfBirth {
+    return copy(
+        ageValue = age.value,
+        ageUpdatedAt = age.updatedAt,
+        dateOfBirth = null
+    )
+  }
+
+  fun withDateOfBirth(dateOfBirth: LocalDate): DateOfBirth {
+    return copy(
+        ageValue = null,
+        ageUpdatedAt = null,
+        dateOfBirth = dateOfBirth
+    )
+  }
+
   // TODO: VS (24 Sep 2019) - Remove these when DateOfBirth becomes an embedded Room model
   companion object {
     fun fromPatient(patient: Patient, userClock: UserClock): DateOfBirth {

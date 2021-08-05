@@ -90,28 +90,28 @@ data class DateOfBirth(
   // TODO: VS (24 Sep 2019) - Remove these when DateOfBirth becomes an embedded Room model
   companion object {
     fun fromPatient(patient: Patient, userClock: UserClock): DateOfBirth {
-      return fromAgeOrDate(patient.age, patient.dateOfBirth, userClock)
+      return fromAgeOrDate(patient.age, patient.dateOfBirth)
     }
 
     fun fromOverdueAppointment(
         overdueAppointment: OverdueAppointment,
         userClock: UserClock
     ): DateOfBirth {
-      return fromAgeOrDate(overdueAppointment.age, overdueAppointment.dateOfBirth, userClock)
+      return fromAgeOrDate(overdueAppointment.age, overdueAppointment.dateOfBirth)
     }
 
     fun fromPatientSearchResultViewModel(
         viewModel: PatientSearchResultItemView.PatientSearchResultViewModel,
         userClock: UserClock
     ): DateOfBirth {
-      return fromAgeOrDate(viewModel.age, viewModel.dateOfBirth, userClock)
+      return fromAgeOrDate(viewModel.age, viewModel.dateOfBirth)
     }
 
     fun fromRecentPatient(recentPatient: RecentPatient, userClock: UserClock): DateOfBirth {
-      return fromAgeOrDate(recentPatient.age, recentPatient.dateOfBirth, userClock)
+      return fromAgeOrDate(recentPatient.age, recentPatient.dateOfBirth)
     }
 
-    private fun fromAgeOrDate(age: Age?, date: LocalDate?, clock: UserClock): DateOfBirth {
+    fun fromAgeOrDate(age: Age?, date: LocalDate?): DateOfBirth {
       return when {
         date != null -> DateOfBirth(null, null, date)
         age != null -> DateOfBirth(age.value, age.updatedAt, null)

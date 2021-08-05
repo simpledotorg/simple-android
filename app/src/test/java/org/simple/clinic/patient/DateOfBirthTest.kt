@@ -75,4 +75,35 @@ class DateOfBirthTest {
     val `estimated age three years and a day later` = estimateAgeAtDate(LocalDate.parse("2021-01-02"))
     assertThat(`estimated age three years and a day later`).isEqualTo(33)
   }
+
+  @Test
+  fun `the current age must be estimated from the recorded age correctly`() {
+    // given
+    val currentTime = Instant.parse("2020-01-01T00:00:00Z")
+    val clock = TestUserClock(currentTime)
+
+    val age = Age(value = 30, updatedAt = Instant.parse("2018-01-01T00:00:00Z"))
+    val dateOfBirth = DateOfBirth.fromAge(age, clock)
+
+    // when
+    val estimatedAge = dateOfBirth.estimateAge(clock)
+
+    // then
+    assertThat(estimatedAge).isEqualTo(32)
+  }
+
+  @Test
+  fun `the current age must be estimated from the recorded date of birth correctly`() {
+    // given
+    val currentTime = Instant.parse("2020-01-01T00:00:00Z")
+    val clock = TestUserClock(currentTime)
+
+    val dateOfBirth = DateOfBirth.fromDate(LocalDate.parse("1988-01-01"))
+
+    // when
+    val estimatedAge = dateOfBirth.estimateAge(clock)
+
+    // then
+    assertThat(estimatedAge).isEqualTo(32)
+  }
 }

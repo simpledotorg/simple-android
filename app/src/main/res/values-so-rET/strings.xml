@@ -31,6 +31,7 @@
   <string name="identifiertype_ethiopia_medical_record_number">Lambarka Diiwaanka Caafimaadka</string>
   <string name="identifiertype_unknown">Kaarka aqoonsiga</string>
   <string name="identifiertype_india_national_health_id">Aqoonsiga Caafimaadka Qaran</string>
+  <string name="identifiertype_sri_lanka_national_id">Lambarka Aqoonsiga Qaranka</string>
 
   <!-- Patient search -->
   <string name="instantsearch_hint">Magaca, Talefoonka ama Aqoonsiga Qaran</string>
@@ -48,6 +49,7 @@
   <string name="patiententry_phone_number">Lambarka telefoonka</string>
   <string name="patiententry_bangladesh_national_id">Lambarka Aqoonsiga Qaranka</string>
   <string name="patiententry_ethiopia_medical_record_number">Lambarka Diiwaanka Caafimaadka</string>
+  <string name="patiententry_sri_lanka_national_id">Lambarka Aqoonsiga Qaranka</string>
   <string name="patiententry_date_of_birth_unfocused">Taariikhda dhalashada</string>
   <string name="patiententry_date_of_birth_focused">Taariikhda dhalashada: DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">Ama</string>
@@ -85,6 +87,8 @@
   <string name="patiententry_consent_sms_reminders">Xasuusimaha Fariinta gaaban</string>
   <string name="patiententry_age_exceeds_max_limit_error">Da\'du ma noqon karto wax ka weyn 120 sano</string>
   <string name="patiententry_age_exceeds_min_limit_error">Da\'du ma noqon karto 0 sano</string>
+  <string name="patiententry_town_area">Magaalada / Aaga</string>
+  <string name="patiententry_province">Gobolka</string>
 
   <string name="patientedit_save_patient">Keydi</string>
   <string name="patientedit_bp_passports_label">Baasaboorada BP</string>
@@ -144,6 +148,7 @@
   <string name="bloodpressureentry_remove_bp_message">Ma hubtaa inaad rabto inaad ka saarto duubistaan cadaadiska dhiigga?</string>
   <string name="bloodpressureentry_remove_bp_confirm">Saar</string>
   <string name="bloodpressureentry_remove_bp_cancel">Baaji</string>
+  <string name="bloodpressureentry_date_change">Baddel</string>
 
   <!-- Patient summary -->
   <string name="patientsummary_contentdescription_up_button">Gadaal u laabo</string>
@@ -273,6 +278,7 @@
     <item quantity="one">%s day overdue</item>
     <item quantity="other">%s maalmo hore</item>
   </plurals>
+  <string name="overdue_list_item_village">Tuullada</string>
   <string name="overduelist_diagnosis_label">Dx</string>
   <string name="overduelist_visited">Booqday</string>
   <string name="overduelist_high_risk">Halis sare</string>
@@ -334,6 +340,8 @@
   <string name="newmedicalhistory_no">Maya</string>
   <string name="newmedicalhistory_history">Taariikh</string>
   <string name="newmedicalhistory_diagnosis">Baaritaan (Loo baahanyahay)</string>
+  <string name="medicalhistory_question_is_on_hypertension_treatment">Miyuu bukaanku qaatay dawooyinka BP wakhti kasta gudaha bishii la soo dhaafay? (Loo baahday)</string>
+
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">Midna</string>
   <string name="prescribed_drugs_dosage_remove">Saar</string>
@@ -350,7 +358,7 @@
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">Hawlgalinta ayaa hakad la galiyay</string>
   <string name="syncindicator_status_failed">Hawlgalinta ayaa guul daraysatay</string>
-  <string name="syncindicator_status_syncing">Hawlgalinaya…</string>
+  <string name="syncindicator_status_syncing">Isku mar wada qaadanay</string>
   <string name="syncindicator_status_synced_just_now">La hawlgaliyay hadda</string>
   <string name="syncindicator_status_synced_min_ago">La hawl galiyay %s daqiiqad ka hor</string>
   <string name="syncindicator_dialog_error_network">Hubso inaad haysato xiriir internet oo shaqeynaya si aad uwaafajiso diiwaanada bukaanka.</string>
@@ -399,6 +407,8 @@
 
   <!-- Simple video -->
   <string name="simple_video_duration">%s daqiiqo</string>
+  <string name="simple_video_watch">Daawo Fiidyawga</string>
+  <string name="simple_video_how_to_use">Sida loo isticmaala abkan</string>
 
   <!-- Settings -->
   <string name="settings_title">Setinka</string>
@@ -461,6 +471,7 @@
   <string name="bloodsugarentry_edit_post_prandial_title">Tafatir sonkorta dhiiga oo aan kala sooc lahayn</string>
   <string name="bloodsugarentry_edit_fasting_title">Tafatir ku soomitaanka sonkorta dhiiga</string>
   <string name="bloodsugarentry_edit_hba1c_title">Tafatir HbA1c</string>
+  <string name="bloodsugarentry_date_change">Baddel</string>
 
   <!-- Confirm remove blood sugar dialog -->
   <string name="bloodsugarentry_remove_blood_sugar_title">Ka saar Dhiig Sokorowga</string>
@@ -522,6 +533,7 @@
   <string name="contactpatient_call_later_in">Mar dambe soo wac</string>
   <string name="contactpatient_change">Baddel</string>
   <string name="contactpatient_done">La dhameeyay</string>
+  <string name="contactpatient_result">Natiijooyinka</string>
   <plurals name="contactpatient_days">
     <item quantity="one">%s day</item>
     <item quantity="other">%s aalmo</item>
@@ -542,6 +554,15 @@
   <string name="contactpatient_moved_to_private">U wareegay dhakhtar gaar ah</string>
   <string name="contactpatient_patient_died">Dhintay</string>
   <string name="contactpatient_other_reason">Sabab kale</string>
+  <string name="contactpatient_patient_registered_at">Laga diiwaangeliyay</string>
+  <string name="contactpatient_patient_transfer_from">Ka soo wareeji</string>
+  <string name="contactpatient_phone">Telefoonka</string>
+  <string name="contactpatient_dx">Dx</string>
+  <string name="contactpatient_visited">Booqday</string>
+  <string name="contactpatient_no_phone_number">Ma jiro Lambatka Telefoonku</string>
+  <string name="contactpatient_diagnosis_diabetes">Sokorow</string>
+  <string name="contactpatient_diagnosis_hypertension">Dhiig kar</string>
+  <string name="contactpatient_diagnosis_none">Midna</string>
 
   <!-- Deep link -->
   <string name="deeplink_patient_profile_not_found">Muuqaalka bukaanka lama heli karo</string>
@@ -693,5 +714,14 @@
   <!-- National Health Id -->
   <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">Aqoonsiga Caafimaadka Qaranka looma qoondeyn karo bukaanka leh Aqoonsiga Caafimaadka Qaranka ee hadda jira</string>
   <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">Haye</string>
+
+  <!-- Select ongoing hypertension treatment dialog -->
+  <string name="select_ongoing_hypertension_treatment_title">Bukaanku miyuu qaatay dawooyinka BP wakhti kasta bishii la soo dhaafay?</string>
+  <string name="select_ongoing_hypertension_treatment_message">Dooro haa ama maya.</string>
+  <string name="select_ongoing_hypertension_treatment_positive_action">Haye</string>
+
+  <!-- Custom drugs search -->
+  <string name="customdrugssearch_hint">Geli magaca dawada</string>
+  <string name="customdrugssearch_item_name_separator">, </string>
 
 </resources>

@@ -2,7 +2,6 @@ package org.simple.clinic.patient
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.simple.clinic.patient.DateOfBirth.Type.FROM_AGE
 import org.simple.clinic.util.TestUserClock
 import java.time.Instant
 import java.time.LocalDate
@@ -31,7 +30,6 @@ class DateOfBirthTest {
     assertThat(`dob from age recorded on the same day`)
         .isEqualTo(DateOfBirth(
             date = LocalDate.parse("1988-01-01"),
-            type = FROM_AGE,
             dateOfBirth = null,
             ageValue = `dob from age recorded on the same day`.ageValue,
             ageUpdatedAt = `dob from age recorded on the same day`.ageUpdatedAt
@@ -39,7 +37,6 @@ class DateOfBirthTest {
     assertThat(`dob from age recorded a year earlier`)
         .isEqualTo(DateOfBirth(
             date = LocalDate.parse("1987-01-01"),
-            type = FROM_AGE,
             dateOfBirth = null,
             ageValue = `dob from age recorded a year earlier`.ageValue,
             ageUpdatedAt = `dob from age recorded a year earlier`.ageUpdatedAt

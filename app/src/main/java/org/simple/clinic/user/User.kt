@@ -73,11 +73,17 @@ data class User(
   val isPendingSmsVerification: Boolean
     get() = loggedInStatus == LoggedInStatus.OTP_REQUESTED
 
+  val isDisapprovedForSyncing: Boolean
+    get() = status == UserStatus.DisapprovedForSyncing
+
   val isNotDisapprovedForSyncing: Boolean
     get() = status != UserStatus.DisapprovedForSyncing
 
   val isUserLoggedIn: Boolean
     get() = loggedInStatus == LoggedInStatus.LOGGED_IN
+
+  val isResettingPin: Boolean
+    get() = loggedInStatus == LoggedInStatus.RESETTING_PIN
 
   fun withStatus(status: UserStatus, clock: UtcClock): User {
     return copy(status = status, updatedAt = Instant.now(clock))

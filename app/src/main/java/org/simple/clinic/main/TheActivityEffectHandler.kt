@@ -10,12 +10,11 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.user.NewlyVerifiedUser
 import org.simple.clinic.user.UserSession
-import java.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.filterTrue
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import org.simple.clinic.util.toOptional
 import java.time.Instant
+import java.util.Optional
 
 class TheActivityEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
@@ -34,9 +33,8 @@ class TheActivityEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<TheActivityEffect, TheActivityEvent> {
     return RxMobius
         .subtypeEffectHandler<TheActivityEffect, TheActivityEvent>()
-        .addTransformer(LoadAppLockInfo::class.java, loadShowAppLockInto())
+        .addTransformer(LoadInitialScreenInfo::class.java, loadInitialScreenInfo())
         .addAction(ClearLockAfterTimestamp::class.java, lockAfterTimestamp::clear)
-        .addAction(ShowAppLockScreen::class.java, uiActions::showAppLockScreen, schedulers.ui())
         .addTransformer(ListenForUserVerifications::class.java, listenForUserVerifications())
         .addAction(ShowUserLoggedOutOnOtherDeviceAlert::class.java, uiActions::showUserLoggedOutOnOtherDeviceAlert, schedulers.ui())
         .addTransformer(ListenForUserUnauthorizations::class.java, listenForUserUnauthorizations())
@@ -44,16 +42,17 @@ class TheActivityEffectHandler @AssistedInject constructor(
         .addTransformer(ListenForUserDisapprovals::class.java, listenForUserDisapprovals())
         .addTransformer(ClearPatientData::class.java, clearPatientData())
         .addTransformer(ShowAccessDeniedScreen::class.java, openAccessDeniedScreen())
+        .addConsumer(ShowInitialScreen::class.java, { uiActions.showInitialScreen(it.screen) }, schedulers.ui())
         .build()
   }
 
-  private fun loadShowAppLockInto(): ObservableTransformer<LoadAppLockInfo, TheActivityEvent> {
+  private fun loadInitialScreenInfo(): ObservableTransformer<LoadInitialScreenInfo, TheActivityEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulers.io())
-          .map { userSession.loggedInUserImmediate().toOptional() }
+          .map { userSession.loggedInUserImmediate()!! }
           .map {
-            AppLockInfoLoaded(
+            InitialScreenInfoLoaded(
                 user = it,
                 currentTimestamp = Instant.now(utcClock),
                 lockAtTimestamp = lockAfterTimestamp.get()

@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -26,10 +25,8 @@ import org.simple.clinic.datepicker.SelectedDate
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.DeferredEventSource
-import org.simple.clinic.navigation.v2.ExpectsResult
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
-import org.simple.clinic.navigation.v2.ScreenResult
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.newentry.ButtonState
@@ -39,6 +36,7 @@ import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelection
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom
 import org.simple.clinic.summary.teleconsultation.status.TeleconsultStatusSheet
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import java.time.LocalDate
@@ -55,7 +53,7 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
     ScheduleAppointmentModel,
     ScheduleAppointmentEvent,
     ScheduleAppointmentEffect,
-    Unit>(), ScheduleAppointmentUi, ScheduleAppointmentUiActions, ExpectsResult {
+    Unit>(), ScheduleAppointmentUi, ScheduleAppointmentUiActions {
 
   companion object {
     private const val REQCODE_FACILITY_SELECT = 100
@@ -171,20 +169,20 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
     changeFacilityButton.setOnClickListener {
       openFacilitySelection()
     }
+
+    setFragmentResultListener(DatePickerResult) { _, result ->
+      if (result is Succeeded) {
+        val selectedDate = result.result as SelectedDate
+        val event = AppointmentCalendarDateSelected(selectedDate = selectedDate.date)
+        calendarDateSelectedEvents.onNext(event)
+      }
+    }
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
     if (resultCode == Activity.RESULT_OK) {
       manageRequestCodes(requestCode, data)
-    }
-  }
-
-  override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
-    if (requestType == DatePickerResult && result is Succeeded) {
-      val selectedDate = result.result as SelectedDate
-      val event = AppointmentCalendarDateSelected(selectedDate = selectedDate.date)
-      calendarDateSelectedEvents.onNext(event)
     }
   }
 

@@ -430,7 +430,7 @@
   <string name="changelanguage_done">අවසන්</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">කරුණාකර රැඳී සිටින්න...</string>
+  <string name="placeholder_loading_title">කරුණාකර රැඳී සිටින්න…</string>
   <string name="placeholder_loading_message">දත්ත සංචිතය නඩත්තුවකට ලක්වෙමින් පවතී. මේ සඳහා විනාඩි කිහිපයක් ගත වේ.</string>
 
   <!-- Select Country Screen -->

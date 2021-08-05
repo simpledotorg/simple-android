@@ -31,12 +31,18 @@ class DateOfBirthTest {
     assertThat(`dob from age recorded on the same day`)
         .isEqualTo(DateOfBirth(
             date = LocalDate.parse("1988-01-01"),
-            type = FROM_AGE
+            type = FROM_AGE,
+            dateOfBirth = null,
+            ageValue = `dob from age recorded on the same day`.ageValue,
+            ageUpdatedAt = `dob from age recorded on the same day`.ageUpdatedAt
         ))
     assertThat(`dob from age recorded a year earlier`)
         .isEqualTo(DateOfBirth(
             date = LocalDate.parse("1987-01-01"),
-            type = FROM_AGE
+            type = FROM_AGE,
+            dateOfBirth = null,
+            ageValue = `dob from age recorded a year earlier`.ageValue,
+            ageUpdatedAt = `dob from age recorded a year earlier`.ageUpdatedAt
         ))
   }
 

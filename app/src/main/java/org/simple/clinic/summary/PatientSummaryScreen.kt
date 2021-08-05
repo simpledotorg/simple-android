@@ -338,7 +338,7 @@ class PatientSummaryScreen :
   @SuppressLint("SetTextI18n")
   override fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile) {
     val patient = patientSummaryProfile.patient
-    val ageValue = DateOfBirth.fromPatient(patient, userClock).estimateAge(userClock)
+    val ageValue = patient.ageDetails.estimateAge(userClock)
 
     displayNameGenderAge(patient.fullName, patient.gender, ageValue)
     displayRegistrationFacilityName(patientSummaryProfile)

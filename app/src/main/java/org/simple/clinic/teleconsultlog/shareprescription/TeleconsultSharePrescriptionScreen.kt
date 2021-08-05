@@ -246,7 +246,7 @@ class TeleconsultSharePrescriptionScreen :
 
   override fun renderPatientInformation(patientProfile: PatientProfile) {
     patientAddressTextView.text = patientProfile.address.completeAddress
-    val ageValue = DateOfBirth.fromPatient(patientProfile.patient, userClock).estimateAge(userClock)
+    val ageValue = patientProfile.patient.ageDetails.estimateAge(userClock)
     val patientGender = patientProfile.patient.gender
     patientNameTextView.text = requireContext().getString(
         R.string.screen_teleconsult_share_prescription_patient_details,

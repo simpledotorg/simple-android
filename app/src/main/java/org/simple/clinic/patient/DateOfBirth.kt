@@ -89,9 +89,6 @@ data class DateOfBirth(
 
   // TODO: VS (24 Sep 2019) - Remove these when DateOfBirth becomes an embedded Room model
   companion object {
-    fun fromPatient(patient: Patient, userClock: UserClock): DateOfBirth {
-      return fromAgeOrDate(patient.age, patient.dateOfBirth)
-    }
 
     fun fromOverdueAppointment(
         overdueAppointment: OverdueAppointment,

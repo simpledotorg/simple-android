@@ -164,7 +164,7 @@ class BloodPressureHistoryScreen : BaseScreen<
   }
 
   override fun showPatientInformation(patient: Patient) {
-    val ageValue = DateOfBirth.fromPatient(patient, userClock).estimateAge(userClock)
+    val ageValue = patient.ageDetails.estimateAge(userClock)
     displayNameGenderAge(patient.fullName, patient.gender, ageValue)
   }
 

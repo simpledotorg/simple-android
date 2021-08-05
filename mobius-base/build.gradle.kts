@@ -4,11 +4,15 @@ plugins {
 }
 
 android {
-  compileSdk = versions.compileSdk
+  val compileSdkVersion: Int by rootProject.extra
+  val minSdkVersion: Int by rootProject.extra
+  val targetSdkVersion: Int by rootProject.extra
+
+  compileSdk = compileSdkVersion
 
   defaultConfig {
-    minSdk = versions.minSdk
-    targetSdk = versions.compileSdk
+    minSdk = minSdkVersion
+    targetSdk = targetSdkVersion
 
     consumerProguardFiles("consumer-rules.pro")
   }
@@ -25,11 +29,9 @@ android {
 }
 
 dependencies {
-  implementation(project(":simple-platform"))
-  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}")
+  api(libs.bundles.mobius)
 
-  api("com.spotify.mobius:mobius-core:${versions.mobius}")
-  api("com.spotify.mobius:mobius-rx2:${versions.mobius}")
-  api("com.spotify.mobius:mobius-android:${versions.mobius}")
-  api("com.spotify.mobius:mobius-extras:${versions.mobius}")
+  implementation(libs.kotlin.stdlib)
+
+  implementation(projects.simplePlatform)
 }

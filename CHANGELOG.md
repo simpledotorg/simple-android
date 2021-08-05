@@ -7,6 +7,7 @@
 - Commit and push string formatting changes
 - Add `.gitattributes` for specifying eol for `strings.xml`  
 - Support `ContactPatientSheet` with no appointment
+- Migrate to Gradle Version Catalog  
 - [In Progress: 04 Aug 2021] Add support for Sri Lanka 
 
 ### Changes

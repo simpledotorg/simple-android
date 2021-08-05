@@ -4,11 +4,15 @@ plugins {
 }
 
 android {
-  compileSdk = versions.compileSdk
+  val compileSdkVersion: Int by rootProject.extra
+  val minSdkVersion: Int by rootProject.extra
+  val targetSdkVersion: Int by rootProject.extra
+
+  compileSdk = compileSdkVersion
 
   defaultConfig {
-    minSdk = versions.minSdk
-    targetSdk = versions.compileSdk
+    minSdk = minSdkVersion
+    targetSdk = targetSdkVersion
 
     consumerProguardFiles("consumer-rules.pro")
   }
@@ -29,8 +33,9 @@ android {
 }
 
 dependencies {
-  implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${versions.kotlin}")
-  api("com.jakewharton.timber:timber:${versions.timber}")
+  api(libs.timber)
 
-  coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:${versions.desugarJdk}")
+  implementation(libs.kotlin.stdlib)
+
+  coreLibraryDesugaring(libs.android.desugaring)
 }

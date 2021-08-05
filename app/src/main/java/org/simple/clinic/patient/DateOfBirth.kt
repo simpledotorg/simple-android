@@ -20,13 +20,6 @@ import java.time.Period
  * as an [Embedded] model.
  **/
 data class DateOfBirth(
-    @Deprecated(
-        message = "",
-        replaceWith = ReplaceWith(
-            expression = "approximateDateOfBirth(userClock)"
-        )
-    )
-    val date: LocalDate,
     val ageValue: Int?,
     val ageUpdatedAt: Instant?,
     val dateOfBirth: LocalDate?
@@ -73,7 +66,6 @@ data class DateOfBirth(
   companion object {
     fun fromDate(date: LocalDate): DateOfBirth {
       return DateOfBirth(
-          date = date,
           ageValue = null,
           ageUpdatedAt = null,
           dateOfBirth = date
@@ -86,7 +78,6 @@ data class DateOfBirth(
       val guessedDateOfBirth = ageRecordedAtDate.minusYears(age.value.toLong()).toLocalDate()
 
       return DateOfBirth(
-          date = guessedDateOfBirth,
           ageValue = age.value,
           ageUpdatedAt = age.updatedAt,
           dateOfBirth = null

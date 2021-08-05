@@ -43,10 +43,8 @@ data class Patient(
 
     val gender: Gender,
 
-    val dateOfBirth: LocalDate?,
-
-    @Embedded(prefix = "age_")
-    val age: Age?,
+    @Embedded
+    val ageDetails: DateOfBirth,
 
     val status: PatientStatus,
 
@@ -70,6 +68,17 @@ data class Patient(
 
     val retainUntil: Instant?
 ) : Parcelable {
+
+  val dateOfBirth: LocalDate?
+    get() = ageDetails.dateOfBirth
+
+  val age: Age?
+    get() {
+      return if (ageDetails.type == DateOfBirth.Type.FROM_AGE)
+        Age(ageDetails.ageValue!!, ageDetails.ageUpdatedAt!!)
+      else
+        null
+    }
 
   fun withNameAndGender(fullName: String, gender: Gender): Patient =
       copy(fullName = fullName, gender = gender)

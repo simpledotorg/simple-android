@@ -1,7 +1,9 @@
 package org.simple.clinic.patient
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.patient.DateOfBirth.Type.EXACT
 import org.simple.clinic.patient.DateOfBirth.Type.FROM_AGE
@@ -20,6 +22,7 @@ import java.time.Period
  * The end goal is to replace the [Age] and [Patient.dateOfBirth] database fields with this class
  * as an [Embedded] model.
  **/
+@Parcelize
 data class DateOfBirth(
     @ColumnInfo(name = "age_value")
     val ageValue: Int?,
@@ -29,7 +32,7 @@ data class DateOfBirth(
 
     @ColumnInfo(name = "dateOfBirth")
     val dateOfBirth: LocalDate?
-) {
+): Parcelable {
 
   val type: Type
     get() = when {

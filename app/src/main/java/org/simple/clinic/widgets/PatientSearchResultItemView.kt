@@ -20,6 +20,7 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Bangladesh
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.patient.displayLetterRes
@@ -112,7 +113,7 @@ class PatientSearchResultItemView(
   private fun getId(identifier: Identifier, searchQuery: String): Id {
     val id = when (identifier.type) {
       BpPassport -> BpPassport.shortCode(identifier)
-      BangladeshNationalId, EthiopiaMedicalRecordNumber, IndiaNationalHealthId, is Unknown -> identifier.value
+      BangladeshNationalId, EthiopiaMedicalRecordNumber, IndiaNationalHealthId, SriLankaNationalId, is Unknown -> identifier.value
     }
     val indexOfIdentifier = id.indexOf(searchQuery, ignoreCase = true)
     return if (indexOfIdentifier >= 0) {

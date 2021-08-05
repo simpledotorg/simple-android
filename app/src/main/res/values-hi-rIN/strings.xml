@@ -31,6 +31,7 @@
   <string name="identifiertype_ethiopia_medical_record_number">मेडिकल रिकॉर्ड संख्या</string>
   <string name="identifiertype_unknown">आईडी</string>
   <string name="identifiertype_india_national_health_id">राष्ट्रीय स्वास्थ्य आईडी</string>
+  <string name="identifiertype_sri_lanka_national_id">राष्ट्रीय आईडी संख्या</string>
 
   <!-- Patient search -->
   <string name="instantsearch_hint">नाम, फोन या ID</string>
@@ -48,6 +49,7 @@
   <string name="patiententry_phone_number">फ़ोन नंबर</string>
   <string name="patiententry_bangladesh_national_id">राष्ट्रीय आईडी संख्या</string>
   <string name="patiententry_ethiopia_medical_record_number">वैद्यकीय रेकॉर्ड क्रमांक</string>
+  <string name="patiententry_sri_lanka_national_id">राष्ट्रीय आईडी संख्या</string>
   <string name="patiententry_date_of_birth_unfocused">जन्म तिथि</string>
   <string name="patiententry_date_of_birth_focused">जन्म तिथि: DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">या</string>
@@ -85,6 +87,8 @@
   <string name="patiententry_consent_sms_reminders">SMS रिमाइंडर</string>
   <string name="patiententry_age_exceeds_max_limit_error">आयु 120 वर्ष से अधिक नहीं होनी चाहिए</string>
   <string name="patiententry_age_exceeds_min_limit_error">आयु 0 वर्ष के बराबर नहीं होनी चाहिए</string>
+  <string name="patiententry_town_area">नगर / क्षेत्र</string>
+  <string name="patiententry_province">प्रांत</string>
 
   <string name="patientedit_save_patient">सहेजें</string>
   <string name="patientedit_bp_passports_label">बीपी पासपोर्ट</string>
@@ -144,6 +148,7 @@
   <string name="bloodpressureentry_remove_bp_message">क्या आप वाकई रक्तचाप की रिकॉर्डिंग हटाना चाहते हैं?</string>
   <string name="bloodpressureentry_remove_bp_confirm">हटाएं</string>
   <string name="bloodpressureentry_remove_bp_cancel">रद्द करें</string>
+  <string name="bloodpressureentry_date_change">बदलें</string>
 
   <!-- Patient summary -->
   <string name="patientsummary_contentdescription_up_button">पीछे जाएं</string>
@@ -335,6 +340,7 @@
   <string name="newmedicalhistory_no">नहीं</string>
   <string name="newmedicalhistory_history">इतिहास</string>
   <string name="newmedicalhistory_diagnosis">निदान (आवश्यक)</string>
+  <string name="medicalhistory_question_is_on_hypertension_treatment">क्या रोगी ने पिछले महीने में कभी भी बीपी की दवाएं ली हैं? (आवश्यक है)</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">कोई नहीं</string>
@@ -352,7 +358,7 @@
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">सिंक लंबित है</string>
   <string name="syncindicator_status_failed">सिंक विफल रहा</string>
-  <string name="syncindicator_status_syncing">सिंक हो रहा है…</string>
+  <string name="syncindicator_status_syncing">सिंक हो रहा है</string>
   <string name="syncindicator_status_synced_just_now">अभी-अभी सिंक हुआ था</string>
   <string name="syncindicator_status_synced_min_ago">%s मिनट पहले सिंक हुआ था</string>
   <string name="syncindicator_dialog_error_network">रोगी के रिकॉर्ड को सिंक करने के लिए सुनिश्चित करें कि आपके पास एक चालू इंटरनेट कनेक्शन है।</string>
@@ -401,6 +407,8 @@
 
   <!-- Simple video -->
   <string name="simple_video_duration">%s मिनट</string>
+  <string name="simple_video_watch">वीडियो देखें</string>
+  <string name="simple_video_how_to_use">इस ऐप को कैसे इस्तेमाल करें</string>
 
   <!-- Settings -->
   <string name="settings_title">सेटिंग्स</string>
@@ -463,6 +471,7 @@
   <string name="bloodsugarentry_edit_post_prandial_title">पोस्ट प्रैंडिअल ब्लड शुगर संपादित करें</string>
   <string name="bloodsugarentry_edit_fasting_title">फास्टिंग ब्लड शुगर संपादित करें</string>
   <string name="bloodsugarentry_edit_hba1c_title">HbA1c में बदलाव करें</string>
+  <string name="bloodsugarentry_date_change">बदलें</string>
 
   <!-- Confirm remove blood sugar dialog -->
   <string name="bloodsugarentry_remove_blood_sugar_title">ब्लड शुगर हटाएं</string>
@@ -524,6 +533,7 @@
   <string name="contactpatient_call_later_in">इतनी देर बाद कॉल करें</string>
   <string name="contactpatient_change">बदलें</string>
   <string name="contactpatient_done">पूरा हुआ</string>
+  <string name="contactpatient_result">नतीजा</string>
   <plurals name="contactpatient_days">
     <item quantity="one">%s दिन</item>
     <item quantity="other">%s दिन</item>
@@ -544,6 +554,15 @@
   <string name="contactpatient_moved_to_private">निजी डॉक्टर के पास चला गया</string>
   <string name="contactpatient_patient_died">जीवित नहीं</string>
   <string name="contactpatient_other_reason">अन्य कारण</string>
+  <string name="contactpatient_patient_registered_at">पर पंजीकृत</string>
+  <string name="contactpatient_patient_transfer_from">से स्थानांतरित</string>
+  <string name="contactpatient_phone">फोन</string>
+  <string name="contactpatient_dx">Dx</string>
+  <string name="contactpatient_visited">विज़िट की गई</string>
+  <string name="contactpatient_no_phone_number">कोई फोन नंबर नहीं</string>
+  <string name="contactpatient_diagnosis_diabetes">मधुमेह</string>
+  <string name="contactpatient_diagnosis_hypertension">हाइपरटेंशन</string>
+  <string name="contactpatient_diagnosis_none">कोई नहीं</string>
 
   <!-- Deep link -->
   <string name="deeplink_patient_profile_not_found">रोगी की प्रोफ़ाइल नहीं मिली</string>
@@ -695,5 +714,14 @@
   <!-- National Health Id -->
   <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">राष्ट्रीय स्वास्थ्य ID, मौजूदा राष्ट्रीय स्वास्थ्य ID के साथ मरीज को निर्धारित नहीं की जा सकती है</string>
   <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">ठीक है</string>
+
+  <!-- Select ongoing hypertension treatment dialog -->
+  <string name="select_ongoing_hypertension_treatment_title">क्या रोगी ने पिछले महीने में कभी भी बीपी की दवाएं ली हैं?</string>
+  <string name="select_ongoing_hypertension_treatment_message">हां या नहीं चुनें।</string>
+  <string name="select_ongoing_hypertension_treatment_positive_action">ठीक है</string>
+
+  <!-- Custom drugs search -->
+  <string name="customdrugssearch_hint">दवा का नाम दर्ज करें</string>
+  <string name="customdrugssearch_item_name_separator">, </string>
 
 </resources>

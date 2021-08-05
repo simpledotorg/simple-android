@@ -28,7 +28,7 @@ enum class Feature(
   InstantSearchQrCode(true, "instant_search_qr_code"),
   EthiopianCalendar(true, "ethiopian_calendar"),
   IndiaNationalHealthID(true, "india_national_health_id"),
-  OverdueListChanges(false, "overdue_list_changes"),
+  OverdueListChanges(false, "overdue_list_ui_changes"),
   OverdueListDownloadAndShare(false, "overdue_list_download_and_share"),
   CustomDrugSearchScreen(false, "custom_drug_search_screen"),
   OnlinePatientLookup(true, "online_patient_lookup"),

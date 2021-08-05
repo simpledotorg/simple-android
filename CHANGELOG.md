@@ -9,6 +9,7 @@
 - Support `ContactPatientSheet` with no appointment
 - Migrate to Gradle Version Catalog  
 - Move logic for deciding the initial screen to the Mobius loop in `TheActivity`
+- Update OverdueListChanges feature flag to support `ContactPatientSheet` changes
 - [In Progress: 04 Aug 2021] Add support for Sri Lanka 
 
 ### Changes

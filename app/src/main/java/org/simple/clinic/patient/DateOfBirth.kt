@@ -6,6 +6,7 @@ import org.simple.clinic.patient.DateOfBirth.Type.EXACT
 import org.simple.clinic.patient.DateOfBirth.Type.FROM_AGE
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.PatientSearchResultItemView
+import java.time.Instant
 import java.time.LocalDate
 import java.time.Period
 
@@ -20,7 +21,10 @@ import java.time.Period
  **/
 data class DateOfBirth(
     val date: LocalDate,
-    val type: Type
+    val type: Type,
+    val ageValue: Int?,
+    val ageUpdatedAt: Instant?,
+    val dateOfBirth: LocalDate?
 ) {
 
   fun estimateAge(userClock: UserClock): Int {
@@ -30,7 +34,13 @@ data class DateOfBirth(
   // TODO: VS (24 Sep 2019) - Remove these when DateOfBirth becomes an embedded Room model
   companion object {
     fun fromDate(date: LocalDate): DateOfBirth {
-      return DateOfBirth(date, EXACT)
+      return DateOfBirth(
+          date = date,
+          type = EXACT,
+          ageValue = null,
+          ageUpdatedAt = null,
+          dateOfBirth = date
+      )
     }
 
     fun fromAge(age: Age, userClock: UserClock): DateOfBirth {
@@ -38,7 +48,13 @@ data class DateOfBirth(
 
       val guessedDateOfBirth = ageRecordedAtDate.minusYears(age.value.toLong()).toLocalDate()
 
-      return DateOfBirth(guessedDateOfBirth, FROM_AGE)
+      return DateOfBirth(
+          date = guessedDateOfBirth,
+          type = FROM_AGE,
+          ageValue = age.value,
+          ageUpdatedAt = age.updatedAt,
+          dateOfBirth = null
+      )
     }
 
     fun fromPatient(patient: Patient, userClock: UserClock): DateOfBirth {

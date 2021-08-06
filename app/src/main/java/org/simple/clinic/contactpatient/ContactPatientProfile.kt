@@ -11,7 +11,6 @@ import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
-import org.simple.clinic.patient.businessid.BusinessId
 import java.time.Instant
 
 @Parcelize
@@ -35,7 +34,7 @@ data class ContactPatientProfile(
         parentColumn = "registeredFacilityId",
         entityColumn = "uuid"
     )
-    val registeredFacility: Facility,
+    val registeredFacility: Facility?,
 
     @Relation(
         parentColumn = "uuid",

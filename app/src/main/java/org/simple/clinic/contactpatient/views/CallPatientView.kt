@@ -13,6 +13,7 @@ import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
+import org.simple.clinic.widgets.visibleOrGone
 import java.time.format.DateTimeFormatter
 
 private typealias AgreedToVisitClicked = () -> Unit
@@ -80,7 +81,7 @@ class CallPatientView(
     get() = binding!!.lastVisitedLabel
 
   private val patientWithCallResultGroup
-  get() = binding!!.patientWithCallResultGroup
+    get() = binding!!.patientWithCallResultGroup
 
   var secureCallingSectionVisible: Boolean = false
     set(value) {
@@ -157,12 +158,20 @@ class CallPatientView(
     nameTextView.text = resources.getString(R.string.contactpatient_patientdetails, patientDetails.name, genderLetter, patientDetails.age.toString())
     phoneNumberTextView.text = patientDetails.phoneNumber
     patientAddressTextView.text = patientDetails.patientAddress
-    registeredFacilityTextView.text = patientDetails.registeredFacility
     diagnosisTextView.text = diagnosis
+
+    registeredFacilityTextView.text = patientDetails.registeredFacility
+    registeredFacilityLabel.visibleOrGone(patientDetails.registeredFacility != null)
+    registeredFacilityTextView.visibleOrGone(patientDetails.registeredFacility != null)
+
     showLastVisitedIfNotNull(dateTimeFormatter, patientDetails, userClock)
   }
 
-  private fun showLastVisitedIfNotNull(dateTimeFormatter: DateTimeFormatter, patientDetails: PatientDetails, userClock: UserClock) {
+  private fun showLastVisitedIfNotNull(
+      dateTimeFormatter: DateTimeFormatter,
+      patientDetails: PatientDetails,
+      userClock: UserClock
+  ) {
     if (patientDetails.lastVisited != null) {
       lastVisitedTextView.visibility = View.VISIBLE
       lastVisitedTextView.text = dateTimeFormatter.format(patientDetails.lastVisited.toLocalDateAtZone(userClock.zone))
@@ -172,7 +181,10 @@ class CallPatientView(
     }
   }
 
-  private fun diagnosisText(diagnosedWithDiabetes: Answer?, diagnosedWithHypertension: Answer?): String {
+  private fun diagnosisText(
+      diagnosedWithDiabetes: Answer?,
+      diagnosedWithHypertension: Answer?
+  ): String {
     return listOf(
         diagnosedWithDiabetes to resources.getString(R.string.contactpatient_diagnosis_diabetes),
         diagnosedWithHypertension to resources.getString(R.string.contactpatient_diagnosis_hypertension)

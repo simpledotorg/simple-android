@@ -10,7 +10,7 @@ data class PatientDetails(
     val age: Int,
     val phoneNumber: String?,
     val patientAddress: String,
-    val registeredFacility: String,
+    val registeredFacility: String?,
     val diagnosedWithDiabetes: Answer?,
     val diagnosedWithHypertension: Answer?,
     val lastVisited: Instant?

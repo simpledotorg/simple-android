@@ -11,6 +11,7 @@ import org.simple.clinic.R
 import org.simple.clinic.databinding.ViewPatientSearchResultBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.patient.DateOfBirth
+import org.simple.clinic.patient.DateOfBirth.Type.EXACT
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientSearchResult
@@ -26,7 +27,6 @@ import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.router.util.resolveColor
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
@@ -102,7 +102,7 @@ class PatientSearchResultItemView(
   fun render(model: PatientSearchResultViewModel, currentFacilityId: UUID, searchQuery: String?) {
     renderPatientNameAgeAndGender(searchQuery, model)
     renderPatientAddress(model.address)
-    renderPatientDateOfBirth(model.dateOfBirth)
+    renderPatientDateOfBirth(model.ageDetails)
     renderPatientPhoneNumber(searchQuery, model)
     renderVisited(model.lastSeen)
     renderLastSeen(model.lastSeen, currentFacilityId)
@@ -201,10 +201,12 @@ class PatientSearchResultItemView(
     phoneNumberTextView.text = patientPhoneNumber
   }
 
-  private fun renderPatientDateOfBirth(dateOfBirth: LocalDate?) {
-    dateOfBirthContainer.visibleOrGone(dateOfBirth != null)
-    if (dateOfBirth != null) {
-      dateOfBirthTextView.text = dateTimeFormatter.format(dateOfBirth)
+  private fun renderPatientDateOfBirth(ageDetails: DateOfBirth) {
+    if (ageDetails.type == EXACT) {
+      dateOfBirthContainer.visibility = VISIBLE
+      dateOfBirthTextView.text = dateTimeFormatter.format(ageDetails.dateOfBirth)
+    } else {
+      dateOfBirthContainer.visibility = GONE
     }
   }
 

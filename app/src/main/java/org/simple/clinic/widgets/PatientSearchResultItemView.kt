@@ -10,7 +10,6 @@ import com.google.android.material.card.MaterialCardView
 import org.simple.clinic.R
 import org.simple.clinic.databinding.ViewPatientSearchResultBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAddress
@@ -264,8 +263,7 @@ class PatientSearchResultItemView(
       val uuid: UUID,
       val fullName: String,
       val gender: Gender,
-      val age: Age?,
-      val dateOfBirth: LocalDate?,
+      val ageDetails: DateOfBirth,
       val address: PatientAddress,
       val phoneNumber: String?,
       val lastSeen: PatientSearchResult.LastSeen?,

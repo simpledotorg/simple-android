@@ -24,7 +24,7 @@
   - Change overdue list UI
   - Load overdue patients without phone number
   - Updated contact patient bottom sheet UI
-- Updated translations: `bn-BD`, `te-IN`
+- Updated translations: `bn-BD`, `te-IN`, `am-ET`
 
 ## On Demo
 ### Internal

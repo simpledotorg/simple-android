@@ -1986,7 +1986,7 @@ class PatientRepositoryAndroidTest {
             fullName = "new name",
             addressUuid = patient1AddressUuid,
             age = recentPatient1.age,
-            dateOfBirth = recentPatient1.dateOfBirth,
+            dateOfBirth = recentPatient1.ageDetails.dateOfBirth,
             gender = recentPatient1.gender,
             status = Active,
             recordedAt = recentPatient1.patientRecordedAt

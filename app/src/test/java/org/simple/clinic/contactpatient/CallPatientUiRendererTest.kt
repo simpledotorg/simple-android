@@ -188,7 +188,7 @@ class CallPatientUiRendererTest {
         age = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock),
         phoneNumber = patientProfile.phoneNumbers.first().number,
         patientAddress = patientAddressText(patientProfile.address)!!,
-        registeredFacility = patientProfile.registeredFacility.name,
+        registeredFacility = patientProfile.registeredFacility?.name,
         diagnosedWithDiabetes = patientProfile.medicalHistory?.diagnosedWithDiabetes,
         diagnosedWithHypertension = patientProfile.medicalHistory?.diagnosedWithHypertension,
         lastVisited = patientProfile.patientLastSeen))
@@ -232,7 +232,7 @@ class CallPatientUiRendererTest {
         age = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock),
         phoneNumber = patientProfile.phoneNumbers.first().number,
         patientAddress = patientAddressText(patientProfile.address)!!,
-        registeredFacility = patientProfile.registeredFacility.name,
+        registeredFacility = patientProfile.registeredFacility?.name,
         diagnosedWithDiabetes = patientProfile.medicalHistory?.diagnosedWithDiabetes,
         diagnosedWithHypertension = patientProfile.medicalHistory?.diagnosedWithHypertension,
         lastVisited = patientProfile.patientLastSeen))
@@ -289,7 +289,7 @@ class CallPatientUiRendererTest {
         age = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock),
         phoneNumber = patientProfile.phoneNumbers.first().number,
         patientAddress = patientAddressText(patientProfile.address)!!,
-        registeredFacility = patientProfile.registeredFacility.name,
+        registeredFacility = patientProfile.registeredFacility?.name,
         diagnosedWithDiabetes = patientProfile.medicalHistory?.diagnosedWithDiabetes,
         diagnosedWithHypertension = patientProfile.medicalHistory?.diagnosedWithHypertension,
         lastVisited = patientProfile.patientLastSeen))
@@ -364,7 +364,7 @@ class CallPatientUiRendererTest {
         age = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock),
         phoneNumber = null,
         patientAddress = patientAddressText(patientProfile.address)!!,
-        registeredFacility = patientProfile.registeredFacility.name,
+        registeredFacility = patientProfile.registeredFacility?.name,
         diagnosedWithDiabetes = patientProfile.medicalHistory?.diagnosedWithDiabetes,
         diagnosedWithHypertension = patientProfile.medicalHistory?.diagnosedWithHypertension,
         lastVisited = patientProfile.patientLastSeen))
@@ -405,7 +405,7 @@ class CallPatientUiRendererTest {
         age = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock),
         phoneNumber = patientProfile.phoneNumbers.first().number,
         patientAddress = patientAddressText(patientProfile.address)!!,
-        registeredFacility = patientProfile.registeredFacility.name,
+        registeredFacility = patientProfile.registeredFacility?.name,
         diagnosedWithDiabetes = patientProfile.medicalHistory?.diagnosedWithDiabetes,
         diagnosedWithHypertension = patientProfile.medicalHistory?.diagnosedWithHypertension,
         lastVisited = patientProfile.patientLastSeen))

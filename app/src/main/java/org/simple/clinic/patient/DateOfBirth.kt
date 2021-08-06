@@ -96,10 +96,6 @@ data class DateOfBirth(
       return fromAgeOrDate(viewModel.age, viewModel.dateOfBirth)
     }
 
-    fun fromRecentPatient(recentPatient: RecentPatient, userClock: UserClock): DateOfBirth {
-      return fromAgeOrDate(recentPatient.age, recentPatient.dateOfBirth)
-    }
-
     fun fromAgeOrDate(age: Age?, date: LocalDate?): DateOfBirth {
       return when {
         date != null -> DateOfBirth(null, null, date)

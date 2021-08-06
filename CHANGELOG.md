@@ -10,6 +10,7 @@
 - Migrate to Gradle Version Catalog  
 - Move logic for deciding the initial screen to the Mobius loop in `TheActivity`
 - Update OverdueListChanges feature flag to support `ContactPatientSheet` changes
+- Change registered facility as nullable in `ContactPatientProfile`
 - [In Progress: 04 Aug 2021] Add support for Sri Lanka 
 
 ### Changes

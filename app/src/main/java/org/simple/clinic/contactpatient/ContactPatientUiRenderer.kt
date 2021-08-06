@@ -191,7 +191,7 @@ class ContactPatientUiRenderer(
         age = patientAge,
         phoneNumber = patientProfile.phoneNumbers.firstOrNull()?.number,
         patientAddress = patientAddressText(patientProfile.address),
-        registeredFacility = patientProfile.registeredFacility.name,
+        registeredFacility = patientProfile.registeredFacility?.name,
         diagnosedWithDiabetes = patientProfile.medicalHistory?.diagnosedWithDiabetes,
         diagnosedWithHypertension = patientProfile.medicalHistory?.diagnosedWithHypertension,
         lastVisited = patientProfile.patientLastSeen

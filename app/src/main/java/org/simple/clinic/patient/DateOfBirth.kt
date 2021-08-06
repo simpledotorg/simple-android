@@ -4,7 +4,6 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import kotlinx.parcelize.Parcelize
-import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.patient.DateOfBirth.Type.EXACT
 import org.simple.clinic.patient.DateOfBirth.Type.FROM_AGE
 import org.simple.clinic.util.UserClock
@@ -89,13 +88,6 @@ data class DateOfBirth(
 
   // TODO: VS (24 Sep 2019) - Remove these when DateOfBirth becomes an embedded Room model
   companion object {
-
-    fun fromOverdueAppointment(
-        overdueAppointment: OverdueAppointment,
-        userClock: UserClock
-    ): DateOfBirth {
-      return fromAgeOrDate(overdueAppointment.age, overdueAppointment.dateOfBirth)
-    }
 
     fun fromPatientSearchResultViewModel(
         viewModel: PatientSearchResultItemView.PatientSearchResultViewModel,

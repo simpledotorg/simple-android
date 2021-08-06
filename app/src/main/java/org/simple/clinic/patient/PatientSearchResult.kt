@@ -7,10 +7,8 @@ import androidx.room.DatabaseView
 import androidx.room.Embedded
 import androidx.room.Query
 import kotlinx.parcelize.Parcelize
-import org.simple.clinic.patient.DateOfBirth.Type.*
 import org.simple.clinic.patient.businessid.Identifier
 import java.time.Instant
-import java.time.LocalDate
 import java.util.UUID
 
 @DatabaseView("""
@@ -106,15 +104,6 @@ data class PatientSearchResult(
 
     val identifierSearchHelp: String?
 ) : Parcelable {
-
-  val dateOfBirth: LocalDate?
-    get() = ageDetails.dateOfBirth
-
-  val age: Age?
-    get() = when(ageDetails.type) {
-      EXACT -> null
-      FROM_AGE -> Age(ageDetails.ageValue!!, ageDetails.ageUpdatedAt!!)
-    }
 
   override fun toString(): String {
     return "Name: $fullName, UUID: $uuid, Facility UUID: ${lastSeen?.lastSeenAtFacilityUuid}"

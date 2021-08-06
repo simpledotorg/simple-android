@@ -9,6 +9,8 @@ import io.reactivex.Flowable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.overdue.Appointment.AppointmentType
 import org.simple.clinic.overdue.Appointment.Status
+import org.simple.clinic.patient.DateOfBirth.Type.EXACT
+import org.simple.clinic.patient.DateOfBirth.Type.FROM_AGE
 import org.simple.clinic.util.Unicode
 import java.time.Instant
 import java.time.LocalDate
@@ -23,15 +25,22 @@ data class RecentPatient(
 
     val gender: Gender,
 
-    val dateOfBirth: LocalDate?,
-
-    @Embedded(prefix = "age_")
-    val age: Age?,
+    @Embedded
+    val ageDetails: DateOfBirth,
 
     val patientRecordedAt: Instant,
 
     val updatedAt: Instant
 ) : Parcelable {
+
+  val dateOfBirth: LocalDate?
+    get() = ageDetails.dateOfBirth
+
+  val age: Age?
+    get() = when(ageDetails.type) {
+      EXACT -> null
+      FROM_AGE -> Age(ageDetails.ageValue!!, ageDetails.ageUpdatedAt!!)
+    }
 
   override fun toString(): String {
     return "RecentPatient(${Unicode.redacted})"

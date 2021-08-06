@@ -911,8 +911,7 @@ class PatientRepositoryAndroidTest {
       uuid = uuid,
       fullName = fullName,
       gender = gender,
-      dateOfBirth = ageDetails.dateOfBirth,
-      age = age,
+      ageDetails = ageDetails,
       patientRecordedAt = this.recordedAt,
       updatedAt = recordedAt
   )
@@ -966,8 +965,7 @@ class PatientRepositoryAndroidTest {
           uuid = uuid,
           fullName = fullName,
           gender = gender,
-          dateOfBirth = ageDetails.dateOfBirth,
-          age = age,
+          ageDetails = ageDetails,
           patientRecordedAt = this.recordedAt,
           updatedAt = updatedAt
       )
@@ -1108,8 +1106,7 @@ class PatientRepositoryAndroidTest {
           uuid = uuid,
           fullName = fullName,
           gender = gender,
-          dateOfBirth = ageDetails.dateOfBirth,
-          age = age,
+          ageDetails = ageDetails,
           patientRecordedAt = this.recordedAt,
           updatedAt = createdAt
       )

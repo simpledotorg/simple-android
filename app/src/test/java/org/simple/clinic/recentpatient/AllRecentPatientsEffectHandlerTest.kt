@@ -19,6 +19,7 @@ import org.simple.clinic.patient.RecentPatient
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.PagingSourceFactory
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
+import java.time.LocalDate
 import java.util.UUID
 
 class AllRecentPatientsEffectHandlerTest {
@@ -49,8 +50,8 @@ class AllRecentPatientsEffectHandlerTest {
   fun `when show recent patients effect is received, then show recent patients`() {
     // given
     val recentPatients = PagingData.from(listOf(
-        TestData.recentPatient(uuid = UUID.fromString("605882e4-f617-4e3d-8dbc-512ed2915996")),
-        TestData.recentPatient(uuid = UUID.fromString("d76962b4-9c5f-4c8b-8258-d9dbf73366d6"))
+        TestData.recentPatient(uuid = UUID.fromString("605882e4-f617-4e3d-8dbc-512ed2915996"), dateOfBirth = LocalDate.parse("1976-01-01")),
+        TestData.recentPatient(uuid = UUID.fromString("d76962b4-9c5f-4c8b-8258-d9dbf73366d6"), dateOfBirth = LocalDate.parse("1976-01-01"))
     ))
 
     // when
@@ -67,8 +68,8 @@ class AllRecentPatientsEffectHandlerTest {
   fun `when load recent patients effect is received, then load recent patients`() {
     // given
     val recentPatients = PagingData.from(listOf(
-        TestData.recentPatient(uuid = UUID.fromString("85b26146-2809-4ae8-b544-a0967b645d2b")),
-        TestData.recentPatient(uuid = UUID.fromString("251bf646-f739-4d68-a710-3ace885096ac"))
+        TestData.recentPatient(uuid = UUID.fromString("85b26146-2809-4ae8-b544-a0967b645d2b"), dateOfBirth = LocalDate.parse("1976-01-01")),
+        TestData.recentPatient(uuid = UUID.fromString("251bf646-f739-4d68-a710-3ace885096ac"), dateOfBirth = LocalDate.parse("1976-01-01"))
     ))
 
     whenever(pagerFactory.createPager(

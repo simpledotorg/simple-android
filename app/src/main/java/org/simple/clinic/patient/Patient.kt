@@ -69,9 +69,6 @@ data class Patient(
     val retainUntil: Instant?
 ) : Parcelable {
 
-  val dateOfBirth: LocalDate?
-    get() = ageDetails.dateOfBirth
-
   val age: Age?
     get() {
       return if (ageDetails.type == DateOfBirth.Type.FROM_AGE)

@@ -32,6 +32,9 @@ import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.Age
+import org.simple.clinic.patient.DateOfBirth
+import org.simple.clinic.patient.DateOfBirth.Type.EXACT
+import org.simple.clinic.patient.DateOfBirth.Type.FROM_AGE
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
@@ -715,10 +718,9 @@ class EditPatientScreenFormTest {
         PhoneNumberChanged(patientProfile.phoneNumbers.firstOrNull()?.number
             ?: "")
     ) + patientProfile.let { (patient, _, _) ->
-      if (patient.age != null) {
-        listOf(AgeChanged(patient.age!!.value.toString()))
-      } else {
-        listOf(DateOfBirthChanged(patient.dateOfBirth!!.format(dateOfBirthFormat)))
+      when (patient.ageDetails.type) {
+        FROM_AGE -> listOf(AgeChanged(patient.ageDetails.ageValue!!.toString()))
+        EXACT -> listOf(DateOfBirthChanged(patient.ageDetails.dateOfBirth!!.format(dateOfBirthFormat)))
       }
     }
 

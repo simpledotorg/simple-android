@@ -32,6 +32,8 @@ import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.DateOfBirth
+import org.simple.clinic.patient.DateOfBirth.Type.EXACT
+import org.simple.clinic.patient.DateOfBirth.Type.FROM_AGE
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -643,10 +645,9 @@ class EditPatientScreenSaveTest {
         PhoneNumberChanged(patientProfile.phoneNumbers.firstOrNull()?.number
             ?: ""),
 
-        if (patientProfile.patient.age != null) {
-          AgeChanged(patientProfile.patient.age!!.value.toString())
-        } else {
-          DateOfBirthChanged(dateOfBirthFormat.format(patientProfile.patient.dateOfBirth!!))
+        when (patientProfile.patient.ageDetails.type) {
+          FROM_AGE -> AgeChanged(patientProfile.patient.ageDetails.ageValue!!.toString())
+          EXACT -> DateOfBirthChanged(dateOfBirthFormat.format(patientProfile.patient.ageDetails.dateOfBirth!!))
         }
     )
 

@@ -18,7 +18,9 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengt
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
-import org.simple.clinic.patient.Age
+import org.simple.clinic.patient.DateOfBirth
+import org.simple.clinic.patient.DateOfBirth.Type.EXACT
+import org.simple.clinic.patient.DateOfBirth.Type.FROM_AGE
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -36,7 +38,6 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 
@@ -90,7 +91,7 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
           colonyOrVillage = address.colonyOrVillage.valueOrEmpty(),
           district = address.district,
           state = address.state,
-          ageOrDateOfBirth = ageOrDateOfBirth(patient.age, patient.dateOfBirth, dateOfBirthFormatter),
+          ageOrDateOfBirth = ageOrDateOfBirth(patient.ageDetails, dateOfBirthFormatter),
           zone = address.zone.valueOrEmpty(),
           streetAddress = address.streetAddress.valueOrEmpty(),
           alternativeId = alternativeId?.identifier?.value.valueOrEmpty()
@@ -98,14 +99,12 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
     }
 
     private fun ageOrDateOfBirth(
-        age: Age?,
-        dateOfBirth: LocalDate?,
+        ageDetails: DateOfBirth,
         dateOfBirthFormatter: DateTimeFormatter
     ): EitherAgeOrDateOfBirth {
-      return when {
-        dateOfBirth != null -> EntryWithDateOfBirth(dateOfBirth.format(dateOfBirthFormatter))
-        age != null -> EntryWithAge(age.value.toString())
-        else -> throw IllegalStateException("`age` or `dateOfBirth` should be present")
+      return when (ageDetails.type) {
+        EXACT -> EntryWithDateOfBirth(ageDetails.dateOfBirth!!.format(dateOfBirthFormatter))
+        FROM_AGE -> EntryWithAge(ageDetails.ageValue.toString())
       }
     }
   }

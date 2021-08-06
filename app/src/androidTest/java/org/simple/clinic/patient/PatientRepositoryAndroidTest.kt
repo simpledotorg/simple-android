@@ -187,8 +187,8 @@ class PatientRepositoryAndroidTest {
 
     val patient = database.patientDao().getOne(savedPatient.patientUuid)!!
 
-    assertThat(patient.dateOfBirth).isEqualTo(LocalDate.parse("1985-04-08"))
-    assertThat(patient.age).isNull()
+    assertThat(patient.ageDetails.dateOfBirth).isEqualTo(LocalDate.parse("1985-04-08"))
+    assertThat(patient.ageDetails.type).isEqualTo(DateOfBirth.Type.EXACT)
 
     val savedPhoneNumbers = database.phoneNumberDao().phoneNumber(patient.uuid).firstOrError().blockingGet()
     assertThat(savedPhoneNumbers).hasSize(1)
@@ -240,8 +240,8 @@ class PatientRepositoryAndroidTest {
     val patient = database.patientDao().getOne(savedPatient.patientUuid)!!
 
     assertThat(patient.fullName).isEqualTo(patientEntry.personalDetails!!.fullName)
-    assertThat(patient.dateOfBirth).isNull()
-    assertThat(patient.age!!.value).isEqualTo(patientEntry.personalDetails!!.age!!.toInt())
+    assertThat(patient.ageDetails.dateOfBirth).isNull()
+    assertThat(patient.ageDetails.ageValue).isEqualTo(patientEntry.personalDetails!!.age!!.toInt())
 
     val savedPhoneNumbers = database.phoneNumberDao().phoneNumber(patient.uuid).firstOrError().blockingGet()
 
@@ -911,7 +911,7 @@ class PatientRepositoryAndroidTest {
       uuid = uuid,
       fullName = fullName,
       gender = gender,
-      dateOfBirth = dateOfBirth,
+      dateOfBirth = ageDetails.dateOfBirth,
       age = age,
       patientRecordedAt = this.recordedAt,
       updatedAt = recordedAt
@@ -966,7 +966,7 @@ class PatientRepositoryAndroidTest {
           uuid = uuid,
           fullName = fullName,
           gender = gender,
-          dateOfBirth = dateOfBirth,
+          dateOfBirth = ageDetails.dateOfBirth,
           age = age,
           patientRecordedAt = this.recordedAt,
           updatedAt = updatedAt
@@ -1108,7 +1108,7 @@ class PatientRepositoryAndroidTest {
           uuid = uuid,
           fullName = fullName,
           gender = gender,
-          dateOfBirth = dateOfBirth,
+          dateOfBirth = ageDetails.dateOfBirth,
           age = age,
           patientRecordedAt = this.recordedAt,
           updatedAt = createdAt

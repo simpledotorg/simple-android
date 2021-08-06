@@ -7,7 +7,6 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.DateOfBirth.Type.EXACT
 import org.simple.clinic.patient.DateOfBirth.Type.FROM_AGE
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.widgets.PatientSearchResultItemView
 import java.time.Instant
 import java.time.LocalDate
 import java.time.Period
@@ -31,7 +30,7 @@ data class DateOfBirth(
 
     @ColumnInfo(name = "dateOfBirth")
     val dateOfBirth: LocalDate?
-): Parcelable {
+) : Parcelable {
 
   val type: Type
     get() = when {
@@ -86,16 +85,7 @@ data class DateOfBirth(
     )
   }
 
-  // TODO: VS (24 Sep 2019) - Remove these when DateOfBirth becomes an embedded Room model
   companion object {
-
-    fun fromPatientSearchResultViewModel(
-        viewModel: PatientSearchResultItemView.PatientSearchResultViewModel,
-        userClock: UserClock
-    ): DateOfBirth {
-      return fromAgeOrDate(viewModel.age, viewModel.dateOfBirth)
-    }
-
     fun fromAgeOrDate(age: Age?, date: LocalDate?): DateOfBirth {
       return when {
         date != null -> DateOfBirth(null, null, date)

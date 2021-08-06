@@ -44,7 +44,7 @@ data class Patient(
     val gender: Gender,
 
     @Embedded
-    val ageDetails: DateOfBirth,
+    val ageDetails: PatientAgeDetails,
 
     val status: PatientStatus,
 
@@ -71,7 +71,7 @@ data class Patient(
 
   val age: Age?
     get() {
-      return if (ageDetails.type == DateOfBirth.Type.FROM_AGE)
+      return if (ageDetails.type == PatientAgeDetails.Type.FROM_AGE)
         Age(ageDetails.ageValue!!, ageDetails.ageUpdatedAt!!)
       else
         null

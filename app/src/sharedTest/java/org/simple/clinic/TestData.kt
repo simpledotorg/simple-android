@@ -33,7 +33,7 @@ import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentPayload
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.CompleteMedicalRecord
-import org.simple.clinic.patient.DateOfBirth
+import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
@@ -180,7 +180,7 @@ object TestData {
         addressUuid = addressUuid,
         fullName = fullName,
         gender = gender,
-        ageDetails = DateOfBirth.fromAgeOrDate(age, dateOfBirth),
+        ageDetails = PatientAgeDetails.fromAgeOrDate(age, dateOfBirth),
         status = status,
         createdAt = createdAt,
         updatedAt = updatedAt,
@@ -968,7 +968,7 @@ object TestData {
     return OverdueAppointment(
         fullName = name,
         gender = gender,
-        ageDetails = DateOfBirth.fromAgeOrDate(age, dateOfBirth),
+        ageDetails = PatientAgeDetails.fromAgeOrDate(age, dateOfBirth),
         appointment = appointment,
         phoneNumber = phoneNumber,
         patientAddress = patientAddress,
@@ -1042,7 +1042,7 @@ object TestData {
         uuid = uuid,
         fullName = fullName,
         gender = gender,
-        ageDetails = DateOfBirth.fromAgeOrDate(age, dateOfBirth),
+        ageDetails = PatientAgeDetails.fromAgeOrDate(age, dateOfBirth),
         assignedFacilityId = assignedFacilityId,
         status = status,
         createdAt = createdAt,
@@ -1073,7 +1073,7 @@ object TestData {
       uuid = uuid,
       fullName = fullName,
       gender = gender,
-      ageDetails = DateOfBirth.fromAgeOrDate(age, dateOfBirth),
+      ageDetails = PatientAgeDetails.fromAgeOrDate(age, dateOfBirth),
       patientRecordedAt = patientRecordedAt,
       updatedAt = updatedAt
   )

@@ -18,7 +18,6 @@ import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.teleconsultlog.success.TeleConsultSuccessScreenKey

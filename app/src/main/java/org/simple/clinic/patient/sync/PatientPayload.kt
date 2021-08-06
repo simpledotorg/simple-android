@@ -2,7 +2,7 @@ package org.simple.clinic.patient.sync
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import org.simple.clinic.patient.DateOfBirth
+import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
@@ -83,7 +83,7 @@ data class PatientPayload(
         addressUuid = address.uuid,
         fullName = fullName,
         gender = gender,
-        ageDetails = DateOfBirth(
+        ageDetails = PatientAgeDetails(
             ageValue = age,
             ageUpdatedAt = ageUpdatedAt,
             dateOfBirth = dateOfBirth

@@ -234,7 +234,7 @@ class PatientRepository @Inject constructor(
           addressUuid = addressUuid,
           fullName = personalDetails.fullName,
           gender = personalDetails.gender!!,
-          ageDetails = DateOfBirth.fromAgeOrDate(personalDetails.age?.let { ageString ->
+          ageDetails = PatientAgeDetails.fromAgeOrDate(personalDetails.age?.let { ageString ->
             Age(ageString.toInt(), Instant.now(utcClock))
           }, dateOfBirth?.let {
             dateOfBirthFormatter.parse(dateOfBirth, LocalDate::from)

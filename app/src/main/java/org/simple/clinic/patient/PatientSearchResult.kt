@@ -67,7 +67,7 @@ data class PatientSearchResult(
     val gender: Gender,
 
     @Embedded
-    val ageDetails: DateOfBirth,
+    val ageDetails: PatientAgeDetails,
 
     val assignedFacilityId: UUID?,
 

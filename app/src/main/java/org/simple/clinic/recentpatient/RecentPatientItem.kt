@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 import org.simple.clinic.databinding.RecentPatientItemViewBinding
-import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.RecentPatient
 import org.simple.clinic.patient.displayIconRes
@@ -55,20 +54,13 @@ data class RecentPatientItem(
       return RecentPatientItem(
           uuid = recentPatient.uuid,
           name = recentPatient.fullName,
-          age = age(recentPatient, userClock),
+          age = recentPatient.ageDetails.estimateAge(userClock),
           gender = recentPatient.gender,
           updatedAt = recentPatient.updatedAt,
           dateFormatter = dateFormatter,
           clock = userClock,
           isNewRegistration = isNewRegistration
       )
-    }
-
-    private fun age(
-        recentPatient: RecentPatient,
-        userClock: UserClock
-    ): Int {
-      return DateOfBirth.fromRecentPatient(recentPatient, userClock).estimateAge(userClock)
     }
   }
 

@@ -11,6 +11,7 @@
 - Move logic for deciding the initial screen to the Mobius loop in `TheActivity`
 - Update OverdueListChanges feature flag to support `ContactPatientSheet` changes
 - Change registered facility as nullable in `ContactPatientProfile`
+- Change Sri Lanka iso country code to `LK`
 - [In Progress: 04 Aug 2021] Add support for Sri Lanka 
 
 ### Changes

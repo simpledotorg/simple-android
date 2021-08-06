@@ -216,12 +216,11 @@ class PatientSearchResultItemView(
 
   private fun getPatientName(
       searchQuery: String?,
-      patientSearchResult: PatientSearchResultViewModel,
-      dateOfBirth: DateOfBirth
+      patientSearchResult: PatientSearchResultViewModel
   ): Name {
     val canHighlight = !searchQuery.isNullOrBlank() && patientSearchResult.fullName.contains(searchQuery, ignoreCase = true)
     genderLabel.setImageResource(patientSearchResult.gender.displayIconRes)
-    val ageValue = dateOfBirth.estimateAge(userClock)
+    val ageValue = patientSearchResult.ageDetails.estimateAge(userClock)
     val genderLetter = resources.getString(patientSearchResult.gender.displayLetterRes)
     val patientNameAgeAndGender = resources.getString(R.string.patientsummary_toolbar_title, patientSearchResult.fullName, genderLetter, ageValue.toString())
     return if (canHighlight) {
@@ -240,7 +239,7 @@ class PatientSearchResultItemView(
       model: PatientSearchResultViewModel
   ) {
 
-    val patientName = when (val name = getPatientName(searchQuery, model, DateOfBirth.fromPatientSearchResultViewModel(model, userClock))) {
+    val patientName = when (val name = getPatientName(searchQuery, model)) {
       is Name.Highlighted -> highlight(text = name.patientName,
           startIndex = name.highlightStart,
           endIndex = name.highlightEnd)

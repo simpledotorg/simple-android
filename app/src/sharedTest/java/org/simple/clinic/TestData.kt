@@ -968,8 +968,7 @@ object TestData {
     return OverdueAppointment(
         fullName = name,
         gender = gender,
-        dateOfBirth = dateOfBirth,
-        age = age,
+        ageDetails = DateOfBirth.fromAgeOrDate(age, dateOfBirth),
         appointment = appointment,
         phoneNumber = phoneNumber,
         patientAddress = patientAddress,

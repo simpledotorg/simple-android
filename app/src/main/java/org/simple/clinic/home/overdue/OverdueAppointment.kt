@@ -11,6 +11,9 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.Age
+import org.simple.clinic.patient.DateOfBirth
+import org.simple.clinic.patient.DateOfBirth.Type.EXACT
+import org.simple.clinic.patient.DateOfBirth.Type.FROM_AGE
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientPhoneNumber
 import java.time.Instant
@@ -91,10 +94,8 @@ data class OverdueAppointment(
 
     val gender: Gender,
 
-    val dateOfBirth: LocalDate?,
-
-    @Embedded(prefix = "age_")
-    val age: Age?,
+    @Embedded
+    val ageDetails: DateOfBirth,
 
     @Embedded(prefix = "appt_")
     val appointment: Appointment,
@@ -119,8 +120,17 @@ data class OverdueAppointment(
 
     val patientRegisteredFacilityName: String?,
 
-    val patientRegisteredFacilityID: UUID?,
+    val patientRegisteredFacilityID: UUID?
     ) : Parcelable {
+
+  val dateOfBirth: LocalDate?
+    get() = ageDetails.dateOfBirth
+
+  val age: Age?
+    get() = when(ageDetails.type) {
+      EXACT -> null
+      FROM_AGE -> Age(ageDetails.ageValue!!, ageDetails.ageUpdatedAt!!)
+    }
 
   val isAppointmentAtAssignedFacility: Boolean
     get() = patientAssignedFacilityUuid == appointment.facilityUuid

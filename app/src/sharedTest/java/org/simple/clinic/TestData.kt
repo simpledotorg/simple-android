@@ -1074,8 +1074,7 @@ object TestData {
       uuid = uuid,
       fullName = fullName,
       gender = gender,
-      dateOfBirth = dateOfBirth,
-      age = age,
+      ageDetails = DateOfBirth.fromAgeOrDate(age, dateOfBirth),
       patientRecordedAt = patientRecordedAt,
       updatedAt = updatedAt
   )

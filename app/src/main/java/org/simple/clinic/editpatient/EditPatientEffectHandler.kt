@@ -16,9 +16,8 @@ import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.Age
-import org.simple.clinic.patient.DateOfBirth
-import org.simple.clinic.patient.DateOfBirth.Type.EXACT
-import org.simple.clinic.patient.DateOfBirth.Type.FROM_AGE
+import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
+import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber

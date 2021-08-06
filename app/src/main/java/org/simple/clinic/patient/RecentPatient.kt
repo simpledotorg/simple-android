@@ -9,11 +9,10 @@ import io.reactivex.Flowable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.overdue.Appointment.AppointmentType
 import org.simple.clinic.overdue.Appointment.Status
-import org.simple.clinic.patient.DateOfBirth.Type.EXACT
-import org.simple.clinic.patient.DateOfBirth.Type.FROM_AGE
+import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
+import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.util.Unicode
 import java.time.Instant
-import java.time.LocalDate
 import java.util.UUID
 
 @Parcelize
@@ -26,7 +25,7 @@ data class RecentPatient(
     val gender: Gender,
 
     @Embedded
-    val ageDetails: DateOfBirth,
+    val ageDetails: PatientAgeDetails,
 
     val patientRecordedAt: Instant,
 

@@ -32,9 +32,8 @@ import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.Age
-import org.simple.clinic.patient.DateOfBirth
-import org.simple.clinic.patient.DateOfBirth.Type.EXACT
-import org.simple.clinic.patient.DateOfBirth.Type.FROM_AGE
+import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
+import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male

@@ -188,7 +188,7 @@ class PatientRepositoryAndroidTest {
     val patient = database.patientDao().getOne(savedPatient.patientUuid)!!
 
     assertThat(patient.ageDetails.dateOfBirth).isEqualTo(LocalDate.parse("1985-04-08"))
-    assertThat(patient.ageDetails.type).isEqualTo(DateOfBirth.Type.EXACT)
+    assertThat(patient.ageDetails.type).isEqualTo(PatientAgeDetails.Type.EXACT)
 
     val savedPhoneNumbers = database.phoneNumberDao().phoneNumber(patient.uuid).firstOrError().blockingGet()
     assertThat(savedPhoneNumbers).hasSize(1)

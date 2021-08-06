@@ -4,8 +4,8 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import kotlinx.parcelize.Parcelize
-import org.simple.clinic.patient.DateOfBirth.Type.EXACT
-import org.simple.clinic.patient.DateOfBirth.Type.FROM_AGE
+import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
+import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.util.UserClock
 import java.time.Instant
 import java.time.LocalDate
@@ -21,7 +21,7 @@ import java.time.Period
  * as an [Embedded] model.
  **/
 @Parcelize
-data class DateOfBirth(
+data class PatientAgeDetails(
     @ColumnInfo(name = "age_value")
     val ageValue: Int?,
 
@@ -69,7 +69,7 @@ data class DateOfBirth(
     return ageRecordedAtDate.minusYears(ageValue!!.toLong()).toLocalDate()
   }
 
-  fun withAge(age: Age): DateOfBirth {
+  fun withAge(age: Age): PatientAgeDetails {
     return copy(
         ageValue = age.value,
         ageUpdatedAt = age.updatedAt,
@@ -77,7 +77,7 @@ data class DateOfBirth(
     )
   }
 
-  fun withDateOfBirth(dateOfBirth: LocalDate): DateOfBirth {
+  fun withDateOfBirth(dateOfBirth: LocalDate): PatientAgeDetails {
     return copy(
         ageValue = null,
         ageUpdatedAt = null,
@@ -86,10 +86,10 @@ data class DateOfBirth(
   }
 
   companion object {
-    fun fromAgeOrDate(age: Age?, date: LocalDate?): DateOfBirth {
+    fun fromAgeOrDate(age: Age?, date: LocalDate?): PatientAgeDetails {
       return when {
-        date != null -> DateOfBirth(null, null, date)
-        age != null -> DateOfBirth(age.value, age.updatedAt, null)
+        date != null -> PatientAgeDetails(null, null, date)
+        age != null -> PatientAgeDetails(age.value, age.updatedAt, null)
         else -> throw IllegalStateException("Both age AND dateOfBirth cannot be null!")
       }
     }

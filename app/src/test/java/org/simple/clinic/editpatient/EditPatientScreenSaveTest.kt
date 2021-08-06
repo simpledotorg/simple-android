@@ -31,9 +31,9 @@ import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.Age
-import org.simple.clinic.patient.DateOfBirth
-import org.simple.clinic.patient.DateOfBirth.Type.EXACT
-import org.simple.clinic.patient.DateOfBirth.Type.FROM_AGE
+import org.simple.clinic.patient.PatientAgeDetails
+import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
+import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -322,7 +322,7 @@ class EditPatientScreenSaveTest {
               it.copy(
                   fullName = "Name",
                   gender = Gender.Male,
-                  ageDetails = DateOfBirth.fromAgeOrDate(null, LocalDate.of(1985, Month.MAY, 20))
+                  ageDetails = PatientAgeDetails.fromAgeOrDate(null, LocalDate.of(1985, Month.MAY, 20))
               )
             },
             createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") },
@@ -349,7 +349,7 @@ class EditPatientScreenSaveTest {
               it.copy(
                   fullName = "Name",
                   gender = Gender.Male,
-                  ageDetails = DateOfBirth.fromAgeOrDate(expectedAge, null)
+                  ageDetails = PatientAgeDetails.fromAgeOrDate(expectedAge, null)
               )
             },
             createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") },
@@ -385,7 +385,7 @@ class EditPatientScreenSaveTest {
               it.copy(
                   fullName = "Name",
                   gender = Gender.Transgender,
-                  ageDetails = DateOfBirth.fromAgeOrDate(expectedAge, null)
+                  ageDetails = PatientAgeDetails.fromAgeOrDate(expectedAge, null)
               )
             },
             createExpectedAddress = { it.copy(district = "District", state = "State") },
@@ -408,7 +408,7 @@ class EditPatientScreenSaveTest {
               it.copy(
                   fullName = "Name",
                   gender = Gender.Transgender,
-                  ageDetails = DateOfBirth.fromAgeOrDate(null, LocalDate.parse("1965-06-25"))
+                  ageDetails = PatientAgeDetails.fromAgeOrDate(null, LocalDate.parse("1965-06-25"))
               )
             },
             createExpectedAddress = { it.copy(district = "District", state = "State") },
@@ -433,7 +433,7 @@ class EditPatientScreenSaveTest {
               it.copy(
                   fullName = "Name",
                   gender = Gender.Transgender,
-                  ageDetails = DateOfBirth.fromAgeOrDate(expectedAge, null)
+                  ageDetails = PatientAgeDetails.fromAgeOrDate(expectedAge, null)
               )
             },
             createExpectedAddress = { it.copy(district = "District", state = "State") },

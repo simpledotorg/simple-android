@@ -18,9 +18,9 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengt
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
-import org.simple.clinic.patient.DateOfBirth
-import org.simple.clinic.patient.DateOfBirth.Type.EXACT
-import org.simple.clinic.patient.DateOfBirth.Type.FROM_AGE
+import org.simple.clinic.patient.PatientAgeDetails
+import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
+import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -99,7 +99,7 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
     }
 
     private fun ageOrDateOfBirth(
-        ageDetails: DateOfBirth,
+        ageDetails: PatientAgeDetails,
         dateOfBirthFormatter: DateTimeFormatter
     ): EitherAgeOrDateOfBirth {
       return when (ageDetails.type) {

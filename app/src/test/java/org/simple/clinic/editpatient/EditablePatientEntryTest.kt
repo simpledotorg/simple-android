@@ -6,7 +6,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
 import org.simple.clinic.patient.Age
-import org.simple.clinic.patient.DateOfBirth
+import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.util.TestUtcClock
 import java.time.Clock
 import java.time.Instant
@@ -52,7 +52,7 @@ class EditablePatientEntryTest {
   @Test
   fun `when the patient has both age and date of birth, then entry object should pick date of birth`() {
     val patientEntry = EditablePatientEntry.from(
-        TestData.patient().copy(ageDetails = DateOfBirth.fromAgeOrDate(
+        TestData.patient().copy(ageDetails = PatientAgeDetails.fromAgeOrDate(
             age = Age(99, Instant.now(clock)),
             date = LocalDate.now(clock)
         )),
@@ -70,7 +70,7 @@ class EditablePatientEntryTest {
   @Test(expected = IllegalStateException::class)
   fun `when the patient does not have neither age nor date of birth, then throw an exception`() {
     EditablePatientEntry.from(
-        TestData.patient().copy(ageDetails = DateOfBirth.fromAgeOrDate(null, null)),
+        TestData.patient().copy(ageDetails = PatientAgeDetails.fromAgeOrDate(null, null)),
         TestData.patientAddress(),
         null,
         dateOfBirthFormat,

@@ -8,7 +8,7 @@ import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.CompleteMedicalRecord
-import org.simple.clinic.patient.DateOfBirth
+import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.SyncStatus
@@ -98,7 +98,7 @@ class LookupPatientOnline @Inject constructor(
             addressUuid = response.address.uuid,
             fullName = response.fullName,
             gender = response.gender,
-            ageDetails = DateOfBirth.fromAgeOrDate(age, response.dateOfBirth),
+            ageDetails = PatientAgeDetails.fromAgeOrDate(age, response.dateOfBirth),
             status = response.status,
             createdAt = response.createdAt,
             updatedAt = response.updatedAt,

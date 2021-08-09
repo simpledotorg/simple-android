@@ -327,6 +327,7 @@
   <string name="newmedicalhistory_no">De’ni</string>
   <string name="newmedicalhistory_history">Xage</string>
   <string name="newmedicalhistory_diagnosis">Hansoonihu</string>
+  <string name="medicalhistory_question_is_on_hypertension_treatment">Xissantinoti sai agani giddo BP xagicho adhinoni? (Hasiisannoho)</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">Foqa</string>
@@ -675,5 +676,10 @@
   <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">Mahoye</string>
   <string name="medicalhistorysummaryview_history">Xagge</string>
   <string name="medicalhistorysummaryview_diagnosis">Diaginoosise (hansoonniri)</string>
+
+  <!-- Select ongoing hypertension treatment dialog -->
+  <string name="select_ongoing_hypertension_treatment_title">Xissantinoti sai agani giddo BP xagicho adhinoni?</string>
+  <string name="select_ongoing_hypertension_treatment_message">Ee woy Dee\'ni doori.</string>
+  <string name="select_ongoing_hypertension_treatment_positive_action">Maahoyye</string>
 
 </resources>

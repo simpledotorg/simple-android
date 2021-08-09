@@ -2,7 +2,6 @@ package org.simple.clinic.patient
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.simple.clinic.patient.DateOfBirth.Type.FROM_AGE
 import org.simple.clinic.util.TestUserClock
 import java.time.Instant
 import java.time.LocalDate
@@ -24,19 +23,21 @@ class DateOfBirthTest {
     )
 
     // when
-    val `dob from age recorded on the same day` = DateOfBirth.fromAge(`age recorded on the same day`, clock)
-    val `dob from age recorded a year earlier` = DateOfBirth.fromAge(`age recorded a year earlier`, clock)
+    val `dob from age recorded on the same day` = DateOfBirth(`age recorded on the same day`.value, `age recorded on the same day`.updatedAt, null)
+    val `dob from age recorded a year earlier` = DateOfBirth(`age recorded a year earlier`.value, `age recorded a year earlier`.updatedAt, null)
 
     // the
     assertThat(`dob from age recorded on the same day`)
         .isEqualTo(DateOfBirth(
-            date = LocalDate.parse("1988-01-01"),
-            type = FROM_AGE
+            ageValue = `dob from age recorded on the same day`.ageValue,
+            ageUpdatedAt = `dob from age recorded on the same day`.ageUpdatedAt,
+            dateOfBirth = null
         ))
     assertThat(`dob from age recorded a year earlier`)
         .isEqualTo(DateOfBirth(
-            date = LocalDate.parse("1987-01-01"),
-            type = FROM_AGE
+            ageValue = `dob from age recorded a year earlier`.ageValue,
+            ageUpdatedAt = `dob from age recorded a year earlier`.ageUpdatedAt,
+            dateOfBirth = null
         ))
   }
 
@@ -47,7 +48,7 @@ class DateOfBirthTest {
 
     fun estimateAgeAtDate(date: LocalDate): Int {
       val clock = TestUserClock(date)
-      return DateOfBirth.fromAge(age, clock).estimateAge(clock)
+      return DateOfBirth(age.value, age.updatedAt, null).estimateAge(clock)
     }
 
     // then
@@ -71,5 +72,56 @@ class DateOfBirthTest {
 
     val `estimated age three years and a day later` = estimateAgeAtDate(LocalDate.parse("2021-01-02"))
     assertThat(`estimated age three years and a day later`).isEqualTo(33)
+  }
+
+  @Test
+  fun `the current age must be estimated from the recorded age correctly`() {
+    // given
+    val currentTime = Instant.parse("2020-01-01T00:00:00Z")
+    val clock = TestUserClock(currentTime)
+
+    val age = Age(value = 30, updatedAt = Instant.parse("2018-01-01T00:00:00Z"))
+    val dateOfBirth = DateOfBirth(age.value, age.updatedAt, null)
+
+    // when
+    val estimatedAge = dateOfBirth.estimateAge(clock)
+
+    // then
+    assertThat(estimatedAge).isEqualTo(32)
+  }
+
+  @Test
+  fun `the current age must be estimated from the recorded date of birth correctly`() {
+    // given
+    val currentTime = Instant.parse("2020-01-01T00:00:00Z")
+    val clock = TestUserClock(currentTime)
+
+    val dateOfBirth = DateOfBirth(
+        ageValue = null,
+        ageUpdatedAt = null,
+        dateOfBirth = LocalDate.parse("1988-01-01")
+    )
+
+    // when
+    val estimatedAge = dateOfBirth.estimateAge(clock)
+
+    // then
+    assertThat(estimatedAge).isEqualTo(32)
+  }
+
+  @Test
+  fun `the date of birth must be estimated from the recorded age correctly`() {
+    // given
+    val currentTime = Instant.parse("2020-01-01T00:00:00Z")
+    val clock = TestUserClock(currentTime)
+
+    val age = Age(value = 30, updatedAt = Instant.parse("2018-01-01T00:00:00Z"))
+    val dateOfBirth = DateOfBirth(age.value, age.updatedAt, null)
+
+    // when
+    val estimatedDateOfBirth = dateOfBirth.approximateDateOfBirth(clock)
+
+    // then
+    assertThat(estimatedDateOfBirth).isEqualTo(LocalDate.parse("1988-01-01"))
   }
 }

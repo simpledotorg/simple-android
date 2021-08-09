@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
@@ -27,10 +28,8 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature.OverdueListChanges
 import org.simple.clinic.feature.Feature.SecureCalling
 import org.simple.clinic.feature.Features
-import org.simple.clinic.navigation.v2.ExpectsResult
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
-import org.simple.clinic.navigation.v2.ScreenResult
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.overdue.AppointmentConfig
@@ -45,6 +44,7 @@ import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.onBackPressed
+import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.valueOrEmpty
 import java.time.LocalDate
@@ -60,7 +60,7 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     ContactPatientModel,
     ContactPatientEvent,
     ContactPatientEffect,
-    Unit>(), ContactPatientUi, ContactPatientUiActions, ExpectsResult {
+    Unit>(), ContactPatientUi, ContactPatientUiActions {
 
   @Inject
   lateinit var phoneCaller: PhoneCaller
@@ -172,6 +172,25 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     }
   }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+
+    setFragmentResultListener(DatePickerResult, RemoveOverdueAppointmentResult) { requestKey, result ->
+      if (result !is Succeeded) return@setFragmentResultListener
+
+      when (requestKey) {
+        DatePickerResult -> {
+          val selectedDate = result.result as SelectedDate
+          val event = ManualDateSelected(selectedDate = selectedDate.date, currentDate = LocalDate.now(userClock))
+          hotEvents.onNext(event)
+        }
+        RemoveOverdueAppointmentResult -> {
+          router.pop()
+        }
+      }
+    }
+  }
+
   override fun onRequestPermissionsResult(
       requestCode: Int,
       permissions: Array<out String>,
@@ -181,22 +200,12 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     permissionResults.onNext(ActivityPermissionResult(requestCode))
   }
 
-  override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
-    if (result !is Succeeded) return
-
-    when (requestType) {
-      DatePickerResult -> {
-        val selectedDate = result.result as SelectedDate
-        val event = ManualDateSelected(selectedDate = selectedDate.date, currentDate = LocalDate.now(userClock))
-        hotEvents.onNext(event)
-      }
-      RemoveOverdueAppointmentResult -> {
-        router.pop()
-      }
-    }
-  }
-
-  override fun renderPatientDetails_Old(name: String, gender: Gender, age: Int, phoneNumber: String) {
+  override fun renderPatientDetails_Old(
+      name: String,
+      gender: Gender,
+      age: Int,
+      phoneNumber: String
+  ) {
     callPatientView_Old.renderPatientDetails(name, gender, age, phoneNumber)
   }
 

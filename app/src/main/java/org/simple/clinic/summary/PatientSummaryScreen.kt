@@ -38,10 +38,8 @@ import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen_Old
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.mobius.ViewRenderer
-import org.simple.clinic.navigation.v2.ExpectsResult
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.ScreenResult
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.DateOfBirth
@@ -61,6 +59,7 @@ import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordScreenKey
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.messagesender.WhatsAppMessageSender
+import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -82,8 +81,7 @@ class PatientSummaryScreen :
     PatientSummaryScreenUi,
     PatientSummaryUiActions,
     PatientSummaryChildView,
-    HandlesBack,
-    ExpectsResult {
+    HandlesBack {
 
   private val rootLayout
     get() = binding.rootLayout
@@ -250,12 +248,12 @@ class PatientSummaryScreen :
     rootLayout.hideKeyboard()
 
     subscriptions.add(setupChildViewVisibility())
-  }
 
-  override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
-    if (requestType == ScreenRequest.ScheduleAppointmentSheet && result is Succeeded) {
-      val sheetOpenedFrom = ScheduleAppointmentSheet.sheetOpenedFrom(result)
-      appointmentScheduleSheetClosed.notify(ScheduledAppointment(sheetOpenedFrom))
+    setFragmentResultListener(ScreenRequest.ScheduleAppointmentSheet) { _, result ->
+      if (result is Succeeded) {
+        val sheetOpenedFrom = ScheduleAppointmentSheet.sheetOpenedFrom(result)
+        appointmentScheduleSheetClosed.notify(ScheduledAppointment(sheetOpenedFrom))
+      }
     }
   }
 

@@ -16,13 +16,12 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.confirm.ConfirmFacilityChangeSheet
 import org.simple.clinic.feature.Features
-import org.simple.clinic.navigation.v2.ExpectsResult
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
-import org.simple.clinic.navigation.v2.ScreenResult
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.RuntimePermissions
+import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
 import javax.inject.Inject
@@ -36,8 +35,7 @@ class FacilityChangeScreen :
         FacilityChangeEffect,
         Unit>(),
     FacilityChangeUi,
-    FacilityChangeUiActions,
-    ExpectsResult {
+    FacilityChangeUiActions {
 
   @Inject
   lateinit var locale: Locale
@@ -82,13 +80,13 @@ class FacilityChangeScreen :
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     setupUiComponents()
-  }
 
-  override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
-    if (requestType == ConfirmFacility && result is Succeeded) {
-      val facilityChangeConfirmed = ConfirmFacilityChangeSheet.wasFacilityChanged(result)
+    setFragmentResultListener(ConfirmFacility) { _, result ->
+      if (result is Succeeded) {
+        val facilityChangeConfirmed = ConfirmFacilityChangeSheet.wasFacilityChanged(result)
 
-      handleFacilityChangeConfirmed(facilityChangeConfirmed)
+        handleFacilityChangeConfirmed(facilityChangeConfirmed)
+      }
     }
   }
 

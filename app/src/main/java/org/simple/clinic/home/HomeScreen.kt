@@ -23,9 +23,7 @@ import org.simple.clinic.home.HomeTab.OVERDUE
 import org.simple.clinic.home.HomeTab.PATIENTS
 import org.simple.clinic.home.HomeTab.REPORTS
 import org.simple.clinic.home.help.HelpScreenKey
-import org.simple.clinic.navigation.v2.ExpectsResult
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.ScreenResult
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.router.ScreenResultBus
@@ -43,8 +41,7 @@ class HomeScreen :
         HomeScreenEffect,
         Unit>(),
     HomeScreenUi,
-    HomeScreenUiActions,
-    ExpectsResult {
+    HomeScreenUiActions {
 
   @Inject
   lateinit var router: Router
@@ -132,10 +129,6 @@ class HomeScreen :
   override fun onDestroyView() {
     viewPager.adapter = null
     super.onDestroyView()
-  }
-
-  override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
-
   }
 
   private fun setupToolBar() {

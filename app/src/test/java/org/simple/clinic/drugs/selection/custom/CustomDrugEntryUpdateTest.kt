@@ -15,14 +15,14 @@ class CustomDrugEntryUpdateTest {
   private val defaultModel = CustomDrugEntryModel.default()
 
   @Test
-  fun `when dosage is edited, then update the model with the new dosage`() {
+  fun `when dosage is edited, then update the model with the new dosage and update the sheet title`() {
     val dosage = "200 mg"
 
     updateSpec.given(defaultModel)
         .whenEvent(DosageEdited(dosage = dosage))
         .then(assertThatNext(
             hasModel(defaultModel.dosageEdited(dosage = dosage)),
-            hasNoEffects()
+            hasEffects(SetSheetTitle(drugName, dosage, null))
         ))
   }
 

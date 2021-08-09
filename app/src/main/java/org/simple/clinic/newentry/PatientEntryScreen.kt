@@ -28,6 +28,7 @@ import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
@@ -39,6 +40,7 @@ import org.simple.clinic.feature.Features
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.form.AlternativeIdInputField
@@ -736,5 +738,13 @@ class PatientEntryScreen(
 
   interface Injector {
     fun inject(target: PatientEntryScreen)
+  }
+
+  @Parcelize
+  data class Key(
+      override val analyticsName: String = "Create Patient Entry"
+  ) : ScreenKey() {
+
+    override fun instantiateFragment() = PatientEntryScreen()
   }
 }

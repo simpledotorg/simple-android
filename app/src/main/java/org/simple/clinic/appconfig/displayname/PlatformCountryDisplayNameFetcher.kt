@@ -12,9 +12,10 @@ class PlatformCountryDisplayNameFetcher @Inject constructor(
 
   override fun displayNameForCountry(country: Country): String {
     return when (country.isoCountryCode) {
-      "IN" -> string(R.string.country_india)
-      "BD" -> string(R.string.country_bangladesh)
-      "ET" -> string(R.string.country_ethiopia)
+      Country.INDIA -> string(R.string.country_india)
+      Country.BANGLADESH -> string(R.string.country_bangladesh)
+      Country.ETHIOPIA -> string(R.string.country_ethiopia)
+      Country.SRI_LANKA -> string(R.string.country_sri_lanka)
       else -> country.displayName
     }
   }

@@ -12,6 +12,7 @@
 - Update OverdueListChanges feature flag to support `ContactPatientSheet` changes
 - Change registered facility as nullable in `ContactPatientProfile`
 - Change Sri Lanka iso country code to `LK`
+- Bump asm to v9.2
 - [In Progress: 04 Aug 2021] Add support for Sri Lanka 
 
 ### Changes

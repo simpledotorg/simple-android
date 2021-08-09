@@ -14,7 +14,8 @@
 - Add home screen illustrations for Sri Lanka
 - Change Sri Lanka iso country code to `LK`
 - Bump asm to v9.2
-- Set Sri Lanka display name in country selection screen  
+- Set Sri Lanka display name in country selection screen
+- [In Progress: 06 Aug 2021] Unify the patient age details into a single model
 
 ### Changes
 - Don't load search results if search query is not changed from previous search query

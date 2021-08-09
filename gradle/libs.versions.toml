@@ -70,7 +70,7 @@ androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidx-
 androidx-work-runtime = { module = "androidx.work:work-runtime", version.ref = "androidx-work" }
 androidx-work-gcm = { module = "androidx.work:work-gcm", version.ref = "androidx-work" }
 
-asm = "org.ow2.asm:asm:7.2"
+asm = "org.ow2.asm:asm:9.2"
 
 dagger-dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }

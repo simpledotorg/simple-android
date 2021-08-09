@@ -1,7 +1,9 @@
 package org.simple.clinic.newentry
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Typeface.BOLD
+import android.os.Bundle
 import android.os.Parcelable
 import android.text.style.StyleSpan
 import android.view.LayoutInflater
@@ -295,6 +297,20 @@ class PatientEntryScreen : BaseScreen<
       layoutInflater: LayoutInflater,
       container: ViewGroup?
   ) = ScreenManualPatientEntryBinding.inflate(layoutInflater, container, false)
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    backButton.setOnClickListener { router.pop() }
+
+    if (features.isEnabled(Feature.VillageTypeAhead)) {
+      colonyOrVillageEditText.setAdapter(villageTypeAheadAdapter)
+    }
+  }
 
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {

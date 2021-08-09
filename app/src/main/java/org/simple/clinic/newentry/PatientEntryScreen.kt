@@ -1,18 +1,16 @@
 package org.simple.clinic.newentry
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Typeface.BOLD
 import android.os.Parcelable
 import android.text.style.StyleSpan
-import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.RadioButton
-import android.widget.RelativeLayout
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
@@ -24,6 +22,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.checkedChanges
 import com.jakewharton.rxbinding3.widget.editorActions
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
@@ -42,6 +41,7 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.form.AlternativeIdInputField
 import org.simple.clinic.newentry.form.DistrictField
@@ -71,7 +71,6 @@ import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.B
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
-import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
@@ -80,10 +79,13 @@ import org.simple.clinic.widgets.topRelativeTo
 import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 
-class PatientEntryScreen(
-    context: Context,
-    attrs: AttributeSet
-) : RelativeLayout(context, attrs), PatientEntryUi, PatientEntryValidationActions {
+class PatientEntryScreen : BaseScreen<
+    PatientEntryScreen.Key,
+    ScreenManualPatientEntryBinding,
+    PatientEntryModel,
+    PatientEntryEvent,
+    PatientEntryEffect,
+    Unit>(), PatientEntryUi, PatientEntryValidationActions {
 
   @Inject
   lateinit var router: Router
@@ -101,7 +103,7 @@ class PatientEntryScreen(
   lateinit var country: Country
 
   @Inject
-  lateinit var effectHandlerInjectionFactory: PatientEntryEffectHandler.InjectionFactory
+  lateinit var effectHandlerFactory: PatientEntryEffectHandler.InjectionFactory
 
   @Inject
   lateinit var features: Features
@@ -267,10 +269,32 @@ class PatientEntryScreen(
         defaultModel = PatientEntryModel.DEFAULT,
         init = PatientEntryInit(isVillageTypeAheadEnabled = features.isEnabled(Feature.VillageTypeAhead)),
         update = PatientEntryUpdate(phoneNumberValidator, dobValidator, ageValidator),
-        effectHandler = effectHandlerInjectionFactory.create(ui = this, validationActions = this).build(),
+        effectHandler = effectHandlerFactory.create(ui = this, validationActions = this).build(),
         modelUpdateListener = uiRenderer::render
     )
   }
+
+  override fun defaultModel() = PatientEntryModel.DEFAULT
+
+  override fun createInit() = PatientEntryInit(isVillageTypeAheadEnabled = features.isEnabled(Feature.VillageTypeAhead))
+
+  override fun createUpdate() = PatientEntryUpdate(phoneNumberValidator, dobValidator, ageValidator)
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
+      .create(ui = this, validationActions = this)
+      .build()
+
+  override fun uiRenderer() = PatientEntryUiRenderer(this)
+
+  override fun events() = Observable
+      .merge(formChanges(), saveClicks(), consentChanges())
+      .compose(ReportAnalyticsEvents())
+      .cast<PatientEntryEvent>()
+
+  override fun bindView(
+      layoutInflater: LayoutInflater,
+      container: ViewGroup?
+  ) = ScreenManualPatientEntryBinding.inflate(layoutInflater, container, false)
 
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {

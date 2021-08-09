@@ -223,7 +223,7 @@ class PatientEntryScreen : BaseScreen<
 
   private val villageTypeAheadAdapter by unsafeLazy {
     ArrayAdapter<String>(
-        context,
+        requireContext(),
         R.layout.village_typeahead_list_item,
         R.id.villageTypeAheadItemTextView,
         mutableListOf()
@@ -374,7 +374,7 @@ class PatientEntryScreen : BaseScreen<
     )
 
     inputFields.fields.forEach {
-      allTextInputFields[it::class.java]?.hint = context.getString(it.labelResId)
+      allTextInputFields[it::class.java]?.hint = getString(it.labelResId)
     }
   }
 
@@ -531,7 +531,7 @@ class PatientEntryScreen : BaseScreen<
   }
 
   private fun inflateAlternateIdView(identifier: String) {
-    val layoutInflater = LayoutInflater.from(context)
+    val layoutInflater = LayoutInflater.from(requireContext())
     val alternateIdView = PatientEntryAlternateIdViewBinding.inflate(layoutInflater, this, false)
     alternateIdView.alternateIdentifier.text = identifier
     alternateIdContainer.addView(alternateIdView.root)
@@ -607,7 +607,7 @@ class PatientEntryScreen : BaseScreen<
 
   override fun showLengthTooShortPhoneNumberError(show: Boolean, requiredNumberLength: Int) {
     if (show) {
-      phoneNumberInputLayout.error = context.getString(R.string.patiententry_error_phonenumber_length_less, requiredNumberLength.toString())
+      phoneNumberInputLayout.error = getString(R.string.patiententry_error_phonenumber_length_less, requiredNumberLength.toString())
     } else {
       phoneNumberInputLayout.error = null
     }
@@ -615,7 +615,7 @@ class PatientEntryScreen : BaseScreen<
 
   override fun showLengthTooLongPhoneNumberError(show: Boolean, requiredNumberLength: Int) {
     if (show) {
-      phoneNumberInputLayout.error = context.getString(R.string.patiententry_error_phonenumber_length_more, requiredNumberLength.toString())
+      phoneNumberInputLayout.error = getString(R.string.patiententry_error_phonenumber_length_more, requiredNumberLength.toString())
     } else {
       phoneNumberInputLayout.error = null
     }

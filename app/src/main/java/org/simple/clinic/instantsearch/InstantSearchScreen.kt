@@ -41,7 +41,7 @@ import org.simple.clinic.instantsearch.InstantSearchProgressState.NO_RESULTS
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.newentry.PatientEntryScreenKey
+import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.ScreenResultBus
@@ -260,7 +260,7 @@ class InstantSearchScreen :
   override fun openPatientEntryScreen(facility: Facility) {
     router.push(AlertFacilityChangeSheet.Key(
         currentFacilityName = facility.name,
-        continuation = Continuation.ContinueToScreen_Old(PatientEntryScreenKey())
+        continuation = Continuation.ContinueToScreen(PatientEntryScreen.Key())
     ))
   }
 

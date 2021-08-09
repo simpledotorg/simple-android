@@ -15,6 +15,7 @@
 - Change Sri Lanka iso country code to `LK`
 - Bump asm to v9.2
 - Set Sri Lanka display name in country selection screen
+- Migrate to Fragment results API
 - [In Progress: 06 Aug 2021] Unify the patient age details into a single model
 
 ### Changes

@@ -38,9 +38,7 @@ import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchProgressState.DONE
 import org.simple.clinic.instantsearch.InstantSearchProgressState.IN_PROGRESS
 import org.simple.clinic.instantsearch.InstantSearchProgressState.NO_RESULTS
-import org.simple.clinic.navigation.v2.ExpectsResult
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.ScreenResult
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.newentry.PatientEntryScreenKey
@@ -56,6 +54,7 @@ import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -78,8 +77,7 @@ class InstantSearchScreen :
         InstantSearchEffect,
         Unit>(),
     InstantSearchUi,
-    InstantSearchUiActions,
-    ExpectsResult {
+    InstantSearchUiActions {
 
   @Inject
   lateinit var effectHandlerFactory: InstantSearchEffectHandler.Factory
@@ -199,6 +197,13 @@ class InstantSearchScreen :
 
     searchResultsView.adapter = searchResultsAdapter
     searchResultsAdapter.addLoadStateListener(::searchResultsAdapterLoadStateListener)
+
+    setFragmentResultListener(BlankScannedQrCode) { _, result ->
+      if (result is Succeeded) {
+        val scannedQrCodeResult = ScannedQrCodeSheet.blankScannedQrCodeResult(result)
+        blankScannedQrCodeResults.onNext(BlankScannedQrCodeResultReceived(scannedQrCodeResult))
+      }
+    }
   }
 
   override fun onStart() {
@@ -306,13 +311,6 @@ class InstantSearchScreen :
 
   override fun hideResults() {
     searchResultsView.visibility = View.GONE
-  }
-
-  override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
-    if (requestType == BlankScannedQrCode && result is Succeeded) {
-      val scannedQrCodeResult = ScannedQrCodeSheet.blankScannedQrCodeResult(result)
-      blankScannedQrCodeResults.onNext(BlankScannedQrCodeResultReceived(scannedQrCodeResult))
-    }
   }
 
   private fun searchResultsAdapterLoadStateListener(loadStates: CombinedLoadStates) {

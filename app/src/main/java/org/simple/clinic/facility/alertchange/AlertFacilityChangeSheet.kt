@@ -18,16 +18,15 @@ import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen_Old
 import org.simple.clinic.facility.change.FacilityChangeScreen
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.ViewRenderer
-import org.simple.clinic.navigation.v2.ExpectsResult
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
-import org.simple.clinic.navigation.v2.ScreenResult
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.router.util.resolveFloat
+import org.simple.clinic.util.setFragmentResultListener
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
@@ -39,8 +38,7 @@ class AlertFacilityChangeSheet :
         AlertFacilityChangeModel,
         AlertFacilityChangeEvent,
         AlertFacilityChangeEffect,
-        Unit>(),
-    ExpectsResult {
+        Unit>() {
 
   @Inject
   lateinit var locale: Locale
@@ -114,18 +112,16 @@ class AlertFacilityChangeSheet :
         openFacilityChangeScreen()
       }
     }
+
+    setFragmentResultListener(ChangeCurrentFacility) { _, result ->
+      if (result is Succeeded) proceedToNextScreen()
+    }
   }
 
   private fun showDialogUi() {
     val backgroundDimAmount = requireContext().resolveFloat(android.R.attr.backgroundDimAmount)
     requireDialog().window!!.setDimAmount(backgroundDimAmount)
     binding.root.visibility = View.VISIBLE
-  }
-
-  override fun onScreenResult(requestType: Parcelable, result: ScreenResult) {
-    if (requestType == ChangeCurrentFacility && result is Succeeded) {
-      proceedToNextScreen()
-    }
   }
 
   private fun proceedToNextScreen() {

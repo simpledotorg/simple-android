@@ -11,15 +11,15 @@
 - Move logic for deciding the initial screen to the Mobius loop in `TheActivity`
 - Update OverdueListChanges feature flag to support `ContactPatientSheet` changes
 - Change registered facility as nullable in `ContactPatientProfile`
+- Add home screen illustrations for Sri Lanka
 - Change Sri Lanka iso country code to `LK`
 - Bump asm to v9.2
-- [In Progress: 04 Aug 2021] Add support for Sri Lanka 
+- Set Sri Lanka display name in country selection screen  
 
 ### Changes
 - Don't load search results if search query is not changed from previous search query
 - Show keyboard and prefill search query if present when instant search screen is shown
 - Updated translations: `kn-IN`, `bn-IN`, `hi-IN`, `ta-LK`, `pa-IN`, `om-ET`, `bn-BD`, `so-ET`, `mr-IN`, `ta-IN`, `si-LK`, `bn-BD`, `te-IN`, `am-ET`, `ti-ET`, `sid-ET`
-- Add home screen illustrations for Sri Lanka  
 - [In Progress: 22 Jul 2021] Add option to download & share overdue list
 - [In Progress: 14 Jul 2021] Medication screen improvements
   - Search for commonly used drugs
@@ -27,6 +27,7 @@
   - Change overdue list UI
   - Load overdue patients without phone number
   - Updated contact patient bottom sheet UI
+- [In Progress: 06 Aug 2021] Add support for Sri Lanka
 
 ## On Demo
 ### Internal

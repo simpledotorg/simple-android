@@ -776,7 +776,7 @@ class EditPatientScreen : BaseScreen<
   }
 
   override fun showDiscardChangesAlert() {
-    ConfirmDiscardChangesDialog.show(activity.supportFragmentManager)
+    ConfirmDiscardChangesDialog.show(childFragmentManager)
   }
 
   override fun showProgress() {

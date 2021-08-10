@@ -20,11 +20,12 @@ class CustomDrugEntryUpdateTest {
   @Test
   fun `when dosage is edited, then update the model with the new dosage and update the sheet title`() {
     val dosage = "200 mg"
+    val drugNameLoadedModel = defaultModel.drugNameLoaded(drugName)
 
-    updateSpec.given(defaultModel)
+    updateSpec.given(drugNameLoadedModel)
         .whenEvent(DosageEdited(dosage = dosage))
         .then(assertThatNext(
-            hasModel(defaultModel.dosageEdited(dosage = dosage)),
+            hasModel(drugNameLoadedModel.dosageEdited(dosage = dosage)),
             hasEffects(SetSheetTitle(drugName, dosage, null))
         ))
   }
@@ -58,10 +59,12 @@ class CustomDrugEntryUpdateTest {
   @Test
   fun `when frequency is edited, then update the model and set drug frequency and update the sheet title in the ui`() {
     val frequency = DrugFrequency.OD
-    updateSpec.given(defaultModel)
+    val drugNameLoadedModel = defaultModel.drugNameLoaded(drugName)
+
+    updateSpec.given(drugNameLoadedModel)
         .whenEvent(FrequencyEdited(frequency))
         .then(assertThatNext(
-            hasModel(defaultModel.frequencyEdited(frequency)),
+            hasModel(drugNameLoadedModel.frequencyEdited(frequency)),
             hasEffects(SetDrugFrequency(frequency), SetSheetTitle(drugName, null, frequency))
         ))
   }

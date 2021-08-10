@@ -1,12 +1,12 @@
 package org.simple.clinic.introvideoscreen
 
 import android.content.ActivityNotFoundException
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.util.AttributeSet
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.parcelize.Parcelize
@@ -18,6 +18,7 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.register.RegistrationLoadingScreenKey
@@ -28,10 +29,14 @@ import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
-class IntroVideoScreen(
-    context: Context,
-    attrs: AttributeSet
-) : ConstraintLayout(context, attrs), UiActions {
+class IntroVideoScreen : BaseScreen<
+    IntroVideoScreen.Key,
+    ScreenIntroVideoBinding,
+    IntroVideoModel,
+    IntroVideoEvent,
+    IntroVideoEffect,
+    Unit>(), UiActions {
+
 
   var binding: ScreenIntroVideoBinding? = null
 
@@ -134,6 +139,11 @@ class IntroVideoScreen(
       CrashReporter.report(ActivityNotFoundException("Unable to play simple video because no supporting apps were found."))
     }
   }
+
+  override fun bindView(
+      layoutInflater: LayoutInflater,
+      container: ViewGroup?
+  ) = ScreenIntroVideoBinding.inflate(layoutInflater, container, false)
 
   @Parcelize
   data class Key(

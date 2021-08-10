@@ -25,6 +25,7 @@
 - Bump Kotlin Coroutines to v1.5.1
 - Bump jBCrypt to v0.4
 - Migrate `EditPatientScreen` to a fragment
+- Migrate `IntroVideoScreen` to a Fragment
 
 ### Changes
 - Don't load search results if search query is not changed from previous search query

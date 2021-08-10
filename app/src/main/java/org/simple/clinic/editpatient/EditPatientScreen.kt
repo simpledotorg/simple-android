@@ -1,5 +1,7 @@
 package org.simple.clinic.editpatient
 
+import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
@@ -336,6 +338,18 @@ class EditPatientScreen : BaseScreen<
       layoutInflater: LayoutInflater,
       container: ViewGroup?
   ) = ScreenEditPatientBinding.inflate(layoutInflater, container, false)
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    if (features.isEnabled(VillageTypeAhead)) {
+      colonyOrVillageEditText.setAdapter(villageTypeAheadAdapter)
+    }
+  }
 
   override fun onFinishInflate() {
     super.onFinishInflate()

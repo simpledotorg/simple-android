@@ -30,11 +30,11 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.databinding.ScreenPatientSummaryBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.editpatient.EditPatientScreenKey
+import org.simple.clinic.editpatient.EditPatientScreen
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
+import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreenExpectingResult
-import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen_Old
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.mobius.ViewRenderer
@@ -292,8 +292,8 @@ class PatientSummaryScreen :
 
   private fun createEditPatientScreenKey(
       patientSummaryProfile: PatientSummaryProfile
-  ): EditPatientScreenKey {
-    return EditPatientScreenKey.fromPatientData(
+  ): EditPatientScreen.Key {
+    return EditPatientScreen.Key(
         patientSummaryProfile.patient,
         patientSummaryProfile.address,
         patientSummaryProfile.phoneNumber,
@@ -480,7 +480,7 @@ class PatientSummaryScreen :
 
     router.push(AlertFacilityChangeSheet.Key(
         currentFacilityName = currentFacility.name,
-        continuation = ContinueToScreen_Old(createEditPatientScreenKey(patientSummaryProfile))
+        continuation = ContinueToScreen(createEditPatientScreenKey(patientSummaryProfile))
     ))
   }
 

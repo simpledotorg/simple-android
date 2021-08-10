@@ -85,4 +85,20 @@ class CustomDrugEntryUpdateTest {
             hasEffects(SaveCustomDrugToPrescription(patientUuid, drugName, dosage, drug.rxNormCode, frequency))
         ))
   }
+
+
+  @Test
+  fun `when add button is clicked and the sheet is opened in create mode from drug name with edited dosage and frequency values, then add the drug to the custom drug list`() {
+    val dosage = "200 mg"
+    val frequency = DrugFrequency.OD
+    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(patientUuid, drugName)).drugNameLoaded(drugName)
+
+    updateSpec
+        .given(defaultModel.dosageEdited(dosage).frequencyEdited(frequency))
+        .whenEvent(AddMedicineButtonClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(SaveCustomDrugToPrescription(patientUuid, drugName, dosage, null, frequency))
+        ))
+  }
 }

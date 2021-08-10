@@ -24,6 +24,8 @@ class CustomDrugEntryUiRendererTest {
     uiRenderer.render(drugDosageChangedModel)
 
     //then
+    verify(ui).hideRemoveButton()
+    verify(ui).setButtonTextAsAdd()
     verify(ui).setDrugDosageText(placeholder)
     verify(ui).moveDrugDosageCursorToBeginning()
     verifyNoMoreInteractions(ui)
@@ -39,6 +41,8 @@ class CustomDrugEntryUiRendererTest {
     uiRenderer.render(drugDosageChangedModel)
 
     //then
+    verify(ui).hideRemoveButton()
+    verify(ui).setButtonTextAsAdd()
     verify(ui).setDrugDosageText("")
     verifyNoMoreInteractions(ui)
   }

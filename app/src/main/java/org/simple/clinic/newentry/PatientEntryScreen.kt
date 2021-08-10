@@ -1,18 +1,16 @@
 package org.simple.clinic.newentry
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface.BOLD
-import android.os.Parcelable
+import android.os.Bundle
 import android.text.style.StyleSpan
-import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.RadioButton
-import android.widget.RelativeLayout
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
@@ -24,10 +22,11 @@ import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.checkedChanges
 import com.jakewharton.rxbinding3.widget.editorActions
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
-import io.reactivex.rxkotlin.ofType
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
@@ -37,9 +36,10 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreenKey
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.form.AlternativeIdInputField
 import org.simple.clinic.newentry.form.DistrictField
@@ -78,10 +78,13 @@ import org.simple.clinic.widgets.topRelativeTo
 import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 
-class PatientEntryScreen(
-    context: Context,
-    attrs: AttributeSet
-) : RelativeLayout(context, attrs), PatientEntryUi, PatientEntryValidationActions {
+class PatientEntryScreen : BaseScreen<
+    PatientEntryScreen.Key,
+    ScreenManualPatientEntryBinding,
+    PatientEntryModel,
+    PatientEntryEvent,
+    PatientEntryEffect,
+    Unit>(), PatientEntryUi, PatientEntryValidationActions {
 
   @Inject
   lateinit var router: Router
@@ -99,127 +102,128 @@ class PatientEntryScreen(
   lateinit var country: Country
 
   @Inject
-  lateinit var effectHandlerInjectionFactory: PatientEntryEffectHandler.InjectionFactory
+  lateinit var effectHandlerFactory: PatientEntryEffectHandler.InjectionFactory
 
   @Inject
   lateinit var features: Features
 
-  private var binding: ScreenManualPatientEntryBinding? = null
+  private val rootView
+    get() = binding.root
 
   private val fullNameEditText
-    get() = binding!!.fullNameEditText
+    get() = binding.fullNameEditText
 
   private val ageEditText
-    get() = binding!!.ageEditText
+    get() = binding.ageEditText
 
   private val dateOfBirthEditText
-    get() = binding!!.dateOfBirthEditText
+    get() = binding.dateOfBirthEditText
 
   private val phoneNumberEditText
-    get() = binding!!.phoneNumberEditText
+    get() = binding.phoneNumberEditText
 
   private val colonyOrVillageEditText
-    get() = binding!!.colonyOrVillageEditText
+    get() = binding.colonyOrVillageEditText
 
   private val districtEditText
-    get() = binding!!.districtEditText
+    get() = binding.districtEditText
 
   private val stateEditText
-    get() = binding!!.stateEditText
+    get() = binding.stateEditText
 
   private val backButton
-    get() = binding!!.backButton
+    get() = binding.backButton
 
   private val identifierTextView
-    get() = binding!!.identifierTextView
+    get() = binding.identifierTextView
 
   private val fullNameInputLayout
-    get() = binding!!.fullNameInputLayout
+    get() = binding.fullNameInputLayout
 
   private val ageEditTextInputLayout
-    get() = binding!!.ageEditTextInputLayout
+    get() = binding.ageEditTextInputLayout
 
   private val dateOfBirthInputLayout
-    get() = binding!!.dateOfBirthInputLayout
+    get() = binding.dateOfBirthInputLayout
 
   private val phoneNumberInputLayout
-    get() = binding!!.phoneNumberInputLayout
+    get() = binding.phoneNumberInputLayout
 
   private val genderRadioGroup
-    get() = binding!!.genderRadioGroup
+    get() = binding.genderRadioGroup
 
   private val alternativeIdInputLayout
-    get() = binding!!.alternativeIdInputLayout
+    get() = binding.alternativeIdInputLayout
 
   private val streetAddressInputLayout
-    get() = binding!!.streetAddressInputLayout
+    get() = binding.streetAddressInputLayout
 
   private val colonyOrVillageInputLayout
-    get() = binding!!.colonyOrVillageInputLayout
+    get() = binding.colonyOrVillageInputLayout
 
   private val zoneInputLayout
-    get() = binding!!.zoneInputLayout
+    get() = binding.zoneInputLayout
 
   private val districtInputLayout
-    get() = binding!!.districtInputLayout
+    get() = binding.districtInputLayout
 
   private val stateInputLayout
-    get() = binding!!.stateInputLayout
+    get() = binding.stateInputLayout
 
   private val maleRadioButton
-    get() = binding!!.maleRadioButton
+    get() = binding.maleRadioButton
 
   private val femaleRadioButton
-    get() = binding!!.femaleRadioButton
+    get() = binding.femaleRadioButton
 
   private val transgenderRadioButton
-    get() = binding!!.transgenderRadioButton
+    get() = binding.transgenderRadioButton
 
   private val consentTextView
-    get() = binding!!.consentTextView
+    get() = binding.consentTextView
 
   private val consentLabel
-    get() = binding!!.consentLabel
+    get() = binding.consentLabel
 
   private val alternativeIdInputEditText
-    get() = binding!!.alternativeIdInputEditText
+    get() = binding.alternativeIdInputEditText
 
   private val zoneEditText
-    get() = binding!!.zoneEditText
+    get() = binding.zoneEditText
 
   private val streetAddressEditText
-    get() = binding!!.streetAddressEditText
+    get() = binding.streetAddressEditText
 
   private val consentSwitch
-    get() = binding!!.consentSwitch
+    get() = binding.consentSwitch
 
   private val dateOfBirthAndAgeSeparator
-    get() = binding!!.dateOfBirthAndAgeSeparator
+    get() = binding.dateOfBirthAndAgeSeparator
 
   private val genderErrorTextView
-    get() = binding!!.genderErrorTextView
+    get() = binding.genderErrorTextView
 
   private val formScrollView
-    get() = binding!!.formScrollView
+    get() = binding.formScrollView
 
   private val patientEntryRoot
-    get() = binding!!.patientEntryRoot
+    get() = binding.patientEntryRoot
 
   private val identifierContainer
-    get() = binding!!.identifierContainer
+    get() = binding.identifierContainer
 
   private val saveButton
-    get() = binding!!.saveButton
+    get() = binding.saveButton
 
   private val alternateIdLabel
-    get() = binding!!.alternateIdLabel
+    get() = binding.alternateIdLabel
 
   private val alternateIdContainer
-    get() = binding!!.alternateIdContainer
+    get() = binding.alternateIdContainer
 
   private val villageTypeAheadAdapter by unsafeLazy {
     ArrayAdapter<String>(
-        context,
+        requireContext(),
         R.layout.village_typeahead_list_item,
         R.id.villageTypeAheadItemTextView,
         mutableListOf()
@@ -250,37 +254,35 @@ class PatientEntryScreen(
    **/
   private var alreadyFocusedOnEmptyTextField: Boolean = false
 
-  private val uiRenderer = PatientEntryUiRenderer(this)
+  override fun defaultModel() = PatientEntryModel.DEFAULT
 
-  private val events: Observable<PatientEntryEvent> by unsafeLazy {
-    Observable
-        .merge(formChanges(), saveClicks(), consentChanges())
-        .compose(ReportAnalyticsEvents())
-        .cast<PatientEntryEvent>()
-  }
+  override fun createInit() = PatientEntryInit(isVillageTypeAheadEnabled = features.isEnabled(Feature.VillageTypeAhead))
 
-  private val delegate by unsafeLazy {
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = PatientEntryModel.DEFAULT,
-        init = PatientEntryInit(isVillageTypeAheadEnabled = features.isEnabled(Feature.VillageTypeAhead)),
-        update = PatientEntryUpdate(phoneNumberValidator, dobValidator, ageValidator),
-        effectHandler = effectHandlerInjectionFactory.create(ui = this, validationActions = this).build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
+  override fun createUpdate() = PatientEntryUpdate(phoneNumberValidator, dobValidator, ageValidator)
 
-  @SuppressLint("CheckResult")
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
+      .create(ui = this, validationActions = this)
+      .build()
 
-    binding = ScreenManualPatientEntryBinding.bind(this)
+  override fun uiRenderer() = PatientEntryUiRenderer(this)
 
+  override fun events() = Observable
+      .merge(formChanges(), saveClicks(), consentChanges())
+      .compose(ReportAnalyticsEvents())
+      .cast<PatientEntryEvent>()
+
+  override fun bindView(
+      layoutInflater: LayoutInflater,
+      container: ViewGroup?
+  ) = ScreenManualPatientEntryBinding.inflate(layoutInflater, container, false)
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     backButton.setOnClickListener { router.pop() }
 
     if (features.isEnabled(Feature.VillageTypeAhead)) {
@@ -294,7 +296,7 @@ class PatientEntryScreen(
     dateOfBirthEditText.imeOptions += EditorInfo.IME_ACTION_NEXT
     dateOfBirthEditText.setOnEditorActionListener { _, actionId, _ ->
       // When date is empty, this will move focus to age field and colony field otherwise.
-      if (!dateOfBirthEditText.text!!.isBlank() && actionId == EditorInfo.IME_ACTION_NEXT) {
+      if (dateOfBirthEditText.text!!.isNotBlank() && actionId == EditorInfo.IME_ACTION_NEXT) {
         colonyOrVillageEditText.requestFocus()
         true
       } else {
@@ -348,7 +350,7 @@ class PatientEntryScreen(
     )
 
     inputFields.fields.forEach {
-      allTextInputFields[it::class.java]?.hint = context.getString(it.labelResId)
+      allTextInputFields[it::class.java]?.hint = getString(it.labelResId)
     }
   }
 
@@ -384,26 +386,6 @@ class PatientEntryScreen(
     else
       R.string.patiententry_consent_sms_reminders
     consentLabel.setText(consentLabelTextResId)
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    binding = null
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    val viewState = delegate.onRestoreInstanceState(state)
-    super.onRestoreInstanceState(viewState)
   }
 
   private fun formChanges(): Observable<PatientEntryEvent> {
@@ -445,7 +427,7 @@ class PatientEntryScreen(
 
   private fun saveClicks(): Observable<PatientEntryEvent> {
     val stateImeClicks = stateEditText
-        .editorActions() { it == EditorInfo.IME_ACTION_DONE }
+        .editorActions { it == EditorInfo.IME_ACTION_DONE }
         .map { SaveClicked }
 
     val saveButtonClicks = saveButton
@@ -505,8 +487,8 @@ class PatientEntryScreen(
   }
 
   private fun inflateAlternateIdView(identifier: String) {
-    val layoutInflater = LayoutInflater.from(context)
-    val alternateIdView = PatientEntryAlternateIdViewBinding.inflate(layoutInflater, this, false)
+    val layoutInflater = LayoutInflater.from(requireContext())
+    val alternateIdView = PatientEntryAlternateIdViewBinding.inflate(layoutInflater, rootView, false)
     alternateIdView.alternateIdentifier.text = identifier
     alternateIdContainer.addView(alternateIdView.root)
   }
@@ -534,7 +516,7 @@ class PatientEntryScreen(
   }
 
   override fun openMedicalHistoryEntryScreen() {
-    hideKeyboard()
+    rootView.hideKeyboard()
     router.push(NewMedicalHistoryScreenKey().wrap())
   }
 
@@ -545,7 +527,7 @@ class PatientEntryScreen(
         .setOrdering(TransitionSet.ORDERING_TOGETHER)
         .setDuration(250)
         .setInterpolator(FastOutSlowInInterpolator())
-    TransitionManager.beginDelayedTransition(this, transition)
+    TransitionManager.beginDelayedTransition(rootView, transition)
 
     dateOfBirthInputLayout.visibility = when (visibility) {
       DATE_OF_BIRTH_VISIBLE, BOTH_VISIBLE -> View.VISIBLE
@@ -581,7 +563,7 @@ class PatientEntryScreen(
 
   override fun showLengthTooShortPhoneNumberError(show: Boolean, requiredNumberLength: Int) {
     if (show) {
-      phoneNumberInputLayout.error = context.getString(R.string.patiententry_error_phonenumber_length_less, requiredNumberLength.toString())
+      phoneNumberInputLayout.error = getString(R.string.patiententry_error_phonenumber_length_less, requiredNumberLength.toString())
     } else {
       phoneNumberInputLayout.error = null
     }
@@ -589,7 +571,7 @@ class PatientEntryScreen(
 
   override fun showLengthTooLongPhoneNumberError(show: Boolean, requiredNumberLength: Int) {
     if (show) {
-      phoneNumberInputLayout.error = context.getString(R.string.patiententry_error_phonenumber_length_more, requiredNumberLength.toString())
+      phoneNumberInputLayout.error = getString(R.string.patiententry_error_phonenumber_length_more, requiredNumberLength.toString())
     } else {
       phoneNumberInputLayout.error = null
     }
@@ -736,5 +718,13 @@ class PatientEntryScreen(
 
   interface Injector {
     fun inject(target: PatientEntryScreen)
+  }
+
+  @Parcelize
+  data class Key(
+      override val analyticsName: String = "Create Patient Entry"
+  ) : ScreenKey() {
+
+    override fun instantiateFragment() = PatientEntryScreen()
   }
 }

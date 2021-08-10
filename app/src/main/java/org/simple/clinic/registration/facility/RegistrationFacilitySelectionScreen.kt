@@ -11,6 +11,7 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenRegistrationFacilitySelectionBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.introvideoscreen.IntroVideoScreen
 import org.simple.clinic.introvideoscreen.IntroVideoScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
@@ -122,7 +123,7 @@ class RegistrationFacilitySelectionScreen(
   }
 
   override fun openIntroVideoScreen(registrationEntry: OngoingRegistrationEntry) {
-    router.push(IntroVideoScreenKey(registrationEntry).wrap())
+    router.push(IntroVideoScreen.Key(registrationEntry))
   }
 
   override fun showConfirmFacilitySheet(facilityUuid: UUID, facilityName: String) {

@@ -105,7 +105,7 @@ class IntroVideoScreen(
   }
 
   override fun openHome() {
-    val screenKey = screenKeyProvider.keyFor<IntroVideoScreenKey>(this)
+    val screenKey = screenKeyProvider.keyFor<Key>(this)
     router.push(RegistrationLoadingScreenKey(screenKey.registrationEntry).wrap())
   }
 

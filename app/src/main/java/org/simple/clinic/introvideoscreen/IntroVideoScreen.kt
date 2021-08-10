@@ -145,6 +145,24 @@ class IntroVideoScreen : BaseScreen<
       container: ViewGroup?
   ) = ScreenIntroVideoBinding.inflate(layoutInflater, container, false)
 
+  override fun defaultModel() = IntroVideoModel.default()
+
+  override fun createUpdate() = IntroVideoUpdate()
+
+  override fun createEffectHandler(
+      viewEffectsConsumer: Consumer<Unit>
+  ) = introVideoEffectHandler
+      .create(this)
+      .build()
+
+  override fun events() = Observable
+      .mergeArray(
+          videoClicks(),
+          skipClicks()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<IntroVideoEvent>()
+
   @Parcelize
   data class Key(
       val registrationEntry: OngoingRegistrationEntry,

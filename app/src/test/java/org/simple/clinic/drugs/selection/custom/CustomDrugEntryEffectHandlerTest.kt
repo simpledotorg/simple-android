@@ -79,4 +79,18 @@ class CustomDrugEntryEffectHandlerTest {
     verify(uiActions).setSheetTitle(updatedDrugName)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when set drug dosage effect is received, set drug dosage in the ui`() {
+    // given
+    val dosage = "12mg"
+
+    // when
+    testCase.dispatch(SetDrugDosage(dosage))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).setDrugDosage(dosage)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

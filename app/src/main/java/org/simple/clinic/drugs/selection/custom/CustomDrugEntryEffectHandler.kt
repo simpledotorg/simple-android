@@ -24,6 +24,7 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<CustomDrugEntryEffect, CustomDrugEntryEvent>()
         .addConsumer(ShowEditFrequencyDialog::class.java, { uiActions.showEditFrequencyDialog(it.frequency) }, schedulersProvider.ui())
         .addConsumer(SetDrugFrequency::class.java, { uiActions.setDrugFrequency(it.frequency) }, schedulersProvider.ui())
+        .addConsumer(SetDrugDosage::class.java, { uiActions.setDrugDosage(it.dosage) }, schedulersProvider.ui())
         .addConsumer(SetSheetTitle::class.java, ::setSheetTitle, schedulersProvider.ui())
         .build()
   }

@@ -10,8 +10,20 @@ class CustomDrugEntryInit : Init<CustomDrugEntryModel, CustomDrugEntryEffect> {
   override fun init(model: CustomDrugEntryModel): First<CustomDrugEntryModel, CustomDrugEntryEffect> {
     return when (model.openAs) {
       is OpenAs.New.FromDrugList -> updatedModelFromDrug(model, model.openAs.drug)
-      else -> first(model)
+      is OpenAs.New.FromDrugName -> updatedModelFromDrugName(model, model.openAs.drugName)
+      else -> first(model) // will be handled in the next PR
     }
+  }
+
+  private fun updatedModelFromDrugName(
+      model: CustomDrugEntryModel,
+      drugName: String
+  ): First<CustomDrugEntryModel, CustomDrugEntryEffect> {
+    val updatedModel = model.drugNameLoaded(drugName)
+
+    val effects = setOf(SetSheetTitle(drugName, null, null), SetDrugFrequency(null))
+
+    return first(updatedModel, effects)
   }
 
   private fun updatedModelFromDrug(

@@ -51,7 +51,7 @@ class CustomDrugEntryUiRendererTest {
   fun `when the screen is loaded in update mode, then render the drug name and setup ui for updating drug entry`() {
     // given
     val prescribedDrugUuid = UUID.fromString("96633994-6e4d-4528-b796-f03ae016553a")
-    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.Update(patientUuid, prescribedDrugUuid), drug = null, drugName = drugName)
+    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.Update(patientUuid, prescribedDrugUuid))
 
     // when
     uiRenderer.render(defaultModel)

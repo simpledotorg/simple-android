@@ -28,4 +28,18 @@ class CustomDrugEntryInitTest {
             )
         )
   }
+
+  @Test
+  fun `when sheet is created in create mode from a drug name, then set the drug name, frequency and sheet title`() {
+    val model = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(patientUuid = UUID.fromString("13008153-beda-475a-909c-793d03e654fb"), drugName))
+
+    initSpec
+        .whenInit(model)
+        .then(
+            assertThatFirst(
+                hasModel(model.drugNameLoaded(drugName)),
+                hasEffects(SetSheetTitle(name = drugName, dosage = null, frequency = null), SetDrugFrequency(null))
+            )
+        )
+  }
 }

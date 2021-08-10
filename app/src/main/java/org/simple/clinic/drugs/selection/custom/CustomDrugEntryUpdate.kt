@@ -14,6 +14,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       is DosageEdited -> next(model.dosageEdited(event.dosage))
       is DosageFocusChanged -> next(model.dosageFocusChanged(event.hasFocus))
       is EditFrequencyClicked -> dispatch(ShowEditFrequencyDialog(event.frequency))
+      is FrequencyEdited -> next(model.frequencyEdited(event.frequency), setOf(SetDrugFrequency(event.frequency)))
     }
   }
 }

@@ -20,6 +20,7 @@
 - Bump AppCompat to v1.3.1
 - Bump RecyclerView to v1.2.1
 - Unify the patient age details into a single model
+- Migrate `PatientEntryScreen` to a fragment
 
 ### Changes
 - Don't load search results if search query is not changed from previous search query

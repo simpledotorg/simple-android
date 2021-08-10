@@ -53,13 +53,13 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
-  fun `when frequency is edited, then update the model and set drug frequency in the ui`() {
+  fun `when frequency is edited, then update the model and set drug frequency and update the sheet title in the ui`() {
     val frequency = DrugFrequency.OD
     updateSpec.given(defaultModel)
         .whenEvent(FrequencyEdited(frequency))
         .then(assertThatNext(
             hasModel(defaultModel.frequencyEdited(frequency)),
-            hasEffects(SetDrugFrequency(frequency))
+            hasEffects(SetDrugFrequency(frequency), SetSheetTitle(drugName, null, frequency))
         ))
   }
 }

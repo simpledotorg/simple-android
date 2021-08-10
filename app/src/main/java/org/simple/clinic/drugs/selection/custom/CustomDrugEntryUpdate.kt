@@ -11,6 +11,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
   ): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
     return when (event) {
       is DosageEdited -> next(model.dosageEdited(event.dosage))
+      is DosageFocusChanged -> next(model.dosageFocusChanged(event.hasFocus))
     }
   }
 }

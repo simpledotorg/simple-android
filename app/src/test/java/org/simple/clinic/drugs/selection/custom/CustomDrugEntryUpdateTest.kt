@@ -8,10 +8,11 @@ import org.junit.Test
 
 class CustomDrugEntryUpdateTest {
 
+  private val updateSpec = UpdateSpec(CustomDrugEntryUpdate())
+  private val defaultModel = CustomDrugEntryModel.default()
+
   @Test
   fun `when dosage is edited, then update the model with the new dosage`() {
-    val updateSpec = UpdateSpec(CustomDrugEntryUpdate())
-    val defaultModel = CustomDrugEntryModel.default()
     val dosage = "200 mg"
 
     updateSpec.given(defaultModel)
@@ -20,5 +21,19 @@ class CustomDrugEntryUpdateTest {
             hasModel(defaultModel.dosageEdited(dosage = dosage)),
             hasNoEffects()
         ))
+  }
+
+  @Test
+  fun `when dosage edit text focus is changed, then update the model`() {
+    val hasFocus = true
+
+    updateSpec.given(defaultModel)
+        .whenEvent(DosageFocusChanged(hasFocus))
+        .then(
+            assertThatNext(
+                hasModel(defaultModel.dosageFocusChanged(hasFocus)),
+                hasNoEffects()
+            )
+        )
   }
 }

@@ -16,9 +16,6 @@ import java.time.Period
  * [Patient.dateOfBirth] being mutually exclusive. This class will provide an easy way to access
  * the methods to estimate the patient's current age from these values without having to manually
  * check in different places.
- *
- * The end goal is to replace the [Age] and [Patient.dateOfBirth] database fields with this class
- * as an [Embedded] model.
  **/
 @Parcelize
 data class PatientAgeDetails(

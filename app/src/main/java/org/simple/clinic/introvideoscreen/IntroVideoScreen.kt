@@ -9,12 +9,14 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenIntroVideoBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.platform.crash.CrashReporter
@@ -22,6 +24,7 @@ import org.simple.clinic.registration.register.RegistrationLoadingScreenKey
 import org.simple.clinic.simplevideo.SimpleVideo
 import org.simple.clinic.simplevideo.SimpleVideoConfig
 import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.TrainingVideo
+import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
@@ -130,5 +133,13 @@ class IntroVideoScreen(
     } else {
       CrashReporter.report(ActivityNotFoundException("Unable to play simple video because no supporting apps were found."))
     }
+  }
+
+  @Parcelize
+  data class Key(
+      val registrationEntry: OngoingRegistrationEntry,
+      override val analyticsName: String = "Onboarding Intro Video"
+  ) : ScreenKey() {
+    override fun instantiateFragment() = IntroVideoScreen()
   }
 }

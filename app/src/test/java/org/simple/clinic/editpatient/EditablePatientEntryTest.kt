@@ -17,7 +17,6 @@ import java.util.Locale
 class EditablePatientEntryTest {
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
   private val clock: Clock = TestUtcClock()
-  private val saveButtonState = EditPatientState.NOT_SAVING_PATIENT
 
   @Test
   fun `when the patient has an age, then entry object should have age`() {
@@ -26,8 +25,7 @@ class EditablePatientEntryTest {
         TestData.patientAddress(),
         null,
         dateOfBirthFormat,
-        null,
-        saveButtonState
+        null
     )
 
     assertThat(patientEntry.ageOrDateOfBirth)
@@ -41,8 +39,7 @@ class EditablePatientEntryTest {
         TestData.patientAddress(),
         null,
         dateOfBirthFormat,
-        null,
-        saveButtonState
+        null
     )
 
     assertThat(patientEntry.ageOrDateOfBirth)
@@ -59,8 +56,7 @@ class EditablePatientEntryTest {
         TestData.patientAddress(),
         null,
         dateOfBirthFormat,
-        null,
-        saveButtonState
+        null
     )
 
     assertThat(patientEntry.ageOrDateOfBirth)
@@ -74,8 +70,7 @@ class EditablePatientEntryTest {
         TestData.patientAddress(),
         null,
         dateOfBirthFormat,
-        null,
-        saveButtonState
+        null
     )
   }
 }

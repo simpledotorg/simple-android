@@ -37,8 +37,7 @@ data class EditPatientModel(
           address,
           phoneNumber,
           dateOfBirthFormatter,
-          bangladeshNationalId,
-          saveButtonState
+          bangladeshNationalId
       )
       val ongoingEntry = savedEntry.copy()
       return EditPatientModel(savedEntry, ongoingEntry, patient, address, phoneNumber, bangladeshNationalId, saveButtonState, null)

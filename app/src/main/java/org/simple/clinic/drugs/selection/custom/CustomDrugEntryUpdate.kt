@@ -26,7 +26,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
     return when (model.openAs) {
       is OpenAs.New.FromDrugList -> dispatch(SaveCustomDrugToPrescription(model.openAs.patientUuid, model.openAs.drug.name, model.dosage, model.openAs.drug.rxNormCode, model.frequency))
       is OpenAs.New.FromDrugName -> dispatch(SaveCustomDrugToPrescription(model.openAs.patientUuid, model.openAs.drugName, model.dosage, null, model.frequency))
-      is OpenAs.Update -> noChange()
+      is OpenAs.Update -> dispatch(UpdatePrescription(model.openAs.patientUuid, model.openAs.prescribedDrugUuid, model.drugName!!, model.dosage, model.rxNormCode, model.frequency))
     }
   }
 }

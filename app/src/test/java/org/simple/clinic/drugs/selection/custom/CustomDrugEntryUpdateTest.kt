@@ -101,4 +101,22 @@ class CustomDrugEntryUpdateTest {
             hasEffects(SaveCustomDrugToPrescription(patientUuid, drugName, dosage, null, frequency))
         ))
   }
+
+  @Test
+  fun `when save button is clicked, then update the prescription in the repository`() {
+    val dosage = "200 mg"
+    val frequency = DrugFrequency.OD
+    val prescribedDrugUuid = UUID.fromString("96633994-6e4d-4528-b796-f03ae016553a")
+    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.Update(patientUuid, prescribedDrugUuid))
+
+    updateSpec
+        .given(defaultModel.drugNameLoaded(drugName).dosageEdited(dosage).frequencyEdited(frequency))
+        .whenEvent(AddMedicineButtonClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(UpdatePrescription(patientUuid, prescribedDrugUuid, drugName, dosage, null, frequency))
+            )
+        )
+  }
 }

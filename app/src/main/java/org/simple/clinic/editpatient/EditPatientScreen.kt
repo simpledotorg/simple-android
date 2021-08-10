@@ -1,15 +1,14 @@
 package org.simple.clinic.editpatient
 
-import android.content.Context
 import android.os.Parcelable
-import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
-import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
@@ -19,6 +18,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.checkedChanges
 import com.jakewharton.rxbinding3.widget.textChanges
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
@@ -52,6 +52,7 @@ import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.form.AgeField
@@ -96,10 +97,13 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
 
-class EditPatientScreen(
-    context: Context,
-    attributeSet: AttributeSet
-) : RelativeLayout(context, attributeSet), EditPatientUi, HandlesBack {
+class EditPatientScreen : BaseScreen<
+    EditPatientScreen.Key,
+    ScreenEditPatientBinding,
+    EditPatientModel,
+    EditPatientEvent,
+    EditPatientEffect,
+    Unit>(), EditPatientUi, HandlesBack {
 
   @Inject
   lateinit var router: Router
@@ -284,6 +288,54 @@ class EditPatientScreen(
         modelUpdateListener = viewRenderer::render
     )
   }
+
+  override fun defaultModel() = EditPatientModel.from(
+      patient = screenKey.patient,
+      address = screenKey.address,
+      phoneNumber = screenKey.phoneNumber,
+      dateOfBirthFormatter = dateOfBirthFormat,
+      bangladeshNationalId = screenKey.bangladeshNationalId,
+      saveButtonState = EditPatientState.NOT_SAVING_PATIENT
+  )
+
+  override fun createInit() = EditPatientInit(
+      patient = screenKey.patient,
+      address = screenKey.address,
+      phoneNumber = screenKey.phoneNumber,
+      bangladeshNationalId = screenKey.bangladeshNationalId,
+      isVillageTypeAheadEnabled = features.isEnabled(VillageTypeAhead)
+  )
+
+  override fun createUpdate() = EditPatientUpdate(numberValidator, dateOfBirthValidator, ageValidator)
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
+      .create(this)
+      .build()
+
+  override fun uiRenderer() = EditPatientViewRenderer(this)
+
+  override fun events() = Observable.mergeArray(
+      saveClicks(),
+      nameTextChanges(),
+      phoneNumberTextChanges(),
+      districtTextChanges(),
+      stateTextChanges(),
+      colonyTextChanges(),
+      genderChanges(),
+      dateOfBirthTextChanges(),
+      dateOfBirthFocusChanges(),
+      ageTextChanges(),
+      backClicks(),
+      bangladeshNationalIdChanges(),
+      zoneEditText.textChanges(::ZoneChanged),
+      streetAddressEditText.textChanges(::StreetAddressChanged)
+  ).compose(ReportAnalyticsEvents())
+      .cast<EditPatientEvent>()
+
+  override fun bindView(
+      layoutInflater: LayoutInflater,
+      container: ViewGroup?
+  ) = ScreenEditPatientBinding.inflate(layoutInflater, container, false)
 
   override fun onFinishInflate() {
     super.onFinishInflate()

@@ -5,3 +5,5 @@ import org.simple.clinic.drugs.search.DrugFrequency
 sealed class CustomDrugEntryEffect
 
 data class ShowEditFrequencyDialog(val frequency: DrugFrequency) : CustomDrugEntryEffect()
+
+data class SetDrugFrequency(val frequency: DrugFrequency?) : CustomDrugEntryEffect()

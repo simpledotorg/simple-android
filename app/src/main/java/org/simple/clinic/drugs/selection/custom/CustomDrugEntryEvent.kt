@@ -20,3 +20,5 @@ object CustomDrugSaved : CustomDrugEntryEvent()
 data class PrescribedDrugFetched(val prescription: PrescribedDrug) : CustomDrugEntryEvent()
 
 object ExistingDrugRemoved : CustomDrugEntryEvent()
+
+object RemoveDrugButtonClicked : CustomDrugEntryEvent()

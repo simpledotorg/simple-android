@@ -152,4 +152,18 @@ class CustomDrugEntryUpdateTest {
                 hasEffects(SetSheetTitle(drugName, dosage, drugFrequency), SetDrugFrequency(drugFrequency)))
         )
   }
+
+  @Test
+  fun `when remove button is clicked, then remove the drug from the custom drug list`() {
+    val prescribedDrugId = UUID.fromString("59842701-d7dd-4206-88a9-9f6f2460e496")
+    val model = CustomDrugEntryModel.default(openAs = OpenAs.Update(patientUuid, prescribedDrugId))
+
+    updateSpec
+        .given(model)
+        .whenEvent(RemoveDrugButtonClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(RemoveDrugFromPrescription(drugUuid = prescribedDrugId))
+        ))
+  }
 }

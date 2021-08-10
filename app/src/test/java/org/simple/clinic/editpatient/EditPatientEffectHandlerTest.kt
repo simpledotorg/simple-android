@@ -21,6 +21,8 @@ import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
+import org.simple.clinic.patient.Age
+import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
@@ -30,6 +32,7 @@ import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.uuid.FakeUuidGenerator
+import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -314,5 +317,91 @@ class EditPatientEffectHandlerTest {
     //then
     testCase.assertOutgoingEvents(ColonyOrVillagesFetched(colonyOrVillages))
     verifyZeroInteractions(ui)
+  }
+
+  @Test
+  fun `when saving the patient, the recorded age must not be updated if the entered age is the same as the recorded age`() {
+    // given
+    val currentTime = Instant.now(utcClock)
+    val patientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("6e7c5107-a762-453a-a5ef-b19c924f2f39"),
+        generatePhoneNumber = false,
+        generateBusinessId = false,
+        age = Age(35, currentTime),
+        dateOfBirth = null
+    )
+    val ongoingEntry = EditablePatientEntry.from(
+        patient = patientProfile.patient,
+        address = patientProfile.address,
+        phoneNumber = patientProfile.phoneNumbers.firstOrNull(),
+        dateOfBirthFormatter = dateOfBirthFormatter,
+        alternativeId = null
+    )
+    whenever(patientRepository.updatePatient(patientProfile.patient)).thenReturn(Completable.complete())
+    whenever(patientRepository.updateAddressForPatient(patientProfile.patientUuid, patientProfile.address)).thenReturn(Completable.complete())
+
+    // when
+    utcClock.advanceBy(Duration.ofSeconds(1))
+    testCase.dispatch(SavePatientEffect(
+        ongoingEntry = ongoingEntry,
+        savedPatient = patientProfile.patient,
+        savedAddress = patientProfile.address,
+        savedPhoneNumber = patientProfile.phoneNumbers.firstOrNull(),
+        saveAlternativeId = null
+    ))
+
+    // then
+    testCase.assertOutgoingEvents(PatientSaved)
+    verifyZeroInteractions(ui)
+    verify(patientRepository).updatePatient(patientProfile.patient)
+    verify(patientRepository).updateAddressForPatient(patientProfile.patientUuid, patientProfile.address)
+    verifyNoMoreInteractions(patientRepository)
+  }
+
+  @Test
+  fun `when saving the patient, the recorded age must be updated if the entered age is different from the recorded age`() {
+    // given
+    val currentTime = Instant.now(utcClock)
+    val timeToAdvanceBy = Duration.ofSeconds(1)
+    val recordedAge = 35
+    val enteredAge = 37
+
+    val patientProfile = TestData.patientProfile(
+        patientUuid = UUID.fromString("6e7c5107-a762-453a-a5ef-b19c924f2f39"),
+        generatePhoneNumber = false,
+        generateBusinessId = false,
+        age = Age(recordedAge, currentTime),
+        dateOfBirth = null
+    )
+    val ongoingEntry = EditablePatientEntry.from(
+        patient = patientProfile.patient,
+        address = patientProfile.address,
+        phoneNumber = patientProfile.phoneNumbers.firstOrNull(),
+        dateOfBirthFormatter = dateOfBirthFormatter,
+        alternativeId = null
+    ).updateAge(enteredAge.toString())
+    val expectedPatientToBeSaved = patientProfile.patient.withAgeDetails(PatientAgeDetails.fromAgeOrDate(
+        age = Age(enteredAge, currentTime + timeToAdvanceBy),
+        date = null
+    ))
+    whenever(patientRepository.updatePatient(expectedPatientToBeSaved)).thenReturn(Completable.complete())
+    whenever(patientRepository.updateAddressForPatient(patientProfile.patientUuid, patientProfile.address)).thenReturn(Completable.complete())
+
+    // when
+    utcClock.advanceBy(timeToAdvanceBy)
+    testCase.dispatch(SavePatientEffect(
+        ongoingEntry = ongoingEntry,
+        savedPatient = patientProfile.patient,
+        savedAddress = patientProfile.address,
+        savedPhoneNumber = patientProfile.phoneNumbers.firstOrNull(),
+        saveAlternativeId = null
+    ))
+
+    // then
+    testCase.assertOutgoingEvents(PatientSaved)
+    verifyZeroInteractions(ui)
+    verify(patientRepository).updatePatient(expectedPatientToBeSaved)
+    verify(patientRepository).updateAddressForPatient(patientProfile.patientUuid, patientProfile.address)
+    verifyNoMoreInteractions(patientRepository)
   }
 }

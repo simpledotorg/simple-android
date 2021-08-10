@@ -7,7 +7,7 @@ class CustomDrugEntryUiRenderer(
     private val dosagePlaceholder: String
 ) : ViewRenderer<CustomDrugEntryModel> {
   override fun render(model: CustomDrugEntryModel) {
-    initialSetup()
+    initialSetup(model.openAs)
 
     showDefaultDosagePlaceholder(model.dosage, model.dosageHasFocus)
   }
@@ -24,12 +24,20 @@ class CustomDrugEntryUiRenderer(
     }
   }
 
-  private fun initialSetup() {
-    setUpUIForCreatingDrugEntry()
+  private fun initialSetup(openAs: OpenAs) {
+    when (openAs) {
+      is OpenAs.New -> setUpUIForCreatingDrugEntry()
+      is OpenAs.Update -> setUpUIForUpdatingDrugEntry()
+    }
   }
 
   private fun setUpUIForCreatingDrugEntry() {
     ui.hideRemoveButton()
     ui.setButtonTextAsAdd()
+  }
+
+  private fun setUpUIForUpdatingDrugEntry() {
+    ui.showRemoveButton()
+    ui.setButtonTextAsSave()
   }
 }

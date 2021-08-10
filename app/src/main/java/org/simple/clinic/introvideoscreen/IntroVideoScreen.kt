@@ -89,7 +89,7 @@ class IntroVideoScreen : BaseScreen<
     binding = ScreenIntroVideoBinding.bind(this)
     if (isInEditMode) return
 
-    context.injector<IntroVideoScreenInjector>().inject(this)
+    requireContext().injector<IntroVideoScreenInjector>().inject(this)
 
     introVideoSubtitle.text = resources.getString(R.string.simple_video_duration, simpleVideo.duration)
   }
@@ -130,11 +130,11 @@ class IntroVideoScreen : BaseScreen<
   }
 
   private fun openYoutubeLinkForSimpleVideo() {
-    val packageManager = context.packageManager
+    val packageManager = requireContext().packageManager
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(simpleVideo.url))
 
     if (intent.resolveActivity(packageManager) != null) {
-      context.startActivity(intent)
+      requireContext().startActivity(intent)
     } else {
       CrashReporter.report(ActivityNotFoundException("Unable to play simple video because no supporting apps were found."))
     }

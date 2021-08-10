@@ -141,6 +141,9 @@ class EditPatientScreen : BaseScreen<
 
   private var binding: ScreenEditPatientBinding? = null
 
+  private val rootView
+    get() = binding!!.root
+
   private val zoneEditText
     get() = binding!!.zoneEditText
 
@@ -522,7 +525,7 @@ class EditPatientScreen : BaseScreen<
 
   private fun inflateBpPassportView(identifier: String) {
     val layoutInflater = LayoutInflater.from(requireContext())
-    val bpPassportView = PatientEditBpPassportViewBinding.inflate(layoutInflater, this, false)
+    val bpPassportView = PatientEditBpPassportViewBinding.inflate(layoutInflater, rootView, false)
     bpPassportView.bpPassportIdentifier.text = identifier
     bpPassportsContainer.addView(bpPassportView.root)
   }
@@ -754,7 +757,7 @@ class EditPatientScreen : BaseScreen<
         .setOrdering(TransitionSet.ORDERING_TOGETHER)
         .setDuration(250)
         .setInterpolator(FastOutSlowInInterpolator())
-    TransitionManager.beginDelayedTransition(this, transition)
+    TransitionManager.beginDelayedTransition(rootView, transition)
 
     dateOfBirthInputLayout.visibility = when (visibility) {
       DATE_OF_BIRTH_VISIBLE, BOTH_VISIBLE -> VISIBLE
@@ -808,7 +811,7 @@ class EditPatientScreen : BaseScreen<
 
   private fun inflateAlternateIdView(identifier: String) {
     val layoutInflater = LayoutInflater.from(requireContext())
-    val alternateIdView = PatientEditAlternateIdViewBinding.inflate(layoutInflater, this, false)
+    val alternateIdView = PatientEditAlternateIdViewBinding.inflate(layoutInflater, rootView, false)
     alternateIdView.alternateIdentifier.text = identifier
     alternateIdContainer.addView(alternateIdView.root)
   }

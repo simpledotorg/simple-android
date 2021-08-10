@@ -21,6 +21,7 @@
 - Bump RecyclerView to v1.2.1
 - Unify the patient age details into a single model
 - Migrate `PatientEntryScreen` to a fragment
+- Check if ViewModel is initialised when saving state in base screens
 
 ### Changes
 - Don't load search results if search query is not changed from previous search query

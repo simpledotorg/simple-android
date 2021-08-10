@@ -19,7 +19,7 @@
 - Bump threeten-extra to v1.7.0
 - Bump AppCompat to v1.3.1
 - Bump RecyclerView to v1.2.1
-- [In Progress: 06 Aug 2021] Unify the patient age details into a single model
+- Unify the patient age details into a single model
 
 ### Changes
 - Don't load search results if search query is not changed from previous search query

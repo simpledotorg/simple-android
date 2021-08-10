@@ -97,7 +97,7 @@ itemanimators = "com.mikepenz:itemanimators:1.0.2"
 
 jackson-core = "com.fasterxml.jackson.core:jackson-core:2.12.4"
 
-jbcrypt = "org.mindrot:jbcrypt:0.3m"
+jbcrypt = "org.mindrot:jbcrypt:0.4"
 
 junit = "junit:junit:4.13.2"
 junitParams = "pl.pragmatists:JUnitParams:1.1.1"

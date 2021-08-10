@@ -1,9 +1,12 @@
 package org.simple.clinic.introvideoscreen
 
 import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
@@ -64,6 +67,16 @@ class IntroVideoScreen : BaseScreen<
 
   @Inject
   lateinit var introVideoEffectHandler: IntroVideoEffectHandler.Factory
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    requireContext().injector<Injector>().inject(this)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    introVideoSubtitle.text = resources.getString(R.string.simple_video_duration, simpleVideo.duration)
+  }
 
   private val events: Observable<IntroVideoEvent> by unsafeLazy {
     Observable

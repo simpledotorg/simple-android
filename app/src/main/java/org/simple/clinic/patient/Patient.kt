@@ -43,10 +43,8 @@ data class Patient(
 
     val gender: Gender,
 
-    val dateOfBirth: LocalDate?,
-
-    @Embedded(prefix = "age_")
-    val age: Age?,
+    @Embedded
+    val ageDetails: PatientAgeDetails,
 
     val status: PatientStatus,
 
@@ -71,17 +69,20 @@ data class Patient(
     val retainUntil: Instant?
 ) : Parcelable {
 
+  val age: Age?
+    get() {
+      return if (ageDetails.type == PatientAgeDetails.Type.FROM_AGE)
+        Age(ageDetails.ageValue!!, ageDetails.ageUpdatedAt!!)
+      else
+        null
+    }
+
   fun withNameAndGender(fullName: String, gender: Gender): Patient =
       copy(fullName = fullName, gender = gender)
 
-  fun withoutAgeAndDateOfBirth(): Patient =
-      copy(age = null, dateOfBirth = null)
+  fun withAge(age: Age): Patient = copy(ageDetails = ageDetails.withAge(age))
 
-  fun withAge(age: Age): Patient =
-      copy(age = age)
-
-  fun withDateOfBirth(dateOfBirth: LocalDate): Patient =
-      copy(dateOfBirth = dateOfBirth)
+  fun withDateOfBirth(dateOfBirth: LocalDate): Patient = copy(ageDetails = ageDetails.withDateOfBirth(dateOfBirth))
 
   @Dao
   abstract class RoomDao : DaoWithUpsert<Patient>() {

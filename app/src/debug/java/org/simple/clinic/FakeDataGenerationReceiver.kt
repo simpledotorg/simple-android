@@ -13,6 +13,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -214,8 +215,7 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
         addressUuid = address.uuid,
         fullName = faker.name.name(),
         gender = randomGender(),
-        dateOfBirth = LocalDate.now(clock).minusYears(Random.nextInt(30..70).toLong()),
-        age = null,
+        ageDetails = PatientAgeDetails.fromAgeOrDate(null, LocalDate.now(clock).minusYears(Random.nextInt(30..70).toLong())),
         status = PatientStatus.Active,
         createdAt = timestamp,
         updatedAt = timestamp,

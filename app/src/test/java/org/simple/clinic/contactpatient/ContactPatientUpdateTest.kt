@@ -38,7 +38,7 @@ class ContactPatientUpdateTest {
       appointmentUuid = appointmentUuid,
       gender = patientProfile.patient.gender,
       age = patientProfile.patient.age,
-      dateOfBirth = patientProfile.patient.dateOfBirth
+      dateOfBirth = patientProfile.patient.ageDetails.dateOfBirth
   )
   private val proxyPhoneNumberForSecureCalls = "9999988888"
   private val timeToAppointments = listOf(

@@ -18,7 +18,6 @@ import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.teleconsultlog.success.TeleConsultSuccessScreenKey
@@ -112,7 +111,7 @@ class TeleconsultRecordScreen :
   }
 
   override fun renderPatientDetails(patient: Patient) {
-    val ageValue = DateOfBirth.fromPatient(patient, userClock).estimateAge(userClock)
+    val ageValue = patient.ageDetails.estimateAge(userClock)
     val patientGender = patient.gender
     toolbar.title = requireContext().getString(
         R.string.screen_teleconsult_record_patient_details,

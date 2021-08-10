@@ -10,8 +10,8 @@ import com.google.android.material.card.MaterialCardView
 import org.simple.clinic.R
 import org.simple.clinic.databinding.ViewPatientSearchResultBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.patient.Age
-import org.simple.clinic.patient.DateOfBirth
+import org.simple.clinic.patient.PatientAgeDetails
+import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientSearchResult
@@ -27,7 +27,6 @@ import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.router.util.resolveColor
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
@@ -103,7 +102,7 @@ class PatientSearchResultItemView(
   fun render(model: PatientSearchResultViewModel, currentFacilityId: UUID, searchQuery: String?) {
     renderPatientNameAgeAndGender(searchQuery, model)
     renderPatientAddress(model.address)
-    renderPatientDateOfBirth(model.dateOfBirth)
+    renderPatientDateOfBirth(model.ageDetails)
     renderPatientPhoneNumber(searchQuery, model)
     renderVisited(model.lastSeen)
     renderLastSeen(model.lastSeen, currentFacilityId)
@@ -202,10 +201,12 @@ class PatientSearchResultItemView(
     phoneNumberTextView.text = patientPhoneNumber
   }
 
-  private fun renderPatientDateOfBirth(dateOfBirth: LocalDate?) {
-    dateOfBirthContainer.visibleOrGone(dateOfBirth != null)
-    if (dateOfBirth != null) {
-      dateOfBirthTextView.text = dateTimeFormatter.format(dateOfBirth)
+  private fun renderPatientDateOfBirth(ageDetails: PatientAgeDetails) {
+    if (ageDetails.type == EXACT) {
+      dateOfBirthContainer.visibility = VISIBLE
+      dateOfBirthTextView.text = dateTimeFormatter.format(ageDetails.dateOfBirth)
+    } else {
+      dateOfBirthContainer.visibility = GONE
     }
   }
 
@@ -215,12 +216,11 @@ class PatientSearchResultItemView(
 
   private fun getPatientName(
       searchQuery: String?,
-      patientSearchResult: PatientSearchResultViewModel,
-      dateOfBirth: DateOfBirth
+      patientSearchResult: PatientSearchResultViewModel
   ): Name {
     val canHighlight = !searchQuery.isNullOrBlank() && patientSearchResult.fullName.contains(searchQuery, ignoreCase = true)
     genderLabel.setImageResource(patientSearchResult.gender.displayIconRes)
-    val ageValue = dateOfBirth.estimateAge(userClock)
+    val ageValue = patientSearchResult.ageDetails.estimateAge(userClock)
     val genderLetter = resources.getString(patientSearchResult.gender.displayLetterRes)
     val patientNameAgeAndGender = resources.getString(R.string.patientsummary_toolbar_title, patientSearchResult.fullName, genderLetter, ageValue.toString())
     return if (canHighlight) {
@@ -239,7 +239,7 @@ class PatientSearchResultItemView(
       model: PatientSearchResultViewModel
   ) {
 
-    val patientName = when (val name = getPatientName(searchQuery, model, DateOfBirth.fromPatientSearchResultViewModel(model, userClock))) {
+    val patientName = when (val name = getPatientName(searchQuery, model)) {
       is Name.Highlighted -> highlight(text = name.patientName,
           startIndex = name.highlightStart,
           endIndex = name.highlightEnd)
@@ -264,8 +264,7 @@ class PatientSearchResultItemView(
       val uuid: UUID,
       val fullName: String,
       val gender: Gender,
-      val age: Age?,
-      val dateOfBirth: LocalDate?,
+      val ageDetails: PatientAgeDetails,
       val address: PatientAddress,
       val phoneNumber: String?,
       val lastSeen: PatientSearchResult.LastSeen?,

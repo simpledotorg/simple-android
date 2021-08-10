@@ -17,6 +17,8 @@ import org.simple.clinic.editpatient.EditPatientState.NOT_SAVING_PATIENT
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.Age
+import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
+import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
@@ -96,7 +98,7 @@ class EditPatientScreenCreatedTest {
     }
 
     if (patientFormTestParams.shouldSetDateOfBirth) {
-      verify(ui).setPatientDateOfBirth(patient.dateOfBirth!!)
+      verify(ui).setPatientDateOfBirth(patient.ageDetails.dateOfBirth!!)
     } else {
       verify(ui, never()).setPatientDateOfBirth(any())
     }
@@ -159,10 +161,10 @@ class EditPatientScreenCreatedTest {
       get() = phoneNumber != null
 
     val shouldSetAge: Boolean
-      get() = patient.age != null
+      get() = patient.ageDetails.type == FROM_AGE
 
     val shouldSetDateOfBirth: Boolean
-      get() = patient.dateOfBirth != null
+      get() = patient.ageDetails.type == EXACT
   }
 
   private fun screenCreated(

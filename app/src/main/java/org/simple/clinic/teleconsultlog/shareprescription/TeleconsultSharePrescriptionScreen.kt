@@ -29,7 +29,6 @@ import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.router.ScreenResultBus
@@ -246,7 +245,7 @@ class TeleconsultSharePrescriptionScreen :
 
   override fun renderPatientInformation(patientProfile: PatientProfile) {
     patientAddressTextView.text = patientProfile.address.completeAddress
-    val ageValue = DateOfBirth.fromPatient(patientProfile.patient, userClock).estimateAge(userClock)
+    val ageValue = patientProfile.patient.ageDetails.estimateAge(userClock)
     val patientGender = patientProfile.patient.gender
     patientNameTextView.text = requireContext().getString(
         R.string.screen_teleconsult_share_prescription_patient_details,

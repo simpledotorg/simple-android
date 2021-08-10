@@ -12,7 +12,6 @@ import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.patient.Age
-import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.util.TestUserClock
@@ -185,7 +184,7 @@ class CallPatientUiRendererTest {
     verify(ui).switchToCallPatientView()
     verify(ui).renderPatientDetails(PatientDetails(name = patientProfile.patient.fullName,
         gender = patientProfile.patient.gender,
-        age = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock),
+        age = patientProfile.patient.ageDetails.estimateAge(clock),
         phoneNumber = patientProfile.phoneNumbers.first().number,
         patientAddress = patientAddressText(patientProfile.address)!!,
         registeredFacility = patientProfile.registeredFacility?.name,
@@ -229,7 +228,7 @@ class CallPatientUiRendererTest {
     verify(ui).switchToCallPatientView()
     verify(ui).renderPatientDetails(PatientDetails(name = patientProfile.patient.fullName,
         gender = patientProfile.patient.gender,
-        age = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock),
+        age = patientProfile.patient.ageDetails.estimateAge(clock),
         phoneNumber = patientProfile.phoneNumbers.first().number,
         patientAddress = patientAddressText(patientProfile.address)!!,
         registeredFacility = patientProfile.registeredFacility?.name,
@@ -286,7 +285,7 @@ class CallPatientUiRendererTest {
     verify(ui).switchToCallPatientView()
     verify(ui).renderPatientDetails(PatientDetails(name = patientProfile.patient.fullName,
         gender = patientProfile.patient.gender,
-        age = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock),
+        age = patientProfile.patient.ageDetails.estimateAge(clock),
         phoneNumber = patientProfile.phoneNumbers.first().number,
         patientAddress = patientAddressText(patientProfile.address)!!,
         registeredFacility = patientProfile.registeredFacility?.name,
@@ -361,7 +360,7 @@ class CallPatientUiRendererTest {
     verify(ui).hidePatientWithPhoneNumberUi()
     verify(ui).renderPatientDetails(PatientDetails(name = patientProfile.patient.fullName,
         gender = patientProfile.patient.gender,
-        age = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock),
+        age = patientProfile.patient.ageDetails.estimateAge(clock),
         phoneNumber = null,
         patientAddress = patientAddressText(patientProfile.address)!!,
         registeredFacility = patientProfile.registeredFacility?.name,
@@ -402,7 +401,7 @@ class CallPatientUiRendererTest {
     verify(ui).hidePatientWithNoPhoneNumberUi()
     verify(ui).renderPatientDetails(PatientDetails(name = patientProfile.patient.fullName,
         gender = patientProfile.patient.gender,
-        age = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock),
+        age = patientProfile.patient.ageDetails.estimateAge(clock),
         phoneNumber = patientProfile.phoneNumbers.first().number,
         patientAddress = patientAddressText(patientProfile.address)!!,
         registeredFacility = patientProfile.registeredFacility?.name,

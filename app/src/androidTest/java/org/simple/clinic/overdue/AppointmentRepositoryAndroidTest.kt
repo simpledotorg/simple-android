@@ -2903,8 +2903,7 @@ class AppointmentRepositoryAndroidTest {
         return OverdueAppointment(
             fullName = patientProfile.patient.fullName,
             gender = patientProfile.patient.gender,
-            dateOfBirth = patientProfile.patient.dateOfBirth,
-            age = patientProfile.patient.age,
+            ageDetails = patientProfile.patient.ageDetails,
             appointment = appointment,
             phoneNumber = patientProfile.phoneNumbers.firstOrNull(),
             patientAddress = overduePatientAddress,

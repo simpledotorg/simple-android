@@ -6,7 +6,6 @@ import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
-import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.util.ParcelableOptional
 import org.simple.clinic.util.UserClock
@@ -170,7 +169,7 @@ class ContactPatientUiRenderer(
   private fun renderPatientProfile_Old(
       patientProfile: ContactPatientProfile
   ) {
-    val patientAge = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock)
+    val patientAge = patientProfile.patient.ageDetails.estimateAge(clock)
 
     ui.renderPatientDetails_Old(
         name = patientProfile.patient.fullName,
@@ -183,7 +182,7 @@ class ContactPatientUiRenderer(
   private fun renderPatientProfile(
       patientProfile: ContactPatientProfile
   ) {
-    val patientAge = DateOfBirth.fromPatient(patientProfile.patient, clock).estimateAge(clock)
+    val patientAge = patientProfile.patient.ageDetails.estimateAge(clock)
 
     ui.renderPatientDetails(PatientDetails(
         name = patientProfile.patient.fullName,

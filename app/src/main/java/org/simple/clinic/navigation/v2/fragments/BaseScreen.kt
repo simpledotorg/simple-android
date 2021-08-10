@@ -115,6 +115,8 @@ abstract class BaseScreen<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, 
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    outState.putParcelable(KEY_MODEL, viewModel.model)
+    if (::viewModel.isInitialized) {
+      outState.putParcelable(KEY_MODEL, viewModel.model)
+    }
   }
 }

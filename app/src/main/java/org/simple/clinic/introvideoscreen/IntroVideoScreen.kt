@@ -170,4 +170,8 @@ class IntroVideoScreen : BaseScreen<
   ) : ScreenKey() {
     override fun instantiateFragment() = IntroVideoScreen()
   }
+
+  interface Injector {
+    fun inject(target: IntroVideoScreen)
+  }
 }

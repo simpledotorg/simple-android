@@ -17,6 +17,7 @@
 - Set Sri Lanka display name in country selection screen
 - Migrate to Fragment results API
 - Bump threeten-extra to v1.7.0
+- Bump AppCompat to v1.3.1
 - [In Progress: 06 Aug 2021] Unify the patient age details into a single model
 
 ### Changes

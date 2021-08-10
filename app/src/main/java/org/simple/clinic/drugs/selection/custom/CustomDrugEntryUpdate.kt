@@ -17,7 +17,16 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       is DosageFocusChanged -> next(model.dosageFocusChanged(event.hasFocus))
       is EditFrequencyClicked -> dispatch(ShowEditFrequencyDialog(event.frequency))
       is FrequencyEdited -> next(model.frequencyEdited(event.frequency), SetDrugFrequency(event.frequency), SetSheetTitle(model.drugName, model.dosage, event.frequency))
+      is AddMedicineButtonClicked -> createOrUpdatePrescriptionEntry(model)
       is CustomDrugSaved -> noChange()
+    }
+  }
+
+  private fun createOrUpdatePrescriptionEntry(model: CustomDrugEntryModel): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
+    return when (model.openAs) {
+      is OpenAs.New.FromDrugList -> dispatch(SaveCustomDrugToPrescription(model.openAs.patientUuid, model.openAs.drug.name, model.dosage, model.openAs.drug.rxNormCode, model.frequency))
+      is OpenAs.New.FromDrugName -> noChange()
+      is OpenAs.Update -> noChange()
     }
   }
 }

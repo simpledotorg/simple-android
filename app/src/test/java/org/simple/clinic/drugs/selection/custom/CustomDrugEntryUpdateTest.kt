@@ -7,6 +7,7 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.drugs.search.DrugFrequency
 import java.util.UUID
 
@@ -66,6 +67,22 @@ class CustomDrugEntryUpdateTest {
         .then(assertThatNext(
             hasModel(drugNameLoadedModel.frequencyEdited(frequency)),
             hasEffects(SetDrugFrequency(frequency), SetSheetTitle(drugName, null, frequency))
+        ))
+  }
+
+  @Test
+  fun `when add button is clicked and the sheet is opened in create mode from drug list with edited dosage and frequency values, then add the drug to the custom drug list`() {
+    val dosage = "200 mg"
+    val frequency = DrugFrequency.OD
+    val drug = TestData.drug(id = UUID.fromString("6106544f-2b18-410d-992b-81860a08f02a"), name = drugName)
+    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugList(patientUuid, drug)).drugNameLoaded(drugName)
+
+    updateSpec
+        .given(defaultModel.dosageEdited(dosage).frequencyEdited(frequency))
+        .whenEvent(AddMedicineButtonClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(SaveCustomDrugToPrescription(patientUuid, drugName, dosage, drug.rxNormCode, frequency))
         ))
   }
 }

@@ -20,6 +20,7 @@ import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
 import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
@@ -184,20 +185,27 @@ class EditPatientEffectHandler @AssistedInject constructor(
       patient: Patient,
       ongoingEntry: EditablePatientEntry
   ): Patient {
-    val patientWithoutAgeOrDateOfBirth = patient
-        .withNameAndGender(ongoingEntry.name, ongoingEntry.gender)
-
-    return when (ongoingEntry.ageOrDateOfBirth) {
+    val ageDetails = when (ongoingEntry.ageOrDateOfBirth) {
       is EntryWithAge -> {
         val age = coerceAgeFrom(patient.age, ongoingEntry.ageOrDateOfBirth.age)
-        patientWithoutAgeOrDateOfBirth.withAge(age)
+        PatientAgeDetails.fromAgeOrDate(
+            age = age,
+            date = null
+        )
       }
 
       is EntryWithDateOfBirth -> {
         val dateOfBirth = LocalDate.parse(ongoingEntry.ageOrDateOfBirth.dateOfBirth, dateOfBirthFormatter)
-        patientWithoutAgeOrDateOfBirth.withDateOfBirth(dateOfBirth)
+        PatientAgeDetails.fromAgeOrDate(
+            age = null,
+            date = dateOfBirth
+        )
       }
     }
+
+    return patient
+        .withNameAndGender(ongoingEntry.name, ongoingEntry.gender)
+        .withAgeDetails(ageDetails)
   }
 
   private fun coerceAgeFrom(alreadySavedAge: Age?, enteredAge: String): Age {

@@ -10,7 +10,7 @@ import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
-import org.simple.clinic.patient.Age
+import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientPhoneNumber
 import java.time.Instant
@@ -91,10 +91,8 @@ data class OverdueAppointment(
 
     val gender: Gender,
 
-    val dateOfBirth: LocalDate?,
-
-    @Embedded(prefix = "age_")
-    val age: Age?,
+    @Embedded
+    val ageDetails: PatientAgeDetails,
 
     @Embedded(prefix = "appt_")
     val appointment: Appointment,
@@ -119,8 +117,8 @@ data class OverdueAppointment(
 
     val patientRegisteredFacilityName: String?,
 
-    val patientRegisteredFacilityID: UUID?,
-    ) : Parcelable {
+    val patientRegisteredFacilityID: UUID?
+) : Parcelable {
 
   val isAppointmentAtAssignedFacility: Boolean
     get() = patientAssignedFacilityUuid == appointment.facilityUuid

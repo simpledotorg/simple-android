@@ -9,7 +9,6 @@ import androidx.room.Query
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.businessid.Identifier
 import java.time.Instant
-import java.time.LocalDate
 import java.util.UUID
 
 @DatabaseView("""
@@ -67,10 +66,8 @@ data class PatientSearchResult(
 
     val gender: Gender,
 
-    val dateOfBirth: LocalDate?,
-
-    @Embedded(prefix = "age_")
-    val age: Age?,
+    @Embedded
+    val ageDetails: PatientAgeDetails,
 
     val assignedFacilityId: UUID?,
 

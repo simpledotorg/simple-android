@@ -32,6 +32,8 @@ import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.Age
+import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
+import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
@@ -715,10 +717,9 @@ class EditPatientScreenFormTest {
         PhoneNumberChanged(patientProfile.phoneNumbers.firstOrNull()?.number
             ?: "")
     ) + patientProfile.let { (patient, _, _) ->
-      if (patient.age != null) {
-        listOf(AgeChanged(patient.age!!.value.toString()))
-      } else {
-        listOf(DateOfBirthChanged(patient.dateOfBirth!!.format(dateOfBirthFormat)))
+      when (patient.ageDetails.type) {
+        FROM_AGE -> listOf(AgeChanged(patient.ageDetails.ageValue!!.toString()))
+        EXACT -> listOf(DateOfBirthChanged(patient.ageDetails.dateOfBirth!!.format(dateOfBirthFormat)))
       }
     }
 
@@ -795,11 +796,11 @@ class EditPatientScreenFormTest {
     }.let { profile ->
       if (ageValue != null) {
         val age = Age(ageValue, Instant.now(utcClock))
-        return@let profile.copy(patient = profile.patient.copy(age = age, dateOfBirth = null))
+        return@let profile.copy(patient = profile.patient.withAge(age))
 
       } else if (dateOfBirthString != null) {
         val dateOfBirth = LocalDate.parse(dateOfBirthString)
-        return@let profile.copy(patient = profile.patient.copy(age = null, dateOfBirth = dateOfBirth))
+        return@let profile.copy(patient = profile.patient.withDateOfBirth(dateOfBirth))
       }
       profile
     }

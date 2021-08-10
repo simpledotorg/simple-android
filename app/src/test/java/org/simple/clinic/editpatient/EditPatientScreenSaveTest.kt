@@ -31,6 +31,9 @@ import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.Age
+import org.simple.clinic.patient.PatientAgeDetails
+import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
+import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -315,7 +318,13 @@ class EditPatientScreenSaveTest {
                 PhoneNumberChanged("12345678"),
                 DateOfBirthChanged("20/05/1985")),
             shouldSavePatient = true,
-            createExpectedPatient = { it.copy(fullName = "Name", gender = Gender.Male, dateOfBirth = LocalDate.of(1985, Month.MAY, 20)) },
+            createExpectedPatient = {
+              it.copy(
+                  fullName = "Name",
+                  gender = Gender.Male,
+                  ageDetails = PatientAgeDetails.fromAgeOrDate(null, LocalDate.of(1985, Month.MAY, 20))
+              )
+            },
             createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") },
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
               alreadyPresentPhoneNumber?.copy(number = "12345678")
@@ -337,7 +346,11 @@ class EditPatientScreenSaveTest {
             createExpectedPatient = {
               val expectedAge = Age(22, Instant.now(utcClock).plus(oneYear))
 
-              it.copy(fullName = "Name", gender = Gender.Male, dateOfBirth = null, age = expectedAge)
+              it.copy(
+                  fullName = "Name",
+                  gender = Gender.Male,
+                  ageDetails = PatientAgeDetails.fromAgeOrDate(expectedAge, null)
+              )
             },
             createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") },
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
@@ -369,7 +382,11 @@ class EditPatientScreenSaveTest {
             createExpectedPatient = {
               val expectedAge = Age(25, Instant.now(utcClock))
 
-              it.copy(fullName = "Name", gender = Gender.Transgender, age = expectedAge)
+              it.copy(
+                  fullName = "Name",
+                  gender = Gender.Transgender,
+                  ageDetails = PatientAgeDetails.fromAgeOrDate(expectedAge, null)
+              )
             },
             createExpectedAddress = { it.copy(district = "District", state = "State") },
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
@@ -391,8 +408,8 @@ class EditPatientScreenSaveTest {
               it.copy(
                   fullName = "Name",
                   gender = Gender.Transgender,
-                  age = null,
-                  dateOfBirth = LocalDate.parse("1965-06-25"))
+                  ageDetails = PatientAgeDetails.fromAgeOrDate(null, LocalDate.parse("1965-06-25"))
+              )
             },
             createExpectedAddress = { it.copy(district = "District", state = "State") },
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
@@ -413,7 +430,11 @@ class EditPatientScreenSaveTest {
             createExpectedPatient = {
               val expectedAge = Age(25, Instant.now(utcClock).plus(twoYears))
 
-              it.copy(fullName = "Name", gender = Gender.Transgender, age = expectedAge)
+              it.copy(
+                  fullName = "Name",
+                  gender = Gender.Transgender,
+                  ageDetails = PatientAgeDetails.fromAgeOrDate(expectedAge, null)
+              )
             },
             createExpectedAddress = { it.copy(district = "District", state = "State") },
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
@@ -624,10 +645,9 @@ class EditPatientScreenSaveTest {
         PhoneNumberChanged(patientProfile.phoneNumbers.firstOrNull()?.number
             ?: ""),
 
-        if (patientProfile.patient.age != null) {
-          AgeChanged(patientProfile.patient.age!!.value.toString())
-        } else {
-          DateOfBirthChanged(dateOfBirthFormat.format(patientProfile.patient.dateOfBirth!!))
+        when (patientProfile.patient.ageDetails.type) {
+          FROM_AGE -> AgeChanged(patientProfile.patient.ageDetails.ageValue!!.toString())
+          EXACT -> DateOfBirthChanged(dateOfBirthFormat.format(patientProfile.patient.ageDetails.dateOfBirth!!))
         }
     )
 

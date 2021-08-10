@@ -42,7 +42,6 @@ import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
@@ -336,7 +335,7 @@ class PatientSummaryScreen :
   @SuppressLint("SetTextI18n")
   override fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile) {
     val patient = patientSummaryProfile.patient
-    val ageValue = DateOfBirth.fromPatient(patient, userClock).estimateAge(userClock)
+    val ageValue = patient.ageDetails.estimateAge(userClock)
 
     displayNameGenderAge(patient.fullName, patient.gender, ageValue)
     displayRegistrationFacilityName(patientSummaryProfile)

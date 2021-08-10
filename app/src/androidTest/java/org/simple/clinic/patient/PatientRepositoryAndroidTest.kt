@@ -187,8 +187,8 @@ class PatientRepositoryAndroidTest {
 
     val patient = database.patientDao().getOne(savedPatient.patientUuid)!!
 
-    assertThat(patient.dateOfBirth).isEqualTo(LocalDate.parse("1985-04-08"))
-    assertThat(patient.age).isNull()
+    assertThat(patient.ageDetails.dateOfBirth).isEqualTo(LocalDate.parse("1985-04-08"))
+    assertThat(patient.ageDetails.type).isEqualTo(PatientAgeDetails.Type.EXACT)
 
     val savedPhoneNumbers = database.phoneNumberDao().phoneNumber(patient.uuid).firstOrError().blockingGet()
     assertThat(savedPhoneNumbers).hasSize(1)
@@ -240,8 +240,8 @@ class PatientRepositoryAndroidTest {
     val patient = database.patientDao().getOne(savedPatient.patientUuid)!!
 
     assertThat(patient.fullName).isEqualTo(patientEntry.personalDetails!!.fullName)
-    assertThat(patient.dateOfBirth).isNull()
-    assertThat(patient.age!!.value).isEqualTo(patientEntry.personalDetails!!.age!!.toInt())
+    assertThat(patient.ageDetails.dateOfBirth).isNull()
+    assertThat(patient.ageDetails.ageValue).isEqualTo(patientEntry.personalDetails!!.age!!.toInt())
 
     val savedPhoneNumbers = database.phoneNumberDao().phoneNumber(patient.uuid).firstOrError().blockingGet()
 
@@ -546,12 +546,12 @@ class PatientRepositoryAndroidTest {
     val updatedAfter = Duration.ofDays(1L)
     clock.advanceBy(updatedAfter)
 
-    val newPatientToSave = originalSavedPatient.copy(
-        fullName = "New Name",
-        gender = Gender.Transgender,
-        age = Age(35, Instant.now(clock)),
-        dateOfBirth = LocalDate.now(clock)
-    )
+    val newPatientToSave = originalSavedPatient.
+        withNameAndGender(
+            fullName = "New Name",
+            gender = Gender.Transgender
+        )
+        .withDateOfBirth(LocalDate.now(clock))
 
     patientRepository.updatePatient(newPatientToSave).blockingAwait()
 
@@ -911,8 +911,7 @@ class PatientRepositoryAndroidTest {
       uuid = uuid,
       fullName = fullName,
       gender = gender,
-      dateOfBirth = dateOfBirth,
-      age = age,
+      ageDetails = ageDetails,
       patientRecordedAt = this.recordedAt,
       updatedAt = recordedAt
   )
@@ -966,8 +965,7 @@ class PatientRepositoryAndroidTest {
           uuid = uuid,
           fullName = fullName,
           gender = gender,
-          dateOfBirth = dateOfBirth,
-          age = age,
+          ageDetails = ageDetails,
           patientRecordedAt = this.recordedAt,
           updatedAt = updatedAt
       )
@@ -1108,8 +1106,7 @@ class PatientRepositoryAndroidTest {
           uuid = uuid,
           fullName = fullName,
           gender = gender,
-          dateOfBirth = dateOfBirth,
-          age = age,
+          ageDetails = ageDetails,
           patientRecordedAt = this.recordedAt,
           updatedAt = createdAt
       )
@@ -1989,7 +1986,7 @@ class PatientRepositoryAndroidTest {
             fullName = "new name",
             addressUuid = patient1AddressUuid,
             age = recentPatient1.age,
-            dateOfBirth = recentPatient1.dateOfBirth,
+            dateOfBirth = recentPatient1.ageDetails.dateOfBirth,
             gender = recentPatient1.gender,
             status = Active,
             recordedAt = recentPatient1.patientRecordedAt

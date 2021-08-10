@@ -13,7 +13,6 @@ import org.simple.clinic.R
 import org.simple.clinic.databinding.ItemOverdueListPatientOldBinding
 import org.simple.clinic.databinding.ListItemOverduePatientBinding
 import org.simple.clinic.medicalhistory.Answer
-import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.util.UserClock
@@ -58,7 +57,7 @@ sealed class OverdueAppointmentListItem : PagingItemAdapter.Item<UiEvent> {
             patientUuid = overdueAppointment.appointment.patientUuid,
             name = overdueAppointment.fullName,
             gender = overdueAppointment.gender,
-            age = DateOfBirth.fromOverdueAppointment(overdueAppointment, clock).estimateAge(clock),
+            age = overdueAppointment.ageDetails.estimateAge(clock),
             phoneNumber = overdueAppointment.phoneNumber?.number,
             overdueDays = daysBetweenNowAndDate(overdueAppointment.appointment.scheduledDate, clock),
             isAtHighRisk = overdueAppointment.isAtHighRisk,
@@ -70,7 +69,7 @@ sealed class OverdueAppointmentListItem : PagingItemAdapter.Item<UiEvent> {
             patientUuid = overdueAppointment.appointment.patientUuid,
             name = overdueAppointment.fullName,
             gender = overdueAppointment.gender,
-            age = DateOfBirth.fromOverdueAppointment(overdueAppointment, clock).estimateAge(clock),
+            age = overdueAppointment.ageDetails.estimateAge(clock),
             phoneNumber = overdueAppointment.phoneNumber?.number,
             overdueDays = daysBetweenNowAndDate(overdueAppointment.appointment.scheduledDate, clock),
             isAtHighRisk = overdueAppointment.isAtHighRisk,

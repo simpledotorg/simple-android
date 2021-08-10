@@ -11,7 +11,6 @@ import org.simple.clinic.databinding.ViewTeleconsultPatientInfoBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
-import org.simple.clinic.patient.DateOfBirth
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientProfile
@@ -106,7 +105,7 @@ class TeleconsultPatientInfoView constructor(
   }
 
   private fun displayPatientNameGenderAge(patient: Patient) {
-    val ageValue = DateOfBirth.fromPatient(patient, userClock).estimateAge(userClock)
+    val ageValue = patient.ageDetails.estimateAge(userClock)
     val patientGender = patient.gender
 
     patientNameTextView.text = context.getString(

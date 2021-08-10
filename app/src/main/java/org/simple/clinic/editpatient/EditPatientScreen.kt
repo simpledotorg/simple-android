@@ -244,7 +244,7 @@ class EditPatientScreen : BaseScreen<
 
   private val villageTypeAheadAdapter by unsafeLazy {
     ArrayAdapter<String>(
-        context,
+        requireContext(),
         R.layout.village_typeahead_list_item,
         R.id.villageTypeAheadItemTextView,
         mutableListOf()
@@ -345,7 +345,7 @@ class EditPatientScreen : BaseScreen<
 
     binding = ScreenEditPatientBinding.bind(this)
 
-    context.injector<Injector>().inject(this)
+    requireContext().injector<Injector>().inject(this)
 
     if (features.isEnabled(VillageTypeAhead)) {
       colonyOrVillageEditText.setAdapter(villageTypeAheadAdapter)
@@ -401,7 +401,7 @@ class EditPatientScreen : BaseScreen<
     )
 
     inputFields.fields.forEach {
-      allTextInputFields[it::class.java]?.hint = context.getString(it.labelResId)
+      allTextInputFields[it::class.java]?.hint = getString(it.labelResId)
     }
   }
 
@@ -507,7 +507,7 @@ class EditPatientScreen : BaseScreen<
   }
 
   private fun inflateBpPassportView(identifier: String) {
-    val layoutInflater = LayoutInflater.from(context)
+    val layoutInflater = LayoutInflater.from(requireContext())
     val bpPassportView = PatientEditBpPassportViewBinding.inflate(layoutInflater, this, false)
     bpPassportView.bpPassportIdentifier.text = identifier
     bpPassportsContainer.addView(bpPassportView.root)
@@ -661,23 +661,23 @@ class EditPatientScreen : BaseScreen<
   }
 
   private fun showPhoneNumberEmptyError() {
-    phoneNumberInputLayout.error = context.getString(R.string.patientedit_error_phonenumber_blank)
+    phoneNumberInputLayout.error = getString(R.string.patientedit_error_phonenumber_blank)
   }
 
   private fun showLengthTooShortPhoneNumberError(requiredNumberLength: Int) {
-    phoneNumberInputLayout.error = context.getString(R.string.patientedit_error_phonenumber_length_less, requiredNumberLength.toString())
+    phoneNumberInputLayout.error = getString(R.string.patientedit_error_phonenumber_length_less, requiredNumberLength.toString())
   }
 
   private fun showLengthTooLongPhoneNumberError(requiredNumberLength: Int) {
-    phoneNumberInputLayout.error = context.getString(R.string.patientedit_error_phonenumber_length_more, requiredNumberLength.toString())
+    phoneNumberInputLayout.error = getString(R.string.patientedit_error_phonenumber_length_more, requiredNumberLength.toString())
   }
 
   private fun showInvalidaDateOfBithError() {
-    dateOfBirthInputLayout.error = context.getString(R.string.patientedit_error_invalid_dateofbirth)
+    dateOfBirthInputLayout.error = getString(R.string.patientedit_error_invalid_dateofbirth)
   }
 
   private fun showDateOfBirthIsInFutureError() {
-    dateOfBirthInputLayout.error = context.getString(R.string.patientedit_error_dateofbirth_is_in_future)
+    dateOfBirthInputLayout.error = getString(R.string.patientedit_error_dateofbirth_is_in_future)
   }
 
   private fun showAgeExceedsMaxLimitError() {
@@ -793,7 +793,7 @@ class EditPatientScreen : BaseScreen<
   }
 
   private fun inflateAlternateIdView(identifier: String) {
-    val layoutInflater = LayoutInflater.from(context)
+    val layoutInflater = LayoutInflater.from(requireContext())
     val alternateIdView = PatientEditAlternateIdViewBinding.inflate(layoutInflater, this, false)
     alternateIdView.alternateIdentifier.text = identifier
     alternateIdContainer.addView(alternateIdView.root)

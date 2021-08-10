@@ -17,7 +17,6 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenIntroVideoBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
@@ -29,7 +28,6 @@ import org.simple.clinic.simplevideo.SimpleVideo
 import org.simple.clinic.simplevideo.SimpleVideoConfig
 import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.TrainingVideo
 import org.simple.clinic.user.OngoingRegistrationEntry
-import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
 class IntroVideoScreen : BaseScreen<
@@ -40,20 +38,17 @@ class IntroVideoScreen : BaseScreen<
     IntroVideoEffect,
     Unit>(), UiActions {
 
-
-  var binding: ScreenIntroVideoBinding? = null
-
   private val introVideoSubtitle
-    get() = binding!!.introVideoSubtitle
+    get() = binding.introVideoSubtitle
 
   private val introVideoImageView
-    get() = binding!!.introVideoImageView
+    get() = binding.introVideoImageView
 
   private val watchVideoButton
-    get() = binding!!.watchVideoButton
+    get() = binding.watchVideoButton
 
   private val skipButton
-    get() = binding!!.skipButton
+    get() = binding.skipButton
 
   @Inject
   lateinit var router: Router
@@ -76,46 +71,6 @@ class IntroVideoScreen : BaseScreen<
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     introVideoSubtitle.text = resources.getString(R.string.simple_video_duration, simpleVideo.duration)
-  }
-
-  private val events: Observable<IntroVideoEvent> by unsafeLazy {
-    Observable
-        .mergeArray(
-            videoClicks(),
-            skipClicks()
-        )
-        .compose(ReportAnalyticsEvents())
-        .cast<IntroVideoEvent>()
-  }
-
-  private val mobiusDelegate by unsafeLazy {
-    MobiusDelegate.forView(
-        events,
-        IntroVideoModel.default(),
-        IntroVideoUpdate(),
-        introVideoEffectHandler.create(this).build()
-    )
-  }
-
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    binding = ScreenIntroVideoBinding.bind(this)
-    if (isInEditMode) return
-
-    requireContext().injector<IntroVideoScreenInjector>().inject(this)
-
-    introVideoSubtitle.text = resources.getString(R.string.simple_video_duration, simpleVideo.duration)
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    mobiusDelegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    super.onDetachedFromWindow()
-    mobiusDelegate.stop()
-    binding = null
   }
 
   override fun openVideo() {

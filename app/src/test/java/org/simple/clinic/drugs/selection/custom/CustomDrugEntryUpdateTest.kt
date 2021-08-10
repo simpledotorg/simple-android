@@ -8,11 +8,14 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.drugs.search.DrugFrequency
+import java.util.UUID
 
 class CustomDrugEntryUpdateTest {
 
   private val updateSpec = UpdateSpec(CustomDrugEntryUpdate())
-  private val defaultModel = CustomDrugEntryModel.default()
+  private val drugName = "Amlodipine"
+  private val patientUuid = UUID.fromString("77f1d870-5c60-49f7-a4e2-2f1d60e4218c")
+  private val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(patientUuid, drugName))
 
   @Test
   fun `when dosage is edited, then update the model with the new dosage and update the sheet title`() {

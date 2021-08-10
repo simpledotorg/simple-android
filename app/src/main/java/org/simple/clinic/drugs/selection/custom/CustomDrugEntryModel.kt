@@ -3,13 +3,17 @@ package org.simple.clinic.drugs.selection.custom
 import org.simple.clinic.drugs.search.DrugFrequency
 
 data class CustomDrugEntryModel(
+    val openAs: OpenAs,
     val drugName: String?,
     val dosage: String?,
     val dosageHasFocus: Boolean?,
     val frequency: DrugFrequency?
 ) {
   companion object {
-    fun default() = CustomDrugEntryModel(
+    fun default(
+        openAs: OpenAs
+    ) = CustomDrugEntryModel(
+        openAs = openAs,
         drugName = null,
         dosage = null,
         dosageHasFocus = null,

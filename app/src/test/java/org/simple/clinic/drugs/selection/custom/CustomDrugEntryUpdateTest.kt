@@ -9,6 +9,7 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.drugs.search.DrugFrequency
+import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import java.util.UUID
 
 class CustomDrugEntryUpdateTest {
@@ -129,5 +130,26 @@ class CustomDrugEntryUpdateTest {
             hasNoModel(),
             hasEffects(CloseBottomSheet)
         ))
+  }
+
+  @Test
+  fun `when the drug is fetched and is not deleted, then update the model, set sheet title and frequency`() {
+    val prescribedDrugUuid = UUID.fromString("96633994-6e4d-4528-b796-f03ae016553a")
+    val drugFrequency = DrugFrequency.OD
+    val dosage = "12mg"
+    val prescribedDrug = TestData.prescription(uuid = prescribedDrugUuid, name = drugName, isDeleted = false, frequency = MedicineFrequency.OD, dosage = dosage)
+    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.Update(patientUuid, prescribedDrugUuid))
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(PrescribedDrugFetched(prescribedDrug))
+        .then(
+            assertThatNext(
+                hasModel(defaultModel
+                    .drugNameLoaded(drugName)
+                    .dosageEdited(dosage = dosage)
+                    .frequencyEdited(frequency = drugFrequency)),
+                hasEffects(SetSheetTitle(drugName, dosage, drugFrequency), SetDrugFrequency(drugFrequency)))
+        )
   }
 }

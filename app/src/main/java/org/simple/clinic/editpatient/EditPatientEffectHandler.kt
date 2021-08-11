@@ -186,10 +186,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
   ): Patient {
     val ageDetails = when (ongoingEntry.ageOrDateOfBirth) {
       is EntryWithAge -> coerceAgeFrom(patient.ageDetails, ongoingEntry.ageOrDateOfBirth.age)
-      is EntryWithDateOfBirth -> {
-        val dateOfBirth = LocalDate.parse(ongoingEntry.ageOrDateOfBirth.dateOfBirth, dateOfBirthFormatter)
-        patient.ageDetails.withDateOfBirth(dateOfBirth)
-      }
+      is EntryWithDateOfBirth -> readAgeDetailsFromEnteredDateOfBirth(ongoingEntry.ageOrDateOfBirth, patient)
     }
 
     return patient
@@ -203,6 +200,14 @@ class EditPatientEffectHandler @AssistedInject constructor(
       recordedAgeDetails.doesRecordedAgeMatch(enteredAgeValue) -> recordedAgeDetails
       else -> recordedAgeDetails.withUpdatedAge(enteredAgeValue, utcClock)
     }
+  }
+
+  private fun readAgeDetailsFromEnteredDateOfBirth(
+      ageOrDateOfBirth: EntryWithDateOfBirth,
+      patient: Patient
+  ): PatientAgeDetails {
+    val dateOfBirth = LocalDate.parse(ageOrDateOfBirth.dateOfBirth, dateOfBirthFormatter)
+    return patient.ageDetails.withDateOfBirth(dateOfBirth)
   }
 
   private fun updateAddress(

@@ -204,7 +204,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
     val enteredAgeValue = enteredAge.toInt()
     return when {
       recordedAgeDetails.doesRecordedAgeMatch(enteredAgeValue) -> recordedAgeDetails
-      else -> PatientAgeDetails(ageValue = enteredAgeValue, ageUpdatedAt = Instant.now(utcClock), dateOfBirth = null)
+      else -> recordedAgeDetails.withUpdatedAge(enteredAgeValue, utcClock)
     }
   }
 

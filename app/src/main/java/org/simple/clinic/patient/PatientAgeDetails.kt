@@ -6,6 +6,7 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
 import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.UtcClock
 import java.time.Instant
 import java.time.LocalDate
 import java.time.Period
@@ -85,6 +86,17 @@ data class PatientAgeDetails(
         ageValue = null,
         ageUpdatedAt = null,
         dateOfBirth = dateOfBirth
+    )
+  }
+
+  fun withUpdatedAge(
+      ageValue: Int,
+      clock: UtcClock
+  ): PatientAgeDetails {
+    return copy(
+        ageValue = ageValue,
+        ageUpdatedAt = Instant.now(clock),
+        dateOfBirth = null
     )
   }
 

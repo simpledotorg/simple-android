@@ -54,9 +54,6 @@ class IntroVideoScreen : BaseScreen<
   lateinit var router: Router
 
   @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
-
-  @Inject
   @SimpleVideoConfig(TrainingVideo)
   lateinit var simpleVideo: SimpleVideo
 
@@ -78,7 +75,6 @@ class IntroVideoScreen : BaseScreen<
   }
 
   override fun openHome() {
-    val screenKey = screenKeyProvider.keyFor<Key>(this)
     router.push(RegistrationLoadingScreenKey(screenKey.registrationEntry).wrap())
   }
 

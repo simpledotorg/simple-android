@@ -36,6 +36,9 @@ data class PatientAgeDetails(
       else -> throw IllegalStateException("Could not infer type from [Age: $ageValue, Age updated: $ageUpdatedAt, DOB: $dateOfBirth]")
     }
 
+  val isRecordedAsAge: Boolean
+    get() = dateOfBirth == null && (ageValue != null && ageUpdatedAt != null)
+
   fun estimateAge(userClock: UserClock): Int {
     return when (type) {
       EXACT -> computeCurrentAgeFromRecordedDateOfBirth(userClock)

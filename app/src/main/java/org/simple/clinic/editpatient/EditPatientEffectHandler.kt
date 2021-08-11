@@ -203,7 +203,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
   private fun coerceAgeFrom(recordedAgeDetails: PatientAgeDetails, enteredAge: String): PatientAgeDetails {
     val enteredAgeValue = enteredAge.toInt()
     return when {
-      recordedAgeDetails.type == FROM_AGE && recordedAgeDetails.ageValue == enteredAgeValue -> recordedAgeDetails
+      recordedAgeDetails.isRecordedAsAge && recordedAgeDetails.ageValue == enteredAgeValue -> recordedAgeDetails
       else -> PatientAgeDetails(ageValue = enteredAgeValue, ageUpdatedAt = Instant.now(utcClock), dateOfBirth = null)
     }
   }

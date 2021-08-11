@@ -211,4 +211,19 @@ class CustomDrugEntryEffectHandlerTest {
     testCase.assertOutgoingEvents(PrescribedDrugFetched(prescribedDrug))
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when remove drug from prescription effect is received, then remove drug entry from prescription`() {
+    // given
+    whenever(prescriptionRepository.softDeletePrescription(prescriptionUuid = customDrugUUID)).thenReturn(Completable.complete())
+
+    // when
+    testCase.dispatch(RemoveDrugFromPrescription(drugUuid = customDrugUUID))
+
+    // then
+    verify(prescriptionRepository).softDeletePrescription(customDrugUUID)
+    verifyNoMoreInteractions(prescriptionRepository)
+    testCase.assertOutgoingEvents(ExistingDrugRemoved)
+    verifyZeroInteractions(uiActions)
+  }
 }

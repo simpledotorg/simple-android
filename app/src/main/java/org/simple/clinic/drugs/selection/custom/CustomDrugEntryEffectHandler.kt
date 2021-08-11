@@ -40,6 +40,7 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
         .addTransformer(UpdatePrescription::class.java, updatePrescription())
         .addAction(CloseBottomSheet::class.java, uiActions::close, schedulersProvider.ui())
         .addTransformer(FetchPrescription::class.java, fetchPrescription())
+        .addTransformer(RemoveDrugFromPrescription::class.java, removeDrugFromPrescription())
         .build()
   }
 
@@ -84,6 +85,19 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
           .observeOn(schedulersProvider.io())
           .map { prescriptionRepository.prescriptionImmediate(it.prescriptionUuid) }
           .map(::PrescribedDrugFetched)
+    }
+  }
+
+  private fun removeDrugFromPrescription(): ObservableTransformer<RemoveDrugFromPrescription, CustomDrugEntryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { it.drugUuid }
+          .switchMap {
+            prescriptionRepository
+                .softDeletePrescription(it)
+                .andThen(Observable.just(ExistingDrugRemoved))
+          }
     }
   }
 

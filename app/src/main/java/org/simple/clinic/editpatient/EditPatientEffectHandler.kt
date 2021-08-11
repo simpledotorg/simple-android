@@ -15,7 +15,6 @@ import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
-import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
 import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.Patient
@@ -186,7 +185,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
       ongoingEntry: EditablePatientEntry
   ): Patient {
     val ageDetails = when (ongoingEntry.ageOrDateOfBirth) {
-      is EntryWithAge -> coerceAgeFrom(patient.age, ongoingEntry.ageOrDateOfBirth.age)
+      is EntryWithAge -> coerceAgeFrom(patient.ageDetails, ongoingEntry.ageOrDateOfBirth.age)
       is EntryWithDateOfBirth -> {
         val dateOfBirth = LocalDate.parse(ongoingEntry.ageOrDateOfBirth.dateOfBirth, dateOfBirthFormatter)
         PatientAgeDetails.fromAgeOrDate(
@@ -201,10 +200,10 @@ class EditPatientEffectHandler @AssistedInject constructor(
         .withAgeDetails(ageDetails)
   }
 
-  private fun coerceAgeFrom(alreadySavedAge: Age?, enteredAge: String): PatientAgeDetails {
+  private fun coerceAgeFrom(recordedAgeDetails: PatientAgeDetails, enteredAge: String): PatientAgeDetails {
     val enteredAgeValue = enteredAge.toInt()
     return when {
-      alreadySavedAge != null && alreadySavedAge.value == enteredAgeValue -> PatientAgeDetails(ageValue = alreadySavedAge.value, ageUpdatedAt = alreadySavedAge.updatedAt, dateOfBirth = null)
+      recordedAgeDetails.type == FROM_AGE && recordedAgeDetails.ageValue == enteredAgeValue -> recordedAgeDetails
       else -> PatientAgeDetails(ageValue = enteredAgeValue, ageUpdatedAt = Instant.now(utcClock), dateOfBirth = null)
     }
   }

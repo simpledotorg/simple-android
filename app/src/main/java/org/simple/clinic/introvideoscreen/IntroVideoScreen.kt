@@ -4,51 +4,54 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.util.AttributeSet
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenIntroVideoBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.register.RegistrationLoadingScreenKey
 import org.simple.clinic.simplevideo.SimpleVideo
 import org.simple.clinic.simplevideo.SimpleVideoConfig
 import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.TrainingVideo
-import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.user.OngoingRegistrationEntry
 import javax.inject.Inject
 
-class IntroVideoScreen(
-    context: Context,
-    attrs: AttributeSet
-) : ConstraintLayout(context, attrs), UiActions {
-
-  var binding: ScreenIntroVideoBinding? = null
+class IntroVideoScreen : BaseScreen<
+    IntroVideoScreen.Key,
+    ScreenIntroVideoBinding,
+    IntroVideoModel,
+    IntroVideoEvent,
+    IntroVideoEffect,
+    Unit>(), UiActions {
 
   private val introVideoSubtitle
-    get() = binding!!.introVideoSubtitle
+    get() = binding.introVideoSubtitle
 
   private val introVideoImageView
-    get() = binding!!.introVideoImageView
+    get() = binding.introVideoImageView
 
   private val watchVideoButton
-    get() = binding!!.watchVideoButton
+    get() = binding.watchVideoButton
 
   private val skipButton
-    get() = binding!!.skipButton
+    get() = binding.skipButton
 
   @Inject
   lateinit var router: Router
-
-  @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
 
   @Inject
   @SimpleVideoConfig(TrainingVideo)
@@ -57,44 +60,14 @@ class IntroVideoScreen(
   @Inject
   lateinit var introVideoEffectHandler: IntroVideoEffectHandler.Factory
 
-  private val events: Observable<IntroVideoEvent> by unsafeLazy {
-    Observable
-        .mergeArray(
-            videoClicks(),
-            skipClicks()
-        )
-        .compose(ReportAnalyticsEvents())
-        .cast<IntroVideoEvent>()
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    requireContext().injector<Injector>().inject(this)
   }
 
-  private val mobiusDelegate by unsafeLazy {
-    MobiusDelegate.forView(
-        events,
-        IntroVideoModel.default(),
-        IntroVideoUpdate(),
-        introVideoEffectHandler.create(this).build()
-    )
-  }
-
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    binding = ScreenIntroVideoBinding.bind(this)
-    if (isInEditMode) return
-
-    context.injector<IntroVideoScreenInjector>().inject(this)
-
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     introVideoSubtitle.text = resources.getString(R.string.simple_video_duration, simpleVideo.duration)
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    mobiusDelegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    super.onDetachedFromWindow()
-    mobiusDelegate.stop()
-    binding = null
   }
 
   override fun openVideo() {
@@ -102,7 +75,6 @@ class IntroVideoScreen(
   }
 
   override fun openHome() {
-    val screenKey = screenKeyProvider.keyFor<IntroVideoScreenKey>(this)
     router.push(RegistrationLoadingScreenKey(screenKey.registrationEntry).wrap())
   }
 
@@ -122,13 +94,48 @@ class IntroVideoScreen(
   }
 
   private fun openYoutubeLinkForSimpleVideo() {
-    val packageManager = context.packageManager
+    val packageManager = requireContext().packageManager
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(simpleVideo.url))
 
     if (intent.resolveActivity(packageManager) != null) {
-      context.startActivity(intent)
+      requireContext().startActivity(intent)
     } else {
       CrashReporter.report(ActivityNotFoundException("Unable to play simple video because no supporting apps were found."))
     }
+  }
+
+  override fun bindView(
+      layoutInflater: LayoutInflater,
+      container: ViewGroup?
+  ) = ScreenIntroVideoBinding.inflate(layoutInflater, container, false)
+
+  override fun defaultModel() = IntroVideoModel.default()
+
+  override fun createUpdate() = IntroVideoUpdate()
+
+  override fun createEffectHandler(
+      viewEffectsConsumer: Consumer<Unit>
+  ) = introVideoEffectHandler
+      .create(this)
+      .build()
+
+  override fun events() = Observable
+      .mergeArray(
+          videoClicks(),
+          skipClicks()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<IntroVideoEvent>()
+
+  @Parcelize
+  data class Key(
+      val registrationEntry: OngoingRegistrationEntry,
+      override val analyticsName: String = "Onboarding Intro Video"
+  ) : ScreenKey() {
+    override fun instantiateFragment() = IntroVideoScreen()
+  }
+
+  interface Injector {
+    fun inject(target: IntroVideoScreen)
   }
 }

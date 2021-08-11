@@ -9,6 +9,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
+import androidx.core.view.isGone
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
@@ -330,7 +331,27 @@ class EditPatientScreen : BaseScreen<
     val receivedTypesOfInputFields = inputFields.fields.map { it::class.java }
 
     allTypesOfInputFields.forEach { (clazz, view) ->
-      view.visibleOrGone(clazz in receivedTypesOfInputFields)
+      setInputFieldsVisibility(
+          clazz = clazz,
+          view = view,
+          isVisible = clazz in receivedTypesOfInputFields
+      )
+    }
+  }
+
+  private fun setInputFieldsVisibility(
+      clazz: Class<*>,
+      view: View,
+      isVisible: Boolean
+  ) {
+    when {
+      clazz == AgeField::class.java && view.isGone -> {
+        return
+      }
+      clazz == DateOfBirthField::class.java && view.isGone -> {
+        return
+      }
+      else -> view.visibleOrGone(isVisible)
     }
   }
 

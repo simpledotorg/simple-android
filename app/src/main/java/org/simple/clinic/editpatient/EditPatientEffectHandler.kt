@@ -188,10 +188,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
       is EntryWithAge -> coerceAgeFrom(patient.ageDetails, ongoingEntry.ageOrDateOfBirth.age)
       is EntryWithDateOfBirth -> {
         val dateOfBirth = LocalDate.parse(ongoingEntry.ageOrDateOfBirth.dateOfBirth, dateOfBirthFormatter)
-        PatientAgeDetails.fromAgeOrDate(
-            age = null,
-            date = dateOfBirth
-        )
+        patient.ageDetails.withDateOfBirth(dateOfBirth)
       }
     }
 

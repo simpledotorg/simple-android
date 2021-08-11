@@ -2,7 +2,6 @@ package org.simple.clinic.patient
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo
-import androidx.room.Embedded
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
 import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
@@ -36,7 +35,7 @@ data class PatientAgeDetails(
       else -> throw IllegalStateException("Could not infer type from [Age: $ageValue, Age updated: $ageUpdatedAt, DOB: $dateOfBirth]")
     }
 
-  val isRecordedAsAge: Boolean
+  private val isRecordedAsAge: Boolean
     get() = dateOfBirth == null && (ageValue != null && ageUpdatedAt != null)
 
   fun estimateAge(userClock: UserClock): Int {
@@ -62,6 +61,10 @@ data class PatientAgeDetails(
       EXACT -> dateOfBirth!!
       FROM_AGE -> calculateApproximateDateOfBirthFromRecordedAge(userClock)
     }
+  }
+
+  fun doesRecordedAgeMatch(age: Int): Boolean {
+    return isRecordedAsAge && age == ageValue!!
   }
 
   private fun calculateApproximateDateOfBirthFromRecordedAge(userClock: UserClock): LocalDate {

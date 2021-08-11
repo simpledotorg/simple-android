@@ -24,6 +24,7 @@
 - Check if ViewModel is initialised when saving state in base screens
 - Bump Kotlin Coroutines to v1.5.1
 - Bump jBCrypt to v0.4
+- Migrate `EditPatientScreen` to a fragment
 
 ### Changes
 - Don't load search results if search query is not changed from previous search query

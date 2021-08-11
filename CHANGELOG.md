@@ -26,6 +26,7 @@
 - Bump jBCrypt to v0.4
 - Migrate `EditPatientScreen` to a fragment
 - Migrate `IntroVideoScreen` to a Fragment
+- Remove usage of `Age` in `EditPatientEffectHandler`
 
 ### Changes
 - Don't load search results if search query is not changed from previous search query

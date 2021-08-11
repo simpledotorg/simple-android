@@ -1,6 +1,7 @@
 package org.simple.clinic.summary
 
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
 import org.simple.clinic.user.User
 import org.simple.clinic.widgets.UiEvent
@@ -46,8 +47,9 @@ data class DataForBackClickLoaded(
 ) : PatientSummaryEvent()
 
 data class DataForDoneClickLoaded(
-    val countOfRecordedMeasurements: Int,
-    val diagnosisRecorded: Boolean
+    val countOfRecordedBloodPressures: Int,
+    val countOfRecordedBloodSugars: Int,
+    val medicalHistory: MedicalHistory
 ) : PatientSummaryEvent()
 
 data class SyncTriggered(val sheetOpenedFrom: AppointmentSheetOpenedFrom) : PatientSummaryEvent()

@@ -16,6 +16,9 @@ import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.medicalhistory.Answer.No
+import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientProfile
@@ -262,7 +265,9 @@ class PatientSummaryEffectHandlerTest {
     // given
     val medicalHistory = TestData.medicalHistory(
         uuid = UUID.fromString("47a70ee3-0d33-4404-9668-59af72390bfd"),
-        patientUuid = patientUuid
+        patientUuid = patientUuid,
+        diagnosedWithHypertension = Yes,
+        hasDiabetes = No
     )
 
     whenever(bloodPressureRepository.bloodPressureCountImmediate(patientUuid)) doReturn 2
@@ -275,8 +280,9 @@ class PatientSummaryEffectHandlerTest {
     // then
     testCase.assertOutgoingEvents(
         DataForDoneClickLoaded(
-            countOfRecordedMeasurements = 5,
-            diagnosisRecorded = medicalHistory.diagnosisRecorded
+            countOfRecordedBloodPressures = 2,
+            countOfRecordedBloodSugars = 3,
+            medicalHistory = medicalHistory
         )
     )
     verifyZeroInteractions(uiActions)

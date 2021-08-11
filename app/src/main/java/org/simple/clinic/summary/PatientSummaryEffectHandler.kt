@@ -23,11 +23,11 @@ import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityRepository
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User
-import java.util.Optional
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toNullable
 import org.simple.clinic.uuid.UuidGenerator
+import java.util.Optional
 import java.util.UUID
 import java.util.function.Function
 
@@ -210,12 +210,18 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .observeOn(scheduler)
           .map { loadDataForBackClick ->
             val patientUuid = loadDataForBackClick.patientUuid
+            val countOfRecordedBloodPressures = bloodPressureRepository.bloodPressureCountImmediate(patientUuid)
+            val countOfRecordedBloodSugars = bloodSugarRepository.bloodSugarCountImmediate(patientUuid)
             val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
                 defaultHistoryUuid = uuidGenerator.v4(),
                 patientUuid = patientUuid
             )
 
-            DataForDoneClickLoaded(countOfRecordedMeasurements = countOfRecordedMeasurements(patientUuid), diagnosisRecorded = medicalHistory.diagnosisRecorded)
+            DataForDoneClickLoaded(
+                countOfRecordedBloodPressures = countOfRecordedBloodPressures,
+                countOfRecordedBloodSugars = countOfRecordedBloodSugars,
+                medicalHistory = medicalHistory
+            )
           }
     }
   }

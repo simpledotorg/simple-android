@@ -41,8 +41,9 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       )
       is DataForDoneClickLoaded -> dataForHandlingDoneClickLoaded(
           patientUuid = model.patientUuid,
-          countOfRecordedMeasurements = event.countOfRecordedMeasurements,
-          diagnosisRecorded = event.diagnosisRecorded,
+          countOfRecordedBloodPressures = event.countOfRecordedBloodPressures,
+          countOfRecordedBloodSugars = event.countOfRecordedBloodSugars,
+          diagnosisRecorded = event.medicalHistory.diagnosisRecorded,
           isDiabetesManagementEnabled = model.isDiabetesManagementEnabled,
           currentFacility = model.currentFacility!!
       )
@@ -88,12 +89,13 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
 
   private fun dataForHandlingDoneClickLoaded(
       patientUuid: UUID,
-      countOfRecordedMeasurements: Int,
+      countOfRecordedBloodPressures: Int,
+      countOfRecordedBloodSugars: Int,
       diagnosisRecorded: Boolean,
       isDiabetesManagementEnabled: Boolean,
       currentFacility: Facility
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val hasAtLeastOneMeasurementRecorded = countOfRecordedMeasurements > 0
+    val hasAtLeastOneMeasurementRecorded = countOfRecordedBloodPressures + countOfRecordedBloodSugars > 0
     val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && diagnosisRecorded.not() && isDiabetesManagementEnabled
 
     val effect = when {

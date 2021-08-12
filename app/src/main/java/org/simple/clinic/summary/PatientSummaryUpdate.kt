@@ -5,6 +5,7 @@ import com.spotify.mobius.Next.next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
@@ -36,7 +37,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
           countOfRecordedBloodPressures = event.countOfRecordedBloodPressures,
           countOfRecordedBloodSugars = event.countOfRecordedBloodSugars,
           openIntention = model.openIntention,
-          diagnosisRecorded = event.medicalHistory.diagnosisRecorded,
+          medicalHistory = event.medicalHistory,
           isDiabetesManagementEnabled = model.isDiabetesManagementEnabled,
           currentFacility = model.currentFacility!!
       )
@@ -114,12 +115,12 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       countOfRecordedBloodPressures: Int,
       countOfRecordedBloodSugars: Int,
       openIntention: OpenIntention,
-      diagnosisRecorded: Boolean,
+      medicalHistory: MedicalHistory,
       isDiabetesManagementEnabled: Boolean,
       currentFacility: Facility
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val shouldShowScheduleAppointmentSheet = if (countOfRecordedBloodPressures + countOfRecordedBloodSugars == 0) false else hasPatientDataChanged
-    val shouldShowDiagnosisError = shouldShowScheduleAppointmentSheet && diagnosisRecorded.not() && isDiabetesManagementEnabled
+    val shouldShowDiagnosisError = shouldShowScheduleAppointmentSheet && medicalHistory.diagnosisRecorded.not() && isDiabetesManagementEnabled
     val shouldGoToPreviousScreen = openIntention is ViewExistingPatient
     val shouldGoToHomeScreen = openIntention is LinkIdWithPatient || openIntention is ViewNewPatient || openIntention is ViewExistingPatientWithTeleconsultLog
 

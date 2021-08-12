@@ -791,6 +791,28 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when patient is diagnosed with diabetes and has no recorded measurements, then clicking on done should show add blood sugar warning`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForDoneClickLoaded(
+            countOfRecordedBloodPressures = 0,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("bdc93463-1577-42df-a6ff-b0526dc0b680"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = No,
+                hasDiabetes = Yes
+            )
+        ))
+        .then(assertThatNext(
+            hasModel(model.shownMeasurementsWarningDialog()),
+            hasEffects(ShowAddBloodSugarWarningDialog)
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

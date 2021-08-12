@@ -119,7 +119,7 @@ class PatientSummaryUpdateTest {
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = true,
             countOfRecordedBloodPressures = 1,
-            countOfRecordedBloodSugars = 0,
+            countOfRecordedBloodSugars = 1,
             medicalHistory = TestData.medicalHistory(
                 uuid = UUID.fromString("94056dc9-85e9-472e-8674-1657bbab56bb"),
                 patientUuid = patientUuid,
@@ -260,7 +260,7 @@ class PatientSummaryUpdateTest {
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = false,
             countOfRecordedBloodPressures = 1,
-            countOfRecordedBloodSugars = 0,
+            countOfRecordedBloodSugars = 1,
             medicalHistory = TestData.medicalHistory(
                 uuid = UUID.fromString("95df9f42-2fd0-4429-b2ad-ae3de909a480"),
                 patientUuid = patientUuid,
@@ -860,6 +860,29 @@ class PatientSummaryUpdateTest {
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
             hasEffects(ShowAddBloodPressureWarningDialog)
+        ))
+  }
+
+  @Test
+  fun `when patient is diagnosed with diabetes and has no recorded measurements, then clicking on back should show add blood sugar warning`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForBackClickLoaded(
+            hasPatientDataChangedSinceScreenCreated = false,
+            countOfRecordedBloodPressures = 0,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("909d198e-c905-4d07-aa39-d209be63765e"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = No,
+                hasDiabetes = Yes
+            )
+        ))
+        .then(assertThatNext(
+            hasModel(model.shownMeasurementsWarningDialog()),
+            hasEffects(ShowAddBloodSugarWarningDialog)
         ))
   }
 

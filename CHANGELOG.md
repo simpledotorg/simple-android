@@ -39,6 +39,7 @@
 - Don't load search results if search query is not changed from previous search query
 - Show keyboard and prefill search query if present when instant search screen is shown
 - Updated translations: `kn-IN`, `bn-IN`, `hi-IN`, `ta-LK`, `pa-IN`, `om-ET`, `bn-BD`, `so-ET`, `mr-IN`, `ta-IN`, `si-LK`, `bn-BD`, `te-IN`, `am-ET`, `ti-ET`, `sid-ET`
+- Show warning dialogs for adding BP and Blood Sugar after creating a patient
 - [In Progress: 22 Jul 2021] Add option to download & share overdue list
 - [In Progress: 14 Jul 2021] Medication screen improvements
   - Search for commonly used drugs
@@ -48,7 +49,6 @@
   - Updated contact patient bottom sheet UI
 - [In Progress: 06 Aug 2021] Add support for Sri Lanka
 - [In Progress: 10 Aug 2021] Implement `CustomDrugEntrySheet`  
-- [In Progress: 12 Aug 2021] Show warning dialogs for adding BP and Blood Sugar after creating a patient
 
 ## 2021-08-09-7904
 ### Internal

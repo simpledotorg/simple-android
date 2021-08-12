@@ -293,7 +293,7 @@
   <string name="registrationphone_country_code" translatable="false">+%1$s</string>
   <string name="registrationphone_next">Next</string>
 
-  <string name="registrationname_name_label">Tell us your full name</string>
+  <string name="registrationname_name_label">Your role and full name</string>
   <string name="registrationname_error_empty_name">Please enter your full name</string>
   <string name="registrationname_next">Next</string>
   <string name="registrationname_name_and_role_hint">Example: Nurse Deepa Singh</string>

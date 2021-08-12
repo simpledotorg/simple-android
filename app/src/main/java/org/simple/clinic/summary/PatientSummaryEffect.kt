@@ -62,3 +62,5 @@ object LoadMedicalOfficers : PatientSummaryEffect()
 data class OpenContactDoctorSheet(val patientUuid: UUID) : PatientSummaryEffect()
 
 object ShowAddMeasurementsWarningDialog : PatientSummaryEffect()
+
+object ShowAddBloodPressureWarningDialog : PatientSummaryEffect()

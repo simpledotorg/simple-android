@@ -83,6 +83,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(LoadMedicalOfficers::class.java, loadMedicalOfficers())
         .addConsumer(OpenContactDoctorSheet::class.java, { uiActions.openContactDoctorSheet(it.patientUuid) }, schedulersProvider.ui())
         .addAction(ShowAddMeasurementsWarningDialog::class.java, uiActions::showAddMeasurementsWarningDialog, schedulersProvider.ui())
+        .addAction(ShowAddBloodPressureWarningDialog::class.java, uiActions::showAddBloodPressureWarningDialog, schedulersProvider.ui())
         .build()
   }
 

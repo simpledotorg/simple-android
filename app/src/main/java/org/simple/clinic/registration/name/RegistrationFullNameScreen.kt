@@ -15,7 +15,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.databinding.ScreenRegistrationNameBinding
+import org.simple.clinic.databinding.ScreenRegistrationFullNameBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -27,7 +27,7 @@ import javax.inject.Inject
 class RegistrationFullNameScreen :
     BaseScreen<
         RegistrationNameScreenKey,
-        ScreenRegistrationNameBinding,
+        ScreenRegistrationFullNameBinding,
         RegistrationNameModel,
         RegistrationNameEvent,
         RegistrationNameEffect,
@@ -61,7 +61,7 @@ class RegistrationFullNameScreen :
   override fun uiRenderer() = RegistrationNameUiRenderer(this)
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
-      ScreenRegistrationNameBinding.inflate(layoutInflater, container, false)
+      ScreenRegistrationFullNameBinding.inflate(layoutInflater, container, false)
 
   override fun events() = Observable
       .merge(

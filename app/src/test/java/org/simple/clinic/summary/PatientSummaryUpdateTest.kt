@@ -307,7 +307,7 @@ class PatientSummaryUpdateTest {
                 uuid = UUID.fromString("7aeb58c1-19f8-43f8-952c-8fb069b9268b"),
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = Yes,
-                hasDiabetes = Yes
+                hasDiabetes = No
             )
         ))
         .then(assertThatNext(
@@ -743,6 +743,28 @@ class PatientSummaryUpdateTest {
         .then(assertThatNext(
             hasModel(model.medicalOfficersLoaded(medicalOfficers)),
             hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when patient is diagnosed with hypertension and diabetes and has no recorded measurements, then clicking on done should show add measurements warning`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForDoneClickLoaded(
+            countOfRecordedBloodPressures = 0,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("4fd4be06-6208-4b79-b153-1a2ef4c2024b"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Yes,
+                hasDiabetes = Yes
+            )
+        ))
+        .then(assertThatNext(
+            hasModel(model.shownMeasurementsWarningDialog()),
+            hasEffects(ShowAddMeasurementsWarningDialog)
         ))
   }
 

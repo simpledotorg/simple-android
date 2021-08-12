@@ -5,6 +5,7 @@ import com.spotify.mobius.Next.next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
@@ -42,12 +43,10 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
           currentFacility = model.currentFacility!!
       )
       is DataForDoneClickLoaded -> dataForHandlingDoneClickLoaded(
-          patientUuid = model.patientUuid,
+          model = model,
           countOfRecordedBloodPressures = event.countOfRecordedBloodPressures,
           countOfRecordedBloodSugars = event.countOfRecordedBloodSugars,
-          medicalHistory = event.medicalHistory,
-          isDiabetesManagementEnabled = model.isDiabetesManagementEnabled,
-          currentFacility = model.currentFacility!!
+          medicalHistory = event.medicalHistory
       )
       is SyncTriggered -> scheduleAppointmentSheetClosed(model, event.sheetOpenedFrom)
       is ContactPatientClicked -> dispatch(OpenContactPatientScreen(model.patientUuid))
@@ -90,23 +89,21 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
   }
 
   private fun dataForHandlingDoneClickLoaded(
-      patientUuid: UUID,
+      model: PatientSummaryModel,
       countOfRecordedBloodPressures: Int,
       countOfRecordedBloodSugars: Int,
       medicalHistory: MedicalHistory,
-      isDiabetesManagementEnabled: Boolean,
-      currentFacility: Facility
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val hasAtLeastOneMeasurementRecorded = countOfRecordedBloodPressures + countOfRecordedBloodSugars > 0
-    val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && medicalHistory.diagnosisRecorded.not() && isDiabetesManagementEnabled
+    val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && medicalHistory.diagnosisRecorded.not() && model.isDiabetesManagementEnabled
+    val shouldShowAddMeasurementsWarning = medicalHistory.diagnosedWithHypertension == Yes && medicalHistory.diagnosedWithDiabetes == Yes && !hasAtLeastOneMeasurementRecorded
 
-    val effect = when {
-      shouldShowDiagnosisError -> ShowDiagnosisError
-      hasAtLeastOneMeasurementRecorded -> ShowScheduleAppointmentSheet(patientUuid, DONE_CLICK, currentFacility)
-      else -> GoToHomeScreen
+    return when {
+      shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
+      shouldShowAddMeasurementsWarning && !model.hasShownMeasurementsWarningDialog -> next(model.shownMeasurementsWarningDialog(), setOf(ShowAddMeasurementsWarningDialog))
+      hasAtLeastOneMeasurementRecorded -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, DONE_CLICK, model.currentFacility!!))
+      else -> dispatch(GoToHomeScreen)
     }
-
-    return dispatch(effect)
   }
 
   private fun dataForHandlingBackLoaded(

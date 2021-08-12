@@ -92,15 +92,11 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val hasAtLeastOneMeasurementRecorded = countOfRecordedBloodPressures + countOfRecordedBloodSugars > 0
     val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && medicalHistory.diagnosisRecorded.not() && model.isDiabetesManagementEnabled
-    val shouldShowAddMeasurementsWarning = medicalHistory.diagnosedWithHypertension == Yes && medicalHistory.diagnosedWithDiabetes == Yes && !hasAtLeastOneMeasurementRecorded
-    val shouldShowAddBloodPressureWarning = medicalHistory.diagnosedWithHypertension == Yes && countOfRecordedBloodPressures == 0
-    val shouldShownAddBloodSugarWarning = medicalHistory.diagnosedWithDiabetes == Yes && countOfRecordedBloodSugars == 0
+    val measurementWarningEffect = validateMeasurements(countOfRecordedBloodSugars, countOfRecordedBloodPressures, medicalHistory, model.hasShownMeasurementsWarningDialog)
 
     return when {
       shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
-      shouldShowAddMeasurementsWarning && !model.hasShownMeasurementsWarningDialog -> next(model.shownMeasurementsWarningDialog(), setOf(ShowAddMeasurementsWarningDialog))
-      shouldShowAddBloodPressureWarning && !model.hasShownMeasurementsWarningDialog -> next(model.shownMeasurementsWarningDialog(), setOf(ShowAddBloodPressureWarningDialog))
-      shouldShownAddBloodSugarWarning && !model.hasShownMeasurementsWarningDialog -> next(model.shownMeasurementsWarningDialog(), setOf(ShowAddBloodSugarWarningDialog))
+      measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))
       hasAtLeastOneMeasurementRecorded -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, DONE_CLICK, model.currentFacility!!))
       else -> dispatch(GoToHomeScreen)
     }
@@ -118,20 +114,38 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     val shouldShowDiagnosisError = shouldShowScheduleAppointmentSheet && medicalHistory.diagnosisRecorded.not() && model.isDiabetesManagementEnabled
     val shouldGoToPreviousScreen = openIntention is ViewExistingPatient
     val shouldGoToHomeScreen = openIntention is LinkIdWithPatient || openIntention is ViewNewPatient || openIntention is ViewExistingPatientWithTeleconsultLog
-    val hasAtLeastOneMeasurementRecorded = countOfRecordedBloodPressures + countOfRecordedBloodSugars > 0
-    val shouldShowAddMeasurementsWarning = medicalHistory.diagnosedWithHypertension == Yes && medicalHistory.diagnosedWithDiabetes == Yes && !hasAtLeastOneMeasurementRecorded
-    val shouldShowAddBloodPressureWarning = medicalHistory.diagnosedWithHypertension == Yes && countOfRecordedBloodPressures == 0
-    val shouldShowAddBloodSugarWarning = medicalHistory.diagnosedWithDiabetes == Yes && countOfRecordedBloodSugars == 0
+    val measurementWarningEffect = validateMeasurements(countOfRecordedBloodSugars, countOfRecordedBloodPressures, medicalHistory, model.hasShownMeasurementsWarningDialog)
 
     return when {
       shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
-      shouldShowAddMeasurementsWarning && !model.hasShownMeasurementsWarningDialog -> next(model.shownMeasurementsWarningDialog(), setOf(ShowAddMeasurementsWarningDialog))
-      shouldShowAddBloodPressureWarning && !model.hasShownMeasurementsWarningDialog -> next(model.shownMeasurementsWarningDialog(), setOf(ShowAddBloodPressureWarningDialog))
-      shouldShowAddBloodSugarWarning && !model.hasShownMeasurementsWarningDialog -> next(model.shownMeasurementsWarningDialog(), setOf(ShowAddBloodSugarWarningDialog))
+      measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))
       shouldShowScheduleAppointmentSheet -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, BACK_CLICK, model.currentFacility!!))
       shouldGoToPreviousScreen -> dispatch(GoBackToPreviousScreen)
       shouldGoToHomeScreen -> dispatch(GoToHomeScreen)
       else -> throw IllegalStateException("This should not happen!")
+    }
+  }
+
+  private fun validateMeasurements(
+      countOfRecordedBloodSugars: Int,
+      countOfRecordedBloodPressures: Int,
+      medicalHistory: MedicalHistory,
+      hasShownMeasurementsWarningDialog: Boolean
+  ): PatientSummaryEffect? {
+    // If the measurements warning dialog is already shown, we don't want to show it again in the
+    // same session.
+    if (hasShownMeasurementsWarningDialog) return null
+
+    val hasAtLeastOneMeasurementRecorded = countOfRecordedBloodPressures + countOfRecordedBloodSugars > 0
+    val shouldShowAddMeasurementsWarning = medicalHistory.diagnosedWithHypertension == Yes && medicalHistory.diagnosedWithDiabetes == Yes && !hasAtLeastOneMeasurementRecorded
+    val shouldShowAddBloodPressureWarning = medicalHistory.diagnosedWithHypertension == Yes && countOfRecordedBloodPressures == 0
+    val shouldShownAddBloodSugarWarning = medicalHistory.diagnosedWithDiabetes == Yes && countOfRecordedBloodSugars == 0
+
+    return when {
+      shouldShowAddMeasurementsWarning -> ShowAddMeasurementsWarningDialog
+      shouldShowAddBloodPressureWarning -> ShowAddBloodPressureWarningDialog
+      shouldShownAddBloodSugarWarning -> ShowAddBloodSugarWarningDialog
+      else -> null
     }
   }
 

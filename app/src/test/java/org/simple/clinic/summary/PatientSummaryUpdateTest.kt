@@ -361,8 +361,9 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when no measurements are present, clicking on save must go to the home screen`() {
+  fun `when no measurements are present and measurement warning dialogs are shown, clicking on save must go to the home screen`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .shownMeasurementsWarningDialog()
 
     updateSpec
         .given(model)
@@ -765,6 +766,28 @@ class PatientSummaryUpdateTest {
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
             hasEffects(ShowAddMeasurementsWarningDialog)
+        ))
+  }
+
+  @Test
+  fun `when patient is diagnosed with hypertension and has no recorded measurements, then clicking on done should show add bp warning`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForDoneClickLoaded(
+            countOfRecordedBloodPressures = 0,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("4fd4be06-6208-4b79-b153-1a2ef4c2024b"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Yes,
+                hasDiabetes = No
+            )
+        ))
+        .then(assertThatNext(
+            hasModel(model.shownMeasurementsWarningDialog()),
+            hasEffects(ShowAddBloodPressureWarningDialog)
         ))
   }
 

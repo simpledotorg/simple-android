@@ -45,7 +45,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
           patientUuid = model.patientUuid,
           countOfRecordedBloodPressures = event.countOfRecordedBloodPressures,
           countOfRecordedBloodSugars = event.countOfRecordedBloodSugars,
-          diagnosisRecorded = event.medicalHistory.diagnosisRecorded,
+          medicalHistory = event.medicalHistory,
           isDiabetesManagementEnabled = model.isDiabetesManagementEnabled,
           currentFacility = model.currentFacility!!
       )
@@ -93,12 +93,12 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       patientUuid: UUID,
       countOfRecordedBloodPressures: Int,
       countOfRecordedBloodSugars: Int,
-      diagnosisRecorded: Boolean,
+      medicalHistory: MedicalHistory,
       isDiabetesManagementEnabled: Boolean,
       currentFacility: Facility
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val hasAtLeastOneMeasurementRecorded = countOfRecordedBloodPressures + countOfRecordedBloodSugars > 0
-    val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && diagnosisRecorded.not() && isDiabetesManagementEnabled
+    val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && medicalHistory.diagnosisRecorded.not() && isDiabetesManagementEnabled
 
     val effect = when {
       shouldShowDiagnosisError -> ShowDiagnosisError

@@ -180,8 +180,9 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when there are patient summary changes and no measurements are recorded, clicking on back for existing patient screen must go back to previous screen`() {
+  fun `when there are patient summary changes and no measurements are recorded and warning is shown, clicking on back for existing patient screen must go back to previous screen`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .shownMeasurementsWarningDialog()
 
     updateSpec
         .given(model.forExistingPatient())
@@ -203,8 +204,9 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when there are patient summary changes and no measurements are recorded, clicking on back for new patient screen must go back to home screen`() {
+  fun `when there are patient summary changes and no measurements are recorded and warning is shown, clicking on back for new patient screen must go back to home screen`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .shownMeasurementsWarningDialog()
 
     updateSpec
         .given(model.forNewPatient())
@@ -226,8 +228,9 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when there are patient summary changes and no measurements are recorded, clicking on back link id with patient screen must go back to home screen`() {
+  fun `when there are patient summary changes and no measurements are recorded and warning is shown, clicking on back link id with patient screen must go back to home screen`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .shownMeasurementsWarningDialog()
 
     updateSpec
         .given(model.forLinkingWithExistingPatient())
@@ -272,8 +275,9 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when there are no patient summary changes and no measurements are recorded, clicking on back must go back`() {
+  fun `when there are no patient summary changes and no measurements are recorded and warning is shown, clicking on back must go back`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .shownMeasurementsWarningDialog()
 
     updateSpec
         .given(model)
@@ -810,6 +814,29 @@ class PatientSummaryUpdateTest {
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
             hasEffects(ShowAddBloodSugarWarningDialog)
+        ))
+  }
+
+  @Test
+  fun `when patient is diagnosed with hypertension and diabetes and has no recorded measurements, then clicking on back should show add measurements warning`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForBackClickLoaded(
+            hasPatientDataChangedSinceScreenCreated = false,
+            countOfRecordedBloodPressures = 0,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("8f96e650-0ec2-4128-98a2-f4ca0c93bdf9"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Yes,
+                hasDiabetes = Yes
+            )
+        ))
+        .then(assertThatNext(
+            hasModel(model.shownMeasurementsWarningDialog()),
+            hasEffects(ShowAddMeasurementsWarningDialog)
         ))
   }
 

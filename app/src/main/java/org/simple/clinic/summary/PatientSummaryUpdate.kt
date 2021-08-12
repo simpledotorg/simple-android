@@ -118,16 +118,17 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     val shouldShowDiagnosisError = shouldShowScheduleAppointmentSheet && medicalHistory.diagnosisRecorded.not() && model.isDiabetesManagementEnabled
     val shouldGoToPreviousScreen = openIntention is ViewExistingPatient
     val shouldGoToHomeScreen = openIntention is LinkIdWithPatient || openIntention is ViewNewPatient || openIntention is ViewExistingPatientWithTeleconsultLog
+    val hasAtLeastOneMeasurementRecorded = countOfRecordedBloodPressures + countOfRecordedBloodSugars > 0
+    val shouldShowAddMeasurementsWarning = medicalHistory.diagnosedWithHypertension == Yes && medicalHistory.diagnosedWithDiabetes == Yes && !hasAtLeastOneMeasurementRecorded
 
-    val effect = when {
-      shouldShowDiagnosisError -> ShowDiagnosisError
-      shouldShowScheduleAppointmentSheet -> ShowScheduleAppointmentSheet(model.patientUuid, BACK_CLICK, model.currentFacility!!)
-      shouldGoToPreviousScreen -> GoBackToPreviousScreen
-      shouldGoToHomeScreen -> GoToHomeScreen
+    return when {
+      shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
+      shouldShowAddMeasurementsWarning && !model.hasShownMeasurementsWarningDialog -> next(model.shownMeasurementsWarningDialog(), setOf(ShowAddMeasurementsWarningDialog))
+      shouldShowScheduleAppointmentSheet -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, BACK_CLICK, model.currentFacility!!))
+      shouldGoToPreviousScreen -> dispatch(GoBackToPreviousScreen)
+      shouldGoToHomeScreen -> dispatch(GoToHomeScreen)
       else -> throw IllegalStateException("This should not happen!")
     }
-
-    return dispatch(effect)
   }
 
   private fun fetchedHasShownMissingReminder(

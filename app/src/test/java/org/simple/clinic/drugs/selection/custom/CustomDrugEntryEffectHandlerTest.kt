@@ -25,6 +25,7 @@ class CustomDrugEntryEffectHandlerTest {
 
   private val customDrugUUID = UUID.fromString("6bbc5bbe-863c-472a-b962-1fd3198e20d1")
   private val uuidGenerator = FakeUuidGenerator.fixed(customDrugUUID)
+  private val drugName = "Amlodipine"
 
   private val effectHandler = CustomDrugEntryEffectHandler(
       TestSchedulersProvider.trampoline(),
@@ -70,10 +71,9 @@ class CustomDrugEntryEffectHandlerTest {
   @Test
   fun `when set drug name effect is received with non null values, construct drug name and set it in the ui`() {
     // given
-    val drugName = "Amolodipine"
     val dosage = "15mg"
     val frequency = DrugFrequency.OD
-    val updatedDrugName = "Amolodipine, 15mg, OD"
+    val updatedDrugName = "Amlodipine, 15mg, OD"
 
     // when
     testCase.dispatch(SetSheetTitle(drugName, dosage, frequency))
@@ -87,8 +87,7 @@ class CustomDrugEntryEffectHandlerTest {
   @Test
   fun `when set drug name effect is received with null values, construct drug name and set it in the ui`() {
     // given
-    val drugName = "Amolodipine"
-    val updatedDrugName = "Amolodipine"
+    val updatedDrugName = "Amlodipine"
 
     // when
     testCase.dispatch(SetSheetTitle(drugName, null, null))
@@ -116,7 +115,6 @@ class CustomDrugEntryEffectHandlerTest {
   @Test
   fun `when add custom drug to prescription effect is received, add custom drug to prescription repository`() {
     // given
-    val drugName = "Amlodipine"
     val dosage = "2.5 mg"
     val frequency = DrugFrequency.OD
 
@@ -149,7 +147,6 @@ class CustomDrugEntryEffectHandlerTest {
   @Test
   fun `when update prescription effect is received, then update prescription`() {
     // given
-    val drugName = "Amlodipine"
     val dosage = "2.5 mg"
     val frequency = DrugFrequency.OD
 

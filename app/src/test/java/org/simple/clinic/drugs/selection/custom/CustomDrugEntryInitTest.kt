@@ -11,7 +11,7 @@ import java.util.UUID
 
 class CustomDrugEntryInitTest {
   private val initSpec = InitSpec(CustomDrugEntryInit())
-  private val drugName = "Amolodipine"
+  private val drugName = "Amlodipine"
 
   @Test
   fun `when sheet is created in create mode from a drug list, then set the dosage, frequency and sheet title from the drug object`() {

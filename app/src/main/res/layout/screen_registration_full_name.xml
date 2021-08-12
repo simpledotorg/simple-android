@@ -87,6 +87,14 @@
       </com.google.android.material.textfield.TextInputLayout>
 
       <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@+id/fullNameEditText"
+        android:text="@string/registrationname_name_and_role_hint"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="@color/color_on_surface_67" />
+
+      <TextView
         android:id="@+id/validationErrorTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

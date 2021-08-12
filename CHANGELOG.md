@@ -28,6 +28,9 @@
 - Migrate `IntroVideoScreen` to a Fragment
 - Remove usage of `Age` in `EditPatientEffectHandler`
 
+### Features
+- Ask users for their name AND job designation on sign up
+
 ### Changes
 - Don't load search results if search query is not changed from previous search query
 - Show keyboard and prefill search query if present when instant search screen is shown

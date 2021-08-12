@@ -120,10 +120,12 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     val shouldGoToHomeScreen = openIntention is LinkIdWithPatient || openIntention is ViewNewPatient || openIntention is ViewExistingPatientWithTeleconsultLog
     val hasAtLeastOneMeasurementRecorded = countOfRecordedBloodPressures + countOfRecordedBloodSugars > 0
     val shouldShowAddMeasurementsWarning = medicalHistory.diagnosedWithHypertension == Yes && medicalHistory.diagnosedWithDiabetes == Yes && !hasAtLeastOneMeasurementRecorded
+    val shouldShowAddBloodPressureWarning = medicalHistory.diagnosedWithHypertension == Yes && countOfRecordedBloodPressures == 0
 
     return when {
       shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
       shouldShowAddMeasurementsWarning && !model.hasShownMeasurementsWarningDialog -> next(model.shownMeasurementsWarningDialog(), setOf(ShowAddMeasurementsWarningDialog))
+      shouldShowAddBloodPressureWarning && !model.hasShownMeasurementsWarningDialog -> next(model.shownMeasurementsWarningDialog(), setOf(ShowAddBloodPressureWarningDialog))
       shouldShowScheduleAppointmentSheet -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, BACK_CLICK, model.currentFacility!!))
       shouldGoToPreviousScreen -> dispatch(GoBackToPreviousScreen)
       shouldGoToHomeScreen -> dispatch(GoToHomeScreen)

@@ -84,6 +84,8 @@ data class Patient(
 
   fun withDateOfBirth(dateOfBirth: LocalDate): Patient = copy(ageDetails = ageDetails.withDateOfBirth(dateOfBirth))
 
+  fun withAgeDetails(ageDetails: PatientAgeDetails): Patient = copy(ageDetails = ageDetails)
+
   @Dao
   abstract class RoomDao : DaoWithUpsert<Patient>() {
 

@@ -15,11 +15,11 @@ import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
-import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
 import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
@@ -184,28 +184,30 @@ class EditPatientEffectHandler @AssistedInject constructor(
       patient: Patient,
       ongoingEntry: EditablePatientEntry
   ): Patient {
-    val patientWithoutAgeOrDateOfBirth = patient
+    val ageDetails = when (ongoingEntry.ageOrDateOfBirth) {
+      is EntryWithAge -> coerceAgeFrom(patient.ageDetails, ongoingEntry.ageOrDateOfBirth.age)
+      is EntryWithDateOfBirth -> readAgeDetailsFromEnteredDateOfBirth(ongoingEntry.ageOrDateOfBirth, patient)
+    }
+
+    return patient
         .withNameAndGender(ongoingEntry.name, ongoingEntry.gender)
+        .withAgeDetails(ageDetails)
+  }
 
-    return when (ongoingEntry.ageOrDateOfBirth) {
-      is EntryWithAge -> {
-        val age = coerceAgeFrom(patient.age, ongoingEntry.ageOrDateOfBirth.age)
-        patientWithoutAgeOrDateOfBirth.withAge(age)
-      }
-
-      is EntryWithDateOfBirth -> {
-        val dateOfBirth = LocalDate.parse(ongoingEntry.ageOrDateOfBirth.dateOfBirth, dateOfBirthFormatter)
-        patientWithoutAgeOrDateOfBirth.withDateOfBirth(dateOfBirth)
-      }
+  private fun coerceAgeFrom(recordedAgeDetails: PatientAgeDetails, enteredAge: String): PatientAgeDetails {
+    val enteredAgeValue = enteredAge.toInt()
+    return when {
+      recordedAgeDetails.doesRecordedAgeMatch(enteredAgeValue) -> recordedAgeDetails
+      else -> recordedAgeDetails.withUpdatedAge(enteredAgeValue, utcClock)
     }
   }
 
-  private fun coerceAgeFrom(alreadySavedAge: Age?, enteredAge: String): Age {
-    val enteredAgeValue = enteredAge.toInt()
-    return when {
-      alreadySavedAge != null && alreadySavedAge.value == enteredAgeValue -> alreadySavedAge
-      else -> Age(enteredAgeValue, Instant.now(utcClock))
-    }
+  private fun readAgeDetailsFromEnteredDateOfBirth(
+      ageOrDateOfBirth: EntryWithDateOfBirth,
+      patient: Patient
+  ): PatientAgeDetails {
+    val dateOfBirth = LocalDate.parse(ageOrDateOfBirth.dateOfBirth, dateOfBirthFormatter)
+    return patient.ageDetails.withDateOfBirth(dateOfBirth)
   }
 
   private fun updateAddress(

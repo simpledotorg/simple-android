@@ -16,7 +16,6 @@ import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
@@ -253,8 +252,9 @@ class PatientSummaryEffectHandlerTest {
     testCase.assertOutgoingEvents(
         DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = true,
-            countOfRecordedMeasurements = 5,
-            diagnosisRecorded = medicalHistory.diagnosisRecorded
+            countOfRecordedBloodPressures = 3,
+            countOfRecordedBloodSugars = 2,
+            medicalHistory = medicalHistory
         )
     )
     verifyZeroInteractions(uiActions)

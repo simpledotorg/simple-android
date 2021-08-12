@@ -33,9 +33,10 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is DataForBackClickLoaded -> dataForHandlingBackLoaded(
           patientUuid = model.patientUuid,
           hasPatientDataChanged = event.hasPatientDataChangedSinceScreenCreated,
-          countOfRecordedMeasurements = event.countOfRecordedMeasurements,
+          countOfRecordedBloodPressures = event.countOfRecordedBloodPressures,
+          countOfRecordedBloodSugars = event.countOfRecordedBloodSugars,
           openIntention = model.openIntention,
-          diagnosisRecorded = event.diagnosisRecorded,
+          diagnosisRecorded = event.medicalHistory.diagnosisRecorded,
           isDiabetesManagementEnabled = model.isDiabetesManagementEnabled,
           currentFacility = model.currentFacility!!
       )
@@ -110,13 +111,14 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
   private fun dataForHandlingBackLoaded(
       patientUuid: UUID,
       hasPatientDataChanged: Boolean,
-      countOfRecordedMeasurements: Int,
+      countOfRecordedBloodPressures: Int,
+      countOfRecordedBloodSugars: Int,
       openIntention: OpenIntention,
       diagnosisRecorded: Boolean,
       isDiabetesManagementEnabled: Boolean,
       currentFacility: Facility
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val shouldShowScheduleAppointmentSheet = if (countOfRecordedMeasurements == 0) false else hasPatientDataChanged
+    val shouldShowScheduleAppointmentSheet = if (countOfRecordedBloodPressures + countOfRecordedBloodSugars == 0) false else hasPatientDataChanged
     val shouldShowDiagnosisError = shouldShowScheduleAppointmentSheet && diagnosisRecorded.not() && isDiabetesManagementEnabled
     val shouldGoToPreviousScreen = openIntention is ViewExistingPatient
     val shouldGoToHomeScreen = openIntention is LinkIdWithPatient || openIntention is ViewNewPatient || openIntention is ViewExistingPatientWithTeleconsultLog

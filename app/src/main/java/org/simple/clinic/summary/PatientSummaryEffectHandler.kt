@@ -188,6 +188,8 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .map { loadDataForBackClick ->
             val patientUuid = loadDataForBackClick.patientUuid
             val timestamp = loadDataForBackClick.screenCreatedTimestamp
+            val countOfRecordedBloodPressures = bloodPressureRepository.bloodPressureCountImmediate(patientUuid)
+            val countOfRecordedBloodSugars = bloodSugarRepository.bloodSugarCountImmediate(patientUuid)
             val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
                 defaultHistoryUuid = uuidGenerator.v4(),
                 patientUuid = patientUuid
@@ -195,8 +197,9 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
 
             DataForBackClickLoaded(
                 hasPatientDataChangedSinceScreenCreated = patientRepository.hasPatientDataChangedSince(patientUuid, timestamp),
-                countOfRecordedMeasurements = countOfRecordedMeasurements(patientUuid),
-                diagnosisRecorded = medicalHistory.diagnosisRecorded
+                countOfRecordedBloodPressures = countOfRecordedBloodPressures,
+                countOfRecordedBloodSugars = countOfRecordedBloodSugars,
+                medicalHistory = medicalHistory
             )
           }
     }

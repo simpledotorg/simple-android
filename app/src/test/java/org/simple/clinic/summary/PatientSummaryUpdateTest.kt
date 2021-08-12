@@ -9,7 +9,6 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityConfig
-import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
@@ -119,8 +118,14 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = true,
-            countOfRecordedMeasurements = 1,
-            diagnosisRecorded = true
+            countOfRecordedBloodPressures = 1,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("94056dc9-85e9-472e-8674-1657bbab56bb"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Yes,
+                hasDiabetes = Yes
+            )
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -136,8 +141,14 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = true,
-            countOfRecordedMeasurements = 1,
-            diagnosisRecorded = false
+            countOfRecordedBloodPressures = 1,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("1d686e68-b64b-40ae-ba33-614c81853389"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Unanswered,
+                hasDiabetes = Unanswered
+            )
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -153,8 +164,14 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = true,
-            countOfRecordedMeasurements = 1,
-            diagnosisRecorded = false
+            countOfRecordedBloodPressures = 1,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("9da22d50-9a5e-4c78-b451-39cc8535fec9"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Unanswered,
+                hasDiabetes = Unanswered
+            )
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -170,8 +187,14 @@ class PatientSummaryUpdateTest {
         .given(model.forExistingPatient())
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = true,
-            countOfRecordedMeasurements = 0,
-            diagnosisRecorded = true
+            countOfRecordedBloodPressures = 0,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("b29992e8-9dfe-4499-84a6-31c0d546c312"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Yes,
+                hasDiabetes = Yes
+            )
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -187,8 +210,14 @@ class PatientSummaryUpdateTest {
         .given(model.forNewPatient())
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = true,
-            countOfRecordedMeasurements = 0,
-            diagnosisRecorded = true
+            countOfRecordedBloodPressures = 0,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("c2bda975-f7b6-4e23-a53f-82acb55e9f37"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Yes,
+                hasDiabetes = Yes
+            )
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -204,8 +233,14 @@ class PatientSummaryUpdateTest {
         .given(model.forLinkingWithExistingPatient())
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = true,
-            countOfRecordedMeasurements = 0,
-            diagnosisRecorded = true
+            countOfRecordedBloodPressures = 0,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("c7d5d852-de82-4f80-95dc-611e333d370b"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Yes,
+                hasDiabetes = Yes
+            )
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -221,8 +256,14 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = false,
-            countOfRecordedMeasurements = 1,
-            diagnosisRecorded = true
+            countOfRecordedBloodPressures = 1,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("95df9f42-2fd0-4429-b2ad-ae3de909a480"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Yes,
+                hasDiabetes = Yes
+            )
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -238,8 +279,14 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = false,
-            countOfRecordedMeasurements = 0,
-            diagnosisRecorded = true
+            countOfRecordedBloodPressures = 0,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("f4825cd5-10ac-4494-af8b-a616377b42df"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Yes,
+                hasDiabetes = Yes
+            )
         ))
         .then(assertThatNext(
             hasNoModel(),

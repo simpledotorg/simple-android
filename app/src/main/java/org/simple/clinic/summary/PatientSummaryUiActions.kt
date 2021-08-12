@@ -27,4 +27,5 @@ interface PatientSummaryUiActions {
   fun openContactDoctorSheet(patientUuid: UUID)
   fun showAddMeasurementsWarningDialog()
   fun showAddBloodPressureWarningDialog()
+  fun showAddBloodSugarWarningDialog()
 }

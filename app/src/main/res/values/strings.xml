@@ -830,5 +830,9 @@
   <string name="warning_add_blood_pressure_message">If possible, add a current blood pressure reading for this patient.</string>
   <string name="warning_add_blood_pressure_positive_button">Add blood pressure</string>
   <string name="warning_add_blood_pressure_negative_button">Not now</string>
+  <string name="warning_add_blood_sugar_title">Add blood sugar?</string>
+  <string name="warning_add_blood_sugar_message">If possible, add a current blood sugar reading for this patient.</string>
+  <string name="warning_add_blood_sugar_positive_button">Add blood sugar</string>
+  <string name="warning_add_blood_sugar_negative_button">Not now</string>
 
 </resources>

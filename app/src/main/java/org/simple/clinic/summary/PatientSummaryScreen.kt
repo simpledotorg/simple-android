@@ -551,6 +551,15 @@ class PatientSummaryScreen :
         .show()
   }
 
+  override fun showAddBloodSugarWarningDialog() {
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(R.string.warning_add_blood_sugar_title)
+        .setMessage(R.string.warning_add_blood_sugar_message)
+        .setPositiveButton(R.string.warning_add_blood_sugar_positive_button, null)
+        .setNegativeButton(R.string.warning_add_blood_sugar_negative_button, null)
+        .show()
+  }
+
   interface Injector {
     fun inject(target: PatientSummaryScreen)
   }

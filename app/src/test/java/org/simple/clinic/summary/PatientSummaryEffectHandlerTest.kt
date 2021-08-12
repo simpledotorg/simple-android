@@ -432,4 +432,16 @@ class PatientSummaryEffectHandlerTest {
     verify(uiActions).showAddBloodPressureWarningDialog()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when show add blood sugar warning dialog effect is received, then show add blood sugar warning dialog`() {
+    // when
+    testCase.dispatch(ShowAddBloodSugarWarningDialog)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).showAddBloodSugarWarningDialog()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

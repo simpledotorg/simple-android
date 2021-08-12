@@ -4,7 +4,6 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
-import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.mobius.dispatch
@@ -33,14 +32,11 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is PatientSummaryBloodPressureSaved -> bloodPressureSaved(model.openIntention, model.patientSummaryProfile!!)
       is FetchedHasShownMissingPhoneReminder -> fetchedHasShownMissingReminder(event.hasShownReminder, model.patientUuid)
       is DataForBackClickLoaded -> dataForHandlingBackLoaded(
-          patientUuid = model.patientUuid,
+          model = model,
           hasPatientDataChanged = event.hasPatientDataChangedSinceScreenCreated,
           countOfRecordedBloodPressures = event.countOfRecordedBloodPressures,
           countOfRecordedBloodSugars = event.countOfRecordedBloodSugars,
-          openIntention = model.openIntention,
-          medicalHistory = event.medicalHistory,
-          isDiabetesManagementEnabled = model.isDiabetesManagementEnabled,
-          currentFacility = model.currentFacility!!
+          medicalHistory = event.medicalHistory
       )
       is DataForDoneClickLoaded -> dataForHandlingDoneClickLoaded(
           model = model,
@@ -111,23 +107,21 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
   }
 
   private fun dataForHandlingBackLoaded(
-      patientUuid: UUID,
+      model: PatientSummaryModel,
       hasPatientDataChanged: Boolean,
       countOfRecordedBloodPressures: Int,
       countOfRecordedBloodSugars: Int,
-      openIntention: OpenIntention,
-      medicalHistory: MedicalHistory,
-      isDiabetesManagementEnabled: Boolean,
-      currentFacility: Facility
+      medicalHistory: MedicalHistory
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    val openIntention = model.openIntention
     val shouldShowScheduleAppointmentSheet = if (countOfRecordedBloodPressures + countOfRecordedBloodSugars == 0) false else hasPatientDataChanged
-    val shouldShowDiagnosisError = shouldShowScheduleAppointmentSheet && medicalHistory.diagnosisRecorded.not() && isDiabetesManagementEnabled
+    val shouldShowDiagnosisError = shouldShowScheduleAppointmentSheet && medicalHistory.diagnosisRecorded.not() && model.isDiabetesManagementEnabled
     val shouldGoToPreviousScreen = openIntention is ViewExistingPatient
     val shouldGoToHomeScreen = openIntention is LinkIdWithPatient || openIntention is ViewNewPatient || openIntention is ViewExistingPatientWithTeleconsultLog
 
     val effect = when {
       shouldShowDiagnosisError -> ShowDiagnosisError
-      shouldShowScheduleAppointmentSheet -> ShowScheduleAppointmentSheet(patientUuid, BACK_CLICK, currentFacility)
+      shouldShowScheduleAppointmentSheet -> ShowScheduleAppointmentSheet(model.patientUuid, BACK_CLICK, model.currentFacility!!)
       shouldGoToPreviousScreen -> GoBackToPreviousScreen
       shouldGoToHomeScreen -> GoToHomeScreen
       else -> throw IllegalStateException("This should not happen!")

@@ -408,4 +408,16 @@ class PatientSummaryEffectHandlerTest {
     verify(uiActions).openContactDoctorSheet(patientUuid)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when show add measurements warning dialog effect is received, then show add measurements warning dialog`() {
+    // when
+    testCase.dispatch(ShowAddMeasurementsWarningDialog)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).showAddMeasurementsWarningDialog()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

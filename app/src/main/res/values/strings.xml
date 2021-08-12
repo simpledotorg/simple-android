@@ -821,4 +821,10 @@
   <string name="customdrugssearch_hint">Enter medicine name</string>
   <string name="customdrugssearch_item_name_separator">, </string>
 
+  <!-- Warning dialogs -->
+  <string name="warning_add_measurements_title">Add BP and blood sugar?</string>
+  <string name="warning_add_measurements_message">If possible, add a current blood pressure and blood sugar reading for this patient.</string>
+  <string name="warning_add_measurements_positive_button">Add readings</string>
+  <string name="warning_add_measurements_negative_button">Not now</string>
+
 </resources>

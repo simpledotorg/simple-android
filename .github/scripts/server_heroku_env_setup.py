@@ -30,6 +30,7 @@ heroku_api_token = sys.argv[3]
 
 additional_heroku_properties = sys.argv[4::]
 additional_properties_map = dict(map(lambda item: item.split('='), additional_heroku_properties))
+print('Additional heroku properties: {0}\nAdditional properties map: {1}'.format(additional_heroku_properties, additional_properties_map))
 server_vars_map.update(additional_properties_map)
 
 server_vars_map['SIMPLE_SERVER_HOST'] = '{app_name}.herokuapp.com'.format(app_name = heroku_app_name)

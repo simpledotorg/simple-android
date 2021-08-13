@@ -24,6 +24,7 @@ if [ $serverAppAlreadyExists = false ]; then
   heroku pipelines:add --app=$herokuAppName --stage=staging simple-android-review
 
   pip3 install requests
+  echo "Additional Heroku properties: $additionalHerokuEnvProperties"
   $androidAppDirectory/.github/scripts/server_heroku_env_setup.py $serverAppDirectory/app.json $herokuAppName $herokuApiKey $additionalHerokuEnvProperties
 
   heroku addons:create --app=$herokuAppName --wait --name="${herokuAppName}-redis" heroku-redis:hobby-dev

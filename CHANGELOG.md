@@ -29,6 +29,7 @@
 - Remove usage of `Age` in `EditPatientEffectHandler`
 - Move delete patient button click listener to `onViewCreated` in `EditPatientScreen`
 - Prefill Sri Lanka national ID in patient entry and edit screens
+- Add `SriLankaNationalIdMetaDataV1` to type adapter
 
 ### Features
 - Ask users for their name AND job designation on sign up

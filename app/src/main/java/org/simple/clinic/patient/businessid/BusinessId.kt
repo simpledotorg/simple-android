@@ -133,7 +133,8 @@ data class BusinessId(
             BpPassportMetaDataV1 to "org.simple.bppassport.meta.v1",
             BangladeshNationalIdMetaDataV1 to "org.simple.bangladesh_national_id.meta.v1",
             MedicalRecordNumberMetaDataV1 to "org.simple.ethiopia_medical_record.meta.v1",
-            IndiaNationalHealthIdMetaDataV1 to "org.simple.india_national_health_id.meta.v1"
+            IndiaNationalHealthIdMetaDataV1 to "org.simple.india_national_health_id.meta.v1",
+            SriLankaNationIdMetaDataV1 to "org.simple.sri_lanka_national_id.meta.v1"
         ),
         unknownStringToEnumConverter = { Unknown(it) },
         unknownEnumToStringConverter = { (it as Unknown).actual }

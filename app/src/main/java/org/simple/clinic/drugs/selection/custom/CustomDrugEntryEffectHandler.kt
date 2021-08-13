@@ -1,15 +1,25 @@
 package org.simple.clinic.drugs.selection.custom
 
 import com.spotify.mobius.rx2.RxMobius
+import dagger.Lazy
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.search.DrugFrequency
+import org.simple.clinic.facility.Facility
+import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
+import org.simple.clinic.util.nullIfBlank
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.uuid.UuidGenerator
 
 class CustomDrugEntryEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
+    private val prescriptionRepository: PrescriptionRepository,
+    private val currentFacility: Lazy<Facility>,
+    private val uuidGenerator: UuidGenerator,
     @Assisted private val uiActions: CustomDrugEntrySheetUiActions
 ) {
   @AssistedFactory
@@ -26,6 +36,7 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
         .addConsumer(SetDrugFrequency::class.java, { uiActions.setDrugFrequency(it.frequency) }, schedulersProvider.ui())
         .addConsumer(SetDrugDosage::class.java, { uiActions.setDrugDosage(it.dosage) }, schedulersProvider.ui())
         .addConsumer(SetSheetTitle::class.java, ::setSheetTitle, schedulersProvider.ui())
+        .addTransformer(SaveCustomDrugToPrescription::class.java, saveCustomDrugToPrescription())
         .build()
   }
 
@@ -41,5 +52,25 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
       frequency: DrugFrequency?
   ): String {
     return listOfNotNull(name, dosage, frequency?.toString()).joinToString()
+  }
+
+  private fun saveCustomDrugToPrescription(): ObservableTransformer<SaveCustomDrugToPrescription, CustomDrugEntryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .switchMap { savePrescription ->
+            prescriptionRepository
+                .savePrescription(
+                    uuid = uuidGenerator.v4(),
+                    patientUuid = savePrescription.patientUuid,
+                    name = savePrescription.drugName,
+                    dosage = savePrescription.dosage.nullIfBlank(),
+                    rxNormCode = savePrescription.rxNormCode,
+                    isProtocolDrug = false,
+                    frequency = MedicineFrequency.fromDrugFrequency(savePrescription.frequency),
+                    facility = currentFacility.get()
+                ).andThen(Observable.just(CustomDrugSaved))
+          }
+    }
   }
 }

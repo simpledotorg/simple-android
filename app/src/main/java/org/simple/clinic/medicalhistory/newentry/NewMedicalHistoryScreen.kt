@@ -1,10 +1,9 @@
 package org.simple.clinic.medicalhistory.newentry
 
-import android.content.Context
 import android.os.Parcelable
-import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.RelativeLayout
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.transition.TransitionManager
 import com.google.android.material.transition.MaterialFade
@@ -36,21 +35,24 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
-import org.simple.clinic.widgets.hideKeyboard
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-class NewMedicalHistoryScreen(
-    context: Context,
-    attrs: AttributeSet
-) : RelativeLayout(context, attrs), NewMedicalHistoryUi, NewMedicalHistoryUiActions {
+class NewMedicalHistoryScreen : BaseScreen<
+    NewMedicalHistoryScreen.Key,
+    ScreenNewMedicalHistoryBinding,
+    NewMedicalHistoryModel,
+    NewMedicalHistoryEvent,
+    NewMedicalHistoryEffect,
+    Unit>(), NewMedicalHistoryUi, NewMedicalHistoryUiActions {
 
   @Inject
   lateinit var router: Router
@@ -113,6 +115,13 @@ class NewMedicalHistoryScreen(
     get() = hypertensionTreatmentBinding!!.noChip
 
   private val questionViewEvents: Subject<NewMedicalHistoryEvent> = PublishSubject.create()
+  
+  override fun defaultModel() = NewMedicalHistoryModel.default(country)
+
+  override fun bindView(
+      layoutInflater: LayoutInflater,
+      container: ViewGroup?
+  ) = ScreenNewMedicalHistoryBinding.inflate(layoutInflater, container, false)
 
   private val events: Observable<NewMedicalHistoryEvent> by unsafeLazy {
     Observable

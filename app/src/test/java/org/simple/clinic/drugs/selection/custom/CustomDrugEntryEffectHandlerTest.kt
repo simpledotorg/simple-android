@@ -195,4 +195,20 @@ class CustomDrugEntryEffectHandlerTest {
     verifyNoMoreInteractions(uiActions)
     testCase.assertNoOutgoingEvents()
   }
+
+  @Test
+  fun `when fetch prescription effect is received, then fetch prescriptions`() {
+    // given
+    val prescriptionUuid = UUID.fromString("17f127a7-547d-45c4-a6a8-44a0f182f9c7")
+    val prescribedDrug = TestData.prescription(uuid = prescriptionUuid)
+    whenever(prescriptionRepository.prescriptionImmediate(prescriptionUuid)).thenReturn(prescribedDrug)
+
+    // when
+    testCase.dispatch(FetchPrescription(prescriptionUuid))
+
+    // then
+    verify(prescriptionRepository).prescriptionImmediate(prescriptionUuid)
+    testCase.assertOutgoingEvents(PrescribedDrugFetched(prescribedDrug))
+    verifyZeroInteractions(uiActions)
+  }
 }

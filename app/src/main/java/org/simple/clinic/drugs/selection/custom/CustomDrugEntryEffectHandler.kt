@@ -39,6 +39,7 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
         .addTransformer(SaveCustomDrugToPrescription::class.java, saveCustomDrugToPrescription())
         .addTransformer(UpdatePrescription::class.java, updatePrescription())
         .addAction(CloseBottomSheet::class.java, uiActions::close, schedulersProvider.ui())
+        .addTransformer(FetchPrescription::class.java, fetchPrescription())
         .build()
   }
 
@@ -74,6 +75,15 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
                     facility = currentFacility.get())
                 ).andThen(Observable.just(CustomDrugSaved))
           }
+    }
+  }
+
+  private fun fetchPrescription(): ObservableTransformer<FetchPrescription, CustomDrugEntryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { prescriptionRepository.prescriptionImmediate(it.prescriptionUuid) }
+          .map(::PrescribedDrugFetched)
     }
   }
 

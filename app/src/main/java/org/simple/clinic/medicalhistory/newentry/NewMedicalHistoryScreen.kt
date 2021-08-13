@@ -13,6 +13,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
@@ -34,6 +35,7 @@ import org.simple.clinic.medicalhistory.SelectOngoingHypertensionTreatmentErrorD
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
@@ -281,5 +283,12 @@ class NewMedicalHistoryScreen(
 
   interface Injector {
     fun inject(target: NewMedicalHistoryScreen)
+  }
+
+  @Parcelize
+  data class Key(
+      override val analyticsName: String = "New Medical History Entry"
+  ) : ScreenKey() {
+    override fun instantiateFragment() = NewMedicalHistoryScreen()
   }
 }

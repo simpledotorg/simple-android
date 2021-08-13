@@ -63,6 +63,7 @@ jobs:
     timeout-minutes: 30
     env:
       AVD_API_LEVEL: 27
+      HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
     steps:
       - name: Checkout Android source
         uses: actions/checkout@v2
@@ -130,6 +131,20 @@ jobs:
         with:
           java-version: 11
 
+      - name: Generate server app name
+        id: generate-server-app-name
+        run: android-app/.github/scripts/generate_heroku_app_name.sh ${{ github.ref }}
+
+      - name: Deploy the server on Heroku
+        id: start-simple-server
+        run: |
+          android-app/.github/scripts/setup_heroku_instance.sh \
+          ${{ steps.generate-server-app-name.outputs.heroku_app_name }} \
+          ${{ env.HEROKU_API_KEY }} \
+          server-app \
+          android-app \
+          ${{ secrets.HEROKU_SECRET_PROPERTIES }}
+
       - name: Turn on capturing of flaky tests
         run: cat android-app/app/src/androidTest/resources/quarantine_ci.properties > android-app/app/src/androidTest/resources/quarantine.properties
 
@@ -141,6 +156,13 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: android-app/gradlew -p android-app --build-cache --no-daemon connectedQaDebugAndroidTest
+
+      - name: Teardown Heroku instance
+        if: always() && steps.start-simple-server.outcome != 'success'
+        run: |
+          heroku apps:destroy \
+          --app=${{ steps.generate-server-app-name.outputs.heroku_app_name }} \
+          --confirm=${{ steps.generate-server-app-name.outputs.heroku_app_name }}
 
   mobius_migration_tests:
     runs-on: [ ubuntu-latest ]

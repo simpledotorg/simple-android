@@ -56,21 +56,11 @@ jobs:
       - name: QA Unit Tests
         run: ./gradlew --build-cache --no-daemon testQaDebugUnitTest
 
-  qa_purge_env:
-    runs-on: [ ubuntu-latest ]
-    steps:
-      - name: Purge QA server
-        run: |
-          curl -v --request DELETE \
-          --url https://api-qa.simple.org/qa/purge \
-          --header 'Authorization: Bearer ${{ secrets.QA_PURGE_TOKEN }}'
-
   # reactivecircus/android-emulator-runner@v2 requires MacOS to run on
   # https://github.com/ReactiveCircus/android-emulator-runner
   qa_android_tests:
     runs-on: [ macos-latest ]
     timeout-minutes: 30
-    needs: [ qa_purge_env ]
     env:
       AVD_API_LEVEL: 27
     steps:

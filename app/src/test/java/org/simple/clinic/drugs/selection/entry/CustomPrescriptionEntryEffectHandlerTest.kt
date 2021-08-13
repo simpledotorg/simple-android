@@ -50,6 +50,7 @@ class CustomPrescriptionEntryEffectHandlerTest {
         dosage = "10mg",
         rxNormCode = null,
         isProtocolDrug = false,
+        frequency = null,
         facility = facility
     )) doReturn Completable.complete()
 

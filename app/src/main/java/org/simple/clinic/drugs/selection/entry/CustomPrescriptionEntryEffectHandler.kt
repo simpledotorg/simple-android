@@ -93,6 +93,7 @@ class CustomPrescriptionEntryEffectHandler @AssistedInject constructor(
             dosage = dosage.nullIfBlank(),
             rxNormCode = null,
             isProtocolDrug = false,
+            frequency = null,
             facility = currentFacility
         )
   }

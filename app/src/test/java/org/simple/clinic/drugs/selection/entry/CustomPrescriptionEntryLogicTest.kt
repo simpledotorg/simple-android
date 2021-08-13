@@ -87,6 +87,7 @@ class CustomPrescriptionEntryLogicTest {
         dosage = dosage.nullIfBlank(),
         rxNormCode = null,
         isProtocolDrug = false,
+        frequency = null,
         facility = facility
     )).thenReturn(Completable.complete())
 
@@ -104,6 +105,7 @@ class CustomPrescriptionEntryLogicTest {
         dosage = dosage.nullIfBlank(),
         rxNormCode = null,
         isProtocolDrug = false,
+        frequency = null,
         facility = facility
     )
     verify(uiActions).finish()

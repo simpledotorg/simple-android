@@ -297,6 +297,8 @@ class EditPatientScreen : BaseScreen<
     if (features.isEnabled(VillageTypeAhead)) {
       colonyOrVillageEditText.setAdapter(villageTypeAheadAdapter)
     }
+
+    deletePatient.setOnClickListener { router.push(DeletePatientScreenKey(screenKey.patient.uuid).wrap()) }
   }
 
   override fun setupUi(inputFields: InputFields) {
@@ -305,7 +307,6 @@ class EditPatientScreen : BaseScreen<
     showOrHideGenderRadioButtons(inputFields)
 
     deletePatient.visibleOrGone(features.isEnabled(DeletePatient))
-    deletePatient.setOnClickListener { router.push(DeletePatientScreenKey(screenKey.patient.uuid).wrap()) }
   }
 
   override fun setColonyOrVillagesAutoComplete(colonyOrVillageList: List<String>) {

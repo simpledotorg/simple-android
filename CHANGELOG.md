@@ -27,6 +27,7 @@
 - Migrate `EditPatientScreen` to a fragment
 - Migrate `IntroVideoScreen` to a Fragment
 - Remove usage of `Age` in `EditPatientEffectHandler`
+- Move delete patient button click listener to `onViewCreated` in `EditPatientScreen`
 
 ### Features
 - Ask users for their name AND job designation on sign up

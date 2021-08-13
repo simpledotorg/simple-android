@@ -155,7 +155,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: android-app/gradlew -p android-app --build-cache --no-daemon connectedQaDebugAndroidTest
+          script: android-app/gradlew -p android-app --build-cache --no-daemon -PmanifestEndpoint=https://${{ steps.generate-server-app-name.outputs.heroku_app_name }}.herokuapp.com/api/ connectedQaDebugAndroidTest
 
       - name: Teardown Heroku instance
         if: always() && steps.start-simple-server.outcome != 'success'

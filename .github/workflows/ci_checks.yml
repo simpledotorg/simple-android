@@ -64,7 +64,10 @@ jobs:
     env:
       AVD_API_LEVEL: 27
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Android source
+        uses: actions/checkout@v2
+        with:
+          path: android-app
 
       - name: Cache Gradle build
         uses: actions/cache@v2
@@ -101,7 +104,7 @@ jobs:
           java-version: 11
 
       - name: Turn on capturing of flaky tests
-        run: cat app/src/androidTest/resources/quarantine_ci.properties > app/src/androidTest/resources/quarantine.properties
+        run: cat android-app/app/src/androidTest/resources/quarantine_ci.properties > android-app/app/src/androidTest/resources/quarantine.properties
 
       - name: QA Android Tests
         uses: reactivecircus/android-emulator-runner@v2
@@ -110,7 +113,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: ./gradlew --build-cache --no-daemon connectedQaDebugAndroidTest
+          script: android-app/gradlew -p android-app --build-cache --no-daemon connectedQaDebugAndroidTest
 
   mobius_migration_tests:
     runs-on: [ ubuntu-latest ]

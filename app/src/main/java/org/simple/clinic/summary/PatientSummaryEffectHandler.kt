@@ -11,7 +11,6 @@ import io.reactivex.Scheduler
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
-import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
@@ -40,9 +39,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val bloodSugarRepository: BloodSugarRepository,
     private val dataSync: DataSync,
     private val medicalHistoryRepository: MedicalHistoryRepository,
-    private val prescriptionRepository: PrescriptionRepository,
     private val country: Country,
-    private val patientSummaryConfig: PatientSummaryConfig,
     private val currentUser: Lazy<User>,
     private val currentFacility: Lazy<Facility>,
     private val uuidGenerator: UuidGenerator,
@@ -238,13 +235,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .doOnNext { dataSync.fireAndForgetSync() }
           .map { SyncTriggered(it.sheetOpenedFrom) }
     }
-  }
-
-  private fun countOfRecordedMeasurements(patientUuid: UUID): Int {
-    val countOfRecordedBloodPressures = bloodPressureRepository.bloodPressureCountImmediate(patientUuid)
-    val countOfRecordedBloodSugars = bloodSugarRepository.bloodSugarCountImmediate(patientUuid)
-
-    return countOfRecordedBloodPressures + countOfRecordedBloodSugars
   }
 
   private fun hasInvalidPhone(patientUuid: UUID): Boolean {

@@ -75,6 +75,10 @@ import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaNationalId
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.exhaustive
@@ -718,9 +722,10 @@ class EditPatientScreen : BaseScreen<
 
   override fun setAlternateId(alternateId: Identifier) {
     when (alternateId.type) {
-      Identifier.IdentifierType.BangladeshNationalId -> setAlternateIdTextField(alternateId)
-      Identifier.IdentifierType.EthiopiaMedicalRecordNumber -> setAlternateIdTextField(alternateId)
-      Identifier.IdentifierType.IndiaNationalHealthId -> setAlternateIdContainer(alternateId)
+      BangladeshNationalId,
+      SriLankaNationalId,
+      EthiopiaMedicalRecordNumber -> setAlternateIdTextField(alternateId)
+      IndiaNationalHealthId -> setAlternateIdContainer(alternateId)
       else -> throw IllegalArgumentException("Unknown alternate id: $alternateId")
     }
   }

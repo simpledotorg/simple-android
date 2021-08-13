@@ -76,6 +76,26 @@ jobs:
           fetch-depth: 0 # Full clone needed for Heroku deploys (https://devcenter.heroku.com/changelog-items/775)
           path: server-app
 
+      - name: Create node dependency hash
+        id: create_node_modules_hash
+        run: android-app/.github/scripts/compute_node_dependency_hash.sh
+
+      - name: Cache node modules
+        id: node-dependency-cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            package-lock.json
+          key: ${{ runner.os }}-npm-${{ steps.create_node_modules_hash.outputs.node_dep_hash }}
+
+      - name: Install Heroku CLI
+        if: steps.node-dependency-cache.outputs.cache-hit != 'true'
+        run: npm install heroku
+
+      - name: Link Heroku CLI globally
+        run: npm link heroku
+
       - name: Cache Gradle build
         uses: actions/cache@v2
         with:

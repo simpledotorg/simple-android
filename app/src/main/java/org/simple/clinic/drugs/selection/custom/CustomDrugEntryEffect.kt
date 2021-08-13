@@ -24,3 +24,12 @@ data class SaveCustomDrugToPrescription(
     val rxNormCode: String?,
     val frequency: DrugFrequency?
 ) : CustomDrugEntryEffect()
+
+data class UpdatePrescription(
+    val patientUuid: UUID,
+    val prescribedDrugUuid: UUID,
+    val drugName: String,
+    val dosage: String?,
+    val rxNormCode: String?,
+    val frequency: DrugFrequency?
+) : CustomDrugEntryEffect()

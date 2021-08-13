@@ -145,4 +145,43 @@ class CustomDrugEntryEffectHandlerTest {
     testCase.assertOutgoingEvents(CustomDrugSaved)
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when update prescription effect is received, then update prescription`() {
+    // given
+    val drugName = "Amlodipine"
+    val dosage = "2.5 mg"
+    val frequency = DrugFrequency.OD
+
+    whenever(prescriptionRepository.softDeletePrescription(customDrugUUID)).thenReturn(Completable.complete())
+
+    whenever(prescriptionRepository.savePrescription(
+        uuid = customDrugUUID,
+        patientUuid = patientUuid,
+        name = drugName,
+        dosage = dosage,
+        rxNormCode = null,
+        isProtocolDrug = false,
+        frequency = MedicineFrequency.OD,
+        facility = facility))
+        .thenReturn(Completable.complete())
+
+    // when
+    testCase.dispatch(UpdatePrescription(patientUuid, customDrugUUID, drugName, dosage, null, frequency))
+
+    // then
+    verify(prescriptionRepository).softDeletePrescription(customDrugUUID)
+    verify(prescriptionRepository).savePrescription(
+        uuid = customDrugUUID,
+        patientUuid = patientUuid,
+        name = drugName,
+        dosage = dosage,
+        rxNormCode = null,
+        isProtocolDrug = false,
+        frequency = MedicineFrequency.OD,
+        facility = facility)
+    testCase.assertOutgoingEvents(CustomDrugSaved)
+    verifyNoMoreInteractions(prescriptionRepository)
+    verifyZeroInteractions(uiActions)
+  }
 }

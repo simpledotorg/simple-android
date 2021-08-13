@@ -37,6 +37,7 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
         .addConsumer(SetDrugDosage::class.java, { uiActions.setDrugDosage(it.dosage) }, schedulersProvider.ui())
         .addConsumer(SetSheetTitle::class.java, ::setSheetTitle, schedulersProvider.ui())
         .addTransformer(SaveCustomDrugToPrescription::class.java, saveCustomDrugToPrescription())
+        .addTransformer(UpdatePrescription::class.java, updatePrescription())
         .build()
   }
 
@@ -52,6 +53,27 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
       frequency: DrugFrequency?
   ): String {
     return listOfNotNull(name, dosage, frequency?.toString()).joinToString()
+  }
+
+  private fun updatePrescription(): ObservableTransformer<UpdatePrescription, CustomDrugEntryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .switchMap { effect ->
+            prescriptionRepository
+                .softDeletePrescription(effect.prescribedDrugUuid)
+                .andThen(prescriptionRepository.savePrescription(
+                    uuid = uuidGenerator.v4(),
+                    patientUuid = effect.patientUuid,
+                    name = effect.drugName,
+                    dosage = effect.dosage,
+                    rxNormCode = effect.rxNormCode,
+                    isProtocolDrug = false,
+                    frequency = MedicineFrequency.fromDrugFrequency(effect.frequency),
+                    facility = currentFacility.get())
+                ).andThen(Observable.just(CustomDrugSaved))
+          }
+    }
   }
 
   private fun saveCustomDrugToPrescription(): ObservableTransformer<SaveCustomDrugToPrescription, CustomDrugEntryEvent> {

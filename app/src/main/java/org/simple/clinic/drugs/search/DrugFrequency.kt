@@ -5,6 +5,7 @@ import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 
 sealed class DrugFrequency : Parcelable {
@@ -57,5 +58,18 @@ sealed class DrugFrequency : Parcelable {
 
     @ToJson
     fun fromEnum(DrugFrequency: DrugFrequency?): String? = TypeAdapter.fromEnum(DrugFrequency)
+  }
+
+
+  companion object {
+    fun fromMedicineFrequency(value: MedicineFrequency?): DrugFrequency {
+      return when (value) {
+        MedicineFrequency.BD -> BD
+        MedicineFrequency.OD -> OD
+        MedicineFrequency.QDS -> QDS
+        MedicineFrequency.TDS -> TDS
+        else -> Unknown("None")
+      }
+    }
   }
 }

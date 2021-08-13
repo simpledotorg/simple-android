@@ -7,7 +7,8 @@ data class CustomDrugEntryModel(
     val drugName: String?,
     val dosage: String?,
     val dosageHasFocus: Boolean?,
-    val frequency: DrugFrequency?
+    val frequency: DrugFrequency?,
+    val rxNormCode: String?
 ) {
   companion object {
     fun default(
@@ -17,7 +18,8 @@ data class CustomDrugEntryModel(
         drugName = null,
         dosage = null,
         dosageHasFocus = null,
-        frequency = null)
+        frequency = null,
+        rxNormCode = null)
   }
 
   fun dosageEdited(dosage: String?): CustomDrugEntryModel {

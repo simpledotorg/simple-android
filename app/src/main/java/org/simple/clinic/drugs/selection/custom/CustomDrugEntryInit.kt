@@ -11,7 +11,7 @@ class CustomDrugEntryInit : Init<CustomDrugEntryModel, CustomDrugEntryEffect> {
     return when (model.openAs) {
       is OpenAs.New.FromDrugList -> updatedModelFromDrug(model, model.openAs.drug)
       is OpenAs.New.FromDrugName -> updatedModelFromDrugName(model, model.openAs.drugName)
-      else -> first(model) // will be handled in the next PR
+      is OpenAs.Update -> first(model, FetchPrescription(model.openAs.prescribedDrugUuid))
     }
   }
 

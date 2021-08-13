@@ -5,6 +5,7 @@ import com.spotify.mobius.Next.next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
@@ -33,16 +34,18 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is DataForBackClickLoaded -> dataForHandlingBackLoaded(
           patientUuid = model.patientUuid,
           hasPatientDataChanged = event.hasPatientDataChangedSinceScreenCreated,
-          countOfRecordedMeasurements = event.countOfRecordedMeasurements,
+          countOfRecordedBloodPressures = event.countOfRecordedBloodPressures,
+          countOfRecordedBloodSugars = event.countOfRecordedBloodSugars,
           openIntention = model.openIntention,
-          diagnosisRecorded = event.diagnosisRecorded,
+          medicalHistory = event.medicalHistory,
           isDiabetesManagementEnabled = model.isDiabetesManagementEnabled,
           currentFacility = model.currentFacility!!
       )
       is DataForDoneClickLoaded -> dataForHandlingDoneClickLoaded(
           patientUuid = model.patientUuid,
-          countOfRecordedMeasurements = event.countOfRecordedMeasurements,
-          diagnosisRecorded = event.diagnosisRecorded,
+          countOfRecordedBloodPressures = event.countOfRecordedBloodPressures,
+          countOfRecordedBloodSugars = event.countOfRecordedBloodSugars,
+          medicalHistory = event.medicalHistory,
           isDiabetesManagementEnabled = model.isDiabetesManagementEnabled,
           currentFacility = model.currentFacility!!
       )
@@ -88,13 +91,14 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
 
   private fun dataForHandlingDoneClickLoaded(
       patientUuid: UUID,
-      countOfRecordedMeasurements: Int,
-      diagnosisRecorded: Boolean,
+      countOfRecordedBloodPressures: Int,
+      countOfRecordedBloodSugars: Int,
+      medicalHistory: MedicalHistory,
       isDiabetesManagementEnabled: Boolean,
       currentFacility: Facility
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val hasAtLeastOneMeasurementRecorded = countOfRecordedMeasurements > 0
-    val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && diagnosisRecorded.not() && isDiabetesManagementEnabled
+    val hasAtLeastOneMeasurementRecorded = countOfRecordedBloodPressures + countOfRecordedBloodSugars > 0
+    val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && medicalHistory.diagnosisRecorded.not() && isDiabetesManagementEnabled
 
     val effect = when {
       shouldShowDiagnosisError -> ShowDiagnosisError
@@ -108,14 +112,15 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
   private fun dataForHandlingBackLoaded(
       patientUuid: UUID,
       hasPatientDataChanged: Boolean,
-      countOfRecordedMeasurements: Int,
+      countOfRecordedBloodPressures: Int,
+      countOfRecordedBloodSugars: Int,
       openIntention: OpenIntention,
-      diagnosisRecorded: Boolean,
+      medicalHistory: MedicalHistory,
       isDiabetesManagementEnabled: Boolean,
       currentFacility: Facility
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val shouldShowScheduleAppointmentSheet = if (countOfRecordedMeasurements == 0) false else hasPatientDataChanged
-    val shouldShowDiagnosisError = shouldShowScheduleAppointmentSheet && diagnosisRecorded.not() && isDiabetesManagementEnabled
+    val shouldShowScheduleAppointmentSheet = if (countOfRecordedBloodPressures + countOfRecordedBloodSugars == 0) false else hasPatientDataChanged
+    val shouldShowDiagnosisError = shouldShowScheduleAppointmentSheet && medicalHistory.diagnosisRecorded.not() && isDiabetesManagementEnabled
     val shouldGoToPreviousScreen = openIntention is ViewExistingPatient
     val shouldGoToHomeScreen = openIntention is LinkIdWithPatient || openIntention is ViewNewPatient || openIntention is ViewExistingPatientWithTeleconsultLog
 

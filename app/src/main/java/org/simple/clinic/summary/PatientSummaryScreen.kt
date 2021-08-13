@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.Init
 import com.spotify.mobius.Update
@@ -530,6 +531,33 @@ class PatientSummaryScreen :
 
   override fun navigateToTeleconsultRecordScreen(patientUuid: UUID, teleconsultRecordId: UUID) {
     router.push(TeleconsultRecordScreenKey(patientUuid, teleconsultRecordId))
+  }
+
+  override fun showAddMeasurementsWarningDialog() {
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(R.string.warning_add_measurements_title)
+        .setMessage(R.string.warning_add_measurements_message)
+        .setPositiveButton(R.string.warning_add_measurements_positive_button, null)
+        .setNegativeButton(R.string.warning_add_measurements_negative_button, null)
+        .show()
+  }
+
+  override fun showAddBloodPressureWarningDialog() {
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(R.string.warning_add_blood_pressure_title)
+        .setMessage(R.string.warning_add_blood_pressure_message)
+        .setPositiveButton(R.string.warning_add_blood_pressure_positive_button, null)
+        .setNegativeButton(R.string.warning_add_blood_pressure_negative_button, null)
+        .show()
+  }
+
+  override fun showAddBloodSugarWarningDialog() {
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(R.string.warning_add_blood_sugar_title)
+        .setMessage(R.string.warning_add_blood_sugar_message)
+        .setPositiveButton(R.string.warning_add_blood_sugar_positive_button, null)
+        .setNegativeButton(R.string.warning_add_blood_sugar_negative_button, null)
+        .show()
   }
 
   interface Injector {

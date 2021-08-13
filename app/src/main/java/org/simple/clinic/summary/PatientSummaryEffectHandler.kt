@@ -23,11 +23,11 @@ import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityRepository
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User
-import java.util.Optional
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toNullable
 import org.simple.clinic.uuid.UuidGenerator
+import java.util.Optional
 import java.util.UUID
 import java.util.function.Function
 
@@ -82,6 +82,9 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addConsumer(NavigateToTeleconsultRecordScreen::class.java, { uiActions.navigateToTeleconsultRecordScreen(it.patientUuid, it.teleconsultRecordId) }, schedulersProvider.ui())
         .addTransformer(LoadMedicalOfficers::class.java, loadMedicalOfficers())
         .addConsumer(OpenContactDoctorSheet::class.java, { uiActions.openContactDoctorSheet(it.patientUuid) }, schedulersProvider.ui())
+        .addAction(ShowAddMeasurementsWarningDialog::class.java, uiActions::showAddMeasurementsWarningDialog, schedulersProvider.ui())
+        .addAction(ShowAddBloodPressureWarningDialog::class.java, uiActions::showAddBloodPressureWarningDialog, schedulersProvider.ui())
+        .addAction(ShowAddBloodSugarWarningDialog::class.java, uiActions::showAddBloodSugarWarningDialog, schedulersProvider.ui())
         .build()
   }
 
@@ -188,6 +191,8 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .map { loadDataForBackClick ->
             val patientUuid = loadDataForBackClick.patientUuid
             val timestamp = loadDataForBackClick.screenCreatedTimestamp
+            val countOfRecordedBloodPressures = bloodPressureRepository.bloodPressureCountImmediate(patientUuid)
+            val countOfRecordedBloodSugars = bloodSugarRepository.bloodSugarCountImmediate(patientUuid)
             val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
                 defaultHistoryUuid = uuidGenerator.v4(),
                 patientUuid = patientUuid
@@ -195,8 +200,9 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
 
             DataForBackClickLoaded(
                 hasPatientDataChangedSinceScreenCreated = patientRepository.hasPatientDataChangedSince(patientUuid, timestamp),
-                countOfRecordedMeasurements = countOfRecordedMeasurements(patientUuid),
-                diagnosisRecorded = medicalHistory.diagnosisRecorded
+                countOfRecordedBloodPressures = countOfRecordedBloodPressures,
+                countOfRecordedBloodSugars = countOfRecordedBloodSugars,
+                medicalHistory = medicalHistory
             )
           }
     }
@@ -210,12 +216,18 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .observeOn(scheduler)
           .map { loadDataForBackClick ->
             val patientUuid = loadDataForBackClick.patientUuid
+            val countOfRecordedBloodPressures = bloodPressureRepository.bloodPressureCountImmediate(patientUuid)
+            val countOfRecordedBloodSugars = bloodSugarRepository.bloodSugarCountImmediate(patientUuid)
             val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
                 defaultHistoryUuid = uuidGenerator.v4(),
                 patientUuid = patientUuid
             )
 
-            DataForDoneClickLoaded(countOfRecordedMeasurements = countOfRecordedMeasurements(patientUuid), diagnosisRecorded = medicalHistory.diagnosisRecorded)
+            DataForDoneClickLoaded(
+                countOfRecordedBloodPressures = countOfRecordedBloodPressures,
+                countOfRecordedBloodSugars = countOfRecordedBloodSugars,
+                medicalHistory = medicalHistory
+            )
           }
     }
   }

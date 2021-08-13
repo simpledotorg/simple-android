@@ -25,4 +25,7 @@ interface PatientSummaryUiActions {
   fun openPatientContactSheet(patientUuid: UUID)
   fun navigateToTeleconsultRecordScreen(patientUuid: UUID, teleconsultRecordId: UUID)
   fun openContactDoctorSheet(patientUuid: UUID)
+  fun showAddMeasurementsWarningDialog()
+  fun showAddBloodPressureWarningDialog()
+  fun showAddBloodSugarWarningDialog()
 }

@@ -31,6 +31,7 @@
 - Prefill Sri Lanka national ID in patient entry and edit screens
 - Add `SriLankaNationalIdMetaDataV1` to type adapter
 - Bump RxJava to v2.2.21
+- Bump LeakCanary to v2.7
 
 ### Features
 - Ask users for their name AND job designation on sign up

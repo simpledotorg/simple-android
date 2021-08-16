@@ -1,6 +1,14 @@
 # CHANGELOG
 
 ## Next Release
+### Changes
+- [In Progress: 22 Jul 2021] Add option to download & share overdue list
+- [In Progress: 14 Jul 2021] Medication screen improvements
+  - Search for commonly used drugs
+- [In Progress: 06 Aug 2021] Add support for Sri Lanka
+- [In Progress: 10 Aug 2021] Implement `CustomDrugEntrySheet`
+
+## On Demo
 ### Internal
 - Set Simple video and duration based on locale
 - Fix incorrect test in `TheActivityControllerTest`
@@ -41,20 +49,13 @@
 - Show keyboard and prefill search query if present when instant search screen is shown
 - Updated translations: `kn-IN`, `bn-IN`, `hi-IN`, `ta-LK`, `pa-IN`, `om-ET`, `bn-BD`, `so-ET`, `mr-IN`, `ta-IN`, `si-LK`, `bn-BD`, `te-IN`, `am-ET`, `ti-ET`, `sid-ET`
 - Show warning dialogs for adding BP and Blood Sugar after creating a patient
-- [In Progress: 22 Jul 2021] Add option to download & share overdue list
-- [In Progress: 14 Jul 2021] Medication screen improvements
-  - Search for commonly used drugs
-- [In Progress: 27 Jul 2021] Overdue list improvements
+- Overdue list improvements
   - Change overdue list UI
   - Load overdue patients without phone number
   - Updated contact patient bottom sheet UI
-- [In Progress: 06 Aug 2021] Add support for Sri Lanka
-- [In Progress: 10 Aug 2021] Implement `CustomDrugEntrySheet`  
 
 ### Fixes
 - Fix app syncing prescription drugs with empty name
-
-### Fixes
 - Fix text overflowing in video illustration in some languages
 
 ## 2021-08-09-7904

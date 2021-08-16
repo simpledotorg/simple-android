@@ -14,7 +14,6 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
-import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Yes
@@ -44,15 +43,9 @@ class PatientSummaryEffectHandlerTest {
   private val bloodPressureRepository = mock<BloodPressureRepository>()
   private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
   private val missingPhoneReminderRepository = mock<MissingPhoneReminderRepository>()
-  private val prescriptionRepository = mock<PrescriptionRepository>()
   private val dataSync = mock<DataSync>()
   private val facilityRepository = mock<FacilityRepository>()
   private val teleconsultFacilityRepository = mock<TeleconsultationFacilityRepository>()
-
-  private val patientSummaryConfig = PatientSummaryConfig(
-      bpEditableDuration = Duration.ofMinutes(10),
-      numberOfMeasurementsForTeleconsultation = 3
-  )
 
   private val patientUuid = UUID.fromString("67bde563-2cde-4f43-91b4-ba450f0f4d8a")
   private val user = TestData.loggedInUser(uuid = UUID.fromString("39f96341-c043-4059-880e-e32754341a04"))
@@ -69,9 +62,7 @@ class PatientSummaryEffectHandlerTest {
       bloodSugarRepository = bloodSugarRepository,
       dataSync = dataSync,
       medicalHistoryRepository = medicalHistoryRepository,
-      prescriptionRepository = prescriptionRepository,
       country = TestData.country(),
-      patientSummaryConfig = patientSummaryConfig,
       currentUser = Lazy { user },
       currentFacility = Lazy { facility },
       uuidGenerator = uuidGenerator,
@@ -109,9 +100,7 @@ class PatientSummaryEffectHandlerTest {
         bloodSugarRepository = bloodSugarRepository,
         dataSync = dataSync,
         medicalHistoryRepository = medicalHistoryRepository,
-        prescriptionRepository = prescriptionRepository,
         country = bangladesh,
-        patientSummaryConfig = patientSummaryConfig,
         currentUser = Lazy { user },
         currentFacility = Lazy { facility },
         uuidGenerator = uuidGenerator,
@@ -166,9 +155,7 @@ class PatientSummaryEffectHandlerTest {
         bloodSugarRepository = bloodSugarRepository,
         dataSync = dataSync,
         medicalHistoryRepository = medicalHistoryRepository,
-        prescriptionRepository = prescriptionRepository,
         country = bangladesh,
-        patientSummaryConfig = patientSummaryConfig,
         currentUser = Lazy { user },
         currentFacility = Lazy { facility },
         uuidGenerator = uuidGenerator,

@@ -15,7 +15,8 @@ data class PatientSummaryModel(
     val currentFacility: Facility?,
     val hasCheckedForInvalidPhone: Boolean,
     val userLoggedInStatus: User.LoggedInStatus?,
-    val medicalOfficers: List<MedicalOfficer>?
+    val medicalOfficers: List<MedicalOfficer>?,
+    val hasShownMeasurementsWarningDialog: Boolean
 ) : Parcelable, PatientSummaryChildModel {
 
   companion object {
@@ -27,7 +28,8 @@ data class PatientSummaryModel(
           currentFacility = null,
           hasCheckedForInvalidPhone = false,
           userLoggedInStatus = null,
-          medicalOfficers = null
+          medicalOfficers = null,
+          hasShownMeasurementsWarningDialog = false
       )
     }
   }
@@ -78,5 +80,9 @@ data class PatientSummaryModel(
 
   fun medicalOfficersLoaded(medicalOfficers: List<MedicalOfficer>): PatientSummaryModel {
     return copy(medicalOfficers = medicalOfficers)
+  }
+
+  fun shownMeasurementsWarningDialog(): PatientSummaryModel {
+    return copy(hasShownMeasurementsWarningDialog = true)
   }
 }

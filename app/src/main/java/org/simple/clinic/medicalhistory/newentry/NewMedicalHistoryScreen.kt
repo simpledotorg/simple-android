@@ -163,10 +163,6 @@ class NewMedicalHistoryScreen : BaseScreen<
     toolbar.setNavigationOnClickListener {
       router.pop()
     }
-
-    post {
-      hideKeyboard()
-    }
   }
 
   private fun saveClicks() = nextButton

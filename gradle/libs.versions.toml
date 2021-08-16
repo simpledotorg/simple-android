@@ -154,7 +154,7 @@ rx-android = "io.reactivex.rxjava2:rxandroid:2.1.1"
 rx-binding-appcompat = { module = "com.jakewharton.rxbinding3:rxbinding-appcompat", version.ref = "rx-binding" }
 rx-binding-binding = { module = "com.jakewharton.rxbinding3:rxbinding", version.ref = "rx-binding" }
 rx-binding-recyclerview = { module = "com.jakewharton.rxbinding3:rxbinding-recyclerview", version.ref = "rx-binding" }
-rx-java = "io.reactivex.rxjava2:rxjava:2.2.16"
+rx-java = "io.reactivex.rxjava2:rxjava:2.2.21"
 rx-kotlin = "io.reactivex.rxjava2:rxkotlin:2.4.0"
 rx-preferences = "com.f2prateek.rx.preferences2:rx-preferences:2.0.1"
 

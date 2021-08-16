@@ -50,6 +50,9 @@
 - [In Progress: 06 Aug 2021] Add support for Sri Lanka
 - [In Progress: 10 Aug 2021] Implement `CustomDrugEntrySheet`  
 
+### Fixes
+- Fix app syncing prescription drugs with empty name
+
 ## 2021-08-09-7904
 ### Internal
 - Add gradle-versions-plugin for checking dependency updates

@@ -106,6 +106,7 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/spacing_8"
     android:layout_marginBottom="@dimen/spacing_16"
+    android:enabled="false"
     android:text="@string/customprescription_save_drug"
     app:cornerRadius="@dimen/spacing_0"
     tools:ignore="UnusedAttribute" />

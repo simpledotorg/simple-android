@@ -41,10 +41,8 @@
 - Bump RxJava to v2.2.21
 - Bump LeakCanary to v2.7
 
-### Features
-- Ask users for their name AND job designation on sign up
-
 ### Changes
+- Ask users for their name and job designation on sign up
 - Don't load search results if search query is not changed from previous search query
 - Show keyboard and prefill search query if present when instant search screen is shown
 - Updated translations: `kn-IN`, `bn-IN`, `hi-IN`, `ta-LK`, `pa-IN`, `om-ET`, `bn-BD`, `so-ET`, `mr-IN`, `ta-IN`, `si-LK`, `bn-BD`, `te-IN`, `am-ET`, `ti-ET`, `sid-ET`

@@ -119,7 +119,7 @@ class PatientSummaryUpdateTest {
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = true,
             countOfRecordedBloodPressures = 1,
-            countOfRecordedBloodSugars = 0,
+            countOfRecordedBloodSugars = 1,
             medicalHistory = TestData.medicalHistory(
                 uuid = UUID.fromString("94056dc9-85e9-472e-8674-1657bbab56bb"),
                 patientUuid = patientUuid,
@@ -180,8 +180,9 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when there are patient summary changes and no measurements are recorded, clicking on back for existing patient screen must go back to previous screen`() {
+  fun `when there are patient summary changes and no measurements are recorded and warning is shown, clicking on back for existing patient screen must go back to previous screen`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .shownMeasurementsWarningDialog()
 
     updateSpec
         .given(model.forExistingPatient())
@@ -203,8 +204,9 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when there are patient summary changes and no measurements are recorded, clicking on back for new patient screen must go back to home screen`() {
+  fun `when there are patient summary changes and no measurements are recorded and warning is shown, clicking on back for new patient screen must go back to home screen`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .shownMeasurementsWarningDialog()
 
     updateSpec
         .given(model.forNewPatient())
@@ -226,8 +228,9 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when there are patient summary changes and no measurements are recorded, clicking on back link id with patient screen must go back to home screen`() {
+  fun `when there are patient summary changes and no measurements are recorded and warning is shown, clicking on back link id with patient screen must go back to home screen`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .shownMeasurementsWarningDialog()
 
     updateSpec
         .given(model.forLinkingWithExistingPatient())
@@ -257,7 +260,7 @@ class PatientSummaryUpdateTest {
         .whenEvent(DataForBackClickLoaded(
             hasPatientDataChangedSinceScreenCreated = false,
             countOfRecordedBloodPressures = 1,
-            countOfRecordedBloodSugars = 0,
+            countOfRecordedBloodSugars = 1,
             medicalHistory = TestData.medicalHistory(
                 uuid = UUID.fromString("95df9f42-2fd0-4429-b2ad-ae3de909a480"),
                 patientUuid = patientUuid,
@@ -272,8 +275,9 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when there are no patient summary changes and no measurements are recorded, clicking on back must go back`() {
+  fun `when there are no patient summary changes and no measurements are recorded and warning is shown, clicking on back must go back`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .shownMeasurementsWarningDialog()
 
     updateSpec
         .given(model)
@@ -307,7 +311,7 @@ class PatientSummaryUpdateTest {
                 uuid = UUID.fromString("7aeb58c1-19f8-43f8-952c-8fb069b9268b"),
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = Yes,
-                hasDiabetes = Yes
+                hasDiabetes = No
             )
         ))
         .then(assertThatNext(
@@ -361,8 +365,9 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when no measurements are present, clicking on save must go to the home screen`() {
+  fun `when no measurements are present and measurement warning dialogs are shown, clicking on save must go to the home screen`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .shownMeasurementsWarningDialog()
 
     updateSpec
         .given(model)
@@ -743,6 +748,141 @@ class PatientSummaryUpdateTest {
         .then(assertThatNext(
             hasModel(model.medicalOfficersLoaded(medicalOfficers)),
             hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when patient is diagnosed with hypertension and diabetes and has no recorded measurements, then clicking on done should show add measurements warning`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForDoneClickLoaded(
+            countOfRecordedBloodPressures = 0,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("4fd4be06-6208-4b79-b153-1a2ef4c2024b"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Yes,
+                hasDiabetes = Yes
+            )
+        ))
+        .then(assertThatNext(
+            hasModel(model.shownMeasurementsWarningDialog()),
+            hasEffects(ShowAddMeasurementsWarningDialog)
+        ))
+  }
+
+  @Test
+  fun `when patient is diagnosed with hypertension and has no recorded measurements, then clicking on done should show add bp warning`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForDoneClickLoaded(
+            countOfRecordedBloodPressures = 0,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("4fd4be06-6208-4b79-b153-1a2ef4c2024b"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Yes,
+                hasDiabetes = No
+            )
+        ))
+        .then(assertThatNext(
+            hasModel(model.shownMeasurementsWarningDialog()),
+            hasEffects(ShowAddBloodPressureWarningDialog)
+        ))
+  }
+
+  @Test
+  fun `when patient is diagnosed with diabetes and has no recorded measurements, then clicking on done should show add blood sugar warning`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForDoneClickLoaded(
+            countOfRecordedBloodPressures = 0,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("bdc93463-1577-42df-a6ff-b0526dc0b680"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = No,
+                hasDiabetes = Yes
+            )
+        ))
+        .then(assertThatNext(
+            hasModel(model.shownMeasurementsWarningDialog()),
+            hasEffects(ShowAddBloodSugarWarningDialog)
+        ))
+  }
+
+  @Test
+  fun `when patient is diagnosed with hypertension and diabetes and has no recorded measurements, then clicking on back should show add measurements warning`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForBackClickLoaded(
+            hasPatientDataChangedSinceScreenCreated = false,
+            countOfRecordedBloodPressures = 0,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("8f96e650-0ec2-4128-98a2-f4ca0c93bdf9"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Yes,
+                hasDiabetes = Yes
+            )
+        ))
+        .then(assertThatNext(
+            hasModel(model.shownMeasurementsWarningDialog()),
+            hasEffects(ShowAddMeasurementsWarningDialog)
+        ))
+  }
+
+  @Test
+  fun `when patient is diagnosed with hypertension and has no recorded measurements, then clicking on back should show add bp warning`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForBackClickLoaded(
+            hasPatientDataChangedSinceScreenCreated = false,
+            countOfRecordedBloodPressures = 0,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("909d198e-c905-4d07-aa39-d209be63765e"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Yes,
+                hasDiabetes = No
+            )
+        ))
+        .then(assertThatNext(
+            hasModel(model.shownMeasurementsWarningDialog()),
+            hasEffects(ShowAddBloodPressureWarningDialog)
+        ))
+  }
+
+  @Test
+  fun `when patient is diagnosed with diabetes and has no recorded measurements, then clicking on back should show add blood sugar warning`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForBackClickLoaded(
+            hasPatientDataChangedSinceScreenCreated = false,
+            countOfRecordedBloodPressures = 0,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("909d198e-c905-4d07-aa39-d209be63765e"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = No,
+                hasDiabetes = Yes
+            )
+        ))
+        .then(assertThatNext(
+            hasModel(model.shownMeasurementsWarningDialog()),
+            hasEffects(ShowAddBloodSugarWarningDialog)
         ))
   }
 

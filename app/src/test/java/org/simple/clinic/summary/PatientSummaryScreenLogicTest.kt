@@ -19,7 +19,6 @@ import org.junit.runner.RunWith
 import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
-import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.Appointment.Status.Cancelled
@@ -33,13 +32,13 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
-import java.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Duration
+import java.util.Optional
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -59,16 +58,11 @@ class PatientSummaryScreenLogicTest {
   private val medicalHistoryUuid = UUID.fromString("fe66d59b-b7e9-48f3-b22b-14d55c5532cb")
   private val bloodSugarRepository = mock<BloodSugarRepository>()
   private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
-  private val prescriptionRepository = mock<PrescriptionRepository>()
   private val facilityRepository = mock<FacilityRepository>()
   private val patientProfile = TestData.patientProfile(
       patientUuid = patientUuid,
       generatePhoneNumber = true,
       generateBusinessId = true
-  )
-  private val patientSummaryConfig = PatientSummaryConfig(
-      bpEditableDuration = Duration.ofMinutes(10),
-      numberOfMeasurementsForTeleconsultation = 3
   )
 
   private val uiEvents = PublishSubject.create<UiEvent>()
@@ -189,9 +183,7 @@ class PatientSummaryScreenLogicTest {
         bloodSugarRepository = bloodSugarRepository,
         dataSync = mock(),
         medicalHistoryRepository = medicalHistoryRepository,
-        prescriptionRepository = prescriptionRepository,
         country = TestData.country(),
-        patientSummaryConfig = patientSummaryConfig,
         currentUser = Lazy { user },
         currentFacility = Lazy { facility },
         uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid),

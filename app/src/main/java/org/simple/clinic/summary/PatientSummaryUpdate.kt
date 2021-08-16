@@ -4,7 +4,7 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
-import org.simple.clinic.facility.Facility
+import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
@@ -32,22 +32,17 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is PatientSummaryBloodPressureSaved -> bloodPressureSaved(model.openIntention, model.patientSummaryProfile!!)
       is FetchedHasShownMissingPhoneReminder -> fetchedHasShownMissingReminder(event.hasShownReminder, model.patientUuid)
       is DataForBackClickLoaded -> dataForHandlingBackLoaded(
-          patientUuid = model.patientUuid,
+          model = model,
           hasPatientDataChanged = event.hasPatientDataChangedSinceScreenCreated,
           countOfRecordedBloodPressures = event.countOfRecordedBloodPressures,
           countOfRecordedBloodSugars = event.countOfRecordedBloodSugars,
-          openIntention = model.openIntention,
-          medicalHistory = event.medicalHistory,
-          isDiabetesManagementEnabled = model.isDiabetesManagementEnabled,
-          currentFacility = model.currentFacility!!
+          medicalHistory = event.medicalHistory
       )
       is DataForDoneClickLoaded -> dataForHandlingDoneClickLoaded(
-          patientUuid = model.patientUuid,
+          model = model,
           countOfRecordedBloodPressures = event.countOfRecordedBloodPressures,
           countOfRecordedBloodSugars = event.countOfRecordedBloodSugars,
-          medicalHistory = event.medicalHistory,
-          isDiabetesManagementEnabled = model.isDiabetesManagementEnabled,
-          currentFacility = model.currentFacility!!
+          medicalHistory = event.medicalHistory
       )
       is SyncTriggered -> scheduleAppointmentSheetClosed(model, event.sheetOpenedFrom)
       is ContactPatientClicked -> dispatch(OpenContactPatientScreen(model.patientUuid))
@@ -90,49 +85,68 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
   }
 
   private fun dataForHandlingDoneClickLoaded(
-      patientUuid: UUID,
+      model: PatientSummaryModel,
       countOfRecordedBloodPressures: Int,
       countOfRecordedBloodSugars: Int,
       medicalHistory: MedicalHistory,
-      isDiabetesManagementEnabled: Boolean,
-      currentFacility: Facility
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val hasAtLeastOneMeasurementRecorded = countOfRecordedBloodPressures + countOfRecordedBloodSugars > 0
-    val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && medicalHistory.diagnosisRecorded.not() && isDiabetesManagementEnabled
+    val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && medicalHistory.diagnosisRecorded.not() && model.isDiabetesManagementEnabled
+    val measurementWarningEffect = validateMeasurements(countOfRecordedBloodSugars, countOfRecordedBloodPressures, medicalHistory, model.hasShownMeasurementsWarningDialog)
 
-    val effect = when {
-      shouldShowDiagnosisError -> ShowDiagnosisError
-      hasAtLeastOneMeasurementRecorded -> ShowScheduleAppointmentSheet(patientUuid, DONE_CLICK, currentFacility)
-      else -> GoToHomeScreen
+    return when {
+      shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
+      measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))
+      hasAtLeastOneMeasurementRecorded -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, DONE_CLICK, model.currentFacility!!))
+      else -> dispatch(GoToHomeScreen)
     }
-
-    return dispatch(effect)
   }
 
   private fun dataForHandlingBackLoaded(
-      patientUuid: UUID,
+      model: PatientSummaryModel,
       hasPatientDataChanged: Boolean,
       countOfRecordedBloodPressures: Int,
       countOfRecordedBloodSugars: Int,
-      openIntention: OpenIntention,
-      medicalHistory: MedicalHistory,
-      isDiabetesManagementEnabled: Boolean,
-      currentFacility: Facility
+      medicalHistory: MedicalHistory
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    val openIntention = model.openIntention
     val shouldShowScheduleAppointmentSheet = if (countOfRecordedBloodPressures + countOfRecordedBloodSugars == 0) false else hasPatientDataChanged
-    val shouldShowDiagnosisError = shouldShowScheduleAppointmentSheet && medicalHistory.diagnosisRecorded.not() && isDiabetesManagementEnabled
+    val shouldShowDiagnosisError = shouldShowScheduleAppointmentSheet && medicalHistory.diagnosisRecorded.not() && model.isDiabetesManagementEnabled
     val shouldGoToPreviousScreen = openIntention is ViewExistingPatient
     val shouldGoToHomeScreen = openIntention is LinkIdWithPatient || openIntention is ViewNewPatient || openIntention is ViewExistingPatientWithTeleconsultLog
+    val measurementWarningEffect = validateMeasurements(countOfRecordedBloodSugars, countOfRecordedBloodPressures, medicalHistory, model.hasShownMeasurementsWarningDialog)
 
-    val effect = when {
-      shouldShowDiagnosisError -> ShowDiagnosisError
-      shouldShowScheduleAppointmentSheet -> ShowScheduleAppointmentSheet(patientUuid, BACK_CLICK, currentFacility)
-      shouldGoToPreviousScreen -> GoBackToPreviousScreen
-      shouldGoToHomeScreen -> GoToHomeScreen
+    return when {
+      shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
+      measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))
+      shouldShowScheduleAppointmentSheet -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, BACK_CLICK, model.currentFacility!!))
+      shouldGoToPreviousScreen -> dispatch(GoBackToPreviousScreen)
+      shouldGoToHomeScreen -> dispatch(GoToHomeScreen)
       else -> throw IllegalStateException("This should not happen!")
     }
+  }
 
-    return dispatch(effect)
+  private fun validateMeasurements(
+      countOfRecordedBloodSugars: Int,
+      countOfRecordedBloodPressures: Int,
+      medicalHistory: MedicalHistory,
+      hasShownMeasurementsWarningDialog: Boolean
+  ): PatientSummaryEffect? {
+    // If the measurements warning dialog is already shown, we don't want to show it again in the
+    // same session.
+    if (hasShownMeasurementsWarningDialog) return null
+
+    val hasAtLeastOneMeasurementRecorded = countOfRecordedBloodPressures + countOfRecordedBloodSugars > 0
+    val shouldShowAddMeasurementsWarning = medicalHistory.diagnosedWithHypertension == Yes && medicalHistory.diagnosedWithDiabetes == Yes && !hasAtLeastOneMeasurementRecorded
+    val shouldShowAddBloodPressureWarning = medicalHistory.diagnosedWithHypertension == Yes && countOfRecordedBloodPressures == 0
+    val shouldShownAddBloodSugarWarning = medicalHistory.diagnosedWithDiabetes == Yes && countOfRecordedBloodSugars == 0
+
+    return when {
+      shouldShowAddMeasurementsWarning -> ShowAddMeasurementsWarningDialog
+      shouldShowAddBloodPressureWarning -> ShowAddBloodPressureWarningDialog
+      shouldShownAddBloodSugarWarning -> ShowAddBloodSugarWarningDialog
+      else -> null
+    }
   }
 
   private fun fetchedHasShownMissingReminder(

@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.transition.TransitionManager
 import com.google.android.material.transition.MaterialFade
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.Init
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
@@ -122,6 +124,26 @@ class NewMedicalHistoryScreen : BaseScreen<
       layoutInflater: LayoutInflater,
       container: ViewGroup?
   ) = ScreenNewMedicalHistoryBinding.inflate(layoutInflater, container, false)
+
+  override fun createUpdate() = NewMedicalHistoryUpdate()
+
+  override fun events() = Observable
+      .merge(
+          questionViewEvents,
+          saveClicks()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<NewMedicalHistoryEvent>()
+
+  override fun createEffectHandler(
+      viewEffectsConsumer: Consumer<Unit>
+  ) = effectHandlerFactory
+      .create(this)
+      .build()
+
+  override fun createInit() = NewMedicalHistoryInit()
+
+  override fun uiRenderer() = NewMedicalHistoryUiRenderer(this)
 
   private val events: Observable<NewMedicalHistoryEvent> by unsafeLazy {
     Observable

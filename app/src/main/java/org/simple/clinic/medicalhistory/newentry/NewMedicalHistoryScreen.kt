@@ -1,5 +1,7 @@
 package org.simple.clinic.medicalhistory.newentry
 
+import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
@@ -169,6 +171,24 @@ class NewMedicalHistoryScreen : BaseScreen<
     MaterialFade().apply {
       duration = 150L
       addTarget(hypertensionTreatmentContainer)
+    }
+  }
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    hypertensionTreatmentBinding = ListMedicalhistoryHypertensionTreatmentBinding.bind(binding!!.hypertensionTreatmentContainer)
+
+    toolbar.setNavigationOnClickListener {
+      router.pop()
+    }
+   
+    post {
+      hideKeyboard()
     }
   }
 

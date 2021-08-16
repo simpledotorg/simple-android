@@ -181,7 +181,7 @@ class NewMedicalHistoryScreen : BaseScreen<
     binding = ScreenNewMedicalHistoryBinding.bind(this)
     hypertensionTreatmentBinding = ListMedicalhistoryHypertensionTreatmentBinding.bind(binding!!.hypertensionTreatmentContainer)
 
-    context.injector<Injector>().inject(this)
+    requireContext().injector<Injector>().inject(this)
 
     toolbar.setNavigationOnClickListener {
       router.pop()

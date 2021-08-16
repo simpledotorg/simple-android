@@ -19,11 +19,10 @@
     app:srcCompat="@drawable/ic_video_illustration_default" />
 
   <LinearLayout
-    android:layout_width="wrap_content"
+    android:layout_width="@dimen/spacing_172"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_16"
     android:layout_marginTop="@dimen/spacing_16"
-    android:minWidth="@dimen/spacing_150"
     android:orientation="vertical">
 
     <com.google.android.material.textview.MaterialTextView

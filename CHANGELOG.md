@@ -44,6 +44,7 @@
 - Add `SriLankaNationalIdMetaDataV1` to type adapter
 - Bump RxJava to v2.2.21
 - Bump LeakCanary to v2.7
+- Remove reporting scanning logs to Sentry
 
 ### Changes
 - Ask users for their name and job designation on sign up

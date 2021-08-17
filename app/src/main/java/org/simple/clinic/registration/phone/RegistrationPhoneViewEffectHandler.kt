@@ -12,6 +12,7 @@ class RegistrationPhoneViewEffectHandler(
       is ShowAccessDeniedScreen -> uiActions.showAccessDeniedScreen(viewEffect.number)
       ProceedToLogin -> uiActions.openLoginPinEntryScreen()
       ShowUserLoggedOutAlert -> uiActions.showLoggedOutOfDeviceDialog()
+      is ContinueRegistration -> uiActions.openRegistrationNameEntryScreen(viewEffect.entry)
     }
   }
 }

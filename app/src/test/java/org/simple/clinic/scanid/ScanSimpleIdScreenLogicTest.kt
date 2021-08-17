@@ -5,18 +5,15 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.spotify.mobius.Init
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.Country
-import org.simple.clinic.feature.Feature
-import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.first
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline
-import org.simple.clinic.remoteconfig.DefaultValueConfigReader
-import org.simple.clinic.remoteconfig.NoOpRemoteConfigService
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.Empty
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.NotEqualToRequiredLength
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -132,18 +129,17 @@ class ScanSimpleIdScreenLogicTest {
   }
 
   private fun setupController() {
+    val viewEffectHandler = ScanSimpleIdViewEffectHandler(
+        uiActions = uiActions
+    )
+
     val effectHandler = ScanSimpleIdEffectHandler(
         schedulersProvider = TestSchedulersProvider.trampoline(),
         patientRepository = mock(),
         qrCodeJsonParser = mock(),
         country = TestData.country(isoCountryCode = Country.INDIA),
-        uiActions = uiActions,
-        lookupPatientOnline = lookupPatientOnline
-    )
-
-    val features = Features(
-        remoteConfigService = NoOpRemoteConfigService(DefaultValueConfigReader()),
-        overrides = mapOf(Feature.IndiaNationalHealthID to true)
+        lookupPatientOnline = lookupPatientOnline,
+        viewEffectsConsumer = viewEffectHandler::handle,
     )
 
     testFixture = MobiusTestFixture(

@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import com.spotify.mobius.test.RecordingConsumer
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -25,13 +26,15 @@ class ScanSimpleIdEffectHandlerTest {
   private val uiActions = mock<ScanSimpleIdUiActions>()
   private val qrCodeJsonParser = mock<QRCodeJsonParser>()
   private val lookupPatientOnline = mock<LookupPatientOnline>()
+  private val viewEffectHandler = ScanSimpleIdViewEffectHandler(uiActions)
+  private val viewEffectConsumer = viewEffectHandler::handle
   private val testCase = EffectHandlerTestCase(ScanSimpleIdEffectHandler(
       schedulersProvider = TestSchedulersProvider.trampoline(),
       patientRepository = patientRepository,
       qrCodeJsonParser = qrCodeJsonParser,
       country = TestData.country(isoCountryCode = Country.INDIA),
       lookupPatientOnline = lookupPatientOnline,
-      uiActions = uiActions
+      viewEffectsConsumer = viewEffectConsumer
   ).build())
 
   @After
@@ -104,7 +107,7 @@ class ScanSimpleIdEffectHandlerTest {
         qrCodeJsonParser = qrCodeJsonParser,
         country = TestData.country(isoCountryCode = Country.BANGLADESH),
         lookupPatientOnline = lookupPatientOnline,
-        uiActions = uiActions
+        viewEffectsConsumer = viewEffectConsumer
     ).build())
 
     val expectedJson = """

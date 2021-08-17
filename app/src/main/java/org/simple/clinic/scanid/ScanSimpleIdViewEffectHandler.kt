@@ -20,6 +20,7 @@ class ScanSimpleIdViewEffectHandler @AssistedInject constructor(
       HideQrCodeScannerView -> uiActions.hideQrCodeScannerView()
       HideEnteredCodeValidationError -> uiActions.hideEnteredCodeValidationError()
       is ShowEnteredCodeValidationError -> uiActions.showEnteredCodeValidationError(viewEffect.failure)
+      is OpenPatientSummary -> uiActions.openPatientSummary(viewEffect.patientId)
     }
   }
 }

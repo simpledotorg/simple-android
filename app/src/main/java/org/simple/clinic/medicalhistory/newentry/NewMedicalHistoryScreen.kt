@@ -1,18 +1,22 @@
 package org.simple.clinic.medicalhistory.newentry
 
 import android.content.Context
-import android.os.Parcelable
-import android.util.AttributeSet
+import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.RelativeLayout
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.transition.TransitionManager
 import com.google.android.material.transition.MaterialFade
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
@@ -31,24 +35,26 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_HYPERTENSION_TREATMENT
 import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
 import org.simple.clinic.medicalhistory.SelectOngoingHypertensionTreatmentErrorDialog
-import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
-import org.simple.clinic.widgets.hideKeyboard
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-class NewMedicalHistoryScreen(
-    context: Context,
-    attrs: AttributeSet
-) : RelativeLayout(context, attrs), NewMedicalHistoryUi, NewMedicalHistoryUiActions {
+class NewMedicalHistoryScreen : BaseScreen<
+    NewMedicalHistoryScreen.Key,
+    ScreenNewMedicalHistoryBinding,
+    NewMedicalHistoryModel,
+    NewMedicalHistoryEvent,
+    NewMedicalHistoryEffect,
+    Unit>(), NewMedicalHistoryUi, NewMedicalHistoryUiActions {
 
   @Inject
   lateinit var router: Router
@@ -65,41 +71,40 @@ class NewMedicalHistoryScreen(
   @Inject
   lateinit var country: Country
 
-  private var binding: ScreenNewMedicalHistoryBinding? = null
   private var hypertensionTreatmentBinding: ListMedicalhistoryHypertensionTreatmentBinding? = null
 
   private val toolbar
-    get() = binding!!.toolbar
+    get() = binding.toolbar
 
   private val nextButton
-    get() = binding!!.nextButton
+    get() = binding.nextButton
 
   private val heartAttackQuestionView
-    get() = binding!!.heartAttackQuestionView
+    get() = binding.heartAttackQuestionView
 
   private val strokeQuestionView
-    get() = binding!!.strokeQuestionView
+    get() = binding.strokeQuestionView
 
   private val kidneyDiseaseQuestionView
-    get() = binding!!.kidneyDiseaseQuestionView
+    get() = binding.kidneyDiseaseQuestionView
 
   private val diabetesQuestionView
-    get() = binding!!.diabetesQuestionView
+    get() = binding.diabetesQuestionView
 
   private val diagnosisViewContainer
-    get() = binding!!.diagnosisViewContainer
+    get() = binding.diagnosisViewContainer
 
   private val diabetesDiagnosisView
-    get() = binding!!.diabetesDiagnosisView
+    get() = binding.diabetesDiagnosisView
 
   private val hypertensionDiagnosisView
-    get() = binding!!.hypertensionDiagnosisView
+    get() = binding.hypertensionDiagnosisView
 
   private val hypertensionTreatmentContainer
-    get() = binding!!.hypertensionTreatmentContainer
+    get() = binding.hypertensionTreatmentContainer
 
   private val scrollView
-    get() = binding!!.scrollView
+    get() = binding.scrollView
 
   private val hypertensionTreatmentChipGroup
     get() = hypertensionTreatmentBinding!!.chipGroup
@@ -112,25 +117,32 @@ class NewMedicalHistoryScreen(
 
   private val questionViewEvents: Subject<NewMedicalHistoryEvent> = PublishSubject.create()
 
-  private val events: Observable<NewMedicalHistoryEvent> by unsafeLazy {
-    Observable
-        .merge(questionViewEvents, saveClicks())
-        .compose(ReportAnalyticsEvents())
-        .cast<NewMedicalHistoryEvent>()
-  }
+  override fun defaultModel() = NewMedicalHistoryModel.default(country)
 
-  private val mobiusDelegate: MobiusDelegate<NewMedicalHistoryModel, NewMedicalHistoryEvent, NewMedicalHistoryEffect> by unsafeLazy {
-    val uiRenderer: ViewRenderer<NewMedicalHistoryModel> = NewMedicalHistoryUiRenderer(this)
+  override fun bindView(
+      layoutInflater: LayoutInflater,
+      container: ViewGroup?
+  ) = ScreenNewMedicalHistoryBinding.inflate(layoutInflater, container, false)
 
-    MobiusDelegate.forView(
-        events = events,
-        defaultModel = NewMedicalHistoryModel.default(country),
-        update = NewMedicalHistoryUpdate(),
-        init = NewMedicalHistoryInit(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
+  override fun createUpdate() = NewMedicalHistoryUpdate()
+
+  override fun events() = Observable
+      .merge(
+          questionViewEvents,
+          saveClicks()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<NewMedicalHistoryEvent>()
+
+  override fun createEffectHandler(
+      viewEffectsConsumer: Consumer<Unit>
+  ) = effectHandlerFactory
+      .create(this)
+      .build()
+
+  override fun createInit() = NewMedicalHistoryInit()
+
+  override fun uiRenderer() = NewMedicalHistoryUiRenderer(this)
 
   private val hypertensionContainerFade by unsafeLazy {
     MaterialFade().apply {
@@ -139,44 +151,18 @@ class NewMedicalHistoryScreen(
     }
   }
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
-
-    binding = ScreenNewMedicalHistoryBinding.bind(this)
-    hypertensionTreatmentBinding = ListMedicalhistoryHypertensionTreatmentBinding.bind(binding!!.hypertensionTreatmentContainer)
-
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    hypertensionTreatmentBinding = ListMedicalhistoryHypertensionTreatmentBinding.bind(binding.hypertensionTreatmentContainer)
 
     toolbar.setNavigationOnClickListener {
       router.pop()
     }
-
-    post {
-      hideKeyboard()
-    }
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    mobiusDelegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    mobiusDelegate.stop()
-    binding = null
-    hypertensionTreatmentBinding = null
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable {
-    return mobiusDelegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(mobiusDelegate.onRestoreInstanceState(state))
   }
 
   private fun saveClicks() = nextButton
@@ -281,5 +267,12 @@ class NewMedicalHistoryScreen(
 
   interface Injector {
     fun inject(target: NewMedicalHistoryScreen)
+  }
+
+  @Parcelize
+  data class Key(
+      override val analyticsName: String = "New Medical History Entry"
+  ) : ScreenKey() {
+    override fun instantiateFragment() = NewMedicalHistoryScreen()
   }
 }

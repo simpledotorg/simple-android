@@ -6,15 +6,11 @@ import java.util.UUID
 
 sealed class RegistrationPhoneEffect
 
-data class PrefillFields(val entry: OngoingRegistrationEntry) : RegistrationPhoneEffect()
-
 data class ValidateEnteredNumber(val number: String) : RegistrationPhoneEffect()
 
 object SyncFacilities : RegistrationPhoneEffect()
 
 data class SearchForExistingUser(val number: String) : RegistrationPhoneEffect()
-
-data class ShowAccessDeniedScreen(val number: String) : RegistrationPhoneEffect()
 
 data class CreateUserLocally(
     val userUuid: UUID,
@@ -22,10 +18,16 @@ data class CreateUserLocally(
     val status: UserStatus
 ) : RegistrationPhoneEffect()
 
-object ProceedToLogin : RegistrationPhoneEffect()
-
 object LoadCurrentUserUnauthorizedStatus : RegistrationPhoneEffect()
 
-object ShowUserLoggedOutAlert : RegistrationPhoneEffect()
+sealed class RegistrationPhoneViewEffect : RegistrationPhoneEffect()
 
-data class ContinueRegistration(val entry: OngoingRegistrationEntry) : RegistrationPhoneEffect()
+data class PrefillFields(val entry: OngoingRegistrationEntry) : RegistrationPhoneViewEffect()
+
+data class ShowAccessDeniedScreen(val number: String) : RegistrationPhoneViewEffect()
+
+object ProceedToLogin : RegistrationPhoneViewEffect()
+
+object ShowUserLoggedOutAlert : RegistrationPhoneViewEffect()
+
+data class ContinueRegistration(val entry: OngoingRegistrationEntry) : RegistrationPhoneViewEffect()

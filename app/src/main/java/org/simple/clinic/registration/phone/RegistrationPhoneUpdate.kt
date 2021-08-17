@@ -29,7 +29,7 @@ class RegistrationPhoneUpdate : Update<RegistrationPhoneModel, RegistrationPhone
 
   private fun showUserLoggedOut(event: CurrentUserUnauthorizedStatusLoaded): Next<RegistrationPhoneModel, RegistrationPhoneEffect> {
     return if (event.isUserUnauthorized) {
-      dispatch(ShowUserLoggedOutAlert as RegistrationPhoneEffect)
+      dispatch(ShowUserLoggedOutAlert)
     } else {
       noChange()
     }

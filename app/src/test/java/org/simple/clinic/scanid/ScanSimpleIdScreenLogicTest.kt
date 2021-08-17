@@ -11,12 +11,8 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.Country
-import org.simple.clinic.feature.Feature
-import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.first
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline
-import org.simple.clinic.remoteconfig.DefaultValueConfigReader
-import org.simple.clinic.remoteconfig.NoOpRemoteConfigService
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.Empty
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.NotEqualToRequiredLength
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -144,11 +140,6 @@ class ScanSimpleIdScreenLogicTest {
         lookupPatientOnline = lookupPatientOnline,
         uiActions = uiActions,
         viewEffectHandler = viewEffectHandler
-    )
-
-    val features = Features(
-        remoteConfigService = NoOpRemoteConfigService(DefaultValueConfigReader()),
-        overrides = mapOf(Feature.IndiaNationalHealthID to true)
     )
 
     testFixture = MobiusTestFixture(

@@ -18,13 +18,12 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
     private val qrCodeJsonParser: QRCodeJsonParser,
     private val country: Country,
     private val lookupPatientOnline: LookupPatientOnline,
-    @Assisted private val uiActions: ScanSimpleIdUiActions,
     @Assisted private val viewEffectHandler: ScanSimpleIdViewEffectHandler
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: ScanSimpleIdUiActions, viewEffectHandler: ScanSimpleIdViewEffectHandler): ScanSimpleIdEffectHandler
+    fun create(viewEffectHandler: ScanSimpleIdViewEffectHandler): ScanSimpleIdEffectHandler
   }
 
   fun build(): ObservableTransformer<ScanSimpleIdEffect, ScanSimpleIdEvent> = RxMobius

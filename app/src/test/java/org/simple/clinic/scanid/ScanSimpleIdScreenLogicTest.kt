@@ -138,7 +138,6 @@ class ScanSimpleIdScreenLogicTest {
         qrCodeJsonParser = mock(),
         country = TestData.country(isoCountryCode = Country.INDIA),
         lookupPatientOnline = lookupPatientOnline,
-        uiActions = uiActions,
         viewEffectHandler = viewEffectHandler
     )
 

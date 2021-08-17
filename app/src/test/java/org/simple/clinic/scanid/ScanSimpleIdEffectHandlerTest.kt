@@ -32,7 +32,6 @@ class ScanSimpleIdEffectHandlerTest {
       qrCodeJsonParser = qrCodeJsonParser,
       country = TestData.country(isoCountryCode = Country.INDIA),
       lookupPatientOnline = lookupPatientOnline,
-      uiActions = uiActions,
       viewEffectHandler = viewEffectHandler
   ).build())
 
@@ -106,7 +105,6 @@ class ScanSimpleIdEffectHandlerTest {
         qrCodeJsonParser = qrCodeJsonParser,
         country = TestData.country(isoCountryCode = Country.BANGLADESH),
         lookupPatientOnline = lookupPatientOnline,
-        uiActions = uiActions,
         viewEffectHandler = viewEffectHandler
     ).build())
 

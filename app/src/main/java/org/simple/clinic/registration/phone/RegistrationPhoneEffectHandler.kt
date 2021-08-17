@@ -39,7 +39,7 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
         .addTransformer(SearchForExistingUser::class.java, findUserByPhoneNumber())
         .addTransformer(CreateUserLocally::class.java, createUserLocally())
         .addTransformer(LoadCurrentUserUnauthorizedStatus::class.java, loadCurrentUserUnauthorizedStatus())
-        .addConsumer(RegistrationPhoneViewEffect::class.java, viewEffectHandler::handle, schedulers.ui())
+        .addConsumer(RegistrationPhoneViewEffect::class.java, viewEffectsConsumer::accept, schedulers.ui())
         .build()
   }
 

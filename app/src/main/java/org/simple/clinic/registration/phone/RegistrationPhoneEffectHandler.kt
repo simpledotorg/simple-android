@@ -39,7 +39,6 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
         .addTransformer(SyncFacilities::class.java, syncFacilities())
         .addTransformer(SearchForExistingUser::class.java, findUserByPhoneNumber())
         .addTransformer(CreateUserLocally::class.java, createUserLocally())
-        .addAction(ProceedToLogin::class.java, uiActions::openLoginPinEntryScreen, schedulers.ui())
         .addTransformer(LoadCurrentUserUnauthorizedStatus::class.java, loadCurrentUserUnauthorizedStatus())
         .addAction(ShowUserLoggedOutAlert::class.java, uiActions::showLoggedOutOfDeviceDialog, schedulers.ui())
         .addConsumer(ContinueRegistration::class.java, { uiActions.openRegistrationNameEntryScreen(it.entry) }, schedulers.ui())

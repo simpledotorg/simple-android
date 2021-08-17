@@ -35,6 +35,7 @@ import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Feature.IndiaNationalHealthID
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
+import org.simple.clinic.mobius.ViewEffectsHandler
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.PatientPrefillInfo
@@ -63,7 +64,7 @@ class ScanSimpleIdScreen : BaseScreen<
     ScanSimpleIdModel,
     ScanSimpleIdEvent,
     ScanSimpleIdEffect,
-    Unit>(), ScanSimpleIdUi, ScanSimpleIdUiActions {
+    ScanSimpleIdViewEffect>(), ScanSimpleIdUi, ScanSimpleIdUiActions {
 
   companion object {
     private const val RATIO_4_3_VALUE = 4.0 / 3.0
@@ -87,6 +88,9 @@ class ScanSimpleIdScreen : BaseScreen<
 
   @Inject
   lateinit var googleApiAvailability: GoogleApiAvailability
+
+  @Inject
+  lateinit var viewEffectHandlerFactory: ScanSimpleIdViewEffectHandler.Factory
 
   private val toolBar
     get() = binding.toolBar
@@ -131,7 +135,9 @@ class ScanSimpleIdScreen : BaseScreen<
 
   override fun createUpdate() = ScanSimpleIdUpdate(features.isEnabled(IndiaNationalHealthID), features.isEnabled(Feature.OnlinePatientLookup))
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<ScanSimpleIdViewEffect>) = effectHandlerFactory.create(viewEffectsConsumer).build()
+
+  override fun viewEffectHandler() = viewEffectHandlerFactory.create(this)
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

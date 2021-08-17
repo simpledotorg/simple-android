@@ -35,10 +35,9 @@ import org.simple.clinic.databinding.ScreenManualPatientEntryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
-import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreenKey
+import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.form.AlternativeIdInputField
@@ -522,7 +521,7 @@ class PatientEntryScreen : BaseScreen<
 
   override fun openMedicalHistoryEntryScreen() {
     rootView.hideKeyboard()
-    router.push(NewMedicalHistoryScreenKey().wrap())
+    router.push(NewMedicalHistoryScreen.Key())
   }
 
   override fun setDateOfBirthAndAgeVisibility(visibility: DateOfBirthAndAgeVisibility) {

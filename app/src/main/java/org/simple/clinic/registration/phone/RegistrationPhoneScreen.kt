@@ -95,6 +95,8 @@ class RegistrationPhoneScreen :
       .create(viewEffectsConsumer = viewEffectsConsumer)
       .build()
 
+  override fun viewEffectHandler() = RegistrationPhoneViewEffectHandler(this)
+
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)

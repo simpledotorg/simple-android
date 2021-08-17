@@ -35,7 +35,6 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<RegistrationPhoneEffect, RegistrationPhoneEvent> {
     return RxMobius
         .subtypeEffectHandler<RegistrationPhoneEffect, RegistrationPhoneEvent>()
-        .addConsumer(PrefillFields::class.java, { uiActions.preFillUserDetails(it.entry) }, schedulers.ui())
         .addTransformer(ValidateEnteredNumber::class.java, validateEnteredPhoneNumber())
         .addTransformer(SyncFacilities::class.java, syncFacilities())
         .addTransformer(SearchForExistingUser::class.java, findUserByPhoneNumber())

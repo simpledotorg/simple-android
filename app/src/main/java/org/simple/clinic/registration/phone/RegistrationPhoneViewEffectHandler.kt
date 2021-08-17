@@ -7,6 +7,8 @@ class RegistrationPhoneViewEffectHandler(
 ) : ViewEffectsHandler<RegistrationPhoneViewEffect> {
 
   override fun handle(viewEffect: RegistrationPhoneViewEffect) {
-
+    when (viewEffect) {
+      is PrefillFields -> uiActions.preFillUserDetails(viewEffect.entry)
+    }
   }
 }

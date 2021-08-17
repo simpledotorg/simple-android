@@ -6,8 +6,6 @@ import java.util.UUID
 
 sealed class RegistrationPhoneEffect
 
-data class PrefillFields(val entry: OngoingRegistrationEntry) : RegistrationPhoneEffect()
-
 data class ValidateEnteredNumber(val number: String) : RegistrationPhoneEffect()
 
 object SyncFacilities : RegistrationPhoneEffect()
@@ -31,3 +29,5 @@ object ShowUserLoggedOutAlert : RegistrationPhoneEffect()
 data class ContinueRegistration(val entry: OngoingRegistrationEntry) : RegistrationPhoneEffect()
 
 sealed class RegistrationPhoneViewEffect : RegistrationPhoneEffect()
+
+data class PrefillFields(val entry: OngoingRegistrationEntry) : RegistrationPhoneViewEffect()

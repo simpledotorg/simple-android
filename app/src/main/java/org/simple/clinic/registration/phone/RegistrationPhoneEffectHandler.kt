@@ -1,5 +1,6 @@
 package org.simple.clinic.registration.phone
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -11,13 +12,11 @@ import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.finduser.UserLookup
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import org.simple.clinic.uuid.UuidGenerator
 
 class RegistrationPhoneEffectHandler @AssistedInject constructor(
-    @Assisted private val uiActions: RegistrationPhoneUiActions,
+    @Assisted private val viewEffectsConsumer: Consumer<RegistrationPhoneViewEffect>,
     private val schedulers: SchedulersProvider,
     private val userSession: UserSession,
-    private val uuidGenerator: UuidGenerator,
     private val numberValidator: PhoneNumberValidator,
     private val facilitySync: FacilitySync,
     private val userLookup: UserLookup
@@ -25,22 +24,20 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: RegistrationPhoneUiActions): RegistrationPhoneEffectHandler
+    fun create(
+        viewEffectsConsumer: Consumer<RegistrationPhoneViewEffect>
+    ): RegistrationPhoneEffectHandler
   }
 
   fun build(): ObservableTransformer<RegistrationPhoneEffect, RegistrationPhoneEvent> {
     return RxMobius
         .subtypeEffectHandler<RegistrationPhoneEffect, RegistrationPhoneEvent>()
-        .addConsumer(PrefillFields::class.java, { uiActions.preFillUserDetails(it.entry) }, schedulers.ui())
         .addTransformer(ValidateEnteredNumber::class.java, validateEnteredPhoneNumber())
         .addTransformer(SyncFacilities::class.java, syncFacilities())
         .addTransformer(SearchForExistingUser::class.java, findUserByPhoneNumber())
-        .addConsumer(ShowAccessDeniedScreen::class.java, { uiActions.showAccessDeniedScreen(it.number) }, schedulers.ui())
         .addTransformer(CreateUserLocally::class.java, createUserLocally())
-        .addAction(ProceedToLogin::class.java, uiActions::openLoginPinEntryScreen, schedulers.ui())
         .addTransformer(LoadCurrentUserUnauthorizedStatus::class.java, loadCurrentUserUnauthorizedStatus())
-        .addAction(ShowUserLoggedOutAlert::class.java, uiActions::showLoggedOutOfDeviceDialog, schedulers.ui())
-        .addConsumer(ContinueRegistration::class.java, { uiActions.openRegistrationNameEntryScreen(it.entry) }, schedulers.ui())
+        .addConsumer(RegistrationPhoneViewEffect::class.java, viewEffectsConsumer::accept, schedulers.ui())
         .build()
   }
 

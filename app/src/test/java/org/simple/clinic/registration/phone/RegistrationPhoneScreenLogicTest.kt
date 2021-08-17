@@ -29,8 +29,7 @@ import org.simple.clinic.user.finduser.FindUserResult.NotFound
 import org.simple.clinic.user.finduser.FindUserResult.UnexpectedError
 import org.simple.clinic.user.finduser.UserLookup
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.uuid.FakeUuidGenerator
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
@@ -41,6 +40,8 @@ class RegistrationPhoneScreenLogicTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val ui = mock<RegistrationPhoneUi>()
+  private val uiActions = mock<RegistrationPhoneUiActions>()
+
   private val userSession = mock<UserSession>()
   private val numberValidator = LengthBasedNumberValidator(10,
       10,
@@ -69,7 +70,7 @@ class RegistrationPhoneScreenLogicTest {
     setupController(ongoingRegistrationEntry = ongoingEntry)
 
     // then
-    verify(ui).preFillUserDetails(ongoingEntry)
+    verify(uiActions).preFillUserDetails(ongoingEntry)
   }
 
   @Test
@@ -87,7 +88,7 @@ class RegistrationPhoneScreenLogicTest {
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
     // then
-    verify(ui).openRegistrationNameEntryScreen(entryWithPhoneNumber)
+    verify(uiActions).openRegistrationNameEntryScreen(entryWithPhoneNumber)
   }
 
   @Test
@@ -107,14 +108,14 @@ class RegistrationPhoneScreenLogicTest {
 
     // then
     verifyZeroInteractions(userSession)
-    verify(ui, never()).openRegistrationNameEntryScreen(any())
+    verify(uiActions, never()).openRegistrationNameEntryScreen(any())
 
     // when
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(validNumber))
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
     // then
-    verify(ui).openRegistrationNameEntryScreen(entryWithValidNumber)
+    verify(uiActions).openRegistrationNameEntryScreen(entryWithValidNumber)
   }
 
   @Test
@@ -129,7 +130,7 @@ class RegistrationPhoneScreenLogicTest {
 
     // then
     verify(ui).showInvalidNumberError()
-    verify(ui, never()).openRegistrationNameEntryScreen(any())
+    verify(uiActions, never()).openRegistrationNameEntryScreen(any())
   }
 
   @Test
@@ -221,8 +222,8 @@ class RegistrationPhoneScreenLogicTest {
 
     // then
     verify(userSession).saveOngoingLoginEntry(entryToBeSaved)
-    verify(ui).openLoginPinEntryScreen()
-    verify(ui, never()).showAccessDeniedScreen(inputNumber)
+    verify(uiActions).openLoginPinEntryScreen()
+    verify(uiActions, never()).showAccessDeniedScreen(inputNumber)
   }
 
   @Test
@@ -239,9 +240,9 @@ class RegistrationPhoneScreenLogicTest {
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
     // then
-    verify(ui).showAccessDeniedScreen(inputNumber)
+    verify(uiActions).showAccessDeniedScreen(inputNumber)
     verify(userSession, never()).saveOngoingLoginEntry(any())
-    verify(ui, never()).openLoginPinEntryScreen()
+    verify(uiActions, never()).openLoginPinEntryScreen()
   }
 
   @Test
@@ -267,7 +268,7 @@ class RegistrationPhoneScreenLogicTest {
     setupController(isUserUnauthorized = true)
 
     // then
-    verify(ui).showLoggedOutOfDeviceDialog()
+    verify(uiActions).showLoggedOutOfDeviceDialog()
   }
 
   @Test
@@ -276,7 +277,7 @@ class RegistrationPhoneScreenLogicTest {
     setupController(isUserUnauthorized = false)
 
     // then
-    verify(ui, never()).showLoggedOutOfDeviceDialog()
+    verify(uiActions, never()).showLoggedOutOfDeviceDialog()
   }
 
   @Test
@@ -354,15 +355,14 @@ class RegistrationPhoneScreenLogicTest {
   ) {
     whenever(userSession.isUserUnauthorized()) doReturn Observable.just(isUserUnauthorized)
 
-    val uuidGenerator = FakeUuidGenerator.fixed(userUuid)
-
     val uiRenderer = RegistrationPhoneUiRenderer(ui)
+    val viewEffectHandler = RegistrationPhoneViewEffectHandler(uiActions)
+    val viewEffectsConsumer = viewEffectHandler::handle
 
     val effectHandler = RegistrationPhoneEffectHandler(
-        uiActions = ui,
-        schedulers = TrampolineSchedulersProvider(),
+        viewEffectsConsumer = viewEffectsConsumer,
+        schedulers = TestSchedulersProvider.trampoline(),
         userSession = userSession,
-        uuidGenerator = uuidGenerator,
         numberValidator = numberValidator,
         facilitySync = facilitySync,
         userLookup = findUserWithPhoneNumber

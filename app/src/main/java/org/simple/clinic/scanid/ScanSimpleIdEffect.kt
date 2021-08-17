@@ -13,12 +13,6 @@ data class SearchPatientByIdentifier(val identifier: Identifier) : ScanSimpleIdE
 
 data class ParseScannedJson(val text: String) : ScanSimpleIdEffect()
 
-data class OpenPatientSearch(
-    val additionalIdentifier: Identifier?,
-    val initialSearchQuery: String?,
-    val patientPrefillInfo: PatientPrefillInfo?
-) : ScanSimpleIdEffect()
-
 data class OnlinePatientLookupWithIdentifier(val identifier: Identifier): ScanSimpleIdEffect()
 
 data class SaveCompleteMedicalRecords(
@@ -36,3 +30,9 @@ object HideEnteredCodeValidationError : ScanSimpleIdViewEffect()
 data class ShowEnteredCodeValidationError(val failure: EnteredCodeValidationResult) : ScanSimpleIdViewEffect()
 
 data class OpenPatientSummary(val patientId: UUID) : ScanSimpleIdViewEffect()
+
+data class OpenPatientSearch(
+    val additionalIdentifier: Identifier?,
+    val initialSearchQuery: String?,
+    val patientPrefillInfo: PatientPrefillInfo?
+) : ScanSimpleIdViewEffect()

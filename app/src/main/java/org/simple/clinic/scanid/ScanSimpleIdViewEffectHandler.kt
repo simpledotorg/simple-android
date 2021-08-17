@@ -21,6 +21,15 @@ class ScanSimpleIdViewEffectHandler @AssistedInject constructor(
       HideEnteredCodeValidationError -> uiActions.hideEnteredCodeValidationError()
       is ShowEnteredCodeValidationError -> uiActions.showEnteredCodeValidationError(viewEffect.failure)
       is OpenPatientSummary -> uiActions.openPatientSummary(viewEffect.patientId)
+      is OpenPatientSearch -> openPatientSearch(viewEffect)
     }
+  }
+
+  private fun openPatientSearch(openPatientSearch: OpenPatientSearch) {
+    uiActions.openPatientSearch(
+        openPatientSearch.additionalIdentifier,
+        openPatientSearch.initialSearchQuery,
+        openPatientSearch.patientPrefillInfo
+    )
   }
 }

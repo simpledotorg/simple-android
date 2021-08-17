@@ -33,7 +33,6 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
       .addTransformer(ValidateEnteredCode::class.java, validateEnteredCode())
       .addTransformer(SearchPatientByIdentifier::class.java, searchPatientByIdentifier())
       .addTransformer(ParseScannedJson::class.java, parseJsonIntoObject())
-      .addConsumer(OpenPatientSearch::class.java, ::openPatientSearch, schedulersProvider.ui())
       .addTransformer(OnlinePatientLookupWithIdentifier::class.java, onlinePatientLookupWithIdentifier())
       .addTransformer(SaveCompleteMedicalRecords::class.java, saveCompleteMedicalRecords())
       .build()
@@ -58,12 +57,6 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
             OnlinePatientLookupWithIdentifierCompleted(results, it.identifier)
           }
     }
-  }
-
-  private fun openPatientSearch(openPatientSearch: OpenPatientSearch) {
-    uiActions.openPatientSearch(openPatientSearch.additionalIdentifier,
-        openPatientSearch.initialSearchQuery,
-        openPatientSearch.patientPrefillInfo)
   }
 
   private fun parseJsonIntoObject(): ObservableTransformer<ParseScannedJson, ScanSimpleIdEvent> {

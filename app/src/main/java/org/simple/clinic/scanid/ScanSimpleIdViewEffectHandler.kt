@@ -15,6 +15,9 @@ class ScanSimpleIdViewEffectHandler @AssistedInject constructor(
   }
 
   override fun handle(viewEffect: ScanSimpleIdViewEffect) {
-    // Nothing to do here. Yet. (Dun dun duuuuuun)
+    when(viewEffect) {
+      ShowQrCodeScannerView -> uiActions.showQrCodeScannerView()
+      HideQrCodeScannerView -> uiActions.hideQrCodeScannerView()
+    }
   }
 }

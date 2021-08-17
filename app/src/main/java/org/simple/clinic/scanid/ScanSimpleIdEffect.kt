@@ -7,8 +7,6 @@ import java.util.UUID
 
 sealed class ScanSimpleIdEffect
 
-object HideQrCodeScannerView : ScanSimpleIdEffect()
-
 object HideEnteredCodeValidationError : ScanSimpleIdEffect()
 
 data class ShowEnteredCodeValidationError(val failure: EnteredCodeValidationResult) : ScanSimpleIdEffect()
@@ -36,3 +34,5 @@ data class SaveCompleteMedicalRecords(
 sealed class ScanSimpleIdViewEffect: ScanSimpleIdEffect()
 
 object ShowQrCodeScannerView : ScanSimpleIdViewEffect()
+
+object HideQrCodeScannerView : ScanSimpleIdViewEffect()

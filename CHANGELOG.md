@@ -3,6 +3,7 @@
 ## Next Release
 ### Internal
 - Change `RegistrationPhoneScreen` to use view effects
+- Change `ScanSimpleIdScreen` to use Mobius view effects
 
 ### Changes
 - [In Progress: 22 Jul 2021] Add option to download & share overdue list

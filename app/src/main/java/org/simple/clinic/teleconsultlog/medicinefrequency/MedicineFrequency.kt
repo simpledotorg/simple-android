@@ -69,13 +69,13 @@ sealed class MedicineFrequency : Parcelable {
   }
 
   companion object {
-    fun fromDrugFrequency(value: DrugFrequency?): MedicineFrequency {
+    fun fromDrugFrequency(value: DrugFrequency?): MedicineFrequency? {
       return when (value) {
         DrugFrequency.BD -> BD
         DrugFrequency.OD -> OD
         DrugFrequency.QDS -> QDS
         DrugFrequency.TDS -> TDS
-        else -> Unknown("None")
+        else -> null
       }
     }
   }

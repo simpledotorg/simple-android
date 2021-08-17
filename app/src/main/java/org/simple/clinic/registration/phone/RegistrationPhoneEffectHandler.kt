@@ -14,7 +14,6 @@ import org.simple.clinic.user.finduser.UserLookup
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class RegistrationPhoneEffectHandler @AssistedInject constructor(
-    @Assisted private val viewEffectHandler: RegistrationPhoneViewEffectHandler,
     @Assisted private val viewEffectsConsumer: Consumer<RegistrationPhoneViewEffect>,
     private val schedulers: SchedulersProvider,
     private val userSession: UserSession,
@@ -26,7 +25,6 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
   @AssistedFactory
   interface Factory {
     fun create(
-        viewEffectHandler: RegistrationPhoneViewEffectHandler,
         viewEffectsConsumer: Consumer<RegistrationPhoneViewEffect>
     ): RegistrationPhoneEffectHandler
   }

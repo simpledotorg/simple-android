@@ -360,7 +360,6 @@ class RegistrationPhoneScreenLogicTest {
     val viewEffectsConsumer = viewEffectHandler::handle
 
     val effectHandler = RegistrationPhoneEffectHandler(
-        viewEffectHandler = viewEffectHandler,
         viewEffectsConsumer = viewEffectsConsumer,
         schedulers = TrampolineSchedulersProvider(),
         userSession = userSession,

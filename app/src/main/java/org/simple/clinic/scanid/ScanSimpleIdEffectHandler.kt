@@ -1,5 +1,6 @@
 package org.simple.clinic.scanid
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.JsonEncodingException
@@ -18,17 +19,17 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
     private val qrCodeJsonParser: QRCodeJsonParser,
     private val country: Country,
     private val lookupPatientOnline: LookupPatientOnline,
-    @Assisted private val viewEffectHandler: ScanSimpleIdViewEffectHandler
+    @Assisted private val viewEffectsConsumer: Consumer<ScanSimpleIdViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(viewEffectHandler: ScanSimpleIdViewEffectHandler): ScanSimpleIdEffectHandler
+    fun create(viewEffectsConsumer: Consumer<ScanSimpleIdViewEffect>): ScanSimpleIdEffectHandler
   }
 
   fun build(): ObservableTransformer<ScanSimpleIdEffect, ScanSimpleIdEvent> = RxMobius
       .subtypeEffectHandler<ScanSimpleIdEffect, ScanSimpleIdEvent>()
-      .addConsumer(ScanSimpleIdViewEffect::class.java, viewEffectHandler::handle, schedulersProvider.ui())
+      .addConsumer(ScanSimpleIdViewEffect::class.java, viewEffectsConsumer::accept, schedulersProvider.ui())
       .addTransformer(ValidateEnteredCode::class.java, validateEnteredCode())
       .addTransformer(SearchPatientByIdentifier::class.java, searchPatientByIdentifier())
       .addTransformer(ParseScannedJson::class.java, parseJsonIntoObject())

@@ -91,7 +91,10 @@ class RegistrationPhoneScreen :
 
   override fun createInit() = RegistrationPhoneInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(
+      uiActions = this,
+      viewEffectHandler = RegistrationPhoneViewEffectHandler(uiActions = this)
+  ).build()
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

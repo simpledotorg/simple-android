@@ -15,6 +15,7 @@ import org.simple.clinic.uuid.UuidGenerator
 
 class RegistrationPhoneEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: RegistrationPhoneUiActions,
+    @Assisted private val viewEffectHandler: RegistrationPhoneViewEffectHandler,
     private val schedulers: SchedulersProvider,
     private val userSession: UserSession,
     private val uuidGenerator: UuidGenerator,
@@ -25,7 +26,10 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: RegistrationPhoneUiActions): RegistrationPhoneEffectHandler
+    fun create(
+        uiActions: RegistrationPhoneUiActions,
+        viewEffectHandler: RegistrationPhoneViewEffectHandler
+    ): RegistrationPhoneEffectHandler
   }
 
   fun build(): ObservableTransformer<RegistrationPhoneEffect, RegistrationPhoneEvent> {

@@ -357,9 +357,11 @@ class RegistrationPhoneScreenLogicTest {
     val uuidGenerator = FakeUuidGenerator.fixed(userUuid)
 
     val uiRenderer = RegistrationPhoneUiRenderer(ui)
+    val viewEffectHandler = RegistrationPhoneViewEffectHandler(ui)
 
     val effectHandler = RegistrationPhoneEffectHandler(
         uiActions = ui,
+        viewEffectHandler = viewEffectHandler,
         schedulers = TrampolineSchedulersProvider(),
         userSession = userSession,
         uuidGenerator = uuidGenerator,

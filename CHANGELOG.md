@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## Next Release
+### Internal
+- Change `RegistrationPhoneScreen` to use view effects
+
 ### Changes
 - [In Progress: 22 Jul 2021] Add option to download & share overdue list
 - [In Progress: 14 Jul 2021] Medication screen improvements

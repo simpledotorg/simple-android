@@ -9,6 +9,7 @@ class RegistrationPhoneViewEffectHandler(
   override fun handle(viewEffect: RegistrationPhoneViewEffect) {
     when (viewEffect) {
       is PrefillFields -> uiActions.preFillUserDetails(viewEffect.entry)
+      is ShowAccessDeniedScreen -> uiActions.showAccessDeniedScreen(viewEffect.number)
     }
   }
 }

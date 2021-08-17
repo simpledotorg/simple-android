@@ -12,8 +12,6 @@ object SyncFacilities : RegistrationPhoneEffect()
 
 data class SearchForExistingUser(val number: String) : RegistrationPhoneEffect()
 
-data class ShowAccessDeniedScreen(val number: String) : RegistrationPhoneEffect()
-
 data class CreateUserLocally(
     val userUuid: UUID,
     val number: String,
@@ -31,3 +29,5 @@ data class ContinueRegistration(val entry: OngoingRegistrationEntry) : Registrat
 sealed class RegistrationPhoneViewEffect : RegistrationPhoneEffect()
 
 data class PrefillFields(val entry: OngoingRegistrationEntry) : RegistrationPhoneViewEffect()
+
+data class ShowAccessDeniedScreen(val number: String) : RegistrationPhoneViewEffect()

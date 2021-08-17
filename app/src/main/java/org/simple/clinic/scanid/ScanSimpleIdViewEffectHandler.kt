@@ -1,0 +1,20 @@
+package org.simple.clinic.scanid
+
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import org.simple.clinic.mobius.ViewEffectsHandler
+
+class ScanSimpleIdViewEffectHandler @AssistedInject constructor(
+    @Assisted private val uiActions: ScanSimpleIdUiActions
+): ViewEffectsHandler<ScanSimpleIdViewEffect> {
+
+  @AssistedFactory
+  interface Factory {
+    fun create(uiActions: ScanSimpleIdUiActions): ScanSimpleIdViewEffectHandler
+  }
+
+  override fun handle(viewEffect: ScanSimpleIdViewEffect) {
+    // Nothing to do here. Yet. (Dun dun duuuuuun)
+  }
+}

@@ -38,7 +38,7 @@ class RegistrationPhoneScreen :
         RegistrationPhoneModel,
         RegistrationPhoneEvent,
         RegistrationPhoneEffect,
-        Unit>(),
+        RegistrationPhoneViewEffect>(),
     RegistrationPhoneUi,
     RegistrationPhoneUiActions {
 
@@ -91,9 +91,11 @@ class RegistrationPhoneScreen :
 
   override fun createInit() = RegistrationPhoneInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(
-      viewEffectHandler = RegistrationPhoneViewEffectHandler(uiActions = this)
-  ).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationPhoneViewEffect>) = effectHandlerFactory
+      .create(
+          viewEffectHandler = RegistrationPhoneViewEffectHandler(uiActions = this),
+          viewEffectsConsumer = viewEffectsConsumer
+      ).build()
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

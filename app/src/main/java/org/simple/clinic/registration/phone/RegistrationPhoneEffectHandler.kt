@@ -1,5 +1,6 @@
 package org.simple.clinic.registration.phone
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -14,6 +15,7 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class RegistrationPhoneEffectHandler @AssistedInject constructor(
     @Assisted private val viewEffectHandler: RegistrationPhoneViewEffectHandler,
+    @Assisted private val viewEffectsConsumer: Consumer<RegistrationPhoneViewEffect>,
     private val schedulers: SchedulersProvider,
     private val userSession: UserSession,
     private val numberValidator: PhoneNumberValidator,
@@ -24,7 +26,8 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
   @AssistedFactory
   interface Factory {
     fun create(
-        viewEffectHandler: RegistrationPhoneViewEffectHandler
+        viewEffectHandler: RegistrationPhoneViewEffectHandler,
+        viewEffectsConsumer: Consumer<RegistrationPhoneViewEffect>
     ): RegistrationPhoneEffectHandler
   }
 

@@ -41,6 +41,7 @@ class RegistrationPhoneScreenLogicTest {
 
   private val ui = mock<RegistrationPhoneUi>()
   private val uiActions = mock<RegistrationPhoneUiActions>()
+
   private val userSession = mock<UserSession>()
   private val numberValidator = LengthBasedNumberValidator(10,
       10,
@@ -356,9 +357,11 @@ class RegistrationPhoneScreenLogicTest {
 
     val uiRenderer = RegistrationPhoneUiRenderer(ui)
     val viewEffectHandler = RegistrationPhoneViewEffectHandler(uiActions)
+    val viewEffectsConsumer = viewEffectHandler::handle
 
     val effectHandler = RegistrationPhoneEffectHandler(
         viewEffectHandler = viewEffectHandler,
+        viewEffectsConsumer = viewEffectsConsumer,
         schedulers = TrampolineSchedulersProvider(),
         userSession = userSession,
         numberValidator = numberValidator,

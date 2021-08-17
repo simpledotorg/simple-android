@@ -34,3 +34,5 @@ data class OnlinePatientLookupWithIdentifier(val identifier: Identifier): ScanSi
 data class SaveCompleteMedicalRecords(
     val completeMedicalRecords: List<CompleteMedicalRecord>
 ) : ScanSimpleIdEffect()
+
+sealed class ScanSimpleIdViewEffect: ScanSimpleIdEffect()

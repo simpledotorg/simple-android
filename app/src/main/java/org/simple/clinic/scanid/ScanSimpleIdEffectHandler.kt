@@ -30,7 +30,6 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<ScanSimpleIdEffect, ScanSimpleIdEvent> = RxMobius
       .subtypeEffectHandler<ScanSimpleIdEffect, ScanSimpleIdEvent>()
       .addConsumer(ScanSimpleIdViewEffect::class.java, viewEffectHandler::handle, schedulersProvider.ui())
-      .addAction(HideEnteredCodeValidationError::class.java, uiActions::hideEnteredCodeValidationError, schedulersProvider.ui())
       .addConsumer(ShowEnteredCodeValidationError::class.java, { uiActions.showEnteredCodeValidationError(it.failure) }, schedulersProvider.ui())
       .addTransformer(ValidateEnteredCode::class.java, validateEnteredCode())
       .addTransformer(SearchPatientByIdentifier::class.java, searchPatientByIdentifier())

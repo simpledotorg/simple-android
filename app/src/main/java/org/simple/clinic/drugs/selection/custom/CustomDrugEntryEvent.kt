@@ -1,6 +1,7 @@
 package org.simple.clinic.drugs.selection.custom
 
 import org.simple.clinic.drugs.PrescribedDrug
+import org.simple.clinic.drugs.search.Drug
 import org.simple.clinic.drugs.search.DrugFrequency
 
 sealed class CustomDrugEntryEvent
@@ -22,3 +23,5 @@ data class PrescribedDrugFetched(val prescription: PrescribedDrug) : CustomDrugE
 object ExistingDrugRemoved : CustomDrugEntryEvent()
 
 object RemoveDrugButtonClicked : CustomDrugEntryEvent()
+
+data class DrugFetched(val drug: Drug) : CustomDrugEntryEvent()

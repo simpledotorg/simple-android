@@ -11,6 +11,7 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.search.DrugFrequency
+import org.simple.clinic.drugs.search.DrugRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -20,6 +21,7 @@ import java.util.UUID
 class CustomDrugEntryEffectHandlerTest {
   private val uiActions = mock<CustomDrugEntrySheetUiActions>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
+  private val drugRepository = mock<DrugRepository>()
   private val facility = TestData.facility(uuid = UUID.fromString("d6685d51-f882-4995-b922-a6c637eed0a5"))
   private val patientUuid = UUID.fromString("be756a9f-005b-4592-8609-209ba0a867a4")
 
@@ -30,6 +32,7 @@ class CustomDrugEntryEffectHandlerTest {
   private val effectHandler = CustomDrugEntryEffectHandler(
       TestSchedulersProvider.trampoline(),
       prescriptionRepository,
+      drugRepository,
       { facility },
       uuidGenerator,
       uiActions).build()
@@ -221,6 +224,22 @@ class CustomDrugEntryEffectHandlerTest {
     verify(prescriptionRepository).softDeletePrescription(customDrugUUID)
     verifyNoMoreInteractions(prescriptionRepository)
     testCase.assertOutgoingEvents(ExistingDrugRemoved)
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when fetch drug effect is received, then fetch drug from drug repository`() {
+    // given
+    val drug = TestData.drug(id = customDrugUUID)
+    whenever(drugRepository.drugImmediate(customDrugUUID)).thenReturn(drug)
+
+    // when
+    testCase.dispatch(FetchDrug(customDrugUUID))
+
+    // then
+    verify(drugRepository).drugImmediate(customDrugUUID)
+    verifyNoMoreInteractions(drugRepository)
+    testCase.assertOutgoingEvents(DrugFetched(drug))
     verifyZeroInteractions(uiActions)
   }
 }

@@ -29,7 +29,7 @@ import org.simple.clinic.user.finduser.FindUserResult.NotFound
 import org.simple.clinic.user.finduser.FindUserResult.UnexpectedError
 import org.simple.clinic.user.finduser.UserLookup
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
@@ -361,7 +361,7 @@ class RegistrationPhoneScreenLogicTest {
 
     val effectHandler = RegistrationPhoneEffectHandler(
         viewEffectsConsumer = viewEffectsConsumer,
-        schedulers = TrampolineSchedulersProvider(),
+        schedulers = TestSchedulersProvider.trampoline(),
         userSession = userSession,
         numberValidator = numberValidator,
         facilitySync = facilitySync,

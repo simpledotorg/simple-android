@@ -1,5 +1,6 @@
 package org.simple.clinic.scanid
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import com.squareup.moshi.JsonDataException
 import com.squareup.moshi.JsonEncodingException
@@ -18,25 +19,20 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
     private val qrCodeJsonParser: QRCodeJsonParser,
     private val country: Country,
     private val lookupPatientOnline: LookupPatientOnline,
-    @Assisted private val uiActions: ScanSimpleIdUiActions
+    @Assisted private val viewEffectsConsumer: Consumer<ScanSimpleIdViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: ScanSimpleIdUiActions): ScanSimpleIdEffectHandler
+    fun create(viewEffectsConsumer: Consumer<ScanSimpleIdViewEffect>): ScanSimpleIdEffectHandler
   }
 
   fun build(): ObservableTransformer<ScanSimpleIdEffect, ScanSimpleIdEvent> = RxMobius
       .subtypeEffectHandler<ScanSimpleIdEffect, ScanSimpleIdEvent>()
-      .addAction(ShowQrCodeScannerView::class.java, uiActions::showQrCodeScannerView, schedulersProvider.ui())
-      .addAction(HideQrCodeScannerView::class.java, uiActions::hideQrCodeScannerView, schedulersProvider.ui())
-      .addAction(HideEnteredCodeValidationError::class.java, uiActions::hideEnteredCodeValidationError, schedulersProvider.ui())
-      .addConsumer(ShowEnteredCodeValidationError::class.java, { uiActions.showEnteredCodeValidationError(it.failure) }, schedulersProvider.ui())
+      .addConsumer(ScanSimpleIdViewEffect::class.java, viewEffectsConsumer::accept, schedulersProvider.ui())
       .addTransformer(ValidateEnteredCode::class.java, validateEnteredCode())
       .addTransformer(SearchPatientByIdentifier::class.java, searchPatientByIdentifier())
       .addTransformer(ParseScannedJson::class.java, parseJsonIntoObject())
-      .addConsumer(OpenPatientSummary::class.java, ::openPatientSummary, schedulersProvider.ui())
-      .addConsumer(OpenPatientSearch::class.java, ::openPatientSearch, schedulersProvider.ui())
       .addTransformer(OnlinePatientLookupWithIdentifier::class.java, onlinePatientLookupWithIdentifier())
       .addTransformer(SaveCompleteMedicalRecords::class.java, saveCompleteMedicalRecords())
       .build()
@@ -61,16 +57,6 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
             OnlinePatientLookupWithIdentifierCompleted(results, it.identifier)
           }
     }
-  }
-
-  private fun openPatientSearch(openPatientSearch: OpenPatientSearch) {
-    uiActions.openPatientSearch(openPatientSearch.additionalIdentifier,
-        openPatientSearch.initialSearchQuery,
-        openPatientSearch.patientPrefillInfo)
-  }
-
-  private fun openPatientSummary(openPatientSummary: OpenPatientSummary) {
-    uiActions.openPatientSummary(openPatientSummary.patientId)
   }
 
   private fun parseJsonIntoObject(): ObservableTransformer<ParseScannedJson, ScanSimpleIdEvent> {

@@ -3,8 +3,9 @@ package org.simple.clinic.drugs.selection.custom
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.search.Drug
 import org.simple.clinic.drugs.search.DrugFrequency
+import org.simple.clinic.widgets.UiEvent
 
-sealed class CustomDrugEntryEvent
+sealed class CustomDrugEntryEvent : UiEvent
 
 data class DosageEdited(val dosage: String) : CustomDrugEntryEvent()
 

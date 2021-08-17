@@ -29,3 +29,5 @@ object LoadCurrentUserUnauthorizedStatus : RegistrationPhoneEffect()
 object ShowUserLoggedOutAlert : RegistrationPhoneEffect()
 
 data class ContinueRegistration(val entry: OngoingRegistrationEntry) : RegistrationPhoneEffect()
+
+sealed class RegistrationPhoneViewEffect : RegistrationPhoneEffect()

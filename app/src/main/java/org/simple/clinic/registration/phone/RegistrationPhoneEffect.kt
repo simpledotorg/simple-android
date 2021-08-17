@@ -20,8 +20,6 @@ data class CreateUserLocally(
 
 object LoadCurrentUserUnauthorizedStatus : RegistrationPhoneEffect()
 
-object ShowUserLoggedOutAlert : RegistrationPhoneEffect()
-
 data class ContinueRegistration(val entry: OngoingRegistrationEntry) : RegistrationPhoneEffect()
 
 sealed class RegistrationPhoneViewEffect : RegistrationPhoneEffect()
@@ -31,3 +29,5 @@ data class PrefillFields(val entry: OngoingRegistrationEntry) : RegistrationPhon
 data class ShowAccessDeniedScreen(val number: String) : RegistrationPhoneViewEffect()
 
 object ProceedToLogin : RegistrationPhoneViewEffect()
+
+object ShowUserLoggedOutAlert : RegistrationPhoneViewEffect()

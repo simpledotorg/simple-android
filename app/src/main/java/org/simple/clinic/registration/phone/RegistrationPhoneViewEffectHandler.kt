@@ -11,6 +11,7 @@ class RegistrationPhoneViewEffectHandler(
       is PrefillFields -> uiActions.preFillUserDetails(viewEffect.entry)
       is ShowAccessDeniedScreen -> uiActions.showAccessDeniedScreen(viewEffect.number)
       ProceedToLogin -> uiActions.openLoginPinEntryScreen()
+      ShowUserLoggedOutAlert -> uiActions.showLoggedOutOfDeviceDialog()
     }
   }
 }

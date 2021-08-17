@@ -150,7 +150,6 @@ class ScanSimpleIdUpdate @Inject constructor(
       val identifier = Identifier(bpPassportCode.toString(), BpPassport)
       next(model = clearInvalidQrCodeModel.searching(), SearchPatientByIdentifier(identifier))
     } catch (e: Exception) {
-      CrashReporter.report(e)
       searchPatientWhenNHIDEnabled(clearInvalidQrCodeModel, event)
     }
   }

@@ -88,6 +88,9 @@ class ScanSimpleIdScreen : BaseScreen<
   @Inject
   lateinit var googleApiAvailability: GoogleApiAvailability
 
+  @Inject
+  lateinit var viewEffectHandlerFactory: ScanSimpleIdViewEffectHandler.Factory
+
   private val toolBar
     get() = binding.toolBar
 
@@ -131,7 +134,7 @@ class ScanSimpleIdScreen : BaseScreen<
 
   override fun createUpdate() = ScanSimpleIdUpdate(features.isEnabled(IndiaNationalHealthID), features.isEnabled(Feature.OnlinePatientLookup))
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this, viewEffectHandlerFactory.create(this)).build()
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

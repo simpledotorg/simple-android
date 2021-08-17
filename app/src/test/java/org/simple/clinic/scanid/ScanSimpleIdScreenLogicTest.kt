@@ -132,13 +132,18 @@ class ScanSimpleIdScreenLogicTest {
   }
 
   private fun setupController() {
+    val viewEffectHandler = ScanSimpleIdViewEffectHandler(
+        uiActions = uiActions
+    )
+
     val effectHandler = ScanSimpleIdEffectHandler(
         schedulersProvider = TestSchedulersProvider.trampoline(),
         patientRepository = mock(),
         qrCodeJsonParser = mock(),
         country = TestData.country(isoCountryCode = Country.INDIA),
+        lookupPatientOnline = lookupPatientOnline,
         uiActions = uiActions,
-        lookupPatientOnline = lookupPatientOnline
+        viewEffectHandler = viewEffectHandler
     )
 
     val features = Features(

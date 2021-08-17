@@ -30,7 +30,6 @@ import org.simple.clinic.user.finduser.FindUserResult.UnexpectedError
 import org.simple.clinic.user.finduser.UserLookup
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
@@ -354,17 +353,13 @@ class RegistrationPhoneScreenLogicTest {
   ) {
     whenever(userSession.isUserUnauthorized()) doReturn Observable.just(isUserUnauthorized)
 
-    val uuidGenerator = FakeUuidGenerator.fixed(userUuid)
-
     val uiRenderer = RegistrationPhoneUiRenderer(ui)
     val viewEffectHandler = RegistrationPhoneViewEffectHandler(ui)
 
     val effectHandler = RegistrationPhoneEffectHandler(
-        uiActions = ui,
         viewEffectHandler = viewEffectHandler,
         schedulers = TrampolineSchedulersProvider(),
         userSession = userSession,
-        uuidGenerator = uuidGenerator,
         numberValidator = numberValidator,
         facilitySync = facilitySync,
         userLookup = findUserWithPhoneNumber

@@ -11,14 +11,11 @@ import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.finduser.UserLookup
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import org.simple.clinic.uuid.UuidGenerator
 
 class RegistrationPhoneEffectHandler @AssistedInject constructor(
-    @Assisted private val uiActions: RegistrationPhoneUiActions,
     @Assisted private val viewEffectHandler: RegistrationPhoneViewEffectHandler,
     private val schedulers: SchedulersProvider,
     private val userSession: UserSession,
-    private val uuidGenerator: UuidGenerator,
     private val numberValidator: PhoneNumberValidator,
     private val facilitySync: FacilitySync,
     private val userLookup: UserLookup
@@ -27,7 +24,6 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
   @AssistedFactory
   interface Factory {
     fun create(
-        uiActions: RegistrationPhoneUiActions,
         viewEffectHandler: RegistrationPhoneViewEffectHandler
     ): RegistrationPhoneEffectHandler
   }

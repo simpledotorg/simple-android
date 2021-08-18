@@ -57,7 +57,7 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
   }
 
   private fun setSheetTitle(setSheetTitle: SetSheetTitle) {
-    val sheetTitle = constructSheetTitle(setSheetTitle.name, setSheetTitle.dosage, setSheetTitle.frequency)
+    val sheetTitle = constructSheetTitle(setSheetTitle.name, setSheetTitle.dosage.nullIfBlank(), setSheetTitle.frequency)
 
     uiActions.setSheetTitle(sheetTitle)
   }

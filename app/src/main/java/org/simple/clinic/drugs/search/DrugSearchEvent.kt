@@ -11,3 +11,5 @@ data class DrugsSearchResultsLoaded(val searchResults: PagingData<Drug>) : DrugS
 data class SearchQueryChanged(val searchQuery: String) : DrugSearchEvent()
 
 data class DrugListItemClicked(val drugId: UUID, val patientUuid: UUID) : DrugSearchEvent()
+
+data class NewCustomDrugClicked(val drugName: String, val patientUuid: UUID) : DrugSearchEvent()

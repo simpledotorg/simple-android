@@ -88,7 +88,8 @@ class DrugsSearchScreen : BaseScreen<
   override fun events() = Observable
       .mergeArray(
           searchQueryChanges(),
-          drugListItemClicks())
+          drugListItemClicks(),
+          newCustomDrugItemClicks())
       .compose(ReportAnalyticsEvents())
       .cast<DrugSearchEvent>()
 
@@ -159,6 +160,13 @@ class DrugsSearchScreen : BaseScreen<
         .itemEvents
         .ofType<DrugSearchListItem.Event.DrugClicked>()
         .map { DrugListItemClicked(it.drug.id, screenKey.patientId) }
+  }
+
+  private fun newCustomDrugItemClicks(): Observable<UiEvent> {
+    return adapter
+        .itemEvents
+        .ofType<DrugSearchListItem.Event.NewCustomDrugClicked>()
+        .map { NewCustomDrugClicked(it.name, screenKey.patientId) }
   }
 
   interface Injector {

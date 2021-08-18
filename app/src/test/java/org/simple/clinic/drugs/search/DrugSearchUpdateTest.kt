@@ -77,4 +77,20 @@ class DrugSearchUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when custom drug list item is clicked, then open custom drug entry sheet from drug name`() {
+    val drugName = "Amlodipine"
+    val patientId = UUID.fromString("3d4105bb-8447-42ab-b769-2da2dcd4ba22")
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(NewCustomDrugClicked(drugName, patientId))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(OpenCustomDrugEntrySheetFromDrugName(drugName, patientId))
+            )
+        )
+  }
 }

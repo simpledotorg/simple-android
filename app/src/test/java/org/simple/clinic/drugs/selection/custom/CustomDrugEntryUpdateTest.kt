@@ -75,8 +75,9 @@ class CustomDrugEntryUpdateTest {
   fun `when add button is clicked and the sheet is opened in create mode from drug list with edited dosage and frequency values, then add the drug to the custom drug list`() {
     val dosage = "200 mg"
     val frequency = DrugFrequency.OD
-    val drug = TestData.drug(id = UUID.fromString("6106544f-2b18-410d-992b-81860a08f02a"), name = drugName)
-    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugList(patientUuid, drug)).drugNameLoaded(drugName)
+    val drugUuid = UUID.fromString("6106544f-2b18-410d-992b-81860a08f02a")
+    val drug = TestData.drug(id = drugUuid, name = drugName)
+    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugList(patientUuid, drugUuid)).drugNameLoaded(drugName).rxNormCodeEdited(drug.rxNormCode)
 
     updateSpec
         .given(defaultModel.dosageEdited(dosage).frequencyEdited(frequency))

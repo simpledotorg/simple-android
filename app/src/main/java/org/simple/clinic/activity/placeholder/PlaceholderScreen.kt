@@ -53,9 +53,9 @@ class PlaceholderScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
   }
 
   @Parcelize
-  object PlaceHolderScreenKey : FullScreenKey {
-
-    override val analyticsName = "Placeholder Screen"
+  data class PlaceHolderScreenKey(
+      override val analyticsName: String = "Placeholder Screen"
+  ) : FullScreenKey {
 
     override fun layoutRes() = R.layout.screen_placeholder
   }

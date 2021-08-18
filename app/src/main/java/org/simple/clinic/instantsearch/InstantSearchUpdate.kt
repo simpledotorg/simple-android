@@ -66,7 +66,10 @@ class InstantSearchUpdate @Inject constructor(
   private fun instantSearchScreenShown(model: InstantSearchModel): Next<InstantSearchModel, InstantSearchEffect> {
     val effects = mutableSetOf<InstantSearchEffect>()
 
-    if (model.hasFacility) effects.add(PrefillSearchQuery(model.searchQuery.orEmpty()))
+    if (model.hasFacility && model.hasSearchQuery) {
+      effects.add(PrefillSearchQuery(model.searchQuery!!))
+      effects.add(ValidateSearchQuery(model.searchQuery))
+    }
 
     // When a scanned BP Passport does not result in a match, we bring up a bottom sheet which asks
     // whether this is a new registration or an existing patient. If we show the keyboard in these

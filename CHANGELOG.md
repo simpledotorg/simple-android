@@ -12,6 +12,9 @@
 - [In Progress: 06 Aug 2021] Add support for Sri Lanka
 - [In Progress: 10 Aug 2021] Implement `CustomDrugEntrySheet`
 
+### Fixes
+- Fix searching by short code from the scan BP Passport screen does not load results initially
+
 ## On Demo
 ### Internal
 - Set Simple video and duration based on locale

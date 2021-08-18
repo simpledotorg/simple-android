@@ -42,6 +42,7 @@
 - Bump LeakCanary to v2.7
 - Change `RegistrationPhoneScreen` to use view effects
 - Change `ScanSimpleIdScreen` to use Mobius view effects
+- Handle exception when syncing reports in `ConfirmFacilityChangeEffectHandler`
 
 ### Changes
 - Ask users for their name and job designation on sign up

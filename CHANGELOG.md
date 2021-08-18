@@ -8,6 +8,7 @@
 - Bump CameraX dependencies
   - Bump `camera-core`, `camera-camera2` and `camera-lifecycle` to v1.0.1
   - Bump `camera-view` to v1.0.0-alpha27
+- Handle exception when syncing reports in `ConfirmFacilityChangeEffectHandler`
 
 ### Changes
 - [In Progress: 22 Jul 2021] Add option to download & share overdue list

@@ -4,6 +4,7 @@ import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncConfigType
 import org.simple.clinic.sync.SyncConfigType.Type.Frequent
+import org.simple.clinic.util.read
 import javax.inject.Inject
 
 class ReportsSync @Inject constructor(
@@ -21,7 +22,7 @@ class ReportsSync @Inject constructor(
   }
 
   override fun pull() {
-    val reportsText = reportsApi.userAnalytics().execute().body()!!
+    val reportsText = reportsApi.userAnalytics().execute().read()!!
 
     reportsRepository.updateReports(reportsText)
   }

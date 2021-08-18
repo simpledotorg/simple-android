@@ -2,13 +2,10 @@
 
 ## Next Release
 ### Internal
-- Change `RegistrationPhoneScreen` to use view effects
-- Change `ScanSimpleIdScreen` to use Mobius view effects
 - Bump Paging to v3.0.1
 - Bump CameraX dependencies
   - Bump `camera-core`, `camera-camera2` and `camera-lifecycle` to v1.0.1
   - Bump `camera-view` to v1.0.0-alpha27
-- Handle exception when syncing reports in `ConfirmFacilityChangeEffectHandler`
 
 ### Changes
 - [In Progress: 22 Jul 2021] Add option to download & share overdue list
@@ -16,9 +13,6 @@
   - Search for commonly used drugs
 - [In Progress: 06 Aug 2021] Add support for Sri Lanka
 - [In Progress: 10 Aug 2021] Implement `CustomDrugEntrySheet`
-
-### Fixes
-- Fix searching by short code from the scan BP Passport screen does not load results initially
 
 ## On Demo
 ### Internal
@@ -54,6 +48,9 @@
 - Bump LeakCanary to v2.7
 - Remove reporting scanning logs to Sentry
 - Migrate `NewMedicalHistoryScreen` to a Fragment
+- Change `RegistrationPhoneScreen` to use view effects
+- Change `ScanSimpleIdScreen` to use Mobius view effects
+- Handle exception when syncing reports in `ConfirmFacilityChangeEffectHandler`
 
 ### Changes
 - Ask users for their name and job designation on sign up
@@ -69,6 +66,7 @@
 ### Fixes
 - Fix app syncing prescription drugs with empty name
 - Fix text overflowing in video illustration in some languages
+- Fix searching by short code from the scan BP Passport screen does not load results initially
 
 ## 2021-08-09-7904
 ### Internal

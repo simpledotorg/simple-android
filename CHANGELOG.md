@@ -5,6 +5,9 @@
 - Change `RegistrationPhoneScreen` to use view effects
 - Change `ScanSimpleIdScreen` to use Mobius view effects
 - Bump Paging to v3.0.1
+- Bump CameraX dependencies
+  - Bump `camera-core`, `camera-camera2` and `camera-lifecycle` to v1.0.1
+  - Bump `camera-view` to v1.0.0-alpha27
 
 ### Changes
 - [In Progress: 22 Jul 2021] Add option to download & share overdue list

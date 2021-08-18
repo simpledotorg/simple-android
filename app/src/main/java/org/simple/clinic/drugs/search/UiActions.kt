@@ -6,4 +6,5 @@ import java.util.UUID
 interface UiActions {
   fun setDrugSearchResults(searchResults: PagingData<Drug>)
   fun openCustomDrugEntrySheetFromDrugList(drugUuid: UUID, patientUuid: UUID)
+  fun openCustomDrugEntrySheetFromDrugName(drugName: String, patientUuid: UUID)
 }

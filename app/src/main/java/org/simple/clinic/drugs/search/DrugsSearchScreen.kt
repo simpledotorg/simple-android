@@ -129,6 +129,10 @@ class DrugsSearchScreen : BaseScreen<
     router.push(CustomDrugEntrySheet.Key(OpenAs.New.FromDrugList(drugUuid), patientUuid))
   }
 
+  override fun openCustomDrugEntrySheetFromDrugName(drugName: String, patientUuid: UUID) {
+    router.push(CustomDrugEntrySheet.Key(OpenAs.New.FromDrugName(drugName), patientUuid))
+  }
+
   private fun drugSearchLoadStateListener(combinedLoadStates: CombinedLoadStates) {
     val isLoading = combinedLoadStates.refresh is LoadState.Loading
     progressIndicator.visibleOrGone(isLoading)

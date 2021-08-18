@@ -13,3 +13,8 @@ data class OpenCustomDrugEntrySheetFromDrugList(
     val drugUuid: UUID,
     val patientUuid: UUID
 ) : DrugSearchEffect()
+
+data class OpenCustomDrugEntrySheetFromDrugName(
+    val drugName: String,
+    val patientUuid: UUID
+) : DrugSearchEffect()

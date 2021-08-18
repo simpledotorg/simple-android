@@ -59,7 +59,7 @@ class SetupActivity : AppCompatActivity(), UiActions {
 
   private val router by unsafeLazy {
     Router(
-        initialScreenKey = PlaceholderScreen.Key().wrap(),
+        initialScreenKey = PlaceholderScreen.Key(),
         fragmentManager = supportFragmentManager,
         containerId = R.id.screen_host_view
     )

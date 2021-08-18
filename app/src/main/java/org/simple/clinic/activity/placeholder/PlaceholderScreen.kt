@@ -6,11 +6,10 @@ import android.widget.RelativeLayout
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.parcelize.Parcelize
-import org.simple.clinic.R
 import org.simple.clinic.await.Await
 import org.simple.clinic.await.Checkpoint
 import org.simple.clinic.databinding.ScreenPlaceholderBinding
-import org.simple.clinic.router.screen.FullScreenKey
+import org.simple.clinic.navigation.v2.ScreenKey
 import java.util.concurrent.TimeUnit.SECONDS
 
 class PlaceholderScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -55,8 +54,8 @@ class PlaceholderScreen(context: Context, attrs: AttributeSet) : RelativeLayout(
   @Parcelize
   data class Key(
       override val analyticsName: String = "Placeholder Screen"
-  ) : FullScreenKey {
+  ) : ScreenKey() {
 
-    override fun layoutRes() = R.layout.screen_placeholder
+    override fun instantiateFragment() = PlaceholderScreen()
   }
 }

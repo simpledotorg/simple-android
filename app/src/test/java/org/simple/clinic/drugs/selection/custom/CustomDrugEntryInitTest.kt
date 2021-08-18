@@ -14,7 +14,7 @@ class CustomDrugEntryInitTest {
   @Test
   fun `when sheet is created in create mode from the drug list, fetch drug from the drugUuid`() {
     val drugUuid = UUID.fromString("6106544f-2b18-410d-992b-81860a08f02a")
-    val model = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugList(patientUuid = UUID.fromString("13008153-beda-475a-909c-793d03e654fb"), drugUuid))
+    val model = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugList(drugUuid))
 
     initSpec
         .whenInit(model)
@@ -28,7 +28,7 @@ class CustomDrugEntryInitTest {
 
   @Test
   fun `when sheet is created in create mode from a drug name, then set the drug name, frequency and sheet title`() {
-    val model = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(patientUuid = UUID.fromString("13008153-beda-475a-909c-793d03e654fb"), drugName))
+    val model = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(drugName))
 
     initSpec
         .whenInit(model)
@@ -43,9 +43,7 @@ class CustomDrugEntryInitTest {
   @Test
   fun `when sheet is created in update mode, then fetch prescription`() {
     val prescribedDrugUuid = UUID.fromString("e046a649-dfc0-45b5-89d4-7a4b0af1c282")
-    val model = CustomDrugEntryModel.default(openAs = OpenAs.Update(
-        patientUuid = UUID.fromString("13008153-beda-475a-909c-793d03e654fb"),
-        prescribedDrugUuid = prescribedDrugUuid))
+    val model = CustomDrugEntryModel.default(openAs = OpenAs.Update(prescribedDrugUuid = prescribedDrugUuid))
 
     initSpec
         .whenInit(model)

@@ -17,7 +17,7 @@ class CustomDrugEntryUpdateTest {
   private val updateSpec = UpdateSpec(CustomDrugEntryUpdate())
   private val drugName = "Amlodipine"
   private val patientUuid = UUID.fromString("77f1d870-5c60-49f7-a4e2-2f1d60e4218c")
-  private val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(patientUuid, drugName))
+  private val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(drugName))
 
   @Test
   fun `when dosage is edited, then update the model with the new dosage and update the sheet title`() {
@@ -77,11 +77,11 @@ class CustomDrugEntryUpdateTest {
     val frequency = DrugFrequency.OD
     val drugUuid = UUID.fromString("6106544f-2b18-410d-992b-81860a08f02a")
     val drug = TestData.drug(id = drugUuid, name = drugName)
-    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugList(patientUuid, drugUuid)).drugNameLoaded(drugName).rxNormCodeEdited(drug.rxNormCode)
+    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugList(drugUuid)).drugNameLoaded(drugName).rxNormCodeEdited(drug.rxNormCode)
 
     updateSpec
         .given(defaultModel.dosageEdited(dosage).frequencyEdited(frequency))
-        .whenEvent(AddMedicineButtonClicked)
+        .whenEvent(AddMedicineButtonClicked(patientUuid))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(SaveCustomDrugToPrescription(patientUuid, drugName, dosage, drug.rxNormCode, frequency))
@@ -93,11 +93,11 @@ class CustomDrugEntryUpdateTest {
   fun `when add button is clicked and the sheet is opened in create mode from drug name with edited dosage and frequency values, then add the drug to the custom drug list`() {
     val dosage = "200 mg"
     val frequency = DrugFrequency.OD
-    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(patientUuid, drugName)).drugNameLoaded(drugName)
+    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(drugName)).drugNameLoaded(drugName)
 
     updateSpec
         .given(defaultModel.dosageEdited(dosage).frequencyEdited(frequency))
-        .whenEvent(AddMedicineButtonClicked)
+        .whenEvent(AddMedicineButtonClicked(patientUuid))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(SaveCustomDrugToPrescription(patientUuid, drugName, dosage, null, frequency))
@@ -109,11 +109,11 @@ class CustomDrugEntryUpdateTest {
     val dosage = "200 mg"
     val frequency = DrugFrequency.OD
     val prescribedDrugUuid = UUID.fromString("96633994-6e4d-4528-b796-f03ae016553a")
-    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.Update(patientUuid, prescribedDrugUuid))
+    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.Update(prescribedDrugUuid))
 
     updateSpec
         .given(defaultModel.drugNameLoaded(drugName).dosageEdited(dosage).frequencyEdited(frequency))
-        .whenEvent(AddMedicineButtonClicked)
+        .whenEvent(AddMedicineButtonClicked(patientUuid))
         .then(
             assertThatNext(
                 hasNoModel(),
@@ -139,7 +139,7 @@ class CustomDrugEntryUpdateTest {
     val drugFrequency = DrugFrequency.OD
     val dosage = "12mg"
     val prescribedDrug = TestData.prescription(uuid = prescribedDrugUuid, name = drugName, isDeleted = false, frequency = MedicineFrequency.OD, dosage = dosage)
-    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.Update(patientUuid, prescribedDrugUuid))
+    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.Update(prescribedDrugUuid))
 
     updateSpec
         .given(defaultModel)
@@ -158,7 +158,7 @@ class CustomDrugEntryUpdateTest {
   @Test
   fun `when remove button is clicked, then remove the drug from the custom drug list`() {
     val prescribedDrugId = UUID.fromString("59842701-d7dd-4206-88a9-9f6f2460e496")
-    val model = CustomDrugEntryModel.default(openAs = OpenAs.Update(patientUuid, prescribedDrugId))
+    val model = CustomDrugEntryModel.default(openAs = OpenAs.Update(prescribedDrugId))
 
     updateSpec
         .given(model)

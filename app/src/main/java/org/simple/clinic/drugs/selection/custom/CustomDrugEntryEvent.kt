@@ -4,6 +4,7 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.search.Drug
 import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 
 sealed class CustomDrugEntryEvent : UiEvent
 
@@ -15,7 +16,7 @@ data class EditFrequencyClicked(val frequency: DrugFrequency) : CustomDrugEntryE
 
 data class FrequencyEdited(val frequency: DrugFrequency) : CustomDrugEntryEvent()
 
-object AddMedicineButtonClicked : CustomDrugEntryEvent()
+data class AddMedicineButtonClicked(val patientUuid: UUID) : CustomDrugEntryEvent()
 
 object CustomDrugSaved : CustomDrugEntryEvent()
 

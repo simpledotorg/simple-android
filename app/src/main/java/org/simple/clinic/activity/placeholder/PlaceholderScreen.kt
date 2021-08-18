@@ -1,5 +1,10 @@
 package org.simple.clinic.activity.placeholder
 
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.View.VISIBLE
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -14,13 +19,37 @@ class PlaceholderScreen : Fragment() {
   private val delayToShowMessage = SECONDS.toMillis(3).toInt()
   private val await = Await(listOf(Checkpoint.unit(delayToShowMessage)))
   private var awaitDisposable: Disposable? = null
-  private var binding: ScreenPlaceholderBinding? = null
+
+  private var _binding: ScreenPlaceholderBinding? = null
+  private val binding get() = _binding!!
 
   private val loadingTextLayout
-    get() = binding!!.loadingTextLayout
+    get() = binding.loadingTextLayout
 
   private val loadingProgressBar
-    get() = binding!!.loadingProgressBar
+    get() = binding.loadingProgressBar
+
+  override fun onCreateView(
+      inflater: LayoutInflater,
+      container: ViewGroup?,
+      savedInstanceState: Bundle?
+  ): View {
+    _binding = ScreenPlaceholderBinding.inflate(layoutInflater, container, false)
+    return binding.root
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    awaitDisposable = await.items()
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe { showLoadingUi() }
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    _binding = null
+    awaitDisposable?.dispose()
+  }
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -33,13 +62,9 @@ class PlaceholderScreen : Fragment() {
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
-    awaitDisposable = await.items()
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe { showLoadingUi() }
   }
 
   override fun onDetachedFromWindow() {
-    awaitDisposable?.dispose()
     binding = null
     super.onDetachedFromWindow()
   }

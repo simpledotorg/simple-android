@@ -1,8 +1,6 @@
 package org.simple.clinic.activity.placeholder
 
-import android.content.Context
-import android.util.AttributeSet
-import android.widget.RelativeLayout
+import androidx.fragment.app.Fragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.parcelize.Parcelize
@@ -12,7 +10,7 @@ import org.simple.clinic.databinding.ScreenPlaceholderBinding
 import org.simple.clinic.navigation.v2.ScreenKey
 import java.util.concurrent.TimeUnit.SECONDS
 
-class PlaceholderScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class PlaceholderScreen : Fragment() {
   private val delayToShowMessage = SECONDS.toMillis(3).toInt()
   private val await = Await(listOf(Checkpoint.unit(delayToShowMessage)))
   private var awaitDisposable: Disposable? = null

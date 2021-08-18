@@ -10,12 +10,14 @@ import io.reactivex.Scheduler
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.FacilitySyncGroupSwitchedAt
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.reports.ReportsSync
-import java.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import retrofit2.HttpException
 import java.time.Instant
+import java.util.Optional
 import javax.inject.Named
 
 class ConfirmFacilityChangeEffectHandler @AssistedInject constructor(
@@ -61,7 +63,13 @@ class ConfirmFacilityChangeEffectHandler @AssistedInject constructor(
   private fun clearAndSyncReports(scheduler: Scheduler) {
     reportsRepository
         .deleteReports()
-        .doOnComplete(reportsSync::pull)
+        .doOnComplete {
+          try {
+            reportsSync.pull()
+          } catch (e: HttpException) {
+            CrashReporter.report(e)
+          }
+        }
         .subscribeOn(scheduler)
         .subscribe()
   }

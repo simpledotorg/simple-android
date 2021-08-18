@@ -148,7 +148,8 @@ class CustomDrugEntryUpdateTest {
                 hasModel(defaultModel
                     .drugNameLoaded(drugName)
                     .dosageEdited(dosage = dosage)
-                    .frequencyEdited(frequency = drugFrequency)),
+                    .frequencyEdited(frequency = drugFrequency)
+                    .rxNormCodeEdited(prescribedDrug.rxNormCode)),
                 hasEffects(SetSheetTitle(drugName, dosage, drugFrequency), SetDrugFrequency(drugFrequency)))
         )
   }

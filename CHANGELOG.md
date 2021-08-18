@@ -1,19 +1,12 @@
 # CHANGELOG
 
 ## Next Release
-### Internal
-- Change `RegistrationPhoneScreen` to use view effects
-- Change `ScanSimpleIdScreen` to use Mobius view effects
-
 ### Changes
 - [In Progress: 22 Jul 2021] Add option to download & share overdue list
 - [In Progress: 14 Jul 2021] Medication screen improvements
   - Search for commonly used drugs
 - [In Progress: 06 Aug 2021] Add support for Sri Lanka
 - [In Progress: 10 Aug 2021] Implement `CustomDrugEntrySheet`
-
-### Fixes
-- Fix searching by short code from the scan BP Passport screen does not load results initially
 
 ## On Demo
 ### Internal
@@ -47,6 +40,8 @@
 - Add `SriLankaNationalIdMetaDataV1` to type adapter
 - Bump RxJava to v2.2.21
 - Bump LeakCanary to v2.7
+- Change `RegistrationPhoneScreen` to use view effects
+- Change `ScanSimpleIdScreen` to use Mobius view effects
 
 ### Changes
 - Ask users for their name and job designation on sign up
@@ -62,6 +57,7 @@
 ### Fixes
 - Fix app syncing prescription drugs with empty name
 - Fix text overflowing in video illustration in some languages
+- Fix searching by short code from the scan BP Passport screen does not load results
 
 ## 2021-08-09-7904
 ### Internal

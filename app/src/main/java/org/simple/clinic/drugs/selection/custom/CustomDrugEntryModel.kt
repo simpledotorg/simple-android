@@ -41,7 +41,7 @@ data class CustomDrugEntryModel(
     return copy(drugName = drugName)
   }
 
-  fun rxNormCodeEdited(rxNormCOde: String?): CustomDrugEntryModel {
+  fun rxNormCodeEdited(rxNormCode: String?): CustomDrugEntryModel {
     return copy(rxNormCode = rxNormCode)
   }
 }

@@ -38,6 +38,8 @@ import org.simple.clinic.drugs.PrescribedDrugsDoneClicked
 import org.simple.clinic.drugs.PresribedDrugsRefillClicked
 import org.simple.clinic.drugs.ProtocolDrugClicked
 import org.simple.clinic.drugs.search.DrugsSearchScreen
+import org.simple.clinic.drugs.selection.custom.CustomDrugEntrySheet
+import org.simple.clinic.drugs.selection.custom.OpenAs
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.feature.Feature
@@ -216,7 +218,11 @@ class EditMedicinesScreen :
   }
 
   override fun showUpdateCustomPrescriptionSheet(prescribedDrug: PrescribedDrug) {
-    activity.startActivity(CustomPrescriptionEntrySheet.intentForUpdatingPrescription(requireContext(), prescribedDrug.patientUuid, prescribedDrug.uuid))
+    if (features.isEnabled(Feature.CustomDrugSearchScreen)) {
+      router.push(CustomDrugEntrySheet.Key(OpenAs.Update(prescribedDrug.uuid), prescribedDrug.patientUuid))
+    } else {
+      activity.startActivity(CustomPrescriptionEntrySheet.intentForUpdatingPrescription(requireContext(), prescribedDrug.patientUuid, prescribedDrug.uuid))
+    }
   }
 
   private fun protocolDrugClicks(): Observable<UiEvent> {

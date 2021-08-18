@@ -51,24 +51,6 @@ class PlaceholderScreen : Fragment() {
     awaitDisposable?.dispose()
   }
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
-
-    binding = ScreenPlaceholderBinding.bind(this)
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-  }
-
-  override fun onDetachedFromWindow() {
-    binding = null
-    super.onDetachedFromWindow()
-  }
-
   private fun showLoadingUi() {
     loadingTextLayout.visibility = VISIBLE
     loadingProgressBar.visibility = VISIBLE

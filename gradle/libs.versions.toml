@@ -1,7 +1,7 @@
 [versions]
 androidx-camera = "1.0.0"
 androidx-cameraView = "1.0.0-alpha26"
-androidx-paging = "3.0.0"
+androidx-paging = "3.0.1"
 androidx-room = "2.3.0"
 androidx-test = "1.4.0"
 androidx-work = "2.5.0"

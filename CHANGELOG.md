@@ -4,6 +4,7 @@
 ### Internal
 - Change `RegistrationPhoneScreen` to use view effects
 - Change `ScanSimpleIdScreen` to use Mobius view effects
+- Bump Paging to v3.0.1
 
 ### Changes
 - [In Progress: 22 Jul 2021] Add option to download & share overdue list

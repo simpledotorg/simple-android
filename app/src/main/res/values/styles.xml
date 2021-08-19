@@ -90,6 +90,7 @@
   <!-- Dialog -->
   <style name="MaterialAlertDialog.Simple.Title.Text" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
     <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
+    <item name="android:textColor">?attr/colorOnSurface</item>
   </style>
 
   <style name="MaterialAlertDialog.Simple.Body.Text" parent="MaterialAlertDialog.MaterialComponents.Body.Text">

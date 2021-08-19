@@ -1,6 +1,7 @@
 package org.simple.clinic.drugs.search
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import com.jakewharton.rxbinding3.widget.textChanges
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import io.reactivex.rxkotlin.ofType
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -83,7 +85,10 @@ class DrugsSearchScreen : BaseScreen<
 
   override fun uiRenderer() = DrugSearchUiRenderer(this)
 
-  override fun events() = searchQueryChanges()
+  override fun events() = Observable
+      .mergeArray(
+          searchQueryChanges(),
+          drugListItemClicks())
       .compose(ReportAnalyticsEvents())
       .cast<DrugSearchEvent>()
 
@@ -147,6 +152,13 @@ class DrugsSearchScreen : BaseScreen<
         .map { searchQuery ->
           SearchQueryChanged(searchQuery.toString())
         }
+  }
+
+  private fun drugListItemClicks(): Observable<UiEvent> {
+    return adapter
+        .itemEvents
+        .ofType<DrugSearchListItem.Event.DrugClicked>()
+        .map { DrugListItemClicked(it.drug.id, screenKey.patientId) }
   }
 
   interface Injector {

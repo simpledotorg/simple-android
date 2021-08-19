@@ -14,6 +14,7 @@ class DrugSearchUpdate : Update<DrugSearchModel, DrugSearchEvent, DrugSearchEffe
     return when (event) {
       is DrugsSearchResultsLoaded -> dispatch(SetDrugsSearchResults(event.searchResults))
       is SearchQueryChanged -> searchDrugs(model, event)
+      is DrugListItemClicked -> dispatch(OpenCustomDrugEntrySheetFromDrugList(event.drugId, event.patientUuid))
     }
   }
 

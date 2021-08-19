@@ -61,4 +61,20 @@ class DrugSearchUpdateTest {
             hasNoEffects()
         ))
   }
+
+  @Test
+  fun `when drug list item is clicked, then open custom drug entry sheet from drug list`() {
+    val drugId = UUID.fromString("05ca8019-0514-4c6b-aa8e-657701229cd5")
+    val patientId = UUID.fromString("3d4105bb-8447-42ab-b769-2da2dcd4ba22")
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DrugListItemClicked(drugId, patientId))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(OpenCustomDrugEntrySheetFromDrugList(drugId, patientId))
+            )
+        )
+  }
 }

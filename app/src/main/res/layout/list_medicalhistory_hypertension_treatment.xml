@@ -8,15 +8,14 @@
 
   <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="@dimen/spacing_16">
 
     <TextView
       android:id="@+id/labelTextView"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_gravity="center_vertical"
-      android:layout_marginHorizontal="@dimen/spacing_16"
-      android:layout_marginTop="@dimen/spacing_16"
       android:layout_marginBottom="@dimen/spacing_8"
       android:text="@string/medicalhistory_question_is_on_hypertension_treatment"
       android:textAppearance="?attr/textAppearanceSubtitle1Medium"

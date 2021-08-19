@@ -25,7 +25,7 @@ class NewMedicalHistoryUiRenderer(
 
       if (model.hasLoadedCurrentFacility) {
         if (model.facilityDiabetesManagementEnabled) {
-          ui.showDiagnosisView()
+          ui.showDiabetesDiagnosisView()
           ui.hideDiabetesHistorySection()
           ui.renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, hasDiabetes)
         } else {

@@ -160,8 +160,7 @@ class NewMedicalHistoryScreen : BaseScreen<
     }
   }
 
-  override fun showDiagnosisView() {
-    // TODO: Rename this to show diabetes diagnosis view
+  override fun showDiabetesDiagnosisView() {
     diabetesDiagnosis.visibility = VISIBLE
   }
 

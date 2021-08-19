@@ -72,7 +72,7 @@ class NewMedicalHistoryUiRendererTest {
 
     // then
     verifyImplicitRenders()
-    verify(ui).showDiagnosisView()
+    verify(ui).showDiabetesDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Yes)
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, No)
@@ -131,7 +131,7 @@ class NewMedicalHistoryUiRendererTest {
 
     // then
     verifyImplicitRenders()
-    verify(ui).showDiagnosisView()
+    verify(ui).showDiabetesDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Yes)
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Unanswered)
@@ -153,7 +153,7 @@ class NewMedicalHistoryUiRendererTest {
 
     // then
     verifyImplicitRenders()
-    verify(ui).showDiagnosisView()
+    verify(ui).showDiabetesDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Yes)
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Unanswered)
@@ -173,7 +173,7 @@ class NewMedicalHistoryUiRendererTest {
 
     // then
     verifyImplicitRenders()
-    verify(ui).showDiagnosisView()
+    verify(ui).showDiabetesDiagnosisView()
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
     verify(ui).hideDiabetesHistorySection()
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Unanswered)

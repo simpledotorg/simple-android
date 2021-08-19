@@ -392,8 +392,10 @@
   <string name="medicalhistory_question_kidney">Kidney disease</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_hypertension">Hypertension</string>
+  <string name="medicalhistory_diagnosis_hypertension_required">Hypertension diagnosis (Required)</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_diabetes">Diabetes</string>
+  <string name="medicalhistory_diagnosis_diabetes_required">Diabetes diagnosis (Required)</string>
   <string name="newmedicalhistory_next">Next</string>
   <string name="newmedicalhistory_yes">Yes</string>
   <string name="newmedicalhistory_no">No</string>

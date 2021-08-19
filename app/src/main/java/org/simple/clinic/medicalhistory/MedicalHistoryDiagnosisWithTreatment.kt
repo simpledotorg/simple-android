@@ -59,13 +59,14 @@ class MedicalHistoryDiagnosisWithTreatment(
   }
 
   fun renderDiagnosis(
+      label: Int,
       question: MedicalHistoryQuestion,
       answer: Answer,
       answerChangeListener: (MedicalHistoryQuestion, Answer) -> Unit
   ) {
     diagnosisChipGroup.setOnCheckedChangeListener(null)
 
-    diagnosisTextView.setText(question.questionRes)
+    diagnosisTextView.setText(label)
 
     updateDiagnosisChipsFromAnswer(answer)
 

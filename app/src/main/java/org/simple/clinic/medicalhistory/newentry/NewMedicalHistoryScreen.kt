@@ -188,7 +188,13 @@ class NewMedicalHistoryScreen : BaseScreen<
       else -> null
     }
 
-    view?.renderDiagnosis(question, answer) { questionForView, newAnswer ->
+    val label = when (question) {
+      DIAGNOSED_WITH_HYPERTENSION -> R.string.medicalhistory_diagnosis_hypertension_required
+      DIAGNOSED_WITH_DIABETES -> R.string.medicalhistory_diagnosis_diabetes_required
+      else -> question.questionRes
+    }
+
+    view?.renderDiagnosis(label, question, answer) { questionForView, newAnswer ->
       questionViewEvents.onNext(NewMedicalHistoryAnswerToggled(questionForView, newAnswer))
     }
   }

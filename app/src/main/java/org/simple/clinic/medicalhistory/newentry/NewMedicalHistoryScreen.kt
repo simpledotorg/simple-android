@@ -84,17 +84,14 @@ class NewMedicalHistoryScreen : BaseScreen<
   private val diabetesQuestionView
     get() = binding.diabetesQuestionView
 
-  private val diagnosisViewContainer
-    get() = binding.diagnosisViewContainer
-
-  private val diabetesDiagnosisView
-    get() = binding.diabetesDiagnosisView
-
   private val scrollView
     get() = binding.scrollView
 
   private val hypertensionDiagnosis
     get() = binding.hypertensionDiagnosis
+
+  private val diabetesDiagnosis
+    get() = binding.diabetesDiagnosis
 
   private val questionViewEvents: Subject<NewMedicalHistoryEvent> = PublishSubject.create()
 
@@ -164,12 +161,13 @@ class NewMedicalHistoryScreen : BaseScreen<
   }
 
   override fun showDiagnosisView() {
-    diagnosisViewContainer.visibility = VISIBLE
-    diabetesDiagnosisView.hideDivider()
+    // TODO: Rename this to show diabetes diagnosis view
+    diabetesDiagnosis.visibility = VISIBLE
   }
 
   override fun hideDiagnosisView() {
-    diagnosisViewContainer.visibility = GONE
+    // TODO: Rename this to hide diabetes diagnosis view
+    diabetesDiagnosis.visibility = GONE
   }
 
   override fun hideDiabetesHistorySection() {
@@ -184,20 +182,14 @@ class NewMedicalHistoryScreen : BaseScreen<
   }
 
   override fun renderDiagnosisAnswer(question: MedicalHistoryQuestion, answer: Answer) {
-    when (question) {
-      DIAGNOSED_WITH_HYPERTENSION -> {
-        hypertensionDiagnosis.renderDiagnosis(question, answer) { questionForView, newAnswer ->
-          questionViewEvents.onNext(NewMedicalHistoryAnswerToggled(questionForView, newAnswer))
-        }
-      }
-      DIAGNOSED_WITH_DIABETES -> {
-        diabetesDiagnosisView.render(question, answer) { questionForView, newAnswer ->
-          questionViewEvents.onNext(NewMedicalHistoryAnswerToggled(questionForView, newAnswer))
-        }
-      }
-      else -> {
-        // No-op
-      }
+    val view = when (question) {
+      DIAGNOSED_WITH_HYPERTENSION -> hypertensionDiagnosis
+      DIAGNOSED_WITH_DIABETES -> diabetesDiagnosis
+      else -> null
+    }
+
+    view?.renderDiagnosis(question, answer) { questionForView, newAnswer ->
+      questionViewEvents.onNext(NewMedicalHistoryAnswerToggled(questionForView, newAnswer))
     }
   }
 

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/rootLayout"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="?attr/colorSurface">
+
+  <TextView
+    android:id="@+id/titleTextView"
+    android:layout_width="@dimen/spacing_0"
+    android:layout_height="wrap_content"
+    android:layout_alignParentStart="true"
+    android:layout_centerVertical="true"
+    android:layout_marginStart="@dimen/spacing_24"
+    android:layout_marginTop="@dimen/spacing_24"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_toStartOf="@+id/removeButton"
+    android:ellipsize="end"
+    android:maxLines="2"
+    android:textAppearance="?attr/textAppearanceHeadline6"
+    android:textColor="?attr/colorOnSurface"
+    app:layout_constraintEnd_toStartOf="@+id/removeButton"
+    app:layout_constraintHorizontal_bias="0.0"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:text="Procardia XL" />
+
+  <com.google.android.material.button.MaterialButton
+    android:id="@+id/removeButton"
+    style="@style/Widget.Simple.Button.TextButton.Red1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentEnd="true"
+    android:layout_gravity="center_vertical"
+    android:layout_marginTop="@dimen/spacing_24"
+    android:layout_marginEnd="@dimen/spacing_24"
+    android:minWidth="@dimen/spacing_0"
+    android:minHeight="@dimen/spacing_0"
+    android:text="@string/custom_drug_entry_sheet_remove"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:visibility="visible" />
+
+  <LinearLayout
+    android:id="@+id/textFieldsLinearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/spacing_16"
+    android:layout_marginStart="@dimen/spacing_24"
+    android:layout_marginTop="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_24"
+    android:layout_marginBottom="@dimen/spacing_16"
+    android:baselineAligned="true"
+    android:orientation="horizontal"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/titleTextView">
+
+    <com.google.android.material.textfield.TextInputLayout
+      android:layout_width="@dimen/spacing_0"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      app:hintTextAppearance="?attr/textAppearanceBody2">
+
+      <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/drugDosageEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/custom_drug_entry_sheet_dosage"
+        android:imeOptions="actionNext"
+        android:inputType="textCapWords"
+        android:textColor="@color/color_on_surface_67" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+      android:layout_width="@dimen/spacing_0"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_8"
+      android:layout_weight="1"
+      app:hintTextAppearance="?attr/textAppearanceBody2"
+      app:hintTextColor="?attr/colorPrimary"
+      app:hintEnabled="true"
+      android:textColorHint="?attr/colorPrimary">
+
+      <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/drugFrequencyEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/custom_drug_entry_sheet_frequency"
+        android:imeOptions="actionDone"
+        android:textColor="@color/color_on_surface_67" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+  </LinearLayout>
+
+  <FrameLayout
+    style="@style/Widget.Simple.Button.Frame"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_24"
+    app:layout_constraintTop_toBottomOf="@+id/textFieldsLinearLayout">
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/saveButton"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/custom_drug_entry_sheet_save_button_text" />
+  </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

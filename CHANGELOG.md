@@ -18,7 +18,7 @@
 - [In Progress: 14 Jul 2021] Medication screen improvements
   - Search for commonly used drugs
 - [In Progress: 06 Aug 2021] Add support for Sri Lanka
-- [In Progress: 10 Aug 2021] Implement `CustomDrugEntrySheet`
+- [In Progress: 18 Aug 2021] Implement `CustomDrugEntrySheet`
 
 ## On Demo
 ### Internal

@@ -57,5 +57,8 @@ data class Drug(
       ORDER BY drugs.name COLLATE NOCASE, drugs.dosage ASC
     """)
     fun searchForNonProtocolDrugs(query: String, protocolId: UUID?): PagingSource<Int, Drug>
+
+    @Query("SELECT * FROM Drug WHERE id = :drugUuid")
+    fun getOne(drugUuid: UUID): Drug?
   }
 }

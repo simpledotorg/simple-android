@@ -1,9 +1,12 @@
 package org.simple.clinic.drugs.selection.custom
 
 import org.simple.clinic.drugs.PrescribedDrug
+import org.simple.clinic.drugs.search.Drug
 import org.simple.clinic.drugs.search.DrugFrequency
+import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 
-sealed class CustomDrugEntryEvent
+sealed class CustomDrugEntryEvent : UiEvent
 
 data class DosageEdited(val dosage: String) : CustomDrugEntryEvent()
 
@@ -13,7 +16,7 @@ data class EditFrequencyClicked(val frequency: DrugFrequency) : CustomDrugEntryE
 
 data class FrequencyEdited(val frequency: DrugFrequency) : CustomDrugEntryEvent()
 
-object AddMedicineButtonClicked : CustomDrugEntryEvent()
+data class AddMedicineButtonClicked(val patientUuid: UUID) : CustomDrugEntryEvent()
 
 object CustomDrugSaved : CustomDrugEntryEvent()
 
@@ -22,3 +25,5 @@ data class PrescribedDrugFetched(val prescription: PrescribedDrug) : CustomDrugE
 object ExistingDrugRemoved : CustomDrugEntryEvent()
 
 object RemoveDrugButtonClicked : CustomDrugEntryEvent()
+
+data class DrugFetched(val drug: Drug) : CustomDrugEntryEvent()

@@ -48,6 +48,8 @@ class DrugRepository @Inject constructor(
     return drugDao.searchForNonProtocolDrugs(query, protocolId)
   }
 
+  fun drugImmediate(drugUuid: UUID): Drug? = drugDao.getOne(drugUuid)
+
   private fun saveRecords(records: List<Drug>) {
     drugDao.save(records)
   }

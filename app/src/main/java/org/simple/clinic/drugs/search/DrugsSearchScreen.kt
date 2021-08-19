@@ -1,6 +1,7 @@
 package org.simple.clinic.drugs.search
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import com.jakewharton.rxbinding3.widget.textChanges
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import io.reactivex.rxkotlin.ofType
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -20,6 +22,8 @@ import org.simple.clinic.databinding.ListItemDrugSearchCornerCapBinding
 import org.simple.clinic.databinding.ListItemDrugSearchDividerBinding
 import org.simple.clinic.databinding.ScreenDrugsSearchBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.drugs.selection.custom.CustomDrugEntrySheet
+import org.simple.clinic.drugs.selection.custom.OpenAs
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -81,7 +85,11 @@ class DrugsSearchScreen : BaseScreen<
 
   override fun uiRenderer() = DrugSearchUiRenderer(this)
 
-  override fun events() = searchQueryChanges()
+  override fun events() = Observable
+      .mergeArray(
+          searchQueryChanges(),
+          drugListItemClicks(),
+          newCustomDrugItemClicks())
       .compose(ReportAnalyticsEvents())
       .cast<DrugSearchEvent>()
 
@@ -123,6 +131,14 @@ class DrugsSearchScreen : BaseScreen<
     adapter.submitData(lifecycle, DrugSearchListItem.from(searchResults, searchQuery))
   }
 
+  override fun openCustomDrugEntrySheetFromDrugList(drugUuid: UUID, patientUuid: UUID) {
+    router.push(CustomDrugEntrySheet.Key(OpenAs.New.FromDrugList(drugUuid), patientUuid))
+  }
+
+  override fun openCustomDrugEntrySheetFromDrugName(drugName: String, patientUuid: UUID) {
+    router.push(CustomDrugEntrySheet.Key(OpenAs.New.FromDrugName(drugName), patientUuid))
+  }
+
   private fun drugSearchLoadStateListener(combinedLoadStates: CombinedLoadStates) {
     val isLoading = combinedLoadStates.refresh is LoadState.Loading
     progressIndicator.visibleOrGone(isLoading)
@@ -137,6 +153,20 @@ class DrugsSearchScreen : BaseScreen<
         .map { searchQuery ->
           SearchQueryChanged(searchQuery.toString())
         }
+  }
+
+  private fun drugListItemClicks(): Observable<UiEvent> {
+    return adapter
+        .itemEvents
+        .ofType<DrugSearchListItem.Event.DrugClicked>()
+        .map { DrugListItemClicked(it.drug.id, screenKey.patientId) }
+  }
+
+  private fun newCustomDrugItemClicks(): Observable<UiEvent> {
+    return adapter
+        .itemEvents
+        .ofType<DrugSearchListItem.Event.NewCustomDrugClicked>()
+        .map { NewCustomDrugClicked(it.name, screenKey.patientId) }
   }
 
   interface Injector {

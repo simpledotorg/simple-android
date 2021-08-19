@@ -1,7 +1,10 @@
 package org.simple.clinic.drugs.selection.custom
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.drugs.search.DrugFrequency
 
+@Parcelize
 data class CustomDrugEntryModel(
     val openAs: OpenAs,
     val drugName: String?,
@@ -9,7 +12,7 @@ data class CustomDrugEntryModel(
     val dosageHasFocus: Boolean?,
     val frequency: DrugFrequency?,
     val rxNormCode: String?
-) {
+) : Parcelable {
   companion object {
     fun default(
         openAs: OpenAs
@@ -36,5 +39,9 @@ data class CustomDrugEntryModel(
 
   fun drugNameLoaded(drugName: String): CustomDrugEntryModel {
     return copy(drugName = drugName)
+  }
+
+  fun rxNormCodeEdited(rxNormCode: String?): CustomDrugEntryModel {
+    return copy(rxNormCode = rxNormCode)
   }
 }

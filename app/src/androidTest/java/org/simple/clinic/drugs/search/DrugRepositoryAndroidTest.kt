@@ -136,4 +136,30 @@ class DrugRepositoryAndroidTest {
     assertThat(expectedSearchResultsForObviousProtocol).containsExactly(amlodipine10).inOrder()
     assertThat(expectedSearchResultsForNoProtocol).containsExactly(amlodipine10, amlodipine20).inOrder()
   }
+
+  @Test
+  fun `getting_drug_immediately_should_work_correctly`() {
+    // given
+    val drugSearchUUID = UUID.fromString("0864635d-fd63-4005-9cea-ba843ea804e6")
+    val searchedDrug = TestData.drug(
+        id = drugSearchUUID,
+        name = "Amlodipine",
+        dosage = "20 mg"
+    )
+    val drugs = listOf(
+        TestData.drug(
+            id = UUID.fromString("4e64d256-ea7e-4b90-8177-1eb1485630c3"),
+            name = "Amlodipine",
+            dosage = "10 mg"
+        ),
+        searchedDrug
+    )
+
+    // when
+    drugRepository.save(drugs).blockingAwait()
+
+    // then
+    val drugImmediate = drugRepository.drugImmediate(drugSearchUUID)
+    assertThat(drugImmediate).isEqualTo(searchedDrug)
+  }
 }

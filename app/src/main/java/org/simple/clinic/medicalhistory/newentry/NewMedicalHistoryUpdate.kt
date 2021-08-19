@@ -32,6 +32,9 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
       model.facilityDiabetesManagementEnabled && !model.hasAnsweredBothDiagnosisQuestions -> {
         dispatch(ShowDiagnosisRequiredError)
       }
+      !model.facilityDiabetesManagementEnabled && !model.hasAnsweredHypertensionDiagnosis -> {
+        dispatch(ShowHypertensionDiagnosisRequiredError)
+      }
       model.showOngoingHypertensionTreatment && !model.answeredIsOnHypertensionTreatment -> {
         dispatch(ShowOngoingHypertensionTreatmentError)
       }

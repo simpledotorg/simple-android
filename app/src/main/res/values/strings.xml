@@ -816,8 +816,8 @@
   <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">OK</string>
 
   <!-- Select ongoing hypertension treatment dialog -->
-  <string name="select_ongoing_hypertension_treatment_title">Did patient take BP medicines any time in the last month?</string>
-  <string name="select_ongoing_hypertension_treatment_message">Select yes or no.</string>
+  <string name="select_ongoing_hypertension_treatment_title">Input required</string>
+  <string name="select_ongoing_hypertension_treatment_message">Confirm if patient took BP medicines anytime in the last month.</string>
   <string name="select_ongoing_hypertension_treatment_positive_action">OK</string>
 
   <!-- Custom drugs search -->

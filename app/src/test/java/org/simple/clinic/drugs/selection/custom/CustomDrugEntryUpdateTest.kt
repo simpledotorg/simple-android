@@ -151,7 +151,7 @@ class CustomDrugEntryUpdateTest {
                     .dosageEdited(dosage = dosage)
                     .frequencyEdited(frequency = drugFrequency)
                     .rxNormCodeEdited(prescribedDrug.rxNormCode)),
-                hasEffects(SetSheetTitle(drugName, dosage, drugFrequency), SetDrugFrequency(drugFrequency)))
+                hasEffects(SetSheetTitle(drugName, dosage, drugFrequency), SetDrugFrequency(drugFrequency), SetDrugDosage(dosage)))
         )
   }
 

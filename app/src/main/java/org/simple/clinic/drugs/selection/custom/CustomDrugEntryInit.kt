@@ -20,7 +20,7 @@ class CustomDrugEntryInit : Init<CustomDrugEntryModel, CustomDrugEntryEffect> {
   ): First<CustomDrugEntryModel, CustomDrugEntryEffect> {
     val updatedModel = model.drugNameLoaded(drugName)
 
-    val effects = setOf(SetSheetTitle(drugName, null, null), SetDrugFrequency(null))
+    val effects = setOf(SetSheetTitle(drugName, null, null))
 
     return first(updatedModel, effects)
   }

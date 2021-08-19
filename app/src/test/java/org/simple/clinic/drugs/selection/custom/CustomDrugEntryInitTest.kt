@@ -35,7 +35,7 @@ class CustomDrugEntryInitTest {
         .then(
             assertThatFirst(
                 hasModel(model.drugNameLoaded(drugName)),
-                hasEffects(SetSheetTitle(name = drugName, dosage = null, frequency = null), SetDrugFrequency(null))
+                hasEffects(SetSheetTitle(name = drugName, dosage = null, frequency = null))
             )
         )
   }

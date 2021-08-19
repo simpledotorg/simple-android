@@ -59,12 +59,6 @@
             android:textColor="?attr/colorOnSurface" />
 
           <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-            android:id="@+id/hypertensionDiagnosisView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_4" />
-
-          <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
             android:id="@+id/diabetesDiagnosisView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -73,18 +67,12 @@
 
       </com.google.android.material.card.MaterialCardView>
 
-      <com.google.android.material.card.MaterialCardView
-        android:id="@+id/hypertensionTreatmentContainer"
+      <org.simple.clinic.medicalhistory.MedicalHistoryDiagnosisWithTreatment
+        android:id="@+id/hypertensionDiagnosis"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/spacing_8"
-        android:layout_marginTop="@dimen/spacing_8"
-        android:visibility="gone"
-        tools:visibility="visible">
-
-        <include layout="@layout/list_medicalhistory_hypertension_treatment" />
-
-      </com.google.android.material.card.MaterialCardView>
+        android:layout_marginTop="@dimen/spacing_8" />
 
       <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"

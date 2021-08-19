@@ -12,7 +12,7 @@ import io.reactivex.Observable
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
-import org.simple.clinic.activity.placeholder.PlaceholderScreen.PlaceHolderScreenKey
+import org.simple.clinic.activity.placeholder.PlaceholderScreen
 import org.simple.clinic.databinding.ActivitySetupBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Features
@@ -59,7 +59,7 @@ class SetupActivity : AppCompatActivity(), UiActions {
 
   private val router by unsafeLazy {
     Router(
-        initialScreenKey = PlaceHolderScreenKey.wrap(),
+        initialScreenKey = PlaceholderScreen.Key(),
         fragmentManager = supportFragmentManager,
         containerId = R.id.screen_host_view
     )

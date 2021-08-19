@@ -10,6 +10,10 @@
 - Migrate `PlaceholderScreen` to a fragment
 
 ### Changes
+- [In Progress: 19 Aug 2021] UI improvements for medical history screen
+  - Show hypertension diagnosis and treatment in single card
+  - Show separate cards for hypertension and diabetes diagnosis
+  - Show hypertension diagnosis even when facility doesn't have diabetes management enabled
 - [In Progress: 22 Jul 2021] Add option to download & share overdue list
 - [In Progress: 14 Jul 2021] Medication screen improvements
   - Search for commonly used drugs

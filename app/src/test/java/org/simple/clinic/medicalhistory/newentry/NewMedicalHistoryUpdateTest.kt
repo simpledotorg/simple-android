@@ -39,30 +39,13 @@ class NewMedicalHistoryUpdateTest {
   private val updateSpec = UpdateSpec(NewMedicalHistoryUpdate())
 
   @Test
-  fun `when the current facility is loaded with diabetes management enabled, update the ui`() {
+  fun `when the current facility is loaded, update the ui`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(CurrentFacilityLoaded(facilityWithDiabetesManagementEnabled))
         .then(
             assertThatNext(
                 hasModel(defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)),
-                hasNoEffects()
-            )
-        )
-  }
-
-  @Test
-  fun `when the current facility is loaded with diabetes management disabled, update the UI and set the hypertension history answer as YES`() {
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(CurrentFacilityLoaded(facilityWithDiabetesManagementDisabled))
-        .then(
-            assertThatNext(
-                hasModel(
-                    defaultModel
-                        .currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
-                        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
-                ),
                 hasNoEffects()
             )
         )

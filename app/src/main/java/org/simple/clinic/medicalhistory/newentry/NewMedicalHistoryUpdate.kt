@@ -4,9 +4,7 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.medicalhistory.Answer
-import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
@@ -48,17 +46,7 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
       event: CurrentFacilityLoaded,
       model: NewMedicalHistoryModel
   ): Next<NewMedicalHistoryModel, NewMedicalHistoryEffect> {
-    val diabetesManagementEnabled = event.facility.config.diabetesManagementEnabled
-
-    val updatedModel = if (diabetesManagementEnabled) {
-      model.currentFacilityLoaded(event.facility)
-    } else {
-      model
-          .currentFacilityLoaded(event.facility)
-          .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
-    }
-
-    return next(updatedModel)
+    return next(model.currentFacilityLoaded(event.facility))
   }
 
   private fun answerToggled(

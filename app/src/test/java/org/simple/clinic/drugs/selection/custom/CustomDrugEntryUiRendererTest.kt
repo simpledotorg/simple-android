@@ -11,8 +11,7 @@ class CustomDrugEntryUiRendererTest {
   private val ui = mock<CustomDrugEntryUi>()
   private val uiRenderer = CustomDrugEntryUiRenderer(ui, dosagePlaceholder = "mg")
   private val drugName = "Amlodipine"
-  private val patientUuid = UUID.fromString("77f1d870-5c60-49f7-a4e2-2f1d60e4218c")
-  private val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(patientUuid, drugName))
+  private val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(drugName))
 
   @Test
   fun `when drug dosage focus is changed and dosage is null, then set drug dosage text with the placeholder and move the cursor to the beginning`() {
@@ -51,7 +50,7 @@ class CustomDrugEntryUiRendererTest {
   fun `when the screen is loaded in update mode, then render the drug name and setup ui for updating drug entry`() {
     // given
     val prescribedDrugUuid = UUID.fromString("96633994-6e4d-4528-b796-f03ae016553a")
-    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.Update(patientUuid, prescribedDrugUuid))
+    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.Update(prescribedDrugUuid))
 
     // when
     uiRenderer.render(defaultModel)

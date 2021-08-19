@@ -9,6 +9,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.search.DrugFrequency
+import org.simple.clinic.drugs.search.DrugRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.util.nullIfBlank
@@ -18,6 +19,7 @@ import org.simple.clinic.uuid.UuidGenerator
 class CustomDrugEntryEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val prescriptionRepository: PrescriptionRepository,
+    private val drugRepository: DrugRepository,
     private val currentFacility: Lazy<Facility>,
     private val uuidGenerator: UuidGenerator,
     @Assisted private val uiActions: CustomDrugEntrySheetUiActions
@@ -38,14 +40,24 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
         .addConsumer(SetSheetTitle::class.java, ::setSheetTitle, schedulersProvider.ui())
         .addTransformer(SaveCustomDrugToPrescription::class.java, saveCustomDrugToPrescription())
         .addTransformer(UpdatePrescription::class.java, updatePrescription())
-        .addAction(CloseBottomSheet::class.java, uiActions::close, schedulersProvider.ui())
+        .addAction(CloseSheetAndGoToEditMedicineScreen::class.java, uiActions::closeSheetAndGoToEditMedicineScreen, schedulersProvider.ui())
         .addTransformer(FetchPrescription::class.java, fetchPrescription())
+        .addTransformer(FetchDrug::class.java, fetchDrug())
         .addTransformer(RemoveDrugFromPrescription::class.java, removeDrugFromPrescription())
         .build()
   }
 
+  private fun fetchDrug(): ObservableTransformer<FetchDrug, CustomDrugEntryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { drugRepository.drugImmediate(it.drugUuid) }
+          .map(::DrugFetched)
+    }
+  }
+
   private fun setSheetTitle(setSheetTitle: SetSheetTitle) {
-    val sheetTitle = constructSheetTitle(setSheetTitle.name, setSheetTitle.dosage, setSheetTitle.frequency)
+    val sheetTitle = constructSheetTitle(setSheetTitle.name, setSheetTitle.dosage.nullIfBlank(), setSheetTitle.frequency)
 
     uiActions.setSheetTitle(sheetTitle)
   }

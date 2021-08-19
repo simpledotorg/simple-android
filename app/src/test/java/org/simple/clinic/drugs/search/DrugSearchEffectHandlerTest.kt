@@ -91,4 +91,34 @@ class DrugSearchEffectHandlerTest {
 
     testCase.assertNoOutgoingEvents()
   }
+
+  @Test
+  fun `when open custom drug entry screen from drug list effect is received, then open custom drug entry screen from drug list`() {
+    // given
+    val drugId = UUID.fromString("05ca8019-0514-4c6b-aa8e-657701229cd5")
+    val patientId = UUID.fromString("3d4105bb-8447-42ab-b769-2da2dcd4ba22")
+
+    // when
+    testCase.dispatch(OpenCustomDrugEntrySheetFromDrugList(drugId, patientId))
+
+    // then
+    verify(uiActions).openCustomDrugEntrySheetFromDrugList(drugId, patientId)
+    verifyNoMoreInteractions(uiActions)
+    testCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when open custom drug entry screen from drug name effect is received, then open custom drug entry screen from drug name`() {
+    // given
+    val drugName = "Amlodipine"
+    val patientId = UUID.fromString("3d4105bb-8447-42ab-b769-2da2dcd4ba22")
+
+    // when
+    testCase.dispatch(OpenCustomDrugEntrySheetFromDrugName(drugName, patientId))
+
+    // then
+    verify(uiActions).openCustomDrugEntrySheetFromDrugName(drugName, patientId)
+    verifyNoMoreInteractions(uiActions)
+    testCase.assertNoOutgoingEvents()
+  }
 }

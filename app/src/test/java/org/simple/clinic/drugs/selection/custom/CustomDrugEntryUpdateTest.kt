@@ -177,4 +177,19 @@ class CustomDrugEntryUpdateTest {
             hasEffects(CloseBottomSheet)
         ))
   }
+
+  @Test
+  fun `when drug is fetched, then update the model with drug values and set sheet title, drug frequency and dosage`() {
+    val drugUuid = UUID.fromString("6bbc5bbe-863c-472a-b962-1fd3198e20d1")
+    val drug = TestData.drug(id = drugUuid)
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DrugFetched(drug))
+        .then(
+            assertThatNext(
+                hasModel(defaultModel.drugNameLoaded(drug.name).dosageEdited(drug.dosage).frequencyEdited(drug.frequency).rxNormCodeEdited(drug.rxNormCode)),
+                hasEffects(SetSheetTitle(drug.name, drug.dosage, drug.frequency), SetDrugFrequency(drug.frequency), SetDrugDosage(drug.dosage))
+            )
+        )
+  }
 }

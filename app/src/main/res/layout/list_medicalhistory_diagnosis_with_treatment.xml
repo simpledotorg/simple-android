@@ -25,7 +25,7 @@
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
-      tools:text="@string/medicalhistory_question_diagnosed_with_hypertension" />
+      tools:text="@string/medicalhistory_diagnosis_hypertension" />
 
     <com.google.android.material.chip.ChipGroup
       android:id="@+id/diagnosisChipGroup"

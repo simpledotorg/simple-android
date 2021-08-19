@@ -332,7 +332,7 @@
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_kidney">ਗੁਰਦਿਆਂ ਦੀ ਬਿਮਾਰੀ</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diagnosed_with_hypertension">ਹਾਈਪਰਟੈਂਸ਼ਨ</string>
+  <string name="medicalhistory_diagnosis_hypertension">ਹਾਈਪਰਟੈਂਸ਼ਨ</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_diabetes">ਸ਼ੂਗਰ</string>
   <string name="newmedicalhistory_next">ਅਗਲਾ</string>

@@ -391,9 +391,11 @@
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_kidney">Kidney disease</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diagnosed_with_hypertension">Hypertension</string>
+  <string name="medicalhistory_diagnosis_hypertension">Hypertension</string>
+  <string name="medicalhistory_diagnosis_hypertension_required">Hypertension diagnosis (Required)</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diabetes">Diabetes</string>
+  <string name="medicalhistory_diagnosis_diabetes">Diabetes</string>
+  <string name="medicalhistory_diagnosis_diabetes_required">Diabetes diagnosis (Required)</string>
   <string name="newmedicalhistory_next">Next</string>
   <string name="newmedicalhistory_yes">Yes</string>
   <string name="newmedicalhistory_no">No</string>
@@ -770,6 +772,7 @@
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">Diagnosis Required</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">Select a diagnosis for both hypertension and diabetes</string>
+  <string name="select_diagnosis_error_enter_diagnosis_hypertension">Select a diagnosis for hypertension</string>
   <string name="select_diagnosis_error_ok">OK</string>
   <string name="sheet_teleconsult_status_title">Tele-consult complete?</string>
   <string name="sheet_teleconsult_status_yes">Yes</string>
@@ -813,8 +816,8 @@
   <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">OK</string>
 
   <!-- Select ongoing hypertension treatment dialog -->
-  <string name="select_ongoing_hypertension_treatment_title">Did patient take BP medicines any time in the last month?</string>
-  <string name="select_ongoing_hypertension_treatment_message">Select yes or no.</string>
+  <string name="select_ongoing_hypertension_treatment_title">Input required</string>
+  <string name="select_ongoing_hypertension_treatment_message">Confirm if patient took BP medicines anytime in the last month.</string>
   <string name="select_ongoing_hypertension_treatment_positive_action">OK</string>
 
   <!-- Custom drugs search -->

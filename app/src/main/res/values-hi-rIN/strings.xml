@@ -332,9 +332,9 @@
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_kidney">गुर्दे की बीमारी</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diagnosed_with_hypertension">हाइपरटेंशन</string>
+  <string name="medicalhistory_diagnosis_hypertension">हाइपरटेंशन</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diabetes">मधुमेह</string>
+  <string name="medicalhistory_diagnosis_diabetes">मधुमेह</string>
   <string name="newmedicalhistory_next">आगे</string>
   <string name="newmedicalhistory_yes">हाँ</string>
   <string name="newmedicalhistory_no">नहीं</string>

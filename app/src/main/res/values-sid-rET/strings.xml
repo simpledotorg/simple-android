@@ -319,9 +319,9 @@
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_kidney">Afalete xiso</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diagnosed_with_hypertension">Jawa munideti xiwo</string>
+  <string name="medicalhistory_diagnosis_hypertension">Jawa munideti xiwo</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diabetes">Sukarete  xiso</string>
+  <string name="medicalhistory_diagnosis_diabetes">Sukarete  xiso</string>
   <string name="newmedicalhistory_next">Aniche</string>
   <string name="newmedicalhistory_yes">E’e</string>
   <string name="newmedicalhistory_no">De’ni</string>

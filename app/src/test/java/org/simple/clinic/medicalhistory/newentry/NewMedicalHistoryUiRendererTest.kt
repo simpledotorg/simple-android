@@ -41,6 +41,7 @@ class NewMedicalHistoryUiRendererTest {
   fun `the medical history answers must be rendered`() {
     // given
     val model = defaultModel
+        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
         .answerChanged(HAS_HAD_A_HEART_ATTACK, Yes)
         .answerChanged(HAS_HAD_A_STROKE, No)
         .answerChanged(HAS_HAD_A_KIDNEY_DISEASE, Unanswered)
@@ -49,11 +50,15 @@ class NewMedicalHistoryUiRendererTest {
     uiRenderer.render(model)
 
     // then
+    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
+    verify(ui).hideHypertensionTreatmentQuestion()
     verify(ui).renderAnswerForQuestion(HAS_HAD_A_HEART_ATTACK, Yes)
     verify(ui).renderAnswerForQuestion(HAS_HAD_A_STROKE, No)
     verify(ui).renderAnswerForQuestion(HAS_HAD_A_KIDNEY_DISEASE, Unanswered)
     verify(ui).hideNextButtonProgress()
-    verify(ui).hideHypertensionTreatmentQuestion()
+    verify(ui).hideDiabetesDiagnosisView()
+    verify(ui).showDiabetesHistorySection()
+    verify(ui).renderAnswerForQuestion(DIAGNOSED_WITH_DIABETES, Unanswered)
     verifyNoMoreInteractions(ui)
   }
 
@@ -70,7 +75,7 @@ class NewMedicalHistoryUiRendererTest {
 
     // then
     verifyImplicitRenders()
-    verify(ui).showDiagnosisView()
+    verify(ui).showDiabetesDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Yes)
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, No)
@@ -80,7 +85,7 @@ class NewMedicalHistoryUiRendererTest {
   }
 
   @Test
-  fun `if the facility does not support diabetes management, hide the diagnosis view and show the diabetes history question`() {
+  fun `if the facility does not support diabetes management, hide the diabetes diagnosis view and show the diabetes history question`() {
     // given
     val model = defaultModel
         .currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
@@ -91,10 +96,11 @@ class NewMedicalHistoryUiRendererTest {
 
     // then
     verifyImplicitRenders()
-    verify(ui).hideDiagnosisView()
+    verify(ui).hideDiabetesDiagnosisView()
     verify(ui).showDiabetesHistorySection()
     verify(ui).renderAnswerForQuestion(DIAGNOSED_WITH_DIABETES, Yes)
     verify(ui).hideNextButtonProgress()
+    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
     verify(ui).hideHypertensionTreatmentQuestion()
     verifyNoMoreInteractions(ui)
   }
@@ -110,8 +116,12 @@ class NewMedicalHistoryUiRendererTest {
 
     // then
     verifyImplicitRenders()
-    verify(ui).showNextButtonProgress()
+    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
     verify(ui).hideHypertensionTreatmentQuestion()
+    verify(ui).showNextButtonProgress()
+    verify(ui).hideDiabetesDiagnosisView()
+    verify(ui).showDiabetesHistorySection()
+    verify(ui).renderAnswerForQuestion(DIAGNOSED_WITH_DIABETES, Unanswered)
     verifyNoMoreInteractions(ui)
   }
 
@@ -127,7 +137,7 @@ class NewMedicalHistoryUiRendererTest {
 
     // then
     verifyImplicitRenders()
-    verify(ui).showDiagnosisView()
+    verify(ui).showDiabetesDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Yes)
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Unanswered)
@@ -149,7 +159,7 @@ class NewMedicalHistoryUiRendererTest {
 
     // then
     verifyImplicitRenders()
-    verify(ui).showDiagnosisView()
+    verify(ui).showDiabetesDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Yes)
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Unanswered)
@@ -169,7 +179,7 @@ class NewMedicalHistoryUiRendererTest {
 
     // then
     verifyImplicitRenders()
-    verify(ui).showDiagnosisView()
+    verify(ui).showDiabetesDiagnosisView()
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
     verify(ui).hideDiabetesHistorySection()
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Unanswered)

@@ -333,9 +333,9 @@
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_kidney">Dhukkuba onne</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diagnosed_with_hypertension">Baayyina dhiiga</string>
+  <string name="medicalhistory_diagnosis_hypertension">Baayyina dhiiga</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diabetes">Sukkaara</string>
+  <string name="medicalhistory_diagnosis_diabetes">Sukkaara</string>
   <string name="newmedicalhistory_next">Kan itti aanu</string>
   <string name="newmedicalhistory_yes">Eeyyee</string>
   <string name="newmedicalhistory_no">Lakki</string>

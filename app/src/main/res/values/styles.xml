@@ -98,6 +98,11 @@
     <item name="android:textColor">@color/color_on_surface_67</item>
   </style>
 
+  <style name="MaterialAlertDialog.Simple" parent="MaterialAlertDialog.MaterialComponents">
+    <item name="backgroundInsetStart">@dimen/spacing_40</item>
+    <item name="backgroundInsetEnd">@dimen/spacing_40</item>
+  </style>
+
   <!-- Radio Button -->
   <style name="Widget.Simple.CompoundButton.RadioButton" parent="Widget.MaterialComponents.CompoundButton.RadioButton">
     <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.RadioButton</item>

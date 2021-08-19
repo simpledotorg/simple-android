@@ -20,12 +20,13 @@ class NewMedicalHistoryUiRenderer(
       ui.renderAnswerForQuestion(HAS_HAD_A_HEART_ATTACK, hasHadHeartAttack)
       ui.renderAnswerForQuestion(HAS_HAD_A_KIDNEY_DISEASE, hasHadKidneyDisease)
       ui.renderAnswerForQuestion(HAS_HAD_A_STROKE, hasHadStroke)
+      ui.renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, diagnosedWithHypertension)
+      renderHypertensionTreatmentQuestion(model)
 
       if (model.hasLoadedCurrentFacility) {
         if (model.facilityDiabetesManagementEnabled) {
           ui.showDiagnosisView()
           ui.hideDiabetesHistorySection()
-          ui.renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, diagnosedWithHypertension)
           ui.renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, hasDiabetes)
         } else {
           ui.hideDiagnosisView()
@@ -33,8 +34,6 @@ class NewMedicalHistoryUiRenderer(
           ui.renderAnswerForQuestion(DIAGNOSED_WITH_DIABETES, hasDiabetes)
         }
       }
-
-      renderHypertensionTreatmentQuestion(model)
     }
 
     renderNextButton(model)

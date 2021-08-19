@@ -32,7 +32,7 @@ rx-binding = "3.1.0"
 spotless = "5.6.1"
 
 [libraries]
-android-gradle-plugin = "com.android.tools.build:gradle:7.0.0"
+android-gradle-plugin = "com.android.tools.build:gradle:7.0.1"
 android-desugaring = "com.android.tools:desugar_jdk_libs:1.0.9"
 
 androidx-annotation-annotation = "androidx.annotation:annotation:1.2.0"

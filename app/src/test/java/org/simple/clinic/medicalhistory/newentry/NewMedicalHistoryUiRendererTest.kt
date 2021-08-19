@@ -56,6 +56,9 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).renderAnswerForQuestion(HAS_HAD_A_STROKE, No)
     verify(ui).renderAnswerForQuestion(HAS_HAD_A_KIDNEY_DISEASE, Unanswered)
     verify(ui).hideNextButtonProgress()
+    verify(ui).hideDiabetesDiagnosisView()
+    verify(ui).showDiabetesHistorySection()
+    verify(ui).renderAnswerForQuestion(DIAGNOSED_WITH_DIABETES, Unanswered)
     verifyNoMoreInteractions(ui)
   }
 
@@ -116,6 +119,9 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
     verify(ui).hideHypertensionTreatmentQuestion()
     verify(ui).showNextButtonProgress()
+    verify(ui).hideDiabetesDiagnosisView()
+    verify(ui).showDiabetesHistorySection()
+    verify(ui).renderAnswerForQuestion(DIAGNOSED_WITH_DIABETES, Unanswered)
     verifyNoMoreInteractions(ui)
   }
 

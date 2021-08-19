@@ -23,16 +23,14 @@ class NewMedicalHistoryUiRenderer(
       ui.renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, diagnosedWithHypertension)
       renderHypertensionTreatmentQuestion(model)
 
-      if (model.hasLoadedCurrentFacility) {
-        if (model.facilityDiabetesManagementEnabled) {
-          ui.showDiabetesDiagnosisView()
-          ui.hideDiabetesHistorySection()
-          ui.renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, hasDiabetes)
-        } else {
-          ui.hideDiabetesDiagnosisView()
-          ui.showDiabetesHistorySection()
-          ui.renderAnswerForQuestion(DIAGNOSED_WITH_DIABETES, hasDiabetes)
-        }
+      if (model.hasLoadedCurrentFacility && model.facilityDiabetesManagementEnabled) {
+        ui.showDiabetesDiagnosisView()
+        ui.hideDiabetesHistorySection()
+        ui.renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, hasDiabetes)
+      } else {
+        ui.hideDiabetesDiagnosisView()
+        ui.showDiabetesHistorySection()
+        ui.renderAnswerForQuestion(DIAGNOSED_WITH_DIABETES, hasDiabetes)
       }
     }
 

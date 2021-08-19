@@ -334,7 +334,7 @@
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_hypertension">ልዑል ፀቕጢ ደም</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diabetes">ሕማም ሽኮርያ</string>
+  <string name="medicalhistory_diagnosis_diabetes">ሕማም ሽኮርያ</string>
   <string name="newmedicalhistory_next">ዝቕፅል</string>
   <string name="newmedicalhistory_yes">እወ</string>
   <string name="newmedicalhistory_no">ኣይፋሉን</string>

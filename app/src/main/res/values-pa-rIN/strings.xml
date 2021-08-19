@@ -334,7 +334,7 @@
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_hypertension">ਹਾਈਪਰਟੈਂਸ਼ਨ</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diabetes">ਸ਼ੂਗਰ</string>
+  <string name="medicalhistory_diagnosis_diabetes">ਸ਼ੂਗਰ</string>
   <string name="newmedicalhistory_next">ਅਗਲਾ</string>
   <string name="newmedicalhistory_yes">ਹਾਂ</string>
   <string name="newmedicalhistory_no">ਨਹੀਂ</string>

@@ -334,7 +334,7 @@
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_hypertension">అధిక రక్తపోటు</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diabetes">మధుమేహం</string>
+  <string name="medicalhistory_diagnosis_diabetes">మధుమేహం</string>
   <string name="newmedicalhistory_next">తదుపరి</string>
   <string name="newmedicalhistory_yes">అవును</string>
   <string name="newmedicalhistory_no">కాదు</string>

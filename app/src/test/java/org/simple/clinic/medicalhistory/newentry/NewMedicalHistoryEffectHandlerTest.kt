@@ -91,4 +91,16 @@ class NewMedicalHistoryEffectHandlerTest {
 
     testCase.assertNoOutgoingEvents()
   }
+
+  @Test
+  fun `when show hypertension diagnosis required effect is received, then show diagnosis required error dialog`() {
+    // when
+    testCase.dispatch(ShowHypertensionDiagnosisRequiredError)
+
+    // then
+    verify(uiActions).showHypertensionDiagnosisRequiredErrorDialog()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
 }

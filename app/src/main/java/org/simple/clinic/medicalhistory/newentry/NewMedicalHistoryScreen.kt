@@ -8,8 +8,9 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.transition.ChangeBounds
 import androidx.transition.TransitionManager
-import com.google.android.material.transition.MaterialFade
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
@@ -20,12 +21,9 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
-import org.simple.clinic.databinding.ListMedicalhistoryHypertensionTreatmentBinding
 import org.simple.clinic.databinding.ScreenNewMedicalHistoryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.medicalhistory.Answer
-import org.simple.clinic.medicalhistory.Answer.No
-import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
@@ -41,7 +39,6 @@ import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import java.time.Instant
@@ -71,8 +68,6 @@ class NewMedicalHistoryScreen : BaseScreen<
   @Inject
   lateinit var country: Country
 
-  private var hypertensionTreatmentBinding: ListMedicalhistoryHypertensionTreatmentBinding? = null
-
   private val toolbar
     get() = binding.toolbar
 
@@ -91,29 +86,14 @@ class NewMedicalHistoryScreen : BaseScreen<
   private val diabetesQuestionView
     get() = binding.diabetesQuestionView
 
-  private val diagnosisViewContainer
-    get() = binding.diagnosisViewContainer
-
-  private val diabetesDiagnosisView
-    get() = binding.diabetesDiagnosisView
-
-  private val hypertensionDiagnosisView
-    get() = binding.hypertensionDiagnosisView
-
-  private val hypertensionTreatmentContainer
-    get() = binding.hypertensionTreatmentContainer
-
   private val scrollView
     get() = binding.scrollView
 
-  private val hypertensionTreatmentChipGroup
-    get() = hypertensionTreatmentBinding!!.chipGroup
+  private val hypertensionDiagnosis
+    get() = binding.hypertensionDiagnosis
 
-  private val hypertensionTreatmentYesChip
-    get() = hypertensionTreatmentBinding!!.yesChip
-
-  private val hypertensionTreatmentNoChip
-    get() = hypertensionTreatmentBinding!!.noChip
+  private val diabetesDiagnosis
+    get() = binding.diabetesDiagnosis
 
   private val questionViewEvents: Subject<NewMedicalHistoryEvent> = PublishSubject.create()
 
@@ -144,13 +124,6 @@ class NewMedicalHistoryScreen : BaseScreen<
 
   override fun uiRenderer() = NewMedicalHistoryUiRenderer(this)
 
-  private val hypertensionContainerFade by unsafeLazy {
-    MaterialFade().apply {
-      duration = 150L
-      addTarget(hypertensionTreatmentContainer)
-    }
-  }
-
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)
@@ -158,8 +131,6 @@ class NewMedicalHistoryScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    hypertensionTreatmentBinding = ListMedicalhistoryHypertensionTreatmentBinding.bind(binding.hypertensionTreatmentContainer)
-
     toolbar.setNavigationOnClickListener {
       router.pop()
     }
@@ -191,13 +162,12 @@ class NewMedicalHistoryScreen : BaseScreen<
     }
   }
 
-  override fun showDiagnosisView() {
-    diagnosisViewContainer.visibility = VISIBLE
-    diabetesDiagnosisView.hideDivider()
+  override fun showDiabetesDiagnosisView() {
+    diabetesDiagnosis.visibility = VISIBLE
   }
 
-  override fun hideDiagnosisView() {
-    diagnosisViewContainer.visibility = GONE
+  override fun hideDiabetesDiagnosisView() {
+    diabetesDiagnosis.visibility = GONE
   }
 
   override fun hideDiabetesHistorySection() {
@@ -213,12 +183,18 @@ class NewMedicalHistoryScreen : BaseScreen<
 
   override fun renderDiagnosisAnswer(question: MedicalHistoryQuestion, answer: Answer) {
     val view = when (question) {
-      DIAGNOSED_WITH_HYPERTENSION -> hypertensionDiagnosisView
-      DIAGNOSED_WITH_DIABETES -> diabetesDiagnosisView
+      DIAGNOSED_WITH_HYPERTENSION -> hypertensionDiagnosis
+      DIAGNOSED_WITH_DIABETES -> diabetesDiagnosis
       else -> null
     }
 
-    view?.render(question, answer) { questionForView, newAnswer ->
+    val label = when (question) {
+      DIAGNOSED_WITH_HYPERTENSION -> R.string.medicalhistory_diagnosis_hypertension_required
+      DIAGNOSED_WITH_DIABETES -> R.string.medicalhistory_diagnosis_diabetes_required
+      else -> question.questionRes
+    }
+
+    view?.renderDiagnosis(label, question, answer) { questionForView, newAnswer ->
       questionViewEvents.onNext(NewMedicalHistoryAnswerToggled(questionForView, newAnswer))
     }
   }
@@ -232,29 +208,17 @@ class NewMedicalHistoryScreen : BaseScreen<
   }
 
   override fun showHypertensionTreatmentQuestion(answer: Answer) {
-    hypertensionTreatmentChipGroup.setOnCheckedChangeListener(null)
-
-    TransitionManager.beginDelayedTransition(scrollView, hypertensionContainerFade)
-
-    hypertensionTreatmentContainer.visibility = View.VISIBLE
-    hypertensionTreatmentYesChip.isChecked = answer == Yes
-    hypertensionTreatmentNoChip.isChecked = answer == No
-
-    hypertensionTreatmentChipGroup.setOnCheckedChangeListener { _, checkedId ->
-      val checkedAnswer = when (checkedId) {
-        R.id.yesChip -> Yes
-        R.id.noChip -> No
-        else -> Answer.Unanswered
-      }
-      questionViewEvents.onNext(NewMedicalHistoryAnswerToggled(IS_ON_HYPERTENSION_TREATMENT, checkedAnswer))
+    hypertensionDiagnosis.renderTreatmentQuestion(IS_ON_HYPERTENSION_TREATMENT, answer) { questionForView, newAnswer ->
+      questionViewEvents.onNext(NewMedicalHistoryAnswerToggled(questionForView, newAnswer))
     }
+    TransitionManager.beginDelayedTransition(scrollView, ChangeBounds())
+
+    hypertensionDiagnosis.showTreatmentQuestion()
   }
 
   override fun hideHypertensionTreatmentQuestion() {
-    TransitionManager.beginDelayedTransition(scrollView, hypertensionContainerFade)
-
-    hypertensionTreatmentContainer.visibility = View.GONE
-    hypertensionTreatmentChipGroup.clearCheck()
+    hypertensionDiagnosis.hideTreatmentQuestion()
+    hypertensionDiagnosis.clearTreatmentChipGroup()
   }
 
   override fun showOngoingHypertensionTreatmentErrorDialog() {
@@ -263,6 +227,14 @@ class NewMedicalHistoryScreen : BaseScreen<
 
   override fun showDiagnosisRequiredErrorDialog() {
     SelectDiagnosisErrorDialog.show(activity.supportFragmentManager)
+  }
+
+  override fun showHypertensionDiagnosisRequiredErrorDialog() {
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(getString(R.string.select_diagnosis_error_diagnosis_required))
+        .setMessage(getString(R.string.select_diagnosis_error_enter_diagnosis_hypertension))
+        .setPositiveButton(getString(R.string.select_diagnosis_error_ok), null)
+        .show()
   }
 
   interface Injector {

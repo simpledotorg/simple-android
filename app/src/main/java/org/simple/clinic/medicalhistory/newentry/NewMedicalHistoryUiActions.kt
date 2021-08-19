@@ -6,4 +6,5 @@ interface NewMedicalHistoryUiActions {
   fun openPatientSummaryScreen(patientUuid: UUID)
   fun showOngoingHypertensionTreatmentErrorDialog()
   fun showDiagnosisRequiredErrorDialog()
+  fun showHypertensionDiagnosisRequiredErrorDialog()
 }

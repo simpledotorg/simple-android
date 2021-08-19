@@ -332,9 +332,9 @@
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_kidney">சிறுநீரக நோய்</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diagnosed_with_hypertension">உயர் இரத்த அழுத்தம்</string>
+  <string name="medicalhistory_diagnosis_hypertension">உயர் இரத்த அழுத்தம்</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_question_diabetes">நீரிழிவு</string>
+  <string name="medicalhistory_diagnosis_diabetes">நீரிழிவு</string>
   <string name="newmedicalhistory_next">அடுத்து</string>
   <string name="newmedicalhistory_yes">ஆம்</string>
   <string name="newmedicalhistory_no">இல்லை</string>

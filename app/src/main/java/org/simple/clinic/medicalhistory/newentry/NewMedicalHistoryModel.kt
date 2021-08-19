@@ -35,6 +35,9 @@ data class NewMedicalHistoryModel(
   val hasAnsweredBothDiagnosisQuestions: Boolean
     get() = !(ongoingMedicalHistoryEntry.diagnosedWithHypertension == Unanswered || ongoingMedicalHistoryEntry.hasDiabetes == Unanswered)
 
+  val hasAnsweredHypertensionDiagnosis: Boolean
+    get() = ongoingMedicalHistoryEntry.diagnosedWithHypertension != Unanswered
+
   val registeringPatient: Boolean
     get() = nextButtonState == ButtonState.SAVING
 

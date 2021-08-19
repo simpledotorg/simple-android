@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.transition.ChangeBounds
 import androidx.transition.TransitionManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
@@ -17,6 +18,7 @@ import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.databinding.ScreenNewMedicalHistoryBinding
@@ -219,6 +221,14 @@ class NewMedicalHistoryScreen : BaseScreen<
 
   override fun showDiagnosisRequiredErrorDialog() {
     SelectDiagnosisErrorDialog.show(activity.supportFragmentManager)
+  }
+
+  override fun showHypertensionDiagnosisRequiredErrorDialog() {
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(getString(R.string.select_diagnosis_error_diagnosis_required))
+        .setMessage(getString(R.string.select_diagnosis_error_enter_diagnosis_hypertension))
+        .setPositiveButton(getString(R.string.select_diagnosis_error_ok), null)
+        .show()
   }
 
   interface Injector {

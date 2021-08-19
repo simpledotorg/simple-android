@@ -18,3 +18,5 @@ data class TriggerSync(val registeredPatientUuid: UUID) : NewMedicalHistoryEffec
 object ShowOngoingHypertensionTreatmentError : NewMedicalHistoryEffect()
 
 object ShowDiagnosisRequiredError : NewMedicalHistoryEffect()
+
+object ShowHypertensionDiagnosisRequiredError : NewMedicalHistoryEffect()

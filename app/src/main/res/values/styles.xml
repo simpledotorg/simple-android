@@ -95,6 +95,7 @@
 
   <style name="MaterialAlertDialog.Simple.Body.Text" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
     <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
+    <item name="android:textColor">@color/color_on_surface_67</item>
   </style>
 
   <!-- Radio Button -->

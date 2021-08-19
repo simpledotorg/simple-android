@@ -20,6 +20,7 @@ import org.simple.clinic.databinding.SheetCustomDrugEntryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.search.DrugFrequency.Unknown
+import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -135,8 +136,8 @@ class CustomDrugEntrySheet : BaseBottomSheet<
     titleTextView.text = drugName
   }
 
-  override fun close() {
-    router.pop()
+  override fun closeSheetAndGoToEditMedicineScreen() {
+    router.popUntil(PrescribedDrugsScreenKey(screenKey.patientUuid))
   }
 
   override fun setDrugDosageText(dosage: String) {

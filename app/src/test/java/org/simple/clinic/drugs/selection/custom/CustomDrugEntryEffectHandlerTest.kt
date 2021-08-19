@@ -188,10 +188,10 @@ class CustomDrugEntryEffectHandlerTest {
   @Test
   fun `when close custom drug entry sheet effect is received, then close the sheet`() {
     // when
-    testCase.dispatch(CloseBottomSheet)
+    testCase.dispatch(CloseSheetAndGoToEditMedicineScreen)
 
     // then
-    verify(uiActions).close()
+    verify(uiActions).closeSheetAndGoToEditMedicineScreen()
     verifyNoMoreInteractions(uiActions)
     testCase.assertNoOutgoingEvents()
   }

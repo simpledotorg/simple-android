@@ -123,13 +123,13 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
-  fun `when the new drug is added to the list, then close the bottom sheet`() {
+  fun `when the new drug is added to the list, then close the bottom sheet and go to edit medicine screen`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(CustomDrugSaved)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(CloseBottomSheet)
+            hasEffects(CloseSheetAndGoToEditMedicineScreen)
         ))
   }
 
@@ -170,13 +170,13 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
-  fun `when the drug is removed from the custom drug list, then close the bottom sheet`() {
+  fun `when the drug is removed from the custom drug list, then close the bottom sheet and go to edit medicine screen`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(ExistingDrugRemoved)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(CloseBottomSheet)
+            hasEffects(CloseSheetAndGoToEditMedicineScreen)
         ))
   }
 

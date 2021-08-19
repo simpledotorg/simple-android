@@ -164,8 +164,7 @@ class NewMedicalHistoryScreen : BaseScreen<
     diabetesDiagnosis.visibility = VISIBLE
   }
 
-  override fun hideDiagnosisView() {
-    // TODO: Rename this to hide diabetes diagnosis view
+  override fun hideDiabetesDiagnosisView() {
     diabetesDiagnosis.visibility = GONE
   }
 

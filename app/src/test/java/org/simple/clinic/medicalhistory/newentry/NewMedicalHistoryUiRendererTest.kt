@@ -93,7 +93,7 @@ class NewMedicalHistoryUiRendererTest {
 
     // then
     verifyImplicitRenders()
-    verify(ui).hideDiagnosisView()
+    verify(ui).hideDiabetesDiagnosisView()
     verify(ui).showDiabetesHistorySection()
     verify(ui).renderAnswerForQuestion(DIAGNOSED_WITH_DIABETES, Yes)
     verify(ui).hideNextButtonProgress()

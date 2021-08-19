@@ -29,7 +29,7 @@ class NewMedicalHistoryUiRenderer(
           ui.hideDiabetesHistorySection()
           ui.renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, hasDiabetes)
         } else {
-          ui.hideDiagnosisView()
+          ui.hideDiabetesDiagnosisView()
           ui.showDiabetesHistorySection()
           ui.renderAnswerForQuestion(DIAGNOSED_WITH_DIABETES, hasDiabetes)
         }

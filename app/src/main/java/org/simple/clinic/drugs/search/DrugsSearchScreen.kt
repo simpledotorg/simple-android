@@ -20,6 +20,8 @@ import org.simple.clinic.databinding.ListItemDrugSearchCornerCapBinding
 import org.simple.clinic.databinding.ListItemDrugSearchDividerBinding
 import org.simple.clinic.databinding.ScreenDrugsSearchBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.drugs.selection.custom.CustomDrugEntrySheet
+import org.simple.clinic.drugs.selection.custom.OpenAs
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -121,6 +123,10 @@ class DrugsSearchScreen : BaseScreen<
     val searchQuery = searchQueryEditText.text?.toString().orEmpty()
     drugSearchResultsList.scrollToPosition(0)
     adapter.submitData(lifecycle, DrugSearchListItem.from(searchResults, searchQuery))
+  }
+
+  override fun openCustomDrugEntrySheetFromDrugList(drugUuid: UUID, patientUuid: UUID) {
+    router.push(CustomDrugEntrySheet.Key(OpenAs.New.FromDrugList(drugUuid), patientUuid))
   }
 
   private fun drugSearchLoadStateListener(combinedLoadStates: CombinedLoadStates) {

@@ -31,6 +31,7 @@ class DrugSearchEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<DrugSearchEffect, DrugSearchEvent>()
         .addTransformer(SearchDrugs::class.java, searchDrugs())
         .addConsumer(SetDrugsSearchResults::class.java, ::setDrugsSearchResults, schedulersProvider.ui())
+        .addConsumer(OpenCustomDrugEntrySheetFromDrugList::class.java, { uiActions.openCustomDrugEntrySheetFromDrugList(it.drugUuid, it.patientUuid) }, schedulersProvider.ui())
         .build()
   }
 

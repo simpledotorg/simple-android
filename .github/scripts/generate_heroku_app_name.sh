@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Extract the PR number from the GitHub ref ("refs/pull/<pr number>/merge")
+echo "Arg: ${1}"
 gitRef=$(cut -d"/" -f3 <<< ${1})
 echo "GiHub ref: ${gitRef}"
 

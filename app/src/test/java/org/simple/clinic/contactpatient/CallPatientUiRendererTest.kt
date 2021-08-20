@@ -316,7 +316,6 @@ class CallPatientUiRendererTest {
     verifyNoMoreInteractions(ui)
   }
 
-
   @Test
   fun `if the overdue list changes feature is disabled, then switch to old call patient view`() {
     // when
@@ -369,6 +368,7 @@ class CallPatientUiRendererTest {
         lastVisited = patientProfile.patientLastSeen))
     verify(ui).switchToCallPatientView()
     verify(ui).setResultLabelText()
+    verify(ui).showPatientWithNoPhoneNumberResults()
     verifyNoMoreInteractions(ui)
   }
 
@@ -445,6 +445,7 @@ class CallPatientUiRendererTest {
     verify(ui).showPatientWithNoPhoneNumberUi()
     verify(ui).hidePatientWithPhoneNumberUi()
     verify(ui).setResultLabelText()
+    verify(ui).showPatientWithNoPhoneNumberResults()
     verifyNoMoreInteractions(ui)
   }
 
@@ -479,6 +480,7 @@ class CallPatientUiRendererTest {
     verify(ui).showPatientWithNoPhoneNumberUi()
     verify(ui).hidePatientWithPhoneNumberUi()
     verify(ui).setResultLabelText()
+    verify(ui).showPatientWithNoPhoneNumberResults()
     verifyNoMoreInteractions(ui)
   }
 

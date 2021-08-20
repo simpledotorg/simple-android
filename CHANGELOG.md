@@ -9,6 +9,7 @@
 - Bump AGP to v7.0.1
 - Bump Timber to v5.0.1
 - Migrate `PlaceholderScreen` to a fragment
+- Update `MaterialAlertDialog` theme and style
 
 ### Changes
 - [In Progress: 19 Aug 2021] UI improvements for medical history screen

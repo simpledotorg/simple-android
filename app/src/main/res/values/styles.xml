@@ -90,10 +90,17 @@
   <!-- Dialog -->
   <style name="MaterialAlertDialog.Simple.Title.Text" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
     <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
+    <item name="android:textColor">?attr/colorOnSurface</item>
   </style>
 
   <style name="MaterialAlertDialog.Simple.Body.Text" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
     <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
+    <item name="android:textColor">@color/color_on_surface_67</item>
+  </style>
+
+  <style name="MaterialAlertDialog.Simple" parent="MaterialAlertDialog.MaterialComponents">
+    <item name="backgroundInsetStart">@dimen/spacing_40</item>
+    <item name="backgroundInsetEnd">@dimen/spacing_40</item>
   </style>
 
   <!-- Radio Button -->

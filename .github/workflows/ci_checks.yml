@@ -60,7 +60,7 @@ jobs:
   # https://github.com/ReactiveCircus/android-emulator-runner
   qa_android_tests:
     runs-on: [ macos-latest ]
-    timeout-minutes: 30
+    timeout-minutes: 60
     env:
       AVD_API_LEVEL: 27
       HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}

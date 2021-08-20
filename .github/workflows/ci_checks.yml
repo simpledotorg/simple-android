@@ -158,7 +158,7 @@ jobs:
           script: android-app/gradlew -p android-app --build-cache --no-daemon -PmanifestEndpoint=https://${{ steps.generate-server-app-name.outputs.heroku_app_name }}.herokuapp.com/api/ connectedQaDebugAndroidTest
 
       - name: Teardown Heroku instance
-        if: always() && steps.start-simple-server.outcome != 'success'
+        if: always() && (steps.start-simple-server.outcome != 'success' || contains(github.ref, '/release/'))
         run: |
           heroku apps:destroy \
           --app=${{ steps.generate-server-app-name.outputs.heroku_app_name }} \

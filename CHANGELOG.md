@@ -7,6 +7,7 @@
   - Bump `camera-core`, `camera-camera2` and `camera-lifecycle` to v1.0.1
   - Bump `camera-view` to v1.0.0-alpha27
 - Bump AGP to v7.0.1
+- Bump Timber to v5.0.1
 - Migrate `PlaceholderScreen` to a fragment
 
 ### Changes

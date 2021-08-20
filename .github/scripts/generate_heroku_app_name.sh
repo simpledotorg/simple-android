@@ -4,9 +4,9 @@
 echo "GitHub reference: ${1}"
 
 if [[ ${1} == *"/release/"* ]]; then
-  herokuAppName="simple-android-review-app-$(date +"%H%M")"
+  herokuAppName="simple-mob-rel-$(date +"%H%M")"
 else
-  herokuAppName="simple-android-review-app-$(cut -d"/" -f3 <<< ${1})"
+  herokuAppName="simple-mob-pr-$(cut -d"/" -f3 <<< ${1})"
 fi
 
 echo "Heroku app name: ${herokuAppName}"

@@ -19,10 +19,10 @@ def check_not_empty(string):
   return len(string) > 0
 
 def check_review_app_prefix(review_app):
-  return review_app.startswith("simple-android-review-app")
+  return review_app.startswith("simple-mob-pr-")
 
 def generate_review_app_name(pr_number):
-  return "simple-android-review-app-" + pr_number
+  return "simple-mob-pr-" + pr_number
 
 open_prs = set(filter(check_not_empty, map(extract_pr_number, exec_shell_command("gh pr list").split("\n"))))
 

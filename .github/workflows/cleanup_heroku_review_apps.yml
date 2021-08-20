@@ -1,0 +1,21 @@
+name: Cleanup dangling Heroku review instances
+
+on:
+  push:
+    branches:
+      - master
+  # Also run a nightly (at 12 AM IST) workflow to clean up dangling instances for redundancy
+  schedule :
+    - cron: '30 6 * * 1-5'
+
+jobs:
+  teardown_heroku_instance:
+    runs-on: [ ubuntu-latest ]
+    env:
+      HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
+    steps:
+      - name: Checkout Android app source
+        uses: actions/checkout@v2
+
+      - name: Teardown dangling Heroku instances
+        run: .github/scripts/teardown_heroku_instances.py

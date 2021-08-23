@@ -12,6 +12,7 @@ class PatientsTabViewEffectHandler(
       is OpenPatientSearchScreen -> uiActions.openPatientSearchScreen(viewEffect.additionalIdentifier)
       ShowUserWasApproved -> uiActions.showUserStatusAsApproved()
       HideUserAccountStatus -> uiActions.hideUserAccountStatus()
+      OpenScanBpPassportScreen -> uiActions.openScanSimpleIdCardScreen()
     }
   }
 }

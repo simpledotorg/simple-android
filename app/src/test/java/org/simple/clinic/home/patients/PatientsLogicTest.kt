@@ -36,7 +36,7 @@ import org.simple.clinic.user.refreshuser.RefreshCurrentUser
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
@@ -82,7 +82,7 @@ class PatientsLogicTest {
     val uiRenderer = PatientsTabUiRenderer(ui)
     val viewEffectHandler = PatientsTabViewEffectHandler(uiActions)
     val patientsEffectHandler = PatientsEffectHandler(
-        schedulers = TrampolineSchedulersProvider(),
+        schedulers = TestSchedulersProvider.trampoline(),
         refreshCurrentUser = refreshCurrentUser,
         userSession = userSession,
         utcClock = utcClock,

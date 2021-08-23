@@ -124,6 +124,8 @@ class EnterOtpScreen : BaseScreen<
     super.onAttachedToWindow()
     delegate.start()
   }
+  private val rootLayout
+  get() = binding.rootLayout
 
   override fun onDetachedFromWindow() {
     delegate.stop()
@@ -201,7 +203,7 @@ class EnterOtpScreen : BaseScreen<
   }
 
   override fun goBack() {
-    hideKeyboard()
+    rootLayout.hideKeyboard()
     router.pop()
   }
 
@@ -234,13 +236,13 @@ class EnterOtpScreen : BaseScreen<
   }
 
   override fun showProgress() {
-    TransitionManager.beginDelayedTransition(this)
+    TransitionManager.beginDelayedTransition(rootLayout)
     validateOtpProgressBar.visibility = View.VISIBLE
     otpEntryContainer.visibility = View.INVISIBLE
   }
 
   override fun hideProgress() {
-    TransitionManager.beginDelayedTransition(this)
+    TransitionManager.beginDelayedTransition(rootLayout)
     validateOtpProgressBar.visibility = View.INVISIBLE
     otpEntryContainer.visibility = View.VISIBLE
   }

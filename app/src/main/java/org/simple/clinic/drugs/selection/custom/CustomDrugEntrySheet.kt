@@ -1,8 +1,10 @@
 package org.simple.clinic.drugs.selection.custom
 
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
@@ -13,6 +15,7 @@ import com.jakewharton.rxbinding3.widget.editorActions
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
@@ -26,7 +29,9 @@ import org.simple.clinic.drugs.selection.custom.drugfrequency.SelectDrugFrequenc
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
+import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.textChanges
@@ -53,6 +58,8 @@ class CustomDrugEntrySheet : BaseBottomSheet<
 
   @Inject
   lateinit var effectHandlerFactory: CustomDrugEntryEffectHandler.Factory
+
+  private val hotEvents: PublishSubject<CustomDrugEntryEvent> = PublishSubject.create()
 
   private val openAs by unsafeLazy { screenKey.openAs }
 
@@ -92,7 +99,8 @@ class CustomDrugEntrySheet : BaseBottomSheet<
           drugDosageFocusChanges(),
           saveClicks(),
           removeClicks(),
-          editFrequencyClicks()
+          editFrequencyClicks(),
+          hotEvents
       ).compose(ReportAnalyticsEvents())
       .cast<CustomDrugEntryEvent>()
 
@@ -123,6 +131,15 @@ class CustomDrugEntrySheet : BaseBottomSheet<
       removeButton
           .clicks()
           .map { RemoveDrugButtonClicked }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+
+    setFragmentResultListener(SelectedDrugFrequency) { _, result ->
+      if (result is Succeeded)
+        hotEvents.onNext(FrequencyEdited(result.result as DrugFrequency))
+    }
+  }
 
   override fun showEditFrequencyDialog(frequency: DrugFrequency?) {
     router.pushExpectingResult(SelectedDrugFrequency, SelectDrugFrequencyDialog.Key(frequency))

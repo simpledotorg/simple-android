@@ -7,6 +7,8 @@ class PatientsTabViewEffectHandler(
 ) : ViewEffectsHandler<PatientsTabViewEffect> {
 
   override fun handle(viewEffect: PatientsTabViewEffect) {
-    // No-op
+    when (viewEffect) {
+      OpenEnterOtpScreen -> uiActions.openEnterCodeManuallyScreen()
+    }
   }
 }

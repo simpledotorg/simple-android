@@ -44,6 +44,7 @@
 - Change `ScanSimpleIdScreen` to use Mobius view effects
 - Handle exception when syncing reports in `ConfirmFacilityChangeEffectHandler`
 - Show appointment results in contact patient sheet for patient with no phone number
+- Change `PatientsTabScreen` to use Mobius view effects
 
 ### Changes
 - Ask users for their name and job designation on sign up

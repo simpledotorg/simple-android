@@ -2,6 +2,7 @@ package org.simple.clinic.home.patients
 
 import android.annotation.SuppressLint
 import com.f2prateek.rx.preferences2.Preference
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -11,7 +12,6 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
-import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.simplevideo.SimpleVideoConfig
 import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.NumberOfPatientsRegistered
 import org.simple.clinic.user.UserSession
@@ -32,36 +32,31 @@ class PatientsEffectHandler @AssistedInject constructor(
     private val utcClock: UtcClock,
     private val userClock: UserClock,
     private val checkAppUpdate: CheckAppUpdateAvailability,
-    private val patientRepository: PatientRepository,
     @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
     @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>,
     @SimpleVideoConfig(NumberOfPatientsRegistered) private val numberOfPatientsRegisteredPref: Preference<Int>,
     @Named("app_update_last_shown_at") private val appUpdateDialogShownAtPref: Preference<Instant>,
-    @Assisted private val uiActions: PatientsTabUiActions
+    @Assisted private val viewEffectsConsumer: Consumer<PatientsTabViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: PatientsTabUiActions): PatientsEffectHandler
+    fun create(
+        viewEffectsConsumer: Consumer<PatientsTabViewEffect>
+    ): PatientsEffectHandler
   }
 
   fun build(): ObservableTransformer<PatientsTabEffect, PatientsTabEvent> {
     return RxMobius
         .subtypeEffectHandler<PatientsTabEffect, PatientsTabEvent>()
-        .addAction(OpenEnterOtpScreen::class.java, uiActions::openEnterCodeManuallyScreen, schedulers.ui())
-        .addConsumer(OpenPatientSearchScreen::class.java, { uiActions.openPatientSearchScreen(it.additionalIdentifier) }, schedulers.ui())
         .addTransformer(RefreshUserDetails::class.java, refreshCurrentUser())
         .addTransformer(LoadUser::class.java, loadUser())
         .addTransformer(LoadInfoForShowingApprovalStatus::class.java, loadRequiredInfoForShowingApprovalStatus())
         .addConsumer(SetDismissedApprovalStatus::class.java, { hasUserDismissedApprovedStatusPref.set(it.dismissedStatus) }, schedulers.io())
-        .addAction(ShowUserWasApproved::class.java, uiActions::showUserStatusAsApproved, schedulers.ui())
-        .addAction(HideUserAccountStatus::class.java, uiActions::hideUserAccountStatus, schedulers.ui())
-        .addAction(OpenScanBpPassportScreen::class.java, uiActions::openScanSimpleIdCardScreen, schedulers.ui())
         .addTransformer(LoadNumberOfPatientsRegistered::class.java, loadNumberOfPatientsRegistered())
-        .addAction(OpenTrainingVideo::class.java, uiActions::openYouTubeLinkForSimpleVideo, schedulers.ui())
         .addTransformer(LoadInfoForShowingAppUpdateMessage::class.java, loadInfoForShowingAppUpdate())
         .addConsumer(TouchAppUpdateShownAtTime::class.java, { appUpdateDialogShownAtPref.set(Instant.now(utcClock)) }, schedulers.io())
-        .addAction(ShowAppUpdateAvailable::class.java, uiActions::showAppUpdateDialog, schedulers.ui())
+        .addConsumer(PatientsTabViewEffect::class.java, viewEffectsConsumer::accept, schedulers.ui())
         .build()
   }
 

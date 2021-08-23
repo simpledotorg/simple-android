@@ -87,7 +87,6 @@ class PatientsLogicTest {
         utcClock = utcClock,
         userClock = userClock,
         checkAppUpdate = checkAppUpdate,
-        patientRepository = mock(),
         approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference,
         hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatusPreference,
         numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPreference,

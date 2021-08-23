@@ -143,6 +143,8 @@ class PatientsTabScreen : BaseScreen<
 
   override fun uiRenderer() = PatientsTabUiRenderer(this)
 
+  override fun viewEffectHandler() = PatientsTabViewEffectHandler(this)
+
   override fun events() = Observable
       .mergeArray(
           activityResumes(),

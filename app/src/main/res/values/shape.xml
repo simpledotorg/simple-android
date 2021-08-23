@@ -31,7 +31,7 @@
   </style>
 
   <style name="ShapeAppearance.Simple.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
-    <item name="cornerSize">@dimen/spacing_0</item>
+    <item name="cornerSize">@dimen/spacing_8</item>
   </style>
 
   <style name="ShapeAppearance.Simple.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">

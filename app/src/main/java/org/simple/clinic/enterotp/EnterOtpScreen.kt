@@ -2,25 +2,16 @@ package org.simple.clinic.enterotp
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
-import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.RelativeLayout
-import androidx.fragment.app.Fragment
 import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
-import com.spotify.mobius.Init
-import com.spotify.mobius.Update
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
-import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.cast
-import io.reactivex.rxkotlin.ofType
-import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.LOGIN_OTP_LENGTH
 import org.simple.clinic.R
@@ -28,14 +19,9 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.databinding.ScreenEnterotpBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryEvent
-import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.router.screen.FullScreenKey
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
@@ -58,96 +44,41 @@ class EnterOtpScreen : BaseScreen<
   @Inject
   lateinit var effectHandlerFactory: EnterOtpEffectHandler.Factory
 
-  private var binding: ScreenEnterotpBinding? = null
-
   private val otpEntryEditText
-    get() = binding!!.otpEntryEditText
+    get() = binding.otpEntryEditText
 
   private val backButton
-    get() = binding!!.backButton
+    get() = binding.backButton
 
   private val resendSmsButton
-    get() = binding!!.resendSmsButton
+    get() = binding.resendSmsButton
 
   private val userPhoneNumberTextView
-    get() = binding!!.userPhoneNumberTextView
+    get() = binding.userPhoneNumberTextView
 
   private val smsSentTextView
-    get() = binding!!.smsSentTextView
+    get() = binding.smsSentTextView
 
   private val errorTextView
-    get() = binding!!.errorTextView
+    get() = binding.errorTextView
 
   private val validateOtpProgressBar
-    get() = binding!!.validateOtpProgressBar
+    get() = binding.validateOtpProgressBar
 
   private val otpEntryContainer
-    get() = binding!!.otpEntryContainer
+    get() = binding.otpEntryContainer
 
-  private val events by unsafeLazy {
-    Observable
-        .mergeArray(
-            otpSubmits(),
-            resendSmsClicks()
-        )
-        .compose(ReportAnalyticsEvents())
-  }
-
-  private val delegate by unsafeLazy {
-    val uiRenderer = EnterOtpUiRenderer(this)
-
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = EnterOtpModel.create(),
-        update = EnterOtpUpdate(LOGIN_OTP_LENGTH),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        init = EnterOtpInit(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
-
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
-
-    binding = ScreenEnterotpBinding.bind(this)
-
-    context.injector<Injector>().inject(this)
-
-    otpEntryEditText.showKeyboard()
-    backButton.setOnClickListener { goBack() }
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
   private val rootLayout
-  get() = binding.rootLayout
+    get() = binding.rootLayout
 
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    binding = null
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
-  }
-  
   override fun defaultModel() = EnterOtpModel.create()
 
   override fun bindView(
       layoutInflater: LayoutInflater,
-      container: ViewGroup?) = ScreenEnterotpBinding.inflate(layoutInflater, container, false)
+      container: ViewGroup?
+  ) = ScreenEnterotpBinding.inflate(layoutInflater, container, false)
 
-  override fun events() =  Observable
+  override fun events() = Observable
       .mergeArray(
           otpSubmits(),
           resendSmsClicks()
@@ -261,7 +192,7 @@ class EnterOtpScreen : BaseScreen<
 
   @Parcelize
   data class Key(
-      override val analyticsName = "Enter Login OTP Manually"
+      override val analyticsName: String = "Enter Login OTP Manually"
   ) : ScreenKey() {
     override fun instantiateFragment() = EnterOtpScreen()
   }

@@ -92,7 +92,6 @@ class PatientsLogicTest {
         hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatusPreference,
         numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPreference,
         appUpdateDialogShownAtPref = appUpdateDialogShownPref,
-        viewEffectHandler = viewEffectHandler,
         viewEffectsConsumer = viewEffectHandler::handle
     )
 

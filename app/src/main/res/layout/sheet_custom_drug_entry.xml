@@ -92,7 +92,11 @@
         android:hint="@string/custom_drug_entry_sheet_frequency"
         android:imeOptions="actionDone"
         android:textColor="@color/color_on_surface_67"
-        android:text="@string/custom_drug_entry_sheet_frequency_none"/>
+        android:text="@string/custom_drug_entry_sheet_frequency_none"
+        android:inputType="textNoSuggestions"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:cursorVisible="false"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 

@@ -1,6 +1,7 @@
 package org.simple.clinic.drugs.selection.custom
 
 import android.content.Context
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -21,6 +22,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.search.DrugFrequency.Unknown
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
+import org.simple.clinic.drugs.selection.custom.drugfrequency.SelectDrugFrequencyDialog
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -89,7 +91,8 @@ class CustomDrugEntrySheet : BaseBottomSheet<
           drugDosageChanges(),
           drugDosageFocusChanges(),
           saveClicks(),
-          removeClicks()
+          removeClicks(),
+          editFrequencyClicks()
       ).compose(ReportAnalyticsEvents())
       .cast<CustomDrugEntryEvent>()
 
@@ -102,6 +105,8 @@ class CustomDrugEntrySheet : BaseBottomSheet<
   private fun drugDosageChanges() = drugDosageEditText.textChanges(::DosageEdited)
 
   private fun drugDosageFocusChanges() = drugDosageEditText.focusChanges().map(::DosageFocusChanged)
+
+  private fun editFrequencyClicks() = drugFrequencyEditText.clicks().map { EditFrequencyClicked }
 
   private fun saveClicks(): Observable<UiEvent> {
     val dosageImeClicks = drugDosageEditText
@@ -119,8 +124,8 @@ class CustomDrugEntrySheet : BaseBottomSheet<
           .clicks()
           .map { RemoveDrugButtonClicked }
 
-  override fun showEditFrequencyDialog(frequency: DrugFrequency) {
-    // to do
+  override fun showEditFrequencyDialog(frequency: DrugFrequency?) {
+    router.pushExpectingResult(SelectedDrugFrequency, SelectDrugFrequencyDialog.Key(frequency))
   }
 
   override fun setDrugFrequency(frequency: DrugFrequency?) {
@@ -183,4 +188,7 @@ class CustomDrugEntrySheet : BaseBottomSheet<
   interface Injector {
     fun inject(target: CustomDrugEntrySheet)
   }
+
+  @Parcelize
+  object SelectedDrugFrequency : Parcelable
 }

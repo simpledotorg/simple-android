@@ -48,4 +48,6 @@ interface ContactPatientUi {
 
   fun showPatientWithCallResultUi()
   fun hidePatientWithCallResultUi()
+
+  fun showPatientWithNoPhoneNumberResults()
 }

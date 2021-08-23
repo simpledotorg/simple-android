@@ -379,6 +379,10 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     progressIndicator.visibility = GONE
   }
 
+  override fun showPatientWithNoPhoneNumberResults() {
+    callPatientView.showPatientWithNoPhoneNumberResults = true
+  }
+
   private fun backPressed() {
     hotEvents.onNext(BackClicked)
   }

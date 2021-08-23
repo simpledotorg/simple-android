@@ -54,7 +54,6 @@ class PatientsEffectHandler @AssistedInject constructor(
         .addTransformer(LoadUser::class.java, loadUser())
         .addTransformer(LoadInfoForShowingApprovalStatus::class.java, loadRequiredInfoForShowingApprovalStatus())
         .addConsumer(SetDismissedApprovalStatus::class.java, { hasUserDismissedApprovedStatusPref.set(it.dismissedStatus) }, schedulers.io())
-        .addAction(ShowUserWasApproved::class.java, uiActions::showUserStatusAsApproved, schedulers.ui())
         .addAction(HideUserAccountStatus::class.java, uiActions::hideUserAccountStatus, schedulers.ui())
         .addAction(OpenScanBpPassportScreen::class.java, uiActions::openScanSimpleIdCardScreen, schedulers.ui())
         .addTransformer(LoadNumberOfPatientsRegistered::class.java, loadNumberOfPatientsRegistered())

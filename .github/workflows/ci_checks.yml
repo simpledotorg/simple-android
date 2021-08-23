@@ -56,25 +56,46 @@ jobs:
       - name: QA Unit Tests
         run: ./gradlew --build-cache --no-daemon testQaDebugUnitTest
 
-  qa_purge_env:
-    runs-on: [ ubuntu-latest ]
-    steps:
-      - name: Purge QA server
-        run: |
-          curl -v --request DELETE \
-          --url https://api-qa.simple.org/qa/purge \
-          --header 'Authorization: Bearer ${{ secrets.QA_PURGE_TOKEN }}'
-
   # reactivecircus/android-emulator-runner@v2 requires MacOS to run on
   # https://github.com/ReactiveCircus/android-emulator-runner
   qa_android_tests:
     runs-on: [ macos-latest ]
-    timeout-minutes: 30
-    needs: [ qa_purge_env ]
+    timeout-minutes: 60
     env:
       AVD_API_LEVEL: 27
+      HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout Android source
+        uses: actions/checkout@v2
+        with:
+          path: android-app
+
+      - name: Checkout server app source
+        uses: actions/checkout@v2
+        with:
+          repository: simpledotorg/simple-server
+          fetch-depth: 0 # Full clone needed for Heroku deploys (https://devcenter.heroku.com/changelog-items/775)
+          path: server-app
+
+      - name: Create node dependency hash
+        id: create_node_modules_hash
+        run: android-app/.github/scripts/compute_node_dependency_hash.sh
+
+      - name: Cache node modules
+        id: node-dependency-cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            package-lock.json
+          key: ${{ runner.os }}-npm-${{ steps.create_node_modules_hash.outputs.node_dep_hash }}
+
+      - name: Install Heroku CLI
+        if: steps.node-dependency-cache.outputs.cache-hit != 'true'
+        run: npm install heroku
+
+      - name: Link Heroku CLI globally
+        run: npm link heroku
 
       - name: Cache Gradle build
         uses: actions/cache@v2
@@ -110,8 +131,22 @@ jobs:
         with:
           java-version: 11
 
+      - name: Generate server app name
+        id: generate-server-app-name
+        run: android-app/.github/scripts/generate_heroku_app_name.sh ${{ github.ref }}
+
+      - name: Deploy the server on Heroku
+        id: start-simple-server
+        run: |
+          android-app/.github/scripts/setup_heroku_instance.sh \
+          ${{ steps.generate-server-app-name.outputs.heroku_app_name }} \
+          ${{ env.HEROKU_API_KEY }} \
+          server-app \
+          android-app \
+          ${{ secrets.HEROKU_SECRET_PROPERTIES }}
+
       - name: Turn on capturing of flaky tests
-        run: cat app/src/androidTest/resources/quarantine_ci.properties > app/src/androidTest/resources/quarantine.properties
+        run: cat android-app/app/src/androidTest/resources/quarantine_ci.properties > android-app/app/src/androidTest/resources/quarantine.properties
 
       - name: QA Android Tests
         uses: reactivecircus/android-emulator-runner@v2
@@ -120,7 +155,14 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: ./gradlew --build-cache --no-daemon connectedQaDebugAndroidTest
+          script: android-app/gradlew -p android-app --build-cache --no-daemon -PmanifestEndpoint=https://${{ steps.generate-server-app-name.outputs.heroku_app_name }}.herokuapp.com/api/ connectedQaDebugAndroidTest
+
+      - name: Teardown Heroku instance
+        if: always() && (steps.start-simple-server.outcome != 'success' || contains(github.ref, '/release/'))
+        run: |
+          heroku apps:destroy \
+          --app=${{ steps.generate-server-app-name.outputs.heroku_app_name }} \
+          --confirm=${{ steps.generate-server-app-name.outputs.heroku_app_name }}
 
   mobius_migration_tests:
     runs-on: [ ubuntu-latest ]

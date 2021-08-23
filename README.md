@@ -177,3 +177,4 @@ Check out the following documents for more information.
 * [Quirks That You Should Probably Be Aware Of](doc/QUIRKS.md)
 * [More Documentation](doc)
 * [Recipes](doc/recipes.md)
+* [Integration Test Heroku Setup](doc/integration-test-suite-setup.md)

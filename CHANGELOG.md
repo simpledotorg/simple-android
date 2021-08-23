@@ -10,6 +10,7 @@
 - Bump Timber to v5.0.1
 - Migrate `PlaceholderScreen` to a fragment
 - Update `MaterialAlertDialog` theme and style
+- Run integration tests on discrete Heroku servers instead of QA
 
 ### Changes
 - [In Progress: 19 Aug 2021] UI improvements for medical history screen

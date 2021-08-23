@@ -78,6 +78,11 @@ class ContactPatientUiRenderer(
     } else if (model.patientProfileHasPhoneNumber && model.isAppointmentPresent) {
       showPatientCallResult()
       loadSecureCallingUi(model)
+    } else if (!model.patientProfileHasPhoneNumber && model.isAppointmentPresent) {
+      ui.showPatientWithNoPhoneNumberUi()
+      ui.hidePatientWithPhoneNumberUi()
+      ui.setResultLabelText()
+      ui.showPatientWithNoPhoneNumberResults()
     } else {
       ui.showPatientWithNoPhoneNumberUi()
       ui.hidePatientWithPhoneNumberUi()

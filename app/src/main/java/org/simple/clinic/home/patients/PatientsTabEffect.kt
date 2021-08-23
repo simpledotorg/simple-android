@@ -18,8 +18,6 @@ object LoadInfoForShowingAppUpdateMessage : PatientsTabEffect()
 
 object TouchAppUpdateShownAtTime : PatientsTabEffect()
 
-object ShowAppUpdateAvailable : PatientsTabEffect()
-
 sealed class PatientsTabViewEffect : PatientsTabEffect()
 
 object OpenEnterOtpScreen : PatientsTabViewEffect()
@@ -33,3 +31,5 @@ object HideUserAccountStatus : PatientsTabViewEffect()
 object OpenScanBpPassportScreen : PatientsTabViewEffect()
 
 object OpenTrainingVideo : PatientsTabViewEffect()
+
+object ShowAppUpdateAvailable : PatientsTabViewEffect()

@@ -80,6 +80,7 @@ class PatientsLogicTest {
   @Before
   fun setUp() {
     val uiRenderer = PatientsTabUiRenderer(ui)
+    val viewEffectHandler = PatientsTabViewEffectHandler(uiActions)
     val patientsEffectHandler = PatientsEffectHandler(
         schedulers = TrampolineSchedulersProvider(),
         refreshCurrentUser = refreshCurrentUser,
@@ -91,7 +92,8 @@ class PatientsLogicTest {
         hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatusPreference,
         numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPreference,
         appUpdateDialogShownAtPref = appUpdateDialogShownPref,
-        uiActions = uiActions
+        uiActions = uiActions,
+        viewEffectHandler = viewEffectHandler
     )
 
     testFixture = MobiusTestFixture(

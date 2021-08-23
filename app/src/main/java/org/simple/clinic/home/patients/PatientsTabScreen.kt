@@ -161,7 +161,6 @@ class PatientsTabScreen : BaseScreen<
   override fun createInit() = PatientsInit()
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(
-      uiActions = this,
       viewEffectHandler = PatientsTabViewEffectHandler(this)
   ).build()
 

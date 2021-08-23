@@ -35,14 +35,12 @@ class PatientsEffectHandler @AssistedInject constructor(
     @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>,
     @SimpleVideoConfig(NumberOfPatientsRegistered) private val numberOfPatientsRegisteredPref: Preference<Int>,
     @Named("app_update_last_shown_at") private val appUpdateDialogShownAtPref: Preference<Instant>,
-    @Assisted private val uiActions: PatientsTabUiActions,
     @Assisted private val viewEffectHandler: PatientsTabViewEffectHandler
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        uiActions: PatientsTabUiActions,
         viewEffectHandler: PatientsTabViewEffectHandler
     ): PatientsEffectHandler
   }

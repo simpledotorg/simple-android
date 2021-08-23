@@ -31,3 +31,5 @@ object LoadInfoForShowingAppUpdateMessage : PatientsTabEffect()
 object TouchAppUpdateShownAtTime : PatientsTabEffect()
 
 object ShowAppUpdateAvailable : PatientsTabEffect()
+
+sealed class PatientsTabViewEffect : PatientsTabEffect()

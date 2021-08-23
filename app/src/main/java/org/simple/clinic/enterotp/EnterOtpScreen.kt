@@ -3,7 +3,9 @@ package org.simple.clinic.enterotp
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.RelativeLayout
 import androidx.fragment.app.Fragment
@@ -23,6 +25,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
@@ -30,10 +33,13 @@ import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class EnterOtpScreen(
-    context: Context,
-    attributeSet: AttributeSet
-) : RelativeLayout(context, attributeSet), EnterOtpUi, EnterOtpUiActions {
+class EnterOtpScreen : BaseScreen<
+    EnterOtpScreen.Key,
+    ScreenEnterotpBinding,
+    EnterOtpModel,
+    EnterOtpEvent,
+    EnterOtpEffect,
+    Unit>(), EnterOtpUi, EnterOtpUiActions {
 
   @Inject
   lateinit var router: Router
@@ -124,6 +130,12 @@ class EnterOtpScreen(
   override fun onRestoreInstanceState(state: Parcelable?) {
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
+  
+  override fun defaultModel() = EnterOtpModel.create()
+
+  override fun bindView(
+      layoutInflater: LayoutInflater,
+      container: ViewGroup?) = ScreenEnterotpBinding.inflate(layoutInflater, container, false)
 
   private fun otpSubmits(): Observable<UiEvent> {
     val otpFromImeClicks: Observable<UiEvent> = otpEntryEditText

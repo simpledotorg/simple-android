@@ -19,3 +19,5 @@ jobs:
 
       - name: Teardown dangling Heroku instances
         run: .github/scripts/teardown_heroku_instances.py
+        env :
+          GITHUB_TOKEN : ${{ secrets.GITHUB_TOKEN }}

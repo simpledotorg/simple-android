@@ -12,7 +12,12 @@ import androidx.fragment.app.Fragment
 import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
+import com.spotify.mobius.Init
+import com.spotify.mobius.Update
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
+import io.reactivex.ObservableTransformer
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
@@ -22,7 +27,9 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.databinding.ScreenEnterotpBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryEvent
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -136,6 +143,24 @@ class EnterOtpScreen : BaseScreen<
   override fun bindView(
       layoutInflater: LayoutInflater,
       container: ViewGroup?) = ScreenEnterotpBinding.inflate(layoutInflater, container, false)
+
+  override fun events() =  Observable
+      .mergeArray(
+          otpSubmits(),
+          resendSmsClicks()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<EnterOtpEvent>()
+
+  override fun createUpdate() = EnterOtpUpdate(LOGIN_OTP_LENGTH)
+
+  override fun createEffectHandler(
+      viewEffectsConsumer: Consumer<Unit>
+  ) = effectHandlerFactory.create(this).build()
+
+  override fun createInit() = EnterOtpInit()
+
+  override fun uiRenderer() = EnterOtpUiRenderer(this)
 
   private fun otpSubmits(): Observable<UiEvent> {
     val otpFromImeClicks: Observable<UiEvent> = otpEntryEditText

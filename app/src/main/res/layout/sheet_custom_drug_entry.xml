@@ -15,7 +15,6 @@
     android:layout_centerVertical="true"
     android:layout_marginStart="@dimen/spacing_24"
     android:layout_marginTop="@dimen/spacing_24"
-    android:layout_marginEnd="@dimen/spacing_16"
     android:layout_toStartOf="@+id/removeButton"
     android:ellipsize="end"
     android:maxLines="2"

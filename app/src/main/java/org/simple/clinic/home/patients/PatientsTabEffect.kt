@@ -12,8 +12,6 @@ object LoadInfoForShowingApprovalStatus : PatientsTabEffect()
 
 data class SetDismissedApprovalStatus(val dismissedStatus: Boolean) : PatientsTabEffect()
 
-object HideUserAccountStatus : PatientsTabEffect()
-
 object OpenScanBpPassportScreen : PatientsTabEffect()
 
 object LoadNumberOfPatientsRegistered : PatientsTabEffect()
@@ -33,3 +31,5 @@ object OpenEnterOtpScreen : PatientsTabViewEffect()
 data class OpenPatientSearchScreen(val additionalIdentifier: Identifier?) : PatientsTabViewEffect()
 
 object ShowUserWasApproved : PatientsTabViewEffect()
+
+object HideUserAccountStatus : PatientsTabViewEffect()

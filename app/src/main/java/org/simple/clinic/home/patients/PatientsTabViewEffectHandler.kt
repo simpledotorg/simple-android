@@ -11,6 +11,7 @@ class PatientsTabViewEffectHandler(
       OpenEnterOtpScreen -> uiActions.openEnterCodeManuallyScreen()
       is OpenPatientSearchScreen -> uiActions.openPatientSearchScreen(viewEffect.additionalIdentifier)
       ShowUserWasApproved -> uiActions.showUserStatusAsApproved()
+      HideUserAccountStatus -> uiActions.hideUserAccountStatus()
     }
   }
 }

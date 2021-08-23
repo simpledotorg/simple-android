@@ -50,7 +50,6 @@ class PatientsEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<PatientsTabEffect, PatientsTabEvent> {
     return RxMobius
         .subtypeEffectHandler<PatientsTabEffect, PatientsTabEvent>()
-        .addConsumer(OpenPatientSearchScreen::class.java, { uiActions.openPatientSearchScreen(it.additionalIdentifier) }, schedulers.ui())
         .addTransformer(RefreshUserDetails::class.java, refreshCurrentUser())
         .addTransformer(LoadUser::class.java, loadUser())
         .addTransformer(LoadInfoForShowingApprovalStatus::class.java, loadRequiredInfoForShowingApprovalStatus())

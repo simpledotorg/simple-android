@@ -9,6 +9,7 @@ class PatientsTabViewEffectHandler(
   override fun handle(viewEffect: PatientsTabViewEffect) {
     when (viewEffect) {
       OpenEnterOtpScreen -> uiActions.openEnterCodeManuallyScreen()
+      is OpenPatientSearchScreen -> uiActions.openPatientSearchScreen(viewEffect.additionalIdentifier)
     }
   }
 }

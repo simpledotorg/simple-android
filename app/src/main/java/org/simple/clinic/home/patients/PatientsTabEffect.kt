@@ -4,8 +4,6 @@ import org.simple.clinic.patient.businessid.Identifier
 
 sealed class PatientsTabEffect
 
-data class OpenPatientSearchScreen(val additionalIdentifier: Identifier?) : PatientsTabEffect()
-
 object RefreshUserDetails : PatientsTabEffect()
 
 object LoadUser : PatientsTabEffect()
@@ -33,3 +31,5 @@ object ShowAppUpdateAvailable : PatientsTabEffect()
 sealed class PatientsTabViewEffect : PatientsTabEffect()
 
 object OpenEnterOtpScreen : PatientsTabViewEffect()
+
+data class OpenPatientSearchScreen(val additionalIdentifier: Identifier?) : PatientsTabViewEffect()

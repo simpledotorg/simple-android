@@ -16,6 +16,7 @@
 - Show appointment results in contact patient sheet for patient with no phone number
 - Change `PatientsTabScreen` to use Mobius view effects
 - Bump lint to v30.0.1
+- Change large component corner shape to 8dp
 
 ### Changes
 - [In Progress: 19 Aug 2021] UI improvements for medical history screen

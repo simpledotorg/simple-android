@@ -50,8 +50,8 @@ class CustomDrugEntryUpdateTest {
   fun `when edit frequency is clicked, then show edit frequency dialog`() {
     val frequency = DrugFrequency.OD
 
-    updateSpec.given(defaultModel)
-        .whenEvent(EditFrequencyClicked(frequency))
+    updateSpec.given(defaultModel.frequencyEdited(frequency))
+        .whenEvent(EditFrequencyClicked)
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ShowEditFrequencyDialog(frequency))

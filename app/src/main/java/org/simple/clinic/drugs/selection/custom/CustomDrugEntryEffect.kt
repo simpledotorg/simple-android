@@ -5,7 +5,7 @@ import java.util.UUID
 
 sealed class CustomDrugEntryEffect
 
-data class ShowEditFrequencyDialog(val frequency: DrugFrequency) : CustomDrugEntryEffect()
+data class ShowEditFrequencyDialog(val frequency: DrugFrequency?) : CustomDrugEntryEffect()
 
 data class SetDrugFrequency(val frequency: DrugFrequency?) : CustomDrugEntryEffect()
 

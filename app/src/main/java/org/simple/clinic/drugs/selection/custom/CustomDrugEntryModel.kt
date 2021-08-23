@@ -11,22 +11,28 @@ data class CustomDrugEntryModel(
     val dosage: String?,
     val dosageHasFocus: Boolean?,
     val frequency: DrugFrequency?,
-    val rxNormCode: String?
+    val rxNormCode: String?,
+    val dosagePlaceholder: String
 ) : Parcelable {
   companion object {
     fun default(
-        openAs: OpenAs
+        openAs: OpenAs,
+        dosagePlaceholder: String
     ) = CustomDrugEntryModel(
         openAs = openAs,
         drugName = null,
         dosage = null,
         dosageHasFocus = null,
         frequency = null,
-        rxNormCode = null)
+        rxNormCode = null,
+        dosagePlaceholder = dosagePlaceholder)
   }
 
   val isDrugFrequencyUnknown
     get() = frequency is DrugFrequency.Unknown
+
+  val isDosageEqualToPlaceHolderOrEmpty
+    get() = dosage == dosagePlaceholder || dosage.isNullOrBlank()
 
   fun dosageEdited(dosage: String?): CustomDrugEntryModel {
     return copy(dosage = dosage)

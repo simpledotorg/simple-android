@@ -10,11 +10,12 @@ import java.util.UUID
 class CustomDrugEntryInitTest {
   private val initSpec = InitSpec(CustomDrugEntryInit())
   private val drugName = "Amlodipine"
+  private val dosagePlaceholder = "mg"
 
   @Test
   fun `when sheet is created in create mode from the drug list, fetch drug from the drugUuid`() {
     val drugUuid = UUID.fromString("6106544f-2b18-410d-992b-81860a08f02a")
-    val model = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugList(drugUuid))
+    val model = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugList(drugUuid), dosagePlaceholder)
 
     initSpec
         .whenInit(model)
@@ -28,7 +29,7 @@ class CustomDrugEntryInitTest {
 
   @Test
   fun `when sheet is created in create mode from a drug name, then set the drug name, frequency and sheet title`() {
-    val model = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(drugName))
+    val model = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(drugName), dosagePlaceholder)
 
     initSpec
         .whenInit(model)
@@ -43,7 +44,7 @@ class CustomDrugEntryInitTest {
   @Test
   fun `when sheet is created in update mode, then fetch prescription`() {
     val prescribedDrugUuid = UUID.fromString("e046a649-dfc0-45b5-89d4-7a4b0af1c282")
-    val model = CustomDrugEntryModel.default(openAs = OpenAs.Update(prescribedDrugUuid = prescribedDrugUuid))
+    val model = CustomDrugEntryModel.default(openAs = OpenAs.Update(prescribedDrugUuid = prescribedDrugUuid), dosagePlaceholder)
 
     initSpec
         .whenInit(model)

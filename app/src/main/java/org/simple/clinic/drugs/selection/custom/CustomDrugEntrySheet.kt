@@ -78,7 +78,7 @@ class CustomDrugEntrySheet : BaseBottomSheet<
   private val saveButton
     get() = binding.saveButton
 
-  override fun defaultModel() = CustomDrugEntryModel.default(openAs)
+  override fun defaultModel() = CustomDrugEntryModel.default(openAs, getString(R.string.custom_drug_entry_sheet_dosage_placeholder))
 
   override fun bindView(
       inflater: LayoutInflater,

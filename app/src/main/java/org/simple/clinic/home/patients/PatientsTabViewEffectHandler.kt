@@ -13,6 +13,7 @@ class PatientsTabViewEffectHandler(
       ShowUserWasApproved -> uiActions.showUserStatusAsApproved()
       HideUserAccountStatus -> uiActions.hideUserAccountStatus()
       OpenScanBpPassportScreen -> uiActions.openScanSimpleIdCardScreen()
+      OpenTrainingVideo -> uiActions.openYouTubeLinkForSimpleVideo()
     }
   }
 }

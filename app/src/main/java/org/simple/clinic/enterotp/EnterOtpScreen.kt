@@ -1,6 +1,7 @@
 package org.simple.clinic.enterotp
 
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -161,6 +162,17 @@ class EnterOtpScreen : BaseScreen<
   override fun createInit() = EnterOtpInit()
 
   override fun uiRenderer() = EnterOtpUiRenderer(this)
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    otpEntryEditText.showKeyboard()
+    backButton.setOnClickListener { goBack() }
+  }
 
   private fun otpSubmits(): Observable<UiEvent> {
     val otpFromImeClicks: Observable<UiEvent> = otpEntryEditText

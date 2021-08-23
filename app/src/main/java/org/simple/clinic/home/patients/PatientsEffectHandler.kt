@@ -58,7 +58,7 @@ class PatientsEffectHandler @AssistedInject constructor(
         .addTransformer(LoadNumberOfPatientsRegistered::class.java, loadNumberOfPatientsRegistered())
         .addTransformer(LoadInfoForShowingAppUpdateMessage::class.java, loadInfoForShowingAppUpdate())
         .addConsumer(TouchAppUpdateShownAtTime::class.java, { appUpdateDialogShownAtPref.set(Instant.now(utcClock)) }, schedulers.io())
-        .addConsumer(PatientsTabViewEffect::class.java, viewEffectHandler::handle, schedulers.ui())
+        .addConsumer(PatientsTabViewEffect::class.java, viewEffectsConsumer::accept, schedulers.ui())
         .build()
   }
 

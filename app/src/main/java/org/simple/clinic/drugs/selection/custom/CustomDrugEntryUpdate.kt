@@ -19,7 +19,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       is DosageEdited -> next(model.dosageEdited(event.dosage), SetSheetTitle(model.drugName, event.dosage, model.frequency))
       is DosageFocusChanged -> next(model.dosageFocusChanged(event.hasFocus))
       is EditFrequencyClicked -> dispatch(ShowEditFrequencyDialog(model.frequency))
-      is FrequencyEdited -> next(model.frequencyEdited(event.frequency), SetDrugFrequency(event.frequency), SetSheetTitle(model.drugName, model.dosage, event.frequency))
+      is FrequencyEdited -> frequencyEdited(nextModel = model.frequencyEdited(event.frequency), event)
       is AddMedicineButtonClicked -> createOrUpdatePrescriptionEntry(model, event.patientUuid)
       is CustomDrugSaved, ExistingDrugRemoved -> dispatch(CloseSheetAndGoToEditMedicineScreen)
       is PrescribedDrugFetched -> prescriptionFetched(model, event.prescription)
@@ -29,6 +29,12 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       }
       is DrugFetched -> drugFetched(model, event.drug)
     }
+  }
+
+  private fun frequencyEdited(nextModel: CustomDrugEntryModel, event: FrequencyEdited): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
+    val frequency = if (nextModel.isDrugFrequencyUnknown) null else event.frequency
+
+    return next(nextModel, SetDrugFrequency(frequency), SetSheetTitle(nextModel.drugName, nextModel.dosage, frequency))
   }
 
   private fun drugFetched(

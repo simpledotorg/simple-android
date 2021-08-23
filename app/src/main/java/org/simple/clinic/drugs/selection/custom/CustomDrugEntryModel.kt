@@ -25,6 +25,9 @@ data class CustomDrugEntryModel(
         rxNormCode = null)
   }
 
+  val isDrugFrequencyUnknown
+    get() = frequency is DrugFrequency.Unknown
+
   fun dosageEdited(dosage: String?): CustomDrugEntryModel {
     return copy(dosage = dosage)
   }

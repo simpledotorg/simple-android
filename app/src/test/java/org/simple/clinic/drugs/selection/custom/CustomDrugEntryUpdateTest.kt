@@ -72,6 +72,19 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
+  fun `when frequency is edited with and Unknown value, then update the model and set drug frequency and update the sheet title with null frequency in the ui`() {
+    val frequency = DrugFrequency.Unknown("None")
+    val drugNameLoadedModel = defaultModel.drugNameLoaded(drugName)
+
+    updateSpec.given(drugNameLoadedModel)
+        .whenEvent(FrequencyEdited(frequency))
+        .then(assertThatNext(
+            hasModel(drugNameLoadedModel.frequencyEdited(frequency)),
+            hasEffects(SetDrugFrequency(null), SetSheetTitle(drugName, null, null))
+        ))
+  }
+
+  @Test
   fun `when add button is clicked and the sheet is opened in create mode from drug list with edited dosage and frequency values, then add the drug to the custom drug list`() {
     val dosage = "200 mg"
     val frequency = DrugFrequency.OD

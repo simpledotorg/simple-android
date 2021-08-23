@@ -2,6 +2,7 @@ package org.simple.clinic.home.patients
 
 import android.annotation.SuppressLint
 import com.f2prateek.rx.preferences2.Preference
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -35,13 +36,15 @@ class PatientsEffectHandler @AssistedInject constructor(
     @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>,
     @SimpleVideoConfig(NumberOfPatientsRegistered) private val numberOfPatientsRegisteredPref: Preference<Int>,
     @Named("app_update_last_shown_at") private val appUpdateDialogShownAtPref: Preference<Instant>,
-    @Assisted private val viewEffectHandler: PatientsTabViewEffectHandler
+    @Assisted private val viewEffectHandler: PatientsTabViewEffectHandler,
+    @Assisted private val viewEffectsConsumer: Consumer<PatientsTabViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        viewEffectHandler: PatientsTabViewEffectHandler
+        viewEffectHandler: PatientsTabViewEffectHandler,
+        viewEffectsConsumer: Consumer<PatientsTabViewEffect>
     ): PatientsEffectHandler
   }
 

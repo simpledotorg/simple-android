@@ -33,7 +33,6 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.user.refreshuser.RefreshCurrentUser
-import java.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -45,6 +44,7 @@ import java.net.SocketTimeoutException
 import java.time.Instant
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
+import java.util.Optional
 import java.util.UUID
 
 class PatientsLogicTest {
@@ -92,7 +92,8 @@ class PatientsLogicTest {
         hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatusPreference,
         numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPreference,
         appUpdateDialogShownAtPref = appUpdateDialogShownPref,
-        viewEffectHandler = viewEffectHandler
+        viewEffectHandler = viewEffectHandler,
+        viewEffectsConsumer = viewEffectHandler::handle
     )
 
     testFixture = MobiusTestFixture(
@@ -548,7 +549,7 @@ class PatientsLogicTest {
     verify(ui).showSyncIndicator()
     verify(uiActions, never()).showAppUpdateDialog()
     verifyNoMoreInteractions(ui)
-//    verifyNoMoreInteractions(uiActions)
+    //    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -592,7 +593,7 @@ class PatientsLogicTest {
     verify(uiActions).openYouTubeLinkForSimpleVideo()
     verify(ui, times(2)).hideUserAccountStatus()
     verifyNoMoreInteractions(ui)
-//    verifyNoMoreInteractions(uiActions)
+    //    verifyNoMoreInteractions(uiActions)
   }
 
   private fun setupController(

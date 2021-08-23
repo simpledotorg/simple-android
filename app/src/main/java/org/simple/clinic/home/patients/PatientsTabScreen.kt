@@ -59,7 +59,7 @@ class PatientsTabScreen : BaseScreen<
     PatientsTabModel,
     PatientsTabEvent,
     PatientsTabEffect,
-    Unit>(), PatientsTabUi, PatientsTabUiActions {
+    PatientsTabViewEffect>(), PatientsTabUi, PatientsTabUiActions {
 
   @Inject
   lateinit var router: Router
@@ -160,8 +160,9 @@ class PatientsTabScreen : BaseScreen<
 
   override fun createInit() = PatientsInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(
-      viewEffectHandler = PatientsTabViewEffectHandler(this)
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<PatientsTabViewEffect>) = effectHandlerFactory.create(
+      viewEffectHandler = PatientsTabViewEffectHandler(this),
+      viewEffectsConsumer = viewEffectsConsumer
   ).build()
 
   override fun additionalEventSources() = listOf(deferredEvents)

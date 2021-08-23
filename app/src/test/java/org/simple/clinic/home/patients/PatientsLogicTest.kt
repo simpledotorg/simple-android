@@ -33,11 +33,10 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.user.refreshuser.RefreshCurrentUser
-import java.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
@@ -45,6 +44,7 @@ import java.net.SocketTimeoutException
 import java.time.Instant
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
+import java.util.Optional
 import java.util.UUID
 
 class PatientsLogicTest {
@@ -80,19 +80,19 @@ class PatientsLogicTest {
   @Before
   fun setUp() {
     val uiRenderer = PatientsTabUiRenderer(ui)
+    val viewEffectHandler = PatientsTabViewEffectHandler(uiActions)
     val patientsEffectHandler = PatientsEffectHandler(
-        schedulers = TrampolineSchedulersProvider(),
+        schedulers = TestSchedulersProvider.trampoline(),
         refreshCurrentUser = refreshCurrentUser,
         userSession = userSession,
         utcClock = utcClock,
         userClock = userClock,
         checkAppUpdate = checkAppUpdate,
-        patientRepository = mock(),
         approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference,
         hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatusPreference,
         numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPreference,
         appUpdateDialogShownAtPref = appUpdateDialogShownPref,
-        uiActions = uiActions
+        viewEffectsConsumer = viewEffectHandler::handle
     )
 
     testFixture = MobiusTestFixture(
@@ -548,7 +548,7 @@ class PatientsLogicTest {
     verify(ui).showSyncIndicator()
     verify(uiActions, never()).showAppUpdateDialog()
     verifyNoMoreInteractions(ui)
-//    verifyNoMoreInteractions(uiActions)
+    //    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -592,7 +592,7 @@ class PatientsLogicTest {
     verify(uiActions).openYouTubeLinkForSimpleVideo()
     verify(ui, times(2)).hideUserAccountStatus()
     verifyNoMoreInteractions(ui)
-//    verifyNoMoreInteractions(uiActions)
+    //    verifyNoMoreInteractions(uiActions)
   }
 
   private fun setupController(

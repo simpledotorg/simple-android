@@ -59,7 +59,7 @@ class PatientsTabScreen : BaseScreen<
     PatientsTabModel,
     PatientsTabEvent,
     PatientsTabEffect,
-    Unit>(), PatientsTabUi, PatientsTabUiActions {
+    PatientsTabViewEffect>(), PatientsTabUi, PatientsTabUiActions {
 
   @Inject
   lateinit var router: Router
@@ -143,6 +143,8 @@ class PatientsTabScreen : BaseScreen<
 
   override fun uiRenderer() = PatientsTabUiRenderer(this)
 
+  override fun viewEffectHandler() = PatientsTabViewEffectHandler(this)
+
   override fun events() = Observable
       .mergeArray(
           activityResumes(),
@@ -160,7 +162,9 @@ class PatientsTabScreen : BaseScreen<
 
   override fun createInit() = PatientsInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<PatientsTabViewEffect>) = effectHandlerFactory.create(
+      viewEffectsConsumer = viewEffectsConsumer
+  ).build()
 
   override fun additionalEventSources() = listOf(deferredEvents)
 

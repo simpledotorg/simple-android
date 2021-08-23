@@ -12,8 +12,9 @@
 - Update `MaterialAlertDialog` theme and style
 - Run integration tests on discrete Heroku servers instead of QA
 - Bump lottie to v4.1.0
-- Show appointment results in contact patient sheet for patient with no phone number
 - Bump logback to v1.2.5
+- Show appointment results in contact patient sheet for patient with no phone number
+- Change `PatientsTabScreen` to use Mobius view effects
 
 ### Changes
 - [In Progress: 19 Aug 2021] UI improvements for medical history screen

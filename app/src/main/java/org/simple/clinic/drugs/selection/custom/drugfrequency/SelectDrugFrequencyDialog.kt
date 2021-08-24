@@ -4,7 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
-import androidx.fragment.app.DialogFragment
+import androidx.appcompat.app.AppCompatDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
@@ -22,7 +22,8 @@ import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
-class SelectDrugFrequencyDialog : DialogFragment() {
+class SelectDrugFrequencyDialog : AppCompatDialogFragment() {
+  
   @Inject
   lateinit var router: Router
 

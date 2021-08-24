@@ -18,6 +18,7 @@ import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
+import org.simple.clinic.overdue.callresult.CallResult
 import org.simple.clinic.overdue.callresult.Outcome
 import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.Gender
@@ -81,13 +82,14 @@ import org.simple.clinic.drugs.search.Answer as DrugAnswer
       MedicalOfficer::class,
       TeleconsultationFacilityMedicalOfficersCrossRef::class,
       TeleconsultRecord::class,
-      Drug::class
+      Drug::class,
+      CallResult::class
     ],
     views = [
       OverdueAppointment::class,
       PatientSearchResult::class
     ],
-    version = 94,
+    version = 95,
     exportSchema = true
 )
 @TypeConverters(

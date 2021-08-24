@@ -18,6 +18,7 @@ import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
+import org.simple.clinic.overdue.callresult.Outcome
 import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
@@ -116,7 +117,8 @@ import org.simple.clinic.drugs.search.Answer as DrugAnswer
     TeleconsultStatus.RoomTypeConverter::class,
     DrugCategory.RoomTypeConverter::class,
     DrugAnswer.RoomTypeConverter::class,
-    DrugFrequency.RoomTypeConverter::class
+    DrugFrequency.RoomTypeConverter::class,
+    Outcome.RoomTypeConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
 

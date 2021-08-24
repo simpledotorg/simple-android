@@ -1,5 +1,6 @@
 package org.simple.clinic.overdue.callresult
 
+import androidx.room.TypeConverter
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 
 sealed class Outcome {
@@ -21,4 +22,13 @@ sealed class Outcome {
   object RemindToCallLater: Outcome()
 
   data class Unknown(val actualValue: String): Outcome()
+
+  class RoomTypeConverter {
+
+    @TypeConverter
+    fun toEnum(value: String?): Outcome? = TypeAdapter.toEnum(value)
+
+    @TypeConverter
+    fun fromEnum(outcome: Outcome?): String? = TypeAdapter.fromEnum(outcome)
+  }
 }

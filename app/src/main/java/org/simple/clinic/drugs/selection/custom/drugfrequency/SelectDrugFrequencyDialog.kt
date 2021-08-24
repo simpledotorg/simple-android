@@ -35,12 +35,14 @@ class SelectDrugFrequencyDialog : DialogFragment() {
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    var selectedValueIndex = frequenciesArrayIndexFromDrugFrequency(screenKey.drugFrequency)
+    val selectedValueIndex = frequenciesArrayIndexFromDrugFrequency(screenKey.drugFrequency)
     return MaterialAlertDialogBuilder(requireContext())
         .setTitle(getString(R.string.custom_drug_entry_sheet_frequency))
-        .setSingleChoiceItems(resources.getStringArray(R.array.custom_drug_entry_sheet_frequencies), selectedValueIndex) { _, indexSelected -> selectedValueIndex = indexSelected }
+        .setSingleChoiceItems(resources.getStringArray(R.array.custom_drug_entry_sheet_frequencies), selectedValueIndex) { _, indexSelected ->
+          router.popWithResult(Succeeded(drugFrequencyFromFrequenciesArrayIndex(indexSelected)))
+        }
         .setPositiveButton(getString(R.string.custom_drug_entry_sheet_frequency_dialog_done)) { _, _ ->
-          router.popWithResult(Succeeded(drugFrequencyFromFrequenciesArrayIndex(selectedValueIndex)))
+          router.pop()
         }
         .create()
   }

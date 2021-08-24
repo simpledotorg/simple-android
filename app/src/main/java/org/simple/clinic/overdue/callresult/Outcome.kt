@@ -1,6 +1,8 @@
 package org.simple.clinic.overdue.callresult
 
 import androidx.room.TypeConverter
+import com.squareup.moshi.FromJson
+import com.squareup.moshi.ToJson
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 
 sealed class Outcome {
@@ -30,5 +32,14 @@ sealed class Outcome {
 
     @TypeConverter
     fun fromEnum(outcome: Outcome?): String? = TypeAdapter.fromEnum(outcome)
+  }
+  
+  class MoshiTypeAdapter {
+
+    @FromJson
+    fun fromJson(value: String?): Outcome? = TypeAdapter.toEnum(value)
+
+    @ToJson
+    fun toJson(outcome: Outcome?): String? = TypeAdapter.fromEnum(outcome)
   }
 }

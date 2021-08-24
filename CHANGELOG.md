@@ -13,8 +13,6 @@
 - Run integration tests on discrete Heroku servers instead of QA
 - Bump lottie to v4.1.0
 - Bump logback to v1.2.5
-- Show appointment results in contact patient sheet for patient with no phone number
-- Change `PatientsTabScreen` to use Mobius view effects
 - Bump lint to v30.0.1
 - Change large component corner shape to 8dp
 
@@ -29,7 +27,7 @@
 - [In Progress: 06 Aug 2021] Add support for Sri Lanka
 - [In Progress: 18 Aug 2021] Implement `CustomDrugEntrySheet`
 
-## On Demo
+## 2021-08-23-7922
 ### Internal
 - Set Simple video and duration based on locale
 - Fix incorrect test in `TheActivityControllerTest`
@@ -66,6 +64,8 @@
 - Change `RegistrationPhoneScreen` to use view effects
 - Change `ScanSimpleIdScreen` to use Mobius view effects
 - Handle exception when syncing reports in `ConfirmFacilityChangeEffectHandler`
+- Show appointment results in contact patient sheet for patient with no phone number
+- Change `PatientsTabScreen` to use Mobius view effects
 
 ### Changes
 - Ask users for their name and job designation on sign up

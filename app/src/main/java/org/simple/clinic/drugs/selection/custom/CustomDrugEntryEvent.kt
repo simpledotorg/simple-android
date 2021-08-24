@@ -14,7 +14,7 @@ data class DosageFocusChanged(val hasFocus: Boolean) : CustomDrugEntryEvent()
 
 object EditFrequencyClicked : CustomDrugEntryEvent()
 
-data class FrequencyEdited(val frequency: DrugFrequency) : CustomDrugEntryEvent()
+data class FrequencyEdited(val frequency: DrugFrequency?) : CustomDrugEntryEvent()
 
 data class AddMedicineButtonClicked(val patientUuid: UUID) : CustomDrugEntryEvent()
 

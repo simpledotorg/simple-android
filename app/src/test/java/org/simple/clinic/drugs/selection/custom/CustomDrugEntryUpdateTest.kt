@@ -73,14 +73,13 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
-  fun `when frequency is edited with and Unknown value, then update the model and set drug frequency and update the sheet title with null frequency in the ui`() {
-    val frequency = DrugFrequency.Unknown("None")
+  fun `when frequency is edited with a null value, then update the model and set drug frequency and update the sheet title with the frequency in the ui`() {
     val drugNameLoadedModel = defaultModel.drugNameLoaded(drugName)
 
     updateSpec.given(drugNameLoadedModel)
-        .whenEvent(FrequencyEdited(frequency))
+        .whenEvent(FrequencyEdited(null))
         .then(assertThatNext(
-            hasModel(drugNameLoadedModel.frequencyEdited(frequency)),
+            hasModel(drugNameLoadedModel.frequencyEdited(null)),
             hasEffects(SetDrugFrequency(null), SetSheetTitle(drugName, null, null))
         ))
   }

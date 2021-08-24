@@ -28,9 +28,6 @@ data class CustomDrugEntryModel(
         dosagePlaceholder = dosagePlaceholder)
   }
 
-  val isDrugFrequencyUnknown
-    get() = frequency is DrugFrequency.Unknown
-
   val isDosageEqualToPlaceHolderOrEmpty
     get() = dosage == dosagePlaceholder || dosage.isNullOrBlank()
 

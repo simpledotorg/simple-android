@@ -99,7 +99,8 @@ class RoomMigrationsModule {
       migration91: Migration_91,
       migration92: Migration_92,
       migration93: Migration_93,
-      migration94: Migration_94
+      migration94: Migration_94,
+      migration95: Migration_95
   ): List<Migration> {
     return listOf(
         migration_3_4,
@@ -192,7 +193,8 @@ class RoomMigrationsModule {
         migration91,
         migration92,
         migration93,
-        migration94
+        migration94,
+        migration95
     )
   }
 }

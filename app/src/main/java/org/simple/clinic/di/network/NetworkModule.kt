@@ -13,6 +13,7 @@ import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
+import org.simple.clinic.overdue.callresult.Outcome
 import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientPhoneNumberType
@@ -77,6 +78,7 @@ class NetworkModule {
         .add(DrugCategory.MoshiTypeConverter())
         .add(DrugAnswer.MoshiTypeAdapter())
         .add(DrugFrequency.MoshiTypeConverter())
+        .add(Outcome.MoshiTypeAdapter())
         .build()
 
     val patientPayloadNullSerializingAdapter = moshi.adapter(PatientPayload::class.java).serializeNulls()

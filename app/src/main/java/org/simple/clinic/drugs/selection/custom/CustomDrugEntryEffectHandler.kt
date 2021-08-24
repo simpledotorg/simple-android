@@ -81,7 +81,7 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
                     uuid = uuidGenerator.v4(),
                     patientUuid = effect.patientUuid,
                     name = effect.drugName,
-                    dosage = effect.dosage,
+                    dosage = effect.dosage.nullIfBlank(),
                     rxNormCode = effect.rxNormCode,
                     isProtocolDrug = false,
                     frequency = MedicineFrequency.fromDrugFrequency(effect.frequency),

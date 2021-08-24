@@ -72,36 +72,6 @@ class CustomDrugEntryEffectHandlerTest {
   }
 
   @Test
-  fun `when set drug name effect is received with non null values, construct drug name and set it in the ui`() {
-    // given
-    val dosage = "15mg"
-    val frequency = DrugFrequency.OD
-    val updatedDrugName = "Amlodipine, 15mg, OD"
-
-    // when
-    testCase.dispatch(SetSheetTitle(drugName, dosage, frequency))
-
-    // then
-    testCase.assertNoOutgoingEvents()
-    verify(uiActions).setSheetTitle(updatedDrugName)
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
-  fun `when set drug name effect is received with null values, construct drug name and set it in the ui`() {
-    // given
-    val updatedDrugName = "Amlodipine"
-
-    // when
-    testCase.dispatch(SetSheetTitle(drugName, null, null))
-
-    // then
-    testCase.assertNoOutgoingEvents()
-    verify(uiActions).setSheetTitle(updatedDrugName)
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
   fun `when set drug dosage effect is received, set drug dosage in the ui`() {
     // given
     val dosage = "12mg"

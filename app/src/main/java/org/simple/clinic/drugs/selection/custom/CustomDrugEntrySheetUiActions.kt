@@ -6,6 +6,5 @@ interface CustomDrugEntrySheetUiActions {
   fun showEditFrequencyDialog(frequency: DrugFrequency?)
   fun setDrugFrequency(frequency: DrugFrequency?)
   fun setDrugDosage(dosage: String?)
-  fun setSheetTitle(drugName: String)
   fun closeSheetAndGoToEditMedicineScreen()
 }

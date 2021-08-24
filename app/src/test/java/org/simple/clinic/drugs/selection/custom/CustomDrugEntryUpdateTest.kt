@@ -21,7 +21,7 @@ class CustomDrugEntryUpdateTest {
   private val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(drugName), dosagePlaceholder)
 
   @Test
-  fun `when dosage is edited, then update the model with the new dosage and update the sheet title`() {
+  fun `when dosage is edited, then update the model with the new dosage`() {
     val dosage = "200 mg"
     val drugNameLoadedModel = defaultModel.drugNameLoaded(drugName)
 
@@ -29,7 +29,7 @@ class CustomDrugEntryUpdateTest {
         .whenEvent(DosageEdited(dosage = dosage))
         .then(assertThatNext(
             hasModel(drugNameLoadedModel.dosageEdited(dosage = dosage)),
-            hasEffects(SetSheetTitle(drugName, dosage, null))
+            hasNoEffects()
         ))
   }
 
@@ -60,7 +60,7 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
-  fun `when frequency is edited, then update the model and set drug frequency and update the sheet title in the ui`() {
+  fun `when frequency is edited, then update the model and set drug frequency in the ui`() {
     val frequency = DrugFrequency.OD
     val drugNameLoadedModel = defaultModel.drugNameLoaded(drugName)
 
@@ -68,19 +68,19 @@ class CustomDrugEntryUpdateTest {
         .whenEvent(FrequencyEdited(frequency))
         .then(assertThatNext(
             hasModel(drugNameLoadedModel.frequencyEdited(frequency)),
-            hasEffects(SetDrugFrequency(frequency), SetSheetTitle(drugName, null, frequency))
+            hasEffects(SetDrugFrequency(frequency))
         ))
   }
 
   @Test
-  fun `when frequency is edited with a null value, then update the model and set drug frequency and update the sheet title with the frequency in the ui`() {
+  fun `when frequency is edited with a null value, then update the model and set drug frequency with the frequency in the ui`() {
     val drugNameLoadedModel = defaultModel.drugNameLoaded(drugName)
 
     updateSpec.given(drugNameLoadedModel)
         .whenEvent(FrequencyEdited(null))
         .then(assertThatNext(
             hasModel(drugNameLoadedModel.frequencyEdited(null)),
-            hasEffects(SetDrugFrequency(null), SetSheetTitle(drugName, null, null))
+            hasEffects(SetDrugFrequency(null))
         ))
   }
 
@@ -147,7 +147,7 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
-  fun `when the drug is fetched and is not deleted, then update the model, set sheet title and frequency`() {
+  fun `when the drug is fetched and is not deleted, then update the model and set frequency`() {
     val prescribedDrugUuid = UUID.fromString("96633994-6e4d-4528-b796-f03ae016553a")
     val drugFrequency = DrugFrequency.OD
     val dosage = "12mg"
@@ -164,7 +164,7 @@ class CustomDrugEntryUpdateTest {
                     .dosageEdited(dosage = dosage)
                     .frequencyEdited(frequency = drugFrequency)
                     .rxNormCodeEdited(prescribedDrug.rxNormCode)),
-                hasEffects(SetSheetTitle(drugName, dosage, drugFrequency), SetDrugFrequency(drugFrequency), SetDrugDosage(dosage)))
+                hasEffects(SetDrugFrequency(drugFrequency), SetDrugDosage(dosage)))
         )
   }
 
@@ -194,7 +194,7 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
-  fun `when drug is fetched, then update the model with drug values and set sheet title, drug frequency and dosage`() {
+  fun `when drug is fetched, then update the model with drug values and set drug frequency and dosage`() {
     val drugUuid = UUID.fromString("6bbc5bbe-863c-472a-b962-1fd3198e20d1")
     val drug = TestData.drug(id = drugUuid)
     updateSpec
@@ -203,7 +203,7 @@ class CustomDrugEntryUpdateTest {
         .then(
             assertThatNext(
                 hasModel(defaultModel.drugNameLoaded(drug.name).dosageEdited(drug.dosage).frequencyEdited(drug.frequency).rxNormCodeEdited(drug.rxNormCode)),
-                hasEffects(SetSheetTitle(drug.name, drug.dosage, drug.frequency), SetDrugFrequency(drug.frequency), SetDrugDosage(drug.dosage))
+                hasEffects(SetDrugFrequency(drug.frequency), SetDrugDosage(drug.dosage))
             )
         )
   }

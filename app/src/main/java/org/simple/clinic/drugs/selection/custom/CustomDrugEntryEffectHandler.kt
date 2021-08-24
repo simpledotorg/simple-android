@@ -8,7 +8,6 @@ import dagger.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.search.DrugRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
@@ -37,7 +36,6 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
         .addConsumer(ShowEditFrequencyDialog::class.java, { uiActions.showEditFrequencyDialog(it.frequency) }, schedulersProvider.ui())
         .addConsumer(SetDrugFrequency::class.java, { uiActions.setDrugFrequency(it.frequency) }, schedulersProvider.ui())
         .addConsumer(SetDrugDosage::class.java, { uiActions.setDrugDosage(it.dosage) }, schedulersProvider.ui())
-        .addConsumer(SetSheetTitle::class.java, ::setSheetTitle, schedulersProvider.ui())
         .addTransformer(SaveCustomDrugToPrescription::class.java, saveCustomDrugToPrescription())
         .addTransformer(UpdatePrescription::class.java, updatePrescription())
         .addAction(CloseSheetAndGoToEditMedicineScreen::class.java, uiActions::closeSheetAndGoToEditMedicineScreen, schedulersProvider.ui())
@@ -54,20 +52,6 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
           .map { drugRepository.drugImmediate(it.drugUuid) }
           .map(::DrugFetched)
     }
-  }
-
-  private fun setSheetTitle(setSheetTitle: SetSheetTitle) {
-    val sheetTitle = constructSheetTitle(setSheetTitle.name, setSheetTitle.dosage.nullIfBlank(), setSheetTitle.frequency)
-
-    uiActions.setSheetTitle(sheetTitle)
-  }
-
-  private fun constructSheetTitle(
-      name: String?,
-      dosage: String?,
-      frequency: DrugFrequency?
-  ): String {
-    return listOfNotNull(name, dosage, frequency?.toString()).joinToString()
   }
 
   private fun updatePrescription(): ObservableTransformer<UpdatePrescription, CustomDrugEntryEvent> {

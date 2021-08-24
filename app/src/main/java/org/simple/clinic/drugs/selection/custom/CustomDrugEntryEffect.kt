@@ -11,12 +11,6 @@ data class SetDrugFrequency(val frequency: DrugFrequency?) : CustomDrugEntryEffe
 
 data class SetDrugDosage(val dosage: String?) : CustomDrugEntryEffect()
 
-data class SetSheetTitle(
-    val name: String?,
-    val dosage: String?,
-    val frequency: DrugFrequency?
-) : CustomDrugEntryEffect()
-
 data class SaveCustomDrugToPrescription(
     val patientUuid: UUID,
     val drugName: String,

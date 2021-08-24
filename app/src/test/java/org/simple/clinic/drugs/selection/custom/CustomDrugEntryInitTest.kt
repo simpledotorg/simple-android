@@ -28,15 +28,14 @@ class CustomDrugEntryInitTest {
   }
 
   @Test
-  fun `when sheet is created in create mode from a drug name, then set the drug name, frequency and sheet title`() {
+  fun `when sheet is created in create mode from a drug name, then update the drug name in the model`() {
     val model = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(drugName), dosagePlaceholder)
 
     initSpec
         .whenInit(model)
         .then(
             assertThatFirst(
-                hasModel(model.drugNameLoaded(drugName)),
-                hasEffects(SetSheetTitle(name = drugName, dosage = null, frequency = null))
+                hasModel(model.drugNameLoaded(drugName))
             )
         )
   }

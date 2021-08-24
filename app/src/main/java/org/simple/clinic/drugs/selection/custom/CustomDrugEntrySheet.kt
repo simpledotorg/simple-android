@@ -154,9 +154,6 @@ class CustomDrugEntrySheet : BaseBottomSheet<
     drugFrequencyEditText.setText(updatedFrequencyString)
   }
 
-  override fun setSheetTitle(drugName: String) {
-    titleTextView.text = drugName
-  }
 
   override fun closeSheetAndGoToEditMedicineScreen() {
     router.popUntil(PrescribedDrugsScreenKey(screenKey.patientUuid))

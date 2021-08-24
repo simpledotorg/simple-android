@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.os.Parcelable
 import androidx.appcompat.app.AppCompatDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.parcelize.IgnoredOnParcel
@@ -15,7 +16,6 @@ import org.simple.clinic.drugs.search.DrugFrequency.BD
 import org.simple.clinic.drugs.search.DrugFrequency.OD
 import org.simple.clinic.drugs.search.DrugFrequency.QDS
 import org.simple.clinic.drugs.search.DrugFrequency.TDS
-import org.simple.clinic.drugs.search.DrugFrequency.Unknown
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.Succeeded
@@ -24,6 +24,13 @@ import javax.inject.Inject
 
 class SelectDrugFrequencyDialog : AppCompatDialogFragment() {
   
+  companion object {
+
+    fun readDrugFrequency(result: Succeeded): DrugFrequency? {
+      return (result.result as SelectedDrugFrequency).drugFrequency
+    }
+  }
+
   @Inject
   lateinit var router: Router
 
@@ -40,7 +47,8 @@ class SelectDrugFrequencyDialog : AppCompatDialogFragment() {
     return MaterialAlertDialogBuilder(requireContext())
         .setTitle(getString(R.string.custom_drug_entry_sheet_frequency))
         .setSingleChoiceItems(resources.getStringArray(R.array.custom_drug_entry_sheet_frequencies), selectedValueIndex) { _, indexSelected ->
-          router.popWithResult(Succeeded(drugFrequencyFromFrequenciesArrayIndex(indexSelected)))
+          val frequency = drugFrequencyFromFrequenciesArrayIndex(indexSelected)
+          router.popWithResult(Succeeded(SelectedDrugFrequency(frequency)))
         }
         .setPositiveButton(getString(R.string.custom_drug_entry_sheet_frequency_dialog_done)) { _, _ ->
           router.pop()
@@ -57,13 +65,14 @@ class SelectDrugFrequencyDialog : AppCompatDialogFragment() {
     requireActivity().onBackPressed()
   }
 
-  private fun drugFrequencyFromFrequenciesArrayIndex(index: Int): DrugFrequency {
+  private fun drugFrequencyFromFrequenciesArrayIndex(index: Int): DrugFrequency? {
     return when (index) {
+      0 -> null
       1 -> OD
       2 -> BD
       3 -> QDS
       4 -> TDS
-      else -> Unknown("None")
+      else -> throw IllegalArgumentException("Unknown drug frequency index selected")
     }
   }
 
@@ -91,4 +100,7 @@ class SelectDrugFrequencyDialog : AppCompatDialogFragment() {
   interface Injector {
     fun inject(target: SelectDrugFrequencyDialog)
   }
+
+  @Parcelize
+  data class SelectedDrugFrequency(val drugFrequency: DrugFrequency?) : Parcelable
 }

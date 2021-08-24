@@ -135,14 +135,14 @@ class CustomDrugEntrySheet : BaseBottomSheet<
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    setFragmentResultListener(SelectedDrugFrequency) { _, result ->
+    setFragmentResultListener(SelectDrugFrequency) { _, result ->
       if (result is Succeeded)
-        hotEvents.onNext(FrequencyEdited(result.result as DrugFrequency))
+        hotEvents.onNext(FrequencyEdited(SelectDrugFrequencyDialog.readDrugFrequency(result)))
     }
   }
 
   override fun showEditFrequencyDialog(frequency: DrugFrequency?) {
-    router.pushExpectingResult(SelectedDrugFrequency, SelectDrugFrequencyDialog.Key(frequency))
+    router.pushExpectingResult(SelectDrugFrequency, SelectDrugFrequencyDialog.Key(frequency))
   }
 
   override fun setDrugFrequency(frequency: DrugFrequency?) {
@@ -207,5 +207,5 @@ class CustomDrugEntrySheet : BaseBottomSheet<
   }
 
   @Parcelize
-  object SelectedDrugFrequency : Parcelable
+  object SelectDrugFrequency : Parcelable
 }

@@ -16,6 +16,7 @@
 - Bump lint to v30.0.1
 - Change large component corner shape to 8dp
 - Add the `CallResult` database table
+- Add 32dp horizontal margin for `noPatientsInFacilityTextView` in `screen_instant_search`
 
 ### Changes
 - [In Progress: 19 Aug 2021] UI improvements for medical history screen

@@ -19,6 +19,7 @@ import org.simple.clinic.di.PagingModule
 import org.simple.clinic.drugs.search.DrugsSearchScreen
 import org.simple.clinic.drugs.selection.EditMedicinesScreen
 import org.simple.clinic.drugs.selection.custom.CustomDrugEntrySheet
+import org.simple.clinic.drugs.selection.custom.drugfrequency.SelectDrugFrequencyDialog
 import org.simple.clinic.editpatient.ConfirmDiscardChangesDialog
 import org.simple.clinic.editpatient.EditPatientScreen
 import org.simple.clinic.editpatient.deletepatient.DeletePatientScreenInjector
@@ -135,7 +136,8 @@ interface TheActivityComponent :
     RemoveOverdueAppointmentScreen.Injector,
     DrugsSearchScreen.Injector,
     SyncIndicatorView.Injector,
-    CustomDrugEntrySheet.Injector {
+    CustomDrugEntrySheet.Injector,
+    SelectDrugFrequencyDialog.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory

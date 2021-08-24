@@ -33,15 +33,11 @@
     android:layout_height="wrap_content"
     android:layout_alignParentEnd="true"
     android:layout_gravity="center_vertical"
-    android:layout_marginTop="@dimen/spacing_18"
     android:layout_marginEnd="@dimen/spacing_8"
-    android:minWidth="@dimen/spacing_0"
-    android:minHeight="@dimen/spacing_0"
-    android:paddingHorizontal="@dimen/spacing_18"
-    android:paddingVertical="@dimen/spacing_10"
     android:text="@string/custom_drug_entry_sheet_remove"
+    app:layout_constraintBottom_toBottomOf="@+id/titleTextView"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintTop_toTopOf="@id/titleTextView"
     tools:visibility="visible" />
 
   <com.google.android.material.textfield.TextInputLayout

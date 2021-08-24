@@ -35,6 +35,15 @@ class SelectDrugFrequencyDialog : AppCompatDialogFragment() {
   lateinit var router: Router
 
   private val screenKey: Key by unsafeLazy { ScreenKey.key(this) }
+  private val frequenciesList by unsafeLazy {
+    listOf(
+        DrugFrequencyChoiceItem(drugFrequency = null, label = getString(R.string.custom_drug_entry_sheet_frequency_none)),
+        DrugFrequencyChoiceItem(drugFrequency = OD, label = getString(R.string.custom_drug_entry_sheet_frequency_OD)),
+        DrugFrequencyChoiceItem(drugFrequency = BD, label = getString(R.string.custom_drug_entry_sheet_frequency_BD)),
+        DrugFrequencyChoiceItem(drugFrequency = QDS, label = getString(R.string.custom_drug_entry_sheet_frequency_QDS)),
+        DrugFrequencyChoiceItem(drugFrequency = TDS, label = getString(R.string.custom_drug_entry_sheet_frequency_TDS))
+    )
+  }
 
   override fun onAttach(context: Context) {
     super.onAttach(context)
@@ -43,12 +52,11 @@ class SelectDrugFrequencyDialog : AppCompatDialogFragment() {
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    val selectedValueIndex = frequenciesArrayIndexFromDrugFrequency(screenKey.drugFrequency)
+    val selectedValueIndex = frequenciesList.map { it.drugFrequency }.indexOf(screenKey.drugFrequency)
     return MaterialAlertDialogBuilder(requireContext())
         .setTitle(getString(R.string.custom_drug_entry_sheet_frequency))
-        .setSingleChoiceItems(resources.getStringArray(R.array.custom_drug_entry_sheet_frequencies), selectedValueIndex) { _, indexSelected ->
-          val frequency = drugFrequencyFromFrequenciesArrayIndex(indexSelected)
-          router.popWithResult(Succeeded(SelectedDrugFrequency(frequency)))
+        .setSingleChoiceItems(frequenciesList.map { it.label }.toTypedArray(), selectedValueIndex) { _, indexSelected ->
+          router.popWithResult(Succeeded(SelectedDrugFrequency(frequenciesList[indexSelected].drugFrequency)))
         }
         .setPositiveButton(getString(R.string.custom_drug_entry_sheet_frequency_dialog_done)) { _, _ ->
           router.pop()
@@ -63,27 +71,6 @@ class SelectDrugFrequencyDialog : AppCompatDialogFragment() {
 
   private fun backPressed() {
     requireActivity().onBackPressed()
-  }
-
-  private fun drugFrequencyFromFrequenciesArrayIndex(index: Int): DrugFrequency? {
-    return when (index) {
-      0 -> null
-      1 -> OD
-      2 -> BD
-      3 -> QDS
-      4 -> TDS
-      else -> throw IllegalArgumentException("Unknown drug frequency index selected")
-    }
-  }
-
-  private fun frequenciesArrayIndexFromDrugFrequency(drugFrequency: DrugFrequency?): Int {
-    return when (drugFrequency) {
-      OD -> 1
-      BD -> 2
-      QDS -> 3
-      TDS -> 4
-      else -> 0
-    }
   }
 
   @Parcelize
@@ -103,4 +90,6 @@ class SelectDrugFrequencyDialog : AppCompatDialogFragment() {
 
   @Parcelize
   data class SelectedDrugFrequency(val drugFrequency: DrugFrequency?) : Parcelable
+
+  data class DrugFrequencyChoiceItem(val drugFrequency: DrugFrequency?, val label: String)
 }

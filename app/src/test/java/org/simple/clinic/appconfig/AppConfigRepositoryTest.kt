@@ -28,18 +28,34 @@ class AppConfigRepositoryTest {
   @Test
   fun `successful network calls to fetch the app manifest should return the app manifest`() {
     // given
-    val countries = listOf(
+    val countriesV1 = listOf(
         Country(isoCountryCode = "IN", endpoint = URI("https://in.simple.org"), displayName = "India", isdCode = "91"),
         Country(isoCountryCode = "BD", endpoint = URI("https://bd.simple.org"), displayName = "Bangladesh", isdCode = "880")
     )
-    whenever(manifestFetchApi.fetchManifest()).doReturn(Single.just(Manifest(countries)))
+
+    val countriesV2 = listOf(
+        CountryV2(
+            isoCountryCode = "IN",
+            displayName = "India",
+            isdCode = "91",
+            deployments = listOf(
+                Deployment(
+                    displayName = "IHCI",
+                    endPoint = URI("https://in.simple.org")
+                )
+            )
+        )
+    )
+    val countriesPayload = CountriesPayload(countriesV2)
+
+    whenever(manifestFetchApi.fetchManifest()).doReturn(Single.just(Manifest(countriesV1, countriesPayload)))
 
     // then
 
     repository
         .fetchAppManifest()
         .test()
-        .assertValue(FetchSucceeded(countries))
+        .assertValue(FetchSucceeded(countriesV1))
         .assertNoErrors()
   }
 

@@ -30,8 +30,15 @@ class EnterOtpUpdate(
 
   private fun effectsForStateChanged(stateChanged: ProtectedState): Next<EnterOtpModel, EnterOtpEffect> {
     return when (stateChanged) {
-      is Allowed -> dispatch(AllowOtpEntry)
+      is Allowed -> dispatch(generateEffectForAllowingOtpEntry(stateChanged), AllowOtpEntry)
       else -> // do something
+    }
+  }
+
+  private fun generateEffectForAllowingOtpEntry(protectedState: Allowed): EnterOtpEffect {
+    return if (protectedState.attemptsMade == 0) {
+      HideErrors
+    }else {
     }
   }
 

@@ -75,4 +75,17 @@ class EnterOtpUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when otp protected state is allowed and attempts are 0, then hide the errors`() {
+    updateSpec
+        .given(loginStartedModel)
+        .whenEvent(OtpEntryProtectedStateChanged(stateChanged = Allowed(0, attemptsRemaining = 5)))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(HideErrors)
+            )
+        )
+  }
 }

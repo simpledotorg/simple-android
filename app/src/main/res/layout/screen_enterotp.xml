@@ -74,6 +74,7 @@
       android:indeterminate="true"
       android:visibility="invisible" />
 
+
     <LinearLayout
       android:id="@+id/otpEntryContainer"
       android:layout_width="match_parent"
@@ -94,17 +95,53 @@
         android:textAppearance="?attr/textAppearanceHeadline6"
         android:textColor="?attr/colorOnSurface" />
 
-      <org.simple.clinic.widgets.StaggeredEditText
-        android:id="@+id/otpEntryEditText"
-        style="@style/Widget.Simple.TextField.PinEntry.Otp"
-        android:layout_width="wrap_content"
+      <org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview
+        android:id="@+id/OtpEntryAndLockViewFlipper"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal"
-        android:imeOptions="actionDone"
-        android:inputType="number"
-        android:maxLength="6"
-        tools:text="123456" />
+        android:layout_marginTop="@dimen/spacing_24"
+        android:measureAllChildren="false"
+        app:debug_displayedChild="1">
+
+        <org.simple.clinic.widgets.StaggeredEditText
+          android:id="@+id/otpEntryEditText"
+          style="@style/Widget.Simple.TextField.PinEntry.Otp"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          android:gravity="center_horizontal"
+          android:imeOptions="actionDone"
+          android:inputType="number"
+          android:maxLength="6"
+          tools:text="123456" />
+
+        <LinearLayout
+          android:id="@+id/otpentry_bruteforcelock"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@drawable/background_pinentry_bruteforcelock_timer"
+          android:gravity="center_horizontal"
+          android:orientation="vertical"
+          android:padding="@dimen/spacing_16"
+          android:visibility="gone"
+          tools:visibility="gone">
+
+          <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/enterotp_try_again_after"
+            android:textAppearance="?attr/textAppearanceBody1" />
+
+          <TextView
+            android:id="@+id/timeRemainingTillUnlockTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_8"
+            android:textAppearance="?attr/textAppearanceHeadline5Numeric"
+            tools:text="13:25" />
+
+        </LinearLayout>
+      </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
 
       <TextView
         android:id="@+id/errorTextView"

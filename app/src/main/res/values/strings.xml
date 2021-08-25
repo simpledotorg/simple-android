@@ -353,6 +353,7 @@
   <string name="enterotp_incorrect_code">Incorrect code, please try again</string>
   <string name="enterotp_resend_sms">Resend SMS</string>
   <string name="enterotp_sms_sent">New verification SMS sent</string>
+  <string name="enterotp_try_again_after">Try again after</string>
 
   <!-- Schedule appointment -->
   <string name="scheduleappointment_next_visit_in">Schedule next visit in</string>

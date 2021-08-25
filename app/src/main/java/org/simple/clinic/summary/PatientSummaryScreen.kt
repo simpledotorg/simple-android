@@ -534,7 +534,7 @@ class PatientSummaryScreen :
   }
 
   override fun showAddMeasurementsWarningDialog() {
-    MaterialAlertDialogBuilder(requireContext())
+    MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_Simple_MaterialAlertDialog_MeasurementWarning)
         .setTitle(R.string.warning_add_measurements_title)
         .setMessage(R.string.warning_add_measurements_message)
         .setPositiveButton(R.string.warning_add_measurements_positive_button, null)
@@ -543,7 +543,7 @@ class PatientSummaryScreen :
   }
 
   override fun showAddBloodPressureWarningDialog() {
-    MaterialAlertDialogBuilder(requireContext())
+    MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_Simple_MaterialAlertDialog_MeasurementWarning)
         .setTitle(R.string.warning_add_blood_pressure_title)
         .setMessage(R.string.warning_add_blood_pressure_message)
         .setPositiveButton(R.string.warning_add_blood_pressure_positive_button, null)
@@ -552,7 +552,7 @@ class PatientSummaryScreen :
   }
 
   override fun showAddBloodSugarWarningDialog() {
-    MaterialAlertDialogBuilder(requireContext())
+    MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_Simple_MaterialAlertDialog_MeasurementWarning)
         .setTitle(R.string.warning_add_blood_sugar_title)
         .setMessage(R.string.warning_add_blood_sugar_message)
         .setPositiveButton(R.string.warning_add_blood_sugar_positive_button, null)

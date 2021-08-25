@@ -1,5 +1,7 @@
 package org.simple.clinic.enterotp
 
+import org.simple.clinic.login.LoginResult
+
 sealed class EnterOtpEffect
 
 object LoadUser : EnterOtpEffect()
@@ -19,3 +21,5 @@ object ListenForUserBackgroundVerification : EnterOtpEffect()
 object RequestLoginOtp : EnterOtpEffect()
 
 object ShowSmsSentMessage : EnterOtpEffect()
+
+data class FailedLoginOtpAttempt(val result: LoginResult) : EnterOtpEffect()

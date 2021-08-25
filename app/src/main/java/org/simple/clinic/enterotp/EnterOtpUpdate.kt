@@ -4,6 +4,7 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState
 import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState.Allowed
+import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState.Blocked
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.activateuser.ActivateUser
 import org.simple.clinic.mobius.dispatch
@@ -31,7 +32,7 @@ class EnterOtpUpdate(
   private fun effectsForStateChanged(stateChanged: ProtectedState): Next<EnterOtpModel, EnterOtpEffect> {
     return when (stateChanged) {
       is Allowed -> dispatch(generateEffectForAllowingOtpEntry(stateChanged), AllowOtpEntry)
-      else -> // do something
+      is Blocked -> dispatch(BlockOtpEntryUntil(stateChanged.blockedTill))
     }
   }
 

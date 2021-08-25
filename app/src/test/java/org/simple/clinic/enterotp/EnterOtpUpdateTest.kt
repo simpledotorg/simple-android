@@ -7,9 +7,11 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState.Allowed
+import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState.Blocked
 import org.simple.clinic.login.LoginResult.NetworkError
 import org.simple.clinic.login.LoginResult.ServerError
 import org.simple.clinic.login.LoginResult.UnexpectedError
+import java.time.Instant
 import java.util.UUID
 
 class EnterOtpUpdateTest {
@@ -85,6 +87,20 @@ class EnterOtpUpdateTest {
             assertThatNext(
                 hasNoModel(),
                 hasEffects(HideErrors)
+            )
+        )
+  }
+
+  @Test
+  fun `when otp protected state is blocked, then block otp entry until 20 minutes`() {
+    val blockedUntil = Instant.parse("2021-09-01T00:00:00Z")
+    updateSpec
+        .given(loginStartedModel)
+        .whenEvent(OtpEntryProtectedStateChanged(stateChanged = Blocked(attemptsMade = 5, blockedTill = blockedUntil)))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(BlockOtpEntryUntil(blockedUntil))
             )
         )
   }

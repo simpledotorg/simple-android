@@ -16,10 +16,10 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       event: CustomDrugEntryEvent
   ): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
     return when (event) {
-      is DosageEdited -> next(model.dosageEdited(event.dosage), SetSheetTitle(model.drugName, event.dosage, model.frequency))
+      is DosageEdited -> next(model.dosageEdited(event.dosage))
       is DosageFocusChanged -> next(model.dosageFocusChanged(event.hasFocus))
-      is EditFrequencyClicked -> dispatch(ShowEditFrequencyDialog(event.frequency))
-      is FrequencyEdited -> next(model.frequencyEdited(event.frequency), SetDrugFrequency(event.frequency), SetSheetTitle(model.drugName, model.dosage, event.frequency))
+      is EditFrequencyClicked -> dispatch(ShowEditFrequencyDialog(model.frequency))
+      is FrequencyEdited -> next(model.frequencyEdited(event.frequency), SetDrugFrequency(event.frequency))
       is AddMedicineButtonClicked -> createOrUpdatePrescriptionEntry(model, event.patientUuid)
       is CustomDrugSaved, ExistingDrugRemoved -> dispatch(CloseSheetAndGoToEditMedicineScreen)
       is PrescribedDrugFetched -> prescriptionFetched(model, event.prescription)
@@ -37,7 +37,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
   ): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
     val updatedModel = model.drugNameLoaded(drug.name).dosageEdited(drug.dosage).frequencyEdited(drug.frequency).rxNormCodeEdited(drug.rxNormCode)
 
-    return next(updatedModel, SetSheetTitle(drug.name, drug.dosage, drug.frequency), SetDrugFrequency(drug.frequency), SetDrugDosage(drug.dosage))
+    return next(updatedModel, SetDrugFrequency(drug.frequency), SetDrugDosage(drug.dosage))
   }
 
   private fun prescriptionFetched(
@@ -48,10 +48,13 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
 
     val updatedModel = model.drugNameLoaded(prescription.name).dosageEdited(prescription.dosage).frequencyEdited(frequency).rxNormCodeEdited(prescription.rxNormCode)
 
-    return next(updatedModel, SetSheetTitle(prescription.name, prescription.dosage, frequency), SetDrugFrequency(frequency), SetDrugDosage(prescription.dosage))
+    return next(updatedModel, SetDrugFrequency(frequency), SetDrugDosage(prescription.dosage))
   }
 
-  private fun createOrUpdatePrescriptionEntry(model: CustomDrugEntryModel, patientUuid: UUID): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
+  private fun createOrUpdatePrescriptionEntry(
+      model: CustomDrugEntryModel,
+      patientUuid: UUID
+  ): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
     return when (model.openAs) {
       is OpenAs.New.FromDrugList -> dispatch(SaveCustomDrugToPrescription(patientUuid, model.drugName!!, model.dosage, model.rxNormCode, model.frequency))
       is OpenAs.New.FromDrugName -> dispatch(SaveCustomDrugToPrescription(patientUuid, model.openAs.drugName, model.dosage, null, model.frequency))

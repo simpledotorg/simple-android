@@ -20,6 +20,7 @@
 - Migrate `EnterOtpScreen` to a Fragment
 
 ### Changes
+- Implement `CustomDrugEntrySheet`
 - [In Progress: 19 Aug 2021] UI improvements for medical history screen
   - Show hypertension diagnosis and treatment in single card
   - Show separate cards for hypertension and diabetes diagnosis
@@ -28,7 +29,6 @@
 - [In Progress: 14 Jul 2021] Medication screen improvements
   - Search for commonly used drugs
 - [In Progress: 06 Aug 2021] Add support for Sri Lanka
-- [In Progress: 18 Aug 2021] Implement `CustomDrugEntrySheet`
 
 ## 2021-08-23-7922
 ### Internal

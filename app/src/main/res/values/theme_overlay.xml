@@ -54,6 +54,7 @@
   </style>
 
   <style name="ThemeOverlay.Simple.MaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+    <item name="colorSecondary">@color/simple_light_blue_500</item>
     <item name="alertDialogStyle">@style/MaterialAlertDialog.Simple</item>
     <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.Simple.Title.Text
     </item>

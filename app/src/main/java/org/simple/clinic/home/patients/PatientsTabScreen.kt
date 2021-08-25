@@ -26,13 +26,12 @@ import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appupdate.dialog.AppUpdateDialog
 import org.simple.clinic.databinding.ScreenPatientsBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.enterotp.EnterOtpScreenKey
+import org.simple.clinic.enterotp.EnterOtpScreen
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
@@ -268,7 +267,7 @@ class PatientsTabScreen : BaseScreen<
   }
 
   override fun openEnterCodeManuallyScreen() {
-    router.push(EnterOtpScreenKey().wrap())
+    router.push(EnterOtpScreen.Key())
   }
 
   override fun openScanSimpleIdCardScreen() {

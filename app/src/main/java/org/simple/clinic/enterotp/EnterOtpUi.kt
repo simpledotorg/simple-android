@@ -8,4 +8,5 @@ interface EnterOtpUi {
   fun showProgress()
   fun hideProgress()
   fun showOtpEntryMode(mode: OtpEntryMode)
+  fun showLimitReachedError(attemptsMade: Int)
 }

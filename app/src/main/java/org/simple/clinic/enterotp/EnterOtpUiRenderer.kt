@@ -43,7 +43,10 @@ class EnterOtpUiRenderer(
         ui.showOtpEntryMode(OtpEntry)
         ui.hideError()
       }
-      is Blocked -> ui.showOtpEntryMode(BruteForceOtpEntryLocked(model.protectedState.blockedTill))
+      is Blocked -> {
+        ui.showOtpEntryMode(BruteForceOtpEntryLocked(model.protectedState.blockedTill))
+        ui.showLimitReachedError(model.protectedState.attemptsMade)
+      }
     }
   }
 }

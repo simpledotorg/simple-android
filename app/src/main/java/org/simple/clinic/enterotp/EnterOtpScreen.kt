@@ -182,6 +182,10 @@ class EnterOtpScreen : BaseScreen<
     smsSentTextView.visibility = View.VISIBLE
   }
 
+  override fun showLimitReachedError(attemptsMade: Int) {
+    showError(resources.getString(R.string.otpentry_error_incorrect_otp_attempts_limit_reached, attemptsMade.toString()))
+  }
+
   override fun clearPin() {
     otpEntryEditText.text = null
   }

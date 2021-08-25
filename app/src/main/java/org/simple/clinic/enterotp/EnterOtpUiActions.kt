@@ -7,4 +7,5 @@ interface EnterOtpUiActions {
   fun showNetworkError()
   fun showUnexpectedError()
   fun showOtpEntryMode(mode: OtpEntryMode)
+  fun hideError()
 }

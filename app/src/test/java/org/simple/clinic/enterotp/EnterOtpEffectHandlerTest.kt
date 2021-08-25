@@ -90,4 +90,14 @@ class EnterOtpEffectHandlerTest {
     verify(uiActions).showOtpEntryMode(OtpEntryMode.BruteForceOtpEntryLocked(blockedUntil))
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when hide errors effect is received, then hide the errors`() {
+    // when
+    testCase.dispatch(HideErrors)
+
+    // then
+    verify(uiActions).hideError()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

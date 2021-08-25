@@ -32,3 +32,5 @@ object ShowUnexpectedError : EnterOtpEffect()
 object AllowOtpEntry: EnterOtpEffect()
 
 data class BlockOtpEntryUntil(val blockTill: Instant) : EnterOtpEffect()
+
+object HideErrors : EnterOtpEffect()

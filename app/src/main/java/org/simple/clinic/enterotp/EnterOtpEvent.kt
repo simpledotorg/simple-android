@@ -1,5 +1,6 @@
 package org.simple.clinic.enterotp
 
+import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.activateuser.ActivateUser
 import org.simple.clinic.user.User
@@ -22,3 +23,5 @@ data class RequestLoginOtpCompleted(val result: ActivateUser.Result) : EnterOtpE
 class EnterOtpResendSmsClicked : EnterOtpEvent() {
   override val analyticsName = "Enter OTP Manually:Resend SMS Clicked"
 }
+
+data class OtpEntryProtectedStateChanged(val stateChanged: ProtectedState) : EnterOtpEvent()

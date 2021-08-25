@@ -34,3 +34,6 @@ object AllowOtpEntry: EnterOtpEffect()
 data class BlockOtpEntryUntil(val blockTill: Instant) : EnterOtpEffect()
 
 object HideErrors : EnterOtpEffect()
+
+data class ShowIncorrectOtpLimitReachedError(val attemptsMade: Int) : EnterOtpEffect()
+

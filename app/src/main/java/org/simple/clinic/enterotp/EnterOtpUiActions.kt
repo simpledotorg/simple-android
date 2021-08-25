@@ -8,4 +8,5 @@ interface EnterOtpUiActions {
   fun showUnexpectedError()
   fun showOtpEntryMode(mode: OtpEntryMode)
   fun hideError()
+  fun showLimitReachedError(attemptsMade: Int)
 }

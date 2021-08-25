@@ -100,4 +100,17 @@ class EnterOtpEffectHandlerTest {
     verify(uiActions).hideError()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when show incorrect Otp limit reached error effects has received, then show the error`() {
+    // given
+    val attemptsMade = 5
+
+    // when
+    testCase.dispatch(ShowIncorrectOtpLimitReachedError(attemptsMade))
+
+    // then
+    verify(uiActions).showLimitReachedError(attemptsMade)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

@@ -49,6 +49,7 @@ class EnterOtpEffectHandler @AssistedInject constructor(
         .addAction(AllowOtpEntry::class.java, { uiActions.showOtpEntryMode(OtpEntry) }, schedulers.ui())
         .addConsumer(BlockOtpEntryUntil::class.java, { uiActions.showOtpEntryMode(BruteForceOtpEntryLocked(it.blockTill)) }, schedulers.ui())
         .addAction(HideErrors::class.java, { uiActions.hideError() }, schedulers.ui())
+        .addConsumer(ShowIncorrectOtpLimitReachedError::class.java, { uiActions.showLimitReachedError(it.attemptsMade) }, schedulers.ui())
         .build()
   }
 

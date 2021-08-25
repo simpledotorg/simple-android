@@ -5,6 +5,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.enterotp.OtpEntryMode.BruteForceOtpEntryLocked
 import org.simple.clinic.enterotp.OtpEntryMode.OtpEntry
 import org.simple.clinic.login.LoginUserWithOtp
 import org.simple.clinic.login.activateuser.ActivateUser
@@ -46,6 +47,7 @@ class EnterOtpEffectHandler @AssistedInject constructor(
         .addAction(ShowNetworkError::class.java, uiActions::showNetworkError, schedulers.ui())
         .addAction(ShowUnexpectedError::class.java, uiActions::showUnexpectedError, schedulers.ui())
         .addAction(AllowOtpEntry::class.java, { uiActions.showOtpEntryMode(OtpEntry) }, schedulers.ui())
+        .addConsumer(BlockOtpEntryUntil::class.java, { uiActions.showOtpEntryMode(BruteForceOtpEntryLocked(it.blockTill)) }, schedulers.ui())
         .build()
   }
 

@@ -1,6 +1,7 @@
 package org.simple.clinic.enterotp
 
 import org.simple.clinic.login.LoginResult
+import java.time.Instant
 
 sealed class EnterOtpEffect
 
@@ -29,3 +30,5 @@ object ShowNetworkError : EnterOtpEffect()
 object ShowUnexpectedError : EnterOtpEffect()
 
 object AllowOtpEntry: EnterOtpEffect()
+
+data class BlockOtpEntryUntil(val blockTill: Instant) : EnterOtpEffect()

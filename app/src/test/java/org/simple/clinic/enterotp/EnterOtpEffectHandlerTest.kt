@@ -9,6 +9,7 @@ import org.junit.Test
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
+import java.time.Instant
 
 class EnterOtpEffectHandlerTest {
 
@@ -76,5 +77,17 @@ class EnterOtpEffectHandlerTest {
     // then
     verify(uiActions).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verifyNoMoreInteractions(uiActions)
-   }
+  }
+
+  @Test
+  fun `when block otp entry until effect is received, then show the block otp entry mode`() {
+    // given
+    val blockedUntil = Instant.parse("2021-08-27T00:00:00Z")
+    // when
+    testCase.dispatch(BlockOtpEntryUntil(blockedUntil))
+
+    // then
+    verify(uiActions).showOtpEntryMode(OtpEntryMode.BruteForceOtpEntryLocked(blockedUntil))
+    verifyNoMoreInteractions(uiActions)
+  }
 }

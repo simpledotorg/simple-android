@@ -39,7 +39,10 @@ class EnterOtpUiRenderer(
     }
 
     when (model.protectedState) {
-      is Allowed -> ui.showOtpEntryMode(OtpEntry)
+      is Allowed -> {
+        ui.showOtpEntryMode(OtpEntry)
+        ui.hideError()
+      }
       is Blocked -> ui.showOtpEntryMode(BruteForceOtpEntryLocked(model.protectedState.blockedTill))
     }
   }

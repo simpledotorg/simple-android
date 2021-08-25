@@ -18,6 +18,7 @@
 - Add the `CallResult` database table
 
 ### Changes
+- Show measurement warning dialog actions vertically
 - [In Progress: 19 Aug 2021] UI improvements for medical history screen
   - Show hypertension diagnosis and treatment in single card
   - Show separate cards for hypertension and diabetes diagnosis

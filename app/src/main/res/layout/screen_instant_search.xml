@@ -92,8 +92,9 @@
 
     <TextView
       android:id="@+id/noPatientsInFacilityTextView"
-      android:layout_width="wrap_content"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
+      android:layout_marginHorizontal="@dimen/spacing_32"
       android:textAlignment="center"
       android:textAppearance="?attr/textAppearanceHeadline6"
       android:textColor="@color/color_on_surface_67"

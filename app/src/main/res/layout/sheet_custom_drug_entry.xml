@@ -24,6 +24,7 @@
     app:layout_constraintHorizontal_bias="0.0"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
+    app:layout_goneMarginEnd="@dimen/spacing_24"
     tools:text="Procardia XL" />
 
   <com.google.android.material.button.MaterialButton

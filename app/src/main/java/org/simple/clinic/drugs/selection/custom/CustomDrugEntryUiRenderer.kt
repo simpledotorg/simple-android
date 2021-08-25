@@ -1,6 +1,8 @@
 package org.simple.clinic.drugs.selection.custom
 
+import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.mobius.ViewRenderer
+import org.simple.clinic.util.nullIfBlank
 
 class CustomDrugEntryUiRenderer(
     private val ui: CustomDrugEntryUi,
@@ -9,10 +11,20 @@ class CustomDrugEntryUiRenderer(
   override fun render(model: CustomDrugEntryModel) {
     initialSetup(model.openAs)
 
+    setSheetTitle(model.drugName, model.dosage, model.frequency)
+
     showDefaultDosagePlaceholder(model.dosage, model.dosageHasFocus)
   }
 
-  private fun showDefaultDosagePlaceholder(dosage: String?, dosageHasFocus: Boolean?) {
+  private fun setSheetTitle(drugName: String?, dosage: String?, frequency: DrugFrequency?) {
+    val sheetTitle = listOfNotNull(drugName, dosage.nullIfBlank(), frequency?.toString()).joinToString()
+    ui.setSheetTitle(sheetTitle)
+  }
+
+  private fun showDefaultDosagePlaceholder(
+      dosage: String?,
+      dosageHasFocus: Boolean?
+  ) {
     if (dosageHasFocus == null) return
 
     when {

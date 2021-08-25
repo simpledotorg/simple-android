@@ -842,9 +842,14 @@
   <string name="custom_drug_entry_sheet_remove">Remove</string>
   <string name="custom_drug_entry_sheet_dosage">Dosage</string>
   <string name="custom_drug_entry_sheet_frequency">Frequency</string>
-  <string name="custom_drug_entry_sheet_dosage_placeholder">mg</string>
+  <string name="custom_drug_entry_sheet_dosage_placeholder" translatable="false">mg</string>
   <string name="custom_drug_entry_sheet_save_button_text">Save</string>
   <string name="custom_drug_entry_sheet_add_button_text">Add</string>
-  <string name="custom_drug_entry_sheet_frequency_none">None</string>
+  <string name="custom_drug_entry_sheet_frequency_none" translatable="false">None</string>
+  <string name="custom_drug_entry_sheet_frequency_dialog_done">Done</string>
+  <string name="custom_drug_entry_sheet_frequency_OD" translatable="false">OD</string>
+  <string name="custom_drug_entry_sheet_frequency_BD" translatable="false">BD</string>
+  <string name="custom_drug_entry_sheet_frequency_QDS" translatable="false">QDS</string>
+  <string name="custom_drug_entry_sheet_frequency_TDS" translatable="false">None</string>
 
 </resources>

@@ -103,6 +103,10 @@
     <item name="backgroundInsetEnd">@dimen/spacing_40</item>
   </style>
 
+  <style name="MaterialAlertDialog.Simple.MeasurementWarning">
+    <item name="android:layout">@layout/measurement_warning_dialog</item>
+  </style>
+
   <!-- Radio Button -->
   <style name="Widget.Simple.CompoundButton.RadioButton" parent="Widget.MaterialComponents.CompoundButton.RadioButton">
     <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.RadioButton</item>

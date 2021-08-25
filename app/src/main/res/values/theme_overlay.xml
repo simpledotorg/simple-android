@@ -67,6 +67,10 @@
     <item name="buttonBarPositiveButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog</item>
   </style>
 
+  <style name="ThemeOverlay.Simple.MaterialAlertDialog.MeasurementWarning">
+    <item name="alertDialogStyle">@style/MaterialAlertDialog.Simple.MeasurementWarning</item>
+  </style>
+
   <style name="ThemeOverlay.Simple.MaterialAlertDialog.Destructive">
     <item name="buttonBarPositiveButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog.Red1
     </item>

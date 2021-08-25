@@ -850,6 +850,6 @@
   <string name="custom_drug_entry_sheet_frequency_OD" translatable="false">OD</string>
   <string name="custom_drug_entry_sheet_frequency_BD" translatable="false">BD</string>
   <string name="custom_drug_entry_sheet_frequency_QDS" translatable="false">QDS</string>
-  <string name="custom_drug_entry_sheet_frequency_TDS" translatable="false">None</string>
+  <string name="custom_drug_entry_sheet_frequency_TDS" translatable="false">TDS</string>
 
 </resources>

@@ -1,8 +1,10 @@
 package org.simple.clinic.enterotp
 
+import android.os.Parcelable
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.timer
 import java.time.Duration
@@ -15,9 +17,11 @@ class BruteForceOtpEntryProtection @Inject constructor(
     private val otpStatePreference: Preference<BruteForceOtpProtectionState>
 ) {
 
-  sealed class ProtectedState {
+  sealed class ProtectedState : Parcelable {
+    @Parcelize
     data class Allowed(val attemptsMade: Int, val attemptsRemaining: Int) : ProtectedState()
 
+    @Parcelize
     data class Blocked(val attemptsMade: Int, val blockedTill: Instant) : ProtectedState()
   }
 

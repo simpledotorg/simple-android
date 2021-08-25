@@ -1,5 +1,9 @@
 package org.simple.clinic.enterotp
 
+import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState.Allowed
+import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState.Blocked
+import org.simple.clinic.enterotp.OtpEntryMode.BruteForceOtpEntryLocked
+import org.simple.clinic.enterotp.OtpEntryMode.OtpEntry
 import org.simple.clinic.enterotp.ValidationResult.IsNotRequiredLength
 import org.simple.clinic.enterotp.ValidationResult.NotValidated
 import org.simple.clinic.enterotp.ValidationResult.Valid
@@ -32,6 +36,11 @@ class EnterOtpUiRenderer(
         ui.showProgress()
       else
         ui.hideProgress()
+    }
+
+    when (model.protectedState) {
+      is Allowed -> ui.showOtpEntryMode(OtpEntry)
+      is Blocked -> ui.showOtpEntryMode(BruteForceOtpEntryLocked(model.protectedState.blockedTill))
     }
   }
 }

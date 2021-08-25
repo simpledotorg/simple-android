@@ -7,4 +7,5 @@ interface EnterOtpUi {
   fun hideError()
   fun showProgress()
   fun hideProgress()
+  fun showOtpEntryMode(mode: OtpEntryMode)
 }

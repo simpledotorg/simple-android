@@ -32,6 +32,7 @@
 - [In Progress: 14 Jul 2021] Medication screen improvements
   - Search for commonly used drugs
 - [In Progress: 06 Aug 2021] Add support for Sri Lanka
+- [In Progress: 25 Aug 2021] Implement providing drug frequencies label depending on the country
 
 ## 2021-08-23-7922
 ### Internal

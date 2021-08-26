@@ -12,6 +12,9 @@ import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.search.DrugRepository
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItems
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.EthiopiaDrugFrequencyProvider
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -29,12 +32,15 @@ class CustomDrugEntryEffectHandlerTest {
   private val uuidGenerator = FakeUuidGenerator.fixed(customDrugUUID)
   private val drugName = "Amlodipine"
 
+  private val drugFrequencyFactory = DrugFrequencyFactory(EthiopiaDrugFrequencyProvider())
+
   private val effectHandler = CustomDrugEntryEffectHandler(
       TestSchedulersProvider.trampoline(),
       prescriptionRepository,
       drugRepository,
       { facility },
       uuidGenerator,
+      drugFrequencyFactory,
       uiActions).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -210,6 +216,17 @@ class CustomDrugEntryEffectHandlerTest {
     verify(drugRepository).drugImmediate(customDrugUUID)
     verifyNoMoreInteractions(drugRepository)
     testCase.assertOutgoingEvents(DrugFetched(drug))
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when load drug frequency choice items effect is received, then load drug frequency choice items`() {
+    // when
+    testCase.dispatch(LoadDrugFrequencyChoiceItems)
+
+    // then
+    val expectedResult = drugFrequencyFactory.provideFields()
+    testCase.assertOutgoingEvents(DrugFrequencyChoiceItemsLoaded(DrugFrequencyChoiceItems(expectedResult)))
     verifyZeroInteractions(uiActions)
   }
 }

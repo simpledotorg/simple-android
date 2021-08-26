@@ -2,6 +2,7 @@ package org.simple.clinic.drugs.selection.custom
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.search.Drug
@@ -28,6 +29,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
         dispatch(RemoveDrugFromPrescription(update.prescribedDrugUuid))
       }
       is DrugFetched -> drugFetched(model, event.drug)
+      is DrugFrequencyChoiceItemsLoaded -> noChange()
     }
   }
 

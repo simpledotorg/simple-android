@@ -7,6 +7,7 @@
 - [In Progress: 30 Aug 2021] Record call results instead of updating the same appointment record
 
 ### Changes
+- Implement providing drug frequencies label depending on the country
 - [In Progress: 19 Aug 2021] UI improvements for medical history screen
   - Show hypertension diagnosis and treatment in single card
   - Show separate cards for hypertension and diabetes diagnosis

@@ -92,15 +92,16 @@ class EnterOtpUpdateTest {
   }
 
   @Test
-  fun `when otp protected state is blocked, then block otp entry until 20 minutes`() {
+  fun `when otp protected state is blocked, then block otp entry until 20 minutes and show otp limit reached error`() {
     val blockedUntil = Instant.parse("2021-09-01T00:00:00Z")
+    val attemptsMade = 5
     updateSpec
         .given(loginStartedModel)
-        .whenEvent(OtpEntryProtectedStateChanged(stateChanged = Blocked(attemptsMade = 5, blockedTill = blockedUntil)))
+        .whenEvent(OtpEntryProtectedStateChanged(stateChanged = Blocked(attemptsMade = attemptsMade, blockedTill = blockedUntil)))
         .then(
             assertThatNext(
                 hasNoModel(),
-                hasEffects(BlockOtpEntryUntil(blockedUntil))
+                hasEffects(ShowIncorrectOtpLimitReachedError(attemptsMade), BlockOtpEntryUntil(blockedUntil))
             )
         )
   }

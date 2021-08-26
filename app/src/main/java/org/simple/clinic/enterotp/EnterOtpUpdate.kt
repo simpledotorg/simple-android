@@ -32,7 +32,7 @@ class EnterOtpUpdate(
   private fun effectsForStateChanged(stateChanged: ProtectedState): Next<EnterOtpModel, EnterOtpEffect> {
     return when (stateChanged) {
       is Allowed -> dispatch(generateEffectForAllowingOtpEntry(stateChanged), AllowOtpEntry)
-      is Blocked -> dispatch(BlockOtpEntryUntil(stateChanged.blockedTill))
+      is Blocked -> dispatch(ShowIncorrectOtpLimitReachedError(stateChanged.attemptsMade), BlockOtpEntryUntil(stateChanged.blockedTill))
     }
   }
 

@@ -12,10 +12,6 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.search.DrugFrequency
-import org.simple.clinic.drugs.search.DrugFrequency.BD
-import org.simple.clinic.drugs.search.DrugFrequency.OD
-import org.simple.clinic.drugs.search.DrugFrequency.QDS
-import org.simple.clinic.drugs.search.DrugFrequency.TDS
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -36,15 +32,6 @@ class SelectDrugFrequencyDialog : AppCompatDialogFragment() {
   lateinit var router: Router
 
   private val screenKey: Key by unsafeLazy { ScreenKey.key(this) }
-  private val frequenciesList by unsafeLazy {
-    listOf(
-        DrugFrequencyChoiceItem_Old(drugFrequency = null, label = getString(R.string.custom_drug_entry_sheet_frequency_none)),
-        DrugFrequencyChoiceItem_Old(drugFrequency = OD, label = getString(R.string.custom_drug_entry_sheet_frequency_OD)),
-        DrugFrequencyChoiceItem_Old(drugFrequency = BD, label = getString(R.string.custom_drug_entry_sheet_frequency_BD)),
-        DrugFrequencyChoiceItem_Old(drugFrequency = QDS, label = getString(R.string.custom_drug_entry_sheet_frequency_QDS)),
-        DrugFrequencyChoiceItem_Old(drugFrequency = TDS, label = getString(R.string.custom_drug_entry_sheet_frequency_TDS))
-    )
-  }
 
   override fun onAttach(context: Context) {
     super.onAttach(context)
@@ -53,11 +40,11 @@ class SelectDrugFrequencyDialog : AppCompatDialogFragment() {
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    val selectedValueIndex = frequenciesList.map { it.drugFrequency }.indexOf(screenKey.drugFrequency)
+    val selectedValueIndex = screenKey.drugFrequencyChoiceItems.map { it.drugFrequency }.indexOf(screenKey.drugFrequency)
     return MaterialAlertDialogBuilder(requireContext())
         .setTitle(getString(R.string.custom_drug_entry_sheet_frequency))
-        .setSingleChoiceItems(frequenciesList.map { it.label }.toTypedArray(), selectedValueIndex) { _, indexSelected ->
-          router.popWithResult(Succeeded(SelectedDrugFrequency(frequenciesList[indexSelected].drugFrequency)))
+        .setSingleChoiceItems(screenKey.drugFrequencyChoiceItems.map { getString(it.labelResId) }.toTypedArray(), selectedValueIndex) { _, indexSelected ->
+          router.popWithResult(Succeeded(SelectedDrugFrequency(screenKey.drugFrequencyChoiceItems[indexSelected].drugFrequency)))
         }
         .setPositiveButton(getString(R.string.custom_drug_entry_sheet_frequency_dialog_done)) { _, _ ->
           router.pop()
@@ -92,6 +79,4 @@ class SelectDrugFrequencyDialog : AppCompatDialogFragment() {
 
   @Parcelize
   data class SelectedDrugFrequency(val drugFrequency: DrugFrequency?) : Parcelable
-
-  data class DrugFrequencyChoiceItem_Old(val drugFrequency: DrugFrequency?, val label: String)
 }

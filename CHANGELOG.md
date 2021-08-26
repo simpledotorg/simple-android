@@ -18,6 +18,7 @@
 - Add the `CallResult` database table
 - Add 32dp horizontal margin for `noPatientsInFacilityTextView` in `screen_instant_search`
 - Migrate `EnterOtpScreen` to a Fragment
+- Add v2 manifest support in app
 
 ### Changes
 - Implement `CustomDrugEntrySheet`

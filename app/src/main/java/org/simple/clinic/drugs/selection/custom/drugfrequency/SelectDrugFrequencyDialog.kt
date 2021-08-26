@@ -37,11 +37,11 @@ class SelectDrugFrequencyDialog : AppCompatDialogFragment() {
   private val screenKey: Key by unsafeLazy { ScreenKey.key(this) }
   private val frequenciesList by unsafeLazy {
     listOf(
-        DrugFrequencyChoiceItem(drugFrequency = null, label = getString(R.string.custom_drug_entry_sheet_frequency_none)),
-        DrugFrequencyChoiceItem(drugFrequency = OD, label = getString(R.string.custom_drug_entry_sheet_frequency_OD)),
-        DrugFrequencyChoiceItem(drugFrequency = BD, label = getString(R.string.custom_drug_entry_sheet_frequency_BD)),
-        DrugFrequencyChoiceItem(drugFrequency = QDS, label = getString(R.string.custom_drug_entry_sheet_frequency_QDS)),
-        DrugFrequencyChoiceItem(drugFrequency = TDS, label = getString(R.string.custom_drug_entry_sheet_frequency_TDS))
+        DrugFrequencyChoiceItem_Old(drugFrequency = null, label = getString(R.string.custom_drug_entry_sheet_frequency_none)),
+        DrugFrequencyChoiceItem_Old(drugFrequency = OD, label = getString(R.string.custom_drug_entry_sheet_frequency_OD)),
+        DrugFrequencyChoiceItem_Old(drugFrequency = BD, label = getString(R.string.custom_drug_entry_sheet_frequency_BD)),
+        DrugFrequencyChoiceItem_Old(drugFrequency = QDS, label = getString(R.string.custom_drug_entry_sheet_frequency_QDS)),
+        DrugFrequencyChoiceItem_Old(drugFrequency = TDS, label = getString(R.string.custom_drug_entry_sheet_frequency_TDS))
     )
   }
 
@@ -91,5 +91,5 @@ class SelectDrugFrequencyDialog : AppCompatDialogFragment() {
   @Parcelize
   data class SelectedDrugFrequency(val drugFrequency: DrugFrequency?) : Parcelable
 
-  data class DrugFrequencyChoiceItem(val drugFrequency: DrugFrequency?, val label: String)
+  data class DrugFrequencyChoiceItem_Old(val drugFrequency: DrugFrequency?, val label: String)
 }

@@ -29,7 +29,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
         dispatch(RemoveDrugFromPrescription(update.prescribedDrugUuid))
       }
       is DrugFetched -> drugFetched(model, event.drug)
-      is DrugFrequencyChoiceItemsLoaded -> noChange()
+      is DrugFrequencyChoiceItemsLoaded -> next(model.drugFrequencyChoiceItemsLoaded(event.drugFrequencyChoiceItems.items))
     }
   }
 

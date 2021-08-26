@@ -7,8 +7,11 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.R
 import org.simple.clinic.TestData
 import org.simple.clinic.drugs.search.DrugFrequency
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItems
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import java.util.UUID
 
@@ -204,6 +207,26 @@ class CustomDrugEntryUpdateTest {
             assertThatNext(
                 hasModel(defaultModel.drugNameLoaded(drug.name).dosageEdited(drug.dosage).frequencyEdited(drug.frequency).rxNormCodeEdited(drug.rxNormCode)),
                 hasEffects(SetDrugFrequency(drug.frequency), SetDrugDosage(drug.dosage))
+            )
+        )
+  }
+
+  @Test
+  fun `when drug frequency choice items are loaded, then update the model`() {
+    val listItems = listOf(
+        DrugFrequencyChoiceItem(drugFrequency = null, labelResId = R.string.custom_drug_entry_sheet_frequency_none),
+        DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.OD, labelResId = R.string.custom_drug_entry_sheet_frequency_OD),
+        DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.BD, labelResId = R.string.custom_drug_entry_sheet_frequency_BD),
+        DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.QDS, labelResId = R.string.custom_drug_entry_sheet_frequency_QDS),
+        DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.TDS, labelResId = R.string.custom_drug_entry_sheet_frequency_TDS))
+    val drugFrequencyChoiceItems = DrugFrequencyChoiceItems(items = listItems)
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DrugFrequencyChoiceItemsLoaded(drugFrequencyChoiceItems))
+        .then(
+            assertThatNext(
+                hasModel(defaultModel.drugFrequencyChoiceItemsLoaded(listItems))
             )
         )
   }

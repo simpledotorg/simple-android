@@ -1,6 +1,7 @@
 package org.simple.clinic.enterotp
 
 import android.os.Parcelable
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState
 import org.simple.clinic.enterotp.OtpEntryMode.OtpEntry
@@ -14,7 +15,7 @@ data class EnterOtpModel(
     val isAsyncOperationOngoing: Boolean,
     val protectedState: ProtectedState,
 
-) : Parcelable {
+    ) : Parcelable {
 
   companion object {
 
@@ -28,6 +29,9 @@ data class EnterOtpModel(
       )
     }
   }
+
+  val hasNoIncorrectPinEntries: Boolean
+    get() = (protectedState as ProtectedState.Allowed).attemptsMade == 0
 
   val hasLoadedUser: Boolean
     get() = user != null

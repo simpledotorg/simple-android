@@ -41,12 +41,20 @@ class EnterOtpUiRenderer(
     when (model.protectedState) {
       is Allowed -> {
         ui.showOtpEntryMode(OtpEntry)
-        ui.hideError()
+        generateUiForAllowingOtpEntry(model.hasNoIncorrectPinEntries, model.protectedState.attemptsMade, model.protectedState.attemptsRemaining)
       }
       is Blocked -> {
         ui.showOtpEntryMode(BruteForceOtpEntryLocked(model.protectedState.blockedTill))
         ui.showLimitReachedError(model.protectedState.attemptsMade)
       }
+    }
+  }
+
+  private fun generateUiForAllowingOtpEntry(hasNoIncorrectPinEntries: Boolean, attemptsMade: Int, attemptsRemaining: Int) {
+    if (hasNoIncorrectPinEntries) {
+      ui.hideError()
+    } else {
+      ui.showFailedAttemptOtpError(attemptsMade = attemptsMade, attemptsRemaining = attemptsRemaining)
     }
   }
 }

@@ -37,3 +37,8 @@ object HideErrors : EnterOtpEffect()
 
 data class ShowIncorrectOtpLimitReachedError(val attemptsMade: Int) : EnterOtpEffect()
 
+data class ShowIncorrectOtpError(
+    val attemptsMade: Int,
+    val attemptsRemaining: Int
+) : EnterOtpEffect()
+

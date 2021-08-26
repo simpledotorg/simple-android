@@ -113,4 +113,17 @@ class EnterOtpEffectHandlerTest {
     verify(uiActions).showLimitReachedError(attemptsMade)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when show incorrect otp error attempt is received, then show the error with attempts remaining`() {
+    // given
+    val attemptsMade = 2
+    val attemptsRemaining = 3
+    // when
+    testCase.dispatch(ShowIncorrectOtpError(attemptsMade = attemptsMade, attemptsRemaining = attemptsRemaining))
+
+    // then
+    verify(uiActions).showIncorrectOtpErrorAttempt(attemptsMade, attemptsRemaining)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

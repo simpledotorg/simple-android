@@ -197,6 +197,15 @@ class EnterOtpScreen : BaseScreen<
     showError(resources.getString(R.string.otpentry_error_incorrect_otp_attempts_limit_reached, attemptsMade.toString()))
   }
 
+  override fun showIncorrectOtpErrorAttempt(attemptsMade: Int, attemptsRemaining: Int) {
+    if (attemptsMade <= 2) {
+      showError(resources.getString(R.string.otpentry_error_incorrect_otp_attempt))
+    } else if (attemptsMade in 3..4) {
+      showError(resources.getString(R.string.otpentry_error_incorrect_otp_attempts_remaining, attemptsRemaining.toString()))
+    }
+    otpEntryEditText.showKeyboard()
+  }
+
   override fun clearPin() {
     otpEntryEditText.text = null
   }

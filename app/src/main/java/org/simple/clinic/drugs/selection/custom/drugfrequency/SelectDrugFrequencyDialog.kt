@@ -16,6 +16,7 @@ import org.simple.clinic.drugs.search.DrugFrequency.BD
 import org.simple.clinic.drugs.search.DrugFrequency.OD
 import org.simple.clinic.drugs.search.DrugFrequency.QDS
 import org.simple.clinic.drugs.search.DrugFrequency.TDS
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.Succeeded
@@ -76,6 +77,7 @@ class SelectDrugFrequencyDialog : AppCompatDialogFragment() {
   @Parcelize
   data class Key(
       val drugFrequency: DrugFrequency?,
+      val drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>,
       override val analyticsName: String = "Drug Frequency Dialog"
   ) : ScreenKey() {
     @IgnoredOnParcel

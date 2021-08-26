@@ -145,7 +145,7 @@ class CustomDrugEntrySheet : BaseBottomSheet<
       frequency: DrugFrequency?,
       drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>
   ) {
-    router.pushExpectingResult(SelectDrugFrequency, SelectDrugFrequencyDialog.Key(frequency))
+    router.pushExpectingResult(SelectDrugFrequency, SelectDrugFrequencyDialog.Key(frequency, drugFrequencyChoiceItems))
   }
 
   override fun setDrugFrequency(frequencyLabelRes: Int) {

@@ -33,9 +33,7 @@ class CallResultRepository @Inject constructor(
 
   }
 
-  override fun recordCount(): Observable<Int> {
-
-  }
+  override fun recordCount() = callResultDao.recordCount()
 
   override fun pendingSyncRecordCount(): Observable<Int> {
 

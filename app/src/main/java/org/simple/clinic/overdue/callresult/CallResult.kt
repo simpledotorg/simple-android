@@ -7,6 +7,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import io.reactivex.Observable
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
@@ -57,5 +58,11 @@ data class CallResult(
         callResultIds: List<UUID>,
         newStatus: SyncStatus
     )
+
+    @Query("""
+      SELECT COUNT(id)
+      FROM CallResult
+    """)
+    fun recordCount(): Observable<Int>
   }
 }

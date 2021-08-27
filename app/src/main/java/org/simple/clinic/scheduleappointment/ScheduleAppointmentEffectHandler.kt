@@ -62,6 +62,7 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
         .addTransformer(LoadTeleconsultRecord::class.java, loadTeleconsultRecordDetails())
         .addConsumer(GoToTeleconsultStatusSheet::class.java, { uiActions.openTeleconsultStatusSheet(it.teleconsultRecordUuid) }, schedulers.ui())
         .addTransformer(ScheduleAppointmentForPatientFromNext::class.java, scheduleAppointmentForPatientFromNext())
+        .addConsumer(ScheduleAppointmentViewEffect::class.java, viewEffectsHandler::handle)
         .build()
   }
 

@@ -15,12 +15,12 @@
 - Bump logback to v1.2.5
 - Bump lint to v30.0.1
 - Change large component corner shape to 8dp
-- Add the `CallResult` database table
 - Add 32dp horizontal margin for `noPatientsInFacilityTextView` in `screen_instant_search`
 - Migrate `EnterOtpScreen` to a Fragment
 - Add v2 manifest support in app
 - Fix TDS drug frequency string value
 - Remove unused `DrugFrequencyChoiceItem` class
+- [In Progress: 27 Aug 2021] Record call results instead of updating the same appointment record
 
 ### Changes
 - Implement `CustomDrugEntrySheet`

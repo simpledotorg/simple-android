@@ -1,5 +1,6 @@
 package org.simple.clinic.overdue.callresult
 
+import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -26,4 +27,8 @@ data class CallResult(
     val timestamps: Timestamps,
 
     val syncStatus: SyncStatus
-)
+) {
+
+  @Dao
+  interface RoomDao
+}

@@ -172,6 +172,8 @@ abstract class AppDatabase : RoomDatabase() {
 
   abstract fun drugDao(): Drug.RoomDao
 
+  abstract fun callResultDao(): CallResult.RoomDao
+
   fun clearAppData() {
     runInTransaction {
       patientDao().clear()

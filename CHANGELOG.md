@@ -19,6 +19,8 @@
 - Add 32dp horizontal margin for `noPatientsInFacilityTextView` in `screen_instant_search`
 - Migrate `EnterOtpScreen` to a Fragment
 - Add v2 manifest support in app
+- Fix TDS drug frequency string value
+- Remove unused `DrugFrequencyChoiceItem` class
 
 ### Changes
 - Implement `CustomDrugEntrySheet`

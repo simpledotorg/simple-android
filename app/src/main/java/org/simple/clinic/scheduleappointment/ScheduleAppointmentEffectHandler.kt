@@ -60,7 +60,7 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
         .addTransformer(LoadPatientDefaulterStatus::class.java, loadPatientDefaulterStatus())
         .addTransformer(LoadTeleconsultRecord::class.java, loadTeleconsultRecordDetails())
         .addTransformer(ScheduleAppointmentForPatientFromNext::class.java, scheduleAppointmentForPatientFromNext())
-        .addConsumer(ScheduleAppointmentViewEffect::class.java, viewEffectsHandler::handle)
+        .addConsumer(ScheduleAppointmentViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 

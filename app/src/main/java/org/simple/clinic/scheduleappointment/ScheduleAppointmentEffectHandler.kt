@@ -38,14 +38,12 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val uuidGenerator: UuidGenerator,
     private val teleconsultRecordRepository: TeleconsultRecordRepository,
-    @Assisted private val uiActions: ScheduleAppointmentUiActions,
     @Assisted private val viewEffectsHandler: ScheduleAppointmentViewEffectHandler
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        uiActions: ScheduleAppointmentUiActions,
         viewEffectsHandler: ScheduleAppointmentViewEffectHandler
     ): ScheduleAppointmentEffectHandler
   }

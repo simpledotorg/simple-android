@@ -6,6 +6,7 @@ import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
+import androidx.room.Query
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
@@ -36,5 +37,25 @@ data class CallResult(
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(callResults: List<CallResult>)
+
+    @Query("""
+        UPDATE CallResult
+        SET syncStatus = :newStatus
+        WHERE syncStatus = :oldStatus
+    """)
+    fun updateSyncStatus(
+        oldStatus: SyncStatus,
+        newStatus: SyncStatus
+    )
+
+    @Query("""
+      UPDATE CallResult
+      SET syncStatus = :newStatus
+      WHERE id IN (:callResultIds)
+    """)
+    fun updateSyncStatusForIds(
+        callResultIds: List<UUID>,
+        newStatus: SyncStatus
+    )
   }
 }

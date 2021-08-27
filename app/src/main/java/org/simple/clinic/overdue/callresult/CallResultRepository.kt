@@ -16,11 +16,17 @@ class CallResultRepository @Inject constructor(
   }
 
   override fun setSyncStatus(from: SyncStatus, to: SyncStatus) {
-
+    callResultDao.updateSyncStatus(
+        oldStatus = from,
+        newStatus = to
+    )
   }
 
   override fun setSyncStatus(ids: List<UUID>, to: SyncStatus) {
-
+    callResultDao.updateSyncStatusForIds(
+        callResultIds = ids,
+        newStatus = to
+    )
   }
 
   override fun mergeWithLocalData(payloads: List<CallResultPayload>) {

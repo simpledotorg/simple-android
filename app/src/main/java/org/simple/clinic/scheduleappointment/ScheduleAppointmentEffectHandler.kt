@@ -54,7 +54,6 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<ScheduleAppointmentEffect, ScheduleAppointmentEvent>()
         .addTransformer(LoadDefaultAppointmentDate::class.java, loadDefaultAppointmentDate())
-        .addConsumer(ShowDatePicker::class.java, { uiActions.showManualDateSelector(it.selectedDate) }, schedulers.ui())
         .addTransformer(LoadAppointmentFacilities::class.java, loadAppointmentFacility())
         .addTransformer(ScheduleAppointmentForPatient::class.java, scheduleAppointmentForPatient())
         .addAction(CloseSheet::class.java, uiActions::closeSheet, schedulers.ui())

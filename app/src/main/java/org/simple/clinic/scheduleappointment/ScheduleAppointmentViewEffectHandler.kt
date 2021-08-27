@@ -7,6 +7,8 @@ class ScheduleAppointmentViewEffectHandler(
 ) : ViewEffectsHandler<ScheduleAppointmentViewEffect> {
 
   override fun handle(viewEffect: ScheduleAppointmentViewEffect) {
-
+    when (viewEffect) {
+      is ShowDatePicker -> uiActions.showManualDateSelector(viewEffect.selectedDate)
+    }
   }
 }

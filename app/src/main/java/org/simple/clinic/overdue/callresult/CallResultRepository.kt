@@ -12,6 +12,7 @@ class CallResultRepository @Inject constructor(
 ) : SynceableRepository<CallResult, CallResultPayload> {
 
   override fun save(records: List<CallResult>): Completable {
+    return Completable.fromAction { callResultDao.save(records) }
   }
 
   override fun setSyncStatus(from: SyncStatus, to: SyncStatus) {

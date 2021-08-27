@@ -3,6 +3,8 @@ package org.simple.clinic.overdue.callresult
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.patient.SyncStatus
@@ -30,5 +32,9 @@ data class CallResult(
 ) {
 
   @Dao
-  interface RoomDao
+  interface RoomDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun save(callResults: List<CallResult>)
+  }
 }

@@ -3,6 +3,7 @@ package org.simple.clinic.drugs.selection.custom
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.drugs.search.DrugFrequency
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
 
 @Parcelize
 data class CustomDrugEntryModel(
@@ -12,7 +13,8 @@ data class CustomDrugEntryModel(
     val dosageHasFocus: Boolean?,
     val frequency: DrugFrequency?,
     val rxNormCode: String?,
-    val dosagePlaceholder: String
+    val dosagePlaceholder: String,
+    val drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>?
 ) : Parcelable {
   companion object {
     fun default(
@@ -25,7 +27,8 @@ data class CustomDrugEntryModel(
         dosageHasFocus = null,
         frequency = null,
         rxNormCode = null,
-        dosagePlaceholder = dosagePlaceholder)
+        dosagePlaceholder = dosagePlaceholder,
+        drugFrequencyChoiceItems = null)
   }
 
   val isDosageEqualToPlaceHolderOrEmpty
@@ -49,5 +52,9 @@ data class CustomDrugEntryModel(
 
   fun rxNormCodeEdited(rxNormCode: String?): CustomDrugEntryModel {
     return copy(rxNormCode = rxNormCode)
+  }
+
+  fun drugFrequencyChoiceItemsLoaded(drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>): CustomDrugEntryModel {
+    return copy(drugFrequencyChoiceItems = drugFrequencyChoiceItems)
   }
 }

@@ -71,5 +71,17 @@ data class CallResult(
       WHERE syncStatus = :syncStatus
     """)
     fun countWithStatus(syncStatus: SyncStatus): Observable<Int>
+
+    @Query("""
+      SELECT *
+      FROM CallResult
+      WHERE syncStatus = :syncStatus
+      LIMIT :limit OFFSET :offset
+    """)
+    fun recordsWithSyncStatusBatched(
+        syncStatus: SyncStatus,
+        limit: Int,
+        offset: Int
+    ): List<CallResult>
   }
 }

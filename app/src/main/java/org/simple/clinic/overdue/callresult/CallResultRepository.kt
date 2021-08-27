@@ -37,7 +37,9 @@ class CallResultRepository @Inject constructor(
 
   override fun pendingSyncRecordCount() = callResultDao.countWithStatus(SyncStatus.PENDING)
 
-  override fun pendingSyncRecords(limit: Int, offset: Int): List<CallResult> {
-
-  }
+  override fun pendingSyncRecords(limit: Int, offset: Int) = callResultDao.recordsWithSyncStatusBatched(
+      syncStatus = SyncStatus.PENDING,
+      limit = limit,
+      offset = offset
+  )
 }

@@ -23,7 +23,7 @@ import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
 class SelectDrugFrequencyDialog : AppCompatDialogFragment() {
-  
+
   companion object {
 
     fun readDrugFrequency(result: Succeeded): DrugFrequency? {

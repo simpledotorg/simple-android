@@ -1,11 +1,15 @@
 package org.simple.clinic.drugs.selection.custom
 
 import org.simple.clinic.drugs.search.DrugFrequency
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
 import java.util.UUID
 
 sealed class CustomDrugEntryEffect
 
-data class ShowEditFrequencyDialog(val frequency: DrugFrequency?) : CustomDrugEntryEffect()
+data class ShowEditFrequencyDialog(
+    val frequency: DrugFrequency?,
+    val drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>
+) : CustomDrugEntryEffect()
 
 data class SetDrugFrequency(val frequencyLabelRes: Int) : CustomDrugEntryEffect()
 

@@ -25,6 +25,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.drugs.selection.custom.drugfrequency.SelectDrugFrequencyDialog
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -140,7 +141,10 @@ class CustomDrugEntrySheet : BaseBottomSheet<
     }
   }
 
-  override fun showEditFrequencyDialog(frequency: DrugFrequency?) {
+  override fun showEditFrequencyDialog(
+      frequency: DrugFrequency?,
+      drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>
+  ) {
     router.pushExpectingResult(SelectDrugFrequency, SelectDrugFrequencyDialog.Key(frequency))
   }
 

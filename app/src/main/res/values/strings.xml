@@ -851,5 +851,9 @@
   <string name="custom_drug_entry_sheet_frequency_BD" translatable="false">BD</string>
   <string name="custom_drug_entry_sheet_frequency_QDS" translatable="false">QDS</string>
   <string name="custom_drug_entry_sheet_frequency_TDS" translatable="false">TDS</string>
+  <string name="custom_drug_entry_sheet_frequency_ethiopia_PD" translatable="false">PD</string>
+  <string name="custom_drug_entry_sheet_frequency_ethiopia_BID" translatable="false">BID</string>
+  <string name="custom_drug_entry_sheet_frequency_ethiopia_QID" translatable="false">QID</string>
+  <string name="custom_drug_entry_sheet_frequency_ethiopia_TID" translatable="false">TID</string>
 
 </resources>

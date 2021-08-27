@@ -3,6 +3,7 @@ package org.simple.clinic.drugs.selection.custom
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.search.Drug
 import org.simple.clinic.drugs.search.DrugFrequency
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItems
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -27,3 +28,5 @@ object ExistingDrugRemoved : CustomDrugEntryEvent()
 object RemoveDrugButtonClicked : CustomDrugEntryEvent()
 
 data class DrugFetched(val drug: Drug) : CustomDrugEntryEvent()
+
+data class DrugFrequencyChoiceItemsLoaded(val drugFrequencyChoiceItems: DrugFrequencyChoiceItems) : CustomDrugEntryEvent()

@@ -34,3 +34,5 @@ data class ScheduleAppointmentForPatientFromNext(
 ) : ScheduleAppointmentEffect()
 
 data class GoToTeleconsultStatusSheet(val teleconsultRecordUuid: UUID) : ScheduleAppointmentEffect()
+
+sealed class ScheduleAppointmentViewEffect : ScheduleAppointmentEffect()

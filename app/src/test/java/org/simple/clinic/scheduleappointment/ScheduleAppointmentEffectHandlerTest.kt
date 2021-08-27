@@ -19,12 +19,12 @@ import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
-import java.util.Optional
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator
 import java.time.LocalDate
 import java.time.Period
+import java.util.Optional
 import java.util.UUID
 
 class ScheduleAppointmentEffectHandlerTest {
@@ -48,6 +48,7 @@ class ScheduleAppointmentEffectHandlerTest {
       remindAppointmentsIn = emptyList()
   )
   private val teleconsultRecordRepository = mock<TeleconsultRecordRepository>()
+  private val viewEffectHandler = ScheduleAppointmentViewEffectHandler(uiActions)
 
   private val effectHandler = ScheduleAppointmentEffectHandler(
       currentFacility = Lazy { facility },
@@ -59,8 +60,9 @@ class ScheduleAppointmentEffectHandlerTest {
       userClock = clock,
       schedulers = TrampolineSchedulersProvider(),
       uuidGenerator = FakeUuidGenerator.fixed(appointmentUuid),
+      teleconsultRecordRepository = teleconsultRecordRepository,
       uiActions = uiActions,
-      teleconsultRecordRepository = teleconsultRecordRepository
+      viewEffectsHandler = viewEffectHandler
   )
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler.build())
 

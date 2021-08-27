@@ -17,7 +17,6 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
-import java.util.Optional
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.plus
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -25,6 +24,7 @@ import org.simple.clinic.util.toNullable
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.uuid.UuidGenerator
 import java.time.LocalDate
+import java.util.Optional
 import java.util.function.Function
 
 class ScheduleAppointmentEffectHandler @AssistedInject constructor(
@@ -37,13 +37,17 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
     private val userClock: UserClock,
     private val schedulers: SchedulersProvider,
     private val uuidGenerator: UuidGenerator,
+    private val teleconsultRecordRepository: TeleconsultRecordRepository,
     @Assisted private val uiActions: ScheduleAppointmentUiActions,
-    private val teleconsultRecordRepository: TeleconsultRecordRepository
+    @Assisted private val viewEffectsHandler: ScheduleAppointmentViewEffectHandler
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: ScheduleAppointmentUiActions): ScheduleAppointmentEffectHandler
+    fun create(
+        uiActions: ScheduleAppointmentUiActions,
+        viewEffectsHandler: ScheduleAppointmentViewEffectHandler
+    ): ScheduleAppointmentEffectHandler
   }
 
   fun build(): ObservableTransformer<ScheduleAppointmentEffect, ScheduleAppointmentEvent> {

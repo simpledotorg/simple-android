@@ -9,6 +9,8 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.search.DrugRepository
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItems
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.util.nullIfBlank
@@ -21,6 +23,7 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
     private val drugRepository: DrugRepository,
     private val currentFacility: Lazy<Facility>,
     private val uuidGenerator: UuidGenerator,
+    private val drugFrequencyFactory: DrugFrequencyFactory,
     @Assisted private val uiActions: CustomDrugEntrySheetUiActions
 ) {
   @AssistedFactory
@@ -42,6 +45,7 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
         .addTransformer(FetchPrescription::class.java, fetchPrescription())
         .addTransformer(FetchDrug::class.java, fetchDrug())
         .addTransformer(RemoveDrugFromPrescription::class.java, removeDrugFromPrescription())
+        .addTransformer(LoadDrugFrequencyChoiceItems::class.java, loadDrugFrequencyChoiceItems())
         .build()
   }
 
@@ -114,6 +118,15 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
                     facility = currentFacility.get()
                 ).andThen(Observable.just(CustomDrugSaved))
           }
+    }
+  }
+
+  private fun loadDrugFrequencyChoiceItems(): ObservableTransformer<LoadDrugFrequencyChoiceItems, CustomDrugEntryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .map { drugFrequencyFactory.provideFields() }
+          .map(::DrugFrequencyChoiceItems)
+          .map(::DrugFrequencyChoiceItemsLoaded)
     }
   }
 }

@@ -10,6 +10,7 @@ class ScheduleAppointmentViewEffectHandler(
     when (viewEffect) {
       is ShowDatePicker -> uiActions.showManualDateSelector(viewEffect.selectedDate)
       CloseSheet -> uiActions.closeSheet()
+      is GoToTeleconsultStatusSheet -> uiActions.openTeleconsultStatusSheet(viewEffect.teleconsultRecordUuid)
     }
   }
 }

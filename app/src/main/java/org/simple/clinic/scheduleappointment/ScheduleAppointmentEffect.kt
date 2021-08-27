@@ -29,10 +29,10 @@ data class ScheduleAppointmentForPatientFromNext(
     val type: Appointment.AppointmentType
 ) : ScheduleAppointmentEffect()
 
-data class GoToTeleconsultStatusSheet(val teleconsultRecordUuid: UUID) : ScheduleAppointmentEffect()
-
 sealed class ScheduleAppointmentViewEffect : ScheduleAppointmentEffect()
 
 data class ShowDatePicker(val selectedDate: LocalDate) : ScheduleAppointmentViewEffect()
 
 object CloseSheet : ScheduleAppointmentViewEffect()
+
+data class GoToTeleconsultStatusSheet(val teleconsultRecordUuid: UUID) : ScheduleAppointmentViewEffect()

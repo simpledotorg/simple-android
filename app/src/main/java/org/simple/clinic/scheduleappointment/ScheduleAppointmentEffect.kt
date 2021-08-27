@@ -18,8 +18,6 @@ data class ScheduleAppointmentForPatient(
     val type: Appointment.AppointmentType
 ) : ScheduleAppointmentEffect()
 
-object CloseSheet : ScheduleAppointmentEffect()
-
 data class LoadPatientDefaulterStatus(val patientUuid: UUID) : ScheduleAppointmentEffect()
 
 data class LoadTeleconsultRecord(val patientUuid: UUID) : ScheduleAppointmentEffect()
@@ -36,3 +34,5 @@ data class GoToTeleconsultStatusSheet(val teleconsultRecordUuid: UUID) : Schedul
 sealed class ScheduleAppointmentViewEffect : ScheduleAppointmentEffect()
 
 data class ShowDatePicker(val selectedDate: LocalDate) : ScheduleAppointmentViewEffect()
+
+object CloseSheet : ScheduleAppointmentViewEffect()

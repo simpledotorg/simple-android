@@ -56,7 +56,6 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
         .addTransformer(LoadDefaultAppointmentDate::class.java, loadDefaultAppointmentDate())
         .addTransformer(LoadAppointmentFacilities::class.java, loadAppointmentFacility())
         .addTransformer(ScheduleAppointmentForPatient::class.java, scheduleAppointmentForPatient())
-        .addAction(CloseSheet::class.java, uiActions::closeSheet, schedulers.ui())
         .addTransformer(LoadPatientDefaulterStatus::class.java, loadPatientDefaulterStatus())
         .addTransformer(LoadTeleconsultRecord::class.java, loadTeleconsultRecordDetails())
         .addConsumer(GoToTeleconsultStatusSheet::class.java, { uiActions.openTeleconsultStatusSheet(it.teleconsultRecordUuid) }, schedulers.ui())

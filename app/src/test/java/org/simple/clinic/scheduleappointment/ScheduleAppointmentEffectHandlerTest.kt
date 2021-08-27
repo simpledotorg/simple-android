@@ -61,7 +61,8 @@ class ScheduleAppointmentEffectHandlerTest {
       schedulers = TrampolineSchedulersProvider(),
       uuidGenerator = FakeUuidGenerator.fixed(appointmentUuid),
       teleconsultRecordRepository = teleconsultRecordRepository,
-      viewEffectsHandler = viewEffectHandler
+      viewEffectsHandler = viewEffectHandler,
+      viewEffectsConsumer = viewEffectHandler::handle
   )
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler.build())
 

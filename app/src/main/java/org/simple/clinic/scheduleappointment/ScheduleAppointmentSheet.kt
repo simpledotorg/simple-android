@@ -156,7 +156,6 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
   override fun createInit() = ScheduleAppointmentInit()
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<ScheduleAppointmentViewEffect>) = effectHandlerFactory.create(
-      viewEffectsHandler = ScheduleAppointmentViewEffectHandler(this),
       viewEffectsConsumer = viewEffectsConsumer
   ).build()
 

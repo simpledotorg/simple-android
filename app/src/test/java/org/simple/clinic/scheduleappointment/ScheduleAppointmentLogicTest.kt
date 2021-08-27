@@ -765,7 +765,6 @@ class ScheduleAppointmentLogicTest {
         schedulers = TrampolineSchedulersProvider(),
         uuidGenerator = FakeUuidGenerator.fixed(appointmentUuid),
         teleconsultRecordRepository = teleconsultRecordRepository,
-        viewEffectsHandler = viewEffectHandler,
         viewEffectsConsumer = viewEffectHandler::handle
     )
 

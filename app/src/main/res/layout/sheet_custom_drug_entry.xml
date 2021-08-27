@@ -89,7 +89,8 @@
       android:hint="@string/custom_drug_entry_sheet_frequency"
       android:imeOptions="actionDone"
       android:inputType="textNoSuggestions"
-      android:text="@string/custom_drug_entry_sheet_frequency_none" />
+      android:text="@string/custom_drug_entry_sheet_frequency_none"
+      android:drawableEnd="@drawable/ic_keyboard_arrow_down_24px"/>
 
   </com.google.android.material.textfield.TextInputLayout>
 

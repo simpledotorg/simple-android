@@ -13,7 +13,7 @@ class CustomDrugEntryInitTest {
   private val dosagePlaceholder = "mg"
 
   @Test
-  fun `when sheet is created in create mode from the drug list, fetch drug from the drugUuid`() {
+  fun `when sheet is created in create mode from the drug list, fetch drug from the drugUuid and load drug frequency choice items`() {
     val drugUuid = UUID.fromString("6106544f-2b18-410d-992b-81860a08f02a")
     val model = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugList(drugUuid), dosagePlaceholder)
 
@@ -22,26 +22,27 @@ class CustomDrugEntryInitTest {
         .then(
             assertThatFirst(
                 hasModel(model),
-                hasEffects(FetchDrug(drugUuid))
+                hasEffects(FetchDrug(drugUuid), LoadDrugFrequencyChoiceItems)
             )
         )
   }
 
   @Test
-  fun `when sheet is created in create mode from a drug name, then update the drug name in the model`() {
+  fun `when sheet is created in create mode from a drug name, then update the drug name in the model and load drug frequency choice items`() {
     val model = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(drugName), dosagePlaceholder)
 
     initSpec
         .whenInit(model)
         .then(
             assertThatFirst(
-                hasModel(model.drugNameLoaded(drugName))
+                hasModel(model.drugNameLoaded(drugName)),
+                hasEffects(LoadDrugFrequencyChoiceItems)
             )
         )
   }
 
   @Test
-  fun `when sheet is created in update mode, then fetch prescription`() {
+  fun `when sheet is created in update mode, then fetch prescription and load drug frequency choice items`() {
     val prescribedDrugUuid = UUID.fromString("e046a649-dfc0-45b5-89d4-7a4b0af1c282")
     val model = CustomDrugEntryModel.default(openAs = OpenAs.Update(prescribedDrugUuid = prescribedDrugUuid), dosagePlaceholder)
 
@@ -49,7 +50,7 @@ class CustomDrugEntryInitTest {
         .whenInit(model)
         .then(
             assertThatFirst(
-                hasEffects(FetchPrescription(prescribedDrugUuid))
+                hasEffects(FetchPrescription(prescribedDrugUuid), LoadDrugFrequencyChoiceItems)
             )
         )
   }

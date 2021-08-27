@@ -30,7 +30,7 @@ class CallResultRepository @Inject constructor(
   }
 
   override fun mergeWithLocalData(payloads: List<CallResultPayload>) {
-
+    // Not necessary since this is not a resource which we current sync *to* the device
   }
 
   override fun recordCount() = callResultDao.recordCount()

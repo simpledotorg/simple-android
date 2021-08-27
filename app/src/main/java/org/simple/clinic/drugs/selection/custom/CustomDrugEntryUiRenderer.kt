@@ -1,6 +1,7 @@
 package org.simple.clinic.drugs.selection.custom
 
 import org.simple.clinic.drugs.search.DrugFrequency
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.util.nullIfBlank
 
@@ -11,15 +12,27 @@ class CustomDrugEntryUiRenderer(
   override fun render(model: CustomDrugEntryModel) {
     initialSetup(model.openAs)
 
-    setSheetTitle(model.drugName, model.dosage, model.frequency)
+    if (model.drugFrequencyChoiceItems != null)
+      setSheetTitle(model.drugName, model.dosage, model.frequency, model.drugFrequencyChoiceItems)
 
     showDefaultDosagePlaceholder(model.dosage, model.dosageHasFocus)
   }
 
-  private fun setSheetTitle(drugName: String?, dosage: String?, frequency: DrugFrequency?) {
-    val sheetTitle = listOfNotNull(drugName, dosage.nullIfBlank(), frequency?.toString()).joinToString()
-    ui.setSheetTitle(sheetTitle)
+  private fun setSheetTitle(
+      drugName: String?,
+      dosage: String?,
+      frequency: DrugFrequency?,
+      drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>
+  ) {
+    val index = getIndexOfDrugFrequencyChoiceItem(drugFrequencyChoiceItems, frequency)
+
+    ui.setSheetTitle(drugName, dosage.nullIfBlank(), drugFrequencyChoiceItems[index].labelResId)
   }
+
+  private fun getIndexOfDrugFrequencyChoiceItem(
+      drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>,
+      frequency: DrugFrequency?
+  ) = drugFrequencyChoiceItems.map { it.drugFrequency }.indexOf(frequency)
 
   private fun showDefaultDosagePlaceholder(
       dosage: String?,

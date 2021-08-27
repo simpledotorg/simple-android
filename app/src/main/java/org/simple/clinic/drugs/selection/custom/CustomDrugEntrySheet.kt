@@ -148,8 +148,11 @@ class CustomDrugEntrySheet : BaseBottomSheet<
     drugFrequencyEditText.setText(getString(frequencyLabelRes))
   }
 
-  override fun setSheetTitle(sheetTitle: String) {
-    titleTextView.text = sheetTitle
+  override fun setSheetTitle(drugName: String?, dosage: String?, frequencyLabelResID: Int) {
+    val hasDrugFrequency = frequencyLabelResID != R.string.custom_drug_entry_sheet_frequency_none
+    val frequency = if (hasDrugFrequency) getString(frequencyLabelResID) else null
+
+    titleTextView.text = listOfNotNull(drugName, dosage, frequency).joinToString()
   }
 
   override fun closeSheetAndGoToEditMedicineScreen() {

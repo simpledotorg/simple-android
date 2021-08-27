@@ -4,6 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import org.simple.clinic.overdue.AppointmentCancelReason
+import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
 import java.util.UUID
 
@@ -22,5 +23,7 @@ data class CallResult(
     val outcome: Outcome,
 
     @Embedded
-    val timestamps: Timestamps
+    val timestamps: Timestamps,
+
+    val syncStatus: SyncStatus
 )

@@ -5,7 +5,5 @@ import javax.inject.Inject
 class DrugFrequencyFactory @Inject constructor(
     private val drugFrequencyProvider: DrugFrequencyProvider
 ) {
-  fun provideFields() : List<DrugFrequencyChoiceItem> {
-    return drugFrequencyProvider.provide()
-  }
+  fun provideFields(): List<DrugFrequencyChoiceItem> = drugFrequencyProvider.provide()
 }

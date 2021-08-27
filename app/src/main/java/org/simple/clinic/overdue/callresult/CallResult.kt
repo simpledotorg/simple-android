@@ -64,5 +64,12 @@ data class CallResult(
       FROM CallResult
     """)
     fun recordCount(): Observable<Int>
+
+    @Query("""
+      SELECT COUNT(id)
+      FROM CallResult
+      WHERE syncStatus = :syncStatus
+    """)
+    fun countWithStatus(syncStatus: SyncStatus): Observable<Int>
   }
 }

@@ -135,6 +135,8 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
 
   override fun uiRenderer() = ScheduleAppointmentUiRenderer(this)
 
+  override fun viewEffectsHandler() = ScheduleAppointmentViewEffectHandler(this)
+
   override fun events() = Observable
       .mergeArray(
           decrementClicks(),

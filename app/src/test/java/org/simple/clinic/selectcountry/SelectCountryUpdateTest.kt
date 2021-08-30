@@ -7,8 +7,7 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.clinic.appconfig.Country
-import java.net.URI
+import org.simple.clinic.TestData
 
 class SelectCountryUpdateTest {
 
@@ -16,16 +15,16 @@ class SelectCountryUpdateTest {
 
   private val spec = UpdateSpec(SelectCountryUpdate())
 
-  val india = Country(
+  val india = TestData.countryV2(
       isoCountryCode = "IN",
-      endpoint = URI("https://in.simple.org"),
+      deploymentEndPoint = "https://in.simple.org",
       displayName = "India",
       isdCode = "91"
   )
 
-  private val bangladesh = Country(
+  private val bangladesh = TestData.countryV2(
       isoCountryCode = "BD",
-      endpoint = URI("https://bd.simple.org"),
+      deploymentEndPoint = "https://bd.simple.org",
       displayName = "Bangladesh",
       isdCode = "880"
   )

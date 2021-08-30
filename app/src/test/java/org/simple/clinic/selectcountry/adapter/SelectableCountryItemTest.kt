@@ -3,27 +3,26 @@ package org.simple.clinic.selectcountry.adapter
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.mock
 import org.junit.Test
-import org.simple.clinic.appconfig.Country
+import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.displayname.CountryDisplayNameFetcher
-import java.net.URI
 
 class SelectableCountryItemTest {
 
-  private val india = Country(
+  private val india = TestData.countryV2(
       isoCountryCode = "IN",
-      endpoint = URI("https://in.simple.org"),
+      deploymentEndPoint = "https://in.simple.org",
       displayName = "India",
       isdCode = "91"
   )
-  private val bangladesh = Country(
+  private val bangladesh = TestData.countryV2(
       isoCountryCode = "BD",
-      endpoint = URI("https://bd.simple.org"),
+      deploymentEndPoint = "https://bd.simple.org",
       displayName = "Bangladesh",
       isdCode = "880"
   )
-  private val ethiopia = Country(
+  private val ethiopia = TestData.countryV2(
       isoCountryCode = "ET",
-      endpoint = URI("https://et.simple.org"),
+      deploymentEndPoint = "https://et.simple.org",
       displayName = "Ethiopia",
       isdCode = "251"
   )

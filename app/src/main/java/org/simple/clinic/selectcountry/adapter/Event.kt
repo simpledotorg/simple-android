@@ -1,7 +1,7 @@
 package org.simple.clinic.selectcountry.adapter
 
-import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appconfig.CountryV2
 
 sealed class Event {
-  data class CountryClicked(val country: Country) : Event()
+  data class CountryClicked(val country: CountryV2) : Event()
 }

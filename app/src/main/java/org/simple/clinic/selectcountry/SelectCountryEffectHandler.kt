@@ -1,11 +1,8 @@
 package org.simple.clinic.selectcountry
 
 import com.spotify.mobius.rx2.RxMobius
-import io.reactivex.Completable
 import io.reactivex.ObservableTransformer
-import io.reactivex.Single
 import org.simple.clinic.appconfig.AppConfigRepository
-import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appconfig.FetchError
 import org.simple.clinic.appconfig.FetchSucceeded
 import org.simple.clinic.appconfig.ManifestFetchResult
@@ -58,17 +55,10 @@ class SelectCountryEffectHandler(
   private fun saveCountry(): ObservableTransformer<SaveCountryEffect, SelectCountryEvent> {
     return ObservableTransformer { effectStream ->
       effectStream
+          .observeOn(schedulersProvider.io())
           .map { saveCountryEffect -> saveCountryEffect.country }
-          .flatMapSingle { countryToSave ->
-            persistSelectedCountry(countryToSave)
-                .andThen(Single.just(CountrySaved))
-          }
+          .doOnNext(appConfigRepository::saveCurrentCountry)
+          .map { CountrySaved }
     }
-  }
-
-  private fun persistSelectedCountry(countryToSave: Country): Completable {
-    return appConfigRepository
-        .saveCurrentCountry(countryToSave)
-        .subscribeOn(schedulersProvider.io())
   }
 }

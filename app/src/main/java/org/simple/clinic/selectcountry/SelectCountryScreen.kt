@@ -13,7 +13,7 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.AppConfigRepository
-import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appconfig.CountryV2
 import org.simple.clinic.appconfig.displayname.CountryDisplayNameFetcher
 import org.simple.clinic.databinding.ListSelectcountryCountryViewBinding
 import org.simple.clinic.databinding.ScreenSelectcountryBinding
@@ -180,7 +180,7 @@ class SelectCountryScreen(
     countrySelectionViewFlipper.displayedChild = progressBarViewIndex
   }
 
-  override fun displaySupportedCountries(countries: List<Country>, chosenCountry: Country?) {
+  override fun displaySupportedCountries(countries: List<CountryV2>, chosenCountry: CountryV2?) {
     supportedCountriesAdapter.submitList(SelectableCountryItem.from(countries, chosenCountry, countryDisplayNameFetcher))
     countrySelectionViewFlipper.displayedChild = countryListViewIndex
   }

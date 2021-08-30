@@ -25,7 +25,7 @@ class ProtocolModule {
   }
 
   @Provides
-  fun protocolSyncApi(@Named("for_country") retrofit: Retrofit): ProtocolSyncApi {
+  fun protocolSyncApi(@Named("for_deployment") retrofit: Retrofit): ProtocolSyncApi {
     return retrofit.create(ProtocolSyncApi::class.java)
   }
 

@@ -32,7 +32,7 @@ class TestRetrofitModule {
 
   @Provides
   @AppScope
-  @Named("for_country")
+  @Named("for_deployment")
   fun retrofit(
       moshi: Moshi,
       okHttpClient: OkHttpClient

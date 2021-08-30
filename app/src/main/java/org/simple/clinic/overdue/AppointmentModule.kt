@@ -41,7 +41,7 @@ class AppointmentModule {
   }
 
   @Provides
-  fun syncApiV3(@Named("for_country") retrofit: Retrofit): AppointmentSyncApi {
+  fun syncApiV3(@Named("for_deployment") retrofit: Retrofit): AppointmentSyncApi {
     return retrofit.create(AppointmentSyncApi::class.java)
   }
 

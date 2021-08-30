@@ -15,7 +15,7 @@ import javax.inject.Named
 class PatientSummaryModule {
 
   @Provides
-  fun teleconsultationFacilitySyncApi(@Named("for_country") retrofit: Retrofit): TeleconsultFacilityInfoApi {
+  fun teleconsultationFacilitySyncApi(@Named("for_deployment") retrofit: Retrofit): TeleconsultFacilityInfoApi {
     return retrofit.create(TeleconsultFacilityInfoApi::class.java)
   }
 

@@ -20,7 +20,7 @@ class FacilityModule {
   }
 
   @Provides
-  fun syncApi(@Named("for_country") retrofit: Retrofit): FacilitySyncApi {
+  fun syncApi(@Named("for_deployment") retrofit: Retrofit): FacilitySyncApi {
     return retrofit.create(FacilitySyncApi::class.java)
   }
 

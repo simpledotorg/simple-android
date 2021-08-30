@@ -21,7 +21,7 @@ class MedicalHistoryModule {
   }
 
   @Provides
-  fun syncApi(@Named("for_country") retrofit: Retrofit): MedicalHistorySyncApi {
+  fun syncApi(@Named("for_deployment") retrofit: Retrofit): MedicalHistorySyncApi {
     return retrofit.create(MedicalHistorySyncApi::class.java)
   }
 

@@ -207,4 +207,8 @@ class SelectCountryScreen(
   override fun goToNextScreen() {
     router.push(RegistrationPhoneScreenKey())
   }
+
+  override fun goToRegistrationScreen() {
+    router.push(RegistrationPhoneScreenKey())
+  }
 }

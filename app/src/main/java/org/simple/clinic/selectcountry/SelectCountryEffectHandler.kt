@@ -35,6 +35,7 @@ class SelectCountryEffectHandler(
         .addTransformer(SaveCountryEffect::class.java, saveCountry())
         .addAction(GoToNextScreen::class.java, uiActions::goToNextScreen, schedulersProvider.ui())
         .addTransformer(SaveDeployment::class.java, saveDeployment())
+        .addAction(GoToRegistrationScreen::class.java, uiActions::goToRegistrationScreen, schedulersProvider.ui())
         .build()
   }
 

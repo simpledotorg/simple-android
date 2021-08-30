@@ -12,3 +12,5 @@ data class SaveCountryEffect(val country: CountryV2) : SelectCountryEffect()
 object GoToNextScreen : SelectCountryEffect()
 
 data class SaveDeployment(val deployment: Deployment) : SelectCountryEffect()
+
+object GoToRegistrationScreen : SelectCountryEffect()

@@ -122,4 +122,16 @@ class SelectCountryEffectHandlerTest {
     verifyNoMoreInteractions(repository)
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when go to registration screen effect is received, then go to registration screen`() {
+    // when
+    testCase.dispatch(GoToRegistrationScreen)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verifyZeroInteractions(repository)
+    verify(uiActions).goToRegistrationScreen()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

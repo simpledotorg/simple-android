@@ -110,4 +110,19 @@ class SelectCountryUpdateTest {
             hasEffects(FetchManifest as SelectCountryEffect)
         ))
   }
+
+  @Test
+  fun `when deployment is saved, then go to registration screen`() {
+    val model = defaultModel
+        .manifestFetched(countries)
+        .countryChosen(india)
+
+    spec
+        .given(model)
+        .whenEvent(DeploymentSaved)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoToRegistrationScreen)
+        ))
+  }
 }

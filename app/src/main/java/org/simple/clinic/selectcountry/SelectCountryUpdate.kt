@@ -18,6 +18,7 @@ class SelectCountryUpdate : Update<SelectCountryModel, SelectCountryEvent, Selec
       NextClicked -> dispatch(SaveCountryEffect(model.selectedCountry!!))
       CountrySaved -> dispatch(GoToNextScreen)
       RetryClicked -> next(model.fetching(), setOf(FetchManifest))
+      DeploymentSaved -> dispatch(GoToRegistrationScreen)
     }
   }
 }

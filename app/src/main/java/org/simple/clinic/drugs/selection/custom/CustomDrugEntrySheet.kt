@@ -23,7 +23,6 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetCustomDrugEntryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.search.DrugFrequency
-import org.simple.clinic.drugs.search.DrugFrequency.Unknown
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.drugs.selection.custom.drugfrequency.SelectDrugFrequencyDialog
 import org.simple.clinic.feature.Features
@@ -145,13 +144,8 @@ class CustomDrugEntrySheet : BaseBottomSheet<
     router.pushExpectingResult(SelectDrugFrequency, SelectDrugFrequencyDialog.Key(frequency))
   }
 
-  override fun setDrugFrequency(frequency: DrugFrequency?) {
-    val updatedFrequencyString = when (frequency) {
-      is Unknown, null -> getString(R.string.custom_drug_entry_sheet_frequency_none)
-      else -> frequency.toString()
-    }
-
-    drugFrequencyEditText.setText(updatedFrequencyString)
+  override fun setDrugFrequency(frequencyLabelRes: Int) {
+    drugFrequencyEditText.setText(getString(frequencyLabelRes))
   }
 
   override fun setSheetTitle(sheetTitle: String) {

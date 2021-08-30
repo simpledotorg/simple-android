@@ -7,7 +7,7 @@ sealed class CustomDrugEntryEffect
 
 data class ShowEditFrequencyDialog(val frequency: DrugFrequency?) : CustomDrugEntryEffect()
 
-data class SetDrugFrequency(val frequency: DrugFrequency?) : CustomDrugEntryEffect()
+data class SetDrugFrequency(val frequencyLabelRes: Int) : CustomDrugEntryEffect()
 
 data class SetDrugDosage(val dosage: String?) : CustomDrugEntryEffect()
 

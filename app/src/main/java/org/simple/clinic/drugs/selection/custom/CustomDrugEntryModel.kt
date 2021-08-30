@@ -31,9 +31,6 @@ data class CustomDrugEntryModel(
         drugFrequencyChoiceItems = null)
   }
 
-  val isDosageEqualToPlaceHolderOrEmpty
-    get() = dosage == dosagePlaceholder || dosage.isNullOrBlank()
-
   fun dosageEdited(dosage: String?): CustomDrugEntryModel {
     return copy(dosage = dosage)
   }

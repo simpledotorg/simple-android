@@ -2,6 +2,23 @@
 
 ## Next Release
 ### Internal
+- Change `ScheduleAppointmentSheet` to use Mobius view effects
+- Add Clubhouse overview description in the Pivotal documentation
+- [In Progress: 30 Aug 2021] Record call results instead of updating the same appointment record
+
+### Changes
+- [In Progress: 19 Aug 2021] UI improvements for medical history screen
+  - Show hypertension diagnosis and treatment in single card
+  - Show separate cards for hypertension and diabetes diagnosis
+  - Show hypertension diagnosis even when facility doesn't have diabetes management enabled
+- [In Progress: 22 Jul 2021] Add option to download & share overdue list
+- [In Progress: 14 Jul 2021] Medication screen improvements
+  - Search for commonly used drugs
+- [In Progress: 06 Aug 2021] Add support for Sri Lanka
+- [In Progress: 25 Aug 2021] Implement providing drug frequencies label depending on the country
+
+## On Demo
+### Internal
 - Bump Paging to v3.0.1
 - Bump CameraX dependencies
   - Bump `camera-core`, `camera-camera2` and `camera-lifecycle` to v1.0.1
@@ -20,25 +37,9 @@
 - Add v2 manifest support in app
 - Fix TDS drug frequency string value
 - Remove unused `DrugFrequencyChoiceItem` class
-- Change `ScheduleAppointmentSheet` to use Mobius view effects
-- Add Clubhouse overview description in the Pivotal documentation
-- [In Progress: 30 Aug 2021] Record call results instead of updating the same appointment record
-- [In Progress: 30 Aug 2021] Migrate v1 `Country` usages to v2 `Country`
-
-### Features
-- [In Progress: 30 Aug 2021] Add support for state selection during sign-in/sign-up
 
 ### Changes
 - Implement `CustomDrugEntrySheet`
-- [In Progress: 19 Aug 2021] UI improvements for medical history screen
-  - Show hypertension diagnosis and treatment in single card
-  - Show separate cards for hypertension and diabetes diagnosis
-  - Show hypertension diagnosis even when facility doesn't have diabetes management enabled
-- [In Progress: 22 Jul 2021] Add option to download & share overdue list
-- [In Progress: 14 Jul 2021] Medication screen improvements
-  - Search for commonly used drugs
-- [In Progress: 06 Aug 2021] Add support for Sri Lanka
-- [In Progress: 25 Aug 2021] Implement providing drug frequencies label depending on the country
 
 ## 2021-08-23-7922
 ### Internal

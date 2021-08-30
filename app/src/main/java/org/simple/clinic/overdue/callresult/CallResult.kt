@@ -83,5 +83,10 @@ data class CallResult(
         limit: Int,
         offset: Int
     ): List<CallResult>
+
+    @Query("""
+      DELETE FROM CallResult
+    """)
+    fun clear()
   }
 }

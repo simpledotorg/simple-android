@@ -34,6 +34,7 @@ import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.showKeyboard
 import org.simple.clinic.widgets.textChanges
 import java.util.Locale
 import java.util.UUID
@@ -139,6 +140,8 @@ class CustomDrugEntrySheet : BaseBottomSheet<
       if (result is Succeeded)
         hotEvents.onNext(FrequencyEdited(SelectDrugFrequencyDialog.readDrugFrequency(result)))
     }
+
+    drugDosageEditText.showKeyboard()
   }
 
   override fun showEditFrequencyDialog(

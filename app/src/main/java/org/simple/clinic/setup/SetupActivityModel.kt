@@ -2,7 +2,7 @@ package org.simple.clinic.setup
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import org.simple.clinic.appconfig.CountryV2
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.user.User
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.isNotEmpty
@@ -36,7 +36,7 @@ data class SetupActivityModel(
     return copy(isUserLoggedIn = user.isNotEmpty())
   }
 
-  fun withSelectedCountry(country: Optional<CountryV2>): SetupActivityModel {
+  fun withSelectedCountry(country: Optional<Country>): SetupActivityModel {
     return copy(hasUserSelectedACountry = country.isNotEmpty())
   }
 }

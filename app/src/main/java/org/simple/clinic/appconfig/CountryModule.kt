@@ -8,7 +8,7 @@ import org.simple.clinic.util.toNullable
 object CountryModule {
 
   @Provides
-  fun providesCountry(appConfigRepository: AppConfigRepository): CountryV2 {
+  fun providesCountry(appConfigRepository: AppConfigRepository): Country {
     createV2CountryIfOldCountryIsPresent(appConfigRepository)
 
     val selectedCountry = appConfigRepository.currentCountryV2()
@@ -53,7 +53,7 @@ object CountryModule {
           displayName = selectedOldCountry.displayName,
           endPoint = selectedOldCountry.endpoint
       )
-      val country = CountryV2(
+      val country = Country(
           isoCountryCode = selectedOldCountry.isoCountryCode,
           displayName = selectedOldCountry.displayName,
           isdCode = selectedOldCountry.isdCode,

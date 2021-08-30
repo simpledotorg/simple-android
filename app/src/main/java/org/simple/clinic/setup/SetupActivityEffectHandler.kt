@@ -10,7 +10,7 @@ import io.reactivex.Scheduler
 import io.reactivex.Single
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.appconfig.AppConfigRepository
-import org.simple.clinic.appconfig.CountryV2
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.DatabaseMaintenanceRunAt
 import org.simple.clinic.main.TypedPreference.Type.FallbackCountry
@@ -33,7 +33,7 @@ class SetupActivityEffectHandler @AssistedInject constructor(
     private val clock: UtcClock,
     private val allowApplicationToRun: AllowApplicationToRun,
     @TypedPreference(OnboardingComplete) private val onboardingCompletePreference: Preference<Boolean>,
-    @TypedPreference(FallbackCountry) private val fallbackCountry: CountryV2,
+    @TypedPreference(FallbackCountry) private val fallbackCountry: Country,
     @TypedPreference(DatabaseMaintenanceRunAt) private val databaseMaintenanceRunAt: Preference<Optional<Instant>>,
     private val userClock: UserClock
 ) {
@@ -80,7 +80,7 @@ class SetupActivityEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun readUserDetailsFromStorage(): Triple<Boolean, Optional<User>, Optional<CountryV2>> {
+  private fun readUserDetailsFromStorage(): Triple<Boolean, Optional<User>, Optional<Country>> {
     val hasUserCompletedOnboarding = onboardingCompletePreference.get()
     val loggedInUser = userDao.userImmediate().toOptional()
     val userSelectedCountry = appConfigRepository.currentCountryV2()

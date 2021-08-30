@@ -9,7 +9,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.appconfig.CountryV2
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
@@ -31,7 +31,7 @@ class ScanSimpleIdEffectHandlerTest {
       schedulersProvider = TestSchedulersProvider.trampoline(),
       patientRepository = patientRepository,
       qrCodeJsonParser = qrCodeJsonParser,
-      country = TestData.countryV2(isoCountryCode = CountryV2.INDIA),
+      country = TestData.countryV2(isoCountryCode = Country.INDIA),
       lookupPatientOnline = lookupPatientOnline,
       viewEffectsConsumer = viewEffectConsumer
   ).build())
@@ -104,7 +104,7 @@ class ScanSimpleIdEffectHandlerTest {
         schedulersProvider = TestSchedulersProvider.trampoline(),
         patientRepository = patientRepository,
         qrCodeJsonParser = qrCodeJsonParser,
-        country = TestData.countryV2(isoCountryCode = CountryV2.BANGLADESH),
+        country = TestData.countryV2(isoCountryCode = Country.BANGLADESH),
         lookupPatientOnline = lookupPatientOnline,
         viewEffectsConsumer = viewEffectConsumer
     ).build())

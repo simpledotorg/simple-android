@@ -3,7 +3,7 @@ package org.simple.clinic.selectcountry.adapter
 import android.view.View
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
-import org.simple.clinic.appconfig.CountryV2
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appconfig.displayname.CountryDisplayNameFetcher
 import org.simple.clinic.databinding.ListSelectcountryCountryViewBinding
 import org.simple.clinic.selectcountry.adapter.Event.CountryClicked
@@ -11,7 +11,7 @@ import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 
 data class SelectableCountryItem(
-    val country: CountryV2,
+    val country: Country,
     private val isCountryChosenByUser: Boolean,
     private val showDivider: Boolean,
     private val countryDisplayNameFetcher: CountryDisplayNameFetcher
@@ -19,8 +19,8 @@ data class SelectableCountryItem(
 
   companion object {
     fun from(
-        countries: List<CountryV2>,
-        chosenCountry: CountryV2?,
+        countries: List<Country>,
+        chosenCountry: Country?,
         countryDisplayNameFetcher: CountryDisplayNameFetcher
     ): List<SelectableCountryItem> {
       return countries

@@ -9,7 +9,7 @@ import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
-import org.simple.clinic.appconfig.CountryV2
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.rules.LocalAuthenticationRule
@@ -38,7 +38,7 @@ class UserSessionAndroidTest {
   lateinit var facilityRepository: FacilityRepository
 
   @Inject
-  lateinit var selectedCountryPreference: Preference<Optional<CountryV2>>
+  lateinit var selectedCountryPreference: Preference<Optional<Country>>
 
   @Inject
   lateinit var user: User

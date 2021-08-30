@@ -16,7 +16,7 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.LOGIN_OTP_LENGTH
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.appconfig.CountryV2
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.databinding.ScreenEnterotpBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
@@ -39,7 +39,7 @@ class EnterOtpScreen : BaseScreen<
   lateinit var router: Router
 
   @Inject
-  lateinit var country: CountryV2
+  lateinit var country: Country
 
   @Inject
   lateinit var effectHandlerFactory: EnterOtpEffectHandler.Factory

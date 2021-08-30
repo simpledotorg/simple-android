@@ -23,7 +23,7 @@ class AppConfigRepositoryTest {
 
   private val manifestFetchApi = mock<ManifestFetchApi>()
   private val selectedCountryPreference = mock<Preference<Optional<Country_Old>>>()
-  private val selectedCountryV2Preference = mock<Preference<Optional<CountryV2>>>()
+  private val selectedCountryV2Preference = mock<Preference<Optional<Country>>>()
   private val selectedDeployment = mock<Preference<Optional<Deployment>>>()
 
   private val repository = AppConfigRepository(
@@ -42,7 +42,7 @@ class AppConfigRepositoryTest {
     )
 
     val countriesV2 = listOf(
-        CountryV2(
+        Country(
             isoCountryCode = "IN",
             displayName = "India",
             isdCode = "91",

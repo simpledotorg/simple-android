@@ -9,7 +9,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.appconfig.CountryV2
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.OnboardingComplete
@@ -32,7 +32,7 @@ class UserSession @Inject constructor(
     private val passwordHasher: PasswordHasher,
     private val ongoingLoginEntryRepository: OngoingLoginEntryRepository,
     private val reportPendingRecords: ReportPendingRecordsToAnalytics,
-    private val selectedCountryPreference: Preference<Optional<CountryV2>>,
+    private val selectedCountryPreference: Preference<Optional<Country>>,
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>,
     @TypedPreference(OnboardingComplete) private val onboardingComplete: Preference<Boolean>
 ) {

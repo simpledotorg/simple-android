@@ -2,7 +2,7 @@ package org.simple.clinic.registration
 
 import dagger.Module
 import dagger.Provides
-import org.simple.clinic.appconfig.CountryV2
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.registration.phone.LengthBasedNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 
@@ -10,10 +10,10 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator
 class RegistrationModule {
 
   @Provides
-  fun phoneNumberValidator(country: CountryV2): PhoneNumberValidator {
+  fun phoneNumberValidator(country: Country): PhoneNumberValidator {
     // In the future, we will want to return a validator depending upon the location.
     return when (country.isoCountryCode) {
-      CountryV2.ETHIOPIA -> LengthBasedNumberValidator(
+      Country.ETHIOPIA -> LengthBasedNumberValidator(
           minimumRequiredLengthMobile = 9,
           maximumAllowedLengthMobile = 10,
           minimumRequiredLengthLandlinesOrMobile = 9,

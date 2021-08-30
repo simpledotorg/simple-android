@@ -21,7 +21,7 @@ import javax.inject.Inject
 class AppConfigRepository @Inject constructor(
     private val manifestFetchApi: ManifestFetchApi,
     private val selectedCountryOldPreference: Preference<Optional<Country_Old>>,
-    private val selectedCountryV2Preference: Preference<Optional<CountryV2>>,
+    private val selectedCountryPreference: Preference<Optional<Country>>,
     private val selectedDeployment: Preference<Optional<Deployment>>
 ) {
 
@@ -37,14 +37,14 @@ class AppConfigRepository @Inject constructor(
     return selectedDeployment.get().toNullable()
   }
 
-  fun currentCountryV2(): CountryV2? {
-    return selectedCountryV2Preference.get().toNullable()
+  fun currentCountryV2(): Country? {
+    return selectedCountryPreference.get().toNullable()
   }
 
   fun fetchAppManifest(): Single<ManifestFetchResult> {
     return manifestFetchApi
         .fetchManifest()
-        .map { it.supportedCountriesV2 }
+        .map { it.supportedCountries }
         .map { FetchSucceeded(it.countries) }
         .cast(ManifestFetchResult::class.java)
         .onErrorReturn { cause -> FetchError(ErrorResolver.resolve(cause)) }
@@ -54,8 +54,8 @@ class AppConfigRepository @Inject constructor(
     return Completable.fromAction { selectedCountryOldPreference.set(Optional.of(countryOld)) }
   }
 
-  fun saveCurrentCountry(country: CountryV2) {
-    selectedCountryV2Preference.set(Optional.of(country))
+  fun saveCurrentCountry(country: Country) {
+    selectedCountryPreference.set(Optional.of(country))
   }
 
   fun saveDeployment(deployment: Deployment) {

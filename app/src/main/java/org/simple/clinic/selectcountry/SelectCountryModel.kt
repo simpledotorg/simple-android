@@ -2,13 +2,13 @@ package org.simple.clinic.selectcountry
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import org.simple.clinic.appconfig.CountryV2
+import org.simple.clinic.appconfig.Country
 
 @Parcelize
 data class SelectCountryModel(
-    val countries: List<CountryV2>?,
+    val countries: List<Country>?,
     val manifestFetchError: ManifestFetchError?,
-    val selectedCountry: CountryV2?
+    val selectedCountry: Country?
 ) : Parcelable {
 
   val hasMoreThanOneDeployment: Boolean
@@ -22,7 +22,7 @@ data class SelectCountryModel(
 
   fun hasSelectedACountry(): Boolean = selectedCountry != null
 
-  fun manifestFetched(countries: List<CountryV2>): SelectCountryModel {
+  fun manifestFetched(countries: List<Country>): SelectCountryModel {
     return copy(countries = countries, manifestFetchError = null)
   }
 
@@ -30,7 +30,7 @@ data class SelectCountryModel(
     return copy(manifestFetchError = manifestFetchError, countries = null)
   }
 
-  fun countryChosen(country: CountryV2): SelectCountryModel {
+  fun countryChosen(country: Country): SelectCountryModel {
     return copy(selectedCountry = country)
   }
 

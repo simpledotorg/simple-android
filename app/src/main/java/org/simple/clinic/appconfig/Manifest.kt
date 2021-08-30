@@ -10,5 +10,5 @@ data class Manifest(
     val supportedCountriesOld: List<Country_Old>,
 
     @Json(name = "v2")
-    val supportedCountriesV2: CountriesPayload
+    val supportedCountries: CountriesPayload
 )

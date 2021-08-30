@@ -2,7 +2,7 @@ package org.simple.clinic
 
 import io.bloco.faker.Faker
 import org.simple.clinic.appconfig.Country_Old
-import org.simple.clinic.appconfig.CountryV2
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appconfig.Deployment
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
@@ -921,8 +921,8 @@ object TestData {
               endPoint = deploymentEndPoint
           )
       )
-  ): CountryV2 {
-    return CountryV2(
+  ): Country {
+    return Country(
         isoCountryCode = isoCountryCode,
         displayName = displayName,
         isdCode = isdCode,

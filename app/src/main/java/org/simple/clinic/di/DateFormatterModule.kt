@@ -2,7 +2,7 @@ package org.simple.clinic.di
 
 import dagger.Module
 import dagger.Provides
-import org.simple.clinic.appconfig.CountryV2
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.DateFormatter.Type.Day
 import org.simple.clinic.di.DateFormatter.Type.FileDateTime
 import org.simple.clinic.di.DateFormatter.Type.FullYear
@@ -19,7 +19,7 @@ import javax.inject.Named
 class DateFormatterModule {
 
   @Provides
-  fun providesChronology(country: CountryV2, features: Features): Chronology {
+  fun providesChronology(country: Country, features: Features): Chronology {
     return if (features.isEnabled(Feature.EthiopianCalendar)) {
       country.chronology
     } else {
@@ -32,7 +32,7 @@ class DateFormatterModule {
   fun provideDateFormatterForFullDate(
       locale: Locale,
       chronology: Chronology,
-      country: CountryV2
+      country: Country
   ): DateTimeFormatter {
     return DateTimeFormatter.ofPattern(country.fullDatePattern, locale)
         .withChronology(chronology)
@@ -60,7 +60,7 @@ class DateFormatterModule {
   fun providesFormatterForFullReadableDate(
       locale: Locale,
       chronology: Chronology,
-      country: CountryV2
+      country: Country
   ): DateTimeFormatter {
     return DateTimeFormatter.ofPattern(country.exactDatePattern, locale)
         .withChronology(chronology)
@@ -81,7 +81,7 @@ class DateFormatterModule {
   fun provideFormatterForFileDateTime(
       locale: Locale,
       chronology: Chronology,
-      country: CountryV2
+      country: Country
   ): DateTimeFormatter {
     return DateTimeFormatter.ofPattern(country.fileDateTimePattern, locale)
         .withChronology(chronology)

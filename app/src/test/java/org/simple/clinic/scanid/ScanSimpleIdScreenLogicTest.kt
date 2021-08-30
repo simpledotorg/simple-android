@@ -10,7 +10,7 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.appconfig.CountryV2
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.mobius.first
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.Empty
@@ -136,7 +136,7 @@ class ScanSimpleIdScreenLogicTest {
         schedulersProvider = TestSchedulersProvider.trampoline(),
         patientRepository = mock(),
         qrCodeJsonParser = mock(),
-        country = TestData.countryV2(isoCountryCode = CountryV2.INDIA),
+        country = TestData.countryV2(isoCountryCode = Country.INDIA),
         lookupPatientOnline = lookupPatientOnline,
         viewEffectsConsumer = viewEffectHandler::handle,
     )

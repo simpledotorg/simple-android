@@ -20,7 +20,7 @@ import io.reactivex.subjects.Subject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.appconfig.CountryV2
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.databinding.ScreenNewMedicalHistoryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.medicalhistory.Answer
@@ -66,7 +66,7 @@ class NewMedicalHistoryScreen : BaseScreen<
   lateinit var effectHandlerFactory: NewMedicalHistoryEffectHandler.Factory
 
   @Inject
-  lateinit var country: CountryV2
+  lateinit var country: Country
 
   private val toolbar
     get() = binding.toolbar

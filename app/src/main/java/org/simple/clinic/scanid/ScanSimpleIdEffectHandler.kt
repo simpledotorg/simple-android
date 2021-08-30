@@ -8,7 +8,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
-import org.simple.clinic.appconfig.CountryV2
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -17,7 +17,7 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val patientRepository: PatientRepository,
     private val qrCodeJsonParser: QRCodeJsonParser,
-    private val country: CountryV2,
+    private val country: Country,
     private val lookupPatientOnline: LookupPatientOnline,
     @Assisted private val viewEffectsConsumer: Consumer<ScanSimpleIdViewEffect>
 ) {
@@ -77,7 +77,7 @@ class ScanSimpleIdEffectHandler @AssistedInject constructor(
 
   private fun parseJsonBasedOnCountry(effect: ParseScannedJson): ScanSimpleIdEvent {
     return when (country.isoCountryCode) {
-      CountryV2.INDIA -> {
+      Country.INDIA -> {
         val payload = qrCodeJsonParser.parseQRCodeJson(effect.text)
         val healthIdNumber = payload?.healthIdNumber?.filter { it.isDigit() }
 

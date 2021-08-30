@@ -11,7 +11,7 @@ import java.time.chrono.IsoChronology
 
 @Parcelize
 @JsonClass(generateAdapter = true)
-data class CountryV2(
+data class Country(
 
     @Json(name = "country_code")
     val isoCountryCode: String,

@@ -22,7 +22,7 @@ class SelectedCountryPersistenceAndroidTest {
   lateinit var preferences: SharedPreferences
 
   @Inject
-  lateinit var selectedCountryPreference: Preference<Optional<CountryV2>>
+  lateinit var selectedCountryPreference: Preference<Optional<Country>>
 
   @Before
   fun setUp() {

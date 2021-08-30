@@ -5,7 +5,7 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.BuildConfig
-import org.simple.clinic.appconfig.CountryV2
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appconfig.Deployment
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.DatabaseMaintenanceRunAt
@@ -23,8 +23,8 @@ class SetupActivityModule {
 
   @Provides
   @TypedPreference(FallbackCountry)
-  fun providesFallbackCountry(): CountryV2 {
-    return CountryV2(
+  fun providesFallbackCountry(): Country {
+    return Country(
         isoCountryCode = "IN",
         displayName = "India",
         isdCode = "91",

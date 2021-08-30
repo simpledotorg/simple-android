@@ -1,13 +1,13 @@
 package org.simple.clinic.selectcountry
 
-import org.simple.clinic.appconfig.CountryV2
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appconfig.Deployment
 
 sealed class SelectCountryEffect
 
 object FetchManifest : SelectCountryEffect()
 
-data class SaveCountryEffect(val country: CountryV2) : SelectCountryEffect()
+data class SaveCountryEffect(val country: Country) : SelectCountryEffect()
 
 object GoToNextScreen : SelectCountryEffect()
 

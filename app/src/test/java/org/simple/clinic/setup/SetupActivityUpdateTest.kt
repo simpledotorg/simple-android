@@ -7,7 +7,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.appconfig.CountryV2
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.setup.runcheck.Allowed
 import org.simple.clinic.setup.runcheck.Disallowed
 import org.simple.clinic.setup.runcheck.Disallowed.Reason.Rooted
@@ -200,7 +200,7 @@ class SetupActivityUpdateTest {
     return UserDetailsFetched(hasUserCompletedOnboarding = false, loggedInUser = Optional.empty(), userSelectedCountry = Optional.empty())
   }
 
-  private fun loggedInUserFetched(user: User, country: CountryV2): UserDetailsFetched {
+  private fun loggedInUserFetched(user: User, country: Country): UserDetailsFetched {
     return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = Optional.of(user), userSelectedCountry = Optional.of(country))
   }
 }
@@ -217,7 +217,7 @@ private fun SetupActivityModel.completelyNewUser(): SetupActivityModel {
       .withSelectedCountry(Optional.empty())
 }
 
-private fun SetupActivityModel.loggedInUser(user: User, country: CountryV2): SetupActivityModel {
+private fun SetupActivityModel.loggedInUser(user: User, country: Country): SetupActivityModel {
   return this
       .withLoggedInUser(Optional.of(user))
       .withSelectedCountry(Optional.of(country))

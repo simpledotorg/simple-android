@@ -7,7 +7,7 @@ import dagger.Provides
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.AppConfigModule
-import org.simple.clinic.appconfig.CountryV2
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.network.NetworkModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.onboarding.OnboardingModule
@@ -58,7 +58,7 @@ class TestAppModule(private val application: Application) {
   fun testData(): TestData = TestData
 
   @Provides
-  fun providesCountry(): CountryV2 {
+  fun providesCountry(): Country {
     return TestData.countryV2(
         isoCountryCode = "IN",
         deploymentEndPoint = BuildConfig.MANIFEST_ENDPOINT,

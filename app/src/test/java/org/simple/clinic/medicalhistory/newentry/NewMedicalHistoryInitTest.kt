@@ -6,11 +6,11 @@ import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.appconfig.CountryV2
+import org.simple.clinic.appconfig.Country
 
 class NewMedicalHistoryInitTest {
 
-  private val country = TestData.countryV2(isoCountryCode = CountryV2.INDIA)
+  private val country = TestData.countryV2(isoCountryCode = Country.INDIA)
   private val defaultModel = NewMedicalHistoryModel.default(country)
 
   private val initSpec = InitSpec(NewMedicalHistoryInit())

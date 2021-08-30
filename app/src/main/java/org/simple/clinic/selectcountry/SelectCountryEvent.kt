@@ -1,15 +1,15 @@
 package org.simple.clinic.selectcountry
 
-import org.simple.clinic.appconfig.CountryV2
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.widgets.UiEvent
 
 sealed class SelectCountryEvent : UiEvent
 
-data class ManifestFetched(val countries: List<CountryV2>) : SelectCountryEvent()
+data class ManifestFetched(val countries: List<Country>) : SelectCountryEvent()
 
 data class ManifestFetchFailed(val error: ManifestFetchError) : SelectCountryEvent()
 
-data class CountryChosen(val country: CountryV2) : SelectCountryEvent() {
+data class CountryChosen(val country: Country) : SelectCountryEvent() {
   override val analyticsName: String = "Select Country:Selected Country Changed:${country.isoCountryCode}"
 }
 

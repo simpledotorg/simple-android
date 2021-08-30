@@ -1,8 +1,11 @@
 package org.simple.clinic.appconfig
 
+import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 @JsonClass(generateAdapter = true)
 data class CountryV2(
 
@@ -17,4 +20,4 @@ data class CountryV2(
 
     @Json(name = "deployments")
     val deployments: List<Deployment>
-)
+) : Parcelable

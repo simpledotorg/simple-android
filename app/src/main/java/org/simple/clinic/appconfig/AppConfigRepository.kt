@@ -37,6 +37,10 @@ class AppConfigRepository @Inject constructor(
     return selectedDeployment.get().toNullable()
   }
 
+  fun currentCountryV2(): CountryV2? {
+    return selectedCountryV2Preference.get().toNullable()
+  }
+
   fun fetchAppManifest(): Single<ManifestFetchResult> {
     return manifestFetchApi
         .fetchManifest()

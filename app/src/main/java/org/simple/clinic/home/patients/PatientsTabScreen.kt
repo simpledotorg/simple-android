@@ -22,7 +22,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.ActivityLifecycle.Resumed
-import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appconfig.CountryV2
 import org.simple.clinic.appupdate.dialog.AppUpdateDialog
 import org.simple.clinic.databinding.ScreenPatientsBinding
 import org.simple.clinic.di.injector
@@ -73,7 +73,7 @@ class PatientsTabScreen : BaseScreen<
   lateinit var activity: AppCompatActivity
 
   @Inject
-  lateinit var country: Country
+  lateinit var country: CountryV2
 
   @Inject
   @SimpleVideoConfig(TrainingVideo)
@@ -181,19 +181,19 @@ class PatientsTabScreen : BaseScreen<
   }
 
   private fun videoIllustrationResourceId() = when (country.isoCountryCode) {
-    Country.INDIA -> R.drawable.ic_video_illustration_india
-    Country.BANGLADESH -> R.drawable.ic_video_illustration_bangladesh
-    Country.ETHIOPIA -> R.drawable.ic_video_illustration_ethiopia
-    Country.SRI_LANKA -> R.drawable.ic_video_illustration_sri_lanka
+    CountryV2.INDIA -> R.drawable.ic_video_illustration_india
+    CountryV2.BANGLADESH -> R.drawable.ic_video_illustration_bangladesh
+    CountryV2.ETHIOPIA -> R.drawable.ic_video_illustration_ethiopia
+    CountryV2.SRI_LANKA -> R.drawable.ic_video_illustration_sri_lanka
     else -> R.drawable.ic_video_illustration_default
   }
 
   private fun illustrationResourceId(): Int =
       when (country.isoCountryCode) {
-        Country.INDIA -> R.drawable.illustration_homescreen_india
-        Country.BANGLADESH -> R.drawable.illustration_homescreen_bangladesh
-        Country.ETHIOPIA -> R.drawable.illustration_homescreen_ethiopia
-        Country.SRI_LANKA -> R.drawable.illustration_homescreen_sri_lanka
+        CountryV2.INDIA -> R.drawable.illustration_homescreen_india
+        CountryV2.BANGLADESH -> R.drawable.illustration_homescreen_bangladesh
+        CountryV2.ETHIOPIA -> R.drawable.illustration_homescreen_ethiopia
+        CountryV2.SRI_LANKA -> R.drawable.illustration_homescreen_sri_lanka
         else -> R.drawable.illustration_homescreen_default
       }
 

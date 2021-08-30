@@ -2,17 +2,17 @@ package org.simple.clinic.setup
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
-import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appconfig.CountryV2
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.setup.runcheck.Allowed
 import org.simple.clinic.setup.runcheck.Disallowed
 import org.simple.clinic.user.User
-import java.util.Optional
 import org.simple.clinic.util.isEmpty
 import org.simple.clinic.util.isNotEmpty
 import java.time.Duration
 import java.time.Instant
+import java.util.Optional
 
 class SetupActivityUpdate(
     private val databaseMaintenanceInterval: Duration
@@ -80,7 +80,7 @@ class SetupActivityUpdate(
   private fun goToNextScreenEffect(
       loggedInUser: Optional<User>,
       hasUserCompletedOnboarding: Boolean,
-      selectedCountry: Optional<Country>
+      selectedCountry: Optional<CountryV2>
   ): SetupActivityEffect {
     val hasUserLoggedInCompletely = loggedInUser.isNotEmpty() && selectedCountry.isNotEmpty()
     val userPresentButCountryNotSelected = loggedInUser.isNotEmpty() && selectedCountry.isEmpty()

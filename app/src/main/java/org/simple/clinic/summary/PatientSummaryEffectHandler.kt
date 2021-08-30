@@ -8,7 +8,7 @@ import dagger.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
-import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appconfig.CountryV2
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.Facility
@@ -39,7 +39,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val bloodSugarRepository: BloodSugarRepository,
     private val dataSync: DataSync,
     private val medicalHistoryRepository: MedicalHistoryRepository,
-    private val country: Country,
+    private val country: CountryV2,
     private val currentUser: Lazy<User>,
     private val currentFacility: Lazy<Facility>,
     private val uuidGenerator: UuidGenerator,

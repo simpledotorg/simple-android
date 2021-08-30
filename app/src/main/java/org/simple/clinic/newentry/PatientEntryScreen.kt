@@ -29,7 +29,7 @@ import io.reactivex.rxkotlin.cast
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appconfig.CountryV2
 import org.simple.clinic.databinding.PatientEntryAlternateIdViewBinding
 import org.simple.clinic.databinding.ScreenManualPatientEntryBinding
 import org.simple.clinic.di.injector
@@ -102,7 +102,7 @@ class PatientEntryScreen : BaseScreen<
   lateinit var ageValidator: UserInputAgeValidator
 
   @Inject
-  lateinit var country: Country
+  lateinit var country: CountryV2
 
   @Inject
   lateinit var effectHandlerFactory: PatientEntryEffectHandler.InjectionFactory

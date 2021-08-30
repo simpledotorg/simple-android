@@ -1,17 +1,17 @@
 package org.simple.clinic.setup
 
-import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appconfig.CountryV2
 import org.simple.clinic.setup.runcheck.AllowedToRun
 import org.simple.clinic.user.User
-import java.util.Optional
 import java.time.Instant
+import java.util.Optional
 
 sealed class SetupActivityEvent
 
 data class UserDetailsFetched(
     val hasUserCompletedOnboarding: Boolean,
     val loggedInUser: Optional<User>,
-    val userSelectedCountry: Optional<Country>
+    val userSelectedCountry: Optional<CountryV2>
 ) : SetupActivityEvent()
 
 object DatabaseInitialized : SetupActivityEvent()

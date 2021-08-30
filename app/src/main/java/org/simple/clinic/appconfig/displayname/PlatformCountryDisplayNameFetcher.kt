@@ -3,7 +3,6 @@ package org.simple.clinic.appconfig.displayname
 import android.content.res.Resources
 import androidx.annotation.StringRes
 import org.simple.clinic.R
-import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appconfig.CountryV2
 import javax.inject.Inject
 
@@ -13,10 +12,10 @@ class PlatformCountryDisplayNameFetcher @Inject constructor(
 
   override fun displayNameForCountry(country: CountryV2): String {
     return when (country.isoCountryCode) {
-      Country.INDIA -> string(R.string.country_india)
-      Country.BANGLADESH -> string(R.string.country_bangladesh)
-      Country.ETHIOPIA -> string(R.string.country_ethiopia)
-      Country.SRI_LANKA -> string(R.string.country_sri_lanka)
+      CountryV2.INDIA -> string(R.string.country_india)
+      CountryV2.BANGLADESH -> string(R.string.country_bangladesh)
+      CountryV2.ETHIOPIA -> string(R.string.country_ethiopia)
+      CountryV2.SRI_LANKA -> string(R.string.country_sri_lanka)
       else -> country.displayName
     }
   }

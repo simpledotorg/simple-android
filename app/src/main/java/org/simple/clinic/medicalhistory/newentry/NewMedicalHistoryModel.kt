@@ -2,7 +2,7 @@ package org.simple.clinic.medicalhistory.newentry
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appconfig.CountryV2
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.Answer.Unanswered
@@ -13,7 +13,7 @@ import org.simple.clinic.patient.OngoingNewPatientEntry
 
 @Parcelize
 data class NewMedicalHistoryModel(
-    val country: Country,
+    val country: CountryV2,
     val ongoingPatientEntry: OngoingNewPatientEntry?,
     val ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry,
     val currentFacility: Facility?,
@@ -48,10 +48,10 @@ data class NewMedicalHistoryModel(
     get() = ongoingMedicalHistoryEntry.isOnHypertensionTreatment != Unanswered
 
   val showOngoingHypertensionTreatment: Boolean
-    get() = diagnosedWithHypertension && country.isoCountryCode == Country.INDIA
+    get() = diagnosedWithHypertension && country.isoCountryCode == CountryV2.INDIA
 
   companion object {
-    fun default(country: Country): NewMedicalHistoryModel = NewMedicalHistoryModel(
+    fun default(country: CountryV2): NewMedicalHistoryModel = NewMedicalHistoryModel(
         country = country,
         ongoingPatientEntry = null,
         ongoingMedicalHistoryEntry = OngoingMedicalHistoryEntry(),

@@ -7,15 +7,15 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appconfig.CountryV2
 import org.simple.clinic.setup.runcheck.Allowed
 import org.simple.clinic.setup.runcheck.Disallowed
 import org.simple.clinic.setup.runcheck.Disallowed.Reason.Rooted
 import org.simple.clinic.user.User
-import java.util.Optional
 import org.simple.clinic.util.TestUtcClock
 import java.time.Duration
 import java.time.Instant
+import java.util.Optional
 import java.util.UUID
 
 class SetupActivityUpdateTest {
@@ -69,7 +69,7 @@ class SetupActivityUpdateTest {
   fun `if the user has logged in and a country is selected, go to home screen`() {
     // given
     val user = TestData.loggedInUser(uuid = UUID.fromString("d7349b2e-bcc8-47d4-be29-1775b88e8460"))
-    val country = TestData.country()
+    val country = TestData.countryV2()
 
     //then
     val expectedModel = defaultModel.loggedInUser(user, country)
@@ -200,7 +200,7 @@ class SetupActivityUpdateTest {
     return UserDetailsFetched(hasUserCompletedOnboarding = false, loggedInUser = Optional.empty(), userSelectedCountry = Optional.empty())
   }
 
-  private fun loggedInUserFetched(user: User, country: Country): UserDetailsFetched {
+  private fun loggedInUserFetched(user: User, country: CountryV2): UserDetailsFetched {
     return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = Optional.of(user), userSelectedCountry = Optional.of(country))
   }
 }
@@ -217,7 +217,7 @@ private fun SetupActivityModel.completelyNewUser(): SetupActivityModel {
       .withSelectedCountry(Optional.empty())
 }
 
-private fun SetupActivityModel.loggedInUser(user: User, country: Country): SetupActivityModel {
+private fun SetupActivityModel.loggedInUser(user: User, country: CountryV2): SetupActivityModel {
   return this
       .withLoggedInUser(Optional.of(user))
       .withSelectedCountry(Optional.of(country))

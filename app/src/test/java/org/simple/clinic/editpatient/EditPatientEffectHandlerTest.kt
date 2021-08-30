@@ -15,7 +15,7 @@ import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appconfig.CountryV2
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
@@ -67,8 +67,8 @@ class EditPatientEffectHandlerTest {
       identifier = Identifier(value = "1234567890abcd", type = BangladeshNationalId)
   )
 
-  private val india = TestData.country(isoCountryCode = Country.INDIA)
-  private val bangladesh = TestData.country(isoCountryCode = Country.BANGLADESH)
+  private val india = TestData.countryV2(isoCountryCode = CountryV2.INDIA)
+  private val bangladesh = TestData.countryV2(isoCountryCode = CountryV2.BANGLADESH)
 
   private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider(
       dateTimeFormatter = dateOfBirthFormatter,

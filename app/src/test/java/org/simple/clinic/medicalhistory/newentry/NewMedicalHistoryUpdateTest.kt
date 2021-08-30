@@ -10,7 +10,7 @@ import junitparams.JUnitParamsRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
-import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appconfig.CountryV2
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
@@ -24,7 +24,7 @@ import java.util.UUID
 @RunWith(JUnitParamsRunner::class)
 class NewMedicalHistoryUpdateTest {
 
-  private val country = TestData.country(isoCountryCode = Country.INDIA)
+  private val country = TestData.countryV2(isoCountryCode = CountryV2.INDIA)
   private val defaultModel = NewMedicalHistoryModel.default(country)
   private val facilityWithDiabetesManagementEnabled = TestData.facility(
       uuid = UUID.fromString("3c7bc1c8-1bb6-4c3a-b6d0-52700bdaac5c"),
@@ -212,7 +212,7 @@ class NewMedicalHistoryUpdateTest {
 
   @Test
   fun `when save is clicked and patient is diagnosed with hypertension and ongoing hypertension treatment question is not answered and selected country is not india, then register patient`() {
-    val bangladesh = TestData.country(isoCountryCode = Country.BANGLADESH)
+    val bangladesh = TestData.countryV2(isoCountryCode = CountryV2.BANGLADESH)
     val model = NewMedicalHistoryModel.default(country = bangladesh)
         .ongoingPatientEntryLoaded(patientEntry)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)

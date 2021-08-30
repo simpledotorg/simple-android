@@ -16,7 +16,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appconfig.CountryV2
 import org.simple.clinic.databinding.ScreenRegistrationPhoneBinding
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.di.injector
@@ -49,7 +49,7 @@ class RegistrationPhoneScreen :
   lateinit var activity: AppCompatActivity
 
   @Inject
-  lateinit var country: Country
+  lateinit var country: CountryV2
 
   @Inject
   lateinit var effectHandlerFactory: RegistrationPhoneEffectHandler.Factory

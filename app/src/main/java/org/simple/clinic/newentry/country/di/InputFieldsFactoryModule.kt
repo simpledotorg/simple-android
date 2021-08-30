@@ -6,7 +6,7 @@ import com.squareup.moshi.Types
 import dagger.Lazy
 import dagger.Module
 import dagger.Provides
-import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appconfig.CountryV2
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.EthiopiaInputFieldsProvider
@@ -26,7 +26,7 @@ class InputFieldsFactoryModule {
 
   @Provides
   fun provideInputFieldsProvider(
-      country: Country,
+      country: CountryV2,
       @Named("date_for_user_input") dateTimeFormatter: DateTimeFormatter,
       userClock: UserClock,
       currentFacility: Lazy<Facility>,
@@ -35,10 +35,10 @@ class InputFieldsFactoryModule {
     val date = LocalDate.now(userClock)
 
     return when (val isoCountryCode = country.isoCountryCode) {
-      Country.INDIA -> IndiaInputFieldsProvider(dateTimeFormatter, date, currentFacility, chennaiFacilityGroupIds)
-      Country.BANGLADESH -> BangladeshInputFieldsProvider(dateTimeFormatter, date)
-      Country.ETHIOPIA -> EthiopiaInputFieldsProvider(dateTimeFormatter, date)
-      Country.SRI_LANKA -> SriLankaInputFieldsProvider(dateTimeFormatter, date)
+      CountryV2.INDIA -> IndiaInputFieldsProvider(dateTimeFormatter, date, currentFacility, chennaiFacilityGroupIds)
+      CountryV2.BANGLADESH -> BangladeshInputFieldsProvider(dateTimeFormatter, date)
+      CountryV2.ETHIOPIA -> EthiopiaInputFieldsProvider(dateTimeFormatter, date)
+      CountryV2.SRI_LANKA -> SriLankaInputFieldsProvider(dateTimeFormatter, date)
       else -> throw IllegalArgumentException("Unknown country code: $isoCountryCode")
     }
   }

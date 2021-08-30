@@ -2,7 +2,7 @@ package org.simple.clinic.datepicker
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appconfig.CountryV2
 import org.simple.clinic.datepicker.calendar.CalendarDatePicker
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
@@ -12,7 +12,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 class DatePickerKeyFactory @Inject constructor(
-    private val country: Country,
+    private val country: CountryV2,
     private val features: Features
 ) {
 
@@ -28,7 +28,7 @@ class DatePickerKeyFactory @Inject constructor(
     }
 
     return when (country.isoCountryCode) {
-      Country.ETHIOPIA -> showTextInputDatePicker(preselectedDate, allowedDateRange)
+      CountryV2.ETHIOPIA -> showTextInputDatePicker(preselectedDate, allowedDateRange)
       else -> showCalendarDatePicker(preselectedDate, allowedDateRange)
     }
   }

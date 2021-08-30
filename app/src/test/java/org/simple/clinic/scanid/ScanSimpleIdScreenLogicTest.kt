@@ -5,13 +5,12 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.spotify.mobius.Init
-import com.spotify.mobius.functions.Consumer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appconfig.CountryV2
 import org.simple.clinic.mobius.first
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure.Empty
@@ -137,7 +136,7 @@ class ScanSimpleIdScreenLogicTest {
         schedulersProvider = TestSchedulersProvider.trampoline(),
         patientRepository = mock(),
         qrCodeJsonParser = mock(),
-        country = TestData.country(isoCountryCode = Country.INDIA),
+        country = TestData.countryV2(isoCountryCode = CountryV2.INDIA),
         lookupPatientOnline = lookupPatientOnline,
         viewEffectsConsumer = viewEffectHandler::handle,
     )

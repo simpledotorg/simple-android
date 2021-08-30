@@ -15,7 +15,7 @@ import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appconfig.CountryV2
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
@@ -304,7 +304,7 @@ class NewMedicalHistoryScreenLogicTest {
         dateOfBirthFormatter = dateOfBirthFormatter
     ).build()
 
-    val country = TestData.country(isoCountryCode = Country.INDIA)
+    val country = TestData.countryV2(isoCountryCode = CountryV2.INDIA)
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),

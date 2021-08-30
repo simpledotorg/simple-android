@@ -23,7 +23,7 @@ import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestData
 import org.simple.clinic.analytics.MockAnalyticsReporter
-import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appconfig.CountryV2
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsUser
@@ -34,8 +34,8 @@ import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
-import java.util.Optional
 import org.simple.clinic.util.RxErrorsRule
+import java.util.Optional
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -56,7 +56,7 @@ class UserSessionTest {
 
   private val reportPendingRecords = mock<ReportPendingRecordsToAnalytics>()
   private val onboardingCompletePreference = mock<Preference<Boolean>>()
-  private val selectedCountryPreference = mock<Preference<Optional<Country>>>()
+  private val selectedCountryPreference = mock<Preference<Optional<CountryV2>>>()
   private val userUuid: UUID = UUID.fromString("866bccab-0117-4471-9d5d-cf6f2f1a64c1")
 
   private val userSession = UserSession(

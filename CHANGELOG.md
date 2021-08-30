@@ -22,6 +22,10 @@
 - Remove unused `DrugFrequencyChoiceItem` class
 - Change `ScheduleAppointmentSheet` to use Mobius view effects
 - [In Progress: 30 Aug 2021] Record call results instead of updating the same appointment record
+- [In Progress: 30 Aug 2021] Migrate v1 `Country` usages to v2 `Country`
+
+### Features
+- [In Progress: 30 Aug 2021] Add support for state selection during sign-in/sign-up
 
 ### Changes
 - Implement `CustomDrugEntrySheet`

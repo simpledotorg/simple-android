@@ -61,7 +61,7 @@
       android:layout_height="wrap_content"
       android:hint="@string/custom_drug_entry_sheet_dosage"
       android:imeOptions="actionNext"
-      android:inputType="textCapWords" />
+      android:inputType="number" />
 
   </com.google.android.material.textfield.TextInputLayout>
 

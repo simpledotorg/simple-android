@@ -23,7 +23,7 @@ object DrugModule {
   }
 
   @Provides
-  fun drugSyncApi(@Named("for_country") retrofit: Retrofit): DrugSyncApi {
+  fun drugSyncApi(@Named("for_deployment") retrofit: Retrofit): DrugSyncApi {
     return retrofit.create(DrugSyncApi::class.java)
   }
 

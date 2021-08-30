@@ -18,7 +18,7 @@ import javax.inject.Named
 class LoginModule {
 
   @Provides
-  fun loginApi(@Named("for_country") retrofit: Retrofit): UsersApi {
+  fun loginApi(@Named("for_deployment") retrofit: Retrofit): UsersApi {
     return retrofit.create(UsersApi::class.java)
   }
 

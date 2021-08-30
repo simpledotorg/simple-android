@@ -21,7 +21,7 @@ class PrescriptionModule {
   }
 
   @Provides
-  fun syncApi(@Named("for_country") retrofit: Retrofit): PrescriptionSyncApi {
+  fun syncApi(@Named("for_deployment") retrofit: Retrofit): PrescriptionSyncApi {
     return retrofit.create(PrescriptionSyncApi::class.java)
   }
 

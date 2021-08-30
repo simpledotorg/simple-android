@@ -23,7 +23,7 @@ class BloodSugarModule {
   }
 
   @Provides
-  fun syncApi(@Named("for_country") retrofit: Retrofit): BloodSugarSyncApi {
+  fun syncApi(@Named("for_deployment") retrofit: Retrofit): BloodSugarSyncApi {
     return retrofit.create(BloodSugarSyncApi::class.java)
   }
 

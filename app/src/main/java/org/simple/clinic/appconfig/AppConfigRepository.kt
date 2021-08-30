@@ -6,6 +6,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.simple.clinic.appconfig.api.ManifestFetchApi
 import org.simple.clinic.util.ErrorResolver
+import org.simple.clinic.util.toNullable
 import java.util.Optional
 import javax.inject.Inject
 
@@ -19,7 +20,9 @@ import javax.inject.Inject
  **/
 class AppConfigRepository @Inject constructor(
     private val manifestFetchApi: ManifestFetchApi,
-    private val selectedCountryPreference: Preference<Optional<Country>>
+    private val selectedCountryPreference: Preference<Optional<Country>>,
+    private val selectedCountryV2Preference: Preference<Optional<CountryV2>>,
+    private val selectedDeployment: Preference<Optional<Deployment>>
 ) {
 
   fun currentCountry(): Optional<Country> {
@@ -28,6 +31,10 @@ class AppConfigRepository @Inject constructor(
 
   fun currentCountryObservable(): Observable<Optional<Country>> {
     return selectedCountryPreference.asObservable()
+  }
+
+  fun currentDeployment(): Deployment? {
+    return selectedDeployment.get().toNullable()
   }
 
   fun fetchAppManifest(): Single<ManifestFetchResult> {
@@ -41,5 +48,13 @@ class AppConfigRepository @Inject constructor(
 
   fun saveCurrentCountry(country: Country): Completable {
     return Completable.fromAction { selectedCountryPreference.set(Optional.of(country)) }
+  }
+
+  fun saveCurrentCountry(country: CountryV2) {
+    selectedCountryV2Preference.set(Optional.of(country))
+  }
+
+  fun saveDeployment(deployment: Deployment) {
+    selectedDeployment.set(Optional.of(deployment))
   }
 }

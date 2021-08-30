@@ -20,7 +20,7 @@
 - Add v2 manifest support in app
 - Fix TDS drug frequency string value
 - Remove unused `DrugFrequencyChoiceItem` class
-- [In Progress: 27 Aug 2021] Record call results instead of updating the same appointment record
+- [In Progress: 30 Aug 2021] Record call results instead of updating the same appointment record
 
 ### Changes
 - Implement `CustomDrugEntrySheet`

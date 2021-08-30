@@ -53,7 +53,7 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
     ScheduleAppointmentModel,
     ScheduleAppointmentEvent,
     ScheduleAppointmentEffect,
-    Unit>(), ScheduleAppointmentUi, ScheduleAppointmentUiActions {
+    ScheduleAppointmentViewEffect>(), ScheduleAppointmentUi, ScheduleAppointmentUiActions {
 
   companion object {
     private const val REQCODE_FACILITY_SELECT = 100
@@ -135,6 +135,8 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
 
   override fun uiRenderer() = ScheduleAppointmentUiRenderer(this)
 
+  override fun viewEffectsHandler() = ScheduleAppointmentViewEffectHandler(this)
+
   override fun events() = Observable
       .mergeArray(
           decrementClicks(),
@@ -155,7 +157,9 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
 
   override fun createInit() = ScheduleAppointmentInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<ScheduleAppointmentViewEffect>) = effectHandlerFactory.create(
+      viewEffectsConsumer = viewEffectsConsumer
+  ).build()
 
   override fun additionalEventSources() = listOf(facilityChanges)
 

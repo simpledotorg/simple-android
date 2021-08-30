@@ -83,21 +83,6 @@ class SelectCountryUpdateTest {
   }
 
   @Test
-  fun `when country is saved, then go to next screen`() {
-    val model = defaultModel
-        .manifestFetched(countries)
-        .countryChosen(bangladesh)
-
-    spec
-        .given(model)
-        .whenEvent(CountrySaved)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(GoToNextScreen as SelectCountryEffect)
-        ))
-  }
-
-  @Test
   fun `when retry is clicked, then fetch manifest`() {
     val model = defaultModel
         .manifestFetchError(NetworkError)
@@ -123,6 +108,31 @@ class SelectCountryUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(GoToRegistrationScreen)
+        ))
+  }
+
+  @Test
+  fun `when selected country is saved and there is only one deployment, then save deployment`() {
+    val deployment = TestData.deployment(
+        endPoint = "https://in.simple.org",
+        displayName = "IHCI"
+    )
+    val india = TestData.countryV2(
+        isoCountryCode = "IN",
+        displayName = "India",
+        isdCode = "91",
+        deployments = listOf(deployment)
+    )
+    val model = defaultModel
+        .manifestFetched(countries)
+        .countryChosen(india)
+
+    spec
+        .given(model)
+        .whenEvent(CountrySaved)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(SaveDeployment(deployment))
         ))
   }
 }

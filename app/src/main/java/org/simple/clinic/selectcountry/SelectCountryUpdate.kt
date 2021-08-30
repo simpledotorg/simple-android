@@ -2,6 +2,7 @@ package org.simple.clinic.selectcountry
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 
@@ -16,9 +17,18 @@ class SelectCountryUpdate : Update<SelectCountryModel, SelectCountryEvent, Selec
       is ManifestFetchFailed -> next(model.manifestFetchError(event.error))
       is CountryChosen -> next(model.countryChosen(event.country))
       NextClicked -> dispatch(SaveCountryEffect(model.selectedCountry!!))
-      CountrySaved -> dispatch(GoToNextScreen)
+      CountrySaved -> countrySaved(model)
       RetryClicked -> next(model.fetching(), setOf(FetchManifest))
       DeploymentSaved -> dispatch(GoToRegistrationScreen)
+    }
+  }
+
+  private fun countrySaved(model: SelectCountryModel): Next<SelectCountryModel, SelectCountryEffect> {
+    return if (!model.hasMoreThanOneDeployment) {
+      val selectedCountryDeployment = model.selectedCountry!!.deployments.first()
+      dispatch(SaveDeployment(selectedCountryDeployment))
+    } else {
+      noChange()
     }
   }
 }

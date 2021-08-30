@@ -8,9 +8,12 @@ import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Observable
+import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
+import org.simple.clinic.user.User
+import org.simple.clinic.util.UtcClock
 import java.util.UUID
 
 @Entity(tableName = "CallResult")
@@ -32,6 +35,57 @@ data class CallResult(
 
     val syncStatus: SyncStatus
 ) {
+
+  companion object {
+    fun agreedToVisit(
+        id: UUID,
+        appointment: Appointment,
+        user: User,
+        clock: UtcClock,
+        syncStatus: SyncStatus
+    ) = CallResult(
+        id = id,
+        userId = user.uuid,
+        appointmentId = appointment.uuid,
+        removeReason = null,
+        outcome = Outcome.AgreedToVisit,
+        timestamps = Timestamps.create(clock),
+        syncStatus = syncStatus
+    )
+
+    fun remindToCallLater(
+        id: UUID,
+        appointment: Appointment,
+        user: User,
+        clock: UtcClock,
+        syncStatus: SyncStatus
+    ) = CallResult(
+        id = id,
+        userId = user.uuid,
+        appointmentId = appointment.uuid,
+        removeReason = null,
+        outcome = Outcome.RemindToCallLater,
+        timestamps = Timestamps.create(clock),
+        syncStatus = syncStatus
+    )
+
+    fun removed(
+        id: UUID,
+        removeReason: AppointmentCancelReason,
+        appointment: Appointment,
+        user: User,
+        clock: UtcClock,
+        syncStatus: SyncStatus
+    ) = CallResult(
+        id = id,
+        userId = user.uuid,
+        appointmentId = appointment.uuid,
+        removeReason = removeReason,
+        outcome = Outcome.RemovedFromOverdueList,
+        timestamps = Timestamps.create(clock),
+        syncStatus = syncStatus
+    )
+  }
 
   @Dao
   interface RoomDao {

@@ -24,8 +24,14 @@ class AppConfigRepositoryTest {
   private val manifestFetchApi = mock<ManifestFetchApi>()
   private val selectedCountryPreference = mock<Preference<Optional<Country>>>()
   private val selectedCountryV2Preference = mock<Preference<Optional<CountryV2>>>()
+  private val selectedDeployment = mock<Preference<Optional<Deployment>>>()
 
-  private val repository = AppConfigRepository(manifestFetchApi, selectedCountryPreference, selectedCountryV2Preference)
+  private val repository = AppConfigRepository(
+      manifestFetchApi,
+      selectedCountryPreference,
+      selectedCountryV2Preference,
+      selectedDeployment
+  )
 
   @Test
   fun `successful network calls to fetch the app manifest should return the app manifest`() {
@@ -170,5 +176,21 @@ class AppConfigRepositoryTest {
 
     verify(selectedCountryV2Preference).set(Optional.of(country))
     verifyNoMoreInteractions(selectedCountryV2Preference)
+  }
+
+  @Test
+  fun `saving the deployment, must save it to local persistence`() {
+    // given
+    val deployment = TestData.deployment(
+        displayName = "IHCI",
+        endPoint = "https://in.simple.org"
+    )
+
+    // when
+    repository.saveDeployment(deployment)
+
+    // then
+    verify(selectedDeployment).set(Optional.of(deployment))
+    verifyNoMoreInteractions(selectedDeployment)
   }
 }

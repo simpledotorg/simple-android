@@ -20,7 +20,8 @@ import javax.inject.Inject
 class AppConfigRepository @Inject constructor(
     private val manifestFetchApi: ManifestFetchApi,
     private val selectedCountryPreference: Preference<Optional<Country>>,
-    private val selectedCountryV2Preference: Preference<Optional<CountryV2>>
+    private val selectedCountryV2Preference: Preference<Optional<CountryV2>>,
+    private val selectedDeployment: Preference<Optional<Deployment>>
 ) {
 
   fun currentCountry(): Optional<Country> {
@@ -46,5 +47,9 @@ class AppConfigRepository @Inject constructor(
 
   fun saveCurrentCountry(country: CountryV2) {
     selectedCountryV2Preference.set(Optional.of(country))
+  }
+
+  fun saveDeployment(deployment: Deployment) {
+    selectedDeployment.set(Optional.of(deployment))
   }
 }

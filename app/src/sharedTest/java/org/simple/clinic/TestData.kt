@@ -916,9 +916,9 @@ object TestData {
       deploymentName: String = "IHCI",
       deploymentEndPoint: String = "https://simple.org",
       deployments: List<Deployment> = listOf(
-          Deployment(
+          deployment(
               displayName = deploymentName,
-              endPoint = URI.create(deploymentEndPoint)
+              endPoint = deploymentEndPoint
           )
       )
   ): CountryV2 {
@@ -927,6 +927,16 @@ object TestData {
         displayName = displayName,
         isdCode = isdCode,
         deployments = deployments
+    )
+  }
+
+  fun deployment(
+      displayName: String = "IHCI",
+      endPoint: String = "https://simple.org",
+  ): Deployment {
+    return Deployment(
+        displayName = displayName,
+        endPoint = URI.create(endPoint)
     )
   }
 

@@ -6,6 +6,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.simple.clinic.appconfig.api.ManifestFetchApi
 import org.simple.clinic.util.ErrorResolver
+import org.simple.clinic.util.toNullable
 import java.util.Optional
 import javax.inject.Inject
 
@@ -30,6 +31,10 @@ class AppConfigRepository @Inject constructor(
 
   fun currentCountryObservable(): Observable<Optional<Country>> {
     return selectedCountryPreference.asObservable()
+  }
+
+  fun currentDeployment(): Deployment? {
+    return selectedDeployment.get().toNullable()
   }
 
   fun fetchAppManifest(): Single<ManifestFetchResult> {

@@ -38,4 +38,13 @@ class AppConfigModule {
     val countryPreferenceConverter = MoshiObjectPreferenceConverter(moshi, CountryV2::class.java)
     return rxSharedPreferences.getOptional("preference_selected_country_v2", countryPreferenceConverter)
   }
+
+  @Provides
+  fun provideSelectedDeployment(
+      rxSharedPreferences: RxSharedPreferences,
+      moshi: Moshi
+  ): Preference<Optional<Deployment>> {
+    val deploymentPreferenceConverter = MoshiObjectPreferenceConverter(moshi, Deployment::class.java)
+    return rxSharedPreferences.getOptional("preference_selected_deployment_v1", deploymentPreferenceConverter)
+  }
 }

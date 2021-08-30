@@ -61,4 +61,8 @@ class AppConfigRepository @Inject constructor(
   fun saveDeployment(deployment: Deployment) {
     selectedDeployment.set(Optional.of(deployment))
   }
+
+  fun deleteV1Country() {
+    selectedCountryPreference.delete()
+  }
 }

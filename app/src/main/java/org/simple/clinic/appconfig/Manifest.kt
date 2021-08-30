@@ -7,7 +7,7 @@ import com.squareup.moshi.JsonClass
 data class Manifest(
 
     @Json(name = "v1")
-    val supportedCountries: List<Country>,
+    val supportedCountriesOld: List<Country_Old>,
 
     @Json(name = "v2")
     val supportedCountriesV2: CountriesPayload

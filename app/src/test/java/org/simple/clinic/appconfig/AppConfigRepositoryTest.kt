@@ -22,7 +22,7 @@ import java.util.Optional
 class AppConfigRepositoryTest {
 
   private val manifestFetchApi = mock<ManifestFetchApi>()
-  private val selectedCountryPreference = mock<Preference<Optional<Country>>>()
+  private val selectedCountryPreference = mock<Preference<Optional<Country_Old>>>()
   private val selectedCountryV2Preference = mock<Preference<Optional<CountryV2>>>()
   private val selectedDeployment = mock<Preference<Optional<Deployment>>>()
 
@@ -37,8 +37,8 @@ class AppConfigRepositoryTest {
   fun `successful network calls to fetch the app manifest should return the app manifest`() {
     // given
     val countriesV1 = listOf(
-        Country(isoCountryCode = "IN", endpoint = URI("https://in.simple.org"), displayName = "India", isdCode = "91"),
-        Country(isoCountryCode = "BD", endpoint = URI("https://bd.simple.org"), displayName = "Bangladesh", isdCode = "880")
+        Country_Old(isoCountryCode = "IN", endpoint = URI("https://in.simple.org"), displayName = "India", isdCode = "91"),
+        Country_Old(isoCountryCode = "BD", endpoint = URI("https://bd.simple.org"), displayName = "Bangladesh", isdCode = "880")
     )
 
     val countriesV2 = listOf(
@@ -148,7 +148,7 @@ class AppConfigRepositoryTest {
   @Test
   fun `saving the country must save it to local persistence`() {
     // given
-    val country = Country(isoCountryCode = "IN", endpoint = URI("https://in.simple.org"), displayName = "India", isdCode = "91")
+    val country = Country_Old(isoCountryCode = "IN", endpoint = URI("https://in.simple.org"), displayName = "India", isdCode = "91")
 
     // then
     repository

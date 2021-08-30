@@ -12,7 +12,7 @@ import java.time.chrono.IsoChronology
 
 @JsonClass(generateAdapter = true)
 @Parcelize
-data class Country(
+data class Country_Old(
 
     @Json(name = "country_code")
     val isoCountryCode: String,

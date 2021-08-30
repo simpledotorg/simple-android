@@ -1,7 +1,7 @@
 package org.simple.clinic
 
 import io.bloco.faker.Faker
-import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appconfig.Country_Old
 import org.simple.clinic.appconfig.CountryV2
 import org.simple.clinic.appconfig.Deployment
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
@@ -900,8 +900,8 @@ object TestData {
       endpoint: String = "https://simple.org",
       displayName: String = "India",
       isdCode: String = "91"
-  ): Country {
-    return Country(
+  ): Country_Old {
+    return Country_Old(
         isoCountryCode = isoCountryCode,
         endpoint = URI.create(endpoint),
         displayName = displayName,

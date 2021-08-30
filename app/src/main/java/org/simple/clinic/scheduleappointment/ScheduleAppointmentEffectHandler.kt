@@ -1,5 +1,6 @@
 package org.simple.clinic.scheduleappointment
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -17,7 +18,6 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
-import java.util.Optional
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.plus
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -25,6 +25,7 @@ import org.simple.clinic.util.toNullable
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.uuid.UuidGenerator
 import java.time.LocalDate
+import java.util.Optional
 import java.util.function.Function
 
 class ScheduleAppointmentEffectHandler @AssistedInject constructor(
@@ -37,27 +38,27 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
     private val userClock: UserClock,
     private val schedulers: SchedulersProvider,
     private val uuidGenerator: UuidGenerator,
-    @Assisted private val uiActions: ScheduleAppointmentUiActions,
-    private val teleconsultRecordRepository: TeleconsultRecordRepository
+    private val teleconsultRecordRepository: TeleconsultRecordRepository,
+    @Assisted private val viewEffectsConsumer: Consumer<ScheduleAppointmentViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: ScheduleAppointmentUiActions): ScheduleAppointmentEffectHandler
+    fun create(
+        viewEffectsConsumer: Consumer<ScheduleAppointmentViewEffect>
+    ): ScheduleAppointmentEffectHandler
   }
 
   fun build(): ObservableTransformer<ScheduleAppointmentEffect, ScheduleAppointmentEvent> {
     return RxMobius
         .subtypeEffectHandler<ScheduleAppointmentEffect, ScheduleAppointmentEvent>()
         .addTransformer(LoadDefaultAppointmentDate::class.java, loadDefaultAppointmentDate())
-        .addConsumer(ShowDatePicker::class.java, { uiActions.showManualDateSelector(it.selectedDate) }, schedulers.ui())
         .addTransformer(LoadAppointmentFacilities::class.java, loadAppointmentFacility())
         .addTransformer(ScheduleAppointmentForPatient::class.java, scheduleAppointmentForPatient())
-        .addAction(CloseSheet::class.java, uiActions::closeSheet, schedulers.ui())
         .addTransformer(LoadPatientDefaulterStatus::class.java, loadPatientDefaulterStatus())
         .addTransformer(LoadTeleconsultRecord::class.java, loadTeleconsultRecordDetails())
-        .addConsumer(GoToTeleconsultStatusSheet::class.java, { uiActions.openTeleconsultStatusSheet(it.teleconsultRecordUuid) }, schedulers.ui())
         .addTransformer(ScheduleAppointmentForPatientFromNext::class.java, scheduleAppointmentForPatientFromNext())
+        .addConsumer(ScheduleAppointmentViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 

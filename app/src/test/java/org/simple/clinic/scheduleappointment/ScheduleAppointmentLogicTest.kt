@@ -34,7 +34,6 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
-import java.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
@@ -43,6 +42,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.time.LocalDate
 import java.time.Period
+import java.util.Optional
 import java.util.UUID
 
 class ScheduleAppointmentLogicTest {
@@ -752,6 +752,7 @@ class ScheduleAppointmentLogicTest {
 
   private fun setupMobiusTestFixture(facility: Facility, config: AppointmentConfig) {
     val uiRenderer = ScheduleAppointmentUiRenderer(ui)
+    val viewEffectHandler = ScheduleAppointmentViewEffectHandler(uiActions)
 
     val effectHandler = ScheduleAppointmentEffectHandler(
         currentFacility = Lazy { facility },
@@ -763,8 +764,8 @@ class ScheduleAppointmentLogicTest {
         userClock = clock,
         schedulers = TrampolineSchedulersProvider(),
         uuidGenerator = FakeUuidGenerator.fixed(appointmentUuid),
-        uiActions = uiActions,
-        teleconsultRecordRepository = teleconsultRecordRepository
+        teleconsultRecordRepository = teleconsultRecordRepository,
+        viewEffectsConsumer = viewEffectHandler::handle
     )
 
     testFixture = MobiusTestFixture(

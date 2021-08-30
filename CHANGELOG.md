@@ -20,6 +20,7 @@
 - Add v2 manifest support in app
 - Fix TDS drug frequency string value
 - Remove unused `DrugFrequencyChoiceItem` class
+- Change `ScheduleAppointmentSheet` to use Mobius view effects
 - [In Progress: 30 Aug 2021] Record call results instead of updating the same appointment record
 
 ### Changes

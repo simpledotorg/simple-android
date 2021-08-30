@@ -7,10 +7,10 @@ import dagger.Module
 import dagger.Provides
 import org.simple.clinic.appconfig.api.ManifestFetchApi
 import org.simple.clinic.appconfig.displayname.CountryDisplayNameFetcherModule
-import java.util.Optional
 import org.simple.clinic.util.preference.MoshiObjectPreferenceConverter
 import org.simple.clinic.util.preference.getOptional
 import retrofit2.Retrofit
+import java.util.Optional
 import javax.inject.Named
 
 @Module(includes = [CountryDisplayNameFetcherModule::class])
@@ -28,5 +28,14 @@ class AppConfigModule {
   ): Preference<Optional<Country>> {
     val countryPreferenceConverter = MoshiObjectPreferenceConverter(moshi, Country::class.java)
     return rxSharedPreferences.getOptional("preference_selected_country_v1", countryPreferenceConverter)
+  }
+
+  @Provides
+  fun provideSelectedCountryV2Preference(
+      rxSharedPreferences: RxSharedPreferences,
+      moshi: Moshi
+  ): Preference<Optional<CountryV2>> {
+    val countryPreferenceConverter = MoshiObjectPreferenceConverter(moshi, CountryV2::class.java)
+    return rxSharedPreferences.getOptional("preference_selected_country_v2", countryPreferenceConverter)
   }
 }

@@ -4,6 +4,6 @@ import org.simple.clinic.util.ResolvedError
 
 sealed class ManifestFetchResult
 
-data class FetchSucceeded(val countries: List<Country>) : ManifestFetchResult()
+data class FetchSucceeded(val countries: List<CountryV2>) : ManifestFetchResult()
 
 data class FetchError(val error: ResolvedError) : ManifestFetchResult()

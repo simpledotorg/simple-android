@@ -63,7 +63,7 @@ class AppConfigRepositoryTest {
     repository
         .fetchAppManifest()
         .test()
-        .assertValue(FetchSucceeded(countriesV1))
+        .assertValue(FetchSucceeded(countriesV2))
         .assertNoErrors()
   }
 

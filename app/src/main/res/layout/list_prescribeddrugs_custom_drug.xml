@@ -34,7 +34,9 @@
         android:paddingEnd="@dimen/spacing_8"
         android:textAppearance="?attr/textAppearanceBody1"
         android:textColor="?attr/colorOnSurface"
-        tools:text="Amlodipine" />
+        tools:text="Amlodipine"
+        android:maxLines="1"
+        android:ellipsize="end"/>
 
       <TextView
         android:id="@+id/prescribeddrug_item_customdrug_dosage"

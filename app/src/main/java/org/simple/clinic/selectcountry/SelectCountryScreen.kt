@@ -205,6 +205,7 @@ class SelectCountryScreen(
   }
 
   override fun goToNextScreen() {
+    // TODO: Navigate to state selection screen
     router.push(RegistrationPhoneScreenKey())
   }
 

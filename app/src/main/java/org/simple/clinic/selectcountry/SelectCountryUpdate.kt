@@ -2,7 +2,6 @@ package org.simple.clinic.selectcountry
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 
@@ -24,11 +23,13 @@ class SelectCountryUpdate : Update<SelectCountryModel, SelectCountryEvent, Selec
   }
 
   private fun countrySaved(model: SelectCountryModel): Next<SelectCountryModel, SelectCountryEffect> {
-    return if (!model.hasMoreThanOneDeployment) {
+    val effect = if (!model.hasMoreThanOneDeployment) {
       val selectedCountryDeployment = model.selectedCountry!!.deployments.first()
-      dispatch(SaveDeployment(selectedCountryDeployment))
+      SaveDeployment(selectedCountryDeployment)
     } else {
-      noChange()
+      GoToNextScreen
     }
+
+    return dispatch(effect = effect)
   }
 }

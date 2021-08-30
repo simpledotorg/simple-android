@@ -135,4 +135,33 @@ class SelectCountryUpdateTest {
             hasEffects(SaveDeployment(deployment))
         ))
   }
+
+  @Test
+  fun `when selected country is saved and there is only one deployment, then go to next screen`() {
+    val ihci = TestData.deployment(
+        endPoint = "https://in.simple.org",
+        displayName = "IHCI"
+    )
+    val kerala = TestData.deployment(
+        endPoint = "https://kerala.simple.org",
+        displayName = "Kerala"
+    )
+    val india = TestData.countryV2(
+        isoCountryCode = "IN",
+        displayName = "India",
+        isdCode = "91",
+        deployments = listOf(ihci, kerala)
+    )
+    val model = defaultModel
+        .manifestFetched(countries)
+        .countryChosen(india)
+
+    spec
+        .given(model)
+        .whenEvent(CountrySaved)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoToNextScreen)
+        ))
+  }
 }

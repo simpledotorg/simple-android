@@ -6,7 +6,6 @@ import dagger.Provides
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import org.simple.clinic.BuildConfig
-import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appconfig.Deployment
 import org.simple.clinic.di.AppScope
 import retrofit2.Retrofit
@@ -40,26 +39,8 @@ class RetrofitModule {
 
   @Provides
   @AppScope
-  @Named("for_country")
-  fun retrofit(
-      country: Country,
-      commonRetrofitBuilder: Retrofit.Builder
-  ): Retrofit {
-    // Since the endpoint is not under our control, and is defined at the server level,
-    // this is a safety check that will generate the right endpoint regardless of whether the
-    // endpoint defined in the manifest has a trailing slash or not.
-    val baseUrl = country.endpoint.toString().removeSuffix("/")
-    val endpoint = "$baseUrl/".toHttpUrl()
-
-    return commonRetrofitBuilder
-        .baseUrl(endpoint)
-        .build()
-  }
-
-  @Provides
-  @AppScope
   @Named("for_deployment")
-  fun retrofitForDeployment(
+  fun retrofit(
       deployment: Deployment,
       commonRetrofitBuilder: Retrofit.Builder
   ): Retrofit {

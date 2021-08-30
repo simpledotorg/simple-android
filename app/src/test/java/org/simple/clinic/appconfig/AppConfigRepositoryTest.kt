@@ -10,6 +10,7 @@ import io.reactivex.Single
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.api.ManifestFetchApi
 import org.simple.clinic.util.ResolvedError
 import retrofit2.HttpException
@@ -22,8 +23,9 @@ class AppConfigRepositoryTest {
 
   private val manifestFetchApi = mock<ManifestFetchApi>()
   private val selectedCountryPreference = mock<Preference<Optional<Country>>>()
+  private val selectedCountryV2Preference = mock<Preference<Optional<CountryV2>>>()
 
-  private val repository = AppConfigRepository(manifestFetchApi, selectedCountryPreference)
+  private val repository = AppConfigRepository(manifestFetchApi, selectedCountryPreference, selectedCountryV2Preference)
 
   @Test
   fun `successful network calls to fetch the app manifest should return the app manifest`() {
@@ -150,5 +152,23 @@ class AppConfigRepositoryTest {
         .assertComplete()
     verify(selectedCountryPreference).set(Optional.of(country))
     verifyNoMoreInteractions(selectedCountryPreference)
+  }
+
+  @Test
+  fun `saving the countryV2, must save it to local persistence`() {
+    // given
+    val country = TestData.countryV2(
+        isoCountryCode = "IN",
+        displayName = "India",
+        isdCode = "91",
+        deploymentName = "IHCI",
+        deploymentEndPoint = "https://in.simple.org"
+    )
+
+    // then
+    repository.saveCurrentCountry(country)
+
+    verify(selectedCountryV2Preference).set(Optional.of(country))
+    verifyNoMoreInteractions(selectedCountryV2Preference)
   }
 }

@@ -19,7 +19,8 @@ import javax.inject.Inject
  **/
 class AppConfigRepository @Inject constructor(
     private val manifestFetchApi: ManifestFetchApi,
-    private val selectedCountryPreference: Preference<Optional<Country>>
+    private val selectedCountryPreference: Preference<Optional<Country>>,
+    private val selectedCountryV2Preference: Preference<Optional<CountryV2>>
 ) {
 
   fun currentCountry(): Optional<Country> {
@@ -41,5 +42,9 @@ class AppConfigRepository @Inject constructor(
 
   fun saveCurrentCountry(country: Country): Completable {
     return Completable.fromAction { selectedCountryPreference.set(Optional.of(country)) }
+  }
+
+  fun saveCurrentCountry(country: CountryV2) {
+    selectedCountryV2Preference.set(Optional.of(country))
   }
 }

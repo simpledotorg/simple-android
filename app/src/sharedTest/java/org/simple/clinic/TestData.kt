@@ -2,6 +2,8 @@ package org.simple.clinic
 
 import io.bloco.faker.Faker
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appconfig.CountryV2
+import org.simple.clinic.appconfig.Deployment
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.bloodsugar.BloodSugarReading
@@ -33,12 +35,12 @@ import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentPayload
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.CompleteMedicalRecord
-import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientPrefillInfo
@@ -904,6 +906,27 @@ object TestData {
         endpoint = URI.create(endpoint),
         displayName = displayName,
         isdCode = isdCode
+    )
+  }
+
+  fun countryV2(
+      isoCountryCode: String = "IN",
+      displayName: String = "India",
+      isdCode: String = "91",
+      deploymentName: String = "IHCI",
+      deploymentEndPoint: String = "https://simple.org",
+      deployments: List<Deployment> = listOf(
+          Deployment(
+              displayName = deploymentName,
+              endPoint = URI.create(deploymentEndPoint)
+          )
+      )
+  ): CountryV2 {
+    return CountryV2(
+        isoCountryCode = isoCountryCode,
+        displayName = displayName,
+        isdCode = isdCode,
+        deployments = deployments
     )
   }
 

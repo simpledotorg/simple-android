@@ -206,7 +206,7 @@ class NewMedicalHistoryScreenLogicTest {
               hasHadKidneyDisease = Unanswered,
               diagnosedWithHypertension = Yes,
               hasDiabetes = Unanswered,
-          isOnHypertensionTreatment = Yes))
+              isOnHypertensionTreatment = Yes))
       verify(uiActions).openPatientSummaryScreen(savedPatient.patientUuid)
     }
   }
@@ -292,8 +292,9 @@ class NewMedicalHistoryScreenLogicTest {
     whenever(medicalHistoryRepository.save(eq(medicalHistoryUuid), eq(patientUuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.ongoingEntry()).thenReturn(ongoingPatientEntry)
 
+    val viewEffectHandler = NewMedicalHistoryViewEffectHandler(uiActions)
+
     val effectHandler = NewMedicalHistoryEffectHandler(
-        uiActions = uiActions,
         schedulersProvider = TrampolineSchedulersProvider(),
         patientRepository = patientRepository,
         medicalHistoryRepository = medicalHistoryRepository,
@@ -301,7 +302,8 @@ class NewMedicalHistoryScreenLogicTest {
         currentUser = Lazy { user },
         currentFacility = Lazy { facility },
         uuidGenerator = uuidGenerator,
-        dateOfBirthFormatter = dateOfBirthFormatter
+        dateOfBirthFormatter = dateOfBirthFormatter,
+        viewEffectsConsumer = viewEffectHandler::handle
     ).build()
 
     val country = TestData.countryV2(isoCountryCode = Country.INDIA)

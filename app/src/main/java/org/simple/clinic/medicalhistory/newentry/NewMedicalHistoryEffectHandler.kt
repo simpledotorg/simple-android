@@ -28,14 +28,12 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
     private val currentFacility: Lazy<Facility>,
     private val uuidGenerator: UuidGenerator,
     @Named("date_for_user_input") private val dateOfBirthFormatter: DateTimeFormatter,
-    @Assisted private val viewEffectHandler: NewMedicalHistoryViewEffectHandler,
     @Assisted private val viewEffectsConsumer: Consumer<NewMedicalHistoryViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        viewEffectHandler: NewMedicalHistoryViewEffectHandler,
         viewEffectsConsumer: Consumer<NewMedicalHistoryViewEffect>
     ): NewMedicalHistoryEffectHandler
   }

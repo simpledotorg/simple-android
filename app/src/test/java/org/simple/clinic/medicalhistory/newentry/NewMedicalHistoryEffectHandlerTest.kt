@@ -36,7 +36,6 @@ class NewMedicalHistoryEffectHandlerTest {
       currentFacility = Lazy { facility },
       uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid),
       dateOfBirthFormatter = dateOfBirthFormatter,
-      viewEffectHandler = viewEffectHandler,
       viewEffectsConsumer = viewEffectHandler::handle
   )
 

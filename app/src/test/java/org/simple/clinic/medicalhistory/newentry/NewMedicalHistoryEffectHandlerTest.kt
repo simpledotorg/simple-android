@@ -19,6 +19,7 @@ import java.util.UUID
 class NewMedicalHistoryEffectHandlerTest {
 
   private val uiActions = mock<NewMedicalHistoryUiActions>()
+  private val viewEffectHandler = NewMedicalHistoryViewEffectHandler(uiActions)
   private val dataSync = mock<DataSync>()
   private val user = TestData.loggedInUser(uuid = UUID.fromString("c70eb25b-c665-4f9d-a889-bf5504ec8af0"))
   private val facility = TestData.facility(uuid = UUID.fromString("5b9629f3-042b-4b0a-8bd6-f7658130eee7"))
@@ -35,7 +36,8 @@ class NewMedicalHistoryEffectHandlerTest {
       currentFacility = Lazy { facility },
       uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid),
       dateOfBirthFormatter = dateOfBirthFormatter,
-      viewEffectHandler = NewMedicalHistoryViewEffectHandler(uiActions)
+      viewEffectHandler = viewEffectHandler,
+      viewEffectsConsumer = viewEffectHandler::handle
   )
 
   private val testCase = EffectHandlerTestCase(effectHandler.build())

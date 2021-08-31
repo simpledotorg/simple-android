@@ -118,7 +118,8 @@ class NewMedicalHistoryScreen : BaseScreen<
       viewEffectsConsumer: Consumer<NewMedicalHistoryViewEffect>
   ) = effectHandlerFactory
       .create(
-          viewEffectHandler = NewMedicalHistoryViewEffectHandler(this)
+          viewEffectHandler = NewMedicalHistoryViewEffectHandler(this),
+          viewEffectsConsumer = viewEffectsConsumer
       )
       .build()
 

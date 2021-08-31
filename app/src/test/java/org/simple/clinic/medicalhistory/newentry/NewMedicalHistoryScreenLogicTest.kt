@@ -292,6 +292,8 @@ class NewMedicalHistoryScreenLogicTest {
     whenever(medicalHistoryRepository.save(eq(medicalHistoryUuid), eq(patientUuid), any())).thenReturn(Completable.complete())
     whenever(patientRepository.ongoingEntry()).thenReturn(ongoingPatientEntry)
 
+    val viewEffectHandler = NewMedicalHistoryViewEffectHandler(uiActions)
+
     val effectHandler = NewMedicalHistoryEffectHandler(
         schedulersProvider = TrampolineSchedulersProvider(),
         patientRepository = patientRepository,
@@ -301,7 +303,8 @@ class NewMedicalHistoryScreenLogicTest {
         currentFacility = Lazy { facility },
         uuidGenerator = uuidGenerator,
         dateOfBirthFormatter = dateOfBirthFormatter,
-        viewEffectHandler = NewMedicalHistoryViewEffectHandler(uiActions)
+        viewEffectHandler = viewEffectHandler,
+        viewEffectsConsumer = viewEffectHandler::handle
     ).build()
 
     val country = TestData.countryV2(isoCountryCode = Country.INDIA)

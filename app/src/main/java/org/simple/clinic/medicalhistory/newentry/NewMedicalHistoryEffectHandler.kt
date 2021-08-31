@@ -50,6 +50,7 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
         .addAction(ShowOngoingHypertensionTreatmentError::class.java, uiActions::showOngoingHypertensionTreatmentErrorDialog, schedulersProvider.ui())
         .addAction(ShowDiagnosisRequiredError::class.java, uiActions::showDiagnosisRequiredErrorDialog, schedulersProvider.ui())
         .addAction(ShowHypertensionDiagnosisRequiredError::class.java, uiActions::showHypertensionDiagnosisRequiredErrorDialog, schedulersProvider.ui())
+        .addConsumer(NewMedicalHistoryViewEffect::class.java, viewEffectHandler::handle)
         .build()
   }
 

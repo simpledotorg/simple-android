@@ -141,7 +141,7 @@ class AppConfigRepositoryTest {
   @Test
   fun `saving the country, must save it to local persistence`() {
     // given
-    val country = TestData.countryV2(
+    val country = TestData.country(
         isoCountryCode = "IN",
         displayName = "India",
         isdCode = "91",

@@ -23,7 +23,7 @@ class SelectCountryEffectHandlerTest {
   private val repository = mock<AppConfigRepository>()
   private val uiActions = mock<UiActions>()
 
-  private val india = TestData.countryV2(
+  private val india = TestData.country(
       isoCountryCode = "IN",
       deploymentEndPoint = "https://in.simple.org",
       displayName = "India",

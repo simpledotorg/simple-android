@@ -30,7 +30,6 @@ import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityR
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator
-import java.time.Duration
 import java.time.Instant
 import java.util.Optional
 import java.util.UUID
@@ -62,7 +61,7 @@ class PatientSummaryEffectHandlerTest {
       bloodSugarRepository = bloodSugarRepository,
       dataSync = dataSync,
       medicalHistoryRepository = medicalHistoryRepository,
-      country = TestData.countryV2(),
+      country = TestData.country(),
       currentUser = Lazy { user },
       currentFacility = Lazy { facility },
       uuidGenerator = uuidGenerator,
@@ -90,7 +89,7 @@ class PatientSummaryEffectHandlerTest {
   @Test
   fun `when the load patient summary profile is received, then patient summary profile must be fetched`() {
     // given
-    val bangladesh = TestData.countryV2(isoCountryCode = "BD")
+    val bangladesh = TestData.country(isoCountryCode = "BD")
     val effectHandler = PatientSummaryEffectHandler(
         schedulersProvider = TrampolineSchedulersProvider(),
         patientRepository = patientRepository,
@@ -145,7 +144,7 @@ class PatientSummaryEffectHandlerTest {
   @Test
   fun `when the load patient summary profile is received and registered facility is not present, then patient summary profile must be fetched`() {
     // given
-    val bangladesh = TestData.countryV2(isoCountryCode = "BD")
+    val bangladesh = TestData.country(isoCountryCode = "BD")
     val effectHandler = PatientSummaryEffectHandler(
         schedulersProvider = TrampolineSchedulersProvider(),
         patientRepository = patientRepository,

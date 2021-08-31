@@ -8,19 +8,19 @@ import org.simple.clinic.appconfig.displayname.CountryDisplayNameFetcher
 
 class SelectableCountryItemTest {
 
-  private val india = TestData.countryV2(
+  private val india = TestData.country(
       isoCountryCode = "IN",
       deploymentEndPoint = "https://in.simple.org",
       displayName = "India",
       isdCode = "91"
   )
-  private val bangladesh = TestData.countryV2(
+  private val bangladesh = TestData.country(
       isoCountryCode = "BD",
       deploymentEndPoint = "https://bd.simple.org",
       displayName = "Bangladesh",
       isdCode = "880"
   )
-  private val ethiopia = TestData.countryV2(
+  private val ethiopia = TestData.country(
       isoCountryCode = "ET",
       deploymentEndPoint = "https://et.simple.org",
       displayName = "Ethiopia",

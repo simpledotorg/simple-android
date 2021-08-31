@@ -1,15 +1,22 @@
 package org.simple.clinic.appconfig
 
+import com.f2prateek.rx.preferences2.RxSharedPreferences
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import dagger.Module
 import dagger.Provides
-import org.simple.clinic.util.toNullable
+import java.net.URI
 
 @Module
 object CountryModule {
 
   @Provides
-  fun providesCountry(appConfigRepository: AppConfigRepository): Country {
-    createV2CountryIfOldCountryIsPresent(appConfigRepository)
+  fun providesCountry(
+      appConfigRepository: AppConfigRepository,
+      rxSharedPreferences: RxSharedPreferences,
+      moshi: Moshi
+  ): Country {
+    createV2CountryIfOldCountryIsPresent(appConfigRepository, rxSharedPreferences, moshi)
 
     val selectedCountry = appConfigRepository.currentCountry()
 
@@ -19,8 +26,12 @@ object CountryModule {
   }
 
   @Provides
-  fun providesDeployment(appConfigRepository: AppConfigRepository): Deployment {
-    createDeploymentIfOldCountryIsPresent(appConfigRepository)
+  fun providesDeployment(
+      appConfigRepository: AppConfigRepository,
+      rxSharedPreferences: RxSharedPreferences,
+      moshi: Moshi
+  ): Deployment {
+    createDeploymentIfOldCountryIsPresent(appConfigRepository, rxSharedPreferences, moshi)
 
     val selectedDeployment = appConfigRepository.currentDeployment()
 
@@ -29,39 +40,57 @@ object CountryModule {
     return selectedDeployment
   }
 
-  private fun createDeploymentIfOldCountryIsPresent(appConfigRepository: AppConfigRepository) {
-    val selectedCountry = appConfigRepository.currentCountry_Old().toNullable()
+  private fun createDeploymentIfOldCountryIsPresent(
+      appConfigRepository: AppConfigRepository,
+      rxSharedPreferences: RxSharedPreferences,
+      moshi: Moshi
+  ) {
+    val selectedOldCountryPreference = rxSharedPreferences.getString("preference_selected_country_v1")
     val selectedDeployment = appConfigRepository.currentDeployment()
 
-    if (selectedCountry != null && selectedDeployment == null) {
+    if (selectedOldCountryPreference.isSet && selectedDeployment == null) {
+      val selectedOldCountry = parseOldCountry(moshi, selectedOldCountryPreference.get())
       // Since V1 country doesn't have deployment names, we are going with country name
       val deployment = Deployment(
-          displayName = selectedCountry.displayName,
-          endPoint = selectedCountry.endpoint
+          displayName = selectedOldCountry["display_name"]!!,
+          endPoint = URI.create(selectedOldCountry["endpoint"]!!)
       )
       appConfigRepository.saveDeployment(deployment)
     }
   }
 
-  private fun createV2CountryIfOldCountryIsPresent(appConfigRepository: AppConfigRepository) {
-    val selectedOldCountry = appConfigRepository.currentCountry_Old().toNullable()
+  private fun createV2CountryIfOldCountryIsPresent(
+      appConfigRepository: AppConfigRepository,
+      rxSharedPreferences: RxSharedPreferences,
+      moshi: Moshi
+  ) {
+    val selectedOldCountryPreference = rxSharedPreferences.getString("preference_selected_country_v1")
     val selectedNewCountry = appConfigRepository.currentCountry()
 
-    if (selectedOldCountry != null && selectedNewCountry == null) {
+    if (selectedOldCountryPreference.isSet && selectedNewCountry == null) {
+      val selectedOldCountry = parseOldCountry(moshi, selectedOldCountryPreference.get())
       // Since V1 country doesn't have deployment names, we are going with country name
       val deployment = Deployment(
-          displayName = selectedOldCountry.displayName,
-          endPoint = selectedOldCountry.endpoint
+          displayName = selectedOldCountry["display_name"]!!,
+          endPoint = URI.create(selectedOldCountry["endpoint"]!!)
       )
       val country = Country(
-          isoCountryCode = selectedOldCountry.isoCountryCode,
-          displayName = selectedOldCountry.displayName,
-          isdCode = selectedOldCountry.isdCode,
+          isoCountryCode = selectedOldCountry["country_code"]!!,
+          displayName = selectedOldCountry["display_name"]!!,
+          isdCode = selectedOldCountry["isd_code"]!!,
           deployments = listOf(deployment)
       )
       appConfigRepository.saveDeployment(deployment)
       appConfigRepository.saveCurrentCountry(country)
-      appConfigRepository.deleteV1Country()
+
+      selectedOldCountryPreference.delete()
     }
+  }
+
+  private fun parseOldCountry(moshi: Moshi, json: String): Map<String, String> {
+    val type = Types.newParameterizedType(Map::class.java, String::class.java)
+    val selectedOldCountryAdapter = moshi.adapter<Map<String, String>>(type)
+
+    return selectedOldCountryAdapter.fromJson(json)!!
   }
 }

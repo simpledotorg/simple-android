@@ -301,7 +301,6 @@ class NewMedicalHistoryScreenLogicTest {
         currentFacility = Lazy { facility },
         uuidGenerator = uuidGenerator,
         dateOfBirthFormatter = dateOfBirthFormatter,
-        uiActions = uiActions,
         viewEffectHandler = NewMedicalHistoryViewEffectHandler(uiActions)
     ).build()
 

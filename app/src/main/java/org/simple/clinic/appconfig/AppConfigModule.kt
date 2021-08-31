@@ -22,7 +22,7 @@ class AppConfigModule {
   }
 
   @Provides
-  fun provideSelectedCountryV2Preference(
+  fun provideSelectedCountryPreference(
       rxSharedPreferences: RxSharedPreferences,
       moshi: Moshi
   ): Preference<Optional<Country>> {

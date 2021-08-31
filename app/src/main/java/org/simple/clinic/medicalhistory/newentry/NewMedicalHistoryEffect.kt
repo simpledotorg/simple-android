@@ -20,3 +20,5 @@ object ShowOngoingHypertensionTreatmentError : NewMedicalHistoryEffect()
 object ShowDiagnosisRequiredError : NewMedicalHistoryEffect()
 
 object ShowHypertensionDiagnosisRequiredError : NewMedicalHistoryEffect()
+
+sealed class NewMedicalHistoryViewEffect : NewMedicalHistoryEffect()

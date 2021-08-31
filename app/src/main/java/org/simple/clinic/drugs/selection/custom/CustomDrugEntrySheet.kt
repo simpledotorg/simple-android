@@ -34,6 +34,7 @@ import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import org.simple.clinic.widgets.textChanges
 import java.util.Locale
@@ -164,6 +165,10 @@ class CustomDrugEntrySheet : BaseBottomSheet<
 
   override fun closeSheetAndGoToEditMedicineScreen() {
     router.popUntil(PrescribedDrugsScreenKey(screenKey.patientUuid))
+  }
+
+  override fun hideKeyboard() {
+    binding.rootLayout.hideKeyboard()
   }
 
   override fun setDrugDosageText(dosage: String) {

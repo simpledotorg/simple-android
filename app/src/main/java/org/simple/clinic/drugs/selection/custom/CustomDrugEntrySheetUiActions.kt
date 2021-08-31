@@ -12,4 +12,5 @@ interface CustomDrugEntrySheetUiActions {
   fun setDrugFrequency(frequencyLabelRes: Int)
   fun setDrugDosage(dosage: String?)
   fun closeSheetAndGoToEditMedicineScreen()
+  fun hideKeyboard()
 }

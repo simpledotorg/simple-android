@@ -102,9 +102,12 @@ class CustomDrugEntrySheet : BaseBottomSheet<
           saveClicks(),
           removeClicks(),
           editFrequencyClicks(),
+          imeActionDoneClicks(),
           hotEvents
       ).compose(ReportAnalyticsEvents())
       .cast<CustomDrugEntryEvent>()
+
+  private fun imeActionDoneClicks() = drugDosageEditText.editorActions { it == EditorInfo.IME_ACTION_DONE }.map { ImeActionDoneClicked }
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

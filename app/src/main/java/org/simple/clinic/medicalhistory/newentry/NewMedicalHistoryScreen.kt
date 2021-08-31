@@ -126,6 +126,8 @@ class NewMedicalHistoryScreen : BaseScreen<
 
   override fun uiRenderer() = NewMedicalHistoryUiRenderer(this)
 
+  override fun viewEffectHandler() = NewMedicalHistoryViewEffectHandler(this)
+
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)

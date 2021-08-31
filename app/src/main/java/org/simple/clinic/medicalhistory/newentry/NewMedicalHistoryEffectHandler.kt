@@ -19,7 +19,6 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Named
 
 class NewMedicalHistoryEffectHandler @AssistedInject constructor(
-    @Assisted private val uiActions: NewMedicalHistoryUiActions,
     private val schedulersProvider: SchedulersProvider,
     private val patientRepository: PatientRepository,
     private val medicalHistoryRepository: MedicalHistoryRepository,
@@ -27,12 +26,17 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
     private val currentUser: Lazy<User>,
     private val currentFacility: Lazy<Facility>,
     private val uuidGenerator: UuidGenerator,
-    @Named("date_for_user_input") private val dateOfBirthFormatter: DateTimeFormatter
+    @Named("date_for_user_input") private val dateOfBirthFormatter: DateTimeFormatter,
+    @Assisted private val uiActions: NewMedicalHistoryUiActions,
+    @Assisted private val viewEffectHandler: NewMedicalHistoryViewEffectHandler
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: NewMedicalHistoryUiActions): NewMedicalHistoryEffectHandler
+    fun create(
+        uiActions: NewMedicalHistoryUiActions,
+        viewEffectHandler: NewMedicalHistoryViewEffectHandler
+    ): NewMedicalHistoryEffectHandler
   }
 
   fun build(): ObservableTransformer<NewMedicalHistoryEffect, NewMedicalHistoryEvent> {

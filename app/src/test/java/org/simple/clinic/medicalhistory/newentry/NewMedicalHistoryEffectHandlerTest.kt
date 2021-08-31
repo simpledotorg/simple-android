@@ -27,7 +27,6 @@ class NewMedicalHistoryEffectHandlerTest {
   private val dateOfBirthFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
 
   private val effectHandler = NewMedicalHistoryEffectHandler(
-      uiActions = uiActions,
       schedulersProvider = TrampolineSchedulersProvider(),
       patientRepository = mock(),
       medicalHistoryRepository = mock(),
@@ -35,7 +34,9 @@ class NewMedicalHistoryEffectHandlerTest {
       currentUser = Lazy { user },
       currentFacility = Lazy { facility },
       uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid),
-      dateOfBirthFormatter = dateOfBirthFormatter
+      dateOfBirthFormatter = dateOfBirthFormatter,
+      uiActions = uiActions,
+      viewEffectHandler = NewMedicalHistoryViewEffectHandler(uiActions)
   )
 
   private val testCase = EffectHandlerTestCase(effectHandler.build())

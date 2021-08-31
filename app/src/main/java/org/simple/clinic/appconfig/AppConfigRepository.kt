@@ -29,8 +29,8 @@ class AppConfigRepository @Inject constructor(
     return selectedCountryOldPreference.get()
   }
 
-  fun currentCountryObservable(): Observable<Optional<Country_Old>> {
-    return selectedCountryOldPreference.asObservable()
+  fun currentCountryObservable(): Observable<Optional<Country>> {
+    return selectedCountryPreference.asObservable()
   }
 
   fun currentDeployment(): Deployment? {

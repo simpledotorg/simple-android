@@ -37,7 +37,7 @@ class AppConfigRepository @Inject constructor(
     return selectedDeployment.get().toNullable()
   }
 
-  fun currentCountryV2(): Country? {
+  fun currentCountry(): Country? {
     return selectedCountryPreference.get().toNullable()
   }
 

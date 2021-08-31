@@ -11,7 +11,7 @@ object CountryModule {
   fun providesCountry(appConfigRepository: AppConfigRepository): Country {
     createV2CountryIfOldCountryIsPresent(appConfigRepository)
 
-    val selectedCountry = appConfigRepository.currentCountryV2()
+    val selectedCountry = appConfigRepository.currentCountry()
 
     requireNotNull(selectedCountry) { "There is no stored country available!" }
 
@@ -45,7 +45,7 @@ object CountryModule {
 
   private fun createV2CountryIfOldCountryIsPresent(appConfigRepository: AppConfigRepository) {
     val selectedOldCountry = appConfigRepository.currentCountry_Old().toNullable()
-    val selectedNewCountry = appConfigRepository.currentCountryV2()
+    val selectedNewCountry = appConfigRepository.currentCountry()
 
     if (selectedOldCountry != null && selectedNewCountry == null) {
       // Since V1 country doesn't have deployment names, we are going with country name

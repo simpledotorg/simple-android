@@ -83,7 +83,7 @@ class SetupActivityEffectHandler @AssistedInject constructor(
   private fun readUserDetailsFromStorage(): Triple<Boolean, Optional<User>, Optional<Country>> {
     val hasUserCompletedOnboarding = onboardingCompletePreference.get()
     val loggedInUser = userDao.userImmediate().toOptional()
-    val userSelectedCountry = appConfigRepository.currentCountryV2()
+    val userSelectedCountry = appConfigRepository.currentCountry()
 
     return Triple(hasUserCompletedOnboarding, loggedInUser, userSelectedCountry.toOptional())
   }

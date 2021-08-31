@@ -67,7 +67,7 @@ class SetupActivityEffectHandlerTest {
     whenever(userDao.userImmediate()).doReturn(user)
 
     val country = TestData.countryV2()
-    whenever(appConfigRepository.currentCountryV2()) doReturn country
+    whenever(appConfigRepository.currentCountry()) doReturn country
 
     // when
     testCase.dispatch(FetchUserDetails)

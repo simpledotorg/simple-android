@@ -46,7 +46,6 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
         .addTransformer(LoadOngoingPatientEntry::class.java, loadOngoingNewPatientEntry())
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility(schedulersProvider.io()))
         .addTransformer(TriggerSync::class.java, triggerSync())
-        .addAction(ShowHypertensionDiagnosisRequiredError::class.java, uiActions::showHypertensionDiagnosisRequiredErrorDialog, schedulersProvider.ui())
         .addConsumer(NewMedicalHistoryViewEffect::class.java, viewEffectHandler::handle)
         .build()
   }

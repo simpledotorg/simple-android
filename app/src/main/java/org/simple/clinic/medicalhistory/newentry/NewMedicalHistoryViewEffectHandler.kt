@@ -11,6 +11,7 @@ class NewMedicalHistoryViewEffectHandler(
       is OpenPatientSummaryScreen -> uiActions.openPatientSummaryScreen(viewEffect.patientUuid)
       ShowOngoingHypertensionTreatmentError -> uiActions.showOngoingHypertensionTreatmentErrorDialog()
       ShowDiagnosisRequiredError -> uiActions.showDiagnosisRequiredErrorDialog()
+      ShowHypertensionDiagnosisRequiredError -> uiActions.showHypertensionDiagnosisRequiredErrorDialog()
     }
   }
 }

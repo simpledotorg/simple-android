@@ -13,8 +13,6 @@ object LoadCurrentFacility : NewMedicalHistoryEffect()
 
 data class TriggerSync(val registeredPatientUuid: UUID) : NewMedicalHistoryEffect()
 
-object ShowHypertensionDiagnosisRequiredError : NewMedicalHistoryEffect()
-
 sealed class NewMedicalHistoryViewEffect : NewMedicalHistoryEffect()
 
 data class OpenPatientSummaryScreen(val patientUuid: UUID) : NewMedicalHistoryViewEffect()
@@ -22,3 +20,5 @@ data class OpenPatientSummaryScreen(val patientUuid: UUID) : NewMedicalHistoryVi
 object ShowOngoingHypertensionTreatmentError : NewMedicalHistoryViewEffect()
 
 object ShowDiagnosisRequiredError : NewMedicalHistoryViewEffect()
+
+object ShowHypertensionDiagnosisRequiredError : NewMedicalHistoryViewEffect()

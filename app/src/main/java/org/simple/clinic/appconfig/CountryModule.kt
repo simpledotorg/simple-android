@@ -30,7 +30,7 @@ object CountryModule {
   }
 
   private fun createDeploymentIfOldCountryIsPresent(appConfigRepository: AppConfigRepository) {
-    val selectedCountry = appConfigRepository.currentCountry().toNullable()
+    val selectedCountry = appConfigRepository.currentCountry_Old().toNullable()
     val selectedDeployment = appConfigRepository.currentDeployment()
 
     if (selectedCountry != null && selectedDeployment == null) {
@@ -44,7 +44,7 @@ object CountryModule {
   }
 
   private fun createV2CountryIfOldCountryIsPresent(appConfigRepository: AppConfigRepository) {
-    val selectedOldCountry = appConfigRepository.currentCountry().toNullable()
+    val selectedOldCountry = appConfigRepository.currentCountry_Old().toNullable()
     val selectedNewCountry = appConfigRepository.currentCountryV2()
 
     if (selectedOldCountry != null && selectedNewCountry == null) {

@@ -25,7 +25,7 @@ class AppConfigRepository @Inject constructor(
     private val selectedDeployment: Preference<Optional<Deployment>>
 ) {
 
-  fun currentCountry(): Optional<Country_Old> {
+  fun currentCountry_Old(): Optional<Country_Old> {
     return selectedCountryOldPreference.get()
   }
 

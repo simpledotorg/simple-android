@@ -17,10 +17,10 @@ import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
-import java.util.Optional
 import org.simple.clinic.util.extractIfPresent
 import org.simple.clinic.util.filterAndUnwrapJust
 import timber.log.Timber
+import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named

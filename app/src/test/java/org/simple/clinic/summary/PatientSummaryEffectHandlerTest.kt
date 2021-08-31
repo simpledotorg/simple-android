@@ -62,7 +62,7 @@ class PatientSummaryEffectHandlerTest {
       bloodSugarRepository = bloodSugarRepository,
       dataSync = dataSync,
       medicalHistoryRepository = medicalHistoryRepository,
-      country = TestData.country(),
+      country = TestData.countryV2(),
       currentUser = Lazy { user },
       currentFacility = Lazy { facility },
       uuidGenerator = uuidGenerator,
@@ -90,7 +90,7 @@ class PatientSummaryEffectHandlerTest {
   @Test
   fun `when the load patient summary profile is received, then patient summary profile must be fetched`() {
     // given
-    val bangladesh = TestData.country(isoCountryCode = "BD")
+    val bangladesh = TestData.countryV2(isoCountryCode = "BD")
     val effectHandler = PatientSummaryEffectHandler(
         schedulersProvider = TrampolineSchedulersProvider(),
         patientRepository = patientRepository,
@@ -145,7 +145,7 @@ class PatientSummaryEffectHandlerTest {
   @Test
   fun `when the load patient summary profile is received and registered facility is not present, then patient summary profile must be fetched`() {
     // given
-    val bangladesh = TestData.country(isoCountryCode = "BD")
+    val bangladesh = TestData.countryV2(isoCountryCode = "BD")
     val effectHandler = PatientSummaryEffectHandler(
         schedulersProvider = TrampolineSchedulersProvider(),
         patientRepository = patientRepository,

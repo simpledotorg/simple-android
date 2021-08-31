@@ -7,7 +7,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Completable
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
@@ -19,11 +18,10 @@ import org.simple.clinic.setup.runcheck.Allowed
 import org.simple.clinic.setup.runcheck.Disallowed.Reason
 import org.simple.clinic.user.User
 import org.simple.clinic.util.TestUserClock
-import java.util.Optional
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.util.toOptional
 import java.time.Instant
+import java.util.Optional
 import java.util.UUID
 
 class SetupActivityEffectHandlerTest {
@@ -32,7 +30,7 @@ class SetupActivityEffectHandlerTest {
   private val uiActions = mock<UiActions>()
   private val userDao = mock<User.RoomDao>()
   private val appConfigRepository = mock<AppConfigRepository>()
-  private val fallbackCountry = TestData.country()
+  private val fallbackCountry = TestData.countryV2()
   private val appDatabase = mock<org.simple.clinic.AppDatabase>()
   private val databaseMaintenanceRunAtPreference = mock<Preference<Optional<Instant>>>()
   private val clock = TestUtcClock(Instant.parse("2018-01-01T00:00:00Z"))
@@ -68,8 +66,8 @@ class SetupActivityEffectHandlerTest {
     val user = TestData.loggedInUser(uuid = UUID.fromString("426d2eb9-ebf7-4a62-b157-1de221c7c3d0"))
     whenever(userDao.userImmediate()).doReturn(user)
 
-    val country = TestData.country()
-    whenever(appConfigRepository.currentCountry()) doReturn country.toOptional()
+    val country = TestData.countryV2()
+    whenever(appConfigRepository.currentCountry()) doReturn country
 
     // when
     testCase.dispatch(FetchUserDetails)
@@ -131,9 +129,6 @@ class SetupActivityEffectHandlerTest {
 
   @Test
   fun `the fallback country must be set as the selected country when the set fallback country as selected effect is received`() {
-    // given
-    whenever(appConfigRepository.saveCurrentCountry(fallbackCountry)) doReturn Completable.complete()
-
     // when
     testCase.dispatch(SetFallbackCountryAsCurrentCountry)
 

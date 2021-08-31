@@ -4,6 +4,7 @@
 ### Internal
 - Change `ScheduleAppointmentSheet` to use Mobius view effects
 - Add Clubhouse overview description in the Pivotal documentation
+- Migrate v1 `Country` usages to v2 `Country`
 - [In Progress: 30 Aug 2021] Record call results instead of updating the same appointment record
 
 ### Changes

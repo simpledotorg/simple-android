@@ -5,7 +5,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.spotify.mobius.Init
-import com.spotify.mobius.functions.Consumer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
@@ -137,7 +136,7 @@ class ScanSimpleIdScreenLogicTest {
         schedulersProvider = TestSchedulersProvider.trampoline(),
         patientRepository = mock(),
         qrCodeJsonParser = mock(),
-        country = TestData.country(isoCountryCode = Country.INDIA),
+        country = TestData.countryV2(isoCountryCode = Country.INDIA),
         lookupPatientOnline = lookupPatientOnline,
         viewEffectsConsumer = viewEffectHandler::handle,
     )

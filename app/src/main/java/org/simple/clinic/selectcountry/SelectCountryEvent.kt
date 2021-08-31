@@ -22,3 +22,5 @@ object CountrySaved : SelectCountryEvent()
 object RetryClicked : SelectCountryEvent() {
   override val analyticsName: String = "Select Country:Retry Clicked"
 }
+
+object DeploymentSaved : SelectCountryEvent()

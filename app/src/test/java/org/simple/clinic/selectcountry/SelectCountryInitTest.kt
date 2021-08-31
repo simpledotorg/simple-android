@@ -6,8 +6,7 @@ import com.spotify.mobius.test.FirstMatchers.hasNoEffects
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
-import org.simple.clinic.appconfig.Country
-import java.net.URI
+import org.simple.clinic.TestData
 
 class SelectCountryInitTest {
 
@@ -28,15 +27,15 @@ class SelectCountryInitTest {
   @Test
   fun `when the screen is restored with the list of supported countries, do nothing`() {
     val countries = listOf(
-        Country(
+        TestData.countryV2(
             isoCountryCode = "IN",
-            endpoint = URI("https://in.simple.org"),
+            deploymentEndPoint = "https://in.simple.org",
             displayName = "India",
             isdCode = "91"
         ),
-        Country(
+        TestData.countryV2(
             isoCountryCode = "BD",
-            endpoint = URI("https://bd.simple.org"),
+            deploymentEndPoint = "https://bd.simple.org",
             displayName = "Bangladesh",
             isdCode = "880"
         )

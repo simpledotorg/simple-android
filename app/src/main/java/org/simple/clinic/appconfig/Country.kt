@@ -6,25 +6,24 @@ import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.businessid.Identifier
 import org.threeten.extra.chrono.EthiopicChronology
-import java.net.URI
 import java.time.chrono.Chronology
 import java.time.chrono.IsoChronology
 
-@JsonClass(generateAdapter = true)
 @Parcelize
+@JsonClass(generateAdapter = true)
 data class Country(
 
     @Json(name = "country_code")
     val isoCountryCode: String,
 
-    @Json(name = "endpoint")
-    val endpoint: URI,
-
     @Json(name = "display_name")
     val displayName: String,
 
     @Json(name = "isd_code")
-    val isdCode: String
+    val isdCode: String,
+
+    @Json(name = "deployments")
+    val deployments: List<Deployment>
 ) : Parcelable {
 
   val alternativeIdentifierType: Identifier.IdentifierType?

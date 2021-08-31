@@ -7,9 +7,9 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestClinicApp
-import java.util.Optional
+import org.simple.clinic.TestData
 import org.simple.clinic.util.Rules
-import java.net.URI
+import java.util.Optional
 import javax.inject.Inject
 
 
@@ -36,20 +36,26 @@ class SelectedCountryPersistenceAndroidTest {
     val savedJson = """
       {
         "country_code": "IN",
-        "endpoint": "https://in.simple.org/",
         "display_name": "India",
-        "isd_code": "91"
+        "isd_code": "91",
+        "deployments": [
+          {
+            "display_name": "IHCI",
+            "endpoint": "https://in.simple.org/"
+          }
+        ]
       }
     """
 
     preferences
         .edit()
-        .putString("preference_selected_country_v1", savedJson)
+        .putString("preference_selected_country_v2", savedJson)
         .commit()
 
-    val expectedSavedCountry = Country(
+    val expectedSavedCountry = TestData.countryV2(
         isoCountryCode = "IN",
-        endpoint = URI.create("https://in.simple.org/"),
+        deploymentEndPoint = "https://in.simple.org/",
+        deploymentName = "IHCI",
         displayName = "India",
         isdCode = "91"
     )

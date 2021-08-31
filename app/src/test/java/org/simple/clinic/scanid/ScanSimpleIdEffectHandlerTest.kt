@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import com.spotify.mobius.test.RecordingConsumer
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -32,7 +31,7 @@ class ScanSimpleIdEffectHandlerTest {
       schedulersProvider = TestSchedulersProvider.trampoline(),
       patientRepository = patientRepository,
       qrCodeJsonParser = qrCodeJsonParser,
-      country = TestData.country(isoCountryCode = Country.INDIA),
+      country = TestData.countryV2(isoCountryCode = Country.INDIA),
       lookupPatientOnline = lookupPatientOnline,
       viewEffectsConsumer = viewEffectConsumer
   ).build())
@@ -105,7 +104,7 @@ class ScanSimpleIdEffectHandlerTest {
         schedulersProvider = TestSchedulersProvider.trampoline(),
         patientRepository = patientRepository,
         qrCodeJsonParser = qrCodeJsonParser,
-        country = TestData.country(isoCountryCode = Country.BANGLADESH),
+        country = TestData.countryV2(isoCountryCode = Country.BANGLADESH),
         lookupPatientOnline = lookupPatientOnline,
         viewEffectsConsumer = viewEffectConsumer
     ).build())

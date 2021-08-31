@@ -5,8 +5,6 @@ import java.util.UUID
 
 sealed class NewMedicalHistoryEffect
 
-data class OpenPatientSummaryScreen(val patientUuid: UUID) : NewMedicalHistoryEffect()
-
 data class RegisterPatient(val ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry) : NewMedicalHistoryEffect()
 
 object LoadOngoingPatientEntry : NewMedicalHistoryEffect()
@@ -22,3 +20,5 @@ object ShowDiagnosisRequiredError : NewMedicalHistoryEffect()
 object ShowHypertensionDiagnosisRequiredError : NewMedicalHistoryEffect()
 
 sealed class NewMedicalHistoryViewEffect : NewMedicalHistoryEffect()
+
+data class OpenPatientSummaryScreen(val patientUuid: UUID) : NewMedicalHistoryViewEffect()

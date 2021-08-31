@@ -42,7 +42,6 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<NewMedicalHistoryEffect, NewMedicalHistoryEvent> {
     return RxMobius
         .subtypeEffectHandler<NewMedicalHistoryEffect, NewMedicalHistoryEvent>()
-        .addConsumer(OpenPatientSummaryScreen::class.java, { effect -> uiActions.openPatientSummaryScreen(effect.patientUuid) }, schedulersProvider.ui())
         .addTransformer(RegisterPatient::class.java, registerPatient(schedulersProvider.io()))
         .addTransformer(LoadOngoingPatientEntry::class.java, loadOngoingNewPatientEntry())
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility(schedulersProvider.io()))

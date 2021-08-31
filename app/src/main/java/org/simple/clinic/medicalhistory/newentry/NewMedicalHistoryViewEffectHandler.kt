@@ -7,6 +7,8 @@ class NewMedicalHistoryViewEffectHandler(
 ) : ViewEffectsHandler<NewMedicalHistoryViewEffect> {
 
   override fun handle(viewEffect: NewMedicalHistoryViewEffect) {
-    // no-op
+    when (viewEffect) {
+      is OpenPatientSummaryScreen -> uiActions.openPatientSummaryScreen(viewEffect.patientUuid)
+    }
   }
 }

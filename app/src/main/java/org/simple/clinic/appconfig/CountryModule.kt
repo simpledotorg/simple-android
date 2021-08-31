@@ -9,7 +9,9 @@ object CountryModule {
 
   @Provides
   fun providesCountry(appConfigRepository: AppConfigRepository): Country {
-    val selectedCountry = appConfigRepository.currentCountry().toNullable()
+    createV2CountryIfOldCountryIsPresent(appConfigRepository)
+
+    val selectedCountry = appConfigRepository.currentCountry()
 
     requireNotNull(selectedCountry) { "There is no stored country available!" }
 
@@ -28,7 +30,7 @@ object CountryModule {
   }
 
   private fun createDeploymentIfOldCountryIsPresent(appConfigRepository: AppConfigRepository) {
-    val selectedCountry = appConfigRepository.currentCountry().toNullable()
+    val selectedCountry = appConfigRepository.currentCountry_Old().toNullable()
     val selectedDeployment = appConfigRepository.currentDeployment()
 
     if (selectedCountry != null && selectedDeployment == null) {
@@ -38,6 +40,28 @@ object CountryModule {
           endPoint = selectedCountry.endpoint
       )
       appConfigRepository.saveDeployment(deployment)
+    }
+  }
+
+  private fun createV2CountryIfOldCountryIsPresent(appConfigRepository: AppConfigRepository) {
+    val selectedOldCountry = appConfigRepository.currentCountry_Old().toNullable()
+    val selectedNewCountry = appConfigRepository.currentCountry()
+
+    if (selectedOldCountry != null && selectedNewCountry == null) {
+      // Since V1 country doesn't have deployment names, we are going with country name
+      val deployment = Deployment(
+          displayName = selectedOldCountry.displayName,
+          endPoint = selectedOldCountry.endpoint
+      )
+      val country = Country(
+          isoCountryCode = selectedOldCountry.isoCountryCode,
+          displayName = selectedOldCountry.displayName,
+          isdCode = selectedOldCountry.isdCode,
+          deployments = listOf(deployment)
+      )
+      appConfigRepository.saveDeployment(deployment)
+      appConfigRepository.saveCurrentCountry(country)
+      appConfigRepository.deleteV1Country()
     }
   }
 }

@@ -34,8 +34,8 @@ import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
-import java.util.Optional
 import org.simple.clinic.util.RxErrorsRule
+import java.util.Optional
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)

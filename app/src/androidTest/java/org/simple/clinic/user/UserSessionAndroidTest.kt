@@ -15,10 +15,10 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
-import java.util.Optional
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toOptional
+import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
 
@@ -86,7 +86,7 @@ class UserSessionAndroidTest {
 
   @Test
   fun when_user_is_logged_out_then_the_selected_country_preference_must_not_be_removed() {
-    val country = testData.country()
+    val country = testData.countryV2(isoCountryCode = "IN")
     selectedCountryPreference.set(country.toOptional())
 
     userSession.logout().blockingGet()

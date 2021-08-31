@@ -59,9 +59,9 @@ class TestAppModule(private val application: Application) {
 
   @Provides
   fun providesCountry(): Country {
-    return Country(
+    return TestData.countryV2(
         isoCountryCode = "IN",
-        endpoint = URI.create(BuildConfig.MANIFEST_ENDPOINT),
+        deploymentEndPoint = BuildConfig.MANIFEST_ENDPOINT,
         displayName = "India",
         isdCode = "91"
     )

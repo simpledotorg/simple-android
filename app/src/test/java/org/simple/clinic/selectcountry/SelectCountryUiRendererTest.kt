@@ -4,23 +4,22 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
-import org.simple.clinic.appconfig.Country
-import java.net.URI
+import org.simple.clinic.TestData
 
 class SelectCountryUiRendererTest {
 
   private val defaultModel = SelectCountryModel.FETCHING
   private val ui = mock<SelectCountryUi>()
 
-  private val india = Country(
+  private val india = TestData.countryV2(
       isoCountryCode = "IN",
-      endpoint = URI("https://in.simple.org"),
+      deploymentEndPoint = "https://in.simple.org",
       displayName = "India",
       isdCode = "91"
   )
-  private val bangladesh = Country(
+  private val bangladesh = TestData.countryV2(
       isoCountryCode = "BD",
-      endpoint = URI("https://bd.simple.org"),
+      deploymentEndPoint = "https://bd.simple.org",
       displayName = "Bangladesh",
       isdCode = "880"
   )

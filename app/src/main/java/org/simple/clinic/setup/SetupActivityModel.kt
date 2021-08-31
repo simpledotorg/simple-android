@@ -4,10 +4,10 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.user.User
-import java.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.isNotEmpty
 import java.time.Instant
+import java.util.Optional
 
 @Parcelize
 data class SetupActivityModel(

@@ -8,11 +8,11 @@ import org.simple.clinic.mobius.next
 import org.simple.clinic.setup.runcheck.Allowed
 import org.simple.clinic.setup.runcheck.Disallowed
 import org.simple.clinic.user.User
-import java.util.Optional
 import org.simple.clinic.util.isEmpty
 import org.simple.clinic.util.isNotEmpty
 import java.time.Duration
 import java.time.Instant
+import java.util.Optional
 
 class SetupActivityUpdate(
     private val databaseMaintenanceInterval: Duration

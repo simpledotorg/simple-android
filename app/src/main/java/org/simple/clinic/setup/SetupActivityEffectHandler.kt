@@ -18,11 +18,11 @@ import org.simple.clinic.main.TypedPreference.Type.OnboardingComplete
 import org.simple.clinic.setup.runcheck.AllowApplicationToRun
 import org.simple.clinic.user.User
 import org.simple.clinic.util.UserClock
-import java.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
 import java.time.Instant
+import java.util.Optional
 
 class SetupActivityEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: UiActions,
@@ -85,7 +85,7 @@ class SetupActivityEffectHandler @AssistedInject constructor(
     val loggedInUser = userDao.userImmediate().toOptional()
     val userSelectedCountry = appConfigRepository.currentCountry()
 
-    return Triple(hasUserCompletedOnboarding, loggedInUser, userSelectedCountry)
+    return Triple(hasUserCompletedOnboarding, loggedInUser, userSelectedCountry.toOptional())
   }
 
   private fun initializeDatabase(scheduler: Scheduler): ObservableTransformer<InitializeDatabase, SetupActivityEvent> {
@@ -98,12 +98,12 @@ class SetupActivityEffectHandler @AssistedInject constructor(
 
   private fun setFallbackCountryAsSelected(scheduler: Scheduler): ObservableTransformer<SetFallbackCountryAsCurrentCountry, SetupActivityEvent> {
     return ObservableTransformer { effectStream ->
-      effectStream.flatMapSingle {
-        appConfigRepository
-            .saveCurrentCountry(fallbackCountry)
-            .subscribeOn(scheduler)
-            .toSingleDefault(FallbackCountrySetAsSelected)
-      }
+      effectStream
+          .observeOn(scheduler)
+          .doOnNext {
+            appConfigRepository.saveCurrentCountry(fallbackCountry)
+          }
+          .map { FallbackCountrySetAsSelected }
     }
   }
 

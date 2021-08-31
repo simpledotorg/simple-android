@@ -6,28 +6,26 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Completable
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.AppConfigRepository
-import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appconfig.FetchError
 import org.simple.clinic.appconfig.FetchSucceeded
 import org.simple.clinic.appconfig.ManifestFetchResult
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.util.ResolvedError.NetworkRelated
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import java.net.URI
 
 class SelectCountryEffectHandlerTest {
 
   private val repository = mock<AppConfigRepository>()
   private val uiActions = mock<UiActions>()
 
-  private val india = Country(
+  private val india = TestData.countryV2(
       isoCountryCode = "IN",
-      endpoint = URI("https://in.simple.org"),
+      deploymentEndPoint = "https://in.simple.org",
       displayName = "India",
       isdCode = "91"
   )
@@ -85,9 +83,6 @@ class SelectCountryEffectHandlerTest {
 
   @Test
   fun `when the save country effect is received, the country must be saved locally`() {
-    // given
-    whenever(repository.saveCurrentCountry(india)) doReturn Completable.complete()
-
     // when
     testCase.dispatch(SaveCountryEffect(india))
 
@@ -107,6 +102,36 @@ class SelectCountryEffectHandlerTest {
     verifyZeroInteractions(repository)
     testCase.assertNoOutgoingEvents()
     verify(uiActions).goToNextScreen()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when save deployment effect is received, then save deployment`() {
+    // given
+    val deployment = TestData.deployment(
+        displayName = "IHCI",
+        endPoint = "https://in.simple.org/"
+    )
+
+    // when
+    testCase.dispatch(SaveDeployment(deployment))
+
+    // then
+    testCase.assertOutgoingEvents(DeploymentSaved)
+    verify(repository).saveDeployment(deployment)
+    verifyNoMoreInteractions(repository)
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when go to registration screen effect is received, then go to registration screen`() {
+    // when
+    testCase.dispatch(GoToRegistrationScreen)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verifyZeroInteractions(repository)
+    verify(uiActions).goToRegistrationScreen()
     verifyNoMoreInteractions(uiActions)
   }
 }

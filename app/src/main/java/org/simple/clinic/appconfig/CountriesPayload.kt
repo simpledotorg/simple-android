@@ -7,5 +7,5 @@ import com.squareup.moshi.JsonClass
 data class CountriesPayload(
 
     @Json(name = "countries")
-    val countries: List<CountryV2>
+    val countries: List<Country>
 )

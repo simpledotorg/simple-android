@@ -12,10 +12,10 @@ import org.simple.clinic.setup.runcheck.Allowed
 import org.simple.clinic.setup.runcheck.Disallowed
 import org.simple.clinic.setup.runcheck.Disallowed.Reason.Rooted
 import org.simple.clinic.user.User
-import java.util.Optional
 import org.simple.clinic.util.TestUtcClock
 import java.time.Duration
 import java.time.Instant
+import java.util.Optional
 import java.util.UUID
 
 class SetupActivityUpdateTest {
@@ -69,7 +69,7 @@ class SetupActivityUpdateTest {
   fun `if the user has logged in and a country is selected, go to home screen`() {
     // given
     val user = TestData.loggedInUser(uuid = UUID.fromString("d7349b2e-bcc8-47d4-be29-1775b88e8460"))
-    val country = TestData.country()
+    val country = TestData.countryV2()
 
     //then
     val expectedModel = defaultModel.loggedInUser(user, country)

@@ -20,6 +20,7 @@ class EnterOtpEffectHandler @AssistedInject constructor(
     private val ongoingLoginEntryRepository: OngoingLoginEntryRepository,
     private val loginUserWithOtp: LoginUserWithOtp,
     private val activateUser: ActivateUser,
+    private val bruteForceProtection: BruteForceOtpEntryProtection,
     @Assisted private val uiActions: EnterOtpUiActions
 ) {
 
@@ -40,6 +41,7 @@ class EnterOtpEffectHandler @AssistedInject constructor(
         .addTransformer(ListenForUserBackgroundVerification::class.java, waitForUserBackgroundVerifications())
         .addTransformer(RequestLoginOtp::class.java, activateUser())
         .addAction(ShowSmsSentMessage::class.java, uiActions::showSmsSentMessage, schedulers.ui())
+        .addConsumer(FailedLoginOtpAttempt::class.java, { bruteForceProtection.incrementFailedOtpAttempt() }, schedulers.io())
         .build()
   }
 

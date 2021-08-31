@@ -18,6 +18,7 @@ import org.simple.clinic.appupdate.AppUpdateModule
 import org.simple.clinic.di.network.HttpInterceptorsModule
 import org.simple.clinic.di.network.NetworkModule
 import org.simple.clinic.di.network.RetrofitModule
+import org.simple.clinic.enterotp.BruteForceOtpEntryProtectionModule
 import org.simple.clinic.facility.change.FacilityChangeModule
 import org.simple.clinic.home.overdue.OverdueAppointmentsConfigModule
 import org.simple.clinic.instantsearch.InstantSearchConfigModule
@@ -88,7 +89,8 @@ import javax.inject.Named
   TeleconsultPrescriptionModule::class,
   InstantSearchConfigModule::class,
   CountryModule::class,
-  OverdueAppointmentsConfigModule::class
+  OverdueAppointmentsConfigModule::class,
+  BruteForceOtpEntryProtectionModule::class
 ])
 class AppModule(private val appContext: Application) {
 

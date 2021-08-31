@@ -919,7 +919,8 @@ class EnterOtpLogicTest {
         ongoingLoginEntryRepository = ongoingLoginEntryRepository,
         loginUserWithOtp = loginUserWithOtp,
         activateUser = activateUser,
-        uiActions = uiActions
+        uiActions = uiActions,
+        bruteForceProtection = mock()
     )
     val uiRenderer = EnterOtpUiRenderer(ui)
 

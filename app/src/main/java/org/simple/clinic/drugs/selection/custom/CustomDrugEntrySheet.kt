@@ -145,6 +145,7 @@ class CustomDrugEntrySheet : BaseBottomSheet<
         hotEvents.onNext(FrequencyEdited(SelectDrugFrequencyDialog.readDrugFrequency(result)))
     }
 
+    drugDosageEditText.imeOptions = EditorInfo.IME_ACTION_DONE
     drugDosageEditText.showKeyboard()
   }
 

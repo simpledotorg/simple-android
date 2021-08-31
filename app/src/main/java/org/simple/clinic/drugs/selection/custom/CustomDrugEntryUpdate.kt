@@ -2,11 +2,11 @@ package org.simple.clinic.drugs.selection.custom
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.search.Drug
 import org.simple.clinic.drugs.search.DrugFrequency
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import java.util.UUID
@@ -19,8 +19,8 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
     return when (event) {
       is DosageEdited -> next(model.dosageEdited(event.dosage))
       is DosageFocusChanged -> next(model.dosageFocusChanged(event.hasFocus))
-      is EditFrequencyClicked -> dispatch(ShowEditFrequencyDialog(model.frequency))
-      is FrequencyEdited -> next(model.frequencyEdited(event.frequency), SetDrugFrequency(event.frequency))
+      is EditFrequencyClicked -> dispatch(ShowEditFrequencyDialog(model.frequency, model.drugFrequencyChoiceItems!!))
+      is FrequencyEdited -> frequencyEdited(model, event)
       is AddMedicineButtonClicked -> createOrUpdatePrescriptionEntry(model, event.patientUuid)
       is CustomDrugSaved, ExistingDrugRemoved -> dispatch(CloseSheetAndGoToEditMedicineScreen)
       is PrescribedDrugFetched -> prescriptionFetched(model, event.prescription)
@@ -29,17 +29,32 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
         dispatch(RemoveDrugFromPrescription(update.prescribedDrugUuid))
       }
       is DrugFetched -> drugFetched(model, event.drug)
-      is DrugFrequencyChoiceItemsLoaded -> noChange()
+      is DrugFrequencyChoiceItemsLoaded -> next(model.drugFrequencyChoiceItemsLoaded(event.drugFrequencyChoiceItems.items))
     }
   }
+
+  private fun frequencyEdited(
+      model: CustomDrugEntryModel,
+      event: FrequencyEdited,
+  ): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
+    val index = getIndexOfDrugFrequencyChoiceItem(model.drugFrequencyChoiceItems!!, event.frequency)
+
+    return next(model.frequencyEdited(event.frequency), SetDrugFrequency(model.drugFrequencyChoiceItems[index].labelResId))
+  }
+
+  private fun getIndexOfDrugFrequencyChoiceItem(
+      drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>,
+      frequency: DrugFrequency?
+  ) = drugFrequencyChoiceItems.map { it.drugFrequency }.indexOf(frequency)
 
   private fun drugFetched(
       model: CustomDrugEntryModel,
       drug: Drug
   ): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
     val updatedModel = model.drugNameLoaded(drug.name).dosageEdited(drug.dosage).frequencyEdited(drug.frequency).rxNormCodeEdited(drug.rxNormCode)
+    val index = getIndexOfDrugFrequencyChoiceItem(model.drugFrequencyChoiceItems!!, drug.frequency)
 
-    return next(updatedModel, SetDrugFrequency(drug.frequency), SetDrugDosage(drug.dosage))
+    return next(updatedModel, SetDrugFrequency(model.drugFrequencyChoiceItems[index].labelResId), SetDrugDosage(drug.dosage))
   }
 
   private fun prescriptionFetched(
@@ -47,10 +62,11 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       prescription: PrescribedDrug
   ): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
     val frequency = DrugFrequency.fromMedicineFrequency(prescription.frequency)
+    val index = getIndexOfDrugFrequencyChoiceItem(model.drugFrequencyChoiceItems!!, frequency)
 
     val updatedModel = model.drugNameLoaded(prescription.name).dosageEdited(prescription.dosage).frequencyEdited(frequency).rxNormCodeEdited(prescription.rxNormCode)
 
-    return next(updatedModel, SetDrugFrequency(frequency), SetDrugDosage(prescription.dosage))
+    return next(updatedModel, SetDrugFrequency(model.drugFrequencyChoiceItems[index].labelResId), SetDrugDosage(prescription.dosage))
   }
 
   private fun createOrUpdatePrescriptionEntry(

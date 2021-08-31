@@ -51,7 +51,7 @@ class NewMedicalHistoryScreen : BaseScreen<
     NewMedicalHistoryModel,
     NewMedicalHistoryEvent,
     NewMedicalHistoryEffect,
-    Unit>(), NewMedicalHistoryUi, NewMedicalHistoryUiActions {
+    NewMedicalHistoryViewEffect>(), NewMedicalHistoryUi, NewMedicalHistoryUiActions {
 
   @Inject
   lateinit var router: Router
@@ -115,14 +115,18 @@ class NewMedicalHistoryScreen : BaseScreen<
       .cast<NewMedicalHistoryEvent>()
 
   override fun createEffectHandler(
-      viewEffectsConsumer: Consumer<Unit>
+      viewEffectsConsumer: Consumer<NewMedicalHistoryViewEffect>
   ) = effectHandlerFactory
-      .create(this)
+      .create(
+          viewEffectsConsumer = viewEffectsConsumer
+      )
       .build()
 
   override fun createInit() = NewMedicalHistoryInit()
 
   override fun uiRenderer() = NewMedicalHistoryUiRenderer(this)
+
+  override fun viewEffectHandler() = NewMedicalHistoryViewEffectHandler(this)
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

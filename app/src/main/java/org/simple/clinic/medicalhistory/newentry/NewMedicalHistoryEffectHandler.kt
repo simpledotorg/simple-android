@@ -1,5 +1,6 @@
 package org.simple.clinic.medicalhistory.newentry
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -19,7 +20,6 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Named
 
 class NewMedicalHistoryEffectHandler @AssistedInject constructor(
-    @Assisted private val uiActions: NewMedicalHistoryUiActions,
     private val schedulersProvider: SchedulersProvider,
     private val patientRepository: PatientRepository,
     private val medicalHistoryRepository: MedicalHistoryRepository,
@@ -27,25 +27,25 @@ class NewMedicalHistoryEffectHandler @AssistedInject constructor(
     private val currentUser: Lazy<User>,
     private val currentFacility: Lazy<Facility>,
     private val uuidGenerator: UuidGenerator,
-    @Named("date_for_user_input") private val dateOfBirthFormatter: DateTimeFormatter
+    @Named("date_for_user_input") private val dateOfBirthFormatter: DateTimeFormatter,
+    @Assisted private val viewEffectsConsumer: Consumer<NewMedicalHistoryViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: NewMedicalHistoryUiActions): NewMedicalHistoryEffectHandler
+    fun create(
+        viewEffectsConsumer: Consumer<NewMedicalHistoryViewEffect>
+    ): NewMedicalHistoryEffectHandler
   }
 
   fun build(): ObservableTransformer<NewMedicalHistoryEffect, NewMedicalHistoryEvent> {
     return RxMobius
         .subtypeEffectHandler<NewMedicalHistoryEffect, NewMedicalHistoryEvent>()
-        .addConsumer(OpenPatientSummaryScreen::class.java, { effect -> uiActions.openPatientSummaryScreen(effect.patientUuid) }, schedulersProvider.ui())
         .addTransformer(RegisterPatient::class.java, registerPatient(schedulersProvider.io()))
         .addTransformer(LoadOngoingPatientEntry::class.java, loadOngoingNewPatientEntry())
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility(schedulersProvider.io()))
         .addTransformer(TriggerSync::class.java, triggerSync())
-        .addAction(ShowOngoingHypertensionTreatmentError::class.java, uiActions::showOngoingHypertensionTreatmentErrorDialog, schedulersProvider.ui())
-        .addAction(ShowDiagnosisRequiredError::class.java, uiActions::showDiagnosisRequiredErrorDialog, schedulersProvider.ui())
-        .addAction(ShowHypertensionDiagnosisRequiredError::class.java, uiActions::showHypertensionDiagnosisRequiredErrorDialog, schedulersProvider.ui())
+        .addConsumer(NewMedicalHistoryViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 

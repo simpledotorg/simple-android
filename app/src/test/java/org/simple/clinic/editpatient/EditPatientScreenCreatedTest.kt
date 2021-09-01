@@ -50,7 +50,7 @@ class EditPatientScreenCreatedTest {
   private val userClock: TestUserClock = TestUserClock()
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
   private val patientRepository = mock<PatientRepository>()
-  private val country = TestData.countryV2()
+  private val country = TestData.country()
   private val user = TestData.loggedInUser()
 
   private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider(

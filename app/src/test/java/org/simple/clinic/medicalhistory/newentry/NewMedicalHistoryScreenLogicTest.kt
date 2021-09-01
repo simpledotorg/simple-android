@@ -306,7 +306,7 @@ class NewMedicalHistoryScreenLogicTest {
         viewEffectsConsumer = viewEffectHandler::handle
     ).build()
 
-    val country = TestData.countryV2(isoCountryCode = Country.INDIA)
+    val country = TestData.country(isoCountryCode = Country.INDIA)
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),

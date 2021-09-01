@@ -136,7 +136,7 @@ class ScanSimpleIdScreenLogicTest {
         schedulersProvider = TestSchedulersProvider.trampoline(),
         patientRepository = mock(),
         qrCodeJsonParser = mock(),
-        country = TestData.countryV2(isoCountryCode = Country.INDIA),
+        country = TestData.country(isoCountryCode = Country.INDIA),
         lookupPatientOnline = lookupPatientOnline,
         viewEffectsConsumer = viewEffectHandler::handle,
     )

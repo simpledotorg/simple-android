@@ -31,7 +31,7 @@ class ScanSimpleIdEffectHandlerTest {
       schedulersProvider = TestSchedulersProvider.trampoline(),
       patientRepository = patientRepository,
       qrCodeJsonParser = qrCodeJsonParser,
-      country = TestData.countryV2(isoCountryCode = Country.INDIA),
+      country = TestData.country(isoCountryCode = Country.INDIA),
       lookupPatientOnline = lookupPatientOnline,
       viewEffectsConsumer = viewEffectConsumer
   ).build())
@@ -104,7 +104,7 @@ class ScanSimpleIdEffectHandlerTest {
         schedulersProvider = TestSchedulersProvider.trampoline(),
         patientRepository = patientRepository,
         qrCodeJsonParser = qrCodeJsonParser,
-        country = TestData.countryV2(isoCountryCode = Country.BANGLADESH),
+        country = TestData.country(isoCountryCode = Country.BANGLADESH),
         lookupPatientOnline = lookupPatientOnline,
         viewEffectsConsumer = viewEffectConsumer
     ).build())

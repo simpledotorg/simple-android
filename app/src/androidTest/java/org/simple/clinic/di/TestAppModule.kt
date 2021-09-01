@@ -16,7 +16,6 @@ import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.sync.SyncModule
 import org.simple.clinic.util.scheduler.DefaultSchedulersProvider
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import java.net.URI
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.util.Locale
@@ -59,7 +58,7 @@ class TestAppModule(private val application: Application) {
 
   @Provides
   fun providesCountry(): Country {
-    return TestData.countryV2(
+    return TestData.country(
         isoCountryCode = "IN",
         deploymentEndPoint = BuildConfig.MANIFEST_ENDPOINT,
         displayName = "India",

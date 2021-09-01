@@ -1,7 +1,6 @@
 package org.simple.clinic
 
 import io.bloco.faker.Faker
-import org.simple.clinic.appconfig.Country_Old
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appconfig.Deployment
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
@@ -897,20 +896,6 @@ object TestData {
 
   fun country(
       isoCountryCode: String = "IN",
-      endpoint: String = "https://simple.org",
-      displayName: String = "India",
-      isdCode: String = "91"
-  ): Country_Old {
-    return Country_Old(
-        isoCountryCode = isoCountryCode,
-        endpoint = URI.create(endpoint),
-        displayName = displayName,
-        isdCode = isdCode
-    )
-  }
-
-  fun countryV2(
-      isoCountryCode: String = "IN",
       displayName: String = "India",
       isdCode: String = "91",
       deploymentName: String = "IHCI",
@@ -1321,10 +1306,10 @@ object TestData {
   )
 
   fun patientPrefillInfo(
-      fullName : String = "Christi Joe",
-      gender : Gender = Gender.Female,
-      dateOfBirth : LocalDate = LocalDate.parse("2021-05-12"),
-      address : String = "Obvious HQ"
+      fullName: String = "Christi Joe",
+      gender: Gender = Gender.Female,
+      dateOfBirth: LocalDate = LocalDate.parse("2021-05-12"),
+      address: String = "Obvious HQ"
   ) = PatientPrefillInfo(
       fullName = fullName,
       gender = gender,

@@ -6,6 +6,8 @@
 - Add Clubhouse overview description in the Pivotal documentation
 - Migrate v1 `Country` usages to v2 `Country`
 - Change `NewMedicalHistoryScreen` to use Mobius view effects
+- Parse `Country_Old` manually when migrating to v2 `Country`
+- Remove `Country_Old`
 - [In Progress: 30 Aug 2021] Record call results instead of updating the same appointment record
 
 ### Changes

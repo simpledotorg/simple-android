@@ -183,7 +183,7 @@ class PatientSummaryScreenLogicTest {
         bloodSugarRepository = bloodSugarRepository,
         dataSync = mock(),
         medicalHistoryRepository = medicalHistoryRepository,
-        country = TestData.countryV2(),
+        country = TestData.country(),
         currentUser = Lazy { user },
         currentFacility = Lazy { facility },
         uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid),

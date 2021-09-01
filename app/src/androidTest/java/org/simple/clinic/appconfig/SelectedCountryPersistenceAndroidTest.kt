@@ -52,7 +52,7 @@ class SelectedCountryPersistenceAndroidTest {
         .putString("preference_selected_country_v2", savedJson)
         .commit()
 
-    val expectedSavedCountry = TestData.countryV2(
+    val expectedSavedCountry = TestData.country(
         isoCountryCode = "IN",
         deploymentEndPoint = "https://in.simple.org/",
         deploymentName = "IHCI",

@@ -9,6 +9,7 @@
 - Parse `Country_Old` manually when migrating to v2 `Country`
 - Remove `Country_Old`
 - [In Progress: 30 Aug 2021] Record call results instead of updating the same appointment record
+- [In Progress: 31 Aug 2021] Refactor logic around providing drug frequencies label depending on the country
 
 ### Changes
 - Implement providing drug frequencies label depending on the country

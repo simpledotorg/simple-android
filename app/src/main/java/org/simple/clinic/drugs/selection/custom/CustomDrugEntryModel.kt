@@ -14,7 +14,8 @@ data class CustomDrugEntryModel(
     val frequency: DrugFrequency?,
     val rxNormCode: String?,
     val dosagePlaceholder: String,
-    val drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>?
+    val drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>?,
+    val drugFrequencyToFrequencyChoiceItemMap: Map<DrugFrequency?, DrugFrequencyChoiceItem>?
 ) : Parcelable {
   companion object {
     fun default(
@@ -28,7 +29,8 @@ data class CustomDrugEntryModel(
         frequency = null,
         rxNormCode = null,
         dosagePlaceholder = dosagePlaceholder,
-        drugFrequencyChoiceItems = null)
+        drugFrequencyChoiceItems = null,
+        drugFrequencyToFrequencyChoiceItemMap = null)
   }
 
   fun dosageEdited(dosage: String?): CustomDrugEntryModel {
@@ -53,5 +55,9 @@ data class CustomDrugEntryModel(
 
   fun drugFrequencyChoiceItemsLoaded(drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>): CustomDrugEntryModel {
     return copy(drugFrequencyChoiceItems = drugFrequencyChoiceItems)
+  }
+
+  fun drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap: Map<DrugFrequency?, DrugFrequencyChoiceItem>?): CustomDrugEntryModel {
+    return copy(drugFrequencyToFrequencyChoiceItemMap = drugFrequencyToFrequencyChoiceItemMap)
   }
 }

@@ -6,7 +6,8 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.R
 import org.simple.clinic.drugs.search.DrugFrequency
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.CommonDrugFrequencyProvider
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
 import java.util.UUID
 
 class CustomDrugEntryUiRendererTest {
@@ -15,14 +16,10 @@ class CustomDrugEntryUiRendererTest {
   private val uiRenderer = CustomDrugEntryUiRenderer(ui, dosagePlaceholder = "mg")
   private val drugName = "Amlodipine"
   private val dosagePlaceholder = "mg"
-  private val drugFrequencyChoiceList = listOf(
-      DrugFrequencyChoiceItem(drugFrequency = null, labelResId = R.string.custom_drug_entry_sheet_frequency_none),
-      DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.OD, labelResId = R.string.custom_drug_entry_sheet_frequency_OD),
-      DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.BD, labelResId = R.string.custom_drug_entry_sheet_frequency_BD),
-      DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.QDS, labelResId = R.string.custom_drug_entry_sheet_frequency_QDS),
-      DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.TDS, labelResId = R.string.custom_drug_entry_sheet_frequency_TDS))
+  private val drugFrequencyFactory = DrugFrequencyFactory(CommonDrugFrequencyProvider())
+  private val drugFrequencyChoiceItems = drugFrequencyFactory.provideFields()
 
-  private val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(drugName), dosagePlaceholder).drugFrequencyChoiceItemsLoaded(drugFrequencyChoiceList)
+  private val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(drugName), dosagePlaceholder).drugFrequencyChoiceItemsLoaded(drugFrequencyChoiceItems)
 
   @Test
   fun `when drug dosage focus is changed and dosage is null, then set drug dosage text with the placeholder and move the cursor to the beginning`() {
@@ -48,7 +45,7 @@ class CustomDrugEntryUiRendererTest {
   fun `when drug dosage focus is changed and dosage is not null but only contains the placeholder, then set drug dosage text as an empty string and update the sheet title`() {
     // given
     val dosageText = "mg"
-    val drugDosageChangedModel = defaultModel.drugNameLoaded(drugName).dosageEdited(dosageText).dosageFocusChanged(hasFocus = false).drugFrequencyChoiceItemsLoaded(drugFrequencyChoiceList)
+    val drugDosageChangedModel = defaultModel.drugNameLoaded(drugName).dosageEdited(dosageText).dosageFocusChanged(hasFocus = false).drugFrequencyChoiceItemsLoaded(drugFrequencyChoiceItems)
     val frequencyLabelResId = R.string.custom_drug_entry_sheet_frequency_none
 
     // when
@@ -66,7 +63,7 @@ class CustomDrugEntryUiRendererTest {
   fun `when the screen is loaded in update mode, then render the drug name and setup ui for updating drug entry`() {
     // given
     val prescribedDrugUuid = UUID.fromString("96633994-6e4d-4528-b796-f03ae016553a")
-    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.Update(prescribedDrugUuid), dosagePlaceholder).drugFrequencyChoiceItemsLoaded(drugFrequencyChoiceList)
+    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.Update(prescribedDrugUuid), dosagePlaceholder).drugFrequencyChoiceItemsLoaded(drugFrequencyChoiceItems)
     val frequencyLabelResId = R.string.custom_drug_entry_sheet_frequency_none
 
     // when

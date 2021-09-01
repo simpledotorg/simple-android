@@ -23,6 +23,7 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
@@ -70,6 +71,9 @@ class EnterOtpScreen : BaseScreen<
 
   private val rootLayout
     get() = binding.rootLayout
+
+  private val otpEntryAndLockViewFlipper
+    get() = binding.OtpEntryAndLockViewFlipper
 
   override fun defaultModel() = EnterOtpModel.create()
 
@@ -180,6 +184,13 @@ class EnterOtpScreen : BaseScreen<
 
   override fun showSmsSentMessage() {
     smsSentTextView.visibility = View.VISIBLE
+  }
+
+  override fun showOtpEntryMode(mode: OtpEntryMode) {
+    otpEntryAndLockViewFlipper.displayedChildResId = when (mode) {
+      is OtpEntryMode.BruteForceOtpEntryLocked -> R.id.otpentry_bruteforcelock
+      OtpEntryMode.OtpEntry -> R.id.otpEntryEditText
+    }
   }
 
   override fun clearPin() {

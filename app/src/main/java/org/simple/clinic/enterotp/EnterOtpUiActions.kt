@@ -6,4 +6,5 @@ interface EnterOtpUiActions {
   fun showSmsSentMessage()
   fun showNetworkError()
   fun showUnexpectedError()
+  fun showOtpEntryMode(mode: OtpEntryMode)
 }

@@ -66,4 +66,15 @@ class EnterOtpEffectHandlerTest {
     verify(uiActions).showUnexpectedError()
     verifyNoMoreInteractions(uiActions)
   }
+
+
+  @Test
+  fun `when allow otp entry effect is received, then allow otp entry`() {
+    // when
+    testCase.dispatch(AllowOtpEntry)
+    
+    // then
+    verify(uiActions).showOtpEntryMode(OtpEntryMode.OtpEntry)
+    verifyNoMoreInteractions(uiActions)
+   }
 }

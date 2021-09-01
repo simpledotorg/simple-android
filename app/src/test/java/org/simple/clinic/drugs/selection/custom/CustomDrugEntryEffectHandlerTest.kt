@@ -13,7 +13,6 @@ import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.search.DrugRepository
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItems
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.EthiopiaDrugFrequencyProvider
@@ -56,19 +55,14 @@ class CustomDrugEntryEffectHandlerTest {
   fun `when show edit frequency dialog effect is received, show edit frequency dialog`() {
     // given
     val frequency = DrugFrequency.OD
-    val drugFrequencyChoiceList = listOf(
-        DrugFrequencyChoiceItem(drugFrequency = null, labelResId = R.string.custom_drug_entry_sheet_frequency_none),
-        DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.OD, labelResId = R.string.custom_drug_entry_sheet_frequency_OD),
-        DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.BD, labelResId = R.string.custom_drug_entry_sheet_frequency_BD),
-        DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.QDS, labelResId = R.string.custom_drug_entry_sheet_frequency_QDS),
-        DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.TDS, labelResId = R.string.custom_drug_entry_sheet_frequency_TDS))
+    val drugFrequencyChoiceItems = drugFrequencyFactory.provideFields()
 
     // when
-    testCase.dispatch(ShowEditFrequencyDialog(frequency, drugFrequencyChoiceList))
+    testCase.dispatch(ShowEditFrequencyDialog(frequency, drugFrequencyChoiceItems))
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(uiActions).showEditFrequencyDialog(frequency, drugFrequencyChoiceList)
+    verify(uiActions).showEditFrequencyDialog(frequency, drugFrequencyChoiceItems)
   }
 
   @Test

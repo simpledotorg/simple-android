@@ -39,7 +39,8 @@ class EnterOtpUpdate(
   private fun generateEffectForAllowingOtpEntry(protectedState: Allowed): EnterOtpEffect {
     return if (protectedState.attemptsMade == 0) {
       HideErrors
-    }else {
+    } else {
+      ShowIncorrectOtpError(attemptsMade = protectedState.attemptsMade, attemptsRemaining = protectedState.attemptsRemaining)
     }
   }
 

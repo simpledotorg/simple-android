@@ -105,4 +105,19 @@ class EnterOtpUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when user has made attempts, then show incorrect otp error attempts message`() {
+    val attemptsMade = 1
+    val attemptsRemaining = 4
+    updateSpec
+        .given(loginStartedModel)
+        .whenEvent(OtpEntryProtectedStateChanged(stateChanged = Allowed(attemptsMade, attemptsRemaining)))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowIncorrectOtpError(attemptsMade, attemptsRemaining))
+            )
+        )
+  }
 }

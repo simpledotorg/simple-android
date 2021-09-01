@@ -27,6 +27,7 @@ import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
 import org.simple.clinic.overdue.AppointmentModule
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.AppointmentSync
+import org.simple.clinic.overdue.callresult.di.CallResultModule
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncModule
@@ -54,7 +55,9 @@ import javax.inject.Named
   ProtocolModule::class,
   ReportsModule::class,
   HelpModule::class,
-  DrugModule::class])
+  DrugModule::class,
+  CallResultModule::class
+])
 class SyncModule {
 
   @Provides

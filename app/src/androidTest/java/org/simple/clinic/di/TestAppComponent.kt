@@ -41,6 +41,7 @@ import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityW
 import org.simple.clinic.sync.AppointmentSyncIntegrationTest
 import org.simple.clinic.sync.BloodPressureSyncIntegrationTest
 import org.simple.clinic.sync.BloodSugarSyncIntegrationTest
+import org.simple.clinic.sync.CallResultSyncIntegrationTest
 import org.simple.clinic.sync.HelpSyncIntegrationTest
 import org.simple.clinic.sync.MedicalHistorySyncIntegrationTest
 import org.simple.clinic.sync.PatientSyncIntegrationTest
@@ -118,4 +119,5 @@ interface TestAppComponent {
   fun inject(target: LookupPatientOnlineApiIntegrationTest)
   fun inject(target: DrugRepositoryAndroidTest)
   fun inject(target: DrugSyncIntegrationTest)
+  fun inject(target: CallResultSyncIntegrationTest)
 }

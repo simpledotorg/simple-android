@@ -25,15 +25,6 @@ class AppConfigModule {
   fun provideSelectedCountryPreference(
       rxSharedPreferences: RxSharedPreferences,
       moshi: Moshi
-  ): Preference<Optional<Country_Old>> {
-    val countryPreferenceConverter = MoshiObjectPreferenceConverter(moshi, Country_Old::class.java)
-    return rxSharedPreferences.getOptional("preference_selected_country_v1", countryPreferenceConverter)
-  }
-
-  @Provides
-  fun provideSelectedCountryV2Preference(
-      rxSharedPreferences: RxSharedPreferences,
-      moshi: Moshi
   ): Preference<Optional<Country>> {
     val countryPreferenceConverter = MoshiObjectPreferenceConverter(moshi, Country::class.java)
     return rxSharedPreferences.getOptional("preference_selected_country_v2", countryPreferenceConverter)

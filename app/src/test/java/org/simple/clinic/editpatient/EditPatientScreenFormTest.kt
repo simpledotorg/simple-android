@@ -76,7 +76,7 @@ class EditPatientScreenFormTest {
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
 
   private val patientRepository: PatientRepository = mock()
-  private val country = TestData.countryV2()
+  private val country = TestData.country()
   private val user = TestData.loggedInUser()
 
   private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider(

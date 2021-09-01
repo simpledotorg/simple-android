@@ -70,7 +70,7 @@ class EditPatientScreenSaveTest {
   private val ui: EditPatientUi = mock()
   private val viewRenderer = EditPatientViewRenderer(ui)
   private val patientRepository: PatientRepository = mock()
-  private val country = TestData.countryV2()
+  private val country = TestData.country()
 
   private val utcClock: TestUtcClock = TestUtcClock()
   private val userClock: TestUserClock = TestUserClock(LocalDate.parse("2018-01-01"))

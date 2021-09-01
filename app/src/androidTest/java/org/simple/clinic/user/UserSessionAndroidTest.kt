@@ -86,7 +86,7 @@ class UserSessionAndroidTest {
 
   @Test
   fun when_user_is_logged_out_then_the_selected_country_preference_must_not_be_removed() {
-    val country = testData.countryV2(isoCountryCode = "IN")
+    val country = testData.country(isoCountryCode = "IN")
     selectedCountryPreference.set(country.toOptional())
 
     userSession.logout().blockingGet()

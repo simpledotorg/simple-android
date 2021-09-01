@@ -30,7 +30,7 @@ class SetupActivityEffectHandlerTest {
   private val uiActions = mock<UiActions>()
   private val userDao = mock<User.RoomDao>()
   private val appConfigRepository = mock<AppConfigRepository>()
-  private val fallbackCountry = TestData.countryV2()
+  private val fallbackCountry = TestData.country()
   private val appDatabase = mock<org.simple.clinic.AppDatabase>()
   private val databaseMaintenanceRunAtPreference = mock<Preference<Optional<Instant>>>()
   private val clock = TestUtcClock(Instant.parse("2018-01-01T00:00:00Z"))
@@ -66,7 +66,7 @@ class SetupActivityEffectHandlerTest {
     val user = TestData.loggedInUser(uuid = UUID.fromString("426d2eb9-ebf7-4a62-b157-1de221c7c3d0"))
     whenever(userDao.userImmediate()).doReturn(user)
 
-    val country = TestData.countryV2()
+    val country = TestData.country()
     whenever(appConfigRepository.currentCountry()) doReturn country
 
     // when

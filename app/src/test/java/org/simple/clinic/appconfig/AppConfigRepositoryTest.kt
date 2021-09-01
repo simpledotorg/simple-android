@@ -22,13 +22,11 @@ import java.util.Optional
 class AppConfigRepositoryTest {
 
   private val manifestFetchApi = mock<ManifestFetchApi>()
-  private val selectedCountryPreference = mock<Preference<Optional<Country_Old>>>()
   private val selectedCountryV2Preference = mock<Preference<Optional<Country>>>()
   private val selectedDeployment = mock<Preference<Optional<Deployment>>>()
 
   private val repository = AppConfigRepository(
       manifestFetchApi,
-      selectedCountryPreference,
       selectedCountryV2Preference,
       selectedDeployment
   )
@@ -36,11 +34,6 @@ class AppConfigRepositoryTest {
   @Test
   fun `successful network calls to fetch the app manifest should return the app manifest`() {
     // given
-    val countriesV1 = listOf(
-        Country_Old(isoCountryCode = "IN", endpoint = URI("https://in.simple.org"), displayName = "India", isdCode = "91"),
-        Country_Old(isoCountryCode = "BD", endpoint = URI("https://bd.simple.org"), displayName = "Bangladesh", isdCode = "880")
-    )
-
     val countriesV2 = listOf(
         Country(
             isoCountryCode = "IN",
@@ -56,7 +49,7 @@ class AppConfigRepositoryTest {
     )
     val countriesPayload = CountriesPayload(countriesV2)
 
-    whenever(manifestFetchApi.fetchManifest()).doReturn(Single.just(Manifest(countriesV1, countriesPayload)))
+    whenever(manifestFetchApi.fetchManifest()).doReturn(Single.just(Manifest(countriesPayload)))
 
     // then
 
@@ -146,24 +139,9 @@ class AppConfigRepositoryTest {
   }
 
   @Test
-  fun `saving the country must save it to local persistence`() {
+  fun `saving the country, must save it to local persistence`() {
     // given
-    val country = Country_Old(isoCountryCode = "IN", endpoint = URI("https://in.simple.org"), displayName = "India", isdCode = "91")
-
-    // then
-    repository
-        .saveCurrentCountry(country)
-        .test()
-        .assertNoErrors()
-        .assertComplete()
-    verify(selectedCountryPreference).set(Optional.of(country))
-    verifyNoMoreInteractions(selectedCountryPreference)
-  }
-
-  @Test
-  fun `saving the countryV2, must save it to local persistence`() {
-    // given
-    val country = TestData.countryV2(
+    val country = TestData.country(
         isoCountryCode = "IN",
         displayName = "India",
         isdCode = "91",

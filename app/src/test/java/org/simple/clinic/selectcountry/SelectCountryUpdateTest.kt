@@ -15,14 +15,14 @@ class SelectCountryUpdateTest {
 
   private val spec = UpdateSpec(SelectCountryUpdate())
 
-  val india = TestData.countryV2(
+  val india = TestData.country(
       isoCountryCode = "IN",
       deploymentEndPoint = "https://in.simple.org",
       displayName = "India",
       isdCode = "91"
   )
 
-  private val bangladesh = TestData.countryV2(
+  private val bangladesh = TestData.country(
       isoCountryCode = "BD",
       deploymentEndPoint = "https://bd.simple.org",
       displayName = "Bangladesh",
@@ -117,7 +117,7 @@ class SelectCountryUpdateTest {
         endPoint = "https://in.simple.org",
         displayName = "IHCI"
     )
-    val india = TestData.countryV2(
+    val india = TestData.country(
         isoCountryCode = "IN",
         displayName = "India",
         isdCode = "91",
@@ -146,7 +146,7 @@ class SelectCountryUpdateTest {
         endPoint = "https://kerala.simple.org",
         displayName = "Kerala"
     )
-    val india = TestData.countryV2(
+    val india = TestData.country(
         isoCountryCode = "IN",
         displayName = "India",
         isdCode = "91",

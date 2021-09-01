@@ -67,8 +67,8 @@ class EditPatientEffectHandlerTest {
       identifier = Identifier(value = "1234567890abcd", type = BangladeshNationalId)
   )
 
-  private val india = TestData.countryV2(isoCountryCode = Country.INDIA)
-  private val bangladesh = TestData.countryV2(isoCountryCode = Country.BANGLADESH)
+  private val india = TestData.country(isoCountryCode = Country.INDIA)
+  private val bangladesh = TestData.country(isoCountryCode = Country.BANGLADESH)
 
   private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider(
       dateTimeFormatter = dateOfBirthFormatter,

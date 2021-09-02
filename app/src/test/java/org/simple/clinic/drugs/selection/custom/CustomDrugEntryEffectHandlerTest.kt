@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.R
 import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.search.DrugFrequency
@@ -75,14 +74,14 @@ class CustomDrugEntryEffectHandlerTest {
   @Test
   fun `when set drug frequency effect is received, set drug frequency in the ui`() {
     // given
-    val frequencyResId = R.string.custom_drug_entry_sheet_frequency_OD
+    val frequencyRes = "OD"
 
     // when
-    testCase.dispatch(SetDrugFrequency(frequencyResId))
+    testCase.dispatch(SetDrugFrequency(frequencyRes))
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(uiActions).setDrugFrequency(frequencyResId)
+    verify(uiActions).setDrugFrequency(frequencyRes)
     verifyNoMoreInteractions(uiActions)
   }
 

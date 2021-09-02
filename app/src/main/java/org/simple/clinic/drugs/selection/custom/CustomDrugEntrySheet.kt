@@ -156,8 +156,8 @@ class CustomDrugEntrySheet : BaseBottomSheet<
     router.pushExpectingResult(SelectDrugFrequency, SelectDrugFrequencyDialog.Key(frequency, drugFrequencyChoiceItems))
   }
 
-  override fun setDrugFrequency(frequencyLabelRes: Int) {
-    drugFrequencyEditText.setText(getString(frequencyLabelRes))
+  override fun setDrugFrequency(frequencyLabel: String) {
+    drugFrequencyEditText.setText(frequencyLabel)
   }
 
   override fun setSheetTitle(drugName: String?, dosage: String?, frequencyLabelResID: Int) {

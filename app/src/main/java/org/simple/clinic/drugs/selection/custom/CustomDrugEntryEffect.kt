@@ -11,7 +11,7 @@ data class ShowEditFrequencyDialog(
     val drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>
 ) : CustomDrugEntryEffect()
 
-data class SetDrugFrequency(val frequencyLabelRes: Int) : CustomDrugEntryEffect()
+data class SetDrugFrequency(val frequencyLabel: String) : CustomDrugEntryEffect()
 
 data class SetDrugDosage(val dosage: String?) : CustomDrugEntryEffect()
 

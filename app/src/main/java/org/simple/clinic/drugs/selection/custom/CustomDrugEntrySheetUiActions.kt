@@ -9,7 +9,7 @@ interface CustomDrugEntrySheetUiActions {
       drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>
   )
 
-  fun setDrugFrequency(frequencyLabelRes: Int)
+  fun setDrugFrequency(frequencyLabel: String)
   fun setDrugDosage(dosage: String?)
   fun closeSheetAndGoToEditMedicineScreen()
   fun hideKeyboard()

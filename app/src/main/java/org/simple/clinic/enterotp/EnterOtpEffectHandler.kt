@@ -43,6 +43,7 @@ class EnterOtpEffectHandler @AssistedInject constructor(
         .addAction(ShowSmsSentMessage::class.java, uiActions::showSmsSentMessage, schedulers.ui())
         .addConsumer(FailedLoginOtpAttempt::class.java, { bruteForceProtection.incrementFailedOtpAttempt() }, schedulers.io())
         .addAction(ShowNetworkError::class.java, uiActions::showNetworkError, schedulers.ui())
+        .addAction(ShowUnexpectedError::class.java, uiActions::showUnexpectedError, schedulers.ui())
         .build()
   }
 

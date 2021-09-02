@@ -25,3 +25,5 @@ object ShowSmsSentMessage : EnterOtpEffect()
 data class FailedLoginOtpAttempt(val result: LoginResult) : EnterOtpEffect()
 
 object ShowNetworkError : EnterOtpEffect()
+
+object ShowUnexpectedError : EnterOtpEffect()

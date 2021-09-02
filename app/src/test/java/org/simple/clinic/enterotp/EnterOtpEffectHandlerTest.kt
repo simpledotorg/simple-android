@@ -59,4 +59,14 @@ class EnterOtpEffectHandlerTest {
     verify(uiActions).showNetworkError()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when show unexpected error effect is received, then show unexpected error`() {
+    // when
+    testCase.dispatch(ShowUnexpectedError)
+
+    // then
+    verify(uiActions).showUnexpectedError()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

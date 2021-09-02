@@ -45,6 +45,7 @@ class EnterOtpUpdate(
     return when (val result = event.result) {
       LoginResult.Success -> next(updatedModel, ClearLoginEntry, TriggerSync)
       is LoginResult.ServerError -> showLoginFailedAttemptIfIncorrectOtp(result, updatedModel)
+      LoginResult.NetworkError -> dispatch(ShowNetworkError, ClearPin)
       else -> next(updatedModel.loginFailed(AsyncOpError.from(result)), ClearPin as EnterOtpEffect)
     }
   }

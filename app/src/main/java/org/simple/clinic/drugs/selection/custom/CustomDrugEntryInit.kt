@@ -9,7 +9,7 @@ class CustomDrugEntryInit : Init<CustomDrugEntryModel, CustomDrugEntryEffect> {
     return when (model.openAs) {
       is OpenAs.New.FromDrugList -> first(model.customDrugEntryProgressStateLoading(), FetchDrug(model.openAs.drugUuid), LoadDrugFrequencyChoiceItems)
       is OpenAs.New.FromDrugName -> first(model.drugNameLoaded(model.openAs.drugName), LoadDrugFrequencyChoiceItems)
-      is OpenAs.Update -> first(model, FetchPrescription(model.openAs.prescribedDrugUuid), LoadDrugFrequencyChoiceItems)
+      is OpenAs.Update -> first(model.customDrugEntryProgressStateLoading(), FetchPrescription(model.openAs.prescribedDrugUuid), LoadDrugFrequencyChoiceItems)
     }
   }
 }

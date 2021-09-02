@@ -42,7 +42,7 @@ class CustomDrugEntryInitTest {
   }
 
   @Test
-  fun `when sheet is created in update mode, then fetch prescription and load drug frequency choice items`() {
+  fun `when sheet is created in update mode, then fetch prescription, load drug frequency choice items and set the screen to progress state`() {
     val prescribedDrugUuid = UUID.fromString("e046a649-dfc0-45b5-89d4-7a4b0af1c282")
     val model = CustomDrugEntryModel.default(openAs = OpenAs.Update(prescribedDrugUuid = prescribedDrugUuid), dosagePlaceholder)
 
@@ -50,6 +50,7 @@ class CustomDrugEntryInitTest {
         .whenInit(model)
         .then(
             assertThatFirst(
+                hasModel(model.customDrugEntryProgressStateLoading()),
                 hasEffects(FetchPrescription(prescribedDrugUuid), LoadDrugFrequencyChoiceItems)
             )
         )

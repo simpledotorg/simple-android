@@ -6,9 +6,11 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ActivitySelectFacilityBinding
@@ -16,6 +18,7 @@ import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
@@ -127,5 +130,15 @@ class FacilitySelectionActivity :
     intent.putExtra(EXTRA_SELECTED_FACILITY, selectedFacility)
     setResult(Activity.RESULT_OK, intent)
     finish()
+  }
+
+  @Parcelize
+  class Key(
+      override val analyticsName: String = "Select Facility"
+  ): ScreenKey() {
+
+    override fun instantiateFragment(): Fragment {
+
+    }
   }
 }

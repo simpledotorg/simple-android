@@ -5,8 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -19,6 +17,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
@@ -27,7 +26,13 @@ import java.util.Locale
 import javax.inject.Inject
 
 class FacilitySelectionActivity :
-    AppCompatActivity(),
+    BaseScreen<
+        FacilitySelectionActivity.Key,
+        ActivitySelectFacilityBinding,
+        FacilitySelectionModel,
+        FacilitySelectionEvent,
+        FacilitySelectionEffect,
+        Unit>(),
     FacilitySelectionUi,
     FacilitySelectionUiActions {
 
@@ -137,8 +142,6 @@ class FacilitySelectionActivity :
       override val analyticsName: String = "Select Facility"
   ): ScreenKey() {
 
-    override fun instantiateFragment(): Fragment {
-
-    }
+    override fun instantiateFragment() = FacilitySelectionActivity()
   }
 }

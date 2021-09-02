@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
-import org.simple.clinic.R
 import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.CommonDrugFrequencyProvider
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
@@ -32,7 +31,7 @@ class CustomDrugEntryUiRendererTest {
     val placeholder = "mg"
     val drugDosageChangedModel = defaultModel.drugNameLoaded(drugName).dosageFocusChanged(hasFocus = true)
     val drugName = "Amlodipine"
-    val frequencyLabelResId = R.string.custom_drug_entry_sheet_frequency_none
+    val frequencyLabel = "None"
 
     // when
     uiRenderer.render(drugDosageChangedModel)
@@ -42,7 +41,7 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).setButtonTextAsAdd()
     verify(ui).setDrugDosageText(placeholder)
     verify(ui).moveDrugDosageCursorToBeginning()
-    verify(ui).setSheetTitle(drugName, null, frequencyLabelResId)
+    verify(ui).setSheetTitle(drugName, null, frequencyLabel)
     verifyNoMoreInteractions(ui)
   }
 
@@ -51,7 +50,7 @@ class CustomDrugEntryUiRendererTest {
     // given
     val dosageText = "mg"
     val drugDosageChangedModel = defaultModel.drugNameLoaded(drugName).dosageEdited(dosageText).dosageFocusChanged(hasFocus = false).drugFrequencyChoiceItemsLoaded(drugFrequencyChoiceItems)
-    val frequencyLabelResId = R.string.custom_drug_entry_sheet_frequency_none
+    val frequencyLabel = "None"
 
     // when
     uiRenderer.render(drugDosageChangedModel)
@@ -60,7 +59,7 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).hideRemoveButton()
     verify(ui).setButtonTextAsAdd()
     verify(ui).setDrugDosageText("")
-    verify(ui).setSheetTitle(drugName, dosageText, frequencyLabelResId)
+    verify(ui).setSheetTitle(drugName, dosageText, frequencyLabel)
     verifyNoMoreInteractions(ui)
   }
 
@@ -69,7 +68,7 @@ class CustomDrugEntryUiRendererTest {
     // given
     val prescribedDrugUuid = UUID.fromString("96633994-6e4d-4528-b796-f03ae016553a")
     val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.Update(prescribedDrugUuid), dosagePlaceholder).drugFrequencyChoiceItemsLoaded(drugFrequencyChoiceItems)
-    val frequencyLabelResId = R.string.custom_drug_entry_sheet_frequency_none
+    val frequencyLabel = "None"
 
     // when
     uiRenderer.render(defaultModel)
@@ -77,7 +76,7 @@ class CustomDrugEntryUiRendererTest {
     // then
     verify(ui).showRemoveButton()
     verify(ui).setButtonTextAsSave()
-    verify(ui).setSheetTitle(null, null, frequencyLabelResId)
+    verify(ui).setSheetTitle(null, null, frequencyLabel)
     verifyNoMoreInteractions(ui)
   }
 
@@ -85,7 +84,7 @@ class CustomDrugEntryUiRendererTest {
   fun `when drug name, dosage and frequency is loaded, then update the sheet title`() {
     val drugDosage = "15mg"
     val frequency = DrugFrequency.OD
-    val frequencyLabelResId = R.string.custom_drug_entry_sheet_frequency_OD
+    val frequencyLabel = "OD"
 
     // when
     uiRenderer.render(defaultModel.drugNameLoaded(drugName).dosageEdited(drugDosage).frequencyEdited(frequency))
@@ -93,7 +92,7 @@ class CustomDrugEntryUiRendererTest {
     // then
     verify(ui).hideRemoveButton()
     verify(ui).setButtonTextAsAdd()
-    verify(ui).setSheetTitle(drugName, drugDosage, frequencyLabelResId)
+    verify(ui).setSheetTitle(drugName, drugDosage, frequencyLabel)
     verifyNoMoreInteractions(ui)
   }
 }

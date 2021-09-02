@@ -26,7 +26,7 @@ class CustomDrugEntryUiRenderer(
   ) {
     val index = getIndexOfDrugFrequencyChoiceItem(drugFrequencyChoiceItems, frequency)
 
-    ui.setSheetTitle(drugName, dosage.nullIfBlank(), drugFrequencyChoiceItems[index].labelResId)
+    ui.setSheetTitle(drugName, dosage.nullIfBlank(), drugFrequencyChoiceItems[index].label)
   }
 
   private fun getIndexOfDrugFrequencyChoiceItem(

@@ -23,7 +23,10 @@ import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
 import javax.inject.Inject
 
-class FacilitySelectionActivity : AppCompatActivity(), FacilitySelectionUi, FacilitySelectionUiActions {
+class FacilitySelectionActivity :
+    AppCompatActivity(),
+    FacilitySelectionUi,
+    FacilitySelectionUiActions {
 
   companion object {
     const val EXTRA_SELECTED_FACILITY = "selected_facility"

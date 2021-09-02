@@ -48,4 +48,15 @@ class EnterOtpEffectHandlerTest {
     verifyNoMoreInteractions(bruteForceOtpEntryProtection)
     verifyZeroInteractions(uiActions)
   }
+
+
+  @Test
+  fun `when show network error effect is received, then show network error`() {
+    // when
+    testCase.dispatch(ShowNetworkError)
+
+    // then
+    verify(uiActions).showNetworkError()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

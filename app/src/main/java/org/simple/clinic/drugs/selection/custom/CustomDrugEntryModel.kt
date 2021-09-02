@@ -3,6 +3,8 @@ package org.simple.clinic.drugs.selection.custom
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.drugs.search.DrugFrequency
+import org.simple.clinic.drugs.selection.custom.CustomDrugEntryProgressState.DONE
+import org.simple.clinic.drugs.selection.custom.CustomDrugEntryProgressState.IN_PROGRESS
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
 
 @Parcelize
@@ -15,7 +17,8 @@ data class CustomDrugEntryModel(
     val rxNormCode: String?,
     val dosagePlaceholder: String,
     val drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>?,
-    val drugFrequencyToFrequencyChoiceItemMap: Map<DrugFrequency?, DrugFrequencyChoiceItem>?
+    val drugFrequencyToFrequencyChoiceItemMap: Map<DrugFrequency?, DrugFrequencyChoiceItem>?,
+    val customDrugEntryProgressState: CustomDrugEntryProgressState?
 ) : Parcelable {
   companion object {
     fun default(
@@ -30,8 +33,12 @@ data class CustomDrugEntryModel(
         rxNormCode = null,
         dosagePlaceholder = dosagePlaceholder,
         drugFrequencyChoiceItems = null,
-        drugFrequencyToFrequencyChoiceItemMap = null)
+        drugFrequencyToFrequencyChoiceItemMap = null,
+        customDrugEntryProgressState = null)
   }
+
+  val isCustomDrugEntrySheetInfoLoaded: Boolean
+    get() = customDrugEntryProgressState == DONE
 
   fun dosageEdited(dosage: String?): CustomDrugEntryModel {
     return copy(dosage = dosage)
@@ -59,5 +66,13 @@ data class CustomDrugEntryModel(
 
   fun drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap: Map<DrugFrequency?, DrugFrequencyChoiceItem>?): CustomDrugEntryModel {
     return copy(drugFrequencyToFrequencyChoiceItemMap = drugFrequencyToFrequencyChoiceItemMap)
+  }
+
+  fun customDrugEntryProgressStateLoaded(): CustomDrugEntryModel {
+    return copy(customDrugEntryProgressState = DONE)
+  }
+
+  fun customDrugEntryProgressStateLoading(): CustomDrugEntryModel {
+    return copy(customDrugEntryProgressState = IN_PROGRESS)
   }
 }

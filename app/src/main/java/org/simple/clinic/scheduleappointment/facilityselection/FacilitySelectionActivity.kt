@@ -12,7 +12,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.databinding.ActivitySelectFacilityBinding
+import org.simple.clinic.databinding.ScreenSelectFacilityBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.feature.Features
@@ -27,7 +27,7 @@ import javax.inject.Inject
 class FacilitySelectionActivity :
     BaseScreen<
         FacilitySelectionActivity.Key,
-        ActivitySelectFacilityBinding,
+        ScreenSelectFacilityBinding,
         FacilitySelectionModel,
         FacilitySelectionEvent,
         FacilitySelectionEffect,
@@ -97,8 +97,8 @@ class FacilitySelectionActivity :
   override fun bindView(
       layoutInflater: LayoutInflater,
       container: ViewGroup?
-  ): ActivitySelectFacilityBinding {
-    return ActivitySelectFacilityBinding.inflate(layoutInflater, container, false)
+  ): ScreenSelectFacilityBinding {
+    return ScreenSelectFacilityBinding.inflate(layoutInflater, container, false)
   }
 
   @Parcelize

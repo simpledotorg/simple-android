@@ -21,7 +21,7 @@ data class SelectStateModel(
     )
   }
 
-  fun statesLoaded(states: List<State>) = copy(states = states)
+  fun statesLoaded(states: List<State>) = copy(states = states, statesFetchError = null)
 
-  fun failedToLoadStates(statesFetchError: StatesFetchError) = copy(statesFetchError = statesFetchError)
+  fun failedToLoadStates(statesFetchError: StatesFetchError) = copy(statesFetchError = statesFetchError, states = null)
 }

@@ -217,7 +217,7 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
   private fun appointmentDateClicks() = changeAppointmentDate.clicks().map { ManuallySelectAppointmentDateClicked }
 
   private fun openFacilitySelection() {
-    startActivityForResult(Intent(requireContext(), FacilitySelectionScreen::class.java), REQCODE_FACILITY_SELECT)
+    router.pushExpectingResult(Request.SelectFacility, FacilitySelectionScreen.Key())
   }
 
   override fun closeSheet() {

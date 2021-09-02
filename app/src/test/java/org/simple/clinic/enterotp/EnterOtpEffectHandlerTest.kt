@@ -1,9 +1,12 @@
 package org.simple.clinic.enterotp
 
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
+import com.nhaarman.mockitokotlin2.whenever
+import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.login.LoginResult
@@ -65,5 +68,19 @@ class EnterOtpEffectHandlerTest {
     // then
     verify(uiActions).showUnexpectedError()
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when load the otp entry protected state effect is received, then load the protected states`() {
+    // given
+    val allowed = BruteForceOtpEntryProtection.ProtectedState.Allowed(2, 3)
+    whenever(bruteForceOtpEntryProtection.protectedStateChanges()) doReturn Observable.just(allowed)
+
+    // when
+    testCase.dispatch(LoadOtpEntryProtectedStates)
+
+    // then
+    testCase.assertOutgoingEvents(OtpEntryProtectedStateChanged(allowed))
+    verifyZeroInteractions(uiActions)
   }
 }

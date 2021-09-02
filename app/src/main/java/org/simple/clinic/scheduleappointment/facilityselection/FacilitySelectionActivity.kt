@@ -1,9 +1,9 @@
 package org.simple.clinic.scheduleappointment.facilityselection
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,6 +18,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
@@ -74,10 +75,7 @@ class FacilitySelectionActivity :
   }
 
   override fun sendSelectedFacility(selectedFacility: Facility) {
-    val intent = Intent()
-    intent.putExtra(EXTRA_SELECTED_FACILITY, selectedFacility)
-    setResult(Activity.RESULT_OK, intent)
-    finish()
+    router.popWithResult(Succeeded(SelectedFacility(selectedFacility)))
   }
 
   override fun defaultModel() = FacilitySelectionModel()
@@ -114,4 +112,7 @@ class FacilitySelectionActivity :
   interface Injector {
     fun inject(target: FacilitySelectionActivity)
   }
+
+  @Parcelize
+  data class SelectedFacility(val facility: Facility) : Parcelable
 }

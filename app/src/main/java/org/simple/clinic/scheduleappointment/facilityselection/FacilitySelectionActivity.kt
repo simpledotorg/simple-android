@@ -3,28 +3,23 @@ package org.simple.clinic.scheduleappointment.facilityselection
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.spotify.mobius.functions.Consumer
-import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.parcelize.Parcelize
-import org.simple.clinic.ClinicApp
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ActivitySelectFacilityBinding
-import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.util.withLocale
-import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
 import javax.inject.Inject
@@ -80,7 +75,10 @@ class FacilitySelectionActivity :
     )
   }
 
-  private lateinit var component: FacilitySelectionActivityComponent
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    requireContext().injector<Injector>().inject(this)
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -91,26 +89,6 @@ class FacilitySelectionActivity :
     facilityPickerView.backClicked = this@FacilitySelectionActivity::finish
 
     delegate.onRestoreInstanceState(savedInstanceState)
-  }
-
-  override fun attachBaseContext(baseContext: Context) {
-    component = ClinicApp
-        .appComponent
-        .facilitySelectionActivityComponent()
-        .create(activity = this)
-
-    component.inject(this)
-
-    val wrappedContext = baseContext
-        .wrap { ViewPumpContextWrapper.wrap(it) }
-        .wrap { InjectorProviderContextWrapper.wrap(it, component) }
-
-    super.attachBaseContext(wrappedContext)
-    applyOverrideConfiguration(Configuration())
-  }
-
-  override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
-    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
   }
 
   override fun onStart() {
@@ -170,5 +148,9 @@ class FacilitySelectionActivity :
   ) : ScreenKey() {
 
     override fun instantiateFragment() = FacilitySelectionActivity()
+  }
+
+  interface Injector {
+    fun inject(target: FacilitySelectionActivity)
   }
 }

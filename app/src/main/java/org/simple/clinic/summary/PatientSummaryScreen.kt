@@ -54,7 +54,7 @@ import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
-import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivity
+import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionScreen
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet.LinkIdWithPatientSheetKey
 import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet
@@ -335,7 +335,7 @@ class PatientSummaryScreen :
     return screenResults
         .streamResults()
         .ofType<ActivityResult>()
-        .extractSuccessful(ASSIGNED_FACILITY_SELECTION, FacilitySelectionActivity.Companion::selectedFacility)
+        .extractSuccessful(ASSIGNED_FACILITY_SELECTION, FacilitySelectionScreen.Companion::selectedFacility)
         .map(::NewAssignedFacilitySelected)
   }
 
@@ -584,7 +584,7 @@ class PatientSummaryScreen :
   }
 
   override fun openSelectFacilitySheet() {
-    activity.startActivityForResult(Intent(context, FacilitySelectionActivity::class.java), ASSIGNED_FACILITY_SELECTION)
+    activity.startActivityForResult(Intent(context, FacilitySelectionScreen::class.java), ASSIGNED_FACILITY_SELECTION)
   }
 
   override fun dispatchNewAssignedFacility(facility: Facility) {

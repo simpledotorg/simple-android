@@ -24,9 +24,9 @@ import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
 import javax.inject.Inject
 
-class FacilitySelectionActivity :
+class FacilitySelectionScreen :
     BaseScreen<
-        FacilitySelectionActivity.Key,
+        FacilitySelectionScreen.Key,
         ScreenSelectFacilityBinding,
         FacilitySelectionModel,
         FacilitySelectionEvent,
@@ -106,11 +106,11 @@ class FacilitySelectionActivity :
       override val analyticsName: String = "Select Facility"
   ) : ScreenKey() {
 
-    override fun instantiateFragment() = FacilitySelectionActivity()
+    override fun instantiateFragment() = FacilitySelectionScreen()
   }
 
   interface Injector {
-    fun inject(target: FacilitySelectionActivity)
+    fun inject(target: FacilitySelectionScreen)
   }
 
   @Parcelize

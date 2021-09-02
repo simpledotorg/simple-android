@@ -32,7 +32,7 @@ import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.newentry.ButtonState
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
-import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivity
+import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionScreen
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom
 import org.simple.clinic.summary.teleconsultation.status.TeleconsultStatusSheet
 import org.simple.clinic.util.UserClock
@@ -198,7 +198,7 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
   }
 
   private fun updateFacilityChangeForPatient(data: Intent?) {
-    val selectedFacility = FacilitySelectionActivity.selectedFacility(data!!)
+    val selectedFacility = FacilitySelectionScreen.selectedFacility(data!!)
     val patientFacilityChanged = PatientFacilityChanged(facility = selectedFacility)
     facilityChanges.notify(patientFacilityChanged)
   }
@@ -216,7 +216,7 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
   private fun appointmentDateClicks() = changeAppointmentDate.clicks().map { ManuallySelectAppointmentDateClicked }
 
   private fun openFacilitySelection() {
-    startActivityForResult(Intent(requireContext(), FacilitySelectionActivity::class.java), REQCODE_FACILITY_SELECT)
+    startActivityForResult(Intent(requireContext(), FacilitySelectionScreen::class.java), REQCODE_FACILITY_SELECT)
   }
 
   override fun closeSheet() {

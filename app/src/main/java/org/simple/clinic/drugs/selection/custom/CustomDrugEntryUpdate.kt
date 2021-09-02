@@ -20,7 +20,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       is DosageEdited -> next(model.dosageEdited(event.dosage))
       is DosageFocusChanged -> next(model.dosageFocusChanged(event.hasFocus))
       is EditFrequencyClicked -> dispatch(ShowEditFrequencyDialog(model.frequency, model.drugFrequencyToFrequencyChoiceItemMap!!.toList().map { it.second }))
-      is FrequencyEdited -> frequencyEdited(model, event)
+      is FrequencyEdited -> next(model.frequencyEdited(event.frequency), SetDrugFrequency(model.drugFrequencyToFrequencyChoiceItemMap!![event.frequency]!!.label))
       is AddMedicineButtonClicked -> createOrUpdatePrescriptionEntry(model, event.patientUuid)
       is CustomDrugSaved, ExistingDrugRemoved -> dispatch(CloseSheetAndGoToEditMedicineScreen)
       is PrescribedDrugFetched -> prescriptionFetched(model, event.prescription)
@@ -40,15 +40,6 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
   ): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
     val drugFrequencyToFrequencyChoiceItemMap = event.drugFrequencyChoiceItems.items.associateBy({ it.drugFrequency }, { it })
     return next(model.drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap))
-  }
-
-  private fun frequencyEdited(
-      model: CustomDrugEntryModel,
-      event: FrequencyEdited,
-  ): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
-    val index = getIndexOfDrugFrequencyChoiceItem(model.drugFrequencyChoiceItems!!, event.frequency)
-
-    return next(model.frequencyEdited(event.frequency), SetDrugFrequency(model.drugFrequencyChoiceItems[index].label))
   }
 
   private fun getIndexOfDrugFrequencyChoiceItem(

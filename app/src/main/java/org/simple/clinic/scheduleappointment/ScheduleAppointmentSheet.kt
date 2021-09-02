@@ -58,7 +58,6 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
     ScheduleAppointmentViewEffect>(), ScheduleAppointmentUi, ScheduleAppointmentUiActions {
 
   companion object {
-    private const val REQCODE_FACILITY_SELECT = 100
     private const val REQUEST_CODE_TELECONSULT_STATUS_CHANGED = 11
 
     fun sheetOpenedFrom(result: Succeeded): AppointmentSheetOpenedFrom {
@@ -176,11 +175,14 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
       openFacilitySelection()
     }
 
-    setFragmentResultListener(DatePickerResult) { requestKey, result ->
+    setFragmentResultListener(DatePickerResult, Request.SelectFacility) { requestKey, result ->
       if (requestKey is DatePickerResult && result is Succeeded) {
         val selectedDate = result.result as SelectedDate
         val event = AppointmentCalendarDateSelected(selectedDate = selectedDate.date)
         calendarDateSelectedEvents.onNext(event)
+      } else if (requestKey is Request.SelectFacility && result is Succeeded) {
+        val selectedFacility = (result.result as FacilitySelectionScreen.SelectedFacility).facility
+        notifyPatientFacilityChanged(selectedFacility)
       }
     }
   }
@@ -194,14 +196,8 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
 
   private fun manageRequestCodes(requestCode: Int, data: Intent?) {
     when (requestCode) {
-      REQCODE_FACILITY_SELECT -> updateFacilityChangeForPatient(data)
       REQUEST_CODE_TELECONSULT_STATUS_CHANGED -> closeSheet()
     }
-  }
-
-  private fun updateFacilityChangeForPatient(data: Intent?) {
-    val selectedFacility = FacilitySelectionScreen.selectedFacility(data!!)
-    notifyPatientFacilityChanged(selectedFacility)
   }
 
   private fun notifyPatientFacilityChanged(selectedFacility: Facility) {

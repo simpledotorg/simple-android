@@ -28,14 +28,14 @@ class CustomDrugEntryInitTest {
   }
 
   @Test
-  fun `when sheet is created in create mode from a drug name, then update the drug name in the model and load drug frequency choice items`() {
+  fun `when sheet is created in create mode from a drug name, then update the drug name in the model, load drug frequency choice items and set the progress state to done`() {
     val model = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(drugName), dosagePlaceholder)
 
     initSpec
         .whenInit(model)
         .then(
             assertThatFirst(
-                hasModel(model.drugNameLoaded(drugName)),
+                hasModel(model.drugNameLoaded(drugName).customDrugEntryProgressStateLoaded()),
                 hasEffects(LoadDrugFrequencyChoiceItems)
             )
         )

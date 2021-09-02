@@ -1,7 +1,5 @@
 package org.simple.clinic.drugs.selection.custom
 
-import org.simple.clinic.drugs.search.DrugFrequency
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.util.nullIfBlank
 
@@ -25,11 +23,6 @@ class CustomDrugEntryUiRenderer(
   ) {
     ui.setSheetTitle(drugName, dosage.nullIfBlank(), drugFrequencyLabel)
   }
-
-  private fun getIndexOfDrugFrequencyChoiceItem(
-      drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>,
-      frequency: DrugFrequency?
-  ) = drugFrequencyChoiceItems.map { it.drugFrequency }.indexOf(frequency)
 
   private fun showDefaultDosagePlaceholder(
       dosage: String?,

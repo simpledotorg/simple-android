@@ -6,7 +6,8 @@ import org.simple.clinic.appconfig.State
 
 @Parcelize
 data class SelectStateModel(
-    val states: List<State>?
+    val states: List<State>?,
+    val statesFetchError: StatesFetchError?
 ) : Parcelable {
 
   val hasStates
@@ -15,9 +16,12 @@ data class SelectStateModel(
   companion object {
 
     fun create() = SelectStateModel(
-        states = null
+        states = null,
+        statesFetchError = null
     )
   }
 
   fun statesLoaded(states: List<State>) = copy(states = states)
+
+  fun failedToLoadStates(statesFetchError: StatesFetchError) = copy(statesFetchError = statesFetchError)
 }

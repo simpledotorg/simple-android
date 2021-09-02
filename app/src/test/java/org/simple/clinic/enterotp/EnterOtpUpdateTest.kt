@@ -22,19 +22,6 @@ class EnterOtpUpdateTest {
       .loginStarted()
 
   @Test
-  fun `when the login request is completed and is unsuccessful, then finish logging in and show error`() {
-    updateSpec
-        .given(loginStartedModel)
-        .whenEvent(LoginUserCompleted(NetworkError))
-        .then(
-            assertThatNext(
-                hasModel(loginStartedModel.loginFinished().loginFailed(AsyncOpError.Companion.from(NetworkError))),
-                hasEffects(ClearPin)
-            )
-        )
-  }
-
-  @Test
   fun `when the login request is completed and has returned server error saying incorrect otp, then show failed attempt and clear pin`() {
     val incorrectOtp = "Your entered Otp is incorrect, please try again"
     val result = ServerError(incorrectOtp)

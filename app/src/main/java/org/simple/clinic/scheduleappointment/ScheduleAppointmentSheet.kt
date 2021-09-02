@@ -21,7 +21,6 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetScheduleAppointmentBinding
 import org.simple.clinic.datepicker.DatePickerKeyFactory
-import org.simple.clinic.datepicker.DatePickerResult
 import org.simple.clinic.datepicker.SelectedDate
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
@@ -175,7 +174,7 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
       openFacilitySelection()
     }
 
-    setFragmentResultListener(DatePickerResult, Request.SelectFacility) { requestKey, result ->
+    setFragmentResultListener(Request.PickAppointmentDate, Request.SelectFacility) { requestKey, result ->
       if(result is Succeeded) {
         handleSuccessfulScreenResult(requestKey, result)
       }
@@ -184,7 +183,7 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
 
   private fun handleSuccessfulScreenResult(requestKey: Parcelable, result: Succeeded) {
     when (requestKey) {
-      is DatePickerResult -> {
+      is Request.PickAppointmentDate -> {
         val selectedDate = result.result as SelectedDate
         val event = AppointmentCalendarDateSelected(selectedDate = selectedDate.date)
         calendarDateSelectedEvents.onNext(event)
@@ -278,7 +277,7 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
         allowedDateRange = today.plusDays(1)..today.plusYears(1)
     )
 
-    router.pushExpectingResult(DatePickerResult, key)
+    router.pushExpectingResult(Request.PickAppointmentDate, key)
   }
 
   override fun showPatientFacility(facilityName: String) {
@@ -334,6 +333,9 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
 
     @Parcelize
     object SelectFacility : Request()
+
+    @Parcelize
+    object PickAppointmentDate: Request()
   }
 
   interface Injector {

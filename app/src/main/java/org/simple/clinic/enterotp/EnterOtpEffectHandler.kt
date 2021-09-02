@@ -51,7 +51,17 @@ class EnterOtpEffectHandler @AssistedInject constructor(
         .addAction(HideErrors::class.java, { uiActions.hideError() }, schedulers.ui())
         .addConsumer(ShowIncorrectOtpLimitReachedError::class.java, { uiActions.showLimitReachedError(it.attemptsMade) }, schedulers.ui())
         .addConsumer(ShowIncorrectOtpError::class.java, { uiActions.showIncorrectOtpErrorAttempt(it.attemptsMade, it.attemptsRemaining) }, schedulers.ui())
+        .addTransformer(LoadOtpEntryProtectedStates::class.java, loadOtpEntryStates())
         .build()
+  }
+
+  private fun loadOtpEntryStates(): ObservableTransformer<LoadOtpEntryProtectedStates, EnterOtpEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulers.io())
+          .map { bruteForceProtection.protectedStateChanges() }
+          .map(::OtpEntryProtectedStateChanged)
+    }
   }
 
   private fun loadUser(): ObservableTransformer<LoadUser, EnterOtpEvent> {

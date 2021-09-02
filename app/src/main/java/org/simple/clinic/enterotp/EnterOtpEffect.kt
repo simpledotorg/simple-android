@@ -42,3 +42,4 @@ data class ShowIncorrectOtpError(
     val attemptsRemaining: Int
 ) : EnterOtpEffect()
 
+object LoadOtpEntryProtectedStates : EnterOtpEffect()

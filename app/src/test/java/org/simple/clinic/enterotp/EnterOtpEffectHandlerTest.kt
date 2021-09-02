@@ -73,7 +73,7 @@ class EnterOtpEffectHandlerTest {
   fun `when allow otp entry effect is received, then allow otp entry`() {
     // when
     testCase.dispatch(AllowOtpEntry)
-    
+
     // then
     verify(uiActions).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verifyNoMoreInteractions(uiActions)
@@ -125,5 +125,15 @@ class EnterOtpEffectHandlerTest {
     // then
     verify(uiActions).showIncorrectOtpErrorAttempt(attemptsMade, attemptsRemaining)
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when load the otp entry protected state effect is received, then load the protected states`() {
+    // when
+    testCase.dispatch(LoadOtpEntryProtectedStates)
+
+    // then
+    verify(bruteForceOtpEntryProtection).protectedStateChanges()
+    verifyZeroInteractions(uiActions)
   }
 }

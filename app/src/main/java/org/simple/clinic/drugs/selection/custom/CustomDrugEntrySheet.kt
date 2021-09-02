@@ -34,6 +34,8 @@ import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.hideKeyboard
+import org.simple.clinic.widgets.showKeyboard
 import org.simple.clinic.widgets.textChanges
 import java.util.Locale
 import java.util.UUID
@@ -100,9 +102,12 @@ class CustomDrugEntrySheet : BaseBottomSheet<
           saveClicks(),
           removeClicks(),
           editFrequencyClicks(),
+          imeActionDoneClicks(),
           hotEvents
       ).compose(ReportAnalyticsEvents())
       .cast<CustomDrugEntryEvent>()
+
+  private fun imeActionDoneClicks() = drugDosageEditText.editorActions { it == EditorInfo.IME_ACTION_DONE }.map { ImeActionDoneClicked }
 
   override fun onAttach(context: Context) {
     super.onAttach(context)
@@ -139,6 +144,9 @@ class CustomDrugEntrySheet : BaseBottomSheet<
       if (result is Succeeded)
         hotEvents.onNext(FrequencyEdited(SelectDrugFrequencyDialog.readDrugFrequency(result)))
     }
+
+    drugDosageEditText.imeOptions = EditorInfo.IME_ACTION_DONE
+    drugDosageEditText.showKeyboard()
   }
 
   override fun showEditFrequencyDialog(
@@ -161,6 +169,10 @@ class CustomDrugEntrySheet : BaseBottomSheet<
 
   override fun closeSheetAndGoToEditMedicineScreen() {
     router.popUntil(PrescribedDrugsScreenKey(screenKey.patientUuid))
+  }
+
+  override fun hideKeyboard() {
+    binding.rootLayout.hideKeyboard()
   }
 
   override fun setDrugDosageText(dosage: String) {

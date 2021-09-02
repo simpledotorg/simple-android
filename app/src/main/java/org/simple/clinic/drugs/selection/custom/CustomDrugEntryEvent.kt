@@ -30,3 +30,5 @@ object RemoveDrugButtonClicked : CustomDrugEntryEvent()
 data class DrugFetched(val drug: Drug) : CustomDrugEntryEvent()
 
 data class DrugFrequencyChoiceItemsLoaded(val drugFrequencyChoiceItems: DrugFrequencyChoiceItems) : CustomDrugEntryEvent()
+
+object ImeActionDoneClicked : CustomDrugEntryEvent()

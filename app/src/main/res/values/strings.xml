@@ -822,7 +822,7 @@
 
   <!-- Custom drugs search -->
   <string name="customdrugssearch_hint">Enter medicine name</string>
-  <string name="customdrugssearch_item_name_separator">, </string>
+  <string name="customdrugssearch_item_name_separator">,\u0020</string>
 
   <!-- Warning dialogs -->
   <string name="warning_add_measurements_title">Add BP and blood sugar?</string>

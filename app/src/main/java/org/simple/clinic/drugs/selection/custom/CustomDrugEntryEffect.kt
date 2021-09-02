@@ -41,3 +41,5 @@ data class FetchDrug(val drugUuid: UUID) : CustomDrugEntryEffect()
 data class RemoveDrugFromPrescription(val drugUuid: UUID) : CustomDrugEntryEffect()
 
 object LoadDrugFrequencyChoiceItems : CustomDrugEntryEffect()
+
+object HideKeyboard : CustomDrugEntryEffect()

@@ -175,8 +175,8 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
       openFacilitySelection()
     }
 
-    setFragmentResultListener(DatePickerResult) { _, result ->
-      if (result is Succeeded) {
+    setFragmentResultListener(DatePickerResult) { requestKey, result ->
+      if (requestKey is DatePickerResult && result is Succeeded) {
         val selectedDate = result.result as SelectedDate
         val event = AppointmentCalendarDateSelected(selectedDate = selectedDate.date)
         calendarDateSelectedEvents.onNext(event)

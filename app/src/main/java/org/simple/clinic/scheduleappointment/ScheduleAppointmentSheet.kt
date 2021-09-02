@@ -24,6 +24,7 @@ import org.simple.clinic.datepicker.DatePickerKeyFactory
 import org.simple.clinic.datepicker.DatePickerResult
 import org.simple.clinic.datepicker.SelectedDate
 import org.simple.clinic.di.injector
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.navigation.v2.Router
@@ -200,6 +201,10 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
 
   private fun updateFacilityChangeForPatient(data: Intent?) {
     val selectedFacility = FacilitySelectionScreen.selectedFacility(data!!)
+    notifyPatientFacilityChanged(selectedFacility)
+  }
+
+  private fun notifyPatientFacilityChanged(selectedFacility: Facility) {
     val patientFacilityChanged = PatientFacilityChanged(facility = selectedFacility)
     facilityChanges.notify(patientFacilityChanged)
   }

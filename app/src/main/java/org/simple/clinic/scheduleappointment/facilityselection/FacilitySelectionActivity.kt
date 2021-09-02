@@ -5,8 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import com.spotify.mobius.functions.Consumer
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.ClinicApp
@@ -137,10 +141,33 @@ class FacilitySelectionActivity :
     finish()
   }
 
+  override fun defaultModel() = FacilitySelectionModel()
+
+  override fun uiRenderer() = FacilitySelectionUiRenderer(this)
+
+  override fun events(): Observable<FacilitySelectionEvent> {
+    return facilityClicks()
+        .compose(ReportAnalyticsEvents())
+        .cast()
+  }
+
+  override fun createUpdate() = FacilitySelectionUpdate()
+
+  override fun createInit() = FacilitySelectionInit()
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
+
+  override fun bindView(
+      layoutInflater: LayoutInflater,
+      container: ViewGroup?
+  ): ActivitySelectFacilityBinding {
+    return ActivitySelectFacilityBinding.inflate(layoutInflater, container, false)
+  }
+
   @Parcelize
   class Key(
       override val analyticsName: String = "Select Facility"
-  ): ScreenKey() {
+  ) : ScreenKey() {
 
     override fun instantiateFragment() = FacilitySelectionActivity()
   }

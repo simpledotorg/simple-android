@@ -27,13 +27,15 @@ class AppConfigRepositoryTest {
   private val manifestFetchApi = mock<ManifestFetchApi>()
   private val selectedCountryV2Preference = mock<Preference<Optional<Country>>>()
   private val selectedDeployment = mock<Preference<Optional<Deployment>>>()
+  private val selectedStatePreference = mock<Preference<Optional<State>>>()
   private val statesFetcher = mock<StatesFetcher>()
 
   private val repository = AppConfigRepository(
       manifestFetchApi,
       selectedCountryV2Preference,
       selectedDeployment,
-      statesFetcher
+      selectedStatePreference,
+      statesFetcher,
   )
 
   @Test
@@ -289,5 +291,25 @@ class AppConfigRepositoryTest {
     // then
     val fetchedStatesResult = repository.fetchStatesInSelectedCountry()
     assertThat(fetchedStatesResult).isEqualTo(StatesResult.FetchError(ResolvedError.Unexpected(cause)))
+  }
+
+  @Test
+  fun `saving the state, should save it to local persistence`() {
+    // given
+    val deployment = TestData.deployment(
+        displayName = "IHCI",
+        endPoint = "https://in.simple.org"
+    )
+    val state = TestData.state(
+        displayName = "Andhra Pradesh",
+        deployment = deployment
+    )
+
+    // when
+    repository.saveState(state)
+
+    // then
+    verify(selectedStatePreference).set(Optional.of(state))
+    verifyNoMoreInteractions(selectedStatePreference)
   }
 }

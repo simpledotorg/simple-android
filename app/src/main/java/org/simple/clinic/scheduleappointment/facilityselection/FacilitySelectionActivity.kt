@@ -17,6 +17,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.unsafeLazy
@@ -51,6 +52,9 @@ class FacilitySelectionActivity :
 
   @Inject
   lateinit var effectHandlerFactory: FacilitySelectionEffectHandler.Factory
+
+  @Inject
+  lateinit var router: Router
 
   private lateinit var binding: ActivitySelectFacilityBinding
 

@@ -221,7 +221,7 @@ class CustomDrugEntryUpdateTest {
     val drugUuid = UUID.fromString("6bbc5bbe-863c-472a-b962-1fd3198e20d1")
     val drug = TestData.drug(id = drugUuid, frequency = OD)
     val frequencyRes = "OD"
-    val drugFrequencyChoiceItemsLoaded = defaultModel.drugFrequencyChoiceItemsLoaded(drugFrequencyChoiceItems)
+    val drugFrequencyChoiceItemsLoaded = defaultModel.drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap)
 
     updateSpec
         .given(drugFrequencyChoiceItemsLoaded)

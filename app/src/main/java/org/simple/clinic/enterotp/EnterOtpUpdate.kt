@@ -47,6 +47,7 @@ class EnterOtpUpdate(
       is LoginResult.ServerError -> showLoginFailedAttemptIfIncorrectOtp(result, updatedModel)
       LoginResult.NetworkError -> dispatch(ShowNetworkError, ClearPin)
       else -> next(updatedModel.loginFailed(AsyncOpError.from(result)), ClearPin as EnterOtpEffect)
+      LoginResult.UnexpectedError -> dispatch(ShowUnexpectedError, ClearPin)
     }
   }
 

@@ -7,8 +7,10 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.LoginResult.NetworkError
 import org.simple.clinic.login.LoginResult.ServerError
+import org.simple.clinic.login.LoginResult.UnexpectedError
 import java.util.UUID
 
 class EnterOtpUpdateTest {
@@ -57,6 +59,20 @@ class EnterOtpUpdateTest {
             assertThatNext(
                 hasNoModel(),
                 hasEffects(ShowNetworkError, ClearPin)
+            )
+        )
+  }
+
+  @Test
+  fun `when the login request is completed and has returned unexpected error, then show show unexpected error`() {
+    val result = UnexpectedError
+    updateSpec
+        .given(loginStartedModel)
+        .whenEvent(LoginUserCompleted(result))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowUnexpectedError, ClearPin)
             )
         )
   }

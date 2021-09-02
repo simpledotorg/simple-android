@@ -29,7 +29,7 @@
   - Search for commonly used drugs
 - [In Progress: 06 Aug 2021] Add support for Sri Lanka
 - [In Progress: 25 Aug 2021] Implement providing drug frequencies label depending on the country
-- [In-progress: 27 Aug 2021] Restrict OTP entries to 5 attempts
+- [In-progress: 07 Sep 2021] Restrict OTP entries to 5 attempts
 - [In-progress: 01 Sep 2021] Add support for state selection after selecting country
 
 ## On Demo

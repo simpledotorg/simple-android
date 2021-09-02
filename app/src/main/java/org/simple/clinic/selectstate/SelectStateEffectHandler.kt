@@ -14,7 +14,17 @@ class SelectStateEffectHandler @Inject constructor(
   fun build(): ObservableTransformer<SelectStateEffect, SelectStateEvent> = RxMobius
       .subtypeEffectHandler<SelectStateEffect, SelectStateEvent>()
       .addTransformer(LoadStates::class.java, loadStates())
+      .addTransformer(SaveSelectedState::class.java, saveState())
       .build()
+
+  private fun saveState(): ObservableTransformer<SaveSelectedState, SelectStateEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulers.io())
+          .map { appConfigRepository.saveState(it.state) }
+          .map { StateSaved }
+    }
+  }
 
   private fun loadStates(): ObservableTransformer<LoadStates, SelectStateEvent> {
     return ObservableTransformer { effects ->

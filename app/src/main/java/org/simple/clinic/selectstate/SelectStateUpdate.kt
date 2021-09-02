@@ -1,6 +1,7 @@
 package org.simple.clinic.selectstate
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.appconfig.StatesResult
 import org.simple.clinic.mobius.next
@@ -13,6 +14,7 @@ class SelectStateUpdate : Update<SelectStateModel, SelectStateEvent, SelectState
   ): Next<SelectStateModel, SelectStateEffect> {
     return when (event) {
       is StatesResultFetched -> statesResultFetched(model, event)
+      StateSaved -> noChange()
     }
   }
 

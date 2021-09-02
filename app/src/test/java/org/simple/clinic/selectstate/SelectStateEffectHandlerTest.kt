@@ -41,4 +41,16 @@ class SelectStateEffectHandlerTest {
     // then
     testCase.assertOutgoingEvents(StatesResultFetched(StatesFetched(states)))
   }
+
+  @Test
+  fun `when save state effect is received, then save state to local persistence`() {
+    // given
+    val state = TestData.state(displayName = "Andhra Pradesh")
+
+    // when
+    testCase.dispatch(SaveSelectedState(state))
+
+    // then
+    testCase.assertOutgoingEvents(StateSaved)
+  }
 }

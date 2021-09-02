@@ -61,7 +61,7 @@
       android:layout_height="wrap_content"
       android:hint="@string/custom_drug_entry_sheet_dosage"
       android:imeOptions="actionNext"
-      android:inputType="textCapWords" />
+      android:inputType="number" />
 
   </com.google.android.material.textfield.TextInputLayout>
 
@@ -73,10 +73,7 @@
     android:layout_marginTop="@dimen/spacing_16"
     android:layout_marginEnd="@dimen/spacing_24"
     android:layout_marginBottom="@dimen/spacing_16"
-    android:textColorHint="?attr/colorPrimary"
-    app:hintEnabled="true"
     app:hintTextAppearance="?attr/textAppearanceBody2"
-    app:hintTextColor="?attr/colorPrimary"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintHorizontal_weight="1"
     app:layout_constraintStart_toEndOf="@+id/dosageTextInputLayout"
@@ -92,7 +89,8 @@
       android:hint="@string/custom_drug_entry_sheet_frequency"
       android:imeOptions="actionDone"
       android:inputType="textNoSuggestions"
-      android:text="@string/custom_drug_entry_sheet_frequency_none" />
+      android:text="@string/custom_drug_entry_sheet_frequency_none"
+      android:drawableEnd="@drawable/ic_keyboard_arrow_down_24px"/>
 
   </com.google.android.material.textfield.TextInputLayout>
 

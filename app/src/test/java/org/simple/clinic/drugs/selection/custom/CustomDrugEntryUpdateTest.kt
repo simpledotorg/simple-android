@@ -232,4 +232,17 @@ class CustomDrugEntryUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when done is clicked on the keyboard, then hide the keyboard`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(ImeActionDoneClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(HideKeyboard)
+            )
+        )
+  }
 }

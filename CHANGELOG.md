@@ -13,6 +13,11 @@
 
 ### Changes
 - Implement providing drug frequencies label depending on the country
+- Ui improvements for `CustomDrugEntrySheet`
+  - Show numeric keyboard with dosage text field focused when sheet is opened
+  - Update drug frequency edit text ui
+- Add ellipsis to long drug name in `PatientSummaryScreen` & `EditMedicineScreen`
+- Add a unicode character instead of space in `DrugSearchScreen` search results
 - [In Progress: 19 Aug 2021] UI improvements for medical history screen
   - Show hypertension diagnosis and treatment in single card
   - Show separate cards for hypertension and diabetes diagnosis

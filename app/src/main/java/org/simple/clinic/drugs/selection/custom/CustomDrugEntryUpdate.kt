@@ -30,6 +30,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       }
       is DrugFetched -> drugFetched(model, event.drug)
       is DrugFrequencyChoiceItemsLoaded -> next(model.drugFrequencyChoiceItemsLoaded(event.drugFrequencyChoiceItems.items))
+      ImeActionDoneClicked -> dispatch(HideKeyboard)
     }
   }
 

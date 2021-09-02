@@ -231,4 +231,15 @@ class CustomDrugEntryEffectHandlerTest {
     testCase.assertOutgoingEvents(DrugFrequencyChoiceItemsLoaded(DrugFrequencyChoiceItems(expectedResult)))
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when hide keyboard effect is received, then hide keyboard`() {
+    // when
+    testCase.dispatch(HideKeyboard)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).hideKeyboard()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

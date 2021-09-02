@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
@@ -56,8 +57,6 @@ class FacilitySelectionActivity :
   @Inject
   lateinit var router: Router
 
-  private lateinit var binding: ActivitySelectFacilityBinding
-
   private val facilityPickerView
     get() = binding.facilityPickerView
 
@@ -84,30 +83,9 @@ class FacilitySelectionActivity :
     requireContext().injector<Injector>().inject(this)
   }
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-
-    binding = ActivitySelectFacilityBinding.inflate(layoutInflater)
-    setContentView(binding.root)
-
-    facilityPickerView.backClicked = this@FacilitySelectionActivity::finish
-
-    delegate.onRestoreInstanceState(savedInstanceState)
-  }
-
-  override fun onStart() {
-    super.onStart()
-    delegate.start()
-  }
-
-  override fun onStop() {
-    delegate.stop()
-    super.onStop()
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    delegate.onSaveInstanceState(outState)
-    super.onSaveInstanceState(outState)
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    facilityPickerView.backClicked = router::pop
   }
 
   private fun facilityClicks(): Observable<UiEvent> {

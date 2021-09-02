@@ -30,7 +30,7 @@ class EnterOtpUpdateTest {
         .whenEvent(LoginUserCompleted(result))
         .then(
             assertThatNext(
-                hasModel(loginStartedModel.loginFinished().loginFailed(AsyncOpError.Companion.from(result))),
+                hasNoModel(),
                 hasEffects(FailedLoginOtpAttempt(result), ClearPin)
             )
         )

@@ -50,10 +50,6 @@ data class EnterOtpModel(
     return copy(isAsyncOperationOngoing = false, asyncOpError = null)
   }
 
-  fun loginFailed(error: AsyncOpError): EnterOtpModel {
-    return copy(asyncOpError = error)
-  }
-
   fun requestLoginOtpStarted(): EnterOtpModel {
     return copy(asyncOpError = null, isAsyncOperationOngoing = true)
   }

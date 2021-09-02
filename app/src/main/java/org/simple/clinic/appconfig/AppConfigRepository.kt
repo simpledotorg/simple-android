@@ -3,6 +3,7 @@ package org.simple.clinic.appconfig
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Observable
 import io.reactivex.Single
+import org.simple.clinic.appconfig.StatesResult.StatesFetched
 import org.simple.clinic.appconfig.api.ManifestFetchApi
 import org.simple.clinic.util.ErrorResolver
 import org.simple.clinic.util.toNullable
@@ -20,7 +21,8 @@ import javax.inject.Inject
 class AppConfigRepository @Inject constructor(
     private val manifestFetchApi: ManifestFetchApi,
     private val selectedCountryPreference: Preference<Optional<Country>>,
-    private val selectedDeployment: Preference<Optional<Deployment>>
+    private val selectedDeployment: Preference<Optional<Deployment>>,
+    private val statesFetcher: StatesFetcher
 ) {
 
   fun currentCountryObservable(): Observable<Optional<Country>> {
@@ -50,5 +52,20 @@ class AppConfigRepository @Inject constructor(
 
   fun saveDeployment(deployment: Deployment) {
     selectedDeployment.set(Optional.of(deployment))
+  }
+
+  fun fetchStatesInSelectedCountry(): StatesResult {
+    val selectedCountry = selectedCountryPreference.get().get()
+
+    return try {
+      val states = selectedCountry.deployments
+          .flatMap(statesFetcher::fetchStates)
+          .distinctBy { state -> state.displayName }
+          .sortedBy { state -> state.displayName }
+
+      StatesFetched(states)
+    } catch (e: Exception) {
+      StatesResult.FetchError(ErrorResolver.resolve(e))
+    }
   }
 }

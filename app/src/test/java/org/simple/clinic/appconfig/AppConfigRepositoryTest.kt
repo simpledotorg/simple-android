@@ -1,7 +1,9 @@
 package org.simple.clinic.appconfig
 
 import com.f2prateek.rx.preferences2.Preference
+import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.doThrow
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
@@ -11,6 +13,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.appconfig.StatesResult.StatesFetched
 import org.simple.clinic.appconfig.api.ManifestFetchApi
 import org.simple.clinic.util.ResolvedError
 import retrofit2.HttpException
@@ -24,11 +27,13 @@ class AppConfigRepositoryTest {
   private val manifestFetchApi = mock<ManifestFetchApi>()
   private val selectedCountryV2Preference = mock<Preference<Optional<Country>>>()
   private val selectedDeployment = mock<Preference<Optional<Deployment>>>()
+  private val statesFetcher = mock<StatesFetcher>()
 
   private val repository = AppConfigRepository(
       manifestFetchApi,
       selectedCountryV2Preference,
-      selectedDeployment
+      selectedDeployment,
+      statesFetcher
   )
 
   @Test
@@ -170,5 +175,119 @@ class AppConfigRepositoryTest {
     // then
     verify(selectedDeployment).set(Optional.of(deployment))
     verifyNoMoreInteractions(selectedDeployment)
+  }
+
+  @Test
+  fun `successful network calls to fetch states for selected country, should return the states for all deployments`() {
+    // given
+    val ihciDeployment = TestData.deployment(
+        displayName = "IHCI",
+        endPoint = "https://simple.org"
+    )
+    val keralaDeployment = TestData.deployment(
+        displayName = "Kerala",
+        endPoint = "https://kerala.simple.org"
+    )
+
+    val andhraPradesh = TestData.state(displayName = "Andhra Pradesh", deployment = ihciDeployment)
+    val kerala = TestData.state(displayName = "Kerala", deployment = keralaDeployment)
+
+    val states = listOf(andhraPradesh, kerala)
+
+    whenever(selectedCountryV2Preference.get()) doReturn Optional.of(TestData.country(
+        displayName = "India",
+        deployments = listOf(ihciDeployment, keralaDeployment)
+    ))
+    whenever(statesFetcher.fetchStates(ihciDeployment)) doReturn listOf(andhraPradesh)
+    whenever(statesFetcher.fetchStates(keralaDeployment)) doReturn listOf(kerala)
+
+    // then
+    val fetchedStates = repository.fetchStatesInSelectedCountry()
+    assertThat(fetchedStates).isEqualTo(StatesFetched(states))
+  }
+
+  @Test
+  fun `failed network calls to fetch states, should return network related failure result`() {
+    // given
+    val cause = ConnectException()
+    val deployment = TestData.deployment(displayName = "IHCI")
+
+    whenever(selectedCountryV2Preference.get()) doReturn Optional.of(TestData.country(
+        displayName = "India",
+        deployments = listOf(deployment)
+    ))
+    whenever(statesFetcher.fetchStates(deployment)) doThrow cause
+
+    // then
+    val fetchedStatesResult = repository.fetchStatesInSelectedCountry()
+    assertThat(fetchedStatesResult).isEqualTo(StatesResult.FetchError(ResolvedError.NetworkRelated(cause)))
+  }
+
+  @Test
+  fun `server errors when fetching the states, should return failure result as server error`() {
+    // given
+    val cause = httpException(500)
+    val deployment = TestData.deployment(displayName = "IHCI")
+
+    whenever(selectedCountryV2Preference.get()) doReturn Optional.of(TestData.country(
+        displayName = "India",
+        deployments = listOf(deployment)
+    ))
+    whenever(statesFetcher.fetchStates(deployment)) doThrow cause
+
+    // then
+    val fetchedStatesResult = repository.fetchStatesInSelectedCountry()
+    assertThat(fetchedStatesResult).isEqualTo(StatesResult.FetchError(ResolvedError.ServerError(cause)))
+  }
+
+  @Test
+  fun `http 401 errors when fetching the states, should return failure result as unauthenticated`() {
+    // given
+    val cause = httpException(401)
+    val deployment = TestData.deployment(displayName = "IHCI")
+
+    whenever(selectedCountryV2Preference.get()) doReturn Optional.of(TestData.country(
+        displayName = "India",
+        deployments = listOf(deployment)
+    ))
+    whenever(statesFetcher.fetchStates(deployment)) doThrow cause
+
+    // then
+    val fetchedStatesResult = repository.fetchStatesInSelectedCountry()
+    assertThat(fetchedStatesResult).isEqualTo(StatesResult.FetchError(ResolvedError.Unauthenticated(cause)))
+  }
+
+  @Test
+  fun `any other http error when fetching the states, should return an unexpected error`() {
+    // given
+    val cause = httpException(400)
+    val deployment = TestData.deployment(displayName = "IHCI")
+
+    whenever(selectedCountryV2Preference.get()) doReturn Optional.of(TestData.country(
+        displayName = "India",
+        deployments = listOf(deployment)
+    ))
+    whenever(statesFetcher.fetchStates(deployment)) doThrow cause
+
+    // then
+    val fetchedStatesResult = repository.fetchStatesInSelectedCountry()
+    assertThat(fetchedStatesResult).isEqualTo(StatesResult.FetchError(ResolvedError.Unexpected(cause)))
+  }
+
+  @Test
+  fun `any other error when fetching the states, should return an unexpected error`() {
+    // given
+    val cause = RuntimeException()
+    val deployment = TestData.deployment(displayName = "IHCI")
+
+    whenever(selectedCountryV2Preference.get()) doReturn Optional.of(TestData.country(
+        displayName = "India",
+        deployments = listOf(deployment)
+    ))
+    whenever(statesFetcher.fetchStates(deployment)) doThrow cause
+
+    // then
+    val fetchedStatesResult = repository.fetchStatesInSelectedCountry()
+    assertThat(fetchedStatesResult).isEqualTo(StatesResult.FetchError(ResolvedError.Unexpected(cause)))
   }
 }

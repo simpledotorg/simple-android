@@ -10,18 +10,15 @@ import android.view.ViewGroup
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
-import io.reactivex.rxkotlin.ofType
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ActivitySelectFacilityBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.feature.Features
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
 import javax.inject.Inject
@@ -59,24 +56,6 @@ class FacilitySelectionActivity :
 
   private val facilityPickerView
     get() = binding.facilityPickerView
-
-  private val events by unsafeLazy {
-    facilityClicks()
-        .compose(ReportAnalyticsEvents())
-  }
-
-  private val delegate by unsafeLazy {
-    val uiRenderer = FacilitySelectionUiRenderer(this)
-
-    MobiusDelegate.forActivity(
-        events = events.ofType(),
-        defaultModel = FacilitySelectionModel(),
-        update = FacilitySelectionUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        init = FacilitySelectionInit(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

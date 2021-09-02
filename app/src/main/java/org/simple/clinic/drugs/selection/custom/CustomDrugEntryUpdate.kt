@@ -61,11 +61,10 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       prescription: PrescribedDrug
   ): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
     val frequency = DrugFrequency.fromMedicineFrequency(prescription.frequency)
-    val index = getIndexOfDrugFrequencyChoiceItem(model.drugFrequencyChoiceItems!!, frequency)
 
     val updatedModel = model.drugNameLoaded(prescription.name).dosageEdited(prescription.dosage).frequencyEdited(frequency).rxNormCodeEdited(prescription.rxNormCode)
 
-    return next(updatedModel, SetDrugFrequency(model.drugFrequencyChoiceItems[index].label), SetDrugDosage(prescription.dosage))
+    return next(updatedModel, SetDrugFrequency(model.drugFrequencyToFrequencyChoiceItemMap!![frequency]!!.label), SetDrugDosage(prescription.dosage))
   }
 
   private fun createOrUpdatePrescriptionEntry(

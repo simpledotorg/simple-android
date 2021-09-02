@@ -8,6 +8,7 @@
 - Change `NewMedicalHistoryScreen` to use Mobius view effects
 - Parse `Country_Old` manually when migrating to v2 `Country`
 - Remove `Country_Old`
+- Fetch states for selected country deployments
 - [In Progress: 31 Aug 2021] Record call results instead of updating the same appointment record
 - [In Progress: 31 Aug 2021] Refactor logic around providing drug frequencies label depending on the country
 
@@ -28,6 +29,7 @@
 - [In Progress: 06 Aug 2021] Add support for Sri Lanka
 - [In Progress: 25 Aug 2021] Implement providing drug frequencies label depending on the country
 - [In-progress: 27 Aug 2021] Restrict OTP entries to 5 attempts
+- [In-progress: 01 Sep 2021] Add support for state selection after selecting country
 
 ## On Demo
 ### Internal

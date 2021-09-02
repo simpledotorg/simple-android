@@ -3,6 +3,7 @@ package org.simple.clinic
 import io.bloco.faker.Faker
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appconfig.Deployment
+import org.simple.clinic.appconfig.State
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.bloodsugar.BloodSugarReading
@@ -922,6 +923,16 @@ object TestData {
     return Deployment(
         displayName = displayName,
         endPoint = URI.create(endPoint)
+    )
+  }
+
+  fun state(
+      displayName: String = "Andhra Pradesh",
+      deployment: Deployment = deployment()
+  ): State {
+    return State(
+        displayName = displayName,
+        deployment = deployment
     )
   }
 

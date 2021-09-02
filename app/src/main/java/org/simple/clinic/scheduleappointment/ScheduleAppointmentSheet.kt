@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -317,6 +318,12 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
     override val type = ScreenType.Modal
 
     override fun instantiateFragment() = ScheduleAppointmentSheet()
+  }
+
+  sealed class Request : Parcelable {
+
+    @Parcelize
+    object SelectFacility : Request()
   }
 
   interface Injector {

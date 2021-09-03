@@ -70,3 +70,5 @@ object LogTeleconsultClicked : PatientSummaryEvent()
 data class MedicalOfficersLoaded(val medicalOfficers: List<MedicalOfficer>) : PatientSummaryEvent()
 
 object ChangeAssignedFacilityClicked: PatientSummaryEvent()
+
+data class NewAssignedFacilitySelected(val facility: Facility): PatientSummaryEvent()

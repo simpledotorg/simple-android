@@ -50,6 +50,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       LogTeleconsultClicked -> logTeleconsultClicked(model)
       is MedicalOfficersLoaded -> next(model.medicalOfficersLoaded(event.medicalOfficers))
       ChangeAssignedFacilityClicked -> dispatch(OpenSelectFacilitySheet)
+      is NewAssignedFacilitySelected -> dispatch(DispatchNewAssignedFacility(event.facility))
     }
   }
 

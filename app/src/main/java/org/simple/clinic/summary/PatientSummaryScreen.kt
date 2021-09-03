@@ -211,7 +211,8 @@ class PatientSummaryScreen :
             phoneNumberClicks(),
             contactDoctorClicks(),
             snackbarActionClicks,
-            logTeleconsultClicks()
+            logTeleconsultClicks(),
+            changeAssignedFacilityClicks()
         )
         .compose(ReportAnalyticsEvents())
         .cast()
@@ -316,6 +317,14 @@ class PatientSummaryScreen :
         .map {
           PatientSummaryBackClicked(screenKey.patientUuid, screenKey.screenCreatedTimestamp)
         }
+  }
+
+  private fun changeAssignedFacilityClicks(): Observable<PatientSummaryEvent> {
+    return Observable.create { emitter ->
+      assignedFacilityView.changeAssignedFacilityClicks = { emitter.onNext(ChangeAssignedFacilityClicked) }
+
+      emitter.setCancellable { assignedFacilityView.changeAssignedFacilityClicks = null }
+    }
   }
 
   override fun onBackPressed(): Boolean {

@@ -8,7 +8,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.card.MaterialCardView
-import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReportAnalyticsEvents
@@ -28,10 +27,14 @@ import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
+private typealias ChangeAssignedFacilityClicked = () -> Unit
+
 class AssignedFacilityView(
     context: Context,
     attrs: AttributeSet
 ) : MaterialCardView(context, attrs), AssignedFacilityUi, UiActions, PatientSummaryChildView {
+
+  var changeAssignedFacilityClicks: ChangeAssignedFacilityClicked? = null
 
   private var binding: PatientsummaryAssignedFacilityContentBinding? = null
 
@@ -97,6 +100,9 @@ class AssignedFacilityView(
     }
 
     context.injector<Injector>().inject(this)
+    changeAssignedFacilityButton.setOnClickListener {
+      changeAssignedFacilityClicks?.invoke()
+    }
   }
 
   override fun onAttachedToWindow() {
@@ -131,7 +137,7 @@ class AssignedFacilityView(
   }
 
   private fun changeButtonClicks(): Observable<AssignedFacilityEvent> {
-    return changeAssignedFacilityButton.clicks().map { ChangeAssignedFacilityButtonClicked }
+    return Observable.never()
   }
 
   private fun assignedFacilitySelected(): Observable<AssignedFacilityEvent> {

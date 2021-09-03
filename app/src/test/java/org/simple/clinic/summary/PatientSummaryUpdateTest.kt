@@ -886,6 +886,22 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when nurse tries to change the patient assigned facility, open the select facility screen`() {
+    val model = defaultModel
+        .currentFacilityLoaded(facilityWithTeleconsultationEnabled)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .completedCheckForInvalidPhone()
+
+    updateSpec
+        .given(model)
+        .whenEvent(ChangeAssignedFacilityClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenSelectFacilitySheet)
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

@@ -19,13 +19,11 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.router.ScreenResultBus
-import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivity
 import org.simple.clinic.summary.ASSIGNED_FACILITY_SELECTION
 import org.simple.clinic.summary.PatientSummaryChildView
 import org.simple.clinic.summary.PatientSummaryModelUpdateCallback
 import org.simple.clinic.summary.PatientSummaryScreenKey
-import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
@@ -146,11 +144,7 @@ class AssignedFacilityView(
   }
 
   private fun assignedFacilitySelected(): Observable<AssignedFacilityEvent> {
-    return screenResults
-        .streamResults()
-        .ofType<ActivityResult>()
-        .extractSuccessful(ASSIGNED_FACILITY_SELECTION, FacilitySelectionActivity.Companion::selectedFacility)
-        .map(::AssignedFacilitySelected)
+    return Observable.never()
   }
 
   fun onNewAssignedFacilitySelected(facility: Facility) {

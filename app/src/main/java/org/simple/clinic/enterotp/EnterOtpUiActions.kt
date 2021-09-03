@@ -4,4 +4,6 @@ interface EnterOtpUiActions {
   fun clearPin()
   fun goBack()
   fun showSmsSentMessage()
+  fun showNetworkError()
+  fun showUnexpectedError()
 }

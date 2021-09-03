@@ -85,6 +85,9 @@ class CustomDrugEntrySheet : BaseBottomSheet<
 
   private val saveButtonFrame
     get() = binding.saveButtonFrame
+    
+  private val progressIndicator
+    get() = binding.progressIndicator
 
   override fun defaultModel() = CustomDrugEntryModel.default(openAs, getString(R.string.custom_drug_entry_sheet_dosage_placeholder))
 
@@ -174,7 +177,7 @@ class CustomDrugEntrySheet : BaseBottomSheet<
   }
 
   override fun showProgressBar() {
-    // todo
+    progressIndicator.visibility = VISIBLE
   }
 
   override fun hideCustomDrugEntryUi() {
@@ -183,7 +186,7 @@ class CustomDrugEntrySheet : BaseBottomSheet<
   }
 
   override fun hideProgressBar() {
-    // todo
+    progressIndicator.visibility = GONE
   }
 
   override fun showCustomDrugEntryUi() {

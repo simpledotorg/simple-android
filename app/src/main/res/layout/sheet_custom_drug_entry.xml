@@ -7,6 +7,22 @@
   android:layout_height="match_parent"
   android:background="?attr/colorSurface">
 
+  <com.google.android.material.progressindicator.CircularProgressIndicator
+    android:id="@+id/progressIndicator"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:indeterminate="true"
+    android:visibility="gone"
+    tools:indeterminate="false"
+    tools:progress="100"
+    tools:visibility="visible"
+    android:layout_marginVertical="@dimen/spacing_52"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintTop_toTopOf="parent"/>
+
   <TextView
     android:id="@+id/titleTextView"
     android:layout_width="@dimen/spacing_0"

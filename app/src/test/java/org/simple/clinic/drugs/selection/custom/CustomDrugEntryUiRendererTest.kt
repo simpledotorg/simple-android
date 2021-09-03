@@ -97,12 +97,13 @@ class CustomDrugEntryUiRendererTest {
   }
 
   @Test
-  fun `when custom drug entry sheet info is not loaded, then show progress bar`() {
+  fun `when custom drug entry sheet info is not loaded, then show progress bar and hide custom drug entry sheet ui`() {
     // when
     uiRenderer.render(defaultModel.drugInfoProgressStateLoading())
 
     // then
     verify(ui).showProgressBar()
+    verify(ui).hideCustomDrugEntryUi()
     verifyNoMoreInteractions(ui)
   }
 }

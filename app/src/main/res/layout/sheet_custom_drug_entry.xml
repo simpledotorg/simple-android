@@ -95,6 +95,7 @@
   </com.google.android.material.textfield.TextInputLayout>
 
   <FrameLayout
+    android:id="@+id/saveButtonFrame"
     style="@style/Widget.Simple.Button.Frame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -107,5 +108,12 @@
       android:layout_height="wrap_content"
       android:text="@string/custom_drug_entry_sheet_save_button_text" />
   </FrameLayout>
+
+  <androidx.constraintlayout.widget.Group
+    android:id="@+id/customDrugEntrySheetUiGroup"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:visibility="visible"
+    app:constraint_referenced_ids="titleTextView, removeButton, dosageTextInputLayout, frequencyTextInputLayout"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

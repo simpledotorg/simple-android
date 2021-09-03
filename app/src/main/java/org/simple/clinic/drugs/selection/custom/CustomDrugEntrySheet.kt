@@ -80,6 +80,12 @@ class CustomDrugEntrySheet : BaseBottomSheet<
   private val saveButton
     get() = binding.saveButton
 
+  private val customDrugEntrySheetUiGroup
+    get() = binding.customDrugEntrySheetUiGroup
+
+  private val saveButtonFrame
+    get() = binding.saveButtonFrame
+
   override fun defaultModel() = CustomDrugEntryModel.default(openAs, getString(R.string.custom_drug_entry_sheet_dosage_placeholder))
 
   override fun bindView(
@@ -169,6 +175,11 @@ class CustomDrugEntrySheet : BaseBottomSheet<
 
   override fun showProgressBar() {
     // todo
+  }
+
+  override fun hideCustomDrugEntryUi() {
+    customDrugEntrySheetUiGroup.visibility = GONE
+    saveButtonFrame.visibility = GONE
   }
 
   override fun closeSheetAndGoToEditMedicineScreen() {

@@ -10,6 +10,7 @@ class CustomDrugEntryUiRenderer(
   override fun render(model: CustomDrugEntryModel) {
     if (!model.isCustomDrugEntrySheetInfoLoaded) {
       ui.showProgressBar()
+      ui.hideCustomDrugEntryUi()
       return
     }
 

@@ -9,4 +9,5 @@ interface CustomDrugEntryUi {
   fun setButtonTextAsAdd()
   fun setSheetTitle(drugName: String?, dosage: String?, frequencyLabelResID: String)
   fun showProgressBar()
+  fun hideCustomDrugEntryUi()
 }

@@ -244,11 +244,11 @@ class EnterOtpLogicTest {
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     // then
-    verify(ui).showUnexpectedError()
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showProgress()
-    verify(ui, times(2)).hideProgress()
+    verify(ui, times(1)).hideProgress()
     verify(uiActions).clearPin()
+    verify(uiActions).showUnexpectedError()
     verifyNoMoreInteractions(ui, uiActions)
     verify(dataSync, never()).fireAndForgetSync()
   }
@@ -264,11 +264,11 @@ class EnterOtpLogicTest {
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     // then
-    verify(ui).showNetworkError()
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showProgress()
-    verify(ui, times(2)).hideProgress()
+    verify(ui, times(1)).hideProgress()
     verify(uiActions).clearPin()
+    verify(uiActions).showNetworkError()
     verifyNoMoreInteractions(ui, uiActions)
     verify(dataSync, never()).fireAndForgetSync()
   }
@@ -285,10 +285,9 @@ class EnterOtpLogicTest {
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     // then
-    verify(ui).showServerError(errorMessage)
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showProgress()
-    verify(ui, times(2)).hideProgress()
+    verify(ui, times(1)).hideProgress()
     verify(uiActions).clearPin()
     verifyNoMoreInteractions(ui, uiActions)
     verify(dataSync, never()).fireAndForgetSync()
@@ -308,8 +307,8 @@ class EnterOtpLogicTest {
     verify(uiActions).clearPin()
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showProgress()
-    verify(ui, times(2)).hideProgress()
-    verify(ui).showUnexpectedError()
+    verify(ui, times(1)).hideProgress()
+    verify(uiActions).showUnexpectedError()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -327,8 +326,8 @@ class EnterOtpLogicTest {
     verify(uiActions).clearPin()
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showProgress()
-    verify(ui, times(2)).hideProgress()
-    verify(ui).showNetworkError()
+    verify(ui, times(1)).hideProgress()
+    verify(uiActions).showNetworkError()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -346,8 +345,7 @@ class EnterOtpLogicTest {
     verify(uiActions).clearPin()
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showProgress()
-    verify(ui, times(2)).hideProgress()
-    verify(ui).showServerError("Error")
+    verify(ui, times(1)).hideProgress()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -396,11 +394,11 @@ class EnterOtpLogicTest {
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     // then
-    verify(ui, times(2)).hideProgress()
+    verify(ui, times(1)).hideProgress()
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showProgress()
-    verify(ui).showNetworkError()
     verify(uiActions).clearPin()
+    verify(uiActions).showNetworkError()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -415,10 +413,9 @@ class EnterOtpLogicTest {
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     // then
-    verify(ui, times(2)).hideProgress()
+    verify(ui, times(1)).hideProgress()
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showProgress()
-    verify(ui).showServerError("Test")
     verify(uiActions).clearPin()
     verifyNoMoreInteractions(ui, uiActions)
   }
@@ -434,11 +431,11 @@ class EnterOtpLogicTest {
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
     // then
-    verify(ui, times(2)).hideProgress()
+    verify(ui, times(1)).hideProgress()
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showProgress()
-    verify(ui).showUnexpectedError()
     verify(uiActions).clearPin()
+    verify(uiActions).showUnexpectedError()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -578,7 +575,6 @@ class EnterOtpLogicTest {
     // then
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showProgress()
-    verify(ui).showNetworkError()
     verify(ui, times(2)).hideProgress()
     verify(uiActions).clearPin()
     verifyNoMoreInteractions(ui, uiActions)
@@ -600,7 +596,6 @@ class EnterOtpLogicTest {
     verify(ui, times(2)).hideProgress()
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showProgress()
-    verify(ui).showUnexpectedError()
     verify(uiActions).clearPin()
     verifyNoMoreInteractions(ui, uiActions)
   }
@@ -621,7 +616,6 @@ class EnterOtpLogicTest {
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showProgress()
     verify(ui, times(2)).hideProgress()
-    verify(ui).showUnexpectedError()
     verify(uiActions).clearPin()
     verifyNoMoreInteractions(ui, uiActions)
   }
@@ -665,7 +659,6 @@ class EnterOtpLogicTest {
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showProgress()
     verify(ui, times(2)).hideProgress()
-    verify(ui).showNetworkError()
     verify(uiActions).clearPin()
     verifyNoMoreInteractions(ui, uiActions)
   }
@@ -687,7 +680,6 @@ class EnterOtpLogicTest {
     verify(ui, times(2)).hideProgress()
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showProgress()
-    verify(ui).showUnexpectedError()
     verify(uiActions).clearPin()
     verifyNoMoreInteractions(ui, uiActions)
   }
@@ -709,7 +701,6 @@ class EnterOtpLogicTest {
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showProgress()
     verify(ui, times(2)).hideProgress()
-    verify(ui).showUnexpectedError()
     verify(uiActions).clearPin()
     verifyNoMoreInteractions(ui, uiActions)
   }
@@ -727,9 +718,7 @@ class EnterOtpLogicTest {
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     // then
-    verify(ui, never()).showNetworkError()
     verify(ui, never()).showServerError(any())
-    verify(ui, never()).showUnexpectedError()
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showProgress()
     verify(ui, times(2)).hideProgress()
@@ -751,7 +740,6 @@ class EnterOtpLogicTest {
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     // then
-    verify(ui).showNetworkError()
     verify(ui, times(2)).hideProgress()
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showProgress()
@@ -773,7 +761,6 @@ class EnterOtpLogicTest {
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     // then
-    verify(ui).showUnexpectedError()
     verify(ui, times(2)).hideProgress()
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showProgress()
@@ -795,7 +782,6 @@ class EnterOtpLogicTest {
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     // then
-    verify(ui).showUnexpectedError()
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showProgress()
     verify(ui, times(2)).hideProgress()
@@ -817,7 +803,6 @@ class EnterOtpLogicTest {
 
     // then
     verify(uiActions).clearPin()
-    verify(ui).showNetworkError()
     verify(ui, times(2)).hideProgress()
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showProgress()
@@ -839,7 +824,6 @@ class EnterOtpLogicTest {
 
     // then
     verify(uiActions).clearPin()
-    verify(ui).showUnexpectedError()
     verify(ui, times(2)).hideProgress()
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showProgress()
@@ -860,7 +844,6 @@ class EnterOtpLogicTest {
 
     // then
     verify(uiActions).clearPin()
-    verify(ui).showUnexpectedError()
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showProgress()
     verify(ui, times(2)).hideProgress()
@@ -899,9 +882,9 @@ class EnterOtpLogicTest {
     verify(ongoingLoginEntryRepository, never()).clearLoginEntry()
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showProgress()
-    verify(ui, times(2)).hideProgress()
-    verify(ui).showNetworkError()
+    verify(ui, times(1)).hideProgress()
     verify(uiActions).clearPin()
+    verify(uiActions).showNetworkError()
     verifyNoMoreInteractions(ui, uiActions)
   }
 

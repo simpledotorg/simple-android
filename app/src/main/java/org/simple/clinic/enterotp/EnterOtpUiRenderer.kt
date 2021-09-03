@@ -12,8 +12,6 @@ class EnterOtpUiRenderer(
 
   private val phoneNumberChangedCallback = ValueChangedCallback<String>()
 
-  private val loginErrorChangedCallback = ValueChangedCallback<AsyncOpError?>()
-
   private val isAsyncOperationOngoingChangedCallback = ValueChangedCallback<Boolean>()
 
   override fun render(model: EnterOtpModel) {
@@ -26,15 +24,6 @@ class EnterOtpUiRenderer(
       }
       IsNotRequiredLength -> ui.showIncorrectOtpError()
       Valid -> { /* Nothing to do here */
-      }
-    }
-
-    loginErrorChangedCallback.pass(model.asyncOpError) { loginError ->
-      when (loginError) {
-        NetworkError -> ui.showNetworkError()
-        is ServerError -> ui.showServerError(loginError.errorMessage)
-        OtherError -> ui.showUnexpectedError()
-        null -> ui.hideError()
       }
     }
 

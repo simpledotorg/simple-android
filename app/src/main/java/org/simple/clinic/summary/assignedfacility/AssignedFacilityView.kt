@@ -2,11 +2,9 @@ package org.simple.clinic.summary.assignedfacility
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.card.MaterialCardView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -18,9 +16,6 @@ import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
-import org.simple.clinic.router.ScreenResultBus
-import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivity
-import org.simple.clinic.summary.ASSIGNED_FACILITY_SELECTION
 import org.simple.clinic.summary.PatientSummaryChildView
 import org.simple.clinic.summary.PatientSummaryModelUpdateCallback
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -50,13 +45,7 @@ class AssignedFacilityView(
   }
 
   @Inject
-  lateinit var activity: AppCompatActivity
-
-  @Inject
   lateinit var router: Router
-
-  @Inject
-  lateinit var screenResults: ScreenResultBus
 
   @Inject
   lateinit var effectHandlerFactory: AssignedFacilityEffectHandler.Factory
@@ -67,11 +56,7 @@ class AssignedFacilityView(
   private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
 
   private val events by unsafeLazy {
-    Observable
-        .merge(
-            changeButtonClicks(),
-            assignedFacilitySelected()
-        )
+    assignedFacilitySelected()
         .compose(ReportAnalyticsEvents())
   }
 
@@ -127,20 +112,12 @@ class AssignedFacilityView(
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
-  override fun openFacilitySelection() {
-    activity.startActivityForResult(Intent(context, FacilitySelectionActivity::class.java), ASSIGNED_FACILITY_SELECTION)
-  }
-
   override fun renderAssignedFacilityName(facilityName: String) {
     assignedFacilityTextView.text = facilityName
   }
 
   override fun registerSummaryModelUpdateCallback(callback: PatientSummaryModelUpdateCallback?) {
     modelUpdateCallback = callback
-  }
-
-  private fun changeButtonClicks(): Observable<AssignedFacilityEvent> {
-    return Observable.never()
   }
 
   private fun assignedFacilitySelected(): Observable<AssignedFacilityEvent> {

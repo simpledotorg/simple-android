@@ -28,4 +28,5 @@ interface PatientSummaryUiActions {
   fun showAddMeasurementsWarningDialog()
   fun showAddBloodPressureWarningDialog()
   fun showAddBloodSugarWarningDialog()
+  fun openSelectFacilitySheet()
 }

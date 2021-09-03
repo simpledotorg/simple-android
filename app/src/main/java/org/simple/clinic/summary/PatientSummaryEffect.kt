@@ -66,3 +66,5 @@ object ShowAddMeasurementsWarningDialog : PatientSummaryEffect()
 object ShowAddBloodPressureWarningDialog : PatientSummaryEffect()
 
 object ShowAddBloodSugarWarningDialog : PatientSummaryEffect()
+
+object OpenSelectFacilitySheet: PatientSummaryEffect()

@@ -2,6 +2,7 @@ package org.simple.clinic.summary
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.text.SpannedString
@@ -51,6 +52,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
+import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivity
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet.LinkIdWithPatientSheetKey
 import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet
@@ -558,6 +560,10 @@ class PatientSummaryScreen :
         .setPositiveButton(R.string.warning_add_blood_sugar_positive_button, null)
         .setNegativeButton(R.string.warning_add_blood_sugar_negative_button, null)
         .show()
+  }
+
+  override fun openSelectFacilitySheet() {
+    activity.startActivityForResult(Intent(context, FacilitySelectionActivity::class.java), ASSIGNED_FACILITY_SELECTION)
   }
 
   interface Injector {

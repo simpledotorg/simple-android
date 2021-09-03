@@ -430,4 +430,16 @@ class PatientSummaryEffectHandlerTest {
     verify(uiActions).showAddBloodSugarWarningDialog()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when open select facility sheet effect is received, then show the select facility sheet`() {
+    // when
+    testCase.dispatch(OpenSelectFacilitySheet)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openSelectFacilitySheet()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

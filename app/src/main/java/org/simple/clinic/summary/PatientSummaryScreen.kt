@@ -576,7 +576,7 @@ class PatientSummaryScreen :
   }
 
   override fun dispatchNewAssignedFacility(facility: Facility) {
-    // Nothing to do here. Yet.
+    assignedFacilityView.onNewAssignedFacilitySelected(facility)
   }
 
   interface Injector {

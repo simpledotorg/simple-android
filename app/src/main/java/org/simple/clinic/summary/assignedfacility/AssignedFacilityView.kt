@@ -13,6 +13,8 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.PatientsummaryAssignedFacilityContentBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.facility.Facility
+import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
@@ -75,6 +77,8 @@ class AssignedFacilityView(
         .compose(ReportAnalyticsEvents())
   }
 
+  private val externalEvents = DeferredEventSource<AssignedFacilityEvent>()
+
   private val delegate by unsafeLazy {
     val uiRenderer = AssignedFacilityUiRenderer(this)
     val patientUuid = screenKeyProvider.keyFor<PatientSummaryScreenKey>(this).patientUuid
@@ -85,6 +89,7 @@ class AssignedFacilityView(
         update = AssignedFacilityUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
         init = AssignedFacilityInit(),
+        additionalEventSources = listOf(externalEvents),
         modelUpdateListener = { model ->
           modelUpdateCallback?.invoke(model)
           uiRenderer.render(model)
@@ -146,6 +151,10 @@ class AssignedFacilityView(
         .ofType<ActivityResult>()
         .extractSuccessful(ASSIGNED_FACILITY_SELECTION, FacilitySelectionActivity.Companion::selectedFacility)
         .map(::AssignedFacilitySelected)
+  }
+
+  fun onNewAssignedFacilitySelected(facility: Facility) {
+    externalEvents.notify(AssignedFacilitySelected(facility))
   }
 
   interface Injector {

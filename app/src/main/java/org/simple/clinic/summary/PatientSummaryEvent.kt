@@ -73,4 +73,6 @@ object ChangeAssignedFacilityClicked: PatientSummaryEvent() {
   override val analyticsName: String = "Assigned Facility:Change Facility"
 }
 
-data class NewAssignedFacilitySelected(val facility: Facility): PatientSummaryEvent()
+data class NewAssignedFacilitySelected(val facility: Facility): PatientSummaryEvent() {
+  override val analyticsName: String = "Assigned Facility:Facility Selected"
+}

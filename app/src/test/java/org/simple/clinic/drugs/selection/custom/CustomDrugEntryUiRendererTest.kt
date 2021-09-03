@@ -43,6 +43,7 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).moveDrugDosageCursorToBeginning()
     verify(ui).setSheetTitle(drugName, null, frequencyLabel)
     verify(ui).hideProgressBar()
+    verify(ui).showCustomDrugEntryUi()
     verifyNoMoreInteractions(ui)
   }
 
@@ -62,6 +63,7 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).setDrugDosageText("")
     verify(ui).setSheetTitle(drugName, dosageText, frequencyLabel)
     verify(ui).hideProgressBar()
+    verify(ui).showCustomDrugEntryUi()
     verifyNoMoreInteractions(ui)
   }
 
@@ -80,6 +82,7 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).setButtonTextAsSave()
     verify(ui).setSheetTitle(null, null, frequencyLabel)
     verify(ui).hideProgressBar()
+    verify(ui).showCustomDrugEntryUi()
     verifyNoMoreInteractions(ui)
   }
 
@@ -97,6 +100,7 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).setButtonTextAsAdd()
     verify(ui).setSheetTitle(drugName, drugDosage, frequencyLabel)
     verify(ui).hideProgressBar()
+    verify(ui).showCustomDrugEntryUi()
     verifyNoMoreInteractions(ui)
   }
 

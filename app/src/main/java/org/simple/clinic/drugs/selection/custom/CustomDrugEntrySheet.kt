@@ -186,6 +186,11 @@ class CustomDrugEntrySheet : BaseBottomSheet<
     // todo
   }
 
+  override fun showCustomDrugEntryUi() {
+    customDrugEntrySheetUiGroup.visibility = VISIBLE
+    saveButton.visibility = VISIBLE
+  }
+
   override fun closeSheetAndGoToEditMedicineScreen() {
     router.popUntil(PrescribedDrugsScreenKey(screenKey.patientUuid))
   }

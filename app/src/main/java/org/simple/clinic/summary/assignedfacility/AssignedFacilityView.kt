@@ -55,11 +55,6 @@ class AssignedFacilityView(
 
   private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
 
-  private val events by unsafeLazy {
-    assignedFacilitySelected()
-        .compose(ReportAnalyticsEvents())
-  }
-
   private val externalEvents = DeferredEventSource<AssignedFacilityEvent>()
 
   private val delegate by unsafeLazy {
@@ -67,7 +62,7 @@ class AssignedFacilityView(
     val patientUuid = screenKeyProvider.keyFor<PatientSummaryScreenKey>(this).patientUuid
 
     MobiusDelegate.forView(
-        events = events.ofType(),
+        events = Observable.never(),
         defaultModel = AssignedFacilityModel.create(patientUuid = patientUuid),
         update = AssignedFacilityUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
@@ -118,10 +113,6 @@ class AssignedFacilityView(
 
   override fun registerSummaryModelUpdateCallback(callback: PatientSummaryModelUpdateCallback?) {
     modelUpdateCallback = callback
-  }
-
-  private fun assignedFacilitySelected(): Observable<AssignedFacilityEvent> {
-    return Observable.never()
   }
 
   fun onNewAssignedFacilitySelected(facility: Facility) {

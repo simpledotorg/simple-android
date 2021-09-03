@@ -29,4 +29,5 @@ interface PatientSummaryUiActions {
   fun showAddBloodPressureWarningDialog()
   fun showAddBloodSugarWarningDialog()
   fun openSelectFacilitySheet()
+  fun dispatchNewAssignedFacility(facility: Facility)
 }

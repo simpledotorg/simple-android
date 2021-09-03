@@ -566,6 +566,10 @@ class PatientSummaryScreen :
     activity.startActivityForResult(Intent(context, FacilitySelectionActivity::class.java), ASSIGNED_FACILITY_SELECTION)
   }
 
+  override fun dispatchNewAssignedFacility(facility: Facility) {
+    // Nothing to do here. Yet.
+  }
+
   interface Injector {
     fun inject(target: PatientSummaryScreen)
   }

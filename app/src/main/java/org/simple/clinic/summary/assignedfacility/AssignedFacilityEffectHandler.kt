@@ -9,8 +9,8 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientRepository
-import java.util.Optional
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import java.util.Optional
 import java.util.function.Function
 
 class AssignedFacilityEffectHandler @AssistedInject constructor(
@@ -29,7 +29,6 @@ class AssignedFacilityEffectHandler @AssistedInject constructor(
       .subtypeEffectHandler<AssignedFacilityEffect, AssignedFacilityEvent>()
       .addTransformer(LoadAssignedFacility::class.java, loadAssignedFacility())
       .addConsumer(ChangeAssignedFacility::class.java, { changeAssignedFacility(it) }, schedulersProvider.io())
-      .addAction(OpenFacilitySelection::class.java, uiActions::openFacilitySelection, schedulersProvider.ui())
       .build()
 
   private fun changeAssignedFacility(effect: ChangeAssignedFacility) {

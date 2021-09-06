@@ -68,3 +68,11 @@ object ContactDoctorClicked : PatientSummaryEvent() {
 object LogTeleconsultClicked : PatientSummaryEvent()
 
 data class MedicalOfficersLoaded(val medicalOfficers: List<MedicalOfficer>) : PatientSummaryEvent()
+
+object ChangeAssignedFacilityClicked: PatientSummaryEvent() {
+  override val analyticsName: String = "Assigned Facility:Change Facility"
+}
+
+data class NewAssignedFacilitySelected(val facility: Facility): PatientSummaryEvent() {
+  override val analyticsName: String = "Assigned Facility:Facility Selected"
+}

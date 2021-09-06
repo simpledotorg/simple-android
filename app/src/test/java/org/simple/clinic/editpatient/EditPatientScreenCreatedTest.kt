@@ -185,7 +185,8 @@ class EditPatientScreenCreatedTest {
         inputFieldsFactory = inputFieldsFactory,
         dateOfBirthFormatter = dateOfBirthFormat,
         ui = ui,
-        viewEffectHandler = viewEffectHandler
+        viewEffectHandler = viewEffectHandler,
+        viewEffectsConsumer = viewEffectHandler::handle
     )
 
     val numberValidator = LengthBasedNumberValidator(

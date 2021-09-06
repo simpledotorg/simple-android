@@ -106,7 +106,7 @@ class EditPatientScreen : BaseScreen<
     EditPatientModel,
     EditPatientEvent,
     EditPatientEffect,
-    Unit>(), EditPatientUi, HandlesBack {
+    EditPatientViewEffect>(), EditPatientUi, HandlesBack {
 
   @Inject
   lateinit var router: Router
@@ -265,10 +265,11 @@ class EditPatientScreen : BaseScreen<
 
   override fun createUpdate() = EditPatientUpdate(numberValidator, dateOfBirthValidator, ageValidator)
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<EditPatientViewEffect>) = effectHandlerFactory
       .create(
           ui = this,
-          viewEffectHandler = viewEffectHandler.create(this)
+          viewEffectHandler = viewEffectHandler.create(this),
+          viewEffectsConsumer = viewEffectsConsumer
       )
       .build()
 

@@ -1,5 +1,6 @@
 package org.simple.clinic.editpatient
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -48,14 +49,16 @@ class EditPatientEffectHandler @AssistedInject constructor(
     private val inputFieldsFactory: InputFieldsFactory,
     @Named("date_for_user_input") private val dateOfBirthFormatter: DateTimeFormatter,
     @Assisted private val ui: EditPatientUi,
-    @Assisted private val viewEffectHandler: EditPatientViewEffectHandler
+    @Assisted private val viewEffectHandler: EditPatientViewEffectHandler,
+    @Assisted private val viewEffectsConsumer: Consumer<EditPatientViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
         ui: EditPatientUi,
-        viewEffectHandler: EditPatientViewEffectHandler
+        viewEffectHandler: EditPatientViewEffectHandler,
+        viewEffectsConsumer: Consumer<EditPatientViewEffect>
     ): EditPatientEffectHandler
   }
 

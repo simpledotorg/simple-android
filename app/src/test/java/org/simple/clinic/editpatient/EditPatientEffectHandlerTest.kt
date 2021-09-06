@@ -101,7 +101,8 @@ class EditPatientEffectHandlerTest {
       inputFieldsFactory = inputFieldsFactory,
       dateOfBirthFormatter = dateOfBirthFormatter,
       ui = ui,
-      viewEffectHandler = viewEffectHandler
+      viewEffectHandler = viewEffectHandler,
+      viewEffectsConsumer = viewEffectHandler::handle
   )
 
   private val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -204,7 +205,8 @@ class EditPatientEffectHandlerTest {
         inputFieldsFactory = inputFieldsFactory,
         dateOfBirthFormatter = dateOfBirthFormatter,
         ui = ui,
-        viewEffectHandler = viewEffectHandler
+        viewEffectHandler = viewEffectHandler,
+        viewEffectsConsumer = viewEffectHandler::handle
     )
 
     val testCase = EffectHandlerTestCase(effectHandler.build())

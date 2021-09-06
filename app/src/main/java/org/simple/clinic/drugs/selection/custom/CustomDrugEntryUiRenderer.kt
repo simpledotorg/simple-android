@@ -12,8 +12,8 @@ class CustomDrugEntryUiRenderer(
   override fun render(model: CustomDrugEntryModel) {
     initialSetup(model.openAs)
 
-    if (model.drugFrequencyChoiceItems != null)
-      setSheetTitle(model.drugName, model.dosage, model.frequency, model.drugFrequencyChoiceItems)
+    if (model.drugFrequencyToFrequencyChoiceItemMap != null)
+      setSheetTitle(model.drugName, model.dosage, model.drugFrequencyToFrequencyChoiceItemMap[model.frequency]!!.label)
 
     showDefaultDosagePlaceholder(model.dosage, model.dosageHasFocus)
   }
@@ -21,12 +21,9 @@ class CustomDrugEntryUiRenderer(
   private fun setSheetTitle(
       drugName: String?,
       dosage: String?,
-      frequency: DrugFrequency?,
-      drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>
+      drugFrequencyLabel: String
   ) {
-    val index = getIndexOfDrugFrequencyChoiceItem(drugFrequencyChoiceItems, frequency)
-
-    ui.setSheetTitle(drugName, dosage.nullIfBlank(), drugFrequencyChoiceItems[index].label)
+    ui.setSheetTitle(drugName, dosage.nullIfBlank(), drugFrequencyLabel)
   }
 
   private fun getIndexOfDrugFrequencyChoiceItem(

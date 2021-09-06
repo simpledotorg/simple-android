@@ -10,6 +10,8 @@ class SelectStateUiRenderer(
     if (model.hasStates) {
       ui.showStates(model.states!!, model.selectedState)
       renderNextButton(model)
+    } else {
+      ui.hideStates()
     }
   }
 

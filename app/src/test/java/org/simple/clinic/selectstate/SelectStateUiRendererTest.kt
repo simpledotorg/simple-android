@@ -45,4 +45,14 @@ class SelectStateUiRendererTest {
     verify(ui).showNextButton()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when states are not fetched, then hide the states list`() {
+    // when
+    uiRenderer.render(defaultModel)
+
+    // then
+    verify(ui).hideStates()
+    verifyNoMoreInteractions(ui)
+  }
 }

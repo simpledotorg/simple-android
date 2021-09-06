@@ -258,14 +258,18 @@ class PatientSummaryScreen :
 
     setFragmentResultListener(ScreenRequest.ScheduleAppointmentSheet, ScreenRequest.SelectFacility) { requestKey, result ->
       if (result is Succeeded) {
-        if (requestKey is ScreenRequest.ScheduleAppointmentSheet) {
-          val sheetOpenedFrom = ScheduleAppointmentSheet.sheetOpenedFrom(result)
-          additionalEvents.notify(ScheduledAppointment(sheetOpenedFrom))
-        } else if (requestKey is ScreenRequest.SelectFacility) {
-          val selectedFacility = (result.result as FacilitySelectionScreen.SelectedFacility).facility
-          additionalEvents.notify(NewAssignedFacilitySelected(selectedFacility))
-        }
+        handleScreenResult(requestKey, result)
       }
+    }
+  }
+
+  private fun handleScreenResult(requestKey: Parcelable, result: Succeeded) {
+    if (requestKey is ScreenRequest.ScheduleAppointmentSheet) {
+      val sheetOpenedFrom = ScheduleAppointmentSheet.sheetOpenedFrom(result)
+      additionalEvents.notify(ScheduledAppointment(sheetOpenedFrom))
+    } else if (requestKey is ScreenRequest.SelectFacility) {
+      val selectedFacility = (result.result as FacilitySelectionScreen.SelectedFacility).facility
+      additionalEvents.notify(NewAssignedFacilitySelected(selectedFacility))
     }
   }
 

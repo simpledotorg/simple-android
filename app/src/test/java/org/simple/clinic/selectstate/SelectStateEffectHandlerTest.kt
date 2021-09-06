@@ -7,8 +7,10 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.AppConfigRepository
-import org.simple.clinic.appconfig.StatesResult.StatesFetched
+import org.simple.clinic.appconfig.StatesResult
+import org.simple.clinic.appconfig.StatesResult.FetchError
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.util.ResolvedError.NetworkRelated
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 
 class SelectStateEffectHandlerTest {
@@ -26,20 +28,34 @@ class SelectStateEffectHandlerTest {
   }
 
   @Test
-  fun `when load states effect is received, then load states`() {
+  fun `when loading states is successful, then states fetched event should be emitted`() {
     // given
     val states = listOf(
         TestData.state(displayName = "Andhra Pradesh"),
         TestData.state(displayName = "Kerala")
     )
 
-    whenever(appConfigRepository.fetchStatesInSelectedCountry()) doReturn StatesFetched(states)
+    whenever(appConfigRepository.fetchStatesInSelectedCountry()) doReturn StatesResult.StatesFetched(states)
 
     // when
     testCase.dispatch(LoadStates)
 
     // then
-    testCase.assertOutgoingEvents(StatesResultFetched(StatesFetched(states)))
+    testCase.assertOutgoingEvents(StatesFetched(states))
+  }
+
+  @Test
+  fun `when loading states fails, then failed to fetch states event should be emitted`() {
+    // given
+    val error = StatesFetchError.NetworkError
+
+    whenever(appConfigRepository.fetchStatesInSelectedCountry()) doReturn FetchError(NetworkRelated(RuntimeException()))
+
+    // when
+    testCase.dispatch(LoadStates)
+
+    // then
+    testCase.assertOutgoingEvents(FailedToFetchStates(error))
   }
 
   @Test

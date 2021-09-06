@@ -3,6 +3,7 @@ package org.simple.clinic.selectstate
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.appconfig.AppConfigRepository
+import org.simple.clinic.appconfig.StatesResult
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import javax.inject.Inject
 
@@ -31,7 +32,14 @@ class SelectStateEffectHandler @Inject constructor(
       effects
           .observeOn(schedulers.io())
           .map { appConfigRepository.fetchStatesInSelectedCountry() }
-          .map(::StatesResultFetched)
+          .map(::statesResultToEvent)
+    }
+  }
+
+  private fun statesResultToEvent(statesResult: StatesResult): SelectStateEvent {
+    return when (statesResult) {
+      is StatesResult.StatesFetched -> StatesFetched(statesResult.states)
+      is StatesResult.FetchError -> FailedToFetchStates(StatesFetchError.fromResolvedError(statesResult.error))
     }
   }
 }

@@ -256,8 +256,8 @@ class PatientSummaryScreen :
 
     subscriptions.add(setupChildViewVisibility())
 
-    setFragmentResultListener(ScreenRequest.ScheduleAppointmentSheet) { _, result ->
-      if (result is Succeeded) {
+    setFragmentResultListener(ScreenRequest.ScheduleAppointmentSheet) { requestKey, result ->
+      if (result is Succeeded && requestKey is ScreenRequest.ScheduleAppointmentSheet) {
         val sheetOpenedFrom = ScheduleAppointmentSheet.sheetOpenedFrom(result)
         additionalEvents.notify(ScheduledAppointment(sheetOpenedFrom))
       }

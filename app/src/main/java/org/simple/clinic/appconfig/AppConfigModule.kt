@@ -38,4 +38,13 @@ class AppConfigModule {
     val deploymentPreferenceConverter = MoshiObjectPreferenceConverter(moshi, Deployment::class.java)
     return rxSharedPreferences.getOptional("preference_selected_deployment_v1", deploymentPreferenceConverter)
   }
+
+  @Provides
+  fun providesSelectedState(
+      rxSharedPreferences: RxSharedPreferences,
+      moshi: Moshi
+  ): Preference<Optional<State>> {
+    val statePreferenceConverter = MoshiObjectPreferenceConverter(moshi, State::class.java)
+    return rxSharedPreferences.getOptional("preference_selected_state_v1", statePreferenceConverter)
+  }
 }

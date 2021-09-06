@@ -22,6 +22,7 @@ class AppConfigRepository @Inject constructor(
     private val manifestFetchApi: ManifestFetchApi,
     private val selectedCountryPreference: Preference<Optional<Country>>,
     private val selectedDeployment: Preference<Optional<Deployment>>,
+    private val selectedStatePreference: Preference<Optional<State>>,
     private val statesFetcher: StatesFetcher
 ) {
 
@@ -52,6 +53,10 @@ class AppConfigRepository @Inject constructor(
 
   fun saveDeployment(deployment: Deployment) {
     selectedDeployment.set(Optional.of(deployment))
+  }
+
+  fun saveState(state: State) {
+    selectedStatePreference.set(Optional.of(state))
   }
 
   fun fetchStatesInSelectedCountry(): StatesResult {

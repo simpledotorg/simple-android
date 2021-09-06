@@ -27,4 +27,22 @@ class SelectStateUiRendererTest {
     verify(ui).showStates(states = states, selectedState = null)
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when state is selected, then show next button`() {
+    // given
+    val andhraPradesh = TestData.state(displayName = "Andhra Pradesh")
+    val states = listOf(andhraPradesh)
+    val stateSelectedModel = defaultModel
+        .statesLoaded(states)
+        .stateChanged(andhraPradesh)
+
+    // when
+    uiRenderer.render(stateSelectedModel)
+
+    // then
+    verify(ui).showStates(states = states, selectedState = andhraPradesh)
+    verify(ui).showNextButton()
+    verifyNoMoreInteractions(ui)
+  }
 }

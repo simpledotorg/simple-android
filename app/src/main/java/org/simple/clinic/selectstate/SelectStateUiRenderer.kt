@@ -7,6 +7,13 @@ class SelectStateUiRenderer(
 ) : ViewRenderer<SelectStateModel> {
 
   override fun render(model: SelectStateModel) {
-    if (model.hasStates) ui.showStates(model.states!!, model.selectedState)
+    if (model.hasStates) {
+      ui.showStates(model.states!!, model.selectedState)
+      renderNextButton(model)
+    }
+  }
+
+  private fun renderNextButton(model: SelectStateModel) {
+    if (model.hasSelectedState) ui.showNextButton()
   }
 }

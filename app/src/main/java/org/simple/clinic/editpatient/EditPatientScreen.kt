@@ -128,6 +128,9 @@ class EditPatientScreen : BaseScreen<
   lateinit var effectHandlerFactory: EditPatientEffectHandler.Factory
 
   @Inject
+  lateinit var viewEffectHandler: EditPatientViewEffectHandler.Factory
+
+  @Inject
   lateinit var features: Features
 
   private val rootView
@@ -265,7 +268,7 @@ class EditPatientScreen : BaseScreen<
   override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
       .create(
           ui = this,
-          viewEffectHandler = EditPatientViewEffectHandler(this)
+          viewEffectHandler = viewEffectHandler.create(this)
       )
       .build()
 

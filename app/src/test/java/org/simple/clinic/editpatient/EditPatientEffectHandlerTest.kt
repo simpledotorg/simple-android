@@ -43,12 +43,12 @@ class EditPatientEffectHandlerTest {
 
   private val date = LocalDate.parse("2018-01-01")
   private val ui = mock<EditPatientUi>()
-  private val viewEffectHandler = EditPatientViewEffectHandler(ui)
   private val facilityRepository = mock<FacilityRepository>()
   private val userClock = TestUserClock(date)
   private val utcClock = TestUtcClock(Instant.parse("2018-01-01T00:00:00Z"))
   private val patientRepository = mock<PatientRepository>()
   private val dateOfBirthFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
+  private val viewEffectHandler = EditPatientViewEffectHandler(userClock, ui)
 
   private val patientAddress = TestData.patientAddress(uuid = UUID.fromString("85d0b5f1-af84-4a6b-938e-5166f8c27666"))
   private val patient = TestData.patient(

@@ -17,10 +17,10 @@ import org.simple.clinic.editpatient.EditPatientState.NOT_SAVING_PATIENT
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.Age
-import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
-import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
+import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.LengthBasedNumberValidator
@@ -46,7 +46,6 @@ class EditPatientScreenCreatedTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val ui: EditPatientUi = mock()
-  private val viewEffectHandler = EditPatientViewEffectHandler(ui)
   private val utcClock: TestUtcClock = TestUtcClock()
   private val userClock: TestUserClock = TestUserClock()
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
@@ -58,6 +57,8 @@ class EditPatientScreenCreatedTest {
       dateTimeFormatter = dateOfBirthFormat,
       today = LocalDate.now(userClock)
   ))
+
+  private val viewEffectHandler = EditPatientViewEffectHandler(userClock, ui)
 
   @Test
   @Parameters(method = "params for prefilling fields on screen created")

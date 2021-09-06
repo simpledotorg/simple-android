@@ -69,7 +69,6 @@ class EditPatientScreenFormTest {
 
   private val uiEvents = PublishSubject.create<EditPatientEvent>()
   private val ui: EditPatientUi = mock()
-  private val viewEffectHandler = EditPatientViewEffectHandler(ui)
   private val viewRenderer = EditPatientViewRenderer(ui)
 
   private val utcClock: TestUtcClock = TestUtcClock()
@@ -84,6 +83,8 @@ class EditPatientScreenFormTest {
       dateTimeFormatter = dateOfBirthFormat,
       today = LocalDate.now(userClock)
   ))
+
+  private val viewEffectHandler = EditPatientViewEffectHandler(userClock, ui)
 
   @Test
   @Parameters(method = "params for hiding errors on text changes")

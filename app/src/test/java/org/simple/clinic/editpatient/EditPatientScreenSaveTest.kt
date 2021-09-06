@@ -68,7 +68,6 @@ class EditPatientScreenSaveTest {
 
   private val uiEvents = PublishSubject.create<EditPatientEvent>()
   private val ui: EditPatientUi = mock()
-  private val viewEffectHandler = EditPatientViewEffectHandler(ui)
   private val viewRenderer = EditPatientViewRenderer(ui)
   private val patientRepository: PatientRepository = mock()
   private val country = TestData.country()
@@ -84,6 +83,8 @@ class EditPatientScreenSaveTest {
       dateTimeFormatter = dateOfBirthFormat,
       today = LocalDate.now(userClock)
   ))
+
+  private val viewEffectHandler = EditPatientViewEffectHandler(userClock, ui)
 
   @Test
   fun `when save is clicked, patient name should be validated`() {

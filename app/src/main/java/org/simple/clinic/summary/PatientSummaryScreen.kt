@@ -2,7 +2,6 @@ package org.simple.clinic.summary
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.text.SpannedString
@@ -596,7 +595,7 @@ class PatientSummaryScreen :
   }
 
   override fun openSelectFacilitySheet() {
-    activity.startActivityForResult(Intent(context, FacilitySelectionScreen::class.java), ASSIGNED_FACILITY_SELECTION)
+    router.pushExpectingResult(ScreenRequest.SelectFacility, FacilitySelectionScreen.Key())
   }
 
   override fun dispatchNewAssignedFacility(facility: Facility) {

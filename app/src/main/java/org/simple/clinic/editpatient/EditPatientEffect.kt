@@ -19,10 +19,6 @@ object GoBackEffect : EditPatientEffect()
 
 object ShowDiscardChangesAlertEffect : EditPatientEffect()
 
-data class ShowValidationErrorsEffect(
-    val validationErrors: Set<EditPatientValidationError>
-) : EditPatientEffect()
-
 data class SavePatientEffect(
     val ongoingEntry: EditablePatientEntry,
     val savedPatient: Patient,
@@ -51,3 +47,7 @@ data class HideValidationErrorsEffect(
 data class SetupUi(val inputFields: InputFields) : EditPatientViewEffect()
 
 data class DisplayBpPassportsEffect(val bpPassports: List<BusinessId>) : EditPatientViewEffect()
+
+data class ShowValidationErrorsEffect(
+    val validationErrors: Set<EditPatientValidationError>
+) : EditPatientViewEffect()

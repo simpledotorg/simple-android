@@ -62,7 +62,6 @@ class EditPatientEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<EditPatientEffect, EditPatientEvent> {
     return RxMobius
         .subtypeEffectHandler<EditPatientEffect, EditPatientEvent>()
-        .addConsumer(ShowValidationErrorsEffect::class.java, ::showValidationErrors, schedulersProvider.ui())
         .addAction(ShowDatePatternInDateOfBirthLabelEffect::class.java, ui::showDatePatternInDateOfBirthLabel, schedulersProvider.ui())
         .addAction(HideDatePatternInDateOfBirthLabelEffect::class.java, ui::hideDatePatternInDateOfBirthLabel, schedulersProvider.ui())
         .addAction(GoBackEffect::class.java, ui::goBack, schedulersProvider.ui())
@@ -80,13 +79,6 @@ class EditPatientEffectHandler @AssistedInject constructor(
       fetchColonyOrVillagesEffect
           .map { patientRepository.allColoniesOrVillagesInPatientAddress() }
           .map(::ColonyOrVillagesFetched)
-    }
-  }
-
-  private fun showValidationErrors(effect: ShowValidationErrorsEffect) {
-    with(ui) {
-      showValidationErrors(effect.validationErrors)
-      scrollToFirstFieldWithError()
     }
   }
 

@@ -24,6 +24,14 @@ class EditPatientViewEffectHandler @AssistedInject constructor(
       is HideValidationErrorsEffect -> ui.hideValidationErrors(viewEffect.validationErrors)
       is SetupUi -> ui.setupUi(viewEffect.inputFields)
       is DisplayBpPassportsEffect -> displayBpPassports(viewEffect.bpPassports)
+      is ShowValidationErrorsEffect -> showValidationErrors(viewEffect.validationErrors)
+    }
+  }
+
+  private fun showValidationErrors(validationErrors: Set<EditPatientValidationError>) {
+    with(ui) {
+      showValidationErrors(validationErrors)
+      scrollToFirstFieldWithError()
     }
   }
 

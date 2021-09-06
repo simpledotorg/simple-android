@@ -1,7 +1,6 @@
 package org.simple.clinic.scheduleappointment.facilityselection
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
@@ -34,14 +33,6 @@ class FacilitySelectionScreen :
         Unit>(),
     FacilitySelectionUi,
     FacilitySelectionUiActions {
-
-  companion object {
-    const val EXTRA_SELECTED_FACILITY = "selected_facility"
-
-    fun selectedFacility(data: Intent): Facility {
-      return data.getParcelableExtra(EXTRA_SELECTED_FACILITY)!!
-    }
-  }
 
   @Inject
   lateinit var locale: Locale

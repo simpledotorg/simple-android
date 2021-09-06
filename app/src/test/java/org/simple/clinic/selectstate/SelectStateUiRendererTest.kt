@@ -70,4 +70,19 @@ class SelectStateUiRendererTest {
     verify(ui).showNetworkErrorMessage()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when states are failed to load with server error, then show server error message`() {
+    // given
+    val failedToLoadStatesModel = defaultModel
+        .failedToLoadStates(StatesFetchError.ServerError)
+
+    // when
+    uiRenderer.render(failedToLoadStatesModel)
+
+    // then
+    verify(ui).hideStates()
+    verify(ui).showServerErrorMessage()
+    verifyNoMoreInteractions(ui)
+  }
 }

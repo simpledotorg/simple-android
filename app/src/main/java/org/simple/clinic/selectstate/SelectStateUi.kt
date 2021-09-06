@@ -7,4 +7,5 @@ interface SelectStateUi {
   fun showNextButton()
   fun hideStates()
   fun showNetworkErrorMessage()
+  fun showServerErrorMessage()
 }

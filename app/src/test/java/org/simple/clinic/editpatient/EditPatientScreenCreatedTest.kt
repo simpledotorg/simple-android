@@ -46,6 +46,7 @@ class EditPatientScreenCreatedTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val ui: EditPatientUi = mock()
+  private val viewEffectHandler = EditPatientViewEffectHandler(ui)
   private val utcClock: TestUtcClock = TestUtcClock()
   private val userClock: TestUserClock = TestUserClock()
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
@@ -182,7 +183,8 @@ class EditPatientScreenCreatedTest {
         currentUser = dagger.Lazy { user },
         inputFieldsFactory = inputFieldsFactory,
         dateOfBirthFormatter = dateOfBirthFormat,
-        ui = ui
+        ui = ui,
+        viewEffectHandler = viewEffectHandler
     )
 
     val numberValidator = LengthBasedNumberValidator(

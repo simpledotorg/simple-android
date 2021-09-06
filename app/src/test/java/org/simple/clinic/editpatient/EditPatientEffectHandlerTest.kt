@@ -43,6 +43,7 @@ class EditPatientEffectHandlerTest {
 
   private val date = LocalDate.parse("2018-01-01")
   private val ui = mock<EditPatientUi>()
+  private val viewEffectHandler = EditPatientViewEffectHandler(ui)
   private val facilityRepository = mock<FacilityRepository>()
   private val userClock = TestUserClock(date)
   private val utcClock = TestUtcClock(Instant.parse("2018-01-01T00:00:00Z"))
@@ -99,7 +100,8 @@ class EditPatientEffectHandlerTest {
       currentUser = Lazy { user },
       inputFieldsFactory = inputFieldsFactory,
       dateOfBirthFormatter = dateOfBirthFormatter,
-      ui = ui
+      ui = ui,
+      viewEffectHandler = viewEffectHandler
   )
 
   private val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -201,7 +203,8 @@ class EditPatientEffectHandlerTest {
         currentUser = dagger.Lazy { user },
         inputFieldsFactory = inputFieldsFactory,
         dateOfBirthFormatter = dateOfBirthFormatter,
-        ui = ui
+        ui = ui,
+        viewEffectHandler = viewEffectHandler
     )
 
     val testCase = EffectHandlerTestCase(effectHandler.build())

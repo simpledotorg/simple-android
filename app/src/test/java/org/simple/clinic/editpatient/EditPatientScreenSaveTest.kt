@@ -31,12 +31,12 @@ import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.Age
-import org.simple.clinic.patient.PatientAgeDetails
-import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
-import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientAgeDetails
+import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
+import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
@@ -68,6 +68,7 @@ class EditPatientScreenSaveTest {
 
   private val uiEvents = PublishSubject.create<EditPatientEvent>()
   private val ui: EditPatientUi = mock()
+  private val viewEffectHandler = EditPatientViewEffectHandler(ui)
   private val viewRenderer = EditPatientViewRenderer(ui)
   private val patientRepository: PatientRepository = mock()
   private val country = TestData.country()
@@ -970,7 +971,8 @@ class EditPatientScreenSaveTest {
         currentUser = dagger.Lazy { user },
         inputFieldsFactory = inputFieldsFactory,
         dateOfBirthFormatter = dateOfBirthFormat,
-        ui = ui
+        ui = ui,
+        viewEffectHandler = viewEffectHandler
     )
 
     val numberValidator = LengthBasedNumberValidator(

@@ -69,6 +69,7 @@ class EditPatientScreenFormTest {
 
   private val uiEvents = PublishSubject.create<EditPatientEvent>()
   private val ui: EditPatientUi = mock()
+  private val viewEffectHandler = EditPatientViewEffectHandler(ui)
   private val viewRenderer = EditPatientViewRenderer(ui)
 
   private val utcClock: TestUtcClock = TestUtcClock()
@@ -821,7 +822,8 @@ class EditPatientScreenFormTest {
         currentUser = dagger.Lazy { user },
         inputFieldsFactory = inputFieldsFactory,
         dateOfBirthFormatter = dateOfBirthFormat,
-        ui = ui
+        ui = ui,
+        viewEffectHandler = viewEffectHandler
     )
 
     val numberValidator = LengthBasedNumberValidator(

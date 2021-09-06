@@ -15,11 +15,11 @@ import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
-import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
-import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientAgeDetails
+import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
+import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
@@ -34,7 +34,6 @@ import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.uuid.UuidGenerator
-import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
@@ -50,12 +49,16 @@ class EditPatientEffectHandler @AssistedInject constructor(
     private val currentUser: Lazy<User>,
     private val inputFieldsFactory: InputFieldsFactory,
     @Named("date_for_user_input") private val dateOfBirthFormatter: DateTimeFormatter,
-    @Assisted private val ui: EditPatientUi
+    @Assisted private val ui: EditPatientUi,
+    @Assisted private val viewEffectHandler: EditPatientViewEffectHandler
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(ui: EditPatientUi): EditPatientEffectHandler
+    fun create(
+        ui: EditPatientUi,
+        viewEffectHandler: EditPatientViewEffectHandler
+    ): EditPatientEffectHandler
   }
 
   fun build(): ObservableTransformer<EditPatientEffect, EditPatientEvent> {
@@ -194,7 +197,10 @@ class EditPatientEffectHandler @AssistedInject constructor(
         .withAgeDetails(ageDetails)
   }
 
-  private fun coerceAgeFrom(recordedAgeDetails: PatientAgeDetails, enteredAge: String): PatientAgeDetails {
+  private fun coerceAgeFrom(
+      recordedAgeDetails: PatientAgeDetails,
+      enteredAge: String
+  ): PatientAgeDetails {
     val enteredAgeValue = enteredAge.toInt()
     return when {
       recordedAgeDetails.doesRecordedAgeMatch(enteredAgeValue) -> recordedAgeDetails

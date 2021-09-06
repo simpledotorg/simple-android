@@ -185,7 +185,7 @@ class PatientSummaryScreen :
   private val hardwareBackClicks = PublishSubject.create<Unit>()
   private val subscriptions = CompositeDisposable()
 
-  private val appointmentScheduleSheetClosed = DeferredEventSource<PatientSummaryEvent>()
+  private val additionalEvents = DeferredEventSource<PatientSummaryEvent>()
 
   override fun defaultModel(): PatientSummaryModel {
     return PatientSummaryModel.from(screenKey.intention, screenKey.patientUuid)
@@ -235,7 +235,7 @@ class PatientSummaryScreen :
   }
 
   override fun additionalEventSources() = listOf(
-      appointmentScheduleSheetClosed
+      additionalEvents
   )
 
   override fun onAttach(context: Context) {
@@ -259,7 +259,7 @@ class PatientSummaryScreen :
     setFragmentResultListener(ScreenRequest.ScheduleAppointmentSheet) { _, result ->
       if (result is Succeeded) {
         val sheetOpenedFrom = ScheduleAppointmentSheet.sheetOpenedFrom(result)
-        appointmentScheduleSheetClosed.notify(ScheduledAppointment(sheetOpenedFrom))
+        additionalEvents.notify(ScheduledAppointment(sheetOpenedFrom))
       }
     }
   }

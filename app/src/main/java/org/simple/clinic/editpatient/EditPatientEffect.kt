@@ -11,8 +11,6 @@ sealed class EditPatientEffect
 
 data class FetchBpPassportsEffect(val patientUuid: UUID) : EditPatientEffect()
 
-object GoBackEffect : EditPatientEffect()
-
 object ShowDiscardChangesAlertEffect : EditPatientEffect()
 
 data class SavePatientEffect(
@@ -51,3 +49,5 @@ data class ShowValidationErrorsEffect(
 object ShowDatePatternInDateOfBirthLabelEffect : EditPatientViewEffect()
 
 object HideDatePatternInDateOfBirthLabelEffect : EditPatientViewEffect()
+
+object GoBackEffect : EditPatientViewEffect()

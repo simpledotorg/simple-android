@@ -7,6 +7,7 @@ import org.junit.Test
 import org.simple.clinic.R
 import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.CommonDrugFrequencyProvider
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
 import java.util.UUID
 
@@ -16,9 +17,13 @@ class CustomDrugEntryUiRendererTest {
   private val uiRenderer = CustomDrugEntryUiRenderer(ui, dosagePlaceholder = "mg")
   private val drugName = "Amlodipine"
   private val dosagePlaceholder = "mg"
-  private val drugFrequencyFactory = DrugFrequencyFactory(CommonDrugFrequencyProvider())
-  private val drugFrequencyChoiceItems = drugFrequencyFactory.provideFields()
-
+  private val drugFrequencyChoiceItems = listOf(
+      DrugFrequencyChoiceItem(drugFrequency = null, label = "None"),
+      DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.OD, label = "OD"),
+      DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.BD, label = "BD"),
+      DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.TDS, label = "TDS"),
+      DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.QDS, label = "QDS")
+  )
   private val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(drugName), dosagePlaceholder).drugFrequencyChoiceItemsLoaded(drugFrequencyChoiceItems)
 
   @Test

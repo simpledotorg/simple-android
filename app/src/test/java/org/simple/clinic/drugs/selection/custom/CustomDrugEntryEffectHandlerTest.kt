@@ -13,9 +13,9 @@ import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.search.DrugRepository
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItems
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.EthiopiaDrugFrequencyProvider
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -33,7 +33,15 @@ class CustomDrugEntryEffectHandlerTest {
   private val uuidGenerator = FakeUuidGenerator.fixed(customDrugUUID)
   private val drugName = "Amlodipine"
 
-  private val drugFrequencyFactory = DrugFrequencyFactory(EthiopiaDrugFrequencyProvider())
+  private val drugFrequencyChoiceItems = listOf(
+      DrugFrequencyChoiceItem(drugFrequency = null, label = "None"),
+      DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.OD, label = "OD"),
+      DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.BD, label = "BD"),
+      DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.TDS, label = "TDS"),
+      DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.QDS, label = "QDS")
+  )
+
+  private val drugFrequencyFactory = mock<DrugFrequencyFactory>()
 
   private val effectHandler = CustomDrugEntryEffectHandler(
       TestSchedulersProvider.trampoline(),
@@ -55,7 +63,6 @@ class CustomDrugEntryEffectHandlerTest {
   fun `when show edit frequency dialog effect is received, show edit frequency dialog`() {
     // given
     val frequency = DrugFrequency.OD
-    val drugFrequencyChoiceItems = drugFrequencyFactory.provideFields()
 
     // when
     testCase.dispatch(ShowEditFrequencyDialog(frequency, drugFrequencyChoiceItems))

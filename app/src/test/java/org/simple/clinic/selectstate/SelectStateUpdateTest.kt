@@ -9,7 +9,6 @@ import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.StatesResult.FetchError
-import org.simple.clinic.appconfig.StatesResult.StatesFetched
 import org.simple.clinic.util.ResolvedError
 import retrofit2.HttpException
 import retrofit2.Response
@@ -28,7 +27,7 @@ class SelectStateUpdateTest {
 
     updateSpec
         .given(defaultModel)
-        .whenEvent(StatesResultFetched(StatesFetched(states)))
+        .whenEvent(StatesFetched(states))
         .then(assertThatNext(
             hasModel(defaultModel.statesLoaded(states)),
             hasNoEffects()

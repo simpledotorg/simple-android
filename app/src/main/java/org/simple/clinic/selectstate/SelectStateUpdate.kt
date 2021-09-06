@@ -15,6 +15,7 @@ class SelectStateUpdate : Update<SelectStateModel, SelectStateEvent, SelectState
     return when (event) {
       is StatesResultFetched -> statesResultFetched(model, event)
       StateSaved -> noChange()
+      is StatesFetched -> next(model.statesLoaded(event.states))
     }
   }
 

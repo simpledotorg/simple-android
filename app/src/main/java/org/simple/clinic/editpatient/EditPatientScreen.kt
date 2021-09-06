@@ -48,6 +48,7 @@ import org.simple.clinic.editpatient.deletepatient.DeletePatientScreenKey
 import org.simple.clinic.feature.Feature.DeletePatient
 import org.simple.clinic.feature.Feature.VillageTypeAhead
 import org.simple.clinic.feature.Features
+import org.simple.clinic.mobius.ViewEffectsHandler
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -270,6 +271,8 @@ class EditPatientScreen : BaseScreen<
       .build()
 
   override fun uiRenderer() = EditPatientViewRenderer(this)
+
+  override fun viewEffectHandler() = viewEffectHandler.create(this)
 
   override fun events() = Observable.mergeArray(
       saveClicks(),

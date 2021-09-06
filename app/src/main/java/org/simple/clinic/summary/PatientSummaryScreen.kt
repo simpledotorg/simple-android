@@ -599,5 +599,8 @@ class PatientSummaryScreen :
 
     @Parcelize
     object ScheduleAppointmentSheet : ScreenRequest()
+
+    @Parcelize
+    object SelectFacility: ScreenRequest()
   }
 }

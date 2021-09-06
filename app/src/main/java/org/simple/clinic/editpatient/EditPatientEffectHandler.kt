@@ -62,7 +62,6 @@ class EditPatientEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<EditPatientEffect, EditPatientEvent> {
     return RxMobius
         .subtypeEffectHandler<EditPatientEffect, EditPatientEvent>()
-        .addAction(HideDatePatternInDateOfBirthLabelEffect::class.java, ui::hideDatePatternInDateOfBirthLabel, schedulersProvider.ui())
         .addAction(GoBackEffect::class.java, ui::goBack, schedulersProvider.ui())
         .addAction(ShowDiscardChangesAlertEffect::class.java, ui::showDiscardChangesAlert, schedulersProvider.ui())
         .addTransformer(FetchBpPassportsEffect::class.java, fetchBpPassports(schedulersProvider.io()))

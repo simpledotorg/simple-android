@@ -2,7 +2,16 @@
 
 ## Next Release
 ### Internal
-- [In Progress: 30 Aug 2021] Record call results instead of updating the same appointment record
+- Change `ScheduleAppointmentSheet` to use Mobius view effects
+- Add Clubhouse overview description in the Pivotal documentation
+- Migrate v1 `Country` usages to v2 `Country`
+- Change `NewMedicalHistoryScreen` to use Mobius view effects
+- Parse `Country_Old` manually when migrating to v2 `Country`
+- Remove `Country_Old`
+- Fetch states for selected country deployments
+- Remove login failed errors from UiRenderer, and add via effect handler when logging in
+- [In Progress: 31 Aug 2021] Record call results instead of updating the same appointment record
+- [In Progress: 31 Aug 2021] Refactor logic around providing drug frequencies label depending on the country
 
 ### Changes
 - [In Progress: 19 Aug 2021] UI improvements for medical history screen
@@ -35,6 +44,7 @@
 - Add v2 manifest support in app
 - Fix TDS drug frequency string value
 - Remove unused `DrugFrequencyChoiceItem` class
+- Move opening of facility selection screen to `PatientSummaryScreen` from `AssignedFacilityView`
 
 ### Changes
 - Implement `CustomDrugEntrySheet`

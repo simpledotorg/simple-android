@@ -2,6 +2,7 @@ package org.simple.clinic.summary
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.text.SpannedString
@@ -24,6 +25,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.cast
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
@@ -50,7 +52,9 @@ import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.router.ScreenResultBus
+import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
+import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivity
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet.LinkIdWithPatientSheetKey
 import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet
@@ -58,6 +62,7 @@ import org.simple.clinic.summary.teleconsultation.messagebuilder.LongTeleconsult
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordScreenKey
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.messagesender.WhatsAppMessageSender
 import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.toLocalDateAtZone
@@ -209,7 +214,9 @@ class PatientSummaryScreen :
             phoneNumberClicks(),
             contactDoctorClicks(),
             snackbarActionClicks,
-            logTeleconsultClicks()
+            logTeleconsultClicks(),
+            changeAssignedFacilityClicks(),
+            assignedFacilitySelected()
         )
         .compose(ReportAnalyticsEvents())
         .cast()
@@ -314,6 +321,22 @@ class PatientSummaryScreen :
         .map {
           PatientSummaryBackClicked(screenKey.patientUuid, screenKey.screenCreatedTimestamp)
         }
+  }
+
+  private fun changeAssignedFacilityClicks(): Observable<PatientSummaryEvent> {
+    return Observable.create { emitter ->
+      assignedFacilityView.changeAssignedFacilityClicks = { emitter.onNext(ChangeAssignedFacilityClicked) }
+
+      emitter.setCancellable { assignedFacilityView.changeAssignedFacilityClicks = null }
+    }
+  }
+
+  private fun assignedFacilitySelected(): Observable<PatientSummaryEvent> {
+    return screenResults
+        .streamResults()
+        .ofType<ActivityResult>()
+        .extractSuccessful(ASSIGNED_FACILITY_SELECTION, FacilitySelectionActivity.Companion::selectedFacility)
+        .map(::NewAssignedFacilitySelected)
   }
 
   override fun onBackPressed(): Boolean {
@@ -558,6 +581,14 @@ class PatientSummaryScreen :
         .setPositiveButton(R.string.warning_add_blood_sugar_positive_button, null)
         .setNegativeButton(R.string.warning_add_blood_sugar_negative_button, null)
         .show()
+  }
+
+  override fun openSelectFacilitySheet() {
+    activity.startActivityForResult(Intent(context, FacilitySelectionActivity::class.java), ASSIGNED_FACILITY_SELECTION)
+  }
+
+  override fun dispatchNewAssignedFacility(facility: Facility) {
+    assignedFacilityView.onNewAssignedFacilitySelected(facility)
   }
 
   interface Injector {

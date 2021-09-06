@@ -431,4 +431,31 @@ class PatientSummaryEffectHandlerTest {
     verify(uiActions).showAddBloodSugarWarningDialog()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when open select facility sheet effect is received, then show the select facility sheet`() {
+    // when
+    testCase.dispatch(OpenSelectFacilitySheet)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openSelectFacilitySheet()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when dispatch new assigned facility is received, then dispatch the newly selected facility`() {
+    // given
+    val selectedFacility = TestData.facility(uuid = UUID.fromString("68a067f0-e746-4191-bfe4-3c4a026642b8"))
+
+    // when
+    testCase.dispatch(DispatchNewAssignedFacility(selectedFacility))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).dispatchNewAssignedFacility(selectedFacility)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

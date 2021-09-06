@@ -66,3 +66,7 @@ object ShowAddMeasurementsWarningDialog : PatientSummaryEffect()
 object ShowAddBloodPressureWarningDialog : PatientSummaryEffect()
 
 object ShowAddBloodSugarWarningDialog : PatientSummaryEffect()
+
+object OpenSelectFacilitySheet: PatientSummaryEffect()
+
+data class DispatchNewAssignedFacility(val facility: Facility): PatientSummaryEffect()

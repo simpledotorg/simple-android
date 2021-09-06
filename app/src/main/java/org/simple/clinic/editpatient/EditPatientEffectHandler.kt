@@ -71,7 +71,6 @@ class EditPatientEffectHandler @AssistedInject constructor(
         .addTransformer(FetchBpPassportsEffect::class.java, fetchBpPassports(schedulersProvider.io()))
         .addTransformer(SavePatientEffect::class.java, savePatientTransformer(schedulersProvider.io()))
         .addTransformer(LoadInputFields::class.java, loadInputFields())
-        .addConsumer(SetupUi::class.java, { ui.setupUi(it.inputFields) }, schedulersProvider.ui())
         .addTransformer(FetchColonyOrVillagesEffect::class.java, fetchColonyOrVillages())
         .addConsumer(EditPatientViewEffect::class.java, viewEffectHandler::handle)
         .build()

@@ -35,8 +35,6 @@ data class SavePatientEffect(
 
 object LoadInputFields : EditPatientEffect()
 
-data class SetupUi(val inputFields: InputFields) : EditPatientEffect()
-
 object FetchColonyOrVillagesEffect : EditPatientEffect()
 
 sealed class EditPatientViewEffect : EditPatientEffect()
@@ -51,3 +49,5 @@ data class PrefillFormEffect(
 data class HideValidationErrorsEffect(
     val validationErrors: Set<EditPatientValidationError>
 ) : EditPatientViewEffect()
+
+data class SetupUi(val inputFields: InputFields) : EditPatientViewEffect()

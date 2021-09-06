@@ -20,6 +20,7 @@ class EditPatientViewEffectHandler @AssistedInject constructor(
   override fun handle(viewEffect: EditPatientViewEffect) {
     when (viewEffect) {
       is PrefillFormEffect -> prefillFormFields(viewEffect)
+      is HideValidationErrorsEffect -> ui.hideValidationErrors(viewEffect.validationErrors)
     }
   }
 

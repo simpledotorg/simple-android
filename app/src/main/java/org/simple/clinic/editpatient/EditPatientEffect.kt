@@ -9,10 +9,6 @@ import java.util.UUID
 
 sealed class EditPatientEffect
 
-data class HideValidationErrorsEffect(
-    val validationErrors: Set<EditPatientValidationError>
-) : EditPatientEffect()
-
 data class FetchBpPassportsEffect(val patientUuid: UUID) : EditPatientEffect()
 
 data class DisplayBpPassportsEffect(val bpPassports: List<BusinessId>) : EditPatientEffect()
@@ -50,4 +46,8 @@ data class PrefillFormEffect(
     val address: PatientAddress,
     val phoneNumber: PatientPhoneNumber?,
     val alternativeId: BusinessId?
+) : EditPatientViewEffect()
+
+data class HideValidationErrorsEffect(
+    val validationErrors: Set<EditPatientValidationError>
 ) : EditPatientViewEffect()

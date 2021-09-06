@@ -64,7 +64,6 @@ class EditPatientEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<EditPatientEffect, EditPatientEvent>()
         .addConsumer(DisplayBpPassportsEffect::class.java, { displayBpPassports(it.bpPassports) }, schedulersProvider.ui())
         .addConsumer(ShowValidationErrorsEffect::class.java, ::showValidationErrors, schedulersProvider.ui())
-        .addConsumer(HideValidationErrorsEffect::class.java, { ui.hideValidationErrors(it.validationErrors) }, schedulersProvider.ui())
         .addAction(ShowDatePatternInDateOfBirthLabelEffect::class.java, ui::showDatePatternInDateOfBirthLabel, schedulersProvider.ui())
         .addAction(HideDatePatternInDateOfBirthLabelEffect::class.java, ui::hideDatePatternInDateOfBirthLabel, schedulersProvider.ui())
         .addAction(GoBackEffect::class.java, ui::goBack, schedulersProvider.ui())

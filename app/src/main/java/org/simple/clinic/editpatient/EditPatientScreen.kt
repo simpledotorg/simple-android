@@ -266,11 +266,7 @@ class EditPatientScreen : BaseScreen<
   override fun createUpdate() = EditPatientUpdate(numberValidator, dateOfBirthValidator, ageValidator)
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<EditPatientViewEffect>) = effectHandlerFactory
-      .create(
-          ui = this,
-          viewEffectHandler = viewEffectHandler.create(this),
-          viewEffectsConsumer = viewEffectsConsumer
-      )
+      .create(viewEffectsConsumer = viewEffectsConsumer)
       .build()
 
   override fun uiRenderer() = EditPatientViewRenderer(this)

@@ -91,7 +91,6 @@ class EditPatientEffectHandlerTest {
   private val uuidGenerator = FakeUuidGenerator.fixed(phoneNumberUuid)
 
   private val effectHandler = EditPatientEffectHandler(
-      userClock = userClock,
       patientRepository = patientRepository,
       utcClock = utcClock,
       schedulersProvider = TrampolineSchedulersProvider(),
@@ -100,8 +99,6 @@ class EditPatientEffectHandlerTest {
       currentUser = Lazy { user },
       inputFieldsFactory = inputFieldsFactory,
       dateOfBirthFormatter = dateOfBirthFormatter,
-      ui = ui,
-      viewEffectHandler = viewEffectHandler,
       viewEffectsConsumer = viewEffectHandler::handle
   )
 
@@ -195,7 +192,6 @@ class EditPatientEffectHandlerTest {
     val identifierUuid = UUID.fromString("a72c3ada-b071-4818-8f0b-476432338235")
 
     val effectHandler = EditPatientEffectHandler(
-        userClock = userClock,
         patientRepository = patientRepository,
         utcClock = utcClock,
         schedulersProvider = TrampolineSchedulersProvider(),
@@ -204,8 +200,6 @@ class EditPatientEffectHandlerTest {
         currentUser = dagger.Lazy { user },
         inputFieldsFactory = inputFieldsFactory,
         dateOfBirthFormatter = dateOfBirthFormatter,
-        ui = ui,
-        viewEffectHandler = viewEffectHandler,
         viewEffectsConsumer = viewEffectHandler::handle
     )
 

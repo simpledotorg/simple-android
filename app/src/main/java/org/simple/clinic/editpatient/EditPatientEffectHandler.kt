@@ -28,7 +28,6 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.user.User
-import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -39,7 +38,6 @@ import java.util.UUID
 import javax.inject.Named
 
 class EditPatientEffectHandler @AssistedInject constructor(
-    private val userClock: UserClock,
     private val patientRepository: PatientRepository,
     private val utcClock: UtcClock,
     private val schedulersProvider: SchedulersProvider,
@@ -48,16 +46,12 @@ class EditPatientEffectHandler @AssistedInject constructor(
     private val currentUser: Lazy<User>,
     private val inputFieldsFactory: InputFieldsFactory,
     @Named("date_for_user_input") private val dateOfBirthFormatter: DateTimeFormatter,
-    @Assisted private val ui: EditPatientUi,
-    @Assisted private val viewEffectHandler: EditPatientViewEffectHandler,
     @Assisted private val viewEffectsConsumer: Consumer<EditPatientViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        ui: EditPatientUi,
-        viewEffectHandler: EditPatientViewEffectHandler,
         viewEffectsConsumer: Consumer<EditPatientViewEffect>
     ): EditPatientEffectHandler
   }

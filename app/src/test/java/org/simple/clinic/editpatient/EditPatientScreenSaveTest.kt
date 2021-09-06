@@ -963,7 +963,6 @@ class EditPatientScreenSaveTest {
       phoneNumber: PatientPhoneNumber?
   ) {
     val editPatientEffectHandler = EditPatientEffectHandler(
-        userClock = TestUserClock(),
         patientRepository = patientRepository,
         utcClock = utcClock,
         schedulersProvider = TrampolineSchedulersProvider(),
@@ -972,8 +971,6 @@ class EditPatientScreenSaveTest {
         currentUser = dagger.Lazy { user },
         inputFieldsFactory = inputFieldsFactory,
         dateOfBirthFormatter = dateOfBirthFormat,
-        ui = ui,
-        viewEffectHandler = viewEffectHandler,
         viewEffectsConsumer = viewEffectHandler::handle
     )
 

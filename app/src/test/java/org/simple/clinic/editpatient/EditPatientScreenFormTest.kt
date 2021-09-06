@@ -814,7 +814,6 @@ class EditPatientScreenFormTest {
       phoneNumber: PatientPhoneNumber?
   ) {
     val editPatientEffectHandler = EditPatientEffectHandler(
-        userClock = TestUserClock(),
         patientRepository = patientRepository,
         utcClock = utcClock,
         schedulersProvider = TrampolineSchedulersProvider(),
@@ -823,8 +822,6 @@ class EditPatientScreenFormTest {
         currentUser = dagger.Lazy { user },
         inputFieldsFactory = inputFieldsFactory,
         dateOfBirthFormatter = dateOfBirthFormat,
-        ui = ui,
-        viewEffectHandler = viewEffectHandler,
         viewEffectsConsumer = viewEffectHandler::handle
     )
 

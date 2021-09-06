@@ -25,6 +25,7 @@ class EditPatientViewEffectHandler @AssistedInject constructor(
       is SetupUi -> ui.setupUi(viewEffect.inputFields)
       is DisplayBpPassportsEffect -> displayBpPassports(viewEffect.bpPassports)
       is ShowValidationErrorsEffect -> showValidationErrors(viewEffect.validationErrors)
+      ShowDatePatternInDateOfBirthLabelEffect -> ui.showDatePatternInDateOfBirthLabel()
     }
   }
 

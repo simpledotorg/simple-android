@@ -49,3 +49,5 @@ object LoadInputFields : EditPatientEffect()
 data class SetupUi(val inputFields: InputFields) : EditPatientEffect()
 
 object FetchColonyOrVillagesEffect : EditPatientEffect()
+
+sealed class EditPatientViewEffect : EditPatientEffect()

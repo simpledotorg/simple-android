@@ -1,6 +1,6 @@
 package org.simple.clinic.drugs.selection.custom
 
-enum class CustomDrugEntryProgressState {
+enum class DrugInfoProgressState {
   IN_PROGRESS,
   DONE
 }

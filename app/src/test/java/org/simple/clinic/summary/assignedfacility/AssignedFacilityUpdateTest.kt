@@ -3,7 +3,6 @@ package org.simple.clinic.summary.assignedfacility
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
-import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -30,17 +29,6 @@ class AssignedFacilityUpdateTest {
         .then(assertThatNext(
             hasModel(model.assignedFacilityUpdated(facility)),
             hasNoEffects()
-        ))
-  }
-
-  @Test
-  fun `when change assign facility button is clicked, then open facility selection`() {
-    updateSpec
-        .given(model)
-        .whenEvent(ChangeAssignedFacilityButtonClicked)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(OpenFacilitySelection as AssignedFacilityEffect)
         ))
   }
 

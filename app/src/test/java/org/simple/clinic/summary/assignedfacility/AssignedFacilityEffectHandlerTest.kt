@@ -3,7 +3,6 @@ package org.simple.clinic.summary.assignedfacility
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.After
@@ -12,8 +11,8 @@ import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
-import java.util.Optional
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
+import java.util.Optional
 import java.util.UUID
 
 class AssignedFacilityEffectHandlerTest {
@@ -79,17 +78,5 @@ class AssignedFacilityEffectHandlerTest {
 
     effectHandlerTestCase.assertNoOutgoingEvents()
     verifyZeroInteractions(uiActions)
-  }
-
-  @Test
-  fun `when open facility selection effect is received, then open the facility selection screen`() {
-    // when
-    effectHandlerTestCase.dispatch(OpenFacilitySelection)
-
-    // then
-    effectHandlerTestCase.assertNoOutgoingEvents()
-
-    verify(uiActions).openFacilitySelection()
-    verifyNoMoreInteractions(uiActions)
   }
 }

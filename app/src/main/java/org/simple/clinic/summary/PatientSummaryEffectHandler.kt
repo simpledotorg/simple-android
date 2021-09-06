@@ -82,6 +82,8 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addAction(ShowAddMeasurementsWarningDialog::class.java, uiActions::showAddMeasurementsWarningDialog, schedulersProvider.ui())
         .addAction(ShowAddBloodPressureWarningDialog::class.java, uiActions::showAddBloodPressureWarningDialog, schedulersProvider.ui())
         .addAction(ShowAddBloodSugarWarningDialog::class.java, uiActions::showAddBloodSugarWarningDialog, schedulersProvider.ui())
+        .addAction(OpenSelectFacilitySheet::class.java, uiActions::openSelectFacilitySheet, schedulersProvider.ui())
+        .addConsumer(DispatchNewAssignedFacility::class.java, { uiActions.dispatchNewAssignedFacility(it.facility) }, schedulersProvider.ui())
         .build()
   }
 

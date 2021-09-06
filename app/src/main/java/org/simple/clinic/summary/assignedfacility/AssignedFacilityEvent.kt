@@ -10,10 +10,6 @@ data class AssignedFacilityLoaded(val facility: Optional<Facility>) : AssignedFa
   override val analyticsName: String = "Assigned Facility:Facility Loaded"
 }
 
-object ChangeAssignedFacilityButtonClicked : AssignedFacilityEvent() {
-  override val analyticsName: String = "Assigned Facility:Change Facility"
-}
-
 data class AssignedFacilitySelected(val facility: Facility) : AssignedFacilityEvent() {
   override val analyticsName: String = "Assigned Facility:Facility Selected"
 }

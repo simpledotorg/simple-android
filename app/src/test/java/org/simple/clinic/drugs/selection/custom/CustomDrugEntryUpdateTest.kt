@@ -63,8 +63,15 @@ class CustomDrugEntryUpdateTest {
   @Test
   fun `when edit frequency is clicked, then show edit frequency dialog and pass drug frequency choice list`() {
     val frequency = OD
+    val drugFrequencyToFrequencyChoiceItemMap = mapOf(
+        null to DrugFrequencyChoiceItem(drugFrequency = null, label = "None"),
+        OD to DrugFrequencyChoiceItem(drugFrequency = OD, label = "OD"),
+        BD to DrugFrequencyChoiceItem(drugFrequency = BD, label = "BD"),
+        TDS to DrugFrequencyChoiceItem(drugFrequency = TDS, label = "TDS"),
+        QDS to DrugFrequencyChoiceItem(drugFrequency = QDS, label = "QDS")
+    )
 
-    updateSpec.given(defaultModel.frequencyEdited(frequency).drugFrequencyChoiceItemsLoaded(drugFrequencyChoiceItems))
+    updateSpec.given(defaultModel.frequencyEdited(frequency).drugFrequencyChoiceItemsLoaded(drugFrequencyChoiceItems).drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap))
         .whenEvent(EditFrequencyClicked)
         .then(assertThatNext(
             hasNoModel(),

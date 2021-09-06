@@ -256,10 +256,13 @@ class PatientSummaryScreen :
 
     subscriptions.add(setupChildViewVisibility())
 
-    setFragmentResultListener(ScreenRequest.ScheduleAppointmentSheet) { requestKey, result ->
+    setFragmentResultListener(ScreenRequest.ScheduleAppointmentSheet, ScreenRequest.SelectFacility) { requestKey, result ->
       if (result is Succeeded && requestKey is ScreenRequest.ScheduleAppointmentSheet) {
         val sheetOpenedFrom = ScheduleAppointmentSheet.sheetOpenedFrom(result)
         additionalEvents.notify(ScheduledAppointment(sheetOpenedFrom))
+      } else if (result is Succeeded && requestKey is ScreenRequest.SelectFacility) {
+        val selectedFacility = (result.result as FacilitySelectionScreen.SelectedFacility).facility
+        additionalEvents.notify(NewAssignedFacilitySelected(selectedFacility))
       }
     }
   }
@@ -601,6 +604,6 @@ class PatientSummaryScreen :
     object ScheduleAppointmentSheet : ScreenRequest()
 
     @Parcelize
-    object SelectFacility: ScreenRequest()
+    object SelectFacility : ScreenRequest()
   }
 }

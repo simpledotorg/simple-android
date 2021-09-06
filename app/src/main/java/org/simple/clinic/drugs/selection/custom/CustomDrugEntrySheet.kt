@@ -167,6 +167,10 @@ class CustomDrugEntrySheet : BaseBottomSheet<
     titleTextView.text = listOfNotNull(drugName, dosage, frequency).joinToString()
   }
 
+  override fun showProgressBar() {
+    // todo
+  }
+
   override fun closeSheetAndGoToEditMedicineScreen() {
     router.popUntil(PrescribedDrugsScreenKey(screenKey.patientUuid))
   }

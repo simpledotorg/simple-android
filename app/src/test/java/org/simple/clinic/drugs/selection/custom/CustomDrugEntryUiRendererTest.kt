@@ -29,7 +29,7 @@ class CustomDrugEntryUiRendererTest {
   fun `when drug dosage focus is changed and dosage is null, then set drug dosage text with the placeholder and move the cursor to the beginning`() {
     // given
     val placeholder = "mg"
-    val drugDosageChangedModel = defaultModel.drugNameLoaded(drugName).dosageFocusChanged(hasFocus = true)
+    val drugDosageChangedModel = defaultModel.drugNameLoaded(drugName).dosageFocusChanged(hasFocus = true).drugInfoProgressStateLoaded()
     val drugName = "Amlodipine"
     val frequencyLabel = "None"
 
@@ -49,7 +49,7 @@ class CustomDrugEntryUiRendererTest {
   fun `when drug dosage focus is changed and dosage is not null but only contains the placeholder, then set drug dosage text as an empty string and update the sheet title`() {
     // given
     val dosageText = "mg"
-    val drugDosageChangedModel = defaultModel.drugNameLoaded(drugName).dosageEdited(dosageText).dosageFocusChanged(hasFocus = false)
+    val drugDosageChangedModel = defaultModel.drugNameLoaded(drugName).dosageEdited(dosageText).dosageFocusChanged(hasFocus = false).drugInfoProgressStateLoaded()
     val frequencyLabel = "None"
 
     // when
@@ -67,7 +67,7 @@ class CustomDrugEntryUiRendererTest {
   fun `when the screen is loaded in update mode, then render the drug name and setup ui for updating drug entry`() {
     // given
     val prescribedDrugUuid = UUID.fromString("96633994-6e4d-4528-b796-f03ae016553a")
-    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.Update(prescribedDrugUuid), dosagePlaceholder).drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap)
+    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.Update(prescribedDrugUuid), dosagePlaceholder).drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap).drugInfoProgressStateLoaded()
     val frequencyLabel = "None"
 
     // when
@@ -87,12 +87,22 @@ class CustomDrugEntryUiRendererTest {
     val frequencyLabel = "OD"
 
     // when
-    uiRenderer.render(defaultModel.drugNameLoaded(drugName).dosageEdited(drugDosage).frequencyEdited(frequency))
+    uiRenderer.render(defaultModel.drugNameLoaded(drugName).dosageEdited(drugDosage).frequencyEdited(frequency).drugInfoProgressStateLoading())
 
     // then
     verify(ui).hideRemoveButton()
     verify(ui).setButtonTextAsAdd()
     verify(ui).setSheetTitle(drugName, drugDosage, frequencyLabel)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when custom drug entry sheet info is not loaded, then show progress bar`() {
+    // when
+    uiRenderer.render(defaultModel.drugInfoProgressStateLoading())
+
+    // then
+    verify(ui).showProgressBar()
     verifyNoMoreInteractions(ui)
   }
 }

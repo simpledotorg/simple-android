@@ -8,6 +8,11 @@ class CustomDrugEntryUiRenderer(
     private val dosagePlaceholder: String
 ) : ViewRenderer<CustomDrugEntryModel> {
   override fun render(model: CustomDrugEntryModel) {
+    if (!model.isCustomDrugEntrySheetInfoLoaded) {
+      ui.showProgressBar()
+      return
+    }
+
     initialSetup(model.openAs)
 
     if (model.drugFrequencyToFrequencyChoiceItemMap != null)

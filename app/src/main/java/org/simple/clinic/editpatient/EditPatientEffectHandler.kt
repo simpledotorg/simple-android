@@ -62,7 +62,6 @@ class EditPatientEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<EditPatientEffect, EditPatientEvent> {
     return RxMobius
         .subtypeEffectHandler<EditPatientEffect, EditPatientEvent>()
-        .addConsumer(DisplayBpPassportsEffect::class.java, { displayBpPassports(it.bpPassports) }, schedulersProvider.ui())
         .addConsumer(ShowValidationErrorsEffect::class.java, ::showValidationErrors, schedulersProvider.ui())
         .addAction(ShowDatePatternInDateOfBirthLabelEffect::class.java, ui::showDatePatternInDateOfBirthLabel, schedulersProvider.ui())
         .addAction(HideDatePatternInDateOfBirthLabelEffect::class.java, ui::hideDatePatternInDateOfBirthLabel, schedulersProvider.ui())
@@ -82,12 +81,6 @@ class EditPatientEffectHandler @AssistedInject constructor(
           .map { patientRepository.allColoniesOrVillagesInPatientAddress() }
           .map(::ColonyOrVillagesFetched)
     }
-  }
-
-
-  private fun displayBpPassports(bpPassports: List<BusinessId>) {
-    val identifiers = bpPassports.map { it.identifier.displayValue() }
-    ui.displayBpPassports(identifiers)
   }
 
   private fun showValidationErrors(effect: ShowValidationErrorsEffect) {

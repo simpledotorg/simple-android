@@ -11,8 +11,6 @@ sealed class EditPatientEffect
 
 data class FetchBpPassportsEffect(val patientUuid: UUID) : EditPatientEffect()
 
-data class DisplayBpPassportsEffect(val bpPassports: List<BusinessId>) : EditPatientEffect()
-
 object ShowDatePatternInDateOfBirthLabelEffect : EditPatientEffect()
 
 object HideDatePatternInDateOfBirthLabelEffect : EditPatientEffect()
@@ -51,3 +49,5 @@ data class HideValidationErrorsEffect(
 ) : EditPatientViewEffect()
 
 data class SetupUi(val inputFields: InputFields) : EditPatientViewEffect()
+
+data class DisplayBpPassportsEffect(val bpPassports: List<BusinessId>) : EditPatientViewEffect()

@@ -10,4 +10,5 @@ interface CustomDrugEntryUi {
   fun setSheetTitle(drugName: String?, dosage: String?, frequencyLabelResID: String)
   fun showProgressBar()
   fun hideCustomDrugEntryUi()
+  fun hideProgressBar()
 }

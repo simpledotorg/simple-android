@@ -14,6 +14,8 @@ class CustomDrugEntryUiRenderer(
       return
     }
 
+    ui.hideProgressBar()
+
     initialSetup(model.openAs)
 
     if (model.drugFrequencyToFrequencyChoiceItemMap != null)

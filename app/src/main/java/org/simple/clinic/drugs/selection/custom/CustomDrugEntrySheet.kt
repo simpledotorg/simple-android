@@ -182,6 +182,10 @@ class CustomDrugEntrySheet : BaseBottomSheet<
     saveButtonFrame.visibility = GONE
   }
 
+  override fun hideProgressBar() {
+    // todo
+  }
+
   override fun closeSheetAndGoToEditMedicineScreen() {
     router.popUntil(PrescribedDrugsScreenKey(screenKey.patientUuid))
   }

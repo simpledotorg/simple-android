@@ -42,6 +42,7 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).setDrugDosageText(placeholder)
     verify(ui).moveDrugDosageCursorToBeginning()
     verify(ui).setSheetTitle(drugName, null, frequencyLabel)
+    verify(ui).hideProgressBar()
     verifyNoMoreInteractions(ui)
   }
 
@@ -60,6 +61,7 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).setButtonTextAsAdd()
     verify(ui).setDrugDosageText("")
     verify(ui).setSheetTitle(drugName, dosageText, frequencyLabel)
+    verify(ui).hideProgressBar()
     verifyNoMoreInteractions(ui)
   }
 
@@ -77,6 +79,7 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).showRemoveButton()
     verify(ui).setButtonTextAsSave()
     verify(ui).setSheetTitle(null, null, frequencyLabel)
+    verify(ui).hideProgressBar()
     verifyNoMoreInteractions(ui)
   }
 
@@ -87,12 +90,13 @@ class CustomDrugEntryUiRendererTest {
     val frequencyLabel = "OD"
 
     // when
-    uiRenderer.render(defaultModel.drugNameLoaded(drugName).dosageEdited(drugDosage).frequencyEdited(frequency).drugInfoProgressStateLoading())
+    uiRenderer.render(defaultModel.drugNameLoaded(drugName).dosageEdited(drugDosage).frequencyEdited(frequency).drugInfoProgressStateLoaded())
 
     // then
     verify(ui).hideRemoveButton()
     verify(ui).setButtonTextAsAdd()
     verify(ui).setSheetTitle(drugName, drugDosage, frequencyLabel)
+    verify(ui).hideProgressBar()
     verifyNoMoreInteractions(ui)
   }
 

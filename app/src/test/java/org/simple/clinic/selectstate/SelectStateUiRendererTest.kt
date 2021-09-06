@@ -85,4 +85,19 @@ class SelectStateUiRendererTest {
     verify(ui).showServerErrorMessage()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when states are failed to load with unexpected error, then show generic error message`() {
+    // given
+    val failedToLoadStatesModel = defaultModel
+        .failedToLoadStates(StatesFetchError.UnexpectedError)
+
+    // when
+    uiRenderer.render(failedToLoadStatesModel)
+
+    // then
+    verify(ui).hideStates()
+    verify(ui).showGenericErrorMessage()
+    verifyNoMoreInteractions(ui)
+  }
 }

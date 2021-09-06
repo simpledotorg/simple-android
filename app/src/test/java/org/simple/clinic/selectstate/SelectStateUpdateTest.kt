@@ -8,8 +8,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.appconfig.StatesResult.FetchError
-import org.simple.clinic.util.ResolvedError
+import org.simple.clinic.util.ResolvedError.ServerError
 import retrofit2.HttpException
 import retrofit2.Response
 
@@ -37,10 +36,11 @@ class SelectStateUpdateTest {
   @Test
   fun `when fetching states fails, then update the ui`() {
     val cause = serverError()
+    val error = StatesFetchError.fromResolvedError(ServerError(cause))
 
     updateSpec
         .given(defaultModel)
-        .whenEvent(StatesResultFetched(FetchError(ResolvedError.ServerError(cause))))
+        .whenEvent(FailedToFetchStates(error))
         .then(assertThatNext(
             hasModel(defaultModel.failedToLoadStates(StatesFetchError.ServerError)),
             hasNoEffects()

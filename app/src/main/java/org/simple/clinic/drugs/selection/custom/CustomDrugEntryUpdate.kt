@@ -29,9 +29,17 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
         dispatch(RemoveDrugFromPrescription(update.prescribedDrugUuid))
       }
       is DrugFetched -> drugFetched(model, event.drug)
-      is DrugFrequencyChoiceItemsLoaded -> next(model.drugFrequencyChoiceItemsLoaded(event.drugFrequencyChoiceItems.items))
+      is DrugFrequencyChoiceItemsLoaded -> drugFrequencyChoiceItemsLoaded(model, event)
       ImeActionDoneClicked -> dispatch(HideKeyboard)
     }
+  }
+
+  private fun drugFrequencyChoiceItemsLoaded(
+      model: CustomDrugEntryModel,
+      event: DrugFrequencyChoiceItemsLoaded
+  ): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
+    val drugFrequencyToFrequencyChoiceItemMap = event.drugFrequencyChoiceItems.items.associateBy({ it.drugFrequency }, { it })
+    return next(model.drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap))
   }
 
   private fun frequencyEdited(

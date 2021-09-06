@@ -228,13 +228,21 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
-  fun `when drug frequency choice items are loaded, then update the model`() {
+  fun `when drug frequency choice items are loaded, then update the model with a map of frequency to frequency choice items`() {
+    val drugFrequencyToFrequencyChoiceItemMap = mapOf(
+        null to DrugFrequencyChoiceItem(drugFrequency = null, label = "None"),
+        OD to DrugFrequencyChoiceItem(drugFrequency = OD, label = "OD"),
+        BD to DrugFrequencyChoiceItem(drugFrequency = BD, label = "BD"),
+        TDS to DrugFrequencyChoiceItem(drugFrequency = TDS, label = "TDS"),
+        QDS to DrugFrequencyChoiceItem(drugFrequency = QDS, label = "QDS")
+    )
+
     updateSpec
         .given(defaultModel)
         .whenEvent(DrugFrequencyChoiceItemsLoaded(DrugFrequencyChoiceItems(drugFrequencyChoiceItems)))
         .then(
             assertThatNext(
-                hasModel(defaultModel.drugFrequencyChoiceItemsLoaded(drugFrequencyChoiceItems))
+                hasModel(defaultModel.drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap))
             )
         )
   }

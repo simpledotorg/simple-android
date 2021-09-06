@@ -25,6 +25,7 @@ class SelectStateUiRendererTest {
 
     // then
     verify(ui).showStates(states = states, selectedState = null)
+    verify(ui).hideErrorView()
     verifyNoMoreInteractions(ui)
   }
 
@@ -43,16 +44,7 @@ class SelectStateUiRendererTest {
     // then
     verify(ui).showStates(states = states, selectedState = andhraPradesh)
     verify(ui).showNextButton()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when states are not fetched, then hide the states list`() {
-    // when
-    uiRenderer.render(defaultModel)
-
-    // then
-    verify(ui).hideStates()
+    verify(ui).hideErrorView()
     verifyNoMoreInteractions(ui)
   }
 

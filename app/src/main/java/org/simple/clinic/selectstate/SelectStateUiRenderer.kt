@@ -17,6 +17,14 @@ class SelectStateUiRenderer(
       ui.hideStates()
     }
 
+    if (model.hasFetchError) {
+      renderErrorView(model)
+    } else {
+      ui.hideErrorView()
+    }
+  }
+
+  private fun renderErrorView(model: SelectStateModel) {
     when (model.statesFetchError) {
       NetworkError -> ui.showNetworkErrorMessage()
       ServerError -> ui.showServerErrorMessage()

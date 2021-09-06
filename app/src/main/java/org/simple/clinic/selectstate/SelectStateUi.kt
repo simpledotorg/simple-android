@@ -9,4 +9,5 @@ interface SelectStateUi {
   fun showNetworkErrorMessage()
   fun showServerErrorMessage()
   fun showGenericErrorMessage()
+  fun hideErrorView()
 }

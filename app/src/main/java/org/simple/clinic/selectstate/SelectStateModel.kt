@@ -11,6 +11,9 @@ data class SelectStateModel(
     val selectedState: State?
 ) : Parcelable {
 
+  val hasFetchError
+    get() = statesFetchError != null
+
   val hasSelectedState
     get() = selectedState != null
 

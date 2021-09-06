@@ -264,12 +264,15 @@ class PatientSummaryScreen :
   }
 
   private fun handleScreenResult(requestKey: Parcelable, result: Succeeded) {
-    if (requestKey is ScreenRequest.ScheduleAppointmentSheet) {
-      val sheetOpenedFrom = ScheduleAppointmentSheet.sheetOpenedFrom(result)
-      additionalEvents.notify(ScheduledAppointment(sheetOpenedFrom))
-    } else if (requestKey is ScreenRequest.SelectFacility) {
-      val selectedFacility = (result.result as FacilitySelectionScreen.SelectedFacility).facility
-      additionalEvents.notify(NewAssignedFacilitySelected(selectedFacility))
+    when (requestKey) {
+      is ScreenRequest.ScheduleAppointmentSheet -> {
+        val sheetOpenedFrom = ScheduleAppointmentSheet.sheetOpenedFrom(result)
+        additionalEvents.notify(ScheduledAppointment(sheetOpenedFrom))
+      }
+      is ScreenRequest.SelectFacility -> {
+        val selectedFacility = (result.result as FacilitySelectionScreen.SelectedFacility).facility
+        additionalEvents.notify(NewAssignedFacilitySelected(selectedFacility))
+      }
     }
   }
 

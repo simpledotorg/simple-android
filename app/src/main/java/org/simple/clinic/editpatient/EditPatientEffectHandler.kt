@@ -69,7 +69,7 @@ class EditPatientEffectHandler @AssistedInject constructor(
         .addTransformer(SavePatientEffect::class.java, savePatientTransformer(schedulersProvider.io()))
         .addTransformer(LoadInputFields::class.java, loadInputFields())
         .addTransformer(FetchColonyOrVillagesEffect::class.java, fetchColonyOrVillages())
-        .addConsumer(EditPatientViewEffect::class.java, viewEffectHandler::handle)
+        .addConsumer(EditPatientViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 

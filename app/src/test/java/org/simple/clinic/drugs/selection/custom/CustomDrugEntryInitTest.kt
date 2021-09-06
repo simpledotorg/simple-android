@@ -21,7 +21,7 @@ class CustomDrugEntryInitTest {
         .whenInit(model)
         .then(
             assertThatFirst(
-                hasModel(model.customDrugEntryProgressStateLoading()),
+                hasModel(model.drugInfoProgressStateLoading()),
                 hasEffects(FetchDrug(drugUuid), LoadDrugFrequencyChoiceItems)
             )
         )
@@ -35,7 +35,7 @@ class CustomDrugEntryInitTest {
         .whenInit(model)
         .then(
             assertThatFirst(
-                hasModel(model.drugNameLoaded(drugName).customDrugEntryProgressStateLoaded()),
+                hasModel(model.drugNameLoaded(drugName).drugInfoProgressStateLoaded()),
                 hasEffects(LoadDrugFrequencyChoiceItems)
             )
         )
@@ -50,7 +50,7 @@ class CustomDrugEntryInitTest {
         .whenInit(model)
         .then(
             assertThatFirst(
-                hasModel(model.customDrugEntryProgressStateLoading()),
+                hasModel(model.drugInfoProgressStateLoading()),
                 hasEffects(FetchPrescription(prescribedDrugUuid), LoadDrugFrequencyChoiceItems)
             )
         )

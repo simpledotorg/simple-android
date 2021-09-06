@@ -68,11 +68,11 @@ data class CustomDrugEntryModel(
     return copy(drugFrequencyToFrequencyChoiceItemMap = drugFrequencyToFrequencyChoiceItemMap)
   }
 
-  fun customDrugEntryProgressStateLoaded(): CustomDrugEntryModel {
+  fun drugInfoProgressStateLoaded(): CustomDrugEntryModel {
     return copy(drugInfoProgressState = DONE)
   }
 
-  fun customDrugEntryProgressStateLoading(): CustomDrugEntryModel {
+  fun drugInfoProgressStateLoading(): CustomDrugEntryModel {
     return copy(drugInfoProgressState = IN_PROGRESS)
   }
 }

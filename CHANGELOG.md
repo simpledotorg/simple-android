@@ -15,6 +15,7 @@
 - Bump Dagger to v2.38.1
 - [In Progress: 31 Aug 2021] Record call results instead of updating the same appointment record
 - [In Progress: 31 Aug 2021] Refactor logic around providing drug frequencies label depending on the country
+- [In Progress: 2 Sep 2021] Add a progress state in `CustomDrugEntrySheet`
 
 ### Features
 - [In-progress: 02 Sep 2021] Add support for state selection after selecting country

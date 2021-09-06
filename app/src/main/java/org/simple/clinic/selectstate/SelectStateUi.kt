@@ -6,4 +6,5 @@ interface SelectStateUi {
   fun showStates(states: List<State>, selectedState: State?)
   fun showNextButton()
   fun hideStates()
+  fun showNetworkErrorMessage()
 }

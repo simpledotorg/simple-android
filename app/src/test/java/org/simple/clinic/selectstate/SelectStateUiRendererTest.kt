@@ -55,4 +55,19 @@ class SelectStateUiRendererTest {
     verify(ui).hideStates()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when states are failed to load with network error, then show network error message`() {
+    // given
+    val failedToLoadStatesModel = defaultModel
+        .failedToLoadStates(StatesFetchError.NetworkError)
+
+    // when
+    uiRenderer.render(failedToLoadStatesModel)
+
+    // then
+    verify(ui).hideStates()
+    verify(ui).showNetworkErrorMessage()
+    verifyNoMoreInteractions(ui)
+  }
 }

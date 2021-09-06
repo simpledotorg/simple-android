@@ -1,6 +1,7 @@
 package org.simple.clinic.selectstate
 
 import org.simple.clinic.mobius.ViewRenderer
+import org.simple.clinic.selectstate.StatesFetchError.NetworkError
 
 class SelectStateUiRenderer(
     private val ui: SelectStateUi
@@ -12,6 +13,10 @@ class SelectStateUiRenderer(
       renderNextButton(model)
     } else {
       ui.hideStates()
+    }
+
+    when (model.statesFetchError) {
+      NetworkError -> ui.showNetworkErrorMessage()
     }
   }
 

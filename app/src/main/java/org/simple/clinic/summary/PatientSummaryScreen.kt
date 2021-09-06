@@ -24,7 +24,6 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.cast
-import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
@@ -50,8 +49,6 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.displayLetterRes
-import org.simple.clinic.router.ScreenResultBus
-import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionScreen
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
@@ -61,7 +58,6 @@ import org.simple.clinic.summary.teleconsultation.messagebuilder.LongTeleconsult
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.teleconsultlog.teleconsultrecord.screen.TeleconsultRecordScreenKey
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.messagesender.WhatsAppMessageSender
 import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.toLocalDateAtZone
@@ -157,9 +153,6 @@ class PatientSummaryScreen :
   lateinit var router: Router
 
   @Inject
-  lateinit var screenResults: ScreenResultBus
-
-  @Inject
   lateinit var activity: AppCompatActivity
 
   @Inject
@@ -215,7 +208,6 @@ class PatientSummaryScreen :
             snackbarActionClicks,
             logTeleconsultClicks(),
             changeAssignedFacilityClicks(),
-            assignedFacilitySelected()
         )
         .compose(ReportAnalyticsEvents())
         .cast()
@@ -340,14 +332,6 @@ class PatientSummaryScreen :
 
       emitter.setCancellable { assignedFacilityView.changeAssignedFacilityClicks = null }
     }
-  }
-
-  private fun assignedFacilitySelected(): Observable<PatientSummaryEvent> {
-    return screenResults
-        .streamResults()
-        .ofType<ActivityResult>()
-        .extractSuccessful(ASSIGNED_FACILITY_SELECTION, FacilitySelectionScreen.Companion::selectedFacility)
-        .map(::NewAssignedFacilitySelected)
   }
 
   override fun onBackPressed(): Boolean {

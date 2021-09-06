@@ -26,7 +26,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       is PrescribedDrugFetched -> prescriptionFetched(model, event.prescription)
       is RemoveDrugButtonClicked -> {
         val update = model.openAs as OpenAs.Update
-        dispatch(RemoveDrugFromPrescription(update.prescribedDrugUuid))
+        next(model.drugInfoProgressStateLoading(), RemoveDrugFromPrescription(update.prescribedDrugUuid))
       }
       is DrugFetched -> drugFetched(model, event.drug)
       is DrugFrequencyChoiceItemsLoaded -> drugFrequencyChoiceItemsLoaded(model, event)

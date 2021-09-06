@@ -193,7 +193,7 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
-  fun `when remove button is clicked, then remove the drug from the custom drug list`() {
+  fun `when remove button is clicked, then remove the drug from the custom drug list and set the screen in progress state`() {
     val prescribedDrugId = UUID.fromString("59842701-d7dd-4206-88a9-9f6f2460e496")
     val model = CustomDrugEntryModel.default(openAs = OpenAs.Update(prescribedDrugId), dosagePlaceholder)
 
@@ -201,7 +201,7 @@ class CustomDrugEntryUpdateTest {
         .given(model)
         .whenEvent(RemoveDrugButtonClicked)
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(model.drugInfoProgressStateLoading()),
             hasEffects(RemoveDrugFromPrescription(drugUuid = prescribedDrugId))
         ))
   }

@@ -9,13 +9,6 @@ import java.util.UUID
 
 sealed class EditPatientEffect
 
-data class PrefillFormEffect(
-    val patient: Patient,
-    val address: PatientAddress,
-    val phoneNumber: PatientPhoneNumber?,
-    val alternativeId: BusinessId?
-) : EditPatientEffect()
-
 data class HideValidationErrorsEffect(
     val validationErrors: Set<EditPatientValidationError>
 ) : EditPatientEffect()
@@ -51,3 +44,10 @@ data class SetupUi(val inputFields: InputFields) : EditPatientEffect()
 object FetchColonyOrVillagesEffect : EditPatientEffect()
 
 sealed class EditPatientViewEffect : EditPatientEffect()
+
+data class PrefillFormEffect(
+    val patient: Patient,
+    val address: PatientAddress,
+    val phoneNumber: PatientPhoneNumber?,
+    val alternativeId: BusinessId?
+) : EditPatientViewEffect()

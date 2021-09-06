@@ -18,8 +18,6 @@ import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientAgeDetails
-import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
-import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
@@ -64,7 +62,6 @@ class EditPatientEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<EditPatientEffect, EditPatientEvent> {
     return RxMobius
         .subtypeEffectHandler<EditPatientEffect, EditPatientEvent>()
-        .addConsumer(PrefillFormEffect::class.java, ::prefillFormFields, schedulersProvider.ui())
         .addConsumer(DisplayBpPassportsEffect::class.java, { displayBpPassports(it.bpPassports) }, schedulersProvider.ui())
         .addConsumer(ShowValidationErrorsEffect::class.java, ::showValidationErrors, schedulersProvider.ui())
         .addConsumer(HideValidationErrorsEffect::class.java, { ui.hideValidationErrors(it.validationErrors) }, schedulersProvider.ui())
@@ -93,37 +90,6 @@ class EditPatientEffectHandler @AssistedInject constructor(
   private fun displayBpPassports(bpPassports: List<BusinessId>) {
     val identifiers = bpPassports.map { it.identifier.displayValue() }
     ui.displayBpPassports(identifiers)
-  }
-
-  private fun prefillFormFields(prefillFormFieldsEffect: PrefillFormEffect) {
-    val (patient, address, phoneNumber, alternateId) = prefillFormFieldsEffect
-
-    with(ui) {
-      setPatientName(patient.fullName)
-      setGender(patient.gender)
-      setState(address.state)
-      setDistrict(address.district)
-      setStreetAddress(address.streetAddress)
-      setZone(address.zone)
-
-      if (address.colonyOrVillage.isNullOrBlank().not()) {
-        setColonyOrVillage(address.colonyOrVillage!!)
-      }
-
-      if (phoneNumber != null) {
-        setPatientPhoneNumber(phoneNumber.number)
-      }
-
-      if (alternateId != null) {
-        setAlternateId(alternateId.identifier)
-      }
-    }
-
-    val dateOfBirth = patient.ageDetails
-    when (dateOfBirth.type) {
-      EXACT -> ui.setPatientDateOfBirth(dateOfBirth.approximateDateOfBirth(userClock))
-      FROM_AGE -> ui.setPatientAge(dateOfBirth.estimateAge(userClock))
-    }
   }
 
   private fun showValidationErrors(effect: ShowValidationErrorsEffect) {

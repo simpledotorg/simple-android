@@ -20,7 +20,7 @@
 - [In Progress: 2 Sep 2021] Add a progress state in `CustomDrugEntrySheet`
 
 ### Features
-- [In-progress: 06 Sep 2021] Add support for state selection after selecting country
+- [In-progress: 07 Sep 2021] Add support for state selection after selecting country
 
 ### Changes
 - Implement providing drug frequencies label depending on the country

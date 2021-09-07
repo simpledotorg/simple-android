@@ -33,7 +33,7 @@ class EnterOtpUpdateTest {
         .whenEvent(LoginUserCompleted(result))
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(loginStartedModel.loginFailed()),
                 hasEffects(FailedLoginOtpAttempt(result), ClearPin)
             )
         )
@@ -47,7 +47,7 @@ class EnterOtpUpdateTest {
         .whenEvent(LoginUserCompleted(result))
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(loginStartedModel.loginFailed()),
                 hasEffects(ShowNetworkError, ClearPin)
             )
         )
@@ -61,7 +61,7 @@ class EnterOtpUpdateTest {
         .whenEvent(LoginUserCompleted(result))
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(loginStartedModel.loginFailed()),
                 hasEffects(ShowUnexpectedError, ClearPin)
             )
         )

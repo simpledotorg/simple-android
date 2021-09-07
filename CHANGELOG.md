@@ -27,7 +27,7 @@
   - Update drug frequency edit text ui
 - Add ellipsis to long drug name in `PatientSummaryScreen` & `EditMedicineScreen`
 - Add a unicode character instead of space in `DrugSearchScreen` search results
-- Updated translations: `mr-IN`, `bn-IN`, `bn-BD`
+- Updated translations: `mr-IN`, `bn-IN`, `bn-BD`, `kn-IN`
 - [In Progress: 19 Aug 2021] UI improvements for medical history screen
   - Show hypertension diagnosis and treatment in single card
   - Show separate cards for hypertension and diabetes diagnosis

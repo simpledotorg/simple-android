@@ -34,7 +34,7 @@ class EditMedicinesUiRenderer(private val ui: EditMedicinesUi) : ViewRenderer<Ed
   ) {
     val (prescribedProtocolDrugs, prescribedCustomDrugs) = prescribedDrugs.partition(model::isProtocolDrug)
 
-    val protocolDrugSelectionItems = protocolDrugSelectionItems(protocolDrugs, prescribedProtocolDrugs)
+    val protocolDrugSelectionItems = protocolDrugSelectionItems(protocolDrugs, prescribedProtocolDrugs, model.medicineFrequencyToFrequencyChoiceItemMap!!)
     val customPrescribedDrugItems = customPrescribedDrugItems(prescribedCustomDrugs, model.medicineFrequencyToFrequencyChoiceItemMap!!)
     val drugsList = (protocolDrugSelectionItems + customPrescribedDrugItems)
         .sortedByDescending { it.prescribedDrug?.updatedAt }
@@ -66,7 +66,8 @@ class EditMedicinesUiRenderer(private val ui: EditMedicinesUi) : ViewRenderer<Ed
 
   private fun protocolDrugSelectionItems(
       protocolDrugs: List<ProtocolDrugAndDosages>,
-      prescribedProtocolDrugs: List<PrescribedDrug>
+      prescribedProtocolDrugs: List<PrescribedDrug>,
+      medicineFrequencyToFrequencyChoiceItemMap: Map<MedicineFrequency?, DrugFrequencyChoiceItem>
   ): List<ProtocolDrugListItem> {
     // Show dosage if prescriptions exist for them.
     return protocolDrugs
@@ -77,7 +78,8 @@ class EditMedicinesUiRenderer(private val ui: EditMedicinesUi) : ViewRenderer<Ed
               id = index,
               drugName = drugAndDosages.drugName,
               prescribedDrug = matchingPrescribedDrug,
-              hasTopCorners = false
+              hasTopCorners = false,
+              medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap
           )
         }
   }

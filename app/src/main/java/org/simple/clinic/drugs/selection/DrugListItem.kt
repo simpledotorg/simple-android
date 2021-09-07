@@ -32,7 +32,8 @@ data class ProtocolDrugListItem(
     val id: Int,
     val drugName: String,
     override val prescribedDrug: PrescribedDrug?,
-    val hasTopCorners: Boolean
+    val hasTopCorners: Boolean,
+    val medicineFrequencyToFrequencyChoiceItemMap: Map<MedicineFrequency?, DrugFrequencyChoiceItem>
 ) : DrugListItem(prescribedDrug) {
 
   override fun layoutResId() = R.layout.list_prescribeddrugs_protocol_drug

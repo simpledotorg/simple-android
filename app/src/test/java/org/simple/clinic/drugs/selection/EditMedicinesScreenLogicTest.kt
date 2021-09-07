@@ -175,7 +175,8 @@ class EditMedicinesScreenLogicTest {
             id = 0,
             drugName = amlodipine10mg.name,
             prescribedDrug = amlodipine10mgPrescription,
-            hasTopCorners = true),
+            hasTopCorners = true,
+            medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
         CustomPrescribedDrugListItem(prescribedDrug = telmisartan9000mgPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
         CustomPrescribedDrugListItem(prescribedDrug = reesesPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
         CustomPrescribedDrugListItem(prescribedDrug = fooPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
@@ -184,7 +185,8 @@ class EditMedicinesScreenLogicTest {
             id = 1,
             drugName = telmisartan40mg.name,
             prescribedDrug = null,
-            hasTopCorners = false))
+            hasTopCorners = false,
+            medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap))
 
     verify(ui).populateDrugsList(expectedUiModels)
   }

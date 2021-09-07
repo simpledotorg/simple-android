@@ -1,7 +1,9 @@
 package org.simple.clinic.selectstate
 
+import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import okhttp3.MediaType.Companion.toMediaType
@@ -44,6 +46,72 @@ class SelectStateUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.failedToLoadStates(StatesFetchError.ServerError)),
             hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when state is saved, then go to registration screen`() {
+    val andhraPradesh = TestData.state(displayName = "Andhra Pradesh")
+    val kerala = TestData.state(displayName = "Kerala")
+    val states = listOf(andhraPradesh, kerala)
+    val statesLoadedModel = defaultModel
+        .statesLoaded(states)
+        .stateChanged(andhraPradesh)
+
+    updateSpec
+        .given(statesLoadedModel)
+        .whenEvent(StateSaved)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoToRegistrationScreen)
+        ))
+  }
+
+  @Test
+  fun `when retry button is clicked, then load states`() {
+    val cause = serverError()
+    val error = StatesFetchError.fromResolvedError(ServerError(cause))
+    val failedToLoadStatesModel = defaultModel
+        .failedToLoadStates(error)
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(RetryButtonClicked)
+        .then(assertThatNext(
+            hasModel(failedToLoadStatesModel.loadingStates()),
+            hasEffects(LoadStates)
+        ))
+  }
+
+  @Test
+  fun `when state is selected, then update the model`() {
+    val state = TestData.state(displayName = "Andhra Pradesh")
+    val states = listOf(state)
+    val statesLoadedModel = defaultModel.statesLoaded(states)
+
+    updateSpec
+        .given(statesLoadedModel)
+        .whenEvent(StateChanged(state))
+        .then(assertThatNext(
+            hasModel(statesLoadedModel.stateChanged(state)),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when next is clicked, then save state`() {
+    val state = TestData.state(displayName = "Andhra Pradesh")
+    val states = listOf(state)
+    val stateSelectedModel = defaultModel
+        .statesLoaded(states)
+        .stateChanged(state)
+
+    updateSpec
+        .given(stateSelectedModel)
+        .whenEvent(NextClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(SaveSelectedState(state))
         ))
   }
 

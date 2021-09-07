@@ -357,6 +357,7 @@
   <string name="otpentry_error_incorrect_otp_attempts_limit_reached" tools:ignore="PluralsCandidate">You have made %s incorrect attempts</string>
   <string name="otpentry_error_incorrect_otp_attempt">Incorrect code, please try again</string>
   <string name="otpentry_error_incorrect_otp_attempts_remaining">Incorrect code, %s attempts remaining</string>
+  <string name="otpentry_bruteforcelock_timer" translatable="false">%1$s:%2$s</string> <!-- minutes:seconds -->
 
   <!-- Schedule appointment -->
   <string name="scheduleappointment_next_visit_in">Schedule next visit in</string>

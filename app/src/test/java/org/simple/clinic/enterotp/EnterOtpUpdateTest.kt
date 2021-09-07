@@ -1,6 +1,7 @@
 package org.simple.clinic.enterotp
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
+import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
@@ -31,7 +32,7 @@ class EnterOtpUpdateTest {
         .whenEvent(LoginUserCompleted(result))
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(loginStartedModel.loginFailed()),
                 hasEffects(FailedLoginOtpAttempt(result), ClearPin)
             )
         )
@@ -45,7 +46,7 @@ class EnterOtpUpdateTest {
         .whenEvent(LoginUserCompleted(result))
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(loginStartedModel.loginFailed()),
                 hasEffects(ShowNetworkError, ClearPin)
             )
         )
@@ -59,7 +60,7 @@ class EnterOtpUpdateTest {
         .whenEvent(LoginUserCompleted(result))
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(loginStartedModel.loginFailed()),
                 hasEffects(ShowUnexpectedError, ClearPin)
             )
         )

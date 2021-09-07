@@ -10,10 +10,9 @@
 - Remove `Country_Old`
 - Fetch states for selected country deployments
 - Remove login failed errors from UiRenderer, and add via effect handler when logging in
-- Move opening of facility selection screen to `PatientSummaryScreen` from `AssignedFacilityView`  
 - Replace deprecated platform `PreferenceManager` usage with AndroidX preference
 - Bump Dagger to v2.38.1
-- Change `FacilitySelectionScreen` to be part of the navigation graph  
+- Bump AGP to v7.0.2
 - [In Progress: 31 Aug 2021] Record call results instead of updating the same appointment record
 - [In Progress: 31 Aug 2021] Refactor logic around providing drug frequencies label depending on the country
 - [In Progress: 2 Sep 2021] Add a progress state in `CustomDrugEntrySheet`

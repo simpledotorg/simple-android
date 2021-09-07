@@ -83,6 +83,21 @@ class SelectStateUpdateTest {
         ))
   }
 
+  @Test
+  fun `when state is selected, then update the model`() {
+    val state = TestData.state(displayName = "Andhra Pradesh")
+    val states = listOf(state)
+    val statesLoadedModel = defaultModel.statesLoaded(states)
+
+    updateSpec
+        .given(statesLoadedModel)
+        .whenEvent(StateChanged(state))
+        .then(assertThatNext(
+            hasModel(statesLoadedModel.stateChanged(state)),
+            hasNoEffects()
+        ))
+  }
+
   private fun serverError(): HttpException {
     val response = Response.error<String>(
         401,

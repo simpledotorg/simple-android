@@ -19,6 +19,7 @@ class SelectStateUpdate : Update<SelectStateModel, SelectStateEvent, SelectState
           model.loadingStates(),
           LoadStates
       )
+      is StateChanged -> next(model.stateChanged(event.state))
     }
   }
 }

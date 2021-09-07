@@ -92,9 +92,9 @@ class EditMedicinesUiRendererTest {
             drugName = amlodipine10mg.name,
             prescribedDrug = amlodipine10mgPrescription,
             hasTopCorners = true),
-        CustomPrescribedDrugListItem(prescribedDrug = telmisartan40mgPrescription, hasTopCorners = false),
-        CustomPrescribedDrugListItem(prescribedDrug = fooPrescription, hasTopCorners = false),
-        CustomPrescribedDrugListItem(prescribedDrug = barPrescription, hasTopCorners = false))
+        CustomPrescribedDrugListItem(prescribedDrug = telmisartan40mgPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
+        CustomPrescribedDrugListItem(prescribedDrug = fooPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
+        CustomPrescribedDrugListItem(prescribedDrug = barPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap))
 
     verify(ui).populateDrugsList(drugsList)
     verify(ui).showDoneButton()
@@ -162,9 +162,9 @@ class EditMedicinesUiRendererTest {
             drugName = amlodipine10mg.name,
             prescribedDrug = amlodipine10mgPrescription,
             hasTopCorners = true),
-        CustomPrescribedDrugListItem(prescribedDrug = telmisartan40mgPrescription, hasTopCorners = false),
-        CustomPrescribedDrugListItem(prescribedDrug = fooPrescription, hasTopCorners = false),
-        CustomPrescribedDrugListItem(prescribedDrug = barPrescription, hasTopCorners = false))
+        CustomPrescribedDrugListItem(prescribedDrug = telmisartan40mgPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
+        CustomPrescribedDrugListItem(prescribedDrug = fooPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
+        CustomPrescribedDrugListItem(prescribedDrug = barPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap))
 
     verify(ui).populateDrugsList(drugsList)
     verify(ui).showDoneButton()
@@ -232,9 +232,9 @@ class EditMedicinesUiRendererTest {
             drugName = amlodipine10mg.name,
             prescribedDrug = amlodipine10mgPrescription,
             hasTopCorners = true),
-        CustomPrescribedDrugListItem(prescribedDrug = telmisartan40mgPrescription, hasTopCorners = false),
-        CustomPrescribedDrugListItem(prescribedDrug = fooPrescription, hasTopCorners = false),
-        CustomPrescribedDrugListItem(prescribedDrug = barPrescription, hasTopCorners = false))
+        CustomPrescribedDrugListItem(prescribedDrug = telmisartan40mgPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
+        CustomPrescribedDrugListItem(prescribedDrug = fooPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
+        CustomPrescribedDrugListItem(prescribedDrug = barPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap))
 
     verify(ui).populateDrugsList(drugsList)
     verify(ui).showRefillMedicineButton()
@@ -296,9 +296,9 @@ class EditMedicinesUiRendererTest {
 
     // then
     val drugsList = listOf(
-        CustomPrescribedDrugListItem(prescribedDrug = telmisartan40mgPrescription, hasTopCorners = true),
-        CustomPrescribedDrugListItem(prescribedDrug = fooPrescription, hasTopCorners = false),
-        CustomPrescribedDrugListItem(prescribedDrug = barPrescription, hasTopCorners = false),
+        CustomPrescribedDrugListItem(prescribedDrug = telmisartan40mgPrescription, hasTopCorners = true, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
+        CustomPrescribedDrugListItem(prescribedDrug = fooPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
+        CustomPrescribedDrugListItem(prescribedDrug = barPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
         ProtocolDrugListItem(id = 0, drugName = amlodipine10mg.name, prescribedDrug = null, hasTopCorners = false))
 
     verify(ui).populateDrugsList(drugsList)

@@ -8,6 +8,8 @@ import org.simple.clinic.databinding.ListPrescribeddrugsCustomDrugBinding
 import org.simple.clinic.databinding.ListPrescribeddrugsNewCustomDrugBinding
 import org.simple.clinic.databinding.ListPrescribeddrugsProtocolDrugBinding
 import org.simple.clinic.drugs.PrescribedDrug
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
+import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.dp
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
@@ -58,7 +60,8 @@ data class ProtocolDrugListItem(
 
 data class CustomPrescribedDrugListItem(
     override val prescribedDrug: PrescribedDrug,
-    val hasTopCorners: Boolean
+    val hasTopCorners: Boolean,
+    val medicineFrequencyToFrequencyChoiceItemMap: Map<MedicineFrequency?, DrugFrequencyChoiceItem>?
 ) : DrugListItem(prescribedDrug) {
 
   override fun layoutResId() = R.layout.list_prescribeddrugs_custom_drug

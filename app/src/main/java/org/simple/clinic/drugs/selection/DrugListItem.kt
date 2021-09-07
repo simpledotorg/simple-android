@@ -61,7 +61,7 @@ data class ProtocolDrugListItem(
 data class CustomPrescribedDrugListItem(
     override val prescribedDrug: PrescribedDrug,
     val hasTopCorners: Boolean,
-    val medicineFrequencyToFrequencyChoiceItemMap: Map<MedicineFrequency?, DrugFrequencyChoiceItem>?
+    val medicineFrequencyToFrequencyChoiceItemMap: Map<MedicineFrequency?, DrugFrequencyChoiceItem>
 ) : DrugListItem(prescribedDrug) {
 
   override fun layoutResId() = R.layout.list_prescribeddrugs_custom_drug
@@ -72,7 +72,10 @@ data class CustomPrescribedDrugListItem(
     viewBinding.prescribeddrugItemCustomdrugName.text = prescribedDrug.name
     viewBinding.prescribeddrugItemCustomdrugName.isChecked = true
 
-    viewBinding.prescribeddrugItemCustomdrugDosage.text = prescribedDrug.dosage
+    val medicineFrequency = if (prescribedDrug.frequency == null) "" else medicineFrequencyToFrequencyChoiceItemMap[prescribedDrug.frequency]!!.label
+    val dosage = prescribedDrug.dosage
+    val dosageAndFrequency = "$dosage, $medicineFrequency"
+    viewBinding.protocoldrugItemDosageAndFrequency.text = dosageAndFrequency
 
     viewBinding.root.setOnClickListener {
       subject.onNext(DrugListItemClicked.CustomPrescriptionClicked(prescribedDrug))

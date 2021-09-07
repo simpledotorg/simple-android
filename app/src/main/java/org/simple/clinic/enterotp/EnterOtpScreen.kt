@@ -2,10 +2,13 @@ package org.simple.clinic.enterotp
 
 import android.content.Context
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
@@ -22,9 +25,14 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
+import java.time.Duration
+import java.time.Instant
 import javax.inject.Inject
 
 class EnterOtpScreen : BaseScreen<
@@ -35,6 +43,12 @@ class EnterOtpScreen : BaseScreen<
     EnterOtpEffect,
     Unit>(), EnterOtpUi, EnterOtpUiActions {
 
+  companion object {
+    private const val MILLIS_IN_SECOND = 1000L
+    private const val SECONDS_IN_HOUR = 3600L
+    private const val SECONDS_IN_MINUTE = 60L
+  }
+
   @Inject
   lateinit var router: Router
 
@@ -43,6 +57,9 @@ class EnterOtpScreen : BaseScreen<
 
   @Inject
   lateinit var effectHandlerFactory: EnterOtpEffectHandler.Factory
+
+  @Inject
+  lateinit var utcClock: UtcClock
 
   private val otpEntryEditText
     get() = binding.otpEntryEditText
@@ -70,6 +87,18 @@ class EnterOtpScreen : BaseScreen<
 
   private val rootLayout
     get() = binding.rootLayout
+
+  private val otpEntryAndLockViewFlipper
+    get() = binding.OtpEntryAndLockViewFlipper
+
+  private val timeRemainingTillUnlockTextView
+    get() = binding.timeRemainingTillUnlockTextView
+
+  private var otpEntryLockedCountdown: CountDownTimer? = null
+    set(value) {
+      field?.cancel()
+      field = value
+    }
 
   override fun defaultModel() = EnterOtpModel.create()
 
@@ -182,6 +211,26 @@ class EnterOtpScreen : BaseScreen<
     smsSentTextView.visibility = View.VISIBLE
   }
 
+  override fun showOtpEntryMode(mode: OtpEntryMode) {
+    val transition = AutoTransition()
+        .setOrdering(AutoTransition.ORDERING_TOGETHER)
+        .setDuration(200)
+        .setInterpolator(FastOutSlowInInterpolator())
+        .removeTarget(errorTextView)
+    TransitionManager.beginDelayedTransition(rootLayout, transition)
+
+    otpEntryAndLockViewFlipper.displayedChildResId = when (mode) {
+      is OtpEntryMode.BruteForceOtpEntryLocked -> R.id.otpentry_bruteforcelock
+      OtpEntryMode.OtpEntry -> R.id.otpEntryEditText
+    }
+
+    if (mode is OtpEntryMode.BruteForceOtpEntryLocked) {
+      val timer = startTimerCountdown(mode.lockUntil)
+      timer.start()
+      otpEntryLockedCountdown = timer
+    }
+  }
+
   override fun showLimitReachedError(attemptsMade: Int) {
     showError(resources.getString(R.string.otpentry_error_incorrect_otp_attempts_limit_reached, attemptsMade.toString()))
   }
@@ -197,6 +246,33 @@ class EnterOtpScreen : BaseScreen<
 
   override fun clearPin() {
     otpEntryEditText.text = null
+  }
+
+  private fun startTimerCountdown(until: Instant): CountDownTimer {
+    val timeRemaining = Duration.between(Instant.now(utcClock), until).toMillis()
+
+    return object : CountDownTimer(timeRemaining, MILLIS_IN_SECOND) {
+
+      override fun onFinish() {
+        /* Nothing to do here */
+      }
+
+      override fun onTick(millisUntilFinished: Long) {
+        val secondsRemaining = millisUntilFinished / MILLIS_IN_SECOND
+
+        val minutes = (secondsRemaining % SECONDS_IN_HOUR / SECONDS_IN_MINUTE).toString()
+        val seconds = (secondsRemaining % SECONDS_IN_MINUTE).toString()
+
+        val minutesWithPadding = minutes.padStart(2, padChar = '0')
+        val secondsWithPadding = seconds.padStart(2, padChar = '0')
+
+        timeRemainingTillUnlockTextView.text = resources.getString(
+            R.string.otpentry_bruteforcelock_timer,
+            minutesWithPadding,
+            secondsWithPadding
+        )
+      }
+    }
   }
 
   interface Injector {

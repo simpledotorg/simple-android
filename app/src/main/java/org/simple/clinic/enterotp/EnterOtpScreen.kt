@@ -224,6 +224,11 @@ class EnterOtpScreen : BaseScreen<
       OtpEntryMode.OtpEntry -> R.id.otpEntryEditText
     }
 
+    when (mode) {
+      is OtpEntryMode.OtpEntry -> otpEntryEditText.showKeyboard()
+      is OtpEntryMode.BruteForceOtpEntryLocked -> rootLayout.hideKeyboard()
+    }.exhaustive()
+
     if (mode is OtpEntryMode.BruteForceOtpEntryLocked) {
       val timer = startTimerCountdown(mode.lockUntil)
       timer.start()

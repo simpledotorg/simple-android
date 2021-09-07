@@ -10,4 +10,5 @@ interface SelectStateUi {
   fun showServerErrorMessage()
   fun showGenericErrorMessage()
   fun hideErrorView()
+  fun showProgress()
 }

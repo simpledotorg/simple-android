@@ -10,6 +10,10 @@ class SelectStateUiRenderer(
 ) : ViewRenderer<SelectStateModel> {
 
   override fun render(model: SelectStateModel) {
+    if (model.isFetching) {
+      ui.showProgress()
+    }
+
     if (model.hasStates) {
       ui.showStates(model.states!!, model.selectedState)
       renderNextButton(model)

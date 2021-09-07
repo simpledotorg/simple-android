@@ -20,6 +20,9 @@ data class SelectStateModel(
   val hasStates
     get() = states != null
 
+  val isFetching
+    get() = states == null && statesFetchError == null
+
   companion object {
 
     fun create() = SelectStateModel(

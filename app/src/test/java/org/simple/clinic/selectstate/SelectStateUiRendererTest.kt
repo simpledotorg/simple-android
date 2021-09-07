@@ -92,4 +92,16 @@ class SelectStateUiRendererTest {
     verify(ui).showGenericErrorMessage()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when states are being fetched, then show the progress bar`() {
+    // when
+    uiRenderer.render(defaultModel)
+
+    // then
+    verify(ui).showProgress()
+    verify(ui).hideStates()
+    verify(ui).hideErrorView()
+    verifyNoMoreInteractions(ui)
+  }
 }

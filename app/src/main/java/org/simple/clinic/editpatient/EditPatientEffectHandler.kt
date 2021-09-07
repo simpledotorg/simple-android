@@ -1,5 +1,6 @@
 package org.simple.clinic.editpatient
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -15,8 +16,6 @@ import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
-import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
-import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientAgeDetails
@@ -29,19 +28,16 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.user.User
-import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.uuid.UuidGenerator
-import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Named
 
 class EditPatientEffectHandler @AssistedInject constructor(
-    private val userClock: UserClock,
     private val patientRepository: PatientRepository,
     private val utcClock: UtcClock,
     private val schedulersProvider: SchedulersProvider,
@@ -50,30 +46,24 @@ class EditPatientEffectHandler @AssistedInject constructor(
     private val currentUser: Lazy<User>,
     private val inputFieldsFactory: InputFieldsFactory,
     @Named("date_for_user_input") private val dateOfBirthFormatter: DateTimeFormatter,
-    @Assisted private val ui: EditPatientUi
+    @Assisted private val viewEffectsConsumer: Consumer<EditPatientViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(ui: EditPatientUi): EditPatientEffectHandler
+    fun create(
+        viewEffectsConsumer: Consumer<EditPatientViewEffect>
+    ): EditPatientEffectHandler
   }
 
   fun build(): ObservableTransformer<EditPatientEffect, EditPatientEvent> {
     return RxMobius
         .subtypeEffectHandler<EditPatientEffect, EditPatientEvent>()
-        .addConsumer(PrefillFormEffect::class.java, ::prefillFormFields, schedulersProvider.ui())
-        .addConsumer(DisplayBpPassportsEffect::class.java, { displayBpPassports(it.bpPassports) }, schedulersProvider.ui())
-        .addConsumer(ShowValidationErrorsEffect::class.java, ::showValidationErrors, schedulersProvider.ui())
-        .addConsumer(HideValidationErrorsEffect::class.java, { ui.hideValidationErrors(it.validationErrors) }, schedulersProvider.ui())
-        .addAction(ShowDatePatternInDateOfBirthLabelEffect::class.java, ui::showDatePatternInDateOfBirthLabel, schedulersProvider.ui())
-        .addAction(HideDatePatternInDateOfBirthLabelEffect::class.java, ui::hideDatePatternInDateOfBirthLabel, schedulersProvider.ui())
-        .addAction(GoBackEffect::class.java, ui::goBack, schedulersProvider.ui())
-        .addAction(ShowDiscardChangesAlertEffect::class.java, ui::showDiscardChangesAlert, schedulersProvider.ui())
         .addTransformer(FetchBpPassportsEffect::class.java, fetchBpPassports(schedulersProvider.io()))
         .addTransformer(SavePatientEffect::class.java, savePatientTransformer(schedulersProvider.io()))
         .addTransformer(LoadInputFields::class.java, loadInputFields())
-        .addConsumer(SetupUi::class.java, { ui.setupUi(it.inputFields) }, schedulersProvider.ui())
         .addTransformer(FetchColonyOrVillagesEffect::class.java, fetchColonyOrVillages())
+        .addConsumer(EditPatientViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 
@@ -82,50 +72,6 @@ class EditPatientEffectHandler @AssistedInject constructor(
       fetchColonyOrVillagesEffect
           .map { patientRepository.allColoniesOrVillagesInPatientAddress() }
           .map(::ColonyOrVillagesFetched)
-    }
-  }
-
-
-  private fun displayBpPassports(bpPassports: List<BusinessId>) {
-    val identifiers = bpPassports.map { it.identifier.displayValue() }
-    ui.displayBpPassports(identifiers)
-  }
-
-  private fun prefillFormFields(prefillFormFieldsEffect: PrefillFormEffect) {
-    val (patient, address, phoneNumber, alternateId) = prefillFormFieldsEffect
-
-    with(ui) {
-      setPatientName(patient.fullName)
-      setGender(patient.gender)
-      setState(address.state)
-      setDistrict(address.district)
-      setStreetAddress(address.streetAddress)
-      setZone(address.zone)
-
-      if (address.colonyOrVillage.isNullOrBlank().not()) {
-        setColonyOrVillage(address.colonyOrVillage!!)
-      }
-
-      if (phoneNumber != null) {
-        setPatientPhoneNumber(phoneNumber.number)
-      }
-
-      if (alternateId != null) {
-        setAlternateId(alternateId.identifier)
-      }
-    }
-
-    val dateOfBirth = patient.ageDetails
-    when (dateOfBirth.type) {
-      EXACT -> ui.setPatientDateOfBirth(dateOfBirth.approximateDateOfBirth(userClock))
-      FROM_AGE -> ui.setPatientAge(dateOfBirth.estimateAge(userClock))
-    }
-  }
-
-  private fun showValidationErrors(effect: ShowValidationErrorsEffect) {
-    with(ui) {
-      showValidationErrors(effect.validationErrors)
-      scrollToFirstFieldWithError()
     }
   }
 
@@ -194,7 +140,10 @@ class EditPatientEffectHandler @AssistedInject constructor(
         .withAgeDetails(ageDetails)
   }
 
-  private fun coerceAgeFrom(recordedAgeDetails: PatientAgeDetails, enteredAge: String): PatientAgeDetails {
+  private fun coerceAgeFrom(
+      recordedAgeDetails: PatientAgeDetails,
+      enteredAge: String
+  ): PatientAgeDetails {
     val enteredAgeValue = enteredAge.toInt()
     return when {
       recordedAgeDetails.doesRecordedAgeMatch(enteredAgeValue) -> recordedAgeDetails

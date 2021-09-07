@@ -9,32 +9,7 @@ import java.util.UUID
 
 sealed class EditPatientEffect
 
-data class PrefillFormEffect(
-    val patient: Patient,
-    val address: PatientAddress,
-    val phoneNumber: PatientPhoneNumber?,
-    val alternativeId: BusinessId?
-) : EditPatientEffect()
-
-data class HideValidationErrorsEffect(
-    val validationErrors: Set<EditPatientValidationError>
-) : EditPatientEffect()
-
 data class FetchBpPassportsEffect(val patientUuid: UUID) : EditPatientEffect()
-
-data class DisplayBpPassportsEffect(val bpPassports: List<BusinessId>) : EditPatientEffect()
-
-object ShowDatePatternInDateOfBirthLabelEffect : EditPatientEffect()
-
-object HideDatePatternInDateOfBirthLabelEffect : EditPatientEffect()
-
-object GoBackEffect : EditPatientEffect()
-
-object ShowDiscardChangesAlertEffect : EditPatientEffect()
-
-data class ShowValidationErrorsEffect(
-    val validationErrors: Set<EditPatientValidationError>
-) : EditPatientEffect()
 
 data class SavePatientEffect(
     val ongoingEntry: EditablePatientEntry,
@@ -46,6 +21,33 @@ data class SavePatientEffect(
 
 object LoadInputFields : EditPatientEffect()
 
-data class SetupUi(val inputFields: InputFields) : EditPatientEffect()
-
 object FetchColonyOrVillagesEffect : EditPatientEffect()
+
+sealed class EditPatientViewEffect : EditPatientEffect()
+
+data class PrefillFormEffect(
+    val patient: Patient,
+    val address: PatientAddress,
+    val phoneNumber: PatientPhoneNumber?,
+    val alternativeId: BusinessId?
+) : EditPatientViewEffect()
+
+data class HideValidationErrorsEffect(
+    val validationErrors: Set<EditPatientValidationError>
+) : EditPatientViewEffect()
+
+data class SetupUi(val inputFields: InputFields) : EditPatientViewEffect()
+
+data class DisplayBpPassportsEffect(val bpPassports: List<BusinessId>) : EditPatientViewEffect()
+
+data class ShowValidationErrorsEffect(
+    val validationErrors: Set<EditPatientValidationError>
+) : EditPatientViewEffect()
+
+object ShowDatePatternInDateOfBirthLabelEffect : EditPatientViewEffect()
+
+object HideDatePatternInDateOfBirthLabelEffect : EditPatientViewEffect()
+
+object GoBackEffect : EditPatientViewEffect()
+
+object ShowDiscardChangesAlertEffect : EditPatientViewEffect()

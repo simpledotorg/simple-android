@@ -48,6 +48,7 @@ import org.simple.clinic.editpatient.deletepatient.DeletePatientScreenKey
 import org.simple.clinic.feature.Feature.DeletePatient
 import org.simple.clinic.feature.Feature.VillageTypeAhead
 import org.simple.clinic.feature.Features
+import org.simple.clinic.mobius.ViewEffectsHandler
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -106,7 +107,7 @@ class EditPatientScreen : BaseScreen<
     EditPatientModel,
     EditPatientEvent,
     EditPatientEffect,
-    Unit>(), EditPatientUi, HandlesBack {
+    EditPatientViewEffect>(), EditPatientUi, HandlesBack {
 
   @Inject
   lateinit var router: Router
@@ -126,6 +127,9 @@ class EditPatientScreen : BaseScreen<
 
   @Inject
   lateinit var effectHandlerFactory: EditPatientEffectHandler.Factory
+
+  @Inject
+  lateinit var viewEffectHandler: EditPatientViewEffectHandler.Factory
 
   @Inject
   lateinit var features: Features
@@ -262,11 +266,13 @@ class EditPatientScreen : BaseScreen<
 
   override fun createUpdate() = EditPatientUpdate(numberValidator, dateOfBirthValidator, ageValidator)
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
-      .create(this)
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<EditPatientViewEffect>) = effectHandlerFactory
+      .create(viewEffectsConsumer = viewEffectsConsumer)
       .build()
 
   override fun uiRenderer() = EditPatientViewRenderer(this)
+
+  override fun viewEffectHandler() = viewEffectHandler.create(this)
 
   override fun events() = Observable.mergeArray(
       saveClicks(),

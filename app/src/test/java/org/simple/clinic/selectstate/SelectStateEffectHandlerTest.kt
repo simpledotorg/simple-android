@@ -2,6 +2,8 @@ package org.simple.clinic.selectstate
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.After
 import org.junit.Test
@@ -71,5 +73,15 @@ class SelectStateEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(StateSaved)
+  }
+
+  @Test
+  fun `when go to registration screen effect is received, then go to registration screen`() {
+    // when
+    testCase.dispatch(GoToRegistrationScreen)
+
+    // then
+    verify(uiActions).goToRegistrationScreen()
+    verifyNoMoreInteractions(uiActions)
   }
 }

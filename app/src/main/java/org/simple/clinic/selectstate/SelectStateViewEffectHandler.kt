@@ -7,6 +7,8 @@ class SelectStateViewEffectHandler(
 ) : ViewEffectsHandler<SelectStateViewEffect> {
 
   override fun handle(viewEffect: SelectStateViewEffect) {
-    // no-op
+    when (viewEffect) {
+      GoToRegistrationScreen -> uiActions.goToRegistrationScreen()
+    }
   }
 }

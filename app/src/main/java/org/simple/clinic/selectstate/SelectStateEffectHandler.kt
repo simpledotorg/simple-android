@@ -25,6 +25,7 @@ class SelectStateEffectHandler @AssistedInject constructor(
       .subtypeEffectHandler<SelectStateEffect, SelectStateEvent>()
       .addTransformer(LoadStates::class.java, loadStates())
       .addTransformer(SaveSelectedState::class.java, saveState())
+      .addConsumer(SelectStateViewEffect::class.java, viewEffectsConsumer::accept)
       .build()
 
   private fun saveState(): ObservableTransformer<SaveSelectedState, SelectStateEvent> {

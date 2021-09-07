@@ -24,6 +24,7 @@ import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.selectcountry.adapter.Event
 import org.simple.clinic.selectcountry.adapter.SelectableCountryItem
 import org.simple.clinic.selectcountry.adapter.SelectableCountryItemDiffCallback
+import org.simple.clinic.selectstate.SelectStateScreen
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
@@ -205,8 +206,7 @@ class SelectCountryScreen(
   }
 
   override fun goToStateSelectionScreen() {
-    // TODO: Navigate to state selection screen
-    router.push(RegistrationPhoneScreenKey())
+    router.push(SelectStateScreen.Key())
   }
 
   override fun goToRegistrationScreen() {

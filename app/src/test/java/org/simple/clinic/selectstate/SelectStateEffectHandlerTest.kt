@@ -15,10 +15,13 @@ import org.simple.clinic.util.scheduler.TestSchedulersProvider
 
 class SelectStateEffectHandlerTest {
 
+  private val uiActions = mock<SelectStateUiActions>()
   private val appConfigRepository = mock<AppConfigRepository>()
+  private val viewEffectHandler = SelectStateViewEffectHandler(uiActions)
   private val effectHandler = SelectStateEffectHandler(
       appConfigRepository = appConfigRepository,
-      schedulers = TestSchedulersProvider.trampoline()
+      schedulers = TestSchedulersProvider.trampoline(),
+      viewEffectsConsumer = viewEffectHandler::handle
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
 

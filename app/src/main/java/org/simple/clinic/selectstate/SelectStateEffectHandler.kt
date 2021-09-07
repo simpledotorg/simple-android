@@ -1,16 +1,25 @@
 package org.simple.clinic.selectstate
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.appconfig.StatesResult
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import javax.inject.Inject
 
-class SelectStateEffectHandler @Inject constructor(
+class SelectStateEffectHandler @AssistedInject constructor(
     private val appConfigRepository: AppConfigRepository,
-    private val schedulers: SchedulersProvider
+    private val schedulers: SchedulersProvider,
+    @Assisted private val viewEffectsConsumer: Consumer<SelectStateViewEffect>
 ) {
+
+  @AssistedFactory
+  interface Factory {
+    fun create(viewEffectsConsumer: Consumer<SelectStateViewEffect>): SelectStateEffectHandler
+  }
 
   fun build(): ObservableTransformer<SelectStateEffect, SelectStateEvent> = RxMobius
       .subtypeEffectHandler<SelectStateEffect, SelectStateEvent>()

@@ -26,6 +26,7 @@ class SelectStateUiRendererTest {
     // then
     verify(ui).showStates(states = states, selectedState = null)
     verify(ui).hideErrorView()
+    verify(ui).hideProgress()
     verifyNoMoreInteractions(ui)
   }
 
@@ -45,6 +46,7 @@ class SelectStateUiRendererTest {
     verify(ui).showStates(states = states, selectedState = andhraPradesh)
     verify(ui).showNextButton()
     verify(ui).hideErrorView()
+    verify(ui).hideProgress()
     verifyNoMoreInteractions(ui)
   }
 
@@ -60,6 +62,7 @@ class SelectStateUiRendererTest {
     // then
     verify(ui).hideStates()
     verify(ui).showNetworkErrorMessage()
+    verify(ui).hideProgress()
     verifyNoMoreInteractions(ui)
   }
 
@@ -75,6 +78,7 @@ class SelectStateUiRendererTest {
     // then
     verify(ui).hideStates()
     verify(ui).showServerErrorMessage()
+    verify(ui).hideProgress()
     verifyNoMoreInteractions(ui)
   }
 
@@ -90,6 +94,7 @@ class SelectStateUiRendererTest {
     // then
     verify(ui).hideStates()
     verify(ui).showGenericErrorMessage()
+    verify(ui).hideProgress()
     verifyNoMoreInteractions(ui)
   }
 

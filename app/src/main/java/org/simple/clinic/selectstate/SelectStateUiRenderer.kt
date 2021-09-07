@@ -12,6 +12,8 @@ class SelectStateUiRenderer(
   override fun render(model: SelectStateModel) {
     if (model.isFetching) {
       ui.showProgress()
+    } else {
+      ui.hideProgress()
     }
 
     if (model.hasStates) {

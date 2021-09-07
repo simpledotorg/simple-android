@@ -11,4 +11,5 @@ interface SelectStateUi {
   fun showGenericErrorMessage()
   fun hideErrorView()
   fun showProgress()
+  fun hideProgress()
 }

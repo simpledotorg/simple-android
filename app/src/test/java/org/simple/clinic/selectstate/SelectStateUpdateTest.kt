@@ -98,6 +98,23 @@ class SelectStateUpdateTest {
         ))
   }
 
+  @Test
+  fun `when next is clicked, then save state`() {
+    val state = TestData.state(displayName = "Andhra Pradesh")
+    val states = listOf(state)
+    val stateSelectedModel = defaultModel
+        .statesLoaded(states)
+        .stateChanged(state)
+
+    updateSpec
+        .given(stateSelectedModel)
+        .whenEvent(NextClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(SaveSelectedState(state))
+        ))
+  }
+
   private fun serverError(): HttpException {
     val response = Response.error<String>(
         401,

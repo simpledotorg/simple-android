@@ -20,6 +20,7 @@ class SelectStateUpdate : Update<SelectStateModel, SelectStateEvent, SelectState
           LoadStates
       )
       is StateChanged -> next(model.stateChanged(event.state))
+      NextClicked -> dispatch(SaveSelectedState(model.selectedState!!))
     }
   }
 }

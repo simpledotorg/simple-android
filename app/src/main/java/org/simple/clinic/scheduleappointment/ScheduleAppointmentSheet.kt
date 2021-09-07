@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -20,9 +21,9 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetScheduleAppointmentBinding
 import org.simple.clinic.datepicker.DatePickerKeyFactory
-import org.simple.clinic.datepicker.DatePickerResult
 import org.simple.clinic.datepicker.SelectedDate
 import org.simple.clinic.di.injector
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.navigation.v2.Router
@@ -32,7 +33,7 @@ import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.newentry.ButtonState
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
-import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivity
+import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionScreen
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom
 import org.simple.clinic.summary.teleconsultation.status.TeleconsultStatusSheet
 import org.simple.clinic.util.UserClock
@@ -56,7 +57,6 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
     Unit>(), ScheduleAppointmentUi, ScheduleAppointmentUiActions {
 
   companion object {
-    private const val REQCODE_FACILITY_SELECT = 100
     private const val REQUEST_CODE_TELECONSULT_STATUS_CHANGED = 11
 
     fun sheetOpenedFrom(result: Succeeded): AppointmentSheetOpenedFrom {
@@ -170,11 +170,23 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
       openFacilitySelection()
     }
 
-    setFragmentResultListener(DatePickerResult) { _, result ->
-      if (result is Succeeded) {
+    setFragmentResultListener(Request.PickAppointmentDate, Request.SelectFacility) { requestKey, result ->
+      if(result is Succeeded) {
+        handleSuccessfulScreenResult(requestKey, result)
+      }
+    }
+  }
+
+  private fun handleSuccessfulScreenResult(requestKey: Parcelable, result: Succeeded) {
+    when (requestKey) {
+      is Request.PickAppointmentDate -> {
         val selectedDate = result.result as SelectedDate
         val event = AppointmentCalendarDateSelected(selectedDate = selectedDate.date)
         calendarDateSelectedEvents.onNext(event)
+      }
+      is Request.SelectFacility -> {
+        val selectedFacility = (result.result as FacilitySelectionScreen.SelectedFacility).facility
+        notifyPatientFacilityChanged(selectedFacility)
       }
     }
   }
@@ -188,13 +200,11 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
 
   private fun manageRequestCodes(requestCode: Int, data: Intent?) {
     when (requestCode) {
-      REQCODE_FACILITY_SELECT -> updateFacilityChangeForPatient(data)
       REQUEST_CODE_TELECONSULT_STATUS_CHANGED -> closeSheet()
     }
   }
 
-  private fun updateFacilityChangeForPatient(data: Intent?) {
-    val selectedFacility = FacilitySelectionActivity.selectedFacility(data!!)
+  private fun notifyPatientFacilityChanged(selectedFacility: Facility) {
     val patientFacilityChanged = PatientFacilityChanged(facility = selectedFacility)
     facilityChanges.notify(patientFacilityChanged)
   }
@@ -212,7 +222,7 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
   private fun appointmentDateClicks() = changeAppointmentDate.clicks().map { ManuallySelectAppointmentDateClicked }
 
   private fun openFacilitySelection() {
-    startActivityForResult(Intent(requireContext(), FacilitySelectionActivity::class.java), REQCODE_FACILITY_SELECT)
+    router.pushExpectingResult(Request.SelectFacility, FacilitySelectionScreen.Key())
   }
 
   override fun closeSheet() {
@@ -263,7 +273,7 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
         allowedDateRange = today.plusDays(1)..today.plusYears(1)
     )
 
-    router.pushExpectingResult(DatePickerResult, key)
+    router.pushExpectingResult(Request.PickAppointmentDate, key)
   }
 
   override fun showPatientFacility(facilityName: String) {
@@ -313,6 +323,15 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
     override val type = ScreenType.Modal
 
     override fun instantiateFragment() = ScheduleAppointmentSheet()
+  }
+
+  sealed class Request : Parcelable {
+
+    @Parcelize
+    object SelectFacility : Request()
+
+    @Parcelize
+    object PickAppointmentDate: Request()
   }
 
   interface Injector {

@@ -10,6 +10,8 @@
 - Remove `Country_Old`
 - Fetch states for selected country deployments
 - Remove login failed errors from UiRenderer, and add via effect handler when logging in
+- Replace deprecated platform `PreferenceManager` usage with AndroidX preference
+- Bump Dagger to v2.38.1
 - [In Progress: 31 Aug 2021] Record call results instead of updating the same appointment record
 - [In Progress: 31 Aug 2021] Refactor logic around providing drug frequencies label depending on the country
 
@@ -45,6 +47,7 @@
 - Fix TDS drug frequency string value
 - Remove unused `DrugFrequencyChoiceItem` class
 - Move opening of facility selection screen to `PatientSummaryScreen` from `AssignedFacilityView`
+- Change `FacilitySelectionScreen` to be part of the navigation graph
 
 ### Changes
 - Implement `CustomDrugEntrySheet`

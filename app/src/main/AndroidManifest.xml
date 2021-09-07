@@ -88,10 +88,6 @@
       android:windowSoftInputMode="adjustResize" />
 
     <activity
-      android:name=".scheduleappointment.facilityselection.FacilitySelectionActivity"
-      android:windowSoftInputMode="adjustResize" />
-
-    <activity
       android:name=".bloodsugar.selection.type.BloodSugarTypePickerSheet"
       android:theme="@style/Theme.Simple.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />

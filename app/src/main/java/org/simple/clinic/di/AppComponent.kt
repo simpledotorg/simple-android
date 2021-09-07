@@ -11,7 +11,6 @@ import org.simple.clinic.drugs.selection.entry.di.CustomPrescriptionEntrySheetCo
 import org.simple.clinic.login.OtpSmsReceiver
 import org.simple.clinic.main.TheActivityComponent
 import org.simple.clinic.registerorlogin.AuthenticationActivityComponent
-import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionActivityComponent
 import org.simple.clinic.setup.SetupActivityComponent
 import org.simple.clinic.signature.SignatureComponent
 import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorComponent
@@ -35,7 +34,6 @@ interface AppComponent {
 
   fun theActivityComponent(): TheActivityComponent.Factory
   fun setupActivityComponent(): SetupActivityComponent.Factory
-  fun facilitySelectionActivityComponent(): FacilitySelectionActivityComponent.Factory
   fun bloodSugarEntryComponent(): BloodSugarEntryComponent.Factory
   fun bloodPressureEntryComponent(): BloodPressureEntryComponent.Factory
   fun dosagePickerSheetComponent(): DosagePickerSheetComponent.Factory

@@ -20,6 +20,7 @@ import org.simple.clinic.registration.register.RegistrationLoadingScreen
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.selectcountry.SelectCountryScreenInjector
+import org.simple.clinic.selectstate.SelectStateScreen
 
 @Subcomponent(modules = [
   FragmentScreenKeyModule::class
@@ -38,7 +39,8 @@ interface AuthenticationActivityComponent :
     PinEntryCardView.Injector,
     LoggedOutOfDeviceDialog.Injector,
     SelectCountryScreenInjector,
-    FacilityPickerView.Injector {
+    FacilityPickerView.Injector,
+    SelectStateScreen.Injector {
   fun inject(target: AuthenticationActivity)
 
   @Subcomponent.Factory

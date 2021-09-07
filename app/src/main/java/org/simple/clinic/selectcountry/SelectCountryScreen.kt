@@ -204,7 +204,7 @@ class SelectCountryScreen(
     nextButtonFrame.visibility = VISIBLE
   }
 
-  override fun goToNextScreen() {
+  override fun goToStateSelectionScreen() {
     // TODO: Navigate to state selection screen
     router.push(RegistrationPhoneScreenKey())
   }

@@ -2,6 +2,6 @@ package org.simple.clinic.selectcountry
 
 interface UiActions {
 
-  fun goToNextScreen()
+  fun goToStateSelectionScreen()
   fun goToRegistrationScreen()
 }

@@ -137,7 +137,7 @@ class SelectCountryUpdateTest {
   }
 
   @Test
-  fun `when selected country is saved and there is only one deployment, then go to next screen`() {
+  fun `when selected country is saved and there is more than one deployment, then go to state selection screen`() {
     val ihci = TestData.deployment(
         endPoint = "https://in.simple.org",
         displayName = "IHCI"
@@ -161,7 +161,7 @@ class SelectCountryUpdateTest {
         .whenEvent(CountrySaved)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(GoToNextScreen)
+            hasEffects(GoToStateSelectionScreen)
         ))
   }
 }

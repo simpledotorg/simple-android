@@ -14,7 +14,7 @@ class EditMedicinesUiRenderer(private val ui: EditMedicinesUi) : ViewRenderer<Ed
 
   override fun render(model: EditMedicinesModel) {
     if (model.prescribedDrugs != null && model.protocolDrugs != null && model.medicineFrequencyToFrequencyChoiceItemMap != null)
-      renderPrescribedProtocolDrugs(model, model.prescribedDrugs, model.protocolDrugs)
+      renderPrescribedProtocolDrugs(model, model.prescribedDrugs!!, model.protocolDrugs!!, model.medicineFrequencyToFrequencyChoiceItemMap!!)
     when (model.editMedicineButtonState) {
       SAVE_MEDICINE -> {
         ui.showDoneButton()
@@ -30,12 +30,13 @@ class EditMedicinesUiRenderer(private val ui: EditMedicinesUi) : ViewRenderer<Ed
   private fun renderPrescribedProtocolDrugs(
       model: EditMedicinesModel,
       prescribedDrugs: List<PrescribedDrug>,
-      protocolDrugs: List<ProtocolDrugAndDosages>
+      protocolDrugs: List<ProtocolDrugAndDosages>,
+      medicineFrequencyToFrequencyChoiceItemMap: Map<MedicineFrequency?, DrugFrequencyChoiceItem>
   ) {
     val (prescribedProtocolDrugs, prescribedCustomDrugs) = prescribedDrugs.partition(model::isProtocolDrug)
 
-    val protocolDrugSelectionItems = protocolDrugSelectionItems(protocolDrugs, prescribedProtocolDrugs, model.medicineFrequencyToFrequencyChoiceItemMap!!)
-    val customPrescribedDrugItems = customPrescribedDrugItems(prescribedCustomDrugs, model.medicineFrequencyToFrequencyChoiceItemMap!!)
+    val protocolDrugSelectionItems = protocolDrugSelectionItems(protocolDrugs, prescribedProtocolDrugs, medicineFrequencyToFrequencyChoiceItemMap)
+    val customPrescribedDrugItems = customPrescribedDrugItems(prescribedCustomDrugs, medicineFrequencyToFrequencyChoiceItemMap)
     val drugsList = (protocolDrugSelectionItems + customPrescribedDrugItems)
         .sortedByDescending { it.prescribedDrug?.updatedAt }
         .mapIndexed { index, drugListItem ->

@@ -11,7 +11,7 @@ import org.simple.clinic.protocol.ProtocolDrugAndDosages
 class EditMedicinesUiRenderer(private val ui: EditMedicinesUi) : ViewRenderer<EditMedicinesModel> {
 
   override fun render(model: EditMedicinesModel) {
-    if (model.prescribedDrugs != null && model.protocolDrugs != null)
+    if (model.prescribedDrugs != null && model.protocolDrugs != null && model.medicineFrequencyToFrequencyChoiceItemMap != null)
       renderPrescribedProtocolDrugs(model, model.prescribedDrugs, model.protocolDrugs)
     when (model.editMedicineButtonState) {
       SAVE_MEDICINE -> {

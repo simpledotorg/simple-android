@@ -7,3 +7,5 @@ sealed class SelectStateEffect
 object LoadStates : SelectStateEffect()
 
 data class SaveSelectedState(val state: State) : SelectStateEffect()
+
+sealed class SelectStateViewEffect : SelectStateEffect()

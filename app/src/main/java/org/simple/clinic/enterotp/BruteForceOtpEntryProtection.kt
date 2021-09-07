@@ -18,26 +18,36 @@ class BruteForceOtpEntryProtection @Inject constructor(
     private val config: Observable<BruteForceOtpEntryProtectionConfig>,
     private val otpStatePreference: Preference<BruteForceOtpProtectionState>
 ) {
-
   sealed class ProtectedState {
     data class Allowed(val attemptsMade: Int, val attemptsRemaining: Int) : ProtectedState()
     data class Blocked(val attemptsMade: Int, val blockedTill: Instant) : ProtectedState()
   }
 
-  fun incrementFailedOtpAttempt() {
-    val updatedBruteForceOtpProtectionState = updateFailedOtpAttemptLimitReached(config.limitOfFailedAttempts)
-    otpStatePreference.set(updatedBruteForceOtpProtectionState)
+  fun incrementFailedOtpAttempt(): Completable {
+    val failedAttemptsLimitStream = config.map { it.limitOfFailedAttempts }
+
+    val pinAuthenticationFailedStream = otpStatePreference
+        .asObservable()
+        .take(1)
+        .map(BruteForceOtpProtectionState::loginAttemptFailed)
+
+    val updatedState = pinAuthenticationFailedStream
+        .withLatestFrom(failedAttemptsLimitStream)
+        .map { (failedAttemptsLimitState, maxAllowedFailedOtpAttempts) -> updateFailedOtpAttemptLimitReached(failedAttemptsLimitState, maxAllowedFailedOtpAttempts = maxAllowedFailedOtpAttempts) }
+        .doOnNext(otpStatePreference::set)
+
+    return updatedState.ignoreElements()
   }
 
   private fun updateFailedOtpAttemptLimitReached(
+      otpState: BruteForceOtpProtectionState,
       maxAllowedFailedOtpAttempts: Int
   ): BruteForceOtpProtectionState {
-    val otpState = otpStatePreference.get()
     val isOtpAttemptLimitReached = otpState.failedLoginOtpAttempt >= maxAllowedFailedOtpAttempts
     return if (isOtpAttemptLimitReached && !otpState.limitReachedAt.isPresent) {
       otpState.failedAttemptLimitReached(utcClock)
     } else {
-      otpState.loginAttemptFailed()
+      otpState
     }
   }
 

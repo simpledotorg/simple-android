@@ -29,7 +29,7 @@ class BruteForceOtpEntryProtectionTest {
     val state = BruteForceOtpProtectionState(failedLoginOtpAttempt = 2)
     whenever(preferenceState.asObservable()).thenReturn(Observable.just(state))
 
-    bruteForceOtpEntryProtection.incrementFailedOtpAttempt()
+    bruteForceOtpEntryProtection.incrementFailedOtpAttempt().blockingAwait()
 
     verify(preferenceState).set(BruteForceOtpProtectionState(failedLoginOtpAttempt = 3))
   }
@@ -42,7 +42,7 @@ class BruteForceOtpEntryProtectionTest {
     )
     whenever(preferenceState.asObservable()).thenReturn(Observable.just(bruteForceOtpProtectionState))
 
-    bruteForceOtpEntryProtection.incrementFailedOtpAttempt()
+    bruteForceOtpEntryProtection.incrementFailedOtpAttempt().blockingAwait()
 
     verify(preferenceState).set(BruteForceOtpProtectionState(
         limitReachedAt = Optional.of(Instant.now(clock)),

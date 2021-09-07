@@ -48,6 +48,7 @@ class EditPatientEffectHandlerTest {
   private val utcClock = TestUtcClock(Instant.parse("2018-01-01T00:00:00Z"))
   private val patientRepository = mock<PatientRepository>()
   private val dateOfBirthFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
+  private val viewEffectHandler = EditPatientViewEffectHandler(userClock, ui)
 
   private val patientAddress = TestData.patientAddress(uuid = UUID.fromString("85d0b5f1-af84-4a6b-938e-5166f8c27666"))
   private val patient = TestData.patient(
@@ -90,7 +91,6 @@ class EditPatientEffectHandlerTest {
   private val uuidGenerator = FakeUuidGenerator.fixed(phoneNumberUuid)
 
   private val effectHandler = EditPatientEffectHandler(
-      userClock = userClock,
       patientRepository = patientRepository,
       utcClock = utcClock,
       schedulersProvider = TrampolineSchedulersProvider(),
@@ -99,7 +99,7 @@ class EditPatientEffectHandlerTest {
       currentUser = Lazy { user },
       inputFieldsFactory = inputFieldsFactory,
       dateOfBirthFormatter = dateOfBirthFormatter,
-      ui = ui
+      viewEffectsConsumer = viewEffectHandler::handle
   )
 
   private val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -192,7 +192,6 @@ class EditPatientEffectHandlerTest {
     val identifierUuid = UUID.fromString("a72c3ada-b071-4818-8f0b-476432338235")
 
     val effectHandler = EditPatientEffectHandler(
-        userClock = userClock,
         patientRepository = patientRepository,
         utcClock = utcClock,
         schedulersProvider = TrampolineSchedulersProvider(),
@@ -201,7 +200,7 @@ class EditPatientEffectHandlerTest {
         currentUser = dagger.Lazy { user },
         inputFieldsFactory = inputFieldsFactory,
         dateOfBirthFormatter = dateOfBirthFormatter,
-        ui = ui
+        viewEffectsConsumer = viewEffectHandler::handle
     )
 
     val testCase = EffectHandlerTestCase(effectHandler.build())

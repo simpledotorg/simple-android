@@ -31,12 +31,12 @@ import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.Age
-import org.simple.clinic.patient.PatientAgeDetails
-import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
-import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientAgeDetails
+import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
+import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
@@ -83,6 +83,8 @@ class EditPatientScreenSaveTest {
       dateTimeFormatter = dateOfBirthFormat,
       today = LocalDate.now(userClock)
   ))
+
+  private val viewEffectHandler = EditPatientViewEffectHandler(userClock, ui)
 
   @Test
   fun `when save is clicked, patient name should be validated`() {
@@ -961,7 +963,6 @@ class EditPatientScreenSaveTest {
       phoneNumber: PatientPhoneNumber?
   ) {
     val editPatientEffectHandler = EditPatientEffectHandler(
-        userClock = TestUserClock(),
         patientRepository = patientRepository,
         utcClock = utcClock,
         schedulersProvider = TrampolineSchedulersProvider(),
@@ -970,7 +971,7 @@ class EditPatientScreenSaveTest {
         currentUser = dagger.Lazy { user },
         inputFieldsFactory = inputFieldsFactory,
         dateOfBirthFormatter = dateOfBirthFormat,
-        ui = ui
+        viewEffectsConsumer = viewEffectHandler::handle
     )
 
     val numberValidator = LengthBasedNumberValidator(

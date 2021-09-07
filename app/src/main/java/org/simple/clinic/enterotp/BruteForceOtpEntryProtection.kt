@@ -15,7 +15,7 @@ import kotlin.math.max
 
 class BruteForceOtpEntryProtection @Inject constructor(
     private val utcClock: UtcClock,
-    private val config: BruteForceOtpEntryProtectionConfig,
+    private val config: Observable<BruteForceOtpEntryProtectionConfig>,
     private val otpStatePreference: Preference<BruteForceOtpProtectionState>
 ) {
 

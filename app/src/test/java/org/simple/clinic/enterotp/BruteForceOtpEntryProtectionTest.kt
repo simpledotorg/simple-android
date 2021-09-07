@@ -22,7 +22,7 @@ class BruteForceOtpEntryProtectionTest {
   private val clock = TestUtcClock()
   private val config = BruteForceOtpEntryProtectionConfig(limitOfFailedAttempts = 4, blockDuration = Duration.ofMinutes(20))
 
-  private val bruteForceOtpEntryProtection = BruteForceOtpEntryProtection(clock, config, preferenceState)
+  private val bruteForceOtpEntryProtection = BruteForceOtpEntryProtection(clock, Observable.just(config), preferenceState)
 
   @Test
   fun `when incrementing the count of failed otp attempts, then the count should be updated`() {

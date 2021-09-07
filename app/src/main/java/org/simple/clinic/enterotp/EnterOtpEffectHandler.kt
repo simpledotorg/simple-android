@@ -4,6 +4,7 @@ import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.enterotp.OtpEntryMode.BruteForceOtpEntryLocked
 import org.simple.clinic.enterotp.OtpEntryMode.OtpEntry
@@ -43,7 +44,7 @@ class EnterOtpEffectHandler @AssistedInject constructor(
         .addTransformer(ListenForUserBackgroundVerification::class.java, waitForUserBackgroundVerifications())
         .addTransformer(RequestLoginOtp::class.java, activateUser())
         .addAction(ShowSmsSentMessage::class.java, uiActions::showSmsSentMessage, schedulers.ui())
-        .addConsumer(FailedLoginOtpAttempt::class.java, { bruteForceProtection.incrementFailedOtpAttempt() }, schedulers.io())
+        .addTransformer(FailedLoginOtpAttempt::class.java, incrementFailedOtpAttempt())
         .addAction(ShowNetworkError::class.java, uiActions::showNetworkError, schedulers.ui())
         .addAction(ShowUnexpectedError::class.java, uiActions::showUnexpectedError, schedulers.ui())
         .addAction(AllowOtpEntry::class.java, { uiActions.showOtpEntryMode(OtpEntry) }, schedulers.ui())
@@ -55,11 +56,22 @@ class EnterOtpEffectHandler @AssistedInject constructor(
         .build()
   }
 
+  private fun incrementFailedOtpAttempt(): ObservableTransformer<FailedLoginOtpAttempt, EnterOtpEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulers.io())
+          .flatMapCompletable {
+            bruteForceProtection.incrementFailedOtpAttempt()
+          }
+          .andThen(Observable.empty())
+    }
+  }
+
   private fun loadOtpEntryStates(): ObservableTransformer<LoadOtpEntryProtectedStates, EnterOtpEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulers.io())
-          .map { bruteForceProtection.protectedStateChanges() }
+          .switchMap { bruteForceProtection.protectedStateChanges() }
           .map(::OtpEntryProtectedStateChanged)
     }
   }

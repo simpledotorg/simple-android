@@ -43,7 +43,7 @@ class SelectDrugFrequencyDialog : AppCompatDialogFragment() {
     val selectedValueIndex = screenKey.drugFrequencyChoiceItems.map { it.drugFrequency }.indexOf(screenKey.drugFrequency)
     return MaterialAlertDialogBuilder(requireContext())
         .setTitle(getString(R.string.custom_drug_entry_sheet_frequency))
-        .setSingleChoiceItems(screenKey.drugFrequencyChoiceItems.map { getString(it.labelResId) }.toTypedArray(), selectedValueIndex) { _, indexSelected ->
+        .setSingleChoiceItems(screenKey.drugFrequencyChoiceItems.map { it.label }.toTypedArray(), selectedValueIndex) { _, indexSelected ->
           router.popWithResult(Succeeded(SelectedDrugFrequency(screenKey.drugFrequencyChoiceItems[indexSelected].drugFrequency)))
         }
         .setPositiveButton(getString(R.string.custom_drug_entry_sheet_frequency_dialog_done)) { _, _ ->

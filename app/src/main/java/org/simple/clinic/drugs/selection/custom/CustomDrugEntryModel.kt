@@ -60,10 +60,6 @@ data class CustomDrugEntryModel(
     return copy(rxNormCode = rxNormCode)
   }
 
-  fun drugFrequencyChoiceItemsLoaded(drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>): CustomDrugEntryModel {
-    return copy(drugFrequencyChoiceItems = drugFrequencyChoiceItems)
-  }
-
   fun drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap: Map<DrugFrequency?, DrugFrequencyChoiceItem>?): CustomDrugEntryModel {
     return copy(drugFrequencyToFrequencyChoiceItemMap = drugFrequencyToFrequencyChoiceItemMap)
   }

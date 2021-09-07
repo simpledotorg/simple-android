@@ -1,5 +1,7 @@
 package org.simple.clinic.drugs.selection.custom.drugfrequency.country
 
+import android.content.res.Resources
+
 interface DrugFrequencyProvider {
-  fun provide(): List<DrugFrequencyChoiceItem>
+  fun provide(resources: Resources): List<DrugFrequencyChoiceItem>
 }

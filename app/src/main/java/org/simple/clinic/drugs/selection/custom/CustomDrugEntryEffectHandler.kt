@@ -37,7 +37,7 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<CustomDrugEntryEffect, CustomDrugEntryEvent>()
         .addConsumer(ShowEditFrequencyDialog::class.java, { uiActions.showEditFrequencyDialog(it.frequency, it.drugFrequencyChoiceItems) }, schedulersProvider.ui())
-        .addConsumer(SetDrugFrequency::class.java, { uiActions.setDrugFrequency(it.frequencyLabelRes) }, schedulersProvider.ui())
+        .addConsumer(SetDrugFrequency::class.java, { uiActions.setDrugFrequency(it.frequencyLabel) }, schedulersProvider.ui())
         .addConsumer(SetDrugDosage::class.java, { uiActions.setDrugDosage(it.dosage) }, schedulersProvider.ui())
         .addTransformer(SaveCustomDrugToPrescription::class.java, saveCustomDrugToPrescription())
         .addTransformer(UpdatePrescription::class.java, updatePrescription())

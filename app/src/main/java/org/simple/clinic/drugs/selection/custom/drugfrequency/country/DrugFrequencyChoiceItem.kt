@@ -8,5 +8,5 @@ import org.simple.clinic.drugs.search.DrugFrequency
 @Parcelize
 data class DrugFrequencyChoiceItem(
     val drugFrequency: DrugFrequency?,
-    @StringRes val labelResId: Int
+    val label: String
 ) : Parcelable

@@ -13,6 +13,7 @@
 - Replace deprecated platform `PreferenceManager` usage with AndroidX preference
 - Bump Dagger to v2.38.1
 - Bump AGP to v7.0.2
+- Refactor logic around providing drug frequencies label depending on the country
 - [In Progress: 31 Aug 2021] Record call results instead of updating the same appointment record
 - [In Progress: 31 Aug 2021] Refactor logic around providing drug frequencies label depending on the country
 - [In Progress: 2 Sep 2021] Add a progress state in `CustomDrugEntrySheet`

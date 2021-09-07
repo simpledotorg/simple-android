@@ -7,5 +7,5 @@ interface CustomDrugEntryUi {
   fun hideRemoveButton()
   fun setButtonTextAsSave()
   fun setButtonTextAsAdd()
-  fun setSheetTitle(drugName: String?, dosage: String?, frequencyLabelResID: Int)
+  fun setSheetTitle(drugName: String?, dosage: String?, frequencyLabelResID: String)
 }

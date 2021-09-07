@@ -53,6 +53,7 @@ import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.scanid.ScanSimpleIdScreen
 import org.simple.clinic.scanid.scannedqrcode.ScannedQrCodeSheet
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
+import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionScreen
 import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.settings.SettingsScreen
 import org.simple.clinic.settings.changelanguage.ChangeLanguageScreen
@@ -138,7 +139,8 @@ interface TheActivityComponent :
     DrugsSearchScreen.Injector,
     SyncIndicatorView.Injector,
     CustomDrugEntrySheet.Injector,
-    SelectDrugFrequencyDialog.Injector {
+    SelectDrugFrequencyDialog.Injector,
+    FacilitySelectionScreen.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory

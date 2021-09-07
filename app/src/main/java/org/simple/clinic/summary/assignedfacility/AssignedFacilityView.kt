@@ -7,8 +7,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import com.google.android.material.card.MaterialCardView
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.ofType
-import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.PatientsummaryAssignedFacilityContentBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.Facility

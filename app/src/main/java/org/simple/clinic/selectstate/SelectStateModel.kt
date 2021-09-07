@@ -11,8 +11,17 @@ data class SelectStateModel(
     val selectedState: State?
 ) : Parcelable {
 
+  val hasFetchError
+    get() = statesFetchError != null
+
+  val hasSelectedState
+    get() = selectedState != null
+
   val hasStates
     get() = states != null
+
+  val isFetching
+    get() = states == null && statesFetchError == null
 
   companion object {
 
@@ -28,4 +37,6 @@ data class SelectStateModel(
   fun failedToLoadStates(statesFetchError: StatesFetchError) = copy(statesFetchError = statesFetchError, states = null)
 
   fun stateChanged(state: State) = copy(selectedState = state)
+
+  fun loadingStates() = copy(states = null, statesFetchError = null)
 }

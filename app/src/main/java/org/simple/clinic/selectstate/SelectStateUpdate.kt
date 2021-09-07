@@ -15,6 +15,10 @@ class SelectStateUpdate : Update<SelectStateModel, SelectStateEvent, SelectState
       StateSaved -> dispatch(GoToRegistrationScreen)
       is StatesFetched -> next(model.statesLoaded(event.states))
       is FailedToFetchStates -> next(model.failedToLoadStates(event.error))
+      RetryButtonClicked -> next(
+          model.loadingStates(),
+          LoadStates
+      )
     }
   }
 }

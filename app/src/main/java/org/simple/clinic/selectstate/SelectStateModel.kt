@@ -37,4 +37,6 @@ data class SelectStateModel(
   fun failedToLoadStates(statesFetchError: StatesFetchError) = copy(statesFetchError = statesFetchError, states = null)
 
   fun stateChanged(state: State) = copy(selectedState = state)
+
+  fun loadingStates() = copy(states = null, statesFetchError = null)
 }

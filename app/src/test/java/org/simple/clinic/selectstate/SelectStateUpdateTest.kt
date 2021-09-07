@@ -67,6 +67,22 @@ class SelectStateUpdateTest {
         ))
   }
 
+  @Test
+  fun `when retry button is clicked, then load states`() {
+    val cause = serverError()
+    val error = StatesFetchError.fromResolvedError(ServerError(cause))
+    val failedToLoadStatesModel = defaultModel
+        .failedToLoadStates(error)
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(RetryButtonClicked)
+        .then(assertThatNext(
+            hasModel(failedToLoadStatesModel.loadingStates()),
+            hasEffects(LoadStates)
+        ))
+  }
+
   private fun serverError(): HttpException {
     val response = Response.error<String>(
         401,

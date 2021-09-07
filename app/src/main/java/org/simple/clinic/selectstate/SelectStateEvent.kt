@@ -9,3 +9,5 @@ object StateSaved : SelectStateEvent()
 data class StatesFetched(val states: List<State>) : SelectStateEvent()
 
 data class FailedToFetchStates(val error: StatesFetchError) : SelectStateEvent()
+
+object RetryButtonClicked : SelectStateEvent()

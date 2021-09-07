@@ -44,8 +44,11 @@ data class ProtocolDrugListItem(
     viewBinding.protocoldrugItemName.text = drugName
     viewBinding.protocoldrugItemName.isChecked = prescribedDrug != null
 
-    viewBinding.protocoldrugItemDosage.visibleOrGone(prescribedDrug != null)
-    viewBinding.protocoldrugItemDosage.text = prescribedDrug?.dosage
+    viewBinding.protocoldrugItemDosageAndFrequency.visibleOrGone(prescribedDrug != null)
+    val medicineFrequency = if (prescribedDrug?.frequency == null) "" else medicineFrequencyToFrequencyChoiceItemMap[prescribedDrug.frequency]!!.label
+    val dosage = if(prescribedDrug?.dosage == null) "" else prescribedDrug.dosage
+    val dosageAndFrequency = "$dosage, $medicineFrequency"
+    viewBinding.protocoldrugItemDosageAndFrequency.text = dosageAndFrequency
 
     viewBinding.prescribeddrugItemProtocoldrugRootlayout.shapeAppearanceModel = shapeAppearanceModel(hasTopCorners)
 

@@ -13,7 +13,7 @@ import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 class EditMedicinesUiRenderer(private val ui: EditMedicinesUi) : ViewRenderer<EditMedicinesModel> {
 
   override fun render(model: EditMedicinesModel) {
-    if (model.prescribedDrugs != null && model.protocolDrugs != null && model.medicineFrequencyToFrequencyChoiceItemMap != null)
+    if (model.hasPrescribedAndProtocolDrugs && model.hasMedicineFrequencyToFrequencyChoiceItemMap)
       renderPrescribedProtocolDrugs(model, model.prescribedDrugs!!, model.protocolDrugs!!, model.medicineFrequencyToFrequencyChoiceItemMap!!)
     when (model.editMedicineButtonState) {
       SAVE_MEDICINE -> {

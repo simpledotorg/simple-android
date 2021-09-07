@@ -22,6 +22,12 @@ data class EditMedicinesModel(
     }
   }
 
+  val hasPrescribedAndProtocolDrugs
+    get() = prescribedDrugs != null && protocolDrugs != null
+
+  val hasMedicineFrequencyToFrequencyChoiceItemMap
+    get() = medicineFrequencyToFrequencyChoiceItemMap != null
+
   fun isProtocolDrug(prescribedDrug: PrescribedDrug): Boolean {
     return protocolDrugs!!.any { it.matches(prescribedDrug) }
   }

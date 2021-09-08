@@ -27,7 +27,7 @@ class AppConfigRepositoryTest {
   private val manifestFetchApi = mock<ManifestFetchApi>()
   private val selectedCountryV2Preference = mock<Preference<Optional<Country>>>()
   private val selectedDeployment = mock<Preference<Optional<Deployment>>>()
-  private val selectedStatePreference = mock<Preference<Optional<State>>>()
+  private val selectedStatePreference = mock<Preference<Optional<String>>>()
   private val statesFetcher = mock<StatesFetcher>()
 
   private val repository = AppConfigRepository(
@@ -294,7 +294,7 @@ class AppConfigRepositoryTest {
   }
 
   @Test
-  fun `saving the state, should save it to local persistence`() {
+  fun `saving the state, should save state name to local persistence`() {
     // given
     val deployment = TestData.deployment(
         displayName = "IHCI",
@@ -309,7 +309,7 @@ class AppConfigRepositoryTest {
     repository.saveState(state)
 
     // then
-    verify(selectedStatePreference).set(Optional.of(state))
+    verify(selectedStatePreference).set(Optional.of(state.displayName))
     verifyNoMoreInteractions(selectedStatePreference)
   }
 }

@@ -43,8 +43,8 @@ class AppConfigModule {
   fun providesSelectedState(
       rxSharedPreferences: RxSharedPreferences,
       moshi: Moshi
-  ): Preference<Optional<State>> {
-    val statePreferenceConverter = MoshiObjectPreferenceConverter(moshi, State::class.java)
-    return rxSharedPreferences.getOptional("preference_selected_state_v1", statePreferenceConverter)
+  ): Preference<Optional<String>> {
+    val statePreferenceConverter = MoshiObjectPreferenceConverter(moshi, String::class.java)
+    return rxSharedPreferences.getOptional("preference_selected_state_v1", statePreferenceConverter, Optional.empty())
   }
 }

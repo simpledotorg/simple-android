@@ -856,4 +856,10 @@
   <string name="custom_drug_entry_sheet_frequency_ethiopia_QID" translatable="false">QID</string>
   <string name="custom_drug_entry_sheet_frequency_ethiopia_TID" translatable="false">TID</string>
 
+  <!-- Select state screen -->
+  <string name="select_state_title">Where is your clinic?</string>
+  <string name="select_state_networkerror">No internet connection!</string>
+  <string name="select_state_servererror">Server error! Please try again later!</string>
+  <string name="select_state_genericerror">Something went wrong! Please try again later!</string>
+
 </resources>

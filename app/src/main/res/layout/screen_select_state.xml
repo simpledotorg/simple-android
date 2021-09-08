@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/spacing_192"
+    android:background="?attr/colorToolbarPrimary"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <ImageView
+    android:id="@+id/simple_logo"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_40"
+    android:contentDescription="@string/selectcountry_logo_contentdescription"
+    app:layout_constraintBottom_toTopOf="@id/contentContainer"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:srcCompat="@drawable/logo_large" />
+
+  <com.google.android.material.card.MaterialCardView
+    android:id="@+id/contentContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_24"
+    android:layout_marginTop="@dimen/spacing_44"
+    android:layout_marginEnd="@dimen/spacing_24"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/simple_logo">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:minHeight="@dimen/spacing_128">
+
+      <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:indeterminate="false"
+        tools:progress="50" />
+
+      <TextView
+        android:id="@+id/select_state_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_24"
+        android:text="@string/select_state_title"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+      <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/statesList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/spacing_24"
+        android:paddingBottom="@dimen/spacing_8"
+        android:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/select_state_title"
+        tools:layout_height="128dp"
+        tools:listitem="@layout/list_selectstate_state_view" />
+
+      <TextView
+        android:id="@+id/errorMessageTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/spacing_24"
+        android:layout_marginTop="@dimen/spacing_24"
+        android:textAlignment="center"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textColor="@color/color_on_surface_67"
+        app:layout_constraintBottom_toTopOf="@id/tryAgain"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="@string/select_state_genericerror" />
+
+      <com.google.android.material.button.MaterialButton
+        android:id="@+id/tryAgain"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_40"
+        android:layout_marginTop="@dimen/spacing_24"
+        android:layout_marginEnd="@dimen/spacing_40"
+        android:layout_marginBottom="@dimen/spacing_24"
+        android:text="@string/selectcountry_retry"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/errorMessageTextView" />
+
+      <androidx.constraintlayout.widget.Group
+        android:id="@+id/statesListGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="select_state_title, statesList"
+        tools:visibility="visible" />
+
+      <androidx.constraintlayout.widget.Group
+        android:id="@+id/errorGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="errorMessageTextView, tryAgain" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+  </com.google.android.material.card.MaterialCardView>
+
+  <FrameLayout
+    android:id="@+id/nextButtonFrame"
+    style="@style/Widget.Simple.Button.Frame"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:visibility="gone"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    tools:visibility="visible">
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/nextButton"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/selectcountry_next" />
+
+  </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

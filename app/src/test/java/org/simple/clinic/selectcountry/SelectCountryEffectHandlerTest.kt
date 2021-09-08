@@ -94,14 +94,14 @@ class SelectCountryEffectHandlerTest {
   }
 
   @Test
-  fun `when the go to next screen effect is received, the next screen must be opened`() {
+  fun `when the go to state selection screen effect is received, then go to state selection screen`() {
     // when
-    testCase.dispatch(GoToNextScreen)
+    testCase.dispatch(GoToStateSelectionScreen)
 
     // then
     verifyZeroInteractions(repository)
     testCase.assertNoOutgoingEvents()
-    verify(uiActions).goToNextScreen()
+    verify(uiActions).goToStateSelectionScreen()
     verifyNoMoreInteractions(uiActions)
   }
 

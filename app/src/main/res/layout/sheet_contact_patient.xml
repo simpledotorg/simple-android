@@ -23,7 +23,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="bottom"
     android:visibility="gone"
-    tools:visibility="gone"/>
+    tools:visibility="gone" />
 
   <org.simple.clinic.contactpatient.views.CallPatientView
     android:id="@+id/callPatientView"

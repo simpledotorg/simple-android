@@ -17,8 +17,8 @@ import org.simple.clinic.registration.RegistrationRequest
 import org.simple.clinic.registration.RegistrationResponse
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
-import java.util.Optional
 import org.simple.clinic.util.toPayload
+import java.util.Optional
 import java.util.UUID
 
 class RegisterUserTest {

@@ -17,9 +17,9 @@ import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
-import java.util.Optional
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
+import java.util.Optional
 import java.util.UUID
 
 class SettingsEffectHandlerTest {

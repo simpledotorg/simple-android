@@ -741,7 +741,7 @@
   <string name="warning_add_blood_sugar_message">সম্ভব হলে, এই রোগীর বর্তমান রক্ত শর্করার রিডিং যোগ করুন।</string>
   <string name="warning_add_blood_sugar_positive_button">রক্ত শর্করা যোগ করুন</string>
   <string name="warning_add_blood_sugar_negative_button">এখন নয়</string>
-  
+
   <!-- Custom drug entry sheet -->
   <string name="custom_drug_entry_sheet_remove">অপসারণ করুন</string>
   <string name="custom_drug_entry_sheet_dosage">ওষুধের মাত্রা</string>
@@ -749,4 +749,4 @@
   <string name="custom_drug_entry_sheet_save_button_text">সংরক্ষণ করুন</string>
   <string name="custom_drug_entry_sheet_add_button_text">যোগ করুন</string>
   <string name="custom_drug_entry_sheet_frequency_dialog_done">সম্পন্ন</string>
-  </resources>
+</resources>

@@ -741,7 +741,7 @@
   <string name="warning_add_blood_sugar_message">हो सके, तो इस मरीज की मौजूदा ब्लड शुगर रीडिंग जोड़ें।</string>
   <string name="warning_add_blood_sugar_positive_button">ब्लड शुगर की जानकारी जोड़ें</string>
   <string name="warning_add_blood_sugar_negative_button">अभी नहीं</string>
-  
+
   <!-- Custom drug entry sheet -->
   <string name="custom_drug_entry_sheet_remove">हटाएं</string>
   <string name="custom_drug_entry_sheet_dosage">मात्रा</string>
@@ -749,4 +749,4 @@
   <string name="custom_drug_entry_sheet_save_button_text">सहेजें</string>
   <string name="custom_drug_entry_sheet_add_button_text">जोड़ें</string>
   <string name="custom_drug_entry_sheet_frequency_dialog_done">पूरा हुआ</string>
-  </resources>
+</resources>

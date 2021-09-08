@@ -15,7 +15,7 @@ interface ContactPatientUi {
 
   fun showCallResultSection_Old()
   fun hideCallResultSection_Old()
-  
+
   fun showSecureCallUi_Old()
   fun showSecureCallUi()
 

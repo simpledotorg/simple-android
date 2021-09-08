@@ -3,7 +3,7 @@ package org.simple.clinic.storage.migrations
 import org.junit.Test
 import org.simple.clinic.assertColumns
 
-class Migration96AndroidTest: BaseDatabaseMigrationTest(
+class Migration96AndroidTest : BaseDatabaseMigrationTest(
     fromVersion = 95,
     toVersion = 96
 ) {

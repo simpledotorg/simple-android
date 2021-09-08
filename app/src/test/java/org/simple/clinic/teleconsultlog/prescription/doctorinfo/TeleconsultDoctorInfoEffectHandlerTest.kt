@@ -14,8 +14,8 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.signature.SignatureRepository
-import java.util.Optional
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
+import java.util.Optional
 import java.util.UUID
 
 class TeleconsultDoctorInfoEffectHandlerTest {

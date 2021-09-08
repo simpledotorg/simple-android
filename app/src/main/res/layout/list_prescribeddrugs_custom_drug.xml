@@ -30,13 +30,13 @@
         android:layout_weight="1"
         android:background="@android:color/transparent"
         android:clickable="false"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:paddingStart="@dimen/spacing_8"
         android:paddingEnd="@dimen/spacing_8"
         android:textAppearance="?attr/textAppearanceBody1"
         android:textColor="?attr/colorOnSurface"
-        tools:text="Amlodipine"
-        android:maxLines="1"
-        android:ellipsize="end"/>
+        tools:text="Amlodipine" />
 
       <TextView
         android:id="@+id/prescribeddrug_item_customdrug_dosage"

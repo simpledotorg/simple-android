@@ -9,11 +9,11 @@ import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Months
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
-import java.util.Optional
 import org.simple.clinic.util.preference.StringPreferenceConverter
 import org.simple.clinic.util.preference.getOptional
 import retrofit2.Retrofit
 import java.time.Period
+import java.util.Optional
 import javax.inject.Named
 
 @Module

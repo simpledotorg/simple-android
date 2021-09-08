@@ -28,7 +28,6 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.Blank
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooLong
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooShort
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
-import java.util.Optional
 import org.simple.clinic.util.toNullable
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMaxAgeLimit
@@ -38,6 +37,7 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
 import java.time.format.DateTimeFormatter
+import java.util.Optional
 
 /**
  * Represents user input on the UI, which is why every field is a String.

@@ -2,7 +2,6 @@ package org.simple.clinic.patient
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import org.simple.clinic.patient.Gender
 import java.time.LocalDate
 
 @Parcelize

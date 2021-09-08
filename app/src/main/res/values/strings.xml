@@ -837,7 +837,7 @@
   <string name="warning_add_blood_sugar_message">If possible, add a current blood sugar reading for this patient.</string>
   <string name="warning_add_blood_sugar_positive_button">Add blood sugar</string>
   <string name="warning_add_blood_sugar_negative_button">Not now</string>
-  
+
   <!-- Custom drug entry sheet -->
   <string name="custom_drug_entry_sheet_remove">Remove</string>
   <string name="custom_drug_entry_sheet_dosage">Dosage</string>

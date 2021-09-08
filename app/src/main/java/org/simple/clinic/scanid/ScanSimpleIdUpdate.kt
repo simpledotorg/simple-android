@@ -15,7 +15,6 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNatio
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.Found
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.NotFound
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.OtherError
-import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Success
 import java.util.UUID

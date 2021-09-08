@@ -1,6 +1,5 @@
 package org.simple.clinic.scanid.qrcodeanalyzer
 
-import android.annotation.SuppressLint
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.google.android.gms.dynamite.DynamiteModule.LoadingException

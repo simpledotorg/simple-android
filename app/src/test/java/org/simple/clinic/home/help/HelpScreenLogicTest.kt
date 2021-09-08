@@ -16,12 +16,12 @@ import org.junit.Test
 import org.simple.clinic.help.HelpPullResult
 import org.simple.clinic.help.HelpRepository
 import org.simple.clinic.help.HelpSync
-import java.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
+import java.util.Optional
 
 class HelpScreenLogicTest {
 

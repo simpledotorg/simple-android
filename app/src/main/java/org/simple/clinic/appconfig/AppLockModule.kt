@@ -5,8 +5,8 @@ import dagger.Provides
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.login.AppLockConfigModule
 import org.simple.clinic.storage.MemoryValue
-import java.util.Optional
 import java.time.Instant
+import java.util.Optional
 
 @Module(includes = [AppLockConfigModule::class])
 class AppLockModule {

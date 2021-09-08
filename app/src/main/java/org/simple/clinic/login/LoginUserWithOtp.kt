@@ -9,11 +9,11 @@ import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsUser
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
-import java.util.Optional
 import org.simple.clinic.util.readErrorResponseJson
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
+import java.util.Optional
 import javax.inject.Inject
 import javax.inject.Named
 

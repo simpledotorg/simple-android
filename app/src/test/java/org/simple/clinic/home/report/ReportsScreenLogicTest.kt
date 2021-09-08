@@ -11,11 +11,11 @@ import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.reports.ReportsRepository
-import java.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
+import java.util.Optional
 
 class ReportsScreenLogicTest {
 

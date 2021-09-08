@@ -5,8 +5,8 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.ReminderConsent
 import org.simple.clinic.patient.businessid.Identifier
-import java.util.Optional
 import org.simple.clinic.widgets.UiEvent
+import java.util.Optional
 
 sealed class PatientEntryEvent : UiEvent
 

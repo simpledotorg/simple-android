@@ -741,7 +741,7 @@
   <string name="warning_add_blood_sugar_message">ಸಾಧ್ಯವಾದರೆ, ಈ ರೋಗಿಗಾಗಿ ಪ್ರಸ್ತುತ ರಕ್ತದ ಸಕ್ಕರೆ ರೀಡಿಂಗ್ ಅನ್ನು ಸೇರಿಸಿ.</string>
   <string name="warning_add_blood_sugar_positive_button">ರಕ್ತದ ಸಕ್ಕರೆಯನ್ನು ಸೇರಿಸಿ</string>
   <string name="warning_add_blood_sugar_negative_button">ಈಗಲ್ಲ</string>
-  
+
   <!-- Custom drug entry sheet -->
   <string name="custom_drug_entry_sheet_remove">ತೆಗೆದುಹಾಕಿ</string>
   <string name="custom_drug_entry_sheet_dosage">ಡೋಸೇಜ್</string>
@@ -749,4 +749,4 @@
   <string name="custom_drug_entry_sheet_save_button_text">ಉಳಿಸಿ</string>
   <string name="custom_drug_entry_sheet_add_button_text">ಸೇರಿಸಿ</string>
   <string name="custom_drug_entry_sheet_frequency_dialog_done">ಪೂರ್ಣಗೊಳಿಸಲಾಗಿದೆ</string>
-  </resources>
+</resources>

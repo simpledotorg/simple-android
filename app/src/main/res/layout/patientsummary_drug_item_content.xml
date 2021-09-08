@@ -36,14 +36,14 @@
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_12"
     android:layout_marginEnd="@dimen/spacing_8"
+    android:ellipsize="end"
+    android:maxLines="1"
     android:textAppearance="?attr/textAppearanceBody0"
     android:textColor="?attr/colorOnSurface"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toStartOf="@id/prescribedDrugDate"
     app:layout_constraintStart_toEndOf="@id/drugIcon"
     app:layout_constraintTop_toTopOf="parent"
-    tools:text="Metformin 500 mg BD"
-    android:maxLines="1"
-    android:ellipsize="end"/>
+    tools:text="Metformin 500 mg BD" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

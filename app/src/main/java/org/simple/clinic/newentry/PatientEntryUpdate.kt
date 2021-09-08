@@ -5,14 +5,23 @@ import com.spotify.mobius.Next.next
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
-import org.simple.clinic.newentry.Field.*
+import org.simple.clinic.newentry.Field.Age
+import org.simple.clinic.newentry.Field.BangladeshNationalId
+import org.simple.clinic.newentry.Field.ColonyOrVillage
+import org.simple.clinic.newentry.Field.DateOfBirth
+import org.simple.clinic.newentry.Field.District
+import org.simple.clinic.newentry.Field.FullName
+import org.simple.clinic.newentry.Field.PhoneNumber
+import org.simple.clinic.newentry.Field.State
+import org.simple.clinic.newentry.Field.StreetAddress
+import org.simple.clinic.newentry.Field.Zone
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.registration.phone.PhoneNumberValidator
-import java.util.Optional
 import org.simple.clinic.util.isNotEmpty
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+import java.util.Optional
 
 typealias PatientEntryNext = Next<PatientEntryModel, PatientEntryEffect>
 

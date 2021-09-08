@@ -13,13 +13,13 @@ data class SearchPatientByIdentifier(val identifier: Identifier) : ScanSimpleIdE
 
 data class ParseScannedJson(val text: String) : ScanSimpleIdEffect()
 
-data class OnlinePatientLookupWithIdentifier(val identifier: Identifier): ScanSimpleIdEffect()
+data class OnlinePatientLookupWithIdentifier(val identifier: Identifier) : ScanSimpleIdEffect()
 
 data class SaveCompleteMedicalRecords(
     val completeMedicalRecords: List<CompleteMedicalRecord>
 ) : ScanSimpleIdEffect()
 
-sealed class ScanSimpleIdViewEffect: ScanSimpleIdEffect()
+sealed class ScanSimpleIdViewEffect : ScanSimpleIdEffect()
 
 object ShowQrCodeScannerView : ScanSimpleIdViewEffect()
 

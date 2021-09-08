@@ -2,8 +2,8 @@ package org.simple.clinic.home.report
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import java.util.Optional
 import org.simple.clinic.util.toNullable
+import java.util.Optional
 
 @Parcelize
 data class ReportsModel(val reportsContent: String?) : Parcelable {

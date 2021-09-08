@@ -741,7 +741,7 @@
   <string name="warning_add_blood_sugar_message">හැකි නම්, මේ රෝගියා සඳහා වත්මන් රුධිරගත සීනි කියවීමක් එක් කරන්න.</string>
   <string name="warning_add_blood_sugar_positive_button">රුධිරගත සීනි එක් කරන්න</string>
   <string name="warning_add_blood_sugar_negative_button">දැන් නොවේ</string>
-  
+
   <!-- Custom drug entry sheet -->
   <string name="custom_drug_entry_sheet_remove">ඉවත් කරන්න</string>
   <string name="custom_drug_entry_sheet_dosage">මාත්‍රාව</string>
@@ -749,4 +749,4 @@
   <string name="custom_drug_entry_sheet_save_button_text">සුරකින්න</string>
   <string name="custom_drug_entry_sheet_add_button_text">එකතු කරන්න</string>
   <string name="custom_drug_entry_sheet_frequency_dialog_done">අවසන්</string>
-  </resources>
+</resources>

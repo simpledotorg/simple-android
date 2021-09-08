@@ -175,7 +175,7 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
     }
 
     setFragmentResultListener(Request.PickAppointmentDate, Request.SelectFacility) { requestKey, result ->
-      if(result is Succeeded) {
+      if (result is Succeeded) {
         handleSuccessfulScreenResult(requestKey, result)
       }
     }
@@ -335,7 +335,7 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
     object SelectFacility : Request()
 
     @Parcelize
-    object PickAppointmentDate: Request()
+    object PickAppointmentDate : Request()
   }
 
   interface Injector {

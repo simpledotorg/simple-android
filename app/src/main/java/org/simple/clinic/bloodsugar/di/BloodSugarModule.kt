@@ -8,10 +8,10 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.bloodsugar.sync.BloodSugarSyncApi
-import java.util.Optional
 import org.simple.clinic.util.preference.StringPreferenceConverter
 import org.simple.clinic.util.preference.getOptional
 import retrofit2.Retrofit
+import java.util.Optional
 import javax.inject.Named
 
 @Module

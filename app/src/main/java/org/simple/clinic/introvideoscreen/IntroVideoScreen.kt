@@ -21,7 +21,6 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.register.RegistrationLoadingScreenKey
 import org.simple.clinic.simplevideo.SimpleVideo

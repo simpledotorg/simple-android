@@ -32,7 +32,8 @@ class SelectStateEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulers.io())
-          .map { appConfigRepository.saveState(it.state) }
+          .doOnNext { appConfigRepository.saveState(it.state) }
+          .doOnNext { appConfigRepository.saveDeployment(it.state.deployment) }
           .map { StateSaved }
     }
   }

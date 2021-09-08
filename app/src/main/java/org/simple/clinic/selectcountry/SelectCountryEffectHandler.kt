@@ -33,7 +33,7 @@ class SelectCountryEffectHandler(
         .subtypeEffectHandler<SelectCountryEffect, SelectCountryEvent>()
         .addTransformer(FetchManifest::class.java, fetchManifest())
         .addTransformer(SaveCountryEffect::class.java, saveCountry())
-        .addAction(GoToNextScreen::class.java, uiActions::goToNextScreen, schedulersProvider.ui())
+        .addAction(GoToStateSelectionScreen::class.java, uiActions::goToStateSelectionScreen, schedulersProvider.ui())
         .addTransformer(SaveDeployment::class.java, saveDeployment())
         .addAction(GoToRegistrationScreen::class.java, uiActions::goToRegistrationScreen, schedulersProvider.ui())
         .build()

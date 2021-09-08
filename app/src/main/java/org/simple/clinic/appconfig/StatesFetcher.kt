@@ -13,11 +13,16 @@ class StatesFetcher @Inject constructor(
   @Throws(ConnectException::class)
   fun fetchStates(deployment: Deployment): List<State> {
     val statesApi = createStatesApi(deployment)
-    return statesApi
+    val statesPayload = statesApi
         .fetchStates()
+        .execute()
+        .body()
+    val states = statesPayload?.states.orEmpty()
+
+    return states
         .map { state ->
           State(
-              displayName = state,
+              displayName = state.displayName,
               deployment = deployment
           )
         }

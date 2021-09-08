@@ -27,7 +27,7 @@ class SelectCountryUpdate : Update<SelectCountryModel, SelectCountryEvent, Selec
       val selectedCountryDeployment = model.selectedCountry!!.deployments.first()
       SaveDeployment(selectedCountryDeployment)
     } else {
-      GoToNextScreen
+      GoToStateSelectionScreen
     }
 
     return dispatch(effect = effect)

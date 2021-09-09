@@ -239,6 +239,7 @@ class FacilityPickerLogicTest {
         schedulers = TestSchedulersProvider.trampoline(),
         screenLocationUpdates = screenLocationUpdates,
         facilityRepository = facilityRepository,
+        appConfigRepository = mock(),
         uiActions = uiActions
     )
     val uiRenderer = FacilityPickerUiRenderer(listItemBuilder, config, ui)

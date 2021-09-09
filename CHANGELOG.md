@@ -17,6 +17,7 @@
 - Bump AGP to v7.0.2
 - Refactor logic around providing drug frequencies label depending on the country
 - Change `EditPatientScreen` to use Mobius view effects
+- Update `.editorconfig` rules
 - [In Progress: 31 Aug 2021] Record call results instead of updating the same appointment record
 - [In Progress: 31 Aug 2021] Refactor logic around providing drug frequencies label depending on the country
 - [In Progress: 2 Sep 2021] Add a progress state in `CustomDrugEntrySheet`

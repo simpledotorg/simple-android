@@ -14,13 +14,11 @@ class CustomDrugEntryInit : Init<CustomDrugEntryModel, CustomDrugEntryEffect> {
       is FromDrugName -> model.drugNameLoaded(model.openAs.drugName).drugInfoProgressStateLoaded()
     }
 
-    val effect = when (updatedModel.openAs) {
-      is FromDrugList -> FetchDrug(updatedModel.openAs.drugUuid)
-      is Update -> FetchPrescription(updatedModel.openAs.prescribedDrugUuid)
-      is FromDrugName -> null
+    val effects = mutableSetOf<CustomDrugEntryEffect>(LoadDrugFrequencyChoiceItems)
+    when (model.openAs) {
+      is FromDrugList -> effects.add(FetchDrug(model.openAs.drugUuid))
+      is Update -> effects.add(FetchPrescription(model.openAs.prescribedDrugUuid))
     }
-
-    val effects = mutableSetOf(LoadDrugFrequencyChoiceItems, effect)
 
     return first(updatedModel, effects)
   }

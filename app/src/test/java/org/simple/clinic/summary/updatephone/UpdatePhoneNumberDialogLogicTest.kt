@@ -18,11 +18,11 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.registration.phone.LengthBasedNumberValidator
-import java.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
+import java.util.Optional
 import java.util.UUID
 
 class UpdatePhoneNumberDialogLogicTest {

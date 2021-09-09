@@ -1,7 +1,6 @@
 package org.simple.clinic.activity
 
 import com.google.common.truth.Truth.assertThat
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.clearInvocations
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never

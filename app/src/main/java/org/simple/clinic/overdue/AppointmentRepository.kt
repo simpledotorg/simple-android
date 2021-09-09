@@ -11,13 +11,13 @@ import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.Appointment.Status.Visited
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.SynceableRepository
-import java.util.Optional
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toOptional
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
+import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
 

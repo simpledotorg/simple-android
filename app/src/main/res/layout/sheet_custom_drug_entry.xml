@@ -84,13 +84,13 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:cursorVisible="false"
+      android:drawableEnd="@drawable/ic_keyboard_arrow_down_24px"
       android:focusable="false"
       android:focusableInTouchMode="false"
       android:hint="@string/custom_drug_entry_sheet_frequency"
       android:imeOptions="actionDone"
       android:inputType="textNoSuggestions"
-      android:text="@string/custom_drug_entry_sheet_frequency_none"
-      android:drawableEnd="@drawable/ic_keyboard_arrow_down_24px"/>
+      android:text="@string/custom_drug_entry_sheet_frequency_none" />
 
   </com.google.android.material.textfield.TextInputLayout>
 

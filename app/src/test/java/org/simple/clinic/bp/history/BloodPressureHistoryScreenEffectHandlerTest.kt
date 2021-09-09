@@ -18,8 +18,8 @@ import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientRepository
-import java.util.Optional
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import java.util.Optional
 import java.util.UUID
 
 class BloodPressureHistoryScreenEffectHandlerTest {

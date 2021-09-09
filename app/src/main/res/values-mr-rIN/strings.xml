@@ -741,7 +741,7 @@
   <string name="warning_add_blood_sugar_message">शक्य असल्यास, ह्या रुग्णासाठी वर्तमान रक्तातील साखरेचे वाचन जोडा.</string>
   <string name="warning_add_blood_sugar_positive_button">रक्तातील साखर जोडा</string>
   <string name="warning_add_blood_sugar_negative_button">आता नाही</string>
-  
+
   <!-- Custom drug entry sheet -->
   <string name="custom_drug_entry_sheet_remove">काढून टाका</string>
   <string name="custom_drug_entry_sheet_dosage">डोस</string>
@@ -749,4 +749,4 @@
   <string name="custom_drug_entry_sheet_save_button_text">जतन करा</string>
   <string name="custom_drug_entry_sheet_add_button_text">जोडा</string>
   <string name="custom_drug_entry_sheet_frequency_dialog_done">पूर्ण झाले</string>
-  </resources>
+</resources>

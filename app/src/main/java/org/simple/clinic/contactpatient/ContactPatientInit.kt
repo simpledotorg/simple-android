@@ -19,7 +19,7 @@ class ContactPatientInit : Init<ContactPatientModel, ContactPatientEffect> {
       effects.add(LoadLatestOverdueAppointment(model.patientUuid))
     }
 
-    if(!model.hasCurrentFacility){
+    if (!model.hasCurrentFacility) {
       effects.add(LoadCurrentFacility)
     }
 

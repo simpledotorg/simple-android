@@ -67,6 +67,7 @@ tasks.withType<Test> {
           println("\n" + ("-".repeat(repeatLength)) + "\n" + startItem + output + endItem + "\n" + ("-".repeat(repeatLength)))
         }
       }
+
       override fun beforeTest(descriptor: TestDescriptor?) {}
       override fun afterTest(descriptor: TestDescriptor?, result: TestResult?) {}
     })

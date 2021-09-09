@@ -10,8 +10,8 @@ import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
-import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientPhoneNumber
 import java.time.Instant
 import java.time.LocalDate

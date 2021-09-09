@@ -6,7 +6,6 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.AppointmentCancelReason
-import org.simple.clinic.overdue.callresult.Outcome
 import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientPhoneNumberType

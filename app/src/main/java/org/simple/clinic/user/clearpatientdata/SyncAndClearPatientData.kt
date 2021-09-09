@@ -5,9 +5,9 @@ import io.reactivex.Completable
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.sync.DataSync
-import java.util.Optional
 import timber.log.Timber
 import java.time.Duration
+import java.util.Optional
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named

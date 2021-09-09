@@ -1,6 +1,7 @@
 (The style of an element on Zeplin can be found in the sidebar of the Zeplin app.)
 
 ## Glossary
+
 - Style: style attributes for a UI element, like a text field.
 - Component: groups of UI elements, like Toolbar or TextInputLayout.
 
@@ -27,9 +28,12 @@ If a style is named as `body2Tag/grey1` on Zeplin, then it'll be stored as two s
 </style>
 ```
 
-Zeplin isn't very smart when it comes to code generation, so it's not recommended to copy the generated styles directly to our XML. For instance, if a style contains attributes that are only related to the text, it should be used with `android:textAppearance` rather than applying the style to the whole TextView.
+Zeplin isn't very smart when it comes to code generation, so it's not recommended to copy the generated styles directly to our XML. For instance, if a
+style contains attributes that are only related to the text, it should be used with `android:textAppearance` rather than applying the style to the
+whole TextView.
 
-If a style also contains non-text related attributes like spacing, background, etc., consider splitting it into two styles. A common example are buttons:
+If a style also contains non-text related attributes like spacing, background, etc., consider splitting it into two styles. A common example are
+buttons:
 
 ```xml
 <style name="Clinic.V2.Button.Solid.WithoutIcon.Blue1">

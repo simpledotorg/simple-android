@@ -22,4 +22,4 @@ object ClearPatientData : TheActivityEffect()
 
 object ShowAccessDeniedScreen : TheActivityEffect()
 
-data class ShowInitialScreen(val screen: ScreenKey): TheActivityEffect()
+data class ShowInitialScreen(val screen: ScreenKey) : TheActivityEffect()

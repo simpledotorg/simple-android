@@ -18,12 +18,12 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengt
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
-import org.simple.clinic.patient.PatientAgeDetails
-import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
-import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientAgeDetails
+import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
+import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.registration.phone.PhoneNumberValidator

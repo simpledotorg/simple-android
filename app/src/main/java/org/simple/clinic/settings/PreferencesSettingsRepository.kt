@@ -4,10 +4,10 @@ import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
-import java.util.Optional
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.ofType
 import java.util.Locale
+import java.util.Optional
 
 class PreferencesSettingsRepository(
     private val userSelectedLocalePreference: Preference<Optional<Locale>>,

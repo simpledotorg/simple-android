@@ -12,6 +12,7 @@ The application currently requires JDK 11 to build. If you already have JDK 11 i
 **Check if the right JDK is already available**
 
 Run the command `java -version`. If you have the right version of the JDK installed, you should see something like:
+
 ```sh
 openjdk version "11.0.10" 2021-01-19
 OpenJDK Runtime Environment AdoptOpenJDK (build 11.0.10+9)
@@ -22,38 +23,45 @@ If this command has an error, or shows a different version, you can follow the i
 
 **Install the JDK**
 
-We recommend using [jEnv](https://www.jenv.be/) to manage your JDK installations. Here are instructions to setup a working JDK 1.8 installation (macOS only):
+We recommend using [jEnv](https://www.jenv.be/) to manage your JDK installations. Here are instructions to setup a working JDK 1.8 installation (macOS
+only):
 
 1. Setup up [Homebrew](https://brew.sh/).
 
 2. Install `jEnv` using Homebrew.
+
 ```sh
 brew install jenv
 ```
 
 3. Add the following lines to your shell configuration file (`~/.bash_profile` if you're using bash, or `~/.zshrc` if you're using zsh).
+
 ```sh
 export PATH="$HOME/.jenv/bin:$PATH"
 eval "$(jenv init -)"
 ```
 
 4. Once this is done, you'll need to restart the terminal or reload the configuration file in order for the `jenv` command to be recognised.
+
 ```sh
 source <path to shell configuration file>
 ```
 
 5. Install the JDK using Homebrew.
+
 ```sh
 brew tap AdoptOpenJDK/openjdk
 brew cask install adoptopenjdk11
 ```
 
 6. Add the installed JDK to `jEnv`
+
 ```sh
 jenv add /Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home
 ```
 
 7. Run the command `jenv versions`. You should see something like:
+
 ```sh
   system
   11
@@ -78,11 +86,10 @@ Download and install Android Studio from [their website](https://developer.andro
 
 **Import the project into Android Studio.**
 
-When Android Studio starts up, it will prompt you to create a new project or import an existing project. Select the
-option to import an existing project, navigate to the `simple-android` directory you cloned earlier, and select it.
+When Android Studio starts up, it will prompt you to create a new project or import an existing project. Select the option to import an existing
+project, navigate to the `simple-android` directory you cloned earlier, and select it.
 
-When building for the first time, gradle will download all dependencies so it'll take a few minutes to complete.
-Subsequent builds will be faster.
+When building for the first time, gradle will download all dependencies so it'll take a few minutes to complete. Subsequent builds will be faster.
 
 If during the build process you see the message:
 "Warning: License for package Android SDK Build-Tools 30.0.2 not accepted."
@@ -116,14 +123,14 @@ NDK will now be installed.
 
 **Create a virtual device**
 
-* Create an Android Virtual Device (AVD) using the AVD Manager, usually found in Tools -> AVD Manager. ([ref](https://developer.android.com/studio/run/managing-avds))
+* Create an Android Virtual Device (AVD) using the AVD Manager, usually found in Tools -> AVD
+  Manager. ([ref](https://developer.android.com/studio/run/managing-avds))
 * Select a device and operating system
 * Note: You will have to download one of the available OS options the first time you create an AVD
 
 **Set the right build variant**
 
-* Open the Build Variants window through View -> Tool Windows -> Build Variants, or clicking the item in the lower left
-  corner of the main window
+* Open the Build Variants window through View -> Tool Windows -> Build Variants, or clicking the item in the lower left corner of the main window
 * Set the Build Variant of the app module to `qaDebug`
 
 **Run the app**
@@ -143,27 +150,33 @@ The code styles which the project uses have been exported as an IntelliJ code st
 
 ## Tooling
 
-An Android Studio plugin that provides some quality of life improvements like live templates can be found [HERE](https://github.com/simpledotorg/simple-android-idea-plugin).
+An Android Studio plugin that provides some quality of life improvements like live templates can be
+found [HERE](https://github.com/simpledotorg/simple-android-idea-plugin).
 
 ## Building an APK with a different build variant
 
 There are currently 2 ways to build an app pointing to different environments:
 
-1. Changing the `qa` API URL in `gradle.properties` file to point to the environment you want. These builds will be debuggable and require us to clone the project and build it using [Android Studio](https://developer.android.com/studio). [*Warning*: These changes should not be commited back to `master` branch]
+1. Changing the `qa` API URL in `gradle.properties` file to point to the environment you want. These builds will be debuggable and require us to clone
+   the project and build it using [Android Studio](https://developer.android.com/studio). [*
+   Warning*: These changes should not be commited back to `master` branch]
 2. Use Bitrise workflows to build APKs of different build variants. These builds will not be debuggable, unless for `build-debuggable-sandbox-apk`.
 
 ## Build and deploy Simple Server
 
-Simple Server is in a separate repository, and you should follow the [instructions there](https://github.com/simpledotorg/simple-server/blob/master/README.md).
+Simple Server is in a separate repository, and you should follow
+the [instructions there](https://github.com/simpledotorg/simple-server/blob/master/README.md).
 
 ## Execute SQL Queries
 
 You can use [Flipper](https://fbflipper.com/) to run SQL queries on Simple:
 
-1. Install Flipper using brew or download from their [website](https://fbflipper.com/). 
+1. Install Flipper using brew or download from their [website](https://fbflipper.com/).
+
 ```sh 
 brew install Flipper
 ```
+
 2. Launch Flipper (you might have to allow Flipper to launch from System Preferences > Security > General as it’s from an unknown developer to Apple).
 3. Run the Simple app in an emulator or your physical device(as Flipper loads the data from your device's local database).
 4. In the Plugins section in the sidebar menu click on Disabled and enable the Database plugin.

@@ -17,7 +17,6 @@ import io.reactivex.Observable
 import io.reactivex.exceptions.Exceptions
 import org.simple.clinic.router.ScreenResultBus
 import timber.log.Timber
-import java.util.ArrayList
 
 /**
  * Responsible for routing between screens inside the host Activity.

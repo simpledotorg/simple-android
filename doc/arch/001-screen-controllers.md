@@ -6,13 +6,18 @@ Superceded by [008](./008-screen-architecture-v3.md) on 2019-10-01
 
 ## Context
 
-We don’t want to put business logic inside Android framework classes (like an `Activity` or `Fragment`) because those cannot be unit tested. To enable a fast feedback loop (i.e. tests that run on the JVM and not Android VM), we separate screens and controllers using the [MVI architecture](https://medium.com/@ragunathjawahar/mvi-series-a-pragmatic-reactive-architecture-for-android-87ca176387d1) [pattern](https://medium.com/@ragunathjawahar/mvi-series-a-pragmatic-reactive-architecture-for-android-87ca176387d1).
+We don’t want to put business logic inside Android framework classes (like an `Activity` or `Fragment`) because those cannot be unit tested. To enable
+a fast feedback loop (i.e. tests that run on the JVM and not Android VM), we separate screens and controllers using
+the [MVI architecture](https://medium.com/@ragunathjawahar/mvi-series-a-pragmatic-reactive-architecture-for-android-87ca176387d1) [pattern](https://medium.com/@ragunathjawahar/mvi-series-a-pragmatic-reactive-architecture-for-android-87ca176387d1)
+.
 
 ## Decision
 
-Every screen has one controller that consumes user events, performs business logic with the help of data repositories and communicates UI changes back to the screen.
+Every screen has one controller that consumes user events, performs business logic with the help of data repositories and communicates UI changes back
+to the screen.
 
-User interactions happening on the screen are abstracted inside data classes of type `UiEvent`. These events flow to the controller in the form of RxJava streams.
+User interactions happening on the screen are abstracted inside data classes of type `UiEvent`. These events flow to the controller in the form of
+RxJava streams.
 
 ```kotlin
 // Create the UsernameTextChanged event by listening to the EditText
@@ -24,7 +29,8 @@ RxTextView
 data class UsernameTextChanged(text: String) : UiEvent
 ```
 
-The screen sends a single stream of `UiEvent`s to the controller and gets back a transformed stream of UI changes. The flow of data is uni-directional. To merge multiple streams into one, RxJava’s `merge()`  operator is used. 
+The screen sends a single stream of `UiEvent`s to the controller and gets back a transformed stream of UI changes. The flow of data is
+uni-directional. To merge multiple streams into one, RxJava’s `merge()`  operator is used.
 
 ```kotlin
 // Login screen
@@ -34,7 +40,8 @@ Observable.merge(usernameChanges(), passwordChanges(), submitClicks())
   .subscribe { uiChange -> uiChange(this) }
 ```
 
-In the controller, `UiEvent`s are transformed as per the business logic and `UiChange`s are sent back to the screen. The `UiChange` is a simple lambda function that takes the screen itself as an argument, which can call a method implemented by the screen interface.
+In the controller, `UiEvent`s are transformed as per the business logic and `UiChange`s are sent back to the screen. The `UiChange` is a simple lambda
+function that takes the screen itself as an argument, which can call a method implemented by the screen interface.
 
 ```kotlin
 typealias Ui = LoginScreen
@@ -52,7 +59,9 @@ class LoginScreenController : ObservableTransformer<UiEvent, UiChange>() {
 }
 ```
 
-When the events have to observed across multiple functions in the controller, the stream is shared using `replay()` + `refCount()` so that the UI events aren't recreated once for every subscription. `replay()` shares a single subscription to the screen by replaying the events to every observer and `refCount()` keeps the subscription alive as long as there is at least one observer.
+When the events have to observed across multiple functions in the controller, the stream is shared using `replay()` + `refCount()` so that the UI
+events aren't recreated once for every subscription. `replay()` shares a single subscription to the screen by replaying the events to every observer
+and `refCount()` keeps the subscription alive as long as there is at least one observer.
 
 ```kotlin
 class LoginScreenController : ObservableTransformer<UiEvent, UiChange>() {
@@ -77,7 +86,8 @@ class LoginScreenController : ObservableTransformer<UiEvent, UiChange>() {
 
 ## Consequences
 
-Because all events are replayed from the beginning on subscription, `UiChange` functions must only subscribe to events exactly once, and immediately when the controller is constructed.
+Because all events are replayed from the beginning on subscription, `UiChange` functions must only subscribe to events exactly once, and immediately
+when the controller is constructed.
 
 For instance, subscribing to the event stream in a `flatMap` will result in the events getting replayed every time `flatMap`'s upstream emits:
 

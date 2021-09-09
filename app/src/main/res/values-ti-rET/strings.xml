@@ -741,7 +741,7 @@
   <string name="warning_add_blood_sugar_message">ዝከኣል እንተ ኰይኑ ፡ ነዚ ሕሙም እዚ ዝኸውን እዋናዊ ሽኮራዊ ንባብ ይውስኹ።</string>
   <string name="warning_add_blood_sugar_positive_button">ኣብ ደም ዘሎ ሽኮር ይውስኹ?</string>
   <string name="warning_add_blood_sugar_negative_button">ሕዚ ኣይኮነን</string>
-  
+
   <!-- Custom drug entry sheet -->
   <string name="custom_drug_entry_sheet_remove">ምልጋስ </string>
   <string name="custom_drug_entry_sheet_dosage">መጠን</string>
@@ -749,4 +749,4 @@
   <string name="custom_drug_entry_sheet_save_button_text">ምዕቃብ</string>
   <string name="custom_drug_entry_sheet_add_button_text">ወስኽ</string>
   <string name="custom_drug_entry_sheet_frequency_dialog_done">ተሰሪሑ</string>
-  </resources>
+</resources>

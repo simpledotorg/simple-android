@@ -7,7 +7,7 @@ import org.simple.clinic.mobius.ViewEffectsHandler
 
 class ScanSimpleIdViewEffectHandler @AssistedInject constructor(
     @Assisted private val uiActions: ScanSimpleIdUiActions
-): ViewEffectsHandler<ScanSimpleIdViewEffect> {
+) : ViewEffectsHandler<ScanSimpleIdViewEffect> {
 
   @AssistedFactory
   interface Factory {
@@ -15,7 +15,7 @@ class ScanSimpleIdViewEffectHandler @AssistedInject constructor(
   }
 
   override fun handle(viewEffect: ScanSimpleIdViewEffect) {
-    when(viewEffect) {
+    when (viewEffect) {
       ShowQrCodeScannerView -> uiActions.showQrCodeScannerView()
       HideQrCodeScannerView -> uiActions.hideQrCodeScannerView()
       HideEnteredCodeValidationError -> uiActions.hideEnteredCodeValidationError()

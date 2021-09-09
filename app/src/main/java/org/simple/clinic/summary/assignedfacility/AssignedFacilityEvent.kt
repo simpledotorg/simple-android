@@ -1,8 +1,8 @@
 package org.simple.clinic.summary.assignedfacility
 
 import org.simple.clinic.facility.Facility
-import java.util.Optional
 import org.simple.clinic.widgets.UiEvent
+import java.util.Optional
 
 sealed class AssignedFacilityEvent : UiEvent
 

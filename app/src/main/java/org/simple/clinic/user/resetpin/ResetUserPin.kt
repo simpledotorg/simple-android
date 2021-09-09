@@ -15,10 +15,10 @@ import org.simple.clinic.user.resetpin.ResetPinResult.NetworkError
 import org.simple.clinic.user.resetpin.ResetPinResult.Success
 import org.simple.clinic.user.resetpin.ResetPinResult.UnexpectedError
 import org.simple.clinic.user.resetpin.ResetPinResult.UserNotFound
-import java.util.Optional
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
+import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named

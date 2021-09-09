@@ -24,7 +24,6 @@ import org.simple.clinic.insert
 import org.simple.clinic.integer
 import org.simple.clinic.storage.inTransaction
 import org.simple.clinic.string
-import java.util.Optional
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -33,6 +32,7 @@ import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.uuid
 import java.time.Instant
 import java.time.LocalDate
+import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named

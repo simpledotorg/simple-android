@@ -4,10 +4,10 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonReader
 import com.squareup.moshi.JsonWriter
 import com.squareup.moshi.Moshi
-import java.util.Optional
 import java.io.IOException
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
+import java.util.Optional
 
 class MoshiOptionalAdapterFactory : JsonAdapter.Factory {
 

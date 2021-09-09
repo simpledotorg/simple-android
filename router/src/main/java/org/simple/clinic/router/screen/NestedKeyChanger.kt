@@ -5,9 +5,6 @@ import flow.Direction
 import flow.KeyChanger
 import flow.State
 import flow.TraversalCallback
-import java.util.ArrayList
-import java.util.HashSet
-import java.util.LinkedHashSet
 
 /**
  * Coordinates between multiple child [KeyChangers][KeyChanger].

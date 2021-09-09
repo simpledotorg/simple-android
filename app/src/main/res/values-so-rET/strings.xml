@@ -741,7 +741,7 @@
   <string name="warning_add_blood_sugar_message">Haddii ay suurtogal tahay, ku dar heerka sokorta  hadda ee bukaankan.</string>
   <string name="warning_add_blood_sugar_positive_button">Ku dar sokorta dhiiga</string>
   <string name="warning_add_blood_sugar_negative_button">Hadda ma aha</string>
-  
+
   <!-- Custom drug entry sheet -->
   <string name="custom_drug_entry_sheet_remove">Saar</string>
   <string name="custom_drug_entry_sheet_dosage">Qiyaas qaadashada daawada</string>
@@ -749,4 +749,4 @@
   <string name="custom_drug_entry_sheet_save_button_text">Keydi</string>
   <string name="custom_drug_entry_sheet_add_button_text">Ku dar</string>
   <string name="custom_drug_entry_sheet_frequency_dialog_done">La dhameeyay</string>
-  </resources>
+</resources>

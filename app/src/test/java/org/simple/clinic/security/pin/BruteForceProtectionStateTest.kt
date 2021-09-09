@@ -3,8 +3,8 @@ package org.simple.clinic.security.pin
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.simple.clinic.di.network.NetworkModule
-import java.util.Optional
 import java.time.Instant
+import java.util.Optional
 
 class BruteForceProtectionStateTest {
 

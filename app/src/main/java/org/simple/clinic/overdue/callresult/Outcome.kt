@@ -7,7 +7,7 @@ import org.simple.clinic.util.room.SafeEnumTypeAdapter
 
 sealed class Outcome {
 
-  object TypeAdapter: SafeEnumTypeAdapter<Outcome>(
+  object TypeAdapter : SafeEnumTypeAdapter<Outcome>(
       knownMappings = mapOf(
           AgreedToVisit to "agreed_to_visit",
           RemovedFromOverdueList to "removed_from_overdue_list",
@@ -19,11 +19,11 @@ sealed class Outcome {
 
   object AgreedToVisit : Outcome()
 
-  object RemovedFromOverdueList: Outcome()
+  object RemovedFromOverdueList : Outcome()
 
-  object RemindToCallLater: Outcome()
+  object RemindToCallLater : Outcome()
 
-  data class Unknown(val actualValue: String): Outcome()
+  data class Unknown(val actualValue: String) : Outcome()
 
   class RoomTypeConverter {
 
@@ -33,7 +33,7 @@ sealed class Outcome {
     @TypeConverter
     fun fromEnum(outcome: Outcome?): String? = TypeAdapter.fromEnum(outcome)
   }
-  
+
   class MoshiTypeAdapter {
 
     @FromJson

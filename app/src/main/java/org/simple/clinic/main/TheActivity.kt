@@ -26,8 +26,6 @@ import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.empty.EmptyScreenKey
 import org.simple.clinic.feature.Features
-import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
-import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.home.patients.LoggedOutOnOtherDeviceDialog
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.login.applock.AppLockScreenKey

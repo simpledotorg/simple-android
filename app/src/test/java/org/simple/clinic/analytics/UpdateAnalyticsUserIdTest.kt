@@ -15,8 +15,8 @@ import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsUser
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
-import java.util.Optional
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import java.util.Optional
 
 @RunWith(JUnitParamsRunner::class)
 class UpdateAnalyticsUserIdTest {

@@ -160,7 +160,8 @@ class TeleconsultMedicinesView(
     teleconsultMedicinesAdapter.submitList(TeleconsultMedicineItem.from(
         medicines = medicines,
         defaultDuration = teleconsultMedicinesConfig.defaultDuration,
-        defaultFrequency = teleconsultMedicinesConfig.defaultFrequency
+        defaultFrequency = teleconsultMedicinesConfig.defaultFrequency,
+        medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap
     ))
   }
 

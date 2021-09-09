@@ -116,7 +116,7 @@ class TeleconsultMedicinesEffectHandlerTest {
     // then
     effectHandlerTestCase.assertNoOutgoingEvents()
 
-    verify(uiActions).openDrugFrequencySheet(prescription)
+    verify(uiActions).openDrugFrequencySheet(prescription, medicineFrequencyToFrequencyChoiceItemMap)
     verifyNoMoreInteractions(uiActions)
   }
 

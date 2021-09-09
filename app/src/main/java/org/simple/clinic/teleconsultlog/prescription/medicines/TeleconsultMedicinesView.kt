@@ -197,7 +197,10 @@ class TeleconsultMedicinesView(
     activity.startActivityForResult(intent, DRUG_DURATION_SHEET)
   }
 
-  override fun openDrugFrequencySheet(prescription: PrescribedDrug) {
+  override fun openDrugFrequencySheet(
+      prescription: PrescribedDrug,
+      medicineFrequencyToFrequencyChoiceItemMap: Map<MedicineFrequency?, DrugFrequencyChoiceItem>
+  ) {
     val frequency = prescription.frequency ?: teleconsultMedicinesConfig.defaultFrequency
     val intent = MedicineFrequencySheet.intent(
         context = context,

@@ -18,6 +18,7 @@ import org.simple.clinic.appupdate.AppUpdateModule
 import org.simple.clinic.di.network.HttpInterceptorsModule
 import org.simple.clinic.di.network.NetworkModule
 import org.simple.clinic.di.network.RetrofitModule
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactoryModule
 import org.simple.clinic.enterotp.BruteForceOtpEntryProtectionModule
 import org.simple.clinic.facility.change.FacilityChangeModule
 import org.simple.clinic.home.overdue.OverdueAppointmentsConfigModule
@@ -90,7 +91,8 @@ import javax.inject.Named
   InstantSearchConfigModule::class,
   CountryModule::class,
   OverdueAppointmentsConfigModule::class,
-  BruteForceOtpEntryProtectionModule::class
+  BruteForceOtpEntryProtectionModule::class,
+  DrugFrequencyFactoryModule::class
 ])
 class AppModule(private val appContext: Application) {
 

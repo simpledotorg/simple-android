@@ -208,7 +208,8 @@ class TeleconsultMedicinesView(
             uuid = prescription.uuid,
             name = prescription.name,
             dosage = prescription.dosage,
-            medicineFrequency = frequency
+            medicineFrequency = frequency,
+            medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap
         )
     )
     activity.startActivityForResult(intent, DRUG_FREQUENCY_SHEET)

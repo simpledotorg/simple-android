@@ -35,7 +35,7 @@ fi
 
 echo "Starting the Simple server on Heroku"
 herokuGitUrl="https://heroku:${herokuApiKey}@git.heroku.com/${herokuAppName}.git"
-(cd $serverAppDirectory && git fetch && git push $herokuGitUrl android-review-fix-redux:master)
+(cd $serverAppDirectory && git push $herokuGitUrl master)
 resultOfServerPush=$?
 
 resultOfSeedDataSetup=0

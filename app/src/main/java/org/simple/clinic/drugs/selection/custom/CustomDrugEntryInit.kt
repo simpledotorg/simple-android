@@ -22,6 +22,6 @@ class CustomDrugEntryInit : Init<CustomDrugEntryModel, CustomDrugEntryEffect> {
 
     val effects = mutableSetOf(LoadDrugFrequencyChoiceItems, effect)
 
-    return (first(updatedModel, effects))
+    return first(updatedModel, effects)
   }
 }

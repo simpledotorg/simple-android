@@ -1,4 +1,5 @@
 ## Feature Flags
+
 We define features using enums, and provide a default value.
 
 ```kotlin
@@ -11,7 +12,7 @@ enum class Feature(
 }
 ```
 
-We check if a feature is enabled or not, using `Features` class.  Since this class is part of Dagger graph we can inject it.
+We check if a feature is enabled or not, using `Features` class. Since this class is part of Dagger graph we can inject it.
 
 ```kotlin
 fun call() {

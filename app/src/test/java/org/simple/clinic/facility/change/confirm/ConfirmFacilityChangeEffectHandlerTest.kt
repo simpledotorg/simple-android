@@ -15,11 +15,11 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.reports.ReportsSync
-import java.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.time.Instant
+import java.util.Optional
 import java.util.UUID
 
 class ConfirmFacilityChangeEffectHandlerTest {

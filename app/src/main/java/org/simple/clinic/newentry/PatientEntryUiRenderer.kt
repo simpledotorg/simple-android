@@ -3,13 +3,13 @@ package org.simple.clinic.newentry
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.businessid.Identifier
-import java.util.Optional
 import org.simple.clinic.util.ValueChangedCallback
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
+import java.util.Optional
 
 class PatientEntryUiRenderer(val ui: PatientEntryUi) : ViewRenderer<PatientEntryModel> {
   private val dateOfBirthAndAgeVisibilityValueChangedCallback = ValueChangedCallback<DateOfBirthAndAgeVisibility>()

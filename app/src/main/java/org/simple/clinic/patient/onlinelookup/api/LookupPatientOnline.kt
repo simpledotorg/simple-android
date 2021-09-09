@@ -8,8 +8,8 @@ import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.CompleteMedicalRecord
-import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.Patient
+import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.Found

@@ -1,7 +1,6 @@
 package org.simple.clinic.overdue.callresult
 
 import io.reactivex.Completable
-import io.reactivex.Observable
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.SynceableRepository
 import java.util.UUID

@@ -17,7 +17,6 @@ import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.ReminderConsent.Denied
 import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.registration.phone.LengthBasedNumberValidator
-import java.util.Optional
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
@@ -25,6 +24,7 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import java.util.Optional
 
 class PatientEntryUpdateTest {
   private val phoneNumberValidator = LengthBasedNumberValidator(

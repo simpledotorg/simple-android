@@ -33,7 +33,7 @@ data class RecentPatient(
 ) : Parcelable {
 
   val age: Age?
-    get() = when(ageDetails.type) {
+    get() = when (ageDetails.type) {
       EXACT -> null
       FROM_AGE -> Age(ageDetails.ageValue!!, ageDetails.ageUpdatedAt!!)
     }

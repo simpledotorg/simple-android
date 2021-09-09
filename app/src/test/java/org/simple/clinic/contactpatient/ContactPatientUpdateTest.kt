@@ -467,7 +467,7 @@ class ContactPatientUpdateTest {
   }
 
   @Test
-  fun `when current facility is loaded, then update the model with the current facility`(){
+  fun `when current facility is loaded, then update the model with the current facility`() {
     val facility = TestData.facility(
         uuid = UUID.fromString("251deca2-d219-4863-80fc-e7d48cb22b1b"),
         name = "PHC Obvious",

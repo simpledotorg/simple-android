@@ -3,11 +3,11 @@ package org.simple.clinic.home.patients
 import android.Manifest
 import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.user.User
-import java.util.Optional
 import org.simple.clinic.util.RequiresPermission
 import org.simple.clinic.widgets.UiEvent
 import java.time.Instant
 import java.time.LocalDate
+import java.util.Optional
 
 sealed class PatientsTabEvent : UiEvent
 

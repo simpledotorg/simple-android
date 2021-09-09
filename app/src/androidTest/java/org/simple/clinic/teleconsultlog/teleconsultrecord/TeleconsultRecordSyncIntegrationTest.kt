@@ -62,7 +62,7 @@ class TeleconsultRecordSyncIntegrationTest {
         pushBatchSize = batchSize,
         name = ""
     )
-    
+
     teleconsultRecordSync = TeleconsultRecordSync(
         syncCoordinator = SyncCoordinator(),
         teleconsultRecordApi = teleconsultRecordApi,

@@ -11,8 +11,8 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.protocol.sync.ProtocolSync
 import org.simple.clinic.rules.LocalAuthenticationRule
-import java.util.Optional
 import org.simple.clinic.util.Rules
+import java.util.Optional
 import javax.inject.Inject
 import javax.inject.Named
 

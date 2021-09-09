@@ -87,9 +87,9 @@ class SyncIndicatorLogicTest {
   @Test
   @Parameters(method = "params for testing sync status indicator update")
   fun `when sync result is updated, sync status indicator should change`(
-    lastSyncState: LastSyncedState,
-    expectedSyncState: SyncIndicatorState,
-    syncFailureThreshold: Long
+      lastSyncState: LastSyncedState,
+      expectedSyncState: SyncIndicatorState,
+      syncFailureThreshold: Long
   ) {
     //given
     val config = SyncIndicatorConfig(Duration.of(syncFailureThreshold, ChronoUnit.HOURS))
@@ -105,16 +105,16 @@ class SyncIndicatorLogicTest {
   @Suppress("Unused")
   private fun `params for testing sync status indicator update`(): List<List<Any>> {
     return listOf(
-      listOf(LastSyncedState(SYNCING), Syncing, 12),
-      listOf(LastSyncedState(FAILURE), SyncPending, 12),
-      listOf(LastSyncedState(SUCCESS, Instant.now(utcClock)), Synced(durationSince = Duration.ZERO), 12),
-      listOf(LastSyncedState(FAILURE, Instant.now(utcClock).minus(13, ChronoUnit.HOURS)), ConnectToSync, 11),
-      listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).minus(20, ChronoUnit.MINUTES)), SyncPending, 11),
-      listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).minus(14, ChronoUnit.HOURS)), ConnectToSync, 13),
-      listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).minus(12, ChronoUnit.MINUTES)), Synced(durationSince = Duration.ofMinutes(12)), 12),
-      listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).plus(12, ChronoUnit.MINUTES)), SyncPending, 12),
-      listOf(LastSyncedState(FAILURE, Instant.now(utcClock).plus(12, ChronoUnit.MINUTES)), SyncPending, 13),
-      listOf(LastSyncedState(FAILURE, Instant.now(utcClock).minus(12, ChronoUnit.MINUTES)), SyncPending, 12)
+        listOf(LastSyncedState(SYNCING), Syncing, 12),
+        listOf(LastSyncedState(FAILURE), SyncPending, 12),
+        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock)), Synced(durationSince = Duration.ZERO), 12),
+        listOf(LastSyncedState(FAILURE, Instant.now(utcClock).minus(13, ChronoUnit.HOURS)), ConnectToSync, 11),
+        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).minus(20, ChronoUnit.MINUTES)), SyncPending, 11),
+        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).minus(14, ChronoUnit.HOURS)), ConnectToSync, 13),
+        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).minus(12, ChronoUnit.MINUTES)), Synced(durationSince = Duration.ofMinutes(12)), 12),
+        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).plus(12, ChronoUnit.MINUTES)), SyncPending, 12),
+        listOf(LastSyncedState(FAILURE, Instant.now(utcClock).plus(12, ChronoUnit.MINUTES)), SyncPending, 13),
+        listOf(LastSyncedState(FAILURE, Instant.now(utcClock).minus(12, ChronoUnit.MINUTES)), SyncPending, 12)
     )
   }
 
@@ -150,10 +150,10 @@ class SyncIndicatorLogicTest {
   @Suppress("Unused")
   private fun `params for showing failure dialog`(): List<ResolvedError> {
     return listOf(
-      NetworkRelated(UnknownHostException()),
-      NetworkRelated(UnknownHostException()),
-      Unexpected(RuntimeException()),
-      ServerError(RuntimeException())
+        NetworkRelated(UnknownHostException()),
+        NetworkRelated(UnknownHostException()),
+        Unexpected(RuntimeException()),
+        ServerError(RuntimeException())
     )
   }
 
@@ -208,27 +208,27 @@ class SyncIndicatorLogicTest {
   private fun startMobiusLoop(config: SyncIndicatorConfig = SyncIndicatorConfig(Duration.of(12, ChronoUnit.HOURS))) {
     val uiRenderer = SyncIndicatorUiRenderer(indicator)
     val effectHandler = SyncIndicatorEffectHandler(
-      lastSyncStatePreference,
-      utcClock,
-      config,
-      TrampolineSchedulersProvider(),
-      dataSync,
-      frequentlySyncingRepositories,
-      indicatorUiActions
+        lastSyncStatePreference,
+        utcClock,
+        config,
+        TrampolineSchedulersProvider(),
+        dataSync,
+        frequentlySyncingRepositories,
+        indicatorUiActions
     )
 
     val syncInterval = SyncInterval(
-      frequency = Duration.ofMinutes(16),
-      backOffDelay = Duration.ofMinutes(5)
+        frequency = Duration.ofMinutes(16),
+        backOffDelay = Duration.ofMinutes(5)
     )
 
     testFixture = MobiusTestFixture(
-      events = uiEvents.ofType(),
-      defaultModel = SyncIndicatorModel.create(),
-      init = SyncIndicatorInit(),
-      update = SyncIndicatorUpdate(syncInterval),
-      effectHandler = effectHandler.build(),
-      modelUpdateListener = uiRenderer::render
+        events = uiEvents.ofType(),
+        defaultModel = SyncIndicatorModel.create(),
+        init = SyncIndicatorInit(),
+        update = SyncIndicatorUpdate(syncInterval),
+        effectHandler = effectHandler.build(),
+        modelUpdateListener = uiRenderer::render
     )
 
     testFixture.start()

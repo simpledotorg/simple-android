@@ -8,10 +8,10 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.security.BCryptPasswordHasher
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.user.OngoingLoginEntry
-import java.util.Optional
 import org.simple.clinic.util.preference.StringPreferenceConverter
 import org.simple.clinic.util.preference.getOptional
 import retrofit2.Retrofit
+import java.util.Optional
 import javax.inject.Named
 
 @Module

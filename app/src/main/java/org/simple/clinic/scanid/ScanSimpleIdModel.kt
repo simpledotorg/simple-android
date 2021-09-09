@@ -43,7 +43,7 @@ data class ScanSimpleIdModel(
   fun clearInvalidQrCodeError(): ScanSimpleIdModel {
     return copy(scanErrorState = null)
   }
-  
+
   fun patientPrefillInfoChanged(patientPrefillInfo: PatientPrefillInfo): ScanSimpleIdModel {
     return copy(patientPrefillInfo = patientPrefillInfo)
   }

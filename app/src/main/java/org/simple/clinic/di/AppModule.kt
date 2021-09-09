@@ -26,13 +26,13 @@ import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.LoginOtpSmsListenerModule
 import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.patient.PatientModule
-import org.simple.clinic.simplevideo.SimpleVideoModule
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.remoteconfig.RemoteConfigModule
 import org.simple.clinic.remoteconfig.firebase.FirebaseRemoteConfigModule
 import org.simple.clinic.security.di.PinVerificationModule
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.settings.SettingsModule
+import org.simple.clinic.simplevideo.SimpleVideoModule
 import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.summary.PatientSummaryModule
 import org.simple.clinic.sync.DataSyncOnApprovalModule
@@ -43,7 +43,6 @@ import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionModu
 import org.simple.clinic.user.SessionModule
 import org.simple.clinic.user.clearpatientdata.ClearPatientDataModule
 import org.simple.clinic.util.ElapsedRealtimeClock
-import java.util.Optional
 import org.simple.clinic.util.RealUserClock
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
@@ -52,6 +51,7 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toNullable
 import java.time.ZoneId
 import java.util.Locale
+import java.util.Optional
 import javax.inject.Named
 
 @Module(includes = [

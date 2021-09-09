@@ -10,10 +10,10 @@ import com.google.android.material.card.MaterialCardView
 import org.simple.clinic.R
 import org.simple.clinic.databinding.ViewPatientSearchResultBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.patient.PatientAgeDetails
-import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientAgeDetails
+import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId

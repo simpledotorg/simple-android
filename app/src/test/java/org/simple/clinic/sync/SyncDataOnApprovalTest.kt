@@ -18,10 +18,10 @@ import org.simple.clinic.user.UserStatus
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.DisapprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
-import java.util.Optional
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
+import java.util.Optional
 
 @RunWith(JUnitParamsRunner::class)
 class SyncDataOnApprovalTest {

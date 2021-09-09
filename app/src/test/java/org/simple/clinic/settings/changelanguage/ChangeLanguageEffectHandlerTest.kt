@@ -25,10 +25,10 @@ class ChangeLanguageEffectHandlerTest {
 
   private val dataSync = mock<DataSync>()
   private val effectHandler = ChangeLanguageEffectHandler(
-    schedulersProvider = TrampolineSchedulersProvider(),
-    settingsRepository = settingsRepository,
-    uiActions = uiActions,
-    dataSync = dataSync
+      schedulersProvider = TrampolineSchedulersProvider(),
+      settingsRepository = settingsRepository,
+      uiActions = uiActions,
+      dataSync = dataSync
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
@@ -54,9 +54,9 @@ class ChangeLanguageEffectHandlerTest {
   fun `the list of supported languages must be fetched when the load supported languages effect is received`() {
     // given
     val supportedLanguages = listOf(
-      SystemDefaultLanguage,
-      ProvidedLanguage(displayName = "English", languageCode = "en_IN"),
-      ProvidedLanguage(displayName = "हिंदी", languageCode = "hi_IN")
+        SystemDefaultLanguage,
+        ProvidedLanguage(displayName = "English", languageCode = "en_IN"),
+        ProvidedLanguage(displayName = "हिंदी", languageCode = "hi_IN")
     )
     whenever(settingsRepository.getSupportedLanguages()).doReturn(Single.just(supportedLanguages))
 

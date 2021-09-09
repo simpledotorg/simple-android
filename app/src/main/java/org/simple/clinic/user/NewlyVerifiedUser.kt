@@ -3,8 +3,8 @@ package org.simple.clinic.user
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import java.util.Optional
 import org.simple.clinic.util.extractIfPresent
+import java.util.Optional
 
 class NewlyVerifiedUser : ObservableTransformer<Optional<User>, User> {
 

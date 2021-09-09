@@ -16,8 +16,8 @@ import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.signature.SignatureRepository
-import java.util.Optional
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
+import java.util.Optional
 import java.util.UUID
 
 class TeleconsultSharePrescriptionEffectHandlerTest {

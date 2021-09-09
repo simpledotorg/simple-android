@@ -1,27 +1,32 @@
 # ADR 006: Forward compatibility for persistable enums from Server responses
 
-
 ## Status
 
 Accepted
 
-
 ## Context
 
-RESTful APIs tend to return enumerated values to represent properties with a fixed number of well-defined values. These are usually represented as `enum` classes on the client. When new business use cases are introduced, there could be additions to these values. If these values are consumed on the fly and are not persisted on the client, they could simply be treated as a special case (unknown) or ignored all together.
+RESTful APIs tend to return enumerated values to represent properties with a fixed number of well-defined values. These are usually represented
+as `enum` classes on the client. When new business use cases are introduced, there could be additions to these values. If these values are consumed on
+the fly and are not persisted on the client, they could simply be treated as a special case (unknown) or ignored all together.
 
-Simple is an "offline-first" application and some of these values have to be persisted to the database. Hence, these enumerated values cannot be represented using a Kotlin `enum` class. Offline-first means, there are some unique constraints that we have to deal with.
+Simple is an "offline-first" application and some of these values have to be persisted to the database. Hence, these enumerated values cannot be
+represented using a Kotlin `enum` class. Offline-first means, there are some unique constraints that we have to deal with.
 
-Apps on an older app version should be able to handle new enum values added to a type even though they don't know how to interpret the new value. This could be solved by adding an UNKNOWN fallback value which the server adds as well. Except,
+Apps on an older app version should be able to handle new enum values added to a type even though they don't know how to interpret the new value. This
+could be solved by adding an UNKNOWN fallback value which the server adds as well. Except,
 
-* Records are shared between different users and thus, between different app versions. A newer app version that understands the new enum value could create a record with the new value and upload it, but an older app version that does not know the new value will overwrite it with UNKNOWN and this value will overwrite the actual value on the server as well when it syncs.
+* Records are shared between different users and thus, between different app versions. A newer app version that understands the new enum value could
+  create a record with the new value and upload it, but an older app version that does not know the new value will overwrite it with UNKNOWN and this
+  value will overwrite the actual value on the server as well when it syncs.
 
-* An app on an older version could have a degraded, fallback experience for enum values it does not understand, but as soon as it updates, the app should be able to interpret the new values as if it was synced afresh.
-
+* An app on an older version could have a degraded, fallback experience for enum values it does not understand, but as soon as it updates, the app
+  should be able to interpret the new values as if it was synced afresh.
 
 ## Decision
 
-To maintain forward-compatibility with enum values, we have to roll out our own infrastructure. To accommodate, we use sealed classes to represent enumerated values so that,
+To maintain forward-compatibility with enum values, we have to roll out our own infrastructure. To accommodate, we use sealed classes to represent
+enumerated values so that,
 
 - We could save these values to the database.
 - Use these values in newer versions of the app.
@@ -29,7 +34,8 @@ To maintain forward-compatibility with enum values, we have to roll out our own 
 
 In order or achieve this, we require 4 classes.
 
-1. A sealed class hierarchy that is used to represent the enumerated values. Which also includes an `Unknown(val actualValue: String)` data class which is used to capture and handle newly introduced values.
+1. A sealed class hierarchy that is used to represent the enumerated values. Which also includes an `Unknown(val actualValue: String)` data class
+   which is used to capture and handle newly introduced values.
 2. An implementation of the `SafeEnumTypeAdapter` class.
 3. A `RoomTypeConverter` to safely store and retrieve newly added enum values.
 4. A `MoshiTypeAdapter` to serialize and deserialize newly added enum values.
@@ -52,13 +58,13 @@ The `unknownEnumToStringConverter` converts unknown enum values to their actual 
 
 The `unknownStringToEnumConverter` can wrap the newly introduced value into the `Unknown` sealed data class defined earlier.
 
-
 ## Consequences
 
-Not all enumerated values have to conform to this forward compatibility spec and be represented in this fashion. Only enums that are served through APIs **and** are saved to the database should use this convention.
+Not all enumerated values have to conform to this forward compatibility spec and be represented in this fashion. Only enums that are served through
+APIs **and** are saved to the database should use this convention.
 
-The only way for developers to gain awareness about this, is to read this ADR or through tribal knowledge. Ideally, we should have a lint check that throws an error if an `enum class` is involved both in a Retrofit and a Room interface.
-
+The only way for developers to gain awareness about this, is to read this ADR or through tribal knowledge. Ideally, we should have a lint check that
+throws an error if an `enum class` is involved both in a Retrofit and a Room interface.
 
 ## Reference
 

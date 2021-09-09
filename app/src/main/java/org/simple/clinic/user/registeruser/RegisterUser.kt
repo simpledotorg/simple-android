@@ -14,9 +14,9 @@ import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.registeruser.RegistrationResult.NetworkError
 import org.simple.clinic.user.registeruser.RegistrationResult.Success
 import org.simple.clinic.user.registeruser.RegistrationResult.UnexpectedError
-import java.util.Optional
 import timber.log.Timber
 import java.io.IOException
+import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named

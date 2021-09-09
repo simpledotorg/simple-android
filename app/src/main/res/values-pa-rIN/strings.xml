@@ -741,7 +741,7 @@
   <string name="warning_add_blood_sugar_message">ਜੇ ਸੰਭਵ ਹੋਵੇ, ਤਾਂ ਇਸ ਮਰੀਜ਼ ਲਈ ਮੌਜੂਦਾ ਬਲੱਡ ਸ਼ੂਗਰ ਰੀਡਿੰਗ ਸ਼ਾਮਲ ਕਰੋ।</string>
   <string name="warning_add_blood_sugar_positive_button">ਬਲੱਡ ਸ਼ੂਗਰ ਸ਼ਾਮਲ ਕਰੋ</string>
   <string name="warning_add_blood_sugar_negative_button">ਹੁਣੇ ਨਹੀਂ</string>
-  
+
   <!-- Custom drug entry sheet -->
   <string name="custom_drug_entry_sheet_remove">ਹਟਾਓ</string>
   <string name="custom_drug_entry_sheet_dosage">ਖੁਰਾਕ</string>
@@ -749,4 +749,4 @@
   <string name="custom_drug_entry_sheet_save_button_text">ਸੁਰੱਖਿਅਤ ਕਰੋ</string>
   <string name="custom_drug_entry_sheet_add_button_text">ਜੋੜੋ</string>
   <string name="custom_drug_entry_sheet_frequency_dialog_done">ਹੋ ਗਿਆ</string>
-  </resources>
+</resources>

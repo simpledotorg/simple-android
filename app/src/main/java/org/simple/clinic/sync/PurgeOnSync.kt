@@ -7,10 +7,10 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.FacilitySyncGroupSwitchedAt
 import org.simple.clinic.remoteconfig.ConfigReader
-import java.util.Optional
 import org.simple.clinic.util.UtcClock
 import java.time.Duration
 import java.time.Instant
+import java.util.Optional
 import javax.inject.Inject
 import javax.inject.Provider
 

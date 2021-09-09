@@ -3,12 +3,11 @@ package org.simple.clinic.contactpatient
 import android.Manifest
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
-import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.platform.util.RuntimePermissionResult
-import java.util.Optional
 import org.simple.clinic.util.RequiresPermission
 import org.simple.clinic.widgets.UiEvent
 import java.time.LocalDate
+import java.util.Optional
 
 sealed class ContactPatientEvent : UiEvent
 

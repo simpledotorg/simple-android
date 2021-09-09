@@ -1,6 +1,8 @@
 package org.simple.clinic.instantsearch
 
-import org.simple.clinic.instantsearch.InstantSearchProgressState.*
+import org.simple.clinic.instantsearch.InstantSearchProgressState.DONE
+import org.simple.clinic.instantsearch.InstantSearchProgressState.IN_PROGRESS
+import org.simple.clinic.instantsearch.InstantSearchProgressState.NO_RESULTS
 import org.simple.clinic.mobius.ViewRenderer
 
 class InstantSearchUiRenderer(

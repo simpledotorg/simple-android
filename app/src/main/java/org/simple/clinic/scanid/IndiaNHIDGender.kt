@@ -2,7 +2,6 @@ package org.simple.clinic.scanid
 
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
-import org.simple.clinic.patient.Gender
 
 enum class IndiaNHIDGender {
   MALE, FEMALE, UNKNOWN;

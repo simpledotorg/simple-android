@@ -741,7 +741,7 @@
   <string name="warning_add_blood_sugar_message">የሚቻል ከሆነ ለዚህ በሽተኛ ወቅታዊ የደም ስኳር ንባብ ይጨምሩ።</string>
   <string name="warning_add_blood_sugar_positive_button">የደም ስኳር ያክሉ</string>
   <string name="warning_add_blood_sugar_negative_button">አሁን አይሆንም</string>
-  
+
   <!-- Custom drug entry sheet -->
   <string name="custom_drug_entry_sheet_remove">ያስወግዱ</string>
   <string name="custom_drug_entry_sheet_dosage">የመድኃኒት መጠን</string>
@@ -749,4 +749,4 @@
   <string name="custom_drug_entry_sheet_save_button_text">ሴቭ</string>
   <string name="custom_drug_entry_sheet_add_button_text">ያክሉ</string>
   <string name="custom_drug_entry_sheet_frequency_dialog_done">ተጠናቅቋል</string>
-  </resources>
+</resources>

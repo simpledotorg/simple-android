@@ -38,6 +38,10 @@ class AppConfigRepository @Inject constructor(
     return selectedCountryPreference.get().toNullable()
   }
 
+  fun currentState(): String? {
+    return selectedStatePreference.get().toNullable()
+  }
+
   fun fetchAppManifest(): Single<ManifestFetchResult> {
     return manifestFetchApi
         .fetchManifest()

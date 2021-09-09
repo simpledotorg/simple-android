@@ -51,7 +51,12 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       model: CustomDrugEntryModel,
       drug: Drug
   ): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
-    val updatedModel = model.drugNameLoaded(drug.name).dosageEdited(drug.dosage).frequencyEdited(drug.frequency).rxNormCodeEdited(drug.rxNormCode).drugInfoProgressStateLoaded()
+    val updatedModel = model
+        .drugNameLoaded(drug.name)
+        .dosageEdited(drug.dosage)
+        .frequencyEdited(drug.frequency)
+        .rxNormCodeEdited(drug.rxNormCode)
+        .drugInfoProgressStateLoaded()
 
     return next(updatedModel, SetDrugFrequency(model.drugFrequencyToFrequencyChoiceItemMap!![drug.frequency]!!.label), SetDrugDosage(drug.dosage))
   }
@@ -62,7 +67,12 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
   ): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
     val frequency = DrugFrequency.fromMedicineFrequency(prescription.frequency)
 
-    val updatedModel = model.drugNameLoaded(prescription.name).dosageEdited(prescription.dosage).frequencyEdited(frequency).rxNormCodeEdited(prescription.rxNormCode).drugInfoProgressStateLoaded()
+    val updatedModel = model
+        .drugNameLoaded(prescription.name)
+        .dosageEdited(prescription.dosage)
+        .frequencyEdited(frequency)
+        .rxNormCodeEdited(prescription.rxNormCode)
+        .drugInfoProgressStateLoaded()
 
     return next(updatedModel, SetDrugFrequency(model.drugFrequencyToFrequencyChoiceItemMap!![frequency]!!.label), SetDrugDosage(prescription.dosage))
   }

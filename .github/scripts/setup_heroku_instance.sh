@@ -35,13 +35,13 @@ fi
 
 echo "Starting the Simple server on Heroku"
 herokuGitUrl="https://heroku:${herokuApiKey}@git.heroku.com/${herokuAppName}.git"
-(cd $serverAppDirectory && git push $herokuGitUrl master)
+(cd $serverAppDirectory && git fetch && git push $herokuGitUrl android-review-fix-redux:master)
 resultOfServerPush=$?
 
 resultOfSeedDataSetup=0
 if [ $serverAppAlreadyExists = false ]; then
   echo "Setting up initial seed data"
-  (cd $serverAppDirectory && heroku run rails db:schema:load db:seed)
+  (cd $serverAppDirectory && heroku run bin/android-review-setup)
   resultOfSeedDataSetup=$?
 fi
 

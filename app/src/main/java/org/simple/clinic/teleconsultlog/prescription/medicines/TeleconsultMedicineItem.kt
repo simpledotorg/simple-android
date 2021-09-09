@@ -51,7 +51,8 @@ data class TeleconsultMedicineItem(
     )
 
     val frequency = prescribedDrug.frequency ?: defaultFrequency
-    binding.medicineFrequencyButton.text = frequency.toString()
+    val frequencyLabel = medicineFrequencyToFrequencyChoiceItemMap[frequency]!!.label
+    binding.medicineFrequencyButton.text = frequencyLabel
 
     val durationInDays = prescribedDrug.durationInDays ?: defaultDuration.toDays().toInt()
     binding.medicineDurationButton.text = context.resources.getQuantityString(

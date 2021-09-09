@@ -41,7 +41,7 @@
 - [In Progress: 25 Aug 2021] Implement providing drug frequencies label depending on the country
 - [In-progress: 27 Aug 2021] Restrict OTP entries to 5 attempts
 
-## On Demo
+## 2021-09-08-7939
 ### Internal
 - Bump Paging to v3.0.1
 - Bump CameraX dependencies

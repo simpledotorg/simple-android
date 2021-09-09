@@ -12,16 +12,16 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
+    android:layout_marginVertical="@dimen/spacing_52"
     android:indeterminate="true"
     android:visibility="gone"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
     tools:indeterminate="false"
     tools:progress="100"
-    tools:visibility="visible"
-    android:layout_marginVertical="@dimen/spacing_52"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintTop_toTopOf="parent"/>
+    tools:visibility="visible" />
 
   <TextView
     android:id="@+id/titleTextView"
@@ -130,6 +130,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:visibility="visible"
-    app:constraint_referenced_ids="titleTextView, removeButton, dosageTextInputLayout, frequencyTextInputLayout"/>
+    app:constraint_referenced_ids="titleTextView, removeButton, dosageTextInputLayout, frequencyTextInputLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

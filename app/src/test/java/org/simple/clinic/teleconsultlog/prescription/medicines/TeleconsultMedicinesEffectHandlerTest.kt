@@ -26,6 +26,13 @@ class TeleconsultMedicinesEffectHandlerTest {
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val uiActions = mock<TeleconsultMedicinesUiActions>()
   private val drugFrequencyFactory = mock<DrugFrequencyFactory>()
+  private val medicineFrequencyToFrequencyChoiceItemMap = mapOf(
+      null to DrugFrequencyChoiceItem(drugFrequency = null, label = "None"),
+      MedicineFrequency.OD to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.OD, label = "OD"),
+      MedicineFrequency.BD to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.BD, label = "BD"),
+      MedicineFrequency.TDS to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.TDS, label = "TDS"),
+      MedicineFrequency.QDS to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.QDS, label = "QDS")
+  )
   private val effectHandler = TeleconsultMedicinesEffectHandler(
       prescriptionRepository = prescriptionRepository,
       schedulersProvider = TestSchedulersProvider.trampoline(),
@@ -104,7 +111,7 @@ class TeleconsultMedicinesEffectHandlerTest {
     )
 
     // when
-    effectHandlerTestCase.dispatch(OpenDrugFrequencySheet(prescription))
+    effectHandlerTestCase.dispatch(OpenDrugFrequencySheet(prescription, medicineFrequencyToFrequencyChoiceItemMap))
 
     // then
     effectHandlerTestCase.assertNoOutgoingEvents()

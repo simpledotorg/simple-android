@@ -20,6 +20,14 @@ class TeleconsultMedicinesUpdateTest {
   private val patientUuid = UUID.fromString("134a6669-7b4c-42dd-a763-e3015b7933ff")
   private val model = TeleconsultMedicinesModel.create(patientUuid = patientUuid)
 
+  private val medicineFrequencyToFrequencyChoiceItemMap = mapOf(
+      null to DrugFrequencyChoiceItem(drugFrequency = null, label = "None"),
+      MedicineFrequency.OD to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.OD, label = "OD"),
+      MedicineFrequency.BD to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.BD, label = "BD"),
+      MedicineFrequency.TDS to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.TDS, label = "TDS"),
+      MedicineFrequency.QDS to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.QDS, label = "QDS")
+  )
+
   private val updateSpec = UpdateSpec(TeleconsultMedicinesUpdate())
 
   @Test
@@ -60,17 +68,17 @@ class TeleconsultMedicinesUpdateTest {
   }
 
   @Test
-  fun `when drug frequency is clicked, then open drug frequency sheet`() {
+  fun `when drug frequency is clicked, then open drug frequency sheet with medicine frequency to frequency choice items map`() {
     val prescription = TestData.prescription(
         uuid = UUID.fromString("b9c52365-2782-4c03-95ac-1c508a11a510")
     )
 
     updateSpec
-        .given(model)
+        .given(model.medicineFrequencyToFrequencyChoiceItemMapLoaded(medicineFrequencyToFrequencyChoiceItemMap))
         .whenEvent(DrugFrequencyClicked(prescription))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenDrugFrequencySheet(prescription))
+            hasEffects(OpenDrugFrequencySheet(prescription, medicineFrequencyToFrequencyChoiceItemMap))
         ))
   }
 
@@ -140,14 +148,6 @@ class TeleconsultMedicinesUpdateTest {
         DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.BD, label = "BD"),
         DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.TDS, label = "TDS"),
         DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.QDS, label = "QDS")
-    )
-
-    val medicineFrequencyToFrequencyChoiceItemMap = mapOf(
-        null to DrugFrequencyChoiceItem(drugFrequency = null, label = "None"),
-        MedicineFrequency.OD to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.OD, label = "OD"),
-        MedicineFrequency.BD to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.BD, label = "BD"),
-        MedicineFrequency.TDS to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.TDS, label = "TDS"),
-        MedicineFrequency.QDS to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.QDS, label = "QDS")
     )
 
     updateSpec

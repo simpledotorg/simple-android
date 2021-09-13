@@ -18,6 +18,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.time.LocalDate
@@ -36,7 +37,8 @@ class ContactPatientEffectHandlerTest {
   private val uuidGenerator = mock<UuidGenerator>()
   private val uiActions = mock<ContactPatientUiActions>()
 
-  private val clock = TestUserClock(LocalDate.parse("2018-01-01"))
+  private val userClock = TestUserClock(LocalDate.parse("2018-01-01"))
+  private val utcClock = TestUtcClock(LocalDate.parse("2018-01-01"))
 
   private val facility = TestData.facility(
       uuid = UUID.fromString("251deca2-d219-4863-80fc-e7d48cb22b1b"),
@@ -56,7 +58,8 @@ class ContactPatientEffectHandlerTest {
       patientRepository = patientRepository,
       appointmentRepository = appointmentRepository,
       callResultRepository = callResultRepository,
-      clock = clock,
+      userClock = userClock,
+      utcClock = utcClock,
       schedulers = TestSchedulersProvider.trampoline(),
       currentFacility = { facility },
       currentUser = { user },
@@ -92,7 +95,7 @@ class ContactPatientEffectHandlerTest {
         appointmentUuid = UUID.fromString("bb291aca-f953-4012-a9c3-aa05685f86f9"),
         patientUuid = patientUuid
     ))
-    val date = LocalDate.now(clock)
+    val date = LocalDate.now(userClock)
     whenever(appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, date)) doReturn overdueAppointment
 
     // when
@@ -171,7 +174,7 @@ class ContactPatientEffectHandlerTest {
     testCase.dispatch(MarkPatientAsAgreedToVisit(appointmentUuid))
 
     // then
-    verify(appointmentRepository).markAsAgreedToVisit(appointmentUuid, clock)
+    verify(appointmentRepository).markAsAgreedToVisit(appointmentUuid, userClock)
     verifyNoMoreInteractions(appointmentRepository)
     testCase.assertOutgoingEvents(PatientMarkedAsAgreedToVisit)
     verifyZeroInteractions(uiActions)

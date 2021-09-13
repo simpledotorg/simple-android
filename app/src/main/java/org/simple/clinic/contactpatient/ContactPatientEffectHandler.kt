@@ -14,6 +14,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.user.User
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.uuid.UuidGenerator
 import java.time.LocalDate
@@ -22,7 +23,8 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val appointmentRepository: AppointmentRepository,
     private val callResultRepository: CallResultRepository,
-    private val clock: UserClock,
+    private val userClock: UserClock,
+    private val utcClock: UtcClock,
     private val schedulers: SchedulersProvider,
     private val currentFacility: Lazy<Facility>,
     private val currentUser: Lazy<User>,
@@ -84,7 +86,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .map { appointmentRepository.latestOverdueAppointmentForPatient(it.patientUuid, LocalDate.now(clock)) }
+          .map { appointmentRepository.latestOverdueAppointmentForPatient(it.patientUuid, LocalDate.now(userClock)) }
           .map(::OverdueAppointmentLoaded)
     }
   }
@@ -95,7 +97,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .doOnNext { appointmentRepository.markAsAgreedToVisit(it.appointmentUuid, clock) }
+          .doOnNext { appointmentRepository.markAsAgreedToVisit(it.appointmentUuid, userClock) }
           .map { PatientMarkedAsAgreedToVisit }
     }
   }

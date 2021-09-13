@@ -29,6 +29,7 @@ import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
 import org.simple.clinic.overdue.AppointmentModule
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.AppointmentSync
+import org.simple.clinic.overdue.callresult.CallResultRepository
 import org.simple.clinic.overdue.callresult.CallResultSync
 import org.simple.clinic.overdue.callresult.di.CallResultModule
 import org.simple.clinic.patient.PatientRepository
@@ -95,14 +96,18 @@ class SyncModule {
   @Provides
   @Named("frequently_syncing_repositories")
   fun frequentlySyncingRepositories(
+      features: Features,
       patientSyncRepository: PatientRepository,
       bloodPressureSyncRepository: BloodPressureRepository,
       medicalHistorySyncRepository: MedicalHistoryRepository,
       appointmentSyncRepository: AppointmentRepository,
       prescriptionSyncRepository: PrescriptionRepository,
       bloodSugarRepository: BloodSugarRepository,
-      teleconsultRecordRepository: TeleconsultRecordRepository
+      teleconsultRecordRepository: TeleconsultRecordRepository,
+      callResultRepository: CallResultRepository
   ): List<SynceableRepository<*, *>> {
+    val optionalRepositories = if (features.isEnabled(Feature.CallResultSyncEnabled)) listOf(callResultRepository) else emptyList()
+
     return listOf(
         patientSyncRepository,
         bloodPressureSyncRepository,
@@ -111,7 +116,7 @@ class SyncModule {
         prescriptionSyncRepository,
         bloodSugarRepository,
         teleconsultRecordRepository
-    )
+    ) + optionalRepositories
   }
 
   @Provides

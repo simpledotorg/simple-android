@@ -378,7 +378,7 @@ class ContactPatientUpdateTest {
         .reminderDateSelected(currentReminderDate)
 
     val expectedEffect = SetReminderForAppointment(
-        appointmentUuid = appointmentUuid,
+        appointment = overdueAppointment.appointment,
         reminderDate = currentSelectedDate
     )
     spec

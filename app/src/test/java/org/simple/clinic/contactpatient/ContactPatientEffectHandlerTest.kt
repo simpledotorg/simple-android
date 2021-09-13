@@ -203,10 +203,11 @@ class ContactPatientEffectHandlerTest {
   fun `when the set reminder effect is received, a reminder date must be set for the appointment for the given date`() {
     // given
     val appointmentUuid = UUID.fromString("10fec427-9509-4237-8493-bef8c3f0a5c2")
+    val appointment = TestData.appointment(uuid = appointmentUuid)
     val reminderDate = LocalDate.parse("2018-01-01")
 
     // when
-    testCase.dispatch(SetReminderForAppointment(appointmentUuid, reminderDate))
+    testCase.dispatch(SetReminderForAppointment(appointment, reminderDate))
 
     // then
     verify(appointmentRepository).createReminder(appointmentUuid, reminderDate)

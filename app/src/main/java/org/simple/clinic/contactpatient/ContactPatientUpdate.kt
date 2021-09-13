@@ -35,8 +35,8 @@ class ContactPatientUpdate(
       is ManualDateSelected -> updateWithManuallySelectedDate(event, model)
       AppointmentDateClicked -> showManualDatePicker(model)
       SaveAppointmentReminderClicked -> {
-        val appointmentUuid = model.appointmentUuid
-        dispatch(SetReminderForAppointment(appointmentUuid, model.selectedAppointmentDate))
+        val appointment = model.appointment!!.get().appointment
+        dispatch(SetReminderForAppointment(appointment, model.selectedAppointmentDate))
       }
       RemindToCallLaterClicked -> next(model.changeUiModeTo(SetAppointmentReminder))
       BackClicked -> backClicks(model)

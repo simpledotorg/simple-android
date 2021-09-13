@@ -1,5 +1,6 @@
 package org.simple.clinic.contactpatient
 
+import org.simple.clinic.overdue.Appointment
 import java.time.LocalDate
 import java.util.UUID
 
@@ -35,7 +36,7 @@ data class ShowManualDatePicker(
 ) : ContactPatientEffect()
 
 data class SetReminderForAppointment(
-    val appointmentUuid: UUID,
+    val appointment: Appointment,
     val reminderDate: LocalDate
 ) : ContactPatientEffect()
 

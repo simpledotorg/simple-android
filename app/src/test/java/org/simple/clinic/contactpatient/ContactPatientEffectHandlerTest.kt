@@ -13,6 +13,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.overdue.callresult.CallResultRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.util.RxErrorsRule
@@ -30,6 +31,7 @@ class ContactPatientEffectHandlerTest {
   private val patientUuid = UUID.fromString("8a490518-a016-4818-b725-22c25dec310b")
   private val patientRepository = mock<PatientRepository>()
   private val appointmentRepository = mock<AppointmentRepository>()
+  private val callResultRepository = mock<CallResultRepository>()
   private val uiActions = mock<ContactPatientUiActions>()
 
   private val clock = TestUserClock(LocalDate.parse("2018-01-01"))
@@ -46,10 +48,11 @@ class ContactPatientEffectHandlerTest {
   private val effectHandler = ContactPatientEffectHandler(
       patientRepository = patientRepository,
       appointmentRepository = appointmentRepository,
+      callResultRepository = callResultRepository,
       clock = clock,
       schedulers = TrampolineSchedulersProvider(),
-      uiActions = uiActions,
-      currentFacility = { facility }
+      currentFacility = { facility },
+      uiActions = uiActions
   ).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)

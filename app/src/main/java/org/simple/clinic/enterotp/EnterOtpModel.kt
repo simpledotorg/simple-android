@@ -33,6 +33,9 @@ data class EnterOtpModel(
   val hasNoIncorrectPinEntries: Boolean
     get() = (protectedState as ProtectedState.Allowed).attemptsMade == 0
 
+  val hasReachedMinPinRetries: Boolean
+    get() = (protectedState as ProtectedState.Allowed).attemptsMade >= 3
+
   val hasLoadedUser: Boolean
     get() = user != null
 

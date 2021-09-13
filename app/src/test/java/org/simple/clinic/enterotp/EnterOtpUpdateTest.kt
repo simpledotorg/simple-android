@@ -10,8 +10,10 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState.Allowed
 import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState.Blocked
+import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.LoginResult.NetworkError
 import org.simple.clinic.login.LoginResult.ServerError
+import org.simple.clinic.login.LoginResult.Success
 import org.simple.clinic.login.LoginResult.UnexpectedError
 import java.time.Instant
 import java.util.UUID
@@ -92,6 +94,19 @@ class EnterOtpUpdateTest {
             assertThatNext(
                 hasModel(loginStartedModel.setOtpEntryMode(stateBlocked)),
                 hasNoEffects()
+            )
+        )
+  }
+
+  @Test
+  fun `when the login request is completed and is successful, then clear pin and reset otp attempts`() {
+    updateSpec
+        .given(loginStartedModel)
+        .whenEvent(LoginUserCompleted(Success))
+        .then(
+            assertThatNext(
+                hasModel(loginStartedModel.loginFinished()),
+                hasEffects(ClearLoginEntry, TriggerSync, ResetOtpAttemptLimit)
             )
         )
   }

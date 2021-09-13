@@ -45,7 +45,7 @@ class EnterOtpUiRendererTest {
 
     // then
     verify(ui).showOtpEntryMode(OtpEntry)
-    verify(ui).showFailedAttemptOtpError(attemptsMade, attemptsRemaining)
+    verify(ui).showIncorrectOtpError()
     verify(ui).hideProgress()
   }
 
@@ -63,5 +63,22 @@ class EnterOtpUiRendererTest {
     // then
     verify(ui).showOtpEntryMode(BruteForceOtpEntryLocked(blockedUntil))
     verify(ui).showLimitReachedError(attemptsMade)
+  }
+
+  @Test
+  fun `when the otp failed attempt is more than 3, then allow otp entries with failed attempts error`() {
+    // given
+    val attemptsMade = 4
+    val attemptsRemaining = 1
+    val allowed = Allowed(attemptsMade = attemptsMade,attemptsRemaining = attemptsRemaining)
+    val updatedModel = model.setOtpEntryMode(allowed)
+
+    // when
+    uiRenderer.render(updatedModel)
+
+    // then
+    verify(ui).showOtpEntryMode(OtpEntry)
+    verify(ui).showFailedAttemptOtpError(attemptsRemaining)
+    verify(ui).hideProgress()
   }
 }

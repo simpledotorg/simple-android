@@ -240,7 +240,7 @@ class EnterOtpScreen : BaseScreen<
     showError(resources.getString(R.string.otpentry_error_incorrect_otp_attempts_limit_reached, attemptsMade.toString()))
   }
 
-  override fun showFailedAttemptOtpError(attemptsMade: Int, attemptsRemaining: Int) {
+  override fun showFailedAttemptOtpError(attemptsRemaining: Int) {
     if (attemptsMade >= 3) {
       showError(resources.getString(R.string.otpentry_error_incorrect_otp_attempts_remaining, attemptsRemaining.toString()))
     } else {

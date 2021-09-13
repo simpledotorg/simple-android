@@ -41,7 +41,7 @@ class EnterOtpUiRenderer(
     when (model.protectedState) {
       is Allowed -> {
         ui.showOtpEntryMode(OtpEntry)
-        generateUiForAllowingOtpEntry(model.hasNoIncorrectPinEntries, model.hasReachedMinPinRetries, model.protectedState.attemptsMade, model.protectedState.attemptsRemaining)
+        generateUiForAllowingOtpEntry(model.hasNoIncorrectPinEntries, model.hasReachedMinPinRetries, model.protectedState.attemptsRemaining)
       }
       is Blocked -> {
         ui.showOtpEntryMode(BruteForceOtpEntryLocked(model.protectedState.blockedTill))
@@ -50,17 +50,17 @@ class EnterOtpUiRenderer(
     }
   }
 
-  private fun generateUiForAllowingOtpEntry(hasNoIncorrectPinEntries: Boolean, hasReachedMinPinRetries: Boolean, attemptsMade: Int, attemptsRemaining: Int) {
+  private fun generateUiForAllowingOtpEntry(hasNoIncorrectPinEntries: Boolean, hasReachedMinPinRetries: Boolean, attemptsRemaining: Int) {
     if (hasNoIncorrectPinEntries) {
       ui.hideError()
     } else {
-      showErrorWithFailedAttempts(hasReachedMinPinRetries, attemptsRemaining, attemptsMade = attemptsMade)
+      showErrorWithFailedAttempts(hasReachedMinPinRetries, attemptsRemaining)
     }
   }
 
-  private fun showErrorWithFailedAttempts(hasReachedMinPinRetries: Boolean, attemptsRemaining: Int,  attemptsMade: Int) {
+  private fun showErrorWithFailedAttempts(hasReachedMinPinRetries: Boolean, attemptsRemaining: Int) {
     if (hasReachedMinPinRetries) {
-      ui.showFailedAttemptOtpError(attemptsMade = attemptsMade, attemptsRemaining = attemptsRemaining)
+      ui.showFailedAttemptOtpError(attemptsRemaining = attemptsRemaining)
     } else {
       ui.showIncorrectOtpError()
     }

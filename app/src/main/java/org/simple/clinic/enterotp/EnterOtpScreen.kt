@@ -241,11 +241,7 @@ class EnterOtpScreen : BaseScreen<
   }
 
   override fun showFailedAttemptOtpError(attemptsRemaining: Int) {
-    if (attemptsMade >= 3) {
-      showError(resources.getString(R.string.otpentry_error_incorrect_otp_attempts_remaining, attemptsRemaining.toString()))
-    } else {
-      showError(resources.getString(R.string.otpentry_error_incorrect_otp_attempt))
-    }
+    showError(resources.getString(R.string.otpentry_error_incorrect_otp_attempts_remaining, attemptsRemaining.toString()))
     otpEntryEditText.showKeyboard()
   }
 

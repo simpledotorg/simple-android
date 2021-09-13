@@ -54,11 +54,15 @@ class EnterOtpUiRenderer(
     if (hasNoIncorrectPinEntries) {
       ui.hideError()
     } else {
-      if (hasReachedMinPinRetries) {
-        ui.showFailedAttemptOtpError(attemptsMade = attemptsMade, attemptsRemaining = attemptsRemaining)
-      } else {
-        ui.showIncorrectOtpError()
-      }
+      showErrorWithFailedAttempts(hasReachedMinPinRetries, attemptsRemaining, attemptsMade = attemptsMade)
+    }
+  }
+
+  private fun showErrorWithFailedAttempts(hasReachedMinPinRetries: Boolean, attemptsRemaining: Int,  attemptsMade: Int) {
+    if (hasReachedMinPinRetries) {
+      ui.showFailedAttemptOtpError(attemptsMade = attemptsMade, attemptsRemaining = attemptsRemaining)
+    } else {
+      ui.showIncorrectOtpError()
     }
   }
 }

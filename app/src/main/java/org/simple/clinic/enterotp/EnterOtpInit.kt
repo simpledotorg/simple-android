@@ -13,6 +13,8 @@ class EnterOtpInit : Init<EnterOtpModel, EnterOtpEffect> {
       effects.add(LoadUser)
     }
 
+    effects.add(LoadOtpEntryProtectedStates)
+
     return first(model, effects)
   }
 }

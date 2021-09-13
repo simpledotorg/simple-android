@@ -12,6 +12,7 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.callresult.CallResultRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.phone.Dialer
+import org.simple.clinic.user.User
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.time.LocalDate
@@ -23,6 +24,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     private val clock: UserClock,
     private val schedulers: SchedulersProvider,
     private val currentFacility: Lazy<Facility>,
+    private val currentUser: Lazy<User>,
     @Assisted private val uiActions: ContactPatientUiActions
 ) {
 

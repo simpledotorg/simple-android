@@ -45,6 +45,11 @@ class ContactPatientEffectHandlerTest {
       )
   )
 
+  private val user = TestData.loggedInUser(
+      uuid = UUID.fromString("ec2452e1-13b3-4d64-b01c-07ade142771e"),
+      registrationFacilityUuid = facility.uuid
+  )
+
   private val effectHandler = ContactPatientEffectHandler(
       patientRepository = patientRepository,
       appointmentRepository = appointmentRepository,
@@ -52,6 +57,7 @@ class ContactPatientEffectHandlerTest {
       clock = clock,
       schedulers = TrampolineSchedulersProvider(),
       currentFacility = { facility },
+      currentUser = { user },
       uiActions = uiActions
   ).build()
 

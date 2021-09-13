@@ -17,6 +17,8 @@ import org.simple.clinic.drugs.search.sync.DrugSync
 import org.simple.clinic.drugs.sync.PrescriptionSync
 import org.simple.clinic.facility.FacilityModule
 import org.simple.clinic.facility.FacilitySync
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
 import org.simple.clinic.help.HelpModule
 import org.simple.clinic.help.HelpSync
 import org.simple.clinic.main.TypedPreference
@@ -27,6 +29,7 @@ import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
 import org.simple.clinic.overdue.AppointmentModule
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.AppointmentSync
+import org.simple.clinic.overdue.callresult.CallResultSync
 import org.simple.clinic.overdue.callresult.di.CallResultModule
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.sync.PatientSync
@@ -62,6 +65,7 @@ class SyncModule {
 
   @Provides
   fun syncs(
+      features: Features,
       facilitySync: FacilitySync,
       protocolSync: ProtocolSync,
       patientSync: PatientSync,
@@ -74,15 +78,18 @@ class SyncModule {
       bloodSugarSync: BloodSugarSync,
       teleconsultationMedicalOfficersSync: TeleconsultationSync,
       teleconsultRecordSync: TeleconsultRecordSync,
-      drugSync: DrugSync
+      drugSync: DrugSync,
+      callResultSync: CallResultSync
   ): List<ModelSync> {
+    val optionalSyncs = if (features.isEnabled(Feature.CallResultSyncEnabled)) listOf(callResultSync) else emptyList()
+
     return listOf(
         facilitySync, protocolSync, patientSync,
         bloodPressureSync, medicalHistorySync, appointmentSync,
         prescriptionSync, reportsSync, helpSync,
         bloodSugarSync, teleconsultationMedicalOfficersSync,
         teleconsultRecordSync, drugSync
-    )
+    ) + optionalSyncs
   }
 
   @Provides

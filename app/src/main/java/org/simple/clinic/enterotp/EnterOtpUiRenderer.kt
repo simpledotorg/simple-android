@@ -1,5 +1,9 @@
 package org.simple.clinic.enterotp
 
+import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState.Allowed
+import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState.Blocked
+import org.simple.clinic.enterotp.OtpEntryMode.BruteForceOtpEntryLocked
+import org.simple.clinic.enterotp.OtpEntryMode.OtpEntry
 import org.simple.clinic.enterotp.ValidationResult.IsNotRequiredLength
 import org.simple.clinic.enterotp.ValidationResult.NotValidated
 import org.simple.clinic.enterotp.ValidationResult.Valid
@@ -32,6 +36,25 @@ class EnterOtpUiRenderer(
         ui.showProgress()
       else
         ui.hideProgress()
+    }
+
+    when (model.protectedState) {
+      is Allowed -> {
+        ui.showOtpEntryMode(OtpEntry)
+        generateUiForAllowingOtpEntry(model.hasNoIncorrectPinEntries, model.protectedState.attemptsMade, model.protectedState.attemptsRemaining)
+      }
+      is Blocked -> {
+        ui.showOtpEntryMode(BruteForceOtpEntryLocked(model.protectedState.blockedTill))
+        ui.showLimitReachedError(model.protectedState.attemptsMade)
+      }
+    }
+  }
+
+  private fun generateUiForAllowingOtpEntry(hasNoIncorrectPinEntries: Boolean, attemptsMade: Int, attemptsRemaining: Int) {
+    if (hasNoIncorrectPinEntries) {
+      ui.hideError()
+    } else {
+      ui.showFailedAttemptOtpError(attemptsMade = attemptsMade, attemptsRemaining = attemptsRemaining)
     }
   }
 }

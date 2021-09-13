@@ -1,14 +1,19 @@
 package org.simple.clinic.enterotp
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
+import com.spotify.mobius.test.NextMatchers.hasModel
+import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState.Allowed
+import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState.Blocked
 import org.simple.clinic.login.LoginResult.NetworkError
 import org.simple.clinic.login.LoginResult.ServerError
 import org.simple.clinic.login.LoginResult.UnexpectedError
+import java.time.Instant
 import java.util.UUID
 
 class EnterOtpUpdateTest {
@@ -28,7 +33,7 @@ class EnterOtpUpdateTest {
         .whenEvent(LoginUserCompleted(result))
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(loginStartedModel.loginFailed()),
                 hasEffects(FailedLoginOtpAttempt(result), ClearPin)
             )
         )
@@ -42,7 +47,7 @@ class EnterOtpUpdateTest {
         .whenEvent(LoginUserCompleted(result))
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(loginStartedModel.loginFailed()),
                 hasEffects(ShowNetworkError, ClearPin)
             )
         )
@@ -56,8 +61,37 @@ class EnterOtpUpdateTest {
         .whenEvent(LoginUserCompleted(result))
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(loginStartedModel.loginFailed()),
                 hasEffects(ShowUnexpectedError, ClearPin)
+            )
+        )
+  }
+
+  @Test
+  fun `when otp entry protected state is changed and is allowed, then allow otp entry`() {
+    val allowed = Allowed(2, 3)
+    updateSpec
+        .given(loginStartedModel)
+        .whenEvent(OtpEntryProtectedStateChanged(allowed))
+        .then(
+            assertThatNext(
+                hasModel(loginStartedModel.setOtpEntryMode(allowed)),
+                hasNoEffects()
+            )
+        )
+  }
+
+  @Test
+  fun `when otp protected state is blocked, then block otp entry until 20 minutes`() {
+    val blockedUntil = Instant.parse("2021-09-01T00:00:00Z")
+    val stateBlocked = Blocked(attemptsMade = 5, blockedTill = blockedUntil)
+    updateSpec
+        .given(loginStartedModel)
+        .whenEvent(OtpEntryProtectedStateChanged(stateChanged = stateBlocked))
+        .then(
+            assertThatNext(
+                hasModel(loginStartedModel.setOtpEntryMode(stateBlocked)),
+                hasNoEffects()
             )
         )
   }

@@ -1,7 +1,10 @@
 package org.simple.clinic.enterotp
 
 import android.os.Parcelable
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState
+import org.simple.clinic.enterotp.OtpEntryMode.OtpEntry
 import org.simple.clinic.user.User
 
 @Parcelize
@@ -9,8 +12,10 @@ data class EnterOtpModel(
     val user: User?,
     val otpValidationResult: ValidationResult,
     val asyncOpError: AsyncOpError?,
-    val isAsyncOperationOngoing: Boolean
-) : Parcelable {
+    val isAsyncOperationOngoing: Boolean,
+    val protectedState: ProtectedState,
+
+    ) : Parcelable {
 
   companion object {
 
@@ -19,10 +24,14 @@ data class EnterOtpModel(
           user = null,
           otpValidationResult = ValidationResult.NotValidated,
           asyncOpError = null,
-          isAsyncOperationOngoing = false
+          isAsyncOperationOngoing = false,
+          protectedState = ProtectedState.Allowed(0,5)
       )
     }
   }
+
+  val hasNoIncorrectPinEntries: Boolean
+    get() = (protectedState as ProtectedState.Allowed).attemptsMade == 0
 
   val hasLoadedUser: Boolean
     get() = user != null
@@ -50,6 +59,10 @@ data class EnterOtpModel(
     return copy(isAsyncOperationOngoing = false, asyncOpError = null)
   }
 
+  fun loginFailed(): EnterOtpModel {
+    return copy(isAsyncOperationOngoing = false)
+  }
+
   fun requestLoginOtpStarted(): EnterOtpModel {
     return copy(asyncOpError = null, isAsyncOperationOngoing = true)
   }
@@ -61,4 +74,7 @@ data class EnterOtpModel(
   fun requestLoginOtpFailed(error: AsyncOpError): EnterOtpModel {
     return copy(asyncOpError = error)
   }
+
+  fun setOtpEntryMode(protectedState: ProtectedState): EnterOtpModel =
+      copy(protectedState = protectedState)
 }

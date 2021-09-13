@@ -44,7 +44,17 @@ class EnterOtpEffectHandler @AssistedInject constructor(
         .addConsumer(FailedLoginOtpAttempt::class.java, { bruteForceProtection.incrementFailedOtpAttempt() }, schedulers.io())
         .addAction(ShowNetworkError::class.java, uiActions::showNetworkError, schedulers.ui())
         .addAction(ShowUnexpectedError::class.java, uiActions::showUnexpectedError, schedulers.ui())
+        .addTransformer(LoadOtpEntryProtectedStates::class.java, loadOtpEntryStates())
         .build()
+  }
+
+  private fun loadOtpEntryStates(): ObservableTransformer<LoadOtpEntryProtectedStates, EnterOtpEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulers.io())
+          .switchMap { bruteForceProtection.protectedStateChanges() }
+          .map(::OtpEntryProtectedStateChanged)
+    }
   }
 
   private fun loadUser(): ObservableTransformer<LoadUser, EnterOtpEvent> {

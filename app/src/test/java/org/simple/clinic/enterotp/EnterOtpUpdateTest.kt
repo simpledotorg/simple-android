@@ -15,6 +15,7 @@ import org.simple.clinic.login.LoginResult.NetworkError
 import org.simple.clinic.login.LoginResult.ServerError
 import org.simple.clinic.login.LoginResult.Success
 import org.simple.clinic.login.LoginResult.UnexpectedError
+import org.simple.clinic.login.activateuser.ActivateUser
 import java.time.Instant
 import java.util.UUID
 
@@ -107,6 +108,20 @@ class EnterOtpUpdateTest {
             assertThatNext(
                 hasModel(loginStartedModel.loginFinished()),
                 hasEffects(ClearLoginEntry, TriggerSync, ResetOtpAttemptLimit)
+            )
+        )
+  }
+
+  @Test
+  fun `when request for otp has completed successfully, then request login otp and reset otp limit`() {
+    val user = TestData.loggedInUserPayload(uuid = UUID.fromString("430081ec-8e36-478f-bd99-03abe95996b2"))
+    updateSpec
+        .given(loginStartedModel)
+        .whenEvent(RequestLoginOtpCompleted(ActivateUser.Result.Success(userPayload = user)))
+        .then(
+            assertThatNext(
+                hasModel(loginStartedModel.requestLoginOtpFinished()),
+                hasEffects(ClearPin, ShowSmsSentMessage, ResetOtpAttemptLimit)
             )
         )
   }

@@ -36,7 +36,7 @@ class EnterOtpUpdate(
     val updatedModel = model.requestLoginOtpFinished()
 
     return when (val result = event.result) {
-      is ActivateUser.Result.Success -> next(updatedModel, ClearPin, ShowSmsSentMessage)
+      is ActivateUser.Result.Success -> next(updatedModel, ClearPin, ShowSmsSentMessage, ResetOtpAttemptLimit)
       else -> next(updatedModel.requestLoginOtpFailed(AsyncOpError.from(result)), ClearPin as EnterOtpEffect)
     }
   }

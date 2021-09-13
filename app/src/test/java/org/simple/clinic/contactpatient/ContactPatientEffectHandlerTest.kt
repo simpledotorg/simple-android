@@ -19,6 +19,7 @@ import org.simple.clinic.phone.Dialer
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.uuid.UuidGenerator
 import java.time.LocalDate
 import java.util.Optional
 import java.util.UUID
@@ -32,6 +33,7 @@ class ContactPatientEffectHandlerTest {
   private val patientRepository = mock<PatientRepository>()
   private val appointmentRepository = mock<AppointmentRepository>()
   private val callResultRepository = mock<CallResultRepository>()
+  private val uuidGenerator = mock<UuidGenerator>()
   private val uiActions = mock<ContactPatientUiActions>()
 
   private val clock = TestUserClock(LocalDate.parse("2018-01-01"))
@@ -58,6 +60,7 @@ class ContactPatientEffectHandlerTest {
       schedulers = TrampolineSchedulersProvider(),
       currentFacility = { facility },
       currentUser = { user },
+      uuidGenerator = uuidGenerator,
       uiActions = uiActions
   ).build()
 

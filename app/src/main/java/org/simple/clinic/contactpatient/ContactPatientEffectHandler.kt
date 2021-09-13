@@ -15,6 +15,7 @@ import org.simple.clinic.phone.Dialer
 import org.simple.clinic.user.User
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.uuid.UuidGenerator
 import java.time.LocalDate
 
 class ContactPatientEffectHandler @AssistedInject constructor(
@@ -25,6 +26,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val currentFacility: Lazy<Facility>,
     private val currentUser: Lazy<User>,
+    private val uuidGenerator: UuidGenerator,
     @Assisted private val uiActions: ContactPatientUiActions
 ) {
 

@@ -29,3 +29,5 @@ object ShowNetworkError : EnterOtpEffect()
 object ShowUnexpectedError : EnterOtpEffect()
 
 object LoadOtpEntryProtectedStates : EnterOtpEffect()
+
+object ResetOtpAttemptLimit : EnterOtpEffect()

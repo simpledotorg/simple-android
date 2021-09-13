@@ -32,5 +32,6 @@ enum class Feature(
   OverdueListDownloadAndShare(false, "overdue_list_download_and_share"),
   CustomDrugSearchScreen(false, "custom_drug_search_screen"),
   OnlinePatientLookup(true, "online_patient_lookup"),
-  HttpRequestBodyCompression(false, "http_request_body_compression_enabled")
+  HttpRequestBodyCompression(false, "http_request_body_compression_enabled"),
+  CallResultSyncEnabled(false)
 }

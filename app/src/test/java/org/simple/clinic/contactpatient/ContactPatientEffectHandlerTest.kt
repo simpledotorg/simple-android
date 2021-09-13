@@ -13,9 +13,13 @@ import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.overdue.callresult.CallResult
 import org.simple.clinic.overdue.callresult.CallResultRepository
+import org.simple.clinic.overdue.callresult.Outcome
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.phone.Dialer
+import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -205,6 +209,8 @@ class ContactPatientEffectHandlerTest {
     val appointmentUuid = UUID.fromString("10fec427-9509-4237-8493-bef8c3f0a5c2")
     val appointment = TestData.appointment(uuid = appointmentUuid)
     val reminderDate = LocalDate.parse("2018-01-01")
+    val callResultId = UUID.fromString("08556750-df29-4305-8747-fe3e11be58ae")
+    whenever(uuidGenerator.v4()).thenReturn(callResultId)
 
     // when
     testCase.dispatch(SetReminderForAppointment(appointment, reminderDate))
@@ -212,6 +218,19 @@ class ContactPatientEffectHandlerTest {
     // then
     verify(appointmentRepository).createReminder(appointmentUuid, reminderDate)
     verifyNoMoreInteractions(appointmentRepository)
+
+    val expectedCallResult = CallResult(
+        id = callResultId,
+        userId = user.uuid,
+        appointmentId = appointmentUuid,
+        removeReason = null,
+        outcome = Outcome.RemindToCallLater,
+        timestamps = Timestamps.create(utcClock),
+        syncStatus = SyncStatus.PENDING
+    )
+    verify(callResultRepository).save(listOf(expectedCallResult))
+    verifyNoMoreInteractions(callResultRepository)
+
     testCase.assertOutgoingEvents(ReminderSetForAppointment)
     verifyZeroInteractions(uiActions)
   }

@@ -8,9 +8,12 @@ import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.overdue.callresult.CallResult
 import org.simple.clinic.overdue.callresult.CallResultRepository
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.user.User
 import org.simple.clinic.util.UserClock
@@ -109,7 +112,20 @@ class ContactPatientEffectHandler @AssistedInject constructor(
       effects
           .observeOn(scheduler)
           .doOnNext { (appointment, reminderDate) -> appointmentRepository.createReminder(appointment.uuid, reminderDate) }
+          .doOnNext { (appointment, _) -> markRemindToCallLaterOutcomeForAppointment(appointment) }
           .map { ReminderSetForAppointment }
     }
+  }
+
+  private fun markRemindToCallLaterOutcomeForAppointment(appointment: Appointment) {
+    val callResult = CallResult.remindToCallLater(
+        id = uuidGenerator.v4(),
+        appointment = appointment,
+        user = currentUser.get(),
+        clock = utcClock,
+        syncStatus = SyncStatus.PENDING
+    )
+
+    callResultRepository.save(listOf(callResult))
   }
 }

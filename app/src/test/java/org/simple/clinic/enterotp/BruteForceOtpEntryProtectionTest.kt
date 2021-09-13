@@ -20,14 +20,15 @@ class BruteForceOtpEntryProtectionTest {
 
   private val preferenceState = mock<Preference<BruteForceOtpProtectionState>>()
   private val clock = TestUtcClock()
-  private val config = BruteForceOtpEntryProtectionConfig(limitOfFailedAttempts = 4, blockDuration = Duration.ofMinutes(20))
+  private val config = BruteForceOtpEntryProtectionConfig(limitOfFailedAttempts = 5, blockDuration = Duration.ofMinutes(20))
 
   private val bruteForceOtpEntryProtection = BruteForceOtpEntryProtection(clock, config, preferenceState)
 
   @Test
   fun `when incrementing the count of failed otp attempts, then the count should be updated`() {
     val state = BruteForceOtpProtectionState(failedLoginOtpAttempt = 2)
-    whenever(preferenceState.asObservable()).thenReturn(Observable.just(state))
+    preferenceState.set(state)
+    whenever(preferenceState.get()).thenReturn(state)
 
     bruteForceOtpEntryProtection.incrementFailedOtpAttempt()
 
@@ -40,7 +41,7 @@ class BruteForceOtpEntryProtectionTest {
         limitReachedAt = Optional.empty(),
         failedLoginOtpAttempt = config.limitOfFailedAttempts - 1
     )
-    whenever(preferenceState.asObservable()).thenReturn(Observable.just(bruteForceOtpProtectionState))
+    whenever(preferenceState.get()).thenReturn(bruteForceOtpProtectionState)
 
     bruteForceOtpProtectionState.loginAttemptFailed()
     bruteForceOtpEntryProtection.incrementFailedOtpAttempt()
@@ -57,7 +58,7 @@ class BruteForceOtpEntryProtectionTest {
     val bruteForceOtpProtectionState = BruteForceOtpProtectionState(
         failedLoginOtpAttempt = config.limitOfFailedAttempts,
         limitReachedAt = Optional.of(timeOfLastAttempt))
-    whenever(preferenceState.asObservable()).thenReturn(Observable.just(bruteForceOtpProtectionState))
+    whenever(preferenceState.get()).thenReturn(bruteForceOtpProtectionState)
 
     clock.advanceBy(Duration.ofMinutes(2))
     bruteForceOtpEntryProtection.incrementFailedOtpAttempt()

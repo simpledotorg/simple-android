@@ -18,8 +18,8 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.uuid.UuidGenerator
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.time.LocalDate
 import java.util.Optional
 import java.util.UUID
@@ -57,7 +57,7 @@ class ContactPatientEffectHandlerTest {
       appointmentRepository = appointmentRepository,
       callResultRepository = callResultRepository,
       clock = clock,
-      schedulers = TrampolineSchedulersProvider(),
+      schedulers = TestSchedulersProvider.trampoline(),
       currentFacility = { facility },
       currentUser = { user },
       uuidGenerator = uuidGenerator,

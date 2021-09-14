@@ -43,6 +43,15 @@ class TestRetrofitModule {
 
   @Provides
   @AppScope
+  @Named("for_config")
+  fun configurationRetrofit(retrofitBuilder: Retrofit.Builder): Retrofit {
+    return retrofitBuilder
+        .baseUrl(BuildConfig.MANIFEST_ENDPOINT)
+        .build()
+  }
+
+  @Provides
+  @AppScope
   @Named("for_deployment")
   fun retrofit(
       retrofitBuilder: Retrofit.Builder

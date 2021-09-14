@@ -7,6 +7,7 @@ import org.simple.clinic.drugs.EditMedicineButtonState.REFILL_MEDICINE
 import org.simple.clinic.drugs.EditMedicineButtonState.SAVE_MEDICINE
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
+import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.util.toLocalDateAtZone
 import java.time.LocalDate
 import java.time.ZoneId
@@ -28,8 +29,16 @@ class EditMedicinesUpdate(
       PresribedDrugsRefillClicked -> dispatch(RefillMedicines(model.patientUuid))
       is DrugsListFetched -> drugsListAndButtonStateFetched(event, model)
       PrescribedMedicinesRefilled -> dispatch(GoBackToPatientSummary)
-      is DrugFrequencyChoiceItemsLoaded -> noChange()
+      is DrugFrequencyChoiceItemsLoaded -> drugFrequencyChoiceItemsLoaded(model, event)
     }
+  }
+
+  private fun drugFrequencyChoiceItemsLoaded(
+      model: EditMedicinesModel,
+      event: DrugFrequencyChoiceItemsLoaded
+  ): Next<EditMedicinesModel, EditMedicinesEffect> {
+    val medicineFrequencyToDrugFrequencyChoiceItemMap = event.drugFrequencyChoiceItems.items.associateBy({MedicineFrequency.fromDrugFrequency(it.drugFrequency)}, {it})
+    return next(model.medicineFrequencyToFrequencyChoiceItemMapLoaded(medicineFrequencyToDrugFrequencyChoiceItemMap))
   }
 
   private fun drugsListAndButtonStateFetched(

@@ -190,7 +190,7 @@ class CustomDrugEntrySheet : BaseBottomSheet<
 
   override fun showCustomDrugEntryUi() {
     customDrugEntrySheetUiGroup.visibility = VISIBLE
-    saveButton.visibility = VISIBLE
+    saveButtonFrame.visibility = VISIBLE
   }
 
   override fun showKeyboard() {

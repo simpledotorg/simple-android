@@ -24,3 +24,5 @@ data class UpdateDrugFrequency(
     val prescribedDrugUuid: UUID,
     val drugFrequency: MedicineFrequency
 ) : TeleconsultMedicinesEffect()
+
+object LoadDrugFrequencyChoiceItems : TeleconsultMedicinesEffect()

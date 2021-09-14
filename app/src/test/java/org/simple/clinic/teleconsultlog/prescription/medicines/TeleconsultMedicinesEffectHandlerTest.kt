@@ -11,6 +11,10 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.drugs.search.DrugFrequency
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItems
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -21,10 +25,12 @@ class TeleconsultMedicinesEffectHandlerTest {
 
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val uiActions = mock<TeleconsultMedicinesUiActions>()
+  private val drugFrequencyFactory = mock<DrugFrequencyFactory>()
   private val effectHandler = TeleconsultMedicinesEffectHandler(
       prescriptionRepository = prescriptionRepository,
       schedulersProvider = TestSchedulersProvider.trampoline(),
-      uiActions = uiActions
+      uiActions = uiActions,
+      drugFrequencyFactory = drugFrequencyFactory
   )
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler.build())
 
@@ -141,5 +147,25 @@ class TeleconsultMedicinesEffectHandlerTest {
 
     verify(prescriptionRepository).updateDrugFrequency(prescribedDrugUuid, drugFrequency)
     verifyNoMoreInteractions(prescriptionRepository)
+  }
+
+  @Test
+  fun `when load drug frequency choice items effect is received, then load drug frequency choice items`() {
+    // given
+    val drugFrequencyChoiceItems = listOf(
+        DrugFrequencyChoiceItem(drugFrequency = null, label = "None"),
+        DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.OD, label = "OD"),
+        DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.BD, label = "BD"),
+        DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.TDS, label = "TDS"),
+        DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.QDS, label = "QDS")
+    )
+
+    // when
+    whenever(drugFrequencyFactory.provideFields()).thenReturn(drugFrequencyChoiceItems)
+    effectHandlerTestCase.dispatch(LoadDrugFrequencyChoiceItems)
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(DrugFrequencyChoiceItemsLoaded(DrugFrequencyChoiceItems(drugFrequencyChoiceItems)))
+    verifyZeroInteractions(uiActions)
   }
 }

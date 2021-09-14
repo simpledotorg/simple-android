@@ -45,6 +45,7 @@ class EnterOtpEffectHandler @AssistedInject constructor(
         .addAction(ShowNetworkError::class.java, uiActions::showNetworkError, schedulers.ui())
         .addAction(ShowUnexpectedError::class.java, uiActions::showUnexpectedError, schedulers.ui())
         .addTransformer(LoadOtpEntryProtectedStates::class.java, loadOtpEntryStates())
+        .addAction(ResetOtpAttemptLimit::class.java, { bruteForceProtection.resetFailedAttempts() }, schedulers.io())
         .build()
   }
 

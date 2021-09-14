@@ -36,7 +36,7 @@ class EnterOtpUpdate(
     val updatedModel = model.requestLoginOtpFinished()
 
     return when (val result = event.result) {
-      is ActivateUser.Result.Success -> next(updatedModel, ClearPin, ShowSmsSentMessage)
+      is ActivateUser.Result.Success -> next(updatedModel, ClearPin, ShowSmsSentMessage, ResetOtpAttemptLimit)
       else -> next(updatedModel.requestLoginOtpFailed(AsyncOpError.from(result)), ClearPin as EnterOtpEffect)
     }
   }
@@ -48,7 +48,7 @@ class EnterOtpUpdate(
     val updatedModel = model.loginFinished()
     val loginFailedModel = updatedModel.loginFailed()
     return when (val result = event.result) {
-      LoginResult.Success -> next(updatedModel, ClearLoginEntry, TriggerSync)
+      LoginResult.Success -> next(updatedModel, ClearLoginEntry, TriggerSync, ResetOtpAttemptLimit)
       is LoginResult.ServerError -> next(loginFailedModel, FailedLoginOtpAttempt(result), ClearPin)
       LoginResult.NetworkError -> next(loginFailedModel, ShowNetworkError, ClearPin)
       LoginResult.UnexpectedError -> next(loginFailedModel, ShowUnexpectedError, ClearPin)

@@ -1,7 +1,26 @@
 # CHANGELOG
 
 ## Next Release
+### Internal
 
+- [In Progress: 14 Sep 2021] Record call results instead of updating the same appointment record
+- [In Progress: 31 Aug 2021] Refactor logic around providing drug frequencies label depending on the country
+- [In Progress: 2 Sep 2021] Add a progress state in `CustomDrugEntrySheet`
+
+### Changes
+
+- [In Progress: 19 Aug 2021] UI improvements for medical history screen
+  - Show hypertension diagnosis and treatment in single card
+  - Show separate cards for hypertension and diabetes diagnosis
+  - Show hypertension diagnosis even when facility doesn't have diabetes management enabled
+- [In Progress: 22 Jul 2021] Add option to download & share overdue list
+- [In Progress: 14 Jul 2021] Medication screen improvements
+  - Search for commonly used drugs
+- [In Progress: 06 Aug 2021] Add support for Sri Lanka
+- [In Progress: 25 Aug 2021] Implement providing drug frequencies label depending on the country
+- [In-progress: 13 Sep 2021] Restrict OTP entries to 5 attempts
+
+## Demo
 ### Internal
 
 - Change `ScheduleAppointmentSheet` to use Mobius view effects
@@ -19,11 +38,9 @@
 - Change `EditPatientScreen` to use Mobius view effects
 - Update `.editorconfig` rules
 - Show facilities from selected state during sign up
-- [In Progress: 14 Sep 2021] Record call results instead of updating the same appointment record
-- [In Progress: 31 Aug 2021] Refactor logic around providing drug frequencies label depending on the country
-- [In Progress: 2 Sep 2021] Add a progress state in `CustomDrugEntrySheet`
 
 ### Features
+
 - Add support for state selection after selecting country
 
 ### Changes
@@ -35,16 +52,6 @@
 - Add ellipsis to long drug name in `PatientSummaryScreen` & `EditMedicineScreen`
 - Add a unicode character instead of space in `DrugSearchScreen` search results
 - Updated translations: `mr-IN`, `bn-IN`, `bn-BD`, `kn-IN`, `pa-IN`, `am-ET`, `sid-ET`, `ta-LK`, `hi-IN`, `ti-ET`, `so-ET`, `si-LK`, `te-IN`, `ta-IN`, `om-ET`
-- [In Progress: 19 Aug 2021] UI improvements for medical history screen
-  - Show hypertension diagnosis and treatment in single card
-  - Show separate cards for hypertension and diabetes diagnosis
-  - Show hypertension diagnosis even when facility doesn't have diabetes management enabled
-- [In Progress: 22 Jul 2021] Add option to download & share overdue list
-- [In Progress: 14 Jul 2021] Medication screen improvements
-  - Search for commonly used drugs
-- [In Progress: 06 Aug 2021] Add support for Sri Lanka
-- [In Progress: 25 Aug 2021] Implement providing drug frequencies label depending on the country
-- [In-progress: 13 Sep 2021] Restrict OTP entries to 5 attempts
 
 ## 2021-09-08-7939
 ### Internal

@@ -27,6 +27,7 @@ import org.simple.clinic.drugs.EditMedicinesUpdate
 import org.simple.clinic.drugs.PrescribedDrugsDoneClicked
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.ProtocolDrugClicked
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import org.simple.clinic.protocol.ProtocolRepository
@@ -63,6 +64,7 @@ class EditMedicinesScreenLogicTest {
   )
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val appointmentRepository = mock<AppointmentRepository>()
+  private val drugFrequencyFactory = mock<DrugFrequencyFactory>()
 
   private lateinit var fixture: MobiusTestFixture<EditMedicinesModel, EditMedicinesEvent, EditMedicinesEffect>
 
@@ -77,7 +79,8 @@ class EditMedicinesScreenLogicTest {
         facility = Lazy { facility },
         utcClock = utcClock,
         uuidGenerator = uuidGenerator,
-        appointmentsRepository = appointmentRepository
+        appointmentsRepository = appointmentRepository,
+        drugFrequencyFactory = drugFrequencyFactory
     )
 
     fixture = MobiusTestFixture(

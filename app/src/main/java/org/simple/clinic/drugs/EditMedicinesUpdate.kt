@@ -1,6 +1,7 @@
 package org.simple.clinic.drugs
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.*
 import com.spotify.mobius.Update
 import org.simple.clinic.drugs.EditMedicineButtonState.REFILL_MEDICINE
 import org.simple.clinic.drugs.EditMedicineButtonState.SAVE_MEDICINE
@@ -27,6 +28,7 @@ class EditMedicinesUpdate(
       PresribedDrugsRefillClicked -> dispatch(RefillMedicines(model.patientUuid))
       is DrugsListFetched -> drugsListAndButtonStateFetched(event, model)
       PrescribedMedicinesRefilled -> dispatch(GoBackToPatientSummary)
+      is DrugFrequencyChoiceItemsLoaded -> noChange()
     }
   }
 

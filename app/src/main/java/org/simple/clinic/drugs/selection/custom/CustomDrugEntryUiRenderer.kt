@@ -11,18 +11,17 @@ class CustomDrugEntryUiRenderer(
     if (!model.isCustomDrugEntrySheetInfoLoaded) {
       ui.showProgressBar()
       ui.hideCustomDrugEntryUi()
-      return
+    } else {
+      ui.hideProgressBar()
+      ui.showCustomDrugEntryUi()
+
+      initialSetup(model.openAs)
+
+      if (model.drugFrequencyToFrequencyChoiceItemMap != null)
+        setSheetTitle(model.drugName, model.dosage, model.drugFrequencyToFrequencyChoiceItemMap[model.frequency]!!.label)
+
+      showDefaultDosagePlaceholder(model.dosage, model.dosageHasFocus)
     }
-
-    ui.hideProgressBar()
-    ui.showCustomDrugEntryUi()
-
-    initialSetup(model.openAs)
-
-    if (model.drugFrequencyToFrequencyChoiceItemMap != null)
-      setSheetTitle(model.drugName, model.dosage, model.drugFrequencyToFrequencyChoiceItemMap[model.frequency]!!.label)
-
-    showDefaultDosagePlaceholder(model.dosage, model.dosageHasFocus)
   }
 
   private fun setSheetTitle(

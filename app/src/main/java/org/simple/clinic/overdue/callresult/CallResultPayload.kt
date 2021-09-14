@@ -1,10 +1,12 @@
 package org.simple.clinic.overdue.callresult
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import org.simple.clinic.overdue.AppointmentCancelReason
 import java.time.Instant
 import java.util.UUID
 
+@JsonClass(generateAdapter = true)
 data class CallResultPayload(
 
     @Json(name = "id")

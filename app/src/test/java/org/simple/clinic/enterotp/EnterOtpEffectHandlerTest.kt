@@ -83,4 +83,14 @@ class EnterOtpEffectHandlerTest {
     testCase.assertOutgoingEvents(OtpEntryProtectedStateChanged(allowed))
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when reset otp attempt limit effect is received, then reset the otp limit`() {
+    // when
+    testCase.dispatch(ResetOtpAttemptLimit)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verifyZeroInteractions(uiActions)
+  }
 }

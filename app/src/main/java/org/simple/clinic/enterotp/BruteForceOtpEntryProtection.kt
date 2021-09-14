@@ -95,7 +95,7 @@ class BruteForceOtpEntryProtection @Inject constructor(
     return Duration.ofMillis(millisTillExpiry + 1)
   }
 
-  private fun resetFailedAttempts() {
+  fun resetFailedAttempts() {
     otpStatePreference.delete()
   }
 }

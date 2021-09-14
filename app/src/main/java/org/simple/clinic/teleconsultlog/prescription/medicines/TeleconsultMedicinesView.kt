@@ -17,6 +17,7 @@ import org.simple.clinic.databinding.ViewTeleconsultMedicinesBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
@@ -24,6 +25,7 @@ import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.teleconsultlog.drugduration.DrugDuration
 import org.simple.clinic.teleconsultlog.drugduration.DrugDurationSheet
+import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequencySheet
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequencySheetExtra
 import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionScreenKey
@@ -148,7 +150,10 @@ class TeleconsultMedicinesView(
     medicinesRecyclerView.addItemDecoration(DividerItemDecorator(context, 0, 0))
   }
 
-  override fun renderMedicines(medicines: List<PrescribedDrug>) {
+  override fun renderMedicines(
+      medicines: List<PrescribedDrug>,
+      medicineFrequencyToFrequencyChoiceItemMap: Map<MedicineFrequency?, DrugFrequencyChoiceItem>
+  ) {
     emptyMedicinesTextView.visibility = GONE
     medicinesRecyclerView.visibility = VISIBLE
 

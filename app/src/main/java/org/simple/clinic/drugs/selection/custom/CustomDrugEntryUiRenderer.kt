@@ -14,6 +14,7 @@ class CustomDrugEntryUiRenderer(
     } else {
       ui.hideProgressBar()
       ui.showCustomDrugEntryUi()
+      ui.showKeyboard()
 
       initialSetup(model.openAs)
 

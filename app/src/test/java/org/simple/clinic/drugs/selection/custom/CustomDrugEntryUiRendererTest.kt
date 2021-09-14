@@ -44,6 +44,7 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).setSheetTitle(drugName, null, frequencyLabel)
     verify(ui).hideProgressBar()
     verify(ui).showCustomDrugEntryUi()
+    verify(ui).showKeyboard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -64,6 +65,7 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).setSheetTitle(drugName, dosageText, frequencyLabel)
     verify(ui).hideProgressBar()
     verify(ui).showCustomDrugEntryUi()
+    verify(ui).showKeyboard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -83,6 +85,7 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).setSheetTitle(null, null, frequencyLabel)
     verify(ui).hideProgressBar()
     verify(ui).showCustomDrugEntryUi()
+    verify(ui).showKeyboard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -101,6 +104,7 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).setSheetTitle(drugName, drugDosage, frequencyLabel)
     verify(ui).hideProgressBar()
     verify(ui).showCustomDrugEntryUi()
+    verify(ui).showKeyboard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -112,6 +116,24 @@ class CustomDrugEntryUiRendererTest {
     // then
     verify(ui).showProgressBar()
     verify(ui).hideCustomDrugEntryUi()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when custom drug entry sheet info is loaded, then hide progress bar, show custom drug entry ui and show keyboard`() {
+    // given
+    val frequencyLabel = "None"
+
+    // when
+    uiRenderer.render(defaultModel.drugInfoProgressStateLoaded())
+
+    // then
+    verify(ui).hideProgressBar()
+    verify(ui).showCustomDrugEntryUi()
+    verify(ui).hideRemoveButton()
+    verify(ui).setButtonTextAsAdd()
+    verify(ui).showKeyboard()
+    verify(ui).setSheetTitle(null, null, frequencyLabel)
     verifyNoMoreInteractions(ui)
   }
 }

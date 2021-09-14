@@ -155,7 +155,6 @@ class CustomDrugEntrySheet : BaseBottomSheet<
     }
 
     drugDosageEditText.imeOptions = EditorInfo.IME_ACTION_DONE
-    drugDosageEditText.showKeyboard()
   }
 
   override fun showEditFrequencyDialog(
@@ -192,6 +191,10 @@ class CustomDrugEntrySheet : BaseBottomSheet<
   override fun showCustomDrugEntryUi() {
     customDrugEntrySheetUiGroup.visibility = VISIBLE
     saveButton.visibility = VISIBLE
+  }
+
+  override fun showKeyboard() {
+    drugDosageEditText.showKeyboard()
   }
 
   override fun closeSheetAndGoToEditMedicineScreen() {

@@ -21,6 +21,10 @@
 - [In Progress: 25 Aug 2021] Implement providing drug frequencies label depending on the country
 - [In-progress: 13 Sep 2021] Restrict OTP entries to 5 attempts
 
+### Fixes
+
+- Fix select country & state screen overlapping next button
+
 ## Demo
 ### Internal
 
@@ -55,6 +59,7 @@
 - Updated translations: `mr-IN`, `bn-IN`, `bn-BD`, `kn-IN`, `pa-IN`, `am-ET`, `sid-ET`, `ta-LK`, `hi-IN`, `ti-ET`, `so-ET`, `si-LK`, `te-IN`, `ta-IN`, `om-ET`
 
 ## 2021-09-08-7939
+
 ### Internal
 
 - Bump Paging to v3.0.1

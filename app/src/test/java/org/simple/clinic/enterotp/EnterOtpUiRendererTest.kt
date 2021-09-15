@@ -13,7 +13,7 @@ import java.time.Instant
 class EnterOtpUiRendererTest {
   private val ui = mock<EnterOtpUi>()
   private val uiRenderer = EnterOtpUiRenderer(ui)
-  private val model = EnterOtpModel.create()
+  private val model = EnterOtpModel.create(minOtpRetries = 3)
 
   @Test
   fun `when the protected state is allowed, then allow otp entries`() {

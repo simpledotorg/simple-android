@@ -20,7 +20,7 @@ import java.util.UUID
 class EnterOtpUpdateTest {
   private val updateSpec = UpdateSpec(EnterOtpUpdate(loginOtpRequiredLength = 6))
   private val user = TestData.loggedInUser(uuid = UUID.fromString("6fc16e72-39a5-4568-86db-1f8b1c0c08d3"))
-  private val loginStartedModel = EnterOtpModel.create()
+  private val loginStartedModel = EnterOtpModel.create(minOtpRetries = 3)
       .userLoaded(user)
       .enteredOtpValid()
       .loginStarted()

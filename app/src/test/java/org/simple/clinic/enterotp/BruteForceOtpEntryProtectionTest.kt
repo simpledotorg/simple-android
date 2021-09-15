@@ -20,7 +20,7 @@ class BruteForceOtpEntryProtectionTest {
 
   private val preferenceState = mock<Preference<BruteForceOtpProtectionState>>()
   private val clock = TestUtcClock()
-  private val config = BruteForceOtpEntryProtectionConfig(limitOfFailedAttempts = 5, blockDuration = Duration.ofMinutes(20))
+  private val config = BruteForceOtpEntryProtectionConfig(limitOfFailedAttempts = 5, blockDuration = Duration.ofMinutes(20), minOtpEntries = 3)
 
   private val bruteForceOtpEntryProtection = BruteForceOtpEntryProtection(clock, config, preferenceState)
 

@@ -109,7 +109,7 @@ class AppointmentRepository @Inject constructor(
 
   override fun save(records: List<Appointment>): Completable {
     return Completable.fromAction {
-      appointmentDao.save(records)
+      saveImmediate(records)
     }
   }
 

@@ -83,7 +83,7 @@ class TeleconsultRecordRepository @Inject constructor(
   }
 
   override fun save(records: List<TeleconsultRecord>): Completable {
-    return Completable.fromAction { teleconsultRecordDao.save(records) }
+    return Completable.fromAction { saveImmediate(records) }
   }
 
   override fun saveImmediate(records: List<TeleconsultRecord>) {

@@ -14,7 +14,7 @@ class DrugRepository @Inject constructor(
 ) : SynceableRepository<Drug, DrugPayload> {
 
   override fun save(records: List<Drug>): Completable {
-    return Completable.fromAction { saveRecords(records) }
+    return Completable.fromAction { saveImmediate(records) }
   }
 
   override fun saveImmediate(records: List<Drug>) {

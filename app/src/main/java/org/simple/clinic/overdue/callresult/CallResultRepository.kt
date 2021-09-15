@@ -11,7 +11,7 @@ class CallResultRepository @Inject constructor(
 ) : SynceableRepository<CallResult, CallResultPayload> {
 
   override fun save(records: List<CallResult>): Completable {
-    return Completable.fromAction { callResultDao.save(records) }
+    return Completable.fromAction { saveImmediate(records) }
   }
 
   override fun saveImmediate(records: List<CallResult>) {

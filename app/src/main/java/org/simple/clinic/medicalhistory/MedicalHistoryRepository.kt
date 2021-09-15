@@ -106,7 +106,7 @@ class MedicalHistoryRepository @Inject constructor(
 
   override fun save(records: List<MedicalHistory>): Completable {
     return Completable.fromAction {
-      dao.saveHistories(records)
+      saveImmediate(records)
     }
   }
 

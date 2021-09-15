@@ -14,7 +14,7 @@ class TeleconsultationFacilityRepository @Inject constructor(
 ) : SynceableRepository<TeleconsultationFacilityWithMedicalOfficers, TeleconsultationFacilityInfoPayload> {
 
   override fun save(records: List<TeleconsultationFacilityWithMedicalOfficers>): Completable {
-    return Completable.fromAction { saveRecords(records) }
+    return Completable.fromAction { saveImmediate(records) }
   }
 
   override fun saveImmediate(records: List<TeleconsultationFacilityWithMedicalOfficers>) {

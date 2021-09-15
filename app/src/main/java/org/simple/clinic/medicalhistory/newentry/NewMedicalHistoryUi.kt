@@ -15,4 +15,5 @@ interface NewMedicalHistoryUi {
   fun hideNextButtonProgress()
   fun showHypertensionTreatmentQuestion(answer: Answer)
   fun hideHypertensionTreatmentQuestion()
+  fun showDiabetesTreatmentQuestion(answer: Answer)
 }

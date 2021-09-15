@@ -147,7 +147,7 @@ class NewMedicalHistoryUiRendererTest {
   }
 
   @Test
-  fun `when patient has hypertension and country is not from india, then show hypertension treatment question`() {
+  fun `when patient has hypertension and country is not from india, then don't show hypertension treatment question`() {
     // given
     val bangladesh = TestData.country(isoCountryCode = Country.BANGLADESH)
     val model = NewMedicalHistoryModel.default(country = bangladesh)
@@ -185,6 +185,28 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Unanswered)
     verify(ui).hideNextButtonProgress()
     verify(ui).hideHypertensionTreatmentQuestion()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when diabetes management is enabled and patient has diabetes and is from india, then show diabetes treatment question`() {
+    // given
+    val model = defaultModel
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .answerChanged(DIAGNOSED_WITH_DIABETES, Yes)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verifyImplicitRenders()
+    verify(ui).showDiabetesDiagnosisView()
+    verify(ui).hideDiabetesHistorySection()
+    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
+    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Yes)
+    verify(ui).hideNextButtonProgress()
+    verify(ui).hideHypertensionTreatmentQuestion()
+    verify(ui).showDiabetesTreatmentQuestion(Unanswered)
     verifyNoMoreInteractions(ui)
   }
 

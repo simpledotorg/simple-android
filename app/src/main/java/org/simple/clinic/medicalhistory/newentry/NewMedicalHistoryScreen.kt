@@ -30,6 +30,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HY
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_DIABETES_TREATMENT
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_HYPERTENSION_TREATMENT
 import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
 import org.simple.clinic.medicalhistory.SelectOngoingHypertensionTreatmentErrorDialog
@@ -223,6 +224,15 @@ class NewMedicalHistoryScreen : BaseScreen<
   override fun hideHypertensionTreatmentQuestion() {
     hypertensionDiagnosis.hideTreatmentQuestion()
     hypertensionDiagnosis.clearTreatmentChipGroup()
+  }
+
+  override fun showDiabetesTreatmentQuestion(answer: Answer) {
+    diabetesDiagnosis.renderTreatmentQuestion(IS_ON_DIABETES_TREATMENT, answer) { questionForView, newAnswer ->
+      questionViewEvents.onNext(NewMedicalHistoryAnswerToggled(questionForView, newAnswer))
+    }
+    TransitionManager.beginDelayedTransition(scrollView, ChangeBounds())
+
+    diabetesDiagnosis.showTreatmentQuestion()
   }
 
   override fun showOngoingHypertensionTreatmentErrorDialog() {

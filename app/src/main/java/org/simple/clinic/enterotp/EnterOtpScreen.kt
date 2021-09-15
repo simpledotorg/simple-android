@@ -61,6 +61,9 @@ class EnterOtpScreen : BaseScreen<
   @Inject
   lateinit var utcClock: UtcClock
 
+  @Inject
+  lateinit var config: BruteForceOtpEntryProtectionConfig
+
   private val otpEntryEditText
     get() = binding.otpEntryEditText
 
@@ -100,7 +103,7 @@ class EnterOtpScreen : BaseScreen<
       field = value
     }
 
-  override fun defaultModel() = EnterOtpModel.create()
+  override fun defaultModel() = EnterOtpModel.create(minOtpRetries = config.minOtpEntries)
 
   override fun bindView(
       layoutInflater: LayoutInflater,

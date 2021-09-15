@@ -269,7 +269,6 @@ class TeleconsultRecordEffectHandlerTest {
 
     whenever(uuidGenerator.v4()).thenReturn(clonedDrug1Uuid, clonedDrug2Uuid)
     whenever(prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)) doReturn prescriptions
-    whenever(prescriptionRepository.save(clonedPrescriptions)) doReturn Completable.complete()
 
     // when
     utcClock.advanceBy(durationToAdvanceBy)

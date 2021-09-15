@@ -7,6 +7,22 @@
   android:layout_height="match_parent"
   android:background="?attr/colorSurface">
 
+  <com.google.android.material.progressindicator.CircularProgressIndicator
+    android:id="@+id/progressIndicator"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginVertical="@dimen/spacing_52"
+    android:indeterminate="true"
+    android:visibility="gone"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:indeterminate="false"
+    tools:progress="100"
+    tools:visibility="visible" />
+
   <TextView
     android:id="@+id/titleTextView"
     android:layout_width="@dimen/spacing_0"
@@ -95,6 +111,7 @@
   </com.google.android.material.textfield.TextInputLayout>
 
   <FrameLayout
+    android:id="@+id/saveButtonFrame"
     style="@style/Widget.Simple.Button.Frame"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -107,5 +124,12 @@
       android:layout_height="wrap_content"
       android:text="@string/custom_drug_entry_sheet_save_button_text" />
   </FrameLayout>
+
+  <androidx.constraintlayout.widget.Group
+    android:id="@+id/customDrugEntrySheetUiGroup"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:visibility="visible"
+    app:constraint_referenced_ids="titleTextView, removeButton, dosageTextInputLayout, frequencyTextInputLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

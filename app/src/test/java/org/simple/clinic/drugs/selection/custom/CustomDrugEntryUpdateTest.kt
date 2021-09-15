@@ -169,7 +169,7 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
-  fun `when the drug is fetched and is not deleted, then update the model and set frequency`() {
+  fun `when the drug is fetched and is not deleted, then update the model, set frequency and update the progress state to done`() {
     val prescribedDrugUuid = UUID.fromString("96633994-6e4d-4528-b796-f03ae016553a")
     val drugFrequency = OD
     val dosage = "12mg"
@@ -186,13 +186,14 @@ class CustomDrugEntryUpdateTest {
                     .drugNameLoaded(drugName)
                     .dosageEdited(dosage = dosage)
                     .frequencyEdited(frequency = drugFrequency)
-                    .rxNormCodeEdited(prescribedDrug.rxNormCode)),
+                    .rxNormCodeEdited(prescribedDrug.rxNormCode)
+                    .drugInfoProgressStateLoaded()),
                 hasEffects(SetDrugFrequency(frequencyRes), SetDrugDosage(dosage)))
         )
   }
 
   @Test
-  fun `when remove button is clicked, then remove the drug from the custom drug list`() {
+  fun `when remove button is clicked, then remove the drug from the custom drug list and set the screen in progress state`() {
     val prescribedDrugId = UUID.fromString("59842701-d7dd-4206-88a9-9f6f2460e496")
     val model = CustomDrugEntryModel.default(openAs = OpenAs.Update(prescribedDrugId), dosagePlaceholder)
 
@@ -200,7 +201,7 @@ class CustomDrugEntryUpdateTest {
         .given(model)
         .whenEvent(RemoveDrugButtonClicked)
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(model.drugInfoProgressStateLoading()),
             hasEffects(RemoveDrugFromPrescription(drugUuid = prescribedDrugId))
         ))
   }
@@ -217,7 +218,7 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
-  fun `when drug is fetched, then update the model with drug values and set drug frequency and dosage`() {
+  fun `when drug is fetched, then update the model with drug values, set drug frequency, dosage and update the progress state to done`() {
     val drugUuid = UUID.fromString("6bbc5bbe-863c-472a-b962-1fd3198e20d1")
     val drug = TestData.drug(id = drugUuid, frequency = OD)
     val frequencyRes = "OD"
@@ -228,7 +229,7 @@ class CustomDrugEntryUpdateTest {
         .whenEvent(DrugFetched(drug))
         .then(
             assertThatNext(
-                hasModel(drugFrequencyChoiceItemsLoaded.drugNameLoaded(drug.name).dosageEdited(drug.dosage).frequencyEdited(drug.frequency).rxNormCodeEdited(drug.rxNormCode)),
+                hasModel(drugFrequencyChoiceItemsLoaded.drugNameLoaded(drug.name).dosageEdited(drug.dosage).frequencyEdited(drug.frequency).rxNormCodeEdited(drug.rxNormCode).drugInfoProgressStateLoaded()),
                 hasEffects(SetDrugFrequency(frequencyRes), SetDrugDosage(drug.dosage))
             )
         )

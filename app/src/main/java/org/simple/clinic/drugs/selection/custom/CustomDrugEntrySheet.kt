@@ -80,6 +80,15 @@ class CustomDrugEntrySheet : BaseBottomSheet<
   private val saveButton
     get() = binding.saveButton
 
+  private val customDrugEntrySheetUiGroup
+    get() = binding.customDrugEntrySheetUiGroup
+
+  private val saveButtonFrame
+    get() = binding.saveButtonFrame
+    
+  private val progressIndicator
+    get() = binding.progressIndicator
+
   override fun defaultModel() = CustomDrugEntryModel.default(openAs, getString(R.string.custom_drug_entry_sheet_dosage_placeholder))
 
   override fun bindView(
@@ -146,7 +155,6 @@ class CustomDrugEntrySheet : BaseBottomSheet<
     }
 
     drugDosageEditText.imeOptions = EditorInfo.IME_ACTION_DONE
-    drugDosageEditText.showKeyboard()
   }
 
   override fun showEditFrequencyDialog(
@@ -165,6 +173,28 @@ class CustomDrugEntrySheet : BaseBottomSheet<
     val frequency = if (hasDrugFrequency) frequencyLabel else null
 
     titleTextView.text = listOfNotNull(drugName, dosage, frequency).joinToString()
+  }
+
+  override fun showProgressBar() {
+    progressIndicator.visibility = VISIBLE
+  }
+
+  override fun hideCustomDrugEntryUi() {
+    customDrugEntrySheetUiGroup.visibility = GONE
+    saveButtonFrame.visibility = GONE
+  }
+
+  override fun hideProgressBar() {
+    progressIndicator.visibility = GONE
+  }
+
+  override fun showCustomDrugEntryUi() {
+    customDrugEntrySheetUiGroup.visibility = VISIBLE
+    saveButtonFrame.visibility = VISIBLE
+  }
+
+  override fun showKeyboard() {
+    drugDosageEditText.showKeyboard()
   }
 
   override fun closeSheetAndGoToEditMedicineScreen() {

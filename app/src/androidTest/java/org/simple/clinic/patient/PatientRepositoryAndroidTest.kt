@@ -478,7 +478,7 @@ class PatientRepositoryAndroidTest {
 
     val patient = patientProfile.patient
 
-    patientRepository.saveImmediate(listOf(patientProfile))
+    patientRepository.save(listOf(patientProfile))
 
     val updatedAfter = Duration.ofDays(1L)
     clock.advanceBy(updatedAfter)
@@ -541,7 +541,7 @@ class PatientRepositoryAndroidTest {
         businessIds = emptyList()
     )
 
-    patientRepository.saveImmediate(listOf(patientProfile))
+    patientRepository.save(listOf(patientProfile))
 
     val updatedAfter = Duration.ofDays(1L)
     clock.advanceBy(updatedAfter)
@@ -597,7 +597,7 @@ class PatientRepositoryAndroidTest {
         businessIds = emptyList()
     )
 
-    patientRepository.saveImmediate(listOf(patientProfile))
+    patientRepository.save(listOf(patientProfile))
 
     val updatedAfter = Duration.ofDays(1L)
     clock.advanceBy(updatedAfter)
@@ -647,7 +647,7 @@ class PatientRepositoryAndroidTest {
                 updatedAt = Instant.now(clock))),
         businessIds = emptyList())
 
-    patientRepository.saveImmediate(listOf(patientProfile))
+    patientRepository.save(listOf(patientProfile))
 
     val updatedAfter = Duration.ofDays(1L)
     clock.advanceBy(updatedAfter)
@@ -725,7 +725,7 @@ class PatientRepositoryAndroidTest {
         appointmentType = Manual,
         cancelReason = null
     )
-    appointmentRepository.saveImmediate(listOf(appointment2))
+    appointmentRepository.save(listOf(appointment2))
 
     recentPatient2 = recentPatient2.copy(updatedAt = clock.instant())
     verifyRecentPatientOrder(
@@ -840,7 +840,7 @@ class PatientRepositoryAndroidTest {
     val patientProfile = testData.patientProfile(patientUuid = patientUuid, patientAddressUuid = patientAddressUuid).run {
       copy(patient = patient.copy(status = patientStatus))
     }
-    patientRepository.saveImmediate(listOf(patientProfile))
+    patientRepository.save(listOf(patientProfile))
 
     val bpMeasurement = testData.bloodPressureMeasurement(
         patientUuid = patientUuid,
@@ -865,7 +865,7 @@ class PatientRepositoryAndroidTest {
     val patientProfile = testData.patientProfile(patientUuid = patientUuid).run {
       copy(patient = patient.copy(createdAt = createdAt, updatedAt = updatedAt))
     }
-    patientRepository.saveImmediate(listOf(patientProfile))
+    patientRepository.save(listOf(patientProfile))
 
     val bpMeasurement = testData.bloodPressureMeasurement(
         patientUuid = patientUuid,
@@ -890,7 +890,7 @@ class PatientRepositoryAndroidTest {
     val patientProfile = testData.patientProfile(patientUuid = patientUuid).run {
       copy(patient = patient.copy(createdAt = createdAt, updatedAt = updatedAt))
     }
-    patientRepository.saveImmediate(listOf(patientProfile))
+    patientRepository.save(listOf(patientProfile))
 
     val bloodSugarMeasurement = testData.bloodSugarMeasurement(
         patientUuid = patientUuid,
@@ -947,7 +947,7 @@ class PatientRepositoryAndroidTest {
       deletedAt: Instant? = null
   ): RecentPatient {
     val patientProfile = testData.patientProfile(patientUuid = patientUuid)
-    patientRepository.saveImmediate(listOf(patientProfile))
+    patientRepository.save(listOf(patientProfile))
 
     val prescribedDrug = testData.prescription(
         patientUuid = patientUuid,
@@ -1084,7 +1084,7 @@ class PatientRepositoryAndroidTest {
       appointmentType: AppointmentType = Manual
   ): RecentPatient {
     val patientProfile = testData.patientProfile(patientUuid = patientUuid)
-    patientRepository.saveImmediate(listOf(patientProfile))
+    patientRepository.save(listOf(patientProfile))
 
     val appointment = testData.appointment(
         uuid = appointmentUuid,
@@ -1112,7 +1112,7 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun if_sync_is_pending_for_any_patient_record_then_it_should_be_counted_in_pendingRecordsCount() {
-    patientRepository.saveImmediate(listOf(
+    patientRepository.save(listOf(
         testData.patientProfile(syncStatus = PENDING),
         testData.patientProfile(syncStatus = PENDING),
         testData.patientProfile(syncStatus = DONE)
@@ -1125,7 +1125,7 @@ class PatientRepositoryAndroidTest {
   @Test
   fun saving_a_bp_identifier_for_a_patient_must_work_as_expected() {
     val patientProfile = testData.patientProfile(syncStatus = DONE, generateBusinessId = false)
-    patientRepository.saveImmediate(listOf(patientProfile))
+    patientRepository.save(listOf(patientProfile))
 
     val bpPassportCode = "6adbfe88-840e-4f03-aaaf-4b1f2bae747a"
     val now = Instant.now(clock)
@@ -1165,7 +1165,7 @@ class PatientRepositoryAndroidTest {
   @Test
   fun saving_bangladesh_national_identifier_for_a_patient_must_work_as_expected() {
     val patientProfile = testData.patientProfile(syncStatus = DONE, generateBusinessId = false)
-    patientRepository.saveImmediate(listOf(patientProfile))
+    patientRepository.save(listOf(patientProfile))
 
     val nationalId = "33ed3fb2-cfcc-48f8-9b7d-079c02146076"
     val now = Instant.now(clock)
@@ -1381,7 +1381,7 @@ class PatientRepositoryAndroidTest {
     }
 
 
-    patientRepository.saveImmediate(listOf(
+    patientRepository.save(listOf(
         patientWithUniqueBusinessId,
         patientOneWithSharedBusinessId,
         patientTwoWithSharedBusinessId,
@@ -1432,7 +1432,7 @@ class PatientRepositoryAndroidTest {
           )
 
       bpMeasurement?.forEach {
-        bloodPressureRepository.saveImmediate(listOf(testData.bloodPressureMeasurement(
+        bloodPressureRepository.save(listOf(testData.bloodPressureMeasurement(
             patientUuid = patientUuid,
             systolic = it.reading.systolic,
             diastolic = it.reading.diastolic,
@@ -1440,13 +1440,13 @@ class PatientRepositoryAndroidTest {
         )))
       }
       bloodSugarMeasurement?.forEach {
-        bloodSugarRepository.saveImmediate(listOf(testData.bloodSugarMeasurement(
+        bloodSugarRepository.save(listOf(testData.bloodSugarMeasurement(
             patientUuid = patientUuid,
             reading = it.reading,
             recordedAt = it.recordedAt
         )))
       }
-      medicalHistoryRepository.saveImmediate(listOf(testData.medicalHistory(
+      medicalHistoryRepository.save(listOf(testData.medicalHistory(
           patientUuid = patientUuid,
           hasDiabetes = hasDiabetes,
           hasHadHeartAttack = hasHadHeartAttack,
@@ -1773,7 +1773,7 @@ class PatientRepositoryAndroidTest {
     val dummyProfile = testData.patientProfile(patientUuid = patientUuid, generateBusinessId = false)
     val profileWithBusinessIds = dummyProfile.copy(businessIds = listOf(oldBpPassport, currentBpPassport, deletedBpPassport))
 
-    patientRepository.saveImmediate(listOf(profileWithBusinessIds))
+    patientRepository.save(listOf(profileWithBusinessIds))
 
     val latestBpPassport = patientRepository.bpPassportForPatient(patientUuid)
 
@@ -1806,7 +1806,7 @@ class PatientRepositoryAndroidTest {
     val recordedAtForPatient2 = Instant.now(clock)
     val patientProfile2 = createPatientProfile(patientUuid2, recordedAtForPatient2)
 
-    patientRepository.saveImmediate(listOf(patientProfile1, patientProfile2))
+    patientRepository.save(listOf(patientProfile1, patientProfile2))
 
     patientRepository.compareAndUpdateRecordedAt(patientUuid1, instantToCompare1)
     patientRepository.compareAndUpdateRecordedAt(patientUuid2, instantToCompare2)
@@ -1848,7 +1848,7 @@ class PatientRepositoryAndroidTest {
     val recordedAtForPatient2 = Instant.now(clock)
     val patientProfile2 = createPatientProfile(patientUuid2, recordedAtForPatient2)
 
-    patientRepository.saveImmediate(listOf(patientProfile1, patientProfile2))
+    patientRepository.save(listOf(patientProfile1, patientProfile2))
 
     patientRepository.compareAndUpdateRecordedAt(patientUuid1, instantToCompare1)
     patientRepository.compareAndUpdateRecordedAt(patientUuid2, instantToCompare2)
@@ -1879,7 +1879,7 @@ class PatientRepositoryAndroidTest {
               syncStatus = DONE)
           )
         }
-    patientRepository.saveImmediate(listOf(patient))
+    patientRepository.save(listOf(patient))
 
     val bpRecordedTwoDaysBeforePatientCreated = testData.bloodPressureMeasurement(
         uuid = UUID.fromString("d24e9033-a397-4468-8a0a-4efb38c4dca1"),
@@ -1900,7 +1900,7 @@ class PatientRepositoryAndroidTest {
         recordedAt = patientCreatedDate.plus(1, ChronoUnit.MINUTES)
     )
 
-    bloodPressureRepository.saveImmediate(listOf(
+    bloodPressureRepository.save(listOf(
         bpRecordedTwoDaysBeforePatientCreated,
         bpRecordedOneDayBeforePatientCreated,
         bpRecordedOneMinuteAfterPatientCreated
@@ -1949,7 +1949,7 @@ class PatientRepositoryAndroidTest {
     }
     val patientUuid = patientProfile.patient.uuid
 
-    patientRepository.saveImmediate(listOf(patientProfile))
+    patientRepository.save(listOf(patientProfile))
 
     val oneSecondAfterPatientUpdated = patientUpdatedAt.plus(Duration.ofSeconds(1L))
     val oneSecondBeforePatientUpdated = patientUpdatedAt.minus(Duration.ofSeconds(1L))
@@ -2050,7 +2050,7 @@ class PatientRepositoryAndroidTest {
           patientDeletedAt = if (isDeleted) Instant.now() else null
       )
 
-      patientRepository.saveImmediate(listOf(patientProfile))
+      patientRepository.save(listOf(patientProfile))
     }
 
     fun findPatientWithIdentifier(identifier: String): Optional<Patient> {
@@ -2355,7 +2355,7 @@ class PatientRepositoryAndroidTest {
           zone = zone
       ))
     }
-    patientRepository.saveImmediate(listOf(patientProfile))
+    patientRepository.save(listOf(patientProfile))
 
     val patients = patientRepository.recordsWithSyncStatus(PENDING)
     assertThat(patients.size).isEqualTo(1)
@@ -2392,7 +2392,7 @@ class PatientRepositoryAndroidTest {
       )
     }
 
-    patientRepository.saveImmediate(listOf(patientProfile))
+    patientRepository.save(listOf(patientProfile))
 
     // when
     val patients = patientRepository.recordsWithSyncStatus(PENDING)
@@ -2411,7 +2411,7 @@ class PatientRepositoryAndroidTest {
         identifier = Identifier("12491236-9725-4eff-aab9-ba789ba37d72", BangladeshNationalId),
         createdAt = now
     )
-    patientRepository.saveImmediate(listOf(patientProfile.copy(businessIds = listOf(bangladeshNationalId))))
+    patientRepository.save(listOf(patientProfile.copy(businessIds = listOf(bangladeshNationalId))))
 
     //when
     clock.advanceBy(Duration.ofHours(1))
@@ -2681,7 +2681,7 @@ class PatientRepositoryAndroidTest {
     )
     val expectedDeletedReason = DeletedReason.Duplicate
 
-    patientRepository.saveImmediate(listOf(patientProfile))
+    patientRepository.save(listOf(patientProfile))
 
     // when
     clock.advanceBy(Duration.ofHours(1))
@@ -2716,7 +2716,7 @@ class PatientRepositoryAndroidTest {
 
     val updatedAssignedFacilityUuid = UUID.fromString("8fcdf153-d85f-4bcb-8cd3-b59ad5b1797a")
 
-    patientRepository.saveImmediate(listOf(patient))
+    patientRepository.save(listOf(patient))
 
     // when
     clock.advanceBy(Duration.ofMinutes(40))
@@ -2766,7 +2766,7 @@ class PatientRepositoryAndroidTest {
         businessId = businessIdTwo
     )
 
-    patientRepository.saveImmediate(listOf(patientOneProfile, patientTwoProfile))
+    patientRepository.save(listOf(patientOneProfile, patientTwoProfile))
 
     // when
     val patients = patientRepository.findPatientsWithBusinessId(identifier.value).map { it.uuid }
@@ -2794,7 +2794,7 @@ class PatientRepositoryAndroidTest {
               businessIds = businessIds
           )
 
-      patientRepository.saveImmediate(listOf(patientProfile))
+      patientRepository.save(listOf(patientProfile))
     }
 
     fun searchResults(facility: Facility): List<String> {
@@ -2896,7 +2896,7 @@ class PatientRepositoryAndroidTest {
               businessIds = businessIds
           )
 
-      patientRepository.saveImmediate(listOf(patientProfile))
+      patientRepository.save(listOf(patientProfile))
     }
 
     fun searchResults(query: String, facility: Facility): List<String> {
@@ -3002,7 +3002,7 @@ class PatientRepositoryAndroidTest {
               businessIds = businessIds
           )
 
-      patientRepository.saveImmediate(listOf(patientProfile))
+      patientRepository.save(listOf(patientProfile))
     }
 
     fun searchResults(query: String, facility: Facility): List<String> {

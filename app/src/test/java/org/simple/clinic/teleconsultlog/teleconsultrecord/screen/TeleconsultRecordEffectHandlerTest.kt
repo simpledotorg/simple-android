@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Completable
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -279,7 +278,7 @@ class TeleconsultRecordEffectHandlerTest {
 
     verify(prescriptionRepository).newestPrescriptionsForPatientImmediate(patientUuid)
     verify(prescriptionRepository).softDeletePrescriptions(prescriptions)
-    verify(prescriptionRepository).saveImmediate(clonedPrescriptions)
+    verify(prescriptionRepository).save(clonedPrescriptions)
     verifyNoMoreInteractions(prescriptionRepository)
 
     verifyZeroInteractions(uiActions)

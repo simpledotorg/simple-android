@@ -101,7 +101,7 @@ class UserSessionAndroidTest {
         uuid = UUID.fromString("56ddc7df-6a81-42bc-8659-78b0ccb51edd"),
         syncGroup = "bb92c082-d749-478a-bd2a-fe7f10055ef0"
     )
-    facilityRepository.saveImmediate(listOf(newFacility))
+    facilityRepository.save(listOf(newFacility))
 
     facilityRepository.setCurrentFacilityImmediate(newFacility)
 

@@ -9,7 +9,7 @@ class CallResultRepository @Inject constructor(
     private val callResultDao: CallResult.RoomDao
 ) : SynceableRepository<CallResult, CallResultPayload> {
 
-  override fun saveImmediate(records: List<CallResult>) {
+  override fun save(records: List<CallResult>) {
     callResultDao.save(records)
   }
 

@@ -112,7 +112,7 @@ class DeleteSyncGroupDatabaseAndroidTest {
         patientInAnotherSyncGroup,
         unsyncedPatientInAnotherSyncGroup
     )
-    patientRepository.saveImmediate(allPatientProfiles)
+    patientRepository.save(allPatientProfiles)
     assertThat(patientRepository.allPatientProfiles()).containsExactlyElementsIn(allPatientProfiles)
 
     // when
@@ -162,7 +162,7 @@ class DeleteSyncGroupDatabaseAndroidTest {
         patientWithCancelledAppointment,
         patientWithVisitedAppointment
     )
-    patientRepository.saveImmediate(allPatientProfiles)
+    patientRepository.save(allPatientProfiles)
     assertThat(patientRepository.allPatientProfiles()).containsExactlyElementsIn(allPatientProfiles)
 
     val scheduledAppointmentInCurrentFacility = TestData.appointment(
@@ -237,7 +237,7 @@ class DeleteSyncGroupDatabaseAndroidTest {
         patientAssignedFacilityId = facilityInAnotherSyncGroup.uuid,
         syncStatus = SyncStatus.DONE
     )
-    patientRepository.saveImmediate(listOf(
+    patientRepository.save(listOf(
         patientInCurrentFacility,
         patientInOtherFacilityInSyncGroup,
         patientInOtherSyncGroup
@@ -351,7 +351,7 @@ class DeleteSyncGroupDatabaseAndroidTest {
         patientAssignedFacilityId = facilityInAnotherSyncGroup.uuid,
         syncStatus = SyncStatus.DONE
     )
-    patientRepository.saveImmediate(listOf(
+    patientRepository.save(listOf(
         patientInCurrentFacility,
         patientInOtherFacilityInSyncGroup,
         patientInOtherSyncGroup
@@ -465,7 +465,7 @@ class DeleteSyncGroupDatabaseAndroidTest {
         patientAssignedFacilityId = facilityInAnotherSyncGroup.uuid,
         syncStatus = SyncStatus.DONE
     )
-    patientRepository.saveImmediate(listOf(
+    patientRepository.save(listOf(
         patientInCurrentFacility,
         patientInOtherFacilityInSyncGroup,
         patientInOtherSyncGroup
@@ -587,7 +587,7 @@ class DeleteSyncGroupDatabaseAndroidTest {
         patientAssignedFacilityId = facilityInAnotherSyncGroup.uuid,
         syncStatus = SyncStatus.DONE
     )
-    patientRepository.saveImmediate(listOf(
+    patientRepository.save(listOf(
         patientInCurrentFacility,
         patientInOtherFacilityInSyncGroup,
         patientInOtherSyncGroup
@@ -701,7 +701,7 @@ class DeleteSyncGroupDatabaseAndroidTest {
         patientAssignedFacilityId = facilityInAnotherSyncGroup.uuid,
         syncStatus = SyncStatus.DONE
     )
-    patientRepository.saveImmediate(listOf(
+    patientRepository.save(listOf(
         patientInCurrentFacility,
         patientInOtherFacilityInSyncGroup,
         patientInOtherSyncGroup

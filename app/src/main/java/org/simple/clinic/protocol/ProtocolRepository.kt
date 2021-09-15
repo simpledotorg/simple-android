@@ -20,7 +20,7 @@ class ProtocolRepository @Inject constructor(
   private val protocolDao = appDatabase.protocolDao()
   private val protocolDrugsDao = appDatabase.protocolDrugDao()
 
-  override fun saveImmediate(records: List<ProtocolAndProtocolDrugs>) {
+  override fun save(records: List<ProtocolAndProtocolDrugs>) {
     saveRecords(records)
   }
 

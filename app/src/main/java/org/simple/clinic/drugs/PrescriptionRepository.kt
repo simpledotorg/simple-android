@@ -75,11 +75,11 @@ class PrescriptionRepository @Inject constructor(
               teleconsultationId = null
           )
         }
-        .doOnSuccess { saveImmediate(listOf(it)) }
+        .doOnSuccess { save(listOf(it)) }
         .ignoreElement()
   }
 
-  override fun saveImmediate(records: List<PrescribedDrug>) {
+  override fun save(records: List<PrescribedDrug>) {
     return dao.save(records)
   }
 

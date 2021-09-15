@@ -12,7 +12,7 @@ class DrugRepository @Inject constructor(
     private val drugDao: Drug.RoomDao
 ) : SynceableRepository<Drug, DrugPayload> {
 
-  override fun saveImmediate(records: List<Drug>) {
+  override fun save(records: List<Drug>) {
     saveRecords(records)
   }
 

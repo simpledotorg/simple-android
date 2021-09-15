@@ -52,7 +52,7 @@ class BloodPressureRepository @Inject constructor(
     return bloodPressureMeasurement
   }
 
-  override fun saveImmediate(records: List<BloodPressureMeasurement>) {
+  override fun save(records: List<BloodPressureMeasurement>) {
     dao.save(records)
   }
 

@@ -81,7 +81,7 @@ class TeleconsultRecordRepository @Inject constructor(
     )
   }
 
-  override fun saveImmediate(records: List<TeleconsultRecord>) {
+  override fun save(records: List<TeleconsultRecord>) {
     teleconsultRecordDao.save(records)
   }
 

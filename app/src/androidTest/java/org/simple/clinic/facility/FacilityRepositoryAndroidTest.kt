@@ -243,7 +243,7 @@ class FacilityRepositoryAndroidTest {
         name = "Facility 2"
     )
 
-    repository.saveImmediate(listOf(facility1, facility2))
+    repository.save(listOf(facility1, facility2))
 
     val user = TestData.loggedInUser(
         uuid = UUID.fromString("e8c307e4-63e4-43c6-ba74-a51fb494ada8"),

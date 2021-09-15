@@ -111,7 +111,7 @@ class PrescriptionSyncIntegrationTest {
     }
     assertThat(records).containsNoDuplicates()
 
-    repository.saveImmediate(records)
+    repository.save(records)
     assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(totalNumberOfRecords)
 
     // when
@@ -138,12 +138,12 @@ class PrescriptionSyncIntegrationTest {
     }
     assertThat(records).containsNoDuplicates()
 
-    repository.saveImmediate(records)
+    repository.save(records)
     sync.push()
     assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(0)
 
     val modifiedRecord = records[1].dosageChanged("Over 9000mg")
-    repository.saveImmediate(listOf(modifiedRecord))
+    repository.save(listOf(modifiedRecord))
     assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(1)
 
     // when

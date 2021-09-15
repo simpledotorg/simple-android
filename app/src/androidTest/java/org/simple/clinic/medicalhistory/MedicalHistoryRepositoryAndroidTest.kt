@@ -97,7 +97,7 @@ class MedicalHistoryRepositoryAndroidTest {
         syncStatus = SyncStatus.DONE,
         updatedAt = now.minus(10, DAYS))
 
-    repository.saveImmediate(listOf(oldHistory))
+    repository.save(listOf(oldHistory))
 
     val newHistory = oldHistory.copy(hasHadHeartAttack = Yes)
     repository.save(newHistory, now)

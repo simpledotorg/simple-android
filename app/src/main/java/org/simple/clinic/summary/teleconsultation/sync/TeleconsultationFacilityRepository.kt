@@ -12,7 +12,7 @@ class TeleconsultationFacilityRepository @Inject constructor(
     private val appDatabase: AppDatabase
 ) : SynceableRepository<TeleconsultationFacilityWithMedicalOfficers, TeleconsultationFacilityInfoPayload> {
 
-  override fun saveImmediate(records: List<TeleconsultationFacilityWithMedicalOfficers>) {
+  override fun save(records: List<TeleconsultationFacilityWithMedicalOfficers>) {
     saveRecords(records)
   }
 

@@ -106,7 +106,7 @@ class AppointmentRepository @Inject constructor(
     )
   }
 
-  override fun saveImmediate(records: List<Appointment>) {
+  override fun save(records: List<Appointment>) {
     appointmentDao.save(records)
   }
 

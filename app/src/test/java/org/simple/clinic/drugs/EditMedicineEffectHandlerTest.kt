@@ -141,7 +141,7 @@ class EditMedicineEffectHandlerTest {
 
     verify(prescriptionRepository).newestPrescriptionsForPatientImmediate(patientUuid)
     verify(prescriptionRepository).softDeletePrescriptions(prescriptions)
-    verify(prescriptionRepository).saveImmediate(clonedPrescriptions)
+    verify(prescriptionRepository).save(clonedPrescriptions)
     verify(appointmentRepository).markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)
     verifyNoMoreInteractions(prescriptionRepository)
     verifyNoMoreInteractions(appointmentRepository)

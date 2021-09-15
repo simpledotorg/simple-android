@@ -104,7 +104,7 @@ class MedicalHistoryRepository @Inject constructor(
     dao.save(dirtyHistory)
   }
 
-  override fun saveImmediate(records: List<MedicalHistory>) {
+  override fun save(records: List<MedicalHistory>) {
     dao.saveHistories(records)
   }
 

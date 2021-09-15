@@ -97,7 +97,7 @@ class CallResultSyncIntegrationTest {
     }
     assertThat(records).containsNoDuplicates()
 
-    repository.saveImmediate(records)
+    repository.save(records)
     assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(totalNumberOfRecords)
 
     // when

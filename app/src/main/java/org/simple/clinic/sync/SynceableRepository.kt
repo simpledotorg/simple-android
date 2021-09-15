@@ -10,7 +10,7 @@ import java.util.UUID
  */
 interface SynceableRepository<T, P> {
 
-  fun saveImmediate(records: List<T>)
+  fun save(records: List<T>)
 
   fun setSyncStatus(from: SyncStatus, to: SyncStatus)
 

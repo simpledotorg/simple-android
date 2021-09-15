@@ -81,7 +81,7 @@ class FacilityRepository @Inject constructor(
     facilityDao.save(payloadsToSave)
   }
 
-  override fun saveImmediate(records: List<Facility>) {
+  override fun save(records: List<Facility>) {
     facilityDao.save(records)
   }
 

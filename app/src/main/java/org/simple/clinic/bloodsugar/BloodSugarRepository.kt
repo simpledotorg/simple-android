@@ -71,7 +71,7 @@ class BloodSugarRepository @Inject constructor(
 
   fun bloodSugarCountImmediate(patientUuid: UUID): Int = dao.recordedBloodSugarsCountForPatientImmediate(patientUuid)
 
-  override fun saveImmediate(records: List<BloodSugarMeasurement>) {
+  override fun save(records: List<BloodSugarMeasurement>) {
     dao.save(records)
   }
 

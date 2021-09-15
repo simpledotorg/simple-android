@@ -129,7 +129,7 @@ class PatientRepository @Inject constructor(
     saveRecords(payloadsToSave)
   }
 
-  override fun saveImmediate(records: List<PatientProfile>) {
+  override fun save(records: List<PatientProfile>) {
     saveRecords(records)
   }
 

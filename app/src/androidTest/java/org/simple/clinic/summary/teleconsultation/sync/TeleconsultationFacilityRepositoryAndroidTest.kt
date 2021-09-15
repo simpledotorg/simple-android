@@ -73,7 +73,7 @@ class TeleconsultationFacilityRepositoryAndroidTest {
         )
     )
 
-    repository.saveImmediate(teleconsultationFacilityWithMedicalOfficers)
+    repository.save(teleconsultationFacilityWithMedicalOfficers)
 
     // when
     val teleconsultationFacilities = repository.getAll()
@@ -131,7 +131,7 @@ class TeleconsultationFacilityRepositoryAndroidTest {
         )
     )
 
-    repository.saveImmediate(teleconsultationFacilityWithMedicalOfficers)
+    repository.save(teleconsultationFacilityWithMedicalOfficers)
 
     // when
     val medicalOfficers = repository.medicalOfficersForFacility(facility1)

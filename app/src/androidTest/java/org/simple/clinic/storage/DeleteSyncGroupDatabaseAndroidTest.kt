@@ -112,7 +112,7 @@ class DeleteSyncGroupDatabaseAndroidTest {
         patientInAnotherSyncGroup,
         unsyncedPatientInAnotherSyncGroup
     )
-    patientRepository.save(allPatientProfiles).blockingAwait()
+    patientRepository.saveImmediate(allPatientProfiles)
     assertThat(patientRepository.allPatientProfiles()).containsExactlyElementsIn(allPatientProfiles)
 
     // when
@@ -162,7 +162,7 @@ class DeleteSyncGroupDatabaseAndroidTest {
         patientWithCancelledAppointment,
         patientWithVisitedAppointment
     )
-    patientRepository.save(allPatientProfiles).blockingAwait()
+    patientRepository.saveImmediate(allPatientProfiles)
     assertThat(patientRepository.allPatientProfiles()).containsExactlyElementsIn(allPatientProfiles)
 
     val scheduledAppointmentInCurrentFacility = TestData.appointment(
@@ -237,11 +237,11 @@ class DeleteSyncGroupDatabaseAndroidTest {
         patientAssignedFacilityId = facilityInAnotherSyncGroup.uuid,
         syncStatus = SyncStatus.DONE
     )
-    patientRepository.save(listOf(
+    patientRepository.saveImmediate(listOf(
         patientInCurrentFacility,
         patientInOtherFacilityInSyncGroup,
         patientInOtherSyncGroup
-    )).blockingAwait()
+    ))
 
     val bloodPressuresForPatientInCurrentFacility = listOf(
         TestData.bloodPressureMeasurement(
@@ -351,11 +351,11 @@ class DeleteSyncGroupDatabaseAndroidTest {
         patientAssignedFacilityId = facilityInAnotherSyncGroup.uuid,
         syncStatus = SyncStatus.DONE
     )
-    patientRepository.save(listOf(
+    patientRepository.saveImmediate(listOf(
         patientInCurrentFacility,
         patientInOtherFacilityInSyncGroup,
         patientInOtherSyncGroup
-    )).blockingAwait()
+    ))
 
     val bloodSugarsForPatientInCurrentFacility = listOf(
         TestData.bloodSugarMeasurement(
@@ -465,11 +465,11 @@ class DeleteSyncGroupDatabaseAndroidTest {
         patientAssignedFacilityId = facilityInAnotherSyncGroup.uuid,
         syncStatus = SyncStatus.DONE
     )
-    patientRepository.save(listOf(
+    patientRepository.saveImmediate(listOf(
         patientInCurrentFacility,
         patientInOtherFacilityInSyncGroup,
         patientInOtherSyncGroup
-    )).blockingAwait()
+    ))
 
     val appointmentsForPatientInCurrentFacility = listOf(
         TestData.appointment(
@@ -587,11 +587,11 @@ class DeleteSyncGroupDatabaseAndroidTest {
         patientAssignedFacilityId = facilityInAnotherSyncGroup.uuid,
         syncStatus = SyncStatus.DONE
     )
-    patientRepository.save(listOf(
+    patientRepository.saveImmediate(listOf(
         patientInCurrentFacility,
         patientInOtherFacilityInSyncGroup,
         patientInOtherSyncGroup
-    )).blockingAwait()
+    ))
 
     val prescribedDrugsForPatientInCurrentFacility = listOf(
         TestData.prescription(
@@ -701,11 +701,11 @@ class DeleteSyncGroupDatabaseAndroidTest {
         patientAssignedFacilityId = facilityInAnotherSyncGroup.uuid,
         syncStatus = SyncStatus.DONE
     )
-    patientRepository.save(listOf(
+    patientRepository.saveImmediate(listOf(
         patientInCurrentFacility,
         patientInOtherFacilityInSyncGroup,
         patientInOtherSyncGroup
-    )).blockingAwait()
+    ))
 
     val medicalHistoryPatientInCurrentFacility = listOf(
         TestData.medicalHistory(

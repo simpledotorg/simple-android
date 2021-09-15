@@ -1,5 +1,6 @@
 package org.simple.clinic.drugs
 
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItems
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import org.simple.clinic.widgets.UiEvent
 
@@ -32,3 +33,5 @@ data class DrugsListFetched(
 ) : EditMedicinesEvent()
 
 object PrescribedMedicinesRefilled : EditMedicinesEvent()
+
+data class DrugFrequencyChoiceItemsLoaded(val drugFrequencyChoiceItems: DrugFrequencyChoiceItems) : EditMedicinesEvent()

@@ -20,4 +20,4 @@ data class FetchPrescribedAndProtocolDrugs(val patientUuid: UUID) : EditMedicine
 
 data class RefillMedicines(val patientUuid: UUID) : EditMedicinesEffect()
 
-
+object LoadDrugFrequencyChoiceItems : EditMedicinesEffect()

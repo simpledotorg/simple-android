@@ -56,6 +56,10 @@ class BloodPressureRepository @Inject constructor(
     return Completable.fromAction { dao.save(records) }
   }
 
+  override fun saveImmediate(records: List<BloodPressureMeasurement>) {
+    dao.save(records)
+  }
+
   fun updateMeasurement(measurement: BloodPressureMeasurement) {
     val updatedMeasurement = measurement.copy(
         updatedAt = Instant.now(utcClock),

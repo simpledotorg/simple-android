@@ -82,7 +82,7 @@ class PrescriptionRepository @Inject constructor(
     return Completable.fromAction { dao.save(records) }
   }
 
-  fun saveImmediate(records: List<PrescribedDrug>) {
+  override fun saveImmediate(records: List<PrescribedDrug>) {
     return dao.save(records)
   }
 

@@ -14,6 +14,10 @@ class CallResultRepository @Inject constructor(
     return Completable.fromAction { callResultDao.save(records) }
   }
 
+  override fun saveImmediate(records: List<CallResult>) {
+    callResultDao.save(records)
+  }
+
   override fun setSyncStatus(from: SyncStatus, to: SyncStatus) {
     callResultDao.updateSyncStatus(
         oldStatus = from,

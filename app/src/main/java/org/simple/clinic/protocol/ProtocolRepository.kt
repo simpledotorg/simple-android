@@ -25,6 +25,10 @@ class ProtocolRepository @Inject constructor(
     return Completable.fromAction { saveRecords(records) }
   }
 
+  override fun saveImmediate(records: List<ProtocolAndProtocolDrugs>) {
+    saveRecords(records)
+  }
+
   private fun saveRecords(records: List<ProtocolAndProtocolDrugs>) {
     appDatabase.openHelper.writableDatabase.inTransaction {
       protocolDao.save(records.map { it.protocol })

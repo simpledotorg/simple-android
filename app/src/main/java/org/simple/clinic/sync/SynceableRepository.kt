@@ -13,6 +13,8 @@ interface SynceableRepository<T, P> {
 
   fun save(records: List<T>): Completable
 
+  fun saveImmediate(records: List<T>)
+
   fun setSyncStatus(from: SyncStatus, to: SyncStatus)
 
   fun setSyncStatus(ids: List<UUID>, to: SyncStatus)

@@ -110,6 +110,10 @@ class MedicalHistoryRepository @Inject constructor(
     }
   }
 
+  override fun saveImmediate(records: List<MedicalHistory>) {
+    dao.saveHistories(records)
+  }
+
   fun recordsWithSyncStatus(syncStatus: SyncStatus): List<MedicalHistory> {
     return dao.recordsWithSyncStatus(syncStatus)
   }

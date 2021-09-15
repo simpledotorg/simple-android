@@ -133,6 +133,10 @@ class PatientRepository @Inject constructor(
     return Completable.fromAction { saveRecords(records) }
   }
 
+  override fun saveImmediate(records: List<PatientProfile>) {
+    saveRecords(records)
+  }
+
   private fun saveRecords(records: List<PatientProfile>) {
     database
         .addressDao()

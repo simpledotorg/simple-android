@@ -113,6 +113,10 @@ class AppointmentRepository @Inject constructor(
     }
   }
 
+  override fun saveImmediate(records: List<Appointment>) {
+    appointmentDao.save(records)
+  }
+
   override fun recordCount(): Observable<Int> {
     return appointmentDao.count().toObservable()
   }

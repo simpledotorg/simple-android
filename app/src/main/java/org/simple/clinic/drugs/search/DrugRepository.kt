@@ -17,6 +17,10 @@ class DrugRepository @Inject constructor(
     return Completable.fromAction { saveRecords(records) }
   }
 
+  override fun saveImmediate(records: List<Drug>) {
+    saveRecords(records)
+  }
+
   override fun setSyncStatus(from: SyncStatus, to: SyncStatus) {
     // no-op
   }

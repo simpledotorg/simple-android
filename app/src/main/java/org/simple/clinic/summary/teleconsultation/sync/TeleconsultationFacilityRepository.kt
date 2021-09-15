@@ -17,6 +17,10 @@ class TeleconsultationFacilityRepository @Inject constructor(
     return Completable.fromAction { saveRecords(records) }
   }
 
+  override fun saveImmediate(records: List<TeleconsultationFacilityWithMedicalOfficers>) {
+    saveRecords(records)
+  }
+
   private fun saveRecords(records: List<TeleconsultationFacilityWithMedicalOfficers>) {
     saveTeleconsultFacilityInfo(records)
     saveTeleconsultMedicalOfficers(records)

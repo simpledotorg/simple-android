@@ -95,10 +95,9 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
       val bps = records.map { it.bloodPressureMeasurements }.flatten()
       val appointments = records.map { it.appointment }
 
-      patientRepository.save(patients)
-          .andThen(bloodPressureRepository.save(bps))
-          .andThen(appointmentRepository.save(appointments))
-          .blockingAwait()
+      patientRepository.saveImmediate(patients)
+      bloodPressureRepository.saveImmediate(bps)
+      appointmentRepository.saveImmediate(appointments)
     }
   }
 

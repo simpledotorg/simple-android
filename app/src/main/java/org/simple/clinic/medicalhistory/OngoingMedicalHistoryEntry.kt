@@ -8,6 +8,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HY
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_DIABETES_TREATMENT
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_HYPERTENSION_TREATMENT
 
 @Parcelize
@@ -29,6 +30,7 @@ data class OngoingMedicalHistoryEntry(
       HAS_HAD_A_KIDNEY_DISEASE -> copy(hasHadKidneyDisease = answer)
       DIAGNOSED_WITH_DIABETES -> copy(hasDiabetes = answer)
       IS_ON_HYPERTENSION_TREATMENT -> copy(isOnHypertensionTreatment = answer)
+      IS_ON_DIABETES_TREATMENT -> copy(isOnDiabetesTreatment = answer)
     }
   }
 }

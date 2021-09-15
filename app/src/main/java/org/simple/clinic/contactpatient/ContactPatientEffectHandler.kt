@@ -111,10 +111,14 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .doOnNext { (appointment, reminderDate) -> appointmentRepository.createReminder(appointment.uuid, reminderDate) }
-          .doOnNext { (appointment, _) -> markRemindToCallLaterOutcomeForAppointment(appointment) }
+          .doOnNext { (appointment, reminderDate) -> createReminderForAppointment(appointment, reminderDate) }
           .map { ReminderSetForAppointment }
     }
+  }
+
+  private fun createReminderForAppointment(appointment: Appointment, reminderDate: LocalDate) {
+    appointmentRepository.createReminder(appointment.uuid, reminderDate)
+    markRemindToCallLaterOutcomeForAppointment(appointment)
   }
 
   private fun markRemindToCallLaterOutcomeForAppointment(appointment: Appointment) {

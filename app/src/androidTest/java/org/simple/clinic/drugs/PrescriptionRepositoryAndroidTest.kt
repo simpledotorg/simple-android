@@ -287,7 +287,7 @@ class PrescriptionRepositoryAndroidTest {
         isDeleted = false
     )
 
-    repository.save(listOf(prescribedDrug1, prescribedDrug2, prescribedDrug3)).blockingAwait()
+    repository.saveImmediate(listOf(prescribedDrug1, prescribedDrug2, prescribedDrug3))
 
     // when
     clock.advanceBy(durationToAdvanceBy)

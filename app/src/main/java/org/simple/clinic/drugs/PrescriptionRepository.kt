@@ -75,7 +75,8 @@ class PrescriptionRepository @Inject constructor(
               teleconsultationId = null
           )
         }
-        .flatMapCompletable { save(listOf(it)) }
+        .doOnSuccess { saveImmediate(listOf(it)) }
+        .ignoreElement()
   }
 
   override fun save(records: List<PrescribedDrug>): Completable {

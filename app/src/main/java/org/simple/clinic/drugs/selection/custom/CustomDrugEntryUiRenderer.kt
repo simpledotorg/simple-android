@@ -8,12 +8,21 @@ class CustomDrugEntryUiRenderer(
     private val dosagePlaceholder: String
 ) : ViewRenderer<CustomDrugEntryModel> {
   override fun render(model: CustomDrugEntryModel) {
-    initialSetup(model.openAs)
+    if (!model.isCustomDrugEntrySheetInfoLoaded) {
+      ui.showProgressBar()
+      ui.hideCustomDrugEntryUi()
+    } else {
+      ui.hideProgressBar()
+      ui.showCustomDrugEntryUi()
+      ui.showKeyboard()
 
-    if (model.drugFrequencyToFrequencyChoiceItemMap != null)
-      setSheetTitle(model.drugName, model.dosage, model.drugFrequencyToFrequencyChoiceItemMap[model.frequency]!!.label)
+      initialSetup(model.openAs)
 
-    showDefaultDosagePlaceholder(model.dosage, model.dosageHasFocus)
+      if (model.drugFrequencyToFrequencyChoiceItemMap != null)
+        setSheetTitle(model.drugName, model.dosage, model.drugFrequencyToFrequencyChoiceItemMap[model.frequency]!!.label)
+
+      showDefaultDosagePlaceholder(model.dosage, model.dosageHasFocus)
+    }
   }
 
   private fun setSheetTitle(

@@ -66,10 +66,16 @@ class ContactPatientEffectHandlerTest {
       uuidGenerator = uuidGenerator
   )
 
+  private val recordPatientAgreedToVisit = RecordPatientAgreedToVisit(
+      appointmentRepository = appointmentRepository,
+      userClock = userClock
+  )
+
   private val effectHandler = ContactPatientEffectHandler(
       patientRepository = patientRepository,
       appointmentRepository = appointmentRepository,
       createReminderForAppointment = createReminderForAppointment,
+      recordPatientAgreedToVisit = recordPatientAgreedToVisit,
       userClock = userClock,
       schedulers = TestSchedulersProvider.trampoline(),
       currentFacility = { facility },

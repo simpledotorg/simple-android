@@ -19,6 +19,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val appointmentRepository: AppointmentRepository,
     private val createReminderForAppointment: CreateReminderForAppointment,
+    private val recordPatientAgreedToVisit: RecordPatientAgreedToVisit,
     private val userClock: UserClock,
     private val schedulers: SchedulersProvider,
     private val currentFacility: Lazy<Facility>,
@@ -90,7 +91,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .doOnNext { appointmentRepository.markAsAgreedToVisit(it.appointment.uuid, userClock) }
+          .doOnNext { recordPatientAgreedToVisit.execute(it.appointment) }
           .map { PatientMarkedAsAgreedToVisit }
     }
   }

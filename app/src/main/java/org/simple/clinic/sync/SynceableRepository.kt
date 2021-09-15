@@ -11,6 +11,7 @@ import java.util.UUID
  */
 interface SynceableRepository<T, P> {
 
+  @Deprecated(message = "", replaceWith = ReplaceWith("saveImmediate(records)"))
   fun save(records: List<T>): Completable
 
   fun saveImmediate(records: List<T>)

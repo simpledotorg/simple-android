@@ -41,6 +41,8 @@ class NewMedicalHistoryUiRenderer(
   private fun renderDiabetesTreatmentQuestion(model: NewMedicalHistoryModel) {
     if (model.showOngoingDiabetesTreatment) {
       ui.showDiabetesTreatmentQuestion(model.ongoingMedicalHistoryEntry.isOnDiabetesTreatment)
+    } else {
+      ui.hideDiabetesTreatmentQuestion()
     }
   }
 

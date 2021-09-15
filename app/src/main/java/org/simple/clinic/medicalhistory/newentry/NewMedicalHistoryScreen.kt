@@ -235,6 +235,11 @@ class NewMedicalHistoryScreen : BaseScreen<
     diabetesDiagnosis.showTreatmentQuestion()
   }
 
+  override fun hideDiabetesTreatmentQuestion() {
+    diabetesDiagnosis.hideTreatmentQuestion()
+    diabetesDiagnosis.clearTreatmentChipGroup()
+  }
+
   override fun showOngoingHypertensionTreatmentErrorDialog() {
     SelectOngoingHypertensionTreatmentErrorDialog.show(fragmentManager = activity.supportFragmentManager)
   }

@@ -81,6 +81,7 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, No)
     verify(ui).hideNextButtonProgress()
     verify(ui).showHypertensionTreatmentQuestion(Unanswered)
+    verify(ui).hideDiabetesTreatmentQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -143,6 +144,7 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Unanswered)
     verify(ui).hideNextButtonProgress()
     verify(ui).showHypertensionTreatmentQuestion(Unanswered)
+    verify(ui).hideDiabetesTreatmentQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -165,6 +167,7 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Unanswered)
     verify(ui).hideNextButtonProgress()
     verify(ui).hideHypertensionTreatmentQuestion()
+    verify(ui).hideDiabetesTreatmentQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -185,6 +188,7 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Unanswered)
     verify(ui).hideNextButtonProgress()
     verify(ui).hideHypertensionTreatmentQuestion()
+    verify(ui).hideDiabetesTreatmentQuestion()
     verifyNoMoreInteractions(ui)
   }
 
@@ -207,6 +211,51 @@ class NewMedicalHistoryUiRendererTest {
     verify(ui).hideNextButtonProgress()
     verify(ui).hideHypertensionTreatmentQuestion()
     verify(ui).showDiabetesTreatmentQuestion(Unanswered)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when diabetes management is enabled and patient has diabetes and is not from india, then don't show diabetes treatment question`() {
+    // given
+    val bangladesh = TestData.country(isoCountryCode = Country.BANGLADESH)
+    val model = NewMedicalHistoryModel.default(country = bangladesh)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .answerChanged(DIAGNOSED_WITH_DIABETES, Yes)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verifyImplicitRenders()
+    verify(ui).showDiabetesDiagnosisView()
+    verify(ui).hideDiabetesHistorySection()
+    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
+    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Yes)
+    verify(ui).hideNextButtonProgress()
+    verify(ui).hideHypertensionTreatmentQuestion()
+    verify(ui).hideDiabetesTreatmentQuestion()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when diabetes management is enabled and patient does not have diabetes, then don't show diabetes treatment question`() {
+    // given
+    val model = defaultModel
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .answerChanged(DIAGNOSED_WITH_DIABETES, No)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verifyImplicitRenders()
+    verify(ui).showDiabetesDiagnosisView()
+    verify(ui).hideDiabetesHistorySection()
+    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
+    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, No)
+    verify(ui).hideNextButtonProgress()
+    verify(ui).hideHypertensionTreatmentQuestion()
+    verify(ui).hideDiabetesTreatmentQuestion()
     verifyNoMoreInteractions(ui)
   }
 

@@ -29,7 +29,7 @@ class ContactPatientUpdate(
       is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.currentFacility))
       is NormalCallClicked -> directlyCallPatient(model, event)
       is SecureCallClicked -> maskedCallPatient(model, event)
-      PatientAgreedToVisitClicked -> dispatch(MarkPatientAsAgreedToVisit(model.appointmentUuid))
+      PatientAgreedToVisitClicked -> dispatch(MarkPatientAsAgreedToVisit(model.appointment!!.get().appointment))
       NextReminderDateClicked -> selectNextReminderDate(model)
       PreviousReminderDateClicked -> selectPreviousReminderDate(model)
       is ManualDateSelected -> updateWithManuallySelectedDate(event, model)

@@ -194,7 +194,7 @@ class ContactPatientUpdateTest {
         .whenEvent(PatientAgreedToVisitClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(MarkPatientAsAgreedToVisit(appointmentUuid) as ContactPatientEffect)
+            hasEffects(MarkPatientAsAgreedToVisit(overdueAppointment.appointment) as ContactPatientEffect)
         ))
   }
 

@@ -90,7 +90,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .doOnNext { appointmentRepository.markAsAgreedToVisit(it.appointmentUuid, userClock) }
+          .doOnNext { appointmentRepository.markAsAgreedToVisit(it.appointment.uuid, userClock) }
           .map { PatientMarkedAsAgreedToVisit }
     }
   }

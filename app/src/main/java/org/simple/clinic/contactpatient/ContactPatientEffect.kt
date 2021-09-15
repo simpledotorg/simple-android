@@ -28,7 +28,7 @@ data class MaskedCallWithManualDialer(
 
 object CloseScreen : ContactPatientEffect()
 
-data class MarkPatientAsAgreedToVisit(val appointmentUuid: UUID) : ContactPatientEffect()
+data class MarkPatientAsAgreedToVisit(val appointment: Appointment) : ContactPatientEffect()
 
 data class ShowManualDatePicker(
     val preselectedDate: LocalDate,

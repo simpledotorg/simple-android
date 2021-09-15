@@ -1,7 +1,6 @@
 package org.simple.clinic.overdue
 
 import androidx.paging.PagingSource
-import io.reactivex.Completable
 import io.reactivex.Observable
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
@@ -107,10 +106,8 @@ class AppointmentRepository @Inject constructor(
     )
   }
 
-  override fun save(records: List<Appointment>): Completable {
-    return Completable.fromAction {
-      appointmentDao.save(records)
-    }
+  override fun save(records: List<Appointment>) {
+    appointmentDao.save(records)
   }
 
   override fun recordCount(): Observable<Int> {

@@ -1,6 +1,5 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord
 
-import io.reactivex.Completable
 import io.reactivex.Observable
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
@@ -82,8 +81,8 @@ class TeleconsultRecordRepository @Inject constructor(
     )
   }
 
-  override fun save(records: List<TeleconsultRecord>): Completable {
-    return Completable.fromAction { teleconsultRecordDao.save(records) }
+  override fun save(records: List<TeleconsultRecord>) {
+    teleconsultRecordDao.save(records)
   }
 
   override fun setSyncStatus(from: SyncStatus, to: SyncStatus) {

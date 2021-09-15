@@ -71,8 +71,9 @@ class BloodSugarRepository @Inject constructor(
 
   fun bloodSugarCountImmediate(patientUuid: UUID): Int = dao.recordedBloodSugarsCountForPatientImmediate(patientUuid)
 
-  override fun save(records: List<BloodSugarMeasurement>): Completable =
-      Completable.fromAction { dao.save(records) }
+  override fun save(records: List<BloodSugarMeasurement>) {
+    dao.save(records)
+  }
 
   fun recordsWithSyncStatus(syncStatus: SyncStatus): List<BloodSugarMeasurement> {
     return dao.withSyncStatus(syncStatus)

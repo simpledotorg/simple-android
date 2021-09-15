@@ -75,15 +75,12 @@ class PrescriptionRepository @Inject constructor(
               teleconsultationId = null
           )
         }
-        .flatMapCompletable { save(listOf(it)) }
+        .doOnSuccess { save(listOf(it)) }
+        .ignoreElement()
   }
 
-  override fun save(records: List<PrescribedDrug>): Completable {
-    return Completable.fromAction { dao.save(records) }
-  }
-
-  fun saveImmediate(records: List<PrescribedDrug>) {
-    return dao.save(records)
+  override fun save(records: List<PrescribedDrug>) {
+    dao.save(records)
   }
 
   fun softDeletePrescription(prescriptionUuid: UUID): Completable {

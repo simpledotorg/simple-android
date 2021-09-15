@@ -51,7 +51,7 @@ class DrugRepositoryAndroidTest {
     )
 
     // when
-    drugRepository.save(drugs).blockingAwait()
+    drugRepository.save(drugs)
 
     // then
     val savedDrugs = drugRepository.drugs()
@@ -118,8 +118,8 @@ class DrugRepositoryAndroidTest {
     protocolRepository.save(listOf(
         ProtocolAndProtocolDrugs(obviousProtocol, obviousProtocolDrugs),
         ProtocolAndProtocolDrugs(notObviousProtocol, notObviousProtocolDrugs)
-    )).blockingAwait()
-    drugRepository.save(drugs).blockingAwait()
+    ))
+    drugRepository.save(drugs)
 
     // when
     val expectedSearchResultsForObviousProtocol = PagingTestCase(pagingSource = drugRepository.searchForNonProtocolDrugs(query = "amlo", protocolId = obviousProtocol.uuid),
@@ -156,7 +156,7 @@ class DrugRepositoryAndroidTest {
     )
 
     // when
-    drugRepository.save(drugs).blockingAwait()
+    drugRepository.save(drugs)
 
     // then
     val drugImmediate = drugRepository.drugImmediate(drugSearchUUID)

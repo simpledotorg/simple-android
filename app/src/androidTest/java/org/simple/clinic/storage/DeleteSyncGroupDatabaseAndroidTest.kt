@@ -112,7 +112,7 @@ class DeleteSyncGroupDatabaseAndroidTest {
         patientInAnotherSyncGroup,
         unsyncedPatientInAnotherSyncGroup
     )
-    patientRepository.save(allPatientProfiles).blockingAwait()
+    patientRepository.save(allPatientProfiles)
     assertThat(patientRepository.allPatientProfiles()).containsExactlyElementsIn(allPatientProfiles)
 
     // when
@@ -162,7 +162,7 @@ class DeleteSyncGroupDatabaseAndroidTest {
         patientWithCancelledAppointment,
         patientWithVisitedAppointment
     )
-    patientRepository.save(allPatientProfiles).blockingAwait()
+    patientRepository.save(allPatientProfiles)
     assertThat(patientRepository.allPatientProfiles()).containsExactlyElementsIn(allPatientProfiles)
 
     val scheduledAppointmentInCurrentFacility = TestData.appointment(
@@ -241,7 +241,7 @@ class DeleteSyncGroupDatabaseAndroidTest {
         patientInCurrentFacility,
         patientInOtherFacilityInSyncGroup,
         patientInOtherSyncGroup
-    )).blockingAwait()
+    ))
 
     val bloodPressuresForPatientInCurrentFacility = listOf(
         TestData.bloodPressureMeasurement(
@@ -355,7 +355,7 @@ class DeleteSyncGroupDatabaseAndroidTest {
         patientInCurrentFacility,
         patientInOtherFacilityInSyncGroup,
         patientInOtherSyncGroup
-    )).blockingAwait()
+    ))
 
     val bloodSugarsForPatientInCurrentFacility = listOf(
         TestData.bloodSugarMeasurement(
@@ -469,7 +469,7 @@ class DeleteSyncGroupDatabaseAndroidTest {
         patientInCurrentFacility,
         patientInOtherFacilityInSyncGroup,
         patientInOtherSyncGroup
-    )).blockingAwait()
+    ))
 
     val appointmentsForPatientInCurrentFacility = listOf(
         TestData.appointment(
@@ -591,7 +591,7 @@ class DeleteSyncGroupDatabaseAndroidTest {
         patientInCurrentFacility,
         patientInOtherFacilityInSyncGroup,
         patientInOtherSyncGroup
-    )).blockingAwait()
+    ))
 
     val prescribedDrugsForPatientInCurrentFacility = listOf(
         TestData.prescription(
@@ -705,7 +705,7 @@ class DeleteSyncGroupDatabaseAndroidTest {
         patientInCurrentFacility,
         patientInOtherFacilityInSyncGroup,
         patientInOtherSyncGroup
-    )).blockingAwait()
+    ))
 
     val medicalHistoryPatientInCurrentFacility = listOf(
         TestData.medicalHistory(

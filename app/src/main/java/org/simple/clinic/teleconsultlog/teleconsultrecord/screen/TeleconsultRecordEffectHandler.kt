@@ -74,7 +74,7 @@ class TeleconsultRecordEffectHandler @AssistedInject constructor(
         )
       }
 
-      prescriptionRepository.saveImmediate(clonedPrescriptions)
+      prescriptionRepository.save(clonedPrescriptions)
     }
   }
 

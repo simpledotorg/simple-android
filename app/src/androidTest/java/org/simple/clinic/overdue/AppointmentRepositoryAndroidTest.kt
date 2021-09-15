@@ -1,7 +1,6 @@
 package org.simple.clinic.overdue
 
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.Completable
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Before
@@ -265,7 +264,7 @@ class AppointmentRepositoryAndroidTest {
         )
     )
 
-    patientRepository.save(patients).blockingAwait()
+    patientRepository.save(patients)
 
     val bpsForPatientWithNoBpsDeleted = listOf(
         createBloodPressure(
@@ -342,7 +341,6 @@ class AppointmentRepositoryAndroidTest {
 
     bpRepository
         .save(bpsForPatientWithNoBpsDeleted + bpsForPatientWithLatestBpDeleted + bpsForPatientWithOldestBpNotDeleted + bpsForPatientWithAllBpsDeleted)
-        .blockingAwait()
 
     val today = LocalDate.now(clock)
     val appointmentsScheduledFor = today.minusDays(1L)
@@ -369,7 +367,6 @@ class AppointmentRepositoryAndroidTest {
 
     appointmentRepository
         .save(listOf(appointmentForPatientWithNoBpsDeleted, appointmentForPatientWithLatestBpDeleted, appointmentsForPatientWithOldestBpNotDeleted, appointmentsForPatientWithAllBpsDeleted))
-        .blockingAwait()
 
     // when
     val overdueAppointments = PagingTestCase(pagingSource = appointmentRepository.overdueAppointmentsInFacility_old(since = today,
@@ -449,7 +446,7 @@ class AppointmentRepositoryAndroidTest {
         )
     )
 
-    patientRepository.save(patients).blockingAwait()
+    patientRepository.save(patients)
 
     val bloodSugarForPatientWithNoBloodSugarsDeleted = listOf(
         createBloodSugar(
@@ -526,7 +523,6 @@ class AppointmentRepositoryAndroidTest {
 
     bloodSugarRepository
         .save(bloodSugarForPatientWithNoBloodSugarsDeleted + bloodSugarsForPatientWithLatestBloodSugarDeleted + bloodSugarsForPatientWithOldestBloodSugarNotDeleted + bloodSugarsForPatientWithAllBloodSugarsDeleted)
-        .blockingAwait()
 
     val today = LocalDate.now(clock)
     val appointmentsScheduledFor = today.minusDays(1L)
@@ -553,7 +549,6 @@ class AppointmentRepositoryAndroidTest {
 
     appointmentRepository
         .save(listOf(appointmentForPatientWithNoBloodSugarDeleted, appointmentForPatientWithLatestBloodSugarDeleted, appointmentsForPatientWithOldestBloodSugarNotDeleted, appointmentsForPatientWithAllBloodSugarsDeleted))
-        .blockingAwait()
 
     // when
     val overdueAppointments = PagingTestCase(pagingSource = appointmentRepository.overdueAppointmentsInFacility_old(since = today,
@@ -729,7 +724,7 @@ class AppointmentRepositoryAndroidTest {
           generatePhoneNumber = true,
           generateBusinessId = false
       )
-      patientRepository.save(listOf(patientProfile)).blockingAwait()
+      patientRepository.save(listOf(patientProfile))
 
       val scheduledDate = (LocalDateTime.now(clock) - appointmentHasBeenOverdueFor).toLocalDate()
       appointmentRepository.schedule(
@@ -756,7 +751,7 @@ class AppointmentRepositoryAndroidTest {
             updatedAt = bpTimestamp
         )
       }
-      bpRepository.save(bloodPressureMeasurements).blockingAwait()
+      bpRepository.save(bloodPressureMeasurements)
 
       medicalHistoryRepository.save(
           uuid = medicalHistoryUuid,
@@ -959,13 +954,13 @@ class AppointmentRepositoryAndroidTest {
           patientUuid = patientUuid,
           generatePhoneNumber = true
       )
-      patientRepository.save(listOf(patientProfile)).blockingAwait()
+      patientRepository.save(listOf(patientProfile))
 
       val bp = testData.bloodPressureMeasurement(
           patientUuid = patientUuid,
           facilityUuid = facilityUuid
       )
-      bpRepository.save(listOf(bp)).blockingAwait()
+      bpRepository.save(listOf(bp))
 
       val appointment = testData.appointment(
           patientUuid = patientUuid,
@@ -974,7 +969,7 @@ class AppointmentRepositoryAndroidTest {
           status = Scheduled,
           cancelReason = null
       )
-      appointmentRepository.save(listOf(appointment)).blockingAwait()
+      appointmentRepository.save(listOf(appointment))
     }
 
     //given
@@ -1153,7 +1148,7 @@ class AppointmentRepositoryAndroidTest {
         generatePhoneNumber = true
     )
 
-    patientRepository.save(listOf(firstPatient, secondPatient)).blockingAwait()
+    patientRepository.save(listOf(firstPatient, secondPatient))
 
     val earlierRecordedBpForFirstPatient = createBloodPressure(
         patientProfile = firstPatient,
@@ -1173,7 +1168,7 @@ class AppointmentRepositoryAndroidTest {
         recordedAt = Instant.parse("2018-01-01T00:00:01Z")
     )
 
-    bpRepository.save(listOf(laterRecordedBpForFirstPatient, earlierRecordedBpForFirstPatient, earlierRecordedBpForSecondPatient, laterRecordedBpForSecondPatient)).blockingAwait()
+    bpRepository.save(listOf(laterRecordedBpForFirstPatient, earlierRecordedBpForFirstPatient, earlierRecordedBpForSecondPatient, laterRecordedBpForSecondPatient))
 
     val appointmentUuidForFirstPatient = UUID.fromString("d9fd734d-13b8-43e3-a2d7-b40341699050")
     val appointmentUuidForSecondPatient = UUID.fromString("979e4a13-ae73-4dcf-a1e0-31465dff5512")
@@ -1233,7 +1228,7 @@ class AppointmentRepositoryAndroidTest {
         generatePhoneNumber = true
     )
 
-    patientRepository.save(listOf(firstPatient, secondPatient)).blockingAwait()
+    patientRepository.save(listOf(firstPatient, secondPatient))
 
     val earlierRecordedBloodSugarForFirstPatient = createBloodSugar(
         patientProfile = firstPatient,
@@ -1253,7 +1248,7 @@ class AppointmentRepositoryAndroidTest {
         recordedAt = Instant.parse("2018-01-01T00:00:01Z")
     )
 
-    bloodSugarRepository.save(listOf(laterRecordedBloodSugarForFirstPatient, earlierRecordedBloodSugarForFirstPatient, earlierRecordedBloodSugarForSecondPatient, laterRecordedBloodSugarForSecondPatient)).blockingAwait()
+    bloodSugarRepository.save(listOf(laterRecordedBloodSugarForFirstPatient, earlierRecordedBloodSugarForFirstPatient, earlierRecordedBloodSugarForSecondPatient, laterRecordedBloodSugarForSecondPatient))
 
     val appointmentUuidForFirstPatient = UUID.fromString("d9fd734d-13b8-43e3-a2d7-b40341699050")
     val appointmentUuidForSecondPatient = UUID.fromString("979e4a13-ae73-4dcf-a1e0-31465dff5512")
@@ -1319,7 +1314,7 @@ class AppointmentRepositoryAndroidTest {
         generatePhoneNumber = true
     )
 
-    patientRepository.save(listOf(patient)).blockingAwait()
+    patientRepository.save(listOf(patient))
 
     val earlierRecordedBPForPatient = createBloodPressure(
         patientProfile = patient,
@@ -1331,7 +1326,7 @@ class AppointmentRepositoryAndroidTest {
     )
 
     bpRepository.save(listOf(earlierRecordedBPForPatient))
-    bloodSugarRepository.save(listOf(laterRecordedBloodSugarForPatient)).blockingAwait()
+    bloodSugarRepository.save(listOf(laterRecordedBloodSugarForPatient))
 
     val appointmentUuidForFirstPatient = UUID.fromString("d9fd734d-13b8-43e3-a2d7-b40341699050")
 
@@ -1395,7 +1390,7 @@ class AppointmentRepositoryAndroidTest {
         generatePhoneNumber = true
     )
 
-    patientRepository.save(listOf(patient)).blockingAwait()
+    patientRepository.save(listOf(patient))
 
     val earlierRecordedBloodSugarForPatient = createBloodSugar(
         patientProfile = patient,
@@ -1407,7 +1402,7 @@ class AppointmentRepositoryAndroidTest {
     )
 
     bloodSugarRepository.save(listOf(earlierRecordedBloodSugarForPatient))
-    bpRepository.save(listOf(laterRecordedBPForPatient)).blockingAwait()
+    bpRepository.save(listOf(laterRecordedBPForPatient))
 
     val appointmentUuidForFirstPatient = UUID.fromString("d9fd734d-13b8-43e3-a2d7-b40341699050")
 
@@ -1441,13 +1436,13 @@ class AppointmentRepositoryAndroidTest {
           generatePhoneNumber = true,
           patientDeletedAt = if (isPatientDeleted) Instant.now() else null
       )
-      patientRepository.save(listOf(patientProfile)).blockingAwait()
+      patientRepository.save(listOf(patientProfile))
 
       val bp = testData.bloodPressureMeasurement(
           patientUuid = patientUuid,
           facilityUuid = facilityUuid
       )
-      bpRepository.save(listOf(bp)).blockingAwait()
+      bpRepository.save(listOf(bp))
 
       val appointment = testData.appointment(
           patientUuid = patientUuid,
@@ -1456,7 +1451,7 @@ class AppointmentRepositoryAndroidTest {
           status = Scheduled,
           cancelReason = null
       )
-      appointmentRepository.save(listOf(appointment)).blockingAwait()
+      appointmentRepository.save(listOf(appointment))
     }
 
     //given
@@ -1496,13 +1491,13 @@ class AppointmentRepositoryAndroidTest {
           patientUuid = patientUuid,
           generatePhoneNumber = true
       )
-      patientRepository.save(listOf(patientProfile)).blockingAwait()
+      patientRepository.save(listOf(patientProfile))
 
       val bp = testData.bloodPressureMeasurement(
           patientUuid = patientUuid,
           facilityUuid = facilityUuid
       )
-      bpRepository.save(listOf(bp)).blockingAwait()
+      bpRepository.save(listOf(bp))
 
       val appointment = testData.appointment(
           patientUuid = patientUuid,
@@ -1512,7 +1507,7 @@ class AppointmentRepositoryAndroidTest {
           cancelReason = null,
           deletedAt = if (isAppointmentDeleted) Instant.now() else null
       )
-      appointmentRepository.save(listOf(appointment)).blockingAwait()
+      appointmentRepository.save(listOf(appointment))
     }
 
     //given
@@ -2033,7 +2028,7 @@ class AppointmentRepositoryAndroidTest {
           generatePhoneNumber = true,
           generateBusinessId = false
       )
-      patientRepository.save(listOf(patientProfile)).blockingAwait()
+      patientRepository.save(listOf(patientProfile))
 
       val scheduledDate = (LocalDateTime.now(clock) - appointmentHasBeenOverdueFor).toLocalDate()
       appointmentRepository.schedule(
@@ -2061,7 +2056,7 @@ class AppointmentRepositoryAndroidTest {
             updatedAt = bpTimestamp
         )
       }
-      bpRepository.save(bloodPressureMeasurements).blockingAwait()
+      bpRepository.save(bloodPressureMeasurements)
 
       val bloodSugarMeasurements = bloodSugars.mapIndexed { index, bloodSugarReading ->
 
@@ -2078,7 +2073,7 @@ class AppointmentRepositoryAndroidTest {
             updatedAt = bloodSugarTimestamp
         )
       }
-      bloodSugarRepository.save(bloodSugarMeasurements).blockingAwait()
+      bloodSugarRepository.save(bloodSugarMeasurements)
 
       medicalHistoryRepository.save(
           uuid = UUID.fromString("29a124c9-b6d4-4faa-91a8-a294f848c912"),
@@ -2263,7 +2258,7 @@ class AppointmentRepositoryAndroidTest {
           generatePhoneNumber = true,
           generateBusinessId = false
       )
-      patientRepository.save(listOf(patientProfile)).blockingAwait()
+      patientRepository.save(listOf(patientProfile))
 
       val scheduledDate = (LocalDateTime.now(clock) - appointmentHasBeenOverdueFor).toLocalDate()
       appointmentRepository.schedule(
@@ -2288,7 +2283,7 @@ class AppointmentRepositoryAndroidTest {
           updatedAt = bpTimestamp
       )
 
-      bpRepository.save(listOf(bloodPressureMeasurement)).blockingAwait()
+      bpRepository.save(listOf(bloodPressureMeasurement))
 
       medicalHistoryAnswers?.run {
         medicalHistoryRepository.save(
@@ -2398,7 +2393,7 @@ class AppointmentRepositoryAndroidTest {
         patientUuid = patientUuid,
         generatePhoneNumber = true
     )
-    patientRepository.save(listOf(patientProfile)).blockingAwait()
+    patientRepository.save(listOf(patientProfile))
 
     val today = LocalDate.now(clock)
     val aWeekInThePast = today.minusWeeks(1)
@@ -2437,13 +2432,13 @@ class AppointmentRepositoryAndroidTest {
 
     bpRepository.save(listOf(
         bp_recorded_a_week_ago
-    )).blockingAwait()
+    ))
 
     appointmentRepository.save(listOf(
         appointment_scheduled_for_today,
         appointment_scheduled_a_week_in_the_future,
         visited_appointment_two_weeks_in_the_future
-    )).blockingAwait()
+    ))
 
     // then
     val latest_appointment_today = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, today.plusDays(1))
@@ -2464,7 +2459,7 @@ class AppointmentRepositoryAndroidTest {
         patientUuid = patientUuid,
         generatePhoneNumber = true
     )
-    patientRepository.save(listOf(patientProfile)).blockingAwait()
+    patientRepository.save(listOf(patientProfile))
 
     val today = LocalDate.now(clock)
     val aWeekInThePast = today.minusWeeks(1)
@@ -2489,11 +2484,11 @@ class AppointmentRepositoryAndroidTest {
 
     bpRepository.save(listOf(
         bp_recorded_a_week_ago
-    )).blockingAwait()
+    ))
 
     appointmentRepository.save(listOf(
         appointment_scheduled_for_today_with_reminder_a_week_in_the_future
-    )).blockingAwait()
+    ))
 
     // then
     val latest_appointment_today = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, today.plusDays(1))
@@ -2514,19 +2509,19 @@ class AppointmentRepositoryAndroidTest {
           patientUuid = patientUuid,
           generatePhoneNumber = true
       )
-      patientRepository.save(listOf(patientProfile)).blockingAwait()
+      patientRepository.save(listOf(patientProfile))
 
       val bp = TestData.bloodPressureMeasurement(
           patientUuid = patientUuid,
           facilityUuid = facilityUuid
       )
-      bpRepository.save(listOf(bp)).blockingAwait()
+      bpRepository.save(listOf(bp))
 
       val bloodSugar = TestData.bloodSugarMeasurement(
           patientUuid = patientUuid,
           facilityUuid = facilityUuid
       )
-      bloodSugarRepository.save(listOf(bloodSugar)).blockingAwait()
+      bloodSugarRepository.save(listOf(bloodSugar))
 
       val appointment = TestData.appointment(
           patientUuid = patientUuid,
@@ -2535,7 +2530,7 @@ class AppointmentRepositoryAndroidTest {
           status = Scheduled,
           cancelReason = null
       )
-      appointmentRepository.save(listOf(appointment)).blockingAwait()
+      appointmentRepository.save(listOf(appointment))
     }
 
     //given
@@ -2572,19 +2567,19 @@ class AppointmentRepositoryAndroidTest {
           generatePhoneNumber = true,
           patientAssignedFacilityId = patientAssignedFacilityUuid
       )
-      patientRepository.save(listOf(patientProfile)).blockingAwait()
+      patientRepository.save(listOf(patientProfile))
 
       val bp = TestData.bloodPressureMeasurement(
           patientUuid = patientUuid,
           facilityUuid = facilityUuid
       )
-      bpRepository.save(listOf(bp)).blockingAwait()
+      bpRepository.save(listOf(bp))
 
       val bloodSugar = TestData.bloodSugarMeasurement(
           patientUuid = patientUuid,
           facilityUuid = facilityUuid
       )
-      bloodSugarRepository.save(listOf(bloodSugar)).blockingAwait()
+      bloodSugarRepository.save(listOf(bloodSugar))
 
       val appointment = TestData.appointment(
           patientUuid = patientUuid,
@@ -2593,7 +2588,7 @@ class AppointmentRepositoryAndroidTest {
           status = Scheduled,
           cancelReason = null
       )
-      appointmentRepository.save(listOf(appointment)).blockingAwait()
+      appointmentRepository.save(listOf(appointment))
     }
 
     //given
@@ -2610,7 +2605,7 @@ class AppointmentRepositoryAndroidTest {
     val facility1 = TestData.facility(uuid = facility1Uuid, name = "PHC Obvious")
     val facility2 = TestData.facility(uuid = facility2Uuid, name = "PHC Bagta")
 
-    facilityRepository.save(listOf(facility1, facility2)).blockingAwait()
+    facilityRepository.save(listOf(facility1, facility2))
 
     createOverdueAppointment(
         patientUuid = patientWithOneDayOverdue,
@@ -2658,19 +2653,19 @@ class AppointmentRepositoryAndroidTest {
           patientAssignedFacilityId = patientAssignedFacilityUuid,
           patientStatus = patientStatus
       )
-      patientRepository.save(listOf(patientProfile)).blockingAwait()
+      patientRepository.save(listOf(patientProfile))
 
       val bp = TestData.bloodPressureMeasurement(
           patientUuid = patientUuid,
           facilityUuid = facilityUuid
       )
-      bpRepository.save(listOf(bp)).blockingAwait()
+      bpRepository.save(listOf(bp))
 
       val bloodSugar = TestData.bloodSugarMeasurement(
           patientUuid = patientUuid,
           facilityUuid = facilityUuid
       )
-      bloodSugarRepository.save(listOf(bloodSugar)).blockingAwait()
+      bloodSugarRepository.save(listOf(bloodSugar))
 
       val appointment = TestData.appointment(
           uuid = appointmentId,
@@ -2680,7 +2675,7 @@ class AppointmentRepositoryAndroidTest {
           status = Scheduled,
           cancelReason = null
       )
-      appointmentRepository.save(listOf(appointment)).blockingAwait()
+      appointmentRepository.save(listOf(appointment))
     }
 
     //given
@@ -2701,7 +2696,7 @@ class AppointmentRepositoryAndroidTest {
     val facility1 = TestData.facility(uuid = facility1Uuid, name = "PHC Obvious")
     val facility2 = TestData.facility(uuid = facility2Uuid, name = "PHC Bagta")
 
-    facilityRepository.save(listOf(facility1, facility2)).blockingAwait()
+    facilityRepository.save(listOf(facility1, facility2))
 
     createOverdueAppointment(
         patientUuid = patientWithOneDayOverdue,
@@ -2764,19 +2759,19 @@ class AppointmentRepositoryAndroidTest {
           generatePhoneNumber = true,
           patientAssignedFacilityId = patientAssignedFacilityUuid
       )
-      patientRepository.save(listOf(patientProfile)).blockingAwait()
+      patientRepository.save(listOf(patientProfile))
 
       val bp = TestData.bloodPressureMeasurement(
           patientUuid = patientUuid,
           facilityUuid = facilityUuid
       )
-      bpRepository.save(listOf(bp)).blockingAwait()
+      bpRepository.save(listOf(bp))
 
       val bloodSugar = TestData.bloodSugarMeasurement(
           patientUuid = patientUuid,
           facilityUuid = facilityUuid
       )
-      bloodSugarRepository.save(listOf(bloodSugar)).blockingAwait()
+      bloodSugarRepository.save(listOf(bloodSugar))
 
       val appointment = TestData.appointment(
           patientUuid = patientUuid,
@@ -2785,7 +2780,7 @@ class AppointmentRepositoryAndroidTest {
           status = Scheduled,
           cancelReason = null
       )
-      appointmentRepository.save(listOf(appointment)).blockingAwait()
+      appointmentRepository.save(listOf(appointment))
     }
 
     //given
@@ -2805,7 +2800,7 @@ class AppointmentRepositoryAndroidTest {
     val facility1 = TestData.facility(uuid = facility1Uuid, name = "PHC Obvious")
     val facility2 = TestData.facility(uuid = facility2Uuid, name = "PHC Bagta")
 
-    facilityRepository.save(listOf(facility1, facility2)).blockingAwait()
+    facilityRepository.save(listOf(facility1, facility2))
 
     createOverdueAppointment(
         patientUuid = patientWithOneDayOverdue,
@@ -2870,19 +2865,10 @@ class AppointmentRepositoryAndroidTest {
         bloodSugarRepository: BloodSugarRepository,
         appointmentRepository: AppointmentRepository
     ) {
-      val saveBp = if (bloodPressureMeasurement != null) {
-        bloodPressureRepository.save(listOf(bloodPressureMeasurement))
-      } else Completable.complete()
-
-      val saveBloodSugar = if (bloodSugarMeasurement != null) {
-        bloodSugarRepository.save(listOf(bloodSugarMeasurement))
-      } else Completable.complete()
-
       patientRepository.save(listOf(patientProfile))
-          .andThen(saveBp)
-          .andThen(saveBloodSugar)
-          .andThen(appointmentRepository.save(listOf(appointment)))
-          .blockingAwait()
+      bloodPressureRepository.save(listOfNotNull(bloodPressureMeasurement))
+      bloodSugarRepository.save(listOfNotNull(bloodSugarMeasurement))
+      appointmentRepository.save(listOf(appointment))
     }
 
     fun toOverdueAppointment(appointmentFacilityName: String?, registeredFacilityName: String?): OverdueAppointment {

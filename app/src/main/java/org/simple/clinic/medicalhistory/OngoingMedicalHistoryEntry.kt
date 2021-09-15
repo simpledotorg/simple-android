@@ -17,6 +17,7 @@ data class OngoingMedicalHistoryEntry(
     val hasHadKidneyDisease: Answer = Unanswered,
     val diagnosedWithHypertension: Answer = Unanswered,
     val isOnHypertensionTreatment: Answer = Unanswered,
+    val isOnDiabetesTreatment: Answer = Unanswered,
     val hasDiabetes: Answer = Unanswered
 ) : Parcelable {
 

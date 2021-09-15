@@ -1,7 +1,6 @@
 package org.simple.clinic.drugs.search
 
 import androidx.paging.PagingSource
-import io.reactivex.Completable
 import io.reactivex.Observable
 import org.simple.clinic.drugs.search.sync.DrugPayload
 import org.simple.clinic.patient.SyncStatus
@@ -12,10 +11,6 @@ import javax.inject.Inject
 class DrugRepository @Inject constructor(
     private val drugDao: Drug.RoomDao
 ) : SynceableRepository<Drug, DrugPayload> {
-
-  override fun save(records: List<Drug>): Completable {
-    return Completable.fromAction { saveImmediate(records) }
-  }
 
   override fun saveImmediate(records: List<Drug>) {
     saveRecords(records)

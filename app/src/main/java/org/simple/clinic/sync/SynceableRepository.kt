@@ -1,6 +1,5 @@
 package org.simple.clinic.sync
 
-import io.reactivex.Completable
 import io.reactivex.Observable
 import org.simple.clinic.patient.SyncStatus
 import java.util.UUID
@@ -10,9 +9,6 @@ import java.util.UUID
  * @param P Type of payload for the local model.
  */
 interface SynceableRepository<T, P> {
-
-  @Deprecated(message = "", replaceWith = ReplaceWith("saveImmediate(records)"))
-  fun save(records: List<T>): Completable
 
   fun saveImmediate(records: List<T>)
 

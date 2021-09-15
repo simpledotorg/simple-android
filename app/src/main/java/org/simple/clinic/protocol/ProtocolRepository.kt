@@ -1,7 +1,6 @@
 package org.simple.clinic.protocol
 
 import androidx.annotation.VisibleForTesting
-import io.reactivex.Completable
 import io.reactivex.Observable
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.patient.SyncStatus
@@ -20,10 +19,6 @@ class ProtocolRepository @Inject constructor(
 
   private val protocolDao = appDatabase.protocolDao()
   private val protocolDrugsDao = appDatabase.protocolDrugDao()
-
-  override fun save(records: List<ProtocolAndProtocolDrugs>): Completable {
-    return Completable.fromAction { saveImmediate(records) }
-  }
 
   override fun saveImmediate(records: List<ProtocolAndProtocolDrugs>) {
     saveRecords(records)

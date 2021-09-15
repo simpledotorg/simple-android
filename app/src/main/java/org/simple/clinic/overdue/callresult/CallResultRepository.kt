@@ -1,6 +1,5 @@
 package org.simple.clinic.overdue.callresult
 
-import io.reactivex.Completable
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.SynceableRepository
 import java.util.UUID
@@ -9,10 +8,6 @@ import javax.inject.Inject
 class CallResultRepository @Inject constructor(
     private val callResultDao: CallResult.RoomDao
 ) : SynceableRepository<CallResult, CallResultPayload> {
-
-  override fun save(records: List<CallResult>): Completable {
-    return Completable.fromAction { saveImmediate(records) }
-  }
 
   override fun saveImmediate(records: List<CallResult>) {
     callResultDao.save(records)

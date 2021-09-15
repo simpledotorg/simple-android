@@ -81,10 +81,6 @@ class FacilityRepository @Inject constructor(
     facilityDao.save(payloadsToSave)
   }
 
-  override fun save(records: List<Facility>): Completable {
-    return Completable.fromAction { saveImmediate(records) }
-  }
-
   override fun saveImmediate(records: List<Facility>) {
     facilityDao.save(records)
   }

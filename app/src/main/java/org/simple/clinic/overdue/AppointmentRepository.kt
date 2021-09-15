@@ -1,7 +1,6 @@
 package org.simple.clinic.overdue
 
 import androidx.paging.PagingSource
-import io.reactivex.Completable
 import io.reactivex.Observable
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
@@ -105,12 +104,6 @@ class AppointmentRepository @Inject constructor(
         newSyncStatus = SyncStatus.PENDING,
         newUpdatedAt = Instant.now(utcClock)
     )
-  }
-
-  override fun save(records: List<Appointment>): Completable {
-    return Completable.fromAction {
-      saveImmediate(records)
-    }
   }
 
   override fun saveImmediate(records: List<Appointment>) {

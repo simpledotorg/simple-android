@@ -129,10 +129,6 @@ class PatientRepository @Inject constructor(
     saveRecords(payloadsToSave)
   }
 
-  override fun save(records: List<PatientProfile>): Completable {
-    return Completable.fromAction { saveImmediate(records) }
-  }
-
   override fun saveImmediate(records: List<PatientProfile>) {
     saveRecords(records)
   }

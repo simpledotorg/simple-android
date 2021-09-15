@@ -94,7 +94,7 @@ class MedicalHistoryRepository @Inject constructor(
         createdAt = Instant.now(utcClock),
         updatedAt = Instant.now(utcClock),
         deletedAt = null)
-    return Completable.fromAction { saveImmediate(listOf(medicalHistory)) }
+    return Completable.fromAction { save(listOf(medicalHistory)) }
   }
 
   fun save(history: MedicalHistory, updateTime: Instant) {
@@ -102,12 +102,6 @@ class MedicalHistoryRepository @Inject constructor(
         syncStatus = SyncStatus.PENDING,
         updatedAt = updateTime)
     dao.save(dirtyHistory)
-  }
-
-  override fun save(records: List<MedicalHistory>): Completable {
-    return Completable.fromAction {
-      saveImmediate(records)
-    }
   }
 
   override fun saveImmediate(records: List<MedicalHistory>) {

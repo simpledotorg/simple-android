@@ -1,6 +1,5 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord
 
-import io.reactivex.Completable
 import io.reactivex.Observable
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
@@ -80,10 +79,6 @@ class TeleconsultRecordRepository @Inject constructor(
         updatedAt = Instant.now(utcClock),
         syncStatus = SyncStatus.PENDING
     )
-  }
-
-  override fun save(records: List<TeleconsultRecord>): Completable {
-    return Completable.fromAction { saveImmediate(records) }
   }
 
   override fun saveImmediate(records: List<TeleconsultRecord>) {

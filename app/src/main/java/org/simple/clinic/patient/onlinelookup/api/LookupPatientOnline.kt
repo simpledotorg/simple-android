@@ -126,6 +126,7 @@ class LookupPatientOnline @Inject constructor(
           patientUuid = response.medicalHistory.patientUuid,
           diagnosedWithHypertension = response.medicalHistory.hasHypertension ?: Answer.Unanswered,
           isOnHypertensionTreatment = response.medicalHistory.isOnTreatmentForHypertension,
+          isOnDiabetesTreatment = Answer.Unanswered,
           hasHadHeartAttack = response.medicalHistory.hasHadHeartAttack,
           hasHadStroke = response.medicalHistory.hasHadStroke,
           hasHadKidneyDisease = response.medicalHistory.hasHadKidneyDisease,

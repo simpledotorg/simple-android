@@ -815,7 +815,6 @@ class EnterOtpLogicTest {
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
     // then
-    verify(ui, never()).showServerError(any())
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showProgress()
     verify(ui, times(2)).hideProgress()

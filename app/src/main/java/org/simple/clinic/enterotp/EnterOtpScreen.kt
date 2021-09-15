@@ -182,11 +182,6 @@ class EnterOtpScreen : BaseScreen<
     showError(resources.getString(R.string.api_network_error))
   }
 
-  override fun showServerError(error: String) {
-    showError(error)
-    otpEntryEditText.showKeyboard()
-  }
-
   override fun showIncorrectOtpError() {
     showError(resources.getString(R.string.enterotp_incorrect_code))
     otpEntryEditText.showKeyboard()

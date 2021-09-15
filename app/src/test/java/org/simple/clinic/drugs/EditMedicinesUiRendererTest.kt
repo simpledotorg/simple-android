@@ -7,10 +7,13 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.drugs.EditMedicineButtonState.REFILL_MEDICINE
 import org.simple.clinic.drugs.EditMedicineButtonState.SAVE_MEDICINE
+import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.selection.CustomPrescribedDrugListItem
 import org.simple.clinic.drugs.selection.EditMedicinesUi
 import org.simple.clinic.drugs.selection.ProtocolDrugListItem
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
+import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import java.time.Instant
 import java.util.UUID
 
@@ -21,6 +24,13 @@ class EditMedicinesUiRendererTest {
 
   private val patientUuid = UUID.fromString("00f6ad74-703a-4176-acaa-fc6b57b4fa3c")
   private val defaultModel = EditMedicinesModel.create(patientUuid)
+  private val medicineFrequencyToFrequencyChoiceItemMap = mapOf(
+      null to DrugFrequencyChoiceItem(drugFrequency = null, label = "None"),
+      MedicineFrequency.OD to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.OD, label = "OD"),
+      MedicineFrequency.BD to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.BD, label = "BD"),
+      MedicineFrequency.TDS to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.TDS, label = "TDS"),
+      MedicineFrequency.QDS to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.QDS, label = "QDS")
+  )
 
   @Test
   fun `when prescribed drug is no longer present in protocol, it should be rendered as custom drug`() {
@@ -70,6 +80,7 @@ class EditMedicinesUiRendererTest {
         .protocolDrugsFetched(protocolDrugAndDosages)
         .prescribedDrugsFetched(prescriptions)
         .editMedicineDrugStateFetched(SAVE_MEDICINE)
+        .medicineFrequencyToFrequencyChoiceItemMapLoaded(medicineFrequencyToFrequencyChoiceItemMap)
 
     // when
     uiRenderer.render(model)
@@ -80,10 +91,11 @@ class EditMedicinesUiRendererTest {
             id = 0,
             drugName = amlodipine10mg.name,
             prescribedDrug = amlodipine10mgPrescription,
-            hasTopCorners = true),
-        CustomPrescribedDrugListItem(prescribedDrug = telmisartan40mgPrescription, hasTopCorners = false),
-        CustomPrescribedDrugListItem(prescribedDrug = fooPrescription, hasTopCorners = false),
-        CustomPrescribedDrugListItem(prescribedDrug = barPrescription, hasTopCorners = false))
+            hasTopCorners = true,
+            medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
+        CustomPrescribedDrugListItem(prescribedDrug = telmisartan40mgPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
+        CustomPrescribedDrugListItem(prescribedDrug = fooPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
+        CustomPrescribedDrugListItem(prescribedDrug = barPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap))
 
     verify(ui).populateDrugsList(drugsList)
     verify(ui).showDoneButton()
@@ -139,6 +151,7 @@ class EditMedicinesUiRendererTest {
         .protocolDrugsFetched(protocolDrugAndDosages)
         .prescribedDrugsFetched(prescriptions)
         .editMedicineDrugStateFetched(SAVE_MEDICINE)
+        .medicineFrequencyToFrequencyChoiceItemMapLoaded(medicineFrequencyToFrequencyChoiceItemMap)
 
     // when
     uiRenderer.render(prescribedDrugsFetchedModel)
@@ -149,10 +162,11 @@ class EditMedicinesUiRendererTest {
             id = 0,
             drugName = amlodipine10mg.name,
             prescribedDrug = amlodipine10mgPrescription,
-            hasTopCorners = true),
-        CustomPrescribedDrugListItem(prescribedDrug = telmisartan40mgPrescription, hasTopCorners = false),
-        CustomPrescribedDrugListItem(prescribedDrug = fooPrescription, hasTopCorners = false),
-        CustomPrescribedDrugListItem(prescribedDrug = barPrescription, hasTopCorners = false))
+            hasTopCorners = true,
+            medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
+        CustomPrescribedDrugListItem(prescribedDrug = telmisartan40mgPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
+        CustomPrescribedDrugListItem(prescribedDrug = fooPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
+        CustomPrescribedDrugListItem(prescribedDrug = barPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap))
 
     verify(ui).populateDrugsList(drugsList)
     verify(ui).showDoneButton()
@@ -208,6 +222,7 @@ class EditMedicinesUiRendererTest {
         .protocolDrugsFetched(protocolDrugAndDosages)
         .prescribedDrugsFetched(prescriptions)
         .editMedicineDrugStateFetched(REFILL_MEDICINE)
+        .medicineFrequencyToFrequencyChoiceItemMapLoaded(medicineFrequencyToFrequencyChoiceItemMap)
 
     // when
     uiRenderer.render(prescribedDrugsFetchedModel)
@@ -218,10 +233,11 @@ class EditMedicinesUiRendererTest {
             id = 0,
             drugName = amlodipine10mg.name,
             prescribedDrug = amlodipine10mgPrescription,
-            hasTopCorners = true),
-        CustomPrescribedDrugListItem(prescribedDrug = telmisartan40mgPrescription, hasTopCorners = false),
-        CustomPrescribedDrugListItem(prescribedDrug = fooPrescription, hasTopCorners = false),
-        CustomPrescribedDrugListItem(prescribedDrug = barPrescription, hasTopCorners = false))
+            hasTopCorners = true,
+            medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
+        CustomPrescribedDrugListItem(prescribedDrug = telmisartan40mgPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
+        CustomPrescribedDrugListItem(prescribedDrug = fooPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
+        CustomPrescribedDrugListItem(prescribedDrug = barPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap))
 
     verify(ui).populateDrugsList(drugsList)
     verify(ui).showRefillMedicineButton()
@@ -276,16 +292,17 @@ class EditMedicinesUiRendererTest {
         .protocolDrugsFetched(protocolDrugAndDosages)
         .prescribedDrugsFetched(prescriptions)
         .editMedicineDrugStateFetched(REFILL_MEDICINE)
+        .medicineFrequencyToFrequencyChoiceItemMapLoaded(medicineFrequencyToFrequencyChoiceItemMap)
 
     // when
     uiRenderer.render(prescribedDrugsFetchedModel)
 
     // then
     val drugsList = listOf(
-        CustomPrescribedDrugListItem(prescribedDrug = telmisartan40mgPrescription, hasTopCorners = true),
-        CustomPrescribedDrugListItem(prescribedDrug = fooPrescription, hasTopCorners = false),
-        CustomPrescribedDrugListItem(prescribedDrug = barPrescription, hasTopCorners = false),
-        ProtocolDrugListItem(id = 0, drugName = amlodipine10mg.name, prescribedDrug = null, hasTopCorners = false))
+        CustomPrescribedDrugListItem(prescribedDrug = telmisartan40mgPrescription, hasTopCorners = true, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
+        CustomPrescribedDrugListItem(prescribedDrug = fooPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
+        CustomPrescribedDrugListItem(prescribedDrug = barPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
+        ProtocolDrugListItem(id = 0, drugName = amlodipine10mg.name, prescribedDrug = null, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap))
 
     verify(ui).populateDrugsList(drugsList)
     verify(ui).showRefillMedicineButton()

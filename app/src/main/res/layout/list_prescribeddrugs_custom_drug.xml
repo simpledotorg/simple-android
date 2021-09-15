@@ -39,7 +39,7 @@
         tools:text="Amlodipine" />
 
       <TextView
-        android:id="@+id/prescribeddrug_item_customdrug_dosage"
+        android:id="@+id/protocoldrug_item_dosage_and_frequency"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawablePadding="@dimen/spacing_4"

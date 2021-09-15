@@ -9,6 +9,8 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.drugs.selection.EditMedicinesUiActions
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItems
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientUuid
@@ -26,7 +28,8 @@ class EditMedicinesEffectHandler @AssistedInject constructor(
     private val facility: Lazy<Facility>,
     private val utcClock: UtcClock,
     private val uuidGenerator: UuidGenerator,
-    private val appointmentsRepository: AppointmentRepository
+    private val appointmentsRepository: AppointmentRepository,
+    private val drugFrequencyFactory: DrugFrequencyFactory,
 ) {
 
   @AssistedFactory
@@ -43,7 +46,18 @@ class EditMedicinesEffectHandler @AssistedInject constructor(
         .addConsumer(ShowUpdateCustomPrescriptionSheet::class.java, { uiActions.showUpdateCustomPrescriptionSheet(it.prescribedDrug) }, schedulersProvider.ui())
         .addAction(GoBackToPatientSummary::class.java, uiActions::goBackToPatientSummary, schedulersProvider.ui())
         .addTransformer(RefillMedicines::class.java, refillMedicines())
+        .addTransformer(LoadDrugFrequencyChoiceItems::class.java, loadFrequencyChoiceItems())
         .build()
+  }
+
+  private fun loadFrequencyChoiceItems(): ObservableTransformer<LoadDrugFrequencyChoiceItems, EditMedicinesEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { drugFrequencyFactory.provideFields() }
+          .map(::DrugFrequencyChoiceItems)
+          .map(::DrugFrequencyChoiceItemsLoaded)
+    }
   }
 
   private fun refillMedicines(): ObservableTransformer<RefillMedicines, EditMedicinesEvent> {

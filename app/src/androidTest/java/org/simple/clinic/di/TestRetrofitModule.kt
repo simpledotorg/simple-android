@@ -19,6 +19,17 @@ import javax.inject.Named
 class TestRetrofitModule {
 
   @Provides
+  @AppScope
+  fun retrofitBuilder(moshi: Moshi, okHttpClient: OkHttpClient): Retrofit.Builder {
+    return Retrofit.Builder()
+        .addConverterFactory(ScalarsConverterFactory.create())
+        .addConverterFactory(MoshiConverterFactory.create(moshi))
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .client(okHttpClient)
+        .validateEagerly(true)
+  }
+
+  @Provides
   fun providerInterceptors(
       loggedInInterceptor: LoggedInUserHttpInterceptor,
       appInfoHttpInterceptor: AppInfoHttpInterceptor
@@ -32,19 +43,22 @@ class TestRetrofitModule {
 
   @Provides
   @AppScope
+  @Named("for_config")
+  fun configurationRetrofit(retrofitBuilder: Retrofit.Builder): Retrofit {
+    return retrofitBuilder
+        .baseUrl(BuildConfig.MANIFEST_ENDPOINT)
+        .build()
+  }
+
+  @Provides
+  @AppScope
   @Named("for_deployment")
   fun retrofit(
-      moshi: Moshi,
-      okHttpClient: OkHttpClient
+      retrofitBuilder: Retrofit.Builder
   ): Retrofit {
     val baseUrl = BuildConfig.MANIFEST_ENDPOINT
 
-    return Retrofit.Builder()
-        .addConverterFactory(ScalarsConverterFactory.create())
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-        .client(okHttpClient)
-        .validateEagerly(true)
+    return retrofitBuilder
         .baseUrl("$baseUrl/")
         .build()
   }

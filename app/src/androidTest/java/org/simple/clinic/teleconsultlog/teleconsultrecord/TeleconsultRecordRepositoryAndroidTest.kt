@@ -93,7 +93,7 @@ class TeleconsultRecordRepositoryAndroidTest {
 
     val teleconsultRecords = listOf(teleconsultRecord1, teleconsultRecord2, teleconsultRecord3)
 
-    teleconsultRecordRepository.save(teleconsultRecords).blockingAwait()
+    teleconsultRecordRepository.save(teleconsultRecords)
 
     // when
     val teleconsultRecordDetails = teleconsultRecordRepository
@@ -287,7 +287,7 @@ class TeleconsultRecordRepositoryAndroidTest {
         syncStatus = SyncStatus.PENDING
     )
 
-    teleconsultRecordRepository.save(listOf(teleconsultRecordDetails)).blockingAwait()
+    teleconsultRecordRepository.save(listOf(teleconsultRecordDetails))
 
     // when
     val teleconsultRecord = teleconsultRecordRepository.getPatientTeleconsultRecord(patientUuid = patientUuid)

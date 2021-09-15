@@ -129,8 +129,8 @@ class PatientRepository @Inject constructor(
     saveRecords(payloadsToSave)
   }
 
-  override fun save(records: List<PatientProfile>): Completable {
-    return Completable.fromAction { saveRecords(records) }
+  override fun save(records: List<PatientProfile>) {
+    saveRecords(records)
   }
 
   private fun saveRecords(records: List<PatientProfile>) {

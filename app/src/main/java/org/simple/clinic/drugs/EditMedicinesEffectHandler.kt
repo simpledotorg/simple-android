@@ -85,7 +85,7 @@ class EditMedicinesEffectHandler @AssistedInject constructor(
         )
       }
 
-      prescriptionRepository.saveImmediate(clonedPrescriptions)
+      prescriptionRepository.save(clonedPrescriptions)
     }
   }
 

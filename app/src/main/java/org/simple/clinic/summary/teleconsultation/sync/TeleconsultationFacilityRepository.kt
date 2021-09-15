@@ -1,6 +1,5 @@
 package org.simple.clinic.summary.teleconsultation.sync
 
-import io.reactivex.Completable
 import io.reactivex.Observable
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.patient.SyncStatus
@@ -13,8 +12,8 @@ class TeleconsultationFacilityRepository @Inject constructor(
     private val appDatabase: AppDatabase
 ) : SynceableRepository<TeleconsultationFacilityWithMedicalOfficers, TeleconsultationFacilityInfoPayload> {
 
-  override fun save(records: List<TeleconsultationFacilityWithMedicalOfficers>): Completable {
-    return Completable.fromAction { saveRecords(records) }
+  override fun save(records: List<TeleconsultationFacilityWithMedicalOfficers>) {
+    saveRecords(records)
   }
 
   private fun saveRecords(records: List<TeleconsultationFacilityWithMedicalOfficers>) {

@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Completable
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -269,7 +268,6 @@ class TeleconsultRecordEffectHandlerTest {
 
     whenever(uuidGenerator.v4()).thenReturn(clonedDrug1Uuid, clonedDrug2Uuid)
     whenever(prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)) doReturn prescriptions
-    whenever(prescriptionRepository.save(clonedPrescriptions)) doReturn Completable.complete()
 
     // when
     utcClock.advanceBy(durationToAdvanceBy)
@@ -280,7 +278,7 @@ class TeleconsultRecordEffectHandlerTest {
 
     verify(prescriptionRepository).newestPrescriptionsForPatientImmediate(patientUuid)
     verify(prescriptionRepository).softDeletePrescriptions(prescriptions)
-    verify(prescriptionRepository).saveImmediate(clonedPrescriptions)
+    verify(prescriptionRepository).save(clonedPrescriptions)
     verifyNoMoreInteractions(prescriptionRepository)
 
     verifyZeroInteractions(uiActions)

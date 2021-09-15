@@ -81,8 +81,8 @@ class FacilityRepository @Inject constructor(
     facilityDao.save(payloadsToSave)
   }
 
-  override fun save(records: List<Facility>): Completable {
-    return Completable.fromAction { facilityDao.save(records) }
+  override fun save(records: List<Facility>) {
+    facilityDao.save(records)
   }
 
   override fun setSyncStatus(from: SyncStatus, to: SyncStatus) {

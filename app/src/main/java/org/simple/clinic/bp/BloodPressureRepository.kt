@@ -52,8 +52,8 @@ class BloodPressureRepository @Inject constructor(
     return bloodPressureMeasurement
   }
 
-  override fun save(records: List<BloodPressureMeasurement>): Completable {
-    return Completable.fromAction { dao.save(records) }
+  override fun save(records: List<BloodPressureMeasurement>) {
+    dao.save(records)
   }
 
   fun updateMeasurement(measurement: BloodPressureMeasurement) {

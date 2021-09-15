@@ -20,7 +20,7 @@ class EnterOtpUiRendererTest {
     // given
     val attemptsMade = 0
     val attemptsRemaining = 5
-    val allowed = Allowed(attemptsMade = attemptsMade,attemptsRemaining = attemptsRemaining)
+    val allowed = Allowed(attemptsMade = attemptsMade, attemptsRemaining = attemptsRemaining)
     val updatedModel = model.setOtpEntryMode(allowed)
 
     // when
@@ -37,7 +37,7 @@ class EnterOtpUiRendererTest {
     // given
     val attemptsMade = 2
     val attemptsRemaining = 3
-    val allowed = Allowed(attemptsMade = attemptsMade,attemptsRemaining = attemptsRemaining)
+    val allowed = Allowed(attemptsMade = attemptsMade, attemptsRemaining = attemptsRemaining)
     val updatedModel = model.setOtpEntryMode(allowed)
 
     // when
@@ -54,7 +54,7 @@ class EnterOtpUiRendererTest {
     // given
     val blockedUntil = Instant.parse("2021-09-02T00:00:00Z")
     val attemptsMade = 5
-    val blocked = Blocked(attemptsMade = attemptsMade,blockedTill = blockedUntil)
+    val blocked = Blocked(attemptsMade = attemptsMade, blockedTill = blockedUntil)
     val updatedModel = model.setOtpEntryMode(blocked)
 
     // when
@@ -70,7 +70,7 @@ class EnterOtpUiRendererTest {
     // given
     val attemptsMade = 4
     val attemptsRemaining = 1
-    val allowed = Allowed(attemptsMade = attemptsMade,attemptsRemaining = attemptsRemaining)
+    val allowed = Allowed(attemptsMade = attemptsMade, attemptsRemaining = attemptsRemaining)
     val updatedModel = model.setOtpEntryMode(allowed)
 
     // when

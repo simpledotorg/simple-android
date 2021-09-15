@@ -68,7 +68,11 @@ class ContactPatientEffectHandlerTest {
 
   private val recordPatientAgreedToVisit = RecordPatientAgreedToVisit(
       appointmentRepository = appointmentRepository,
-      userClock = userClock
+      callResultRepository = callResultRepository,
+      userClock = userClock,
+      utcClock = utcClock,
+      uuidGenerator = uuidGenerator,
+      currentUser = { user }
   )
 
   private val effectHandler = ContactPatientEffectHandler(
@@ -184,6 +188,10 @@ class ContactPatientEffectHandlerTest {
 
   @Test
   fun `when the mark patient as agree to visit effect is received, mark the patient as agreed to visit`() {
+    // given
+    val callResultId = UUID.fromString("56da1ce0-cad4-4788-ad29-83c550f5f452")
+    whenever(uuidGenerator.v4()).thenReturn(callResultId)
+
     // when
     val appointmentUuid = UUID.fromString("6d47fc9e-76dd-4aa3-b3dd-171e90cadc58")
     val appointment = TestData.appointment(uuid = appointmentUuid)
@@ -192,6 +200,19 @@ class ContactPatientEffectHandlerTest {
     // then
     verify(appointmentRepository).markAsAgreedToVisit(appointmentUuid, userClock)
     verifyNoMoreInteractions(appointmentRepository)
+
+    val expectedCallResult = CallResult(
+        id = callResultId,
+        userId = user.uuid,
+        appointmentId = appointmentUuid,
+        removeReason = null,
+        outcome = Outcome.AgreedToVisit,
+        timestamps = Timestamps.create(utcClock),
+        syncStatus = SyncStatus.PENDING
+    )
+    verify(callResultRepository).save(listOf(expectedCallResult))
+    verifyNoMoreInteractions(callResultRepository)
+
     testCase.assertOutgoingEvents(PatientMarkedAsAgreedToVisit)
     verifyZeroInteractions(uiActions)
   }

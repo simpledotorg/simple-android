@@ -1,6 +1,7 @@
 # CHANGELOG
 
 ## Next Release
+
 ### Internal
 
 - Add a progress state in `CustomDrugEntrySheet`
@@ -10,6 +11,7 @@
 - Change server environment in integration tests to `android_review`
 - Update `verify_pr_description` CI validation check to Shortcut links
 - Unify appointment cancellation flow in `RemoveOverdueScreen`
+- Add support for syncing diabetes treatment question
 - [In Progress: 16 Sep 2021] Record call results instead of updating the same appointment record
 - [In Progress: 31 Aug 2021] Refactor logic around providing drug frequencies label depending on the country
 - [In Progress: 2 Sep 2021] Add a progress state in `CustomDrugEntrySheet`
@@ -34,6 +36,7 @@
 - Fix select country & state screen overlapping next button
 
 ## Demo
+
 ### Internal
 
 - Change `ScheduleAppointmentSheet` to use Mobius view effects
@@ -64,7 +67,8 @@
   - Update drug frequency edit text ui
 - Add ellipsis to long drug name in `PatientSummaryScreen` & `EditMedicineScreen`
 - Add a unicode character instead of space in `DrugSearchScreen` search results
-- Updated translations: `mr-IN`, `bn-IN`, `bn-BD`, `kn-IN`, `pa-IN`, `am-ET`, `sid-ET`, `ta-LK`, `hi-IN`, `ti-ET`, `so-ET`, `si-LK`, `te-IN`, `ta-IN`, `om-ET`
+- Updated translations: `mr-IN`, `bn-IN`, `bn-BD`, `kn-IN`, `pa-IN`, `am-ET`, `sid-ET`, `ta-LK`, `hi-IN`, `ti-ET`, `so-ET`, `si-LK`, `te-IN`, `ta-IN`
+  , `om-ET`
 
 ## 2021-09-08-7939
 

@@ -152,7 +152,7 @@ class MedicalHistoryRepository @Inject constructor(
           // TODO(vs): 2020-01-30 Remove the fallback value when the server changes are available in PROD
           diagnosedWithHypertension = hasHypertension ?: Unanswered,
           isOnHypertensionTreatment = isOnTreatmentForHypertension,
-          isOnDiabetesTreatment = Unanswered,
+          isOnDiabetesTreatment = isOnDiabetesTreatment ?: Unanswered,
           hasHadHeartAttack = hasHadHeartAttack,
           hasHadStroke = hasHadStroke,
           hasHadKidneyDisease = hasHadKidneyDisease,

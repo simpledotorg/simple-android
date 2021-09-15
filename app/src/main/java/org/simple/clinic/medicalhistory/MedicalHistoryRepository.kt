@@ -94,7 +94,7 @@ class MedicalHistoryRepository @Inject constructor(
         createdAt = Instant.now(utcClock),
         updatedAt = Instant.now(utcClock),
         deletedAt = null)
-    return save(listOf(medicalHistory))
+    return Completable.fromAction { saveImmediate(listOf(medicalHistory)) }
   }
 
   fun save(history: MedicalHistory, updateTime: Instant) {

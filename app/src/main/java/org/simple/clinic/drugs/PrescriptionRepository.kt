@@ -80,7 +80,7 @@ class PrescriptionRepository @Inject constructor(
   }
 
   override fun save(records: List<PrescribedDrug>) {
-    return dao.save(records)
+    dao.save(records)
   }
 
   fun softDeletePrescription(prescriptionUuid: UUID): Completable {

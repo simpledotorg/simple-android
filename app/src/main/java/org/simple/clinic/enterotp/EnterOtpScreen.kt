@@ -139,7 +139,6 @@ class EnterOtpScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    otpEntryEditText.showKeyboard()
     backButton.setOnClickListener { goBack() }
   }
 
@@ -184,7 +183,6 @@ class EnterOtpScreen : BaseScreen<
 
   override fun showIncorrectOtpError() {
     showError(resources.getString(R.string.enterotp_incorrect_code))
-    otpEntryEditText.showKeyboard()
   }
 
   private fun showError(error: String) {
@@ -252,7 +250,6 @@ class EnterOtpScreen : BaseScreen<
 
   override fun showFailedAttemptOtpError(attemptsRemaining: Int) {
     showError(resources.getString(R.string.otpentry_error_incorrect_otp_attempts_remaining, attemptsRemaining.toString()))
-    otpEntryEditText.showKeyboard()
   }
 
   override fun clearPin() {

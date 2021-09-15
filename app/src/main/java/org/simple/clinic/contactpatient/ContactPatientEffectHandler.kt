@@ -8,30 +8,20 @@ import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.overdue.callresult.CallResult
-import org.simple.clinic.overdue.callresult.CallResultRepository
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.phone.Dialer
-import org.simple.clinic.user.User
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import org.simple.clinic.uuid.UuidGenerator
 import java.time.LocalDate
 
 class ContactPatientEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val appointmentRepository: AppointmentRepository,
-    private val callResultRepository: CallResultRepository,
+    private val createReminderForAppointment: CreateReminderForAppointment,
     private val userClock: UserClock,
-    private val utcClock: UtcClock,
     private val schedulers: SchedulersProvider,
     private val currentFacility: Lazy<Facility>,
-    private val currentUser: Lazy<User>,
-    private val uuidGenerator: UuidGenerator,
     @Assisted private val uiActions: ContactPatientUiActions
 ) {
 
@@ -111,25 +101,8 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .doOnNext { (appointment, reminderDate) -> createReminderForAppointment(appointment, reminderDate) }
+          .doOnNext { (appointment, reminderDate) -> createReminderForAppointment.execute(appointment, reminderDate) }
           .map { ReminderSetForAppointment }
     }
-  }
-
-  private fun createReminderForAppointment(appointment: Appointment, reminderDate: LocalDate) {
-    appointmentRepository.createReminder(appointment.uuid, reminderDate)
-    markRemindToCallLaterOutcomeForAppointment(appointment)
-  }
-
-  private fun markRemindToCallLaterOutcomeForAppointment(appointment: Appointment) {
-    val callResult = CallResult.remindToCallLater(
-        id = uuidGenerator.v4(),
-        appointment = appointment,
-        user = currentUser.get(),
-        clock = utcClock,
-        syncStatus = SyncStatus.PENDING
-    )
-
-    callResultRepository.save(listOf(callResult))
   }
 }

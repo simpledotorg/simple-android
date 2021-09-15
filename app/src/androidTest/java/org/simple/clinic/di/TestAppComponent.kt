@@ -5,6 +5,7 @@ import org.simple.clinic.DateOfBirthHintUnfocusedAndroidTest
 import org.simple.clinic.FakerModule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestDataModule
+import org.simple.clinic.appconfig.AppConfigRepositoryAndroidTest
 import org.simple.clinic.appconfig.SelectedCountryPersistenceAndroidTest
 import org.simple.clinic.bloodsugar.BloodSugarHistoryListItemDataSourceTest
 import org.simple.clinic.bloodsugar.BloodSugarRepositoryAndroidTest
@@ -120,4 +121,5 @@ interface TestAppComponent {
   fun inject(target: DrugRepositoryAndroidTest)
   fun inject(target: DrugSyncIntegrationTest)
   fun inject(target: CallResultSyncIntegrationTest)
+  fun inject(target: AppConfigRepositoryAndroidTest)
 }

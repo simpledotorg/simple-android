@@ -138,7 +138,7 @@ class DrugsSearchScreen : BaseScreen<
   override fun setDrugSearchResults(searchResults: PagingData<Drug>) {
     val searchQuery = searchQueryEditText.text?.toString().orEmpty()
     drugSearchResultsList.scrollToPosition(0)
-    adapter.submitData(lifecycle, DrugSearchListItem.from(searchResults, searchQuery))
+    adapter.submitData(lifecycle, DrugSearchListItem.from(searchResults, searchQuery, drugFrequencyToFrequencyChoiceItemMap!!))
   }
 
   override fun openCustomDrugEntrySheetFromDrugList(drugUuid: UUID, patientUuid: UUID) {

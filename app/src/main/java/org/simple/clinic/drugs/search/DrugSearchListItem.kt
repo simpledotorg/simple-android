@@ -13,6 +13,7 @@ import org.simple.clinic.R
 import org.simple.clinic.databinding.ListItemDrugSearchBinding
 import org.simple.clinic.databinding.ListItemDrugSearchCornerCapBinding
 import org.simple.clinic.drugs.search.DrugSearchListItem.Event
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.dp
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
@@ -21,9 +22,9 @@ sealed class DrugSearchListItem : PagingItemAdapter.Item<Event> {
 
   companion object {
 
-    fun from(searchResults: PagingData<Drug>, searchQuery: String): PagingData<DrugSearchListItem> {
+    fun from(searchResults: PagingData<Drug>, searchQuery: String, drugFrequencyToFrequencyChoiceItemMap: Map<DrugFrequency?, DrugFrequencyChoiceItem>): PagingData<DrugSearchListItem> {
       return searchResults
-          .map(::DrugSearchResult)
+          .map{DrugSearchResult(it, drugFrequencyToFrequencyChoiceItemMap)}
           .insertSeparators(SOURCE_COMPLETE) { oldItem, newItem ->
             insertSeparators(oldItem, newItem, searchQuery)
           }
@@ -49,7 +50,7 @@ sealed class DrugSearchListItem : PagingItemAdapter.Item<Event> {
     }
   }
 
-  data class DrugSearchResult(val drug: Drug) : DrugSearchListItem() {
+  data class DrugSearchResult(val drug: Drug, val drugFrequencyToFrequencyChoiceItemMap: Map<DrugFrequency?, DrugFrequencyChoiceItem>) : DrugSearchListItem() {
 
     override fun layoutResId() = R.layout.list_item_drug_search
 
@@ -72,7 +73,8 @@ sealed class DrugSearchListItem : PagingItemAdapter.Item<Event> {
         }
 
         if (drug.frequency != null) {
-          append("$drugNameSeparator${drug.frequency}")
+          val frequencyLabel = drugFrequencyToFrequencyChoiceItemMap[drug.frequency]!!.label
+          append("$drugNameSeparator${frequencyLabel}")
         }
       }
     }

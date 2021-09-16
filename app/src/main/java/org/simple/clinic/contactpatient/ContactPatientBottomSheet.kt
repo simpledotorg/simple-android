@@ -313,7 +313,7 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   override fun openRemoveOverdueAppointmentScreen(appointment: Appointment) {
     router.pushExpectingResult(
         RemoveOverdueAppointmentResult,
-        RemoveOverdueAppointmentScreen.Key(appointment.uuid, appointment.patientUuid)
+        RemoveOverdueAppointmentScreen.Key(appointment)
     )
   }
 

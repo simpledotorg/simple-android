@@ -8,10 +8,6 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTo
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.ValidNumber
 
 interface PhoneNumberValidator {
-  enum class Type {
-    LANDLINE_OR_MOBILE,
-    MOBILE
-  }
 
   sealed class Result : Parcelable {
     @Parcelize

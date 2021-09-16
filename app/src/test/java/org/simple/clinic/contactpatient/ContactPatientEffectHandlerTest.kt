@@ -280,7 +280,7 @@ class ContactPatientEffectHandlerTest {
     // then
     testCase.assertNoOutgoingEvents()
 
-    verify(uiActions).openRemoveOverdueAppointmentScreen(appointmentId, patientUuid)
+    verify(uiActions).openRemoveOverdueAppointmentScreen(appointment)
     verifyNoMoreInteractions(uiActions)
   }
 

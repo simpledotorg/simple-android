@@ -30,6 +30,7 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
+import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.phone.Dialer
@@ -309,10 +310,10 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     setAppointmentReminderView.visibility = VISIBLE
   }
 
-  override fun openRemoveOverdueAppointmentScreen(appointmentId: UUID, patientId: UUID) {
+  override fun openRemoveOverdueAppointmentScreen(appointment: Appointment) {
     router.pushExpectingResult(
         RemoveOverdueAppointmentResult,
-        RemoveOverdueAppointmentScreen.Key(appointmentId, patientId)
+        RemoveOverdueAppointmentScreen.Key(appointment.uuid, appointment.patientUuid)
     )
   }
 

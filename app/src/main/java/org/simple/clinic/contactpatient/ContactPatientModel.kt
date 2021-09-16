@@ -6,6 +6,7 @@ import org.simple.clinic.contactpatient.ContactPatientInfoProgressState.DONE
 import org.simple.clinic.contactpatient.ContactPatientInfoProgressState.IN_PROGRESS
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
+import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.patient.PatientStatus
@@ -76,8 +77,11 @@ data class ContactPatientModel(
   val appointmentIsInRegisteredFacility: Boolean
     get() = overdueAppointment?.get()?.patientRegisteredFacilityID == currentFacility?.uuid
 
+  val appointment: Appointment
+    get() = overdueAppointment!!.get().appointment
+
   val appointmentUuid: UUID
-    get() = overdueAppointment!!.get().appointment.uuid
+    get() = appointment.uuid
 
   val isPatientContactInfoLoaded: Boolean
     get() = contactPatientInfoProgressState == DONE

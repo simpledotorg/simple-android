@@ -61,6 +61,9 @@ class EnterOtpScreen : BaseScreen<
   @Inject
   lateinit var utcClock: UtcClock
 
+  @Inject
+  lateinit var config: BruteForceOtpEntryProtectionConfig
+
   private val otpEntryEditText
     get() = binding.otpEntryEditText
 
@@ -100,7 +103,9 @@ class EnterOtpScreen : BaseScreen<
       field = value
     }
 
-  override fun defaultModel() = EnterOtpModel.create()
+  override fun defaultModel() = EnterOtpModel.create(
+      minOtpRetries = config.minOtpEntries,
+      maxOtpEntriesAllowed = config.limitOfFailedAttempts)
 
   override fun bindView(
       layoutInflater: LayoutInflater,
@@ -240,12 +245,8 @@ class EnterOtpScreen : BaseScreen<
     showError(resources.getString(R.string.otpentry_error_incorrect_otp_attempts_limit_reached, attemptsMade.toString()))
   }
 
-  override fun showFailedAttemptOtpError(attemptsMade: Int, attemptsRemaining: Int) {
-    if (attemptsMade >= 3) {
-      showError(resources.getString(R.string.otpentry_error_incorrect_otp_attempts_remaining, attemptsRemaining.toString()))
-    } else {
-      showError(resources.getString(R.string.otpentry_error_incorrect_otp_attempt))
-    }
+  override fun showFailedAttemptOtpError(attemptsRemaining: Int) {
+    showError(resources.getString(R.string.otpentry_error_incorrect_otp_attempts_remaining, attemptsRemaining.toString()))
     otpEntryEditText.showKeyboard()
   }
 

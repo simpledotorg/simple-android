@@ -12,7 +12,6 @@ import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
 import org.simple.clinic.patient.OngoingNewPatientEntry.PhoneNumber
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.ValidNumber
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -58,7 +57,7 @@ class OngoingNewPatientEntryTest {
     )
 
     val numValidator = mock<PhoneNumberValidator>()
-    whenever(numValidator.validate("", LANDLINE_OR_MOBILE)).thenReturn(phoneValidationResult)
+    whenever(numValidator.validate("")).thenReturn(phoneValidationResult)
 
     assertThat(entry.validationErrors(dobValidator, numValidator, ageValidator)).apply {
       if (isValid) {
@@ -100,7 +99,7 @@ class OngoingNewPatientEntryTest {
     whenever(mockDobValidator.validate("01/01/3000")).thenReturn(DateIsInFuture)
 
     val mockNumValidator = mock<PhoneNumberValidator>()
-    whenever(mockNumValidator.validate("phone-number", LANDLINE_OR_MOBILE)).thenReturn(ValidNumber)
+    whenever(mockNumValidator.validate("phone-number")).thenReturn(ValidNumber)
 
     val validationErrors = entry.validationErrors(mockDobValidator, mockNumValidator, mockAgeValidator)
 

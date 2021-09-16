@@ -27,14 +27,14 @@ interface PhoneNumberValidator {
     object Blank : Result()
   }
 
-  fun validate(number: String, type: Type): Result
+  fun validate(number: String): Result
 }
 
 class MinimumLengthBasedNumberValidator(
     private val minimumRequiredLength: Int
 ) : PhoneNumberValidator {
 
-  override fun validate(number: String, type: PhoneNumberValidator.Type): Result {
+  override fun validate(number: String): Result {
     return when {
       number.isBlank() -> Blank
       number.length < minimumRequiredLength -> LengthTooShort(minimumRequiredLength)

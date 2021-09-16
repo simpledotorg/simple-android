@@ -44,7 +44,7 @@ class RegistrationPhoneEffectHandler @AssistedInject constructor(
   private fun validateEnteredPhoneNumber(): ObservableTransformer<ValidateEnteredNumber, RegistrationPhoneEvent> {
     return ObservableTransformer { effects ->
       effects
-          .map { numberValidator.validate(it.number, PhoneNumberValidator.Type.MOBILE) }
+          .map { numberValidator.validate(it.number) }
           .map { EnteredNumberValidated.fromValidateNumberResult(it) }
     }
   }

@@ -30,7 +30,6 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.Blank
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooLong
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooShort
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Type
 import org.simple.clinic.util.valueOrEmpty
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMaxAgeLimit
@@ -175,7 +174,7 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
       alreadySavedNumber: PatientPhoneNumber?,
       numberValidator: PhoneNumberValidator
   ): ValidationCheck = {
-    when (val error = numberValidator.validate(phoneNumber, Type.LANDLINE_OR_MOBILE)) {
+    when (val error = numberValidator.validate(phoneNumber)) {
       is LengthTooShort -> PhoneNumberLengthTooShort(error.minimumAllowedNumberLength)
       is LengthTooLong -> PhoneNumberLengthTooLong(error.maximumRequiredNumberLength)
       is Blank -> checkIfPhoneNumberIsBlank(alreadySavedNumber)

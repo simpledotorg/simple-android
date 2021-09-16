@@ -36,9 +36,10 @@ class BruteForceOtpEntryProtection @Inject constructor(
     val isOtpAttemptLimitReached = config.limitOfFailedAttempts == updatedOtpState.failedLoginOtpAttempt
     return if (isOtpAttemptLimitReached && !otpState.limitReachedAt.isPresent) {
       updatedOtpState.failedAttemptLimitReached(utcClock)
-    } else {
+    } else if (!isOtpAttemptLimitReached && otpState.limitReachedAt.isPresent) {
+      otpState
+    } else
       updatedOtpState
-    }
   }
 
   fun protectedStateChanges(): Observable<ProtectedState> {

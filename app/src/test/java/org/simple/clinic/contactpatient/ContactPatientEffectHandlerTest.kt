@@ -272,9 +272,10 @@ class ContactPatientEffectHandlerTest {
   fun `when open remove overdue appointment screen effect is received, then open the screen`() {
     // given
     val appointmentId = UUID.fromString("1b91f7e4-aa2e-4ec7-8526-15b57f6025a2")
+    val appointment = TestData.appointment(uuid = appointmentId, patientUuid = patientUuid)
 
     // when
-    testCase.dispatch(OpenRemoveOverdueAppointmentScreen(appointmentId, patientUuid))
+    testCase.dispatch(OpenRemoveOverdueAppointmentScreen(appointment))
 
     // then
     testCase.assertNoOutgoingEvents()

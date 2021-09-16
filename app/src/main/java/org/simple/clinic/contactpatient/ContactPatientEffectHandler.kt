@@ -59,7 +59,9 @@ class ContactPatientEffectHandler @AssistedInject constructor(
   }
 
   private fun openRemoveOverdueAppointmentScreen(effect: OpenRemoveOverdueAppointmentScreen) {
-    uiActions.openRemoveOverdueAppointmentScreen(effect.appointmentId, effect.patientId)
+    val appointment = effect.appointment
+
+    uiActions.openRemoveOverdueAppointmentScreen(appointment.uuid, appointment.patientUuid)
   }
 
   private fun loadContactPatientProfile(

@@ -49,7 +49,7 @@ class RemoveOverdueEffectHandlerTest {
   }
 
   @Test
-  fun `when mark patient as dead effect is received, then cancel appointment and update patient status`() {
+  fun `when mark patient as dead effect is received, then update patient status`() {
     // given
     val patientId = UUID.fromString("6a87ea63-2ef4-4d27-b8ef-a07f1706cb67")
     val appointmentId = UUID.fromString("0affc37a-7344-493e-8768-6175c96c905e")
@@ -58,8 +58,7 @@ class RemoveOverdueEffectHandlerTest {
     testCase.dispatch(MarkPatientAsDead(patientId, appointmentId))
 
     // then
-    verify(appointmentRepository).cancelWithReason(appointmentId, AppointmentCancelReason.Dead)
-    verifyNoMoreInteractions(appointmentRepository)
+    verifyZeroInteractions(appointmentRepository)
 
     verify(patientRepository).updatePatientStatusToDead(patientId)
     verifyNoMoreInteractions(patientRepository)

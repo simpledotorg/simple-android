@@ -175,7 +175,7 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
     when (val error = numberValidator.validate(phoneNumber)) {
       is LengthTooShort -> PhoneNumberLengthTooShort(error.minimumAllowedNumberLength)
       is Blank -> checkIfPhoneNumberIsBlank(alreadySavedNumber)
-      is PhoneNumberValidator.Result.ValidNumber, is PhoneNumberValidator.Result.LengthTooLong -> null
+      is PhoneNumberValidator.Result.ValidNumber -> null
     }
   }
 

@@ -75,7 +75,6 @@ class OngoingNewPatientEntryTest {
         arrayOf(false, "Ashok Kumar", "01-01-1971", "47", "colony", "state", "district", PhoneNumberValidator.Result.LengthTooShort(6)),
         arrayOf(false, "Ashok Kumar", "01/01/1971", null, "colony", "state", "district", PhoneNumberValidator.Result.Blank),
         arrayOf(false, "Ashok Kumar", "01/01/1971", null, "colony", "state", "district", PhoneNumberValidator.Result.LengthTooShort(6)),
-        arrayOf(false, "Ashok Kumar", "01/01/1971", null, "colony", "state", "district", PhoneNumberValidator.Result.LengthTooLong(12)),
         arrayOf(true, "Ashok Kumar", "01/01/1971", null, "colony", "state", "district", PhoneNumberValidator.Result.ValidNumber)
     )
   }

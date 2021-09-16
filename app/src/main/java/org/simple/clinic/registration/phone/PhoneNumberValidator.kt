@@ -17,9 +17,6 @@ interface PhoneNumberValidator {
     data class LengthTooShort(val minimumAllowedNumberLength: Int) : Result()
 
     @Parcelize
-    data class LengthTooLong(val maximumRequiredNumberLength: Int) : Result()
-
-    @Parcelize
     object Blank : Result()
   }
 

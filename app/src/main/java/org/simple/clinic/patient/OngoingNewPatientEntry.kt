@@ -193,7 +193,7 @@ data class OngoingNewPatientEntry(
     errors += when (val errorNumber = numberValidator.validate(phoneNumber.number)) {
       is Blank -> listOf(PhoneNumberNonNullButBlank)
       is LengthTooShort -> listOf(PhoneNumberLengthTooShort(errorNumber.minimumAllowedNumberLength))
-      is PhoneNumberValidator.Result.ValidNumber, is PhoneNumberValidator.Result.LengthTooLong -> listOf()
+      is PhoneNumberValidator.Result.ValidNumber -> listOf()
     }
   }
 

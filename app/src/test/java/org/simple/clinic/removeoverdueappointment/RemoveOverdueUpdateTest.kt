@@ -58,13 +58,13 @@ class RemoveOverdueUpdateTest {
   }
 
   @Test
-  fun `when patient is marked as dead, then go back to previous screen`() {
+  fun `when patient is marked as dead, then cancel the appointment`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(PatientMarkedAsDead)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(GoBackAfterAppointmentRemoval)
+            hasEffects(CancelAppointment(appointmentId, AppointmentCancelReason.Dead))
         ))
   }
 

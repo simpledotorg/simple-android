@@ -65,7 +65,6 @@ class RemoveOverdueEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .doOnNext { appointmentRepository.cancelWithReason(it.appointmentId, AppointmentCancelReason.Dead) }
           .doOnNext { patientRepository.updatePatientStatusToDead(it.patientId) }
           .map { PatientMarkedAsDead }
     }

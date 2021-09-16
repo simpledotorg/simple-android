@@ -198,7 +198,6 @@
   <string name="patientsummary_updatephone_cancel">Skip</string>
   <string name="patientsummary_updatephone_error_phonenumber_empty" translatable="false">@string/patiententry_error_phonenumber_blank</string>
   <string name="patientsummary_updatephone_error_phonenumber_length_less" translatable="false">@string/patiententry_error_phonenumber_length_less</string>
-  <string name="patientsummary_updatephone_error_phonenumber_length_more" translatable="false">@string/patiententry_error_phonenumber_length_more</string>
 
   <string name="patientsummary_addphone_dialog_title">Update phone number</string>
   <string name="patientsummary_addphone_dialog_message">Patient’s phone number was not entered during registration</string>

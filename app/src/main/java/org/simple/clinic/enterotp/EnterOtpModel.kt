@@ -15,21 +15,24 @@ data class EnterOtpModel(
     val isAsyncOperationOngoing: Boolean,
     val protectedState: ProtectedState,
 
-    val minOtpRetries: Int
-    ) : Parcelable {
+    val minOtpRetries: Int,
+    val maxOtpEntriesAllowed: Int
+) : Parcelable {
 
   companion object {
 
     fun create(
-        minOtpRetries: Int
+        minOtpRetries: Int,
+        maxOtpEntriesAllowed: Int
     ): EnterOtpModel {
       return EnterOtpModel(
           user = null,
           otpValidationResult = ValidationResult.NotValidated,
           asyncOpError = null,
           isAsyncOperationOngoing = false,
-          protectedState = ProtectedState.Allowed(0,5),
-          minOtpRetries = minOtpRetries
+          protectedState = ProtectedState.Allowed(0, maxOtpEntriesAllowed),
+          minOtpRetries = minOtpRetries,
+          maxOtpEntriesAllowed = maxOtpEntriesAllowed
       )
     }
   }

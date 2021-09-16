@@ -996,7 +996,7 @@ class EnterOtpLogicTest {
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
-        defaultModel = EnterOtpModel.create(minOtpRetries = 3),
+        defaultModel = EnterOtpModel.create(minOtpRetries = 3, maxOtpEntriesAllowed = 5),
         update = EnterOtpUpdate(loginOtpRequiredLength = 6),
         effectHandler = effectHandler.build(),
         init = EnterOtpInit(),

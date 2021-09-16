@@ -103,7 +103,9 @@ class EnterOtpScreen : BaseScreen<
       field = value
     }
 
-  override fun defaultModel() = EnterOtpModel.create(minOtpRetries = config.minOtpEntries)
+  override fun defaultModel() = EnterOtpModel.create(
+      minOtpRetries = config.minOtpEntries,
+      maxOtpEntriesAllowed = config.limitOfFailedAttempts)
 
   override fun bindView(
       layoutInflater: LayoutInflater,

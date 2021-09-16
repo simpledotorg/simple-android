@@ -8,8 +8,6 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.transition.ChangeBounds
-import androidx.transition.TransitionManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
@@ -216,7 +214,6 @@ class NewMedicalHistoryScreen : BaseScreen<
     hypertensionDiagnosis.renderTreatmentQuestion(IS_ON_HYPERTENSION_TREATMENT, answer) { questionForView, newAnswer ->
       questionViewEvents.onNext(NewMedicalHistoryAnswerToggled(questionForView, newAnswer))
     }
-    TransitionManager.beginDelayedTransition(scrollView, ChangeBounds())
 
     hypertensionDiagnosis.showTreatmentQuestion()
   }
@@ -230,7 +227,6 @@ class NewMedicalHistoryScreen : BaseScreen<
     diabetesDiagnosis.renderTreatmentQuestion(IS_ON_DIABETES_TREATMENT, answer) { questionForView, newAnswer ->
       questionViewEvents.onNext(NewMedicalHistoryAnswerToggled(questionForView, newAnswer))
     }
-    TransitionManager.beginDelayedTransition(scrollView, ChangeBounds())
 
     diabetesDiagnosis.showTreatmentQuestion()
   }

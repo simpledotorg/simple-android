@@ -43,7 +43,7 @@ import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.registration.phone.LengthBasedNumberValidator
+import org.simple.clinic.registration.phone.MinimumLengthBasedNumberValidator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -825,12 +825,7 @@ class EditPatientScreenFormTest {
         viewEffectsConsumer = viewEffectHandler::handle
     )
 
-    val numberValidator = LengthBasedNumberValidator(
-        minimumRequiredLengthMobile = 10,
-        maximumAllowedLengthMobile = 10,
-        minimumRequiredLengthLandlinesOrMobile = 6,
-        maximumAllowedLengthLandlinesOrMobile = 12
-    )
+    val numberValidator = MinimumLengthBasedNumberValidator(minimumRequiredLength = 6)
 
     val fixture = MobiusTestFixture<EditPatientModel, EditPatientEvent, EditPatientEffect>(
         events = uiEvents,

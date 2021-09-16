@@ -71,7 +71,6 @@ class PatientEntryEffectHandlerTest {
     // then
     testCase.assertNoOutgoingEvents()
     verify(validationActions).showLengthTooShortPhoneNumberError(false, 0)
-    verify(validationActions).showLengthTooLongPhoneNumberError(false, 0)
     verifyNoMoreInteractions(validationActions)
   }
 

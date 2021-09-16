@@ -79,7 +79,6 @@
   <string name="patiententry_error_dateofbirth_is_in_future">Xiwamanichu ilamino bara tashi</string>
   <string name="patiententry_error_phonenumber_blank">Bilibilu kiro fano ikitonike</string>
   <string name="patiententry_error_phonenumber_length_less">Bilibilu kiro %1$s woroni ikitonike</string>
-  <string name="patiententry_error_phonenumber_length_more">Bilibilu kiro %1$s aleni  ikitonike</string>
   <string name="patiententry_identifier_bp_passport">Mundeete xiiwo passporte</string>
   <string name="patiententry_consent_header">Bitima:\u0020</string>
   <string name="patiententry_consent_first_para">Koni alibani xiwamanichu akata boresotoha ikirona xaa la’ate baxitiro hasisanore wonishite la’a danidato. Xiwamanichu woyi xiwamanicho agarano mani afana wodanicha hasisanosari ati koni xisamanichu taje la’ani nooto gede tini yano tene tajje hito mashalaqe amadinoro tene mashalaqe sokateni,SMS soka,WhatsApp woyi wolu danini yano bilibilu kiro horosirateni la’a danidato.</string>

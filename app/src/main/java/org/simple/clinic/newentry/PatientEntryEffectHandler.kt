@@ -36,7 +36,6 @@ import org.simple.clinic.patient.PatientEntryValidationError.FullNameEmpty
 import org.simple.clinic.patient.PatientEntryValidationError.InvalidDateOfBirth
 import org.simple.clinic.patient.PatientEntryValidationError.MissingGender
 import org.simple.clinic.patient.PatientEntryValidationError.PersonalDetailsEmpty
-import org.simple.clinic.patient.PatientEntryValidationError.PhoneNumberLengthTooLong
 import org.simple.clinic.patient.PatientEntryValidationError.PhoneNumberLengthTooShort
 import org.simple.clinic.patient.PatientEntryValidationError.PhoneNumberNonNullButBlank
 import org.simple.clinic.patient.PatientEntryValidationError.StateEmpty
@@ -132,7 +131,6 @@ class PatientEntryEffectHandler @AssistedInject constructor(
 
   private fun hidePhoneLengthErrors() {
     with(validationActions) {
-      showLengthTooLongPhoneNumberError(false, 0)
       showLengthTooShortPhoneNumberError(false, 0)
     }
   }
@@ -167,7 +165,6 @@ class PatientEntryEffectHandler @AssistedInject constructor(
           when (it) {
             FullNameEmpty -> validationActions.showEmptyFullNameError(true)
             is PhoneNumberLengthTooShort -> validationActions.showLengthTooShortPhoneNumberError(true, it.limit)
-            is PhoneNumberLengthTooLong -> validationActions.showLengthTooLongPhoneNumberError(true, it.limit)
             BothDateOfBirthAndAgeAbsent -> validationActions.showEmptyDateOfBirthAndAgeError(true)
             InvalidDateOfBirth -> validationActions.showInvalidDateOfBirthError(true)
             DateOfBirthInFuture -> validationActions.showDateOfBirthIsInFutureError(true)

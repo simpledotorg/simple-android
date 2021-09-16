@@ -79,7 +79,6 @@
   <string name="patiententry_error_dateofbirth_is_in_future">రోగి పుట్టినతేదీని ఫిక్స్ చేయండి</string>
   <string name="patiententry_error_phonenumber_blank">ఫోన్ నంబర్ ఫీల్డ్ ఖాళీగా ఉండకూడదు</string>
   <string name="patiententry_error_phonenumber_length_less">ఫోన్ నంబర్ %1$s అంకెల కంటే తక్కువగా ఉండకూడదు</string>
-  <string name="patiententry_error_phonenumber_length_more">ఫోన్ నంబర్ %1$s అంకెల కంటే ఎక్కువగా ఉండకూడదు</string>
   <string name="patiententry_identifier_bp_passport">బిపి పాస్‌పోర్ట్</string>
   <string name="patiententry_consent_header">సమ్మతి:\u0020</string>
   <string name="patiententry_consent_first_para">దిగువ నొక్కడం ద్వారా, మీరు సముచిత సూచిత సమ్మతితో తీసుకున్న రోగి డేటాను మాత్రమే నమోదు చేస్తున్నట్లు మీరు నిర్ధారిస్తున్నారు. అంటే, రోగికి లేదా చట్టపరమైన సంరక్షకునికి మీరు వారి వ్యక్తిగత డేటాను యాప్‌లో నమోదు చేస్తున్నట్లు తెలియజేయాలి, ఏ డేటా సేకరించబడుతోంది తెలియజేయాలి, యాప్‌లోని ఫోన్ నంబర్‌ను ఉపయోగించి SMS, WhatsApp లేదా మరో పద్ధతిలో వారిని సంప్రదించవచ్చు అని వారికి చెప్పాలి.</string>

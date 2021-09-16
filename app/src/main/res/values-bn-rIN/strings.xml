@@ -79,7 +79,6 @@
   <string name="patiententry_error_dateofbirth_is_in_future">রোগীর জন্ম তারিখ ঠিক করুন</string>
   <string name="patiententry_error_phonenumber_blank">ফোন নম্বর খালি রাখা যাবে না</string>
   <string name="patiententry_error_phonenumber_length_less">ফোন নম্বর %1$s সংখ্যার কম হতে পারে না</string>
-  <string name="patiententry_error_phonenumber_length_more">ফোন নম্বর %1$s সংখ্যার বেশি হতে পারে না</string>
   <string name="patiententry_identifier_bp_passport">বিপি পাসপোর্ট</string>
   <string name="patiententry_consent_header">সম্মতি:\u0020</string>
   <string name="patiententry_consent_first_para">নিন্মে ট্যাপ করার মাধমে আপনি নিশ্চিত হচ্ছেন যে এখানে আপনার দেওয়া যে কোনও রোগীর ডেটা যথাযথ অবহিত সম্মতিতে গ্রহণ করা হয়েছে। এর অর্থ হল রোগী বা আইনি অভিভাবক জানেন যে আপনি অ্যাপে তাদের ব্যক্তিগত ডেটা প্রদান করেছেন, কোন ডেটা সংগ্রহ করা হচ্ছে তা বুঝতে পেরেছেন এবং এটিও জানেন যে অ্যাপটিতে প্রদত্ত ফোন নম্বর ব্যবহার করে SMS, WhatsApp বা অন্যান্য পদ্ধতির মাধ্যমে তাদের সাথে যোগাযোগ করা হতে পারে।</string>

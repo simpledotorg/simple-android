@@ -372,7 +372,6 @@ class PatientEntryScreenLogicTest {
     }
 
     // These get invoked every time the phone number changes
-    verify(validationActions, times(3)).showLengthTooLongPhoneNumberError(false, 0)
     verify(validationActions, times(3)).showLengthTooShortPhoneNumberError(false, 0)
 
     verify(validationActions, atLeastOnce()).showEmptyFullNameError(true)

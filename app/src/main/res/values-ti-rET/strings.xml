@@ -79,7 +79,6 @@
   <string name="patiententry_error_dateofbirth_is_in_future">ናይ ተሓካሚ ዕለተ ትውልዲ ኣዓሪ/ዪ</string>
   <string name="patiententry_error_phonenumber_blank">ቑፅሪ ስልኪ ክፍቲ ክኽውን ኣይግባእን</string>
   <string name="patiententry_error_phonenumber_length_less">ቁፅሪ ተሌፎን ካብ %1$s ኣሃዛት ንታሕቲ ክኸውን የብሉን</string>
-  <string name="patiententry_error_phonenumber_length_more">ቁፅሪ ተሌፎን ካብ %1$s ኣሃዛት ንላዕሊ ክኸውን የብሉን</string>
   <string name="patiententry_identifier_bp_passport">BP Passport</string>
   <string name="patiententry_consent_header">ስምምዕ፥\ u0020</string>
   <string name="patiententry_consent_first_para">ኣብ ታሕቲ ብምትንካፍ፡ ኩሉ ኣብዚ ዘእተኻዮ/ኽዮ ናይ ተሓካሚ ሓበሬታ ብኣገባብን ስምምዕን ከም ዝረኸብካዮ/ዝረኸብኪዮ  ኣረጋግጽ/ጺ እዚ ማለት፡ ተሓካሚ ወይ ድማ ሕጋዊ ኣላዪኡ/ኣ ግላዊ ሓበሬታታቶም ከም ዝተኣከበን ኣብ ኣፕሊኬሽን ከምዝኣተወን ከምኡ ውን ብ ኣገልግሎት ሓጺር መልእኽቲ፡ ዋትስኣፕ ወይ ካልኦት ኣገባባት ብምጥቃም በቲ ዝተመዝገበ ስልኪ ቁጽሪ ከም ነዘራርቦም ይፈልጡ ማለት’ዩ።</string>

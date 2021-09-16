@@ -41,7 +41,6 @@ import org.simple.clinic.editpatient.EditPatientValidationError.DateOfBirthParse
 import org.simple.clinic.editpatient.EditPatientValidationError.DistrictEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.FullNameEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
-import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooLong
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.editpatient.deletepatient.DeletePatientScreenKey
@@ -524,7 +523,6 @@ class EditPatientScreen : BaseScreen<
         FullNameEmpty -> showEmptyFullNameError(true)
         PhoneNumberEmpty -> showPhoneNumberEmptyError()
         is PhoneNumberLengthTooShort -> showLengthTooShortPhoneNumberError(it.minimumAllowedNumberLength)
-        is PhoneNumberLengthTooLong -> showLengthTooLongPhoneNumberError(it.maximumAllowedNumberLength)
         ColonyOrVillageEmpty -> showEmptyColonyOrVillageError(true)
         DistrictEmpty -> showEmptyDistrictError(true)
         StateEmpty -> showEmptyStateError(true)
@@ -547,8 +545,7 @@ class EditPatientScreen : BaseScreen<
         }
 
         PhoneNumberEmpty,
-        is PhoneNumberLengthTooShort,
-        is PhoneNumberLengthTooLong -> {
+        is PhoneNumberLengthTooShort -> {
           hidePhoneNumberError()
         }
 
@@ -621,10 +618,6 @@ class EditPatientScreen : BaseScreen<
 
   private fun showLengthTooShortPhoneNumberError(requiredNumberLength: Int) {
     phoneNumberInputLayout.error = getString(R.string.patientedit_error_phonenumber_length_less, requiredNumberLength.toString())
-  }
-
-  private fun showLengthTooLongPhoneNumberError(requiredNumberLength: Int) {
-    phoneNumberInputLayout.error = getString(R.string.patientedit_error_phonenumber_length_more, requiredNumberLength.toString())
   }
 
   private fun showInvalidaDateOfBithError() {

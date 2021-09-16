@@ -26,7 +26,6 @@ import org.simple.clinic.editpatient.EditPatientValidationError.DateOfBirthParse
 import org.simple.clinic.editpatient.EditPatientValidationError.DistrictEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.FullNameEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
-import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooLong
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
@@ -116,8 +115,8 @@ class EditPatientScreenFormTest {
     return listOf(
         HidingErrorsOnTextChangeParams(NameChanged(""), setOf(FullNameEmpty)),
         HidingErrorsOnTextChangeParams(NameChanged("Name"), setOf(FullNameEmpty)),
-        HidingErrorsOnTextChangeParams(PhoneNumberChanged(""), setOf(PhoneNumberEmpty, PhoneNumberLengthTooShort(0), PhoneNumberLengthTooLong(0))),
-        HidingErrorsOnTextChangeParams(PhoneNumberChanged("12345"), setOf(PhoneNumberEmpty, PhoneNumberLengthTooShort(0), PhoneNumberLengthTooLong(0))),
+        HidingErrorsOnTextChangeParams(PhoneNumberChanged(""), setOf(PhoneNumberEmpty, PhoneNumberLengthTooShort(0))),
+        HidingErrorsOnTextChangeParams(PhoneNumberChanged("12345"), setOf(PhoneNumberEmpty, PhoneNumberLengthTooShort(0))),
         HidingErrorsOnTextChangeParams(ColonyOrVillageChanged(""), setOf(ColonyOrVillageEmpty)),
         HidingErrorsOnTextChangeParams(ColonyOrVillageChanged("Colony"), setOf(ColonyOrVillageEmpty)),
         HidingErrorsOnTextChangeParams(StateChanged(""), setOf(StateEmpty)),

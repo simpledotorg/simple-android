@@ -112,7 +112,6 @@
   <string name="patientedit_error_state_empty" translatable="false">@string/patiententry_error_state_empty</string>
   <string name="patientedit_error_phonenumber_blank" translatable="false">@string/patiententry_error_phonenumber_blank</string>
   <string name="patientedit_error_phonenumber_length_less" translatable="false">@string/patiententry_error_phonenumber_length_less</string>
-  <string name="patientedit_error_phonenumber_length_more" translatable="false">@string/patiententry_error_phonenumber_length_more</string>
   <string name="patientedit_date_of_birth_unfocused" translatable="false">@string/patiententry_date_of_birth_unfocused</string>
   <string name="patientedit_date_of_birth_focused" translatable="false">@string/patiententry_date_of_birth_focused</string>
   <string name="patientedit_dateofbirth_and_age_separator" translatable="false">@string/patiententry_dateofbirth_and_age_separator</string>

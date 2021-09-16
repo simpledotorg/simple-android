@@ -13,7 +13,6 @@ import org.simple.clinic.editpatient.EditPatientValidationError.DateOfBirthParse
 import org.simple.clinic.editpatient.EditPatientValidationError.DistrictEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.FullNameEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
-import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooLong
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
@@ -28,7 +27,6 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.Blank
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooLong
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooShort
 import org.simple.clinic.util.valueOrEmpty
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
@@ -176,9 +174,8 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
   ): ValidationCheck = {
     when (val error = numberValidator.validate(phoneNumber)) {
       is LengthTooShort -> PhoneNumberLengthTooShort(error.minimumAllowedNumberLength)
-      is LengthTooLong -> PhoneNumberLengthTooLong(error.maximumRequiredNumberLength)
       is Blank -> checkIfPhoneNumberIsBlank(alreadySavedNumber)
-      is PhoneNumberValidator.Result.ValidNumber -> null
+      is PhoneNumberValidator.Result.ValidNumber, is PhoneNumberValidator.Result.LengthTooLong -> null
     }
   }
 

@@ -17,7 +17,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientUuid
-import org.simple.clinic.registration.phone.MinimumLengthBasedNumberValidator
+import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
@@ -34,7 +34,7 @@ class UpdatePhoneNumberDialogLogicTest {
   private val ui = mock<UpdatePhoneNumberDialogUi>()
   private val uiActions = mock<UpdatePhoneNumberUiActions>()
   private val repository = mock<PatientRepository>()
-  private val validator = MinimumLengthBasedNumberValidator(minimumRequiredLength = 6)
+  private val validator = PhoneNumberValidator(minimumRequiredLength = 6)
 
   private val patientUuid = UUID.fromString("0c1c5a00-2416-4a41-8b9e-8059ac18df5d")
 

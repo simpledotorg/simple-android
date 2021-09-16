@@ -8,7 +8,7 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.ValidNum
 
 class MinimumLengthBasedNumberValidatorTest {
 
-  private val validator = MinimumLengthBasedNumberValidator(minimumRequiredLength = 6)
+  private val validator = PhoneNumberValidator(minimumRequiredLength = 6)
 
   @Test
   fun `validate phone numbers`() {

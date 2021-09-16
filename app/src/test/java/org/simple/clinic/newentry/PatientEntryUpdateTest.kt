@@ -16,7 +16,7 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.ReminderConsent.Denied
 import org.simple.clinic.patient.ReminderConsent.Granted
-import org.simple.clinic.registration.phone.MinimumLengthBasedNumberValidator
+import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
@@ -27,7 +27,7 @@ import java.util.Locale
 import java.util.Optional
 
 class PatientEntryUpdateTest {
-  private val phoneNumberValidator = MinimumLengthBasedNumberValidator(minimumRequiredLength = 6)
+  private val phoneNumberValidator = PhoneNumberValidator(minimumRequiredLength = 6)
 
   private val localDate = LocalDate.parse("2020-01-01")
   private val userClock: UserClock = TestUserClock(localDate)

@@ -2,7 +2,6 @@ package org.simple.clinic.registration
 
 import dagger.Module
 import dagger.Provides
-import org.simple.clinic.registration.phone.MinimumLengthBasedNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 
 @Module
@@ -10,6 +9,6 @@ class RegistrationModule {
 
   @Provides
   fun phoneNumberValidator(): PhoneNumberValidator {
-    return MinimumLengthBasedNumberValidator(minimumRequiredLength = 6)
+    return PhoneNumberValidator(minimumRequiredLength = 6)
   }
 }

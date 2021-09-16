@@ -16,7 +16,7 @@ import org.junit.Test
 import org.simple.clinic.mobius.first
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PhoneNumberDetails
-import org.simple.clinic.registration.phone.MinimumLengthBasedNumberValidator
+import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator
@@ -34,7 +34,7 @@ class AddPhoneNumberDialogLogicTest {
   private val uiActions = mock<UiActions>()
   private val repository = mock<PatientRepository>()
 
-  private val validator = MinimumLengthBasedNumberValidator(minimumRequiredLength = 6)
+  private val validator = PhoneNumberValidator(minimumRequiredLength = 6)
 
   private val patientUuid = UUID.fromString("b2d1e529-8ee9-43f3-bacc-72fe1e73daa6")
   private val generatedPhoneUuid = UUID.fromString("f94bd99b-b182-4138-8e77-d91908b7ada5")

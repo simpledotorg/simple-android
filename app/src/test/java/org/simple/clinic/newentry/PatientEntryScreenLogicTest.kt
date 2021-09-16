@@ -38,7 +38,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.platform.analytics.Analytics
-import org.simple.clinic.registration.phone.MinimumLengthBasedNumberValidator
+import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
@@ -68,7 +68,7 @@ class PatientEntryScreenLogicTest {
   private val userSession = mock<UserSession>()
   private val userClock: UserClock = TestUserClock(LocalDate.parse("2018-01-01"))
   private val dobValidator = UserInputDateValidator(userClock, DateTimeFormatter.ofPattern("dd/MM/yyyy", ENGLISH))
-  private val numberValidator = MinimumLengthBasedNumberValidator(minimumRequiredLength = 6)
+  private val numberValidator = PhoneNumberValidator(minimumRequiredLength = 6)
   private val patientRegisteredCount = mock<Preference<Int>>()
   private val ageValidator = UserInputAgeValidator(userClock, DateTimeFormatter.ofPattern("dd/MM/yyyy", ENGLISH))
 

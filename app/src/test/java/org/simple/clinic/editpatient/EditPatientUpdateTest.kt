@@ -11,7 +11,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
-import org.simple.clinic.registration.phone.MinimumLengthBasedNumberValidator
+import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -24,7 +24,7 @@ class EditPatientUpdateTest {
   private val clock = TestUserClock(LocalDate.parse("2018-01-01"))
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
 
-  private val numberValidator = MinimumLengthBasedNumberValidator(minimumRequiredLength = 6)
+  private val numberValidator = PhoneNumberValidator(minimumRequiredLength = 6)
   private val dobValidator = UserInputDateValidator(
       userClock = clock,
       dateOfBirthFormat = dateOfBirthFormat

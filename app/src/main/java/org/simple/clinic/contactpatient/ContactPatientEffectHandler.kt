@@ -18,7 +18,9 @@ import java.time.LocalDate
 class ContactPatientEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val appointmentRepository: AppointmentRepository,
-    private val clock: UserClock,
+    private val createReminderForAppointment: CreateReminderForAppointment,
+    private val recordPatientAgreedToVisit: RecordPatientAgreedToVisit,
+    private val userClock: UserClock,
     private val schedulers: SchedulersProvider,
     private val currentFacility: Lazy<Facility>,
     @Assisted private val uiActions: ContactPatientUiActions
@@ -78,7 +80,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .map { appointmentRepository.latestOverdueAppointmentForPatient(it.patientUuid, LocalDate.now(clock)) }
+          .map { appointmentRepository.latestOverdueAppointmentForPatient(it.patientUuid, LocalDate.now(userClock)) }
           .map(::OverdueAppointmentLoaded)
     }
   }
@@ -89,7 +91,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .doOnNext { appointmentRepository.markAsAgreedToVisit(it.appointmentUuid, clock) }
+          .doOnNext { recordPatientAgreedToVisit.execute(it.appointment) }
           .map { PatientMarkedAsAgreedToVisit }
     }
   }
@@ -100,7 +102,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .doOnNext { (appointmentUuid, reminderDate) -> appointmentRepository.createReminder(appointmentUuid, reminderDate) }
+          .doOnNext { (appointment, reminderDate) -> createReminderForAppointment.execute(appointment, reminderDate) }
           .map { ReminderSetForAppointment }
     }
   }

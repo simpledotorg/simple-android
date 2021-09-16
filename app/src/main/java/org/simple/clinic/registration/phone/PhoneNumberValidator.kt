@@ -76,3 +76,16 @@ class LengthBasedNumberValidator(
     }
   }
 }
+
+class MinimumLengthBasedNumberValidator(
+    private val minimumRequiredLength: Int
+) : PhoneNumberValidator {
+
+  override fun validate(number: String, type: PhoneNumberValidator.Type): Result {
+    return when {
+      number.isBlank() -> Blank
+      number.length < minimumRequiredLength -> LengthTooShort(minimumRequiredLength)
+      else -> ValidNumber
+    }
+  }
+}

@@ -21,7 +21,7 @@ data class ContactPatientModel(
     val patientUuid: UUID,
     val uiMode: UiMode,
     val patientProfile: ContactPatientProfile? = null,
-    val appointment: ParcelableOptional<OverdueAppointment>? = null,
+    val overdueAppointment: ParcelableOptional<OverdueAppointment>? = null,
     val secureCallingFeatureEnabled: Boolean,
     val potentialAppointments: List<PotentialAppointmentDate>,
     val selectedAppointmentDate: LocalDate,
@@ -65,19 +65,19 @@ data class ContactPatientModel(
     get() = !patientProfile?.phoneNumbers.isNullOrEmpty()
 
   val hasLoadedAppointment: Boolean
-    get() = appointment != null
+    get() = overdueAppointment != null
 
   val isAppointmentPresent: Boolean
-    get() = appointment?.isPresent() == true
+    get() = overdueAppointment?.isPresent() == true
 
   val hasRegisteredFacility: Boolean
-    get() = appointment?.isPresent() == true && appointment.get().patientRegisteredFacilityID != null
+    get() = overdueAppointment?.isPresent() == true && overdueAppointment.get().patientRegisteredFacilityID != null
 
   val appointmentIsInRegisteredFacility: Boolean
-    get() = appointment?.get()?.patientRegisteredFacilityID == currentFacility?.uuid
+    get() = overdueAppointment?.get()?.patientRegisteredFacilityID == currentFacility?.uuid
 
   val appointmentUuid: UUID
-    get() = appointment!!.get().appointment.uuid
+    get() = overdueAppointment!!.get().appointment.uuid
 
   val isPatientContactInfoLoaded: Boolean
     get() = contactPatientInfoProgressState == DONE
@@ -87,7 +87,7 @@ data class ContactPatientModel(
   }
 
   fun overdueAppointmentLoaded(appointment: Optional<OverdueAppointment>): ContactPatientModel {
-    return copy(appointment = appointment.parcelable())
+    return copy(overdueAppointment = appointment.parcelable())
   }
 
   fun reminderDateSelected(date: PotentialAppointmentDate): ContactPatientModel {

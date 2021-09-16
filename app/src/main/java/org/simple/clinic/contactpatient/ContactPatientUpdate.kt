@@ -29,13 +29,13 @@ class ContactPatientUpdate(
       is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.currentFacility))
       is NormalCallClicked -> directlyCallPatient(model, event)
       is SecureCallClicked -> maskedCallPatient(model, event)
-      PatientAgreedToVisitClicked -> dispatch(MarkPatientAsAgreedToVisit(model.appointment!!.get().appointment))
+      PatientAgreedToVisitClicked -> dispatch(MarkPatientAsAgreedToVisit(model.overdueAppointment!!.get().appointment))
       NextReminderDateClicked -> selectNextReminderDate(model)
       PreviousReminderDateClicked -> selectPreviousReminderDate(model)
       is ManualDateSelected -> updateWithManuallySelectedDate(event, model)
       AppointmentDateClicked -> showManualDatePicker(model)
       SaveAppointmentReminderClicked -> {
-        val appointment = model.appointment!!.get().appointment
+        val appointment = model.overdueAppointment!!.get().appointment
         dispatch(SetReminderForAppointment(appointment, model.selectedAppointmentDate))
       }
       RemindToCallLaterClicked -> next(model.changeUiModeTo(SetAppointmentReminder))

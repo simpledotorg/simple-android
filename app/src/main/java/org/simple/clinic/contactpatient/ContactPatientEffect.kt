@@ -1,5 +1,6 @@
 package org.simple.clinic.contactpatient
 
+import org.simple.clinic.overdue.Appointment
 import java.time.LocalDate
 import java.util.UUID
 
@@ -27,7 +28,7 @@ data class MaskedCallWithManualDialer(
 
 object CloseScreen : ContactPatientEffect()
 
-data class MarkPatientAsAgreedToVisit(val appointmentUuid: UUID) : ContactPatientEffect()
+data class MarkPatientAsAgreedToVisit(val appointment: Appointment) : ContactPatientEffect()
 
 data class ShowManualDatePicker(
     val preselectedDate: LocalDate,
@@ -35,7 +36,7 @@ data class ShowManualDatePicker(
 ) : ContactPatientEffect()
 
 data class SetReminderForAppointment(
-    val appointmentUuid: UUID,
+    val appointment: Appointment,
     val reminderDate: LocalDate
 ) : ContactPatientEffect()
 

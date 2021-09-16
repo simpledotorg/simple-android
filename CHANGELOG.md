@@ -9,7 +9,7 @@
 - Change `SynceableRepository#save()` to be a synchronous call
 - Change server environment in integration tests to `android_review`
 - Update `verify_pr_description` CI validation check to Shortcut links 
-- [In Progress: 14 Sep 2021] Record call results instead of updating the same appointment record
+- [In Progress: 16 Sep 2021] Record call results instead of updating the same appointment record
 - [In Progress: 31 Aug 2021] Refactor logic around providing drug frequencies label depending on the country
 - [In Progress: 2 Sep 2021] Add a progress state in `CustomDrugEntrySheet`
 

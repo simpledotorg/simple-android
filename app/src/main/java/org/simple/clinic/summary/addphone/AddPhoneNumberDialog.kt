@@ -175,10 +175,6 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi, UiActi
     phoneNumberInputLayout.error = getString(R.string.patientsummary_addphone_error_phonenumber_length_less, requiredNumberLength.toString())
   }
 
-  override fun showPhoneNumberTooLongError(requiredNumberLength: Int) {
-    phoneNumberInputLayout.error = getString(R.string.patientsummary_addphone_error_phonenumber_length_more, requiredNumberLength.toString())
-  }
-
   override fun clearPhoneNumberError() {
     phoneNumberInputLayout.error = null
   }

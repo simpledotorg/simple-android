@@ -239,8 +239,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:hint="@string/patiententry_bangladesh_national_id"
-          android:imeOptions="flagNoFullscreen"
-          android:inputType="phone|textCapSentences" />
+          android:imeOptions="flagNoFullscreen" />
 
       </com.google.android.material.textfield.TextInputLayout>
 

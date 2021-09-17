@@ -43,6 +43,18 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
   private val saveMedicineFrequencyButton
     get() = binding.saveMedicineFrequencyButton
 
+  private val medicineFrequencyOdRadioButton
+    get() = binding.medicineFrequencyOdRadioButton
+
+  private val medicineFrequencyBdRadioButton
+    get() = binding.medicineFrequencyBdRadioButton
+
+  private val medicineFrequencyTdsRadioButton
+    get() = binding.medicineFrequencyTdsRadioButton
+
+  private val medicineFrequencyQdsRadioButton
+    get() = binding.medicineFrequencyQdsRadioButton
+
   @Inject
   lateinit var locale: Locale
 
@@ -114,6 +126,15 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
     binding = SheetMedicineFrequencyBinding.inflate(layoutInflater)
     setContentView(binding.root)
     medicineFrequencyTitleTextView.text = getString(R.string.drug_duration_title, medicineFrequencyExtra.name, medicineFrequencyExtra.dosage)
+    setDrugFrequencyLabels()
+
+  }
+
+  private fun setDrugFrequencyLabels() {
+    medicineFrequencyOdRadioButton.text = medicineFrequencyExtra.medicineFrequencyToFrequencyChoiceItemMap[OD]!!.label
+    medicineFrequencyBdRadioButton.text = medicineFrequencyExtra.medicineFrequencyToFrequencyChoiceItemMap[BD]!!.label
+    medicineFrequencyTdsRadioButton.text = medicineFrequencyExtra.medicineFrequencyToFrequencyChoiceItemMap[TDS]!!.label
+    medicineFrequencyQdsRadioButton.text = medicineFrequencyExtra.medicineFrequencyToFrequencyChoiceItemMap[QDS]!!.label
   }
 
   private fun medicineFrequencyChanges(): Observable<MedicineFrequencyChanged> {

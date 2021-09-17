@@ -14,12 +14,12 @@ class TeleconsultMedicinesInitTest {
   private val initSpec = InitSpec(TeleconsultMedicinesInit())
 
   @Test
-  fun `when screen is created, then load initial data`() {
+  fun `when screen is created, then load patient medicines and drug frequency choice items`() {
     initSpec
         .whenInit(model)
         .then(assertThatFirst(
             hasModel(model),
-            hasEffects(LoadPatientMedicines(patientUuid))
+            hasEffects(LoadPatientMedicines(patientUuid), LoadDrugFrequencyChoiceItems)
         ))
   }
 }

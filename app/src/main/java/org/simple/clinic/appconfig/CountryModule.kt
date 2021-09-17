@@ -2,7 +2,6 @@ package org.simple.clinic.appconfig
 
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import dagger.Module
 import dagger.Provides
 import java.net.URI
@@ -87,10 +86,10 @@ object CountryModule {
     }
   }
 
+  @Suppress("UNCHECKED_CAST")
   private fun parseOldCountry(moshi: Moshi, json: String): Map<String, String> {
-    val type = Types.newParameterizedType(Map::class.java, String::class.java)
-    val selectedOldCountryAdapter = moshi.adapter<Map<String, String>>(type)
+    val selectedOldCountryAdapter = moshi.adapter(Object::class.java)
 
-    return selectedOldCountryAdapter.fromJson(json)!!
+    return selectedOldCountryAdapter.fromJson(json) as Map<String, String>
   }
 }

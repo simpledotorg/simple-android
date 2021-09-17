@@ -79,7 +79,6 @@
   <string name="patiententry_error_dateofbirth_is_in_future">நோயாளரின் பிறந்த திகதியைச் சரிசெய்யவும்</string>
   <string name="patiententry_error_phonenumber_blank">தொலைபேசி இலக்கம் காலியாக இருக்கக்கூடாது</string>
   <string name="patiententry_error_phonenumber_length_less">தொலைபேசி இலக்கம், %1$s இலக்கங்களுக்கும் குறைவாக இருக்கக்கூடாது</string>
-  <string name="patiententry_error_phonenumber_length_more">தொலைபேசி இலக்கம், %1$s இலக்கங்களுக்கும் அதிகமாக இருக்கக்கூடாது</string>
   <string name="patiententry_identifier_bp_passport">பீபி பாஸ்போர்ட்</string>
   <string name="patiententry_consent_header">ஒப்புதல்:\u0020</string>
   <string name="patiententry_consent_first_para">கீழே தட்டுவதன் மூலம், நீங்கள் இங்கே உள்ளிடும் அனைத்து நோயாளரின் தரவும் பொருத்தமான தகவலறிந்த ஒப்புதலின் கீழ் பெறப்பட்டுள்ளது என்பதை உறுதிப்படுத்துகிறீர்கள். அதாவது நோயாளர் அல்லது அவரின் சட்டப்பூர்வப் பாதுகாவலர் நீங்கள் அவர்களின் தனிப்பட்ட தரவைச் செயலியில் உள்ளிடுகிறீர்கள் என்பதை அறிவார்கள், என்ன தரவு சேகரிக்கப்படுகிறது என்பதைப் புரிந்துகொள்கிறார்கள், மேலும் அவர்கள் செயலியில் வழங்கப்பட்டுள்ள தொலைபேசி இலக்கத்தைப் பயன்படுத்தி SMS, WhatsApp அல்லது பிற முறைகள் வழியாகத் தொடர்பு கொள்ளலாம் என்பதை அறிவார்கள்.</string>

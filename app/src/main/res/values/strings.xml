@@ -83,7 +83,6 @@
   <string name="patiententry_error_dateofbirth_is_in_future">Fix patient’s date of birth</string>
   <string name="patiententry_error_phonenumber_blank">Phone number cannot be empty</string>
   <string name="patiententry_error_phonenumber_length_less">Phone number cannot be less than %1$s digits</string>
-  <string name="patiententry_error_phonenumber_length_more">Phone number cannot be more than %1$s digits</string>
   <string name="patiententry_identifier_bp_passport">BP Passport</string>
   <string name="patiententry_consent_header">Consent:\u0020</string>
   <string name="patiententry_consent_first_para">By tapping below, you confirm that any patient data you enter here has been obtained under appropriate informed consent. This means that the patient or legal guardian knows that you are entering their personal data into the app, understands what data is being collected, and knows that they may be contacted via SMS, WhatsApp, or other methods using the phone number provided in the app.</string>
@@ -112,7 +111,6 @@
   <string name="patientedit_error_state_empty" translatable="false">@string/patiententry_error_state_empty</string>
   <string name="patientedit_error_phonenumber_blank" translatable="false">@string/patiententry_error_phonenumber_blank</string>
   <string name="patientedit_error_phonenumber_length_less" translatable="false">@string/patiententry_error_phonenumber_length_less</string>
-  <string name="patientedit_error_phonenumber_length_more" translatable="false">@string/patiententry_error_phonenumber_length_more</string>
   <string name="patientedit_date_of_birth_unfocused" translatable="false">@string/patiententry_date_of_birth_unfocused</string>
   <string name="patientedit_date_of_birth_focused" translatable="false">@string/patiententry_date_of_birth_focused</string>
   <string name="patientedit_dateofbirth_and_age_separator" translatable="false">@string/patiententry_dateofbirth_and_age_separator</string>
@@ -199,7 +197,6 @@
   <string name="patientsummary_updatephone_cancel">Skip</string>
   <string name="patientsummary_updatephone_error_phonenumber_empty" translatable="false">@string/patiententry_error_phonenumber_blank</string>
   <string name="patientsummary_updatephone_error_phonenumber_length_less" translatable="false">@string/patiententry_error_phonenumber_length_less</string>
-  <string name="patientsummary_updatephone_error_phonenumber_length_more" translatable="false">@string/patiententry_error_phonenumber_length_more</string>
 
   <string name="patientsummary_addphone_dialog_title">Update phone number</string>
   <string name="patientsummary_addphone_dialog_message">Patient’s phone number was not entered during registration</string>
@@ -208,7 +205,6 @@
   <string name="patientsummary_addphone_cancel">Skip</string>
   <string name="patientsummary_addphone_error_phonenumber_empty" translatable="false">@string/patiententry_error_phonenumber_blank</string>
   <string name="patientsummary_addphone_error_phonenumber_length_less" translatable="false">@string/patiententry_error_phonenumber_length_less</string>
-  <string name="patientsummary_addphone_error_phonenumber_length_more" translatable="false">@string/patiententry_error_phonenumber_length_more</string>
   <string name="patientsummary_newbp_date_time" translatable="false">%1$s\n%2$s</string>
   <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
 

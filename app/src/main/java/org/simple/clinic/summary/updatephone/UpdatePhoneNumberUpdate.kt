@@ -28,7 +28,6 @@ class UpdatePhoneNumberUpdate : Update<UpdatePhoneNumberModel, UpdatePhoneNumber
     val effect = when (val result = event.result) {
       PhoneNumberValidator.Result.ValidNumber -> SaveNewPhoneNumber(model.patientUuid, event.phoneNumber)
       is PhoneNumberValidator.Result.LengthTooShort -> ShowPhoneNumberTooShortError(result.minimumAllowedNumberLength)
-      is PhoneNumberValidator.Result.LengthTooLong -> ShowPhoneNumberTooLongError(result.maximumRequiredNumberLength)
       PhoneNumberValidator.Result.Blank -> ShowBlankPhoneNumberError
     }
 

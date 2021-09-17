@@ -26,7 +26,6 @@ import org.simple.clinic.editpatient.EditPatientValidationError.DateOfBirthParse
 import org.simple.clinic.editpatient.EditPatientValidationError.DistrictEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.FullNameEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
-import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooLong
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
@@ -43,7 +42,7 @@ import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.registration.phone.LengthBasedNumberValidator
+import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -116,8 +115,8 @@ class EditPatientScreenFormTest {
     return listOf(
         HidingErrorsOnTextChangeParams(NameChanged(""), setOf(FullNameEmpty)),
         HidingErrorsOnTextChangeParams(NameChanged("Name"), setOf(FullNameEmpty)),
-        HidingErrorsOnTextChangeParams(PhoneNumberChanged(""), setOf(PhoneNumberEmpty, PhoneNumberLengthTooShort(0), PhoneNumberLengthTooLong(0))),
-        HidingErrorsOnTextChangeParams(PhoneNumberChanged("12345"), setOf(PhoneNumberEmpty, PhoneNumberLengthTooShort(0), PhoneNumberLengthTooLong(0))),
+        HidingErrorsOnTextChangeParams(PhoneNumberChanged(""), setOf(PhoneNumberEmpty, PhoneNumberLengthTooShort(0))),
+        HidingErrorsOnTextChangeParams(PhoneNumberChanged("12345"), setOf(PhoneNumberEmpty, PhoneNumberLengthTooShort(0))),
         HidingErrorsOnTextChangeParams(ColonyOrVillageChanged(""), setOf(ColonyOrVillageEmpty)),
         HidingErrorsOnTextChangeParams(ColonyOrVillageChanged("Colony"), setOf(ColonyOrVillageEmpty)),
         HidingErrorsOnTextChangeParams(StateChanged(""), setOf(StateEmpty)),
@@ -825,12 +824,7 @@ class EditPatientScreenFormTest {
         viewEffectsConsumer = viewEffectHandler::handle
     )
 
-    val numberValidator = LengthBasedNumberValidator(
-        minimumRequiredLengthMobile = 10,
-        maximumAllowedLengthMobile = 10,
-        minimumRequiredLengthLandlinesOrMobile = 6,
-        maximumAllowedLengthLandlinesOrMobile = 12
-    )
+    val numberValidator = PhoneNumberValidator(minimumRequiredLength = 6)
 
     val fixture = MobiusTestFixture<EditPatientModel, EditPatientEvent, EditPatientEffect>(
         events = uiEvents,

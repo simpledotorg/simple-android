@@ -17,7 +17,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientUuid
-import org.simple.clinic.registration.phone.LengthBasedNumberValidator
+import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
@@ -34,12 +34,7 @@ class UpdatePhoneNumberDialogLogicTest {
   private val ui = mock<UpdatePhoneNumberDialogUi>()
   private val uiActions = mock<UpdatePhoneNumberUiActions>()
   private val repository = mock<PatientRepository>()
-  private val validator = LengthBasedNumberValidator(
-      minimumRequiredLengthMobile = 6,
-      minimumRequiredLengthLandlinesOrMobile = 6,
-      maximumAllowedLengthMobile = 12,
-      maximumAllowedLengthLandlinesOrMobile = 12
-  )
+  private val validator = PhoneNumberValidator(minimumRequiredLength = 6)
 
   private val patientUuid = UUID.fromString("0c1c5a00-2416-4a41-8b9e-8059ac18df5d")
 
@@ -141,31 +136,6 @@ class UpdatePhoneNumberDialogLogicTest {
 
     verify(uiActions).preFillPhoneNumber(existingPhoneNumber.number)
     verify(uiActions).showPhoneNumberTooShortError(6)
-    verifyNoMoreInteractions(ui, uiActions)
-  }
-
-  @Test
-  fun `when save is clicked, the number should not be saved if it's too long and an error should be shown`() {
-    // given
-    val newNumber = "1234567890123"
-    val existingPhoneNumber = TestData.patientPhoneNumber(
-        uuid = UUID.fromString("0e4bf753-009b-4cd6-ae30-aa9935bf2ea6"),
-        patientUuid = patientUuid,
-        number = "1234567890"
-    )
-
-    whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Optional.of(existingPhoneNumber)))
-    whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.updatePhoneNumber(newNumber))).thenReturn(Completable.never())
-
-    // when
-    setupController(patientUuid = patientUuid)
-    uiEvents.onNext(UpdatePhoneNumberSaveClicked(newNumber))
-
-    // then
-    verify(repository, never()).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber.updatePhoneNumber(newNumber))
-
-    verify(uiActions).preFillPhoneNumber(existingPhoneNumber.number)
-    verify(uiActions).showPhoneNumberTooLongError(12)
     verifyNoMoreInteractions(ui, uiActions)
   }
 

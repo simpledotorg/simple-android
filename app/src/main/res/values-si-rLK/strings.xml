@@ -79,7 +79,6 @@
   <string name="patiententry_error_dateofbirth_is_in_future">රෝගියාගේ උපන්දිනය තහවුරු කරන්න</string>
   <string name="patiententry_error_phonenumber_blank">දුරකතන අංකය හිස්ව තැබිය නොහැක</string>
   <string name="patiententry_error_phonenumber_length_less">දුරකතන අංකය, අංක %1$s ට වඩා අඩු විය නොහැකිය</string>
-  <string name="patiententry_error_phonenumber_length_more">දුරකතන අංකය, අංක %1$s ට වඩා වැඩි විය නොහැකිය</string>
   <string name="patiententry_identifier_bp_passport">බීපී පාස්පෝර්ට්</string>
   <string name="patiententry_consent_header">කැමැත්ත ප්‍රකාශ කිරීම:\u0020</string>
   <string name="patiententry_consent_first_para">පහළ තට්ටු කිරීමෙන්, ඔබ මෙහි ඇතුලත් කරනු ලබන ඕනෑම රෝගියෙකුගේ දත්තයක් ම ඔහුගේ යෝග්‍ය හා දැනුවත් අභිමතය මත ලබාගත් දත්ත බවට තහවුරු කරනු ලැබේ. මෙහි අර්ථය වන්නේ, රෝගියෙකු හෝ නෛතික බාරකරු, ඔබ ඔවුන්ගේ පුද්ගලික දත්ත යෙදවුමට ඇතුලත් කරන බව දන්නා බවත්, කුමන දත්ත රැස් කරන්නේ ද යන්න අවබෝධ කර ගන්නා බවත්, එම දත්තයන්ට SMS, WhatsApp මඟින් හෝ යෙදවුමට සපයා ඇති දුරකතන අංක‍ය භාවිතයෙන් වෙනත් ක්‍රම වලට හෝ පිවිසිය හැකි බව දන්නා බවත්ය.</string>

@@ -10,7 +10,6 @@ import org.simple.clinic.editpatient.EditPatientValidationError.DateOfBirthParse
 import org.simple.clinic.editpatient.EditPatientValidationError.DistrictEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.FullNameEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
-import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooLong
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.mobius.dispatch
@@ -25,7 +24,7 @@ class EditPatientUpdate(
     private val ageValidator: UserInputAgeValidator
 ) : Update<EditPatientModel, EditPatientEvent, EditPatientEffect> {
   private val errorsForEventType = mapOf(
-      PhoneNumberChanged::class to setOf(PhoneNumberEmpty, PhoneNumberLengthTooLong(0), PhoneNumberLengthTooShort(0)),
+      PhoneNumberChanged::class to setOf(PhoneNumberEmpty, PhoneNumberLengthTooShort(0)),
       NameChanged::class to setOf(FullNameEmpty),
       ColonyOrVillageChanged::class to setOf(ColonyOrVillageEmpty),
       StateChanged::class to setOf(StateEmpty),

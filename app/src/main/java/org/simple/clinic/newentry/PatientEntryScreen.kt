@@ -573,14 +573,6 @@ class PatientEntryScreen : BaseScreen<
     }
   }
 
-  override fun showLengthTooLongPhoneNumberError(show: Boolean, requiredNumberLength: Int) {
-    if (show) {
-      phoneNumberInputLayout.error = getString(R.string.patiententry_error_phonenumber_length_more, requiredNumberLength.toString())
-    } else {
-      phoneNumberInputLayout.error = null
-    }
-  }
-
   override fun showMissingGenderError(show: Boolean) {
     if (show) {
       genderErrorTextView.visibility = View.VISIBLE

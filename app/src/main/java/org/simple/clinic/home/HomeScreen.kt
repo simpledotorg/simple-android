@@ -2,11 +2,14 @@ package org.simple.clinic.home
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
@@ -15,6 +18,11 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenHomeBinding
+import org.simple.clinic.deeplink.OpenPatientSummary
+import org.simple.clinic.deeplink.OpenPatientSummaryWithTeleconsultLog
+import org.simple.clinic.deeplink.ShowNoPatientUuid
+import org.simple.clinic.deeplink.ShowPatientNotFound
+import org.simple.clinic.deeplink.ShowTeleconsultNotAllowed
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.change.FacilityChangeScreen
 import org.simple.clinic.feature.Features
@@ -23,13 +31,19 @@ import org.simple.clinic.home.HomeTab.OVERDUE
 import org.simple.clinic.home.HomeTab.PATIENTS
 import org.simple.clinic.home.HomeTab.REPORTS
 import org.simple.clinic.home.help.HelpScreenKey
+import org.simple.clinic.main.TheActivity
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.settings.SettingsScreenKey
+import org.simple.clinic.summary.OpenIntention
+import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.hideKeyboard
+import java.time.Instant
+import java.util.UUID
 import javax.inject.Inject
 
 class HomeScreen :
@@ -124,6 +138,14 @@ class HomeScreen :
     // The WebView in "Progress" tab is expensive to load. Pre-instantiating
     // it when the app starts reduces its time-to-display.
     viewPager.offscreenPageLimit = REPORTS.ordinal - PATIENTS.ordinal
+
+    // Open deep links results at end of the queue, so that
+    // existing fragment transactions can be finished, or else
+    // the app crashes when `Router` executes pending transactions
+    // in fragment manager.
+    Handler(Looper.getMainLooper()).post {
+      handleDeepLinkResult()
+    }
   }
 
   override fun onDestroyView() {
@@ -183,6 +205,64 @@ class HomeScreen :
     val overdueTab = homeTabLayout.getTabAt(overdueTabIndex)
 
     overdueTab?.removeBadge()
+  }
+
+  private fun handleDeepLinkResult() {
+    val deepLinkResult = TheActivity.readDeepLinkResult(intent = requireActivity().intent)
+    when (deepLinkResult) {
+      is OpenPatientSummary -> showPatientSummary(deepLinkResult.patientUuid)
+      is OpenPatientSummaryWithTeleconsultLog -> showPatientSummaryWithTeleconsultLog(deepLinkResult.patientUuid, deepLinkResult.teleconsultRecordId)
+      ShowNoPatientUuid -> showNoPatientUuidErrorDialog()
+      ShowPatientNotFound -> showPatientNotFoundErrorDialog()
+      ShowTeleconsultNotAllowed -> showTeleconsultNotAllowedErrorDialog()
+      null -> {
+        //No-op
+      }
+    }.exhaustive()
+  }
+
+  private fun showPatientSummary(patientUuid: UUID) {
+    router.push(
+        PatientSummaryScreenKey(
+            patientUuid = patientUuid,
+            intention = OpenIntention.ViewExistingPatient,
+            screenCreatedTimestamp = Instant.now(utcClock)
+        )
+    )
+  }
+
+  private fun showPatientSummaryWithTeleconsultLog(patientUuid: UUID, teleconsultRecordId: UUID) {
+    router.push(
+        PatientSummaryScreenKey(
+            patientUuid = patientUuid,
+            intention = OpenIntention.ViewExistingPatientWithTeleconsultLog(teleconsultRecordId),
+            screenCreatedTimestamp = Instant.now(utcClock)
+        )
+    )
+  }
+
+  private fun showPatientNotFoundErrorDialog() {
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(R.string.deeplink_patient_profile_not_found)
+        .setMessage(R.string.deeplink_patient_profile_not_found_desc)
+        .setPositiveButton(R.string.deeplink_patient_profile_not_found_positive_action, null)
+        .show()
+  }
+
+  private fun showNoPatientUuidErrorDialog() {
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(R.string.deeplink_no_patient)
+        .setMessage(R.string.deeplink_no_patient_desc)
+        .setPositiveButton(R.string.deeplink_no_patient_positive_action, null)
+        .show()
+  }
+
+  private fun showTeleconsultNotAllowedErrorDialog() {
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(R.string.deeplink_medical_officer_not_authorised_to_log_teleconsult)
+        .setMessage(R.string.deeplink_please_check_with_your_supervisor)
+        .setPositiveButton(R.string.deeplink_okay_positive_action, null)
+        .show()
   }
 
   interface Injector {

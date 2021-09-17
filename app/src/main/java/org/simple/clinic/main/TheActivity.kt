@@ -49,6 +49,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.finishWithoutAnimations
+import org.simple.clinic.util.popWithParcelableResult
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
@@ -63,6 +64,10 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   companion object {
     private const val EXTRA_DEEP_LINK_RESULT = "TheActivity.EXTRA_DEEP_LINK_RESULT"
     private const val EXTRA_IS_FRESH_AUTHENTICATION = "TheActivity.EXTRA_IS_FRESH_AUTHENTICATION"
+
+    fun readDeepLinkResult(intent: Intent): DeepLinkResult? {
+      return intent.popWithParcelableResult(EXTRA_DEEP_LINK_RESULT)
+    }
 
     fun newIntent(
         context: Context,

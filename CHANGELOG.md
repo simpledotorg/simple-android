@@ -56,6 +56,10 @@
 - Add a unicode character instead of space in `DrugSearchScreen` search results
 - Updated translations: `mr-IN`, `bn-IN`, `bn-BD`, `kn-IN`, `pa-IN`, `am-ET`, `sid-ET`, `ta-LK`, `hi-IN`, `ti-ET`, `so-ET`, `si-LK`, `te-IN`, `ta-IN`, `om-ET`
 
+### Fixes
+
+- Fix patient summary going back to home screen when opening teleconsult links
+
 ## 2021-09-08-7939
 ### Internal
 

@@ -23,7 +23,6 @@ data class EnteredNumberValidated(val result: RegistrationPhoneValidationResult)
       val registrationPhoneValidationResult = when (result) {
         is PhoneNumberValidator.Result.ValidNumber -> RegistrationPhoneValidationResult.Valid
         is PhoneNumberValidator.Result.LengthTooShort -> RegistrationPhoneValidationResult.Invalid.TooShort
-        is PhoneNumberValidator.Result.LengthTooLong -> RegistrationPhoneValidationResult.Invalid.TooLong
         is PhoneNumberValidator.Result.Blank -> RegistrationPhoneValidationResult.Invalid.Blank
       }
 

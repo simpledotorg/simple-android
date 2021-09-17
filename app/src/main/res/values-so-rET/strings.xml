@@ -79,7 +79,6 @@
   <string name="patiententry_error_dateofbirth_is_in_future">Hagaaji taariikhda dhalashada bukaanka</string>
   <string name="patiententry_error_phonenumber_blank">Lambarka taleefanka ma noqon karo mid madhan</string>
   <string name="patiententry_error_phonenumber_length_less">Lambarka taleefanka kama yaraan karo%1$s lambar</string>
-  <string name="patiententry_error_phonenumber_length_more">Lambarka taleefanka kama badnaan karo %1$s lambar</string>
   <string name="patiententry_identifier_bp_passport">Baasaboorka BP</string>
   <string name="patiententry_consent_header">Ogolaanshi:\u0020</string>
   <string name="patiententry_consent_first_para">Adiga oo taabanaya hoosta, waxaad xaqiijineysaa in xog kasta oo bukaan ah oo aad halkan gasho lagu helay ogolaansho ku habboon oo la oggol yahay. Tan macnaheedu waa in bukaanku ama masuulka sharciga ah uu ogyahay inaad ku dareyso xogtooda shaqsi barnaamijka, fahmay waxa xogta la aruurinayo, uuna ogyahay in lagala soo xiriiri karo fariinta gaaban, WhatsApp, ama qaabab kale iyadoo la adeegsanayo lambarka taleefanka ee ku jira barnaamijka. .</string>

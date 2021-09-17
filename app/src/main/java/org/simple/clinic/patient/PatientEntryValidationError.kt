@@ -5,7 +5,6 @@ sealed class PatientEntryValidationError(val analyticsName: String) {
   object FullNameEmpty : PatientEntryValidationError("Patient Entry:Name is empty")
   object PhoneNumberNonNullButBlank : PatientEntryValidationError("Patient Entry:Phone Number is empty")
   data class PhoneNumberLengthTooShort(val limit: Int) : PatientEntryValidationError("Patient Entry:Phone Number is less than 6 digits")
-  data class PhoneNumberLengthTooLong(val limit: Int) : PatientEntryValidationError("Patient Entry:Phone Number is more than 12 digits")
   object BothDateOfBirthAndAgeAbsent : PatientEntryValidationError("Patient Entry:Age and DOB are both absent")
   object BothDateOfBirthAndAgePresent : PatientEntryValidationError("Patient Entry:Age and DOB are both present")
   object InvalidDateOfBirth : PatientEntryValidationError("Patient Entry:Invalid DOB")

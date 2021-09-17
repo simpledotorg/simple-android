@@ -38,7 +38,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.platform.analytics.Analytics
-import org.simple.clinic.registration.phone.LengthBasedNumberValidator
+import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
@@ -68,12 +68,7 @@ class PatientEntryScreenLogicTest {
   private val userSession = mock<UserSession>()
   private val userClock: UserClock = TestUserClock(LocalDate.parse("2018-01-01"))
   private val dobValidator = UserInputDateValidator(userClock, DateTimeFormatter.ofPattern("dd/MM/yyyy", ENGLISH))
-  private val numberValidator = LengthBasedNumberValidator(
-      minimumRequiredLengthMobile = 10,
-      maximumAllowedLengthMobile = 10,
-      minimumRequiredLengthLandlinesOrMobile = 6,
-      maximumAllowedLengthLandlinesOrMobile = 12
-  )
+  private val numberValidator = PhoneNumberValidator(minimumRequiredLength = 6)
   private val patientRegisteredCount = mock<Preference<Int>>()
   private val ageValidator = UserInputAgeValidator(userClock, DateTimeFormatter.ofPattern("dd/MM/yyyy", ENGLISH))
 
@@ -377,7 +372,6 @@ class PatientEntryScreenLogicTest {
     }
 
     // These get invoked every time the phone number changes
-    verify(validationActions, times(3)).showLengthTooLongPhoneNumberError(false, 0)
     verify(validationActions, times(3)).showLengthTooShortPhoneNumberError(false, 0)
 
     verify(validationActions, atLeastOnce()).showEmptyFullNameError(true)
@@ -388,7 +382,6 @@ class PatientEntryScreenLogicTest {
     verify(validationActions, atLeastOnce()).showEmptyDistrictError(true)
     verify(validationActions, atLeastOnce()).showEmptyStateError(true)
     verify(validationActions, atLeastOnce()).showLengthTooShortPhoneNumberError(true, 6)
-    verify(validationActions, atLeastOnce()).showLengthTooLongPhoneNumberError(true, 12)
   }
 
   @Test

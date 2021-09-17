@@ -25,7 +25,6 @@ import org.simple.clinic.editpatient.EditPatientValidationError.DateOfBirthParse
 import org.simple.clinic.editpatient.EditPatientValidationError.DistrictEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.FullNameEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
-import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooLong
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
@@ -41,7 +40,7 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PhoneNumberDetails
-import org.simple.clinic.registration.phone.LengthBasedNumberValidator
+import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -569,7 +568,7 @@ class EditPatientScreenSaveTest {
                 DistrictChanged("District"),
                 StateChanged("State"),
                 GenderChanged(Gender.Transgender),
-                PhoneNumberChanged("12345678901234")),
+                PhoneNumberChanged("12345")),
             shouldSavePatient = false),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = false),
@@ -792,28 +791,6 @@ class EditPatientScreenSaveTest {
         ),
         ValidateFieldsTestParams(
             TestData.patientPhoneNumber(),
-            "Name",
-            "",
-            "District",
-            "",
-            "1",
-            null,
-            setOf(PhoneNumberLengthTooLong(12), ColonyOrVillageEmpty, StateEmpty),
-            "12345678901234"
-        ),
-        ValidateFieldsTestParams(
-            null,
-            "Name",
-            "",
-            "District",
-            "",
-            null,
-            "24/24/2000",
-            setOf(PhoneNumberLengthTooLong(12), ColonyOrVillageEmpty, StateEmpty, DateOfBirthParseError),
-            "12345678901234"
-        ),
-        ValidateFieldsTestParams(
-            TestData.patientPhoneNumber(),
             "",
             "Colony",
             "District",
@@ -919,8 +896,6 @@ class EditPatientScreenSaveTest {
   private fun `params for validating phone numbers`(): List<ValidatePhoneNumberTestParams> {
     return listOf(
         ValidatePhoneNumberTestParams(null, "1234", PhoneNumberLengthTooShort(6)),
-        ValidatePhoneNumberTestParams(null, "12345678901234", PhoneNumberLengthTooLong(12)),
-        ValidatePhoneNumberTestParams(TestData.patientPhoneNumber(), "12345678901234", PhoneNumberLengthTooLong(12)),
         ValidatePhoneNumberTestParams(TestData.patientPhoneNumber(), "", PhoneNumberEmpty),
         ValidatePhoneNumberTestParams(TestData.patientPhoneNumber(), "1234", PhoneNumberLengthTooShort(6))
     )
@@ -974,12 +949,7 @@ class EditPatientScreenSaveTest {
         viewEffectsConsumer = viewEffectHandler::handle
     )
 
-    val numberValidator = LengthBasedNumberValidator(
-        minimumRequiredLengthMobile = 10,
-        maximumAllowedLengthMobile = 10,
-        minimumRequiredLengthLandlinesOrMobile = 6,
-        maximumAllowedLengthLandlinesOrMobile = 12
-    )
+    val numberValidator = PhoneNumberValidator(minimumRequiredLength = 6)
 
     val fixture = MobiusTestFixture<EditPatientModel, EditPatientEvent, EditPatientEffect>(
         events = uiEvents,

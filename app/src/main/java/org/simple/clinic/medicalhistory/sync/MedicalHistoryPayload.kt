@@ -24,6 +24,9 @@ data class MedicalHistoryPayload(
     @Json(name = "receiving_treatment_for_hypertension")
     val isOnTreatmentForHypertension: Answer,
 
+    @Json(name = "receiving_treatment_for_diabetes")
+    val isOnDiabetesTreatment: Answer?,
+
     @Json(name = "prior_heart_attack")
     val hasHadHeartAttack: Answer,
 
@@ -45,6 +48,7 @@ data class MedicalHistoryPayload(
 
     @Json(name = "updated_at")
     val updatedAt: Instant,
+
     @Json(name = "deleted_at")
     val deletedAt: Instant?
 )

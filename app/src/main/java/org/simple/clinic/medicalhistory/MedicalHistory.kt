@@ -34,6 +34,8 @@ data class MedicalHistory(
 
     val isOnHypertensionTreatment: Answer,
 
+    val isOnDiabetesTreatment: Answer,
+
     val hasHadHeartAttack: Answer,
 
     val hasHadStroke: Answer,

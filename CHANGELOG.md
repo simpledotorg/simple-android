@@ -36,6 +36,7 @@
 ### Fixes
 
 - Fix select country & state screen overlapping next button
+- Fix patient summary going back to home screen when opening teleconsult links
 
 ## Demo
 

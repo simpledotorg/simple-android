@@ -1,6 +1,7 @@
 package org.simple.clinic.teleconsultlog.prescription.medicines
 
 import org.simple.clinic.drugs.PrescribedDrug
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItems
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.widgets.UiEvent
 import java.time.Duration
@@ -35,3 +36,7 @@ data class DrugFrequencyChanged(
 ) : TeleconsultMedicinesEvent() {
   override val analyticsName: String = "Teleconsult Medicines:Drug Frequency Changed"
 }
+
+data class DrugFrequencyChoiceItemsLoaded(
+    val drugFrequencyChoiceItems: DrugFrequencyChoiceItems
+) : TeleconsultMedicinesEvent()

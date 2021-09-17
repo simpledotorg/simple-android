@@ -43,6 +43,7 @@ class MedicalHistorySync @Inject constructor(
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = diagnosedWithHypertension,
                 isOnTreatmentForHypertension = isOnHypertensionTreatment,
+                isOnDiabetesTreatment = isOnDiabetesTreatment,
                 hasHadHeartAttack = hasHadHeartAttack,
                 hasHadStroke = hasHadStroke,
                 hasHadKidneyDisease = hasHadKidneyDisease,

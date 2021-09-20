@@ -69,6 +69,7 @@ class EnterOtpUiRendererTest {
     verify(ui).hideResendSmsButton()
     verify(ui).showOtpEntryMode(BruteForceOtpEntryLocked(blockedUntil))
     verify(ui).showLimitReachedError(attemptsMade)
+    verify(ui).hideProgress()
     verifyNoMoreInteractions(ui)
   }
 

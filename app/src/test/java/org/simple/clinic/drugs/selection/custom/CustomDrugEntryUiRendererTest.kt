@@ -136,4 +136,24 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).setSheetTitle(null, null, frequencyLabel)
     verifyNoMoreInteractions(ui)
   }
+
+
+  @Test
+  fun `when add button is clicked and info is being added or updated, then show progress state in the save button`() {
+    // given
+    val frequencyLabel = "None"
+
+    // when
+    uiRenderer.render(defaultModel.drugInfoProgressStateLoaded().buttonProgressStateIsSaving())
+
+    // then
+    verify(ui).hideProgressBar()
+    verify(ui).showCustomDrugEntryUi()
+    verify(ui).hideRemoveButton()
+    verify(ui).setButtonTextAsAdd()
+    verify(ui).showKeyboard()
+    verify(ui).setSheetTitle(null, null, frequencyLabel)
+    verify(ui).showSaveButtonProgressState()
+    verifyNoMoreInteractions(ui)
+  }
 }

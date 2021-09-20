@@ -22,6 +22,9 @@ class CustomDrugEntryUiRenderer(
         setSheetTitle(model.drugName, model.dosage, model.drugFrequencyToFrequencyChoiceItemMap[model.frequency]!!.label)
 
       showDefaultDosagePlaceholder(model.dosage, model.dosageHasFocus)
+
+      if (model.isSaveButtonInProgressState)
+        ui.showSaveButtonProgressState()
     }
   }
 

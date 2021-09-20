@@ -27,6 +27,7 @@ class NewMedicalHistoryUiRenderer(
         ui.showDiabetesDiagnosisView()
         ui.hideDiabetesHistorySection()
         ui.renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, hasDiabetes)
+        renderDiabetesTreatmentQuestion(model)
       } else {
         ui.hideDiabetesDiagnosisView()
         ui.showDiabetesHistorySection()
@@ -35,6 +36,14 @@ class NewMedicalHistoryUiRenderer(
     }
 
     renderNextButton(model)
+  }
+
+  private fun renderDiabetesTreatmentQuestion(model: NewMedicalHistoryModel) {
+    if (model.showOngoingDiabetesTreatment) {
+      ui.showDiabetesTreatmentQuestion(model.ongoingMedicalHistoryEntry.isOnDiabetesTreatment)
+    } else {
+      ui.hideDiabetesTreatmentQuestion()
+    }
   }
 
   private fun renderHypertensionTreatmentQuestion(model: NewMedicalHistoryModel) {

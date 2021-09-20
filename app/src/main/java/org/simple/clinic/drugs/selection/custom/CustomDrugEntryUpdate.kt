@@ -75,10 +75,12 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       model: CustomDrugEntryModel,
       patientUuid: UUID
   ): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
-    return when (model.openAs) {
-      is OpenAs.New.FromDrugList -> dispatch(SaveCustomDrugToPrescription(patientUuid, model.drugName!!, model.dosage, model.rxNormCode, model.frequency))
-      is OpenAs.New.FromDrugName -> dispatch(SaveCustomDrugToPrescription(patientUuid, model.openAs.drugName, model.dosage, null, model.frequency))
-      is OpenAs.Update -> dispatch(UpdatePrescription(patientUuid, model.openAs.prescribedDrugUuid, model.drugName!!, model.dosage, model.rxNormCode, model.frequency))
+    val effect = when (model.openAs) {
+      is OpenAs.New.FromDrugList -> SaveCustomDrugToPrescription(patientUuid, model.drugName!!, model.dosage, model.rxNormCode, model.frequency)
+      is OpenAs.New.FromDrugName -> SaveCustomDrugToPrescription(patientUuid, model.openAs.drugName, model.dosage, null, model.frequency)
+      is OpenAs.Update -> UpdatePrescription(patientUuid, model.openAs.prescribedDrugUuid, model.drugName!!, model.dosage, model.rxNormCode, model.frequency)
     }
+
+    return next(model.buttonProgressStateIsSaving(), effect)
   }
 }

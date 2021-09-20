@@ -107,51 +107,51 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
-  fun `when add button is clicked and the sheet is opened in create mode from drug list with edited dosage and frequency values, then add the drug to the custom drug list`() {
+  fun `when add button is clicked and the sheet is opened in create mode from drug list with edited dosage and frequency values, then add the drug to the custom drug list and set button progress state to saving`() {
     val dosage = "200 mg"
     val frequency = OD
     val drugUuid = UUID.fromString("6106544f-2b18-410d-992b-81860a08f02a")
     val drug = TestData.drug(id = drugUuid, name = drugName)
-    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugList(drugUuid), dosagePlaceholder).drugNameLoaded(drugName).rxNormCodeEdited(drug.rxNormCode)
+    val model = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugList(drugUuid), dosagePlaceholder).drugNameLoaded(drugName).rxNormCodeEdited(drug.rxNormCode).dosageEdited(dosage).frequencyEdited(frequency)
 
     updateSpec
-        .given(defaultModel.dosageEdited(dosage).frequencyEdited(frequency))
+        .given(model)
         .whenEvent(AddMedicineButtonClicked(patientUuid))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(model.buttonProgressStateIsSaving()),
             hasEffects(SaveCustomDrugToPrescription(patientUuid, drugName, dosage, drug.rxNormCode, frequency))
         ))
   }
 
 
   @Test
-  fun `when add button is clicked and the sheet is opened in create mode from drug name with edited dosage and frequency values, then add the drug to the custom drug list`() {
+  fun `when add button is clicked and the sheet is opened in create mode from drug name with edited dosage and frequency values, then add the drug to the custom drug list and set button progress state to saving`() {
     val dosage = "200 mg"
     val frequency = OD
-    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(drugName), dosagePlaceholder).drugNameLoaded(drugName)
+    val model = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(drugName), dosagePlaceholder).drugNameLoaded(drugName).dosageEdited(dosage).frequencyEdited(frequency)
 
     updateSpec
-        .given(defaultModel.dosageEdited(dosage).frequencyEdited(frequency))
+        .given(model)
         .whenEvent(AddMedicineButtonClicked(patientUuid))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(model.buttonProgressStateIsSaving()),
             hasEffects(SaveCustomDrugToPrescription(patientUuid, drugName, dosage, null, frequency))
         ))
   }
 
   @Test
-  fun `when save button is clicked, then update the prescription in the repository`() {
+  fun `when save button is clicked, then update the prescription in the repository and set button progress state to saving`() {
     val dosage = "200 mg"
     val frequency = OD
     val prescribedDrugUuid = UUID.fromString("96633994-6e4d-4528-b796-f03ae016553a")
-    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.Update(prescribedDrugUuid), dosagePlaceholder)
+    val model = CustomDrugEntryModel.default(openAs = OpenAs.Update(prescribedDrugUuid), dosagePlaceholder).drugNameLoaded(drugName).dosageEdited(dosage).frequencyEdited(frequency)
 
     updateSpec
-        .given(defaultModel.drugNameLoaded(drugName).dosageEdited(dosage).frequencyEdited(frequency))
+        .given(model)
         .whenEvent(AddMedicineButtonClicked(patientUuid))
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(model.buttonProgressStateIsSaving()),
                 hasEffects(UpdatePrescription(patientUuid, prescribedDrugUuid, drugName, dosage, null, frequency))
             )
         )

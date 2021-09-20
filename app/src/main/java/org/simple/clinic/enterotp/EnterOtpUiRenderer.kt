@@ -41,6 +41,7 @@ class EnterOtpUiRenderer(
     when (model.protectedState) {
       is Allowed -> {
         ui.showOtpEntryMode(OtpEntry)
+        ui.showResendSmsButton()
         generateUiForAllowingOtpEntry(
             model.hasNoIncorrectPinEntries,
             model.hasReachedMinPinRetries,

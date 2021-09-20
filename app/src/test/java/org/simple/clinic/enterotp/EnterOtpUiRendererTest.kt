@@ -30,6 +30,7 @@ class EnterOtpUiRendererTest {
     verify(ui).showOtpEntryMode(OtpEntry)
     verify(ui).hideError()
     verify(ui).hideProgress()
+    verify(ui).showResendSmsButton()
   }
 
   @Test
@@ -47,6 +48,7 @@ class EnterOtpUiRendererTest {
     verify(ui).showOtpEntryMode(OtpEntry)
     verify(ui).showIncorrectOtpError()
     verify(ui).hideProgress()
+    verify(ui).showResendSmsButton()
   }
 
   @Test
@@ -81,5 +83,6 @@ class EnterOtpUiRendererTest {
     verify(ui).showOtpEntryMode(OtpEntry)
     verify(ui).showFailedAttemptOtpError(attemptsRemaining)
     verify(ui).hideProgress()
+    verify(ui).showResendSmsButton()
   }
 }

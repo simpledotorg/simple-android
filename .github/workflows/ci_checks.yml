@@ -218,18 +218,9 @@ jobs:
     runs-on: [ ubuntu-latest ]
     if: github.event_name == 'pull_request'
     steps:
+      - uses: actions/checkout@v2
       - name: Verify PR description
-        run: |
-          QUOTED_PR_DESCRIPTION="$(printf "%q" "${{github.event.pull_request.body}}")"
-          PR_DESCRIPTION="$QUOTED_PR_DESCRIPTION"
-          STORY_LINK_REGEX='https:\/\/app.shortcut.com\/simpledotorg\/story\/[0-9]+\/[A-Za-z0-9_-]+'
-
-          if [[ $PR_DESCRIPTION =~ $STORY_LINK_REGEX ]]; then
-            exit 0
-          else
-            echo "PR description doesn't contain a valid story link"
-            exit 1
-          fi
+        run: kotlinc -script ".github/scripts/PrCommentCheck.main.kts" "${{ github.event.pull_request.body }}"
 
   verify_changelog_updated:
     runs-on: [ ubuntu-latest ]

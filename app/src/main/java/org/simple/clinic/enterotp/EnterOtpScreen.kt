@@ -6,6 +6,7 @@ import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
@@ -194,7 +195,7 @@ class EnterOtpScreen : BaseScreen<
   private fun showError(error: String) {
     smsSentTextView.visibility = View.GONE
     errorTextView.text = error
-    errorTextView.visibility = View.VISIBLE
+    errorTextView.visibility = VISIBLE
   }
 
   override fun hideError() {
@@ -203,18 +204,18 @@ class EnterOtpScreen : BaseScreen<
 
   override fun showProgress() {
     TransitionManager.beginDelayedTransition(rootLayout)
-    validateOtpProgressBar.visibility = View.VISIBLE
+    validateOtpProgressBar.visibility = VISIBLE
     otpEntryContainer.visibility = View.INVISIBLE
   }
 
   override fun hideProgress() {
     TransitionManager.beginDelayedTransition(rootLayout)
     validateOtpProgressBar.visibility = View.INVISIBLE
-    otpEntryContainer.visibility = View.VISIBLE
+    otpEntryContainer.visibility = VISIBLE
   }
 
   override fun showSmsSentMessage() {
-    smsSentTextView.visibility = View.VISIBLE
+    smsSentTextView.visibility = VISIBLE
   }
 
   override fun showOtpEntryMode(mode: OtpEntryMode) {
@@ -247,7 +248,7 @@ class EnterOtpScreen : BaseScreen<
   }
 
   override fun showResendSmsButton() {
-    resendSmsButton.visibility = View.VISIBLE
+    resendSmsButton.visibility = VISIBLE
   }
 
   override fun hideResendSmsButton() {

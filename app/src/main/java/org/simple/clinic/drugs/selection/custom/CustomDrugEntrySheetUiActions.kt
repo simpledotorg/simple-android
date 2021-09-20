@@ -13,4 +13,5 @@ interface CustomDrugEntrySheetUiActions {
   fun setDrugDosage(dosage: String?)
   fun closeSheetAndGoToEditMedicineScreen()
   fun hideKeyboard()
+  fun showKeyboard()
 }

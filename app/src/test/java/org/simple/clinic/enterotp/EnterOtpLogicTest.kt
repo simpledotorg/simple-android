@@ -105,6 +105,7 @@ class EnterOtpLogicTest {
     verify(ui).hideProgress()
     verify(ui, times(3)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(3)).hideError()
+    verify(ui, times(3)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -125,6 +126,7 @@ class EnterOtpLogicTest {
     verify(ui, times(2)).hideProgress()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -146,6 +148,7 @@ class EnterOtpLogicTest {
     verify(ui).hideProgress()
     verify(ui, times(4)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(4)).hideError()
+    verify(ui, times(4)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -166,6 +169,7 @@ class EnterOtpLogicTest {
     verify(ui, times(2)).hideProgress()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -188,6 +192,7 @@ class EnterOtpLogicTest {
     verify(ui).hideProgress()
     verify(ui, times(4)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(4)).hideError()
+    verify(ui, times(4)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -208,6 +213,7 @@ class EnterOtpLogicTest {
     verify(ui, times(2)).hideProgress()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -227,6 +233,7 @@ class EnterOtpLogicTest {
     verify(ui, times(2)).hideProgress()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -247,6 +254,7 @@ class EnterOtpLogicTest {
     verify(ui, times(2)).hideProgress()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -268,6 +276,7 @@ class EnterOtpLogicTest {
     verify(uiActions).showUnexpectedError()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
     verify(dataSync, never()).fireAndForgetSync()
   }
@@ -290,6 +299,7 @@ class EnterOtpLogicTest {
     verify(uiActions).showNetworkError()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
     verify(dataSync, never()).fireAndForgetSync()
   }
@@ -312,6 +322,7 @@ class EnterOtpLogicTest {
     verify(uiActions).clearPin()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
     verify(dataSync, never()).fireAndForgetSync()
   }
@@ -334,6 +345,7 @@ class EnterOtpLogicTest {
     verify(uiActions).showUnexpectedError()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -355,6 +367,7 @@ class EnterOtpLogicTest {
     verify(uiActions).showNetworkError()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -375,6 +388,7 @@ class EnterOtpLogicTest {
     verify(ui, times(2)).hideProgress()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -394,6 +408,7 @@ class EnterOtpLogicTest {
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui, times(4)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(4)).hideError()
+    verify(ui, times(4)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -413,6 +428,7 @@ class EnterOtpLogicTest {
     verify(ui).showProgress()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -434,6 +450,7 @@ class EnterOtpLogicTest {
     verify(uiActions).showNetworkError()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -454,6 +471,7 @@ class EnterOtpLogicTest {
     verify(uiActions).clearPin()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -475,6 +493,7 @@ class EnterOtpLogicTest {
     verify(uiActions).showUnexpectedError()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -495,6 +514,7 @@ class EnterOtpLogicTest {
     verify(ui).hideProgress()
     verify(ui, times(3)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(3)).hideError()
+    verify(ui, times(3)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -515,6 +535,7 @@ class EnterOtpLogicTest {
     verify(ui).hideProgress()
     verify(ui, times(3)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(3)).hideError()
+    verify(ui, times(3)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -539,6 +560,7 @@ class EnterOtpLogicTest {
     verify(uiActions).clearPin()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -562,6 +584,7 @@ class EnterOtpLogicTest {
     verify(uiActions).clearPin()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -585,6 +608,7 @@ class EnterOtpLogicTest {
     verify(uiActions).clearPin()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -608,6 +632,7 @@ class EnterOtpLogicTest {
     verify(uiActions).clearPin()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -630,6 +655,7 @@ class EnterOtpLogicTest {
     verify(uiActions).clearPin()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -652,6 +678,7 @@ class EnterOtpLogicTest {
     verify(uiActions).clearPin()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -674,6 +701,7 @@ class EnterOtpLogicTest {
     verify(uiActions).clearPin()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -697,6 +725,7 @@ class EnterOtpLogicTest {
     verify(uiActions).clearPin()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -721,6 +750,7 @@ class EnterOtpLogicTest {
     verify(uiActions).clearPin()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -744,6 +774,7 @@ class EnterOtpLogicTest {
     verify(uiActions).clearPin()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -767,6 +798,7 @@ class EnterOtpLogicTest {
     verify(uiActions).clearPin()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -791,6 +823,7 @@ class EnterOtpLogicTest {
     verify(uiActions).showSmsSentMessage()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -814,6 +847,7 @@ class EnterOtpLogicTest {
     verify(uiActions).clearPin()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -837,6 +871,7 @@ class EnterOtpLogicTest {
     verify(uiActions).clearPin()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -858,6 +893,7 @@ class EnterOtpLogicTest {
     verify(ui, times(2)).hideProgress()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verify(uiActions).clearPin()
     verifyNoMoreInteractions(ui, uiActions)
   }
@@ -882,6 +918,7 @@ class EnterOtpLogicTest {
     verify(ui, times(2)).hideProgress()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -904,6 +941,7 @@ class EnterOtpLogicTest {
     verify(ui).showProgress()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -926,6 +964,7 @@ class EnterOtpLogicTest {
     verify(ui, times(2)).hideProgress()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -946,6 +985,7 @@ class EnterOtpLogicTest {
     verify(ui, times(2)).hideProgress()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 
@@ -968,6 +1008,7 @@ class EnterOtpLogicTest {
     verify(uiActions).showNetworkError()
     verify(ui, times(5)).showOtpEntryMode(OtpEntryMode.OtpEntry)
     verify(ui, times(5)).hideError()
+    verify(ui, times(5)).showResendSmsButton()
     verifyNoMoreInteractions(ui, uiActions)
   }
 

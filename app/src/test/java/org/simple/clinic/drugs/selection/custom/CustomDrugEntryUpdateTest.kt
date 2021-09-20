@@ -234,7 +234,7 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
-  fun `when drug is fetched, then update the model with drug values, set drug frequency, dosage and update the progress state to done`() {
+  fun `when drug is fetched, then update the model with drug values, set drug frequency, dosage and show keyboard`() {
     val drugUuid = UUID.fromString("6bbc5bbe-863c-472a-b962-1fd3198e20d1")
     val drug = TestData.drug(id = drugUuid, frequency = OD)
     val frequencyRes = "OD"
@@ -251,7 +251,7 @@ class CustomDrugEntryUpdateTest {
                     .frequencyEdited(drug.frequency)
                     .rxNormCodeEdited(drug.rxNormCode)
                     .drugInfoProgressStateLoaded()),
-                hasEffects(SetDrugFrequency(frequencyRes), SetDrugDosage(drug.dosage))
+                hasEffects(SetDrugFrequency(frequencyRes), SetDrugDosage(drug.dosage), ShowKeyboard)
             )
         )
   }

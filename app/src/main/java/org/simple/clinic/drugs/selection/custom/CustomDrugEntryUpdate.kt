@@ -53,7 +53,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
         .rxNormCodeEdited(drug.rxNormCode)
         .drugInfoProgressStateLoaded()
 
-    return next(updatedModel, SetDrugFrequency(model.drugFrequencyToFrequencyChoiceItemMap!![drug.frequency]!!.label), SetDrugDosage(drug.dosage))
+    return next(updatedModel, SetDrugFrequency(model.drugFrequencyToFrequencyChoiceItemMap!![drug.frequency]!!.label), SetDrugDosage(drug.dosage), ShowKeyboard)
   }
 
   private fun prescriptionFetched(

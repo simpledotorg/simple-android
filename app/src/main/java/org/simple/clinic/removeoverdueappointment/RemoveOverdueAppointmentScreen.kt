@@ -60,7 +60,7 @@ class RemoveOverdueAppointmentScreen : BaseScreen<
   private val removalReasonsRecyclerView
     get() = binding.removalReasonsRecyclerView
 
-  override fun defaultModel() = RemoveOverdueModel.create(screenKey.appointment.uuid, screenKey.appointment.patientUuid)
+  override fun defaultModel() = RemoveOverdueModel.create(screenKey.appointment)
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenRemoveOverdueAppointmentBinding.inflate(layoutInflater, container, false)

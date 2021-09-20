@@ -3,6 +3,7 @@ package org.simple.clinic.removeoverdueappointment
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.contactpatient.RemoveAppointmentReason
+import org.simple.clinic.overdue.Appointment
 import java.util.UUID
 
 @Parcelize
@@ -17,9 +18,9 @@ data class RemoveOverdueModel(
 
   companion object {
 
-    fun create(appointmentId: UUID, patientId: UUID) = RemoveOverdueModel(
-        appointmentId = appointmentId,
-        patientId = patientId,
+    fun create(appointment: Appointment) = RemoveOverdueModel(
+        appointmentId = appointment.uuid,
+        patientId = appointment.patientUuid,
         selectedReason = null
     )
   }

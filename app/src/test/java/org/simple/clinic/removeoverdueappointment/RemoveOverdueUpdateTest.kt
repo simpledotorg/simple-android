@@ -7,6 +7,7 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.contactpatient.RemoveAppointmentReason
 import org.simple.clinic.overdue.AppointmentCancelReason
 import java.util.UUID
@@ -16,7 +17,11 @@ class RemoveOverdueUpdateTest {
   private val updateSpec = UpdateSpec(RemoveOverdueUpdate())
   private val appointmentId = UUID.fromString("05dbff2d-b90a-4e64-a597-332c8cf115ff")
   private val patientId = UUID.fromString("a5856e14-5e81-4776-a50c-59115e1f09de")
-  private val defaultModel = RemoveOverdueModel.create(appointmentId, patientId)
+  private val appointment = TestData.appointment(
+      uuid = appointmentId,
+      patientUuid = patientId
+  )
+  private val defaultModel = RemoveOverdueModel.create(appointment)
 
   @Test
   fun `when remove appointment reason is clicked, then update the UI`() {

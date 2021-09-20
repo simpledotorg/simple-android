@@ -6,7 +6,6 @@ import com.spotify.mobius.Update
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.search.Drug
 import org.simple.clinic.drugs.search.DrugFrequency
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import java.util.UUID
@@ -41,11 +40,6 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
     val drugFrequencyToFrequencyChoiceItemMap = event.drugFrequencyChoiceItems.items.associateBy({ it.drugFrequency }, { it })
     return next(model.drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap))
   }
-
-  private fun getIndexOfDrugFrequencyChoiceItem(
-      drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>,
-      frequency: DrugFrequency?
-  ) = drugFrequencyChoiceItems.map { it.drugFrequency }.indexOf(frequency)
 
   private fun drugFetched(
       model: CustomDrugEntryModel,

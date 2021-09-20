@@ -47,6 +47,7 @@ class EnterOtpUiRenderer(
             model.protectedState.attemptsRemaining)
       }
       is Blocked -> {
+        ui.hideResendSmsButton()
         ui.showOtpEntryMode(BruteForceOtpEntryLocked(model.protectedState.blockedTill))
         ui.showLimitReachedError(model.protectedState.attemptsMade)
       }

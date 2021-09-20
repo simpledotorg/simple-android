@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
@@ -243,6 +244,10 @@ class EnterOtpScreen : BaseScreen<
 
   override fun showLimitReachedError(attemptsMade: Int) {
     showError(resources.getString(R.string.otpentry_error_incorrect_otp_attempts_limit_reached, attemptsMade.toString()))
+  }
+
+  override fun hideResendSmsButton() {
+    resendSmsButton.visibility = GONE
   }
 
   override fun showFailedAttemptOtpError(attemptsRemaining: Int) {

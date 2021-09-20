@@ -10,4 +10,5 @@ interface EnterOtpUi {
   fun showOtpEntryMode(mode: OtpEntryMode)
   fun showFailedAttemptOtpError(attemptsRemaining: Int)
   fun showLimitReachedError(attemptsMade: Int)
+  fun hideResendSmsButton()
 }

@@ -3,6 +3,7 @@ package org.simple.clinic.enterotp
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState.Allowed
 import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState.Blocked
@@ -30,6 +31,8 @@ class EnterOtpUiRendererTest {
     verify(ui).showOtpEntryMode(OtpEntry)
     verify(ui).hideError()
     verify(ui).hideProgress()
+    verify(ui).showResendSmsButton()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -47,6 +50,8 @@ class EnterOtpUiRendererTest {
     verify(ui).showOtpEntryMode(OtpEntry)
     verify(ui).showIncorrectOtpError()
     verify(ui).hideProgress()
+    verify(ui).showResendSmsButton()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -61,8 +66,11 @@ class EnterOtpUiRendererTest {
     uiRenderer.render(updatedModel)
 
     // then
+    verify(ui).hideResendSmsButton()
     verify(ui).showOtpEntryMode(BruteForceOtpEntryLocked(blockedUntil))
     verify(ui).showLimitReachedError(attemptsMade)
+    verify(ui).hideProgress()
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -80,5 +88,7 @@ class EnterOtpUiRendererTest {
     verify(ui).showOtpEntryMode(OtpEntry)
     verify(ui).showFailedAttemptOtpError(attemptsRemaining)
     verify(ui).hideProgress()
+    verify(ui).showResendSmsButton()
+    verifyNoMoreInteractions(ui)
   }
 }

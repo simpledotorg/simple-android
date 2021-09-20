@@ -24,6 +24,7 @@
 - Show alpha numeric keyboard for national ID text field in patient entry and edit screen
 - Remove maximum character limit for phone numbers
 - Add diabetes treatment question in medical history screen
+- Hide resend sms button when OTP attempts are blocked
 - [In Progress: 19 Aug 2021] UI improvements for medical history screen
   - Show hypertension diagnosis and treatment in single card
   - Show separate cards for hypertension and diabetes diagnosis

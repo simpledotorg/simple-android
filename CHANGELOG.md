@@ -15,6 +15,7 @@
 - Add support for syncing diabetes treatment question
 - Use `Object` class for parsing old `Country` json
 - Use Kotlin script for PR comment check GH Action
+- Bump Kotlin to v1.5.31
 - [In Progress: 16 Sep 2021] Record call results instead of updating the same appointment record
 - [In Progress: 31 Aug 2021] Refactor logic around providing drug frequencies label depending on the country
 - [In Progress: 2 Sep 2021] Add a progress state in `CustomDrugEntrySheet`

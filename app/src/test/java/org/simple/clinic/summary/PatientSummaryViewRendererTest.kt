@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityConfig
+import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.user.User
@@ -70,7 +71,10 @@ class PatientSummaryViewRendererTest {
   fun `when profile summary is loaded, then populate patient profile and show edit button`() {
     // given
     val patientUuid = UUID.fromString("873e001f-fdc7-4e27-a734-5c9f15b22cdc")
-    val patient = TestData.patient(patientUuid)
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        status = PatientStatus.Active
+    )
     val patientAddress = TestData.patientAddress(patient.addressUuid)
     val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
     val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", Identifier.IdentifierType.BpPassport))
@@ -96,6 +100,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).populatePatientProfile(patientSummaryProfile)
     verify(ui).showEditButton()
     verify(ui).hideAssignedFacilityView()
+    verify(ui).hidePatientDiedStatus()
     verifyNoMoreInteractions(ui)
   }
 
@@ -155,7 +160,11 @@ class PatientSummaryViewRendererTest {
   fun `show assigned facility view if patient has assigned facility`() {
     // given
     val patientUuid = UUID.fromString("873e001f-fdc7-4e27-a734-5c9f15b22cdc")
-    val patient = TestData.patient(uuid = patientUuid, assignedFacilityId = UUID.fromString("170049b2-9a97-4da4-a46c-d791751819fd"))
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        assignedFacilityId = UUID.fromString("170049b2-9a97-4da4-a46c-d791751819fd"),
+        status = PatientStatus.Active
+    )
     val patientAddress = TestData.patientAddress(patient.addressUuid)
     val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
     val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", Identifier.IdentifierType.BpPassport))
@@ -181,6 +190,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).populatePatientProfile(patientSummaryProfile)
     verify(ui).showEditButton()
     verify(ui).showAssignedFacilityView()
+    verify(ui).hidePatientDiedStatus()
     verifyNoMoreInteractions(ui)
   }
 
@@ -190,7 +200,8 @@ class PatientSummaryViewRendererTest {
     val patientUuid = UUID.fromString("873e001f-fdc7-4e27-a734-5c9f15b22cdc")
     val patient = TestData.patient(
         uuid = patientUuid,
-        assignedFacilityId = null
+        assignedFacilityId = null,
+        status = PatientStatus.Active
     )
     val patientAddress = TestData.patientAddress(patient.addressUuid)
     val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
@@ -217,6 +228,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).populatePatientProfile(patientSummaryProfile)
     verify(ui).showEditButton()
     verify(ui).hideAssignedFacilityView()
+    verify(ui).hidePatientDiedStatus()
     verifyNoMoreInteractions(ui)
   }
 
@@ -239,6 +251,42 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideTeleconsultButton()
     verify(ui).hideDoneButton()
     verify(ui).showTeleconsultLogButton()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when patient is not dead, then hide patient died status view`() {
+    // given
+    val patientUuid = UUID.fromString("53223c27-405c-4bbf-87e7-0bb35207c955")
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        status = PatientStatus.Active
+    )
+    val patientAddress = TestData.patientAddress(patient.addressUuid)
+    val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
+    val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", Identifier.IdentifierType.BpPassport))
+    val bangladeshNationalId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", Identifier.IdentifierType.BangladeshNationalId))
+    val facility = TestData.facility(uuid = UUID.fromString("a8a541d3-7cc4-492b-92f3-4fac3e4b88f8"))
+
+    val patientSummaryProfile = PatientSummaryProfile(
+        patient = patient,
+        address = patientAddress,
+        phoneNumber = phoneNumber,
+        bpPassport = bpPassport,
+        alternativeId = bangladeshNationalId,
+        facility = facility
+    )
+
+    val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).populatePatientProfile(patientSummaryProfile)
+    verify(ui).showEditButton()
+    verify(ui).hideAssignedFacilityView()
+    verify(ui).hidePatientDiedStatus()
     verifyNoMoreInteractions(ui)
   }
 }

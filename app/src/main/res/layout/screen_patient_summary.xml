@@ -152,6 +152,21 @@
       android:layout_height="wrap_content"
       android:orientation="vertical">
 
+      <org.simple.clinic.widgets.PatientStatusView
+        android:id="@+id/patientDiedStatusView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_8"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:layout_marginEnd="@dimen/spacing_8"
+        android:visibility="gone"
+        app:cardBackgroundColor="?attr/colorError"
+        app:statusIcon="@drawable/ic_patient_dead"
+        app:statusIconTint="?attr/colorOnError"
+        app:statusText="@string/patient_status_died"
+        app:statusTextColor="?attr/colorOnError"
+        tools:visibility="visible" />
+
       <org.simple.clinic.summary.prescribeddrugs.DrugSummaryView
         android:id="@+id/drugSummaryView"
         android:layout_width="match_parent"

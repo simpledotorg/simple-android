@@ -4,12 +4,10 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.contactpatient.RemoveAppointmentReason
 import org.simple.clinic.overdue.Appointment
-import java.util.UUID
 
 @Parcelize
 data class RemoveOverdueModel(
-    val appointmentId: UUID,
-    val patientId: UUID,
+    val appointment: Appointment,
     val selectedReason: RemoveAppointmentReason?
 ) : Parcelable {
 
@@ -19,8 +17,7 @@ data class RemoveOverdueModel(
   companion object {
 
     fun create(appointment: Appointment) = RemoveOverdueModel(
-        appointmentId = appointment.uuid,
-        patientId = appointment.patientUuid,
+        appointment = appointment,
         selectedReason = null
     )
   }

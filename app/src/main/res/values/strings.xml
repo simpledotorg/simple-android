@@ -863,4 +863,7 @@
   <string name="select_state_servererror">Server error! Please try again later!</string>
   <string name="select_state_genericerror">Something went wrong! Please try again later!</string>
 
+  <!-- Patient status view -->
+  <string name="patient_status_died">Died</string>
+
 </resources>

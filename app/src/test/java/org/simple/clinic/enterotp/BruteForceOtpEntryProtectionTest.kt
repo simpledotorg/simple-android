@@ -53,7 +53,7 @@ class BruteForceOtpEntryProtectionTest {
   }
 
   @Test
-  fun `when incrementing the otp failed attempts and the otp limit was already reached then the blocked-at time should not be updated`() {
+  fun `when otp limit was already reached then the blocked-at time and the number of attempts should not be updated`() {
     val timeOfLastAttempt = Instant.now(clock)
     val bruteForceOtpProtectionState = BruteForceOtpProtectionState(
         failedLoginOtpAttempt = config.limitOfFailedAttempts,
@@ -64,7 +64,7 @@ class BruteForceOtpEntryProtectionTest {
     bruteForceOtpEntryProtection.incrementFailedOtpAttempt()
 
     verify(preferenceState).set(BruteForceOtpProtectionState(
-        failedLoginOtpAttempt = config.limitOfFailedAttempts + 1,
+        failedLoginOtpAttempt = config.limitOfFailedAttempts,
         limitReachedAt = Optional.of(timeOfLastAttempt)))
   }
 }

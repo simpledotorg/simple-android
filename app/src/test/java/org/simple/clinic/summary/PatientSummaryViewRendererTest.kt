@@ -289,4 +289,40 @@ class PatientSummaryViewRendererTest {
     verify(ui).hidePatientDiedStatus()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when patient is dead, then show patient died status view`() {
+    // given
+    val patientUuid = UUID.fromString("830a8adc-b4d1-4b30-8b22-e8ee2412693b")
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        status = PatientStatus.Dead
+    )
+    val patientAddress = TestData.patientAddress(patient.addressUuid)
+    val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
+    val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", Identifier.IdentifierType.BpPassport))
+    val bangladeshNationalId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", Identifier.IdentifierType.BangladeshNationalId))
+    val facility = TestData.facility(uuid = UUID.fromString("0dae915f-7a4f-458d-9434-10d783ec3f33"))
+
+    val patientSummaryProfile = PatientSummaryProfile(
+        patient = patient,
+        address = patientAddress,
+        phoneNumber = phoneNumber,
+        bpPassport = bpPassport,
+        alternativeId = bangladeshNationalId,
+        facility = facility
+    )
+
+    val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).populatePatientProfile(patientSummaryProfile)
+    verify(ui).showEditButton()
+    verify(ui).hideAssignedFacilityView()
+    verify(ui).showPatientDiedStatus()
+    verifyNoMoreInteractions(ui)
+  }
 }

@@ -26,7 +26,9 @@ class PatientSummaryViewRenderer(
   }
 
   private fun renderPatientDiedStatus(model: PatientSummaryModel) {
-    if (!model.hasPatientDied) {
+    if (model.hasPatientDied) {
+      ui.showPatientDiedStatus()
+    } else {
       ui.hidePatientDiedStatus()
     }
   }

@@ -593,6 +593,10 @@ class PatientSummaryScreen :
     patientDiedStatusView.visibility = GONE
   }
 
+  override fun showPatientDiedStatus() {
+    patientDiedStatusView.visibility = VISIBLE
+  }
+
   interface Injector {
     fun inject(target: PatientSummaryScreen)
   }

@@ -23,6 +23,9 @@ import org.simple.clinic.databinding.ScreenDrugsSearchBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.selection.custom.CustomDrugEntrySheet
 import org.simple.clinic.drugs.selection.custom.OpenAs
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItems
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -48,6 +51,11 @@ class DrugsSearchScreen : BaseScreen<
 
   @Inject
   lateinit var router: Router
+
+  @Inject
+  lateinit var drugFrequencyFactory: DrugFrequencyFactory
+
+  private var drugFrequencyToFrequencyChoiceItemMap: Map<DrugFrequency?, DrugFrequencyChoiceItem>? = null
 
   private val adapter = PagingItemAdapter(
       diffCallback = DrugSearchListItem.DiffCallback(),
@@ -104,6 +112,9 @@ class DrugsSearchScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+
+    val drugFrequencyChoiceItems = DrugFrequencyChoiceItems(drugFrequencyFactory.provideFields())
+    drugFrequencyToFrequencyChoiceItemMap = drugFrequencyChoiceItems.items.associateBy({ it.drugFrequency }, { it })
 
     drugSearchToolbar.setNavigationOnClickListener {
       router.pop()

@@ -13,7 +13,6 @@
 - Unify appointment cancellation flow in `RemoveOverdueScreen`
 - Implement showing medicine frequency labels depending on the country in `TeleconsultMedicinesView` and `MedicineFrequencySheet`
 - Add support for syncing diabetes treatment question
-- Use `Object` class for parsing old `Country` json
 - Use Kotlin script for PR comment check GH Action
 - Bump Kotlin to v1.5.31
 - Remove overdue list changes feature flag
@@ -23,8 +22,6 @@
 
 ### Changes
 
-- Show alpha numeric keyboard for national ID text field in patient entry and edit screen
-- Remove maximum character limit for phone numbers
 - Add diabetes treatment question in medical history screen
 - Hide resend sms button when OTP attempts are blocked
 - Show patient died status in patient summary screen
@@ -42,9 +39,8 @@
 ### Fixes
 
 - Fix select country & state screen overlapping next button
-- Fix patient summary going back to home screen when opening teleconsult links
 
-## Demo
+## 2021-09-20-7952
 
 ### Internal
 
@@ -63,6 +59,7 @@
 - Change `EditPatientScreen` to use Mobius view effects
 - Update `.editorconfig` rules
 - Show facilities from selected state during sign up
+- Use `Object` class for parsing old `Country` json
 
 ### Features
 
@@ -78,6 +75,12 @@
 - Add a unicode character instead of space in `DrugSearchScreen` search results
 - Updated translations: `mr-IN`, `bn-IN`, `bn-BD`, `kn-IN`, `pa-IN`, `am-ET`, `sid-ET`, `ta-LK`, `hi-IN`, `ti-ET`, `so-ET`, `si-LK`, `te-IN`, `ta-IN`
   , `om-ET`
+- Show alpha numeric keyboard for national ID text field in patient entry and edit screen
+- Remove maximum character limit for phone numbers
+
+### Fixes
+
+- Fix patient summary going back to home screen when opening teleconsult links
 
 ## 2021-09-08-7939
 

@@ -8,8 +8,7 @@ import org.simple.clinic.mobius.next
 import java.time.LocalDate
 
 class OverdueUpdate(
-    val date: LocalDate,
-    val isOverdueListChangesEnabled: Boolean
+    val date: LocalDate
 ) : Update<OverdueModel, OverdueEvent, OverdueEffect> {
 
   override fun update(model: OverdueModel, event: OverdueEvent): Next<OverdueModel, OverdueEffect> {
@@ -37,9 +36,5 @@ class OverdueUpdate(
       model: OverdueModel,
       event: CurrentFacilityLoaded
   ): Next<OverdueModel, OverdueEffect> =
-      if (isOverdueListChangesEnabled) {
-        next(model.currentFacilityLoaded(event.facility), LoadOverdueAppointments(date, event.facility))
-      } else {
-        next(model.currentFacilityLoaded(event.facility), LoadOverdueAppointments_old(date, event.facility))
-      }
+      next(model.currentFacilityLoaded(event.facility), LoadOverdueAppointments(date, event.facility))
 }

@@ -320,7 +320,7 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     callPatientView.showPatientWithCallResultLayout = true
   }
 
-  override fun hidePatientWithCallResultUi() {
+  override fun hidePatientWithPhoneNumberCallResults() {
     callPatientView.showPatientWithCallResultLayout = false
   }
 

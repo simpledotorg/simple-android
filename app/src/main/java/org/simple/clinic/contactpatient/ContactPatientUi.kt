@@ -31,7 +31,7 @@ interface ContactPatientUi {
   fun setTransferredFromLabelText()
 
   fun showPatientWithPhoneNumberCallResults()
-  fun hidePatientWithCallResultUi()
+  fun hidePatientWithPhoneNumberCallResults()
 
   fun showPatientWithNoPhoneNumberResults()
 

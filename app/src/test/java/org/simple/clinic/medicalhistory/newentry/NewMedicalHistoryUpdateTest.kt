@@ -230,4 +230,23 @@ class NewMedicalHistoryUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when save is clicked and patient is diagnosed with no hypertension and diabetes, then show change diagnosis dialog`() {
+    val model = defaultModel
+        .ongoingPatientEntryLoaded(patientEntry)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, No)
+        .answerChanged(DIAGNOSED_WITH_DIABETES, No)
+
+    updateSpec
+        .given(model)
+        .whenEvent(SaveMedicalHistoryClicked())
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowChangeDiagnosisErrorDialog)
+            )
+        )
+  }
 }

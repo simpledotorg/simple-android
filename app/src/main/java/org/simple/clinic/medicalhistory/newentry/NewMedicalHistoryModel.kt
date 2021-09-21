@@ -5,6 +5,7 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
@@ -55,6 +56,12 @@ data class NewMedicalHistoryModel(
 
   val showOngoingDiabetesTreatment: Boolean
     get() = diagnosedWithDiabetes && country.isoCountryCode == Country.INDIA
+
+  val hasNoHypertension: Boolean
+    get() = ongoingMedicalHistoryEntry.diagnosedWithHypertension == No
+
+  val hasNoDiabetes: Boolean
+    get() = ongoingMedicalHistoryEntry.hasDiabetes == No
 
   companion object {
     fun default(country: Country): NewMedicalHistoryModel = NewMedicalHistoryModel(

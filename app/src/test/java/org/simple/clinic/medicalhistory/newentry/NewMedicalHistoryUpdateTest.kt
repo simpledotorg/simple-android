@@ -249,4 +249,23 @@ class NewMedicalHistoryUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when change diagnosis not now is clicked, then register patient`() {
+    val model = defaultModel
+        .ongoingPatientEntryLoaded(patientEntry)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, No)
+        .answerChanged(DIAGNOSED_WITH_DIABETES, No)
+
+    updateSpec
+        .given(model)
+        .whenEvent(ChangeDiagnosisNotNowClicked)
+        .then(
+            assertThatNext(
+                hasModel(model.registeringPatient()),
+                hasEffects(RegisterPatient(model.ongoingMedicalHistoryEntry))
+            )
+        )
+  }
 }

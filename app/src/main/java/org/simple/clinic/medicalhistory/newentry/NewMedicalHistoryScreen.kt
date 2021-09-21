@@ -257,7 +257,9 @@ class NewMedicalHistoryScreen : BaseScreen<
         .setTitle(getString(R.string.change_diagnosis_title))
         .setMessage(getString(R.string.change_diagnosis_message))
         .setPositiveButton(getString(R.string.change_diagnosis_positive), null)
-        .setNegativeButton(getString(R.string.change_diagnosis_negative), null)
+        .setNegativeButton(getString(R.string.change_diagnosis_negative)) { _, _ ->
+          hotEvents.onNext(ChangeDiagnosisNotNowClicked)
+        }
         .show()
   }
 

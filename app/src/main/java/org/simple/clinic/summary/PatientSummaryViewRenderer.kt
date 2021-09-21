@@ -15,12 +15,21 @@ class PatientSummaryViewRenderer(
         populatePatientProfile(model.patientSummaryProfile!!)
         showEditButton()
         setupUiForAssignedFacility(model)
+        renderPatientDiedStatus(model)
       }
 
       if (model.hasLoadedCurrentFacility) {
         setupUiForDiabetesManagement(model.isDiabetesManagementEnabled)
         setupUiForTeleconsult(model)
       }
+    }
+  }
+
+  private fun renderPatientDiedStatus(model: PatientSummaryModel) {
+    if (model.hasPatientDied) {
+      ui.showPatientDiedStatus()
+    } else {
+      ui.hidePatientDiedStatus()
     }
   }
 

@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentRepository
@@ -72,10 +73,11 @@ class RemoveOverdueEffectHandlerTest {
   fun `when cancel appointment effect is received, then cancel the appointment`() {
     // given
     val appointmentId = UUID.fromString("3a908737-17c8-44e6-b4f9-03a46a185189")
+    val appointment = TestData.appointment(uuid = appointmentId)
     val cancelReason = AppointmentCancelReason.random()
 
     // when
-    testCase.dispatch(CancelAppointment(appointmentId, cancelReason))
+    testCase.dispatch(CancelAppointment(appointment, cancelReason))
 
     // then
     verify(appointmentRepository).cancelWithReason(appointmentId, cancelReason)

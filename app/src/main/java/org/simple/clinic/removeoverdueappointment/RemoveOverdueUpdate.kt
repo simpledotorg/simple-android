@@ -15,8 +15,8 @@ class RemoveOverdueUpdate : Update<RemoveOverdueModel, RemoveOverdueEvent, Remov
   ): Next<RemoveOverdueModel, RemoveOverdueEffect> {
     return when (event) {
       is RemoveAppointmentReasonSelected -> next(model.removeAppointmentReasonSelected(selectedReason = event.reason))
-      is PatientMarkedAsMigrated -> dispatch(CancelAppointment(model.appointment.uuid, event.cancelReason))
-      PatientMarkedAsDead -> dispatch(CancelAppointment(model.appointment.uuid, AppointmentCancelReason.Dead))
+      is PatientMarkedAsMigrated -> dispatch(CancelAppointment(model.appointment, event.cancelReason))
+      PatientMarkedAsDead -> dispatch(CancelAppointment(model.appointment, AppointmentCancelReason.Dead))
       PatientMarkedAsVisited,
       AppointmentMarkedAsCancelled -> dispatch(GoBackAfterAppointmentRemoval)
       DoneClicked -> removeAppointment(model)
@@ -29,11 +29,11 @@ class RemoveOverdueUpdate : Update<RemoveOverdueModel, RemoveOverdueEvent, Remov
     val effect = when (model.selectedReason!!) {
       RemoveAppointmentReason.AlreadyVisited -> MarkPatientAsVisited(appointmentUuid = appointmentUuid)
       RemoveAppointmentReason.Died -> MarkPatientAsDead(patientId = model.appointment.patientUuid, appointmentId = appointmentUuid)
-      RemoveAppointmentReason.NotResponding -> CancelAppointment(appointmentUuid = appointmentUuid, reason = AppointmentCancelReason.PatientNotResponding)
-      RemoveAppointmentReason.PhoneNumberNotWorking -> CancelAppointment(appointmentUuid = appointmentUuid, reason = AppointmentCancelReason.InvalidPhoneNumber)
+      RemoveAppointmentReason.NotResponding -> CancelAppointment(model.appointment, reason = AppointmentCancelReason.PatientNotResponding)
+      RemoveAppointmentReason.PhoneNumberNotWorking -> CancelAppointment(model.appointment, reason = AppointmentCancelReason.InvalidPhoneNumber)
       RemoveAppointmentReason.TransferredToAnotherFacility -> MarkPatientAsTransferredToAnotherFacility(patientId = model.appointment.patientUuid)
       RemoveAppointmentReason.MovedToPrivatePractitioner -> MarkPatientAsMovedToPrivate(patientId = model.appointment.patientUuid)
-      RemoveAppointmentReason.OtherReason -> CancelAppointment(appointmentUuid = appointmentUuid, reason = AppointmentCancelReason.Other)
+      RemoveAppointmentReason.OtherReason -> CancelAppointment(model.appointment, reason = AppointmentCancelReason.Other)
     }
 
     return dispatch(effect)

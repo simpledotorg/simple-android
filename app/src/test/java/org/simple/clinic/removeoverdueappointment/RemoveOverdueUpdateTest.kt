@@ -47,7 +47,7 @@ class RemoveOverdueUpdateTest {
         .whenEvent(PatientMarkedAsMigrated(cancelReason))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(CancelAppointment(appointmentId, cancelReason))
+            hasEffects(CancelAppointment(appointment, cancelReason))
         ))
   }
 
@@ -69,7 +69,7 @@ class RemoveOverdueUpdateTest {
         .whenEvent(PatientMarkedAsDead)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(CancelAppointment(appointmentId, AppointmentCancelReason.Dead))
+            hasEffects(CancelAppointment(appointment, AppointmentCancelReason.Dead))
         ))
   }
 
@@ -122,7 +122,7 @@ class RemoveOverdueUpdateTest {
         .whenEvent(DoneClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(CancelAppointment(appointmentUuid = appointmentId, reason = AppointmentCancelReason.PatientNotResponding))
+            hasEffects(CancelAppointment(appointment = appointment, reason = AppointmentCancelReason.PatientNotResponding))
         ))
   }
 
@@ -136,7 +136,7 @@ class RemoveOverdueUpdateTest {
         .whenEvent(DoneClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(CancelAppointment(appointmentUuid = appointmentId, reason = AppointmentCancelReason.InvalidPhoneNumber))
+            hasEffects(CancelAppointment(appointment = appointment, reason = AppointmentCancelReason.InvalidPhoneNumber))
         ))
   }
 
@@ -150,7 +150,7 @@ class RemoveOverdueUpdateTest {
         .whenEvent(DoneClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(CancelAppointment(appointmentUuid = appointmentId, reason = AppointmentCancelReason.Other))
+            hasEffects(CancelAppointment(appointment = appointment, reason = AppointmentCancelReason.Other))
         ))
   }
 }

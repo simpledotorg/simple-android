@@ -56,7 +56,7 @@ class RemoveOverdueEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .doOnNext { appointmentRepository.cancelWithReason(it.appointmentUuid, it.reason) }
+          .doOnNext { appointmentRepository.cancelWithReason(it.appointment.uuid, it.reason) }
           .map { AppointmentMarkedAsCancelled }
     }
   }

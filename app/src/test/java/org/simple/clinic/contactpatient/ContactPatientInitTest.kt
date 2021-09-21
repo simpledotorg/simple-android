@@ -98,8 +98,7 @@ class ContactPatientInitTest {
         appointmentConfig = appointmentConfig,
         userClock = userClock,
         mode = mode,
-        secureCallFeatureEnabled = phoneMaskFeatureEnabled,
-        overdueListChangesFeatureEnabled = overdueListChangesFeatureEnabled
+        secureCallFeatureEnabled = phoneMaskFeatureEnabled
     )
   }
 }

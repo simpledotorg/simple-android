@@ -21,7 +21,6 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
-import org.simple.clinic.databinding.ItemOverdueListPatientOldBinding
 import org.simple.clinic.databinding.ListItemOverduePatientBinding
 import org.simple.clinic.databinding.ScreenOverdueBinding
 import org.simple.clinic.di.injector
@@ -37,7 +36,6 @@ import org.simple.clinic.sync.LastSyncedState
 import org.simple.clinic.sync.SyncProgress
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
@@ -84,9 +82,6 @@ class OverdueScreen : BaseScreen<
   private val overdueListAdapter = PagingItemAdapter(
       diffCallback = OverdueAppointmentListItem.DiffCallback(),
       bindings = mapOf(
-          R.layout.item_overdue_list_patient_old to { layoutInflater, parent ->
-            ItemOverdueListPatientOldBinding.inflate(layoutInflater, parent, false)
-          },
           R.layout.list_item_overdue_patient to { layoutInflater, parent ->
             ListItemOverduePatientBinding.inflate(layoutInflater, parent, false)
           }
@@ -112,10 +107,6 @@ class OverdueScreen : BaseScreen<
     get() = binding.shareOverdueListButton
 
   private val screenDestroys = PublishSubject.create<Unit>()
-
-  private val overdueListChangesEnabled by unsafeLazy {
-    features.isEnabled(OverdueListChanges)
-  }
 
   override fun defaultModel() = OverdueModel.create()
 
@@ -172,10 +163,7 @@ class OverdueScreen : BaseScreen<
   ) {
     overdueListAdapter.submitData(lifecycle, OverdueAppointmentListItem.from(
         appointments = overdueAppointments,
-        clock = userClock,
-        dateFormatter = dateFormatter,
-        isDiabetesManagementEnabled = isDiabetesManagementEnabled,
-        overdueListChangesEnabled = overdueListChangesEnabled
+        clock = userClock
     ))
   }
 

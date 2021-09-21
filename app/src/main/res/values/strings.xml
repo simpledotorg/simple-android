@@ -819,6 +819,7 @@
   <!-- Select ongoing hypertension treatment dialog -->
   <string name="select_ongoing_hypertension_treatment_title">Input required</string>
   <string name="select_ongoing_hypertension_treatment_message">Confirm if patient took BP medicines anytime in the last month.</string>
+  <string name="select_ongoing_diabetes_treatment_message">Confirm if patient took diabetes medicines anytime in the last month.</string>
   <string name="select_ongoing_hypertension_treatment_positive_action">OK</string>
 
   <!-- Custom drugs search -->

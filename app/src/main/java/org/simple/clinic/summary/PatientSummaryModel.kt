@@ -3,6 +3,7 @@ package org.simple.clinic.summary
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
 import org.simple.clinic.user.User
 import java.util.UUID
@@ -33,6 +34,9 @@ data class PatientSummaryModel(
       )
     }
   }
+
+  val hasPatientDied: Boolean
+    get() = patientSummaryProfile!!.patient.status == PatientStatus.Dead
 
   val hasLoadedPatientSummaryProfile: Boolean
     get() = patientSummaryProfile != null

@@ -149,6 +149,9 @@ class PatientSummaryScreen :
   private val doneButtonFrame
     get() = binding.doneButtonFrame
 
+  private val patientDiedStatusView
+    get() = binding.patientDiedStatusView
+
   @Inject
   lateinit var router: Router
 
@@ -584,6 +587,14 @@ class PatientSummaryScreen :
 
   override fun dispatchNewAssignedFacility(facility: Facility) {
     assignedFacilityView.onNewAssignedFacilitySelected(facility)
+  }
+
+  override fun hidePatientDiedStatus() {
+    patientDiedStatusView.visibility = GONE
+  }
+
+  override fun showPatientDiedStatus() {
+    patientDiedStatusView.visibility = VISIBLE
   }
 
   interface Injector {

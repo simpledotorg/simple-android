@@ -47,6 +47,12 @@ class ContactPatientUiRenderer(
       renderPatientFacilityLabel(model.appointmentIsInRegisteredFacility)
     }
 
+    renderPhoneNumberAndCallResults(model)
+
+    ui.switchToCallPatientView()
+  }
+
+  private fun renderPhoneNumberAndCallResults(model: ContactPatientModel) {
     when {
       model.patientProfileHasPhoneNumber && model.hasPatientDied -> renderDeadPatientWithPhoneNumber(model.secureCallingFeatureEnabled)
       model.patientProfileHasPhoneNumber && !model.isAppointmentPresent -> renderPatientWithPhoneNumberAndNoAppointment(model.secureCallingFeatureEnabled)
@@ -54,8 +60,6 @@ class ContactPatientUiRenderer(
       !model.patientProfileHasPhoneNumber && model.isAppointmentPresent -> renderPatientWithNoPhoneNumberAndWithAppointment()
       else -> renderPatientWithoutPhoneNumberAndAppointment()
     }
-
-    ui.switchToCallPatientView()
   }
 
   private fun renderDeadPatientWithPhoneNumber(isSecureCallingEnabled: Boolean) {

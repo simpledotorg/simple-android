@@ -340,6 +340,10 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     callPatientView.showPatientDiedStatus = true
   }
 
+  override fun hideDeadPatientStatus() {
+    callPatientView.showPatientDiedStatus = false
+  }
+
   private fun backPressed() {
     hotEvents.onNext(BackClicked)
   }

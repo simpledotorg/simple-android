@@ -36,6 +36,7 @@ interface ContactPatientUi {
   fun showPatientWithNoPhoneNumberResults()
 
   fun showDeadPatientStatus()
+  fun hideDeadPatientStatus()
 
   /**
    * Select reminder view

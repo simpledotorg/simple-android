@@ -70,6 +70,7 @@ class ContactPatientUiRenderer(
     ui.showPatientWithNoPhoneNumberUi()
     ui.hidePatientWithPhoneNumberUi()
     ui.setResultLabelText()
+    ui.hideDeadPatientStatus()
   }
 
   private fun renderPatientWithNoPhoneNumberAndWithAppointment() {
@@ -77,6 +78,7 @@ class ContactPatientUiRenderer(
     ui.hidePatientWithPhoneNumberUi()
     ui.showPatientWithNoPhoneNumberResults()
     ui.setResultLabelText()
+    ui.hideDeadPatientStatus()
   }
 
   private fun renderPatientWithPhoneNumberAndAppointment(isSecureCallingEnabled: Boolean) {
@@ -84,6 +86,7 @@ class ContactPatientUiRenderer(
     ui.showPatientWithPhoneNumberCallResults()
     ui.setResultOfCallLabelText()
     ui.hidePatientWithNoPhoneNumberUi()
+    ui.hideDeadPatientStatus()
     renderSecureCalling(isSecureCallingEnabled)
   }
 
@@ -91,6 +94,7 @@ class ContactPatientUiRenderer(
     ui.showPatientWithPhoneNumberUi()
     ui.hidePatientWithNoPhoneNumberUi()
     ui.hidePatientWithPhoneNumberCallResults()
+    ui.hideDeadPatientStatus()
     renderSecureCalling(isSecureCallingEnabled)
   }
 

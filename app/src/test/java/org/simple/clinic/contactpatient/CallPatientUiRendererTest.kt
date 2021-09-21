@@ -80,6 +80,7 @@ class CallPatientUiRendererTest {
     verify(ui).hidePatientWithNoPhoneNumberUi()
     verify(ui).setResultOfCallLabelText()
     verify(ui).showSecureCallUi()
+    verify(ui).hideDeadPatientStatus()
     verifyNoMoreInteractions(ui)
   }
 
@@ -124,6 +125,7 @@ class CallPatientUiRendererTest {
     verify(ui).showPatientWithPhoneNumberCallResults()
     verify(ui).setResultOfCallLabelText()
     verify(ui).showSecureCallUi()
+    verify(ui).hideDeadPatientStatus()
     verifyNoMoreInteractions(ui)
   }
 
@@ -166,6 +168,7 @@ class CallPatientUiRendererTest {
     verify(ui).setResultOfCallLabelText()
     verify(ui).hideSecureCallUi()
     verify(ui).showPatientWithPhoneNumberCallResults()
+    verify(ui).hideDeadPatientStatus()
     verifyNoMoreInteractions(ui)
   }
 
@@ -208,6 +211,7 @@ class CallPatientUiRendererTest {
     verify(ui).switchToCallPatientView()
     verify(ui).setResultLabelText()
     verify(ui).showPatientWithNoPhoneNumberResults()
+    verify(ui).hideDeadPatientStatus()
     verifyNoMoreInteractions(ui)
   }
 
@@ -251,6 +255,7 @@ class CallPatientUiRendererTest {
     verify(ui).switchToCallPatientView()
     verify(ui).setResultOfCallLabelText()
     verify(ui).showPatientWithPhoneNumberCallResults()
+    verify(ui).hideDeadPatientStatus()
     verifyNoMoreInteractions(ui)
   }
 
@@ -285,6 +290,7 @@ class CallPatientUiRendererTest {
     verify(ui).hidePatientWithPhoneNumberUi()
     verify(ui).setResultLabelText()
     verify(ui).showPatientWithNoPhoneNumberResults()
+    verify(ui).hideDeadPatientStatus()
     verifyNoMoreInteractions(ui)
   }
 
@@ -320,6 +326,7 @@ class CallPatientUiRendererTest {
     verify(ui).hidePatientWithPhoneNumberUi()
     verify(ui).setResultLabelText()
     verify(ui).showPatientWithNoPhoneNumberResults()
+    verify(ui).hideDeadPatientStatus()
     verifyNoMoreInteractions(ui)
   }
 

@@ -112,7 +112,12 @@ class CustomDrugEntryUpdateTest {
     val frequency = OD
     val drugUuid = UUID.fromString("6106544f-2b18-410d-992b-81860a08f02a")
     val drug = TestData.drug(id = drugUuid, name = drugName)
-    val model = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugList(drugUuid), dosagePlaceholder).drugNameLoaded(drugName).rxNormCodeEdited(drug.rxNormCode).dosageEdited(dosage).frequencyEdited(frequency)
+    val model = CustomDrugEntryModel
+        .default(openAs = OpenAs.New.FromDrugList(drugUuid), dosagePlaceholder)
+        .drugNameLoaded(drugName)
+        .rxNormCodeEdited(drug.rxNormCode)
+        .dosageEdited(dosage)
+        .frequencyEdited(frequency)
 
     updateSpec
         .given(model)
@@ -128,7 +133,11 @@ class CustomDrugEntryUpdateTest {
   fun `when add button is clicked and the sheet is opened in create mode from drug name with edited dosage and frequency values, then add the drug to the custom drug list and set button progress state to saving`() {
     val dosage = "200 mg"
     val frequency = OD
-    val model = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(drugName), dosagePlaceholder).drugNameLoaded(drugName).dosageEdited(dosage).frequencyEdited(frequency)
+    val model = CustomDrugEntryModel
+        .default(openAs = OpenAs.New.FromDrugName(drugName), dosagePlaceholder)
+        .drugNameLoaded(drugName)
+        .dosageEdited(dosage)
+        .frequencyEdited(frequency)
 
     updateSpec
         .given(model)
@@ -144,7 +153,11 @@ class CustomDrugEntryUpdateTest {
     val dosage = "200 mg"
     val frequency = OD
     val prescribedDrugUuid = UUID.fromString("96633994-6e4d-4528-b796-f03ae016553a")
-    val model = CustomDrugEntryModel.default(openAs = OpenAs.Update(prescribedDrugUuid), dosagePlaceholder).drugNameLoaded(drugName).dosageEdited(dosage).frequencyEdited(frequency)
+    val model = CustomDrugEntryModel
+        .default(openAs = OpenAs.Update(prescribedDrugUuid), dosagePlaceholder)
+        .drugNameLoaded(drugName)
+        .dosageEdited(dosage)
+        .frequencyEdited(frequency)
 
     updateSpec
         .given(model)
@@ -174,7 +187,9 @@ class CustomDrugEntryUpdateTest {
     val drugFrequency = OD
     val dosage = "12mg"
     val prescribedDrug = TestData.prescription(uuid = prescribedDrugUuid, name = drugName, isDeleted = false, frequency = MedicineFrequency.OD, dosage = dosage)
-    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.Update(prescribedDrugUuid), dosagePlaceholder).drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap)
+    val defaultModel = CustomDrugEntryModel
+        .default(openAs = OpenAs.Update(prescribedDrugUuid), dosagePlaceholder)
+        .drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap)
     val frequencyRes = "OD"
 
     updateSpec
@@ -229,7 +244,12 @@ class CustomDrugEntryUpdateTest {
         .whenEvent(DrugFetched(drug))
         .then(
             assertThatNext(
-                hasModel(drugFrequencyChoiceItemsLoaded.drugNameLoaded(drug.name).dosageEdited(drug.dosage).frequencyEdited(drug.frequency).rxNormCodeEdited(drug.rxNormCode).drugInfoProgressStateLoaded()),
+                hasModel(drugFrequencyChoiceItemsLoaded
+                    .drugNameLoaded(drug.name)
+                    .dosageEdited(drug.dosage)
+                    .frequencyEdited(drug.frequency)
+                    .rxNormCodeEdited(drug.rxNormCode)
+                    .drugInfoProgressStateLoaded()),
                 hasEffects(SetDrugFrequency(frequencyRes), SetDrugDosage(drug.dosage))
             )
         )

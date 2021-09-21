@@ -10,7 +10,6 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.transition.TransitionManager
-import com.google.android.material.transition.MaterialFade
 import com.google.android.material.transition.MaterialSharedAxis
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
@@ -34,7 +33,6 @@ import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
-import org.simple.clinic.patient.Gender
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
@@ -105,9 +103,6 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   private val contentFlipper
     get() = binding.contentFlipper
 
-  private val callPatientView_Old
-    get() = binding.callPatientViewOld
-
   private val callPatientView
     get() = binding.callPatientView
 
@@ -133,19 +128,14 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
   override fun events() = Observable
       .mergeArray(
-          normalCallClicks_Old(),
           normalCallClicks(),
-          secureCallClicks_Old(),
           secureCallClicks(),
-          agreedToVisitClicks_Old(),
           agreedToVisitClicks(),
-          remindToCallLaterClicks_Old(),
           remindToCallLaterClicks(),
           nextReminderDateClicks(),
           previousReminderDateClicks(),
           appointmentDateClicks(),
           saveReminderDateClicks(),
-          removeFromOverdueListClicks_Old(),
           removeFromOverdueListClicks(),
           hotEvents
       )
@@ -200,15 +190,6 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     permissionResults.onNext(ActivityPermissionResult(requestCode))
   }
 
-  override fun renderPatientDetails_Old(
-      name: String,
-      gender: Gender,
-      age: Int,
-      phoneNumber: String
-  ) {
-    callPatientView_Old.renderPatientDetails(name, gender, age, phoneNumber)
-  }
-
   override fun renderPatientDetails(patientDetails: PatientDetails) {
     callPatientView.renderPatientDetails(
         PatientDetails(
@@ -227,28 +208,8 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     )
   }
 
-  override fun showCallResultSection_Old() {
-    fadeIn(contentFlipper)
-
-    callPatientView_Old.callResultSectionVisible = true
-  }
-
-  override fun hideCallResultSection_Old() {
-    fadeIn(contentFlipper)
-
-    callPatientView_Old.callResultSectionVisible = false
-  }
-
-  override fun showSecureCallUi_Old() {
-    callPatientView_Old.secureCallingSectionVisible = true
-  }
-
   override fun showSecureCallUi() {
     callPatientView.secureCallingSectionVisible = true
-  }
-
-  override fun hideSecureCallUi_Old() {
-    callPatientView_Old.secureCallingSectionVisible = false
   }
 
   override fun hideSecureCallUi() {
@@ -338,11 +299,6 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     setAppointmentReminderView.enableNextReminderDateStepper()
   }
 
-  override fun switchToCallPatientView_Old() {
-    callPatientView_Old.visibility = VISIBLE
-    setAppointmentReminderView.visibility = GONE
-  }
-
   override fun switchToCallPatientView() {
     callPatientView.visibility = VISIBLE
     setAppointmentReminderView.visibility = GONE
@@ -352,7 +308,6 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     sharedAxis(contentFlipper)
 
     callPatientView.visibility = GONE
-    callPatientView_Old.visibility = GONE
     setAppointmentReminderView.visibility = VISIBLE
   }
 
@@ -387,27 +342,11 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     hotEvents.onNext(BackClicked)
   }
 
-  private fun normalCallClicks_Old(): Observable<ContactPatientEvent> {
-    return Observable.create { emitter ->
-      emitter.setCancellable { callPatientView_Old.normalCallButtonClicked = null }
-
-      callPatientView_Old.normalCallButtonClicked = { emitter.onNext(NormalCallClicked()) }
-    }
-  }
-
   private fun normalCallClicks(): Observable<ContactPatientEvent> {
     return Observable.create { emitter ->
       emitter.setCancellable { callPatientView.normalCallButtonClicked = null }
 
       callPatientView.normalCallButtonClicked = { emitter.onNext(NormalCallClicked()) }
-    }
-  }
-
-  private fun secureCallClicks_Old(): Observable<ContactPatientEvent> {
-    return Observable.create { emitter ->
-      emitter.setCancellable { callPatientView_Old.secureCallButtonClicked = null }
-
-      callPatientView_Old.secureCallButtonClicked = { emitter.onNext(SecureCallClicked()) }
     }
   }
 
@@ -419,27 +358,11 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     }
   }
 
-  private fun agreedToVisitClicks_Old(): Observable<ContactPatientEvent> {
-    return Observable.create { emitter ->
-      emitter.setCancellable { callPatientView_Old.agreedToVisitClicked = null }
-
-      callPatientView_Old.agreedToVisitClicked = { emitter.onNext(PatientAgreedToVisitClicked) }
-    }
-  }
-
   private fun agreedToVisitClicks(): Observable<ContactPatientEvent> {
     return Observable.create { emitter ->
       emitter.setCancellable { callPatientView.agreedToVisitClicked = null }
 
       callPatientView.agreedToVisitClicked = { emitter.onNext(PatientAgreedToVisitClicked) }
-    }
-  }
-
-  private fun remindToCallLaterClicks_Old(): Observable<ContactPatientEvent> {
-    return Observable.create { emitter ->
-      emitter.setCancellable { callPatientView_Old.remindToCallLaterClicked = null }
-
-      callPatientView_Old.remindToCallLaterClicked = { emitter.onNext(RemindToCallLaterClicked) }
     }
   }
 
@@ -483,27 +406,12 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     }
   }
 
-  private fun removeFromOverdueListClicks_Old(): Observable<ContactPatientEvent> {
-    return Observable.create { emitter ->
-      emitter.setCancellable { callPatientView_Old.removeFromOverdueListClicked = null }
-
-      callPatientView_Old.removeFromOverdueListClicked = { emitter.onNext(RemoveFromOverdueListClicked) }
-    }
-  }
-
   private fun removeFromOverdueListClicks(): Observable<ContactPatientEvent> {
     return Observable.create { emitter ->
       emitter.setCancellable { callPatientView.removeFromOverdueListClicked = null }
 
       callPatientView.removeFromOverdueListClicked = { emitter.onNext(RemoveFromOverdueListClicked) }
     }
-  }
-
-  private fun fadeIn(viewGroup: ViewGroup) {
-    val materialFade = MaterialFade().apply {
-      duration = 150
-    }
-    TransitionManager.beginDelayedTransition(viewGroup, materialFade)
   }
 
   private fun sharedAxis(viewGroup: ViewGroup) {

@@ -506,8 +506,7 @@ class ContactPatientUpdateTest {
         appointmentConfig = appointmentConfig,
         userClock = clock,
         mode = mode,
-        secureCallFeatureEnabled = phoneMaskFeatureEnabled,
-        overdueListChangesFeatureEnabled = overdueListChangesFeatureEnabled
+        secureCallFeatureEnabled = phoneMaskFeatureEnabled
     )
   }
 }

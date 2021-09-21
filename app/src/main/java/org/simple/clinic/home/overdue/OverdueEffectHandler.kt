@@ -29,7 +29,6 @@ class OverdueEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<OverdueEffect, OverdueEvent>()
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
-        .addTransformer(LoadOverdueAppointments_old::class.java, loadOverdueAppointments_old())
         .addTransformer(LoadOverdueAppointments::class.java, loadOverdueAppointments())
         .addConsumer(OpenContactPatientScreen::class.java, { uiActions.openPhoneMaskBottomSheet(it.patientUuid) }, schedulers.ui())
         .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientUuid) }, schedulers.ui())
@@ -49,27 +48,6 @@ class OverdueEffectHandler @AssistedInject constructor(
           .observeOn(schedulers.io())
           .switchMap { currentFacilityStream }
           .map(::CurrentFacilityLoaded)
-    }
-  }
-
-  private fun loadOverdueAppointments_old(): ObservableTransformer<LoadOverdueAppointments_old, OverdueEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulers.io())
-          .switchMap { (overdueSince, facility) ->
-            pagerFactory.createPager(
-                sourceFactory = {
-                  appointmentRepository.overdueAppointmentsInFacility_old(
-                      since = overdueSince,
-                      facilityId = facility.uuid
-                  )
-                },
-                pageSize = overdueAppointmentsConfig.overdueAppointmentsLoadSize
-            )
-          }
-          .map { pagingData ->
-            OverdueAppointmentsLoaded(pagingData)
-          }
     }
   }
 

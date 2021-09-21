@@ -189,8 +189,7 @@ class SetAppointmentReminderUiRendererTest {
         appointmentConfig = appointmentConfig,
         userClock = clock,
         mode = UiMode.SetAppointmentReminder,
-        secureCallFeatureEnabled = phoneMaskFeatureEnabled,
-        overdueListChangesFeatureEnabled = overdueListChangesFeatureEnabled
+        secureCallFeatureEnabled = phoneMaskFeatureEnabled
     )
   }
 }

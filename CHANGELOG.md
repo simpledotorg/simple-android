@@ -17,6 +17,7 @@
 - Bump Kotlin to v1.5.31
 - Remove overdue list changes feature flag
 - Implement providing drug frequencies label depending on the country in `DrugSearchScreen`
+- Add progress state in the save button when the drug is being added/updated in `CustomDrugEntrySheet` 
 - [In Progress: 16 Sep 2021] Record call results instead of updating the same appointment record
 - [In Progress: 31 Aug 2021] Refactor logic around providing drug frequencies label depending on the country
 - [In Progress: 2 Sep 2021] Add a progress state in `CustomDrugEntrySheet`

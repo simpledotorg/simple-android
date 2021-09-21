@@ -3,6 +3,7 @@ package org.simple.clinic.drugs.selection.custom
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.drugs.search.DrugFrequency
+import org.simple.clinic.drugs.selection.custom.ButtonState.SAVING
 import org.simple.clinic.drugs.selection.custom.DrugInfoProgressState.DONE
 import org.simple.clinic.drugs.selection.custom.DrugInfoProgressState.IN_PROGRESS
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
@@ -18,7 +19,8 @@ data class CustomDrugEntryModel(
     val dosagePlaceholder: String,
     val drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>?,
     val drugFrequencyToFrequencyChoiceItemMap: Map<DrugFrequency?, DrugFrequencyChoiceItem>?,
-    val drugInfoProgressState: DrugInfoProgressState?
+    val drugInfoProgressState: DrugInfoProgressState?,
+    val saveButtonState: ButtonState?
 ) : Parcelable {
   companion object {
     fun default(
@@ -34,11 +36,15 @@ data class CustomDrugEntryModel(
         dosagePlaceholder = dosagePlaceholder,
         drugFrequencyChoiceItems = null,
         drugFrequencyToFrequencyChoiceItemMap = null,
-        drugInfoProgressState = null)
+        drugInfoProgressState = null,
+        saveButtonState = null)
   }
 
   val isCustomDrugEntrySheetInfoLoaded: Boolean
     get() = drugInfoProgressState == DONE
+
+  val isSaveButtonInProgressState: Boolean
+    get() = saveButtonState == SAVING
 
   fun dosageEdited(dosage: String?): CustomDrugEntryModel {
     return copy(dosage = dosage)
@@ -70,5 +76,9 @@ data class CustomDrugEntryModel(
 
   fun drugInfoProgressStateLoading(): CustomDrugEntryModel {
     return copy(drugInfoProgressState = IN_PROGRESS)
+  }
+
+  fun saveButtonStateChanged(saveButtonState: ButtonState): CustomDrugEntryModel {
+    return copy(saveButtonState = saveButtonState)
   }
 }

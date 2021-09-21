@@ -64,6 +64,9 @@ data class NewMedicalHistoryModel(
   val hasNoDiabetes: Boolean
     get() = ongoingMedicalHistoryEntry.hasDiabetes == No
 
+  val showChangeDiagnosisError: Boolean
+    get() = !hasShownChangeDiagnosisError && hasNoHypertension && hasNoDiabetes
+
   companion object {
     fun default(country: Country): NewMedicalHistoryModel = NewMedicalHistoryModel(
         country = country,

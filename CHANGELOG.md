@@ -22,7 +22,7 @@
 - Refactor `ContactPatientUiRenderer`
 - Provide drug frequencies to label as a map
 - Show ongoing diabetes treatment required dialog in diagnosis screen
-- [In Progress: 16 Sep 2021] Record call results instead of updating the same appointment record
+- Record call results instead of updating the same appointment record
 - [In Progress: 31 Aug 2021] Refactor logic around providing drug frequencies label depending on the country
 - [In Progress: 2 Sep 2021] Add a progress state in `CustomDrugEntrySheet`
 

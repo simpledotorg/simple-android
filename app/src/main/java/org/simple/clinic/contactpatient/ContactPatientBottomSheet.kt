@@ -316,7 +316,7 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     )
   }
 
-  override fun showPatientWithCallResultUi() {
+  override fun showPatientWithPhoneNumberCallResults() {
     callPatientView.showPatientWithCallResultLayout = true
   }
 

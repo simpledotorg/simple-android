@@ -30,7 +30,7 @@ interface ContactPatientUi {
   fun setRegisterAtLabelText()
   fun setTransferredFromLabelText()
 
-  fun showPatientWithCallResultUi()
+  fun showPatientWithPhoneNumberCallResults()
   fun hidePatientWithCallResultUi()
 
   fun showPatientWithNoPhoneNumberResults()

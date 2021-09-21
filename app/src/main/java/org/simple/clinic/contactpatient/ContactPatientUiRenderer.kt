@@ -72,7 +72,7 @@ class ContactPatientUiRenderer(
 
   private fun renderPatientWithPhoneNumberAndAppointment(isSecureCallingEnabled: Boolean) {
     ui.showPatientWithPhoneNumberUi()
-    ui.showPatientWithCallResultUi()
+    ui.showPatientWithPhoneNumberCallResults()
     ui.setResultOfCallLabelText()
     ui.hidePatientWithNoPhoneNumberUi()
     renderSecureCalling(isSecureCallingEnabled)

@@ -19,9 +19,14 @@ class RemoveOverdueEffectHandlerTest {
   private val appointmentRepository = mock<AppointmentRepository>()
   private val patientRepository = mock<PatientRepository>()
   private val uiActions = mock<RemoveOverdueUiActions>()
+  private val cancelAppointmentWithReason = CancelAppointmentWithReason(
+      appointmentRepository = appointmentRepository
+  )
+
   private val effectHandler = RemoveOverdueEffectHandler(
       appointmentRepository = appointmentRepository,
       patientRepository = patientRepository,
+      cancelAppointmentWithReason = cancelAppointmentWithReason,
       schedulersProvider = TestSchedulersProvider.trampoline(),
       uiActions = uiActions
   ).build()

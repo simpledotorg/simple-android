@@ -47,7 +47,6 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).setSheetTitle(drugName, null, frequencyLabel)
     verify(ui).hideProgressBar()
     verify(ui).showCustomDrugEntryUi()
-    verify(ui).showKeyboard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -72,7 +71,6 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).setSheetTitle(drugName, dosageText, frequencyLabel)
     verify(ui).hideProgressBar()
     verify(ui).showCustomDrugEntryUi()
-    verify(ui).showKeyboard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -95,7 +93,6 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).setSheetTitle(null, null, frequencyLabel)
     verify(ui).hideProgressBar()
     verify(ui).showCustomDrugEntryUi()
-    verify(ui).showKeyboard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -114,7 +111,6 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).setSheetTitle(drugName, drugDosage, frequencyLabel)
     verify(ui).hideProgressBar()
     verify(ui).showCustomDrugEntryUi()
-    verify(ui).showKeyboard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -142,7 +138,6 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).showCustomDrugEntryUi()
     verify(ui).hideRemoveButton()
     verify(ui).setButtonTextAsAdd()
-    verify(ui).showKeyboard()
     verify(ui).setSheetTitle(null, null, frequencyLabel)
     verifyNoMoreInteractions(ui)
   }
@@ -161,7 +156,6 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).showCustomDrugEntryUi()
     verify(ui).hideRemoveButton()
     verify(ui).setButtonTextAsAdd()
-    verify(ui).showKeyboard()
     verify(ui).setSheetTitle(null, null, frequencyLabel)
     verify(ui).showSaveButtonProgressState()
     verifyNoMoreInteractions(ui)

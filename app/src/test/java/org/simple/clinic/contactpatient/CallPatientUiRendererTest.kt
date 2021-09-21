@@ -58,7 +58,7 @@ class CallPatientUiRendererTest {
     )
 
     // when
-    val model = defaultModel(phoneMaskFeatureEnabled = true, overdueListChangesFeatureEnabled = true)
+    val model = defaultModel(phoneMaskFeatureEnabled = true)
         .contactPatientInfoLoaded().contactPatientProfileLoaded(patientProfile).overdueAppointmentLoaded(Optional.of(overdueAppointment))
     uiRenderer.render(model)
 
@@ -100,7 +100,7 @@ class CallPatientUiRendererTest {
     )
 
     // when
-    val model = defaultModel(phoneMaskFeatureEnabled = true, overdueListChangesFeatureEnabled = true)
+    val model = defaultModel(phoneMaskFeatureEnabled = true)
         .contactPatientInfoLoaded()
         .contactPatientProfileLoaded(patientProfile)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
@@ -143,7 +143,7 @@ class CallPatientUiRendererTest {
     )
 
     // when
-    val model = defaultModel(phoneMaskFeatureEnabled = false, overdueListChangesFeatureEnabled = true)
+    val model = defaultModel(phoneMaskFeatureEnabled = false)
         .contactPatientInfoLoaded().contactPatientProfileLoaded(patientProfile).overdueAppointmentLoaded(Optional.of(overdueAppointment))
 
     uiRenderer.render(model)
@@ -186,7 +186,7 @@ class CallPatientUiRendererTest {
     )
 
     // when
-    uiRenderer.render(defaultModel(overdueListChangesFeatureEnabled = true)
+    uiRenderer.render(defaultModel()
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
         .contactPatientInfoLoaded()
         .contactPatientProfileLoaded(patientProfile))
@@ -228,7 +228,7 @@ class CallPatientUiRendererTest {
     )
 
     // when
-    uiRenderer.render(defaultModel(phoneMaskFeatureEnabled = true, overdueListChangesFeatureEnabled = true)
+    uiRenderer.render(defaultModel(phoneMaskFeatureEnabled = true)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
         .contactPatientInfoLoaded()
         .contactPatientProfileLoaded(patientProfile))
@@ -272,7 +272,7 @@ class CallPatientUiRendererTest {
     )
 
     // when
-    uiRenderer.render(defaultModel(overdueListChangesFeatureEnabled = true)
+    uiRenderer.render(defaultModel()
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
         .contactPatientInfoLoaded().currentFacilityLoaded(currentFacility))
 
@@ -306,7 +306,7 @@ class CallPatientUiRendererTest {
     )
 
     // when
-    uiRenderer.render(defaultModel(overdueListChangesFeatureEnabled = true)
+    uiRenderer.render(defaultModel()
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
         .contactPatientInfoLoaded()
         .currentFacilityLoaded(currentFacility))
@@ -324,8 +324,7 @@ class CallPatientUiRendererTest {
 
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
-      timeToAppointments: List<TimeToAppointment> = this.timeToAppointments,
-      overdueListChangesFeatureEnabled: Boolean = false
+      timeToAppointments: List<TimeToAppointment> = this.timeToAppointments
   ): ContactPatientModel {
     val appointmentConfig = AppointmentConfig(
         appointmentDuePeriodForDefaulters = Period.ZERO,
@@ -340,8 +339,7 @@ class CallPatientUiRendererTest {
         appointmentConfig = appointmentConfig,
         userClock = clock,
         mode = UiMode.CallPatient,
-        secureCallFeatureEnabled = phoneMaskFeatureEnabled,
-        overdueListChangesFeatureEnabled = overdueListChangesFeatureEnabled
+        secureCallFeatureEnabled = phoneMaskFeatureEnabled
     )
   }
 

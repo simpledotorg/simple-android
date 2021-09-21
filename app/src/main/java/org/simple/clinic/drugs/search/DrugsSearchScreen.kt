@@ -23,8 +23,6 @@ import org.simple.clinic.databinding.ScreenDrugsSearchBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.selection.custom.CustomDrugEntrySheet
 import org.simple.clinic.drugs.selection.custom.OpenAs
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItems
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -54,8 +52,6 @@ class DrugsSearchScreen : BaseScreen<
 
   @Inject
   lateinit var drugFrequencyFactory: DrugFrequencyFactory
-
-  private var drugFrequencyToFrequencyChoiceItemMap: Map<DrugFrequency?, DrugFrequencyChoiceItem>? = null
 
   private val adapter = PagingItemAdapter(
       diffCallback = DrugSearchListItem.DiffCallback(),
@@ -113,9 +109,6 @@ class DrugsSearchScreen : BaseScreen<
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    val drugFrequencyChoiceItems = DrugFrequencyChoiceItems(drugFrequencyFactory.provideFields())
-    drugFrequencyToFrequencyChoiceItemMap = drugFrequencyChoiceItems.items.associateBy({ it.drugFrequency }, { it })
-
     drugSearchToolbar.setNavigationOnClickListener {
       router.pop()
     }
@@ -136,9 +129,17 @@ class DrugsSearchScreen : BaseScreen<
   }
 
   override fun setDrugSearchResults(searchResults: PagingData<Drug>) {
+    val drugFrequencyToFrequencyChoiceItemMap = drugFrequencyFactory
+        .provideFields()
+        .associateBy({ it.drugFrequency }, { it })
+
     val searchQuery = searchQueryEditText.text?.toString().orEmpty()
     drugSearchResultsList.scrollToPosition(0)
-    adapter.submitData(lifecycle, DrugSearchListItem.from(searchResults, searchQuery, drugFrequencyToFrequencyChoiceItemMap!!))
+    adapter.submitData(lifecycle, DrugSearchListItem.from(
+        searchResults,
+        searchQuery,
+        drugFrequencyToFrequencyChoiceItemMap
+    ))
   }
 
   override fun openCustomDrugEntrySheetFromDrugList(drugUuid: UUID, patientUuid: UUID) {

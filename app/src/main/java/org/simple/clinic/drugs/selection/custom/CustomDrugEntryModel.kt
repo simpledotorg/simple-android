@@ -3,7 +3,6 @@ package org.simple.clinic.drugs.selection.custom
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.drugs.search.DrugFrequency
-import org.simple.clinic.drugs.selection.custom.ButtonState.SAVED
 import org.simple.clinic.drugs.selection.custom.ButtonState.SAVING
 import org.simple.clinic.drugs.selection.custom.DrugInfoProgressState.DONE
 import org.simple.clinic.drugs.selection.custom.DrugInfoProgressState.IN_PROGRESS
@@ -77,14 +76,6 @@ data class CustomDrugEntryModel(
 
   fun drugInfoProgressStateLoading(): CustomDrugEntryModel {
     return copy(drugInfoProgressState = IN_PROGRESS)
-  }
-
-  fun buttonProgressStateIsSaving(): CustomDrugEntryModel {
-    return copy(saveButtonState = SAVING)
-  }
-
-  fun buttonProgressStateIsSaved(): CustomDrugEntryModel {
-    return copy(saveButtonState = SAVED)
   }
 
   fun saveButtonStateChanged(saveButtonState: ButtonState): CustomDrugEntryModel {

@@ -6,7 +6,7 @@ import com.spotify.mobius.Update
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.search.Drug
 import org.simple.clinic.drugs.search.DrugFrequency
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
+import org.simple.clinic.drugs.selection.custom.ButtonState.SAVING
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import java.util.UUID
@@ -42,11 +42,6 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
     return next(model.drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap))
   }
 
-  private fun getIndexOfDrugFrequencyChoiceItem(
-      drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>,
-      frequency: DrugFrequency?
-  ) = drugFrequencyChoiceItems.map { it.drugFrequency }.indexOf(frequency)
-
   private fun drugFetched(
       model: CustomDrugEntryModel,
       drug: Drug
@@ -81,10 +76,12 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       model: CustomDrugEntryModel,
       patientUuid: UUID
   ): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
-    return when (model.openAs) {
-      is OpenAs.New.FromDrugList -> dispatch(SaveCustomDrugToPrescription(patientUuid, model.drugName!!, model.dosage, model.rxNormCode, model.frequency))
-      is OpenAs.New.FromDrugName -> dispatch(SaveCustomDrugToPrescription(patientUuid, model.openAs.drugName, model.dosage, null, model.frequency))
-      is OpenAs.Update -> dispatch(UpdatePrescription(patientUuid, model.openAs.prescribedDrugUuid, model.drugName!!, model.dosage, model.rxNormCode, model.frequency))
+    val effect = when (model.openAs) {
+      is OpenAs.New.FromDrugList -> SaveCustomDrugToPrescription(patientUuid, model.drugName!!, model.dosage, model.rxNormCode, model.frequency)
+      is OpenAs.New.FromDrugName -> SaveCustomDrugToPrescription(patientUuid, model.openAs.drugName, model.dosage, null, model.frequency)
+      is OpenAs.Update -> UpdatePrescription(patientUuid, model.openAs.prescribedDrugUuid, model.drugName!!, model.dosage, model.rxNormCode, model.frequency)
     }
+
+    return next(model.saveButtonStateChanged(SAVING), effect)
   }
 }

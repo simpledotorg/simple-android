@@ -33,6 +33,8 @@ import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.widgets.ProgressMaterialButton
+import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
@@ -195,6 +197,10 @@ class CustomDrugEntrySheet : BaseBottomSheet<
 
   override fun showKeyboard() {
     drugDosageEditText.showKeyboard()
+  }
+
+  override fun showSaveButtonProgressState() {
+    saveButton.setButtonState(InProgress)
   }
 
   override fun closeSheetAndGoToEditMedicineScreen() {

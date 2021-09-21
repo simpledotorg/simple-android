@@ -23,8 +23,7 @@ class CustomDrugEntryUiRenderer(
 
       showDefaultDosagePlaceholder(model.dosage, model.dosageHasFocus)
 
-      if (model.isSaveButtonInProgressState)
-        ui.showSaveButtonProgressState()
+      if (model.isSaveButtonInProgressState) ui.showSaveButtonProgressState()
     }
   }
 

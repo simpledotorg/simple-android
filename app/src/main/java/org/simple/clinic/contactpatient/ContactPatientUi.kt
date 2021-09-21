@@ -4,8 +4,13 @@ import org.simple.clinic.overdue.TimeToAppointment
 import java.time.LocalDate
 
 interface ContactPatientUi {
-  fun switchToCallPatientView()
+  fun showProgress()
+  fun hideProgress()
 
+  /**
+   * Call patient view
+   */
+  fun switchToCallPatientView()
   fun switchToSetAppointmentReminderView()
 
   fun renderPatientDetails(patientDetails: PatientDetails)
@@ -25,6 +30,14 @@ interface ContactPatientUi {
   fun setRegisterAtLabelText()
   fun setTransferredFromLabelText()
 
+  fun showPatientWithCallResultUi()
+  fun hidePatientWithCallResultUi()
+
+  fun showPatientWithNoPhoneNumberResults()
+
+  /**
+   * Select reminder view
+   */
   fun renderSelectedAppointmentDate(
       selectedAppointmentReminderPeriod: TimeToAppointment,
       selectedDate: LocalDate
@@ -34,11 +47,4 @@ interface ContactPatientUi {
   fun enablePreviousReminderDateStepper()
   fun disableNextReminderDateStepper()
   fun enableNextReminderDateStepper()
-  fun showProgress()
-  fun hideProgress()
-
-  fun showPatientWithCallResultUi()
-  fun hidePatientWithCallResultUi()
-
-  fun showPatientWithNoPhoneNumberResults()
 }

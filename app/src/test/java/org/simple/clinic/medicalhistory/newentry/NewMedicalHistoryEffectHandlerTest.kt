@@ -116,4 +116,16 @@ class NewMedicalHistoryEffectHandlerTest {
 
     testCase.assertNoOutgoingEvents()
   }
+
+  @Test
+  fun `when show select ongoing diabetes treatment error effect is received, then show ongoing diabetes treatment error dialog`() {
+    // when
+    testCase.dispatch(ShowOngoingDiabetesTreatmentErrorDialog)
+
+    // then
+    verify(uiActions).showOngoingDiabetesTreatmentErrorDialog()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
 }

@@ -24,3 +24,5 @@ object ShowDiagnosisRequiredError : NewMedicalHistoryViewEffect()
 object ShowHypertensionDiagnosisRequiredError : NewMedicalHistoryViewEffect()
 
 object ShowChangeDiagnosisErrorDialog : NewMedicalHistoryViewEffect()
+
+object ShowOngoingDiabetesTreatmentErrorDialog : NewMedicalHistoryViewEffect()

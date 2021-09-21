@@ -14,6 +14,7 @@ class NewMedicalHistoryViewEffectHandler(
       ShowDiagnosisRequiredError -> uiActions.showDiagnosisRequiredErrorDialog()
       ShowHypertensionDiagnosisRequiredError -> uiActions.showHypertensionDiagnosisRequiredErrorDialog()
       ShowChangeDiagnosisErrorDialog -> uiActions.showChangeDiagnosisErrorDialog()
+      ShowOngoingDiabetesTreatmentErrorDialog -> uiActions.showOngoingDiabetesTreatmentErrorDialog()
     }.exhaustive()
   }
 }

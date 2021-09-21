@@ -26,11 +26,14 @@ class PatientStatusView(context: Context, attrs: AttributeSet) : MaterialCardVie
       val statusText = typedArray.getString(R.styleable.PatientStatusView_statusText)
       val statusTextColor = typedArray.getColor(R.styleable.PatientStatusView_statusTextColor, 0)
       val statusIconColor = typedArray.getColor(R.styleable.PatientStatusView_statusIconTint, statusTextColor)
+      val statusTextAppearance = typedArray.getResourceId(R.styleable.PatientStatusView_statusTextAppearance, R.style.TextAppearance_Simple_Headline6)
 
       statusTextView.text = statusText
       statusTextView.setTextColor(statusTextColor)
       statusTextView.setCompoundDrawableStart(statusIconDrawable)
+
       TextViewCompat.setCompoundDrawableTintList(statusTextView, ColorStateList.valueOf(statusIconColor))
+      TextViewCompat.setTextAppearance(statusTextView, statusTextAppearance)
     }
   }
 

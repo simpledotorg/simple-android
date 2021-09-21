@@ -244,7 +244,7 @@ class NewMedicalHistoryUpdateTest {
         .whenEvent(SaveMedicalHistoryClicked())
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(model.changeDiagnosisErrorShown()),
                 hasEffects(ShowChangeDiagnosisErrorDialog)
             )
         )

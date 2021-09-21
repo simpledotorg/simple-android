@@ -94,4 +94,8 @@ data class NewMedicalHistoryModel(
   fun patientRegistered(): NewMedicalHistoryModel {
     return copy(nextButtonState = ButtonState.SAVED)
   }
+
+  fun changeDiagnosisErrorShown(): NewMedicalHistoryModel {
+    return copy(hasShownChangeDiagnosisError = true)
+  }
 }

@@ -23,7 +23,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     return when (event) {
       is PatientSummaryProfileLoaded -> patientSummaryProfileLoaded(model, event)
-      is PatientSummaryBackClicked -> dispatch(LoadDataForBackClick(model.patientUuid, event.screenCreatedTimestamp))
+      is PatientSummaryBackClicked -> backClicked()
       is PatientSummaryDoneClicked -> dispatch(LoadDataForDoneClick(model.patientUuid))
       is CurrentUserAndFacilityLoaded -> currentUserAndFacilityLoaded(model, event)
       PatientSummaryEditClicked -> dispatch(HandleEditClick(model.patientSummaryProfile!!, model.currentFacility!!))
@@ -51,6 +51,14 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is MedicalOfficersLoaded -> next(model.medicalOfficersLoaded(event.medicalOfficers))
       ChangeAssignedFacilityClicked -> dispatch(OpenSelectFacilitySheet)
       is NewAssignedFacilitySelected -> dispatch(DispatchNewAssignedFacility(event.facility))
+    }
+  }
+
+  private fun backClicked(model: PatientSummaryModel): Next<PatientSummaryModel, PatientSummaryEffect> {
+    return if (model.hasPatientDied) {
+      dispatch(GoBackToPreviousScreen)
+    } else {
+      noChange()
     }
   }
 

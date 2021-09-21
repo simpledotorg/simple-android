@@ -995,6 +995,21 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when done is clicked and patient is not dead, then load data for done click`() {
+    val model = defaultModel
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientSummaryDoneClicked(patientUuid))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(LoadDataForDoneClick(patientUuid))
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

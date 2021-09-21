@@ -38,6 +38,9 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
       model.showOngoingHypertensionTreatment && !model.answeredIsOnHypertensionTreatment -> {
         dispatch(ShowOngoingHypertensionTreatmentError)
       }
+      model.showOngoingDiabetesTreatment && !model.answeredIsOnDiabetesTreatment -> {
+        dispatch(ShowOngoingDiabetesTreatmentErrorDialog)
+      }
       else -> registerPatient(model)
     }
   }

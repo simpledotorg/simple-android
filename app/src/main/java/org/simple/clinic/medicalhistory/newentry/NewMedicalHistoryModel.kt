@@ -52,6 +52,9 @@ data class NewMedicalHistoryModel(
   val answeredIsOnHypertensionTreatment: Boolean
     get() = ongoingMedicalHistoryEntry.isOnHypertensionTreatment != Unanswered
 
+  val answeredIsOnDiabetesTreatment: Boolean
+    get() = ongoingMedicalHistoryEntry.isOnDiabetesTreatment != Unanswered
+
   val showOngoingHypertensionTreatment: Boolean
     get() = diagnosedWithHypertension && country.isoCountryCode == Country.INDIA
 

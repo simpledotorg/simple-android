@@ -252,6 +252,15 @@ class NewMedicalHistoryScreen : BaseScreen<
         .show()
   }
 
+  override fun showChangeDiagnosisErrorDialog() {
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(getString(R.string.change_diagnosis_title))
+        .setMessage(getString(R.string.change_diagnosis_message))
+        .setPositiveButton(getString(R.string.change_diagnosis_positive), null)
+        .setNegativeButton(getString(R.string.change_diagnosis_negative), null)
+        .show()
+  }
+
   interface Injector {
     fun inject(target: NewMedicalHistoryScreen)
   }

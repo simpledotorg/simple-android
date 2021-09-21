@@ -965,6 +965,36 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when done is clicked and patient is dead, then go back to previous screen`() {
+    val patientUuid = UUID.fromString("c28e15d1-c83c-4d07-a839-b978e4482f30")
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        status = PatientStatus.Dead
+    )
+
+    val patientSummaryProfile = PatientSummaryProfile(
+        patient = patient,
+        address = patientAddress,
+        phoneNumber = phoneNumber,
+        bpPassport = bpPassport,
+        alternativeId = bangladeshNationalId,
+        facility = facility
+    )
+
+    val model = defaultModel
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientSummaryDoneClicked(patientUuid))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoToHomeScreen)
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

@@ -8,7 +8,7 @@
   android:clipToPadding="false"
   tools:background="?attr/colorSurface"
   tools:context="org.simple.clinic.contactpatient.views.CallPatientView"
-  tools:parentTag="org.simple.clinic.contactpatient.views.CallPatientView">
+  tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
   <TextView
     android:id="@+id/nameTextView"

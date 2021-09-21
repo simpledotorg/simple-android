@@ -26,7 +26,7 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
 
   private fun saveClicked(model: NewMedicalHistoryModel): Next<NewMedicalHistoryModel, NewMedicalHistoryEffect> {
     return when {
-      model.facilityDiabetesManagementEnabled && model.hasNoHypertension && model.hasNoDiabetes -> {
+      model.facilityDiabetesManagementEnabled && !model.hasShownChangeDiagnosisError && model.hasNoHypertension && model.hasNoDiabetes -> {
         next(model.changeDiagnosisErrorShown(), ShowChangeDiagnosisErrorDialog)
       }
       model.facilityDiabetesManagementEnabled && !model.hasAnsweredBothDiagnosisQuestions -> {

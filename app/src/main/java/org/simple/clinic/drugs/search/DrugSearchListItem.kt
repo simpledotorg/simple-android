@@ -22,7 +22,11 @@ sealed class DrugSearchListItem : PagingItemAdapter.Item<Event> {
 
   companion object {
 
-    fun from(searchResults: PagingData<Drug>, searchQuery: String, drugFrequencyToFrequencyChoiceItemMap: Map<DrugFrequency?, DrugFrequencyChoiceItem>): PagingData<DrugSearchListItem> {
+    fun from(
+        searchResults: PagingData<Drug>,
+        searchQuery: String,
+        drugFrequencyToFrequencyChoiceItemMap: Map<DrugFrequency?, DrugFrequencyChoiceItem>
+    ): PagingData<DrugSearchListItem> {
       return searchResults
           .map{DrugSearchResult(it, drugFrequencyToFrequencyChoiceItemMap)}
           .insertSeparators(SOURCE_COMPLETE) { oldItem, newItem ->

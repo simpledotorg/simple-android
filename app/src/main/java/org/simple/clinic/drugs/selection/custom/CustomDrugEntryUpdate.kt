@@ -6,6 +6,7 @@ import com.spotify.mobius.Update
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.search.Drug
 import org.simple.clinic.drugs.search.DrugFrequency
+import org.simple.clinic.drugs.selection.custom.ButtonState.SAVING
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import java.util.UUID
@@ -81,6 +82,6 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       is OpenAs.Update -> UpdatePrescription(patientUuid, model.openAs.prescribedDrugUuid, model.drugName!!, model.dosage, model.rxNormCode, model.frequency)
     }
 
-    return next(model.buttonProgressStateIsSaving(), effect)
+    return next(model.saveButtonStateChanged(SAVING), effect)
   }
 }

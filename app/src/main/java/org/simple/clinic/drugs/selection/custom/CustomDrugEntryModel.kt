@@ -86,4 +86,8 @@ data class CustomDrugEntryModel(
   fun buttonProgressStateIsSaved(): CustomDrugEntryModel {
     return copy(saveButtonState = SAVED)
   }
+
+  fun saveButtonStateChanged(saveButtonState: ButtonState): CustomDrugEntryModel {
+    return copy(saveButtonState = saveButtonState)
+  }
 }

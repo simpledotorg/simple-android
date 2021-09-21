@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.drugs.search.DrugFrequency
+import org.simple.clinic.drugs.selection.custom.ButtonState.SAVING
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
 import java.util.UUID
 
@@ -153,7 +154,7 @@ class CustomDrugEntryUiRendererTest {
     val frequencyLabel = "None"
 
     // when
-    uiRenderer.render(defaultModel.drugInfoProgressStateLoaded().buttonProgressStateIsSaving())
+    uiRenderer.render(defaultModel.drugInfoProgressStateLoaded().saveButtonStateChanged(SAVING))
 
     // then
     verify(ui).hideProgressBar()

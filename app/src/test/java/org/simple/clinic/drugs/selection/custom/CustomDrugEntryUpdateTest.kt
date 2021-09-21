@@ -12,6 +12,7 @@ import org.simple.clinic.drugs.search.DrugFrequency.BD
 import org.simple.clinic.drugs.search.DrugFrequency.OD
 import org.simple.clinic.drugs.search.DrugFrequency.QDS
 import org.simple.clinic.drugs.search.DrugFrequency.TDS
+import org.simple.clinic.drugs.selection.custom.ButtonState.SAVING
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItems
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
@@ -123,7 +124,7 @@ class CustomDrugEntryUpdateTest {
         .given(model)
         .whenEvent(AddMedicineButtonClicked(patientUuid))
         .then(assertThatNext(
-            hasModel(model.buttonProgressStateIsSaving()),
+            hasModel(model.saveButtonStateChanged(SAVING)),
             hasEffects(SaveCustomDrugToPrescription(patientUuid, drugName, dosage, drug.rxNormCode, frequency))
         ))
   }
@@ -143,7 +144,7 @@ class CustomDrugEntryUpdateTest {
         .given(model)
         .whenEvent(AddMedicineButtonClicked(patientUuid))
         .then(assertThatNext(
-            hasModel(model.buttonProgressStateIsSaving()),
+            hasModel(model.saveButtonStateChanged(SAVING)),
             hasEffects(SaveCustomDrugToPrescription(patientUuid, drugName, dosage, null, frequency))
         ))
   }
@@ -164,7 +165,7 @@ class CustomDrugEntryUpdateTest {
         .whenEvent(AddMedicineButtonClicked(patientUuid))
         .then(
             assertThatNext(
-                hasModel(model.buttonProgressStateIsSaving()),
+                hasModel(model.saveButtonStateChanged(SAVING)),
                 hasEffects(UpdatePrescription(patientUuid, prescribedDrugUuid, drugName, dosage, null, frequency))
             )
         )

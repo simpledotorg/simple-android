@@ -336,6 +336,10 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     callPatientView.showPatientWithNoPhoneNumberResults = true
   }
 
+  override fun showDeadPatientStatus() {
+    callPatientView.showPatientDiedStatus = true
+  }
+
   private fun backPressed() {
     hotEvents.onNext(BackClicked)
   }

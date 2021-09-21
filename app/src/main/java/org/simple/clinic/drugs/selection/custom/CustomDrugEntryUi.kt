@@ -12,6 +12,5 @@ interface CustomDrugEntryUi {
   fun hideCustomDrugEntryUi()
   fun hideProgressBar()
   fun showCustomDrugEntryUi()
-  fun showKeyboard()
   fun showSaveButtonProgressState()
 }

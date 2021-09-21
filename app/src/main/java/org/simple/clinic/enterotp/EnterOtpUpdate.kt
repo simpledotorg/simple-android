@@ -2,9 +2,6 @@ package org.simple.clinic.enterotp
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
-import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState
-import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState.Allowed
-import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState.Blocked
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.activateuser.ActivateUser
 import org.simple.clinic.mobius.dispatch
@@ -46,13 +43,13 @@ class EnterOtpUpdate(
       event: LoginUserCompleted
   ): Next<EnterOtpModel, EnterOtpEffect> {
     val updatedModel = model.loginFinished()
-    val loginFailedModel = updatedModel.loginFailed()
-    return when (val result = event.result) {
-      LoginResult.Success -> next(updatedModel, ClearLoginEntry, TriggerSync, ResetOtpAttemptLimit)
-      is LoginResult.ServerError -> next(loginFailedModel, FailedLoginOtpAttempt(result), ClearPin)
-      LoginResult.NetworkError -> next(loginFailedModel, ShowNetworkError, ClearPin)
-      LoginResult.UnexpectedError -> next(loginFailedModel, ShowUnexpectedError, ClearPin)
+    val effects = when (val result = event.result) {
+      LoginResult.Success -> setOf(ClearLoginEntry, TriggerSync, ResetOtpAttemptLimit)
+      is LoginResult.ServerError -> setOf(FailedLoginOtpAttempt(result), ClearPin)
+      LoginResult.NetworkError -> setOf(ShowNetworkError, ClearPin)
+      LoginResult.UnexpectedError -> setOf(ShowUnexpectedError, ClearPin)
     }
+    return next(updatedModel, *effects.toTypedArray())
   }
 
   private fun otpSubmitted(

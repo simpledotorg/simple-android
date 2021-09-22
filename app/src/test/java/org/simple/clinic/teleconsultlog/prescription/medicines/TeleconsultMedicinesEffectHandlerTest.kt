@@ -15,7 +15,6 @@ import org.simple.clinic.drugs.search.DrugFrequency.BD
 import org.simple.clinic.drugs.search.DrugFrequency.OD
 import org.simple.clinic.drugs.search.DrugFrequency.QDS
 import org.simple.clinic.drugs.search.DrugFrequency.TDS
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
@@ -27,12 +26,19 @@ class TeleconsultMedicinesEffectHandlerTest {
 
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val uiActions = mock<TeleconsultMedicinesUiActions>()
-  private val drugFrequencyFactory = mock<DrugFrequencyFactory>()
+
+  private val drugFrequencyToLabelMap = mapOf(
+      null to DrugFrequencyLabel(label = "None"),
+      OD to DrugFrequencyLabel(label = "OD"),
+      BD to DrugFrequencyLabel(label = "BD"),
+      TDS to DrugFrequencyLabel(label = "TDS"),
+      QDS to DrugFrequencyLabel(label = "QDS")
+  )
   private val effectHandler = TeleconsultMedicinesEffectHandler(
       prescriptionRepository = prescriptionRepository,
       schedulersProvider = TestSchedulersProvider.trampoline(),
       uiActions = uiActions,
-      drugFrequencyFactory = drugFrequencyFactory
+      drugFrequencyToLabelMap = drugFrequencyToLabelMap
   )
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler.build())
 
@@ -153,17 +159,6 @@ class TeleconsultMedicinesEffectHandlerTest {
 
   @Test
   fun `when load drug frequency choice items effect is received, then load drug frequency choice items`() {
-    // given
-    val drugFrequencyToLabelMap = mapOf(
-        null to DrugFrequencyLabel(label = "None"),
-        OD to DrugFrequencyLabel(label = "OD"),
-        BD to DrugFrequencyLabel(label = "BD"),
-        TDS to DrugFrequencyLabel(label = "TDS"),
-        QDS to DrugFrequencyLabel(label = "QDS")
-    )
-
-    whenever(drugFrequencyFactory.provideFields()).thenReturn(drugFrequencyToLabelMap)
-
     // when
     effectHandlerTestCase.dispatch(LoadDrugFrequencyChoiceItems)
 

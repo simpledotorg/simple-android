@@ -6,13 +6,14 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
+import org.simple.clinic.drugs.search.DrugFrequency
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class TeleconsultMedicinesEffectHandler @AssistedInject constructor(
     private val prescriptionRepository: PrescriptionRepository,
     private val schedulersProvider: SchedulersProvider,
-    private val drugFrequencyFactory: DrugFrequencyFactory,
+    private val drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>,
     @Assisted private val uiActions: TeleconsultMedicinesUiActions
 ) {
 
@@ -38,7 +39,7 @@ class TeleconsultMedicinesEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .map { drugFrequencyFactory.provideFields() }
+          .map { drugFrequencyToLabelMap }
           .map(::DrugFrequencyChoiceItemsLoaded)
     }
   }

@@ -25,17 +25,21 @@ class TeleconsultMedicinesUpdate : Update<TeleconsultMedicinesModel, Teleconsult
     }
   }
 
-  private fun drugFrequencyClicked(event: DrugFrequencyClicked, model: TeleconsultMedicinesModel): Next<TeleconsultMedicinesModel, TeleconsultMedicinesEffect> {
-    return dispatch(OpenDrugFrequencySheet(event.prescription, model.medicineFrequencyToFrequencyChoiceItemMap))
+  private fun drugFrequencyClicked(
+      event: DrugFrequencyClicked,
+      model: TeleconsultMedicinesModel
+  ): Next<TeleconsultMedicinesModel, TeleconsultMedicinesEffect> {
+    return dispatch(OpenDrugFrequencySheet(event.prescription))
   }
 
   private fun drugFrequencyChoiceItemsLoaded(
       model: TeleconsultMedicinesModel,
       event: DrugFrequencyChoiceItemsLoaded
   ): Next<TeleconsultMedicinesModel, TeleconsultMedicinesEffect> {
-    val medicineFrequencyToDrugFrequencyChoiceItemMap =
-        event.drugFrequencyChoiceItems.items
-            .associateBy({ MedicineFrequency.fromDrugFrequency(it.drugFrequency) }, { it })
-    return next(model.medicineFrequencyToFrequencyChoiceItemMapLoaded(medicineFrequencyToDrugFrequencyChoiceItemMap))
+    val medicineFrequencyToLabelMap = event
+        .drugFrequencyToLabelMap
+        .mapKeys { (drugFrequency, _) -> MedicineFrequency.fromDrugFrequency(drugFrequency) }
+
+    return next(model.medicineFrequencyToLabelMapLoaded(medicineFrequencyToLabelMap))
   }
 }

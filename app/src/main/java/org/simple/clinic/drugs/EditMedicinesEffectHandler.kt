@@ -8,9 +8,9 @@ import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.Observables
+import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.selection.EditMedicinesUiActions
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItems
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientUuid
@@ -21,7 +21,6 @@ import org.simple.clinic.uuid.UuidGenerator
 import java.util.UUID
 
 class EditMedicinesEffectHandler @AssistedInject constructor(
-    @Assisted private val uiActions: EditMedicinesUiActions,
     private val schedulersProvider: SchedulersProvider,
     private val protocolRepository: ProtocolRepository,
     private val prescriptionRepository: PrescriptionRepository,
@@ -29,7 +28,8 @@ class EditMedicinesEffectHandler @AssistedInject constructor(
     private val utcClock: UtcClock,
     private val uuidGenerator: UuidGenerator,
     private val appointmentsRepository: AppointmentRepository,
-    private val drugFrequencyFactory: DrugFrequencyFactory,
+    private val drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>,
+    @Assisted private val uiActions: EditMedicinesUiActions,
 ) {
 
   @AssistedFactory
@@ -54,8 +54,7 @@ class EditMedicinesEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .map { drugFrequencyFactory.provideFields() }
-          .map(::DrugFrequencyChoiceItems)
+          .map { drugFrequencyToLabelMap }
           .map(::DrugFrequencyChoiceItemsLoaded)
     }
   }

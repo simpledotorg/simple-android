@@ -3,7 +3,7 @@ package org.simple.clinic.teleconsultlog.prescription.medicines
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.drugs.PrescribedDrug
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import java.util.UUID
 
@@ -11,7 +11,7 @@ import java.util.UUID
 data class TeleconsultMedicinesModel(
     val patientUuid: UUID,
     val medicines: List<PrescribedDrug>?,
-    val medicineFrequencyToFrequencyChoiceItemMap: Map<MedicineFrequency?, DrugFrequencyChoiceItem>?
+    val medicineFrequencyToLabelMap: Map<MedicineFrequency?, DrugFrequencyLabel>?
 ) : Parcelable {
 
   companion object {
@@ -19,7 +19,7 @@ data class TeleconsultMedicinesModel(
     fun create(patientUuid: UUID) = TeleconsultMedicinesModel(
         patientUuid = patientUuid,
         medicines = null,
-        medicineFrequencyToFrequencyChoiceItemMap = null
+        medicineFrequencyToLabelMap = null
     )
   }
 
@@ -29,14 +29,14 @@ data class TeleconsultMedicinesModel(
   val medicinesNotNullorEmpty: Boolean
     get() = !medicines.isNullOrEmpty()
 
-  val hasMedicineFrequencyToFrequencyChoiceItemMap
-    get() = medicineFrequencyToFrequencyChoiceItemMap != null
+  val hasMedicineFrequencyToLabelMap
+    get() = medicineFrequencyToLabelMap != null
 
   fun medicinesLoaded(medicines: List<PrescribedDrug>): TeleconsultMedicinesModel {
     return copy(medicines = medicines)
   }
 
-  fun medicineFrequencyToFrequencyChoiceItemMapLoaded(
-      medicineFrequencyToFrequencyChoiceItemMap: Map<MedicineFrequency?, DrugFrequencyChoiceItem>?
-  ) = copy(medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap)
+  fun medicineFrequencyToLabelMapLoaded(medicineFrequencyToLabelMap: Map<MedicineFrequency?, DrugFrequencyLabel>?): TeleconsultMedicinesModel {
+    return copy(medicineFrequencyToLabelMap = medicineFrequencyToLabelMap)
+  }
 }

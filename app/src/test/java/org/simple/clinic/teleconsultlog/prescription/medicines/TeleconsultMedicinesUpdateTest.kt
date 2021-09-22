@@ -10,8 +10,7 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.search.DrugFrequency
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItems
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import java.time.Duration
 import java.util.UUID
@@ -20,12 +19,12 @@ class TeleconsultMedicinesUpdateTest {
   private val patientUuid = UUID.fromString("134a6669-7b4c-42dd-a763-e3015b7933ff")
   private val model = TeleconsultMedicinesModel.create(patientUuid = patientUuid)
 
-  private val medicineFrequencyToFrequencyChoiceItemMap = mapOf(
-      null to DrugFrequencyChoiceItem(drugFrequency = null, label = "None"),
-      MedicineFrequency.OD to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.OD, label = "OD"),
-      MedicineFrequency.BD to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.BD, label = "BD"),
-      MedicineFrequency.TDS to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.TDS, label = "TDS"),
-      MedicineFrequency.QDS to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.QDS, label = "QDS")
+  private val medicineFrequencyToLabelMap = mapOf(
+      null to DrugFrequencyLabel(label = "None"),
+      MedicineFrequency.OD to DrugFrequencyLabel(label = "OD"),
+      MedicineFrequency.BD to DrugFrequencyLabel(label = "BD"),
+      MedicineFrequency.TDS to DrugFrequencyLabel(label = "TDS"),
+      MedicineFrequency.QDS to DrugFrequencyLabel(label = "QDS")
   )
 
   private val updateSpec = UpdateSpec(TeleconsultMedicinesUpdate())
@@ -74,11 +73,11 @@ class TeleconsultMedicinesUpdateTest {
     )
 
     updateSpec
-        .given(model.medicineFrequencyToFrequencyChoiceItemMapLoaded(medicineFrequencyToFrequencyChoiceItemMap))
+        .given(model.medicineFrequencyToLabelMapLoaded(medicineFrequencyToLabelMap))
         .whenEvent(DrugFrequencyClicked(prescription))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenDrugFrequencySheet(prescription, medicineFrequencyToFrequencyChoiceItemMap))
+            hasEffects(OpenDrugFrequencySheet(prescription))
         ))
   }
 
@@ -142,19 +141,19 @@ class TeleconsultMedicinesUpdateTest {
 
   @Test
   fun `when drug frequency choice items are loaded, then update the model with a map of medicine frequency to frequency choice items`() {
-    val drugFrequencyChoiceItems = listOf(
-        DrugFrequencyChoiceItem(drugFrequency = null, label = "None"),
-        DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.OD, label = "OD"),
-        DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.BD, label = "BD"),
-        DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.TDS, label = "TDS"),
-        DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.QDS, label = "QDS")
+    val drugFrequencyToLabelMap = mapOf(
+        null to DrugFrequencyLabel(label = "None"),
+        DrugFrequency.OD to DrugFrequencyLabel(label = "OD"),
+        DrugFrequency.BD to DrugFrequencyLabel(label = "BD"),
+        DrugFrequency.TDS to DrugFrequencyLabel(label = "TDS"),
+        DrugFrequency.QDS to DrugFrequencyLabel(label = "QDS")
     )
 
     updateSpec
         .given(model)
-        .whenEvent(DrugFrequencyChoiceItemsLoaded(DrugFrequencyChoiceItems(drugFrequencyChoiceItems)))
+        .whenEvent(DrugFrequencyChoiceItemsLoaded(drugFrequencyToLabelMap))
         .then(assertThatNext(
-            hasModel(model.medicineFrequencyToFrequencyChoiceItemMapLoaded(medicineFrequencyToFrequencyChoiceItemMap)),
+            hasModel(model.medicineFrequencyToLabelMapLoaded(medicineFrequencyToLabelMap)),
             hasNoEffects()
         ))
   }

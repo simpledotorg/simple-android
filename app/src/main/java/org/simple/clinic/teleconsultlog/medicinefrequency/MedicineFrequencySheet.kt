@@ -15,6 +15,8 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetMedicineFrequencyBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.drugs.search.DrugFrequency
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency.BD
@@ -63,6 +65,9 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
 
   @Inject
   lateinit var features: Features
+
+  @Inject
+  lateinit var drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>
 
   private lateinit var component: MedicineFrequencyComponent
 
@@ -131,10 +136,15 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
   }
 
   private fun setDrugFrequencyLabels() {
-    medicineFrequencyOdRadioButton.text = medicineFrequencyExtra.medicineFrequencyToFrequencyChoiceItemMap[OD]!!.label
-    medicineFrequencyBdRadioButton.text = medicineFrequencyExtra.medicineFrequencyToFrequencyChoiceItemMap[BD]!!.label
-    medicineFrequencyTdsRadioButton.text = medicineFrequencyExtra.medicineFrequencyToFrequencyChoiceItemMap[TDS]!!.label
-    medicineFrequencyQdsRadioButton.text = medicineFrequencyExtra.medicineFrequencyToFrequencyChoiceItemMap[QDS]!!.label
+    val medicineFrequencyToLabelMap = drugFrequencyToLabelMap
+        .mapKeys { (drugFrequency, _) ->
+          MedicineFrequency.fromDrugFrequency(drugFrequency)
+        }
+
+    medicineFrequencyOdRadioButton.text = medicineFrequencyToLabelMap[OD]!!.label
+    medicineFrequencyBdRadioButton.text = medicineFrequencyToLabelMap[BD]!!.label
+    medicineFrequencyTdsRadioButton.text = medicineFrequencyToLabelMap[TDS]!!.label
+    medicineFrequencyQdsRadioButton.text = medicineFrequencyToLabelMap[QDS]!!.label
   }
 
   private fun medicineFrequencyChanges(): Observable<MedicineFrequencyChanged> {

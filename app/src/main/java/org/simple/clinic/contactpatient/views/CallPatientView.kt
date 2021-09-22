@@ -86,6 +86,9 @@ class CallPatientView(
   private val patientWithNoPhoneNumberResultsGroup
     get() = binding!!.patientWithNoPhoneNumberResultGroup
 
+  private val patientDiedStatusView
+    get() = binding!!.patientDiedStatusView
+
   var secureCallingSectionVisible: Boolean = false
     set(value) {
       field = value
@@ -126,6 +129,12 @@ class CallPatientView(
     set(value) {
       field = value
       patientWithNoPhoneNumberResultsGroup.visibility = if (field) View.VISIBLE else View.GONE
+    }
+
+  var showPatientDiedStatus: Boolean = false
+    set(value) {
+      field = value
+      patientDiedStatusView.visibility = if (field) View.VISIBLE else View.GONE
     }
 
   var agreedToVisitClicked: AgreedToVisitClicked? = null

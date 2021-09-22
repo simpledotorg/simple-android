@@ -11,6 +11,7 @@ import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.util.TestUserClock
 import java.time.LocalDate
 import java.time.Period
@@ -79,6 +80,7 @@ class CallPatientUiRendererTest {
     verify(ui).hidePatientWithNoPhoneNumberUi()
     verify(ui).setResultOfCallLabelText()
     verify(ui).showSecureCallUi()
+    verify(ui).hideDeadPatientStatus()
     verifyNoMoreInteractions(ui)
   }
 
@@ -123,6 +125,7 @@ class CallPatientUiRendererTest {
     verify(ui).showPatientWithPhoneNumberCallResults()
     verify(ui).setResultOfCallLabelText()
     verify(ui).showSecureCallUi()
+    verify(ui).hideDeadPatientStatus()
     verifyNoMoreInteractions(ui)
   }
 
@@ -165,6 +168,7 @@ class CallPatientUiRendererTest {
     verify(ui).setResultOfCallLabelText()
     verify(ui).hideSecureCallUi()
     verify(ui).showPatientWithPhoneNumberCallResults()
+    verify(ui).hideDeadPatientStatus()
     verifyNoMoreInteractions(ui)
   }
 
@@ -207,6 +211,7 @@ class CallPatientUiRendererTest {
     verify(ui).switchToCallPatientView()
     verify(ui).setResultLabelText()
     verify(ui).showPatientWithNoPhoneNumberResults()
+    verify(ui).hideDeadPatientStatus()
     verifyNoMoreInteractions(ui)
   }
 
@@ -250,6 +255,7 @@ class CallPatientUiRendererTest {
     verify(ui).switchToCallPatientView()
     verify(ui).setResultOfCallLabelText()
     verify(ui).showPatientWithPhoneNumberCallResults()
+    verify(ui).hideDeadPatientStatus()
     verifyNoMoreInteractions(ui)
   }
 
@@ -284,6 +290,7 @@ class CallPatientUiRendererTest {
     verify(ui).hidePatientWithPhoneNumberUi()
     verify(ui).setResultLabelText()
     verify(ui).showPatientWithNoPhoneNumberResults()
+    verify(ui).hideDeadPatientStatus()
     verifyNoMoreInteractions(ui)
   }
 
@@ -319,6 +326,52 @@ class CallPatientUiRendererTest {
     verify(ui).hidePatientWithPhoneNumberUi()
     verify(ui).setResultLabelText()
     verify(ui).showPatientWithNoPhoneNumberResults()
+    verify(ui).hideDeadPatientStatus()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when patient is dead and has phone number, then show patient died status`() {
+    // given
+    val currentFacility = TestData.facility(
+        uuid = UUID.fromString("1749461e-0ff7-47d9-95e0-fa4337d118b3"),
+        name = "Bhatinda"
+    )
+    val patientProfile = TestData.contactPatientProfile(
+        patientUuid = patientUuid,
+        patientStatus = PatientStatus.Dead,
+        patientPhoneNumber = "1234567890",
+        generatePhoneNumber = false
+    )
+
+    // when
+    val defaultModel = defaultModel(
+        phoneMaskFeatureEnabled = true
+    )
+    uiRenderer.render(
+        defaultModel
+            .currentFacilityLoaded(currentFacility)
+            .contactPatientProfileLoaded(patientProfile)
+            .contactPatientInfoLoaded()
+    )
+
+    // then
+    verify(ui).hideProgress()
+    verify(ui).renderPatientDetails(PatientDetails(name = patientProfile.patient.fullName,
+        gender = patientProfile.patient.gender,
+        age = patientProfile.patient.ageDetails.estimateAge(clock),
+        phoneNumber = patientProfile.phoneNumbers.first().number,
+        patientAddress = patientAddressText(patientProfile.address)!!,
+        registeredFacility = patientProfile.registeredFacility?.name,
+        diagnosedWithDiabetes = patientProfile.medicalHistory?.diagnosedWithDiabetes,
+        diagnosedWithHypertension = patientProfile.medicalHistory?.diagnosedWithHypertension,
+        lastVisited = patientProfile.patientLastSeen))
+    verify(ui).switchToCallPatientView()
+    verify(ui).hidePatientWithNoPhoneNumberUi()
+    verify(ui).showPatientWithPhoneNumberUi()
+    verify(ui).hidePatientWithPhoneNumberCallResults()
+    verify(ui).showDeadPatientStatus()
+    verify(ui).showSecureCallUi()
     verifyNoMoreInteractions(ui)
   }
 

@@ -8,6 +8,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.PotentialAppointmentDate
+import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.util.ParcelableOptional
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.parcelable
@@ -50,6 +51,9 @@ data class ContactPatientModel(
       )
     }
   }
+
+  val hasPatientDied: Boolean
+    get() = patientProfile?.patient?.status == PatientStatus.Dead
 
   val hasCurrentFacility: Boolean
     get() = currentFacility != null

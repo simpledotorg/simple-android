@@ -141,8 +141,8 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
-  fun `when save button is clicked, then update the prescription in the repository and set button progress state to saving`() {
-    val dosage = "200 mg"
+  fun `when save button is clicked and dosage is invalid, then update the prescription in the repository without the dosage and set button progress state to saving`() {
+    val dosage = "mg"
     val frequency = OD
     val prescribedDrugUuid = UUID.fromString("96633994-6e4d-4528-b796-f03ae016553a")
     val model = CustomDrugEntryModel
@@ -157,7 +157,7 @@ class CustomDrugEntryUpdateTest {
         .then(
             assertThatNext(
                 hasModel(model.saveButtonStateChanged(SAVING)),
-                hasEffects(UpdatePrescription(patientUuid, prescribedDrugUuid, drugName, dosage, null, frequency))
+                hasEffects(UpdatePrescription(patientUuid, prescribedDrugUuid, drugName, null, null, frequency))
             )
         )
   }

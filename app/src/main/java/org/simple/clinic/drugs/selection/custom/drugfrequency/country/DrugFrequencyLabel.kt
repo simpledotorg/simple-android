@@ -1,4 +1,8 @@
 package org.simple.clinic.drugs.selection.custom.drugfrequency.country
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 @JvmInline
-value class DrugFrequencyLabel(val label: String)
+@Parcelize
+value class DrugFrequencyLabel(val label: String) : Parcelable

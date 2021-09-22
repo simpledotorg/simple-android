@@ -13,7 +13,7 @@ import org.simple.clinic.R
 import org.simple.clinic.databinding.ListItemDrugSearchBinding
 import org.simple.clinic.databinding.ListItemDrugSearchCornerCapBinding
 import org.simple.clinic.drugs.search.DrugSearchListItem.Event
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.dp
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
@@ -25,10 +25,10 @@ sealed class DrugSearchListItem : PagingItemAdapter.Item<Event> {
     fun from(
         searchResults: PagingData<Drug>,
         searchQuery: String,
-        drugFrequencyToFrequencyChoiceItemMap: Map<DrugFrequency?, DrugFrequencyChoiceItem>
+        drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>
     ): PagingData<DrugSearchListItem> {
       return searchResults
-          .map{DrugSearchResult(it, drugFrequencyToFrequencyChoiceItemMap)}
+          .map { DrugSearchResult(it, drugFrequencyToLabelMap) }
           .insertSeparators(SOURCE_COMPLETE) { oldItem, newItem ->
             insertSeparators(oldItem, newItem, searchQuery)
           }
@@ -54,7 +54,10 @@ sealed class DrugSearchListItem : PagingItemAdapter.Item<Event> {
     }
   }
 
-  data class DrugSearchResult(val drug: Drug, val drugFrequencyToFrequencyChoiceItemMap: Map<DrugFrequency?, DrugFrequencyChoiceItem>) : DrugSearchListItem() {
+  data class DrugSearchResult(
+      val drug: Drug,
+      val drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>
+  ) : DrugSearchListItem() {
 
     override fun layoutResId() = R.layout.list_item_drug_search
 
@@ -77,7 +80,7 @@ sealed class DrugSearchListItem : PagingItemAdapter.Item<Event> {
         }
 
         if (drug.frequency != null) {
-          val frequencyLabel = drugFrequencyToFrequencyChoiceItemMap[drug.frequency]!!.label
+          val frequencyLabel = drugFrequencyToLabelMap[drug.frequency]!!.label
           append("$drugNameSeparator${frequencyLabel}")
         }
       }

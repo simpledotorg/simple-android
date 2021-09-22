@@ -129,16 +129,14 @@ class DrugsSearchScreen : BaseScreen<
   }
 
   override fun setDrugSearchResults(searchResults: PagingData<Drug>) {
-    val drugFrequencyToFrequencyChoiceItemMap = drugFrequencyFactory
-        .provideFields()
-        .associateBy({ it.drugFrequency }, { it })
-
+    val drugFrequencyToLabelMap = drugFrequencyFactory.provideFields()
     val searchQuery = searchQueryEditText.text?.toString().orEmpty()
+
     drugSearchResultsList.scrollToPosition(0)
     adapter.submitData(lifecycle, DrugSearchListItem.from(
         searchResults,
         searchQuery,
-        drugFrequencyToFrequencyChoiceItemMap
+        drugFrequencyToLabelMap
     ))
   }
 

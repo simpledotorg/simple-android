@@ -5,6 +5,7 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
@@ -17,7 +18,8 @@ data class NewMedicalHistoryModel(
     val ongoingPatientEntry: OngoingNewPatientEntry?,
     val ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry,
     val currentFacility: Facility?,
-    val nextButtonState: ButtonState?
+    val nextButtonState: ButtonState?,
+    val hasShownChangeDiagnosisError: Boolean
 ) : Parcelable {
 
   val hasLoadedPatientEntry: Boolean
@@ -56,13 +58,23 @@ data class NewMedicalHistoryModel(
   val showOngoingDiabetesTreatment: Boolean
     get() = diagnosedWithDiabetes && country.isoCountryCode == Country.INDIA
 
+  private val hasNoHypertension: Boolean
+    get() = ongoingMedicalHistoryEntry.diagnosedWithHypertension == No
+
+  private val hasNoDiabetes: Boolean
+    get() = ongoingMedicalHistoryEntry.hasDiabetes == No
+
+  val showChangeDiagnosisError: Boolean
+    get() = !hasShownChangeDiagnosisError && hasNoHypertension && hasNoDiabetes
+
   companion object {
     fun default(country: Country): NewMedicalHistoryModel = NewMedicalHistoryModel(
         country = country,
         ongoingPatientEntry = null,
         ongoingMedicalHistoryEntry = OngoingMedicalHistoryEntry(),
         currentFacility = null,
-        nextButtonState = null
+        nextButtonState = null,
+        hasShownChangeDiagnosisError = false
     )
   }
 
@@ -84,5 +96,9 @@ data class NewMedicalHistoryModel(
 
   fun patientRegistered(): NewMedicalHistoryModel {
     return copy(nextButtonState = ButtonState.SAVED)
+  }
+
+  fun changeDiagnosisErrorShown(): NewMedicalHistoryModel {
+    return copy(hasShownChangeDiagnosisError = true)
   }
 }

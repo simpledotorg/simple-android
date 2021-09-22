@@ -15,7 +15,8 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetMedicineFrequencyBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
+import org.simple.clinic.drugs.search.DrugFrequency
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency.BD
@@ -66,7 +67,7 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
   lateinit var features: Features
 
   @Inject
-  lateinit var drugFrequencyFactory: DrugFrequencyFactory
+  lateinit var drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>
 
   private lateinit var component: MedicineFrequencyComponent
 
@@ -135,8 +136,7 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
   }
 
   private fun setDrugFrequencyLabels() {
-    val medicineFrequencyToLabelMap = drugFrequencyFactory
-        .provideFields()
+    val medicineFrequencyToLabelMap = drugFrequencyToLabelMap
         .mapKeys { (drugFrequency, _) ->
           MedicineFrequency.fromDrugFrequency(drugFrequency)
         }

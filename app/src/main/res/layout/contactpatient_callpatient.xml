@@ -8,7 +8,7 @@
   android:clipToPadding="false"
   tools:background="?attr/colorSurface"
   tools:context="org.simple.clinic.contactpatient.views.CallPatientView"
-  tools:parentTag="org.simple.clinic.contactpatient.views.CallPatientView">
+  tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
   <TextView
     android:id="@+id/nameTextView"
@@ -341,7 +341,7 @@
     app:constraint_referenced_ids="patientAddressTextView, noPhoneNumberBottomTextViewLayout" />
 
   <androidx.constraintlayout.widget.Group
-    android:id="@+id/patientWithCallResultGroup"
+    android:id="@+id/patientWithPhoneNumberResultsGroup"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:visibility="gone"

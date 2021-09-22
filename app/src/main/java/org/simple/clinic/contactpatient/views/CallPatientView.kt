@@ -80,8 +80,8 @@ class CallPatientView(
   private val lastVisitedLabel
     get() = binding!!.lastVisitedLabel
 
-  private val patientWithCallResultGroup
-    get() = binding!!.patientWithCallResultGroup
+  private val patientWithPhoneNumberResultsGroup
+    get() = binding!!.patientWithPhoneNumberResultsGroup
 
   private val patientWithNoPhoneNumberResultsGroup
     get() = binding!!.patientWithNoPhoneNumberResultGroup
@@ -119,7 +119,7 @@ class CallPatientView(
   var showPatientWithCallResultLayout: Boolean = false
     set(value) {
       field = value
-      patientWithCallResultGroup.visibility = if (field) View.VISIBLE else View.GONE
+      patientWithPhoneNumberResultsGroup.visibility = if (field) View.VISIBLE else View.GONE
     }
 
   var showPatientWithNoPhoneNumberResults: Boolean = false

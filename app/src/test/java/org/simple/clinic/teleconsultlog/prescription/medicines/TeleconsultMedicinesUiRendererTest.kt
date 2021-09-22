@@ -6,8 +6,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.drugs.search.DrugFrequency
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import java.util.UUID
 
@@ -39,22 +38,22 @@ class TeleconsultMedicinesUiRendererTest {
             uuid = UUID.fromString("c3e45f9b-7023-4671-bfc5-4159fefe8aa2")
         )
     )
-    val medicineFrequencyToFrequencyChoiceItemMap = mapOf(
-        null to DrugFrequencyChoiceItem(drugFrequency = null, label = "None"),
-        MedicineFrequency.OD to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.OD, label = "OD"),
-        MedicineFrequency.BD to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.BD, label = "BD"),
-        MedicineFrequency.TDS to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.TDS, label = "TDS"),
-        MedicineFrequency.QDS to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.QDS, label = "QDS")
+    val medicineFrequencyToLabelMap = mapOf(
+        null to DrugFrequencyLabel(label = "None"),
+        MedicineFrequency.OD to DrugFrequencyLabel(label = "OD"),
+        MedicineFrequency.BD to DrugFrequencyLabel(label = "BD"),
+        MedicineFrequency.TDS to DrugFrequencyLabel(label = "TDS"),
+        MedicineFrequency.QDS to DrugFrequencyLabel(label = "QDS")
     )
     val medicinesLoadedModel = model
         .medicinesLoaded(medicines)
-        .medicineFrequencyToFrequencyChoiceItemMapLoaded(medicineFrequencyToFrequencyChoiceItemMap)
+        .medicineFrequencyToLabelMapLoaded(medicineFrequencyToLabelMap)
 
     // when
     uiRenderer.render(medicinesLoadedModel)
 
     // then
-    verify(ui).renderMedicines(medicines, medicineFrequencyToFrequencyChoiceItemMap)
+    verify(ui).renderMedicines(medicines, medicineFrequencyToLabelMap)
     verify(ui).showEditButton()
     verify(ui).hideMedicinesRequiredError()
     verifyNoMoreInteractions(ui)

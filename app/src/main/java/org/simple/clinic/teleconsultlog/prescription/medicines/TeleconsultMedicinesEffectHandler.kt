@@ -6,7 +6,6 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItems
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
@@ -28,7 +27,7 @@ class TeleconsultMedicinesEffectHandler @AssistedInject constructor(
         .addTransformer(LoadPatientMedicines::class.java, loadPatientMedicines())
         .addConsumer(OpenEditMedicines::class.java, { uiActions.openEditMedicines(it.patientUuid) }, schedulersProvider.ui())
         .addConsumer(OpenDrugDurationSheet::class.java, { uiActions.openDrugDurationSheet(it.prescription) }, schedulersProvider.ui())
-        .addConsumer(OpenDrugFrequencySheet::class.java, { uiActions.openDrugFrequencySheet(it.prescription, it.medicineFrequencyToFrequencyChoiceItemMap!!) }, schedulersProvider.ui())
+        .addConsumer(OpenDrugFrequencySheet::class.java, { uiActions.openDrugFrequencySheet(it.prescription) }, schedulersProvider.ui())
         .addConsumer(UpdateDrugDuration::class.java, { updateDrugDuration(it) }, schedulersProvider.io())
         .addConsumer(UpdateDrugFrequency::class.java, { updateDrugFrequency(it) }, schedulersProvider.io())
         .addTransformer(LoadDrugFrequencyChoiceItems::class.java, loadDrugFrequencyChoiceItems())
@@ -40,7 +39,6 @@ class TeleconsultMedicinesEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulersProvider.io())
           .map { drugFrequencyFactory.provideFields() }
-          .map(::DrugFrequencyChoiceItems)
           .map(::DrugFrequencyChoiceItemsLoaded)
     }
   }

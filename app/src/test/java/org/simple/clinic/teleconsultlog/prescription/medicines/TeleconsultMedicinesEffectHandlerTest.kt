@@ -11,10 +11,12 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.drugs.search.DrugFrequency
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItems
+import org.simple.clinic.drugs.search.DrugFrequency.BD
+import org.simple.clinic.drugs.search.DrugFrequency.OD
+import org.simple.clinic.drugs.search.DrugFrequency.QDS
+import org.simple.clinic.drugs.search.DrugFrequency.TDS
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -26,13 +28,6 @@ class TeleconsultMedicinesEffectHandlerTest {
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val uiActions = mock<TeleconsultMedicinesUiActions>()
   private val drugFrequencyFactory = mock<DrugFrequencyFactory>()
-  private val medicineFrequencyToFrequencyChoiceItemMap = mapOf(
-      null to DrugFrequencyChoiceItem(drugFrequency = null, label = "None"),
-      MedicineFrequency.OD to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.OD, label = "OD"),
-      MedicineFrequency.BD to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.BD, label = "BD"),
-      MedicineFrequency.TDS to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.TDS, label = "TDS"),
-      MedicineFrequency.QDS to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.QDS, label = "QDS")
-  )
   private val effectHandler = TeleconsultMedicinesEffectHandler(
       prescriptionRepository = prescriptionRepository,
       schedulersProvider = TestSchedulersProvider.trampoline(),
@@ -111,12 +106,12 @@ class TeleconsultMedicinesEffectHandlerTest {
     )
 
     // when
-    effectHandlerTestCase.dispatch(OpenDrugFrequencySheet(prescription, medicineFrequencyToFrequencyChoiceItemMap))
+    effectHandlerTestCase.dispatch(OpenDrugFrequencySheet(prescription))
 
     // then
     effectHandlerTestCase.assertNoOutgoingEvents()
 
-    verify(uiActions).openDrugFrequencySheet(prescription, medicineFrequencyToFrequencyChoiceItemMap)
+    verify(uiActions).openDrugFrequencySheet(prescription)
     verifyNoMoreInteractions(uiActions)
   }
 
@@ -159,20 +154,21 @@ class TeleconsultMedicinesEffectHandlerTest {
   @Test
   fun `when load drug frequency choice items effect is received, then load drug frequency choice items`() {
     // given
-    val drugFrequencyChoiceItems = listOf(
-        DrugFrequencyChoiceItem(drugFrequency = null, label = "None"),
-        DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.OD, label = "OD"),
-        DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.BD, label = "BD"),
-        DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.TDS, label = "TDS"),
-        DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.QDS, label = "QDS")
+    val drugFrequencyToLabelMap = mapOf(
+        null to DrugFrequencyLabel(label = "None"),
+        OD to DrugFrequencyLabel(label = "OD"),
+        BD to DrugFrequencyLabel(label = "BD"),
+        TDS to DrugFrequencyLabel(label = "TDS"),
+        QDS to DrugFrequencyLabel(label = "QDS")
     )
 
+    whenever(drugFrequencyFactory.provideFields()).thenReturn(drugFrequencyToLabelMap)
+
     // when
-    whenever(drugFrequencyFactory.provideFields()).thenReturn(drugFrequencyChoiceItems)
     effectHandlerTestCase.dispatch(LoadDrugFrequencyChoiceItems)
 
     // then
-    effectHandlerTestCase.assertOutgoingEvents(DrugFrequencyChoiceItemsLoaded(DrugFrequencyChoiceItems(drugFrequencyChoiceItems)))
+    effectHandlerTestCase.assertOutgoingEvents(DrugFrequencyChoiceItemsLoaded(drugFrequencyToLabelMap))
     verifyZeroInteractions(uiActions)
   }
 }

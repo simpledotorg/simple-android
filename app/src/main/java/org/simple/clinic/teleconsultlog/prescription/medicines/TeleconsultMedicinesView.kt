@@ -17,7 +17,7 @@ import org.simple.clinic.databinding.ViewTeleconsultMedicinesBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
@@ -152,7 +152,7 @@ class TeleconsultMedicinesView(
 
   override fun renderMedicines(
       medicines: List<PrescribedDrug>,
-      medicineFrequencyToFrequencyChoiceItemMap: Map<MedicineFrequency?, DrugFrequencyChoiceItem>
+      medicineFrequencyToLabelMap: Map<MedicineFrequency?, DrugFrequencyLabel>
   ) {
     emptyMedicinesTextView.visibility = GONE
     medicinesRecyclerView.visibility = VISIBLE
@@ -161,7 +161,7 @@ class TeleconsultMedicinesView(
         medicines = medicines,
         defaultDuration = teleconsultMedicinesConfig.defaultDuration,
         defaultFrequency = teleconsultMedicinesConfig.defaultFrequency,
-        medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap
+        medicineFrequencyToLabelMap = medicineFrequencyToLabelMap
     ))
   }
 
@@ -197,10 +197,7 @@ class TeleconsultMedicinesView(
     activity.startActivityForResult(intent, DRUG_DURATION_SHEET)
   }
 
-  override fun openDrugFrequencySheet(
-      prescription: PrescribedDrug,
-      medicineFrequencyToFrequencyChoiceItemMap: Map<MedicineFrequency?, DrugFrequencyChoiceItem>
-  ) {
+  override fun openDrugFrequencySheet(prescription: PrescribedDrug) {
     val frequency = prescription.frequency ?: teleconsultMedicinesConfig.defaultFrequency
     val intent = MedicineFrequencySheet.intent(
         context = context,

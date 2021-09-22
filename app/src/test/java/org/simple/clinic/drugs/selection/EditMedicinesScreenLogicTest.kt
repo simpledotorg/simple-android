@@ -1,6 +1,7 @@
 package org.simple.clinic.drugs.selection
 
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import dagger.Lazy
@@ -27,7 +28,7 @@ import org.simple.clinic.drugs.EditMedicinesUpdate
 import org.simple.clinic.drugs.PrescribedDrugsDoneClicked
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.ProtocolDrugClicked
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
+import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
@@ -66,7 +67,14 @@ class EditMedicinesScreenLogicTest {
   )
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val appointmentRepository = mock<AppointmentRepository>()
-  private val drugFrequencyFactory = mock<DrugFrequencyFactory>()
+
+  private val drugFrequencyToLabelMap = mapOf(
+      null to DrugFrequencyLabel(label = "None"),
+      DrugFrequency.OD to DrugFrequencyLabel(label = "OD"),
+      DrugFrequency.BD to DrugFrequencyLabel(label = "BD"),
+      DrugFrequency.TDS to DrugFrequencyLabel(label = "TDS"),
+      DrugFrequency.QDS to DrugFrequencyLabel(label = "QDS")
+  )
 
   private val medicineFrequencyToLabelMap = mapOf(
       null to DrugFrequencyLabel(label = "None"),
@@ -82,7 +90,6 @@ class EditMedicinesScreenLogicTest {
   fun setup() {
     val editMedicinesUiRenderer = EditMedicinesUiRenderer(ui)
     val effectHandler = EditMedicinesEffectHandler(
-        uiActions = uiActions,
         schedulersProvider = TrampolineSchedulersProvider(),
         protocolRepository = protocolRepository,
         prescriptionRepository = prescriptionRepository,
@@ -90,7 +97,8 @@ class EditMedicinesScreenLogicTest {
         utcClock = utcClock,
         uuidGenerator = uuidGenerator,
         appointmentsRepository = appointmentRepository,
-        drugFrequencyFactory = drugFrequencyFactory
+        drugFrequencyToLabelMap = drugFrequencyToLabelMap,
+        uiActions = uiActions
     )
 
     fixture = MobiusTestFixture(
@@ -187,7 +195,7 @@ class EditMedicinesScreenLogicTest {
             hasTopCorners = false,
             medicineFrequencyToLabelMap = medicineFrequencyToLabelMap))
 
-    verify(ui).populateDrugsList(expectedUiModels)
+    verify(ui, times(2)).populateDrugsList(expectedUiModels)
   }
 
   @Test

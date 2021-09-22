@@ -15,7 +15,6 @@ import org.simple.clinic.drugs.search.DrugFrequency.OD
 import org.simple.clinic.drugs.search.DrugFrequency.QDS
 import org.simple.clinic.drugs.search.DrugFrequency.TDS
 import org.simple.clinic.drugs.selection.EditMedicinesUiActions
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.AppointmentRepository
@@ -39,10 +38,16 @@ class EditMedicineEffectHandlerTest {
   private val utcClock = TestUtcClock(instant = Instant.parse("2018-01-01T00:00:00Z"))
   private val uuidGenerator = mock<UuidGenerator>()
   private val appointmentRepository = mock<AppointmentRepository>()
-  private val drugFrequencyFactory = mock<DrugFrequencyFactory>()
+
+  private val drugFrequencyToLabelMap = mapOf(
+      null to DrugFrequencyLabel(label = "None"),
+      OD to DrugFrequencyLabel(label = "OD"),
+      BD to DrugFrequencyLabel(label = "BD"),
+      TDS to DrugFrequencyLabel(label = "TDS"),
+      QDS to DrugFrequencyLabel(label = "QDS")
+  )
 
   private val effectHandler = EditMedicinesEffectHandler(
-      uiActions = uiActions,
       schedulersProvider = TestSchedulersProvider.trampoline(),
       protocolRepository = protocolRepository,
       prescriptionRepository = prescriptionRepository,
@@ -50,7 +55,8 @@ class EditMedicineEffectHandlerTest {
       utcClock = utcClock,
       uuidGenerator = uuidGenerator,
       appointmentsRepository = appointmentRepository,
-      drugFrequencyFactory = drugFrequencyFactory
+      drugFrequencyToLabelMap = drugFrequencyToLabelMap,
+      uiActions = uiActions
   )
 
   private val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -153,17 +159,7 @@ class EditMedicineEffectHandlerTest {
 
   @Test
   fun `when load drug frequency choice items effect is received, then load drug frequency choice items`() {
-    // given
-    val drugFrequencyToLabelMap = mapOf(
-        null to DrugFrequencyLabel(label = "None"),
-        OD to DrugFrequencyLabel(label = "OD"),
-        BD to DrugFrequencyLabel(label = "BD"),
-        TDS to DrugFrequencyLabel(label = "TDS"),
-        QDS to DrugFrequencyLabel(label = "QDS")
-    )
-
     // when
-    whenever(drugFrequencyFactory.provideFields()).thenReturn(drugFrequencyToLabelMap)
     testCase.dispatch(LoadDrugFrequencyChoiceItems)
 
     // then

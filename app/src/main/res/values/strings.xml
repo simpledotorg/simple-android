@@ -866,4 +866,10 @@
   <!-- Patient status view -->
   <string name="patient_status_died">Died</string>
 
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">Change diagnosis?</string>
+  <string name="change_diagnosis_message">Please mark YES if patient has ever been diagnosed with hypertension or diabetes.</string>
+  <string name="change_diagnosis_positive">CHANGE</string>
+  <string name="change_diagnosis_negative">NOT NOW</string>
+
 </resources>

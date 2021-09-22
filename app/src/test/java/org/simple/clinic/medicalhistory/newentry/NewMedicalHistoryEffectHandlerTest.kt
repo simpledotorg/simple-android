@@ -104,4 +104,16 @@ class NewMedicalHistoryEffectHandlerTest {
 
     testCase.assertNoOutgoingEvents()
   }
+
+  @Test
+  fun `when show change diagnosis error effect is received, then show change diagnosis error dialog`() {
+    // when
+    testCase.dispatch(ShowChangeDiagnosisErrorDialog)
+
+    // then
+    verify(uiActions).showChangeDiagnosisErrorDialog()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
 }

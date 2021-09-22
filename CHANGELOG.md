@@ -30,6 +30,7 @@
 - Hide resend sms button when OTP attempts are blocked
 - Show patient died status in patient summary screen
 - Show patient died status in contact patient bottom sheet
+- Go back to the previous screen when done/back is clicked in the patient summary screen when the patient is marked as dead
 - [In Progress: 19 Aug 2021] UI improvements for medical history screen
   - Show hypertension diagnosis and treatment in single card
   - Show separate cards for hypertension and diabetes diagnosis

@@ -23,8 +23,8 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     return when (event) {
       is PatientSummaryProfileLoaded -> patientSummaryProfileLoaded(model, event)
-      is PatientSummaryBackClicked -> dispatch(LoadDataForBackClick(model.patientUuid, event.screenCreatedTimestamp))
-      is PatientSummaryDoneClicked -> dispatch(LoadDataForDoneClick(model.patientUuid))
+      is PatientSummaryBackClicked -> backClicked(model, event)
+      is PatientSummaryDoneClicked -> doneClicked(model, event)
       is CurrentUserAndFacilityLoaded -> currentUserAndFacilityLoaded(model, event)
       PatientSummaryEditClicked -> dispatch(HandleEditClick(model.patientSummaryProfile!!, model.currentFacility!!))
       is ScheduledAppointment -> dispatch(TriggerSync(event.sheetOpenedFrom))
@@ -52,6 +52,24 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       ChangeAssignedFacilityClicked -> dispatch(OpenSelectFacilitySheet)
       is NewAssignedFacilitySelected -> dispatch(DispatchNewAssignedFacility(event.facility))
     }
+  }
+
+  private fun doneClicked(model: PatientSummaryModel, event: PatientSummaryDoneClicked): Next<PatientSummaryModel, PatientSummaryEffect> {
+    val effect = if (model.hasPatientDied)
+      GoToHomeScreen
+    else
+      LoadDataForDoneClick(event.patientUuid)
+
+    return dispatch(effect)
+  }
+
+  private fun backClicked(model: PatientSummaryModel, event: PatientSummaryBackClicked): Next<PatientSummaryModel, PatientSummaryEffect> {
+    val effect = if (model.hasPatientDied)
+      GoBackToPreviousScreen
+    else
+      LoadDataForBackClick(event.patientUuid, event.screenCreatedTimestamp)
+
+    return dispatch(effect)
   }
 
   private fun patientSummaryProfileLoaded(

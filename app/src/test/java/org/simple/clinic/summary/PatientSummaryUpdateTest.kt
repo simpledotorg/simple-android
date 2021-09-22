@@ -12,6 +12,7 @@ import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
+import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
@@ -20,6 +21,7 @@ import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
+import java.time.Instant
 import java.util.UUID
 
 class PatientSummaryUpdateTest {
@@ -27,7 +29,7 @@ class PatientSummaryUpdateTest {
   private val patientUuid = UUID.fromString("93a131b0-890e-41a3-88ec-b35b48efc6c5")
   private val defaultModel = PatientSummaryModel.from(ViewExistingPatient, patientUuid)
 
-  private val patient = TestData.patient(patientUuid)
+  private val patient = TestData.patient(patientUuid, status = PatientStatus.Active)
   private val patientAddress = TestData.patientAddress(patient.addressUuid)
   private val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
   private val bpPassportIdentifier = Identifier("526 780", BpPassport)
@@ -915,6 +917,96 @@ class PatientSummaryUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(DispatchNewAssignedFacility(facilityWithDiabetesManagementEnabled))
+        ))
+  }
+
+  @Test
+  fun `when back is clicked and patient is dead, then go back to previous screen`() {
+    val patientUuid = UUID.fromString("c28e15d1-c83c-4d07-a839-b978e4482f30")
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        status = PatientStatus.Dead
+    )
+
+    val patientSummaryProfile = PatientSummaryProfile(
+        patient = patient,
+        address = patientAddress,
+        phoneNumber = phoneNumber,
+        bpPassport = bpPassport,
+        alternativeId = bangladeshNationalId,
+        facility = facility
+    )
+
+    val model = defaultModel
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientSummaryBackClicked(patientUuid, Instant.parse("2018-01-01T00:00:00Z")))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoBackToPreviousScreen)
+        ))
+  }
+
+  @Test
+  fun `when back is clicked and patient is not dead, then load data for back click`() {
+    val model = defaultModel
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientSummaryBackClicked(patientUuid, Instant.parse("2018-01-01T00:00:00Z")))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(LoadDataForBackClick(patientUuid, Instant.parse("2018-01-01T00:00:00Z")))
+        ))
+  }
+
+  @Test
+  fun `when done is clicked and patient is dead, then go back to previous screen`() {
+    val patientUuid = UUID.fromString("c28e15d1-c83c-4d07-a839-b978e4482f30")
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        status = PatientStatus.Dead
+    )
+
+    val patientSummaryProfile = PatientSummaryProfile(
+        patient = patient,
+        address = patientAddress,
+        phoneNumber = phoneNumber,
+        bpPassport = bpPassport,
+        alternativeId = bangladeshNationalId,
+        facility = facility
+    )
+
+    val model = defaultModel
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientSummaryDoneClicked(patientUuid))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoToHomeScreen)
+        ))
+  }
+
+  @Test
+  fun `when done is clicked and patient is not dead, then load data for done click`() {
+    val model = defaultModel
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientSummaryDoneClicked(patientUuid))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(LoadDataForDoneClick(patientUuid))
         ))
   }
 

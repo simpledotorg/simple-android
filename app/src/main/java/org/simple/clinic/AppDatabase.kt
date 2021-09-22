@@ -188,6 +188,7 @@ abstract class AppDatabase : RoomDatabase() {
       teleconsultMedicalOfficersDao().clear()
       teleconsultFacilityWithMedicalOfficersDao().clear()
       teleconsultRecordDao().clear()
+      callResultDao().clear()
     }
   }
 

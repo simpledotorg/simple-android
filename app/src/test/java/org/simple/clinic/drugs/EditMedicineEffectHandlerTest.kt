@@ -10,11 +10,13 @@ import dagger.Lazy
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.drugs.search.DrugFrequency
+import org.simple.clinic.drugs.search.DrugFrequency.BD
+import org.simple.clinic.drugs.search.DrugFrequency.OD
+import org.simple.clinic.drugs.search.DrugFrequency.QDS
+import org.simple.clinic.drugs.search.DrugFrequency.TDS
 import org.simple.clinic.drugs.selection.EditMedicinesUiActions
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItems
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.SyncStatus
@@ -152,20 +154,20 @@ class EditMedicineEffectHandlerTest {
   @Test
   fun `when load drug frequency choice items effect is received, then load drug frequency choice items`() {
     // given
-    val drugFrequencyChoiceItems = listOf(
-        DrugFrequencyChoiceItem(drugFrequency = null, label = "None"),
-        DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.OD, label = "OD"),
-        DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.BD, label = "BD"),
-        DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.TDS, label = "TDS"),
-        DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.QDS, label = "QDS")
+    val drugFrequencyToLabelMap = mapOf(
+        null to DrugFrequencyLabel(label = "None"),
+        OD to DrugFrequencyLabel(label = "OD"),
+        BD to DrugFrequencyLabel(label = "BD"),
+        TDS to DrugFrequencyLabel(label = "TDS"),
+        QDS to DrugFrequencyLabel(label = "QDS")
     )
 
     // when
-    whenever(drugFrequencyFactory.provideFields()).thenReturn(drugFrequencyChoiceItems)
+    whenever(drugFrequencyFactory.provideFields()).thenReturn(drugFrequencyToLabelMap)
     testCase.dispatch(LoadDrugFrequencyChoiceItems)
 
     // then
-    testCase.assertOutgoingEvents(DrugFrequencyChoiceItemsLoaded(DrugFrequencyChoiceItems(drugFrequencyChoiceItems)))
+    testCase.assertOutgoingEvents(DrugFrequencyChoiceItemsLoaded(drugFrequencyToLabelMap))
     verifyZeroInteractions(uiActions)
   }
 }

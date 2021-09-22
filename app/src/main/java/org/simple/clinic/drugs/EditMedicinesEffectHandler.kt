@@ -9,7 +9,6 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.drugs.selection.EditMedicinesUiActions
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItems
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
@@ -55,7 +54,6 @@ class EditMedicinesEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulersProvider.io())
           .map { drugFrequencyFactory.provideFields() }
-          .map(::DrugFrequencyChoiceItems)
           .map(::DrugFrequencyChoiceItemsLoaded)
     }
   }

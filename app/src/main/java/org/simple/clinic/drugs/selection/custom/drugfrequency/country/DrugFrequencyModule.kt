@@ -6,7 +6,7 @@ import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appconfig.Country.Companion.ETHIOPIA
 
 @Module
-class DrugFrequencyFactoryModule {
+class DrugFrequencyModule {
 
   @Provides
   fun provideDrugFrequencyProvider(country: Country): DrugFrequencyProvider {

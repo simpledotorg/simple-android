@@ -20,7 +20,7 @@ import org.simple.clinic.drugs.search.DrugsSearchScreen
 import org.simple.clinic.drugs.selection.EditMedicinesScreen
 import org.simple.clinic.drugs.selection.custom.CustomDrugEntrySheet
 import org.simple.clinic.drugs.selection.custom.drugfrequency.SelectDrugFrequencyDialog
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactoryModule
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyModule
 import org.simple.clinic.editpatient.ConfirmDiscardChangesDialog
 import org.simple.clinic.editpatient.EditPatientScreen
 import org.simple.clinic.editpatient.deletepatient.DeletePatientScreenInjector
@@ -158,7 +158,7 @@ interface TheActivityComponent :
   PagingModule::class,
   InputFieldsFactoryModule::class,
   FragmentScreenKeyModule::class,
-  DrugFrequencyFactoryModule::class
+  DrugFrequencyModule::class
 ])
 class TheActivityModule {
 

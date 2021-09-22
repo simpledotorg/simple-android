@@ -12,7 +12,7 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.search.DrugFrequency
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.Succeeded
@@ -32,7 +32,7 @@ class SelectDrugFrequencyDialog : AppCompatDialogFragment() {
   lateinit var router: Router
 
   @Inject
-  lateinit var drugFrequencyFactory: DrugFrequencyFactory
+  lateinit var drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>
 
   private val screenKey: Key by unsafeLazy { ScreenKey.key(this) }
 
@@ -43,7 +43,6 @@ class SelectDrugFrequencyDialog : AppCompatDialogFragment() {
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    val drugFrequencyToLabelMap = drugFrequencyFactory.provideFields()
     val drugFrequencies = drugFrequencyToLabelMap.keys.toList()
     val drugFrequencyLabels = drugFrequencyToLabelMap.values.map { it.label }
     val selectedValueIndex = drugFrequencies.indexOf(screenKey.drugFrequency)

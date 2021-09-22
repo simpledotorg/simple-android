@@ -41,3 +41,5 @@ object LoadDrugFrequencyChoiceItems : CustomDrugEntryEffect()
 object HideKeyboard : CustomDrugEntryEffect()
 
 object ShowKeyboard : CustomDrugEntryEffect()
+
+object ClearFocusFromDosageEditText : CustomDrugEntryEffect()

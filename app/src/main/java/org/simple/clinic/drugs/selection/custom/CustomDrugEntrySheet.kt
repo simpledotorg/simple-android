@@ -194,6 +194,10 @@ class CustomDrugEntrySheet : BaseBottomSheet<
     drugDosageEditText.showKeyboard()
   }
 
+  override fun clearFocusFromDosageEditText() {
+    drugDosageEditText.clearFocus()
+  }
+
   override fun showSaveButtonProgressState() {
     saveButton.setButtonState(InProgress)
   }

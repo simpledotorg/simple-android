@@ -1,5 +1,6 @@
 package org.simple.clinic.drugs.selection.custom
 
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
@@ -12,9 +13,8 @@ import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.search.DrugRepository
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItems
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -32,12 +32,12 @@ class CustomDrugEntryEffectHandlerTest {
   private val uuidGenerator = FakeUuidGenerator.fixed(customDrugUUID)
   private val drugName = "Amlodipine"
 
-  private val drugFrequencyChoiceItems = listOf(
-      DrugFrequencyChoiceItem(drugFrequency = null, label = "None"),
-      DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.OD, label = "OD"),
-      DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.BD, label = "BD"),
-      DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.TDS, label = "TDS"),
-      DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.QDS, label = "QDS")
+  private val drugFrequencyToLabelMap = mapOf(
+      null to DrugFrequencyLabel(label = "None"),
+      DrugFrequency.OD to DrugFrequencyLabel(label = "OD"),
+      DrugFrequency.BD to DrugFrequencyLabel(label = "BD"),
+      DrugFrequency.TDS to DrugFrequencyLabel(label = "TDS"),
+      DrugFrequency.QDS to DrugFrequencyLabel(label = "QDS")
   )
 
   private val drugFrequencyFactory = mock<DrugFrequencyFactory>()
@@ -64,11 +64,11 @@ class CustomDrugEntryEffectHandlerTest {
     val frequency = DrugFrequency.OD
 
     // when
-    testCase.dispatch(ShowEditFrequencyDialog(frequency, drugFrequencyChoiceItems))
+    testCase.dispatch(ShowEditFrequencyDialog(frequency))
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(uiActions).showEditFrequencyDialog(frequency, drugFrequencyChoiceItems)
+    verify(uiActions).showEditFrequencyDialog(frequency)
   }
 
   @Test
@@ -229,12 +229,14 @@ class CustomDrugEntryEffectHandlerTest {
 
   @Test
   fun `when load drug frequency choice items effect is received, then load drug frequency choice items`() {
+    // given
+    whenever(drugFrequencyFactory.provideFields()) doReturn drugFrequencyToLabelMap
+
     // when
     testCase.dispatch(LoadDrugFrequencyChoiceItems)
 
     // then
-    val expectedResult = drugFrequencyFactory.provideFields()
-    testCase.assertOutgoingEvents(DrugFrequencyChoiceItemsLoaded(DrugFrequencyChoiceItems(expectedResult)))
+    testCase.assertOutgoingEvents(DrugFrequencyChoiceItemsLoaded(drugFrequencyToLabelMap))
     verifyZeroInteractions(uiActions)
   }
 

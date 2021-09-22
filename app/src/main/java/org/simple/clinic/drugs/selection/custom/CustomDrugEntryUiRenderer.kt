@@ -17,8 +17,8 @@ class CustomDrugEntryUiRenderer(
 
       initialSetup(model.openAs)
 
-      if (model.drugFrequencyToFrequencyChoiceItemMap != null)
-        setSheetTitle(model.drugName, model.dosage, model.drugFrequencyToFrequencyChoiceItemMap[model.frequency]!!.label)
+      if (model.drugFrequencyToLabelMap != null)
+        setSheetTitle(model.drugName, model.dosage, model.drugFrequencyToLabelMap[model.frequency]!!.label)
 
       showDefaultDosagePlaceholder(model.dosage, model.dosageHasFocus)
 

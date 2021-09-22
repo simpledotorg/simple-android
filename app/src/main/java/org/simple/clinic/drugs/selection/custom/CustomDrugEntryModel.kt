@@ -6,7 +6,7 @@ import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.selection.custom.ButtonState.SAVING
 import org.simple.clinic.drugs.selection.custom.DrugInfoProgressState.DONE
 import org.simple.clinic.drugs.selection.custom.DrugInfoProgressState.IN_PROGRESS
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 
 @Parcelize
 data class CustomDrugEntryModel(
@@ -17,8 +17,7 @@ data class CustomDrugEntryModel(
     val frequency: DrugFrequency?,
     val rxNormCode: String?,
     val dosagePlaceholder: String,
-    val drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>?,
-    val drugFrequencyToFrequencyChoiceItemMap: Map<DrugFrequency?, DrugFrequencyChoiceItem>?,
+    val drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>?,
     val drugInfoProgressState: DrugInfoProgressState?,
     val saveButtonState: ButtonState?
 ) : Parcelable {
@@ -34,8 +33,7 @@ data class CustomDrugEntryModel(
         frequency = null,
         rxNormCode = null,
         dosagePlaceholder = dosagePlaceholder,
-        drugFrequencyChoiceItems = null,
-        drugFrequencyToFrequencyChoiceItemMap = null,
+        drugFrequencyToLabelMap = null,
         drugInfoProgressState = null,
         saveButtonState = null)
   }
@@ -66,8 +64,8 @@ data class CustomDrugEntryModel(
     return copy(rxNormCode = rxNormCode)
   }
 
-  fun drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap: Map<DrugFrequency?, DrugFrequencyChoiceItem>?): CustomDrugEntryModel {
-    return copy(drugFrequencyToFrequencyChoiceItemMap = drugFrequencyToFrequencyChoiceItemMap)
+  fun drugFrequencyToLabelMapLoaded(drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>?): CustomDrugEntryModel {
+    return copy(drugFrequencyToLabelMap = drugFrequencyToLabelMap)
   }
 
   fun drugInfoProgressStateLoaded(): CustomDrugEntryModel {

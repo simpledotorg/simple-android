@@ -45,9 +45,8 @@ data class ProtocolDrugListItem(
     viewBinding.protocoldrugItemName.isChecked = prescribedDrug != null
 
     viewBinding.protocoldrugItemDosageAndFrequency.visibleOrGone(prescribedDrug != null)
-    val medicineFrequency = if (prescribedDrug?.frequency == null) "" else medicineFrequencyToLabelMap[prescribedDrug.frequency]!!.label
-    val dosage = if(prescribedDrug?.dosage == null) "" else prescribedDrug.dosage
-    val dosageAndFrequency = "$dosage, $medicineFrequency"
+    val medicineFrequency = if (prescribedDrug?.frequency == null) null else medicineFrequencyToLabelMap[prescribedDrug.frequency]!!.label
+    val dosageAndFrequency = listOfNotNull(prescribedDrug?.dosage, medicineFrequency).joinToString()
     viewBinding.protocoldrugItemDosageAndFrequency.text = dosageAndFrequency
 
     viewBinding.prescribeddrugItemProtocoldrugRootlayout.shapeAppearanceModel = shapeAppearanceModel(hasTopCorners)
@@ -76,9 +75,8 @@ data class CustomPrescribedDrugListItem(
     viewBinding.prescribeddrugItemCustomdrugName.text = prescribedDrug.name
     viewBinding.prescribeddrugItemCustomdrugName.isChecked = true
 
-    val medicineFrequency = if (prescribedDrug.frequency == null) "" else medicineFrequencyToLabelMap[prescribedDrug.frequency]!!.label
-    val dosage = prescribedDrug.dosage
-    val dosageAndFrequency = "$dosage, $medicineFrequency"
+    val medicineFrequency = if (prescribedDrug.frequency == null) null else medicineFrequencyToLabelMap[prescribedDrug.frequency]!!.label
+    val dosageAndFrequency = listOfNotNull(prescribedDrug.dosage, medicineFrequency).joinToString()
     viewBinding.protocoldrugItemDosageAndFrequency.text = dosageAndFrequency
 
     viewBinding.root.setOnClickListener {

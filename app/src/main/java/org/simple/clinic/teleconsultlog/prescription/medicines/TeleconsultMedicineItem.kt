@@ -5,7 +5,7 @@ import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 import org.simple.clinic.databinding.ListItemTeleconsultMedicineBinding
 import org.simple.clinic.drugs.PrescribedDrug
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
@@ -15,7 +15,7 @@ data class TeleconsultMedicineItem(
     val prescribedDrug: PrescribedDrug,
     val defaultDuration: Duration,
     val defaultFrequency: MedicineFrequency,
-    val medicineFrequencyToFrequencyChoiceItemMap: Map<MedicineFrequency?, DrugFrequencyChoiceItem>
+    val medicineFrequencyToLabelMap: Map<MedicineFrequency?, DrugFrequencyLabel>
 ) : ItemAdapter.Item<TeleconsultMedicineItemEvent> {
 
   companion object {
@@ -24,7 +24,7 @@ data class TeleconsultMedicineItem(
         medicines: List<PrescribedDrug>,
         defaultDuration: Duration,
         defaultFrequency: MedicineFrequency,
-        medicineFrequencyToFrequencyChoiceItemMap: Map<MedicineFrequency?, DrugFrequencyChoiceItem>
+        medicineFrequencyToLabelMap: Map<MedicineFrequency?, DrugFrequencyLabel>
     ): List<TeleconsultMedicineItem> {
       return medicines
           .map { prescribedDrug ->
@@ -32,7 +32,7 @@ data class TeleconsultMedicineItem(
                 prescribedDrug = prescribedDrug,
                 defaultDuration = defaultDuration,
                 defaultFrequency = defaultFrequency,
-                medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap
+                medicineFrequencyToLabelMap = medicineFrequencyToLabelMap
             )
           }
     }
@@ -51,7 +51,7 @@ data class TeleconsultMedicineItem(
     )
 
     val frequency = prescribedDrug.frequency ?: defaultFrequency
-    val frequencyLabel = medicineFrequencyToFrequencyChoiceItemMap[frequency]!!.label
+    val frequencyLabel = medicineFrequencyToLabelMap[frequency]!!.label
     binding.medicineFrequencyButton.text = frequencyLabel
 
     val durationInDays = prescribedDrug.durationInDays ?: defaultDuration.toDays().toInt()

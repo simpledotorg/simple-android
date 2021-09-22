@@ -2,7 +2,7 @@ package org.simple.clinic.drugs
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import java.util.UUID
@@ -13,7 +13,7 @@ data class EditMedicinesModel(
     val prescribedDrugs: List<PrescribedDrug>?,
     val protocolDrugs: List<ProtocolDrugAndDosages>?,
     val editMedicineButtonState: EditMedicineButtonState?,
-    val medicineFrequencyToFrequencyChoiceItemMap: Map<MedicineFrequency?, DrugFrequencyChoiceItem>?
+    val medicineFrequencyToLabelMap: Map<MedicineFrequency?, DrugFrequencyLabel>?
 ) : Parcelable {
 
   companion object {
@@ -25,8 +25,8 @@ data class EditMedicinesModel(
   val hasPrescribedAndProtocolDrugs
     get() = prescribedDrugs != null && protocolDrugs != null
 
-  val hasMedicineFrequencyToFrequencyChoiceItemMap
-    get() = medicineFrequencyToFrequencyChoiceItemMap != null
+  val hasMedicineFrequencyToLabelMap
+    get() = medicineFrequencyToLabelMap != null
 
   fun isProtocolDrug(prescribedDrug: PrescribedDrug): Boolean {
     return protocolDrugs!!.any { it.matches(prescribedDrug) }
@@ -41,6 +41,6 @@ data class EditMedicinesModel(
   fun editMedicineDrugStateFetched(editMedicineButtonState: EditMedicineButtonState) =
       copy(editMedicineButtonState = editMedicineButtonState)
 
-  fun medicineFrequencyToFrequencyChoiceItemMapLoaded(medicineFrequencyToFrequencyChoiceItemMap: Map<MedicineFrequency?, DrugFrequencyChoiceItem>?) =
-      copy(medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap)
+  fun medicineFrequencyToLabelMapLoaded(medicineFrequencyToLabelMap: Map<MedicineFrequency?, DrugFrequencyLabel>?) =
+      copy(medicineFrequencyToLabelMap = medicineFrequencyToLabelMap)
 }

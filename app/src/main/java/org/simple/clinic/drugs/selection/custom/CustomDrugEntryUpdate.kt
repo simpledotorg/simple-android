@@ -19,8 +19,8 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
     return when (event) {
       is DosageEdited -> next(model.dosageEdited(event.dosage))
       is DosageFocusChanged -> next(model.dosageFocusChanged(event.hasFocus))
-      is EditFrequencyClicked -> dispatch(ShowEditFrequencyDialog(model.frequency, model.drugFrequencyToFrequencyChoiceItemMap!!.toList().map { it.second }))
-      is FrequencyEdited -> next(model.frequencyEdited(event.frequency), SetDrugFrequency(model.drugFrequencyToFrequencyChoiceItemMap!![event.frequency]!!.label))
+      is EditFrequencyClicked -> dispatch(ShowEditFrequencyDialog(model.frequency))
+      is FrequencyEdited -> next(model.frequencyEdited(event.frequency), SetDrugFrequency(model.drugFrequencyToLabelMap!![event.frequency]!!.label))
       is AddMedicineButtonClicked -> createOrUpdatePrescriptionEntry(model, event.patientUuid)
       is CustomDrugSaved, ExistingDrugRemoved -> dispatch(CloseSheetAndGoToEditMedicineScreen)
       is PrescribedDrugFetched -> prescriptionFetched(model, event.prescription)
@@ -38,8 +38,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       model: CustomDrugEntryModel,
       event: DrugFrequencyChoiceItemsLoaded
   ): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
-    val drugFrequencyToFrequencyChoiceItemMap = event.drugFrequencyChoiceItems.items.associateBy({ it.drugFrequency }, { it })
-    return next(model.drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap))
+    return next(model.drugFrequencyToLabelMapLoaded(event.drugFrequencyToLabelMap))
   }
 
   private fun drugFetched(
@@ -53,7 +52,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
         .rxNormCodeEdited(drug.rxNormCode)
         .drugInfoProgressStateLoaded()
 
-    return next(updatedModel, SetDrugFrequency(model.drugFrequencyToFrequencyChoiceItemMap!![drug.frequency]!!.label), SetDrugDosage(drug.dosage), ShowKeyboard)
+    return next(updatedModel, SetDrugFrequency(model.drugFrequencyToLabelMap!![drug.frequency]!!.label), SetDrugDosage(drug.dosage), ShowKeyboard)
   }
 
   private fun prescriptionFetched(
@@ -69,7 +68,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
         .rxNormCodeEdited(prescription.rxNormCode)
         .drugInfoProgressStateLoaded()
 
-    return next(updatedModel, SetDrugFrequency(model.drugFrequencyToFrequencyChoiceItemMap!![frequency]!!.label), SetDrugDosage(prescription.dosage), ShowKeyboard)
+    return next(updatedModel, SetDrugFrequency(model.drugFrequencyToLabelMap!![frequency]!!.label), SetDrugDosage(prescription.dosage), ShowKeyboard)
   }
 
   private fun createOrUpdatePrescriptionEntry(

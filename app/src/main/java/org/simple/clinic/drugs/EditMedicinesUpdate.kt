@@ -1,7 +1,6 @@
 package org.simple.clinic.drugs
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.*
 import com.spotify.mobius.Update
 import org.simple.clinic.drugs.EditMedicineButtonState.REFILL_MEDICINE
 import org.simple.clinic.drugs.EditMedicineButtonState.SAVE_MEDICINE
@@ -37,8 +36,11 @@ class EditMedicinesUpdate(
       model: EditMedicinesModel,
       event: DrugFrequencyChoiceItemsLoaded
   ): Next<EditMedicinesModel, EditMedicinesEffect> {
-    val medicineFrequencyToDrugFrequencyChoiceItemMap = event.drugFrequencyChoiceItems.items.associateBy({MedicineFrequency.fromDrugFrequency(it.drugFrequency)}, {it})
-    return next(model.medicineFrequencyToFrequencyChoiceItemMapLoaded(medicineFrequencyToDrugFrequencyChoiceItemMap))
+    val medicineFrequencyToLabelMap = event
+        .drugFrequencyToLabelMap
+        .mapKeys { (drugFrequency, _) -> MedicineFrequency.fromDrugFrequency(drugFrequency) }
+
+    return next(model.medicineFrequencyToLabelMapLoaded(medicineFrequencyToLabelMap))
   }
 
   private fun drugsListAndButtonStateFetched(

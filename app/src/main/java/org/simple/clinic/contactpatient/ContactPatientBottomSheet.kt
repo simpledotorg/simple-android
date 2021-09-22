@@ -316,11 +316,11 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     )
   }
 
-  override fun showPatientWithCallResultUi() {
+  override fun showPatientWithPhoneNumberCallResults() {
     callPatientView.showPatientWithCallResultLayout = true
   }
 
-  override fun hidePatientWithCallResultUi() {
+  override fun hidePatientWithPhoneNumberCallResults() {
     callPatientView.showPatientWithCallResultLayout = false
   }
 

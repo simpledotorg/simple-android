@@ -179,6 +179,22 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/lastVisitedLabel" />
 
+  <org.simple.clinic.widgets.PatientStatusView
+    android:id="@+id/patientDiedStatusView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/spacing_24"
+    android:layout_marginTop="@dimen/spacing_16"
+    android:visibility="gone"
+    app:cardBackgroundColor="?attr/colorError"
+    app:layout_constraintTop_toBottomOf="@id/diagnosisSeparator"
+    app:statusIcon="@drawable/ic_patient_dead_24dp"
+    app:statusIconTint="?attr/colorOnError"
+    app:statusText="@string/patient_status_died"
+    app:statusTextAppearance="?attr/textAppearanceBody0Medium"
+    app:statusTextColor="?attr/colorOnError"
+    tools:visibility="visible" />
+
   <TextView
     android:id="@+id/resultOfCallLabel"
     android:layout_width="@dimen/spacing_0"
@@ -243,18 +259,27 @@
     style="@style/Widget.Simple.PatientContactCallResultItem"
     android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_24"
     android:text="@string/contactpatient_remove_from_list"
     app:drawableStartCompat="@drawable/ic_radio_button_unchecked_red"
+    app:layout_constraintBottom_toTopOf="@id/barrier"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/remindToCallLaterSeparator" />
+
+  <androidx.constraintlayout.widget.Barrier
+    android:id="@+id/barrier"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:barrierDirection="bottom"
+    app:barrierMargin="@dimen/spacing_16"
+    app:constraint_referenced_ids="patientDiedStatusView" />
 
   <TextView
     android:id="@+id/helpTextView"
     android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_16"
-    android:layout_marginTop="@dimen/spacing_24"
     android:layout_marginEnd="@dimen/spacing_16"
     android:text="@string/contactpatient_help_text"
     android:textAlignment="center"
@@ -262,7 +287,7 @@
     android:textColor="@color/color_on_surface_67"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/removeFromOverdueListTextView"
+    app:layout_constraintTop_toBottomOf="@id/barrier"
     tools:visibility="visible" />
 
   <com.google.android.material.button.MaterialButton

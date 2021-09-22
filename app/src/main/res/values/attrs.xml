@@ -53,5 +53,6 @@
     <attr name="statusText" format="string" />
     <attr name="statusTextColor" format="color" />
     <attr name="statusIconTint" format="color" />
+    <attr name="statusTextAppearance" format="reference" />
   </declare-styleable>
 </resources>

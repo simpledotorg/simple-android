@@ -47,20 +47,34 @@ class ContactPatientUiRenderer(
       renderPatientFacilityLabel(model.appointmentIsInRegisteredFacility)
     }
 
+    renderPhoneNumberAndCallResults(model)
+
+    ui.switchToCallPatientView()
+  }
+
+  private fun renderPhoneNumberAndCallResults(model: ContactPatientModel) {
     when {
+      model.patientProfileHasPhoneNumber && model.hasPatientDied -> renderDeadPatientWithPhoneNumber(model.secureCallingFeatureEnabled)
       model.patientProfileHasPhoneNumber && !model.isAppointmentPresent -> renderPatientWithPhoneNumberAndNoAppointment(model.secureCallingFeatureEnabled)
       model.patientProfileHasPhoneNumber && model.isAppointmentPresent -> renderPatientWithPhoneNumberAndAppointment(model.secureCallingFeatureEnabled)
       !model.patientProfileHasPhoneNumber && model.isAppointmentPresent -> renderPatientWithNoPhoneNumberAndWithAppointment()
       else -> renderPatientWithoutPhoneNumberAndAppointment()
     }
+  }
 
-    ui.switchToCallPatientView()
+  private fun renderDeadPatientWithPhoneNumber(isSecureCallingEnabled: Boolean) {
+    ui.showPatientWithPhoneNumberUi()
+    ui.hidePatientWithNoPhoneNumberUi()
+    ui.hidePatientWithPhoneNumberCallResults()
+    ui.showDeadPatientStatus()
+    renderSecureCalling(isSecureCallingEnabled)
   }
 
   private fun renderPatientWithoutPhoneNumberAndAppointment() {
     ui.showPatientWithNoPhoneNumberUi()
     ui.hidePatientWithPhoneNumberUi()
     ui.setResultLabelText()
+    ui.hideDeadPatientStatus()
   }
 
   private fun renderPatientWithNoPhoneNumberAndWithAppointment() {
@@ -68,6 +82,7 @@ class ContactPatientUiRenderer(
     ui.hidePatientWithPhoneNumberUi()
     ui.showPatientWithNoPhoneNumberResults()
     ui.setResultLabelText()
+    ui.hideDeadPatientStatus()
   }
 
   private fun renderPatientWithPhoneNumberAndAppointment(isSecureCallingEnabled: Boolean) {
@@ -75,6 +90,7 @@ class ContactPatientUiRenderer(
     ui.showPatientWithPhoneNumberCallResults()
     ui.setResultOfCallLabelText()
     ui.hidePatientWithNoPhoneNumberUi()
+    ui.hideDeadPatientStatus()
     renderSecureCalling(isSecureCallingEnabled)
   }
 
@@ -82,6 +98,7 @@ class ContactPatientUiRenderer(
     ui.showPatientWithPhoneNumberUi()
     ui.hidePatientWithNoPhoneNumberUi()
     ui.hidePatientWithPhoneNumberCallResults()
+    ui.hideDeadPatientStatus()
     renderSecureCalling(isSecureCallingEnabled)
   }
 

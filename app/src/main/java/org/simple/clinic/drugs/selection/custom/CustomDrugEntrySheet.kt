@@ -33,7 +33,6 @@ import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ProgressMaterialButton
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -163,7 +162,7 @@ class CustomDrugEntrySheet : BaseBottomSheet<
       frequency: DrugFrequency?,
       drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>
   ) {
-    router.pushExpectingResult(SelectDrugFrequency, SelectDrugFrequencyDialog.Key(frequency, drugFrequencyChoiceItems))
+    router.pushExpectingResult(SelectDrugFrequency, SelectDrugFrequencyDialog.Key(frequency))
   }
 
   override fun setDrugFrequency(frequencyLabel: String) {

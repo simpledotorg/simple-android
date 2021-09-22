@@ -12,7 +12,6 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.search.DrugFrequency
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -72,7 +71,6 @@ class SelectDrugFrequencyDialog : AppCompatDialogFragment() {
   @Parcelize
   data class Key(
       val drugFrequency: DrugFrequency?,
-      val drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>,
       override val analyticsName: String = "Drug Frequency Dialog"
   ) : ScreenKey() {
     @IgnoredOnParcel

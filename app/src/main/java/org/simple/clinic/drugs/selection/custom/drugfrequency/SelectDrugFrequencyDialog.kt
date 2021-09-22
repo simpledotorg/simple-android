@@ -13,6 +13,7 @@ import org.simple.clinic.R
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.Succeeded
@@ -31,6 +32,9 @@ class SelectDrugFrequencyDialog : AppCompatDialogFragment() {
   @Inject
   lateinit var router: Router
 
+  @Inject
+  lateinit var drugFrequencyFactory: DrugFrequencyFactory
+
   private val screenKey: Key by unsafeLazy { ScreenKey.key(this) }
 
   override fun onAttach(context: Context) {
@@ -40,11 +44,15 @@ class SelectDrugFrequencyDialog : AppCompatDialogFragment() {
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    val selectedValueIndex = screenKey.drugFrequencyChoiceItems.map { it.drugFrequency }.indexOf(screenKey.drugFrequency)
+    val drugFrequencyToLabelMap = drugFrequencyFactory.provideFields()
+    val drugFrequencies = drugFrequencyToLabelMap.keys.toList()
+    val drugFrequencyLabels = drugFrequencyToLabelMap.values.map { it.label }
+    val selectedValueIndex = drugFrequencies.indexOf(screenKey.drugFrequency)
+
     return MaterialAlertDialogBuilder(requireContext())
         .setTitle(getString(R.string.custom_drug_entry_sheet_frequency))
-        .setSingleChoiceItems(screenKey.drugFrequencyChoiceItems.map { it.label }.toTypedArray(), selectedValueIndex) { _, indexSelected ->
-          router.popWithResult(Succeeded(SelectedDrugFrequency(screenKey.drugFrequencyChoiceItems[indexSelected].drugFrequency)))
+        .setSingleChoiceItems(drugFrequencyLabels.toTypedArray(), selectedValueIndex) { _, indexSelected ->
+          router.popWithResult(Succeeded(SelectedDrugFrequency(drugFrequencies[indexSelected])))
         }
         .setPositiveButton(getString(R.string.custom_drug_entry_sheet_frequency_dialog_done)) { _, _ ->
           router.pop()

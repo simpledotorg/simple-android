@@ -9,7 +9,6 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.search.DrugRepository
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItems
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
@@ -127,7 +126,6 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .map { drugFrequencyFactory.provideFields() }
-          .map(::DrugFrequencyChoiceItems)
           .map(::DrugFrequencyChoiceItemsLoaded)
     }
   }

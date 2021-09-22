@@ -8,8 +8,9 @@ import dagger.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.search.DrugRepository
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.util.nullIfBlank
@@ -22,7 +23,7 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
     private val drugRepository: DrugRepository,
     private val currentFacility: Lazy<Facility>,
     private val uuidGenerator: UuidGenerator,
-    private val drugFrequencyFactory: DrugFrequencyFactory,
+    private val drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>,
     @Assisted private val uiActions: CustomDrugEntrySheetUiActions
 ) {
   @AssistedFactory
@@ -125,7 +126,7 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
   private fun loadDrugFrequencyChoiceItems(): ObservableTransformer<LoadDrugFrequencyChoiceItems, CustomDrugEntryEvent> {
     return ObservableTransformer { effects ->
       effects
-          .map { drugFrequencyFactory.provideFields() }
+          .map { drugFrequencyToLabelMap }
           .map(::DrugFrequencyChoiceItemsLoaded)
     }
   }

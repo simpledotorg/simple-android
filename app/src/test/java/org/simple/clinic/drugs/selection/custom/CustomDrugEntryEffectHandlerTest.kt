@@ -1,6 +1,5 @@
 package org.simple.clinic.drugs.selection.custom
 
-import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
@@ -13,7 +12,6 @@ import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.search.DrugRepository
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
@@ -40,15 +38,13 @@ class CustomDrugEntryEffectHandlerTest {
       DrugFrequency.QDS to DrugFrequencyLabel(label = "QDS")
   )
 
-  private val drugFrequencyFactory = mock<DrugFrequencyFactory>()
-
   private val effectHandler = CustomDrugEntryEffectHandler(
       TestSchedulersProvider.trampoline(),
       prescriptionRepository,
       drugRepository,
       { facility },
       uuidGenerator,
-      drugFrequencyFactory,
+      drugFrequencyToLabelMap,
       uiActions).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -229,9 +225,6 @@ class CustomDrugEntryEffectHandlerTest {
 
   @Test
   fun `when load drug frequency choice items effect is received, then load drug frequency choice items`() {
-    // given
-    whenever(drugFrequencyFactory.provideFields()) doReturn drugFrequencyToLabelMap
-
     // when
     testCase.dispatch(LoadDrugFrequencyChoiceItems)
 

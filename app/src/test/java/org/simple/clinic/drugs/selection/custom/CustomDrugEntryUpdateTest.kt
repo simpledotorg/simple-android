@@ -61,13 +61,13 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
-  fun `when edit frequency is clicked, then show edit frequency dialog and pass drug frequency choice list`() {
+  fun `when edit frequency is clicked, then show edit frequency dialog and clear focus from dosage edit text`() {
     val frequency = OD
     updateSpec.given(defaultModel.frequencyEdited(frequency).drugFrequencyToLabelMapLoaded(drugFrequencyToLabelMap))
         .whenEvent(EditFrequencyClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowEditFrequencyDialog(frequency))
+            hasEffects(ShowEditFrequencyDialog(frequency), ClearFocusFromDosageEditText)
         ))
   }
 

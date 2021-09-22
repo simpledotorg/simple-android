@@ -19,7 +19,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
     return when (event) {
       is DosageEdited -> next(model.dosageEdited(event.dosage))
       is DosageFocusChanged -> next(model.dosageFocusChanged(event.hasFocus))
-      is EditFrequencyClicked -> dispatch(ShowEditFrequencyDialog(model.frequency))
+      is EditFrequencyClicked -> dispatch(ShowEditFrequencyDialog(model.frequency), ClearFocusFromDosageEditText)
       is FrequencyEdited -> next(model.frequencyEdited(event.frequency), SetDrugFrequency(model.drugFrequencyToLabelMap!![event.frequency]!!.label))
       is AddMedicineButtonClicked -> createOrUpdatePrescriptionEntry(model, event.patientUuid)
       is CustomDrugSaved, ExistingDrugRemoved -> dispatch(CloseSheetAndGoToEditMedicineScreen)

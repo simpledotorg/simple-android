@@ -24,8 +24,8 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.widgets.ItemAdapter
-import java.util.UUID
 import javax.inject.Inject
 
 class RemoveOverdueAppointmentScreen : BaseScreen<
@@ -60,7 +60,7 @@ class RemoveOverdueAppointmentScreen : BaseScreen<
   private val removalReasonsRecyclerView
     get() = binding.removalReasonsRecyclerView
 
-  override fun defaultModel() = RemoveOverdueModel.create(screenKey.appointmentId, screenKey.patientId)
+  override fun defaultModel() = RemoveOverdueModel.create(screenKey.appointment)
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenRemoveOverdueAppointmentBinding.inflate(layoutInflater, container, false)
@@ -126,7 +126,7 @@ class RemoveOverdueAppointmentScreen : BaseScreen<
   }
 
   @Parcelize
-  data class Key(val appointmentId: UUID, val patientId: UUID) : ScreenKey() {
+  data class Key(val appointment: Appointment) : ScreenKey() {
 
     @IgnoredOnParcel
     override val analyticsName = "Remove Overdue Appointment Screen"

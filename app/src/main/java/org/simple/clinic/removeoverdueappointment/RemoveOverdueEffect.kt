@@ -1,5 +1,6 @@
 package org.simple.clinic.removeoverdueappointment
 
+import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import java.util.UUID
 
@@ -10,7 +11,7 @@ data class MarkPatientAsVisited(val appointmentUuid: UUID) : RemoveOverdueEffect
 data class MarkPatientAsDead(val patientId: UUID, val appointmentId: UUID) : RemoveOverdueEffect()
 
 data class CancelAppointment(
-    val appointmentUuid: UUID,
+    val appointment: Appointment,
     val reason: AppointmentCancelReason
 ) : RemoveOverdueEffect()
 

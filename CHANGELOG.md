@@ -51,6 +51,7 @@
 
 - Fix select country & state screen overlapping next button
 - Fix app not displaying national ID and proper illustration in Sri Lanka
+- Fix contact patient bottom sheet not showing correct results
 
 ## 2021-09-20-7952
 

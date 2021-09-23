@@ -215,6 +215,7 @@ abstract class AppDatabase : RoomDatabase() {
       withAppointmentDao()
       withMedicalHistoryDao()
       withPrescriptionDao()
+      purgeUnnecessaryCallResults()
     }
   }
 
@@ -261,6 +262,10 @@ abstract class AppDatabase : RoomDatabase() {
       purgeDeletedBusinessIds()
       purgePatientAfterRetentionTime(now)
     }
+  }
+
+  private fun purgeUnnecessaryCallResults() {
+    callResultDao().purgeDeleted()
   }
 
   private fun vacuumDatabase() {

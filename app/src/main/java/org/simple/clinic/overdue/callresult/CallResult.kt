@@ -151,5 +151,14 @@ data class CallResult(
     fun getOne(
         id: UUID
     ): CallResult?
+
+    @Query("""
+      DELETE
+      FROM CallResult
+      WHERE
+        deletedAt IS NOT NULL
+        AND syncStatus == 'DONE'
+    """)
+    fun purgeDeleted()
   }
 }

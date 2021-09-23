@@ -59,6 +59,7 @@
 ### Fixes
 
 - Fix patient summary going back to home screen when opening teleconsult links
+- Fix app not displaying national ID and proper illustration in Sri Lanka
 
 ## 2021-09-08-7939
 ### Internal

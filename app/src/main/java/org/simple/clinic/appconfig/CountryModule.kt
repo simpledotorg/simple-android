@@ -45,9 +45,7 @@ object CountryModule {
       moshi: Moshi
   ) {
     val selectedOldCountryPreference = rxSharedPreferences.getString("preference_selected_country_v1")
-    val selectedDeployment = appConfigRepository.currentDeployment()
-
-    if (selectedOldCountryPreference.isSet && selectedDeployment == null) {
+    if (selectedOldCountryPreference.isSet) {
       val selectedOldCountry = parseOldCountry(moshi, selectedOldCountryPreference.get())
       // Since V1 country doesn't have deployment names, we are going with country name
       val deployment = Deployment(
@@ -64,9 +62,7 @@ object CountryModule {
       moshi: Moshi
   ) {
     val selectedOldCountryPreference = rxSharedPreferences.getString("preference_selected_country_v1")
-    val selectedNewCountry = appConfigRepository.currentCountry()
-
-    if (selectedOldCountryPreference.isSet && selectedNewCountry == null) {
+    if (selectedOldCountryPreference.isSet) {
       val selectedOldCountry = parseOldCountry(moshi, selectedOldCountryPreference.get())
       // Since V1 country doesn't have deployment names, we are going with country name
       val deployment = Deployment(

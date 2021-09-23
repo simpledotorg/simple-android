@@ -19,7 +19,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
     return when (event) {
       is DosageEdited -> next(model.dosageEdited(event.dosage))
       is DosageFocusChanged -> next(model.dosageFocusChanged(event.hasFocus))
-      is EditFrequencyClicked -> dispatch(ShowEditFrequencyDialog(model.frequency))
+      is EditFrequencyClicked -> dispatch(ShowEditFrequencyDialog(model.frequency), ClearFocusFromDosageEditText)
       is FrequencyEdited -> next(model.frequencyEdited(event.frequency), SetDrugFrequency(model.drugFrequencyToLabelMap!![event.frequency]!!.label))
       is AddMedicineButtonClicked -> createOrUpdatePrescriptionEntry(model, event.patientUuid)
       is CustomDrugSaved, ExistingDrugRemoved -> dispatch(CloseSheetAndGoToEditMedicineScreen)
@@ -75,10 +75,13 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       model: CustomDrugEntryModel,
       patientUuid: UUID
   ): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
+    val isAValidDosage = model.dosage != null && model.dosage.filter { it.isDigit() }.isNotBlank()
+    val dosage = if (isAValidDosage) model.dosage else null
+
     val effect = when (model.openAs) {
-      is OpenAs.New.FromDrugList -> SaveCustomDrugToPrescription(patientUuid, model.drugName!!, model.dosage, model.rxNormCode, model.frequency)
-      is OpenAs.New.FromDrugName -> SaveCustomDrugToPrescription(patientUuid, model.openAs.drugName, model.dosage, null, model.frequency)
-      is OpenAs.Update -> UpdatePrescription(patientUuid, model.openAs.prescribedDrugUuid, model.drugName!!, model.dosage, model.rxNormCode, model.frequency)
+      is OpenAs.New.FromDrugList -> SaveCustomDrugToPrescription(patientUuid, model.drugName!!, dosage, model.rxNormCode, model.frequency)
+      is OpenAs.New.FromDrugName -> SaveCustomDrugToPrescription(patientUuid, model.openAs.drugName, dosage, null, model.frequency)
+      is OpenAs.Update -> UpdatePrescription(patientUuid, model.openAs.prescribedDrugUuid, model.drugName!!, dosage, model.rxNormCode, model.frequency)
     }
 
     return next(model.saveButtonStateChanged(SAVING), effect)

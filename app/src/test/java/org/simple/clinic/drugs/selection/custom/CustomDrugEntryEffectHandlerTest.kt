@@ -254,4 +254,15 @@ class CustomDrugEntryEffectHandlerTest {
     verify(uiActions).showKeyboard()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when clear focus from edit text effect is received, then clear focus from edit text`() {
+    // when
+    testCase.dispatch(ClearFocusFromDosageEditText)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).clearFocusFromDosageEditText()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

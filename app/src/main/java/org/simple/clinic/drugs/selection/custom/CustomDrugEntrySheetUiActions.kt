@@ -9,4 +9,5 @@ interface CustomDrugEntrySheetUiActions {
   fun closeSheetAndGoToEditMedicineScreen()
   fun hideKeyboard()
   fun showKeyboard()
+  fun clearFocusFromDosageEditText()
 }

@@ -48,6 +48,7 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
         .addTransformer(LoadDrugFrequencyChoiceItems::class.java, loadDrugFrequencyChoiceItems())
         .addAction(HideKeyboard::class.java, uiActions::hideKeyboard, schedulersProvider.ui())
         .addAction(ShowKeyboard::class.java, uiActions::showKeyboard, schedulersProvider.ui())
+        .addAction(ClearFocusFromDosageEditText::class.java, uiActions::clearFocusFromDosageEditText, schedulersProvider.ui())
         .build()
   }
 

@@ -76,8 +76,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:hint="@string/custom_drug_entry_sheet_dosage"
-      android:imeOptions="actionNext"
-      android:inputType="number" />
+      android:imeOptions="actionNext" />
 
   </com.google.android.material.textfield.TextInputLayout>
 

@@ -41,6 +41,5 @@ data class SetReminderForAppointment(
 ) : ContactPatientEffect()
 
 data class OpenRemoveOverdueAppointmentScreen(
-    val appointmentId: UUID,
-    val patientId: UUID
+    val appointment: Appointment
 ) : ContactPatientEffect()

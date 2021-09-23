@@ -462,7 +462,7 @@ class ContactPatientUpdateTest {
         .whenEvent(RemoveFromOverdueListClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenRemoveOverdueAppointmentScreen(appointmentUuid, patientUuid))
+            hasEffects(OpenRemoveOverdueAppointmentScreen(overdueAppointment.appointment))
         ))
   }
 

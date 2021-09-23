@@ -13,6 +13,7 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 class RemoveOverdueEffectHandler @AssistedInject constructor(
     private val appointmentRepository: AppointmentRepository,
     private val patientRepository: PatientRepository,
+    private val cancelAppointmentWithReason: CancelAppointmentWithReason,
     private val schedulersProvider: SchedulersProvider,
     @Assisted private val uiActions: RemoveOverdueUiActions
 ) {
@@ -56,7 +57,7 @@ class RemoveOverdueEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .doOnNext { appointmentRepository.cancelWithReason(it.appointmentUuid, it.reason) }
+          .doOnNext { cancelAppointmentWithReason.execute(it.appointment, it.reason) }
           .map { AppointmentMarkedAsCancelled }
     }
   }

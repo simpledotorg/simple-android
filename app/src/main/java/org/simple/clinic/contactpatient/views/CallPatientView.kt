@@ -134,7 +134,7 @@ class CallPatientView(
   var showPatientWithNoPhoneNumberResults: Boolean = false
     set(value) {
       field = value
-      patientWithNoPhoneNumberResultsGroup.visibility = if (field) View.VISIBLE else View.GONE
+      renderPatientWithNoPhoneNumberResults(field)
     }
 
   var showPatientDiedStatus: Boolean = false
@@ -225,6 +225,15 @@ class CallPatientView(
     agreedToVisitSeparator.visibleOrGone(isVisible)
     remindToCallLaterTextView.visibleOrGone(isVisible)
     remindToCallSeparator.visibleOrGone(isVisible)
+    removeFromOverdueListTextView.visibleOrGone(isVisible)
+  }
+
+  private fun renderPatientWithNoPhoneNumberResults(isVisible: Boolean) {
+    resultOfCallLabelTextView.visibleOrGone(isVisible)
+    agreedToVisitTextView.visibleOrGone(isVisible)
+    agreedToVisitSeparator.visibleOrGone(isVisible)
+    remindToCallLaterTextView.visibility = View.GONE
+    remindToCallSeparator.visibility = View.GONE
     removeFromOverdueListTextView.visibleOrGone(isVisible)
   }
 }

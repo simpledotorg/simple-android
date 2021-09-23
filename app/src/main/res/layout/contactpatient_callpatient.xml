@@ -365,17 +365,4 @@
     android:visibility="gone"
     app:constraint_referenced_ids="patientAddressTextView, noPhoneNumberBottomTextViewLayout" />
 
-  <androidx.constraintlayout.widget.Group
-    android:id="@+id/patientWithPhoneNumberResultsGroup"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:visibility="gone"
-    app:constraint_referenced_ids="resultOfCallLabel, agreedToVisitTextView, agreedToVisitSeparator, remindToCallLaterTextView, remindToCallLaterSeparator, removeFromOverdueListTextView" />
-
-  <androidx.constraintlayout.widget.Group
-    android:id="@+id/patientWithNoPhoneNumberResultGroup"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:visibility="gone"
-    app:constraint_referenced_ids="resultOfCallLabel, agreedToVisitTextView, agreedToVisitSeparator, removeFromOverdueListTextView" />
 </merge>

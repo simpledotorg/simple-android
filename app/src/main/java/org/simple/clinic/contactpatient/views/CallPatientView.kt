@@ -86,12 +86,6 @@ class CallPatientView(
   private val lastVisitedLabel
     get() = binding!!.lastVisitedLabel
 
-  private val patientWithPhoneNumberResultsGroup
-    get() = binding!!.patientWithPhoneNumberResultsGroup
-
-  private val patientWithNoPhoneNumberResultsGroup
-    get() = binding!!.patientWithNoPhoneNumberResultGroup
-
   private val patientDiedStatusView
     get() = binding!!.patientDiedStatusView
 

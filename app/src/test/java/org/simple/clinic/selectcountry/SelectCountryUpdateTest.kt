@@ -97,46 +97,6 @@ class SelectCountryUpdateTest {
   }
 
   @Test
-  fun `when deployment is saved, then go to registration screen`() {
-    val model = defaultModel
-        .manifestFetched(countries)
-        .countryChosen(india)
-
-    spec
-        .given(model)
-        .whenEvent(DeploymentSaved)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(GoToRegistrationScreen)
-        ))
-  }
-
-  @Test
-  fun `when selected country is saved and there is only one deployment, then save deployment`() {
-    val deployment = TestData.deployment(
-        endPoint = "https://in.simple.org",
-        displayName = "IHCI"
-    )
-    val india = TestData.country(
-        isoCountryCode = "IN",
-        displayName = "India",
-        isdCode = "91",
-        deployments = listOf(deployment)
-    )
-    val model = defaultModel
-        .manifestFetched(countries)
-        .countryChosen(india)
-
-    spec
-        .given(model)
-        .whenEvent(CountrySaved)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(SaveDeployment(deployment))
-        ))
-  }
-
-  @Test
   fun `when selected country is saved and there is more than one deployment, then go to state selection screen`() {
     val ihci = TestData.deployment(
         endPoint = "https://in.simple.org",

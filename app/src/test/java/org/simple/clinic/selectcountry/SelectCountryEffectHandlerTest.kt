@@ -104,34 +104,4 @@ class SelectCountryEffectHandlerTest {
     verify(uiActions).goToStateSelectionScreen()
     verifyNoMoreInteractions(uiActions)
   }
-
-  @Test
-  fun `when save deployment effect is received, then save deployment`() {
-    // given
-    val deployment = TestData.deployment(
-        displayName = "IHCI",
-        endPoint = "https://in.simple.org/"
-    )
-
-    // when
-    testCase.dispatch(SaveDeployment(deployment))
-
-    // then
-    testCase.assertOutgoingEvents(DeploymentSaved)
-    verify(repository).saveDeployment(deployment)
-    verifyNoMoreInteractions(repository)
-    verifyZeroInteractions(uiActions)
-  }
-
-  @Test
-  fun `when go to registration screen effect is received, then go to registration screen`() {
-    // when
-    testCase.dispatch(GoToRegistrationScreen)
-
-    // then
-    testCase.assertNoOutgoingEvents()
-    verifyZeroInteractions(repository)
-    verify(uiActions).goToRegistrationScreen()
-    verifyNoMoreInteractions(uiActions)
-  }
 }

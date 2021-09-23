@@ -16,20 +16,8 @@ class SelectCountryUpdate : Update<SelectCountryModel, SelectCountryEvent, Selec
       is ManifestFetchFailed -> next(model.manifestFetchError(event.error))
       is CountryChosen -> next(model.countryChosen(event.country))
       NextClicked -> dispatch(SaveCountryEffect(model.selectedCountry!!))
-      CountrySaved -> countrySaved(model)
+      CountrySaved -> dispatch(GoToStateSelectionScreen)
       RetryClicked -> next(model.fetching(), setOf(FetchManifest))
-      DeploymentSaved -> dispatch(GoToRegistrationScreen)
     }
-  }
-
-  private fun countrySaved(model: SelectCountryModel): Next<SelectCountryModel, SelectCountryEffect> {
-    val effect = if (!model.hasMoreThanOneDeployment) {
-      val selectedCountryDeployment = model.selectedCountry!!.deployments.first()
-      SaveDeployment(selectedCountryDeployment)
-    } else {
-      GoToStateSelectionScreen
-    }
-
-    return dispatch(effect = effect)
   }
 }

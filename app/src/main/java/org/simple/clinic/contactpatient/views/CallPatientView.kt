@@ -35,8 +35,14 @@ class CallPatientView(
   private val agreedToVisitTextView
     get() = binding!!.agreedToVisitTextView
 
+  private val agreedToVisitSeparator
+    get() = binding!!.agreedToVisitSeparator
+
   private val remindToCallLaterTextView
     get() = binding!!.remindToCallLaterTextView
+
+  private val remindToCallSeparator
+    get() = binding!!.remindToCallLaterSeparator
 
   private val removeFromOverdueListTextView
     get() = binding!!.removeFromOverdueListTextView
@@ -122,7 +128,7 @@ class CallPatientView(
   var showPatientWithCallResultLayout: Boolean = false
     set(value) {
       field = value
-      patientWithPhoneNumberResultsGroup.visibility = if (field) View.VISIBLE else View.GONE
+      renderPatientWithPhoneNumberResults(field)
     }
 
   var showPatientWithNoPhoneNumberResults: Boolean = false
@@ -211,5 +217,14 @@ class CallPatientView(
         .map { (_, diagnosisTitle) -> diagnosisTitle }
         .ifEmpty { listOf(resources.getString(R.string.contactpatient_diagnosis_none)) }
         .joinToString()
+  }
+
+  private fun renderPatientWithPhoneNumberResults(isVisible: Boolean) {
+    resultOfCallLabelTextView.visibleOrGone(isVisible)
+    agreedToVisitTextView.visibleOrGone(isVisible)
+    agreedToVisitSeparator.visibleOrGone(isVisible)
+    remindToCallLaterTextView.visibleOrGone(isVisible)
+    remindToCallSeparator.visibleOrGone(isVisible)
+    removeFromOverdueListTextView.visibleOrGone(isVisible)
   }
 }

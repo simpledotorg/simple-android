@@ -2,6 +2,7 @@ package org.simple.clinic.selectstate
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
+import org.simple.clinic.appconfig.State
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
@@ -13,7 +14,7 @@ class SelectStateUpdate : Update<SelectStateModel, SelectStateEvent, SelectState
   ): Next<SelectStateModel, SelectStateEffect> {
     return when (event) {
       StateSaved -> dispatch(GoToRegistrationScreen)
-      is StatesFetched -> next(model.statesLoaded(event.states))
+      is StatesFetched -> statesFetched(model, event.states)
       is FailedToFetchStates -> next(model.failedToLoadStates(event.error))
       RetryButtonClicked -> next(
           model.loadingStates(),
@@ -21,6 +22,14 @@ class SelectStateUpdate : Update<SelectStateModel, SelectStateEvent, SelectState
       )
       is StateChanged -> next(model.stateChanged(event.state))
       NextClicked -> dispatch(SaveSelectedState(model.selectedState!!))
+    }
+  }
+
+  private fun statesFetched(model: SelectStateModel, states: List<State>): Next<SelectStateModel, SelectStateEffect> {
+    return if(states.size > 1){
+      next(model.statesLoaded(states))
+    }else {
+      dispatch(SaveSelectedState(states.first()))
     }
   }
 }

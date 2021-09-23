@@ -36,6 +36,22 @@ class SelectStateUpdateTest {
   }
 
   @Test
+  fun `when states are fetched successfully and there's only one state received, then save the state`(){
+    val states = listOf(
+        TestData.state(displayName = "Maharashtra")
+    )
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(StatesFetched(states))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(SaveSelectedState(state = states.first()))
+            )
+        )
+  }
+
+  @Test
   fun `when fetching states fails, then update the ui`() {
     val cause = serverError()
     val error = StatesFetchError.fromResolvedError(ServerError(cause))

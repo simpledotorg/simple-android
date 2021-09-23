@@ -17,13 +17,14 @@
 - Bump Kotlin to v1.5.31
 - Remove overdue list changes feature flag
 - Implement providing drug frequencies label depending on the country in `DrugSearchScreen`
-- Add progress state in the save button when the drug is being added/updated in `CustomDrugEntrySheet` 
-- Handle `ShowKeyboard` as a Ui Action instead of rendering it in the `UiRenderer` 
+- Add progress state in the save button when the drug is being added/updated in `CustomDrugEntrySheet`
+- Handle `ShowKeyboard` as a Ui Action instead of rendering it in the `UiRenderer`
 - Refactor `ContactPatientUiRenderer`
 - Provide drug frequencies to label as a map
 - Show ongoing diabetes treatment required dialog in diagnosis screen
 - Record call results instead of updating the same appointment record
 - Fix `Country` v2 migration not running
+- Convert commit and push bash script to Kotlin script
 - [In Progress: 31 Aug 2021] Refactor logic around providing drug frequencies label depending on the country
 - [In Progress: 2 Sep 2021] Add a progress state in `CustomDrugEntrySheet`
 

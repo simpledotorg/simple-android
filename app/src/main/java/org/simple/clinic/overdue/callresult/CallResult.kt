@@ -142,5 +142,14 @@ data class CallResult(
       DELETE FROM CallResult
     """)
     fun clear()
+
+    @Query("""
+      SELECT *
+      FROM CallResult
+      WHERE id = :id
+    """)
+    fun getOne(
+        id: UUID
+    ): CallResult?
   }
 }

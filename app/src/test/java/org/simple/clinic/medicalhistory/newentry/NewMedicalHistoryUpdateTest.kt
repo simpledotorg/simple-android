@@ -17,6 +17,7 @@ import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_DIABETES_TREATMENT
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_HYPERTENSION_TREATMENT
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import java.util.UUID
@@ -287,5 +288,24 @@ class NewMedicalHistoryUpdateTest {
                 hasEffects(RegisterPatient(model.ongoingMedicalHistoryEntry))
             )
         )
+  }
+
+  @Test
+  fun `when save is clicked and patient is diagnosed with diabetes and ongoing diabetes treatment question is not answered and selected country is india, then show error`() {
+    val model = defaultModel
+        .ongoingPatientEntryLoaded(patientEntry)
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
+        .answerChanged(DIAGNOSED_WITH_DIABETES, Yes)
+        .answerChanged(IS_ON_HYPERTENSION_TREATMENT, Yes)
+        .answerChanged(IS_ON_DIABETES_TREATMENT, Unanswered)
+
+    updateSpec
+        .given(model)
+        .whenEvent(SaveMedicalHistoryClicked())
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowOngoingDiabetesTreatmentErrorDialog)
+        ))
   }
 }

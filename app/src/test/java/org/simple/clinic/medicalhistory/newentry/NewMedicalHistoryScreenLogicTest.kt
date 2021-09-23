@@ -24,6 +24,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HY
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_DIABETES_TREATMENT
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_HYPERTENSION_TREATMENT
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
@@ -119,6 +120,7 @@ class NewMedicalHistoryScreenLogicTest {
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_STROKE, No))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_KIDNEY_DISEASE, Yes))
     uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_DIABETES, Yes))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(IS_ON_DIABETES_TREATMENT, Yes))
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
     // then
@@ -142,7 +144,8 @@ class NewMedicalHistoryScreenLogicTest {
               hasHadStroke = No,
               hasHadKidneyDisease = Yes,
               diagnosedWithHypertension = No,
-              hasDiabetes = Yes
+              hasDiabetes = Yes,
+              isOnDiabetesTreatment = Yes
           )
       )
       verify(uiActions).openPatientSummaryScreen(savedPatient.patientUuid)

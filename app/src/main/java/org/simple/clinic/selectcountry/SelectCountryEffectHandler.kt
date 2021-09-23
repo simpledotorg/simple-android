@@ -34,18 +34,7 @@ class SelectCountryEffectHandler(
         .addTransformer(FetchManifest::class.java, fetchManifest())
         .addTransformer(SaveCountryEffect::class.java, saveCountry())
         .addAction(GoToStateSelectionScreen::class.java, uiActions::goToStateSelectionScreen, schedulersProvider.ui())
-        .addTransformer(SaveDeployment::class.java, saveDeployment())
-        .addAction(GoToRegistrationScreen::class.java, uiActions::goToRegistrationScreen, schedulersProvider.ui())
         .build()
-  }
-
-  private fun saveDeployment(): ObservableTransformer<SaveDeployment, SelectCountryEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulersProvider.io())
-          .doOnNext { appConfigRepository.saveDeployment(it.deployment) }
-          .map { DeploymentSaved }
-    }
   }
 
   private fun fetchManifest(): ObservableTransformer<FetchManifest, SelectCountryEvent> {

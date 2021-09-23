@@ -35,8 +35,14 @@ class CallPatientView(
   private val agreedToVisitTextView
     get() = binding!!.agreedToVisitTextView
 
+  private val agreedToVisitSeparator
+    get() = binding!!.agreedToVisitSeparator
+
   private val remindToCallLaterTextView
     get() = binding!!.remindToCallLaterTextView
+
+  private val remindToCallSeparator
+    get() = binding!!.remindToCallLaterSeparator
 
   private val removeFromOverdueListTextView
     get() = binding!!.removeFromOverdueListTextView
@@ -80,12 +86,6 @@ class CallPatientView(
   private val lastVisitedLabel
     get() = binding!!.lastVisitedLabel
 
-  private val patientWithPhoneNumberResultsGroup
-    get() = binding!!.patientWithPhoneNumberResultsGroup
-
-  private val patientWithNoPhoneNumberResultsGroup
-    get() = binding!!.patientWithNoPhoneNumberResultGroup
-
   private val patientDiedStatusView
     get() = binding!!.patientDiedStatusView
 
@@ -122,13 +122,13 @@ class CallPatientView(
   var showPatientWithCallResultLayout: Boolean = false
     set(value) {
       field = value
-      patientWithPhoneNumberResultsGroup.visibility = if (field) View.VISIBLE else View.GONE
+      renderPatientWithPhoneNumberResults(field)
     }
 
   var showPatientWithNoPhoneNumberResults: Boolean = false
     set(value) {
       field = value
-      patientWithNoPhoneNumberResultsGroup.visibility = if (field) View.VISIBLE else View.GONE
+      renderPatientWithNoPhoneNumberResults(field)
     }
 
   var showPatientDiedStatus: Boolean = false
@@ -211,5 +211,23 @@ class CallPatientView(
         .map { (_, diagnosisTitle) -> diagnosisTitle }
         .ifEmpty { listOf(resources.getString(R.string.contactpatient_diagnosis_none)) }
         .joinToString()
+  }
+
+  private fun renderPatientWithPhoneNumberResults(isVisible: Boolean) {
+    resultOfCallLabelTextView.visibleOrGone(isVisible)
+    agreedToVisitTextView.visibleOrGone(isVisible)
+    agreedToVisitSeparator.visibleOrGone(isVisible)
+    remindToCallLaterTextView.visibleOrGone(isVisible)
+    remindToCallSeparator.visibleOrGone(isVisible)
+    removeFromOverdueListTextView.visibleOrGone(isVisible)
+  }
+
+  private fun renderPatientWithNoPhoneNumberResults(isVisible: Boolean) {
+    resultOfCallLabelTextView.visibleOrGone(isVisible)
+    agreedToVisitTextView.visibleOrGone(isVisible)
+    agreedToVisitSeparator.visibleOrGone(isVisible)
+    remindToCallLaterTextView.visibility = View.GONE
+    remindToCallSeparator.visibility = View.GONE
+    removeFromOverdueListTextView.visibleOrGone(isVisible)
   }
 }

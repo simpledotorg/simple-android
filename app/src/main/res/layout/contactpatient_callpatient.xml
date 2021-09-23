@@ -192,8 +192,7 @@
     app:statusIconTint="?attr/colorOnError"
     app:statusText="@string/patient_status_died"
     app:statusTextAppearance="?attr/textAppearanceBody0Medium"
-    app:statusTextColor="?attr/colorOnError"
-    tools:visibility="visible" />
+    app:statusTextColor="?attr/colorOnError" />
 
   <TextView
     android:id="@+id/resultOfCallLabel"
@@ -206,9 +205,11 @@
     android:textAllCaps="true"
     android:textAppearance="?attr/textAppearanceTag"
     android:textColor="@color/color_on_surface_67"
+    android:visibility="gone"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/diagnosisSeparator" />
+    app:layout_constraintTop_toBottomOf="@id/diagnosisSeparator"
+    tools:visibility="visible" />
 
   <TextView
     android:id="@+id/agreedToVisitTextView"
@@ -217,10 +218,12 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/spacing_8"
     android:text="@string/contactpatient_agreed_to_visit"
+    android:visibility="gone"
     app:drawableStartCompat="@drawable/ic_radio_button_unchecked_green"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/resultOfCallLabel" />
+    app:layout_constraintTop_toBottomOf="@id/resultOfCallLabel"
+    tools:visibility="visible" />
 
   <View
     android:id="@+id/agreedToVisitSeparator"
@@ -230,7 +233,8 @@
     android:background="@drawable/divider"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/agreedToVisitTextView" />
+    app:layout_constraintTop_toBottomOf="@id/agreedToVisitTextView"
+    tools:visibility="visible" />
 
   <TextView
     android:id="@+id/remindToCallLaterTextView"
@@ -238,11 +242,12 @@
     android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
     android:text="@string/contactpatient_remind_call_later"
-    android:visibility="visible"
+    android:visibility="gone"
     app:drawableStartCompat="@drawable/ic_radio_button_unchecked_yellow"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/agreedToVisitSeparator" />
+    app:layout_constraintTop_toBottomOf="@id/agreedToVisitSeparator"
+    tools:visibility="visible" />
 
   <View
     android:id="@+id/remindToCallLaterSeparator"
@@ -252,7 +257,8 @@
     android:background="@drawable/divider"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/remindToCallLaterTextView" />
+    app:layout_constraintTop_toBottomOf="@id/remindToCallLaterTextView"
+    tools:visibility="visible" />
 
   <TextView
     android:id="@+id/removeFromOverdueListTextView"
@@ -261,11 +267,13 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/spacing_24"
     android:text="@string/contactpatient_remove_from_list"
+    android:visibility="gone"
     app:drawableStartCompat="@drawable/ic_radio_button_unchecked_red"
     app:layout_constraintBottom_toTopOf="@id/barrier"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/remindToCallLaterSeparator" />
+    app:layout_constraintTop_toBottomOf="@id/remindToCallLaterSeparator"
+    tools:visibility="visible" />
 
   <androidx.constraintlayout.widget.Barrier
     android:id="@+id/barrier"
@@ -356,7 +364,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:visibility="gone"
-    app:constraint_referenced_ids="phoneNumberLabel, phoneNumberTextView, helpTextView, normalCallButton, secureCallButton" />
+    app:constraint_referenced_ids="phoneNumberLabel, phoneNumberTextView, normalCallButton, secureCallingGroup" />
 
   <androidx.constraintlayout.widget.Group
     android:id="@+id/patientWithNoPhoneNumberGroup"
@@ -365,17 +373,4 @@
     android:visibility="gone"
     app:constraint_referenced_ids="patientAddressTextView, noPhoneNumberBottomTextViewLayout" />
 
-  <androidx.constraintlayout.widget.Group
-    android:id="@+id/patientWithPhoneNumberResultsGroup"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:visibility="gone"
-    app:constraint_referenced_ids="resultOfCallLabel, agreedToVisitTextView, agreedToVisitSeparator, remindToCallLaterTextView, remindToCallLaterSeparator, removeFromOverdueListTextView" />
-
-  <androidx.constraintlayout.widget.Group
-    android:id="@+id/patientWithNoPhoneNumberResultGroup"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:visibility="gone"
-    app:constraint_referenced_ids="resultOfCallLabel, agreedToVisitTextView, agreedToVisitSeparator, removeFromOverdueListTextView" />
 </merge>

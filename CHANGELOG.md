@@ -23,6 +23,7 @@
 - Provide drug frequencies to label as a map
 - Show ongoing diabetes treatment required dialog in diagnosis screen
 - Record call results instead of updating the same appointment record
+- Fix `Country` v2 migration not running
 - [In Progress: 31 Aug 2021] Refactor logic around providing drug frequencies label depending on the country
 - [In Progress: 2 Sep 2021] Add a progress state in `CustomDrugEntrySheet`
 
@@ -48,6 +49,7 @@
 ### Fixes
 
 - Fix select country & state screen overlapping next button
+- Fix app not displaying national ID and proper illustration in Sri Lanka
 
 ## 2021-09-20-7952
 

@@ -23,7 +23,7 @@ jobs:
 
       - name: Commit and Push
         id: commit_and_push
-        run: .github/scripts/commit_and_push.sh "${{secrets.USER_NAME}}" "${{secrets.USER_EMAIL}}"
+        run: kotlinc -script ".github/scripts/CommitAndPush.main.kts" "${{secrets.USER_NAME}}" "${{secrets.USER_EMAIL}}"
 
       - name: Create PR
         uses: actions/github-script@0.3.0

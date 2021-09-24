@@ -25,10 +25,11 @@
 - Record call results instead of updating the same appointment record
 - Fix `Country` v2 migration not running
 - Convert commit and push bash script to Kotlin script
+- Show state selection screen after country is selected
+- Purge call results when database purges run
 - [In Progress: 22 Sep 2021] Custom Drug Entry Sheet UI Improvements
 - [In Progress: 31 Aug 2021] Refactor logic around providing drug frequencies label depending on the country
 - [In Progress: 2 Sep 2021] Add a progress state in `CustomDrugEntrySheet`
-- Show state selection screen after country is selected
 
 ### Changes
 

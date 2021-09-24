@@ -225,9 +225,11 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
-  fun `when drug is fetched, then update the model with drug values, set drug frequency, dosage and show keyboard`() {
+  fun `when drug is fetched and dosage has numeric values, then update the model with drug values, set drug frequency, dosage, show keyboard and set cursor position`() {
     val drugUuid = UUID.fromString("6bbc5bbe-863c-472a-b962-1fd3198e20d1")
-    val drug = TestData.drug(id = drugUuid, frequency = OD)
+    val dosage = "10 mg/ 150 mg"
+    val position = 10
+    val drug = TestData.drug(id = drugUuid, frequency = OD, dosage = dosage)
     val frequencyRes = "OD"
     val drugFrequencyChoiceItemsLoaded = defaultModel.drugFrequencyToLabelMapLoaded(drugFrequencyToLabelMap)
 
@@ -242,7 +244,32 @@ class CustomDrugEntryUpdateTest {
                     .frequencyEdited(drug.frequency)
                     .rxNormCodeEdited(drug.rxNormCode)
                     .drugInfoProgressStateLoaded()),
-                hasEffects(SetDrugFrequency(frequencyRes), SetDrugDosage(drug.dosage), ShowKeyboard)
+                hasEffects(SetDrugFrequency(frequencyRes), SetDrugDosage(drug.dosage), ShowKeyboard, SetCursorPosition(position))
+            )
+        )
+  }
+
+  @Test
+  fun `when drug is fetched and dosage does not have a numeric values, then update the model with drug values, set drug frequency, dosage, show keyboard and set cursor position`() {
+    val drugUuid = UUID.fromString("6bbc5bbe-863c-472a-b962-1fd3198e20d1")
+    val dosage = "mg"
+    val position = 0
+    val drug = TestData.drug(id = drugUuid, frequency = OD, dosage = dosage)
+    val frequencyRes = "OD"
+    val drugFrequencyChoiceItemsLoaded = defaultModel.drugFrequencyToLabelMapLoaded(drugFrequencyToLabelMap)
+
+    updateSpec
+        .given(drugFrequencyChoiceItemsLoaded)
+        .whenEvent(DrugFetched(drug))
+        .then(
+            assertThatNext(
+                hasModel(drugFrequencyChoiceItemsLoaded
+                    .drugNameLoaded(drug.name)
+                    .dosageEdited(drug.dosage)
+                    .frequencyEdited(drug.frequency)
+                    .rxNormCodeEdited(drug.rxNormCode)
+                    .drugInfoProgressStateLoaded()),
+                hasEffects(SetDrugFrequency(frequencyRes), SetDrugDosage(drug.dosage), ShowKeyboard, SetCursorPosition(position))
             )
         )
   }

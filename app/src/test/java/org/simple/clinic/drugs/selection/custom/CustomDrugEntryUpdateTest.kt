@@ -174,10 +174,11 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
-  fun `when the drug is fetched and is not deleted, then update the model, set frequency and show keyboard`() {
+  fun `when the drug is fetched, is not deleted and has a numeric dosage value, then update the model, set frequency, show keyboard and set cursor position`() {
     val prescribedDrugUuid = UUID.fromString("96633994-6e4d-4528-b796-f03ae016553a")
     val drugFrequency = OD
     val dosage = "12mg"
+    val position = 2
     val prescribedDrug = TestData.prescription(uuid = prescribedDrugUuid, name = drugName, isDeleted = false, frequency = MedicineFrequency.OD, dosage = dosage)
     val defaultModel = CustomDrugEntryModel
         .default(openAs = OpenAs.Update(prescribedDrugUuid), dosagePlaceholder)
@@ -195,7 +196,7 @@ class CustomDrugEntryUpdateTest {
                     .frequencyEdited(frequency = drugFrequency)
                     .rxNormCodeEdited(prescribedDrug.rxNormCode)
                     .drugInfoProgressStateLoaded()),
-                hasEffects(SetDrugFrequency(frequencyRes), SetDrugDosage(dosage), ShowKeyboard))
+                hasEffects(SetDrugFrequency(frequencyRes), SetDrugDosage(dosage), ShowKeyboard, SetCursorPosition(position)))
         )
   }
 

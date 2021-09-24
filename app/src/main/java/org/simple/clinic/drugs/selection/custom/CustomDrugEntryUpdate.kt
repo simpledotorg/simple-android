@@ -67,6 +67,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       prescription: PrescribedDrug
   ): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
     val frequency = DrugFrequency.fromMedicineFrequency(prescription.frequency)
+    val cursorPosition = if (prescription.dosage != null) cursorPositionFromDosage(prescription.dosage) else 0
 
     val updatedModel = model
         .drugNameLoaded(prescription.name)
@@ -75,7 +76,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
         .rxNormCodeEdited(prescription.rxNormCode)
         .drugInfoProgressStateLoaded()
 
-    return next(updatedModel, SetDrugFrequency(model.drugFrequencyToLabelMap!![frequency]!!.label), SetDrugDosage(prescription.dosage), ShowKeyboard)
+    return next(updatedModel, SetDrugFrequency(model.drugFrequencyToLabelMap!![frequency]!!.label), SetDrugDosage(prescription.dosage), ShowKeyboard, SetCursorPosition(cursorPosition))
   }
 
   private fun createOrUpdatePrescriptionEntry(

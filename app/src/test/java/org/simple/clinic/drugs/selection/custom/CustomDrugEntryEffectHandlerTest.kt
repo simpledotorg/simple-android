@@ -265,4 +265,18 @@ class CustomDrugEntryEffectHandlerTest {
     verify(uiActions).clearFocusFromDosageEditText()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when set cursor position effect is received, then set cursor position`() {
+    // given
+    val position = 5
+
+    // when
+    testCase.dispatch(SetCursorPosition(position))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).setCursorPosition(position)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

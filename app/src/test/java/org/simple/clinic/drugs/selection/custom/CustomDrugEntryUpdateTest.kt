@@ -185,17 +185,19 @@ class CustomDrugEntryUpdateTest {
         .drugFrequencyToLabelMapLoaded(drugFrequencyToLabelMap)
     val frequencyRes = "OD"
 
+    val updatedModel = defaultModel
+        .drugNameLoaded(drugName)
+        .dosageEdited(dosage = dosage)
+        .frequencyEdited(frequency = drugFrequency)
+        .rxNormCodeEdited(prescribedDrug.rxNormCode)
+        .drugInfoProgressStateLoaded()
+
     updateSpec
         .given(defaultModel)
         .whenEvent(PrescribedDrugFetched(prescribedDrug))
         .then(
             assertThatNext(
-                hasModel(defaultModel
-                    .drugNameLoaded(drugName)
-                    .dosageEdited(dosage = dosage)
-                    .frequencyEdited(frequency = drugFrequency)
-                    .rxNormCodeEdited(prescribedDrug.rxNormCode)
-                    .drugInfoProgressStateLoaded()),
+                hasModel(updatedModel),
                 hasEffects(SetDrugFrequency(frequencyRes), SetDrugDosage(dosage), ShowKeyboard, SetCursorPosition(position)))
         )
   }
@@ -234,17 +236,19 @@ class CustomDrugEntryUpdateTest {
     val frequencyRes = "OD"
     val drugFrequencyChoiceItemsLoaded = defaultModel.drugFrequencyToLabelMapLoaded(drugFrequencyToLabelMap)
 
+    val updateModel = drugFrequencyChoiceItemsLoaded
+        .drugNameLoaded(drug.name)
+        .dosageEdited(drug.dosage)
+        .frequencyEdited(drug.frequency)
+        .rxNormCodeEdited(drug.rxNormCode)
+        .drugInfoProgressStateLoaded()
+
     updateSpec
         .given(drugFrequencyChoiceItemsLoaded)
         .whenEvent(DrugFetched(drug))
         .then(
             assertThatNext(
-                hasModel(drugFrequencyChoiceItemsLoaded
-                    .drugNameLoaded(drug.name)
-                    .dosageEdited(drug.dosage)
-                    .frequencyEdited(drug.frequency)
-                    .rxNormCodeEdited(drug.rxNormCode)
-                    .drugInfoProgressStateLoaded()),
+                hasModel(updateModel),
                 hasEffects(SetDrugFrequency(frequencyRes), SetDrugDosage(drug.dosage), ShowKeyboard, SetCursorPosition(position))
             )
         )
@@ -259,17 +263,19 @@ class CustomDrugEntryUpdateTest {
     val frequencyRes = "OD"
     val drugFrequencyChoiceItemsLoaded = defaultModel.drugFrequencyToLabelMapLoaded(drugFrequencyToLabelMap)
 
+    val updateModel = drugFrequencyChoiceItemsLoaded
+        .drugNameLoaded(drug.name)
+        .dosageEdited(drug.dosage)
+        .frequencyEdited(drug.frequency)
+        .rxNormCodeEdited(drug.rxNormCode)
+        .drugInfoProgressStateLoaded()
+
     updateSpec
         .given(drugFrequencyChoiceItemsLoaded)
         .whenEvent(DrugFetched(drug))
         .then(
             assertThatNext(
-                hasModel(drugFrequencyChoiceItemsLoaded
-                    .drugNameLoaded(drug.name)
-                    .dosageEdited(drug.dosage)
-                    .frequencyEdited(drug.frequency)
-                    .rxNormCodeEdited(drug.rxNormCode)
-                    .drugInfoProgressStateLoaded()),
+                hasModel(updateModel),
                 hasEffects(SetDrugFrequency(frequencyRes), SetDrugDosage(drug.dosage), ShowKeyboard, SetCursorPosition(position))
             )
         )

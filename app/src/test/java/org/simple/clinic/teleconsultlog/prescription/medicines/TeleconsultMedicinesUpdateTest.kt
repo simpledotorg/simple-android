@@ -9,7 +9,6 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescribedDrug
-import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import java.time.Duration
@@ -136,25 +135,6 @@ class TeleconsultMedicinesUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenEditMedicines(patientUuid)),
-        ))
-  }
-
-  @Test
-  fun `when drug frequency choice items are loaded, then update the model with a map of medicine frequency to frequency choice items`() {
-    val drugFrequencyToLabelMap = mapOf(
-        null to DrugFrequencyLabel(label = "None"),
-        DrugFrequency.OD to DrugFrequencyLabel(label = "OD"),
-        DrugFrequency.BD to DrugFrequencyLabel(label = "BD"),
-        DrugFrequency.TDS to DrugFrequencyLabel(label = "TDS"),
-        DrugFrequency.QDS to DrugFrequencyLabel(label = "QDS")
-    )
-
-    updateSpec
-        .given(model)
-        .whenEvent(DrugFrequencyChoiceItemsLoaded(drugFrequencyToLabelMap))
-        .then(assertThatNext(
-            hasModel(model.medicineFrequencyToLabelMapLoaded(medicineFrequencyToLabelMap)),
-            hasNoEffects()
         ))
   }
 }

@@ -11,11 +11,6 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.drugs.search.DrugFrequency.BD
-import org.simple.clinic.drugs.search.DrugFrequency.OD
-import org.simple.clinic.drugs.search.DrugFrequency.QDS
-import org.simple.clinic.drugs.search.DrugFrequency.TDS
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -27,18 +22,10 @@ class TeleconsultMedicinesEffectHandlerTest {
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val uiActions = mock<TeleconsultMedicinesUiActions>()
 
-  private val drugFrequencyToLabelMap = mapOf(
-      null to DrugFrequencyLabel(label = "None"),
-      OD to DrugFrequencyLabel(label = "OD"),
-      BD to DrugFrequencyLabel(label = "BD"),
-      TDS to DrugFrequencyLabel(label = "TDS"),
-      QDS to DrugFrequencyLabel(label = "QDS")
-  )
   private val effectHandler = TeleconsultMedicinesEffectHandler(
       prescriptionRepository = prescriptionRepository,
       schedulersProvider = TestSchedulersProvider.trampoline(),
-      uiActions = uiActions,
-      drugFrequencyToLabelMap = drugFrequencyToLabelMap
+      uiActions = uiActions
   )
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler.build())
 
@@ -155,15 +142,5 @@ class TeleconsultMedicinesEffectHandlerTest {
 
     verify(prescriptionRepository).updateDrugFrequency(prescribedDrugUuid, drugFrequency)
     verifyNoMoreInteractions(prescriptionRepository)
-  }
-
-  @Test
-  fun `when load drug frequency choice items effect is received, then load drug frequency choice items`() {
-    // when
-    effectHandlerTestCase.dispatch(LoadDrugFrequencyChoiceItems)
-
-    // then
-    effectHandlerTestCase.assertOutgoingEvents(DrugFrequencyChoiceItemsLoaded(drugFrequencyToLabelMap))
-    verifyZeroInteractions(uiActions)
   }
 }

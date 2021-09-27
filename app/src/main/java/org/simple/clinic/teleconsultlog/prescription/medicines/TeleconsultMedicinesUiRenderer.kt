@@ -1,9 +1,7 @@
 package org.simple.clinic.teleconsultlog.prescription.medicines
 
 import org.simple.clinic.drugs.PrescribedDrug
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.mobius.ViewRenderer
-import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 
 class TeleconsultMedicinesUiRenderer(
     private val ui: TeleconsultMedicinesUi

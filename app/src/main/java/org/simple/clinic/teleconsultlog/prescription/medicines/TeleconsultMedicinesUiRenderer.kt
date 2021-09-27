@@ -13,18 +13,16 @@ class TeleconsultMedicinesUiRenderer(
     if (model.hasMedicines) {
       renderMedicines(
           model.medicines!!,
-          model.hasMedicineFrequencyToLabelMap,
-          model.medicineFrequencyToLabelMap)
+          model.hasMedicineFrequencyToLabelMap)
     }
   }
 
   private fun renderMedicines(
       medicines: List<PrescribedDrug>,
-      hasMedicineFrequencyToFrequencyChoiceItemMap: Boolean,
-      medicineFrequencyToLabelMap: Map<MedicineFrequency?, DrugFrequencyLabel>?
+      hasMedicineFrequencyToFrequencyChoiceItemMap: Boolean
   ) {
     if (medicines.isNotEmpty() && hasMedicineFrequencyToFrequencyChoiceItemMap) {
-      ui.renderMedicines(medicines, medicineFrequencyToLabelMap!!)
+      ui.renderMedicines(medicines)
       ui.showEditButton()
       ui.hideMedicinesRequiredError()
     } else {

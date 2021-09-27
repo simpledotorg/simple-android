@@ -53,7 +53,7 @@ class TeleconsultMedicinesUiRendererTest {
     uiRenderer.render(medicinesLoadedModel)
 
     // then
-    verify(ui).renderMedicines(medicines, medicineFrequencyToLabelMap)
+    verify(ui).renderMedicines(medicines)
     verify(ui).showEditButton()
     verify(ui).hideMedicinesRequiredError()
     verifyNoMoreInteractions(ui)

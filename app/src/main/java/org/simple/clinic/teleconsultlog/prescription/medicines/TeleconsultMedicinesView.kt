@@ -155,11 +155,14 @@ class TeleconsultMedicinesView(
   }
 
   override fun renderMedicines(
-      medicines: List<PrescribedDrug>,
-      medicineFrequencyToLabelMap: Map<MedicineFrequency?, DrugFrequencyLabel>
+      medicines: List<PrescribedDrug>
   ) {
     emptyMedicinesTextView.visibility = GONE
     medicinesRecyclerView.visibility = VISIBLE
+
+    val medicineFrequencyToLabelMap = drugFrequencyToLabelMap
+        .mapKeys { (drugFrequency, _) -> MedicineFrequency.fromDrugFrequency(drugFrequency) }
+
 
     teleconsultMedicinesAdapter.submitList(TeleconsultMedicineItem.from(
         medicines = medicines,

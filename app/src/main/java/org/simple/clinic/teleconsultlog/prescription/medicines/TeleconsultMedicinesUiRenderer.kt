@@ -9,17 +9,12 @@ class TeleconsultMedicinesUiRenderer(
 
   override fun render(model: TeleconsultMedicinesModel) {
     if (model.hasMedicines) {
-      renderMedicines(
-          model.medicines!!,
-          model.hasMedicineFrequencyToLabelMap)
+      renderMedicines(model.medicines!!)
     }
   }
 
-  private fun renderMedicines(
-      medicines: List<PrescribedDrug>,
-      hasMedicineFrequencyToFrequencyChoiceItemMap: Boolean
-  ) {
-    if (medicines.isNotEmpty() && hasMedicineFrequencyToFrequencyChoiceItemMap) {
+  private fun renderMedicines(medicines: List<PrescribedDrug>) {
+    if (medicines.isNotEmpty()) {
       ui.renderMedicines(medicines)
       ui.showEditButton()
       ui.hideMedicinesRequiredError()

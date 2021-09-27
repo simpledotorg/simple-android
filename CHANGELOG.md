@@ -4,6 +4,26 @@
 
 ### Internal
 
+- [In Progress: 22 Sep 2021] Custom Drug Entry Sheet UI Improvements
+- [In Progress: 31 Aug 2021] Refactor logic around providing drug frequencies label depending on the country
+- [In Progress: 2 Sep 2021] Add a progress state in `CustomDrugEntrySheet`
+
+### Changes
+
+- [In Progress: 19 Aug 2021] UI improvements for medical history screen
+  - Show hypertension diagnosis and treatment in single card
+  - Show separate cards for hypertension and diabetes diagnosis
+  - Show hypertension diagnosis even when facility doesn't have diabetes management enabled
+- [In Progress: 22 Jul 2021] Add option to download & share overdue list
+- [In Progress: 14 Jul 2021] Medication screen improvements
+  - Search for commonly used drugs
+- [In Progress: 06 Aug 2021] Add support for Sri Lanka
+- [In Progress: 25 Aug 2021] Implement providing drug frequencies label depending on the country
+
+## On Demo
+
+### Internal
+
 - Add a progress state in `CustomDrugEntrySheet`
 - Implement showing drug frequency in `EditMedicineScreen` based on the country
 - Add integration tests for `AppConfigRepository`
@@ -26,10 +46,6 @@
 - Fix `Country` v2 migration not running
 - Convert commit and push bash script to Kotlin script
 - Show state selection screen after country is selected
-- Purge call results when database purges run
-- [In Progress: 22 Sep 2021] Custom Drug Entry Sheet UI Improvements
-- [In Progress: 31 Aug 2021] Refactor logic around providing drug frequencies label depending on the country
-- [In Progress: 2 Sep 2021] Add a progress state in `CustomDrugEntrySheet`
 
 ### Changes
 
@@ -39,16 +55,6 @@
 - Show patient died status in contact patient bottom sheet
 - Go back to the previous screen when done/back is clicked in the patient summary screen when the patient is marked as dead
 - Show change diagnosis dialog when patient is not diagnosed with HTN or diabetes when registering
-- Remove next button from state selection screen, you can now select a state to go to next screen
-- [In Progress: 19 Aug 2021] UI improvements for medical history screen
-  - Show hypertension diagnosis and treatment in single card
-  - Show separate cards for hypertension and diabetes diagnosis
-  - Show hypertension diagnosis even when facility doesn't have diabetes management enabled
-- [In Progress: 22 Jul 2021] Add option to download & share overdue list
-- [In Progress: 14 Jul 2021] Medication screen improvements
-  - Search for commonly used drugs
-- [In Progress: 06 Aug 2021] Add support for Sri Lanka
-- [In Progress: 25 Aug 2021] Implement providing drug frequencies label depending on the country
 - Restrict OTP entries to 5 attempts
 
 ### Fixes

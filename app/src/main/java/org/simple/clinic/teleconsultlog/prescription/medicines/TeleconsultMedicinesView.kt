@@ -16,6 +16,7 @@ import org.simple.clinic.databinding.ListItemTeleconsultMedicineBinding
 import org.simple.clinic.databinding.ViewTeleconsultMedicinesBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescribedDrug
+import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.mobius.MobiusDelegate
@@ -73,6 +74,9 @@ class TeleconsultMedicinesView(
 
   @Inject
   lateinit var screenKeyProvider: ScreenKeyProvider
+
+  @Inject
+  lateinit var drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>
 
   companion object {
     private const val DRUG_FREQUENCY_SHEET = 1

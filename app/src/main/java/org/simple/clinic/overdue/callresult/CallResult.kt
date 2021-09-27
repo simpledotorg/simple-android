@@ -142,5 +142,23 @@ data class CallResult(
       DELETE FROM CallResult
     """)
     fun clear()
+
+    @Query("""
+      SELECT *
+      FROM CallResult
+      WHERE id = :id
+    """)
+    fun getOne(
+        id: UUID
+    ): CallResult?
+
+    @Query("""
+      DELETE
+      FROM CallResult
+      WHERE
+        deletedAt IS NOT NULL
+        AND syncStatus == 'DONE'
+    """)
+    fun purgeDeleted()
   }
 }

@@ -188,6 +188,7 @@ abstract class AppDatabase : RoomDatabase() {
       teleconsultMedicalOfficersDao().clear()
       teleconsultFacilityWithMedicalOfficersDao().clear()
       teleconsultRecordDao().clear()
+      callResultDao().clear()
     }
   }
 
@@ -208,30 +209,31 @@ abstract class AppDatabase : RoomDatabase() {
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
   fun purge(now: Instant) {
     runInTransaction {
-      withPatientDao(now)
-      withBloodPressureDao()
-      withBloodSugarDao()
-      withAppointmentDao()
-      withMedicalHistoryDao()
-      withPrescriptionDao()
+      purgeUnnecessaryPatients(now)
+      purgeUnnecessaryBloodPressures()
+      purgeUnnecessaryBloodSugars()
+      purgeUnnecessaryAppointments()
+      purgeUnnecessaryMedicalHistories()
+      purgeUnnecessaryPrescriptions()
+      purgeUnnecessaryCallResults()
     }
   }
 
-  private fun withPrescriptionDao() {
+  private fun purgeUnnecessaryPrescriptions() {
     with(prescriptionDao()) {
       purgeDeleted()
       purgePrescribedDrugWhenPatientIsNull()
     }
   }
 
-  private fun withMedicalHistoryDao() {
+  private fun purgeUnnecessaryMedicalHistories() {
     with(medicalHistoryDao()) {
       purgeDeleted()
       purgeMedicalHistoryWhenPatientIsNull()
     }
   }
 
-  private fun withAppointmentDao() {
+  private fun purgeUnnecessaryAppointments() {
     with(appointmentDao()) {
       purgeDeleted()
       purgeUnusedAppointments()
@@ -239,27 +241,31 @@ abstract class AppDatabase : RoomDatabase() {
     }
   }
 
-  private fun withBloodSugarDao() {
+  private fun purgeUnnecessaryBloodSugars() {
     with(bloodSugarDao()) {
       purgeDeleted()
       purgeBloodSugarMeasurementWhenPatientIsNull()
     }
   }
 
-  private fun withBloodPressureDao() {
+  private fun purgeUnnecessaryBloodPressures() {
     with(bloodPressureDao()) {
       purgeDeleted()
       purgeBloodPressureMeasurementWhenPatientIsNull()
     }
   }
 
-  private fun withPatientDao(now: Instant) {
+  private fun purgeUnnecessaryPatients(now: Instant) {
     with(patientDao()) {
       purgeDeleted()
       purgeDeletedPhoneNumbers()
       purgeDeletedBusinessIds()
       purgePatientAfterRetentionTime(now)
     }
+  }
+
+  private fun purgeUnnecessaryCallResults() {
+    callResultDao().purgeDeleted()
   }
 
   private fun vacuumDatabase() {

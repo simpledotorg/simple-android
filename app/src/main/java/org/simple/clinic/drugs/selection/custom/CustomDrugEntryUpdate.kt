@@ -45,7 +45,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       model: CustomDrugEntryModel,
       drug: Drug
   ): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
-    val cursorPosition = if (drug.dosage != null) cursorPositionFromDosage(drug.dosage) else 0
+    val cursorPosition = cursorPositionFromDosage(drug.dosage)
 
     val updatedModel = model
         .drugNameLoaded(drug.name)
@@ -57,7 +57,8 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
     return next(updatedModel, SetDrugFrequency(model.drugFrequencyToLabelMap!![drug.frequency]!!.label), SetDrugDosage(drug.dosage), ShowKeyboard, SetCursorPosition(cursorPosition))
   }
 
-  private fun cursorPositionFromDosage(dosage: String): Int {
+  private fun cursorPositionFromDosage(dosage: String?): Int {
+    if (dosage.isNullOrEmpty()) return 0
     val filteredDigitList = dosage.filter { it.isDigit() }
     return if (filteredDigitList.isNotEmpty()) dosage.lastIndexOf(filteredDigitList.last()) + 1 else 0
   }
@@ -67,7 +68,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       prescription: PrescribedDrug
   ): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
     val frequency = DrugFrequency.fromMedicineFrequency(prescription.frequency)
-    val cursorPosition = if (prescription.dosage != null) cursorPositionFromDosage(prescription.dosage) else 0
+    val cursorPosition = cursorPositionFromDosage(prescription.dosage)
 
     val updatedModel = model
         .drugNameLoaded(prescription.name)

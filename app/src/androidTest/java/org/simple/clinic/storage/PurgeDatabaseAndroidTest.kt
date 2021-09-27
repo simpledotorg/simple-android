@@ -35,6 +35,8 @@ class PurgeDatabaseAndroidTest {
 
   private val prescribedDrugsDao by lazy { appDatabase.prescriptionDao() }
 
+  private val callResultDao by lazy { appDatabase.callResultDao() }
+
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
@@ -736,5 +738,39 @@ class PurgeDatabaseAndroidTest {
     // then
     assertThat(prescribedDrugsDao.getOne(deletedPrescribedDrug.uuid)).isNull()
     assertThat(prescribedDrugsDao.getOne(notDeletedPrescribedDrug.uuid)).isEqualTo(notDeletedPrescribedDrug)
+  }
+
+  @Test
+  fun purging_the_database_should_delete_soft_deleted_call_results() {
+    // given
+    val deletedCallResult = TestData.callResult(
+        id = UUID.fromString("57e5bc23-0865-48d7-8e3b-34b111b318f2"),
+        deletedAt = Instant.parse("2018-01-01T00:00:02Z"),
+        syncStatus = SyncStatus.DONE
+    )
+    val notDeletedCallResult = TestData.callResult(
+        id = UUID.fromString("2bd34f85-052e-4c1b-a110-b7a92097762a"),
+        deletedAt = null,
+        syncStatus = SyncStatus.DONE
+    )
+    val deletedButUnsyncedCallResult = TestData.callResult(
+        id = UUID.fromString("b924feac-72de-48dc-93d5-74c4bd774a0f"),
+        deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        syncStatus = SyncStatus.PENDING
+    )
+
+    callResultDao.save(listOf(deletedCallResult, notDeletedCallResult, deletedButUnsyncedCallResult))
+
+    assertThat(callResultDao.getOne(deletedCallResult.id)).isEqualTo(deletedCallResult)
+    assertThat(callResultDao.getOne(notDeletedCallResult.id)).isEqualTo(notDeletedCallResult)
+    assertThat(callResultDao.getOne(deletedButUnsyncedCallResult.id)).isEqualTo(deletedButUnsyncedCallResult)
+
+    // when
+    appDatabase.purge(Instant.parse("2018-01-01T00:00:00Z"))
+
+    // then
+    assertThat(callResultDao.getOne(deletedCallResult.id)).isNull()
+    assertThat(callResultDao.getOne(notDeletedCallResult.id)).isEqualTo(notDeletedCallResult)
+    assertThat(callResultDao.getOne(deletedButUnsyncedCallResult.id)).isEqualTo(deletedButUnsyncedCallResult)
   }
 }

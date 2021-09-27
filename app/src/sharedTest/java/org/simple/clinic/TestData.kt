@@ -33,6 +33,8 @@ import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentPayload
+import org.simple.clinic.overdue.callresult.CallResult
+import org.simple.clinic.overdue.callresult.Outcome
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.CompleteMedicalRecord
 import org.simple.clinic.patient.DeletedReason
@@ -1404,4 +1406,24 @@ object TestData {
         bloodSugarMeasurement = bloodSugarMeasurement(patientUuid = patientUuid),
         bloodPressureMeasurement = bloodPressureMeasurement(patientUuid = patientUuid))
   }
+
+  fun callResult(
+      id: UUID = UUID.fromString("512a1c6e-3b11-4dd7-bda9-e0f99a092ace"),
+      userId: UUID = UUID.fromString("80115bd3-d8be-4426-9e71-c0550ba2a495"),
+      appointmentId: UUID = UUID.fromString("a2a467c9-1695-4e72-833d-37ce0cb3534a"),
+      removeReason: AppointmentCancelReason? = null,
+      outcome: Outcome = Outcome.AgreedToVisit,
+      createdAt: Instant = Instant.parse("2018-01-01T00:00:00Z"),
+      updatedAt: Instant = Instant.parse("2018-01-01T00:00:00Z"),
+      deletedAt: Instant? = null,
+      syncStatus: SyncStatus = SyncStatus.DONE
+  ) = CallResult(
+      id = id,
+      userId = userId,
+      appointmentId = appointmentId,
+      removeReason = removeReason,
+      outcome = outcome,
+      timestamps = Timestamps(createdAt, updatedAt, deletedAt),
+      syncStatus = syncStatus
+  )
 }

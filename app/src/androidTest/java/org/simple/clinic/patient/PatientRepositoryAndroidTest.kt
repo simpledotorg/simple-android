@@ -35,6 +35,7 @@ import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.Appointment.Status.Visited
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.overdue.callresult.CallResultRepository
 import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchCriteria.NumericCriteria
 import org.simple.clinic.patient.PatientStatus.Active
@@ -132,6 +133,9 @@ class PatientRepositoryAndroidTest {
   @Inject
   @Named("date_for_user_input")
   lateinit var dateOfBirthFormatter: DateTimeFormatter
+
+  @Inject
+  lateinit var callResultRepository: CallResultRepository
 
   @get:Rule
   val rules: RuleChain = Rules
@@ -307,7 +311,13 @@ class PatientRepositoryAndroidTest {
     val bloodSugarPayloads = rangeOfRecords.map { testData.bloodSugarPayload(patientUuid = patientUuid, facilityUuid = facilityUuid) }
     val prescriptionPayloads = rangeOfRecords.map { testData.prescriptionPayload(patientUuid = patientUuid, facilityUuid = facilityUuid) }
     val appointmentPayloads = rangeOfRecords.map { testData.appointmentPayload(patientUuid = patientUuid) }
-
+    val callResults = appointmentPayloads.map {
+      TestData.callResult(
+          id = UUID.randomUUID(),
+          appointmentId = it.uuid,
+          userId = user.uuid
+      )
+    }
     val medicalHistoryPayloads = rangeOfRecords.map { testData.medicalHistoryPayload(patientUuid = patientUuid) }
 
     patientRepository.mergeWithLocalData(patientPayloads)
@@ -315,8 +325,8 @@ class PatientRepositoryAndroidTest {
     bloodSugarRepository.mergeWithLocalData(bloodSugarPayloads)
     prescriptionRepository.mergeWithLocalData(prescriptionPayloads)
     appointmentRepository.mergeWithLocalData(appointmentPayloads)
+    callResultRepository.save(callResults)
     medicalHistoryRepository.mergeWithLocalData(medicalHistoryPayloads)
-
     reportsRepository.updateReports("test reports!")
 
     // We need to ensure that ONLY the tables related to the patient get cleared,
@@ -332,6 +342,7 @@ class PatientRepositoryAndroidTest {
     assertThat(database.facilityDao().count().blockingFirst()).isGreaterThan(0)
     assertThat(database.userDao().userImmediate()).isNotNull()
     assertThat(database.appointmentDao().count().blockingFirst()).isGreaterThan(0)
+    assertThat(database.callResultDao().recordCount().blockingFirst()).isGreaterThan(0)
     assertThat(database.medicalHistoryDao().count().blockingFirst()).isGreaterThan(0)
     assertThat(textStore.get(REPORTS_KEY)).isNotEmpty()
 
@@ -345,6 +356,7 @@ class PatientRepositoryAndroidTest {
     assertThat(database.bloodSugarDao().count().blockingFirst()).isEqualTo(0)
     assertThat(database.prescriptionDao().count().blockingFirst()).isEqualTo(0)
     assertThat(database.appointmentDao().count().blockingFirst()).isEqualTo(0)
+    assertThat(database.callResultDao().recordCount().blockingFirst()).isEqualTo(0)
     assertThat(database.medicalHistoryDao().count().blockingFirst()).isEqualTo(0)
     assertThat(textStore.get(REPORTS_KEY)).isNull()
 

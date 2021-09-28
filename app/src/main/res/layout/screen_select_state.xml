@@ -35,6 +35,7 @@
     android:layout_marginTop="@dimen/spacing_44"
     android:layout_marginEnd="@dimen/spacing_24"
     android:layout_marginBottom="@dimen/spacing_24"
+    app:layout_constrainedHeight="true"
     app:layout_constraintBottom_toTopOf="@id/nextButtonFrame"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"

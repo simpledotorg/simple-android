@@ -38,6 +38,7 @@
 - Show patient died status in contact patient bottom sheet
 - Go back to the previous screen when done/back is clicked in the patient summary screen when the patient is marked as dead
 - Show change diagnosis dialog when patient is not diagnosed with HTN or diabetes when registering
+- Remove next button from state selection screen, you can now select a state to go to next screen
 - [In Progress: 19 Aug 2021] UI improvements for medical history screen
   - Show hypertension diagnosis and treatment in single card
   - Show separate cards for hypertension and diabetes diagnosis

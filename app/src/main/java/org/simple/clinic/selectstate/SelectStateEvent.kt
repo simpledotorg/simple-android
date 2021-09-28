@@ -18,7 +18,3 @@ object RetryButtonClicked : SelectStateEvent() {
 data class StateChanged(val state: State) : SelectStateEvent() {
   override val analyticsName: String = "Select State:State Changed:${state.displayName}"
 }
-
-object NextClicked : SelectStateEvent() {
-  override val analyticsName: String = "Select State:Next Clicked"
-}

@@ -103,7 +103,6 @@ class SelectStateScreen : BaseScreen<
 
   override fun events() = Observable
       .mergeArray(
-          nextButtonClicks(),
           retryButtonClicks(),
           stateSelectedEvents()
       )
@@ -154,12 +153,6 @@ class SelectStateScreen : BaseScreen<
     return statesAdapter
         .itemEvents
         .map { StateChanged(it.state) }
-  }
-
-  private fun nextButtonClicks(): Observable<UiEvent> {
-    return nextButton
-        .clicks()
-        .map { NextClicked }
   }
 
   private fun retryButtonClicks(): Observable<UiEvent> {

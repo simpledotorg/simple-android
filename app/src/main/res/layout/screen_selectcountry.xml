@@ -35,7 +35,7 @@
     android:layout_marginTop="@dimen/spacing_44"
     android:layout_marginEnd="@dimen/spacing_16"
     android:layout_marginBottom="@dimen/spacing_24"
-    app:layout_constraintBottom_toTopOf="@id/nextButtonFrame"
+    app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/simple_logo">
@@ -109,24 +109,5 @@
     </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
 
   </com.google.android.material.card.MaterialCardView>
-
-  <FrameLayout
-    android:id="@+id/nextButtonFrame"
-    style="@style/Widget.Simple.Button.Frame"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:visibility="gone"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    tools:visibility="visible">
-
-    <com.google.android.material.button.MaterialButton
-      android:id="@+id/nextButton"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:text="@string/selectcountry_next" />
-
-  </FrameLayout>
 
 </org.simple.clinic.selectcountry.SelectCountryScreen>

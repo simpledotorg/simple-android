@@ -46,14 +46,8 @@ class SelectCountryScreen(
   private val tryAgain
     get() = binding!!.tryAgain
 
-  private val nextButton
-    get() = binding!!.nextButton
-
   private val errorMessageTextView
     get() = binding!!.errorMessageTextView
-
-  private val nextButtonFrame
-    get() = binding!!.nextButtonFrame
 
   @Inject
   lateinit var appConfigRepository: AppConfigRepository

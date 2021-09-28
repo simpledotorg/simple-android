@@ -36,7 +36,7 @@ class SelectStateUpdateTest {
   }
 
   @Test
-  fun `when states are fetched successfully and there's only one state received, then save the state`(){
+  fun `when states are fetched successfully and there's only one state received, then save the state`() {
     val states = listOf(
         TestData.state(displayName = "Maharashtra")
     )
@@ -110,23 +110,6 @@ class SelectStateUpdateTest {
         .whenEvent(StateChanged(state))
         .then(assertThatNext(
             hasModel(statesLoadedModel.stateChanged(state)),
-            hasNoEffects()
-        ))
-  }
-
-  @Test
-  fun `when next is clicked, then save state`() {
-    val state = TestData.state(displayName = "Andhra Pradesh")
-    val states = listOf(state)
-    val stateSelectedModel = defaultModel
-        .statesLoaded(states)
-        .stateChanged(state)
-
-    updateSpec
-        .given(stateSelectedModel)
-        .whenEvent(NextClicked)
-        .then(assertThatNext(
-            hasNoModel(),
             hasEffects(SaveSelectedState(state))
         ))
   }

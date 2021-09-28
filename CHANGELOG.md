@@ -9,6 +9,7 @@
 ### Changes
 - Purge call results when database purges run
 - Remove next button from state selection screen, you can now select a state to go to next screen
+- Remove next button from the country selection screen, you can now select a country to go to next screen
 - [In Progress: 22 Jul 2021] Add option to download & share overdue list
 
 ## On Demo

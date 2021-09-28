@@ -29,6 +29,7 @@
 - [In Progress: 31 Aug 2021] Refactor logic around providing drug frequencies label depending on the country
 - [In Progress: 2 Sep 2021] Add a progress state in `CustomDrugEntrySheet`
 - Show state selection screen after country is selected
+- Remove next button from the country selection screen, you can now select a country to go to next screen
 
 ### Changes
 

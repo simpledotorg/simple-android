@@ -63,22 +63,7 @@ class SelectCountryUpdateTest {
         .whenEvent(CountryChosen(bangladesh))
         .then(assertThatNext(
             hasModel(model.countryChosen(bangladesh)),
-            hasNoEffects()
-        ))
-  }
-
-  @Test
-  fun `when next is clicked, then save country`() {
-    val model = defaultModel
-        .manifestFetched(countries)
-        .countryChosen(bangladesh)
-
-    spec
-        .given(model)
-        .whenEvent(NextClicked)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(SaveCountryEffect(country = bangladesh) as SelectCountryEffect)
+            hasEffects(SaveCountryEffect(bangladesh))
         ))
   }
 

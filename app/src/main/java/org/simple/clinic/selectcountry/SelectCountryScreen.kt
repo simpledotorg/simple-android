@@ -20,7 +20,6 @@ import org.simple.clinic.databinding.ScreenSelectcountryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.selectcountry.adapter.Event
 import org.simple.clinic.selectcountry.adapter.SelectableCountryItem
 import org.simple.clinic.selectcountry.adapter.SelectableCountryItemDiffCallback
@@ -47,14 +46,8 @@ class SelectCountryScreen(
   private val tryAgain
     get() = binding!!.tryAgain
 
-  private val nextButton
-    get() = binding!!.nextButton
-
   private val errorMessageTextView
     get() = binding!!.errorMessageTextView
-
-  private val nextButtonFrame
-    get() = binding!!.nextButtonFrame
 
   @Inject
   lateinit var appConfigRepository: AppConfigRepository
@@ -76,7 +69,6 @@ class SelectCountryScreen(
   private val events by unsafeLazy {
     Observable
         .merge(
-            nextClicks(),
             retryClicks(),
             countrySelectionChanges()
         )
@@ -152,12 +144,6 @@ class SelectCountryScreen(
         .map { RetryClicked }
   }
 
-  private fun nextClicks(): Observable<NextClicked> {
-    return nextButton
-        .clicks()
-        .map { NextClicked }
-  }
-
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
     delegate.start()
@@ -199,10 +185,6 @@ class SelectCountryScreen(
   override fun displayGenericErrorMessage() {
     errorMessageTextView.setText(R.string.selectcountry_genericerror)
     countrySelectionViewFlipper.displayedChild = errorViewIndex
-  }
-
-  override fun showNextButton() {
-    nextButtonFrame.visibility = VISIBLE
   }
 
   override fun goToStateSelectionScreen() {

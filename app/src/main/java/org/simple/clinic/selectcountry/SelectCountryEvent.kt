@@ -13,10 +13,6 @@ data class CountryChosen(val country: Country) : SelectCountryEvent() {
   override val analyticsName: String = "Select Country:Selected Country Changed:${country.isoCountryCode}"
 }
 
-object NextClicked : SelectCountryEvent() {
-  override val analyticsName: String = "Select Country:Next Clicked"
-}
-
 object CountrySaved : SelectCountryEvent()
 
 object RetryClicked : SelectCountryEvent() {

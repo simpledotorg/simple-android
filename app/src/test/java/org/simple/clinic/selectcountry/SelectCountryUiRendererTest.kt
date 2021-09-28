@@ -90,22 +90,6 @@ class SelectCountryUiRendererTest {
   }
 
   @Test
-  fun `when the user has chosen a country, show the next button`() {
-    // given
-    val model = defaultModel
-        .manifestFetched(countries)
-        .countryChosen(bangladesh)
-
-    // when
-    renderer.render(model)
-
-    // then
-    verify(ui).displaySupportedCountries(countries, bangladesh)
-    verify(ui).showNextButton()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
   fun `when fetching the manifest is being retried, show the progress bar`() {
     // given
     val model = defaultModel

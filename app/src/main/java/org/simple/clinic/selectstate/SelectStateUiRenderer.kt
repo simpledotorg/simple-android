@@ -18,7 +18,6 @@ class SelectStateUiRenderer(
 
     if (model.hasStates) {
       ui.showStates(model.states!!, model.selectedState)
-      renderNextButton(model)
     } else {
       ui.hideStates()
     }
@@ -36,9 +35,5 @@ class SelectStateUiRenderer(
       ServerError -> ui.showServerErrorMessage()
       UnexpectedError -> ui.showGenericErrorMessage()
     }
-  }
-
-  private fun renderNextButton(model: SelectStateModel) {
-    if (model.hasSelectedState) ui.showNextButton()
   }
 }

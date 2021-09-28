@@ -119,10 +119,6 @@ class SelectStateScreen : BaseScreen<
     statesListGroup.visibility = View.GONE
   }
 
-  override fun showNextButton() {
-    nextButtonFrame.visibility = View.VISIBLE
-  }
-
   override fun showNetworkErrorMessage() {
     errorGroup.visibility = View.VISIBLE
     errorMessageTextView.setText(R.string.select_state_networkerror)

@@ -20,15 +20,14 @@ class SelectStateUpdate : Update<SelectStateModel, SelectStateEvent, SelectState
           model.loadingStates(),
           LoadStates
       )
-      is StateChanged -> next(model.stateChanged(event.state))
-      NextClicked -> dispatch(SaveSelectedState(model.selectedState!!))
+      is StateChanged -> next(model.stateChanged(event.state), SaveSelectedState(event.state))
     }
   }
 
   private fun statesFetched(model: SelectStateModel, states: List<State>): Next<SelectStateModel, SelectStateEffect> {
-    return if(states.size > 1){
+    return if (states.size > 1) {
       next(model.statesLoaded(states))
-    }else {
+    } else {
       dispatch(SaveSelectedState(states.first()))
     }
   }

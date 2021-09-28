@@ -31,26 +31,6 @@ class SelectStateUiRendererTest {
   }
 
   @Test
-  fun `when state is selected, then show next button`() {
-    // given
-    val andhraPradesh = TestData.state(displayName = "Andhra Pradesh")
-    val states = listOf(andhraPradesh)
-    val stateSelectedModel = defaultModel
-        .statesLoaded(states)
-        .stateChanged(andhraPradesh)
-
-    // when
-    uiRenderer.render(stateSelectedModel)
-
-    // then
-    verify(ui).showStates(states = states, selectedState = andhraPradesh)
-    verify(ui).showNextButton()
-    verify(ui).hideErrorView()
-    verify(ui).hideProgress()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
   fun `when states are failed to load with network error, then show network error message`() {
     // given
     val failedToLoadStatesModel = defaultModel

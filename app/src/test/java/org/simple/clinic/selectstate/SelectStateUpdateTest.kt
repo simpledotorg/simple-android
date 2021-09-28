@@ -114,6 +114,21 @@ class SelectStateUpdateTest {
         ))
   }
 
+  @Test
+  fun `when the model has only one state, then replace the current screen with registration screen`() {
+    val state = listOf(TestData.state(displayName = "Maharashtra"))
+    val loadedStateModel = defaultModel
+        .statesLoaded(state)
+
+    updateSpec
+        .given(loadedStateModel)
+        .whenEvent(StateSaved)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ReplaceCurrentScreenWithRegistrationScreen)
+        ))
+  }
+
   private fun serverError(): HttpException {
     val response = Response.error<String>(
         401,

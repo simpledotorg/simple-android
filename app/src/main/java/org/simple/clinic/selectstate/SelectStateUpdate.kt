@@ -26,11 +26,13 @@ class SelectStateUpdate : Update<SelectStateModel, SelectStateEvent, SelectState
   }
 
   private fun stateSaved(model: SelectStateModel): Next<SelectStateModel, SelectStateEffect> {
-    return if (model.hasMoreThanOneState) {
-      dispatch(GoToRegistrationScreen)
+    val effect = if (model.hasMoreThanOneState) {
+      GoToRegistrationScreen
     } else {
-      noChange()
+      ReplaceCurrentScreenWithRegistrationScreen
     }
+
+    return dispatch(effect)
   }
 
   private fun statesFetched(model: SelectStateModel, states: List<State>): Next<SelectStateModel, SelectStateEffect> {

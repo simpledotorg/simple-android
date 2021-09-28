@@ -17,8 +17,6 @@ data class SelectCountryModel(
 
   fun isFetching(): Boolean = countries == null && manifestFetchError == null
 
-  fun hasSelectedACountry(): Boolean = selectedCountry != null
-
   fun manifestFetched(countries: List<Country>): SelectCountryModel {
     return copy(countries = countries, manifestFetchError = null)
   }

@@ -63,7 +63,7 @@ class SelectCountryUpdateTest {
         .whenEvent(CountryChosen(bangladesh))
         .then(assertThatNext(
             hasModel(model.countryChosen(bangladesh)),
-            hasNoEffects()
+            hasEffects(SaveCountryEffect(bangladesh))
         ))
   }
 

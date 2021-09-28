@@ -110,7 +110,7 @@ class SelectStateUpdateTest {
         .whenEvent(StateChanged(state))
         .then(assertThatNext(
             hasModel(statesLoadedModel.stateChanged(state)),
-            hasNoEffects()
+            hasEffects(SaveSelectedState(state))
         ))
   }
 

@@ -25,10 +25,12 @@ class SelectStateUpdate : Update<SelectStateModel, SelectStateEvent, SelectState
   }
 
   private fun statesFetched(model: SelectStateModel, states: List<State>): Next<SelectStateModel, SelectStateEffect> {
+    val statesLoadedModel = model.statesLoaded(states)
+
     return if (states.size > 1) {
-      next(model.statesLoaded(states))
+      next(statesLoadedModel)
     } else {
-      dispatch(SaveSelectedState(states.first()))
+      next(statesLoadedModel, SaveSelectedState(states.first()))
     }
   }
 }

@@ -45,7 +45,7 @@ class SelectStateUpdateTest {
         .whenEvent(StatesFetched(states))
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(defaultModel.statesLoaded(states)),
                 hasEffects(SaveSelectedState(state = states.first()))
             )
         )

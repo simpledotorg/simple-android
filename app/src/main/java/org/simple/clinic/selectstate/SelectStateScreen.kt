@@ -38,12 +38,6 @@ class SelectStateScreen : BaseScreen<
   @Inject
   lateinit var router: Router
 
-  private val nextButtonFrame
-    get() = binding.nextButtonFrame
-
-  private val nextButton
-    get() = binding.nextButton
-
   private val statesListGroup
     get() = binding.statesListGroup
 

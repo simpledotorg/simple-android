@@ -12,7 +12,7 @@ data class SelectStateModel(
 ) : Parcelable {
 
   val hasMoreThanOneState: Boolean
-    get() = states!!.size > 1
+    get() = states.orEmpty().size > 1
 
   val hasFetchError
     get() = statesFetchError != null

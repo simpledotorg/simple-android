@@ -57,6 +57,11 @@ class TeleconsultMedicinesView(
   private val emptyMedicinesTextView
     get() = binding!!.emptyMedicinesTextView
 
+  private val medicineFrequencyToLabelMap by lazy {
+    drugFrequencyToLabelMap
+        .mapKeys { (drugFrequency, _) -> MedicineFrequency.fromDrugFrequency(drugFrequency) }
+  }
+
   @Inject
   lateinit var effectHandlerFactory: TeleconsultMedicinesEffectHandler.Factory
 
@@ -159,10 +164,6 @@ class TeleconsultMedicinesView(
   ) {
     emptyMedicinesTextView.visibility = GONE
     medicinesRecyclerView.visibility = VISIBLE
-
-    val medicineFrequencyToLabelMap = drugFrequencyToLabelMap
-        .mapKeys { (drugFrequency, _) -> MedicineFrequency.fromDrugFrequency(drugFrequency) }
-
 
     teleconsultMedicinesAdapter.submitList(TeleconsultMedicineItem.from(
         medicines = medicines,

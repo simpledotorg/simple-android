@@ -75,7 +75,6 @@ class SelectCountryScreen(
   private val events by unsafeLazy {
     Observable
         .merge(
-            nextClicks(),
             retryClicks(),
             countrySelectionChanges()
         )
@@ -149,12 +148,6 @@ class SelectCountryScreen(
     return tryAgain
         .clicks()
         .map { RetryClicked }
-  }
-
-  private fun nextClicks(): Observable<NextClicked> {
-    return nextButton
-        .clicks()
-        .map { NextClicked }
   }
 
   override fun onAttachedToWindow() {

@@ -68,21 +68,6 @@ class SelectCountryUpdateTest {
   }
 
   @Test
-  fun `when next is clicked, then save country`() {
-    val model = defaultModel
-        .manifestFetched(countries)
-        .countryChosen(bangladesh)
-
-    spec
-        .given(model)
-        .whenEvent(NextClicked)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(SaveCountryEffect(country = bangladesh) as SelectCountryEffect)
-        ))
-  }
-
-  @Test
   fun `when retry is clicked, then fetch manifest`() {
     val model = defaultModel
         .manifestFetchError(NetworkError)

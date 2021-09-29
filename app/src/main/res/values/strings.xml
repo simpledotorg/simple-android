@@ -34,6 +34,7 @@
   <string name="identifiertype_unknown">ID</string>
   <string name="identifiertype_india_national_health_id">National Health ID</string>
   <string name="identifiertype_sri_lanka_national_id">National ID</string>
+  <string name="identifiertype_sri_lanka_personal_health_number">Personal Health Number</string>
 
   <!-- Patient search -->
   <string name="instantsearch_hint">Name, phone, or ID</string>

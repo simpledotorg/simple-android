@@ -7,6 +7,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
@@ -113,6 +114,26 @@ class SelectCountryScreen : BaseScreen<
   private val errorViewIndex: Int by unsafeLazy {
     countrySelectionViewFlipper.indexOfChildId(R.id.errorContainer)
   }
+
+  override fun defaultModel() = SelectCountryModel.FETCHING
+
+  override fun events() = Observable
+      .merge(
+          retryClicks(),
+          countrySelectionChanges()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<SelectCountryEvent>()
+
+  override fun createInit() = SelectCountryInit()
+
+  override fun createUpdate() = SelectCountryUpdate()
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = SelectCountryEffectHandler.create(appConfigRepository = appConfigRepository,
+      uiActions = this,
+      schedulersProvider = schedulersProvider)
+
+  override fun uiRenderer() = SelectCountryUiRenderer(this)
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

@@ -31,6 +31,7 @@
 - Show state selection screen after country is selected
 - Remove next button from the country selection screen, you can now select a country to go to next screen
 - Custom Drug Entry Sheet UI Improvements
+- Add Sri Lanka personal health number business identifier
 
 ### Changes
 

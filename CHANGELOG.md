@@ -52,6 +52,7 @@
 - [In Progress: 06 Aug 2021] Add support for Sri Lanka
 - [In Progress: 25 Aug 2021] Implement providing drug frequencies label depending on the country
 - Restrict OTP entries to 5 attempts
+- Show personal health number text field in patient entry/edit screens
 
 ### Fixes
 

@@ -6,8 +6,6 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
-import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import java.util.UUID
 
 class TeleconsultMedicinesUiRendererTest {
@@ -38,22 +36,14 @@ class TeleconsultMedicinesUiRendererTest {
             uuid = UUID.fromString("c3e45f9b-7023-4671-bfc5-4159fefe8aa2")
         )
     )
-    val medicineFrequencyToLabelMap = mapOf(
-        null to DrugFrequencyLabel(label = "None"),
-        MedicineFrequency.OD to DrugFrequencyLabel(label = "OD"),
-        MedicineFrequency.BD to DrugFrequencyLabel(label = "BD"),
-        MedicineFrequency.TDS to DrugFrequencyLabel(label = "TDS"),
-        MedicineFrequency.QDS to DrugFrequencyLabel(label = "QDS")
-    )
     val medicinesLoadedModel = model
         .medicinesLoaded(medicines)
-        .medicineFrequencyToLabelMapLoaded(medicineFrequencyToLabelMap)
 
     // when
     uiRenderer.render(medicinesLoadedModel)
 
     // then
-    verify(ui).renderMedicines(medicines, medicineFrequencyToLabelMap)
+    verify(ui).renderMedicines(medicines)
     verify(ui).showEditButton()
     verify(ui).hideMedicinesRequiredError()
     verifyNoMoreInteractions(ui)

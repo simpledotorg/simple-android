@@ -4,7 +4,6 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
-import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 
 class TeleconsultMedicinesUpdate : Update<TeleconsultMedicinesModel, TeleconsultMedicinesEvent, TeleconsultMedicinesEffect> {
 
@@ -21,7 +20,6 @@ class TeleconsultMedicinesUpdate : Update<TeleconsultMedicinesModel, Teleconsult
       is DrugFrequencyClicked -> drugFrequencyClicked(event, model)
       is DrugDurationChanged -> dispatch(UpdateDrugDuration(event.prescriptionUuid, event.duration))
       is DrugFrequencyChanged -> dispatch(UpdateDrugFrequency(event.prescriptionUuid, event.frequency))
-      is DrugFrequencyChoiceItemsLoaded -> drugFrequencyChoiceItemsLoaded(model, event)
     }
   }
 
@@ -30,16 +28,5 @@ class TeleconsultMedicinesUpdate : Update<TeleconsultMedicinesModel, Teleconsult
       model: TeleconsultMedicinesModel
   ): Next<TeleconsultMedicinesModel, TeleconsultMedicinesEffect> {
     return dispatch(OpenDrugFrequencySheet(event.prescription))
-  }
-
-  private fun drugFrequencyChoiceItemsLoaded(
-      model: TeleconsultMedicinesModel,
-      event: DrugFrequencyChoiceItemsLoaded
-  ): Next<TeleconsultMedicinesModel, TeleconsultMedicinesEffect> {
-    val medicineFrequencyToLabelMap = event
-        .drugFrequencyToLabelMap
-        .mapKeys { (drugFrequency, _) -> MedicineFrequency.fromDrugFrequency(drugFrequency) }
-
-    return next(model.medicineFrequencyToLabelMapLoaded(medicineFrequencyToLabelMap))
   }
 }

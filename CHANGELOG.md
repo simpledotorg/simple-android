@@ -5,6 +5,7 @@
 ### Internal
 
 - Migrate `SelectCountryScreen` to a fragment
+- Inject `DrugFrequencyToLabelMap` directly in `TeleconsultMedicinesView` instead of handling it in the effect handler
 - [In Progress: 22 Sep 2021] Custom Drug Entry Sheet UI Improvements
 
 ### Changes

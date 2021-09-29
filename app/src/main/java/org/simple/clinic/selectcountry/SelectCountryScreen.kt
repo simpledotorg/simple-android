@@ -2,7 +2,6 @@ package org.simple.clinic.selectcountry
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +21,6 @@ import org.simple.clinic.appconfig.displayname.CountryDisplayNameFetcher
 import org.simple.clinic.databinding.ListSelectcountryCountryViewBinding
 import org.simple.clinic.databinding.ScreenSelectcountryBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -44,20 +42,6 @@ class SelectCountryScreen : BaseScreen<
     SelectCountryEffect,
     Unit>(), SelectCountryUi, UiActions {
 
-  var binding: ScreenSelectcountryBinding? = null
-
-  private val countrySelectionViewFlipper
-    get() = binding!!.countrySelectionViewFlipper
-
-  private val supportedCountriesList
-    get() = binding!!.supportedCountriesList
-
-  private val tryAgain
-    get() = binding!!.tryAgain
-
-  private val errorMessageTextView
-    get() = binding!!.errorMessageTextView
-
   @Inject
   lateinit var appConfigRepository: AppConfigRepository
 
@@ -73,28 +57,17 @@ class SelectCountryScreen : BaseScreen<
   @Inject
   lateinit var router: Router
 
-  private val uiRenderer = SelectCountryUiRenderer(this)
+  private val countrySelectionViewFlipper
+    get() = binding.countrySelectionViewFlipper
 
-  private val events by unsafeLazy {
-    Observable
-        .merge(
-            retryClicks(),
-            countrySelectionChanges()
-        )
-        .compose(ReportAnalyticsEvents())
-        .cast<SelectCountryEvent>()
-  }
+  private val supportedCountriesList
+    get() = binding.supportedCountriesList
 
-  private val delegate by unsafeLazy {
-    MobiusDelegate.forView(
-        events = events,
-        defaultModel = SelectCountryModel.FETCHING,
-        init = SelectCountryInit(),
-        update = SelectCountryUpdate(),
-        effectHandler = SelectCountryEffectHandler.create(appConfigRepository, this, schedulersProvider),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
+  private val tryAgain
+    get() = binding.tryAgain
+
+  private val errorMessageTextView
+    get() = binding.errorMessageTextView
 
   private val supportedCountriesAdapter = ItemAdapter(
       diffCallback = SelectableCountryItemDiffCallback(),
@@ -152,17 +125,6 @@ class SelectCountryScreen : BaseScreen<
     setupCountriesList()
   }
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-
-    binding = ScreenSelectcountryBinding.bind(this)
-    if (isInEditMode) {
-      return
-    }
-
-    delegate.prepare()
-  }
-
   private fun setupCountriesList() {
     supportedCountriesList.apply {
       setHasFixedSize(false)
@@ -182,25 +144,6 @@ class SelectCountryScreen : BaseScreen<
     return tryAgain
         .clicks()
         .map { RetryClicked }
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    binding = null
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   override fun showProgress() {

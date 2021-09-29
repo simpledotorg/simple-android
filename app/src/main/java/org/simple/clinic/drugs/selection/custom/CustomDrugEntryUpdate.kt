@@ -45,6 +45,8 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       model: CustomDrugEntryModel,
       drug: Drug
   ): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
+    val cursorPosition = cursorPositionFromDosage(drug.dosage)
+
     val updatedModel = model
         .drugNameLoaded(drug.name)
         .dosageEdited(drug.dosage)
@@ -52,7 +54,13 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
         .rxNormCodeEdited(drug.rxNormCode)
         .drugInfoProgressStateLoaded()
 
-    return next(updatedModel, SetDrugFrequency(model.drugFrequencyToLabelMap!![drug.frequency]!!.label), SetDrugDosage(drug.dosage), ShowKeyboard)
+    return next(updatedModel, SetDrugFrequency(model.drugFrequencyToLabelMap!![drug.frequency]!!.label), SetDrugDosage(drug.dosage), ShowKeyboard, SetCursorPosition(cursorPosition))
+  }
+
+  private fun cursorPositionFromDosage(dosage: String?): Int {
+    if (dosage.isNullOrEmpty()) return 0
+    val filteredDigitList = dosage.filter { it.isDigit() }
+    return if (filteredDigitList.isNotEmpty()) dosage.lastIndexOf(filteredDigitList.last()) + 1 else 0
   }
 
   private fun prescriptionFetched(
@@ -60,6 +68,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
       prescription: PrescribedDrug
   ): Next<CustomDrugEntryModel, CustomDrugEntryEffect> {
     val frequency = DrugFrequency.fromMedicineFrequency(prescription.frequency)
+    val cursorPosition = cursorPositionFromDosage(prescription.dosage)
 
     val updatedModel = model
         .drugNameLoaded(prescription.name)
@@ -68,7 +77,7 @@ class CustomDrugEntryUpdate : Update<CustomDrugEntryModel, CustomDrugEntryEvent,
         .rxNormCodeEdited(prescription.rxNormCode)
         .drugInfoProgressStateLoaded()
 
-    return next(updatedModel, SetDrugFrequency(model.drugFrequencyToLabelMap!![frequency]!!.label), SetDrugDosage(prescription.dosage), ShowKeyboard)
+    return next(updatedModel, SetDrugFrequency(model.drugFrequencyToLabelMap!![frequency]!!.label), SetDrugDosage(prescription.dosage), ShowKeyboard, SetCursorPosition(cursorPosition))
   }
 
   private fun createOrUpdatePrescriptionEntry(

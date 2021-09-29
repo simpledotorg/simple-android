@@ -49,6 +49,7 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
         .addAction(HideKeyboard::class.java, uiActions::hideKeyboard, schedulersProvider.ui())
         .addAction(ShowKeyboard::class.java, uiActions::showKeyboard, schedulersProvider.ui())
         .addAction(ClearFocusFromDosageEditText::class.java, uiActions::clearFocusFromDosageEditText, schedulersProvider.ui())
+        .addConsumer(SetCursorPosition::class.java, { uiActions.setCursorPosition(it.position) }, schedulersProvider.ui())
         .build()
   }
 

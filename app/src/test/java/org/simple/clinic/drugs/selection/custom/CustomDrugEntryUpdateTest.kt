@@ -174,28 +174,31 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
-  fun `when the drug is fetched and is not deleted, then update the model, set frequency and show keyboard`() {
+  fun `when the drug is fetched, is not deleted and has a numeric dosage value, then update the model, set frequency, show keyboard and set cursor position`() {
     val prescribedDrugUuid = UUID.fromString("96633994-6e4d-4528-b796-f03ae016553a")
     val drugFrequency = OD
     val dosage = "12mg"
+    val position = 2
     val prescribedDrug = TestData.prescription(uuid = prescribedDrugUuid, name = drugName, isDeleted = false, frequency = MedicineFrequency.OD, dosage = dosage)
     val defaultModel = CustomDrugEntryModel
         .default(openAs = OpenAs.Update(prescribedDrugUuid), dosagePlaceholder)
         .drugFrequencyToLabelMapLoaded(drugFrequencyToLabelMap)
     val frequencyRes = "OD"
 
+    val updatedModel = defaultModel
+        .drugNameLoaded(drugName)
+        .dosageEdited(dosage = dosage)
+        .frequencyEdited(frequency = drugFrequency)
+        .rxNormCodeEdited(prescribedDrug.rxNormCode)
+        .drugInfoProgressStateLoaded()
+
     updateSpec
         .given(defaultModel)
         .whenEvent(PrescribedDrugFetched(prescribedDrug))
         .then(
             assertThatNext(
-                hasModel(defaultModel
-                    .drugNameLoaded(drugName)
-                    .dosageEdited(dosage = dosage)
-                    .frequencyEdited(frequency = drugFrequency)
-                    .rxNormCodeEdited(prescribedDrug.rxNormCode)
-                    .drugInfoProgressStateLoaded()),
-                hasEffects(SetDrugFrequency(frequencyRes), SetDrugDosage(dosage), ShowKeyboard))
+                hasModel(updatedModel),
+                hasEffects(SetDrugFrequency(frequencyRes), SetDrugDosage(dosage), ShowKeyboard, SetCursorPosition(position)))
         )
   }
 
@@ -225,24 +228,55 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
-  fun `when drug is fetched, then update the model with drug values, set drug frequency, dosage and show keyboard`() {
+  fun `when drug is fetched and dosage has numeric values, then update the model with drug values, set drug frequency, dosage, show keyboard and set cursor position`() {
     val drugUuid = UUID.fromString("6bbc5bbe-863c-472a-b962-1fd3198e20d1")
-    val drug = TestData.drug(id = drugUuid, frequency = OD)
+    val dosage = "10 mg/ 150 mg"
+    val position = 10
+    val drug = TestData.drug(id = drugUuid, frequency = OD, dosage = dosage)
     val frequencyRes = "OD"
     val drugFrequencyChoiceItemsLoaded = defaultModel.drugFrequencyToLabelMapLoaded(drugFrequencyToLabelMap)
+
+    val updateModel = drugFrequencyChoiceItemsLoaded
+        .drugNameLoaded(drug.name)
+        .dosageEdited(drug.dosage)
+        .frequencyEdited(drug.frequency)
+        .rxNormCodeEdited(drug.rxNormCode)
+        .drugInfoProgressStateLoaded()
 
     updateSpec
         .given(drugFrequencyChoiceItemsLoaded)
         .whenEvent(DrugFetched(drug))
         .then(
             assertThatNext(
-                hasModel(drugFrequencyChoiceItemsLoaded
-                    .drugNameLoaded(drug.name)
-                    .dosageEdited(drug.dosage)
-                    .frequencyEdited(drug.frequency)
-                    .rxNormCodeEdited(drug.rxNormCode)
-                    .drugInfoProgressStateLoaded()),
-                hasEffects(SetDrugFrequency(frequencyRes), SetDrugDosage(drug.dosage), ShowKeyboard)
+                hasModel(updateModel),
+                hasEffects(SetDrugFrequency(frequencyRes), SetDrugDosage(drug.dosage), ShowKeyboard, SetCursorPosition(position))
+            )
+        )
+  }
+
+  @Test
+  fun `when drug is fetched and dosage does not have a numeric values, then update the model with drug values, set drug frequency, dosage, show keyboard and set cursor position`() {
+    val drugUuid = UUID.fromString("6bbc5bbe-863c-472a-b962-1fd3198e20d1")
+    val dosage = "mg"
+    val position = 0
+    val drug = TestData.drug(id = drugUuid, frequency = OD, dosage = dosage)
+    val frequencyRes = "OD"
+    val drugFrequencyChoiceItemsLoaded = defaultModel.drugFrequencyToLabelMapLoaded(drugFrequencyToLabelMap)
+
+    val updateModel = drugFrequencyChoiceItemsLoaded
+        .drugNameLoaded(drug.name)
+        .dosageEdited(drug.dosage)
+        .frequencyEdited(drug.frequency)
+        .rxNormCodeEdited(drug.rxNormCode)
+        .drugInfoProgressStateLoaded()
+
+    updateSpec
+        .given(drugFrequencyChoiceItemsLoaded)
+        .whenEvent(DrugFetched(drug))
+        .then(
+            assertThatNext(
+                hasModel(updateModel),
+                hasEffects(SetDrugFrequency(frequencyRes), SetDrugDosage(drug.dosage), ShowKeyboard, SetCursorPosition(position))
             )
         )
   }

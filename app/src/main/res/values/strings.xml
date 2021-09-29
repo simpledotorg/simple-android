@@ -53,6 +53,7 @@
   <string name="patiententry_bangladesh_national_id">National ID number</string>
   <string name="patiententry_ethiopia_medical_record_number">Medical Record Number</string>
   <string name="patiententry_sri_lanka_national_id">National ID number</string>
+  <string name="patiententry_sri_lanka_personal_health_number">Personal Health Number</string>
   <string name="patiententry_date_of_birth_unfocused">Date of birth</string>
   <string name="patiententry_date_of_birth_focused">D.O.B: DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">Or</string>

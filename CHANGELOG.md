@@ -7,6 +7,7 @@
 - Migrate `SelectCountryScreen` to a fragment
 - Inject `DrugFrequencyToLabelMap` directly in `TeleconsultMedicinesView` instead of handling it in the effect handler
 - Custom Drug Entry Sheet UI Improvements
+- Add Sri Lanka personal health number business identifier
 
 ### Changes
 

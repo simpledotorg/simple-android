@@ -10,6 +10,7 @@ import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.AppConfigRepository
@@ -20,6 +21,7 @@ import org.simple.clinic.databinding.ScreenSelectcountryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.selectcountry.adapter.Event
 import org.simple.clinic.selectcountry.adapter.SelectableCountryItem
 import org.simple.clinic.selectcountry.adapter.SelectableCountryItemDiffCallback
@@ -189,5 +191,13 @@ class SelectCountryScreen(
 
   override fun goToStateSelectionScreen() {
     router.push(SelectStateScreen.Key())
+  }
+
+  @Parcelize
+  data class Key(
+      override val analyticsName: String = "Select Country"
+  ) : ScreenKey() {
+
+    override fun instantiateFragment() = SelectCountryScreen()
   }
 }

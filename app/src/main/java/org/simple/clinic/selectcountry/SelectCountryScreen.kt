@@ -1,10 +1,7 @@
 package org.simple.clinic.selectcountry
 
-import android.content.Context
 import android.os.Parcelable
-import android.util.AttributeSet
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
@@ -22,6 +19,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.selectcountry.adapter.Event
 import org.simple.clinic.selectcountry.adapter.SelectableCountryItem
 import org.simple.clinic.selectcountry.adapter.SelectableCountryItemDiffCallback
@@ -32,10 +30,13 @@ import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.indexOfChildId
 import javax.inject.Inject
 
-class SelectCountryScreen(
-    context: Context,
-    attributeSet: AttributeSet
-) : ConstraintLayout(context, attributeSet), SelectCountryUi, UiActions {
+class SelectCountryScreen : BaseScreen<
+    SelectCountryScreen.Key,
+    ScreenSelectcountryBinding,
+    SelectCountryModel,
+    SelectCountryEvent,
+    SelectCountryEffect,
+    Unit>(), SelectCountryUi, UiActions {
 
   var binding: ScreenSelectcountryBinding? = null
 

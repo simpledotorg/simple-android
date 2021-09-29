@@ -28,7 +28,7 @@ class SriLankaInputFieldsProvider(
         DateOfBirthField(dateTimeFormatter, today, R.string.patiententry_date_of_birth_unfocused),
         GenderField(_labelResId = 0, allowedGenders = setOf(Gender.Male, Gender.Female)),
         LandlineOrMobileField(R.string.patiententry_phone_number),
-        AlternativeIdInputField(R.string.patiententry_sri_lanka_national_id),
+        AlternativeIdInputField(R.string.patiententry_sri_lanka_personal_health_number),
         StreetAddressField(R.string.patiententry_street_house_road_number),
         VillageOrColonyField(R.string.patiententry_town_area),
         DistrictField(R.string.patiententry_district),

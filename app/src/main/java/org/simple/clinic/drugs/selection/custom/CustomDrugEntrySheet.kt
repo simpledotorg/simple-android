@@ -198,6 +198,10 @@ class CustomDrugEntrySheet : BaseBottomSheet<
     drugDosageEditText.clearFocus()
   }
 
+  override fun setCursorPosition(position: Int) {
+    drugDosageEditText.post { drugDosageEditText.setSelection(position) }
+  }
+
   override fun showSaveButtonProgressState() {
     saveButton.setButtonState(InProgress)
   }

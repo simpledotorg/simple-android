@@ -10,4 +10,5 @@ interface CustomDrugEntrySheetUiActions {
   fun hideKeyboard()
   fun showKeyboard()
   fun clearFocusFromDosageEditText()
+  fun setCursorPosition(position: Int)
 }

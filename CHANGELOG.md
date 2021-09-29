@@ -4,9 +4,11 @@
 
 ### Internal
 
+- Migrate `SelectCountryScreen` to a fragment
 - [In Progress: 22 Sep 2021] Custom Drug Entry Sheet UI Improvements
 
 ### Changes
+
 - Purge call results when database purges run
 - Remove next button from state selection screen, you can now select a state to go to next screen
 - Remove next button from the country selection screen, you can now select a country to go to next screen

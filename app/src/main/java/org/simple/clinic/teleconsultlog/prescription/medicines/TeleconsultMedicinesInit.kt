@@ -7,6 +7,6 @@ import org.simple.clinic.mobius.first
 class TeleconsultMedicinesInit : Init<TeleconsultMedicinesModel, TeleconsultMedicinesEffect> {
 
   override fun init(model: TeleconsultMedicinesModel): First<TeleconsultMedicinesModel, TeleconsultMedicinesEffect> {
-    return first(model, LoadPatientMedicines(model.patientUuid), LoadDrugFrequencyChoiceItems)
+    return first(model, LoadPatientMedicines(model.patientUuid))
   }
 }

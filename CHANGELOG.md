@@ -30,6 +30,7 @@
 - [In Progress: 2 Sep 2021] Add a progress state in `CustomDrugEntrySheet`
 - Show state selection screen after country is selected
 - Remove next button from the country selection screen, you can now select a country to go to next screen
+- Custom Drug Entry Sheet UI Improvements
 
 ### Changes
 

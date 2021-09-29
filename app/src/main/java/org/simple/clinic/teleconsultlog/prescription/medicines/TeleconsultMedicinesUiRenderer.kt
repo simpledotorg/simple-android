@@ -1,9 +1,7 @@
 package org.simple.clinic.teleconsultlog.prescription.medicines
 
 import org.simple.clinic.drugs.PrescribedDrug
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.mobius.ViewRenderer
-import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 
 class TeleconsultMedicinesUiRenderer(
     private val ui: TeleconsultMedicinesUi
@@ -11,20 +9,13 @@ class TeleconsultMedicinesUiRenderer(
 
   override fun render(model: TeleconsultMedicinesModel) {
     if (model.hasMedicines) {
-      renderMedicines(
-          model.medicines!!,
-          model.hasMedicineFrequencyToLabelMap,
-          model.medicineFrequencyToLabelMap)
+      renderMedicines(model.medicines!!)
     }
   }
 
-  private fun renderMedicines(
-      medicines: List<PrescribedDrug>,
-      hasMedicineFrequencyToFrequencyChoiceItemMap: Boolean,
-      medicineFrequencyToLabelMap: Map<MedicineFrequency?, DrugFrequencyLabel>?
-  ) {
-    if (medicines.isNotEmpty() && hasMedicineFrequencyToFrequencyChoiceItemMap) {
-      ui.renderMedicines(medicines, medicineFrequencyToLabelMap!!)
+  private fun renderMedicines(medicines: List<PrescribedDrug>) {
+    if (medicines.isNotEmpty()) {
+      ui.renderMedicines(medicines)
       ui.showEditButton()
       ui.hideMedicinesRequiredError()
     } else {

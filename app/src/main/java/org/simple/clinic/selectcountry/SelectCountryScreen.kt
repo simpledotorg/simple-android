@@ -3,7 +3,9 @@ package org.simple.clinic.selectcountry
 import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.clicks
@@ -114,6 +116,10 @@ class SelectCountryScreen : BaseScreen<
   private val errorViewIndex: Int by unsafeLazy {
     countrySelectionViewFlipper.indexOfChildId(R.id.errorContainer)
   }
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenSelectcountryBinding.inflate(layoutInflater,
+      container,
+      false)
 
   override fun defaultModel() = SelectCountryModel.FETCHING
 

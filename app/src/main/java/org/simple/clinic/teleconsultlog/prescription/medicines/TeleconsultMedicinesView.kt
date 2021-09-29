@@ -16,6 +16,7 @@ import org.simple.clinic.databinding.ListItemTeleconsultMedicineBinding
 import org.simple.clinic.databinding.ViewTeleconsultMedicinesBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescribedDrug
+import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.mobius.MobiusDelegate
@@ -56,6 +57,11 @@ class TeleconsultMedicinesView(
   private val emptyMedicinesTextView
     get() = binding!!.emptyMedicinesTextView
 
+  private val medicineFrequencyToLabelMap by lazy {
+    drugFrequencyToLabelMap
+        .mapKeys { (drugFrequency, _) -> MedicineFrequency.fromDrugFrequency(drugFrequency) }
+  }
+
   @Inject
   lateinit var effectHandlerFactory: TeleconsultMedicinesEffectHandler.Factory
 
@@ -73,6 +79,9 @@ class TeleconsultMedicinesView(
 
   @Inject
   lateinit var screenKeyProvider: ScreenKeyProvider
+
+  @Inject
+  lateinit var drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>
 
   companion object {
     private const val DRUG_FREQUENCY_SHEET = 1
@@ -151,8 +160,7 @@ class TeleconsultMedicinesView(
   }
 
   override fun renderMedicines(
-      medicines: List<PrescribedDrug>,
-      medicineFrequencyToLabelMap: Map<MedicineFrequency?, DrugFrequencyLabel>
+      medicines: List<PrescribedDrug>
   ) {
     emptyMedicinesTextView.visibility = GONE
     medicinesRecyclerView.visibility = VISIBLE

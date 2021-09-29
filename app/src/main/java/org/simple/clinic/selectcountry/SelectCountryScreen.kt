@@ -1,5 +1,6 @@
 package org.simple.clinic.selectcountry
 
+import android.content.Context
 import android.os.Parcelable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -111,6 +112,11 @@ class SelectCountryScreen : BaseScreen<
     countrySelectionViewFlipper.indexOfChildId(R.id.errorContainer)
   }
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<SelectCountryScreenInjector>().inject(this)
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
 
@@ -118,8 +124,6 @@ class SelectCountryScreen : BaseScreen<
     if (isInEditMode) {
       return
     }
-
-    context.injector<SelectCountryScreenInjector>().inject(this)
 
     setupCountriesList()
 

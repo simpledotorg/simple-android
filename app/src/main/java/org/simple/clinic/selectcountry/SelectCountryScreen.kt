@@ -1,7 +1,9 @@
 package org.simple.clinic.selectcountry
 
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.clicks
@@ -117,6 +119,12 @@ class SelectCountryScreen : BaseScreen<
     context.injector<SelectCountryScreenInjector>().inject(this)
   }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+
+    setupCountriesList()
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
 
@@ -124,8 +132,6 @@ class SelectCountryScreen : BaseScreen<
     if (isInEditMode) {
       return
     }
-
-    setupCountriesList()
 
     delegate.prepare()
   }

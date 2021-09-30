@@ -11,7 +11,7 @@ object CustomFirstMatchers {
 
     return object : TypeSafeDiagnosingMatcher<First<M, F>>() {
 
-      private val typeMatcher = Is.isA(type)
+      private val typeMatcher = Is.isA<Class<*>>(type)
 
       override fun describeTo(
           description: Description

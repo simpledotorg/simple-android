@@ -45,7 +45,7 @@ class SelectStateUpdateTest {
         .whenEvent(StatesFetched(states))
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(defaultModel.statesLoaded(states)),
                 hasEffects(SaveSelectedState(state = states.first()))
             )
         )
@@ -111,6 +111,21 @@ class SelectStateUpdateTest {
         .then(assertThatNext(
             hasModel(statesLoadedModel.stateChanged(state)),
             hasEffects(SaveSelectedState(state))
+        ))
+  }
+
+  @Test
+  fun `when the model has only one state, then replace the current screen with registration screen`() {
+    val state = listOf(TestData.state(displayName = "Maharashtra"))
+    val loadedStateModel = defaultModel
+        .statesLoaded(state)
+
+    updateSpec
+        .given(loadedStateModel)
+        .whenEvent(StateSaved)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ReplaceCurrentScreenWithRegistrationScreen)
         ))
   }
 

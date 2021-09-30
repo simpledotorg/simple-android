@@ -16,7 +16,9 @@ class SelectStateUiRendererTest {
   @Test
   fun `when states list is fetched, then show states list`() {
     // given
-    val states = listOf(TestData.state(displayName = "Andhra Pradesh"))
+    val andhraPradesh = TestData.state(displayName = "Andhra Pradesh")
+    val maharashtra = TestData.state(displayName = "Maharashtra")
+    val states = listOf(andhraPradesh, maharashtra)
     val statesLoadedModel = defaultModel
         .statesLoaded(states)
 

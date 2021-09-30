@@ -143,6 +143,10 @@ class SelectStateScreen : BaseScreen<
     router.push(RegistrationPhoneScreenKey())
   }
 
+  override fun replaceCurrentScreenToRegistrationScreen() {
+    router.replaceTop(RegistrationPhoneScreenKey())
+  }
+
   private fun stateSelectedEvents(): Observable<UiEvent> {
     return statesAdapter
         .itemEvents

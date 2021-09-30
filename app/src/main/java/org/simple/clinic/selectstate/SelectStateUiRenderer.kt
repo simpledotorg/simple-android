@@ -16,7 +16,7 @@ class SelectStateUiRenderer(
       ui.hideProgress()
     }
 
-    if (model.hasStates) {
+    if (model.hasMoreThanOneState) {
       ui.showStates(model.states!!, model.selectedState)
     } else {
       ui.hideStates()

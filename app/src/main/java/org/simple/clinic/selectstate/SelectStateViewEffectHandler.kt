@@ -9,6 +9,7 @@ class SelectStateViewEffectHandler(
   override fun handle(viewEffect: SelectStateViewEffect) {
     when (viewEffect) {
       GoToRegistrationScreen -> uiActions.goToRegistrationScreen()
+      ReplaceCurrentScreenWithRegistrationScreen -> uiActions.replaceCurrentScreenToRegistrationScreen()
     }
   }
 }

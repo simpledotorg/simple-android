@@ -92,4 +92,16 @@ class SelectStateEffectHandlerTest {
     verify(uiActions).goToRegistrationScreen()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when replace current screen to registration screen effect is received, then replace current screen with registration screen`() {
+    // when
+    testCase.dispatch(ReplaceCurrentScreenWithRegistrationScreen)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).replaceCurrentScreenToRegistrationScreen()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

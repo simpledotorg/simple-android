@@ -106,9 +106,12 @@ class OverdueEffectHandlerTest {
         TestData.overdueAppointment(appointmentUuid = UUID.fromString("3379cdf4-9693-4ad8-b0d6-1006f6dd48ff"))
     ))
 
-    whenever(pagerFactory.createPager(sourceFactory = any<PagingSourceFactory<Int, OverdueAppointment>>(),
+    whenever(pagerFactory.createPager(
+        sourceFactory = any<PagingSourceFactory<Int, OverdueAppointment>>(),
         pageSize = eq(overdueAppointmentsConfig.overdueAppointmentsLoadSize),
-        initialKey = eq(null))) doReturn Observable.just(overdueAppointments)
+        enablePlaceholders = eq(false),
+        initialKey = eq(null)
+    )) doReturn Observable.just(overdueAppointments)
 
     // when
     effectHandlerTestCase.dispatch(LoadOverdueAppointments(overdueSince = LocalDate.parse("2018-01-01"), facility = facility))

@@ -75,6 +75,7 @@ class AllRecentPatientsEffectHandlerTest {
     whenever(pagerFactory.createPager(
         sourceFactory = any<PagingSourceFactory<Int, RecentPatient>>(),
         pageSize = eq(pagingSize),
+        enablePlaceholders = eq(false),
         initialKey = eq(null)
     )) doReturn Observable.just(recentPatients)
 

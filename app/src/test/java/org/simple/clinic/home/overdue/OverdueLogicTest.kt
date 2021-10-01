@@ -85,6 +85,7 @@ class OverdueLogicTest {
     whenever(pagerFactory.createPager(
         sourceFactory = any<PagingSourceFactory<Int, OverdueAppointment>>(),
         pageSize = eq(10),
+        enablePlaceholders = eq(true),
         initialKey = eq(null)
     )) doReturn Observable.just(overdueAppointments)
 

@@ -58,6 +58,7 @@ class DrugSearchEffectHandlerTest {
     whenever(pagerFactory.createPager(
         sourceFactory = any<PagingSourceFactory<Int, Drug>>(),
         pageSize = eq(drugsSearchResultsPageSize),
+        enablePlaceholders = eq(false),
         initialKey = eq(null)
     )) doReturn Observable.just(searchResults)
 

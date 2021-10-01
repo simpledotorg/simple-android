@@ -22,6 +22,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.databinding.ListItemOverduePatientBinding
+import org.simple.clinic.databinding.ListItemOverduePlaceholderBinding
 import org.simple.clinic.databinding.ScreenOverdueBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature.OverdueListDownloadAndShare
@@ -84,7 +85,10 @@ class OverdueScreen : BaseScreen<
           R.layout.list_item_overdue_patient to { layoutInflater, parent ->
             ListItemOverduePatientBinding.inflate(layoutInflater, parent, false)
           }
-      )
+      ),
+      placeHolderBinding = R.layout.list_item_overdue_placeholder to { layoutInflater, parent ->
+        ListItemOverduePlaceholderBinding.inflate(layoutInflater, parent, false)
+      }
   )
 
   private val viewForEmptyList

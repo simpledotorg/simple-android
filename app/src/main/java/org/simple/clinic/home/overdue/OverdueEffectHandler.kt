@@ -63,7 +63,8 @@ class OverdueEffectHandler @AssistedInject constructor(
                       facilityId = facility.uuid
                   )
                 },
-                pageSize = overdueAppointmentsConfig.overdueAppointmentsLoadSize
+                pageSize = overdueAppointmentsConfig.overdueAppointmentsLoadSize,
+                enablePlaceholders = true
             )
           }
           .map(::OverdueAppointmentsLoaded)

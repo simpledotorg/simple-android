@@ -98,7 +98,8 @@ class InstantSearchEffectHandler @AssistedInject constructor(
           .switchMap {
             pagerFactory.createPager(
                 sourceFactory = { patientRepository.searchPagingSource(it.criteria, it.facility.uuid) },
-                pageSize = instantSearchConfig.pagingLoadSize
+                pageSize = instantSearchConfig.pagingLoadSize,
+                enablePlaceholders = false
             )
           }
           .map(::SearchResultsLoaded)
@@ -112,7 +113,8 @@ class InstantSearchEffectHandler @AssistedInject constructor(
           .switchMap { (facility) ->
             pagerFactory.createPager(
                 sourceFactory = { patientRepository.allPatientsInFacility(facilityId = facility.uuid) },
-                pageSize = instantSearchConfig.pagingLoadSize
+                pageSize = instantSearchConfig.pagingLoadSize,
+                enablePlaceholders = false
             )
           }
           .map(::AllPatientsInFacilityLoaded)

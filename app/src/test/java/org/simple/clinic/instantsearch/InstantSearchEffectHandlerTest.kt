@@ -78,6 +78,7 @@ class InstantSearchEffectHandlerTest {
     whenever(pagerFactory.createPager(
         sourceFactory = any<PagingSourceFactory<Int, PatientSearchResult>>(),
         pageSize = eq(pagingLoadSize),
+        enablePlaceholders = eq(false),
         initialKey = eq(null)
     )) doReturn Observable.just(expectedPagingData)
 
@@ -108,6 +109,7 @@ class InstantSearchEffectHandlerTest {
     whenever(pagerFactory.createPager(
         sourceFactory = any<PagingSourceFactory<Int, PatientSearchResult>>(),
         pageSize = eq(pagingLoadSize),
+        enablePlaceholders = eq(false),
         initialKey = eq(null)
     )) doReturn Observable.just(patients)
 

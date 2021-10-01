@@ -49,7 +49,8 @@ class AllRecentPatientsEffectHandler @AssistedInject constructor(
 
             pagerFactory.createPager(
                 sourceFactory = { patientRepository.recentPatients(facilityUuid = facilityId) },
-                pageSize = allRecentPatientsPagingSize
+                pageSize = allRecentPatientsPagingSize,
+                enablePlaceholders = false
             )
           }
           .map(::RecentPatientsLoaded)

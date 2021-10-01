@@ -2,7 +2,6 @@ package org.simple.clinic.overdue
 
 import androidx.paging.PagingSource
 import io.reactivex.Observable
-import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.overdue.Appointment.AppointmentType
 import org.simple.clinic.overdue.Appointment.Status.Cancelled
@@ -124,17 +123,6 @@ class AppointmentRepository @Inject constructor(
             scheduledBefore = since,
             scheduledAfter = since.minus(appointmentConfig.periodForIncludingOverdueAppointments)
         )
-  }
-
-  fun overdueAppointmentsCount(
-      since: LocalDate,
-      facility: Facility
-  ): Observable<Int> {
-    return overdueDao.overdueAtFacilityCount(
-        facilityUuid = facility.uuid,
-        scheduledBefore = since,
-        scheduledAfter = since.minus(appointmentConfig.periodForIncludingOverdueAppointments)
-    ).map { it.size }
   }
 
   fun lastCreatedAppointmentForPatient(patientUuid: UUID): Optional<Appointment> {

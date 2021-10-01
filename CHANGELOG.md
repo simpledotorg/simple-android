@@ -10,6 +10,7 @@
 - Add Sri Lanka personal health number business identifier
 - Navigate back to `SelectCountryScreen` from `RegistrationPhoneScreen` when there's only one state present in the country
 - Bump Mobius to v1.5.5
+- Enable custom drug search feature
 
 ### Changes
 

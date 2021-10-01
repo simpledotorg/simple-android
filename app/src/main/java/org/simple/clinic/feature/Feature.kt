@@ -29,7 +29,7 @@ enum class Feature(
   EthiopianCalendar(true, "ethiopian_calendar"),
   IndiaNationalHealthID(true, "india_national_health_id"),
   OverdueListDownloadAndShare(false, "overdue_list_download_and_share"),
-  CustomDrugSearchScreen(false, "custom_drug_search_screen"),
+  CustomDrugSearchScreen(true, "drug_search_screen"),
   OnlinePatientLookup(true, "online_patient_lookup"),
   HttpRequestBodyCompression(false, "http_request_body_compression_enabled"),
   CallResultSyncEnabled(false)

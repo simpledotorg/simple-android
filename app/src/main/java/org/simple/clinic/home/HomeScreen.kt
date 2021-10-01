@@ -159,7 +159,7 @@ class HomeScreen :
   }
 
   fun overdueListCountUpdated(count: Int) {
-    hotEvents.onNext(OverdueAppointmentCountLoaded(count))
+    hotEvents.onNext(OverdueAppointmentCountUpdated(count))
   }
 
   private fun setupToolBar() {

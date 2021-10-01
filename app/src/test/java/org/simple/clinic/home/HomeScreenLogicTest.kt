@@ -53,8 +53,8 @@ class HomeScreenLogicTest {
     // when
     setupController(Observable.just(facility1, facility2))
 
-    uiEvents.onNext(OverdueAppointmentCountLoaded(3))
-    uiEvents.onNext(OverdueAppointmentCountLoaded(0))
+    uiEvents.onNext(OverdueAppointmentCountUpdated(3))
+    uiEvents.onNext(OverdueAppointmentCountUpdated(0))
 
     // then
     verify(ui).setFacility("CHC Buchho")
@@ -75,7 +75,7 @@ class HomeScreenLogicTest {
     // when
     setupController(Observable.just(facility))
     uiEvents.onNext(HomeFacilitySelectionClicked)
-    uiEvents.onNext(OverdueAppointmentCountLoaded(0))
+    uiEvents.onNext(OverdueAppointmentCountUpdated(0))
 
     // then
     verify(ui, times(2)).setFacility("CHC Buchho")

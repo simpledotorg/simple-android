@@ -14,7 +14,7 @@ class HomeScreenUpdate : Update<HomeScreenModel, HomeScreenEvent, HomeScreenEffe
     return when (event) {
       HomeFacilitySelectionClicked -> dispatch(OpenFacilitySelection)
       is CurrentFacilityLoaded -> next(model.facilityLoaded(event.facility))
-      is OverdueAppointmentCountLoaded -> next(model.overdueAppointmentCountLoaded(event.overdueAppointmentCount))
+      is OverdueAppointmentCountUpdated -> next(model.overdueAppointmentCountUpdated(event.overdueAppointmentCount))
     }
   }
 }

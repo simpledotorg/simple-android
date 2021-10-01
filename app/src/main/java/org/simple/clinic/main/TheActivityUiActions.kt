@@ -1,6 +1,6 @@
 package org.simple.clinic.main
 
-import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.History
 
 interface TheActivityUiActions {
   // This is here because we need to show the same alert in multiple
@@ -8,5 +8,5 @@ interface TheActivityUiActions {
   fun showUserLoggedOutOnOtherDeviceAlert()
   fun redirectToLogin()
   fun showAccessDeniedScreen(fullName: String)
-  fun showInitialScreen(screenKey: ScreenKey)
+  fun setCurrentScreenHistory(newHistory: History)
 }

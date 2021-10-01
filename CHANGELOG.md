@@ -13,6 +13,7 @@
 - Enable custom drug search feature
 - Enable placeholders in overdue screen
 - Use overdue list count to display the count in the tab bar
+- Change `TheActivity` to load the entire screen history instead of a single screen key
 
 ### Changes
 

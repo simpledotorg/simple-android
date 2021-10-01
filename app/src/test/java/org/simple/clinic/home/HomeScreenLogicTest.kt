@@ -1,11 +1,9 @@
 package org.simple.clinic.home
 
-import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -57,18 +55,17 @@ class HomeScreenLogicTest {
         uuid = UUID.fromString("5b2136b8-11d5-4e20-8703-087281679aee"),
         name = "CHC Nathana"
     )
-    val date = LocalDate.parse("2018-01-01")
-
-    whenever(appointmentRepository.overdueAppointmentsCount(date, facility1)) doReturn Observable.just(3)
-    whenever(appointmentRepository.overdueAppointmentsCount(date, facility2)) doReturn Observable.just(0)
 
     // when
     setupController(Observable.just(facility1, facility2))
 
+    uiEvents.onNext(OverdueAppointmentCountLoaded(3))
+    uiEvents.onNext(OverdueAppointmentCountLoaded(0))
+
     // then
-    verify(ui, times(2)).setFacility("CHC Buchho")
-    verify(ui, times(2)).setFacility("CHC Nathana")
-    verify(ui, times(2)).showOverdueAppointmentCount(3)
+    verify(ui).setFacility("CHC Buchho")
+    verify(ui, times(3)).setFacility("CHC Nathana")
+    verify(ui).showOverdueAppointmentCount(3)
     verify(ui).removeOverdueAppointmentCount()
     verifyNoMoreInteractions(ui, uiActions)
   }
@@ -80,13 +77,11 @@ class HomeScreenLogicTest {
         uuid = UUID.fromString("e497355e-723c-4b35-b55a-778a6233b720"),
         name = "CHC Buchho"
     )
-    val date = LocalDate.parse("2018-01-01")
-
-    whenever(appointmentRepository.overdueAppointmentsCount(date, facility)) doReturn Observable.just(0)
 
     // when
     setupController(Observable.just(facility))
     uiEvents.onNext(HomeFacilitySelectionClicked)
+    uiEvents.onNext(OverdueAppointmentCountLoaded(0))
 
     // then
     verify(ui, times(2)).setFacility("CHC Buchho")

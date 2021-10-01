@@ -11,7 +11,6 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import java.time.LocalDate
 
 class HomeScreenEffectHandler @AssistedInject constructor(
     private val currentFacilityStream: Observable<Facility>,
@@ -31,20 +30,7 @@ class HomeScreenEffectHandler @AssistedInject constructor(
       .subtypeEffectHandler<HomeScreenEffect, HomeScreenEvent>()
       .addAction(OpenFacilitySelection::class.java, uiActions::openFacilitySelection, schedulersProvider.ui())
       .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
-      .addTransformer(LoadOverdueAppointmentCount::class.java, loadOverdueAppointmentCount())
       .build()
-
-  private fun loadOverdueAppointmentCount(): ObservableTransformer<LoadOverdueAppointmentCount, HomeScreenEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulersProvider.io())
-          .flatMap { (facility) ->
-            val now = LocalDate.now(userClock)
-            appointmentRepository.overdueAppointmentsCount(now, facility)
-          }
-          .map(::OverdueAppointmentCountLoaded)
-    }
-  }
 
   private fun loadCurrentFacility(): ObservableTransformer<LoadCurrentFacility, HomeScreenEvent> {
     return ObservableTransformer { effects ->

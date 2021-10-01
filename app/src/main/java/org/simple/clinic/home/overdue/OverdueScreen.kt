@@ -27,6 +27,7 @@ import org.simple.clinic.databinding.ScreenOverdueBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature.OverdueListDownloadAndShare
 import org.simple.clinic.feature.Features
+import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -197,6 +198,8 @@ class OverdueScreen : BaseScreen<
       overdueProgressBar.visibility = View.GONE
       viewForEmptyList.visibleOrGone(isVisible = shouldShowEmptyView)
       overdueRecyclerView.visibleOrGone(isVisible = !shouldShowEmptyView)
+
+      (parentFragment as HomeScreen).overdueListCountUpdated(overdueListAdapter.itemCount)
     }
   }
 

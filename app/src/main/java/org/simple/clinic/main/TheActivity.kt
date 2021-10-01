@@ -28,6 +28,7 @@ import org.simple.clinic.home.patients.LoggedOutOnOtherDeviceDialog
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.login.applock.AppLockScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.History
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
@@ -301,5 +302,9 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
 
   override fun showInitialScreen(screenKey: ScreenKey) {
     router.clearHistoryAndPush(screenKey)
+  }
+
+  override fun setCurrentScreenHistory(newHistory: History) {
+    router.replaceHistory(newHistory)
   }
 }

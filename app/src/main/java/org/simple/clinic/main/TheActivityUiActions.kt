@@ -1,5 +1,6 @@
 package org.simple.clinic.main
 
+import org.simple.clinic.navigation.v2.History
 import org.simple.clinic.navigation.v2.ScreenKey
 
 interface TheActivityUiActions {
@@ -9,4 +10,5 @@ interface TheActivityUiActions {
   fun redirectToLogin()
   fun showAccessDeniedScreen(fullName: String)
   fun showInitialScreen(screenKey: ScreenKey)
+  fun setCurrentScreenHistory(newHistory: History)
 }

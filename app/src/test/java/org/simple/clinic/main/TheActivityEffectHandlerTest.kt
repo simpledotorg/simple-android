@@ -40,17 +40,6 @@ class TheActivityEffectHandlerTest {
   }
 
   @Test
-  fun `when the show initial screen effect is received, the initial screen must be shown`() {
-    // when
-    testCase.dispatch(ShowInitialScreen(HomeScreenKey))
-
-    // then
-    testCase.assertNoOutgoingEvents()
-    verify(uiActions).showInitialScreen(HomeScreenKey)
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
   fun `when the set current screen history effect is received, the current screen history must be replaced`() {
     // given
     val history = History(listOf(

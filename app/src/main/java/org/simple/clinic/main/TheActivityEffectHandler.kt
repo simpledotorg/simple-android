@@ -42,7 +42,6 @@ class TheActivityEffectHandler @AssistedInject constructor(
         .addTransformer(ListenForUserDisapprovals::class.java, listenForUserDisapprovals())
         .addTransformer(ClearPatientData::class.java, clearPatientData())
         .addTransformer(ShowAccessDeniedScreen::class.java, openAccessDeniedScreen())
-        .addConsumer(ShowInitialScreen::class.java, { uiActions.showInitialScreen(it.screen) }, schedulers.ui())
         .addConsumer(SetCurrentScreenHistory::class.java, { uiActions.setCurrentScreenHistory(it.history) }, schedulers.ui())
         .build()
   }

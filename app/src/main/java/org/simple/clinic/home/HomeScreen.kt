@@ -13,7 +13,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
+import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -96,6 +98,8 @@ class HomeScreen :
   private val facilitySelectButton
     get() = binding.facilitySelectButton
 
+  private val hotEvents = PublishSubject.create<HomeScreenEvent>()
+
   private val tabs = listOf(PATIENTS, OVERDUE, REPORTS)
 
   override fun defaultModel() = HomeScreenModel.create()
@@ -105,7 +109,11 @@ class HomeScreen :
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenHomeBinding.inflate(layoutInflater, container, false)
 
-  override fun events() = facilitySelectionClicks()
+  override fun events() = Observable
+      .mergeArray(
+          facilitySelectionClicks(),
+          hotEvents
+      )
       .compose(ReportAnalyticsEvents())
       .cast<HomeScreenEvent>()
 
@@ -151,6 +159,10 @@ class HomeScreen :
   override fun onDestroyView() {
     viewPager.adapter = null
     super.onDestroyView()
+  }
+
+  fun overdueListCountUpdated(count: Int) {
+    hotEvents.onNext(OverdueAppointmentCountLoaded(count))
   }
 
   private fun setupToolBar() {

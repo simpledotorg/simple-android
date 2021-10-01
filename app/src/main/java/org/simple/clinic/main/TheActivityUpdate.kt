@@ -7,6 +7,8 @@ import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.login.applock.AppLockScreenKey
 import org.simple.clinic.mobius.dispatch
+import org.simple.clinic.navigation.v2.History
+import org.simple.clinic.navigation.v2.Normal
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
@@ -67,10 +69,14 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
       else -> throw IllegalStateException("Unknown user status combinations: [${user.loggedInStatus}, ${user.status}]")
     }
 
-    return if (shouldShowAppLockScreen && !model.isFreshLogin)
-      dispatch(ShowInitialScreen(AppLockScreenKey(initialScreen)))
-    else
-      dispatch(ShowInitialScreen(initialScreen), ClearLockAfterTimestamp)
+    return if (shouldShowAppLockScreen && !model.isFreshLogin) {
+      val newHistory = History(listOf(Normal(AppLockScreenKey(initialScreen))))
+      dispatch(SetCurrentScreenHistory(newHistory))
+    }
+    else {
+      val newHistory = History(listOf(Normal(initialScreen)))
+      dispatch(SetCurrentScreenHistory(newHistory), ClearLockAfterTimestamp)
+    }
   }
 
   private fun shouldShowAppLockScreenForUser(

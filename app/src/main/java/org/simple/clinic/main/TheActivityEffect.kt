@@ -1,6 +1,6 @@
 package org.simple.clinic.main
 
-import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.History
 
 sealed class TheActivityEffect
 
@@ -22,4 +22,4 @@ object ClearPatientData : TheActivityEffect()
 
 object ShowAccessDeniedScreen : TheActivityEffect()
 
-data class ShowInitialScreen(val screen: ScreenKey) : TheActivityEffect()
+data class SetCurrentScreenHistory(val history: History) : TheActivityEffect()

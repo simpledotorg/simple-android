@@ -12,9 +12,11 @@ import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.login.applock.AppLockScreenKey
 import org.simple.clinic.main.ClearLockAfterTimestamp
 import org.simple.clinic.main.InitialScreenInfoLoaded
-import org.simple.clinic.main.ShowInitialScreen
+import org.simple.clinic.main.SetCurrentScreenHistory
 import org.simple.clinic.main.TheActivityModel
 import org.simple.clinic.main.TheActivityUpdate
+import org.simple.clinic.navigation.v2.History
+import org.simple.clinic.navigation.v2.Normal
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
@@ -38,7 +40,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowInitialScreen(HomeScreenKey), ClearLockAfterTimestamp)
+            hasEffects(SetCurrentScreenHistory(History(listOf(Normal(HomeScreenKey)))), ClearLockAfterTimestamp)
         ))
   }
 
@@ -51,7 +53,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowInitialScreen(HomeScreenKey), ClearLockAfterTimestamp)
+            hasEffects(SetCurrentScreenHistory(History(listOf(Normal(HomeScreenKey)))), ClearLockAfterTimestamp)
         ))
   }
 
@@ -64,7 +66,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowInitialScreen(HomeScreenKey), ClearLockAfterTimestamp)
+            hasEffects(SetCurrentScreenHistory(History(listOf(Normal(HomeScreenKey)))), ClearLockAfterTimestamp)
         ))
   }
 
@@ -77,7 +79,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowInitialScreen(HomeScreenKey), ClearLockAfterTimestamp)
+            hasEffects(SetCurrentScreenHistory(History(listOf(Normal(HomeScreenKey)))), ClearLockAfterTimestamp)
         ))
   }
 
@@ -90,7 +92,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowInitialScreen(HomeScreenKey), ClearLockAfterTimestamp)
+            hasEffects(SetCurrentScreenHistory(History(listOf(Normal(HomeScreenKey)))), ClearLockAfterTimestamp)
         ))
   }
 
@@ -103,7 +105,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowInitialScreen(HomeScreenKey), ClearLockAfterTimestamp)
+            hasEffects(SetCurrentScreenHistory(History(listOf(Normal(HomeScreenKey)))), ClearLockAfterTimestamp)
         ))
   }
 
@@ -116,7 +118,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowInitialScreen(HomeScreenKey), ClearLockAfterTimestamp)
+            hasEffects(SetCurrentScreenHistory(History(listOf(Normal(HomeScreenKey)))), ClearLockAfterTimestamp)
         ))
   }
 
@@ -129,7 +131,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowInitialScreen(HomeScreenKey), ClearLockAfterTimestamp)
+            hasEffects(SetCurrentScreenHistory(History(listOf(Normal(HomeScreenKey)))), ClearLockAfterTimestamp)
         ))
   }
 
@@ -142,7 +144,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowInitialScreen(ForgotPinCreateNewPinScreenKey().wrap()), ClearLockAfterTimestamp)
+            hasEffects(SetCurrentScreenHistory(History(listOf(Normal(ForgotPinCreateNewPinScreenKey().wrap())))), ClearLockAfterTimestamp)
         ))
   }
 
@@ -155,7 +157,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowInitialScreen(ForgotPinCreateNewPinScreenKey().wrap()), ClearLockAfterTimestamp)
+            hasEffects(SetCurrentScreenHistory(History(listOf(Normal(ForgotPinCreateNewPinScreenKey().wrap())))), ClearLockAfterTimestamp)
         ))
   }
 
@@ -168,7 +170,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowInitialScreen(AccessDeniedScreenKey(user.fullName)), ClearLockAfterTimestamp)
+            hasEffects(SetCurrentScreenHistory(History(listOf(Normal(AccessDeniedScreenKey(user.fullName))))), ClearLockAfterTimestamp)
         ))
   }
 
@@ -181,7 +183,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowInitialScreen(AccessDeniedScreenKey(user.fullName)), ClearLockAfterTimestamp)
+            hasEffects(SetCurrentScreenHistory(History(listOf(Normal(AccessDeniedScreenKey(user.fullName))))), ClearLockAfterTimestamp)
         ))
   }
 
@@ -194,7 +196,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowInitialScreen(AccessDeniedScreenKey(user.fullName)), ClearLockAfterTimestamp)
+            hasEffects(SetCurrentScreenHistory(History(listOf(Normal(AccessDeniedScreenKey(user.fullName))))), ClearLockAfterTimestamp)
         ))
   }
 
@@ -207,7 +209,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowInitialScreen(AccessDeniedScreenKey(user.fullName)), ClearLockAfterTimestamp)
+            hasEffects(SetCurrentScreenHistory(History(listOf(Normal(AccessDeniedScreenKey(user.fullName))))), ClearLockAfterTimestamp)
         ))
   }
 
@@ -220,7 +222,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowInitialScreen(AccessDeniedScreenKey(user.fullName)), ClearLockAfterTimestamp)
+            hasEffects(SetCurrentScreenHistory(History(listOf(Normal(AccessDeniedScreenKey(user.fullName))))), ClearLockAfterTimestamp)
         ))
   }
 
@@ -243,7 +245,7 @@ class TheActivityUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowInitialScreen(AppLockScreenKey(HomeScreenKey)))
+            hasEffects(SetCurrentScreenHistory(History(listOf(Normal(AppLockScreenKey(HomeScreenKey))))))
         ))
   }
 
@@ -266,7 +268,7 @@ class TheActivityUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowInitialScreen(HomeScreenKey))
+            hasEffects(SetCurrentScreenHistory(History(listOf(Normal(HomeScreenKey)))))
         ))
   }
 }

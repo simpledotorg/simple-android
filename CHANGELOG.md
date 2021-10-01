@@ -12,6 +12,7 @@
 - Bump Mobius to v1.5.5
 - Enable custom drug search feature
 - Enable placeholders in overdue screen
+- Use overdue list count to display the count in the tab bar
 
 ### Changes
 

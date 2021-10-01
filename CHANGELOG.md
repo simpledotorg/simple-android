@@ -33,6 +33,7 @@
 - Custom Drug Entry Sheet UI Improvements
 - Add Sri Lanka personal health number business identifier
 - Navigate back to `SelectCountryScreen` from `RegistrationPhoneScreen` when there's only one state present in the country
+- Enable custom drug search feature
 
 ### Changes
 

@@ -64,7 +64,7 @@ class OverdueEffectHandler @AssistedInject constructor(
                   )
                 },
                 pageSize = overdueAppointmentsConfig.overdueAppointmentsLoadSize,
-                enablePlaceholders = false
+                enablePlaceholders = true
             )
           }
           .map(::OverdueAppointmentsLoaded)

@@ -3,13 +3,9 @@ package org.simple.clinic.home
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Update
-import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.dispatch
-import javax.inject.Inject
 
-class HomeScreenUpdate @Inject constructor(
-    private val features: Features
-) : Update<HomeScreenModel, HomeScreenEvent, HomeScreenEffect> {
+class HomeScreenUpdate : Update<HomeScreenModel, HomeScreenEvent, HomeScreenEffect> {
 
   override fun update(
       model: HomeScreenModel,

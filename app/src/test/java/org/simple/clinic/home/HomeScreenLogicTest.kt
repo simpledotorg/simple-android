@@ -12,11 +12,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.feature.Feature
-import org.simple.clinic.feature.Features
-import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.remoteconfig.DefaultValueConfigReader
-import org.simple.clinic.remoteconfig.NoOpRemoteConfigService
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -34,7 +29,6 @@ class HomeScreenLogicTest {
 
   private val ui = mock<HomeScreenUi>()
   private val uiActions = mock<HomeScreenUiActions>()
-  private val appointmentRepository = mock<AppointmentRepository>()
   private val clock = TestUserClock()
 
   private lateinit var testFixture: MobiusTestFixture<HomeScreenModel, HomeScreenEvent, HomeScreenEffect>
@@ -95,25 +89,18 @@ class HomeScreenLogicTest {
 
     val effectHandler = HomeScreenEffectHandler(
         currentFacilityStream = facilityStream,
-        appointmentRepository = appointmentRepository,
         patientRepository = mock(),
-        userClock = clock,
         schedulersProvider = TestSchedulersProvider.trampoline(),
         uiActions = uiActions
     )
 
     val uiRenderer = HomeScreenUiRenderer(ui)
 
-    val features = Features(
-        remoteConfigService = NoOpRemoteConfigService(DefaultValueConfigReader()),
-        overrides = mapOf(Feature.OverdueCount to true)
-    )
-
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = HomeScreenModel.create(),
         init = HomeScreenInit(),
-        update = HomeScreenUpdate(features),
+        update = HomeScreenUpdate(),
         effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )

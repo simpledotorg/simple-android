@@ -7,16 +7,12 @@ import dagger.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class HomeScreenEffectHandler @AssistedInject constructor(
     private val currentFacilityStream: Observable<Facility>,
-    private val appointmentRepository: AppointmentRepository,
     val patientRepository: PatientRepository,
-    private val userClock: UserClock,
     private val schedulersProvider: SchedulersProvider,
     @Assisted private val uiActions: HomeScreenUiActions
 ) {

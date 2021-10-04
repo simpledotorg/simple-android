@@ -60,7 +60,8 @@ class TheActivityEffectHandler @AssistedInject constructor(
             InitialScreenInfoLoaded(
                 user = it,
                 currentTimestamp = Instant.now(utcClock),
-                lockAtTimestamp = lockAfterTimestamp.get()
+                lockAtTimestamp = lockAfterTimestamp.get(),
+                currentHistory = provideCurrentScreenHistory()
             )
           }
     }

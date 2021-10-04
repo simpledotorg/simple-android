@@ -521,7 +521,6 @@
   <string name="alertfacilitychange_facility_name">%s?</string>
 
   <!-- Prescribed Drug Summary -->
-  <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
   <string name="contactpatient_agreed_to_visit">రోగి \"సందర్శించడానికి అంగీకరించారు\" అని గుర్తుపెట్టండి</string>

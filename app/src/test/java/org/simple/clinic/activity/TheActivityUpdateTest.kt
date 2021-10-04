@@ -19,6 +19,8 @@ import org.simple.clinic.main.TheActivityUpdate
 import org.simple.clinic.navigation.v2.History
 import org.simple.clinic.navigation.v2.Normal
 import org.simple.clinic.navigation.v2.compat.wrap
+import org.simple.clinic.scanid.OpenedFrom
+import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
 import java.time.Instant
@@ -273,6 +275,19 @@ class TheActivityUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(SetCurrentScreenHistory(History(listOf(Normal(HomeScreenKey)))))
+        ))
+  }
+
+  @Test
+  fun `when the local user is approved for syncing and has logged in, then restore the history if it's not empty`() {
+    val user = TestData.loggedInUser(loggedInStatus = User.LoggedInStatus.LOGGED_IN, status = UserStatus.ApprovedForSyncing)
+    val currentHistory = History(listOf(Normal(HomeScreenKey), Normal(ScanSimpleIdScreenKey(OpenedFrom.PatientsTabScreen))))
+    spec
+        .given(model)
+        .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime, currentHistory))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(SetCurrentScreenHistory(currentHistory), ClearLockAfterTimestamp)
         ))
   }
 }

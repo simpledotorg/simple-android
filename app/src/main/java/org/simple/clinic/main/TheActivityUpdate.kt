@@ -3,6 +3,7 @@ package org.simple.clinic.main
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
+import org.simple.clinic.empty.EmptyScreenKey
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.login.applock.AppLockScreenKey
@@ -36,7 +37,8 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
           model = model,
           currentTimestamp = event.currentTimestamp,
           lockAtTimestamp = event.lockAtTimestamp,
-          user = event.user
+          user = event.user,
+          currentScreenHistory = event.currentHistory
       )
       UserWasJustVerified -> dispatch(ShowUserLoggedOutOnOtherDeviceAlert)
       UserWasUnauthorized -> dispatch(RedirectToLoginScreen)
@@ -49,7 +51,8 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
       model: TheActivityModel,
       currentTimestamp: Instant,
       lockAtTimestamp: Optional<Instant>,
-      user: User
+      user: User,
+      currentScreenHistory: History
   ): Next<TheActivityModel, TheActivityEffect> {
     val hasAppLockTimerExpired = lockAtTimestamp
         .map(currentTimestamp::isAfter)
@@ -62,20 +65,24 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
       LOGGED_IN, OTP_REQUESTED, RESET_PIN_REQUESTED, UNAUTHORIZED -> true
     }
 
-    val initialScreen = when {
-      user.isDisapprovedForSyncing -> AccessDeniedScreenKey(user.fullName)
-      canMoveToHomeScreen && user.isNotDisapprovedForSyncing -> HomeScreenKey
-      user.isResettingPin -> ForgotPinCreateNewPinScreenKey().wrap()
+    val history = when {
+      user.isDisapprovedForSyncing -> History(listOf(Normal(AccessDeniedScreenKey(user.fullName))))
+      canMoveToHomeScreen && user.isNotDisapprovedForSyncing -> {
+        if (currentScreenHistory.top().key.matchesScreen(EmptyScreenKey().wrap())) {
+          History(listOf(Normal(HomeScreenKey)))
+        } else {
+          currentScreenHistory
+        }
+      }
+      user.isResettingPin -> History(listOf(Normal(ForgotPinCreateNewPinScreenKey().wrap())))
       else -> throw IllegalStateException("Unknown user status combinations: [${user.loggedInStatus}, ${user.status}]")
     }
 
     return if (shouldShowAppLockScreen && !model.isFreshLogin) {
-      val newHistory = History(listOf(Normal(AppLockScreenKey(initialScreen))))
-      dispatch(SetCurrentScreenHistory(newHistory))
-    }
-    else {
-      val newHistory = History(listOf(Normal(initialScreen)))
-      dispatch(SetCurrentScreenHistory(newHistory), ClearLockAfterTimestamp)
+      // val newHistory = History(listOf(Normal(AppLockScreenKey(HomeScreenKey)))) Add this in the next PR
+      dispatch(SetCurrentScreenHistory(history))
+    } else {
+      dispatch(SetCurrentScreenHistory(history), ClearLockAfterTimestamp)
     }
   }
 

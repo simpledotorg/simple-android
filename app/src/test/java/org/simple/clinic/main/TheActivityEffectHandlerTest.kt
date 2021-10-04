@@ -23,14 +23,15 @@ class TheActivityEffectHandlerTest {
   private val clock = TestUtcClock(currentTime)
 
   private val uiActions = mock<TheActivityUiActions>()
-
+  private val currentHistory = History(listOf(Normal(EmptyScreenKey().wrap())))
   private val effectHandler = TheActivityEffectHandler(
       schedulers = TestSchedulersProvider.trampoline(),
       userSession = mock(),
       utcClock = clock,
       patientRepository = mock(),
       lockAfterTimestamp = MemoryValue(defaultValue = Optional.empty()),
-      uiActions = uiActions
+      uiActions = uiActions,
+      provideCurrentScreenHistory = { currentHistory }
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
 

@@ -16,6 +16,7 @@ import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.empty.EmptyScreenKey
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.login.applock.AppLockScreenKey
@@ -326,13 +327,15 @@ class TheActivityControllerTest {
     whenever(userSession.loggedInUser()).thenReturn(userStream)
     whenever(userSession.isUserDisapproved()).thenReturn(userDisapprovedStream)
 
+    val currentHistory = History(listOf(Normal(EmptyScreenKey().wrap())))
     val effectHandler = TheActivityEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
         userSession = userSession,
         utcClock = clock,
         patientRepository = patientRepository,
         lockAfterTimestamp = lockAfterTimestamp,
-        uiActions = ui
+        uiActions = ui,
+        provideCurrentScreenHistory = { currentHistory }
     )
     val uiRenderer = TheActivityUiRenderer(ui)
 

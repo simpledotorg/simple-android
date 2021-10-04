@@ -183,18 +183,18 @@ class EditMedicinesScreen :
     }
 
     val newAdapterItems = protocolDrugItems + AddNewPrescriptionListItem
+    val hasDrugsListChanged = adapter.currentList != newAdapterItems
 
-    val hasNewItems = (adapter.itemCount == 0).not() && adapter.itemCount < newAdapterItems.size
     adapter.submitList(newAdapterItems)
 
-    // Scroll to end to show newly added prescriptions.
-    if (hasNewItems) {
-      recyclerView.postDelayed(::scrollListToLastPosition, 300)
+    // Scroll to top to show newly added or edited prescriptions.
+    if (hasDrugsListChanged) {
+      recyclerView.postDelayed(::scrollListToTopPosition, 300)
     }
   }
 
-  private fun scrollListToLastPosition() {
-    recyclerView.smoothScrollToPosition(recyclerView.adapter!!.itemCount - 1)
+  private fun scrollListToTopPosition() {
+    recyclerView.smoothScrollToPosition(0)
   }
 
   override fun showNewPrescriptionEntrySheet(patientUuid: UUID) {

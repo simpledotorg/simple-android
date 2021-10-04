@@ -10,6 +10,10 @@
 - Enable placeholders in overdue screen
 - Use overdue list count to display the count in the tab bar
 - Change `TheActivity` to load the entire screen history instead of a single screen key
+- Add support for Android 12
+  - Bump compile & target SDK to 31
+  - Add exported attr in `AndroidManifest.xml` for activities/services/receivers with intent filters
+  - Add `ACCESS_COARSE_LOCATION` permission
 
 ### Changes
 

@@ -15,6 +15,7 @@
 
 - Purge call results when database purges run
 - Scroll to top when drugs list content is changed in edit medicines screen
+- Render custom drug frequency in drug summary view
 - [In Progress: 22 Jul 2021] Add option to download & share overdue list
 
 ## 2021-10-04-7971

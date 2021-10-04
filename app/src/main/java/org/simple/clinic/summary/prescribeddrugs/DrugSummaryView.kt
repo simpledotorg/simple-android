@@ -177,7 +177,12 @@ class DrugSummaryView(
       prescriptions
           .map { drug ->
             val drugItemView = LayoutInflater.from(context).inflate(R.layout.list_patientsummary_prescripton_drug, this, false) as DrugSummaryItemView
-            drugItemView.render(drug.name, drug.dosage.orEmpty(), dateFormatter.format(drug.updatedAt.toLocalDateAtZone(userClock.zone)))
+            drugItemView.render(
+                drugName = drug.name,
+                drugDosage = drug.dosage,
+                drugFrequency = drug.frequency,
+                dateFormatter.format(drug.updatedAt.toLocalDateAtZone(userClock.zone))
+            )
             drugItemView
           }
           .forEach(drugsSummaryContainer::addView)

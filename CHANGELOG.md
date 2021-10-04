@@ -5,10 +5,6 @@
 ### Internal
 
 - Migrate `SelectCountryScreen` to a fragment
-- Inject `DrugFrequencyToLabelMap` directly in `TeleconsultMedicinesView` instead of handling it in the effect handler
-- Custom Drug Entry Sheet UI Improvements
-- Add Sri Lanka personal health number business identifier
-- Navigate back to `SelectCountryScreen` from `RegistrationPhoneScreen` when there's only one state present in the country
 - Bump Mobius to v1.5.5
 - Enable custom drug search feature
 - Enable placeholders in overdue screen
@@ -18,9 +14,6 @@
 ### Changes
 
 - Purge call results when database purges run
-- Remove next button from state selection screen, you can now select a state to go to next screen
-- Remove next button from the country selection screen, you can now select a country to go to next screen
-- Show personal health number text field in patient entry/edit screens
 - [In Progress: 22 Jul 2021] Add option to download & share overdue list
 
 ## On Demo
@@ -49,7 +42,9 @@
 - Fix `Country` v2 migration not running
 - Convert commit and push bash script to Kotlin script
 - Show state selection screen after country is selected
-- Add a progress state in `CustomDrugEntrySheet`
+- Add Sri Lanka personal health number business identifier
+- Enable custom drug search feature
+- Inject `DrugFrequencyToLabelMap` directly in `TeleconsultMedicinesView` instead of handling it in the effect handler
 
 ### Changes
 
@@ -68,6 +63,11 @@
 - Add support for Sri Lanka
 - Add support for displaying drug frequencies label depending on the country
 - Restrict OTP entries to 5 attempts
+- Remove next button from state selection screen, you can now select a state to go to next screen  
+- Remove next button from the country selection screen, you can now select a country to go to next screen
+- Custom Drug Entry Sheet UI Improvements
+- Navigate back to `SelectCountryScreen` from `RegistrationPhoneScreen` when there's only one state present in the country
+- Show personal health number text field in patient entry/edit screens
 
 ### Fixes
 

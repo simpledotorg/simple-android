@@ -16,6 +16,7 @@
   - Add `ACCESS_COARSE_LOCATION` permission
 - Fetch appointment directly in contact patient sheet
 - Updated translations: `so-ET`, `pa-IN`, `bn-BD`
+- Bump CameraX dependencies
 
 ### Changes
 

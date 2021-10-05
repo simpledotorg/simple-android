@@ -101,10 +101,6 @@ data class ContactPatientModel(
     return copy(uiMode = newMode)
   }
 
-  fun removeAppointmentReasonSelected(reason: RemoveAppointmentReason): ContactPatientModel {
-    return copy(selectedRemoveAppointmentReason = reason)
-  }
-
   fun contactPatientInfoLoaded(): ContactPatientModel {
     return copy(contactPatientInfoProgressState = DONE)
   }

@@ -35,6 +35,7 @@
     android:layout_marginTop="@dimen/spacing_44"
     android:layout_marginEnd="@dimen/spacing_16"
     android:layout_marginBottom="@dimen/spacing_24"
+    app:layout_constrainedHeight="true"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -73,6 +74,7 @@
           android:id="@+id/supportedCountriesList"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:clipToPadding="false"
           android:paddingBottom="@dimen/spacing_8"
           tools:layout_height="128dp"
           tools:listitem="@layout/list_selectcountry_country_view" />

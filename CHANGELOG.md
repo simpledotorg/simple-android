@@ -4,6 +4,28 @@
 
 ### Internal
 
+- Migrate `SelectCountryScreen` to a fragment
+- Bump Mobius to v1.5.5
+- Enable custom drug search feature
+- Enable placeholders in overdue screen
+- Use overdue list count to display the count in the tab bar
+- Change `TheActivity` to load the entire screen history instead of a single screen key
+- Add support for Android 12
+  - Bump compile & target SDK to 31
+  - Add exported attr in `AndroidManifest.xml` for activities/services/receivers with intent filters
+  - Add `ACCESS_COARSE_LOCATION` permission
+
+### Changes
+
+- Purge call results when database purges run
+- Scroll to top when drugs list content is changed in edit medicines screen
+- Render custom drug frequency in drug summary view
+- [In Progress: 22 Jul 2021] Add option to download & share overdue list
+
+## 2021-10-04-7971
+
+### Internal
+
 - Add a progress state in `CustomDrugEntrySheet`
 - Implement showing drug frequency in `EditMedicineScreen` based on the country
 - Add integration tests for `AppConfigRepository`
@@ -25,35 +47,32 @@
 - Record call results instead of updating the same appointment record
 - Fix `Country` v2 migration not running
 - Convert commit and push bash script to Kotlin script
-- [In Progress: 22 Sep 2021] Custom Drug Entry Sheet UI Improvements
-- [In Progress: 31 Aug 2021] Refactor logic around providing drug frequencies label depending on the country
-- [In Progress: 2 Sep 2021] Add a progress state in `CustomDrugEntrySheet`
 - Show state selection screen after country is selected
-- Remove next button from the country selection screen, you can now select a country to go to next screen
-- Custom Drug Entry Sheet UI Improvements
 - Add Sri Lanka personal health number business identifier
-- Navigate back to `SelectCountryScreen` from `RegistrationPhoneScreen` when there's only one state present in the country
 - Enable custom drug search feature
+- Inject `DrugFrequencyToLabelMap` directly in `TeleconsultMedicinesView` instead of handling it in the effect handler
 
 ### Changes
 
-- Add diabetes treatment question in medical history screen
 - Hide resend sms button when OTP attempts are blocked
-- Show patient died status in patient summary screen
-- Show patient died status in contact patient bottom sheet
+- Show patient died status in patient summary screen & contact patient bottom sheet
 - Go back to the previous screen when done/back is clicked in the patient summary screen when the patient is marked as dead
 - Show change diagnosis dialog when patient is not diagnosed with HTN or diabetes when registering
-- Remove next button from state selection screen, you can now select a state to go to next screen
-- [In Progress: 19 Aug 2021] UI improvements for medical history screen
+- UI improvements for medical history screen
   - Show hypertension diagnosis and treatment in single card
   - Show separate cards for hypertension and diabetes diagnosis
   - Show hypertension diagnosis even when facility doesn't have diabetes management enabled
-- [In Progress: 22 Jul 2021] Add option to download & share overdue list
-- [In Progress: 14 Jul 2021] Medication screen improvements
+  - Added diabetes treatment question in medical history screen
+- Medication screen improvements
   - Search for commonly used drugs
-- [In Progress: 06 Aug 2021] Add support for Sri Lanka
-- [In Progress: 25 Aug 2021] Implement providing drug frequencies label depending on the country
+  - New custom drug entry/edit sheet
+- Add support for Sri Lanka
+- Add support for displaying drug frequencies label depending on the country
 - Restrict OTP entries to 5 attempts
+- Remove next button from state selection screen, you can now select a state to go to next screen
+- Remove next button from the country selection screen, you can now select a country to go to next screen
+- Custom Drug Entry Sheet UI Improvements
+- Navigate back to `SelectCountryScreen` from `RegistrationPhoneScreen` when there's only one state present in the country
 - Show personal health number text field in patient entry/edit screens
 
 ### Fixes
@@ -61,6 +80,7 @@
 - Fix select country & state screen overlapping next button
 - Fix contact patient bottom sheet not showing correct results
 - Fix multiple medical history answers selection in patient summary screen
+- Fix state selection list content hidden behind Android navigation bar
 
 ## 2021-09-23-7958
 

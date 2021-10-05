@@ -44,7 +44,7 @@ class ContactPatientUiRenderer(
     }
 
     if (model.hasRegisteredFacility && model.hasCurrentFacility) {
-      renderPatientFacilityLabel(model.appointmentIsInRegisteredFacility)
+      renderPatientFacilityLabel(model.patientIsAtRegisteredFacility)
     }
 
     renderPhoneNumberAndCallResults(model)

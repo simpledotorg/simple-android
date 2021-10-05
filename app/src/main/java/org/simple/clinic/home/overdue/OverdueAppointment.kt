@@ -139,18 +139,5 @@ data class OverdueAppointment(
         scheduledBefore: LocalDate,
         scheduledAfter: LocalDate
     ): PagingSource<Int, OverdueAppointment>
-
-    @Query("""
-      SELECT * FROM OverdueAppointment
-      WHERE 
-        appt_patientUuid = :patientUUID
-        AND appt_scheduledDate < :scheduledDate
-        AND (appt_remindOn < :scheduledDate OR appt_remindOn IS NULL)
-      GROUP BY appt_patientUuid HAVING MAX(appt_scheduledDate)
-    """)
-    fun latestForPatient(
-        patientUUID: UUID,
-        scheduledDate: LocalDate
-    ): OverdueAppointment?
   }
 }

@@ -115,7 +115,7 @@ class ContactPatientEffectHandlerTest {
         patientUuid = patientUuid
     ))
     val date = LocalDate.now(userClock)
-    whenever(appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, date)) doReturn overdueAppointment
+    whenever(appointmentRepository.latestOverdueAppointmentForPatient_Old(patientUuid, date)) doReturn overdueAppointment
 
     // when
     testCase.dispatch(LoadLatestOverdueAppointment(patientUuid))

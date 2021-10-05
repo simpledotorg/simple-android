@@ -207,7 +207,7 @@ class AppointmentRepository @Inject constructor(
         )
   }
 
-  fun latestOverdueAppointmentForPatient(
+  fun latestOverdueAppointmentForPatient_Old(
       patientUuid: UUID,
       date: LocalDate
   ): Optional<OverdueAppointment> {

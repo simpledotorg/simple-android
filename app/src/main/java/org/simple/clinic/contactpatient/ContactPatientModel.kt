@@ -73,7 +73,7 @@ data class ContactPatientModel(
   val hasRegisteredFacility: Boolean
     get() = patientProfile != null && patientProfile.patient.registeredFacilityId != null
 
-  val appointmentIsInRegisteredFacility: Boolean
+  val patientIsAtRegisteredFacility: Boolean
     get() = patientProfile != null && patientProfile.patient.registeredFacilityId == currentFacility?.uuid
 
   val appointment: Appointment

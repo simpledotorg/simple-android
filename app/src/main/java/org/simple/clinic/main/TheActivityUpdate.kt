@@ -9,7 +9,6 @@ import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.login.applock.AppLockScreenKey
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.navigation.v2.History
-import org.simple.clinic.navigation.v2.Normal
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
@@ -54,11 +53,7 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
       user: User,
       currentScreenHistory: History
   ): Next<TheActivityModel, TheActivityEffect> {
-    val hasAppLockTimerExpired = lockAtTimestamp
-        .map(currentTimestamp::isAfter)
-        .orElse(true) // Handle the case where the app is opened after a cold start
-
-    val shouldShowAppLockScreen = shouldShowAppLockScreenForUser(user) && hasAppLockTimerExpired
+    val shouldShowAppLockScreen = shouldShowAppLockScreenForUser(user, currentTimestamp, lockAtTimestamp)
 
     val canMoveToHomeScreen = when (user.loggedInStatus) {
       RESETTING_PIN -> false
@@ -87,8 +82,14 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
   }
 
   private fun shouldShowAppLockScreenForUser(
-      user: User
+      user: User,
+      currentTimestamp: Instant,
+      lockAtTimestamp: Optional<Instant>
   ): Boolean {
-    return user.isNotDisapprovedForSyncing && user.loggedInStatus in SHOW_APP_LOCK_FOR_USER_STATES
+    val hasAppLockTimerExpired = lockAtTimestamp
+        .map(currentTimestamp::isAfter)
+        .orElse(true) // Handle the case where the app is opened after a cold start
+
+    return user.isNotDisapprovedForSyncing && user.loggedInStatus in SHOW_APP_LOCK_FOR_USER_STATES && hasAppLockTimerExpired
   }
 }

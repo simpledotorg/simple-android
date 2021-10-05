@@ -21,6 +21,7 @@
 
     <receiver
       android:name=".FakeDataGenerationReceiver"
+      android:exported="false"
       tools:ignore="ExportedReceiver">
       <intent-filter>
         <action android:name="org.simple.clinic.debug.GENERATE_FAKE_DATA" />
@@ -38,6 +39,7 @@
     <activity
       android:name=".WebviewTestActivity"
       android:enabled="false"
+      android:exported="false"
       android:label="WebViewTest">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />

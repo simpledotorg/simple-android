@@ -3,9 +3,9 @@ import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 buildscript {
   extra.apply {
-    set("compileSdkVersion", 30)
+    set("compileSdkVersion", 31)
     set("minSdkVersion", 21)
-    set("targetSdkVersion", 30)
+    set("targetSdkVersion", 31)
   }
 
   repositories {

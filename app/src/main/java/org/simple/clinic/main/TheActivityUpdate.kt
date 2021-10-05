@@ -25,6 +25,13 @@ private val SHOW_APP_LOCK_FOR_USER_STATES = setOf(
     RESET_PIN_REQUESTED
 )
 
+private val SHOW_HOME_SCREEN_FOR_USER_STATES = setOf(
+    LOGGED_IN,
+    OTP_REQUESTED,
+    RESET_PIN_REQUESTED,
+    UNAUTHORIZED
+)
+
 class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivityEffect> {
 
   override fun update(
@@ -55,10 +62,7 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
   ): Next<TheActivityModel, TheActivityEffect> {
     val shouldShowAppLockScreen = shouldShowAppLockScreenForUser(user, currentTimestamp, lockAtTimestamp)
 
-    val canMoveToHomeScreen = when (user.loggedInStatus) {
-      RESETTING_PIN -> false
-      LOGGED_IN, OTP_REQUESTED, RESET_PIN_REQUESTED, UNAUTHORIZED -> true
-    }
+    val canMoveToHomeScreen = user.loggedInStatus in SHOW_HOME_SCREEN_FOR_USER_STATES
 
     val history = when {
       user.isDisapprovedForSyncing -> History.ofNormalScreens(AccessDeniedScreenKey(user.fullName))

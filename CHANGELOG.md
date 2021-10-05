@@ -22,6 +22,10 @@
 - Render custom drug frequency in drug summary view
 - [In Progress: 22 Jul 2021] Add option to download & share overdue list
 
+### Fixes
+
+- Fix state selection list content hidden behind Android navigation bar
+
 ## 2021-10-04-7971
 
 ### Internal
@@ -69,7 +73,7 @@
 - Add support for Sri Lanka
 - Add support for displaying drug frequencies label depending on the country
 - Restrict OTP entries to 5 attempts
-- Remove next button from state selection screen, you can now select a state to go to next screen  
+- Remove next button from state selection screen, you can now select a state to go to next screen
 - Remove next button from the country selection screen, you can now select a country to go to next screen
 - Custom Drug Entry Sheet UI Improvements
 - Navigate back to `SelectCountryScreen` from `RegistrationPhoneScreen` when there's only one state present in the country

@@ -25,6 +25,7 @@
 ### Fixes
 
 - Fix state selection list content hidden behind Android navigation bar
+- Fix country selection list content hidden behind Android navigation bar
 
 ## 2021-10-04-7971
 

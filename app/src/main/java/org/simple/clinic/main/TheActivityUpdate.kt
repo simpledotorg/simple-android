@@ -13,7 +13,6 @@ import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
-import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import java.time.Instant
@@ -60,26 +59,30 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
       user: User,
       currentScreenHistory: History
   ): Next<TheActivityModel, TheActivityEffect> {
-    val shouldShowAppLockScreen = shouldShowAppLockScreenForUser(user, currentTimestamp, lockAtTimestamp)
-
     val canMoveToHomeScreen = user.loggedInStatus in SHOW_HOME_SCREEN_FOR_USER_STATES
 
     val history = when {
       user.isDisapprovedForSyncing -> History.ofNormalScreens(AccessDeniedScreenKey(user.fullName))
       canMoveToHomeScreen && user.isNotDisapprovedForSyncing -> {
-        if (currentScreenHistory.top().key.matchesScreen(EmptyScreenKey().wrap())) {
+        val newHistory = if (currentScreenHistory.top().key.matchesScreen(EmptyScreenKey().wrap())) {
           History.ofNormalScreens(HomeScreenKey)
         } else {
           currentScreenHistory
+        }
+
+        val shouldShowAppLockScreen = shouldShowAppLockScreenForUser(user, currentTimestamp, lockAtTimestamp)
+        if (shouldShowAppLockScreen && !model.isFreshLogin) {
+          History.ofNormalScreens(AppLockScreenKey(newHistory))
+        } else {
+          newHistory
         }
       }
       user.isResettingPin -> History.ofNormalScreens(ForgotPinCreateNewPinScreenKey().wrap())
       else -> throw IllegalStateException("Unknown user status combinations: [${user.loggedInStatus}, ${user.status}]")
     }
 
-    return if (shouldShowAppLockScreen && !model.isFreshLogin) {
-      val newHistory = History.ofNormalScreens(AppLockScreenKey(history))
-      dispatch(SetCurrentScreenHistory(newHistory))
+    return if (history.top().key is AppLockScreenKey) {
+      dispatch(SetCurrentScreenHistory(history))
     } else {
       dispatch(SetCurrentScreenHistory(history), ClearLockAfterTimestamp)
     }

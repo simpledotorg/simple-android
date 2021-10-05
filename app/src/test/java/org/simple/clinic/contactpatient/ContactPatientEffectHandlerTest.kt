@@ -12,6 +12,7 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.callresult.CallResult
 import org.simple.clinic.overdue.callresult.CallResultRepository
@@ -23,8 +24,8 @@ import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
+import org.simple.clinic.uuid.UuidGenerator
 import java.time.LocalDate
 import java.util.Optional
 import java.util.UUID
@@ -110,12 +111,13 @@ class ContactPatientEffectHandlerTest {
   @Test
   fun `when the load overdue appointment effect is received, the latest overdue appointment for the patient must be loaded`() {
     // given
-    val overdueAppointment = Optional.of(TestData.overdueAppointment(
-        appointmentUuid = UUID.fromString("bb291aca-f953-4012-a9c3-aa05685f86f9"),
-        patientUuid = patientUuid
+    val overdueAppointment = Optional.of(TestData.appointment(
+        uuid = UUID.fromString("bb291aca-f953-4012-a9c3-aa05685f86f9"),
+        patientUuid = patientUuid,
+        status = Scheduled
     ))
     val date = LocalDate.now(userClock)
-    whenever(appointmentRepository.latestOverdueAppointmentForPatient_Old(patientUuid, date)) doReturn overdueAppointment
+    whenever(appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, date)) doReturn overdueAppointment
 
     // when
     testCase.dispatch(LoadLatestOverdueAppointment(patientUuid))

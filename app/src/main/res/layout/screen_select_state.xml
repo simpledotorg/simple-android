@@ -35,6 +35,7 @@
     android:layout_marginTop="@dimen/spacing_44"
     android:layout_marginEnd="@dimen/spacing_24"
     android:layout_marginBottom="@dimen/spacing_24"
+    app:layout_constrainedHeight="true"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -76,13 +77,15 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/spacing_16"
         android:layout_marginTop="@dimen/spacing_24"
+        android:clipToPadding="false"
         android:paddingBottom="@dimen/spacing_8"
         android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/select_state_title"
-        tools:layout_height="128dp"
-        tools:listitem="@layout/list_selectstate_state_view" />
+        tools:listitem="@layout/list_selectstate_state_view"
+        tools:minHeight="@dimen/spacing_128" />
 
       <TextView
         android:id="@+id/errorMessageTextView"

@@ -5,7 +5,6 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.contactpatient.ContactPatientInfoProgressState.DONE
 import org.simple.clinic.contactpatient.ContactPatientInfoProgressState.IN_PROGRESS
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.PotentialAppointmentDate
@@ -22,7 +21,7 @@ data class ContactPatientModel(
     val patientUuid: UUID,
     val uiMode: UiMode,
     val patientProfile: ContactPatientProfile? = null,
-    val overdueAppointment: ParcelableOptional<OverdueAppointment>? = null,
+    val overdueAppointment: ParcelableOptional<Appointment>? = null,
     val secureCallingFeatureEnabled: Boolean,
     val potentialAppointments: List<PotentialAppointmentDate>,
     val selectedAppointmentDate: LocalDate,
@@ -72,13 +71,13 @@ data class ContactPatientModel(
     get() = overdueAppointment?.isPresent() == true
 
   val hasRegisteredFacility: Boolean
-    get() = overdueAppointment?.isPresent() == true && overdueAppointment.get().patientRegisteredFacilityID != null
+    get() = patientProfile != null && patientProfile.patient.registeredFacilityId != null
 
   val appointmentIsInRegisteredFacility: Boolean
-    get() = overdueAppointment?.get()?.patientRegisteredFacilityID == currentFacility?.uuid
+    get() = patientProfile != null && patientProfile.patient.registeredFacilityId == currentFacility?.uuid
 
   val appointment: Appointment
-    get() = overdueAppointment!!.get().appointment
+    get() = overdueAppointment!!.get()
 
   val appointmentUuid: UUID
     get() = appointment.uuid
@@ -90,7 +89,7 @@ data class ContactPatientModel(
     return copy(patientProfile = contactPatientProfile)
   }
 
-  fun overdueAppointmentLoaded(appointment: Optional<OverdueAppointment>): ContactPatientModel {
+  fun overdueAppointmentLoaded(appointment: Optional<Appointment>): ContactPatientModel {
     return copy(overdueAppointment = appointment.parcelable())
   }
 

@@ -9,6 +9,7 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityConfig
+import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
@@ -31,14 +32,11 @@ class ContactPatientUpdateTest {
       patientUuid = patientUuid,
       patientPhoneNumber = patientPhoneNumber
   )
-  private val overdueAppointment = TestData.overdueAppointment(
+  private val overdueAppointment = TestData.appointment(
       patientUuid = patientUuid,
       facilityUuid = UUID.fromString("c97a8b30-8094-4c93-9ad6-ecc100130943"),
-      phoneNumber = patientProfile.phoneNumbers.first(),
-      appointmentUuid = appointmentUuid,
-      gender = patientProfile.patient.gender,
-      age = patientProfile.patient.age,
-      dateOfBirth = patientProfile.patient.ageDetails.dateOfBirth
+      uuid = appointmentUuid,
+      status = Scheduled
   )
   private val proxyPhoneNumberForSecureCalls = "9999988888"
   private val timeToAppointments = listOf(
@@ -194,7 +192,7 @@ class ContactPatientUpdateTest {
         .whenEvent(PatientAgreedToVisitClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(MarkPatientAsAgreedToVisit(overdueAppointment.appointment) as ContactPatientEffect)
+            hasEffects(MarkPatientAsAgreedToVisit(overdueAppointment) as ContactPatientEffect)
         ))
   }
 
@@ -378,7 +376,7 @@ class ContactPatientUpdateTest {
         .reminderDateSelected(currentReminderDate)
 
     val expectedEffect = SetReminderForAppointment(
-        appointment = overdueAppointment.appointment,
+        appointment = overdueAppointment,
         reminderDate = currentSelectedDate
     )
     spec
@@ -462,7 +460,7 @@ class ContactPatientUpdateTest {
         .whenEvent(RemoveFromOverdueListClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenRemoveOverdueAppointmentScreen(overdueAppointment.appointment))
+            hasEffects(OpenRemoveOverdueAppointmentScreen(overdueAppointment))
         ))
   }
 

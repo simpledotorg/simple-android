@@ -5,7 +5,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.overdue.TimeToAppointment.Days
@@ -45,17 +45,11 @@ class CallPatientUiRendererTest {
   fun `if the secure call feature is enabled, show the secure call ui`() {
     // given
     val patientProfile = TestData.contactPatientProfile(patientUuid = patientUuid, generatePhoneNumber = true)
-    val overdueAppointment = TestData.overdueAppointment(
+    val overdueAppointment = TestData.appointment(
+        uuid = UUID.fromString("60825c79-5588-4db0-9a57-ee6178f57f0d"),
         facilityUuid = UUID.fromString("a607a97f-4bf6-4ce6-86a3-b266059c7734"),
         patientUuid = patientUuid,
-        patientAddress = TestData.overduePatientAddress(
-            streetAddress = null,
-            colonyOrVillage = null,
-            district = "Bhatinda",
-            state = "Punjab"),
-        patientRegisteredFacilityName = "Bhatinda",
-        diagnosedWithDiabetes = Answer.Yes,
-        diagnosedWithHypertension = Answer.No
+        status = Scheduled
     )
 
     // when
@@ -88,17 +82,11 @@ class CallPatientUiRendererTest {
   fun `if there is overdue appointment, show the call result section`() {
     // given
     val patientProfile = TestData.contactPatientProfile(patientUuid = patientUuid, generatePhoneNumber = true)
-    val overdueAppointment = TestData.overdueAppointment(
+    val overdueAppointment = TestData.appointment(
+        uuid = UUID.fromString("fc2da02d-bb8b-4b39-a011-2a7365b43d39"),
         facilityUuid = UUID.fromString("a607a97f-4bf6-4ce6-86a3-b266059c7734"),
         patientUuid = patientUuid,
-        patientAddress = TestData.overduePatientAddress(
-            streetAddress = null,
-            colonyOrVillage = null,
-            district = "Bhatinda",
-            state = "Punjab"),
-        patientRegisteredFacilityName = "Bhatinda",
-        diagnosedWithDiabetes = Answer.Yes,
-        diagnosedWithHypertension = Answer.No
+        status = Scheduled
     )
 
     // when
@@ -132,17 +120,11 @@ class CallPatientUiRendererTest {
   @Test
   fun `if the secure call feature is disabled, hide the secure call ui`() {
     val patientProfile = TestData.contactPatientProfile(patientUuid = patientUuid, generatePhoneNumber = true)
-    val overdueAppointment = TestData.overdueAppointment(
+    val overdueAppointment = TestData.appointment(
+        uuid = UUID.fromString("59ab2060-0a3c-4908-bff4-8d0f4916a545"),
         facilityUuid = UUID.fromString("a607a97f-4bf6-4ce6-86a3-b266059c7734"),
         patientUuid = patientUuid,
-        patientAddress = TestData.overduePatientAddress(
-            streetAddress = null,
-            colonyOrVillage = null,
-            district = "Bhatinda",
-            state = "Punjab"),
-        patientRegisteredFacilityName = "Bhatinda",
-        diagnosedWithDiabetes = Answer.Yes,
-        diagnosedWithHypertension = Answer.No
+        status = Scheduled
     )
 
     // when
@@ -176,17 +158,11 @@ class CallPatientUiRendererTest {
   fun `display patient with no phone number layout and render patient details for patient with no phone number`() {
     // given
     val patientProfile = TestData.contactPatientProfile(patientUuid = patientUuid, generatePhoneNumber = false)
-    val overdueAppointment = TestData.overdueAppointment(
+    val overdueAppointment = TestData.appointment(
+        uuid = UUID.fromString("7dd074a9-6493-4cd4-a4af-f4e4b2edd678"),
         facilityUuid = UUID.fromString("a607a97f-4bf6-4ce6-86a3-b266059c7734"),
         patientUuid = patientUuid,
-        patientAddress = TestData.overduePatientAddress(
-            streetAddress = null,
-            colonyOrVillage = null,
-            district = "Bhatinda",
-            state = "Punjab"),
-        patientRegisteredFacilityName = "Bhatinda",
-        diagnosedWithDiabetes = Answer.Yes,
-        diagnosedWithHypertension = Answer.No
+        status = Scheduled
     )
 
     // when
@@ -219,17 +195,11 @@ class CallPatientUiRendererTest {
   fun `display patient with phone number layout and render patient details for patient with phone number`() {
     // given
     val patientProfile = TestData.contactPatientProfile(patientUuid = patientUuid, generatePhoneNumber = true)
-    val overdueAppointment = TestData.overdueAppointment(
+    val overdueAppointment = TestData.appointment(
+        uuid = UUID.fromString("8fc0339e-5f03-430e-8ff4-dfeb0f78c24e"),
         facilityUuid = UUID.fromString("a607a97f-4bf6-4ce6-86a3-b266059c7734"),
         patientUuid = patientUuid,
-        patientAddress = TestData.overduePatientAddress(
-            streetAddress = null,
-            colonyOrVillage = null,
-            district = "Bhatinda",
-            state = "Punjab"),
-        patientRegisteredFacilityName = "Bhatinda",
-        diagnosedWithDiabetes = Answer.Yes,
-        diagnosedWithHypertension = Answer.No
+        status = Scheduled
     )
 
     // when
@@ -264,26 +234,37 @@ class CallPatientUiRendererTest {
     // given
     val registeredFacilityUUID = UUID.fromString("1749461e-0ff7-47d9-95e0-fa4337d118b3")
     val currentFacility = TestData.facility(uuid = registeredFacilityUUID)
-    val overdueAppointment = TestData.overdueAppointment(
+    val patientProfile = TestData.contactPatientProfile(
+        patientUuid = patientUuid,
+        patientStatus = PatientStatus.Active,
+        generatePhoneNumber = false,
+        patientRegisteredFacilityId = registeredFacilityUUID
+    )
+
+    val overdueAppointment = TestData.appointment(
+        uuid = UUID.fromString("dbcc8469-9cab-4c61-8df8-bb6678504e6e"),
         facilityUuid = UUID.fromString("a607a97f-4bf6-4ce6-86a3-b266059c7734"),
         patientUuid = patientUuid,
-        patientAddress = TestData.overduePatientAddress(
-            streetAddress = null,
-            colonyOrVillage = null,
-            district = "Bhatinda",
-            state = "Punjab"),
-        diagnosedWithDiabetes = Answer.Yes,
-        diagnosedWithHypertension = Answer.No,
-        patientRegisteredFacilityID = registeredFacilityUUID
+        status = Scheduled
     )
 
     // when
     uiRenderer.render(defaultModel()
+        .contactPatientProfileLoaded(patientProfile)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
         .contactPatientInfoLoaded().currentFacilityLoaded(currentFacility))
 
     // then
     verify(ui).hideProgress()
+    verify(ui).renderPatientDetails(PatientDetails(name = patientProfile.patient.fullName,
+        gender = patientProfile.patient.gender,
+        age = patientProfile.patient.ageDetails.estimateAge(clock),
+        phoneNumber = null,
+        patientAddress = patientAddressText(patientProfile.address)!!,
+        registeredFacility = patientProfile.registeredFacility?.name,
+        diagnosedWithDiabetes = patientProfile.medicalHistory?.diagnosedWithDiabetes,
+        diagnosedWithHypertension = patientProfile.medicalHistory?.diagnosedWithHypertension,
+        lastVisited = patientProfile.patientLastSeen))
     verify(ui).setRegisterAtLabelText()
     verify(ui).switchToCallPatientView()
     verify(ui).showPatientWithNoPhoneNumberUi()
@@ -298,28 +279,37 @@ class CallPatientUiRendererTest {
   fun `display transferred from facility label text when patient's registered facility is not the same as user's current facility`() {
     // given
     val currentFacility = TestData.facility(uuid = UUID.fromString("1749461e-0ff7-47d9-95e0-fa4337d118b3"), name = "Bhatinda")
-    val overdueAppointment = TestData.overdueAppointment(
+    val patientProfile = TestData.contactPatientProfile(
+        patientUuid = patientUuid,
+        patientStatus = PatientStatus.Dead,
+        generatePhoneNumber = false,
+        patientRegisteredFacilityId = UUID.fromString("62a3b371-519b-4f59-8dee-5270261a372d")
+    )
+    val overdueAppointment = TestData.appointment(
+        uuid = UUID.fromString("a98fa374-1a17-400d-9723-6c2f87a9d439"),
         facilityUuid = UUID.fromString("a607a97f-4bf6-4ce6-86a3-b266059c7734"),
         patientUuid = patientUuid,
-        patientAddress = TestData.overduePatientAddress(
-            streetAddress = null,
-            colonyOrVillage = null,
-            district = "Bhatinda",
-            state = "Punjab"),
-        patientRegisteredFacilityName = "Rajasthan",
-        diagnosedWithDiabetes = Answer.Yes,
-        diagnosedWithHypertension = Answer.No,
-        patientRegisteredFacilityID = UUID.fromString("10f066d7-892a-42af-9fae-7991c3f699bb")
+        status = Scheduled
     )
 
     // when
     uiRenderer.render(defaultModel()
+        .contactPatientProfileLoaded(patientProfile)
         .overdueAppointmentLoaded(Optional.of(overdueAppointment))
         .contactPatientInfoLoaded()
         .currentFacilityLoaded(currentFacility))
 
     // then
     verify(ui).hideProgress()
+    verify(ui).renderPatientDetails(PatientDetails(name = patientProfile.patient.fullName,
+        gender = patientProfile.patient.gender,
+        age = patientProfile.patient.ageDetails.estimateAge(clock),
+        phoneNumber = null,
+        patientAddress = patientAddressText(patientProfile.address)!!,
+        registeredFacility = patientProfile.registeredFacility?.name,
+        diagnosedWithDiabetes = patientProfile.medicalHistory?.diagnosedWithDiabetes,
+        diagnosedWithHypertension = patientProfile.medicalHistory?.diagnosedWithHypertension,
+        lastVisited = patientProfile.patientLastSeen))
     verify(ui).setTransferredFromLabelText()
     verify(ui).switchToCallPatientView()
     verify(ui).showPatientWithNoPhoneNumberUi()
@@ -372,6 +362,7 @@ class CallPatientUiRendererTest {
     verify(ui).hidePatientWithPhoneNumberCallResults()
     verify(ui).showDeadPatientStatus()
     verify(ui).showSecureCallUi()
+    verify(ui).setTransferredFromLabelText()
     verifyNoMoreInteractions(ui)
   }
 

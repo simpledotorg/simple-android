@@ -90,7 +90,7 @@ class TheActivityControllerTest {
     setupController(lockAtTime = lockAfterTime)
 
     // then
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(AppLockScreenKey(History(listOf(Normal(HomeScreenKey))))))))
+    verify(ui).setCurrentScreenHistory(History.ofNormalScreens(AppLockScreenKey(History.ofNormalScreens(HomeScreenKey))))
     verifyNoMoreInteractions(ui)
   }
 
@@ -105,7 +105,7 @@ class TheActivityControllerTest {
     setupController(lockAtTime = lockAfterTime)
 
     // then
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(AppLockScreenKey(History(listOf(Normal(HomeScreenKey))))))))
+    verify(ui).setCurrentScreenHistory(History.ofNormalScreens(AppLockScreenKey(History.ofNormalScreens(HomeScreenKey))))
     verifyNoMoreInteractions(ui)
   }
 
@@ -119,7 +119,7 @@ class TheActivityControllerTest {
     setupController(lockAtTime = lockAfterTime)
 
     // then
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(AppLockScreenKey(History(listOf(Normal(HomeScreenKey))))))))
+    verify(ui).setCurrentScreenHistory(History.ofNormalScreens(AppLockScreenKey(History.ofNormalScreens(HomeScreenKey))))
     verifyNoMoreInteractions(ui)
   }
 
@@ -134,7 +134,7 @@ class TheActivityControllerTest {
     setupController(lockAtTime = lockAfterTime)
 
     // then
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(ForgotPinCreateNewPinScreenKey().wrap()))))
+    verify(ui).setCurrentScreenHistory(History.ofNormalScreens(ForgotPinCreateNewPinScreenKey().wrap()))
     verifyNoMoreInteractions(ui)
   }
 
@@ -153,7 +153,7 @@ class TheActivityControllerTest {
 
     // then
     assertThat(lockAfterTimestamp.hasValue).isFalse()
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(HomeScreenKey))))
+    verify(ui).setCurrentScreenHistory(History.ofNormalScreens(HomeScreenKey))
     verifyNoMoreInteractions(ui)
   }
 
@@ -171,7 +171,7 @@ class TheActivityControllerTest {
 
     // then
     assertThat(lockAfterTimestamp.hasValue).isTrue()
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(AppLockScreenKey(History(listOf(Normal(HomeScreenKey))))))))
+    verify(ui).setCurrentScreenHistory(History.ofNormalScreens(AppLockScreenKey(History.ofNormalScreens(HomeScreenKey))))
     verifyNoMoreInteractions(ui)
   }
 
@@ -192,7 +192,7 @@ class TheActivityControllerTest {
     )
 
     // then
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(HomeScreenKey))))
+    verify(ui).setCurrentScreenHistory(History.ofNormalScreens(HomeScreenKey))
     verify(ui).showUserLoggedOutOnOtherDeviceAlert()
     verifyNoMoreInteractions(ui)
   }
@@ -212,7 +212,7 @@ class TheActivityControllerTest {
     setupController()
 
     // then
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(AppLockScreenKey(History(listOf(Normal(HomeScreenKey))))))))
+    verify(ui).setCurrentScreenHistory(History.ofNormalScreens(AppLockScreenKey(History.ofNormalScreens(HomeScreenKey))))
     verify(ui, never()).showUserLoggedOutOnOtherDeviceAlert()
     verifyNoMoreInteractions(ui)
   }
@@ -233,7 +233,7 @@ class TheActivityControllerTest {
         lockAtTime = Instant.now(clock)
     )
     // then
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(HomeScreenKey))))
+    verify(ui).setCurrentScreenHistory(History.ofNormalScreens(HomeScreenKey))
     verifyNoMoreInteractions(ui)
     verify(patientRepository, never()).clearPatientData()
 
@@ -256,7 +256,7 @@ class TheActivityControllerTest {
     setupController(lockAtTime = Instant.now(clock))
 
     //then
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(HomeScreenKey))))
+    verify(ui).setCurrentScreenHistory(History.ofNormalScreens(HomeScreenKey))
     verifyNoMoreInteractions(ui)
     verify(patientRepository, never()).clearPatientData()
   }
@@ -327,7 +327,7 @@ class TheActivityControllerTest {
     whenever(userSession.loggedInUser()).thenReturn(userStream)
     whenever(userSession.isUserDisapproved()).thenReturn(userDisapprovedStream)
 
-    val currentHistory = History(listOf(Normal(EmptyScreenKey().wrap())))
+    val currentHistory = History.ofNormalScreens(EmptyScreenKey().wrap())
     val effectHandler = TheActivityEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
         userSession = userSession,

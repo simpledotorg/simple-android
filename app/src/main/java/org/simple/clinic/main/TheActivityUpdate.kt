@@ -66,20 +66,20 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
     }
 
     val history = when {
-      user.isDisapprovedForSyncing -> History(listOf(Normal(AccessDeniedScreenKey(user.fullName))))
+      user.isDisapprovedForSyncing -> History.ofNormalScreens(AccessDeniedScreenKey(user.fullName))
       canMoveToHomeScreen && user.isNotDisapprovedForSyncing -> {
         if (currentScreenHistory.top().key.matchesScreen(EmptyScreenKey().wrap())) {
-          History(listOf(Normal(HomeScreenKey)))
+          History.ofNormalScreens(HomeScreenKey)
         } else {
           currentScreenHistory
         }
       }
-      user.isResettingPin -> History(listOf(Normal(ForgotPinCreateNewPinScreenKey().wrap())))
+      user.isResettingPin -> History.ofNormalScreens(ForgotPinCreateNewPinScreenKey().wrap())
       else -> throw IllegalStateException("Unknown user status combinations: [${user.loggedInStatus}, ${user.status}]")
     }
 
     return if (shouldShowAppLockScreen && !model.isFreshLogin) {
-      val newHistory = History(listOf(Normal(AppLockScreenKey(history))))
+      val newHistory = History.ofNormalScreens(AppLockScreenKey(history))
       dispatch(SetCurrentScreenHistory(newHistory))
     } else {
       dispatch(SetCurrentScreenHistory(history), ClearLockAfterTimestamp)

@@ -16,6 +16,7 @@ import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.empty.EmptyScreenKey
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.login.applock.AppLockScreenKey
@@ -89,7 +90,7 @@ class TheActivityControllerTest {
     setupController(lockAtTime = lockAfterTime)
 
     // then
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(AppLockScreenKey(HomeScreenKey)))))
+    verify(ui).setCurrentScreenHistory(History.ofNormalScreens(AppLockScreenKey(History.ofNormalScreens(HomeScreenKey))))
     verifyNoMoreInteractions(ui)
   }
 
@@ -104,7 +105,7 @@ class TheActivityControllerTest {
     setupController(lockAtTime = lockAfterTime)
 
     // then
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(AppLockScreenKey(HomeScreenKey)))))
+    verify(ui).setCurrentScreenHistory(History.ofNormalScreens(AppLockScreenKey(History.ofNormalScreens(HomeScreenKey))))
     verifyNoMoreInteractions(ui)
   }
 
@@ -118,7 +119,7 @@ class TheActivityControllerTest {
     setupController(lockAtTime = lockAfterTime)
 
     // then
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(AppLockScreenKey(HomeScreenKey)))))
+    verify(ui).setCurrentScreenHistory(History.ofNormalScreens(AppLockScreenKey(History.ofNormalScreens(HomeScreenKey))))
     verifyNoMoreInteractions(ui)
   }
 
@@ -133,7 +134,7 @@ class TheActivityControllerTest {
     setupController(lockAtTime = lockAfterTime)
 
     // then
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(ForgotPinCreateNewPinScreenKey().wrap()))))
+    verify(ui).setCurrentScreenHistory(History.ofNormalScreens(ForgotPinCreateNewPinScreenKey().wrap()))
     verifyNoMoreInteractions(ui)
   }
 
@@ -152,7 +153,7 @@ class TheActivityControllerTest {
 
     // then
     assertThat(lockAfterTimestamp.hasValue).isFalse()
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(HomeScreenKey))))
+    verify(ui).setCurrentScreenHistory(History.ofNormalScreens(HomeScreenKey))
     verifyNoMoreInteractions(ui)
   }
 
@@ -170,7 +171,7 @@ class TheActivityControllerTest {
 
     // then
     assertThat(lockAfterTimestamp.hasValue).isTrue()
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(AppLockScreenKey(HomeScreenKey)))))
+    verify(ui).setCurrentScreenHistory(History.ofNormalScreens(AppLockScreenKey(History.ofNormalScreens(HomeScreenKey))))
     verifyNoMoreInteractions(ui)
   }
 
@@ -191,7 +192,7 @@ class TheActivityControllerTest {
     )
 
     // then
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(HomeScreenKey))))
+    verify(ui).setCurrentScreenHistory(History.ofNormalScreens(HomeScreenKey))
     verify(ui).showUserLoggedOutOnOtherDeviceAlert()
     verifyNoMoreInteractions(ui)
   }
@@ -211,7 +212,7 @@ class TheActivityControllerTest {
     setupController()
 
     // then
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(AppLockScreenKey(HomeScreenKey)))))
+    verify(ui).setCurrentScreenHistory(History.ofNormalScreens(AppLockScreenKey(History.ofNormalScreens(HomeScreenKey))))
     verify(ui, never()).showUserLoggedOutOnOtherDeviceAlert()
     verifyNoMoreInteractions(ui)
   }
@@ -232,7 +233,7 @@ class TheActivityControllerTest {
         lockAtTime = Instant.now(clock)
     )
     // then
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(HomeScreenKey))))
+    verify(ui).setCurrentScreenHistory(History.ofNormalScreens(HomeScreenKey))
     verifyNoMoreInteractions(ui)
     verify(patientRepository, never()).clearPatientData()
 
@@ -255,7 +256,7 @@ class TheActivityControllerTest {
     setupController(lockAtTime = Instant.now(clock))
 
     //then
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(HomeScreenKey))))
+    verify(ui).setCurrentScreenHistory(History.ofNormalScreens(HomeScreenKey))
     verifyNoMoreInteractions(ui)
     verify(patientRepository, never()).clearPatientData()
   }
@@ -326,13 +327,15 @@ class TheActivityControllerTest {
     whenever(userSession.loggedInUser()).thenReturn(userStream)
     whenever(userSession.isUserDisapproved()).thenReturn(userDisapprovedStream)
 
+    val currentHistory = History.ofNormalScreens(EmptyScreenKey().wrap())
     val effectHandler = TheActivityEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
         userSession = userSession,
         utcClock = clock,
         patientRepository = patientRepository,
         lockAfterTimestamp = lockAfterTimestamp,
-        uiActions = ui
+        uiActions = ui,
+        provideCurrentScreenHistory = { currentHistory }
     )
     val uiRenderer = TheActivityUiRenderer(ui)
 

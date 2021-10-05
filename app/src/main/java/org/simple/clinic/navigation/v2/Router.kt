@@ -107,6 +107,10 @@ class Router(
     executeStateChange(newHistory, Direction.Replace, null)
   }
 
+  fun currentHistory(): History {
+    return history.copy()
+  }
+
   fun pop() {
     val newHistory = history.removeLast()
 

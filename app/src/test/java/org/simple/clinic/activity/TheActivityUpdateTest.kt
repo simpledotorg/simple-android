@@ -290,4 +290,29 @@ class TheActivityUpdateTest {
             hasEffects(SetCurrentScreenHistory(currentHistory), ClearLockAfterTimestamp)
         ))
   }
+
+  @Test
+  fun `when the user is already logged in and the screen is opened, show the lock screen with the current history`() {
+    val user = TestData.loggedInUser(
+        uuid = UUID.fromString("233204e2-d64f-4fd6-ab64-a99d9289609f"),
+        loggedInStatus = User.LoggedInStatus.LOGGED_IN,
+        status = UserStatus.ApprovedForSyncing
+    )
+
+    val model = TheActivityModel.createForAlreadyLoggedInUser()
+    val currentHistory = History(listOf(Normal(HomeScreenKey), Normal(ScanSimpleIdScreenKey(OpenedFrom.PatientsTabScreen))))
+
+    spec
+        .given(model)
+        .whenEvent(InitialScreenInfoLoaded(
+            user = user,
+            currentTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+            lockAtTimestamp = Optional.empty(),
+            currentHistory = currentHistory
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(SetCurrentScreenHistory(History(listOf(Normal(AppLockScreenKey(currentHistory))))))
+        ))
+  }
 }

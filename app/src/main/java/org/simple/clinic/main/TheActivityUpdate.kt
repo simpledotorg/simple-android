@@ -79,7 +79,7 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
     }
 
     return if (shouldShowAppLockScreen && !model.isFreshLogin) {
-      val newHistory = History(listOf(Normal(AppLockScreenKey(History(listOf(Normal(HomeScreenKey)))))))
+      val newHistory = History(listOf(Normal(AppLockScreenKey(history))))
       dispatch(SetCurrentScreenHistory(newHistory))
     } else {
       dispatch(SetCurrentScreenHistory(history), ClearLockAfterTimestamp)

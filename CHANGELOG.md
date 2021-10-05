@@ -26,6 +26,7 @@
 
 - Fix state selection list content hidden behind Android navigation bar
 - Fix country selection list content hidden behind Android navigation bar
+- Fix screen backstack not getting maintained when app is restored from background
 
 ## 2021-10-04-7971
 

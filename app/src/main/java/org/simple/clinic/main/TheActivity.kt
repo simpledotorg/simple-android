@@ -177,7 +177,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
         events = Observable.never(),
         defaultModel = defaultModel,
         update = TheActivityUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
+        effectHandler = effectHandlerFactory.create(this, router::currentHistory).build(),
         init = TheActivityInit(),
         modelUpdateListener = uiRenderer::render
     )

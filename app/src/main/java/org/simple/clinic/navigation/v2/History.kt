@@ -10,6 +10,12 @@ data class History(val requests: List<NavRequest>) : Parcelable {
     if (requests.isEmpty()) throw IllegalStateException("Require at least 1 key!")
   }
 
+  companion object {
+    fun ofNormalScreens(vararg screens: ScreenKey): History {
+      return History(screens.map(::Normal))
+    }
+  }
+
   fun add(request: NavRequest): History {
     return copy(requests = requests + request)
   }

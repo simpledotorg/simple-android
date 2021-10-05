@@ -90,7 +90,7 @@ class TheActivityControllerTest {
     setupController(lockAtTime = lockAfterTime)
 
     // then
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(AppLockScreenKey(HomeScreenKey)))))
+    verify(ui).setCurrentScreenHistory(History(listOf(Normal(AppLockScreenKey(History(listOf(Normal(HomeScreenKey))))))))
     verifyNoMoreInteractions(ui)
   }
 
@@ -105,7 +105,7 @@ class TheActivityControllerTest {
     setupController(lockAtTime = lockAfterTime)
 
     // then
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(AppLockScreenKey(HomeScreenKey)))))
+    verify(ui).setCurrentScreenHistory(History(listOf(Normal(AppLockScreenKey(History(listOf(Normal(HomeScreenKey))))))))
     verifyNoMoreInteractions(ui)
   }
 
@@ -119,7 +119,7 @@ class TheActivityControllerTest {
     setupController(lockAtTime = lockAfterTime)
 
     // then
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(AppLockScreenKey(HomeScreenKey)))))
+    verify(ui).setCurrentScreenHistory(History(listOf(Normal(AppLockScreenKey(History(listOf(Normal(HomeScreenKey))))))))
     verifyNoMoreInteractions(ui)
   }
 
@@ -171,7 +171,7 @@ class TheActivityControllerTest {
 
     // then
     assertThat(lockAfterTimestamp.hasValue).isTrue()
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(AppLockScreenKey(HomeScreenKey)))))
+    verify(ui).setCurrentScreenHistory(History(listOf(Normal(AppLockScreenKey(History(listOf(Normal(HomeScreenKey))))))))
     verifyNoMoreInteractions(ui)
   }
 
@@ -212,7 +212,7 @@ class TheActivityControllerTest {
     setupController()
 
     // then
-    verify(ui).setCurrentScreenHistory(History(listOf(Normal(AppLockScreenKey(HomeScreenKey)))))
+    verify(ui).setCurrentScreenHistory(History(listOf(Normal(AppLockScreenKey(History(listOf(Normal(HomeScreenKey))))))))
     verify(ui, never()).showUserLoggedOutOnOtherDeviceAlert()
     verifyNoMoreInteractions(ui)
   }

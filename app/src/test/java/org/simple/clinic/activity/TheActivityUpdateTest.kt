@@ -250,7 +250,7 @@ class TheActivityUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(SetCurrentScreenHistory(History(listOf(Normal(AppLockScreenKey(HomeScreenKey))))))
+            hasEffects(SetCurrentScreenHistory(History(listOf(Normal(AppLockScreenKey(History(listOf(Normal(HomeScreenKey)))))))))
         ))
   }
 

@@ -14,6 +14,7 @@
   - Bump compile & target SDK to 31
   - Add exported attr in `AndroidManifest.xml` for activities/services/receivers with intent filters
   - Add `ACCESS_COARSE_LOCATION` permission
+- Fetch appointment directly in contact patient sheet
 
 ### Changes
 

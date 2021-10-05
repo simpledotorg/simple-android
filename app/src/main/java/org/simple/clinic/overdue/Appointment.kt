@@ -292,5 +292,19 @@ data class Appointment(
 		    )
     """)
     fun purgeAppointmentsWhenPatientIsNull()
+
+    @Query("""
+      SELECT * FROM Appointment
+      WHERE 
+        patientUuid = :patientUUID
+        AND scheduledDate < :scheduledDate
+        AND (remindOn < :scheduledDate OR remindOn IS NULL)
+        AND deletedAt IS NULL AND status = 'scheduled'
+      GROUP BY patientUuid HAVING MAX(scheduledDate)
+    """)
+    fun latestOverdueAppointmentForPatient(
+        patientUUID: UUID,
+        scheduledDate: LocalDate
+    ): Appointment?
   }
 }

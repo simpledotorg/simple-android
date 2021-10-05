@@ -213,4 +213,11 @@ class AppointmentRepository @Inject constructor(
   ): Optional<OverdueAppointment> {
     return overdueDao.latestForPatient(patientUuid, date).toOptional()
   }
+
+  fun latestOverdueAppointmentForPatient(
+      patientUuid: UUID,
+      date: LocalDate
+  ): Optional<Appointment> {
+    return appointmentDao.latestOverdueAppointmentForPatient(patientUuid, date).toOptional()
+  }
 }

@@ -738,7 +738,7 @@
   <string name="warning_add_measurements_title">ಬಿಪಿ ಮತ್ತು ರಕ್ತದ ಸಕ್ಕರೆ ಸೇರಿಸುವುದೇ?</string>
   <string name="warning_add_measurements_message">ಸಾಧ್ಯವಾದರೆ, ಈ ರೋಗಿಗಾಗಿ ಪ್ರಸ್ತುತ ರಕ್ತದೊತ್ತಡ ಮತ್ತು ರಕ್ತದ ಸಕ್ಕರೆ ರೀಡಿಂಗ್ ಅನ್ನು ಸೇರಿಸಿ.</string>
   <string name="warning_add_measurements_positive_button">ರೀಡಿಂಗ್‌ಗಳನ್ನು ಸೇರಿಸಿ</string>
-  <string name="warning_add_measurements_negative_button">ಈಗಲ್ಲ</string>
+  <string name="warning_add_measurements_negative_button">ಈಗ ಬೇಡ</string>
   <string name="warning_add_blood_pressure_title">ಬಿಪಿ ಸೇರಿಸುವುದೇ?</string>
   <string name="warning_add_blood_pressure_message">ಸಾಧ್ಯವಾದರೆ, ಈ ರೋಗಿಗಾಗಿ ಪ್ರಸ್ತುತ ರಕ್ತದೊತ್ತಡ ರೀಡಿಂಗ್ ಅನ್ನು ಸೇರಿಸಿ.</string>
   <string name="warning_add_blood_pressure_positive_button">ರಕ್ತದೊತ್ತಡವನ್ನು ಸೇರಿಸಿ</string>

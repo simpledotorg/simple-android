@@ -106,8 +106,10 @@ class ContactPatientUiRenderer(
     if (isSecureCallingEnabled) {
       ui.showSecureCallUi()
       ui.showNormalCallButtonText()
-    } else
+    } else {
       ui.hideSecureCallUi()
+      ui.showCallButtonText()
+    }
   }
 
   private fun renderPatientFacilityLabel(appointmentIsInRegisteredFacility: Boolean) {

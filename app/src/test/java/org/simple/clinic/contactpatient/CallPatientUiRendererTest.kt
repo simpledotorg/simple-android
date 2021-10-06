@@ -151,7 +151,7 @@ class CallPatientUiRendererTest {
     verify(ui).hidePatientWithNoPhoneNumberUi()
     verify(ui).setResultOfCallLabelText()
     verify(ui).hideSecureCallUi()
-    verify(ui).setCallButtonText()
+    verify(ui).showCallButtonText()
     verify(ui).showPatientWithPhoneNumberCallResults()
     verify(ui).hideDeadPatientStatus()
     verifyNoMoreInteractions(ui)

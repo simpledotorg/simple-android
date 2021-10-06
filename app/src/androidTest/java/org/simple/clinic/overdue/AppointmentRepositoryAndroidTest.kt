@@ -2762,9 +2762,7 @@ class AppointmentRepositoryAndroidTest {
             diagnosedWithDiabetes = null,
             diagnosedWithHypertension = null,
             patientAssignedFacilityUuid = patientProfile.patient.assignedFacilityId,
-            appointmentFacilityName = appointmentFacilityName,
-            patientRegisteredFacilityName = registeredFacilityName,
-            patientRegisteredFacilityID = patientProfile.patient.registeredFacilityId
+            appointmentFacilityName = appointmentFacilityName
         )
       }
     }

@@ -7,7 +7,6 @@ import androidx.room.DatabaseView
 import androidx.room.Embedded
 import androidx.room.Query
 import kotlinx.parcelize.Parcelize
-import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAgeDetails
@@ -26,8 +25,6 @@ import java.util.UUID
 
           PPN.uuid phone_uuid, PPN.patientUuid phone_patientUuid, PPN.number phone_number, PPN.phoneType phone_phoneType, PPN.active phone_active,
           PPN.createdAt phone_createdAt, PPN.updatedAt phone_updatedAt,
-
-          MH.hasDiabetes diagnosedWithDiabetes, MH.diagnosedWithHypertension diagnosedWithHypertension,
 
           (
             CASE
@@ -99,10 +96,6 @@ data class OverdueAppointment(
     val isAtHighRisk: Boolean,
 
     val patientLastSeen: Instant,
-
-    val diagnosedWithDiabetes: Answer?,
-
-    val diagnosedWithHypertension: Answer?,
 
     val patientAssignedFacilityUuid: UUID?
 ) : Parcelable {

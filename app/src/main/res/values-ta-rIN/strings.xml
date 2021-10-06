@@ -33,6 +33,7 @@
   <string name="identifiertype_unknown">ஐடி</string>
   <string name="identifiertype_india_national_health_id">தேசியச் சுகாதார ID</string>
   <string name="identifiertype_sri_lanka_national_id">தேசிய ஐடி எண்</string>
+  <string name="identifiertype_sri_lanka_personal_health_number">தனிப்பட்ட சுகாதார எண்</string>
 
   <!-- Patient search -->
   <string name="instantsearch_hint">பெயர், தொலைபேசி அல்லது ID</string>
@@ -51,6 +52,7 @@
   <string name="patiententry_bangladesh_national_id">தேசிய ஐடி எண்</string>
   <string name="patiententry_ethiopia_medical_record_number">மருத்துவப் பதிவு எண்</string>
   <string name="patiententry_sri_lanka_national_id">தேசிய ஐடி எண்</string>
+  <string name="patiententry_sri_lanka_personal_health_number">தனிப்பட்ட சுகாதார எண்</string>
   <string name="patiententry_date_of_birth_unfocused">பிறந்த தேதி</string>
   <string name="patiententry_date_of_birth_focused">பிறந்த தேதி: DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">அல்லது</string>
@@ -294,6 +296,10 @@
   <string name="enterotp_incorrect_code">தவறான குறியீட்டை எழுதினீர்கள், மீண்டும் முயலவும்</string>
   <string name="enterotp_resend_sms">SMS மீண்டும் அனுப்பவும்</string>
   <string name="enterotp_sms_sent">புதிய சரிபார்ப்பு எஸ்எம்எஸ் அனுப்பப்பட்டது</string>
+  <string name="enterotp_try_again_after">இதற்குப் பிறகு முயலவும்</string>
+  <string name="otpentry_error_incorrect_otp_attempts_limit_reached" tools:ignore="PluralsCandidate">%s தவறான முயற்சிகளை மேற்கொண்டுள்ளீர்கள்</string>
+  <string name="otpentry_error_incorrect_otp_attempts_remaining">தவறான குறியீடு, %s முயற்சிகள் மீதமுள்ளன</string>
+  <!-- minutes:seconds -->
 
   <!-- Schedule appointment -->
   <string name="scheduleappointment_next_visit_in">அடுத்து வர வேண்டிய நாள்</string>
@@ -343,6 +349,7 @@
   <string name="newmedicalhistory_history">வரலாறு</string>
   <string name="newmedicalhistory_diagnosis">நோய் கண்டறிதல் (அவசிய விவரம்)</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">கடந்த மாதத்தில் நோயாளி எப்போதாவது பிபி மருந்துகளை எடுத்துக்கொண்டாரா? (தேவையானவை)</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">கடந்த மாதத்தில் நோயாளி எப்போதாவது நீரழிவுநோய் மருந்துகளை எடுத்துக்கொண்டாரா? (தேவையானவை)</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ஏதுமில்லை</string>
@@ -720,6 +727,7 @@
   <!-- Select ongoing hypertension treatment dialog -->
   <string name="select_ongoing_hypertension_treatment_title">கடந்த மாதத்தில் நோயாளி எப்போதாவது பிபி மருந்துகளை எடுத்துக்கொண்டாரா?</string>
   <string name="select_ongoing_hypertension_treatment_message">ஆம் அல்லது இல்லை என்பதைத் தேர்ந்தெடுக்கவும்.</string>
+  <string name="select_ongoing_diabetes_treatment_message">நோயாளி கடந்த மாதத்தில் எப்போதாவது நீரிழிவு மருந்துகளை உட்கொண்டாரா என்பதை உறுதிப்படுத்தவும்.</string>
   <string name="select_ongoing_hypertension_treatment_positive_action">சரி</string>
 
   <!-- Custom drugs search -->
@@ -739,7 +747,7 @@
   <string name="warning_add_blood_sugar_message">இயன்றால், இந்த நோயாளியின் தற்போதைய இரத்தச் சர்க்கரை அளவீட்டைச் சேர்க்கவும்.</string>
   <string name="warning_add_blood_sugar_positive_button">இரத்தச் சர்க்கரை அளவைச் சேர்க்கவும்</string>
   <string name="warning_add_blood_sugar_negative_button">இப்போது வேண்டாம்</string>
-  
+
   <!-- Custom drug entry sheet -->
   <string name="custom_drug_entry_sheet_remove">அகற்றவும்</string>
   <string name="custom_drug_entry_sheet_dosage">அளவு</string>
@@ -747,4 +755,19 @@
   <string name="custom_drug_entry_sheet_save_button_text">சேமிக்கவும்</string>
   <string name="custom_drug_entry_sheet_add_button_text">சேர்க்கவும்</string>
   <string name="custom_drug_entry_sheet_frequency_dialog_done">முடிந்தது</string>
-  </resources>
+  <!-- Select state screen -->
+  <string name="select_state_title">உங்கள் வைத்தியசாலை எங்கே உள்ளது?</string>
+  <string name="select_state_networkerror">இணைய இணைப்பு இல்லை!</string>
+  <string name="select_state_servererror">சேவையகத்தில் பிழை ஏற்பட்டுள்ளது! தயவுசெய்து சிறிது நேரம் கழித்து மீண்டும் முயலவும்!</string>
+  <string name="select_state_genericerror">எதுவோ தவறாக உள்ளது! தயவுசெய்து சிறிது நேரம் கழித்து மீண்டும் முயலவும்!</string>
+
+  <!-- Patient status view -->
+  <string name="patient_status_died">இறந்துவிட்டார்</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">நோயறிதலை மாற்றவா?</string>
+  <string name="change_diagnosis_message">நோயாளருக்கு எப்போதாவது உயர் இரத்த அழுத்தம் அல்லது நீரிழிவு நோய் இருப்பது கண்டறியப்பட்டால், ஆம் என்று குறிக்கவும்.</string>
+  <string name="change_diagnosis_positive">மாற்று</string>
+  <string name="change_diagnosis_negative">இப்போது வேண்டாம்</string>
+
+</resources>

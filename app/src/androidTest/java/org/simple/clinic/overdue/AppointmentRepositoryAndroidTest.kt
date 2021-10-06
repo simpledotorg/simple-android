@@ -2419,89 +2419,6 @@ class AppointmentRepositoryAndroidTest {
   }
 
   @Test
-  fun fetching_overdue_appointments_with_appointment_facility_names_should_work_correctly() {
-    fun createOverdueAppointment(
-        patientUuid: UUID,
-        scheduledDate: LocalDate,
-        facilityUuid: UUID,
-        patientAssignedFacilityUuid: UUID?
-    ) {
-      val patientProfile = TestData.patientProfile(
-          patientUuid = patientUuid,
-          generatePhoneNumber = true,
-          patientAssignedFacilityId = patientAssignedFacilityUuid
-      )
-      patientRepository.save(listOf(patientProfile))
-
-      val bp = TestData.bloodPressureMeasurement(
-          patientUuid = patientUuid,
-          facilityUuid = facilityUuid
-      )
-      bpRepository.save(listOf(bp))
-
-      val bloodSugar = TestData.bloodSugarMeasurement(
-          patientUuid = patientUuid,
-          facilityUuid = facilityUuid
-      )
-      bloodSugarRepository.save(listOf(bloodSugar))
-
-      val appointment = TestData.appointment(
-          patientUuid = patientUuid,
-          facilityUuid = facilityUuid,
-          scheduledDate = scheduledDate,
-          status = Scheduled,
-          cancelReason = null
-      )
-      appointmentRepository.save(listOf(appointment))
-    }
-
-    //given
-    val patientWithOneDayOverdue = UUID.fromString("6c314875-dc2f-42a0-86f0-e883e5f17043")
-    val patientWithTenDaysOverdue = UUID.fromString("f03f2c7c-14b3-429d-b69a-6d072a42173d")
-    val patientWithOverAnYearDaysOverdue = UUID.fromString("f90ef167-b673-4ad6-ae3c-f1dafd82e1e9")
-
-    val now = LocalDate.now(clock)
-    val facility1Uuid = UUID.fromString("a347eee6-d1ea-4ab8-84b9-a5166f0c11a4")
-    val facility2Uuid = UUID.fromString("ce1fa1ae-02af-49a9-91af-f659a6573e5a")
-
-    val assignedFacilityUuid = facility2Uuid
-
-    val facility1 = TestData.facility(uuid = facility1Uuid, name = "PHC Obvious")
-    val facility2 = TestData.facility(uuid = facility2Uuid, name = "PHC Bagta")
-
-    facilityRepository.save(listOf(facility1, facility2))
-
-    createOverdueAppointment(
-        patientUuid = patientWithOneDayOverdue,
-        scheduledDate = now.minusDays(1),
-        facilityUuid = facility1Uuid,
-        patientAssignedFacilityUuid = assignedFacilityUuid
-    )
-    createOverdueAppointment(
-        patientUuid = patientWithTenDaysOverdue,
-        scheduledDate = now.minusDays(10),
-        facilityUuid = facility2Uuid,
-        patientAssignedFacilityUuid = null
-    )
-    createOverdueAppointment(
-        patientUuid = patientWithOverAnYearDaysOverdue,
-        scheduledDate = now.minusDays(370),
-        facilityUuid = facility1Uuid,
-        patientAssignedFacilityUuid = null
-    )
-
-    //when
-    val overdueAppointments = PagingTestCase(pagingSource = appointmentRepository.overdueAppointmentsInFacility(since = now,
-        facilityId = facility2.uuid),
-        loadSize = 10)
-        .data
-        .blockingFirst().map { it.appointmentFacilityName }
-
-    //then
-    assertThat(overdueAppointments).isEqualTo(listOf("PHC Obvious", "PHC Bagta"))
-  }
-
-  @Test
   fun patient_that_are_marked_as_dead_should_not_be_present_when_loading_overdue_appointments() {
     fun createOverdueAppointment(
         patientUuid: UUID,
@@ -2761,8 +2678,7 @@ class AppointmentRepositoryAndroidTest {
             patientLastSeen = patientLastSeen,
             diagnosedWithDiabetes = null,
             diagnosedWithHypertension = null,
-            patientAssignedFacilityUuid = patientProfile.patient.assignedFacilityId,
-            appointmentFacilityName = appointmentFacilityName
+            patientAssignedFacilityUuid = patientProfile.patient.assignedFacilityId
         )
       }
     }

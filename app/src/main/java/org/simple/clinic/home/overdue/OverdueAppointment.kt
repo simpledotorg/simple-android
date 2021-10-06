@@ -51,9 +51,7 @@ import java.util.UUID
           ) AS isAtHighRisk,
           
           PA.streetAddress patient_address_streetAddress, PA.colonyOrVillage patient_address_colonyOrVillage,
-          PA.district patient_address_district, PA.state patient_address_state,
-          
-          AF.name appointmentFacilityName
+          PA.district patient_address_district, PA.state patient_address_state
 
           FROM Patient P
 
@@ -69,9 +67,7 @@ import java.util.UUID
           LEFT JOIN (
             SELECT * FROM BloodSugarMeasurements WHERE deletedAt IS NULL GROUP BY patientUuid HAVING max(recordedAt)
           ) BloodSugar ON BloodSugar.patientUuid = P.uuid
-          
-          LEFT JOIN Facility AF ON AF.uuid == A.facilityUuid
-          
+
           WHERE 
             P.deletedAt IS NULL
             AND P.status != 'dead'
@@ -108,9 +104,7 @@ data class OverdueAppointment(
 
     val diagnosedWithHypertension: Answer?,
 
-    val patientAssignedFacilityUuid: UUID?,
-
-    val appointmentFacilityName: String?
+    val patientAssignedFacilityUuid: UUID?
 ) : Parcelable {
 
   val isAppointmentAtAssignedFacility: Boolean

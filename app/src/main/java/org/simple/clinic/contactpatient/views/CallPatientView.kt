@@ -137,6 +137,12 @@ class CallPatientView(
       patientDiedStatusView.visibility = if (field) View.VISIBLE else View.GONE
     }
 
+  var normalCallButtonText: String = resources.getString(R.string.contactpatient_call_normal)
+    set(value) {
+      field = value
+      normalCallButton.text = field
+    }
+
   var agreedToVisitClicked: AgreedToVisitClicked? = null
 
   var remindToCallLaterClicked: RemindToCallLaterClicked? = null

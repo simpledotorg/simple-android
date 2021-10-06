@@ -215,6 +215,14 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     callPatientView.secureCallingSectionVisible = false
   }
 
+  override fun showNormalCallButtonText() {
+    callPatientView.normalCallButtonText = getString(R.string.contactpatient_call_normal)
+  }
+
+  override fun showCallButtonText() {
+    callPatientView.normalCallButtonText = getString(R.string.contactpatient_call)
+  }
+
   override fun showPatientWithNoPhoneNumberUi() {
     callPatientView.showPatientWithNoPhoneNumberLayout = true
   }

@@ -75,6 +75,7 @@ class CallPatientUiRendererTest {
     verify(ui).setResultOfCallLabelText()
     verify(ui).showSecureCallUi()
     verify(ui).hideDeadPatientStatus()
+    verify(ui).showNormalCallButtonText()
     verifyNoMoreInteractions(ui)
   }
 
@@ -113,6 +114,7 @@ class CallPatientUiRendererTest {
     verify(ui).showPatientWithPhoneNumberCallResults()
     verify(ui).setResultOfCallLabelText()
     verify(ui).showSecureCallUi()
+    verify(ui).showNormalCallButtonText()
     verify(ui).hideDeadPatientStatus()
     verifyNoMoreInteractions(ui)
   }
@@ -149,6 +151,7 @@ class CallPatientUiRendererTest {
     verify(ui).hidePatientWithNoPhoneNumberUi()
     verify(ui).setResultOfCallLabelText()
     verify(ui).hideSecureCallUi()
+    verify(ui).setCallButtonText()
     verify(ui).showPatientWithPhoneNumberCallResults()
     verify(ui).hideDeadPatientStatus()
     verifyNoMoreInteractions(ui)
@@ -222,6 +225,7 @@ class CallPatientUiRendererTest {
         diagnosedWithHypertension = patientProfile.medicalHistory?.diagnosedWithHypertension,
         lastVisited = patientProfile.patientLastSeen))
     verify(ui).showSecureCallUi()
+    verify(ui).showNormalCallButtonText()
     verify(ui).switchToCallPatientView()
     verify(ui).setResultOfCallLabelText()
     verify(ui).showPatientWithPhoneNumberCallResults()
@@ -362,6 +366,7 @@ class CallPatientUiRendererTest {
     verify(ui).hidePatientWithPhoneNumberCallResults()
     verify(ui).showDeadPatientStatus()
     verify(ui).showSecureCallUi()
+    verify(ui).showNormalCallButtonText()
     verify(ui).setTransferredFromLabelText()
     verifyNoMoreInteractions(ui)
   }

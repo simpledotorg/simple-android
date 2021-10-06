@@ -18,6 +18,8 @@ interface ContactPatientUi {
   fun showSecureCallUi()
   fun hideSecureCallUi()
 
+  fun showNormalCallButtonText()
+
   fun showPatientWithNoPhoneNumberUi()
   fun hidePatientWithNoPhoneNumberUi()
 

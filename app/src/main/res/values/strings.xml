@@ -610,6 +610,7 @@
   <string name="contactpatient_remind_call_later">Remind to call later…</string>
   <string name="contactpatient_remove_from_list">Remove from overdue list…</string>
   <string name="contactpatient_result_of_call">Result of call</string>
+  <string name="contactpatient_call">Call</string>
   <string name="contactpatient_call_normal">Normal</string>
   <string name="contactpatient_call_secure">Secure</string>
   <string name="contactpatient_help_text">Secure calls hide your number and are toll free</string>

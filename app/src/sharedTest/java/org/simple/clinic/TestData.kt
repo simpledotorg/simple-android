@@ -991,7 +991,6 @@ object TestData {
       age: Age? = null,
       phoneNumber: PatientPhoneNumber? = patientPhoneNumber(uuid = phoneNumberUuid, patientUuid = patientUuid),
       appointment: Appointment = appointment(uuid = appointmentUuid, patientUuid = patientUuid, facilityUuid = facilityUuid),
-      patientLastSeen: Instant = Instant.parse("2018-01-01T00:00:00Z"),
       patientAddress: OverduePatientAddress = overduePatientAddress(),
       patientAssignedFacilityId: UUID? = null
   ): OverdueAppointment {
@@ -1003,7 +1002,6 @@ object TestData {
         phoneNumber = phoneNumber,
         patientAddress = patientAddress,
         isAtHighRisk = isHighRisk,
-        patientLastSeen = patientLastSeen,
         patientAssignedFacilityUuid = patientAssignedFacilityId
     )
   }

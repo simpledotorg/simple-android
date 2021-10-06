@@ -11,7 +11,6 @@ import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientPhoneNumber
-import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
 
@@ -25,14 +24,6 @@ import java.util.UUID
 
           PPN.uuid phone_uuid, PPN.patientUuid phone_patientUuid, PPN.number phone_number, PPN.phoneType phone_phoneType, PPN.active phone_active,
           PPN.createdAt phone_createdAt, PPN.updatedAt phone_updatedAt,
-
-          (
-            CASE
-                WHEN BP.uuid IS NULL THEN BloodSugar.recordedAt
-                WHEN BloodSugar.uuid IS NULL THEN BP.recordedAt
-                ELSE MAX(BP.recordedAt, BloodSugar.recordedAt)
-            END
-          ) AS patientLastSeen,
 
           (
             CASE
@@ -94,8 +85,6 @@ data class OverdueAppointment(
     val patientAddress: OverduePatientAddress,
 
     val isAtHighRisk: Boolean,
-
-    val patientLastSeen: Instant,
 
     val patientAssignedFacilityUuid: UUID?
 ) : Parcelable {

@@ -22,6 +22,7 @@
 - Purge call results when database purges run
 - Scroll to top when drugs list content is changed in edit medicines screen
 - Render custom drug frequency in drug summary view
+- Change "Normal" button text to "Call" in patient contact sheet if secure call is disabled
 - [In Progress: 22 Jul 2021] Add option to download & share overdue list
 
 ### Fixes

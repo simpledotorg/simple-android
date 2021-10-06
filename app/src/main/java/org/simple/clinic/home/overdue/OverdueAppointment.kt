@@ -107,9 +107,6 @@ data class OverdueAppointment(
     val patientAssignedFacilityUuid: UUID?
 ) : Parcelable {
 
-  val isAppointmentAtAssignedFacility: Boolean
-    get() = patientAssignedFacilityUuid == appointment.facilityUuid
-
   @Dao
   interface RoomDao {
 

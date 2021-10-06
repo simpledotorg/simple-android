@@ -33,6 +33,7 @@
   <string name="identifiertype_unknown">ಐಡಿ</string>
   <string name="identifiertype_india_national_health_id">ರಾಷ್ಟ್ರೀಯ ಆರೋಗ್ಯ ID</string>
   <string name="identifiertype_sri_lanka_national_id">ರಾಷ್ಟ್ರೀಯ ಐಡಿ ಸಂಖ್ಯೆ</string>
+  <string name="identifiertype_sri_lanka_personal_health_number">ವೈಯಕ್ತಿಕ ಆರೋಗ್ಯ ಸಂಖ್ಯೆ</string>
 
   <!-- Patient search -->
   <string name="instantsearch_hint">ಹೆಸರು, ಫೋನ್ ಅಥವಾ ID</string>
@@ -51,6 +52,7 @@
   <string name="patiententry_bangladesh_national_id">ರಾಷ್ಟ್ರೀಯ ಐಡಿ ಸಂಖ್ಯೆ</string>
   <string name="patiententry_ethiopia_medical_record_number">ವೈದ್ಯಕೀಯ ದಾಖಲೆ ಸಂಖ್ಯೆ</string>
   <string name="patiententry_sri_lanka_national_id">ರಾಷ್ಟ್ರೀಯ ಐಡಿ ಸಂಖ್ಯೆ</string>
+  <string name="patiententry_sri_lanka_personal_health_number">ವೈಯಕ್ತಿಕ ಆರೋಗ್ಯ ಸಂಖ್ಯೆ</string>
   <string name="patiententry_date_of_birth_unfocused">ಜನ್ಮ ದಿನಾಂಕ</string>
   <string name="patiententry_date_of_birth_focused">D.O.B (ಹುಟ್ಟಿದ ದಿನಾಂಕ): DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">ಅಥವಾ</string>
@@ -294,6 +296,10 @@
   <string name="enterotp_incorrect_code">ತಪ್ಪಾದ ಕೋಡ್, ದಯವಿಟ್ಟು ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ</string>
   <string name="enterotp_resend_sms">SMS ಅನ್ನು ಮತ್ತೊಮ್ಮೆ ಕಳುಹಿಸಿ</string>
   <string name="enterotp_sms_sent">ಹೊಸ ಪರಿಶೀಲನೆ SMS ಅನ್ನು ಕಳುಹಿಸಲಾಗಿದೆ</string>
+  <string name="enterotp_try_again_after">ಇದರ ನಂತರ ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ</string>
+  <string name="otpentry_error_incorrect_otp_attempts_limit_reached" tools:ignore="PluralsCandidate">ನೀವು %s ತಪ್ಪಾದ ಪ್ರಯತ್ನಗಳನ್ನು ಮಾಡಿದ್ದಿರಿ</string>
+  <string name="otpentry_error_incorrect_otp_attempts_remaining">ತಪ್ಪಾದ ಕೋಡ್, %s ಪ್ರಯತ್ನಗಳು ಉಳಿದಿವೆ</string>
+  <!-- minutes:seconds -->
 
   <!-- Schedule appointment -->
   <string name="scheduleappointment_next_visit_in">ಇಷ್ಟು ಸಮಯದಲ್ಲಿ ಮುಂದಿನ ಭೇಟಿ ನಿಗದಿಪಡಿಸಿ</string>
@@ -343,6 +349,7 @@
   <string name="newmedicalhistory_history">ಇತಿಹಾಸ</string>
   <string name="newmedicalhistory_diagnosis">ರೋಗನಿರ್ಣಯ (ಅಗತ್ಯವಿದೆ)</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">ಕಳೆದ ತಿಂಗಳು ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ರೋಗಿಯು ಬಿಪಿ ಔಷಧಿಗಳನ್ನು ತೆಗೆದುಕೊಂಡಿದ್ದಾರೆಯೇ? (ಅಗತ್ಯವಿದೆ)</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">ಕಳೆದ ತಿಂಗಳು ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ರೋಗಿಯು ಡಯಾಬಿಟಿಸ್ ಔಷಧಿಗಳನ್ನು ತೆಗೆದುಕೊಂಡಿದ್ದಾರೆಯೇ? (ಅಗತ್ಯವಿದೆ)</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ಯಾವುದೂ ಅಲ್ಲ</string>
@@ -394,7 +401,7 @@
   <string name="appupdatedialog_title">ಆ್ಯಪ್ ಅಪ್‌ಡೇಟ್ ಮಾಡಿ</string>
   <string name="appupdatedialog_body">ಸಿಂಪಲ್ ಅನ್ನು ಅಪ್ಡೇಟ್ ಮಾಡುವುದಕ್ಕಾಗಿ ನಿಮ್ಮನ್ನು Google Play Store ಗೆ ಕರೆದೊಯ್ಯಲಾಗುತ್ತದೆ.</string>
   <string name="appupdatedialog_positive_button_text">ಅಪ್‌ಡೇಟ್ ಮಾಡಿ</string>
-  <string name="appupdatedialog_negative_button_text">ಈಗಲ್ಲ</string>
+  <string name="appupdatedialog_negative_button_text">ಈಗ ಬೇಡ</string>
 
   <!-- All Patients In Facility View-->
 
@@ -720,6 +727,7 @@
   <!-- Select ongoing hypertension treatment dialog -->
   <string name="select_ongoing_hypertension_treatment_title">ಕಳೆದ ತಿಂಗಳು ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ರೋಗಿಯು ಬಿಪಿ ಔಷಧಿಗಳನ್ನು ತೆಗೆದುಕೊಂಡಿದ್ದಾರೆಯೇ?</string>
   <string name="select_ongoing_hypertension_treatment_message">ಹೌದು ಅಥವಾ ಇಲ್ಲ ಅನ್ನು ಆಯ್ಕೆಮಾಡಿ.</string>
+  <string name="select_ongoing_diabetes_treatment_message">ಕಳೆದ ತಿಂಗಳು ಯಾವುದೇ ಸಮಯದಲ್ಲಿ ರೋಗಿಯು ಡಯಾಬಿಟಿಸ್ ಔಷಧಿಗಳನ್ನು ತೆಗೆದುಕೊಂಡಿದ್ದಾರೆಯೇ ಎಂದು ದೃಢಪಡಿಸಿ.</string>
   <string name="select_ongoing_hypertension_treatment_positive_action">ಸರಿ</string>
 
   <!-- Custom drugs search -->
@@ -730,15 +738,15 @@
   <string name="warning_add_measurements_title">ಬಿಪಿ ಮತ್ತು ರಕ್ತದ ಸಕ್ಕರೆ ಸೇರಿಸುವುದೇ?</string>
   <string name="warning_add_measurements_message">ಸಾಧ್ಯವಾದರೆ, ಈ ರೋಗಿಗಾಗಿ ಪ್ರಸ್ತುತ ರಕ್ತದೊತ್ತಡ ಮತ್ತು ರಕ್ತದ ಸಕ್ಕರೆ ರೀಡಿಂಗ್ ಅನ್ನು ಸೇರಿಸಿ.</string>
   <string name="warning_add_measurements_positive_button">ರೀಡಿಂಗ್‌ಗಳನ್ನು ಸೇರಿಸಿ</string>
-  <string name="warning_add_measurements_negative_button">ಈಗಲ್ಲ</string>
+  <string name="warning_add_measurements_negative_button">ಈಗ ಬೇಡ</string>
   <string name="warning_add_blood_pressure_title">ಬಿಪಿ ಸೇರಿಸುವುದೇ?</string>
   <string name="warning_add_blood_pressure_message">ಸಾಧ್ಯವಾದರೆ, ಈ ರೋಗಿಗಾಗಿ ಪ್ರಸ್ತುತ ರಕ್ತದೊತ್ತಡ ರೀಡಿಂಗ್ ಅನ್ನು ಸೇರಿಸಿ.</string>
   <string name="warning_add_blood_pressure_positive_button">ರಕ್ತದೊತ್ತಡವನ್ನು ಸೇರಿಸಿ</string>
-  <string name="warning_add_blood_pressure_negative_button">ಈಗಲ್ಲ</string>
+  <string name="warning_add_blood_pressure_negative_button">ಈಗ ಬೇಡ</string>
   <string name="warning_add_blood_sugar_title">ರಕ್ತದ ಸಕ್ಕರೆಯನ್ನು ಸೇರಿಸುವುದೇ?</string>
   <string name="warning_add_blood_sugar_message">ಸಾಧ್ಯವಾದರೆ, ಈ ರೋಗಿಗಾಗಿ ಪ್ರಸ್ತುತ ರಕ್ತದ ಸಕ್ಕರೆ ರೀಡಿಂಗ್ ಅನ್ನು ಸೇರಿಸಿ.</string>
   <string name="warning_add_blood_sugar_positive_button">ರಕ್ತದ ಸಕ್ಕರೆಯನ್ನು ಸೇರಿಸಿ</string>
-  <string name="warning_add_blood_sugar_negative_button">ಈಗಲ್ಲ</string>
+  <string name="warning_add_blood_sugar_negative_button">ಈಗ ಬೇಡ</string>
 
   <!-- Custom drug entry sheet -->
   <string name="custom_drug_entry_sheet_remove">ತೆಗೆದುಹಾಕಿ</string>
@@ -747,4 +755,19 @@
   <string name="custom_drug_entry_sheet_save_button_text">ಉಳಿಸಿ</string>
   <string name="custom_drug_entry_sheet_add_button_text">ಸೇರಿಸಿ</string>
   <string name="custom_drug_entry_sheet_frequency_dialog_done">ಪೂರ್ಣಗೊಳಿಸಲಾಗಿದೆ</string>
+  <!-- Select state screen -->
+  <string name="select_state_title">ನಿಮ್ಮ ಕ್ಲಿನಿಕ್ ಎಲ್ಲಿದೆ?</string>
+  <string name="select_state_networkerror">ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕವಿಲ್ಲ!</string>
+  <string name="select_state_servererror">ಸರ್ವರ್ ದೋಷ! ದಯವಿಟ್ಟು ನಂತರ ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ!</string>
+  <string name="select_state_genericerror">ಏನೋ ತಪ್ಪಾಗಿದೆ! ದಯವಿಟ್ಟು ನಂತರ ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ!</string>
+
+  <!-- Patient status view -->
+  <string name="patient_status_died">ಮರಣ ಹೊಂದಿದ್ದಾರೆ</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">ಡಯಾಗ್ನಾಸಿಸ್ ಬದಲಿಸುವುದೇ?</string>
+  <string name="change_diagnosis_message">ರೋಗಿಯಲ್ಲಿ ಎಂದಿಗಾದರೂ ಹೈಪರ್‌ಟೆನ್ಶನ್ ಅಥವಾ ಡಯಾಬಿಟಿಸ್ ಪತ್ತೆಮಾಡಲಾಗಿದ್ದರೆ ಹೌದು ಎಂದು ಗುರುತು ಮಾಡಿ.</string>
+  <string name="change_diagnosis_positive">ಬದಲಾಯಿಸಿ</string>
+  <string name="change_diagnosis_negative">ಈಗ ಬೇಡ</string>
+
 </resources>

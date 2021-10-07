@@ -991,14 +991,8 @@ object TestData {
       age: Age? = null,
       phoneNumber: PatientPhoneNumber? = patientPhoneNumber(uuid = phoneNumberUuid, patientUuid = patientUuid),
       appointment: Appointment = appointment(uuid = appointmentUuid, patientUuid = patientUuid, facilityUuid = facilityUuid),
-      patientLastSeen: Instant = Instant.parse("2018-01-01T00:00:00Z"),
-      diagnosedWithDiabetes: Answer? = null,
-      diagnosedWithHypertension: Answer? = null,
       patientAddress: OverduePatientAddress = overduePatientAddress(),
-      patientAssignedFacilityId: UUID? = null,
-      appointmentFacilityName: String? = null,
-      patientRegisteredFacilityName: String? = null,
-      patientRegisteredFacilityID: UUID? = null
+      patientAssignedFacilityId: UUID? = null
   ): OverdueAppointment {
     return OverdueAppointment(
         fullName = name,
@@ -1008,13 +1002,7 @@ object TestData {
         phoneNumber = phoneNumber,
         patientAddress = patientAddress,
         isAtHighRisk = isHighRisk,
-        patientLastSeen = patientLastSeen,
-        diagnosedWithDiabetes = diagnosedWithDiabetes,
-        diagnosedWithHypertension = diagnosedWithHypertension,
-        patientAssignedFacilityUuid = patientAssignedFacilityId,
-        appointmentFacilityName = appointmentFacilityName,
-        patientRegisteredFacilityName = patientRegisteredFacilityName,
-        patientRegisteredFacilityID = patientRegisteredFacilityID
+        patientAssignedFacilityUuid = patientAssignedFacilityId
     )
   }
 

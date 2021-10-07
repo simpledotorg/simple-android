@@ -56,7 +56,7 @@ class CallResultSyncIntegrationTest {
       .global()
       .around(ServerAuthenticationRule())
 
-  private val batchSize = 0
+  private val batchSize = 3
   private lateinit var config: SyncConfig
 
   @Before

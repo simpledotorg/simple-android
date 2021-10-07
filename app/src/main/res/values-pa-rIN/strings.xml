@@ -33,6 +33,7 @@
   <string name="identifiertype_unknown">ਆਈਡੀ</string>
   <string name="identifiertype_india_national_health_id">ਰਾਸ਼ਟਰੀ ਸਿਹਤ ID</string>
   <string name="identifiertype_sri_lanka_national_id">ਰਾਸ਼ਟਰੀ ਆਈ ਡੀ ਸੰਖਿਆ</string>
+  <string name="identifiertype_sri_lanka_personal_health_number">ਨਿੱਜੀ ਸਿਹਤ ਨੰਬਰ</string>
 
   <!-- Patient search -->
   <string name="instantsearch_hint">ਨਾਮ, ਫ਼ੋਨ, ਜਾਂ ID</string>
@@ -51,6 +52,7 @@
   <string name="patiententry_bangladesh_national_id">ਰਾਸ਼ਟਰੀ ਆਈ ਡੀ ਸੰਖਿਆ</string>
   <string name="patiententry_ethiopia_medical_record_number">ਮੈਡੀਕਲ ਰਿਕਾਰਡ ਨੰਬਰ</string>
   <string name="patiententry_sri_lanka_national_id">ਰਾਸ਼ਟਰੀ ਆਈ ਡੀ ਸੰਖਿਆ</string>
+  <string name="patiententry_sri_lanka_personal_health_number">ਨਿੱਜੀ ਸਿਹਤ ਨੰਬਰ</string>
   <string name="patiententry_date_of_birth_unfocused">ਜਨਮ ਮਿਤੀ</string>
   <string name="patiententry_date_of_birth_focused">D.O.B (ਜਨਮ ਮਿਤੀ): DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">ਜਾਂ</string>
@@ -294,6 +296,10 @@
   <string name="enterotp_incorrect_code">ਗ਼ਲਤ ਕੋਡ, ਕਿਰਪਾ ਕਰਕੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
   <string name="enterotp_resend_sms">SMS ਦੁਬਾਰਾ ਭੇਜੋ</string>
   <string name="enterotp_sms_sent">ਨਵਾਂ ਤਸਦੀਕੀ SMS ਭੇਜਿਆ ਗਿਆ</string>
+  <string name="enterotp_try_again_after">ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
+  <string name="otpentry_error_incorrect_otp_attempts_limit_reached" tools:ignore="PluralsCandidate">ਤੁਸੀਂ %s ਗ਼ਲਤ ਕੋਸ਼ਿਸ਼ਾਂ ਕੀਤੀਆਂ ਹਨ</string>
+  <string name="otpentry_error_incorrect_otp_attempts_remaining">ਗਲਤ ਕੋਡ, %s ਕੋਸ਼ਿਸ਼ਾਂ ਬਾਕੀ ਹਨ</string>
+  <!-- minutes:seconds -->
 
   <!-- Schedule appointment -->
   <string name="scheduleappointment_next_visit_in">ਅਗਲੀ ਫੇਰੀ ਇਦੋਂ ਕਰਨਾ ਤੈਅ ਕਰੋ</string>
@@ -343,6 +349,7 @@
   <string name="newmedicalhistory_history">ਅਤੀਤ</string>
   <string name="newmedicalhistory_diagnosis">ਡਾਇਗਨੋਸਿਸ (ਲੋੜੀਂਦਾ)</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">ਕੀ ਮਰੀਜ਼ ਨੇ ਪਿਛਲੇ ਮਹੀਨੇ ਕਿਸੇ ਵੀ ਸਮੇਂ ਬੀਪੀ ਦੀਆਂ ਦਵਾਈਆਂ ਲਈਆਂ ਸਨ? (ਲੋੜੀਂਦਾ)</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">ਕੀ ਮਰੀਜ਼ ਨੇ ਪਿਛਲੇ ਮਹੀਨੇ ਕਿਸੇ ਵੀ ਸਮੇਂ ਸ਼ੂਗਰ ਦੀ ਦਵਾਈ ਲਈ ਸੀ? (ਲੋੜੀਂਦਾ)</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ਕੋਈ ਨਹੀਂ</string>
@@ -720,6 +727,7 @@
   <!-- Select ongoing hypertension treatment dialog -->
   <string name="select_ongoing_hypertension_treatment_title">ਕੀ ਮਰੀਜ਼ ਨੇ ਪਿਛਲੇ ਮਹੀਨੇ ਕਿਸੇ ਵੀ ਸਮੇਂ ਬੀਪੀ ਦੀਆਂ ਦਵਾਈਆਂ ਲਈਆਂ ਸਨ?</string>
   <string name="select_ongoing_hypertension_treatment_message">ਹਾਂ ਜਾਂ ਨਾਂ ਦੀ ਚੋਣ ਕਰੋ।</string>
+  <string name="select_ongoing_diabetes_treatment_message">ਜੇ ਮਰੀਜ਼ ਨੇ ਪਿਛਲੇ ਮਹੀਨੇ ਕਿਸੇ ਵੀ ਸਮੇਂ ਸ਼ੂਗਰ ਦੀ ਦਵਾਈ ਲਈ ਹੋਵੇ ਤਾਂ ਪੁਸ਼ਟੀ ਕਰੋ।</string>
   <string name="select_ongoing_hypertension_treatment_positive_action">ਠੀਕ ਹੈ</string>
 
   <!-- Custom drugs search -->
@@ -747,4 +755,19 @@
   <string name="custom_drug_entry_sheet_save_button_text">ਸੁਰੱਖਿਅਤ ਕਰੋ</string>
   <string name="custom_drug_entry_sheet_add_button_text">ਜੋੜੋ</string>
   <string name="custom_drug_entry_sheet_frequency_dialog_done">ਹੋ ਗਿਆ</string>
+  <!-- Select state screen -->
+  <string name="select_state_title">ਤੁਹਾਡਾ ਕਲੀਨਿਕ ਕਿੱਥੇ ਹੈ?</string>
+  <string name="select_state_networkerror">ਕੋਈ ਇੰਟਰਨੈੱਟ ਕਨੈਕਸ਼ਨ ਨਹੀਂ ਹੈ!</string>
+  <string name="select_state_servererror">ਸਰਵਰ ਤਰੁੱਟੀ! ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ!</string>
+  <string name="select_state_genericerror">ਕੁਝ ਗਲਤ ਹੋ ਗਿਆ! ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ!</string>
+
+  <!-- Patient status view -->
+  <string name="patient_status_died">ਮਰ ਗਿਆ</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">ਕੀ ਨਿਦਾਨ ਬਦਲਣਾ ਹੈ?</string>
+  <string name="change_diagnosis_message">ਜੇ ਮਰੀਜ਼ ਨੂੰ ਕਦੇ ਵੀ ਹਾਈਪਰਟੈਨਸ਼ਨ ਜਾਂ ਸ਼ੂਗਰ ਦਾ ਪਤਾ ਲੱਗਿਆ ਹੋਵੇ ਤਾਂ ਕਿਰਪਾ ਕਰਕੇ ਹਾਂ ਨਾਲ ਚਿੰਨ੍ਹਿਤ ਕਰੋ।</string>
+  <string name="change_diagnosis_positive">ਬਦਲੋ</string>
+  <string name="change_diagnosis_negative">ਹਾਲੇ ਨਹੀਂ</string>
+
 </resources>

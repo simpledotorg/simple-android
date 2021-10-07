@@ -33,6 +33,7 @@
   <string name="identifiertype_unknown">ID</string>
   <string name="identifiertype_india_national_health_id">Waraqaa Eenyummaa Fayyaa Biyyaalessaa</string>
   <string name="identifiertype_sri_lanka_national_id">Lakkoosa eenyummeessaa biyyaalessa</string>
+  <string name="identifiertype_sri_lanka_personal_health_number">Lakkoofa Fayyaa Dhuunfaa</string>
 
   <!-- Patient search -->
   <string name="instantsearch_hint">Maqaa, Bilbila, yookan Waraqaa Eenyummaa</string>
@@ -51,6 +52,7 @@
   <string name="patiententry_bangladesh_national_id">Lakkoosa eenyummeessaa biyyaalessa</string>
   <string name="patiententry_ethiopia_medical_record_number">Lakkoofsa Galmee Fayya</string>
   <string name="patiententry_sri_lanka_national_id">Lakkoosa eenyummeessaa biyyaalessa</string>
+  <string name="patiententry_sri_lanka_personal_health_number">Lakkoofa Fayyaa Dhuunfaa</string>
   <string name="patiententry_date_of_birth_unfocused">Guyyaa dhaloota</string>
   <string name="patiententry_date_of_birth_focused">G,Dh GG/JJ/WWWW</string>
   <string name="patiententry_dateofbirth_and_age_separator">Yookan</string>
@@ -295,6 +297,10 @@
   <string name="enterotp_incorrect_code">Koodii  dogongoraa, maaloo deebisii yaali</string>
   <string name="enterotp_resend_sms">SMS deebisii ergi</string>
   <string name="enterotp_sms_sent">Mirkaneeffannaan SMS biraa ergameera</string>
+  <string name="enterotp_try_again_after">Booda deebi’ii yaali</string>
+  <string name="otpentry_error_incorrect_otp_attempts_limit_reached" tools:ignore="PluralsCandidate">Yaalii dogongoraa %s taasistee jirta</string>
+  <string name="otpentry_error_incorrect_otp_attempts_remaining">Koodii sirrii hin taane,  yaaliiwwan %s tu hafe </string>
+  <!-- minutes:seconds -->
 
   <!-- Schedule appointment -->
   <string name="scheduleappointment_next_visit_in">Daawwannaa itti aanu karoorsi</string>
@@ -344,6 +350,7 @@
   <string name="newmedicalhistory_history">Seenaa</string>
   <string name="newmedicalhistory_diagnosis">Qorannoo (Barbaadameera)</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">Dhukubsataan ji\'a darbe yeroo ta\'e keessa dawaa BP fudhateeraa? (Barbaadamaa)</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">Ji\'a darbe keessa dhukkubsatichi dawaawwan sukkaaraa fudhatee jiraa? (Barbaadama)</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">Hin jiru</string>
@@ -721,6 +728,7 @@
   <!-- Select ongoing hypertension treatment dialog -->
   <string name="select_ongoing_hypertension_treatment_title">Dhukkubsataan ji\'a darbe keessa yeroo ta\'etti dawaa BP fudhateera?</string>
   <string name="select_ongoing_hypertension_treatment_message">Eeyyee yookan lakkii filadhu</string>
+  <string name="select_ongoing_diabetes_treatment_message">Ji\'a darbe keessa dhukkubsatichi dawaawwan sukkaaraa fudhatee jira taanaan mirkaneessi.</string>
   <string name="select_ongoing_hypertension_treatment_positive_action">Tole</string>
 
   <!-- Custom drugs search -->
@@ -740,7 +748,7 @@
   <string name="warning_add_blood_sugar_message">Yoo danda\'ame, dubbisa sukkaara dhiigaa ammaa dhukkubsataa kanaaf dabali</string>
   <string name="warning_add_blood_sugar_positive_button">Sukkaara Dhiiga dabali</string>
   <string name="warning_add_blood_sugar_negative_button">Amma miti</string>
-  
+
   <!-- Custom drug entry sheet -->
   <string name="custom_drug_entry_sheet_remove">Balleessi</string>
   <string name="custom_drug_entry_sheet_dosage">Hamma fudhanna</string>
@@ -748,4 +756,19 @@
   <string name="custom_drug_entry_sheet_save_button_text">Ol kaa’i</string>
   <string name="custom_drug_entry_sheet_add_button_text">Dabali</string>
   <string name="custom_drug_entry_sheet_frequency_dialog_done">Taasifameera</string>
-  </resources>
+  <!-- Select state screen -->
+  <string name="select_state_title">Kilinikiin kee eessa?</string>
+  <string name="select_state_networkerror">Hidhati interneetaa hin jiru!</string>
+  <string name="select_state_servererror">Dogongora Sarvarii! Maaloo booda turii yaali!</string>
+  <string name="select_state_genericerror">Wanti ta’e dogongorameera! Maaloo booda turii yaali!</string>
+
+  <!-- Patient status view -->
+  <string name="patient_status_died">Boqateera</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">Qorannoo jijjiiri?</string>
+  <string name="change_diagnosis_message">Maaloo dhukkubsataan sukkaara yookan dhiibbaa dhiigaa qaba taanaa EEYYEE irratti mallattoo kaa\'i.</string>
+  <string name="change_diagnosis_positive">JIJJIIRI</string>
+  <string name="change_diagnosis_negative">AMMA MITI</string>
+
+</resources>

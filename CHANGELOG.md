@@ -15,7 +15,7 @@
   - Add exported attr in `AndroidManifest.xml` for activities/services/receivers with intent filters
   - Add `ACCESS_COARSE_LOCATION` permission
 - Fetch appointment directly in contact patient sheet
-- Updated translations: `so-ET`
+- Updated translations: `so-ET`, `pa-IN`
 
 ### Changes
 

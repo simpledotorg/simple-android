@@ -3,7 +3,6 @@ package org.simple.clinic.sync
 import com.google.common.truth.Truth.assertThat
 import org.junit.After
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
@@ -28,7 +27,6 @@ import java.util.UUID
 import javax.inject.Inject
 import kotlin.random.Random
 
-@Ignore("Ignored for now because the feature is not turned on in the server yet")
 class CallResultSyncIntegrationTest {
 
   @Inject

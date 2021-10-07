@@ -18,6 +18,7 @@
 - Updated translations: `so-ET`, `pa-IN`, `bn-BD`
 - Bump CameraX dependencies
 - Remove unused params from `OverdueAppointment`
+- Bump Dagger to v2.39.1
 
 ### Changes
 

@@ -1,22 +1,19 @@
-package org.simple.clinic.home.overdue
+package org.simple.clinic.storage.migrations
 
-import android.os.Parcelable
-import androidx.paging.PagingSource
-import androidx.room.Dao
-import androidx.room.DatabaseView
-import androidx.room.Embedded
-import androidx.room.Query
-import kotlinx.parcelize.Parcelize
-import org.simple.clinic.overdue.Appointment
-import org.simple.clinic.patient.Gender
-import org.simple.clinic.patient.PatientAgeDetails
-import org.simple.clinic.patient.PatientPhoneNumber
-import java.time.LocalDate
-import java.util.UUID
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
+import org.simple.clinic.storage.inTransaction
+import javax.inject.Inject
 
-@DatabaseView(
-    """
-      SELECT P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.assignedFacilityId patientAssignedFacilityUuid,
+@Suppress("ClassName")
+class Migration_98 @Inject constructor() : Migration(97, 98) {
+
+  override fun migrate(database: SupportSQLiteDatabase) {
+    database.inTransaction {
+      execSQL(""" DROP VIEW `OverdueAppointment` """)
+
+      execSQL("""
+        CREATE VIEW `OverdueAppointment` AS SELECT P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.assignedFacilityId patientAssignedFacilityUuid,
 
           A.uuid appt_uuid, A.patientUuid appt_patientUuid, A.facilityUuid appt_facilityUuid, A.scheduledDate appt_scheduledDate, A.status appt_status,
           A.cancelReason appt_cancelReason, A.remindOn appt_remindOn, A.agreedToVisit appt_agreedToVisit, A.appointmentType appt_appointmentType,
@@ -63,48 +60,7 @@ import java.util.UUID
             AND PPN.deletedAt IS NULL
             AND A.status = 'scheduled'
             AND (BP.recordedAt IS NOT NULL OR BloodSugar.recordedAt IS NOT NULL)
-    """
-)
-@Parcelize
-data class OverdueAppointment(
-
-    val fullName: String,
-
-    val gender: Gender,
-
-    @Embedded
-    val ageDetails: PatientAgeDetails,
-
-    @Embedded(prefix = "appt_")
-    val appointment: Appointment,
-
-    @Embedded(prefix = "phone_")
-    val phoneNumber: PatientPhoneNumber?,
-
-    @Embedded(prefix = "patient_address_")
-    val patientAddress: OverduePatientAddress,
-
-    val isAtHighRisk: Boolean,
-
-    val patientAssignedFacilityUuid: UUID?
-) : Parcelable {
-
-  @Dao
-  interface RoomDao {
-
-    @Query("""
-      SELECT * FROM OverdueAppointment
-      WHERE 
-        IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid 
-        AND (appt_scheduledDate < :scheduledBefore AND appt_scheduledDate > :scheduledAfter)
-        AND (appt_remindOn < :scheduledBefore OR appt_remindOn IS NULL)
-        GROUP BY appt_patientUuid
-        ORDER BY isAtHighRisk DESC, appt_scheduledDate DESC, appt_updatedAt ASC
-    """)
-    fun overdueInFacilityPagingSource(
-        facilityUuid: UUID,
-        scheduledBefore: LocalDate,
-        scheduledAfter: LocalDate
-    ): PagingSource<Int, OverdueAppointment>
+      """)
+    }
   }
 }

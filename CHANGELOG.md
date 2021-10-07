@@ -17,6 +17,7 @@
 - Fetch appointment directly in contact patient sheet
 - Updated translations: `so-ET`, `pa-IN`, `bn-BD`
 - Bump CameraX dependencies
+- Remove unused params from `OverdueAppointment`
 
 ### Changes
 

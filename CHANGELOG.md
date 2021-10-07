@@ -15,7 +15,7 @@
   - Add exported attr in `AndroidManifest.xml` for activities/services/receivers with intent filters
   - Add `ACCESS_COARSE_LOCATION` permission
 - Fetch appointment directly in contact patient sheet
-- Updated translations: `so-ET`, `pa-IN`, `bn-BD`, `mr-IN`, `bn-IN`
+- Updated translations: `so-ET`, `pa-IN`, `bn-BD`, `mr-IN`, `bn-IN`, `ta-LK`
 - Bump CameraX dependencies
 - Remove unused params from `OverdueAppointment`
 - Bump Dagger to v2.39.1

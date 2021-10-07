@@ -33,6 +33,7 @@
   <string name="identifiertype_unknown">መታወቂያ</string>
   <string name="identifiertype_india_national_health_id">ብሔራዊ የጤና መታወቂያ</string>
   <string name="identifiertype_sri_lanka_national_id">ብሔራዊ መታወቂያ ቁጥር</string>
+  <string name="identifiertype_sri_lanka_personal_health_number">የግል ጤና ቁጥር</string>
 
   <!-- Patient search -->
   <string name="instantsearch_hint">ስም ፣ ስልክ ወይም መታወቂያ</string>
@@ -51,6 +52,7 @@
   <string name="patiententry_bangladesh_national_id">ብሔራዊ መታወቂያ ቁጥር</string>
   <string name="patiententry_ethiopia_medical_record_number">የህክምና መዝገብ ቁጥር</string>
   <string name="patiententry_sri_lanka_national_id">ብሔራዊ መታወቂያ ቁጥር</string>
+  <string name="patiententry_sri_lanka_personal_health_number">የግል ጤና ቁጥር</string>
   <string name="patiententry_date_of_birth_unfocused">የትውልድ ቀን</string>
   <string name="patiententry_date_of_birth_focused">የ.ት.ቅ፡ ቀቀ/ወወ/ዐዐ</string>
   <string name="patiententry_dateofbirth_and_age_separator">ወይም</string>
@@ -294,6 +296,10 @@
   <string name="enterotp_incorrect_code">ትክክል ያልሆነ ኮድ ፣ እባክዎ እንደገና ይሞክሩ</string>
   <string name="enterotp_resend_sms">ኤስኤምኤስ እንደገና ይላኩ</string>
   <string name="enterotp_sms_sent">አዲስ የማረጋገጫ SMS ተልኳል</string>
+  <string name="enterotp_try_again_after">በኋላ እንደገና ይሞክሩ</string>
+  <string name="otpentry_error_incorrect_otp_attempts_limit_reached" tools:ignore="PluralsCandidate">%s የተሳሳቱ ሙከራዎችን አድርገዋል</string>
+  <string name="otpentry_error_incorrect_otp_attempts_remaining">ትክክል ያልሆነ ኮድ፣  %s ሙከራዎች ይቀራሉ</string>
+  <!-- minutes:seconds -->
 
   <!-- Schedule appointment -->
   <string name="scheduleappointment_next_visit_in">ቀጣዩ ጉብኝት መርሃግብር በ</string>
@@ -343,6 +349,7 @@
   <string name="newmedicalhistory_history">ታሪክ</string>
   <string name="newmedicalhistory_diagnosis">ምርመራ (አስፈላጊ)</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">ባለፈው ወር ውስጥ ህመምተኞው በማንኛውም ጊዜ የBP መድሃኒት ወስዷል? (አስፈላጊ)</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">በሽተኛው ባለፈው ወር ውስጥ የስኳር በሽታ መድኃኒቶችን ወስዶ ነበር? (ያስፈልጋል)</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ምንም</string>
@@ -527,6 +534,7 @@
   <string name="contactpatient_remind_call_later">በኋላ ላይ ለመደወል ያስታውሱ…</string>
   <string name="contactpatient_remove_from_list">ጊዜው ካለፈበት ዝርዝር ያስወግዱ…</string>
   <string name="contactpatient_result_of_call">የ ስልክ ጥሪ ውጤት</string>
+  <string name="contactpatient_call">ይደውሉ</string>
   <string name="contactpatient_call_normal">መደበኛ</string>
   <string name="contactpatient_call_secure">ደህንነቱ የተጠበቀ</string>
   <string name="contactpatient_help_text">ደህንነቱ የተጠበቀ ጥሪዎች ቁጥርዎን ይደብቃሉ እና ክፍያ ነፃ ናቸው</string>
@@ -720,6 +728,7 @@
   <!-- Select ongoing hypertension treatment dialog -->
   <string name="select_ongoing_hypertension_treatment_title">ባለፈው ወር ውስጥ ህመምተኞው በማንኛውም ጊዜ የBP መድሃኒት ወስዷል? </string>
   <string name="select_ongoing_hypertension_treatment_message">አዎ ወይንም አይን ይምረጡ</string>
+  <string name="select_ongoing_diabetes_treatment_message">ባለፈው ወር ውስጥ በሽተኛው በማንኛውም ጊዜ የስኳር በሽታ መድኃኒቶችን ከወሰደ ያረጋግጡ።</string>
   <string name="select_ongoing_hypertension_treatment_positive_action">እሺ</string>
 
   <!-- Custom drugs search -->
@@ -747,4 +756,19 @@
   <string name="custom_drug_entry_sheet_save_button_text">ሴቭ</string>
   <string name="custom_drug_entry_sheet_add_button_text">ያክሉ</string>
   <string name="custom_drug_entry_sheet_frequency_dialog_done">ተጠናቅቋል</string>
+  <!-- Select state screen -->
+  <string name="select_state_title">ክሊኒክዎ የት ነው?</string>
+  <string name="select_state_networkerror">ምንም የበይነመረብ ግንኙነት የለም!</string>
+  <string name="select_state_servererror">የሰርቨር ስህተት! እባክዎ ቆየት ብለው ይሞክሩ!</string>
+  <string name="select_state_genericerror">የሆነ ስህተት ተከስቷል! እባክዎ ቆየት ብለው ይሞክሩ!</string>
+
+  <!-- Patient status view -->
+  <string name="patient_status_died">በህይወት የለም</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">ምርመራ ይለወጥ?</string>
+  <string name="change_diagnosis_message">በሽተኛው የደም ግፊት ወይም የስኳር በሽታ እንዳለበት ከታወቀ እባክዎን አዎ ብለው ምልክት ያድርጉ።</string>
+  <string name="change_diagnosis_positive">ይቀይሩ</string>
+  <string name="change_diagnosis_negative">አሁን አይደለም</string>
+
 </resources>

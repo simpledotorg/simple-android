@@ -33,6 +33,7 @@
   <string name="identifiertype_unknown">আইডি</string>
   <string name="identifiertype_india_national_health_id">জাতীয় স্বাস্থ্য পরিচয়পত্র ID</string>
   <string name="identifiertype_sri_lanka_national_id">জাতীয় পরিচয়পত্র নম্বর</string>
+  <string name="identifiertype_sri_lanka_personal_health_number">ব্যক্তিগত হেলথ নম্বর</string>
 
   <!-- Patient search -->
   <string name="instantsearch_hint">নাম, ফোন বা ID</string>
@@ -51,6 +52,7 @@
   <string name="patiententry_bangladesh_national_id">জাতীয় পরিচয়পত্র নম্বর</string>
   <string name="patiententry_ethiopia_medical_record_number">মেডিকেল রেকর্ড নম্বর</string>
   <string name="patiententry_sri_lanka_national_id">জাতীয় পরিচয়পত্র নম্বর</string>
+  <string name="patiententry_sri_lanka_personal_health_number">ব্যক্তিগত হেলথ নম্বর</string>
   <string name="patiententry_date_of_birth_unfocused">জন্ম তারিখ</string>
   <string name="patiententry_date_of_birth_focused">D.O.B (জন্মদিন): DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">অথবা</string>
@@ -294,6 +296,10 @@
   <string name="enterotp_incorrect_code">ভুল কোড, অনুগ্রহ করে আবার চেষ্টা করুন</string>
   <string name="enterotp_resend_sms">SMS পুনরায় পাঠান</string>
   <string name="enterotp_sms_sent">যাচাইকরণের নতুন SMS পাঠানো হয়েছে</string>
+  <string name="enterotp_try_again_after">পরে আবার চেষ্টা করুন</string>
+  <string name="otpentry_error_incorrect_otp_attempts_limit_reached" tools:ignore="PluralsCandidate">আপনি %s বার ভুল প্রচেষ্টা করেছেন</string>
+  <string name="otpentry_error_incorrect_otp_attempts_remaining">ভুল কোড, আরো %s বার চেষ্টা করতে পারবেন</string>
+  <!-- minutes:seconds -->
 
   <!-- Schedule appointment -->
   <string name="scheduleappointment_next_visit_in">সাক্ষাতের পরবর্তী সময়সূচী স্থির করুন</string>
@@ -343,6 +349,7 @@
   <string name="newmedicalhistory_history">ইতিহাস</string>
   <string name="newmedicalhistory_diagnosis">রোগ নির্ণয় (প্রয়োজন)</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">গত মাসে রোগী কি কোনও সময় বিপি-র ওষুধ খেয়েছিলেন? (আবশ্যিক)</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">গত মাসে রোগী কি কোনও সময় ডায়াবেটিসের ওষুধ খেয়েছিলেন? (আবশ্যিক)</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">কোনটিই নয়</string>
@@ -720,6 +727,7 @@
   <!-- Select ongoing hypertension treatment dialog -->
   <string name="select_ongoing_hypertension_treatment_title">গত মাসে রোগী কি কোনও সময় বিপি-র ওষুধ খেয়েছিলেন?</string>
   <string name="select_ongoing_hypertension_treatment_message">হ্যাবা না নির্বাচন করুন।</string>
+  <string name="select_ongoing_diabetes_treatment_message">গত মাসে রোগী কোনও সময় ডায়াবেটিসের ওষুধ খেয়েছিলেন কিনা তা নিশ্চিত করুন।</string>
   <string name="select_ongoing_hypertension_treatment_positive_action">ঠিক আছে</string>
 
   <!-- Custom drugs search -->
@@ -747,4 +755,19 @@
   <string name="custom_drug_entry_sheet_save_button_text">সংরক্ষণ করুন</string>
   <string name="custom_drug_entry_sheet_add_button_text">যোগ করুন</string>
   <string name="custom_drug_entry_sheet_frequency_dialog_done">সম্পন্ন</string>
+  <!-- Select state screen -->
+  <string name="select_state_title">আপনার ক্লিনিক কোথায়?</string>
+  <string name="select_state_networkerror">কোনো ইন্টারনেট সংযোগ নেই!</string>
+  <string name="select_state_servererror">সার্ভার ত্রুটি! অনুগ্রহ করে পরে আবার চেষ্টা করুন!</string>
+  <string name="select_state_genericerror">কিছু ত্রুটি ঘটেছে! অনুগ্রহ করে পরে আবার চেষ্টা করুন!</string>
+
+  <!-- Patient status view -->
+  <string name="patient_status_died">মারা গেছে</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">ডায়গোনসিস পরিবর্তন করবেন?</string>
+  <string name="change_diagnosis_message">রোগীর কোনও সময় হাইপারটেনশন বা ডায়াবেটিস নির্নীত হয়ে থাকলে অনুগ্রহ করে হ্যাঁ চিহ্নিত করুন।</string>
+  <string name="change_diagnosis_positive">পরিবর্তন করুন</string>
+  <string name="change_diagnosis_negative">এখন না</string>
+
 </resources>

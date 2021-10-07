@@ -33,6 +33,7 @@
   <string name="identifiertype_unknown">आयडी</string>
   <string name="identifiertype_india_national_health_id">राष्‍ट्रीय आरोग्य ID</string>
   <string name="identifiertype_sri_lanka_national_id">राष्‍ट्रीय आयडी क्रमांक</string>
+  <string name="identifiertype_sri_lanka_personal_health_number">वैयक्तिक आरोग्य क्रमांक</string>
 
   <!-- Patient search -->
   <string name="instantsearch_hint">नाव, फोन किंवा ID</string>
@@ -51,6 +52,7 @@
   <string name="patiententry_bangladesh_national_id">राष्‍ट्रीय आयडी क्रमांक</string>
   <string name="patiententry_ethiopia_medical_record_number">मेडिकल रेकॉर्ड नंबर</string>
   <string name="patiententry_sri_lanka_national_id">राष्‍ट्रीय आयडी क्रमांक</string>
+  <string name="patiententry_sri_lanka_personal_health_number">वैयक्तिक आरोग्य क्रमांक</string>
   <string name="patiententry_date_of_birth_unfocused">जन्‍मतारीख</string>
   <string name="patiententry_date_of_birth_focused">जन्मदिवस: DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">किंवा</string>
@@ -294,6 +296,10 @@
   <string name="enterotp_incorrect_code">चुकीचा कोड, कृपया पुन्‍हा प्रयत्‍न करा</string>
   <string name="enterotp_resend_sms">SMS पुन्हा पाठवा</string>
   <string name="enterotp_sms_sent">नवीन सत्यापन SMS पाठवला</string>
+  <string name="enterotp_try_again_after">नंतर पुन्‍हा प्रयत्‍न करा</string>
+  <string name="otpentry_error_incorrect_otp_attempts_limit_reached" tools:ignore="PluralsCandidate">तुम्ही %s चुकीचे प्रयत्न केले आहेत</string>
+  <string name="otpentry_error_incorrect_otp_attempts_remaining">चुकीचा कोड, %s प्रयत्न शिल्लक</string>
+  <!-- minutes:seconds -->
 
   <!-- Schedule appointment -->
   <string name="scheduleappointment_next_visit_in">मध्‍ये पुढील भेट शेड्यूल करा</string>
@@ -343,6 +349,7 @@
   <string name="newmedicalhistory_history">इतिहास</string>
   <string name="newmedicalhistory_diagnosis">निदान (आवश्यक)</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">रुग्णाने मागच्या महिन्यात कधीही बीपीची औषधे घेतली का? (आवश्यक)</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">रुग्णाने मागच्या महिन्यात कधीही मधुमेहाची औषधे घेतली का? (आवश्यक)</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">काही नाही</string>
@@ -720,6 +727,7 @@
   <!-- Select ongoing hypertension treatment dialog -->
   <string name="select_ongoing_hypertension_treatment_title">रुग्णाने मागच्या महिन्यात कधीही बीपीची औषधे घेतली का?</string>
   <string name="select_ongoing_hypertension_treatment_message">होय किंवा नाही निवडा.</string>
+  <string name="select_ongoing_diabetes_treatment_message">रुग्णाने मागच्या महिन्यात कधीही मधुमेहाची औषधे घेतली की नाही याची खात्री करा.</string>
   <string name="select_ongoing_hypertension_treatment_positive_action">ठीक आहे</string>
 
   <!-- Custom drugs search -->
@@ -727,11 +735,11 @@
   <string name="customdrugssearch_item_name_separator">,\u0020</string>
 
   <!-- Warning dialogs -->
-  <string name="warning_add_measurements_title">BP आणि रक्तातील साखर जोडायचे?</string>
+  <string name="warning_add_measurements_title">बीपी आणि रक्तातील साखर जोडायचे?</string>
   <string name="warning_add_measurements_message">शक्य असल्यास, ह्या रुग्णासाठी वर्तमान रक्तदाब आणि रक्तातील साखर यांचे वाचन जोडा.</string>
   <string name="warning_add_measurements_positive_button">वाचन जोडा</string>
   <string name="warning_add_measurements_negative_button">आता नाही</string>
-  <string name="warning_add_blood_pressure_title">BP जोडायचे?</string>
+  <string name="warning_add_blood_pressure_title">बीपी जोडायचे?</string>
   <string name="warning_add_blood_pressure_message">शक्य असल्यास, ह्या रुग्णासाठी वर्तमान रक्तदाबाचे वाचन जोडा.</string>
   <string name="warning_add_blood_pressure_positive_button">रक्‍तदाब जोडा</string>
   <string name="warning_add_blood_pressure_negative_button">आता नाही</string>
@@ -747,4 +755,19 @@
   <string name="custom_drug_entry_sheet_save_button_text">जतन करा</string>
   <string name="custom_drug_entry_sheet_add_button_text">जोडा</string>
   <string name="custom_drug_entry_sheet_frequency_dialog_done">पूर्ण झाले</string>
+  <!-- Select state screen -->
+  <string name="select_state_title">तुमचे क्लिनिक कुठे आहे?</string>
+  <string name="select_state_networkerror">इंटरनेट कनेक्‍शन नाही!</string>
+  <string name="select_state_servererror">सर्व्‍हर त्रुटी! कृपया पुन्‍हा प्रयत्‍न करा!</string>
+  <string name="select_state_genericerror">काहीतरी चुकले! कृपया पुन्‍हा प्रयत्‍न करा!</string>
+
+  <!-- Patient status view -->
+  <string name="patient_status_died">मृत झाले</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">निदान बदलायचे?</string>
+  <string name="change_diagnosis_message">जर रुग्णाला उच्च रक्तदाबाचे किंवा मधुमेहाचे निदान झाले असेल तर कृपया होय वर खूण करा.</string>
+  <string name="change_diagnosis_positive">बदला</string>
+  <string name="change_diagnosis_negative">आता नाही</string>
+
 </resources>

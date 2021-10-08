@@ -32,5 +32,5 @@ enum class Feature(
   CustomDrugSearchScreen(true, "drug_search_screen"),
   OnlinePatientLookup(true, "online_patient_lookup"),
   HttpRequestBodyCompression(false, "http_request_body_compression_enabled"),
-  CallResultSyncEnabled(false)
+  CallResultSyncEnabled(true)
 }

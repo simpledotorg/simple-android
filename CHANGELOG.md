@@ -19,6 +19,7 @@
 - Bump CameraX dependencies
 - Remove unused params from `OverdueAppointment`
 - Bump Dagger to v2.39.1
+- Enable call result sync
 
 ### Changes
 

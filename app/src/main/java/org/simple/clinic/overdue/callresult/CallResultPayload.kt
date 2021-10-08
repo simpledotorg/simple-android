@@ -18,10 +18,10 @@ data class CallResultPayload(
     @Json(name = "appointment_id")
     val appointmentId: UUID,
 
-    @Json(name = "cancel_reason")
+    @Json(name = "remove_reason")
     val removeReason: AppointmentCancelReason?,
 
-    @Json(name = "result")
+    @Json(name = "result_type")
     val outcome: Outcome,
 
     @Json(name = "created_at")

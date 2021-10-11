@@ -33,6 +33,7 @@
   <string name="identifiertype_unknown">ఐడి</string>
   <string name="identifiertype_india_national_health_id">జాతీయ ఆరోగ్య ID</string>
   <string name="identifiertype_sri_lanka_national_id">జాతీయ గుర్తింపు కార్డ్ సంఖ్య</string>
+  <string name="identifiertype_sri_lanka_personal_health_number">వ్యక్తిగత ఆరోగ్యం నంబర్</string>
 
   <!-- Patient search -->
   <string name="instantsearch_hint">పేరు, ఫోన్ లేదా ID</string>
@@ -51,6 +52,7 @@
   <string name="patiententry_bangladesh_national_id">జాతీయ గుర్తింపు కార్డ్ సంఖ్య</string>
   <string name="patiententry_ethiopia_medical_record_number">వైద్య రికార్డ్ నంబర్</string>
   <string name="patiententry_sri_lanka_national_id">జాతీయ గుర్తింపు కార్డ్ సంఖ్య</string>
+  <string name="patiententry_sri_lanka_personal_health_number">వ్యక్తిగత ఆరోగ్యం నంబర్</string>
   <string name="patiententry_date_of_birth_unfocused">పుట్టినతేదీ</string>
   <string name="patiententry_date_of_birth_focused">D.O.B (పుట్టినతేదీ): DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">లేదా</string>
@@ -294,6 +296,10 @@
   <string name="enterotp_incorrect_code">కోడ్ తప్పు, మళ్లీ ప్రయత్నించండి</string>
   <string name="enterotp_resend_sms">SMS తిరిగి పంపు</string>
   <string name="enterotp_sms_sent">కొత్త ధృవీకరణ SMS పంపబడింది</string>
+  <string name="enterotp_try_again_after">తర్వాత మళ్లీ ప్రయత్నించండి</string>
+  <string name="otpentry_error_incorrect_otp_attempts_limit_reached" tools:ignore="PluralsCandidate">మీరు %s సార్లు విఫలయత్నాలు చేసారు</string>
+  <string name="otpentry_error_incorrect_otp_attempts_remaining">తప్పు కోడ్, %s ప్రయత్నాలు మిగిలి ఉన్నాయి</string>
+  <!-- minutes:seconds -->
 
   <!-- Schedule appointment -->
   <string name="scheduleappointment_next_visit_in">షెడ్యూల్ చేసిన తదుపరి సందర్శన</string>
@@ -343,6 +349,7 @@
   <string name="newmedicalhistory_history">చరిత్ర</string>
   <string name="newmedicalhistory_diagnosis">రోగ నిర్ధారణ (అవసరం)</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">గత నెలలో రోగి ఎప్పుడైనా బిపి మందులు తీసుకున్నారా? (అవసరం)</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">గత నెలలో రోగి ఎప్పుడైనా మధుమేహం మందులు తీసుకున్నారా? (అవసరం)</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ఏదీ కాదు</string>
@@ -720,6 +727,7 @@
   <!-- Select ongoing hypertension treatment dialog -->
   <string name="select_ongoing_hypertension_treatment_title">గత నెలలో రోగి ఎప్పుడైనా బిపి మందులు తీసుకున్నారా?</string>
   <string name="select_ongoing_hypertension_treatment_message">అవును లేదా లేదు ఎంచుకోండి.</string>
+  <string name="select_ongoing_diabetes_treatment_message">గత నెలలో రోగి ఎప్పుడైనా మధుమేహం మందులు తీసుకున్నారని నిర్ధారించండి.</string>
   <string name="select_ongoing_hypertension_treatment_positive_action">సరే</string>
 
   <!-- Custom drugs search -->
@@ -739,7 +747,7 @@
   <string name="warning_add_blood_sugar_message">వీలైతే, ఈ రోగి కోసం ప్రస్తుత రక్తంలోని చెక్కర రీడింగ్‌ను జోడించండి.</string>
   <string name="warning_add_blood_sugar_positive_button">రక్తంలోని చెక్కరను జోడించు</string>
   <string name="warning_add_blood_sugar_negative_button">ఇప్పుడు కాదు</string>
-  
+
   <!-- Custom drug entry sheet -->
   <string name="custom_drug_entry_sheet_remove">తీసివేయి</string>
   <string name="custom_drug_entry_sheet_dosage">మోతాదు</string>
@@ -747,4 +755,19 @@
   <string name="custom_drug_entry_sheet_save_button_text">సేవ్ చేయి</string>
   <string name="custom_drug_entry_sheet_add_button_text">జోడించు</string>
   <string name="custom_drug_entry_sheet_frequency_dialog_done">పూర్తయింది</string>
-  </resources>
+  <!-- Select state screen -->
+  <string name="select_state_title">మీ క్లినిక్ ఎక్కడ ఉంది?</string>
+  <string name="select_state_networkerror">ఇంటర్నెట్ కనెక్షన్ లేదు!</string>
+  <string name="select_state_servererror">సర్వర్లో లోపం ఏర్పడింది! తర్వాత మళ్లీ ప్రయత్నించండి!</string>
+  <string name="select_state_genericerror">ఏదో తప్పు జరిగింది! తర్వాత మళ్లీ ప్రయత్నించండి!</string>
+
+  <!-- Patient status view -->
+  <string name="patient_status_died">మరణించారు</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">రోగ నిర్ణయాన్ని మార్చాలా?</string>
+  <string name="change_diagnosis_message">దయచేసి రోగికి ఎప్పుడైన రక్తపోటు లేదా మధుమేహం ఉన్నట్లయితే అవును అని నిర్ధారించండి.</string>
+  <string name="change_diagnosis_positive">మార్చు</string>
+  <string name="change_diagnosis_negative">ఇప్పుడు వద్దు</string>
+
+</resources>

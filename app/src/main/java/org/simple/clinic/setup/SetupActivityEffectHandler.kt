@@ -33,7 +33,8 @@ class SetupActivityEffectHandler @AssistedInject constructor(
     private val allowApplicationToRun: AllowApplicationToRun,
     @TypedPreference(OnboardingComplete) private val onboardingCompletePreference: Preference<Boolean>,
     @TypedPreference(DatabaseMaintenanceRunAt) private val databaseMaintenanceRunAt: Preference<Optional<Instant>>,
-    private val userClock: UserClock
+    private val userClock: UserClock,
+    private val loadV1Country: LoadV1Country
 ) {
 
   @AssistedFactory

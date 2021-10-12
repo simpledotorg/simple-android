@@ -35,6 +35,7 @@ class SetupActivityEffectHandlerTest {
   private val clock = TestUtcClock(Instant.parse("2018-01-01T00:00:00Z"))
   private val userClock = TestUserClock(Instant.parse("2021-07-11T00:00:00Z"))
   private val allowApplicationToRun = mock<AllowApplicationToRun>()
+  private val loadV1Country = mock<LoadV1Country>()
 
   private val effectHandler = SetupActivityEffectHandler(
       uiActions = uiActions,
@@ -46,7 +47,8 @@ class SetupActivityEffectHandlerTest {
       allowApplicationToRun = allowApplicationToRun,
       onboardingCompletePreference = onboardingCompletePreference,
       databaseMaintenanceRunAt = databaseMaintenanceRunAtPreference,
-      userClock = userClock
+      userClock = userClock,
+      loadV1Country = loadV1Country
   ).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)

@@ -112,7 +112,6 @@ android {
     val sentryEnvironment: String by project
     val mixpanelToken: String by project
     val manifestEndpoint: String by project
-    val fallbackApiEndpoint: String by project
     val disableScreenshot: String by project
     val allowRootedDevice: String by project
 
@@ -123,7 +122,6 @@ android {
 
     buildConfigField("String", "MIXPANEL_TOKEN", "\"$mixpanelToken\"")
     buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
-    buildConfigField("String", "FALLBACK_ENDPOINT", "\"$fallbackApiEndpoint\"")
     buildConfigField("boolean", "DISABLE_SCREENSHOT", disableScreenshot)
     buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", allowRootedDevice)
   }

@@ -84,22 +84,6 @@ class SetupActivityUpdateTest {
   }
 
   @Test
-  fun `when the fallback country is set as the selected country, go to home screen`() {
-    // given
-    val user = TestData.loggedInUser(uuid = UUID.fromString("d7349b2e-bcc8-47d4-be29-1775b88e8460"))
-    val model = defaultModel.previouslyLoggedInUser(user)
-
-    // then
-    updateSpec
-        .given(model)
-        .whenEvent(FallbackCountrySetAsSelected)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(GoToMainActivity as SetupActivityEffect)
-        ))
-  }
-
-  @Test
   fun `when the database maintenance is completed, fetch the user details`() {
     updateSpec
         .given(defaultModel)

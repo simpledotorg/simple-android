@@ -34,7 +34,6 @@ class SetupActivityUpdate(
         next(updatedModel, effect)
       }
       is DatabaseInitialized -> dispatch(FetchDatabaseMaintenanceLastRunAtTime)
-      is FallbackCountrySetAsSelected -> dispatch(GoToMainActivity)
       is DatabaseMaintenanceCompleted -> dispatch(FetchUserDetails)
       is DatabaseMaintenanceLastRunAtTimeLoaded -> runDatabaseMaintenanceIfRequired(event, model)
       is AppAllowedToRunCheckCompleted -> initializeDatabase(event)

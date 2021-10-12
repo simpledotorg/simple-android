@@ -220,6 +220,7 @@
           android:id="@+id/phoneNumberEditText"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:digits="@string/latin_numeric_characters"
           android:hint="@string/patiententry_phone_number"
           android:imeOptions="flagNoFullscreen"
           android:inputType="phone|textCapSentences" />

@@ -19,7 +19,7 @@ import org.simple.clinic.setup.runcheck.Disallowed.Reason
 import org.simple.clinic.user.User
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.time.Instant
 import java.util.Optional
 import java.util.UUID
@@ -35,18 +35,20 @@ class SetupActivityEffectHandlerTest {
   private val clock = TestUtcClock(Instant.parse("2018-01-01T00:00:00Z"))
   private val userClock = TestUserClock(Instant.parse("2021-07-11T00:00:00Z"))
   private val allowApplicationToRun = mock<AllowApplicationToRun>()
+  private val loadV1Country = mock<LoadV1Country>()
 
   private val effectHandler = SetupActivityEffectHandler(
       uiActions = uiActions,
       userDao = userDao,
       appConfigRepository = appConfigRepository,
-      schedulersProvider = TrampolineSchedulersProvider(),
+      schedulersProvider = TestSchedulersProvider.trampoline(),
       appDatabase = appDatabase,
       clock = clock,
       allowApplicationToRun = allowApplicationToRun,
       onboardingCompletePreference = onboardingCompletePreference,
       databaseMaintenanceRunAt = databaseMaintenanceRunAtPreference,
-      userClock = userClock
+      userClock = userClock,
+      loadV1Country = loadV1Country
   ).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -67,6 +69,17 @@ class SetupActivityEffectHandlerTest {
     val country = TestData.country()
     whenever(appConfigRepository.currentCountry()) doReturn country
 
+    val v1Country = mapOf(
+        "country_code" to "IN",
+        "endpoint" to "https://api.simple.org/api/v1",
+        "display_name" to "India",
+        "isd_code" to "91"
+    )
+    whenever(loadV1Country.load()).thenReturn(Optional.of(v1Country))
+
+    val currentDeployment = TestData.deployment()
+    whenever(appConfigRepository.currentDeployment()).thenReturn(currentDeployment)
+
     // when
     testCase.dispatch(FetchUserDetails)
 
@@ -74,7 +87,9 @@ class SetupActivityEffectHandlerTest {
     testCase.assertOutgoingEvents(UserDetailsFetched(
         hasUserCompletedOnboarding = true,
         loggedInUser = Optional.of(user),
-        userSelectedCountry = Optional.of(country)
+        userSelectedCountry = Optional.of(country),
+        userSelectedCountryV1 = Optional.of(v1Country),
+        currentDeployment = Optional.of(currentDeployment)
     ))
     verifyZeroInteractions(uiActions)
   }

@@ -19,7 +19,7 @@ import org.simple.clinic.setup.runcheck.Disallowed.Reason
 import org.simple.clinic.user.User
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.time.Instant
 import java.util.Optional
 import java.util.UUID
@@ -40,7 +40,7 @@ class SetupActivityEffectHandlerTest {
       uiActions = uiActions,
       userDao = userDao,
       appConfigRepository = appConfigRepository,
-      schedulersProvider = TrampolineSchedulersProvider(),
+      schedulersProvider = TestSchedulersProvider.trampoline(),
       appDatabase = appDatabase,
       clock = clock,
       allowApplicationToRun = allowApplicationToRun,

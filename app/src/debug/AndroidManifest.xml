@@ -39,7 +39,7 @@
     <activity
       android:name=".WebviewTestActivity"
       android:enabled="false"
-      android:exported="false"
+      android:exported="true"
       android:label="WebViewTest">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />

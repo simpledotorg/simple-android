@@ -875,4 +875,6 @@
   <string name="change_diagnosis_positive">CHANGE</string>
   <string name="change_diagnosis_negative">NOT NOW</string>
 
+  <string name="latin_numeric_characters" translatable="false">0123456789</string>
+
 </resources>

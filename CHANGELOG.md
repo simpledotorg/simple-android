@@ -2,6 +2,10 @@
 
 ## Next Release
 
+### Internal
+
+- Allow only latin digits in the phone number entry
+
 ### Changes
 
 - [In Progress: 22 Jul 2021] Add option to download & share overdue list

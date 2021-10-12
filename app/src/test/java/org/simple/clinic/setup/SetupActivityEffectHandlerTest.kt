@@ -69,6 +69,17 @@ class SetupActivityEffectHandlerTest {
     val country = TestData.country()
     whenever(appConfigRepository.currentCountry()) doReturn country
 
+    val v1Country = mapOf(
+        "country_code" to "IN",
+        "endpoint" to "https://api.simple.org/api/v1",
+        "display_name" to "India",
+        "isd_code" to "91"
+    )
+    whenever(loadV1Country.load()).thenReturn(Optional.of(v1Country))
+
+    val currentDeployment = TestData.deployment()
+    whenever(appConfigRepository.currentDeployment()).thenReturn(currentDeployment)
+
     // when
     testCase.dispatch(FetchUserDetails)
 
@@ -76,7 +87,9 @@ class SetupActivityEffectHandlerTest {
     testCase.assertOutgoingEvents(UserDetailsFetched(
         hasUserCompletedOnboarding = true,
         loggedInUser = Optional.of(user),
-        userSelectedCountry = Optional.of(country)
+        userSelectedCountry = Optional.of(country),
+        userSelectedCountryV1 = Optional.of(v1Country),
+        currentDeployment = Optional.of(currentDeployment)
     ))
     verifyZeroInteractions(uiActions)
   }

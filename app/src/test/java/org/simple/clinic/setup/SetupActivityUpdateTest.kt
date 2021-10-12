@@ -156,19 +156,43 @@ class SetupActivityUpdateTest {
   }
 
   private fun previouslyLoggedInUserFetched(user: User): UserDetailsFetched {
-    return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = Optional.of(user), userSelectedCountry = Optional.empty())
+    return UserDetailsFetched(
+        hasUserCompletedOnboarding = true,
+        loggedInUser = Optional.of(user),
+        userSelectedCountry = Optional.empty(),
+        userSelectedCountryV1 = Optional.empty(),
+        currentDeployment = Optional.empty()
+    )
   }
 
   private fun onboardedUserWithoutLoggingInFetched(): UserDetailsFetched {
-    return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = Optional.empty(), userSelectedCountry = Optional.empty())
+    return UserDetailsFetched(
+        hasUserCompletedOnboarding = true,
+        loggedInUser = Optional.empty(),
+        userSelectedCountry = Optional.empty(),
+        userSelectedCountryV1 = Optional.empty(),
+        currentDeployment = Optional.empty()
+    )
   }
 
   private fun completelyNewUserFetched(): UserDetailsFetched {
-    return UserDetailsFetched(hasUserCompletedOnboarding = false, loggedInUser = Optional.empty(), userSelectedCountry = Optional.empty())
+    return UserDetailsFetched(
+        hasUserCompletedOnboarding = false,
+        loggedInUser = Optional.empty(),
+        userSelectedCountry = Optional.empty(),
+        userSelectedCountryV1 = Optional.empty(),
+        currentDeployment = Optional.empty()
+    )
   }
 
   private fun loggedInUserFetched(user: User, country: Country): UserDetailsFetched {
-    return UserDetailsFetched(hasUserCompletedOnboarding = true, loggedInUser = Optional.of(user), userSelectedCountry = Optional.of(country))
+    return UserDetailsFetched(
+        hasUserCompletedOnboarding = true,
+        loggedInUser = Optional.of(user),
+        userSelectedCountry = Optional.of(country),
+        userSelectedCountryV1 = Optional.empty(),
+        currentDeployment = Optional.empty()
+    )
   }
 }
 

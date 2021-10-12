@@ -73,7 +73,13 @@ class SetupActivityEffectHandler @AssistedInject constructor(
       effectStream
           .flatMapSingle { Single.fromCallable(::readUserDetailsFromStorage).subscribeOn(scheduler) }
           .map { (hasUserCompletedOnboarding, loggedInUser, userSelectedCountry) ->
-            UserDetailsFetched(hasUserCompletedOnboarding, loggedInUser, userSelectedCountry)
+            UserDetailsFetched(
+                hasUserCompletedOnboarding = hasUserCompletedOnboarding,
+                loggedInUser = loggedInUser,
+                userSelectedCountry = userSelectedCountry,
+                userSelectedCountryV1 = loadV1Country.load(),
+                currentDeployment = appConfigRepository.currentDeployment().toOptional()
+            )
           }
     }
   }

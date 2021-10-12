@@ -5,6 +5,7 @@
 ### Internal
 
 - Allow only latin digits in the phone number entry
+- Remove flow for setting a fallback country for India users when moving to a build supporting country selection
 
 ### Changes
 

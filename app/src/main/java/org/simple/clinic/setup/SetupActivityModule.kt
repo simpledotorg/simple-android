@@ -4,15 +4,10 @@ import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
-import org.simple.clinic.BuildConfig
-import org.simple.clinic.appconfig.Country
-import org.simple.clinic.appconfig.Deployment
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.DatabaseMaintenanceRunAt
-import org.simple.clinic.main.TypedPreference.Type.FallbackCountry
 import org.simple.clinic.util.preference.InstantRxPreferencesConverter
 import org.simple.clinic.util.preference.getOptional
-import java.net.URI
 import java.time.Instant
 import java.util.Optional
 
@@ -20,22 +15,6 @@ import java.util.Optional
   SetupActivityConfigModule::class
 ])
 class SetupActivityModule {
-
-  @Provides
-  @TypedPreference(FallbackCountry)
-  fun providesFallbackCountry(): Country {
-    return Country(
-        isoCountryCode = "IN",
-        displayName = "India",
-        isdCode = "91",
-        deployments = listOf(
-            Deployment(
-                displayName = "IHCI",
-                endPoint = URI.create(BuildConfig.FALLBACK_ENDPOINT)
-            )
-        )
-    )
-  }
 
   @Provides
   @TypedPreference(DatabaseMaintenanceRunAt)

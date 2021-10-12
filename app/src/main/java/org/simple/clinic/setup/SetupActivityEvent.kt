@@ -16,8 +16,6 @@ data class UserDetailsFetched(
 
 object DatabaseInitialized : SetupActivityEvent()
 
-object FallbackCountrySetAsSelected : SetupActivityEvent()
-
 object DatabaseMaintenanceCompleted : SetupActivityEvent()
 
 data class DatabaseMaintenanceLastRunAtTimeLoaded(val runAt: Optional<Instant>) : SetupActivityEvent()

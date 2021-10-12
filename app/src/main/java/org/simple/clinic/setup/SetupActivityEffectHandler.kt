@@ -13,7 +13,6 @@ import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.DatabaseMaintenanceRunAt
-import org.simple.clinic.main.TypedPreference.Type.FallbackCountry
 import org.simple.clinic.main.TypedPreference.Type.OnboardingComplete
 import org.simple.clinic.setup.runcheck.AllowApplicationToRun
 import org.simple.clinic.user.User
@@ -33,7 +32,6 @@ class SetupActivityEffectHandler @AssistedInject constructor(
     private val clock: UtcClock,
     private val allowApplicationToRun: AllowApplicationToRun,
     @TypedPreference(OnboardingComplete) private val onboardingCompletePreference: Preference<Boolean>,
-    @TypedPreference(FallbackCountry) private val fallbackCountry: Country,
     @TypedPreference(DatabaseMaintenanceRunAt) private val databaseMaintenanceRunAt: Preference<Optional<Instant>>,
     private val userClock: UserClock
 ) {
@@ -62,7 +60,6 @@ class SetupActivityEffectHandler @AssistedInject constructor(
         // effect so that the intention is clear.
         .addTransformer(InitializeDatabase::class.java, initializeDatabase(schedulersProvider.io()))
         .addAction(ShowCountrySelectionScreen::class.java, uiActions::showCountrySelectionScreen, schedulersProvider.ui())
-        .addTransformer(SetFallbackCountryAsCurrentCountry::class.java, setFallbackCountryAsSelected(schedulersProvider.io()))
         .addTransformer(RunDatabaseMaintenance::class.java, runDatabaseMaintenance())
         .addTransformer(FetchDatabaseMaintenanceLastRunAtTime::class.java, loadLastDatabaseMaintenanceTime())
         .addConsumer(ShowNotAllowedToRunMessage::class.java, { uiActions.showDisallowedToRunError(it.reason) }, schedulersProvider.ui())
@@ -93,17 +90,6 @@ class SetupActivityEffectHandler @AssistedInject constructor(
       effectStream
           .flatMapSingle { userDao.userCount().subscribeOn(scheduler) }
           .map { DatabaseInitialized }
-    }
-  }
-
-  private fun setFallbackCountryAsSelected(scheduler: Scheduler): ObservableTransformer<SetFallbackCountryAsCurrentCountry, SetupActivityEvent> {
-    return ObservableTransformer { effectStream ->
-      effectStream
-          .observeOn(scheduler)
-          .doOnNext {
-            appConfigRepository.saveCurrentCountry(fallbackCountry)
-          }
-          .map { FallbackCountrySetAsSelected }
     }
   }
 

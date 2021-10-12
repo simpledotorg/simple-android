@@ -14,8 +14,6 @@ object InitializeDatabase : SetupActivityEffect()
 
 object ShowCountrySelectionScreen : SetupActivityEffect()
 
-object SetFallbackCountryAsCurrentCountry : SetupActivityEffect()
-
 object RunDatabaseMaintenance : SetupActivityEffect()
 
 object FetchDatabaseMaintenanceLastRunAtTime : SetupActivityEffect()

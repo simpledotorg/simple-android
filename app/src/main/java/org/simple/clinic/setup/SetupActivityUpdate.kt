@@ -34,7 +34,6 @@ class SetupActivityUpdate(
         next(updatedModel, effect)
       }
       is DatabaseInitialized -> dispatch(FetchDatabaseMaintenanceLastRunAtTime)
-      is FallbackCountrySetAsSelected -> dispatch(GoToMainActivity)
       is DatabaseMaintenanceCompleted -> dispatch(FetchUserDetails)
       is DatabaseMaintenanceLastRunAtTimeLoaded -> runDatabaseMaintenanceIfRequired(event, model)
       is AppAllowedToRunCheckCompleted -> initializeDatabase(event)
@@ -87,7 +86,7 @@ class SetupActivityUpdate(
 
     return when {
       hasUserLoggedInCompletely -> GoToMainActivity
-      userPresentButCountryNotSelected -> SetFallbackCountryAsCurrentCountry
+      userPresentButCountryNotSelected -> throw IllegalStateException("User is logged in but the selected country is not present.")
       hasUserCompletedOnboarding.not() -> ShowOnboardingScreen
       else -> ShowCountrySelectionScreen
     }

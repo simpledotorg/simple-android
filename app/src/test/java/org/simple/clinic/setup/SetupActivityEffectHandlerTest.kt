@@ -30,7 +30,6 @@ class SetupActivityEffectHandlerTest {
   private val uiActions = mock<UiActions>()
   private val userDao = mock<User.RoomDao>()
   private val appConfigRepository = mock<AppConfigRepository>()
-  private val fallbackCountry = TestData.country()
   private val appDatabase = mock<org.simple.clinic.AppDatabase>()
   private val databaseMaintenanceRunAtPreference = mock<Preference<Optional<Instant>>>()
   private val clock = TestUtcClock(Instant.parse("2018-01-01T00:00:00Z"))
@@ -46,7 +45,6 @@ class SetupActivityEffectHandlerTest {
       clock = clock,
       allowApplicationToRun = allowApplicationToRun,
       onboardingCompletePreference = onboardingCompletePreference,
-      fallbackCountry = fallbackCountry,
       databaseMaintenanceRunAt = databaseMaintenanceRunAtPreference,
       userClock = userClock
   ).build()
@@ -125,16 +123,6 @@ class SetupActivityEffectHandlerTest {
     testCase.assertNoOutgoingEvents()
     verify(uiActions).showCountrySelectionScreen()
     verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
-  fun `the fallback country must be set as the selected country when the set fallback country as selected effect is received`() {
-    // when
-    testCase.dispatch(SetFallbackCountryAsCurrentCountry)
-
-    // then
-    testCase.assertOutgoingEvents(FallbackCountrySetAsSelected)
-    verifyZeroInteractions(uiActions)
   }
 
   @Test

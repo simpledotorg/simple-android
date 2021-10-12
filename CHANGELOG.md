@@ -27,6 +27,7 @@
 - Bump Dagger to v2.39.1
 - Enable call result sync
 - Scope the construction of `RxSharedPreferences` to the application
+- Remove flow for setting a fallback country for India users when moving to a build supporting country selection
 
 ### Changes
 

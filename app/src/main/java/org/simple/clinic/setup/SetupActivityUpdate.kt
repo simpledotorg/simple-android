@@ -87,7 +87,7 @@ class SetupActivityUpdate(
 
     return when {
       hasUserLoggedInCompletely -> GoToMainActivity
-      userPresentButCountryNotSelected -> SetFallbackCountryAsCurrentCountry
+      userPresentButCountryNotSelected -> throw IllegalStateException("User is logged in but the selected country is not present.")
       hasUserCompletedOnboarding.not() -> ShowOnboardingScreen
       else -> ShowCountrySelectionScreen
     }

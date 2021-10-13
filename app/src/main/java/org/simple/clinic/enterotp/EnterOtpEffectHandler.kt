@@ -1,5 +1,6 @@
 package org.simple.clinic.enterotp
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -22,12 +23,13 @@ class EnterOtpEffectHandler @AssistedInject constructor(
     private val activateUser: ActivateUser,
     private val bruteForceProtection: BruteForceOtpEntryProtection,
     @Assisted private val uiActions: EnterOtpUiActions,
-    @Assisted private val viewEffectHandler: EnterOtpViewEffectHandler
+    @Assisted private val viewEffectHandler: EnterOtpViewEffectHandler,
+    @Assisted private val viewEffectsConsumer: Consumer<EnterOtpViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: EnterOtpUiActions, viewEffectHandler: EnterOtpViewEffectHandler): EnterOtpEffectHandler
+    fun create(uiActions: EnterOtpUiActions, viewEffectHandler: EnterOtpViewEffectHandler, viewEffectsConsumer: Consumer<EnterOtpViewEffect>): EnterOtpEffectHandler
   }
 
   fun build(): ObservableTransformer<EnterOtpEffect, EnterOtpEvent> {

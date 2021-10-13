@@ -1022,6 +1022,7 @@ class EnterOtpLogicTest {
 
     whenever(bruteForceOtpEntryProtection.protectedStateChanges()) doReturn Observable.just(Allowed(attemptsMade = 0, attemptsRemaining = 5))
 
+    val viewEffectHandler = EnterOtpViewEffectHandler(uiActions)
     val effectHandler = EnterOtpEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
         userSession = userSession,
@@ -1031,7 +1032,8 @@ class EnterOtpLogicTest {
         activateUser = activateUser,
         uiActions = uiActions,
         bruteForceProtection = bruteForceOtpEntryProtection,
-        viewEffectHandler = EnterOtpViewEffectHandler(uiActions)
+        viewEffectHandler = viewEffectHandler,
+        viewEffectsConsumer = viewEffectHandler::handle
     )
     val uiRenderer = EnterOtpUiRenderer(ui)
 

@@ -31,3 +31,5 @@ object ShowUnexpectedError : EnterOtpEffect()
 object LoadOtpEntryProtectedStates : EnterOtpEffect()
 
 object ResetOtpAttemptLimit : EnterOtpEffect()
+
+sealed class EnterOtpViewEffect : EnterOtpEffect()

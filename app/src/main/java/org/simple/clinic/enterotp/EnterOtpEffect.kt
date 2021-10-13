@@ -18,8 +18,6 @@ object RequestLoginOtp : EnterOtpEffect()
 
 data class FailedLoginOtpAttempt(val result: LoginResult) : EnterOtpEffect()
 
-object ShowUnexpectedError : EnterOtpEffect()
-
 object LoadOtpEntryProtectedStates : EnterOtpEffect()
 
 object ResetOtpAttemptLimit : EnterOtpEffect()
@@ -33,3 +31,5 @@ object GoBack : EnterOtpViewEffect()
 object ShowSmsSentMessage : EnterOtpViewEffect()
 
 object ShowNetworkError : EnterOtpViewEffect()
+
+object ShowUnexpectedError : EnterOtpViewEffect()

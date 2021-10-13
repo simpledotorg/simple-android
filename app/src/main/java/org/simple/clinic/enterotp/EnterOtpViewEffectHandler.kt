@@ -11,6 +11,7 @@ class EnterOtpViewEffectHandler(
       GoBack -> uiActions::goBack
       ShowSmsSentMessage -> uiActions::showSmsSentMessage
       ShowNetworkError -> uiActions::showNetworkError
+      ShowUnexpectedError -> uiActions::showUnexpectedError
     }
   }
 }

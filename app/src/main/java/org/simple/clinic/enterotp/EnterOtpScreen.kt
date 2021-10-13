@@ -66,6 +66,9 @@ class EnterOtpScreen : BaseScreen<
   @Inject
   lateinit var config: BruteForceOtpEntryProtectionConfig
 
+  @Inject
+  lateinit var viewEffectHandler: EnterOtpViewEffectHandler.Factory
+
   private val otpEntryEditText
     get() = binding.otpEntryEditText
 
@@ -127,6 +130,8 @@ class EnterOtpScreen : BaseScreen<
   override fun createEffectHandler(
       viewEffectsConsumer: Consumer<EnterOtpViewEffect>
   ) = effectHandlerFactory.create(this, viewEffectHandler = EnterOtpViewEffectHandler(this), viewEffectsConsumer = viewEffectsConsumer).build()
+
+  override fun viewEffectHandler() = viewEffectHandler.create(this)
 
   override fun createInit() = EnterOtpInit()
 

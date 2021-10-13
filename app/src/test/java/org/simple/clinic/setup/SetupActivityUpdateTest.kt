@@ -166,6 +166,17 @@ class SetupActivityUpdateTest {
         ))
   }
 
+  @Test
+  fun `when stored country v1 is deleted, then go to main activity`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(StoredCountryV1Deleted)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoToMainActivity)
+        ))
+  }
+
   private fun previouslyLoggedInUserFetched(user: User): UserDetailsFetched {
     return UserDetailsFetched(
         hasUserCompletedOnboarding = true,

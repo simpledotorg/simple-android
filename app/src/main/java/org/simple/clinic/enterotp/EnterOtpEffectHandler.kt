@@ -34,7 +34,6 @@ class EnterOtpEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<EnterOtpEffect, EnterOtpEvent>()
         .addTransformer(LoadUser::class.java, loadUser())
-        .addAction(ClearPin::class.java, uiActions::clearPin, schedulers.ui())
         .addAction(TriggerSync::class.java, dataSync::fireAndForgetSync)
         .addAction(ClearLoginEntry::class.java, ongoingLoginEntryRepository::clearLoginEntry)
         .addTransformer(LoginUser::class.java, loginUser())

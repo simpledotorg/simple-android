@@ -6,8 +6,6 @@ sealed class EnterOtpEffect
 
 object LoadUser : EnterOtpEffect()
 
-object ClearPin : EnterOtpEffect()
-
 object TriggerSync : EnterOtpEffect()
 
 object ClearLoginEntry : EnterOtpEffect()
@@ -33,3 +31,5 @@ object LoadOtpEntryProtectedStates : EnterOtpEffect()
 object ResetOtpAttemptLimit : EnterOtpEffect()
 
 sealed class EnterOtpViewEffect : EnterOtpEffect()
+
+object ClearPin : EnterOtpViewEffect()

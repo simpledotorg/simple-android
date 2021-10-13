@@ -6,6 +6,8 @@ class EnterOtpViewEffectHandler(
     private val uiActions: EnterOtpUiActions
 ) : ViewEffectsHandler<EnterOtpViewEffect> {
   override fun handle(viewEffect: EnterOtpViewEffect) {
-    // no-op
+    when (viewEffect) {
+      ClearPin -> uiActions::clearPin
+    }
   }
 }

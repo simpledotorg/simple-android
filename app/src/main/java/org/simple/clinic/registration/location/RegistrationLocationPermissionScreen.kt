@@ -31,16 +31,14 @@ class RegistrationLocationPermissionScreen : BaseScreen<
     RegistrationLocationPermissionEffect,
     Unit>(), RegistrationLocationPermissionUi {
 
-  var binding: ScreenRegistrationLocationPermissionBinding? = null
-
   private val allowAccessButton
-    get() = binding!!.allowAccessButton
+    get() = binding.allowAccessButton
 
   private val skipButton
-    get() = binding!!.skipButton
+    get() = binding.skipButton
 
   private val toolbar
-    get() = binding!!.toolbar
+    get() = binding.toolbar
 
   @Inject
   lateinit var router: Router
@@ -89,7 +87,6 @@ class RegistrationLocationPermissionScreen : BaseScreen<
 
   override fun onFinishInflate() {
     super.onFinishInflate()
-    binding = ScreenRegistrationLocationPermissionBinding.bind(this)
     if (isInEditMode) {
       return
     }
@@ -111,7 +108,6 @@ class RegistrationLocationPermissionScreen : BaseScreen<
 
   override fun onDetachedFromWindow() {
     delegate.stop()
-    binding = null
     super.onDetachedFromWindow()
   }
 

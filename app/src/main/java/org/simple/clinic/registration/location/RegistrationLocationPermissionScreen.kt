@@ -12,7 +12,6 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreen
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
@@ -44,9 +43,6 @@ class RegistrationLocationPermissionScreen : BaseScreen<
   lateinit var router: Router
 
   @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
-
-  @Inject
   lateinit var runtimePermissions: RuntimePermissions
 
   @Inject
@@ -54,8 +50,6 @@ class RegistrationLocationPermissionScreen : BaseScreen<
 
   @Inject
   lateinit var screenResults: ScreenResultBus
-
-  private val screenKey by unsafeLazy { screenKeyProvider.keyFor<RegistrationLocationPermissionScreenKey>(this) }
 
   private val events by unsafeLazy {
     val permissionResults = screenResults

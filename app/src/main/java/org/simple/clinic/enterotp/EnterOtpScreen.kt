@@ -43,7 +43,7 @@ class EnterOtpScreen : BaseScreen<
     EnterOtpModel,
     EnterOtpEvent,
     EnterOtpEffect,
-    Unit>(), EnterOtpUi, EnterOtpUiActions {
+    EnterOtpViewEffect>(), EnterOtpUi, EnterOtpUiActions {
 
   companion object {
     private const val MILLIS_IN_SECOND = 1000L
@@ -125,8 +125,8 @@ class EnterOtpScreen : BaseScreen<
   override fun createUpdate() = EnterOtpUpdate(LOGIN_OTP_LENGTH)
 
   override fun createEffectHandler(
-      viewEffectsConsumer: Consumer<Unit>
-  ) = effectHandlerFactory.create(this, viewEffectHandler = EnterOtpViewEffectHandler(this)).build()
+      viewEffectsConsumer: Consumer<EnterOtpViewEffect>
+  ) = effectHandlerFactory.create(this, viewEffectHandler = EnterOtpViewEffectHandler(this), viewEffectsConsumer = viewEffectsConsumer).build()
 
   override fun createInit() = EnterOtpInit()
 

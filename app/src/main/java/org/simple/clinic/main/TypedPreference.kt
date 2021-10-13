@@ -11,6 +11,7 @@ annotation class TypedPreference(val value: Type) {
     MedicalRegistrationId,
     FacilitySyncGroupSwitchedAt,
     LastDrugPullToken,
-    SelectedState
+    SelectedState,
+    CountryV1
   }
 }

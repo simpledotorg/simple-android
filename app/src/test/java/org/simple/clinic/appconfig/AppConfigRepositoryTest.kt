@@ -35,7 +35,7 @@ class AppConfigRepositoryTest {
       selectedCountryV2Preference,
       selectedDeployment,
       selectedStatePreference,
-      statesFetcher,
+      statesFetcher,,
   )
 
   @Test

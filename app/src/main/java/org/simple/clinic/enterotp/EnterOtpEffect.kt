@@ -16,8 +16,6 @@ object ListenForUserBackgroundVerification : EnterOtpEffect()
 
 object RequestLoginOtp : EnterOtpEffect()
 
-object ShowSmsSentMessage : EnterOtpEffect()
-
 data class FailedLoginOtpAttempt(val result: LoginResult) : EnterOtpEffect()
 
 object ShowNetworkError : EnterOtpEffect()
@@ -33,3 +31,5 @@ sealed class EnterOtpViewEffect : EnterOtpEffect()
 object ClearPin : EnterOtpViewEffect()
 
 object GoBack : EnterOtpViewEffect()
+
+object ShowSmsSentMessage : EnterOtpViewEffect()

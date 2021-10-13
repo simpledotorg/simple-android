@@ -9,6 +9,7 @@ class EnterOtpViewEffectHandler(
     when (viewEffect) {
       ClearPin -> uiActions::clearPin
       GoBack -> uiActions::goBack
+      ShowSmsSentMessage -> uiActions::showSmsSentMessage
     }
   }
 }

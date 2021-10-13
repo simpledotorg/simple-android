@@ -26,8 +26,6 @@ class EnterOtpEffectHandlerTest {
       loginUserWithOtp = mock(),
       activateUser = mock(),
       bruteForceProtection = bruteForceOtpEntryProtection,
-      uiActions = uiActions,
-      viewEffectHandler = viewEffectHandler,
       viewEffectsConsumer = viewEffectHandler::handle
   )
 

@@ -1030,9 +1030,7 @@ class EnterOtpLogicTest {
         ongoingLoginEntryRepository = ongoingLoginEntryRepository,
         loginUserWithOtp = loginUserWithOtp,
         activateUser = activateUser,
-        uiActions = uiActions,
         bruteForceProtection = bruteForceOtpEntryProtection,
-        viewEffectHandler = viewEffectHandler,
         viewEffectsConsumer = viewEffectHandler::handle
     )
     val uiRenderer = EnterOtpUiRenderer(ui)

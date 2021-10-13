@@ -37,7 +37,6 @@ class EnterOtpEffectHandler @AssistedInject constructor(
         .addAction(TriggerSync::class.java, dataSync::fireAndForgetSync)
         .addAction(ClearLoginEntry::class.java, ongoingLoginEntryRepository::clearLoginEntry)
         .addTransformer(LoginUser::class.java, loginUser())
-        .addAction(GoBack::class.java, uiActions::goBack, schedulers.ui())
         .addTransformer(ListenForUserBackgroundVerification::class.java, waitForUserBackgroundVerifications())
         .addTransformer(RequestLoginOtp::class.java, activateUser())
         .addAction(ShowSmsSentMessage::class.java, uiActions::showSmsSentMessage, schedulers.ui())

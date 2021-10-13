@@ -3,7 +3,9 @@ package org.simple.clinic.registration.location
 import android.content.Context
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
@@ -112,6 +114,9 @@ class RegistrationLocationPermissionScreen : BaseScreen<
   override fun onRestoreInstanceState(state: Parcelable?) {
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenRegistrationLocationPermissionBinding
+      .inflate(layoutInflater, container, false)
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
       .create(this)

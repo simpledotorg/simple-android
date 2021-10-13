@@ -212,4 +212,18 @@ class SetupActivityEffectHandlerTest {
 
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when delete stored country v1 effect is received, then delete stored country v1 preference`() {
+    // when
+    testCase.dispatch(DeleteStoredCountryV1)
+
+    // then
+    verify(appConfigRepository).deleteStoredCountryV1()
+    verifyNoMoreInteractions(appConfigRepository)
+
+    testCase.assertOutgoingEvents(StoredCountryV1Deleted)
+
+    verifyZeroInteractions(uiActions)
+  }
 }

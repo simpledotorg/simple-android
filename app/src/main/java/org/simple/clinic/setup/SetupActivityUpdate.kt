@@ -39,6 +39,7 @@ class SetupActivityUpdate(
       is DatabaseMaintenanceLastRunAtTimeLoaded -> runDatabaseMaintenanceIfRequired(event, model)
       is AppAllowedToRunCheckCompleted -> initializeDatabase(event)
       is CountryAndDeploymentSaved -> noChange()
+      is StoredCountryV1Deleted -> noChange()
     }
   }
 

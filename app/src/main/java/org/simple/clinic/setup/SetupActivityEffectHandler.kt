@@ -66,7 +66,17 @@ class SetupActivityEffectHandler @AssistedInject constructor(
         .addConsumer(ShowNotAllowedToRunMessage::class.java, { uiActions.showDisallowedToRunError(it.reason) }, schedulersProvider.ui())
         .addTransformer(CheckIfAppCanRun::class.java, checkApplicationAllowedToRun())
         .addTransformer(SaveCountryAndDeployment::class.java, saveCountryAndDeployment())
+        .addTransformer(DeleteStoredCountryV1::class.java, deleteStoredCountryV1())
         .build()
+  }
+
+  private fun deleteStoredCountryV1(): ObservableTransformer<DeleteStoredCountryV1, SetupActivityEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .subscribeOn(schedulersProvider.io())
+          .map { appConfigRepository.deleteStoredCountryV1() }
+          .map { StoredCountryV1Deleted }
+    }
   }
 
   private fun fetchUserDetails(scheduler: Scheduler): ObservableTransformer<FetchUserDetails, SetupActivityEvent> {

@@ -28,3 +28,5 @@ data class SaveCountryAndDeployment(
     val country: Country,
     val deployment: Deployment
 ): SetupActivityEffect()
+
+object DeleteStoredCountryV1 : SetupActivityEffect()

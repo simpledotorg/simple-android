@@ -81,4 +81,8 @@ class AppConfigRepository @Inject constructor(
       StatesResult.FetchError(ErrorResolver.resolve(e))
     }
   }
+
+  fun deleteStoredCountryV1() {
+    countryV1Preference.delete()
+  }
 }

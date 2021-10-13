@@ -29,13 +29,15 @@ class AppConfigRepositoryTest {
   private val selectedDeployment = mock<Preference<Optional<Deployment>>>()
   private val selectedStatePreference = mock<Preference<Optional<String>>>()
   private val statesFetcher = mock<StatesFetcher>()
+  private val countryV1Preference = mock<Preference<Optional<String>>>()
 
   private val repository = AppConfigRepository(
       manifestFetchApi,
       selectedCountryV2Preference,
       selectedDeployment,
       selectedStatePreference,
-      statesFetcher,,
+      statesFetcher,
+      countryV1Preference
   )
 
   @Test

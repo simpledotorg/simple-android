@@ -1,7 +1,9 @@
 package org.simple.clinic.registration.location
 
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
+import android.view.View
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -86,10 +88,6 @@ class RegistrationLocationPermissionScreen : BaseScreen<
       return
     }
 
-    toolbar.setOnClickListener {
-      router.pop()
-    }
-
     // Can't tell why, but the keyboard stays
     // visible on coming from the previous screen.
     hideKeyboard()
@@ -116,6 +114,14 @@ class RegistrationLocationPermissionScreen : BaseScreen<
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+
+    toolbar.setNavigationOnClickListener {
+      router.pop()
+    }
   }
 
   private fun allowLocationClicks(): Observable<RegistrationLocationPermissionEvent> {

@@ -126,7 +126,7 @@ class EnterOtpScreen : BaseScreen<
 
   override fun createEffectHandler(
       viewEffectsConsumer: Consumer<Unit>
-  ) = effectHandlerFactory.create(this).build()
+  ) = effectHandlerFactory.create(this, viewEffectHandler = EnterOtpViewEffectHandler()).build()
 
   override fun createInit() = EnterOtpInit()
 

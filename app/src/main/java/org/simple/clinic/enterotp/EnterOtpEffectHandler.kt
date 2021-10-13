@@ -21,12 +21,13 @@ class EnterOtpEffectHandler @AssistedInject constructor(
     private val loginUserWithOtp: LoginUserWithOtp,
     private val activateUser: ActivateUser,
     private val bruteForceProtection: BruteForceOtpEntryProtection,
-    @Assisted private val uiActions: EnterOtpUiActions
+    @Assisted private val uiActions: EnterOtpUiActions,
+    @Assisted private val viewEffectHandler: EnterOtpViewEffectHandler
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: EnterOtpUiActions): EnterOtpEffectHandler
+    fun create(uiActions: EnterOtpUiActions, viewEffectHandler: EnterOtpViewEffectHandler): EnterOtpEffectHandler
   }
 
   fun build(): ObservableTransformer<EnterOtpEffect, EnterOtpEvent> {

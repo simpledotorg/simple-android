@@ -24,3 +24,5 @@ object DatabaseMaintenanceCompleted : SetupActivityEvent()
 data class DatabaseMaintenanceLastRunAtTimeLoaded(val runAt: Optional<Instant>) : SetupActivityEvent()
 
 data class AppAllowedToRunCheckCompleted(val allowedToRun: AllowedToRun) : SetupActivityEvent()
+
+object CountryAndDeploymentSaved: SetupActivityEvent()

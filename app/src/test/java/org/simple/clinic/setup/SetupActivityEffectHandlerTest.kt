@@ -193,4 +193,23 @@ class SetupActivityEffectHandlerTest {
     testCase.assertOutgoingEvents(AppAllowedToRunCheckCompleted(allowedToRun))
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when the save country and deployment effect is received, the country and deployment must be saved`() {
+    // given
+    val deploymentToSave = TestData.deployment()
+    val countryToSave = TestData.country(deployments = listOf(deploymentToSave))
+
+    // when
+    testCase.dispatch(SaveCountryAndDeployment(countryToSave, deploymentToSave))
+
+    // then
+    verify(appConfigRepository).saveCurrentCountry(countryToSave)
+    verify(appConfigRepository).saveDeployment(deploymentToSave)
+    verifyNoMoreInteractions(appConfigRepository)
+
+    testCase.assertOutgoingEvents(CountryAndDeploymentSaved)
+
+    verifyZeroInteractions(uiActions)
+  }
 }

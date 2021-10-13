@@ -65,6 +65,7 @@ class SetupActivityEffectHandler @AssistedInject constructor(
         .addTransformer(FetchDatabaseMaintenanceLastRunAtTime::class.java, loadLastDatabaseMaintenanceTime())
         .addConsumer(ShowNotAllowedToRunMessage::class.java, { uiActions.showDisallowedToRunError(it.reason) }, schedulersProvider.ui())
         .addTransformer(CheckIfAppCanRun::class.java, checkApplicationAllowedToRun())
+        .addTransformer(SaveCountryAndDeployment::class.java, saveCountryAndDeployment())
         .build()
   }
 
@@ -125,6 +126,18 @@ class SetupActivityEffectHandler @AssistedInject constructor(
           .observeOn(schedulersProvider.io())
           .map { allowApplicationToRun.check() }
           .map(::AppAllowedToRunCheckCompleted)
+    }
+  }
+
+  private fun saveCountryAndDeployment(): ObservableTransformer<SaveCountryAndDeployment, SetupActivityEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .doOnNext { effect ->
+            appConfigRepository.saveCurrentCountry(effect.country)
+            appConfigRepository.saveDeployment(effect.deployment)
+          }
+          .map { CountryAndDeploymentSaved }
     }
   }
 }

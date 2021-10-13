@@ -29,7 +29,11 @@ class EnterOtpEffectHandler @AssistedInject constructor(
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: EnterOtpUiActions, viewEffectHandler: EnterOtpViewEffectHandler, viewEffectsConsumer: Consumer<EnterOtpViewEffect>): EnterOtpEffectHandler
+    fun create(
+        uiActions: EnterOtpUiActions,
+        viewEffectHandler: EnterOtpViewEffectHandler,
+        viewEffectsConsumer: Consumer<EnterOtpViewEffect>
+    ): EnterOtpEffectHandler
   }
 
   fun build(): ObservableTransformer<EnterOtpEffect, EnterOtpEvent> {

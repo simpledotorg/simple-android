@@ -1,9 +1,6 @@
 package org.simple.clinic.registration.location
 
-import android.content.Context
 import android.os.Parcelable
-import android.util.AttributeSet
-import android.widget.RelativeLayout
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -14,6 +11,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreen
 import org.simple.clinic.router.ScreenResultBus
@@ -23,13 +21,15 @@ import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.hideKeyboard
 import javax.inject.Inject
 
-class RegistrationLocationPermissionScreen(
-    context: Context,
-    attrs: AttributeSet
-) : RelativeLayout(context, attrs), RegistrationLocationPermissionUi {
+class RegistrationLocationPermissionScreen : BaseScreen<
+    RegistrationLocationPermissionScreen.Key,
+    ScreenRegistrationLocationPermissionBinding,
+    RegistrationLocationPermissionModel,
+    RegistrationLocationPermissionEvent,
+    RegistrationLocationPermissionEffect,
+    Unit>(), RegistrationLocationPermissionUi {
 
   var binding: ScreenRegistrationLocationPermissionBinding? = null
 

@@ -26,7 +26,7 @@ class EnterOtpEffectHandlerTest {
       activateUser = mock(),
       bruteForceProtection = bruteForceOtpEntryProtection,
       uiActions = uiActions,
-      viewEffectHandler = EnterOtpViewEffectHandler()
+      viewEffectHandler = EnterOtpViewEffectHandler(uiActions)
   )
 
   private val testCase = EffectHandlerTestCase(effectHandler.build())

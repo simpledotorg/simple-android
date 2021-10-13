@@ -40,7 +40,6 @@ class EnterOtpEffectHandler @AssistedInject constructor(
         .addTransformer(ListenForUserBackgroundVerification::class.java, waitForUserBackgroundVerifications())
         .addTransformer(RequestLoginOtp::class.java, activateUser())
         .addConsumer(FailedLoginOtpAttempt::class.java, { bruteForceProtection.incrementFailedOtpAttempt() }, schedulers.io())
-        .addAction(ShowNetworkError::class.java, uiActions::showNetworkError, schedulers.ui())
         .addAction(ShowUnexpectedError::class.java, uiActions::showUnexpectedError, schedulers.ui())
         .addTransformer(LoadOtpEntryProtectedStates::class.java, loadOtpEntryStates())
         .addAction(ResetOtpAttemptLimit::class.java, { bruteForceProtection.resetFailedAttempts() }, schedulers.io())

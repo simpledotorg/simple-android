@@ -10,6 +10,7 @@ class EnterOtpViewEffectHandler(
       ClearPin -> uiActions::clearPin
       GoBack -> uiActions::goBack
       ShowSmsSentMessage -> uiActions::showSmsSentMessage
+      ShowNetworkError -> uiActions::showNetworkError
     }
   }
 }

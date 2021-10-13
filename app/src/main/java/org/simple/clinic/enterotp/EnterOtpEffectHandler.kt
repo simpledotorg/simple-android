@@ -47,6 +47,7 @@ class EnterOtpEffectHandler @AssistedInject constructor(
         .addAction(ShowUnexpectedError::class.java, uiActions::showUnexpectedError, schedulers.ui())
         .addTransformer(LoadOtpEntryProtectedStates::class.java, loadOtpEntryStates())
         .addAction(ResetOtpAttemptLimit::class.java, { bruteForceProtection.resetFailedAttempts() }, schedulers.io())
+        .addConsumer(EnterOtpViewEffect::class.java, viewEffectHandler::handle)
         .build()
   }
 

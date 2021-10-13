@@ -7,11 +7,13 @@ import android.widget.RelativeLayout
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenRegistrationLocationPermissionBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreen
 import org.simple.clinic.router.ScreenResultBus
@@ -139,5 +141,14 @@ class RegistrationLocationPermissionScreen(
 
   interface Injector {
     fun inject(target: RegistrationLocationPermissionScreen)
+  }
+
+  @Parcelize
+  data class Key(
+      val ongoingRegistrationEntry: OngoingRegistrationEntry,
+      override val analyticsName: String = "Registration Location Permission"
+  ) : ScreenKey() {
+
+    override fun instantiateFragment() = RegistrationLocationPermissionScreen()
   }
 }

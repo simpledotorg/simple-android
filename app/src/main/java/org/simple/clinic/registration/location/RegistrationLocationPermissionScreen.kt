@@ -1,5 +1,6 @@
 package org.simple.clinic.registration.location
 
+import android.content.Context
 import android.os.Parcelable
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
@@ -84,7 +85,6 @@ class RegistrationLocationPermissionScreen : BaseScreen<
     if (isInEditMode) {
       return
     }
-    context.injector<Injector>().inject(this)
 
     toolbar.setOnClickListener {
       router.pop()
@@ -111,6 +111,11 @@ class RegistrationLocationPermissionScreen : BaseScreen<
 
   override fun onRestoreInstanceState(state: Parcelable?) {
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
+  }
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
   }
 
   private fun allowLocationClicks(): Observable<RegistrationLocationPermissionEvent> {

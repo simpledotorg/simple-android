@@ -44,7 +44,7 @@ class EnterOtpEffectHandler @AssistedInject constructor(
         .addConsumer(FailedLoginOtpAttempt::class.java, { bruteForceProtection.incrementFailedOtpAttempt() }, schedulers.io())
         .addTransformer(LoadOtpEntryProtectedStates::class.java, loadOtpEntryStates())
         .addAction(ResetOtpAttemptLimit::class.java, { bruteForceProtection.resetFailedAttempts() }, schedulers.io())
-        .addConsumer(EnterOtpViewEffect::class.java, viewEffectHandler::handle)
+        .addConsumer(EnterOtpViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 

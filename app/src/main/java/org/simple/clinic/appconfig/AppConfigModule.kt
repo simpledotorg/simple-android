@@ -7,6 +7,8 @@ import dagger.Module
 import dagger.Provides
 import org.simple.clinic.appconfig.api.ManifestFetchApi
 import org.simple.clinic.appconfig.displayname.CountryDisplayNameFetcherModule
+import org.simple.clinic.main.TypedPreference
+import org.simple.clinic.main.TypedPreference.Type.SelectedState
 import org.simple.clinic.util.preference.MoshiObjectPreferenceConverter
 import org.simple.clinic.util.preference.getOptional
 import retrofit2.Retrofit
@@ -39,6 +41,7 @@ class AppConfigModule {
     return rxSharedPreferences.getOptional("preference_selected_deployment_v1", deploymentPreferenceConverter)
   }
 
+  @TypedPreference(SelectedState)
   @Provides
   fun providesSelectedState(
       rxSharedPreferences: RxSharedPreferences,

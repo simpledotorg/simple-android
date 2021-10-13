@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.ReportAnalyticsEvents
@@ -110,6 +112,33 @@ class RegistrationLocationPermissionScreen : BaseScreen<
   override fun onRestoreInstanceState(state: Parcelable?) {
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
+      .create(this)
+      .build()
+
+  override fun createInit() = RegistrationLocationPermissionInit()
+
+  override fun createUpdate() = RegistrationLocationPermissionUpdate()
+
+  override fun defaultModel() = RegistrationLocationPermissionModel.create(screenKey.ongoingRegistrationEntry)
+
+  override fun events(): Observable<RegistrationLocationPermissionEvent> {
+    val permissionResults = screenResults
+        .streamResults()
+        .ofType<ActivityPermissionResult>()
+
+    return Observable
+        .merge(
+            allowLocationClicks(),
+            skipClicks()
+        )
+        .compose(RequestPermissions<UiEvent>(runtimePermissions, permissionResults))
+        .compose(ReportAnalyticsEvents())
+        .cast()
+  }
+
+  override fun uiRenderer() = RegistrationLocationPermissionUiRenderer(this)
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

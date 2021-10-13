@@ -13,6 +13,7 @@
 - Remove `:router` package
 - Remove dependency on `com.squareup.flow:flow`
 - Migrate `SelectCountryScreen` to use view effects
+- Migrate `EnterOtpScreen` to use view effects
 
 ### Changes
 

@@ -9,7 +9,7 @@
 - Bump AGP to v7.0.3
 - Migrate `RegistrationFacilitySelectionScreen` to a fragment
 - Migrate `RegistrationLocationPermissionScreen` to a fragment
-- [In Progress: 13 Oct 2021] Move migration of v1 Country to `SetupActivity` from the DI provider
+- Move migration of v1 Country to `SetupActivity` from the DI provider
 
 ### Changes
 

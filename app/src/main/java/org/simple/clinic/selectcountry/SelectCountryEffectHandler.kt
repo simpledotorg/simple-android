@@ -38,6 +38,7 @@ class SelectCountryEffectHandler(
         .addTransformer(FetchManifest::class.java, fetchManifest())
         .addTransformer(SaveCountryEffect::class.java, saveCountry())
         .addAction(GoToStateSelectionScreen::class.java, uiActions::goToStateSelectionScreen, schedulersProvider.ui())
+        .addConsumer(SelectCountryViewEffect::class.java) { viewEffect -> viewEffectsConsumer.accept(viewEffect) }
         .build()
   }
 

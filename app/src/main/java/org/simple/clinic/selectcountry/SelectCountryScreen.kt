@@ -110,7 +110,6 @@ class SelectCountryScreen : BaseScreen<
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<SelectCountryViewEffect>) = SelectCountryEffectHandler.create(
       appConfigRepository = appConfigRepository,
-      uiActions = this,
       schedulersProvider = schedulersProvider,
       viewEffectsConsumer = viewEffectsConsumer
   )

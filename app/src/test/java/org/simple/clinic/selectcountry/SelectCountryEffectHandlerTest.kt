@@ -33,7 +33,6 @@ class SelectCountryEffectHandlerTest {
   private val viewEffectHandler = SelectCountryViewEffectHandler(uiActions)
 
   private val effectHandler = SelectCountryEffectHandler.create(repository,
-      uiActions,
       TestSchedulersProvider.trampoline(),
       viewEffectHandler::handle)
   private val testCase = EffectHandlerTestCase(effectHandler)

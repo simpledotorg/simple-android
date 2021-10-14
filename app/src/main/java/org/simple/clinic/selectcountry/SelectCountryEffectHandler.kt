@@ -11,7 +11,6 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class SelectCountryEffectHandler(
     private val appConfigRepository: AppConfigRepository,
-    private val uiActions: UiActions,
     private val schedulersProvider: SchedulersProvider,
     private val viewEffectsConsumer: Consumer<SelectCountryViewEffect>
 ) {
@@ -19,13 +18,11 @@ class SelectCountryEffectHandler(
   companion object {
     fun create(
         appConfigRepository: AppConfigRepository,
-        uiActions: UiActions,
         schedulersProvider: SchedulersProvider,
         viewEffectsConsumer: Consumer<SelectCountryViewEffect>
     ): ObservableTransformer<SelectCountryEffect, SelectCountryEvent> {
       return SelectCountryEffectHandler(
           appConfigRepository,
-          uiActions,
           schedulersProvider,
           viewEffectsConsumer
       ).build()

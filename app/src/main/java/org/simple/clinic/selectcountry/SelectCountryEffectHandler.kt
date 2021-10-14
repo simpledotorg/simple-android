@@ -2,6 +2,9 @@ package org.simple.clinic.selectcountry
 
 import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.appconfig.FetchError
@@ -9,27 +12,18 @@ import org.simple.clinic.appconfig.FetchSucceeded
 import org.simple.clinic.appconfig.ManifestFetchResult
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
-class SelectCountryEffectHandler(
+class SelectCountryEffectHandler @AssistedInject constructor(
     private val appConfigRepository: AppConfigRepository,
     private val schedulersProvider: SchedulersProvider,
-    private val viewEffectsConsumer: Consumer<SelectCountryViewEffect>
+    @Assisted private val viewEffectsConsumer: Consumer<SelectCountryViewEffect>
 ) {
 
-  companion object {
-    fun create(
-        appConfigRepository: AppConfigRepository,
-        schedulersProvider: SchedulersProvider,
-        viewEffectsConsumer: Consumer<SelectCountryViewEffect>
-    ): ObservableTransformer<SelectCountryEffect, SelectCountryEvent> {
-      return SelectCountryEffectHandler(
-          appConfigRepository,
-          schedulersProvider,
-          viewEffectsConsumer
-      ).build()
-    }
+  @AssistedFactory
+  interface Factory {
+    fun create(viewEffectsConsumer: Consumer<SelectCountryViewEffect>): SelectCountryEffectHandler
   }
 
-  private fun build(): ObservableTransformer<SelectCountryEffect, SelectCountryEvent> {
+  fun build(): ObservableTransformer<SelectCountryEffect, SelectCountryEvent> {
     return RxMobius
         .subtypeEffectHandler<SelectCountryEffect, SelectCountryEvent>()
         .addTransformer(FetchManifest::class.java, fetchManifest())

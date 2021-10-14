@@ -8,7 +8,6 @@ import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.setup.runcheck.Allowed
 import org.simple.clinic.setup.runcheck.Disallowed
-import org.simple.clinic.user.User
 import java.net.URI
 import java.time.Duration
 import java.time.Instant
@@ -25,20 +24,81 @@ class SetupActivityUpdate(
       event: SetupActivityEvent
   ): Next<SetupActivityModel, SetupActivityEffect> {
     return when (event) {
-      is UserDetailsFetched -> {
-        val updatedModel = model
-            .withLoggedInUser(event.loggedInUser)
-            .withSelectedCountry(event.userSelectedCountry)
-        val effect = goToNextScreenEffect(event.loggedInUser, event.hasUserCompletedOnboarding, event.userSelectedCountry, event.currentDeployment, event.userSelectedCountryV1)
-
-        next(updatedModel, effect)
-      }
+      is UserDetailsFetched -> processUserDetails(event, model)
       is DatabaseInitialized -> dispatch(FetchDatabaseMaintenanceLastRunAtTime)
       is DatabaseMaintenanceCompleted -> dispatch(FetchUserDetails)
       is DatabaseMaintenanceLastRunAtTimeLoaded -> runDatabaseMaintenanceIfRequired(event, model)
       is AppAllowedToRunCheckCompleted -> initializeDatabase(event)
       is CountryAndDeploymentSaved -> dispatch(DeleteStoredCountryV1)
       is StoredCountryV1Deleted -> dispatch(GoToMainActivity)
+    }
+  }
+
+  private fun processUserDetails(
+      event: UserDetailsFetched,
+      model: SetupActivityModel
+  ): Next<SetupActivityModel, SetupActivityEffect> {
+    val loggedInUser = event.loggedInUser
+    val selectedCountry = event.userSelectedCountry
+    val selectedDeployment = event.currentDeployment
+    val countryV1 = event.userSelectedCountryV1
+
+    val updatedModel = model
+        .withLoggedInUser(loggedInUser)
+        .withSelectedCountry(selectedCountry)
+
+    val hasUserLoggedInCompletely = loggedInUser.isPresent && selectedCountry.isPresent && selectedDeployment.isPresent
+    val hasUserLoggedInButCountryV1IsPresent = loggedInUser.isPresent && countryV1.isPresent
+    val hasUserLoggedInButNoDeploymentIsPresent = loggedInUser.isPresent && selectedCountry.isPresent && !selectedDeployment.isPresent
+    val userPresentButCountryNotSelected = loggedInUser.isPresent && !selectedCountry.isPresent
+    val shouldConstructCountryAndDeployment = hasUserLoggedInButCountryV1IsPresent || hasUserLoggedInButNoDeploymentIsPresent
+
+    val effect = if (shouldConstructCountryAndDeployment) {
+      saveCountryAndDeploymentEffect(
+          countryV1IsPresent = hasUserLoggedInButCountryV1IsPresent,
+          countryV1 = countryV1,
+          deploymentIsAbsent = hasUserLoggedInButNoDeploymentIsPresent,
+          selectedCountry = selectedCountry
+      )
+    } else {
+      goToNextScreenEffect(
+          hasUserCompletedOnboarding = event.hasUserCompletedOnboarding,
+          hasUserLoggedInCompletely = hasUserLoggedInCompletely,
+          countryNotSelected = userPresentButCountryNotSelected
+      )
+    }
+
+    return next(updatedModel, effect)
+  }
+
+  private fun saveCountryAndDeploymentEffect(
+      countryV1IsPresent: Boolean,
+      countryV1: Optional<Map<String, String>>,
+      deploymentIsAbsent: Boolean,
+      selectedCountry: Optional<Country>
+  ): SetupActivityEffect {
+    return when {
+      countryV1IsPresent -> {
+        val selectedOldCountry = countryV1.get()
+        val deployment = Deployment(
+            displayName = selectedOldCountry["display_name"]!!,
+            endPoint = URI.create(selectedOldCountry["endpoint"]!!)
+        )
+        val country = Country(
+            isoCountryCode = selectedOldCountry["country_code"]!!,
+            displayName = selectedOldCountry["display_name"]!!,
+            isdCode = selectedOldCountry["isd_code"]!!,
+            deployments = listOf(deployment)
+        )
+
+        SaveCountryAndDeployment(country, deployment)
+      }
+      deploymentIsAbsent -> {
+        val deployment = selectedCountry.get().deployments.first()
+
+        SaveCountryAndDeployment(selectedCountry.get(), deployment)
+      }
+      else -> throw RuntimeException("This should never happen!")
     }
   }
 
@@ -79,40 +139,13 @@ class SetupActivityUpdate(
   }
 
   private fun goToNextScreenEffect(
-      loggedInUser: Optional<User>,
       hasUserCompletedOnboarding: Boolean,
-      selectedCountry: Optional<Country>,
-      selectedDeployment: Optional<Deployment>,
-      countryV1: Optional<Map<String, String>>
+      hasUserLoggedInCompletely: Boolean,
+      countryNotSelected: Boolean
   ): SetupActivityEffect {
-    val hasUserLoggedInCompletely = loggedInUser.isPresent && selectedCountry.isPresent && selectedDeployment.isPresent
-    val hasUserLoggedInButCountryV1IsPresent = loggedInUser.isPresent && countryV1.isPresent
-    val hasUserLoggedInButNoDeploymentIsPresent = loggedInUser.isPresent && selectedCountry.isPresent && !selectedDeployment.isPresent
-    val userPresentButCountryNotSelected = loggedInUser.isPresent && !selectedCountry.isPresent
-
     return when {
       hasUserLoggedInCompletely -> GoToMainActivity
-      hasUserLoggedInButCountryV1IsPresent -> {
-        val selectedOldCountry = countryV1.get()
-        val deployment = Deployment(
-            displayName = selectedOldCountry["display_name"]!!,
-            endPoint = URI.create(selectedOldCountry["endpoint"]!!)
-        )
-        val country = Country(
-            isoCountryCode = selectedOldCountry["country_code"]!!,
-            displayName = selectedOldCountry["display_name"]!!,
-            isdCode = selectedOldCountry["isd_code"]!!,
-            deployments = listOf(deployment)
-        )
-
-        SaveCountryAndDeployment(country, deployment)
-      }
-      hasUserLoggedInButNoDeploymentIsPresent -> {
-        val deployment = selectedCountry.get().deployments.first()
-
-        SaveCountryAndDeployment(selectedCountry.get(), deployment)
-      }
-      userPresentButCountryNotSelected -> throw IllegalStateException("User is logged in but the selected country is not present.")
+      countryNotSelected -> throw IllegalStateException("User is logged in but the selected country is not present.")
       hasUserCompletedOnboarding.not() -> ShowOnboardingScreen
       else -> ShowCountrySelectionScreen
     }

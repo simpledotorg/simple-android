@@ -12,9 +12,8 @@ import org.simple.clinic.databinding.ScreenRegistrationLocationPermissionBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
-import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreenKey
+import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreen
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.user.OngoingRegistrationEntry
@@ -135,7 +134,7 @@ class RegistrationLocationPermissionScreen(
   }
 
   override fun openFacilitySelectionScreen(registrationEntry: OngoingRegistrationEntry) {
-    router.push(RegistrationFacilitySelectionScreenKey(registrationEntry).wrap())
+    router.push(RegistrationFacilitySelectionScreen.Key(registrationEntry))
   }
 
   interface Injector {

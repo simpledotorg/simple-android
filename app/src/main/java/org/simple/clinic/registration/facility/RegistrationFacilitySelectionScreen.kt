@@ -8,12 +8,14 @@ import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenRegistrationFacilitySelectionBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.introvideoscreen.IntroVideoScreen
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.registration.confirmfacility.ConfirmFacilitySheet
 import org.simple.clinic.router.ScreenResultBus
@@ -135,5 +137,14 @@ class RegistrationFacilitySelectionScreen(
 
   interface Injector {
     fun inject(target: RegistrationFacilitySelectionScreen)
+  }
+
+  @Parcelize
+  data class Key(
+      val ongoingRegistrationEntry: OngoingRegistrationEntry,
+      override val analyticsName: String = "Registration Facility Selection"
+  ) : ScreenKey() {
+
+    override fun instantiateFragment() = RegistrationFacilitySelectionScreen()
   }
 }

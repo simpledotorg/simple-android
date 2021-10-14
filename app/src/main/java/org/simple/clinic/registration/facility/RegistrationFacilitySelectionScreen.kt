@@ -138,7 +138,7 @@ class RegistrationFacilitySelectionScreen : BaseScreen<
   }
 
   override fun showConfirmFacilitySheet(facilityUuid: UUID, facilityName: String) {
-    val intent = ConfirmFacilitySheet.intentForConfirmFacilitySheet(context, facilityUuid, facilityName)
+    val intent = ConfirmFacilitySheet.intentForConfirmFacilitySheet(requireContext(), facilityUuid, facilityName)
     activity.startActivityForResult(intent, CONFIRM_FACILITY_SHEET)
   }
 

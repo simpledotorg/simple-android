@@ -16,9 +16,8 @@ import org.simple.clinic.SECURITY_PIN_LENGTH
 import org.simple.clinic.databinding.ScreenRegistrationConfirmPinBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.registration.location.RegistrationLocationPermissionScreenKey
+import org.simple.clinic.registration.location.RegistrationLocationPermissionScreen
 import org.simple.clinic.registration.pin.RegistrationPinScreenKey
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.widgets.hideKeyboard
@@ -132,7 +131,7 @@ class RegistrationConfirmPinScreen :
 
   override fun openFacilitySelectionScreen(entry: OngoingRegistrationEntry) {
     binding.root.hideKeyboard()
-    router.push(RegistrationLocationPermissionScreenKey(entry).wrap())
+    router.push(RegistrationLocationPermissionScreen.Key(entry))
   }
 
   override fun goBackToPinScreen(entry: OngoingRegistrationEntry) {

@@ -8,7 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.ReportAnalyticsEvents
@@ -106,6 +108,26 @@ class RegistrationFacilitySelectionScreen : BaseScreen<
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenRegistrationFacilitySelectionBinding
       .inflate(layoutInflater, container, false)
+
+  override fun createInit() = RegistrationFacilitySelectionInit()
+
+  override fun createUpdate() = RegistrationFacilitySelectionUpdate()
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
+      .create(uiActions = this)
+      .build()
+
+  override fun defaultModel() = RegistrationFacilitySelectionModel.create(
+      entry = screenKey.ongoingRegistrationEntry
+  )
+
+  override fun events() = Observable
+      .mergeArray(
+          facilityClicks(),
+          registrationFacilityConfirmations()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<RegistrationFacilitySelectionEvent>()
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

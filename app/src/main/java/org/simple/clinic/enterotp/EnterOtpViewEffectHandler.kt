@@ -1,17 +1,10 @@
 package org.simple.clinic.enterotp
 
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import org.simple.clinic.mobius.ViewEffectsHandler
 
-class EnterOtpViewEffectHandler @AssistedInject constructor(
+class EnterOtpViewEffectHandler(
     private val uiActions: EnterOtpUiActions
 ) : ViewEffectsHandler<EnterOtpViewEffect> {
-
-  @AssistedFactory
-  interface Factory {
-    fun create(uiActions: EnterOtpUiActions): EnterOtpViewEffectHandler
-  }
 
   override fun handle(viewEffect: EnterOtpViewEffect) {
     when (viewEffect) {

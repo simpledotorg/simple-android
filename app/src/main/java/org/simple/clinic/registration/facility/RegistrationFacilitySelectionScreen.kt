@@ -1,6 +1,7 @@
 package org.simple.clinic.registration.facility
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -82,8 +83,6 @@ class RegistrationFacilitySelectionScreen : BaseScreen<
       return
     }
 
-    context.injector<Injector>().inject(this)
-
     facilityPickerView.backClicked = { router.pop() }
   }
 
@@ -107,6 +106,11 @@ class RegistrationFacilitySelectionScreen : BaseScreen<
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenRegistrationFacilitySelectionBinding
       .inflate(layoutInflater, container, false)
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
 
   private fun facilityClicks(): Observable<RegistrationFacilitySelectionEvent> {
     return Observable.create { emitter ->

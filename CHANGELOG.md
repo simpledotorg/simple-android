@@ -28,7 +28,7 @@
 - Enable call result sync
 - Scope the construction of `RxSharedPreferences` to the application
 - Remove flow for setting a fallback country for India users when moving to a build supporting country selection
-- [In Progress: 13 Oct 2021] Move migration of v1 Country to `SetupActivity` from the DI provider
+- Move migration of v1 Country to `SetupActivity` from the DI provider
 
 ### Changes
 

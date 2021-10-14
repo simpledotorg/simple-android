@@ -2,8 +2,10 @@ package org.simple.clinic.registration.facility
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.Observable
@@ -82,8 +84,6 @@ class RegistrationFacilitySelectionScreen : BaseScreen<
     if (isInEditMode) {
       return
     }
-
-    facilityPickerView.backClicked = { router.pop() }
   }
 
   override fun onAttachedToWindow() {
@@ -110,6 +110,11 @@ class RegistrationFacilitySelectionScreen : BaseScreen<
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    facilityPickerView.backClicked = { router.pop() }
   }
 
   private fun facilityClicks(): Observable<RegistrationFacilitySelectionEvent> {

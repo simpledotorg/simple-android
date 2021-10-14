@@ -5,6 +5,9 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.simple.clinic.appconfig.StatesResult.StatesFetched
 import org.simple.clinic.appconfig.api.ManifestFetchApi
+import org.simple.clinic.main.TypedPreference
+import org.simple.clinic.main.TypedPreference.Type.CountryV1
+import org.simple.clinic.main.TypedPreference.Type.SelectedState
 import org.simple.clinic.util.ErrorResolver
 import org.simple.clinic.util.toNullable
 import java.util.Optional
@@ -22,8 +25,9 @@ class AppConfigRepository @Inject constructor(
     private val manifestFetchApi: ManifestFetchApi,
     private val selectedCountryPreference: Preference<Optional<Country>>,
     private val selectedDeployment: Preference<Optional<Deployment>>,
-    private val selectedStatePreference: Preference<Optional<String>>,
-    private val statesFetcher: StatesFetcher
+    @TypedPreference(SelectedState) private val selectedStatePreference: Preference<Optional<String>>,
+    private val statesFetcher: StatesFetcher,
+    @TypedPreference(CountryV1) private val countryV1Preference: Preference<Optional<String>>
 ) {
 
   fun currentCountryObservable(): Observable<Optional<Country>> {
@@ -76,5 +80,9 @@ class AppConfigRepository @Inject constructor(
     } catch (e: Exception) {
       StatesResult.FetchError(ErrorResolver.resolve(e))
     }
+  }
+
+  fun deleteStoredCountryV1() {
+    countryV1Preference.delete()
   }
 }

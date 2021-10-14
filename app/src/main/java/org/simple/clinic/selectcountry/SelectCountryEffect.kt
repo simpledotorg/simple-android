@@ -8,6 +8,6 @@ object FetchManifest : SelectCountryEffect()
 
 data class SaveCountryEffect(val country: Country) : SelectCountryEffect()
 
-object GoToStateSelectionScreen : SelectCountryEffect()
-
 sealed class SelectCountryViewEffect : SelectCountryEffect()
+
+object GoToStateSelectionScreen : SelectCountryViewEffect()

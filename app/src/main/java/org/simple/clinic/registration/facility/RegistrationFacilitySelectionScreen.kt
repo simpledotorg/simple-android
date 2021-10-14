@@ -1,9 +1,7 @@
 package org.simple.clinic.registration.facility
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +15,6 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenRegistrationFacilitySelectionBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.introvideoscreen.IntroVideoScreen
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -27,7 +24,6 @@ import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.extractSuccessful
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
@@ -57,54 +53,6 @@ class RegistrationFacilitySelectionScreen : BaseScreen<
 
   private val facilityPickerView
     get() = binding.facilityPickerView
-
-  private val events by unsafeLazy {
-    Observable
-        .mergeArray(
-            facilityClicks(),
-            registrationFacilityConfirmations()
-        )
-        .compose(ReportAnalyticsEvents())
-        .share()
-  }
-
-  private val delegate by unsafeLazy {
-    val screenKey = screenKeyProvider.keyFor<RegistrationFacilitySelectionScreenKey>(this)
-
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = RegistrationFacilitySelectionModel.create(screenKey.ongoingRegistrationEntry),
-        update = RegistrationFacilitySelectionUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        init = RegistrationFacilitySelectionInit()
-    )
-  }
-
-  @SuppressLint("CheckResult")
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    super.onDetachedFromWindow()
-    delegate.stop()
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
-  }
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenRegistrationFacilitySelectionBinding
       .inflate(layoutInflater, container, false)

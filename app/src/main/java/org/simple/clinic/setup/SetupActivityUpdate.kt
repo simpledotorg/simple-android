@@ -87,6 +87,7 @@ class SetupActivityUpdate(
   ): SetupActivityEffect {
     val hasUserLoggedInCompletely = loggedInUser.isPresent && selectedCountry.isPresent && selectedDeployment.isPresent
     val hasUserLoggedInButCountryV1IsPresent = loggedInUser.isPresent && countryV1.isPresent
+    val hasUserLoggedInButNoDeploymentIsPresent = loggedInUser.isPresent && selectedCountry.isPresent && !selectedDeployment.isPresent
     val userPresentButCountryNotSelected = loggedInUser.isPresent && !selectedCountry.isPresent
 
     return when {
@@ -105,6 +106,11 @@ class SetupActivityUpdate(
         )
 
         SaveCountryAndDeployment(country, deployment)
+      }
+      hasUserLoggedInButNoDeploymentIsPresent -> {
+        val deployment = selectedCountry.get().deployments.first()
+
+        SaveCountryAndDeployment(selectedCountry.get(), deployment)
       }
       userPresentButCountryNotSelected -> throw IllegalStateException("User is logged in but the selected country is not present.")
       hasUserCompletedOnboarding.not() -> ShowOnboardingScreen

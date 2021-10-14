@@ -220,6 +220,42 @@ class SetupActivityUpdateTest {
         ))
   }
 
+  @Test
+  fun `when user is logged in with v2 country and there is no deployment present, add a deployment from the v2 country`() {
+    val user = TestData.loggedInUser(uuid = UUID.fromString("85233c9e-edda-417e-8f58-8f1413ac84a1"))
+
+    val deployment = Deployment(
+        displayName = "India",
+        endPoint = URI.create("https://api.simple.org/api/v1")
+    )
+    val country = Country(
+        isoCountryCode = "IN",
+        displayName = "India",
+        isdCode = "91",
+        deployments = listOf(deployment)
+    )
+
+    val event = UserDetailsFetched(
+        hasUserCompletedOnboarding = true,
+        loggedInUser = Optional.of(user),
+        userSelectedCountry = Optional.of(country),
+        userSelectedCountryV1 = Optional.empty(),
+        currentDeployment = Optional.empty()
+    )
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(event)
+        .then(assertThatNext(
+            hasModel(
+                defaultModel
+                    .withLoggedInUser(Optional.of(user))
+                    .withSelectedCountry(Optional.of(country))
+            ),
+            hasEffects(SaveCountryAndDeployment(country, deployment))
+        ))
+  }
+
   private fun previouslyLoggedInUserFetched(user: User): UserDetailsFetched {
     return UserDetailsFetched(
         hasUserCompletedOnboarding = true,

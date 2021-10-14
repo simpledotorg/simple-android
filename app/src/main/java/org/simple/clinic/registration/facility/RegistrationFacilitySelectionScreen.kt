@@ -1,10 +1,7 @@
 package org.simple.clinic.registration.facility
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Parcelable
-import android.util.AttributeSet
-import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -16,6 +13,7 @@ import org.simple.clinic.introvideoscreen.IntroVideoScreen
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.registration.confirmfacility.ConfirmFacilitySheet
 import org.simple.clinic.router.ScreenResultBus
@@ -27,10 +25,13 @@ import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
 
-class RegistrationFacilitySelectionScreen(
-    context: Context,
-    attrs: AttributeSet
-) : RelativeLayout(context, attrs), RegistrationFacilitySelectionUiActions {
+class RegistrationFacilitySelectionScreen : BaseScreen<
+    RegistrationFacilitySelectionScreen.Key,
+    ScreenRegistrationFacilitySelectionBinding,
+    RegistrationFacilitySelectionModel,
+    RegistrationFacilitySelectionEvent,
+    RegistrationFacilitySelectionEffect,
+    Unit>(), RegistrationFacilitySelectionUiActions {
 
   var binding: ScreenRegistrationFacilitySelectionBinding? = null
 

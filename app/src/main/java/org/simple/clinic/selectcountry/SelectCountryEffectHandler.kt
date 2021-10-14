@@ -1,5 +1,6 @@
 package org.simple.clinic.selectcountry
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.appconfig.AppConfigRepository
@@ -11,19 +12,22 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 class SelectCountryEffectHandler(
     private val appConfigRepository: AppConfigRepository,
     private val uiActions: UiActions,
-    private val schedulersProvider: SchedulersProvider
+    private val schedulersProvider: SchedulersProvider,
+    private val viewEffectsConsumer: Consumer<SelectCountryViewEffect>
 ) {
 
   companion object {
     fun create(
         appConfigRepository: AppConfigRepository,
         uiActions: UiActions,
-        schedulersProvider: SchedulersProvider
+        schedulersProvider: SchedulersProvider,
+        viewEffectsConsumer: Consumer<SelectCountryViewEffect>
     ): ObservableTransformer<SelectCountryEffect, SelectCountryEvent> {
       return SelectCountryEffectHandler(
           appConfigRepository,
           uiActions,
-          schedulersProvider
+          schedulersProvider,
+          viewEffectsConsumer
       ).build()
     }
   }

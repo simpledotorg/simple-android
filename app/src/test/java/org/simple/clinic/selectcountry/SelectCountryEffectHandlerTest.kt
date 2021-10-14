@@ -30,7 +30,12 @@ class SelectCountryEffectHandlerTest {
       isdCode = "91"
   )
 
-  private val effectHandler = SelectCountryEffectHandler.create(repository, uiActions, TrampolineSchedulersProvider())
+  private val viewEffectHandler = SelectCountryViewEffectHandler(uiActions)
+
+  private val effectHandler = SelectCountryEffectHandler.create(repository,
+      uiActions,
+      TrampolineSchedulersProvider(),
+      viewEffectHandler::handle)
   private val testCase = EffectHandlerTestCase(effectHandler)
 
   @After

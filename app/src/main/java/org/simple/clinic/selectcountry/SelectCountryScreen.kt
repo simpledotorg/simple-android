@@ -108,9 +108,12 @@ class SelectCountryScreen : BaseScreen<
 
   override fun createUpdate() = SelectCountryUpdate()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<SelectCountryViewEffect>) = SelectCountryEffectHandler.create(appConfigRepository = appConfigRepository,
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<SelectCountryViewEffect>) = SelectCountryEffectHandler.create(
+      appConfigRepository = appConfigRepository,
       uiActions = this,
-      schedulersProvider = schedulersProvider)
+      schedulersProvider = schedulersProvider,
+      viewEffectsConsumer = viewEffectsConsumer
+  )
 
   override fun uiRenderer() = SelectCountryUiRenderer(this)
 

@@ -14,6 +14,7 @@ import org.simple.clinic.setup.runcheck.Disallowed
 import org.simple.clinic.setup.runcheck.Disallowed.Reason.Rooted
 import org.simple.clinic.user.User
 import org.simple.clinic.util.TestUtcClock
+import java.net.URI
 import java.time.Duration
 import java.time.Instant
 import java.util.Optional
@@ -175,6 +176,47 @@ class SetupActivityUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(GoToMainActivity)
+        ))
+  }
+
+  @Test
+  fun `when user is logged in and the v1 country is present, migrate the country to the new format`() {
+    val user = TestData.loggedInUser(uuid = UUID.fromString("85233c9e-edda-417e-8f58-8f1413ac84a1"))
+    val countryV1 = mapOf(
+        "country_code" to "IN",
+        "endpoint" to "https://api.simple.org/api/v1",
+        "display_name" to "India",
+        "isd_code" to "91"
+    )
+
+    val event = UserDetailsFetched(
+        hasUserCompletedOnboarding = true,
+        loggedInUser = Optional.of(user),
+        userSelectedCountry = Optional.empty(),
+        userSelectedCountryV1 = Optional.of(countryV1),
+        currentDeployment = Optional.empty()
+    )
+
+    val expectedDeploymentToSave = Deployment(
+        displayName = "India",
+        endPoint = URI.create("https://api.simple.org/api/v1")
+    )
+    val expectedCountryToSave = Country(
+        isoCountryCode = "IN",
+        displayName = "India",
+        isdCode = "91",
+        deployments = listOf(expectedDeploymentToSave)
+    )
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(event)
+        .then(assertThatNext(
+            hasModel(defaultModel
+                .withLoggedInUser(Optional.of(user))
+                .withSelectedCountry(Optional.empty())
+            ),
+            hasEffects(SaveCountryAndDeployment(expectedCountryToSave, expectedDeploymentToSave))
         ))
   }
 

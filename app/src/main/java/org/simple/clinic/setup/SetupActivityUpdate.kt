@@ -9,6 +9,7 @@ import org.simple.clinic.mobius.next
 import org.simple.clinic.setup.runcheck.Allowed
 import org.simple.clinic.setup.runcheck.Disallowed
 import org.simple.clinic.user.User
+import java.net.URI
 import java.time.Duration
 import java.time.Instant
 import java.util.Optional
@@ -28,7 +29,7 @@ class SetupActivityUpdate(
         val updatedModel = model
             .withLoggedInUser(event.loggedInUser)
             .withSelectedCountry(event.userSelectedCountry)
-        val effect = goToNextScreenEffect(event.loggedInUser, event.hasUserCompletedOnboarding, event.userSelectedCountry, event.currentDeployment)
+        val effect = goToNextScreenEffect(event.loggedInUser, event.hasUserCompletedOnboarding, event.userSelectedCountry, event.currentDeployment, event.userSelectedCountryV1)
 
         next(updatedModel, effect)
       }
@@ -81,13 +82,30 @@ class SetupActivityUpdate(
       loggedInUser: Optional<User>,
       hasUserCompletedOnboarding: Boolean,
       selectedCountry: Optional<Country>,
-      selectedDeployment: Optional<Deployment>
+      selectedDeployment: Optional<Deployment>,
+      countryV1: Optional<Map<String, String>>
   ): SetupActivityEffect {
     val hasUserLoggedInCompletely = loggedInUser.isPresent && selectedCountry.isPresent && selectedDeployment.isPresent
+    val hasUserLoggedInButCountryV1IsPresent = loggedInUser.isPresent && countryV1.isPresent
     val userPresentButCountryNotSelected = loggedInUser.isPresent && !selectedCountry.isPresent
 
     return when {
       hasUserLoggedInCompletely -> GoToMainActivity
+      hasUserLoggedInButCountryV1IsPresent -> {
+        val selectedOldCountry = countryV1.get()
+        val deployment = Deployment(
+            displayName = selectedOldCountry["display_name"]!!,
+            endPoint = URI.create(selectedOldCountry["endpoint"]!!)
+        )
+        val country = Country(
+            isoCountryCode = selectedOldCountry["country_code"]!!,
+            displayName = selectedOldCountry["display_name"]!!,
+            isdCode = selectedOldCountry["isd_code"]!!,
+            deployments = listOf(deployment)
+        )
+
+        SaveCountryAndDeployment(country, deployment)
+      }
       userPresentButCountryNotSelected -> throw IllegalStateException("User is logged in but the selected country is not present.")
       hasUserCompletedOnboarding.not() -> ShowOnboardingScreen
       else -> ShowCountrySelectionScreen

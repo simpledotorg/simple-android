@@ -7,7 +7,7 @@
 - Allow only latin digits in the phone number entry
 - Remove flow for setting a fallback country for India users when moving to a build supporting country selection
 - Bump AGP to v7.0.3
-- [In Progress: 12 Oct 2021] Move migration of v1 Country to `SetupActivity` from the DI provider
+- [In Progress: 13 Oct 2021] Move migration of v1 Country to `SetupActivity` from the DI provider
 
 ### Changes
 

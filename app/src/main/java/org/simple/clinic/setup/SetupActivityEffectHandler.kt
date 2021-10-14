@@ -65,7 +65,18 @@ class SetupActivityEffectHandler @AssistedInject constructor(
         .addTransformer(FetchDatabaseMaintenanceLastRunAtTime::class.java, loadLastDatabaseMaintenanceTime())
         .addConsumer(ShowNotAllowedToRunMessage::class.java, { uiActions.showDisallowedToRunError(it.reason) }, schedulersProvider.ui())
         .addTransformer(CheckIfAppCanRun::class.java, checkApplicationAllowedToRun())
+        .addTransformer(SaveCountryAndDeployment::class.java, saveCountryAndDeployment())
+        .addTransformer(DeleteStoredCountryV1::class.java, deleteStoredCountryV1())
         .build()
+  }
+
+  private fun deleteStoredCountryV1(): ObservableTransformer<DeleteStoredCountryV1, SetupActivityEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .subscribeOn(schedulersProvider.io())
+          .map { appConfigRepository.deleteStoredCountryV1() }
+          .map { StoredCountryV1Deleted }
+    }
   }
 
   private fun fetchUserDetails(scheduler: Scheduler): ObservableTransformer<FetchUserDetails, SetupActivityEvent> {
@@ -125,6 +136,18 @@ class SetupActivityEffectHandler @AssistedInject constructor(
           .observeOn(schedulersProvider.io())
           .map { allowApplicationToRun.check() }
           .map(::AppAllowedToRunCheckCompleted)
+    }
+  }
+
+  private fun saveCountryAndDeployment(): ObservableTransformer<SaveCountryAndDeployment, SetupActivityEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .doOnNext { effect ->
+            appConfigRepository.saveCurrentCountry(effect.country)
+            appConfigRepository.saveDeployment(effect.deployment)
+          }
+          .map { CountryAndDeploymentSaved }
     }
   }
 }

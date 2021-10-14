@@ -2,6 +2,8 @@ package org.simple.clinic.registration.facility
 
 import android.annotation.SuppressLint
 import android.os.Parcelable
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -33,11 +35,6 @@ class RegistrationFacilitySelectionScreen : BaseScreen<
     RegistrationFacilitySelectionEffect,
     Unit>(), RegistrationFacilitySelectionUiActions {
 
-  var binding: ScreenRegistrationFacilitySelectionBinding? = null
-
-  private val facilityPickerView
-    get() = binding!!.facilityPickerView
-
   @Inject
   lateinit var router: Router
 
@@ -52,6 +49,9 @@ class RegistrationFacilitySelectionScreen : BaseScreen<
 
   @Inject
   lateinit var screenResultBus: ScreenResultBus
+
+  private val facilityPickerView
+    get() = binding.facilityPickerView
 
   private val events by unsafeLazy {
     Observable
@@ -78,7 +78,6 @@ class RegistrationFacilitySelectionScreen : BaseScreen<
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
-    binding = ScreenRegistrationFacilitySelectionBinding.bind(this)
     if (isInEditMode) {
       return
     }
@@ -96,7 +95,6 @@ class RegistrationFacilitySelectionScreen : BaseScreen<
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
     delegate.stop()
-    binding = null
   }
 
   override fun onSaveInstanceState(): Parcelable? {
@@ -106,6 +104,9 @@ class RegistrationFacilitySelectionScreen : BaseScreen<
   override fun onRestoreInstanceState(state: Parcelable?) {
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenRegistrationFacilitySelectionBinding
+      .inflate(layoutInflater, container, false)
 
   private fun facilityClicks(): Observable<RegistrationFacilitySelectionEvent> {
     return Observable.create { emitter ->

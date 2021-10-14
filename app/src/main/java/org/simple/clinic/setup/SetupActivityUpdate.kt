@@ -1,7 +1,6 @@
 package org.simple.clinic.setup
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.mobius.dispatch
@@ -9,8 +8,6 @@ import org.simple.clinic.mobius.next
 import org.simple.clinic.setup.runcheck.Allowed
 import org.simple.clinic.setup.runcheck.Disallowed
 import org.simple.clinic.user.User
-import org.simple.clinic.util.isEmpty
-import org.simple.clinic.util.isNotEmpty
 import java.time.Duration
 import java.time.Instant
 import java.util.Optional
@@ -84,8 +81,8 @@ class SetupActivityUpdate(
       hasUserCompletedOnboarding: Boolean,
       selectedCountry: Optional<Country>
   ): SetupActivityEffect {
-    val hasUserLoggedInCompletely = loggedInUser.isNotEmpty() && selectedCountry.isNotEmpty()
-    val userPresentButCountryNotSelected = loggedInUser.isNotEmpty() && selectedCountry.isEmpty()
+    val hasUserLoggedInCompletely = loggedInUser.isPresent && selectedCountry.isPresent
+    val userPresentButCountryNotSelected = loggedInUser.isPresent && !selectedCountry.isPresent
 
     return when {
       hasUserLoggedInCompletely -> GoToMainActivity

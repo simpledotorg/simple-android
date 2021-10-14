@@ -155,6 +155,28 @@ class SetupActivityUpdateTest {
         ))
   }
 
+  @Test
+  fun `when country and deployment is saved, then delete stored country v1 preference`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(CountryAndDeploymentSaved)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(DeleteStoredCountryV1)
+        ))
+  }
+
+  @Test
+  fun `when stored country v1 is deleted, then go to main activity`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(StoredCountryV1Deleted)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoToMainActivity)
+        ))
+  }
+
   private fun previouslyLoggedInUserFetched(user: User): UserDetailsFetched {
     return UserDetailsFetched(
         hasUserCompletedOnboarding = true,

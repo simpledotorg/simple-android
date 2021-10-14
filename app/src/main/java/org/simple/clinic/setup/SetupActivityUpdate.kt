@@ -3,6 +3,7 @@ package org.simple.clinic.setup
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appconfig.Deployment
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.setup.runcheck.Allowed
@@ -27,7 +28,7 @@ class SetupActivityUpdate(
         val updatedModel = model
             .withLoggedInUser(event.loggedInUser)
             .withSelectedCountry(event.userSelectedCountry)
-        val effect = goToNextScreenEffect(event.loggedInUser, event.hasUserCompletedOnboarding, event.userSelectedCountry)
+        val effect = goToNextScreenEffect(event.loggedInUser, event.hasUserCompletedOnboarding, event.userSelectedCountry, event.currentDeployment)
 
         next(updatedModel, effect)
       }
@@ -79,9 +80,10 @@ class SetupActivityUpdate(
   private fun goToNextScreenEffect(
       loggedInUser: Optional<User>,
       hasUserCompletedOnboarding: Boolean,
-      selectedCountry: Optional<Country>
+      selectedCountry: Optional<Country>,
+      selectedDeployment: Optional<Deployment>
   ): SetupActivityEffect {
-    val hasUserLoggedInCompletely = loggedInUser.isPresent && selectedCountry.isPresent
+    val hasUserLoggedInCompletely = loggedInUser.isPresent && selectedCountry.isPresent && selectedDeployment.isPresent
     val userPresentButCountryNotSelected = loggedInUser.isPresent && !selectedCountry.isPresent
 
     return when {

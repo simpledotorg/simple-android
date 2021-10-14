@@ -8,6 +8,7 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appconfig.Deployment
 import org.simple.clinic.setup.runcheck.Allowed
 import org.simple.clinic.setup.runcheck.Disallowed
 import org.simple.clinic.setup.runcheck.Disallowed.Reason.Rooted
@@ -66,7 +67,7 @@ class SetupActivityUpdateTest {
   }
 
   @Test
-  fun `if the user has logged in and a country is selected, go to home screen`() {
+  fun `if the user has logged in completely, go to home screen`() {
     // given
     val user = TestData.loggedInUser(uuid = UUID.fromString("d7349b2e-bcc8-47d4-be29-1775b88e8460"))
     val country = TestData.country()
@@ -76,7 +77,7 @@ class SetupActivityUpdateTest {
 
     updateSpec
         .given(defaultModel)
-        .whenEvent(loggedInUserFetched(user, country))
+        .whenEvent(loggedInUserFetched(user, country, country.deployments.first()))
         .then(assertThatNext(
             hasModel(expectedModel),
             hasEffects(GoToMainActivity as SetupActivityEffect)
@@ -207,13 +208,17 @@ class SetupActivityUpdateTest {
     )
   }
 
-  private fun loggedInUserFetched(user: User, country: Country): UserDetailsFetched {
+  private fun loggedInUserFetched(
+      user: User,
+      country: Country,
+      deployment: Deployment
+  ): UserDetailsFetched {
     return UserDetailsFetched(
         hasUserCompletedOnboarding = true,
         loggedInUser = Optional.of(user),
         userSelectedCountry = Optional.of(country),
         userSelectedCountryV1 = Optional.empty(),
-        currentDeployment = Optional.empty()
+        currentDeployment = Optional.of(deployment)
     )
   }
 }

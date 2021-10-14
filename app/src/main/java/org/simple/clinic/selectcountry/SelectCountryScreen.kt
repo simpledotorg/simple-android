@@ -114,6 +114,8 @@ class SelectCountryScreen : BaseScreen<
 
   override fun uiRenderer() = SelectCountryUiRenderer(this)
 
+  override fun viewEffectHandler() = SelectCountryViewEffectHandler(this)
+
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<SelectCountryScreenInjector>().inject(this)

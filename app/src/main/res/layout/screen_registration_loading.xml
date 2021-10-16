@@ -1,81 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.registration.register.RegistrationLoadingScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<ViewSwitcher xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:orientation="vertical">
+  android:inAnimation="@android:anim/fade_in"
+  android:outAnimation="@android:anim/fade_out">
 
-  <ViewSwitcher
-    android:id="@+id/viewSwitcher"
+  <com.google.android.material.progressindicator.CircularProgressIndicator
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:indeterminate="true" />
+
+  <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:inAnimation="@android:anim/fade_in"
-    android:outAnimation="@android:anim/fade_out">
+    android:orientation="vertical">
 
-    <com.google.android.material.progressindicator.CircularProgressIndicator
+    <ImageButton
+      android:id="@+id/loaderBack"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="center"
-      android:indeterminate="true" />
+      android:background="?attr/selectableItemBackgroundBorderless"
+      android:padding="16dp"
+      app:srcCompat="@drawable/ic_arrow_back_24dp"
+      app:tint="@color/color_on_surface_67"
+      tools:ignore="ContentDescription" />
 
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:layout_gravity="center"
+      android:layout_marginBottom="@dimen/spacing_44"
+      android:gravity="center"
       android:orientation="vertical">
 
-      <ImageButton
-        android:id="@+id/loaderBack"
+      <TextView
+        android:id="@+id/errorTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="16dp"
-        app:srcCompat="@drawable/ic_arrow_back_24dp"
-        app:tint="@color/color_on_surface_67"
-        tools:ignore="ContentDescription" />
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textColor="@color/color_on_surface_67"
+        tools:text="@string/registrationloader_error_unexpected_title" />
 
-      <LinearLayout
+      <TextView
+        android:id="@+id/errorMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_48"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:layout_marginEnd="@dimen/spacing_48"
+        android:gravity="center_horizontal"
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:textColor="@color/color_on_surface_67"
+        tools:text="@string/registrationloader_error_unexpected_message" />
+
+      <com.google.android.material.button.MaterialButton
+        android:id="@+id/errorRetryButton"
+        style="?attr/materialButtonOutlinedStyle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/spacing_44"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <TextView
-          android:id="@+id/errorTitle"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:textAppearance="?attr/textAppearanceHeadline6"
-          android:textColor="@color/color_on_surface_67"
-          tools:text="@string/registrationloader_error_unexpected_title" />
-
-        <TextView
-          android:id="@+id/errorMessage"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginStart="@dimen/spacing_48"
-          android:layout_marginTop="@dimen/spacing_8"
-          android:layout_marginEnd="@dimen/spacing_48"
-          android:gravity="center_horizontal"
-          android:textAppearance="?attr/textAppearanceBody1"
-          android:textColor="@color/color_on_surface_67"
-          tools:text="@string/registrationloader_error_unexpected_message" />
-
-        <com.google.android.material.button.MaterialButton
-          android:id="@+id/errorRetryButton"
-          style="?attr/materialButtonOutlinedStyle"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginStart="@dimen/spacing_40"
-          android:layout_marginTop="@dimen/spacing_24"
-          android:layout_marginEnd="@dimen/spacing_40"
-          android:text="@string/registrationloader_retry" />
-
-      </LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_40"
+        android:layout_marginTop="@dimen/spacing_24"
+        android:layout_marginEnd="@dimen/spacing_40"
+        android:text="@string/registrationloader_retry" />
 
     </LinearLayout>
 
-  </ViewSwitcher>
+  </LinearLayout>
 
-</org.simple.clinic.registration.register.RegistrationLoadingScreen>
+</ViewSwitcher>

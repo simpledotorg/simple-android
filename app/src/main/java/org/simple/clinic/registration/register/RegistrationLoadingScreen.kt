@@ -1,7 +1,9 @@
 package org.simple.clinic.registration.register
 
 import android.os.Parcelable
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.rxkotlin.ofType
@@ -30,22 +32,20 @@ class RegistrationLoadingScreen : BaseScreen<
     RegistrationLoadingEffect,
     Unit>(), RegistrationLoadingUi, RegistrationLoadingUiActions {
 
-  var binding: ScreenRegistrationLoadingBinding? = null
-
   private val loaderBack
-    get() = binding!!.loaderBack
+    get() = binding.loaderBack
 
   private val errorRetryButton
-    get() = binding!!.errorRetryButton
+    get() = binding.errorRetryButton
 
   private val errorTitle
-    get() = binding!!.errorTitle
+    get() = binding.errorTitle
 
   private val errorMessage
-    get() = binding!!.errorMessage
+    get() = binding.errorMessage
 
   private val viewSwitcher
-    get() = binding!!.viewSwitcher
+    get() = binding.root
 
   @Inject
   lateinit var router: Router
@@ -81,8 +81,6 @@ class RegistrationLoadingScreen : BaseScreen<
 
   override fun onFinishInflate() {
     super.onFinishInflate()
-
-    binding = ScreenRegistrationLoadingBinding.bind(this)
     context.injector<Injector>().inject(this)
 
     loaderBack.setOnClickListener {
@@ -97,7 +95,6 @@ class RegistrationLoadingScreen : BaseScreen<
 
   override fun onDetachedFromWindow() {
     delegate.stop()
-    binding = null
     super.onDetachedFromWindow()
   }
 
@@ -108,6 +105,9 @@ class RegistrationLoadingScreen : BaseScreen<
   override fun onRestoreInstanceState(state: Parcelable?) {
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenRegistrationLoadingBinding
+      .inflate(layoutInflater, container, false)
 
   private fun retryClicks() = errorRetryButton
       .clicks()

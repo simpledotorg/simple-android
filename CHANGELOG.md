@@ -5,11 +5,9 @@
 ### Internal
 
 - Allow only latin digits in the phone number entry
-- Remove flow for setting a fallback country for India users when moving to a build supporting country selection
 - Bump AGP to v7.0.3
 - Migrate `RegistrationFacilitySelectionScreen` to a fragment
 - Migrate `RegistrationLocationPermissionScreen` to a fragment
-- Move migration of v1 Country to `SetupActivity` from the DI provider
 - Migrate `RegistrationLoadingScreen` to a fragment
 - Remove `FragmentScreenKeyModule` from `AuthenticationActivityComponent`
 
@@ -38,6 +36,8 @@
 - Bump Dagger to v2.39.1
 - Enable call result sync
 - Scope the construction of `RxSharedPreferences` to the application
+- Remove flow for setting a fallback country for India users when moving to a build supporting country selection
+- Move migration of v1 Country to `SetupActivity` from the DI provider
 
 ### Changes
 

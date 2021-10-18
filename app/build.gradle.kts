@@ -339,8 +339,6 @@ dependencies {
   implementation(libs.firebase.config)
   implementation(libs.firebase.performance.perf)
 
-  implementation(libs.flow)
-
   implementation(libs.itemanimators)
 
   implementation(libs.jbcrypt)

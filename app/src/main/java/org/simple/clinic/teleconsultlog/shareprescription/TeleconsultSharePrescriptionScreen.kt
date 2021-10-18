@@ -33,8 +33,8 @@ import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.teleconsultlog.prescription.medicines.TeleconsultMedicinesConfig
-import org.simple.clinic.util.RequestPermissions
-import org.simple.clinic.util.RuntimePermissions
+import org.simple.clinic.activity.permissions.RequestPermissions
+import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled

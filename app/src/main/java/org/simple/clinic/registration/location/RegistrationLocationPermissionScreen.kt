@@ -19,10 +19,10 @@ import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreen
 import org.simple.clinic.navigation.v2.ScreenResultBus
-import org.simple.clinic.util.ActivityPermissionResult
+import org.simple.clinic.activity.permissions.ActivityPermissionResult
 import org.simple.clinic.user.OngoingRegistrationEntry
-import org.simple.clinic.util.RequestPermissions
-import org.simple.clinic.util.RuntimePermissions
+import org.simple.clinic.activity.permissions.RequestPermissions
+import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 

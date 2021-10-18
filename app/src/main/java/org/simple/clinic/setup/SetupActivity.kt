@@ -22,7 +22,7 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.registerorlogin.AuthenticationActivity
 import org.simple.clinic.navigation.v2.ScreenResultBus
-import org.simple.clinic.util.ActivityPermissionResult
+import org.simple.clinic.activity.permissions.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.setup.runcheck.Disallowed
 import org.simple.clinic.splash.SplashScreen.SplashScreenKey

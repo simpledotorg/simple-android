@@ -1,3 +1,3 @@
-package org.simple.clinic.util
+package org.simple.clinic.activity.permissions
 
 data class ActivityPermissionResult(val requestCode: Int)

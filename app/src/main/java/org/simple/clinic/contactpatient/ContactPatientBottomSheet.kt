@@ -37,9 +37,9 @@ import org.simple.clinic.phone.Dialer
 import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.removeoverdueappointment.RemoveOverdueAppointmentScreen
-import org.simple.clinic.util.ActivityPermissionResult
-import org.simple.clinic.util.RequestPermissions
-import org.simple.clinic.util.RuntimePermissions
+import org.simple.clinic.activity.permissions.ActivityPermissionResult
+import org.simple.clinic.activity.permissions.RequestPermissions
+import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.onBackPressed
 import org.simple.clinic.util.setFragmentResultListener

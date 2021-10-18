@@ -8,6 +8,10 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.activity.permissions.ActivityPermissionResult
+import org.simple.clinic.activity.permissions.RequestPermissions
+import org.simple.clinic.activity.permissions.RequiresPermission
+import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED

@@ -1,4 +1,4 @@
-package org.simple.clinic.util
+package org.simple.clinic.activity.permissions
 
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity

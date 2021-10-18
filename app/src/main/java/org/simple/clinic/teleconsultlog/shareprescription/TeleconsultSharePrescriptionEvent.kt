@@ -6,7 +6,7 @@ import android.net.Uri
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.platform.util.RuntimePermissionResult
-import org.simple.clinic.util.RequiresPermission
+import org.simple.clinic.activity.permissions.RequiresPermission
 import org.simple.clinic.widgets.UiEvent
 import java.util.Optional
 

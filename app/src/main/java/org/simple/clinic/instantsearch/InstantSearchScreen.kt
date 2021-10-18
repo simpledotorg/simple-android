@@ -51,8 +51,8 @@ import org.simple.clinic.scanid.scannedqrcode.NationalHealthIDErrorDialog
 import org.simple.clinic.scanid.scannedqrcode.ScannedQrCodeSheet
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
-import org.simple.clinic.util.RequestPermissions
-import org.simple.clinic.util.RuntimePermissions
+import org.simple.clinic.activity.permissions.RequestPermissions
+import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.widgets.PagingItemAdapter

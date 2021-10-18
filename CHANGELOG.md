@@ -11,6 +11,7 @@
 - Migrate `RegistrationLocationPermissionScreen` to a fragment
 - Move migration of v1 Country to `SetupActivity` from the DI provider
 - Migrate `RegistrationLoadingScreen` to a fragment
+- Remove `FragmentScreenKeyModule` from `AuthenticationActivityComponent`
 
 ### Changes
 

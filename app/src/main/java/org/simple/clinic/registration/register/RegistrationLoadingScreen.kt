@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.functions.Consumer
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
@@ -97,6 +99,22 @@ class RegistrationLoadingScreen : BaseScreen<
   override fun onRestoreInstanceState(state: Parcelable?) {
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
+
+  override fun events() = retryClicks()
+      .compose(ReportAnalyticsEvents())
+      .cast<RegistrationLoadingEvent>()
+
+  override fun defaultModel() = RegistrationLoadingModel.create(screenKey.registrationEntry)
+
+  override fun createInit() = RegistrationLoadingInit()
+
+  override fun createUpdate() = RegistrationLoadingUpdate()
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
+      .create(this)
+      .build()
+
+  override fun uiRenderer() = RegistrationLoadingUiRenderer(this)
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

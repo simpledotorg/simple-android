@@ -1,5 +1,6 @@
 package org.simple.clinic.registration.register
 
+import android.content.Context
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
@@ -76,8 +77,6 @@ class RegistrationLoadingScreen : BaseScreen<
 
   override fun onFinishInflate() {
     super.onFinishInflate()
-    context.injector<Injector>().inject(this)
-
     loaderBack.setOnClickListener {
       router.pop()
     }
@@ -99,6 +98,11 @@ class RegistrationLoadingScreen : BaseScreen<
 
   override fun onRestoreInstanceState(state: Parcelable?) {
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
+  }
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
   }
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenRegistrationLoadingBinding

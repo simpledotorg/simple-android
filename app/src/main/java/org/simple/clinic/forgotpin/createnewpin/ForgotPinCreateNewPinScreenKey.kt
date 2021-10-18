@@ -2,7 +2,7 @@ package org.simple.clinic.forgotpin.createnewpin
 
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
-import org.simple.clinic.router.screen.FullScreenKey
+import org.simple.clinic.navigation.v2.compat.FullScreenKey
 
 @Parcelize
 data class ForgotPinCreateNewPinScreenKey(

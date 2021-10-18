@@ -19,7 +19,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.patient.displayLetterRes
-import org.simple.clinic.router.util.resolveColor
+import org.simple.clinic.util.resolveColor
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.toLocalDateAtZone
 import java.time.format.DateTimeFormatter

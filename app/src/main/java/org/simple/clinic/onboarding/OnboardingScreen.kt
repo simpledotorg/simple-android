@@ -18,8 +18,8 @@ import org.simple.clinic.databinding.ScreenOnboardingBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.registerorlogin.AuthenticationActivity
-import org.simple.clinic.router.screen.FullScreenKey
-import org.simple.clinic.router.util.resolveColor
+import org.simple.clinic.navigation.v2.compat.FullScreenKey
+import org.simple.clinic.util.resolveColor
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.finishWithoutAnimations
 import org.simple.clinic.util.unsafeLazy

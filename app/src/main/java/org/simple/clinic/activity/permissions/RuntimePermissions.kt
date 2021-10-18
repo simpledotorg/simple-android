@@ -1,4 +1,4 @@
-package org.simple.clinic.util
+package org.simple.clinic.activity.permissions
 
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
@@ -13,7 +13,6 @@ import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
-import org.simple.clinic.router.screen.ActivityPermissionResult
 import java.util.Optional
 import javax.inject.Inject
 

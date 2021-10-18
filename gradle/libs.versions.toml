@@ -89,8 +89,6 @@ firebase-performance-plugin = "com.google.firebase:perf-plugin:1.4.0"
 flipper-flipper = { module = "com.facebook.flipper:flipper", version.ref = "flipper" }
 flipper-networkPlugin = { module = "com.facebook.flipper:flipper-network-plugin", version.ref = "flipper" }
 
-flow = "com.squareup.flow:flow:1.0.0-alpha3"
-
 google-services = "com.google.gms:google-services:4.3.3"
 
 guava = "com.google.guava:guava:28.1-jre"

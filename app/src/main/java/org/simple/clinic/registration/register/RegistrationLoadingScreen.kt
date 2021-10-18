@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.rxkotlin.cast
@@ -52,9 +51,6 @@ class RegistrationLoadingScreen : BaseScreen<
   @Inject
   lateinit var effectHandlerFactory: RegistrationLoadingEffectHandler.Factory
 
-  @Inject
-  lateinit var activity: AppCompatActivity
-
   override fun events() = retryClicks()
       .compose(ReportAnalyticsEvents())
       .cast<RegistrationLoadingEvent>()
@@ -93,11 +89,11 @@ class RegistrationLoadingScreen : BaseScreen<
 
   override fun openHomeScreen() {
     val intent = TheActivity
-        .newIntent(activity, isFreshAuthentication = true)
+        .newIntent(requireContext(), isFreshAuthentication = true)
         .disableAnimations()
 
-    activity.startActivity(intent)
-    activity.finishWithoutAnimations()
+    requireActivity().startActivity(intent)
+    requireActivity().finishWithoutAnimations()
   }
 
   override fun showNetworkError() {

@@ -356,6 +356,8 @@ dependencies {
 
   implementation(libs.okhttp.interceptor.logging)
 
+  implementation(libs.openCsv)
+
   implementation(libs.play.core)
   implementation(libs.play.services.auth)
   implementation(libs.play.services.location)

@@ -40,7 +40,7 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.navigation.v2.ScreenResultBus
-import org.simple.clinic.router.screen.ActivityResult
+import org.simple.clinic.navigation.v2.ActivityResult
 import org.simple.clinic.summary.TYPE_PICKER_SHEET
 import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryConfig
 import org.simple.clinic.util.UserClock

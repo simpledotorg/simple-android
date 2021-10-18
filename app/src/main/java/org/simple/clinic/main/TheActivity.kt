@@ -36,7 +36,7 @@ import org.simple.clinic.remoteconfig.UpdateRemoteConfigWorker
 import org.simple.clinic.remoteconfig.UpdateRemoteConfigWorker.Companion.REMOTE_CONFIG_SYNC_WORKER
 import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.activity.permissions.ActivityPermissionResult
-import org.simple.clinic.router.screen.ActivityResult
+import org.simple.clinic.navigation.v2.ActivityResult
 import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncSetup

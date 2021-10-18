@@ -14,7 +14,7 @@ import androidx.core.content.ContextCompat
 import io.reactivex.Observable
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
-import org.simple.clinic.router.screen.ActivityResult
+import org.simple.clinic.navigation.v2.ActivityResult
 import java.util.Locale
 
 inline fun Context.wrap(wrapper: (Context) -> Context): Context = wrapper(this)

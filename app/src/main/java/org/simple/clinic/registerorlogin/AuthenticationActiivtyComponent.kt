@@ -16,7 +16,7 @@ import org.simple.clinic.registration.phone.RegistrationPhoneScreen
 import org.simple.clinic.registration.phone.loggedout.LoggedOutOfDeviceDialog
 import org.simple.clinic.registration.pin.RegistrationPinScreen
 import org.simple.clinic.registration.register.RegistrationLoadingScreen
-import org.simple.clinic.router.ScreenResultBus
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.selectcountry.SelectCountryScreenInjector
 import org.simple.clinic.selectstate.SelectStateScreen

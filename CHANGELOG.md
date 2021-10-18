@@ -10,6 +10,8 @@
 - Migrate `RegistrationLocationPermissionScreen` to a fragment
 - Migrate `RegistrationLoadingScreen` to a fragment
 - Remove `FragmentScreenKeyModule` from `AuthenticationActivityComponent`
+- Remove `:router` package
+- Remove dependency on `com.squareup.flow:flow`
 
 ### Changes
 

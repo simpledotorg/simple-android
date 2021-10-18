@@ -35,7 +35,7 @@ import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
-import org.simple.clinic.router.ScreenResultBus
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.simplevideo.SimpleVideo
@@ -43,8 +43,8 @@ import org.simple.clinic.simplevideo.SimpleVideoConfig
 import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.TrainingVideo
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
-import org.simple.clinic.util.RequestPermissions
-import org.simple.clinic.util.RuntimePermissions
+import org.simple.clinic.activity.permissions.RequestPermissions
+import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId

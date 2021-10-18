@@ -11,7 +11,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.onboarding.OnboardingScreen.OnboardingScreenKey
-import org.simple.clinic.router.screen.FullScreenKey
+import org.simple.clinic.navigation.v2.compat.FullScreenKey
 import javax.inject.Inject
 
 class SplashScreen(

@@ -1,7 +1,6 @@
-package org.simple.clinic.router
+package org.simple.clinic.navigation.v2
 
 import androidx.annotation.CheckResult
-
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 

@@ -1,4 +1,4 @@
-package org.simple.clinic.router.screen
+package org.simple.clinic.navigation.v2
 
 import android.app.Activity
 import android.content.Intent

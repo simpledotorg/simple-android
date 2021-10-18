@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import org.simple.clinic.router.screen.FullScreenKey
+import org.simple.clinic.navigation.v2.compat.FullScreenKey
 
 class HomeScreenTab : Fragment() {
 

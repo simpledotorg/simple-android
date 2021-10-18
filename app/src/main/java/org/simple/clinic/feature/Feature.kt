@@ -10,7 +10,6 @@ enum class Feature(
   NotifyAppUpdateAvailable(false, "appupdate_enabled"),
   DeletePatient(true, "delete_patient_feature_enabled"),
   SecureCalling(false, "phonenumbermasker_masking_enabled"),
-  LogSavedStateSizes(false, "log_saved_state_sizes_enabled"),
 
   /**
    * API levels 21 and 22 cause a framework level crash in appcompat 1.2.0 when overriding

@@ -8,6 +8,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.rxkotlin.ofType
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenRegistrationLoadingBinding
@@ -15,7 +16,9 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
+import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.finishWithoutAnimations
 import org.simple.clinic.util.unsafeLazy
@@ -138,5 +141,14 @@ class RegistrationLoadingScreen(
 
   interface Injector {
     fun inject(target: RegistrationLoadingScreen)
+  }
+
+  @Parcelize
+  data class Key(
+      val registrationEntry: OngoingRegistrationEntry,
+      override val analyticsName: String = "Ongoing Registration"
+  ) : ScreenKey() {
+
+    override fun instantiateFragment() = RegistrationLoadingScreen()
   }
 }

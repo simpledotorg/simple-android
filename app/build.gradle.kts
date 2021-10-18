@@ -389,7 +389,6 @@ dependencies {
   implementation(libs.zxing)
 
   implementation(projects.mobiusBase)
-  implementation(projects.router)
   implementation(projects.simplePlatform)
   implementation(projects.simpleVisuals)
 

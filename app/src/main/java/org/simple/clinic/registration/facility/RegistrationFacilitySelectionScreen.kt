@@ -18,7 +18,6 @@ import org.simple.clinic.introvideoscreen.IntroVideoScreen
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.registration.confirmfacility.ConfirmFacilitySheet
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
@@ -38,9 +37,6 @@ class RegistrationFacilitySelectionScreen : BaseScreen<
 
   @Inject
   lateinit var router: Router
-
-  @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
 
   @Inject
   lateinit var activity: AppCompatActivity

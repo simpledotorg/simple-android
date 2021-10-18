@@ -25,7 +25,7 @@ import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.FullScreenKey
-import org.simple.clinic.router.util.resolveFloat
+import org.simple.clinic.util.resolveFloat
 import org.simple.clinic.util.setFragmentResultListener
 import java.util.Locale
 import javax.inject.Inject

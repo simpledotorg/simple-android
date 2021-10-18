@@ -1,10 +1,7 @@
 package org.simple.clinic.registration.register
 
-import android.content.Context
 import android.os.Parcelable
-import android.util.AttributeSet
 import android.view.View
-import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.rxkotlin.ofType
@@ -17,6 +14,7 @@ import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.disableAnimations
@@ -24,10 +22,13 @@ import org.simple.clinic.util.finishWithoutAnimations
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
-class RegistrationLoadingScreen(
-    context: Context,
-    attrs: AttributeSet
-) : LinearLayout(context, attrs), RegistrationLoadingUi, RegistrationLoadingUiActions {
+class RegistrationLoadingScreen : BaseScreen<
+    RegistrationLoadingScreen.Key,
+    ScreenRegistrationLoadingBinding,
+    RegistrationLoadingModel,
+    RegistrationLoadingEvent,
+    RegistrationLoadingEffect,
+    Unit>(), RegistrationLoadingUi, RegistrationLoadingUiActions {
 
   var binding: ScreenRegistrationLoadingBinding? = null
 

@@ -1,4 +1,4 @@
-package org.simple.clinic.router.screen
+package org.simple.clinic.navigation.v2.compat
 
 import android.os.Parcelable
 import androidx.annotation.LayoutRes

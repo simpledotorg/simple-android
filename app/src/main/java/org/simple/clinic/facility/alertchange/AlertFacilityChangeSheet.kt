@@ -24,7 +24,7 @@ import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.navigation.v2.ScreenResultBus
-import org.simple.clinic.router.screen.FullScreenKey
+import org.simple.clinic.navigation.v2.compat.FullScreenKey
 import org.simple.clinic.util.resolveFloat
 import org.simple.clinic.util.setFragmentResultListener
 import java.util.Locale

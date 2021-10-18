@@ -22,7 +22,7 @@ import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFreque
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
-import org.simple.clinic.router.ScreenResultBus
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.teleconsultlog.drugduration.DrugDuration
 import org.simple.clinic.teleconsultlog.drugduration.DrugDurationSheet

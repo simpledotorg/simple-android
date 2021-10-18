@@ -31,7 +31,7 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.displayLetterRes
-import org.simple.clinic.router.ScreenResultBus
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.teleconsultlog.prescription.medicines.TeleconsultMedicinesConfig
 import org.simple.clinic.util.RequestPermissions
 import org.simple.clinic.util.RuntimePermissions

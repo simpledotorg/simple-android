@@ -15,7 +15,7 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
-import org.simple.clinic.router.ScreenResultBus
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.selectcountry.SelectCountryScreen

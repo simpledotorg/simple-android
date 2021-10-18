@@ -19,7 +19,7 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.registration.confirmfacility.ConfirmFacilitySheet
-import org.simple.clinic.router.ScreenResultBus
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.extractSuccessful

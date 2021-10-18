@@ -2,7 +2,6 @@ package org.simple.clinic.registration.register
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,21 +9,18 @@ import androidx.appcompat.app.AppCompatActivity
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.rxkotlin.cast
-import io.reactivex.rxkotlin.ofType
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenRegistrationLoadingBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.main.TheActivity
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.finishWithoutAnimations
-import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
 class RegistrationLoadingScreen : BaseScreen<
@@ -58,47 +54,6 @@ class RegistrationLoadingScreen : BaseScreen<
 
   @Inject
   lateinit var activity: AppCompatActivity
-
-  private val events by unsafeLazy {
-    retryClicks()
-        .compose(ReportAnalyticsEvents())
-        .share()
-  }
-
-  private val delegate by unsafeLazy {
-    val uiRenderer = RegistrationLoadingUiRenderer(this)
-
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = RegistrationLoadingModel.create(screenKey.registrationEntry),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        update = RegistrationLoadingUpdate(),
-        init = RegistrationLoadingInit(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
-
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
-  }
 
   override fun events() = retryClicks()
       .compose(ReportAnalyticsEvents())

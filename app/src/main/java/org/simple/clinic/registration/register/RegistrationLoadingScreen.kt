@@ -1,6 +1,7 @@
 package org.simple.clinic.registration.register
 
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
@@ -77,9 +78,6 @@ class RegistrationLoadingScreen : BaseScreen<
 
   override fun onFinishInflate() {
     super.onFinishInflate()
-    loaderBack.setOnClickListener {
-      router.pop()
-    }
   }
 
   override fun onAttachedToWindow() {
@@ -107,6 +105,13 @@ class RegistrationLoadingScreen : BaseScreen<
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenRegistrationLoadingBinding
       .inflate(layoutInflater, container, false)
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    loaderBack.setOnClickListener {
+      router.pop()
+    }
+  }
 
   private fun retryClicks() = errorRetryButton
       .clicks()

@@ -17,7 +17,6 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.finishWithoutAnimations
@@ -51,9 +50,6 @@ class RegistrationLoadingScreen : BaseScreen<
   lateinit var router: Router
 
   @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
-
-  @Inject
   lateinit var effectHandlerFactory: RegistrationLoadingEffectHandler.Factory
 
   @Inject
@@ -66,7 +62,6 @@ class RegistrationLoadingScreen : BaseScreen<
   }
 
   private val delegate by unsafeLazy {
-    val screenKey = screenKeyProvider.keyFor<RegistrationLoadingScreenKey>(this)
     val uiRenderer = RegistrationLoadingUiRenderer(this)
 
     MobiusDelegate.forView(

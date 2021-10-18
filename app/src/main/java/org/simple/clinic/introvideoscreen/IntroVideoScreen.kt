@@ -19,10 +19,9 @@ import org.simple.clinic.databinding.ScreenIntroVideoBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.platform.crash.CrashReporter
-import org.simple.clinic.registration.register.RegistrationLoadingScreenKey
+import org.simple.clinic.registration.register.RegistrationLoadingScreen
 import org.simple.clinic.simplevideo.SimpleVideo
 import org.simple.clinic.simplevideo.SimpleVideoConfig
 import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.TrainingVideo
@@ -74,7 +73,7 @@ class IntroVideoScreen : BaseScreen<
   }
 
   override fun openHome() {
-    router.push(RegistrationLoadingScreenKey(screenKey.registrationEntry).wrap())
+    router.push(RegistrationLoadingScreen.Key(screenKey.registrationEntry))
   }
 
   private fun videoClicks(): Observable<IntroVideoEvent> {

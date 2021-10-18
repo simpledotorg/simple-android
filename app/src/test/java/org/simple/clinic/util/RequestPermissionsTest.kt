@@ -11,7 +11,6 @@ import org.junit.Test
 import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
-import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.util.RequestPermissionsTest.Event.FirstEvent
 import org.simple.clinic.util.RequestPermissionsTest.Event.FourthEvent
 import org.simple.clinic.util.RequestPermissionsTest.Event.SecondEvent

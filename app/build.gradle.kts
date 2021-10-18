@@ -341,6 +341,8 @@ dependencies {
 
   implementation(libs.itemanimators)
 
+  implementation(libs.itext7)
+
   implementation(libs.jbcrypt)
 
   implementation(libs.kotlin.coroutines)

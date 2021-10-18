@@ -95,6 +95,8 @@ guava = "com.google.guava:guava:28.1-jre"
 
 itemanimators = "com.mikepenz:itemanimators:1.0.2"
 
+itext7 = "com.itextpdf:itext7-core:7.1.16"
+
 jackson-core = "com.fasterxml.jackson.core:jackson-core:2.12.4"
 
 jbcrypt = "org.mindrot:jbcrypt:0.4"

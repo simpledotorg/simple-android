@@ -1,10 +1,9 @@
 package org.simple.clinic.forgotpin.confirmpin
 
-import android.content.Context
 import android.os.Parcelable
-import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.RelativeLayout
 import androidx.annotation.StringRes
 import com.jakewharton.rxbinding3.widget.editorActions
 import io.reactivex.Observable
@@ -18,17 +17,20 @@ import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import org.simple.clinic.widgets.textChanges
 import javax.inject.Inject
 
-class ForgotPinConfirmPinScreen(
-    context: Context,
-    attributeSet: AttributeSet?
-) : RelativeLayout(context, attributeSet), ForgotPinConfirmPinUi, ForgotPinConfirmPinUiActions {
+class ForgotPinConfirmPinScreen : BaseScreen<
+    ForgotPinConfirmPinScreen.Key,
+    ScreenForgotpinConfirmpinBinding,
+    ForgotPinConfirmPinModel,
+    ForgotPinConfirmPinEvent,
+    ForgotPinConfirmPinEffect,
+    Unit>(), ForgotPinConfirmPinUi, ForgotPinConfirmPinUiActions {
 
   @Inject
   lateinit var effectHandlerFactory: ForgotPinConfirmPinEffectHandler.Factory
@@ -87,6 +89,11 @@ class ForgotPinConfirmPinScreen(
         modelUpdateListener = uiRenderer::render
     )
   }
+
+  override fun defaultModel() = ForgotPinConfirmPinModel.create(previousPin = screenKey.enteredPin)
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenForgotpinConfirmpinBinding.inflate(layoutInflater, container, false)
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()

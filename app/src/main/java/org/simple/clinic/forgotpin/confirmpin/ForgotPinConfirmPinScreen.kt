@@ -9,6 +9,7 @@ import androidx.annotation.StringRes
 import com.jakewharton.rxbinding3.widget.editorActions
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenForgotpinConfirmpinBinding
@@ -16,6 +17,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.hideKeyboard
@@ -180,5 +182,13 @@ class ForgotPinConfirmPinScreen(
 
   interface Injector {
     fun inject(target: ForgotPinConfirmPinScreen)
+  }
+
+  @Parcelize
+  data class Key(
+      val enteredPin: String,
+      override val analyticsName: String = "Forgot PIN Confirm PIN"
+  ) : ScreenKey() {
+    override fun instantiateFragment() = ForgotPinConfirmPinScreen()
   }
 }

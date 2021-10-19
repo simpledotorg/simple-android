@@ -416,8 +416,6 @@ dependencies {
 
   testImplementation(libs.mockito.kotlin)
 
-  testImplementation(libs.quarantine)
-
   testImplementation(libs.truth)
 
   /**
@@ -440,10 +438,6 @@ dependencies {
   }
 
   androidTestImplementation(libs.faker)
-
-  androidTestImplementation(libs.quarantine) {
-    exclude(group = "com.fasterxml.jackson.core", module = "jackson-core")
-  }
 
   androidTestImplementation(libs.androidx.room.testing)
 

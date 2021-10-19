@@ -145,8 +145,6 @@ play-services-auth = "com.google.android.gms:play-services-auth:19.0.0"
 play-services-location = "com.google.android.gms:play-services-location:18.0.0"
 play-services-mlkit-barcode = "com.google.android.gms:play-services-mlkit-barcode-scanning:16.2.0"
 
-quarantine = "com.vinaysshenoy:quarantine-junit4:0.3.0"
-
 rootbeer = "com.scottyab:rootbeer-lib:0.0.9"
 
 retrofit-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }

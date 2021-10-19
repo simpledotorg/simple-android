@@ -40,7 +40,7 @@ class SelectCountryScreen : BaseScreen<
     SelectCountryModel,
     SelectCountryEvent,
     SelectCountryEffect,
-    Unit>(), SelectCountryUi, UiActions {
+    SelectCountryViewEffect>(), SelectCountryUi, UiActions {
 
   @Inject
   lateinit var appConfigRepository: AppConfigRepository
@@ -56,6 +56,9 @@ class SelectCountryScreen : BaseScreen<
 
   @Inject
   lateinit var router: Router
+
+  @Inject
+  lateinit var effectHandlerFactory: SelectCountryEffectHandler.Factory
 
   private val countrySelectionViewFlipper
     get() = binding.countrySelectionViewFlipper
@@ -108,11 +111,13 @@ class SelectCountryScreen : BaseScreen<
 
   override fun createUpdate() = SelectCountryUpdate()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = SelectCountryEffectHandler.create(appConfigRepository = appConfigRepository,
-      uiActions = this,
-      schedulersProvider = schedulersProvider)
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<SelectCountryViewEffect>) = effectHandlerFactory
+      .create(viewEffectsConsumer)
+      .build()
 
   override fun uiRenderer() = SelectCountryUiRenderer(this)
+
+  override fun viewEffectHandler() = SelectCountryViewEffectHandler(this)
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

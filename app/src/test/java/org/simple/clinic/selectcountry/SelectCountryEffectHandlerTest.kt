@@ -16,7 +16,7 @@ import org.simple.clinic.appconfig.FetchSucceeded
 import org.simple.clinic.appconfig.ManifestFetchResult
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.util.ResolvedError.NetworkRelated
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 
 class SelectCountryEffectHandlerTest {
 
@@ -30,7 +30,13 @@ class SelectCountryEffectHandlerTest {
       isdCode = "91"
   )
 
-  private val effectHandler = SelectCountryEffectHandler.create(repository, uiActions, TrampolineSchedulersProvider())
+  private val viewEffectHandler = SelectCountryViewEffectHandler(uiActions)
+
+  private val effectHandler = SelectCountryEffectHandler(
+      repository,
+      TestSchedulersProvider.trampoline(),
+      viewEffectHandler::handle
+  ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
   @After

@@ -145,9 +145,6 @@ jobs:
           android-app \
           ${{ secrets.HEROKU_SECRET_PROPERTIES }}
 
-      - name: Turn on capturing of flaky tests
-        run: cat android-app/app/src/androidTest/resources/quarantine_ci.properties > android-app/app/src/androidTest/resources/quarantine.properties
-
       - name: QA Android Tests
         uses: reactivecircus/android-emulator-runner@v2
         with:

@@ -5,9 +5,5 @@
     android:name="org.simple.clinic.AndroidTestJUnitRunner"
     android:targetPackage="org.simple.clinic.qa.debug">
 
-    <meta-data
-      android:name="listener"
-      android:value="org.simple.clinic.QuarantineRunListener" />
-
   </instrumentation>
 </manifest>

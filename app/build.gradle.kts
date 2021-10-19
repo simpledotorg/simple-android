@@ -418,6 +418,8 @@ dependencies {
 
   testImplementation(libs.truth)
 
+  testImplementation(libs.kotlin.reflect)
+
   /**
    * Android test dependencies
    */

@@ -243,22 +243,30 @@ class AppointmentRepositoryAndroidTest {
         testData.patientProfile(
             patientUuid = noBpsDeletedPatientUuid,
             generatePhoneNumber = true,
-            patientName = "No BPs are deleted"
+            patientName = "No BPs are deleted",
+            patientRegisteredFacilityId = facility.uuid,
+            patientAssignedFacilityId = facility.uuid
         ),
         testData.patientProfile(
             patientUuid = latestBpDeletedPatientUuid,
             generatePhoneNumber = true,
-            patientName = "Latest BP is deleted"
+            patientName = "Latest BP is deleted",
+            patientRegisteredFacilityId = facility.uuid,
+            patientAssignedFacilityId = facility.uuid
         ),
         testData.patientProfile(
             patientUuid = oldestBpNotDeletedPatientUuid,
             generatePhoneNumber = true,
-            patientName = "Oldest BP is not deleted"
+            patientName = "Oldest BP is not deleted",
+            patientRegisteredFacilityId = facility.uuid,
+            patientAssignedFacilityId = facility.uuid
         ),
         testData.patientProfile(
             patientUuid = allBpsDeletedPatientUuid,
             generatePhoneNumber = true,
-            patientName = "All BPs are deleted"
+            patientName = "All BPs are deleted",
+            patientRegisteredFacilityId = facility.uuid,
+            patientAssignedFacilityId = facility.uuid
         )
     )
 
@@ -400,11 +408,15 @@ class AppointmentRepositoryAndroidTest {
     }
 
     fun createAppointment(patientUuid: UUID, scheduledDate: LocalDate): Appointment {
+      val appointmentTimestamp = scheduledDate.minusDays(10).toUtcInstant(userClock)
+
       return testData.appointment(
           patientUuid = patientUuid,
           facilityUuid = facility.uuid,
           status = Scheduled,
-          scheduledDate = scheduledDate)
+          scheduledDate = scheduledDate,
+          createdAt = appointmentTimestamp,
+          updatedAt = appointmentTimestamp)
     }
 
     // given
@@ -417,22 +429,30 @@ class AppointmentRepositoryAndroidTest {
         testData.patientProfile(
             patientUuid = noBloodSugarsDeletedPatientUuid,
             generatePhoneNumber = true,
-            patientName = "No blood sugars are deleted"
+            patientName = "No blood sugars are deleted",
+            patientRegisteredFacilityId = facility.uuid,
+            patientAssignedFacilityId = facility.uuid
         ),
         testData.patientProfile(
             patientUuid = latestBloodSugarDeletedPatientUuid,
             generatePhoneNumber = true,
-            patientName = "Latest blood sugar is deleted"
+            patientName = "Latest blood sugar is deleted",
+            patientRegisteredFacilityId = facility.uuid,
+            patientAssignedFacilityId = facility.uuid
         ),
         testData.patientProfile(
             patientUuid = oldestBloodSugarNotDeletedPatientUuid,
             generatePhoneNumber = true,
-            patientName = "Oldest blood sugar is not deleted"
+            patientName = "Oldest blood sugar is not deleted",
+            patientRegisteredFacilityId = facility.uuid,
+            patientAssignedFacilityId = facility.uuid
         ),
         testData.patientProfile(
             patientUuid = allBloodSugarsDeletedPatientUuid,
             generatePhoneNumber = true,
-            patientName = "All blood sugars are deleted"
+            patientName = "All blood sugars are deleted",
+            patientRegisteredFacilityId = facility.uuid,
+            patientAssignedFacilityId = facility.uuid
         )
     )
 
@@ -1159,7 +1179,9 @@ class AppointmentRepositoryAndroidTest {
     ) {
       val patientProfile = testData.patientProfile(
           patientUuid = patientUuid,
-          generatePhoneNumber = true
+          generatePhoneNumber = true,
+          patientRegisteredFacilityId = facilityUuid,
+          patientAssignedFacilityId = facilityUuid
       )
       patientRepository.save(listOf(patientProfile))
 
@@ -1175,6 +1197,8 @@ class AppointmentRepositoryAndroidTest {
           scheduledDate = LocalDate.now(clock).minusDays(1),
           status = Scheduled,
           cancelReason = null,
+          createdAt = Instant.now(clock),
+          updatedAt = Instant.now(clock),
           deletedAt = if (isAppointmentDeleted) Instant.now() else null
       )
       appointmentRepository.save(listOf(appointment))
@@ -1391,7 +1415,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentUuid: UUID,
         patientPhoneNumber: PatientPhoneNumber?
     ): RecordAppointment {
-      val patientProfile = with(testData.patientProfile(patientUuid = patientUuid, generatePhoneNumber = false, patientRegisteredFacilityId = facility.uuid)) {
+      val patientProfile = with(testData.patientProfile(patientUuid = patientUuid, generatePhoneNumber = false, patientRegisteredFacilityId = facility.uuid, patientAssignedFacilityId = facility.uuid)) {
         val phoneNumbers = if (patientPhoneNumber == null) emptyList() else listOf(patientPhoneNumber.withPatientUuid(patientUuid))
 
         this.copy(phoneNumbers = phoneNumbers)
@@ -1470,7 +1494,7 @@ class AppointmentRepositoryAndroidTest {
         bpUuid: UUID?,
         appointmentUuid: UUID
     ): RecordAppointment {
-      val patientProfile = testData.patientProfile(patientUuid = patientUuid, generatePhoneNumber = true, patientRegisteredFacilityId = facility.uuid)
+      val patientProfile = testData.patientProfile(patientUuid = patientUuid, generatePhoneNumber = true, patientRegisteredFacilityId = facility.uuid, patientAssignedFacilityId = facility.uuid)
 
       val bloodPressureMeasurement = if (bpUuid != null) {
         testData.bloodPressureMeasurement(
@@ -1538,7 +1562,7 @@ class AppointmentRepositoryAndroidTest {
         bloodSugarUuid: UUID?,
         appointmentUuid: UUID
     ): RecordAppointment {
-      val patientProfile = testData.patientProfile(patientUuid = patientUuid, generatePhoneNumber = true, patientRegisteredFacilityId = facility.uuid)
+      val patientProfile = testData.patientProfile(patientUuid = patientUuid, generatePhoneNumber = true, patientRegisteredFacilityId = facility.uuid, patientAssignedFacilityId = facility.uuid)
 
       val bloodSugarMeasurement = if (bloodSugarUuid != null) {
         testData.bloodSugarMeasurement(
@@ -2066,13 +2090,16 @@ class AppointmentRepositoryAndroidTest {
 
       val bp = TestData.bloodPressureMeasurement(
           patientUuid = patientUuid,
-          facilityUuid = facilityUuid
+          facilityUuid = facilityUuid,
+          systolic = 120,
+          diastolic = 80
       )
       bpRepository.save(listOf(bp))
 
       val bloodSugar = TestData.bloodSugarMeasurement(
           patientUuid = patientUuid,
-          facilityUuid = facilityUuid
+          facilityUuid = facilityUuid,
+          reading = BloodSugarReading.fromMg("30", Random)
       )
       bloodSugarRepository.save(listOf(bloodSugar))
 

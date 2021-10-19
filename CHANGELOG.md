@@ -16,6 +16,7 @@
 - Migrate `EnterOtpScreen` to use view effects
 - Implement CSV to PDF file converter
 - Add `OverdueListDownloadApi`
+- Remove tool for capturing of flaky tests
 
 ### Changes
 

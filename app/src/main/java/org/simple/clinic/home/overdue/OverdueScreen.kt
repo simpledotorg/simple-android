@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,8 +14,11 @@ import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.Update
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.cast
-import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.rx2.asObservable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -92,6 +94,8 @@ class OverdueScreen : BaseScreen<
       }
   )
 
+  private val disposable = CompositeDisposable()
+
   private val viewForEmptyList
     get() = binding.viewForEmptyList
 
@@ -109,8 +113,6 @@ class OverdueScreen : BaseScreen<
 
   private val shareOverdueListButton
     get() = binding.shareOverdueListButton
-
-  private val screenDestroys = PublishSubject.create<Unit>()
 
   override fun defaultModel() = OverdueModel.create()
 
@@ -145,16 +147,15 @@ class OverdueScreen : BaseScreen<
     overdueRecyclerView.adapter = overdueListAdapter
     overdueRecyclerView.layoutManager = LinearLayoutManager(context)
 
-    overdueListAdapter.addLoadStateListener(::overdueListAdapterLoadStateListener)
-
     buttonsFrame.visibleOrGone(isVisible = features.isEnabled(OverdueListDownloadAndShare))
+
+    disposable.add(overdueListLoadStateListener())
   }
 
   override fun onDestroyView() {
     overdueRecyclerView.adapter = null
+    disposable.clear()
     super.onDestroyView()
-    overdueListAdapter.removeLoadStateListener(::overdueListAdapterLoadStateListener)
-    screenDestroys.onNext(Unit)
   }
 
   override fun openPhoneMaskBottomSheet(patientUuid: UUID) {
@@ -181,28 +182,6 @@ class OverdueScreen : BaseScreen<
     )
   }
 
-  private fun overdueListAdapterLoadStateListener(loadStates: CombinedLoadStates) {
-    val isSyncingPatientData = lastSyncedState.get().lastSyncProgress == SyncProgress.SYNCING
-    val isLoadingInitialData = loadStates.refresh is LoadState.Loading
-    val hasNoAdapterItems = overdueListAdapter.itemCount == 0
-    val hasOverdueListFullyLoaded = (isSyncingPatientData || isLoadingInitialData) && hasNoAdapterItems
-
-    if (hasOverdueListFullyLoaded) {
-      overdueProgressBar.visibility = View.VISIBLE
-      viewForEmptyList.visibility = View.GONE
-      overdueRecyclerView.visibility = View.GONE
-    } else {
-      val endOfPaginationReached = loadStates.append.endOfPaginationReached
-      val shouldShowEmptyView = endOfPaginationReached && hasNoAdapterItems
-
-      overdueProgressBar.visibility = View.GONE
-      viewForEmptyList.visibleOrGone(isVisible = shouldShowEmptyView)
-      overdueRecyclerView.visibleOrGone(isVisible = !shouldShowEmptyView)
-
-      (parentFragment as HomeScreen).overdueListCountUpdated(overdueListAdapter.itemCount)
-    }
-  }
-
   private fun downloadOverdueListClicks(): Observable<UiEvent> {
     return downloadOverdueListButton
         .clicks()
@@ -215,14 +194,51 @@ class OverdueScreen : BaseScreen<
         .map { ShareOverdueListClicked }
   }
 
+  private fun overdueListLoadStateListener(): Disposable {
+    return Observables
+        .combineLatest(
+            lastSyncedState.asObservable(),
+            overdueListAdapter.loadStateFlow.asObservable()
+        )
+        .subscribe { (syncState, loadStates) ->
+          val isSyncingPatientData = syncState.lastSyncProgress == SyncProgress.SYNCING
+          val isLoadingInitialData = loadStates.refresh is LoadState.Loading
+          val isOverdueListLoading = isSyncingPatientData || isLoadingInitialData
+          val hasNoAdapterItems = overdueListAdapter.itemCount == 0
+
+          when {
+            isOverdueListLoading && hasNoAdapterItems -> loadingOverdueList()
+            else -> {
+              val shouldShowEmptyView = loadStates.append.endOfPaginationReached && hasNoAdapterItems
+
+              overdueListLoaded(shouldShowEmptyView)
+            }
+          }
+        }
+  }
+
+  private fun overdueListLoaded(shouldShowEmptyView: Boolean) {
+    overdueProgressBar.visibility = View.GONE
+    viewForEmptyList.visibleOrGone(isVisible = shouldShowEmptyView)
+    overdueRecyclerView.visibleOrGone(isVisible = !shouldShowEmptyView)
+
+    (parentFragment as HomeScreen).overdueListCountUpdated(overdueListAdapter.itemCount)
+  }
+
+  private fun loadingOverdueList() {
+    overdueProgressBar.visibility = View.VISIBLE
+    viewForEmptyList.visibility = View.GONE
+    overdueRecyclerView.visibility = View.GONE
+  }
+
   interface Injector {
     fun inject(target: OverdueScreen)
   }
 
   @Parcelize
-  class Key : ScreenKey() {
-
-    override val analyticsName = "Overdue"
+  data class Key(
+      override val analyticsName: String = "Overdue"
+  ) : ScreenKey() {
 
     override fun instantiateFragment() = OverdueScreen()
   }

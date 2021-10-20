@@ -21,6 +21,10 @@
 
 - [In Progress: 20 Oct 2021] Add option to download & share overdue list
 
+### Fixes
+
+- Fix overdue screen progress state during initial sync
+
 ## 2021-10-18-7990
 
 ### Internal

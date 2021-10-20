@@ -41,31 +41,29 @@ class ForgotPinConfirmPinScreen : BaseScreen<
   @Inject
   lateinit var screenKeyProvider: ScreenKeyProvider
 
-  private var binding: ScreenForgotpinConfirmpinBinding? = null
-
   private val pinEntryEditText
-    get() = binding!!.pinEntryEditText
+    get() = binding.pinEntryEditText
 
   private val backButton
-    get() = binding!!.backButton
+    get() = binding.backButton
 
   private val userNameTextView
-    get() = binding!!.userNameTextView
+    get() = binding.userNameTextView
 
   private val facilityNameTextView
-    get() = binding!!.facilityNameTextView
+    get() = binding.facilityNameTextView
 
   private val pinErrorTextView
-    get() = binding!!.pinErrorTextView
+    get() = binding.pinErrorTextView
 
   private val pinEntryHintTextView
-    get() = binding!!.pinEntryHintTextView
+    get() = binding.pinEntryHintTextView
 
   private val progressBar
-    get() = binding!!.progressBar
+    get() = binding.progressBar
 
   private val pinEntryContainer
-    get() = binding!!.pinEntryContainer
+    get() = binding.pinEntryContainer
 
   private val events by unsafeLazy {
     Observable

@@ -6,8 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.paging.CombinedLoadStates
-import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.f2prateek.rx.preferences2.Preference
@@ -26,14 +24,12 @@ import org.simple.clinic.databinding.ScreenOverdueBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature.OverdueListDownloadAndShare
 import org.simple.clinic.feature.Features
-import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.sync.LastSyncedState
-import org.simple.clinic.sync.SyncProgress
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.PagingItemAdapter
@@ -142,15 +138,12 @@ class OverdueScreen : BaseScreen<
     overdueRecyclerView.adapter = overdueListAdapter
     overdueRecyclerView.layoutManager = LinearLayoutManager(context)
 
-    overdueListAdapter.addLoadStateListener(::overdueListAdapterLoadStateListener)
-
     buttonsFrame.visibleOrGone(isVisible = features.isEnabled(OverdueListDownloadAndShare))
   }
 
   override fun onDestroyView() {
     overdueRecyclerView.adapter = null
     super.onDestroyView()
-    overdueListAdapter.removeLoadStateListener(::overdueListAdapterLoadStateListener)
   }
 
   override fun openPhoneMaskBottomSheet(patientUuid: UUID) {
@@ -175,28 +168,6 @@ class OverdueScreen : BaseScreen<
             screenCreatedTimestamp = Instant.now(utcClock)
         )
     )
-  }
-
-  private fun overdueListAdapterLoadStateListener(loadStates: CombinedLoadStates) {
-    val isSyncingPatientData = lastSyncedState.get().lastSyncProgress == SyncProgress.SYNCING
-    val isLoadingInitialData = loadStates.refresh is LoadState.Loading
-    val hasNoAdapterItems = overdueListAdapter.itemCount == 0
-    val hasOverdueListFullyLoaded = (isSyncingPatientData || isLoadingInitialData) && hasNoAdapterItems
-
-    if (hasOverdueListFullyLoaded) {
-      overdueProgressBar.visibility = View.VISIBLE
-      viewForEmptyList.visibility = View.GONE
-      overdueRecyclerView.visibility = View.GONE
-    } else {
-      val endOfPaginationReached = loadStates.append.endOfPaginationReached
-      val shouldShowEmptyView = endOfPaginationReached && hasNoAdapterItems
-
-      overdueProgressBar.visibility = View.GONE
-      viewForEmptyList.visibleOrGone(isVisible = shouldShowEmptyView)
-      overdueRecyclerView.visibleOrGone(isVisible = !shouldShowEmptyView)
-
-      (parentFragment as HomeScreen).overdueListCountUpdated(overdueListAdapter.itemCount)
-    }
   }
 
   private fun downloadOverdueListClicks(): Observable<UiEvent> {

@@ -16,7 +16,6 @@ import com.spotify.mobius.Update
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
-import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -110,8 +109,6 @@ class OverdueScreen : BaseScreen<
   private val shareOverdueListButton
     get() = binding.shareOverdueListButton
 
-  private val screenDestroys = PublishSubject.create<Unit>()
-
   override fun defaultModel() = OverdueModel.create()
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
@@ -154,7 +151,6 @@ class OverdueScreen : BaseScreen<
     overdueRecyclerView.adapter = null
     super.onDestroyView()
     overdueListAdapter.removeLoadStateListener(::overdueListAdapterLoadStateListener)
-    screenDestroys.onNext(Unit)
   }
 
   override fun openPhoneMaskBottomSheet(patientUuid: UUID) {

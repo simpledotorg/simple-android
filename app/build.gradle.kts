@@ -358,7 +358,9 @@ dependencies {
 
   implementation(libs.okhttp.interceptor.logging)
 
-  implementation(libs.openCsv)
+  implementation(libs.openCsv) {
+    exclude(module = "commons-logging")
+  }
 
   implementation(libs.play.core)
   implementation(libs.play.services.auth)

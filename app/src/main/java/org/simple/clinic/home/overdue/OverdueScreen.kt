@@ -231,9 +231,9 @@ class OverdueScreen : BaseScreen<
   }
 
   @Parcelize
-  class Key : ScreenKey() {
-
-    override val analyticsName = "Overdue"
+  data class Key(
+      override val analyticsName: String = "Overdue"
+  ) : ScreenKey() {
 
     override fun instantiateFragment() = OverdueScreen()
   }

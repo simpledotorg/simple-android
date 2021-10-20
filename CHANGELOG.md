@@ -14,10 +14,11 @@
 - Remove dependency on `com.squareup.flow:flow`
 - Migrate `SelectCountryScreen` to use view effects
 - Migrate `EnterOtpScreen` to use view effects
+- Implement CSV to PDF file converter
 
 ### Changes
 
-- [In Progress: 22 Jul 2021] Add option to download & share overdue list
+- [In Progress: 20 Oct 2021] Add option to download & share overdue list
 
 ## 2021-10-18-7990
 

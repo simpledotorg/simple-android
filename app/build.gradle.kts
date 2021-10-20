@@ -341,6 +341,8 @@ dependencies {
 
   implementation(libs.itemanimators)
 
+  implementation(libs.itext7)
+
   implementation(libs.jbcrypt)
 
   implementation(libs.kotlin.coroutines)
@@ -355,6 +357,10 @@ dependencies {
   implementation(libs.mixpanel.android)
 
   implementation(libs.okhttp.interceptor.logging)
+
+  implementation(libs.openCsv) {
+    exclude(module = "commons-logging")
+  }
 
   implementation(libs.play.core)
   implementation(libs.play.services.auth)

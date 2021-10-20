@@ -195,11 +195,11 @@ class OverdueScreen : BaseScreen<
   }
 
   private fun overdueListLoadStateListener(): Disposable {
-    val syncState = lastSyncedState.asObservable()
-    val loadStates = overdueListAdapter.loadStateFlow.asObservable()
-
     return Observables
-        .combineLatest(syncState, loadStates)
+        .combineLatest(
+            lastSyncedState.asObservable(),
+            overdueListAdapter.loadStateFlow.asObservable()
+        )
         .subscribe { (syncState, loadStates) ->
           val isSyncingPatientData = syncState.lastSyncProgress == SyncProgress.SYNCING
           val isLoadingInitialData = loadStates.refresh is LoadState.Loading
@@ -207,23 +207,28 @@ class OverdueScreen : BaseScreen<
           val hasNoAdapterItems = overdueListAdapter.itemCount == 0
 
           when {
-            isOverdueListLoading && hasNoAdapterItems -> {
-              overdueProgressBar.visibility = View.VISIBLE
-              viewForEmptyList.visibility = View.GONE
-              overdueRecyclerView.visibility = View.GONE
-            }
+            isOverdueListLoading && hasNoAdapterItems -> loadingOverdueList()
             else -> {
-              val endOfPaginationReached = loadStates.append.endOfPaginationReached
-              val shouldShowEmptyView = endOfPaginationReached && hasNoAdapterItems
+              val shouldShowEmptyView = loadStates.append.endOfPaginationReached && hasNoAdapterItems
 
-              overdueProgressBar.visibility = View.GONE
-              viewForEmptyList.visibleOrGone(isVisible = shouldShowEmptyView)
-              overdueRecyclerView.visibleOrGone(isVisible = !shouldShowEmptyView)
-
-              (parentFragment as HomeScreen).overdueListCountUpdated(overdueListAdapter.itemCount)
+              overdueListLoaded(shouldShowEmptyView)
             }
           }
         }
+  }
+
+  private fun overdueListLoaded(shouldShowEmptyView: Boolean) {
+    overdueProgressBar.visibility = View.GONE
+    viewForEmptyList.visibleOrGone(isVisible = shouldShowEmptyView)
+    overdueRecyclerView.visibleOrGone(isVisible = !shouldShowEmptyView)
+
+    (parentFragment as HomeScreen).overdueListCountUpdated(overdueListAdapter.itemCount)
+  }
+
+  private fun loadingOverdueList() {
+    overdueProgressBar.visibility = View.VISIBLE
+    viewForEmptyList.visibility = View.GONE
+    overdueRecyclerView.visibility = View.GONE
   }
 
   interface Injector {

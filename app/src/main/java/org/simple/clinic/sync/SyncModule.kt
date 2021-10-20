@@ -32,6 +32,7 @@ import org.simple.clinic.overdue.AppointmentSync
 import org.simple.clinic.overdue.callresult.CallResultRepository
 import org.simple.clinic.overdue.callresult.CallResultSync
 import org.simple.clinic.overdue.callresult.di.CallResultModule
+import org.simple.clinic.overdue.download.di.OverdueListDownloadModule
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncModule
@@ -60,7 +61,8 @@ import javax.inject.Named
   ReportsModule::class,
   HelpModule::class,
   DrugModule::class,
-  CallResultModule::class
+  CallResultModule::class,
+  OverdueListDownloadModule::class
 ])
 class SyncModule {
 

@@ -1,8 +1,10 @@
 package org.simple.clinic.forgotpin.confirmpin
 
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.annotation.StringRes
@@ -93,6 +95,12 @@ class ForgotPinConfirmPinScreen : BaseScreen<
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    pinEntryEditText.showKeyboard()
+    backButton.setOnClickListener { goBack() }
   }
 
   override fun onAttachedToWindow() {

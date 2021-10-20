@@ -9,7 +9,11 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.annotation.StringRes
 import com.jakewharton.rxbinding3.widget.editorActions
+import com.spotify.mobius.Init
+import com.spotify.mobius.Update
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
+import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
@@ -18,6 +22,7 @@ import org.simple.clinic.databinding.ScreenForgotpinConfirmpinBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -91,6 +96,20 @@ class ForgotPinConfirmPinScreen : BaseScreen<
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenForgotpinConfirmpinBinding.inflate(layoutInflater, container, false)
+
+  override fun events(): Observable<ForgotPinConfirmPinEvent> {
+    return events.ofType()
+  }
+
+  override fun createUpdate() = ForgotPinConfirmPinUpdate()
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
+      .create(this)
+      .build()
+
+  override fun createInit() = ForgotPinConfirmPinInit()
+
+  override fun uiRenderer() = ForgotPinConfirmPinUiRenderer(this)
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

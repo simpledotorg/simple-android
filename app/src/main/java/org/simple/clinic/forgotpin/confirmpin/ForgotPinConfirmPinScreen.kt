@@ -1,5 +1,6 @@
 package org.simple.clinic.forgotpin.confirmpin
 
+import android.content.Context
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -88,6 +89,11 @@ class ForgotPinConfirmPinScreen : BaseScreen<
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenForgotpinConfirmpinBinding.inflate(layoutInflater, container, false)
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()

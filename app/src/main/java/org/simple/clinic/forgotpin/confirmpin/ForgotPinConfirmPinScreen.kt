@@ -38,9 +38,6 @@ class ForgotPinConfirmPinScreen : BaseScreen<
   @Inject
   lateinit var router: Router
 
-  @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
-
   private val pinEntryEditText
     get() = binding.pinEntryEditText
 
@@ -75,7 +72,6 @@ class ForgotPinConfirmPinScreen : BaseScreen<
   }
 
   private val delegate by unsafeLazy {
-    val screenKey = screenKeyProvider.keyFor<ForgotPinConfirmPinScreenKey>(this)
     val uiRenderer = ForgotPinConfirmPinUiRenderer(this)
 
     MobiusDelegate.forView(

@@ -23,6 +23,7 @@ import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import org.simple.clinic.widgets.textChanges
 import javax.inject.Inject
@@ -142,7 +143,7 @@ class ForgotPinConfirmPinScreen : BaseScreen<
   override fun showProgress() {
     progressBar.visibility = VISIBLE
     pinEntryContainer.visibility = INVISIBLE
-    hideKeyboard()
+    pinEntryContainer.hideKeyboard()
   }
 
   private fun hideProgress() {

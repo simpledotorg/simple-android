@@ -13,7 +13,7 @@ import androidx.annotation.StringRes
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.cast
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -23,7 +23,6 @@ import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.showKeyboard
 import org.simple.clinic.widgets.textChanges
 import javax.inject.Inject
@@ -66,22 +65,19 @@ class ForgotPinConfirmPinScreen : BaseScreen<
   private val pinEntryContainer
     get() = binding.pinEntryContainer
 
-  private val events by unsafeLazy {
-    Observable
-        .merge(
-            pinSubmits(),
-            pinTextChanges()
-        )
-        .compose(ReportAnalyticsEvents())
-  }
-
   override fun defaultModel() = ForgotPinConfirmPinModel.create(previousPin = screenKey.enteredPin)
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenForgotpinConfirmpinBinding.inflate(layoutInflater, container, false)
 
   override fun events(): Observable<ForgotPinConfirmPinEvent> {
-    return events.ofType()
+    return Observable
+        .merge(
+            pinSubmits(),
+            pinTextChanges()
+        )
+        .compose(ReportAnalyticsEvents())
+        .cast()
   }
 
   override fun createUpdate() = ForgotPinConfirmPinUpdate()

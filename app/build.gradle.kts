@@ -15,6 +15,7 @@ plugins {
   id("io.sentry.android.gradle")
   id("com.google.firebase.firebase-perf")
   id("plugins.git.install-hooks")
+  id("dd-sdk-android-gradle-plugin")
 }
 
 sentry {
@@ -455,6 +456,8 @@ dependencies {
   lintChecks(projects.lint)
 
   runtimeOnly(libs.jackson.core)
+
+  implementation(libs.datadog.sdk)
 }
 
 // This must always be present at the bottom of this file, as per:

@@ -23,6 +23,7 @@ buildscript {
     classpath(libs.kotlin.gradle.plugin)
     classpath(libs.sentry.gradle.plugin)
     classpath(files("./buildTooling/room-metadata-generator-${roomMetaDataGeneratorVersion}.jar"))
+    classpath(libs.datadog.gradle.plugin)
   }
 }
 

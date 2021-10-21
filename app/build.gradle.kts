@@ -115,6 +115,10 @@ android {
     val manifestEndpoint: String by project
     val disableScreenshot: String by project
     val allowRootedDevice: String by project
+    val datadogServiceName: String by project
+    val datadogApplicationId: String by project
+    val datadogClientToken: String by project
+    val datadogEnvironment: String by project
 
     addManifestPlaceholders(mapOf(
         "sentryDsn" to sentryDsn,
@@ -125,6 +129,10 @@ android {
     buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
     buildConfigField("boolean", "DISABLE_SCREENSHOT", disableScreenshot)
     buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", allowRootedDevice)
+    buildConfigField("String", "DATADOG_SERVICE_NAME", "\"$datadogServiceName\"")
+    buildConfigField("String", "DATADOG_APPLICATION_ID", "\"$datadogApplicationId\"")
+    buildConfigField("String", "DATADOG_CLIENT_TOKEN", "\"$datadogClientToken\"")
+    buildConfigField("String", "DATADOG_ENVIRONMENT", "\"$datadogEnvironment\"")
   }
 
   buildTypes {

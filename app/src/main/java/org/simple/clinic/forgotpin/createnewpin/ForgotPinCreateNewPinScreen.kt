@@ -12,10 +12,9 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenForgotpinCreatepinBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreenKey
+import org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreen
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
@@ -124,7 +123,7 @@ class ForgotPinCreateNewPinScreen(
 
   override fun showConfirmPinScreen(pin: String) {
     hideKeyboard()
-    router.push(ForgotPinConfirmPinScreenKey(pin).wrap())
+    router.push(ForgotPinConfirmPinScreen.Key(pin))
   }
 
   override fun hideInvalidPinError() {

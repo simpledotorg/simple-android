@@ -2,6 +2,12 @@
 
 ## Next Release
 
+### Changes
+
+- [In Progress: 20 Oct 2021] Add option to download & share overdue list
+
+## On Demo
+
 ### Internal
 
 - Allow only latin digits in the phone number entry
@@ -17,10 +23,6 @@
 - Implement CSV to PDF file converter
 - Add `OverdueListDownloadApi`
 - Migrate `ForgotPinConfirmPinScreen` to a Fragment
-
-### Changes
-
-- [In Progress: 20 Oct 2021] Add option to download & share overdue list
 
 ### Fixes
 

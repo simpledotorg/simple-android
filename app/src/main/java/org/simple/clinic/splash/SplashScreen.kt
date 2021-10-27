@@ -13,8 +13,7 @@ import org.simple.clinic.databinding.ScreenSplashBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
-import org.simple.clinic.navigation.v2.compat.wrap
-import org.simple.clinic.onboarding.OnboardingScreen.OnboardingScreenKey
+import org.simple.clinic.onboarding.OnboardingScreen
 import javax.inject.Inject
 
 @SuppressLint("CustomSplashScreen")
@@ -50,7 +49,7 @@ class SplashScreen : Fragment() {
     }
 
     nextButton.setOnClickListener {
-      router.clearHistoryAndPush(OnboardingScreenKey.wrap())
+      router.clearHistoryAndPush(OnboardingScreen.Key())
     }
   }
 

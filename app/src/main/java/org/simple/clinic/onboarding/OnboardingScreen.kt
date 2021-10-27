@@ -201,4 +201,8 @@ class OnboardingScreen : BaseScreen<
   ) : ScreenKey() {
     override fun instantiateFragment() = OnboardingScreen()
   }
+
+  interface Injector {
+    fun inject(target: OnboardingScreen)
+  }
 }

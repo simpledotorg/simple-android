@@ -4,6 +4,8 @@ import android.content.Context
 import android.text.style.ForegroundColorSpan
 import android.text.style.TextAppearanceSpan
 import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.text.buildSpannedString
@@ -21,16 +23,20 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.registerorlogin.AuthenticationActivity
 import org.simple.clinic.navigation.v2.compat.FullScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.resolveColor
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.finishWithoutAnimations
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
-class OnboardingScreen(
-    context: Context,
-    attributeSet: AttributeSet
-) : ConstraintLayout(context, attributeSet), OnboardingUi {
+class OnboardingScreen : BaseScreen<
+    OnboardingScreen.Key,
+    ScreenOnboardingBinding,
+    OnboardingModel,
+    OnboardingEvent,
+    OnboardingEffect,
+    Unit>(), OnboardingUi {
 
   @Inject
   lateinit var onboardingEffectHandler: OnboardingEffectHandler.Factory
@@ -66,6 +72,11 @@ class OnboardingScreen(
         onboardingEffectHandler.create(this).build()
     )
   }
+
+  override fun defaultModel() = OnboardingModel
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenOnboardingBinding.inflate(layoutInflater, container, false)
 
   override fun onFinishInflate() {
     super.onFinishInflate()

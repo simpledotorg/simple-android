@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
+import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
@@ -17,6 +18,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenOnboardingBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.registerorlogin.AuthenticationActivity
 import org.simple.clinic.navigation.v2.compat.FullScreenKey
 import org.simple.clinic.util.resolveColor
@@ -169,5 +171,12 @@ class OnboardingScreen(
     override val analyticsName = "Onboarding Screen"
 
     override fun layoutRes() = R.layout.screen_onboarding
+  }
+  
+  @Parcelize
+  data class Key(
+      override val analyticsName: String = "Onboarding Screen"
+  ) : ScreenKey() {
+    override fun instantiateFragment() = OnboardingScreen()
   }
 }

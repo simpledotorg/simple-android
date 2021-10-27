@@ -89,6 +89,11 @@ class OnboardingScreen : BaseScreen<
       .compose(ReportAnalyticsEvents())
       .cast<OnboardingEvent>()
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     binding = ScreenOnboardingBinding.bind(this)

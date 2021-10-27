@@ -1,10 +1,12 @@
 package org.simple.clinic.onboarding
 
 import android.content.Context
+import android.os.Bundle
 import android.text.style.ForegroundColorSpan
 import android.text.style.TextAppearanceSpan
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -94,6 +96,13 @@ class OnboardingScreen : BaseScreen<
     context.injector<Injector>().inject(this)
   }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    setIntroOneTextView()
+    setIntroTwoTextView()
+    setIntroThreeTextView()
+  }
+  
   override fun onFinishInflate() {
     super.onFinishInflate()
     binding = ScreenOnboardingBinding.bind(this)

@@ -12,7 +12,10 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
 import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.Update
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
+import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.cast
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
@@ -77,6 +80,16 @@ class OnboardingScreen : BaseScreen<
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenOnboardingBinding.inflate(layoutInflater, container, false)
+
+  override fun createUpdate() = OnboardingUpdate()
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = onboardingEffectHandler
+      .create(this)
+      .build()
+
+  override fun events() = getStartedClicks()
+      .compose(ReportAnalyticsEvents())
+      .cast<OnboardingEvent>()
 
   override fun onFinishInflate() {
     super.onFinishInflate()

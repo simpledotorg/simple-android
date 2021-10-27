@@ -4,35 +4,27 @@ import android.content.Context
 import android.os.Bundle
 import android.text.style.ForegroundColorSpan
 import android.text.style.TextAppearanceSpan
-import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
-import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.view.clicks
-import com.spotify.mobius.Update
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
-import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.cast
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenOnboardingBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.registerorlogin.AuthenticationActivity
-import org.simple.clinic.navigation.v2.compat.FullScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.resolveColor
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.finishWithoutAnimations
-import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
 class OnboardingScreen : BaseScreen<
@@ -61,21 +53,6 @@ class OnboardingScreen : BaseScreen<
   private val introThreeTextView
     get() = binding.introThreeTextView
 
-  private val events: Observable<OnboardingEvent> by unsafeLazy {
-    getStartedClicks()
-        .compose(ReportAnalyticsEvents())
-        .cast<OnboardingEvent>()
-  }
-
-  private val delegate by unsafeLazy {
-    MobiusDelegate.forView(
-        events,
-        OnboardingModel,
-        OnboardingUpdate(),
-        onboardingEffectHandler.create(this).build()
-    )
-  }
-
   override fun defaultModel() = OnboardingModel
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
@@ -101,31 +78,6 @@ class OnboardingScreen : BaseScreen<
     setIntroOneTextView()
     setIntroTwoTextView()
     setIntroThreeTextView()
-  }
-  
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    binding = ScreenOnboardingBinding.bind(this)
-    if (isInEditMode) {
-      return
-    }
-
-    context.injector<OnboardingScreenInjector>().inject(this)
-
-    setIntroOneTextView()
-    setIntroTwoTextView()
-    setIntroThreeTextView()
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    binding = null
-    super.onDetachedFromWindow()
   }
 
   private fun getStartedClicks(): Observable<OnboardingEvent> {
@@ -201,14 +153,6 @@ class OnboardingScreen : BaseScreen<
     introThreeTextView.text = introThreeFormattedString
   }
 
-  @Parcelize
-  object OnboardingScreenKey : FullScreenKey {
-
-    override val analyticsName = "Onboarding Screen"
-
-    override fun layoutRes() = R.layout.screen_onboarding
-  }
-  
   @Parcelize
   data class Key(
       override val analyticsName: String = "Onboarding Screen"

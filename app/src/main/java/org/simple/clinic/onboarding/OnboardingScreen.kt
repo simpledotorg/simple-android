@@ -147,13 +147,13 @@ class OnboardingScreen : BaseScreen<
 
   private fun setIntroOneTextView() {
     val onboardingEmphasisTextSpan = TextAppearanceSpan(context, R.style.TextAppearance_Simple_Subtitle1_Medium)
-    val onboardingEmphasisColorSpan = ForegroundColorSpan(context.resolveColor(attrRes = R.attr.colorOnBackground))
+    val onboardingEmphasisColorSpan = ForegroundColorSpan(requireContext().resolveColor(attrRes = R.attr.colorOnBackground))
 
     val introOneFormattedString = buildSpannedString {
-      append(context.getString(R.string.screenonboarding_intro_1))
+      append(requireContext().getString(R.string.screenonboarding_intro_1))
 
       inSpans(onboardingEmphasisTextSpan, onboardingEmphasisColorSpan) {
-        append(context.getString(R.string.screenonboarding_intro_1_hypertension))
+        append(requireContext().getString(R.string.screenonboarding_intro_1_hypertension))
       }
     }
 
@@ -162,22 +162,22 @@ class OnboardingScreen : BaseScreen<
 
   private fun setIntroTwoTextView() {
     val introTwoFormattedString = buildSpannedString {
-      append(context.getString(R.string.screenonboarding_intro_2))
+      append(requireContext().getString(R.string.screenonboarding_intro_2))
 
       inSpans(
           TextAppearanceSpan(context, R.style.TextAppearance_Simple_Subtitle1_Medium),
-          ForegroundColorSpan(context.resolveColor(attrRes = R.attr.colorOnBackground))
+          ForegroundColorSpan(requireContext().resolveColor(attrRes = R.attr.colorOnBackground))
       ) {
-        append(context.getString(R.string.screenonboarding_intro_2_bp))
+        append(requireContext().getString(R.string.screenonboarding_intro_2_bp))
       }
 
-      append(context.getString(R.string.screenonboarding_intro_2_and))
+      append(requireContext().getString(R.string.screenonboarding_intro_2_and))
 
       inSpans(
           TextAppearanceSpan(context, R.style.TextAppearance_Simple_Subtitle1_Medium),
-          ForegroundColorSpan(context.resolveColor(attrRes = R.attr.colorOnBackground))
+          ForegroundColorSpan(requireContext().resolveColor(attrRes = R.attr.colorOnBackground))
       ) {
-        append(context.getString(R.string.screenonboarding_intro_2_medicines))
+        append(requireContext().getString(R.string.screenonboarding_intro_2_medicines))
       }
     }
 
@@ -186,16 +186,16 @@ class OnboardingScreen : BaseScreen<
 
   private fun setIntroThreeTextView() {
     val onboardingEmphasisTextSpan = TextAppearanceSpan(context, R.style.TextAppearance_Simple_Subtitle1_Medium)
-    val onboardingEmphasisColorSpan = ForegroundColorSpan(context.resolveColor(attrRes = R.attr.colorOnBackground))
+    val onboardingEmphasisColorSpan = ForegroundColorSpan(requireContext().resolveColor(attrRes = R.attr.colorOnBackground))
 
     val introThreeFormattedString = buildSpannedString {
-      append(context.getString(R.string.screenonboarding_intro_3))
+      append(requireContext().getString(R.string.screenonboarding_intro_3))
 
       inSpans(onboardingEmphasisTextSpan, onboardingEmphasisColorSpan) {
-        append(context.getString(R.string.screenonboarding_intro_3_reminder))
+        append(requireContext().getString(R.string.screenonboarding_intro_3_reminder))
       }
 
-      append(context.getString(R.string.screenonboarding_intro_3_visits))
+      append(requireContext().getString(R.string.screenonboarding_intro_3_visits))
     }
 
     introThreeTextView.text = introThreeFormattedString

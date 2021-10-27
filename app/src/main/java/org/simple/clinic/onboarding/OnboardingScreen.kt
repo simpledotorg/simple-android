@@ -47,19 +47,17 @@ class OnboardingScreen : BaseScreen<
   @Inject
   lateinit var activity: AppCompatActivity
 
-  private var binding: ScreenOnboardingBinding? = null
-
   private val getStartedButton
-    get() = binding!!.getStartedButton
+    get() = binding.getStartedButton
 
   private val introOneTextView
-    get() = binding!!.introOneTextView
+    get() = binding.introOneTextView
 
   private val introTwoTextView
-    get() = binding!!.introTwoTextView
+    get() = binding.introTwoTextView
 
   private val introThreeTextView
-    get() = binding!!.introThreeTextView
+    get() = binding.introThreeTextView
 
   private val events: Observable<OnboardingEvent> by unsafeLazy {
     getStartedClicks()

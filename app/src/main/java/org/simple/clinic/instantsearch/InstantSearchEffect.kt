@@ -21,11 +21,6 @@ data class SearchWithCriteria(
 
 data class ValidateSearchQuery(val searchQuery: String) : InstantSearchEffect()
 
-data class OpenLinkIdWithPatientScreen(
-    val patientId: UUID,
-    val identifier: Identifier
-) : InstantSearchEffect()
-
 data class OpenScannedQrCodeSheet(val identifier: Identifier) : InstantSearchEffect()
 
 data class SaveNewOngoingPatientEntry(val ongoingNewPatientEntry: OngoingNewPatientEntry) : InstantSearchEffect()
@@ -56,3 +51,8 @@ data class ShowPatientSearchResults(
 ) : InstantSearchViewEffect()
 
 data class OpenPatientSummary(val patientId: UUID) : InstantSearchViewEffect()
+
+data class OpenLinkIdWithPatientScreen(
+    val patientId: UUID,
+    val identifier: Identifier
+) : InstantSearchViewEffect()

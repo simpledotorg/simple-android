@@ -12,6 +12,7 @@ class PatientSummaryViewEffectHandler(
       is HandleEditClick -> uiActions.showEditPatientScreen(viewEffect.patientSummaryProfile, viewEffect.currentFacility)
       GoBackToPreviousScreen -> uiActions.goToPreviousScreen()
       GoToHomeScreen -> uiActions.goToHomeScreen()
+      is ShowAddPhonePopup -> uiActions.showAddPhoneDialog(viewEffect.patientUuid)
     }.exhaustive()
   }
 }

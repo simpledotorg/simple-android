@@ -65,7 +65,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(LoadCurrentUserAndFacility::class.java, loadUserAndCurrentFacility())
         .addTransformer(CheckForInvalidPhone::class.java, checkForInvalidPhone(schedulersProvider.io(), schedulersProvider.ui()))
         .addTransformer(MarkReminderAsShown::class.java, markReminderAsShown(schedulersProvider.io()))
-        .addConsumer(ShowAddPhonePopup::class.java, { uiActions.showAddPhoneDialog(it.patientUuid) }, schedulersProvider.ui())
         .addConsumer(ShowLinkIdWithPatientView::class.java, { uiActions.showLinkIdWithPatientView(it.patientUuid, it.identifier) }, schedulersProvider.ui())
         .addConsumer(
             ShowScheduleAppointmentSheet::class.java,

@@ -15,8 +15,6 @@ data class CheckForInvalidPhone(val patientUuid: UUID) : PatientSummaryEffect()
 
 data class MarkReminderAsShown(val patientUuid: UUID) : PatientSummaryEffect()
 
-data class ShowAddPhonePopup(val patientUuid: UUID) : PatientSummaryEffect()
-
 data class ShowLinkIdWithPatientView(
     val patientUuid: UUID,
     val identifier: Identifier
@@ -72,3 +70,5 @@ data class HandleEditClick(
 object GoBackToPreviousScreen : PatientSummaryViewEffect()
 
 object GoToHomeScreen : PatientSummaryViewEffect()
+
+data class ShowAddPhonePopup(val patientUuid: UUID) : PatientSummaryViewEffect()

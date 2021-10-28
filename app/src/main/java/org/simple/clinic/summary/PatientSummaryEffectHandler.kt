@@ -63,7 +63,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<PatientSummaryEffect, PatientSummaryEvent>()
         .addTransformer(LoadPatientSummaryProfile::class.java, loadPatientSummaryProfile(schedulersProvider.io()))
         .addTransformer(LoadCurrentUserAndFacility::class.java, loadUserAndCurrentFacility())
-        .addAction(GoToHomeScreen::class.java, { uiActions.goToHomeScreen() }, schedulersProvider.ui())
         .addTransformer(CheckForInvalidPhone::class.java, checkForInvalidPhone(schedulersProvider.io(), schedulersProvider.ui()))
         .addTransformer(MarkReminderAsShown::class.java, markReminderAsShown(schedulersProvider.io()))
         .addConsumer(ShowAddPhonePopup::class.java, { uiActions.showAddPhoneDialog(it.patientUuid) }, schedulersProvider.ui())

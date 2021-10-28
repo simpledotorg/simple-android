@@ -11,6 +11,7 @@ class PatientSummaryViewEffectHandler(
     when (viewEffect) {
       is HandleEditClick -> uiActions.showEditPatientScreen(viewEffect.patientSummaryProfile, viewEffect.currentFacility)
       GoBackToPreviousScreen -> uiActions.goToPreviousScreen()
+      GoToHomeScreen -> uiActions.goToHomeScreen()
     }.exhaustive()
   }
 }

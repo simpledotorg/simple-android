@@ -11,8 +11,6 @@ data class LoadPatientSummaryProfile(val patientUuid: UUID) : PatientSummaryEffe
 
 object LoadCurrentUserAndFacility : PatientSummaryEffect()
 
-object GoToHomeScreen : PatientSummaryEffect()
-
 data class CheckForInvalidPhone(val patientUuid: UUID) : PatientSummaryEffect()
 
 data class MarkReminderAsShown(val patientUuid: UUID) : PatientSummaryEffect()
@@ -72,3 +70,5 @@ data class HandleEditClick(
 ) : PatientSummaryViewEffect()
 
 object GoBackToPreviousScreen : PatientSummaryViewEffect()
+
+object GoToHomeScreen : PatientSummaryViewEffect()

@@ -1,5 +1,6 @@
 package org.simple.clinic.instantsearch
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -19,12 +20,16 @@ class InstantSearchEffectHandler @AssistedInject constructor(
     private val instantSearchConfig: InstantSearchConfig,
     private val pagerFactory: PagerFactory,
     private val schedulers: SchedulersProvider,
-    @Assisted private val uiActions: InstantSearchUiActions
+    @Assisted private val uiActions: InstantSearchUiActions,
+    @Assisted private val viewEffectsConsumer: Consumer<InstantSearchViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: InstantSearchUiActions): InstantSearchEffectHandler
+    fun create(
+        uiActions: InstantSearchUiActions,
+        viewEffectsConsumer: Consumer<InstantSearchViewEffect>
+    ): InstantSearchEffectHandler
   }
 
   fun build(): ObservableTransformer<InstantSearchEffect, InstantSearchEvent> = RxMobius

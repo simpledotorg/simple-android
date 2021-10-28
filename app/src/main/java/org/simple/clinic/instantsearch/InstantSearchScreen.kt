@@ -172,7 +172,10 @@ class InstantSearchScreen :
 
   override fun createInit() = InstantSearchInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<InstantSearchViewEffect>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<InstantSearchViewEffect>) = effectHandlerFactory.create(
+      uiActions = this,
+      viewEffectsConsumer = viewEffectsConsumer
+  ).build()
 
   override fun uiRenderer() = InstantSearchUiRenderer(this)
 

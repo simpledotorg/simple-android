@@ -21,8 +21,6 @@ data class SearchWithCriteria(
 
 data class ValidateSearchQuery(val searchQuery: String) : InstantSearchEffect()
 
-data class OpenPatientSummary(val patientId: UUID) : InstantSearchEffect()
-
 data class OpenLinkIdWithPatientScreen(
     val patientId: UUID,
     val identifier: Identifier
@@ -56,3 +54,5 @@ data class ShowPatientSearchResults(
     val facility: Facility,
     val searchQuery: String
 ) : InstantSearchViewEffect()
+
+data class OpenPatientSummary(val patientId: UUID) : InstantSearchViewEffect()

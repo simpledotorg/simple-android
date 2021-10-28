@@ -11,6 +11,7 @@ class InstantSearchViewEffectHandler(
     when (viewEffect) {
       is ShowAllPatients -> uiActions.showAllPatients(viewEffect.patients, viewEffect.facility)
       is ShowPatientSearchResults -> uiActions.showPatientsSearchResults(viewEffect.patients, viewEffect.facility, viewEffect.searchQuery)
+      is OpenPatientSummary -> uiActions.openPatientSummary(viewEffect.patientId)
     }.exhaustive()
   }
 }

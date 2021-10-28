@@ -1,5 +1,9 @@
 package org.simple.clinic.splash
 
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.airbnb.lottie.LottieDrawable
 import kotlinx.parcelize.Parcelize
@@ -25,9 +29,13 @@ class SplashScreen : Fragment() {
   private val nextButton
     get() = binding!!.nextButton
 
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    binding = ScreenSplashBinding.inflate(inflater, container, false)
+    return binding?.root
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
-    binding = ScreenSplashBinding.bind(this)
     if (isInEditMode) {
       return
     }

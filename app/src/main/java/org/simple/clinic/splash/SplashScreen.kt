@@ -1,5 +1,6 @@
 package org.simple.clinic.splash
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,6 +17,7 @@ import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.onboarding.OnboardingScreen.OnboardingScreenKey
 import javax.inject.Inject
 
+@SuppressLint("CustomSplashScreen")
 class SplashScreen : Fragment() {
 
   @Inject

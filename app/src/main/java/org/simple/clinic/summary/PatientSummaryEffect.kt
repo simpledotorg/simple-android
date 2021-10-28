@@ -11,11 +11,6 @@ data class LoadPatientSummaryProfile(val patientUuid: UUID) : PatientSummaryEffe
 
 object LoadCurrentUserAndFacility : PatientSummaryEffect()
 
-data class HandleEditClick(
-    val patientSummaryProfile: PatientSummaryProfile,
-    val currentFacility: Facility
-) : PatientSummaryEffect()
-
 object GoBackToPreviousScreen : PatientSummaryEffect()
 
 object GoToHomeScreen : PatientSummaryEffect()
@@ -72,3 +67,8 @@ object OpenSelectFacilitySheet : PatientSummaryEffect()
 data class DispatchNewAssignedFacility(val facility: Facility) : PatientSummaryEffect()
 
 sealed class PatientSummaryViewEffect : PatientSummaryEffect()
+
+data class HandleEditClick(
+    val patientSummaryProfile: PatientSummaryProfile,
+    val currentFacility: Facility
+) : PatientSummaryViewEffect()

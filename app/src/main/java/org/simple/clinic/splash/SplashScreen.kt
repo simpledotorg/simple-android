@@ -41,12 +41,8 @@ class SplashScreen : Fragment() {
     return binding?.root
   }
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
-
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     with(splashLottieView) {
       setAnimation("splash_animation.json")
       repeatCount = LottieDrawable.INFINITE
@@ -55,6 +51,13 @@ class SplashScreen : Fragment() {
 
     nextButton.setOnClickListener {
       router.clearHistoryAndPush(OnboardingScreenKey.wrap())
+    }
+  }
+
+  override fun onFinishInflate() {
+    super.onFinishInflate()
+    if (isInEditMode) {
+      return
     }
   }
 

@@ -54,6 +54,11 @@ class SplashScreen : Fragment() {
     }
   }
 
+  override fun onDestroyView() {
+    super.onDestroyView()
+    binding = null
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {

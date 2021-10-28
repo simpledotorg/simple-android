@@ -51,7 +51,7 @@ source <path to shell configuration file>
 
 ```sh
 brew tap AdoptOpenJDK/openjdk
-brew cask install adoptopenjdk11
+brew install adoptopenjdk11
 ```
 
 6. Add the installed JDK to `jEnv`

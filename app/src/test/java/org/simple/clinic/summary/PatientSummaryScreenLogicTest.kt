@@ -174,6 +174,7 @@ class PatientSummaryScreenLogicTest {
   }
 
   private fun startMobiusLoop(openIntention: OpenIntention) {
+    val viewEffectHandler = PatientSummaryViewEffectHandler(uiActions)
     val effectHandler = PatientSummaryEffectHandler(
         schedulersProvider = TrampolineSchedulersProvider(),
         patientRepository = patientRepository,
@@ -189,7 +190,8 @@ class PatientSummaryScreenLogicTest {
         uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid),
         facilityRepository = facilityRepository,
         teleconsultationFacilityRepository = mock(),
-        uiActions = uiActions
+        uiActions = uiActions,
+        viewEffectsConsumer = viewEffectHandler::handle
     )
 
     testFixture = MobiusTestFixture(

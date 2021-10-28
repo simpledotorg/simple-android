@@ -45,6 +45,7 @@ class PatientSummaryEffectHandlerTest {
   private val dataSync = mock<DataSync>()
   private val facilityRepository = mock<FacilityRepository>()
   private val teleconsultFacilityRepository = mock<TeleconsultationFacilityRepository>()
+  private val viewEffectHandler = PatientSummaryViewEffectHandler(uiActions)
 
   private val patientUuid = UUID.fromString("67bde563-2cde-4f43-91b4-ba450f0f4d8a")
   private val user = TestData.loggedInUser(uuid = UUID.fromString("39f96341-c043-4059-880e-e32754341a04"))
@@ -67,7 +68,8 @@ class PatientSummaryEffectHandlerTest {
       uuidGenerator = uuidGenerator,
       facilityRepository = facilityRepository,
       teleconsultationFacilityRepository = teleconsultFacilityRepository,
-      uiActions = uiActions
+      uiActions = uiActions,
+      viewEffectsConsumer = viewEffectHandler::handle
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
 
@@ -105,7 +107,8 @@ class PatientSummaryEffectHandlerTest {
         uuidGenerator = uuidGenerator,
         facilityRepository = facilityRepository,
         teleconsultationFacilityRepository = teleconsultFacilityRepository,
-        uiActions = uiActions
+        uiActions = uiActions,
+        viewEffectsConsumer = viewEffectHandler::handle
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
     val registeredFacilityUuid = UUID.fromString("1b359ec9-02e2-4f50-bebd-6001f96df57f")
@@ -160,7 +163,8 @@ class PatientSummaryEffectHandlerTest {
         uuidGenerator = uuidGenerator,
         facilityRepository = facilityRepository,
         teleconsultationFacilityRepository = teleconsultFacilityRepository,
-        uiActions = uiActions
+        uiActions = uiActions,
+        viewEffectsConsumer = viewEffectHandler::handle
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
     val patient = TestData.patient(patientUuid)

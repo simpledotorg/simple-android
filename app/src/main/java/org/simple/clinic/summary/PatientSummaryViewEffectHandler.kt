@@ -10,6 +10,7 @@ class PatientSummaryViewEffectHandler(
   override fun handle(viewEffect: PatientSummaryViewEffect) {
     when (viewEffect) {
       is HandleEditClick -> uiActions.showEditPatientScreen(viewEffect.patientSummaryProfile, viewEffect.currentFacility)
+      GoBackToPreviousScreen -> uiActions.goToPreviousScreen()
     }.exhaustive()
   }
 }

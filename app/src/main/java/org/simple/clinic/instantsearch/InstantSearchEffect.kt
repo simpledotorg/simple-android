@@ -23,8 +23,6 @@ data class ValidateSearchQuery(val searchQuery: String) : InstantSearchEffect()
 
 data class SaveNewOngoingPatientEntry(val ongoingNewPatientEntry: OngoingNewPatientEntry) : InstantSearchEffect()
 
-object OpenQrCodeScanner : InstantSearchEffect()
-
 data class CheckIfPatientAlreadyHasAnExistingNHID(val patientId: UUID) : InstantSearchEffect()
 
 object ShowNHIDErrorDialog : InstantSearchEffect()
@@ -56,3 +54,5 @@ data class OpenScannedQrCodeSheet(val identifier: Identifier) : InstantSearchVie
 data class OpenPatientEntryScreen(val facility: Facility) : InstantSearchViewEffect()
 
 object ShowKeyboard : InstantSearchViewEffect()
+
+object OpenQrCodeScanner : InstantSearchViewEffect()

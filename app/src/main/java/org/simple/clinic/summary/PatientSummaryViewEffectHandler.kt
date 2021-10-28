@@ -14,6 +14,9 @@ class PatientSummaryViewEffectHandler(
       GoToHomeScreen -> uiActions.goToHomeScreen()
       is ShowAddPhonePopup -> uiActions.showAddPhoneDialog(viewEffect.patientUuid)
       is ShowLinkIdWithPatientView -> uiActions.showLinkIdWithPatientView(viewEffect.patientUuid, viewEffect.identifier)
+      is ShowScheduleAppointmentSheet -> uiActions.showScheduleAppointmentSheet(viewEffect.patientUuid,
+          viewEffect.sheetOpenedFrom,
+          viewEffect.currentFacility)
     }.exhaustive()
   }
 }

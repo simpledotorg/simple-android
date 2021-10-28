@@ -65,11 +65,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(LoadCurrentUserAndFacility::class.java, loadUserAndCurrentFacility())
         .addTransformer(CheckForInvalidPhone::class.java, checkForInvalidPhone(schedulersProvider.io(), schedulersProvider.ui()))
         .addTransformer(MarkReminderAsShown::class.java, markReminderAsShown(schedulersProvider.io()))
-        .addConsumer(
-            ShowScheduleAppointmentSheet::class.java,
-            { uiActions.showScheduleAppointmentSheet(it.patientUuid, it.sheetOpenedFrom, it.currentFacility) },
-            schedulersProvider.ui()
-        )
         .addTransformer(LoadDataForBackClick::class.java, loadDataForBackClick(schedulersProvider.io()))
         .addTransformer(LoadDataForDoneClick::class.java, loadDataForDoneClick(schedulersProvider.io()))
         .addTransformer(TriggerSync::class.java, triggerSync())

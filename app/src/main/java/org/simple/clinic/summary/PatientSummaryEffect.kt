@@ -15,12 +15,6 @@ data class CheckForInvalidPhone(val patientUuid: UUID) : PatientSummaryEffect()
 
 data class MarkReminderAsShown(val patientUuid: UUID) : PatientSummaryEffect()
 
-data class ShowScheduleAppointmentSheet(
-    val patientUuid: UUID,
-    val sheetOpenedFrom: AppointmentSheetOpenedFrom,
-    val currentFacility: Facility
-) : PatientSummaryEffect()
-
 data class LoadDataForBackClick(
     val patientUuid: UUID,
     val screenCreatedTimestamp: Instant
@@ -71,4 +65,10 @@ data class ShowAddPhonePopup(val patientUuid: UUID) : PatientSummaryViewEffect()
 data class ShowLinkIdWithPatientView(
     val patientUuid: UUID,
     val identifier: Identifier
+) : PatientSummaryViewEffect()
+
+data class ShowScheduleAppointmentSheet(
+    val patientUuid: UUID,
+    val sheetOpenedFrom: AppointmentSheetOpenedFrom,
+    val currentFacility: Facility
 ) : PatientSummaryViewEffect()

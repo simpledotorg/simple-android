@@ -19,12 +19,6 @@ data class SearchWithCriteria(
     val facility: Facility
 ) : InstantSearchEffect()
 
-data class ShowPatientSearchResults(
-    val patients: PagingData<PatientSearchResult>,
-    val facility: Facility,
-    val searchQuery: String
-) : InstantSearchEffect()
-
 data class ValidateSearchQuery(val searchQuery: String) : InstantSearchEffect()
 
 data class OpenPatientSummary(val patientId: UUID) : InstantSearchEffect()
@@ -55,4 +49,10 @@ sealed class InstantSearchViewEffect : InstantSearchEffect()
 data class ShowAllPatients(
     val patients: PagingData<PatientSearchResult>,
     val facility: Facility
+) : InstantSearchViewEffect()
+
+data class ShowPatientSearchResults(
+    val patients: PagingData<PatientSearchResult>,
+    val facility: Facility,
+    val searchQuery: String
 ) : InstantSearchViewEffect()

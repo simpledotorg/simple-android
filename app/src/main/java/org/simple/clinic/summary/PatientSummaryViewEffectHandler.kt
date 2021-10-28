@@ -23,6 +23,7 @@ class PatientSummaryViewEffectHandler(
       is OpenContactDoctorSheet -> uiActions.openContactDoctorSheet(viewEffect.patientUuid)
       ShowAddMeasurementsWarningDialog -> uiActions.showAddMeasurementsWarningDialog()
       ShowAddBloodPressureWarningDialog -> uiActions.showAddBloodPressureWarningDialog()
+      ShowAddBloodSugarWarningDialog -> uiActions.showAddBloodSugarWarningDialog()
     }.exhaustive()
   }
 }

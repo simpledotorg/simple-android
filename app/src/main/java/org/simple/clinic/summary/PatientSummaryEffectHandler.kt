@@ -70,7 +70,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(TriggerSync::class.java, triggerSync())
         .addTransformer(FetchHasShownMissingPhoneReminder::class.java, fetchHasShownMissingPhoneReminder(schedulersProvider.io()))
         .addTransformer(LoadMedicalOfficers::class.java, loadMedicalOfficers())
-        .addAction(ShowAddBloodSugarWarningDialog::class.java, uiActions::showAddBloodSugarWarningDialog, schedulersProvider.ui())
         .addAction(OpenSelectFacilitySheet::class.java, uiActions::openSelectFacilitySheet, schedulersProvider.ui())
         .addConsumer(DispatchNewAssignedFacility::class.java, { uiActions.dispatchNewAssignedFacility(it.facility) }, schedulersProvider.ui())
         .addConsumer(PatientSummaryViewEffect::class.java, viewEffectsConsumer::accept)

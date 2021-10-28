@@ -18,6 +18,7 @@ class InstantSearchViewEffectHandler(
       ShowKeyboard -> uiActions.showKeyboard()
       OpenQrCodeScanner -> uiActions.openQrCodeScanner()
       ShowNHIDErrorDialog -> uiActions.showNHIDErrorDialog()
+      is PrefillSearchQuery -> uiActions.prefillSearchQuery(viewEffect.searchQuery)
     }.exhaustive()
   }
 }

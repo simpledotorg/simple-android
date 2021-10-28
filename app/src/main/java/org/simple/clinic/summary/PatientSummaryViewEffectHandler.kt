@@ -18,6 +18,7 @@ class PatientSummaryViewEffectHandler(
           viewEffect.sheetOpenedFrom,
           viewEffect.currentFacility)
       ShowDiagnosisError -> uiActions.showDiagnosisError()
+      is OpenContactPatientScreen -> uiActions.openPatientContactSheet(viewEffect.patientUuid)
     }.exhaustive()
   }
 }

@@ -26,8 +26,6 @@ data class TriggerSync(val sheetOpenedFrom: AppointmentSheetOpenedFrom) : Patien
 
 data class FetchHasShownMissingPhoneReminder(val patientUuid: UUID) : PatientSummaryEffect()
 
-data class OpenContactPatientScreen(val patientUuid: UUID) : PatientSummaryEffect()
-
 data class NavigateToTeleconsultRecordScreen(
     val patientUuid: UUID,
     val teleconsultRecordId: UUID
@@ -72,3 +70,5 @@ data class ShowScheduleAppointmentSheet(
 ) : PatientSummaryViewEffect()
 
 object ShowDiagnosisError : PatientSummaryViewEffect()
+
+data class OpenContactPatientScreen(val patientUuid: UUID) : PatientSummaryViewEffect()

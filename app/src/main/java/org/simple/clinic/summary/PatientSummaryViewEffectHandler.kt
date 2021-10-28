@@ -25,6 +25,7 @@ class PatientSummaryViewEffectHandler(
       ShowAddBloodPressureWarningDialog -> uiActions.showAddBloodPressureWarningDialog()
       ShowAddBloodSugarWarningDialog -> uiActions.showAddBloodSugarWarningDialog()
       OpenSelectFacilitySheet -> uiActions.openSelectFacilitySheet()
+      is DispatchNewAssignedFacility -> uiActions.dispatchNewAssignedFacility(viewEffect.facility)
     }.exhaustive()
   }
 }

@@ -28,8 +28,6 @@ data class FetchHasShownMissingPhoneReminder(val patientUuid: UUID) : PatientSum
 
 object LoadMedicalOfficers : PatientSummaryEffect()
 
-data class DispatchNewAssignedFacility(val facility: Facility) : PatientSummaryEffect()
-
 sealed class PatientSummaryViewEffect : PatientSummaryEffect()
 
 data class HandleEditClick(
@@ -72,3 +70,5 @@ object ShowAddBloodPressureWarningDialog : PatientSummaryViewEffect()
 object ShowAddBloodSugarWarningDialog : PatientSummaryViewEffect()
 
 object OpenSelectFacilitySheet : PatientSummaryViewEffect()
+
+data class DispatchNewAssignedFacility(val facility: Facility) : PatientSummaryViewEffect()

@@ -22,6 +22,7 @@ class PatientSummaryViewEffectHandler(
       is NavigateToTeleconsultRecordScreen -> uiActions.navigateToTeleconsultRecordScreen(viewEffect.patientUuid, viewEffect.teleconsultRecordId)
       is OpenContactDoctorSheet -> uiActions.openContactDoctorSheet(viewEffect.patientUuid)
       ShowAddMeasurementsWarningDialog -> uiActions.showAddMeasurementsWarningDialog()
+      ShowAddBloodPressureWarningDialog -> uiActions.showAddBloodPressureWarningDialog()
     }.exhaustive()
   }
 }

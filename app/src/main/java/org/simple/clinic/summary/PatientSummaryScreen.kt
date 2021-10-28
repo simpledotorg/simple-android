@@ -77,7 +77,7 @@ class PatientSummaryScreen :
         PatientSummaryModel,
         PatientSummaryEvent,
         PatientSummaryEffect,
-        Unit>(),
+        PatientSummaryViewEffect>(),
     PatientSummaryScreenUi,
     PatientSummaryUiActions,
     PatientSummaryChildView,
@@ -224,7 +224,7 @@ class PatientSummaryScreen :
     return PatientSummaryInit()
   }
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>): ObservableTransformer<PatientSummaryEffect, PatientSummaryEvent> {
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<PatientSummaryViewEffect>): ObservableTransformer<PatientSummaryEffect, PatientSummaryEvent> {
     return effectHandlerFactory.create(this).build()
   }
 

@@ -69,7 +69,6 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(LoadDataForDoneClick::class.java, loadDataForDoneClick(schedulersProvider.io()))
         .addTransformer(TriggerSync::class.java, triggerSync())
         .addTransformer(FetchHasShownMissingPhoneReminder::class.java, fetchHasShownMissingPhoneReminder(schedulersProvider.io()))
-        .addConsumer(NavigateToTeleconsultRecordScreen::class.java, { uiActions.navigateToTeleconsultRecordScreen(it.patientUuid, it.teleconsultRecordId) }, schedulersProvider.ui())
         .addTransformer(LoadMedicalOfficers::class.java, loadMedicalOfficers())
         .addConsumer(OpenContactDoctorSheet::class.java, { uiActions.openContactDoctorSheet(it.patientUuid) }, schedulersProvider.ui())
         .addAction(ShowAddMeasurementsWarningDialog::class.java, uiActions::showAddMeasurementsWarningDialog, schedulersProvider.ui())

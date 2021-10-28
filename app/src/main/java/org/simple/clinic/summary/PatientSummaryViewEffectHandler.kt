@@ -19,6 +19,7 @@ class PatientSummaryViewEffectHandler(
           viewEffect.currentFacility)
       ShowDiagnosisError -> uiActions.showDiagnosisError()
       is OpenContactPatientScreen -> uiActions.openPatientContactSheet(viewEffect.patientUuid)
+      is NavigateToTeleconsultRecordScreen -> uiActions.navigateToTeleconsultRecordScreen(viewEffect.patientUuid, viewEffect.teleconsultRecordId)
     }.exhaustive()
   }
 }

@@ -25,8 +25,6 @@ data class SaveNewOngoingPatientEntry(val ongoingNewPatientEntry: OngoingNewPati
 
 data class CheckIfPatientAlreadyHasAnExistingNHID(val patientId: UUID) : InstantSearchEffect()
 
-object ShowNHIDErrorDialog : InstantSearchEffect()
-
 data class PrefillSearchQuery(val searchQuery: String) : InstantSearchEffect()
 
 sealed class InstantSearchViewEffect : InstantSearchEffect()
@@ -56,3 +54,5 @@ data class OpenPatientEntryScreen(val facility: Facility) : InstantSearchViewEff
 object ShowKeyboard : InstantSearchViewEffect()
 
 object OpenQrCodeScanner : InstantSearchViewEffect()
+
+object ShowNHIDErrorDialog : InstantSearchViewEffect()

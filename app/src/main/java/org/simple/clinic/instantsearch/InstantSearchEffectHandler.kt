@@ -40,7 +40,6 @@ class InstantSearchEffectHandler @AssistedInject constructor(
       .addTransformer(ValidateSearchQuery::class.java, validateSearchQuery())
       .addTransformer(SaveNewOngoingPatientEntry::class.java, saveNewOngoingPatientEntry())
       .addTransformer(CheckIfPatientAlreadyHasAnExistingNHID::class.java, checkIfPatientAlreadyHasAnExistingNHID())
-      .addAction(ShowNHIDErrorDialog::class.java, uiActions::showNHIDErrorDialog, schedulers.ui())
       .addConsumer(PrefillSearchQuery::class.java, ::prefillSearchQuery, schedulers.ui())
       .addConsumer(InstantSearchViewEffect::class.java, viewEffectsConsumer::accept)
       .build()

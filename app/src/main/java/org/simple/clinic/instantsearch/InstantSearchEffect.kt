@@ -54,3 +54,5 @@ data class CheckIfPatientAlreadyHasAnExistingNHID(val patientId: UUID) : Instant
 object ShowNHIDErrorDialog : InstantSearchEffect()
 
 data class PrefillSearchQuery(val searchQuery: String) : InstantSearchEffect()
+
+sealed class InstantSearchViewEffect : InstantSearchEffect()

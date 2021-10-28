@@ -39,7 +39,6 @@ class InstantSearchEffectHandler @AssistedInject constructor(
       .addTransformer(SearchWithCriteria::class.java, searchWithCriteria())
       .addTransformer(ValidateSearchQuery::class.java, validateSearchQuery())
       .addTransformer(SaveNewOngoingPatientEntry::class.java, saveNewOngoingPatientEntry())
-      .addConsumer(OpenPatientEntryScreen::class.java, { uiActions.openPatientEntryScreen(it.facility) }, schedulers.ui())
       .addAction(ShowKeyboard::class.java, { uiActions.showKeyboard() }, schedulers.ui())
       .addAction(OpenQrCodeScanner::class.java, uiActions::openQrCodeScanner, schedulers.ui())
       .addTransformer(CheckIfPatientAlreadyHasAnExistingNHID::class.java, checkIfPatientAlreadyHasAnExistingNHID())

@@ -48,7 +48,6 @@ class InstantSearchEffectHandlerTest {
       ),
       pagerFactory = pagerFactory,
       schedulers = TestSchedulersProvider.trampoline(),
-      uiActions = uiActions,
       viewEffectsConsumer = viewEffectHandler::handle
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)

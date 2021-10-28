@@ -63,7 +63,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<PatientSummaryEffect, PatientSummaryEvent>()
         .addTransformer(LoadPatientSummaryProfile::class.java, loadPatientSummaryProfile(schedulersProvider.io()))
         .addTransformer(LoadCurrentUserAndFacility::class.java, loadUserAndCurrentFacility())
-        .addTransformer(CheckForInvalidPhone::class.java, checkForInvalidPhone(schedulersProvider.io(), schedulersProvider.ui()))
+        .addTransformer(CheckForInvalidPhone::class.java, checkForInvalidPhone(schedulersProvider.io()))
         .addTransformer(MarkReminderAsShown::class.java, markReminderAsShown(schedulersProvider.io()))
         .addTransformer(LoadDataForBackClick::class.java, loadDataForBackClick(schedulersProvider.io()))
         .addTransformer(LoadDataForDoneClick::class.java, loadDataForDoneClick(schedulersProvider.io()))
@@ -134,22 +134,14 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     )
   }
 
-  // TODO(vs): 2020-02-19 Revisit after Mobius migration
   private fun checkForInvalidPhone(
-      backgroundWorkScheduler: Scheduler,
-      uiWorkScheduler: Scheduler
+      backgroundWorkScheduler: Scheduler
   ): ObservableTransformer<CheckForInvalidPhone, PatientSummaryEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(backgroundWorkScheduler)
-          .map { it.patientUuid to hasInvalidPhone(it.patientUuid) }
-          .observeOn(uiWorkScheduler)
-          .doOnNext { (patientUuid, isPhoneInvalid) ->
-            if (isPhoneInvalid) {
-              uiActions.showUpdatePhoneDialog(patientUuid)
-            }
-          }
-          .map { CompletedCheckForInvalidPhone }
+          .map { hasInvalidPhone(it.patientUuid) }
+          .map(::CompletedCheckForInvalidPhone)
     }
   }
 

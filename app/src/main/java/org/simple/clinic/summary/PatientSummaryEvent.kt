@@ -36,7 +36,7 @@ data class ScheduledAppointment(val sheetOpenedFrom: AppointmentSheetOpenedFrom)
   override val analyticsName = "Patient Summary:Schedule Appointment Sheet Closed"
 }
 
-object CompletedCheckForInvalidPhone : PatientSummaryEvent()
+data class CompletedCheckForInvalidPhone(val isPhoneInvalid: Boolean) : PatientSummaryEvent()
 
 object PatientSummaryBloodPressureSaved : PatientSummaryEvent()
 

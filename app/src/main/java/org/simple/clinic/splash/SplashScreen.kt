@@ -9,6 +9,7 @@ import org.simple.clinic.R
 import org.simple.clinic.databinding.ScreenSplashBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.onboarding.OnboardingScreen.OnboardingScreenKey
 import org.simple.clinic.navigation.v2.compat.FullScreenKey
@@ -65,5 +66,13 @@ class SplashScreen(
     override val analyticsName = "Splash Screen"
 
     override fun layoutRes() = R.layout.screen_splash
+  }
+
+  @Parcelize
+  data class Key(
+      override val analyticsName: String = "Splash Screen"
+  ) : ScreenKey() {
+
+    override fun instantiateFragment() = SplashScreen()
   }
 }

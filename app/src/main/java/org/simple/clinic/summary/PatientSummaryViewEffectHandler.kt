@@ -13,6 +13,7 @@ class PatientSummaryViewEffectHandler(
       GoBackToPreviousScreen -> uiActions.goToPreviousScreen()
       GoToHomeScreen -> uiActions.goToHomeScreen()
       is ShowAddPhonePopup -> uiActions.showAddPhoneDialog(viewEffect.patientUuid)
+      is ShowLinkIdWithPatientView -> uiActions.showLinkIdWithPatientView(viewEffect.patientUuid, viewEffect.identifier)
     }.exhaustive()
   }
 }

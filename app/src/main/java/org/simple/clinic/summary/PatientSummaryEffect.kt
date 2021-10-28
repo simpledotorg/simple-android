@@ -41,6 +41,8 @@ object GoToHomeScreen : PatientSummaryViewEffect()
 
 data class ShowAddPhonePopup(val patientUuid: UUID) : PatientSummaryViewEffect()
 
+data class ShowUpdatePhonePopup(val patientUuid: UUID) : PatientSummaryViewEffect()
+
 data class ShowLinkIdWithPatientView(
     val patientUuid: UUID,
     val identifier: Identifier

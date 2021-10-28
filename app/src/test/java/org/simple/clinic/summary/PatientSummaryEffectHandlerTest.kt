@@ -461,4 +461,19 @@ class PatientSummaryEffectHandlerTest {
     verify(uiActions).dispatchNewAssignedFacility(selectedFacility)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when show update phone popup view effect is received, then show update phone popup`() {
+    // given
+    val patientUuid = UUID.fromString("be201fe0-f65c-463d-a302-8b67ff2c4c55")
+
+    // when
+    testCase.dispatch(ShowUpdatePhonePopup(patientUuid))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).showUpdatePhoneDialog(patientUuid)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

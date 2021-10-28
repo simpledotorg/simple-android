@@ -190,7 +190,6 @@ class PatientSummaryScreenLogicTest {
         uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid),
         facilityRepository = facilityRepository,
         teleconsultationFacilityRepository = mock(),
-        uiActions = uiActions,
         viewEffectsConsumer = viewEffectHandler::handle
     )
 

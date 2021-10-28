@@ -46,14 +46,12 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val uuidGenerator: UuidGenerator,
     private val facilityRepository: FacilityRepository,
     private val teleconsultationFacilityRepository: TeleconsultationFacilityRepository,
-    @Assisted private val uiActions: PatientSummaryUiActions,
     @Assisted private val viewEffectsConsumer: Consumer<PatientSummaryViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        uiActions: PatientSummaryUiActions,
         viewEffectsConsumer: Consumer<PatientSummaryViewEffect>
     ): PatientSummaryEffectHandler
   }

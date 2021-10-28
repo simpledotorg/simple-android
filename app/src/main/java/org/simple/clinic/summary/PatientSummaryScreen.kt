@@ -228,7 +228,6 @@ class PatientSummaryScreen :
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<PatientSummaryViewEffect>): ObservableTransformer<PatientSummaryEffect, PatientSummaryEvent> {
     return effectHandlerFactory.create(
-        uiActions = this,
         viewEffectsConsumer = viewEffectsConsumer
     ).build()
   }

@@ -68,7 +68,6 @@ class PatientSummaryEffectHandlerTest {
       uuidGenerator = uuidGenerator,
       facilityRepository = facilityRepository,
       teleconsultationFacilityRepository = teleconsultFacilityRepository,
-      uiActions = uiActions,
       viewEffectsConsumer = viewEffectHandler::handle
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -107,7 +106,6 @@ class PatientSummaryEffectHandlerTest {
         uuidGenerator = uuidGenerator,
         facilityRepository = facilityRepository,
         teleconsultationFacilityRepository = teleconsultFacilityRepository,
-        uiActions = uiActions,
         viewEffectsConsumer = viewEffectHandler::handle
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -163,7 +161,6 @@ class PatientSummaryEffectHandlerTest {
         uuidGenerator = uuidGenerator,
         facilityRepository = facilityRepository,
         teleconsultationFacilityRepository = teleconsultFacilityRepository,
-        uiActions = uiActions,
         viewEffectsConsumer = viewEffectHandler::handle
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())

@@ -1,5 +1,6 @@
 package org.simple.clinic.splash
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import com.airbnb.lottie.LottieDrawable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.databinding.ScreenSplashBinding
+import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.FullScreenKey
@@ -29,6 +31,11 @@ class SplashScreen : Fragment() {
   private val nextButton
     get() = binding!!.nextButton
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     binding = ScreenSplashBinding.inflate(inflater, container, false)
     return binding?.root
@@ -39,8 +46,6 @@ class SplashScreen : Fragment() {
     if (isInEditMode) {
       return
     }
-
-    context.injector<Injector>().inject(this)
 
     with(splashLottieView) {
       setAnimation("splash_animation.json")

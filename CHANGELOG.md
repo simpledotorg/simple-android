@@ -2,6 +2,10 @@
 
 ## Next Release
 
+### Internal
+
+- Bump Dagger to v2.40
+
 ### Changes
 
 - [In Progress: 20 Oct 2021] Add option to download & share overdue list

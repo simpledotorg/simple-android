@@ -17,6 +17,7 @@ class PatientSummaryViewEffectHandler(
       is ShowScheduleAppointmentSheet -> uiActions.showScheduleAppointmentSheet(viewEffect.patientUuid,
           viewEffect.sheetOpenedFrom,
           viewEffect.currentFacility)
+      ShowDiagnosisError -> uiActions.showDiagnosisError()
     }.exhaustive()
   }
 }

@@ -15,6 +15,7 @@ class InstantSearchViewEffectHandler(
       is OpenLinkIdWithPatientScreen -> uiActions.openLinkIdWithPatientScreen(viewEffect.patientId, viewEffect.identifier)
       is OpenScannedQrCodeSheet -> uiActions.openScannedQrCodeSheet(viewEffect.identifier)
       is OpenPatientEntryScreen -> uiActions.openPatientEntryScreen(viewEffect.facility)
+      ShowKeyboard -> uiActions.showKeyboard()
     }.exhaustive()
   }
 }

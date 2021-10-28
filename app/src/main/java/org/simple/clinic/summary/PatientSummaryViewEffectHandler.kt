@@ -24,6 +24,7 @@ class PatientSummaryViewEffectHandler(
       ShowAddMeasurementsWarningDialog -> uiActions.showAddMeasurementsWarningDialog()
       ShowAddBloodPressureWarningDialog -> uiActions.showAddBloodPressureWarningDialog()
       ShowAddBloodSugarWarningDialog -> uiActions.showAddBloodSugarWarningDialog()
+      OpenSelectFacilitySheet -> uiActions.openSelectFacilitySheet()
     }.exhaustive()
   }
 }

@@ -199,6 +199,8 @@ class PatientSummaryScreen :
     }
   }
 
+  override fun viewEffectHandler() = PatientSummaryViewEffectHandler(this)
+
   override fun events(): Observable<PatientSummaryEvent> {
     return Observable
         .mergeArray(

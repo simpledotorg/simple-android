@@ -19,11 +19,6 @@ data class SearchWithCriteria(
     val facility: Facility
 ) : InstantSearchEffect()
 
-data class ShowAllPatients(
-    val patients: PagingData<PatientSearchResult>,
-    val facility: Facility
-) : InstantSearchEffect()
-
 data class ShowPatientSearchResults(
     val patients: PagingData<PatientSearchResult>,
     val facility: Facility,
@@ -56,3 +51,8 @@ object ShowNHIDErrorDialog : InstantSearchEffect()
 data class PrefillSearchQuery(val searchQuery: String) : InstantSearchEffect()
 
 sealed class InstantSearchViewEffect : InstantSearchEffect()
+
+data class ShowAllPatients(
+    val patients: PagingData<PatientSearchResult>,
+    val facility: Facility
+) : InstantSearchViewEffect()

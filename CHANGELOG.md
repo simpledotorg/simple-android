@@ -5,6 +5,7 @@
 ### Internal
 
 - Bump Dagger to v2.40
+- Bump WorkManager to v2.7.0
 
 ### Changes
 

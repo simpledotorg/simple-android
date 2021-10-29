@@ -15,3 +15,5 @@ data class AddIdentifierToPatient(
 ) : LinkIdWithPatientEffect()
 
 data class GetPatientNameFromId(val patientUuid: UUID) : LinkIdWithPatientEffect()
+
+sealed class LinkIdWithPatientViewEffect : LinkIdWithPatientEffect()

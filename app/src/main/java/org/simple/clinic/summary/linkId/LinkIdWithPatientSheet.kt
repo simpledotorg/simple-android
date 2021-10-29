@@ -24,14 +24,13 @@ import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-class LinkIdWithPatientSheet :
-    BaseBottomSheet<
-        LinkIdWithPatientSheetKey,
-        LinkIdWithPatientViewBinding,
-        LinkIdWithPatientModel,
-        LinkIdWithPatientEvent,
-        LinkIdWithPatientEffect,
-        Unit>(),
+class LinkIdWithPatientSheet : BaseBottomSheet<
+    LinkIdWithPatientSheetKey,
+    LinkIdWithPatientViewBinding,
+    LinkIdWithPatientModel,
+    LinkIdWithPatientEvent,
+    LinkIdWithPatientEffect,
+    LinkIdWithPatientViewEffect>(),
     LinkIdWithPatientViewUi,
     LinkIdWithPatientUiActions {
 
@@ -69,7 +68,7 @@ class LinkIdWithPatientSheet :
 
   override fun createInit() = LinkIdWithPatientInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<LinkIdWithPatientViewEffect>) = effectHandlerFactory
       .create(this)
       .build()
 

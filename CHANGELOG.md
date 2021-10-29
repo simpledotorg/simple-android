@@ -10,6 +10,7 @@
 - Bump Core-KTX to v1.7.0
 - Migrate `InstantSearchScreen` to use view effects
 - Migrate `LinkIdWithPatientEffectHandler` to use view effects
+- Migrate `PatientSummaryScreen` to use view effects
 
 ### Changes
 

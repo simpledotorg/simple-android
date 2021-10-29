@@ -28,7 +28,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is CurrentUserAndFacilityLoaded -> currentUserAndFacilityLoaded(model, event)
       PatientSummaryEditClicked -> dispatch(HandleEditClick(model.patientSummaryProfile!!, model.currentFacility!!))
       is ScheduledAppointment -> dispatch(TriggerSync(event.sheetOpenedFrom))
-      is CompletedCheckForInvalidPhone -> next(model.completedCheckForInvalidPhone())
+      is CompletedCheckForInvalidPhone -> completedCheckForInvalidPhone(model, event)
       is PatientSummaryBloodPressureSaved -> bloodPressureSaved(model.openIntention, model.patientSummaryProfile!!)
       is FetchedHasShownMissingPhoneReminder -> fetchedHasShownMissingReminder(event.hasShownReminder, model.patientUuid)
       is DataForBackClickLoaded -> dataForHandlingBackLoaded(
@@ -51,6 +51,17 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is MedicalOfficersLoaded -> next(model.medicalOfficersLoaded(event.medicalOfficers))
       ChangeAssignedFacilityClicked -> dispatch(OpenSelectFacilitySheet)
       is NewAssignedFacilitySelected -> dispatch(DispatchNewAssignedFacility(event.facility))
+    }
+  }
+
+  private fun completedCheckForInvalidPhone(
+      model: PatientSummaryModel,
+      event: CompletedCheckForInvalidPhone
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    return if (event.isPhoneInvalid) {
+      next(model.completedCheckForInvalidPhone(), setOf(ShowUpdatePhonePopup(model.patientUuid)))
+    } else {
+      next(model.completedCheckForInvalidPhone())
     }
   }
 

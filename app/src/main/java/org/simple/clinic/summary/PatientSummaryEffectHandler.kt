@@ -1,5 +1,6 @@
 package org.simple.clinic.summary
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -45,12 +46,14 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val uuidGenerator: UuidGenerator,
     private val facilityRepository: FacilityRepository,
     private val teleconsultationFacilityRepository: TeleconsultationFacilityRepository,
-    @Assisted private val uiActions: PatientSummaryUiActions
+    @Assisted private val viewEffectsConsumer: Consumer<PatientSummaryViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: PatientSummaryUiActions): PatientSummaryEffectHandler
+    fun create(
+        viewEffectsConsumer: Consumer<PatientSummaryViewEffect>
+    ): PatientSummaryEffectHandler
   }
 
   fun build(): ObservableTransformer<PatientSummaryEffect, PatientSummaryEvent> {
@@ -58,32 +61,14 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<PatientSummaryEffect, PatientSummaryEvent>()
         .addTransformer(LoadPatientSummaryProfile::class.java, loadPatientSummaryProfile(schedulersProvider.io()))
         .addTransformer(LoadCurrentUserAndFacility::class.java, loadUserAndCurrentFacility())
-        .addConsumer(HandleEditClick::class.java, { uiActions.showEditPatientScreen(it.patientSummaryProfile, it.currentFacility) }, schedulersProvider.ui())
-        .addAction(GoBackToPreviousScreen::class.java, { uiActions.goToPreviousScreen() }, schedulersProvider.ui())
-        .addAction(GoToHomeScreen::class.java, { uiActions.goToHomeScreen() }, schedulersProvider.ui())
-        .addTransformer(CheckForInvalidPhone::class.java, checkForInvalidPhone(schedulersProvider.io(), schedulersProvider.ui()))
+        .addTransformer(CheckForInvalidPhone::class.java, checkForInvalidPhone(schedulersProvider.io()))
         .addTransformer(MarkReminderAsShown::class.java, markReminderAsShown(schedulersProvider.io()))
-        .addConsumer(ShowAddPhonePopup::class.java, { uiActions.showAddPhoneDialog(it.patientUuid) }, schedulersProvider.ui())
-        .addConsumer(ShowLinkIdWithPatientView::class.java, { uiActions.showLinkIdWithPatientView(it.patientUuid, it.identifier) }, schedulersProvider.ui())
-        .addConsumer(
-            ShowScheduleAppointmentSheet::class.java,
-            { uiActions.showScheduleAppointmentSheet(it.patientUuid, it.sheetOpenedFrom, it.currentFacility) },
-            schedulersProvider.ui()
-        )
         .addTransformer(LoadDataForBackClick::class.java, loadDataForBackClick(schedulersProvider.io()))
         .addTransformer(LoadDataForDoneClick::class.java, loadDataForDoneClick(schedulersProvider.io()))
         .addTransformer(TriggerSync::class.java, triggerSync())
-        .addAction(ShowDiagnosisError::class.java, { uiActions.showDiagnosisError() }, schedulersProvider.ui())
         .addTransformer(FetchHasShownMissingPhoneReminder::class.java, fetchHasShownMissingPhoneReminder(schedulersProvider.io()))
-        .addConsumer(OpenContactPatientScreen::class.java, { uiActions.openPatientContactSheet(it.patientUuid) }, schedulersProvider.ui())
-        .addConsumer(NavigateToTeleconsultRecordScreen::class.java, { uiActions.navigateToTeleconsultRecordScreen(it.patientUuid, it.teleconsultRecordId) }, schedulersProvider.ui())
         .addTransformer(LoadMedicalOfficers::class.java, loadMedicalOfficers())
-        .addConsumer(OpenContactDoctorSheet::class.java, { uiActions.openContactDoctorSheet(it.patientUuid) }, schedulersProvider.ui())
-        .addAction(ShowAddMeasurementsWarningDialog::class.java, uiActions::showAddMeasurementsWarningDialog, schedulersProvider.ui())
-        .addAction(ShowAddBloodPressureWarningDialog::class.java, uiActions::showAddBloodPressureWarningDialog, schedulersProvider.ui())
-        .addAction(ShowAddBloodSugarWarningDialog::class.java, uiActions::showAddBloodSugarWarningDialog, schedulersProvider.ui())
-        .addAction(OpenSelectFacilitySheet::class.java, uiActions::openSelectFacilitySheet, schedulersProvider.ui())
-        .addConsumer(DispatchNewAssignedFacility::class.java, { uiActions.dispatchNewAssignedFacility(it.facility) }, schedulersProvider.ui())
+        .addConsumer(PatientSummaryViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 
@@ -147,22 +132,14 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     )
   }
 
-  // TODO(vs): 2020-02-19 Revisit after Mobius migration
   private fun checkForInvalidPhone(
-      backgroundWorkScheduler: Scheduler,
-      uiWorkScheduler: Scheduler
+      backgroundWorkScheduler: Scheduler
   ): ObservableTransformer<CheckForInvalidPhone, PatientSummaryEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(backgroundWorkScheduler)
-          .map { it.patientUuid to hasInvalidPhone(it.patientUuid) }
-          .observeOn(uiWorkScheduler)
-          .doOnNext { (patientUuid, isPhoneInvalid) ->
-            if (isPhoneInvalid) {
-              uiActions.showUpdatePhoneDialog(patientUuid)
-            }
-          }
-          .map { CompletedCheckForInvalidPhone }
+          .map { hasInvalidPhone(it.patientUuid) }
+          .map(::CompletedCheckForInvalidPhone)
     }
   }
 

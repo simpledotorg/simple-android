@@ -1010,6 +1010,17 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when patient phone number is invalid, then show update phone popup`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(CompletedCheckForInvalidPhone(isPhoneInvalid = true))
+        .then(assertThatNext(
+            hasModel(defaultModel.completedCheckForInvalidPhone()),
+            hasEffects(ShowUpdatePhonePopup(patientUuid))
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

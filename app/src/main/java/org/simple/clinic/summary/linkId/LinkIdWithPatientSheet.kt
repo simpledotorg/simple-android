@@ -56,6 +56,8 @@ class LinkIdWithPatientSheet : BaseBottomSheet<
 
   override fun uiRenderer() = LinkIdWithPatientUiRenderer(this)
 
+  override fun viewEffectsHandler() = LinkIdWithPatientViewEffectHandler(this)
+
   override fun events() = Observable
       .merge(
           addClicks(),

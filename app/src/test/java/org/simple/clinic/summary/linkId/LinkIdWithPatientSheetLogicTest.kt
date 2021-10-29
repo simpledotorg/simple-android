@@ -112,7 +112,6 @@ class LinkIdWithPatientSheetLogicTest {
         patientRepository = patientRepository,
         uuidGenerator = uuidGenerator,
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = uiActions,
         viewEffectsConsumer = viewEffectHandler::handle
     )
 

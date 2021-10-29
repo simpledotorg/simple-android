@@ -17,14 +17,12 @@ class LinkIdWithPatientEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val uuidGenerator: UuidGenerator,
     private val schedulersProvider: SchedulersProvider,
-    @Assisted private val uiActions: LinkIdWithPatientUiActions,
     @Assisted private val viewEffectsConsumer: Consumer<LinkIdWithPatientViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        uiActions: LinkIdWithPatientUiActions,
         viewEffectsConsumer: Consumer<LinkIdWithPatientViewEffect>
     ): LinkIdWithPatientEffectHandler
   }

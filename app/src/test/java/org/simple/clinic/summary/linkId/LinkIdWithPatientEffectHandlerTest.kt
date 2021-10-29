@@ -26,7 +26,6 @@ class LinkIdWithPatientEffectHandlerTest {
       patientRepository = patientRepository,
       uuidGenerator = uuidGenerator,
       schedulersProvider = TestSchedulersProvider.trampoline(),
-      uiActions = uiActions,
       viewEffectsConsumer = viewEffectHandler::handle
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())

@@ -37,6 +37,7 @@ class InstantSearchEffectHandlerTest {
   private val patientRepository = mock<PatientRepository>()
   private val uiActions = mock<InstantSearchUiActions>()
   private val pagerFactory = mock<PagerFactory>()
+  private val viewEffectHandler = InstantSearchViewEffectHandler(uiActions)
   private val effectHandler = InstantSearchEffectHandler(
       currentFacility = { facility },
       patientRepository = patientRepository,
@@ -47,7 +48,7 @@ class InstantSearchEffectHandlerTest {
       ),
       pagerFactory = pagerFactory,
       schedulers = TestSchedulersProvider.trampoline(),
-      uiActions = uiActions
+      viewEffectsConsumer = viewEffectHandler::handle
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 

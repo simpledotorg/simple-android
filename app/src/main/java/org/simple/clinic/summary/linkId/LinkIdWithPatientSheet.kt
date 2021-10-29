@@ -71,7 +71,10 @@ class LinkIdWithPatientSheet : BaseBottomSheet<
   override fun createInit() = LinkIdWithPatientInit()
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<LinkIdWithPatientViewEffect>) = effectHandlerFactory
-      .create(this)
+      .create(
+          uiActions = this,
+          viewEffectsConsumer = viewEffectsConsumer
+      )
       .build()
 
   override fun onAttach(context: Context) {

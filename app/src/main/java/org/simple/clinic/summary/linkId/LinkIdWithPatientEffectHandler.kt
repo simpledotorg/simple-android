@@ -1,5 +1,6 @@
 package org.simple.clinic.summary.linkId
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -16,12 +17,16 @@ class LinkIdWithPatientEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val uuidGenerator: UuidGenerator,
     private val schedulersProvider: SchedulersProvider,
-    @Assisted private val uiActions: LinkIdWithPatientUiActions
+    @Assisted private val uiActions: LinkIdWithPatientUiActions,
+    @Assisted private val viewEffectsConsumer: Consumer<LinkIdWithPatientViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: LinkIdWithPatientUiActions): LinkIdWithPatientEffectHandler
+    fun create(
+        uiActions: LinkIdWithPatientUiActions,
+        viewEffectsConsumer: Consumer<LinkIdWithPatientViewEffect>
+    ): LinkIdWithPatientEffectHandler
   }
 
   fun build(): ObservableTransformer<LinkIdWithPatientEffect, LinkIdWithPatientEvent> = RxMobius

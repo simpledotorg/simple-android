@@ -19,13 +19,15 @@ class LinkIdWithPatientEffectHandlerTest {
   private val user = TestData.loggedInUser(uuid = UUID.fromString("5039c37f-3752-4dcb-ad69-0b6e38e02107"))
   private val identifierUuid = UUID.fromString("097a39e5-945f-44de-8293-f75960c0a54e")
   private val uuidGenerator = FakeUuidGenerator.fixed(identifierUuid)
+  private val viewEffectHandler = LinkIdWithPatientViewEffectHandler(uiActions)
 
   private val effectHandler = LinkIdWithPatientEffectHandler(
       currentUser = { user },
       patientRepository = patientRepository,
       uuidGenerator = uuidGenerator,
       schedulersProvider = TestSchedulersProvider.trampoline(),
-      uiActions = uiActions
+      uiActions = uiActions,
+      viewEffectsConsumer = viewEffectHandler::handle
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
 

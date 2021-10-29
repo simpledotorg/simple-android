@@ -105,13 +105,14 @@ class LinkIdWithPatientSheetLogicTest {
 
   private fun setupController() {
     val uuidGenerator = FakeUuidGenerator.fixed(identifierUuid)
+    val viewEffectHandler = LinkIdWithPatientViewEffectHandler(uiActions)
 
     val effectHandler = LinkIdWithPatientEffectHandler(
         currentUser = Lazy { user },
         patientRepository = patientRepository,
         uuidGenerator = uuidGenerator,
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = uiActions
+        viewEffectsConsumer = viewEffectHandler::handle
     )
 
     val uiRenderer = LinkIdWithPatientUiRenderer(ui)

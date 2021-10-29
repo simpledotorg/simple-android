@@ -3,13 +3,17 @@ package org.simple.clinic.drugs.search
 import com.google.common.truth.Truth.assertThat
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.PagingTestCase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.protocol.ProtocolAndProtocolDrugs
 import org.simple.clinic.protocol.ProtocolRepository
+import org.simple.clinic.rules.SaveDatabaseRule
+import org.simple.clinic.util.Rules
 import java.util.UUID
 import javax.inject.Inject
 
@@ -23,6 +27,11 @@ class DrugRepositoryAndroidTest {
 
   @Inject
   lateinit var protocolRepository: ProtocolRepository
+
+  @get:Rule
+  val rules: RuleChain = Rules
+      .global()
+      .around(SaveDatabaseRule())
 
   @Before
   fun setUp() {

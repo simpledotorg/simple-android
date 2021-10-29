@@ -56,6 +56,7 @@ import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.reports.ReportsRepository.Companion.REPORTS_KEY
 import org.simple.clinic.rules.LocalAuthenticationRule
+import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.storage.text.TextStore
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
@@ -142,6 +143,7 @@ class PatientRepositoryAndroidTest {
       .global()
       .around(LocalAuthenticationRule())
       .around(InstantTaskExecutorRule())
+      .around(SaveDatabaseRule())
 
   @Before
   fun setUp() {

@@ -12,6 +12,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.rules.LocalAuthenticationRule
+import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Rules
 import java.util.UUID
@@ -39,6 +40,7 @@ class ProtocolRepositoryAndroidTest {
   val ruleChain: RuleChain = Rules
       .global()
       .around(LocalAuthenticationRule())
+      .around(SaveDatabaseRule())
 
   @Before
   fun setUp() {

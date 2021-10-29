@@ -31,7 +31,6 @@ class LinkIdWithPatientEffectHandler @AssistedInject constructor(
 
   fun build(): ObservableTransformer<LinkIdWithPatientEffect, LinkIdWithPatientEvent> = RxMobius
       .subtypeEffectHandler<LinkIdWithPatientEffect, LinkIdWithPatientEvent>()
-      .addAction(CloseSheetWithOutIdLinked::class.java, uiActions::closeSheetWithoutIdLinked, schedulersProvider.ui())
       .addAction(CloseSheetWithLinkedId::class.java, uiActions::closeSheetWithIdLinked, schedulersProvider.ui())
       .addTransformer(AddIdentifierToPatient::class.java, addIdentifierToPatient())
       .addTransformer(GetPatientNameFromId::class.java, getPatientNameFromId())

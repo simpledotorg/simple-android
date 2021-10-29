@@ -7,6 +7,7 @@
 - Bump Dagger to v2.40
 - Bump WorkManager to v2.7.0
 - Migrate `SplashScreen` to a fragment
+- Bump Core-KTX to v1.7.0
 
 ### Changes
 

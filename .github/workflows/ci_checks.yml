@@ -153,13 +153,29 @@ jobs:
         run: cat android-app/app/src/androidTest/resources/quarantine_ci.properties > android-app/app/src/androidTest/resources/quarantine.properties
 
       - name: QA Android Tests
+        id: run-instrumented-tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ env.AVD_API_LEVEL }}
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: android-app/gradlew -p android-app --build-cache --no-daemon -PmanifestEndpoint=https://${{ steps.generate-server-app-name.outputs.heroku_app_name }}.herokuapp.com/api/ connectedQaDebugAndroidTest
+          script: |
+            mkdir -p android-app/app/build/outputs/test-artifacts
+            android-app/gradlew -p android-app --build-cache --no-daemon -PmanifestEndpoint=https://${{ steps.generate-server-app-name.outputs.heroku_app_name }}.herokuapp.com/api/ installQaDebug installQaDebugAndroidTest
+            adb shell am instrument -w org.simple.clinic.qa.debug.test/org.simple.clinic.AndroidTestJUnitRunner >android-app/app/build/outputs/test-artifacts/logs.txt 2>android-app/app/build/outputs/test-artifacts/logs.txt
+            cat android-app/app/build/outputs/test-artifacts/logs.txt
+            adb pull /storage/emulated/0/Android/data/org.simple.clinic.qa.debug/ android-app/app/build/outputs/test-artifacts/
+            adb uninstall org.simple.clinic.qa.debug
+            adb uninstall org.simple.clinic.qa.debug.test
+            ! grep -q "FAILURES\!\!\!" android-app/app/build/outputs/test-artifacts/logs.txt
+
+      - name: Upload failed test artifacts
+        if: always() && steps.run-instrumented-tests.outcome != 'success'
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-artifacts
+          path: android-app/app/build/outputs/test-artifacts
 
       - name: Teardown Heroku instance
         if: always() && (steps.start-simple-server.outcome != 'success' || contains(github.ref, '/release/'))

@@ -12,6 +12,7 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.drugs.search.DrugRepository
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.LastDrugPullToken
+import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncCoordinator
@@ -41,6 +42,7 @@ class DrugSyncIntegrationTest {
   val ruleChain: RuleChain = Rules
       .global()
       .around(ServerAuthenticationRule())
+      .around(SaveDatabaseRule())
 
   private lateinit var sync: DrugSync
 
@@ -70,11 +72,6 @@ class DrugSyncIntegrationTest {
         lastPullToken = lastPullToken,
         config = config
     )
-  }
-
-  @After
-  fun tearDown() {
-    resetLocalData()
   }
 
   private fun resetLocalData() {

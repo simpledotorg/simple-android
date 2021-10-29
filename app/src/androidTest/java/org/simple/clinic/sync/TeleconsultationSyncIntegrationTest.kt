@@ -9,6 +9,7 @@ import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultFacilityInfoApi
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityRepository
@@ -38,6 +39,7 @@ class TeleconsultationSyncIntegrationTest {
   val ruleChain: RuleChain = Rules
       .global()
       .around(ServerAuthenticationRule())
+      .around(SaveDatabaseRule())
 
   private lateinit var sync: TeleconsultationSync
 
@@ -62,11 +64,6 @@ class TeleconsultationSyncIntegrationTest {
         api = syncApi,
         config = config
     )
-  }
-
-  @After
-  fun tearDown() {
-    resetLocalData()
   }
 
   private fun resetLocalData() {

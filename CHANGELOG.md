@@ -11,6 +11,7 @@
 - Migrate `InstantSearchScreen` to use view effects
 - Migrate `LinkIdWithPatientEffectHandler` to use view effects
 - Migrate `PatientSummaryScreen` to use view effects
+- Migrate `OnBoardingScreen` to a Fragment
 
 ### Changes
 

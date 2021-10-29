@@ -14,10 +14,11 @@
 - Migrate `OnBoardingScreen` to a Fragment
 - Migrate `SettingsScreen` to a Fragment
 - Bump Coroutines to v1.5.2
+- Implement `OverdueListDownloader`
 
 ### Changes
 
-- [In Progress: 20 Oct 2021] Add option to download & share overdue list
+- [In Progress: 29 Oct 2021] Add option to download & share overdue list
 
 ## 2021-11-02-8005
 

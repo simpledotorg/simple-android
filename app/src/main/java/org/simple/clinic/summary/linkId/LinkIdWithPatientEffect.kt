@@ -5,8 +5,6 @@ import java.util.UUID
 
 sealed class LinkIdWithPatientEffect
 
-object CloseSheetWithLinkedId : LinkIdWithPatientEffect()
-
 data class AddIdentifierToPatient(
     val patientUuid: UUID,
     val identifier: Identifier
@@ -17,3 +15,5 @@ data class GetPatientNameFromId(val patientUuid: UUID) : LinkIdWithPatientEffect
 sealed class LinkIdWithPatientViewEffect : LinkIdWithPatientEffect()
 
 object CloseSheetWithOutIdLinked : LinkIdWithPatientViewEffect()
+
+object CloseSheetWithLinkedId : LinkIdWithPatientViewEffect()

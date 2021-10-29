@@ -10,6 +10,7 @@ class LinkIdWithPatientViewEffectHandler(
   override fun handle(viewEffect: LinkIdWithPatientViewEffect) {
     when (viewEffect) {
       CloseSheetWithOutIdLinked -> uiActions.closeSheetWithoutIdLinked()
+      CloseSheetWithLinkedId -> uiActions.closeSheetWithIdLinked()
     }.exhaustive()
   }
 }

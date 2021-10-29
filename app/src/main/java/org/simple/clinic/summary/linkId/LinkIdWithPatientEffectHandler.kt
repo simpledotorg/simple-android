@@ -35,6 +35,7 @@ class LinkIdWithPatientEffectHandler @AssistedInject constructor(
       .addAction(CloseSheetWithLinkedId::class.java, uiActions::closeSheetWithIdLinked, schedulersProvider.ui())
       .addTransformer(AddIdentifierToPatient::class.java, addIdentifierToPatient())
       .addTransformer(GetPatientNameFromId::class.java, getPatientNameFromId())
+      .addConsumer(LinkIdWithPatientViewEffect::class.java, viewEffectsConsumer::accept)
       .build()
 
   private fun addIdentifierToPatient(): ObservableTransformer<AddIdentifierToPatient, LinkIdWithPatientEvent> {

@@ -7,9 +7,11 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
+import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -19,6 +21,7 @@ import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.settings.changelanguage.ChangeLanguageScreen
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
@@ -169,5 +172,12 @@ class SettingsScreen(
 
   interface Injector {
     fun inject(target: SettingsScreen)
+  }
+
+  @Parcelize
+  data class Key(
+      override val analyticsName: String = "Settings"
+  ) : ScreenKey() {
+    override fun instantiateFragment(): Fragment = SettingsScreen()
   }
 }

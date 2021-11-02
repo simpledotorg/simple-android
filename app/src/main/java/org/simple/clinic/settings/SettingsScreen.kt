@@ -4,21 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Parcelable
-import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.view.clicks
-import com.spotify.mobius.Init
-import com.spotify.mobius.Update
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
-import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.cast
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.BuildConfig
@@ -28,8 +22,6 @@ import org.simple.clinic.databinding.ScreenSettingsBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
-import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -78,25 +70,6 @@ class SettingsScreen : BaseScreen<
   private val changeLanguageWidgetGroup
     get() = binding.changeLanguageWidgetGroup
 
-  private val uiRenderer: SettingsUiRenderer = SettingsUiRenderer(this)
-
-  private val events: Observable<SettingsEvent> by unsafeLazy {
-    changeLanguageButtonClicks()
-        .compose(ReportAnalyticsEvents())
-        .cast<SettingsEvent>()
-  }
-
-  private val delegate: MobiusDelegate<SettingsModel, SettingsEvent, SettingsEffect> by unsafeLazy {
-    MobiusDelegate.forView(
-        events = events,
-        defaultModel = SettingsModel.default(BuildConfig.APPLICATION_ID),
-        init = SettingsInit(),
-        update = SettingsUpdate(),
-        effectHandler = settingsEffectHandler.create(this).build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
-
   private val isChangeLanguageFeatureEnabled by unsafeLazy { features.isEnabled(Feature.ChangeLanguage) }
 
   override fun defaultModel() = SettingsModel.default(BuildConfig.APPLICATION_ID)
@@ -135,45 +108,8 @@ class SettingsScreen : BaseScreen<
     return changeLanguageButton.clicks().map { ChangeLanguage }
   }
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
-
-    binding = ScreenSettingsBinding.bind(this)
-
-    context.injector<Injector>().inject(this)
-
-    toggleChangeLanguageFeature()
-    toolbar.setNavigationOnClickListener { router.pop() }
-
-    updateAppVersionButton.setOnClickListener {
-      launchPlayStoreForUpdate()
-    }
-  }
-
   private fun toggleChangeLanguageFeature() {
     changeLanguageWidgetGroup.visibility = if (isChangeLanguageFeatureEnabled) VISIBLE else GONE
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    binding = null
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   override fun displayUserDetails(name: String, phoneNumber: String) {

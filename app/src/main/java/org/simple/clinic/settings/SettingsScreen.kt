@@ -8,6 +8,8 @@ import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
@@ -185,7 +187,7 @@ class SettingsScreen : BaseScreen<
 
   override fun setChangeLanguageButtonVisible() {
     if (isChangeLanguageFeatureEnabled) {
-      changeLanguageButton.visibility = View.VISIBLE
+      changeLanguageButton.visibility = VISIBLE
     }
   }
 
@@ -198,11 +200,11 @@ class SettingsScreen : BaseScreen<
   }
 
   override fun showAppUpdateButton() {
-    updateAppVersionButton.visibility = View.VISIBLE
+    updateAppVersionButton.visibility = VISIBLE
   }
 
   override fun hideAppUpdateButton() {
-    updateAppVersionButton.visibility = View.GONE
+    updateAppVersionButton.visibility = GONE
   }
 
   private fun launchPlayStoreForUpdate() {

@@ -113,6 +113,11 @@ class SettingsScreen : BaseScreen<
 
   override fun uiRenderer() = SettingsUiRenderer(this)
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
+
   private fun changeLanguageButtonClicks(): Observable<SettingsEvent> {
     return changeLanguageButton.clicks().map { ChangeLanguage }
   }

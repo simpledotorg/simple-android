@@ -51,31 +51,29 @@ class SettingsScreen : BaseScreen<
   @Inject
   lateinit var features: Features
 
-  private var binding: ScreenSettingsBinding? = null
-
   private val changeLanguageButton
-    get() = binding!!.changeLanguageButton
+    get() = binding.changeLanguageButton
 
   private val toolbar
-    get() = binding!!.toolbar
+    get() = binding.toolbar
 
   private val updateAppVersionButton
-    get() = binding!!.updateAppVersionButton
+    get() = binding.updateAppVersionButton
 
   private val userName
-    get() = binding!!.userName
+    get() = binding.userName
 
   private val userNumber
-    get() = binding!!.userNumber
+    get() = binding.userNumber
 
   private val currentLanguage
-    get() = binding!!.currentLanguage
+    get() = binding.currentLanguage
 
   private val appVersion
-    get() = binding!!.appVersion
+    get() = binding.appVersion
 
   private val changeLanguageWidgetGroup
-    get() = binding!!.changeLanguageWidgetGroup
+    get() = binding.changeLanguageWidgetGroup
 
   private val uiRenderer: SettingsUiRenderer = SettingsUiRenderer(this)
 

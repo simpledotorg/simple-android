@@ -11,7 +11,11 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.Init
+import com.spotify.mobius.Update
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
+import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.cast
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.BuildConfig
@@ -22,6 +26,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -97,6 +102,18 @@ class SettingsScreen : BaseScreen<
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenSettingsBinding.inflate(layoutInflater, container, false)
+
+  override fun createInit() = SettingsInit()
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = settingsEffectHandler.create(this).build()
+
+  override fun createUpdate() = SettingsUpdate()
+
+  override fun events() = changeLanguageButtonClicks()
+      .compose(ReportAnalyticsEvents())
+      .cast<SettingsEvent>()
+
+  override fun uiRenderer() = SettingsUiRenderer(this)
 
   private fun changeLanguageButtonClicks(): Observable<SettingsEvent> {
     return changeLanguageButton.clicks().map { ChangeLanguage }

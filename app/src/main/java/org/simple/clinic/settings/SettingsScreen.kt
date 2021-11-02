@@ -5,7 +5,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.view.clicks
@@ -22,14 +24,18 @@ import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.settings.changelanguage.ChangeLanguageScreen
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
-class SettingsScreen(
-    context: Context,
-    attributeSet: AttributeSet
-) : LinearLayout(context, attributeSet), SettingsUi, UiActions {
+class SettingsScreen : BaseScreen<
+    SettingsScreen.Key,
+    ScreenSettingsBinding,
+    SettingsModel,
+    SettingsEvent,
+    SettingsEffect,
+    Unit>(), SettingsUi, UiActions {
 
   @Inject
   lateinit var router: Router
@@ -86,6 +92,11 @@ class SettingsScreen(
   }
 
   private val isChangeLanguageFeatureEnabled by unsafeLazy { features.isEnabled(Feature.ChangeLanguage) }
+
+  override fun defaultModel() = SettingsModel.default(BuildConfig.APPLICATION_ID)
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenSettingsBinding.inflate(layoutInflater, container, false)
 
   private fun changeLanguageButtonClicks(): Observable<SettingsEvent> {
     return changeLanguageButton.clicks().map { ChangeLanguage }

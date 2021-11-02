@@ -194,7 +194,7 @@ class SettingsScreen : BaseScreen<
   }
 
   override fun displayAppVersion(version: String) {
-    appVersion.text = context.getString(R.string.settings_software_version, version)
+    appVersion.text = requireContext().getString(R.string.settings_software_version, version)
   }
 
   override fun showAppUpdateButton() {
@@ -209,7 +209,7 @@ class SettingsScreen : BaseScreen<
     val intent = Intent(Intent.ACTION_VIEW).apply {
       data = Uri.parse("https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}")
     }
-    context.startActivity(intent)
+    requireContext().startActivity(intent)
   }
 
   interface Injector {

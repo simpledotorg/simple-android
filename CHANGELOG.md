@@ -13,6 +13,7 @@
 - Migrate `PatientSummaryScreen` to use view effects
 - Migrate `OnBoardingScreen` to a Fragment
 - Migrate `SettingsScreen` to a Fragment
+- Cancel in progress GH actions when new action is started with same group name
 
 ### Changes
 

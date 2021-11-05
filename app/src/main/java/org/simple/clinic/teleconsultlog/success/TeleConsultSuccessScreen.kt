@@ -8,13 +8,18 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.Init
+import com.spotify.mobius.Update
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
+import io.reactivex.ObservableTransformer
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.databinding.ScreenTeleconsultSuccessBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
@@ -86,6 +91,22 @@ class TeleConsultSuccessScreen : BaseScreen<
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenTeleconsultSuccessBinding.inflate(layoutInflater, container, false)
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) =
+      effectHandler.create(this).build()
+
+  override fun createUpdate() = TeleConsultSuccessUpdate()
+
+  override fun createInit() = TeleConsultSuccessInit()
+
+  override fun events(): Observable<TeleConsultSuccessEvent> =
+      Observable
+          .merge(
+              yesClicks(),
+              noClicks()
+          )
+
+  override fun uiRenderer() = TeleConsultSuccessUiRenderer(this)
 
   override fun onFinishInflate() {
     super.onFinishInflate()

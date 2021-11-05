@@ -4,14 +4,17 @@ import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.databinding.ScreenTeleconsultSuccessBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.Gender
@@ -138,4 +141,12 @@ class TeleConsultSuccessScreen(
     fun inject(target: TeleConsultSuccessScreen)
   }
 
+  @Parcelize
+  data class Key(
+      val patientUuid: UUID,
+      val teleconsultRecordId: UUID,
+      override val analyticsName: String = "TeleConsultation Success"
+  ) : ScreenKey() {
+    override fun instantiateFragment(): Fragment = TeleConsultSuccessScreen()
+  }
 }

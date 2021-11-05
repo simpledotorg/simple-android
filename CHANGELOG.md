@@ -13,6 +13,7 @@
 - Migrate `PatientSummaryScreen` to use view effects
 - Migrate `OnBoardingScreen` to a Fragment
 - Migrate `SettingsScreen` to a Fragment
+- Bump Coroutines to v1.5.2
 
 ### Changes
 

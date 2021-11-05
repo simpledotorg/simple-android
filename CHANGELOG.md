@@ -15,6 +15,7 @@
 - Migrate `SettingsScreen` to a Fragment
 - Bump Coroutines to v1.5.2
 - Implement `OverdueListDownloader`
+- Cancel in progress GH actions when new action is started with same group name
 
 ### Changes
 

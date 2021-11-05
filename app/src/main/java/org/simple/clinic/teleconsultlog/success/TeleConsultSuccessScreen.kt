@@ -62,9 +62,6 @@ class TeleConsultSuccessScreen : BaseScreen<
   @Inject
   lateinit var userClock: UserClock
 
-  @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
-
   private val events: Observable<TeleConsultSuccessEvent> by unsafeLazy {
     Observable
         .merge(

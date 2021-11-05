@@ -19,6 +19,7 @@ import org.simple.clinic.login.LoginUserWithOtpServerIntegrationTest
 import org.simple.clinic.medicalhistory.MedicalHistoryRepositoryAndroidTest
 import org.simple.clinic.overdue.AppointmentRepositoryAndroidTest
 import org.simple.clinic.overdue.OverdueListDownloadApiIntegrationTest
+import org.simple.clinic.overdue.download.OverdueListDownloaderIntegrationTest
 import org.simple.clinic.patient.PatientRepositoryAndroidTest
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnlineApiIntegrationTest
 import org.simple.clinic.protocolv2.ProtocolRepositoryAndroidTest
@@ -124,4 +125,5 @@ interface TestAppComponent {
   fun inject(target: CallResultSyncIntegrationTest)
   fun inject(target: AppConfigRepositoryAndroidTest)
   fun inject(target: OverdueListDownloadApiIntegrationTest)
+  fun inject(target: OverdueListDownloaderIntegrationTest)
 }

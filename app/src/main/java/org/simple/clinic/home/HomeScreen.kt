@@ -38,7 +38,7 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.navigation.v2.ScreenResultBus
-import org.simple.clinic.settings.SettingsScreenKey
+import org.simple.clinic.settings.SettingsScreen
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
@@ -168,7 +168,7 @@ class HomeScreen :
       setOnMenuItemClickListener { menuItem ->
         when (menuItem.itemId) {
           R.id.openSettings -> {
-            router.push(SettingsScreenKey().wrap())
+            router.push(SettingsScreen.Key())
             true
           }
           else -> false

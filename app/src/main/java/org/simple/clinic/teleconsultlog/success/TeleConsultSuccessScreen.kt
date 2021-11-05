@@ -3,6 +3,8 @@ package org.simple.clinic.teleconsultlog.success
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.view.clicks
@@ -16,6 +18,7 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
@@ -26,10 +29,13 @@ import org.simple.clinic.util.unsafeLazy
 import java.util.UUID
 import javax.inject.Inject
 
-class TeleConsultSuccessScreen(
-    context: Context,
-    attributeSet: AttributeSet
-) : ConstraintLayout(context, attributeSet), TeleConsultSuccessScreenUiActions, TeleConsultSuccessUi {
+class TeleConsultSuccessScreen : BaseScreen<
+    TeleConsultSuccessScreen.Key,
+    ScreenTeleconsultSuccessBinding,
+    TeleConsultSuccessModel,
+    TeleConsultSuccessEvent,
+    TeleConsultSuccessEffect,
+    Unit>(), TeleConsultSuccessScreenUiActions, TeleConsultSuccessUi {
 
   private var binding: ScreenTeleconsultSuccessBinding? = null
 
@@ -75,6 +81,11 @@ class TeleConsultSuccessScreen(
         modelUpdateListener = uiRenderer::render
     )
   }
+
+  override fun defaultModel() = TeleConsultSuccessModel.create(screenKey.patientUuid, screenKey.teleconsultRecordId)
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenTeleconsultSuccessBinding.inflate(layoutInflater, container, false)
 
   override fun onFinishInflate() {
     super.onFinishInflate()

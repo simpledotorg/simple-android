@@ -38,6 +38,9 @@ jobs:
           script: ./gradlew connectedQaDebugAndroidTest
 
   rebase_pr:
+    concurrency:
+      group: pr-rebease-${{ github.head_ref }}
+      cancel-in-progress: true
     # This job only runs for pull request comments and when the comment starts with `/rebase`
     if: |
       github.event.issue.pull_request != '' &&

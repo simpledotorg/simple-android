@@ -44,16 +44,14 @@ class TeleConsultSuccessScreen : BaseScreen<
     TeleConsultSuccessEffect,
     Unit>(), TeleConsultSuccessScreenUiActions, TeleConsultSuccessUi {
 
-  private var binding: ScreenTeleconsultSuccessBinding? = null
-
   private val prescriptionNoButton
-    get() = binding!!.prescriptionNoButton
+    get() = binding.prescriptionNoButton
 
   private val prescriptionYesButton
-    get() = binding!!.prescriptionYesButton
+    get() = binding.prescriptionYesButton
 
   private val toolbar
-    get() = binding!!.toolbar
+    get() = binding.toolbar
 
   @Inject
   lateinit var effectHandler: TeleConsultSuccessEffectHandler.Factory

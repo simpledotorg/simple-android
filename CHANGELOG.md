@@ -12,6 +12,7 @@
 - Migrate `LinkIdWithPatientEffectHandler` to use view effects
 - Migrate `PatientSummaryScreen` to use view effects
 - Migrate `OnBoardingScreen` to a Fragment
+- Migrate `SettingsScreen` to a Fragment
 
 ### Changes
 

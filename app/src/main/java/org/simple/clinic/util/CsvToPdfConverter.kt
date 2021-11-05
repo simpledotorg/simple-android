@@ -7,20 +7,21 @@ import com.itextpdf.layout.Document
 import com.itextpdf.layout.element.Paragraph
 import com.itextpdf.layout.element.Table
 import com.opencsv.CSVReader
-import java.io.File
-import java.io.FileReader
+import java.io.InputStream
+import java.io.InputStreamReader
+import java.io.OutputStream
 import javax.inject.Inject
 
 class CsvToPdfConverter @Inject constructor() {
 
-  fun convert(inputFile: File, outputFile: File) {
-    val entries = readCsvFile(inputFile)
+  fun convert(inputStream: InputStream, outputStream: OutputStream) {
+    val entries = readCsvFile(inputStream)
 
-    createPdfDocument(outputFile, entries)
+    createPdfDocument(outputStream, entries)
   }
 
-  private fun createPdfDocument(outputFile: File, entries: List<Array<String>>) {
-    val pdfDoc = PdfDocument(PdfWriter(outputFile))
+  private fun createPdfDocument(outputStream: OutputStream, entries: List<Array<String>>) {
+    val pdfDoc = PdfDocument(PdfWriter(outputStream))
     val documentName = entries[0].joinToString()
     val numberOfColumns = entries[1].size
 
@@ -38,8 +39,8 @@ class CsvToPdfConverter @Inject constructor() {
     }
   }
 
-  private fun readCsvFile(file: File): List<Array<String>> {
-    val reader = CSVReader(FileReader(file))
+  private fun readCsvFile(inputStream: InputStream): List<Array<String>> {
+    val reader = CSVReader(InputStreamReader(inputStream))
     return reader.readAll()
   }
 }

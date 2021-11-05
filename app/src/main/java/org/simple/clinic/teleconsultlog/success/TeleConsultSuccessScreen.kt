@@ -108,6 +108,10 @@ class TeleConsultSuccessScreen : BaseScreen<
 
   override fun uiRenderer() = TeleConsultSuccessUiRenderer(this)
 
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {

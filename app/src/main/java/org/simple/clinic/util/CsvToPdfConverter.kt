@@ -32,10 +32,9 @@ class CsvToPdfConverter @Inject constructor() {
         .flatMap { it.toList() }
         .forEach(table::addCell)
 
-    Document(pdfDoc, PageSize.A4.rotate()).run {
-      add(Paragraph(documentName))
-      add(table)
-      close()
+    Document(pdfDoc, PageSize.A4.rotate()).use { document ->
+      document.add(Paragraph(documentName))
+      document.add(table)
     }
   }
 

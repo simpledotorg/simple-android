@@ -3,7 +3,9 @@ package org.simple.clinic.forgotpin.createnewpin
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.RelativeLayout
 import androidx.fragment.app.Fragment
@@ -18,15 +20,19 @@ import org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreen
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class ForgotPinCreateNewPinScreen(
-    context: Context,
-    attributeSet: AttributeSet?
-) : RelativeLayout(context, attributeSet), ForgotPinCreateNewPinUi, UiActions {
+class ForgotPinCreateNewPinScreen : BaseScreen<
+    ForgotPinCreateNewPinScreen.Key,
+    ScreenForgotpinCreatepinBinding,
+    ForgotPinCreateNewModel,
+    ForgotPinCreateNewEvent,
+    ForgotPinCreateNewEffect,
+    Unit>(), ForgotPinCreateNewPinUi, UiActions {
 
   @Inject
   lateinit var router: Router
@@ -69,6 +75,11 @@ class ForgotPinCreateNewPinScreen(
         modelUpdateListener = uiRenderer::render
     )
   }
+  
+  override fun defaultModel() = ForgotPinCreateNewModel.create()
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenForgotpinCreatepinBinding.inflate(layoutInflater, container, false)
 
   override fun onFinishInflate() {
     super.onFinishInflate()

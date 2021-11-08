@@ -73,7 +73,6 @@ class PatientEntryEffectHandler @AssistedInject constructor(
         .addConsumer(HideValidationError::class.java, { hideValidationError(it.field) }, schedulersProvider.ui())
         .addTransformer(SavePatient::class.java, savePatientTransformer(schedulersProvider.io()))
         .addConsumer(ShowValidationErrors::class.java, { showValidationErrors(it.errors) }, schedulersProvider.ui())
-        .addAction(OpenMedicalHistoryEntryScreen::class.java, uiActions::openMedicalHistoryEntryScreen, schedulersProvider.ui())
         .addTransformer(LoadInputFields::class.java, loadInputFields())
         .addConsumer(SetupUi::class.java, { uiActions.setupUi(it.inputFields) }, schedulersProvider.ui())
         .addTransformer(FetchColonyOrVillagesEffect::class.java, fetchColonyOrVillages())

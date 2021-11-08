@@ -16,6 +16,7 @@ class PatientEntryViewEffectHandler(
       ScrollFormOnGenderSelection -> uiActions.scrollFormOnGenderSelection()
       is ShowDatePatternInDateOfBirthLabel -> showDatePatternInLabelValueChangedCallback.pass(viewEffect.show,
           uiActions::setShowDatePatternInDateOfBirthLabel)
+      OpenMedicalHistoryEntryScreen -> uiActions.openMedicalHistoryEntryScreen()
     }.exhaustive()
   }
 }

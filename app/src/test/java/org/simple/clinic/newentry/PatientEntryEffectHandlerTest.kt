@@ -45,13 +45,15 @@ class PatientEntryEffectHandlerTest {
   ))
 
   private val ui = mock<PatientEntryUi>()
+  private val uiActions = mock<PatientEntryUiActions>()
   private val effectHandler = PatientEntryEffectHandler(
       facilityRepository = facilityRepository,
       patientRepository = patientRepository,
       schedulersProvider = TrampolineSchedulersProvider(),
-      patientRegisteredCount = mock(),
       inputFieldsFactory = inputFieldsFactory,
+      patientRegisteredCount = mock(),
       ui = ui,
+      uiActions = uiActions,
       validationActions = validationActions
   )
 

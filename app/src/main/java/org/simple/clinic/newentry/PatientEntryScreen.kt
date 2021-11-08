@@ -264,7 +264,11 @@ class PatientEntryScreen : BaseScreen<
   override fun createUpdate() = PatientEntryUpdate(phoneNumberValidator, dobValidator, ageValidator)
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
-      .create(ui = this, validationActions = this)
+      .create(
+          ui = this,
+          uiActions = this,
+          validationActions = this
+      )
       .build()
 
   override fun uiRenderer() = PatientEntryUiRenderer(this)

@@ -62,6 +62,7 @@ class PatientEntryScreenLogicTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val ui = mock<PatientEntryUi>()
+  private val uiActions = mock<PatientEntryUiActions>()
   private val validationActions = mock<PatientEntryValidationActions>()
   private val patientRepository = mock<PatientRepository>()
   private val facilityRepository = mock<FacilityRepository>()
@@ -100,9 +101,10 @@ class PatientEntryScreenLogicTest {
         facilityRepository = facilityRepository,
         patientRepository = patientRepository,
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        patientRegisteredCount = patientRegisteredCount,
         inputFieldsFactory = inputFieldsFactory,
+        patientRegisteredCount = patientRegisteredCount,
         ui = ui,
+        uiActions = uiActions,
         validationActions = validationActions
     )
 

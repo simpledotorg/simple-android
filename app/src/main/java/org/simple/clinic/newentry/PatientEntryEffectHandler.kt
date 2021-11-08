@@ -53,6 +53,7 @@ class PatientEntryEffectHandler @AssistedInject constructor(
     private val inputFieldsFactory: InputFieldsFactory,
     @SimpleVideoConfig(NumberOfPatientsRegistered) private val patientRegisteredCount: Preference<Int>,
     @Assisted private val ui: PatientEntryUi,
+    @Assisted private val uiActions: PatientEntryUiActions,
     @Assisted private val validationActions: PatientEntryValidationActions
 ) {
 
@@ -60,6 +61,7 @@ class PatientEntryEffectHandler @AssistedInject constructor(
   interface InjectionFactory {
     fun create(
         ui: PatientEntryUi,
+        uiActions: PatientEntryUiActions,
         validationActions: PatientEntryValidationActions
     ): PatientEntryEffectHandler
   }

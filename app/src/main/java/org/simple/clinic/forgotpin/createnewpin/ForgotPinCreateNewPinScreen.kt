@@ -46,19 +46,17 @@ class ForgotPinCreateNewPinScreen : BaseScreen<
   @Inject
   lateinit var effectHandlerFactory: ForgotPinCreateNewEffectHandler.Factory
 
-  private var binding: ScreenForgotpinCreatepinBinding? = null
-
   private val createPinEditText
-    get() = binding!!.createPinEditText
+    get() = binding.createPinEditText
 
   private val userFullNameTextView
-    get() = binding!!.userFullNameTextView
+    get() = binding.userFullNameTextView
 
   private val facilityNameTextView
-    get() = binding!!.facilityNameTextView
+    get() = binding.facilityNameTextView
 
   private val createPinErrorTextView
-    get() = binding!!.createPinErrorTextView
+    get() = binding.createPinErrorTextView
 
   private val events by unsafeLazy {
     Observable

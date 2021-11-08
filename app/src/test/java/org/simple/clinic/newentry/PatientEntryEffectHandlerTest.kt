@@ -44,7 +44,6 @@ class PatientEntryEffectHandlerTest {
       today = LocalDate.now(clock)
   ))
 
-  private val ui = mock<PatientEntryUi>()
   private val uiActions = mock<PatientEntryUiActions>()
   private val effectHandler = PatientEntryEffectHandler(
       facilityRepository = facilityRepository,
@@ -52,7 +51,6 @@ class PatientEntryEffectHandlerTest {
       schedulersProvider = TrampolineSchedulersProvider(),
       inputFieldsFactory = inputFieldsFactory,
       patientRegisteredCount = mock(),
-      ui = ui,
       uiActions = uiActions,
       validationActions = validationActions
   )

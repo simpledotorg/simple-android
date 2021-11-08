@@ -72,17 +72,17 @@ class PatientEntryEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<PatientEntryEffect, PatientEntryEvent>()
         .addTransformer(FetchPatientEntry::class.java, fetchOngoingEntryTransformer(schedulersProvider.io()))
-        .addConsumer(PrefillFields::class.java, { ui.prefillFields(it.patientEntry) }, schedulersProvider.ui())
-        .addAction(ScrollFormOnGenderSelection::class.java, ui::scrollFormOnGenderSelection, schedulersProvider.ui())
+        .addConsumer(PrefillFields::class.java, { uiActions.prefillFields(it.patientEntry) }, schedulersProvider.ui())
+        .addAction(ScrollFormOnGenderSelection::class.java, uiActions::scrollFormOnGenderSelection, schedulersProvider.ui())
         .addConsumer(HideValidationError::class.java, { hideValidationError(it.field) }, schedulersProvider.ui())
         .addConsumer(ShowDatePatternInDateOfBirthLabel::class.java, {
-          showDatePatternInLabelValueChangedCallback.pass(it.show, ui::setShowDatePatternInDateOfBirthLabel)
+          showDatePatternInLabelValueChangedCallback.pass(it.show, uiActions::setShowDatePatternInDateOfBirthLabel)
         }, schedulersProvider.ui())
         .addTransformer(SavePatient::class.java, savePatientTransformer(schedulersProvider.io()))
         .addConsumer(ShowValidationErrors::class.java, { showValidationErrors(it.errors) }, schedulersProvider.ui())
-        .addAction(OpenMedicalHistoryEntryScreen::class.java, ui::openMedicalHistoryEntryScreen, schedulersProvider.ui())
+        .addAction(OpenMedicalHistoryEntryScreen::class.java, uiActions::openMedicalHistoryEntryScreen, schedulersProvider.ui())
         .addTransformer(LoadInputFields::class.java, loadInputFields())
-        .addConsumer(SetupUi::class.java, { ui.setupUi(it.inputFields) }, schedulersProvider.ui())
+        .addConsumer(SetupUi::class.java, { uiActions.setupUi(it.inputFields) }, schedulersProvider.ui())
         .addTransformer(FetchColonyOrVillagesEffect::class.java, fetchColonyOrVillages())
         .build()
   }
@@ -189,7 +189,7 @@ class PatientEntryEffectHandler @AssistedInject constructor(
         }
 
     if (errors.isNotEmpty()) {
-      ui.scrollToFirstFieldWithError()
+      uiActions.scrollToFirstFieldWithError()
     }
   }
 

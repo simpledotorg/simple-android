@@ -132,7 +132,7 @@ class PatientEntryScreenLogicTest {
 
     screenCreated()
 
-    verify(ui).prefillFields(OngoingNewPatientEntry(
+    verify(uiActions).prefillFields(OngoingNewPatientEntry(
         address = Address(
             colonyOrVillage = "",
             district = "district",
@@ -156,7 +156,7 @@ class PatientEntryScreenLogicTest {
 
     screenCreated()
 
-    verify(ui).prefillFields(OngoingNewPatientEntry(address = address))
+    verify(uiActions).prefillFields(OngoingNewPatientEntry(address = address))
   }
 
   @Test
@@ -199,7 +199,7 @@ class PatientEntryScreenLogicTest {
     verify(patientRegisteredCount).get()
     verify(patientRegisteredCount).set(1)
     verifyNoMoreInteractions(patientRegisteredCount)
-    verify(ui).openMedicalHistoryEntryScreen()
+    verify(uiActions).openMedicalHistoryEntryScreen()
   }
 
   @Test
@@ -246,7 +246,7 @@ class PatientEntryScreenLogicTest {
     verify(patientRegisteredCount).get()
     verify(patientRegisteredCount).set(1)
     verifyNoMoreInteractions(patientRegisteredCount)
-    verify(ui).openMedicalHistoryEntryScreen()
+    verify(uiActions).openMedicalHistoryEntryScreen()
   }
 
   @Test
@@ -326,8 +326,8 @@ class PatientEntryScreenLogicTest {
       onNext(DateOfBirthFocusChanged(hasFocus = false))
     }
 
-    verify(ui).setShowDatePatternInDateOfBirthLabel(false)
-    verify(ui).setShowDatePatternInDateOfBirthLabel(true)
+    verify(uiActions).setShowDatePatternInDateOfBirthLabel(false)
+    verify(uiActions).setShowDatePatternInDateOfBirthLabel(true)
   }
 
   @Test
@@ -475,7 +475,7 @@ class PatientEntryScreenLogicTest {
       onNext(SaveClicked)
     }
 
-    verify(ui, never()).openMedicalHistoryEntryScreen()
+    verify(uiActions, never()).openMedicalHistoryEntryScreen()
     verify(patientRepository, never()).saveOngoingEntry(any())
   }
 
@@ -497,7 +497,7 @@ class PatientEntryScreenLogicTest {
       onNext(SaveClicked)
     }
 
-    verify(ui, never()).openMedicalHistoryEntryScreen()
+    verify(uiActions, never()).openMedicalHistoryEntryScreen()
     verify(patientRepository, never()).saveOngoingEntry(any())
   }
 
@@ -519,7 +519,7 @@ class PatientEntryScreenLogicTest {
       onNext(SaveClicked)
     }
 
-    verify(ui, never()).openMedicalHistoryEntryScreen()
+    verify(uiActions, never()).openMedicalHistoryEntryScreen()
     verify(patientRepository, never()).saveOngoingEntry(any())
   }
 
@@ -543,7 +543,7 @@ class PatientEntryScreenLogicTest {
       onNext(SaveClicked)
     }
 
-    verify(ui).openMedicalHistoryEntryScreen()
+    verify(uiActions).openMedicalHistoryEntryScreen()
     verify(patientRepository).saveOngoingEntry(any())
     verify(patientRegisteredCount).set(any())
   }
@@ -560,7 +560,7 @@ class PatientEntryScreenLogicTest {
       onNext(GenderChanged(Optional.of(gender)))
     }
 
-    verify(ui, times(1)).scrollFormOnGenderSelection()
+    verify(uiActions, times(1)).scrollFormOnGenderSelection()
   }
 
   @Suppress("Unused")
@@ -588,9 +588,9 @@ class PatientEntryScreenLogicTest {
 
     // This is order dependent because finding the first field
     // with error is only possible once the errors are set.
-    val inOrder = inOrder(ui, validationActions)
+    val inOrder = inOrder(uiActions, validationActions)
     inOrder.verify(validationActions).showEmptyDistrictError(true)
-    inOrder.verify(ui).scrollToFirstFieldWithError()
+    inOrder.verify(uiActions).scrollToFirstFieldWithError()
   }
 
   @Test

@@ -98,8 +98,8 @@ class PatientEntryEffectHandlerTest {
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(ui).setupUi(inputFields)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).setupUi(inputFields)
+    verifyNoMoreInteractions(uiActions)
     verifyZeroInteractions(validationActions)
   }
 
@@ -114,7 +114,7 @@ class PatientEntryEffectHandlerTest {
 
     //then
     testCase.assertOutgoingEvents(ColonyOrVillagesFetched(colonyOrVillages))
-    verifyZeroInteractions(ui)
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -138,7 +138,7 @@ class PatientEntryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(OngoingEntryFetched(ongoingNewPatientEntry.withDistrict(facility.district).withState(facility.state)))
-    verifyZeroInteractions(ui)
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -149,7 +149,7 @@ class PatientEntryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(OngoingEntryFetched(entry))
-    verifyZeroInteractions(ui)
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -173,7 +173,7 @@ class PatientEntryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(OngoingEntryFetched(ongoingNewPatientEntry.withDistrict(facility.district).withState(facility.state)))
-    verifyZeroInteractions(ui)
+    verifyZeroInteractions(uiActions)
   }
 
   private fun setupTestCase() {

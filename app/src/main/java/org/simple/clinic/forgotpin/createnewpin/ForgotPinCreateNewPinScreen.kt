@@ -59,6 +59,9 @@ class ForgotPinCreateNewPinScreen : BaseScreen<
   private val createPinErrorTextView
     get() = binding.createPinErrorTextView
 
+  private val appLockRoot
+    get() = binding.applockRoot
+
   private val events by unsafeLazy {
     Observable
         .merge(
@@ -169,7 +172,7 @@ class ForgotPinCreateNewPinScreen : BaseScreen<
   }
 
   override fun showConfirmPinScreen(pin: String) {
-    hideKeyboard()
+    appLockRoot.hideKeyboard()
     router.push(ForgotPinConfirmPinScreen.Key(pin))
   }
 

@@ -70,7 +70,6 @@ class PatientEntryEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<PatientEntryEffect, PatientEntryEvent>()
         .addTransformer(FetchPatientEntry::class.java, fetchOngoingEntryTransformer(schedulersProvider.io()))
-        .addConsumer(HideValidationError::class.java, { hideValidationError(it.field) }, schedulersProvider.ui())
         .addTransformer(SavePatient::class.java, savePatientTransformer(schedulersProvider.io()))
         .addConsumer(ShowValidationErrors::class.java, { showValidationErrors(it.errors) }, schedulersProvider.ui())
         .addTransformer(LoadInputFields::class.java, loadInputFields())
@@ -108,36 +107,6 @@ class PatientEntryEffectHandler @AssistedInject constructor(
             }
           }
           .map { OngoingEntryFetched(it) }
-    }
-  }
-
-  private fun hideValidationError(field: Field) {
-    when (field) {
-      FullName -> validationActions.showEmptyFullNameError(false)
-      PhoneNumber -> hidePhoneLengthErrors()
-      Age, DateOfBirth -> hideDateOfBirthErrors()
-      Gender -> validationActions.showMissingGenderError(false)
-      ColonyOrVillage -> validationActions.showEmptyColonyOrVillageError(false)
-      District -> validationActions.showEmptyDistrictError(false)
-      State -> validationActions.showEmptyStateError(false)
-    }
-  }
-
-  private fun hidePhoneLengthErrors() {
-    with(validationActions) {
-      showLengthTooShortPhoneNumberError(false, 0)
-    }
-  }
-
-  private fun hideDateOfBirthErrors() {
-    with(validationActions) {
-      showEmptyDateOfBirthAndAgeError(false)
-      showInvalidDateOfBirthError(false)
-      showDateOfBirthIsInFutureError(false)
-      showAgeExceedsMaxLimitError(false)
-      showDOBExceedsMaxLimitError(false)
-      showAgeExceedsMinLimitError(false)
-      showDOBExceedsMinLimitError(false)
     }
   }
 

@@ -10,8 +10,6 @@ object FetchPatientEntry : PatientEntryEffect()
 
 data class ShowValidationErrors(val errors: List<PatientEntryValidationError>) : PatientEntryEffect()
 
-data class HideValidationError(val field: Field) : PatientEntryEffect()
-
 data class SavePatient(val entry: OngoingNewPatientEntry) : PatientEntryEffect()
 
 object LoadInputFields : PatientEntryEffect()
@@ -29,3 +27,5 @@ data class ShowDatePatternInDateOfBirthLabel(val show: Boolean) : PatientEntryVi
 object OpenMedicalHistoryEntryScreen : PatientEntryViewEffect()
 
 data class SetupUi(val inputFields: InputFields) : PatientEntryViewEffect()
+
+data class HideValidationError(val field: Field) : PatientEntryViewEffect()

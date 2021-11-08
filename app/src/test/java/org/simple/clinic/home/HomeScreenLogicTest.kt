@@ -92,7 +92,6 @@ class HomeScreenLogicTest {
         currentFacilityStream = facilityStream,
         patientRepository = mock(),
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = uiActions,
         viewEffectsConsumer = viewEffectHandler::handle
     )
 

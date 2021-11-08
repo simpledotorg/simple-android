@@ -16,6 +16,7 @@
 - Bump Coroutines to v1.5.2
 - Implement `OverdueListDownloader`
 - Cancel in progress GH actions when new action is started with same group name
+- Migrate `HomeScreen` to use view effects
 
 ### Changes
 

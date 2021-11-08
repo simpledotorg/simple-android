@@ -17,7 +17,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.empty.EmptyScreenKey
-import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
+import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.login.applock.AppLockScreenKey
 import org.simple.clinic.main.TheActivityEffect
@@ -29,7 +29,6 @@ import org.simple.clinic.main.TheActivityUi
 import org.simple.clinic.main.TheActivityUiRenderer
 import org.simple.clinic.main.TheActivityUpdate
 import org.simple.clinic.navigation.v2.History
-import org.simple.clinic.navigation.v2.Normal
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.storage.MemoryValue
@@ -134,7 +133,7 @@ class TheActivityControllerTest {
     setupController(lockAtTime = lockAfterTime)
 
     // then
-    verify(ui).setCurrentScreenHistory(History.ofNormalScreens(ForgotPinCreateNewPinScreenKey().wrap()))
+    verify(ui).setCurrentScreenHistory(History.ofNormalScreens(ForgotPinCreateNewPinScreen.Key()))
     verifyNoMoreInteractions(ui)
   }
 

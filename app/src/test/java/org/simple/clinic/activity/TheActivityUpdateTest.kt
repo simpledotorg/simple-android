@@ -8,7 +8,7 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.empty.EmptyScreenKey
-import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
+import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.login.applock.AppLockScreenKey
 import org.simple.clinic.main.ClearLockAfterTimestamp
@@ -17,7 +17,6 @@ import org.simple.clinic.main.SetCurrentScreenHistory
 import org.simple.clinic.main.TheActivityModel
 import org.simple.clinic.main.TheActivityUpdate
 import org.simple.clinic.navigation.v2.History
-import org.simple.clinic.navigation.v2.Normal
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
@@ -148,7 +147,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime, initialHistoryScreen))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(SetCurrentScreenHistory(History.ofNormalScreens(ForgotPinCreateNewPinScreenKey().wrap())), ClearLockAfterTimestamp)
+            hasEffects(SetCurrentScreenHistory(History.ofNormalScreens(ForgotPinCreateNewPinScreen.Key())), ClearLockAfterTimestamp)
         ))
   }
 
@@ -161,7 +160,7 @@ class TheActivityUpdateTest {
         .whenEvent(InitialScreenInfoLoaded(user, currentTimestamp, lockAtTime, initialHistoryScreen))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(SetCurrentScreenHistory(History.ofNormalScreens(ForgotPinCreateNewPinScreenKey().wrap())), ClearLockAfterTimestamp)
+            hasEffects(SetCurrentScreenHistory(History.ofNormalScreens(ForgotPinCreateNewPinScreen.Key())), ClearLockAfterTimestamp)
         ))
   }
 

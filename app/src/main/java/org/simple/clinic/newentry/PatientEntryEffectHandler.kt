@@ -1,6 +1,7 @@
 package org.simple.clinic.newentry
 
 import com.f2prateek.rx.preferences2.Preference
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -53,14 +54,16 @@ class PatientEntryEffectHandler @AssistedInject constructor(
     private val inputFieldsFactory: InputFieldsFactory,
     @SimpleVideoConfig(NumberOfPatientsRegistered) private val patientRegisteredCount: Preference<Int>,
     @Assisted private val uiActions: PatientEntryUiActions,
-    @Assisted private val validationActions: PatientEntryValidationActions
+    @Assisted private val validationActions: PatientEntryValidationActions,
+    @Assisted private val viewEffectsConsumer: Consumer<PatientEntryViewEffect>
 ) {
 
   @AssistedFactory
   interface InjectionFactory {
     fun create(
         uiActions: PatientEntryUiActions,
-        validationActions: PatientEntryValidationActions
+        validationActions: PatientEntryValidationActions,
+        viewEffectsConsumer: Consumer<PatientEntryViewEffect>
     ): PatientEntryEffectHandler
   }
 

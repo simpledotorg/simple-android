@@ -97,6 +97,7 @@ class PatientEntryScreenLogicTest {
             streetAddress = "street"
         )))
 
+    val viewEffectHandler = PatientEntryViewEffectHandler(uiActions)
     val effectHandler = PatientEntryEffectHandler(
         facilityRepository = facilityRepository,
         patientRepository = patientRepository,
@@ -104,7 +105,8 @@ class PatientEntryScreenLogicTest {
         inputFieldsFactory = inputFieldsFactory,
         patientRegisteredCount = patientRegisteredCount,
         uiActions = uiActions,
-        validationActions = validationActions
+        validationActions = validationActions,
+        viewEffectsConsumer = viewEffectHandler::handle
     )
 
     fixture = MobiusTestFixture(

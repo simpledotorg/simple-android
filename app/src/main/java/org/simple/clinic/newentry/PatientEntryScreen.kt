@@ -269,7 +269,8 @@ class PatientEntryScreen : BaseScreen<
   override fun createEffectHandler(viewEffectsConsumer: Consumer<PatientEntryViewEffect>) = effectHandlerFactory
       .create(
           uiActions = this,
-          validationActions = this
+          validationActions = this,
+          viewEffectsConsumer = viewEffectsConsumer
       )
       .build()
 

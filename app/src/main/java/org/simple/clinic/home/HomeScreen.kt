@@ -120,7 +120,12 @@ class HomeScreen :
 
   override fun createInit() = HomeScreenInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<HomeScreenViewEffect>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<HomeScreenViewEffect>) = effectHandlerFactory
+      .create(
+          uiActions = this,
+          viewEffectsConsumer = viewEffectsConsumer
+      )
+      .build()
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

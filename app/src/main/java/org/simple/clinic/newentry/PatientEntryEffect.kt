@@ -16,8 +16,6 @@ data class SavePatient(val entry: OngoingNewPatientEntry) : PatientEntryEffect()
 
 object LoadInputFields : PatientEntryEffect()
 
-data class SetupUi(val inputFields: InputFields) : PatientEntryEffect()
-
 object FetchColonyOrVillagesEffect : PatientEntryEffect()
 
 sealed class PatientEntryViewEffect : PatientEntryEffect()
@@ -29,3 +27,5 @@ object ScrollFormOnGenderSelection : PatientEntryViewEffect()
 data class ShowDatePatternInDateOfBirthLabel(val show: Boolean) : PatientEntryViewEffect()
 
 object OpenMedicalHistoryEntryScreen : PatientEntryViewEffect()
+
+data class SetupUi(val inputFields: InputFields) : PatientEntryViewEffect()

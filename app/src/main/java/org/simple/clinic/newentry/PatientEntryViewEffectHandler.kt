@@ -17,6 +17,7 @@ class PatientEntryViewEffectHandler(
       is ShowDatePatternInDateOfBirthLabel -> showDatePatternInLabelValueChangedCallback.pass(viewEffect.show,
           uiActions::setShowDatePatternInDateOfBirthLabel)
       OpenMedicalHistoryEntryScreen -> uiActions.openMedicalHistoryEntryScreen()
+      is SetupUi -> uiActions.setupUi(viewEffect.inputFields)
     }.exhaustive()
   }
 }

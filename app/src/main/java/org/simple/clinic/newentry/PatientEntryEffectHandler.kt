@@ -74,7 +74,6 @@ class PatientEntryEffectHandler @AssistedInject constructor(
         .addTransformer(SavePatient::class.java, savePatientTransformer(schedulersProvider.io()))
         .addConsumer(ShowValidationErrors::class.java, { showValidationErrors(it.errors) }, schedulersProvider.ui())
         .addTransformer(LoadInputFields::class.java, loadInputFields())
-        .addConsumer(SetupUi::class.java, { uiActions.setupUi(it.inputFields) }, schedulersProvider.ui())
         .addTransformer(FetchColonyOrVillagesEffect::class.java, fetchColonyOrVillages())
         .addConsumer(PatientEntryViewEffect::class.java, viewEffectsConsumer::accept)
         .build()

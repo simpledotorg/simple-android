@@ -27,3 +27,5 @@ object LoadInputFields : PatientEntryEffect()
 data class SetupUi(val inputFields: InputFields) : PatientEntryEffect()
 
 object FetchColonyOrVillagesEffect : PatientEntryEffect()
+
+sealed class PatientEntryViewEffect : PatientEntryEffect()

@@ -97,7 +97,7 @@ class PatientEntryScreenLogicTest {
             streetAddress = "street"
         )))
 
-    val viewEffectHandler = PatientEntryViewEffectHandler(uiActions)
+    val viewEffectHandler = PatientEntryViewEffectHandler(uiActions, validationActions)
     val effectHandler = PatientEntryEffectHandler(
         facilityRepository = facilityRepository,
         patientRepository = patientRepository,

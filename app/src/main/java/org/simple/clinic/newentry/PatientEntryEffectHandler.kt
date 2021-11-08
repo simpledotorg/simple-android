@@ -44,7 +44,6 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.simplevideo.SimpleVideoConfig
 import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.NumberOfPatientsRegistered
-import org.simple.clinic.util.ValueChangedCallback
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class PatientEntryEffectHandler @AssistedInject constructor(
@@ -68,15 +67,10 @@ class PatientEntryEffectHandler @AssistedInject constructor(
   }
 
   fun build(): ObservableTransformer<PatientEntryEffect, PatientEntryEvent> {
-    val showDatePatternInLabelValueChangedCallback = ValueChangedCallback<Boolean>()
-
     return RxMobius
         .subtypeEffectHandler<PatientEntryEffect, PatientEntryEvent>()
         .addTransformer(FetchPatientEntry::class.java, fetchOngoingEntryTransformer(schedulersProvider.io()))
         .addConsumer(HideValidationError::class.java, { hideValidationError(it.field) }, schedulersProvider.ui())
-        .addConsumer(ShowDatePatternInDateOfBirthLabel::class.java, {
-          showDatePatternInLabelValueChangedCallback.pass(it.show, uiActions::setShowDatePatternInDateOfBirthLabel)
-        }, schedulersProvider.ui())
         .addTransformer(SavePatient::class.java, savePatientTransformer(schedulersProvider.io()))
         .addConsumer(ShowValidationErrors::class.java, { showValidationErrors(it.errors) }, schedulersProvider.ui())
         .addAction(OpenMedicalHistoryEntryScreen::class.java, uiActions::openMedicalHistoryEntryScreen, schedulersProvider.ui())

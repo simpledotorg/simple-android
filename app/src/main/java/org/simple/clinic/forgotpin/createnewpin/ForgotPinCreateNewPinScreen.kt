@@ -1,6 +1,7 @@
 package org.simple.clinic.forgotpin.createnewpin
 
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -106,6 +107,11 @@ class ForgotPinCreateNewPinScreen : BaseScreen<
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    createPinEditText.showKeyboard()
   }
 
   override fun onFinishInflate() {

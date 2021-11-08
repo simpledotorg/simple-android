@@ -8,6 +8,8 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.DEMO_USER_ID
 import org.simple.clinic.TestData
+import org.simple.clinic.security.pin.verification.LoginPinServerVerificationMethod
+import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.Correct
 import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.NetworkError
 import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.OtherError
 import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.ServerError
@@ -85,6 +87,26 @@ class PinEntryUpdateTest {
             hasEffects(
                 RecordSuccessfulAttempt,
                 CorrectPinEntered(userPayload)
+            )
+        ))
+  }
+
+  @Test
+  fun `when verified pin is for demo user, then save demo facility`() {
+    val loggedInUser = TestData.loggedInUserPayload(
+        uuid = DEMO_USER_ID
+    )
+    val userData = LoginPinServerVerificationMethod.UserData.create(
+        pin = "0000",
+        payload = loggedInUser
+    )
+
+    spec
+        .given(defaultModel)
+        .whenEvent(PinVerified(Correct(userData)))
+        .then(assertThatNext(
+            hasEffects(
+                SaveDemoFacility(userData)
             )
         ))
   }

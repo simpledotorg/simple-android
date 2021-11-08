@@ -8,8 +8,6 @@ sealed class PatientEntryEffect
 
 object FetchPatientEntry : PatientEntryEffect()
 
-object ScrollFormOnGenderSelection : PatientEntryEffect()
-
 data class ShowDatePatternInDateOfBirthLabel(val show: Boolean) : PatientEntryEffect()
 
 data class ShowValidationErrors(val errors: List<PatientEntryValidationError>) : PatientEntryEffect()
@@ -29,3 +27,5 @@ object FetchColonyOrVillagesEffect : PatientEntryEffect()
 sealed class PatientEntryViewEffect : PatientEntryEffect()
 
 data class PrefillFields(val patientEntry: OngoingNewPatientEntry) : PatientEntryViewEffect()
+
+object ScrollFormOnGenderSelection : PatientEntryViewEffect()

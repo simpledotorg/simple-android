@@ -10,6 +10,7 @@ class PatientEntryViewEffectHandler(
   override fun handle(viewEffect: PatientEntryViewEffect) {
     when (viewEffect) {
       is PrefillFields -> uiActions.prefillFields(viewEffect.patientEntry)
+      ScrollFormOnGenderSelection -> uiActions.scrollFormOnGenderSelection()
     }.exhaustive()
   }
 }

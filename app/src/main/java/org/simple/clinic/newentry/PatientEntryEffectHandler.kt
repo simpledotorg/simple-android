@@ -73,7 +73,6 @@ class PatientEntryEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<PatientEntryEffect, PatientEntryEvent>()
         .addTransformer(FetchPatientEntry::class.java, fetchOngoingEntryTransformer(schedulersProvider.io()))
-        .addAction(ScrollFormOnGenderSelection::class.java, uiActions::scrollFormOnGenderSelection, schedulersProvider.ui())
         .addConsumer(HideValidationError::class.java, { hideValidationError(it.field) }, schedulersProvider.ui())
         .addConsumer(ShowDatePatternInDateOfBirthLabel::class.java, {
           showDatePatternInLabelValueChangedCallback.pass(it.show, uiActions::setShowDatePatternInDateOfBirthLabel)

@@ -31,6 +31,7 @@ class HomeScreenEffectHandler @AssistedInject constructor(
       .subtypeEffectHandler<HomeScreenEffect, HomeScreenEvent>()
       .addAction(OpenFacilitySelection::class.java, uiActions::openFacilitySelection, schedulersProvider.ui())
       .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
+      .addConsumer(HomeScreenViewEffect::class.java, viewEffectsConsumer::accept)
       .build()
 
   private fun loadCurrentFacility(): ObservableTransformer<LoadCurrentFacility, HomeScreenEvent> {

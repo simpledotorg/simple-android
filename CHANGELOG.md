@@ -20,6 +20,7 @@
 - Migrate `TeleConsultSuccessScreen` to a Fragment
 - Migrate `ForgotPinCreateNewPinScreen` to a Fragment
 - Create demo user for Google Play reviews
+- Migrate `PatientEntryScreen` to use view effects
 
 ### Changes
 

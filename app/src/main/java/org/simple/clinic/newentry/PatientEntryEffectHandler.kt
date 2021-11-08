@@ -25,16 +25,12 @@ class PatientEntryEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val inputFieldsFactory: InputFieldsFactory,
     @SimpleVideoConfig(NumberOfPatientsRegistered) private val patientRegisteredCount: Preference<Int>,
-    @Assisted private val uiActions: PatientEntryUiActions,
-    @Assisted private val validationActions: PatientEntryValidationActions,
     @Assisted private val viewEffectsConsumer: Consumer<PatientEntryViewEffect>
 ) {
 
   @AssistedFactory
   interface InjectionFactory {
     fun create(
-        uiActions: PatientEntryUiActions,
-        validationActions: PatientEntryValidationActions,
         viewEffectsConsumer: Consumer<PatientEntryViewEffect>
     ): PatientEntryEffectHandler
   }

@@ -104,8 +104,6 @@ class PatientEntryScreenLogicTest {
         schedulersProvider = TestSchedulersProvider.trampoline(),
         inputFieldsFactory = inputFieldsFactory,
         patientRegisteredCount = patientRegisteredCount,
-        uiActions = uiActions,
-        validationActions = validationActions,
         viewEffectsConsumer = viewEffectHandler::handle
     )
 

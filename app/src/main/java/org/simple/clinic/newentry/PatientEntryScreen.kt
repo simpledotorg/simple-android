@@ -275,6 +275,8 @@ class PatientEntryScreen : BaseScreen<
 
   override fun uiRenderer() = PatientEntryUiRenderer(this)
 
+  override fun viewEffectHandler() = PatientEntryViewEffectHandler(this)
+
   override fun events() = Observable
       .merge(formChanges(), saveClicks(), consentChanges())
       .compose(ReportAnalyticsEvents())

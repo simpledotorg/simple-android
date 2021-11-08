@@ -41,6 +41,7 @@ class PinEntryUpdate(
       }
       is PinAuthenticated -> noChange()
       PinEntryDoneClicked -> noChange()
+      is DemoFacilitySaved -> noChange()
     }
   }
 

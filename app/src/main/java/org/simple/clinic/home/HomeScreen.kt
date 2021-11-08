@@ -103,6 +103,8 @@ class HomeScreen :
 
   override fun uiRenderer() = HomeScreenUiRenderer(this)
 
+  override fun viewEffectHandler() = HomeScreenViewEffectHandler(this)
+
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenHomeBinding.inflate(layoutInflater, container, false)
 

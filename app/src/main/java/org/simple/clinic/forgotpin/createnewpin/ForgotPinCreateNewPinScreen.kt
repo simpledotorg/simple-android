@@ -10,7 +10,12 @@ import android.view.inputmethod.EditorInfo
 import android.widget.RelativeLayout
 import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.widget.editorActions
+import com.spotify.mobius.Init
+import com.spotify.mobius.Update
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
+import io.reactivex.ObservableTransformer
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.ReportAnalyticsEvents
@@ -18,6 +23,7 @@ import org.simple.clinic.databinding.ScreenForgotpinCreatepinBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreen
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -80,6 +86,24 @@ class ForgotPinCreateNewPinScreen : BaseScreen<
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenForgotpinCreatepinBinding.inflate(layoutInflater, container, false)
+
+  override fun createUpdate() = ForgotPinCreateNewUpdate()
+
+  override fun createInit() = ForgotPinCreateNewInit()
+
+  override fun events(): Observable<ForgotPinCreateNewEvent> {
+    return Observable
+        .merge(
+            pinTextChanges(),
+            pinSubmitClicked()
+        )
+        .compose(ReportAnalyticsEvents())
+        .cast<ForgotPinCreateNewEvent>()
+  }
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
+
+  override fun uiRenderer() = ForgotPinCreateNewUiRenderer(this)
 
   override fun onFinishInflate() {
     super.onFinishInflate()

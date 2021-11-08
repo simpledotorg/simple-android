@@ -35,9 +35,9 @@ import org.simple.clinic.home.HomeTab.REPORTS
 import org.simple.clinic.home.help.HelpScreenKey
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.settings.SettingsScreen
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -55,7 +55,7 @@ class HomeScreen :
         HomeScreenModel,
         HomeScreenEvent,
         HomeScreenEffect,
-        Unit>(),
+        HomeScreenViewEffect>(),
     HomeScreenUi,
     HomeScreenUiActions {
 
@@ -103,6 +103,8 @@ class HomeScreen :
 
   override fun uiRenderer() = HomeScreenUiRenderer(this)
 
+  override fun viewEffectHandler() = HomeScreenViewEffectHandler(this)
+
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenHomeBinding.inflate(layoutInflater, container, false)
 
@@ -118,7 +120,9 @@ class HomeScreen :
 
   override fun createInit() = HomeScreenInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<HomeScreenViewEffect>) = effectHandlerFactory
+      .create(viewEffectsConsumer = viewEffectsConsumer)
+      .build()
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

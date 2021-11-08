@@ -87,11 +87,12 @@ class HomeScreenLogicTest {
   private fun setupController(facilityStream: Observable<Facility>) {
     clock.setDate(LocalDate.parse("2018-01-01"))
 
+    val viewEffectHandler = HomeScreenViewEffectHandler(uiActions)
     val effectHandler = HomeScreenEffectHandler(
         currentFacilityStream = facilityStream,
         patientRepository = mock(),
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = uiActions
+        viewEffectsConsumer = viewEffectHandler::handle
     )
 
     val uiRenderer = HomeScreenUiRenderer(ui)

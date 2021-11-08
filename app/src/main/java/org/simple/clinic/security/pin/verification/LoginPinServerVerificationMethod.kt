@@ -6,6 +6,7 @@ import org.simple.clinic.DEMO_USER_PHONE_NUMBER
 import org.simple.clinic.DEMO_USER_PIN
 import org.simple.clinic.login.activateuser.ActivateUser
 import org.simple.clinic.login.activateuser.ActivateUser.Result
+import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult
 import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.Correct
 import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.Incorrect
@@ -19,7 +20,8 @@ import javax.inject.Inject
 
 class LoginPinServerVerificationMethod @Inject constructor(
     private val repository: OngoingLoginEntryRepository,
-    private val activateUser: ActivateUser
+    private val activateUser: ActivateUser,
+    private val passwordHasher: PasswordHasher
 ) : PinVerificationMethod {
 
   override fun verify(pin: String): VerificationResult {
@@ -49,7 +51,7 @@ class LoginPinServerVerificationMethod @Inject constructor(
           uuid = DEMO_USER_ID,
           fullName = "Demo User",
           phoneNumber = DEMO_USER_PHONE_NUMBER,
-          pinDigest = "pin-digest",
+          pinDigest = passwordHasher.hash(DEMO_USER_PIN),
           registrationFacilityId = DEMO_FACILITY_ID,
           status = UserStatus.WaitingForApproval,
           createdAt = Instant.parse("2018-01-01T00:00:00Z"),

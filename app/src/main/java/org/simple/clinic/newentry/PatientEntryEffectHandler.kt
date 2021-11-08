@@ -11,37 +11,10 @@ import io.reactivex.Scheduler
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.newentry.Field.Age
-import org.simple.clinic.newentry.Field.ColonyOrVillage
-import org.simple.clinic.newentry.Field.DateOfBirth
-import org.simple.clinic.newentry.Field.District
-import org.simple.clinic.newentry.Field.FullName
-import org.simple.clinic.newentry.Field.Gender
-import org.simple.clinic.newentry.Field.PhoneNumber
-import org.simple.clinic.newentry.Field.State
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.OngoingNewPatientEntry.Address
-import org.simple.clinic.patient.PatientEntryValidationError
-import org.simple.clinic.patient.PatientEntryValidationError.AgeExceedsMaxLimit
-import org.simple.clinic.patient.PatientEntryValidationError.AgeExceedsMinLimit
-import org.simple.clinic.patient.PatientEntryValidationError.BothDateOfBirthAndAgeAbsent
-import org.simple.clinic.patient.PatientEntryValidationError.BothDateOfBirthAndAgePresent
-import org.simple.clinic.patient.PatientEntryValidationError.ColonyOrVillageEmpty
-import org.simple.clinic.patient.PatientEntryValidationError.DateOfBirthInFuture
-import org.simple.clinic.patient.PatientEntryValidationError.DistrictEmpty
-import org.simple.clinic.patient.PatientEntryValidationError.DobExceedsMaxLimit
-import org.simple.clinic.patient.PatientEntryValidationError.DobExceedsMinLimit
-import org.simple.clinic.patient.PatientEntryValidationError.EmptyAddressDetails
-import org.simple.clinic.patient.PatientEntryValidationError.FullNameEmpty
-import org.simple.clinic.patient.PatientEntryValidationError.InvalidDateOfBirth
-import org.simple.clinic.patient.PatientEntryValidationError.MissingGender
-import org.simple.clinic.patient.PatientEntryValidationError.PersonalDetailsEmpty
-import org.simple.clinic.patient.PatientEntryValidationError.PhoneNumberLengthTooShort
-import org.simple.clinic.patient.PatientEntryValidationError.PhoneNumberNonNullButBlank
-import org.simple.clinic.patient.PatientEntryValidationError.StateEmpty
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.simplevideo.SimpleVideoConfig
 import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.NumberOfPatientsRegistered
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -71,7 +44,6 @@ class PatientEntryEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<PatientEntryEffect, PatientEntryEvent>()
         .addTransformer(FetchPatientEntry::class.java, fetchOngoingEntryTransformer(schedulersProvider.io()))
         .addTransformer(SavePatient::class.java, savePatientTransformer(schedulersProvider.io()))
-        .addConsumer(ShowValidationErrors::class.java, { showValidationErrors(it.errors) }, schedulersProvider.ui())
         .addTransformer(LoadInputFields::class.java, loadInputFields())
         .addTransformer(FetchColonyOrVillagesEffect::class.java, fetchColonyOrVillages())
         .addConsumer(PatientEntryViewEffect::class.java, viewEffectsConsumer::accept)
@@ -118,39 +90,6 @@ class PatientEntryEffectHandler @AssistedInject constructor(
           .doOnNext(patientRepository::saveOngoingEntry)
           .doOnNext { patientRegisteredCount.set(patientRegisteredCount.get().plus(1)) }
           .map { PatientEntrySaved }
-    }
-  }
-
-  private fun showValidationErrors(errors: List<PatientEntryValidationError>) {
-    errors
-        .onEach { Analytics.reportInputValidationError(it.analyticsName) }
-        .forEach {
-          when (it) {
-            FullNameEmpty -> validationActions.showEmptyFullNameError(true)
-            is PhoneNumberLengthTooShort -> validationActions.showLengthTooShortPhoneNumberError(true, it.limit)
-            BothDateOfBirthAndAgeAbsent -> validationActions.showEmptyDateOfBirthAndAgeError(true)
-            InvalidDateOfBirth -> validationActions.showInvalidDateOfBirthError(true)
-            DateOfBirthInFuture -> validationActions.showDateOfBirthIsInFutureError(true)
-            MissingGender -> validationActions.showMissingGenderError(true)
-            ColonyOrVillageEmpty -> validationActions.showEmptyColonyOrVillageError(true)
-            DistrictEmpty -> validationActions.showEmptyDistrictError(true)
-            StateEmpty -> validationActions.showEmptyStateError(true)
-            AgeExceedsMaxLimit -> validationActions.showAgeExceedsMaxLimitError(true)
-            DobExceedsMaxLimit -> validationActions.showDOBExceedsMaxLimitError(true)
-            AgeExceedsMinLimit -> validationActions.showAgeExceedsMinLimitError(true)
-            DobExceedsMinLimit -> validationActions.showDOBExceedsMinLimitError(true)
-
-            EmptyAddressDetails,
-            PhoneNumberNonNullButBlank,
-            BothDateOfBirthAndAgePresent,
-            PersonalDetailsEmpty -> {
-              throw AssertionError("Should never receive this error: $it")
-            }
-          }
-        }
-
-    if (errors.isNotEmpty()) {
-      uiActions.scrollToFirstFieldWithError()
     }
   }
 

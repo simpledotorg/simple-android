@@ -8,8 +8,6 @@ sealed class PatientEntryEffect
 
 object FetchPatientEntry : PatientEntryEffect()
 
-data class ShowValidationErrors(val errors: List<PatientEntryValidationError>) : PatientEntryEffect()
-
 data class SavePatient(val entry: OngoingNewPatientEntry) : PatientEntryEffect()
 
 object LoadInputFields : PatientEntryEffect()
@@ -29,3 +27,5 @@ object OpenMedicalHistoryEntryScreen : PatientEntryViewEffect()
 data class SetupUi(val inputFields: InputFields) : PatientEntryViewEffect()
 
 data class HideValidationError(val field: Field) : PatientEntryViewEffect()
+
+data class ShowValidationErrors(val errors: List<PatientEntryValidationError>) : PatientEntryViewEffect()

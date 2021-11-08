@@ -1,6 +1,8 @@
 package org.simple.clinic.newentry
 
 import org.simple.clinic.mobius.ViewEffectsHandler
+import org.simple.clinic.patient.PatientEntryValidationError
+import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.util.ValueChangedCallback
 import org.simple.clinic.util.exhaustive
 
@@ -20,6 +22,7 @@ class PatientEntryViewEffectHandler(
       OpenMedicalHistoryEntryScreen -> uiActions.openMedicalHistoryEntryScreen()
       is SetupUi -> uiActions.setupUi(viewEffect.inputFields)
       is HideValidationError -> hideValidationError(viewEffect.field)
+      is ShowValidationErrors -> showValidationErrors(viewEffect.errors)
     }.exhaustive()
   }
 
@@ -32,7 +35,6 @@ class PatientEntryViewEffectHandler(
       Field.ColonyOrVillage -> validationActions.showEmptyColonyOrVillageError(false)
       Field.District -> validationActions.showEmptyDistrictError(false)
       Field.State -> validationActions.showEmptyStateError(false)
-      else -> throw IllegalArgumentException("Cannot hide error for field: ${field.name}")
     }
   }
 
@@ -51,6 +53,38 @@ class PatientEntryViewEffectHandler(
       showDOBExceedsMaxLimitError(false)
       showAgeExceedsMinLimitError(false)
       showDOBExceedsMinLimitError(false)
+    }
+  }
+
+  private fun showValidationErrors(errors: List<PatientEntryValidationError>) {
+    errors
+        .onEach { Analytics.reportInputValidationError(it.analyticsName) }
+        .forEach {
+          when (it) {
+            PatientEntryValidationError.FullNameEmpty -> validationActions.showEmptyFullNameError(true)
+            is PatientEntryValidationError.PhoneNumberLengthTooShort -> validationActions.showLengthTooShortPhoneNumberError(true, it.limit)
+            PatientEntryValidationError.BothDateOfBirthAndAgeAbsent -> validationActions.showEmptyDateOfBirthAndAgeError(true)
+            PatientEntryValidationError.InvalidDateOfBirth -> validationActions.showInvalidDateOfBirthError(true)
+            PatientEntryValidationError.DateOfBirthInFuture -> validationActions.showDateOfBirthIsInFutureError(true)
+            PatientEntryValidationError.MissingGender -> validationActions.showMissingGenderError(true)
+            PatientEntryValidationError.ColonyOrVillageEmpty -> validationActions.showEmptyColonyOrVillageError(true)
+            PatientEntryValidationError.DistrictEmpty -> validationActions.showEmptyDistrictError(true)
+            PatientEntryValidationError.StateEmpty -> validationActions.showEmptyStateError(true)
+            PatientEntryValidationError.AgeExceedsMaxLimit -> validationActions.showAgeExceedsMaxLimitError(true)
+            PatientEntryValidationError.DobExceedsMaxLimit -> validationActions.showDOBExceedsMaxLimitError(true)
+            PatientEntryValidationError.AgeExceedsMinLimit -> validationActions.showAgeExceedsMinLimitError(true)
+            PatientEntryValidationError.DobExceedsMinLimit -> validationActions.showDOBExceedsMinLimitError(true)
+            PatientEntryValidationError.EmptyAddressDetails,
+            PatientEntryValidationError.PhoneNumberNonNullButBlank,
+            PatientEntryValidationError.BothDateOfBirthAndAgePresent,
+            PatientEntryValidationError.PersonalDetailsEmpty -> {
+              throw AssertionError("Should never receive this error: $it")
+            }
+          }
+        }
+
+    if (errors.isNotEmpty()) {
+      uiActions.scrollToFirstFieldWithError()
     }
   }
 }

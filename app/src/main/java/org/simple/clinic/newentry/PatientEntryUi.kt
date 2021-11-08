@@ -2,7 +2,7 @@ package org.simple.clinic.newentry
 
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 
-interface PatientEntryUi : PatientEntryUiActions {
+interface PatientEntryUi {
   fun setDateOfBirthAndAgeVisibility(visibility: DateOfBirthAndAgeVisibility)
   fun showIdentifierSection()
   fun hideIdentifierSection()

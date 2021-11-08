@@ -41,7 +41,7 @@ class PinEntryUpdate(
       }
       is PinAuthenticated -> noChange()
       PinEntryDoneClicked -> noChange()
-      is DemoFacilitySaved -> noChange()
+      is DemoFacilitySaved -> dispatch(RecordSuccessfulAttempt, CorrectPinEntered(event.data))
     }
   }
 

@@ -33,7 +33,7 @@ val DEMO_FACILITY = Facility(
     syncStatus = SyncStatus.DONE,
     deletedAt = null,
     config = FacilityConfig(
-        diabetesManagementEnabled = false,
+        diabetesManagementEnabled = true,
         teleconsultationEnabled = false
     ),
     syncGroup = ""

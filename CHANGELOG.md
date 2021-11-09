@@ -23,6 +23,7 @@
 - Implement CSV to PDF file converter
 - Add `OverdueListDownloadApi`
 - Migrate `ForgotPinConfirmPinScreen` to a Fragment
+- Create demo user for Google Play reviews
 
 ### Fixes
 

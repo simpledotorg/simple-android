@@ -4,7 +4,7 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import org.simple.clinic.deniedaccess.AccessDeniedScreenKey
 import org.simple.clinic.empty.EmptyScreenKey
-import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
+import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.login.applock.AppLockScreenKey
 import org.simple.clinic.mobius.dispatch
@@ -68,7 +68,7 @@ class TheActivityUpdate : Update<TheActivityModel, TheActivityEvent, TheActivity
 
         createHistoryForLoggedInUser(currentScreenHistory, shouldShowAppLockScreen, model)
       }
-      user.isResettingPin -> History.ofNormalScreens(ForgotPinCreateNewPinScreenKey().wrap())
+      user.isResettingPin -> History.ofNormalScreens(ForgotPinCreateNewPinScreen.Key())
       else -> throw IllegalStateException("Unknown user status combinations: [${user.loggedInStatus}, ${user.status}]")
     }
 

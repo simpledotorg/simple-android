@@ -18,6 +18,7 @@
 - Cancel in progress GH actions when new action is started with same group name
 - Migrate `HomeScreen` to use view effects
 - Migrate `TeleConsultSuccessScreen` to a Fragment
+- Migrate `ForgotPinCreateNewPinScreen` to a Fragment
 
 ### Changes
 

@@ -21,6 +21,7 @@
 - Migrate `ForgotPinCreateNewPinScreen` to a Fragment
 - Create demo user for Google Play reviews
 - Migrate `PatientEntryScreen` to use view effects
+- Bump Gradle to 7.3
 
 ### Changes
 

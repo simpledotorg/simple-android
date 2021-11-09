@@ -59,7 +59,7 @@ data class NewMedicalHistoryModel(
     get() = diagnosedWithHypertension && country.isoCountryCode == Country.INDIA
 
   val showOngoingDiabetesTreatment: Boolean
-    get() = diagnosedWithDiabetes && country.isoCountryCode == Country.INDIA
+    get() = facilityDiabetesManagementEnabled && diagnosedWithDiabetes && country.isoCountryCode == Country.INDIA
 
   private val hasNoHypertension: Boolean
     get() = ongoingMedicalHistoryEntry.diagnosedWithHypertension == No

@@ -28,6 +28,7 @@
 ### Fixes
 
 - Fix overdue screen progress state during initial sync
+- Fix diabetes treatment input required dialog showing when diabetes management is disabled
 
 ## 2021-10-18-7990
 

@@ -36,3 +36,5 @@ object ShowNetworkError : PinEntryEffect()
 object ShowServerError : PinEntryEffect()
 
 object ShowUnexpectedError : PinEntryEffect()
+
+data class SaveDemoFacility(val data: Any?) : PinEntryEffect()

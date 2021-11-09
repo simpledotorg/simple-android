@@ -19,6 +19,7 @@
 - Migrate `HomeScreen` to use view effects
 - Migrate `TeleConsultSuccessScreen` to a Fragment
 - Migrate `ForgotPinCreateNewPinScreen` to a Fragment
+- Create demo user for Google Play reviews
 
 ### Changes
 

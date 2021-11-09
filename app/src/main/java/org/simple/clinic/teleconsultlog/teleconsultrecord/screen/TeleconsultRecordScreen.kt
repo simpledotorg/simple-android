@@ -16,11 +16,10 @@ import org.simple.clinic.databinding.ScreenTeleconsultRecordBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
-import org.simple.clinic.teleconsultlog.success.TeleConsultSuccessScreenKey
+import org.simple.clinic.teleconsultlog.success.TeleConsultSuccessScreen
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.No
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.Yes
@@ -144,10 +143,10 @@ class TeleconsultRecordScreen :
   }
 
   override fun navigateToTeleconsultSuccessScreen() {
-    router.push(TeleConsultSuccessScreenKey(
+    router.push(TeleConsultSuccessScreen.Key(
         patientUuid = screenKey.patientUuid,
         teleconsultRecordId = screenKey.teleconsultRecordId
-    ).wrap())
+    ))
   }
 
   override fun showTeleconsultNotRecordedWarning() {

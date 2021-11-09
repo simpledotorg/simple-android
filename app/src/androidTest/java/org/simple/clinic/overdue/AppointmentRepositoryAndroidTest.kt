@@ -114,11 +114,6 @@ class AppointmentRepositoryAndroidTest {
     userClock.setDate(LocalDate.parse("2018-01-01"))
   }
 
-  @After
-  fun tearDown() {
-    database.clearAllTables()
-  }
-
   @Test
   fun when_creating_new_appointment_then_the_appointment_should_be_saved() {
     // given

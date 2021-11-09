@@ -40,11 +40,6 @@ class TeleconsultRecordRepositoryAndroidTest {
     testUtcClock.setDate(LocalDate.of(2020, Month.SEPTEMBER, 15))
   }
 
-  @After
-  fun tearDown() {
-    teleconsultRecordRepository.clear()
-  }
-
   private val patientUuid = UUID.fromString("3c00cdf9-4304-4dc7-8d32-6fbd5cd8f14d")
   private val teleconsultRecordId = UUID.fromString("700ee55d-7f49-4bda-9a4a-c5ce903ce485")
   private val medicalOfficerId = UUID.fromString("7142092e-24b1-4757-b7b6-a00fbd60332b")

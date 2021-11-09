@@ -45,4 +45,9 @@ class SaveDatabaseRule : TestWatcher() {
 
     return directory
   }
+
+  override fun finished(description: Description?) {
+    super.finished(description)
+    database.clearAllTables()
+  }
 }

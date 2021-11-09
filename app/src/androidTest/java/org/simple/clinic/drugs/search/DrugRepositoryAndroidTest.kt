@@ -38,11 +38,6 @@ class DrugRepositoryAndroidTest {
     TestClinicApp.appComponent().inject(this)
   }
 
-  @After
-  fun tearDown() {
-    database.clearAllTables()
-  }
-
   @Test
   fun saving_drugs_should_work_correctly() {
     // given

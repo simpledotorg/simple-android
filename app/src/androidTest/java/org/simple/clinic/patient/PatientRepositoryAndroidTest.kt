@@ -152,11 +152,6 @@ class PatientRepositoryAndroidTest {
     userClock.setDate(LocalDate.parse("2018-01-01"))
   }
 
-  @After
-  fun tearDown() {
-    reportsRepository.deleteReports().blockingAwait()
-  }
-
   @Test
   fun when_a_patient_with_phone_numbers_is_saved_then_it_should_be_correctly_stored_in_the_database() {
     val ongoingAddress = OngoingNewPatientEntry.Address(

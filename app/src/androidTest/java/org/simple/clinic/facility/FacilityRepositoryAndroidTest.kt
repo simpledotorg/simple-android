@@ -44,11 +44,6 @@ class FacilityRepositoryAndroidTest {
     database.clearAllTables()
   }
 
-  @After
-  fun tearDown() {
-    database.clearAllTables()
-  }
-
   @Test
   fun facilities_should_be_ordered_alphabetically() {
     val facilityB = testData.facility(uuid = UUID.randomUUID(), name = "Facility B")

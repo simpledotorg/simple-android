@@ -46,11 +46,6 @@ class MedicalHistoryRepositoryAndroidTest {
     TestClinicApp.appComponent().inject(this)
   }
 
-  @After
-  fun tearDown() {
-    dao.clear()
-  }
-
   @Test
   fun when_creating_new_medical_history_from_ongoing_entry_then_the_medical_history_should_be_saved() {
     val patientUuid = UUID.fromString("9a39d73b-6568-4359-90a7-1553d8cfa05c")

@@ -28,11 +28,6 @@ class TeleconsultationFacilityRepositoryAndroidTest {
     TestClinicApp.appComponent().inject(this)
   }
 
-  @After
-  fun tearDown() {
-    repository.clear()
-  }
-
   @Test
   fun saving_records_should_work_correctly() {
     // given

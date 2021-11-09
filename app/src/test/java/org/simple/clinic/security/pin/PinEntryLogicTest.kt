@@ -48,7 +48,8 @@ class PinEntryLogicTest {
       bruteForceProtection = bruteForceProtection,
       schedulersProvider = TrampolineSchedulersProvider(),
       uiActions = uiActions,
-      pinVerificationMethod = pinVerificationMethod
+      pinVerificationMethod = pinVerificationMethod,
+      facilityRepository = mock()
   )
 
   private lateinit var testFixture: MobiusTestFixture<PinEntryModel, PinEntryEvent, PinEntryEffect>

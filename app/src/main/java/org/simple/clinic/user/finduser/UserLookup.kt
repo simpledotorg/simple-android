@@ -1,7 +1,10 @@
 package org.simple.clinic.user.finduser
 
+import org.simple.clinic.DEMO_USER_ID
+import org.simple.clinic.DEMO_USER_PHONE_NUMBER
 import org.simple.clinic.login.UsersApi
 import org.simple.clinic.registration.FindUserRequest
+import org.simple.clinic.user.UserStatus
 import org.simple.clinic.user.finduser.FindUserResult.Found
 import org.simple.clinic.user.finduser.FindUserResult.NetworkError
 import org.simple.clinic.user.finduser.FindUserResult.NotFound
@@ -16,6 +19,10 @@ class UserLookup @Inject constructor(
 ) {
 
   fun find(phoneNumber: String): FindUserResult {
+    if (phoneNumber == DEMO_USER_PHONE_NUMBER) {
+      Timber.i("Demo user found")
+      return Found(DEMO_USER_ID, UserStatus.WaitingForApproval)
+    }
     Timber.i("Finding user with phone number")
     return try {
       makeFindUserApiCall(phoneNumber)

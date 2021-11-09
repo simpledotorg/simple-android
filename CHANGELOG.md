@@ -25,6 +25,10 @@
 
 - [In Progress: 29 Oct 2021] Add option to download & share overdue list
 
+### Fixes
+
+- Fix diabetes treatment input required dialog showing when diabetes management is disabled
+
 ## 2021-11-02-8005
 
 ### Internal

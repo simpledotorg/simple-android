@@ -308,4 +308,23 @@ class NewMedicalHistoryUpdateTest {
             hasEffects(ShowOngoingDiabetesTreatmentErrorDialog)
         ))
   }
+
+  @Test
+  fun `when save is clicked and diabetes management is disable and patient is diagnosed with diabetes and ongoing diabetes treatment question is not answered and selected country is india, then register patient`() {
+    val model = defaultModel
+        .ongoingPatientEntryLoaded(patientEntry)
+        .currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
+        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
+        .answerChanged(DIAGNOSED_WITH_DIABETES, Yes)
+        .answerChanged(IS_ON_HYPERTENSION_TREATMENT, Yes)
+        .answerChanged(IS_ON_DIABETES_TREATMENT, Unanswered)
+
+    updateSpec
+        .given(model)
+        .whenEvent(SaveMedicalHistoryClicked())
+        .then(assertThatNext(
+            hasModel(model.registeringPatient()),
+            hasEffects(RegisterPatient(model.ongoingMedicalHistoryEntry))
+        ))
+  }
 }

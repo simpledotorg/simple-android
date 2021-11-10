@@ -10,6 +10,7 @@ import org.simple.clinic.drugs.selection.dosage.di.DosagePickerSheetComponent
 import org.simple.clinic.drugs.selection.entry.di.CustomPrescriptionEntrySheetComponent
 import org.simple.clinic.login.OtpSmsReceiver
 import org.simple.clinic.main.TheActivityComponent
+import org.simple.clinic.overdue.download.OverdueDownloadWorker
 import org.simple.clinic.registerorlogin.AuthenticationActivityComponent
 import org.simple.clinic.remoteconfig.UpdateRemoteConfigWorker
 import org.simple.clinic.setup.SetupActivityComponent
@@ -31,6 +32,7 @@ interface AppComponent {
   fun inject(target: UpdateRemoteConfigWorker)
   fun inject(target: OtpSmsReceiver)
   fun inject(target: DataSync)
+  fun inject(target: OverdueDownloadWorker)
 
   fun theActivityComponent(): TheActivityComponent.Factory
   fun setupActivityComponent(): SetupActivityComponent.Factory

@@ -36,6 +36,9 @@ class OverdueDownloadWorker(
     private const val DOWNLOAD_SUCCESS_NOTIFICATION_ID = 2
     private const val DOWNLOAD_FAILED_NOTIFICATION_ID = 3
 
+    private const val PLAY_STORE_EXCEL = "https://play.google.com/store/apps/details?id=com.microsoft.office.excel"
+    private const val PLAY_STORE_ADOBE_ACROBAT = "https://play.google.com/store/apps/details?id=com.adobe.reader"
+
     fun workRequest(downloadFormat: OverdueListDownloadFormat): OneTimeWorkRequest {
       return OneTimeWorkRequestBuilder<OverdueDownloadWorker>()
           .setInputData(workDataOf(
@@ -69,7 +72,7 @@ class OverdueDownloadWorker(
 
     return try {
       val uri = downloadOverdueList.blockingGet()
-      downloadSuccess(uri)
+      downloadSuccess(uri, downloadFormat)
     } catch (e: Exception) {
       downloadFailure()
     }
@@ -89,10 +92,10 @@ class OverdueDownloadWorker(
     return Result.failure()
   }
 
-  private fun downloadSuccess(uri: Uri): Result {
+  private fun downloadSuccess(uri: Uri, downloadFormat: OverdueListDownloadFormat): Result {
     notificationManager.run {
       cancel(DOWNLOAD_IN_PROGRESS_NOTIFICATION_ID)
-      notify(DOWNLOAD_SUCCESS_NOTIFICATION_ID, downloadSucceededNotification(uri))
+      notify(DOWNLOAD_SUCCESS_NOTIFICATION_ID, downloadSucceededNotification(uri, downloadFormat))
     }
 
     return Result.success()
@@ -134,16 +137,26 @@ class OverdueDownloadWorker(
         .build()
   }
 
-  private fun downloadSucceededNotification(uri: Uri): Notification {
+  private fun downloadSucceededNotification(uri: Uri, downloadFormat: OverdueListDownloadFormat): Notification {
     val flag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
     } else {
       PendingIntent.FLAG_CANCEL_CURRENT
     }
 
-    val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+    var intent = Intent(Intent.ACTION_VIEW, uri).apply {
       addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     }
+
+    val playStoreUrl = when(downloadFormat) {
+      CSV -> PLAY_STORE_EXCEL
+      PDF -> PLAY_STORE_ADOBE_ACROBAT
+    }
+
+    if (intent.resolveActivity(context.packageManager) == null) {
+      intent = Intent(Intent.ACTION_VIEW, Uri.parse(playStoreUrl))
+    }
+
     val pendingIntent = PendingIntent.getActivity(context, 0, intent, flag)
 
     return NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)

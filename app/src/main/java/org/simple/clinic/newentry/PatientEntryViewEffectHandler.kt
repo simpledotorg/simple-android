@@ -7,8 +7,7 @@ import org.simple.clinic.util.ValueChangedCallback
 import org.simple.clinic.util.exhaustive
 
 class PatientEntryViewEffectHandler(
-    private val uiActions: PatientEntryUiActions,
-    private val validationActions: PatientEntryValidationActions
+    private val uiActions: PatientEntryUiActions
 ) : ViewEffectsHandler<PatientEntryViewEffect> {
 
   private val showDatePatternInLabelValueChangedCallback = ValueChangedCallback<Boolean>()

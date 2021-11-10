@@ -273,8 +273,7 @@ class PatientEntryScreen : BaseScreen<
   override fun uiRenderer() = PatientEntryUiRenderer(this)
 
   override fun viewEffectHandler() = PatientEntryViewEffectHandler(
-      uiActions = this,
-      validationActions = this
+      uiActions = this
   )
 
   override fun events() = Observable

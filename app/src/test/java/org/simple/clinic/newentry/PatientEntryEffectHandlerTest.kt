@@ -31,7 +31,6 @@ class PatientEntryEffectHandlerTest {
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
   private val patientRepository = mock<PatientRepository>()
-  private val validationActions = mock<PatientEntryValidationActions>()
 
   private val facility = TestData.facility(uuid = UUID.fromString("e135085f-b5a1-49d4-bd77-73ad98500b92"))
   private val entry = TestData.ongoingPatientEntry()

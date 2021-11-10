@@ -70,8 +70,8 @@ class PatientEntryEffectHandlerTest {
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(validationActions).showLengthTooShortPhoneNumberError(false, 0)
-    verifyNoMoreInteractions(validationActions)
+    verify(uiActions).showLengthTooShortPhoneNumberError(false, 0)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -98,7 +98,7 @@ class PatientEntryEffectHandlerTest {
     testCase.assertNoOutgoingEvents()
     verify(uiActions).setupUi(inputFields)
     verifyNoMoreInteractions(uiActions)
-    verifyZeroInteractions(validationActions)
+    verifyZeroInteractions(uiActions)
   }
 
   @Test

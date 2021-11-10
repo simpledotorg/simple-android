@@ -28,24 +28,24 @@ class PatientEntryViewEffectHandler(
 
   private fun hideValidationError(field: Field) {
     when (field) {
-      Field.FullName -> validationActions.showEmptyFullNameError(false)
+      Field.FullName -> uiActions.showEmptyFullNameError(false)
       Field.PhoneNumber -> hidePhoneLengthErrors()
       Field.Age, Field.DateOfBirth -> hideDateOfBirthErrors()
-      Field.Gender -> validationActions.showMissingGenderError(false)
-      Field.ColonyOrVillage -> validationActions.showEmptyColonyOrVillageError(false)
-      Field.District -> validationActions.showEmptyDistrictError(false)
-      Field.State -> validationActions.showEmptyStateError(false)
+      Field.Gender -> uiActions.showMissingGenderError(false)
+      Field.ColonyOrVillage -> uiActions.showEmptyColonyOrVillageError(false)
+      Field.District -> uiActions.showEmptyDistrictError(false)
+      Field.State -> uiActions.showEmptyStateError(false)
     }
   }
 
   private fun hidePhoneLengthErrors() {
-    with(validationActions) {
+    with(uiActions) {
       showLengthTooShortPhoneNumberError(false, 0)
     }
   }
 
   private fun hideDateOfBirthErrors() {
-    with(validationActions) {
+    with(uiActions) {
       showEmptyDateOfBirthAndAgeError(false)
       showInvalidDateOfBirthError(false)
       showDateOfBirthIsInFutureError(false)
@@ -61,19 +61,19 @@ class PatientEntryViewEffectHandler(
         .onEach { Analytics.reportInputValidationError(it.analyticsName) }
         .forEach {
           when (it) {
-            PatientEntryValidationError.FullNameEmpty -> validationActions.showEmptyFullNameError(true)
-            is PatientEntryValidationError.PhoneNumberLengthTooShort -> validationActions.showLengthTooShortPhoneNumberError(true, it.limit)
-            PatientEntryValidationError.BothDateOfBirthAndAgeAbsent -> validationActions.showEmptyDateOfBirthAndAgeError(true)
-            PatientEntryValidationError.InvalidDateOfBirth -> validationActions.showInvalidDateOfBirthError(true)
-            PatientEntryValidationError.DateOfBirthInFuture -> validationActions.showDateOfBirthIsInFutureError(true)
-            PatientEntryValidationError.MissingGender -> validationActions.showMissingGenderError(true)
-            PatientEntryValidationError.ColonyOrVillageEmpty -> validationActions.showEmptyColonyOrVillageError(true)
-            PatientEntryValidationError.DistrictEmpty -> validationActions.showEmptyDistrictError(true)
-            PatientEntryValidationError.StateEmpty -> validationActions.showEmptyStateError(true)
-            PatientEntryValidationError.AgeExceedsMaxLimit -> validationActions.showAgeExceedsMaxLimitError(true)
-            PatientEntryValidationError.DobExceedsMaxLimit -> validationActions.showDOBExceedsMaxLimitError(true)
-            PatientEntryValidationError.AgeExceedsMinLimit -> validationActions.showAgeExceedsMinLimitError(true)
-            PatientEntryValidationError.DobExceedsMinLimit -> validationActions.showDOBExceedsMinLimitError(true)
+            PatientEntryValidationError.FullNameEmpty -> uiActions.showEmptyFullNameError(true)
+            is PatientEntryValidationError.PhoneNumberLengthTooShort -> uiActions.showLengthTooShortPhoneNumberError(true, it.limit)
+            PatientEntryValidationError.BothDateOfBirthAndAgeAbsent -> uiActions.showEmptyDateOfBirthAndAgeError(true)
+            PatientEntryValidationError.InvalidDateOfBirth -> uiActions.showInvalidDateOfBirthError(true)
+            PatientEntryValidationError.DateOfBirthInFuture -> uiActions.showDateOfBirthIsInFutureError(true)
+            PatientEntryValidationError.MissingGender -> uiActions.showMissingGenderError(true)
+            PatientEntryValidationError.ColonyOrVillageEmpty -> uiActions.showEmptyColonyOrVillageError(true)
+            PatientEntryValidationError.DistrictEmpty -> uiActions.showEmptyDistrictError(true)
+            PatientEntryValidationError.StateEmpty -> uiActions.showEmptyStateError(true)
+            PatientEntryValidationError.AgeExceedsMaxLimit -> uiActions.showAgeExceedsMaxLimitError(true)
+            PatientEntryValidationError.DobExceedsMaxLimit -> uiActions.showDOBExceedsMaxLimitError(true)
+            PatientEntryValidationError.AgeExceedsMinLimit -> uiActions.showAgeExceedsMinLimitError(true)
+            PatientEntryValidationError.DobExceedsMinLimit -> uiActions.showDOBExceedsMinLimitError(true)
             PatientEntryValidationError.EmptyAddressDetails,
             PatientEntryValidationError.PhoneNumberNonNullButBlank,
             PatientEntryValidationError.BothDateOfBirthAndAgePresent,

@@ -373,16 +373,16 @@ class PatientEntryScreenLogicTest {
     }
 
     // These get invoked every time the phone number changes
-    verify(validationActions, times(3)).showLengthTooShortPhoneNumberError(false, 0)
+    verify(uiActions, times(3)).showLengthTooShortPhoneNumberError(false, 0)
 
-    verify(validationActions, atLeastOnce()).showEmptyFullNameError(true)
-    verify(validationActions, atLeastOnce()).showEmptyDateOfBirthAndAgeError(true)
-    verify(validationActions, atLeastOnce()).showInvalidDateOfBirthError(true)
-    verify(validationActions, atLeastOnce()).showMissingGenderError(true)
-    verify(validationActions, atLeastOnce()).showEmptyColonyOrVillageError(true)
-    verify(validationActions, atLeastOnce()).showEmptyDistrictError(true)
-    verify(validationActions, atLeastOnce()).showEmptyStateError(true)
-    verify(validationActions, atLeastOnce()).showLengthTooShortPhoneNumberError(true, 6)
+    verify(uiActions, atLeastOnce()).showEmptyFullNameError(true)
+    verify(uiActions, atLeastOnce()).showEmptyDateOfBirthAndAgeError(true)
+    verify(uiActions, atLeastOnce()).showInvalidDateOfBirthError(true)
+    verify(uiActions, atLeastOnce()).showMissingGenderError(true)
+    verify(uiActions, atLeastOnce()).showEmptyColonyOrVillageError(true)
+    verify(uiActions, atLeastOnce()).showEmptyDistrictError(true)
+    verify(uiActions, atLeastOnce()).showEmptyStateError(true)
+    verify(uiActions, atLeastOnce()).showLengthTooShortPhoneNumberError(true, 6)
   }
 
   @Test
@@ -444,14 +444,14 @@ class PatientEntryScreenLogicTest {
       onNext(ColonyOrVillageChanged(""))
     }
 
-    verify(validationActions).showEmptyFullNameError(false)
-    verify(validationActions, atLeastOnce()).showEmptyDateOfBirthAndAgeError(false)
-    verify(validationActions, atLeastOnce()).showInvalidDateOfBirthError(false)
-    verify(validationActions, atLeastOnce()).showDateOfBirthIsInFutureError(false)
-    verify(validationActions).showMissingGenderError(false)
-    verify(validationActions, atLeastOnce()).showEmptyColonyOrVillageError(false)
-    verify(validationActions).showEmptyDistrictError(false)
-    verify(validationActions).showEmptyStateError(false)
+    verify(uiActions).showEmptyFullNameError(false)
+    verify(uiActions, atLeastOnce()).showEmptyDateOfBirthAndAgeError(false)
+    verify(uiActions, atLeastOnce()).showInvalidDateOfBirthError(false)
+    verify(uiActions, atLeastOnce()).showDateOfBirthIsInFutureError(false)
+    verify(uiActions).showMissingGenderError(false)
+    verify(uiActions, atLeastOnce()).showEmptyColonyOrVillageError(false)
+    verify(uiActions).showEmptyDistrictError(false)
+    verify(uiActions).showEmptyStateError(false)
   }
 
   // TODO: Write these similarly structured regression tests in a smarter way.
@@ -587,8 +587,8 @@ class PatientEntryScreenLogicTest {
 
     // This is order dependent because finding the first field
     // with error is only possible once the errors are set.
-    val inOrder = inOrder(uiActions, validationActions)
-    inOrder.verify(validationActions).showEmptyDistrictError(true)
+    val inOrder = inOrder(uiActions)
+    inOrder.verify(uiActions).showEmptyDistrictError(true)
     inOrder.verify(uiActions).scrollToFirstFieldWithError()
   }
 

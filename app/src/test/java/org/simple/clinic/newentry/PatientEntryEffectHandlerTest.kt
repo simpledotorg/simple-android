@@ -31,7 +31,6 @@ class PatientEntryEffectHandlerTest {
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
   private val patientRepository = mock<PatientRepository>()
-  private val validationActions = mock<PatientEntryValidationActions>()
 
   private val facility = TestData.facility(uuid = UUID.fromString("e135085f-b5a1-49d4-bd77-73ad98500b92"))
   private val entry = TestData.ongoingPatientEntry()
@@ -44,15 +43,15 @@ class PatientEntryEffectHandlerTest {
       today = LocalDate.now(clock)
   ))
 
-  private val ui = mock<PatientEntryUi>()
+  private val uiActions = mock<PatientEntryUiActions>()
+  private val viewEffectHandler = PatientEntryViewEffectHandler(uiActions)
   private val effectHandler = PatientEntryEffectHandler(
       facilityRepository = facilityRepository,
       patientRepository = patientRepository,
       schedulersProvider = TrampolineSchedulersProvider(),
-      patientRegisteredCount = mock(),
       inputFieldsFactory = inputFieldsFactory,
-      ui = ui,
-      validationActions = validationActions
+      patientRegisteredCount = mock(),
+      viewEffectsConsumer = viewEffectHandler::handle
   )
 
   private lateinit var testCase: EffectHandlerTestCase<PatientEntryEffect, PatientEntryEvent>
@@ -70,8 +69,8 @@ class PatientEntryEffectHandlerTest {
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(validationActions).showLengthTooShortPhoneNumberError(false, 0)
-    verifyNoMoreInteractions(validationActions)
+    verify(uiActions).showLengthTooShortPhoneNumberError(false, 0)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -96,9 +95,9 @@ class PatientEntryEffectHandlerTest {
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(ui).setupUi(inputFields)
-    verifyNoMoreInteractions(ui)
-    verifyZeroInteractions(validationActions)
+    verify(uiActions).setupUi(inputFields)
+    verifyNoMoreInteractions(uiActions)
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -112,7 +111,7 @@ class PatientEntryEffectHandlerTest {
 
     //then
     testCase.assertOutgoingEvents(ColonyOrVillagesFetched(colonyOrVillages))
-    verifyZeroInteractions(ui)
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -136,7 +135,7 @@ class PatientEntryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(OngoingEntryFetched(ongoingNewPatientEntry.withDistrict(facility.district).withState(facility.state)))
-    verifyZeroInteractions(ui)
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -147,7 +146,7 @@ class PatientEntryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(OngoingEntryFetched(entry))
-    verifyZeroInteractions(ui)
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -171,7 +170,7 @@ class PatientEntryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(OngoingEntryFetched(ongoingNewPatientEntry.withDistrict(facility.district).withState(facility.state)))
-    verifyZeroInteractions(ui)
+    verifyZeroInteractions(uiActions)
   }
 
   private fun setupTestCase() {

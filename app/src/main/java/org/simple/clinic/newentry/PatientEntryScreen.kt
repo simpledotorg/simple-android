@@ -87,7 +87,9 @@ class PatientEntryScreen : BaseScreen<
     PatientEntryModel,
     PatientEntryEvent,
     PatientEntryEffect,
-    Unit>(), PatientEntryUi, PatientEntryValidationActions {
+    PatientEntryViewEffect>(),
+    PatientEntryUi,
+    PatientEntryUiActions {
 
   @Inject
   lateinit var router: Router
@@ -263,11 +265,15 @@ class PatientEntryScreen : BaseScreen<
 
   override fun createUpdate() = PatientEntryUpdate(phoneNumberValidator, dobValidator, ageValidator)
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
-      .create(ui = this, validationActions = this)
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<PatientEntryViewEffect>) = effectHandlerFactory
+      .create(viewEffectsConsumer = viewEffectsConsumer)
       .build()
 
   override fun uiRenderer() = PatientEntryUiRenderer(this)
+
+  override fun viewEffectHandler() = PatientEntryViewEffectHandler(
+      uiActions = this
+  )
 
   override fun events() = Observable
       .merge(formChanges(), saveClicks(), consentChanges())

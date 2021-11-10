@@ -1,6 +1,15 @@
 package org.simple.clinic.newentry
 
-interface PatientEntryValidationActions {
+import org.simple.clinic.newentry.country.InputFields
+import org.simple.clinic.patient.OngoingNewPatientEntry
+
+interface PatientEntryUiActions {
+  fun prefillFields(entry: OngoingNewPatientEntry)
+  fun scrollToFirstFieldWithError()
+  fun scrollFormOnGenderSelection()
+  fun setShowDatePatternInDateOfBirthLabel(showPattern: Boolean)
+  fun openMedicalHistoryEntryScreen()
+  fun setupUi(inputFields: InputFields)
   fun showEmptyFullNameError(show: Boolean)
   fun showLengthTooShortPhoneNumberError(show: Boolean, requiredNumberLength: Int)
   fun showMissingGenderError(show: Boolean)

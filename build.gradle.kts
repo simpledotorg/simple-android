@@ -29,8 +29,8 @@ buildscript {
 // https://youtrack.jetbrains.com/issue/KTIJ-19369
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
+  alias(libs.plugins.dependencyUpdates)
   alias(libs.plugins.spotless)
-  id("com.github.ben-manes.versions")
 }
 
 allprojects {

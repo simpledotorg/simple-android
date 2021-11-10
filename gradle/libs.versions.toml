@@ -9,6 +9,8 @@ androidx-work = "2.7.0"
 
 dagger = "2.40"
 
+dependencyUpdates = "0.38.0"
+
 flipper = "0.98.0"
 
 kotlin = "1.5.31"
@@ -32,6 +34,8 @@ rx-binding = "3.1.0"
 spotless = "5.6.1"
 
 [plugins]
+dependencyUpdates = { id = "com.github.ben-manes.versions", version.ref = "dependencyUpdates" }
+
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 
 [libraries]

@@ -3,7 +3,7 @@ package org.simple.clinic.newentry
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.patient.OngoingNewPatientEntry
 
-interface PatientEntryUiActions {
+interface PatientEntryUiActions : PatientEntryValidationActions {
   fun prefillFields(entry: OngoingNewPatientEntry)
   fun scrollToFirstFieldWithError()
   fun scrollFormOnGenderSelection()

@@ -89,8 +89,7 @@ class PatientEntryScreen : BaseScreen<
     PatientEntryEffect,
     PatientEntryViewEffect>(),
     PatientEntryUi,
-    PatientEntryUiActions,
-    PatientEntryValidationActions {
+    PatientEntryUiActions {
 
   @Inject
   lateinit var router: Router

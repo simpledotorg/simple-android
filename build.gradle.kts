@@ -15,7 +15,6 @@ buildscript {
   }
 
   dependencies {
-    val libs = project.extensions.getByType<VersionCatalogsExtension>().named("libs") as org.gradle.accessors.dm.LibrariesForLibs
     val roomMetaDataGeneratorVersion = libs.versions.room.metadataGenerator.get()
 
     classpath(libs.android.gradle.plugin)
@@ -27,9 +26,11 @@ buildscript {
   }
 }
 
+// https://youtrack.jetbrains.com/issue/KTIJ-19369
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-  id("com.diffplug.spotless")
-  id("com.github.ben-manes.versions")
+  alias(libs.plugins.dependencyUpdates)
+  alias(libs.plugins.spotless)
 }
 
 allprojects {

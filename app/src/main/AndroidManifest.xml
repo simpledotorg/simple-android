@@ -27,6 +27,16 @@
         android:host="www.youtube.com"
         android:scheme="https" />
     </intent>
+
+    <intent>
+      <action android:name="android.intent.action.VIEW" />
+      <data android:mimeType="text/csv" />
+    </intent>
+
+    <intent>
+      <action android:name="android.intent.action.VIEW" />
+      <data android:mimeType="application/pdf" />
+    </intent>
   </queries>
 
   <application

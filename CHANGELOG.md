@@ -22,10 +22,11 @@
 - Create demo user for Google Play reviews
 - Migrate `PatientEntryScreen` to use view effects
 - Bump Gradle to 7.3
+- Implement `OverdueDownloadWorker`
 
 ### Changes
 
-- [In Progress: 29 Oct 2021] Add option to download & share overdue list
+- [In Progress: 10 Nov 2021] Add option to download & share overdue list
 
 ### Fixes
 

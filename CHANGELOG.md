@@ -35,6 +35,7 @@
 - Bump Gradle to 7.3
 - Implement `OverdueDownloadWorker`
 - Show no internet connection dialog when download/share button is clicked
+- Save databases in failed instrumented tests as test artifacts
 
 ### Fixes
 

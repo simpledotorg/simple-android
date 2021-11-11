@@ -877,4 +877,12 @@
 
   <string name="latin_numeric_characters" translatable="false">0123456789</string>
 
+  <!-- Overdue download notification -->
+  <string name="overdue_download_notification_failed_title">Download Failed</string>
+  <string name="overdue_download_notification_failed_subtitle">Try again in some time</string>
+  <string name="overdue_download_notification_in_progress_title">Overdue line list</string>
+  <string name="overdue_download_notification_cancel">Cancel</string>
+  <string name="overdue_download_notification_succeeded_title">Download complete</string>
+  <string name="overdue_download_notification_succeeded_subtitle">Click to open</string>
+
 </resources>

@@ -109,5 +109,7 @@ class BruteForceProtectionAndroidTest {
     advanceTimeByMillis(1)
     stateChangeObserver.assertValueAt(2, Allowed(attemptsMade = 0, attemptsRemaining = config.limitOfFailedAttempts))
     stateChangeObserver.assertValueCount(3)
+
+    stateChangeObserver.dispose()
   }
 }

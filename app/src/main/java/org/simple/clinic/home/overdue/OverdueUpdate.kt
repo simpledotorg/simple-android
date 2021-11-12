@@ -38,9 +38,8 @@ class OverdueUpdate(
     return noChange()
   }
 
-  // TODO: Trigger download overdue list effect
   private fun downloadOverdueListClicked(): Next<OverdueModel, OverdueEffect> {
-    return noChange()
+    return dispatch(LoadNetworkConnectivityStatus)
   }
 
   private fun loadOverduePatients(

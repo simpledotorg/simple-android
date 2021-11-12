@@ -79,13 +79,13 @@ class OverdueUpdateTest {
   }
 
   @Test
-  fun `when download overdue list button is clicked, then do nothing`() {
+  fun `when download overdue list button is clicked, then load network connectivity status`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(DownloadOverdueListClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasNoEffects()
+            hasEffects(LoadNetworkConnectivityStatus)
         ))
   }
 

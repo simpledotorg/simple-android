@@ -1,6 +1,7 @@
 package org.simple.clinic.home.overdue
 
 import androidx.paging.PagingData
+import org.simple.clinic.analytics.NetworkConnectivityStatus
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -30,3 +31,5 @@ object ShareOverdueListClicked : OverdueEvent() {
 
   override val analyticsName = "Overdue Screen:Share clicked"
 }
+
+data class NetworkConnectivityStatusLoaded(val status: NetworkConnectivityStatus) : OverdueEvent()

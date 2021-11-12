@@ -15,6 +15,7 @@ import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.analytics.NetworkCapabilitiesProvider
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.util.PagerFactory
@@ -35,6 +36,7 @@ class OverdueLogicTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val repository = mock<AppointmentRepository>()
   private val pagerFactory = mock<PagerFactory>()
+  private val networkCapabilitiesProvider = mock<NetworkCapabilitiesProvider>()
   private val facility = TestData.facility(
       uuid = UUID.fromString("f4430584-eeaf-4352-b1f5-c21cc96faa6c"),
       facilityConfig = FacilityConfig(
@@ -97,7 +99,8 @@ class OverdueLogicTest {
         overdueAppointmentsConfig = OverdueAppointmentsConfig(
             overdueAppointmentsLoadSize = 10
         ),
-        uiActions = uiActions
+        uiActions = uiActions,
+        networkCapabilitiesProvider = networkCapabilitiesProvider
     )
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),

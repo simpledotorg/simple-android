@@ -36,6 +36,7 @@ class OverdueEffectHandler @AssistedInject constructor(
         .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientUuid) }, schedulers.ui())
         .addConsumer(ShowOverdueAppointments::class.java, ::showOverdueAppointments, schedulers.ui())
         .addTransformer(LoadNetworkConnectivityStatus::class.java, checkIfNetworkIsConnected())
+        .addAction(ShowNoActiveNetworkConnectionDialog::class.java, uiActions::showNoActiveNetworkConnectionDialog, schedulers.ui())
         .build()
   }
 

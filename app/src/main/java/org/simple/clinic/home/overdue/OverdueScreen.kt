@@ -10,6 +10,7 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.f2prateek.rx.preferences2.Preference
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.Update
 import com.spotify.mobius.functions.Consumer
@@ -170,6 +171,14 @@ class OverdueScreen : BaseScreen<
         appointments = overdueAppointments,
         clock = userClock
     ))
+  }
+
+  override fun showNoActiveNetworkConnectionDialog() {
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(R.string.overdue_download_no_active_network_connection_dialog_title)
+        .setMessage(R.string.overdue_download_no_active_network_connection_dialog_message)
+        .setPositiveButton(R.string.overdue_download_no_active_network_connection_dialog_positive_button, null)
+        .show()
   }
 
   override fun openPatientSummary(patientUuid: UUID) {

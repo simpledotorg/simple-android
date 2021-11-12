@@ -138,4 +138,14 @@ class OverdueEffectHandlerTest {
     verifyZeroInteractions(uiActions)
     effectHandlerTestCase.assertOutgoingEvents(NetworkConnectivityStatusLoaded(ACTIVE))
   }
+
+  @Test
+  fun `when show no internet connection dialog effect is received, then show no internet connection dialog`() {
+    // when
+    effectHandlerTestCase.dispatch(ShowNoActiveNetworkConnectionDialog)
+
+    // then
+    verify(uiActions).showNoActiveNetworkConnectionDialog()
+    effectHandlerTestCase.assertNoOutgoingEvents()
+  }
 }

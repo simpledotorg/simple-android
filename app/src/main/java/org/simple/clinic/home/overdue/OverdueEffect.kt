@@ -29,3 +29,5 @@ data class ShowOverdueAppointments(
 ) : OverdueEffect()
 
 object LoadNetworkConnectivityStatus : OverdueEffect()
+
+object ShowNoActiveNetworkConnectionDialog : OverdueEffect()

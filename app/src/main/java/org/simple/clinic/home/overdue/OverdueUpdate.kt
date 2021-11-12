@@ -33,9 +33,8 @@ class OverdueUpdate(
     }
   }
 
-  // TODO: Trigger share overdue list effect
   private fun shareOverdueListClicked(): Next<OverdueModel, OverdueEffect> {
-    return noChange()
+    return dispatch(LoadNetworkConnectivityStatus)
   }
 
   private fun downloadOverdueListClicked(): Next<OverdueModel, OverdueEffect> {

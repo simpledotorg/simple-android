@@ -35,7 +35,11 @@ data class DownloadOverdueListClicked(
   override val analyticsName = "Overdue Screen:Download clicked"
 }
 
-object ShareOverdueListClicked : OverdueEvent() {
+data class ShareOverdueListClicked(
+    override var permission: Optional<RuntimePermissionResult> = Optional.empty(),
+    override val permissionString: String = Manifest.permission.WRITE_EXTERNAL_STORAGE,
+    override val permissionRequestCode: Int = 2
+) : OverdueEvent(), RequiresPermission {
 
   override val analyticsName = "Overdue Screen:Share clicked"
 }

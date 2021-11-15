@@ -212,7 +212,7 @@ class OverdueScreen : BaseScreen<
   private fun shareOverdueListClicks(): Observable<UiEvent> {
     return shareOverdueListButton
         .clicks()
-        .map { ShareOverdueListClicked }
+        .map { ShareOverdueListClicked() }
   }
 
   private fun overdueListLoadStateListener(): Disposable {

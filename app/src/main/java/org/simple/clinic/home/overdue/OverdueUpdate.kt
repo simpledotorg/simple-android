@@ -19,7 +19,7 @@ class OverdueUpdate(
       is CallPatientClicked -> dispatch(OpenContactPatientScreen(event.patientUuid))
       is OverduePatientClicked -> dispatch(OpenPatientSummary(event.patientUuid))
       is OverdueAppointmentsLoaded -> dispatch(ShowOverdueAppointments(event.overdueAppointments, model.isDiabetesManagementEnabled))
-      DownloadOverdueListClicked -> downloadOverdueListClicked()
+      is DownloadOverdueListClicked -> downloadOverdueListClicked()
       ShareOverdueListClicked -> shareOverdueListClicked()
       is NetworkConnectivityStatusLoaded -> networkConnectivityStatusLoaded(event.status)
     }

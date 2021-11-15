@@ -82,7 +82,7 @@ class OverdueUpdateTest {
   fun `when download overdue list button is clicked, then load network connectivity status`() {
     updateSpec
         .given(defaultModel)
-        .whenEvent(DownloadOverdueListClicked)
+        .whenEvent(DownloadOverdueListClicked())
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(LoadNetworkConnectivityStatus)

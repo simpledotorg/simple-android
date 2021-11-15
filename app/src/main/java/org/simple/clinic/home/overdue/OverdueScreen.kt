@@ -19,10 +19,13 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.cast
+import io.reactivex.rxkotlin.ofType
 import kotlinx.coroutines.rx2.asObservable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.activity.permissions.RequestPermissions
+import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.databinding.ListItemOverduePatientBinding
 import org.simple.clinic.databinding.ListItemOverduePlaceholderBinding
@@ -33,6 +36,7 @@ import org.simple.clinic.feature.Features
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -58,6 +62,10 @@ class OverdueScreen : BaseScreen<
     OverdueEffect,
     Unit>(), OverdueUiActions {
 
+
+  @Inject
+  lateinit var screenResults: ScreenResultBus
+
   @Inject
   lateinit var activity: AppCompatActivity
 
@@ -72,6 +80,9 @@ class OverdueScreen : BaseScreen<
 
   @Inject
   lateinit var utcClock: UtcClock
+
+  @Inject
+  lateinit var runtimePermissions: RuntimePermissions
 
   @Inject
   @Named("full_date")
@@ -125,6 +136,7 @@ class OverdueScreen : BaseScreen<
       downloadOverdueListClicks(),
       shareOverdueListClicks()
   )
+      .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
       .compose(ReportAnalyticsEvents())
       .share()
       .cast<OverdueEvent>()
@@ -194,7 +206,7 @@ class OverdueScreen : BaseScreen<
   private fun downloadOverdueListClicks(): Observable<UiEvent> {
     return downloadOverdueListButton
         .clicks()
-        .map { DownloadOverdueListClicked }
+        .map { DownloadOverdueListClicked() }
   }
 
   private fun shareOverdueListClicks(): Observable<UiEvent> {

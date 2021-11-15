@@ -75,6 +75,20 @@ class OverdueListDownloader @Inject constructor(
     }
   }
 
+  private fun scanFile(
+      path: String,
+      downloadFormat: OverdueListDownloadFormat
+  ) = Single.create<Uri> { emitter ->
+    val mimeType = when (downloadFormat) {
+      OverdueListDownloadFormat.CSV -> "text/csv"
+      OverdueListDownloadFormat.PDF -> "application/pdf"
+    }
+
+    MediaScannerConnection.scanFile(appContext, arrayOf(path), arrayOf(mimeType)) { _, uri ->
+      emitter.onSuccess(uri)
+    }
+  }
+
   private fun downloadPdfApi21(fileName: String, responseBody: ResponseBody): String {
     val downloadsFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
     val file = File(downloadsFolder, fileName)

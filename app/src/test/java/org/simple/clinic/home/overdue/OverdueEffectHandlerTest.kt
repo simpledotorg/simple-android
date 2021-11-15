@@ -129,7 +129,7 @@ class OverdueEffectHandlerTest {
   @Test
   fun `when load network connectivity status effect is received, then load network connectivity status`() {
     //given
-    whenever(networkCapabilitiesProvider.hasActiveNetworkConnection()).thenReturn(ACTIVE)
+    whenever(networkCapabilitiesProvider.networkConnectivityStatus()).thenReturn(ACTIVE)
 
     // when
     effectHandlerTestCase.dispatch(LoadNetworkConnectivityStatus)

@@ -44,7 +44,7 @@ class OverdueEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulers.io())
-          .map { networkCapabilitiesProvider.hasActiveNetworkConnection() }
+          .map { networkCapabilitiesProvider.networkConnectivityStatus() }
           .map(::NetworkConnectivityStatusLoaded)
     }
   }

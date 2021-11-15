@@ -33,7 +33,7 @@ class NetworkCapabilitiesProvider @Inject constructor(private val application: A
         .find { connectivityManager.getNetworkInfo(it)?.isConnected ?: false }
   }
 
-  fun hasActiveNetworkConnection(): NetworkConnectivityStatus {
+  fun networkConnectivityStatus(): NetworkConnectivityStatus {
     val networkCapabilities = activeNetworkCapabilities() ?: return INACTIVE
     val isConnectedToNetwork = networkCapabilities.hasCapability(NET_CAPABILITY_INTERNET)
     val isConnectedToInternet = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

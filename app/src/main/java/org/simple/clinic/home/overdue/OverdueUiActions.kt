@@ -10,4 +10,6 @@ interface OverdueUiActions {
       overdueAppointments: PagingData<OverdueAppointment>,
       isDiabetesManagementEnabled: Boolean
   )
+
+  fun showNoActiveNetworkConnectionDialog()
 }

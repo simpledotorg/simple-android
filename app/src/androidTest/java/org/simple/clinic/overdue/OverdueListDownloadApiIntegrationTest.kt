@@ -29,9 +29,9 @@ class OverdueListDownloadApiIntegrationTest {
   @Test
   fun overdue_list_download_api_should_work_correctly() {
     // when
-    val response = api.download().execute()
+    val responseBody = api.download().blockingGet()
 
     // then
-    assertThat(response.isSuccessful).isTrue()
+    assertThat(responseBody).isNotNull()
   }
 }

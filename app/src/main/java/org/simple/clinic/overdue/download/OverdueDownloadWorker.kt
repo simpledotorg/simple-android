@@ -65,13 +65,11 @@ class OverdueDownloadWorker(
     val downloadFormatString = inputData.getString(KEY_DOWNLOAD_FORMAT)!!
     val downloadFormat = OverdueListDownloadFormat.valueOf(downloadFormatString)
 
-    val downloadOverdueList = when (downloadFormat) {
-      CSV -> downloader.downloadAsCsv()
-      PDF -> downloader.downloadAsPdf()
-    }
-
     return try {
-      val uri = downloadOverdueList.blockingGet()
+      val uri = downloader
+          .download(downloadFormat)
+          .blockingGet()
+
       downloadSuccess(uri, downloadFormat)
     } catch (e: Exception) {
       downloadFailure()
@@ -148,7 +146,7 @@ class OverdueDownloadWorker(
       addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     }
 
-    val playStoreUrl = when(downloadFormat) {
+    val playStoreUrl = when (downloadFormat) {
       CSV -> PLAY_STORE_EXCEL
       PDF -> PLAY_STORE_ADOBE_ACROBAT
     }

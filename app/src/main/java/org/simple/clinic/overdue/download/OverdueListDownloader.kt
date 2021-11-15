@@ -102,6 +102,39 @@ class OverdueListDownloader @Inject constructor(
     return file.path
   }
 
+  @RequiresApi(Build.VERSION_CODES.Q)
+  private fun downloadApi29(
+      fileName: String,
+      responseBody: ResponseBody,
+      downloadFormat: OverdueListDownloadFormat
+  ): String {
+    val collection = MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+    val file = ContentValues().apply {
+      put(MediaStore.Downloads.DISPLAY_NAME, fileName)
+    }
+    val fileUri = appContext.contentResolver.insert(collection, file)
+        ?: throw Exception("MediaStore Uri couldn't be created")
+
+    val outputStream = appContext.contentResolver.openOutputStream(fileUri, "w")
+        ?: throw Exception("ContentResolver couldn't open $fileUri outputStream")
+
+    when (downloadFormat) {
+      OverdueListDownloadFormat.CSV -> responseBody.use {
+        outputStream.use {
+          responseBody.byteStream().copyTo(it)
+        }
+      }
+
+      OverdueListDownloadFormat.PDF -> csvToPdfConverter.convert(
+          responseBody.byteStream(),
+          outputStream
+      )
+    }
+
+    return getMediaStoreEntryPathApi29(fileUri)
+        ?: throw Exception("ContentResolver couldn't find $fileUri")
+  }
+
   private fun downloadPdfApi21(fileName: String, responseBody: ResponseBody): String {
     val downloadsFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
     val file = File(downloadsFolder, fileName)

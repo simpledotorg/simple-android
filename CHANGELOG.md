@@ -23,10 +23,11 @@
 - Migrate `PatientEntryScreen` to use view effects
 - Bump Gradle to 7.3
 - Implement `OverdueDownloadWorker`
+- Show no internet connection dialog when download/share button is clicked
 
 ### Changes
 
-- [In Progress: 10 Nov 2021] Add option to download & share overdue list
+- [In Progress: 12 Nov 2021] Add option to download & share overdue list
 
 ### Fixes
 

@@ -885,4 +885,9 @@
   <string name="overdue_download_notification_succeeded_title">Download complete</string>
   <string name="overdue_download_notification_succeeded_subtitle">Click to open</string>
 
+  <!-- Overdue download no active network connection dialog -->
+  <string name="overdue_download_no_active_network_connection_dialog_title">No Internet</string>
+  <string name="overdue_download_no_active_network_connection_dialog_message">Check your internet and try again.</string>
+  <string name="overdue_download_no_active_network_connection_dialog_positive_button">OK</string>
+
 </resources>

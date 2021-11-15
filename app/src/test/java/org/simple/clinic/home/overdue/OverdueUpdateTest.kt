@@ -9,6 +9,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.analytics.NetworkConnectivityStatus.INACTIVE
 import org.simple.clinic.facility.FacilityConfig
 import java.time.LocalDate
 import java.util.UUID
@@ -78,24 +79,35 @@ class OverdueUpdateTest {
   }
 
   @Test
-  fun `when download overdue list button is clicked, then do nothing`() {
+  fun `when download overdue list button is clicked, then load network connectivity status`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(DownloadOverdueListClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasNoEffects()
+            hasEffects(LoadNetworkConnectivityStatus)
         ))
   }
 
   @Test
-  fun `when share overdue list button is clicked, then do nothing`() {
+  fun `when share overdue list button is clicked, then load network connectivity status`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(ShareOverdueListClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasNoEffects()
+            hasEffects(LoadNetworkConnectivityStatus)
+        ))
+  }
+
+  @Test
+  fun `when there is no active network connection, then show no active network connection dialog`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(NetworkConnectivityStatusLoaded(INACTIVE))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowNoActiveNetworkConnectionDialog)
         ))
   }
 }

@@ -77,6 +77,31 @@ class OverdueListDownloader @Inject constructor(
     }
   }
 
+  private fun downloadApi21(
+      fileName: String,
+      responseBody: ResponseBody,
+      downloadFormat: OverdueListDownloadFormat
+  ): String {
+    val downloadsFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+    val file = File(downloadsFolder, fileName)
+    val outputStream = file.outputStream()
+
+    when (downloadFormat) {
+      OverdueListDownloadFormat.CSV -> responseBody.use {
+        outputStream.use {
+          responseBody.byteStream().copyTo(it)
+        }
+      }
+
+      OverdueListDownloadFormat.PDF -> csvToPdfConverter.convert(
+          responseBody.byteStream(),
+          outputStream
+      )
+    }
+
+    return file.path
+  }
+
   private fun downloadPdfApi21(fileName: String, responseBody: ResponseBody): String {
     val downloadsFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
     val file = File(downloadsFolder, fileName)

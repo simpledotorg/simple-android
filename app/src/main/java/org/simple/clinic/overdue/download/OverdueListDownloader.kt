@@ -28,51 +28,39 @@ class OverdueListDownloader @Inject constructor(
   }
 
   fun downloadAsCsv(): Single<Uri> {
-    return Single.create { emitter ->
-      try {
-        val response = api.download().execute()
-        val responseBody = response.body()!!
+    return api
+        .download()
+        .map { responseBody ->
+          val localDateNow = LocalDate.now(userClock)
+          val fileName = "$DOWNLOAD_FILE_NAME_PREFIX$localDateNow.csv"
 
-        val localDateNow = LocalDate.now(userClock)
-        val fileName = "$DOWNLOAD_FILE_NAME_PREFIX$localDateNow.csv"
-
-        val path = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-          downloadCsvApi29(fileName, responseBody)
-        } else {
-          downloadCsvApi21(fileName, responseBody)
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            downloadCsvApi29(fileName, responseBody)
+          } else {
+            downloadCsvApi21(fileName, responseBody)
+          }
         }
-
-        MediaScannerConnection.scanFile(appContext, arrayOf(path), arrayOf("text/csv")) { _, uri ->
-          emitter.onSuccess(uri)
+        .flatMap { path ->
+          scanFile(path, OverdueListDownloadFormat.CSV)
         }
-      } catch (e: Throwable) {
-        emitter.onError(e)
-      }
-    }
   }
 
   fun downloadAsPdf(): Single<Uri> {
-    return Single.create { emitter ->
-      try {
-        val response = api.download().execute()
-        val responseBody = response.body()!!
+    return api
+        .download()
+        .map { responseBody ->
+          val localDateNow = LocalDate.now(userClock)
+          val fileName = "$DOWNLOAD_FILE_NAME_PREFIX$localDateNow.pdf"
 
-        val localDateNow = LocalDate.now(userClock)
-        val fileName = "$DOWNLOAD_FILE_NAME_PREFIX$localDateNow.pdf"
-
-        val path = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-          downloadPdfApi29(fileName, responseBody)
-        } else {
-          downloadPdfApi21(fileName, responseBody)
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            downloadPdfApi29(fileName, responseBody)
+          } else {
+            downloadPdfApi21(fileName, responseBody)
+          }
         }
-
-        MediaScannerConnection.scanFile(appContext, arrayOf(path), arrayOf("application/pdf")) { _, uri ->
-          emitter.onSuccess(uri)
+        .flatMap { path ->
+          scanFile(path, OverdueListDownloadFormat.PDF)
         }
-      } catch (e: Throwable) {
-        emitter.onError(e)
-      }
-    }
   }
 
   private fun scanFile(

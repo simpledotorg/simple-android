@@ -43,7 +43,7 @@ class OverdueListDownloaderIntegrationTest {
   fun downloading_a_pdf_should_work_correctly() {
     // when
     val expectedUri = overdueListDownloader
-        .downloadAsPdf()
+        .download(OverdueListDownloadFormat.PDF)
         .blockingGet()
 
     // then

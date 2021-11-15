@@ -66,7 +66,7 @@ class OverdueDownloadWorker(
     val downloadFormat = OverdueListDownloadFormat.valueOf(downloadFormatString)
 
     val downloadOverdueList = when (downloadFormat) {
-      CSV -> downloader.downloadAsCsv()
+      CSV -> downloader.download(CSV)
       PDF -> downloader.downloadAsPdf()
     }
 
@@ -148,7 +148,7 @@ class OverdueDownloadWorker(
       addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
     }
 
-    val playStoreUrl = when(downloadFormat) {
+    val playStoreUrl = when (downloadFormat) {
       CSV -> PLAY_STORE_EXCEL
       PDF -> PLAY_STORE_ADOBE_ACROBAT
     }

@@ -34,11 +34,15 @@ class NetworkCapabilitiesProvider @Inject constructor(private val application: A
   }
 
   fun hasActiveNetworkConnection(): NetworkConnectivityStatus {
-    val networkCapabilities = activeNetworkCapabilities()
+    val networkCapabilities = activeNetworkCapabilities() ?: return INACTIVE
+    val isConnectedToNetwork = networkCapabilities.hasCapability(NET_CAPABILITY_INTERNET)
+    val isConnectedToInternet = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      isConnectedToNetwork && networkCapabilities.hasCapability(NET_CAPABILITY_VALIDATED)
+    } else {
+      isConnectedToNetwork // Network validation check is not available before API 23
+    }
 
-    return if (networkCapabilities != null
-        && networkCapabilities.hasCapability(NET_CAPABILITY_INTERNET)
-        && networkCapabilities.hasCapability(NET_CAPABILITY_VALIDATED)) {
+    return if (isConnectedToInternet) {
       ACTIVE
     } else {
       INACTIVE

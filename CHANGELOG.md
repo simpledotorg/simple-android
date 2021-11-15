@@ -2,6 +2,12 @@
 
 ## Next Release
 
+### Changes
+
+- [In Progress: 12 Nov 2021] Add option to download & share overdue list
+
+## Demo
+
 ### Internal
 
 - Bump Dagger to v2.40
@@ -24,10 +30,6 @@
 - Bump Gradle to 7.3
 - Implement `OverdueDownloadWorker`
 - Show no internet connection dialog when download/share button is clicked
-
-### Changes
-
-- [In Progress: 12 Nov 2021] Add option to download & share overdue list
 
 ### Fixes
 

@@ -24,10 +24,11 @@
 - Bump Gradle to 7.3
 - Implement `OverdueDownloadWorker`
 - Show no internet connection dialog when download/share button is clicked
+- Ask storage permission when download/share button is clicked
 
 ### Changes
 
-- [In Progress: 12 Nov 2021] Add option to download & share overdue list
+- [In Progress: 15 Nov 2021] Add option to download & share overdue list
 
 ### Fixes
 

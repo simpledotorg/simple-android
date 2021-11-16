@@ -4,6 +4,17 @@
 
 ### Internal
 
+- Ask storage permission when download/share button is clicked
+- Add common download function for downloading overdue list
+
+### Changes
+
+- [In Progress: 12 Nov 2021] Add option to download & share overdue list
+
+## Demo
+
+### Internal
+
 - Bump Dagger to v2.40
 - Bump WorkManager to v2.7.0
 - Migrate `SplashScreen` to a fragment
@@ -24,12 +35,6 @@
 - Bump Gradle to 7.3
 - Implement `OverdueDownloadWorker`
 - Show no internet connection dialog when download/share button is clicked
-- Ask storage permission when download/share button is clicked
-- Add common download function for downloading overdue list
-
-### Changes
-
-- [In Progress: 15 Nov 2021] Add option to download & share overdue list
 
 ### Fixes
 

@@ -51,4 +51,15 @@ class SelectOverdueDownloadUpdateTest {
             hasEffects(Dismiss)
         ))
   }
+
+  @Test
+  fun `when cancel is clicked, then dismiss the dialog`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(CancelClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(Dismiss)
+        ))
+  }
 }

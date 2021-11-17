@@ -9,3 +9,5 @@ data class FileDownloadedForSharing(val uri: Uri) : SelectOverdueDownloadFormatE
 object DownloadOrShareClicked : SelectOverdueDownloadFormatEvent()
 
 object OverdueDownloadScheduled : SelectOverdueDownloadFormatEvent()
+
+object CancelClicked : SelectOverdueDownloadFormatEvent()

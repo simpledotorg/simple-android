@@ -11,6 +11,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
+import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency.BD
@@ -49,6 +50,7 @@ class PrescriptionRepositoryAndroidTest {
   val rules: RuleChain = Rules
       .global()
       .around(LocalAuthenticationRule())
+      .around(SaveDatabaseRule())
 
   @Before
   fun setUp() {

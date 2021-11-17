@@ -16,6 +16,7 @@ import org.simple.clinic.drugs.sync.PrescriptionSync
 import org.simple.clinic.drugs.sync.PrescriptionSyncApi
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.RegisterPatientRule
+import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Rules
@@ -54,6 +55,7 @@ class PrescriptionSyncIntegrationTest {
       .around(ServerAuthenticationRule())
       // Needed because the server only syncs resources if a patient exists
       .around(RegisterPatientRule(patientUuid))
+      .around(SaveDatabaseRule())
 
   private lateinit var sync: PrescriptionSync
 
@@ -82,11 +84,6 @@ class PrescriptionSyncIntegrationTest {
         lastPullToken = lastPullToken,
         config = config
     )
-  }
-
-  @After
-  fun tearDown() {
-    resetLocalData()
   }
 
   private fun resetLocalData() {

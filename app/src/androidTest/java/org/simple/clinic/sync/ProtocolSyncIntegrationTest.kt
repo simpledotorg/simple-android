@@ -13,6 +13,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.protocol.ProtocolSyncApi
 import org.simple.clinic.protocol.sync.ProtocolSync
+import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Rules
@@ -45,6 +46,7 @@ class ProtocolSyncIntegrationTest {
   val ruleChain: RuleChain = Rules
       .global()
       .around(ServerAuthenticationRule())
+      .around(SaveDatabaseRule())
 
   private lateinit var sync: ProtocolSync
 
@@ -71,11 +73,6 @@ class ProtocolSyncIntegrationTest {
         lastPullToken = lastPullToken,
         config = config
     )
-  }
-
-  @After
-  fun tearDown() {
-    resetLocalData()
   }
 
   private fun resetLocalData() {

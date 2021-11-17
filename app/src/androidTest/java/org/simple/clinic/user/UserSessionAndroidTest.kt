@@ -13,6 +13,7 @@ import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.rules.LocalAuthenticationRule
+import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.util.Rules
@@ -50,7 +51,7 @@ class UserSessionAndroidTest {
   val ruleChain: RuleChain = Rules
       .global()
       .around(LocalAuthenticationRule())
-      .around(RxErrorsRule())
+      .around(SaveDatabaseRule())
 
   @Before
   fun setUp() {

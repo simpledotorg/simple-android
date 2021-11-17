@@ -17,6 +17,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncApi
+import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Rules
@@ -51,6 +52,7 @@ class PatientSyncIntegrationTest {
   val ruleChain: RuleChain = Rules
       .global()
       .around(ServerAuthenticationRule())
+      .around(SaveDatabaseRule())
 
   private lateinit var patientSync: PatientSync
 
@@ -79,11 +81,6 @@ class PatientSyncIntegrationTest {
         lastPullToken = lastPullToken,
         config = config
     )
-  }
-
-  @After
-  fun tearDown() {
-    resetLocalData()
   }
 
   private fun resetLocalData() {

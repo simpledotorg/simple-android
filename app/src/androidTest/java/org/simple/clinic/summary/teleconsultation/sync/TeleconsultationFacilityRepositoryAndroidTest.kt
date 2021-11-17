@@ -3,9 +3,13 @@ package org.simple.clinic.summary.teleconsultation.sync
 import com.google.common.truth.Truth.assertThat
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
+import org.simple.clinic.rules.SaveDatabaseRule
+import org.simple.clinic.util.Rules
 import java.util.UUID
 import javax.inject.Inject
 
@@ -14,14 +18,14 @@ class TeleconsultationFacilityRepositoryAndroidTest {
   @Inject
   lateinit var repository: TeleconsultationFacilityRepository
 
+  @get:Rule
+  val rules: RuleChain = Rules
+      .global()
+      .around(SaveDatabaseRule())
+
   @Before
   fun setup() {
     TestClinicApp.appComponent().inject(this)
-  }
-
-  @After
-  fun tearDown() {
-    repository.clear()
   }
 
   @Test

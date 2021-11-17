@@ -24,7 +24,7 @@ import org.simple.clinic.user.User
 class TestStorageModule {
 
   @Provides
-  fun sqliteOpenHelperFactory(): SupportSQLiteOpenHelper.Factory = AppSqliteOpenHelperFactory(inMemory = true)
+  fun sqliteOpenHelperFactory(): SupportSQLiteOpenHelper.Factory = AppSqliteOpenHelperFactory(inMemory = false)
 
   @AppScope
   @Provides

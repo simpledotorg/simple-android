@@ -26,6 +26,7 @@ import org.simple.clinic.protocolv2.ProtocolRepositoryAndroidTest
 import org.simple.clinic.protocolv2.sync.ProtocolSyncAndroidTest
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.rules.RegisterPatientRule
+import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.rules.ServerRegistrationAtFacilityRule
 import org.simple.clinic.security.pin.BruteForceProtectionAndroidTest
@@ -126,4 +127,5 @@ interface TestAppComponent {
   fun inject(target: AppConfigRepositoryAndroidTest)
   fun inject(target: OverdueListDownloadApiIntegrationTest)
   fun inject(target: OverdueListDownloaderIntegrationTest)
+  fun inject(target: SaveDatabaseRule)
 }

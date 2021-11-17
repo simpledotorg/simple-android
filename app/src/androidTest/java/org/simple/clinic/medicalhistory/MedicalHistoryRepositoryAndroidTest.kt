@@ -13,6 +13,7 @@ import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
+import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.util.Rules
 import org.simple.clinic.util.UtcClock
 import java.time.Instant
@@ -38,15 +39,11 @@ class MedicalHistoryRepositoryAndroidTest {
   val rules: RuleChain = Rules
       .global()
       .around(LocalAuthenticationRule())
+      .around(SaveDatabaseRule())
 
   @Before
   fun setup() {
     TestClinicApp.appComponent().inject(this)
-  }
-
-  @After
-  fun tearDown() {
-    dao.clear()
   }
 
   @Test

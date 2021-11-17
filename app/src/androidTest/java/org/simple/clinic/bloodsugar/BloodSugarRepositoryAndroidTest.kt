@@ -10,6 +10,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
+import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.user.User
 import org.simple.clinic.util.Rules
@@ -47,6 +48,7 @@ class BloodSugarRepositoryAndroidTest {
   val ruleChain: RuleChain = Rules
       .global()
       .around(LocalAuthenticationRule())
+      .around(SaveDatabaseRule())
 
   @Before
   fun setUp() {

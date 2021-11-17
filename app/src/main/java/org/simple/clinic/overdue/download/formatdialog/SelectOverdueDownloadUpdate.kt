@@ -1,8 +1,8 @@
 package org.simple.clinic.overdue.download.formatdialog
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
 class SelectOverdueDownloadUpdate : Update<SelectOverdueDownloadFormatModel, SelectOverdueDownloadFormatEvent, SelectOverdueDownloadFormatEffect> {
@@ -14,7 +14,7 @@ class SelectOverdueDownloadUpdate : Update<SelectOverdueDownloadFormatModel, Sel
     return when (event) {
       DownloadOrShareClicked -> downloadOrShareClicked(model)
       is FileDownloadedForSharing -> next(model.overdueDownloadCompleted(), ShareDownloadedFile(event.uri))
-      OverdueDownloadScheduled -> noChange()
+      OverdueDownloadScheduled -> dispatch(Dismiss)
     }
   }
 

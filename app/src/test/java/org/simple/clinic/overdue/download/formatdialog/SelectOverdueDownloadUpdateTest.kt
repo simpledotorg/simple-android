@@ -4,6 +4,7 @@ import android.net.Uri
 import com.nhaarman.mockitokotlin2.mock
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -37,6 +38,17 @@ class SelectOverdueDownloadUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.overdueDownloadCompleted()),
             hasEffects(ShareDownloadedFile(uri))
+        ))
+  }
+
+  @Test
+  fun `when download is scheduled, then dismiss the dialog`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(OverdueDownloadScheduled)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(Dismiss)
         ))
   }
 }

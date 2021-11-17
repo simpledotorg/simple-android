@@ -25,6 +25,7 @@ import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsReporter
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.storage.monitoring.AnalyticsSqlPerformanceReportingSink
+import org.simple.clinic.storage.monitoring.DatadogSqlPerformanceReportingSink
 import org.simple.clinic.storage.monitoring.SqlPerformanceReporter
 import timber.log.Timber
 import java.io.IOException
@@ -76,6 +77,7 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
       Analytics.addReporter(reporter)
     }
     SqlPerformanceReporter.addSink(analyticsSqlPerformanceReportingSink)
+    SqlPerformanceReporter.addSink(DatadogSqlPerformanceReportingSink())
 
     updateAnalyticsUserId.listen()
 

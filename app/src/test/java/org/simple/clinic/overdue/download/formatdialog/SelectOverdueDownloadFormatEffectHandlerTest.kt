@@ -15,9 +15,12 @@ import org.simple.clinic.util.scheduler.TestSchedulersProvider
 class SelectOverdueDownloadFormatEffectHandlerTest {
 
   private val overdueListDownloader = mock<OverdueListDownloader>()
+  private val uiActions = mock<UiActions>()
+  private val viewEffectHandler = SelectOverdueDownloadFormatViewEffectHandler(uiActions)
   private val effectHandler = SelectOverdueDownloadFormatEffectHandler(
       overdueListDownloader = overdueListDownloader,
-      schedulersProvider = TestSchedulersProvider.trampoline()
+      schedulersProvider = TestSchedulersProvider.trampoline(),
+      viewEffectsConsumer = viewEffectHandler::handle
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 

@@ -4,4 +4,5 @@ import android.net.Uri
 
 interface UiActions {
   fun shareDownloadedFile(downloadedUri: Uri)
+  fun dismiss()
 }

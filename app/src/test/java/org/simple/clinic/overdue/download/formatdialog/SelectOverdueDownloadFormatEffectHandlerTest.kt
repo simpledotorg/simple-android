@@ -77,4 +77,16 @@ class SelectOverdueDownloadFormatEffectHandlerTest {
 
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when dismiss effect is received, then dismiss the dialog`() {
+    // when
+    testCase.dispatch(Dismiss)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).dismiss()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

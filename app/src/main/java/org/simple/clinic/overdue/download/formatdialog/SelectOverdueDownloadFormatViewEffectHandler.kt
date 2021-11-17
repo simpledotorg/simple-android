@@ -10,6 +10,7 @@ class SelectOverdueDownloadFormatViewEffectHandler(
   override fun handle(viewEffect: SelectOverdueDownloadFormatViewEffect) {
     when (viewEffect) {
       is ShareDownloadedFile -> uiActions.shareDownloadedFile(viewEffect.uri)
+      Dismiss -> uiActions.dismiss()
     }.exhaustive()
   }
 }

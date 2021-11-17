@@ -11,12 +11,12 @@ import com.datadog.android.privacy.TrackingConsent
 import com.datadog.android.rum.GlobalRum
 import com.datadog.android.rum.RumMonitor
 import com.datadog.android.rum.tracking.FragmentViewTrackingStrategy
-import com.datadog.android.rum.tracking.ViewTrackingStrategy
 import com.datadog.android.tracing.AndroidTracer
 import io.opentracing.util.GlobalTracer
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
 import org.simple.clinic.activity.CloseActivitiesWhenUserIsUnauthorized
+import org.simple.clinic.analytics.ResolveScreenNamesForDatadog
 import org.simple.clinic.analytics.UpdateAnalyticsUserId
 import org.simple.clinic.crash.CrashBreadcrumbsTimberTree
 import org.simple.clinic.crash.SentryCrashReporterSink
@@ -96,7 +96,8 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
         .trackBackgroundRumEvents(true)
         .trackLongTasks(5000)
         .useViewTrackingStrategy(FragmentViewTrackingStrategy(
-            trackArguments = false
+            trackArguments = false,
+            supportFragmentComponentPredicate = ResolveScreenNamesForDatadog()
         ))
         .build()
     val credentials = Credentials(

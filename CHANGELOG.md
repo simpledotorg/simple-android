@@ -8,12 +8,13 @@
 - Add common download function for downloading overdue list
 - Fix flaky paging test cases
 - Bump Mixpanel to v5.9.5
+- Remove post delayed callbacks when view is detached from window
 
 ### Changes
 
 - [In Progress: 12 Nov 2021] Add option to download & share overdue list
 
-## Demo
+## On Demo
 
 ### Internal
 

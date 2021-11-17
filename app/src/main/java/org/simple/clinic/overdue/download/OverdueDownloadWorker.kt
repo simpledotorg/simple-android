@@ -28,6 +28,8 @@ class OverdueDownloadWorker(
 ) : Worker(context, workerParams) {
 
   companion object {
+    const val OVERDUE_DOWNLOAD_WORKER = "overdue_download_worker"
+
     private const val KEY_DOWNLOAD_FORMAT = "download_format"
     private const val NOTIFICATION_CHANNEL_ID = "org.simple.clinic.Downloads"
     private const val NOTIFICATION_CHANNEL_NAME = "Downloads"

@@ -24,6 +24,7 @@ import androidx.annotation.StyleRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.doOnDetach
 import androidx.core.widget.NestedScrollView
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
@@ -38,6 +39,8 @@ fun EditText.showKeyboard() {
   }
 
   postDelayed(::showKeyboard, 100)
+
+  doOnDetach { removeCallbacks(::showKeyboard) }
 }
 
 fun ViewGroup.hideKeyboard() {

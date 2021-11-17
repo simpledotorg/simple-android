@@ -11,6 +11,7 @@ import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.overdue.download.OverdueDownloadScheduler
 import org.simple.clinic.overdue.download.OverdueListDownloadFormat
 import org.simple.clinic.overdue.download.OverdueListDownloader
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -20,9 +21,11 @@ class SelectOverdueDownloadFormatEffectHandlerTest {
   private val overdueListDownloader = mock<OverdueListDownloader>()
   private val uiActions = mock<UiActions>()
   private val viewEffectHandler = SelectOverdueDownloadFormatViewEffectHandler(uiActions)
+  private val overdueDownloadScheduler = mock<OverdueDownloadScheduler>()
   private val effectHandler = SelectOverdueDownloadFormatEffectHandler(
       overdueListDownloader = overdueListDownloader,
       schedulersProvider = TestSchedulersProvider.trampoline(),
+      overdueDownloadScheduler = overdueDownloadScheduler,
       viewEffectsConsumer = viewEffectHandler::handle
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -59,5 +62,19 @@ class SelectOverdueDownloadFormatEffectHandlerTest {
 
     verify(uiActions).shareDownloadedFile(downloadedUri)
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when schedule download effect is received, then schedule the overdue list download`() {
+    // given
+    val format = OverdueListDownloadFormat.PDF
+
+    // when
+    testCase.dispatch(ScheduleDownload(format))
+
+    // given
+    testCase.assertOutgoingEvents(OverdueDownloadScheduled)
+
+    verifyZeroInteractions(uiActions)
   }
 }

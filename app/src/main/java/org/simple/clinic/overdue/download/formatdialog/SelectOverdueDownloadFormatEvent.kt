@@ -7,3 +7,5 @@ sealed class SelectOverdueDownloadFormatEvent
 data class FileDownloadedForSharing(val uri: Uri) : SelectOverdueDownloadFormatEvent()
 
 object DownloadOrShareClicked : SelectOverdueDownloadFormatEvent()
+
+object OverdueDownloadScheduled : SelectOverdueDownloadFormatEvent()

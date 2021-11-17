@@ -24,4 +24,8 @@ data class SelectOverdueDownloadFormatModel(
   fun overdueDownloadInProgress(): SelectOverdueDownloadFormatModel {
     return copy(overdueDownloadStatus = OverdueDownloadStatus.InProgress)
   }
+
+  fun overdueDownloadCompleted(): SelectOverdueDownloadFormatModel {
+    return copy(overdueDownloadStatus = OverdueDownloadStatus.Done)
+  }
 }

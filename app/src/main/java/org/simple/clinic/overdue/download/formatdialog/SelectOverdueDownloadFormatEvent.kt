@@ -5,3 +5,5 @@ import android.net.Uri
 sealed class SelectOverdueDownloadFormatEvent
 
 data class FileDownloadedForSharing(val uri: Uri) : SelectOverdueDownloadFormatEvent()
+
+object DownloadOrShareClicked : SelectOverdueDownloadFormatEvent()

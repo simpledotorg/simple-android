@@ -1,5 +1,7 @@
 package org.simple.clinic.overdue.download.formatdialog
 
-interface UiActions {
+import android.net.Uri
 
+interface UiActions {
+  fun shareDownloadedFile(downloadedUri: Uri)
 }

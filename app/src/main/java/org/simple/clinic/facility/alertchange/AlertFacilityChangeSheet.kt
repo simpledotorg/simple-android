@@ -121,6 +121,11 @@ class AlertFacilityChangeSheet :
     }
   }
 
+  override fun onDestroyView() {
+    rootView.removeCallbacks(::closeSheetWithContinuation)
+    super.onDestroyView()
+  }
+
   private fun showDialogUi() {
     val backgroundDimAmount = requireContext().resolveFloat(android.R.attr.backgroundDimAmount)
     requireDialog().window!!.setDimAmount(backgroundDimAmount)

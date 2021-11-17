@@ -241,6 +241,8 @@ fun ScrollView.scrollToChild(view: View, onScrollComplete: () -> Unit = {}) {
 
     postDelayed(onScrollComplete, 400)
   }
+
+  doOnDetach { removeCallbacks(onScrollComplete) }
 }
 
 fun NestedScrollView.scrollToChild(view: View, onScrollComplete: () -> Unit = {}) {

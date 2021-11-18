@@ -29,6 +29,21 @@ class SelectOverdueDownloadUpdateTest {
   }
 
   @Test
+  fun `when download or share button is clicked and it's opened as download, then schedule the download`() {
+    val overdueDownloadFormatUpdatedModel = SelectOverdueDownloadFormatModel
+        .create(Download)
+        .overdueListDownloadFormatUpdated(CSV)
+
+    updateSpec
+        .given(overdueDownloadFormatUpdatedModel)
+        .whenEvent(DownloadOrShareClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ScheduleDownload(CSV))
+        ))
+  }
+
+  @Test
   fun `when file is downloaded for sharing, then share the downloaded file`() {
     val uri = mock<Uri>()
 

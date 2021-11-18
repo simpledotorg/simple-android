@@ -24,6 +24,7 @@ class SelectOverdueDownloadUpdate : Update<SelectOverdueDownloadFormatModel, Sel
           model.overdueDownloadInProgress(),
           DownloadForShare(model.overdueListDownloadFormat)
       )
+      Download -> dispatch(ScheduleDownload(model.overdueListDownloadFormat))
     }
   }
 }

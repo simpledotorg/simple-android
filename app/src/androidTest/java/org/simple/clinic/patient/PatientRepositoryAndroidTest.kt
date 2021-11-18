@@ -3,7 +3,6 @@ package org.simple.clinic.patient
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.squareup.moshi.JsonAdapter
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -828,7 +827,7 @@ class PatientRepositoryAndroidTest {
     val recentPatient3 = savePatientWithBp(facilityUuid = facilityUuid)
 
     val recentPatients = PagingTestCase(
-        pagingSource = patientRepository.recentPatients(facilityUuid),
+        pagingSource = { patientRepository.recentPatients(facilityUuid) },
         loadSize = 20)
         .data
         .blockingFirst()
@@ -940,7 +939,7 @@ class PatientRepositoryAndroidTest {
     val recentPatient3 = savePatientWithPrescribedDrug(facilityUuid = facilityUuid)
 
     val recentPatients = PagingTestCase(
-        pagingSource = patientRepository.recentPatients(facilityUuid),
+        pagingSource = { patientRepository.recentPatients(facilityUuid) },
         loadSize = 20)
         .data
         .blockingFirst()
@@ -986,7 +985,7 @@ class PatientRepositoryAndroidTest {
     val recentPatient3 = savePatientWithAppointment(facilityUuid = facilityUuid, creationFacilityUuid = facilityUuid)
 
     val recentPatients = PagingTestCase(
-        pagingSource = patientRepository.recentPatients(facilityUuid),
+        pagingSource = { patientRepository.recentPatients(facilityUuid) },
         loadSize = 20)
         .data
         .blockingFirst()
@@ -1014,7 +1013,7 @@ class PatientRepositoryAndroidTest {
     )
 
     val recentPatients = PagingTestCase(
-        pagingSource = patientRepository.recentPatients(facilityUuid),
+        pagingSource = { patientRepository.recentPatients(facilityUuid) },
         loadSize = 20)
         .data
         .blockingFirst()
@@ -1051,13 +1050,13 @@ class PatientRepositoryAndroidTest {
     )
 
     val recentPatientsInFromFacility = PagingTestCase(
-        pagingSource = patientRepository.recentPatients(fromFacilityUuid),
+        pagingSource = { patientRepository.recentPatients(fromFacilityUuid) },
         loadSize = 20
     ).data.blockingFirst()
     assertThat(recentPatientsInFromFacility).isEqualTo(listOf(recentPatient))
 
     val recentPatientsInToFacility = PagingTestCase(
-        pagingSource = patientRepository.recentPatients(toFacilityUuid),
+        pagingSource = { patientRepository.recentPatients(toFacilityUuid) },
         loadSize = 20
     ).data.blockingFirst()
 
@@ -1073,7 +1072,7 @@ class PatientRepositoryAndroidTest {
         appointmentType = AppointmentType.Unknown(""))
 
     val recentPatients = PagingTestCase(
-        pagingSource = patientRepository.recentPatients(facilityUuid),
+        pagingSource = { patientRepository.recentPatients(facilityUuid) },
         loadSize = 20)
         .data
         .blockingFirst()
@@ -2807,8 +2806,10 @@ class PatientRepositoryAndroidTest {
     }
 
     fun searchResults(facility: Facility): List<String> {
-      val testCase = PagingTestCase(pagingSource = patientRepository.allPatientsInFacility(facilityId = facility.uuid),
-          loadSize = 10)
+      val testCase = PagingTestCase(
+          pagingSource = { patientRepository.allPatientsInFacility(facilityId = facility.uuid) },
+          loadSize = 10
+      )
 
       return testCase
           .data
@@ -2909,8 +2910,13 @@ class PatientRepositoryAndroidTest {
     }
 
     fun searchResults(query: String, facility: Facility): List<String> {
-      val testCase = PagingTestCase(pagingSource = patientRepository.searchPagingSource(criteria = Name(query), facilityId = facility.uuid),
-          loadSize = 10)
+      val testCase = PagingTestCase(
+          pagingSource = {
+            patientRepository.searchPagingSource(criteria = Name(query),
+                facilityId = facility.uuid)
+          },
+          loadSize = 10
+      )
 
       return testCase
           .data
@@ -3015,8 +3021,10 @@ class PatientRepositoryAndroidTest {
     }
 
     fun searchResults(query: String, facility: Facility): List<String> {
-      val testCase = PagingTestCase(pagingSource = patientRepository.searchPagingSource(criteria = NumericCriteria(query), facilityId = facility.uuid),
-          loadSize = 10)
+      val testCase = PagingTestCase(pagingSource = {
+        patientRepository.searchPagingSource(criteria = NumericCriteria(query),
+            facilityId = facility.uuid)
+      }, loadSize = 10)
 
       return testCase
           .data

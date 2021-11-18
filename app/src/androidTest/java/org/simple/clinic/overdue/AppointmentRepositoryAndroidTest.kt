@@ -1,7 +1,6 @@
 package org.simple.clinic.overdue
 
 import com.google.common.truth.Truth.assertThat
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -364,8 +363,10 @@ class AppointmentRepositoryAndroidTest {
         .save(listOf(appointmentForPatientWithNoBpsDeleted, appointmentForPatientWithLatestBpDeleted, appointmentsForPatientWithOldestBpNotDeleted, appointmentsForPatientWithAllBpsDeleted))
 
     // when
-    val overdueAppointments = PagingTestCase(pagingSource = appointmentRepository.overdueAppointmentsInFacility(since = today,
-        facilityId = facility.uuid),
+    val overdueAppointments = PagingTestCase(
+        pagingSource = {
+          appointmentRepository.overdueAppointmentsInFacility(since = today, facilityId = facility.uuid)
+        },
         loadSize = 10)
         .data
         .blockingFirst()
@@ -538,8 +539,11 @@ class AppointmentRepositoryAndroidTest {
         .save(listOf(appointmentForPatientWithNoBloodSugarDeleted, appointmentForPatientWithLatestBloodSugarDeleted, appointmentsForPatientWithOldestBloodSugarNotDeleted, appointmentsForPatientWithAllBloodSugarsDeleted))
 
     // when
-    val overdueAppointments = PagingTestCase(pagingSource = appointmentRepository.overdueAppointmentsInFacility(since = today,
-        facilityId = facility.uuid),
+    val overdueAppointments = PagingTestCase(
+        pagingSource = {
+          appointmentRepository.overdueAppointmentsInFacility(since = today,
+              facilityId = facility.uuid)
+        },
         loadSize = 10)
         .data
         .blockingFirst()
@@ -896,8 +900,10 @@ class AppointmentRepositoryAndroidTest {
     )
 
     // when
-    val appointments = PagingTestCase(pagingSource = appointmentRepository.overdueAppointmentsInFacility(since = LocalDate.now(clock),
-        facilityId = facility.uuid),
+    val appointments = PagingTestCase(
+        pagingSource = {
+          appointmentRepository.overdueAppointmentsInFacility(since = LocalDate.now(clock), facilityId = facility.uuid)
+        },
         loadSize = 15)
         .data
         .blockingFirst()
@@ -964,8 +970,10 @@ class AppointmentRepositoryAndroidTest {
     createOverdueAppointment(patientWithOverAnYearDaysOverdue, now.minusDays(370), facilityUuid)
 
     //when
-    val overduePatientUuids = PagingTestCase(pagingSource = appointmentRepository.overdueAppointmentsInFacility(since = now,
-        facilityId = facilityUuid),
+    val overduePatientUuids = PagingTestCase(
+        pagingSource = {
+          appointmentRepository.overdueAppointmentsInFacility(since = now, facilityId = facilityUuid)
+        },
         loadSize = 10)
         .data
         .blockingFirst()
@@ -1136,8 +1144,11 @@ class AppointmentRepositoryAndroidTest {
     )
 
     // when
-    val overdueAppointments = PagingTestCase(pagingSource = appointmentRepository.overdueAppointmentsInFacility(since = LocalDate.now(clock),
-        facilityId = facility.uuid),
+    val overdueAppointments = PagingTestCase(
+        pagingSource = {
+          appointmentRepository.overdueAppointmentsInFacility(since = LocalDate.now(clock),
+              facilityId = facility.uuid)
+        },
         loadSize = 10)
         .data
         .blockingFirst()
@@ -1192,8 +1203,11 @@ class AppointmentRepositoryAndroidTest {
     )
 
     // when
-    val overdueAppointments = PagingTestCase(pagingSource = appointmentRepository.overdueAppointmentsInFacility(since = LocalDate.now(clock),
-        facilityId = facility.uuid),
+    val overdueAppointments = PagingTestCase(
+        pagingSource = {
+          appointmentRepository.overdueAppointmentsInFacility(since = LocalDate.now(clock),
+              facilityId = facility.uuid)
+        },
         loadSize = 10)
         .data
         .blockingFirst()
@@ -1278,8 +1292,11 @@ class AppointmentRepositoryAndroidTest {
         .forEach { it.save(patientRepository, bpRepository, bloodSugarRepository, appointmentRepository) }
 
     // when
-    val overdueAppointments = PagingTestCase(pagingSource = appointmentRepository.overdueAppointmentsInFacility(since = currentDate,
-        facilityId = facility.uuid),
+    val overdueAppointments = PagingTestCase(
+        pagingSource = {
+          appointmentRepository.overdueAppointmentsInFacility(since = currentDate,
+              facilityId = facility.uuid)
+        },
         loadSize = 10)
         .data
         .blockingFirst()
@@ -1365,8 +1382,11 @@ class AppointmentRepositoryAndroidTest {
         .forEach { it.save(patientRepository, bpRepository, bloodSugarRepository, appointmentRepository) }
 
     // when
-    val overdueAppointments = PagingTestCase(pagingSource = appointmentRepository.overdueAppointmentsInFacility(since = currentDate,
-        facilityId = facility.uuid),
+    val overdueAppointments = PagingTestCase(
+        pagingSource = {
+          appointmentRepository.overdueAppointmentsInFacility(since = currentDate,
+              facilityId = facility.uuid)
+        },
         loadSize = 10)
         .data
         .blockingFirst()
@@ -1445,8 +1465,11 @@ class AppointmentRepositoryAndroidTest {
         .forEach { it.save(patientRepository, bpRepository, bloodSugarRepository, appointmentRepository) }
 
     // when
-    val overdueAppointments = PagingTestCase(pagingSource = appointmentRepository.overdueAppointmentsInFacility(since = currentDate,
-        facilityId = facility.uuid),
+    val overdueAppointments = PagingTestCase(
+        pagingSource = {
+          appointmentRepository.overdueAppointmentsInFacility(since = currentDate,
+              facilityId = facility.uuid)
+        },
         loadSize = 10)
         .data
         .blockingFirst()
@@ -1513,8 +1536,11 @@ class AppointmentRepositoryAndroidTest {
         .forEach { it.save(patientRepository, bpRepository, bloodSugarRepository, appointmentRepository) }
 
     // when
-    val overdueAppointments = PagingTestCase(pagingSource = appointmentRepository.overdueAppointmentsInFacility(since = currentDate,
-        facilityId = facility.uuid),
+    val overdueAppointments = PagingTestCase(
+        pagingSource = {
+          appointmentRepository.overdueAppointmentsInFacility(since = currentDate,
+              facilityId = facility.uuid)
+        },
         loadSize = 10)
         .data
         .blockingFirst()
@@ -1580,8 +1606,11 @@ class AppointmentRepositoryAndroidTest {
         .forEach { it.save(patientRepository, bpRepository, bloodSugarRepository, appointmentRepository) }
 
     // when
-    val overdueAppointments = PagingTestCase(pagingSource = appointmentRepository.overdueAppointmentsInFacility(since = currentDate,
-        facilityId = facility.uuid),
+    val overdueAppointments = PagingTestCase(
+        pagingSource = {
+          appointmentRepository.overdueAppointmentsInFacility(since = currentDate,
+              facilityId = facility.uuid)
+        },
         loadSize = 10)
         .data
         .blockingFirst()
@@ -1798,8 +1827,11 @@ class AppointmentRepositoryAndroidTest {
     )
 
     // then
-    val overdueAppointments = PagingTestCase(pagingSource = appointmentRepository.overdueAppointmentsInFacility(since = LocalDate.now(clock),
-        facilityId = facility.uuid),
+    val overdueAppointments = PagingTestCase(
+        pagingSource = {
+          appointmentRepository.overdueAppointmentsInFacility(since = LocalDate.now(clock),
+              facilityId = facility.uuid)
+        },
         loadSize = 15)
         .data
         .blockingFirst()
@@ -2032,8 +2064,11 @@ class AppointmentRepositoryAndroidTest {
     )
 
     //when
-    val overdueAppointments = PagingTestCase(pagingSource = appointmentRepository.overdueAppointmentsInFacility(since = now,
-        facilityId = facility2.uuid),
+    val overdueAppointments = PagingTestCase(
+        pagingSource = {
+          appointmentRepository.overdueAppointmentsInFacility(since = now,
+              facilityId = facility2.uuid)
+        },
         loadSize = 10)
         .data
         .blockingFirst()
@@ -2134,8 +2169,11 @@ class AppointmentRepositoryAndroidTest {
     )
 
     //when
-    val overdueAppointments = PagingTestCase(pagingSource = appointmentRepository.overdueAppointmentsInFacility(since = now,
-        facilityId = facility1.uuid),
+    val overdueAppointments = PagingTestCase(
+        pagingSource = {
+          appointmentRepository.overdueAppointmentsInFacility(since = now,
+              facilityId = facility1.uuid)
+        },
         loadSize = 10)
         .data
         .blockingFirst()

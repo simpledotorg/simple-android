@@ -1,7 +1,6 @@
 package org.simple.clinic.drugs.search
 
 import com.google.common.truth.Truth.assertThat
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -126,15 +125,15 @@ class DrugRepositoryAndroidTest {
     drugRepository.save(drugs)
 
     // when
-    val expectedSearchResultsForObviousProtocol = PagingTestCase(pagingSource = drugRepository.searchForNonProtocolDrugs(query = "amlo", protocolId = obviousProtocol.uuid),
-        loadSize = 10)
-        .data
-        .blockingFirst()
+    val expectedSearchResultsForObviousProtocol = PagingTestCase(
+        pagingSource = { drugRepository.searchForNonProtocolDrugs(query = "amlo", protocolId = obviousProtocol.uuid) },
+        loadSize = 10
+    ).data.blockingFirst()
 
-    val expectedSearchResultsForNoProtocol = PagingTestCase(pagingSource = drugRepository.searchForNonProtocolDrugs(query = "amlo", protocolId = null),
-        loadSize = 10)
-        .data
-        .blockingFirst()
+    val expectedSearchResultsForNoProtocol = PagingTestCase(
+        pagingSource = { drugRepository.searchForNonProtocolDrugs(query = "amlo", protocolId = null) },
+        loadSize = 10
+    ).data.blockingFirst()
 
     // then
     assertThat(expectedSearchResultsForObviousProtocol).containsExactly(amlodipine10).inOrder()

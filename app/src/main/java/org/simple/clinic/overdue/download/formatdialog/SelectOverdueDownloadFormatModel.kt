@@ -17,6 +17,9 @@ data class SelectOverdueDownloadFormatModel(
     )
   }
 
+  val isDownloadForShareInProgress
+    get() = overdueDownloadStatus == OverdueDownloadStatus.InProgress
+
   fun overdueListDownloadFormatUpdated(overdueListDownloadFormat: OverdueListDownloadFormat): SelectOverdueDownloadFormatModel {
     return copy(overdueListDownloadFormat = overdueListDownloadFormat)
   }

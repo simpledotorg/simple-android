@@ -8,4 +8,8 @@ interface SelectOverdueDownloadFormatUi {
   fun setDownloadButtonLabel()
   fun setShareTitle()
   fun setShareButtonLabel()
+  fun hideTitle()
+  fun hideContent()
+  fun showProgress()
+  fun hideDownloadOrShareButton()
 }

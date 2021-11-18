@@ -8,6 +8,21 @@ class SelectOverdueDownloadFormatUiRenderer(
 ) : ViewRenderer<SelectOverdueDownloadFormatModel> {
 
   override fun render(model: SelectOverdueDownloadFormatModel) {
+    if (model.isDownloadForShareInProgress) {
+      renderDownloadForShareInProgress()
+    } else {
+      renderDialogUi(model)
+    }
+  }
+
+  private fun renderDownloadForShareInProgress() {
+    ui.hideTitle()
+    ui.hideContent()
+    ui.hideDownloadOrShareButton()
+    ui.showProgress()
+  }
+
+  private fun renderDialogUi(model: SelectOverdueDownloadFormatModel) {
     ui.setOverdueListFormat(model.overdueListDownloadFormat)
 
     when (model.openAs) {

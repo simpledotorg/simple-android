@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
+import org.simple.clinic.overdue.download.OverdueListDownloadFormat.CSV
 
 class SelectOverdueDownloadFormatUiRendererTest {
 
@@ -38,5 +39,23 @@ class SelectOverdueDownloadFormatUiRendererTest {
     verify(ui).setShareButtonLabel()
     verify(ui).setOverdueListFormat(model.overdueListDownloadFormat)
     verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when download for share is in progress, then show in progress ui`() {
+    // given
+    val downloadForShareInProgress = SelectOverdueDownloadFormatModel
+        .create(Share)
+        .overdueListDownloadFormatUpdated(CSV)
+        .overdueDownloadInProgress()
+
+    // when
+    uiRenderer.render(downloadForShareInProgress)
+
+    // then
+    verify(ui).hideTitle()
+    verify(ui).hideContent()
+    verify(ui).hideDownloadOrShareButton()
+    verify(ui).showProgress()
   }
 }

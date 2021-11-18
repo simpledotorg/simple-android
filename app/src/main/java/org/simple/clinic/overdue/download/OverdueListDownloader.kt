@@ -32,7 +32,11 @@ class OverdueListDownloader @Inject constructor(
         .download()
         .map { responseBody ->
           val localDateNow = LocalDate.now(userClock)
-          val fileName = "$DOWNLOAD_FILE_NAME_PREFIX$localDateNow.csv"
+          val fileExtension = when (downloadFormat) {
+            OverdueListDownloadFormat.CSV -> "csv"
+            OverdueListDownloadFormat.PDF -> "pdf"
+          }
+          val fileName = "$DOWNLOAD_FILE_NAME_PREFIX$localDateNow.$fileExtension"
 
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             downloadApi29(fileName, responseBody, downloadFormat)

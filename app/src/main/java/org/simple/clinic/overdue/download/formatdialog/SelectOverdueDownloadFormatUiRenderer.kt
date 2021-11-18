@@ -12,10 +12,13 @@ class SelectOverdueDownloadFormatUiRenderer(
 
     when (model.openAs) {
       Download -> renderDownloadUi()
-      Share -> {
-        // look away, nothing to see here
-      }
+      Share -> renderShareUi()
     }.exhaustive()
+  }
+
+  private fun renderShareUi() {
+    ui.setShareTitle()
+    ui.setShareButtonLabel()
   }
 
   private fun renderDownloadUi() {

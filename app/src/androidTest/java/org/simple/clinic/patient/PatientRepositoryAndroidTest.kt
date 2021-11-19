@@ -1,9 +1,7 @@
 package org.simple.clinic.patient
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import com.squareup.moshi.JsonAdapter
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -142,7 +140,6 @@ class PatientRepositoryAndroidTest {
   val rules: RuleChain = Rules
       .global()
       .around(LocalAuthenticationRule())
-      .around(InstantTaskExecutorRule())
       .around(SaveDatabaseRule())
 
   @Before
@@ -1051,15 +1048,15 @@ class PatientRepositoryAndroidTest {
     )
 
     val recentPatientsInFromFacility = PagingTestCase(
-          pagingSource = patientRepository.recentPatients(fromFacilityUuid),
-          loadSize = 20
-      ).loadPage().data
+        pagingSource = patientRepository.recentPatients(fromFacilityUuid),
+        loadSize = 20
+    ).loadPage().data
     assertThat(recentPatientsInFromFacility).isEqualTo(listOf(recentPatient))
 
     val recentPatientsInToFacility = PagingTestCase(
-          pagingSource = patientRepository.recentPatients(toFacilityUuid),
-          loadSize = 20
-      ).loadPage().data
+        pagingSource = patientRepository.recentPatients(toFacilityUuid),
+        loadSize = 20
+    ).loadPage().data
 
     assertThat(recentPatientsInToFacility).isEqualTo(emptyList<RecentPatient>())
   }
@@ -1073,8 +1070,8 @@ class PatientRepositoryAndroidTest {
         appointmentType = AppointmentType.Unknown(""))
 
     val recentPatients = PagingTestCase(
-          pagingSource = patientRepository.recentPatients(facilityUuid),
-          loadSize = 20)
+        pagingSource = patientRepository.recentPatients(facilityUuid),
+        loadSize = 20)
         .loadPage()
         .data
 

@@ -1,6 +1,8 @@
 package org.simple.clinic
 
 import android.app.Application
+import androidx.arch.core.executor.ArchTaskExecutor
+import androidx.arch.core.executor.TaskExecutor
 import com.tspoon.traceur.Traceur
 import org.simple.clinic.TestClinicApp.Companion.appComponent
 import org.simple.clinic.di.DaggerTestAppComponent
@@ -28,6 +30,17 @@ class TestClinicApp : Application() {
     Traceur.enableLogging()
 
     appComponent = buildDaggerGraph()
+    ArchTaskExecutor.getInstance().setDelegate(object : TaskExecutor() {
+      override fun executeOnDiskIO(runnable: Runnable) {
+        runnable.run()
+      }
+
+      override fun postToMainThread(runnable: Runnable) {
+        runnable.run()
+      }
+
+      override fun isMainThread() = true
+    })
   }
 
   private fun buildDaggerGraph(): TestAppComponent {

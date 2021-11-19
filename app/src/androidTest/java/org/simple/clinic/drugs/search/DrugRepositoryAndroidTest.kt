@@ -128,13 +128,13 @@ class DrugRepositoryAndroidTest {
     // when
     val expectedSearchResultsForObviousProtocol = PagingTestCase(pagingSource = drugRepository.searchForNonProtocolDrugs(query = "amlo", protocolId = obviousProtocol.uuid),
         loadSize = 10)
+        .loadPage()
         .data
-        .blockingFirst()
 
     val expectedSearchResultsForNoProtocol = PagingTestCase(pagingSource = drugRepository.searchForNonProtocolDrugs(query = "amlo", protocolId = null),
         loadSize = 10)
+        .loadPage()
         .data
-        .blockingFirst()
 
     // then
     assertThat(expectedSearchResultsForObviousProtocol).containsExactly(amlodipine10).inOrder()

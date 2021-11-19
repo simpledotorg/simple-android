@@ -3,8 +3,7 @@ package org.simple.clinic
 import androidx.paging.PagingSource
 import androidx.paging.PagingSource.LoadParams.Refresh
 import androidx.paging.PagingSource.LoadResult.Page
-import io.reactivex.Observable
-import kotlinx.coroutines.rx2.rxObservable
+import kotlinx.coroutines.runBlocking
 
 class PagingTestCase<K : Any, V : Any>(
     private val pagingSource: PagingSource<K, V>,
@@ -15,9 +14,7 @@ class PagingTestCase<K : Any, V : Any>(
 
   private val loadParams = Refresh(key, loadSize, placeholdersEnabled)
 
-  val data: Observable<List<V>>
-    get() = rxObservable {
-      val page = pagingSource.load(loadParams) as Page<K, V>
-      send(page.data)
-    }
+  fun loadPage(): Page<K, V> {
+    return runBlocking { pagingSource.load(loadParams) as Page<K, V> }
+  }
 }

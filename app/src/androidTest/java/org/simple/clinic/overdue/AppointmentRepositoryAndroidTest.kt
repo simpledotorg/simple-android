@@ -2063,13 +2063,16 @@ class AppointmentRepositoryAndroidTest {
 
       val bp = TestData.bloodPressureMeasurement(
           patientUuid = patientUuid,
-          facilityUuid = facilityUuid
+          facilityUuid = facilityUuid,
+          systolic = 120,
+          diastolic = 80
       )
       bpRepository.save(listOf(bp))
 
       val bloodSugar = TestData.bloodSugarMeasurement(
           patientUuid = patientUuid,
-          facilityUuid = facilityUuid
+          facilityUuid = facilityUuid,
+          reading = BloodSugarReading.fromMg("100", Random)
       )
       bloodSugarRepository.save(listOf(bloodSugar))
 

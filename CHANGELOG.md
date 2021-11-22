@@ -9,6 +9,7 @@
 - Fix flaky paging test cases
 - Bump Mixpanel to v5.9.5
 - Remove post delayed callbacks when view is detached from window
+- Remove canceling previously scheduled periodic work in `SyncScheduler`
 
 ### Changes
 

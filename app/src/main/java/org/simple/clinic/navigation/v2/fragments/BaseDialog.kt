@@ -3,11 +3,14 @@ package org.simple.clinic.navigation.v2.fragments
 import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Parcelable
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
+import androidx.viewbinding.ViewBinding
 import com.spotify.mobius.EventSource
 import com.spotify.mobius.Init
 import com.spotify.mobius.Next.noChange
@@ -25,7 +28,7 @@ import org.simple.clinic.mobius.first
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.util.unsafeLazy
 
-abstract class BaseDialog<K : ScreenKey, M : Parcelable, E, F, V> : DialogFragment() {
+abstract class BaseDialog<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, V> : DialogFragment() {
 
   companion object {
     private const val KEY_MODEL = "org.simple.clinic.navigation.v2.fragments.BaseScreen.KEY_MODEL"
@@ -36,7 +39,14 @@ abstract class BaseDialog<K : ScreenKey, M : Parcelable, E, F, V> : DialogFragme
 
   protected val screenKey by unsafeLazy { ScreenKey.key<K>(this) }
 
+  private var _binding: B? = null
+
+  protected val binding: B
+    get() = _binding!!
+
   abstract fun defaultModel(): M
+
+  abstract fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?): B
 
   open fun uiRenderer(): ViewRenderer<M> = NoopViewRenderer()
 
@@ -52,8 +62,10 @@ abstract class BaseDialog<K : ScreenKey, M : Parcelable, E, F, V> : DialogFragme
 
   open fun additionalEventSources(): List<EventSource<E>> = emptyList()
 
-  private fun backPressed() {
-    requireActivity().onBackPressed()
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    _binding = bindView(inflater, container)
+
+    return _binding?.root
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -104,5 +116,9 @@ abstract class BaseDialog<K : ScreenKey, M : Parcelable, E, F, V> : DialogFragme
   override fun onCancel(dialog: DialogInterface) {
     backPressed()
     super.onCancel(dialog)
+  }
+
+  private fun backPressed() {
+    requireActivity().onBackPressed()
   }
 }

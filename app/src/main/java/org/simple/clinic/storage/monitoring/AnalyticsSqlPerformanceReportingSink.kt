@@ -16,9 +16,14 @@ class AnalyticsSqlPerformanceReportingSink(
       sampler = Sampler(remoteConfig.double("room_query_profile_sample_rate", 0.0).toFloat())
   )
 
-  override fun report(daoName: String, methodName: String, timeTaken: Duration) {
+  override fun begin(operation: SqlPerformanceReporter.SqlOperation) {
+    // Nothing to do here for reporting to Mixpanel
+  }
+
+  override fun end(operation: SqlPerformanceReporter.SqlOperation) {
     if (sampler.sample) {
-      Analytics.reportSqlOperation(daoName, methodName, timeTaken)
+      val timeTaken = Duration.ofMillis(System.currentTimeMillis() - operation.startTimeMillis)
+      Analytics.reportSqlOperation(operation.daoName, operation.methodName, timeTaken)
     }
   }
 }

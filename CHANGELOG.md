@@ -6,6 +6,7 @@
 
 - Ask storage permission when download/share button is clicked
 - Add common download function for downloading overdue list
+- Fix flaky paging test cases
 
 ### Changes
 

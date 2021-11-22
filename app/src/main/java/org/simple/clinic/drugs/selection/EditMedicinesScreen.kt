@@ -193,6 +193,11 @@ class EditMedicinesScreen :
     }
   }
 
+  override fun onDestroyView() {
+    recyclerView.removeCallbacks(::scrollListToTopPosition)
+    super.onDestroyView()
+  }
+
   private fun scrollListToTopPosition() {
     recyclerView.smoothScrollToPosition(0)
   }

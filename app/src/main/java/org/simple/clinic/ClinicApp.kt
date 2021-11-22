@@ -24,9 +24,11 @@ import org.simple.clinic.di.AppComponent
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsReporter
 import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.storage.monitoring.AnalyticsSqlPerformanceReportingSink
 import org.simple.clinic.storage.monitoring.DatadogSqlPerformanceReportingSink
 import org.simple.clinic.storage.monitoring.SqlPerformanceReporter
+import org.simple.clinic.util.clamp
 import timber.log.Timber
 import java.io.IOException
 import java.net.SocketException
@@ -49,6 +51,9 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
 
   @Inject
   lateinit var sentryCrashReporterSink: SentryCrashReporterSink
+
+  @Inject
+  lateinit var remoteConfig: ConfigReader
 
   protected open val analyticsReporters = emptyList<AnalyticsReporter>()
 
@@ -86,6 +91,11 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
   }
 
   private fun setupApplicationPerformanceMonitoring() {
+    val samplingRate = remoteConfig
+        .double("datadog_sample_rate", 0.0)
+        .toFloat()
+        .clamp(0F, 100F)
+
     val datadogConfig = Configuration
         .Builder(
             logsEnabled = false,
@@ -99,6 +109,7 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
             trackArguments = false,
             supportFragmentComponentPredicate = ResolveScreenNamesForDatadog()
         ))
+        .sampleRumSessions(samplingRate = samplingRate)
         .build()
     val credentials = Credentials(
         clientToken = BuildConfig.DATADOG_CLIENT_TOKEN,

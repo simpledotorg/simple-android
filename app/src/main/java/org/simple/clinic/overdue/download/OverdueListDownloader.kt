@@ -53,12 +53,7 @@ class OverdueListDownloader @Inject constructor(
       path: String,
       downloadFormat: OverdueListDownloadFormat
   ) = Single.create<Uri> { emitter ->
-    val mimeType = when (downloadFormat) {
-      OverdueListDownloadFormat.CSV -> "text/csv"
-      OverdueListDownloadFormat.PDF -> "application/pdf"
-    }
-
-    MediaScannerConnection.scanFile(appContext, arrayOf(path), arrayOf(mimeType)) { _, uri ->
+    MediaScannerConnection.scanFile(appContext, arrayOf(path), arrayOf(downloadFormat.mimeType)) { _, uri ->
       emitter.onSuccess(uri)
     }
   }

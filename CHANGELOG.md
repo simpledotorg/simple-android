@@ -60,6 +60,7 @@
 - Implement CSV to PDF file converter
 - Add `OverdueListDownloadApi`
 - Migrate `ForgotPinConfirmPinScreen` to a Fragment
+- Remove tool for capturing of flaky tests
 
 ### Fixes
 

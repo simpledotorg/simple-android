@@ -114,6 +114,7 @@ junitParams = "pl.pragmatists:JUnitParams:1.1.1"
 kotlin-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:1.5.2"
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk7", version.ref = "kotlin" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 
 leakcanary = "com.squareup.leakcanary:leakcanary-android:2.7"
 
@@ -151,8 +152,6 @@ play-core = "com.google.android.play:core:1.10.0"
 play-services-auth = "com.google.android.gms:play-services-auth:19.0.0"
 play-services-location = "com.google.android.gms:play-services-location:18.0.0"
 play-services-mlkit-barcode = "com.google.android.gms:play-services-mlkit-barcode-scanning:16.2.0"
-
-quarantine = "com.vinaysshenoy:quarantine-junit4:0.3.0"
 
 rootbeer = "com.scottyab:rootbeer-lib:0.0.9"
 

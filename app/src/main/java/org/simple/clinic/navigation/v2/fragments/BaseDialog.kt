@@ -1,6 +1,5 @@
 package org.simple.clinic.navigation.v2.fragments
 
-import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Parcelable
@@ -39,8 +38,6 @@ abstract class BaseDialog<K : ScreenKey, M : Parcelable, E, F, V> : DialogFragme
 
   abstract fun defaultModel(): M
 
-  abstract fun createDialog(savedInstanceState: Bundle?): Dialog
-
   open fun uiRenderer(): ViewRenderer<M> = NoopViewRenderer()
 
   open fun viewEffectHandler(): ViewEffectsHandler<V> = NoopViewEffectsHandler()
@@ -54,10 +51,6 @@ abstract class BaseDialog<K : ScreenKey, M : Parcelable, E, F, V> : DialogFragme
   open fun createEffectHandler(viewEffectsConsumer: Consumer<V>): ObservableTransformer<F, E> = ObservableTransformer { Observable.never() }
 
   open fun additionalEventSources(): List<EventSource<E>> = emptyList()
-
-  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return createDialog(savedInstanceState)
-  }
 
   private fun backPressed() {
     requireActivity().onBackPressed()

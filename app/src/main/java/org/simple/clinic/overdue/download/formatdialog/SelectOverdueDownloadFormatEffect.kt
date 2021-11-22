@@ -11,6 +11,6 @@ data class ScheduleDownload(val downloadFormat: OverdueListDownloadFormat) : Sel
 
 sealed class SelectOverdueDownloadFormatViewEffect : SelectOverdueDownloadFormatEffect()
 
-data class ShareDownloadedFile(val uri: Uri) : SelectOverdueDownloadFormatViewEffect()
+data class ShareDownloadedFile(val uri: Uri, val mimeType: String) : SelectOverdueDownloadFormatViewEffect()
 
 object Dismiss : SelectOverdueDownloadFormatViewEffect()

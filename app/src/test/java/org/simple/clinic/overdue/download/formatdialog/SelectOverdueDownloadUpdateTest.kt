@@ -54,7 +54,7 @@ class SelectOverdueDownloadUpdateTest {
         .whenEvent(FileDownloadedForSharing(uri))
         .then(assertThatNext(
             hasModel(defaultModel.overdueDownloadCompleted()),
-            hasEffects(ShareDownloadedFile(uri))
+            hasEffects(ShareDownloadedFile(uri, defaultModel.overdueListDownloadFormat.mimeType))
         ))
   }
 

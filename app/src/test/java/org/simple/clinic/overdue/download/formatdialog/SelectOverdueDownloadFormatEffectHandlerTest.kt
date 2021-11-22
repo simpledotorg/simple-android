@@ -54,13 +54,16 @@ class SelectOverdueDownloadFormatEffectHandlerTest {
 
   @Test
   fun `when share downloaded file effect is received, then share the downloaded file`() {
+    // given
+    val mimeType = "text/csv"
+
     // when
-    testCase.dispatch(ShareDownloadedFile(downloadedUri))
+    testCase.dispatch(ShareDownloadedFile(downloadedUri, mimeType))
 
     // then
     testCase.assertNoOutgoingEvents()
 
-    verify(uiActions).shareDownloadedFile(downloadedUri)
+    verify(uiActions).shareDownloadedFile(downloadedUri, mimeType)
     verifyNoMoreInteractions(uiActions)
   }
 

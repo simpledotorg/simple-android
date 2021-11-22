@@ -13,7 +13,10 @@ class SelectOverdueDownloadUpdate : Update<SelectOverdueDownloadFormatModel, Sel
   ): Next<SelectOverdueDownloadFormatModel, SelectOverdueDownloadFormatEffect> {
     return when (event) {
       DownloadOrShareClicked -> downloadOrShareClicked(model)
-      is FileDownloadedForSharing -> next(model.overdueDownloadCompleted(), ShareDownloadedFile(event.uri))
+      is FileDownloadedForSharing -> next(
+          model.overdueDownloadCompleted(),
+          ShareDownloadedFile(event.uri, model.overdueListDownloadFormat.mimeType)
+      )
       OverdueDownloadScheduled, CancelClicked -> dispatch(Dismiss)
       is DownloadFormatChanged -> next(model.overdueListDownloadFormatUpdated(event.downloadFormat))
     }

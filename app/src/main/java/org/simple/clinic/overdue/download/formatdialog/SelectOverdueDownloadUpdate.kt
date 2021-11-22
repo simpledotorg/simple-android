@@ -15,10 +15,10 @@ class SelectOverdueDownloadUpdate : Update<SelectOverdueDownloadFormatModel, Sel
       DownloadOrShareClicked -> downloadOrShareClicked(model)
       is FileDownloadedForSharing -> next(
           model.overdueDownloadCompleted(),
-          ShareDownloadedFile(event.uri, model.overdueListDownloadFormat.mimeType)
+          ShareDownloadedFile(event.uri, model.overdueListFileFormat.mimeType)
       )
       OverdueDownloadScheduled, CancelClicked -> dispatch(Dismiss)
-      is DownloadFormatChanged -> next(model.overdueListDownloadFormatUpdated(event.downloadFormat))
+      is DownloadFormatChanged -> next(model.overdueListDownloadFormatUpdated(event.fileFormat))
     }
   }
 
@@ -26,9 +26,9 @@ class SelectOverdueDownloadUpdate : Update<SelectOverdueDownloadFormatModel, Sel
     return when (model.openAs) {
       Share -> next(
           model.overdueDownloadInProgress(),
-          DownloadForShare(model.overdueListDownloadFormat)
+          DownloadForShare(model.overdueListFileFormat)
       )
-      Download -> dispatch(ScheduleDownload(model.overdueListDownloadFormat))
+      Download -> dispatch(ScheduleDownload(model.overdueListFileFormat))
     }
   }
 }

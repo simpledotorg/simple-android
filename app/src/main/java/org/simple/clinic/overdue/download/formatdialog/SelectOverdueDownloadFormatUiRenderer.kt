@@ -1,5 +1,4 @@
 package org.simple.clinic.overdue.download.formatdialog
-
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.util.exhaustive
 
@@ -23,7 +22,7 @@ class SelectOverdueDownloadFormatUiRenderer(
   }
 
   private fun renderDialogUi(model: SelectOverdueDownloadFormatModel) {
-    ui.setOverdueListFormat(model.overdueListDownloadFormat)
+    ui.setOverdueListFormat(model.overdueListFileFormat)
 
     when (model.openAs) {
       Download -> renderDownloadUi()

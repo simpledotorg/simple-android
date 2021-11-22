@@ -1,9 +1,9 @@
 package org.simple.clinic.overdue.download.formatdialog
 
-import org.simple.clinic.overdue.download.OverdueListDownloadFormat
+import org.simple.clinic.overdue.download.OverdueListFileFormat
 
 interface SelectOverdueDownloadFormatUi {
-  fun setOverdueListFormat(overdueListDownloadFormat: OverdueListDownloadFormat)
+  fun setOverdueListFormat(overdueListFileFormat: OverdueListFileFormat)
   fun setDownloadTitle()
   fun setDownloadButtonLabel()
   fun setShareTitle()

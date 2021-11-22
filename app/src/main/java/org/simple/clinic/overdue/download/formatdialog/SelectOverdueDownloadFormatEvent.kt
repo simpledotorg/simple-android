@@ -1,7 +1,7 @@
 package org.simple.clinic.overdue.download.formatdialog
 
 import android.net.Uri
-import org.simple.clinic.overdue.download.OverdueListDownloadFormat
+import org.simple.clinic.overdue.download.OverdueListFileFormat
 
 sealed class SelectOverdueDownloadFormatEvent
 
@@ -13,4 +13,4 @@ object OverdueDownloadScheduled : SelectOverdueDownloadFormatEvent()
 
 object CancelClicked : SelectOverdueDownloadFormatEvent()
 
-data class DownloadFormatChanged(val downloadFormat: OverdueListDownloadFormat) : SelectOverdueDownloadFormatEvent()
+data class DownloadFormatChanged(val fileFormat: OverdueListFileFormat) : SelectOverdueDownloadFormatEvent()

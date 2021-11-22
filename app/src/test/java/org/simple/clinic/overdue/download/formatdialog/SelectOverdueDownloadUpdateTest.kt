@@ -9,8 +9,8 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.clinic.overdue.download.OverdueListDownloadFormat.CSV
-import org.simple.clinic.overdue.download.OverdueListDownloadFormat.PDF
+import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
+import org.simple.clinic.overdue.download.OverdueListFileFormat.PDF
 
 class SelectOverdueDownloadUpdateTest {
 
@@ -54,7 +54,7 @@ class SelectOverdueDownloadUpdateTest {
         .whenEvent(FileDownloadedForSharing(uri))
         .then(assertThatNext(
             hasModel(defaultModel.overdueDownloadCompleted()),
-            hasEffects(ShareDownloadedFile(uri, defaultModel.overdueListDownloadFormat.mimeType))
+            hasEffects(ShareDownloadedFile(uri, defaultModel.overdueListFileFormat.mimeType))
         ))
   }
 

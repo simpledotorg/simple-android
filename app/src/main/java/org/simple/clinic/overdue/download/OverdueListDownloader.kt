@@ -10,6 +10,8 @@ import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import io.reactivex.Single
 import okhttp3.ResponseBody
+import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
+import org.simple.clinic.overdue.download.OverdueListFileFormat.PDF
 import org.simple.clinic.util.CsvToPdfConverter
 import org.simple.clinic.util.UserClock
 import java.io.File
@@ -27,33 +29,33 @@ class OverdueListDownloader @Inject constructor(
     private const val DOWNLOAD_FILE_NAME_PREFIX = "overdue-list-"
   }
 
-  fun download(downloadFormat: OverdueListDownloadFormat): Single<Uri> {
+  fun download(fileFormat: OverdueListFileFormat): Single<Uri> {
     return api
         .download()
         .map { responseBody ->
           val localDateNow = LocalDate.now(userClock)
-          val fileExtension = when (downloadFormat) {
-            OverdueListDownloadFormat.CSV -> "csv"
-            OverdueListDownloadFormat.PDF -> "pdf"
+          val fileExtension = when (fileFormat) {
+            CSV -> "csv"
+            PDF -> "pdf"
           }
           val fileName = "$DOWNLOAD_FILE_NAME_PREFIX$localDateNow.$fileExtension"
 
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            downloadApi29(fileName, responseBody, downloadFormat)
+            downloadApi29(fileName, responseBody, fileFormat)
           } else {
-            downloadApi21(fileName, responseBody, downloadFormat)
+            downloadApi21(fileName, responseBody, fileFormat)
           }
         }
         .flatMap { path ->
-          scanFile(path, downloadFormat)
+          scanFile(path, fileFormat)
         }
   }
 
   private fun scanFile(
       path: String,
-      downloadFormat: OverdueListDownloadFormat
+      fileFormat: OverdueListFileFormat
   ) = Single.create<Uri> { emitter ->
-    MediaScannerConnection.scanFile(appContext, arrayOf(path), arrayOf(downloadFormat.mimeType)) { _, uri ->
+    MediaScannerConnection.scanFile(appContext, arrayOf(path), arrayOf(fileFormat.mimeType)) { _, uri ->
       emitter.onSuccess(uri)
     }
   }
@@ -61,20 +63,20 @@ class OverdueListDownloader @Inject constructor(
   private fun downloadApi21(
       fileName: String,
       responseBody: ResponseBody,
-      downloadFormat: OverdueListDownloadFormat
+      fileFormat: OverdueListFileFormat
   ): String {
     val downloadsFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
     val file = File(downloadsFolder, fileName)
     val outputStream = file.outputStream()
 
-    when (downloadFormat) {
-      OverdueListDownloadFormat.CSV -> responseBody.use {
+    when (fileFormat) {
+      CSV -> responseBody.use {
         outputStream.use {
           responseBody.byteStream().copyTo(it)
         }
       }
 
-      OverdueListDownloadFormat.PDF -> csvToPdfConverter.convert(
+      PDF -> csvToPdfConverter.convert(
           responseBody.byteStream(),
           outputStream
       )
@@ -87,7 +89,7 @@ class OverdueListDownloader @Inject constructor(
   private fun downloadApi29(
       fileName: String,
       responseBody: ResponseBody,
-      downloadFormat: OverdueListDownloadFormat
+      fileFormat: OverdueListFileFormat
   ): String {
     val collection = MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
     val file = ContentValues().apply {
@@ -99,14 +101,14 @@ class OverdueListDownloader @Inject constructor(
     val outputStream = appContext.contentResolver.openOutputStream(fileUri, "w")
         ?: throw Exception("ContentResolver couldn't open $fileUri outputStream")
 
-    when (downloadFormat) {
-      OverdueListDownloadFormat.CSV -> responseBody.use {
+    when (fileFormat) {
+      CSV -> responseBody.use {
         outputStream.use {
           responseBody.byteStream().copyTo(it)
         }
       }
 
-      OverdueListDownloadFormat.PDF -> csvToPdfConverter.convert(
+      PDF -> csvToPdfConverter.convert(
           responseBody.byteStream(),
           outputStream
       )

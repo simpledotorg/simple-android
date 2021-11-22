@@ -4,7 +4,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
-import org.simple.clinic.overdue.download.OverdueListDownloadFormat.CSV
+import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 
 class SelectOverdueDownloadFormatUiRendererTest {
 
@@ -22,7 +22,7 @@ class SelectOverdueDownloadFormatUiRendererTest {
     // then
     verify(ui).setDownloadTitle()
     verify(ui).setDownloadButtonLabel()
-    verify(ui).setOverdueListFormat(model.overdueListDownloadFormat)
+    verify(ui).setOverdueListFormat(model.overdueListFileFormat)
     verifyNoMoreInteractions(ui)
   }
 
@@ -37,7 +37,7 @@ class SelectOverdueDownloadFormatUiRendererTest {
     // then
     verify(ui).setShareTitle()
     verify(ui).setShareButtonLabel()
-    verify(ui).setOverdueListFormat(model.overdueListDownloadFormat)
+    verify(ui).setOverdueListFormat(model.overdueListFileFormat)
     verifyNoMoreInteractions(ui)
   }
 

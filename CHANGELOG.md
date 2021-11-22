@@ -30,6 +30,7 @@
 - Bump Gradle to 7.3
 - Implement `OverdueDownloadWorker`
 - Show no internet connection dialog when download/share button is clicked
+- Bump Mixpanel to v5.9.5
 
 ### Fixes
 

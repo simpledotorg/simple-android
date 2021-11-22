@@ -12,4 +12,8 @@ interface SelectOverdueDownloadFormatUi {
   fun hideContent()
   fun showProgress()
   fun hideDownloadOrShareButton()
+  fun showTitle()
+  fun showContent()
+  fun hideProgress()
+  fun showDownloadOrShareButton()
 }

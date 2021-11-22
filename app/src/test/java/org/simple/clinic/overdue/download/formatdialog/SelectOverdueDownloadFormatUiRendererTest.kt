@@ -20,6 +20,10 @@ class SelectOverdueDownloadFormatUiRendererTest {
     uiRenderer.render(model)
 
     // then
+    verify(ui).showTitle()
+    verify(ui).showContent()
+    verify(ui).hideProgress()
+    verify(ui).showDownloadOrShareButton()
     verify(ui).setDownloadTitle()
     verify(ui).setDownloadButtonLabel()
     verify(ui).setOverdueListFormat(model.overdueListFileFormat)
@@ -35,6 +39,10 @@ class SelectOverdueDownloadFormatUiRendererTest {
     uiRenderer.render(model)
 
     // then
+    verify(ui).showTitle()
+    verify(ui).showContent()
+    verify(ui).hideProgress()
+    verify(ui).showDownloadOrShareButton()
     verify(ui).setShareTitle()
     verify(ui).setShareButtonLabel()
     verify(ui).setOverdueListFormat(model.overdueListFileFormat)

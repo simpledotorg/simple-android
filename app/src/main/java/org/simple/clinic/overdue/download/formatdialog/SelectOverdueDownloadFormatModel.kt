@@ -1,12 +1,15 @@
 package org.simple.clinic.overdue.download.formatdialog
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.overdue.download.OverdueListFileFormat
 
+@Parcelize
 data class SelectOverdueDownloadFormatModel(
     val openAs: OpenAs,
     val overdueListFileFormat: OverdueListFileFormat,
     val overdueDownloadStatus: OverdueDownloadStatus?
-) {
+) : Parcelable {
 
   companion object {
 

@@ -15,23 +15,32 @@ class SqlPerformanceReporter {
     }
 
     @JvmStatic
-    fun report(
+    fun begin(
         daoName: String,
-        methodName: String,
-        timeTaken: Duration
+        startTimeMillis: Long,
+        methodName: String
     ) {
-      INSTANCE.sendToAll(daoName, methodName, timeTaken)
+      val operation = SqlOperation(daoName, startTimeMillis, methodName)
+
+      INSTANCE.onEachSink { it.begin(operation) }
+    }
+
+    @JvmStatic
+    fun end(
+        daoName: String,
+        startTimeMillis: Long,
+        methodName: String
+    ) {
+      val operation = SqlOperation(daoName, startTimeMillis, methodName)
+
+      INSTANCE.onEachSink { it.end(operation) }
     }
   }
 
-  private fun sendToAll(
-      daoName: String,
-      methodName: String,
-      timeTaken: Duration
-  ) {
+  private inline fun onEachSink(block: (ReportSink) -> Unit) {
     sinks.forEach { sink ->
       try {
-        sink.report(daoName, methodName, timeTaken)
+        block(sink)
       } catch (e: Exception) {
         // We don't need to handle any failures here, but we do want to know if they happened
         Timber.tag("SqlPerformanceReporter").w(e)
@@ -44,10 +53,13 @@ class SqlPerformanceReporter {
   }
 
   interface ReportSink {
-    fun report(
-        daoName: String,
-        methodName: String,
-        timeTaken: Duration
-    )
+    fun begin(operation: SqlOperation)
+    fun end(operation: SqlOperation)
   }
+
+  data class SqlOperation(
+      val daoName: String,
+      val startTimeMillis: Long,
+      val methodName: String
+  )
 }

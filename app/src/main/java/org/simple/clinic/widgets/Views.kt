@@ -24,6 +24,7 @@ import androidx.annotation.StyleRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.doOnDetach
 import androidx.core.widget.NestedScrollView
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
@@ -31,11 +32,15 @@ import timber.log.Timber
 import java.time.Duration
 
 fun EditText.showKeyboard() {
-  postDelayed({
-    this.requestFocus()
+  fun openKeyboard() {
+    requestFocus()
     val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     inputMethodManager.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
-  }, 100)
+  }
+
+  postDelayed(::openKeyboard, 100)
+
+  doOnDetach { removeCallbacks(::openKeyboard) }
 }
 
 fun ViewGroup.hideKeyboard() {
@@ -236,6 +241,8 @@ fun ScrollView.scrollToChild(view: View, onScrollComplete: () -> Unit = {}) {
 
     postDelayed(onScrollComplete, 400)
   }
+
+  doOnDetach { removeCallbacks(onScrollComplete) }
 }
 
 fun NestedScrollView.scrollToChild(view: View, onScrollComplete: () -> Unit = {}) {
@@ -246,6 +253,8 @@ fun NestedScrollView.scrollToChild(view: View, onScrollComplete: () -> Unit = {}
 
     postDelayed(onScrollComplete, 400)
   }
+
+  doOnDetach { removeCallbacks(onScrollComplete) }
 }
 
 var ViewFlipper.displayedChildResId: Int

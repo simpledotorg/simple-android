@@ -20,11 +20,11 @@ import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.Succeeded
+import org.simple.clinic.navigation.v2.compat.FullScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
-import org.simple.clinic.navigation.v2.ScreenResultBus
-import org.simple.clinic.navigation.v2.compat.FullScreenKey
 import org.simple.clinic.util.resolveFloat
 import org.simple.clinic.util.setFragmentResultListener
 import java.util.Locale
@@ -75,6 +75,9 @@ class AlertFacilityChangeSheet :
   private val continuation
     get() = screenKey.continuation
 
+  private val rootView
+    get() = binding.root
+
   private val facilityName
     get() = binding.facilityName
 
@@ -99,7 +102,7 @@ class AlertFacilityChangeSheet :
     super.onViewCreated(view, savedInstanceState)
 
     if (isFacilitySwitchedPreference.get().not()) {
-      view.postDelayed(::closeSheetWithContinuation, 100)
+      rootView.postDelayed(::closeSheetWithContinuation, 100)
     } else {
       showDialogUi()
 
@@ -116,6 +119,11 @@ class AlertFacilityChangeSheet :
     setFragmentResultListener(ChangeCurrentFacility) { _, result ->
       if (result is Succeeded) proceedToNextScreen()
     }
+  }
+
+  override fun onDestroyView() {
+    rootView.removeCallbacks(::closeSheetWithContinuation)
+    super.onDestroyView()
   }
 
   private fun showDialogUi() {

@@ -22,19 +22,7 @@ class SyncScheduler @Inject constructor(
     return Single.just(syncConfig)
         .map { config -> createWorkRequest(config.syncInterval) }
         .doOnSuccess { request -> workManager.enqueueUniquePeriodicWork(syncConfig.name, REPLACE, request) }
-        .doOnSuccess { cancelPreviouslyScheduledPeriodicWork() }
         .ignoreElement()
-  }
-
-  /*
-   * This is meant to cancel the periodic work that was scheduled using the `SyncGroup` enum
-   * until enough devices have migrated over to the system where we schedule only one periodic
-   * sync
-   * TODO vs(2021-07-15): Remove once the single unique sync work has been deployed to enough devices
-   **/
-  private fun cancelPreviouslyScheduledPeriodicWork() {
-    workManager.cancelUniqueWork("FREQUENT")
-    workManager.cancelUniqueWork("DAILY")
   }
 
   private fun createWorkRequest(syncInterval: SyncInterval): PeriodicWorkRequest {

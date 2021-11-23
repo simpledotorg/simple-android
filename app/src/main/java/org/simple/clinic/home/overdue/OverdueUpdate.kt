@@ -34,11 +34,11 @@ class OverdueUpdate(
   }
 
   private fun shareOverdueListClicked(): Next<OverdueModel, OverdueEffect> {
-    return dispatch(LoadNetworkConnectivityStatus)
+    return noChange()
   }
 
   private fun downloadOverdueListClicked(): Next<OverdueModel, OverdueEffect> {
-    return dispatch(LoadNetworkConnectivityStatus)
+    return noChange()
   }
 
   private fun loadOverduePatients(

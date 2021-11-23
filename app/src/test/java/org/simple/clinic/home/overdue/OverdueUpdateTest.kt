@@ -3,7 +3,6 @@ package org.simple.clinic.home.overdue
 import androidx.paging.PagingData
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
-import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
@@ -75,28 +74,6 @@ class OverdueUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.currentFacilityLoaded(facility)),
             hasEffects(LoadOverdueAppointments(dateOnClock, facility))
-        ))
-  }
-
-  @Test
-  fun `when download overdue list button is clicked, then load network connectivity status`() {
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(DownloadOverdueListClicked())
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(LoadNetworkConnectivityStatus)
-        ))
-  }
-
-  @Test
-  fun `when share overdue list button is clicked, then load network connectivity status`() {
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(ShareOverdueListClicked())
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(LoadNetworkConnectivityStatus)
         ))
   }
 

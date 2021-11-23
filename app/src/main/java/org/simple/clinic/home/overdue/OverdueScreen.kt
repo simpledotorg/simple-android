@@ -43,6 +43,7 @@ import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.sync.LastSyncedState
 import org.simple.clinic.sync.SyncProgress
+import org.simple.clinic.util.RuntimeNetworkStatus
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.PagingItemAdapter
@@ -98,6 +99,9 @@ class OverdueScreen : BaseScreen<
   @Inject
   lateinit var lastSyncedState: Preference<LastSyncedState>
 
+  @Inject
+  lateinit var runtimeNetworkStatus: RuntimeNetworkStatus<UiEvent>
+
   private val overdueListAdapter = PagingItemAdapter(
       diffCallback = OverdueAppointmentListItem.DiffCallback(),
       bindings = mapOf(
@@ -141,6 +145,7 @@ class OverdueScreen : BaseScreen<
       shareOverdueListClicks()
   )
       .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
+      .compose(runtimeNetworkStatus::apply)
       .compose(ReportAnalyticsEvents())
       .share()
       .cast<OverdueEvent>()

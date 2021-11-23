@@ -15,10 +15,11 @@
 - Fix overdue list file name in `OverdueListDownloader`
 - Send performance monitoring events to Datadog
 - Bump Mobius to v1.5.6
+- Enable overdue list download and share feature in India only
 
 ### Changes
 
-- [In Progress: 18 Nov 2021] Add option to download & share overdue list
+- [In Progress: 23 Nov 2021] Add option to download & share overdue list
 
 ## On Demo
 

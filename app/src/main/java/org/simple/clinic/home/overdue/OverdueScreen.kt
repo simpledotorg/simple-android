@@ -26,6 +26,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.permissions.RequestPermissions
 import org.simple.clinic.activity.permissions.RuntimePermissions
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.databinding.ListItemOverduePatientBinding
 import org.simple.clinic.databinding.ListItemOverduePlaceholderBinding
@@ -83,6 +84,9 @@ class OverdueScreen : BaseScreen<
 
   @Inject
   lateinit var runtimePermissions: RuntimePermissions
+
+  @Inject
+  lateinit var country: Country
 
   @Inject
   @Named("full_date")
@@ -160,7 +164,8 @@ class OverdueScreen : BaseScreen<
     overdueRecyclerView.adapter = overdueListAdapter
     overdueRecyclerView.layoutManager = LinearLayoutManager(context)
 
-    buttonsFrame.visibleOrGone(isVisible = features.isEnabled(OverdueListDownloadAndShare))
+    val isOverdueListDownloadAndShareEnabled = features.isEnabled(OverdueListDownloadAndShare) && country.isoCountryCode == Country.INDIA
+    buttonsFrame.visibleOrGone(isVisible = isOverdueListDownloadAndShareEnabled)
 
     disposable.add(overdueListLoadStateListener())
   }

@@ -4,6 +4,16 @@ import android.annotation.SuppressLint
 import android.app.Application
 import androidx.camera.camera2.Camera2Config
 import androidx.camera.core.CameraXConfig
+import com.datadog.android.Datadog
+import com.datadog.android.core.configuration.Configuration
+import com.datadog.android.core.configuration.Credentials
+import com.datadog.android.privacy.TrackingConsent
+import com.datadog.android.rum.GlobalRum
+import com.datadog.android.rum.RumMonitor
+import com.datadog.android.rum.tracking.FragmentViewTrackingStrategy
+import com.datadog.android.rum.tracking.ViewTrackingStrategy
+import com.datadog.android.tracing.AndroidTracer
+import io.opentracing.util.GlobalTracer
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
 import org.simple.clinic.activity.CloseActivitiesWhenUserIsUnauthorized
@@ -51,6 +61,9 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
     appComponent.inject(this)
 
     crashReporterSinks.forEach(CrashReporter::addSink)
+
+    setupApplicationPerformanceMonitoring()
+
     Timber.plant(CrashBreadcrumbsTimberTree())
     RxJavaPlugins.setErrorHandler { error ->
       if (!error.canBeIgnoredSafely()) {
@@ -68,6 +81,32 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
 
     registerActivityLifecycleCallbacks(closeActivitiesWhenUserIsUnauthorized)
     closeActivitiesWhenUserIsUnauthorized.listen()
+  }
+
+  private fun setupApplicationPerformanceMonitoring() {
+    val datadogConfig = Configuration
+        .Builder(
+            logsEnabled = false,
+            tracesEnabled = true,
+            crashReportsEnabled = false,
+            rumEnabled = true
+        )
+        .trackBackgroundRumEvents(true)
+        .trackLongTasks(5000)
+        .useViewTrackingStrategy(FragmentViewTrackingStrategy(
+            trackArguments = false
+        ))
+        .build()
+    val credentials = Credentials(
+        clientToken = BuildConfig.DATADOG_CLIENT_TOKEN,
+        envName = BuildConfig.DATADOG_ENVIRONMENT,
+        variant = BuildConfig.FLAVOR,
+        rumApplicationId = BuildConfig.DATADOG_APPLICATION_ID,
+        serviceName = BuildConfig.DATADOG_SERVICE_NAME
+    )
+    Datadog.initialize(this, credentials, datadogConfig, TrackingConsent.GRANTED)
+    GlobalRum.registerIfAbsent(RumMonitor.Builder().build())
+    GlobalTracer.registerIfAbsent(AndroidTracer.Builder().build())
   }
 
   override fun getCameraXConfig(): CameraXConfig {

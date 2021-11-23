@@ -140,8 +140,9 @@ class OverdueDownloadWorker(
       PendingIntent.FLAG_CANCEL_CURRENT
     }
 
-    var intent = Intent(Intent.ACTION_VIEW, uri).apply {
-      addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    var intent = Intent(Intent.ACTION_VIEW).apply {
+      setDataAndType(uri, fileFormat.mimeType)
+      addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
     }
 
     val playStoreUrl = when (fileFormat) {

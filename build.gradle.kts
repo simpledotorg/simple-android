@@ -18,11 +18,11 @@ buildscript {
     val roomMetaDataGeneratorVersion = libs.versions.room.metadataGenerator.get()
 
     classpath(libs.android.gradle.plugin)
-    classpath(libs.firebase.performance.plugin)
     classpath(libs.google.services)
     classpath(libs.kotlin.gradle.plugin)
     classpath(libs.sentry.gradle.plugin)
     classpath(files("./buildTooling/room-metadata-generator-${roomMetaDataGeneratorVersion}.jar"))
+    classpath(libs.datadog.gradle.plugin)
   }
 }
 

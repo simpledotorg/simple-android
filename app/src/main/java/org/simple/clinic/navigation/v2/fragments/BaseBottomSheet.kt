@@ -43,6 +43,9 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
 
   protected val screenKey by unsafeLazy { ScreenKey.key<K>(this) }
 
+  val screenName: String
+    get() = screenKey.analyticsName
+
   private var _binding: B? = null
 
   protected val binding: B

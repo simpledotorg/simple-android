@@ -99,8 +99,7 @@ class OverdueLogicTest {
         overdueAppointmentsConfig = OverdueAppointmentsConfig(
             overdueAppointmentsLoadSize = 10
         ),
-        uiActions = uiActions,
-        networkCapabilitiesProvider = networkCapabilitiesProvider
+        uiActions = uiActions
     )
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),

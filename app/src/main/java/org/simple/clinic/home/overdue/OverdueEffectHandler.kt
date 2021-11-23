@@ -6,7 +6,6 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
-import org.simple.clinic.analytics.NetworkCapabilitiesProvider
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.util.PagerFactory
@@ -18,7 +17,6 @@ class OverdueEffectHandler @AssistedInject constructor(
     private val currentFacilityStream: Observable<Facility>,
     private val pagerFactory: PagerFactory,
     private val overdueAppointmentsConfig: OverdueAppointmentsConfig,
-    private val networkCapabilitiesProvider: NetworkCapabilitiesProvider,
     @Assisted private val uiActions: OverdueUiActions
 ) {
 
@@ -35,18 +33,8 @@ class OverdueEffectHandler @AssistedInject constructor(
         .addConsumer(OpenContactPatientScreen::class.java, { uiActions.openPhoneMaskBottomSheet(it.patientUuid) }, schedulers.ui())
         .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientUuid) }, schedulers.ui())
         .addConsumer(ShowOverdueAppointments::class.java, ::showOverdueAppointments, schedulers.ui())
-        .addTransformer(LoadNetworkConnectivityStatus::class.java, checkIfNetworkIsConnected())
         .addAction(ShowNoActiveNetworkConnectionDialog::class.java, uiActions::showNoActiveNetworkConnectionDialog, schedulers.ui())
         .build()
-  }
-
-  private fun checkIfNetworkIsConnected(): ObservableTransformer<LoadNetworkConnectivityStatus, OverdueEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulers.io())
-          .map { networkCapabilitiesProvider.networkConnectivityStatus() }
-          .map(::NetworkConnectivityStatusLoaded)
-    }
   }
 
   private fun showOverdueAppointments(effect: ShowOverdueAppointments) {

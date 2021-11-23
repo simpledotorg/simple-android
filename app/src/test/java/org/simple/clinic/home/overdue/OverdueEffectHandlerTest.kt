@@ -14,7 +14,6 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.analytics.NetworkCapabilitiesProvider
-import org.simple.clinic.analytics.NetworkConnectivityStatus.ACTIVE
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.util.PagerFactory
@@ -45,8 +44,7 @@ class OverdueEffectHandlerTest {
       currentFacilityStream = Observable.just(facility),
       pagerFactory = pagerFactory,
       overdueAppointmentsConfig = overdueAppointmentsConfig,
-      uiActions = uiActions,
-      networkCapabilitiesProvider = networkCapabilitiesProvider
+      uiActions = uiActions
   ).build()
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
 
@@ -124,19 +122,6 @@ class OverdueEffectHandlerTest {
     verifyZeroInteractions(uiActions)
 
     effectHandlerTestCase.assertOutgoingEvents(OverdueAppointmentsLoaded(overdueAppointments))
-  }
-
-  @Test
-  fun `when load network connectivity status effect is received, then load network connectivity status`() {
-    //given
-    whenever(networkCapabilitiesProvider.networkConnectivityStatus()).thenReturn(ACTIVE)
-
-    // when
-    effectHandlerTestCase.dispatch(LoadNetworkConnectivityStatus)
-
-    // then
-    verifyZeroInteractions(uiActions)
-    effectHandlerTestCase.assertOutgoingEvents(NetworkConnectivityStatusLoaded(ACTIVE))
   }
 
   @Test

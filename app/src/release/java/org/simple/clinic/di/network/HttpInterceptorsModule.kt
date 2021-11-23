@@ -1,5 +1,6 @@
 package org.simple.clinic.di.network
 
+import com.datadog.android.DatadogInterceptor
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -17,6 +18,7 @@ class HttpInterceptorsModule {
       compressRequestInterceptor: CompressRequestInterceptor
   ): List<Interceptor> {
     return listOf(
+        DatadogInterceptor(),
         loggedInInterceptor,
         appInfoHttpInterceptor,
         compressRequestInterceptor,

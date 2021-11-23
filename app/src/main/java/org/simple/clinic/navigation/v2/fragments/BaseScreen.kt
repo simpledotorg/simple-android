@@ -37,6 +37,9 @@ abstract class BaseScreen<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, 
 
   protected val screenKey by unsafeLazy { ScreenKey.key<K>(this) }
 
+  val screenName: String
+    get() = screenKey.analyticsName
+
   private var _binding: B? = null
 
   protected val binding: B

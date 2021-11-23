@@ -13,6 +13,7 @@
 - Change SQL performance reporting to use begin and end hooks
 - Use view binding to inflate layout in `BaseDialog`
 - Fix overdue list file name in `OverdueListDownloader`
+- Send performance monitoring events to Datadog
 
 ### Changes
 

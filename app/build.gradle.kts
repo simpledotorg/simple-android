@@ -1,4 +1,3 @@
-import com.google.firebase.perf.plugin.FirebasePerfExtension
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.simple.rmg.RoomMetadataGenerator
@@ -13,8 +12,8 @@ plugins {
   kotlin("kapt")
   id("kotlin-parcelize")
   id("io.sentry.android.gradle")
-  id("com.google.firebase.firebase-perf")
   id("plugins.git.install-hooks")
+  id("dd-sdk-android-gradle-plugin")
 }
 
 sentry {
@@ -114,6 +113,10 @@ android {
     val manifestEndpoint: String by project
     val disableScreenshot: String by project
     val allowRootedDevice: String by project
+    val datadogServiceName: String by project
+    val datadogApplicationId: String by project
+    val datadogClientToken: String by project
+    val datadogEnvironment: String by project
 
     addManifestPlaceholders(mapOf(
         "sentryDsn" to sentryDsn,
@@ -124,6 +127,10 @@ android {
     buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
     buildConfigField("boolean", "DISABLE_SCREENSHOT", disableScreenshot)
     buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", allowRootedDevice)
+    buildConfigField("String", "DATADOG_SERVICE_NAME", "\"$datadogServiceName\"")
+    buildConfigField("String", "DATADOG_APPLICATION_ID", "\"$datadogApplicationId\"")
+    buildConfigField("String", "DATADOG_CLIENT_TOKEN", "\"$datadogClientToken\"")
+    buildConfigField("String", "DATADOG_ENVIRONMENT", "\"$datadogEnvironment\"")
   }
 
   buildTypes {
@@ -131,7 +138,6 @@ android {
       applicationIdSuffix = ".debug"
       isMinifyEnabled = false
       isShrinkResources = false
-      configure<FirebasePerfExtension> { setInstrumentationEnabled(false) }
     }
 
     val runProguard: String by project
@@ -337,7 +343,6 @@ dependencies {
   implementation(libs.edittext.pinentry)
 
   implementation(libs.firebase.config)
-  implementation(libs.firebase.performance.perf)
 
   implementation(libs.itemanimators)
 
@@ -455,6 +460,8 @@ dependencies {
   lintChecks(projects.lint)
 
   runtimeOnly(libs.jackson.core)
+
+  implementation(libs.datadog.sdk)
 }
 
 // This must always be present at the bottom of this file, as per:

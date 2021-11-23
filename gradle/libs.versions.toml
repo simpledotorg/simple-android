@@ -90,8 +90,6 @@ edittext-pinentry = "com.alimuzaffar.lib:pinentryedittext:2.0.6"
 faker = "com.github.blocoio:faker:1.2.8"
 
 firebase-config = "com.google.firebase:firebase-config:21.0.0"
-firebase-performance-perf = "com.google.firebase:firebase-perf:20.0.2"
-firebase-performance-plugin = "com.google.firebase:perf-plugin:1.4.0"
 
 flipper-flipper = { module = "com.facebook.flipper:flipper", version.ref = "flipper" }
 flipper-networkPlugin = { module = "com.facebook.flipper:flipper-network-plugin", version.ref = "flipper" }
@@ -188,6 +186,9 @@ truth = "com.google.truth:truth:1.1.2"
 uuid-generator = "com.fasterxml.uuid:java-uuid-generator:4.0.1"
 
 viewpump = "io.github.inflationx:viewpump:2.0.3"
+
+datadog-sdk = "com.datadoghq:dd-sdk-android:1.10.0"
+datadog-gradle-plugin = "com.datadoghq:dd-sdk-android-gradle-plugin:1.1.0"
 
 zxing = { group = "com.google.zxing", name = "core", version = { strictly = "[3.3, 3.4[", prefer = "3.3.3" } }
 

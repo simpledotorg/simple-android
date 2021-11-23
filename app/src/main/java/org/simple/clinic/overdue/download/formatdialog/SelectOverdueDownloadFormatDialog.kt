@@ -69,7 +69,7 @@ class SelectOverdueDownloadFormatDialog : BaseDialog<
     context.injector<Injector>().inject(this)
   }
 
-  override fun createUpdate() = SelectOverdueDownloadUpdate()
+  override fun createUpdate() = SelectOverdueDownloadFormatUpdate()
 
   override fun defaultModel() = SelectOverdueDownloadFormatModel.create(openAs)
 

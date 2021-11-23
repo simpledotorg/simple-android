@@ -12,9 +12,9 @@ import org.junit.Test
 import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import org.simple.clinic.overdue.download.OverdueListFileFormat.PDF
 
-class SelectOverdueDownloadUpdateTest {
+class SelectOverdueDownloadFormatUpdateTest {
 
-  private val updateSpec = UpdateSpec(SelectOverdueDownloadUpdate())
+  private val updateSpec = UpdateSpec(SelectOverdueDownloadFormatUpdate())
   private val defaultModel = SelectOverdueDownloadFormatModel.create(openAs = Share)
 
   @Test

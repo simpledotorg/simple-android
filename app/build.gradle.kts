@@ -1,4 +1,3 @@
-import com.google.firebase.perf.plugin.FirebasePerfExtension
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.simple.rmg.RoomMetadataGenerator
@@ -13,7 +12,6 @@ plugins {
   kotlin("kapt")
   id("kotlin-parcelize")
   id("io.sentry.android.gradle")
-  id("com.google.firebase.firebase-perf")
   id("plugins.git.install-hooks")
   id("dd-sdk-android-gradle-plugin")
 }
@@ -140,7 +138,6 @@ android {
       applicationIdSuffix = ".debug"
       isMinifyEnabled = false
       isShrinkResources = false
-      configure<FirebasePerfExtension> { setInstrumentationEnabled(false) }
     }
 
     val runProguard: String by project
@@ -346,7 +343,6 @@ dependencies {
   implementation(libs.edittext.pinentry)
 
   implementation(libs.firebase.config)
-  implementation(libs.firebase.performance.perf)
 
   implementation(libs.itemanimators)
 

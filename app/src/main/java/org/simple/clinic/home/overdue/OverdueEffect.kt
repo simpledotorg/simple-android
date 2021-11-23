@@ -28,6 +28,4 @@ data class ShowOverdueAppointments(
     val isDiabetesManagementEnabled: Boolean
 ) : OverdueEffect()
 
-object LoadNetworkConnectivityStatus : OverdueEffect()
-
 object ShowNoActiveNetworkConnectionDialog : OverdueEffect()

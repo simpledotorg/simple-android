@@ -88,4 +88,15 @@ class OverdueUpdateTest {
             hasEffects(ShowNoActiveNetworkConnectionDialog)
         ))
   }
+
+  @Test
+  fun `when share overdue list button is clicked and network is not connected, then show no active connection dialog`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(ShareOverdueListClicked(networkStatus = Optional.of(INACTIVE)))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowNoActiveNetworkConnectionDialog)
+        ))
+  }
 }

@@ -14,6 +14,7 @@
 - Use view binding to inflate layout in `BaseDialog`
 - Fix overdue list file name in `OverdueListDownloader`
 - Send performance monitoring events to Datadog
+- Bump Mobius to v1.5.6
 
 ### Changes
 

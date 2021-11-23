@@ -3,7 +3,6 @@ package org.simple.clinic.home.overdue
 import androidx.paging.PagingData
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
-import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
@@ -12,6 +11,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.analytics.NetworkConnectivityStatus.INACTIVE
 import org.simple.clinic.facility.FacilityConfig
 import java.time.LocalDate
+import java.util.Optional
 import java.util.UUID
 
 class OverdueUpdateTest {
@@ -79,32 +79,21 @@ class OverdueUpdateTest {
   }
 
   @Test
-  fun `when download overdue list button is clicked, then load network connectivity status`() {
+  fun `when download overdue list button is clicked and network is not connected, then show no active connection dialog`() {
     updateSpec
         .given(defaultModel)
-        .whenEvent(DownloadOverdueListClicked())
+        .whenEvent(DownloadOverdueListClicked(networkStatus = Optional.of(INACTIVE)))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(LoadNetworkConnectivityStatus)
+            hasEffects(ShowNoActiveNetworkConnectionDialog)
         ))
   }
 
   @Test
-  fun `when share overdue list button is clicked, then load network connectivity status`() {
+  fun `when share overdue list button is clicked and network is not connected, then show no active connection dialog`() {
     updateSpec
         .given(defaultModel)
-        .whenEvent(ShareOverdueListClicked())
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(LoadNetworkConnectivityStatus)
-        ))
-  }
-
-  @Test
-  fun `when there is no active network connection, then show no active network connection dialog`() {
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(NetworkConnectivityStatusLoaded(INACTIVE))
+        .whenEvent(ShareOverdueListClicked(networkStatus = Optional.of(INACTIVE)))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ShowNoActiveNetworkConnectionDialog)

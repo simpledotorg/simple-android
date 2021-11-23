@@ -3,8 +3,6 @@ package org.simple.clinic.home.overdue
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
-import org.simple.clinic.analytics.NetworkConnectivityStatus
-import org.simple.clinic.analytics.NetworkConnectivityStatus.ACTIVE
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import java.time.LocalDate
@@ -19,26 +17,25 @@ class OverdueUpdate(
       is CallPatientClicked -> dispatch(OpenContactPatientScreen(event.patientUuid))
       is OverduePatientClicked -> dispatch(OpenPatientSummary(event.patientUuid))
       is OverdueAppointmentsLoaded -> dispatch(ShowOverdueAppointments(event.overdueAppointments, model.isDiabetesManagementEnabled))
-      is DownloadOverdueListClicked -> downloadOverdueListClicked()
-      is ShareOverdueListClicked -> shareOverdueListClicked()
-      is NetworkConnectivityStatusLoaded -> networkConnectivityStatusLoaded(event.status)
+      is DownloadOverdueListClicked -> downloadOverdueListClicked(event)
+      is ShareOverdueListClicked -> shareOverdueListClicked(event)
     }
   }
 
-  private fun networkConnectivityStatusLoaded(status: NetworkConnectivityStatus): Next<OverdueModel, OverdueEffect> {
-    return if (status == ACTIVE) {
+  private fun shareOverdueListClicked(event: ShareOverdueListClicked): Next<OverdueModel, OverdueEffect> {
+    return if (event.hasNetworkConnection) {
       noChange()
     } else {
       dispatch(ShowNoActiveNetworkConnectionDialog)
     }
   }
 
-  private fun shareOverdueListClicked(): Next<OverdueModel, OverdueEffect> {
-    return dispatch(LoadNetworkConnectivityStatus)
-  }
-
-  private fun downloadOverdueListClicked(): Next<OverdueModel, OverdueEffect> {
-    return dispatch(LoadNetworkConnectivityStatus)
+  private fun downloadOverdueListClicked(event: DownloadOverdueListClicked): Next<OverdueModel, OverdueEffect> {
+    return if (event.hasNetworkConnection) {
+      noChange()
+    } else {
+      dispatch(ShowNoActiveNetworkConnectionDialog)
+    }
   }
 
   private fun loadOverduePatients(

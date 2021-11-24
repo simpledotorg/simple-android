@@ -8,6 +8,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.analytics.NetworkConnectivityStatus.ACTIVE
 import org.simple.clinic.analytics.NetworkConnectivityStatus.INACTIVE
 import org.simple.clinic.facility.FacilityConfig
 import java.time.LocalDate
@@ -86,6 +87,17 @@ class OverdueUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ShowNoActiveNetworkConnectionDialog)
+        ))
+  }
+
+  @Test
+  fun `when download overdue list button is clicked and network is connected, then open select download format dialog`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DownloadOverdueListClicked(networkStatus = Optional.of(ACTIVE)))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenSelectDownloadFormatDialog)
         ))
   }
 

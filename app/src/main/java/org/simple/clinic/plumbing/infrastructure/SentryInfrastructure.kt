@@ -4,8 +4,9 @@ import io.sentry.Sentry
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appconfig.Deployment
 import org.simple.clinic.user.User
+import javax.inject.Inject
 
-class SentryInfrastructure: Infrastructure {
+class SentryInfrastructure @Inject constructor(): Infrastructure {
 
   override fun addDetails(user: User, country: Country, deployment: Deployment) {
     Sentry.setTag("userUuid", user.uuid.toString())

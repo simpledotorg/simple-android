@@ -7,5 +7,8 @@ import dagger.Provides
 class InfrastructureModule {
 
   @Provides
-  fun provideInfrastructure() = emptyList<Infrastructure>()
+  fun provideInfrastructure(
+      sentryInfrastructure: SentryInfrastructure,
+      datadogInfrastructure: DatadogInfrastructure
+  ) = listOf(sentryInfrastructure, datadogInfrastructure)
 }

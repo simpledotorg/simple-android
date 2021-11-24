@@ -111,4 +111,15 @@ class OverdueUpdateTest {
             hasEffects(ShowNoActiveNetworkConnectionDialog)
         ))
   }
+
+  @Test
+  fun `when share overdue list button is clicked and network is connected, then open select share format dialog`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(ShareOverdueListClicked(networkStatus = Optional.of(ACTIVE)))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenSelectShareFormatDialog)
+        ))
+  }
 }

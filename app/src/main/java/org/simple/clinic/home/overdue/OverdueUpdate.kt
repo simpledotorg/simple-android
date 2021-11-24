@@ -1,7 +1,6 @@
 package org.simple.clinic.home.overdue
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -23,11 +22,13 @@ class OverdueUpdate(
   }
 
   private fun shareOverdueListClicked(event: ShareOverdueListClicked): Next<OverdueModel, OverdueEffect> {
-    return if (event.hasNetworkConnection) {
-      noChange()
+    val effect = if (event.hasNetworkConnection) {
+      OpenSelectShareFormatDialog
     } else {
-      dispatch(ShowNoActiveNetworkConnectionDialog)
+      ShowNoActiveNetworkConnectionDialog
     }
+
+    return dispatch(effect)
   }
 
   private fun downloadOverdueListClicked(event: DownloadOverdueListClicked): Next<OverdueModel, OverdueEffect> {

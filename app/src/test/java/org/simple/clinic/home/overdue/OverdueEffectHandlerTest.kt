@@ -133,4 +133,14 @@ class OverdueEffectHandlerTest {
     verify(uiActions).showNoActiveNetworkConnectionDialog()
     effectHandlerTestCase.assertNoOutgoingEvents()
   }
+
+  @Test
+  fun `when open select download format effect is received, then open select download format dialog`() {
+    // when
+    effectHandlerTestCase.dispatch(OpenSelectDownloadFormatDialog)
+
+    // then
+    verify(uiActions).openSelectDownloadFormatDialog()
+    effectHandlerTestCase.assertNoOutgoingEvents()
+  }
 }

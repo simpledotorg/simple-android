@@ -39,7 +39,7 @@ class OverdueDownloadWorker(
     private const val DOWNLOAD_SUCCESS_NOTIFICATION_ID = 2
     private const val DOWNLOAD_FAILED_NOTIFICATION_ID = 3
 
-    private const val PLAY_STORE_EXCEL = "https://play.google.com/store/apps/details?id=com.microsoft.office.excel"
+    private const val PLAY_STORE_SHEETS = "https://play.google.com/store/apps/details?id=com.google.android.apps.docs.editors.sheets"
     private const val PLAY_STORE_ADOBE_ACROBAT = "https://play.google.com/store/apps/details?id=com.adobe.reader"
 
     fun workRequest(fileFormat: OverdueListFileFormat): OneTimeWorkRequest {
@@ -146,7 +146,7 @@ class OverdueDownloadWorker(
     }
 
     val playStoreUrl = when (fileFormat) {
-      CSV -> PLAY_STORE_EXCEL
+      CSV -> PLAY_STORE_SHEETS
       PDF -> PLAY_STORE_ADOBE_ACROBAT
     }
 

@@ -7,7 +7,6 @@
 - Ask storage permission when download/share button is clicked
 - Add common download function for downloading overdue list
 - Fix flaky paging test cases
-- Bump Mixpanel to v5.9.5
 - Remove post delayed callbacks when view is detached from window
 - Remove canceling previously scheduled periodic work in `SyncScheduler`
 - Change SQL performance reporting to use begin and end hooks
@@ -16,13 +15,19 @@
 - Send performance monitoring events to Datadog
 - Bump Mobius to v1.5.6
 - Enable overdue list download and share feature in India only
-- Set user ID as user property in `MixpanelAnalyticsReporter`
 - Extend `RxWorker` in `OverdueDownloadWorker`
 - Implement overdue list download/share format dialog
 
 ### Changes
 
 - [In Progress: 23 Nov 2021] Add option to download & share overdue list
+
+## 2021-11-24-8041
+
+### Internal
+
+- Bump Mixpanel to v5.9.5
+- Set user ID as user property in `MixpanelAnalyticsReporter`
 
 ## 2021-11-23-8038
 

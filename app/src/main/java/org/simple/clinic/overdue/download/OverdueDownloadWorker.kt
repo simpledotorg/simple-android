@@ -12,10 +12,11 @@ import androidx.core.app.NotificationCompat
 import androidx.work.ForegroundInfo
 import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.RxWorker
 import androidx.work.WorkManager
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import io.reactivex.Single
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.overdue.download.OverdueListDownloadFormat.CSV
@@ -25,7 +26,7 @@ import javax.inject.Inject
 class OverdueDownloadWorker(
     private val context: Context,
     workerParams: WorkerParameters,
-) : Worker(context, workerParams) {
+) : RxWorker(context, workerParams) {
 
   companion object {
     const val OVERDUE_DOWNLOAD_WORKER = "overdue_download_worker"
@@ -58,7 +59,7 @@ class OverdueDownloadWorker(
 
   private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-  override fun doWork(): Result {
+  override fun createWork(): Single<Result> {
     ClinicApp.appComponent.inject(this)
 
     createNotificationChannel()
@@ -67,15 +68,10 @@ class OverdueDownloadWorker(
     val downloadFormatString = inputData.getString(KEY_DOWNLOAD_FORMAT)!!
     val downloadFormat = OverdueListDownloadFormat.valueOf(downloadFormatString)
 
-    return try {
-      val uri = downloader
-          .download(downloadFormat)
-          .blockingGet()
-
-      downloadSuccess(uri, downloadFormat)
-    } catch (e: Exception) {
-      downloadFailure()
-    }
+    return downloader
+        .download(downloadFormat)
+        .map { uri -> downloadSuccess(uri, downloadFormat) }
+        .onErrorReturn { downloadFailure() }
   }
 
   override fun onStopped() {

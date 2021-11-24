@@ -21,10 +21,10 @@ class MixpanelAnalyticsReporter(app: ClinicApp) : AnalyticsReporter {
       mixpanel.identify(userId)
       with(mixpanel.people) {
         identify(userId)
+        set("id", userId)
         set("name", user.name)
       }
     }
-
   }
 
   override fun resetUser() {

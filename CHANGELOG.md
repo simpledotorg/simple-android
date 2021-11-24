@@ -31,6 +31,7 @@
 - Implement `OverdueDownloadWorker`
 - Show no internet connection dialog when download/share button is clicked
 - Bump Mixpanel to v5.9.5
+- Set user ID as user property in `MixpanelAnalyticsReporter`
 
 ### Fixes
 

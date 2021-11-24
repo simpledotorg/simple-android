@@ -35,6 +35,7 @@ class OverdueEffectHandler @AssistedInject constructor(
         .addConsumer(ShowOverdueAppointments::class.java, ::showOverdueAppointments, schedulers.ui())
         .addAction(ShowNoActiveNetworkConnectionDialog::class.java, uiActions::showNoActiveNetworkConnectionDialog, schedulers.ui())
         .addAction(OpenSelectDownloadFormatDialog::class.java, uiActions::openSelectDownloadFormatDialog, schedulers.ui())
+        .addAction(OpenSelectShareFormatDialog::class.java, uiActions::openSelectShareFormatDialog, schedulers.ui())
         .build()
   }
 

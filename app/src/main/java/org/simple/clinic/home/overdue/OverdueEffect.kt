@@ -31,3 +31,5 @@ data class ShowOverdueAppointments(
 object ShowNoActiveNetworkConnectionDialog : OverdueEffect()
 
 object OpenSelectDownloadFormatDialog : OverdueEffect()
+
+object OpenSelectShareFormatDialog : OverdueEffect()

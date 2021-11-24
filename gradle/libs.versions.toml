@@ -77,6 +77,7 @@ androidx-test-runner = { module = "androidx.test:runner", version.ref = "android
 androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidx-test" }
 
 androidx-work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
+androidx-work-rxjava = { module = "androidx.work:work-rxjava2", version.ref = "androidx-work" }
 androidx-work-gcm = { module = "androidx.work:work-gcm", version.ref = "androidx-work" }
 
 asm = "org.ow2.asm:asm:9.2"
@@ -197,7 +198,7 @@ androidx-camera = ["androidx-camera-core", "androidx-camera-camera2", "androidx-
 androidx-paging = ["androidx-paging-common", "androidx-paging-runtime", "androidx-paging-rx2"]
 androidx-room = ["androidx-room-runtime", "androidx-room-rx2"]
 androidx-test = ["androidx-test-junit", "androidx-test-runner", "androidx-test-rules"]
-androidx-work = ["androidx-work-runtime", "androidx-work-gcm"]
+androidx-work = ["androidx-work-runtime", "androidx-work-rxjava", "androidx-work-gcm"]
 
 flipper = ["flipper-flipper", "flipper-networkPlugin"]
 

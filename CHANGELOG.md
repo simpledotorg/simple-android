@@ -16,6 +16,7 @@
 - Send performance monitoring events to Datadog
 - Bump Mobius to v1.5.6
 - Enable overdue list download and share feature in India only
+- Set user ID as user property in `MixpanelAnalyticsReporter`
 
 ### Changes
 

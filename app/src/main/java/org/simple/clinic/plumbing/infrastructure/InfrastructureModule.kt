@@ -9,6 +9,7 @@ class InfrastructureModule {
   @Provides
   fun provideInfrastructure(
       sentryInfrastructure: SentryInfrastructure,
-      datadogInfrastructure: DatadogInfrastructure
-  ) = listOf(sentryInfrastructure, datadogInfrastructure)
+      datadogInfrastructure: DatadogInfrastructure,
+      mixpanelInfrastructure: MixpanelInfrastructure
+  ) = listOf(sentryInfrastructure, datadogInfrastructure, mixpanelInfrastructure)
 }

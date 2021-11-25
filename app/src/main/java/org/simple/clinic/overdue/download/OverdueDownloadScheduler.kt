@@ -9,8 +9,8 @@ class OverdueDownloadScheduler @Inject constructor(
     private val workManager: WorkManager
 ) {
 
-  fun schedule(downloadFormat: OverdueListDownloadFormat) {
-    val workRequest = OverdueDownloadWorker.workRequest(downloadFormat)
+  fun schedule(fileFormat: OverdueListFileFormat) {
+    val workRequest = OverdueDownloadWorker.workRequest(fileFormat)
 
     workManager.enqueueUniqueWork(
         OVERDUE_DOWNLOAD_WORKER,

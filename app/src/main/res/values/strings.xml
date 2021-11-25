@@ -880,7 +880,7 @@
   <!-- Overdue download notification -->
   <string name="overdue_download_notification_failed_title">Download Failed</string>
   <string name="overdue_download_notification_failed_subtitle">Try again in some time</string>
-  <string name="overdue_download_notification_in_progress_title">Overdue line list</string>
+  <string name="overdue_download_notification_in_progress_title">Downloading overdue line list</string>
   <string name="overdue_download_notification_cancel">Cancel</string>
   <string name="overdue_download_notification_succeeded_title">Download complete</string>
   <string name="overdue_download_notification_succeeded_subtitle">Click to open</string>
@@ -889,5 +889,16 @@
   <string name="overdue_download_no_active_network_connection_dialog_title">No Internet</string>
   <string name="overdue_download_no_active_network_connection_dialog_message">Check your internet and try again.</string>
   <string name="overdue_download_no_active_network_connection_dialog_positive_button">OK</string>
+
+  <!-- Select overdue download format dialog -->
+  <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">Spreadsheet</string>
+  <string name="select_overdue_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="requires_microsoft_excel_to_view">Requires Sheets or Excel to view</string>
+  <string name="select_overdue_download_format_dialog_action_negative">Cancel</string>
+  <string name="select_overdue_download_format_dialog_title_download">Download as</string>
+  <string name="select_overdue_download_format_dialog_title_share">Share as</string>
+  <string name="select_overdue_download_format_dialog_action_positive_download">Download</string>
+  <string name="select_overdue_download_format_dialog_action_positive_share">Share</string>
+  <string name="select_overdue_download_format_dialog_share_with">Share with</string>
 
 </resources>

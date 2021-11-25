@@ -19,8 +19,8 @@ import androidx.work.workDataOf
 import io.reactivex.Single
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
-import org.simple.clinic.overdue.download.OverdueListDownloadFormat.CSV
-import org.simple.clinic.overdue.download.OverdueListDownloadFormat.PDF
+import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
+import org.simple.clinic.overdue.download.OverdueListFileFormat.PDF
 import javax.inject.Inject
 
 class OverdueDownloadWorker(
@@ -39,13 +39,13 @@ class OverdueDownloadWorker(
     private const val DOWNLOAD_SUCCESS_NOTIFICATION_ID = 2
     private const val DOWNLOAD_FAILED_NOTIFICATION_ID = 3
 
-    private const val PLAY_STORE_EXCEL = "https://play.google.com/store/apps/details?id=com.microsoft.office.excel"
+    private const val PLAY_STORE_SHEETS = "https://play.google.com/store/apps/details?id=com.google.android.apps.docs.editors.sheets"
     private const val PLAY_STORE_ADOBE_ACROBAT = "https://play.google.com/store/apps/details?id=com.adobe.reader"
 
-    fun workRequest(downloadFormat: OverdueListDownloadFormat): OneTimeWorkRequest {
+    fun workRequest(fileFormat: OverdueListFileFormat): OneTimeWorkRequest {
       return OneTimeWorkRequestBuilder<OverdueDownloadWorker>()
           .setInputData(workDataOf(
-              KEY_DOWNLOAD_FORMAT to downloadFormat.toString()
+              KEY_DOWNLOAD_FORMAT to fileFormat.toString()
           ))
           .build()
     }
@@ -66,7 +66,7 @@ class OverdueDownloadWorker(
     setForegroundAsync(downloadInProgressNotification()).get()
 
     val downloadFormatString = inputData.getString(KEY_DOWNLOAD_FORMAT)!!
-    val downloadFormat = OverdueListDownloadFormat.valueOf(downloadFormatString)
+    val downloadFormat = OverdueListFileFormat.valueOf(downloadFormatString)
 
     return downloader
         .download(downloadFormat)
@@ -88,10 +88,10 @@ class OverdueDownloadWorker(
     return Result.failure()
   }
 
-  private fun downloadSuccess(uri: Uri, downloadFormat: OverdueListDownloadFormat): Result {
+  private fun downloadSuccess(uri: Uri, fileFormat: OverdueListFileFormat): Result {
     notificationManager.run {
       cancel(DOWNLOAD_IN_PROGRESS_NOTIFICATION_ID)
-      notify(DOWNLOAD_SUCCESS_NOTIFICATION_ID, downloadSucceededNotification(uri, downloadFormat))
+      notify(DOWNLOAD_SUCCESS_NOTIFICATION_ID, downloadSucceededNotification(uri, fileFormat))
     }
 
     return Result.success()
@@ -133,19 +133,20 @@ class OverdueDownloadWorker(
         .build()
   }
 
-  private fun downloadSucceededNotification(uri: Uri, downloadFormat: OverdueListDownloadFormat): Notification {
+  private fun downloadSucceededNotification(uri: Uri, fileFormat: OverdueListFileFormat): Notification {
     val flag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
     } else {
       PendingIntent.FLAG_CANCEL_CURRENT
     }
 
-    var intent = Intent(Intent.ACTION_VIEW, uri).apply {
-      addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    var intent = Intent(Intent.ACTION_VIEW).apply {
+      setDataAndType(uri, fileFormat.mimeType)
+      addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
     }
 
-    val playStoreUrl = when (downloadFormat) {
-      CSV -> PLAY_STORE_EXCEL
+    val playStoreUrl = when (fileFormat) {
+      CSV -> PLAY_STORE_SHEETS
       PDF -> PLAY_STORE_ADOBE_ACROBAT
     }
 

@@ -12,7 +12,7 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.download.OverdueDownloadScheduler
-import org.simple.clinic.overdue.download.OverdueListDownloadFormat
+import org.simple.clinic.overdue.download.OverdueListFileFormat
 import org.simple.clinic.overdue.download.OverdueListDownloader
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 
@@ -39,7 +39,7 @@ class SelectOverdueDownloadFormatEffectHandlerTest {
   @Test
   fun `when download for share effect is received, then download the file`() {
     // given
-    val format = OverdueListDownloadFormat.CSV
+    val format = OverdueListFileFormat.CSV
 
     whenever(overdueListDownloader.download(format)) doReturn Single.just(downloadedUri)
 
@@ -54,20 +54,23 @@ class SelectOverdueDownloadFormatEffectHandlerTest {
 
   @Test
   fun `when share downloaded file effect is received, then share the downloaded file`() {
+    // given
+    val mimeType = "text/csv"
+
     // when
-    testCase.dispatch(ShareDownloadedFile(downloadedUri))
+    testCase.dispatch(ShareDownloadedFile(downloadedUri, mimeType))
 
     // then
     testCase.assertNoOutgoingEvents()
 
-    verify(uiActions).shareDownloadedFile(downloadedUri)
+    verify(uiActions).shareDownloadedFile(downloadedUri, mimeType)
     verifyNoMoreInteractions(uiActions)
   }
 
   @Test
   fun `when schedule download effect is received, then schedule the overdue list download`() {
     // given
-    val format = OverdueListDownloadFormat.PDF
+    val format = OverdueListFileFormat.PDF
 
     // when
     testCase.dispatch(ScheduleDownload(format))

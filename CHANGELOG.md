@@ -18,6 +18,7 @@
 - Enable overdue list download and share feature in India only
 - Set user ID as user property in `MixpanelAnalyticsReporter`
 - Extend `RxWorker` in `OverdueDownloadWorker`
+- Implement overdue list download/share format dialog
 
 ### Changes
 

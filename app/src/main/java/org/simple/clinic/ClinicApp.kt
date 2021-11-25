@@ -24,6 +24,7 @@ import org.simple.clinic.di.AppComponent
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsReporter
 import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.plumbing.infrastructure.UpdateInfrastructureUserDetails
 import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.storage.monitoring.AnalyticsSqlPerformanceReportingSink
 import org.simple.clinic.storage.monitoring.DatadogSqlPerformanceReportingSink
@@ -55,6 +56,9 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
   @Inject
   lateinit var remoteConfig: ConfigReader
 
+  @Inject
+  lateinit var updateInfrastructureUserDetails: UpdateInfrastructureUserDetails
+
   protected open val analyticsReporters = emptyList<AnalyticsReporter>()
 
   protected open val crashReporterSinks = emptyList<CrashReporter.Sink>()
@@ -65,6 +69,7 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
 
     appComponent = buildDaggerGraph()
     appComponent.inject(this)
+    updateInfrastructureUserDetails.track()
 
     crashReporterSinks.forEach(CrashReporter::addSink)
 

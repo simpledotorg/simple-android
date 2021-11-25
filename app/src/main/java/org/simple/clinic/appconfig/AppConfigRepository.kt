@@ -38,6 +38,10 @@ class AppConfigRepository @Inject constructor(
     return selectedDeployment.get().toNullable()
   }
 
+  fun currentDeploymentObservable(): Observable<Optional<Deployment>> {
+    return selectedDeployment.asObservable()
+  }
+
   fun currentCountry(): Country? {
     return selectedCountryPreference.get().toNullable()
   }

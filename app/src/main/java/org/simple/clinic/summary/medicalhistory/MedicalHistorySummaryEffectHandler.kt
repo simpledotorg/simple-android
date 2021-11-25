@@ -32,13 +32,12 @@ class MedicalHistorySummaryEffectHandler @Inject constructor(
   private fun loadMedicalHistory(): ObservableTransformer<LoadMedicalHistory, MedicalHistorySummaryEvent> {
     return ObservableTransformer { effects ->
       effects
-          .switchMap {
-            medicalHistoryRepository
-                .historyForPatientOrDefault(
-                    defaultHistoryUuid = uuidGenerator.v4(),
-                    patientUuid = it.patientUUID
-                )
-                .subscribeOn(schedulers.io())
+          .observeOn(schedulers.io())
+          .map {
+            medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+                defaultHistoryUuid = uuidGenerator.v4(),
+                patientUuid = it.patientUUID
+            )
           }
           .map(::MedicalHistoryLoaded)
     }

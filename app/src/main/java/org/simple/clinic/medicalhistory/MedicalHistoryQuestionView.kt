@@ -23,6 +23,9 @@ class MedicalHistoryQuestionView(
   private val contentLayout
     get() = binding!!.contentLayout
 
+  private val chipGroup
+    get() = binding!!.chipGroup
+
   private val yesChip
     get() = binding!!.yesChip
 
@@ -47,11 +50,6 @@ class MedicalHistoryQuestionView(
     contentLayout.setPadding(contentPaddingStart, contentLayout.paddingTop, contentPaddingEnd, contentLayout.paddingBottom)
   }
 
-  private fun updateCheckboxesFromAnswer(answer: Answer) {
-    yesChip.isChecked = answer == Yes
-    noChip.isChecked = answer == No
-  }
-
   fun hideDivider() {
     dividerView.visibility = View.GONE
   }
@@ -65,18 +63,23 @@ class MedicalHistoryQuestionView(
       answer: Answer,
       answerChangeListener: (MedicalHistoryQuestion, Answer) -> Unit
   ) {
-    yesChip.setOnCheckedChangeListener(null)
-    noChip.setOnCheckedChangeListener(null)
-
     labelTextView.setText(question.questionRes)
-    updateCheckboxesFromAnswer(answer)
 
-    yesChip.setOnCheckedChangeListener { _, checked ->
-      val newAnswer = if (checked) Yes else Unanswered
-      answerChangeListener.invoke(question, newAnswer)
+    val checkedId = when (answer) {
+      Yes -> yesChip.id
+      No -> noChip.id
+      Unanswered,
+      is Answer.Unknown -> View.NO_ID
     }
-    noChip.setOnCheckedChangeListener { _, checked ->
-      val newAnswer = if (checked) No else Unanswered
+    chipGroup.check(checkedId)
+
+    chipGroup.setOnCheckedChangeListener { _, newCheckedId ->
+      val newAnswer = when (newCheckedId) {
+        yesChip.id -> Yes
+        noChip.id -> No
+        else -> Unanswered
+      }
+
       answerChangeListener.invoke(question, newAnswer)
     }
   }

@@ -24,6 +24,10 @@
 
 - [In Progress: 23 Nov 2021] Add option to download & share overdue list
 
+### Fixes
+
+- Fix medical history answers toggle not switching when selected
+
 ## 2021-11-24-8041
 
 ### Internal

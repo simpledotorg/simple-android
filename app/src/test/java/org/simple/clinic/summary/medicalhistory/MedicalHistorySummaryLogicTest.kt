@@ -78,7 +78,7 @@ class MedicalHistorySummaryLogicTest {
   @Test
   fun `patient's medical history should be populated`() {
     // given
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
+    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
 
     // when
     setupController()

@@ -7,7 +7,8 @@ import org.simple.clinic.mobius.next
 import java.time.LocalDate
 
 class OverdueUpdate(
-    val date: LocalDate
+    val date: LocalDate,
+    val canGeneratePdf: Boolean
 ) : Update<OverdueModel, OverdueEvent, OverdueEffect> {
 
   override fun update(model: OverdueModel, event: OverdueEvent): Next<OverdueModel, OverdueEffect> {

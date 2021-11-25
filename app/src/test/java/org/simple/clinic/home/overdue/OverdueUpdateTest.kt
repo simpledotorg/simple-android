@@ -18,7 +18,7 @@ import java.util.UUID
 class OverdueUpdateTest {
 
   private val dateOnClock = LocalDate.parse("2018-01-01")
-  private val updateSpec = UpdateSpec(OverdueUpdate(dateOnClock))
+  private val updateSpec = UpdateSpec(OverdueUpdate(date = dateOnClock, canGeneratePdf = true))
   private val defaultModel = OverdueModel.create()
 
   @Test
@@ -61,7 +61,6 @@ class OverdueUpdateTest {
 
   @Test
   fun `when current facility is loaded and overdue list changes feature is enabled, then load overdue appointments with patients with no phone numbers`() {
-    val updateSpec = UpdateSpec(OverdueUpdate(dateOnClock))
     val facility = TestData.facility(
         uuid = UUID.fromString("6d66fda7-7ca6-4431-ac3b-b570f1123624"),
         facilityConfig = FacilityConfig(

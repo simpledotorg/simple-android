@@ -4,15 +4,17 @@ import android.net.Uri
 import com.nhaarman.mockitokotlin2.mock
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
+import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.clinic.overdue.download.OverdueListDownloadFormat.CSV
+import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
+import org.simple.clinic.overdue.download.OverdueListFileFormat.PDF
 
-class SelectOverdueDownloadUpdateTest {
+class SelectOverdueDownloadFormatUpdateTest {
 
-  private val updateSpec = UpdateSpec(SelectOverdueDownloadUpdate())
+  private val updateSpec = UpdateSpec(SelectOverdueDownloadFormatUpdate())
   private val defaultModel = SelectOverdueDownloadFormatModel.create(openAs = Share)
 
   @Test
@@ -52,7 +54,7 @@ class SelectOverdueDownloadUpdateTest {
         .whenEvent(FileDownloadedForSharing(uri))
         .then(assertThatNext(
             hasModel(defaultModel.overdueDownloadCompleted()),
-            hasEffects(ShareDownloadedFile(uri))
+            hasEffects(ShareDownloadedFile(uri, defaultModel.overdueListFileFormat.mimeType))
         ))
   }
 
@@ -75,6 +77,17 @@ class SelectOverdueDownloadUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(Dismiss)
+        ))
+  }
+
+  @Test
+  fun `when download format is changed, then update the model`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DownloadFormatChanged(PDF))
+        .then(assertThatNext(
+            hasModel(defaultModel.overdueListDownloadFormatUpdated(PDF)),
+            hasNoEffects()
         ))
   }
 }

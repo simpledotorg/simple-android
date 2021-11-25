@@ -1,24 +1,30 @@
 package org.simple.clinic.overdue.download.formatdialog
 
-import org.simple.clinic.overdue.download.OverdueListDownloadFormat
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+import org.simple.clinic.overdue.download.OverdueListFileFormat
 
+@Parcelize
 data class SelectOverdueDownloadFormatModel(
     val openAs: OpenAs,
-    val overdueListDownloadFormat: OverdueListDownloadFormat,
+    val overdueListFileFormat: OverdueListFileFormat,
     val overdueDownloadStatus: OverdueDownloadStatus?
-) {
+) : Parcelable {
 
   companion object {
 
     fun create(openAs: OpenAs) = SelectOverdueDownloadFormatModel(
         openAs = openAs,
-        overdueListDownloadFormat = OverdueListDownloadFormat.CSV,
+        overdueListFileFormat = OverdueListFileFormat.CSV,
         overdueDownloadStatus = null
     )
   }
 
-  fun overdueListDownloadFormatUpdated(overdueListDownloadFormat: OverdueListDownloadFormat): SelectOverdueDownloadFormatModel {
-    return copy(overdueListDownloadFormat = overdueListDownloadFormat)
+  val isDownloadForShareInProgress
+    get() = overdueDownloadStatus == OverdueDownloadStatus.InProgress
+
+  fun overdueListDownloadFormatUpdated(overdueListFileFormat: OverdueListFileFormat): SelectOverdueDownloadFormatModel {
+    return copy(overdueListFileFormat = overdueListFileFormat)
   }
 
   fun overdueDownloadInProgress(): SelectOverdueDownloadFormatModel {

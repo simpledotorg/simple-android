@@ -5,7 +5,7 @@ import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
-class SelectOverdueDownloadUpdate : Update<SelectOverdueDownloadFormatModel, SelectOverdueDownloadFormatEvent, SelectOverdueDownloadFormatEffect> {
+class SelectOverdueDownloadFormatUpdate : Update<SelectOverdueDownloadFormatModel, SelectOverdueDownloadFormatEvent, SelectOverdueDownloadFormatEffect> {
 
   override fun update(
       model: SelectOverdueDownloadFormatModel,
@@ -13,8 +13,12 @@ class SelectOverdueDownloadUpdate : Update<SelectOverdueDownloadFormatModel, Sel
   ): Next<SelectOverdueDownloadFormatModel, SelectOverdueDownloadFormatEffect> {
     return when (event) {
       DownloadOrShareClicked -> downloadOrShareClicked(model)
-      is FileDownloadedForSharing -> next(model.overdueDownloadCompleted(), ShareDownloadedFile(event.uri))
+      is FileDownloadedForSharing -> next(
+          model.overdueDownloadCompleted(),
+          ShareDownloadedFile(event.uri, model.overdueListFileFormat.mimeType)
+      )
       OverdueDownloadScheduled, CancelClicked -> dispatch(Dismiss)
+      is DownloadFormatChanged -> next(model.overdueListDownloadFormatUpdated(event.fileFormat))
     }
   }
 
@@ -22,9 +26,9 @@ class SelectOverdueDownloadUpdate : Update<SelectOverdueDownloadFormatModel, Sel
     return when (model.openAs) {
       Share -> next(
           model.overdueDownloadInProgress(),
-          DownloadForShare(model.overdueListDownloadFormat)
+          DownloadForShare(model.overdueListFileFormat)
       )
-      Download -> dispatch(ScheduleDownload(model.overdueListDownloadFormat))
+      Download -> dispatch(ScheduleDownload(model.overdueListFileFormat))
     }
   }
 }

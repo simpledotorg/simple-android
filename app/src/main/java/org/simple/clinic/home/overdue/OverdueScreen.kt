@@ -39,6 +39,9 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.overdue.download.formatdialog.Download
+import org.simple.clinic.overdue.download.formatdialog.SelectOverdueDownloadFormatDialog
+import org.simple.clinic.overdue.download.formatdialog.Share
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.sync.LastSyncedState
@@ -211,6 +214,14 @@ class OverdueScreen : BaseScreen<
             screenCreatedTimestamp = Instant.now(utcClock)
         )
     )
+  }
+
+  override fun openSelectDownloadFormatDialog() {
+    router.push(SelectOverdueDownloadFormatDialog.Key(Download))
+  }
+
+  override fun openSelectShareFormatDialog() {
+    router.push(SelectOverdueDownloadFormatDialog.Key(Share))
   }
 
   private fun downloadOverdueListClicks(): Observable<UiEvent> {

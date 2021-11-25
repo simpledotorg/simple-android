@@ -1,7 +1,12 @@
 package org.simple.clinic.overdue.download.formatdialog
 
-sealed class OpenAs
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+sealed class OpenAs : Parcelable
+
+@Parcelize
 object Share : OpenAs()
 
+@Parcelize
 object Download : OpenAs()

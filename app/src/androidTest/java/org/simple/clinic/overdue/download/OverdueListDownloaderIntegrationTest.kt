@@ -32,7 +32,7 @@ class OverdueListDownloaderIntegrationTest {
   fun downloading_a_csv_should_work_correctly() {
     // when
     val expectedUri = overdueListDownloader
-        .download(OverdueListDownloadFormat.CSV)
+        .download(OverdueListFileFormat.CSV)
         .blockingGet()
 
     // then
@@ -43,7 +43,7 @@ class OverdueListDownloaderIntegrationTest {
   fun downloading_a_pdf_should_work_correctly() {
     // when
     val expectedUri = overdueListDownloader
-        .download(OverdueListDownloadFormat.PDF)
+        .download(OverdueListFileFormat.PDF)
         .blockingGet()
 
     // then

@@ -90,7 +90,7 @@ class OverdueUpdateTest {
   }
 
   @Test
-  fun `when download overdue list button is clicked and network is connected, then open select download format dialog`() {
+  fun `when download overdue list button is clicked, network is connected and pdf can be generated, then open select download format dialog`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(DownloadOverdueListClicked(networkStatus = Optional.of(ACTIVE)))

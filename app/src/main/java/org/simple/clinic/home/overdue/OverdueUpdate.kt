@@ -32,9 +32,13 @@ class OverdueUpdate(
     return dispatch(effect)
   }
 
+  private fun downloadOverdueListEffect(): OverdueEffect {
+    return OpenSelectDownloadFormatDialog
+  }
+
   private fun downloadOverdueListClicked(event: DownloadOverdueListClicked): Next<OverdueModel, OverdueEffect> {
     val effect = if (event.hasNetworkConnection) {
-      OpenSelectDownloadFormatDialog
+      downloadOverdueListEffect()
     } else {
       ShowNoActiveNetworkConnectionDialog
     }

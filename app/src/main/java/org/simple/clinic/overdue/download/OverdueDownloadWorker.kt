@@ -81,8 +81,13 @@ class OverdueDownloadWorker(
 
     return downloader
         .download(downloadFormat)
-        .map { uri -> downloadSuccess(uri, downloadFormat) }
-        .onErrorReturn { downloadFailure() }
+        .map { result ->
+          when (result) {
+            is OverdueListDownloadResult.DownloadSuccessful -> downloadSuccess(result.uri, downloadFormat)
+            OverdueListDownloadResult.DownloadFailed,
+            OverdueListDownloadResult.NotEnoughStorage -> downloadFailure()
+          }
+        }
   }
 
   override fun onStopped() {

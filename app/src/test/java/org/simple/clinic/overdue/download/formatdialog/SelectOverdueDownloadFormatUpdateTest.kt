@@ -90,4 +90,17 @@ class SelectOverdueDownloadFormatUpdateTest {
             hasNoEffects()
         ))
   }
+
+  @Test
+  fun `when sheet is opened as progress for sharing and download or share button is clicked, then do nothing`() {
+    val progressForSharingModel = SelectOverdueDownloadFormatModel.create(ProgressForSharing)
+
+    updateSpec
+        .given(progressForSharingModel)
+        .whenEvent(DownloadOrShareClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasNoEffects()
+        ))
+  }
 }

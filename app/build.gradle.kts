@@ -24,7 +24,7 @@ kapt {
   arguments {
     arg("room.schemaLocation", "$projectDir/schemas")
     arg("room.incremental", true)
-    arg("room.expandProjection", false)
+    arg("room.expandProjection", true)
   }
 }
 

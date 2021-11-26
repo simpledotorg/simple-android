@@ -23,8 +23,8 @@ sentry {
 kapt {
   arguments {
     arg("room.schemaLocation", "$projectDir/schemas")
-    arg("room.incremental", false)
-    arg("room.expandProjection", false)
+    arg("room.incremental", true)
+    arg("room.expandProjection", true)
   }
 }
 

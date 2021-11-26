@@ -19,6 +19,9 @@
 - Implement overdue list download/share format dialog
 - Set user ID as user property in `MixpanelAnalyticsReporter`
 - Provide a standardized mechanism to update user and deployment details in third-party tooling
+- Improve Room annotation processing
+  - Enable star projection of queries
+  - Enable incremental annotation processing
 
 ### Changes
 

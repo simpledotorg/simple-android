@@ -2,6 +2,7 @@ package org.simple.clinic.home.overdue
 
 import androidx.paging.PagingData
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.overdue.download.OverdueListFileFormat
 import java.time.LocalDate
 import java.util.UUID
 
@@ -33,3 +34,5 @@ object ShowNoActiveNetworkConnectionDialog : OverdueEffect()
 object OpenSelectDownloadFormatDialog : OverdueEffect()
 
 object OpenSelectShareFormatDialog : OverdueEffect()
+
+data class ScheduleDownload(val fileFormat: OverdueListFileFormat) : OverdueEffect()

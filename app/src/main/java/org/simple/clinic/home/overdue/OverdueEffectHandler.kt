@@ -8,6 +8,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.overdue.download.OverdueDownloadScheduler
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
@@ -17,6 +18,7 @@ class OverdueEffectHandler @AssistedInject constructor(
     private val currentFacilityStream: Observable<Facility>,
     private val pagerFactory: PagerFactory,
     private val overdueAppointmentsConfig: OverdueAppointmentsConfig,
+    private val overdueDownloadScheduler: OverdueDownloadScheduler,
     @Assisted private val uiActions: OverdueUiActions
 ) {
 
@@ -36,7 +38,12 @@ class OverdueEffectHandler @AssistedInject constructor(
         .addAction(ShowNoActiveNetworkConnectionDialog::class.java, uiActions::showNoActiveNetworkConnectionDialog, schedulers.ui())
         .addAction(OpenSelectDownloadFormatDialog::class.java, uiActions::openSelectDownloadFormatDialog, schedulers.ui())
         .addAction(OpenSelectShareFormatDialog::class.java, uiActions::openSelectShareFormatDialog, schedulers.ui())
+        .addConsumer(ScheduleDownload::class.java, ::scheduleDownload, schedulers.io())
         .build()
+  }
+
+  private fun scheduleDownload(effect: ScheduleDownload) {
+    overdueDownloadScheduler.schedule(effect.fileFormat)
   }
 
   private fun showOverdueAppointments(effect: ShowOverdueAppointments) {

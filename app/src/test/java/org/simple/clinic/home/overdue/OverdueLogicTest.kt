@@ -18,6 +18,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.analytics.NetworkCapabilitiesProvider
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.overdue.download.OverdueDownloadScheduler
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.PagingSourceFactory
 import org.simple.clinic.util.RxErrorsRule
@@ -99,6 +100,7 @@ class OverdueLogicTest {
         overdueAppointmentsConfig = OverdueAppointmentsConfig(
             overdueAppointmentsLoadSize = 10
         ),
+        overdueDownloadScheduler = mock<OverdueDownloadScheduler>(),
         uiActions = uiActions
     )
     testFixture = MobiusTestFixture(

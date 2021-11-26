@@ -1,10 +1,14 @@
 package org.simple.clinic.benchmark
 
+import android.util.Log
+import io.opentracing.util.GlobalTracer
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import org.simple.clinic.TestClinicApp
+import java.util.concurrent.TimeUnit.MICROSECONDS
+import java.util.concurrent.TimeUnit.MILLISECONDS
 
 class BenchmarkTestRule(
     // Default value chosen as 11 because that's what the Android benchmark library also uses.
@@ -46,10 +50,23 @@ class BenchmarkTestRule(
 
         val testClass = description.className
         val testMethod = description.methodName
-        val medianTimeTaken = stats.getPercentile(50.0)
+        val medianTimeTaken = stats.getPercentile(50.0).toLong()
 
-        println("Median benchmark for $testClass#$testMethod: ${medianTimeTaken}ms")
+        Log.i("PerfRegression", "Median benchmark for $testClass#$testMethod: ${medianTimeTaken}ms")
+
+        val tracer = GlobalTracer.get()
+        val adjustedStartTime = millisToMicros(System.currentTimeMillis() - medianTimeTaken)
+        val span = tracer
+            .buildSpan("test.method")
+            .withTag("class", testClass)
+            .withTag("method", testMethod)
+            .withStartTimestamp(adjustedStartTime)
+            .start()
+
+        span.finish(adjustedStartTime + millisToMicros(medianTimeTaken))
       }
+
+      private fun millisToMicros(millis: Long) = MICROSECONDS.convert(millis, MILLISECONDS)
     }
   }
 }

@@ -105,4 +105,16 @@ class SelectOverdueDownloadFormatEffectHandlerTest {
     verify(uiActions).openNotEnoughStorageErrorDialog()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when open download failed error dialog effect is received, then open download failed error dialog`() {
+    // when
+    testCase.dispatch(OpenDownloadFailedErrorDialog)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openDownloadFailedErrorDialog()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

@@ -126,7 +126,7 @@ class OverdueUpdateTest {
   }
 
   @Test
-  fun `when share overdue list button is clicked and network is connected, then open select share format dialog`() {
+  fun `when share overdue list button is clicked, network is connected and pdf can be generated, then open select share format dialog`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(ShareOverdueListClicked(networkStatus = Optional.of(ACTIVE)))

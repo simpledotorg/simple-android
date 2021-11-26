@@ -25,7 +25,7 @@ class OverdueUpdate(
 
   private fun shareOverdueListClicked(event: ShareOverdueListClicked): Next<OverdueModel, OverdueEffect> {
     val effect = if (event.hasNetworkConnection) {
-      OpenSelectShareFormatDialog
+      openDialogForShareEffect()
     } else {
       ShowNoActiveNetworkConnectionDialog
     }
@@ -35,6 +35,10 @@ class OverdueUpdate(
 
   private fun downloadOverdueListEffect(): OverdueEffect {
     return if (canGeneratePdf) OpenSelectDownloadFormatDialog else ScheduleDownload(CSV)
+  }
+
+  private fun openDialogForShareEffect(): OverdueEffect {
+    return OpenSelectShareFormatDialog
   }
 
   private fun downloadOverdueListClicked(event: DownloadOverdueListClicked): Next<OverdueModel, OverdueEffect> {

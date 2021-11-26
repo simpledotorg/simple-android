@@ -38,7 +38,7 @@ class OverdueUpdate(
   }
 
   private fun openDialogForShareEffect(): OverdueEffect {
-    return OpenSelectShareFormatDialog
+    return if (canGeneratePdf) OpenSelectShareFormatDialog else OpenProgressForSharingDialog
   }
 
   private fun downloadOverdueListClicked(event: DownloadOverdueListClicked): Next<OverdueModel, OverdueEffect> {

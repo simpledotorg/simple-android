@@ -135,4 +135,17 @@ class OverdueUpdateTest {
             hasEffects(OpenSelectShareFormatDialog)
         ))
   }
+
+  @Test
+  fun `when share overdue list button is clicked, network is connected but pdf can not be generated, then open progress for share dialog`() {
+    val updateSpec = UpdateSpec(OverdueUpdate(date = dateOnClock, canGeneratePdf = false))
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(ShareOverdueListClicked(networkStatus = Optional.of(ACTIVE)))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenProgressForSharingDialog)
+        ))
+  }
 }

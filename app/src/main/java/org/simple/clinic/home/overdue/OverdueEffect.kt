@@ -35,4 +35,6 @@ object OpenSelectDownloadFormatDialog : OverdueEffect()
 
 object OpenSelectShareFormatDialog : OverdueEffect()
 
+object OpenProgressForSharingDialog : OverdueEffect()
+
 data class ScheduleDownload(val fileFormat: OverdueListFileFormat) : OverdueEffect()

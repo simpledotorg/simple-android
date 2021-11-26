@@ -167,4 +167,14 @@ class OverdueEffectHandlerTest {
     effectHandlerTestCase.assertNoOutgoingEvents()
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when open progress for sharing dialog effect is received, then open progress for sharing dialog`() {
+    // when
+    effectHandlerTestCase.dispatch(OpenProgressForSharingDialog)
+
+    // then
+    verify(uiActions).openProgressForSharingDialog()
+    effectHandlerTestCase.assertNoOutgoingEvents()
+  }
 }

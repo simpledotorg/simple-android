@@ -41,6 +41,7 @@ import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.overdue.download.formatdialog.Download
+import org.simple.clinic.overdue.download.formatdialog.ProgressForSharing
 import org.simple.clinic.overdue.download.formatdialog.SelectOverdueDownloadFormatDialog
 import org.simple.clinic.overdue.download.formatdialog.Share
 import org.simple.clinic.summary.OpenIntention
@@ -224,6 +225,10 @@ class OverdueScreen : BaseScreen<
 
   override fun openSelectShareFormatDialog() {
     router.push(SelectOverdueDownloadFormatDialog.Key(Share))
+  }
+
+  override fun openProgressForSharingDialog() {
+    router.push(SelectOverdueDownloadFormatDialog.Key(ProgressForSharing))
   }
 
   private fun downloadOverdueListClicks(): Observable<UiEvent> {

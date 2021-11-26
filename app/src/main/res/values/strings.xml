@@ -902,5 +902,7 @@
   <string name="select_overdue_download_format_dialog_share_with">Share with</string>
   <string name="not_enough_storage_error_dialog_title">Not enough storage</string>
   <string name="not_enough_storage_error_dialog_message">Delete a few files and try again</string>
+  <string name="download_failed_error_dialog_title">Unable to download</string>
+  <string name="download_failed_error_dialog_message">Something went wrong. Wait a few minutes and try again</string>
 
 </resources>

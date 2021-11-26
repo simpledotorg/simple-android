@@ -8,6 +8,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.overdue.download.OverdueListDownloadResult.DownloadSuccessful
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.util.Rules
 import javax.inject.Inject
@@ -31,22 +32,22 @@ class OverdueListDownloaderIntegrationTest {
   @Test
   fun downloading_a_csv_should_work_correctly() {
     // when
-    val expectedUri = overdueListDownloader
+    val result = overdueListDownloader
         .download(OverdueListFileFormat.CSV)
         .blockingGet()
 
     // then
-    assertThat(expectedUri).isNotNull()
+    assertThat(result).isInstanceOf(DownloadSuccessful::class.java)
   }
 
   @Test
   fun downloading_a_pdf_should_work_correctly() {
     // when
-    val expectedUri = overdueListDownloader
+    val result = overdueListDownloader
         .download(OverdueListFileFormat.PDF)
         .blockingGet()
 
     // then
-    assertThat(expectedUri).isNotNull()
+    assertThat(result).isInstanceOf(DownloadSuccessful::class.java)
   }
 }

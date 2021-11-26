@@ -11,6 +11,9 @@ import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import io.reactivex.Single
 import okhttp3.ResponseBody
+import org.simple.clinic.overdue.download.OverdueListDownloadResult.DownloadFailed
+import org.simple.clinic.overdue.download.OverdueListDownloadResult.DownloadSuccessful
+import org.simple.clinic.overdue.download.OverdueListDownloadResult.NotEnoughStorage
 import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import org.simple.clinic.overdue.download.OverdueListFileFormat.PDF
 import org.simple.clinic.util.CsvToPdfConverter
@@ -55,6 +58,8 @@ class OverdueListDownloader @Inject constructor(
         .flatMap { path ->
           scanFile(path, fileFormat)
         }
+        .map { uri -> DownloadSuccessful(uri) as OverdueListDownloadResult }
+        .onErrorReturn { _ -> DownloadFailed }
   }
 
   private fun scanFile(

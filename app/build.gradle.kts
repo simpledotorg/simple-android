@@ -462,6 +462,8 @@ dependencies {
   runtimeOnly(libs.jackson.core)
 
   implementation(libs.datadog.sdk)
+
+  androidTestImplementation(libs.apache.commons.math)
 }
 
 // This must always be present at the bottom of this file, as per:

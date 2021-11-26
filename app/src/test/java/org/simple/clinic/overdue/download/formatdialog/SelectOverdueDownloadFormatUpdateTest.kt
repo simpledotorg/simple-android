@@ -10,6 +10,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.overdue.download.OverdueListDownloadResult.DownloadSuccessful
+import org.simple.clinic.overdue.download.OverdueListDownloadResult.NotEnoughStorage
 import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import org.simple.clinic.overdue.download.OverdueListFileFormat.PDF
 
@@ -102,6 +103,17 @@ class SelectOverdueDownloadFormatUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasNoEffects()
+        ))
+  }
+
+   @Test
+  fun `when there is not enough space to download the file, then open not enough storage error dialog`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(FileDownloadedForSharing(NotEnoughStorage))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenNotEnoughStorageErrorDialog)
         ))
   }
 }

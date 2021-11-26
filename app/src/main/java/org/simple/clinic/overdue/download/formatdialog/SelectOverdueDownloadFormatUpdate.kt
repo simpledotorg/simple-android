@@ -31,7 +31,7 @@ class SelectOverdueDownloadFormatUpdate : Update<SelectOverdueDownloadFormatMode
           ShareDownloadedFile(result.uri, model.overdueListFileFormat.mimeType)
       )
       OverdueListDownloadResult.DownloadFailed -> noChange()
-      OverdueListDownloadResult.NotEnoughStorage -> noChange()
+      OverdueListDownloadResult.NotEnoughStorage -> dispatch(OpenNotEnoughStorageErrorDialog)
     }
   }
 

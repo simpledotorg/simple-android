@@ -61,4 +61,4 @@ jobs:
       - name: Rebase
         uses: cirrus-actions/rebase@1.4
         env:
-          GITHUB_TOKEN: ${{ secrets.SERVICES_ACCESS_TOKEN  }
+          GITHUB_TOKEN: ${{ secrets.SERVICES_ACCESS_TOKEN  }}

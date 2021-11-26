@@ -900,5 +900,7 @@
   <string name="select_overdue_download_format_dialog_action_positive_download">Download</string>
   <string name="select_overdue_download_format_dialog_action_positive_share">Share</string>
   <string name="select_overdue_download_format_dialog_share_with">Share with</string>
+  <string name="not_enough_storage_error_dialog_title">Not enough storage</string>
+  <string name="not_enough_storage_error_dialog_message">Delete a few files and try again</string>
 
 </resources>

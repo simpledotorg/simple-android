@@ -4,6 +4,7 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
+import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import java.time.LocalDate
 
 class OverdueUpdate(
@@ -33,7 +34,7 @@ class OverdueUpdate(
   }
 
   private fun downloadOverdueListEffect(): OverdueEffect {
-    return OpenSelectDownloadFormatDialog
+    return if (canGeneratePdf) OpenSelectDownloadFormatDialog else ScheduleDownload(CSV)
   }
 
   private fun downloadOverdueListClicked(event: DownloadOverdueListClicked): Next<OverdueModel, OverdueEffect> {

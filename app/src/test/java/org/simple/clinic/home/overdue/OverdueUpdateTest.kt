@@ -11,6 +11,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.analytics.NetworkConnectivityStatus.ACTIVE
 import org.simple.clinic.analytics.NetworkConnectivityStatus.INACTIVE
 import org.simple.clinic.facility.FacilityConfig
+import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import java.time.LocalDate
 import java.util.Optional
 import java.util.UUID
@@ -97,6 +98,19 @@ class OverdueUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenSelectDownloadFormatDialog)
+        ))
+  }
+
+  @Test
+  fun `when download overdue list button is clicked, network is connected and pdf can not be generated, then schedule download`() {
+    val updateSpec = UpdateSpec(OverdueUpdate(date = dateOnClock, canGeneratePdf = false))
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DownloadOverdueListClicked(networkStatus = Optional.of(ACTIVE)))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ScheduleDownload(CSV))
         ))
   }
 

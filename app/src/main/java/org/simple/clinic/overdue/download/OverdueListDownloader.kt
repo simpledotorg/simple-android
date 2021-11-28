@@ -6,6 +6,7 @@ import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.os.StatFs
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import io.reactivex.Single
@@ -27,9 +28,14 @@ class OverdueListDownloader @Inject constructor(
 
   companion object {
     private const val DOWNLOAD_FILE_NAME_PREFIX = "overdue-list-"
+    private const val MIN_REQ_SPACE = 10_00_0000L
   }
 
-  fun download(fileFormat: OverdueListFileFormat): Single<Uri> {
+  fun download(fileFormat: OverdueListFileFormat): Single<OverdueListDownloadResult> {
+    if (!hasMinReqSpace()) {
+      return Single.just(NotEnoughStorage)
+    }
+
     return api
         .download()
         .map { responseBody ->
@@ -134,5 +140,16 @@ class OverdueListDownloader @Inject constructor(
 
       return cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATA))
     }
+  }
+
+  private fun hasMinReqSpace(): Boolean {
+    // If we cannot get access to the directory, we will allow saving to directory and fail with
+    // error if there isn't enough space
+    val dir = appContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+        ?: return true
+    val statFs = StatFs(dir.path)
+    val availableSpace = statFs.availableBlocksLong * statFs.blockSizeLong
+
+    return availableSpace >= MIN_REQ_SPACE
   }
 }

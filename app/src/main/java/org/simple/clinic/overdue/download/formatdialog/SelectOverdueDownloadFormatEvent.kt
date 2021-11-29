@@ -1,12 +1,12 @@
 package org.simple.clinic.overdue.download.formatdialog
 
-import android.net.Uri
+import org.simple.clinic.overdue.download.OverdueListDownloadResult
 import org.simple.clinic.overdue.download.OverdueListFileFormat
 import org.simple.clinic.widgets.UiEvent
 
 sealed class SelectOverdueDownloadFormatEvent : UiEvent
 
-data class FileDownloadedForSharing(val uri: Uri) : SelectOverdueDownloadFormatEvent()
+data class FileDownloadedForSharing(val result: OverdueListDownloadResult) : SelectOverdueDownloadFormatEvent()
 
 object DownloadOrShareClicked : SelectOverdueDownloadFormatEvent() {
 

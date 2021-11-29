@@ -14,3 +14,7 @@ sealed class SelectOverdueDownloadFormatViewEffect : SelectOverdueDownloadFormat
 data class ShareDownloadedFile(val uri: Uri, val mimeType: String) : SelectOverdueDownloadFormatViewEffect()
 
 object Dismiss : SelectOverdueDownloadFormatViewEffect()
+
+object OpenNotEnoughStorageErrorDialog : SelectOverdueDownloadFormatViewEffect()
+
+object OpenDownloadFailedErrorDialog : SelectOverdueDownloadFormatViewEffect()

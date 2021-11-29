@@ -25,6 +25,10 @@ class TestDataModule {
   fun provideTestUserOtp(): String = "000000"
 
   @Provides
+  @Named("user_phone_number")
+  fun provideTestUserPhoneNumber(): String = "6664266642"
+
+  @Provides
   fun provideTestFacility(
       facilityRepository: FacilityRepository
   ): Facility {

@@ -84,6 +84,10 @@ class ServerAuthenticationRule : TestRule {
   @Named("user_otp")
   lateinit var userOtp: String
 
+  @Inject
+  @Named("user_phone_number")
+  lateinit var userPhoneNumber: String
+
   private val cachedUserInformationAdapter by unsafeLazy { moshi.adapter(CachedUserInformation::class.java) }
 
   override fun apply(base: Statement, description: Description): Statement {

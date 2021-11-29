@@ -25,6 +25,7 @@
 - Use `IO` scheduler for doing background tasks in `OverdueDownloadWorker`
 - Download/Share CSV only for API below 24
 - Show error dialog when overdue list download fails
+- Fix sharing downloaded overdue list through Whatsapp is not working
 
 ### Changes
 

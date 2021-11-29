@@ -16,11 +16,13 @@ import androidx.work.RxWorker
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import io.reactivex.Scheduler
 import io.reactivex.Single
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import org.simple.clinic.overdue.download.OverdueListFileFormat.PDF
+import org.simple.clinic.util.scheduler.SchedulersProvider
 import javax.inject.Inject
 
 class OverdueDownloadWorker(
@@ -57,10 +59,17 @@ class OverdueDownloadWorker(
   @Inject
   lateinit var workManager: WorkManager
 
+  @Inject
+  lateinit var schedulersProvider: SchedulersProvider
+
   private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
   init {
     ClinicApp.appComponent.inject(this)
+  }
+
+  override fun getBackgroundScheduler(): Scheduler {
+    return schedulersProvider.io()
   }
 
   override fun createWork(): Single<Result> {

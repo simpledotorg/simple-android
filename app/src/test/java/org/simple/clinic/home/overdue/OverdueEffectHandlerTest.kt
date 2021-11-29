@@ -171,7 +171,7 @@ class OverdueEffectHandlerTest {
   @Test
   fun `when open progress for sharing dialog effect is received, then open progress for sharing dialog`() {
     // when
-    effectHandlerTestCase.dispatch(OpenProgressForSharingDialog)
+    effectHandlerTestCase.dispatch(OpenSharingInProgressDialog)
 
     // then
     verify(uiActions).openProgressForSharingDialog()

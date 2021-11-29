@@ -145,7 +145,7 @@ class OverdueUpdateTest {
         .whenEvent(ShareOverdueListClicked(networkStatus = Optional.of(ACTIVE)))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenProgressForSharingDialog)
+            hasEffects(OpenSharingInProgressDialog)
         ))
   }
 }

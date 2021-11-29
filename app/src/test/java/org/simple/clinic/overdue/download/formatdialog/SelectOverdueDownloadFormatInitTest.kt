@@ -12,7 +12,7 @@ class SelectOverdueDownloadFormatInitTest {
   @Test
   fun `When dialog is opened in progress for sharing, then update the model and start download for share`() {
     val initSpec = InitSpec(SelectOverdueDownloadFormatInit())
-    val progressForSharingModel = SelectOverdueDownloadFormatModel.create(ProgressForSharing)
+    val progressForSharingModel = SelectOverdueDownloadFormatModel.create(SharingInProgress)
 
     initSpec
         .whenInit(progressForSharingModel)

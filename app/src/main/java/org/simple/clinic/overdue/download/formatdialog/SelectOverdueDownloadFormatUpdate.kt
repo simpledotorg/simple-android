@@ -30,7 +30,7 @@ class SelectOverdueDownloadFormatUpdate : Update<SelectOverdueDownloadFormatMode
           DownloadForShare(model.overdueListFileFormat)
       )
       Download -> dispatch(ScheduleDownload(model.overdueListFileFormat))
-      ProgressForSharing -> noChange()
+      SharingInProgress -> noChange()
     }
   }
 }

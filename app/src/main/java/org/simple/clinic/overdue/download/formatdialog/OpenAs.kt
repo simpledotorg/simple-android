@@ -9,7 +9,7 @@ sealed class OpenAs : Parcelable
 object Share : OpenAs()
 
 @Parcelize
-object ProgressForSharing : OpenAs()
+object SharingInProgress : OpenAs()
 
 @Parcelize
 object Download : OpenAs()

@@ -8,7 +8,7 @@ import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 
 class SelectOverdueDownloadFormatInit : Init<SelectOverdueDownloadFormatModel, SelectOverdueDownloadFormatEffect> {
   override fun init(model: SelectOverdueDownloadFormatModel): First<SelectOverdueDownloadFormatModel, SelectOverdueDownloadFormatEffect> {
-    return if (model.openAs is ProgressForSharing) {
+    return if (model.openAs is SharingInProgress) {
       first(model.overdueDownloadInProgress(), DownloadForShare(CSV))
     } else {
       first(model)

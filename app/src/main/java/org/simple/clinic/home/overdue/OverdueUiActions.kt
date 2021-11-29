@@ -14,4 +14,5 @@ interface OverdueUiActions {
   fun showNoActiveNetworkConnectionDialog()
   fun openSelectDownloadFormatDialog()
   fun openSelectShareFormatDialog()
+  fun openProgressForSharingDialog()
 }

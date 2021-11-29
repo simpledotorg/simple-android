@@ -1,6 +1,7 @@
 package org.simple.clinic.home.overdue
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -40,6 +41,7 @@ import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.overdue.download.formatdialog.Download
+import org.simple.clinic.overdue.download.formatdialog.SharingInProgress
 import org.simple.clinic.overdue.download.formatdialog.SelectOverdueDownloadFormatDialog
 import org.simple.clinic.overdue.download.formatdialog.Share
 import org.simple.clinic.summary.OpenIntention
@@ -155,7 +157,8 @@ class OverdueScreen : BaseScreen<
 
   override fun createUpdate(): Update<OverdueModel, OverdueEvent, OverdueEffect> {
     val date = LocalDate.now(userClock)
-    return OverdueUpdate(date)
+    val canGeneratePdf = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+    return OverdueUpdate(date, canGeneratePdf)
   }
 
   override fun createInit() = OverdueInit()
@@ -222,6 +225,10 @@ class OverdueScreen : BaseScreen<
 
   override fun openSelectShareFormatDialog() {
     router.push(SelectOverdueDownloadFormatDialog.Key(Share))
+  }
+
+  override fun openProgressForSharingDialog() {
+    router.push(SelectOverdueDownloadFormatDialog.Key(SharingInProgress))
   }
 
   private fun downloadOverdueListClicks(): Observable<UiEvent> {

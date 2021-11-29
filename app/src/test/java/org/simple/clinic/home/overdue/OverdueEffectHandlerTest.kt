@@ -16,6 +16,8 @@ import org.simple.clinic.TestData
 import org.simple.clinic.analytics.NetworkCapabilitiesProvider
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.overdue.download.OverdueDownloadScheduler
+import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.PagingSourceFactory
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -38,12 +40,14 @@ class OverdueEffectHandlerTest {
       overdueAppointmentsLoadSize = 10
   )
   private val networkCapabilitiesProvider = mock<NetworkCapabilitiesProvider>()
+  private val overdueDownloadScheduler = mock<OverdueDownloadScheduler>()
   private val effectHandler = OverdueEffectHandler(
       schedulers = TestSchedulersProvider.trampoline(),
       appointmentRepository = mock(),
       currentFacilityStream = Observable.just(facility),
       pagerFactory = pagerFactory,
       overdueAppointmentsConfig = overdueAppointmentsConfig,
+      overdueDownloadScheduler = overdueDownloadScheduler,
       uiActions = uiActions
   ).build()
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
@@ -151,6 +155,26 @@ class OverdueEffectHandlerTest {
 
     // then
     verify(uiActions).openSelectShareFormatDialog()
+    effectHandlerTestCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when schedule download effect is received, then schedule the overdue list download`() {
+    // when
+    effectHandlerTestCase.dispatch(ScheduleDownload(CSV))
+
+    // given
+    effectHandlerTestCase.assertNoOutgoingEvents()
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when open progress for sharing dialog effect is received, then open progress for sharing dialog`() {
+    // when
+    effectHandlerTestCase.dispatch(OpenSharingInProgressDialog)
+
+    // then
+    verify(uiActions).openProgressForSharingDialog()
     effectHandlerTestCase.assertNoOutgoingEvents()
   }
 }

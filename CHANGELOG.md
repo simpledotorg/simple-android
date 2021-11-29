@@ -26,10 +26,11 @@
 - Download/Share CSV only for API below 24
 - Show error dialog when overdue list download fails
 - Fix sharing downloaded overdue list through Whatsapp is not working
+- Enable `OverdueListDownloadAndShare` feature flag
 
 ### Changes
 
-- [In Progress: 26 Nov 2021] Add option to download & share overdue list
+- Add option to download & share overdue list
 
 ### Fixes
 

@@ -68,12 +68,7 @@ class OverdueListDownloader @Inject constructor(
   }
 
   private fun saveFileToDisk(fileFormat: OverdueListFileFormat, responseBody: ResponseBody): String {
-    val localDateNow = LocalDate.now(userClock)
-    val fileExtension = when (fileFormat) {
-      CSV -> "csv"
-      PDF -> "pdf"
-    }
-    val fileName = "$DOWNLOAD_FILE_NAME_PREFIX$localDateNow.$fileExtension"
+    val fileName = generateFileName(fileFormat)
 
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
       downloadApi29(fileName, responseBody, fileFormat)
@@ -87,12 +82,7 @@ class OverdueListDownloader @Inject constructor(
       responseBody: ResponseBody
   ): Uri? {
     appContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
-    val localDateNow = LocalDate.now(userClock)
-    val fileExtension = when (fileFormat) {
-      CSV -> "csv"
-      PDF -> "pdf"
-    }
-    val fileName = "$DOWNLOAD_FILE_NAME_PREFIX$localDateNow.$fileExtension"
+    val fileName = generateFileName(fileFormat)
     val file = File(
         appContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
         fileName
@@ -166,6 +156,15 @@ class OverdueListDownloader @Inject constructor(
           outputStream
       )
     }
+  }
+
+  private fun generateFileName(fileFormat: OverdueListFileFormat): String {
+    val localDateNow = LocalDate.now(userClock)
+    val fileExtension = when (fileFormat) {
+      CSV -> "csv"
+      PDF -> "pdf"
+    }
+    return "$DOWNLOAD_FILE_NAME_PREFIX$localDateNow.$fileExtension"
   }
 
   private fun getMediaStoreEntryPathApi29(uri: Uri): String? {

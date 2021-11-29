@@ -19,6 +19,7 @@ import org.simple.clinic.overdue.download.OverdueListFileFormat.PDF
 import org.simple.clinic.util.CsvToPdfConverter
 import org.simple.clinic.util.UserClock
 import java.io.File
+import java.io.OutputStream
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -84,18 +85,7 @@ class OverdueListDownloader @Inject constructor(
     val file = File(downloadsFolder, fileName)
     val outputStream = file.outputStream()
 
-    when (fileFormat) {
-      CSV -> responseBody.use {
-        outputStream.use {
-          responseBody.byteStream().copyTo(it)
-        }
-      }
-
-      PDF -> csvToPdfConverter.convert(
-          responseBody.byteStream(),
-          outputStream
-      )
-    }
+    writeResponseToOutputStream(fileFormat, responseBody, outputStream)
 
     return file.path
   }
@@ -116,6 +106,17 @@ class OverdueListDownloader @Inject constructor(
     val outputStream = appContext.contentResolver.openOutputStream(fileUri, "w")
         ?: throw Exception("ContentResolver couldn't open $fileUri outputStream")
 
+    writeResponseToOutputStream(fileFormat, responseBody, outputStream)
+
+    return getMediaStoreEntryPathApi29(fileUri)
+        ?: throw Exception("ContentResolver couldn't find $fileUri")
+  }
+
+  private fun writeResponseToOutputStream(
+      fileFormat: OverdueListFileFormat,
+      responseBody: ResponseBody,
+      outputStream: OutputStream
+  ) {
     when (fileFormat) {
       CSV -> responseBody.use {
         outputStream.use {
@@ -128,9 +129,6 @@ class OverdueListDownloader @Inject constructor(
           outputStream
       )
     }
-
-    return getMediaStoreEntryPathApi29(fileUri)
-        ?: throw Exception("ContentResolver couldn't find $fileUri")
   }
 
   private fun getMediaStoreEntryPathApi29(uri: Uri): String? {

@@ -107,13 +107,7 @@ class ServerAuthenticationRule : TestRule {
 
   private fun ensureLoggedInUser() {
     ensureFacilities()
-    val cachedUserInformation = readCachedUserInformation()
-    if (cachedUserInformation != null) {
-      loginWithPhoneNumber(cachedUserInformation.userUuid, cachedUserInformation.phoneNumber)
-    } else {
-      register()
-      cacheRegisteredUserInformation()
-    }
+    findOrRegisterUser()
   }
 
   private fun ensureFacilities() {

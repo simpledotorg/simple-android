@@ -23,10 +23,11 @@
   - Enable star projection of queries
   - Enable incremental annotation processing
 - Use `IO` scheduler for doing background tasks in `OverdueDownloadWorker`
+- Download/Share CSV only for API below 24
 
 ### Changes
 
-- [In Progress: 23 Nov 2021] Add option to download & share overdue list
+- [In Progress: 26 Nov 2021] Add option to download & share overdue list
 
 ### Fixes
 

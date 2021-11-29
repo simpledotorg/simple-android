@@ -4,10 +4,12 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
+import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import java.time.LocalDate
 
 class OverdueUpdate(
-    val date: LocalDate
+    val date: LocalDate,
+    val canGeneratePdf: Boolean
 ) : Update<OverdueModel, OverdueEvent, OverdueEffect> {
 
   override fun update(model: OverdueModel, event: OverdueEvent): Next<OverdueModel, OverdueEffect> {
@@ -23,7 +25,7 @@ class OverdueUpdate(
 
   private fun shareOverdueListClicked(event: ShareOverdueListClicked): Next<OverdueModel, OverdueEffect> {
     val effect = if (event.hasNetworkConnection) {
-      OpenSelectShareFormatDialog
+      openDialogForShareEffect()
     } else {
       ShowNoActiveNetworkConnectionDialog
     }
@@ -31,9 +33,17 @@ class OverdueUpdate(
     return dispatch(effect)
   }
 
+  private fun downloadOverdueListEffect(): OverdueEffect {
+    return if (canGeneratePdf) OpenSelectDownloadFormatDialog else ScheduleDownload(CSV)
+  }
+
+  private fun openDialogForShareEffect(): OverdueEffect {
+    return if (canGeneratePdf) OpenSelectShareFormatDialog else OpenSharingInProgressDialog
+  }
+
   private fun downloadOverdueListClicked(event: DownloadOverdueListClicked): Next<OverdueModel, OverdueEffect> {
     val effect = if (event.hasNetworkConnection) {
-      OpenSelectDownloadFormatDialog
+      downloadOverdueListEffect()
     } else {
       ShowNoActiveNetworkConnectionDialog
     }

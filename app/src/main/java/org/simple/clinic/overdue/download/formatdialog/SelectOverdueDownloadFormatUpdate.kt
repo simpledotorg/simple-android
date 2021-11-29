@@ -1,6 +1,7 @@
 package org.simple.clinic.overdue.download.formatdialog
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -29,6 +30,7 @@ class SelectOverdueDownloadFormatUpdate : Update<SelectOverdueDownloadFormatMode
           DownloadForShare(model.overdueListFileFormat)
       )
       Download -> dispatch(ScheduleDownload(model.overdueListFileFormat))
+      SharingInProgress -> noChange()
     }
   }
 }

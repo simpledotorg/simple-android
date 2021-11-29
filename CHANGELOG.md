@@ -22,6 +22,7 @@
 - Improve Room annotation processing
   - Enable star projection of queries
   - Enable incremental annotation processing
+- Use `IO` scheduler for doing background tasks in `OverdueDownloadWorker`
 
 ### Changes
 

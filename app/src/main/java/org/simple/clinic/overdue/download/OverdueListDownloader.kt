@@ -9,6 +9,7 @@ import android.os.Environment
 import android.os.StatFs
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
+import androidx.core.content.FileProvider
 import io.reactivex.Single
 import okhttp3.ResponseBody
 import org.simple.clinic.overdue.download.OverdueListDownloadResult.DownloadFailed
@@ -52,6 +53,20 @@ class OverdueListDownloader @Inject constructor(
         .onErrorReturn { _ -> DownloadFailed }
   }
 
+  fun downloadForShare(fileFormat: OverdueListFileFormat): Single<OverdueListDownloadResult> {
+    if (!hasMinReqSpace()) {
+      return Single.just(NotEnoughStorage)
+    }
+
+    return api
+        .download()
+        .map { responseBody ->
+          saveFileToAppData(fileFormat, responseBody)
+        }
+        .map { uri -> DownloadSuccessful(uri) as OverdueListDownloadResult }
+        .onErrorReturn { _ -> DownloadFailed }
+  }
+
   private fun saveFileToDisk(fileFormat: OverdueListFileFormat, responseBody: ResponseBody): String {
     val localDateNow = LocalDate.now(userClock)
     val fileExtension = when (fileFormat) {
@@ -65,6 +80,28 @@ class OverdueListDownloader @Inject constructor(
     } else {
       downloadApi21(fileName, responseBody, fileFormat)
     }
+  }
+
+  private fun saveFileToAppData(
+      fileFormat: OverdueListFileFormat,
+      responseBody: ResponseBody
+  ): Uri? {
+    appContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+    val localDateNow = LocalDate.now(userClock)
+    val fileExtension = when (fileFormat) {
+      CSV -> "csv"
+      PDF -> "pdf"
+    }
+    val fileName = "$DOWNLOAD_FILE_NAME_PREFIX$localDateNow.$fileExtension"
+    val file = File(
+        appContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
+        fileName
+    )
+    val outputStream = file.outputStream()
+
+    writeResponseToOutputStream(fileFormat, responseBody, outputStream)
+
+    return FileProvider.getUriForFile(appContext, appContext.packageName + ".provider", file)
   }
 
   private fun scanFile(

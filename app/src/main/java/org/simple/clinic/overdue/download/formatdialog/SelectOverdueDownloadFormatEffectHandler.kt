@@ -44,7 +44,7 @@ class SelectOverdueDownloadFormatEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .flatMapSingle { overdueListDownloader.download(it.fileFormat) }
+          .flatMapSingle { overdueListDownloader.downloadForShare(it.fileFormat) }
           .map(::FileDownloadedForSharing)
     }
   }

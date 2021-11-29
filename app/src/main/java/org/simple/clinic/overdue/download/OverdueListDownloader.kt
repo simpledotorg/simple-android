@@ -9,6 +9,7 @@ import android.os.Environment
 import android.os.StatFs
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
+import androidx.core.content.FileProvider
 import io.reactivex.Single
 import okhttp3.ResponseBody
 import org.simple.clinic.overdue.download.OverdueListDownloadResult.DownloadFailed
@@ -19,6 +20,7 @@ import org.simple.clinic.overdue.download.OverdueListFileFormat.PDF
 import org.simple.clinic.util.CsvToPdfConverter
 import org.simple.clinic.util.UserClock
 import java.io.File
+import java.io.OutputStream
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -51,19 +53,45 @@ class OverdueListDownloader @Inject constructor(
         .onErrorReturn { _ -> DownloadFailed }
   }
 
-  private fun saveFileToDisk(fileFormat: OverdueListFileFormat, responseBody: ResponseBody): String {
-    val localDateNow = LocalDate.now(userClock)
-    val fileExtension = when (fileFormat) {
-      CSV -> "csv"
-      PDF -> "pdf"
+  fun downloadForShare(fileFormat: OverdueListFileFormat): Single<OverdueListDownloadResult> {
+    if (!hasMinReqSpace()) {
+      return Single.just(NotEnoughStorage)
     }
-    val fileName = "$DOWNLOAD_FILE_NAME_PREFIX$localDateNow.$fileExtension"
+
+    return api
+        .download()
+        .map { responseBody ->
+          saveFileToAppData(fileFormat, responseBody)
+        }
+        .map { uri -> DownloadSuccessful(uri) as OverdueListDownloadResult }
+        .onErrorReturn { _ -> DownloadFailed }
+  }
+
+  private fun saveFileToDisk(fileFormat: OverdueListFileFormat, responseBody: ResponseBody): String {
+    val fileName = generateFileName(fileFormat)
 
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
       downloadApi29(fileName, responseBody, fileFormat)
     } else {
       downloadApi21(fileName, responseBody, fileFormat)
     }
+  }
+
+  private fun saveFileToAppData(
+      fileFormat: OverdueListFileFormat,
+      responseBody: ResponseBody
+  ): Uri? {
+    appContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+    val fileName = generateFileName(fileFormat)
+    val file = File(
+        appContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
+        fileName
+    )
+    val outputStream = file.outputStream()
+
+    writeResponseToOutputStream(fileFormat, responseBody, outputStream)
+
+    return FileProvider.getUriForFile(appContext, appContext.packageName + ".provider", file)
   }
 
   private fun scanFile(
@@ -84,18 +112,7 @@ class OverdueListDownloader @Inject constructor(
     val file = File(downloadsFolder, fileName)
     val outputStream = file.outputStream()
 
-    when (fileFormat) {
-      CSV -> responseBody.use {
-        outputStream.use {
-          responseBody.byteStream().copyTo(it)
-        }
-      }
-
-      PDF -> csvToPdfConverter.convert(
-          responseBody.byteStream(),
-          outputStream
-      )
-    }
+    writeResponseToOutputStream(fileFormat, responseBody, outputStream)
 
     return file.path
   }
@@ -116,6 +133,17 @@ class OverdueListDownloader @Inject constructor(
     val outputStream = appContext.contentResolver.openOutputStream(fileUri, "w")
         ?: throw Exception("ContentResolver couldn't open $fileUri outputStream")
 
+    writeResponseToOutputStream(fileFormat, responseBody, outputStream)
+
+    return getMediaStoreEntryPathApi29(fileUri)
+        ?: throw Exception("ContentResolver couldn't find $fileUri")
+  }
+
+  private fun writeResponseToOutputStream(
+      fileFormat: OverdueListFileFormat,
+      responseBody: ResponseBody,
+      outputStream: OutputStream
+  ) {
     when (fileFormat) {
       CSV -> responseBody.use {
         outputStream.use {
@@ -128,9 +156,15 @@ class OverdueListDownloader @Inject constructor(
           outputStream
       )
     }
+  }
 
-    return getMediaStoreEntryPathApi29(fileUri)
-        ?: throw Exception("ContentResolver couldn't find $fileUri")
+  private fun generateFileName(fileFormat: OverdueListFileFormat): String {
+    val localDateNow = LocalDate.now(userClock)
+    val fileExtension = when (fileFormat) {
+      CSV -> "csv"
+      PDF -> "pdf"
+    }
+    return "$DOWNLOAD_FILE_NAME_PREFIX$localDateNow.$fileExtension"
   }
 
   private fun getMediaStoreEntryPathApi29(uri: Uri): String? {

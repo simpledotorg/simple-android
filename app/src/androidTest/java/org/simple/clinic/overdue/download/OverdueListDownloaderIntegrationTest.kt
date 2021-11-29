@@ -50,4 +50,26 @@ class OverdueListDownloaderIntegrationTest {
     // then
     assertThat(result).isInstanceOf(DownloadSuccessful::class.java)
   }
+
+  @Test
+  fun downloading_a_csv_for_sharing_should_work_correctly() {
+    // when
+    val result = overdueListDownloader
+        .downloadForShare(OverdueListFileFormat.CSV)
+        .blockingGet()
+
+    // then
+    assertThat(result).isInstanceOf(DownloadSuccessful::class.java)
+  }
+
+  @Test
+  fun downloading_a_pdf_for_sharing_should_work_correctly() {
+    // when
+    val result = overdueListDownloader
+        .downloadForShare(OverdueListFileFormat.PDF)
+        .blockingGet()
+
+    // then
+    assertThat(result).isInstanceOf(DownloadSuccessful::class.java)
+  }
 }

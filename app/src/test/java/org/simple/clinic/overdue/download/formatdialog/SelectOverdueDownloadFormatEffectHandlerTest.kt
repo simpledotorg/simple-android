@@ -12,8 +12,9 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.download.OverdueDownloadScheduler
-import org.simple.clinic.overdue.download.OverdueListFileFormat
+import org.simple.clinic.overdue.download.OverdueListDownloadResult.DownloadSuccessful
 import org.simple.clinic.overdue.download.OverdueListDownloader
+import org.simple.clinic.overdue.download.OverdueListFileFormat
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 
 class SelectOverdueDownloadFormatEffectHandlerTest {
@@ -41,13 +42,13 @@ class SelectOverdueDownloadFormatEffectHandlerTest {
     // given
     val format = OverdueListFileFormat.CSV
 
-    whenever(overdueListDownloader.download(format)) doReturn Single.just(downloadedUri)
+    whenever(overdueListDownloader.download(format)) doReturn Single.just(DownloadSuccessful(downloadedUri))
 
     // when
     testCase.dispatch(DownloadForShare(format))
 
     // then
-    testCase.assertOutgoingEvents(FileDownloadedForSharing(downloadedUri))
+    testCase.assertOutgoingEvents(FileDownloadedForSharing(DownloadSuccessful(downloadedUri)))
 
     verifyZeroInteractions(uiActions)
   }
@@ -90,6 +91,30 @@ class SelectOverdueDownloadFormatEffectHandlerTest {
     testCase.assertNoOutgoingEvents()
 
     verify(uiActions).dismiss()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when open not enough storage error dialog effect is received, then open not enough storage error dialog`() {
+    // when
+    testCase.dispatch(OpenNotEnoughStorageErrorDialog)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openNotEnoughStorageErrorDialog()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when open download failed error dialog effect is received, then open download failed error dialog`() {
+    // when
+    testCase.dispatch(OpenDownloadFailedErrorDialog)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openDownloadFailedErrorDialog()
     verifyNoMoreInteractions(uiActions)
   }
 }

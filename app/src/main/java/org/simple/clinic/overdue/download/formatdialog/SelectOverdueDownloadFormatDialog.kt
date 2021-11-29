@@ -169,6 +169,14 @@ class SelectOverdueDownloadFormatDialog : BaseDialog<
     router.pop()
   }
 
+  override fun openNotEnoughStorageErrorDialog() {
+    router.replaceTop(NotEnoughStorageErrorDialog.Key())
+  }
+
+  override fun openDownloadFailedErrorDialog() {
+    router.replaceTop(DownloadFailedErrorDialog.Key())
+  }
+
   private fun downloadOrShareClicks() = downloadOrShareButton
       .clicks()
       .map { DownloadOrShareClicked }

@@ -6,10 +6,14 @@ import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.os.StatFs
 import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import io.reactivex.Single
 import okhttp3.ResponseBody
+import org.simple.clinic.overdue.download.OverdueListDownloadResult.DownloadFailed
+import org.simple.clinic.overdue.download.OverdueListDownloadResult.DownloadSuccessful
+import org.simple.clinic.overdue.download.OverdueListDownloadResult.NotEnoughStorage
 import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import org.simple.clinic.overdue.download.OverdueListFileFormat.PDF
 import org.simple.clinic.util.CsvToPdfConverter
@@ -27,28 +31,39 @@ class OverdueListDownloader @Inject constructor(
 
   companion object {
     private const val DOWNLOAD_FILE_NAME_PREFIX = "overdue-list-"
+    private const val MIN_REQ_SPACE = 10_00_0000L
   }
 
-  fun download(fileFormat: OverdueListFileFormat): Single<Uri> {
+  fun download(fileFormat: OverdueListFileFormat): Single<OverdueListDownloadResult> {
+    if (!hasMinReqSpace()) {
+      return Single.just(NotEnoughStorage)
+    }
+
     return api
         .download()
         .map { responseBody ->
-          val localDateNow = LocalDate.now(userClock)
-          val fileExtension = when (fileFormat) {
-            CSV -> "csv"
-            PDF -> "pdf"
-          }
-          val fileName = "$DOWNLOAD_FILE_NAME_PREFIX$localDateNow.$fileExtension"
-
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            downloadApi29(fileName, responseBody, fileFormat)
-          } else {
-            downloadApi21(fileName, responseBody, fileFormat)
-          }
+          saveFileToDisk(fileFormat, responseBody)
         }
         .flatMap { path ->
           scanFile(path, fileFormat)
         }
+        .map { uri -> DownloadSuccessful(uri) as OverdueListDownloadResult }
+        .onErrorReturn { _ -> DownloadFailed }
+  }
+
+  private fun saveFileToDisk(fileFormat: OverdueListFileFormat, responseBody: ResponseBody): String {
+    val localDateNow = LocalDate.now(userClock)
+    val fileExtension = when (fileFormat) {
+      CSV -> "csv"
+      PDF -> "pdf"
+    }
+    val fileName = "$DOWNLOAD_FILE_NAME_PREFIX$localDateNow.$fileExtension"
+
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      downloadApi29(fileName, responseBody, fileFormat)
+    } else {
+      downloadApi21(fileName, responseBody, fileFormat)
+    }
   }
 
   private fun scanFile(
@@ -134,5 +149,16 @@ class OverdueListDownloader @Inject constructor(
 
       return cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATA))
     }
+  }
+
+  private fun hasMinReqSpace(): Boolean {
+    // If we cannot get access to the directory, we will allow saving to directory and fail with
+    // error if there isn't enough space
+    val dir = appContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+        ?: return true
+    val statFs = StatFs(dir.path)
+    val availableSpace = statFs.availableBlocksLong * statFs.blockSizeLong
+
+    return availableSpace >= MIN_REQ_SPACE
   }
 }

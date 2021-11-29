@@ -42,24 +42,28 @@ class OverdueListDownloader @Inject constructor(
     return api
         .download()
         .map { responseBody ->
-          val localDateNow = LocalDate.now(userClock)
-          val fileExtension = when (fileFormat) {
-            CSV -> "csv"
-            PDF -> "pdf"
-          }
-          val fileName = "$DOWNLOAD_FILE_NAME_PREFIX$localDateNow.$fileExtension"
-
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            downloadApi29(fileName, responseBody, fileFormat)
-          } else {
-            downloadApi21(fileName, responseBody, fileFormat)
-          }
+          saveFileToDisk(fileFormat, responseBody)
         }
         .flatMap { path ->
           scanFile(path, fileFormat)
         }
         .map { uri -> DownloadSuccessful(uri) as OverdueListDownloadResult }
         .onErrorReturn { _ -> DownloadFailed }
+  }
+
+  private fun saveFileToDisk(fileFormat: OverdueListFileFormat, responseBody: ResponseBody): String {
+    val localDateNow = LocalDate.now(userClock)
+    val fileExtension = when (fileFormat) {
+      CSV -> "csv"
+      PDF -> "pdf"
+    }
+    val fileName = "$DOWNLOAD_FILE_NAME_PREFIX$localDateNow.$fileExtension"
+
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      downloadApi29(fileName, responseBody, fileFormat)
+    } else {
+      downloadApi21(fileName, responseBody, fileFormat)
+    }
   }
 
   private fun scanFile(

@@ -24,6 +24,8 @@ import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
+import org.simple.clinic.user.finduser.FindUserResult.*
+import org.simple.clinic.user.finduser.UserLookup
 import org.simple.clinic.user.registeruser.RegisterUser
 import org.simple.clinic.user.registeruser.RegistrationResult
 import org.simple.clinic.util.toNullable
@@ -77,6 +79,9 @@ class ServerAuthenticationRule : TestRule {
   lateinit var passwordHasher: PasswordHasher
 
   @Inject
+  lateinit var userLookup: UserLookup
+
+  @Inject
   @Named("user_pin")
   lateinit var userPin: String
 
@@ -119,6 +124,14 @@ class ServerAuthenticationRule : TestRule {
     val result = facilitySync.pullWithResult()
 
     assertThat(result).isEqualTo(FacilityPullResult.Success)
+  }
+
+  private fun findOrRegisterUser() {
+    when (val result = userLookup.find(userPhoneNumber)) {
+      is Found -> loginWithPhoneNumber(result.uuid, userPhoneNumber)
+      NotFound -> register()
+      NetworkError, UnexpectedError -> throw RuntimeException("Could not lookup user because: $result")
+    }
   }
 
   private fun readCachedUserInformation(): CachedUserInformation? {

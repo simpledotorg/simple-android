@@ -59,9 +59,11 @@ class OverdueDownloadWorker(
 
   private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-  override fun createWork(): Single<Result> {
+  init {
     ClinicApp.appComponent.inject(this)
+  }
 
+  override fun createWork(): Single<Result> {
     createNotificationChannel()
     setForegroundAsync(downloadInProgressNotification()).get()
 

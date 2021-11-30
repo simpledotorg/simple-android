@@ -74,8 +74,6 @@ import javax.inject.Named
   RemoteConfigModule::class,
   SettingsModule::class,
   AppConfigModule::class,
-  HttpInterceptorsModule::class,
-  RetrofitModule::class,
   FirebaseRemoteConfigModule::class,
   LoginOtpSmsListenerModule::class,
   HttpInterceptorsModule::class,

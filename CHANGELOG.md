@@ -2,6 +2,9 @@
 
 ## Next Release
 
+## Internal
+- Remove duplicate included modules in `AppModule`
+
 ## On Demo
 
 ### Internal

@@ -192,20 +192,7 @@ class Router(
         .beginTransaction()
         .disallowAddToBackStack()
 
-    val (enterAnim, exitAnim) = when (direction) {
-      Direction.Forward -> Pair(
-          transactionOptions?.enterAnim ?: R.anim.router_slide_in_right,
-          transactionOptions?.exitAnim ?: R.anim.router_slide_out_left
-      )
-      Direction.Backward -> Pair(
-          transactionOptions?.enterAnim ?: R.anim.router_slide_in_left,
-          transactionOptions?.exitAnim ?: R.anim.router_slide_out_right
-      )
-      Direction.Replace -> Pair(
-          transactionOptions?.enterAnim ?: R.anim.router_fade_in,
-          transactionOptions?.exitAnim ?: R.anim.router_fade_out
-      )
-    }
+    val (enterAnim, exitAnim) = getTransactionAnimations(direction, transactionOptions)
 
     transaction.setCustomAnimations(enterAnim, exitAnim)
 
@@ -452,6 +439,24 @@ class Router(
     if (Looper.getMainLooper() !== Looper.myLooper()) {
       throw RuntimeException("Can only execute navigation state changes on the UI thread! Current thread is [${Thread.currentThread().name}].")
     }
+  }
+
+  private fun getTransactionAnimations(
+      direction: Direction,
+      transactionOptions: TransactionOptions?
+  ) = when (direction) {
+    Direction.Forward -> Pair(
+        transactionOptions?.enterAnim ?: R.anim.router_slide_in_right,
+        transactionOptions?.exitAnim ?: R.anim.router_slide_out_left
+    )
+    Direction.Backward -> Pair(
+        transactionOptions?.enterAnim ?: R.anim.router_slide_in_left,
+        transactionOptions?.exitAnim ?: R.anim.router_slide_out_right
+    )
+    Direction.Replace -> Pair(
+        transactionOptions?.enterAnim ?: R.anim.router_fade_in,
+        transactionOptions?.exitAnim ?: R.anim.router_fade_out
+    )
   }
 }
 

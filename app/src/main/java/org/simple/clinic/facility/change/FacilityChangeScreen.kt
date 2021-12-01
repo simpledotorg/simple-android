@@ -98,7 +98,7 @@ class FacilityChangeScreen :
   }
 
   private fun setupUiComponents() {
-    facilityPickerView.backClicked = router::pop
+    facilityPickerView.backClicked = { router.pop() }
   }
 
   private fun facilityClicks(): Observable<UiEvent> {

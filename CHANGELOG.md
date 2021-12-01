@@ -5,6 +5,7 @@
 ## Internal
 - Remove duplicate included modules in `AppModule`
 - Use hardcoded user in server integration tests
+- Add support to set custom animations for `Router` transactions
 
 ## On Demo
 

@@ -56,7 +56,7 @@ class FacilitySelectionScreen :
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    facilityPickerView.backClicked = router::pop
+    facilityPickerView.backClicked = { router.pop() }
   }
 
   private fun facilityClicks(): Observable<UiEvent> {

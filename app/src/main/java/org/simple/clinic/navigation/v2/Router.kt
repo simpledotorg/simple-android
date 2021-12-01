@@ -8,6 +8,7 @@ import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import org.simple.clinic.R
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.util.setFragmentResult
 
@@ -53,97 +54,103 @@ class Router(
   fun onReady(savedInstanceState: Bundle?) {
     history = savedInstanceState?.getParcelable(HISTORY_STATE_KEY) ?: history
 
-    executeStateChange(history, Direction.Replace, null)
+    executeStateChange(history, Direction.Replace, null, null)
   }
 
   fun onSaveInstanceState(savedInstanceState: Bundle) {
     savedInstanceState.putParcelable(HISTORY_STATE_KEY, history)
   }
 
-  fun clearHistoryAndPush(screenKey: ScreenKey) {
+  fun clearHistoryAndPush(screenKey: ScreenKey, transactionOptions: TransactionOptions? = null) {
     val newHistory = History(listOf(Normal(screenKey)))
 
-    executeStateChange(newHistory, Direction.Replace, null)
+    executeStateChange(newHistory, Direction.Replace, null, transactionOptions)
   }
 
-  fun push(screenKey: ScreenKey) {
+  fun push(screenKey: ScreenKey, transactionOptions: TransactionOptions? = null) {
     val navRequest = Normal(screenKey)
     if (!history.matchesTop(navRequest)) {
       val newHistory = history.add(navRequest)
 
-      executeStateChange(newHistory, Direction.Forward, null)
+      executeStateChange(newHistory, Direction.Forward, null, transactionOptions)
     }
   }
 
   fun pushExpectingResult(
       requestType: Parcelable,
-      key: ScreenKey
+      key: ScreenKey,
+      transactionOptions: TransactionOptions? = null
   ) {
     val navRequest = ExpectingResult(requestType, key)
     if (!history.matchesTop(navRequest)) {
       val newHistory = history.add(navRequest)
 
-      executeStateChange(newHistory, Direction.Forward, null)
+      executeStateChange(newHistory, Direction.Forward, null, transactionOptions)
     }
   }
 
-  fun replaceTop(screenKey: ScreenKey) {
+  fun replaceTop(screenKey: ScreenKey, transactionOptions: TransactionOptions? = null) {
     val newHistory = history
         .removeLast()
         .add(Normal(screenKey))
 
-    executeStateChange(newHistory, Direction.Replace, null)
+    executeStateChange(newHistory, Direction.Replace, null, transactionOptions)
   }
 
-  fun replaceTopExpectingResult(requestType: Parcelable, screenKey: ScreenKey) {
+  fun replaceTopExpectingResult(
+      requestType: Parcelable,
+      screenKey: ScreenKey,
+      transactionOptions: TransactionOptions? = null
+  ) {
     val newHistory = history
         .removeLast()
         .add(ExpectingResult(requestType, screenKey))
 
-    executeStateChange(newHistory, Direction.Forward, null)
+    executeStateChange(newHistory, Direction.Forward, null, transactionOptions)
   }
 
   fun replaceHistory(newHistory: History) {
-    executeStateChange(newHistory, Direction.Replace, null)
+    executeStateChange(newHistory, Direction.Replace, null, null)
   }
 
   fun currentHistory(): History {
     return history.copy()
   }
 
-  fun pop() {
+  fun pop(transactionOptions: TransactionOptions? = null) {
     val newHistory = history.removeLast()
 
-    executeStateChange(newHistory, Direction.Backward, null)
+    executeStateChange(newHistory, Direction.Backward, null, transactionOptions)
   }
 
-  fun popWithResult(result: ScreenResult) {
+  fun popWithResult(result: ScreenResult, transactionOptions: TransactionOptions? = null) {
     val newHistory = history.removeLast()
 
-    executeStateChange(newHistory, Direction.Backward, result)
+    executeStateChange(newHistory, Direction.Backward, result, transactionOptions)
   }
 
-  fun popUntil(key: ScreenKey) {
+  fun popUntil(key: ScreenKey, transactionOptions: TransactionOptions? = null) {
     val newHistory = history.removeUntil(key)
 
-    executeStateChange(newHistory, Direction.Backward, null)
+    executeStateChange(newHistory, Direction.Backward, null, transactionOptions)
   }
 
-  fun popUntilInclusive(key: ScreenKey) {
+  fun popUntilInclusive(key: ScreenKey, transactionOptions: TransactionOptions? = null) {
     val newHistory = history.removeUntilInclusive(key)
 
-    executeStateChange(newHistory, Direction.Backward, null)
+    executeStateChange(newHistory, Direction.Backward, null, transactionOptions)
   }
 
   fun replaceKeyOfSameType(
-      keyToPush: ScreenKey
+      keyToPush: ScreenKey,
+      transactionOptions: TransactionOptions? = null
   ) {
     val newHistory = history
         .removeWhile { screenKey -> !screenKey.matchesScreen(keyToPush) }
         .removeLast() // We need to remove the key which matches this key as well
         .add(Normal(keyToPush))
 
-    executeStateChange(newHistory, Direction.Replace, null)
+    executeStateChange(newHistory, Direction.Replace, null, transactionOptions)
   }
 
   fun hasKeyOfType(clazz: Class<*>): Boolean {
@@ -174,7 +181,8 @@ class Router(
   private fun executeStateChange(
       newHistory: History,
       direction: Direction,
-      screenResult: ScreenResult?
+      screenResult: ScreenResult?,
+      transactionOptions: TransactionOptions?
   ) {
     checkNotMainThread()
 
@@ -184,11 +192,9 @@ class Router(
         .beginTransaction()
         .disallowAddToBackStack()
 
-    transaction.setTransition(when (direction) {
-      Direction.Forward -> FragmentTransaction.TRANSIT_FRAGMENT_OPEN
-      Direction.Backward -> FragmentTransaction.TRANSIT_FRAGMENT_CLOSE
-      Direction.Replace -> FragmentTransaction.TRANSIT_FRAGMENT_FADE
-    })
+    val (enterAnim, exitAnim) = getTransactionAnimations(direction, transactionOptions)
+
+    transaction.setCustomAnimations(enterAnim, exitAnim)
 
     val currentNavRequests = history.requests
     val newNavRequests = newHistory.requests
@@ -433,6 +439,24 @@ class Router(
     if (Looper.getMainLooper() !== Looper.myLooper()) {
       throw RuntimeException("Can only execute navigation state changes on the UI thread! Current thread is [${Thread.currentThread().name}].")
     }
+  }
+
+  private fun getTransactionAnimations(
+      direction: Direction,
+      transactionOptions: TransactionOptions?
+  ) = when (direction) {
+    Direction.Forward -> Pair(
+        transactionOptions?.enterAnim ?: R.anim.router_slide_in_right,
+        transactionOptions?.exitAnim ?: R.anim.router_slide_out_left
+    )
+    Direction.Backward -> Pair(
+        transactionOptions?.enterAnim ?: R.anim.router_slide_in_left,
+        transactionOptions?.exitAnim ?: R.anim.router_slide_out_right
+    )
+    Direction.Replace -> Pair(
+        transactionOptions?.enterAnim ?: R.anim.router_fade_in,
+        transactionOptions?.exitAnim ?: R.anim.router_fade_out
+    )
   }
 }
 

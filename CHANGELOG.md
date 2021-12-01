@@ -4,6 +4,7 @@
 
 ## Internal
 - Remove duplicate included modules in `AppModule`
+- Use hardcoded user in server integration tests
 
 ## On Demo
 

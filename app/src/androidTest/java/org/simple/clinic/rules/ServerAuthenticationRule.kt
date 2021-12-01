@@ -3,10 +3,6 @@ package org.simple.clinic.rules
 import android.app.Application
 import android.content.SharedPreferences
 import com.google.common.truth.Truth.assertThat
-import com.squareup.moshi.JsonClass
-import com.squareup.moshi.JsonDataException
-import com.squareup.moshi.Moshi
-import io.bloco.faker.components.PhoneNumber
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
@@ -24,11 +20,11 @@ import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
+import org.simple.clinic.user.finduser.FindUserResult.*
+import org.simple.clinic.user.finduser.UserLookup
 import org.simple.clinic.user.registeruser.RegisterUser
 import org.simple.clinic.user.registeruser.RegistrationResult
 import org.simple.clinic.util.toNullable
-import org.simple.clinic.util.unsafeLazy
-import java.io.File
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -53,9 +49,6 @@ class ServerAuthenticationRule : TestRule {
   lateinit var facilitySync: FacilitySync
 
   @Inject
-  lateinit var fakePhoneNumber: PhoneNumber
-
-  @Inject
   lateinit var appDatabase: AppDatabase
 
   @Inject
@@ -68,13 +61,13 @@ class ServerAuthenticationRule : TestRule {
   lateinit var usersApi: UsersApi
 
   @Inject
-  lateinit var moshi: Moshi
-
-  @Inject
   lateinit var registerUser: RegisterUser
 
   @Inject
   lateinit var passwordHasher: PasswordHasher
+
+  @Inject
+  lateinit var userLookup: UserLookup
 
   @Inject
   @Named("user_pin")
@@ -84,7 +77,9 @@ class ServerAuthenticationRule : TestRule {
   @Named("user_otp")
   lateinit var userOtp: String
 
-  private val cachedUserInformationAdapter by unsafeLazy { moshi.adapter(CachedUserInformation::class.java) }
+  @Inject
+  @Named("user_phone_number")
+  lateinit var userPhoneNumber: String
 
   override fun apply(base: Statement, description: Description): Statement {
     return object : Statement() {
@@ -102,13 +97,7 @@ class ServerAuthenticationRule : TestRule {
 
   private fun ensureLoggedInUser() {
     ensureFacilities()
-    val cachedUserInformation = readCachedUserInformation()
-    if (cachedUserInformation != null) {
-      loginWithPhoneNumber(cachedUserInformation.userUuid, cachedUserInformation.phoneNumber)
-    } else {
-      register()
-      cacheRegisteredUserInformation()
-    }
+    findOrRegisterUser()
   }
 
   private fun ensureFacilities() {
@@ -117,20 +106,12 @@ class ServerAuthenticationRule : TestRule {
     assertThat(result).isEqualTo(FacilityPullResult.Success)
   }
 
-  private fun readCachedUserInformation(): CachedUserInformation? {
-    return temporaryFile()
-        .takeIf { it.exists() && it.length() > 0 }
-        ?.let { file ->
-          try {
-            cachedUserInformationAdapter.fromJson(file.readText())
-          } catch (e: JsonDataException) {
-            // This could potentially happen when running tests locally if the app was not
-            // uninstalled and the structure of the cached user information model has changed.
-            // In this case, we can register a new user and just cache that again and overwrite
-            // the file.
-            null
-          }
-        }
+  private fun findOrRegisterUser() {
+    when (val result = userLookup.find(userPhoneNumber)) {
+      is Found -> loginWithPhoneNumber(result.uuid, userPhoneNumber)
+      NotFound -> register()
+      NetworkError, UnexpectedError -> throw RuntimeException("Could not lookup user because: $result")
+    }
   }
 
   private fun loginWithPhoneNumber(userUuid: UUID, phoneNumber: String) {
@@ -167,13 +148,6 @@ class ServerAuthenticationRule : TestRule {
     verifyUserCanSyncData()
   }
 
-  private fun cacheRegisteredUserInformation() {
-    val savedUser = userSession.loggedInUserImmediate()!!
-
-    val json = cachedUserInformationAdapter.toJson(CachedUserInformation(savedUser.uuid, savedUser.phoneNumber))
-    temporaryFile().writeText(json)
-  }
-
   private fun getFirstStoredFacility(): Facility {
     return appDatabase
         .facilityDao()
@@ -184,7 +158,8 @@ class ServerAuthenticationRule : TestRule {
 
   private fun registerUserAtFacility(facility: Facility): RegistrationResult {
     val user = testData.loggedInUser(
-        phone = fakePhoneNumber.phoneNumber(),
+        name = "Android Test User",
+        phone = userPhoneNumber,
         pinDigest = passwordHasher.hash(userPin),
         currentFacilityUuid = facility.uuid,
         registrationFacilityUuid = facility.uuid
@@ -214,12 +189,4 @@ class ServerAuthenticationRule : TestRule {
     val packageManager = application.packageManager
     return packageManager.getPackageInfo(application.packageName, 0).versionName
   }
-
-  private fun temporaryFile() = File(application.cacheDir, "test-${appVersion()}.tmp")
-
-  @JsonClass(generateAdapter = true)
-  data class CachedUserInformation(
-      val userUuid: UUID,
-      val phoneNumber: String
-  )
 }

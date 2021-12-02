@@ -97,4 +97,8 @@ data class EditPatientModel(
 
   fun updateColonyOrVillagesList(colonyOrVillages: List<String>): EditPatientModel =
       copy(colonyOrVillagesList = colonyOrVillages)
+
+  fun inputFieldsLoaded(inputFields: InputFields): EditPatientModel {
+    return copy(inputFields = inputFields)
+  }
 }

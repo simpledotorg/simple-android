@@ -3,7 +3,6 @@ package org.simple.clinic.editpatient
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
-import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -68,7 +67,7 @@ class EditPatientUpdateTest {
         .given(model)
         .whenEvent(InputFieldsLoaded(inputFields))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(model.inputFieldsLoaded(inputFields)),
             hasEffects(SetupUi(inputFields) as EditPatientEffect)
         ))
   }

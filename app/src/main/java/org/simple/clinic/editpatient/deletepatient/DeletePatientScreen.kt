@@ -51,13 +51,11 @@ class DeletePatientScreen : BaseScreen<
     screenKeyProvider.keyFor<DeletePatientScreenKey>(this)
   }
 
-  private var binding: ScreenDeletePatientBinding? = null
-
   private val toolbar
-    get() = binding!!.toolbar
+    get() = binding.toolbar
 
   private val deleteReasonsRecyclerView
-    get() = binding!!.deleteReasonsRecyclerView
+    get() = binding.deleteReasonsRecyclerView
 
   private val deleteReasonsAdapter = ItemAdapter(
       diffCallback = DeleteReasonItem.DiffCallback(),
@@ -101,8 +99,6 @@ class DeletePatientScreen : BaseScreen<
     super.onFinishInflate()
     if (isInEditMode) return
 
-    binding = ScreenDeletePatientBinding.bind(this)
-
     context.injector<Injector>().inject(this)
 
     toolbar.setNavigationOnClickListener { router.pop() }
@@ -120,7 +116,6 @@ class DeletePatientScreen : BaseScreen<
   override fun onDetachedFromWindow() {
     deleteConfirmationDialog.dismiss()
     delegate.stop()
-    binding = null
     super.onDetachedFromWindow()
   }
 

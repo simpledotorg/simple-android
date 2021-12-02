@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
@@ -60,7 +59,7 @@ class TeleconsultPrescriptionScreen constructor(
   lateinit var screenKeyProvider: ScreenKeyProvider
 
   private val screenKey by unsafeLazy {
-    screenKeyProvider.keyFor<TeleconsultPrescriptionScreenKey>(this)
+    screenKeyProvider.keyFor<Key>(this)
   }
 
   private val events by unsafeLazy {

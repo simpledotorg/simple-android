@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter
 class DateOfBirthFieldTest {
   private val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
   private val dateOfBirthField = DateOfBirthField(
-      dateTimeFormatter,
+      { value -> LocalDate.parse(value, dateTimeFormatter) },
       LocalDate.parse("20/11/2019", dateTimeFormatter),
       _labelResId = 0
   )

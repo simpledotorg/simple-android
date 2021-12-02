@@ -26,7 +26,7 @@ class BangladeshInputFieldsProvider(
     return listOf(
         PatientNameField(R.string.patiententry_full_name),
         AgeField(R.string.patiententry_age),
-        DateOfBirthField(dateTimeFormatter, today, R.string.patiententry_date_of_birth_unfocused),
+        DateOfBirthField({ value -> LocalDate.parse(value, dateTimeFormatter) }, today, R.string.patiententry_date_of_birth_unfocused),
         LandlineOrMobileField(R.string.patiententry_phone_number),
         GenderField(_labelResId = 0, allowedGenders = setOf(Gender.Male, Gender.Female, Gender.Transgender)),
         AlternativeIdInputField(R.string.patiententry_bangladesh_national_id),

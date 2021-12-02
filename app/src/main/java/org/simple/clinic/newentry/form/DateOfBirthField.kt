@@ -4,11 +4,10 @@ import org.simple.clinic.newentry.form.ValidationError.DateIsInFuture
 import org.simple.clinic.newentry.form.ValidationError.InvalidDateFormat
 import org.simple.clinic.newentry.form.ValidationError.MissingValue
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
 data class DateOfBirthField(
-    private val dateTimeFormatter: DateTimeFormatter,
+    private val parseDate: (String) -> LocalDate,
     private val today: LocalDate,
     private val _labelResId: Int
 ) : InputField<String>(_labelResId) {
@@ -16,8 +15,7 @@ data class DateOfBirthField(
     if (value.isBlank()) return setOf(MissingValue)
 
     return try {
-      val parsedDate = LocalDate.parse(value, dateTimeFormatter)
-      if (parsedDate > today) {
+      if (parseDate(value) > today) {
         setOf(DateIsInFuture)
       } else {
         emptySet()

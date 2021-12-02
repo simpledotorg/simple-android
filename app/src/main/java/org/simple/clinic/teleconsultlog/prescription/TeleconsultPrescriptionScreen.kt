@@ -36,19 +36,17 @@ class TeleconsultPrescriptionScreen : BaseScreen<
     TeleconsultPrescriptionEffect,
     Unit>(), TeleconsultPrescriptionUi, TeleconsultPrescriptionUiActions {
 
-  private var binding: ScreenTeleconsultPrescriptionBinding? = null
-
   private val toolbar
-    get() = binding!!.toolbar
+    get() = binding.toolbar
 
   private val teleconsultPrescriptionDoctorInfoView
-    get() = binding!!.teleconsultPrescriptionDoctorInfoView
+    get() = binding.teleconsultPrescriptionDoctorInfoView
 
   private val teleconsultPrescriptionMedicinesView
-    get() = binding!!.teleconsultPrescriptionMedicinesView
+    get() = binding.teleconsultPrescriptionMedicinesView
 
   private val nextButton
-    get() = binding!!.nextButton
+    get() = binding.nextButton
 
   @Inject
   lateinit var router: Router
@@ -96,7 +94,6 @@ class TeleconsultPrescriptionScreen : BaseScreen<
   override fun onDetachedFromWindow() {
     hideKeyboard()
     delegate.stop()
-    binding = null
     super.onDetachedFromWindow()
   }
 
@@ -112,7 +109,6 @@ class TeleconsultPrescriptionScreen : BaseScreen<
     super.onFinishInflate()
     if (isInEditMode) return
 
-    binding = ScreenTeleconsultPrescriptionBinding.bind(this)
     context.injector<Injector>().inject(this)
   }
 

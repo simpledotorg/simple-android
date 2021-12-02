@@ -1,11 +1,8 @@
 package org.simple.clinic.editpatient.deletepatient
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.DialogInterface
 import android.os.Parcelable
-import android.util.AttributeSet
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
@@ -21,6 +18,7 @@ import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.util.unsafeLazy
@@ -30,10 +28,13 @@ import org.simple.clinic.widgets.dp
 import java.util.UUID
 import javax.inject.Inject
 
-class DeletePatientScreen(
-    context: Context,
-    attrs: AttributeSet
-) : ConstraintLayout(context, attrs), UiActions, DeletePatientUi {
+class DeletePatientScreen : BaseScreen<
+    DeletePatientScreen.Key,
+    ScreenDeletePatientBinding,
+    DeletePatientModel,
+    DeletePatientEvent,
+    DeletePatientEffect,
+    Unit>(), UiActions, DeletePatientUi {
 
   @Inject
   lateinit var router: Router

@@ -43,14 +43,13 @@ import org.simple.clinic.editpatient.EditPatientValidationError.FullNameEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
-import org.simple.clinic.editpatient.deletepatient.DeletePatientScreenKey
+import org.simple.clinic.editpatient.deletepatient.DeletePatientScreen
 import org.simple.clinic.feature.Feature.DeletePatient
 import org.simple.clinic.feature.Feature.VillageTypeAhead
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.form.AgeField
@@ -306,7 +305,7 @@ class EditPatientScreen : BaseScreen<
       colonyOrVillageEditText.setAdapter(villageTypeAheadAdapter)
     }
 
-    deletePatient.setOnClickListener { router.push(DeletePatientScreenKey(screenKey.patient.uuid).wrap()) }
+    deletePatient.setOnClickListener { router.push(DeletePatientScreen.Key(screenKey.patient.uuid)) }
   }
 
   override fun setupUi(inputFields: InputFields) {

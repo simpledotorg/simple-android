@@ -163,11 +163,11 @@ class DeletePatientScreen : BaseScreen<
   }
 
   override fun showConfirmDeleteDialog(patientName: String, deletedReason: DeletedReason) {
-    val message = context.getString(R.string.deletereason_confirm_message, patientName)
+    val message = getString(R.string.deletereason_confirm_message, patientName)
 
     with(deleteConfirmationDialog) {
       setMessage(message)
-      setButton(DialogInterface.BUTTON_POSITIVE, context.getString(R.string.deletereason_confirm_positive)) { _, _ ->
+      setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.deletereason_confirm_positive)) { _, _ ->
         dialogEvents.onNext(ConfirmPatientDeleteClicked(deletedReason))
       }
       show()
@@ -175,11 +175,11 @@ class DeletePatientScreen : BaseScreen<
   }
 
   override fun showConfirmDiedDialog(patientName: String) {
-    val message = context.getString(R.string.deletereason_confirm_message, patientName)
+    val message = getString(R.string.deletereason_confirm_message, patientName)
 
     with(deleteConfirmationDialog) {
       setMessage(message)
-      setButton(DialogInterface.BUTTON_POSITIVE, context.getString(R.string.deletereason_confirm_positive)) { _, _ ->
+      setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.deletereason_confirm_positive)) { _, _ ->
         dialogEvents.onNext(ConfirmPatientDiedClicked)
       }
       show()

@@ -2,6 +2,7 @@ package org.simple.clinic.editpatient
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -21,7 +22,8 @@ data class EditPatientModel(
     val savedPhoneNumber: PatientPhoneNumber?,
     val savedBangladeshNationalId: BusinessId?,
     val saveButtonState: EditPatientState?,
-    val colonyOrVillagesList: List<String>?
+    val colonyOrVillagesList: List<String>?,
+    val inputFields: InputFields?
 ) : Parcelable {
   companion object {
     fun from(
@@ -40,7 +42,17 @@ data class EditPatientModel(
           bangladeshNationalId
       )
       val ongoingEntry = savedEntry.copy()
-      return EditPatientModel(savedEntry, ongoingEntry, patient, address, phoneNumber, bangladeshNationalId, saveButtonState, null)
+      return EditPatientModel(
+          savedEntry,
+          ongoingEntry,
+          patient,
+          address,
+          phoneNumber,
+          bangladeshNationalId,
+          saveButtonState,
+          null,
+          null
+      )
     }
   }
 

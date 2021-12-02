@@ -140,10 +140,10 @@ class TeleconsultPrescriptionScreen : BaseScreen<
   override fun renderPatientDetails(patient: Patient) {
     val ageValue = patient.ageDetails.estimateAge(userClock)
     val patientGender = patient.gender
-    toolbar.title = context.getString(
+    toolbar.title = getString(
         R.string.screen_teleconsult_prescription_patient_details,
         patient.fullName,
-        context.getString(patientGender.displayLetterRes),
+        getString(patientGender.displayLetterRes),
         ageValue.toString()
     )
   }

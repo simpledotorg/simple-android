@@ -5,7 +5,11 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Parcelable
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.spotify.mobius.Init
+import com.spotify.mobius.Update
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
+import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -17,6 +21,7 @@ import org.simple.clinic.databinding.ScreenDeletePatientBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -129,6 +134,26 @@ class DeletePatientScreen : BaseScreen<
     super.onAttach(context)
     context.injector<Injector>().inject(this)
   }
+
+  override fun defaultModel() = DeletePatientModel.default(screenKey.patientUuid)
+
+  override fun events() = Observable
+      .mergeArray(
+          dialogEvents,
+          adapterEvents()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<DeletePatientEvent>()
+
+  override fun createInit() = DeletePatientInit()
+
+  override fun createUpdate() = DeletePatientUpdate()
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
+      .create(this)
+      .build()
+
+  override fun uiRenderer() = DeletePatientViewRenderer(this)
 
   override fun showDeleteReasons(
       patientDeleteReasons: List<PatientDeleteReason>,

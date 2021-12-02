@@ -2,6 +2,8 @@ package org.simple.clinic.teleconsultlog.prescription
 
 import android.content.Context
 import android.os.Parcelable
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
@@ -131,6 +133,9 @@ class TeleconsultPrescriptionScreen : BaseScreen<
       .build()
 
   override fun uiRenderer() = TeleconsultPrescriptionUiRenderer(this)
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenTeleconsultPrescriptionBinding
+      .inflate(layoutInflater, container, false)
 
   override fun renderPatientDetails(patient: Patient) {
     val ageValue = patient.ageDetails.estimateAge(userClock)

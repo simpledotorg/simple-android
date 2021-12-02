@@ -4,7 +4,9 @@ import android.content.Context
 import android.os.Parcelable
 import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
@@ -106,6 +108,29 @@ class TeleconsultPrescriptionScreen : BaseScreen<
     super.onAttach(context)
     context.injector<Injector>().inject(this)
   }
+
+  override fun defaultModel() = TeleconsultPrescriptionModel.create(
+      screenKey.teleconsultRecordId,
+      screenKey.patientUuid
+  )
+
+  override fun events() = Observable
+      .merge(
+          backClicks(),
+          nextClicks()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<TeleconsultPrescriptionEvent>()
+
+  override fun createInit() = TeleconsultPrescriptionInit()
+
+  override fun createUpdate() = TeleconsultPrescriptionUpdate()
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandler
+      .create(this)
+      .build()
+
+  override fun uiRenderer() = TeleconsultPrescriptionUiRenderer(this)
 
   override fun renderPatientDetails(patient: Patient) {
     val ageValue = patient.ageDetails.estimateAge(userClock)

@@ -1,9 +1,6 @@
 package org.simple.clinic.teleconsultlog.prescription
 
-import android.content.Context
 import android.os.Parcelable
-import android.util.AttributeSet
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
@@ -17,7 +14,6 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.teleconsultlog.shareprescription.TeleconsultSharePrescriptionScreenKey
@@ -56,13 +52,6 @@ class TeleconsultPrescriptionScreen : BaseScreen<
 
   @Inject
   lateinit var userClock: UserClock
-
-  @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
-
-  private val screenKey by unsafeLazy {
-    screenKeyProvider.keyFor<Key>(this)
-  }
 
   private val events by unsafeLazy {
     Observable

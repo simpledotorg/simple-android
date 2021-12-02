@@ -182,4 +182,9 @@ class DeletePatientScreen(
 
     override fun instantiateFragment() = DeletePatientScreen()
   }
+
+  interface Injector {
+
+    fun inject(target: DeletePatientScreen)
+  }
 }

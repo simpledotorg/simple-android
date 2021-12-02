@@ -22,6 +22,7 @@ import org.simple.clinic.drugs.selection.custom.CustomDrugEntrySheet
 import org.simple.clinic.drugs.selection.custom.drugfrequency.SelectDrugFrequencyDialog
 import org.simple.clinic.editpatient.ConfirmDiscardChangesDialog
 import org.simple.clinic.editpatient.EditPatientScreen
+import org.simple.clinic.editpatient.deletepatient.DeletePatientScreen
 import org.simple.clinic.editpatient.deletepatient.DeletePatientScreenInjector
 import org.simple.clinic.enterotp.EnterOtpScreen
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
@@ -141,7 +142,8 @@ interface TheActivityComponent :
     CustomDrugEntrySheet.Injector,
     SelectDrugFrequencyDialog.Injector,
     FacilitySelectionScreen.Injector,
-    SelectOverdueDownloadFormatDialog.Injector {
+    SelectOverdueDownloadFormatDialog.Injector,
+    DeletePatientScreen.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory

@@ -102,7 +102,7 @@ class DeletePatientScreen(
 
     binding = ScreenDeletePatientBinding.bind(this)
 
-    context.injector<DeletePatientScreenInjector>().inject(this)
+    context.injector<Injector>().inject(this)
 
     toolbar.setNavigationOnClickListener { router.pop() }
     with(deleteReasonsRecyclerView) {

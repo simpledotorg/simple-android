@@ -47,10 +47,6 @@ class DeletePatientScreen : BaseScreen<
 
   private val viewRenderer = DeletePatientViewRenderer(this)
 
-  private val screenKey by unsafeLazy {
-    screenKeyProvider.keyFor<DeletePatientScreenKey>(this)
-  }
-
   private val toolbar
     get() = binding.toolbar
 

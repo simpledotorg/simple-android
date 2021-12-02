@@ -1,6 +1,7 @@
 package org.simple.clinic.editpatient.deletepatient
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.DialogInterface
 import android.os.Parcelable
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -122,6 +123,11 @@ class DeletePatientScreen : BaseScreen<
   override fun onRestoreInstanceState(state: Parcelable?) {
     val viewState = delegate.onRestoreInstanceState(state)
     super.onRestoreInstanceState(viewState)
+  }
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
   }
 
   override fun showDeleteReasons(

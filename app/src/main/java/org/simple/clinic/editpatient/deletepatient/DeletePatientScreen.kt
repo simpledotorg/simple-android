@@ -94,7 +94,7 @@ class DeletePatientScreen : BaseScreen<
   }
 
   private val deleteConfirmationDialog by unsafeLazy {
-    MaterialAlertDialogBuilder(context, R.style.ThemeOverlay_Simple_MaterialAlertDialog_Destructive)
+    MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_Simple_MaterialAlertDialog_Destructive)
         .setTitle(R.string.deletereason_confirm_title)
         .setNegativeButton(R.string.deletereason_confirm_negative, null)
         .create()
@@ -139,7 +139,7 @@ class DeletePatientScreen : BaseScreen<
     toolbar.setNavigationOnClickListener { router.pop() }
     with(deleteReasonsRecyclerView) {
       adapter = deleteReasonsAdapter
-      addItemDecoration(DividerItemDecorator(context, marginStart = 56.dp, marginEnd = 16.dp))
+      addItemDecoration(DividerItemDecorator(requireContext(), marginStart = 56.dp, marginEnd = 16.dp))
     }
   }
 

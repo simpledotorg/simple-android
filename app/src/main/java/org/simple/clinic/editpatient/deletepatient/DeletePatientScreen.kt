@@ -11,6 +11,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ListDeleteReasonBinding
@@ -19,12 +20,14 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.DividerItemDecorator
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.dp
+import java.util.UUID
 import javax.inject.Inject
 
 class DeletePatientScreen(
@@ -169,5 +172,14 @@ class DeletePatientScreen(
         .itemEvents
         .ofType<DeleteReasonItem.Event.Clicked>()
         .map { PatientDeleteReasonClicked(it.reason) }
+  }
+
+  @Parcelize
+  data class Key(
+      val patientUuid: UUID,
+      override val analyticsName: String = "Delete Patient"
+  ) : ScreenKey() {
+
+    override fun instantiateFragment() = DeletePatientScreen()
   }
 }

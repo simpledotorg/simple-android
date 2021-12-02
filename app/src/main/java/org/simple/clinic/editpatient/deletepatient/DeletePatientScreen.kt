@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Parcelable
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.spotify.mobius.Init
 import com.spotify.mobius.Update
@@ -134,6 +136,9 @@ class DeletePatientScreen : BaseScreen<
     super.onAttach(context)
     context.injector<Injector>().inject(this)
   }
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenDeletePatientBinding
+      .inflate(layoutInflater, container, false)
 
   override fun defaultModel() = DeletePatientModel.default(screenKey.patientUuid)
 

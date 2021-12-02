@@ -4,16 +4,19 @@ import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenTeleconsultPrescriptionBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
@@ -155,6 +158,16 @@ class TeleconsultPrescriptionScreen constructor(
               medicalRegistrationId = medicalRegistrationId
           )
         }
+  }
+
+  @Parcelize
+  data class Key(
+      val patientUuid: UUID,
+      val teleconsultRecordId: UUID,
+      override val analyticsName: String = "Teleconsultation Prescription"
+  ) : ScreenKey() {
+
+    override fun instantiateFragment() = TeleconsultPrescriptionScreen()
   }
 
   interface Injector {

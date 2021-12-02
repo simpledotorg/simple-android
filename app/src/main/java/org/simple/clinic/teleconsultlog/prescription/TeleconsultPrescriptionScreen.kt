@@ -1,5 +1,6 @@
 package org.simple.clinic.teleconsultlog.prescription
 
+import android.content.Context
 import android.os.Parcelable
 import com.jakewharton.rxbinding3.appcompat.navigationClicks
 import com.jakewharton.rxbinding3.view.clicks
@@ -98,6 +99,11 @@ class TeleconsultPrescriptionScreen : BaseScreen<
     super.onFinishInflate()
     if (isInEditMode) return
 
+    context.injector<Injector>().inject(this)
+  }
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
     context.injector<Injector>().inject(this)
   }
 

@@ -16,6 +16,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
@@ -27,10 +28,13 @@ import org.simple.clinic.widgets.hideKeyboard
 import java.util.UUID
 import javax.inject.Inject
 
-class TeleconsultPrescriptionScreen constructor(
-    context: Context,
-    attrs: AttributeSet?
-) : ConstraintLayout(context, attrs), TeleconsultPrescriptionUi, TeleconsultPrescriptionUiActions {
+class TeleconsultPrescriptionScreen : BaseScreen<
+    TeleconsultPrescriptionScreen.Key,
+    ScreenTeleconsultPrescriptionBinding,
+    TeleconsultPrescriptionModel,
+    TeleconsultPrescriptionEvent,
+    TeleconsultPrescriptionEffect,
+    Unit>(), TeleconsultPrescriptionUi, TeleconsultPrescriptionUiActions {
 
   private var binding: ScreenTeleconsultPrescriptionBinding? = null
 

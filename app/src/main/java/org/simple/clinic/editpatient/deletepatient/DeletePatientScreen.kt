@@ -3,8 +3,10 @@ package org.simple.clinic.editpatient.deletepatient
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
+import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.spotify.mobius.Init
@@ -104,12 +106,6 @@ class DeletePatientScreen : BaseScreen<
     if (isInEditMode) return
 
     context.injector<Injector>().inject(this)
-
-    toolbar.setNavigationOnClickListener { router.pop() }
-    with(deleteReasonsRecyclerView) {
-      adapter = deleteReasonsAdapter
-      addItemDecoration(DividerItemDecorator(context, marginStart = 56.dp, marginEnd = 16.dp))
-    }
   }
 
   override fun onAttachedToWindow() {
@@ -135,6 +131,16 @@ class DeletePatientScreen : BaseScreen<
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+
+    toolbar.setNavigationOnClickListener { router.pop() }
+    with(deleteReasonsRecyclerView) {
+      adapter = deleteReasonsAdapter
+      addItemDecoration(DividerItemDecorator(context, marginStart = 56.dp, marginEnd = 16.dp))
+    }
   }
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenDeletePatientBinding

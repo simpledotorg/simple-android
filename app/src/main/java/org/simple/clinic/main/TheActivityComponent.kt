@@ -23,7 +23,6 @@ import org.simple.clinic.drugs.selection.custom.drugfrequency.SelectDrugFrequenc
 import org.simple.clinic.editpatient.ConfirmDiscardChangesDialog
 import org.simple.clinic.editpatient.EditPatientScreen
 import org.simple.clinic.editpatient.deletepatient.DeletePatientScreen
-import org.simple.clinic.editpatient.deletepatient.DeletePatientScreenInjector
 import org.simple.clinic.enterotp.EnterOtpScreen
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.change.FacilityChangeScreen
@@ -91,7 +90,6 @@ interface TheActivityComponent :
     AccessDeniedScreenInjector,
     PinEntryCardView.Injector,
     EnterOtpScreen.Injector,
-    DeletePatientScreenInjector,
     PatientsTabScreen.Injector,
     HelpScreen.Injector,
     ReportsScreen.Injector,

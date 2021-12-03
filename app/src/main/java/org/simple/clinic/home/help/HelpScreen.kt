@@ -7,12 +7,15 @@ import android.util.AttributeSet
 import android.widget.LinearLayout
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.rxkotlin.ofType
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenHelpBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
@@ -135,5 +138,13 @@ class HelpScreen(
 
   interface Injector {
     fun inject(target: HelpScreen)
+  }
+
+  @Parcelize
+  data class Key(
+      override val analyticsName: String = "Home"
+  ) : ScreenKey() {
+
+    override fun instantiateFragment() = HomeScreen()
   }
 }

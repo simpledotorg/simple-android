@@ -3,7 +3,6 @@ package org.simple.clinic.home.help
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,19 +10,15 @@ import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
-import io.reactivex.rxkotlin.ofType
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenHelpBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreen
-import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 
@@ -59,65 +54,11 @@ class HelpScreen : BaseScreen<
   private val errorMessageTextView
     get() = binding.errorMessageTextView
 
-  private val events by unsafeLazy {
-    tryAgainClicks()
-        .compose(ReportAnalyticsEvents())
-  }
-
-  private val delegate by unsafeLazy {
-    val uiRenderer = HelpScreenUiRenderer(this)
-
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = HelpScreenModel.create(),
-        init = HelpScreenInit(),
-        update = HelpScreenUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    binding = null
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
-  }
-
-  @SuppressLint("SetJavaScriptEnabled")
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-
-    if (isInEditMode) {
-      return
-    }
-
-    binding = ScreenHelpBinding.bind(this)
-
-    context.injector<Injector>().inject(this)
-
-    toolbar.setNavigationOnClickListener { router.pop() }
-
-    webView.settings.javaScriptEnabled = true
-  }
-
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)
   }
-  
+
   @SuppressLint("SetJavaScriptEnabled")
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)

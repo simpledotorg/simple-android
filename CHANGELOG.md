@@ -7,6 +7,7 @@
 - Use hardcoded user in server integration tests
 - Add support to set custom animations for `Router` transactions
 - Migrate `DeletePatientScreen` to a fragment
+- Migrate `TeleconsultPrescriptionScreen` to a fragment
 
 ## On Demo
 

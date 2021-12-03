@@ -20,16 +20,16 @@ import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
-import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.ActivityResult
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenResultBus
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.teleconsultlog.drugduration.DrugDuration
 import org.simple.clinic.teleconsultlog.drugduration.DrugDurationSheet
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequencySheet
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequencySheetExtra
-import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionScreenKey
+import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionScreen.Key
 import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.DividerItemDecorator
@@ -94,7 +94,7 @@ class TeleconsultMedicinesView(
   }
 
   private val screenKey by unsafeLazy {
-    screenKeyProvider.keyFor<TeleconsultPrescriptionScreenKey>(this)
+    screenKeyProvider.keyFor<Key>(this)
   }
 
   private val events by unsafeLazy {

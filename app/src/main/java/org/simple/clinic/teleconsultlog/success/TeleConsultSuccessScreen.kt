@@ -16,12 +16,11 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
-import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionScreenKey
+import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionScreen
 import org.simple.clinic.util.UserClock
 import java.util.UUID
 import javax.inject.Inject
@@ -102,7 +101,7 @@ class TeleConsultSuccessScreen : BaseScreen<
   }
 
   override fun goToPrescriptionScreen(patientUuid: UUID, teleconsultRecordId: UUID) {
-    router.push(TeleconsultPrescriptionScreenKey(patientUuid = patientUuid, teleconsultRecordId = teleconsultRecordId).wrap())
+    router.push(TeleconsultPrescriptionScreen.Key(patientUuid = patientUuid, teleconsultRecordId = teleconsultRecordId))
   }
 
   override fun showPatientInfo(patient: Patient) {

@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.text.TextWatcher
 import android.util.DisplayMetrics
 import android.view.MenuItem
 import android.view.View
@@ -48,6 +49,16 @@ fun ViewGroup.hideKeyboard() {
     val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
   }
+}
+
+fun EditText.setTextWithWatcher(textToSet: CharSequence?, textWatcher: TextWatcher) {
+  removeTextChangedListener(textWatcher)
+  setText(textToSet)
+
+  // Cannot rely on textToSet. It's possible that the
+  // EditText modifies the text using InputFilters.
+  setSelection(text.length)
+  addTextChangedListener(textWatcher)
 }
 
 fun EditText.setTextAndCursor(textToSet: CharSequence?) {

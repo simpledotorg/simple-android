@@ -91,7 +91,7 @@ import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.D
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.scrollToChild
-import org.simple.clinic.widgets.setTextAndCursor
+import org.simple.clinic.widgets.setTextWithWatcher
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -491,45 +491,31 @@ class EditPatientScreen : BaseScreen<
   }
 
   override fun setPatientName(name: String) {
-    fullNameEditText.removeTextChangedListener(fullNameEditTextChanges)
-    fullNameEditText.setTextAndCursor(name)
-    fullNameEditText.addTextChangedListener(fullNameEditTextChanges)
+    fullNameEditText.setTextWithWatcher(name, fullNameEditTextChanges)
   }
 
   override fun setPatientPhoneNumber(number: String) {
-    phoneNumberEditText.removeTextChangedListener(phoneNumberTextChanges)
-    phoneNumberEditText.setTextAndCursor(number)
-    phoneNumberEditText.addTextChangedListener(phoneNumberTextChanges)
+    phoneNumberEditText.setTextWithWatcher(number, phoneNumberTextChanges)
   }
 
   override fun setColonyOrVillage(colonyOrVillage: String) {
-    colonyOrVillageEditText.removeTextChangedListener(colonyOrVillageTextChanges)
-    colonyOrVillageEditText.setTextAndCursor(colonyOrVillage)
-    colonyOrVillageEditText.addTextChangedListener(colonyOrVillageTextChanges)
+    colonyOrVillageEditText.setTextWithWatcher(colonyOrVillage, colonyOrVillageTextChanges)
   }
 
   override fun setDistrict(district: String) {
-    districtEditText.removeTextChangedListener(districtTextChanges)
-    districtEditText.setTextAndCursor(district)
-    districtEditText.addTextChangedListener(districtTextChanges)
+    districtEditText.setTextWithWatcher(district, districtTextChanges)
   }
 
   override fun setState(state: String) {
-    stateEditText.removeTextChangedListener(stateTextChanges)
-    stateEditText.setTextAndCursor(state)
-    stateEditText.addTextChangedListener(stateTextChanges)
+    stateEditText.setTextWithWatcher(state, stateTextChanges)
   }
 
   override fun setStreetAddress(streetAddress: String?) {
-    streetAddressEditText.removeTextChangedListener(streetAddressTextChanges)
-    streetAddressEditText.setTextAndCursor(streetAddress)
-    streetAddressEditText.addTextChangedListener(streetAddressTextChanges)
+    streetAddressEditText.setTextWithWatcher(streetAddress, streetAddressTextChanges)
   }
 
   override fun setZone(zone: String?) {
-    zoneEditText.removeTextChangedListener(zoneTextChanges)
-    zoneEditText.setTextAndCursor(zone)
-    zoneEditText.addTextChangedListener(zoneTextChanges)
+    zoneEditText.setTextWithWatcher(zone, zoneTextChanges)
   }
 
   override fun setGender(gender: Gender) {
@@ -547,15 +533,11 @@ class EditPatientScreen : BaseScreen<
   }
 
   override fun setPatientAge(age: Int) {
-    ageEditText.removeTextChangedListener(ageTextChanges)
-    ageEditText.setTextAndCursor(age.toString())
-    ageEditText.addTextChangedListener(ageTextChanges)
+    ageEditText.setTextWithWatcher(age.toString(), ageTextChanges)
   }
 
   override fun setPatientDateOfBirth(dateOfBirth: LocalDate) {
-    dateOfBirthEditText.removeTextChangedListener(dateOfBirthTextChanges)
-    dateOfBirthEditText.setTextAndCursor(dateOfBirthFormat.format(dateOfBirth))
-    dateOfBirthEditText.addTextChangedListener(dateOfBirthTextChanges)
+    dateOfBirthEditText.setTextWithWatcher(dateOfBirthFormat.format(dateOfBirth), dateOfBirthTextChanges)
   }
 
   override fun showValidationErrors(errors: Set<EditPatientValidationError>) {
@@ -770,9 +752,7 @@ class EditPatientScreen : BaseScreen<
   }
 
   private fun setAlternateIdTextField(alternateId: Identifier) {
-    alternativeIdInputEditText.removeTextChangedListener(alternateIdTextChanges)
-    alternativeIdInputEditText.setTextAndCursor(alternateId.displayValue())
-    alternativeIdInputEditText.addTextChangedListener(alternateIdTextChanges)
+    alternativeIdInputEditText.setTextWithWatcher(alternateId.displayValue(), alternateIdTextChanges)
   }
 
   private fun setAlternateIdContainer(alternateId: Identifier) {

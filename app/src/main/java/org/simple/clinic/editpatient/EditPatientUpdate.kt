@@ -54,7 +54,7 @@ class EditPatientUpdate(
       is SaveClicked -> onSaveClicked(model)
       is AlternativeIdChanged -> next(model.updateAlternativeId(event.alternativeId))
       is BpPassportsFetched -> dispatch(DisplayBpPassportsEffect(event.bpPasssports))
-      is InputFieldsLoaded -> next(model.inputFieldsLoaded(event.inputFields), setOf(SetupUi(event.inputFields)))
+      is InputFieldsLoaded -> next(model.inputFieldsLoaded(event.inputFields))
       is ColonyOrVillagesFetched -> next(model.updateColonyOrVillagesList(event.colonyOrVillages))
     }
   }

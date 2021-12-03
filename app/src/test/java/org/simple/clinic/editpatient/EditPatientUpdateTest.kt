@@ -1,6 +1,5 @@
 package org.simple.clinic.editpatient
 
-import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.UpdateSpec
@@ -102,7 +101,7 @@ class EditPatientUpdateTest {
         .whenEvent(BpPassportsFetched(bpPassports))
         .then(assertThatNext(
             hasModel(model.bpPassportsLoaded(bpPassports)),
-            hasEffects(DisplayBpPassportsEffect(bpPassports))
+            hasNoEffects()
         ))
   }
 }

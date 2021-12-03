@@ -831,9 +831,6 @@ class EditPatientScreenFormTest {
         events = uiEvents,
         defaultModel = EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null, NOT_SAVING_PATIENT),
         init = EditPatientInit(patient = patient,
-            address = address,
-            phoneNumber = phoneNumber,
-            bangladeshNationalId = null,
             isVillageTypeAheadEnabled = true),
         update = EditPatientUpdate(
             numberValidator = numberValidator,

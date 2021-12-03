@@ -319,9 +319,6 @@ class EditPatientScreen : BaseScreen<
 
   override fun createInit() = EditPatientInit(
       patient = screenKey.patient,
-      address = screenKey.address,
-      phoneNumber = screenKey.phoneNumber,
-      bangladeshNationalId = screenKey.bangladeshNationalId,
       isVillageTypeAheadEnabled = features.isEnabled(VillageTypeAhead)
   )
 

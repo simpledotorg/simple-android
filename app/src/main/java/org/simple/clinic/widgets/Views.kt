@@ -14,6 +14,7 @@ import android.view.ViewPropertyAnimator
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.RadioGroup
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.ViewFlipper
@@ -298,6 +299,12 @@ fun MenuItem.visibleOrGone(isVisible: Boolean) {
 
 fun ViewPropertyAnimator.setDuration(duration: Duration): ViewPropertyAnimator {
   return setDuration(duration.toMillis())
+}
+
+fun RadioGroup.checkWithListener(@IdRes id: Int, onCheckedChangeListener: RadioGroup.OnCheckedChangeListener) {
+  setOnCheckedChangeListener(null)
+  check(id)
+  setOnCheckedChangeListener(onCheckedChangeListener)
 }
 
 val Int.dp: Int

@@ -2,8 +2,10 @@ package org.simple.clinic.home.help
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
@@ -116,6 +118,14 @@ class HelpScreen : BaseScreen<
     context.injector<Injector>().inject(this)
   }
   
+  @SuppressLint("SetJavaScriptEnabled")
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    toolbar.setNavigationOnClickListener { router.pop() }
+
+    webView.settings.javaScriptEnabled = true
+  }
+
   override fun defaultModel() = HelpScreenModel.create()
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenHelpBinding

@@ -68,7 +68,6 @@ class EditPatientScreenFormTest {
 
   private val uiEvents = PublishSubject.create<EditPatientEvent>()
   private val ui: EditPatientUi = mock()
-  private val viewRenderer = EditPatientViewRenderer(ui)
 
   private val utcClock: TestUtcClock = TestUtcClock()
   private val userClock: TestUserClock = TestUserClock()
@@ -77,6 +76,8 @@ class EditPatientScreenFormTest {
   private val patientRepository: PatientRepository = mock()
   private val country = TestData.country()
   private val user = TestData.loggedInUser()
+
+  private val viewRenderer = EditPatientViewRenderer(ui)
 
   private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider(
       dateTimeFormatter = dateOfBirthFormat,

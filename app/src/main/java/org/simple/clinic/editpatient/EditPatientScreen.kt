@@ -78,6 +78,7 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNatio
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaNationalId
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.afterTextChangedWatcher
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.unsafeLazy
@@ -93,7 +94,6 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.setTextWithWatcher
 import org.simple.clinic.widgets.visibleOrGone
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
@@ -130,6 +130,9 @@ class EditPatientScreen : BaseScreen<
 
   @Inject
   lateinit var features: Features
+
+  @Inject
+  lateinit var userClock: UserClock
 
   private val rootView
     get() = binding.root
@@ -532,12 +535,12 @@ class EditPatientScreen : BaseScreen<
     genderButton?.isChecked = true
   }
 
-  override fun setPatientAge(age: Int) {
-    ageEditText.setTextWithWatcher(age.toString(), ageTextChanges)
+  override fun setPatientAge(age: String) {
+    ageEditText.setTextWithWatcher(age, ageTextChanges)
   }
 
-  override fun setPatientDateOfBirth(dateOfBirth: LocalDate) {
-    dateOfBirthEditText.setTextWithWatcher(dateOfBirthFormat.format(dateOfBirth), dateOfBirthTextChanges)
+  override fun setPatientDateOfBirth(dateOfBirth: String) {
+    dateOfBirthEditText.setTextWithWatcher(dateOfBirth, dateOfBirthTextChanges)
   }
 
   override fun showValidationErrors(errors: Set<EditPatientValidationError>) {

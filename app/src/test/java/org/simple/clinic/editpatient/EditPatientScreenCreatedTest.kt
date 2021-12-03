@@ -98,7 +98,7 @@ class EditPatientScreenCreatedTest {
     }
 
     if (patientFormTestParams.shouldSetDateOfBirth) {
-      verify(ui).setPatientDateOfBirth(patient.ageDetails.dateOfBirth!!)
+      verify(ui).setPatientDateOfBirth(patient.ageDetails.dateOfBirth!!.format(dateOfBirthFormat))
     } else {
       verify(ui, never()).setPatientDateOfBirth(any())
     }

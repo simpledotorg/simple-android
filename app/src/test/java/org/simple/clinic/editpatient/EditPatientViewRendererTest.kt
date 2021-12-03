@@ -50,6 +50,15 @@ class EditPatientViewRendererTest {
     uiRenderer.render(colonyOrVillagesFetchedState)
 
     // then
+    verify(ui).setPatientName(patientProfile.patient.fullName)
+    verify(ui).setGender(patientProfile.patient.gender)
+    verify(ui).setState(patientProfile.address.state)
+    verify(ui).setDistrict(patientProfile.address.district)
+    verify(ui).setStreetAddress(patientProfile.address.streetAddress)
+    verify(ui).setZone(patientProfile.address.zone)
+    verify(ui).setColonyOrVillage(patientProfile.address.colonyOrVillage!!)
+    verify(ui).setPatientPhoneNumber(patientProfile.phoneNumbers.first().number)
+    verify(ui).setPatientDateOfBirth("2018-03-09")
     verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
     verify(ui).setColonyOrVillagesAutoComplete(colonyOrVillages)
     verify(ui).showProgress()
@@ -72,6 +81,15 @@ class EditPatientViewRendererTest {
     uiRenderer.render(inputFieldsLoadedModel)
 
     // then
+    verify(ui).setPatientName(patientProfile.patient.fullName)
+    verify(ui).setGender(patientProfile.patient.gender)
+    verify(ui).setState(patientProfile.address.state)
+    verify(ui).setDistrict(patientProfile.address.district)
+    verify(ui).setStreetAddress(patientProfile.address.streetAddress)
+    verify(ui).setZone(patientProfile.address.zone)
+    verify(ui).setColonyOrVillage(patientProfile.address.colonyOrVillage!!)
+    verify(ui).setPatientPhoneNumber(patientProfile.phoneNumbers.first().number)
+    verify(ui).setPatientDateOfBirth("09/03/1990")
     verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
     verify(ui).showProgress()
     verify(ui).setupUi(inputFields)
@@ -106,6 +124,15 @@ class EditPatientViewRendererTest {
     // then
     val expectedIdentifiers = listOf("090 2319", "236 9244")
 
+    verify(ui).setPatientName(patientProfile.patient.fullName)
+    verify(ui).setGender(patientProfile.patient.gender)
+    verify(ui).setState(patientProfile.address.state)
+    verify(ui).setDistrict(patientProfile.address.district)
+    verify(ui).setStreetAddress(patientProfile.address.streetAddress)
+    verify(ui).setZone(patientProfile.address.zone)
+    verify(ui).setColonyOrVillage(patientProfile.address.colonyOrVillage!!)
+    verify(ui).setPatientPhoneNumber(patientProfile.phoneNumbers.first().number)
+    verify(ui).setPatientDateOfBirth("09/03/1990")
     verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
     verify(ui).showProgress()
     verify(ui).displayBpPassports(expectedIdentifiers)

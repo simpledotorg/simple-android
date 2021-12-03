@@ -67,7 +67,6 @@ class EditPatientScreenSaveTest {
 
   private val uiEvents = PublishSubject.create<EditPatientEvent>()
   private val ui: EditPatientUi = mock()
-  private val viewRenderer = EditPatientViewRenderer(ui)
   private val patientRepository: PatientRepository = mock()
   private val country = TestData.country()
 
@@ -77,6 +76,8 @@ class EditPatientScreenSaveTest {
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
   private val generatedPhoneUuid = UUID.fromString("ada3ea24-819b-42e4-ac21-51bcf61cebac")
   private val user = TestData.loggedInUser()
+
+  private val viewRenderer = EditPatientViewRenderer(ui)
 
   private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider(
       dateTimeFormatter = dateOfBirthFormat,

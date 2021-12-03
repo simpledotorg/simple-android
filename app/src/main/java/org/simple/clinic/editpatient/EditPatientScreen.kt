@@ -8,7 +8,6 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.RadioButton
 import androidx.core.view.isGone
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.ChangeBounds
@@ -17,7 +16,6 @@ import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding3.view.clicks
-import com.jakewharton.rxbinding3.widget.checkedChanges
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
@@ -91,6 +89,7 @@ import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.B
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+import org.simple.clinic.widgets.checkWithListener
 import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.setTextWithWatcher
 import org.simple.clinic.widgets.visibleOrGone
@@ -331,7 +330,6 @@ class EditPatientScreen : BaseScreen<
 
   override fun events() = Observable.mergeArray(
       saveClicks(),
-      genderChanges(),
       dateOfBirthFocusChanges(),
       backClicks(),
       hotEvents
@@ -456,21 +454,6 @@ class EditPatientScreen : BaseScreen<
         .cast()
   }
 
-  private fun genderChanges(): Observable<EditPatientEvent> {
-    val radioIdToGenders = mapOf(
-        R.id.femaleRadioButton to Female,
-        R.id.maleRadioButton to Male,
-        R.id.transgenderRadioButton to Transgender)
-
-    return genderRadioGroup
-        .checkedChanges()
-        .filter { it != -1 }
-        .map { checkedId ->
-          val gender = radioIdToGenders.getValue(checkedId)
-          GenderChanged(gender)
-        }
-  }
-
   private fun dateOfBirthFocusChanges(): Observable<EditPatientEvent> = dateOfBirthEditText.focusChanges.map(::DateOfBirthFocusChanged)
 
   override fun displayBpPassports(identifiers: List<String>) {
@@ -516,17 +499,25 @@ class EditPatientScreen : BaseScreen<
   }
 
   override fun setGender(gender: Gender) {
-    val genderButton: RadioButton? = when (gender) {
-      Male -> maleRadioButton
-      Female -> femaleRadioButton
-      Transgender -> transgenderRadioButton
+    val checkedId = when (gender) {
+      Male -> maleRadioButton.id
+      Female -> femaleRadioButton.id
+      Transgender -> transgenderRadioButton.id
       is Unknown -> {
         CrashReporter.report(IllegalStateException("Heads-up: unknown gender ${gender.actualValue} found in ${EditPatientScreen::class.java.name}"))
-        null
+        View.NO_ID
       }
     }
 
-    genderButton?.isChecked = true
+    val radioIdToGenders = mapOf(
+        R.id.femaleRadioButton to Female,
+        R.id.maleRadioButton to Male,
+        R.id.transgenderRadioButton to Transgender)
+
+    genderRadioGroup.checkWithListener(checkedId) { _, updatedCheckedId ->
+      val updatedGender = radioIdToGenders.getValue(updatedCheckedId)
+      hotEvents.onNext(GenderChanged(updatedGender))
+    }
   }
 
   override fun setPatientAge(age: String) {

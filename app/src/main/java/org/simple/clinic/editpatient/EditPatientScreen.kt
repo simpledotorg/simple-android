@@ -126,9 +126,6 @@ class EditPatientScreen : BaseScreen<
   lateinit var effectHandlerFactory: EditPatientEffectHandler.Factory
 
   @Inject
-  lateinit var viewEffectHandler: EditPatientViewEffectHandler.Factory
-
-  @Inject
   lateinit var features: Features
 
   @Inject
@@ -330,7 +327,7 @@ class EditPatientScreen : BaseScreen<
 
   override fun uiRenderer() = EditPatientViewRenderer(this)
 
-  override fun viewEffectHandler() = viewEffectHandler.create(this)
+  override fun viewEffectHandler() = EditPatientViewEffectHandler(this)
 
   override fun events() = Observable.mergeArray(
       saveClicks(),

@@ -84,7 +84,7 @@ class EditPatientScreenSaveTest {
       today = LocalDate.now(userClock)
   ))
 
-  private val viewEffectHandler = EditPatientViewEffectHandler(userClock, ui)
+  private val viewEffectHandler = EditPatientViewEffectHandler(ui)
 
   @Test
   fun `when save is clicked, patient name should be validated`() {

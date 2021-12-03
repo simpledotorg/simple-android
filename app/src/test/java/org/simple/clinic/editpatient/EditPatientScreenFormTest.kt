@@ -84,7 +84,7 @@ class EditPatientScreenFormTest {
       today = LocalDate.now(userClock)
   ))
 
-  private val viewEffectHandler = EditPatientViewEffectHandler(userClock, ui)
+  private val viewEffectHandler = EditPatientViewEffectHandler(ui)
 
   @Test
   @Parameters(method = "params for hiding errors on text changes")

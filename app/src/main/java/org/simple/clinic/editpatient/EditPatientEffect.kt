@@ -24,13 +24,6 @@ object FetchColonyOrVillagesEffect : EditPatientEffect()
 
 sealed class EditPatientViewEffect : EditPatientEffect()
 
-data class PrefillFormEffect(
-    val patient: Patient,
-    val address: PatientAddress,
-    val phoneNumber: PatientPhoneNumber?,
-    val alternativeId: BusinessId?
-) : EditPatientViewEffect()
-
 data class HideValidationErrorsEffect(
     val validationErrors: Set<EditPatientValidationError>
 ) : EditPatientViewEffect()

@@ -37,25 +37,23 @@ class HelpScreen : BaseScreen<
   @Inject
   lateinit var effectHandlerFactory: HelpScreenEffectHandler.Factory
 
-  private var binding: ScreenHelpBinding? = null
-
   private val toolbar
-    get() = binding!!.toolbar
+    get() = binding.toolbar
 
   private val webView
-    get() = binding!!.webView
+    get() = binding.webView
 
   private val tryAgainButton
-    get() = binding!!.tryAgainButton
+    get() = binding.tryAgainButton
 
   private val progressBar
-    get() = binding!!.progressBar
+    get() = binding.progressBar
 
   private val noContentView
-    get() = binding!!.noContentView
+    get() = binding.noContentView
 
   private val errorMessageTextView
-    get() = binding!!.errorMessageTextView
+    get() = binding.errorMessageTextView
 
   private val events by unsafeLazy {
     tryAgainClicks()

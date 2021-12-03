@@ -1,29 +1,31 @@
 package org.simple.clinic.home.help
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Parcelable
-import android.util.AttributeSet
-import android.widget.LinearLayout
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.rxkotlin.ofType
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenHelpBinding
-import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 
-class HelpScreen(
-    context: Context,
-    attrs: AttributeSet
-) : LinearLayout(context, attrs), HelpScreenUi, HelpScreenUiActions {
+class HelpScreen : BaseScreen<
+    HelpScreen.Key,
+    ScreenHelpBinding,
+    HelpScreenModel,
+    HelpScreenEvent,
+    HelpScreenEffect,
+    Unit>(), HelpScreenUi, HelpScreenUiActions {
 
   @Inject
   lateinit var router: Router
@@ -104,6 +106,11 @@ class HelpScreen(
 
     webView.settings.javaScriptEnabled = true
   }
+  
+  override fun defaultModel() = HelpScreenModel.create()
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenHelpBinding
+      .inflate(layoutInflater, container, false)
 
   private fun tryAgainClicks() = tryAgainButton
       .clicks()

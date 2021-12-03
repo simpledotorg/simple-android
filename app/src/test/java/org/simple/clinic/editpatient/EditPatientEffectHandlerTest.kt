@@ -316,17 +316,6 @@ class EditPatientEffectHandlerTest {
   }
 
   @Test
-  fun `when the setup UI effect is received, the UI must be setup with the input fields`() {
-    // when
-    testCase.dispatch(SetupUi(inputFields))
-
-    // then
-    testCase.assertNoOutgoingEvents()
-    verify(ui).setupUi(inputFields)
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
   fun `when fetch colony or village names effect is received, then load colony or village names`() {
     // given
     val colonyOrVillages = listOf("colony1", "colony2", "colony3", "colony4")

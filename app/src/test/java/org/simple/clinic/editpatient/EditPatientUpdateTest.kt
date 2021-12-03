@@ -1,5 +1,6 @@
 package org.simple.clinic.editpatient
 
+import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.UpdateSpec
@@ -9,6 +10,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
@@ -80,6 +82,27 @@ class EditPatientUpdateTest {
         .then(assertThatNext(
             hasModel(model.updateColonyOrVillagesList(colonyOrVillages)),
             hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when bp passports are loaded, then update the model`() {
+    val bpPassports = listOf(
+        TestData.businessId(
+            uuid = UUID.fromString("4585acb4-4e8d-418f-a6da-c15ac4b44837"),
+            identifier = TestData.identifier(
+                value = "8ccc4438-8158-41f9-9a3a-a96e4a221aa0",
+                type = Identifier.IdentifierType.BpPassport
+            )
+        )
+    )
+
+    updateSpec
+        .given(model)
+        .whenEvent(BpPassportsFetched(bpPassports))
+        .then(assertThatNext(
+            hasModel(model.bpPassportsLoaded(bpPassports)),
+            hasEffects(DisplayBpPassportsEffect(bpPassports))
         ))
   }
 }

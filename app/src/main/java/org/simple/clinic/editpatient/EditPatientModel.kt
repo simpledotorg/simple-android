@@ -106,4 +106,8 @@ data class EditPatientModel(
   fun inputFieldsLoaded(inputFields: InputFields): EditPatientModel {
     return copy(inputFields = inputFields)
   }
+
+  fun bpPassportsLoaded(bpPassports: List<BusinessId>): EditPatientModel {
+    return copy(bpPassports = bpPassports)
+  }
 }

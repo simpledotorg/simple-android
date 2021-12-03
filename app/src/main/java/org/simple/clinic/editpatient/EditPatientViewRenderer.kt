@@ -25,6 +25,10 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
     if (model.hasColonyOrVillagesList) {
       ui.setColonyOrVillagesAutoComplete(model.colonyOrVillagesList!!)
     }
+
+    if (model.hasInputFields) {
+      ui.setupUi(model.inputFields!!)
+    }
   }
 
   private fun manageButtonState(model: EditPatientModel) {

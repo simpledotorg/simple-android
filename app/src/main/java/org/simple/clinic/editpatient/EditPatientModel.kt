@@ -59,6 +59,9 @@ data class EditPatientModel(
   val hasColonyOrVillagesList: Boolean
     get() = !colonyOrVillagesList.isNullOrEmpty()
 
+  val hasInputFields
+    get() = inputFields != null
+
   fun updateName(name: String): EditPatientModel =
       copy(ongoingEntry = ongoingEntry.updateName(name))
 

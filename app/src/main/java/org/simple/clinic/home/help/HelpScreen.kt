@@ -1,6 +1,7 @@
 package org.simple.clinic.home.help
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenHelpBinding
+import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.mobius.ViewRenderer
@@ -107,6 +109,11 @@ class HelpScreen : BaseScreen<
     toolbar.setNavigationOnClickListener { router.pop() }
 
     webView.settings.javaScriptEnabled = true
+  }
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
   }
   
   override fun defaultModel() = HelpScreenModel.create()

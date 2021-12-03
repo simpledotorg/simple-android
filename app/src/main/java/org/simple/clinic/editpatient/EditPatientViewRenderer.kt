@@ -29,6 +29,14 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
     if (model.hasInputFields) {
       ui.setupUi(model.inputFields!!)
     }
+
+    displayBpPassports(model)
+  }
+
+  private fun displayBpPassports(model: EditPatientModel) {
+    val identifiers = model.bpPassports?.map { it.identifier.displayValue() }.orEmpty()
+
+    ui.displayBpPassports(identifiers)
   }
 
   private fun manageButtonState(model: EditPatientModel) {

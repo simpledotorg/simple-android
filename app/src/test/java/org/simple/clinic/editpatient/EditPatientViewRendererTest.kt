@@ -7,6 +7,7 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFields
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import java.time.LocalDate
@@ -52,6 +53,7 @@ class EditPatientViewRendererTest {
     verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
     verify(ui).setColonyOrVillagesAutoComplete(colonyOrVillages)
     verify(ui).showProgress()
+    verify(ui).displayBpPassports(emptyList())
     verifyNoMoreInteractions(ui)
   }
 
@@ -73,6 +75,40 @@ class EditPatientViewRendererTest {
     verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
     verify(ui).showProgress()
     verify(ui).setupUi(inputFields)
+    verify(ui).displayBpPassports(emptyList())
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when bp passports are loaded, then display identifier`() {
+    // given
+    val bpPassports = listOf(
+        TestData.businessId(
+            uuid = UUID.fromString("59b367d7-d8b9-4d8b-b1c5-f702a15bc78d"),
+            identifier = Identifier(
+                value = "09023191-33dd-4bc8-8e60-c13df9e4764b",
+                type = Identifier.IdentifierType.BpPassport
+            )
+        ),
+        TestData.businessId(
+            uuid = UUID.fromString("47fde07a-43a7-4233-a01f-ae80dd5b09c8"),
+            identifier = Identifier(
+                value = "c2b36fa9-2f4d-480e-92af-946bdc432b92",
+                type = Identifier.IdentifierType.BpPassport
+            )
+        )
+    )
+    val bpPassportsLoadedModel = model.bpPassportsLoaded(bpPassports)
+
+    // when
+    uiRenderer.render(bpPassportsLoadedModel)
+
+    // then
+    val expectedIdentifiers = listOf("090 2319", "236 9244")
+
+    verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
+    verify(ui).showProgress()
+    verify(ui).displayBpPassports(expectedIdentifiers)
     verifyNoMoreInteractions(ui)
   }
 }

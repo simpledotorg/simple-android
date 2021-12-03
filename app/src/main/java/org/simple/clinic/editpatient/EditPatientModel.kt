@@ -23,7 +23,8 @@ data class EditPatientModel(
     val savedBangladeshNationalId: BusinessId?,
     val saveButtonState: EditPatientState?,
     val colonyOrVillagesList: List<String>?,
-    val inputFields: InputFields?
+    val inputFields: InputFields?,
+    val bpPassports: List<BusinessId>?
 ) : Parcelable {
   companion object {
     fun from(
@@ -50,6 +51,7 @@ data class EditPatientModel(
           phoneNumber,
           bangladeshNationalId,
           saveButtonState,
+          null,
           null,
           null
       )

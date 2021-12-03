@@ -5,6 +5,9 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.functions.Consumer
+import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
@@ -12,6 +15,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenHelpBinding
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -111,6 +115,21 @@ class HelpScreen : BaseScreen<
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenHelpBinding
       .inflate(layoutInflater, container, false)
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) =
+      effectHandlerFactory.create(this).build()
+
+  override fun createInit() = HelpScreenInit()
+
+  override fun createUpdate() = HelpScreenUpdate()
+
+  override fun events(): Observable<HelpScreenEvent> {
+    return tryAgainClicks()
+        .compose(ReportAnalyticsEvents())
+        .cast<HelpScreenEvent>()
+  }
+
+  override fun uiRenderer() = HelpScreenUiRenderer(this)
 
   private fun tryAgainClicks() = tryAgainButton
       .clicks()

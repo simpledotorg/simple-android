@@ -35,8 +35,6 @@ data class HideValidationErrorsEffect(
     val validationErrors: Set<EditPatientValidationError>
 ) : EditPatientViewEffect()
 
-data class DisplayBpPassportsEffect(val bpPassports: List<BusinessId>) : EditPatientViewEffect()
-
 data class ShowValidationErrorsEffect(
     val validationErrors: Set<EditPatientValidationError>
 ) : EditPatientViewEffect()

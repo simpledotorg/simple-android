@@ -5,7 +5,6 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import org.simple.clinic.mobius.ViewEffectsHandler
 import org.simple.clinic.patient.PatientAgeDetails
-import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.util.UserClock
 
 class EditPatientViewEffectHandler @AssistedInject constructor(
@@ -22,7 +21,6 @@ class EditPatientViewEffectHandler @AssistedInject constructor(
     when (viewEffect) {
       is PrefillFormEffect -> prefillFormFields(viewEffect)
       is HideValidationErrorsEffect -> ui.hideValidationErrors(viewEffect.validationErrors)
-      is DisplayBpPassportsEffect -> displayBpPassports(viewEffect.bpPassports)
       is ShowValidationErrorsEffect -> showValidationErrors(viewEffect.validationErrors)
       ShowDatePatternInDateOfBirthLabelEffect -> ui.showDatePatternInDateOfBirthLabel()
       HideDatePatternInDateOfBirthLabelEffect -> ui.hideDatePatternInDateOfBirthLabel()
@@ -36,11 +34,6 @@ class EditPatientViewEffectHandler @AssistedInject constructor(
       showValidationErrors(validationErrors)
       scrollToFirstFieldWithError()
     }
-  }
-
-  private fun displayBpPassports(bpPassports: List<BusinessId>) {
-    val identifiers = bpPassports.map { it.identifier.displayValue() }
-    ui.displayBpPassports(identifiers)
   }
 
   private fun prefillFormFields(prefillFormFieldsEffect: PrefillFormEffect) {

@@ -18,7 +18,6 @@ import androidx.transition.TransitionSet
 import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.checkedChanges
-import com.jakewharton.rxbinding3.widget.textChanges
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
@@ -79,10 +78,12 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNatio
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaNationalId
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.clinic.util.afterTextChangedWatcher
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
+import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
@@ -91,7 +92,6 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.setTextAndCursor
-import org.simple.clinic.widgets.textChanges
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -234,6 +234,7 @@ class EditPatientScreen : BaseScreen<
     get() = binding.saveButton
 
   private val hardwareBackPressEvents = PublishSubject.create<BackClicked>()
+  private val hotEvents = PublishSubject.create<UiEvent>()
 
   private val villageTypeAheadAdapter by unsafeLazy {
     ArrayAdapter<String>(
@@ -242,6 +243,66 @@ class EditPatientScreen : BaseScreen<
         R.id.villageTypeAheadItemTextView,
         mutableListOf()
     )
+  }
+
+  private val fullNameEditTextChanges by unsafeLazy {
+    afterTextChangedWatcher { text ->
+      hotEvents.onNext(NameChanged(text?.toString().orEmpty()))
+    }
+  }
+
+  private val phoneNumberTextChanges by unsafeLazy {
+    afterTextChangedWatcher { text ->
+      hotEvents.onNext(PhoneNumberChanged(text?.toString().orEmpty()))
+    }
+  }
+
+  private val districtTextChanges by unsafeLazy {
+    afterTextChangedWatcher { text ->
+      hotEvents.onNext(DistrictChanged(text?.toString().orEmpty()))
+    }
+  }
+
+  private val stateTextChanges by unsafeLazy {
+    afterTextChangedWatcher { text ->
+      hotEvents.onNext(StateChanged(text?.toString().orEmpty()))
+    }
+  }
+
+  private val colonyOrVillageTextChanges by unsafeLazy {
+    afterTextChangedWatcher { text ->
+      hotEvents.onNext(ColonyOrVillageChanged(text?.toString().orEmpty()))
+    }
+  }
+
+  private val alternateIdTextChanges by unsafeLazy {
+    afterTextChangedWatcher { text ->
+      hotEvents.onNext(AlternativeIdChanged(text?.toString().orEmpty()))
+    }
+  }
+
+  private val dateOfBirthTextChanges by unsafeLazy {
+    afterTextChangedWatcher { text ->
+      hotEvents.onNext(DateOfBirthChanged(text?.toString().orEmpty()))
+    }
+  }
+
+  private val ageTextChanges by unsafeLazy {
+    afterTextChangedWatcher { text ->
+      hotEvents.onNext(AgeChanged(text?.toString().orEmpty()))
+    }
+  }
+
+  private val zoneTextChanges by unsafeLazy {
+    afterTextChangedWatcher { text ->
+      hotEvents.onNext(ZoneChanged(text?.toString().orEmpty()))
+    }
+  }
+
+  private val streetAddressTextChanges by unsafeLazy {
+    afterTextChangedWatcher { text ->
+      hotEvents.onNext(StreetAddressChanged(text?.toString().orEmpty()))
+    }
   }
 
   override fun defaultModel() = EditPatientModel.from(
@@ -273,19 +334,10 @@ class EditPatientScreen : BaseScreen<
 
   override fun events() = Observable.mergeArray(
       saveClicks(),
-      nameTextChanges(),
-      phoneNumberTextChanges(),
-      districtTextChanges(),
-      stateTextChanges(),
-      colonyTextChanges(),
       genderChanges(),
-      dateOfBirthTextChanges(),
       dateOfBirthFocusChanges(),
-      ageTextChanges(),
       backClicks(),
-      bangladeshNationalIdChanges(),
-      zoneEditText.textChanges(::ZoneChanged),
-      streetAddressEditText.textChanges(::StreetAddressChanged)
+      hotEvents
   ).compose(ReportAnalyticsEvents())
       .cast<EditPatientEvent>()
 
@@ -397,30 +449,6 @@ class EditPatientScreen : BaseScreen<
     return saveButton.clicks().map { SaveClicked }
   }
 
-  private fun nameTextChanges(): Observable<EditPatientEvent> {
-    return fullNameEditText.textChanges().map { NameChanged(it.toString()) }
-  }
-
-  private fun phoneNumberTextChanges(): Observable<EditPatientEvent> {
-    return phoneNumberEditText.textChanges().map { PhoneNumberChanged(it.toString()) }
-  }
-
-  private fun districtTextChanges(): Observable<EditPatientEvent> {
-    return districtEditText.textChanges().map { DistrictChanged(it.toString()) }
-  }
-
-  private fun stateTextChanges(): Observable<EditPatientEvent> {
-    return stateEditText.textChanges().map { StateChanged(it.toString()) }
-  }
-
-  private fun bangladeshNationalIdChanges(): Observable<EditPatientEvent> {
-    return alternativeIdInputEditText.textChanges().map { AlternativeIdChanged(it.toString()) }
-  }
-
-  private fun colonyTextChanges(): Observable<EditPatientEvent> {
-    return colonyOrVillageEditText.textChanges().map { ColonyOrVillageChanged(it.toString()) }
-  }
-
   private fun backClicks(): Observable<EditPatientEvent> {
     val backButtonClicks = backButton
         .clicks()
@@ -446,11 +474,7 @@ class EditPatientScreen : BaseScreen<
         }
   }
 
-  private fun dateOfBirthTextChanges(): Observable<EditPatientEvent> = dateOfBirthEditText.textChanges(::DateOfBirthChanged)
-
   private fun dateOfBirthFocusChanges(): Observable<EditPatientEvent> = dateOfBirthEditText.focusChanges.map(::DateOfBirthFocusChanged)
-
-  private fun ageTextChanges(): Observable<EditPatientEvent> = ageEditText.textChanges(::AgeChanged)
 
   override fun displayBpPassports(identifiers: List<String>) {
     bpPassportsContainer.removeAllViews()
@@ -467,31 +491,45 @@ class EditPatientScreen : BaseScreen<
   }
 
   override fun setPatientName(name: String) {
+    fullNameEditText.removeTextChangedListener(fullNameEditTextChanges)
     fullNameEditText.setTextAndCursor(name)
+    fullNameEditText.addTextChangedListener(fullNameEditTextChanges)
   }
 
   override fun setPatientPhoneNumber(number: String) {
+    phoneNumberEditText.removeTextChangedListener(phoneNumberTextChanges)
     phoneNumberEditText.setTextAndCursor(number)
+    phoneNumberEditText.addTextChangedListener(phoneNumberTextChanges)
   }
 
   override fun setColonyOrVillage(colonyOrVillage: String) {
+    colonyOrVillageEditText.removeTextChangedListener(colonyOrVillageTextChanges)
     colonyOrVillageEditText.setTextAndCursor(colonyOrVillage)
+    colonyOrVillageEditText.addTextChangedListener(colonyOrVillageTextChanges)
   }
 
   override fun setDistrict(district: String) {
+    districtEditText.removeTextChangedListener(districtTextChanges)
     districtEditText.setTextAndCursor(district)
+    districtEditText.addTextChangedListener(districtTextChanges)
   }
 
   override fun setState(state: String) {
+    stateEditText.removeTextChangedListener(stateTextChanges)
     stateEditText.setTextAndCursor(state)
+    stateEditText.addTextChangedListener(stateTextChanges)
   }
 
   override fun setStreetAddress(streetAddress: String?) {
+    streetAddressEditText.removeTextChangedListener(streetAddressTextChanges)
     streetAddressEditText.setTextAndCursor(streetAddress)
+    streetAddressEditText.addTextChangedListener(streetAddressTextChanges)
   }
 
   override fun setZone(zone: String?) {
+    zoneEditText.removeTextChangedListener(zoneTextChanges)
     zoneEditText.setTextAndCursor(zone)
+    zoneEditText.addTextChangedListener(zoneTextChanges)
   }
 
   override fun setGender(gender: Gender) {
@@ -509,11 +547,15 @@ class EditPatientScreen : BaseScreen<
   }
 
   override fun setPatientAge(age: Int) {
+    ageEditText.removeTextChangedListener(ageTextChanges)
     ageEditText.setTextAndCursor(age.toString())
+    ageEditText.addTextChangedListener(ageTextChanges)
   }
 
   override fun setPatientDateOfBirth(dateOfBirth: LocalDate) {
+    dateOfBirthEditText.removeTextChangedListener(dateOfBirthTextChanges)
     dateOfBirthEditText.setTextAndCursor(dateOfBirthFormat.format(dateOfBirth))
+    dateOfBirthEditText.addTextChangedListener(dateOfBirthTextChanges)
   }
 
   override fun showValidationErrors(errors: Set<EditPatientValidationError>) {
@@ -728,7 +770,9 @@ class EditPatientScreen : BaseScreen<
   }
 
   private fun setAlternateIdTextField(alternateId: Identifier) {
+    alternativeIdInputEditText.removeTextChangedListener(alternateIdTextChanges)
     alternativeIdInputEditText.setTextAndCursor(alternateId.displayValue())
+    alternativeIdInputEditText.addTextChangedListener(alternateIdTextChanges)
   }
 
   private fun setAlternateIdContainer(alternateId: Identifier) {

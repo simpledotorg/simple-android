@@ -15,7 +15,7 @@ data class SelectOverdueDownloadFormatModel(
 
     fun create(openAs: OpenAs) = SelectOverdueDownloadFormatModel(
         openAs = openAs,
-        overdueListFileFormat = OverdueListFileFormat.CSV,
+        overdueListFileFormat = OverdueListFileFormat.PDF,
         overdueDownloadStatus = null
     )
   }

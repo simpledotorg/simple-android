@@ -11,6 +11,7 @@
 - Migrate `TeleconsultPrescriptionScreen` to a fragment
 - Report `StringIndexOutOfBoundsException` when building identifier display value
 - Migrate `HelpScreen` to a Fragment
+- Use `StringPreferenceConverter` for getting selected state from preferences
 
 ## 2021-12-06-8056
 

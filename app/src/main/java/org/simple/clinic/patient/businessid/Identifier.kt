@@ -17,6 +17,7 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNatio
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaPersonalHealthNumber
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 
@@ -31,29 +32,37 @@ data class Identifier(
 ) : Parcelable {
 
   fun displayValue(): String {
-    return when (type) {
-      BpPassport -> {
-        val shortCode = BpPassport.shortCode(this)
+    return try {
+      when (type) {
+        BpPassport -> {
+          val shortCode = BpPassport.shortCode(this)
 
-        val prefix = shortCode.substring(0, 3)
-        val suffix = shortCode.substring(3)
+          val prefix = shortCode.substring(0, 3)
+          val suffix = shortCode.substring(3)
 
-        "$prefix${Unicode.nonBreakingSpace}$suffix"
+          "$prefix${Unicode.nonBreakingSpace}$suffix"
+        }
+        BangladeshNationalId -> value
+        EthiopiaMedicalRecordNumber -> value
+        IndiaNationalHealthId -> {
+          val enteredCode = value
+          val prefix = enteredCode.substring(0, 2)
+          val subString1 = enteredCode.substring(2, 6)
+          val subString2 = enteredCode.substring(6, 10)
+          val suffix = enteredCode.substring(10)
+
+          "$prefix${Unicode.nonBreakingSpace}$subString1${Unicode.nonBreakingSpace}$subString2${Unicode.nonBreakingSpace}$suffix"
+        }
+        SriLankaNationalId -> value
+        SriLankaPersonalHealthNumber -> value
+        is Unknown -> value
       }
-      BangladeshNationalId -> value
-      EthiopiaMedicalRecordNumber -> value
-      IndiaNationalHealthId -> {
-        val enteredCode = value
-        val prefix = enteredCode.substring(0, 2)
-        val subString1 = enteredCode.substring(2, 6)
-        val subString2 = enteredCode.substring(6, 10)
-        val suffix = enteredCode.substring(10)
+    } catch (e: StringIndexOutOfBoundsException) {
+      // TODO (SM): Get more information on the crash and resolve the issue accordingly
+      val errorMessage = "Failed to parse the `Identifier` of type: $type, with value length: ${value.length}"
+      CrashReporter.report(StringIndexOutOfBoundsException(errorMessage))
 
-        "$prefix${Unicode.nonBreakingSpace}$subString1${Unicode.nonBreakingSpace}$subString2${Unicode.nonBreakingSpace}$suffix"
-      }
-      SriLankaNationalId -> value
-      SriLankaPersonalHealthNumber -> value
-      is Unknown -> value
+      return value
     }
   }
 

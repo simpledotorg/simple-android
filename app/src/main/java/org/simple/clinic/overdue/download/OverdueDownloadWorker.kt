@@ -44,6 +44,8 @@ class OverdueDownloadWorker(
     private const val PLAY_STORE_SHEETS = "https://play.google.com/store/apps/details?id=com.google.android.apps.docs.editors.sheets"
     private const val PLAY_STORE_ADOBE_ACROBAT = "https://play.google.com/store/apps/details?id=com.adobe.reader"
 
+    private const val GOOGLE_SHEETS_PACKAGE_NAME = "com.google.android.apps.docs.editors.sheets"
+
     fun workRequest(fileFormat: OverdueListFileFormat): OneTimeWorkRequest {
       return OneTimeWorkRequestBuilder<OverdueDownloadWorker>()
           .setInputData(workDataOf(
@@ -165,6 +167,8 @@ class OverdueDownloadWorker(
       CSV -> PLAY_STORE_SHEETS
       PDF -> PLAY_STORE_ADOBE_ACROBAT
     }
+
+    if (fileFormat == CSV) intent.setPackage(GOOGLE_SHEETS_PACKAGE_NAME)
 
     if (intent.resolveActivity(context.packageManager) == null) {
       intent = Intent(Intent.ACTION_VIEW, Uri.parse(playStoreUrl))

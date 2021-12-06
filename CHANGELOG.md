@@ -11,6 +11,8 @@
 - Migrate `TeleconsultPrescriptionScreen` to a fragment
 - Report `StringIndexOutOfBoundsException` when building identifier display value
 - Migrate `HelpScreen` to a Fragment
+- Make PDF as the default for downloading Overdue lists
+- Default to opening Google Sheets for Spreadsheets
 
 ## On Demo
 

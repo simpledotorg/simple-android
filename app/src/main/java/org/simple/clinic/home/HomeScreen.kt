@@ -32,11 +32,10 @@ import org.simple.clinic.home.HomeScreen.ScreenRequest.ChangeCurrentFacility
 import org.simple.clinic.home.HomeTab.OVERDUE
 import org.simple.clinic.home.HomeTab.PATIENTS
 import org.simple.clinic.home.HomeTab.REPORTS
-import org.simple.clinic.home.help.HelpScreenKey
+import org.simple.clinic.home.help.HelpScreen
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenResultBus
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.settings.SettingsScreen
 import org.simple.clinic.summary.OpenIntention
@@ -183,7 +182,7 @@ class HomeScreen :
 
   private fun setupHelpClicks() {
     helpButton.setOnClickListener {
-      router.push(HelpScreenKey().wrap())
+      router.push(HelpScreen.Key())
     }
   }
 

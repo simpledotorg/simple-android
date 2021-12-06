@@ -10,6 +10,7 @@
 - Migrate `DeletePatientScreen` to a fragment
 - Migrate `TeleconsultPrescriptionScreen` to a fragment
 - Report `StringIndexOutOfBoundsException` when building identifier display value
+- Migrate `HelpScreen` to a Fragment
 
 ## On Demo
 

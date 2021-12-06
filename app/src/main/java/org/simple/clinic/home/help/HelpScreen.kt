@@ -124,7 +124,7 @@ class HelpScreen : BaseScreen<
 
   @Parcelize
   data class Key(
-      override val analyticsName: String = "Home"
+      override val analyticsName: String = "Help"
   ) : ScreenKey() {
 
     override fun instantiateFragment() = HomeScreen()

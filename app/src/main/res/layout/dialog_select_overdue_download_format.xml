@@ -62,15 +62,6 @@
       android:text="@string/select_overdue_download_format_dialog_radio_button_spreadsheet"
       android:textAppearance="?attr/textAppearanceBody0"
       android:textColor="?attr/colorOnSurface" />
-
-    <com.google.android.material.textview.MaterialTextView
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:paddingStart="@dimen/spacing_40"
-      android:paddingEnd="@dimen/spacing_0"
-      android:text="@string/requires_microsoft_excel_to_view"
-      android:textAppearance="?attr/textAppearanceBody1"
-      android:textColor="@color/color_on_surface_67" />
   </RadioGroup>
 
   <LinearLayout

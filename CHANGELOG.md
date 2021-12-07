@@ -11,10 +11,8 @@
 - Migrate `TeleconsultPrescriptionScreen` to a fragment
 - Report `StringIndexOutOfBoundsException` when building identifier display value
 - Migrate `HelpScreen` to a Fragment
-- Make PDF as the default for downloading Overdue lists
-- Default to opening Google Sheets for Spreadsheets
 
-## On Demo
+## 2021-12-06-8056
 
 ### Internal
 
@@ -41,6 +39,8 @@
 - Show error dialog when overdue list download fails
 - Fix sharing downloaded overdue list through Whatsapp is not working
 - Enable `OverdueListDownloadAndShare` feature flag
+- Make PDF as the default for downloading Overdue lists
+- Default to opening Google Sheets for Spreadsheets
 
 ### Changes
 

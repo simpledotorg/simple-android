@@ -12,6 +12,7 @@
 - Report `StringIndexOutOfBoundsException` when building identifier display value
 - Migrate `HelpScreen` to a Fragment
 - Use `StringPreferenceConverter` for getting selected state from preferences
+- Use view render to setup UI and fill fields in edit screen
 
 ## 2021-12-06-8056
 

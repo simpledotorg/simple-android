@@ -18,9 +18,6 @@ class EditPatientInitTest {
   private val bangladeshNationalId = TestData.businessId(UUID.fromString("c9be5e5d-770c-4f37-a9de-2c304dfebfcd"))
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
   private val initSpec = InitSpec(EditPatientInit(patient = patient,
-      address = patientAddress,
-      phoneNumber = patientPhoneNumber,
-      bangladeshNationalId = bangladeshNationalId,
       isVillageTypeAheadEnabled = true))
 
   @Test
@@ -30,7 +27,7 @@ class EditPatientInitTest {
 
     initSpec.whenInit(defaultModel).then(assertThatFirst(
         hasModel(defaultModel),
-        hasEffects(PrefillFormEffect(patient, patientAddress, patientPhoneNumber, bangladeshNationalId),
+        hasEffects(
             FetchBpPassportsEffect(patientUuid),
             LoadInputFields,
             FetchColonyOrVillagesEffect
@@ -43,14 +40,11 @@ class EditPatientInitTest {
     val patientUuid = UUID.fromString("e40f42f4-0867-4891-ac77-95df5fe1fdef")
     val defaultModel = EditPatientModel.from(patient, patientAddress, patientPhoneNumber, dateOfBirthFormat, bangladeshNationalId, EditPatientState.NOT_SAVING_PATIENT)
     val initSpec = InitSpec(EditPatientInit(patient = patient,
-        address = patientAddress,
-        phoneNumber = patientPhoneNumber,
-        bangladeshNationalId = bangladeshNationalId,
         isVillageTypeAheadEnabled = false))
 
     initSpec.whenInit(defaultModel).then(assertThatFirst(
         hasModel(defaultModel),
-        hasEffects(PrefillFormEffect(patient, patientAddress, patientPhoneNumber, bangladeshNationalId),
+        hasEffects(
             FetchBpPassportsEffect(patientUuid),
             LoadInputFields
         )
@@ -65,7 +59,7 @@ class EditPatientInitTest {
 
     initSpec.whenInit(updatedVillageOrColonyNamesModel).then(assertThatFirst(
         hasModel(updatedVillageOrColonyNamesModel),
-        hasEffects(PrefillFormEffect(patient, patientAddress, patientPhoneNumber, bangladeshNationalId),
+        hasEffects(
             FetchBpPassportsEffect(patientUuid),
             LoadInputFields
         )

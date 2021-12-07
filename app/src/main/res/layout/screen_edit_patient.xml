@@ -42,7 +42,8 @@
         android:id="@+id/fullNameInputLayout"
         style="@style/Widget.Simple.TextField.Layout.PatientEntry"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:saveEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
           android:id="@+id/fullNameEditText"
@@ -50,7 +51,8 @@
           android:layout_height="wrap_content"
           android:hint="@string/patientedit_full_name"
           android:imeOptions="flagNoFullscreen"
-          android:inputType="textPersonName|textCapWords" />
+          android:inputType="textPersonName|textCapWords"
+          android:saveEnabled="false" />
 
       </com.google.android.material.textfield.TextInputLayout>
 
@@ -59,7 +61,8 @@
         style="@style/Widget.Simple.TextField.Layout.PatientEntry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_16">
+        android:layout_marginTop="@dimen/spacing_16"
+        android:saveEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
           android:id="@+id/phoneNumberEditText"
@@ -68,7 +71,8 @@
           android:digits="@string/latin_numeric_characters"
           android:hint="@string/patientedit_phone_number"
           android:imeOptions="flagNoFullscreen"
-          android:inputType="phone|textCapSentences" />
+          android:inputType="phone|textCapSentences"
+          android:saveEnabled="false" />
 
       </com.google.android.material.textfield.TextInputLayout>
 
@@ -84,7 +88,8 @@
           style="@style/Widget.Simple.TextField.Layout.PatientEntry"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
-          android:layout_weight="0.6">
+          android:layout_weight="0.6"
+          android:saveEnabled="false">
 
           <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/ageEditText"
@@ -93,7 +98,8 @@
             android:hint="@string/patientedit_age"
             android:imeOptions="flagNoFullscreen"
             android:inputType="number"
-            android:maxLength="3" />
+            android:maxLength="3"
+            android:saveEnabled="false" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -112,7 +118,8 @@
           style="@style/Widget.Simple.TextField.Layout.PatientEntry"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
-          android:layout_weight="1">
+          android:layout_weight="1"
+          android:saveEnabled="false">
 
           <org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthEditText
             android:id="@+id/dateOfBirthEditText"
@@ -121,6 +128,7 @@
             android:hint="@string/patientedit_date_of_birth_unfocused"
             android:imeOptions="flagNoFullscreen"
             android:inputType="number"
+            android:saveEnabled="false"
             app:allowed_chars="1234567890"
             app:mask="##/##/####" />
 
@@ -134,7 +142,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_24"
         android:layout_marginEnd="@dimen/spacing_16"
-        android:text="@string/patientedit_bp_passports_label" />
+        android:text="@string/patientedit_bp_passports_label"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
       <LinearLayout
         android:id="@+id/bpPassportsContainer"
@@ -216,14 +226,16 @@
         style="@style/Widget.Simple.TextField.Layout.PatientEntry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_16">
+        android:layout_marginTop="@dimen/spacing_16"
+        android:saveEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
           android:id="@+id/alternativeIdInputEditText"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:hint="@string/patientedit_bangladesh_national_id"
-          android:imeOptions="flagNoFullscreen" />
+          android:imeOptions="flagNoFullscreen"
+          android:saveEnabled="false" />
 
       </com.google.android.material.textfield.TextInputLayout>
 
@@ -232,7 +244,8 @@
         style="@style/Widget.Simple.TextField.Layout.PatientEntry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_16">
+        android:layout_marginTop="@dimen/spacing_16"
+        android:saveEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
           android:id="@+id/streetAddressEditText"
@@ -240,7 +253,8 @@
           android:layout_height="wrap_content"
           android:hint="@string/patientedit_street_address"
           android:imeOptions="flagNoFullscreen"
-          android:inputType="textPostalAddress|textCapSentences" />
+          android:inputType="textPostalAddress|textCapSentences"
+          android:saveEnabled="false" />
 
       </com.google.android.material.textfield.TextInputLayout>
 
@@ -249,7 +263,8 @@
         style="@style/Widget.Simple.TextField.Layout.PatientEntry.AutoComplete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_16">
+        android:layout_marginTop="@dimen/spacing_16"
+        android:saveEnabled="false">
 
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
           android:id="@+id/colonyOrVillageEditText"
@@ -257,7 +272,8 @@
           android:layout_height="wrap_content"
           android:hint="@string/patientedit_colony_or_village"
           android:imeOptions="flagNoFullscreen"
-          android:inputType="textPostalAddress|textCapSentences" />
+          android:inputType="textPostalAddress|textCapSentences"
+          android:saveEnabled="false" />
 
       </com.google.android.material.textfield.TextInputLayout>
 
@@ -267,6 +283,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_16"
+        android:saveEnabled="false"
         android:visibility="gone">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -275,7 +292,8 @@
           android:layout_height="wrap_content"
           android:hint="@string/patientedit_zone"
           android:imeOptions="flagNoFullscreen"
-          android:inputType="textPostalAddress|textCapSentences" />
+          android:inputType="textPostalAddress|textCapSentences"
+          android:saveEnabled="false" />
 
       </com.google.android.material.textfield.TextInputLayout>
 
@@ -291,7 +309,8 @@
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_marginEnd="@dimen/spacing_4"
-          android:layout_weight="1">
+          android:layout_weight="1"
+          android:saveEnabled="false">
 
           <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/districtEditText"
@@ -299,7 +318,8 @@
             android:layout_height="wrap_content"
             android:hint="@string/patientedit_district"
             android:imeOptions="flagNoFullscreen"
-            android:inputType="textPostalAddress|textCapSentences" />
+            android:inputType="textPostalAddress|textCapSentences"
+            android:saveEnabled="false" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -308,7 +328,8 @@
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_4"
-          android:layout_weight="1">
+          android:layout_weight="1"
+          android:saveEnabled="false">
 
           <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/stateEditText"
@@ -316,7 +337,8 @@
             android:layout_height="wrap_content"
             android:hint="@string/patientedit_state"
             android:imeOptions="flagNoFullscreen"
-            android:inputType="textPostalAddress|textCapSentences" />
+            android:inputType="textPostalAddress|textCapSentences"
+            android:saveEnabled="false" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

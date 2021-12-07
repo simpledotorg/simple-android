@@ -2,6 +2,7 @@ package org.simple.clinic.editpatient
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -21,7 +22,9 @@ data class EditPatientModel(
     val savedPhoneNumber: PatientPhoneNumber?,
     val savedBangladeshNationalId: BusinessId?,
     val saveButtonState: EditPatientState?,
-    val colonyOrVillagesList: List<String>?
+    val colonyOrVillagesList: List<String>?,
+    val inputFields: InputFields?,
+    val bpPassports: List<BusinessId>?
 ) : Parcelable {
   companion object {
     fun from(
@@ -40,12 +43,26 @@ data class EditPatientModel(
           bangladeshNationalId
       )
       val ongoingEntry = savedEntry.copy()
-      return EditPatientModel(savedEntry, ongoingEntry, patient, address, phoneNumber, bangladeshNationalId, saveButtonState, null)
+      return EditPatientModel(
+          savedEntry,
+          ongoingEntry,
+          patient,
+          address,
+          phoneNumber,
+          bangladeshNationalId,
+          saveButtonState,
+          null,
+          null,
+          null
+      )
     }
   }
 
   val hasColonyOrVillagesList: Boolean
     get() = !colonyOrVillagesList.isNullOrEmpty()
+
+  val hasInputFields
+    get() = inputFields != null
 
   fun updateName(name: String): EditPatientModel =
       copy(ongoingEntry = ongoingEntry.updateName(name))
@@ -85,4 +102,12 @@ data class EditPatientModel(
 
   fun updateColonyOrVillagesList(colonyOrVillages: List<String>): EditPatientModel =
       copy(colonyOrVillagesList = colonyOrVillages)
+
+  fun inputFieldsLoaded(inputFields: InputFields): EditPatientModel {
+    return copy(inputFields = inputFields)
+  }
+
+  fun bpPassportsLoaded(bpPassports: List<BusinessId>): EditPatientModel {
+    return copy(bpPassports = bpPassports)
+  }
 }

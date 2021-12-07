@@ -53,8 +53,8 @@ class EditPatientUpdate(
       is PatientSaved -> next(model.buttonStateChanged(EditPatientState.NOT_SAVING_PATIENT), GoBackEffect)
       is SaveClicked -> onSaveClicked(model)
       is AlternativeIdChanged -> next(model.updateAlternativeId(event.alternativeId))
-      is BpPassportsFetched -> dispatch(DisplayBpPassportsEffect(event.bpPasssports))
-      is InputFieldsLoaded -> dispatch(SetupUi(event.inputFields) as EditPatientEffect)
+      is BpPassportsFetched -> next(model.bpPassportsLoaded(event.bpPasssports))
+      is InputFieldsLoaded -> next(model.inputFieldsLoaded(event.inputFields))
       is ColonyOrVillagesFetched -> next(model.updateColonyOrVillagesList(event.colonyOrVillages))
     }
   }

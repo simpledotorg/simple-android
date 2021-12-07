@@ -1,5 +1,6 @@
 package org.simple.clinic.newentry
 
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
@@ -8,13 +9,24 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.R
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.newentry.Field.PhoneNumber
-import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
+import org.simple.clinic.newentry.form.AgeField
+import org.simple.clinic.newentry.form.AlternativeIdInputField
+import org.simple.clinic.newentry.form.DateOfBirthField
+import org.simple.clinic.newentry.form.DistrictField
+import org.simple.clinic.newentry.form.GenderField
+import org.simple.clinic.newentry.form.LandlineOrMobileField
+import org.simple.clinic.newentry.form.PatientNameField
+import org.simple.clinic.newentry.form.StateField
+import org.simple.clinic.newentry.form.StreetAddressField
+import org.simple.clinic.newentry.form.VillageOrColonyField
+import org.simple.clinic.newentry.form.ZoneField
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientRepository
@@ -38,10 +50,20 @@ class PatientEntryEffectHandlerTest {
   private val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
   private val clock = TestUserClock(LocalDate.parse("2018-01-01"))
 
-  private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider(
-      dateTimeFormatter = dateTimeFormatter,
-      today = LocalDate.now(clock)
+  private val inputFields = InputFields(listOf(
+      PatientNameField(R.string.patiententry_full_name),
+      AgeField(R.string.patiententry_age),
+      DateOfBirthField({ value -> LocalDate.parse(value, dateTimeFormatter) }, LocalDate.now(clock), R.string.patiententry_date_of_birth_unfocused),
+      LandlineOrMobileField(R.string.patiententry_phone_number),
+      GenderField(_labelResId = 0, allowedGenders = setOf(Gender.Male, Gender.Female, Gender.Transgender)),
+      AlternativeIdInputField(R.string.patiententry_bangladesh_national_id),
+      StreetAddressField(R.string.patiententry_street_house_road_number),
+      VillageOrColonyField(R.string.patiententry_village_ward),
+      ZoneField(R.string.patiententry_zone),
+      DistrictField(R.string.patiententry_upazila),
+      StateField(R.string.patiententry_district)
   ))
+  private val inputFieldsFactory = mock<InputFieldsFactory>()
 
   private val uiActions = mock<PatientEntryUiActions>()
   private val viewEffectHandler = PatientEntryViewEffectHandler(uiActions)
@@ -75,20 +97,19 @@ class PatientEntryEffectHandlerTest {
 
   @Test
   fun `when the load input fields effect is received, the input fields must be loaded`() {
+    // given
+    whenever(inputFieldsFactory.provideFields()) doReturn inputFields.fields
+
     // when
     setupTestCase()
     testCase.dispatch(LoadInputFields)
 
     // then
-    val expectedFields = InputFields(inputFieldsFactory.provideFields())
-    testCase.assertOutgoingEvents(InputFieldsLoaded(expectedFields))
+    testCase.assertOutgoingEvents(InputFieldsLoaded(inputFields))
   }
 
   @Test
   fun `when the setup UI effect is received, the UI must be setup with the input fields`() {
-    // given
-    val inputFields = InputFields(inputFieldsFactory.provideFields())
-
     // when
     setupTestCase()
     testCase.dispatch(SetupUi(inputFields))

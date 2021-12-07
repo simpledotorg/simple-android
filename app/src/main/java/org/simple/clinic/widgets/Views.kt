@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Build
+import android.text.TextWatcher
 import android.util.DisplayMetrics
 import android.view.MenuItem
 import android.view.View
@@ -13,6 +14,7 @@ import android.view.ViewPropertyAnimator
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.RadioGroup
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.ViewFlipper
@@ -48,6 +50,16 @@ fun ViewGroup.hideKeyboard() {
     val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
   }
+}
+
+fun EditText.setTextWithWatcher(textToSet: CharSequence?, textWatcher: TextWatcher) {
+  removeTextChangedListener(textWatcher)
+  setText(textToSet)
+
+  // Cannot rely on textToSet. It's possible that the
+  // EditText modifies the text using InputFilters.
+  setSelection(text.length)
+  addTextChangedListener(textWatcher)
 }
 
 fun EditText.setTextAndCursor(textToSet: CharSequence?) {
@@ -287,6 +299,12 @@ fun MenuItem.visibleOrGone(isVisible: Boolean) {
 
 fun ViewPropertyAnimator.setDuration(duration: Duration): ViewPropertyAnimator {
   return setDuration(duration.toMillis())
+}
+
+fun RadioGroup.checkWithListener(@IdRes id: Int, onCheckedChangeListener: RadioGroup.OnCheckedChangeListener) {
+  setOnCheckedChangeListener(null)
+  check(id)
+  setOnCheckedChangeListener(onCheckedChangeListener)
 }
 
 val Int.dp: Int

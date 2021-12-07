@@ -67,7 +67,6 @@ class EditPatientScreenSaveTest {
 
   private val uiEvents = PublishSubject.create<EditPatientEvent>()
   private val ui: EditPatientUi = mock()
-  private val viewRenderer = EditPatientViewRenderer(ui)
   private val patientRepository: PatientRepository = mock()
   private val country = TestData.country()
 
@@ -78,12 +77,14 @@ class EditPatientScreenSaveTest {
   private val generatedPhoneUuid = UUID.fromString("ada3ea24-819b-42e4-ac21-51bcf61cebac")
   private val user = TestData.loggedInUser()
 
+  private val viewRenderer = EditPatientViewRenderer(ui)
+
   private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider(
       dateTimeFormatter = dateOfBirthFormat,
       today = LocalDate.now(userClock)
   ))
 
-  private val viewEffectHandler = EditPatientViewEffectHandler(userClock, ui)
+  private val viewEffectHandler = EditPatientViewEffectHandler(ui)
 
   @Test
   fun `when save is clicked, patient name should be validated`() {
@@ -955,9 +956,6 @@ class EditPatientScreenSaveTest {
         events = uiEvents,
         defaultModel = EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null, NOT_SAVING_PATIENT),
         init = EditPatientInit(patient = patient,
-            address = address,
-            phoneNumber = phoneNumber,
-            bangladeshNationalId = null,
             isVillageTypeAheadEnabled = true),
         update = EditPatientUpdate(
             numberValidator = numberValidator,

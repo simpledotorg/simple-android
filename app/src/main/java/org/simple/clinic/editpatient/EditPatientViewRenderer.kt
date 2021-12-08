@@ -5,6 +5,11 @@ import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaNationalId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaPersonalHealthNumber
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
@@ -65,10 +70,7 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
       setStreetAddress(ongoingEntry.streetAddress)
       setZone(ongoingEntry.zone)
       setColonyOrVillage(ongoingEntry.colonyOrVillage)
-
-      if (alternateId != null) {
-        setAlternateId(ongoingEntry, alternateId)
-      }
+      setAlternateId(ongoingEntry, alternateId)
     }
 
     val ageOrDateOfBirth = ongoingEntry.ageOrDateOfBirth
@@ -78,11 +80,19 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
     }.exhaustive()
   }
 
-  private fun setAlternateId(ongoingEntry: EditablePatientEntry, alternateId: BusinessId) {
-    if (alternateId.identifier.value != ongoingEntry.alternativeId) {
-      ui.setAlternateId(Identifier(ongoingEntry.alternativeId, alternateId.identifier.type))
-    } else {
-      ui.setAlternateId(alternateId.identifier)
-    }
+  private fun setAlternateId(ongoingEntry: EditablePatientEntry, alternateId: BusinessId?) {
+    when (val alternateIdentifierType = alternateId?.identifier?.type) {
+      // When alternative id is not present, we would want to set the text watcher on
+      // text field, so that we can listen the text changes and update the model
+      // accordingly. It is same as setting text changes observable on the text field.
+      null,
+      BangladeshNationalId,
+      EthiopiaMedicalRecordNumber,
+      SriLankaNationalId,
+      SriLankaPersonalHealthNumber -> ui.setAlternateIdTextField(ongoingEntry.alternativeId)
+      IndiaNationalHealthId -> ui.setAlternateIdContainer(Identifier(ongoingEntry.alternativeId, alternateIdentifierType))
+      Identifier.IdentifierType.BpPassport,
+      is Identifier.IdentifierType.Unknown -> throw IllegalArgumentException("Unknown alternative id: $alternateId")
+    }.exhaustive()
   }
 }

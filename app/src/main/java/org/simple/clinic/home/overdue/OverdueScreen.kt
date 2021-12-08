@@ -41,9 +41,9 @@ import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.overdue.download.formatdialog.Download
-import org.simple.clinic.overdue.download.formatdialog.SharingInProgress
 import org.simple.clinic.overdue.download.formatdialog.SelectOverdueDownloadFormatDialog
 import org.simple.clinic.overdue.download.formatdialog.Share
+import org.simple.clinic.overdue.download.formatdialog.SharingInProgress
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.sync.LastSyncedState
@@ -67,8 +67,7 @@ class OverdueScreen : BaseScreen<
     OverdueModel,
     OverdueEvent,
     OverdueEffect,
-    Unit>(), OverdueUiActions {
-
+    OverdueViewEffect>(), OverdueUiActions {
 
   @Inject
   lateinit var screenResults: ScreenResultBus
@@ -163,7 +162,7 @@ class OverdueScreen : BaseScreen<
 
   override fun createInit() = OverdueInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<OverdueViewEffect>) = effectHandlerFactory.create(this).build()
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

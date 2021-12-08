@@ -20,8 +20,6 @@ data class LoadOverdueAppointments(
     val facility: Facility
 ) : OverdueEffect()
 
-data class OpenContactPatientScreen(val patientUuid: UUID) : OverdueEffect()
-
 data class OpenPatientSummary(val patientUuid: UUID) : OverdueEffect()
 
 data class ShowOverdueAppointments(
@@ -40,3 +38,5 @@ object OpenSharingInProgressDialog : OverdueEffect()
 data class ScheduleDownload(val fileFormat: OverdueListFileFormat) : OverdueEffect()
 
 sealed class OverdueViewEffect : OverdueEffect()
+
+data class OpenContactPatientScreen(val patientUuid: UUID) : OverdueViewEffect()

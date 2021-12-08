@@ -37,7 +37,6 @@ class OverdueEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<OverdueEffect, OverdueEvent>()
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
         .addTransformer(LoadOverdueAppointments::class.java, loadOverdueAppointments())
-        .addConsumer(OpenContactPatientScreen::class.java, { uiActions.openPhoneMaskBottomSheet(it.patientUuid) }, schedulers.ui())
         .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientUuid) }, schedulers.ui())
         .addConsumer(ShowOverdueAppointments::class.java, ::showOverdueAppointments, schedulers.ui())
         .addAction(ShowNoActiveNetworkConnectionDialog::class.java, uiActions::showNoActiveNetworkConnectionDialog, schedulers.ui())

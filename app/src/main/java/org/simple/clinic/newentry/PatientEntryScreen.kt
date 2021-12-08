@@ -62,6 +62,7 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Bangladesh
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaNationalId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaPersonalHealthNumber
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.toOptional
@@ -481,6 +482,7 @@ class PatientEntryScreen : BaseScreen<
     when (alternateId.type) {
       BangladeshNationalId,
       SriLankaNationalId,
+      SriLankaPersonalHealthNumber,
       EthiopiaMedicalRecordNumber -> setAlternateIdTextField(alternateId)
       IndiaNationalHealthId -> setAlternateIdContainer(alternateId)
       else -> throw IllegalArgumentException("Unknown alternate id: $alternateId")

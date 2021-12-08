@@ -37,6 +37,7 @@
 ### Fixes
 
 - Fix medical history answers toggle not switching when selected
+- Fix Sri Lanka personal health number not rendering in the patient entry and edit screens
 
 ## 2021-11-24-8041
 

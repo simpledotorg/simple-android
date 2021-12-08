@@ -63,10 +63,7 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
       setDistrict(ongoingEntry.district)
       setStreetAddress(ongoingEntry.streetAddress)
       setZone(ongoingEntry.zone)
-
-      if (ongoingEntry.colonyOrVillage.isNotBlank()) {
-        setColonyOrVillage(ongoingEntry.colonyOrVillage)
-      }
+      setColonyOrVillage(ongoingEntry.colonyOrVillage)
 
       if (ongoingEntry.phoneNumber.isNotBlank()) {
         setPatientPhoneNumber(ongoingEntry.phoneNumber)

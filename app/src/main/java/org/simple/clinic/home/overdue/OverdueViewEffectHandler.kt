@@ -10,6 +10,7 @@ class OverdueViewEffectHandler(
   override fun handle(viewEffect: OverdueViewEffect) {
     when (viewEffect) {
       is OpenContactPatientScreen -> uiActions.openPhoneMaskBottomSheet(viewEffect.patientUuid)
+      is OpenPatientSummary -> uiActions.openPatientSummary(viewEffect.patientUuid)
     }.exhaustive()
   }
 }

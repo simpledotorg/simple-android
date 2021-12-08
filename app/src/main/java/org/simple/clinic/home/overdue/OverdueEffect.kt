@@ -20,8 +20,6 @@ data class LoadOverdueAppointments(
     val facility: Facility
 ) : OverdueEffect()
 
-object OpenSelectDownloadFormatDialog : OverdueEffect()
-
 object OpenSelectShareFormatDialog : OverdueEffect()
 
 object OpenSharingInProgressDialog : OverdueEffect()
@@ -40,3 +38,5 @@ data class ShowOverdueAppointments(
 ) : OverdueViewEffect()
 
 object ShowNoActiveNetworkConnectionDialog : OverdueViewEffect()
+
+object OpenSelectDownloadFormatDialog : OverdueViewEffect()

@@ -13,6 +13,7 @@ class OverdueViewEffectHandler(
       is OpenPatientSummary -> uiActions.openPatientSummary(viewEffect.patientUuid)
       is ShowOverdueAppointments -> uiActions.showOverdueAppointments(viewEffect.overdueAppointments, viewEffect.isDiabetesManagementEnabled)
       ShowNoActiveNetworkConnectionDialog -> uiActions.showNoActiveNetworkConnectionDialog()
+      OpenSelectDownloadFormatDialog -> uiActions.openSelectDownloadFormatDialog()
     }.exhaustive()
   }
 }

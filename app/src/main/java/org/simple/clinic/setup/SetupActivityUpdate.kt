@@ -5,7 +5,6 @@ import com.spotify.mobius.Update
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appconfig.Deployment
 import org.simple.clinic.mobius.dispatch
-import org.simple.clinic.mobius.next
 import org.simple.clinic.setup.runcheck.Allowed
 import org.simple.clinic.setup.runcheck.Disallowed
 import java.net.URI
@@ -43,10 +42,6 @@ class SetupActivityUpdate(
     val selectedDeployment = event.currentDeployment
     val countryV1 = event.userSelectedCountryV1
 
-    val updatedModel = model
-        .withLoggedInUser(loggedInUser)
-        .withSelectedCountry(selectedCountry)
-
     val hasUserLoggedInCompletely = loggedInUser.isPresent && selectedCountry.isPresent && selectedDeployment.isPresent
     val hasUserLoggedInButCountryV1IsPresent = loggedInUser.isPresent && countryV1.isPresent
     val hasUserLoggedInButNoDeploymentIsPresent = loggedInUser.isPresent && selectedCountry.isPresent && !selectedDeployment.isPresent
@@ -68,7 +63,7 @@ class SetupActivityUpdate(
       )
     }
 
-    return next(updatedModel, effect)
+    return dispatch(effect)
   }
 
   private fun saveCountryAndDeploymentEffect(

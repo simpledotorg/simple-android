@@ -49,7 +49,6 @@ class OverdueEffectHandlerTest {
       pagerFactory = pagerFactory,
       overdueAppointmentsConfig = overdueAppointmentsConfig,
       overdueDownloadScheduler = overdueDownloadScheduler,
-      uiActions = uiActions,
       viewEffectsConsumer = viewEffectHandler::handle
   ).build()
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)

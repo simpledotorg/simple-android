@@ -20,14 +20,12 @@ class OverdueEffectHandler @AssistedInject constructor(
     private val pagerFactory: PagerFactory,
     private val overdueAppointmentsConfig: OverdueAppointmentsConfig,
     private val overdueDownloadScheduler: OverdueDownloadScheduler,
-    @Assisted private val uiActions: OverdueUiActions,
     @Assisted private val viewEffectsConsumer: Consumer<OverdueViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        uiActions: OverdueUiActions,
         viewEffectsConsumer: Consumer<OverdueViewEffect>
     ): OverdueEffectHandler
   }
@@ -44,12 +42,6 @@ class OverdueEffectHandler @AssistedInject constructor(
 
   private fun scheduleDownload(effect: ScheduleDownload) {
     overdueDownloadScheduler.schedule(effect.fileFormat)
-  }
-
-  private fun showOverdueAppointments(effect: ShowOverdueAppointments) {
-    uiActions.showOverdueAppointments(
-        overdueAppointments = effect.overdueAppointments,
-        isDiabetesManagementEnabled = effect.isDiabetesManagementEnabled)
   }
 
   private fun loadCurrentFacility(): ObservableTransformer<LoadCurrentFacility, OverdueEvent> {

@@ -45,6 +45,7 @@ class OverdueEffectHandler @AssistedInject constructor(
         .addAction(OpenSelectShareFormatDialog::class.java, uiActions::openSelectShareFormatDialog, schedulers.ui())
         .addAction(OpenSharingInProgressDialog::class.java, uiActions::openProgressForSharingDialog, schedulers.ui())
         .addConsumer(ScheduleDownload::class.java, ::scheduleDownload, schedulers.io())
+        .addConsumer(OverdueViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 

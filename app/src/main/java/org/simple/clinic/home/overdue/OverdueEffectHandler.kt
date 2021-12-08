@@ -1,5 +1,6 @@
 package org.simple.clinic.home.overdue
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -19,12 +20,16 @@ class OverdueEffectHandler @AssistedInject constructor(
     private val pagerFactory: PagerFactory,
     private val overdueAppointmentsConfig: OverdueAppointmentsConfig,
     private val overdueDownloadScheduler: OverdueDownloadScheduler,
-    @Assisted private val uiActions: OverdueUiActions
+    @Assisted private val uiActions: OverdueUiActions,
+    @Assisted private val viewEffectsConsumer: Consumer<OverdueViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: OverdueUiActions): OverdueEffectHandler
+    fun create(
+        uiActions: OverdueUiActions,
+        viewEffectsConsumer: Consumer<OverdueViewEffect>
+    ): OverdueEffectHandler
   }
 
   fun build(): ObservableTransformer<OverdueEffect, OverdueEvent> {

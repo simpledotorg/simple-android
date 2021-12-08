@@ -43,9 +43,7 @@ class SetupActivityUpdate(
     val selectedDeployment = event.currentDeployment
     val countryV1 = event.userSelectedCountryV1
 
-    val updatedModel = model
-        .withLoggedInUser(loggedInUser)
-        .withSelectedCountry(selectedCountry)
+    val updatedModel = model.withSelectedCountry(selectedCountry)
 
     val hasUserLoggedInCompletely = loggedInUser.isPresent && selectedCountry.isPresent && selectedDeployment.isPresent
     val hasUserLoggedInButCountryV1IsPresent = loggedInUser.isPresent && countryV1.isPresent

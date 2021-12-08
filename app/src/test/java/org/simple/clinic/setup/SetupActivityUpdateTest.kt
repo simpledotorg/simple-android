@@ -74,7 +74,7 @@ class SetupActivityUpdateTest {
     val country = TestData.country()
 
     //then
-    val expectedModel = defaultModel.loggedInUser(user, country)
+    val expectedModel = defaultModel.loggedInUser(country)
 
     updateSpec
         .given(defaultModel)
@@ -212,10 +212,7 @@ class SetupActivityUpdateTest {
         .given(defaultModel)
         .whenEvent(event)
         .then(assertThatNext(
-            hasModel(defaultModel
-                .withLoggedInUser(Optional.of(user))
-                .withSelectedCountry(Optional.empty())
-            ),
+            hasModel(defaultModel.withSelectedCountry(Optional.empty())),
             hasEffects(SaveCountryAndDeployment(expectedCountryToSave, expectedDeploymentToSave))
         ))
   }
@@ -247,11 +244,7 @@ class SetupActivityUpdateTest {
         .given(defaultModel)
         .whenEvent(event)
         .then(assertThatNext(
-            hasModel(
-                defaultModel
-                    .withLoggedInUser(Optional.of(user))
-                    .withSelectedCountry(Optional.of(country))
-            ),
+            hasModel(defaultModel.withSelectedCountry(Optional.of(country))),
             hasEffects(SaveCountryAndDeployment(country, deployment))
         ))
   }
@@ -302,19 +295,13 @@ class SetupActivityUpdateTest {
 }
 
 private fun SetupActivityModel.previouslyLoggedInUser(user: User): SetupActivityModel {
-  return this
-      .withLoggedInUser(Optional.of(user))
-      .withSelectedCountry(Optional.empty())
+  return this.withSelectedCountry(Optional.empty())
 }
 
 private fun SetupActivityModel.completelyNewUser(): SetupActivityModel {
-  return this
-      .withLoggedInUser(Optional.empty())
-      .withSelectedCountry(Optional.empty())
+  return this.withSelectedCountry(Optional.empty())
 }
 
-private fun SetupActivityModel.loggedInUser(user: User, country: Country): SetupActivityModel {
-  return this
-      .withLoggedInUser(Optional.of(user))
-      .withSelectedCountry(Optional.of(country))
+private fun SetupActivityModel.loggedInUser(country: Country): SetupActivityModel {
+  return this.withSelectedCountry(Optional.of(country))
 }

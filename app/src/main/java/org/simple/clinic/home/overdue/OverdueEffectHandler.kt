@@ -37,7 +37,6 @@ class OverdueEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<OverdueEffect, OverdueEvent>()
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
         .addTransformer(LoadOverdueAppointments::class.java, loadOverdueAppointments())
-        .addAction(OpenSharingInProgressDialog::class.java, uiActions::openProgressForSharingDialog, schedulers.ui())
         .addConsumer(ScheduleDownload::class.java, ::scheduleDownload, schedulers.io())
         .addConsumer(OverdueViewEffect::class.java, viewEffectsConsumer::accept)
         .build()

@@ -15,6 +15,7 @@ class OverdueViewEffectHandler(
       ShowNoActiveNetworkConnectionDialog -> uiActions.showNoActiveNetworkConnectionDialog()
       OpenSelectDownloadFormatDialog -> uiActions.openSelectDownloadFormatDialog()
       OpenSelectShareFormatDialog -> uiActions.openSelectShareFormatDialog()
+      OpenSharingInProgressDialog -> uiActions.openProgressForSharingDialog()
     }.exhaustive()
   }
 }

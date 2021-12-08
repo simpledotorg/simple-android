@@ -14,6 +14,10 @@
 - Use `StringPreferenceConverter` for getting selected state from preferences
 - Use view render to setup UI and fill fields in edit screen
 
+### Fixes
+
+- Fix Sri Lanka personal health number not rendering in the patient entry and edit screens
+
 ## 2021-12-06-8056
 
 ### Internal

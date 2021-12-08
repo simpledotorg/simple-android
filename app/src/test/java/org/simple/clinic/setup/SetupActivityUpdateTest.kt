@@ -1,7 +1,6 @@
 package org.simple.clinic.setup
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
-import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
@@ -30,26 +29,22 @@ class SetupActivityUpdateTest {
 
   @Test
   fun `if the user has not logged in, the country selection screen must be shown`() {
-    val expectedModel = defaultModel.completelyNewUser()
-
     updateSpec
         .given(defaultModel)
         .whenEvent(onboardedUserWithoutLoggingInFetched())
         .then(assertThatNext(
-            hasModel(expectedModel),
+            hasNoModel(),
             hasEffects(ShowCountrySelectionScreen as SetupActivityEffect)
         ))
   }
 
   @Test
   fun `if the user has not completed onboarding, the onboarding screen must be shown`() {
-    val expectedModel = defaultModel.completelyNewUser()
-
     updateSpec
         .given(defaultModel)
         .whenEvent(completelyNewUserFetched())
         .then(assertThatNext(
-            hasModel(expectedModel),
+            hasNoModel(),
             hasEffects(ShowOnboardingScreen as SetupActivityEffect)
         ))
   }
@@ -74,13 +69,11 @@ class SetupActivityUpdateTest {
     val country = TestData.country()
 
     //then
-    val expectedModel = defaultModel.loggedInUser(user, country)
-
     updateSpec
         .given(defaultModel)
         .whenEvent(loggedInUserFetched(user, country, country.deployments.first()))
         .then(assertThatNext(
-            hasModel(expectedModel),
+            hasNoModel(),
             hasEffects(GoToMainActivity as SetupActivityEffect)
         ))
   }
@@ -212,10 +205,7 @@ class SetupActivityUpdateTest {
         .given(defaultModel)
         .whenEvent(event)
         .then(assertThatNext(
-            hasModel(defaultModel
-                .withLoggedInUser(Optional.of(user))
-                .withSelectedCountry(Optional.empty())
-            ),
+            hasNoModel(),
             hasEffects(SaveCountryAndDeployment(expectedCountryToSave, expectedDeploymentToSave))
         ))
   }
@@ -247,11 +237,7 @@ class SetupActivityUpdateTest {
         .given(defaultModel)
         .whenEvent(event)
         .then(assertThatNext(
-            hasModel(
-                defaultModel
-                    .withLoggedInUser(Optional.of(user))
-                    .withSelectedCountry(Optional.of(country))
-            ),
+            hasNoModel(),
             hasEffects(SaveCountryAndDeployment(country, deployment))
         ))
   }
@@ -299,22 +285,4 @@ class SetupActivityUpdateTest {
         currentDeployment = Optional.of(deployment)
     )
   }
-}
-
-private fun SetupActivityModel.previouslyLoggedInUser(user: User): SetupActivityModel {
-  return this
-      .withLoggedInUser(Optional.of(user))
-      .withSelectedCountry(Optional.empty())
-}
-
-private fun SetupActivityModel.completelyNewUser(): SetupActivityModel {
-  return this
-      .withLoggedInUser(Optional.empty())
-      .withSelectedCountry(Optional.empty())
-}
-
-private fun SetupActivityModel.loggedInUser(user: User, country: Country): SetupActivityModel {
-  return this
-      .withLoggedInUser(Optional.of(user))
-      .withSelectedCountry(Optional.of(country))
 }

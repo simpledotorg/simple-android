@@ -1,13 +1,15 @@
 package org.simple.clinic.home.overdue
 
-import org.simple.clinic.home.HomeScreenViewEffect
 import org.simple.clinic.mobius.ViewEffectsHandler
+import org.simple.clinic.util.exhaustive
 
 class OverdueViewEffectHandler(
     private val uiActions: OverdueUiActions
 ) : ViewEffectsHandler<OverdueViewEffect> {
 
   override fun handle(viewEffect: OverdueViewEffect) {
-    // does nothing, yet.
+    when (viewEffect) {
+      is OpenContactPatientScreen -> uiActions.openPhoneMaskBottomSheet(viewEffect.patientUuid)
+    }.exhaustive()
   }
 }

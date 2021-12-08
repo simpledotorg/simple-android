@@ -11,6 +11,7 @@ class OverdueViewEffectHandler(
     when (viewEffect) {
       is OpenContactPatientScreen -> uiActions.openPhoneMaskBottomSheet(viewEffect.patientUuid)
       is OpenPatientSummary -> uiActions.openPatientSummary(viewEffect.patientUuid)
+      is ShowOverdueAppointments -> uiActions.showOverdueAppointments(viewEffect.overdueAppointments, viewEffect.isDiabetesManagementEnabled)
     }.exhaustive()
   }
 }

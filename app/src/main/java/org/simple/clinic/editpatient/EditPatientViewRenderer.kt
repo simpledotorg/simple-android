@@ -58,16 +58,13 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
   ) {
     with(ui) {
       setPatientName(ongoingEntry.name)
+      setPatientPhoneNumber(ongoingEntry.phoneNumber)
       setGender(ongoingEntry.gender)
       setState(ongoingEntry.state)
       setDistrict(ongoingEntry.district)
       setStreetAddress(ongoingEntry.streetAddress)
       setZone(ongoingEntry.zone)
       setColonyOrVillage(ongoingEntry.colonyOrVillage)
-
-      if (ongoingEntry.phoneNumber.isNotBlank()) {
-        setPatientPhoneNumber(ongoingEntry.phoneNumber)
-      }
 
       if (alternateId != null) {
         setAlternateId(ongoingEntry, alternateId)

@@ -55,12 +55,7 @@ class EditPatientScreenCreatedTest {
     verify(ui).setGender(patient.gender)
     verify(ui).setPatientName(patient.fullName)
     verify(ui).setColonyOrVillage(address.colonyOrVillage.orEmpty())
-
-    if (patientFormTestParams.shouldSetPhoneNumber) {
-      verify(ui).setPatientPhoneNumber(phoneNumber!!.number)
-    } else {
-      verify(ui, never()).setPatientPhoneNumber(any())
-    }
+    verify(ui).setPatientPhoneNumber(phoneNumber?.number.orEmpty())
 
     if (patientFormTestParams.shouldSetAge) {
       verify(ui).setPatientAge(any())

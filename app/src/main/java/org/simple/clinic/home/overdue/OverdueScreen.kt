@@ -164,7 +164,7 @@ class OverdueScreen : BaseScreen<
 
   override fun createEffectHandler(
       viewEffectsConsumer: Consumer<OverdueViewEffect>
-  ) = effectHandlerFactory.create(this, viewEffectsConsumer).build()
+  ) = effectHandlerFactory.create(viewEffectsConsumer).build()
 
   override fun viewEffectHandler() = OverdueViewEffectHandler(this)
 

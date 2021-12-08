@@ -36,7 +36,6 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature.OverdueListDownloadAndShare
 import org.simple.clinic.feature.Features
 import org.simple.clinic.home.HomeScreen
-import org.simple.clinic.mobius.ViewEffectsHandler
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.ScreenResultBus
@@ -163,7 +162,9 @@ class OverdueScreen : BaseScreen<
 
   override fun createInit() = OverdueInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<OverdueViewEffect>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(
+      viewEffectsConsumer: Consumer<OverdueViewEffect>
+  ) = effectHandlerFactory.create(this, viewEffectsConsumer).build()
 
   override fun viewEffectHandler() = OverdueViewEffectHandler(this)
 

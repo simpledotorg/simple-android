@@ -49,6 +49,7 @@ class EditMedicinesEffectHandler @AssistedInject constructor(
         .addAction(GoBackToPatientSummary::class.java, uiActions::goBackToPatientSummary, schedulersProvider.ui())
         .addTransformer(RefillMedicines::class.java, refillMedicines())
         .addTransformer(LoadDrugFrequencyChoiceItems::class.java, loadFrequencyChoiceItems())
+        .addConsumer(EditMedicinesViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 

@@ -34,6 +34,7 @@ import org.simple.clinic.drugs.EditMedicinesModel
 import org.simple.clinic.drugs.EditMedicinesUiRenderer
 import org.simple.clinic.drugs.EditMedicinesUpdate
 import org.simple.clinic.drugs.EditMedicinesViewEffect
+import org.simple.clinic.drugs.EditMedicinesViewEffectHandler
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescribedDrugsDoneClicked
 import org.simple.clinic.drugs.PresribedDrugsRefillClicked
@@ -136,6 +137,8 @@ class EditMedicinesScreen :
   override fun createInit() = EditMedicinesInit()
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<EditMedicinesViewEffect>) = effectHandlerFactory.create(this).build()
+
+  override fun viewEffectHandler() = EditMedicinesViewEffectHandler(this)
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

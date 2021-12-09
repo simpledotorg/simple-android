@@ -43,7 +43,6 @@ class EditMedicinesEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<EditMedicinesEffect, EditMedicinesEvent>()
         .addTransformer(FetchPrescribedAndProtocolDrugs::class.java, fetchDrugsList(schedulersProvider.io()))
-        .addConsumer(ShowUpdateCustomPrescriptionSheet::class.java, { uiActions.showUpdateCustomPrescriptionSheet(it.prescribedDrug) }, schedulersProvider.ui())
         .addAction(GoBackToPatientSummary::class.java, uiActions::goBackToPatientSummary, schedulersProvider.ui())
         .addTransformer(RefillMedicines::class.java, refillMedicines())
         .addTransformer(LoadDrugFrequencyChoiceItems::class.java, loadFrequencyChoiceItems())

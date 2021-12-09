@@ -4,8 +4,6 @@ import java.util.UUID
 
 sealed class EditMedicinesEffect
 
-data class ShowUpdateCustomPrescriptionSheet(val prescribedDrug: PrescribedDrug) : EditMedicinesEffect()
-
 object GoBackToPatientSummary : EditMedicinesEffect()
 
 data class FetchPrescribedAndProtocolDrugs(val patientUuid: UUID) : EditMedicinesEffect()
@@ -23,3 +21,5 @@ data class OpenDosagePickerSheet(
     val patientUuid: UUID,
     val prescribedDrugUuid: UUID?
 ) : EditMedicinesViewEffect()
+
+data class ShowUpdateCustomPrescriptionSheet(val prescribedDrug: PrescribedDrug) : EditMedicinesViewEffect()

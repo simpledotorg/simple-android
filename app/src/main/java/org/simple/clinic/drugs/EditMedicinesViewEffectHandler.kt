@@ -14,6 +14,7 @@ class EditMedicinesViewEffectHandler(
           viewEffect.patientUuid,
           viewEffect.prescribedDrugUuid
       )
+      is ShowUpdateCustomPrescriptionSheet -> uiActions.showUpdateCustomPrescriptionSheet(viewEffect.prescribedDrug)
     }
   }
 }

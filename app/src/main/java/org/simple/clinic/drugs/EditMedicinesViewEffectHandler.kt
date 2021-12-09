@@ -9,6 +9,11 @@ class EditMedicinesViewEffectHandler(
   override fun handle(viewEffect: EditMedicinesViewEffect) {
     when (viewEffect) {
       is ShowNewPrescriptionEntrySheet -> uiActions.showNewPrescriptionEntrySheet(viewEffect.patientUuid)
+      is OpenDosagePickerSheet -> uiActions.showDosageSelectionSheet(
+          viewEffect.drugName,
+          viewEffect.patientUuid,
+          viewEffect.prescribedDrugUuid
+      )
     }
   }
 }

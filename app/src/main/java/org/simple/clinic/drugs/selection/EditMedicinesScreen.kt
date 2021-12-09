@@ -136,7 +136,7 @@ class EditMedicinesScreen :
 
   override fun createInit() = EditMedicinesInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<EditMedicinesViewEffect>) = effectHandlerFactory.create(this, viewEffectsConsumer).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<EditMedicinesViewEffect>) = effectHandlerFactory.create(viewEffectsConsumer).build()
 
   override fun viewEffectHandler() = EditMedicinesViewEffectHandler(this)
 

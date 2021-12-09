@@ -10,7 +10,6 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.drugs.search.DrugFrequency
-import org.simple.clinic.drugs.selection.EditMedicinesUiActions
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
@@ -30,13 +29,12 @@ class EditMedicinesEffectHandler @AssistedInject constructor(
     private val uuidGenerator: UuidGenerator,
     private val appointmentsRepository: AppointmentRepository,
     private val drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>,
-    @Assisted private val uiActions: EditMedicinesUiActions,
     @Assisted private val viewEffectsConsumer: Consumer<EditMedicinesViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: EditMedicinesUiActions, viewEffectsConsumer: Consumer<EditMedicinesViewEffect>): EditMedicinesEffectHandler
+    fun create(viewEffectsConsumer: Consumer<EditMedicinesViewEffect>): EditMedicinesEffectHandler
   }
 
   fun build(): ObservableTransformer<EditMedicinesEffect, EditMedicinesEvent> {

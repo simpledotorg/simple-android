@@ -58,7 +58,6 @@ class EditMedicineEffectHandlerTest {
       uuidGenerator = uuidGenerator,
       appointmentsRepository = appointmentRepository,
       drugFrequencyToLabelMap = drugFrequencyToLabelMap,
-      uiActions = uiActions,
       viewEffectsConsumer = viewEffectsConsumer
   )
 

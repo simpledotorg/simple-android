@@ -7,6 +7,8 @@ class EditMedicinesViewEffectHandler(
     private val uiActions: EditMedicinesUiActions
 ) : ViewEffectsHandler<EditMedicinesViewEffect> {
   override fun handle(viewEffect: EditMedicinesViewEffect) {
-    // does nothing, yet.
+    when (viewEffect) {
+      is ShowNewPrescriptionEntrySheet -> uiActions.showNewPrescriptionEntrySheet(viewEffect.patientUuid)
+    }
   }
 }

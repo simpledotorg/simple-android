@@ -1,5 +1,6 @@
 package org.simple.clinic.drugs
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -30,11 +31,12 @@ class EditMedicinesEffectHandler @AssistedInject constructor(
     private val appointmentsRepository: AppointmentRepository,
     private val drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>,
     @Assisted private val uiActions: EditMedicinesUiActions,
+    @Assisted private val viewEffectsConsumer: Consumer<EditMedicinesViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: EditMedicinesUiActions): EditMedicinesEffectHandler
+    fun create(uiActions: EditMedicinesUiActions, viewEffectsConsumer: Consumer<EditMedicinesViewEffect>): EditMedicinesEffectHandler
   }
 
   fun build(): ObservableTransformer<EditMedicinesEffect, EditMedicinesEvent> {

@@ -50,22 +50,12 @@ class EditPatientScreenCreatedTest {
     viewRenderer.render(model)
 
     // then
-    if (patientFormTestParams.shouldSetColonyOrVillage) {
-      verify(ui).setColonyOrVillage(address.colonyOrVillage!!)
-    } else {
-      verify(ui, never()).setColonyOrVillage(any())
-    }
-
     verify(ui).setDistrict(address.district)
     verify(ui).setState(address.state)
     verify(ui).setGender(patient.gender)
     verify(ui).setPatientName(patient.fullName)
-
-    if (patientFormTestParams.shouldSetPhoneNumber) {
-      verify(ui).setPatientPhoneNumber(phoneNumber!!.number)
-    } else {
-      verify(ui, never()).setPatientPhoneNumber(any())
-    }
+    verify(ui).setColonyOrVillage(address.colonyOrVillage.orEmpty())
+    verify(ui).setPatientPhoneNumber(phoneNumber?.number.orEmpty())
 
     if (patientFormTestParams.shouldSetAge) {
       verify(ui).setPatientAge(any())
@@ -130,9 +120,6 @@ class EditPatientScreenCreatedTest {
       val address: PatientAddress,
       val phoneNumber: PatientPhoneNumber?
   ) {
-    val shouldSetColonyOrVillage: Boolean
-      get() = address.colonyOrVillage.isNullOrBlank().not()
-
     val shouldSetPhoneNumber: Boolean
       get() = phoneNumber != null
 

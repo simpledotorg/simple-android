@@ -8,6 +8,8 @@ import org.simple.clinic.TestData
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import java.time.LocalDate
@@ -63,6 +65,7 @@ class EditPatientViewRendererTest {
     verify(ui).setColonyOrVillagesAutoComplete(colonyOrVillages)
     verify(ui).showProgress()
     verify(ui).displayBpPassports(emptyList())
+    verify(ui).setAlternateIdTextField("")
     verifyNoMoreInteractions(ui)
   }
 
@@ -94,6 +97,7 @@ class EditPatientViewRendererTest {
     verify(ui).showProgress()
     verify(ui).setupUi(inputFields)
     verify(ui).displayBpPassports(emptyList())
+    verify(ui).setAlternateIdTextField("")
     verifyNoMoreInteractions(ui)
   }
 
@@ -136,6 +140,85 @@ class EditPatientViewRendererTest {
     verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
     verify(ui).showProgress()
     verify(ui).displayBpPassports(expectedIdentifiers)
+    verify(ui).setAlternateIdTextField("")
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when alternate id is present, then display alternate id`() {
+    // given
+    val identifier = TestData.identifier(
+        value = "1234567",
+        type = BangladeshNationalId
+    )
+    val model = EditPatientModel.from(
+        patient = patientProfile.patient,
+        address = patientProfile.address,
+        phoneNumber = patientProfile.phoneNumbers.first(),
+        bangladeshNationalId = TestData.businessId(
+            uuid = UUID.fromString("0244d1f1-ec97-4911-b7a1-3a84032b499c"),
+            identifier = identifier
+        ),
+        saveButtonState = EditPatientState.SAVING_PATIENT,
+        dateOfBirthFormatter = dateOfBirthFormat
+    )
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).setPatientName(patientProfile.patient.fullName)
+    verify(ui).setGender(patientProfile.patient.gender)
+    verify(ui).setState(patientProfile.address.state)
+    verify(ui).setDistrict(patientProfile.address.district)
+    verify(ui).setStreetAddress(patientProfile.address.streetAddress)
+    verify(ui).setZone(patientProfile.address.zone)
+    verify(ui).setColonyOrVillage(patientProfile.address.colonyOrVillage!!)
+    verify(ui).setPatientPhoneNumber(patientProfile.phoneNumbers.first().number)
+    verify(ui).setPatientDateOfBirth("09/03/1990")
+    verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
+    verify(ui).showProgress()
+    verify(ui).displayBpPassports(emptyList())
+    verify(ui).setAlternateIdTextField("1234567")
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when indian national health id is present, then display alternate id container`() {
+    // given
+    val identifier = TestData.identifier(
+        value = "1234567",
+        type = IndiaNationalHealthId
+    )
+    val model = EditPatientModel.from(
+        patient = patientProfile.patient,
+        address = patientProfile.address,
+        phoneNumber = patientProfile.phoneNumbers.first(),
+        bangladeshNationalId = TestData.businessId(
+            uuid = UUID.fromString("ed74922a-3909-4084-a667-1f2bf1c36322"),
+            identifier = identifier
+        ),
+        saveButtonState = EditPatientState.SAVING_PATIENT,
+        dateOfBirthFormatter = dateOfBirthFormat
+    )
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).setPatientName(patientProfile.patient.fullName)
+    verify(ui).setGender(patientProfile.patient.gender)
+    verify(ui).setState(patientProfile.address.state)
+    verify(ui).setDistrict(patientProfile.address.district)
+    verify(ui).setStreetAddress(patientProfile.address.streetAddress)
+    verify(ui).setZone(patientProfile.address.zone)
+    verify(ui).setColonyOrVillage(patientProfile.address.colonyOrVillage!!)
+    verify(ui).setPatientPhoneNumber(patientProfile.phoneNumbers.first().number)
+    verify(ui).setPatientDateOfBirth("09/03/1990")
+    verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
+    verify(ui).showProgress()
+    verify(ui).displayBpPassports(emptyList())
+    verify(ui).setAlternateIdContainer(identifier)
     verifyNoMoreInteractions(ui)
   }
 }

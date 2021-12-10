@@ -14,6 +14,7 @@
 - Use `StringPreferenceConverter` for getting selected state from preferences
 - Use view render to setup UI and fill fields in edit screen
 - Remove unused properties from `SetupActivityModel`
+- Fix text change events not triggering in edit patient screen
 
 ### Fixes
 

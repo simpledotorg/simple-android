@@ -70,11 +70,6 @@ import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaNationalId
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaPersonalHealthNumber
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.UserClock
@@ -730,22 +725,11 @@ class EditPatientScreen : BaseScreen<
     saveButton.setButtonState(Enabled)
   }
 
-  override fun setAlternateId(alternateId: Identifier) {
-    when (alternateId.type) {
-      BangladeshNationalId,
-      SriLankaNationalId,
-      SriLankaPersonalHealthNumber,
-      EthiopiaMedicalRecordNumber -> setAlternateIdTextField(alternateId)
-      IndiaNationalHealthId -> setAlternateIdContainer(alternateId)
-      else -> throw IllegalArgumentException("Unknown alternate id: $alternateId")
-    }
+  override fun setAlternateIdTextField(alternateId: String) {
+    alternativeIdInputEditText.setTextWithWatcher(alternateId, alternateIdTextChanges)
   }
 
-  private fun setAlternateIdTextField(alternateId: Identifier) {
-    alternativeIdInputEditText.setTextWithWatcher(alternateId.displayValue(), alternateIdTextChanges)
-  }
-
-  private fun setAlternateIdContainer(alternateId: Identifier) {
+  override fun setAlternateIdContainer(alternateId: Identifier) {
     alternateIdLabel.visibility = VISIBLE
     alternateIdLabel.text = alternateId.displayType(resources)
 

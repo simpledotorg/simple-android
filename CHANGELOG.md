@@ -16,6 +16,8 @@
 - Remove unused properties from `SetupActivityModel`
 - Fix text change events not triggering in edit patient screen
 
+## 2021-12-08-8060
+
 ### Fixes
 
 - Fix Sri Lanka personal health number not rendering in the patient entry and edit screens

@@ -1,5 +1,6 @@
 package org.simple.clinic.drugs
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -9,7 +10,6 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.drugs.search.DrugFrequency
-import org.simple.clinic.drugs.selection.EditMedicinesUiActions
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
@@ -29,24 +29,21 @@ class EditMedicinesEffectHandler @AssistedInject constructor(
     private val uuidGenerator: UuidGenerator,
     private val appointmentsRepository: AppointmentRepository,
     private val drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>,
-    @Assisted private val uiActions: EditMedicinesUiActions,
+    @Assisted private val viewEffectsConsumer: Consumer<EditMedicinesViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: EditMedicinesUiActions): EditMedicinesEffectHandler
+    fun create(viewEffectsConsumer: Consumer<EditMedicinesViewEffect>): EditMedicinesEffectHandler
   }
 
   fun build(): ObservableTransformer<EditMedicinesEffect, EditMedicinesEvent> {
     return RxMobius
         .subtypeEffectHandler<EditMedicinesEffect, EditMedicinesEvent>()
         .addTransformer(FetchPrescribedAndProtocolDrugs::class.java, fetchDrugsList(schedulersProvider.io()))
-        .addConsumer(ShowNewPrescriptionEntrySheet::class.java, { uiActions.showNewPrescriptionEntrySheet(it.patientUuid) }, schedulersProvider.ui())
-        .addConsumer(OpenDosagePickerSheet::class.java, { uiActions.showDosageSelectionSheet(it.drugName, it.patientUuid, it.prescribedDrugUuid) }, schedulersProvider.ui())
-        .addConsumer(ShowUpdateCustomPrescriptionSheet::class.java, { uiActions.showUpdateCustomPrescriptionSheet(it.prescribedDrug) }, schedulersProvider.ui())
-        .addAction(GoBackToPatientSummary::class.java, uiActions::goBackToPatientSummary, schedulersProvider.ui())
         .addTransformer(RefillMedicines::class.java, refillMedicines())
         .addTransformer(LoadDrugFrequencyChoiceItems::class.java, loadFrequencyChoiceItems())
+        .addConsumer(EditMedicinesViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 

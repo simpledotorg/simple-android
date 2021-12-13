@@ -25,6 +25,7 @@ import org.simple.clinic.drugs.EditMedicinesInit
 import org.simple.clinic.drugs.EditMedicinesModel
 import org.simple.clinic.drugs.EditMedicinesUiRenderer
 import org.simple.clinic.drugs.EditMedicinesUpdate
+import org.simple.clinic.drugs.EditMedicinesViewEffectHandler
 import org.simple.clinic.drugs.PrescribedDrugsDoneClicked
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.ProtocolDrugClicked
@@ -89,6 +90,7 @@ class EditMedicinesScreenLogicTest {
   @Before
   fun setup() {
     val editMedicinesUiRenderer = EditMedicinesUiRenderer(ui)
+    val viewEffectsConsumer = EditMedicinesViewEffectHandler(uiActions)::handle
     val effectHandler = EditMedicinesEffectHandler(
         schedulersProvider = TrampolineSchedulersProvider(),
         protocolRepository = protocolRepository,
@@ -98,7 +100,7 @@ class EditMedicinesScreenLogicTest {
         uuidGenerator = uuidGenerator,
         appointmentsRepository = appointmentRepository,
         drugFrequencyToLabelMap = drugFrequencyToLabelMap,
-        uiActions = uiActions
+        viewEffectsConsumer = viewEffectsConsumer
     )
 
     fixture = MobiusTestFixture(

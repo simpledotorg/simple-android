@@ -6,7 +6,8 @@ on:
       - master
   # Also run a nightly (at 12 AM IST) workflow to clean up dangling instances for redundancy
   schedule:
-    - cron: '30 6 * * 1-5'
+    - cron: '30 18 * * 1-5'
+  workflow_dispatch:
 
 jobs:
   teardown_heroku_instance:

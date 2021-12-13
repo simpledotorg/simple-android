@@ -15,6 +15,7 @@
 - Use view render to setup UI and fill fields in edit screen
 - Remove unused properties from `SetupActivityModel`
 - Fix text change events not triggering in edit patient screen
+- Add support for running Heroku cleanup instance manually
 
 ## 2021-12-08-8060
 

@@ -47,6 +47,8 @@ class EditMedicineEffectHandlerTest {
       QDS to DrugFrequencyLabel(label = "QDS")
   )
 
+  val viewEffectsConsumer = EditMedicinesViewEffectHandler(uiActions)::handle
+
   private val effectHandler = EditMedicinesEffectHandler(
       schedulersProvider = TestSchedulersProvider.trampoline(),
       protocolRepository = protocolRepository,
@@ -56,7 +58,7 @@ class EditMedicineEffectHandlerTest {
       uuidGenerator = uuidGenerator,
       appointmentsRepository = appointmentRepository,
       drugFrequencyToLabelMap = drugFrequencyToLabelMap,
-      uiActions = uiActions
+      viewEffectsConsumer = viewEffectsConsumer
   )
 
   private val testCase = EffectHandlerTestCase(effectHandler.build())

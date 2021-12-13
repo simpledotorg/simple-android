@@ -33,6 +33,8 @@ import org.simple.clinic.drugs.EditMedicinesInit
 import org.simple.clinic.drugs.EditMedicinesModel
 import org.simple.clinic.drugs.EditMedicinesUiRenderer
 import org.simple.clinic.drugs.EditMedicinesUpdate
+import org.simple.clinic.drugs.EditMedicinesViewEffect
+import org.simple.clinic.drugs.EditMedicinesViewEffectHandler
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescribedDrugsDoneClicked
 import org.simple.clinic.drugs.PresribedDrugsRefillClicked
@@ -62,7 +64,7 @@ class EditMedicinesScreen :
         EditMedicinesModel,
         EditMedicinesEvent,
         EditMedicinesEffect,
-        Unit>(), EditMedicinesUi, EditMedicinesUiActions {
+        EditMedicinesViewEffect>(), EditMedicinesUi, EditMedicinesUiActions {
 
   @Inject
   lateinit var router: Router
@@ -134,7 +136,9 @@ class EditMedicinesScreen :
 
   override fun createInit() = EditMedicinesInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<EditMedicinesViewEffect>) = effectHandlerFactory.create(viewEffectsConsumer).build()
+
+  override fun viewEffectHandler() = EditMedicinesViewEffectHandler(this)
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

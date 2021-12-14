@@ -5,11 +5,13 @@ import android.content.res.Resources
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.BuildConfig
+import org.simple.clinic.NoopSmsListenerOtp
 import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.AppConfigModule
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.network.NetworkModule
 import org.simple.clinic.login.LoginModule
+import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.security.pin.BruteForceProtectionModule
@@ -65,4 +67,7 @@ class TestAppModule(private val application: Application) {
         isdCode = "91"
     )
   }
+
+  @Provides
+  fun provideLoginOtpSmsListener(): LoginOtpSmsListener = NoopSmsListenerOtp()
 }

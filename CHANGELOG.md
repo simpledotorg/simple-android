@@ -2,7 +2,7 @@
 
 ## Next Release
 
-## Internal
+### Internal
 
 - Remove duplicate included modules in `AppModule`
 - Use hardcoded user in server integration tests
@@ -18,6 +18,10 @@
 - Add support for running Heroku cleanup instance manually
 - Migrate `EditMedicineScreen` to use view effects
 - Migrate `OverdueScreen` to use view effects
+
+### Fixes
+
+- Fix app crashing when changing facility while app is not connected to network
 
 ## 2021-12-08-8060
 

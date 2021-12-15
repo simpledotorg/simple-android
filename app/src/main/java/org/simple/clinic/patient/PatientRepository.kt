@@ -474,7 +474,7 @@ class PatientRepository @Inject constructor(
   fun clearPatientData(): Completable {
     return Completable
         .fromCallable { database.clearAppData() }
-        .doOnComplete { reportsRepository.deleteReportsImmediate() }
+        .doOnComplete { reportsRepository.deleteReports() }
   }
 
   fun recentPatients(facilityUuid: UUID, limit: Int): Observable<List<RecentPatient>> =

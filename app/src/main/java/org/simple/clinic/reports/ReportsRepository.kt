@@ -29,4 +29,8 @@ class ReportsRepository @Inject constructor(
   fun deleteReports(): Completable {
     return Completable.fromCallable { textStore.delete(REPORTS_KEY) }
   }
+
+  fun deleteReportsImmediate() {
+    return textStore.delete(REPORTS_KEY)
+  }
 }

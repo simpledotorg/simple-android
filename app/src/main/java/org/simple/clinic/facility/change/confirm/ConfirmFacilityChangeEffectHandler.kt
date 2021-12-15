@@ -15,7 +15,6 @@ import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.reports.ReportsSync
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import retrofit2.HttpException
 import java.time.Instant
 import java.util.Optional
 import javax.inject.Named
@@ -66,7 +65,7 @@ class ConfirmFacilityChangeEffectHandler @AssistedInject constructor(
         .doOnComplete {
           try {
             reportsSync.pull()
-          } catch (e: HttpException) {
+          } catch (e: Exception) {
             CrashReporter.report(e)
           }
         }

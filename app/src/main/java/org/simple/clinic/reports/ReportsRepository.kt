@@ -25,7 +25,7 @@ class ReportsRepository @Inject constructor(
     textStore.put(REPORTS_KEY, reportContent)
   }
 
-  fun deleteReportsImmediate() {
+  fun deleteReports() {
     return textStore.delete(REPORTS_KEY)
   }
 }

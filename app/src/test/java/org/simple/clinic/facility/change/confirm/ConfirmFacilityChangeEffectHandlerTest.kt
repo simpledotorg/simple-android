@@ -56,7 +56,7 @@ class ConfirmFacilityChangeEffectHandlerTest {
 
     //then
     testCase.assertOutgoingEvents(FacilityChanged(facility))
-    verify(reportsRepository).deleteReportsImmediate()
+    verify(reportsRepository).deleteReports()
     verify(reportsSync).pull()
     verify(isFacilitySwitchedPreference).set(true)
     verify(facilityRepository).setCurrentFacilityImmediate(facility)

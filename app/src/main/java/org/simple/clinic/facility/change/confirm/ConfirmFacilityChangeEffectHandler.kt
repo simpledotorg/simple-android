@@ -60,7 +60,7 @@ class ConfirmFacilityChangeEffectHandler @AssistedInject constructor(
   }
 
   private fun clearAndSyncReports() {
-    reportsRepository.deleteReportsImmediate()
+    reportsRepository.deleteReports()
 
     try {
       reportsSync.pull()

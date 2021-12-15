@@ -54,23 +54,19 @@ class ConfirmFacilityChangeEffectHandler @AssistedInject constructor(
           .observeOn(io)
           .doOnNext(facilityRepository::setCurrentFacilityImmediate)
           .doOnNext { isFacilitySwitchedPreference.set(true) }
-          .doOnNext { clearAndSyncReports(io) }
+          .doOnNext { clearAndSyncReports() }
           .map(::FacilityChanged)
     }
   }
 
-  private fun clearAndSyncReports(scheduler: Scheduler) {
-    reportsRepository
-        .deleteReports()
-        .doOnComplete {
-          try {
-            reportsSync.pull()
-          } catch (e: Exception) {
-            CrashReporter.report(e)
-          }
-        }
-        .subscribeOn(scheduler)
-        .subscribe()
+  private fun clearAndSyncReports() {
+    reportsRepository.deleteReportsImmediate()
+
+    try {
+      reportsSync.pull()
+    } catch (e: Exception) {
+      CrashReporter.report(e)
+    }
   }
 
   private fun loadCurrentFacility(): ObservableTransformer<LoadCurrentFacility, ConfirmFacilityChangeEvent> {

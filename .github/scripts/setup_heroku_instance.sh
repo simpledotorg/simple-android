@@ -41,7 +41,7 @@ resultOfServerPush=$?
 resultOfSeedDataSetup=0
 if [ $serverAppAlreadyExists = false ]; then
   echo "Setting up initial seed data"
-  (cd $serverAppDirectory && heroku run rails db:schema:load db:seed)
+  (cd $serverAppDirectory && heroku run rails db:structure:load:with_data db:seed)
   resultOfSeedDataSetup=$?
 fi
 

@@ -1,5 +1,6 @@
 package org.simple.clinic.home.overdue
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -19,12 +20,14 @@ class OverdueEffectHandler @AssistedInject constructor(
     private val pagerFactory: PagerFactory,
     private val overdueAppointmentsConfig: OverdueAppointmentsConfig,
     private val overdueDownloadScheduler: OverdueDownloadScheduler,
-    @Assisted private val uiActions: OverdueUiActions
+    @Assisted private val viewEffectsConsumer: Consumer<OverdueViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: OverdueUiActions): OverdueEffectHandler
+    fun create(
+        viewEffectsConsumer: Consumer<OverdueViewEffect>
+    ): OverdueEffectHandler
   }
 
   fun build(): ObservableTransformer<OverdueEffect, OverdueEvent> {
@@ -32,25 +35,13 @@ class OverdueEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<OverdueEffect, OverdueEvent>()
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
         .addTransformer(LoadOverdueAppointments::class.java, loadOverdueAppointments())
-        .addConsumer(OpenContactPatientScreen::class.java, { uiActions.openPhoneMaskBottomSheet(it.patientUuid) }, schedulers.ui())
-        .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientUuid) }, schedulers.ui())
-        .addConsumer(ShowOverdueAppointments::class.java, ::showOverdueAppointments, schedulers.ui())
-        .addAction(ShowNoActiveNetworkConnectionDialog::class.java, uiActions::showNoActiveNetworkConnectionDialog, schedulers.ui())
-        .addAction(OpenSelectDownloadFormatDialog::class.java, uiActions::openSelectDownloadFormatDialog, schedulers.ui())
-        .addAction(OpenSelectShareFormatDialog::class.java, uiActions::openSelectShareFormatDialog, schedulers.ui())
-        .addAction(OpenSharingInProgressDialog::class.java, uiActions::openProgressForSharingDialog, schedulers.ui())
         .addConsumer(ScheduleDownload::class.java, ::scheduleDownload, schedulers.io())
+        .addConsumer(OverdueViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 
   private fun scheduleDownload(effect: ScheduleDownload) {
     overdueDownloadScheduler.schedule(effect.fileFormat)
-  }
-
-  private fun showOverdueAppointments(effect: ShowOverdueAppointments) {
-    uiActions.showOverdueAppointments(
-        overdueAppointments = effect.overdueAppointments,
-        isDiabetesManagementEnabled = effect.isDiabetesManagementEnabled)
   }
 
   private fun loadCurrentFacility(): ObservableTransformer<LoadCurrentFacility, OverdueEvent> {

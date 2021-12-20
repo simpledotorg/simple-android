@@ -17,6 +17,7 @@
 - Fix text change events not triggering in edit patient screen
 - Add support for running Heroku cleanup instance manually
 - Migrate `EditMedicineScreen` to use view effects
+- Migrate `OverdueScreen` to use view effects
 
 ### Fixes
 

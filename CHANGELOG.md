@@ -24,6 +24,7 @@
 - Add support for running Heroku cleanup instance manually
 - Migrate `EditMedicineScreen` to use view effects
 - Migrate `OverdueScreen` to use view effects
+- Add a specific endpoint network timeout
 
 ### Fixes
 

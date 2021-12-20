@@ -101,7 +101,7 @@ class OverdueLogicTest {
             overdueAppointmentsLoadSize = 10
         ),
         overdueDownloadScheduler = mock<OverdueDownloadScheduler>(),
-        uiActions = uiActions
+        viewEffectsConsumer = OverdueViewEffectHandler(uiActions)::handle
     )
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),

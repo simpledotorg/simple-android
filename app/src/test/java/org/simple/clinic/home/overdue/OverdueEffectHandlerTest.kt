@@ -41,6 +41,7 @@ class OverdueEffectHandlerTest {
   )
   private val networkCapabilitiesProvider = mock<NetworkCapabilitiesProvider>()
   private val overdueDownloadScheduler = mock<OverdueDownloadScheduler>()
+  private val viewEffectHandler = OverdueViewEffectHandler(uiActions)
   private val effectHandler = OverdueEffectHandler(
       schedulers = TestSchedulersProvider.trampoline(),
       appointmentRepository = mock(),
@@ -48,7 +49,7 @@ class OverdueEffectHandlerTest {
       pagerFactory = pagerFactory,
       overdueAppointmentsConfig = overdueAppointmentsConfig,
       overdueDownloadScheduler = overdueDownloadScheduler,
-      uiActions = uiActions
+      viewEffectsConsumer = viewEffectHandler::handle
   ).build()
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
 

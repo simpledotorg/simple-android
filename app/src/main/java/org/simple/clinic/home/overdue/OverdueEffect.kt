@@ -20,21 +20,23 @@ data class LoadOverdueAppointments(
     val facility: Facility
 ) : OverdueEffect()
 
-data class OpenContactPatientScreen(val patientUuid: UUID) : OverdueEffect()
+data class ScheduleDownload(val fileFormat: OverdueListFileFormat) : OverdueEffect()
 
-data class OpenPatientSummary(val patientUuid: UUID) : OverdueEffect()
+sealed class OverdueViewEffect : OverdueEffect()
+
+data class OpenContactPatientScreen(val patientUuid: UUID) : OverdueViewEffect()
+
+data class OpenPatientSummary(val patientUuid: UUID) : OverdueViewEffect()
 
 data class ShowOverdueAppointments(
     val overdueAppointments: PagingData<OverdueAppointment>,
     val isDiabetesManagementEnabled: Boolean
-) : OverdueEffect()
+) : OverdueViewEffect()
 
-object ShowNoActiveNetworkConnectionDialog : OverdueEffect()
+object ShowNoActiveNetworkConnectionDialog : OverdueViewEffect()
 
-object OpenSelectDownloadFormatDialog : OverdueEffect()
+object OpenSelectDownloadFormatDialog : OverdueViewEffect()
 
-object OpenSelectShareFormatDialog : OverdueEffect()
+object OpenSelectShareFormatDialog : OverdueViewEffect()
 
-object OpenSharingInProgressDialog : OverdueEffect()
-
-data class ScheduleDownload(val fileFormat: OverdueListFileFormat) : OverdueEffect()
+object OpenSharingInProgressDialog : OverdueViewEffect()

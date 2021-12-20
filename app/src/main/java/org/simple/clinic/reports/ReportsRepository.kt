@@ -1,7 +1,6 @@
 package org.simple.clinic.reports
 
 import androidx.annotation.VisibleForTesting
-import io.reactivex.Completable
 import io.reactivex.Observable
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.storage.text.TextStore
@@ -26,7 +25,7 @@ class ReportsRepository @Inject constructor(
     textStore.put(REPORTS_KEY, reportContent)
   }
 
-  fun deleteReports(): Completable {
-    return Completable.fromCallable { textStore.delete(REPORTS_KEY) }
+  fun deleteReports() {
+    return textStore.delete(REPORTS_KEY)
   }
 }

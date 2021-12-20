@@ -7,7 +7,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Completable
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
@@ -51,8 +50,6 @@ class ConfirmFacilityChangeEffectHandlerTest {
   fun `when facility change effect is received, then change user's current facility`() {
     //given
     val facility = TestData.facility(UUID.fromString("98a260cb-45b1-46f7-a7ca-d217a27c43c0"))
-
-    whenever(reportsRepository.deleteReports()) doReturn Completable.complete()
 
     //when
     testCase.dispatch(ChangeFacilityEffect(facility))

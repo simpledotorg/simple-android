@@ -1,19 +1,33 @@
 package org.simple.clinic.benchmark
 
+import android.app.Application
 import android.util.Log
 import io.opentracing.util.GlobalTracer
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
+import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
+import java.io.File
 import java.util.concurrent.TimeUnit.MICROSECONDS
 import java.util.concurrent.TimeUnit.MILLISECONDS
+import javax.inject.Inject
 
 class BenchmarkTestRule(
     // Default value chosen as 11 because that's what the Android benchmark library also uses.
     private val benchmarkSampleSize: Int = 11
 ) : TestRule {
+
+  @Inject
+  lateinit var application: Application
+
+  @Inject
+  lateinit var database: AppDatabase
+
+  init {
+    TestClinicApp.appComponent().inject(this)
+  }
 
   override fun apply(
       base: Statement,
@@ -36,7 +50,13 @@ class BenchmarkTestRule(
     return object : Statement() {
 
       override fun evaluate() {
+        val databaseDirectory = File(database.openHelper.readableDatabase.path).parentFile!!
+        val databaseBackupDirectory = resolveDatabaseBackupDirectory()
+
         (1..benchmarkSampleSize).forEach { runNumber ->
+          // Save the database
+          databaseDirectory.copyRecursively(databaseBackupDirectory, overwrite = true)
+
           val startedAt = System.currentTimeMillis()
           base.evaluate()
           val timeTaken = System.currentTimeMillis() - startedAt
@@ -46,6 +66,12 @@ class BenchmarkTestRule(
             // pools which might inflate the first run
             stats.addValue(timeTaken.toDouble())
           }
+
+          // Restore the database
+          database.close()
+          databaseDirectory.deleteRecursively()
+          databaseDirectory.mkdirs()
+          databaseBackupDirectory.copyRecursively(databaseDirectory, overwrite = true)
         }
 
         val testClass = description.className
@@ -68,5 +94,15 @@ class BenchmarkTestRule(
 
       private fun millisToMicros(millis: Long) = MICROSECONDS.convert(millis, MILLISECONDS)
     }
+  }
+
+  private fun resolveDatabaseBackupDirectory(): File {
+    val directory = application.filesDir.resolve("test_db_backup")
+
+    if (!directory.exists()) {
+      directory.mkdirs()
+    }
+
+    return directory
   }
 }

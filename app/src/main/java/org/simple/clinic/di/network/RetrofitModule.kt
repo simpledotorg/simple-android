@@ -24,6 +24,7 @@ class RetrofitModule {
         .addConverterFactory(ScalarsConverterFactory.create())
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .addCallAdapterFactory(TimeoutCallAdapterFactory.create())
         .client(okHttpClient)
         .validateEagerly(true)
   }

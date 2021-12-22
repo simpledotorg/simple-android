@@ -9,6 +9,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.Transaction
 import io.reactivex.Flowable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
@@ -117,63 +118,72 @@ data class PrescribedDrug(
   }
 
   @Dao
-  interface RoomDao {
+  abstract class RoomDao {
 
     @Query("SELECT * FROM prescribeddrug WHERE syncStatus = :status")
-    fun withSyncStatus(status: SyncStatus): List<PrescribedDrug>
+    abstract fun withSyncStatus(status: SyncStatus): List<PrescribedDrug>
 
     @Query("""
       SELECT * FROM prescribeddrug
       WHERE syncStatus = :syncStatus
       LIMIT :limit OFFSET :offset
     """)
-    fun withSyncStatusBatched(
+    abstract fun withSyncStatusBatched(
         syncStatus: SyncStatus,
         limit: Int,
         offset: Int
     ): List<PrescribedDrug>
 
     @Query("UPDATE prescribeddrug SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")
-    fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
+    abstract fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
 
     @Query("UPDATE prescribeddrug SET syncStatus = :newStatus WHERE uuid IN (:uuids)")
-    fun updateSyncStatusForIds(uuids: List<UUID>, newStatus: SyncStatus)
+    abstract fun updateSyncStatusForIds(uuids: List<UUID>, newStatus: SyncStatus)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(newDrugs: List<PrescribedDrug>)
+    abstract fun save(newDrugs: List<PrescribedDrug>)
+
+    @Transaction
+    open fun softDeletePrescription(
+        prescriptionUuid: UUID,
+        timestamp: Instant
+    ) {
+      softDelete(prescriptionUuid, deleted = true, updatedAt = timestamp)
+      updateSyncStatusForIds(listOf(prescriptionUuid), SyncStatus.PENDING)
+    }
 
     /**
      * [deleted] exists only to trigger Room's Boolean type converter.
      * */
     @Query("UPDATE prescribeddrug SET isDeleted = :deleted, updatedAt = :updatedAt WHERE uuid = :prescriptionId")
-    fun softDelete(prescriptionId: UUID, deleted: Boolean, updatedAt: Instant)
+    abstract fun softDelete(prescriptionId: UUID, deleted: Boolean, updatedAt: Instant)
 
     @Query("SELECT * FROM prescribeddrug WHERE uuid = :uuid LIMIT 1")
-    fun getOne(uuid: UUID): PrescribedDrug?
+    abstract fun getOne(uuid: UUID): PrescribedDrug?
 
     @Query("SELECT uuid FROM prescribeddrug WHERE syncStatus = :syncStatus")
-    fun recordIdsWithSyncStatus(syncStatus: SyncStatus): List<UUID>
+    abstract fun recordIdsWithSyncStatus(syncStatus: SyncStatus): List<UUID>
 
     @Query("SELECT COUNT(*) FROM prescribeddrug")
-    fun count(): Flowable<Int>
+    abstract fun count(): Flowable<Int>
 
     @Query("SELECT COUNT(uuid) FROM PrescribedDrug WHERE syncStatus = :syncStatus")
-    fun countWithStatus(syncStatus: SyncStatus): Flowable<Int>
+    abstract fun countWithStatus(syncStatus: SyncStatus): Flowable<Int>
 
     @Query("SELECT * FROM prescribeddrug WHERE patientUuid = :patientUuid AND isDeleted = 0 ORDER BY updatedAt DESC")
-    fun forPatient(patientUuid: UUID): Flowable<List<PrescribedDrug>>
+    abstract fun forPatient(patientUuid: UUID): Flowable<List<PrescribedDrug>>
 
     @Query("SELECT * FROM prescribeddrug WHERE patientUuid = :patientUuid AND isDeleted = 0 ORDER BY updatedAt DESC")
-    fun forPatientImmediate(patientUuid: UUID): List<PrescribedDrug>
+    abstract fun forPatientImmediate(patientUuid: UUID): List<PrescribedDrug>
 
     @Query("DELETE FROM prescribeddrug")
-    fun clearData(): Int
+    abstract fun clearData(): Int
 
     @Query("SELECT * FROM PrescribedDrug WHERE uuid = :prescriptionUuid")
-    fun prescription(prescriptionUuid: UUID): Flowable<PrescribedDrug>
+    abstract fun prescription(prescriptionUuid: UUID): Flowable<PrescribedDrug>
 
     @Query("SELECT * FROM PrescribedDrug WHERE uuid = :prescriptionUuid")
-    fun prescriptionImmediate(prescriptionUuid: UUID): PrescribedDrug?
+    abstract fun prescriptionImmediate(prescriptionUuid: UUID): PrescribedDrug?
 
     @Query("""
         SELECT (
@@ -185,7 +195,7 @@ data class PrescribedDrug(
         FROM PrescribedDrug
         WHERE updatedAt > :instantToCompare AND syncStatus = :pendingStatus AND patientUuid = :patientUuid
     """)
-    fun hasPrescriptionForPatientChangedSince(
+    abstract fun hasPrescriptionForPatientChangedSince(
         patientUuid: UUID,
         instantToCompare: Instant,
         pendingStatus: SyncStatus
@@ -195,10 +205,10 @@ data class PrescribedDrug(
       DELETE FROM PrescribedDrug
       WHERE isDeleted = 1 AND syncStatus == 'DONE'
     """)
-    fun purgeDeleted()
+    abstract fun purgeDeleted()
 
     @Query("UPDATE PrescribedDrug SET durationInDays = :durationInDays, updatedAt = :updatedAt, syncStatus = :syncStatus WHERE uuid = :id")
-    fun updateDrugDuration(
+    abstract fun updateDrugDuration(
         id: UUID,
         durationInDays: Int,
         updatedAt: Instant,
@@ -206,7 +216,7 @@ data class PrescribedDrug(
     )
 
     @Query("UPDATE PrescribedDrug SET frequency = :drugFrequency, updatedAt = :updatedAt, syncStatus = :syncStatus WHERE uuid = :id")
-    fun updateDrugFrequenecy(
+    abstract fun updateDrugFrequenecy(
         id: UUID,
         drugFrequency: MedicineFrequency,
         updatedAt: Instant,
@@ -214,7 +224,7 @@ data class PrescribedDrug(
     )
 
     @Query("UPDATE PrescribedDrug SET teleconsultationId = :teleconsultationId, updatedAt = :updatedAt, syncStatus = :syncStatus WHERE uuid IN (:drugUuids)")
-    fun addTeleconsultationIdToDrugs(
+    abstract fun addTeleconsultationIdToDrugs(
         drugUuids: List<UUID>,
         teleconsultationId: UUID,
         updatedAt: Instant,
@@ -225,7 +235,7 @@ data class PrescribedDrug(
      * [deleted] exists only to trigger Room's Boolean type converter.
      * */
     @Query("UPDATE PrescribedDrug SET isDeleted = :deleted, updatedAt = :updatedAt, syncStatus = :syncStatus WHERE uuid IN (:prescriptionIds)")
-    fun softDeleteIds(
+    abstract fun softDeleteIds(
         prescriptionIds: List<UUID>,
         deleted: Boolean,
         updatedAt: Instant,
@@ -233,7 +243,7 @@ data class PrescribedDrug(
     )
 
     @Query(""" SELECT * FROM PrescribedDrug """)
-    fun getAllPrescribedDrugs(): List<PrescribedDrug>
+    abstract fun getAllPrescribedDrugs(): List<PrescribedDrug>
 
     @Query("""
         DELETE FROM PrescribedDrug
@@ -244,7 +254,7 @@ data class PrescribedDrug(
             ) AND
             syncStatus == 'DONE'
     """)
-    fun deleteWithoutLinkedPatient()
+    abstract fun deleteWithoutLinkedPatient()
 
     @Query("""
         DELETE FROM PrescribedDrug
@@ -255,6 +265,6 @@ data class PrescribedDrug(
 			      WHERE P.uuid IS NULL AND PD.syncStatus == 'DONE'
 		    )
     """)
-    fun purgePrescribedDrugWhenPatientIsNull()
+    abstract fun purgePrescribedDrugWhenPatientIsNull()
   }
 }

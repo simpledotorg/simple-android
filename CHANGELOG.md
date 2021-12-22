@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Next Release
+
+### Internal
+
+- Inject a new `AppDatabase` in instrumented tests instead of using a singleton instance
+
 ## On Demo
 
 ### Internal

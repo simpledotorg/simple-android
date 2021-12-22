@@ -3,7 +3,6 @@ package org.simple.clinic.drugs
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.facility.Facility
@@ -20,7 +19,6 @@ import javax.inject.Inject
 
 @AppScope
 class PrescriptionRepository @Inject constructor(
-    private val database: AppDatabase,
     private val dao: PrescribedDrug.RoomDao,
     private val utcClock: UtcClock
 ) : SynceableRepository<PrescribedDrug, PrescribedDrugPayload> {

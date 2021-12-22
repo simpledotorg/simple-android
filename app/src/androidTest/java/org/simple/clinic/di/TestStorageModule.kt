@@ -26,7 +26,6 @@ class TestStorageModule {
   @Provides
   fun sqliteOpenHelperFactory(): SupportSQLiteOpenHelper.Factory = AppSqliteOpenHelperFactory(inMemory = false)
 
-  @AppScope
   @Provides
   fun appDatabase(
       appContext: Application,

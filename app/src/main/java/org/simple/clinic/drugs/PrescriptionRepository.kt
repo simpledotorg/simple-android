@@ -85,10 +85,10 @@ class PrescriptionRepository @Inject constructor(
 
   fun softDeletePrescription(prescriptionUuid: UUID): Completable {
     return Completable.fromAction {
-      database.runInTransaction {
-        dao.softDelete(prescriptionUuid, deleted = true, updatedAt = Instant.now())
-        dao.updateSyncStatusForIds(listOf(prescriptionUuid), SyncStatus.PENDING)
-      }
+      dao.softDeletePrescription(
+          prescriptionUuid = prescriptionUuid,
+          timestamp = Instant.now()
+      )
     }
   }
 

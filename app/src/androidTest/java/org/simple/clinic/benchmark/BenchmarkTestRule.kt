@@ -1,15 +1,12 @@
 package org.simple.clinic.benchmark
 
-import android.app.Application
 import android.util.Log
 import io.opentracing.util.GlobalTracer
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
-import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
-import java.io.File
 import java.util.concurrent.TimeUnit.MICROSECONDS
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.inject.Inject
@@ -20,10 +17,7 @@ class BenchmarkTestRule(
 ) : TestRule {
 
   @Inject
-  lateinit var application: Application
-
-  @Inject
-  lateinit var database: AppDatabase
+  lateinit var backupDatabase: BackupBenchmarkDatabase
 
   init {
     TestClinicApp.appComponent().inject(this)
@@ -50,12 +44,9 @@ class BenchmarkTestRule(
     return object : Statement() {
 
       override fun evaluate() {
-        val databaseDirectory = File(database.openHelper.readableDatabase.path).parentFile!!
-        val databaseBackupDirectory = resolveDatabaseBackupDirectory()
-
         (1..benchmarkSampleSize).forEach { runNumber ->
           // Save the database
-          databaseDirectory.copyRecursively(databaseBackupDirectory, overwrite = true)
+          backupDatabase.backup()
 
           val startedAt = System.currentTimeMillis()
           base.evaluate()
@@ -68,10 +59,7 @@ class BenchmarkTestRule(
           }
 
           // Restore the database
-          database.close()
-          databaseDirectory.deleteRecursively()
-          databaseDirectory.mkdirs()
-          databaseBackupDirectory.copyRecursively(databaseDirectory, overwrite = true)
+          backupDatabase.restore()
         }
 
         val testClass = description.className
@@ -94,15 +82,5 @@ class BenchmarkTestRule(
 
       private fun millisToMicros(millis: Long) = MICROSECONDS.convert(millis, MILLISECONDS)
     }
-  }
-
-  private fun resolveDatabaseBackupDirectory(): File {
-    val directory = application.filesDir.resolve("test_db_backup")
-
-    if (!directory.exists()) {
-      directory.mkdirs()
-    }
-
-    return directory
   }
 }

@@ -45,8 +45,8 @@ class BenchmarkTestRule(
 
       override fun evaluate() {
         (1..benchmarkSampleSize).forEach { runNumber ->
-          // Save the database
-          backupDatabase.backup()
+          // Restore the database
+          backupDatabase.restore()
 
           val startedAt = System.currentTimeMillis()
           base.evaluate()
@@ -57,9 +57,6 @@ class BenchmarkTestRule(
             // pools which might inflate the first run
             stats.addValue(timeTaken.toDouble())
           }
-
-          // Restore the database
-          backupDatabase.restore()
         }
 
         val testClass = description.className

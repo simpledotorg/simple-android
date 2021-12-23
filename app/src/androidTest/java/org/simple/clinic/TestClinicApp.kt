@@ -17,6 +17,7 @@ import com.datadog.android.tracing.AndroidTracer
 import com.tspoon.traceur.Traceur
 import io.opentracing.util.GlobalTracer
 import org.simple.clinic.TestClinicApp.Companion.appComponent
+import org.simple.clinic.benchmark.BackupBenchmarkDatabase
 import org.simple.clinic.di.DaggerTestAppComponent
 import org.simple.clinic.di.TestAppComponent
 import org.simple.clinic.di.TestAppModule
@@ -83,6 +84,9 @@ class TestClinicApp : Application() {
   @Inject
   lateinit var dataSync: DataSync
 
+  @Inject
+  lateinit var backupBenchmarkDatabase: BackupBenchmarkDatabase
+
   override fun onCreate() {
     super.onCreate()
     Timber.plant(Timber.DebugTree())
@@ -108,6 +112,7 @@ class TestClinicApp : Application() {
     if (isInBenchmarkMode) {
       loginWithBenchmarkUser()
       dataSync.syncTheWorld()
+      backupBenchmarkDatabase.backup()
 
       setupDatadog(
           clientToken = instrumentationArgs.getString("dd_client_token")!!,

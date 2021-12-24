@@ -5,6 +5,7 @@
 ### Internal
 
 - Inject a new `AppDatabase` in instrumented tests instead of using a singleton instance
+- Add support for writing performance regression test suites
 
 ## On Demo
 

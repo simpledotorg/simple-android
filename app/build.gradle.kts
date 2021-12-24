@@ -14,6 +14,7 @@ plugins {
   id("io.sentry.android.gradle")
   id("plugins.git.install-hooks")
   id("dd-sdk-android-gradle-plugin")
+  id("androidx.benchmark")
 }
 
 sentry {

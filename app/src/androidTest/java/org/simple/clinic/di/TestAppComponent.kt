@@ -7,6 +7,9 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestDataModule
 import org.simple.clinic.appconfig.AppConfigRepositoryAndroidTest
 import org.simple.clinic.appconfig.SelectedCountryPersistenceAndroidTest
+import org.simple.clinic.benchmark.BenchmarkTestRule
+import org.simple.clinic.benchmark.CanaryBenchmarkTest
+import org.simple.clinic.benchmark.patientlookup.PatientLookupBenchmark
 import org.simple.clinic.bloodsugar.BloodSugarHistoryListItemDataSourceTest
 import org.simple.clinic.bloodsugar.BloodSugarRepositoryAndroidTest
 import org.simple.clinic.bp.BloodPressureHistoryListItemDataSourceTest
@@ -128,4 +131,7 @@ interface TestAppComponent {
   fun inject(target: OverdueListDownloadApiIntegrationTest)
   fun inject(target: OverdueListDownloaderIntegrationTest)
   fun inject(target: SaveDatabaseRule)
+  fun inject(target: BenchmarkTestRule)
+  fun inject(target: CanaryBenchmarkTest)
+  fun inject(target: PatientLookupBenchmark)
 }

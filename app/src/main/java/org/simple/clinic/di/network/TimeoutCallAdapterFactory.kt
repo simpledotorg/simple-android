@@ -14,12 +14,12 @@ class TimeoutCallAdapterFactory : CallAdapter.Factory() {
   }
 
   override fun get(returnType: Type, annotations: Array<out Annotation>, retrofit: Retrofit): CallAdapter<*, *>? {
-    val timeout = annotations.firstOrNull { it is Timeout } as? Timeout
-    val delegate = retrofit.nextCallAdapter(this, returnType, annotations)
-
     if (getRawType(returnType) != Call::class.java) {
       return null
     }
+
+    val timeout = annotations.firstOrNull { it is Timeout } as? Timeout
+    val delegate = retrofit.nextCallAdapter(this, returnType, annotations)
 
     return object : CallAdapter<Any, Call<Any>> {
       override fun responseType(): Type {

@@ -14,6 +14,7 @@ plugins {
   id("io.sentry.android.gradle")
   id("plugins.git.install-hooks")
   id("dd-sdk-android-gradle-plugin")
+  id("androidx.benchmark")
 }
 
 sentry {
@@ -462,6 +463,8 @@ dependencies {
   runtimeOnly(libs.jackson.core)
 
   implementation(libs.datadog.sdk)
+
+  androidTestImplementation(libs.apache.commons.math)
 }
 
 // This must always be present at the bottom of this file, as per:

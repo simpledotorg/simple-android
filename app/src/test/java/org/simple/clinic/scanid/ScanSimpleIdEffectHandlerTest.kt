@@ -266,4 +266,22 @@ class ScanSimpleIdEffectHandlerTest {
     testCase.assertOutgoingEvents(CompleteMedicalRecordsSaved(medicalRecords))
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when go back to edit patient screen effect is received, then go back to edit patient screen`() {
+    // given
+    val identifier = TestData.identifier(
+        value = "12341234123412",
+        type = IndiaNationalHealthId
+    )
+
+    // when
+    testCase.dispatch(GoBackToEditPatientScreen(identifier))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).goBackToEditPatientScreen(identifier)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

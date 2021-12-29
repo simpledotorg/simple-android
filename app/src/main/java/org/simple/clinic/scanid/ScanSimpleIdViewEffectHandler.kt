@@ -22,6 +22,7 @@ class ScanSimpleIdViewEffectHandler @AssistedInject constructor(
       is ShowEnteredCodeValidationError -> uiActions.showEnteredCodeValidationError(viewEffect.failure)
       is OpenPatientSummary -> uiActions.openPatientSummary(viewEffect.patientId)
       is OpenPatientSearch -> openPatientSearch(viewEffect)
+      is GoBackToEditPatientScreen -> uiActions.goBackToEditPatientScreen(viewEffect.identifier)
     }
   }
 

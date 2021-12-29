@@ -36,6 +36,7 @@ import org.simple.clinic.feature.Feature.IndiaNationalHealthID
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.PatientPrefillInfo
 import org.simple.clinic.patient.businessid.Identifier
@@ -291,6 +292,10 @@ class ScanSimpleIdScreen : BaseScreen<
       OpenedFrom.PatientsTabScreen -> router.replaceTop(keyToPush)
       else -> throw IllegalArgumentException("Opened from unknown: $openedFrom")
     }
+  }
+
+  override fun goBackToEditPatientScreen(identifier: Identifier) {
+    router.popWithResult(Succeeded(identifier))
   }
 
   override fun showEnteredCodeValidationError(failure: EnteredCodeValidationResult) {

@@ -64,6 +64,7 @@
   </FrameLayout>
 
   <com.google.android.material.card.MaterialCardView
+    android:id="@+id/enteredCodeContainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_16"

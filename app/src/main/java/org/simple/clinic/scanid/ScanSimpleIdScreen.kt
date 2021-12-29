@@ -112,6 +112,9 @@ class ScanSimpleIdScreen : BaseScreen<
   private val scanErrorTextView
     get() = binding.scanErrorTextView
 
+  private val enteredCodeContainer
+    get() = binding.enteredCodeContainer
+
   private val keyboardVisibilityDetector = KeyboardVisibilityDetector()
   private val cameraExecutor = Executors.newSingleThreadExecutor()
   private val cameraProviderFuture by unsafeLazy {
@@ -328,6 +331,10 @@ class ScanSimpleIdScreen : BaseScreen<
 
   override fun showScanError() {
     scanErrorTextView.visibility = View.VISIBLE
+  }
+
+  override fun hideEnteredCodeContainerView() {
+    enteredCodeContainer.visibility = View.GONE
   }
 
   interface Injector {

@@ -68,4 +68,19 @@ class ScanSimpleIdUiRendererTest {
     verify(ui).showScanError()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when scan simple id screen is opened from edit patient screen, then hide entered code container view`() {
+    // given
+    val defaultModel = ScanSimpleIdModel.create(openedFrom = OpenedFrom.EditPatientScreen.ToAddNHID)
+
+    // when
+    uiRenderer.render(defaultModel)
+
+    // then
+    verify(ui).hideEnteredCodeContainerView()
+    verify(ui).hideSearchingForPatient()
+    verify(ui).hideScanError()
+    verifyNoMoreInteractions(ui)
+  }
 }

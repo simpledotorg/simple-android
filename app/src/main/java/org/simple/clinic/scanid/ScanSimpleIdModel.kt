@@ -26,6 +26,9 @@ data class ScanSimpleIdModel(
   val isSearching: Boolean
     get() = scanSearchState == Searching
 
+  val isOpenedFromEditPatientScreen
+    get() = openedFrom is OpenedFrom.EditPatientScreen
+
   fun enteredCodeChanged(enteredCode: EnteredCodeInput): ScanSimpleIdModel {
     return copy(enteredCode = enteredCode)
   }

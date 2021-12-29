@@ -395,4 +395,20 @@ class ScanSimpleIdUpdateTest {
             hasEffects(GoBackToEditPatientScreen(identifier))
         ))
   }
+
+  @Test
+  fun `when online patient lookup is completed, screen is opened from edit patient and patient is not found, then go back to edit patient screen`() {
+    val identifier = TestData.identifier(value = "12341234123412", type = IndiaNationalHealthId)
+    val openedToAddNHIDModel = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddNHID)
+
+    spec
+        .given(openedToAddNHIDModel)
+        .whenEvent(OnlinePatientLookupWithIdentifierCompleted(LookupPatientOnline.Result.NotFound(identifier.value), identifier))
+        .then(
+            assertThatNext(
+                hasModel(openedToAddNHIDModel.notSearching()),
+                hasEffects(GoBackToEditPatientScreen(identifier))
+            )
+        )
+  }
 }

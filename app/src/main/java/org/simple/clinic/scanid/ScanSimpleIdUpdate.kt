@@ -49,7 +49,7 @@ class ScanSimpleIdUpdate @Inject constructor(
       event: OnlinePatientLookupWithIdentifierCompleted
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     return when (event.result) {
-      is NotFound, is OtherError -> next(model.notSearching(), OpenPatientSearch(event.identifier, null, model.patientPrefillInfo))
+      is NotFound, is OtherError -> next(model.notSearching(), checkIfOpenedFromEditPatient(model, event.identifier))
       is Found -> next(model.notSearching(), SaveCompleteMedicalRecords(event.result.medicalRecords))
     }
   }

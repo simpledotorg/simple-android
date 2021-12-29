@@ -113,9 +113,19 @@ class ScanSimpleIdUpdate @Inject constructor(
     val effect = if (isOnlinePatientLookupEnabled) {
       OnlinePatientLookupWithIdentifier(event.identifier)
     } else {
-      OpenPatientSearch(event.identifier, null, model.patientPrefillInfo)
+      checkIfOpenedFromEditPatient(model, event.identifier)
     }
     return dispatch(effect)
+  }
+
+  private fun checkIfOpenedFromEditPatient(
+      model: ScanSimpleIdModel,
+      identifier: Identifier
+  ): ScanSimpleIdViewEffect {
+    return if (model.openedFrom == OpenedFrom.EditPatientScreen.ToAddNHID)
+      GoBackToEditPatientScreen(identifier)
+    else
+      OpenPatientSearch(identifier, null, model.patientPrefillInfo)
   }
 
   private fun patientFoundByIdentifierSearch(

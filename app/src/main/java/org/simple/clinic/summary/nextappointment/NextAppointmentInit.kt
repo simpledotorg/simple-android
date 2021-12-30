@@ -12,6 +12,10 @@ class NextAppointmentInit : Init<NextAppointmentModel, NextAppointmentEffect> {
       effects.add(LoadAppointment(model.patientUuid))
     }
 
+    if (!model.hasPatientAndAssignedFacility) {
+      effects.add(LoadPatientAndAssignedFacility(model.patientUuid))
+    }
+
     return first(model, effects)
   }
 }

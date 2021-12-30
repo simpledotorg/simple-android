@@ -7,6 +7,7 @@ import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.patient.PatientAndAssignedFacility
 import java.util.UUID
 
 class NextAppointmentInitTest {
@@ -18,27 +19,43 @@ class NextAppointmentInitTest {
   private val initSpec = InitSpec(NextAppointmentInit())
 
   @Test
-  fun `when view is created, then load appointment`() {
+  fun `when view is created, then load appointment, patient and assigned facility`() {
     initSpec
         .whenInit(defaultModel)
         .then(assertThatFirst(
             hasModel(defaultModel),
-            hasEffects(LoadAppointment(patientUuid = patientUuid))
+            hasEffects(LoadAppointment(patientUuid = patientUuid), LoadPatientAndAssignedFacility(patientUuid = patientUuid))
         ))
   }
 
   @Test
-  fun `when view is restored, then dont load appointment`() {
+  fun `when view is restored, then don't load appointment, patient and assigned facility`() {
     val appointment = TestData.appointment(
         uuid = UUID.fromString("fce259b8-793a-4e92-8a27-423258be3bf7"),
         patientUuid = patientUuid
     )
-    val appointmentLoadedModel = defaultModel.appointmentLoaded(appointment)
+
+    val assignedFacility = TestData.facility(
+        uuid = UUID.fromString("9aa8df4e-2768-4daa-8d7b-9557dea182fa"),
+        name = "PHC Obvious"
+    )
+
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        fullName = "Ramesh Mehta",
+        assignedFacilityId = assignedFacility.uuid
+    )
+
+    val patientAndAssignedFacility = PatientAndAssignedFacility(patient, assignedFacility)
+
+    val appointmentAndPatientLoadedModel = defaultModel
+        .appointmentLoaded(appointment)
+        .patientAndAssignedFacilityLoaded(patientAndAssignedFacility)
 
     initSpec
-        .whenInit(appointmentLoadedModel)
+        .whenInit(appointmentAndPatientLoadedModel)
         .then(assertThatFirst(
-            hasModel(appointmentLoadedModel),
+            hasModel(appointmentAndPatientLoadedModel),
             hasNoEffects()
         ))
   }

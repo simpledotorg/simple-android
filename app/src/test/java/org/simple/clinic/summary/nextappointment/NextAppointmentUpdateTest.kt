@@ -6,6 +6,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.patient.PatientAndAssignedFacility
 import java.util.UUID
 
 class NextAppointmentUpdateTest {
@@ -25,6 +26,30 @@ class NextAppointmentUpdateTest {
         .whenEvent(AppointmentLoaded(appointment))
         .then(assertThatNext(
             hasModel(defaultModel.appointmentLoaded(appointment)),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when patient and assigned facility is loaded, then update the model`() {
+    val facility = TestData.facility(
+        uuid = UUID.fromString("337e7b23-cd84-4fff-8a57-4f1b376c7d69"),
+        name = "PHC Obvious"
+    )
+
+    val patient = TestData.patient(
+        uuid = UUID.fromString("5c23d24c-fbb4-49d5-bf71-877412d766fa"),
+        fullName = "Ramesh Mehta",
+        assignedFacilityId = UUID.fromString("337e7b23-cd84-4fff-8a57-4f1b376c7d69")
+    )
+
+    val patientAndAssignedFacility = PatientAndAssignedFacility(patient, facility)
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(PatientAndAssignedFacilityLoaded(patientAndAssignedFacility))
+        .then(assertThatNext(
+            hasModel(defaultModel.patientAndAssignedFacilityLoaded(patientAndAssignedFacility)),
             hasNoEffects()
         ))
   }

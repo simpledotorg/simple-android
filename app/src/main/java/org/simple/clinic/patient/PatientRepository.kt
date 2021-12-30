@@ -732,6 +732,10 @@ class PatientRepository @Inject constructor(
     return database.patientDao().contactPatientProfileImmediate(patientUuid)
   }
 
+  fun patientAndAssignedFacility(patientUuid: UUID): Observable<PatientAndAssignedFacility> {
+    return database.patientDao().patientAndAssignedFacility(patientUuid)
+  }
+
   private data class BusinessIdMetaAndVersion(
       val metaData: String,
       val metaDataVersion: MetaDataVersion

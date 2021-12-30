@@ -374,5 +374,12 @@ data class Patient(
       WHERE uuid = :patientUuid
     """)
     abstract fun contactPatientProfileImmediate(patientUuid: UUID): ContactPatientProfile
+
+    @Transaction
+    @Query("""
+      SELECT * FROM Patient
+      WHERE uuid = :patientUuid
+    """)
+    abstract fun patientAndAssignedFacility(patientUuid: UUID): Observable<PatientAndAssignedFacility>
   }
 }

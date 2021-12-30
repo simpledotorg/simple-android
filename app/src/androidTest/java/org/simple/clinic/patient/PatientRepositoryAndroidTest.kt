@@ -3310,4 +3310,55 @@ class PatientRepositoryAndroidTest {
     assertThat(savedAddress).isEqualTo(contactPatientProfile.address)
     assertThat(savedPhoneNumber).isEqualTo(contactPatientProfile.phoneNumbers)
   }
+
+  @Test
+  fun fetching_patient_and_assigned_facility_should_work_correctly() {
+    // given
+    val patientUuid = UUID.fromString("559de09c-42b7-4460-b22b-ed4a5c2ead89")
+    val assignedFacility = TestData.facility(
+        uuid = UUID.fromString("6f2cdec2-88dd-4425-b0cf-9ce9eac33044"),
+        name = "PHC Obvious"
+    )
+
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        fullName = "Ramesh Mehta",
+        assignedFacilityId = assignedFacility.uuid,
+        age = Age(45, Instant.parse("2018-01-01T00:00:00Z")),
+        dateOfBirth = null
+    )
+
+    val patientProfile = TestData.patientProfile(
+        patientUuid = patient.uuid,
+        patientAssignedFacilityId = patient.assignedFacilityId,
+        patientName = patient.fullName,
+        patientAddressUuid = patient.addressUuid,
+        patientStatus = patient.status,
+        patientRegisteredFacilityId = patient.registeredFacilityId,
+        patientDeletedReason = patient.deletedReason,
+        patientCreatedAt = patient.createdAt,
+        patientUpdatedAt = patient.updatedAt,
+        patientDeletedAt = patient.deletedAt,
+        patientRecordedAt = patient.recordedAt,
+        gender = patient.gender,
+        syncStatus = patient.syncStatus,
+        retainUntil = patient.retainUntil,
+        age = patient.age,
+        generateDateOfBirth = false
+    )
+
+    facilityRepository.save(listOf(assignedFacility))
+    patientRepository.save(listOf(patientProfile))
+
+    // when
+    val expectedPatientAndAssignedFacility = patientRepository.patientAndAssignedFacility(patientUuid)
+        .blockingFirst()
+
+    // then
+    val patientAndAssignedFacility = PatientAndAssignedFacility(
+        patient = patient,
+        assignedFacility = assignedFacility
+    )
+    assertThat(expectedPatientAndAssignedFacility).isEqualTo(patientAndAssignedFacility)
+  }
 }

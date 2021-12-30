@@ -4,25 +4,61 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
+import org.simple.clinic.TestData
+import java.time.LocalDate
 import java.util.UUID
 
 class NextAppointmentUiRendererTest {
 
+  private val ui = mock<NextAppointmentUi>()
+  private val uiRenderer = NextAppointmentUiRenderer(ui)
+  private val patientUuid = UUID.fromString("305c6c33-90b5-4895-9f82-e6d071d05955")
+  private val defaultModel = NextAppointmentModel.default(
+      patientUuid = patientUuid
+  )
+
   @Test
   fun `when next appointment patient profile is not present, then render no appointment view`() {
-    // given
-    val ui = mock<NextAppointmentUi>()
-    val uiRenderer = NextAppointmentUiRenderer(ui)
-    val defaultModel = NextAppointmentModel.default(
-        patientUuid = UUID.fromString("305c6c33-90b5-4895-9f82-e6d071d05955")
-    )
-
     // when
     uiRenderer.render(defaultModel)
 
     // then
     verify(ui).showNoAppointment()
     verify(ui).showAddAppointmentButton()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when appointment is present, then show appointment view`() {
+    // give
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        fullName = "Ramesh"
+    )
+
+    val facility = TestData.facility(
+        uuid = UUID.fromString("d5ab9b31-101c-4172-a50a-6c57b79a3712"),
+        name = "PHC Obvious"
+    )
+
+    val appointment = TestData.appointment(
+        uuid = UUID.fromString("01361f22-c10e-465d-97de-c44f990572c4"),
+        patientUuid = patientUuid,
+        facilityUuid = facility.uuid,
+        scheduledDate = LocalDate.parse("2018-01-01")
+    )
+
+    val nextAppointmentPatientProfile = NextAppointmentPatientProfile(appointment, patient, facility)
+
+    val nextAppointmentPatientProfileLoadedModel = defaultModel
+        .nextAppointmentPatientProfileLoaded(nextAppointmentPatientProfile)
+
+    // when
+    uiRenderer.render(nextAppointmentPatientProfileLoadedModel)
+
+    // then
+    verify(ui).showAppointmentDate(LocalDate.parse("2018-01-01"))
+    verify(ui).showChangeAppointmentButton()
     verifyNoMoreInteractions(ui)
   }
 }

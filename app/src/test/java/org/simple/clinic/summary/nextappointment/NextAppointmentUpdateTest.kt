@@ -1,7 +1,9 @@
 package org.simple.clinic.summary.nextappointment
 
+import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -40,6 +42,17 @@ class NextAppointmentUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.nextAppointmentPatientProfileLoaded(nextAppointmentPatientProfile)),
             hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when next appointment action button is clicked, then open schedule appointment sheet`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(NextAppointmentActionButtonClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenScheduleAppointmentSheet(patientUuid))
         ))
   }
 }

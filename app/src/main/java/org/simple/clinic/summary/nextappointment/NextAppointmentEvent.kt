@@ -7,3 +7,5 @@ sealed class NextAppointmentEvent
 data class NextAppointmentPatientProfileLoaded(
     val nextAppointmentPatientProfile: NextAppointmentPatientProfile?
 ) : NextAppointmentEvent()
+
+object NextAppointmentActionButtonClicked : NextAppointmentEvent()

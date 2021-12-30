@@ -18,6 +18,8 @@ class NextAppointmentUiRenderer(private val ui: NextAppointmentUi) : ViewRendere
 
     if (!model.appointmentIsInAssignedFacility) {
       ui.showAppointmentFacility(model.appointmentFacilityName)
+    } else {
+      ui.hideAppointmentFacility()
     }
   }
 

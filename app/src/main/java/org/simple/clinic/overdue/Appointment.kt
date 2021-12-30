@@ -12,6 +12,7 @@ import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import io.reactivex.Flowable
+import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
@@ -306,5 +307,14 @@ data class Appointment(
         patientUUID: UUID,
         scheduledDate: LocalDate
     ): Appointment?
+
+    @Query("""
+      SELECT * FROM Appointment
+      WHERE 
+        patientUuid = :patientUUID
+        AND deletedAt IS NULL AND status = 'scheduled'
+      GROUP BY patientUuid HAVING MAX(scheduledDate)
+    """)
+    fun latestAppointmentForPatient(patientUUID: UUID): Observable<Appointment?>
   }
 }

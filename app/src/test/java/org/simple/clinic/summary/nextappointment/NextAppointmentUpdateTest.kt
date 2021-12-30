@@ -49,7 +49,7 @@ class NextAppointmentUpdateTest {
   fun `when next appointment action button is clicked, then open schedule appointment sheet`() {
     updateSpec
         .given(defaultModel)
-        .whenEvent(NextAppointmentActionButtonClicked)
+        .whenEvent(NextAppointmentActionButtonClicked())
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenScheduleAppointmentSheet(patientUuid))

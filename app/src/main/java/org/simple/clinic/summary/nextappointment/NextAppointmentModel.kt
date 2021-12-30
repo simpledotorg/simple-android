@@ -1,12 +1,14 @@
 package org.simple.clinic.summary.nextappointment
 
+import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
+@Parcelize
 data class NextAppointmentModel(
     val patientUuid: UUID,
     val nextAppointmentPatientProfile: NextAppointmentPatientProfile?
-) {
+) : Parcelable {
 
   companion object {
     fun default(patientUuid: UUID) = NextAppointmentModel(

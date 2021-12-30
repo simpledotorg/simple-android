@@ -67,6 +67,7 @@ class NextAppointmentUiRendererTest {
     // then
     verify(ui).showChangeAppointmentButton()
     verify(ui).showAppointmentDate(LocalDate.parse("2018-02-01"))
+    verify(ui).hideAssignedFacility()
     verifyNoMoreInteractions(ui)
   }
 

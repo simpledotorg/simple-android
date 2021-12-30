@@ -20,6 +20,8 @@ class NextAppointmentUiRenderer(private val ui: NextAppointmentUi) : ViewRendere
 
     if (patientAndAssignedFacility.hasAssignedFacility && patientAndAssignedFacility.assignedFacilityId != appointment.facilityUuid) {
       ui.showAssignedFacility(patientAndAssignedFacility.assignedFacility!!.name)
+    } else {
+      ui.hideAssignedFacility()
     }
   }
 

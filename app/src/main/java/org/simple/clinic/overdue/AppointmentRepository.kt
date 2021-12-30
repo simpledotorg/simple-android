@@ -8,6 +8,7 @@ import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.Appointment.Status.Visited
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.summary.nextappointment.NextAppointmentPatientProfile
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
@@ -212,5 +213,9 @@ class AppointmentRepository @Inject constructor(
       date: LocalDate
   ): Optional<Appointment> {
     return appointmentDao.latestOverdueAppointmentForPatient(patientUuid, date).toOptional()
+  }
+
+  fun nextAppointmentPatientProfile(patientUuid: UUID): Observable<NextAppointmentPatientProfile?> {
+    return appointmentDao.nextAppointmentPatientProfile(patientUuid)
   }
 }

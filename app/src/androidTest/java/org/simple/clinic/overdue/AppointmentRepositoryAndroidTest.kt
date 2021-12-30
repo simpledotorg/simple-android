@@ -1,7 +1,6 @@
 package org.simple.clinic.overdue
 
 import com.google.common.truth.Truth.assertThat
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -42,6 +41,7 @@ import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.rules.SaveDatabaseRule
+import org.simple.clinic.summary.nextappointment.NextAppointmentPatientProfile
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Rules
@@ -2146,6 +2146,54 @@ class AppointmentRepositoryAndroidTest {
 
     //then
     assertThat(overdueAppointments).isEqualTo(listOf(patientWithOneDayOverdue, patientWithFiveDayOverdue, patientWithFifteenDaysOverdue))
+  }
+
+  @Test
+  fun fetching_next_appointment_patient_profile_should_work_correctly() {
+    // given
+    val now = LocalDate.now(clock)
+    val patientUuid = UUID.fromString("4de4dd8f-eefa-4693-8eaf-56beb1da4f1d")
+    val visitedAppointment = TestData.appointment(
+        uuid = UUID.fromString("2da3673e-94be-4b1c-b667-ca03a14d6ebf"),
+        patientUuid = patientUuid,
+        scheduledDate = now.minusDays(30),
+        status = Visited,
+        createdAt = Instant.now(clock),
+        updatedAt = Instant.now(clock),
+        deletedAt = null,
+        cancelReason = null,
+        agreedToVisit = true,
+        facilityUuid = facility.uuid,
+        creationFacilityUuid = facility.uuid
+    )
+
+    val scheduledAppointment = TestData.appointment(
+        uuid = UUID.fromString("230b2e75-2d4a-4bf9-bd4e-83899c83ec54"),
+        patientUuid = patientUuid,
+        scheduledDate = now.plusDays(10),
+        status = Scheduled,
+        createdAt = Instant.now(clock),
+        updatedAt = Instant.now(clock),
+        deletedAt = null,
+        cancelReason = null,
+        agreedToVisit = null,
+        facilityUuid = facility.uuid,
+        creationFacilityUuid = facility.uuid
+    )
+
+    val patientProfile = TestData.patientProfile(patientUuid = patientUuid)
+    val nextAppointmentPatientProfile = NextAppointmentPatientProfile(scheduledAppointment, patientProfile.patient, facility)
+
+    patientRepository.save(listOf(patientProfile))
+    facilityRepository.save(listOf(facility))
+    appointmentRepository.save(listOf(visitedAppointment, scheduledAppointment))
+
+    // when
+    val expectedAppointment = appointmentRepository.nextAppointmentPatientProfile(patientUuid)
+        .blockingFirst()
+
+    // then
+    assertThat(expectedAppointment).isEqualTo(nextAppointmentPatientProfile)
   }
 
   private fun markAppointmentSyncStatusAsDone(vararg appointmentUuids: UUID) {

@@ -2,6 +2,9 @@ package org.simple.clinic.summary.nextappointment
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import org.junit.After
@@ -15,11 +18,15 @@ import java.util.UUID
 class NextAppointmentEffectHandlerTest {
 
   private val appointmentRepository = mock<AppointmentRepository>()
+  private val uiActions = mock<NextAppointmentUiActions>()
   private val effectHandler = NextAppointmentEffectHandler(
       appointmentRepository = appointmentRepository,
-      schedulersProvider = TestSchedulersProvider.trampoline()
+      schedulersProvider = TestSchedulersProvider.trampoline(),
+      uiActions = uiActions
   ).build()
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
+
+  private val patientUuid = UUID.fromString("06ffb32b-fc59-4e38-9f08-9be810b313da")
 
   @After
   fun teardown() {
@@ -30,7 +37,6 @@ class NextAppointmentEffectHandlerTest {
   fun `when load next appointment patient profile effect is received, then load the next appointment patient profile`() {
     // given
     val appointmentUuid = UUID.fromString("13dea42d-1958-412e-9db7-6f7601373245")
-    val patientUuid = UUID.fromString("06ffb32b-fc59-4e38-9f08-9be810b313da")
     val facilityUuid = UUID.fromString("095c2baa-bb05-4cce-99a8-5e21ea964117")
 
     val patient = TestData.patient(
@@ -58,5 +64,19 @@ class NextAppointmentEffectHandlerTest {
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(NextAppointmentPatientProfileLoaded(nextAppointmentPatientProfile))
+
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when open schedule appointment sheet effect is received, then open the schedule appointment sheet`() {
+    // when
+    effectHandlerTestCase.dispatch(OpenScheduleAppointmentSheet(patientUuid))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openScheduleAppointmentSheet(patientUuid)
+    verifyNoMoreInteractions(uiActions)
   }
 }

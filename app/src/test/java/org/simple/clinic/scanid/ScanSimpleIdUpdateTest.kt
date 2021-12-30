@@ -450,4 +450,19 @@ class ScanSimpleIdUpdateTest {
         ))
   }
 
+  @Test
+  fun `when online patient lookup is completed, screen is opened from edit patient to add bp passport and patient is not found, then go back to edit patient screen`() {
+    val identifier = TestData.identifier(value = "798cf791-d42d-428d-b8ae-35bbbb6c9447", type = BpPassport)
+    val openedToAddBpPassportModel = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddBpPassport)
+
+    spec
+        .given(openedToAddBpPassportModel)
+        .whenEvent(OnlinePatientLookupWithIdentifierCompleted(LookupPatientOnline.Result.NotFound(identifier.value), identifier))
+        .then(
+            assertThatNext(
+                hasModel(openedToAddBpPassportModel.notSearching()),
+                hasEffects(GoBackToEditPatientScreen(identifier))
+            )
+        )
+  }
 }

@@ -10,7 +10,7 @@ class NextAppointmentUpdate : Update<NextAppointmentModel, NextAppointmentEvent,
   override fun update(model: NextAppointmentModel, event: NextAppointmentEvent): Next<NextAppointmentModel, NextAppointmentEffect> {
     return when (event) {
       is NextAppointmentPatientProfileLoaded -> next(model.nextAppointmentPatientProfileLoaded(event.nextAppointmentPatientProfile))
-      NextAppointmentActionButtonClicked -> dispatch(OpenScheduleAppointmentSheet(model.patientUuid))
+      is NextAppointmentActionButtonClicked -> dispatch(OpenScheduleAppointmentSheet(model.patientUuid))
     }
   }
 }

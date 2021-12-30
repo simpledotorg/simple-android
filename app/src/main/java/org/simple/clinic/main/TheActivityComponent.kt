@@ -64,6 +64,7 @@ import org.simple.clinic.summary.bloodpressures.view.BloodPressureSummaryViewInj
 import org.simple.clinic.summary.bloodsugar.view.BloodSugarSummaryViewInjector
 import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet
 import org.simple.clinic.summary.medicalhistory.MedicalHistorySummaryViewInjector
+import org.simple.clinic.summary.nextappointment.NextAppointmentCardView
 import org.simple.clinic.summary.prescribeddrugs.DrugSummaryViewInjector
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.sync.indicator.SyncIndicatorView
@@ -141,7 +142,8 @@ interface TheActivityComponent :
     SelectDrugFrequencyDialog.Injector,
     FacilitySelectionScreen.Injector,
     SelectOverdueDownloadFormatDialog.Injector,
-    DeletePatientScreen.Injector {
+    DeletePatientScreen.Injector,
+    NextAppointmentCardView.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory

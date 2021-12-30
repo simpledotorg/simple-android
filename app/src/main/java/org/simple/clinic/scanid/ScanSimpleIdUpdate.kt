@@ -155,16 +155,24 @@ class ScanSimpleIdUpdate @Inject constructor(
 
     val clearInvalidQrCodeModel = model.clearInvalidQrCodeError()
 
-    if (model.openedFrom == OpenedFrom.EditPatientScreen.ToAddNHID) {
-      return searchPatientWhenNHIDEnabled(clearInvalidQrCodeModel, event)
-    }
-
-    return try {
-      val bpPassportCode = UUID.fromString(event.text)
-      val identifier = Identifier(bpPassportCode.toString(), BpPassport)
-      next(model = clearInvalidQrCodeModel.searching(), SearchPatientByIdentifier(identifier))
-    } catch (e: Exception) {
-      searchPatientWhenNHIDEnabled(clearInvalidQrCodeModel, event)
+    return when (model.openedFrom) {
+      OpenedFrom.EditPatientScreen.ToAddNHID -> {
+        return searchPatientWhenNHIDEnabled(clearInvalidQrCodeModel, event)
+      }
+      OpenedFrom.EditPatientScreen.ToAddBpPassport -> {
+        val bpPassportCode = UUID.fromString(event.text)
+        val identifier = Identifier(bpPassportCode.toString(), BpPassport)
+        next(model = clearInvalidQrCodeModel.searching(), SearchPatientByIdentifier(identifier))
+      }
+      else -> {
+        try {
+          val bpPassportCode = UUID.fromString(event.text)
+          val identifier = Identifier(bpPassportCode.toString(), BpPassport)
+          next(model = clearInvalidQrCodeModel.searching(), SearchPatientByIdentifier(identifier))
+        } catch (e: Exception) {
+          searchPatientWhenNHIDEnabled(clearInvalidQrCodeModel, event)
+        }
+      }
     }
   }
 

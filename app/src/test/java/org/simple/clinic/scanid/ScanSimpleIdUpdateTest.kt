@@ -411,4 +411,21 @@ class ScanSimpleIdUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when a valid qr code is scanned and screen is opened from edit patient screen to add Bp passport, then search for the patient`() {
+    val scannedId = "1e2997db-4ef1-4a76-8313-97a8b5a8b16b"
+    val identifier = Identifier(scannedId, BpPassport)
+    val modelToAddBpPassport = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddBpPassport)
+
+    spec
+        .given(modelToAddBpPassport)
+        .whenEvent(ScanSimpleIdScreenQrCodeScanned(scannedId))
+        .then(assertThatNext(
+            hasModel(modelToAddBpPassport
+                .clearInvalidQrCodeError()
+                .searching()),
+            hasEffects(SearchPatientByIdentifier(identifier))
+        ))
+  }
 }

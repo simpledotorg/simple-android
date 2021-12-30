@@ -8,4 +8,5 @@ interface NextAppointmentUi {
   fun showChangeAppointmentButton()
   fun showAppointmentDate(date: LocalDate)
   fun showAppointmentFacility(name: String)
+  fun hideAppointmentFacility()
 }

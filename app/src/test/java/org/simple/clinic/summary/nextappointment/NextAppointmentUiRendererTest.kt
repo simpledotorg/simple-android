@@ -64,4 +64,41 @@ class NextAppointmentUiRendererTest {
     verify(ui).showAppointmentFacility("PHC Obvious")
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when appointment facility is different from assigned facility, then hide appointment facility`() {
+    // give
+
+    val facility = TestData.facility(
+        uuid = UUID.fromString("d5ab9b31-101c-4172-a50a-6c57b79a3712"),
+        name = "PHC Obvious"
+    )
+
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        fullName = "Ramesh",
+        assignedFacilityId = UUID.fromString("fa63232f-0755-4c13-969e-e7d5da3b78d0")
+    )
+
+    val appointment = TestData.appointment(
+        uuid = UUID.fromString("01361f22-c10e-465d-97de-c44f990572c4"),
+        patientUuid = patientUuid,
+        facilityUuid = facility.uuid,
+        scheduledDate = LocalDate.parse("2018-01-01")
+    )
+
+    val nextAppointmentPatientProfile = NextAppointmentPatientProfile(appointment, patient, facility)
+
+    val nextAppointmentPatientProfileLoadedModel = defaultModel
+        .nextAppointmentPatientProfileLoaded(nextAppointmentPatientProfile)
+
+    // when
+    uiRenderer.render(nextAppointmentPatientProfileLoadedModel)
+
+    // then
+    verify(ui).showAppointmentDate(LocalDate.parse("2018-01-01"))
+    verify(ui).showChangeAppointmentButton()
+    verify(ui).hideAppointmentFacility()
+    verifyNoMoreInteractions(ui)
+  }
 }

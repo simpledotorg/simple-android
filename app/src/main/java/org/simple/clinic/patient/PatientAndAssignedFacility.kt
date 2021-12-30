@@ -5,6 +5,7 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.facility.Facility
+import java.util.UUID
 
 @Parcelize
 data class PatientAndAssignedFacility(
@@ -16,4 +17,11 @@ data class PatientAndAssignedFacility(
         entityColumn = "uuid"
     )
     val assignedFacility: Facility?
-) : Parcelable
+) : Parcelable {
+
+  val hasAssignedFacility: Boolean
+    get() = assignedFacility != null
+
+  val assignedFacilityId: UUID
+    get() = assignedFacility!!.uuid
+}

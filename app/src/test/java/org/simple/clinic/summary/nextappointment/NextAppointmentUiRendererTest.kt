@@ -25,6 +25,7 @@ class NextAppointmentUiRendererTest {
     // then
     verify(ui).showNoAppointment()
     verify(ui).showAddAppointmentButton()
+    verify(ui).hideAppointmentFacility()
     verifyNoMoreInteractions(ui)
   }
 

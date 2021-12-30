@@ -26,5 +26,6 @@ class NextAppointmentUiRenderer(private val ui: NextAppointmentUi) : ViewRendere
   private fun renderNoAppointmentView() {
     ui.showNoAppointment()
     ui.showAddAppointmentButton()
+    ui.hideAppointmentFacility()
   }
 }

@@ -31,14 +31,16 @@ class NextAppointmentUiRendererTest {
   @Test
   fun `when appointment is present, then show appointment view`() {
     // give
-    val patient = TestData.patient(
-        uuid = patientUuid,
-        fullName = "Ramesh"
-    )
 
     val facility = TestData.facility(
         uuid = UUID.fromString("d5ab9b31-101c-4172-a50a-6c57b79a3712"),
         name = "PHC Obvious"
+    )
+
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        fullName = "Ramesh",
+        assignedFacilityId = facility.uuid
     )
 
     val appointment = TestData.appointment(
@@ -59,6 +61,7 @@ class NextAppointmentUiRendererTest {
     // then
     verify(ui).showAppointmentDate(LocalDate.parse("2018-01-01"))
     verify(ui).showChangeAppointmentButton()
+    verify(ui).showAppointmentFacility("PHC Obvious")
     verifyNoMoreInteractions(ui)
   }
 }

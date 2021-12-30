@@ -15,6 +15,10 @@ class NextAppointmentUiRenderer(private val ui: NextAppointmentUi) : ViewRendere
   private fun renderAppointmentView(model: NextAppointmentModel) {
     ui.showAppointmentDate(model.appointment.scheduledDate)
     ui.showChangeAppointmentButton()
+
+    if (model.appointmentIsInAssignedFacility) {
+      ui.showAppointmentFacility(model.appointmentFacilityName)
+    }
   }
 
   private fun renderNoAppointmentView() {

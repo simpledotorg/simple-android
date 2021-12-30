@@ -2,6 +2,9 @@ package org.simple.clinic.summary.nextappointment
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import org.junit.After
@@ -18,10 +21,15 @@ class NextAppointmentEffectHandlerTest {
 
   private val appointmentRepository = mock<AppointmentRepository>()
   private val patientRepository = mock<PatientRepository>()
+  private val uiActions = mock<NextAppointmentUiActions>()
+
+  private val viewEffectHandler = NextAppointmentViewEffectHandler(uiActions)
+
   private val effectHandler = NextAppointmentEffectHandler(
       appointmentRepository = appointmentRepository,
       patientRepository = patientRepository,
-      schedulersProvider = TestSchedulersProvider.trampoline()
+      schedulersProvider = TestSchedulersProvider.trampoline(),
+      viewEffectsConsumer = viewEffectHandler::handle
   ).build()
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
   private val patientUuid = UUID.fromString("06ffb32b-fc59-4e38-9f08-9be810b313da")
@@ -47,6 +55,8 @@ class NextAppointmentEffectHandlerTest {
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(AppointmentLoaded(appointment))
+
+    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -72,5 +82,19 @@ class NextAppointmentEffectHandlerTest {
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(PatientAndAssignedFacilityLoaded(patientAndAssignedFacility))
+
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when open schedule appointment sheet effect is received, then open the schedule appointment sheet`() {
+    // when
+    effectHandlerTestCase.dispatch(OpenScheduleAppointmentSheet(patientUuid))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openScheduleAppointmentSheet(patientUuid)
+    verifyNoMoreInteractions(uiActions)
   }
 }

@@ -11,6 +11,7 @@ class NextAppointmentUpdate : Update<NextAppointmentModel, NextAppointmentEvent,
     return when (event) {
       is NextAppointmentPatientProfileLoaded -> next(model.nextAppointmentPatientProfileLoaded(event.nextAppointmentPatientProfile))
       is NextAppointmentActionButtonClicked -> dispatch(OpenScheduleAppointmentSheet(model.patientUuid))
+      RefreshAppointment -> dispatch(LoadNextAppointmentPatientProfile(model.patientUuid))
     }
   }
 }

@@ -18,6 +18,15 @@ data class NextAppointmentModel(
   val hasNextAppointmentPatientProfile
     get() = nextAppointmentPatientProfile != null
 
+  val appointment
+    get() = nextAppointmentPatientProfile!!.appointment!!
+
+  val appointmentIsInAssignedFacility
+    get() = appointment.facilityUuid == nextAppointmentPatientProfile!!.patient.assignedFacilityId
+
+  val appointmentFacilityName
+    get() = nextAppointmentPatientProfile!!.facility.name
+
   fun nextAppointmentPatientProfileLoaded(nextAppointmentPatientProfile: NextAppointmentPatientProfile?): NextAppointmentModel {
     return copy(nextAppointmentPatientProfile = nextAppointmentPatientProfile)
   }

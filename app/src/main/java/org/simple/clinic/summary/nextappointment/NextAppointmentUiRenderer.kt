@@ -7,6 +7,17 @@ class NextAppointmentUiRenderer(private val ui: NextAppointmentUi) : ViewRendere
   override fun render(model: NextAppointmentModel) {
     if (!model.hasNextAppointmentPatientProfile) {
       renderNoAppointmentView()
+    } else {
+      renderAppointmentView(model)
+    }
+  }
+
+  private fun renderAppointmentView(model: NextAppointmentModel) {
+    ui.showAppointmentDate(model.appointment.scheduledDate)
+    ui.showChangeAppointmentButton()
+
+    if (!model.appointmentIsInAssignedFacility) {
+      ui.showAppointmentFacility(model.appointmentFacilityName)
     }
   }
 

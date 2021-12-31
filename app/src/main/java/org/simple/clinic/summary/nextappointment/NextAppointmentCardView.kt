@@ -11,6 +11,7 @@ import com.google.android.material.card.MaterialCardView
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.PatientsummaryNextAppointmentCardBinding
@@ -75,8 +76,14 @@ class NextAppointmentCardView(
   private val nextAppointmentActionsButton
     get() = binding!!.nextAppointmentActionButton
 
+  private val hotEvents = PublishSubject.create<NextAppointmentEvent>()
+
   private val events: Observable<NextAppointmentEvent> by unsafeLazy {
-    actionsButtonClicks()
+    Observable
+        .merge(
+            actionsButtonClicks(),
+            hotEvents
+        )
         .compose(ReportAnalyticsEvents())
         .cast()
   }
@@ -210,6 +217,10 @@ class NextAppointmentCardView(
     return nextAppointmentActionsButton
         .clicks()
         .map { NextAppointmentActionButtonClicked() }
+  }
+
+  fun refreshAppointmentDetails() {
+    hotEvents.onNext(RefreshAppointment)
   }
 
   interface Injector {

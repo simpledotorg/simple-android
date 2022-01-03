@@ -15,7 +15,6 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenHelpBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -127,6 +126,6 @@ class HelpScreen : BaseScreen<
       override val analyticsName: String = "Help"
   ) : ScreenKey() {
 
-    override fun instantiateFragment() = HomeScreen()
+    override fun instantiateFragment() = HelpScreen()
   }
 }

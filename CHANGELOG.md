@@ -15,6 +15,10 @@
 
 - [In progress: 30 Dec 2021] View next appointment information in patient summary screen
 
+### Fixes
+
+- Fix help screen not opening on button click
+
 ## 2021-12-28-8079
 
 ### Internal

@@ -173,6 +173,24 @@ class NextAppointmentCardView(
     }
   }
 
+  override fun showAppointmentDateWithOverdueDays(date: LocalDate, overdueDays: Int) {
+    appointmentDateTextView.text = buildSpannedString {
+      color(context.resolveColor(attrRes = R.attr.colorOnSurface)) {
+        append(fullDateFormatter.format(date))
+      }
+
+      append(Unicode.nonBreakingSpace)
+
+      color(context.resolveColor(attrRes = R.attr.colorError)) {
+        append(resources.getQuantityString(
+            R.plurals.next_appointment_overdue_plurals,
+            overdueDays,
+            overdueDays
+        ))
+      }
+    }
+  }
+
   override fun showAddAppointmentButton() {
     nextAppointmentActionsButton.text = context.getString(R.string.next_appointment_view_add)
   }

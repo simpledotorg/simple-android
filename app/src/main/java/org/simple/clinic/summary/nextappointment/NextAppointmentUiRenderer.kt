@@ -35,6 +35,9 @@ class NextAppointmentUiRenderer(private val ui: NextAppointmentUi) : ViewRendere
       appointmentDate > model.currentDate -> {
         ui.showAppointmentDateWithRemainingDays(appointmentDate, appointmentDate.daysTill(model.currentDate).absoluteValue)
       }
+      appointmentDate < model.currentDate -> {
+        ui.showAppointmentDateWithOverdueDays(appointmentDate, appointmentDate.daysTill(model.currentDate).absoluteValue)
+      }
     }
   }
 

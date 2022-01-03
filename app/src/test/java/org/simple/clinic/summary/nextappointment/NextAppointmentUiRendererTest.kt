@@ -14,7 +14,8 @@ class NextAppointmentUiRendererTest {
   private val uiRenderer = NextAppointmentUiRenderer(ui)
   private val patientUuid = UUID.fromString("305c6c33-90b5-4895-9f82-e6d071d05955")
   private val defaultModel = NextAppointmentModel.default(
-      patientUuid = patientUuid
+      patientUuid = patientUuid,
+      currentDate = LocalDate.parse("2018-01-01")
   )
 
   @Test

@@ -2,18 +2,24 @@ package org.simple.clinic.summary.nextappointment
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import java.time.LocalDate
 import java.util.UUID
 
 @Parcelize
 data class NextAppointmentModel(
     val patientUuid: UUID,
-    val nextAppointmentPatientProfile: NextAppointmentPatientProfile?
+    val nextAppointmentPatientProfile: NextAppointmentPatientProfile?,
+    val currentDate: LocalDate
 ) : Parcelable {
 
   companion object {
-    fun default(patientUuid: UUID) = NextAppointmentModel(
+    fun default(
+        patientUuid: UUID,
+        currentDate: LocalDate
+    ) = NextAppointmentModel(
         patientUuid = patientUuid,
-        nextAppointmentPatientProfile = null
+        nextAppointmentPatientProfile = null,
+        currentDate = currentDate
     )
   }
 

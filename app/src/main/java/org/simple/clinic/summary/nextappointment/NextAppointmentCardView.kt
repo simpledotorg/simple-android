@@ -155,6 +155,24 @@ class NextAppointmentCardView(
     }
   }
 
+  override fun showAppointmentDateWithRemainingDays(date: LocalDate, daysRemaining: Int) {
+    appointmentDateTextView.text = buildSpannedString {
+      color(context.resolveColor(attrRes = R.attr.colorOnSurface)) {
+        append(fullDateFormatter.format(date))
+      }
+
+      append(Unicode.nonBreakingSpace)
+
+      color(context.resolveColor(colorRes = R.color.simple_green_500)) {
+        append(resources.getQuantityString(
+            R.plurals.next_appointment_plurals,
+            daysRemaining,
+            daysRemaining
+        ))
+      }
+    }
+  }
+
   override fun showAddAppointmentButton() {
     nextAppointmentActionsButton.text = context.getString(R.string.next_appointment_view_add)
   }

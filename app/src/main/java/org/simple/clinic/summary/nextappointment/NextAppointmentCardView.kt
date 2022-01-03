@@ -26,13 +26,11 @@ import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.resolveColor
 import org.simple.clinic.util.unsafeLazy
-import org.threeten.extra.Days
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.math.absoluteValue
 
 class NextAppointmentCardView(
     context: Context,
@@ -93,7 +91,7 @@ class NextAppointmentCardView(
 
     MobiusDelegate.forView(
         events = events,
-        defaultModel = NextAppointmentModel.default(screenKey.patientUuid),
+        defaultModel = NextAppointmentModel.default(screenKey.patientUuid, currentDate),
         init = NextAppointmentInit(),
         update = NextAppointmentUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
@@ -144,48 +142,16 @@ class NextAppointmentCardView(
   }
 
   override fun showAppointmentDate(date: LocalDate) {
-    val daysUntilAppointment = Days.between(currentDate, date)
-
-    val formattedDate = fullDateFormatter.format(date)
-    val appointmentStatus = appointmentStatusString(daysUntilAppointment)
-    val appointmentStatusColor = appointmentStatusColor(daysUntilAppointment)
-
     appointmentDateTextView.text = buildSpannedString {
       color(context.resolveColor(attrRes = R.attr.colorOnSurface)) {
-        append(formattedDate)
+        append(fullDateFormatter.format(date))
       }
 
       append(Unicode.nonBreakingSpace)
 
-      color(appointmentStatusColor) {
-        append(appointmentStatus)
+      color(context.resolveColor(colorRes = R.color.simple_green_500)) {
+        append(context.getString(R.string.next_appointment_today))
       }
-    }
-  }
-
-  private fun appointmentStatusColor(daysUntilAppointment: Days) = if (daysUntilAppointment >= Days.ZERO) {
-    context.resolveColor(colorRes = R.color.simple_green_500)
-  } else {
-    context.resolveColor(attrRes = R.attr.colorError)
-  }
-
-  private fun appointmentStatusString(daysUntilAppointment: Days) = when {
-    daysUntilAppointment < Days.ZERO -> {
-      resources.getQuantityString(
-          R.plurals.next_appointment_overdue_plurals,
-          daysUntilAppointment.amount.absoluteValue,
-          daysUntilAppointment.amount.absoluteValue
-      )
-    }
-    daysUntilAppointment == Days.ZERO -> {
-      resources.getString(R.string.next_appointment_today)
-    }
-    else -> {
-      resources.getQuantityString(
-          R.plurals.next_appointment_plurals,
-          daysUntilAppointment.amount,
-          daysUntilAppointment.amount
-      )
     }
   }
 

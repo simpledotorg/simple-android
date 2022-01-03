@@ -31,7 +31,7 @@ class NextAppointmentUiRendererTest {
   }
 
   @Test
-  fun `when appointment is present, then show appointment view`() {
+  fun `when appointment is scheduled for current date, then show appointment date`() {
     // given
     val facility = TestData.facility(
         uuid = UUID.fromString("d5ab9b31-101c-4172-a50a-6c57b79a3712"),

@@ -10,7 +10,8 @@ jobs:
     if: |
       github.event.label.name != 'work in progress' &&
       github.event.pull_request.requested_reviewers[0] == null &&
-      github.event.pull_request.requested_teams[0] == null
+      github.event.pull_request.requested_teams[0] == null &&
+      github.event.pull_request.draft == false
     runs-on: [ ubuntu-latest ]
     steps:
       - name: Request Android Devs for review

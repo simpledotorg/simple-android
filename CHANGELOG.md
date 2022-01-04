@@ -9,6 +9,7 @@
 - Remove QA Android tests from PR comment GH Action
 - Return early if the required `Timeout` conditions are not satisfied in `TimeoutCallAdapterFactory`
 - Enable auto merge of PR when assigning reviewer
+- Don't run auto request review action in draft PRs
 - [In progress: 30 Dec 2021] Implement `NextAppointmentCardView`
 
 ### Changes

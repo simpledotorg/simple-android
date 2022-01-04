@@ -50,6 +50,7 @@ class PatientSummaryViewRendererTest {
     // then
     verify(ui).showDiabetesView()
     verify(ui).hideTeleconsultButton()
+    verify(ui).hideNextAppointmentCard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -64,6 +65,7 @@ class PatientSummaryViewRendererTest {
     // then
     verify(ui).hideDiabetesView()
     verify(ui).hideTeleconsultButton()
+    verify(ui).hideNextAppointmentCard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -101,6 +103,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).showEditButton()
     verify(ui).hideAssignedFacilityView()
     verify(ui).hidePatientDiedStatus()
+    verify(ui).hideNextAppointmentCard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -117,6 +120,7 @@ class PatientSummaryViewRendererTest {
     // then
     verify(ui).showDiabetesView()
     verify(ui).hideTeleconsultButton()
+    verify(ui).hideNextAppointmentCard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -137,6 +141,7 @@ class PatientSummaryViewRendererTest {
     // then
     verify(ui).showDiabetesView()
     verify(ui).showTeleconsultButton()
+    verify(ui).hideNextAppointmentCard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -153,6 +158,7 @@ class PatientSummaryViewRendererTest {
     // then
     verify(ui).showDiabetesView()
     verify(ui).hideTeleconsultButton()
+    verify(ui).hideNextAppointmentCard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -191,6 +197,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).showEditButton()
     verify(ui).showAssignedFacilityView()
     verify(ui).hidePatientDiedStatus()
+    verify(ui).hideNextAppointmentCard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -229,6 +236,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).showEditButton()
     verify(ui).hideAssignedFacilityView()
     verify(ui).hidePatientDiedStatus()
+    verify(ui).hideNextAppointmentCard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -251,6 +259,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideTeleconsultButton()
     verify(ui).hideDoneButton()
     verify(ui).showTeleconsultLogButton()
+    verify(ui).hideNextAppointmentCard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -287,6 +296,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).showEditButton()
     verify(ui).hideAssignedFacilityView()
     verify(ui).hidePatientDiedStatus()
+    verify(ui).hideNextAppointmentCard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -323,9 +333,10 @@ class PatientSummaryViewRendererTest {
     verify(ui).showEditButton()
     verify(ui).hideAssignedFacilityView()
     verify(ui).showPatientDiedStatus()
+    verify(ui).hideNextAppointmentCard()
     verifyNoMoreInteractions(ui)
   }
-  
+
   @Test
   fun `when patient registration data is present, then show the next appointment card`() {
     // given
@@ -337,6 +348,20 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).showNextAppointmentCard()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when patient registration data is not present, then hide the next appointment card`() {
+    // given
+    val modelWithPatientRegistrationData = defaultModel
+        .patientRegistrationDataLoaded(hasPatientRegistrationData = false)
+
+    // when
+    uiRenderer.render(modelWithPatientRegistrationData)
+
+    // then
+    verify(ui).hideNextAppointmentCard()
     verifyNoMoreInteractions(ui)
   }
 }

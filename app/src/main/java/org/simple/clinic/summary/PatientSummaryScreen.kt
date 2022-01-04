@@ -608,6 +608,10 @@ class PatientSummaryScreen :
     nextAppointmentFacilityView.visibility = VISIBLE
   }
 
+  override fun hideNextAppointmentCard() {
+    nextAppointmentFacilityView.visibility = GONE
+  }
+
   interface Injector {
     fun inject(target: PatientSummaryScreen)
   }

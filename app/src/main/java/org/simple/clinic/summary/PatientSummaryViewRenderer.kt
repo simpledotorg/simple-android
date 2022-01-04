@@ -25,6 +25,8 @@ class PatientSummaryViewRenderer(
 
       if (model.hasPatientRegistrationData == true) {
         ui.showNextAppointmentCard()
+      } else {
+        ui.hideNextAppointmentCard()
       }
     }
   }

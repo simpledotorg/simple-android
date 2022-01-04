@@ -300,7 +300,10 @@ class ScanSimpleIdScreen : BaseScreen<
   }
 
   override fun showPatientWithIdentifierExistsError() {
-    // Will handle in a later commit
+    Snackbar
+        .make(binding.root, R.string.scansimpleid_identfier_already_exists, Snackbar.LENGTH_SHORT)
+        .setAction(R.string.scansimpleid_error_state_snackbar_ok) {}
+        .show()
   }
 
   override fun showInvalidQrCodeError() {

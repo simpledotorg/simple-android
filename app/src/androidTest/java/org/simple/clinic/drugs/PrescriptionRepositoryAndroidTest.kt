@@ -310,4 +310,41 @@ class PrescriptionRepositoryAndroidTest {
         syncStatus = SyncStatus.PENDING
     ))
   }
+
+  @Test
+  fun fetching_prescribed_drugs_count_should_work_as_expected() {
+    // given
+    val patientUuid = UUID.fromString("9199c684-655d-42c9-9f2b-298b849a2516")
+    val prescribedDrug1 = TestData.prescription(
+        uuid = UUID.fromString("e20f4571-09c5-40d4-9521-5453fb5f1d4f"),
+        patientUuid = patientUuid,
+        timestamps = Timestamps.create(clock),
+        syncStatus = SyncStatus.DONE,
+        isDeleted = false
+    )
+
+    val prescribedDrug2 = TestData.prescription(
+        uuid = UUID.fromString("191159ff-cd05-4357-934b-1035ed5ba50f"),
+        patientUuid = patientUuid,
+        timestamps = Timestamps.create(clock),
+        syncStatus = SyncStatus.DONE,
+        isDeleted = false
+    )
+
+    val prescribedDrug3 = TestData.prescription(
+        uuid = UUID.fromString("fc4d3170-568c-4a10-8ce8-5457469aebe4"),
+        patientUuid = patientUuid,
+        timestamps = Timestamps.create(clock),
+        syncStatus = SyncStatus.DONE,
+        isDeleted = true
+    )
+
+    repository.save(listOf(prescribedDrug1, prescribedDrug2, prescribedDrug3))
+
+    // when
+    val prescribedDrugsCount = repository.prescriptionCountImmediate(patientUuid = patientUuid)
+
+    // then
+    assertThat(prescribedDrugsCount).isEqualTo(2)
+  }
 }

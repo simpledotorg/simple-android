@@ -17,7 +17,7 @@ import java.util.UUID
 
 class ScanSimpleIdUpdateTest {
 
-  private val defaultModel = ScanSimpleIdModel.create()
+  private val defaultModel = ScanSimpleIdModel.create(OpenedFrom.PatientsTabScreen)
   private val expectedJson = """
     {
     "hidn":"28-3222-2283-6682",

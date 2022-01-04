@@ -120,7 +120,7 @@ class ScanSimpleIdScreen : BaseScreen<
 
   private val qrScans = PublishSubject.create<ScanSimpleIdEvent>()
 
-  override fun defaultModel() = ScanSimpleIdModel.create()
+  override fun defaultModel() = ScanSimpleIdModel.create(screenKey.openedFrom)
 
   override fun uiRenderer() = ScanSimpleIdUiRenderer(this)
 

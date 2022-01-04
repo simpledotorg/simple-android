@@ -13,7 +13,7 @@ class ScanSimpleIdUiRendererTest {
   @Test
   fun `when searching for a patient, then show search progress`() {
     // given
-    val searchingModel = ScanSimpleIdModel.create()
+    val searchingModel = ScanSimpleIdModel.create(OpenedFrom.PatientsTabScreen)
         .searching()
 
     // when
@@ -28,7 +28,7 @@ class ScanSimpleIdUiRendererTest {
   @Test
   fun `when searching for patient is completed, then hide search progress`() {
     // given
-    val notSearchingModel = ScanSimpleIdModel.create()
+    val notSearchingModel = ScanSimpleIdModel.create(OpenedFrom.PatientsTabScreen)
         .notSearching()
 
     // when
@@ -43,7 +43,7 @@ class ScanSimpleIdUiRendererTest {
   @Test
   fun `when there is no scan error, then hide scan error`() {
     // given
-    val defaultModel = ScanSimpleIdModel.create()
+    val defaultModel = ScanSimpleIdModel.create(OpenedFrom.PatientsTabScreen)
 
     // when
     uiRenderer.render(defaultModel)
@@ -57,7 +57,7 @@ class ScanSimpleIdUiRendererTest {
   @Test
   fun `when there is scan error, then show scan error`() {
     // given
-    val defaultModel = ScanSimpleIdModel.create()
+    val defaultModel = ScanSimpleIdModel.create(OpenedFrom.PatientsTabScreen)
         .invalidQrCode()
 
     // when

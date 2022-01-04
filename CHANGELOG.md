@@ -4,16 +4,21 @@
 
 ### Internal
 
-- Inject a new `AppDatabase` in instrumented tests instead of using a singleton instance
-- Add support for writing performance regression test suites
-- Remove QA Android tests from PR comment GH Action
-- Return early if the required `Timeout` conditions are not satisfied in `TimeoutCallAdapterFactory`
-- Enable auto merge of PR when assigning reviewer
 - [In progress: 30 Dec 2021] Implement `NextAppointmentCardView`
 
 ### Changes
 
 - [In progress: 30 Dec 2021] View next appointment information in patient summary screen
+
+## Demo
+
+### Internal
+
+- Inject a new `AppDatabase` in instrumented tests instead of using a singleton instance
+- Add support for writing performance regression test suites
+- Remove QA Android tests from PR comment GH Action
+- Return early if the required `Timeout` conditions are not satisfied in `TimeoutCallAdapterFactory`
+- Enable auto merge of PR when assigning reviewer
 
 ### Fixes
 

@@ -156,24 +156,28 @@ class ScanSimpleIdUpdate @Inject constructor(
     val clearInvalidQrCodeModel = model.clearInvalidQrCodeError()
 
     return when (model.openedFrom) {
-      OpenedFrom.EditPatientScreen.ToAddNHID -> {
-        return searchPatientWhenNHIDEnabled(clearInvalidQrCodeModel, event)
-      }
-      OpenedFrom.EditPatientScreen.ToAddBpPassport -> {
-        val bpPassportCode = UUID.fromString(event.text)
-        val identifier = Identifier(bpPassportCode.toString(), BpPassport)
-        next(model = clearInvalidQrCodeModel.searching(), SearchPatientByIdentifier(identifier))
-      }
-      else -> {
-        try {
-          val bpPassportCode = UUID.fromString(event.text)
-          val identifier = Identifier(bpPassportCode.toString(), BpPassport)
-          next(model = clearInvalidQrCodeModel.searching(), SearchPatientByIdentifier(identifier))
-        } catch (e: Exception) {
-          searchPatientWhenNHIDEnabled(clearInvalidQrCodeModel, event)
-        }
-      }
+      OpenedFrom.EditPatientScreen.ToAddNHID -> searchPatientWhenNHIDEnabled(clearInvalidQrCodeModel, event)
+      OpenedFrom.EditPatientScreen.ToAddBpPassport -> searchPatientByBpPassport(event, clearInvalidQrCodeModel)
+      OpenedFrom.InstantSearchScreen, OpenedFrom.PatientsTabScreen -> searchPatientByIdentifersFromPatientsTabOrInstantSearch(event, clearInvalidQrCodeModel)
     }
+  }
+
+  private fun searchPatientByIdentifersFromPatientsTabOrInstantSearch(
+      event: ScanSimpleIdScreenQrCodeScanned,
+      clearInvalidQrCodeModel: ScanSimpleIdModel
+  ) = try {
+    searchPatientByBpPassport(event, clearInvalidQrCodeModel)
+  } catch (e: Exception) {
+    searchPatientWhenNHIDEnabled(clearInvalidQrCodeModel, event)
+  }
+
+  private fun searchPatientByBpPassport(
+      event: ScanSimpleIdScreenQrCodeScanned,
+      clearInvalidQrCodeModel: ScanSimpleIdModel
+  ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+    val bpPassportCode = UUID.fromString(event.text)
+    val identifier = Identifier(bpPassportCode.toString(), BpPassport)
+    return next(model = clearInvalidQrCodeModel.searching(), SearchPatientByIdentifier(identifier))
   }
 
   private fun searchPatientWhenNHIDEnabled(

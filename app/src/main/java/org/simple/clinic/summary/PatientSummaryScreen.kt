@@ -36,6 +36,8 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreenExpectingResult
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.mobius.ViewRenderer
@@ -177,6 +179,9 @@ class PatientSummaryScreen :
   @Inject
   lateinit var whatsAppMessageSender: WhatsAppMessageSender
 
+  @Inject
+  lateinit var features: Features
+
   private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
 
   private val snackbarActionClicks = PublishSubject.create<PatientSummaryEvent>()
@@ -197,7 +202,10 @@ class PatientSummaryScreen :
   }
 
   override fun uiRenderer(): ViewRenderer<PatientSummaryModel> {
-    return PatientSummaryViewRenderer(ui = this) { model ->
+    return PatientSummaryViewRenderer(
+        ui = this,
+        isNextAppointmentFeatureEnabled = features.isEnabled(Feature.NextAppointment)
+    ) { model ->
       modelUpdateCallback?.invoke(model)
     }
   }

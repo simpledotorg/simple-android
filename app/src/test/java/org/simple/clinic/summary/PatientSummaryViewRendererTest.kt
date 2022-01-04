@@ -37,7 +37,7 @@ class PatientSummaryViewRendererTest {
   private val defaultModel = PatientSummaryModel.from(ViewExistingPatient, UUID.fromString("6fdf088e-f6aa-40e9-9cc2-22e197b83470"))
   private val ui = mock<PatientSummaryScreenUi>()
 
-  private val uiRenderer = PatientSummaryViewRenderer(ui, modelUpdateCallback = { /* no-op */ })
+  private val uiRenderer = PatientSummaryViewRenderer(ui, isNextAppointmentFeatureEnabled = false) { /* no-op */ }
 
   @Test
   fun `when the facility supports diabetes management, the diabetes widget must be shown`() {
@@ -338,16 +338,30 @@ class PatientSummaryViewRendererTest {
   }
 
   @Test
-  fun `when patient registration data is present, then show the next appointment card`() {
+  fun `when patient registration data is present and next appointment feature is enabled, then show the next appointment card`() {
     // given
-    val modelWithPatientRegistrationData = defaultModel
-        .patientRegistrationDataLoaded(hasPatientRegistrationData = true)
+    val modelWithPatientRegistrationData = defaultModel.patientRegistrationDataLoaded(hasPatientRegistrationData = true)
+    val uiRenderer = PatientSummaryViewRenderer(ui = ui, isNextAppointmentFeatureEnabled = true) { /* no-op */ }
 
     // when
     uiRenderer.render(modelWithPatientRegistrationData)
 
     // then
     verify(ui).showNextAppointmentCard()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when patient registration data is present and next appointment feature is disabled, then hide the next appointment card`() {
+    // given
+    val modelWithPatientRegistrationData = defaultModel.patientRegistrationDataLoaded(hasPatientRegistrationData = true)
+    val uiRenderer = PatientSummaryViewRenderer(ui = ui, isNextAppointmentFeatureEnabled = false) { /* no-op */ }
+
+    // when
+    uiRenderer.render(modelWithPatientRegistrationData)
+
+    // then
+    verify(ui).hideNextAppointmentCard()
     verifyNoMoreInteractions(ui)
   }
 

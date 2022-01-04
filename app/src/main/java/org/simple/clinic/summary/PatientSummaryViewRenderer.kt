@@ -4,6 +4,7 @@ import org.simple.clinic.mobius.ViewRenderer
 
 class PatientSummaryViewRenderer(
     private val ui: PatientSummaryScreenUi,
+    private val isNextAppointmentFeatureEnabled: Boolean,
     private val modelUpdateCallback: PatientSummaryModelUpdateCallback
 ) : ViewRenderer<PatientSummaryModel> {
 
@@ -23,11 +24,15 @@ class PatientSummaryViewRenderer(
         setupUiForTeleconsult(model)
       }
 
-      if (model.hasPatientRegistrationData == true) {
-        ui.showNextAppointmentCard()
-      } else {
-        ui.hideNextAppointmentCard()
-      }
+      renderNextAppointmentCard(model)
+    }
+  }
+
+  private fun renderNextAppointmentCard(model: PatientSummaryModel) {
+    if (isNextAppointmentFeatureEnabled && model.hasPatientRegistrationData == true) {
+      ui.showNextAppointmentCard()
+    } else {
+      ui.hideNextAppointmentCard()
     }
   }
 

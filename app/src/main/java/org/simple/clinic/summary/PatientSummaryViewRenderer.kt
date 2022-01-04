@@ -22,6 +22,10 @@ class PatientSummaryViewRenderer(
         setupUiForDiabetesManagement(model.isDiabetesManagementEnabled)
         setupUiForTeleconsult(model)
       }
+
+      if (model.hasPatientRegistrationData == true) {
+        ui.showNextAppointmentCard()
+      }
     }
   }
 

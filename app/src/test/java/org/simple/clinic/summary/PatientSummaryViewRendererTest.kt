@@ -325,4 +325,18 @@ class PatientSummaryViewRendererTest {
     verify(ui).showPatientDiedStatus()
     verifyNoMoreInteractions(ui)
   }
+  
+  @Test
+  fun `when patient registration data is present, then show the next appointment card`() {
+    // given
+    val modelWithPatientRegistrationData = defaultModel
+        .patientRegistrationDataLoaded(hasPatientRegistrationData = true)
+
+    // when
+    uiRenderer.render(modelWithPatientRegistrationData)
+
+    // then
+    verify(ui).showNextAppointmentCard()
+    verifyNoMoreInteractions(ui)
+  }
 }

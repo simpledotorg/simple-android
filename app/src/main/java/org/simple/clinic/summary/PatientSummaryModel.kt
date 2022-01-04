@@ -65,7 +65,7 @@ data class PatientSummaryModel(
     get() = medicalOfficers.isNullOrEmpty().not()
 
   override fun readyToRender(): Boolean {
-    return hasLoadedPatientSummaryProfile && hasLoadedCurrentFacility
+    return hasLoadedPatientSummaryProfile && hasLoadedCurrentFacility && hasPatientRegistrationData != null
   }
 
   fun patientSummaryProfileLoaded(patientSummaryProfile: PatientSummaryProfile): PatientSummaryModel {

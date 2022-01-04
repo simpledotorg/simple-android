@@ -18,6 +18,7 @@ import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.Oth
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Success
 import org.simple.clinic.scanid.OpenedFrom.EditPatientScreen
+import org.simple.clinic.scanid.ScanErrorState.IdentifierAlreadyExists
 import java.util.UUID
 import javax.inject.Inject
 
@@ -103,7 +104,13 @@ class ScanSimpleIdUpdate @Inject constructor(
     return if (event.patients.isEmpty()) {
       searchPatientOnlineWhenOnlinePatientLookupEnabled(event, model)
     } else {
-      next(model = model.notSearching(), patientFoundByIdentifierSearch(patients = event.patients, identifier = event.identifier))
+      when (model.openedFrom) {
+        OpenedFrom.EditPatientScreen.ToAddBpPassport, OpenedFrom.EditPatientScreen.ToAddNHID -> dispatch(ShowScannedQrCodeError(IdentifierAlreadyExists))
+        OpenedFrom.InstantSearchScreen, OpenedFrom.PatientsTabScreen -> next(
+            model = model.notSearching(),
+            patientFoundByIdentifierSearch(patients = event.patients, identifier = event.identifier)
+        )
+      }
     }
   }
 

@@ -13,6 +13,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline
+import org.simple.clinic.scanid.ScanErrorState.IdentifierAlreadyExists
 import java.util.UUID
 
 class ScanSimpleIdUpdateTest {
@@ -464,5 +465,23 @@ class ScanSimpleIdUpdateTest {
                 hasEffects(GoBackToEditPatientScreen(identifier))
             )
         )
+  }
+
+  @Test
+  fun `when screen is opened from edit patient and patient with identifier already exists, then dispatch show scanned qr code error effect`() {
+    val patientId = UUID.fromString("ce93586b-1cfe-41c5-b933-fead6343f96a")
+    val patient = TestData.patient(
+        uuid = patientId
+    )
+    val identifier = Identifier("77877995-6f2f-4591-bdb8-bd0f9c62d573", BpPassport)
+    val openedToAddBpPassportModel = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddBpPassport)
+
+    spec
+        .given(openedToAddBpPassportModel)
+        .whenEvent(PatientSearchByIdentifierCompleted(listOf(patient), identifier))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowScannedQrCodeError(IdentifierAlreadyExists))
+        ))
   }
 }

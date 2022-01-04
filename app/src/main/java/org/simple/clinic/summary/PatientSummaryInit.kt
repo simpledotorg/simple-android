@@ -21,6 +21,10 @@ class PatientSummaryInit : Init<PatientSummaryModel, PatientSummaryEffect> {
       effects.add(LoadMedicalOfficers)
     }
 
+    if (model.hasPatientRegistrationData == null) {
+      effects.add(LoadPatientRegistrationData(model.patientUuid))
+    }
+
     return first(model, effects)
   }
 }

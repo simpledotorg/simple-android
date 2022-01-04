@@ -505,4 +505,17 @@ class ScanSimpleIdUpdateTest {
                 hasEffects(ShowScannedQrCodeError(IdentifierAlreadyExists)))
         )
   }
+
+  @Test
+  fun `when scanned qr code is invalid and screen is opened from edit patient screen, then show scanned qr code error with invalid qr code state`(){
+    spec
+        .given(openedToAddBpPassportModel)
+        .whenEvent(InvalidQrCode)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
+            )
+        )
+  }
 }

@@ -42,9 +42,16 @@ class ScanSimpleIdUpdate @Inject constructor(
       is ScanSimpleIdScreenQrCodeScanned -> simpleIdQrScanned(model, event)
       is PatientSearchByIdentifierCompleted -> patientSearchByIdentifierCompleted(model, event)
       is ScannedQRCodeJsonParsed -> scannedQRCodeParsed(model, event)
-      InvalidQrCode -> next(model.notSearching().invalidQrCode())
+      InvalidQrCode -> invalidQrCode(model)
       is OnlinePatientLookupWithIdentifierCompleted -> onlinePatientLookupWithIdentifierCompleted(model, event)
       is CompleteMedicalRecordsSaved -> patientsFoundByOnlineLookup(event.completeMedicalRecords)
+    }
+  }
+
+  private fun invalidQrCode(model: ScanSimpleIdModel): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+    return when (model.openedFrom) {
+      is EditPatientScreen -> dispatch(ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
+      InstantSearchScreen, PatientsTabScreen -> next(model.notSearching().invalidQrCode())
     }
   }
 
@@ -114,7 +121,7 @@ class ScanSimpleIdUpdate @Inject constructor(
       searchPatientOnlineWhenOnlinePatientLookupEnabled(event, model)
     } else {
       when (model.openedFrom) {
-        EditPatientScreen.ToAddBpPassport, EditPatientScreen.ToAddNHID -> dispatch(ShowScannedQrCodeError(IdentifierAlreadyExists))
+        is EditPatientScreen -> dispatch(ShowScannedQrCodeError(IdentifierAlreadyExists))
         InstantSearchScreen, PatientsTabScreen -> next(
             model = model.notSearching(),
             patientFoundByIdentifierSearch(patients = event.patients, identifier = event.identifier)

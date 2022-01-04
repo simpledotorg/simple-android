@@ -284,4 +284,26 @@ class ScanSimpleIdEffectHandlerTest {
     verify(uiActions).goBackToEditPatientScreen(identifier)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when show scanned qr code error effect is received with identifier already exists error state, then show patient with identifier already exists error`() {
+    // when
+    testCase.dispatch(ShowScannedQrCodeError(ScanErrorState.IdentifierAlreadyExists))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).showPatientWithIdentifierExistsError()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when show scanned qr code error effect is received with invalid qr code error state, then show patient with invalid qr code error`() {
+    // when
+    testCase.dispatch(ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).showInvalidQrCodeError()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

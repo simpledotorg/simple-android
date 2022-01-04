@@ -298,6 +298,14 @@ class ScanSimpleIdScreen : BaseScreen<
     router.popWithResult(Succeeded(identifier))
   }
 
+  override fun showPatientWithIdentifierExistsError() {
+    // Will handle in a later commit
+  }
+
+  override fun showInvalidQrCodeError() {
+    // Will handle in a later commit
+  }
+
   override fun showEnteredCodeValidationError(failure: EnteredCodeValidationResult) {
     enteredCodeErrorText.visibility = View.VISIBLE
     val validationErrorMessage = if (failure == Empty) {

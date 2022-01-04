@@ -12,4 +12,6 @@ interface ScanSimpleIdUiActions {
   fun openPatientSummary(patientId: UUID)
   fun openPatientSearch(additionalIdentifier: Identifier?, initialSearchQuery: String?, patientPrefillInfo: PatientPrefillInfo?)
   fun goBackToEditPatientScreen(identifier: Identifier)
+  fun showPatientWithIdentifierExistsError()
+  fun showInvalidQrCodeError()
 }

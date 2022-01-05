@@ -37,6 +37,8 @@ class ScanSimpleIdUpdateTest {
       isOnlinePatientLookupEnabled = true
   ))
 
+  private val openedToAddBpPassportModel = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddBpPassport)
+
   @Test
   fun `when a valid QR code is scanned, then search for the patient`() {
     val scannedId = "9f154761-ee2f-4ee3-acd1-0038328f75ca"
@@ -440,8 +442,6 @@ class ScanSimpleIdUpdateTest {
     val patients = emptyList<Patient>()
     val identifier = Identifier("d5a706f9-34a7-4218-b97a-cb873e1ba867", BpPassport)
 
-    val openedToAddBpPassportModel = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddBpPassport)
-
     spec
         .given(openedToAddBpPassportModel)
         .whenEvent(PatientSearchByIdentifierCompleted(patients, identifier))
@@ -454,7 +454,6 @@ class ScanSimpleIdUpdateTest {
   @Test
   fun `when online patient lookup is completed, screen is opened from edit patient to add bp passport and patient is not found, then go back to edit patient screen`() {
     val identifier = TestData.identifier(value = "798cf791-d42d-428d-b8ae-35bbbb6c9447", type = BpPassport)
-    val openedToAddBpPassportModel = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddBpPassport)
 
     spec
         .given(openedToAddBpPassportModel)
@@ -474,7 +473,6 @@ class ScanSimpleIdUpdateTest {
         uuid = patientId
     )
     val identifier = Identifier("77877995-6f2f-4591-bdb8-bd0f9c62d573", BpPassport)
-    val openedToAddBpPassportModel = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddBpPassport)
 
     spec
         .given(openedToAddBpPassportModel)
@@ -483,5 +481,28 @@ class ScanSimpleIdUpdateTest {
             hasNoModel(),
             hasEffects(ShowScannedQrCodeError(IdentifierAlreadyExists))
         ))
+  }
+
+  @Test
+  fun `when screen is opened from edit patient and online patient lookup is completed and had found medical records, show scanned qr code error effect`() {
+    val identifier = Identifier("11a77d3b-4a6f-441e-8496-0beb989ba693", BpPassport)
+    val commonIdentifier = TestData.businessId(identifier = identifier)
+
+    val patientUuid1 = TestData.patientProfile(patientUuid = UUID.fromString("da01a72e-cc74-4e74-86ff-59d730dfc2eb"), businessId = commonIdentifier)
+    val patientUuid2 = TestData.patientProfile(patientUuid = UUID.fromString("a09acec5-7cab-4b1a-a99a-ef673b29e024"), businessId = commonIdentifier)
+
+    val completeMedicalRecord = TestData.completeMedicalRecord(patient = patientUuid1)
+    val completeMedicalRecord2 = TestData.completeMedicalRecord(patient = patientUuid2)
+
+    val medicalRecords = listOf(completeMedicalRecord, completeMedicalRecord2)
+
+    spec
+        .given(openedToAddBpPassportModel)
+        .whenEvent(OnlinePatientLookupWithIdentifierCompleted(LookupPatientOnline.Result.Found(medicalRecords = medicalRecords), identifier))
+        .then(
+            assertThatNext(
+                hasModel(openedToAddBpPassportModel.notSearching()),
+                hasEffects(ShowScannedQrCodeError(IdentifierAlreadyExists)))
+        )
   }
 }

@@ -18,6 +18,8 @@ import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.Oth
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Success
 import org.simple.clinic.scanid.OpenedFrom.EditPatientScreen
+import org.simple.clinic.scanid.OpenedFrom.InstantSearchScreen
+import org.simple.clinic.scanid.OpenedFrom.PatientsTabScreen
 import org.simple.clinic.scanid.ScanErrorState.IdentifierAlreadyExists
 import java.util.UUID
 import javax.inject.Inject
@@ -52,7 +54,14 @@ class ScanSimpleIdUpdate @Inject constructor(
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     return when (event.result) {
       is NotFound, is OtherError -> next(model.notSearching(), checkIfOpenedFromEditPatient(model, event.identifier))
-      is Found -> next(model.notSearching(), SaveCompleteMedicalRecords(event.result.medicalRecords))
+      is Found -> {
+        when (model.openedFrom) {
+          is EditPatientScreen -> next(model.notSearching(), ShowScannedQrCodeError(IdentifierAlreadyExists))
+          InstantSearchScreen, PatientsTabScreen -> next(
+              model.notSearching(), SaveCompleteMedicalRecords(event.result.medicalRecords)
+          )
+        }
+      }
     }
   }
 
@@ -105,8 +114,8 @@ class ScanSimpleIdUpdate @Inject constructor(
       searchPatientOnlineWhenOnlinePatientLookupEnabled(event, model)
     } else {
       when (model.openedFrom) {
-        OpenedFrom.EditPatientScreen.ToAddBpPassport, OpenedFrom.EditPatientScreen.ToAddNHID -> dispatch(ShowScannedQrCodeError(IdentifierAlreadyExists))
-        OpenedFrom.InstantSearchScreen, OpenedFrom.PatientsTabScreen -> next(
+        EditPatientScreen.ToAddBpPassport, EditPatientScreen.ToAddNHID -> dispatch(ShowScannedQrCodeError(IdentifierAlreadyExists))
+        InstantSearchScreen, PatientsTabScreen -> next(
             model = model.notSearching(),
             patientFoundByIdentifierSearch(patients = event.patients, identifier = event.identifier)
         )
@@ -166,7 +175,7 @@ class ScanSimpleIdUpdate @Inject constructor(
     return when (model.openedFrom) {
       EditPatientScreen.ToAddNHID -> searchPatientWhenNHIDEnabled(clearInvalidQrCodeModel, event)
       EditPatientScreen.ToAddBpPassport -> searchPatientByBpPassport(event, clearInvalidQrCodeModel)
-      OpenedFrom.InstantSearchScreen, OpenedFrom.PatientsTabScreen -> searchPatientByIdentifersFromPatientsTabOrInstantSearch(event, clearInvalidQrCodeModel)
+      InstantSearchScreen, PatientsTabScreen -> searchPatientByIdentifersFromPatientsTabOrInstantSearch(event, clearInvalidQrCodeModel)
     }
   }
 

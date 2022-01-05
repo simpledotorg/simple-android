@@ -18,6 +18,7 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Bangladesh
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
+import org.simple.clinic.summary.AppointmentSheetOpenedFrom.NEXT_APPOINTMENT_ACTION_CLICK
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
@@ -1049,6 +1050,25 @@ class PatientSummaryUpdateTest {
             hasModel(defaultModel.patientRegistrationDataLoaded(hasPatientRegistrationData = false)),
             hasNoEffects()
         ))
+  }
+
+  @Test
+  fun `when sync is triggered after clicking change from next appointment, then refresh appointment`() {
+    val model = defaultModel
+        .forExistingPatient()
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .completedCheckForInvalidPhone()
+
+    updateSpec
+        .given(model)
+        .whenEvent(SyncTriggered(NEXT_APPOINTMENT_ACTION_CLICK))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(RefreshNextAppointment)
+            )
+        )
   }
 
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {

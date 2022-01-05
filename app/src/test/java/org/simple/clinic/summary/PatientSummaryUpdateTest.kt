@@ -1071,6 +1071,21 @@ class PatientSummaryUpdateTest {
         )
   }
 
+  @Test
+  fun `when next appointment action button is clicked, then open schedule appointment sheet`() {
+    val model = defaultModel
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(NextAppointmentActionClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowScheduleAppointmentSheet(patientUuid, NEXT_APPOINTMENT_ACTION_CLICK, facility))
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

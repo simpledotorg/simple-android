@@ -53,6 +53,11 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       ChangeAssignedFacilityClicked -> dispatch(OpenSelectFacilitySheet)
       is NewAssignedFacilitySelected -> dispatch(DispatchNewAssignedFacility(event.facility), RefreshNextAppointment)
       is PatientRegistrationDataLoaded -> patientRegistrationDataLoaded(model, event)
+      NextAppointmentActionClicked -> dispatch(ShowScheduleAppointmentSheet(
+          model.patientUuid,
+          NEXT_APPOINTMENT_ACTION_CLICK,
+          model.currentFacility!!
+      ))
     }
   }
 

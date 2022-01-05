@@ -34,6 +34,8 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
+private typealias NextAppointmentActionClicked = () -> Unit
+
 class NextAppointmentCardView(
     context: Context,
     attrs: AttributeSet
@@ -68,6 +70,8 @@ class NextAppointmentCardView(
 
   private var binding: PatientsummaryNextAppointmentCardBinding? = null
   private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
+
+  var nextAppointmentActionClicks: NextAppointmentActionClicked? = null
 
   private val appointmentDateTextView
     get() = binding!!.appointmentDateTextView
@@ -117,6 +121,10 @@ class NextAppointmentCardView(
       return
     }
     context.injector<Injector>().inject(this)
+
+    nextAppointmentActionsButton.setOnClickListener {
+      nextAppointmentActionClicks?.invoke()
+    }
   }
 
   override fun onAttachedToWindow() {

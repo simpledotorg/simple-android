@@ -224,6 +224,7 @@ class PatientSummaryScreen :
             snackbarActionClicks,
             logTeleconsultClicks(),
             changeAssignedFacilityClicks(),
+            nextAppointmentActionClicks()
         )
         .compose(ReportAnalyticsEvents())
         .cast()
@@ -349,6 +350,14 @@ class PatientSummaryScreen :
       assignedFacilityView.changeAssignedFacilityClicks = { emitter.onNext(ChangeAssignedFacilityClicked) }
 
       emitter.setCancellable { assignedFacilityView.changeAssignedFacilityClicks = null }
+    }
+  }
+
+  private fun nextAppointmentActionClicks(): Observable<PatientSummaryEvent> {
+    return Observable.create { emitter ->
+      nextAppointmentFacilityView.nextAppointmentActionClicks = { emitter.onNext(NextAppointmentActionClicked) }
+
+      emitter.setCancellable { nextAppointmentFacilityView.nextAppointmentActionClicks = null }
     }
   }
 

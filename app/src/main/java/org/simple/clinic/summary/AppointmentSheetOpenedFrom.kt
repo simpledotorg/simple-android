@@ -19,5 +19,6 @@ import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 @Parcelize
 enum class AppointmentSheetOpenedFrom : Parcelable {
   BACK_CLICK,
-  DONE_CLICK
+  DONE_CLICK,
+  NEXT_APPOINTMENT_ACTION_CLICK
 }

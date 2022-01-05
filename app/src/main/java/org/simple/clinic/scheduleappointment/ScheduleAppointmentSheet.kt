@@ -234,6 +234,10 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
     router.popWithResult(Succeeded(screenKey.sheetOpenedFrom))
   }
 
+  override fun closeSheetWithoutResult() {
+    router.pop()
+  }
+
   override fun openTeleconsultStatusSheet(teleconsultRecordUuid: UUID) {
     startActivityForResult(
         TeleconsultStatusSheet.intent(

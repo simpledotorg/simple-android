@@ -905,7 +905,7 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when nurse selects the new assigned facility, dispatch the newly selected facility`() {
+  fun `when nurse selects the new assigned facility, dispatch the newly selected facility and refresh next appointment`() {
     val model = defaultModel
         .currentFacilityLoaded(facilityWithTeleconsultationEnabled)
         .patientSummaryProfileLoaded(patientSummaryProfile)
@@ -916,7 +916,7 @@ class PatientSummaryUpdateTest {
         .whenEvent(NewAssignedFacilitySelected(facilityWithDiabetesManagementEnabled))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(DispatchNewAssignedFacility(facilityWithDiabetesManagementEnabled))
+            hasEffects(DispatchNewAssignedFacility(facilityWithDiabetesManagementEnabled), RefreshNextAppointment)
         ))
   }
 

@@ -620,6 +620,10 @@ class PatientSummaryScreen :
     nextAppointmentFacilityView.visibility = GONE
   }
 
+  override fun refreshNextAppointment() {
+    nextAppointmentFacilityView.refreshAppointmentDetails()
+  }
+
   interface Injector {
     fun inject(target: PatientSummaryScreen)
   }

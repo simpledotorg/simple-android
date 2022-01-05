@@ -3,12 +3,14 @@ package org.simple.clinic.scheduleappointment
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.newentry.ButtonState.SAVED
 import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
@@ -147,5 +149,29 @@ class ScheduleAppointmentUpdateTest {
                 )
             )
         )
+  }
+
+  @Test
+  fun `when patient defaulter status is loaded and patient is defaulter, then schedule an automatic appointment`() {
+    val scheduledAtFacility = TestData.facility(uuid = UUID.fromString("871d1068-518e-4cd5-b624-f39ef83e8169"))
+    val currentDate = LocalDate.now(clock)
+
+    val facilityModel = model
+        .appointmentFacilitySelected(facility = scheduledAtFacility)
+
+    UpdateSpec(ScheduleAppointmentUpdate(
+        currentDate = LocalDate.parse("2018-01-01"),
+        defaulterAppointmentPeriod = appointmentConfig.appointmentDuePeriodForDefaulters)
+    ).given(facilityModel)
+        .whenEvent(PatientDefaulterStatusLoaded(isPatientADefaulter = true))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ScheduleAppointmentForPatient(
+                patientUuid = patientUuid,
+                scheduledForDate = LocalDate.parse("2018-01-31"),
+                scheduledAtFacility = scheduledAtFacility,
+                type = Automatic
+            ))
+        ))
   }
 }

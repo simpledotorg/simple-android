@@ -8,7 +8,6 @@ import android.view.View
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import com.google.android.material.card.MaterialCardView
-import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
@@ -85,11 +84,7 @@ class NextAppointmentCardView(
   private val hotEvents = PublishSubject.create<NextAppointmentEvent>()
 
   private val events: Observable<NextAppointmentEvent> by unsafeLazy {
-    Observable
-        .merge(
-            actionsButtonClicks(),
-            hotEvents
-        )
+    hotEvents
         .compose(ReportAnalyticsEvents())
         .cast()
   }
@@ -230,12 +225,6 @@ class NextAppointmentCardView(
         patientId = patientUUID,
         sheetOpenedFrom = AppointmentSheetOpenedFrom.DONE_CLICK
     ))
-  }
-
-  private fun actionsButtonClicks(): Observable<NextAppointmentEvent> {
-    return nextAppointmentActionsButton
-        .clicks()
-        .map { NextAppointmentActionButtonClicked() }
   }
 
   fun refreshAppointmentDetails() {

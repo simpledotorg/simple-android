@@ -6,6 +6,7 @@
 
 - Don't run auto request review action in draft PRs
 - Implement `NextAppointmentCardView`
+- Show next appointment card in patient summary screen
 
 ### Changes
 

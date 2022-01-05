@@ -61,14 +61,19 @@ class ScanSimpleIdUpdate @Inject constructor(
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     return when (event.result) {
       is NotFound, is OtherError -> next(model.notSearching(), checkIfOpenedFromEditPatient(model, event.identifier))
-      is Found -> {
-        when (model.openedFrom) {
-          is EditPatientScreen -> next(model.notSearching(), ShowScannedQrCodeError(IdentifierAlreadyExists))
-          InstantSearchScreen, PatientsTabScreen -> next(
-              model.notSearching(), SaveCompleteMedicalRecords(event.result.medicalRecords)
-          )
-        }
-      }
+      is Found -> patientIsFoundWhileSearchingFromOnlineLookup(model, event.result)
+    }
+  }
+
+  private fun patientIsFoundWhileSearchingFromOnlineLookup(
+      model: ScanSimpleIdModel,
+      result: Found
+  ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
+    return when (model.openedFrom) {
+      is EditPatientScreen -> next(model.notSearching(), ShowScannedQrCodeError(IdentifierAlreadyExists))
+      InstantSearchScreen, PatientsTabScreen -> next(
+          model.notSearching(), SaveCompleteMedicalRecords(result.medicalRecords)
+      )
     }
   }
 

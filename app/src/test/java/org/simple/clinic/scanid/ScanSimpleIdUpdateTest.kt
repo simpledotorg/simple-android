@@ -358,4 +358,20 @@ class ScanSimpleIdUpdateTest {
             hasEffects(OpenPatientSearch(additionalIdentifier = identifier, initialSearchQuery = null, patientPrefillInfo = null))
         ))
   }
+
+  @Test
+  fun `when the qr code is scanned and screen is opened from edit patient screen to add NHID, then parse the json into object`() {
+    val scannedId = "9f154761-ee2f-4ee3-acd1-0038328f75ca"
+    val defaultModel = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddNHID)
+
+    spec
+        .given(defaultModel)
+        .whenEvent(ScanSimpleIdScreenQrCodeScanned(scannedId))
+        .then(assertThatNext(
+            hasModel(defaultModel
+                .clearInvalidQrCodeError()
+                .searching()),
+            hasEffects(ParseScannedJson(scannedId))
+        ))
+  }
 }

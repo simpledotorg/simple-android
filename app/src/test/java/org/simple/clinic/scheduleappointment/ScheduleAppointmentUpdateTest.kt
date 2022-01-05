@@ -174,4 +174,26 @@ class ScheduleAppointmentUpdateTest {
             ))
         ))
   }
+
+  @Test
+  fun `when patient defaulter status is loaded and patient is not defaulter, then close sheet`() {
+    val scheduledAtFacility = TestData.facility(uuid = UUID.fromString("871d1068-518e-4cd5-b624-f39ef83e8169"))
+
+    val scheduledForDate = PotentialAppointmentDate(
+        scheduledFor = LocalDate.parse("2020-10-29"),
+        timeToAppointment = TimeToAppointment.Weeks(1)
+    )
+
+    val facilityModel = model
+        .appointmentFacilitySelected(facility = scheduledAtFacility)
+        .appointmentDateSelected(scheduledForDate)
+
+    updateSpec
+        .given(facilityModel)
+        .whenEvent(PatientDefaulterStatusLoaded(isPatientADefaulter = false))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CloseSheet)
+        ))
+  }
 }

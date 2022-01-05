@@ -21,6 +21,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding3.widget.editorActionEvents
 import com.jakewharton.rxbinding3.widget.textChangeEvents
 import com.spotify.mobius.functions.Consumer
@@ -303,7 +304,10 @@ class ScanSimpleIdScreen : BaseScreen<
   }
 
   override fun showInvalidQrCodeError() {
-    // Will handle in a later commit
+    Snackbar
+        .make(binding.root, R.string.scansimpleid_invalid_qr_code, Snackbar.LENGTH_SHORT)
+        .setAction(R.string.scansimpleid_error_state_snackbar_ok) {}
+        .show()
   }
 
   override fun showEnteredCodeValidationError(failure: EnteredCodeValidationResult) {

@@ -1,9 +1,15 @@
 package org.simple.clinic.summary.nextappointment
 
-sealed class NextAppointmentEvent
+import org.simple.clinic.widgets.UiEvent
+
+sealed class NextAppointmentEvent : UiEvent
 
 data class NextAppointmentPatientProfileLoaded(
     val nextAppointmentPatientProfile: NextAppointmentPatientProfile?
 ) : NextAppointmentEvent()
 
-object NextAppointmentActionButtonClicked : NextAppointmentEvent()
+data class NextAppointmentActionButtonClicked(
+    override val analyticsName: String = "Next Appointment Card:Action Button Clicked"
+) : NextAppointmentEvent()
+
+object RefreshAppointment : NextAppointmentEvent()

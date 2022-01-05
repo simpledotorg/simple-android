@@ -7,13 +7,15 @@ import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
 import org.simple.clinic.TestData
+import java.time.LocalDate
 import java.util.UUID
 
 class NextAppointmentInitTest {
 
   private val patientUuid = UUID.fromString("d7daec34-2a9c-44d1-9892-c38d82af1243")
   private val defaultModel = NextAppointmentModel.default(
-      patientUuid = patientUuid
+      patientUuid = patientUuid,
+      currentDate = LocalDate.parse("2018-01-01")
   )
   private val initSpec = InitSpec(NextAppointmentInit())
 

@@ -1,6 +1,8 @@
 package org.simple.clinic.summary.nextappointment
 
 import org.simple.clinic.mobius.ViewRenderer
+import org.simple.clinic.util.daysTill
+import kotlin.math.absoluteValue
 
 class NextAppointmentUiRenderer(private val ui: NextAppointmentUi) : ViewRenderer<NextAppointmentModel> {
 
@@ -13,13 +15,29 @@ class NextAppointmentUiRenderer(private val ui: NextAppointmentUi) : ViewRendere
   }
 
   private fun renderAppointmentView(model: NextAppointmentModel) {
-    ui.showAppointmentDate(model.appointment.scheduledDate)
+    renderAppointmentDate(model)
     ui.showChangeAppointmentButton()
 
     if (!model.appointmentIsInAssignedFacility) {
       ui.showAppointmentFacility(model.appointmentFacilityName)
     } else {
       ui.hideAppointmentFacility()
+    }
+  }
+
+  private fun renderAppointmentDate(model: NextAppointmentModel) {
+    val appointmentDate = model.appointment.scheduledDate
+
+    when {
+      appointmentDate == model.currentDate -> {
+        ui.showAppointmentDate(appointmentDate)
+      }
+      appointmentDate > model.currentDate -> {
+        ui.showAppointmentDateWithRemainingDays(appointmentDate, appointmentDate.daysTill(model.currentDate).absoluteValue)
+      }
+      appointmentDate < model.currentDate -> {
+        ui.showAppointmentDateWithOverdueDays(appointmentDate, appointmentDate.daysTill(model.currentDate).absoluteValue)
+      }
     }
   }
 

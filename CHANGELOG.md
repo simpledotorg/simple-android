@@ -5,7 +5,7 @@
 ### Internal
 
 - Don't run auto request review action in draft PRs
-- [In progress: 30 Dec 2021] Implement `NextAppointmentCardView`
+- Implement `NextAppointmentCardView`
 
 ### Changes
 

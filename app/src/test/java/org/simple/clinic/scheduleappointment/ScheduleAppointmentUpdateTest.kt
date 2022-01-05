@@ -12,6 +12,7 @@ import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
+import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.util.TestUserClock
 import java.time.LocalDate
 import java.time.Period
@@ -38,7 +39,8 @@ class ScheduleAppointmentUpdateTest {
       timeToAppointments = appointmentConfig.scheduleAppointmentsIn,
       userClock = clock,
       doneButtonState = SAVED,
-      nextButtonState = NextButtonState.SCHEDULED
+      nextButtonState = NextButtonState.SCHEDULED,
+      openedFrom = DONE_CLICK
   )
   private val teleconsultRecordUuid = UUID.fromString("f60e5a36-824d-48c6-a5eb-01a2184c8b97")
 

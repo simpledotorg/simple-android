@@ -6,6 +6,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.newentry.ButtonState
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
+import org.simple.clinic.summary.AppointmentSheetOpenedFrom
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecord
 import org.simple.clinic.util.UserClock
 import java.util.UUID
@@ -18,7 +19,8 @@ data class ScheduleAppointmentModel(
     val appointmentFacility: Facility?,
     val doneButtonState: ButtonState,
     val teleconsultRecord: TeleconsultRecord?,
-    val nextButtonState: NextButtonState
+    val nextButtonState: org.simple.clinic.scheduleappointment.ButtonState,
+    val openedFrom: AppointmentSheetOpenedFrom
 ) : Parcelable {
 
   companion object {
@@ -27,7 +29,8 @@ data class ScheduleAppointmentModel(
         timeToAppointments: List<TimeToAppointment>,
         userClock: UserClock,
         doneButtonState: ButtonState,
-        nextButtonState: NextButtonState
+        nextButtonState: org.simple.clinic.scheduleappointment.ButtonState,
+        openedFrom: AppointmentSheetOpenedFrom
     ): ScheduleAppointmentModel {
       val potentialAppointmentDates = generatePotentialAppointmentDatesForScheduling(timeToAppointments, userClock)
       val potientialAppointmentDateModel = PotentialAppointmentDateModel
@@ -39,7 +42,8 @@ data class ScheduleAppointmentModel(
           appointmentFacility = null,
           doneButtonState = doneButtonState,
           teleconsultRecord = null,
-          nextButtonState = nextButtonState
+          nextButtonState = nextButtonState,
+          openedFrom = openedFrom
       )
     }
 

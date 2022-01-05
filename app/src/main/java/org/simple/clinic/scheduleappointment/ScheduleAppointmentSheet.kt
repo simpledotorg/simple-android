@@ -127,7 +127,8 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
       timeToAppointments = config.scheduleAppointmentsIn,
       userClock = userClock,
       doneButtonState = ButtonState.SAVED,
-      nextButtonState = NextButtonState.SCHEDULED
+      nextButtonState = NextButtonState.SCHEDULED,
+      openedFrom = screenKey.sheetOpenedFrom
   )
 
   override fun bindView(inflater: LayoutInflater, container: ViewGroup?) =

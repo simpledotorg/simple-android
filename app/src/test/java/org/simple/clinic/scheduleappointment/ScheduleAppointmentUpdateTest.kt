@@ -15,6 +15,7 @@ import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
+import org.simple.clinic.summary.AppointmentSheetOpenedFrom.NEXT_APPOINTMENT_ACTION_CLICK
 import org.simple.clinic.util.TestUserClock
 import java.time.LocalDate
 import java.time.Period
@@ -194,6 +195,36 @@ class ScheduleAppointmentUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(CloseSheet)
+        ))
+  }
+
+  @Test
+  fun `when not now is clicked and sheet is opened from next appointment, then close sheet without result`() {
+    val scheduledAtFacility = TestData.facility(uuid = UUID.fromString("35c0a526-465b-4573-b0b4-733bff815214"))
+
+    val scheduledForDate = PotentialAppointmentDate(
+        scheduledFor = LocalDate.parse("2020-10-29"),
+        timeToAppointment = TimeToAppointment.Weeks(1)
+    )
+
+    val model = ScheduleAppointmentModel
+        .create(
+            patientUuid = patientUuid,
+            timeToAppointments = appointmentConfig.scheduleAppointmentsIn,
+            userClock = clock,
+            doneButtonState = SAVED,
+            nextButtonState = NextButtonState.SCHEDULED,
+            openedFrom = NEXT_APPOINTMENT_ACTION_CLICK
+        )
+        .appointmentFacilitySelected(facility = scheduledAtFacility)
+        .appointmentDateSelected(scheduledForDate)
+
+    updateSpec
+        .given(model)
+        .whenEvent(SchedulingSkipped)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CloseSheetWithoutResult)
         ))
   }
 }

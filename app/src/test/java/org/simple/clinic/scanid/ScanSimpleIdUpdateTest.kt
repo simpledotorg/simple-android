@@ -428,4 +428,26 @@ class ScanSimpleIdUpdateTest {
             hasEffects(SearchPatientByIdentifier(identifier))
         ))
   }
+
+  @Test
+  fun `when the screen is opened from bp passport button from edit patient screen and online patient lookup is disabled, then go back to edit patient screen`() {
+    val spec = UpdateSpec(ScanSimpleIdUpdate(
+        isIndianNHIDSupportEnabled = false,
+        isOnlinePatientLookupEnabled = false
+    ))
+
+    val patients = emptyList<Patient>()
+    val identifier = Identifier("d5a706f9-34a7-4218-b97a-cb873e1ba867", BpPassport)
+
+    val openedToAddBpPassportModel = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddBpPassport)
+
+    spec
+        .given(openedToAddBpPassportModel)
+        .whenEvent(PatientSearchByIdentifierCompleted(patients, identifier))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoBackToEditPatientScreen(identifier))
+        ))
+  }
+
 }

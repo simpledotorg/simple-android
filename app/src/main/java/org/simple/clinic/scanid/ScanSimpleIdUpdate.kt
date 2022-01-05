@@ -17,6 +17,7 @@ import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.Not
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.OtherError
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Failure
 import org.simple.clinic.scanid.EnteredCodeValidationResult.Success
+import org.simple.clinic.scanid.OpenedFrom.EditPatientScreen
 import java.util.UUID
 import javax.inject.Inject
 
@@ -122,7 +123,7 @@ class ScanSimpleIdUpdate @Inject constructor(
       model: ScanSimpleIdModel,
       identifier: Identifier
   ): ScanSimpleIdViewEffect {
-    return if (model.openedFrom == OpenedFrom.EditPatientScreen.ToAddNHID)
+    return if (model.openedFrom is EditPatientScreen)
       GoBackToEditPatientScreen(identifier)
     else
       OpenPatientSearch(identifier, null, model.patientPrefillInfo)
@@ -156,8 +157,8 @@ class ScanSimpleIdUpdate @Inject constructor(
     val clearInvalidQrCodeModel = model.clearInvalidQrCodeError()
 
     return when (model.openedFrom) {
-      OpenedFrom.EditPatientScreen.ToAddNHID -> searchPatientWhenNHIDEnabled(clearInvalidQrCodeModel, event)
-      OpenedFrom.EditPatientScreen.ToAddBpPassport -> searchPatientByBpPassport(event, clearInvalidQrCodeModel)
+      EditPatientScreen.ToAddNHID -> searchPatientWhenNHIDEnabled(clearInvalidQrCodeModel, event)
+      EditPatientScreen.ToAddBpPassport -> searchPatientByBpPassport(event, clearInvalidQrCodeModel)
       OpenedFrom.InstantSearchScreen, OpenedFrom.PatientsTabScreen -> searchPatientByIdentifersFromPatientsTabOrInstantSearch(event, clearInvalidQrCodeModel)
     }
   }

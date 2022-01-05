@@ -904,5 +904,18 @@
   <string name="not_enough_storage_error_dialog_message">Delete a few files and try again</string>
   <string name="download_failed_error_dialog_title">Unable to download</string>
   <string name="download_failed_error_dialog_message">Something went wrong. Wait a few minutes and try again</string>
-
+  <string name="next_appointment_view_title">Next appointment</string>
+  <string name="next_appointment_view_add">Add</string>
+  <string name="next_appointment_view_change">Change</string>
+  <string name="next_appointment_none">None</string>
+  <string name="next_appointment_appointment_at_facility">at %s</string>
+  <string name="next_appointment_today">Today</string>
+  <plurals name="next_appointment_plurals">
+    <item quantity="one">%d day</item>
+    <item quantity="other">%d days</item>
+  </plurals>
+  <plurals name="next_appointment_overdue_plurals">
+    <item quantity="one">%d day overdue</item>
+    <item quantity="other">%d days overdue</item>
+  </plurals>
 </resources>

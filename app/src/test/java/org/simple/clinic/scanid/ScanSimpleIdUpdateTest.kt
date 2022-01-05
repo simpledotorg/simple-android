@@ -364,7 +364,7 @@ class ScanSimpleIdUpdateTest {
 
   @Test
   fun `when the qr code is scanned and screen is opened from edit patient screen to add NHID, then parse the json into object`() {
-    val scannedId = "9f154761-ee2f-4ee3-acd1-0038328f75ca"
+    val scannedId = "12341234123412"
     val defaultModel = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddNHID)
 
     spec
@@ -375,6 +375,34 @@ class ScanSimpleIdUpdateTest {
                 .clearInvalidQrCodeError()
                 .searching()),
             hasEffects(ParseScannedJson(scannedId))
+        ))
+  }
+
+  @Test
+  fun `when the qr code is scanned and screen is opened from edit patient screen to add NHID but the user scanned bp passport, then show scanned qr code error`() {
+    val scannedId = "0486cdb8-b617-41bf-9b9f-4a89434c68cf"
+    val defaultModel = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddNHID)
+
+    spec
+        .given(defaultModel)
+        .whenEvent(ScanSimpleIdScreenQrCodeScanned(scannedId))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
+        ))
+  }
+
+  @Test
+  fun `when the qr code is scanned and screen is opened from edit patient screen to add BP Passport but the user scanned an NHID, then show scanned qr code error`() {
+    val scannedId = "12341234123412"
+    val defaultModel = ScanSimpleIdModel.create(OpenedFrom.EditPatientScreen.ToAddBpPassport)
+
+    spec
+        .given(defaultModel)
+        .whenEvent(ScanSimpleIdScreenQrCodeScanned(scannedId))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
         ))
   }
 

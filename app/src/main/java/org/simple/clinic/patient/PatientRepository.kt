@@ -677,6 +677,16 @@ class PatientRepository @Inject constructor(
         .or(bloodSugarsChangedSince)
   }
 
+  fun hasPatientMeasurementDataChangedSince(patientUuid: UUID, timestamp: Instant): Boolean {
+    val bpsChangedSince = haveBpsForPatientChangedSince(patientUuid, timestamp)
+    val bloodSugarsChangedSince = haveBloodSugarsForPatientChangedSince(patientUuid, timestamp)
+    val prescriptionsChangedSince = hasPrescriptionForPatientChangedSince(patientUuid, timestamp)
+
+    return bpsChangedSince
+        .or(bloodSugarsChangedSince)
+        .or(prescriptionsChangedSince)
+  }
+
   fun patientProfileImmediate(patientUuid: UUID): Optional<PatientProfile> {
     return database.patientDao().patientProfileImmediate(patientUuid).toOptional()
   }

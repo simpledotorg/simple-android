@@ -28,7 +28,8 @@ class PatientSummaryInitTest {
                     LoadPatientSummaryProfile(patientUuid),
                     LoadCurrentUserAndFacility,
                     CheckForInvalidPhone(patientUuid),
-                    LoadMedicalOfficers
+                    LoadMedicalOfficers,
+                    LoadPatientRegistrationData(patientUuid)
                 )
             )
         )

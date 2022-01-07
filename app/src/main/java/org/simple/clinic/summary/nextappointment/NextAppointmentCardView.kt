@@ -21,6 +21,8 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom
+import org.simple.clinic.summary.PatientSummaryChildView
+import org.simple.clinic.summary.PatientSummaryModelUpdateCallback
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UserClock
@@ -37,7 +39,8 @@ class NextAppointmentCardView(
     attrs: AttributeSet
 ) : MaterialCardView(context, attrs),
     NextAppointmentUi,
-    NextAppointmentUiActions {
+    NextAppointmentUiActions,
+    PatientSummaryChildView {
 
   @Inject
   lateinit var userClock: UserClock
@@ -64,6 +67,7 @@ class NextAppointmentCardView(
   }
 
   private var binding: PatientsummaryNextAppointmentCardBinding? = null
+  private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
 
   private val appointmentDateTextView
     get() = binding!!.appointmentDateTextView
@@ -96,6 +100,7 @@ class NextAppointmentCardView(
         update = NextAppointmentUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
         modelUpdateListener = { model ->
+          modelUpdateCallback?.invoke(model)
           uiRenderer.render(model)
         }
     )
@@ -131,6 +136,10 @@ class NextAppointmentCardView(
 
   override fun onRestoreInstanceState(state: Parcelable?) {
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
+  }
+
+  override fun registerSummaryModelUpdateCallback(callback: PatientSummaryModelUpdateCallback?) {
+    modelUpdateCallback = callback
   }
 
   override fun showNoAppointment() {

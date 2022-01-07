@@ -28,6 +28,8 @@ data class FetchHasShownMissingPhoneReminder(val patientUuid: UUID) : PatientSum
 
 object LoadMedicalOfficers : PatientSummaryEffect()
 
+data class LoadPatientRegistrationData(val patientUuid: UUID) : PatientSummaryEffect()
+
 sealed class PatientSummaryViewEffect : PatientSummaryEffect()
 
 data class HandleEditClick(

@@ -188,4 +188,8 @@ class PrescriptionRepository @Inject constructor(
         syncStatus = SyncStatus.PENDING
     )
   }
+
+  fun prescriptionCountImmediate(patientUuid: UUID): Int {
+    return dao.prescriptionCountImmediate(patientUuid)
+  }
 }

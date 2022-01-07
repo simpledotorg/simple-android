@@ -14,6 +14,7 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Yes
@@ -41,6 +42,7 @@ class PatientSummaryEffectHandlerTest {
   private val bloodSugarRepository = mock<BloodSugarRepository>()
   private val bloodPressureRepository = mock<BloodPressureRepository>()
   private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
+  private val prescriptionRepository = mock<PrescriptionRepository>()
   private val missingPhoneReminderRepository = mock<MissingPhoneReminderRepository>()
   private val dataSync = mock<DataSync>()
   private val facilityRepository = mock<FacilityRepository>()
@@ -68,6 +70,7 @@ class PatientSummaryEffectHandlerTest {
       uuidGenerator = uuidGenerator,
       facilityRepository = facilityRepository,
       teleconsultationFacilityRepository = teleconsultFacilityRepository,
+      prescriptionRepository = prescriptionRepository,
       viewEffectsConsumer = viewEffectHandler::handle
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -106,6 +109,7 @@ class PatientSummaryEffectHandlerTest {
         uuidGenerator = uuidGenerator,
         facilityRepository = facilityRepository,
         teleconsultationFacilityRepository = teleconsultFacilityRepository,
+        prescriptionRepository = prescriptionRepository,
         viewEffectsConsumer = viewEffectHandler::handle
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -161,6 +165,7 @@ class PatientSummaryEffectHandlerTest {
         uuidGenerator = uuidGenerator,
         facilityRepository = facilityRepository,
         teleconsultationFacilityRepository = teleconsultFacilityRepository,
+        prescriptionRepository = prescriptionRepository,
         viewEffectsConsumer = viewEffectHandler::handle
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -472,5 +477,31 @@ class PatientSummaryEffectHandlerTest {
 
     verify(uiActions).showUpdatePhoneDialog(patientUuid)
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when load patient registration data effect is received, then load patient registration data`() {
+    // given
+    val patientUuid = UUID.fromString("31b34900-52aa-4892-8bed-2c720951880e")
+    val medicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("333a13f9-4a5b-4fd9-84f3-e169d26331ba"),
+        patientUuid = patientUuid
+    )
+
+    whenever(prescriptionRepository.prescriptionCountImmediate(patientUuid)) doReturn 2
+    whenever(bloodPressureRepository.bloodPressureCountImmediate(patientUuid)) doReturn 2
+    whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)) doReturn 0
+
+    // when
+    testCase.dispatch(LoadPatientRegistrationData(patientUuid))
+
+    // then
+    testCase.assertOutgoingEvents(PatientRegistrationDataLoaded(
+        countOfPrescribedDrugs = 2,
+        countOfRecordedBloodPressures = 2,
+        countOfRecordedBloodSugars = 0
+    ))
+
+    verifyZeroInteractions(uiActions)
   }
 }

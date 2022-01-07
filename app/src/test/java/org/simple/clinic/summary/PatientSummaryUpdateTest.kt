@@ -1021,6 +1021,36 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when patient registration data is loaded and has registration data, then update model`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(PatientRegistrationDataLoaded(
+            countOfPrescribedDrugs = 2,
+            countOfRecordedBloodPressures = 2,
+            countOfRecordedBloodSugars = 0
+        ))
+        .then(assertThatNext(
+            hasModel(defaultModel.patientRegistrationDataLoaded(hasPatientRegistrationData = true)),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when patient registration data is loaded and doesn't has registration data, then update model`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(PatientRegistrationDataLoaded(
+            countOfPrescribedDrugs = 0,
+            countOfRecordedBloodPressures = 0,
+            countOfRecordedBloodSugars = 0
+        ))
+        .then(assertThatNext(
+            hasModel(defaultModel.patientRegistrationDataLoaded(hasPatientRegistrationData = false)),
+            hasNoEffects()
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

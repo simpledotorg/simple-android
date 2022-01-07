@@ -17,7 +17,8 @@ data class PatientSummaryModel(
     val hasCheckedForInvalidPhone: Boolean,
     val userLoggedInStatus: User.LoggedInStatus?,
     val medicalOfficers: List<MedicalOfficer>?,
-    val hasShownMeasurementsWarningDialog: Boolean
+    val hasShownMeasurementsWarningDialog: Boolean,
+    val hasPatientRegistrationData: Boolean?
 ) : Parcelable, PatientSummaryChildModel {
 
   companion object {
@@ -30,7 +31,8 @@ data class PatientSummaryModel(
           hasCheckedForInvalidPhone = false,
           userLoggedInStatus = null,
           medicalOfficers = null,
-          hasShownMeasurementsWarningDialog = false
+          hasShownMeasurementsWarningDialog = false,
+          hasPatientRegistrationData = null
       )
     }
   }
@@ -63,7 +65,7 @@ data class PatientSummaryModel(
     get() = medicalOfficers.isNullOrEmpty().not()
 
   override fun readyToRender(): Boolean {
-    return hasLoadedPatientSummaryProfile && hasLoadedCurrentFacility
+    return hasLoadedPatientSummaryProfile && hasLoadedCurrentFacility && hasPatientRegistrationData != null
   }
 
   fun patientSummaryProfileLoaded(patientSummaryProfile: PatientSummaryProfile): PatientSummaryModel {
@@ -88,5 +90,9 @@ data class PatientSummaryModel(
 
   fun shownMeasurementsWarningDialog(): PatientSummaryModel {
     return copy(hasShownMeasurementsWarningDialog = true)
+  }
+
+  fun patientRegistrationDataLoaded(hasPatientRegistrationData: Boolean): PatientSummaryModel {
+    return copy(hasPatientRegistrationData = hasPatientRegistrationData)
   }
 }

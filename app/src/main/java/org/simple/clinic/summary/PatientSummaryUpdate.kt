@@ -51,7 +51,18 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is MedicalOfficersLoaded -> next(model.medicalOfficersLoaded(event.medicalOfficers))
       ChangeAssignedFacilityClicked -> dispatch(OpenSelectFacilitySheet)
       is NewAssignedFacilitySelected -> dispatch(DispatchNewAssignedFacility(event.facility))
+      is PatientRegistrationDataLoaded -> patientRegistrationDataLoaded(model, event)
     }
+  }
+
+  private fun patientRegistrationDataLoaded(
+      model: PatientSummaryModel,
+      event: PatientRegistrationDataLoaded
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    val measurementsCount = event.countOfPrescribedDrugs + event.countOfRecordedBloodPressures + event.countOfRecordedBloodSugars
+    val hasRegistrationData = measurementsCount > 0
+
+    return next(model.patientRegistrationDataLoaded(hasPatientRegistrationData = hasRegistrationData))
   }
 
   private fun completedCheckForInvalidPhone(

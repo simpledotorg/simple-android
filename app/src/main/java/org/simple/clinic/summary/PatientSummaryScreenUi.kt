@@ -13,4 +13,6 @@ interface PatientSummaryScreenUi {
   fun showTeleconsultLogButton()
   fun hidePatientDiedStatus()
   fun showPatientDiedStatus()
+  fun showNextAppointmentCard()
+  fun hideNextAppointmentCard()
 }

@@ -21,7 +21,10 @@ data class PatientSummaryBackClicked(
 }
 
 // TODO(vs): 2020-01-16 Consider whether these should be moved to the effect handler as properties later
-data class PatientSummaryDoneClicked(val patientUuid: UUID) : PatientSummaryEvent() {
+data class PatientSummaryDoneClicked(
+    val patientUuid: UUID,
+    val screenCreatedTimestamp: Instant
+) : PatientSummaryEvent() {
   override val analyticsName = "Patient Summary:Done Clicked"
 }
 

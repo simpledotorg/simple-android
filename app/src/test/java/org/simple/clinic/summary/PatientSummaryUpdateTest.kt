@@ -989,7 +989,7 @@ class PatientSummaryUpdateTest {
 
     updateSpec
         .given(model)
-        .whenEvent(PatientSummaryDoneClicked(patientUuid))
+        .whenEvent(PatientSummaryDoneClicked(patientUuid, Instant.parse("2018-01-01T00:00:00Z")))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(GoToHomeScreen)
@@ -1004,7 +1004,7 @@ class PatientSummaryUpdateTest {
 
     updateSpec
         .given(model)
-        .whenEvent(PatientSummaryDoneClicked(patientUuid))
+        .whenEvent(PatientSummaryDoneClicked(patientUuid, Instant.parse("2018-01-01T00:00:00Z")))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(LoadDataForDoneClick(patientUuid))

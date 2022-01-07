@@ -267,7 +267,7 @@ class PatientSummaryEffectHandlerTest {
     whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
 
     // when
-    testCase.dispatch(LoadDataForDoneClick(patientUuid))
+    testCase.dispatch(LoadDataForDoneClick(patientUuid, Instant.parse("2018-01-01T00:00:00Z")))
 
     // then
     testCase.assertOutgoingEvents(

@@ -1007,7 +1007,7 @@ class PatientSummaryUpdateTest {
         .whenEvent(PatientSummaryDoneClicked(patientUuid, Instant.parse("2018-01-01T00:00:00Z")))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(LoadDataForDoneClick(patientUuid))
+            hasEffects(LoadDataForDoneClick(patientUuid, Instant.parse("2018-01-01T00:00:00Z")))
         ))
   }
 

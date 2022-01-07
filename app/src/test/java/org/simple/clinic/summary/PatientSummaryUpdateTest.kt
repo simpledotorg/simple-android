@@ -183,14 +183,14 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when there are patient summary changes and no measurements are recorded and warning is shown, clicking on back for existing patient screen must go back to previous screen`() {
+  fun `when there are no patient measurement changes and no warnings, clicking on back for existing patient screen must go back to previous screen`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .shownMeasurementsWarningDialog()
 
     updateSpec
         .given(model.forExistingPatient())
         .whenEvent(DataForBackClickLoaded(
-            hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasPatientMeasurementDataChangedSinceScreenCreated = false,
             countOfRecordedBloodPressures = 0,
             countOfRecordedBloodSugars = 0,
             medicalHistory = TestData.medicalHistory(
@@ -207,14 +207,14 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when there are patient summary changes and no measurements are recorded and warning is shown, clicking on back for new patient screen must go back to home screen`() {
+  fun `when there are no patient measurement changes and no warnings, clicking on back for new patient screen must go back to home screen`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .shownMeasurementsWarningDialog()
 
     updateSpec
         .given(model.forNewPatient())
         .whenEvent(DataForBackClickLoaded(
-            hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasPatientMeasurementDataChangedSinceScreenCreated = false,
             countOfRecordedBloodPressures = 0,
             countOfRecordedBloodSugars = 0,
             medicalHistory = TestData.medicalHistory(
@@ -231,14 +231,14 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when there are patient summary changes and no measurements are recorded and warning is shown, clicking on back link id with patient screen must go back to home screen`() {
+  fun `when there are no patient measurement changes and warnings, clicking on back link id with patient screen must go back to home screen`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
         .shownMeasurementsWarningDialog()
 
     updateSpec
         .given(model.forLinkingWithExistingPatient())
         .whenEvent(DataForBackClickLoaded(
-            hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasPatientMeasurementDataChangedSinceScreenCreated = false,
             countOfRecordedBloodPressures = 0,
             countOfRecordedBloodSugars = 0,
             medicalHistory = TestData.medicalHistory(

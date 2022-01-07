@@ -34,7 +34,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is FetchedHasShownMissingPhoneReminder -> fetchedHasShownMissingReminder(event.hasShownReminder, model.patientUuid)
       is DataForBackClickLoaded -> dataForHandlingBackLoaded(
           model = model,
-          hasPatientDataChanged = event.hasPatientMeasurementDataChangedSinceScreenCreated,
+          hasPatientMeasurementDataChangedSinceScreenCreated = event.hasPatientMeasurementDataChangedSinceScreenCreated,
           countOfRecordedBloodPressures = event.countOfRecordedBloodPressures,
           countOfRecordedBloodSugars = event.countOfRecordedBloodSugars,
           medicalHistory = event.medicalHistory
@@ -154,14 +154,14 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
 
   private fun dataForHandlingBackLoaded(
       model: PatientSummaryModel,
-      hasPatientDataChanged: Boolean,
+      hasPatientMeasurementDataChangedSinceScreenCreated: Boolean,
       countOfRecordedBloodPressures: Int,
       countOfRecordedBloodSugars: Int,
       medicalHistory: MedicalHistory
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val openIntention = model.openIntention
-    val shouldShowScheduleAppointmentSheet = if (countOfRecordedBloodPressures + countOfRecordedBloodSugars == 0) false else hasPatientDataChanged
-    val shouldShowDiagnosisError = shouldShowScheduleAppointmentSheet && medicalHistory.diagnosisRecorded.not() && model.isDiabetesManagementEnabled
+    val hasAtLeastOneMeasurementRecorded = countOfRecordedBloodPressures + countOfRecordedBloodSugars > 0
+    val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && medicalHistory.diagnosisRecorded.not() && model.isDiabetesManagementEnabled
     val shouldGoToPreviousScreen = openIntention is ViewExistingPatient
     val shouldGoToHomeScreen = openIntention is LinkIdWithPatient || openIntention is ViewNewPatient || openIntention is ViewExistingPatientWithTeleconsultLog
     val measurementWarningEffect = validateMeasurements(countOfRecordedBloodSugars, countOfRecordedBloodPressures, medicalHistory, model.hasShownMeasurementsWarningDialog)
@@ -169,7 +169,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     return when {
       shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
       measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))
-      shouldShowScheduleAppointmentSheet -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, BACK_CLICK, model.currentFacility!!))
+      hasPatientMeasurementDataChangedSinceScreenCreated -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, BACK_CLICK, model.currentFacility!!))
       shouldGoToPreviousScreen -> dispatch(GoBackToPreviousScreen)
       shouldGoToHomeScreen -> dispatch(GoToHomeScreen)
       else -> throw IllegalStateException("This should not happen!")

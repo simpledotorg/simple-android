@@ -21,6 +21,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding3.widget.editorActionEvents
 import com.jakewharton.rxbinding3.widget.textChangeEvents
 import com.spotify.mobius.functions.Consumer
@@ -36,6 +37,7 @@ import org.simple.clinic.feature.Feature.IndiaNationalHealthID
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.PatientPrefillInfo
 import org.simple.clinic.patient.businessid.Identifier
@@ -112,6 +114,9 @@ class ScanSimpleIdScreen : BaseScreen<
   private val scanErrorTextView
     get() = binding.scanErrorTextView
 
+  private val enteredCodeContainer
+    get() = binding.enteredCodeContainer
+
   private val keyboardVisibilityDetector = KeyboardVisibilityDetector()
   private val cameraExecutor = Executors.newSingleThreadExecutor()
   private val cameraProviderFuture by unsafeLazy {
@@ -120,7 +125,7 @@ class ScanSimpleIdScreen : BaseScreen<
 
   private val qrScans = PublishSubject.create<ScanSimpleIdEvent>()
 
-  override fun defaultModel() = ScanSimpleIdModel.create()
+  override fun defaultModel() = ScanSimpleIdModel.create(screenKey.openedFrom)
 
   override fun uiRenderer() = ScanSimpleIdUiRenderer(this)
 
@@ -290,6 +295,24 @@ class ScanSimpleIdScreen : BaseScreen<
     }
   }
 
+  override fun goBackToEditPatientScreen(identifier: Identifier) {
+    router.popWithResult(Succeeded(identifier))
+  }
+
+  override fun showPatientWithIdentifierExistsError() {
+    Snackbar
+        .make(binding.root, R.string.scansimpleid_identfier_already_exists, Snackbar.LENGTH_SHORT)
+        .setAction(R.string.scansimpleid_error_state_snackbar_ok) {}
+        .show()
+  }
+
+  override fun showInvalidQrCodeError() {
+    Snackbar
+        .make(binding.root, R.string.scansimpleid_invalid_qr_code, Snackbar.LENGTH_SHORT)
+        .setAction(R.string.scansimpleid_error_state_snackbar_ok) {}
+        .show()
+  }
+
   override fun showEnteredCodeValidationError(failure: EnteredCodeValidationResult) {
     enteredCodeErrorText.visibility = View.VISIBLE
     val validationErrorMessage = if (failure == Empty) {
@@ -328,6 +351,10 @@ class ScanSimpleIdScreen : BaseScreen<
 
   override fun showScanError() {
     scanErrorTextView.visibility = View.VISIBLE
+  }
+
+  override fun hideEnteredCodeContainerView() {
+    enteredCodeContainer.visibility = View.GONE
   }
 
   interface Injector {

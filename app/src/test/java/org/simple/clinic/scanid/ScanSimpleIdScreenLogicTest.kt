@@ -146,7 +146,7 @@ class ScanSimpleIdScreenLogicTest {
         init = Init { first(it) },
         update = ScanSimpleIdUpdate(isIndianNHIDSupportEnabled = true, isOnlinePatientLookupEnabled = true),
         effectHandler = effectHandler.build(),
-        defaultModel = ScanSimpleIdModel.create(),
+        defaultModel = ScanSimpleIdModel.create(OpenedFrom.PatientsTabScreen),
         modelUpdateListener = { /* no-op */ }
     )
 

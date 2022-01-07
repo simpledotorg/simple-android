@@ -22,6 +22,15 @@ class ScanSimpleIdViewEffectHandler @AssistedInject constructor(
       is ShowEnteredCodeValidationError -> uiActions.showEnteredCodeValidationError(viewEffect.failure)
       is OpenPatientSummary -> uiActions.openPatientSummary(viewEffect.patientId)
       is OpenPatientSearch -> openPatientSearch(viewEffect)
+      is GoBackToEditPatientScreen -> uiActions.goBackToEditPatientScreen(viewEffect.identifier)
+      is ShowScannedQrCodeError -> showScannedQrCodeError(viewEffect.scanErrorState)
+    }
+  }
+
+  private fun showScannedQrCodeError(scanErrorState: ScanErrorState) {
+    when(scanErrorState){
+      ScanErrorState.IdentifierAlreadyExists -> uiActions.showPatientWithIdentifierExistsError()
+      ScanErrorState.InvalidQrCode -> uiActions.showInvalidQrCodeError()
     }
   }
 

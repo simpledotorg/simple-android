@@ -7,4 +7,7 @@ sealed class ScanErrorState : Parcelable {
 
   @Parcelize
   object InvalidQrCode : ScanErrorState()
+
+  @Parcelize
+  object IdentifierAlreadyExists : ScanErrorState()
 }

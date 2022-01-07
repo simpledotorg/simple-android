@@ -66,7 +66,11 @@ class PatientSummaryScreenLogicTest {
   )
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val viewRenderer = PatientSummaryViewRenderer(ui, modelUpdateCallback = { /* no-op */ })
+  private val viewRenderer = PatientSummaryViewRenderer(
+      ui = ui,
+      isNextAppointmentFeatureEnabled = false,
+      modelUpdateCallback = { /* no-op */ }
+  )
 
   private lateinit var testFixture: MobiusTestFixture<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect>
 
@@ -190,6 +194,7 @@ class PatientSummaryScreenLogicTest {
         uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid),
         facilityRepository = facilityRepository,
         teleconsultationFacilityRepository = mock(),
+        prescriptionRepository = mock(),
         viewEffectsConsumer = viewEffectHandler::handle
     )
 

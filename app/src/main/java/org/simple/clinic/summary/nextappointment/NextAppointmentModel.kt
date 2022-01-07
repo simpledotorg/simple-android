@@ -2,6 +2,7 @@ package org.simple.clinic.summary.nextappointment
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.summary.PatientSummaryChildModel
 import java.time.LocalDate
 import java.util.UUID
 
@@ -10,7 +11,7 @@ data class NextAppointmentModel(
     val patientUuid: UUID,
     val nextAppointmentPatientProfile: NextAppointmentPatientProfile?,
     val currentDate: LocalDate
-) : Parcelable {
+) : Parcelable, PatientSummaryChildModel {
 
   companion object {
     fun default(
@@ -37,5 +38,9 @@ data class NextAppointmentModel(
 
   fun nextAppointmentPatientProfileLoaded(nextAppointmentPatientProfile: NextAppointmentPatientProfile?): NextAppointmentModel {
     return copy(nextAppointmentPatientProfile = nextAppointmentPatientProfile)
+  }
+
+  override fun readyToRender(): Boolean {
+    return true
   }
 }

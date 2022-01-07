@@ -12,6 +12,7 @@ import io.reactivex.Scheduler
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
@@ -46,6 +47,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val uuidGenerator: UuidGenerator,
     private val facilityRepository: FacilityRepository,
     private val teleconsultationFacilityRepository: TeleconsultationFacilityRepository,
+    private val prescriptionRepository: PrescriptionRepository,
     @Assisted private val viewEffectsConsumer: Consumer<PatientSummaryViewEffect>
 ) {
 
@@ -69,7 +71,27 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(FetchHasShownMissingPhoneReminder::class.java, fetchHasShownMissingPhoneReminder(schedulersProvider.io()))
         .addTransformer(LoadMedicalOfficers::class.java, loadMedicalOfficers())
         .addConsumer(PatientSummaryViewEffect::class.java, viewEffectsConsumer::accept)
+        .addTransformer(LoadPatientRegistrationData::class.java, checkPatientRegistrationData())
         .build()
+  }
+
+  private fun checkPatientRegistrationData(): ObservableTransformer<LoadPatientRegistrationData, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { effect ->
+            val patientUuid = effect.patientUuid
+            val countOfPrescribedDrugs = prescriptionRepository.prescriptionCountImmediate(patientUuid)
+            val countOfRecordedBloodPressures = bloodPressureRepository.bloodPressureCountImmediate(patientUuid)
+            val countOfRecordedBloodSugars = bloodSugarRepository.bloodSugarCountImmediate(patientUuid)
+
+            PatientRegistrationDataLoaded(
+                countOfPrescribedDrugs = countOfPrescribedDrugs,
+                countOfRecordedBloodPressures = countOfRecordedBloodPressures,
+                countOfRecordedBloodSugars = countOfRecordedBloodSugars
+            )
+          }
+    }
   }
 
   private fun loadMedicalOfficers(): ObservableTransformer<LoadMedicalOfficers, PatientSummaryEvent> {

@@ -192,6 +192,15 @@
         android:layout_marginEnd="@dimen/spacing_8"
         android:visibility="gone" />
 
+      <org.simple.clinic.summary.nextappointment.NextAppointmentCardView
+        android:id="@+id/nextAppointmentFacilityView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_8"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:layout_marginEnd="@dimen/spacing_8"
+        android:visibility="visible" />
+
       <org.simple.clinic.summary.assignedfacility.AssignedFacilityView
         android:id="@+id/assignedFacilityView"
         android:layout_width="match_parent"

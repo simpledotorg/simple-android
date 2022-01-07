@@ -266,5 +266,14 @@ data class PrescribedDrug(
 		    )
     """)
     abstract fun purgePrescribedDrugWhenPatientIsNull()
+
+    @Query("""
+      SELECT COUNT(uuid)
+      FROM PrescribedDrug
+      WHERE
+      patientUuid = :patientUuid AND
+      isDeleted = 0
+    """)
+    abstract fun prescriptionCountImmediate(patientUuid: UUID): Int
   }
 }

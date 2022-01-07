@@ -44,7 +44,7 @@ data class CompletedCheckForInvalidPhone(val isPhoneInvalid: Boolean) : PatientS
 object PatientSummaryBloodPressureSaved : PatientSummaryEvent()
 
 data class DataForBackClickLoaded(
-    val hasPatientDataChangedSinceScreenCreated: Boolean,
+    val hasPatientMeasurementDataChangedSinceScreenCreated: Boolean,
     val countOfRecordedBloodPressures: Int,
     val countOfRecordedBloodSugars: Int,
     val medicalHistory: MedicalHistory

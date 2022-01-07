@@ -14,6 +14,7 @@ class EditPatientViewEffectHandler(
       HideDatePatternInDateOfBirthLabelEffect -> ui.hideDatePatternInDateOfBirthLabel()
       GoBackEffect -> ui.goBack()
       ShowDiscardChangesAlertEffect -> ui.showDiscardChangesAlert()
+      is OpenSimpleScanIdScreen -> ui.openSimpleScanIdScreen(viewEffect.openedFrom)
     }
   }
 

@@ -418,6 +418,8 @@
   <string name="scansimpleid_enteredcode_error_not_required_length">Enter a valid BP Passport number or a National Health ID</string>
   <string name="scansimpleid_type_number">or type number</string>
   <string name="scansimpleid_invalid_qr_code">Scan a valid health ID</string>
+  <string name="scansimpleid_error_state_snackbar_ok">OK</string>
+  <string name="scansimpleid_identfier_already_exists">ID already given to another patient.\nScan a new health ID.</string>
   <string name="scansimpleid_bp_passport_or_national_health_id">BP Passport or National Health ID</string>
 
   <!--- Sync Indicator-->

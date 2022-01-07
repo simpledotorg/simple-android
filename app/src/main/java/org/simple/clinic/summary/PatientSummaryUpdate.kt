@@ -43,7 +43,8 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
           model = model,
           countOfRecordedBloodPressures = event.countOfRecordedBloodPressures,
           countOfRecordedBloodSugars = event.countOfRecordedBloodSugars,
-          medicalHistory = event.medicalHistory
+          medicalHistory = event.medicalHistory,
+          hasPatientMeasurementDataChangedSinceScreenCreated = event.hasPatientMeasurementDataChangedSinceScreenCreated
       )
       is SyncTriggered -> scheduleAppointmentSheetClosed(model, event.sheetOpenedFrom)
       is ContactPatientClicked -> dispatch(OpenContactPatientScreen(model.patientUuid))
@@ -137,6 +138,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       countOfRecordedBloodPressures: Int,
       countOfRecordedBloodSugars: Int,
       medicalHistory: MedicalHistory,
+      hasPatientMeasurementDataChangedSinceScreenCreated: Boolean,
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val hasAtLeastOneMeasurementRecorded = countOfRecordedBloodPressures + countOfRecordedBloodSugars > 0
     val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && medicalHistory.diagnosisRecorded.not() && model.isDiabetesManagementEnabled
@@ -145,7 +147,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     return when {
       shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
       measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))
-      hasAtLeastOneMeasurementRecorded -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, DONE_CLICK, model.currentFacility!!))
+      hasPatientMeasurementDataChangedSinceScreenCreated -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, DONE_CLICK, model.currentFacility!!))
       else -> dispatch(GoToHomeScreen)
     }
   }

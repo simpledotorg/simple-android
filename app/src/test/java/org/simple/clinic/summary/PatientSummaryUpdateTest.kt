@@ -302,7 +302,7 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when at least one measurement is present, clicking on save must show the schedule appointment sheet`() {
+  fun `when patient measurement data is changed, clicking on save must show the schedule appointment sheet`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
 
     updateSpec
@@ -378,7 +378,7 @@ class PatientSummaryUpdateTest {
     updateSpec
         .given(model)
         .whenEvent(DataForDoneClickLoaded(
-            hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasPatientMeasurementDataChangedSinceScreenCreated = false,
             countOfRecordedBloodPressures = 0,
             countOfRecordedBloodSugars = 0,
             medicalHistory = TestData.medicalHistory(
@@ -1090,6 +1090,29 @@ class PatientSummaryUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ShowScheduleAppointmentSheet(patientUuid, NEXT_APPOINTMENT_ACTION_CLICK, facility))
+        ))
+  }
+
+  @Test
+  fun `when patient measurement data is not changed and there are no diagnosis and measurement warning, clicking on done must take them back to home screen`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForDoneClickLoaded(
+            hasPatientMeasurementDataChangedSinceScreenCreated = false,
+            countOfRecordedBloodPressures = 1,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("7aeb58c1-19f8-43f8-952c-8fb069b9268b"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Yes,
+                hasDiabetes = No
+            )
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoToHomeScreen)
         ))
   }
 

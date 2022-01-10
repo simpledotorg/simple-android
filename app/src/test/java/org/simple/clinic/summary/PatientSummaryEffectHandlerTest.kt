@@ -262,6 +262,7 @@ class PatientSummaryEffectHandlerTest {
         hasDiabetes = No
     )
 
+    whenever(patientRepository.hasPatientMeasurementDataChangedSince(patientUuid, Instant.parse("2018-01-01T00:00:00Z"))) doReturn true
     whenever(bloodPressureRepository.bloodPressureCountImmediate(patientUuid)) doReturn 2
     whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)) doReturn 3
     whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
@@ -272,6 +273,7 @@ class PatientSummaryEffectHandlerTest {
     // then
     testCase.assertOutgoingEvents(
         DataForDoneClickLoaded(
+            hasPatientMeasurementDataChangedSinceScreenCreated = true,
             countOfRecordedBloodPressures = 2,
             countOfRecordedBloodSugars = 3,
             medicalHistory = medicalHistory

@@ -29,6 +29,7 @@ class AssignedFacilityEffectHandler @AssistedInject constructor(
       .subtypeEffectHandler<AssignedFacilityEffect, AssignedFacilityEvent>()
       .addTransformer(LoadAssignedFacility::class.java, loadAssignedFacility())
       .addConsumer(ChangeAssignedFacility::class.java, { changeAssignedFacility(it) }, schedulersProvider.io())
+      .addAction(NotifyAssignedFacilityChanged::class.java, uiActions::notifyAssignedFacilityChanged, schedulersProvider.ui())
       .build()
 
   private fun changeAssignedFacility(effect: ChangeAssignedFacility) {

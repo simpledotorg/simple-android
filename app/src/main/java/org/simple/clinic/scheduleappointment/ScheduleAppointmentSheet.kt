@@ -127,7 +127,8 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
       timeToAppointments = config.scheduleAppointmentsIn,
       userClock = userClock,
       doneButtonState = ButtonState.SAVED,
-      nextButtonState = NextButtonState.SCHEDULED
+      nextButtonState = NextButtonState.SCHEDULED,
+      openedFrom = screenKey.sheetOpenedFrom
   )
 
   override fun bindView(inflater: LayoutInflater, container: ViewGroup?) =
@@ -231,6 +232,10 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
 
   override fun closeSheet() {
     router.popWithResult(Succeeded(screenKey.sheetOpenedFrom))
+  }
+
+  override fun closeSheetWithoutResult() {
+    router.pop()
   }
 
   override fun openTeleconsultStatusSheet(teleconsultRecordUuid: UUID) {

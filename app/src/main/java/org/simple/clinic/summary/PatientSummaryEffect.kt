@@ -76,3 +76,5 @@ object ShowAddBloodSugarWarningDialog : PatientSummaryViewEffect()
 object OpenSelectFacilitySheet : PatientSummaryViewEffect()
 
 data class DispatchNewAssignedFacility(val facility: Facility) : PatientSummaryViewEffect()
+
+object RefreshNextAppointment : PatientSummaryViewEffect()

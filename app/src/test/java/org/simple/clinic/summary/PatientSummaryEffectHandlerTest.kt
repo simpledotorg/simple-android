@@ -504,4 +504,16 @@ class PatientSummaryEffectHandlerTest {
 
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when refresh next appointment effect is received, then refresh appointment details`() {
+    // when
+    testCase.dispatch(RefreshNextAppointment)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).refreshNextAppointment()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

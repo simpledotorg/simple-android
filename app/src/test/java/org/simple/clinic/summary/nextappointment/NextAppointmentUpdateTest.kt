@@ -47,17 +47,6 @@ class NextAppointmentUpdateTest {
   }
 
   @Test
-  fun `when next appointment action button is clicked, then open schedule appointment sheet`() {
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(NextAppointmentActionButtonClicked())
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(OpenScheduleAppointmentSheet(patientUuid))
-        ))
-  }
-
-  @Test
   fun `when refresh appointment event is triggered, then load next appointment patient profile`() {
     val patient = TestData.patient(
         uuid = UUID.fromString("00679b32-4097-482a-af2d-f4377ace870f"),

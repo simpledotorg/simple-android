@@ -82,3 +82,7 @@ data class PatientRegistrationDataLoaded(
     val countOfRecordedBloodPressures: Int,
     val countOfRecordedBloodSugars: Int
 ) : PatientSummaryEvent()
+
+object NextAppointmentActionClicked : PatientSummaryEvent() {
+  override val analyticsName: String = "Next Appointment Card:Action Button Clicked"
+}

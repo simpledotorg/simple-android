@@ -30,4 +30,5 @@ interface PatientSummaryUiActions {
   fun showAddBloodSugarWarningDialog()
   fun openSelectFacilitySheet()
   fun dispatchNewAssignedFacility(facility: Facility)
+  fun refreshNextAppointment()
 }

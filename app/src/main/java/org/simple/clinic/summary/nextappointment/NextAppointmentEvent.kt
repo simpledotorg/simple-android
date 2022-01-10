@@ -8,8 +8,4 @@ data class NextAppointmentPatientProfileLoaded(
     val nextAppointmentPatientProfile: NextAppointmentPatientProfile?
 ) : NextAppointmentEvent()
 
-data class NextAppointmentActionButtonClicked(
-    override val analyticsName: String = "Next Appointment Card:Action Button Clicked"
-) : NextAppointmentEvent()
-
 object RefreshAppointment : NextAppointmentEvent()

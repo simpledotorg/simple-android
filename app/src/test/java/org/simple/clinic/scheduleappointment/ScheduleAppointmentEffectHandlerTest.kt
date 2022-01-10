@@ -159,4 +159,15 @@ class ScheduleAppointmentEffectHandlerTest {
     verifyZeroInteractions(uiActions)
   }
 
+  @Test
+  fun `when close sheet without result effect is received, then close the sheet without result`() {
+    // when
+    effectHandlerTestCase.dispatch(CloseSheetWithoutResult)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).closeSheetWithoutResult()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

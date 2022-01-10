@@ -8,7 +8,6 @@ import android.view.View
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import com.google.android.material.card.MaterialCardView
-import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
@@ -33,6 +32,8 @@ import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
+
+private typealias NextAppointmentActionClicked = () -> Unit
 
 class NextAppointmentCardView(
     context: Context,
@@ -69,6 +70,8 @@ class NextAppointmentCardView(
   private var binding: PatientsummaryNextAppointmentCardBinding? = null
   private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
 
+  var nextAppointmentActionClicks: NextAppointmentActionClicked? = null
+
   private val appointmentDateTextView
     get() = binding!!.appointmentDateTextView
 
@@ -81,11 +84,7 @@ class NextAppointmentCardView(
   private val hotEvents = PublishSubject.create<NextAppointmentEvent>()
 
   private val events: Observable<NextAppointmentEvent> by unsafeLazy {
-    Observable
-        .merge(
-            actionsButtonClicks(),
-            hotEvents
-        )
+    hotEvents
         .compose(ReportAnalyticsEvents())
         .cast()
   }
@@ -117,6 +116,10 @@ class NextAppointmentCardView(
       return
     }
     context.injector<Injector>().inject(this)
+
+    nextAppointmentActionsButton.setOnClickListener {
+      nextAppointmentActionClicks?.invoke()
+    }
   }
 
   override fun onAttachedToWindow() {
@@ -222,12 +225,6 @@ class NextAppointmentCardView(
         patientId = patientUUID,
         sheetOpenedFrom = AppointmentSheetOpenedFrom.DONE_CLICK
     ))
-  }
-
-  private fun actionsButtonClicks(): Observable<NextAppointmentEvent> {
-    return nextAppointmentActionsButton
-        .clicks()
-        .map { NextAppointmentActionButtonClicked() }
   }
 
   fun refreshAppointmentDetails() {

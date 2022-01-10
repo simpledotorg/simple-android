@@ -7,10 +7,11 @@
 - Don't run auto request review action in draft PRs
 - Implement `NextAppointmentCardView`
 - Show next appointment card in patient summary screen
+- Refresh appointment details when appointment is scheduled or assigned facility is changed
 
 ### Changes
 
-- [In progress: 30 Dec 2021] View next appointment information in patient summary screen
+- View next appointment information in patient summary screen
 
 ## On Demo
 

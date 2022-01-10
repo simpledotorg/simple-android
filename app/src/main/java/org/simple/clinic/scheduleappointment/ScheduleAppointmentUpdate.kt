@@ -9,6 +9,7 @@ import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment.Days
+import org.simple.clinic.summary.AppointmentSheetOpenedFrom.NEXT_APPOINTMENT_ACTION_CLICK
 import org.simple.clinic.util.daysTill
 import java.time.LocalDate
 import java.time.Period
@@ -33,12 +34,22 @@ class ScheduleAppointmentUpdate(
       is PatientFacilityChanged -> next(model.appointmentFacilitySelected(event.facility))
       is DoneClicked -> scheduleManualAppointment(model)
       is AppointmentScheduled -> next(model.doneButtonStateChanged(ButtonState.SAVED), CloseSheet)
-      SchedulingSkipped -> dispatch(LoadPatientDefaulterStatus(model.patientUuid))
+      SchedulingSkipped -> schedulingSkipped(model)
       is PatientDefaulterStatusLoaded -> scheduleAutomaticAppointment(event, model)
       is TeleconsultRecordLoaded -> next(model.teleconsultRecordLoaded(event.teleconsultRecord))
       AppointmentScheduledForPatientFromNext -> next(model.nextButtonStateChanged(NextButtonState.SCHEDULED), GoToTeleconsultStatusSheet(model.teleconsultRecord!!.id))
       NextClicked -> scheduleManualAppointmentFromNext(model)
     }
+  }
+
+  private fun schedulingSkipped(model: ScheduleAppointmentModel): Next<ScheduleAppointmentModel, ScheduleAppointmentEffect> {
+    val effect = if (model.openedFrom != NEXT_APPOINTMENT_ACTION_CLICK) {
+      LoadPatientDefaulterStatus(model.patientUuid)
+    } else {
+      CloseSheetWithoutResult
+    }
+
+    return dispatch(effect)
   }
 
   private fun scheduleManualAppointmentFromNext(model: ScheduleAppointmentModel): Next<ScheduleAppointmentModel, ScheduleAppointmentEffect> {
@@ -112,7 +123,7 @@ class ScheduleAppointmentUpdate(
   ): Next<ScheduleAppointmentModel, ScheduleAppointmentEffect> {
     val shouldAutomaticAppointmentBeScheduled = event.isPatientADefaulter
 
-    val effect = if (shouldAutomaticAppointmentBeScheduled) {
+    val effect = if (shouldAutomaticAppointmentBeScheduled && model.openedFrom != NEXT_APPOINTMENT_ACTION_CLICK) {
       ScheduleAppointmentForPatient(
           patientUuid = model.patientUuid,
           scheduledForDate = currentDate + defaulterAppointmentPeriod,

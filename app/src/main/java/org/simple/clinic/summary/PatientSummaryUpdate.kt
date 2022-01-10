@@ -9,6 +9,7 @@ import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
+import org.simple.clinic.summary.AppointmentSheetOpenedFrom.NEXT_APPOINTMENT_ACTION_CLICK
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatientWithTeleconsultLog
@@ -50,8 +51,13 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       LogTeleconsultClicked -> logTeleconsultClicked(model)
       is MedicalOfficersLoaded -> next(model.medicalOfficersLoaded(event.medicalOfficers))
       ChangeAssignedFacilityClicked -> dispatch(OpenSelectFacilitySheet)
-      is NewAssignedFacilitySelected -> dispatch(DispatchNewAssignedFacility(event.facility))
+      is NewAssignedFacilitySelected -> dispatch(DispatchNewAssignedFacility(event.facility), RefreshNextAppointment)
       is PatientRegistrationDataLoaded -> patientRegistrationDataLoaded(model, event)
+      NextAppointmentActionClicked -> dispatch(ShowScheduleAppointmentSheet(
+          model.patientUuid,
+          NEXT_APPOINTMENT_ACTION_CLICK,
+          model.currentFacility!!
+      ))
     }
   }
 
@@ -223,6 +229,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     val effect = when (appointmentScheduledFrom) {
       BACK_CLICK -> handleBackClick(model)
       DONE_CLICK -> GoToHomeScreen
+      NEXT_APPOINTMENT_ACTION_CLICK -> RefreshNextAppointment
     }
 
     return dispatch(effect)

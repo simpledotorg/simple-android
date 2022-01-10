@@ -18,6 +18,7 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Bangladesh
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
+import org.simple.clinic.summary.AppointmentSheetOpenedFrom.NEXT_APPOINTMENT_ACTION_CLICK
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
@@ -905,7 +906,7 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when nurse selects the new assigned facility, dispatch the newly selected facility`() {
+  fun `when nurse selects the new assigned facility, dispatch the newly selected facility and refresh next appointment`() {
     val model = defaultModel
         .currentFacilityLoaded(facilityWithTeleconsultationEnabled)
         .patientSummaryProfileLoaded(patientSummaryProfile)
@@ -916,7 +917,7 @@ class PatientSummaryUpdateTest {
         .whenEvent(NewAssignedFacilitySelected(facilityWithDiabetesManagementEnabled))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(DispatchNewAssignedFacility(facilityWithDiabetesManagementEnabled))
+            hasEffects(DispatchNewAssignedFacility(facilityWithDiabetesManagementEnabled), RefreshNextAppointment)
         ))
   }
 
@@ -1048,6 +1049,40 @@ class PatientSummaryUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.patientRegistrationDataLoaded(hasPatientRegistrationData = false)),
             hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when sync is triggered after clicking change from next appointment, then refresh appointment`() {
+    val model = defaultModel
+        .forExistingPatient()
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .completedCheckForInvalidPhone()
+
+    updateSpec
+        .given(model)
+        .whenEvent(SyncTriggered(NEXT_APPOINTMENT_ACTION_CLICK))
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(RefreshNextAppointment)
+            )
+        )
+  }
+
+  @Test
+  fun `when next appointment action button is clicked, then open schedule appointment sheet`() {
+    val model = defaultModel
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(NextAppointmentActionClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowScheduleAppointmentSheet(patientUuid, NEXT_APPOINTMENT_ACTION_CLICK, facility))
         ))
   }
 

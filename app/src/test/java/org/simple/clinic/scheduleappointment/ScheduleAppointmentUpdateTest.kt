@@ -3,15 +3,19 @@ package org.simple.clinic.scheduleappointment
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.newentry.ButtonState.SAVED
 import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
+import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
+import org.simple.clinic.summary.AppointmentSheetOpenedFrom.NEXT_APPOINTMENT_ACTION_CLICK
 import org.simple.clinic.util.TestUserClock
 import java.time.LocalDate
 import java.time.Period
@@ -38,7 +42,8 @@ class ScheduleAppointmentUpdateTest {
       timeToAppointments = appointmentConfig.scheduleAppointmentsIn,
       userClock = clock,
       doneButtonState = SAVED,
-      nextButtonState = NextButtonState.SCHEDULED
+      nextButtonState = NextButtonState.SCHEDULED,
+      openedFrom = DONE_CLICK
   )
   private val teleconsultRecordUuid = UUID.fromString("f60e5a36-824d-48c6-a5eb-01a2184c8b97")
 
@@ -145,5 +150,81 @@ class ScheduleAppointmentUpdateTest {
                 )
             )
         )
+  }
+
+  @Test
+  fun `when patient defaulter status is loaded and patient is defaulter, then schedule an automatic appointment`() {
+    val scheduledAtFacility = TestData.facility(uuid = UUID.fromString("871d1068-518e-4cd5-b624-f39ef83e8169"))
+    val currentDate = LocalDate.now(clock)
+
+    val facilityModel = model
+        .appointmentFacilitySelected(facility = scheduledAtFacility)
+
+    UpdateSpec(ScheduleAppointmentUpdate(
+        currentDate = LocalDate.parse("2018-01-01"),
+        defaulterAppointmentPeriod = appointmentConfig.appointmentDuePeriodForDefaulters)
+    ).given(facilityModel)
+        .whenEvent(PatientDefaulterStatusLoaded(isPatientADefaulter = true))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ScheduleAppointmentForPatient(
+                patientUuid = patientUuid,
+                scheduledForDate = LocalDate.parse("2018-01-31"),
+                scheduledAtFacility = scheduledAtFacility,
+                type = Automatic
+            ))
+        ))
+  }
+
+  @Test
+  fun `when patient defaulter status is loaded and patient is not defaulter, then close sheet`() {
+    val scheduledAtFacility = TestData.facility(uuid = UUID.fromString("871d1068-518e-4cd5-b624-f39ef83e8169"))
+
+    val scheduledForDate = PotentialAppointmentDate(
+        scheduledFor = LocalDate.parse("2020-10-29"),
+        timeToAppointment = TimeToAppointment.Weeks(1)
+    )
+
+    val facilityModel = model
+        .appointmentFacilitySelected(facility = scheduledAtFacility)
+        .appointmentDateSelected(scheduledForDate)
+
+    updateSpec
+        .given(facilityModel)
+        .whenEvent(PatientDefaulterStatusLoaded(isPatientADefaulter = false))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CloseSheet)
+        ))
+  }
+
+  @Test
+  fun `when not now is clicked and sheet is opened from next appointment, then close sheet without result`() {
+    val scheduledAtFacility = TestData.facility(uuid = UUID.fromString("35c0a526-465b-4573-b0b4-733bff815214"))
+
+    val scheduledForDate = PotentialAppointmentDate(
+        scheduledFor = LocalDate.parse("2020-10-29"),
+        timeToAppointment = TimeToAppointment.Weeks(1)
+    )
+
+    val model = ScheduleAppointmentModel
+        .create(
+            patientUuid = patientUuid,
+            timeToAppointments = appointmentConfig.scheduleAppointmentsIn,
+            userClock = clock,
+            doneButtonState = SAVED,
+            nextButtonState = NextButtonState.SCHEDULED,
+            openedFrom = NEXT_APPOINTMENT_ACTION_CLICK
+        )
+        .appointmentFacilitySelected(facility = scheduledAtFacility)
+        .appointmentDateSelected(scheduledForDate)
+
+    updateSpec
+        .given(model)
+        .whenEvent(SchedulingSkipped)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CloseSheetWithoutResult)
+        ))
   }
 }

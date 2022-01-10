@@ -8,6 +8,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.newentry.ButtonState
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
+import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRequestInfo
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultStatus
 import org.simple.clinic.util.TestUserClock
@@ -38,7 +39,8 @@ class ScheduleAppointmentUiRendererTest {
       timeToAppointments = appointmentConfig.scheduleAppointmentsIn,
       userClock = clock,
       doneButtonState = ButtonState.SAVED,
-      nextButtonState = NextButtonState.SCHEDULED
+      nextButtonState = NextButtonState.SCHEDULED,
+      openedFrom = DONE_CLICK
   )
 
   @Test

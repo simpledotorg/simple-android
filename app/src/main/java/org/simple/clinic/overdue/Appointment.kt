@@ -316,5 +316,17 @@ data class Appointment(
       GROUP BY patientUuid HAVING MAX(scheduledDate)
     """)
     fun nextAppointmentPatientProfile(patientUuid: UUID): NextAppointmentPatientProfile?
+
+    @Query("""
+        SELECT (
+            CASE
+                WHEN (COUNT(uuid) > 0) THEN 1
+                ELSE 0
+            END
+        )
+        FROM Appointment
+        WHERE updatedAt > :instantToCompare AND syncStatus = :pendingStatus AND patientUuid = :patientUuid
+    """)
+    fun hasAppointmentForPatientChangedSince(patientUuid: UUID, instantToCompare: Instant, pendingStatus: SyncStatus): Boolean
   }
 }

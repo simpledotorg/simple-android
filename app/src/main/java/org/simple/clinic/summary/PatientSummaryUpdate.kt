@@ -54,7 +54,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       LogTeleconsultClicked -> logTeleconsultClicked(model)
       is MedicalOfficersLoaded -> next(model.medicalOfficersLoaded(event.medicalOfficers))
       ChangeAssignedFacilityClicked -> dispatch(OpenSelectFacilitySheet)
-      is NewAssignedFacilitySelected -> dispatch(DispatchNewAssignedFacility(event.facility), RefreshNextAppointment)
+      is NewAssignedFacilitySelected -> dispatch(DispatchNewAssignedFacility(event.facility))
       is PatientRegistrationDataLoaded -> patientRegistrationDataLoaded(model, event)
       NextAppointmentActionClicked -> dispatch(ShowScheduleAppointmentSheet(
           model.patientUuid,

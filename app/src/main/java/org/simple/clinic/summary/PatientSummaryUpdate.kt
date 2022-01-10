@@ -61,6 +61,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
           NEXT_APPOINTMENT_ACTION_CLICK,
           model.currentFacility!!
       ))
+      AssignedFacilityChanged -> dispatch(RefreshNextAppointment)
     }
   }
 

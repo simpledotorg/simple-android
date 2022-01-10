@@ -1251,6 +1251,21 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when assigned facility changed, then refresh next appointment`() {
+    val model = defaultModel
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(AssignedFacilityChanged)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(RefreshNextAppointment)
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

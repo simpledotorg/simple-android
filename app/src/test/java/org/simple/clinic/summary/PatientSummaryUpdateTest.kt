@@ -309,6 +309,7 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(DataForDoneClickLoaded(
             hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = false,
             countOfRecordedBloodPressures = 1,
             countOfRecordedBloodSugars = 0,
             medicalHistory = TestData.medicalHistory(
@@ -332,6 +333,7 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(DataForDoneClickLoaded(
             hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = false,
             countOfRecordedBloodPressures = 1,
             countOfRecordedBloodSugars = 0,
             medicalHistory = TestData.medicalHistory(
@@ -355,6 +357,7 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(DataForDoneClickLoaded(
             hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = false,
             countOfRecordedBloodPressures = 1,
             countOfRecordedBloodSugars = 0,
             medicalHistory = TestData.medicalHistory(
@@ -379,6 +382,7 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(DataForDoneClickLoaded(
             hasPatientMeasurementDataChangedSinceScreenCreated = false,
+            hasAppointmentChangeSinceScreenCreated = false,
             countOfRecordedBloodPressures = 0,
             countOfRecordedBloodSugars = 0,
             medicalHistory = TestData.medicalHistory(
@@ -766,6 +770,7 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(DataForDoneClickLoaded(
             hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = false,
             countOfRecordedBloodPressures = 0,
             countOfRecordedBloodSugars = 0,
             medicalHistory = TestData.medicalHistory(
@@ -789,6 +794,7 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(DataForDoneClickLoaded(
             hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = false,
             countOfRecordedBloodPressures = 0,
             countOfRecordedBloodSugars = 0,
             medicalHistory = TestData.medicalHistory(
@@ -812,6 +818,7 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(DataForDoneClickLoaded(
             hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = false,
             countOfRecordedBloodPressures = 0,
             countOfRecordedBloodSugars = 0,
             medicalHistory = TestData.medicalHistory(
@@ -1101,6 +1108,7 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(DataForDoneClickLoaded(
             hasPatientMeasurementDataChangedSinceScreenCreated = false,
+            hasAppointmentChangeSinceScreenCreated = false,
             countOfRecordedBloodPressures = 1,
             countOfRecordedBloodSugars = 0,
             medicalHistory = TestData.medicalHistory(

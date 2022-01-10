@@ -52,6 +52,7 @@ data class DataForBackClickLoaded(
 
 data class DataForDoneClickLoaded(
     val hasPatientMeasurementDataChangedSinceScreenCreated: Boolean,
+    val hasAppointmentChangeSinceScreenCreated: Boolean,
     val countOfRecordedBloodPressures: Int,
     val countOfRecordedBloodSugars: Int,
     val medicalHistory: MedicalHistory

@@ -246,6 +246,7 @@ class PatientSummaryEffectHandlerTest {
     testCase.assertOutgoingEvents(
         DataForBackClickLoaded(
             hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = false,
             countOfRecordedBloodPressures = 3,
             countOfRecordedBloodSugars = 2,
             medicalHistory = medicalHistory

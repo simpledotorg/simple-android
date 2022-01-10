@@ -202,6 +202,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
 
             DataForBackClickLoaded(
                 hasPatientMeasurementDataChangedSinceScreenCreated = hasPatientMeasurementDataChanged,
+                hasAppointmentChangeSinceScreenCreated = false,
                 countOfRecordedBloodPressures = countOfRecordedBloodPressures,
                 countOfRecordedBloodSugars = countOfRecordedBloodSugars,
                 medicalHistory = medicalHistory

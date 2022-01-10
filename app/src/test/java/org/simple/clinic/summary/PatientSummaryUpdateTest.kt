@@ -121,6 +121,7 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(DataForBackClickLoaded(
             hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = false,
             countOfRecordedBloodPressures = 1,
             countOfRecordedBloodSugars = 1,
             medicalHistory = TestData.medicalHistory(
@@ -144,6 +145,7 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(DataForBackClickLoaded(
             hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = false,
             countOfRecordedBloodPressures = 1,
             countOfRecordedBloodSugars = 0,
             medicalHistory = TestData.medicalHistory(
@@ -167,6 +169,7 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(DataForBackClickLoaded(
             hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = false,
             countOfRecordedBloodPressures = 1,
             countOfRecordedBloodSugars = 0,
             medicalHistory = TestData.medicalHistory(
@@ -191,6 +194,7 @@ class PatientSummaryUpdateTest {
         .given(model.forExistingPatient())
         .whenEvent(DataForBackClickLoaded(
             hasPatientMeasurementDataChangedSinceScreenCreated = false,
+            hasAppointmentChangeSinceScreenCreated = false,
             countOfRecordedBloodPressures = 0,
             countOfRecordedBloodSugars = 0,
             medicalHistory = TestData.medicalHistory(
@@ -215,6 +219,7 @@ class PatientSummaryUpdateTest {
         .given(model.forNewPatient())
         .whenEvent(DataForBackClickLoaded(
             hasPatientMeasurementDataChangedSinceScreenCreated = false,
+            hasAppointmentChangeSinceScreenCreated = false,
             countOfRecordedBloodPressures = 0,
             countOfRecordedBloodSugars = 0,
             medicalHistory = TestData.medicalHistory(
@@ -239,6 +244,7 @@ class PatientSummaryUpdateTest {
         .given(model.forLinkingWithExistingPatient())
         .whenEvent(DataForBackClickLoaded(
             hasPatientMeasurementDataChangedSinceScreenCreated = false,
+            hasAppointmentChangeSinceScreenCreated = false,
             countOfRecordedBloodPressures = 0,
             countOfRecordedBloodSugars = 0,
             medicalHistory = TestData.medicalHistory(
@@ -262,6 +268,7 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(DataForBackClickLoaded(
             hasPatientMeasurementDataChangedSinceScreenCreated = false,
+            hasAppointmentChangeSinceScreenCreated = false,
             countOfRecordedBloodPressures = 1,
             countOfRecordedBloodSugars = 1,
             medicalHistory = TestData.medicalHistory(
@@ -286,6 +293,7 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(DataForBackClickLoaded(
             hasPatientMeasurementDataChangedSinceScreenCreated = false,
+            hasAppointmentChangeSinceScreenCreated = false,
             countOfRecordedBloodPressures = 0,
             countOfRecordedBloodSugars = 0,
             medicalHistory = TestData.medicalHistory(
@@ -842,6 +850,7 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(DataForBackClickLoaded(
             hasPatientMeasurementDataChangedSinceScreenCreated = false,
+            hasAppointmentChangeSinceScreenCreated = false,
             countOfRecordedBloodPressures = 0,
             countOfRecordedBloodSugars = 0,
             medicalHistory = TestData.medicalHistory(
@@ -865,6 +874,7 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(DataForBackClickLoaded(
             hasPatientMeasurementDataChangedSinceScreenCreated = false,
+            hasAppointmentChangeSinceScreenCreated = false,
             countOfRecordedBloodPressures = 0,
             countOfRecordedBloodSugars = 0,
             medicalHistory = TestData.medicalHistory(
@@ -888,6 +898,7 @@ class PatientSummaryUpdateTest {
         .given(model)
         .whenEvent(DataForBackClickLoaded(
             hasPatientMeasurementDataChangedSinceScreenCreated = false,
+            hasAppointmentChangeSinceScreenCreated = false,
             countOfRecordedBloodPressures = 0,
             countOfRecordedBloodSugars = 0,
             medicalHistory = TestData.medicalHistory(

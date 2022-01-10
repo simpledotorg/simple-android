@@ -45,6 +45,7 @@ object PatientSummaryBloodPressureSaved : PatientSummaryEvent()
 
 data class DataForBackClickLoaded(
     val hasPatientMeasurementDataChangedSinceScreenCreated: Boolean,
+    val hasAppointmentChangeSinceScreenCreated: Boolean,
     val countOfRecordedBloodPressures: Int,
     val countOfRecordedBloodSugars: Int,
     val medicalHistory: MedicalHistory

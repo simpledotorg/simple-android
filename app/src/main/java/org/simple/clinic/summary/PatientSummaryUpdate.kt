@@ -35,6 +35,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is DataForBackClickLoaded -> dataForHandlingBackLoaded(
           model = model,
           hasPatientMeasurementDataChangedSinceScreenCreated = event.hasPatientMeasurementDataChangedSinceScreenCreated,
+          hasAppointmentChangedSinceScreenCreated = event.hasAppointmentChangeSinceScreenCreated,
           countOfRecordedBloodPressures = event.countOfRecordedBloodPressures,
           countOfRecordedBloodSugars = event.countOfRecordedBloodSugars,
           medicalHistory = event.medicalHistory
@@ -158,11 +159,13 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
   private fun dataForHandlingBackLoaded(
       model: PatientSummaryModel,
       hasPatientMeasurementDataChangedSinceScreenCreated: Boolean,
+      hasAppointmentChangedSinceScreenCreated: Boolean,
       countOfRecordedBloodPressures: Int,
       countOfRecordedBloodSugars: Int,
       medicalHistory: MedicalHistory
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val openIntention = model.openIntention
+    val canShowAppointmentSheet = hasPatientMeasurementDataChangedSinceScreenCreated && !hasAppointmentChangedSinceScreenCreated
     val hasAtLeastOneMeasurementRecorded = countOfRecordedBloodPressures + countOfRecordedBloodSugars > 0
     val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && medicalHistory.diagnosisRecorded.not() && model.isDiabetesManagementEnabled
     val shouldGoToPreviousScreen = openIntention is ViewExistingPatient
@@ -172,7 +175,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     return when {
       shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
       measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))
-      hasPatientMeasurementDataChangedSinceScreenCreated -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, BACK_CLICK, model.currentFacility!!))
+      canShowAppointmentSheet -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, BACK_CLICK, model.currentFacility!!))
       shouldGoToPreviousScreen -> dispatch(GoBackToPreviousScreen)
       shouldGoToHomeScreen -> dispatch(GoToHomeScreen)
       else -> throw IllegalStateException("This should not happen!")

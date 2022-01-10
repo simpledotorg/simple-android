@@ -114,7 +114,7 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when there are patient summary changes and at least one measurement is present, clicking on back must show the schedule appointment sheet`() {
+  fun `when there are patient summary changes and appointment is not changed, clicking on back must show the schedule appointment sheet`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
 
     updateSpec
@@ -1142,6 +1142,98 @@ class PatientSummaryUpdateTest {
     updateSpec
         .given(model)
         .whenEvent(DataForDoneClickLoaded(
+            hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = true,
+            countOfRecordedBloodPressures = 1,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("7aeb58c1-19f8-43f8-952c-8fb069b9268b"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Yes,
+                hasDiabetes = No
+            )
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoToHomeScreen)
+        ))
+  }
+
+  @Test
+  fun `when viewing existing patient and patient measurement data is changed and appointment is changed, clicking on back must go to previous screen`() {
+    val model = PatientSummaryModel
+        .from(
+            openIntention = ViewExistingPatient,
+            patientUuid = patientUuid
+        )
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForBackClickLoaded(
+            hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = true,
+            countOfRecordedBloodPressures = 1,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("7aeb58c1-19f8-43f8-952c-8fb069b9268b"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Yes,
+                hasDiabetes = No
+            )
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoBackToPreviousScreen)
+        ))
+  }
+
+  @Test
+  fun `when viewing new patient and patient measurement data is changed and appointment is changed, clicking on back must go to previous screen`() {
+    val model = PatientSummaryModel
+        .from(
+            openIntention = ViewNewPatient,
+            patientUuid = patientUuid
+        )
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForBackClickLoaded(
+            hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = true,
+            countOfRecordedBloodPressures = 1,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("7aeb58c1-19f8-43f8-952c-8fb069b9268b"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Yes,
+                hasDiabetes = No
+            )
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoToHomeScreen)
+        ))
+  }
+
+  @Test
+  fun `when viewing existing patient to link ID and patient measurement data is changed and appointment is changed, clicking on back must go to previous screen`() {
+    val model = PatientSummaryModel
+        .from(
+            openIntention = LinkIdWithPatient(
+                identifier = TestData.identifier(
+                    value = "4574355a-3bd6-48c6-8d46-50eae707e1d3",
+                    type = BpPassport
+                )
+            ),
+            patientUuid = patientUuid
+        )
+        .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForBackClickLoaded(
             hasPatientMeasurementDataChangedSinceScreenCreated = true,
             hasAppointmentChangeSinceScreenCreated = true,
             countOfRecordedBloodPressures = 1,

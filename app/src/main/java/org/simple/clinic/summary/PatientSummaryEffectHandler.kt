@@ -195,9 +195,13 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 defaultHistoryUuid = uuidGenerator.v4(),
                 patientUuid = patientUuid
             )
+            val hasPatientMeasurementDataChanged = patientRepository.hasPatientMeasurementDataChangedSince(
+                patientUuid = patientUuid,
+                timestamp = timestamp
+            )
 
             DataForBackClickLoaded(
-                hasPatientMeasurementDataChangedSinceScreenCreated = patientRepository.hasPatientDataChangedSince(patientUuid, timestamp),
+                hasPatientMeasurementDataChangedSinceScreenCreated = hasPatientMeasurementDataChanged,
                 countOfRecordedBloodPressures = countOfRecordedBloodPressures,
                 countOfRecordedBloodSugars = countOfRecordedBloodSugars,
                 medicalHistory = medicalHistory

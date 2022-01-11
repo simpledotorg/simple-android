@@ -3,6 +3,7 @@ package org.simple.clinic.summary.assignedfacility
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -50,6 +51,23 @@ class AssignedFacilityUpdateTest {
         .then(assertThatNext(
             hasModel(model.assignedFacilityUpdated(newAssignedFacility)),
             hasEffects(ChangeAssignedFacility(patientUuid, newAssignedFacility.uuid) as AssignedFacilityEffect)
+        ))
+  }
+
+  @Test
+  fun `when assigned facility is changed, then notify assigned facility changed`() {
+    val facility = TestData.facility(
+        uuid = UUID.fromString("c131da1e-7fef-4edd-ac9a-cb5ebf732606"),
+        name = "CHC Obvious"
+    )
+    val model = model.assignedFacilityUpdated(facility)
+
+    updateSpec
+        .given(model)
+        .whenEvent(AssignedFacilityChanged)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(NotifyAssignedFacilityChanged)
         ))
   }
 }

@@ -931,7 +931,7 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when nurse selects the new assigned facility, dispatch the newly selected facility and refresh next appointment`() {
+  fun `when nurse selects the new assigned facility, dispatch the newly selected facility`() {
     val model = defaultModel
         .currentFacilityLoaded(facilityWithTeleconsultationEnabled)
         .patientSummaryProfileLoaded(patientSummaryProfile)
@@ -942,7 +942,7 @@ class PatientSummaryUpdateTest {
         .whenEvent(NewAssignedFacilitySelected(facilityWithDiabetesManagementEnabled))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(DispatchNewAssignedFacility(facilityWithDiabetesManagementEnabled), RefreshNextAppointment)
+            hasEffects(DispatchNewAssignedFacility(facilityWithDiabetesManagementEnabled))
         ))
   }
 
@@ -1248,6 +1248,21 @@ class PatientSummaryUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(GoToHomeScreen)
+        ))
+  }
+
+  @Test
+  fun `when assigned facility changed, then refresh next appointment`() {
+    val model = defaultModel
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(AssignedFacilityChanged)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(RefreshNextAppointment)
         ))
   }
 

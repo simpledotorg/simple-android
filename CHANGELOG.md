@@ -8,6 +8,8 @@
 - Implement `NextAppointmentCardView`
 - Show next appointment card in patient summary screen
 - Refresh appointment details when appointment is scheduled or assigned facility is changed
+- Fix appointment not refreshing after assigned facility is changed
+- Add double non breaking spaces between appointment date and status
 
 ### Changes
 

@@ -73,4 +73,6 @@ data class InputFieldsLoaded(val inputFields: InputFields) : EditPatientEvent()
 
 data class ColonyOrVillagesFetched(val colonyOrVillages: List<String>) : EditPatientEvent()
 
-object AddNHIDButtonClicked : EditPatientEvent()
+object AddNHIDButtonClicked : EditPatientEvent() {
+  override val analyticsName = "Edit Patient Entry:Add NHID Button Clicked"
+}

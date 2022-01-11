@@ -10,6 +10,7 @@
 - Refresh appointment details when appointment is scheduled or assigned facility is changed
 - Fix appointment not refreshing after assigned facility is changed
 - Add double non breaking spaces between appointment date and status
+- Debounce overdue updates to prevent running out of view effect queue size
 
 ### Changes
 

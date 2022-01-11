@@ -1,7 +1,9 @@
 package org.simple.clinic.editpatient
 
+import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -11,6 +13,7 @@ import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -103,5 +106,18 @@ class EditPatientUpdateTest {
             hasModel(model.bpPassportsLoaded(bpPassports)),
             hasNoEffects()
         ))
+  }
+
+  @Test
+  fun `when add NHID button is clicked, then open scan simple id screen to add NHID`() {
+    updateSpec
+        .given(model)
+        .whenEvent(AddNHIDButtonClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(OpenSimpleScanIdScreen(OpenedFrom.EditPatientScreen.ToAddNHID))
+            )
+        )
   }
 }

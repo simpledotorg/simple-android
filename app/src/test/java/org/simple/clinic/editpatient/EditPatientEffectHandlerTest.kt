@@ -39,6 +39,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
@@ -412,5 +413,19 @@ class EditPatientEffectHandlerTest {
     verify(patientRepository).updatePatient(expectedPatientToBeSaved)
     verify(patientRepository).updateAddressForPatient(patientProfile.patientUuid, patientProfile.address)
     verifyNoMoreInteractions(patientRepository)
+  }
+
+  @Test
+  fun `when open scan simple id screen effect is received, then open scan simple id screen`() {
+    // given
+    val openedFrom = OpenedFrom.EditPatientScreen.ToAddNHID
+
+    // when
+    testCase.dispatch(OpenSimpleScanIdScreen(openedFrom))
+
+    // then
+    verify(ui).openSimpleScanIdScreen(openedFrom)
+    testCase.assertNoOutgoingEvents()
+    verifyNoMoreInteractions(ui)
   }
 }

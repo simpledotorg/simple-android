@@ -3,6 +3,7 @@ package org.simple.clinic.editpatient
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 
 interface EditPatientUi {
@@ -31,4 +32,5 @@ interface EditPatientUi {
   fun hideProgress()
   fun setupUi(inputFields: InputFields)
   fun setColonyOrVillagesAutoComplete(colonyOrVillageList: List<String>)
+  fun openSimpleScanIdScreen(openedFrom: OpenedFrom)
 }

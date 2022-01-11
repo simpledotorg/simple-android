@@ -234,6 +234,9 @@ class EditPatientScreen : BaseScreen<
   private val saveButton
     get() = binding.saveButton
 
+  private val addBpPassportButton
+    get() = binding.addBpPassportButton
+
   private val hardwareBackPressEvents = PublishSubject.create<BackClicked>()
   private val hotEvents = PublishSubject.create<UiEvent>()
 

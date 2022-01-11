@@ -337,6 +337,7 @@ class EditPatientScreen : BaseScreen<
       saveClicks(),
       dateOfBirthFocusChanges(),
       backClicks(),
+      addBpPassportClicks(),
       hotEvents
   ).compose(ReportAnalyticsEvents())
       .cast<EditPatientEvent>()
@@ -469,6 +470,10 @@ class EditPatientScreen : BaseScreen<
     return backButtonClicks
         .mergeWith(hardwareBackPressEvents)
         .cast()
+  }
+
+  private fun addBpPassportClicks(): Observable<EditPatientEvent> {
+    return addBpPassportButton.clicks().map { AddBpPassportButtonClicked }
   }
 
   private fun dateOfBirthFocusChanges(): Observable<EditPatientEvent> = dateOfBirthEditText.focusChanges.map(::DateOfBirthFocusChanged)

@@ -12,6 +12,7 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.download.OverdueDownloadScheduler
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import java.util.concurrent.TimeUnit
 
 class OverdueEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
@@ -67,7 +68,7 @@ class OverdueEffectHandler @AssistedInject constructor(
                 },
                 pageSize = overdueAppointmentsConfig.overdueAppointmentsLoadSize,
                 enablePlaceholders = true
-            )
+            ).debounce(1, TimeUnit.SECONDS)
           }
           .map(::OverdueAppointmentsLoaded)
     }

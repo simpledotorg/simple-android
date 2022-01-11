@@ -2,6 +2,7 @@ package org.simple.clinic.editpatient
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -47,6 +48,7 @@ import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.form.AgeField
@@ -74,9 +76,11 @@ import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
+import org.simple.clinic.scanid.ScanSimpleIdScreen
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.afterTextChangedWatcher
 import org.simple.clinic.util.exhaustive
+import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
@@ -351,6 +355,14 @@ class EditPatientScreen : BaseScreen<
     }
 
     deletePatient.setOnClickListener { router.push(DeletePatientScreen.Key(screenKey.patient.uuid)) }
+
+    setFragmentResultListener(RequestToScanIdentifier) { requestKey, result ->
+      if (result !is Succeeded) return@setFragmentResultListener
+
+      if (requestKey is RequestToScanIdentifier) {
+        val scannedIdentifier = (result.result as ScanSimpleIdScreen.SendScannedIdentifier).identifier
+      }
+    }
   }
 
   override fun setupUi(inputFields: InputFields) {
@@ -771,4 +783,7 @@ class EditPatientScreen : BaseScreen<
 
     override fun instantiateFragment() = EditPatientScreen()
   }
+
+  @Parcelize
+  object RequestToScanIdentifier : Parcelable
 }

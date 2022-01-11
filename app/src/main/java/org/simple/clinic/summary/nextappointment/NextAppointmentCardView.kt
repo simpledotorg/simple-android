@@ -159,7 +159,7 @@ class NextAppointmentCardView(
         append(fullDateFormatter.format(date))
       }
 
-      append(Unicode.nonBreakingSpace)
+      append("${Unicode.nonBreakingSpace}${Unicode.nonBreakingSpace}")
 
       color(context.resolveColor(colorRes = R.color.simple_green_500)) {
         append(context.getString(R.string.next_appointment_today))
@@ -173,7 +173,7 @@ class NextAppointmentCardView(
         append(fullDateFormatter.format(date))
       }
 
-      append(Unicode.nonBreakingSpace)
+      append("${Unicode.nonBreakingSpace}${Unicode.nonBreakingSpace}")
 
       color(context.resolveColor(colorRes = R.color.simple_green_500)) {
         append(resources.getQuantityString(
@@ -191,7 +191,7 @@ class NextAppointmentCardView(
         append(fullDateFormatter.format(date))
       }
 
-      append(Unicode.nonBreakingSpace)
+      append("${Unicode.nonBreakingSpace}${Unicode.nonBreakingSpace}")
 
       color(context.resolveColor(attrRes = R.attr.colorError)) {
         append(resources.getQuantityString(

@@ -92,3 +92,5 @@ data class PatientRegistrationDataLoaded(
 object NextAppointmentActionClicked : PatientSummaryEvent() {
   override val analyticsName: String = "Next Appointment Card:Action Button Clicked"
 }
+
+object AssignedFacilityChanged : PatientSummaryEvent()

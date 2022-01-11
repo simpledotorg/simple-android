@@ -8,6 +8,7 @@ import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.Appointment.Status.Visited
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.summary.nextappointment.NextAppointmentPatientProfile
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.util.UserClock
@@ -46,7 +47,7 @@ class AppointmentRepository @Inject constructor(
         remindOn = null,
         agreedToVisit = null,
         appointmentType = appointmentType,
-        syncStatus = SyncStatus.PENDING,
+        syncStatus = PENDING,
         createdAt = Instant.now(utcClock),
         updatedAt = Instant.now(utcClock),
         deletedAt = null,
@@ -64,7 +65,7 @@ class AppointmentRepository @Inject constructor(
         patientUuid = patientUuid,
         updatedStatus = Visited,
         scheduledStatus = Scheduled,
-        newSyncStatus = SyncStatus.PENDING,
+        newSyncStatus = PENDING,
         newUpdatedAt = Instant.now(utcClock)
     )
   }
@@ -73,7 +74,7 @@ class AppointmentRepository @Inject constructor(
     appointmentDao.saveRemindDate(
         appointmentUUID = appointmentUuid,
         reminderDate = reminderDate,
-        newSyncStatus = SyncStatus.PENDING,
+        newSyncStatus = PENDING,
         newUpdatedAt = Instant.now(utcClock)
     )
   }
@@ -82,7 +83,7 @@ class AppointmentRepository @Inject constructor(
     appointmentDao.markAsAgreedToVisit(
         appointmentUUID = appointmentUuid,
         reminderDate = LocalDate.now(userClock).plusMonths(1),
-        newSyncStatus = SyncStatus.PENDING,
+        newSyncStatus = PENDING,
         newUpdatedAt = Instant.now(utcClock)
     )
   }
@@ -91,7 +92,7 @@ class AppointmentRepository @Inject constructor(
     appointmentDao.markAsVisited(
         appointmentUuid = appointmentUuid,
         newStatus = Visited,
-        newSyncStatus = SyncStatus.PENDING,
+        newSyncStatus = PENDING,
         newUpdatedAt = Instant.now(utcClock)
     )
   }
@@ -101,7 +102,7 @@ class AppointmentRepository @Inject constructor(
         appointmentUuid = appointmentUuid,
         cancelReason = reason,
         newStatus = Cancelled,
-        newSyncStatus = SyncStatus.PENDING,
+        newSyncStatus = PENDING,
         newUpdatedAt = Instant.now(utcClock)
     )
   }
@@ -140,7 +141,7 @@ class AppointmentRepository @Inject constructor(
         patientUuid = patientUuid,
         updatedStatus = Visited,
         scheduledStatus = Scheduled,
-        newSyncStatus = SyncStatus.PENDING,
+        newSyncStatus = PENDING,
         newUpdatedAt = Instant.now(utcClock),
         createdBefore = startOfToday
     )
@@ -164,7 +165,7 @@ class AppointmentRepository @Inject constructor(
   }
 
   override fun mergeWithLocalData(payloads: List<AppointmentPayload>) {
-    val dirtyRecords = appointmentDao.recordIdsWithSyncStatus(SyncStatus.PENDING)
+    val dirtyRecords = appointmentDao.recordIdsWithSyncStatus(PENDING)
 
     val payloadsToSave = payloads
         .filterNot { it.uuid in dirtyRecords }
@@ -195,14 +196,14 @@ class AppointmentRepository @Inject constructor(
 
   override fun pendingSyncRecordCount(): Observable<Int> {
     return appointmentDao
-        .countWithStatus(SyncStatus.PENDING)
+        .countWithStatus(PENDING)
         .toObservable()
   }
 
   override fun pendingSyncRecords(limit: Int, offset: Int): List<Appointment> {
     return appointmentDao
         .recordsWithSyncStatusBatched(
-            syncStatus = SyncStatus.PENDING,
+            syncStatus = PENDING,
             limit = limit,
             offset = offset
         )
@@ -217,5 +218,14 @@ class AppointmentRepository @Inject constructor(
 
   fun nextAppointmentPatientProfile(patientUuid: UUID): NextAppointmentPatientProfile? {
     return appointmentDao.nextAppointmentPatientProfile(patientUuid)
+  }
+
+  fun hasAppointmentForPatientChangedSince(patientUuid: UUID, timestamp: Instant): Boolean {
+    return appointmentDao
+        .hasAppointmentForPatientChangedSince(
+            patientUuid = patientUuid,
+            instantToCompare = timestamp,
+            pendingStatus = PENDING
+        )
   }
 }

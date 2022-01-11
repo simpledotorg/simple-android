@@ -195,9 +195,18 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 defaultHistoryUuid = uuidGenerator.v4(),
                 patientUuid = patientUuid
             )
+            val hasPatientMeasurementDataChanged = patientRepository.hasPatientMeasurementDataChangedSince(
+                patientUuid = patientUuid,
+                timestamp = timestamp
+            )
+            val hasAppointmentChanged = appointmentRepository.hasAppointmentForPatientChangedSince(
+                patientUuid = patientUuid,
+                timestamp = loadDataForBackClick.screenCreatedTimestamp
+            )
 
             DataForBackClickLoaded(
-                hasPatientDataChangedSinceScreenCreated = patientRepository.hasPatientDataChangedSince(patientUuid, timestamp),
+                hasPatientMeasurementDataChangedSinceScreenCreated = hasPatientMeasurementDataChanged,
+                hasAppointmentChangeSinceScreenCreated = hasAppointmentChanged,
                 countOfRecordedBloodPressures = countOfRecordedBloodPressures,
                 countOfRecordedBloodSugars = countOfRecordedBloodSugars,
                 medicalHistory = medicalHistory
@@ -212,16 +221,26 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .map { loadDataForBackClick ->
-            val patientUuid = loadDataForBackClick.patientUuid
+          .map { loadDataForDoneClick ->
+            val patientUuid = loadDataForDoneClick.patientUuid
             val countOfRecordedBloodPressures = bloodPressureRepository.bloodPressureCountImmediate(patientUuid)
             val countOfRecordedBloodSugars = bloodSugarRepository.bloodSugarCountImmediate(patientUuid)
             val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
                 defaultHistoryUuid = uuidGenerator.v4(),
                 patientUuid = patientUuid
             )
+            val hasPatientMeasurementDataChanged = patientRepository.hasPatientMeasurementDataChangedSince(
+                patientUuid = patientUuid,
+                timestamp = loadDataForDoneClick.screenCreatedTimestamp
+            )
+            val hasAppointmentChanged = appointmentRepository.hasAppointmentForPatientChangedSince(
+                patientUuid = patientUuid,
+                timestamp = loadDataForDoneClick.screenCreatedTimestamp
+            )
 
             DataForDoneClickLoaded(
+                hasPatientMeasurementDataChangedSinceScreenCreated = hasPatientMeasurementDataChanged,
+                hasAppointmentChangeSinceScreenCreated = hasAppointmentChanged,
                 countOfRecordedBloodPressures = countOfRecordedBloodPressures,
                 countOfRecordedBloodSugars = countOfRecordedBloodSugars,
                 medicalHistory = medicalHistory

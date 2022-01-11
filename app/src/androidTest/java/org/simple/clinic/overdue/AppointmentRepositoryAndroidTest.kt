@@ -2195,6 +2195,56 @@ class AppointmentRepositoryAndroidTest {
     assertThat(expectedAppointment).isEqualTo(nextAppointmentPatientProfile)
   }
 
+  @Test
+  fun querying_whether_appointment_for_patient_has_changed_should_work_as_expected() {
+    fun setAppointmentSyncStatusToDone(appointmentId: UUID) {
+      database.appointmentDao().updateSyncStatusForIds(listOf(appointmentId), DONE)
+    }
+
+    val patientUuid = UUID.fromString("efd303fd-f96b-4b05-9c8a-c067b189974e")
+    val now = Instant.now(clock)
+    val oneSecondEarlier = now.minus(Duration.ofSeconds(1))
+    val fiftyNineSecondsLater = now.plus(Duration.ofSeconds(59))
+    val oneMinuteLater = now.plus(Duration.ofMinutes(1))
+
+    val appointment1ForPatient = TestData.appointment(
+        uuid = UUID.fromString("84703ef1-7e50-44d0-83a0-ea931dacccf7"),
+        patientUuid = patientUuid,
+        syncStatus = PENDING,
+        updatedAt = now
+    )
+    val appointment2ForPatient = TestData.appointment(
+        uuid = UUID.fromString("6b0a7ded-9fe8-4ac6-9103-94674d3b72f9"),
+        patientUuid = patientUuid,
+        syncStatus = PENDING,
+        updatedAt = oneMinuteLater
+    )
+    val appointmentForSomeOtherPatient = TestData.appointment(
+        uuid = UUID.fromString("a39b9a71-40cd-42bc-bfeb-0c6055426e24"),
+        patientUuid = UUID.fromString("c77a152e-223c-469a-8bff-a568ddfde628"),
+        syncStatus = PENDING,
+        updatedAt = now
+    )
+
+    database.appointmentDao().save(listOf(appointment1ForPatient, appointment2ForPatient, appointmentForSomeOtherPatient))
+
+    assertThat(appointmentRepository.hasAppointmentForPatientChangedSince(patientUuid, oneSecondEarlier)).isTrue()
+    assertThat(appointmentRepository.hasAppointmentForPatientChangedSince(patientUuid, now)).isTrue()
+    assertThat(appointmentRepository.hasAppointmentForPatientChangedSince(patientUuid, fiftyNineSecondsLater)).isTrue()
+    assertThat(appointmentRepository.hasAppointmentForPatientChangedSince(patientUuid, oneMinuteLater)).isFalse()
+
+    setAppointmentSyncStatusToDone(appointment2ForPatient.uuid)
+    assertThat(appointmentRepository.hasAppointmentForPatientChangedSince(patientUuid, fiftyNineSecondsLater)).isFalse()
+    assertThat(appointmentRepository.hasAppointmentForPatientChangedSince(patientUuid, oneSecondEarlier)).isTrue()
+
+    setAppointmentSyncStatusToDone(appointment1ForPatient.uuid)
+    assertThat(appointmentRepository.hasAppointmentForPatientChangedSince(patientUuid, oneSecondEarlier)).isFalse()
+    assertThat(appointmentRepository.hasAppointmentForPatientChangedSince(appointmentForSomeOtherPatient.patientUuid, oneSecondEarlier)).isTrue()
+
+    setAppointmentSyncStatusToDone(appointmentForSomeOtherPatient.uuid)
+    assertThat(appointmentRepository.hasAppointmentForPatientChangedSince(appointmentForSomeOtherPatient.patientUuid, oneSecondEarlier)).isFalse()
+  }
+
   private fun markAppointmentSyncStatusAsDone(vararg appointmentUuids: UUID) {
     appointmentRepository.setSyncStatus(appointmentUuids.toList(), DONE)
   }

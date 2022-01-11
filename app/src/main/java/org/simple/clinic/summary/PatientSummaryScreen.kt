@@ -331,7 +331,11 @@ class PatientSummaryScreen :
     )
   }
 
-  private fun doneClicks() = doneButton.clicks().map { PatientSummaryDoneClicked(screenKey.patientUuid) }
+  private fun doneClicks() = doneButton
+      .clicks()
+      .map {
+        PatientSummaryDoneClicked(screenKey.patientUuid, screenKey.screenCreatedTimestamp)
+      }
 
   private fun contactDoctorClicks() = teleconsultButton.clicks().map { ContactDoctorClicked }
 

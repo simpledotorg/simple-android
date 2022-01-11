@@ -4,6 +4,7 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
+import org.simple.clinic.scanid.OpenedFrom
 import java.util.UUID
 
 sealed class EditPatientEffect
@@ -39,3 +40,5 @@ object HideDatePatternInDateOfBirthLabelEffect : EditPatientViewEffect()
 object GoBackEffect : EditPatientViewEffect()
 
 object ShowDiscardChangesAlertEffect : EditPatientViewEffect()
+
+data class OpenSimpleScanIdScreen(val openedFrom: OpenedFrom) : EditPatientViewEffect()

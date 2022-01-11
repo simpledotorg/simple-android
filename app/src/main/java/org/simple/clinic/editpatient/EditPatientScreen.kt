@@ -72,6 +72,8 @@ import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.clinic.scanid.OpenedFrom
+import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.afterTextChangedWatcher
 import org.simple.clinic.util.exhaustive
@@ -362,6 +364,10 @@ class EditPatientScreen : BaseScreen<
   override fun setColonyOrVillagesAutoComplete(colonyOrVillageList: List<String>) {
     villageTypeAheadAdapter.clear()
     villageTypeAheadAdapter.addAll(colonyOrVillageList)
+  }
+
+  override fun openSimpleScanIdScreen(openedFrom: OpenedFrom) {
+    router.push(ScanSimpleIdScreenKey(openedFrom))
   }
 
   private fun showOrHideInputFields(inputFields: InputFields) {

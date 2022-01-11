@@ -15,6 +15,7 @@ import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.clinic.scanid.OpenedFrom.EditPatientScreen.ToAddBpPassport
 import org.simple.clinic.scanid.OpenedFrom.EditPatientScreen.ToAddNHID
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -58,6 +59,7 @@ class EditPatientUpdate(
       is InputFieldsLoaded -> next(model.inputFieldsLoaded(event.inputFields))
       is ColonyOrVillagesFetched -> next(model.updateColonyOrVillagesList(event.colonyOrVillages))
       AddNHIDButtonClicked -> dispatch(OpenSimpleScanIdScreen(ToAddNHID))
+      AddBpPassportButtonClicked -> dispatch(OpenSimpleScanIdScreen(ToAddBpPassport))
     }
   }
 

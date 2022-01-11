@@ -76,3 +76,7 @@ data class ColonyOrVillagesFetched(val colonyOrVillages: List<String>) : EditPat
 object AddNHIDButtonClicked : EditPatientEvent() {
   override val analyticsName = "Edit Patient Entry:Add NHID Button Clicked"
 }
+
+object AddBpPassportButtonClicked : EditPatientEvent() {
+  override val analyticsName = "Edit Patient Entry:Add Bp Passport Clicked"
+}

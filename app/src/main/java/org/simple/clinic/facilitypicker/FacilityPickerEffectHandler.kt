@@ -29,7 +29,6 @@ class FacilityPickerEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<FacilityPickerEffect, FacilityPickerEvent>()
         .addTransformer(FetchCurrentLocation::class.java, fetchLocation())
         .addTransformer(LoadFacilitiesWithQuery::class.java, loadFacilitiesWithQuery())
-        .addTransformer(LoadTotalFacilityCount::class.java, loadTotalCountOfFacilities())
         .addConsumer(ForwardSelectedFacility::class.java, { uiActions.dispatchSelectedFacility(it.facility) }, schedulers.ui())
         .addTransformer(LoadFacilitiesInCurrentGroup::class.java, loadFacilitiesInCurrentGroup())
         .build()
@@ -60,19 +59,6 @@ class FacilityPickerEffectHandler @AssistedInject constructor(
                 .subscribeOn(schedulers.io())
                 .map(::filterFacilitiesByState)
                 .map { FacilitiesFetched(query = effect.query, facilities = it) }
-          }
-    }
-  }
-
-  private fun loadTotalCountOfFacilities(): ObservableTransformer<LoadTotalFacilityCount, FacilityPickerEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .switchMap {
-            facilityRepository
-                .recordCount()
-                .subscribeOn(schedulers.io())
-                .take(1)
-                .map(::TotalFacilityCountLoaded)
           }
     }
   }

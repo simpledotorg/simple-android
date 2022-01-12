@@ -383,7 +383,7 @@ class EditPatientScreen : BaseScreen<
   }
 
   override fun openSimpleScanIdScreen(openedFrom: OpenedFrom) {
-    router.push(ScanSimpleIdScreenKey(openedFrom))
+    router.pushExpectingResult(RequestToScanIdentifier, ScanSimpleIdScreenKey(openedFrom))
   }
 
   private fun showOrHideInputFields(inputFields: InputFields) {

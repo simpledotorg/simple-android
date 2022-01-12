@@ -91,8 +91,7 @@ jobs:
       - name: Setup Node.js 16 
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
-          cache: 'npm'  
+          node-version: 16.x
 
       - name: Cache node modules
         id: node-dependency-cache

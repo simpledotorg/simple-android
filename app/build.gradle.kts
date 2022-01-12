@@ -13,7 +13,7 @@ plugins {
   id("kotlin-parcelize")
   id("io.sentry.android.gradle")
   id("plugins.git.install-hooks")
-  id("dd-sdk-android-gradle-plugin")
+  id("com.datadoghq.dd-sdk-android-gradle-plugin")
   id("androidx.benchmark")
 }
 

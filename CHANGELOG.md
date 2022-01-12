@@ -13,6 +13,7 @@
 - Debounce overdue updates to prevent running out of view effect queue size
 - Stop loading total facility count when facility picker view is created
 - Update `hasAppointmentForPatientChangedSince` query to only consider `Scheduled` appointments
+- Update GH Actions `setup-jdk` to v2
 - [In Progress: 11 Jan 2022] Implement adding NHID in `PatientEditScreen`
 
 ### Changes

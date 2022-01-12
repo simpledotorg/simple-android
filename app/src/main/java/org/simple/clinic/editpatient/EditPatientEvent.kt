@@ -3,6 +3,7 @@ package org.simple.clinic.editpatient
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.businessid.BusinessId
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.widgets.UiEvent
 
 sealed class EditPatientEvent : UiEvent
@@ -79,4 +80,8 @@ object AddNHIDButtonClicked : EditPatientEvent() {
 
 object AddBpPassportButtonClicked : EditPatientEvent() {
   override val analyticsName = "Edit Patient Entry:Add Bp Passport Clicked"
+}
+
+data class BpPassportAdded(val identifier: List<Identifier>) : EditPatientEvent() {
+  override val analyticsName: String = "Edit Patient Entry:Bp Passport Added"
 }

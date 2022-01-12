@@ -134,4 +134,20 @@ class EditPatientUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when bp passport is added, then update the model with bp passport`() {
+    val bpPassport1 = Identifier("a26d7480-ac79-4de6-a120-15e2bdbdc6e7", Identifier.IdentifierType.BpPassport)
+    val bpPassport2 = Identifier("a26d7480-ac79-4de6-a120-15e2bdbdc6e7", Identifier.IdentifierType.BpPassport)
+    val listOfBpPassports = listOf(bpPassport1, bpPassport2)
+    updateSpec
+        .given(model)
+        .whenEvent(BpPassportAdded(listOfBpPassports))
+        .then(
+            assertThatNext(
+                hasModel(model.addBpPassports(listOfBpPassports)),
+                hasNoEffects()
+            )
+        )
+  }
 }

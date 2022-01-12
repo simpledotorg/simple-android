@@ -101,6 +101,10 @@ jobs:
         if: steps.node-dependency-cache.outputs.cache-hit != 'true'
         run: npm install heroku
 
+      - name: Install Heroku CLI
+        if: steps.node-dependency-cache.outputs.cache-hit != 'true'
+        run: npm install @heroku/buildpack-registry
+        
       - name: Link Heroku CLI globally
         run: npm link heroku
 

@@ -31,6 +31,7 @@ if [ $serverAppAlreadyExists = false ]; then
   heroku addons:create --app=$herokuAppName --wait --name="${herokuAppName}-postgres" heroku-postgresql:hobby-dev
   heroku buildpacks:add --index 1 --app=$herokuAppName heroku/nodejs
   heroku buildpacks:add --index 2 --app=$herokuAppName heroku/ruby
+  heroku buildpacks:add --index 3 --app=$herokuAppName https://github.com/weibeld/heroku-buildpack-run.git
 fi
 
 echo "Starting the Simple server on Heroku"

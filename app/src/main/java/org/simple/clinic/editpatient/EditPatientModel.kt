@@ -8,6 +8,7 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
+import org.simple.clinic.patient.businessid.Identifier
 import java.time.format.DateTimeFormatter
 
 @Parcelize
@@ -110,4 +111,7 @@ data class EditPatientModel(
   fun bpPassportsLoaded(bpPassports: List<BusinessId>): EditPatientModel {
     return copy(bpPassports = bpPassports)
   }
+
+  fun addBpPassports(bpPassports: List<Identifier>): EditPatientModel =
+      copy(ongoingEntry = ongoingEntry.addBpPassports(bpPassports))
 }

@@ -60,6 +60,7 @@ class EditPatientUpdate(
       is ColonyOrVillagesFetched -> next(model.updateColonyOrVillagesList(event.colonyOrVillages))
       AddNHIDButtonClicked -> dispatch(OpenSimpleScanIdScreen(ToAddNHID))
       AddBpPassportButtonClicked -> dispatch(OpenSimpleScanIdScreen(ToAddBpPassport))
+      is BpPassportAdded -> next(model.addBpPassports(event.identifier))
     }
   }
 

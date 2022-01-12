@@ -87,24 +87,23 @@ jobs:
       - name: Create node dependency hash
         id: create_node_modules_hash
         run: android-app/.github/scripts/compute_node_dependency_hash.sh
-        
-      - name: Setup Node.js 16 
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16.x
 
-      - name: Cache node modules
-        id: node-dependency-cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            node_modules
-            package-lock.json
-          key: ${{ runner.os }}-npm-${{ steps.create_node_modules_hash.outputs.node_dep_hash }}
+#       - name: Cache node modules
+#         id: node-dependency-cache
+#         uses: actions/cache@v2
+#         with:
+#           path: |
+#             node_modules
+#             package-lock.json
+#           key: ${{ runner.os }}-npm-${{ steps.create_node_modules_hash.outputs.node_dep_hash }}
 
       - name: Install Heroku CLI
-        if: steps.node-dependency-cache.outputs.cache-hit != 'true'
+#         if: steps.node-dependency-cache.outputs.cache-hit != 'true'
         run: npm install heroku
+        
+      - name: Install Heroku buildpack-registry
+#         if: steps.node-dependency-cache.outputs.cache-hit != 'true'
+        run: npm install @heroku/buildpack-registry
         
       - name: Link Heroku CLI globally
         run: npm link heroku

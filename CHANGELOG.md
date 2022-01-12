@@ -11,6 +11,7 @@
 - Fix appointment not refreshing after assigned facility is changed
 - Add double non breaking spaces between appointment date and status
 - Debounce overdue updates to prevent running out of view effect queue size
+- Stop loading total facility count when facility picker view is created
 - [In Progress: 11 Jan 2022] Implement adding NHID in `PatientEditScreen`
 
 ### Changes

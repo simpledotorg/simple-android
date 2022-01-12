@@ -45,6 +45,7 @@ import org.simple.clinic.editpatient.deletepatient.DeletePatientScreen
 import org.simple.clinic.feature.Feature.DeletePatient
 import org.simple.clinic.feature.Feature.VillageTypeAhead
 import org.simple.clinic.feature.Features
+import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -239,6 +240,7 @@ class EditPatientScreen : BaseScreen<
 
   private val hardwareBackPressEvents = PublishSubject.create<BackClicked>()
   private val hotEvents = PublishSubject.create<UiEvent>()
+  private val additionalEvents = DeferredEventSource<EditPatientEvent>()
 
   private val villageTypeAheadAdapter by unsafeLazy {
     ArrayAdapter<String>(
@@ -342,6 +344,10 @@ class EditPatientScreen : BaseScreen<
   ).compose(ReportAnalyticsEvents())
       .cast<EditPatientEvent>()
 
+  override fun additionalEventSources() = listOf(
+      additionalEvents
+  )
+
   override fun bindView(
       layoutInflater: LayoutInflater,
       container: ViewGroup?
@@ -365,6 +371,7 @@ class EditPatientScreen : BaseScreen<
 
       if (requestKey is RequestToScanIdentifier) {
         val scannedIdentifier = (result.result as ScanSimpleIdScreen.SendScannedIdentifier).identifier
+        additionalEvents.notify(BpPassportAdded(listOf(scannedIdentifier)))
       }
     }
   }

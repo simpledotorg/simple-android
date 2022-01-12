@@ -19,7 +19,6 @@ class FacilityPickerUpdate(
       is LocationFetched -> next(model.locationFetched(event.update))
       is FacilitiesFetched -> next(model.queryChanged(event.query).facilitiesLoaded(event.facilities))
       is SearchQueryChanged -> loadFacilities(event)
-      is TotalFacilityCountLoaded -> next(model.facilityCountLoaded(event.count))
       is FacilityClicked -> dispatch(ForwardSelectedFacility(event.facility))
     }
   }

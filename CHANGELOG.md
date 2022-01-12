@@ -21,6 +21,7 @@
 - View next appointment information in patient summary screen
 - Change appointment bottom sheet display logic
   - Schedule appointment sheet is now only opened from patient summary screen when BP or Blood Sugar or Prescription is changed
+- Implement adding support for BpPassport in `EditPatientScreen`
 
 ## 2022-01-11-8098
 

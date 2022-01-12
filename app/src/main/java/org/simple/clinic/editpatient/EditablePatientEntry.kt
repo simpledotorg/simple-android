@@ -25,6 +25,7 @@ import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
 import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.Blank
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooShort
@@ -52,7 +53,8 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
     val ageOrDateOfBirth: EitherAgeOrDateOfBirth,
     val zone: String,
     val streetAddress: String,
-    val alternativeId: String
+    val alternativeId: String,
+    val bpPassports: List<Identifier>?
 ) : Parcelable {
 
   sealed class EitherAgeOrDateOfBirth : Parcelable {
@@ -90,7 +92,8 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
           ageOrDateOfBirth = ageOrDateOfBirth(patient.ageDetails, dateOfBirthFormatter),
           zone = address.zone.valueOrEmpty(),
           streetAddress = address.streetAddress.valueOrEmpty(),
-          alternativeId = alternativeId?.identifier?.value.valueOrEmpty()
+          alternativeId = alternativeId?.identifier?.value.valueOrEmpty(),
+          bpPassports = null
       )
     }
 
@@ -137,6 +140,9 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
 
   fun updateAlternativeId(alternativeId: String): EditablePatientEntry =
       copy(alternativeId = alternativeId)
+
+  fun addBpPassports(bpPassports: List<Identifier>): EditablePatientEntry =
+      copy(bpPassports = bpPassports)
 
   fun validate(
       alreadySavedNumber: PatientPhoneNumber?,

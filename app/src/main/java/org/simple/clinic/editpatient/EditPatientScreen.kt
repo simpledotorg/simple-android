@@ -24,6 +24,7 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.databinding.PatientEditAlternateIdViewBinding
 import org.simple.clinic.databinding.PatientEditBpPassportViewBinding
 import org.simple.clinic.databinding.ScreenEditPatientBinding
@@ -49,6 +50,7 @@ import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.newentry.country.InputFields
@@ -99,6 +101,8 @@ import org.simple.clinic.widgets.visibleOrGone
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
+import io.reactivex.rxkotlin.ofType
+import org.simple.clinic.activity.permissions.RequestPermissions
 
 class EditPatientScreen : BaseScreen<
     EditPatientScreen.Key,
@@ -132,6 +136,12 @@ class EditPatientScreen : BaseScreen<
 
   @Inject
   lateinit var userClock: UserClock
+
+  @Inject
+  lateinit var runtimePermissions: RuntimePermissions
+
+  @Inject
+  lateinit var screenResults: ScreenResultBus
 
   private val rootView
     get() = binding.root
@@ -341,7 +351,9 @@ class EditPatientScreen : BaseScreen<
       backClicks(),
       addBpPassportClicks(),
       hotEvents
-  ).compose(ReportAnalyticsEvents())
+  )
+      .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
+      .compose(ReportAnalyticsEvents())
       .cast<EditPatientEvent>()
 
   override fun additionalEventSources() = listOf(
@@ -488,7 +500,7 @@ class EditPatientScreen : BaseScreen<
   }
 
   private fun addBpPassportClicks(): Observable<EditPatientEvent> {
-    return addBpPassportButton.clicks().map { AddBpPassportButtonClicked }
+    return addBpPassportButton.clicks().map { AddBpPassportButtonClicked() }
   }
 
   private fun dateOfBirthFocusChanges(): Observable<EditPatientEvent> = dateOfBirthEditText.focusChanges.map(::DateOfBirthFocusChanged)

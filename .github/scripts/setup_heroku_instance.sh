@@ -21,7 +21,7 @@ fi
 
 if [ $serverAppAlreadyExists = false ]; then
   echo "Setting up server app [$herokuAppName]"
-  (cd $serverAppDirectory && heroku apps:create --team $herokuTeamName $herokuAppName)
+  (cd $serverAppDirectory && heroku apps:create --team $herokuTeamName --buildpack https://github.com/vkrmis/custom-simple-android-ci-buildpack.git $herokuAppName)
   heroku pipelines:add --app=$herokuAppName --stage=staging simple-android-review
 
   pip3 install requests
@@ -29,8 +29,8 @@ if [ $serverAppAlreadyExists = false ]; then
 
   heroku addons:create --app=$herokuAppName --wait --name="${herokuAppName}-redis" heroku-redis:hobby-dev
   heroku addons:create --app=$herokuAppName --wait --name="${herokuAppName}-postgres" heroku-postgresql:hobby-dev
-  heroku buildpacks:add --index 1 --app=$herokuAppName heroku/nodejs
-  heroku buildpacks:add --index 2 --app=$herokuAppName heroku/ruby
+#   heroku buildpacks:add --index 1 --app=$herokuAppName heroku/nodejs
+#   heroku buildpacks:add --index 2 --app=$herokuAppName heroku/ruby
 fi
 
 echo "Starting the Simple server on Heroku"

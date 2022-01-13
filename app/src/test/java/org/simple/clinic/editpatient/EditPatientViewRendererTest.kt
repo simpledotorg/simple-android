@@ -224,4 +224,40 @@ class EditPatientViewRendererTest {
     verify(ui).setAlternateIdContainer(identifier)
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when NHID is added after qr code scan, then display NHID in the ui and hide add NHID button`() {
+    // given
+    val indiaNHID = "23432123456434"
+    val identifier = Identifier(indiaNHID, IndiaNationalHealthId)
+    val model = EditPatientModel.from(
+        patient = patientProfile.patient,
+        address = patientProfile.address,
+        phoneNumber = patientProfile.phoneNumbers.first(),
+        dateOfBirthFormatter = dateOfBirthFormat,
+        bangladeshNationalId = null,
+        saveButtonState = EditPatientState.SAVING_PATIENT,
+        isUserCountryIndia = true
+    ).updateAlternativeId(indiaNHID)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).setPatientName(patientProfile.patient.fullName)
+    verify(ui).setGender(patientProfile.patient.gender)
+    verify(ui).setState(patientProfile.address.state)
+    verify(ui).setDistrict(patientProfile.address.district)
+    verify(ui).setStreetAddress(patientProfile.address.streetAddress)
+    verify(ui).setZone(patientProfile.address.zone)
+    verify(ui).setColonyOrVillage(patientProfile.address.colonyOrVillage!!)
+    verify(ui).setPatientPhoneNumber(patientProfile.phoneNumbers.first().number)
+    verify(ui).setPatientDateOfBirth("09/03/1990")
+    verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
+    verify(ui).showProgress()
+    verify(ui).displayBpPassports(emptyList())
+    verify(ui).setAlternateIdContainer(identifier)
+    verify(ui).hideAddNHIDButton()
+    verifyNoMoreInteractions(ui)
+  }
 }

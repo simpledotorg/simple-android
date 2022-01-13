@@ -429,6 +429,10 @@ class EditPatientScreen : BaseScreen<
     router.pushExpectingResult(requestType, ScanSimpleIdScreenKey(openedFrom))
   }
 
+  override fun hideAddNHIDButton() {
+    // Nothing to see here, yet
+  }
+
   private fun showOrHideInputFields(inputFields: InputFields) {
     val allTypesOfInputFields: Map<Class<*>, View> = mapOf(
         PatientNameField::class.java to fullNameInputLayout,

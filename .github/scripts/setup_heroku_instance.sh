@@ -21,7 +21,7 @@ fi
 
 if [ $serverAppAlreadyExists = false ]; then
   echo "Setting up server app [$herokuAppName]"
-  (cd $serverAppDirectory && heroku apps:create --team $herokuTeamName --buildpack https://github.com/vkrmis/custom-simple-android-ci-buildpack.git $herokuAppName)
+  (cd $serverAppDirectory && heroku apps:create --team $herokuTeamName $herokuAppName)
   heroku pipelines:add --app=$herokuAppName --stage=staging simple-android-review
 
   pip3 install requests

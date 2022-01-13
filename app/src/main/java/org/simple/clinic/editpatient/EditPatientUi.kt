@@ -33,5 +33,6 @@ interface EditPatientUi {
   fun setupUi(inputFields: InputFields)
   fun setColonyOrVillagesAutoComplete(colonyOrVillageList: List<String>)
   fun openSimpleScanIdScreen(openedFrom: OpenedFrom)
+  fun showAddNHIDButton()
   fun hideAddNHIDButton()
 }

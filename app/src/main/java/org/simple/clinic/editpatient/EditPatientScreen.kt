@@ -429,6 +429,10 @@ class EditPatientScreen : BaseScreen<
     router.pushExpectingResult(requestType, ScanSimpleIdScreenKey(openedFrom))
   }
 
+  override fun showAddNHIDButton() {
+    // Nothing to see here, yet
+  }
+
   override fun hideAddNHIDButton() {
     // Nothing to see here, yet
   }

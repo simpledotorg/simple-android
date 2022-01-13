@@ -260,4 +260,37 @@ class EditPatientViewRendererTest {
     verify(ui).hideAddNHIDButton()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when there is no NHID in edit screen and the user country is India, then show add NHID button`() {
+    // given
+    val model = EditPatientModel.from(
+        patient = patientProfile.patient,
+        address = patientProfile.address,
+        phoneNumber = patientProfile.phoneNumbers.first(),
+        dateOfBirthFormatter = dateOfBirthFormat,
+        bangladeshNationalId = null,
+        saveButtonState = EditPatientState.SAVING_PATIENT,
+        isUserCountryIndia = true
+    )
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).setPatientName(patientProfile.patient.fullName)
+    verify(ui).setGender(patientProfile.patient.gender)
+    verify(ui).setState(patientProfile.address.state)
+    verify(ui).setDistrict(patientProfile.address.district)
+    verify(ui).setStreetAddress(patientProfile.address.streetAddress)
+    verify(ui).setZone(patientProfile.address.zone)
+    verify(ui).setColonyOrVillage(patientProfile.address.colonyOrVillage!!)
+    verify(ui).setPatientPhoneNumber(patientProfile.phoneNumbers.first().number)
+    verify(ui).setPatientDateOfBirth("09/03/1990")
+    verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
+    verify(ui).showProgress()
+    verify(ui).displayBpPassports(emptyList())
+    verify(ui).showAddNHIDButton()
+    verifyNoMoreInteractions(ui)
+  }
 }

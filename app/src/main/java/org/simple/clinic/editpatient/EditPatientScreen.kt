@@ -27,6 +27,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.permissions.RequestPermissions
 import org.simple.clinic.activity.permissions.RuntimePermissions
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.databinding.PatientEditAlternateIdViewBinding
 import org.simple.clinic.databinding.PatientEditBpPassportViewBinding
 import org.simple.clinic.databinding.ScreenEditPatientBinding
@@ -142,6 +143,9 @@ class EditPatientScreen : BaseScreen<
 
   @Inject
   lateinit var screenResults: ScreenResultBus
+
+   @Inject
+  lateinit var country: Country
 
   private val rootView
     get() = binding.root
@@ -327,7 +331,8 @@ class EditPatientScreen : BaseScreen<
       phoneNumber = screenKey.phoneNumber,
       dateOfBirthFormatter = dateOfBirthFormat,
       bangladeshNationalId = screenKey.bangladeshNationalId,
-      saveButtonState = EditPatientState.NOT_SAVING_PATIENT
+      saveButtonState = EditPatientState.NOT_SAVING_PATIENT,
+      isUserCountryIndia = country.isoCountryCode == Country.INDIA
   )
 
   override fun createInit() = EditPatientInit(

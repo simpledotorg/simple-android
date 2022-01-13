@@ -58,9 +58,10 @@ class EditPatientUpdateTest {
       patient = patientProfile.patient,
       address = patientProfile.address,
       phoneNumber = patientProfile.phoneNumbers.first(),
+      dateOfBirthFormatter = dateOfBirthFormat,
       bangladeshNationalId = null,
       saveButtonState = EditPatientState.NOT_SAVING_PATIENT,
-      dateOfBirthFormatter = dateOfBirthFormat
+      isUserCountryIndia = false
   )
 
   @Test

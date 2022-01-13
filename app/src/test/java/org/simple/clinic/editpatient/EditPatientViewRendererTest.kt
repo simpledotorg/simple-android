@@ -34,12 +34,13 @@ class EditPatientViewRendererTest {
   )
 
   private val model = EditPatientModel.from(
-      patient = patientProfile.patient,
-      address = patientProfile.address,
-      phoneNumber = patientProfile.phoneNumbers.first(),
-      bangladeshNationalId = null,
-      saveButtonState = EditPatientState.SAVING_PATIENT,
-      dateOfBirthFormatter = dateOfBirthFormat
+    patient = patientProfile.patient,
+    address = patientProfile.address,
+    phoneNumber = patientProfile.phoneNumbers.first(),
+    dateOfBirthFormatter = dateOfBirthFormat,
+    bangladeshNationalId = null,
+    saveButtonState = EditPatientState.SAVING_PATIENT,
+    isUserCountryIndia = false
   )
 
   @Test
@@ -152,15 +153,16 @@ class EditPatientViewRendererTest {
         type = BangladeshNationalId
     )
     val model = EditPatientModel.from(
-        patient = patientProfile.patient,
-        address = patientProfile.address,
-        phoneNumber = patientProfile.phoneNumbers.first(),
-        bangladeshNationalId = TestData.businessId(
-            uuid = UUID.fromString("0244d1f1-ec97-4911-b7a1-3a84032b499c"),
-            identifier = identifier
-        ),
-        saveButtonState = EditPatientState.SAVING_PATIENT,
-        dateOfBirthFormatter = dateOfBirthFormat
+      patient = patientProfile.patient,
+      address = patientProfile.address,
+      phoneNumber = patientProfile.phoneNumbers.first(),
+      dateOfBirthFormatter = dateOfBirthFormat,
+      bangladeshNationalId = TestData.businessId(
+          uuid = UUID.fromString("0244d1f1-ec97-4911-b7a1-3a84032b499c"),
+          identifier = identifier
+      ),
+      saveButtonState = EditPatientState.SAVING_PATIENT,
+      isUserCountryIndia = false
     )
 
     // when
@@ -191,15 +193,16 @@ class EditPatientViewRendererTest {
         type = IndiaNationalHealthId
     )
     val model = EditPatientModel.from(
-        patient = patientProfile.patient,
-        address = patientProfile.address,
-        phoneNumber = patientProfile.phoneNumbers.first(),
-        bangladeshNationalId = TestData.businessId(
-            uuid = UUID.fromString("ed74922a-3909-4084-a667-1f2bf1c36322"),
-            identifier = identifier
-        ),
-        saveButtonState = EditPatientState.SAVING_PATIENT,
-        dateOfBirthFormatter = dateOfBirthFormat
+      patient = patientProfile.patient,
+      address = patientProfile.address,
+      phoneNumber = patientProfile.phoneNumbers.first(),
+      dateOfBirthFormatter = dateOfBirthFormat,
+      bangladeshNationalId = TestData.businessId(
+          uuid = UUID.fromString("ed74922a-3909-4084-a667-1f2bf1c36322"),
+          identifier = identifier
+      ),
+      saveButtonState = EditPatientState.SAVING_PATIENT,
+      isUserCountryIndia = false
     )
 
     // when

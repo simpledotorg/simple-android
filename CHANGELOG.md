@@ -15,6 +15,7 @@
 - Update `hasAppointmentForPatientChangedSince` query to only consider `Scheduled` appointments
 - Update GH Actions `setup-jdk` to v2
 - Bump Datadog SDK version
+- Update CI PR comment rebase action to v1.5 
 - [In Progress: 11 Jan 2022] Implement adding NHID in `PatientEditScreen`
 
 ### Changes

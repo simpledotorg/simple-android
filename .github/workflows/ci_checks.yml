@@ -104,6 +104,12 @@ jobs:
       - name: Link Heroku CLI globally
         run: npm link heroku
 
+      - name: Install Heroku Buildpacks registry
+        run: heroku plugins:install buildpack-registry
+
+      - name: Link Heroku CLI globally
+        run: heroku plugins:install buildpacks
+
       - name: Cache Gradle build
         uses: actions/cache@v2
         with:

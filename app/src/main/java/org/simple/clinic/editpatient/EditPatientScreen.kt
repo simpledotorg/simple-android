@@ -360,12 +360,20 @@ class EditPatientScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    if (features.isEnabled(VillageTypeAhead)) {
-      colonyOrVillageEditText.setAdapter(villageTypeAheadAdapter)
-    }
+    setAdapterWhenVillageTypeAheadIsEnabled()
 
     deletePatient.setOnClickListener { router.push(DeletePatientScreen.Key(screenKey.patient.uuid)) }
 
+    handleScanBpPassportResult()
+  }
+
+  private fun setAdapterWhenVillageTypeAheadIsEnabled() {
+    if (features.isEnabled(VillageTypeAhead)) {
+      colonyOrVillageEditText.setAdapter(villageTypeAheadAdapter)
+    }
+  }
+
+  private fun handleScanBpPassportResult() {
     setFragmentResultListener(ScanBpPassport) { requestKey, result ->
       if (result !is Succeeded) return@setFragmentResultListener
 

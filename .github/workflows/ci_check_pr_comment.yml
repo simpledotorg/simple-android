@@ -29,6 +29,6 @@ jobs:
           persist-credentials: false
           fetch-depth: 0
       - name: Rebase
-        uses: cirrus-actions/rebase@1.4
+        uses: cirrus-actions/rebase@1.5
         env:
           GITHUB_TOKEN: ${{ secrets.SERVICES_ACCESS_TOKEN  }}

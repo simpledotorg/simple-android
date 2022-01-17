@@ -311,8 +311,10 @@ data class Appointment(
     @Query("""
       SELECT * FROM Appointment
       WHERE 
-        patientUuid = :patientUuid
-        AND deletedAt IS NULL AND status = 'scheduled'
+        patientUuid = :patientUuid AND
+        deletedAt IS NULL AND
+        status = 'scheduled' AND
+        appointmentType != 'automatic'
       GROUP BY patientUuid HAVING MAX(scheduledDate)
     """)
     fun nextAppointmentPatientProfile(patientUuid: UUID): NextAppointmentPatientProfile?

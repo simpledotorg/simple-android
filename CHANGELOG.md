@@ -4,6 +4,14 @@
 
 ### Internal
 
+- Bump Gradle to v7.3.3
+- Remove version range for zxing dependency in the version catalog
+- [In Progress: 11 Jan 2022] Implement adding NHID in `PatientEditScreen`
+
+## On Demo
+
+### Internal
+
 - Don't run auto request review action in draft PRs
 - Implement `NextAppointmentCardView`
 - Show next appointment card in patient summary screen
@@ -15,9 +23,6 @@
 - Update `hasAppointmentForPatientChangedSince` query to only consider `Scheduled` appointments
 - Update GH Actions `setup-jdk` to v2
 - Bump Datadog SDK version
-- Bump Gradle to v7.3.3
-- Remove version range for zxing dependency in the version catalog
-- [In Progress: 11 Jan 2022] Implement adding NHID in `PatientEditScreen`
 
 ### Changes
 

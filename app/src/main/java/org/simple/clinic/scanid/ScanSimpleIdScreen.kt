@@ -298,7 +298,7 @@ class ScanSimpleIdScreen : BaseScreen<
   }
 
   override fun goBackToEditPatientScreen(identifier: Identifier) {
-    router.popWithResult(Succeeded(SendScannedIdentifier(identifier)))
+    router.popWithResult(Succeeded(ScannedIdentifier(identifier)))
   }
 
   override fun showPatientWithIdentifierExistsError() {
@@ -364,7 +364,7 @@ class ScanSimpleIdScreen : BaseScreen<
   }
 
   @Parcelize
-  data class SendScannedIdentifier(val identifier: Identifier) : Parcelable
+  data class ScannedIdentifier(val identifier: Identifier) : Parcelable
 }
 
 class KeyboardVisibilityDetector {

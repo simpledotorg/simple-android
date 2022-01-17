@@ -191,7 +191,7 @@ viewpump = "io.github.inflationx:viewpump:2.0.3"
 datadog-sdk = "com.datadoghq:dd-sdk-android:1.11.1"
 datadog-gradle-plugin = "com.datadoghq:dd-sdk-android-gradle-plugin:1.2.1"
 
-zxing = { group = "com.google.zxing", name = "core", version = { strictly = "[3.3, 3.4[", prefer = "3.3.3" } }
+zxing = "com.google.zxing:core:3.3.3"
 
 apache-commons-math = "org.apache.commons:commons-math3:3.6.1"
 

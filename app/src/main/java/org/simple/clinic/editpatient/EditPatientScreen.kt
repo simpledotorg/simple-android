@@ -366,10 +366,10 @@ class EditPatientScreen : BaseScreen<
 
     deletePatient.setOnClickListener { router.push(DeletePatientScreen.Key(screenKey.patient.uuid)) }
 
-    setFragmentResultListener(RequestToScanIdentifier) { requestKey, result ->
+    setFragmentResultListener(ScanBpPassport) { requestKey, result ->
       if (result !is Succeeded) return@setFragmentResultListener
 
-      if (requestKey is RequestToScanIdentifier) {
+      if (requestKey is ScanBpPassport) {
         val scannedIdentifier = (result.result as ScanSimpleIdScreen.SendScannedIdentifier).identifier
         additionalEvents.notify(BpPassportAdded(listOf(scannedIdentifier)))
       }
@@ -390,7 +390,7 @@ class EditPatientScreen : BaseScreen<
   }
 
   override fun openSimpleScanIdScreen(openedFrom: OpenedFrom) {
-    router.pushExpectingResult(RequestToScanIdentifier, ScanSimpleIdScreenKey(openedFrom))
+    router.pushExpectingResult(ScanBpPassport, ScanSimpleIdScreenKey(openedFrom))
   }
 
   private fun showOrHideInputFields(inputFields: InputFields) {
@@ -800,5 +800,5 @@ class EditPatientScreen : BaseScreen<
   }
 
   @Parcelize
-  object RequestToScanIdentifier : Parcelable
+  object ScanBpPassport : Parcelable
 }

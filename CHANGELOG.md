@@ -6,6 +6,7 @@
 
 - Bump Gradle to v7.3.3
 - Remove version range for zxing dependency in the version catalog
+- Bump WorkManager to v2.7.1
 - [In Progress: 11 Jan 2022] Implement adding NHID in `PatientEditScreen`
 
 ## On Demo

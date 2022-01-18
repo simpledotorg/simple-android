@@ -16,6 +16,7 @@
 - Bump AGP to v7.0.4
 - Bump Play Core to v1.10.3
 - Bump androidx-cameraView to 1.0.0-alpha32
+- Bump Github action script to v5.1.0
 - [In Progress: 11 Jan 2022] Implement adding NHID in `PatientEditScreen`
 
 ## On Demo

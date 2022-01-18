@@ -2164,7 +2164,8 @@ class AppointmentRepositoryAndroidTest {
         cancelReason = null,
         agreedToVisit = true,
         facilityUuid = facility.uuid,
-        creationFacilityUuid = facility.uuid
+        creationFacilityUuid = facility.uuid,
+        appointmentType = Manual
     )
 
     val scheduledAppointment = TestData.appointment(
@@ -2178,7 +2179,8 @@ class AppointmentRepositoryAndroidTest {
         cancelReason = null,
         agreedToVisit = null,
         facilityUuid = facility.uuid,
-        creationFacilityUuid = facility.uuid
+        creationFacilityUuid = facility.uuid,
+        appointmentType = Manual
     )
 
     val patientProfile = TestData.patientProfile(patientUuid = patientUuid)
@@ -2193,6 +2195,54 @@ class AppointmentRepositoryAndroidTest {
 
     // then
     assertThat(expectedAppointment).isEqualTo(nextAppointmentPatientProfile)
+  }
+
+  @Test
+  fun should_not_fetch_automatic_appointment_when_fetching_next_appointment_patient_profile() {
+    // given
+    val now = LocalDate.now(clock)
+    val patientUuid = UUID.fromString("5ac54fc7-437e-40e9-bc58-8cf61c930472")
+    val visitedAppointment = TestData.appointment(
+        uuid = UUID.fromString("cfe7df95-b17a-4254-88c1-fb672bfc8023"),
+        patientUuid = patientUuid,
+        scheduledDate = now.minusDays(30),
+        status = Visited,
+        createdAt = Instant.now(clock),
+        updatedAt = Instant.now(clock),
+        deletedAt = null,
+        cancelReason = null,
+        agreedToVisit = true,
+        facilityUuid = facility.uuid,
+        creationFacilityUuid = facility.uuid,
+        appointmentType = Manual
+    )
+
+    val scheduledAutomaticAppointment = TestData.appointment(
+        uuid = UUID.fromString("6c3acd2b-bf01-4712-8b44-f2000b2eb227"),
+        patientUuid = patientUuid,
+        scheduledDate = now.plusDays(10),
+        status = Scheduled,
+        createdAt = Instant.now(clock),
+        updatedAt = Instant.now(clock),
+        deletedAt = null,
+        cancelReason = null,
+        agreedToVisit = null,
+        facilityUuid = facility.uuid,
+        creationFacilityUuid = facility.uuid,
+        appointmentType = Automatic
+    )
+
+    val patientProfile = TestData.patientProfile(patientUuid = patientUuid)
+
+    patientRepository.save(listOf(patientProfile))
+    facilityRepository.save(listOf(facility))
+    appointmentRepository.save(listOf(visitedAppointment, scheduledAutomaticAppointment))
+
+    // when
+    val expectedAppointment = appointmentRepository.nextAppointmentPatientProfile(patientUuid)
+
+    // then
+    assertThat(expectedAppointment).isNull()
   }
 
   @Test

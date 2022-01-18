@@ -44,9 +44,10 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
   }
 
   private fun displayBpPassports(model: EditPatientModel) {
+    val newlyAddedBpPassports = model.ongoingEntry.bpPassports?.map { it.displayValue() }.orEmpty()
     val identifiers = model.bpPassports?.map { it.identifier.displayValue() }.orEmpty()
 
-    ui.displayBpPassports(identifiers)
+    ui.displayBpPassports(identifiers + newlyAddedBpPassports)
   }
 
   private fun manageButtonState(model: EditPatientModel) {

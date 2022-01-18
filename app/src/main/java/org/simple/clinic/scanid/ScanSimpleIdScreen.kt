@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -28,6 +29,7 @@ import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenScanSimpleBinding
@@ -296,7 +298,7 @@ class ScanSimpleIdScreen : BaseScreen<
   }
 
   override fun goBackToEditPatientScreen(identifier: Identifier) {
-    router.popWithResult(Succeeded(identifier))
+    router.popWithResult(Succeeded(ScannedIdentifier(identifier)))
   }
 
   override fun showPatientWithIdentifierExistsError() {
@@ -360,6 +362,9 @@ class ScanSimpleIdScreen : BaseScreen<
   interface Injector {
     fun inject(target: ScanSimpleIdScreen)
   }
+
+  @Parcelize
+  data class ScannedIdentifier(val identifier: Identifier) : Parcelable
 }
 
 class KeyboardVisibilityDetector {

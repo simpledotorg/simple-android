@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
@@ -42,6 +43,7 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.uuid.FakeUuidGenerator
@@ -427,5 +429,60 @@ class EditPatientEffectHandlerTest {
     verify(ui).openSimpleScanIdScreen(openedFrom)
     testCase.assertNoOutgoingEvents()
     verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when save the patient effect is received, then link the newly added bp passport to the patient`() {
+    // given
+    val identifierUuid = UUID.fromString("a2df66fd-e207-47c4-af4c-e59ffa7cf706")
+
+    val effectHandler = EditPatientEffectHandler(
+        patientRepository = patientRepository,
+        utcClock = utcClock,
+        schedulersProvider = TestSchedulersProvider.trampoline(),
+        country = bangladesh,
+        uuidGenerator = FakeUuidGenerator.fixed(identifierUuid),
+        currentUser = Lazy { user },
+        inputFieldsFactory = inputFieldsFactory,
+        dateOfBirthFormatter = dateOfBirthFormatter,
+        viewEffectsConsumer = viewEffectHandler::handle
+    )
+
+    val testCase = EffectHandlerTestCase(effectHandler.build())
+    val bpPassportBusinessId = TestData.businessId(
+        uuid = identifierUuid,
+        patientUuid = patient.uuid,
+        identifier = Identifier("e116bf4c-53e0-46a3-b95d-295d7178d66e", BpPassport)
+    )
+    val listOfBpPassports = listOf(bpPassportBusinessId.identifier)
+
+    whenever(patientRepository.updatePatient(patient)) doReturn Completable.complete()
+    whenever(patientRepository.updateAddressForPatient(patient.uuid, patientAddress)) doReturn Completable.complete()
+    whenever(patientRepository.updatePhoneNumberForPatient(patient.uuid, phoneNumber)) doReturn Completable.complete()
+    whenever(facilityRepository.currentFacility()) doReturn (Observable.just(facility))
+    whenever(patientRepository.addIdentifierToPatient(
+        uuid = identifierUuid,
+        patientUuid = patient.uuid,
+        identifier = bpPassportBusinessId.identifier,
+        assigningUser = user
+    )) doReturn Single.just(bpPassportBusinessId)
+
+    // when
+    testCase.dispatch(SavePatientEffect(entry.addBpPassports(listOfBpPassports), patient, patientAddress, phoneNumber, null))
+
+    // then
+    verify(patientRepository).updatePatient(patient)
+    verify(patientRepository).updateAddressForPatient(patient.uuid, patientAddress)
+    verify(patientRepository).updatePhoneNumberForPatient(patient.uuid, phoneNumber)
+    verify(patientRepository).addIdentifierToPatient(
+        uuid = identifierUuid,
+        patientUuid = patient.uuid,
+        identifier = bpPassportBusinessId.identifier,
+        assigningUser = user
+    )
+    verify(patientRepository, never()).saveBusinessId(any())
+    verifyNoMoreInteractions(patientRepository)
+    testCase.assertOutgoingEvents(PatientSaved)
+    verifyZeroInteractions(ui)
   }
 }

@@ -2,6 +2,7 @@ package org.simple.clinic.editpatient
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -44,9 +45,11 @@ import org.simple.clinic.editpatient.deletepatient.DeletePatientScreen
 import org.simple.clinic.feature.Feature.DeletePatient
 import org.simple.clinic.feature.Feature.VillageTypeAhead
 import org.simple.clinic.feature.Features
+import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.form.AgeField
@@ -74,9 +77,11 @@ import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
+import org.simple.clinic.scanid.ScanSimpleIdScreen
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.afterTextChangedWatcher
 import org.simple.clinic.util.exhaustive
+import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
@@ -230,8 +235,12 @@ class EditPatientScreen : BaseScreen<
   private val saveButton
     get() = binding.saveButton
 
+  private val addBpPassportButton
+    get() = binding.addBpPassportButton
+
   private val hardwareBackPressEvents = PublishSubject.create<BackClicked>()
   private val hotEvents = PublishSubject.create<UiEvent>()
+  private val additionalEvents = DeferredEventSource<EditPatientEvent>()
 
   private val villageTypeAheadAdapter by unsafeLazy {
     ArrayAdapter<String>(
@@ -330,9 +339,14 @@ class EditPatientScreen : BaseScreen<
       saveClicks(),
       dateOfBirthFocusChanges(),
       backClicks(),
+      addBpPassportClicks(),
       hotEvents
   ).compose(ReportAnalyticsEvents())
       .cast<EditPatientEvent>()
+
+  override fun additionalEventSources() = listOf(
+      additionalEvents
+  )
 
   override fun bindView(
       layoutInflater: LayoutInflater,
@@ -346,11 +360,28 @@ class EditPatientScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    setAdapterWhenVillageTypeAheadIsEnabled()
+
+    deletePatient.setOnClickListener { router.push(DeletePatientScreen.Key(screenKey.patient.uuid)) }
+
+    handleScanBpPassportResult()
+  }
+
+  private fun setAdapterWhenVillageTypeAheadIsEnabled() {
     if (features.isEnabled(VillageTypeAhead)) {
       colonyOrVillageEditText.setAdapter(villageTypeAheadAdapter)
     }
+  }
 
-    deletePatient.setOnClickListener { router.push(DeletePatientScreen.Key(screenKey.patient.uuid)) }
+  private fun handleScanBpPassportResult() {
+    setFragmentResultListener(ScanBpPassport) { requestKey, result ->
+      if (result !is Succeeded) return@setFragmentResultListener
+
+      if (requestKey is ScanBpPassport) {
+        val scannedIdentifier = (result.result as ScanSimpleIdScreen.ScannedIdentifier).identifier
+        additionalEvents.notify(BpPassportAdded(listOf(scannedIdentifier)))
+      }
+    }
   }
 
   override fun setupUi(inputFields: InputFields) {
@@ -367,7 +398,7 @@ class EditPatientScreen : BaseScreen<
   }
 
   override fun openSimpleScanIdScreen(openedFrom: OpenedFrom) {
-    router.push(ScanSimpleIdScreenKey(openedFrom))
+    router.pushExpectingResult(ScanBpPassport, ScanSimpleIdScreenKey(openedFrom))
   }
 
   private fun showOrHideInputFields(inputFields: InputFields) {
@@ -454,6 +485,10 @@ class EditPatientScreen : BaseScreen<
     return backButtonClicks
         .mergeWith(hardwareBackPressEvents)
         .cast()
+  }
+
+  private fun addBpPassportClicks(): Observable<EditPatientEvent> {
+    return addBpPassportButton.clicks().map { AddBpPassportButtonClicked }
   }
 
   private fun dateOfBirthFocusChanges(): Observable<EditPatientEvent> = dateOfBirthEditText.focusChanges.map(::DateOfBirthFocusChanged)
@@ -771,4 +806,7 @@ class EditPatientScreen : BaseScreen<
 
     override fun instantiateFragment() = EditPatientScreen()
   }
+
+  @Parcelize
+  object ScanBpPassport : Parcelable
 }

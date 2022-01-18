@@ -19,6 +19,8 @@
 - Bump Github action script to v5.1.0
 - Bump Lint to v30.0.4
 - Bump Dagger to v2.40.5
+- Bump facebook.soloader to 0.10.3
+- Bump Mobius to v1.5.7
 - [In Progress: 11 Jan 2022] Implement adding NHID in `PatientEditScreen`
 
 ## On Demo

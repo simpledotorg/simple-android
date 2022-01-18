@@ -12,6 +12,7 @@
   - Authentication to v19.2.0
 - Update renovate bot config
 - Bump OkHttp to v4.9.3
+- Ignore automatic appointments when fetching next appointment details
 - [In Progress: 11 Jan 2022] Implement adding NHID in `PatientEditScreen`
 
 ## On Demo

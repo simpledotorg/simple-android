@@ -14,6 +14,7 @@ import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.scanid.OpenedFrom
+import org.simple.clinic.scanid.OpenedFrom.EditPatientScreen.ToAddBpPassport
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -117,6 +118,35 @@ class EditPatientUpdateTest {
             assertThatNext(
                 hasNoModel(),
                 hasEffects(OpenSimpleScanIdScreen(OpenedFrom.EditPatientScreen.ToAddNHID))
+            )
+        )
+  }
+
+  @Test
+  fun `when add bp passport button is clicked, then open scan simple id screen`() {
+    updateSpec
+        .given(model)
+        .whenEvent(AddBpPassportButtonClicked)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasEffects(OpenSimpleScanIdScreen(ToAddBpPassport))
+            )
+        )
+  }
+
+  @Test
+  fun `when bp passport is added, then update the model with bp passport`() {
+    val bpPassport1 = Identifier("a26d7480-ac79-4de6-a120-15e2bdbdc6e7", Identifier.IdentifierType.BpPassport)
+    val bpPassport2 = Identifier("a26d7480-ac79-4de6-a120-15e2bdbdc6e7", Identifier.IdentifierType.BpPassport)
+    val listOfBpPassports = listOf(bpPassport1, bpPassport2)
+    updateSpec
+        .given(model)
+        .whenEvent(BpPassportAdded(listOfBpPassports))
+        .then(
+            assertThatNext(
+                hasModel(model.addBpPassports(listOfBpPassports)),
+                hasNoEffects()
             )
         )
   }

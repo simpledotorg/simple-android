@@ -153,6 +153,34 @@
         android:layout_marginTop="@dimen/spacing_8"
         android:orientation="vertical" />
 
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:orientation="horizontal">
+
+        <ImageButton
+          android:id="@+id/addBpPassportButton"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:padding="@dimen/spacing_2"
+          android:background="?attr/selectableItemBackgroundBorderless"
+          app:srcCompat="@drawable/ic_add_circle_outline_24px"
+          tools:ignore="ContentDescription" />
+
+        <TextView
+          android:id="@+id/addBpPassportText"
+          style="?attr/textAppearanceButton"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:paddingVertical="@dimen/spacing_2"
+          android:paddingStart="@dimen/spacing_8"
+          android:textAlignment="textStart"
+          android:text="@string/patientedit_add_bppassport"
+          android:textColor="@color/simple_light_blue_500" />
+
+      </LinearLayout>
+
       <TextView
         android:id="@+id/alternateIdLabel"
         android:layout_width="wrap_content"

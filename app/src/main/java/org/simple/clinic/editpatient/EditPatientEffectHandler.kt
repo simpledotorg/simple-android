@@ -8,6 +8,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.Maybe
 import io.reactivex.Observable
+import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.Single
@@ -101,9 +102,31 @@ class EditPatientEffectHandler @AssistedInject constructor(
       Observable.merge(
           createOrUpdatePhoneNumber(sharedSavePatientEffects),
           savePatient(sharedSavePatientEffects),
-          handleAlternativeId(sharedSavePatientEffects)
+          handleAlternativeId(sharedSavePatientEffects),
+          linkBpPassportToThePatient(sharedSavePatientEffects)
       )
     }
+  }
+
+  private fun linkBpPassportToThePatient(
+      savePatientEffects: Observable<SavePatientEffect>
+  ): Observable<EditPatientEvent> {
+    return savePatientEffects
+        .filter(::isBpPassportAdded)
+        .flatMapCompletable { savePatientEffect ->
+          patientRepository
+              .addIdentifierToPatient(
+                  uuid = uuidGenerator.v4(),
+                  assigningUser = currentUser.get(),
+                  patientUuid = savePatientEffect.ongoingEntry.patientUuid,
+                  identifier = Identifier(
+                      value = savePatientEffect.ongoingEntry.bpPassports!!.last().value,
+                      type = BpPassport
+                  )
+              )
+              .ignoreElement()
+        }
+        .toObservable()
   }
 
   private fun savePatient(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
@@ -305,6 +328,8 @@ class EditPatientEffectHandler @AssistedInject constructor(
   private fun isAlternativeIdAdded(it: SavePatientEffect) = it.saveAlternativeId == null && it.ongoingEntry.alternativeId.isNotBlank()
 
   private fun isAlternativeIdCleared(it: SavePatientEffect) = it.saveAlternativeId != null && it.ongoingEntry.alternativeId.isBlank()
+
+  private fun isBpPassportAdded(it: SavePatientEffect) = it.ongoingEntry.bpPassports?.isNotEmpty() == true
 
   private fun loadInputFields(): ObservableTransformer<LoadInputFields, EditPatientEvent> {
     return ObservableTransformer { effects ->

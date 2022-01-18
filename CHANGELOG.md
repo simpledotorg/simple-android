@@ -11,6 +11,7 @@
   - MLKit Barcode Scanning to v16.2.1
   - Authentication to v19.2.0
 - Update renovate bot config
+- Bump OkHttp to v4.9.3
 - [In Progress: 11 Jan 2022] Implement adding NHID in `PatientEditScreen`
 
 ## On Demo

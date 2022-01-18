@@ -13,6 +13,7 @@
 - Update renovate bot config
 - Bump OkHttp to v4.9.3
 - Ignore automatic appointments when fetching next appointment details
+- Bump AGP to v7.0.4
 - [In Progress: 11 Jan 2022] Implement adding NHID in `PatientEditScreen`
 
 ## On Demo

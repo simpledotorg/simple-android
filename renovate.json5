@@ -1,0 +1,13 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "schedule": [
+    "every 2 months on the first day of the month after 12am"
+  ],
+  "ignoreDeps": [
+    // Ignoring zxing update. Since update requires Java 8+ runtime.
+    "com.google.zxing:core"
+  ],
+  "prConcurrentLimit": 5
+}

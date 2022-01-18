@@ -7,7 +7,7 @@ androidx-room = "2.3.0"
 androidx-test = "1.4.0"
 androidx-work = "2.7.1"
 
-dagger = "2.40"
+dagger = "2.40.5"
 
 dependencyUpdates = "0.38.0"
 

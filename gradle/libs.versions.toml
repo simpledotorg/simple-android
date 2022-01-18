@@ -39,7 +39,7 @@ dependencyUpdates = { id = "com.github.ben-manes.versions", version.ref = "depen
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 
 [libraries]
-android-gradle-plugin = "com.android.tools.build:gradle:7.0.3"
+android-gradle-plugin = "com.android.tools.build:gradle:7.0.4"
 android-desugaring = "com.android.tools:desugar_jdk_libs:1.0.9"
 
 androidx-annotation-annotation = "androidx.annotation:annotation:1.2.0"

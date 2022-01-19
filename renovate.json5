@@ -3,7 +3,7 @@
     "config:base"
   ],
   "schedule": [
-    "every 2 months on the first day of the month after 12am"
+    "after 12am and before 2am"
   ],
   "ignoreDeps": [
     // Ignoring zxing update. Since update requires Java 8+ runtime.

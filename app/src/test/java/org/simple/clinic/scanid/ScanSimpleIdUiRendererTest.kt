@@ -22,6 +22,7 @@ class ScanSimpleIdUiRendererTest {
     // then
     verify(ui).showSearchingForPatient()
     verify(ui).hideScanError()
+    verify(ui).setToolBarTitle(searchingModel.openedFrom)
     verifyNoMoreInteractions(ui)
   }
 
@@ -37,6 +38,7 @@ class ScanSimpleIdUiRendererTest {
     // then
     verify(ui).hideSearchingForPatient()
     verify(ui).hideScanError()
+    verify(ui).setToolBarTitle(notSearchingModel.openedFrom)
     verifyNoMoreInteractions(ui)
   }
 
@@ -51,6 +53,7 @@ class ScanSimpleIdUiRendererTest {
     // then
     verify(ui).hideSearchingForPatient()
     verify(ui).hideScanError()
+    verify(ui).setToolBarTitle(defaultModel.openedFrom)
     verifyNoMoreInteractions(ui)
   }
 
@@ -66,6 +69,7 @@ class ScanSimpleIdUiRendererTest {
     // then
     verify(ui).hideSearchingForPatient()
     verify(ui).showScanError()
+    verify(ui).setToolBarTitle(defaultModel.openedFrom)
     verifyNoMoreInteractions(ui)
   }
 
@@ -81,6 +85,7 @@ class ScanSimpleIdUiRendererTest {
     verify(ui).hideEnteredCodeContainerView()
     verify(ui).hideSearchingForPatient()
     verify(ui).hideScanError()
+    verify(ui).setToolBarTitle(defaultModel.openedFrom)
     verifyNoMoreInteractions(ui)
   }
 }

@@ -21,6 +21,7 @@
 - Bump Dagger to v2.40.5
 - Bump facebook.soloader to 0.10.3
 - Bump Mobius to v1.5.7
+- Request camera permissions when add bp passport button is clicked in `EditPatientScreen`
 - [In Progress: 11 Jan 2022] Implement adding NHID in `PatientEditScreen`
 - [In Progress: 17 Jan 2022] Implement adding scan support for BpPassport in `EditPatientScreen`
 

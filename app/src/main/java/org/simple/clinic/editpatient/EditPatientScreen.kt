@@ -386,12 +386,17 @@ class EditPatientScreen : BaseScreen<
   }
 
   private fun handleScanIdentifierResult() {
-    setFragmentResultListener(ScanBpPassport) { requestKey, result ->
+    setFragmentResultListener(ScanBpPassport, ScanIndiaNationalHealthID) { requestKey, result ->
       if (result !is Succeeded) return@setFragmentResultListener
 
       if (requestKey is ScanBpPassport) {
         val scannedBPPassport = ScanSimpleIdScreen.readIdentifier(result)
         additionalEvents.notify(BpPassportAdded(listOf(scannedBPPassport)))
+      }
+
+      if (requestKey is ScanIndiaNationalHealthID) {
+        val scannedIndiaNHID = ScanSimpleIdScreen.readIdentifier(result)
+        additionalEvents.notify(AlternativeIdChanged(scannedIndiaNHID.value))
       }
     }
   }

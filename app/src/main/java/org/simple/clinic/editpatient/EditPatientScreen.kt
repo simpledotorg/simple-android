@@ -526,7 +526,7 @@ class EditPatientScreen : BaseScreen<
   }
 
   private fun addNHIDButtonClicks(): Observable<EditPatientEvent> {
-    return addNHIDButton.clicks().map { AddNHIDButtonClicked }
+    return addNHIDButton.clicks().map { AddNHIDButtonClicked() }
   }
 
   private fun backClicks(): Observable<EditPatientEvent> {

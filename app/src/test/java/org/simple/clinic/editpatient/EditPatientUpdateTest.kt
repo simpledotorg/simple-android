@@ -114,7 +114,7 @@ class EditPatientUpdateTest {
   fun `when add NHID button is clicked, then open scan simple id screen to add NHID`() {
     updateSpec
         .given(model)
-        .whenEvent(AddNHIDButtonClicked)
+        .whenEvent(AddNHIDButtonClicked())
         .then(
             assertThatNext(
                 hasNoModel(),

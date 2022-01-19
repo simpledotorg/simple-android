@@ -376,7 +376,7 @@ class EditPatientScreen : BaseScreen<
 
     deletePatient.setOnClickListener { router.push(DeletePatientScreen.Key(screenKey.patient.uuid)) }
 
-    handleScanBpPassportResult()
+    handleScanIdentifierResult()
   }
 
   private fun setAdapterWhenVillageTypeAheadIsEnabled() {
@@ -385,7 +385,7 @@ class EditPatientScreen : BaseScreen<
     }
   }
 
-  private fun handleScanBpPassportResult() {
+  private fun handleScanIdentifierResult() {
     setFragmentResultListener(ScanBpPassport) { requestKey, result ->
       if (result !is Succeeded) return@setFragmentResultListener
 

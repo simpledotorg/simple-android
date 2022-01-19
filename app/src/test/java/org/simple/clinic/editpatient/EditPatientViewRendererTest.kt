@@ -291,6 +291,7 @@ class EditPatientViewRendererTest {
     verify(ui).showProgress()
     verify(ui).displayBpPassports(emptyList())
     verify(ui).showAddNHIDButton()
+    verify(ui).showIndiaNHIDLabel()
     verifyNoMoreInteractions(ui)
   }
 }

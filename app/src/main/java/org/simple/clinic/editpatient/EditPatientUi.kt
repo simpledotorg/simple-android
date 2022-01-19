@@ -35,4 +35,5 @@ interface EditPatientUi {
   fun openSimpleScanIdScreen(openedFrom: OpenedFrom)
   fun showAddNHIDButton()
   fun hideAddNHIDButton()
+  fun showIndiaNHIDLabel()
 }

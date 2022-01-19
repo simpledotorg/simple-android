@@ -437,6 +437,11 @@ class EditPatientScreen : BaseScreen<
     // Nothing to see here, yet
   }
 
+  override fun showIndiaNHIDLabel() {
+    alternateIdLabel.visibility = VISIBLE
+    alternateIdLabel.text = resources.getString(R.string.identifiertype_india_national_health_id)
+  }
+
   private fun showOrHideInputFields(inputFields: InputFields) {
     val allTypesOfInputFields: Map<Class<*>, View> = mapOf(
         PatientNameField::class.java to fullNameInputLayout,

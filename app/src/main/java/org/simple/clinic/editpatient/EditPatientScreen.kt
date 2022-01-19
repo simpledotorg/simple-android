@@ -255,6 +255,9 @@ class EditPatientScreen : BaseScreen<
   private val addNHIDButtonContainer
     get() = binding.addNHIDButtonContainer
 
+  private val addNHIDButton
+    get() = binding.addNHIDButton
+
   private val hardwareBackPressEvents = PublishSubject.create<BackClicked>()
   private val hotEvents = PublishSubject.create<UiEvent>()
   private val additionalEvents = DeferredEventSource<EditPatientEvent>()
@@ -358,6 +361,7 @@ class EditPatientScreen : BaseScreen<
       dateOfBirthFocusChanges(),
       backClicks(),
       addBpPassportClicks(),
+      addNHIDButtonClicks(),
       hotEvents
   )
       .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
@@ -519,6 +523,10 @@ class EditPatientScreen : BaseScreen<
 
   private fun saveClicks(): Observable<EditPatientEvent> {
     return saveButton.clicks().map { SaveClicked }
+  }
+
+  private fun addNHIDButtonClicks(): Observable<EditPatientEvent> {
+    return addNHIDButton.clicks().map { AddNHIDButtonClicked }
   }
 
   private fun backClicks(): Observable<EditPatientEvent> {

@@ -390,8 +390,8 @@ class EditPatientScreen : BaseScreen<
       if (result !is Succeeded) return@setFragmentResultListener
 
       if (requestKey is ScanBpPassport) {
-        val scannedIdentifier = (result.result as ScanSimpleIdScreen.ScannedIdentifier).identifier
-        additionalEvents.notify(BpPassportAdded(listOf(scannedIdentifier)))
+        val scannedBPPassport = ScanSimpleIdScreen.readIdentifier(result)
+        additionalEvents.notify(BpPassportAdded(listOf(scannedBPPassport)))
       }
     }
   }

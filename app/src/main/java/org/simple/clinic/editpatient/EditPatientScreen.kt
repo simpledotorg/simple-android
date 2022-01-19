@@ -251,6 +251,9 @@ class EditPatientScreen : BaseScreen<
 
   private val addBpPassportButton
     get() = binding.addBpPassportButton
+    
+  private val addNHIDButtonContainer
+    get() = binding.addNHIDButtonContainer
 
   private val hardwareBackPressEvents = PublishSubject.create<BackClicked>()
   private val hotEvents = PublishSubject.create<UiEvent>()
@@ -430,11 +433,11 @@ class EditPatientScreen : BaseScreen<
   }
 
   override fun showAddNHIDButton() {
-    // Nothing to see here, yet
+    addNHIDButtonContainer.visibility = VISIBLE
   }
 
   override fun hideAddNHIDButton() {
-    // Nothing to see here, yet
+    addNHIDButtonContainer.visibility = GONE
   }
 
   override fun showIndiaNHIDLabel() {

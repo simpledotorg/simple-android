@@ -821,4 +821,7 @@ class EditPatientScreen : BaseScreen<
 
   @Parcelize
   object ScanBpPassport : Parcelable
+
+  @Parcelize
+  object ScanIndiaNationalHealthID : Parcelable
 }

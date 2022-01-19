@@ -229,7 +229,7 @@ class EditPatientViewRendererTest {
   }
 
   @Test
-  fun `when NHID is added after qr code scan and feature flag is enabled, then display NHID in the ui and hide add NHID button`() {
+  fun `when NHID is added after qr code scan and feature flag is enabled, then display NHID with highligh in the ui and hide add NHID button`() {
     // given
     val indiaNHID = "23432123456434"
     val identifier = Identifier(indiaNHID, IndiaNationalHealthId)
@@ -260,7 +260,7 @@ class EditPatientViewRendererTest {
     verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
     verify(ui).showProgress()
     verify(ui).displayBpPassports(emptyList())
-    verify(ui).setAlternateIdContainer(identifier, false)
+    verify(ui).setAlternateIdContainer(identifier, true)
     verify(ui).hideAddNHIDButton()
     verify(ui).showBPPassportButton()
     verifyNoMoreInteractions(ui)

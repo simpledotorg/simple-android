@@ -54,7 +54,7 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
   private fun displayNewlyAddedNHID(alternativeId: String) {
     if (alternativeId.isNotEmpty()) {
       ui.hideAddNHIDButton()
-      ui.setAlternateIdContainer(Identifier(alternativeId, IndiaNationalHealthId), false)
+      ui.setAlternateIdContainer(Identifier(alternativeId, IndiaNationalHealthId), true)
     } else {
       ui.showIndiaNHIDLabel()
       ui.showAddNHIDButton()

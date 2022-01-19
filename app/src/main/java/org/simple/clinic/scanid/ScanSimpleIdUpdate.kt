@@ -50,7 +50,7 @@ class ScanSimpleIdUpdate @Inject constructor(
 
   private fun invalidQrCode(model: ScanSimpleIdModel): Next<ScanSimpleIdModel, ScanSimpleIdEffect> {
     return when (model.openedFrom) {
-      is EditPatientScreen -> dispatch(ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
+      is EditPatientScreen -> next(model.notSearching(), ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
       InstantSearchScreen, PatientsTabScreen -> next(model.notSearching().invalidQrCode())
     }
   }
@@ -126,7 +126,7 @@ class ScanSimpleIdUpdate @Inject constructor(
       searchPatientOnlineWhenOnlinePatientLookupEnabled(event, model)
     } else {
       when (model.openedFrom) {
-        is EditPatientScreen -> dispatch(ShowScannedQrCodeError(IdentifierAlreadyExists))
+        is EditPatientScreen -> next(model.notSearching(), ShowScannedQrCodeError(IdentifierAlreadyExists))
         InstantSearchScreen, PatientsTabScreen -> next(
             model = model.notSearching(),
             patientFoundByIdentifierSearch(patients = event.patients, identifier = event.identifier)
@@ -197,7 +197,7 @@ class ScanSimpleIdUpdate @Inject constructor(
       event: ScanSimpleIdScreenQrCodeScanned
   ): Next<ScanSimpleIdModel, ScanSimpleIdEffect> =
       if (model.isOpenedFromEditPatientScreenToAddBpPassport) {
-        dispatch(ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
+        next(model.notSearching(), ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
       } else {
         searchPatientWhenNHIDEnabled(clearInvalidQrCodeModel, event)
       }
@@ -211,7 +211,7 @@ class ScanSimpleIdUpdate @Inject constructor(
     val identifier = Identifier(bpPassportCode.toString(), BpPassport)
 
     return if (model.isOpenedFromEditPatientScreenToAddNhid) {
-      dispatch(ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
+      next(model.notSearching(), ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
     } else {
       next(model = clearInvalidQrCodeModel.searching(), SearchPatientByIdentifier(identifier))
     }

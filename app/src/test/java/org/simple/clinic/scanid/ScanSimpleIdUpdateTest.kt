@@ -387,7 +387,7 @@ class ScanSimpleIdUpdateTest {
         .given(defaultModel)
         .whenEvent(ScanSimpleIdScreenQrCodeScanned(scannedId))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(defaultModel.notSearching()),
             hasEffects(ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
         ))
   }
@@ -401,7 +401,7 @@ class ScanSimpleIdUpdateTest {
         .given(defaultModel)
         .whenEvent(ScanSimpleIdScreenQrCodeScanned(scannedId))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(defaultModel.notSearching()),
             hasEffects(ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
         ))
   }
@@ -506,7 +506,7 @@ class ScanSimpleIdUpdateTest {
         .given(openedToAddBpPassportModel)
         .whenEvent(PatientSearchByIdentifierCompleted(listOf(patient), identifier))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(openedToAddBpPassportModel.notSearching()),
             hasEffects(ShowScannedQrCodeError(IdentifierAlreadyExists))
         ))
   }
@@ -541,7 +541,7 @@ class ScanSimpleIdUpdateTest {
         .whenEvent(InvalidQrCode)
         .then(
             assertThatNext(
-                hasNoModel(),
+                hasModel(openedToAddBpPassportModel.notSearching()),
                 hasEffects(ShowScannedQrCodeError(ScanErrorState.InvalidQrCode))
             )
         )

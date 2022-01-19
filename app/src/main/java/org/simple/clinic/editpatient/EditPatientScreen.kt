@@ -20,10 +20,12 @@ import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.activity.permissions.RequestPermissions
 import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.databinding.PatientEditAlternateIdViewBinding
 import org.simple.clinic.databinding.PatientEditBpPassportViewBinding
@@ -78,8 +80,8 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.scanid.OpenedFrom
-import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.scanid.ScanSimpleIdScreen
+import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.afterTextChangedWatcher
 import org.simple.clinic.util.exhaustive
@@ -101,8 +103,6 @@ import org.simple.clinic.widgets.visibleOrGone
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
-import io.reactivex.rxkotlin.ofType
-import org.simple.clinic.activity.permissions.RequestPermissions
 
 class EditPatientScreen : BaseScreen<
     EditPatientScreen.Key,
@@ -410,7 +410,13 @@ class EditPatientScreen : BaseScreen<
   }
 
   override fun openSimpleScanIdScreen(openedFrom: OpenedFrom) {
-    router.pushExpectingResult(ScanBpPassport, ScanSimpleIdScreenKey(openedFrom))
+    val requestType = when (openedFrom) {
+      is OpenedFrom.EditPatientScreen.ToAddBpPassport -> ScanBpPassport
+      is OpenedFrom.EditPatientScreen.ToAddNHID -> ScanIndiaNationalHealthID
+      else -> throw IllegalArgumentException("Opened from parameter is unknown, this shouldn't happen")
+    }
+
+    router.pushExpectingResult(requestType, ScanSimpleIdScreenKey(openedFrom))
   }
 
   private fun showOrHideInputFields(inputFields: InputFields) {

@@ -126,7 +126,7 @@ class EditPatientUpdateTest {
   fun `when add bp passport button is clicked, then open scan simple id screen`() {
     updateSpec
         .given(model)
-        .whenEvent(AddBpPassportButtonClicked)
+        .whenEvent(AddBpPassportButtonClicked())
         .then(
             assertThatNext(
                 hasNoModel(),

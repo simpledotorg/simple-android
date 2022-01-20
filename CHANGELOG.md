@@ -28,6 +28,8 @@
 - Implement adding `NHID` in `EditPatientScreen`
 - Request camera permission when add nhid button is clicked in `EditPatientScreen`
 - Fix when scanned QR code error is shown the progress state continues to show
+- Refactor `addBPPassport` and `addNHIDButton` to use `MaterialButton`
+- Fix two duplicate NHIDs end up rendering in `EditPatientScreen`
 - [In Progress: 11 Jan 2022] Implement adding NHID in `PatientEditScreen`
 - [In Progress: 17 Jan 2022] Implement adding scan support for BpPassport in `EditPatientScreen`
 

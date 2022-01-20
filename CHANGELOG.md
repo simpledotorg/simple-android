@@ -31,6 +31,7 @@
 - Refactor `addBPPassport` and `addNHIDButton` to use `MaterialButton`
 - Fix two duplicate NHIDs end up rendering in `EditPatientScreen`
 - Bump firebase config to v21.0.1
+- Add facility protocol and group UUID in demo facility
 - [In Progress: 11 Jan 2022] Implement adding NHID in `PatientEditScreen`
 - [In Progress: 17 Jan 2022] Implement adding scan support for BpPassport in `EditPatientScreen`
 

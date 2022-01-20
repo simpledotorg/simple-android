@@ -42,11 +42,12 @@
 - Bump Mixpanel to v5.9.6
 - Bump androidx-annotation
 - Add benchmark test for loading overdue appointments in a facility
-- [In Progress: 17 Jan 2022] Implement adding scan support for BpPassport in `EditPatientScreen`
+- Support scanning list of unique Bp passports in `EditPatientScreen`
 
 ### Changes
 
 - Implement adding scan support for India NHID in `EditPatientScreen`
+- Implement adding scan support for BpPassport in `EditPatientScreen`
 
 ## On Demo
 

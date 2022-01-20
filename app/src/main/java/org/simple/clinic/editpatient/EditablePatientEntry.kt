@@ -141,8 +141,9 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
   fun updateAlternativeId(alternativeId: String): EditablePatientEntry =
       copy(alternativeId = alternativeId)
 
-  fun addBpPassports(bpPassports: List<Identifier>): EditablePatientEntry =
-      copy(bpPassports = bpPassports)
+  fun addBpPassports(bpPassports: List<Identifier>): EditablePatientEntry {
+    return copy(bpPassports = this.bpPassports.orEmpty() + bpPassports)
+  }
 
   fun validate(
       alreadySavedNumber: PatientPhoneNumber?,

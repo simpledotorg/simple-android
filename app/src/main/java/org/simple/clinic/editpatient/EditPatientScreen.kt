@@ -449,6 +449,10 @@ class EditPatientScreen : BaseScreen<
     alternateIdLabel.text = resources.getString(R.string.identifiertype_india_national_health_id)
   }
 
+  override fun showBPPassportButton() {
+    addBpPassportButton.visibility = VISIBLE
+  }
+
   private fun showOrHideInputFields(inputFields: InputFields) {
     val allTypesOfInputFields: Map<Class<*>, View> = mapOf(
         PatientNameField::class.java to fullNameInputLayout,

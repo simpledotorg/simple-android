@@ -39,6 +39,10 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
       ui.setupUi(model.inputFields!!)
     }
 
+    if (model.isAddingHealthIDsFromEditPatientEnabled) {
+      ui.showBPPassportButton()
+    }
+
     fillFormFields(
         model.ongoingEntry,
         model.savedBangladeshNationalId,

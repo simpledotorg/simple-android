@@ -262,6 +262,7 @@ class EditPatientViewRendererTest {
     verify(ui).displayBpPassports(emptyList())
     verify(ui).setAlternateIdContainer(identifier)
     verify(ui).hideAddNHIDButton()
+    verify(ui).showBPPassportButton()
     verifyNoMoreInteractions(ui)
   }
 
@@ -297,6 +298,41 @@ class EditPatientViewRendererTest {
     verify(ui).displayBpPassports(emptyList())
     verify(ui).showAddNHIDButton()
     verify(ui).showIndiaNHIDLabel()
+    verify(ui).showBPPassportButton()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when adding health ids from edit patient is enabled, then show bp passport button`() {
+    // given
+    val model = EditPatientModel.from(
+        patient = patientProfile.patient,
+        address = patientProfile.address,
+        phoneNumber = patientProfile.phoneNumbers.first(),
+        dateOfBirthFormatter = dateOfBirthFormat,
+        bangladeshNationalId = null,
+        saveButtonState = EditPatientState.SAVING_PATIENT,
+        isUserCountryIndia = false,
+        isAddingHealthIDsFromEditPatientEnabled = true)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).setPatientName(patientProfile.patient.fullName)
+    verify(ui).setGender(patientProfile.patient.gender)
+    verify(ui).setState(patientProfile.address.state)
+    verify(ui).setDistrict(patientProfile.address.district)
+    verify(ui).setStreetAddress(patientProfile.address.streetAddress)
+    verify(ui).setZone(patientProfile.address.zone)
+    verify(ui).setColonyOrVillage(patientProfile.address.colonyOrVillage!!)
+    verify(ui).setPatientPhoneNumber(patientProfile.phoneNumbers.first().number)
+    verify(ui).setPatientDateOfBirth("09/03/1990")
+    verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
+    verify(ui).showProgress()
+    verify(ui).setAlternateIdTextField("")
+    verify(ui).displayBpPassports(emptyList())
+    verify(ui).showBPPassportButton()
     verifyNoMoreInteractions(ui)
   }
 }

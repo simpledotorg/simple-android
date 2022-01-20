@@ -251,9 +251,6 @@ class EditPatientScreen : BaseScreen<
 
   private val addBpPassportButton
     get() = binding.addBpPassportButton
-    
-  private val addNHIDButtonContainer
-    get() = binding.addNHIDButtonContainer
 
   private val addNHIDButton
     get() = binding.addNHIDButton
@@ -438,11 +435,11 @@ class EditPatientScreen : BaseScreen<
   }
 
   override fun showAddNHIDButton() {
-    addNHIDButtonContainer.visibility = VISIBLE
+    addNHIDButton.visibility = VISIBLE
   }
 
   override fun hideAddNHIDButton() {
-    addNHIDButtonContainer.visibility = GONE
+    addNHIDButton.visibility = GONE
   }
 
   override fun showIndiaNHIDLabel() {
@@ -836,6 +833,7 @@ class EditPatientScreen : BaseScreen<
     val layoutInflater = LayoutInflater.from(requireContext())
     val alternateIdView = PatientEditAlternateIdViewBinding.inflate(layoutInflater, rootView, false)
     alternateIdView.alternateIdentifier.text = identifier
+    alternateIdContainer.removeAllViews()
     alternateIdContainer.addView(alternateIdView.root)
   }
 

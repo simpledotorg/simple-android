@@ -186,35 +186,20 @@
         android:visibility="gone"
         tools:visibility="visible" />
 
-      <LinearLayout
-        android:id="@+id/addNHIDButtonContainer"
-        android:layout_width="match_parent"
+      <com.google.android.material.button.MaterialButton
+        android:id="@+id/addNHIDButton"
+        style="?attr/borderlessButtonDenseStyle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_8"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <ImageButton
-          android:id="@+id/addNHIDButton"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:padding="@dimen/spacing_2"
-          android:background="?attr/selectableItemBackgroundBorderless"
-          app:srcCompat="@drawable/ic_add_circle_outline_24px"
-          tools:ignore="ContentDescription" />
-
-        <TextView
-          android:id="@+id/addNHIDText"
-          style="?attr/textAppearanceButton"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:paddingVertical="@dimen/spacing_2"
-          android:paddingStart="@dimen/spacing_8"
-          android:text="@string/patientedit_add_button"
-          android:textAlignment="textStart"
-          android:textColor="?attr/colorPrimary" />
-
-      </LinearLayout>
+        android:paddingStart="@dimen/spacing_2"
+        android:text="@string/patientedit_add_button"
+        android:textAlignment="viewStart"
+        android:textAppearance="?attr/textAppearanceButton"
+        android:visibility="gone"
+        app:icon="@drawable/ic_add_circle_outline_24px"
+        app:iconGravity="start"
+        app:iconPadding="@dimen/spacing_8" />
 
       <RadioGroup
         android:id="@+id/genderRadioGroup"

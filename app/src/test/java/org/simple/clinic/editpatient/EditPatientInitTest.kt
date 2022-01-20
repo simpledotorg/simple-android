@@ -30,6 +30,7 @@ class EditPatientInitTest {
       dateOfBirthFormat,
       bangladeshNationalId,
       EditPatientState.NOT_SAVING_PATIENT,
+      false,
       false
     )
 
@@ -53,6 +54,7 @@ class EditPatientInitTest {
       dateOfBirthFormat,
       bangladeshNationalId,
       EditPatientState.NOT_SAVING_PATIENT,
+      false,
       false
     )
     val initSpec = InitSpec(EditPatientInit(patient = patient,
@@ -78,6 +80,7 @@ class EditPatientInitTest {
       dateOfBirthFormat,
       bangladeshNationalId,
       EditPatientState.NOT_SAVING_PATIENT,
+      false,
       false
     ).updateColonyOrVillagesList(colonyOrVillages)
 

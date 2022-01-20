@@ -46,6 +46,7 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.editpatient.deletepatient.DeletePatientScreen
+import org.simple.clinic.feature.Feature.AddingHealthIDsFromEditPatient
 import org.simple.clinic.feature.Feature.DeletePatient
 import org.simple.clinic.feature.Feature.VillageTypeAhead
 import org.simple.clinic.feature.Features
@@ -335,7 +336,8 @@ class EditPatientScreen : BaseScreen<
       dateOfBirthFormatter = dateOfBirthFormat,
       bangladeshNationalId = screenKey.bangladeshNationalId,
       saveButtonState = EditPatientState.NOT_SAVING_PATIENT,
-      isUserCountryIndia = country.isoCountryCode == Country.INDIA
+      isUserCountryIndia = country.isoCountryCode == Country.INDIA,
+      isAddingHealthIDsFromEditPatientEnabled = features.isEnabled(AddingHealthIDsFromEditPatient)
   )
 
   override fun createInit() = EditPatientInit(

@@ -833,6 +833,7 @@ class EditPatientScreen : BaseScreen<
     val layoutInflater = LayoutInflater.from(requireContext())
     val alternateIdView = PatientEditAlternateIdViewBinding.inflate(layoutInflater, rootView, false)
     alternateIdView.alternateIdentifier.text = identifier
+    alternateIdContainer.removeAllViews()
     alternateIdContainer.addView(alternateIdView.root)
   }
 

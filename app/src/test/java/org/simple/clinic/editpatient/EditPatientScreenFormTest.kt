@@ -829,7 +829,7 @@ class EditPatientScreenFormTest {
 
     val fixture = MobiusTestFixture<EditPatientModel, EditPatientEvent, EditPatientEffect>(
         events = uiEvents,
-        defaultModel = EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null, NOT_SAVING_PATIENT),
+        defaultModel = EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null, NOT_SAVING_PATIENT, false),
         init = EditPatientInit(patient = patient,
             isVillageTypeAheadEnabled = true),
         update = EditPatientUpdate(

@@ -52,6 +52,13 @@
     <item name="android:textAppearance">?attr/textAppearanceButton</item>
   </style>
 
+  <style name="Widget.Simple.Button.TextButton.Dense">
+    <item name="android:minHeight">@dimen/spacing_32</item>
+    <item name="android:paddingRight">@dimen/spacing_0</item>
+    <item name="android:paddingLeft">@dimen/spacing_0</item>
+    <item name="android:textAppearance">?attr/textAppearanceButton</item>
+  </style>
+
   <style name="Widget.Simple.Button.TextButton.Red1">
     <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.Red1Primary</item>
   </style>

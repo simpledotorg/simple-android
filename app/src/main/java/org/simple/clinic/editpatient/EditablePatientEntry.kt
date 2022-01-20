@@ -145,6 +145,10 @@ data class EditablePatientEntry @Deprecated("Use the `from` factory function ins
     return copy(bpPassports = this.bpPassports.orEmpty() + bpPassports)
   }
 
+  fun getCurrentListOfBpPassports(): List<Identifier> {
+    return this.bpPassports.orEmpty()
+  }
+
   fun validate(
       alreadySavedNumber: PatientPhoneNumber?,
       numberValidator: PhoneNumberValidator,

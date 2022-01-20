@@ -74,6 +74,9 @@ data class EditPatientModel(
   val canAddNHID
     get() = isUserCountryIndia && isAddingHealthIDsFromEditPatientEnabled && savedBangladeshNationalId == null
 
+  val currentListOfBpPassports
+    get() = ongoingEntry.getCurrentListOfBpPassports()
+
   fun updateName(name: String): EditPatientModel =
       copy(ongoingEntry = ongoingEntry.updateName(name))
 

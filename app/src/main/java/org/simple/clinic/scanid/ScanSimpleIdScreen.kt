@@ -359,6 +359,14 @@ class ScanSimpleIdScreen : BaseScreen<
     enteredCodeContainer.visibility = View.GONE
   }
 
+  override fun setToolBarTitle(openedFrom: OpenedFrom) {
+    toolBar.title = when(openedFrom) {
+      OpenedFrom.InstantSearchScreen, OpenedFrom.PatientsTabScreen -> resources.getString(R.string.scansimpleid_bp_passport_or_national_health_id)
+      OpenedFrom.EditPatientScreen.ToAddBpPassport -> resources.getString(R.string.scansimpleid_bp_passport_title)
+      OpenedFrom.EditPatientScreen.ToAddNHID -> resources.getString(R.string.scansimpleid_national_id_title)
+    }
+  }
+
   interface Injector {
     fun inject(target: ScanSimpleIdScreen)
   }

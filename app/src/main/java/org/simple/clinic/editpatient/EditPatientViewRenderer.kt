@@ -43,7 +43,7 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
     displayBpPassports(model)
   }
 
-  private fun displayUpdatedNHID(alternativeId: String) {
+  private fun displayNewlyAddedNHID(alternativeId: String) {
     if (alternativeId.isNotEmpty()) {
       ui.hideAddNHIDButton()
       ui.setAlternateIdContainer(Identifier(alternativeId, IndiaNationalHealthId))
@@ -94,7 +94,7 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
 
   private fun setAlternateIdIfNHIDIsUpdated(ongoingEntry: EditablePatientEntry, alternateId: BusinessId?, isUserCountryIndia: Boolean) {
     if (isUserCountryIndia && alternateId == null) {
-      displayUpdatedNHID(ongoingEntry.alternativeId)
+      displayNewlyAddedNHID(ongoingEntry.alternativeId)
     } else {
       setAlternateId(alternateId, ongoingEntry)
     }

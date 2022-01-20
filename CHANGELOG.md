@@ -23,6 +23,7 @@
 - Bump Mobius to v1.5.7
 - Request camera permissions when add bp passport button is clicked in `EditPatientScreen`
 - Run renovate bot daily after 12 am
+- Update next appointment card UI specifications
 - [In Progress: 11 Jan 2022] Implement adding NHID in `PatientEditScreen`
 - [In Progress: 17 Jan 2022] Implement adding scan support for BpPassport in `EditPatientScreen`
 

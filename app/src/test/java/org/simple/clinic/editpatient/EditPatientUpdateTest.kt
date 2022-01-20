@@ -58,9 +58,10 @@ class EditPatientUpdateTest {
       patient = patientProfile.patient,
       address = patientProfile.address,
       phoneNumber = patientProfile.phoneNumbers.first(),
+      dateOfBirthFormatter = dateOfBirthFormat,
       bangladeshNationalId = null,
       saveButtonState = EditPatientState.NOT_SAVING_PATIENT,
-      dateOfBirthFormatter = dateOfBirthFormat
+      isUserCountryIndia = false
   )
 
   @Test
@@ -113,7 +114,7 @@ class EditPatientUpdateTest {
   fun `when add NHID button is clicked, then open scan simple id screen to add NHID`() {
     updateSpec
         .given(model)
-        .whenEvent(AddNHIDButtonClicked)
+        .whenEvent(AddNHIDButtonClicked())
         .then(
             assertThatNext(
                 hasNoModel(),

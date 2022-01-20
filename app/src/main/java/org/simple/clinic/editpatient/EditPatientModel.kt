@@ -25,7 +25,8 @@ data class EditPatientModel(
     val saveButtonState: EditPatientState?,
     val colonyOrVillagesList: List<String>?,
     val inputFields: InputFields?,
-    val bpPassports: List<BusinessId>?
+    val bpPassports: List<BusinessId>?,
+    val isUserCountryIndia: Boolean
 ) : Parcelable {
   companion object {
     fun from(
@@ -34,7 +35,8 @@ data class EditPatientModel(
         phoneNumber: PatientPhoneNumber?,
         dateOfBirthFormatter: DateTimeFormatter,
         bangladeshNationalId: BusinessId?,
-        saveButtonState: EditPatientState?
+        saveButtonState: EditPatientState?,
+        isUserCountryIndia: Boolean
     ): EditPatientModel {
       val savedEntry = EditablePatientEntry.from(
           patient,
@@ -54,7 +56,8 @@ data class EditPatientModel(
           saveButtonState,
           null,
           null,
-          null
+          null,
+          isUserCountryIndia
       )
     }
   }

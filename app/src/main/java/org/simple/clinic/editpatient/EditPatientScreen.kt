@@ -826,16 +826,16 @@ class EditPatientScreen : BaseScreen<
     alternativeIdInputEditText.setTextWithWatcher(alternateId, alternateIdTextChanges)
   }
 
-  override fun setAlternateIdContainer(alternateId: Identifier) {
+  override fun setAlternateIdContainer(alternateId: Identifier, hasHighlight: Boolean) {
     alternateIdLabel.visibility = VISIBLE
     alternateIdLabel.text = alternateId.displayType(resources)
 
     alternateIdContainer.visibility = VISIBLE
 
-    inflateAlternateIdView(alternateId.displayValue())
+    inflateAlternateIdView(alternateId.displayValue(), hasHighlight)
   }
 
-  private fun inflateAlternateIdView(identifier: String) {
+  private fun inflateAlternateIdView(identifier: String, hasHighlight: Boolean) {
     val layoutInflater = LayoutInflater.from(requireContext())
     val alternateIdView = PatientEditAlternateIdViewBinding.inflate(layoutInflater, rootView, false)
     alternateIdView.alternateIdentifier.text = identifier

@@ -224,7 +224,7 @@ class EditPatientViewRendererTest {
     verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
     verify(ui).showProgress()
     verify(ui).displayBpPassports(emptyList())
-    verify(ui).setAlternateIdContainer(identifier)
+    verify(ui).setAlternateIdContainer(identifier, false)
     verifyNoMoreInteractions(ui)
   }
 
@@ -260,7 +260,7 @@ class EditPatientViewRendererTest {
     verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
     verify(ui).showProgress()
     verify(ui).displayBpPassports(emptyList())
-    verify(ui).setAlternateIdContainer(identifier)
+    verify(ui).setAlternateIdContainer(identifier, false)
     verify(ui).hideAddNHIDButton()
     verify(ui).showBPPassportButton()
     verifyNoMoreInteractions(ui)

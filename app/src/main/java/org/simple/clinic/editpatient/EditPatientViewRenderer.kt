@@ -54,7 +54,7 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
   private fun displayNewlyAddedNHID(alternativeId: String) {
     if (alternativeId.isNotEmpty()) {
       ui.hideAddNHIDButton()
-      ui.setAlternateIdContainer(Identifier(alternativeId, IndiaNationalHealthId))
+      ui.setAlternateIdContainer(Identifier(alternativeId, IndiaNationalHealthId), false)
     } else {
       ui.showIndiaNHIDLabel()
       ui.showAddNHIDButton()
@@ -129,7 +129,7 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
       EthiopiaMedicalRecordNumber,
       SriLankaNationalId,
       SriLankaPersonalHealthNumber -> ui.setAlternateIdTextField(ongoingEntry.alternativeId)
-      IndiaNationalHealthId -> ui.setAlternateIdContainer(Identifier(ongoingEntry.alternativeId, alternateIdentifierType))
+      IndiaNationalHealthId -> ui.setAlternateIdContainer(Identifier(ongoingEntry.alternativeId, alternateIdentifierType), false)
       Identifier.IdentifierType.BpPassport,
       is Identifier.IdentifierType.Unknown -> throw IllegalArgumentException("Unknown alternative id: $alternateId")
     }.exhaustive()

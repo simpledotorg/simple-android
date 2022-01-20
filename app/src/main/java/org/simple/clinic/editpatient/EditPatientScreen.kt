@@ -431,7 +431,7 @@ class EditPatientScreen : BaseScreen<
     val requestType = when (openedFrom) {
       is OpenedFrom.EditPatientScreen.ToAddBpPassport -> ScanBpPassport
       is OpenedFrom.EditPatientScreen.ToAddNHID -> ScanIndiaNationalHealthID
-      else -> throw IllegalArgumentException("Opened from parameter is unknown, this shouldn't happen")
+      else -> throw IllegalArgumentException("Unknown opened from: $openedFrom")
     }
 
     router.pushExpectingResult(requestType, ScanSimpleIdScreenKey(openedFrom))

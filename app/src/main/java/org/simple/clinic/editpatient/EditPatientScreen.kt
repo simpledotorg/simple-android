@@ -144,7 +144,7 @@ class EditPatientScreen : BaseScreen<
   @Inject
   lateinit var screenResults: ScreenResultBus
 
-   @Inject
+  @Inject
   lateinit var country: Country
 
   private val rootView

@@ -43,4 +43,6 @@
 
   <dimen name="patientsummary_drug_summary_item_container_bottom_padding_8">8dp</dimen>
   <dimen name="patientsummary_drug_summary_item_container_bottom_padding_24">24dp</dimen>
+
+  <dimen name="editpatient_identifier_highlight_horizontal_padding">@dimen/spacing_8</dimen>
 </resources>

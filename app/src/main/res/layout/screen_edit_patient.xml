@@ -177,7 +177,7 @@
           android:paddingStart="@dimen/spacing_8"
           android:textAlignment="textStart"
           android:text="@string/patientedit_add_bppassport"
-          android:textColor="@color/simple_light_blue_500" />
+          android:textColor="?attr/colorPrimary" />
 
       </LinearLayout>
 
@@ -226,7 +226,7 @@
           android:paddingStart="@dimen/spacing_8"
           android:text="@string/patientedit_add_bppassport"
           android:textAlignment="textStart"
-          android:textColor="@color/simple_light_blue_500" />
+          android:textColor="?attr/colorPrimary" />
 
       </LinearLayout>
 

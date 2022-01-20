@@ -402,12 +402,12 @@ class EditPatientScreen : BaseScreen<
 
       when (requestKey) {
         ScanBpPassport -> {
-          val scannedBPPassport = ScanSimpleIdScreen.readIdentifier(result)
-          additionalEvents.notify(BpPassportAdded(listOf(scannedBPPassport)))
+          val scannedBpPassport = ScanSimpleIdScreen.readIdentifier(result)
+          hotEvents.onNext(BpPassportAdded(listOf(scannedBpPassport)))
         }
         ScanIndiaNationalHealthID -> {
           val scannedIndiaNHID = ScanSimpleIdScreen.readIdentifier(result)
-          additionalEvents.notify(AlternativeIdChanged(scannedIndiaNHID.value))
+          hotEvents.onNext(AlternativeIdChanged(scannedIndiaNHID.value))
         }
       }
     }

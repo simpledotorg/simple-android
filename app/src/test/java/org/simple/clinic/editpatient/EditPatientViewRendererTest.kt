@@ -229,7 +229,7 @@ class EditPatientViewRendererTest {
   }
 
   @Test
-  fun `when NHID is added after qr code scan, then display NHID in the ui and hide add NHID button`() {
+  fun `when NHID is added after qr code scan and feature flag is enabled, then display NHID in the ui and hide add NHID button`() {
     // given
     val indiaNHID = "23432123456434"
     val identifier = Identifier(indiaNHID, IndiaNationalHealthId)
@@ -241,7 +241,7 @@ class EditPatientViewRendererTest {
         bangladeshNationalId = null,
         saveButtonState = EditPatientState.SAVING_PATIENT,
         isUserCountryIndia = true,
-        isAddingHealthIDsFromEditPatientEnabled = false
+        isAddingHealthIDsFromEditPatientEnabled = true
     ).updateAlternativeId(indiaNHID)
 
     // when
@@ -266,7 +266,7 @@ class EditPatientViewRendererTest {
   }
 
   @Test
-  fun `when there is no NHID in edit screen and the user country is India, then show add NHID button`() {
+  fun `when there is no NHID in edit screen, the user country is India and feature flag is enabled, then show add NHID button`() {
     // given
     val model = EditPatientModel.from(
         patient = patientProfile.patient,
@@ -276,7 +276,7 @@ class EditPatientViewRendererTest {
         bangladeshNationalId = null,
         saveButtonState = EditPatientState.SAVING_PATIENT,
         isUserCountryIndia = true,
-        isAddingHealthIDsFromEditPatientEnabled = false
+        isAddingHealthIDsFromEditPatientEnabled = true
     )
 
     // when

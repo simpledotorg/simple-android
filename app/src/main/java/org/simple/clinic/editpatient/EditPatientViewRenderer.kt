@@ -39,7 +39,12 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
       ui.setupUi(model.inputFields!!)
     }
 
-    fillFormFields(model.ongoingEntry, model.savedBangladeshNationalId, model.isUserCountryIndia)
+    fillFormFields(
+        model.ongoingEntry,
+        model.savedBangladeshNationalId,
+        model.isUserCountryIndia,
+        model.isAddingHealthIDsFromEditPatientEnabled
+    )
     displayBpPassports(model)
   }
 
@@ -71,7 +76,8 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
   private fun fillFormFields(
       ongoingEntry: EditablePatientEntry,
       alternateId: BusinessId?,
-      isUserCountryIndia: Boolean
+      isUserCountryIndia: Boolean,
+      isAddingHealthIDsFromEditPatientEnabled: Boolean
   ) {
     with(ui) {
       setPatientName(ongoingEntry.name)
@@ -82,7 +88,12 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
       setStreetAddress(ongoingEntry.streetAddress)
       setZone(ongoingEntry.zone)
       setColonyOrVillage(ongoingEntry.colonyOrVillage)
-      setAlternateIdIfNHIDIsUpdated(ongoingEntry, alternateId, isUserCountryIndia)
+      setAlternateIdIfNHIDIsUpdated(
+          ongoingEntry,
+          alternateId,
+          isUserCountryIndia,
+          isAddingHealthIDsFromEditPatientEnabled
+      )
     }
 
     val ageOrDateOfBirth = ongoingEntry.ageOrDateOfBirth
@@ -92,8 +103,13 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
     }.exhaustive()
   }
 
-  private fun setAlternateIdIfNHIDIsUpdated(ongoingEntry: EditablePatientEntry, alternateId: BusinessId?, isUserCountryIndia: Boolean) {
-    if (isUserCountryIndia && alternateId == null) {
+  private fun setAlternateIdIfNHIDIsUpdated(
+      ongoingEntry: EditablePatientEntry,
+      alternateId: BusinessId?,
+      isUserCountryIndia: Boolean,
+      isAddingHealthIDsFromEditPatientEnabled: Boolean
+  ) {
+    if (isUserCountryIndia && alternateId == null && isAddingHealthIDsFromEditPatientEnabled) {
       displayNewlyAddedNHID(ongoingEntry.alternativeId)
     } else {
       setAlternateId(alternateId, ongoingEntry)

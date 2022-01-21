@@ -826,21 +826,38 @@ class EditPatientScreen : BaseScreen<
     alternativeIdInputEditText.setTextWithWatcher(alternateId, alternateIdTextChanges)
   }
 
-  override fun setAlternateIdContainer(alternateId: Identifier) {
+  override fun setAlternateIdContainer(alternateId: Identifier, hasHighlight: Boolean) {
     alternateIdLabel.visibility = VISIBLE
     alternateIdLabel.text = alternateId.displayType(resources)
 
     alternateIdContainer.visibility = VISIBLE
 
-    inflateAlternateIdView(alternateId.displayValue())
+    inflateAlternateIdView(alternateId.displayValue(), hasHighlight)
   }
 
-  private fun inflateAlternateIdView(identifier: String) {
+  private fun inflateAlternateIdView(identifier: String, hasHighlight: Boolean) {
     val layoutInflater = LayoutInflater.from(requireContext())
     val alternateIdView = PatientEditAlternateIdViewBinding.inflate(layoutInflater, rootView, false)
     alternateIdView.alternateIdentifier.text = identifier
     alternateIdContainer.removeAllViews()
+
+    setHighlight(hasHighlight, alternateIdView)
+
     alternateIdContainer.addView(alternateIdView.root)
+  }
+
+  private fun setHighlight(
+      hasHighlight: Boolean,
+      alternateIdView: PatientEditAlternateIdViewBinding
+  ) {
+    if (hasHighlight) {
+      alternateIdView.alternateIdentifier.setBackgroundColor(resources.getColor(R.color.simple_yellow_100))
+
+      val horizontalPadding = resources.getDimensionPixelSize(R.dimen.spacing_8)
+      val verticalPadding = resources.getDimensionPixelSize(R.dimen.spacing_4)
+
+      alternateIdView.alternateIdentifier.setPaddingRelative(horizontalPadding, verticalPadding, horizontalPadding, verticalPadding)
+    }
   }
 
   override fun onBackPressed(): Boolean {

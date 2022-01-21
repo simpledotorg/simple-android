@@ -5,6 +5,7 @@
   "schedule": [
     "after 12am and before 2am"
   ],
+  "timezone": "Asia/Kolkata",
   "ignoreDeps": [
     // Ignoring zxing update. Since update requires Java 8+ runtime.
     "com.google.zxing:core"

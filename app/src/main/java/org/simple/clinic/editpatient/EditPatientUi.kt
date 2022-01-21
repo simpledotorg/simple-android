@@ -19,7 +19,7 @@ interface EditPatientUi {
   fun setPatientAge(age: String)
   fun setPatientDateOfBirth(dateOfBirth: String)
   fun setAlternateIdTextField(alternateId: String)
-  fun setAlternateIdContainer(alternateId: Identifier)
+  fun setAlternateIdContainer(alternateId: Identifier, hasHighlight: Boolean)
   fun showValidationErrors(errors: Set<EditPatientValidationError>)
   fun hideValidationErrors(errors: Set<EditPatientValidationError>)
   fun scrollToFirstFieldWithError()

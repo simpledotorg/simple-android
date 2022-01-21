@@ -55,13 +55,14 @@ class EditPatientUpdateTest {
   )
 
   private val model = EditPatientModel.from(
-      patient = patientProfile.patient,
-      address = patientProfile.address,
-      phoneNumber = patientProfile.phoneNumbers.first(),
-      dateOfBirthFormatter = dateOfBirthFormat,
-      bangladeshNationalId = null,
-      saveButtonState = EditPatientState.NOT_SAVING_PATIENT,
-      isUserCountryIndia = false
+    patient = patientProfile.patient,
+    address = patientProfile.address,
+    phoneNumber = patientProfile.phoneNumbers.first(),
+    dateOfBirthFormatter = dateOfBirthFormat,
+    bangladeshNationalId = null,
+    saveButtonState = EditPatientState.NOT_SAVING_PATIENT,
+    isUserCountryIndia = false,
+    isAddingHealthIDsFromEditPatientEnabled = false
   )
 
   @Test

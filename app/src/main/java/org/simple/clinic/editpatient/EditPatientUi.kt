@@ -36,4 +36,5 @@ interface EditPatientUi {
   fun showAddNHIDButton()
   fun hideAddNHIDButton()
   fun showIndiaNHIDLabel()
+  fun showBPPassportButton()
 }

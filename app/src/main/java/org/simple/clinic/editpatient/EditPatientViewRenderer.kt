@@ -39,7 +39,15 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
       ui.setupUi(model.inputFields!!)
     }
 
-    fillFormFields(model.ongoingEntry, model.savedBangladeshNationalId, model.isUserCountryIndia)
+    if (model.isAddingHealthIDsFromEditPatientEnabled) {
+      ui.showBPPassportButton()
+    }
+
+    fillFormFields(
+        model.ongoingEntry,
+        model.savedBangladeshNationalId,
+        model.canAddNHID
+    )
     displayBpPassports(model)
   }
 
@@ -71,7 +79,7 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
   private fun fillFormFields(
       ongoingEntry: EditablePatientEntry,
       alternateId: BusinessId?,
-      isUserCountryIndia: Boolean
+      canAddNHID: Boolean
   ) {
     with(ui) {
       setPatientName(ongoingEntry.name)
@@ -82,7 +90,11 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
       setStreetAddress(ongoingEntry.streetAddress)
       setZone(ongoingEntry.zone)
       setColonyOrVillage(ongoingEntry.colonyOrVillage)
-      setAlternateIdIfNHIDIsUpdated(ongoingEntry, alternateId, isUserCountryIndia)
+      setAlternateIdIfNHIDIsUpdated(
+          ongoingEntry,
+          alternateId,
+          canAddNHID
+      )
     }
 
     val ageOrDateOfBirth = ongoingEntry.ageOrDateOfBirth
@@ -92,8 +104,12 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
     }.exhaustive()
   }
 
-  private fun setAlternateIdIfNHIDIsUpdated(ongoingEntry: EditablePatientEntry, alternateId: BusinessId?, isUserCountryIndia: Boolean) {
-    if (isUserCountryIndia && alternateId == null) {
+  private fun setAlternateIdIfNHIDIsUpdated(
+      ongoingEntry: EditablePatientEntry,
+      alternateId: BusinessId?,
+      canAddNHID: Boolean
+  ) {
+    if (canAddNHID) {
       displayNewlyAddedNHID(ongoingEntry.alternativeId)
     } else {
       setAlternateId(alternateId, ongoingEntry)

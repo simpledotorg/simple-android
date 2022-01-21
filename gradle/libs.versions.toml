@@ -95,7 +95,7 @@ firebase-config = "com.google.firebase:firebase-config:21.0.1"
 flipper-flipper = { module = "com.facebook.flipper:flipper", version.ref = "flipper" }
 flipper-networkPlugin = { module = "com.facebook.flipper:flipper-network-plugin", version.ref = "flipper" }
 
-google-services = "com.google.gms:google-services:4.3.3"
+google-services = "com.google.gms:google-services:4.3.10"
 
 guava = "com.google.guava:guava:28.1-jre"
 

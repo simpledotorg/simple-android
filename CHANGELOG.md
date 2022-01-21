@@ -35,6 +35,7 @@
 - Update assigned facility card UI specifications
 - Set India timezone for renovate bot to run schedules
 - Move adding health ids from edit patient behind a feature flag
+- Display National Health ID before BP Passports in `EditPatientScreen`
 - [In Progress: 11 Jan 2022] Implement adding NHID in `PatientEditScreen`
 - [In Progress: 17 Jan 2022] Implement adding scan support for BpPassport in `EditPatientScreen`
 

@@ -71,8 +71,8 @@ data class EditPatientModel(
   val hasInputFields
     get() = inputFields != null
 
-  val isUserCountryIndiaAndAddingNHIDsFeatureEnabled
-    get() = isUserCountryIndia && isAddingHealthIDsFromEditPatientEnabled
+  val canAddNHID
+    get() = isUserCountryIndia && isAddingHealthIDsFromEditPatientEnabled && savedBangladeshNationalId == null
 
   fun updateName(name: String): EditPatientModel =
       copy(ongoingEntry = ongoingEntry.updateName(name))

@@ -20,7 +20,7 @@
 - Bump Lint to v30.0.4
 - Bump Dagger to v2.40.5
 - Bump facebook.soloader to 0.10.3
-- Bump Mobius to v1.5.7
+- Bump Mobius to v1.5.8
 - Request camera permissions when add bp passport button is clicked in `EditPatientScreen`
 - Run renovate bot daily after 12 am
 - Update next appointment card UI specifications
@@ -36,6 +36,7 @@
 - Set India timezone for renovate bot to run schedules
 - Move adding health ids from edit patient behind a feature flag
 - Display National Health ID before BP Passports in `EditPatientScreen`
+- Bump google-services to 4.3.10
 - [In Progress: 11 Jan 2022] Implement adding NHID in `PatientEditScreen`
 - [In Progress: 17 Jan 2022] Implement adding scan support for BpPassport in `EditPatientScreen`
 

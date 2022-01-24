@@ -554,8 +554,6 @@ class EditPatientScreen : BaseScreen<
   override fun displayBpPassports(identifiers: List<String>) {
     bpPassportsContainer.removeAllViews()
     identifiers.forEach { identifier -> inflateBpPassportView(identifier) }
-
-    bpPassportsLabel.visibleOrGone(identifiers.isNotEmpty())
   }
 
   private fun inflateBpPassportView(identifier: String) {

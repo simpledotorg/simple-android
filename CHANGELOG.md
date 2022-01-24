@@ -39,6 +39,7 @@
 - Bump google-services to 4.3.10
 - Add highlight when a new alternate id is added
 - Bump Google Truth to v1.1.3
+- Bump Mixpanel to v5.9.6
 - [In Progress: 17 Jan 2022] Implement adding scan support for BpPassport in `EditPatientScreen`
 
 ### Changes

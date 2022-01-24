@@ -44,6 +44,7 @@
 - Add benchmark test for loading overdue appointments in a facility
 - Support scanning list of unique Bp passports in `EditPatientScreen`
 - Add benchmark test for patient registration queries
+- Handle visibility of Bp Passport label and button when scan health id from edit patient is enabled
 
 ### Changes
 

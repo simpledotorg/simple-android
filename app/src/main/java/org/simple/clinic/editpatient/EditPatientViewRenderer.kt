@@ -41,6 +41,7 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
 
     if (model.isAddingHealthIDsFromEditPatientEnabled) {
       ui.showBPPassportButton()
+      ui.showBpPassportLabel()
     }
 
     fillFormFields(

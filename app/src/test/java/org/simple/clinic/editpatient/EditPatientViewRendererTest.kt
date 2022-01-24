@@ -263,6 +263,7 @@ class EditPatientViewRendererTest {
     verify(ui).setAlternateIdContainer(identifier, true)
     verify(ui).hideAddNHIDButton()
     verify(ui).showBPPassportButton()
+    verify(ui).showBpPassportLabel()
     verifyNoMoreInteractions(ui)
   }
 
@@ -299,11 +300,12 @@ class EditPatientViewRendererTest {
     verify(ui).showAddNHIDButton()
     verify(ui).showIndiaNHIDLabel()
     verify(ui).showBPPassportButton()
+    verify(ui).showBpPassportLabel()
     verifyNoMoreInteractions(ui)
   }
 
   @Test
-  fun `when adding health ids from edit patient is enabled, then show bp passport button`() {
+  fun `when adding health ids from edit patient is enabled, then show bp passport button and label`() {
     // given
     val model = EditPatientModel.from(
         patient = patientProfile.patient,
@@ -333,6 +335,7 @@ class EditPatientViewRendererTest {
     verify(ui).setAlternateIdTextField("")
     verify(ui).displayBpPassports(emptyList())
     verify(ui).showBPPassportButton()
+    verify(ui).showBpPassportLabel()
     verifyNoMoreInteractions(ui)
   }
 }

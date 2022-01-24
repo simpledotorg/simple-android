@@ -143,6 +143,7 @@ class EditPatientViewRendererTest {
     verify(ui).showProgress()
     verify(ui).displayBpPassports(expectedIdentifiers)
     verify(ui).setAlternateIdTextField("")
+    verify(ui).showBpPassportLabel()
     verifyNoMoreInteractions(ui)
   }
 

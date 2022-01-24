@@ -3310,4 +3310,67 @@ class PatientRepositoryAndroidTest {
     assertThat(savedAddress).isEqualTo(contactPatientProfile.address)
     assertThat(savedPhoneNumber).isEqualTo(contactPatientProfile.phoneNumbers)
   }
+
+  @Test
+  fun saving_list_of_bp_identifiers_for_a_patient_must_work_as_expected() {
+    val patientProfile = testData.patientProfile(syncStatus = DONE, generateBusinessId = false)
+    patientRepository.save(listOf(patientProfile))
+
+    val bpPassportCode1 = "c824737d-bf8a-4e9c-a497-785bb4da7cf0"
+    val bpPassportCode2 = "f58533da-a520-4665-ae77-f4e773b836ae"
+    val now = Instant.now(clock)
+
+    val duration = Duration.ofDays(1L)
+    clock.advanceBy(duration)
+
+    val businessId1 = patientRepository
+        .createBusinessIdFromIdentifier(
+            id = UUID.fromString("3bf3cb49-a8be-4754-98da-da9f2b487727"),
+            patientUuid = patientProfile.patient.uuid,
+            identifier = Identifier(bpPassportCode1, BpPassport),
+            user = loggedInUser
+        )
+
+    val businessId2 = patientRepository
+        .createBusinessIdFromIdentifier(
+            id = UUID.fromString("c08fbfa6-c701-4aca-8d96-1756a057e63b"),
+            patientUuid = patientProfile.patient.uuid,
+            identifier = Identifier(bpPassportCode2, BpPassport),
+            user = loggedInUser
+        )
+
+    patientRepository.addIdentifiersToPatient(
+        patientProfile.patient.uuid,
+        listOf(businessId1, businessId2)
+    )
+
+    assertThat(businessId1.uuid).isNotEqualTo(bpPassportCode1)
+    assertThat(businessId1.patientUuid).isEqualTo(patientProfile.patient.uuid)
+    assertThat(businessId1.identifier)
+        .isEqualTo(Identifier(value = bpPassportCode1, type = BpPassport))
+    assertThat(businessId1.metaDataVersion).isEqualTo(BusinessId.MetaDataVersion.BpPassportMetaDataV1)
+    assertThat(businessId1.createdAt).isEqualTo(now.plus(duration))
+    assertThat(businessId1.updatedAt).isEqualTo(now.plus(duration))
+    assertThat(businessId1.deletedAt).isNull()
+    assertThat(businessId2.uuid).isNotEqualTo(bpPassportCode2)
+    assertThat(businessId2.patientUuid).isEqualTo(patientProfile.patient.uuid)
+    assertThat(businessId2.identifier)
+        .isEqualTo(Identifier(value = bpPassportCode2, type = BpPassport))
+    assertThat(businessId2.metaDataVersion).isEqualTo(BusinessId.MetaDataVersion.BpPassportMetaDataV1)
+    assertThat(businessId2.createdAt).isEqualTo(now.plus(duration))
+    assertThat(businessId2.updatedAt).isEqualTo(now.plus(duration))
+    assertThat(businessId2.deletedAt).isNull()
+
+    val savedMetaForBusinessId1 = businessIdMetaDataAdapter.fromJson(businessId1.metaData)
+    val savedMetaForBusinessId2 = businessIdMetaDataAdapter.fromJson(businessId2.metaData)
+    val expectedSavedMeta = BusinessIdMetaData(
+        assigningUserUuid = loggedInUser.uuid,
+        assigningFacilityUuid = currentFacility.uuid
+    )
+    assertThat(savedMetaForBusinessId1).isEqualTo(expectedSavedMeta)
+    assertThat(savedMetaForBusinessId2).isEqualTo(expectedSavedMeta)
+
+    val updatedPatient = patientRepository.patient(patientProfile.patient.uuid).blockingFirst().get()
+    assertThat(updatedPatient.syncStatus).isEqualTo(PENDING)
+  }
 }

@@ -60,13 +60,16 @@ class EditPatientUpdate(
       is ColonyOrVillagesFetched -> next(model.updateColonyOrVillagesList(event.colonyOrVillages))
       is AddNHIDButtonClicked -> dispatch(OpenSimpleScanIdScreen(ToAddNHID))
       is AddBpPassportButtonClicked -> dispatch(OpenSimpleScanIdScreen(ToAddBpPassport))
-      is BpPassportAdded -> {
-        return if (model.currentListOfBpPassports.contains(event.identifier.last()))
-          next(model.addBpPassports(model.currentListOfBpPassports))
-        else
-          next(model.addBpPassports(model.currentListOfBpPassports + event.identifier))
-      }
+      is BpPassportAdded -> addBpPassports(model, event)
     }
+  }
+
+  private fun addBpPassports(model: EditPatientModel, event: BpPassportAdded): Next<EditPatientModel, EditPatientEffect> {
+    val currentListOfBpPassports = model.currentListOfBpPassports
+    return if (currentListOfBpPassports.contains(event.identifier.last()))
+      next(model.addBpPassports(currentListOfBpPassports))
+    else
+      next(model.addBpPassports(currentListOfBpPassports + event.identifier))
   }
 
   private fun onTextFieldChanged(

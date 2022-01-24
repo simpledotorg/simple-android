@@ -37,10 +37,12 @@
 - Move adding health ids from edit patient behind a feature flag
 - Display National Health ID before BP Passports in `EditPatientScreen`
 - Bump google-services to 4.3.10
-- Add highlight when a new alternate id is added 
+- Add highlight when a new alternate id is added
+- Bump Google Truth to v1.1.3
 - [In Progress: 17 Jan 2022] Implement adding scan support for BpPassport in `EditPatientScreen`
 
 ### Changes
+
 - Implement adding scan support for India NHID in `EditPatientScreen`
 
 ## On Demo

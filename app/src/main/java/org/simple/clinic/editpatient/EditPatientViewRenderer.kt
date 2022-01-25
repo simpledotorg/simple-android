@@ -44,11 +44,7 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
       ui.showBpPassportLabel()
     } else {
       val identifiers = model.bpPassports?.map { it.identifier.displayValue() }.orEmpty()
-      if (identifiers.isNotEmpty()) {
-        ui.showBpPassportLabel()
-      } else {
-        ui.hideBpPassportLabel()
-      }
+      showBpPassportLabelIfIdentifierNotEmpty(identifiers)
     }
 
     fillFormFields(
@@ -57,6 +53,14 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
         model.canAddNHID
     )
     displayBpPassports(model)
+  }
+
+  private fun showBpPassportLabelIfIdentifierNotEmpty(identifiers: List<String>) {
+    if (identifiers.isNotEmpty()) {
+      ui.showBpPassportLabel()
+    } else {
+      ui.hideBpPassportLabel()
+    }
   }
 
   private fun displayNewlyAddedNHID(alternativeId: String) {

@@ -6,9 +6,9 @@ import dagger.Lazy
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
-import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.Single
@@ -114,19 +114,30 @@ class EditPatientEffectHandler @AssistedInject constructor(
     return savePatientEffects
         .filter(::isBpPassportAdded)
         .flatMapCompletable { savePatientEffect ->
-          patientRepository
-              .addIdentifierToPatient(
-                  uuid = uuidGenerator.v4(),
-                  assigningUser = currentUser.get(),
-                  patientUuid = savePatientEffect.ongoingEntry.patientUuid,
-                  identifier = Identifier(
-                      value = savePatientEffect.ongoingEntry.bpPassports!!.last().value,
-                      type = BpPassport
-                  )
-              )
-              .ignoreElement()
+          Completable.fromAction {
+            val businessIds = createBusinessIdsFromIdentifiers(savePatientEffect)
+            patientRepository
+                .addIdentifiersToPatient(
+                    patientUuid = savePatientEffect.ongoingEntry.patientUuid,
+                    businessIds = businessIds
+                )
+          }
         }
         .toObservable()
+  }
+
+  private fun createBusinessIdsFromIdentifiers(savePatientEffect: SavePatientEffect): List<BusinessId> {
+    return savePatientEffect.ongoingEntry
+        .bpPassports
+        .orEmpty()
+        .map {
+          patientRepository.createBusinessIdFromIdentifier(
+              id = uuidGenerator.v4(),
+              patientUuid = savePatientEffect.ongoingEntry.patientUuid,
+              identifier = it,
+              user = currentUser.get()
+          )
+        }
   }
 
   private fun savePatient(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {

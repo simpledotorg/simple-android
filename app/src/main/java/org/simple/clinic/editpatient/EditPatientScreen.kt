@@ -447,6 +447,18 @@ class EditPatientScreen : BaseScreen<
     addBpPassportButton.visibility = VISIBLE
   }
 
+  override fun showBpPassportLabel() {
+    bpPassportsLabel.visibility = VISIBLE
+  }
+
+  override fun hideBpPassportLabel() {
+    bpPassportsLabel.visibility = GONE
+  }
+
+  override fun hideBpPassportButton() {
+    addBpPassportButton.visibility = GONE
+  }
+
   private fun showOrHideInputFields(inputFields: InputFields) {
     val allTypesOfInputFields: Map<Class<*>, View> = mapOf(
         PatientNameField::class.java to fullNameInputLayout,
@@ -546,8 +558,6 @@ class EditPatientScreen : BaseScreen<
   override fun displayBpPassports(identifiers: List<String>) {
     bpPassportsContainer.removeAllViews()
     identifiers.forEach { identifier -> inflateBpPassportView(identifier) }
-
-    bpPassportsLabel.visibleOrGone(identifiers.isNotEmpty())
   }
 
   private fun inflateBpPassportView(identifier: String) {

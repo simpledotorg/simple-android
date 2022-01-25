@@ -199,7 +199,6 @@
         android:textAppearance="?attr/textAppearanceButton"
         app:icon="@drawable/ic_add_circle_outline_24px"
         app:iconGravity="start"
-        android:visibility="gone"
         app:iconPadding="@dimen/spacing_8" />
 
       <RadioGroup

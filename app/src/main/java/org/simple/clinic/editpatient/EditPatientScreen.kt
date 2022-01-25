@@ -451,6 +451,10 @@ class EditPatientScreen : BaseScreen<
     bpPassportsLabel.visibility = VISIBLE
   }
 
+  override fun hideBpPassportLabel() {
+    bpPassportsLabel.visibility = GONE
+  }
+
   private fun showOrHideInputFields(inputFields: InputFields) {
     val allTypesOfInputFields: Map<Class<*>, View> = mapOf(
         PatientNameField::class.java to fullNameInputLayout,

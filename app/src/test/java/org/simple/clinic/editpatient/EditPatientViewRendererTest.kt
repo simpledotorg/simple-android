@@ -68,6 +68,7 @@ class EditPatientViewRendererTest {
     verify(ui).showProgress()
     verify(ui).displayBpPassports(emptyList())
     verify(ui).setAlternateIdTextField("")
+    verify(ui).hideBpPassportLabel()
     verifyNoMoreInteractions(ui)
   }
 
@@ -100,6 +101,7 @@ class EditPatientViewRendererTest {
     verify(ui).setupUi(inputFields)
     verify(ui).displayBpPassports(emptyList())
     verify(ui).setAlternateIdTextField("")
+    verify(ui).hideBpPassportLabel()
     verifyNoMoreInteractions(ui)
   }
 
@@ -185,6 +187,7 @@ class EditPatientViewRendererTest {
     verify(ui).showProgress()
     verify(ui).displayBpPassports(emptyList())
     verify(ui).setAlternateIdTextField("1234567")
+    verify(ui).hideBpPassportLabel()
     verifyNoMoreInteractions(ui)
   }
 
@@ -226,6 +229,7 @@ class EditPatientViewRendererTest {
     verify(ui).showProgress()
     verify(ui).displayBpPassports(emptyList())
     verify(ui).setAlternateIdContainer(identifier, false)
+    verify(ui).hideBpPassportLabel()
     verifyNoMoreInteractions(ui)
   }
 

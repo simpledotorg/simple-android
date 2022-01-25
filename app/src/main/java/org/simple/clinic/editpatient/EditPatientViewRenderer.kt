@@ -46,6 +46,8 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
       val identifiers = model.bpPassports?.map { it.identifier.displayValue() }.orEmpty()
       if (identifiers.isNotEmpty()) {
         ui.showBpPassportLabel()
+      } else {
+        ui.hideBpPassportLabel()
       }
     }
 

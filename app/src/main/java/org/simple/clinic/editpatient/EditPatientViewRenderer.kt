@@ -49,6 +49,7 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
       ui.showBPPassportButton()
       ui.showBpPassportLabel()
     } else {
+      ui.hideBpPassportButton()
       val hasBpPassports = !model.bpPassports.isNullOrEmpty()
       handleLabelVisibilityIfBpPassportsNotEmpty(hasBpPassports)
     }

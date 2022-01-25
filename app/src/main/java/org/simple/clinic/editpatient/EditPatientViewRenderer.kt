@@ -39,16 +39,33 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
       ui.setupUi(model.inputFields!!)
     }
 
-    if (model.isAddingHealthIDsFromEditPatientEnabled) {
-      ui.showBPPassportButton()
-    }
-
     fillFormFields(
         model.ongoingEntry,
         model.savedBangladeshNationalId,
         model.canAddNHID
     )
+
+    handleBpPassportButtonAndLabelVisibility(model)
     displayBpPassports(model)
+  }
+
+  private fun handleBpPassportButtonAndLabelVisibility(model: EditPatientModel) {
+    if (model.isAddingHealthIDsFromEditPatientEnabled) {
+      ui.showBPPassportButton()
+      ui.showBpPassportLabel()
+    } else {
+      ui.hideBpPassportButton()
+      val hasBpPassports = !model.bpPassports.isNullOrEmpty()
+      handleLabelVisibilityIfBpPassportsNotEmpty(hasBpPassports)
+    }
+  }
+
+  private fun handleLabelVisibilityIfBpPassportsNotEmpty(hasBpPassports: Boolean) {
+    if (hasBpPassports) {
+      ui.showBpPassportLabel()
+    } else {
+      ui.hideBpPassportLabel()
+    }
   }
 
   private fun displayNewlyAddedNHID(alternativeId: String) {

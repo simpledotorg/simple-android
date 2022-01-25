@@ -9,6 +9,7 @@ import org.simple.clinic.appconfig.AppConfigRepositoryAndroidTest
 import org.simple.clinic.appconfig.SelectedCountryPersistenceAndroidTest
 import org.simple.clinic.benchmark.BenchmarkTestRule
 import org.simple.clinic.benchmark.CanaryBenchmarkTest
+import org.simple.clinic.benchmark.overdue.OverdueBenchmark
 import org.simple.clinic.benchmark.patientlookup.PatientLookupBenchmark
 import org.simple.clinic.bloodsugar.BloodSugarHistoryListItemDataSourceTest
 import org.simple.clinic.bloodsugar.BloodSugarRepositoryAndroidTest
@@ -134,4 +135,5 @@ interface TestAppComponent {
   fun inject(target: BenchmarkTestRule)
   fun inject(target: CanaryBenchmarkTest)
   fun inject(target: PatientLookupBenchmark)
+  fun inject(target: OverdueBenchmark)
 }

@@ -56,6 +56,7 @@
 - Remove Spotless Gradle plugin
 - Remove code formatting checks GH Action
 - Bump AppCompat to v1.4.1
+- Bump Room to v2.4.1  
 
 ### Changes
 

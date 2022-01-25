@@ -39,6 +39,12 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
       ui.setupUi(model.inputFields!!)
     }
 
+    fillFormFields(
+        model.ongoingEntry,
+        model.savedBangladeshNationalId,
+        model.canAddNHID
+    )
+
     if (model.isAddingHealthIDsFromEditPatientEnabled) {
       ui.showBPPassportButton()
       ui.showBpPassportLabel()
@@ -47,11 +53,6 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
       handleLabelVisibilityIfBpPassportsNotEmpty(hasBpPassports)
     }
 
-    fillFormFields(
-        model.ongoingEntry,
-        model.savedBangladeshNationalId,
-        model.canAddNHID
-    )
     displayBpPassports(model)
   }
 

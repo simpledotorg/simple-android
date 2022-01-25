@@ -45,6 +45,11 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
         model.canAddNHID
     )
 
+    handleBpPassportButtonAndLabelVisibility(model)
+    displayBpPassports(model)
+  }
+
+  private fun handleBpPassportButtonAndLabelVisibility(model: EditPatientModel) {
     if (model.isAddingHealthIDsFromEditPatientEnabled) {
       ui.showBPPassportButton()
       ui.showBpPassportLabel()
@@ -53,8 +58,6 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
       val hasBpPassports = !model.bpPassports.isNullOrEmpty()
       handleLabelVisibilityIfBpPassportsNotEmpty(hasBpPassports)
     }
-
-    displayBpPassports(model)
   }
 
   private fun handleLabelVisibilityIfBpPassportsNotEmpty(hasBpPassports: Boolean) {

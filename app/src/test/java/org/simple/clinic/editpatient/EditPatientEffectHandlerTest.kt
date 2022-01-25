@@ -449,23 +449,34 @@ class EditPatientEffectHandlerTest {
     )
 
     val testCase = EffectHandlerTestCase(effectHandler.build())
-    val bpPassportBusinessId = TestData.businessId(
+    val bpPassportBusinessId1 = TestData.businessId(
         uuid = identifierUuid,
         patientUuid = patient.uuid,
         identifier = Identifier("e116bf4c-53e0-46a3-b95d-295d7178d66e", BpPassport)
     )
-    val listOfBpPassports = listOf(bpPassportBusinessId.identifier)
+    val bpPassportBusinessId2 = TestData.businessId(
+        uuid = identifierUuid,
+        patientUuid = patient.uuid,
+        identifier = Identifier("dc7a2b25-1fa6-44b4-bdef-faaad6764118", BpPassport)
+    )
+    val listOfBpPassports = listOf(bpPassportBusinessId1.identifier, bpPassportBusinessId2.identifier)
 
     whenever(patientRepository.updatePatient(patient)) doReturn Completable.complete()
     whenever(patientRepository.updateAddressForPatient(patient.uuid, patientAddress)) doReturn Completable.complete()
     whenever(patientRepository.updatePhoneNumberForPatient(patient.uuid, phoneNumber)) doReturn Completable.complete()
     whenever(facilityRepository.currentFacility()) doReturn (Observable.just(facility))
-    whenever(patientRepository.addIdentifierToPatient(
-        uuid = identifierUuid,
+    whenever(patientRepository.createBusinessIdFromIdentifier(
+        id = identifierUuid,
         patientUuid = patient.uuid,
-        identifier = bpPassportBusinessId.identifier,
-        assigningUser = user
-    )) doReturn Single.just(bpPassportBusinessId)
+        identifier = bpPassportBusinessId1.identifier,
+        user = user
+    )) doReturn bpPassportBusinessId1
+    whenever(patientRepository.createBusinessIdFromIdentifier(
+        id = identifierUuid,
+        patientUuid = patient.uuid,
+        identifier = bpPassportBusinessId2.identifier,
+        user = user
+    )) doReturn bpPassportBusinessId2
 
     // when
     testCase.dispatch(SavePatientEffect(entry.addBpPassports(listOfBpPassports), patient, patientAddress, phoneNumber, null))
@@ -474,13 +485,22 @@ class EditPatientEffectHandlerTest {
     verify(patientRepository).updatePatient(patient)
     verify(patientRepository).updateAddressForPatient(patient.uuid, patientAddress)
     verify(patientRepository).updatePhoneNumberForPatient(patient.uuid, phoneNumber)
-    verify(patientRepository).addIdentifierToPatient(
-        uuid = identifierUuid,
+    verify(patientRepository).createBusinessIdFromIdentifier(
+        id = identifierUuid,
         patientUuid = patient.uuid,
-        identifier = bpPassportBusinessId.identifier,
-        assigningUser = user
+        identifier = bpPassportBusinessId1.identifier,
+        user = user
     )
-    verify(patientRepository, never()).saveBusinessId(any())
+    verify(patientRepository).createBusinessIdFromIdentifier(
+        id = identifierUuid,
+        patientUuid = patient.uuid,
+        identifier = bpPassportBusinessId2.identifier,
+        user = user
+    )
+    verify(patientRepository).addIdentifiersToPatient(
+        patientUuid = patient.uuid,
+        businessIds = listOf(bpPassportBusinessId1, bpPassportBusinessId2)
+    )
     verifyNoMoreInteractions(patientRepository)
     testCase.assertOutgoingEvents(PatientSaved)
     verifyZeroInteractions(ui)

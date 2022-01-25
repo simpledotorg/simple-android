@@ -351,7 +351,7 @@ class PatientRepository @Inject constructor(
     }
   }
 
-  private fun createBusinessIdFromIdentifier(
+  fun createBusinessIdFromIdentifier(
       id: UUID,
       patientUuid: UUID,
       identifier: Identifier,
@@ -533,6 +533,10 @@ class PatientRepository @Inject constructor(
     return Completable.fromAction {
       database.businessIdDao().save(listOf(businessId))
     }
+  }
+
+  private fun saveBusinessIds(businessIds: List<BusinessId>) {
+    database.businessIdDao().save(businessIds)
   }
 
   private fun createBusinessIdMetaDataForIdentifier(
@@ -735,6 +739,16 @@ class PatientRepository @Inject constructor(
         database.appointmentDao().save(medicalRecord.appointments)
         database.prescriptionDao().save(medicalRecord.prescribedDrugs)
       }
+    }
+  }
+
+  fun addIdentifiersToPatient(
+      patientUuid: UUID,
+      businessIds: List<BusinessId>
+  ) {
+    database.runInTransaction {
+      saveBusinessIds(businessIds)
+      setSyncStatus(listOf(patientUuid), PENDING)
     }
   }
 

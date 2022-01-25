@@ -50,7 +50,6 @@ import org.simple.clinic.feature.Feature.AddingHealthIDsFromEditPatient
 import org.simple.clinic.feature.Feature.DeletePatient
 import org.simple.clinic.feature.Feature.VillageTypeAhead
 import org.simple.clinic.feature.Features
-import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -145,7 +144,7 @@ class EditPatientScreen : BaseScreen<
   @Inject
   lateinit var screenResults: ScreenResultBus
 
-   @Inject
+  @Inject
   lateinit var country: Country
 
   private val rootView
@@ -258,7 +257,6 @@ class EditPatientScreen : BaseScreen<
 
   private val hardwareBackPressEvents = PublishSubject.create<BackClicked>()
   private val hotEvents = PublishSubject.create<UiEvent>()
-  private val additionalEvents = DeferredEventSource<EditPatientEvent>()
 
   private val villageTypeAheadAdapter by unsafeLazy {
     ArrayAdapter<String>(
@@ -367,10 +365,6 @@ class EditPatientScreen : BaseScreen<
       .compose(ReportAnalyticsEvents())
       .cast<EditPatientEvent>()
 
-  override fun additionalEventSources() = listOf(
-      additionalEvents
-  )
-
   override fun bindView(
       layoutInflater: LayoutInflater,
       container: ViewGroup?
@@ -402,12 +396,12 @@ class EditPatientScreen : BaseScreen<
 
       when (requestKey) {
         ScanBpPassport -> {
-          val scannedBPPassport = ScanSimpleIdScreen.readIdentifier(result)
-          additionalEvents.notify(BpPassportAdded(listOf(scannedBPPassport)))
+          val scannedBpPassport = ScanSimpleIdScreen.readIdentifier(result)
+          hotEvents.onNext(BpPassportAdded(listOf(scannedBpPassport)))
         }
         ScanIndiaNationalHealthID -> {
           val scannedIndiaNHID = ScanSimpleIdScreen.readIdentifier(result)
-          additionalEvents.notify(AlternativeIdChanged(scannedIndiaNHID.value))
+          hotEvents.onNext(AlternativeIdChanged(scannedIndiaNHID.value))
         }
       }
     }

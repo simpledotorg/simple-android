@@ -43,8 +43,8 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
       ui.showBPPassportButton()
       ui.showBpPassportLabel()
     } else {
-      val identifiers = model.bpPassports?.map { it.identifier.displayValue() }.orEmpty()
-      showBpPassportLabelIfIdentifierNotEmpty(identifiers)
+      val hasBpPassports = !model.bpPassports.isNullOrEmpty()
+      handleLabelVisibilityIfBpPassportsNotEmpty(hasBpPassports)
     }
 
     fillFormFields(
@@ -55,8 +55,8 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
     displayBpPassports(model)
   }
 
-  private fun showBpPassportLabelIfIdentifierNotEmpty(identifiers: List<String>) {
-    if (identifiers.isNotEmpty()) {
+  private fun handleLabelVisibilityIfBpPassportsNotEmpty(hasBpPassports: Boolean) {
+    if (hasBpPassports) {
       ui.showBpPassportLabel()
     } else {
       ui.hideBpPassportLabel()

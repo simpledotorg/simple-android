@@ -11,3 +11,5 @@ object OpenLanguageSelectionScreenEffect : SettingsEffect()
 data class LoadAppVersionEffect(val applicationId: String) : SettingsEffect()
 
 object CheckAppUpdateAvailable : SettingsEffect()
+
+sealed class SettingsViewEffect : SettingsEffect()

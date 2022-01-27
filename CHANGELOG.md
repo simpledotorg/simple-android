@@ -49,6 +49,7 @@
 - Migrate `ScannedQrCodeSheet` to use view effects
 - Bump lint to v30.1.0
 - Bump Flipper to v0.131.0
+- Add benchmark test for creating a new bp entry 
 
 ### Changes
 

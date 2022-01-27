@@ -90,6 +90,8 @@ class SettingsScreen : BaseScreen<
 
   override fun uiRenderer() = SettingsUiRenderer(this)
 
+  override fun viewEffectHandler() = SettingsViewEffectHandler(this)
+
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)

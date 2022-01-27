@@ -77,7 +77,12 @@ class ScannedQrCodeSheet : BaseBottomSheet<
   override fun createUpdate() = ScannedQrCodeUpdate()
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<ScannedQrCodeViewEffect>) =
-      effectHandlerFactory.create(this).build()
+      effectHandlerFactory
+          .create(
+              uiActions = this,
+              viewEffectsConsumer = viewEffectsConsumer
+          )
+          .build()
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

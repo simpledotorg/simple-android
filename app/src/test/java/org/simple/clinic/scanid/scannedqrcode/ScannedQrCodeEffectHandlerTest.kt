@@ -19,7 +19,7 @@ class ScannedQrCodeEffectHandlerTest {
   private val effectHandler = ScannedQrCodeEffectHandler(
       schedulersProvider = TestSchedulersProvider.trampoline(),
       patientRepository = patientRepository,
-      uiActions = uiActions
+      viewEffectsConsumer = ScannedQrCodeViewEffectHandler(uiActions)::handle
   ).build()
 
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)

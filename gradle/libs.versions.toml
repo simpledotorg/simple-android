@@ -11,7 +11,7 @@ dagger = "2.40.5"
 
 dependencyUpdates = "0.38.0"
 
-flipper = "0.98.0"
+flipper = "0.130.0"
 
 kotlin = "1.5.31"
 

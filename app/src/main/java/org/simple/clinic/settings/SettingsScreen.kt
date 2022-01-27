@@ -35,7 +35,7 @@ class SettingsScreen : BaseScreen<
     SettingsModel,
     SettingsEvent,
     SettingsEffect,
-    Unit>(), SettingsUi, UiActions {
+    SettingsViewEffect>(), SettingsUi, UiActions {
 
   @Inject
   lateinit var router: Router
@@ -79,7 +79,8 @@ class SettingsScreen : BaseScreen<
 
   override fun createInit() = SettingsInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = settingsEffectHandler.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<SettingsViewEffect>) =
+      settingsEffectHandler.create(this).build()
 
   override fun createUpdate() = SettingsUpdate()
 

@@ -21,6 +21,7 @@
 - Update `hasAppointmentForPatientChangedSince` query to only consider `Scheduled` appointments
 - Update GH Actions `setup-jdk` to v2
 - Bump Datadog SDK version
+- Rename next appointment title string
 
 ### Changes
 

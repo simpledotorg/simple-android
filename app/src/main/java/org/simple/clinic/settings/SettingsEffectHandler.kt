@@ -37,6 +37,7 @@ class SettingsEffectHandler @AssistedInject constructor(
       .addAction(OpenLanguageSelectionScreenEffect::class.java, uiActions::openLanguageSelectionScreen, schedulersProvider.ui())
       .addTransformer(LoadAppVersionEffect::class.java, loadAppVersion())
       .addTransformer(CheckAppUpdateAvailable::class.java, checkAppUpdateAvailability())
+      .addConsumer(SettingsViewEffect::class.java, viewEffectsConsumer::accept)
       .build()
 
   private fun loadUserDetails(): ObservableTransformer<LoadUserDetailsEffect, SettingsEvent> {

@@ -19,14 +19,13 @@ import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.patient.businessid.Identifier
 import javax.inject.Inject
 
-class ScannedQrCodeSheet :
-    BaseBottomSheet<
-        ScannedQrCodeSheet.Key,
-        SheetScannedQrCodeBinding,
-        ScannedQrCodeModel,
-        ScannedQrCodeEvent,
-        ScannedQrCodeEffect,
-        Unit>(), ScannedQrCodeUiActions, ScannedQrCodeUi {
+class ScannedQrCodeSheet : BaseBottomSheet<
+    ScannedQrCodeSheet.Key,
+    SheetScannedQrCodeBinding,
+    ScannedQrCodeModel,
+    ScannedQrCodeEvent,
+    ScannedQrCodeEffect,
+    ScannedQrCodeViewEffect>(), ScannedQrCodeUiActions, ScannedQrCodeUi {
 
   companion object {
 
@@ -75,7 +74,8 @@ class ScannedQrCodeSheet :
 
   override fun createUpdate() = ScannedQrCodeUpdate()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<ScannedQrCodeViewEffect>) =
+      effectHandlerFactory.create(this).build()
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

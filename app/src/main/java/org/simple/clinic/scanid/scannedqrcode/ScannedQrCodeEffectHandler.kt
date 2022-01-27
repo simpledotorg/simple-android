@@ -12,14 +12,12 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 class ScannedQrCodeEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val patientRepository: PatientRepository,
-    @Assisted private val uiActions: ScannedQrCodeUiActions,
     @Assisted private val viewEffectsConsumer: Consumer<ScannedQrCodeViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        uiActions: ScannedQrCodeUiActions,
         viewEffectsConsumer: Consumer<ScannedQrCodeViewEffect>
     ): ScannedQrCodeEffectHandler
   }

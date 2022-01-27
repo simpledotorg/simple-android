@@ -45,7 +45,6 @@
 - Support scanning list of unique Bp passports in `EditPatientScreen`
 - Add benchmark test for patient registration queries
 - Handle visibility of Bp Passport label and button when scan health id from edit patient is enabled
-- Rename next appointment title string
 - Migrate `ScannedQrCodeSheet` to use view effects
 - Bump lint to v30.1.0
 - Bump Flipper to v0.131.0
@@ -77,6 +76,7 @@
 - Update `hasAppointmentForPatientChangedSince` query to only consider `Scheduled` appointments
 - Update GH Actions `setup-jdk` to v2
 - Bump Datadog SDK version
+- Rename next appointment title string
 
 ### Changes
 

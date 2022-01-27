@@ -28,7 +28,6 @@ class ScannedQrCodeEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<ScannedQrCodeEffect, ScannedQrCodeEvent>()
         .addTransformer(SaveNewOngoingPatientEntry::class.java, saveNewPatientEntry())
-        .addConsumer(SendBlankScannedQrCodeResult::class.java, { uiActions.sendScannedQrCodeResult(it.scannedQRCodeResult) }, schedulersProvider.ui())
         .addConsumer(ScannedQrCodeViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }

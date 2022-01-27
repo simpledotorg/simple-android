@@ -34,7 +34,6 @@ class SettingsEffectHandler @AssistedInject constructor(
       .subtypeEffectHandler<SettingsEffect, SettingsEvent>()
       .addTransformer(LoadUserDetailsEffect::class.java, loadUserDetails())
       .addTransformer(LoadCurrentLanguageEffect::class.java, loadCurrentSelectedLanguage())
-      .addAction(OpenLanguageSelectionScreenEffect::class.java, uiActions::openLanguageSelectionScreen, schedulersProvider.ui())
       .addTransformer(LoadAppVersionEffect::class.java, loadAppVersion())
       .addTransformer(CheckAppUpdateAvailable::class.java, checkAppUpdateAvailability())
       .addConsumer(SettingsViewEffect::class.java, viewEffectsConsumer::accept)

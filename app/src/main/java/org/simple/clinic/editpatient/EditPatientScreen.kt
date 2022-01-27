@@ -556,7 +556,7 @@ class EditPatientScreen : BaseScreen<
 
   private fun dateOfBirthFocusChanges(): Observable<EditPatientEvent> = dateOfBirthEditText.focusChanges.map(::DateOfBirthFocusChanged)
 
-  override fun displayBpPassports(identifiers: List<String>) {
+  override fun displayBpPassports(identifiers: List<String>, newlyScannedIdentifiers: List<String>) {
     bpPassportsContainer.removeAllViews()
     identifiers.forEach { identifier -> inflateBpPassportView(identifier) }
   }

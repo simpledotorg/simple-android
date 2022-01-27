@@ -18,14 +18,12 @@ class SettingsEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val appVersionFetcher: AppVersionFetcher,
     private val appUpdateAvailability: CheckAppUpdateAvailability,
-    @Assisted private val uiActions: UiActions,
     @Assisted private val viewEffectsConsumer: Consumer<SettingsViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        uiActions: UiActions,
         viewEffectsConsumer: Consumer<SettingsViewEffect>
     ): SettingsEffectHandler
   }

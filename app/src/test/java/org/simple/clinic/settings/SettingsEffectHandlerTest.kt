@@ -36,7 +36,6 @@ class SettingsEffectHandlerTest {
       schedulersProvider = TrampolineSchedulersProvider(),
       appVersionFetcher = appVersionFetcher,
       appUpdateAvailability = checkAppUpdateAvailability,
-      uiActions = uiActions,
       viewEffectsConsumer = SettingsViewEffectHandler(uiActions)::handle
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)

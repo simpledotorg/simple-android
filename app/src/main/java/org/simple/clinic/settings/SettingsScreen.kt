@@ -82,7 +82,6 @@ class SettingsScreen : BaseScreen<
   override fun createEffectHandler(viewEffectsConsumer: Consumer<SettingsViewEffect>) =
       settingsEffectHandler
           .create(
-              uiActions = this,
               viewEffectsConsumer = viewEffectsConsumer
           )
           .build()

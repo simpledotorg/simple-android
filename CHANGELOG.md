@@ -48,6 +48,7 @@
 - Bump Flipper to v0.130.0
 - Rename next appointment title string
 - Migrate `ScannedQrCodeSheet` to use view effects
+- Bump lint to v30.1.0
 
 ### Changes
 

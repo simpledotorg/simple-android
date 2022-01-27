@@ -57,6 +57,8 @@ class ScannedQrCodeSheet : BaseBottomSheet<
 
   override fun uiRenderer() = ScannedQrCodeUiRenderer(this)
 
+  override fun viewEffectsHandler() = ScannedQrCodeViewEffectHandler(this)
+
   override fun bindView(
       inflater: LayoutInflater,
       container: ViewGroup?

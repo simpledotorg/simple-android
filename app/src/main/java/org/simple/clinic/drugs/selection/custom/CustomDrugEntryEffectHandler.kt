@@ -1,5 +1,6 @@
 package org.simple.clinic.drugs.selection.custom
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -24,32 +25,25 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
     private val currentFacility: Lazy<Facility>,
     private val uuidGenerator: UuidGenerator,
     private val drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>,
-    @Assisted private val uiActions: CustomDrugEntrySheetUiActions
+    @Assisted private val viewEffectsConsumer: Consumer<CustomDrugEntryViewEffect>
 ) {
   @AssistedFactory
   interface Factory {
     fun create(
-        uiActions: CustomDrugEntrySheetUiActions
+        viewEffectsConsumer: Consumer<CustomDrugEntryViewEffect>
     ): CustomDrugEntryEffectHandler
   }
 
   fun build(): ObservableTransformer<CustomDrugEntryEffect, CustomDrugEntryEvent> {
     return RxMobius
         .subtypeEffectHandler<CustomDrugEntryEffect, CustomDrugEntryEvent>()
-        .addConsumer(ShowEditFrequencyDialog::class.java, { uiActions.showEditFrequencyDialog(it.frequency) }, schedulersProvider.ui())
-        .addConsumer(SetDrugFrequency::class.java, { uiActions.setDrugFrequency(it.frequencyLabel) }, schedulersProvider.ui())
-        .addConsumer(SetDrugDosage::class.java, { uiActions.setDrugDosage(it.dosage) }, schedulersProvider.ui())
         .addTransformer(SaveCustomDrugToPrescription::class.java, saveCustomDrugToPrescription())
         .addTransformer(UpdatePrescription::class.java, updatePrescription())
-        .addAction(CloseSheetAndGoToEditMedicineScreen::class.java, uiActions::closeSheetAndGoToEditMedicineScreen, schedulersProvider.ui())
         .addTransformer(FetchPrescription::class.java, fetchPrescription())
         .addTransformer(FetchDrug::class.java, fetchDrug())
         .addTransformer(RemoveDrugFromPrescription::class.java, removeDrugFromPrescription())
         .addTransformer(LoadDrugFrequencyChoiceItems::class.java, loadDrugFrequencyChoiceItems())
-        .addAction(HideKeyboard::class.java, uiActions::hideKeyboard, schedulersProvider.ui())
-        .addAction(ShowKeyboard::class.java, uiActions::showKeyboard, schedulersProvider.ui())
-        .addAction(ClearFocusFromDosageEditText::class.java, uiActions::clearFocusFromDosageEditText, schedulersProvider.ui())
-        .addConsumer(SetCursorPosition::class.java, { uiActions.setCursorPosition(it.position) }, schedulersProvider.ui())
+        .addConsumer(CustomDrugEntryViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 

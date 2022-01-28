@@ -5,12 +5,6 @@ import java.util.UUID
 
 sealed class CustomDrugEntryEffect
 
-data class ShowEditFrequencyDialog(val frequency: DrugFrequency?) : CustomDrugEntryEffect()
-
-data class SetDrugFrequency(val frequencyLabel: String) : CustomDrugEntryEffect()
-
-data class SetDrugDosage(val dosage: String?) : CustomDrugEntryEffect()
-
 data class SaveCustomDrugToPrescription(
     val patientUuid: UUID,
     val drugName: String,
@@ -28,8 +22,6 @@ data class UpdatePrescription(
     val frequency: DrugFrequency?
 ) : CustomDrugEntryEffect()
 
-object CloseSheetAndGoToEditMedicineScreen : CustomDrugEntryEffect()
-
 data class FetchPrescription(val prescriptionUuid: UUID) : CustomDrugEntryEffect()
 
 data class FetchDrug(val drugUuid: UUID) : CustomDrugEntryEffect()
@@ -38,10 +30,20 @@ data class RemoveDrugFromPrescription(val drugUuid: UUID) : CustomDrugEntryEffec
 
 object LoadDrugFrequencyChoiceItems : CustomDrugEntryEffect()
 
-object HideKeyboard : CustomDrugEntryEffect()
+sealed class CustomDrugEntryViewEffect : CustomDrugEntryEffect()
 
-object ShowKeyboard : CustomDrugEntryEffect()
+data class ShowEditFrequencyDialog(val frequency: DrugFrequency?) : CustomDrugEntryViewEffect()
 
-object ClearFocusFromDosageEditText : CustomDrugEntryEffect()
+data class SetDrugFrequency(val frequencyLabel: String) : CustomDrugEntryViewEffect()
 
-data class SetCursorPosition(val position: Int) : CustomDrugEntryEffect()
+data class SetDrugDosage(val dosage: String?) : CustomDrugEntryViewEffect()
+
+object CloseSheetAndGoToEditMedicineScreen : CustomDrugEntryViewEffect()
+
+object HideKeyboard : CustomDrugEntryViewEffect()
+
+object ShowKeyboard : CustomDrugEntryViewEffect()
+
+object ClearFocusFromDosageEditText : CustomDrugEntryViewEffect()
+
+data class SetCursorPosition(val position: Int) : CustomDrugEntryViewEffect()

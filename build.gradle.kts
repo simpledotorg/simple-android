@@ -1,4 +1,3 @@
-import com.diffplug.spotless.LineEnding.UNIX
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 buildscript {
@@ -31,35 +30,12 @@ buildscript {
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
   alias(libs.plugins.dependencyUpdates)
-  alias(libs.plugins.spotless)
 }
 
 allprojects {
   repositories {
     google()
     mavenCentral()
-  }
-}
-
-subprojects {
-  apply(plugin = "com.diffplug.spotless")
-
-  // https://github.com/diffplug/spotless/tree/master/plugin-gradle
-  spotless {
-    lineEndings = UNIX
-
-    kotlin {
-      val ktLintVersion = libs.versions.ktlint.get()
-
-      ktlint(ktLintVersion).userData(mapOf(
-          "indent_style" to "space",
-          "indent_size" to "2",
-          "continuation_indent_size" to "4"
-      ))
-
-      trimTrailingWhitespace()
-      endWithNewline()
-    }
   }
 }
 

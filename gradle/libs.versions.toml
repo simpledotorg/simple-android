@@ -31,12 +31,8 @@ room-metadataGenerator = "2.0.0"
 
 rx-binding = "3.1.0"
 
-spotless = "5.6.1"
-
 [plugins]
 dependencyUpdates = { id = "com.github.ben-manes.versions", version.ref = "dependencyUpdates" }
-
-spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
 
 [libraries]
 android-gradle-plugin = "com.android.tools.build:gradle:7.0.4"

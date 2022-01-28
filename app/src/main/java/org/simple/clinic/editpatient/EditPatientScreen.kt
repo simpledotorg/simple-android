@@ -584,6 +584,11 @@ class EditPatientScreen : BaseScreen<
     }
     bpPassportView.bpPassportIdentifier.text = identifier
     bpPassportsContainer.addView(bpPassportView.root)
+    
+    newlyScannedIdentifiers.forEach { newlyScannedBpPassport ->
+      if (newlyScannedBpPassport == identifier)
+        highlightNewlyScannedBpPassports(bpPassportView)
+    }
   }
 
   override fun setPatientName(name: String) {

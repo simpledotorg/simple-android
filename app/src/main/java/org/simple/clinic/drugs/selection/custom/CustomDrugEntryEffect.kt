@@ -30,8 +30,6 @@ data class RemoveDrugFromPrescription(val drugUuid: UUID) : CustomDrugEntryEffec
 
 object LoadDrugFrequencyChoiceItems : CustomDrugEntryEffect()
 
-data class SetCursorPosition(val position: Int) : CustomDrugEntryEffect()
-
 sealed class CustomDrugEntryViewEffect : CustomDrugEntryEffect()
 
 data class ShowEditFrequencyDialog(val frequency: DrugFrequency?) : CustomDrugEntryViewEffect()
@@ -47,3 +45,5 @@ object HideKeyboard : CustomDrugEntryViewEffect()
 object ShowKeyboard : CustomDrugEntryViewEffect()
 
 object ClearFocusFromDosageEditText : CustomDrugEntryViewEffect()
+
+data class SetCursorPosition(val position: Int) : CustomDrugEntryViewEffect()

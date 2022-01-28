@@ -16,6 +16,7 @@ class CustomDrugEntryViewEffectHandler(
       HideKeyboard -> uiActions.hideKeyboard()
       ShowKeyboard -> uiActions.showKeyboard()
       ClearFocusFromDosageEditText -> uiActions.clearFocusFromDosageEditText()
+      is SetCursorPosition -> uiActions.setCursorPosition(viewEffect.position)
     }.exhaustive()
   }
 }

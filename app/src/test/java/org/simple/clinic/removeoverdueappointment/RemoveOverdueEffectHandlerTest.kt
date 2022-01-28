@@ -45,7 +45,7 @@ class RemoveOverdueEffectHandlerTest {
       patientRepository = patientRepository,
       cancelAppointmentWithReason = cancelAppointmentWithReason,
       schedulersProvider = TestSchedulersProvider.trampoline(),
-      uiActions = uiActions
+      viewEffectsConsumer = RemoveOverdueViewEffectHandler(uiActions)::handle
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 

@@ -39,10 +39,6 @@ allprojects {
   }
 }
 
-tasks.named<Delete>("clean") {
-  delete(rootProject.buildDir)
-}
-
 fun String.isNonStable(): Boolean {
   val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { this.toUpperCase().contains(it) }
   val regex = "^[0-9,.v-]+(-r)?$".toRegex()

@@ -104,6 +104,8 @@ class CustomDrugEntrySheet : BaseBottomSheet<
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<CustomDrugEntryViewEffect>) = effectHandlerFactory.create(this).build()
 
+  override fun viewEffectsHandler() = CustomDrugEntryViewEffectHandler(this)
+
   override fun events() = Observable
       .mergeArray(
           drugDosageChanges(),

@@ -15,6 +15,7 @@ class CustomDrugEntryViewEffectHandler(
       CloseSheetAndGoToEditMedicineScreen -> uiActions.closeSheetAndGoToEditMedicineScreen()
       HideKeyboard -> uiActions.hideKeyboard()
       ShowKeyboard -> uiActions.showKeyboard()
+      ClearFocusFromDosageEditText -> uiActions.clearFocusFromDosageEditText()
     }.exhaustive()
   }
 }

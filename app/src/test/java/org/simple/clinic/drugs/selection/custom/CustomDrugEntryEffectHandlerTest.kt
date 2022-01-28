@@ -45,7 +45,6 @@ class CustomDrugEntryEffectHandlerTest {
       { facility },
       uuidGenerator,
       drugFrequencyToLabelMap,
-      uiActions,
       CustomDrugEntryViewEffectHandler(uiActions)::handle
   ).build()
 

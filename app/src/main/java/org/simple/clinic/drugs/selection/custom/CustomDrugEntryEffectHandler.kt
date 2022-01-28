@@ -25,13 +25,11 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
     private val currentFacility: Lazy<Facility>,
     private val uuidGenerator: UuidGenerator,
     private val drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>,
-    @Assisted private val uiActions: CustomDrugEntrySheetUiActions,
     @Assisted private val viewEffectsConsumer: Consumer<CustomDrugEntryViewEffect>
 ) {
   @AssistedFactory
   interface Factory {
     fun create(
-        uiActions: CustomDrugEntrySheetUiActions,
         viewEffectsConsumer: Consumer<CustomDrugEntryViewEffect>
     ): CustomDrugEntryEffectHandler
   }

@@ -54,6 +54,8 @@
 - Migrate `SettingsScreen` to use view effects
 - Bump Paging to v3.1.0
 - Migrate `RemoveOverdueAppointmentScreen` to user view effects
+- Remove Spotless Gradle plugin
+- Remove code formatting checks GH Action
 
 ### Changes
 

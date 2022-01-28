@@ -12,6 +12,7 @@ class CustomDrugEntryViewEffectHandler(
       is ShowEditFrequencyDialog -> uiActions.showEditFrequencyDialog(viewEffect.frequency)
       is SetDrugFrequency -> uiActions.setDrugFrequency(viewEffect.frequencyLabel)
       is SetDrugDosage -> uiActions.setDrugDosage(viewEffect.dosage)
+      CloseSheetAndGoToEditMedicineScreen -> uiActions.closeSheetAndGoToEditMedicineScreen()
     }.exhaustive()
   }
 }

@@ -22,8 +22,6 @@ data class UpdatePrescription(
     val frequency: DrugFrequency?
 ) : CustomDrugEntryEffect()
 
-object CloseSheetAndGoToEditMedicineScreen : CustomDrugEntryEffect()
-
 data class FetchPrescription(val prescriptionUuid: UUID) : CustomDrugEntryEffect()
 
 data class FetchDrug(val drugUuid: UUID) : CustomDrugEntryEffect()
@@ -47,3 +45,5 @@ data class ShowEditFrequencyDialog(val frequency: DrugFrequency?) : CustomDrugEn
 data class SetDrugFrequency(val frequencyLabel: String) : CustomDrugEntryViewEffect()
 
 data class SetDrugDosage(val dosage: String?) : CustomDrugEntryViewEffect()
+
+object CloseSheetAndGoToEditMedicineScreen : CustomDrugEntryViewEffect()

@@ -41,7 +41,6 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<CustomDrugEntryEffect, CustomDrugEntryEvent>()
         .addTransformer(SaveCustomDrugToPrescription::class.java, saveCustomDrugToPrescription())
         .addTransformer(UpdatePrescription::class.java, updatePrescription())
-        .addAction(CloseSheetAndGoToEditMedicineScreen::class.java, uiActions::closeSheetAndGoToEditMedicineScreen, schedulersProvider.ui())
         .addTransformer(FetchPrescription::class.java, fetchPrescription())
         .addTransformer(FetchDrug::class.java, fetchDrug())
         .addTransformer(RemoveDrugFromPrescription::class.java, removeDrugFromPrescription())

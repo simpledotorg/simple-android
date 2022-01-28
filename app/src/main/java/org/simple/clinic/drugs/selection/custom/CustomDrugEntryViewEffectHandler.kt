@@ -10,6 +10,7 @@ class CustomDrugEntryViewEffectHandler(
   override fun handle(viewEffect: CustomDrugEntryViewEffect) {
     when (viewEffect) {
       is ShowEditFrequencyDialog -> uiActions.showEditFrequencyDialog(viewEffect.frequency)
+      is SetDrugFrequency -> uiActions.setDrugFrequency(viewEffect.frequencyLabel)
     }.exhaustive()
   }
 }

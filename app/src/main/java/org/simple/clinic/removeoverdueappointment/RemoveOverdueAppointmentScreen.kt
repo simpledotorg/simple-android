@@ -34,7 +34,7 @@ class RemoveOverdueAppointmentScreen : BaseScreen<
     RemoveOverdueModel,
     RemoveOverdueEvent,
     RemoveOverdueEffect,
-    Unit>(), RemoveOverdueUi, RemoveOverdueUiActions {
+    RemoveOverdueViewEffect>(), RemoveOverdueUi, RemoveOverdueUiActions {
 
   @Inject
   lateinit var router: Router
@@ -75,7 +75,7 @@ class RemoveOverdueAppointmentScreen : BaseScreen<
 
   override fun createUpdate() = RemoveOverdueUpdate()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<RemoveOverdueViewEffect>) = effectHandlerFactory
       .create(this)
       .build()
 

@@ -76,7 +76,7 @@ class RemoveOverdueAppointmentScreen : BaseScreen<
   override fun createUpdate() = RemoveOverdueUpdate()
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<RemoveOverdueViewEffect>) = effectHandlerFactory
-      .create(this, viewEffectsConsumer)
+      .create(viewEffectsConsumer)
       .build()
 
   override fun viewEffectHandler() = RemoveOverdueViewEffectHandler(this)

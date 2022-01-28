@@ -16,13 +16,12 @@ class RemoveOverdueEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val cancelAppointmentWithReason: CancelAppointmentWithReason,
     private val schedulersProvider: SchedulersProvider,
-    @Assisted private val uiActions: RemoveOverdueUiActions,
     @Assisted private val viewEffectsConsumer: Consumer<RemoveOverdueViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: RemoveOverdueUiActions, viewEffectsConsumer: Consumer<RemoveOverdueViewEffect>): RemoveOverdueEffectHandler
+    fun create(viewEffectsConsumer: Consumer<RemoveOverdueViewEffect>): RemoveOverdueEffectHandler
   }
 
   fun build(): ObservableTransformer<RemoveOverdueEffect, RemoveOverdueEvent> = RxMobius

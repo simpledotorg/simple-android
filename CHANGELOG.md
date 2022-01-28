@@ -52,6 +52,7 @@
 - Add benchmark test for creating a new bp entry 
 - Migrate `CustomDrugEntrySheet` to user view effects
 - Migrate `SettingsScreen` to use view effects
+- Bump Paging to v3.1.0
 
 ### Changes
 

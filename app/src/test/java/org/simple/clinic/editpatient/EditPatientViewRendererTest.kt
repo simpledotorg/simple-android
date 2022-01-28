@@ -66,7 +66,7 @@ class EditPatientViewRendererTest {
     verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
     verify(ui).setColonyOrVillagesAutoComplete(colonyOrVillages)
     verify(ui).showProgress()
-    verify(ui).displayBpPassports(emptyList())
+    verify(ui).displayBpPassports(emptyList(), emptyList())
     verify(ui).setAlternateIdTextField("")
     verify(ui).hideBpPassportLabel()
     verify(ui).hideBpPassportButton()
@@ -100,7 +100,7 @@ class EditPatientViewRendererTest {
     verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
     verify(ui).showProgress()
     verify(ui).setupUi(inputFields)
-    verify(ui).displayBpPassports(emptyList())
+    verify(ui).displayBpPassports(emptyList(), emptyList())
     verify(ui).setAlternateIdTextField("")
     verify(ui).hideBpPassportLabel()
     verify(ui).hideBpPassportButton()
@@ -126,13 +126,22 @@ class EditPatientViewRendererTest {
             )
         )
     )
-    val bpPassportsLoadedModel = model.bpPassportsLoaded(bpPassports)
+
+    val newlyScannedBpPassports = listOf(
+        TestData.identifier(
+            value = "374488dc-43a0-4a8a-9f3b-619096e95546",
+            type = Identifier.IdentifierType.BpPassport
+        )
+    )
+
+    val bpPassportsLoadedModel = model.bpPassportsLoaded(bpPassports).addBpPassports(newlyScannedBpPassports)
 
     // when
     uiRenderer.render(bpPassportsLoadedModel)
 
     // then
     val expectedIdentifiers = listOf("090 2319", "236 9244")
+    val expectedNewlyScannedBpPassports = listOf("374 4884")
 
     verify(ui).setPatientName(patientProfile.patient.fullName)
     verify(ui).setGender(patientProfile.patient.gender)
@@ -145,7 +154,7 @@ class EditPatientViewRendererTest {
     verify(ui).setPatientDateOfBirth("09/03/1990")
     verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
     verify(ui).showProgress()
-    verify(ui).displayBpPassports(expectedIdentifiers)
+    verify(ui).displayBpPassports(expectedIdentifiers, expectedNewlyScannedBpPassports)
     verify(ui).setAlternateIdTextField("")
     verify(ui).showBpPassportLabel()
     verify(ui).hideBpPassportButton()
@@ -188,7 +197,7 @@ class EditPatientViewRendererTest {
     verify(ui).setPatientDateOfBirth("09/03/1990")
     verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
     verify(ui).showProgress()
-    verify(ui).displayBpPassports(emptyList())
+    verify(ui).displayBpPassports(emptyList(), emptyList())
     verify(ui).setAlternateIdTextField("1234567")
     verify(ui).hideBpPassportLabel()
     verify(ui).hideBpPassportButton()
@@ -231,7 +240,7 @@ class EditPatientViewRendererTest {
     verify(ui).setPatientDateOfBirth("09/03/1990")
     verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
     verify(ui).showProgress()
-    verify(ui).displayBpPassports(emptyList())
+    verify(ui).displayBpPassports(emptyList(), emptyList())
     verify(ui).setAlternateIdContainer(identifier, false)
     verify(ui).hideBpPassportLabel()
     verify(ui).hideBpPassportButton()
@@ -269,7 +278,7 @@ class EditPatientViewRendererTest {
     verify(ui).setPatientDateOfBirth("09/03/1990")
     verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
     verify(ui).showProgress()
-    verify(ui).displayBpPassports(emptyList())
+    verify(ui).displayBpPassports(emptyList(), emptyList())
     verify(ui).setAlternateIdContainer(identifier, true)
     verify(ui).hideAddNHIDButton()
     verify(ui).showBPPassportButton()
@@ -306,7 +315,7 @@ class EditPatientViewRendererTest {
     verify(ui).setPatientDateOfBirth("09/03/1990")
     verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
     verify(ui).showProgress()
-    verify(ui).displayBpPassports(emptyList())
+    verify(ui).displayBpPassports(emptyList(), emptyList())
     verify(ui).showAddNHIDButton()
     verify(ui).showIndiaNHIDLabel()
     verify(ui).showBPPassportButton()
@@ -343,7 +352,7 @@ class EditPatientViewRendererTest {
     verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
     verify(ui).showProgress()
     verify(ui).setAlternateIdTextField("")
-    verify(ui).displayBpPassports(emptyList())
+    verify(ui).displayBpPassports(emptyList(), emptyList())
     verify(ui).showBPPassportButton()
     verify(ui).showBpPassportLabel()
     verifyNoMoreInteractions(ui)

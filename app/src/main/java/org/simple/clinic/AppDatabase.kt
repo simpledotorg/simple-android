@@ -89,7 +89,7 @@ import org.simple.clinic.drugs.search.Answer as DrugAnswer
       OverdueAppointment::class,
       PatientSearchResult::class
     ],
-    version = 98,
+    version = 99,
     exportSchema = true
 )
 @TypeConverters(

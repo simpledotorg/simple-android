@@ -80,7 +80,12 @@ class SettingsScreen : BaseScreen<
   override fun createInit() = SettingsInit()
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<SettingsViewEffect>) =
-      settingsEffectHandler.create(this).build()
+      settingsEffectHandler
+          .create(
+              uiActions = this,
+              viewEffectsConsumer = viewEffectsConsumer
+          )
+          .build()
 
   override fun createUpdate() = SettingsUpdate()
 

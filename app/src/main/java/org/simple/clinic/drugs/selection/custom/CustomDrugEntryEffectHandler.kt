@@ -1,5 +1,6 @@
 package org.simple.clinic.drugs.selection.custom
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -24,12 +25,14 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
     private val currentFacility: Lazy<Facility>,
     private val uuidGenerator: UuidGenerator,
     private val drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>,
-    @Assisted private val uiActions: CustomDrugEntrySheetUiActions
+    @Assisted private val uiActions: CustomDrugEntrySheetUiActions,
+    @Assisted private val viewEffectsConsumer: Consumer<CustomDrugEntryViewEffect>
 ) {
   @AssistedFactory
   interface Factory {
     fun create(
-        uiActions: CustomDrugEntrySheetUiActions
+        uiActions: CustomDrugEntrySheetUiActions,
+        viewEffectsConsumer: Consumer<CustomDrugEntryViewEffect>
     ): CustomDrugEntryEffectHandler
   }
 

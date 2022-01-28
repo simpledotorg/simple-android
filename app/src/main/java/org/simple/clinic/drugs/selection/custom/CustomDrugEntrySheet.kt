@@ -102,7 +102,13 @@ class CustomDrugEntrySheet : BaseBottomSheet<
 
   override fun createInit() = CustomDrugEntryInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<CustomDrugEntryViewEffect>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<CustomDrugEntryViewEffect>) =
+      effectHandlerFactory
+          .create(
+              uiActions = this,
+              viewEffectsConsumer = viewEffectsConsumer
+          )
+          .build()
 
   override fun viewEffectsHandler() = CustomDrugEntryViewEffectHandler(this)
 

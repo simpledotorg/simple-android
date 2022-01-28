@@ -45,7 +45,9 @@ class CustomDrugEntryEffectHandlerTest {
       { facility },
       uuidGenerator,
       drugFrequencyToLabelMap,
-      uiActions).build()
+      uiActions,
+      CustomDrugEntryViewEffectHandler(uiActions)::handle
+  ).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)
 

@@ -558,10 +558,12 @@ class EditPatientScreen : BaseScreen<
 
   override fun displayBpPassports(identifiers: List<String>, newlyScannedIdentifiers: List<String>) {
     bpPassportsContainer.removeAllViews()
-    identifiers.forEach { identifier -> inflateBpPassportView(identifier) }
+    identifiers.forEach { identifier ->
+      inflateBpPassportView(identifier, newlyScannedIdentifiers)
+    }
   }
 
-  private fun inflateBpPassportView(identifier: String) {
+  private fun inflateBpPassportView(identifier: String, newlyScannedIdentifiers: List<String>) {
     val layoutInflater = LayoutInflater.from(requireContext())
     val bpPassportView = PatientEditBpPassportViewBinding.inflate(layoutInflater, rootView, false)
 

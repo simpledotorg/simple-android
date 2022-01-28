@@ -39,7 +39,7 @@ class BloodPressureEntryBenchmark : BaseBenchmarkTest() {
   }
 
   @Test
-  fun `creating_new_blood_pressure_entry_for_a_patient`() {
+  fun creating_new_blood_pressure_entry_for_a_patient() {
     val patientUuid = UUID.fromString("9a59d117-34ad-44e5-b0e2-93213ebfea01")
     val recordedAt = Instant.now()
 

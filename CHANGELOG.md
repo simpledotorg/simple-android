@@ -56,6 +56,7 @@
 - Migrate `RemoveOverdueAppointmentScreen` to user view effects
 - Remove Spotless Gradle plugin
 - Remove code formatting checks GH Action
+- Bump AppCompat to v1.4.1
 
 ### Changes
 

@@ -1,12 +1,15 @@
 package org.simple.clinic.drugs.selection.custom
 
 import org.simple.clinic.mobius.ViewEffectsHandler
+import org.simple.clinic.util.exhaustive
 
 class CustomDrugEntryViewEffectHandler(
     private val uiActions: CustomDrugEntrySheetUiActions
 ) : ViewEffectsHandler<CustomDrugEntryViewEffect> {
 
   override fun handle(viewEffect: CustomDrugEntryViewEffect) {
-    // nothing to look at here, yet
+    when (viewEffect) {
+      is ShowEditFrequencyDialog -> uiActions.showEditFrequencyDialog(viewEffect.frequency)
+    }.exhaustive()
   }
 }

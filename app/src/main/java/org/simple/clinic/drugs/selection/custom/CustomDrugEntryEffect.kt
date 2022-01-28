@@ -5,8 +5,6 @@ import java.util.UUID
 
 sealed class CustomDrugEntryEffect
 
-data class ShowEditFrequencyDialog(val frequency: DrugFrequency?) : CustomDrugEntryEffect()
-
 data class SetDrugFrequency(val frequencyLabel: String) : CustomDrugEntryEffect()
 
 data class SetDrugDosage(val dosage: String?) : CustomDrugEntryEffect()
@@ -47,3 +45,5 @@ object ClearFocusFromDosageEditText : CustomDrugEntryEffect()
 data class SetCursorPosition(val position: Int) : CustomDrugEntryEffect()
 
 sealed class CustomDrugEntryViewEffect : CustomDrugEntryEffect()
+
+data class ShowEditFrequencyDialog(val frequency: DrugFrequency?) : CustomDrugEntryViewEffect()

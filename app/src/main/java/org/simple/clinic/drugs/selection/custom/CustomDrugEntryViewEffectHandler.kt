@@ -14,6 +14,7 @@ class CustomDrugEntryViewEffectHandler(
       is SetDrugDosage -> uiActions.setDrugDosage(viewEffect.dosage)
       CloseSheetAndGoToEditMedicineScreen -> uiActions.closeSheetAndGoToEditMedicineScreen()
       HideKeyboard -> uiActions.hideKeyboard()
+      ShowKeyboard -> uiActions.showKeyboard()
     }.exhaustive()
   }
 }

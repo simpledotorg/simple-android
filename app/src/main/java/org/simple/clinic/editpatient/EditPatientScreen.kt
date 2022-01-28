@@ -564,6 +564,15 @@ class EditPatientScreen : BaseScreen<
     }
   }
 
+  private fun highlightNewlyScannedBpPassports(bpPassportView: PatientEditBpPassportViewBinding) {
+    bpPassportView.bpPassportIdentifier.setBackgroundColor(resources.getColor(R.color.simple_yellow_100))
+
+    val horizontalPadding = resources.getDimensionPixelSize(R.dimen.spacing_8)
+    val verticalPadding = resources.getDimensionPixelSize(R.dimen.spacing_4)
+
+    bpPassportView.bpPassportIdentifier.setPaddingRelative(horizontalPadding, verticalPadding, horizontalPadding, verticalPadding)
+  }
+
   private fun inflateBpPassportView(identifier: String, newlyScannedIdentifiers: List<String>) {
     val layoutInflater = LayoutInflater.from(requireContext())
     val bpPassportView = PatientEditBpPassportViewBinding.inflate(layoutInflater, rootView, false)

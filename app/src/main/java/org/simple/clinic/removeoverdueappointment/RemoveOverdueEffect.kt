@@ -22,3 +22,5 @@ data class MarkPatientAsTransferredToAnotherFacility(val patientId: UUID) : Remo
 object GoBack : RemoveOverdueEffect()
 
 object GoBackAfterAppointmentRemoval : RemoveOverdueEffect()
+
+sealed class RemoveOverdueViewEffect : RemoveOverdueEffect()

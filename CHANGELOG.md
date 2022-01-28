@@ -50,6 +50,7 @@
 - Bump lint to v30.1.0
 - Bump Flipper to v0.131.0
 - Add benchmark test for creating a new bp entry 
+- Migrate `CustomDrugEntrySheet` to user view effects
 
 ### Changes
 

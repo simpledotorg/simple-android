@@ -1,5 +1,6 @@
 package org.simple.clinic.removeoverdueappointment
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -15,12 +16,13 @@ class RemoveOverdueEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val cancelAppointmentWithReason: CancelAppointmentWithReason,
     private val schedulersProvider: SchedulersProvider,
-    @Assisted private val uiActions: RemoveOverdueUiActions
+    @Assisted private val uiActions: RemoveOverdueUiActions,
+    @Assisted private val viewEffectsConsumer: Consumer<RemoveOverdueViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: RemoveOverdueUiActions): RemoveOverdueEffectHandler
+    fun create(uiActions: RemoveOverdueUiActions, viewEffectsConsumer: Consumer<RemoveOverdueViewEffect>): RemoveOverdueEffectHandler
   }
 
   fun build(): ObservableTransformer<RemoveOverdueEffect, RemoveOverdueEvent> = RxMobius

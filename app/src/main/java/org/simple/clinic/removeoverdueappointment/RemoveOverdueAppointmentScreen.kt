@@ -20,7 +20,6 @@ import org.simple.clinic.contactpatient.views.RemoveAppointmentReasonItem
 import org.simple.clinic.databinding.RemoveappointmentReasonitemBinding
 import org.simple.clinic.databinding.ScreenRemoveOverdueAppointmentBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.ViewEffectsHandler
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.Succeeded
@@ -77,7 +76,7 @@ class RemoveOverdueAppointmentScreen : BaseScreen<
   override fun createUpdate() = RemoveOverdueUpdate()
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<RemoveOverdueViewEffect>) = effectHandlerFactory
-      .create(this)
+      .create(this, viewEffectsConsumer)
       .build()
 
   override fun viewEffectHandler() = RemoveOverdueViewEffectHandler(this)

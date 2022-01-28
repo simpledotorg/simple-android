@@ -47,7 +47,7 @@ class CustomDrugEntrySheet : BaseBottomSheet<
     CustomDrugEntryModel,
     CustomDrugEntryEvent,
     CustomDrugEntryEffect,
-    Unit>(), CustomDrugEntryUi, CustomDrugEntrySheetUiActions {
+    CustomDrugEntryViewEffect>(), CustomDrugEntryUi, CustomDrugEntrySheetUiActions {
 
   @Inject
   lateinit var locale: Locale
@@ -102,7 +102,7 @@ class CustomDrugEntrySheet : BaseBottomSheet<
 
   override fun createInit() = CustomDrugEntryInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<CustomDrugEntryViewEffect>) = effectHandlerFactory.create(this).build()
 
   override fun events() = Observable
       .mergeArray(

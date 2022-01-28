@@ -6,6 +6,8 @@ class RemoveOverdueViewEffectHandler(
     private val uiActions: RemoveOverdueUiActions
 ) : ViewEffectsHandler<RemoveOverdueViewEffect> {
   override fun handle(viewEffect: RemoveOverdueViewEffect) {
-    // nothing to see here, yet
+    when (viewEffect) {
+      GoBackAfterAppointmentRemoval -> uiActions.goBackAfterAppointmentRemoval()
+    }
   }
 }

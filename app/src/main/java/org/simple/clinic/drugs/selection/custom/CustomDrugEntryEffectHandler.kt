@@ -39,7 +39,6 @@ class CustomDrugEntryEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<CustomDrugEntryEffect, CustomDrugEntryEvent> {
     return RxMobius
         .subtypeEffectHandler<CustomDrugEntryEffect, CustomDrugEntryEvent>()
-        .addConsumer(SetDrugDosage::class.java, { uiActions.setDrugDosage(it.dosage) }, schedulersProvider.ui())
         .addTransformer(SaveCustomDrugToPrescription::class.java, saveCustomDrugToPrescription())
         .addTransformer(UpdatePrescription::class.java, updatePrescription())
         .addAction(CloseSheetAndGoToEditMedicineScreen::class.java, uiActions::closeSheetAndGoToEditMedicineScreen, schedulersProvider.ui())

@@ -5,8 +5,6 @@ import java.util.UUID
 
 sealed class CustomDrugEntryEffect
 
-data class SetDrugDosage(val dosage: String?) : CustomDrugEntryEffect()
-
 data class SaveCustomDrugToPrescription(
     val patientUuid: UUID,
     val drugName: String,
@@ -47,3 +45,5 @@ sealed class CustomDrugEntryViewEffect : CustomDrugEntryEffect()
 data class ShowEditFrequencyDialog(val frequency: DrugFrequency?) : CustomDrugEntryViewEffect()
 
 data class SetDrugFrequency(val frequencyLabel: String) : CustomDrugEntryViewEffect()
+
+data class SetDrugDosage(val dosage: String?) : CustomDrugEntryViewEffect()

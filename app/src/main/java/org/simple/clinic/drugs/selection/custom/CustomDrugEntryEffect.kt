@@ -45,3 +45,5 @@ object ShowKeyboard : CustomDrugEntryEffect()
 object ClearFocusFromDosageEditText : CustomDrugEntryEffect()
 
 data class SetCursorPosition(val position: Int) : CustomDrugEntryEffect()
+
+sealed class CustomDrugEntryViewEffect : CustomDrugEntryEffect()

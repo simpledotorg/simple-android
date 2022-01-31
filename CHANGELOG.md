@@ -60,6 +60,7 @@
 - Add highlight when newly scanned bp passports are added
 - Index `patientUuid` in tables that are joined in `OverdueAppointment` database view
 - Remove `InputField#validate`
+- Migrate `RegistrationLoadingScreen` to use view effects
 
 ### Changes
 

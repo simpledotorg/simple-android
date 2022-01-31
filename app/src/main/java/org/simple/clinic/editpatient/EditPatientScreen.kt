@@ -884,7 +884,7 @@ class EditPatientScreen : BaseScreen<
       alternateIdView: PatientEditAlternateIdViewBinding
   ) {
     if (hasHighlight) {
-      alternateIdView.alternateIdentifier.setBackgroundColor(resources.getColor(R.color.simple_yellow_100))
+      alternateIdView.alternateIdentifier.setBackgroundColor(requireContext().resolveColor(R.color.simple_yellow_100))
 
       val horizontalPadding = resources.getDimensionPixelSize(R.dimen.spacing_8)
       val verticalPadding = resources.getDimensionPixelSize(R.dimen.spacing_4)

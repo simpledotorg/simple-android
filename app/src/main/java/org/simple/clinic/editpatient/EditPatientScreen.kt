@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.core.view.isGone
 import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
@@ -87,6 +88,7 @@ import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.afterTextChangedWatcher
 import org.simple.clinic.util.exhaustive
+import org.simple.clinic.util.resolveColor
 import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
@@ -556,12 +558,22 @@ class EditPatientScreen : BaseScreen<
 
   private fun dateOfBirthFocusChanges(): Observable<EditPatientEvent> = dateOfBirthEditText.focusChanges.map(::DateOfBirthFocusChanged)
 
-  override fun displayBpPassports(identifiers: List<String>) {
+  override fun displayBpPassports(bpPassports: List<BPPassportListItem>) {
     bpPassportsContainer.removeAllViews()
-    identifiers.forEach { identifier -> inflateBpPassportView(identifier) }
+    bpPassports.forEach { identifier ->
+      inflateBpPassportView(identifier)
+    }
   }
 
-  private fun inflateBpPassportView(identifier: String) {
+  private fun highlightNewlyScannedBpPassports(bpPassportView: PatientEditBpPassportViewBinding) {
+    bpPassportView.bpPassportIdentifier.setBackgroundColor(requireContext().resolveColor(R.color.simple_yellow_100))
+
+    val verticalPadding = resources.getDimensionPixelSize(R.dimen.spacing_4)
+
+    bpPassportView.bpPassportIdentifier.updatePadding(top = verticalPadding, bottom = verticalPadding)
+  }
+
+  private fun inflateBpPassportView(identifier: BPPassportListItem) {
     val layoutInflater = LayoutInflater.from(requireContext())
     val bpPassportView = PatientEditBpPassportViewBinding.inflate(layoutInflater, rootView, false)
 
@@ -570,8 +582,12 @@ class EditPatientScreen : BaseScreen<
     bpPassportView.root.updateLayoutParams<ViewGroup.MarginLayoutParams> {
       marginStart = resources.getDimensionPixelSize(R.dimen.spacing_8).unaryMinus()
     }
-    bpPassportView.bpPassportIdentifier.text = identifier
+    bpPassportView.bpPassportIdentifier.text = identifier.identifierValue
     bpPassportsContainer.addView(bpPassportView.root)
+
+    if (identifier.isHighlighted) {
+      highlightNewlyScannedBpPassports(bpPassportView)
+    }
   }
 
   override fun setPatientName(name: String) {
@@ -868,12 +884,11 @@ class EditPatientScreen : BaseScreen<
       alternateIdView: PatientEditAlternateIdViewBinding
   ) {
     if (hasHighlight) {
-      alternateIdView.alternateIdentifier.setBackgroundColor(resources.getColor(R.color.simple_yellow_100))
+      alternateIdView.alternateIdentifier.setBackgroundColor(requireContext().resolveColor(R.color.simple_yellow_100))
 
-      val horizontalPadding = resources.getDimensionPixelSize(R.dimen.spacing_8)
       val verticalPadding = resources.getDimensionPixelSize(R.dimen.spacing_4)
 
-      alternateIdView.alternateIdentifier.setPaddingRelative(horizontalPadding, verticalPadding, horizontalPadding, verticalPadding)
+      alternateIdView.alternateIdentifier.updatePadding(top = verticalPadding, bottom = verticalPadding)
     }
   }
 

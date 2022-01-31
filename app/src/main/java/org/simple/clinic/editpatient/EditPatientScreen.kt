@@ -570,7 +570,7 @@ class EditPatientScreen : BaseScreen<
 
     val verticalPadding = resources.getDimensionPixelSize(R.dimen.spacing_4)
 
-    bpPassportView.bpPassportIdentifier.updatePadding(0, verticalPadding, 0, verticalPadding)
+    bpPassportView.bpPassportIdentifier.updatePadding(top = verticalPadding, bottom = verticalPadding)
   }
 
   private fun inflateBpPassportView(identifier: BPPassportListItem) {
@@ -888,7 +888,7 @@ class EditPatientScreen : BaseScreen<
 
       val verticalPadding = resources.getDimensionPixelSize(R.dimen.spacing_4)
 
-      alternateIdView.alternateIdentifier.updatePadding(0, verticalPadding, 0, verticalPadding)
+      alternateIdView.alternateIdentifier.updatePadding(top = verticalPadding, bottom = verticalPadding)
     }
   }
 

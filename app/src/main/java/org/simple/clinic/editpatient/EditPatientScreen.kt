@@ -10,6 +10,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.core.view.isGone
+import androidx.core.view.updateLayoutParams
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
@@ -563,6 +564,12 @@ class EditPatientScreen : BaseScreen<
   private fun inflateBpPassportView(identifier: String) {
     val layoutInflater = LayoutInflater.from(requireContext())
     val bpPassportView = PatientEditBpPassportViewBinding.inflate(layoutInflater, rootView, false)
+
+    // Setting a negative margin, so that the highlighted BP passports can be rendered
+    // little bit outside of the parent view as per design requirements.
+    bpPassportView.root.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+      marginStart = resources.getDimensionPixelSize(R.dimen.spacing_8).unaryMinus()
+    }
     bpPassportView.bpPassportIdentifier.text = identifier
     bpPassportsContainer.addView(bpPassportView.root)
   }

@@ -5,3 +5,5 @@ import org.simple.clinic.user.OngoingRegistrationEntry
 sealed class RegistrationPinEffect
 
 data class ProceedToConfirmPin(val entry: OngoingRegistrationEntry) : RegistrationPinEffect()
+
+sealed class RegistrationPinViewEffect : RegistrationPinEffect()

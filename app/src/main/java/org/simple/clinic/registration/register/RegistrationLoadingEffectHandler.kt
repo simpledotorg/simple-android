@@ -37,6 +37,7 @@ class RegistrationLoadingEffectHandler @AssistedInject constructor(
         .addTransformer(RegisterUserAtFacility::class.java, registerUserAtFacility())
         .addAction(GoToHomeScreen::class.java, uiActions::openHomeScreen, schedulers.ui())
         .addTransformer(ConvertRegistrationEntryToUserDetails::class.java, convertRegistrationEntryToUser())
+        .addConsumer(RegistrationLoadingViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 

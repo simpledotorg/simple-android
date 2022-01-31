@@ -6,6 +6,7 @@
 
 - Remove `InputField#validate`
 - Migrate `RegistrationFullNameScreen` to use view effects
+- Migrate `RegistrationLoadingScreen` to use view effects
 
 ## On Demo
 

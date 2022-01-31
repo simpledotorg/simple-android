@@ -62,7 +62,10 @@ class RegistrationLoadingScreen : BaseScreen<
   override fun createUpdate() = RegistrationLoadingUpdate()
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationLoadingViewEffect>) = effectHandlerFactory
-      .create(this)
+      .create(
+          uiActions = this,
+          viewEffectsConsumer = viewEffectsConsumer
+      )
       .build()
 
   override fun uiRenderer() = RegistrationLoadingUiRenderer(this)

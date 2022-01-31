@@ -126,13 +126,23 @@ class EditPatientViewRendererTest {
             )
         )
     )
-    val bpPassportsLoadedModel = model.bpPassportsLoaded(bpPassports)
+
+    val newlyScannedBpPassports = listOf(
+        TestData.identifier(
+            value = "374488dc-43a0-4a8a-9f3b-619096e95546",
+            type = Identifier.IdentifierType.BpPassport
+        )
+    )
+
+    val bpPassportsLoadedModel = model.bpPassportsLoaded(bpPassports).addBpPassports(newlyScannedBpPassports)
 
     // when
     uiRenderer.render(bpPassportsLoadedModel)
 
     // then
-    val expectedIdentifiers = listOf("090 2319", "236 9244")
+    val expectedIdentifiers = listOf(BPPassportListItem("090 2319", false), BPPassportListItem("236 9244", false))
+    val expectedNewlyScannedBpPassports = listOf(BPPassportListItem("374 4884", true))
+    val expectedBpPassports = expectedIdentifiers + expectedNewlyScannedBpPassports
 
     verify(ui).setPatientName(patientProfile.patient.fullName)
     verify(ui).setGender(patientProfile.patient.gender)
@@ -145,7 +155,7 @@ class EditPatientViewRendererTest {
     verify(ui).setPatientDateOfBirth("09/03/1990")
     verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
     verify(ui).showProgress()
-    verify(ui).displayBpPassports(expectedIdentifiers)
+    verify(ui).displayBpPassports(expectedBpPassports)
     verify(ui).setAlternateIdTextField("")
     verify(ui).showBpPassportLabel()
     verify(ui).hideBpPassportButton()

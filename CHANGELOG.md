@@ -57,6 +57,7 @@
 - Remove code formatting checks GH Action
 - Bump AppCompat to v1.4.1
 - Update the highlight alignment for newly added NHID or BP passport
+- Add highlight when newly scanned bp passports are added
 
 ### Changes
 

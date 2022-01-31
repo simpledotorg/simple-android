@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.core.view.isGone
 import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
@@ -567,10 +568,9 @@ class EditPatientScreen : BaseScreen<
   private fun highlightNewlyScannedBpPassports(bpPassportView: PatientEditBpPassportViewBinding) {
     bpPassportView.bpPassportIdentifier.setBackgroundColor(requireContext().resolveColor(R.color.simple_yellow_100))
 
-    val horizontalPadding = resources.getDimensionPixelSize(R.dimen.spacing_8)
     val verticalPadding = resources.getDimensionPixelSize(R.dimen.spacing_4)
 
-    bpPassportView.bpPassportIdentifier.setPaddingRelative(horizontalPadding, verticalPadding, horizontalPadding, verticalPadding)
+    bpPassportView.bpPassportIdentifier.updatePadding(0, verticalPadding, 0, verticalPadding)
   }
 
   private fun inflateBpPassportView(identifier: BPPassportListItem) {
@@ -886,10 +886,9 @@ class EditPatientScreen : BaseScreen<
     if (hasHighlight) {
       alternateIdView.alternateIdentifier.setBackgroundColor(requireContext().resolveColor(R.color.simple_yellow_100))
 
-      val horizontalPadding = resources.getDimensionPixelSize(R.dimen.spacing_8)
       val verticalPadding = resources.getDimensionPixelSize(R.dimen.spacing_4)
 
-      alternateIdView.alternateIdentifier.setPaddingRelative(horizontalPadding, verticalPadding, horizontalPadding, verticalPadding)
+      alternateIdView.alternateIdentifier.updatePadding(0, verticalPadding, 0, verticalPadding)
     }
   }
 

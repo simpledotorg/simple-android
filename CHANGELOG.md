@@ -56,6 +56,7 @@
 - Remove Spotless Gradle plugin
 - Remove code formatting checks GH Action
 - Bump AppCompat to v1.4.1
+- Update the highlight alignment for newly added NHID or BP passport
 
 ### Changes
 

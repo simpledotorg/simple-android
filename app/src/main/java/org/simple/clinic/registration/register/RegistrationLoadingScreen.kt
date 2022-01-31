@@ -63,7 +63,6 @@ class RegistrationLoadingScreen : BaseScreen<
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationLoadingViewEffect>) = effectHandlerFactory
       .create(
-          uiActions = this,
           viewEffectsConsumer = viewEffectsConsumer
       )
       .build()

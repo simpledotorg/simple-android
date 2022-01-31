@@ -32,7 +32,6 @@ class RegistrationLoadingEffectHandlerTest {
       registerUser = registerUser,
       clock = clock,
       passwordHasher = passwordHasher,
-      uiActions = uiActions,
       viewEffectsConsumer = RegistrationLoadingViewEffectHandler(uiActions)::handle
   ).build()
 

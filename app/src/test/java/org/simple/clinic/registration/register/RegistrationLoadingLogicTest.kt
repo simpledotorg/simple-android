@@ -152,7 +152,6 @@ class RegistrationLoadingLogicTest {
         registerUser = registerUser,
         clock = clock,
         passwordHasher = passwordHasher,
-        uiActions = uiActions,
         viewEffectsConsumer = RegistrationLoadingViewEffectHandler(uiActions)::handle
     )
     val uiRenderer = RegistrationLoadingUiRenderer(ui)

@@ -28,7 +28,7 @@ class RegistrationLoadingScreen : BaseScreen<
     RegistrationLoadingModel,
     RegistrationLoadingEvent,
     RegistrationLoadingEffect,
-    Unit>(), RegistrationLoadingUi, RegistrationLoadingUiActions {
+    RegistrationLoadingViewEffect>(), RegistrationLoadingUi, RegistrationLoadingUiActions {
 
   private val loaderBack
     get() = binding.loaderBack
@@ -61,7 +61,7 @@ class RegistrationLoadingScreen : BaseScreen<
 
   override fun createUpdate() = RegistrationLoadingUpdate()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationLoadingViewEffect>) = effectHandlerFactory
       .create(this)
       .build()
 

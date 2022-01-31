@@ -48,7 +48,7 @@
 - Migrate `ScannedQrCodeSheet` to use view effects
 - Bump lint to v30.1.0
 - Bump Flipper to v0.131.0
-- Add benchmark test for creating a new bp entry 
+- Add benchmark test for creating a new bp entry
 - Migrate `CustomDrugEntrySheet` to user view effects
 - Migrate `SettingsScreen` to use view effects
 - Bump Paging to v3.1.0
@@ -58,6 +58,7 @@
 - Bump AppCompat to v1.4.1
 - Update the highlight alignment for newly added NHID or BP passport
 - Add highlight when newly scanned bp passports are added
+- Add support for demo country
 
 ### Changes
 

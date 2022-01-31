@@ -7,7 +7,7 @@ import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 
 interface EditPatientUi {
-  fun displayBpPassports(identifiers: List<BPPassportListItem>, newlyScannedIdentifiers: List<BPPassportListItem>)
+  fun displayBpPassports(listOfBpPassports: List<BPPassportListItem>)
   fun setPatientName(name: String)
   fun setPatientPhoneNumber(number: String)
   fun setColonyOrVillage(colonyOrVillage: String)

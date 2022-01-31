@@ -68,6 +68,8 @@ class RegistrationPinScreen :
 
   override fun uiRenderer() = RegistrationPinUiRenderer(this)
 
+  override fun viewEffectHandler() = RegistrationPinViewEffectHandler(this)
+
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenRegistrationPinBinding.inflate(layoutInflater, container, false)
 

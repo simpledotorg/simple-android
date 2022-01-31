@@ -140,8 +140,8 @@ class EditPatientViewRendererTest {
     uiRenderer.render(bpPassportsLoadedModel)
 
     // then
-    val expectedIdentifiers = listOf("090 2319", "236 9244")
-    val expectedNewlyScannedBpPassports = listOf("374 4884")
+    val expectedIdentifiers = listOf(BPPassportListItem("090 2319", false), BPPassportListItem("236 9244", false))
+    val expectedNewlyScannedBpPassports = listOf(BPPassportListItem("374 4884", true))
 
     verify(ui).setPatientName(patientProfile.patient.fullName)
     verify(ui).setGender(patientProfile.patient.gender)

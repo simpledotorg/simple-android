@@ -79,8 +79,8 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
   }
 
   private fun displayBpPassports(model: EditPatientModel) {
-    val newlyAddedBpPassports = model.ongoingEntry.bpPassports?.map { it.displayValue() }.orEmpty()
-    val identifiers = model.bpPassports?.map { it.identifier.displayValue() }.orEmpty()
+    val newlyAddedBpPassports = model.ongoingEntry.bpPassports ?.map { BPPassportListItem(identifierValue = it.displayValue(), isHighlighted = true) } .orEmpty()
+    val identifiers = model.bpPassports ?.map { BPPassportListItem(identifierValue = it.identifier.displayValue(), isHighlighted = false) } .orEmpty()
 
     ui.displayBpPassports(identifiers, newlyAddedBpPassports)
   }
@@ -152,3 +152,5 @@ class EditPatientViewRenderer(private val ui: EditPatientUi) : ViewRenderer<Edit
     }.exhaustive()
   }
 }
+
+data class BPPassportListItem(val identifierValue: String, val isHighlighted: Boolean)

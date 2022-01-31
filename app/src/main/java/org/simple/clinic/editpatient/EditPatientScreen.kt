@@ -556,11 +556,11 @@ class EditPatientScreen : BaseScreen<
 
   private fun dateOfBirthFocusChanges(): Observable<EditPatientEvent> = dateOfBirthEditText.focusChanges.map(::DateOfBirthFocusChanged)
 
-  override fun displayBpPassports(identifiers: List<String>, newlyScannedIdentifiers: List<String>) {
+  override fun displayBpPassports(identifiers: List<BPPassportListItem>, newlyScannedIdentifiers: List<BPPassportListItem>) {
     bpPassportsContainer.removeAllViews()
     val listOfBpPassports = identifiers + newlyScannedIdentifiers
     listOfBpPassports.forEach { identifier ->
-      inflateBpPassportView(identifier, newlyScannedIdentifiers)
+      inflateBpPassportView(identifier)
     }
   }
 
@@ -573,7 +573,7 @@ class EditPatientScreen : BaseScreen<
     bpPassportView.bpPassportIdentifier.setPaddingRelative(horizontalPadding, verticalPadding, horizontalPadding, verticalPadding)
   }
 
-  private fun inflateBpPassportView(identifier: String, newlyScannedIdentifiers: List<String>) {
+  private fun inflateBpPassportView(identifier: BPPassportListItem) {
     val layoutInflater = LayoutInflater.from(requireContext())
     val bpPassportView = PatientEditBpPassportViewBinding.inflate(layoutInflater, rootView, false)
 
@@ -582,12 +582,11 @@ class EditPatientScreen : BaseScreen<
     bpPassportView.root.updateLayoutParams<ViewGroup.MarginLayoutParams> {
       marginStart = resources.getDimensionPixelSize(R.dimen.spacing_8).unaryMinus()
     }
-    bpPassportView.bpPassportIdentifier.text = identifier
+    bpPassportView.bpPassportIdentifier.text = identifier.identifierValue
     bpPassportsContainer.addView(bpPassportView.root)
-    
-    newlyScannedIdentifiers.forEach { newlyScannedBpPassport ->
-      if (newlyScannedBpPassport == identifier)
-        highlightNewlyScannedBpPassports(bpPassportView)
+
+    if (identifier.isHighlighted) {
+      highlightNewlyScannedBpPassports(bpPassportView)
     }
   }
 

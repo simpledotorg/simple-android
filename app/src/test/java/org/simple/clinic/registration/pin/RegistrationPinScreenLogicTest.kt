@@ -110,7 +110,8 @@ class RegistrationPinScreenLogicTest {
 
     val effectHandler = RegistrationPinEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
-        uiActions = uiActions
+        uiActions = uiActions,
+        viewEffectsConsumer = RegistrationPinViewEffectHandler(uiActions)::handle
     )
 
     testFixture = MobiusTestFixture(

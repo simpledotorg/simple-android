@@ -62,7 +62,12 @@ class RegistrationPinScreen :
 
   override fun createInit() = RegistrationPinInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationPinViewEffect>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationPinViewEffect>) = effectHandlerFactory
+      .create(
+          uiActions = this,
+          viewEffectsConsumer = viewEffectsConsumer
+      )
+      .build()
 
   override fun defaultModel() = RegistrationPinModel.create(screenKey.registrationEntry)
 

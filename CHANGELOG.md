@@ -59,6 +59,7 @@
 - Update the highlight alignment for newly added NHID or BP passport
 - Add highlight when newly scanned bp passports are added
 - Add support for demo country
+- Index `patientUuid` in tables that are joined in `OverdueAppointment` database view
 
 ### Changes
 

@@ -142,7 +142,7 @@ class EditPatientViewRendererTest {
     // then
     val expectedIdentifiers = listOf(BPPassportListItem("090 2319", false), BPPassportListItem("236 9244", false))
     val expectedNewlyScannedBpPassports = listOf(BPPassportListItem("374 4884", true))
-    val listOfBpPassports = expectedIdentifiers + expectedNewlyScannedBpPassports
+    val expectedBpPassports = expectedIdentifiers + expectedNewlyScannedBpPassports
 
     verify(ui).setPatientName(patientProfile.patient.fullName)
     verify(ui).setGender(patientProfile.patient.gender)
@@ -155,7 +155,7 @@ class EditPatientViewRendererTest {
     verify(ui).setPatientDateOfBirth("09/03/1990")
     verify(ui).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
     verify(ui).showProgress()
-    verify(ui).displayBpPassports(listOfBpPassports)
+    verify(ui).displayBpPassports(expectedBpPassports)
     verify(ui).setAlternateIdTextField("")
     verify(ui).showBpPassportLabel()
     verify(ui).hideBpPassportButton()

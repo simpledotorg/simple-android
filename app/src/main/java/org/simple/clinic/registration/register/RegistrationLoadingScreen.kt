@@ -67,6 +67,8 @@ class RegistrationLoadingScreen : BaseScreen<
 
   override fun uiRenderer() = RegistrationLoadingUiRenderer(this)
 
+  override fun viewEffectHandler() = RegistrationLoadingViewEffectHandler(this)
+
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)

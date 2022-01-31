@@ -16,6 +16,7 @@ class PlatformCountryDisplayNameFetcher @Inject constructor(
       Country.BANGLADESH -> string(R.string.country_bangladesh)
       Country.ETHIOPIA -> string(R.string.country_ethiopia)
       Country.SRI_LANKA -> string(R.string.country_sri_lanka)
+      Country.DEMO -> string(R.string.country_demo)
       else -> country.displayName
     }
   }

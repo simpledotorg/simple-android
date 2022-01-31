@@ -849,6 +849,12 @@ class EditPatientScreen : BaseScreen<
   private fun inflateAlternateIdView(identifier: String, hasHighlight: Boolean) {
     val layoutInflater = LayoutInflater.from(requireContext())
     val alternateIdView = PatientEditAlternateIdViewBinding.inflate(layoutInflater, rootView, false)
+
+    // Setting a negative margin, so that the highlighted alternative ids can be rendered
+    // little bit outside of the parent view as per design requirements.
+    alternateIdView.root.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+      marginStart = resources.getDimensionPixelSize(R.dimen.spacing_8).unaryMinus()
+    }
     alternateIdView.alternateIdentifier.text = identifier
     alternateIdContainer.removeAllViews()
 

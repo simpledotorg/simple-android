@@ -32,7 +32,8 @@ class RegistrationLoadingEffectHandlerTest {
       registerUser = registerUser,
       clock = clock,
       passwordHasher = passwordHasher,
-      uiActions = uiActions
+      uiActions = uiActions,
+      viewEffectsConsumer = RegistrationLoadingViewEffectHandler(uiActions)::handle
   ).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)

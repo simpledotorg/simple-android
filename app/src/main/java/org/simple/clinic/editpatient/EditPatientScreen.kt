@@ -87,6 +87,7 @@ import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.afterTextChangedWatcher
 import org.simple.clinic.util.exhaustive
+import org.simple.clinic.util.resolveColor
 import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
@@ -565,7 +566,7 @@ class EditPatientScreen : BaseScreen<
   }
 
   private fun highlightNewlyScannedBpPassports(bpPassportView: PatientEditBpPassportViewBinding) {
-    bpPassportView.bpPassportIdentifier.setBackgroundColor(resources.getColor(R.color.simple_yellow_100))
+    bpPassportView.bpPassportIdentifier.setBackgroundColor(requireContext().resolveColor(R.color.simple_yellow_100))
 
     val horizontalPadding = resources.getDimensionPixelSize(R.dimen.spacing_8)
     val verticalPadding = resources.getDimensionPixelSize(R.dimen.spacing_4)

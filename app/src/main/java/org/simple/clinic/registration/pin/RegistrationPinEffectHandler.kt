@@ -6,18 +6,14 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
-import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class RegistrationPinEffectHandler @AssistedInject constructor(
-    private val schedulers: SchedulersProvider,
-    @Assisted private val uiActions: RegistrationPinUiActions,
     @Assisted private val viewEffectsConsumer: Consumer<RegistrationPinViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        uiActions: RegistrationPinUiActions,
         viewEffectsConsumer: Consumer<RegistrationPinViewEffect>
     ): RegistrationPinEffectHandler
   }

@@ -5,6 +5,7 @@ import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.PrimaryKey
@@ -18,7 +19,12 @@ import org.simple.clinic.storage.Timestamps
 import java.time.Instant
 import java.util.UUID
 
-@Entity(tableName = "BloodSugarMeasurements")
+@Entity(
+    tableName = "BloodSugarMeasurements",
+    indices = [
+      Index("patientUuid", unique = false)
+    ]
+)
 @Parcelize
 data class BloodSugarMeasurement(
     @PrimaryKey

@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
@@ -24,7 +25,12 @@ import java.time.Instant
 import java.util.UUID
 
 @Parcelize
-@Entity(tableName = "MedicalHistory")
+@Entity(
+    tableName = "MedicalHistory",
+    indices = [
+      Index("patientUuid", unique = false)
+    ]
+)
 data class MedicalHistory(
     @PrimaryKey
     val uuid: UUID,

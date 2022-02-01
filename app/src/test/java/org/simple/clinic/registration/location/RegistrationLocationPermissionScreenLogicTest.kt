@@ -66,7 +66,10 @@ class RegistrationLocationPermissionScreenLogicTest {
 
   private fun setupController() {
     val uiRenderer = RegistrationLocationPermissionUiRenderer(ui)
-    val effectHandler = RegistrationLocationPermissionEffectHandler(TestSchedulersProvider.trampoline(), ui)
+    val effectHandler = RegistrationLocationPermissionEffectHandler(
+        schedulers = TestSchedulersProvider.trampoline(),
+        uiActions = ui,
+        viewEffectConsumer = RegistrationLocationPermissionViewEffectHandler(ui)::handle)
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),

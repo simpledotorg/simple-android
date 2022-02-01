@@ -8,6 +8,7 @@
 - Migrate `RegistrationFullNameScreen` to use view effects
 - Migrate `RegistrationLoadingScreen` to use view effects
 - Bump Flipper to v0.131.1
+- Migrate `RegistrationLocationPermissionScreen` to use view effects 
 
 ## On Demo
 

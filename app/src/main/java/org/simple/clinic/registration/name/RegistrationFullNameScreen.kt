@@ -77,6 +77,8 @@ class RegistrationFullNameScreen :
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationNameViewEffect>) = effectHandlerFactory.create(this).build()
 
+  override fun viewEffectHandler() = RegistrationNameViewEffectHandler(this)
+
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)

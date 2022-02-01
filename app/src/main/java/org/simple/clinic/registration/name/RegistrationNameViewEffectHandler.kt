@@ -8,6 +8,7 @@ class RegistrationNameViewEffectHandler(
   override fun handle(viewEffect: RegistrationNameViewEffect) {
     when (viewEffect) {
       is PrefillFields -> uiActions.preFillUserDetails(viewEffect.entry)
+      is ProceedToPinEntry -> uiActions.openRegistrationPinEntryScreen(viewEffect.entry)
     }
   }
 }

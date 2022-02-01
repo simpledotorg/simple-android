@@ -28,7 +28,6 @@ class RegistrationNameEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<RegistrationNameEffect, RegistrationNameEvent>()
         .addTransformer(ValidateEnteredName::class.java, validateNameEntry())
-        .addConsumer(ProceedToPinEntry::class.java, { uiActions.openRegistrationPinEntryScreen(it.entry) }, schedulers.ui())
         .addConsumer(RegistrationNameViewEffect::class.java, viewEffectConsumer::accept)
         .build()
   }

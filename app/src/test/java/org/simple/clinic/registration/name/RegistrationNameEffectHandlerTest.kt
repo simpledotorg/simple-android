@@ -37,4 +37,18 @@ class RegistrationNameEffectHandlerTest {
     verifyNoMoreInteractions(uiActions)
     testCase.assertNoOutgoingEvents()
   }
+
+  @Test
+  fun `when proceed to pin entry effect is received, then open registration pin entry screen`() {
+    // given
+    val ongoingRegistrationEntry = TestData.ongoingRegistrationEntry(uuid = UUID.fromString("d97e2dfb-95f0-41fd-8b5a-dfc1d3ad10db"))
+
+    // when
+    testCase.dispatch(ProceedToPinEntry(ongoingRegistrationEntry))
+
+    // then
+    verify(uiActions).openRegistrationPinEntryScreen(ongoingRegistrationEntry)
+    verifyNoMoreInteractions(uiActions)
+    testCase.assertNoOutgoingEvents()
+  }
 }

@@ -139,7 +139,8 @@ class RegistrationNameScreenLogicTest {
     val uiRenderer = RegistrationNameUiRenderer(ui)
     val effectHandler = RegistrationNameEffectHandler(
         schedulers = TrampolineSchedulersProvider(),
-        uiActions = uiActions
+        uiActions = uiActions,
+        viewEffectConsumer = RegistrationNameViewEffectHandler(uiActions)::handle
     )
 
     testFixture = MobiusTestFixture(

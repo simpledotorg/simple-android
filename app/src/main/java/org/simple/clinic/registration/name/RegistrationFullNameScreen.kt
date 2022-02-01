@@ -75,7 +75,12 @@ class RegistrationFullNameScreen :
 
   override fun createInit() = RegistrationNameInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationNameViewEffect>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationNameViewEffect>) =
+      effectHandlerFactory
+          .create(
+              uiActions = this,
+              viewEffectConsumer = viewEffectsConsumer
+          ).build()
 
   override fun viewEffectHandler() = RegistrationNameViewEffectHandler(this)
 

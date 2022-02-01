@@ -6,18 +6,14 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
-import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class RegistrationLocationPermissionEffectHandler @AssistedInject constructor(
-    private val schedulers: SchedulersProvider,
-    @Assisted private val uiActions: RegistrationLocationPermissionUiActions,
     @Assisted private val viewEffectConsumer: Consumer<RegistrationLocationPermissionViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        uiActions: RegistrationLocationPermissionUiActions,
         viewEffectConsumer: Consumer<RegistrationLocationPermissionViewEffect>
     ): RegistrationLocationPermissionEffectHandler
   }

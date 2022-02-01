@@ -59,7 +59,7 @@ class RegistrationLocationPermissionScreen : BaseScreen<
       .inflate(layoutInflater, container, false)
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationLocationPermissionViewEffect>) = effectHandlerFactory
-      .create(this, viewEffectsConsumer)
+      .create(viewEffectsConsumer)
       .build()
 
   override fun createInit() = RegistrationLocationPermissionInit()

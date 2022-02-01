@@ -9,3 +9,5 @@ data class PrefillFields(val entry: OngoingRegistrationEntry) : RegistrationName
 data class ValidateEnteredName(val name: String) : RegistrationNameEffect()
 
 data class ProceedToPinEntry(val entry: OngoingRegistrationEntry) : RegistrationNameEffect()
+
+sealed class RegistrationNameViewEffect : RegistrationNameEffect()

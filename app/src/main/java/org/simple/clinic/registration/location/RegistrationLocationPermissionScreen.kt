@@ -32,7 +32,7 @@ class RegistrationLocationPermissionScreen : BaseScreen<
     RegistrationLocationPermissionModel,
     RegistrationLocationPermissionEvent,
     RegistrationLocationPermissionEffect,
-    Unit>(), RegistrationLocationPermissionUi {
+    RegistrationLocationPermissionViewEffect>(), RegistrationLocationPermissionUi {
 
   private val allowAccessButton
     get() = binding.allowAccessButton
@@ -58,7 +58,7 @@ class RegistrationLocationPermissionScreen : BaseScreen<
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenRegistrationLocationPermissionBinding
       .inflate(layoutInflater, container, false)
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationLocationPermissionViewEffect>) = effectHandlerFactory
       .create(this)
       .build()
 

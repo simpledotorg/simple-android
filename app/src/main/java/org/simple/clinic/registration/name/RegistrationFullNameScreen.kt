@@ -78,7 +78,6 @@ class RegistrationFullNameScreen :
   override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationNameViewEffect>) =
       effectHandlerFactory
           .create(
-              uiActions = this,
               viewEffectConsumer = viewEffectsConsumer
           ).build()
 

@@ -8,18 +8,14 @@ import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.registration.name.RegistrationNameValidationResult.Blank
 import org.simple.clinic.registration.name.RegistrationNameValidationResult.Valid
-import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class RegistrationNameEffectHandler @AssistedInject constructor(
-    private val schedulers: SchedulersProvider,
-    @Assisted private val uiActions: RegistrationNameUiActions,
     @Assisted private val viewEffectConsumer: Consumer<RegistrationNameViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        uiActions: RegistrationNameUiActions,
         viewEffectConsumer: Consumer<RegistrationNameViewEffect>
     ): RegistrationNameEffectHandler
   }

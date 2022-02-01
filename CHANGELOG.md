@@ -5,6 +5,7 @@
 ### Internal
 
 - Remove `InputField#validate`
+- Bump Lottie to v4.2.2
 
 ## On Demo
 

@@ -35,6 +35,7 @@ class InputFieldsFactoryModule {
     val date = LocalDate.now(userClock)
 
     return when (val isoCountryCode = country.isoCountryCode) {
+      Country.DEMO,
       Country.INDIA -> IndiaInputFieldsProvider(dateTimeFormatter, date, currentFacility, chennaiFacilityGroupIds)
       Country.BANGLADESH -> BangladeshInputFieldsProvider(dateTimeFormatter, date)
       Country.ETHIOPIA -> EthiopiaInputFieldsProvider(dateTimeFormatter, date)

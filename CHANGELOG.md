@@ -22,6 +22,7 @@
 - Update GH Actions `setup-jdk` to v2
 - Bump Datadog SDK version
 - Rename next appointment title string
+- Add support for demo country
 
 ### Changes
 

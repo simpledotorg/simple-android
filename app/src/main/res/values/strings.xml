@@ -22,6 +22,7 @@
   <string name="country_bangladesh">Bangladesh</string>
   <string name="country_ethiopia">Ethiopia</string>
   <string name="country_sri_lanka">Sri Lanka</string>
+  <string name="country_demo">Demo Country</string>
 
   <!-- Home -->
   <string name="home_help">Help</string>

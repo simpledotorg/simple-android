@@ -6,6 +6,8 @@ class RegistrationLocationPermissionViewEffectHandler(
     private val uiActions: RegistrationLocationPermissionUiActions
 ) : ViewEffectsHandler<RegistrationLocationPermissionViewEffect> {
   override fun handle(viewEffect: RegistrationLocationPermissionViewEffect) {
-    // Nothing to look at here, yet. 龴ↀ◡ↀ龴
+    when (viewEffect) {
+      is OpenFacilitySelectionScreen -> uiActions.openFacilitySelectionScreen(viewEffect.entry)
+    }
   }
 }

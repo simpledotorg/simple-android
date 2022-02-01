@@ -58,15 +58,13 @@
 - Bump AppCompat to v1.4.1
 - Update the highlight alignment for newly added NHID or BP passport
 - Add highlight when newly scanned bp passports are added
-- Add support for demo country
 - Index `patientUuid` in tables that are joined in `OverdueAppointment` database view
 
 ### Changes
 
-- Implement adding scan support for India NHID in `EditPatientScreen`
-- Implement adding scan support for BpPassport in `EditPatientScreen`
+- Add health ID's from edit patient screen
 
-## On Demo
+## 2022-02-01-8118
 
 ### Internal
 
@@ -82,6 +80,7 @@
 - Update GH Actions `setup-jdk` to v2
 - Bump Datadog SDK version
 - Rename next appointment title string
+- Add support for demo country
 
 ### Changes
 

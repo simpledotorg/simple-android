@@ -6,6 +6,8 @@ class RegistrationNameViewEffectHandler(
     private val uiActions: RegistrationNameUiActions
 ) : ViewEffectsHandler<RegistrationNameViewEffect> {
   override fun handle(viewEffect: RegistrationNameViewEffect) {
-    // Nothing to do here, yet. ٩(- ̮̮̃-̃)۶
+    when (viewEffect) {
+      is PrefillFields -> uiActions.preFillUserDetails(viewEffect.entry)
+    }
   }
 }

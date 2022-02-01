@@ -79,10 +79,7 @@ class EditPatientScreenSaveTest {
 
   private val viewRenderer = EditPatientViewRenderer(ui)
 
-  private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider(
-      dateTimeFormatter = dateOfBirthFormat,
-      today = LocalDate.now(userClock)
-  ))
+  private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider())
 
   private val viewEffectHandler = EditPatientViewEffectHandler(ui)
 

@@ -78,7 +78,7 @@ class EditPatientViewRendererTest {
     // given
     val date = LocalDate.parse("2018-01-01")
     val userClock = TestUserClock(date)
-    val inputFieldsList = BangladeshInputFieldsProvider(dateOfBirthFormat, LocalDate.now(userClock))
+    val inputFieldsList = BangladeshInputFieldsProvider()
         .provide()
     val inputFields = InputFields(inputFieldsList)
 

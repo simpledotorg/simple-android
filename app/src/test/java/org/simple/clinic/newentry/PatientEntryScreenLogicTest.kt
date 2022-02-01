@@ -78,10 +78,7 @@ class PatientEntryScreenLogicTest {
 
   private val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
 
-  private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider(
-      dateTimeFormatter = dateTimeFormatter,
-      today = LocalDate.now(userClock)
-  ))
+  private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider())
 
   private lateinit var errorConsumer: (Throwable) -> Unit
 

@@ -12,17 +12,17 @@ import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.activity.permissions.ActivityPermissionResult
+import org.simple.clinic.activity.permissions.RequestPermissions
+import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.databinding.ScreenRegistrationLocationPermissionBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreen
-import org.simple.clinic.navigation.v2.ScreenResultBus
-import org.simple.clinic.activity.permissions.ActivityPermissionResult
 import org.simple.clinic.user.OngoingRegistrationEntry
-import org.simple.clinic.activity.permissions.RequestPermissions
-import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -67,6 +67,8 @@ class RegistrationLocationPermissionScreen : BaseScreen<
   override fun createUpdate() = RegistrationLocationPermissionUpdate()
 
   override fun defaultModel() = RegistrationLocationPermissionModel.create(screenKey.ongoingRegistrationEntry)
+
+  override fun viewEffectHandler() = RegistrationLocationPermissionViewEffectHandler(this)
 
   override fun events(): Observable<RegistrationLocationPermissionEvent> {
     val permissionResults = screenResults

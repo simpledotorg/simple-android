@@ -4,7 +4,6 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
@@ -89,7 +88,7 @@ class EditPatientEffectHandlerTest {
   private val inputFields = InputFields(listOf(
       PatientNameField(R.string.patiententry_full_name),
       AgeField(R.string.patiententry_age),
-      DateOfBirthField({ value -> LocalDate.parse(value, dateOfBirthFormatter) }, LocalDate.now(userClock), R.string.patiententry_date_of_birth_unfocused),
+      DateOfBirthField(R.string.patiententry_date_of_birth_unfocused),
       LandlineOrMobileField(R.string.patiententry_phone_number),
       GenderField(_labelResId = 0, allowedGenders = setOf(Gender.Male, Gender.Female, Gender.Transgender)),
       AlternativeIdInputField(R.string.patiententry_bangladesh_national_id),

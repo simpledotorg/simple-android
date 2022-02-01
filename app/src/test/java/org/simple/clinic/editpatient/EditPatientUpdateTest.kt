@@ -42,10 +42,7 @@ class EditPatientUpdateTest {
       ageValidator = ageValidator
   ))
 
-  private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider(
-      dateTimeFormatter = dateOfBirthFormat,
-      today = LocalDate.now(clock)
-  ))
+  private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider())
 
   private val patientProfile = TestData.patientProfile(
       patientUuid = UUID.fromString("f8193c3b-20d3-4fae-be3a-0029969db624"),

@@ -5,14 +5,11 @@ import org.junit.Test
 import org.simple.clinic.newentry.form.ValidationError.DateIsInFuture
 import org.simple.clinic.newentry.form.ValidationError.InvalidDateFormat
 import org.simple.clinic.newentry.form.ValidationError.MissingValue
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class DateOfBirthFieldTest {
   private val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
   private val dateOfBirthField = DateOfBirthField(
-      { value -> LocalDate.parse(value, dateTimeFormatter) },
-      LocalDate.parse("20/11/2019", dateTimeFormatter),
       _labelResId = 0
   )
 

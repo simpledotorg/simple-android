@@ -38,10 +38,7 @@ class PatientEntryUpdateTest {
   private val updateSpec = UpdateSpec(update)
   private val defaultModel = PatientEntryModel.DEFAULT
 
-  private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider(
-      dateTimeFormatter = dateOfBirthFormat,
-      today = LocalDate.now(userClock)
-  ))
+  private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider())
 
   @Test
   fun `when the user grants reminder consent, update the model`() {

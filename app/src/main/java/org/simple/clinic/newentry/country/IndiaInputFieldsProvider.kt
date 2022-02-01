@@ -14,13 +14,9 @@ import org.simple.clinic.newentry.form.StateField
 import org.simple.clinic.newentry.form.StreetAddressField
 import org.simple.clinic.newentry.form.VillageOrColonyField
 import org.simple.clinic.patient.Gender
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 class IndiaInputFieldsProvider(
-    private val dateTimeFormatter: DateTimeFormatter,
-    private val today: LocalDate,
     private val currentFacility: Lazy<Facility>,
     private val chennaiFacilityGroupIds: Lazy<Set<UUID>>
 ) : InputFieldsProvider {
@@ -32,8 +28,6 @@ class IndiaInputFieldsProvider(
         PatientNameField(R.string.patiententry_full_name),
         AgeField(R.string.patiententry_age),
         DateOfBirthField(
-            { value -> LocalDate.parse(value, dateTimeFormatter) },
-            today,
             R.string.patiententry_date_of_birth_unfocused
         ),
         LandlineOrMobileField(R.string.patiententry_phone_number),

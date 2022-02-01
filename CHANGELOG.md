@@ -4,6 +4,12 @@
 
 ### Internal
 
+- Remove `InputField#validate`
+
+## On Demo
+
+### Internal
+
 - Bump Gradle to v7.3.3
 - Remove version range for zxing dependency in the version catalog
 - Bump WorkManager to v2.7.1
@@ -59,7 +65,6 @@
 - Update the highlight alignment for newly added NHID or BP passport
 - Add highlight when newly scanned bp passports are added
 - Index `patientUuid` in tables that are joined in `OverdueAppointment` database view
-- Remove `InputField#validate`
 
 ### Changes
 

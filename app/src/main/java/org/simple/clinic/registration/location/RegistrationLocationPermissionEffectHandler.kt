@@ -26,6 +26,7 @@ class RegistrationLocationPermissionEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<RegistrationLocationPermissionEffect, RegistrationLocationPermissionEvent>()
         .addConsumer(OpenFacilitySelectionScreen::class.java, { uiActions.openFacilitySelectionScreen(it.entry) }, schedulers.ui())
+        .addConsumer(RegistrationLocationPermissionViewEffect::class.java, viewEffectConsumer::accept)
         .build()
   }
 }

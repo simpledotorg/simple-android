@@ -10,14 +10,11 @@ import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinValidationResult.DoesNotMatchEnteredPin
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinValidationResult.Valid
-import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.util.UUID
 
 class RegistrationConfirmPinEffectHandlerTest {
   private val uiActions = mock<RegistrationConfirmPinUiActions>()
   private val effectHandler = RegistrationConfirmPinEffectHandler(
-      uiActions = uiActions,
-      schedulers = TestSchedulersProvider.trampoline(),
       viewEffectsConsumer = RegistrationConfirmPinViewEffectHandler(uiActions)::handle
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)

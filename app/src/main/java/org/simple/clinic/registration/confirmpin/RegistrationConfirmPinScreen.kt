@@ -78,7 +78,6 @@ class RegistrationConfirmPinScreen :
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationConfirmPinViewEffect>) =
       effectHandlerFactory.create(
-          uiActions = this,
           viewEffectsConsumer = viewEffectsConsumer
       ).build()
 

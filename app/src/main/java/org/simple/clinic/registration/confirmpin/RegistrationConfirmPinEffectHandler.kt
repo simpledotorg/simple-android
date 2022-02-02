@@ -9,18 +9,14 @@ import io.reactivex.ObservableTransformer
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinValidationResult.DoesNotMatchEnteredPin
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinValidationResult.Valid
 import org.simple.clinic.user.OngoingRegistrationEntry
-import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class RegistrationConfirmPinEffectHandler @AssistedInject constructor(
-    private val schedulers: SchedulersProvider,
-    @Assisted private val uiActions: RegistrationConfirmPinUiActions,
     @Assisted private val viewEffectsConsumer: Consumer<RegistrationConfirmPinViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        uiActions: RegistrationConfirmPinUiActions,
         viewEffectsConsumer: Consumer<RegistrationConfirmPinViewEffect>
     ): RegistrationConfirmPinEffectHandler
   }

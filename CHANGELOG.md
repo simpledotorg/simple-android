@@ -5,6 +5,7 @@
 ### Internal
 
 - Remove `InputField#validate`
+- Migrate `RegistrationFullNameScreen` to use view effects
 
 ## On Demo
 

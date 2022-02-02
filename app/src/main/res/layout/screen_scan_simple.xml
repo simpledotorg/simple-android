@@ -127,6 +127,7 @@
             android:hint="@string/scansimpleid_hint_short_code"
             android:imeOptions="actionSearch"
             android:inputType="number"
+            android:digits="1234567890 "
             android:textAppearance="?attr/textAppearanceHeadline6" />
 
         </com.google.android.material.textfield.TextInputLayout>

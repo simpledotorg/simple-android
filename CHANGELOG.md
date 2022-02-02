@@ -7,6 +7,7 @@
 - Remove `InputField#validate`
 - Migrate `RegistrationFullNameScreen` to use view effects
 - Migrate `RegistrationLoadingScreen` to use view effects
+- Bump Flipper to v0.131.1
 
 ## On Demo
 

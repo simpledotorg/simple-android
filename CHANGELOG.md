@@ -8,7 +8,8 @@
 - Migrate `RegistrationFullNameScreen` to use view effects
 - Migrate `RegistrationLoadingScreen` to use view effects
 - Bump Flipper to v0.131.1
-- Migrate `RegistrationLocationPermissionScreen` to use view effects 
+- Migrate `RegistrationLocationPermissionScreen` to use view effects
+- Bump Lottie to v4.2.2
 
 ## On Demo
 

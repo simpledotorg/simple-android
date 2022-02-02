@@ -15,6 +15,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.SECURITY_PIN_LENGTH
 import org.simple.clinic.databinding.ScreenRegistrationConfirmPinBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.mobius.ViewEffectsHandler
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.registration.location.RegistrationLocationPermissionScreen
@@ -77,6 +78,8 @@ class RegistrationConfirmPinScreen :
   override fun createInit() = RegistrationConfirmPinInit()
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationConfirmPinViewEffect>) = effectHandlerFactory.create(this).build()
+
+  override fun viewEffectHandler() = RegistrationConfirmPinViewEffectHandler(this)
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

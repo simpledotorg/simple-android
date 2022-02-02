@@ -10,6 +10,7 @@
 - Bump Flipper to v0.131.1
 - Migrate `RegistrationLocationPermissionScreen` to use view effects
 - Bump Lottie to v4.2.2
+- Bump Fragment to v1.4.1
 
 ## On Demo
 

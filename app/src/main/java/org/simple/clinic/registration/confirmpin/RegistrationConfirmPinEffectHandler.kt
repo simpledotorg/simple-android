@@ -32,6 +32,7 @@ class RegistrationConfirmPinEffectHandler @AssistedInject constructor(
         .addAction(ClearPin::class.java, uiActions::clearPin, schedulers.ui())
         .addConsumer(OpenFacilitySelectionScreen::class.java, { uiActions.openFacilitySelectionScreen(it.entry) }, schedulers.ui())
         .addConsumer(GoBackToPinEntry::class.java, { uiActions.goBackToPinScreen(it.entry) }, schedulers.ui())
+        .addConsumer(RegistrationConfirmPinViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 

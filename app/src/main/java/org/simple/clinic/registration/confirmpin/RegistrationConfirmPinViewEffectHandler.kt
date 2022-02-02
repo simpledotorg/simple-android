@@ -8,6 +8,7 @@ class RegistrationConfirmPinViewEffectHandler(
   override fun handle(viewEffect: RegistrationConfirmPinViewEffect) {
     when (viewEffect) {
       ClearPin -> uiActions.clearPin()
+      is OpenFacilitySelectionScreen -> uiActions.openFacilitySelectionScreen(viewEffect.entry)
     }
   }
 }

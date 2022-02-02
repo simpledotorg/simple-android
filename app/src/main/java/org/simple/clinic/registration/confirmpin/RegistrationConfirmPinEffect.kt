@@ -9,10 +9,10 @@ data class ValidatePinConfirmation(
     val entry: OngoingRegistrationEntry
 ) : RegistrationConfirmPinEffect()
 
-data class OpenFacilitySelectionScreen(val entry: OngoingRegistrationEntry) : RegistrationConfirmPinEffect()
-
 data class GoBackToPinEntry(val entry: OngoingRegistrationEntry) : RegistrationConfirmPinEffect()
 
 sealed class RegistrationConfirmPinViewEffect : RegistrationConfirmPinEffect()
 
 object ClearPin : RegistrationConfirmPinViewEffect()
+
+data class OpenFacilitySelectionScreen(val entry: OngoingRegistrationEntry) : RegistrationConfirmPinViewEffect()

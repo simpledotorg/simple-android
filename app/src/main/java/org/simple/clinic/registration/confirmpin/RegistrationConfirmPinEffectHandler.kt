@@ -29,7 +29,6 @@ class RegistrationConfirmPinEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<RegistrationConfirmPinEffect, RegistrationConfirmPinEvent>()
         .addTransformer(ValidatePinConfirmation::class.java, validatePinConfirmation())
-        .addConsumer(OpenFacilitySelectionScreen::class.java, { uiActions.openFacilitySelectionScreen(it.entry) }, schedulers.ui())
         .addConsumer(GoBackToPinEntry::class.java, { uiActions.goBackToPinScreen(it.entry) }, schedulers.ui())
         .addConsumer(RegistrationConfirmPinViewEffect::class.java, viewEffectsConsumer::accept)
         .build()

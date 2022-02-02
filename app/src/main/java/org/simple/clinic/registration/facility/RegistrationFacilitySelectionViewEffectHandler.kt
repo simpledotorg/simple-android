@@ -8,6 +8,7 @@ class RegistrationFacilitySelectionViewEffectHandler(
   override fun handle(viewEffect: RegistrationFacilitySelectionViewEffect) {
     when(viewEffect){
       is OpenConfirmFacilitySheet -> uiActions.showConfirmFacilitySheet(viewEffect.facility.uuid, viewEffect.facility.name)
+      is MoveToIntroVideoScreen -> uiActions.openIntroVideoScreen(viewEffect.registrationEntry)
     }
   }
 }

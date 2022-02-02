@@ -25,7 +25,6 @@ class RegistrationFacilitySelectionEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<RegistrationFacilitySelectionEffect, RegistrationFacilitySelectionEvent> {
     return RxMobius
         .subtypeEffectHandler<RegistrationFacilitySelectionEffect, RegistrationFacilitySelectionEvent>()
-        .addConsumer(MoveToIntroVideoScreen::class.java, { uiActions.openIntroVideoScreen(it.registrationEntry) }, schedulersProvider.ui())
         .addConsumer(RegistrationFacilitySelectionViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }

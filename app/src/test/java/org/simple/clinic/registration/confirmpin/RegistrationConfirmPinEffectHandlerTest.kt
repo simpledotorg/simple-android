@@ -48,4 +48,18 @@ class RegistrationConfirmPinEffectHandlerTest {
     verifyNoMoreInteractions(uiActions)
     testCase.assertNoOutgoingEvents()
   }
+
+  @Test
+  fun `when go back to pin entry effect is received, then go back to pin screen`() {
+    // given
+    val ongoingRegistrationEntry = TestData.ongoingRegistrationEntry(uuid = UUID.fromString("79ae24ef-6ca2-4380-882d-050b271928da"))
+
+    // when
+    testCase.dispatch(GoBackToPinEntry(ongoingRegistrationEntry))
+
+    // then
+    verify(uiActions).goBackToPinScreen(ongoingRegistrationEntry)
+    verifyNoMoreInteractions(uiActions)
+    testCase.assertNoOutgoingEvents()
+  }
 }

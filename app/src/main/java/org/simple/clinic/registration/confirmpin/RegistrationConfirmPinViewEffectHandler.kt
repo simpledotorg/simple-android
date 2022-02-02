@@ -9,6 +9,7 @@ class RegistrationConfirmPinViewEffectHandler(
     when (viewEffect) {
       ClearPin -> uiActions.clearPin()
       is OpenFacilitySelectionScreen -> uiActions.openFacilitySelectionScreen(viewEffect.entry)
+      is GoBackToPinEntry -> uiActions.goBackToPinScreen(viewEffect.entry)
     }
   }
 }

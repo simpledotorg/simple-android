@@ -12,6 +12,7 @@
 - Bump Lottie to v4.2.2
 - Bump ConstraintLayout to v2.1.3
 - Bump Preferences to v1.2.0
+- Migrate `RegistrationConfirmPinScreen` to use view effects
 
 ## On Demo
 

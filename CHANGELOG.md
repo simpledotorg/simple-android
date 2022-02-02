@@ -8,6 +8,7 @@
 - Migrate `RegistrationFullNameScreen` to use view effects
 - Migrate `RegistrationLoadingScreen` to use view effects
 - Bump Flipper to v0.131.1
+- Bump Preference to v1.2.0
 
 ## On Demo
 

@@ -11,6 +11,10 @@
 - Migrate `RegistrationLocationPermissionScreen` to use view effects
 - Bump Lottie to v4.2.2
 
+### Fixes
+
+- Fixed unable to enter space while entering bp passport number in `ScanSimpleIdScreen`
+
 ## On Demo
 
 ### Internal

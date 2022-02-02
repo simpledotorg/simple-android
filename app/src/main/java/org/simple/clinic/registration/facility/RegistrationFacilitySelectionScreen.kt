@@ -33,7 +33,7 @@ class RegistrationFacilitySelectionScreen : BaseScreen<
     RegistrationFacilitySelectionModel,
     RegistrationFacilitySelectionEvent,
     RegistrationFacilitySelectionEffect,
-    Unit>(), RegistrationFacilitySelectionUiActions {
+    RegistrationFacilitySelectionViewEffect>(), RegistrationFacilitySelectionUiActions {
 
   @Inject
   lateinit var router: Router
@@ -57,7 +57,7 @@ class RegistrationFacilitySelectionScreen : BaseScreen<
 
   override fun createUpdate() = RegistrationFacilitySelectionUpdate()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationFacilitySelectionViewEffect>) = effectHandlerFactory
       .create(uiActions = this)
       .build()
 

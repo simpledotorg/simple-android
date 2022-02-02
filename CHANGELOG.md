@@ -67,6 +67,7 @@
 - Update the highlight alignment for newly added NHID or BP passport
 - Add highlight when newly scanned bp passports are added
 - Index `patientUuid` in tables that are joined in `OverdueAppointment` database view
+- Migrate `RegistrationPinScreen` to use view effects
 
 ### Changes
 

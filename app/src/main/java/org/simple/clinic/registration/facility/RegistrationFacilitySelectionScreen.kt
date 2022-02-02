@@ -58,7 +58,7 @@ class RegistrationFacilitySelectionScreen : BaseScreen<
   override fun createUpdate() = RegistrationFacilitySelectionUpdate()
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationFacilitySelectionViewEffect>) = effectHandlerFactory
-      .create(uiActions = this, viewEffectsConsumer = viewEffectsConsumer)
+      .create(viewEffectsConsumer = viewEffectsConsumer)
       .build()
 
   override fun viewEffectHandler() = RegistrationFacilitySelectionViewEffectHandler(this)

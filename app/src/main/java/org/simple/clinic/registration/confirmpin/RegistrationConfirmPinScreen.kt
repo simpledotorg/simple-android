@@ -31,7 +31,7 @@ class RegistrationConfirmPinScreen :
         RegistrationConfirmPinModel,
         RegistrationConfirmPinEvent,
         RegistrationConfirmPinEffect,
-        Unit>(),
+        RegistrationConfirmPinViewEffect>(),
     RegistrationConfirmPinUi,
     RegistrationConfirmPinUiActions {
 
@@ -76,7 +76,7 @@ class RegistrationConfirmPinScreen :
 
   override fun createInit() = RegistrationConfirmPinInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationConfirmPinViewEffect>) = effectHandlerFactory.create(this).build()
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

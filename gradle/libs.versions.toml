@@ -9,8 +9,6 @@ androidx-work = "2.7.1"
 
 dagger = "2.40.5"
 
-dependencyUpdates = "0.38.0"
-
 flipper = "0.131.1"
 
 kotlin = "1.5.31"
@@ -30,9 +28,6 @@ retrofit = "2.9.0"
 room-metadataGenerator = "2.0.0"
 
 rx-binding = "3.1.0"
-
-[plugins]
-dependencyUpdates = { id = "com.github.ben-manes.versions", version.ref = "dependencyUpdates" }
 
 [libraries]
 android-gradle-plugin = "com.android.tools.build:gradle:7.1.0"

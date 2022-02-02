@@ -112,7 +112,7 @@ class RegistrationConfirmPinScreen :
 
   private fun doneClicks(): Observable<RegistrationConfirmPinDoneClicked>? {
     val imeDoneClicks = confirmPinEditText
-        .editorActions() { it == EditorInfo.IME_ACTION_DONE }
+        .editorActions { it == EditorInfo.IME_ACTION_DONE }
         .map { RegistrationConfirmPinDoneClicked() }
 
     val pinAutoSubmits = confirmPinEditText

@@ -143,8 +143,9 @@ class RegistrationConfirmPinLogicTest {
       ongoingRegistrationEntry: OngoingRegistrationEntry = ongoingEntry
   ) {
     val effectHandler = RegistrationConfirmPinEffectHandler(
-        schedulers = TestSchedulersProvider.trampoline(),
-        uiActions = uiActions
+      schedulers = TestSchedulersProvider.trampoline(),
+      uiActions = uiActions,
+      viewEffectsConsumer = RegistrationConfirmPinViewEffectHandler(uiActions)::handle
     )
     val uiRenderer = RegistrationConfirmPinUiRenderer(ui)
 

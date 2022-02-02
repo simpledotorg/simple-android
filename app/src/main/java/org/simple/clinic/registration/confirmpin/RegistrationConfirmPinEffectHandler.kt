@@ -1,5 +1,6 @@
 package org.simple.clinic.registration.confirmpin
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -12,12 +13,16 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class RegistrationConfirmPinEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
-    @Assisted private val uiActions: RegistrationConfirmPinUiActions
+    @Assisted private val uiActions: RegistrationConfirmPinUiActions,
+    @Assisted private val viewEffectsConsumer: Consumer<RegistrationConfirmPinViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: RegistrationConfirmPinUiActions): RegistrationConfirmPinEffectHandler
+    fun create(
+        uiActions: RegistrationConfirmPinUiActions,
+        viewEffectsConsumer: Consumer<RegistrationConfirmPinViewEffect>
+    ): RegistrationConfirmPinEffectHandler
   }
 
   fun build(): ObservableTransformer<RegistrationConfirmPinEffect, RegistrationConfirmPinEvent> {

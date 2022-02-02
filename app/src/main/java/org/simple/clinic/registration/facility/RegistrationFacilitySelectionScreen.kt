@@ -15,7 +15,6 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenRegistrationFacilitySelectionBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.introvideoscreen.IntroVideoScreen
-import org.simple.clinic.mobius.ViewEffectsHandler
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -59,7 +58,7 @@ class RegistrationFacilitySelectionScreen : BaseScreen<
   override fun createUpdate() = RegistrationFacilitySelectionUpdate()
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationFacilitySelectionViewEffect>) = effectHandlerFactory
-      .create(uiActions = this)
+      .create(uiActions = this, viewEffectsConsumer = viewEffectsConsumer)
       .build()
 
   override fun viewEffectHandler() = RegistrationFacilitySelectionViewEffectHandler(this)

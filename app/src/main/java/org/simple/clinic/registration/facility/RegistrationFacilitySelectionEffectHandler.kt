@@ -1,5 +1,6 @@
 package org.simple.clinic.registration.facility
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -9,12 +10,16 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class RegistrationFacilitySelectionEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
-    @Assisted private val uiActions: RegistrationFacilitySelectionUiActions
+    @Assisted private val uiActions: RegistrationFacilitySelectionUiActions,
+    @Assisted private val viewEffectsConsumer: Consumer<RegistrationFacilitySelectionViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: RegistrationFacilitySelectionUiActions): RegistrationFacilitySelectionEffectHandler
+    fun create(
+        uiActions: RegistrationFacilitySelectionUiActions,
+        viewEffectsConsumer: Consumer<RegistrationFacilitySelectionViewEffect>
+    ): RegistrationFacilitySelectionEffectHandler
   }
 
   fun build(): ObservableTransformer<RegistrationFacilitySelectionEffect, RegistrationFacilitySelectionEvent> {

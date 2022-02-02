@@ -74,8 +74,9 @@ class RegistrationFacilitySelectionLogicTest {
       ongoingRegistrationEntry: OngoingRegistrationEntry = ongoingEntry
   ) {
     val effectHandler = RegistrationFacilitySelectionEffectHandler(
-        schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = uiActions
+      schedulersProvider = TestSchedulersProvider.trampoline(),
+      uiActions = uiActions,
+      viewEffectsConsumer = RegistrationFacilitySelectionViewEffectHandler(uiActions)::handle
     )
 
     testFixture = MobiusTestFixture(

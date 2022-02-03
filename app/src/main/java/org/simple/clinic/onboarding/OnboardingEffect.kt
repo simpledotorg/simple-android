@@ -5,3 +5,5 @@ sealed class OnboardingEffect
 object CompleteOnboardingEffect : OnboardingEffect()
 
 object MoveToRegistrationEffect : OnboardingEffect()
+
+sealed class OnboardingViewEffect : OnboardingEffect()

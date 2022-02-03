@@ -20,14 +20,12 @@ class AllRecentPatientsEffectHandler @AssistedInject constructor(
     private val currentFacility: Lazy<Facility>,
     private val pagerFactory: PagerFactory,
     @PagingSize(AllRecentPatients) private val allRecentPatientsPagingSize: Int,
-    @Assisted private val uiActions: AllRecentPatientsUiActions,
     @Assisted private val viewEffectsConsumer: Consumer<AllRecentPatientsViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        uiActions: AllRecentPatientsUiActions,
         viewEffectsConsumer: Consumer<AllRecentPatientsViewEffect>
     ): AllRecentPatientsEffectHandler
   }

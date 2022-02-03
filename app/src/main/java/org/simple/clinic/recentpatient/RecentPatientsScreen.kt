@@ -90,7 +90,6 @@ class RecentPatientsScreen : BaseScreen<
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<AllRecentPatientsViewEffect>) = effectHandlerFactory
       .create(
-          uiActions = this,
           viewEffectsConsumer = viewEffectsConsumer
       )
       .build()

@@ -9,19 +9,15 @@ import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.OnboardingComplete
-import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class OnboardingEffectHandler @AssistedInject constructor(
     @TypedPreference(OnboardingComplete) private val hasUserCompletedOnboarding: Preference<Boolean>,
-    private val schedulersProvider: SchedulersProvider,
-    @Assisted private val ui: OnboardingUi,
     @Assisted private val viewEffectsConsumer: Consumer<OnboardingViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        ui: OnboardingUi,
         viewEffectsConsumer: Consumer<OnboardingViewEffect>
     ): OnboardingEffectHandler
   }
@@ -42,4 +38,3 @@ class OnboardingEffectHandler @AssistedInject constructor(
     }
   }
 }
-

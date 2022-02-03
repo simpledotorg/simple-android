@@ -62,7 +62,6 @@ class OnboardingScreen : BaseScreen<
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<OnboardingViewEffect>) = onboardingEffectHandler
       .create(
-          ui = this,
           viewEffectsConsumer = viewEffectsConsumer
       )
       .build()

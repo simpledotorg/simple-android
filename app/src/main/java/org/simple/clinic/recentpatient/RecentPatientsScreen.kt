@@ -42,7 +42,7 @@ class RecentPatientsScreen : BaseScreen<
     AllRecentPatientsModel,
     AllRecentPatientsEvent,
     AllRecentPatientsEffect,
-    Unit>(), AllRecentPatientsUiActions {
+    AllRecentPatientsViewEffect>(), AllRecentPatientsUiActions {
 
   @Inject
   lateinit var router: Router
@@ -88,7 +88,9 @@ class RecentPatientsScreen : BaseScreen<
 
   override fun createUpdate() = AllRecentPatientsUpdate()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<AllRecentPatientsViewEffect>) = effectHandlerFactory
+      .create(this)
+      .build()
 
   override fun defaultModel() = AllRecentPatientsModel
 

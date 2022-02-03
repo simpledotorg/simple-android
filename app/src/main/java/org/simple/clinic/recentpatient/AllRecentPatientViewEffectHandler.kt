@@ -1,12 +1,15 @@
 package org.simple.clinic.recentpatient
 
 import org.simple.clinic.mobius.ViewEffectsHandler
+import org.simple.clinic.util.exhaustive
 
 class AllRecentPatientViewEffectHandler(
     private val uiActions: AllRecentPatientsUiActions
 ) : ViewEffectsHandler<AllRecentPatientsViewEffect> {
 
   override fun handle(viewEffect: AllRecentPatientsViewEffect) {
-    // Empty...for now
+    when (viewEffect) {
+      is OpenPatientSummary -> uiActions.openPatientSummary(viewEffect.patientUuid)
+    }.exhaustive()
   }
 }

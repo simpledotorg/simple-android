@@ -11,6 +11,7 @@
 - Migrate `RegistrationLocationPermissionScreen` to use view effects
 - Bump Lottie to v4.2.2
 - Bump ConstraintLayout to v2.1.3
+- Bump Preferences to v1.2.0
 
 ## On Demo
 

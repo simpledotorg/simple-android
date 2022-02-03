@@ -10,6 +10,7 @@ class AllRecentPatientViewEffectHandler(
   override fun handle(viewEffect: AllRecentPatientsViewEffect) {
     when (viewEffect) {
       is OpenPatientSummary -> uiActions.openPatientSummary(viewEffect.patientUuid)
+      is ShowRecentPatients -> uiActions.showRecentPatients(viewEffect.recentPatients)
     }.exhaustive()
   }
 }

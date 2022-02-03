@@ -36,13 +36,8 @@ class AllRecentPatientsEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<AllRecentPatientsEffect, AllRecentPatientsEvent>()
         .addTransformer(LoadAllRecentPatients::class.java, loadAllRecentPatients())
-        .addConsumer(ShowRecentPatients::class.java, ::showRecentPatients, schedulersProvider.ui())
         .addConsumer(AllRecentPatientsViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
-  }
-
-  private fun showRecentPatients(effect: ShowRecentPatients) {
-    uiActions.showRecentPatients(effect.recentPatients)
   }
 
   private fun loadAllRecentPatients(): ObservableTransformer<LoadAllRecentPatients, AllRecentPatientsEvent> {

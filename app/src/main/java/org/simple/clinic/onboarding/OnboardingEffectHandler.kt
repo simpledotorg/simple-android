@@ -30,7 +30,6 @@ class OnboardingEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<OnboardingEffect, OnboardingEvent>()
         .addTransformer(CompleteOnboardingEffect::class.java, completeOnboardingTransformer())
-        .addAction(MoveToRegistrationEffect::class.java, ui::moveToRegistrationScreen, schedulersProvider.ui())
         .addConsumer(OnboardingViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }

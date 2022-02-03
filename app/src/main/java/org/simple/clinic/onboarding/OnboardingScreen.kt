@@ -61,7 +61,10 @@ class OnboardingScreen : BaseScreen<
   override fun createUpdate() = OnboardingUpdate()
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<OnboardingViewEffect>) = onboardingEffectHandler
-      .create(this)
+      .create(
+          ui = this,
+          viewEffectsConsumer = viewEffectsConsumer
+      )
       .build()
 
   override fun events() = getStartedClicks()

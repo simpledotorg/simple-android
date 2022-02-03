@@ -25,7 +25,8 @@ class OnboardingScreenControllerTest {
   private val effectHandler = OnboardingEffectHandler(
       hasUserCompletedOnboarding,
       TrampolineSchedulersProvider(),
-      onboardingUi
+      onboardingUi,
+      OnboardingViewEffectHandler(onboardingUi)::handle
   ).build()
 
   @Before

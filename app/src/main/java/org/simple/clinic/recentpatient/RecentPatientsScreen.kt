@@ -92,6 +92,8 @@ class RecentPatientsScreen : BaseScreen<
       .create(this)
       .build()
 
+  override fun viewEffectHandler() = AllRecentPatientViewEffectHandler(this)
+
   override fun defaultModel() = AllRecentPatientsModel
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =

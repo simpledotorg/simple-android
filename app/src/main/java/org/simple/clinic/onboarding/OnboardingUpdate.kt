@@ -15,4 +15,3 @@ class OnboardingUpdate : Update<OnboardingModel, OnboardingEvent, OnboardingEffe
     }
   }
 }
-

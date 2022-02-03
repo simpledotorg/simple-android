@@ -12,7 +12,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
@@ -143,8 +142,7 @@ class RegistrationConfirmPinLogicTest {
       ongoingRegistrationEntry: OngoingRegistrationEntry = ongoingEntry
   ) {
     val effectHandler = RegistrationConfirmPinEffectHandler(
-        schedulers = TestSchedulersProvider.trampoline(),
-        uiActions = uiActions
+        viewEffectsConsumer = RegistrationConfirmPinViewEffectHandler(uiActions)::handle
     )
     val uiRenderer = RegistrationConfirmPinUiRenderer(ui)
 

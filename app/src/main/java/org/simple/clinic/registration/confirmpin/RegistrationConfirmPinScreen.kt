@@ -31,7 +31,7 @@ class RegistrationConfirmPinScreen :
         RegistrationConfirmPinModel,
         RegistrationConfirmPinEvent,
         RegistrationConfirmPinEffect,
-        Unit>(),
+        RegistrationConfirmPinViewEffect>(),
     RegistrationConfirmPinUi,
     RegistrationConfirmPinUiActions {
 
@@ -76,7 +76,12 @@ class RegistrationConfirmPinScreen :
 
   override fun createInit() = RegistrationConfirmPinInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationConfirmPinViewEffect>) =
+      effectHandlerFactory.create(
+          viewEffectsConsumer = viewEffectsConsumer
+      ).build()
+
+  override fun viewEffectHandler() = RegistrationConfirmPinViewEffectHandler(this)
 
   override fun onAttach(context: Context) {
     super.onAttach(context)
@@ -106,7 +111,7 @@ class RegistrationConfirmPinScreen :
 
   private fun doneClicks(): Observable<RegistrationConfirmPinDoneClicked>? {
     val imeDoneClicks = confirmPinEditText
-        .editorActions() { it == EditorInfo.IME_ACTION_DONE }
+        .editorActions { it == EditorInfo.IME_ACTION_DONE }
         .map { RegistrationConfirmPinDoneClicked() }
 
     val pinAutoSubmits = confirmPinEditText

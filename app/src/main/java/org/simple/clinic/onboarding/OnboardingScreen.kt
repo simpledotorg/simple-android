@@ -20,11 +20,11 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenOnboardingBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.ScreenKey
-import org.simple.clinic.registerorlogin.AuthenticationActivity
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.util.resolveColor
+import org.simple.clinic.registerorlogin.AuthenticationActivity
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.finishWithoutAnimations
+import org.simple.clinic.util.resolveColor
 import javax.inject.Inject
 
 class OnboardingScreen : BaseScreen<
@@ -33,7 +33,7 @@ class OnboardingScreen : BaseScreen<
     OnboardingModel,
     OnboardingEvent,
     OnboardingEffect,
-    Unit>(), OnboardingUi {
+    OnboardingViewEffect>(), OnboardingUi {
 
   @Inject
   lateinit var onboardingEffectHandler: OnboardingEffectHandler.Factory
@@ -60,8 +60,10 @@ class OnboardingScreen : BaseScreen<
 
   override fun createUpdate() = OnboardingUpdate()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = onboardingEffectHandler
-      .create(this)
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<OnboardingViewEffect>) = onboardingEffectHandler
+      .create(
+          viewEffectsConsumer = viewEffectsConsumer
+      )
       .build()
 
   override fun events() = getStartedClicks()

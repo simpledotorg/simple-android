@@ -15,12 +15,12 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenRegistrationFacilitySelectionBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.introvideoscreen.IntroVideoScreen
+import org.simple.clinic.navigation.v2.ActivityResult
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.registration.confirmfacility.ConfirmFacilitySheet
-import org.simple.clinic.navigation.v2.ScreenResultBus
-import org.simple.clinic.navigation.v2.ActivityResult
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.widgets.UiEvent
@@ -33,7 +33,7 @@ class RegistrationFacilitySelectionScreen : BaseScreen<
     RegistrationFacilitySelectionModel,
     RegistrationFacilitySelectionEvent,
     RegistrationFacilitySelectionEffect,
-    Unit>(), RegistrationFacilitySelectionUiActions {
+    RegistrationFacilitySelectionViewEffect>(), RegistrationFacilitySelectionUiActions {
 
   @Inject
   lateinit var router: Router
@@ -57,9 +57,11 @@ class RegistrationFacilitySelectionScreen : BaseScreen<
 
   override fun createUpdate() = RegistrationFacilitySelectionUpdate()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
-      .create(uiActions = this)
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationFacilitySelectionViewEffect>) = effectHandlerFactory
+      .create(viewEffectsConsumer = viewEffectsConsumer)
       .build()
+
+  override fun viewEffectHandler() = RegistrationFacilitySelectionViewEffectHandler(this)
 
   override fun defaultModel() = RegistrationFacilitySelectionModel.create(
       entry = screenKey.ongoingRegistrationEntry

@@ -19,6 +19,7 @@
 - Migrate `RecentPatientsScreen` to use view effects
 - Fix `OnboardingScreen` not opening registration screen
 - Mark `Appointment#nextAppointmentPatientProfile` query as a transaction
+- Remove Gradle Versions plugin
 
 ## On Demo
 

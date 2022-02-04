@@ -12,7 +12,6 @@ import org.simple.clinic.TestData
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Instant
@@ -74,8 +73,7 @@ class RegistrationFacilitySelectionLogicTest {
       ongoingRegistrationEntry: OngoingRegistrationEntry = ongoingEntry
   ) {
     val effectHandler = RegistrationFacilitySelectionEffectHandler(
-        schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = uiActions
+      viewEffectsConsumer = RegistrationFacilitySelectionViewEffectHandler(uiActions)::handle
     )
 
     testFixture = MobiusTestFixture(

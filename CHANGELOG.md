@@ -14,6 +14,7 @@
 - Bump Preferences to v1.2.0
 - Migrate `RegistrationConfirmPinScreen` to use view effects
 - Migrate `OnboardingScreen` to use view effects
+- Bump AGP to v7.1.0
 
 ## On Demo
 

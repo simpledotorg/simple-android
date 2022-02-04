@@ -200,10 +200,10 @@ android {
   }
 
   lint {
-    isWarningsAsErrors = true
-    isAbortOnError = true
-    isCheckReleaseBuilds = false
-    isCheckDependencies = true
+    warningsAsErrors = true
+    abortOnError = true
+    checkReleaseBuilds = false
+    checkDependencies = true
   }
 
   compileOptions {

@@ -35,7 +35,7 @@ class AllRecentPatientsEffectHandlerTest {
       currentFacility = currentFacility,
       pagerFactory = pagerFactory,
       allRecentPatientsPagingSize = pagingSize,
-      uiActions = uiActions
+      viewEffectsConsumer = AllRecentPatientViewEffectHandler(uiActions)::handle
   ).build()
   private val effectHandlerTestCase = EffectHandlerTestCase(
       effectHandler = effectHandler

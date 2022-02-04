@@ -117,7 +117,7 @@ logback-classic = "ch.qos.logback:logback-classic:1.2.10"
 
 lottie = "com.airbnb.android:lottie:4.2.2"
 
-material = "com.google.android.material:material:1.4.0"
+material = "com.google.android.material:material:1.5.0"
 
 mixpanel-android = "com.mixpanel.android:mixpanel-android:5.9.6"
 

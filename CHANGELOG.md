@@ -20,6 +20,8 @@
 - Fix `OnboardingScreen` not opening registration screen
 - Mark `Appointment#nextAppointmentPatientProfile` query as a transaction
 - Remove Gradle Versions plugin
+- Migrate `RegistrationPinScreen` to use view effects
+- Migrate `RegistrationFacilitySelectionScreen` to use view effects
 
 ## On Demo
 
@@ -80,7 +82,6 @@
 - Update the highlight alignment for newly added NHID or BP passport
 - Add highlight when newly scanned bp passports are added
 - Index `patientUuid` in tables that are joined in `OverdueAppointment` database view
-- Migrate `RegistrationPinScreen` to use view effects
 - Fix broken back button in `EditPatientScreen`
 
 ### Changes

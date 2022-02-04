@@ -15,6 +15,7 @@
 - Migrate `RegistrationConfirmPinScreen` to use view effects
 - Migrate `OnboardingScreen` to use view effects
 - Bump AGP to v7.1.0
+- Mark `Appointment#nextAppointmentPatientProfile` query as a transaction
 
 ## On Demo
 

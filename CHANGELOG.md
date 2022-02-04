@@ -15,6 +15,7 @@
 - Migrate `RegistrationConfirmPinScreen` to use view effects
 - Migrate `OnboardingScreen` to use view effects
 - Bump AGP to v7.1.0
+- Bump desugar JDK library to v1.1.5
 
 ## On Demo
 

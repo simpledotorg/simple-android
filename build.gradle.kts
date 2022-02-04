@@ -1,5 +1,3 @@
-import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
-
 buildscript {
   extra.apply {
     set("compileSdkVersion", 31)
@@ -26,30 +24,9 @@ buildscript {
   }
 }
 
-// https://youtrack.jetbrains.com/issue/KTIJ-19369
-@Suppress("DSL_SCOPE_VIOLATION")
-plugins {
-  alias(libs.plugins.dependencyUpdates)
-}
-
 allprojects {
   repositories {
     google()
     mavenCentral()
   }
-}
-
-fun String.isNonStable(): Boolean {
-  val stableKeyword = listOf("RELEASE", "FINAL", "GA").any { this.toUpperCase().contains(it) }
-  val regex = "^[0-9,.v-]+(-r)?$".toRegex()
-  val isStable = stableKeyword || regex.matches(this)
-  return isStable.not()
-}
-
-tasks.withType<DependencyUpdatesTask> {
-  // Reject all non-stable versions
-  rejectVersionIf { candidate.version.isNonStable() }
-
-  // Dependency updates report
-  outputFormatter = "html"
 }

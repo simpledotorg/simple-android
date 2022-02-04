@@ -7,17 +7,6 @@
   android:layout_height="match_parent"
   android:orientation="horizontal">
 
-  <ImageButton
-    android:id="@+id/backButton"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackgroundBorderless"
-    android:padding="@dimen/spacing_16"
-    android:tintMode="src_in"
-    app:srcCompat="@drawable/ic_close_24dp"
-    app:tint="@color/color_on_surface_67"
-    tools:ignore="ContentDescription" />
-
   <ScrollView
     android:id="@+id/formScrollView"
     android:layout_width="match_parent"
@@ -388,6 +377,17 @@
 
   </ScrollView>
 
+  <ImageButton
+    android:id="@+id/backButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackgroundBorderless"
+    android:padding="@dimen/spacing_16"
+    android:tintMode="src_in"
+    app:srcCompat="@drawable/ic_close_24dp"
+    app:tint="@color/color_on_surface_67"
+    tools:ignore="ContentDescription" />
+  
   <FrameLayout
     android:id="@+id/saveButtonFrame"
     style="@style/Widget.Simple.Button.Frame"

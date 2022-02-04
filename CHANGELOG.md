@@ -18,6 +18,7 @@
 - Bump desugar JDK library to v1.1.5
 - Migrate `RecentPatientsScreen` to use view effects
 - Fix `OnboardingScreen` not opening registration screen
+- Mark `Appointment#nextAppointmentPatientProfile` query as a transaction
 
 ## On Demo
 

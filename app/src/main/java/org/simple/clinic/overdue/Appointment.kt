@@ -9,6 +9,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
@@ -323,6 +324,7 @@ data class Appointment(
         appointmentType != 'automatic'
       GROUP BY patientUuid HAVING MAX(scheduledDate)
     """)
+    @Transaction
     fun nextAppointmentPatientProfile(patientUuid: UUID): NextAppointmentPatientProfile?
 
     @Query("""

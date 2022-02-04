@@ -18,6 +18,7 @@
 - Bump desugar JDK library to v1.1.5
 - Migrate `RecentPatientsScreen` to use view effects
 - Fix `OnboardingScreen` not opening registration screen
+- Bump Flipper to v0.132.0
 
 ## On Demo
 

@@ -59,6 +59,7 @@
 - Update the highlight alignment for newly added NHID or BP passport
 - Add highlight when newly scanned bp passports are added
 - Index `patientUuid` in tables that are joined in `OverdueAppointment` database view
+- Fix broken back button in `EditPatientScreen`
 - Fix uneven spacing between health ID labels and `ADD` button
 
 ### Changes

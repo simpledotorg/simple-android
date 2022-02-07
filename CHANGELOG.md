@@ -22,6 +22,7 @@
 - Remove Gradle Versions plugin
 - Migrate `RegistrationPinScreen` to use view effects
 - Migrate `RegistrationFacilitySelectionScreen` to use view effects
+- Bump Lint to v30.1.1
 
 ## On Demo
 

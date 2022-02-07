@@ -73,6 +73,10 @@
       android:name="io.sentry.sample-rate"
       android:value="0.75" />
 
+    <meta-data
+      android:name="com.mixpanel.android.MPConfig.UseIpAddressForGeolocation"
+      android:value="false" />
+
     <activity
       android:name=".setup.SetupActivity"
       android:exported="true"

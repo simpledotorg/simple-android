@@ -65,7 +65,7 @@ class UpdateAnalyticsUserIdTest {
     updateAnalyticsUserId.listen()
 
     // then
-    assertThat(reporter.user).isEqualTo(AnalyticsUser(user.uuid, user.fullName))
+    assertThat(reporter.user).isEqualTo(AnalyticsUser(user.uuid))
   }
 
   @Test

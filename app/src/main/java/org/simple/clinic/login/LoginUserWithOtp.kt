@@ -81,6 +81,6 @@ class LoginUserWithOtp @Inject constructor(
   }
 
   private fun reportUserLoggedInToAnalytics(user: User) {
-    Analytics.setLoggedInUser(AnalyticsUser(user.uuid, user.fullName))
+    Analytics.setLoggedInUser(AnalyticsUser(user.uuid))
   }
 }

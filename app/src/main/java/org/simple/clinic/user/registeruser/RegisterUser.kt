@@ -34,7 +34,7 @@ class RegisterUser @Inject constructor(
         .createUser(registrationRequest)
         .doOnSubscribe { Timber.i("Registering user") }
         .flatMap { storeUserAndAccessToken(it) }
-        .map { AnalyticsUser(it.uuid, it.fullName) }
+        .map { AnalyticsUser(it.uuid) }
         .doOnSuccess(Analytics::setNewlyRegisteredUser)
         .map { Success as RegistrationResult }
         .doOnError { reportErrors(it) }

@@ -283,7 +283,7 @@ class UserSessionTest {
     whenever(reportPendingRecords.report()).thenReturn(Completable.complete())
 
     val user = TestData.loggedInUser(uuid = userUuid)
-    reporter.setLoggedInUser(AnalyticsUser(user.uuid, user.fullName), false)
+    reporter.setLoggedInUser(AnalyticsUser(user.uuid), false)
     assertThat(reporter.user).isNotNull()
 
     // when

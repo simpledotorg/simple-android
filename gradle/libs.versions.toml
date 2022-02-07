@@ -94,7 +94,7 @@ itemanimators = "com.mikepenz:itemanimators:1.0.2"
 
 itext7 = "com.itextpdf:itext7-core:7.1.16"
 
-jackson-core = "com.fasterxml.jackson.core:jackson-core:2.12.4"
+jackson-core = "com.fasterxml.jackson.core:jackson-core:2.13.1"
 
 jbcrypt = "org.mindrot:jbcrypt:0.4"
 

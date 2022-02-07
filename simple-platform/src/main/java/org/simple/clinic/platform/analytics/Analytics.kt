@@ -9,7 +9,6 @@ import android.net.NetworkCapabilities.TRANSPORT_VPN
 import android.net.NetworkCapabilities.TRANSPORT_WIFI
 import android.net.NetworkCapabilities.TRANSPORT_WIFI_AWARE
 import org.simple.clinic.platform.util.RuntimePermissionResult
-import java.time.Duration
 import java.time.Instant
 
 object Analytics {
@@ -139,20 +138,6 @@ object Analytics {
     )
 
     reporters.forEach { it.createEvent("DatabaseOptimized", props) }
-  }
-
-  fun reportSqlOperation(
-      dao: String,
-      method: String,
-      timeTaken: Duration
-  ) {
-    val props = mapOf(
-        "dao" to dao,
-        "method" to method,
-        "timeTakenInMillis" to timeTaken.toMillis()
-    )
-
-    reporters.forEach { it.createEvent("SqlOperation", props) }
   }
 
   enum class NetworkTransportType {

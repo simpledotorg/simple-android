@@ -23,6 +23,7 @@
 - Migrate `RegistrationPinScreen` to use view effects
 - Migrate `RegistrationFacilitySelectionScreen` to use view effects
 - Bump Lint to v30.1.1
+- Stop sending user location information to Mixpanel
 
 ## On Demo
 

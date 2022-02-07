@@ -24,6 +24,7 @@
 - Migrate `RegistrationFacilitySelectionScreen` to use view effects
 - Bump Lint to v30.1.1
 - Stop sending user location information to Mixpanel
+- Bump Jackson to v2.13.1
 
 ## On Demo
 

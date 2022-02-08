@@ -38,6 +38,7 @@ class LoginPinEffectHandler @AssistedInject constructor(
       .addAction(OpenHomeScreen::class.java, uiActions::openHomeScreen, schedulersProvider.ui())
       .addAction(GoBackToRegistrationScreen::class.java, uiActions::goBackToRegistrationScreen, schedulersProvider.ui())
       .addTransformer(ClearOngoingLoginEntry::class.java, clearOngoingLoginEntry())
+      .addConsumer(LoginPinViewEffect::class.java, viewEffectsConsumer::accept)
       .build()
 
   private fun clearOngoingLoginEntry(): ObservableTransformer<ClearOngoingLoginEntry, LoginPinEvent> {

@@ -111,7 +111,6 @@ class AppLockScreenLogicTest {
         currentFacility = { facility },
         schedulersProvider = TestSchedulersProvider.trampoline(),
         lockAfterTimestampValue = lockAfterTimestampValue,
-        uiActions = uiActions,
         viewEffectsConsumer = AppLockViewEffectHandler(uiActions)::handle
     )
 

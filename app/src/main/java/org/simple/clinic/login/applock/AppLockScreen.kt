@@ -83,10 +83,7 @@ class AppLockScreen : BaseScreen<
   override fun createInit() = AppLockInit()
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<AppLockViewEffect>) = effectHandlerFactory
-      .create(
-          uiActions = this,
-          viewEffectsConsumer = viewEffectsConsumer
-      )
+      .create(viewEffectsConsumer = viewEffectsConsumer)
       .build()
 
   override fun onAttach(context: Context) {

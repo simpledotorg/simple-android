@@ -19,16 +19,12 @@ class AppLockEffectHandler @AssistedInject constructor(
     private val currentFacility: Lazy<Facility>,
     private val schedulersProvider: SchedulersProvider,
     private val lockAfterTimestampValue: MemoryValue<Optional<Instant>>,
-    @Assisted private val uiActions: AppLockUiActions,
     @Assisted private val viewEffectsConsumer: Consumer<AppLockViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(
-        uiActions: AppLockUiActions,
-        viewEffectsConsumer: Consumer<AppLockViewEffect>
-    ): AppLockEffectHandler
+    fun create(viewEffectsConsumer: Consumer<AppLockViewEffect>): AppLockEffectHandler
   }
 
   fun build(): ObservableTransformer<AppLockEffect, AppLockEvent> = RxMobius

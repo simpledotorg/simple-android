@@ -1,5 +1,6 @@
 package org.simple.clinic.login.pin
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -17,12 +18,16 @@ class LoginPinEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val userSession: UserSession,
     private val ongoingLoginEntryRepository: OngoingLoginEntryRepository,
-    @Assisted private val uiActions: UiActions
+    @Assisted private val uiActions: UiActions,
+    @Assisted private val viewEffectsConsumer: Consumer<LoginPinViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: UiActions): LoginPinEffectHandler
+    fun create(
+        uiActions: UiActions,
+        viewEffectsConsumer: Consumer<LoginPinViewEffect>
+    ): LoginPinEffectHandler
   }
 
   fun build(): ObservableTransformer<LoginPinEffect, LoginPinEvent> = RxMobius

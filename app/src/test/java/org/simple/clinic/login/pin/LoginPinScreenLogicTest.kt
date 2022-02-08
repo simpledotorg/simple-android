@@ -162,7 +162,8 @@ class LoginPinScreenLogicTest {
         schedulersProvider = TestSchedulersProvider.trampoline(),
         userSession = userSession,
         ongoingLoginEntryRepository = ongoingLoginEntryRepository,
-        uiActions = uiActions
+        uiActions = uiActions,
+        viewEffectsConsumer = LoginPinViewEffectHandler(uiActions)::handle
     )
     val uiRenderer = LoginPinUiRenderer(ui)
 

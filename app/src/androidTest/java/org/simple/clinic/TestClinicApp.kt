@@ -2,8 +2,6 @@ package org.simple.clinic
 
 import android.app.Application
 import android.content.Context
-import androidx.arch.core.executor.ArchTaskExecutor
-import androidx.arch.core.executor.TaskExecutor
 import androidx.test.platform.app.InstrumentationRegistry
 import com.datadog.android.Datadog
 import com.datadog.android.core.configuration.Configuration
@@ -94,18 +92,6 @@ class TestClinicApp : Application() {
 
     appComponent = buildDaggerGraph()
     appComponent.inject(this)
-
-    ArchTaskExecutor.getInstance().setDelegate(object : TaskExecutor() {
-      override fun executeOnDiskIO(runnable: Runnable) {
-        runnable.run()
-      }
-
-      override fun postToMainThread(runnable: Runnable) {
-        runnable.run()
-      }
-
-      override fun isMainThread() = true
-    })
 
     val instrumentationArgs = InstrumentationRegistry.getArguments()
     isInBenchmarkMode = instrumentationArgs.getString("benchmark_app_performance", "false").toBooleanStrict()

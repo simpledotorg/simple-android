@@ -3,7 +3,7 @@
 androidx-camera = "1.0.2"
 androidx-cameraView = "1.0.0-alpha32"
 androidx-paging = "3.1.0"
-androidx-room = "2.3.0"
+androidx-room = "2.4.1"
 androidx-test = "1.4.0"
 androidx-work = "2.7.1"
 
@@ -62,6 +62,7 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
 androidx-room-rx2 = { module = "androidx.room:room-rxjava2", version.ref = "androidx-room" }
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "androidx-room" }
+androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "androidx-room" }
 
 androidx-test-junit = "androidx.test.ext:junit:1.1.3"
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test" }
@@ -191,7 +192,7 @@ benchmark-gradle-plugin = "androidx.benchmark:benchmark-gradle-plugin:1.0.0"
 [bundles]
 androidx-camera = ["androidx-camera-core", "androidx-camera-camera2", "androidx-camera-view", "androidx-camera-lifecycle"]
 androidx-paging = ["androidx-paging-common", "androidx-paging-runtime", "androidx-paging-rx2"]
-androidx-room = ["androidx-room-runtime", "androidx-room-rx2"]
+androidx-room = ["androidx-room-runtime", "androidx-room-rx2", "androidx-room-paging"]
 androidx-test = ["androidx-test-junit", "androidx-test-runner", "androidx-test-rules"]
 androidx-work = ["androidx-work-runtime", "androidx-work-rxjava", "androidx-work-gcm"]
 

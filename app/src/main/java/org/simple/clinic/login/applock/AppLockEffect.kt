@@ -13,3 +13,5 @@ object UnlockOnAuthentication : AppLockEffect()
 object LoadLoggedInUser : AppLockEffect()
 
 object LoadCurrentFacility : AppLockEffect()
+
+sealed class AppLockViewEffect : AppLockEffect()

@@ -27,17 +27,13 @@ import org.simple.clinic.util.finishWithoutAnimations
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-class LoginPinScreen :
-    BaseScreen<
-        LoginPinScreenKey,
-        ScreenLoginPinBinding,
-        LoginPinModel,
-        LoginPinEvent,
-        LoginPinEffect,
-        Unit>(),
-    LoginPinScreenUi,
-    UiActions,
-    HandlesBack {
+class LoginPinScreen : BaseScreen<
+    LoginPinScreenKey,
+    ScreenLoginPinBinding,
+    LoginPinModel,
+    LoginPinEvent,
+    LoginPinEffect,
+    LoginPinViewEffect>(), LoginPinScreenUi, UiActions, HandlesBack {
 
   @Inject
   lateinit var router: Router
@@ -78,7 +74,9 @@ class LoginPinScreen :
 
   override fun createInit() = LoginPinInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandler.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<LoginPinViewEffect>) = effectHandler
+      .create(this)
+      .build()
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

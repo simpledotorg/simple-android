@@ -117,6 +117,8 @@ class IntroVideoScreen : BaseScreen<
       .create(this)
       .build()
 
+  override fun viewEffectHandler() = IntroVideoViewEffectHandler(this)
+
   override fun events() = Observable
       .mergeArray(
           videoClicks(),

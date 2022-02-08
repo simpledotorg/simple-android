@@ -25,7 +25,8 @@
 - Bump Lint to v30.1.1
 - Stop sending user location information to Mixpanel
 - Bump Jackson to v2.13.1
-- Bump Room to v2.4.1  
+- Bump Room to v2.4.1
+- Migrate `LoginPinScreen` to use view effects
 
 ## 2022-02-07-8126
 

@@ -16,8 +16,7 @@ import java.util.UUID
 class AnalyticsTest {
 
   private val user = AnalyticsUser(
-      id = UUID.fromString("8d8c86a1-1c32-4e1b-96ba-a85bfee7b45c"),
-      name = "Anish Acharya"
+      id = UUID.fromString("8d8c86a1-1c32-4e1b-96ba-a85bfee7b45c")
   )
 
   @After

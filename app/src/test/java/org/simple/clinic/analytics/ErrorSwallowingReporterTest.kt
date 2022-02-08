@@ -15,7 +15,7 @@ class ErrorSwallowingReporterTest {
     val user = TestData.loggedInUser()
 
     // when
-    reporter.setLoggedInUser(AnalyticsUser(user.uuid, user.fullName), isANewRegistration = true)
+    reporter.setLoggedInUser(AnalyticsUser(user.uuid), isANewRegistration = true)
   }
 
   @Test(expected = Test.None::class)
@@ -24,7 +24,7 @@ class ErrorSwallowingReporterTest {
     val user = TestData.loggedInUser()
 
     // when
-    reporter.setLoggedInUser(AnalyticsUser(user.uuid, user.fullName), isANewRegistration = false)
+    reporter.setLoggedInUser(AnalyticsUser(user.uuid), isANewRegistration = false)
   }
 
   @Test(expected = Test.None::class)

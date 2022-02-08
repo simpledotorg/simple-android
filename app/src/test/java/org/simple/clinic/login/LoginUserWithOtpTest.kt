@@ -116,7 +116,7 @@ class LoginUserWithOtpTest {
     val loginResult = loginUserWithOtp.loginWithOtp(phoneNumber = phoneNumber, pin = pin, otp = otp).blockingGet()
 
     // then
-    assertThat(analyticsReporter.user).isEqualTo(AnalyticsUser(user.uuid, user.fullName))
+    assertThat(analyticsReporter.user).isEqualTo(AnalyticsUser(user.uuid))
     assertThat(loginResult).isEqualTo(Success)
   }
 

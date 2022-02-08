@@ -54,7 +54,7 @@ class RegisterUserTest {
     registerUser.registerUserAtFacility(user).blockingGet()
 
     // then
-    assertThat(reporter.user).isEqualTo(AnalyticsUser(savedUser.uuid, savedUser.fullName))
+    assertThat(reporter.user).isEqualTo(AnalyticsUser(savedUser.uuid))
     assertThat(reporter.isANewRegistration).isTrue()
   }
 }

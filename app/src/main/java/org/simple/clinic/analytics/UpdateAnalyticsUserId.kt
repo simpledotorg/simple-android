@@ -27,7 +27,7 @@ class UpdateAnalyticsUserId @Inject constructor(
         .take(1)
         .filterAndUnwrapJust()
         .filter { it.loggedInStatus in statesToSetUserIdFor }
-        .map { AnalyticsUser(it.uuid, it.fullName) }
+        .map { AnalyticsUser(it.uuid) }
         .doOnNext(Analytics::setLoggedInUser)
         .subscribeOn(schedulersProvider.io())
         .subscribe()

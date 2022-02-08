@@ -9,14 +9,13 @@ import io.reactivex.ObservableTransformer
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class IntroVideoEffectHandler @AssistedInject constructor(
-    @Assisted val uiActions: UiActions,
     val schedulersProvider: SchedulersProvider,
     @Assisted private val viewEffectsConsumer: Consumer<IntroVideoViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: UiActions, viewEffectsConsumer: Consumer<IntroVideoViewEffect>): IntroVideoEffectHandler
+    fun create(viewEffectsConsumer: Consumer<IntroVideoViewEffect>): IntroVideoEffectHandler
   }
 
   fun build(): ObservableTransformer<IntroVideoEffect, IntroVideoEvent> = RxMobius

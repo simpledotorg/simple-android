@@ -12,7 +12,6 @@ class IntroVideoEffectHandlerTest {
 
   private val uiActions = mock<UiActions>()
   private val effectHandler = IntroVideoEffectHandler(
-      uiActions = uiActions,
       schedulersProvider = TrampolineSchedulersProvider(),
       viewEffectsConsumer = IntroVideoViewEffectHandler(uiActions)::handle
   ).build()

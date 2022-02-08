@@ -23,17 +23,13 @@ import org.simple.clinic.security.pin.PinAuthenticated
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class AppLockScreen :
-    BaseScreen<
-        AppLockScreenKey,
-        ScreenAppLockBinding,
-        AppLockModel,
-        AppLockEvent,
-        AppLockEffect,
-        Unit>(),
-    AppLockScreenUi,
-    AppLockUiActions,
-    HandlesBack {
+class AppLockScreen : BaseScreen<
+    AppLockScreenKey,
+    ScreenAppLockBinding,
+    AppLockModel,
+    AppLockEvent,
+    AppLockEffect,
+    AppLockViewEffect>(), AppLockScreenUi, AppLockUiActions, HandlesBack {
 
   @Inject
   lateinit var router: Router
@@ -84,7 +80,7 @@ class AppLockScreen :
 
   override fun createInit() = AppLockInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<AppLockViewEffect>) = effectHandlerFactory.create(this).build()
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

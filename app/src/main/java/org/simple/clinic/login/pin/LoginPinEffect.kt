@@ -10,10 +10,10 @@ data class SaveOngoingLoginEntry(val entry: OngoingLoginEntry) : LoginPinEffect(
 
 data class LoginUser(val entry: OngoingLoginEntry) : LoginPinEffect()
 
-object OpenHomeScreen : LoginPinEffect()
-
 object GoBackToRegistrationScreen : LoginPinEffect()
 
 object ClearOngoingLoginEntry : LoginPinEffect()
 
 sealed class LoginPinViewEffect : LoginPinEffect()
+
+object OpenHomeScreen : LoginPinViewEffect()

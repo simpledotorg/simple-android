@@ -1,5 +1,6 @@
 package org.simple.clinic.login.applock
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -18,12 +19,16 @@ class AppLockEffectHandler @AssistedInject constructor(
     private val currentFacility: Lazy<Facility>,
     private val schedulersProvider: SchedulersProvider,
     private val lockAfterTimestampValue: MemoryValue<Optional<Instant>>,
-    @Assisted private val uiActions: AppLockUiActions
+    @Assisted private val uiActions: AppLockUiActions,
+    @Assisted private val viewEffectsConsumer: Consumer<AppLockViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: AppLockUiActions): AppLockEffectHandler
+    fun create(
+        uiActions: AppLockUiActions,
+        viewEffectsConsumer: Consumer<AppLockViewEffect>
+    ): AppLockEffectHandler
   }
 
   fun build(): ObservableTransformer<AppLockEffect, AppLockEvent> = RxMobius

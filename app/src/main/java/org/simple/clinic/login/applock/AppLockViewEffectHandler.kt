@@ -11,6 +11,7 @@ class AppLockViewEffectHandler(
     when (viewEffect) {
       ExitApp -> uiActions.exitApp()
       ShowConfirmResetPinDialog -> uiActions.showConfirmResetPinDialog()
+      RestorePreviousScreen -> uiActions.restorePreviousScreen()
     }.exhaustive()
   }
 }

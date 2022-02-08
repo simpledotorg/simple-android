@@ -14,7 +14,6 @@
 - Bump Preferences to v1.2.0
 - Migrate `RegistrationConfirmPinScreen` to use view effects
 - Migrate `OnboardingScreen` to use view effects
-- Bump AGP to v7.1.0
 - Bump desugar JDK library to v1.1.5
 - Migrate `RecentPatientsScreen` to use view effects
 - Fix `OnboardingScreen` not opening registration screen
@@ -27,6 +26,7 @@
 - Bump Jackson to v2.13.1
 - Bump Room to v2.4.1
 - Migrate `LoginPinScreen` to use view effects
+- Bump AGP to v7.1.1
 
 ## 2022-02-07-8126
 

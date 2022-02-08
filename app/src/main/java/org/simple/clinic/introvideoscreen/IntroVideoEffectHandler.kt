@@ -23,5 +23,6 @@ class IntroVideoEffectHandler @AssistedInject constructor(
       .subtypeEffectHandler<IntroVideoEffect, IntroVideoEvent>()
       .addAction(OpenVideo::class.java, { uiActions.openVideo() }, schedulersProvider.ui())
       .addAction(OpenHome::class.java, { uiActions.openHome() }, schedulersProvider.ui())
+      .addConsumer(IntroVideoViewEffect::class.java, viewEffectsConsumer::accept)
       .build()
 }

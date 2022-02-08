@@ -7,3 +7,5 @@ object ShowLoadingView : HelpScreenEffect()
 object LoadHelpContent : HelpScreenEffect()
 
 object SyncHelp : HelpScreenEffect()
+
+sealed class HelpScreenViewEffect : HelpScreenEffect()

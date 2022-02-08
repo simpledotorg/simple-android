@@ -15,3 +15,5 @@ object OpenHomeScreen : LoginPinEffect()
 object GoBackToRegistrationScreen : LoginPinEffect()
 
 object ClearOngoingLoginEntry : LoginPinEffect()
+
+sealed class LoginPinViewEffect : LoginPinEffect()

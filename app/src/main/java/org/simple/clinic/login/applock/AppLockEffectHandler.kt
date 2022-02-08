@@ -33,7 +33,6 @@ class AppLockEffectHandler @AssistedInject constructor(
 
   fun build(): ObservableTransformer<AppLockEffect, AppLockEvent> = RxMobius
       .subtypeEffectHandler<AppLockEffect, AppLockEvent>()
-      .addAction(ShowConfirmResetPinDialog::class.java, uiActions::showConfirmResetPinDialog, schedulersProvider.ui())
       .addAction(RestorePreviousScreen::class.java, uiActions::restorePreviousScreen, schedulersProvider.ui())
       .addTransformer(UnlockOnAuthentication::class.java, unlockOnAuthentication())
       .addTransformer(LoadLoggedInUser::class.java, loadLoggedInUser())

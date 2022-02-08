@@ -10,6 +10,7 @@ class AppLockViewEffectHandler(
   override fun handle(viewEffect: AppLockViewEffect) {
     when (viewEffect) {
       ExitApp -> uiActions.exitApp()
+      ShowConfirmResetPinDialog -> uiActions.showConfirmResetPinDialog()
     }.exhaustive()
   }
 }

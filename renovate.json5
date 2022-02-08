@@ -8,7 +8,10 @@
   "timezone": "Asia/Kolkata",
   "ignoreDeps": [
     // Ignoring zxing update. Since update requires Java 8+ runtime.
-    "com.google.zxing:core"
+    "com.google.zxing:core",
+
+    // Ignoring this version because it introduces Material 3 specs
+    "com.google.android.material:material"
   ],
   "prConcurrentLimit": 5
 }

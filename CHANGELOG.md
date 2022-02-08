@@ -28,6 +28,7 @@
 - Migrate `LoginPinScreen` to use view effects
 - Bump AGP to v7.1.1
 - Stop sending username to analytics
+- Stop reporting SQL performance metrics to Mixpanel
 
 ## 2022-02-07-8126
 

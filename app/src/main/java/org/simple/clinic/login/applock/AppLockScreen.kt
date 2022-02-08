@@ -67,6 +67,8 @@ class AppLockScreen : BaseScreen<
 
   override fun uiRenderer() = AppLockUiRenderer(this)
 
+  override fun viewEffectHandler() = AppLockViewEffectHandler(this)
+
   override fun events() = Observable
       .merge(
           backClicks,

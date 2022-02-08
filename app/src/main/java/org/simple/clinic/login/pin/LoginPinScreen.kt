@@ -59,6 +59,8 @@ class LoginPinScreen : BaseScreen<
 
   override fun uiRenderer() = LoginPinUiRenderer(this)
 
+  override fun viewEffectHandler() = LoginPinViewEffectHandler(this)
+
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenLoginPinBinding.inflate(layoutInflater, container, false)
 

@@ -26,7 +26,6 @@ import org.simple.clinic.platform.analytics.AnalyticsReporter
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.plumbing.infrastructure.UpdateInfrastructureUserDetails
 import org.simple.clinic.remoteconfig.ConfigReader
-import org.simple.clinic.storage.monitoring.AnalyticsSqlPerformanceReportingSink
 import org.simple.clinic.storage.monitoring.DatadogSqlPerformanceReportingSink
 import org.simple.clinic.storage.monitoring.SqlPerformanceReporter
 import org.simple.clinic.util.clamp
@@ -46,9 +45,6 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
 
   @Inject
   lateinit var closeActivitiesWhenUserIsUnauthorized: CloseActivitiesWhenUserIsUnauthorized
-
-  @Inject
-  lateinit var analyticsSqlPerformanceReportingSink: AnalyticsSqlPerformanceReportingSink
 
   @Inject
   lateinit var sentryCrashReporterSink: SentryCrashReporterSink
@@ -86,7 +82,6 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
     analyticsReporters.forEach { reporter ->
       Analytics.addReporter(reporter)
     }
-    SqlPerformanceReporter.addSink(analyticsSqlPerformanceReportingSink)
     SqlPerformanceReporter.addSink(DatadogSqlPerformanceReportingSink())
 
     updateAnalyticsUserId.listen()

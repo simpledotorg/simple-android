@@ -114,7 +114,7 @@ class IntroVideoScreen : BaseScreen<
   override fun createEffectHandler(
       viewEffectsConsumer: Consumer<IntroVideoViewEffect>
   ) = introVideoEffectHandler
-      .create(this)
+      .create(this, viewEffectsConsumer)
       .build()
 
   override fun viewEffectHandler() = IntroVideoViewEffectHandler(this)

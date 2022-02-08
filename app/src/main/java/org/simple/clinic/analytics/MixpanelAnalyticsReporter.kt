@@ -24,7 +24,6 @@ class MixpanelAnalyticsReporter(app: ClinicApp) : AnalyticsReporter {
       with(mixpanel.people) {
         identify(userId)
         set("id", userId)
-        set("name", user.name)
       }
     }
   }

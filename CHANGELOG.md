@@ -27,6 +27,7 @@
 - Bump Room to v2.4.1
 - Migrate `LoginPinScreen` to use view effects
 - Bump AGP to v7.1.1
+- Stop sending username to analytics
 
 ## 2022-02-07-8126
 

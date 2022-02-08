@@ -10,6 +10,7 @@ class IntroVideoViewEffectHandler(
   override fun handle(viewEffect: IntroVideoViewEffect) {
     when(viewEffect){
       OpenVideo -> uiActions.openVideo()
+      OpenHome -> uiActions.openHome()
     }.exhaustive()
   }
 }

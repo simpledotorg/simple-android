@@ -10,6 +10,7 @@ class LoginPinViewEffectHandler(
   override fun handle(viewEffect: LoginPinViewEffect) {
     when (viewEffect) {
       OpenHomeScreen -> uiActions.openHomeScreen()
+      GoBackToRegistrationScreen -> uiActions.goBackToRegistrationScreen()
     }.exhaustive()
   }
 }

@@ -5,3 +5,5 @@ sealed class IntroVideoEffect
 object OpenVideo : IntroVideoEffect()
 
 object OpenHome : IntroVideoEffect()
+
+sealed class IntroVideoViewEffect : IntroVideoEffect()

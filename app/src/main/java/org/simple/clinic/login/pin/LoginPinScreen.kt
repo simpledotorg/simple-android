@@ -77,10 +77,7 @@ class LoginPinScreen : BaseScreen<
   override fun createInit() = LoginPinInit()
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<LoginPinViewEffect>) = effectHandler
-      .create(
-          uiActions = this,
-          viewEffectsConsumer = viewEffectsConsumer
-      )
+      .create(viewEffectsConsumer = viewEffectsConsumer)
       .build()
 
   override fun onAttach(context: Context) {

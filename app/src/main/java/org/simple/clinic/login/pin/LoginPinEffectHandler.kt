@@ -18,16 +18,12 @@ class LoginPinEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val userSession: UserSession,
     private val ongoingLoginEntryRepository: OngoingLoginEntryRepository,
-    @Assisted private val uiActions: UiActions,
     @Assisted private val viewEffectsConsumer: Consumer<LoginPinViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(
-        uiActions: UiActions,
-        viewEffectsConsumer: Consumer<LoginPinViewEffect>
-    ): LoginPinEffectHandler
+    fun create(viewEffectsConsumer: Consumer<LoginPinViewEffect>): LoginPinEffectHandler
   }
 
   fun build(): ObservableTransformer<LoginPinEffect, LoginPinEvent> = RxMobius

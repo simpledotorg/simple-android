@@ -39,6 +39,7 @@ class AppLockEffectHandler @AssistedInject constructor(
       .addTransformer(UnlockOnAuthentication::class.java, unlockOnAuthentication())
       .addTransformer(LoadLoggedInUser::class.java, loadLoggedInUser())
       .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
+      .addConsumer(AppLockViewEffect::class.java, viewEffectsConsumer::accept)
       .build()
 
   private fun loadCurrentFacility(): ObservableTransformer<LoadCurrentFacility, AppLockEvent> {

@@ -34,6 +34,7 @@
 - Bump Moshi to v1.13.0
 - Bump ItemAnimators to v1.1.0
 - Bump Mixpanel to v6.0.0
+- Migrate `AppLockScreen` to use view effects
 
 ## 2022-02-07-8126
 

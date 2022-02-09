@@ -36,6 +36,7 @@
 - Bump Mixpanel to v6.0.0
 - Migrate `AppLockScreen` to use view effects
 - Bump Gradle to v7.4
+- Bump itext7 to 7.2.1
 
 ## 2022-02-07-8126
 

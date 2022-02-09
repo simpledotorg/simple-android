@@ -89,7 +89,7 @@ flipper-networkPlugin = { module = "com.facebook.flipper:flipper-network-plugin"
 
 google-services = "com.google.gms:google-services:4.3.10"
 
-guava = "com.google.guava:guava:28.1-jre"
+guava = "com.google.guava:guava:28.2-jre"
 
 itemanimators = "com.mikepenz:itemanimators:1.0.2"
 

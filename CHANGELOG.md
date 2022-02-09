@@ -30,6 +30,8 @@
 - Stop sending username to analytics
 - Stop reporting SQL performance metrics to Mixpanel
 - Ignore updating to Material 3 dependency
+- Bump Kotlin to v1.6.10
+- Bump Moshi to v1.13.0
 
 ## 2022-02-07-8126
 

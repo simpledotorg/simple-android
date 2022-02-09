@@ -1,6 +1,5 @@
 package org.simple.mobius.migration
 
-import com.google.common.util.concurrent.MoreExecutors
 import com.spotify.mobius.Connectable
 import com.spotify.mobius.Connection
 import com.spotify.mobius.EventSource
@@ -9,8 +8,8 @@ import com.spotify.mobius.Init
 import com.spotify.mobius.Mobius
 import com.spotify.mobius.MobiusLoop
 import com.spotify.mobius.Update
+import com.spotify.mobius.runners.ImmediateWorkRunner
 import com.spotify.mobius.runners.WorkRunner
-import com.spotify.mobius.runners.WorkRunners
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
@@ -36,7 +35,7 @@ class MobiusTestFixture<M : Any, E, F>(
     get() = controller.model
 
   init {
-    val immediateWorkRunner = WorkRunners.from(MoreExecutors.newDirectExecutorService())
+    val immediateWorkRunner = ImmediateWorkRunner()
     val eventSource = ImmediateEventSource<E>()
     eventsDisposable = events.subscribe(eventSource::notifyEvent)
 

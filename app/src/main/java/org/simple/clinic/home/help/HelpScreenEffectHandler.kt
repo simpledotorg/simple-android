@@ -13,12 +13,16 @@ class HelpScreenEffectHandler @AssistedInject constructor(
     private val helpRepository: HelpRepository,
     private val helpSync: HelpSync,
     private val schedulersProvider: SchedulersProvider,
-    @Assisted private val uiActions: HelpScreenUiActions
+    @Assisted private val uiActions: HelpScreenUiActions,
+    @Assisted private val viewEffectHandler: HelpScreenViewEffectHandler
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: HelpScreenUiActions): HelpScreenEffectHandler
+    fun create(
+        uiActions: HelpScreenUiActions,
+        helpScreenViewEffectHandler: HelpScreenViewEffectHandler
+    ): HelpScreenEffectHandler
   }
 
   fun build(): ObservableTransformer<HelpScreenEffect, HelpScreenEvent> = RxMobius

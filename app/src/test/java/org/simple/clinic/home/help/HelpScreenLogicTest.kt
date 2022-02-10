@@ -201,7 +201,8 @@ class HelpScreenLogicTest {
         helpRepository = helpRepository,
         helpSync = helpSync,
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = uiActions
+        uiActions = uiActions,
+        viewEffectHandler = HelpScreenViewEffectHandler()
     )
     val uiRenderer = HelpScreenUiRenderer(ui)
 

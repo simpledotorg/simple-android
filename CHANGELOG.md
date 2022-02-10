@@ -35,6 +35,7 @@
 - Bump ItemAnimators to v1.1.0
 - Bump Mixpanel to v6.0.0
 - Migrate `AppLockScreen` to use view effects
+- Bump Gradle to v7.4
 
 ## 2022-02-07-8126
 

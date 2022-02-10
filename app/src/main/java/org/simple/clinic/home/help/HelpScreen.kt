@@ -72,7 +72,7 @@ class HelpScreen : BaseScreen<
       .inflate(layoutInflater, container, false)
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) =
-      effectHandlerFactory.create(this, HelpScreenViewEffectHandler()).build()
+      effectHandlerFactory.create(this, HelpScreenViewEffectHandler(this)).build()
 
   override fun createInit() = HelpScreenInit()
 

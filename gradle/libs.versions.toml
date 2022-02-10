@@ -144,7 +144,7 @@ play-services-auth = "com.google.android.gms:play-services-auth:19.2.0"
 play-services-location = "com.google.android.gms:play-services-location:18.0.0"
 play-services-mlkit-barcode = "com.google.android.gms:play-services-mlkit-barcode-scanning:16.2.1"
 
-rootbeer = "com.scottyab:rootbeer-lib:0.0.9"
+rootbeer = "com.scottyab:rootbeer-lib:0.1.0"
 
 retrofit-retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit-rx = { module = "com.squareup.retrofit2:adapter-rxjava2", version.ref = "retrofit" }

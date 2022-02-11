@@ -36,6 +36,7 @@
 - Bump Mixpanel to v6.0.0
 - Migrate `AppLockScreen` to use view effects
 - Bump Gradle to v7.4
+- Bump RootBeer to 0.1.0
 
 ## 2022-02-07-8126
 

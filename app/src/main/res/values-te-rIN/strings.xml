@@ -21,6 +21,7 @@
   <string name="country_bangladesh">బంగ్లాదేశ్</string>
   <string name="country_ethiopia">ఇథియోపియా</string>
   <string name="country_sri_lanka">శ్రీలంక</string>
+  <string name="country_demo">డెమో దేశం</string>
 
   <!-- Home -->
   <string name="home_help">సహాయం</string>
@@ -98,6 +99,7 @@
   <string name="patientedit_confirm_discard_ok">విస్మరించు</string>
   <string name="patientedit_confirm_discard_cancel">రద్దు చేయి</string>
   <string name="patientedit_delete_patient">తొలగించు</string>
+  <string name="patientedit_add_button">జోడించు</string>
 
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
@@ -362,7 +364,11 @@
   <string name="scansimpleid_enteredcode_error_not_required_length">బిపి పాస్‌పోర్ట్ సంఖ్య 7 అంకెల కంటే తక్కువ ఉంటుంది</string>
   <string name="scansimpleid_type_number">లేదా నంబర్ టైప్ చేయండి</string>
   <string name="scansimpleid_invalid_qr_code">చెల్లుబాటు అయ్యే ఆరోగ్య IDని స్కాన్ చేయండి</string>
+  <string name="scansimpleid_error_state_snackbar_ok">సరే</string>
+  <string name="scansimpleid_identfier_already_exists">ID ఇప్పటికే మరొక రోగికి ఇవ్వబడింది.\nకొత్త హెల్త్ ID ని స్కాన్ చేయండి.</string>
   <string name="scansimpleid_bp_passport_or_national_health_id">బిపి పాస్‌పోర్ట్ లేదా జాతీయ ఆరోగ్య ID</string>
+  <string name="scansimpleid_bp_passport_title">బిపి పాస్‌పోర్ట్</string>
+  <string name="scansimpleid_national_id_title">జాతీయ గుర్తింపు కార్డ్ సంఖ్య</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">సింక్ పెండింగ్‌లో ఉంది</string>
@@ -534,6 +540,7 @@
   <string name="contactpatient_remind_call_later">కాల్ చేయాలని తర్వాత గుర్తు చేయండి…</string>
   <string name="contactpatient_remove_from_list">గడువు దాటిన జాబితా నుండి తీసివేయి…</string>
   <string name="contactpatient_result_of_call">కాల్ ఫలితం</string>
+  <string name="contactpatient_call">కాల్ చేయండి</string>
   <string name="contactpatient_call_normal">సాధారణం</string>
   <string name="contactpatient_call_secure">సురక్షితం</string>
   <string name="contactpatient_help_text">సురక్షిత కాల్స్‌లో మీ నంబర్ కనిపించదు, ఇవి టోల్-ఫ్రీ</string>
@@ -770,4 +777,43 @@
   <string name="change_diagnosis_positive">మార్చు</string>
   <string name="change_diagnosis_negative">ఇప్పుడు వద్దు</string>
 
+  <!-- Overdue download notification -->
+  <string name="overdue_download_notification_failed_title">డౌన్‌లోడ్ విఫలమైంది</string>
+  <string name="overdue_download_notification_failed_subtitle">కొద్ది సమయంలో మళ్లీ ప్రయత్నించండి</string>
+  <string name="overdue_download_notification_in_progress_title">ఓవర్‌డ్యూ లైన్ జాబితాను డౌన్‌లోడ్ చేస్తోంది</string>
+  <string name="overdue_download_notification_cancel">రద్దు చేయి</string>
+  <string name="overdue_download_notification_succeeded_title">డౌన్‌లోడ్ పూర్తయింది</string>
+  <string name="overdue_download_notification_succeeded_subtitle">తెరవడానికి క్లిక్ చేయండి</string>
+
+  <!-- Overdue download no active network connection dialog -->
+  <string name="overdue_download_no_active_network_connection_dialog_title">ఇంటర్నెట్ లేదు</string>
+  <string name="overdue_download_no_active_network_connection_dialog_message">మీ ఇంటర్నెట్‌ని సరిచూసుకుని, మళ్లీ ప్రయత్నించండి.</string>
+  <string name="overdue_download_no_active_network_connection_dialog_positive_button">సరే</string>
+
+  <!-- Select overdue download format dialog -->
+  <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">స్ప్రెడ్‌షీట్</string>
+  <string name="select_overdue_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="requires_microsoft_excel_to_view">వీక్షించడానికి Sheets లేదా Excel అవసరం</string>
+  <string name="select_overdue_download_format_dialog_action_negative">రద్దు చేయి</string>
+  <string name="select_overdue_download_format_dialog_title_download">ఇలా డౌన్‌లోడ్ చేయండి</string>
+  <string name="select_overdue_download_format_dialog_title_share">ఇలా షేర్ చేయండి</string>
+  <string name="select_overdue_download_format_dialog_action_positive_download">డౌన్‌లోడ్ చేయి</string>
+  <string name="select_overdue_download_format_dialog_action_positive_share">భాగస్వామ్యం చేయి</string>
+  <string name="select_overdue_download_format_dialog_share_with">దీనితో షేర్ చేయండి</string>
+  <string name="not_enough_storage_error_dialog_title">తగినంత నిల్వ లేదు</string>
+  <string name="not_enough_storage_error_dialog_message">కొన్ని ఫైల్‌లను తొలగించి, మళ్లీ ప్రయత్నించండి</string>
+  <string name="download_failed_error_dialog_title">డౌన్‌లోడ్ చేయడం సాధ్యపడలేదు</string>
+  <string name="download_failed_error_dialog_message">ఏదో తప్పు జరిగింది. కొద్ది నిమిషాలు వేచి ఉండి, మళ్లీ ప్రయత్నించండి</string>
+  <string name="next_appointment_view_title">ఫాలో-అప్ అపాయింట్‌మెంట్</string>
+  <string name="next_appointment_view_add">జోడించు</string>
+  <string name="next_appointment_view_change">మార్చు</string>
+  <string name="next_appointment_none">ఏదీ కాదు</string>
+  <string name="next_appointment_appointment_at_facility">సమయం %s</string>
+  <string name="next_appointment_today">ఈరోజు</string>
+  <plurals name="next_appointment_plurals">
+    <item quantity="other">%d రోజులు</item>
+  </plurals>
+  <plurals name="next_appointment_overdue_plurals">
+    <item quantity="other">%d రోజుల క్రితం గడువు ముగిసింది</item>
+  </plurals>
 </resources>

@@ -242,6 +242,7 @@
 - Implement `OverdueDownloadWorker`
 - Show no internet connection dialog when download/share button is clicked
 - Save databases in failed instrumented tests as test artifacts
+- Migrate `IntroVideoScreen` to use view effects
 
 ### Fixes
 

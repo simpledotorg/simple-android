@@ -34,7 +34,7 @@ class IntroVideoScreen : BaseScreen<
     IntroVideoModel,
     IntroVideoEvent,
     IntroVideoEffect,
-    Unit>(), UiActions {
+    IntroVideoViewEffect>(), UiActions {
 
   private val introVideoSubtitle
     get() = binding.introVideoSubtitle
@@ -112,10 +112,12 @@ class IntroVideoScreen : BaseScreen<
   override fun createUpdate() = IntroVideoUpdate()
 
   override fun createEffectHandler(
-      viewEffectsConsumer: Consumer<Unit>
+      viewEffectsConsumer: Consumer<IntroVideoViewEffect>
   ) = introVideoEffectHandler
-      .create(this)
+      .create(viewEffectsConsumer)
       .build()
+
+  override fun viewEffectHandler() = IntroVideoViewEffectHandler(this)
 
   override fun events() = Observable
       .mergeArray(

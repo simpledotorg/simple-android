@@ -21,6 +21,7 @@
   <string name="country_bangladesh">ಬಾಂಗ್ಲಾದೇಶ</string>
   <string name="country_ethiopia">ಇಥಿಯೋಪಿಯಾ</string>
   <string name="country_sri_lanka">ಶ್ರೀಲಂಕಾ</string>
+  <string name="country_demo">ಪ್ರಾತ್ಯಕ್ಷಿಕೆ ದೇಶ</string>
 
   <!-- Home -->
   <string name="home_help">ಸಹಾಯ</string>
@@ -98,6 +99,7 @@
   <string name="patientedit_confirm_discard_ok">ತ್ಯಜಿಸಿ</string>
   <string name="patientedit_confirm_discard_cancel">ರದ್ದುಮಾಡಿ</string>
   <string name="patientedit_delete_patient">ಅಳಿಸಿ</string>
+  <string name="patientedit_add_button">ಸೇರಿಸಿ</string>
 
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
@@ -362,7 +364,11 @@
   <string name="scansimpleid_enteredcode_error_not_required_length">ಬಿಪಿ ಪಾಸ್‌ಪೋರ್ಟ್ ಸಂಖ್ಯೆಯ ಉದ್ದ 7 ಅಂಕಿಗಳಿಗಿಂತ ಕಡಿಮೆ ಇರಬೇಕು</string>
   <string name="scansimpleid_type_number">ಅಥವಾ ಸಂಖ್ಯೆಯನ್ನು ಟೈಪ್ ಮಾಡಿ</string>
   <string name="scansimpleid_invalid_qr_code">ಮಾನ್ಯವಾದ ಆರೋಗ್ಯ ID ಸ್ಕ್ಯಾನ್ ಮಾಡಿ</string>
+  <string name="scansimpleid_error_state_snackbar_ok">ಸರಿ</string>
+  <string name="scansimpleid_identfier_already_exists">ID ಅನ್ನು ಈಗಾಗಲೇ ಮತ್ತೊಂದು ರೋಗಿಗೆ ನೀಡಲಾಗಿದೆ.\nಹೊಸ ಆರೋಗ್ಯ ID ಸ್ಕ್ಯಾನ್ ಮಾಡಿ.</string>
   <string name="scansimpleid_bp_passport_or_national_health_id">ಬಿಪಿ ಪಾಸ್‌ಪೋರ್ಟ್ ಅಥವಾ ರಾಷ್ಟ್ರೀಯ ಆರೋಗ್ಯ ID</string>
+  <string name="scansimpleid_bp_passport_title">ಬಿಪಿ ಪಾಸ್‌ಪೋರ್ಟ್</string>
+  <string name="scansimpleid_national_id_title">ರಾಷ್ಟ್ರೀಯ ಐಡಿ ಸಂಖ್ಯೆ</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">ಸಿಂಕ್ ಬಾಕಿ ಇದೆ</string>
@@ -534,6 +540,7 @@
   <string name="contactpatient_remind_call_later">ನಂತರ ಕರೆ ಮಾಡಲು ನೆನಪಿಸಿ…</string>
   <string name="contactpatient_remove_from_list">ಬಾಕಿ ಪಟ್ಟಿಯಿಂದ ತೆಗೆದುಹಾಕಿ…</string>
   <string name="contactpatient_result_of_call">ಕರೆಯ ಫಲಿತಾಂಶ</string>
+  <string name="contactpatient_call">ಕರೆ ಮಾಡಿ</string>
   <string name="contactpatient_call_normal">ಸಾಮಾನ್ಯ</string>
   <string name="contactpatient_call_secure">ಸುರಕ್ಷಿತ</string>
   <string name="contactpatient_help_text">ಸುರಕ್ಷಿತ ಕರೆಗಳು ನಿಮ್ಮ ಸಂಖ್ಯೆಯನ್ನು ಮರೆಮಾಡುತ್ತವೆ ಮತ್ತು ಅವು ಶುಲ್ಕ ರಹಿತವಾಗಿರುತ್ತವೆ</string>
@@ -770,4 +777,43 @@
   <string name="change_diagnosis_positive">ಬದಲಾಯಿಸಿ</string>
   <string name="change_diagnosis_negative">ಈಗ ಬೇಡ</string>
 
+  <!-- Overdue download notification -->
+  <string name="overdue_download_notification_failed_title">ಡೌನ್‌ಲೋಡ್ ವಿಫಲವಾಗಿದೆ</string>
+  <string name="overdue_download_notification_failed_subtitle">ಸ್ವಲ್ಪ ಸಮಯದಲ್ಲಿ ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ</string>
+  <string name="overdue_download_notification_in_progress_title">ಓವರ್‌ಡ್ಯೂ ಲೈನ್ ಪಟ್ಟಿಯನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ</string>
+  <string name="overdue_download_notification_cancel">ರದ್ದುಮಾಡಿ</string>
+  <string name="overdue_download_notification_succeeded_title">ಡೌನ್‌ಲೋಡ್ ಪೂರ್ಣಗೊಂಡಿದೆ</string>
+  <string name="overdue_download_notification_succeeded_subtitle">ತೆರೆಯಲು ಕ್ಲಿಕ್ ಮಾಡಿ</string>
+
+  <!-- Overdue download no active network connection dialog -->
+  <string name="overdue_download_no_active_network_connection_dialog_title">ಇಂಟರ್ನೆಟ್ ಇಲ್ಲ</string>
+  <string name="overdue_download_no_active_network_connection_dialog_message">ನಿಮ್ಮ ಇಂಟರ್ನೆಟ್ ಪರಿಶೀಲಿಸಿ ಹಾಗೂ ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ.</string>
+  <string name="overdue_download_no_active_network_connection_dialog_positive_button">ಸರಿ</string>
+
+  <!-- Select overdue download format dialog -->
+  <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">ಸ್ಪ್ರೆಡ್‌ಶೀಟ್</string>
+  <string name="select_overdue_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="requires_microsoft_excel_to_view">ವೀಕ್ಷಿಸುವುದಕ್ಕಾಗಿ Sheets ಅಥವಾ Excel ಅಗತ್ಯವಿರುತ್ತದೆ</string>
+  <string name="select_overdue_download_format_dialog_action_negative">ರದ್ದುಮಾಡಿ</string>
+  <string name="select_overdue_download_format_dialog_title_download">ಹೀಗೆ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</string>
+  <string name="select_overdue_download_format_dialog_title_share">ಹೀಗೆ ಹಂಚಿಕೊಳ್ಳಿ</string>
+  <string name="select_overdue_download_format_dialog_action_positive_download">ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</string>
+  <string name="select_overdue_download_format_dialog_action_positive_share">ಹಂಚಿಕೊಳ್ಳಿ</string>
+  <string name="select_overdue_download_format_dialog_share_with">ಈ ಮೂಲಕ ಹಂಚಿಕೊಳ್ಳಿ</string>
+  <string name="not_enough_storage_error_dialog_title">ಸಾಕಷ್ಟು ಸಂಗ್ರಹಣೆ ಇಲ್ಲ</string>
+  <string name="not_enough_storage_error_dialog_message">ಕೆಲವು ಫೈಲ್‌ಗಳನ್ನು ಅಳಿಸಿ ಹಾಗೂ ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ</string>
+  <string name="download_failed_error_dialog_title">ಡೌನ್‌ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗುತ್ತಿಲ್ಲ</string>
+  <string name="download_failed_error_dialog_message">ಏನೋ ತಪ್ಪು ಸಂಭವಿಸಿದೆ. ಕೆಲವು ನಿಮಿಷಗಳ ಕಾಲ ಕಾಯಿರಿ ಹಾಗೂ ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ</string>
+  <string name="next_appointment_view_title">ಫಾಲೋ-ಅಪ್ ಅಪಾಯಿಂಟ್‌ಮೆಂಟ್</string>
+  <string name="next_appointment_view_add">ಸೇರಿಸಿ</string>
+  <string name="next_appointment_view_change">ಬದಲಾಯಿಸಿ</string>
+  <string name="next_appointment_none">ಯಾವುದೂ ಅಲ್ಲ</string>
+  <string name="next_appointment_appointment_at_facility">%s ಸಮಯಕ್ಕೆ</string>
+  <string name="next_appointment_today">ಇಂದು</string>
+  <plurals name="next_appointment_plurals">
+    <item quantity="other">%d ದಿನಗಳು</item>
+  </plurals>
+  <plurals name="next_appointment_overdue_plurals">
+    <item quantity="other">%d ದಿನಗಳಷ್ಟು ತಡವಾಗಿದೆ</item>
+  </plurals>
 </resources>

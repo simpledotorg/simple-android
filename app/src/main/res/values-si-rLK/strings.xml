@@ -21,6 +21,7 @@
   <string name="country_bangladesh">බංග්ලාදේශය</string>
   <string name="country_ethiopia">ඉතියෝපියාව</string>
   <string name="country_sri_lanka">ශ්‍රී ලංකාව</string>
+  <string name="country_demo">ආදර්ශන රට</string>
 
   <!-- Home -->
   <string name="home_help">සහාය</string>
@@ -98,6 +99,7 @@
   <string name="patientedit_confirm_discard_ok">බැහැර කරන්න</string>
   <string name="patientedit_confirm_discard_cancel">අවලංගු කරන්න</string>
   <string name="patientedit_delete_patient">මකන්න</string>
+  <string name="patientedit_add_button">එක් කරන්න</string>
 
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
@@ -362,7 +364,11 @@
   <string name="scansimpleid_enteredcode_error_not_required_length">වලංගු බීපී පාස්පෝර්ට් අංකය හෝ ජාතික සෞඛ්‍ය හැඳුනුම්පත් අංකය ඇතුලත් කරන්න</string>
   <string name="scansimpleid_type_number">හෝ අංකය ටයිප් කරන්න</string>
   <string name="scansimpleid_invalid_qr_code">වලංගු සෞඛ්‍ය හැඳුනුම්පතක් ස්කෑන් කරන්න</string>
+  <string name="scansimpleid_error_state_snackbar_ok">හරි</string>
+  <string name="scansimpleid_identfier_already_exists">හැඳුනුම දැනටමත් වෙනත් රෝගියෙකුට දී ඇත.\nනව සෞඛ්‍ය හැඳුනුමක් ස්කෑන් කරන්න.</string>
   <string name="scansimpleid_bp_passport_or_national_health_id">බීපී පාස්පෝර්ට් අංකය හෝ ජාතික සෞඛ්‍ය හැඳුනුම්පත් අංකය</string>
+  <string name="scansimpleid_bp_passport_title">බීපී පාස්පෝර්ට්</string>
+  <string name="scansimpleid_national_id_title">ජාතික හැදු</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">සමමුහුර්ත කිරීමට අපේක්ෂිතයි</string>
@@ -534,6 +540,7 @@
   <string name="contactpatient_remind_call_later">පසුව ඇමතීමට සිහිකැඳවන්න…</string>
   <string name="contactpatient_remove_from_list">කල් ගතවූ ලැයිස්තුවෙන් ඉවත් කරන්න…</string>
   <string name="contactpatient_result_of_call">ඇමතුමේ ප්‍රතිඵලය</string>
+  <string name="contactpatient_call">අමතන්න</string>
   <string name="contactpatient_call_normal">සාමාන්‍ය</string>
   <string name="contactpatient_call_secure">ආරක්ෂිත</string>
   <string name="contactpatient_help_text">ආරක්ෂිත ඇමතුම්, ඔබ‍ගේ අංකය සඟවන්න සහ ගාස්තු රහිතයි</string>
@@ -770,4 +777,45 @@
   <string name="change_diagnosis_positive">වෙනස් කරන්න</string>
   <string name="change_diagnosis_negative">දැන් නොවේ</string>
 
+  <!-- Overdue download notification -->
+  <string name="overdue_download_notification_failed_title">බාගැනීම අසාර්ථක විය</string>
+  <string name="overdue_download_notification_failed_subtitle">මද වේලාවකින් නැවත උත්සාහ කරන්න</string>
+  <string name="overdue_download_notification_in_progress_title">කල් ඉකුත් වූ පේළි ලැයිස්තුව බාගැනේ</string>
+  <string name="overdue_download_notification_cancel">අවලංගු කරන්න</string>
+  <string name="overdue_download_notification_succeeded_title">බාගැනීම සම්පූර්ණයි</string>
+  <string name="overdue_download_notification_succeeded_subtitle">විවෘත කිරීමට ක්ලික් කරන්න</string>
+
+  <!-- Overdue download no active network connection dialog -->
+  <string name="overdue_download_no_active_network_connection_dialog_title">අන්තර්ජාලය නැත</string>
+  <string name="overdue_download_no_active_network_connection_dialog_message">ඔබගේ අන්තර්ජාලය පරීක්ෂා කර නැවත උත්සාහ කරන්න.</string>
+  <string name="overdue_download_no_active_network_connection_dialog_positive_button">හරි</string>
+
+  <!-- Select overdue download format dialog -->
+  <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">පැතුරුම්පත</string>
+  <string name="select_overdue_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="requires_microsoft_excel_to_view">බැලීමට Sheets හෝ Excel අවශ්‍ය වේ</string>
+  <string name="select_overdue_download_format_dialog_action_negative">අවලංගු කරන්න</string>
+  <string name="select_overdue_download_format_dialog_title_download">මෙම ආකාරයට බාගන්න</string>
+  <string name="select_overdue_download_format_dialog_title_share">මෙම ආකාරයට බෙදාගන්න</string>
+  <string name="select_overdue_download_format_dialog_action_positive_download">බාගත කිරීම</string>
+  <string name="select_overdue_download_format_dialog_action_positive_share">බෙදා ගැනීම</string>
+  <string name="select_overdue_download_format_dialog_share_with">මේ සමග බෙදාගන්න</string>
+  <string name="not_enough_storage_error_dialog_title">ප්‍රමාණවත් ගබඩාවක් නොමැත</string>
+  <string name="not_enough_storage_error_dialog_message">ගොනු කිහිපයක් මකා නැවත උත්සාහ කරන්න</string>
+  <string name="download_failed_error_dialog_title">බාගත නොහැක</string>
+  <string name="download_failed_error_dialog_message">යමක් වැරදුනි. මිනිත්තු කිහිපයක් රැඳී සිට නැවත උත්සාහ කරන්න</string>
+  <string name="next_appointment_view_title">හමුවීම වේලාව අනුව යන්න</string>
+  <string name="next_appointment_view_add">එකතු කරන්න</string>
+  <string name="next_appointment_view_change">වෙනස් කරන්න</string>
+  <string name="next_appointment_none">කිසිවක් නැත</string>
+  <string name="next_appointment_appointment_at_facility">%s ට</string>
+  <string name="next_appointment_today">අද</string>
+  <plurals name="next_appointment_plurals">
+    <item quantity="one">දින %d ක්</item>
+    <item quantity="other">දින %d ක්</item>
+  </plurals>
+  <plurals name="next_appointment_overdue_plurals">
+    <item quantity="one">දින %d ක කාලයක් ඉකුත් වී ඇත</item>
+    <item quantity="other">දින %d ක කාලයක් ඉකුත් වී ඇත</item>
+  </plurals>
 </resources>

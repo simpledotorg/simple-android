@@ -21,6 +21,7 @@
   <string name="country_bangladesh">பங்களாதேஷ்</string>
   <string name="country_ethiopia">எத்தியோப்பியா</string>
   <string name="country_sri_lanka">இலங்கை</string>
+  <string name="country_demo">டெமோ நாடு</string>
 
   <!-- Home -->
   <string name="home_help">உதவி</string>
@@ -98,6 +99,7 @@
   <string name="patientedit_confirm_discard_ok">நிராகரி</string>
   <string name="patientedit_confirm_discard_cancel">ரத்துசெய்</string>
   <string name="patientedit_delete_patient">நீக்கு</string>
+  <string name="patientedit_add_button">சேர்</string>
 
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
@@ -362,7 +364,11 @@
   <string name="scansimpleid_enteredcode_error_not_required_length">செல்லுபடியாகும் பீபி பாஸ்போர்ட் இலக்கம் அல்லது தேசிய சுகாதார ஐடியை உள்ளிடவும்</string>
   <string name="scansimpleid_type_number">அல்லது இலக்கத்தைத் தட்டச்சு செய்யவும்</string>
   <string name="scansimpleid_invalid_qr_code">சரியான சுகாதார ஐடியை ஸ்கேன் செய்யவும்</string>
+  <string name="scansimpleid_error_state_snackbar_ok">சரி</string>
+  <string name="scansimpleid_identfier_already_exists">ஏற்கனவே மற்றொரு நோயாளிக்கு ID கொடுக்கப்பட்டுள்ளது.\nபுதிய சுகாதார ID-ஐ ஸ்கேன் செய்யவும்.</string>
   <string name="scansimpleid_bp_passport_or_national_health_id">பீபி பாஸ்போர்ட் அல்லது தேசிய சுகாதார ஐடி</string>
+  <string name="scansimpleid_bp_passport_title">பீபி பாஸ்போர்ட்</string>
+  <string name="scansimpleid_national_id_title">தேசிய ஐடி</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">ஒத்திசைவு நிலுவையில் உள்ளது</string>
@@ -534,6 +540,7 @@
   <string name="contactpatient_remind_call_later">பின்னர் அழைக்குமாறு நினைவூட்டவும்…</string>
   <string name="contactpatient_remove_from_list">தாமதப் பட்டியலிலிருந்து அகற்றவும்…</string>
   <string name="contactpatient_result_of_call">அழைப்பின் முடிவு</string>
+  <string name="contactpatient_call">அழை</string>
   <string name="contactpatient_call_normal">வழக்கமானது</string>
   <string name="contactpatient_call_secure">பாதுகாப்பானது</string>
   <string name="contactpatient_help_text">பாதுகாப்பான அழைப்புகள் உங்கள் இலக்கத்தை மறைக்கின்றன மற்றும் கட்டணமில்லாதவை</string>
@@ -770,4 +777,45 @@
   <string name="change_diagnosis_positive">மாற்று</string>
   <string name="change_diagnosis_negative">இப்போது வேண்டாம்</string>
 
+  <!-- Overdue download notification -->
+  <string name="overdue_download_notification_failed_title">பதிவிறக்குவது தோல்வி</string>
+  <string name="overdue_download_notification_failed_subtitle">கொஞ்சம் நேரம் கழித்து மீண்டும் முயலவும்</string>
+  <string name="overdue_download_notification_in_progress_title">வரவேண்டிய தேதி முடிந்தவர்கள் பட்டியலைப் பதிவிறக்குகிறது</string>
+  <string name="overdue_download_notification_cancel">ரத்துசெய்</string>
+  <string name="overdue_download_notification_succeeded_title">பதிவிறக்கப்பட்டது</string>
+  <string name="overdue_download_notification_succeeded_subtitle">திறக்க, கிளிக் செய்யவும்</string>
+
+  <!-- Overdue download no active network connection dialog -->
+  <string name="overdue_download_no_active_network_connection_dialog_title">இணையம் இல்லை</string>
+  <string name="overdue_download_no_active_network_connection_dialog_message">உங்கள் இணையத்தைச் சரிபார்த்து, மீண்டும் முயலவும்.</string>
+  <string name="overdue_download_no_active_network_connection_dialog_positive_button">சரி</string>
+
+  <!-- Select overdue download format dialog -->
+  <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">விரிதாள்</string>
+  <string name="select_overdue_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="requires_microsoft_excel_to_view">பார்க்க, Sheets அல்லது Excel தேவை</string>
+  <string name="select_overdue_download_format_dialog_action_negative">ரத்துசெய்</string>
+  <string name="select_overdue_download_format_dialog_title_download">இதாகப் பதிவிறக்கு</string>
+  <string name="select_overdue_download_format_dialog_title_share">இதாகப் பகிர்</string>
+  <string name="select_overdue_download_format_dialog_action_positive_download">பதிவிறக்கப்பட்டது</string>
+  <string name="select_overdue_download_format_dialog_action_positive_share">பகிர்</string>
+  <string name="select_overdue_download_format_dialog_share_with">இதன்மூலம் பகிர்</string>
+  <string name="not_enough_storage_error_dialog_title">போதுமான சேமிப்பகம் இல்லை</string>
+  <string name="not_enough_storage_error_dialog_message">ஒரு சில கோப்புகளை நீக்கிவிட்டு, மீண்டும் முயலவும்</string>
+  <string name="download_failed_error_dialog_title">பதிவிறக்க முடியவில்லை</string>
+  <string name="download_failed_error_dialog_message">ஏதோ தவறாகிவிட்டது. ஒரு சில நிமிடங்கள் காத்திருந்து, மீண்டும் முயலவும்</string>
+  <string name="next_appointment_view_title">கூடுதல் விவரங்களுக்கான முன்பதிவு</string>
+  <string name="next_appointment_view_add">சேர்</string>
+  <string name="next_appointment_view_change">மாற்றம்</string>
+  <string name="next_appointment_none">எதுவுமில்லை</string>
+  <string name="next_appointment_appointment_at_facility">- %s</string>
+  <string name="next_appointment_today">இன்று</string>
+  <plurals name="next_appointment_plurals">
+    <item quantity="one">%d நாள்</item>
+    <item quantity="other">%d நாட்கள்</item>
+  </plurals>
+  <plurals name="next_appointment_overdue_plurals">
+    <item quantity="one">%d நாள் கடந்துவிட்டது</item>
+    <item quantity="other">%d days overdue</item>
+  </plurals>
 </resources>

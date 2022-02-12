@@ -21,6 +21,7 @@
   <string name="country_bangladesh">बांग्लादेश</string>
   <string name="country_ethiopia">इथिओपिया</string>
   <string name="country_sri_lanka">श्री लंका</string>
+  <string name="country_demo">डेमो देश</string>
 
   <!-- Home -->
   <string name="home_help">मदत</string>
@@ -98,6 +99,7 @@
   <string name="patientedit_confirm_discard_ok">रद्द करा</string>
   <string name="patientedit_confirm_discard_cancel">रद्द करा</string>
   <string name="patientedit_delete_patient">हटवा</string>
+  <string name="patientedit_add_button">जोडा</string>
 
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
@@ -362,7 +364,11 @@
   <string name="scansimpleid_enteredcode_error_not_required_length">बीपी पासपोर्ट क्रमांकाची लांबी 7 पेक्षा कमी अंकांचा आहे</string>
   <string name="scansimpleid_type_number">किंवा नंबर टाइप करा</string>
   <string name="scansimpleid_invalid_qr_code">वैध आरोग्‍य ID स्‍कॅन करा</string>
+  <string name="scansimpleid_error_state_snackbar_ok">ठीक आहे</string>
+  <string name="scansimpleid_identfier_already_exists">ID आधीच दुसऱ्या रुग्णाला दिलेला आहे.\nनवीन आरोग्य ID स्कॅन करा.</string>
   <string name="scansimpleid_bp_passport_or_national_health_id">बीपी पासपोर्ट किंवा राष्ट्रीय आरोग्य ID</string>
+  <string name="scansimpleid_bp_passport_title">बीपी पासपोर्ट</string>
+  <string name="scansimpleid_national_id_title">राष्‍ट्रीय आयडी क्रमांक</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">सिंक प्रलंबित आहे</string>
@@ -534,6 +540,7 @@
   <string name="contactpatient_remind_call_later">नंतर कॉल करण्‍याची आठवण करून द्या…</string>
   <string name="contactpatient_remove_from_list">ओव्‍हरड्यू यादीतून दूर करा…</string>
   <string name="contactpatient_result_of_call">कॉलसाठी निकाल</string>
+  <string name="contactpatient_call">कॉल करा</string>
   <string name="contactpatient_call_normal">सामान्‍य</string>
   <string name="contactpatient_call_secure">सुरक्षित</string>
   <string name="contactpatient_help_text">सुरक्षित कॉल्‍स तुमचे नंबर लपवतात आणि टोल फ्री आहेत</string>
@@ -770,4 +777,43 @@
   <string name="change_diagnosis_positive">बदला</string>
   <string name="change_diagnosis_negative">आता नाही</string>
 
+  <!-- Overdue download notification -->
+  <string name="overdue_download_notification_failed_title">डाउनलोड अयशस्वी</string>
+  <string name="overdue_download_notification_failed_subtitle">काही वेळाने पुन्हा प्रयत्न करा</string>
+  <string name="overdue_download_notification_in_progress_title">ओव्हरड्यू लाइन सूची डाउनलोड करीत आहे</string>
+  <string name="overdue_download_notification_cancel">रद्द करा</string>
+  <string name="overdue_download_notification_succeeded_title">डाउनलोड पूर्ण झाले</string>
+  <string name="overdue_download_notification_succeeded_subtitle">उघडण्यासाठी क्लिक करा</string>
+
+  <!-- Overdue download no active network connection dialog -->
+  <string name="overdue_download_no_active_network_connection_dialog_title">इंटरनेट नाही</string>
+  <string name="overdue_download_no_active_network_connection_dialog_message">आपले इंटरनेट तपासा आणि पुन्हा प्रयत्न करा.</string>
+  <string name="overdue_download_no_active_network_connection_dialog_positive_button">ठीक आहे</string>
+
+  <!-- Select overdue download format dialog -->
+  <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">स्प्रेडशीट</string>
+  <string name="select_overdue_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="requires_microsoft_excel_to_view">पाहण्यासाठी Sheets किंवा Excel आवश्यक आहे</string>
+  <string name="select_overdue_download_format_dialog_action_negative">रद्द करा</string>
+  <string name="select_overdue_download_format_dialog_title_download">म्हणून डाउनलोड करा</string>
+  <string name="select_overdue_download_format_dialog_title_share">म्हणून शेअर करा</string>
+  <string name="select_overdue_download_format_dialog_action_positive_download">डाउनलोड करा</string>
+  <string name="select_overdue_download_format_dialog_action_positive_share">सामायिक करा</string>
+  <string name="select_overdue_download_format_dialog_share_with">सोबत शेअर करा</string>
+  <string name="not_enough_storage_error_dialog_title">पुरेसे संग्रहण नाही</string>
+  <string name="not_enough_storage_error_dialog_message">काही फायली हटवा आणि पुन्हा प्रयत्न करा</string>
+  <string name="download_failed_error_dialog_title">डाउनलोड करण्यात अक्षम</string>
+  <string name="download_failed_error_dialog_message">काहीतरी चूक झाली. काही मिनिटे थांबा आणि पुन्हा प्रयत्न करा</string>
+  <string name="next_appointment_view_title">पाठपुरावा अपॉइंटमेंट</string>
+  <string name="next_appointment_view_add">जोडा</string>
+  <string name="next_appointment_view_change">बदला</string>
+  <string name="next_appointment_none">काही नाही</string>
+  <string name="next_appointment_appointment_at_facility">%s वाजता</string>
+  <string name="next_appointment_today">आज</string>
+  <plurals name="next_appointment_plurals">
+    <item quantity="other">%d दिवस</item>
+  </plurals>
+  <plurals name="next_appointment_overdue_plurals">
+    <item quantity="other">%d दिवसांनी उशीर झाला</item>
+  </plurals>
 </resources>

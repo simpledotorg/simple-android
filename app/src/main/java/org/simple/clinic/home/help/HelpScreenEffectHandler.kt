@@ -14,16 +14,12 @@ class HelpScreenEffectHandler @AssistedInject constructor(
     private val helpRepository: HelpRepository,
     private val helpSync: HelpSync,
     private val schedulersProvider: SchedulersProvider,
-    @Assisted private val uiActions: HelpScreenUiActions,
-    @Assisted private val viewEffectHandler: HelpScreenViewEffectHandler,
     @Assisted private val viewEffectsConsumer: Consumer<HelpScreenViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        uiActions: HelpScreenUiActions,
-        helpScreenViewEffectHandler: HelpScreenViewEffectHandler,
         viewEffectsConsumer: Consumer<HelpScreenViewEffect>
     ): HelpScreenEffectHandler
   }

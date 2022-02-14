@@ -32,7 +32,7 @@ class HelpScreenEffectHandler @AssistedInject constructor(
       .subtypeEffectHandler<HelpScreenEffect, HelpScreenEvent>()
       .addTransformer(LoadHelpContent::class.java, loadHelpContent())
       .addTransformer(SyncHelp::class.java, syncHelp())
-      .addConsumer(HelpScreenViewEffect::class.java, viewEffectHandler::handle)
+      .addConsumer(HelpScreenViewEffect::class.java, viewEffectsConsumer::accept)
       .build()
 
   private fun syncHelp(): ObservableTransformer<SyncHelp, HelpScreenEvent> {

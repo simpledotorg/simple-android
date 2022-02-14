@@ -1,5 +1,6 @@
 package org.simple.clinic.home.help
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -14,14 +15,16 @@ class HelpScreenEffectHandler @AssistedInject constructor(
     private val helpSync: HelpSync,
     private val schedulersProvider: SchedulersProvider,
     @Assisted private val uiActions: HelpScreenUiActions,
-    @Assisted private val viewEffectHandler: HelpScreenViewEffectHandler
+    @Assisted private val viewEffectHandler: HelpScreenViewEffectHandler,
+    @Assisted private val viewEffectsConsumer: Consumer<HelpScreenViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
         uiActions: HelpScreenUiActions,
-        helpScreenViewEffectHandler: HelpScreenViewEffectHandler
+        helpScreenViewEffectHandler: HelpScreenViewEffectHandler,
+        viewEffectsConsumer: Consumer<HelpScreenViewEffect>
     ): HelpScreenEffectHandler
   }
 

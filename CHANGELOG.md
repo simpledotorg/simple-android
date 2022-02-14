@@ -42,6 +42,7 @@
   - Auth to v20.1.0
   - Location to v19.0.1
   - Barcode Scanning to v18.0.0
+- Bump leakcanary to 2.8.1
 
 ## 2022-02-07-8126
 

@@ -27,7 +27,7 @@ class HelpScreen : BaseScreen<
     HelpScreenModel,
     HelpScreenEvent,
     HelpScreenEffect,
-    Unit>(), HelpScreenUi, HelpScreenUiActions {
+    HelpScreenViewEffect>(), HelpScreenUi, HelpScreenUiActions {
 
   @Inject
   lateinit var router: Router
@@ -71,8 +71,8 @@ class HelpScreen : BaseScreen<
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenHelpBinding
       .inflate(layoutInflater, container, false)
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) =
-      effectHandlerFactory.create(this, HelpScreenViewEffectHandler(this)).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<HelpScreenViewEffect>) =
+      effectHandlerFactory.create(this, HelpScreenViewEffectHandler(this), viewEffectsConsumer = viewEffectsConsumer).build()
 
   override fun createInit() = HelpScreenInit()
 

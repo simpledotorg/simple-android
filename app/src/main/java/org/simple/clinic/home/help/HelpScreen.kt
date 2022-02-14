@@ -15,6 +15,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenHelpBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.mobius.ViewEffectsHandler
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -73,6 +74,8 @@ class HelpScreen : BaseScreen<
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<HelpScreenViewEffect>) =
       effectHandlerFactory.create(this, HelpScreenViewEffectHandler(this), viewEffectsConsumer = viewEffectsConsumer).build()
+
+  override fun viewEffectHandler() = HelpScreenViewEffectHandler(this)
 
   override fun createInit() = HelpScreenInit()
 

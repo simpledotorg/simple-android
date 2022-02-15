@@ -21,6 +21,7 @@
   <string name="country_bangladesh">Banigiladish</string>
   <string name="country_ethiopia">Itophiya</string>
   <string name="country_sri_lanka">Sirilaanka</string>
+  <string name="country_demo">wo\'onalishu gobba</string>
 
   <!-- Home -->
   <string name="home_help">Kaalo</string>
@@ -98,6 +99,7 @@
   <string name="patientedit_confirm_discard_ok">Horosinoniho</string>
   <string name="patientedit_confirm_discard_cancel">Hoola</string>
   <string name="patientedit_delete_patient">Huni</string>
+  <string name="patientedit_add_button">leda</string>
 
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
@@ -347,7 +349,7 @@
   <string name="newmedicalhistory_yes">E’e</string>
   <string name="newmedicalhistory_no">De’ni</string>
   <string name="newmedicalhistory_history">Xage</string>
-  <string name="newmedicalhistory_diagnosis">Hansoonihu</string>
+  <string name="newmedicalhistory_diagnosis">xiinixaloo</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">Xissantinoti sai agani giddo BP xagicho adhinoni? (Hasiisannoho)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">Sa\'i aganira xisamanchu sukarete xagicho adhino? (Hasisiro)</string>
 
@@ -362,7 +364,11 @@
   <string name="scansimpleid_enteredcode_error_not_required_length">Wodho agartino BP paasipoorte kiiro woy Dagoomu fayyimate ayimma eessi</string>
   <string name="scansimpleid_type_number">Woy kiiro boreessi.</string>
   <string name="scansimpleid_invalid_qr_code">Garunnita fayyimate ayimma iskaane assi</string>
+  <string name="scansimpleid_error_state_snackbar_ok">Mahoye</string>
+  <string name="scansimpleid_identfier_already_exists">ayimmate kiiro wooleho uuyinoni.\fayyimate ayimma kiiro haaro iskanne assi </string>
   <string name="scansimpleid_bp_passport_or_national_health_id">BP Passipoorte woy Dagoomu fayyimate ayimma</string>
+  <string name="scansimpleid_bp_passport_title">Mundeete xiiwo passporte</string>
+  <string name="scansimpleid_national_id_title">Dagoomu ayimma</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">Lawishishuni asii</string>
@@ -398,7 +404,7 @@
   <!-- Add ID to Patient: Search Results-->
 
   <!-- App update : Dialog -->
-  <string name="appupdatedialog_title">Horonisiranicho (app) woyesi</string>
+  <string name="appupdatedialog_title">maalate woyesi</string>
   <string name="appupdatedialog_body">Horonisiranicho woyesate Google gamiboshiniwini Simple.</string>
   <string name="appupdatedialog_positive_button_text">Woyesi</string>
   <string name="appupdatedialog_negative_button_text">Dixaa</string>
@@ -508,7 +514,7 @@
 
   <!-- Access Denied screen -->
   <string name="accessdeniedscreen_title_access_denied">Sa’a didanidinanni</string>
-  <string name="accessdeniedscreen_description">Sa’a  Simple danidato Egotena qaru noha lawe leliha ikiro la’anichiki ledo xadi.\n\nShimuni  APP (Horonisiranicho) hunite aguri Horonisiranicho w iro qoli wole Simple App (Horonisiranicho) Play store gidoni dirisi</string>
+  <string name="accessdeniedscreen_description">shootu gaarin afira dedanidato. qaru noha lawe leliha ikiro la’anichiki ledo xadi.\n\nShimuni  APP (Horonisiranicho) hunite aguri Horonisiranicho w iro qoli wole Simple App (Horonisiranicho) Play store gidoni dirisi</string>
 
   <!-- Confirm Facility change sheet -->
   <string name="confirmfacilitychange_title">Dariga sori</string>
@@ -771,4 +777,45 @@
   <string name="change_diagnosis_positive">Sooro</string>
   <string name="change_diagnosis_negative">Dixati</string>
 
+  <!-- Overdue download notification -->
+  <string name="overdue_download_notification_failed_title">driisa hoonigoni</string>
+  <string name="overdue_download_notification_failed_subtitle">woole yanara wiiro woonali</string>
+  <string name="overdue_download_notification_in_progress_title">akaatis garin drisaa</string>
+  <string name="overdue_download_notification_cancel">Hoola</string>
+  <string name="overdue_download_notification_succeeded_title">drisa guumulantino</string>
+  <string name="overdue_download_notification_succeeded_subtitle">faanate kissi</string>
+
+  <!-- Overdue download no active network connection dialog -->
+  <string name="overdue_download_no_active_network_connection_dialog_title">interinete dino</string>
+  <string name="overdue_download_no_active_network_connection_dialog_message">interineteki buuxi lledeno wirro woonali</string>
+  <string name="overdue_download_no_active_network_connection_dialog_positive_button">Mahoye</string>
+
+  <!-- Select overdue download format dialog -->
+  <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">spreedeshiitee</string>
+  <string name="select_overdue_download_format_dialog_radio_button_pdf">pdafee</string>
+  <string name="requires_microsoft_excel_to_view">leelishate shiitee woole aexele hasisano </string>
+  <string name="select_overdue_download_format_dialog_action_negative">Hoola</string>
+  <string name="select_overdue_download_format_dialog_title_download">dirrinisa gede</string>
+  <string name="select_overdue_download_format_dialog_title_share">beenkani gede</string>
+  <string name="select_overdue_download_format_dialog_action_positive_download">Dirisi</string>
+  <string name="select_overdue_download_format_dialog_action_positive_share">Behhi</string>
+  <string name="select_overdue_download_format_dialog_share_with">beehato gede </string>
+  <string name="not_enough_storage_error_dialog_title">iikado baasse dinno</string>
+  <string name="not_enough_storage_error_dialog_message">shima filee huunte wiiro woonali</string>
+  <string name="download_failed_error_dialog_title">dirisa dedanidinoni</string>
+  <string name="download_failed_error_dialog_message">shimu qaaru noona shima yaana gedensani wiiro woonali</string>
+  <string name="next_appointment_view_title">xaadoshiki gaarini</string>
+  <string name="next_appointment_view_add">Ledi</string>
+  <string name="next_appointment_view_change">Soori</string>
+  <string name="next_appointment_none">Foqa</string>
+  <string name="next_appointment_appointment_at_facility">chala %s</string>
+  <string name="next_appointment_today">Techo</string>
+  <plurals name="next_appointment_plurals">
+    <item quantity="one">1%d barubara</item>
+    <item quantity="other">%d barubara</item>
+  </plurals>
+  <plurals name="next_appointment_overdue_plurals">
+    <item quantity="one">%d Techo barira chala keshinohu</item>
+    <item quantity="other">%d Techo barira chala keshinohu</item>
+  </plurals>
 </resources>

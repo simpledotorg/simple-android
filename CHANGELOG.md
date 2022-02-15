@@ -6,7 +6,7 @@
 
 - Migrate `HelpScreen` to user view effects
 - Bump Sentry Gradle plugin to v2.1.5
-- Updated translations: `am-ET`
+- Update translations: `am-ET`, `ta-LK`
 
 ## On Demo
 

@@ -21,6 +21,7 @@
   <string name="country_bangladesh">ባንግላደሽ</string>
   <string name="country_ethiopia">ኢትዮጵያ</string>
   <string name="country_sri_lanka">Sri Lanka</string>
+  <string name="country_demo">ደሞ ሃገር</string>
 
   <!-- Home -->
   <string name="home_help">እርዳታ</string>
@@ -98,6 +99,7 @@
   <string name="patientedit_confirm_discard_ok">ይወገዱ</string>
   <string name="patientedit_confirm_discard_cancel">ይቅር</string>
   <string name="patientedit_delete_patient">ያስወግዱ</string>
+  <string name="patientedit_add_button">ያክሉ</string>
 
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
@@ -362,7 +364,11 @@
   <string name="scansimpleid_enteredcode_error_not_required_length">የደም ግፊት ፓስፖርት ቁጥር ከ 7 ቁጥሮች በታች ነው</string>
   <string name="scansimpleid_type_number">ወይም ቁጥር ይተይቡ</string>
   <string name="scansimpleid_invalid_qr_code">ትክክለኛ የጤና መታወቂያ ይቃኙ</string>
+  <string name="scansimpleid_error_state_snackbar_ok">እሺ</string>
+  <string name="scansimpleid_identfier_already_exists">መታወቂያ ለሌላ ታካሚ ተሰጥቷል።\nአዲስ የጤና መታወቂያ ይቃኙ።</string>
   <string name="scansimpleid_bp_passport_or_national_health_id">BP ፓስፖርት ቁጥር ወይም የብሔራዊ የጤና መታወቂያ</string>
+  <string name="scansimpleid_bp_passport_title">የደም ግፊት ፓስፖርት</string>
+  <string name="scansimpleid_national_id_title">ብሔራዊ መታወቂያ ቁጥር</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">ለመጣመር በመጠባበቅ ላይ </string>
@@ -771,4 +777,45 @@
   <string name="change_diagnosis_positive">ይቀይሩ</string>
   <string name="change_diagnosis_negative">አሁን አይደለም</string>
 
+  <!-- Overdue download notification -->
+  <string name="overdue_download_notification_failed_title">ማውረድ አልተሳካም።</string>
+  <string name="overdue_download_notification_failed_subtitle">ከተወሰነ ጊዜ በኋላ እንደገና ይሞክሩ</string>
+  <string name="overdue_download_notification_in_progress_title">ጊዜው ያለፈበት የመስመር ዝርዝር በማውረድ ላይ</string>
+  <string name="overdue_download_notification_cancel">ይቅር</string>
+  <string name="overdue_download_notification_succeeded_title">ማውረድ ተጠናቅቋል</string>
+  <string name="overdue_download_notification_succeeded_subtitle">ለመክፈት ጠቅ ያድርጉ</string>
+
+  <!-- Overdue download no active network connection dialog -->
+  <string name="overdue_download_no_active_network_connection_dialog_title">ኢንተርኔት የለም</string>
+  <string name="overdue_download_no_active_network_connection_dialog_message">በኢንተርኔትዎን ይፈትሹ እና እንደገና ይሞክሩ።</string>
+  <string name="overdue_download_no_active_network_connection_dialog_positive_button">እሺ</string>
+
+  <!-- Select overdue download format dialog -->
+  <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">ሉህ</string>
+  <string name="select_overdue_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="requires_microsoft_excel_to_view">ለማየት ሉሆች ወይም ኤክሴል ያስፈልገዋል</string>
+  <string name="select_overdue_download_format_dialog_action_negative">ይቅር</string>
+  <string name="select_overdue_download_format_dialog_title_download">አውርድ እንደ</string>
+  <string name="select_overdue_download_format_dialog_title_share">አካፍል እንደ</string>
+  <string name="select_overdue_download_format_dialog_action_positive_download">አውርድ</string>
+  <string name="select_overdue_download_format_dialog_action_positive_share">ያጋሩ</string>
+  <string name="select_overdue_download_format_dialog_share_with">አካፍል ከ</string>
+  <string name="not_enough_storage_error_dialog_title">በቂ ማከማቻ የለም</string>
+  <string name="not_enough_storage_error_dialog_message">ጥቂት ፋይሎችን ሰርዝ እና እንደገና ሞክር</string>
+  <string name="download_failed_error_dialog_title">ማውረድ አልተቻለም</string>
+  <string name="download_failed_error_dialog_message">የሆነ ስህተት ተከስቷል። ጥቂት ደቂቃዎችን ይጠብቁ እና እንደገና ይሞክሩ</string>
+  <string name="next_appointment_view_title">የክትትል ቀጠሮ</string>
+  <string name="next_appointment_view_add">ያክሉ</string>
+  <string name="next_appointment_view_change">ለውጥ</string>
+  <string name="next_appointment_none">ምንም</string>
+  <string name="next_appointment_appointment_at_facility">በ %s </string>
+  <string name="next_appointment_today">ዛሬ</string>
+  <plurals name="next_appointment_plurals">
+    <item quantity="one">%d ቀን</item>
+    <item quantity="other">%d ቀናት</item>
+  </plurals>
+  <plurals name="next_appointment_overdue_plurals">
+    <item quantity="one">%d ቀን አልduል</item>
+    <item quantity="other">%d ቀናት ጊዜው አልፎበታል</item>
+  </plurals>
 </resources>

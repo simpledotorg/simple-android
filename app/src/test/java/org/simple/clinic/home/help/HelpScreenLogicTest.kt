@@ -197,11 +197,12 @@ class HelpScreenLogicTest {
   }
 
   private fun setupController() {
+    val viewEffectHandler = HelpScreenViewEffectHandler(uiActions)
     val effectHandler = HelpScreenEffectHandler(
         helpRepository = helpRepository,
         helpSync = helpSync,
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = uiActions
+        viewEffectsConsumer = viewEffectHandler::handle
     )
     val uiRenderer = HelpScreenUiRenderer(ui)
 

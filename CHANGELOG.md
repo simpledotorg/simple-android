@@ -44,6 +44,7 @@
   - Barcode Scanning to v18.0.0
 - Bump leakcanary to 2.8.1
 - Bump coroutines to v1.6.0
+- Migrate `HelpScreen` to user view effects
 
 ## 2022-02-07-8126
 

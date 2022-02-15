@@ -6,7 +6,8 @@
 
 - Migrate `HelpScreen` to user view effects
 - Bump Sentry Gradle plugin to v2.1.5
-- Update translations: `am-ET`, `ta-LK`, `kn-IN`, `bn-BD`, `bn-IN`. `pa-IN`
+- Remove Google Guava dependency
+- Update translations: `am-ET`, `ta-LK`, `kn-IN`, `bn-BD`, `bn-IN`. `pa-IN`, `hi-IN`
 
 ## On Demo
 
@@ -51,7 +52,6 @@
   - Barcode Scanning to v18.0.0
 - Bump leakcanary to 2.8.1
 - Bump coroutines to v1.6.0
-- Remove Google Guava dependency
 
 ## 2022-02-07-8126
 

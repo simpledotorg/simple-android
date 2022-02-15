@@ -4,6 +4,13 @@
 
 ### Internal
 
+- Migrate `HelpScreen` to user view effects
+- Bump Sentry Gradle plugin to v2.1.5
+
+## On Demo
+
+### Internal
+
 - Remove `InputField#validate`
 - Migrate `RegistrationFullNameScreen` to use view effects
 - Migrate `RegistrationLoadingScreen` to use view effects
@@ -44,8 +51,6 @@
   - Barcode Scanning to v18.0.0
 - Bump leakcanary to 2.8.1
 - Bump coroutines to v1.6.0
-- Migrate `HelpScreen` to user view effects
-- Bump Sentry Gradle plugin to v2.1.5
 
 ## 2022-02-07-8126
 

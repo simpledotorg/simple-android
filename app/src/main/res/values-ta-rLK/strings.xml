@@ -815,7 +815,7 @@
     <item quantity="other">%d நாட்கள்</item>
   </plurals>
   <plurals name="next_appointment_overdue_plurals">
-    <item quantity="one">%d நாள் கடந்துவிட்டது</item>
+    <item quantity="one">குறித்த நாளை விட %d நாள் அதிகம்</item>
     <item quantity="other">%d நாட்கள் கடந்துவிட்டன</item>
   </plurals>
 </resources>

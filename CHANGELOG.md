@@ -45,6 +45,7 @@
 - Bump leakcanary to 2.8.1
 - Bump coroutines to v1.6.0
 - Migrate `HelpScreen` to user view effects
+- Updated translations: `si-LK`
 
 ## 2022-02-07-8126
 

@@ -7,7 +7,6 @@
 - Remove `InputField#validate`
 - Migrate `RegistrationFullNameScreen` to use view effects
 - Migrate `RegistrationLoadingScreen` to use view effects
-- Bump Flipper to v0.131.1
 - Migrate `RegistrationLocationPermissionScreen` to use view effects
 - Bump Lottie to v4.2.2
 - Bump ConstraintLayout to v2.1.3
@@ -46,6 +45,7 @@
 - Bump coroutines to v1.6.0
 - Migrate `HelpScreen` to user view effects
 - Bump Sentry Gradle plugin to v2.1.5
+- Bump Flipper to v0.133.1
 
 ## 2022-02-07-8126
 

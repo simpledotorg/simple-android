@@ -15,6 +15,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenHelpBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.mobius.ViewEffectsHandler
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -27,7 +28,7 @@ class HelpScreen : BaseScreen<
     HelpScreenModel,
     HelpScreenEvent,
     HelpScreenEffect,
-    Unit>(), HelpScreenUi, HelpScreenUiActions {
+    HelpScreenViewEffect>(), HelpScreenUi, HelpScreenUiActions {
 
   @Inject
   lateinit var router: Router
@@ -71,8 +72,10 @@ class HelpScreen : BaseScreen<
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenHelpBinding
       .inflate(layoutInflater, container, false)
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) =
-      effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<HelpScreenViewEffect>) =
+      effectHandlerFactory.create(viewEffectsConsumer = viewEffectsConsumer).build()
+
+  override fun viewEffectHandler() = HelpScreenViewEffectHandler(this)
 
   override fun createInit() = HelpScreenInit()
 

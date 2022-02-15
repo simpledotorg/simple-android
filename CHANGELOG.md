@@ -45,6 +45,7 @@
 - Bump leakcanary to 2.8.1
 - Bump coroutines to v1.6.0
 - Migrate `HelpScreen` to user view effects
+- Bump Sentry Gradle plugin to v2.1.5
 
 ## 2022-02-07-8126
 

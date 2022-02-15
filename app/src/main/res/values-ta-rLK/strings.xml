@@ -279,7 +279,7 @@
   <string name="overdue_list_item_diagnosis_hypertension">உயர் இரத்த அழுத்தம்</string>
   <string name="overdue_list_item_diagnosis_none">எதுவுமில்லை</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
-    <item quantity="one">%s நாட்கள் தாமதமானது</item>
+    <item quantity="one">குறித்த நாளை விட %s நாள் அதிகம்</item>
     <item quantity="other">%s நாட்கள் தாமதமானது</item>
   </plurals>
   <string name="overdue_list_item_village">கிராமம்</string>
@@ -309,7 +309,7 @@
   <string name="scheduleappointment_done">முடிந்தது</string>
   <string name="scheduleappointment_next">அடுத்தது</string>
   <plurals name="scheduleappointment_appointment_in_days">
-    <item quantity="one">%s day</item>
+    <item quantity="one">%s நாள்</item>
     <item quantity="other">%s நாட்கள்</item>
   </plurals>
   <plurals name="scheduleappointment_appointment_in_weeks">
@@ -550,7 +550,7 @@
   <string name="contactpatient_done">முடிந்தது</string>
   <string name="contactpatient_result">முடிவு</string>
   <plurals name="contactpatient_days">
-    <item quantity="one">%s நாட்கள்</item>
+    <item quantity="one">%s நாள்</item>
     <item quantity="other">%s நாட்கள்</item>
   </plurals>
   <plurals name="contactpatient_weeks">
@@ -815,7 +815,7 @@
     <item quantity="other">%d நாட்கள்</item>
   </plurals>
   <plurals name="next_appointment_overdue_plurals">
-    <item quantity="one">%d நாள் கடந்துவிட்டது</item>
-    <item quantity="other">%d நாட்கள் கடந்துவிட்டன</item>
+    <item quantity="one">குறித்த நாளை விட %d நாள் அதிகம்</item>
+    <item quantity="other">குறித்த நாளை விட %d நாட்கள் அதிகம்</item>
   </plurals>
 </resources>

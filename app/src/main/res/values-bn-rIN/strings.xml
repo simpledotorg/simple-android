@@ -21,6 +21,7 @@
   <string name="country_bangladesh">বাংলাদেশ</string>
   <string name="country_ethiopia">ইথিওপিয়া</string>
   <string name="country_sri_lanka">শ্রীলঙ্কা</string>
+  <string name="country_demo">ডেমো দেশ</string>
 
   <!-- Home -->
   <string name="home_help">সাহায্য</string>
@@ -98,6 +99,7 @@
   <string name="patientedit_confirm_discard_ok">খারিজ করুন</string>
   <string name="patientedit_confirm_discard_cancel">বাতিল করুন</string>
   <string name="patientedit_delete_patient">মুছুন</string>
+  <string name="patientedit_add_button">যোগ করুন</string>
 
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
@@ -277,7 +279,7 @@
   <string name="overdue_list_item_diagnosis_hypertension">হাইপারটেনশন</string>
   <string name="overdue_list_item_diagnosis_none">কোনটিই নয়</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
-    <item quantity="one">%s দিন সময়াতীত</item>
+    <item quantity="one">%s দিন আগে সময় পার হয়ে গেছে</item>
     <item quantity="other">%s দিন আগে সময় পার হয়ে গেছে</item>
   </plurals>
   <string name="overdue_list_item_village">গ্রাম</string>
@@ -362,7 +364,11 @@
   <string name="scansimpleid_enteredcode_error_not_required_length">বিপি পাসপোর্ট নম্বর 7 সংখ্যার কম দীর্ঘ</string>
   <string name="scansimpleid_type_number">বা নম্বর টাইপ করুন</string>
   <string name="scansimpleid_invalid_qr_code">একটি বৈধ স্বাস্থ্য ID স্ক্যান করুন</string>
+  <string name="scansimpleid_error_state_snackbar_ok">ঠিক আছে</string>
+  <string name="scansimpleid_identfier_already_exists">আইডিটি ইতিমধ্যেই অন্য রোগীকে দেওয়া হয়েছে।\nএকটি নতুন হেল্থ আইডি স্ক্যান করুন।</string>
   <string name="scansimpleid_bp_passport_or_national_health_id">বিপি পাসপোর্ট বা জাতীয় স্বাস্থ্য ID</string>
+  <string name="scansimpleid_bp_passport_title">বিপি পাসপোর্ট</string>
+  <string name="scansimpleid_national_id_title">জাতীয় পরিচয়পত্র নম্বর</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">সিঙ্ক মুলতুবি রয়েছে</string>
@@ -534,6 +540,7 @@
   <string name="contactpatient_remind_call_later">পরে কল করার জন্য মনে করিয়ে দিন…</string>
   <string name="contactpatient_remove_from_list">সময়াতীতের তালিকা থেকে সরান…</string>
   <string name="contactpatient_result_of_call">কলের ফলাফল</string>
+  <string name="contactpatient_call">কল করুন</string>
   <string name="contactpatient_call_normal">স্বাভাবিক</string>
   <string name="contactpatient_call_secure">নিরাপদ</string>
   <string name="contactpatient_help_text">সুরক্ষিত কলগুলো আপনার নম্বরটিকে গোপন করে এবং এগুলো টোল ফ্রি</string>
@@ -770,4 +777,45 @@
   <string name="change_diagnosis_positive">পরিবর্তন করুন</string>
   <string name="change_diagnosis_negative">এখন না</string>
 
+  <!-- Overdue download notification -->
+  <string name="overdue_download_notification_failed_title">ডাউনলোড ব্যর্থ হয়েছে</string>
+  <string name="overdue_download_notification_failed_subtitle">কিছু সময়ের মধ্যে আবার চেষ্টা করুন</string>
+  <string name="overdue_download_notification_in_progress_title">ওভারডিউ লাইনের তালিকা ডাউনলোড করা হচ্ছে</string>
+  <string name="overdue_download_notification_cancel">বাতিল করুন</string>
+  <string name="overdue_download_notification_succeeded_title">ডাউনলোড সম্পূর্ণ হয়েছে</string>
+  <string name="overdue_download_notification_succeeded_subtitle">খুলতে ক্লিক করুন</string>
+
+  <!-- Overdue download no active network connection dialog -->
+  <string name="overdue_download_no_active_network_connection_dialog_title">কোনো ইন্টারনেট নেই</string>
+  <string name="overdue_download_no_active_network_connection_dialog_message">আপনার ইন্টারনেট পরীক্ষা করে আবার চেষ্টা করুন।</string>
+  <string name="overdue_download_no_active_network_connection_dialog_positive_button">ঠিক আছে</string>
+
+  <!-- Select overdue download format dialog -->
+  <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">স্প্রেডশীট</string>
+  <string name="select_overdue_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="requires_microsoft_excel_to_view">দেখার জন্য Sheets বা Excel প্রয়োজন</string>
+  <string name="select_overdue_download_format_dialog_action_negative">বাতিল করুন</string>
+  <string name="select_overdue_download_format_dialog_title_download">এই হিসাবে ডাউনলোড করুন</string>
+  <string name="select_overdue_download_format_dialog_title_share">এই হিসাবে শেয়ার করুন</string>
+  <string name="select_overdue_download_format_dialog_action_positive_download">ডাউনলোড করুন</string>
+  <string name="select_overdue_download_format_dialog_action_positive_share">শেয়ার করুন</string>
+  <string name="select_overdue_download_format_dialog_share_with">এর সাথে শেয়ার করুন</string>
+  <string name="not_enough_storage_error_dialog_title">যথেষ্ট স্থান নেই</string>
+  <string name="not_enough_storage_error_dialog_message">কিছু ফাইল মুছে দিয়ে আবার চেষ্টা করুন</string>
+  <string name="download_failed_error_dialog_title">ডাউনলোড করা যায়নি</string>
+  <string name="download_failed_error_dialog_message">কিছু ভুল হয়েছে। কিছু মিনিট অপেক্ষা করার পর আবার চেষ্টা করুন</string>
+  <string name="next_appointment_view_title">অ্যাপয়েন্টমেন্ট ফলো-আপ করুন</string>
+  <string name="next_appointment_view_add">যোগ করুন</string>
+  <string name="next_appointment_view_change">পরিবর্তন</string>
+  <string name="next_appointment_none">কিছুই না</string>
+  <string name="next_appointment_appointment_at_facility">%s-এ</string>
+  <string name="next_appointment_today">আজ</string>
+  <plurals name="next_appointment_plurals">
+    <item quantity="one">%d দিন</item>
+    <item quantity="other">%d দিন</item>
+  </plurals>
+  <plurals name="next_appointment_overdue_plurals">
+    <item quantity="one">%d দিন আগে সময় পার হয়ে গেছে</item>
+    <item quantity="other">%d দিন আগে সময় পার হয়ে গেছে</item>
+  </plurals>
 </resources>

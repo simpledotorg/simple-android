@@ -13,7 +13,6 @@ import dagger.Provides
 import org.simple.clinic.appconfig.AppConfigModule
 import org.simple.clinic.appconfig.AppLockModule
 import org.simple.clinic.appconfig.CountryModule
-import org.simple.clinic.appupdate.AppUpdateModule
 import org.simple.clinic.di.network.HttpInterceptorsModule
 import org.simple.clinic.di.network.NetworkModule
 import org.simple.clinic.di.network.RetrofitModule
@@ -68,7 +67,6 @@ import javax.inject.Named
   PatientModule::class,
   SyncIndicatorModule::class,
   OnboardingModule::class,
-  AppUpdateModule::class,
   DataSyncOnApprovalModule::class,
   SimpleVideoModule::class,
   RemoteConfigModule::class,

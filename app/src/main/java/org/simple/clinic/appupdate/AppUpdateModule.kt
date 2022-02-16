@@ -32,5 +32,4 @@ open class AppUpdateModule {
         features = features
     )
   }
-
 }

@@ -14,13 +14,14 @@
   <string name="gender_trans_letter">ተፈጥሮኣዊ ጾታኡ/ኣ ዝቐየረ/ት</string>
   <string name="api_unexpected_error">ዝኾነ ጌጋ ኣጋጢሙ ኣሎ መሊስካ/ኪ ፈትን/ኒ።</string>
   <string name="api_network_error">ኣገልግሎት ኢንተርኔት የለን</string>
-  <string name="api_server_error">ጌጋ ኣብ ኣሳላጢ (ሰርቨር) በይዘኦም ፀኒሖም ይሞክሩ</string>
+  <string name="api_server_error">ጌጋ ኣብ ኣሳላጢ (ሰርቨር)! በይዘኦም ፀኒሖም ይሞክሩ።</string>
 
   <!-- Country names -->
   <string name="country_india">ህንዲ</string>
   <string name="country_bangladesh">ባንግላድሽ</string>
   <string name="country_ethiopia">ኢትዮጵያ</string>
   <string name="country_sri_lanka">Sri Lanka</string>
+  <string name="country_demo">ሃገር ዴሞ</string>
 
   <!-- Home -->
   <string name="home_help">ሓገዝ</string>
@@ -33,6 +34,7 @@
   <string name="identifiertype_unknown">መለለዪ </string>
   <string name="identifiertype_india_national_health_id">ሃገራዊ ናይ ጥዕና መለለዪ መንነት</string>
   <string name="identifiertype_sri_lanka_national_id">ሃገራዊ መለለዪ </string>
+  <string name="identifiertype_sri_lanka_personal_health_number">ናይ ብሕቲ ቁጽሪ ጥዕና</string>
 
   <!-- Patient search -->
   <string name="instantsearch_hint">ስም፣ ስልኪ ቑፅሪ፣ ወይ መለለዪ መንነት</string>
@@ -51,6 +53,7 @@
   <string name="patiententry_bangladesh_national_id">ሃገራዊ መለለዪ ቑፅሪ</string>
   <string name="patiententry_ethiopia_medical_record_number">ቁፅሪ ሕክምናዊ መዝገብ</string>
   <string name="patiententry_sri_lanka_national_id">ሃገራዊ መለለዪ ቑፅሪ</string>
+  <string name="patiententry_sri_lanka_personal_health_number">ናይ ብሕቲ ቁጽሪ ጥዕና</string>
   <string name="patiententry_date_of_birth_unfocused">ዕለተ ትውልዲ</string>
   <string name="patiententry_date_of_birth_focused">ዕ.ት፡ ዕ/ወ/ዓ.ም</string>
   <string name="patiententry_dateofbirth_and_age_separator">ወይ</string>
@@ -96,6 +99,7 @@
   <string name="patientedit_confirm_discard_ok">ምንፃግ </string>
   <string name="patientedit_confirm_discard_cancel"> ሰርዝ</string>
   <string name="patientedit_delete_patient">ኣጥፍእ</string>
+  <string name="patientedit_add_button">ወስኽ</string>
 
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
@@ -243,7 +247,7 @@
 
   <string name="registrationpin_pin_label">ናይ ድሕነት ውልቃዊ ቁፅሪ መንነት ፍጠር/ሪ</string>
   <string name="registrationpin_pin_hint">ውልቃዊ ቁፅሪ መንነትካ/ኪ ዘክር፡ ደሓር ከድልየካ’ዩ</string>
-  <string name="registrationpin_error_incomplete_pin">ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ ኣዝዩ ሓጺሩ’ሎ ኣርባዕተ ቁፅርታት ኣእትው/ዊ</string>
+  <string name="registrationpin_error_incomplete_pin">ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ ኣዝዩ ሓጺሩ’ሎ። ብኽብረትኩም 4 ቁፅርታት ኣእትው።</string>
 
   <string name="registrationconfirmpin_confirm_pin_label">ንምርግጋፅ ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ መሊስካ/ኪ ኣእትው/ዊ</string>
   <string name="registrationconfirmpin_error_pin_mismatch">ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ ምስ ናይ መጀመርያ ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ ኣይሰማማዕን’ዩ</string>
@@ -289,11 +293,15 @@
   <!-- Facility change -->
 
   <!-- Enter OTP -->
-  <string name="enterotp_check_sms_sent_to">ናብ [] ዝተላእኸ ሓፂር መልእኽቲ ኣረጋግፅ</string>
-  <string name="enterotp_enter_verification_code">ናይ መረጋገፂ ቁፅሪ (ኮድ) ኣእትው</string>
+  <string name="enterotp_check_sms_sent_to">ናባኻ ዝተላእኸ ሓፂር መልእኽቲ ኣረጋግፅ</string>
+  <string name="enterotp_enter_verification_code">ናይ መረጋገፂ ቁጽሪ ኣእትው</string>
   <string name="enterotp_incorrect_code">ግጉይ ኮድ, መሊስካ/ኪ ፈትን/ኒ</string>
   <string name="enterotp_resend_sms">ሓፂር መልእኽቲ ዳግማይ መሊስካ ልኣኽ</string>
   <string name="enterotp_sms_sent">ሓድሽ ናይ መረጋገፂ ሓጺር መልእኽቲ ተላኢኹ</string>
+  <string name="enterotp_try_again_after">ድሕሪኡ መሊስካ ፈትን </string>
+  <string name="otpentry_error_incorrect_otp_attempts_limit_reached" tools:ignore="PluralsCandidate">%s ግጉይ ፈተነታት ፈፂምካ/ኪ ኣለኻ/ኺ</string>
+  <string name="otpentry_error_incorrect_otp_attempts_remaining">ዘይቅኑዕ ቁጽሪ፣ %s ዝቐረዩኹም ሙከራታት</string>
+  <!-- minutes:seconds -->
 
   <!-- Schedule appointment -->
   <string name="scheduleappointment_next_visit_in">ዝቕፅል ዑደት መድብ</string>
@@ -343,6 +351,7 @@
   <string name="newmedicalhistory_history">ታሪኽ</string>
   <string name="newmedicalhistory_diagnosis">ምርመራ (ተደልዩ)</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">እቲ ሕሙም ኣብ ዝሓለፈ ወርሒ መድሃኒት ቢፒ ወሲዱ ዶ?(ዝድለ)</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">እቲ ሕሙም ኣብ ዝሓለፈ ወርሒ ኣብ ዝኾነ ይኹን እዋን ናይ ሽኮርያ መድሓኒት ወሲዱ ኔሩ ድዩ? (ኣገዳሲ) </string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ዋላ ሓደ የለን</string>
@@ -355,7 +364,11 @@
   <string name="scansimpleid_enteredcode_error_not_required_length">ቅኑዕ ዝኾነ ናይ BP ፓስፖርት ወይ ሃገራዊ ናይ ጥዕና መለለዪ መንነት የእቱ</string>
   <string name="scansimpleid_type_number">ወይ ቁጽሪ ጸሓፍ</string>
   <string name="scansimpleid_invalid_qr_code">ቅኑዕ ዝኾነ ናይ ጥዕና መለለዪ መንነት ስካን ግበር</string>
+  <string name="scansimpleid_error_state_snackbar_ok">እሺ</string>
+  <string name="scansimpleid_identfier_already_exists">መለለዩ ታሴራ ንካልእ ሕሙም ተዋሂቡ። ሓዱሽ ናይ ጥዕና መለለዩ ታሴራ ኣረምስሱ።</string>
   <string name="scansimpleid_bp_passport_or_national_health_id">ናይ BP ፓስፖርት ወይ ሃገራዊ ናይ ጥዕና መለለዪ መንነት</string>
+  <string name="scansimpleid_bp_passport_title">BP Passport</string>
+  <string name="scansimpleid_national_id_title">ሃገራዊ መለለዪ </string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending"> ምስናይ ንውሳነ ይፅበይ ኣሎ</string>
@@ -527,6 +540,7 @@
   <string name="contactpatient_remind_call_later">ፀኒሕካ ንምድዋል ኣዘክር…</string>
   <string name="contactpatient_remove_from_list">ካብ መዝገብ ዝደንጎዩ ኣውጽኣዮ…</string>
   <string name="contactpatient_result_of_call">ውፅኢት ፃውዒት ስልኪ</string>
+  <string name="contactpatient_call">ደውል</string>
   <string name="contactpatient_call_normal">ንቡር</string>
   <string name="contactpatient_call_secure">ውሕስነት ዘለዎ</string>
   <string name="contactpatient_help_text">ውሕስነት ዘለዎም ፃውዒታት ስልኪ ቁፅሪ ይሓብኡ ከም’ኡ’ውን ክሳራ ኣየስዕቡን</string>
@@ -720,6 +734,7 @@
   <!-- Select ongoing hypertension treatment dialog -->
   <string name="select_ongoing_hypertension_treatment_title">እቲ ሕሙም ኣብ ዝሓለፈ ወርሒ መድሃኒት ቢፒ ወሲዱ ዶ?</string>
   <string name="select_ongoing_hypertension_treatment_message"> እወ  ወይ  ኣይፋል  ኢልካ ምረጽ::</string>
+  <string name="select_ongoing_diabetes_treatment_message">እቲ ሕሙም ኣብ ዝሓለፈ ወርሒ ኣብ ዝኾነ ይኹን እዋን ናይ ሽኮርያ መድሓኒት እንተ ወሲዱ ኣረጋግጽ።</string>
   <string name="select_ongoing_hypertension_treatment_positive_action">እሺ</string>
 
   <!-- Custom drugs search -->
@@ -747,4 +762,58 @@
   <string name="custom_drug_entry_sheet_save_button_text">ምዕቃብ</string>
   <string name="custom_drug_entry_sheet_add_button_text">ወስኽ</string>
   <string name="custom_drug_entry_sheet_frequency_dialog_done">ተሰሪሑ</string>
+  <!-- Select state screen -->
+  <string name="select_state_title">ክሊኒክካ ኣበይ እዩ?</string>
+  <string name="select_state_networkerror">ኣገልግሎት ኢንተርኔት የለን</string>
+  <string name="select_state_servererror">ጌጋ ኣብ ኣሳላጢ ወይ ሰርቨር ፀኒሕካ/ኪ! መሊስካ/ኪ ፈትን/ኒ!</string>
+  <string name="select_state_genericerror">ዝኾነ ጌጋ ኣጋጢሙ ኣሎ ፀኒሕካ/ኪ መሊስካ/ኪ ፈትን/ኒ</string>
+
+  <!-- Patient status view -->
+  <string name="patient_status_died">ሞይቱ/ታ</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">መርመራ ትቕይር\'ዶ?</string>
+  <string name="change_diagnosis_message">እቲ ሕሙም ልዑል ጸቕጢ ደም ወይ ሽኮርያ ከም ዘለዎ ብ መርመራ እንተ ደኣ ተረጋጊጹ ብኽብረትካ አወ ዝብል ምልክት ግበር።</string>
+  <string name="change_diagnosis_positive">ምቕያር</string>
+  <string name="change_diagnosis_negative">ሕጂ ኣይኮነን</string>
+
+  <!-- Overdue download notification -->
+  <string name="overdue_download_notification_failed_title">ዳውንሎድ ክገብር ወይ ከውርድ ኣይከኣለን</string>
+  <string name="overdue_download_notification_failed_subtitle">ካልእ ግዜ ዳግማይ ሞክሩ</string>
+  <string name="overdue_download_notification_in_progress_title">ክወርድ ዝደንጎየ ናይ መስመር ዝርዝር</string>
+  <string name="overdue_download_notification_cancel"> ሰርዝ</string>
+  <string name="overdue_download_notification_succeeded_title">ዳውንሎድ ተገይሩ ወይ ወሪዱ</string>
+  <string name="overdue_download_notification_succeeded_subtitle">ንክኽፈት ጠውቑ</string>
+
+  <!-- Overdue download no active network connection dialog -->
+  <string name="overdue_download_no_active_network_connection_dialog_title">ኢንተርነት የለን</string>
+  <string name="overdue_download_no_active_network_connection_dialog_message">ኢንተርነትኩም ፈቲሽኩም ዳግማይ ሞክሩ።</string>
+  <string name="overdue_download_no_active_network_connection_dialog_positive_button">እሺ</string>
+
+  <!-- Select overdue download format dialog -->
+  <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">ዝርጉሕ ቀጸላ</string>
+  <string name="select_overdue_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="requires_microsoft_excel_to_view">ንምርኣይ Sheets ወይ Excel የድሊ</string>
+  <string name="select_overdue_download_format_dialog_action_negative"> ሰርዝ</string>
+  <string name="select_overdue_download_format_dialog_title_download">ብኸምዚ መልክዕ ኣውርድ ወይ ዳውንሎድ ግበር</string>
+  <string name="select_overdue_download_format_dialog_title_share">ብኸምዚ መልክዕ ኣካፍል</string>
+  <string name="select_overdue_download_format_dialog_action_positive_download">ዳውንሎድ</string>
+  <string name="select_overdue_download_format_dialog_action_positive_share">ኣካፍል</string>
+  <string name="select_overdue_download_format_dialog_share_with">ምስ ክስታይ ኣካፍል</string>
+  <string name="not_enough_storage_error_dialog_title">እኹል መዋህለሊ የለን</string>
+  <string name="not_enough_storage_error_dialog_message">ሒደት ፋይላት ደምሲስካ ዳግማይ ሞክር</string>
+  <string name="download_failed_error_dialog_title">ዳውንሎድ ክገብር ወይ ከውርድ ኣይክእልን</string>
+  <string name="download_failed_error_dialog_message">ዝኾነ ነገር ዘይቅኑዕ እዩ ዘሎ። ሒደት ደቓይቕ ጽንሑ እሞ ዳግማይ ሞክሩ</string>
+  <string name="next_appointment_view_title">ቆጸራ ተኸታተሉ</string>
+  <string name="next_appointment_view_add">ወስኽ</string>
+  <string name="next_appointment_view_change">ለውጢ</string>
+  <string name="next_appointment_none">ዋላ ሓደ የለን</string>
+  <string name="next_appointment_appointment_at_facility">ኣብ %s</string>
+  <string name="next_appointment_today">ሎሚ መዓልቲ</string>
+  <plurals name="next_appointment_plurals">
+    <item quantity="other">%d መዓልታት</item>
+  </plurals>
+  <plurals name="next_appointment_overdue_plurals">
+    <item quantity="other">%d መዓልታት ዘሕለፈ</item>
+  </plurals>
 </resources>

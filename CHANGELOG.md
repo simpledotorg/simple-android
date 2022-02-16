@@ -45,13 +45,13 @@
 - Migrate `AppLockScreen` to use view effects
 - Bump Gradle to v7.4
 - Bump RootBeer to 0.1.0
-- Remove Google Guava dependency
 - Bump Google Play Services
   - Auth to v20.1.0
   - Location to v19.0.1
   - Barcode Scanning to v18.0.0
 - Bump leakcanary to 2.8.1
 - Bump coroutines to v1.6.0
+- Remove Google Guava dependency
 
 ## 2022-02-07-8126
 

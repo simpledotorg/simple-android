@@ -6,7 +6,7 @@
 
 - Migrate `HelpScreen` to user view effects
 - Bump Sentry Gradle plugin to v2.1.5
-- Update translations: `am-ET`, `ta-LK`, `kn-IN`, `bn-BD`, `bn-IN`. `pa-IN`, `mr-IN`, `ta-IN`, `si-LK`, `sid-ET`
+- Update translations: `am-ET`, `ta-LK`, `kn-IN`, `bn-BD`, `bn-IN`. `pa-IN`, `mr-IN`, `ta-IN`, `si-LK`, `sid-ET`, `te-IN`
 - Bump flipper to 0.134.0
 
 ## On Demo

@@ -56,4 +56,16 @@ class CriticalAppUpdateEffectHandlerTest {
     verify(uiActions).openContactUrl(contactUrl)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when open simple in google play effect is received, then open simple in google play`() {
+    // when
+    testCase.dispatch(OpenSimpleInGooglePlay)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openSimpleInGooglePlay()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

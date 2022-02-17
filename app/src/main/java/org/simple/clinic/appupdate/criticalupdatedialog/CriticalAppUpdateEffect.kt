@@ -7,3 +7,5 @@ object LoadAppUpdateHelpContact : CriticalAppUpdateEffect()
 sealed class CriticalAppUpdateViewEffect : CriticalAppUpdateEffect()
 
 data class OpenHelpContactUrl(val contactUrl: String) : CriticalAppUpdateViewEffect()
+
+object OpenSimpleInGooglePlay : CriticalAppUpdateViewEffect()

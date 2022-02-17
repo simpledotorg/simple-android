@@ -10,6 +10,7 @@ class CriticalAppUpdateViewEffectHandler(
   override fun handle(viewEffect: CriticalAppUpdateViewEffect) {
     when (viewEffect) {
       is OpenHelpContactUrl -> uiActions.openContactUrl(viewEffect.contactUrl)
+      OpenSimpleInGooglePlay -> uiActions.openSimpleInGooglePlay()
     }.exhaustive()
   }
 }

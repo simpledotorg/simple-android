@@ -6,6 +6,7 @@ import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import org.simple.clinic.ContactType
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.drugs.search.DrugCategory
@@ -79,6 +80,7 @@ class NetworkModule {
         .add(DrugAnswer.MoshiTypeAdapter())
         .add(DrugFrequency.MoshiTypeConverter())
         .add(Outcome.MoshiTypeAdapter())
+        .add(ContactType.MoshiTypeAdapter())
         .build()
 
     val patientPayloadNullSerializingAdapter = moshi.adapter(PatientPayload::class.java).serializeNulls()

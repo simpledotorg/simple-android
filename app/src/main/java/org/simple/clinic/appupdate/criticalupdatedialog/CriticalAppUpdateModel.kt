@@ -17,6 +17,9 @@ data class CriticalAppUpdateModel(
   val contactUrl: String
     get() = appUpdateHelpContact.get().url
 
+  val hasHelpContact: Boolean
+    get() = appUpdateHelpContact.isPresent
+
   fun appUpdateHelpContactLoaded(appUpdateHelpContact: Optional<AppUpdateHelpContact>): CriticalAppUpdateModel {
     return copy(appUpdateHelpContact = appUpdateHelpContact)
   }

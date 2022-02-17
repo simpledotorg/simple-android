@@ -1,7 +1,9 @@
 package org.simple.clinic.appupdate.criticalupdatedialog
 
+import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -28,6 +30,24 @@ class CriticalAppUpdateDialogUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.appUpdateHelpContactLoaded(appUpdateHelpContact)),
             hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when contact help button is clicked, then open contact link`() {
+    val appUpdateHelpContact = Optional.of(AppUpdateHelpContact(
+        displayText = "+91 1111111111",
+        url = "https://wa.me/911111111111/?text=I would like to ask a question about Simple",
+        contactType = WhatsApp
+    ))
+    val model = defaultModel.appUpdateHelpContactLoaded(appUpdateHelpContact)
+
+    updateSpec
+        .given(model)
+        .whenEvent(ContactHelpClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenHelpContactUrl("https://wa.me/911111111111/?text=I would like to ask a question about Simple"))
         ))
   }
 }

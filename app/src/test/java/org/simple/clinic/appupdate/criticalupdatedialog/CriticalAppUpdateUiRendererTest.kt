@@ -31,4 +31,14 @@ class CriticalAppUpdateUiRendererTest {
     verify(ui).showHelp()
     verifyNoMoreInteractions(ui)
   }
+  
+  @Test
+  fun `when help contact is not available, then hide the help section`() {
+    // when
+    uiRenderer.render(defaultModel)
+
+    // then
+    verify(ui).hideHelp()
+    verifyNoMoreInteractions(ui)
+  }
 }

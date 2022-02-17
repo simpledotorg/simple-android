@@ -9,6 +9,8 @@ class CriticalAppUpdateUiRenderer(
   override fun render(model: CriticalAppUpdateModel) {
     if (model.hasHelpContact) {
       ui.showHelp()
+    } else {
+      ui.hideHelp()
     }
   }
 }

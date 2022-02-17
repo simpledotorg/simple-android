@@ -11,6 +11,7 @@ class CriticalAppUpdateDialogUpdate : Update<CriticalAppUpdateModel, CriticalApp
     return when (event) {
       is AppUpdateHelpContactLoaded -> next(model.appUpdateHelpContactLoaded(event.appUpdateHelpContact))
       ContactHelpClicked -> dispatch(OpenHelpContactUrl(model.contactUrl))
+      UpdateAppClicked -> dispatch(OpenSimpleInGooglePlay)
     }
   }
 }

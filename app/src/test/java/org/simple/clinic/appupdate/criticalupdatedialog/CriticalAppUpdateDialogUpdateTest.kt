@@ -50,4 +50,15 @@ class CriticalAppUpdateDialogUpdateTest {
             hasEffects(OpenHelpContactUrl("https://wa.me/911111111111/?text=I would like to ask a question about Simple"))
         ))
   }
+
+  @Test
+  fun `when update button is clicked, then open google play`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(UpdateAppClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenSimpleInGooglePlay)
+        ))
+  }
 }

@@ -21,6 +21,7 @@
   <string name="country_bangladesh">Baangilaadeesh</string>
   <string name="country_ethiopia">Itoophiyaa</string>
   <string name="country_sri_lanka">Sri Lanka</string>
+  <string name="country_demo">Biyya Demo</string>
 
   <!-- Home -->
   <string name="home_help">Gargaarsa</string>
@@ -98,6 +99,7 @@
   <string name="patientedit_confirm_discard_ok">Dhiisi</string>
   <string name="patientedit_confirm_discard_cancel">Adda kuti</string>
   <string name="patientedit_delete_patient">Haqi</string>
+  <string name="patientedit_add_button">Dabali</string>
 
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
@@ -363,7 +365,11 @@
   <string name="scansimpleid_enteredcode_error_not_required_length">Lakkoofsi paaspoortii PB dijitiiwwan 7 gadi</string>
   <string name="scansimpleid_type_number">Yookaan lakkoobsa barreessi</string>
   <string name="scansimpleid_invalid_qr_code">Waraqaa eenyummaa fayyaa sirrii garagalchi</string>
+  <string name="scansimpleid_error_state_snackbar_ok">Tole</string>
+  <string name="scansimpleid_identfier_already_exists">Lakkoofsi eenyummeessaa kun nama biraaf kennameera; kan biraa yaalaa.</string>
   <string name="scansimpleid_bp_passport_or_national_health_id">Paaspoortii BP yookan Waraqaa Eenyummaa Fayyaa Biyyaalessaa</string>
+  <string name="scansimpleid_bp_passport_title">Paaspoortii BP</string>
+  <string name="scansimpleid_national_id_title">Lakkoosa eenyummeessaa biyyaalessa</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">Mirkana ilaalamaa jira</string>
@@ -535,6 +541,7 @@
   <string name="contactpatient_remind_call_later">Booddee na yaadachiisi…</string>
   <string name="contactpatient_remove_from_list">Tarree  irra darbeerraa kaasi…</string>
   <string name="contactpatient_result_of_call">Bu’aa bilbiluu</string>
+  <string name="contactpatient_call">Waamaa</string>
   <string name="contactpatient_call_normal">Sirrii</string>
   <string name="contactpatient_call_secure">Eegamaa</string>
   <string name="contactpatient_help_text">Bilbila kee eeggadhu lakkoofsa kee dhoksi fii bilisaan</string>
@@ -771,4 +778,45 @@
   <string name="change_diagnosis_positive">JIJJIIRI</string>
   <string name="change_diagnosis_negative">AMMA MITI</string>
 
+  <!-- Overdue download notification -->
+  <string name="overdue_download_notification_failed_title">Buusuun in kufe</string>
+  <string name="overdue_download_notification_failed_subtitle">Yeroo xiqqoo booda shaakalaa</string>
+  <string name="overdue_download_notification_in_progress_title">Toora tarreeffama buusaa guyyaa irra darbanii</string>
+  <string name="overdue_download_notification_cancel">Adda kuti</string>
+  <string name="overdue_download_notification_succeeded_title">Buusuun raawwateera</string>
+  <string name="overdue_download_notification_succeeded_subtitle">Banuuf cuqaasaa</string>
+
+  <!-- Overdue download no active network connection dialog -->
+  <string name="overdue_download_no_active_network_connection_dialog_title">Interneetiin hin jiru</string>
+  <string name="overdue_download_no_active_network_connection_dialog_message">Interneetii keessan mirkaneeffachuun irra deebi\'aa yaalaa.</string>
+  <string name="overdue_download_no_active_network_connection_dialog_positive_button">Tole</string>
+
+  <!-- Select overdue download format dialog -->
+  <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">Spreadsheet</string>
+  <string name="select_overdue_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="requires_microsoft_excel_to_view">Agarsiisuuf Excel yookiin Sheets barbaada</string>
+  <string name="select_overdue_download_format_dialog_action_negative">Adda kuti</string>
+  <string name="select_overdue_download_format_dialog_title_download">Bifa ittiin buustan filadhaa</string>
+  <string name="select_overdue_download_format_dialog_title_share">Bifa ittiin qooddan filadhaa</string>
+  <string name="select_overdue_download_format_dialog_action_positive_download">Buusicha</string>
+  <string name="select_overdue_download_format_dialog_action_positive_share">Raabsi</string>
+  <string name="select_overdue_download_format_dialog_share_with">Kan ittiin qooddan filadhaa</string>
+  <string name="not_enough_storage_error_dialog_title">Kuusaa ga\'aan hin jiru</string>
+  <string name="not_enough_storage_error_dialog_message">Faayila haaraa balleessuun irra deebi\'aa yaalaa</string>
+  <string name="download_failed_error_dialog_title">Buusuu hin dandeenye</string>
+  <string name="download_failed_error_dialog_message">Wanti ta\'e sirrii miti. Xiqqooshee turaa irra deebi\'aa yaalaa</string>
+  <string name="next_appointment_view_title">Beellama hordofaa</string>
+  <string name="next_appointment_view_add">Dabali</string>
+  <string name="next_appointment_view_change">Jijjiiri</string>
+  <string name="next_appointment_none">Hin jiru</string>
+  <string name="next_appointment_appointment_at_facility">%stti</string>
+  <string name="next_appointment_today">Har’a</string>
+  <plurals name="next_appointment_plurals">
+    <item quantity="one">%dguyyoota</item>
+    <item quantity="other">%d guyyoota</item>
+  </plurals>
+  <plurals name="next_appointment_overdue_plurals">
+    <item quantity="one">Guyyaa %d irra darbe</item>
+    <item quantity="other">%d guyyoonni kan irra darbe</item>
+  </plurals>
 </resources>

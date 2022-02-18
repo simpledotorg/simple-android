@@ -2,7 +2,6 @@ package org.simple.clinic.appupdate
 
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManager
-import com.google.android.play.core.install.model.AppUpdateType.FLEXIBLE
 import com.google.android.play.core.install.model.UpdateAvailability.UPDATE_AVAILABLE
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -34,7 +33,6 @@ class PlayUpdateManager @Inject constructor(
 
   private fun createUpdateInfo(appUpdateInfo: AppUpdateInfo) = UpdateInfo(
       availableVersionCode = appUpdateInfo.availableVersionCode(),
-      isUpdateAvailable = appUpdateInfo.updateAvailability() == UPDATE_AVAILABLE,
-      isFlexibleUpdateType = appUpdateInfo.isUpdateTypeAllowed(FLEXIBLE)
+      isUpdateAvailable = appUpdateInfo.updateAvailability() == UPDATE_AVAILABLE
   )
 }

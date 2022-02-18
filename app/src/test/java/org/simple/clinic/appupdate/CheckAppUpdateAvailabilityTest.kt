@@ -21,7 +21,13 @@ class CheckAppUpdateAvailabilityTest {
 
   private val currentAppVersionCode = 1
   private val differenceInVersionsToShowUpdate = 1
-  private val config = Observable.just(AppUpdateConfig(differenceBetweenVersionsToNudge = 1))
+  private val config = Observable.just(
+          AppUpdateConfig(
+              differenceBetweenVersionsToNudge = 1,
+              differenceBetweenVersionsForLightNudge = 30,
+              differenceBetweenVersionsForMediumNudge = 61,
+              differenceBetweenVersionsForCriticalNudge = 181
+          ))
 
   private val appVersionFetcher = mock<AppVersionFetcher>()
 

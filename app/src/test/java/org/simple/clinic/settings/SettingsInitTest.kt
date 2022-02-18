@@ -8,7 +8,7 @@ import org.junit.Test
 
 class SettingsInitTest {
 
-  private val defaultModel = SettingsModel.default(applicationId = "org.simple")
+  private val defaultModel = SettingsModel.default()
 
   private val spec = InitSpec(SettingsInit())
 

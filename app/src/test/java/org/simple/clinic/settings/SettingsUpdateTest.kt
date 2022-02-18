@@ -10,7 +10,7 @@ import org.junit.Test
 
 class SettingsUpdateTest {
 
-  private val defaultModel = SettingsModel.default(applicationId = "org.simple")
+  private val defaultModel = SettingsModel.default()
 
   private val spec = UpdateSpec<SettingsModel, SettingsEvent, SettingsEffect>(SettingsUpdate())
 

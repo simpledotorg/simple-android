@@ -72,7 +72,7 @@ class SettingsScreen : BaseScreen<
 
   private val isChangeLanguageFeatureEnabled by unsafeLazy { features.isEnabled(Feature.ChangeLanguage) }
 
-  override fun defaultModel() = SettingsModel.default(BuildConfig.APPLICATION_ID)
+  override fun defaultModel() = SettingsModel.default()
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenSettingsBinding.inflate(layoutInflater, container, false)

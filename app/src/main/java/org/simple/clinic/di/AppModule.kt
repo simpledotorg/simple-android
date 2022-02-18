@@ -2,6 +2,7 @@ package org.simple.clinic.di
 
 import android.app.Application
 import android.content.Context
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.os.Vibrator
@@ -10,6 +11,7 @@ import com.f2prateek.rx.preferences2.Preference
 import com.google.android.gms.common.GoogleApiAvailability
 import dagger.Module
 import dagger.Provides
+import org.simple.clinic.BuildConfig
 import org.simple.clinic.appconfig.AppConfigModule
 import org.simple.clinic.appconfig.AppLockModule
 import org.simple.clinic.appconfig.CountryModule
@@ -136,6 +138,14 @@ class AppModule(private val appContext: Application) {
   @Provides
   @AppScope
   fun providesPackageManager(): PackageManager = appContext.packageManager
+
+  @Provides
+  @AppScope
+  fun providesPackageInfo(appContext: Application): PackageInfo {
+    return appContext
+        .packageManager
+        .getPackageInfo(BuildConfig.APPLICATION_ID, 0)
+  }
 
   @Provides
   fun providesGoogleApiAvailability() = GoogleApiAvailability.getInstance()

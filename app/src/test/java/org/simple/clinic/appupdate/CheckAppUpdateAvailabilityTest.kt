@@ -50,7 +50,7 @@ class CheckAppUpdateAvailabilityTest {
     setup(isFeatureEnabled = isInAppUpdateEnabled)
 
     val testObserver = checkUpdateAvailable
-        .shouldNudgeForUpdate(updateInfo)
+        .shouldNudgeForUpdate_Old(updateInfo)
         .test()
 
     with(testObserver) {

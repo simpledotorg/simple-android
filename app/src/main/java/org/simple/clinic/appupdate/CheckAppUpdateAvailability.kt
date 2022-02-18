@@ -34,7 +34,7 @@ class CheckAppUpdateAvailability @Inject constructor(
   fun listen(): Observable<AppUpdateState> {
     return updateManager
         .updateInfo()
-        .flatMap(this::shouldNudgeForUpdate)
+        .flatMap(this::shouldNudgeForUpdate_Old)
         .onErrorReturn(::AppUpdateStateError)
   }
 
@@ -52,7 +52,7 @@ class CheckAppUpdateAvailability @Inject constructor(
   }
 
   @VisibleForTesting(otherwise = PRIVATE)
-  fun shouldNudgeForUpdate(updateInfo: UpdateInfo): Observable<AppUpdateState> {
+  fun shouldNudgeForUpdate_Old(updateInfo: UpdateInfo): Observable<AppUpdateState> {
     val checkUpdate = config
         .map { checkForUpdate(updateInfo, it) }
 

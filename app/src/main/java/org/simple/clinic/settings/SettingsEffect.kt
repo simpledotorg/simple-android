@@ -6,7 +6,7 @@ object LoadUserDetailsEffect : SettingsEffect()
 
 object LoadCurrentLanguageEffect : SettingsEffect()
 
-data class LoadAppVersionEffect(val applicationId: String) : SettingsEffect()
+object LoadAppVersionEffect : SettingsEffect()
 
 object CheckAppUpdateAvailable : SettingsEffect()
 

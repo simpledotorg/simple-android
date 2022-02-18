@@ -6,11 +6,13 @@
 
 - Migrate `HelpScreen` to user view effects
 - Bump Sentry Gradle plugin to v2.1.5
-- Update translations: `am-ET`, `ta-LK`, `kn-IN`, `bn-BD`, `bn-IN`. `pa-IN`, `mr-IN`, `ta-IN`, `si-LK`, `sid-ET`, `te-IN`, `so-ET`, `ti-ET`, `om-ET`, `ta-LK`
+- Update translations: `am-ET`, `ta-LK`, `kn-IN`, `bn-BD`, `bn-IN`. `pa-IN`, `mr-IN`, `ta-IN`, `si-LK`, `sid-ET`, `te-IN`, `so-ET`, `ti-ET`, `om-ET`
+  , `ta-LK`
 - Bump sentry to 5.6.1
 - Provide `AppUpdateHelpContact` based on the `Country`
 - Bump flipper to v0.135.0
 - Remove `isFlexibleUpdateType` as parameter from `UpdateInfo`
+- Provide `PackageInfo` as dependency for `AppVersionFetcher`
 
 ### Changes
 

@@ -8,9 +8,9 @@ import org.junit.Test
 
 class SettingsInitTest {
 
-  private val defaultModel = SettingsModel.default(applicationId = "org.simple")
+  private val defaultModel = SettingsModel.default()
 
-  private val spec = InitSpec<SettingsModel, SettingsEffect>(SettingsInit())
+  private val spec = InitSpec(SettingsInit())
 
   @Test
   fun `when screen is created, then user details, then load initial data`() {
@@ -18,7 +18,7 @@ class SettingsInitTest {
         .whenInit(defaultModel)
         .then(assertThatFirst(
             hasModel(defaultModel),
-            hasEffects(LoadUserDetailsEffect, LoadCurrentLanguageEffect, LoadAppVersionEffect(defaultModel.applicationId), CheckAppUpdateAvailable)
+            hasEffects(LoadUserDetailsEffect, LoadCurrentLanguageEffect, LoadAppVersionEffect, CheckAppUpdateAvailable)
         ))
   }
 

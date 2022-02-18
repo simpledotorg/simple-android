@@ -32,7 +32,7 @@ class CheckAppUpdateAvailability @Inject constructor(
     return updateManager
         .updateInfo()
         .map {
-          if (it.isUpdateAvailable && it.isFlexibleUpdateType) {
+          if (it.isUpdateAvailable) {
             ShowAppUpdate
           } else {
             DontShowAppUpdate
@@ -60,7 +60,6 @@ class CheckAppUpdateAvailability @Inject constructor(
   private fun checkForUpdate(updateInfo: UpdateInfo, config: AppUpdateConfig): Boolean {
     return features.isEnabled(NotifyAppUpdateAvailable)
         && updateInfo.isUpdateAvailable
-        && updateInfo.isFlexibleUpdateType
         && versionUpdateCheck(updateInfo.availableVersionCode, appContext, config)
   }
 }

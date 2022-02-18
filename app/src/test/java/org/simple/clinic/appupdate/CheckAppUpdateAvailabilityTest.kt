@@ -38,8 +38,7 @@ class CheckAppUpdateAvailabilityTest {
     val isUpdateAvailable = updateAvailabilityState == UpdateAvailability.UPDATE_AVAILABLE
     val updateInfo = UpdateInfo(
         availableVersionCode = availableVersionCode,
-        isUpdateAvailable = isUpdateAvailable,
-        isFlexibleUpdateType = flexibleUpdateIntent != null
+        isUpdateAvailable = isUpdateAvailable
     )
 
     setup(isFeatureEnabled = isInAppUpdateEnabled)

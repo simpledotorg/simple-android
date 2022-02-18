@@ -3,7 +3,7 @@ package org.simple.clinic.appupdate
 import android.app.Application
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.nhaarman.mockitokotlin2.mock
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.Observable
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Test
@@ -18,9 +18,9 @@ import org.simple.clinic.remoteconfig.NoOpRemoteConfigService
 @RunWith(JUnitParamsRunner::class)
 class CheckAppUpdateAvailabilityTest {
 
-  private val configProvider = PublishSubject.create<AppUpdateConfig>()
   private val currentAppVersionCode = 1
   private val differenceInVersionsToShowUpdate = 1
+  private val config = Observable.just(AppUpdateConfig(differenceBetweenVersionsToNudge = 1))
 
   lateinit var checkUpdateAvailable: CheckAppUpdateAvailability
 
@@ -43,8 +43,6 @@ class CheckAppUpdateAvailabilityTest {
     val testObserver = checkUpdateAvailable
         .shouldNudgeForUpdate(updateInfo)
         .test()
-
-    configProvider.onNext(AppUpdateConfig(1))
 
     with(testObserver) {
       assertNoErrors()
@@ -111,7 +109,7 @@ class CheckAppUpdateAvailabilityTest {
     )
     checkUpdateAvailable = CheckAppUpdateAvailability(
         appContext = mock(),
-        config = configProvider,
+        config = config,
         updateManager = mock(),
         versionUpdateCheck = versionCodeCheck,
         features = features

@@ -110,12 +110,11 @@ class SettingsEffectHandlerTest {
   @Test
   fun `when load app version effect is received, the app version must be loaded`() {
     // given
-    val applicationId = "org.simple"
     val versionName = "1.0.0"
-    whenever(appVersionFetcher.appVersion(applicationId)) doReturn versionName
+    whenever(appVersionFetcher.appVersion()) doReturn versionName
 
     // when
-    testCase.dispatch(LoadAppVersionEffect(applicationId))
+    testCase.dispatch(LoadAppVersionEffect)
 
     // then
     verifyZeroInteractions(uiActions)

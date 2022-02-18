@@ -5,7 +5,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class SettingsModel(
-    val applicationId: String,
     val name: String?,
     val phoneNumber: String?,
     val currentLanguage: Language?,
@@ -14,8 +13,7 @@ data class SettingsModel(
 ) : Parcelable {
 
   companion object {
-    fun default(applicationId: String) = SettingsModel(
-        applicationId = applicationId,
+    fun default() = SettingsModel(
         name = null,
         phoneNumber = null,
         currentLanguage = null,

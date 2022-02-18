@@ -58,7 +58,7 @@ class SettingsEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effectStream ->
       effectStream
           .map { appVersionEffect ->
-            val appVersionName = appVersionFetcher.appVersion(appVersionEffect.applicationId)
+            val appVersionName = appVersionFetcher.appVersion()
             AppVersionLoaded(appVersionName)
           }
     }

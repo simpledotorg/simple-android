@@ -1,7 +1,6 @@
 package org.simple.clinic.appupdate
 
 import android.app.Application
-import android.app.PendingIntent
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.nhaarman.mockitokotlin2.mock
 import io.reactivex.subjects.PublishSubject
@@ -30,11 +29,9 @@ class CheckAppUpdateAvailabilityTest {
   fun `when app update is available and it is eligible for updates, then the user should be nudged for an app update`(
       availableVersionCode: Int,
       updateAvailabilityState: Int,
-      flexibleUpdateIntent: PendingIntent?,
       isInAppUpdateEnabled: Boolean,
       appUpdateState: AppUpdateState
   ) {
-
     val isUpdateAvailable = updateAvailabilityState == UpdateAvailability.UPDATE_AVAILABLE
     val updateInfo = UpdateInfo(
         availableVersionCode = availableVersionCode,
@@ -61,53 +58,40 @@ class CheckAppUpdateAvailabilityTest {
     fun testCase(
         versionCode: Int,
         updateAvailabilityState: Int,
-        flexibleUpdateIntent: PendingIntent?,
         isInAppUpdateEnabled: Boolean,
         appUpdateState: AppUpdateState
     ): List<Any?> {
-      return listOf(versionCode, updateAvailabilityState, flexibleUpdateIntent, isInAppUpdateEnabled, appUpdateState)
+      return listOf(versionCode, updateAvailabilityState, isInAppUpdateEnabled, appUpdateState)
     }
 
     return listOf(
         testCase(
             versionCode = 1,
             updateAvailabilityState = UpdateAvailability.UPDATE_AVAILABLE,
-            flexibleUpdateIntent = mock(),
             isInAppUpdateEnabled = true,
             appUpdateState = DontShowAppUpdate
         ),
         testCase(
             versionCode = 2111,
             updateAvailabilityState = UpdateAvailability.UPDATE_NOT_AVAILABLE,
-            flexibleUpdateIntent = mock(),
-            isInAppUpdateEnabled = true,
-            appUpdateState = DontShowAppUpdate
-        ),
-        testCase(
-            versionCode = 2000,
-            updateAvailabilityState = UpdateAvailability.UPDATE_AVAILABLE,
-            flexibleUpdateIntent = null,
             isInAppUpdateEnabled = true,
             appUpdateState = DontShowAppUpdate
         ),
         testCase(
             versionCode = 1000,
             updateAvailabilityState = UpdateAvailability.UPDATE_AVAILABLE,
-            flexibleUpdateIntent = mock(),
             isInAppUpdateEnabled = false,
             appUpdateState = DontShowAppUpdate
         ),
         testCase(
             versionCode = 2,
             updateAvailabilityState = UpdateAvailability.UPDATE_AVAILABLE,
-            flexibleUpdateIntent = mock(),
             isInAppUpdateEnabled = true,
             appUpdateState = ShowAppUpdate
         ),
         testCase(
             versionCode = 2111,
             updateAvailabilityState = UpdateAvailability.UPDATE_AVAILABLE,
-            flexibleUpdateIntent = mock(),
             isInAppUpdateEnabled = true,
             appUpdateState = ShowAppUpdate
         )

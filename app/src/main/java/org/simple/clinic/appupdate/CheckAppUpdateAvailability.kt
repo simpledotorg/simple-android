@@ -36,9 +36,16 @@ class CheckAppUpdateAvailability @Inject constructor(
   fun listen(): Observable<AppUpdateState> {
     return updateManager
         .updateInfo()
-        .flatMap(this::shouldNudgeForUpdate_Old)
+        .flatMap(this::shouldNudgeForUpdateBasedOnFeatureFlag)
         .onErrorReturn(::AppUpdateStateError)
   }
+
+  private fun shouldNudgeForUpdateBasedOnFeatureFlag(updateInfo: UpdateInfo) =
+      if (features.isEnabled(NotifyAppUpdateAvailableV2)) {
+        shouldNudgeForUpdate(updateInfo)
+      } else {
+        shouldNudgeForUpdate_Old(updateInfo)
+      }
 
   fun listenAllUpdates(): Observable<AppUpdateState> {
     return updateManager

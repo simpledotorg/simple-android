@@ -112,7 +112,7 @@ class SettingsEffectHandlerTest {
     // given
     val applicationId = "org.simple"
     val versionName = "1.0.0"
-    whenever(appVersionFetcher.appVersion(applicationId)) doReturn versionName
+    whenever(appVersionFetcher.appVersion()) doReturn versionName
 
     // when
     testCase.dispatch(LoadAppVersionEffect(applicationId))

@@ -7,8 +7,7 @@ class AppVersionFetcher @Inject constructor(
     private val packageInfo: PackageInfo
 ) {
 
-  fun appVersion(applicationId: String): String {
-    val packageInfo = packageManager.getPackageInfo(applicationId, 0)
+  fun appVersion(): String {
     return packageInfo.versionName
   }
 }

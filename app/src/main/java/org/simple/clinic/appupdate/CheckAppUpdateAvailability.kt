@@ -11,6 +11,7 @@ import org.simple.clinic.appupdate.AppUpdateState.DontShowAppUpdate
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.feature.Feature.NotifyAppUpdateAvailable
 import org.simple.clinic.feature.Features
+import org.simple.clinic.settings.AppVersionFetcher
 import javax.inject.Inject
 
 class CheckAppUpdateAvailability @Inject constructor(
@@ -18,7 +19,8 @@ class CheckAppUpdateAvailability @Inject constructor(
     private val config: Observable<AppUpdateConfig>,
     private val updateManager: UpdateManager,
     private val versionUpdateCheck: (Int, Application, AppUpdateConfig) -> Boolean = isVersionApplicableForUpdate,
-    private val features: Features
+    private val features: Features,
+    private val appVersionFetcher: AppVersionFetcher
 ) {
 
   fun listen(): Observable<AppUpdateState> {

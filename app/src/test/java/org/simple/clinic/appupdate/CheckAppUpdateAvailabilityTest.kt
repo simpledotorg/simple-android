@@ -14,6 +14,7 @@ import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.remoteconfig.DefaultValueConfigReader
 import org.simple.clinic.remoteconfig.NoOpRemoteConfigService
+import org.simple.clinic.settings.AppVersionFetcher
 
 @RunWith(JUnitParamsRunner::class)
 class CheckAppUpdateAvailabilityTest {
@@ -21,6 +22,8 @@ class CheckAppUpdateAvailabilityTest {
   private val currentAppVersionCode = 1
   private val differenceInVersionsToShowUpdate = 1
   private val config = Observable.just(AppUpdateConfig(differenceBetweenVersionsToNudge = 1))
+
+  private val appVersionFetcher = mock<AppVersionFetcher>()
 
   lateinit var checkUpdateAvailable: CheckAppUpdateAvailability
 
@@ -112,7 +115,8 @@ class CheckAppUpdateAvailabilityTest {
         config = config,
         updateManager = mock(),
         versionUpdateCheck = versionCodeCheck,
-        features = features
+        features = features,
+        appVersionFetcher = appVersionFetcher
     )
   }
 }

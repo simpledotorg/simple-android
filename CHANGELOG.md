@@ -13,10 +13,11 @@
 - Bump flipper to v0.135.0
 - Remove `isFlexibleUpdateType` as parameter from `UpdateInfo`
 - Provide `PackageInfo` as dependency for `AppVersionFetcher`
+- [In Progress: 17 Feb 2022] Add `CriticalAppUpdateDialog`
 
 ### Changes
 
-- [In Progress: 16 Feb 2021] Add stronger app update reminders
+- [In Progress: 17 Feb 2022] Add stronger app update reminders
 
 ## On Demo
 

@@ -1,6 +1,5 @@
 package org.simple.clinic.appupdate
 
-import android.app.Application
 import androidx.annotation.VisibleForTesting
 import androidx.annotation.VisibleForTesting.PRIVATE
 import io.reactivex.Observable
@@ -23,7 +22,6 @@ import java.util.Optional
 import javax.inject.Inject
 
 class CheckAppUpdateAvailability @Inject constructor(
-    private val appContext: Application,
     private val config: Observable<AppUpdateConfig>,
     private val updateManager: UpdateManager,
     private val versionUpdateCheck: (Int, Int, AppUpdateConfig) -> Boolean = isVersionApplicableForUpdate,

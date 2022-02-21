@@ -242,7 +242,6 @@ class CheckAppUpdateAvailabilityTest {
         )
     )
     checkUpdateAvailable = CheckAppUpdateAvailability(
-        appContext = mock(),
         config = config,
         updateManager = mock(),
         versionUpdateCheck = versionCodeCheck,

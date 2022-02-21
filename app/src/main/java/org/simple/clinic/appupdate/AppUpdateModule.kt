@@ -26,14 +26,12 @@ open class AppUpdateModule {
 
   @Provides
   fun checkAppUpdate(
-      application: Application,
       appUpdateConfig: Observable<AppUpdateConfig>,
       updateManager: PlayUpdateManager,
       features: Features,
       appVersionFetcher: AppVersionFetcher
   ): CheckAppUpdateAvailability {
     return CheckAppUpdateAvailability(
-        appContext = application,
         config = appUpdateConfig,
         updateManager = updateManager,
         features = features,

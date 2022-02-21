@@ -16,8 +16,10 @@ import org.simple.clinic.appupdate.AppUpdateState.AppUpdateStateError
 import org.simple.clinic.appupdate.AppUpdateState.DontShowAppUpdate
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.feature.Feature.NotifyAppUpdateAvailable
+import org.simple.clinic.feature.Feature.NotifyAppUpdateAvailableV2
 import org.simple.clinic.feature.Features
 import org.simple.clinic.settings.AppVersionFetcher
+import org.simple.clinic.util.toNullable
 import org.simple.clinic.util.toOptional
 import java.util.Optional
 import javax.inject.Inject
@@ -49,6 +51,28 @@ class CheckAppUpdateAvailability @Inject constructor(
           }
         }
         .onErrorReturn(::AppUpdateStateError)
+  }
+
+  @VisibleForTesting(otherwise = PRIVATE)
+  fun shouldNudgeForUpdate(updateInfo: UpdateInfo): Observable<AppUpdateState> {
+    val appStaleness = appStaleness(updateInfo.availableVersionCode)
+    val appUpdatePriority = config
+        .map {
+          appUpdateNudgePriority(
+              appStaleness = appStaleness,
+              config = it,
+              appUpdatePriority = updateInfo.appUpdatePriority
+          )
+        }
+
+    return appUpdatePriority
+        .map { updatePriority ->
+          if (features.isEnabled(NotifyAppUpdateAvailableV2) && updateInfo.isUpdateAvailable) {
+            ShowAppUpdate(updatePriority.toNullable())
+          } else {
+            DontShowAppUpdate
+          }
+        }
   }
 
   @VisibleForTesting(otherwise = PRIVATE)

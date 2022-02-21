@@ -6,12 +6,20 @@ import androidx.annotation.VisibleForTesting
 import androidx.annotation.VisibleForTesting.PRIVATE
 import io.reactivex.Observable
 import org.simple.clinic.BuildConfig
+import org.simple.clinic.CRITICAL_SECURITY_APP_UPDATE_PRIORITY
+import org.simple.clinic.LIGHT_APP_UPDATE_PRIORITY
+import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
+import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL_SECURITY
+import org.simple.clinic.appupdate.AppUpdateNudgePriority.LIGHT
+import org.simple.clinic.appupdate.AppUpdateNudgePriority.MEDIUM
 import org.simple.clinic.appupdate.AppUpdateState.AppUpdateStateError
 import org.simple.clinic.appupdate.AppUpdateState.DontShowAppUpdate
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.feature.Feature.NotifyAppUpdateAvailable
 import org.simple.clinic.feature.Features
 import org.simple.clinic.settings.AppVersionFetcher
+import org.simple.clinic.util.toOptional
+import java.util.Optional
 import javax.inject.Inject
 
 class CheckAppUpdateAvailability @Inject constructor(
@@ -63,6 +71,22 @@ class CheckAppUpdateAvailability @Inject constructor(
     return features.isEnabled(NotifyAppUpdateAvailable)
         && updateInfo.isUpdateAvailable
         && versionUpdateCheck(updateInfo.availableVersionCode, appContext, config)
+  }
+
+  private fun appUpdateNudgePriority(appStaleness: Int, config: AppUpdateConfig, appUpdatePriority: Int): Optional<AppUpdateNudgePriority> {
+    val rangeOfDiffBetweenVersionsForLightNudge =
+        config.differenceBetweenVersionsForLightNudge until config.differenceBetweenVersionsForMediumNudge
+    val rangeOfDiffBetweenVersionsForMediumNudge =
+        config.differenceBetweenVersionsForMediumNudge until config.differenceBetweenVersionsForCriticalNudge
+
+    return when {
+      appUpdatePriority == CRITICAL_SECURITY_APP_UPDATE_PRIORITY -> CRITICAL_SECURITY
+      appStaleness in rangeOfDiffBetweenVersionsForLightNudge -> LIGHT
+      appStaleness in rangeOfDiffBetweenVersionsForMediumNudge -> MEDIUM
+      appStaleness > config.differenceBetweenVersionsForCriticalNudge -> CRITICAL
+      appUpdatePriority == LIGHT_APP_UPDATE_PRIORITY -> LIGHT
+      else -> null
+    }.toOptional()
   }
 
   private fun appStaleness(availableVersionCode: Int) = availableVersionCode.minus(appVersionFetcher.appVersionCode())

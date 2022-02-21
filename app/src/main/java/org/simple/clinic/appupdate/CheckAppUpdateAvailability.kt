@@ -1,11 +1,9 @@
 package org.simple.clinic.appupdate
 
 import android.app.Application
-import android.os.Build
 import androidx.annotation.VisibleForTesting
 import androidx.annotation.VisibleForTesting.PRIVATE
 import io.reactivex.Observable
-import org.simple.clinic.BuildConfig
 import org.simple.clinic.CRITICAL_SECURITY_APP_UPDATE_PRIORITY
 import org.simple.clinic.LIGHT_APP_UPDATE_PRIORITY
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
@@ -28,7 +26,7 @@ class CheckAppUpdateAvailability @Inject constructor(
     private val appContext: Application,
     private val config: Observable<AppUpdateConfig>,
     private val updateManager: UpdateManager,
-    private val versionUpdateCheck: (Int, Application, AppUpdateConfig) -> Boolean = isVersionApplicableForUpdate,
+    private val versionUpdateCheck: (Int, Int, AppUpdateConfig) -> Boolean = isVersionApplicableForUpdate,
     private val features: Features,
     private val appVersionFetcher: AppVersionFetcher
 ) {
@@ -101,7 +99,7 @@ class CheckAppUpdateAvailability @Inject constructor(
   private fun checkForUpdate(updateInfo: UpdateInfo, config: AppUpdateConfig): Boolean {
     return features.isEnabled(NotifyAppUpdateAvailable)
         && updateInfo.isUpdateAvailable
-        && versionUpdateCheck(updateInfo.availableVersionCode, appContext, config)
+        && versionUpdateCheck(updateInfo.availableVersionCode, appVersionFetcher.appVersionCode(), config)
   }
 
   private fun appUpdateNudgePriority(appStaleness: Int, config: AppUpdateConfig, appUpdatePriority: Int): Optional<AppUpdateNudgePriority> {
@@ -123,15 +121,6 @@ class CheckAppUpdateAvailability @Inject constructor(
   private fun appStaleness(availableVersionCode: Int) = availableVersionCode.minus(appVersionFetcher.appVersionCode())
 }
 
-private val isVersionApplicableForUpdate = { availableVersionCode: Int, appContext: Application, config: AppUpdateConfig ->
-  val packageInfo = appContext.packageManager.getPackageInfo(BuildConfig.APPLICATION_ID, 0)
-
-  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-    val longVersionCode = packageInfo.longVersionCode
-    val versionCode = longVersionCode.and(0xffffffff)
-    availableVersionCode.minus(versionCode) >= config.differenceBetweenVersionsToNudge
-
-  } else {
-    availableVersionCode.minus(packageInfo.versionCode) >= config.differenceBetweenVersionsToNudge
-  }
+private val isVersionApplicableForUpdate = { availableVersionCode: Int, appVersionCode: Int, config: AppUpdateConfig ->
+  availableVersionCode.minus(appVersionCode) >= config.differenceBetweenVersionsToNudge
 }

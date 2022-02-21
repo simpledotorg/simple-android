@@ -1,6 +1,5 @@
 package org.simple.clinic.appupdate
 
-import android.app.Application
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
@@ -227,7 +226,7 @@ class CheckAppUpdateAvailabilityTest {
       isInAppUpdateEnabled: Boolean,
       isInAppUpdateEnabledV2: Boolean
   ) {
-    val versionCodeCheck = { versionCode: Int, _: Application, _: AppUpdateConfig ->
+    val versionCodeCheck = { versionCode: Int, _: Int, _: AppUpdateConfig ->
       versionCode.minus(currentAppVersionCode) >= differenceInVersionsToShowUpdate
     }
 

@@ -63,6 +63,7 @@
 - Bump leakcanary to 2.8.1
 - Bump coroutines to v1.6.0
 - Remove Google Guava dependency
+- Bump Dagger to v2.41
 
 ## 2022-02-07-8126
 

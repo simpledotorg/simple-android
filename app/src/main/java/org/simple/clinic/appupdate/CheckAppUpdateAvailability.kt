@@ -64,6 +64,8 @@ class CheckAppUpdateAvailability @Inject constructor(
         && updateInfo.isUpdateAvailable
         && versionUpdateCheck(updateInfo.availableVersionCode, appContext, config)
   }
+
+  private fun appStaleness(availableVersionCode: Int) = availableVersionCode.minus(appVersionFetcher.appVersionCode())
 }
 
 private val isVersionApplicableForUpdate = { availableVersionCode: Int, appContext: Application, config: AppUpdateConfig ->

@@ -38,3 +38,5 @@ val DEMO_FACILITY = Facility(
     ),
     syncGroup = ""
 )
+const val CRITICAL_SECURITY_APP_UPDATE_PRIORITY : Int = 5
+const val LIGHT_APP_UPDATE_PRIORITY : Int = 1

@@ -14,6 +14,7 @@
 - Remove `isFlexibleUpdateType` as parameter from `UpdateInfo`
 - Provide `PackageInfo` as dependency for `AppVersionFetcher`
 - Bump Lottie to v5.0.1
+- Update proguard rule to keep enum classes only for iText library
 - [In Progress: 17 Feb 2022] Add `CriticalAppUpdateDialog`
 
 ### Changes

@@ -13,6 +13,7 @@
 - Bump flipper to v0.135.0
 - Remove `isFlexibleUpdateType` as parameter from `UpdateInfo`
 - Provide `PackageInfo` as dependency for `AppVersionFetcher`
+- Bump Lottie to v5.0.1
 - [In Progress: 17 Feb 2022] Add `CriticalAppUpdateDialog`
 
 ### Changes

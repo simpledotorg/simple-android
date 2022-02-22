@@ -100,21 +100,19 @@ class CheckAppUpdateAvailability @Inject constructor(
         && versionUpdateCheck(updateInfo.availableVersionCode, appVersionFetcher.appVersionCode(), config)
   }
 
-  private fun appUpdateNudgePriority(appStaleness: Int, config: AppUpdateConfig, appUpdatePriority: Int): Optional<AppUpdateNudgePriority> {
-    val rangeOfDiffBetweenVersionsForLightNudge =
-        config.differenceBetweenVersionsForLightNudge until config.differenceBetweenVersionsForMediumNudge
-    val rangeOfDiffBetweenVersionsForMediumNudge =
-        config.differenceBetweenVersionsForMediumNudge until config.differenceBetweenVersionsForCriticalNudge
-
-    return when {
-      appUpdatePriority == CRITICAL_SECURITY_APP_UPDATE_PRIORITY -> CRITICAL_SECURITY
-      appStaleness in rangeOfDiffBetweenVersionsForLightNudge -> LIGHT
-      appStaleness in rangeOfDiffBetweenVersionsForMediumNudge -> MEDIUM
-      appStaleness > config.differenceBetweenVersionsForCriticalNudge -> CRITICAL
-      appUpdatePriority == LIGHT_APP_UPDATE_PRIORITY -> LIGHT
-      else -> null
-    }.toOptional()
-  }
+  private fun appUpdateNudgePriority(
+      appStaleness: Int,
+      config: AppUpdateConfig,
+      appUpdatePriority: Int
+  ): Optional<AppUpdateNudgePriority> =
+      when {
+        appUpdatePriority == CRITICAL_SECURITY_APP_UPDATE_PRIORITY -> CRITICAL_SECURITY
+        appStaleness > config.differenceBetweenVersionsForCriticalNudge -> CRITICAL
+        appStaleness > config.differenceBetweenVersionsForMediumNudge -> MEDIUM
+        appStaleness >= config.differenceBetweenVersionsForLightNudge -> LIGHT
+        appUpdatePriority == LIGHT_APP_UPDATE_PRIORITY -> LIGHT
+        else -> null
+      }.toOptional()
 
   private fun appStaleness(availableVersionCode: Int) = availableVersionCode.minus(appVersionFetcher.appVersionCode())
 }

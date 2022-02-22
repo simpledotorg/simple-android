@@ -69,7 +69,8 @@ class CheckAppUpdateAvailability @Inject constructor(
 
     return appUpdatePriority
         .map { updatePriority ->
-          if (features.isEnabled(NotifyAppUpdateAvailableV2) && updateInfo.isUpdateAvailable && updatePriority.isPresent) {
+          val canShowAppUpdateNotification = updateInfo.isUpdateAvailable && updatePriority.isPresent
+          if (features.isEnabled(NotifyAppUpdateAvailableV2) && canShowAppUpdateNotification) {
             ShowAppUpdate(updatePriority.get())
           } else {
             DontShowAppUpdate

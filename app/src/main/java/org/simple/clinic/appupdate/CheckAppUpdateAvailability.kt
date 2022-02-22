@@ -57,7 +57,7 @@ class CheckAppUpdateAvailability @Inject constructor(
 
   @VisibleForTesting(otherwise = PRIVATE)
   fun shouldNudgeForUpdate(updateInfo: UpdateInfo): Observable<AppUpdateState> {
-    val appStaleness = appStaleness(updateInfo.availableVersionCode)
+    val appStaleness = appVersionStaleness(updateInfo.availableVersionCode)
     val appUpdatePriority = config
         .map {
           appUpdateNudgePriority(
@@ -113,7 +113,7 @@ class CheckAppUpdateAvailability @Inject constructor(
         else -> null
       }.toOptional()
 
-  private fun appStaleness(availableVersionCode: Int) = availableVersionCode.minus(appVersionFetcher.appVersionCode())
+  private fun appVersionStaleness(availableVersionCode: Int) = availableVersionCode.minus(appVersionFetcher.appVersionCode())
 }
 
 private val isVersionApplicableForUpdate = { availableVersionCode: Int, appVersionCode: Int, config: AppUpdateConfig ->

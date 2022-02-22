@@ -16,7 +16,6 @@ import org.simple.clinic.feature.Feature.NotifyAppUpdateAvailable
 import org.simple.clinic.feature.Feature.NotifyAppUpdateAvailableV2
 import org.simple.clinic.feature.Features
 import org.simple.clinic.settings.AppVersionFetcher
-import org.simple.clinic.util.toNullable
 import org.simple.clinic.util.toOptional
 import java.util.Optional
 import javax.inject.Inject
@@ -70,8 +69,8 @@ class CheckAppUpdateAvailability @Inject constructor(
 
     return appUpdatePriority
         .map { updatePriority ->
-          if (features.isEnabled(NotifyAppUpdateAvailableV2) && updateInfo.isUpdateAvailable) {
-            ShowAppUpdate(updatePriority.toNullable())
+          if (features.isEnabled(NotifyAppUpdateAvailableV2) && updateInfo.isUpdateAvailable && updatePriority.isPresent) {
+            ShowAppUpdate(updatePriority.get())
           } else {
             DontShowAppUpdate
           }

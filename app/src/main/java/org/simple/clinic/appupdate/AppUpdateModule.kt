@@ -11,6 +11,7 @@ import io.reactivex.Observable
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.feature.Features
 import org.simple.clinic.remoteconfig.ConfigReader
+import org.simple.clinic.settings.AppVersionFetcher
 import org.simple.clinic.util.toOptional
 import java.util.Optional
 
@@ -25,16 +26,16 @@ open class AppUpdateModule {
 
   @Provides
   fun checkAppUpdate(
-      application: Application,
       appUpdateConfig: Observable<AppUpdateConfig>,
       updateManager: PlayUpdateManager,
-      features: Features
+      features: Features,
+      appVersionFetcher: AppVersionFetcher
   ): CheckAppUpdateAvailability {
     return CheckAppUpdateAvailability(
-        appContext = application,
         config = appUpdateConfig,
         updateManager = updateManager,
-        features = features
+        features = features,
+        appVersionFetcher = appVersionFetcher
     )
   }
 

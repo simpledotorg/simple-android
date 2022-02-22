@@ -15,11 +15,12 @@
 - Provide `PackageInfo` as dependency for `AppVersionFetcher`
 - Bump Lottie to v5.0.1
 - Update proguard rule to keep enum classes only for iText library
+- Add support for prioritised nudges in `CheckAppUpdateAvailability`
 - [In Progress: 17 Feb 2022] Add `CriticalAppUpdateDialog`
 
 ### Changes
 
-- [In Progress: 17 Feb 2022] Add stronger app update reminders
+- [In Progress: 22 Feb 2022] Add stronger app update reminders
 
 ## On Demo
 

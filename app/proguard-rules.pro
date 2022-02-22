@@ -84,3 +84,6 @@
 -dontwarn javax.naming.*
 -dontwarn javax.servlet.*
 -dontwarn javax.servlet.http.Cookie
+
+# iText7
+-keepclassmembers enum com.itextpdf.** { *; }

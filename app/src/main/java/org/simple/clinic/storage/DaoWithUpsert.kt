@@ -13,7 +13,7 @@ abstract class DaoWithUpsert<T> {
   @Insert(onConflict = OnConflictStrategy.IGNORE)
   abstract fun insert(record: List<T>): List<Long>
 
-  @Update(onConflict = OnConflictStrategy.FAIL)
+  @Update(onConflict = OnConflictStrategy.ABORT)
   protected abstract fun update(entities: List<T>)
 
   @Transaction

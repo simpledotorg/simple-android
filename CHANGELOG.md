@@ -17,6 +17,7 @@
 - Update proguard rule to keep enum classes only for iText library
 - Add support for prioritised nudges in `CheckAppUpdateAvailability`
 - Use `OnConflictStrategy.ABORT` when updating using upsert
+- Bump opencsv to v5.6
 - [In Progress: 17 Feb 2022] Add `CriticalAppUpdateDialog`
 
 ### Changes

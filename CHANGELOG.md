@@ -10,7 +10,7 @@
   , `ta-LK`
 - Bump sentry to 5.6.1
 - Provide `AppUpdateHelpContact` based on the `Country`
-- Bump flipper to v0.135.0
+- Bump flipper to v0.136.0
 - Remove `isFlexibleUpdateType` as parameter from `UpdateInfo`
 - Provide `PackageInfo` as dependency for `AppVersionFetcher`
 - Bump Lottie to v5.0.1

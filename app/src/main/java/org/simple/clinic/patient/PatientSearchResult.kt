@@ -24,6 +24,7 @@ import java.util.UUID
   LEFT JOIN PatientPhoneNumber PP ON PP.patientUuid = P.uuid
   LEFT JOIN Facility AF ON AF.uuid = P.assignedFacilityId
   LEFT JOIN BusinessId B ON B.patientUuid = P.uuid
+  WHERE P.deletedAt IS NULL
 """)
 @Parcelize
 data class PatientSearchResult(
@@ -83,7 +84,7 @@ data class PatientSearchResult(
       SELECT searchResult.*, 1 priority FROM 
       PatientSearchResult searchResult
       LEFT JOIN Patient P ON P.uuid = searchResult.uuid
-      WHERE P.status = :status AND P.deletedAt IS NULL AND P.assignedFacilityId = :facilityId
+      WHERE P.status = :status AND P.assignedFacilityId = :facilityId
       GROUP BY P.uuid
       ORDER BY fullName COLLATE NOCASE
     """)
@@ -100,7 +101,7 @@ data class PatientSearchResult(
             ) AS priority, 
             INSTR(lower(P.fullName), lower(:name)) namePosition FROM PatientSearchResult searchResult
         LEFT JOIN Patient P ON P.uuid = searchResult.uuid
-        WHERE P.deletedAt IS NULL AND namePosition > 0
+        WHERE namePosition > 0
         GROUP BY P.uuid
         ORDER BY priority ASC, namePosition ASC
     """)
@@ -118,7 +119,7 @@ data class PatientSearchResult(
             INSTR(phoneNumber, :query) phoneNumberPosition, 
             INSTR(identifierSearchHelp, :query) identifierPosition FROM PatientSearchResult searchResult
         LEFT JOIN Patient P ON P.uuid = searchResult.uuid
-        WHERE P.deletedAt IS NULL AND phoneNumberPosition > 0 OR identifierPosition > 0
+        WHERE phoneNumberPosition > 0 OR identifierPosition > 0
         GROUP BY P.uuid
         ORDER BY priority ASC, phoneNumberPosition ASC, identifierPosition ASC
         """)

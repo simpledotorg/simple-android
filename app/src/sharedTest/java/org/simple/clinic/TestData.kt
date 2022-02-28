@@ -1049,11 +1049,6 @@ object TestData {
       phoneActive: Boolean = true,
       phoneCreatedAt: Instant = Instant.now(),
       phoneUpdatedAt: Instant = Instant.now(),
-      lastSeen: PatientSearchResult.LastSeen = PatientSearchResult.LastSeen(
-          lastSeenOn = Instant.now(),
-          lastSeenAtFacilityName = "Some Facility",
-          lastSeenAtFacilityUuid = UUID.randomUUID()
-      ),
       assignedFacilityId: UUID? = null,
       identifier: Identifier = Identifier(
           value = UUID.randomUUID().toString(),
@@ -1079,7 +1074,6 @@ object TestData {
         phoneActive = phoneActive,
         phoneCreatedAt = phoneCreatedAt,
         phoneUpdatedAt = phoneUpdatedAt,
-        lastSeen = lastSeen,
         identifier = identifier,
         identifierSearchHelp = identifierSearchHelp,
         assignedFacilityName = assignedFacilityName

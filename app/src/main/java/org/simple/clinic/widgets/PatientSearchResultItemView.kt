@@ -21,7 +21,6 @@ import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.util.resolveColor
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.toLocalDateAtZone
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
@@ -93,7 +92,11 @@ class PatientSearchResultItemView(
     renderPatientAddress(model.address)
     renderPatientDateOfBirth(model.ageDetails)
     renderPatientPhoneNumber(searchQuery, model)
-    renderLastSeen(model.lastSeen, currentFacilityId)
+    renderLastSeen(
+        currentFacilityId = currentFacilityId,
+        assignedFacilityId = model.assignedFacilityId,
+        assignedFacilityName = model.assignedFacilityName
+    )
     renderIdentifier(model.identifier, searchQuery)
   }
 
@@ -147,11 +150,16 @@ class PatientSearchResultItemView(
     }
   }
 
-  private fun renderLastSeen(lastSeen: PatientSearchResult.LastSeen?, currentFacilityId: UUID) {
-    val isAtCurrentFacility = currentFacilityId == lastSeen?.lastSeenAtFacilityUuid
-    lastSeenContainer.visibleOrGone(lastSeen != null && !isAtCurrentFacility)
-    if (lastSeen != null) {
-      lastSeenTextView.text = lastSeen.lastSeenAtFacilityName
+  private fun renderLastSeen(
+      currentFacilityId: UUID,
+      assignedFacilityId: UUID?,
+      assignedFacilityName: String?
+  ) {
+    val isAtCurrentFacility = currentFacilityId == assignedFacilityId
+    val hasAssignedFacilityName = !assignedFacilityName.isNullOrBlank()
+    lastSeenContainer.visibleOrGone(hasAssignedFacilityName && !isAtCurrentFacility)
+    if (hasAssignedFacilityName) {
+      lastSeenTextView.text = assignedFacilityName
     }
   }
 

@@ -8,6 +8,7 @@ import androidx.room.Embedded
 import androidx.room.Query
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.util.Unicode
 import java.time.Instant
 import java.util.UUID
 
@@ -72,7 +73,7 @@ data class PatientSearchResult(
 ) : Parcelable {
 
   override fun toString(): String {
-    return "Name: $fullName, UUID: $uuid, Facility UUID: $assignedFacilityId"
+    return "PatientSearchResult(${Unicode.redacted})"
   }
 
   @Dao

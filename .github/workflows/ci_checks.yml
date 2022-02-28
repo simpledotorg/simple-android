@@ -30,7 +30,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: set up JDK
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: 11
@@ -54,7 +54,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: set up JDK
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: 11
@@ -141,7 +141,7 @@ jobs:
           script: echo "Generated AVD snapshot for caching."
 
       - name: set up JDK
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: 11
@@ -200,7 +200,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: set up JDK
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: 11
@@ -217,7 +217,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: set up JDK
-        uses: actions/setup-java@v2
+        uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: 11

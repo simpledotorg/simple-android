@@ -40,12 +40,6 @@ class PatientSearchResultItemView(
   private val lastSeenTextView
     get() = binding.lastSeenTextView
 
-  private val visitedContainer
-    get() = binding.visitedContainer
-
-  private val visitedTextView
-    get() = binding.visitedTextView
-
   private val phoneNumberContainer
     get() = binding.phoneNumberContainer
 
@@ -99,7 +93,6 @@ class PatientSearchResultItemView(
     renderPatientAddress(model.address)
     renderPatientDateOfBirth(model.ageDetails)
     renderPatientPhoneNumber(searchQuery, model)
-    renderVisited(model.lastSeen)
     renderLastSeen(model.lastSeen, currentFacilityId)
     renderIdentifier(model.identifier, searchQuery)
   }
@@ -159,18 +152,6 @@ class PatientSearchResultItemView(
     lastSeenContainer.visibleOrGone(lastSeen != null && !isAtCurrentFacility)
     if (lastSeen != null) {
       lastSeenTextView.text = lastSeen.lastSeenAtFacilityName
-    }
-  }
-
-  private fun renderVisited(
-      lastSeen: PatientSearchResult.LastSeen?
-  ) {
-    visitedContainer.visibleOrGone(lastSeen != null)
-    if (lastSeen != null) {
-      val lastSeenDate = lastSeen.lastSeenOn.toLocalDateAtZone(userClock.zone)
-      val formattedLastSeenDate = dateTimeFormatter.format(lastSeenDate)
-
-      visitedTextView.text = formattedLastSeenDate
     }
   }
 

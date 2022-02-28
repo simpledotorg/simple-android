@@ -120,7 +120,9 @@ sealed class InstantSearchResultsItemType : PagingItemAdapter.Item<InstantSearch
             address = searchResult.address,
             phoneNumber = searchResult.phoneNumber,
             lastSeen = searchResult.lastSeen,
-            identifier = searchResult.identifier
+            identifier = searchResult.identifier,
+            assignedFacilityId = searchResult.assignedFacilityId,
+            assignedFacilityName = searchResult.assignedFacilityName
         )
       }
     }

@@ -244,7 +244,9 @@ class PatientSearchResultItemView(
       val address: PatientAddress,
       val phoneNumber: String?,
       val lastSeen: PatientSearchResult.LastSeen?,
-      val identifier: Identifier?
+      val identifier: Identifier?,
+      val assignedFacilityId: UUID?,
+      val assignedFacilityName: String?
   )
 
   sealed class Name(open val patientName: String) {

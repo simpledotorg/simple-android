@@ -1040,15 +1040,7 @@ object TestData {
       dateOfBirth: LocalDate? = null,
       age: Age? = Age(45, Instant.now()),
       status: PatientStatus = PatientStatus.Active,
-      createdAt: Instant = Instant.now(),
-      updatedAt: Instant = Instant.now(),
       address: PatientAddress = patientAddress(),
-      syncStatus: SyncStatus = SyncStatus.DONE,
-      phoneType: PatientPhoneNumberType = PatientPhoneNumberType.Mobile,
-      phoneNumberUuid: UUID = UUID.randomUUID(),
-      phoneActive: Boolean = true,
-      phoneCreatedAt: Instant = Instant.now(),
-      phoneUpdatedAt: Instant = Instant.now(),
       assignedFacilityId: UUID? = null,
       identifier: Identifier = Identifier(
           value = UUID.randomUUID().toString(),
@@ -1062,21 +1054,13 @@ object TestData {
         fullName = fullName,
         gender = gender,
         ageDetails = PatientAgeDetails.fromAgeOrDate(age, dateOfBirth),
-        assignedFacilityId = assignedFacilityId,
         status = status,
-        createdAt = createdAt,
-        updatedAt = updatedAt,
-        syncStatus = syncStatus,
+        assignedFacilityId = assignedFacilityId,
+        assignedFacilityName = assignedFacilityName,
         address = address,
-        phoneUuid = phoneNumberUuid,
         phoneNumber = phoneNumber,
-        phoneType = phoneType,
-        phoneActive = phoneActive,
-        phoneCreatedAt = phoneCreatedAt,
-        phoneUpdatedAt = phoneUpdatedAt,
         identifier = identifier,
-        identifierSearchHelp = identifierSearchHelp,
-        assignedFacilityName = assignedFacilityName
+        identifierSearchHelp = identifierSearchHelp
     )
   }
 

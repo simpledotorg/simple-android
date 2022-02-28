@@ -9,15 +9,14 @@ import androidx.room.Query
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.util.Unicode
-import java.time.Instant
 import java.util.UUID
 
 @DatabaseView("""
-  SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.assignedFacilityId, P.status, P.createdAt, P.updatedAt, P.syncStatus, P.recordedAt,
+  SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.assignedFacilityId, P.status,
   PA.uuid addr_uuid, PA.streetAddress addr_streetAddress, PA.colonyOrVillage addr_colonyOrVillage, PA.zone addr_zone, PA.district addr_district,
   PA.state addr_state, PA.country addr_country,
-  PA.createdAt addr_createdAt, PA.updatedAt addr_updatedAt,
-  PP.uuid phoneUuid, PP.number phoneNumber, PP.phoneType phoneType, PP.active phoneActive, PP.createdAt phoneCreatedAt, PP.updatedAt phoneUpdatedAt,
+  PA.createdAt addr_createdAt, PA.updatedAt addr_updatedAt, PA.deletedAt addr_deletedAt,
+  PP.number phoneNumber,
   B.identifier id_identifier, B.identifierType id_identifierType, B.searchHelp identifierSearchHelp, AF.name assignedFacilityName
   FROM Patient P
   INNER JOIN PatientAddress PA ON PA.uuid = P.addressUuid
@@ -38,39 +37,21 @@ data class PatientSearchResult(
     @Embedded
     val ageDetails: PatientAgeDetails,
 
-    val assignedFacilityId: UUID?,
-
     val status: PatientStatus,
 
-    val createdAt: Instant,
+    val assignedFacilityId: UUID?,
 
-    val updatedAt: Instant,
-
-    val syncStatus: SyncStatus,
+    val assignedFacilityName: String?,
 
     @Embedded(prefix = "addr_")
     val address: PatientAddress,
 
-    // TODO: Use embedded PatientPhoneNumber instead of flattened fields.
-    // https://www.pivotaltracker.com/story/show/160617492
-    val phoneUuid: UUID?,
-
     val phoneNumber: String?,
-
-    val phoneType: PatientPhoneNumberType?,
-
-    val phoneActive: Boolean?,
-
-    val phoneCreatedAt: Instant?,
-
-    val phoneUpdatedAt: Instant?,
 
     @Embedded(prefix = "id_")
     val identifier: Identifier?,
 
-    val identifierSearchHelp: String?,
-
-    val assignedFacilityName: String?
+    val identifierSearchHelp: String?
 ) : Parcelable {
 
   override fun toString(): String {

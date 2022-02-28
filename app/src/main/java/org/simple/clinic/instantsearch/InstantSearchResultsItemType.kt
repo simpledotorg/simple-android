@@ -117,7 +117,6 @@ sealed class InstantSearchResultsItemType : PagingItemAdapter.Item<InstantSearch
             ageDetails = searchResult.ageDetails,
             address = searchResult.address,
             phoneNumber = searchResult.phoneNumber,
-            lastSeen = searchResult.lastSeen,
             identifier = searchResult.identifier,
             assignedFacilityId = searchResult.assignedFacilityId,
             assignedFacilityName = searchResult.assignedFacilityName

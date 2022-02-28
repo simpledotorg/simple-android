@@ -14,7 +14,6 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
-import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.displayIconRes
@@ -251,7 +250,6 @@ class PatientSearchResultItemView(
       val ageDetails: PatientAgeDetails,
       val address: PatientAddress,
       val phoneNumber: String?,
-      val lastSeen: PatientSearchResult.LastSeen?,
       val identifier: Identifier?,
       val assignedFacilityId: UUID?,
       val assignedFacilityName: String?

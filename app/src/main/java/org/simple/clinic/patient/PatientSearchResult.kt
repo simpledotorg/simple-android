@@ -83,9 +83,8 @@ data class PatientSearchResult(
     @Query("""
       SELECT searchResult.*, 1 priority FROM 
       PatientSearchResult searchResult
-      LEFT JOIN Patient P ON P.uuid = searchResult.uuid
-      WHERE P.status = :status AND P.assignedFacilityId = :facilityId
-      GROUP BY P.uuid
+      WHERE status = :status AND assignedFacilityId = :facilityId
+      GROUP BY uuid
       ORDER BY fullName COLLATE NOCASE
     """)
     fun allPatientsInFacility(facilityId: UUID, status: PatientStatus): PagingSource<Int, PatientSearchResult>

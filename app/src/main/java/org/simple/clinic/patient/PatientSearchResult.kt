@@ -94,14 +94,13 @@ data class PatientSearchResult(
             searchResult.*, 
             (
                 CASE
-                    WHEN P.assignedFacilityId = :facilityId THEN 0
+                    WHEN assignedFacilityId = :facilityId THEN 0
                     ELSE 1
                 END
             ) AS priority, 
-            INSTR(lower(P.fullName), lower(:name)) namePosition FROM PatientSearchResult searchResult
-        LEFT JOIN Patient P ON P.uuid = searchResult.uuid
+            INSTR(lower(fullName), lower(:name)) namePosition FROM PatientSearchResult searchResult
         WHERE namePosition > 0
-        GROUP BY P.uuid
+        GROUP BY uuid
         ORDER BY priority ASC, namePosition ASC
     """)
     fun searchByNamePagingSource(name: String, facilityId: UUID): PagingSource<Int, PatientSearchResult>

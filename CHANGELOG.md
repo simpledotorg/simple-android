@@ -18,6 +18,7 @@
 - Add support for prioritised nudges in `CheckAppUpdateAvailability`
 - Use `OnConflictStrategy.ABORT` when updating using upsert
 - Bump opencsv to v5.6
+- Update Room to v2.4.2
 - [In Progress: 17 Feb 2022] Add `CriticalAppUpdateDialog`
 
 ### Changes

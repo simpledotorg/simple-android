@@ -110,15 +110,14 @@ data class PatientSearchResult(
             searchResult.*, 
             (
                 CASE
-                    WHEN P.assignedFacilityId = :facilityId THEN 0
+                    WHEN assignedFacilityId = :facilityId THEN 0
                     ELSE 1
                 END
             ) AS priority,
             INSTR(phoneNumber, :query) phoneNumberPosition, 
             INSTR(identifierSearchHelp, :query) identifierPosition FROM PatientSearchResult searchResult
-        LEFT JOIN Patient P ON P.uuid = searchResult.uuid
         WHERE phoneNumberPosition > 0 OR identifierPosition > 0
-        GROUP BY P.uuid
+        GROUP BY uuid
         ORDER BY priority ASC, phoneNumberPosition ASC, identifierPosition ASC
         """)
     fun searchByNumberPagingSource(

@@ -18,7 +18,7 @@ import java.util.UUID
   PA.createdAt addr_createdAt, PA.updatedAt addr_updatedAt,
   PP.uuid phoneUuid, PP.number phoneNumber, PP.phoneType phoneType, PP.active phoneActive, PP.createdAt phoneCreatedAt, PP.updatedAt phoneUpdatedAt,
   PatientLastSeen.lastSeenTime lastSeen_lastSeenOn, F.name lastSeen_lastSeenAtFacilityName, PatientLastSeen.lastSeenFacilityUuid lastSeen_lastSeenAtFacilityUuid,
-  B.identifier id_identifier, B.identifierType id_identifierType, B.searchHelp identifierSearchHelp
+  B.identifier id_identifier, B.identifierType id_identifierType, B.searchHelp identifierSearchHelp, AF.name assignedFacilityName
   FROM Patient P
   INNER JOIN PatientAddress PA ON PA.uuid = P.addressUuid
   LEFT JOIN PatientPhoneNumber PP ON PP.patientUuid = P.uuid
@@ -55,6 +55,7 @@ import java.util.UUID
       WHERE LatestBP.uuid IS NOT NULL OR LatestBloodSugar.uuid IS NOT NULL
   ) PatientLastSeen ON PatientLastSeen.patientUuid = P.uuid
   LEFT JOIN Facility F ON F.uuid = PatientLastSeen.lastSeenFacilityUuid
+  LEFT JOIN Facility AF ON AF.uuid = P.assignedFacilityId
   LEFT JOIN BusinessId B ON B.patientUuid = P.uuid
 """)
 @Parcelize
@@ -102,7 +103,9 @@ data class PatientSearchResult(
     @Embedded(prefix = "id_")
     val identifier: Identifier?,
 
-    val identifierSearchHelp: String?
+    val identifierSearchHelp: String?,
+
+    val assignedFacilityName: String?
 ) : Parcelable {
 
   override fun toString(): String {

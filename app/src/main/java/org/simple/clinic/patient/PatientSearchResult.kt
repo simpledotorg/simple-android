@@ -62,8 +62,7 @@ data class PatientSearchResult(
   interface RoomDao {
 
     @Query("""
-      SELECT searchResult.*, 1 priority FROM 
-      PatientSearchResult searchResult
+      SELECT * FROM PatientSearchResult
       WHERE status = :status AND assignedFacilityId = :facilityId
       GROUP BY uuid
       ORDER BY fullName COLLATE NOCASE

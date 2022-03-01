@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Fts4
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Query
@@ -376,3 +377,7 @@ data class Patient(
     abstract fun contactPatientProfileImmediate(patientUuid: UUID): ContactPatientProfile
   }
 }
+
+@Entity
+@Fts4(contentEntity = Patient::class)
+data class PatientFts(val uuid: UUID, val fullName: String)

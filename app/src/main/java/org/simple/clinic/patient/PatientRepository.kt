@@ -48,6 +48,14 @@ class PatientRepository @Inject constructor(
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
 
+  fun search(criteria: PatientSearchCriteria, facilityId: UUID): PagingSource<Int, PatientSearchResult> {
+    val query = when (criteria) {
+      is Name -> criteria.patientName
+      is NumericCriteria -> criteria.numericCriteria
+    }
+    return database.patientSearchDao().search("*$query*", facilityId)
+  }
+
   fun searchPagingSource(criteria: PatientSearchCriteria, facilityId: UUID): PagingSource<Int, PatientSearchResult> {
     return when (criteria) {
       is Name -> searchByNamePagingSource(criteria.patientName, facilityId)

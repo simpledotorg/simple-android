@@ -105,5 +105,32 @@ data class PatientSearchResult(
         query: String,
         facilityId: UUID
     ): PagingSource<Int, PatientSearchResult>
+
+    @Query("""
+      SELECT * FROM (
+        SELECT searchResult.* FROM PatientSearchResult searchResult
+        JOIN PatientFts patientFts ON patientFts.uuid = searchResult.uuid
+        WHERE patientFts.fullName MATCH :query
+        
+        UNION
+        
+        SELECT searchResult.* FROM PatientSearchResult searchResult
+        JOIN PatientPhoneNumberFts phoneNumberFts ON phoneNumberFts.patientUuid = searchResult.uuid
+        WHERE number MATCH :query
+        
+        UNION
+        
+        SELECT searchResult.* FROM PatientSearchResult searchResult
+        JOIN BusinessIdFts businessIdFts ON businessIdFts.patientUuid = searchResult.uuid
+        WHERE searchHelp MATCH :query
+      )
+      GROUP BY uuid
+      ORDER BY 
+      CASE assignedFacilityId
+        WHEN :facilityId THEN 0
+        ELSE 1 
+      END
+    """)
+    fun search(query: String, facilityId: UUID): PagingSource<Int, PatientSearchResult>
   }
 }

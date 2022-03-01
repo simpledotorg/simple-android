@@ -4,6 +4,17 @@
 
 ### Internal
 
+- Bump AGP to 7.1.2
+- [In Progress: 17 Feb 2022] Add `CriticalAppUpdateDialog`
+
+### Changes
+
+- [In Progress: 22 Feb 2022] Add stronger app update reminders
+
+## On Demo
+
+### Internal
+
 - Migrate `HelpScreen` to user view effects
 - Bump Sentry Gradle plugin to v2.1.5
 - Update translations: `am-ET`, `ta-LK`, `kn-IN`, `bn-BD`, `bn-IN`. `pa-IN`, `mr-IN`, `ta-IN`, `si-LK`, `sid-ET`, `te-IN`, `so-ET`, `ti-ET`, `om-ET`
@@ -20,14 +31,8 @@
 - Bump opencsv to v5.6
 - Update Room to v2.4.2
 - Update GH Actions `setup-jdk` to v3
-- Bump AGP to 7.1.2
-- [In Progress: 17 Feb 2022] Add `CriticalAppUpdateDialog`
 
-### Changes
-
-- [In Progress: 22 Feb 2022] Add stronger app update reminders
-
-## On Demo
+## 2022-02-21-8141
 
 ### Internal
 

@@ -33,8 +33,8 @@ class PatientLookupBenchmark : BaseBenchmarkTest() {
   fun looking_for_patient_by_name() {
     val dao = patientSearchDaoProvider.get()
     val pagingTestCase = PagingTestCase(
-        pagingSource = dao.searchByNamePagingSource(
-            name = "Shyam",
+        pagingSource = dao.search(
+            query = "Ankit Shyam",
             facilityId = UUID.fromString("c68603b3-9293-4783-bd76-0dc425c0c5d2")
         ),
         loadSize = 50

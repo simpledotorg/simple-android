@@ -71,42 +71,6 @@ data class PatientSearchResult(
     fun allPatientsInFacility(facilityId: UUID, status: PatientStatus): PagingSource<Int, PatientSearchResult>
 
     @Query("""
-        SELECT 
-            searchResult.*, 
-            (
-                CASE
-                    WHEN assignedFacilityId = :facilityId THEN 0
-                    ELSE 1
-                END
-            ) AS priority, 
-            INSTR(lower(fullName), lower(:name)) namePosition FROM PatientSearchResult searchResult
-        WHERE namePosition > 0
-        GROUP BY uuid
-        ORDER BY priority ASC, namePosition ASC
-    """)
-    fun searchByNamePagingSource(name: String, facilityId: UUID): PagingSource<Int, PatientSearchResult>
-
-    @Query("""
-        SELECT DISTINCT
-            searchResult.*, 
-            (
-                CASE
-                    WHEN assignedFacilityId = :facilityId THEN 0
-                    ELSE 1
-                END
-            ) AS priority,
-            INSTR(phoneNumber, :query) phoneNumberPosition, 
-            INSTR(identifierSearchHelp, :query) identifierPosition FROM PatientSearchResult searchResult
-        WHERE phoneNumberPosition > 0 OR identifierPosition > 0
-        GROUP BY uuid
-        ORDER BY priority ASC, phoneNumberPosition ASC, identifierPosition ASC
-        """)
-    fun searchByNumberPagingSource(
-        query: String,
-        facilityId: UUID
-    ): PagingSource<Int, PatientSearchResult>
-
-    @Query("""
       SELECT * FROM (
         SELECT searchResult.* FROM PatientSearchResult searchResult
         JOIN PatientFts patientFts ON patientFts.uuid = searchResult.uuid

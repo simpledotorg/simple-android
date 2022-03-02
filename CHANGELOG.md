@@ -14,6 +14,7 @@
 ### Changes
 
 - Improve patient search performance
+- Show patient died status for dead patients in search results
 - [In Progress: 22 Feb 2022] Add stronger app update reminders
 
 ## On Demo

@@ -15,6 +15,7 @@ import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
 import org.simple.clinic.patient.PatientStatus
+import org.simple.clinic.patient.PatientStatus.Dead
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.displayIconRes
@@ -69,6 +70,9 @@ class PatientSearchResultItemView(
   private val identifierTextView
     get() = binding.identifierTextView
 
+  private val patientDiedStatusView
+    get() = binding.patientDiedStatusView
+
   @Inject
   @Named("full_date")
   lateinit var dateTimeFormatter: DateTimeFormatter
@@ -98,6 +102,11 @@ class PatientSearchResultItemView(
         assignedFacilityName = model.assignedFacilityName
     )
     renderIdentifier(model.identifier, searchQuery)
+    renderPatientStatus(model.status)
+  }
+
+  private fun renderPatientStatus(status: PatientStatus) {
+    patientDiedStatusView.visibleOrGone(isVisible = status == Dead)
   }
 
   private fun getId(identifier: Identifier, searchQuery: String): Id {

@@ -14,6 +14,7 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
+import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.displayIconRes
@@ -252,7 +253,8 @@ class PatientSearchResultItemView(
       val phoneNumber: String?,
       val identifier: Identifier?,
       val assignedFacilityId: UUID?,
-      val assignedFacilityName: String?
+      val assignedFacilityName: String?,
+      val status: PatientStatus
   )
 
   sealed class Name(open val patientName: String) {

@@ -8,6 +8,7 @@
 - Bump lint to v30.1.2
 - Bump Lottie to v5.0.2
 - Use full text search when searching for patients
+- Bump flipper to v0.137.0
 - [In Progress: 17 Feb 2022] Add `CriticalAppUpdateDialog`
 
 ### Changes

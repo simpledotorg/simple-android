@@ -91,7 +91,7 @@ class PatientSearchResultItemView(
     renderPatientAddress(model.address)
     renderPatientDateOfBirth(model.ageDetails)
     renderPatientPhoneNumber(searchQuery, model)
-    renderLastSeen(
+    renderAssignedFacility(
         currentFacilityId = currentFacilityId,
         assignedFacilityId = model.assignedFacilityId,
         assignedFacilityName = model.assignedFacilityName
@@ -149,7 +149,7 @@ class PatientSearchResultItemView(
     }
   }
 
-  private fun renderLastSeen(
+  private fun renderAssignedFacility(
       currentFacilityId: UUID,
       assignedFacilityId: UUID?,
       assignedFacilityName: String?

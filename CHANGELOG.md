@@ -7,10 +7,12 @@
 - Bump AGP to 7.1.2
 - Bump lint to v30.1.2
 - Bump Lottie to v5.0.2
+- Use full text search when searching for patients
 - [In Progress: 17 Feb 2022] Add `CriticalAppUpdateDialog`
 
 ### Changes
 
+- Improve patient search performance
 - [In Progress: 22 Feb 2022] Add stronger app update reminders
 
 ## On Demo

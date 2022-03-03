@@ -24,7 +24,9 @@ import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientFts
 import org.simple.clinic.patient.PatientPhoneNumber
+import org.simple.clinic.patient.PatientPhoneNumberFts
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.PatientStatus
@@ -32,6 +34,7 @@ import org.simple.clinic.patient.RecentPatient
 import org.simple.clinic.patient.ReminderConsent
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.businessid.BusinessId
+import org.simple.clinic.patient.businessid.BusinessIdFts
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.DatabaseOptimizationEvent
@@ -83,13 +86,16 @@ import org.simple.clinic.drugs.search.Answer as DrugAnswer
       TeleconsultationFacilityMedicalOfficersCrossRef::class,
       TeleconsultRecord::class,
       Drug::class,
-      CallResult::class
+      CallResult::class,
+      PatientFts::class,
+      PatientPhoneNumberFts::class,
+      BusinessIdFts::class
     ],
     views = [
       OverdueAppointment::class,
       PatientSearchResult::class
     ],
-    version = 99,
+    version = 100,
     exportSchema = true
 )
 @TypeConverters(

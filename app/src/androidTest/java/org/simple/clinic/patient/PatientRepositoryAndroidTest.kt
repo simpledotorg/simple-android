@@ -2887,7 +2887,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun querying_search_by_name_results_must_return_paging_source_of_patients_partitioned_by_assigned_facility_and_nearby_facilities() {
+  fun searching_by_name_must_return_paging_source_of_patients_partitioned_by_assigned_facility_and_nearby_facilities() {
     fun createPatientWithNameAndAssignedFacilityID(
         patientUuid: UUID,
         patientName: String,
@@ -2906,7 +2906,7 @@ class PatientRepositoryAndroidTest {
     }
 
     fun searchResults(query: String, facility: Facility): List<String> {
-      val testCase = PagingTestCase(pagingSource = patientRepository.searchPagingSource(criteria = Name(query), facilityId = facility.uuid),
+      val testCase = PagingTestCase(pagingSource = patientRepository.search(criteria = Name(query), facilityId = facility.uuid),
           loadSize = 10)
 
       return testCase
@@ -2979,17 +2979,15 @@ class PatientRepositoryAndroidTest {
     val searchResults = searchResults(query = "Ramesh", facility = currentFacility)
 
     //then
-    assertThat(searchResults)
-        .containsExactly(
-            "Ramesh Rao",
-            "Mohan Ramesh",
-            "Sai Ramesh"
-        )
-        .inOrder()
+    assertThat(searchResults).containsExactly(
+        "Ramesh Rao",
+        "Mohan Ramesh",
+        "Sai Ramesh"
+    )
   }
 
   @Test
-  fun querying_search_by_number_results_must_return_paging_source_of_patients_partitioned_by_assigned_facility_and_nearby_facilities() {
+  fun searching_by_number_must_return_paging_source_of_patients_partitioned_by_assigned_facility_and_nearby_facilities() {
     fun createPatientWithNameAndAssignedFacilityID(
         patientUuid: UUID,
         patientName: String,
@@ -3012,7 +3010,7 @@ class PatientRepositoryAndroidTest {
     }
 
     fun searchResults(query: String, facility: Facility): List<String> {
-      val testCase = PagingTestCase(pagingSource = patientRepository.searchPagingSource(criteria = NumericCriteria(query), facilityId = facility.uuid),
+      val testCase = PagingTestCase(pagingSource = patientRepository.search(criteria = NumericCriteria(query), facilityId = facility.uuid),
           loadSize = 10)
 
       return testCase
@@ -3095,16 +3093,14 @@ class PatientRepositoryAndroidTest {
     )
 
     //when
-    val searchResults = searchResults(query = "467", facility = currentFacility)
+    val searchResults = searchResults(query = "1234", facility = currentFacility)
 
     //then
-    assertThat(searchResults)
-        .containsExactly(
-            "Ramesh Rao",
-            "Mohan Ramesh",
-            "Mohan"
-        )
-        .inOrder()
+    assertThat(searchResults).containsExactly(
+        "Ramesh Rao",
+        "Mohan Ramesh",
+        "Mohan"
+    )
   }
 
   @Test

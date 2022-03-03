@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Fts4
 import androidx.room.Index
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -72,3 +73,7 @@ data class PatientPhoneNumber(
     fun count(): Int
   }
 }
+
+@Entity
+@Fts4(contentEntity = PatientPhoneNumber::class)
+data class PatientPhoneNumberFts(val patientUuid: UUID, val number: String)

@@ -7,6 +7,7 @@ import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Fts4
 import androidx.room.Index
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -201,3 +202,7 @@ data class BusinessId(
     fun get(uuid: UUID): BusinessId?
   }
 }
+
+@Entity
+@Fts4(contentEntity = BusinessId::class)
+data class BusinessIdFts(val patientUuid: UUID, val searchHelp: String)

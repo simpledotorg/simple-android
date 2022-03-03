@@ -14,14 +14,12 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
-import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.util.resolveColor
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.toLocalDateAtZone
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
@@ -39,12 +37,6 @@ class PatientSearchResultItemView(
 
   private val lastSeenTextView
     get() = binding.lastSeenTextView
-
-  private val visitedContainer
-    get() = binding.visitedContainer
-
-  private val visitedTextView
-    get() = binding.visitedTextView
 
   private val phoneNumberContainer
     get() = binding.phoneNumberContainer
@@ -99,8 +91,11 @@ class PatientSearchResultItemView(
     renderPatientAddress(model.address)
     renderPatientDateOfBirth(model.ageDetails)
     renderPatientPhoneNumber(searchQuery, model)
-    renderVisited(model.lastSeen)
-    renderLastSeen(model.lastSeen, currentFacilityId)
+    renderAssignedFacility(
+        currentFacilityId = currentFacilityId,
+        assignedFacilityId = model.assignedFacilityId,
+        assignedFacilityName = model.assignedFacilityName
+    )
     renderIdentifier(model.identifier, searchQuery)
   }
 
@@ -154,23 +149,16 @@ class PatientSearchResultItemView(
     }
   }
 
-  private fun renderLastSeen(lastSeen: PatientSearchResult.LastSeen?, currentFacilityId: UUID) {
-    val isAtCurrentFacility = currentFacilityId == lastSeen?.lastSeenAtFacilityUuid
-    lastSeenContainer.visibleOrGone(lastSeen != null && !isAtCurrentFacility)
-    if (lastSeen != null) {
-      lastSeenTextView.text = lastSeen.lastSeenAtFacilityName
-    }
-  }
-
-  private fun renderVisited(
-      lastSeen: PatientSearchResult.LastSeen?
+  private fun renderAssignedFacility(
+      currentFacilityId: UUID,
+      assignedFacilityId: UUID?,
+      assignedFacilityName: String?
   ) {
-    visitedContainer.visibleOrGone(lastSeen != null)
-    if (lastSeen != null) {
-      val lastSeenDate = lastSeen.lastSeenOn.toLocalDateAtZone(userClock.zone)
-      val formattedLastSeenDate = dateTimeFormatter.format(lastSeenDate)
-
-      visitedTextView.text = formattedLastSeenDate
+    val isAtCurrentFacility = currentFacilityId == assignedFacilityId
+    val hasAssignedFacilityName = !assignedFacilityName.isNullOrBlank()
+    lastSeenContainer.visibleOrGone(hasAssignedFacilityName && !isAtCurrentFacility)
+    if (hasAssignedFacilityName) {
+      lastSeenTextView.text = assignedFacilityName
     }
   }
 
@@ -262,8 +250,9 @@ class PatientSearchResultItemView(
       val ageDetails: PatientAgeDetails,
       val address: PatientAddress,
       val phoneNumber: String?,
-      val lastSeen: PatientSearchResult.LastSeen?,
-      val identifier: Identifier?
+      val identifier: Identifier?,
+      val assignedFacilityId: UUID?,
+      val assignedFacilityName: String?
   )
 
   sealed class Name(open val patientName: String) {

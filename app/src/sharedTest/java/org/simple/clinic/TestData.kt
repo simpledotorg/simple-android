@@ -1040,45 +1040,25 @@ object TestData {
       dateOfBirth: LocalDate? = null,
       age: Age? = Age(45, Instant.now()),
       status: PatientStatus = PatientStatus.Active,
-      createdAt: Instant = Instant.now(),
-      updatedAt: Instant = Instant.now(),
       address: PatientAddress = patientAddress(),
-      syncStatus: SyncStatus = SyncStatus.DONE,
-      phoneType: PatientPhoneNumberType = PatientPhoneNumberType.Mobile,
-      phoneNumberUuid: UUID = UUID.randomUUID(),
-      phoneActive: Boolean = true,
-      phoneCreatedAt: Instant = Instant.now(),
-      phoneUpdatedAt: Instant = Instant.now(),
-      lastSeen: PatientSearchResult.LastSeen = PatientSearchResult.LastSeen(
-          lastSeenOn = Instant.now(),
-          lastSeenAtFacilityName = "Some Facility",
-          lastSeenAtFacilityUuid = UUID.randomUUID()
-      ),
       assignedFacilityId: UUID? = null,
       identifier: Identifier = Identifier(
           value = UUID.randomUUID().toString(),
           type = BpPassport
       ),
-      identifierSearchHelp: String? = null
+      identifierSearchHelp: String? = null,
+      assignedFacilityName: String? = null
   ): PatientSearchResult {
     return PatientSearchResult(
         uuid = uuid,
         fullName = fullName,
         gender = gender,
         ageDetails = PatientAgeDetails.fromAgeOrDate(age, dateOfBirth),
-        assignedFacilityId = assignedFacilityId,
         status = status,
-        createdAt = createdAt,
-        updatedAt = updatedAt,
-        syncStatus = syncStatus,
+        assignedFacilityId = assignedFacilityId,
+        assignedFacilityName = assignedFacilityName,
         address = address,
-        phoneUuid = phoneNumberUuid,
         phoneNumber = phoneNumber,
-        phoneType = phoneType,
-        phoneActive = phoneActive,
-        phoneCreatedAt = phoneCreatedAt,
-        phoneUpdatedAt = phoneUpdatedAt,
-        lastSeen = lastSeen,
         identifier = identifier,
         identifierSearchHelp = identifierSearchHelp
     )

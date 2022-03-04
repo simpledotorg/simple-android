@@ -10,6 +10,7 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.RxWorker
 import androidx.work.WorkerParameters
+import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import org.simple.clinic.R
@@ -18,6 +19,8 @@ import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL_SECURITY
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.LIGHT
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.MEDIUM
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
+import org.simple.clinic.main.TypedPreference
+import org.simple.clinic.main.TypedPreference.Type.IsLightAppUpdateNotificationShown
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.time.Duration
@@ -67,6 +70,10 @@ class AppUpdateNotificationWorker(
   @Inject
   lateinit var schedulerProvider: SchedulersProvider
 
+  @Inject
+  @TypedPreference(IsLightAppUpdateNotificationShown)
+  lateinit var isLightAppUpdateNotificationShown: Preference<Boolean>
+
   override fun createWork(): Single<Result> {
     createNotificationChannel()
 
@@ -76,7 +83,7 @@ class AppUpdateNotificationWorker(
         .singleOrError()
         .map { result ->
           when ((result as ShowAppUpdate).appUpdateNudgePriority) {
-            LIGHT -> showLightUpdateNotification()
+            LIGHT -> showLightUpdateNotificationOnce()
             MEDIUM -> showMediumUpdateNotification()
             CRITICAL_SECURITY, CRITICAL -> showCriticalUpdateNotification()
             else -> Result.failure()
@@ -91,8 +98,18 @@ class AppUpdateNotificationWorker(
     return schedulerProvider.io()
   }
 
+  private fun showLightUpdateNotificationOnce(): Result {
+    return if (isLightAppUpdateNotificationShown.get()) {
+      Result.failure()
+    } else {
+      showLightUpdateNotification()
+    }
+  }
+
   private fun showLightUpdateNotification(): Result {
     notificationManager.notify(NOTIFICATION_ID_LIGHT, appUpdateNotification())
+
+    isLightAppUpdateNotificationShown.set(true)
 
     return Result.success()
   }

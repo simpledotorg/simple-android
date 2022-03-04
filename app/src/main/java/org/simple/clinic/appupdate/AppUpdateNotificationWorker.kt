@@ -10,6 +10,7 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.RxWorker
 import androidx.work.WorkerParameters
+import io.reactivex.Scheduler
 import io.reactivex.Single
 import org.simple.clinic.R
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
@@ -18,6 +19,7 @@ import org.simple.clinic.appupdate.AppUpdateNudgePriority.LIGHT
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.MEDIUM
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.time.Duration
 import java.time.LocalDateTime
 import java.util.concurrent.TimeUnit
@@ -54,6 +56,9 @@ class AppUpdateNotificationWorker(
   @Inject
   lateinit var checkAppUpdateAvailability: CheckAppUpdateAvailability
 
+  @Inject
+  lateinit var schedulerProvider: SchedulersProvider
+
   override fun createWork(): Single<Result> {
     createNotificationChannel()
 
@@ -72,6 +77,10 @@ class AppUpdateNotificationWorker(
         .doOnError {
           Result.failure()
         }
+  }
+
+  override fun getBackgroundScheduler(): Scheduler {
+    return schedulerProvider.io()
   }
 
   private fun showLightUpdateNotification(): Result {

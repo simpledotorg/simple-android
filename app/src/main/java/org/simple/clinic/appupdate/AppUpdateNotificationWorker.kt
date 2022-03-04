@@ -92,8 +92,8 @@ class AppUpdateNotificationWorker(
         .singleOrError()
         .map { result ->
           when ((result as ShowAppUpdate).appUpdateNudgePriority) {
-            LIGHT -> showLightUpdateNotificationOnce()
-            MEDIUM -> showMediumUpdateNotificationOnce()
+            LIGHT -> showAppUpdateNotification(NOTIFICATION_ID_LIGHT, isLightAppUpdateNotificationShown)
+            MEDIUM -> showAppUpdateNotification(NOTIFICATION_ID_MEDIUM, isMediumAppUpdateNotificationShown)
             CRITICAL_SECURITY, CRITICAL -> showCriticalUpdateNotification()
             else -> Result.failure()
           }
@@ -107,36 +107,16 @@ class AppUpdateNotificationWorker(
     return schedulerProvider.io()
   }
 
-  private fun showLightUpdateNotificationOnce(): Result {
-    return if (isLightAppUpdateNotificationShown.get()) {
-      Result.failure()
+  private fun showAppUpdateNotification(notificationId: Int, isAppUpdateNotificationShown: Preference<Boolean>): Result {
+    return if (isAppUpdateNotificationShown.get()) {
+      isAppUpdateNotificationShown.set(true)
+
+      notificationManager.notify(notificationId, appUpdateNotification())
+
+      Result.success()
     } else {
-      showLightUpdateNotification()
-    }
-  }
-
-  private fun showLightUpdateNotification(): Result {
-    notificationManager.notify(NOTIFICATION_ID_LIGHT, appUpdateNotification())
-
-    isLightAppUpdateNotificationShown.set(true)
-
-    return Result.success()
-  }
-
-  private fun showMediumUpdateNotificationOnce(): Result {
-    return if (isMediumAppUpdateNotificationShown.get()) {
       Result.failure()
-    } else {
-      showMediumUpdateNotification()
     }
-  }
-
-  private fun showMediumUpdateNotification(): Result {
-    notificationManager.notify(NOTIFICATION_ID_MEDIUM, appUpdateNotification())
-
-    isMediumAppUpdateNotificationShown.set(true)
-
-    return Result.success()
   }
 
   private fun showCriticalUpdateNotification(): Result {

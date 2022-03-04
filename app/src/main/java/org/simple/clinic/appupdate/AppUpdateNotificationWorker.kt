@@ -21,6 +21,7 @@ import org.simple.clinic.appupdate.AppUpdateNudgePriority.MEDIUM
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.IsLightAppUpdateNotificationShown
+import org.simple.clinic.main.TypedPreference.Type.IsMediumAppUpdateNotificationShown
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.time.Duration
@@ -74,6 +75,10 @@ class AppUpdateNotificationWorker(
   @TypedPreference(IsLightAppUpdateNotificationShown)
   lateinit var isLightAppUpdateNotificationShown: Preference<Boolean>
 
+  @Inject
+  @TypedPreference(IsMediumAppUpdateNotificationShown)
+  lateinit var isMediumAppUpdateNotificationShown: Preference<Boolean>
+
   override fun createWork(): Single<Result> {
     createNotificationChannel()
 
@@ -84,7 +89,7 @@ class AppUpdateNotificationWorker(
         .map { result ->
           when ((result as ShowAppUpdate).appUpdateNudgePriority) {
             LIGHT -> showLightUpdateNotificationOnce()
-            MEDIUM -> showMediumUpdateNotification()
+            MEDIUM -> showMediumUpdateNotificationOnce()
             CRITICAL_SECURITY, CRITICAL -> showCriticalUpdateNotification()
             else -> Result.failure()
           }
@@ -114,8 +119,18 @@ class AppUpdateNotificationWorker(
     return Result.success()
   }
 
+  private fun showMediumUpdateNotificationOnce(): Result {
+    return if (isMediumAppUpdateNotificationShown.get()) {
+      Result.failure()
+    } else {
+      showMediumUpdateNotification()
+    }
+  }
+
   private fun showMediumUpdateNotification(): Result {
     notificationManager.notify(NOTIFICATION_ID_MEDIUM, appUpdateNotification())
+
+    isMediumAppUpdateNotificationShown.set(true)
 
     return Result.success()
   }

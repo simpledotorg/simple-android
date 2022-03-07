@@ -116,18 +116,12 @@ class AppUpdateNotificationWorker(
     when (showAppUpdate.appUpdateNudgePriority) {
       LIGHT -> showAppUpdateNotification(NOTIFICATION_ID_LIGHT, isLightAppUpdateNotificationShown)
       MEDIUM -> showAppUpdateNotification(NOTIFICATION_ID_MEDIUM, isMediumAppUpdateNotificationShown)
-      CRITICAL_SECURITY, CRITICAL -> showCriticalUpdateNotification()
+      CRITICAL_SECURITY, CRITICAL -> showCriticalAppUpdateNotification()
     }
   }
 
   override fun getBackgroundScheduler(): Scheduler {
     return schedulerProvider.io()
-  }
-
-  private fun showCriticalUpdateNotification(): Result {
-    notificationManager.notify(NOTIFICATION_CRITICAL, criticalAppUpdateNotification())
-
-    return Result.success()
   }
 
   private fun createNotificationChannel() {
@@ -172,10 +166,9 @@ class AppUpdateNotificationWorker(
     return PendingIntent.getActivity(context, 0, intent, flag)
   }
 
-  private fun criticalAppUpdateNotification(): Notification {
+  private fun showCriticalAppUpdateNotification() {
     val contentText = context.getString(R.string.critical_app_update_notification_subtext)
-    
-    return NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
+    val criticalAppUpdateNotification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
         .setSmallIcon(R.drawable.ic_app_update_notification_logo)
         .setContentTitle(context.getString(R.string.app_name))
         .setTicker(context.getString(R.string.app_name))
@@ -184,5 +177,7 @@ class AppUpdateNotificationWorker(
         .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
         .setContentIntent(openSimpleInPlayStorePendingIntent())
         .build()
+
+    notificationManager.notify(NOTIFICATION_CRITICAL, criticalAppUpdateNotification)
   }
 }

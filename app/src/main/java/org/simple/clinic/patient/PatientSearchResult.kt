@@ -73,19 +73,19 @@ data class PatientSearchResult(
       SELECT * FROM (
         SELECT searchResult.* FROM PatientSearchResult searchResult
         JOIN PatientFts patientFts ON patientFts.uuid = searchResult.uuid
-        WHERE patientFts.fullName MATCH :query
+        WHERE patientFts.fullName MATCH "*"||:query||"*"
         
         UNION
         
         SELECT searchResult.* FROM PatientSearchResult searchResult
         JOIN PatientPhoneNumberFts phoneNumberFts ON phoneNumberFts.patientUuid = searchResult.uuid
-        WHERE number MATCH :query
+        WHERE number MATCH "*"||:query||"*"
         
         UNION
         
         SELECT searchResult.* FROM PatientSearchResult searchResult
         JOIN BusinessIdFts businessIdFts ON businessIdFts.patientUuid = searchResult.uuid
-        WHERE searchHelp MATCH :query
+        WHERE searchHelp MATCH "*"||:query||"*"
       )
       GROUP BY uuid
       ORDER BY 

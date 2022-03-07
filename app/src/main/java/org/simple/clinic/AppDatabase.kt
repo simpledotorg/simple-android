@@ -92,7 +92,6 @@ import org.simple.clinic.drugs.search.Answer as DrugAnswer
       BusinessIdFts::class
     ],
     views = [
-      OverdueAppointment::class,
       PatientSearchResult::class
     ],
     version = 101,

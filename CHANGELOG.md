@@ -27,6 +27,7 @@
 
 - Improve patient search performance
 - Improve loading recent patients performance
+- Improve loading overdue patients performance
 - Show patient died status for dead patients in search results
 - [In Progress: 22 Feb 2022] Add stronger app update reminders
 

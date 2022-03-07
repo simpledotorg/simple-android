@@ -10,6 +10,7 @@
 - Use full text search when searching for patients
 - Bump flipper to v0.137.0
 - Bump GH Actions `upload-artifact` to v3
+- Bump logback to v1.2.11
 - [In Progress: 17 Feb 2022] Add `CriticalAppUpdateDialog`
 
 ### Changes

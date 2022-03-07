@@ -1,6 +1,5 @@
 package org.simple.clinic.appupdate
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -125,18 +124,6 @@ class AppUpdateNotificationWorker(
     return schedulerProvider.io()
   }
 
-  private fun showAppUpdateNotification(notificationId: Int, isAppUpdateNotificationShown: Preference<Boolean>): Result {
-    return if (isAppUpdateNotificationShown.get()) {
-      isAppUpdateNotificationShown.set(true)
-
-      notificationManager.notify(notificationId, appUpdateNotification())
-
-      Result.success()
-    } else {
-      Result.failure()
-    }
-  }
-
   private fun showCriticalUpdateNotification(): Result {
     notificationManager.notify(NOTIFICATION_CRITICAL, criticalAppUpdateNotification())
 
@@ -153,18 +140,24 @@ class AppUpdateNotificationWorker(
     }
   }
 
-  private fun appUpdateNotification(): Notification {
-    val contentText = context.getString(R.string.app_update_notification_subtext)
+  private fun showAppUpdateNotification(notificationId: Int, isAppUpdateNotificationShown: Preference<Boolean>) {
+    if (!isAppUpdateNotificationShown.get()) {
 
-    return NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
-        .setSmallIcon(R.drawable.ic_app_update_notification_logo)
-        .setContentTitle(context.getString(R.string.app_name))
-        .setTicker(context.getString(R.string.app_name))
-        .setContentText(contentText)
-        .setPriority(NotificationCompat.PRIORITY_HIGH)
-        .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
-        .setContentIntent(openSimpleInPlayStorePendingIntent())
-        .build()
+      val contentText = context.getString(R.string.app_update_notification_subtext)
+      val appUpdateNotification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
+          .setSmallIcon(R.drawable.ic_app_update_notification_logo)
+          .setContentTitle(context.getString(R.string.app_name))
+          .setTicker(context.getString(R.string.app_name))
+          .setContentText(context.getString(R.string.app_update_notification_subtext))
+          .setPriority(NotificationCompat.PRIORITY_HIGH)
+          .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
+          .setContentIntent(openSimpleInPlayStorePendingIntent())
+          .build()
+
+      isAppUpdateNotificationShown.set(true)
+
+      notificationManager.notify(notificationId, appUpdateNotification)
+    }
   }
 
   private fun openSimpleInPlayStorePendingIntent(): PendingIntent {

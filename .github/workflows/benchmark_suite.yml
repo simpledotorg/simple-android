@@ -17,7 +17,7 @@ jobs:
     runs-on: [ macos-latest ]
     steps:
       - name: Checkout Android source
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: set up JDK
         uses: actions/setup-java@v3

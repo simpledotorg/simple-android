@@ -53,7 +53,7 @@ class PatientRepository @Inject constructor(
       is Name -> criteria.patientName
       is NumericCriteria -> criteria.numericCriteria
     }
-    return database.patientSearchDao().search("*$query*", facilityId)
+    return database.patientSearchDao().search(query, facilityId)
   }
 
   fun patient(uuid: UUID): Observable<Optional<Patient>> {

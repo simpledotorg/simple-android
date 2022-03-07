@@ -22,7 +22,8 @@ import java.util.UUID
 @Entity(
     tableName = "BloodSugarMeasurements",
     indices = [
-      Index("patientUuid", unique = false)
+      Index("patientUuid", unique = false),
+      Index("facilityUuid", unique = false)
     ]
 )
 @Parcelize

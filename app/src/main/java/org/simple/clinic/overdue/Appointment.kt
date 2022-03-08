@@ -25,7 +25,8 @@ import java.util.UUID
 @Entity(
     tableName = "Appointment",
     indices = [
-      Index("patientUuid", unique = false)
+      Index("patientUuid", unique = false),
+      Index("creationFacilityUuid", unique = false)
     ]
 )
 @Parcelize

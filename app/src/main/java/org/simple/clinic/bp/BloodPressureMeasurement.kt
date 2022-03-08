@@ -20,7 +20,10 @@ import java.time.Instant
 import java.util.UUID
 
 @Parcelize
-@Entity(indices = [Index("patientUuid", unique = false)])
+@Entity(indices = [
+  Index("patientUuid", unique = false),
+  Index("facilityUuid", unique = false)
+])
 data class BloodPressureMeasurement(
     @PrimaryKey
     val uuid: UUID,

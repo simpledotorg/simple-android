@@ -114,7 +114,7 @@ lint-tests = { module = "com.android.tools.lint:lint-tests", version.ref = "lint
 
 logback-classic = "ch.qos.logback:logback-classic:1.2.11"
 
-lottie = "com.airbnb.android:lottie:5.0.2"
+lottie = "com.airbnb.android:lottie:5.0.3"
 
 material = "com.google.android.material:material:1.4.0"
 

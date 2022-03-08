@@ -13,6 +13,7 @@ import org.simple.clinic.benchmark.bp.BloodPressureEntryBenchmark
 import org.simple.clinic.benchmark.overdue.OverdueBenchmark
 import org.simple.clinic.benchmark.patientlookup.PatientLookupBenchmark
 import org.simple.clinic.benchmark.patientregistration.PatientRegistrationBenchmark
+import org.simple.clinic.benchmark.recentpatient.RecentPatientsBenchmark
 import org.simple.clinic.bloodsugar.BloodSugarHistoryListItemDataSourceTest
 import org.simple.clinic.bloodsugar.BloodSugarRepositoryAndroidTest
 import org.simple.clinic.bp.BloodPressureHistoryListItemDataSourceTest
@@ -140,4 +141,5 @@ interface TestAppComponent {
   fun inject(target: OverdueBenchmark)
   fun inject(target: PatientRegistrationBenchmark)
   fun inject(target: BloodPressureEntryBenchmark)
+  fun inject(target: RecentPatientsBenchmark)
 }

@@ -17,7 +17,7 @@ jobs:
   qa_lint:
     runs-on: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Cache Gradle build
         uses: actions/cache@v2
@@ -41,7 +41,7 @@ jobs:
   qa_unit_tests:
     runs-on: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Cache Gradle build
         uses: actions/cache@v2
@@ -73,12 +73,12 @@ jobs:
       HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
     steps:
       - name: Checkout Android source
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: android-app
 
       - name: Checkout server app source
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: simpledotorg/simple-server
           fetch-depth: 0 # Full clone needed for Heroku deploys (https://devcenter.heroku.com/changelog-items/775)
@@ -197,7 +197,7 @@ jobs:
   mobius_migration_tests:
     runs-on: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: set up JDK
         uses: actions/setup-java@v3
@@ -214,7 +214,7 @@ jobs:
       matrix:
         buildType: [ 'Production' ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: set up JDK
         uses: actions/setup-java@v3
@@ -233,13 +233,13 @@ jobs:
     runs-on: [ ubuntu-latest ]
     steps:
       - name: Checkout master
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: master
           path: master
 
       - name: Checkout current
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: current
 
@@ -250,7 +250,7 @@ jobs:
     runs-on: [ ubuntu-latest ]
     if: github.event_name == 'pull_request'
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Verify PR description
         run: kotlinc -script ".github/scripts/PrCommentCheck.main.kts" "${{ github.event.pull_request.body }}"
 
@@ -259,13 +259,13 @@ jobs:
     if: github.event_name == 'pull_request'
     steps:
       - name: Checkout master
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: master
           path: master
 
       - name: Checkout current
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: current
 
@@ -276,7 +276,7 @@ jobs:
     runs-on: [ ubuntu-latest ]
     if: github.event_name == 'pull_request'
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{github.event.pull_request.head.ref}}
           fetch-depth: 0

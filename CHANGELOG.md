@@ -13,6 +13,7 @@
 - Bump logback to v1.2.11
 - Move wildcard formatting to search query
 - Update GH Actions `checkout` to v3
+- Bump Lottie to v5.0.3
 - [In Progress: 17 Feb 2022] Add `CriticalAppUpdateDialog`
 
 ### Changes

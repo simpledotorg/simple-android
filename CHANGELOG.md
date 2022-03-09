@@ -19,6 +19,10 @@
 - Bump Sentry to v5.6.2 
 - [In Progress: 17 Feb 2022] Add `CriticalAppUpdateDialog`
 
+### Features
+
+- [In Progress: 10 Mar 2022] Messaging users to remind them to fill out drug stock report each month
+
 ### Changes
 
 - Improve patient search performance

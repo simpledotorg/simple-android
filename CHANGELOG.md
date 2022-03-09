@@ -14,7 +14,8 @@
 - Move wildcard formatting to search query
 - Update GH Actions `checkout` to v3
 - Bump Lottie to v5.0.3
-- Bump Jackson to v2.13.2
+- Bump Jackson to v2.13.2 
+- Bump mixpanel-android to 6.1.0
 - [In Progress: 17 Feb 2022] Add `CriticalAppUpdateDialog`
 
 ### Changes

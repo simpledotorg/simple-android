@@ -129,14 +129,16 @@ data class OverdueAppointment(
       LEFT JOIN (
         SELECT * 
         FROM BloodPressureMeasurement 
-        WHERE deletedAt IS NULL 
+        WHERE (patientUuid IN ( SELECT uuid FROM Patient WHERE assignedFacilityId = :facilityUuid ) OR facilityUuid = :facilityUuid) AND
+            deletedAt IS NULL 
         GROUP BY patientUuid HAVING MAX(recordedAt)
       ) BP ON BP.patientUuid = P.uuid
       
       LEFT JOIN (
         SELECT * 
         FROM BloodSugarMeasurements 
-        WHERE deletedAt IS NULL 
+        WHERE (patientUuid IN ( SELECT uuid FROM Patient WHERE assignedFacilityId = :facilityUuid ) OR facilityUuid = :facilityUuid) AND
+            deletedAt IS NULL 
         GROUP BY patientUuid HAVING MAX(recordedAt)
       ) BloodSugar ON BloodSugar.patientUuid = P.uuid
       

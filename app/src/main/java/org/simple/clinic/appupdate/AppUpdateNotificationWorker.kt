@@ -21,6 +21,7 @@ import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL_SECURITY
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.LIGHT
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.MEDIUM
+import org.simple.clinic.appupdate.AppUpdateState.DontShowAppUpdate
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.IsLightAppUpdateNotificationShown
@@ -88,19 +89,36 @@ class AppUpdateNotificationWorker(
 
     return checkAppUpdateAvailability
         .listen()
-        .filter { it is ShowAppUpdate }
+        .filter { it is ShowAppUpdate || it is DontShowAppUpdate }
         .singleOrError()
         .map { result ->
-          when ((result as ShowAppUpdate).appUpdateNudgePriority) {
-            LIGHT -> showAppUpdateNotification(NOTIFICATION_ID_LIGHT, isLightAppUpdateNotificationShown)
-            MEDIUM -> showAppUpdateNotification(NOTIFICATION_ID_MEDIUM, isMediumAppUpdateNotificationShown)
-            CRITICAL_SECURITY, CRITICAL -> showCriticalUpdateNotification()
-            else -> Result.failure()
+          if (result is ShowAppUpdate) {
+            showAppUpdateNotificationBasedOnThePriority(result)
+          } else {
+            resetPreferences()
           }
+
+          Result.success()
         }
         .doOnError {
           Result.failure()
         }
+  }
+
+  private fun resetPreferences() {
+    isLightAppUpdateNotificationShown.set(false)
+    isMediumAppUpdateNotificationShown.set(false)
+  }
+
+  private fun showAppUpdateNotificationBasedOnThePriority(showAppUpdate: ShowAppUpdate) {
+    if (showAppUpdate.appUpdateNudgePriority == null)
+      return
+
+    when (showAppUpdate.appUpdateNudgePriority) {
+      LIGHT -> showAppUpdateNotification(NOTIFICATION_ID_LIGHT, isLightAppUpdateNotificationShown)
+      MEDIUM -> showAppUpdateNotification(NOTIFICATION_ID_MEDIUM, isMediumAppUpdateNotificationShown)
+      CRITICAL_SECURITY, CRITICAL -> showCriticalUpdateNotification()
+    }
   }
 
   override fun getBackgroundScheduler(): Scheduler {

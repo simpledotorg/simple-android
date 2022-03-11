@@ -9,6 +9,7 @@
 - Bump flipper to v0.138.0 
 - Bump sentry to v.5.6.3 
 - Bump paging to v3.1.1
+- Handle background notifications for prioritised app updates
 - [In Progress: 17 Feb 2022] Add `CriticalAppUpdateDialog`
 
 ### Features
@@ -17,7 +18,7 @@
 
 ### Changes
 
-- [In Progress: 22 Feb 2022] Add stronger app update reminders
+- [In Progress: 11 Mar 2022] Add stronger app update reminders
 
 ## On Demo
 

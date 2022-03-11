@@ -3,7 +3,10 @@ package org.simple.clinic.appupdate
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.work.OneTimeWorkRequest
@@ -36,6 +39,7 @@ class AppUpdateNotificationWorker(
 
   companion object {
     const val APP_UPDATE_NOTIFICATION_WORKER = "app_update_notification_worker"
+    const val PLAY_STORE_URL_FOR_SIMPLE = "https://play.google.com/store/apps/details?id=org.simple.clinic"
 
     private const val NOTIFICATION_CHANNEL_ID = "org.simple.clinic.AppUpdates"
     private const val NOTIFICATION_ID_LIGHT = 4
@@ -161,7 +165,20 @@ class AppUpdateNotificationWorker(
         .setContentText(contentText)
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
+        .setContentIntent(openSimpleInPlayStorePendingIntent())
         .build()
+  }
+
+  private fun openSimpleInPlayStorePendingIntent(): PendingIntent {
+    val flag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
+    } else {
+      PendingIntent.FLAG_CANCEL_CURRENT
+    }
+
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(PLAY_STORE_URL_FOR_SIMPLE))
+
+    return PendingIntent.getActivity(context, 0, intent, flag)
   }
 
   private fun criticalAppUpdateNotification(): Notification {
@@ -174,6 +191,7 @@ class AppUpdateNotificationWorker(
         .setContentText(contentText)
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setStyle(NotificationCompat.BigTextStyle().bigText(contentText))
+        .setContentIntent(openSimpleInPlayStorePendingIntent())
         .build()
   }
 }

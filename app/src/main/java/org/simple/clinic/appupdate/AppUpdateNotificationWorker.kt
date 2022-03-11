@@ -6,6 +6,8 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.RxWorker
 import androidx.work.WorkerParameters
 import io.reactivex.Single
@@ -15,6 +17,10 @@ import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL_SECURITY
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.LIGHT
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.MEDIUM
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
+import org.simple.clinic.util.UserClock
+import java.time.Duration
+import java.time.LocalDateTime
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class AppUpdateNotificationWorker(
@@ -23,11 +29,24 @@ class AppUpdateNotificationWorker(
 ) : RxWorker(context, workerParams) {
 
   companion object {
+    const val APP_UPDATE_NOTIFICATION_WORKER = "app_update_notification_worker"
+
     private const val NOTIFICATION_CHANNEL_ID = "org.simple.clinic.AppUpdates"
     private const val NOTIFICATION_ID_LIGHT = 4
     private const val NOTIFICATION_ID_MEDIUM = 5
     private const val NOTIFICATION_CRITICAL = 6
     private const val NOTIFICATION_CHANNEL_NAME = "Updates"
+
+    fun createWorkRequest(userClock: UserClock, schedule: AppUpdateNotificationSchedule): OneTimeWorkRequest {
+      val currentDateTime = LocalDateTime.now(userClock)
+      val notificationScheduledTime = schedule.dateTime
+
+      val initialDelay = Duration.between(currentDateTime, notificationScheduledTime).toMillis()
+
+      return OneTimeWorkRequestBuilder<AppUpdateNotificationWorker>()
+          .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
+          .build()
+    }
   }
 
   private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

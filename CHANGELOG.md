@@ -17,6 +17,7 @@
 - Bump Jackson to v2.13.2 
 - Bump mixpanel-android to 6.1.0
 - Bump Sentry to v5.6.2 
+- Bump Gradle to v7.4.1
 - [In Progress: 17 Feb 2022] Add `CriticalAppUpdateDialog`
 
 ### Features

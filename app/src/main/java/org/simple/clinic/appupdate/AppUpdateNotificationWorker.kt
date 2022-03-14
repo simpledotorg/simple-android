@@ -9,8 +9,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import androidx.work.OneTimeWorkRequest
-import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.PeriodicWorkRequest
+import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.RxWorker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
@@ -51,17 +51,14 @@ class AppUpdateNotificationWorker(
     private const val NOTIFICATION_CRITICAL = 6
     private const val NOTIFICATION_CHANNEL_NAME = "Updates"
 
-    private const val KEY_NOTIFICATION_SCHEDULED_TIME = "notification_scheduled_time"
-
-    fun createWorkRequest(userClock: UserClock, schedule: AppUpdateNotificationSchedule): OneTimeWorkRequest {
+    fun createWorkRequest(userClock: UserClock, schedule: AppUpdateNotificationSchedule): PeriodicWorkRequest {
       val currentDateTime = LocalDateTime.now(userClock)
       val notificationScheduledTime = notificationScheduledTime(schedule.dateTime, currentDateTime)
 
       val initialDelay = Duration.between(currentDateTime, notificationScheduledTime).toMillis()
 
-      return OneTimeWorkRequestBuilder<AppUpdateNotificationWorker>()
+      return PeriodicWorkRequestBuilder<AppUpdateNotificationWorker>(repeatInterval = Duration.ofDays(1))
           .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
-          .setInputData(workDataOf(KEY_NOTIFICATION_SCHEDULED_TIME to notificationScheduledTime.toString()))
           .build()
     }
 
@@ -90,9 +87,6 @@ class AppUpdateNotificationWorker(
   @TypedPreference(IsMediumAppUpdateNotificationShown)
   lateinit var isMediumAppUpdateNotificationShown: Preference<Boolean>
 
-  @Inject
-  lateinit var userClock: UserClock
-
   init {
     ClinicApp.appComponent.inject(this)
   }
@@ -109,8 +103,6 @@ class AppUpdateNotificationWorker(
             is AppUpdateState.AppUpdateStateError -> resetPreferences()
             DontShowAppUpdate -> { /* no-op */ }
           }.exhaustive()
-
-          rescheduleWorker(currentNotificationScheduledDateTime = inputData.getString(KEY_NOTIFICATION_SCHEDULED_TIME)!!)
 
           Result.success()
         }
@@ -133,12 +125,6 @@ class AppUpdateNotificationWorker(
       MEDIUM -> showMediumAppUpdateNotification()
       CRITICAL_SECURITY, CRITICAL -> showCriticalAppUpdateNotification()
     }
-  }
-
-  private fun rescheduleWorker(currentNotificationScheduledDateTime: String) {
-    val rescheduleWorkerDateTime = LocalDateTime.parse(currentNotificationScheduledDateTime).plusDays(1)
-
-    createWorkRequest(userClock, AppUpdateNotificationSchedule(rescheduleWorkerDateTime))
   }
 
   override fun getBackgroundScheduler(): Scheduler {

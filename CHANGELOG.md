@@ -2,6 +2,20 @@
 
 ## Next Release
 
+### Internal 
+
+- [In Progress: 17 Feb 2022] Add `CriticalAppUpdateDialog`
+
+### Features
+
+- [In Progress: 10 Mar 2022] Messaging users to remind them to fill out drug stock report each month
+
+### Changes
+
+- [In Progress: 22 Feb 2022] Add stronger app update reminders
+
+## On Demo
+
 ### Internal
 
 - Bump AGP to 7.1.2
@@ -18,11 +32,6 @@
 - Bump mixpanel-android to 6.1.0
 - Bump Sentry to v5.6.2 
 - Bump Gradle to v7.4.1
-- [In Progress: 17 Feb 2022] Add `CriticalAppUpdateDialog`
-
-### Features
-
-- [In Progress: 10 Mar 2022] Messaging users to remind them to fill out drug stock report each month
 
 ### Changes
 
@@ -30,7 +39,6 @@
 - Improve loading recent patients performance
 - Improve loading overdue patients performance
 - Show patient died status for dead patients in search results
-- [In Progress: 22 Feb 2022] Add stronger app update reminders
 
 ## 2022-03-07-8157
 

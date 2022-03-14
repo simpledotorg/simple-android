@@ -27,6 +27,7 @@ import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.IsLightAppUpdateNotificationShown
 import org.simple.clinic.main.TypedPreference.Type.IsMediumAppUpdateNotificationShown
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.time.Duration
 import java.time.LocalDateTime
@@ -95,14 +96,13 @@ class AppUpdateNotificationWorker(
 
     return checkAppUpdateAvailability
         .listen()
-        .filter { it is ShowAppUpdate || it is DontShowAppUpdate }
         .singleOrError()
         .map { result ->
-          if (result is ShowAppUpdate) {
-            showAppUpdateNotificationBasedOnThePriority(result)
-          } else {
-            resetPreferences()
-          }
+          when (result) {
+            is ShowAppUpdate -> showAppUpdateNotificationBasedOnThePriority(result)
+            is AppUpdateState.AppUpdateStateError -> resetPreferences()
+            DontShowAppUpdate -> { /* no-op */ }
+          }.exhaustive()
 
           rescheduleWorker(currentNotificationScheduledDateTime = inputData.getString(KEY_NOTIFICATION_SCHEDULED_TIME)!!)
 

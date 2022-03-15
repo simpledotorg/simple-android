@@ -4,7 +4,8 @@
 
 ### Internal 
 
-- Bump fragment to v1.4.1 
+- Bump fragment to v1.4.1
+- Bump firebase to v21.0.2
 - [In Progress: 17 Feb 2022] Add `CriticalAppUpdateDialog`
 
 ### Features

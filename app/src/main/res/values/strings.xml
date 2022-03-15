@@ -924,4 +924,8 @@
     <item quantity="one">%d day overdue</item>
     <item quantity="other">%d days overdue</item>
   </plurals>
+
+  <!-- App update notification -->
+  <string name="app_update_notification_subtext">Please update your Simple app in the Google Play Store as soon as possible.</string>
+  <string name="critical_app_update_notification_subtext">Important updates available. Update your Simple app from the Google Playstore.</string>
 </resources>

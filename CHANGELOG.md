@@ -4,6 +4,7 @@
 
 ### Internal 
 
+- Bump fragment to v1.4.1 
 - [In Progress: 17 Feb 2022] Add `CriticalAppUpdateDialog`
 
 ### Features

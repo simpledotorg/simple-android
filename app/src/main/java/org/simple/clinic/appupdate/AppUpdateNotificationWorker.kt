@@ -17,6 +17,7 @@ import androidx.work.workDataOf
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Scheduler
 import io.reactivex.Single
+import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL_SECURITY
@@ -91,6 +92,10 @@ class AppUpdateNotificationWorker(
 
   @Inject
   lateinit var userClock: UserClock
+
+  init {
+    ClinicApp.appComponent.inject(this)
+  }
 
   override fun createWork(): Single<Result> {
     createNotificationChannel()

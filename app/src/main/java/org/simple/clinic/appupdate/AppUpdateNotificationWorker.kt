@@ -41,13 +41,21 @@ class AppUpdateNotificationWorker(
 
     fun createWorkRequest(userClock: UserClock, schedule: AppUpdateNotificationSchedule): OneTimeWorkRequest {
       val currentDateTime = LocalDateTime.now(userClock)
-      val notificationScheduledTime = schedule.dateTime
+      val notificationScheduledTime = notificationScheduledTime(schedule.dateTime, currentDateTime)
 
       val initialDelay = Duration.between(currentDateTime, notificationScheduledTime).toMillis()
 
       return OneTimeWorkRequestBuilder<AppUpdateNotificationWorker>()
           .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
           .build()
+    }
+
+     private fun notificationScheduledTime(scheduledDateTime: LocalDateTime, currentDateTime: LocalDateTime): LocalDateTime {
+      return if (scheduledDateTime.isAfter(currentDateTime)) {
+        scheduledDateTime.plusDays(1)
+      } else {
+        scheduledDateTime
+      }
     }
   }
 

@@ -936,6 +936,5 @@
   <string name="critical_update_required_dialog_update_button_text">UPDATE NOW</string>
   <string name="critical_update_required_dialog_help_section_title">Need help?</string>
   <string name="critical_update_required_dialog_help_section_content">Tap on the button below to get help from our friendly support team</string>
-  <string name="critical_update_required_dialog_help_section_phone_number">+91 8397847298</string>
 
 </resources>

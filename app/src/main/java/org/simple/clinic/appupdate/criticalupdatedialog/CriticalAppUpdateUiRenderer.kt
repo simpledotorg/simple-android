@@ -17,6 +17,9 @@ class CriticalAppUpdateUiRenderer(
 
     if (model.isCriticalUpdateNudgePriority && model.hasAppStaleness)
       ui.renderCriticalAppUpdateReason(appStalenessInMonths(model.appStaleness!!))
+
+    if (model.isCriticalSecurityUpdateNudgePriority)
+      ui.renderCriticalSecurityAppUpdateReason()
   }
 
   private fun appStalenessInMonths(appStaleness: Int): Int {

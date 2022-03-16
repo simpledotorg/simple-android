@@ -7,6 +7,7 @@ import org.junit.Test
 import org.simple.clinic.ContactType
 import org.simple.clinic.appupdate.AppUpdateHelpContact
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
+import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL_SECURITY
 import java.util.Optional
 
 class CriticalAppUpdateUiRendererTest {
@@ -54,6 +55,20 @@ class CriticalAppUpdateUiRendererTest {
     // then
     verify(ui).hideHelp()
     verify(ui).renderCriticalAppUpdateReason(appStalenessInMonths = 2)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when nudge priority is critical security, then render critical security app update reason`() {
+    // given
+    val criticalSecurityModel = CriticalAppUpdateModel.create(CRITICAL_SECURITY)
+
+    // when
+    uiRenderer.render(criticalSecurityModel)
+
+    // then
+    verify(ui).hideHelp()
+    verify(ui).renderCriticalSecurityAppUpdateReason()
     verifyNoMoreInteractions(ui)
   }
 }

@@ -4,4 +4,5 @@ interface CriticalAppUpdateUi {
   fun showHelp()
   fun hideHelp()
   fun renderCriticalAppUpdateReason(appStalenessInMonths: Int)
+  fun renderCriticalSecurityAppUpdateReason()
 }

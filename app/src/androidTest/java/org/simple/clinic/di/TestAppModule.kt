@@ -10,6 +10,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.AppConfigModule
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.network.NetworkModule
+import org.simple.clinic.drugstockreminders.DrugStockReminderApiModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.onboarding.OnboardingModule
@@ -36,7 +37,8 @@ import java.util.Locale
   SyncModule::class,
   DateFormatterModule::class,
   UuidGeneratorModule::class,
-  TestSyncConfigModule::class
+  TestSyncConfigModule::class,
+  DrugStockReminderApiModule::class
 ])
 class TestAppModule(private val application: Application) {
 

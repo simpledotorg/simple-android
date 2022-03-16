@@ -6,13 +6,14 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.ContactType
 import org.simple.clinic.appupdate.AppUpdateHelpContact
+import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
 import java.util.Optional
 
 class CriticalAppUpdateUiRendererTest {
 
   private val ui = mock<CriticalAppUpdateUi>()
   private val uiRenderer = CriticalAppUpdateUiRenderer(ui)
-  private val defaultModel = CriticalAppUpdateModel.create()
+  private val defaultModel = CriticalAppUpdateModel.create(CRITICAL)
 
   @Test
   fun `when help contact is available, then show the help section`() {

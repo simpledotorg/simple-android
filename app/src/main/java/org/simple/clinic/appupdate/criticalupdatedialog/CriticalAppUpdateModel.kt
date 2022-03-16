@@ -1,18 +1,21 @@
 package org.simple.clinic.appupdate.criticalupdatedialog
 
 import org.simple.clinic.appupdate.AppUpdateHelpContact
+import org.simple.clinic.appupdate.AppUpdateNudgePriority
 import java.util.Optional
 
 data class CriticalAppUpdateModel(
     val appUpdateHelpContact: Optional<AppUpdateHelpContact>,
-    val appStaleness: Int?
+    val appStaleness: Int?,
+    val appUpdateNudgePriority: AppUpdateNudgePriority
 ) {
 
   companion object {
 
-    fun create() = CriticalAppUpdateModel(
+    fun create(appUpdateNudgePriority: AppUpdateNudgePriority) = CriticalAppUpdateModel(
         appUpdateHelpContact = Optional.empty(),
-        appStaleness = null
+        appStaleness = null,
+        appUpdateNudgePriority = appUpdateNudgePriority
     )
   }
 

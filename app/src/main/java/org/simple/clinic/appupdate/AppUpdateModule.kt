@@ -1,6 +1,8 @@
 package org.simple.clinic.appupdate
 
 import android.app.Application
+import com.f2prateek.rx.preferences2.Preference
+import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.squareup.moshi.Moshi
@@ -10,6 +12,9 @@ import dagger.Provides
 import io.reactivex.Observable
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.feature.Features
+import org.simple.clinic.main.TypedPreference
+import org.simple.clinic.main.TypedPreference.Type.IsLightAppUpdateNotificationShown
+import org.simple.clinic.main.TypedPreference.Type.IsMediumAppUpdateNotificationShown
 import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.settings.AppVersionFetcher
 import org.simple.clinic.util.toOptional
@@ -52,5 +57,21 @@ open class AppUpdateModule {
     val appUpdateHelpContacts: Map<String, AppUpdateHelpContact> = configAdapter.fromJson(appUpdateHelpContactJson)!!
 
     return appUpdateHelpContacts[country.isoCountryCode].toOptional()
+  }
+
+  @TypedPreference(IsLightAppUpdateNotificationShown)
+  @Provides
+  fun provideLightAppUpdateNudgeShownBoolean(
+      rxSharedPreferences: RxSharedPreferences
+  ): Preference<Boolean> {
+    return rxSharedPreferences.getBoolean("is_light_app_update_notification_shown", false)
+  }
+
+  @TypedPreference(IsMediumAppUpdateNotificationShown)
+  @Provides
+  fun provideMediumAppUpdateNudgeShownBoolean(
+      rxSharedPreferences: RxSharedPreferences
+  ): Preference<Boolean> {
+    return rxSharedPreferences.getBoolean("is_medium_app_update_notification_shown", false)
   }
 }

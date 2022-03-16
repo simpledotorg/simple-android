@@ -161,8 +161,7 @@ interface TheActivityComponent :
   PatientsModule::class,
   PagingModule::class,
   InputFieldsFactoryModule::class,
-  FragmentScreenKeyModule::class,
-  AppUpdateModule::class
+  FragmentScreenKeyModule::class
 ])
 class TheActivityModule {
 

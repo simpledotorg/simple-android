@@ -12,6 +12,8 @@ annotation class TypedPreference(val value: Type) {
     FacilitySyncGroupSwitchedAt,
     LastDrugPullToken,
     SelectedState,
-    CountryV1
+    CountryV1,
+    IsLightAppUpdateNotificationShown,
+    IsMediumAppUpdateNotificationShown
   }
 }

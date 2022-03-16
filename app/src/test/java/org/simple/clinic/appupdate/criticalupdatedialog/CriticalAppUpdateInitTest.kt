@@ -16,12 +16,12 @@ class CriticalAppUpdateInitTest {
   private val initSpec = InitSpec(CriticalAppUpdateInit())
 
   @Test
-  fun `when screen is created, then load app update help contact`() {
+  fun `when screen is created, then load app update help contact and load app staleness`() {
     initSpec
         .whenInit(defaultModel)
         .then(assertThatFirst(
             hasModel(defaultModel),
-            hasEffects(LoadAppUpdateHelpContact)
+            hasEffects(LoadAppUpdateHelpContact, LoadAppStaleness)
         ))
   }
 
@@ -38,7 +38,7 @@ class CriticalAppUpdateInitTest {
         .whenInit(model)
         .then(assertThatFirst(
             hasModel(model),
-            hasNoEffects()
+            hasEffects(LoadAppStaleness)
         ))
   }
 }

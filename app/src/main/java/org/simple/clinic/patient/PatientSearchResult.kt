@@ -71,23 +71,26 @@ data class PatientSearchResult(
 
     @Query("""
       SELECT * FROM (
-        SELECT searchResult.* FROM PatientSearchResult searchResult
-        JOIN PatientFts patientFts ON patientFts.uuid = searchResult.uuid
-        WHERE patientFts.fullName MATCH "*"||:query||"*"
+        SELECT * FROM (
+            SELECT searchResult.* FROM PatientSearchResult searchResult
+            JOIN PatientFts patientFts ON patientFts.uuid = searchResult.uuid
+            WHERE patientFts.fullName MATCH "*"||:query||"*"
         
-        UNION
+            UNION
         
-        SELECT searchResult.* FROM PatientSearchResult searchResult
-        JOIN PatientPhoneNumberFts phoneNumberFts ON phoneNumberFts.patientUuid = searchResult.uuid
-        WHERE number MATCH "*"||:query||"*"
+            SELECT searchResult.* FROM PatientSearchResult searchResult
+            JOIN PatientPhoneNumberFts phoneNumberFts ON phoneNumberFts.patientUuid = searchResult.uuid
+            WHERE number MATCH "*"||:query||"*"
         
-        UNION
+            UNION
         
-        SELECT searchResult.* FROM PatientSearchResult searchResult
-        JOIN BusinessIdFts businessIdFts ON businessIdFts.patientUuid = searchResult.uuid
-        WHERE searchHelp MATCH "*"||:query||"*"
+            SELECT searchResult.* FROM PatientSearchResult searchResult
+            JOIN BusinessIdFts businessIdFts ON businessIdFts.patientUuid = searchResult.uuid
+            WHERE searchHelp MATCH "*"||:query||"*"
+        )
+        GROUP BY uuid
+        ORDER BY fullName COLLATE NOCASE
       )
-      GROUP BY uuid
       ORDER BY 
       CASE assignedFacilityId
         WHEN :facilityId THEN 0

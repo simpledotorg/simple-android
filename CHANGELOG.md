@@ -32,6 +32,7 @@
 - Bump mixpanel-android to 6.1.0
 - Bump Sentry to v5.6.2 
 - Bump Gradle to v7.4.1
+- Display patient search results in alphabetical order
 
 ### Changes
 

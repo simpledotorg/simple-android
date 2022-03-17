@@ -2887,7 +2887,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun searching_by_name_must_return_paging_source_of_patients_partitioned_by_assigned_facility_and_nearby_facilities() {
+  fun searching_by_name_must_return_paging_source_of_patients_partitioned_by_assigned_facility_and_nearby_facilities_and_ordered_by_name() {
     fun createPatientWithNameAndAssignedFacilityID(
         patientUuid: UUID,
         patientName: String,
@@ -2975,19 +2975,28 @@ class PatientRepositoryAndroidTest {
         businessIds = emptyList()
     )
 
+    val patientWithOtherFacilityAssigned3 = UUID.fromString("46d01e03-a23a-423a-870d-3d09daf1aee8")
+    createPatientWithNameAndAssignedFacilityID(
+        patientUuid =  patientWithOtherFacilityAssigned3,
+        patientName = "Abhishek Ramesh",
+        assignedFacilityId = otherFacility.uuid,
+        businessIds = emptyList()
+    )
+
     //when
     val searchResults = searchResults(query = "Ramesh", facility = currentFacility)
 
     //then
     assertThat(searchResults).containsExactly(
-        "Ramesh Rao",
         "Mohan Ramesh",
+        "Ramesh Rao",
+        "Abhishek Ramesh",
         "Sai Ramesh"
-    )
+    ).inOrder()
   }
 
   @Test
-  fun searching_by_number_must_return_paging_source_of_patients_partitioned_by_assigned_facility_and_nearby_facilities() {
+  fun searching_by_number_must_return_paging_source_of_patients_partitioned_by_assigned_facility_and_nearby_facilities_and_ordered_by_name() {
     fun createPatientWithNameAndAssignedFacilityID(
         patientUuid: UUID,
         patientName: String,
@@ -3092,15 +3101,25 @@ class PatientRepositoryAndroidTest {
         businessIds = emptyList()
     )
 
+    val patientWithOtherFacilityAssigned3 = UUID.fromString("703dce87-d510-4301-b8b7-373fbd7c8680")
+    createPatientWithNameAndAssignedFacilityID(
+        patientUuid =  patientWithOtherFacilityAssigned3,
+        patientName = "Abhishek Ramesh",
+        assignedFacilityId = otherFacility.uuid,
+        phoneNumber = "1234567890",
+        businessIds = emptyList()
+    )
+
     //when
     val searchResults = searchResults(query = "1234", facility = currentFacility)
 
     //then
     assertThat(searchResults).containsExactly(
-        "Ramesh Rao",
         "Mohan Ramesh",
+        "Ramesh Rao",
+        "Abhishek Ramesh",
         "Mohan"
-    )
+    ).inOrder()
   }
 
   @Test

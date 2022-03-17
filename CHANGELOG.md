@@ -10,6 +10,7 @@
 - Bump sentry to v.5.6.3 
 - Bump paging to v3.1.1
 - Handle background notifications for prioritised app updates
+- Display patient search results in alphabetical order
 - [In Progress: 17 Feb 2022] Add `CriticalAppUpdateDialog`
 
 ### Features

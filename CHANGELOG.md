@@ -9,13 +9,14 @@
 - Bump flipper to v0.138.0 
 - Bump sentry to v5.6.3 
 - Bump paging to v3.1.1
-- Handle background notifications for prioritised app updates
+- Handle background notifications for prioritised app updates 
 - Bump Sentry Gradle plugin to v3.0.0
+- Add `DrugStockReminder` api support
 - [In Progress: 15 Mar 2022] Add `CriticalAppUpdateDialog`
 
 ### Features
 
-- [In Progress: 10 Mar 2022] Messaging users to remind them to fill out drug stock report each month
+- [In Progress: 17 Mar 2022] Messaging users to remind them to fill out drug stock report each month
 
 ### Changes
 

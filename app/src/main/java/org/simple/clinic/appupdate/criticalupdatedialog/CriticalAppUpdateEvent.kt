@@ -15,3 +15,5 @@ object ContactHelpClicked : CriticalAppUpdateEvent() {
 object UpdateAppClicked : CriticalAppUpdateEvent() {
   override val analyticsName: String = "Critical App Update Dialog:Update App Clicked"
 }
+
+data class AppStalenessLoaded(val appStaleness: Int) : CriticalAppUpdateEvent()

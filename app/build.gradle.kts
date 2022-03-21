@@ -20,6 +20,12 @@ plugins {
 sentry {
   includeProguardMapping.set(true)
   autoUploadProguardMapping.set(false)
+
+  // We are using our own instrumentation tooling for Room queries
+  // Look at [ADR 013: SQL Performance Profiling (v2)]
+  tracingInstrumentation {
+    enabled.set(false)
+  }
 }
 
 kapt {

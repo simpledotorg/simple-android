@@ -18,7 +18,8 @@ plugins {
 }
 
 sentry {
-  autoUpload.set(false)
+  includeProguardMapping.set(true)
+  autoUploadProguardMapping.set(false)
 }
 
 kapt {

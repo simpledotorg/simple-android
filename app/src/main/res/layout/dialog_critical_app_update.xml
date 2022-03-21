@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:orientation="vertical"
+  android:padding="@dimen/spacing_24">
+
+  <ImageView
+    android:id="@+id/icon"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:srcCompat="@drawable/ic_critical_update_dialog_icon" />
+
+  <com.google.android.material.textview.MaterialTextView
+    android:id="@+id/criticalUpdateTitle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_24"
+    android:text="@string/critical_update_required_dialog_title"
+    android:textAppearance="?attr/textAppearanceBody0Medium"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/icon" />
+
+  <com.google.android.material.textview.MaterialTextView
+    android:id="@+id/criticalUpdateDescription"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_16"
+    android:text="@string/critical_update_required_dialog_content"
+    android:textAppearance="?attr/textAppearanceBody0"
+    android:textColor="?attr/colorOnSurface"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/criticalUpdateTitle" />
+
+  <com.google.android.material.textview.MaterialTextView
+    android:id="@+id/criticalUpdateReason"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_16"
+    android:text="@string/critical_update_required_dialog_error_warning"
+    android:textAppearance="?attr/textAppearanceBody1"
+    android:textColor="?attr/colorError"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/criticalUpdateDescription" />
+
+  <com.google.android.material.button.MaterialButton
+    android:id="@+id/updateNowButton"
+    style="@style/Widget.Simple.Button.Red1"
+    android:layout_width="@dimen/spacing_0"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_32"
+    android:elevation="@dimen/spacing_2"
+    android:text="@string/critical_update_required_dialog_update_button_text"
+    android:textAppearance="?attr/textAppearanceButtonBig"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/criticalUpdateReason" />
+
+  <View
+    android:id="@+id/divider"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/spacing_1"
+    android:layout_marginTop="@dimen/spacing_24"
+    android:background="#DADDE0"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/updateNowButton" />
+
+  <com.google.android.material.textview.MaterialTextView
+    android:id="@+id/helpSectionTitle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_24"
+    android:text="@string/critical_update_required_dialog_help_section_title"
+    android:textAppearance="?attr/textAppearanceBody0Medium"
+    android:textColor="?attr/colorOnSurface"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+  <com.google.android.material.textview.MaterialTextView
+    android:id="@+id/helpSectionDescription"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_16"
+    android:text="@string/critical_update_required_dialog_help_section_content"
+    android:textAppearance="?attr/textAppearanceBody0"
+    android:textColor="?attr/colorOnSurface"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/helpSectionTitle" />
+
+  <com.google.android.material.button.MaterialButton
+    style="@style/Widget.Simple.Button.Green2"
+    android:id="@+id/supportTeamContactButton"
+    android:layout_width="@dimen/spacing_0"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_16"
+    android:elevation="@dimen/spacing_2"
+    android:textAppearance="?attr/textAppearanceButtonBig"
+    app:elevation="@dimen/spacing_4"
+    app:icon="@drawable/ic_whatsapp_logo"
+    app:iconTint="?attr/colorSecondary"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/helpSectionDescription" />
+</androidx.constraintlayout.widget.ConstraintLayout>

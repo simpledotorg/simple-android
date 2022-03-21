@@ -42,8 +42,16 @@
     <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.Green1Primary</item>
   </style>
 
+  <style name="Widget.Simple.Button.Green2">
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.Green2Primary</item>
+  </style>
+
   <style name="Widget.Simple.Button.Red2">
     <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.Red2Primary</item>
+  </style>
+
+  <style name="Widget.Simple.Button.Red1">
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.Red1Primary</item>
   </style>
 
   <style name="Widget.Simple.Button.TextButton" parent="Widget.MaterialComponents.Button.TextButton">

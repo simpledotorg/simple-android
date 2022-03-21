@@ -7,10 +7,11 @@
 - Bump fragment to v1.4.1
 - Bump firebase to v21.0.2 
 - Bump flipper to v0.138.0 
-- Bump sentry to v.5.6.3 
+- Bump sentry to v5.6.3 
 - Bump paging to v3.1.1
 - Handle background notifications for prioritised app updates
 - Display patient search results in alphabetical order
+- Bump Sentry Gradle plugin to v3.0.0
 - [In Progress: 17 Feb 2022] Add `CriticalAppUpdateDialog`
 
 ### Features

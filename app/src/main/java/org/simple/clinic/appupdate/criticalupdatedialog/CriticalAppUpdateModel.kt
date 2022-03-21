@@ -2,6 +2,8 @@ package org.simple.clinic.appupdate.criticalupdatedialog
 
 import org.simple.clinic.appupdate.AppUpdateHelpContact
 import org.simple.clinic.appupdate.AppUpdateNudgePriority
+import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
+import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL_SECURITY
 import java.util.Optional
 
 data class CriticalAppUpdateModel(
@@ -27,6 +29,12 @@ data class CriticalAppUpdateModel(
 
   val hasAppStaleness: Boolean
     get() = appStaleness != null
+
+  val isCriticalSecurityUpdateNudgePriority: Boolean
+    get() = appUpdateNudgePriority == CRITICAL_SECURITY
+
+  val isCriticalUpdateNudgePriority: Boolean
+    get() = appUpdateNudgePriority == CRITICAL
 
   fun appUpdateHelpContactLoaded(appUpdateHelpContact: Optional<AppUpdateHelpContact>): CriticalAppUpdateModel {
     return copy(appUpdateHelpContact = appUpdateHelpContact)

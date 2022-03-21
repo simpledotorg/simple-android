@@ -42,4 +42,18 @@ class CriticalAppUpdateUiRendererTest {
     verify(ui).hideHelp()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when app staleness is available and nudge priority is critical, then render critical app update reason`() {
+    // given
+    val appStaleness = 75
+
+    // when
+    uiRenderer.render(defaultModel.appStalenessLoaded(appStaleness))
+
+    // then
+    verify(ui).hideHelp()
+    verify(ui).renderCriticalAppUpdateReason(appStalenessInMonths = 2)
+    verifyNoMoreInteractions(ui)
+  }
 }

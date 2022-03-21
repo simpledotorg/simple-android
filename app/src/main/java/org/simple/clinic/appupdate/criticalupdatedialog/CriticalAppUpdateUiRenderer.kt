@@ -1,6 +1,8 @@
 package org.simple.clinic.appupdate.criticalupdatedialog
 
 import org.simple.clinic.mobius.ViewRenderer
+import java.time.LocalDate
+import java.time.Period
 
 class CriticalAppUpdateUiRenderer(
     private val ui: CriticalAppUpdateUi
@@ -12,5 +14,14 @@ class CriticalAppUpdateUiRenderer(
     } else {
       ui.hideHelp()
     }
+
+    if (model.isCriticalUpdateNudgePriority && model.hasAppStaleness)
+      ui.renderCriticalAppUpdateReason(appStalenessInMonths(model.appStaleness!!))
+  }
+
+  private fun appStalenessInMonths(appStaleness: Int): Int {
+    val currentDate = LocalDate.now()
+    val lastUpdatedDate = currentDate.minusDays(appStaleness.toLong())
+    return Period.between(lastUpdatedDate, currentDate).months
   }
 }

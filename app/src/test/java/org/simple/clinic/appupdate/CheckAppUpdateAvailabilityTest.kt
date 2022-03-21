@@ -23,16 +23,18 @@ class CheckAppUpdateAvailabilityTest {
   private val currentAppVersionCode = 1
   private val differenceInVersionsToShowUpdate = 1
   private val config = Observable.just(
-          AppUpdateConfig(
-              differenceBetweenVersionsToNudge = 1,
-              differenceBetweenVersionsForLightNudge = 30,
-              differenceBetweenVersionsForMediumNudge = 61,
-              differenceBetweenVersionsForCriticalNudge = 181
-          ))
+      AppUpdateConfig(
+          differenceBetweenVersionsToNudge = 1,
+          differenceBetweenVersionsForLightNudge = 30,
+          differenceBetweenVersionsForMediumNudge = 61,
+          differenceBetweenVersionsForCriticalNudge = 181
+      ))
 
   private val appVersionFetcher = mock<AppVersionFetcher>()
 
   lateinit var checkUpdateAvailable: CheckAppUpdateAvailability
+
+  private val updateManager = mock<UpdateManager>()
 
   @Test
   @Parameters(method = "params for checking app update")
@@ -222,6 +224,17 @@ class CheckAppUpdateAvailabilityTest {
     )
   }
 
+  @Test
+  fun `app staleness should be loaded correctly`() {
+    // given
+    setup(isInAppUpdateEnabled = false, isInAppUpdateEnabledV2 = false)
+    val updateInfo = UpdateInfo(isUpdateAvailable = true, availableVersionCode = 150, appUpdatePriority = 0)
+    whenever(updateManager.updateInfo()).doReturn(Observable.just(updateInfo))
+
+    // then
+    checkUpdateAvailable.loadAppStaleness().test().assertValue(149)
+  }
+
   private fun setup(
       isInAppUpdateEnabled: Boolean,
       isInAppUpdateEnabledV2: Boolean
@@ -243,7 +256,7 @@ class CheckAppUpdateAvailabilityTest {
     )
     checkUpdateAvailable = CheckAppUpdateAvailability(
         config = config,
-        updateManager = mock(),
+        updateManager = updateManager,
         versionUpdateCheck = versionCodeCheck,
         features = features,
         appVersionFetcher = appVersionFetcher

@@ -2,6 +2,7 @@ package org.simple.clinic.drugstockreminders
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.Found
@@ -12,6 +13,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.inject.Inject
 
+@Ignore("remove ignore annotation after server implements the drug stock reminder api")
 class DrugStockReminderApiIntegrationTest {
 
   @Inject

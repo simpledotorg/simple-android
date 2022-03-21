@@ -11,7 +11,7 @@
 - Bump paging to v3.1.1
 - Handle background notifications for prioritised app updates
 - Bump Sentry Gradle plugin to v3.0.0
-- [In Progress: 17 Feb 2022] Add `CriticalAppUpdateDialog`
+- [In Progress: 15 Mar 2022] Add `CriticalAppUpdateDialog`
 
 ### Features
 
@@ -19,7 +19,7 @@
 
 ### Changes
 
-- [In Progress: 11 Mar 2022] Add stronger app update reminders
+- [In Progress: 15 Mar 2022] Add stronger app update reminders
 
 ## 2022-03-21-8173
 

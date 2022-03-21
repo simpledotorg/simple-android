@@ -928,4 +928,13 @@
   <!-- App update notification -->
   <string name="app_update_notification_subtext">Please update your Simple app in the Google Play Store as soon as possible.</string>
   <string name="critical_app_update_notification_subtext">Important updates available. Update your Simple app from the Google Playstore.</string>
+  
+  <!-- Critical app update dialog -->
+  <string name="critical_update_required_dialog_title">Critical update required</string>
+  <string name="critical_update_required_dialog_content">Update now for critical security changes and latest features</string>
+  <string name="critical_update_required_dialog_error_warning">App security is compromised</string>
+  <string name="critical_update_required_dialog_update_button_text">UPDATE NOW</string>
+  <string name="critical_update_required_dialog_help_section_title">Need help?</string>
+  <string name="critical_update_required_dialog_help_section_content">Tap on the button below to get help from our friendly support team</string>
+
 </resources>

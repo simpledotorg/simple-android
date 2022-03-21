@@ -10,7 +10,6 @@
 - Bump sentry to v5.6.3 
 - Bump paging to v3.1.1
 - Handle background notifications for prioritised app updates
-- Display patient search results in alphabetical order
 - Bump Sentry Gradle plugin to v3.0.0
 - [In Progress: 17 Feb 2022] Add `CriticalAppUpdateDialog`
 
@@ -22,7 +21,7 @@
 
 - [In Progress: 11 Mar 2022] Add stronger app update reminders
 
-## On Demo
+## 2022-03-21-8173
 
 ### Internal
 
@@ -40,6 +39,7 @@
 - Bump mixpanel-android to 6.1.0
 - Bump Sentry to v5.6.2 
 - Bump Gradle to v7.4.1
+- Display patient search results in alphabetical order
 
 ### Changes
 

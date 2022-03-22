@@ -15,11 +15,15 @@ class CriticalAppUpdateUiRenderer(
       ui.hideHelp()
     }
 
-    if (model.isCriticalUpdateNudgePriority && model.hasAppStaleness)
-      ui.renderCriticalAppUpdateReason(appStalenessInMonths(model.appStaleness!!))
+    renderCriticalAppUpdateReason(model)
+  }
 
-    if (model.isCriticalSecurityUpdateNudgePriority)
+  private fun renderCriticalAppUpdateReason(model: CriticalAppUpdateModel) {
+    if (model.isCriticalUpdateNudgePriority && model.hasAppStaleness) {
+      ui.renderCriticalAppUpdateReason(appStalenessInMonths(model.appStaleness!!))
+    } else if (model.isCriticalSecurityUpdateNudgePriority) {
       ui.renderCriticalSecurityAppUpdateReason()
+    }
   }
 
   private fun appStalenessInMonths(appStaleness: Int): Int {

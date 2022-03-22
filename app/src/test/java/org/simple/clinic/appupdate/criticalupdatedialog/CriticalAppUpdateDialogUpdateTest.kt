@@ -9,11 +9,12 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.ContactType.WhatsApp
 import org.simple.clinic.appupdate.AppUpdateHelpContact
+import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
 import java.util.Optional
 
 class CriticalAppUpdateDialogUpdateTest {
 
-  private val defaultModel = CriticalAppUpdateModel.create()
+  private val defaultModel = CriticalAppUpdateModel.create(CRITICAL)
   private val updateSpec = UpdateSpec(CriticalAppUpdateDialogUpdate())
 
   @Test

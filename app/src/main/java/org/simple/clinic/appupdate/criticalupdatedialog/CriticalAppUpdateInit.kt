@@ -12,6 +12,8 @@ class CriticalAppUpdateInit : Init<CriticalAppUpdateModel, CriticalAppUpdateEffe
       effects.add(LoadAppUpdateHelpContact)
     }
 
+    effects.add(LoadAppStaleness)
+
     return first(model, effects)
   }
 }

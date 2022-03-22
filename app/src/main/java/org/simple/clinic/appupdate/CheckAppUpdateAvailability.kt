@@ -55,6 +55,14 @@ class CheckAppUpdateAvailability @Inject constructor(
         .onErrorReturn(::AppUpdateStateError)
   }
 
+  fun loadAppStaleness(): Observable<Int> {
+    return updateManager
+        .updateInfo()
+        .map {
+          appVersionStaleness(it.availableVersionCode)
+        }
+  }
+
   @VisibleForTesting(otherwise = PRIVATE)
   fun shouldNudgeForUpdate(updateInfo: UpdateInfo): Observable<AppUpdateState> {
     val appStaleness = appVersionStaleness(updateInfo.availableVersionCode)
@@ -114,7 +122,8 @@ class CheckAppUpdateAvailability @Inject constructor(
         else -> null
       }.toOptional()
 
-  private fun appVersionStaleness(availableVersionCode: Int) = availableVersionCode.minus(appVersionFetcher.appVersionCode())
+  @VisibleForTesting(otherwise = PRIVATE)
+  fun appVersionStaleness(availableVersionCode: Int) = availableVersionCode.minus(appVersionFetcher.appVersionCode())
 }
 
 private val isVersionApplicableForUpdate = { availableVersionCode: Int, appVersionCode: Int, config: AppUpdateConfig ->

@@ -8,12 +8,14 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.appupdate.AppUpdateHelpContact
+import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.util.Optional
 
 class CriticalAppUpdateEffectHandler @AssistedInject constructor(
     private val appUpdateHelpContact: Lazy<Optional<AppUpdateHelpContact>>,
     private val schedulersProvider: SchedulersProvider,
+    private val checkAppUpdateAvailability: CheckAppUpdateAvailability,
     @Assisted private val viewEffectsConsumer: Consumer<CriticalAppUpdateViewEffect>
 ) {
 
@@ -27,6 +29,7 @@ class CriticalAppUpdateEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<CriticalAppUpdateEffect, CriticalAppUpdateEvent>()
         .addTransformer(LoadAppUpdateHelpContact::class.java, loadAppUpdateHelpContact())
         .addConsumer(CriticalAppUpdateViewEffect::class.java, viewEffectsConsumer::accept)
+        .addTransformer(LoadAppStaleness::class.java, loadAppStaleness())
         .build()
   }
 
@@ -36,6 +39,15 @@ class CriticalAppUpdateEffectHandler @AssistedInject constructor(
           .observeOn(schedulersProvider.io())
           .map { appUpdateHelpContact.get() }
           .map(::AppUpdateHelpContactLoaded)
+    }
+  }
+
+  private fun loadAppStaleness(): ObservableTransformer<LoadAppStaleness, CriticalAppUpdateEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .switchMap { checkAppUpdateAvailability.loadAppStaleness() }
+          .map(::AppStalenessLoaded)
     }
   }
 }

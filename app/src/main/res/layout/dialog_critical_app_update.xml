@@ -104,4 +104,11 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/helpSectionDescription" />
+
+  <androidx.constraintlayout.widget.Group
+    android:id="@+id/helpSectionGroup"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:visibility="visible"
+    app:constraint_referenced_ids="helpSectionTitle, helpSectionDescription, supportTeamContactButton, divider" />
 </androidx.constraintlayout.widget.ConstraintLayout>

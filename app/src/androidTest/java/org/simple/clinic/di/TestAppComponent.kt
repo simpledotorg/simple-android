@@ -21,6 +21,7 @@ import org.simple.clinic.bp.BloodPressureRepositoryAndroidTest
 import org.simple.clinic.drugs.PrescriptionRepositoryAndroidTest
 import org.simple.clinic.drugs.search.DrugRepositoryAndroidTest
 import org.simple.clinic.drugs.search.sync.DrugSyncIntegrationTest
+import org.simple.clinic.drugstockreminders.DrugStockReminderApiIntegrationTest
 import org.simple.clinic.facility.FacilityRepositoryAndroidTest
 import org.simple.clinic.login.LoginUserWithOtpServerIntegrationTest
 import org.simple.clinic.medicalhistory.MedicalHistoryRepositoryAndroidTest
@@ -142,4 +143,5 @@ interface TestAppComponent {
   fun inject(target: PatientRegistrationBenchmark)
   fun inject(target: BloodPressureEntryBenchmark)
   fun inject(target: RecentPatientsBenchmark)
+  fun inject(target: DrugStockReminderApiIntegrationTest)
 }

@@ -5,7 +5,8 @@ import java.time.LocalDate
 import java.time.Period
 
 class CriticalAppUpdateUiRenderer(
-    private val ui: CriticalAppUpdateUi
+    private val ui: CriticalAppUpdateUi,
+    private val currentDate: LocalDate
 ) : ViewRenderer<CriticalAppUpdateModel> {
 
   override fun render(model: CriticalAppUpdateModel) {
@@ -27,7 +28,6 @@ class CriticalAppUpdateUiRenderer(
   }
 
   private fun appStalenessInMonths(appStaleness: Int): Int {
-    val currentDate = LocalDate.now()
     val lastUpdatedDate = currentDate.minusDays(appStaleness.toLong())
     return Period.between(lastUpdatedDate, currentDate).months
   }

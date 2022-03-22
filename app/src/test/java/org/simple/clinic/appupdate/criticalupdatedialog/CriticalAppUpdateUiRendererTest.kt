@@ -8,12 +8,13 @@ import org.simple.clinic.ContactType
 import org.simple.clinic.appupdate.AppUpdateHelpContact
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL_SECURITY
+import java.time.LocalDate
 import java.util.Optional
 
 class CriticalAppUpdateUiRendererTest {
 
   private val ui = mock<CriticalAppUpdateUi>()
-  private val uiRenderer = CriticalAppUpdateUiRenderer(ui)
+  private val uiRenderer = CriticalAppUpdateUiRenderer(ui, LocalDate.of(2022, 3, 22))
   private val defaultModel = CriticalAppUpdateModel.create(CRITICAL)
 
   @Test

@@ -12,6 +12,7 @@
 - Handle background notifications for prioritised app updates 
 - Bump Sentry Gradle plugin to v3.0.0
 - Add `DrugStockReminder` api support
+- Bump Sentry to v5.7.0
 - [In Progress: 21 Mar 2022] Add `CriticalAppUpdateDialog`
 
 ### Features

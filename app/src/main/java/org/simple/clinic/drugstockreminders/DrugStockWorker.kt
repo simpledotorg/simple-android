@@ -10,6 +10,9 @@ class DrugStockWorker(
     workerParams: WorkerParameters
 ) : RxWorker(context, workerParams) {
 
+  init {
+    ClinicApp.appComponent.inject(this)
+  }
   override fun createWork(): Single<Result> {
     // todo add the work here next
   }

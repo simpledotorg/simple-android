@@ -25,6 +25,7 @@ import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseDialog
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.resolveColor
 import org.simple.clinic.widgets.UiEvent
 import java.time.LocalDate
 import javax.inject.Inject
@@ -122,7 +123,30 @@ class CriticalAppUpdateDialog : BaseDialog<
   }
 
   override fun showSupportContactPhoneNumber(number: String, contactType: ContactType) {
+    when (contactType) {
+      ContactType.Telegram -> setupTelegramButton()
+      ContactType.WhatsApp -> setupWhatsappButton()
+      is ContactType.Unknown -> setupDefaultButton()
+    }
+
     supportTeamContactButton.text = number
+  }
+
+  private fun setupWhatsappButton() {
+    supportTeamContactButton.setBackgroundColor(requireContext().resolveColor(R.color.simple_green_100))
+    supportTeamContactButton.setTextColor(requireContext().resolveColor(R.color.simple_green_500))
+    supportTeamContactButton.setIconResource(R.drawable.ic_whatsapp_logo)
+  }
+
+  private fun setupTelegramButton() {
+    supportTeamContactButton.setBackgroundColor(requireContext().resolveColor(R.color.simple_light_blue_100))
+    supportTeamContactButton.setTextColor(requireContext().resolveColor(R.color.simple_light_blue_500))
+    supportTeamContactButton.setIconResource(R.drawable.ic_telegram_logo)
+  }
+
+  private fun setupDefaultButton() {
+    supportTeamContactButton.setBackgroundColor(requireContext().resolveColor(R.color.simple_light_blue_100))
+    supportTeamContactButton.setTextColor(requireContext().resolveColor(R.color.simple_light_blue_500))
   }
 
   override fun openContactUrl(url: String) {

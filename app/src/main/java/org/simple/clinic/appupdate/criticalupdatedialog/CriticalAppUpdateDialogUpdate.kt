@@ -13,7 +13,7 @@ class CriticalAppUpdateDialogUpdate : Update<CriticalAppUpdateModel, CriticalApp
       is AppUpdateHelpContactLoaded -> next(model.appUpdateHelpContactLoaded(event.appUpdateHelpContact))
       ContactHelpClicked -> dispatch(OpenHelpContactUrl(model.contactUrl))
       UpdateAppClicked -> dispatch(OpenSimpleInGooglePlay)
-      is AppStalenessLoaded -> noChange()
+      is AppStalenessLoaded -> next(model.appStalenessLoaded(event.appStaleness))
     }
   }
 }

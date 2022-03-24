@@ -62,4 +62,17 @@ class CriticalAppUpdateDialogUpdateTest {
             hasEffects(OpenSimpleInGooglePlay)
         ))
   }
+
+  @Test
+  fun `when app staleness is loaded, then update the model`() {
+    val appStaleness = 76
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(AppStalenessLoaded(appStaleness))
+        .then(assertThatNext(
+            hasModel(defaultModel.appStalenessLoaded(appStaleness)),
+            hasNoEffects()
+        ))
+  }
 }

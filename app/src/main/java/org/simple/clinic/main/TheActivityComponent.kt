@@ -9,7 +9,7 @@ import dagger.Subcomponent
 import io.reactivex.Observable
 import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.RxActivityLifecycle
-import org.simple.clinic.appupdate.AppUpdateModule
+import org.simple.clinic.appupdate.criticalupdatedialog.CriticalAppUpdateDialog
 import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreen
 import org.simple.clinic.bp.history.BloodPressureHistoryScreen
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
@@ -144,7 +144,8 @@ interface TheActivityComponent :
     FacilitySelectionScreen.Injector,
     SelectOverdueDownloadFormatDialog.Injector,
     DeletePatientScreen.Injector,
-    NextAppointmentCardView.Injector {
+    NextAppointmentCardView.Injector,
+    CriticalAppUpdateDialog.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory

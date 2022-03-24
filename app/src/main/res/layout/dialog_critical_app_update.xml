@@ -40,7 +40,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/spacing_16"
-    android:text="@string/critical_update_required_dialog_error_warning"
+    android:text="@string/critical_security_update_required_reason"
     android:textAppearance="?attr/textAppearanceBody1"
     android:textColor="?attr/colorError"
     app:layout_constraintStart_toStartOf="parent"

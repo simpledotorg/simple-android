@@ -2,17 +2,18 @@
 
 ## Next Release
 
-### Internal 
+### Internal
 
 - Bump fragment to v1.4.1
-- Bump firebase to v21.0.2 
-- Bump flipper to v0.138.0 
-- Bump sentry to v5.6.3 
+- Bump firebase to v21.0.2
+- Bump flipper to v0.138.0
+- Bump sentry to v5.6.3
 - Bump paging to v3.1.1
-- Handle background notifications for prioritised app updates 
+- Handle background notifications for prioritised app updates
 - Bump Sentry Gradle plugin to v3.0.0
 - Add `DrugStockReminder` api support
 - Bump Sentry to v5.7.0
+- Add GH Action to trigger a demo release on Bitrise when release branch is created
 - [In Progress: 21 Mar 2022] Add `CriticalAppUpdateDialog`
 
 ### Features
@@ -37,9 +38,9 @@
 - Move wildcard formatting to search query
 - Update GH Actions `checkout` to v3
 - Bump Lottie to v5.0.3
-- Bump Jackson to v2.13.2 
+- Bump Jackson to v2.13.2
 - Bump mixpanel-android to 6.1.0
-- Bump Sentry to v5.6.2 
+- Bump Sentry to v5.6.2
 - Bump Gradle to v7.4.1
 - Display patient search results in alphabetical order
 

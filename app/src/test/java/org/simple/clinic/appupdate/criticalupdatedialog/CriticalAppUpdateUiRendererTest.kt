@@ -18,12 +18,14 @@ class CriticalAppUpdateUiRendererTest {
   private val defaultModel = CriticalAppUpdateModel.create(CRITICAL)
 
   @Test
-  fun `when help contact is available, then show the help section`() {
+  fun `when help contact is available, then show the help section and contact support phone number`() {
     // given
+    val supportContact = "+91 1111111111"
+    val contactType = ContactType.WhatsApp
     val appUpdateHelpContact = Optional.of(AppUpdateHelpContact(
-        displayText = "+91 1111111111",
+        displayText = supportContact,
         url = "https://wa.me/911111111111/?text=I would like to ask a question about Simple",
-        contactType = ContactType.WhatsApp
+        contactType = contactType
     ))
     val model = defaultModel.appUpdateHelpContactLoaded(appUpdateHelpContact)
 
@@ -32,6 +34,7 @@ class CriticalAppUpdateUiRendererTest {
 
     // then
     verify(ui).showHelp()
+    verify(ui).showSupportContactPhoneNumber(supportContact, contactType)
     verifyNoMoreInteractions(ui)
   }
   

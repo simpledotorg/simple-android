@@ -16,6 +16,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.ContactType
+import org.simple.clinic.PLAY_STORE_URL_FOR_SIMPLE
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appupdate.AppUpdateNudgePriority
@@ -38,10 +39,6 @@ class CriticalAppUpdateDialog : BaseDialog<
     CriticalAppUpdateEffect,
     CriticalAppUpdateViewEffect>(),
     CriticalAppUpdateUi, UiActions {
-
-  companion object {
-    const val PLAY_STORE_URL_FOR_SIMPLE = "https://play.google.com/store/apps/details?id=org.simple.clinic"
-  }
 
   @Inject
   lateinit var effectHandlerFactory: CriticalAppUpdateEffectHandler.Factory

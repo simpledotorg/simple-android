@@ -16,6 +16,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.BuildConfig
+import org.simple.clinic.PLAY_STORE_URL_FOR_SIMPLE
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenSettingsBinding
@@ -152,7 +153,7 @@ class SettingsScreen : BaseScreen<
 
   private fun launchPlayStoreForUpdate() {
     val intent = Intent(Intent.ACTION_VIEW).apply {
-      data = Uri.parse("https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}")
+      data = Uri.parse(PLAY_STORE_URL_FOR_SIMPLE)
     }
     requireContext().startActivity(intent)
   }

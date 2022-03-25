@@ -174,7 +174,7 @@ class CriticalAppUpdateDialog : BaseDialog<
   @Parcelize
   data class Key(
       val appUpdateNudgePriority: AppUpdateNudgePriority,
-      override val analyticsName: String = "",
+      override val analyticsName: String = "Critical App Update Dialog",
       override val type: ScreenType = ScreenType.Modal
   ) : ScreenKey() {
 

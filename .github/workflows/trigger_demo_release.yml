@@ -1,0 +1,28 @@
+# Trigger Bitrise to make a demo release on `release/*` branch creation
+
+name: trigger_demo_release
+
+on: create
+
+jobs:
+  ci:
+    uses: ./.github/workflows/ci_checks.yml
+
+  demo_release:
+    needs: ci
+    concurrency:
+      group: ${{ github.head_ref }}
+      cancel-in-progress: true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{github.ref}}
+
+      - name: Trigger a Bitrise build
+        run: |
+          kotlinc -script
+          ".github/scripts/TriggerBitriseRelease.main.kts"
+          "${{ github.ref }}"
+          "${{ secrets.BITRISE_ACCESS_TOKEN }}"
+          "${{ secrets.BITRISE_DEMO_WORKFLOW }}"

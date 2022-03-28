@@ -1,15 +1,20 @@
 package org.simple.clinic
 
+import android.os.Parcelable
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 
-sealed class ContactType {
+sealed class ContactType : Parcelable {
 
+  @Parcelize
   object WhatsApp : ContactType()
 
+  @Parcelize
   object Telegram : ContactType()
 
+  @Parcelize
   data class Unknown(val actualValue: String) : ContactType()
 
   object TypeAdapter : SafeEnumTypeAdapter<ContactType>(

@@ -932,9 +932,10 @@
   <!-- Critical app update dialog -->
   <string name="critical_update_required_dialog_title">Critical update required</string>
   <string name="critical_update_required_dialog_content">Update now for critical security changes and latest features</string>
-  <string name="critical_update_required_dialog_error_warning">App security is compromised</string>
+  <string name="critical_security_update_required_reason">App security is compromised</string>
   <string name="critical_update_required_dialog_update_button_text">UPDATE NOW</string>
   <string name="critical_update_required_dialog_help_section_title">Need help?</string>
   <string name="critical_update_required_dialog_help_section_content">Tap on the button below to get help from our friendly support team</string>
+  <string name="critical_update_required_reason">App is %d months out of date</string>
 
 </resources>

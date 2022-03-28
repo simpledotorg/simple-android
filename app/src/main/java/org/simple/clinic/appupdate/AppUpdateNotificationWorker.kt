@@ -18,6 +18,7 @@ import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import org.simple.clinic.ClinicApp
+import org.simple.clinic.PLAY_STORE_URL_FOR_SIMPLE
 import org.simple.clinic.R
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL_SECURITY
@@ -43,7 +44,6 @@ class AppUpdateNotificationWorker(
 
   companion object {
     const val APP_UPDATE_NOTIFICATION_WORKER = "app_update_notification_worker"
-    const val PLAY_STORE_URL_FOR_SIMPLE = "https://play.google.com/store/apps/details?id=org.simple.clinic"
 
     private const val NOTIFICATION_CHANNEL_ID = "org.simple.clinic.AppUpdates"
     private const val NOTIFICATION_ID_LIGHT = 4

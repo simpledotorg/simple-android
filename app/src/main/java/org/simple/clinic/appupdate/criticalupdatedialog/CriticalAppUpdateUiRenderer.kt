@@ -12,6 +12,7 @@ class CriticalAppUpdateUiRenderer(
   override fun render(model: CriticalAppUpdateModel) {
     if (model.hasHelpContact) {
       ui.showHelp()
+      ui.showSupportContactPhoneNumber(model.appUpdateHelpContact!!.get().displayText, model.appUpdateHelpContact.get().contactType)
     } else {
       ui.hideHelp()
     }

@@ -4,6 +4,20 @@
 
 ### Internal
 
+- Bump GH Actions `cache` to v3
+
+### Features
+
+- [In Progress: 17 Mar 2022] Messaging users to remind them to fill out drug stock report each month
+
+### Changes
+
+- [In Progress: 24 Mar 2022] Add stronger app update reminders
+
+## On Demo
+
+### Internal
+
 - Bump fragment to v1.4.1
 - Bump firebase to v21.0.2
 - Bump flipper to v0.138.0
@@ -18,15 +32,6 @@
 - Cancel in progress demo release workflow when new release action is triggered
 - Pass Simple Bitrise app slug to `TriggerBitriseRelease` script
 - Add `CriticalAppUpdateDialog`
-- Bump GH Actions `cache` to v3
-
-### Features
-
-- [In Progress: 17 Mar 2022] Messaging users to remind them to fill out drug stock report each month
-
-### Changes
-
-- [In Progress: 24 Mar 2022] Add stronger app update reminders
 
 ## 2022-03-21-8173
 

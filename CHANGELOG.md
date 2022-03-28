@@ -18,6 +18,7 @@
 - Cancel in progress demo release workflow when new release action is triggered
 - Pass Simple Bitrise app slug to `TriggerBitriseRelease` script
 - Add `CriticalAppUpdateDialog`
+- Bump GH Actions `cache` to v3
 
 ### Features
 

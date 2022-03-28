@@ -8,6 +8,7 @@
 - Fix `trigger_demo_release` workflow running on every newly created branch
 - Implement critical app update card in `PatientsTabScreen`
 - Bump flipper to v0.140.0
+- Use `RecyclerView.AdapterDataObserver` to scroll to top when drugs are added
 - [In Progress: 29 Mar 2022] Implement showing app update nudges based on the priority in `PatientTabScreen`
 
 ### Features
@@ -17,6 +18,10 @@
 ### Changes
 
 - [In Progress: 29 Mar 2022] Add stronger app update reminders
+
+### Fixes
+
+- Fix recycler view crash when refilling drugs
 
 ## On Demo
 

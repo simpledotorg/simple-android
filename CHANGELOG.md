@@ -15,6 +15,7 @@
 - Bump Sentry to v5.7.0
 - Add GH Action to trigger a demo release on Bitrise when release branch is created
 - Run CI checks in `trigger_demo_release` workflow
+- Cancel in progress demo release workflow when new release action is triggered
 - [In Progress: 21 Mar 2022] Add `CriticalAppUpdateDialog`
 
 ### Features

@@ -4,6 +4,10 @@ name: trigger_demo_release
 
 on: create
 
+concurrency:
+  group: demo-release-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   qa_lint:
     runs-on: ubuntu-latest
@@ -230,9 +234,6 @@ jobs:
 
   demo_release:
     needs: [ qa_lint, qa_unit_tests, qa_android_tests, verify_release_bundles, verify_room_schemas ]
-    concurrency:
-      group: ${{ github.head_ref }}
-      cancel-in-progress: true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

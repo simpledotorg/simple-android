@@ -241,4 +241,4 @@ jobs:
           ref: ${{github.ref}}
 
       - name: Trigger a Bitrise build
-        run: kotlinc -script ".github/scripts/TriggerBitriseRelease.main.kts" "${{ github.ref }}" "${{ secrets.BITRISE_ACCESS_TOKEN }}" "${{ secrets.BITRISE_DEMO_WORKFLOW }}"
+        run: kotlinc -script ".github/scripts/TriggerBitriseRelease.main.kts" "${{ github.ref }}" "${{ secrets.BITRISE_ACCESS_TOKEN }}" "${{ secrets.BITRISE_APP_SLUG }}" "${{ secrets.BITRISE_DEMO_WORKFLOW }}"

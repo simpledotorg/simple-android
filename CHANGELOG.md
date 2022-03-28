@@ -16,7 +16,7 @@
 - Add GH Action to trigger a demo release on Bitrise when release branch is created
 - Run CI checks in `trigger_demo_release` workflow
 - Cancel in progress demo release workflow when new release action is triggered
-- [In Progress: 21 Mar 2022] Add `CriticalAppUpdateDialog`
+- Add `CriticalAppUpdateDialog`
 
 ### Features
 
@@ -24,7 +24,7 @@
 
 ### Changes
 
-- [In Progress: 15 Mar 2022] Add stronger app update reminders
+- [In Progress: 24 Mar 2022] Add stronger app update reminders
 
 ## 2022-03-21-8173
 

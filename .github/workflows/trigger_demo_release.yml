@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Cache Gradle build
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -39,7 +39,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Cache Gradle build
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -85,7 +85,7 @@ jobs:
 
       - name: Cache node modules
         id: node-dependency-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             node_modules
@@ -106,7 +106,7 @@ jobs:
         run: heroku plugins:install buildpacks
 
       - name: Cache Gradle build
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -116,7 +116,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Cache AVD
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: avd-cache
         with:
           path: |

@@ -18,6 +18,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.PLAY_STORE_URL_FOR_SIMPLE
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.ActivityLifecycle
@@ -25,7 +26,6 @@ import org.simple.clinic.activity.ActivityLifecycle.Resumed
 import org.simple.clinic.activity.permissions.RequestPermissions
 import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.appconfig.Country
-import org.simple.clinic.appupdate.AppUpdateNotificationWorker.Companion.PLAY_STORE_URL_FOR_SIMPLE
 import org.simple.clinic.appupdate.dialog.AppUpdateDialog
 import org.simple.clinic.databinding.ScreenPatientsBinding
 import org.simple.clinic.di.injector

@@ -18,6 +18,8 @@ object LoadInfoForShowingAppUpdateMessage : PatientsTabEffect()
 
 object TouchAppUpdateShownAtTime : PatientsTabEffect()
 
+object LoadAppStaleness : PatientsTabEffect()
+
 sealed class PatientsTabViewEffect : PatientsTabEffect()
 
 object OpenEnterOtpScreen : PatientsTabViewEffect()

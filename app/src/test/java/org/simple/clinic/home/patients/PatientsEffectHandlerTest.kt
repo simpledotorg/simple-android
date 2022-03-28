@@ -1,8 +1,12 @@
 package org.simple.clinic.home.patients
 
 import com.f2prateek.rx.preferences2.Preference
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
+import com.nhaarman.mockitokotlin2.whenever
+import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
@@ -61,5 +65,19 @@ class PatientsEffectHandlerTest {
     // then
     verify(uiActions).openSimpleOnPlaystore()
     effectHandlerTestCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when load app staleness effect is received, then load app staleness`() {
+    // given
+    val appStaleness = 35
+    whenever(checkAppUpdate.loadAppStaleness()).doReturn(Observable.just(appStaleness))
+
+    // when
+    effectHandlerTestCase.dispatch(LoadAppStaleness)
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(AppStalenessLoaded(appStaleness))
+    verifyZeroInteractions(uiActions)
   }
 }

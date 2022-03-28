@@ -26,6 +26,9 @@ data class PatientsTabModel(
   val hasLoadedNumberOfPatientsRegistered: Boolean
     get() = numberOfPatientsRegistered != null
 
+  val hasAppStaleness
+    get() = appStaleness != null
+
   fun userLoaded(user: User): PatientsTabModel {
     return copy(user = user)
   }

@@ -79,7 +79,7 @@ class PatientsLogicTest {
 
   @Before
   fun setUp() {
-    val uiRenderer = PatientsTabUiRenderer(ui)
+    val uiRenderer = PatientsTabUiRenderer(ui, LocalDate.of(2021, 3, 22))
     val viewEffectHandler = PatientsTabViewEffectHandler(uiActions)
     val patientsEffectHandler = PatientsEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),

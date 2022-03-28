@@ -46,10 +46,12 @@ import org.simple.clinic.simplevideo.SimpleVideoConfig
 import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.TrainingVideo
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId
 import java.time.Instant
+import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 
@@ -91,6 +93,9 @@ class PatientsTabScreen : BaseScreen<
 
   @Inject
   lateinit var features: Features
+
+  @Inject
+  lateinit var userClock: UserClock
 
   private val deferredEvents = DeferredEventSource<PatientsTabEvent>()
 
@@ -141,7 +146,7 @@ class PatientsTabScreen : BaseScreen<
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenPatientsBinding.inflate(layoutInflater, container, false)
 
-  override fun uiRenderer() = PatientsTabUiRenderer(this)
+  override fun uiRenderer() = PatientsTabUiRenderer(this, LocalDate.now(userClock))
 
   override fun viewEffectHandler() = PatientsTabViewEffectHandler(this)
 
@@ -251,6 +256,10 @@ class PatientsTabScreen : BaseScreen<
 
   override fun showUserStatusAsWaitingForApproval() {
     showUserAccountStatus(R.id.userStatusAwaitingApproval)
+  }
+
+  override fun renderAppUpdateReason(appStalenessInMonths: Int) {
+    // nothing to look at here, yet
   }
 
   override fun showUserStatusAsApproved() {

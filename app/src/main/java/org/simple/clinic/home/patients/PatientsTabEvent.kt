@@ -55,3 +55,5 @@ data class RequiredInfoForShowingAppUpdateLoaded(
 ) : PatientsTabEvent()
 
 data class AppStalenessLoaded(val appStaleness: Int) : PatientsTabEvent()
+
+object UpdateNowButtonClicked : PatientsTabEvent()

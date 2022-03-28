@@ -26,6 +26,7 @@ class PatientsTabUpdate : Update<PatientsTabModel, PatientsTabEvent, PatientsTab
       SimpleVideoClicked -> dispatch(OpenTrainingVideo)
       is RequiredInfoForShowingAppUpdateLoaded -> showAppUpdateAvailableMessage(event)
       is AppStalenessLoaded -> noChange()
+      UpdateNowButtonClicked -> dispatch(OpenSimpleOnPlayStore)
     }
   }
 

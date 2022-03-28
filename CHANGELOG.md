@@ -16,6 +16,7 @@
 - Add GH Action to trigger a demo release on Bitrise when release branch is created
 - Run CI checks in `trigger_demo_release` workflow
 - Cancel in progress demo release workflow when new release action is triggered
+- Pass Simple Bitrise app slug to `TriggerBitriseRelease` script
 - Add `CriticalAppUpdateDialog`
 
 ### Features

@@ -141,6 +141,15 @@ class PatientsTabScreen : BaseScreen<
   private val simpleVideoDurationTextView
     get() = simpleVideoLayout.simpleVideoDurationTextView
 
+  private val appUpdateCardLayout
+    get() = binding.appUpdateCardLayout
+
+  private val appUpdateCardUpdateNowButton
+    get() = appUpdateCardLayout.updateNowButton
+
+  private val appUpdateCardUpdateReason
+    get() = appUpdateCardLayout.criticalUpdateReason
+
   override fun defaultModel() = PatientsTabModel.create()
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
@@ -157,7 +166,8 @@ class PatientsTabScreen : BaseScreen<
           dismissApprovedStatusClicks(),
           enterCodeManuallyClicks(),
           scanCardIdButtonClicks(),
-          simpleVideoClicked()
+          simpleVideoClicked(),
+          appUpdateCardUpdateNowClicked()
       )
       .compose<UiEvent>(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
       .compose(ReportAnalyticsEvents())
@@ -228,6 +238,10 @@ class PatientsTabScreen : BaseScreen<
       .clicks()
       .map { SimpleVideoClicked }
 
+  private fun appUpdateCardUpdateNowClicked() = appUpdateCardUpdateNowButton
+      .clicks()
+      .map { UpdateNowButtonClicked }
+
   override fun openPatientSearchScreen(additionalIdentifier: Identifier?) {
     val screenKey = InstantSearchScreenKey(
         additionalIdentifier = additionalIdentifier,
@@ -259,7 +273,7 @@ class PatientsTabScreen : BaseScreen<
   }
 
   override fun renderAppUpdateReason(appStalenessInMonths: Int) {
-    // nothing to look at here, yet
+    appUpdateCardUpdateReason.text = resources.getString(R.string.update_required_reason, appStalenessInMonths)
   }
 
   override fun showUserStatusAsApproved() {

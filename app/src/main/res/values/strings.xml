@@ -938,4 +938,10 @@
   <string name="critical_update_required_dialog_help_section_content">Tap on the button below to get help from our friendly support team</string>
   <string name="critical_update_required_reason">App is %d months out of date</string>
 
+  <!-- Critical app update card -->
+  <string name="critical_update_required_card_title">Critical update</string>
+  <string name="critical_update_required_card_content">Update now for critical security changes and latest features</string>
+  <string name="update_required_reason">App is %d months out of date</string>
+  <string name="critical_update_required_card_update_button_text">UPDATE NOW</string>
+
 </resources>

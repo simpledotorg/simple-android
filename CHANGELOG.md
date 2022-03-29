@@ -6,6 +6,7 @@
 
 - Bump GH Actions `cache` to v3
 - Fix `trigger_demo_release` workflow running on every newly created branch
+- Implement critical app update card in `PatientsTabScreen`
 
 ### Features
 
@@ -13,7 +14,7 @@
 
 ### Changes
 
-- [In Progress: 24 Mar 2022] Add stronger app update reminders
+- [In Progress: 28 Mar 2022] Add stronger app update reminders
 
 ## On Demo
 

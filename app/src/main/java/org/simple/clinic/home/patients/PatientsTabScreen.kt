@@ -18,10 +18,13 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.PLAY_STORE_URL_FOR_SIMPLE
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.ActivityLifecycle.Resumed
+import org.simple.clinic.activity.permissions.RequestPermissions
+import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appupdate.dialog.AppUpdateDialog
 import org.simple.clinic.databinding.ScreenPatientsBinding
@@ -32,10 +35,10 @@ import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
-import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.simplevideo.SimpleVideo
@@ -43,12 +46,12 @@ import org.simple.clinic.simplevideo.SimpleVideoConfig
 import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.TrainingVideo
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
-import org.simple.clinic.activity.permissions.RequestPermissions
-import org.simple.clinic.activity.permissions.RuntimePermissions
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId
 import java.time.Instant
+import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 
@@ -90,6 +93,9 @@ class PatientsTabScreen : BaseScreen<
 
   @Inject
   lateinit var features: Features
+
+  @Inject
+  lateinit var userClock: UserClock
 
   private val deferredEvents = DeferredEventSource<PatientsTabEvent>()
 
@@ -135,12 +141,21 @@ class PatientsTabScreen : BaseScreen<
   private val simpleVideoDurationTextView
     get() = simpleVideoLayout.simpleVideoDurationTextView
 
+  private val appUpdateCardLayout
+    get() = binding.appUpdateCardLayout
+
+  private val appUpdateCardUpdateNowButton
+    get() = appUpdateCardLayout.updateNowButton
+
+  private val appUpdateCardUpdateReason
+    get() = appUpdateCardLayout.criticalUpdateReason
+
   override fun defaultModel() = PatientsTabModel.create()
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenPatientsBinding.inflate(layoutInflater, container, false)
 
-  override fun uiRenderer() = PatientsTabUiRenderer(this)
+  override fun uiRenderer() = PatientsTabUiRenderer(this, LocalDate.now(userClock))
 
   override fun viewEffectHandler() = PatientsTabViewEffectHandler(this)
 
@@ -151,7 +166,8 @@ class PatientsTabScreen : BaseScreen<
           dismissApprovedStatusClicks(),
           enterCodeManuallyClicks(),
           scanCardIdButtonClicks(),
-          simpleVideoClicked()
+          simpleVideoClicked(),
+          appUpdateCardUpdateNowClicked()
       )
       .compose<UiEvent>(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
       .compose(ReportAnalyticsEvents())
@@ -222,6 +238,10 @@ class PatientsTabScreen : BaseScreen<
       .clicks()
       .map { SimpleVideoClicked }
 
+  private fun appUpdateCardUpdateNowClicked() = appUpdateCardUpdateNowButton
+      .clicks()
+      .map { UpdateNowButtonClicked }
+
   override fun openPatientSearchScreen(additionalIdentifier: Identifier?) {
     val screenKey = InstantSearchScreenKey(
         additionalIdentifier = additionalIdentifier,
@@ -250,6 +270,10 @@ class PatientsTabScreen : BaseScreen<
 
   override fun showUserStatusAsWaitingForApproval() {
     showUserAccountStatus(R.id.userStatusAwaitingApproval)
+  }
+
+  override fun renderAppUpdateReason(appStalenessInMonths: Int) {
+    appUpdateCardUpdateReason.text = resources.getString(R.string.update_required_reason, appStalenessInMonths)
   }
 
   override fun showUserStatusAsApproved() {
@@ -288,6 +312,17 @@ class PatientsTabScreen : BaseScreen<
 
   override fun openPatientSummary(patientId: UUID) {
     router.push(PatientSummaryScreenKey(patientId, OpenIntention.ViewExistingPatient, Instant.now(utcClock)))
+  }
+
+  override fun openSimpleOnPlaystore() {
+    val packageManager = requireContext().packageManager
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(PLAY_STORE_URL_FOR_SIMPLE))
+
+    if (intent.resolveActivity(packageManager) != null) {
+      requireContext().startActivity(intent)
+    } else {
+      CrashReporter.report(ActivityNotFoundException("Unable to open play store url because no supporting apps were found."))
+    }
   }
 
   private fun showHomeScreenBackground(@IdRes viewId: Int) {

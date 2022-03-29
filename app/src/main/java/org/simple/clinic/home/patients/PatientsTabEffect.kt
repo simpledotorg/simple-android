@@ -20,6 +20,8 @@ object TouchAppUpdateShownAtTime : PatientsTabEffect()
 
 object LoadAppStaleness : PatientsTabEffect()
 
+object ScheduleAppUpdateNotification : PatientsTabEffect()
+
 sealed class PatientsTabViewEffect : PatientsTabEffect()
 
 object OpenEnterOtpScreen : PatientsTabViewEffect()

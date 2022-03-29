@@ -10,6 +10,7 @@ import dagger.assisted.AssistedInject
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.appupdate.AppUpdateNotificationScheduler
 import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.simplevideo.SimpleVideoConfig
@@ -32,11 +33,12 @@ class PatientsEffectHandler @AssistedInject constructor(
     private val utcClock: UtcClock,
     private val userClock: UserClock,
     private val checkAppUpdate: CheckAppUpdateAvailability,
-    @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
+    private val appUpdateNotificationScheduler: AppUpdateNotificationScheduler,
     @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>,
     @SimpleVideoConfig(NumberOfPatientsRegistered) private val numberOfPatientsRegisteredPref: Preference<Int>,
     @Named("app_update_last_shown_at") private val appUpdateDialogShownAtPref: Preference<Instant>,
-    @Assisted private val viewEffectsConsumer: Consumer<PatientsTabViewEffect>
+    @Assisted private val viewEffectsConsumer: Consumer<PatientsTabViewEffect>,
+    @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>
 ) {
 
   @AssistedFactory
@@ -57,6 +59,7 @@ class PatientsEffectHandler @AssistedInject constructor(
         .addTransformer(LoadInfoForShowingAppUpdateMessage::class.java, loadInfoForShowingAppUpdate())
         .addConsumer(TouchAppUpdateShownAtTime::class.java, { appUpdateDialogShownAtPref.set(Instant.now(utcClock)) }, schedulers.io())
         .addTransformer(LoadAppStaleness::class.java, loadAppStaleness())
+        .addConsumer(ScheduleAppUpdateNotification::class.java, { appUpdateNotificationScheduler.schedule() }, schedulers.io())
         .addConsumer(PatientsTabViewEffect::class.java, viewEffectsConsumer::accept, schedulers.ui())
         .build()
   }

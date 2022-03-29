@@ -4,11 +4,13 @@ import com.f2prateek.rx.preferences2.Preference
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.appupdate.AppUpdateNotificationScheduler
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.user.UserSession
@@ -26,6 +28,7 @@ class PatientsEffectHandlerTest {
   private val hasUserDismissedApprovedStatusPreference = mock<Preference<Boolean>>()
   private val checkAppUpdate = mock<CheckAppUpdateAvailability>()
   private val appUpdateDialogShownPref = mock<Preference<Instant>>()
+  private val appUpdateNotificationScheduler = mock<AppUpdateNotificationScheduler>()
 
   private val date = LocalDate.parse("2018-01-01")
   private val utcClock = TestUtcClock(date)
@@ -43,11 +46,12 @@ class PatientsEffectHandlerTest {
       utcClock = utcClock,
       userClock = userClock,
       checkAppUpdate = checkAppUpdate,
-      approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference,
+      appUpdateNotificationScheduler = appUpdateNotificationScheduler,
       hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatusPreference,
       numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPreference,
       appUpdateDialogShownAtPref = appUpdateDialogShownPref,
-      viewEffectsConsumer = viewEffectHandler::handle
+      viewEffectsConsumer = viewEffectHandler::handle,
+      approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference
   ).build()
 
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
@@ -78,6 +82,18 @@ class PatientsEffectHandlerTest {
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(AppStalenessLoaded(appStaleness))
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when schedule app update notification effect is received, then schedule app update notification`() {
+    // when
+    effectHandlerTestCase.dispatch(ScheduleAppUpdateNotification)
+
+    // then
+    verify(appUpdateNotificationScheduler).schedule()
+    verifyNoMoreInteractions(appUpdateNotificationScheduler)
+    effectHandlerTestCase.assertNoOutgoingEvents()
     verifyZeroInteractions(uiActions)
   }
 }

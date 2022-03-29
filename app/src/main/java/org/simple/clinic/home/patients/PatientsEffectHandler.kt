@@ -133,7 +133,8 @@ class PatientsEffectHandler @AssistedInject constructor(
             RequiredInfoForShowingAppUpdateLoaded(
                 isAppUpdateAvailable = it is AppUpdateState.ShowAppUpdate,
                 appUpdateLastShownOn = updateLastShownOn,
-                currentDate = today
+                currentDate = today,
+                appUpdateNudgePriority = (it as? AppUpdateState.ShowAppUpdate)?.appUpdateNudgePriority
             )
           }
     }

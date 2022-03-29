@@ -2,6 +2,7 @@ package org.simple.clinic.home.patients
 
 import android.Manifest
 import org.simple.clinic.activity.permissions.RequiresPermission
+import org.simple.clinic.appupdate.AppUpdateNudgePriority
 import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.user.User
 import org.simple.clinic.widgets.UiEvent
@@ -51,7 +52,8 @@ object SimpleVideoClicked : PatientsTabEvent() {
 data class RequiredInfoForShowingAppUpdateLoaded(
     val isAppUpdateAvailable: Boolean,
     val appUpdateLastShownOn: LocalDate,
-    val currentDate: LocalDate
+    val currentDate: LocalDate,
+    val appUpdateNudgePriority: AppUpdateNudgePriority?
 ) : PatientsTabEvent()
 
 data class AppStalenessLoaded(val appStaleness: Int) : PatientsTabEvent()

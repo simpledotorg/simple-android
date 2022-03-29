@@ -12,6 +12,7 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.appupdate.AppUpdateNotificationScheduler
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
+import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.user.UserSession
@@ -19,6 +20,7 @@ import org.simple.clinic.user.refreshuser.RefreshCurrentUser
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
+import org.simple.clinic.util.toUtcInstant
 import java.time.Instant
 import java.time.LocalDate
 
@@ -110,5 +112,26 @@ class PatientsEffectHandlerTest {
     verify(uiActions).showCriticalAppUpdateDialog(appUpdateNudgePriority)
     verifyNoMoreInteractions(uiActions)
     effectHandlerTestCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when load info for showing app update message effect is received, then load info for showing app update message`() {
+    // given
+    val appUpdateNudgePriority = CRITICAL
+    val appUpdateLastShownOn = LocalDate.of(2022, 3, 22)
+    whenever(checkAppUpdate.listen()).doReturn(Observable.just(ShowAppUpdate(appUpdateNudgePriority)))
+    whenever(appUpdateDialogShownPref.get()).thenReturn(appUpdateLastShownOn.toUtcInstant(userClock))
+
+    // when
+    effectHandlerTestCase.dispatch(LoadInfoForShowingAppUpdateMessage)
+
+    // then
+
+    effectHandlerTestCase.assertOutgoingEvents(RequiredInfoForShowingAppUpdateLoaded(
+        isAppUpdateAvailable = true,
+        appUpdateLastShownOn = appUpdateLastShownOn,
+        currentDate = LocalDate.of(2018, 1, 1),
+        appUpdateNudgePriority = appUpdateNudgePriority
+    ))
   }
 }

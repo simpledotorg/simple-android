@@ -101,7 +101,7 @@ class PatientsLogicTest {
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = PatientsTabModel.create(),
-        init = PatientsInit(),
+        init = PatientsInit(isNotifyAppUpdateAvailableV2Enabled = false),
         update = PatientsTabUpdate(),
         effectHandler = patientsEffectHandler.build(),
         modelUpdateListener = uiRenderer::render

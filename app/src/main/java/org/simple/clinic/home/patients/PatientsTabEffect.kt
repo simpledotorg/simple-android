@@ -33,3 +33,5 @@ object OpenScanBpPassportScreen : PatientsTabViewEffect()
 object OpenTrainingVideo : PatientsTabViewEffect()
 
 object ShowAppUpdateAvailable : PatientsTabViewEffect()
+
+object OpenSimpleOnPlayStore : PatientsTabViewEffect()

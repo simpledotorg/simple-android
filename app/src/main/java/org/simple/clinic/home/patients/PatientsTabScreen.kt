@@ -22,7 +22,10 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.ActivityLifecycle.Resumed
+import org.simple.clinic.activity.permissions.RequestPermissions
+import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appupdate.AppUpdateNotificationWorker.Companion.PLAY_STORE_URL_FOR_SIMPLE
 import org.simple.clinic.appupdate.dialog.AppUpdateDialog
 import org.simple.clinic.databinding.ScreenPatientsBinding
 import org.simple.clinic.di.injector
@@ -32,10 +35,10 @@ import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
-import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.simplevideo.SimpleVideo
@@ -43,8 +46,6 @@ import org.simple.clinic.simplevideo.SimpleVideoConfig
 import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.TrainingVideo
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
-import org.simple.clinic.activity.permissions.RequestPermissions
-import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId
@@ -288,6 +289,17 @@ class PatientsTabScreen : BaseScreen<
 
   override fun openPatientSummary(patientId: UUID) {
     router.push(PatientSummaryScreenKey(patientId, OpenIntention.ViewExistingPatient, Instant.now(utcClock)))
+  }
+
+  override fun openSimpleOnPlaystore() {
+    val packageManager = requireContext().packageManager
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(PLAY_STORE_URL_FOR_SIMPLE))
+
+    if (intent.resolveActivity(packageManager) != null) {
+      requireContext().startActivity(intent)
+    } else {
+      CrashReporter.report(ActivityNotFoundException("Unable to open play store url because no supporting apps were found."))
+    }
   }
 
   private fun showHomeScreenBackground(@IdRes viewId: Int) {

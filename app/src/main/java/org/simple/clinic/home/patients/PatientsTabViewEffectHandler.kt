@@ -15,6 +15,7 @@ class PatientsTabViewEffectHandler(
       OpenScanBpPassportScreen -> uiActions.openScanSimpleIdCardScreen()
       OpenTrainingVideo -> uiActions.openYouTubeLinkForSimpleVideo()
       ShowAppUpdateAvailable -> uiActions.showAppUpdateDialog()
+      OpenSimpleOnPlayStore -> uiActions.openSimpleOnPlaystore()
     }
   }
 }

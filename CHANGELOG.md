@@ -5,6 +5,7 @@
 ### Internal
 
 - Bump GH Actions `cache` to v3
+- Fix `trigger_demo_release` workflow running on every newly created branch
 
 ### Features
 

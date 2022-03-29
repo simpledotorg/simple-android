@@ -20,7 +20,7 @@ val releaseBranchRegex = Regex("release\\/\\d{4}-\\d{2}-\\d{2}\$")
 
 println("Checking for newly created release branch")
 
-if (formattedReleaseBranch.contains(releaseBranchRegex)) {
+if (formattedReleaseBranch.matches(releaseBranchRegex)) {
   println("Newly created release branch found: $formattedReleaseBranch")
 
   val client = OkHttpClient.Builder().build()

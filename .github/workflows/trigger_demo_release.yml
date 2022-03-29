@@ -11,6 +11,7 @@ concurrency:
 jobs:
   qa_lint:
     runs-on: ubuntu-latest
+    if: ${{ contains(github.ref, 'refs/heads/release/') }}
     steps:
       - uses: actions/checkout@v3
 
@@ -35,6 +36,7 @@ jobs:
 
   qa_unit_tests:
     runs-on: ubuntu-latest
+    if: ${{ contains(github.ref, 'refs/heads/release/') }}
     steps:
       - uses: actions/checkout@v3
 
@@ -61,6 +63,7 @@ jobs:
   # https://github.com/ReactiveCircus/android-emulator-runner
   qa_android_tests:
     runs-on: macos-latest
+    if: ${{ contains(github.ref, 'refs/heads/release/') }}
     timeout-minutes: 60
     env:
       AVD_API_LEVEL: 30
@@ -192,8 +195,10 @@ jobs:
 
 
 
+
   verify_release_bundles:
     runs-on: [ ubuntu-latest ]
+    if: ${{ contains(github.ref, 'refs/heads/release/') }}
     strategy:
       matrix:
         buildType: [ 'Production' ]
@@ -215,8 +220,10 @@ jobs:
 
 
 
+
   verify_room_schemas:
     runs-on: [ ubuntu-latest ]
+    if: ${{ contains(github.ref, 'refs/heads/release/') }}
     steps:
       - name: Checkout master
         uses: actions/checkout@v3

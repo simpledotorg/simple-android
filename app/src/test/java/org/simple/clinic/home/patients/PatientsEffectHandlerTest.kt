@@ -11,6 +11,7 @@ import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.appupdate.AppUpdateNotificationScheduler
+import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.user.UserSession
@@ -95,5 +96,19 @@ class PatientsEffectHandlerTest {
     verifyNoMoreInteractions(appUpdateNotificationScheduler)
     effectHandlerTestCase.assertNoOutgoingEvents()
     verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when show critical app update dialog effect is received, then show critical app update dialog`() {
+    // given
+    val appUpdateNudgePriority = CRITICAL
+
+    // when
+    effectHandlerTestCase.dispatch(ShowCriticalAppUpdateDialog(appUpdateNudgePriority))
+
+    // then
+    verify(uiActions).showCriticalAppUpdateDialog(appUpdateNudgePriority)
+    verifyNoMoreInteractions(uiActions)
+    effectHandlerTestCase.assertNoOutgoingEvents()
   }
 }

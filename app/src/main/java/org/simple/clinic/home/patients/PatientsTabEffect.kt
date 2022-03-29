@@ -1,5 +1,6 @@
 package org.simple.clinic.home.patients
 
+import org.simple.clinic.appupdate.AppUpdateNudgePriority
 import org.simple.clinic.patient.businessid.Identifier
 
 sealed class PatientsTabEffect
@@ -39,3 +40,5 @@ object OpenTrainingVideo : PatientsTabViewEffect()
 object ShowAppUpdateAvailable : PatientsTabViewEffect()
 
 object OpenSimpleOnPlayStore : PatientsTabViewEffect()
+
+data class ShowCriticalAppUpdateDialog(val appUpdateNudgePriority: AppUpdateNudgePriority) : PatientsTabViewEffect()

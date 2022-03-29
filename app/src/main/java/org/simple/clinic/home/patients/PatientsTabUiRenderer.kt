@@ -3,9 +3,12 @@ package org.simple.clinic.home.patients
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.user.User
 import org.simple.clinic.util.ValueChangedCallback
+import java.time.LocalDate
+import java.time.Period
 
 class PatientsTabUiRenderer(
-    private val ui: PatientsTabUi
+    private val ui: PatientsTabUi,
+    private val currentDate: LocalDate
 ) : ViewRenderer<PatientsTabModel> {
 
   private val userChangedCallback = ValueChangedCallback<User>()
@@ -22,6 +25,15 @@ class PatientsTabUiRenderer(
     if (model.hasLoadedNumberOfPatientsRegistered) {
       toggleTrainingViewVisibility(model)
     }
+
+    if(model.hasAppStaleness) {
+      ui.renderAppUpdateReason(appStalenessInMonths(model.appStaleness!!))
+    }
+  }
+
+  private fun appStalenessInMonths(appStaleness: Int): Int {
+    val lastUpdatedDate = currentDate.minusDays(appStaleness.toLong())
+    return Period.between(lastUpdatedDate, currentDate).months
   }
 
   private fun showAccountNotifications(model: PatientsTabModel) {

@@ -25,6 +25,8 @@ class PatientsTabUpdate : Update<PatientsTabModel, PatientsTabEvent, PatientsTab
       is LoadedNumberOfPatientsRegistered -> next(model.numberOfPatientsRegisteredUpdated(event.numberOfPatientsRegistered))
       SimpleVideoClicked -> dispatch(OpenTrainingVideo)
       is RequiredInfoForShowingAppUpdateLoaded -> showAppUpdateAvailableMessage(event)
+      is AppStalenessLoaded -> next(model.updateAppStaleness(event.appStaleness))
+      UpdateNowButtonClicked -> dispatch(OpenSimpleOnPlayStore)
     }
   }
 

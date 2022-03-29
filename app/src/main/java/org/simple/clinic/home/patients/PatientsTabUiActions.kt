@@ -12,4 +12,5 @@ interface PatientsTabUiActions {
   fun openYouTubeLinkForSimpleVideo()
   fun showAppUpdateDialog()
   fun openPatientSummary(patientId: UUID)
+  fun openSimpleOnPlaystore()
 }

@@ -7,6 +7,7 @@
 - Bump GH Actions `cache` to v3
 - Fix `trigger_demo_release` workflow running on every newly created branch
 - Implement critical app update card in `PatientsTabScreen`
+- Bump flipper to v0.140.0
 
 ### Features
 

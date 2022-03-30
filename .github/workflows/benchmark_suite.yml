@@ -32,6 +32,7 @@ jobs:
           api-level: 30
           arch: x86_64
           disable-animations: true
+          disk-size: 8G
           script: |
             adb root
             ./gradlew -PmanifestEndpoint=https://api-sandbox.simple.org/api/ installQaDebug installQaDebugAndroidTest lockClocks

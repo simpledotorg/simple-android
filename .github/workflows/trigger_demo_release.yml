@@ -136,6 +136,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
+          disk-size: 8G
           script: echo "Generated AVD snapshot for caching."
 
       - name: set up JDK
@@ -167,6 +168,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
+          disk-size: 8G
           script: |
             adb root
             mkdir -p android-app/app/build/outputs/test-artifacts

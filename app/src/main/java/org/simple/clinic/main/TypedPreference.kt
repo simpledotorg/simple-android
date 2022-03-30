@@ -14,6 +14,7 @@ annotation class TypedPreference(val value: Type) {
     SelectedState,
     CountryV1,
     IsLightAppUpdateNotificationShown,
-    IsMediumAppUpdateNotificationShown
+    IsMediumAppUpdateNotificationShown,
+    UpdateDrugStockReportsMonth
   }
 }

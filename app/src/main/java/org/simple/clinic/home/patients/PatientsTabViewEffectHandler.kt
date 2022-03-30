@@ -16,6 +16,7 @@ class PatientsTabViewEffectHandler(
       OpenTrainingVideo -> uiActions.openYouTubeLinkForSimpleVideo()
       ShowAppUpdateAvailable -> uiActions.showAppUpdateDialog()
       OpenSimpleOnPlayStore -> uiActions.openSimpleOnPlaystore()
+      is ShowCriticalAppUpdateDialog -> uiActions.showCriticalAppUpdateDialog(viewEffect.appUpdateNudgePriority)
     }
   }
 }

@@ -7,6 +7,11 @@ import android.os.Build
 import androidx.work.RxWorker
 import androidx.work.WorkerParameters
 import io.reactivex.Single
+import org.simple.clinic.ClinicApp
+import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.Found
+import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.NotFound
+import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.OtherError
+import javax.inject.Inject
 
 class DrugStockWorker(
     private val context: Context,
@@ -18,6 +23,9 @@ class DrugStockWorker(
     private const val NOTIFICATION_CHANNEL_NAME = "Drug Stock Reminders"
   }
 
+  @Inject
+  lateinit var drugStockReminder: DrugStockReminder
+
   private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
   init {
@@ -25,6 +33,17 @@ class DrugStockWorker(
   }
   override fun createWork(): Single<Result> {
     createNotificationChannel()
+
+    return Single.create<Result?> {
+      val response = drugStockReminder
+          .reminderForDrugStock(formattedDate)
+      when (response) {
+        is Found -> { /* no op */ }
+        NotFound -> {/* no op */ }
+        OtherError -> { /* no op */ }
+      }
+    }
+  }
   }
 
   private fun createNotificationChannel() {

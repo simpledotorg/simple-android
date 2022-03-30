@@ -26,10 +26,13 @@ import org.simple.clinic.activity.ActivityLifecycle.Resumed
 import org.simple.clinic.activity.permissions.RequestPermissions
 import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appupdate.AppUpdateNudgePriority
+import org.simple.clinic.appupdate.criticalupdatedialog.CriticalAppUpdateDialog
 import org.simple.clinic.appupdate.dialog.AppUpdateDialog
 import org.simple.clinic.databinding.ScreenPatientsBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.enterotp.EnterOtpScreen
+import org.simple.clinic.feature.Feature.NotifyAppUpdateAvailableV2
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.mobius.DeferredEventSource
@@ -175,7 +178,7 @@ class PatientsTabScreen : BaseScreen<
 
   override fun createUpdate() = PatientsTabUpdate()
 
-  override fun createInit() = PatientsInit()
+  override fun createInit() = PatientsInit(features.isEnabled(NotifyAppUpdateAvailableV2))
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<PatientsTabViewEffect>) = effectHandlerFactory.create(
       viewEffectsConsumer = viewEffectsConsumer
@@ -323,6 +326,10 @@ class PatientsTabScreen : BaseScreen<
     } else {
       CrashReporter.report(ActivityNotFoundException("Unable to open play store url because no supporting apps were found."))
     }
+  }
+
+  override fun showCriticalAppUpdateDialog(appUpdateNudgePriority: AppUpdateNudgePriority) {
+    router.push(CriticalAppUpdateDialog.Key(appUpdateNudgePriority))
   }
 
   private fun showHomeScreenBackground(@IdRes viewId: Int) {

@@ -8,6 +8,7 @@
 - Fix `trigger_demo_release` workflow running on every newly created branch
 - Implement critical app update card in `PatientsTabScreen`
 - Bump flipper to v0.140.0
+- [In Progress: 29 Mar 2022] Implement showing app update nudges based on the priority in `PatientTabScreen`
 
 ### Features
 
@@ -15,7 +16,7 @@
 
 ### Changes
 
-- [In Progress: 28 Mar 2022] Add stronger app update reminders
+- [In Progress: 29 Mar 2022] Add stronger app update reminders
 
 ## On Demo
 

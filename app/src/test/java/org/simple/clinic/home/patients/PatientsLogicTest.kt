@@ -18,6 +18,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
+import org.simple.clinic.appupdate.AppUpdateNotificationScheduler
 import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.AppUpdateState.AppUpdateStateError
 import org.simple.clinic.appupdate.AppUpdateState.DontShowAppUpdate
@@ -59,6 +60,7 @@ class PatientsLogicTest {
   private val hasUserDismissedApprovedStatusPreference = mock<Preference<Boolean>>()
   private val checkAppUpdate = mock<CheckAppUpdateAvailability>()
   private val appUpdateDialogShownPref = mock<Preference<Instant>>()
+  private val appUpdateNotificationScheduler = mock<AppUpdateNotificationScheduler>()
 
   private val date = LocalDate.parse("2018-01-01")
   private val dateAsInstant = Instant.parse("2018-01-01T00:00:00Z")
@@ -88,17 +90,18 @@ class PatientsLogicTest {
         utcClock = utcClock,
         userClock = userClock,
         checkAppUpdate = checkAppUpdate,
-        approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference,
+        appUpdateNotificationScheduler = appUpdateNotificationScheduler,
         hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatusPreference,
         numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPreference,
         appUpdateDialogShownAtPref = appUpdateDialogShownPref,
-        viewEffectsConsumer = viewEffectHandler::handle
+        viewEffectsConsumer = viewEffectHandler::handle,
+        approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference
     )
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = PatientsTabModel.create(),
-        init = PatientsInit(),
+        init = PatientsInit(isNotifyAppUpdateAvailableV2Enabled = false),
         update = PatientsTabUpdate(),
         effectHandler = patientsEffectHandler.build(),
         modelUpdateListener = uiRenderer::render

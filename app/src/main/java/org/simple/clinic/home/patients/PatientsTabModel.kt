@@ -2,13 +2,15 @@ package org.simple.clinic.home.patients
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.appupdate.AppUpdateNudgePriority
 import org.simple.clinic.user.User
 
 @Parcelize
 data class PatientsTabModel(
     val user: User?,
     val numberOfPatientsRegistered: Int?,
-    val appStaleness: Int?
+    val appStaleness: Int?,
+    val appUpdateNudgePriority: AppUpdateNudgePriority?
 ) : Parcelable {
 
   companion object {
@@ -16,7 +18,8 @@ data class PatientsTabModel(
     fun create(): PatientsTabModel = PatientsTabModel(
         user = null,
         numberOfPatientsRegistered = null,
-        appStaleness = null
+        appStaleness = null,
+        appUpdateNudgePriority = null
     )
   }
 
@@ -39,5 +42,9 @@ data class PatientsTabModel(
 
   fun updateAppStaleness(appStaleness: Int): PatientsTabModel {
     return copy(appStaleness = appStaleness)
+  }
+
+  fun appUpdateNudgePriorityUpdated(appUpdateNudgePriority: AppUpdateNudgePriority): PatientsTabModel {
+    return copy(appUpdateNudgePriority = appUpdateNudgePriority)
   }
 }

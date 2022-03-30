@@ -9,6 +9,8 @@ import androidx.work.WorkerParameters
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Single
 import org.simple.clinic.ClinicApp
+import org.simple.clinic.di.DateFormatter
+import org.simple.clinic.di.DateFormatter.Type.MonthAndYear
 import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.Found
 import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.NotFound
 import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.OtherError
@@ -16,6 +18,7 @@ import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.UpdateDrugStockReportsMonth
 import org.simple.clinic.util.UserClock
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Optional
 import javax.inject.Inject
 
@@ -38,6 +41,10 @@ class DrugStockWorker(
   @Inject
   @TypedPreference(UpdateDrugStockReportsMonth)
   lateinit var updateDrugStockReportsMonth: Preference<Optional<String>>
+
+  @Inject
+  @DateFormatter(MonthAndYear)
+  lateinit var monthAndYearDateFormatter: DateTimeFormatter
 
   private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -69,6 +76,11 @@ class DrugStockWorker(
   private fun drugStockReportFound(currentMonthsDate: String): Result {
     updateDrugStockReportsMonth.set(Optional.of(currentMonthsDate))
     return Result.success()
+  }
+
+  private fun formatDateForNotification(currentMonthsDate: String): String {
+    val date = LocalDate.parse(currentMonthsDate)
+    return monthAndYearDateFormatter.format(date)
   }
 
   private fun createNotificationChannel() {

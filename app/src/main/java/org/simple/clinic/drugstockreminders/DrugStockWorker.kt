@@ -54,7 +54,7 @@ class DrugStockWorker(
       val response = drugStockReminder
           .reminderForDrugStock(formattedDate)
       when (response) {
-        is Found -> { /* no op */ }
+        is Found -> drugStockReportFound(response.drugStockReminderResponse.month)
         NotFound -> drugStockReportNotFound(formattedDate)
         OtherError -> { /* no op */ }
       }
@@ -64,6 +64,11 @@ class DrugStockWorker(
   private fun drugStockReportNotFound(previousMonthsDate: String): Result {
     updateDrugStockReportsMonth.set(Optional.of(previousMonthsDate))
     return Result.failure()
+  }
+
+  private fun drugStockReportFound(currentMonthsDate: String): Result {
+    updateDrugStockReportsMonth.set(Optional.of(currentMonthsDate))
+    return Result.success()
   }
 
   private fun createNotificationChannel() {

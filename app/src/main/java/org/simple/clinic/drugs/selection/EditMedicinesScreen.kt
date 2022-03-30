@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding3.view.clicks
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import com.spotify.mobius.functions.Consumer
@@ -111,6 +112,13 @@ class EditMedicinesScreen :
       )
   )
 
+  private val adapterObserver = object : RecyclerView.AdapterDataObserver() {
+    override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+      if (positionStart == 0 && itemCount == 1) recyclerView.smoothScrollToPosition(0)
+      super.onItemRangeInserted(positionStart, itemCount)
+    }
+  }
+
   private val patientUuid by unsafeLazy {
     screenKey.patientUuid
   }
@@ -150,6 +158,8 @@ class EditMedicinesScreen :
     toolbar.setNavigationOnClickListener { router.pop() }
     recyclerView.setHasFixedSize(false)
     recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+    adapter.registerAdapterDataObserver(adapterObserver)
     recyclerView.adapter = adapter
 
     val fadeAnimator = DefaultItemAnimator()
@@ -186,24 +196,12 @@ class EditMedicinesScreen :
       recyclerView.itemAnimator = animator
     }
 
-    val newAdapterItems = protocolDrugItems + AddNewPrescriptionListItem
-    val hasDrugsListChanged = adapter.currentList != newAdapterItems
-
-    adapter.submitList(newAdapterItems)
-
-    // Scroll to top to show newly added or edited prescriptions.
-    if (hasDrugsListChanged) {
-      recyclerView.postDelayed(::scrollListToTopPosition, 300)
-    }
+    adapter.submitList(protocolDrugItems + AddNewPrescriptionListItem)
   }
 
   override fun onDestroyView() {
-    recyclerView.removeCallbacks(::scrollListToTopPosition)
+    adapter.unregisterAdapterDataObserver(adapterObserver)
     super.onDestroyView()
-  }
-
-  private fun scrollListToTopPosition() {
-    recyclerView.smoothScrollToPosition(0)
   }
 
   override fun showNewPrescriptionEntrySheet(patientUuid: UUID) {

@@ -13,7 +13,7 @@ class PatientsTabUiRendererTest {
   private val defaultModel = PatientsTabModel.create()
 
   @Test
-  fun `When app staleness is loaded and app update nudge priority is medium, then display app update nudge reason`() {
+  fun `When app staleness is loaded and app update nudge priority is medium, then show critical app update card and display app update nudge reason`() {
     //given
     val appStaleness = 75
 
@@ -21,6 +21,7 @@ class PatientsTabUiRendererTest {
     uiRenderer.render(defaultModel.updateAppStaleness(appStaleness).appUpdateNudgePriorityUpdated(MEDIUM))
 
     // then
+    verify(ui).showCriticalAppUpdateCard()
     verify(ui).renderAppUpdateReason(appStalenessInMonths = 2)
     verifyNoMoreInteractions(ui)
   }

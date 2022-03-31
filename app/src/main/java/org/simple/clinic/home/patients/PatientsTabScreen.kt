@@ -348,6 +348,10 @@ class PatientsTabScreen : BaseScreen<
     showHomeScreenBackground(R.id.homeIllustration)
   }
 
+  override fun showCriticalAppUpdateCard() {
+    showHomeScreenBackground(R.id.appUpdateCardLayout)
+  }
+
   override fun openYouTubeLinkForSimpleVideo() {
     val packageManager = requireContext().packageManager
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(simpleVideo.url))

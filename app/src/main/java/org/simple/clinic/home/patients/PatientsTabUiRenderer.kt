@@ -27,6 +27,7 @@ class PatientsTabUiRenderer(
     }
 
     if (model.appUpdateNudgePriorityIsMedium && model.hasAppStaleness) {
+      ui.showCriticalAppUpdateCard()
       ui.renderAppUpdateReason(appStalenessInMonths(model.appStaleness!!))
     }
   }

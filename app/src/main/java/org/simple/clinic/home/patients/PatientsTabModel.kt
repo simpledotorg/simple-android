@@ -3,6 +3,7 @@ package org.simple.clinic.home.patients
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.appupdate.AppUpdateNudgePriority
+import org.simple.clinic.appupdate.AppUpdateNudgePriority.MEDIUM
 import org.simple.clinic.user.User
 
 @Parcelize
@@ -34,6 +35,9 @@ data class PatientsTabModel(
 
   val hasAppUpdateNudgePriority
     get() = appUpdateNudgePriority != null
+
+  val appUpdateNudgePriorityIsMedium
+    get() = hasAppUpdateNudgePriority && appUpdateNudgePriority == MEDIUM
 
   fun userLoaded(user: User): PatientsTabModel {
     return copy(user = user)

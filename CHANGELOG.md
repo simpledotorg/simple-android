@@ -21,10 +21,11 @@
 - Bump gradle to v7.4.2
 - Bump kotlin to v1.6.20
 - Bump coroutines to v1.6.0
+- Implemented the support for DrugStockReminder API
 
 ### Features
 
-- [In Progress: 17 Mar 2022] Messaging users to remind them to fill out drug stock report each month
+- [In Progress: 05 Apr 2022] Messaging users to remind them to fill out drug stock report each month
 
 ### Changes
 

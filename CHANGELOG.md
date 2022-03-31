@@ -12,7 +12,7 @@
 - Update AVD disk size to 8GB in GH Actions
 - Bump sentry-android to 5.7.1
 - Bump sentry gradle plugin to 3.0.1
-- [In Progress: 29 Mar 2022] Implement showing app update nudges based on the priority in `PatientTabScreen`
+- Implement showing app update nudges based on the priority in `PatientTabScreen`
 
 ### Features
 
@@ -20,7 +20,7 @@
 
 ### Changes
 
-- [In Progress: 29 Mar 2022] Add stronger app update reminders
+- [In Progress: 31 Mar 2022] Add stronger app update reminders
 
 ### Fixes
 

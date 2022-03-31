@@ -7,6 +7,7 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import java.time.LocalDate
 
 class PatientsTabUpdateTest {
   private val defaultModel = PatientsTabModel.create()
@@ -38,5 +39,35 @@ class PatientsTabUpdateTest {
                 hasNoEffects()
             )
         )
+  }
+
+  @Test
+  fun `when app update is available, update dialog was last shown yesterday and feature flag is disabled, then show app update dialog and touch app update shown time preference`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(RequiredInfoForShowingAppUpdateLoaded(isAppUpdateAvailable = true,
+            appUpdateNudgePriority = null,
+            appUpdateLastShownOn = LocalDate.of(2022, 3, 30),
+            currentDate = LocalDate.of(2022, 3, 31)
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowAppUpdateAvailable, TouchAppUpdateShownAtTime)
+        ))
+  }
+
+  @Test
+  fun `when app update is available, update dialog was last shown today and feature flag is disabled, then do nothing`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(RequiredInfoForShowingAppUpdateLoaded(isAppUpdateAvailable = true,
+            appUpdateNudgePriority = null,
+            appUpdateLastShownOn = LocalDate.of(2022, 3, 31),
+            currentDate = LocalDate.of(2022, 3, 31)
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasNoEffects()
+        ))
   }
 }

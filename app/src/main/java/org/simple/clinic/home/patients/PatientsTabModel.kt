@@ -32,6 +32,9 @@ data class PatientsTabModel(
   val hasAppStaleness
     get() = appStaleness != null
 
+  val hasAppUpdateNudgePriority
+    get() = appUpdateNudgePriority != null
+
   fun userLoaded(user: User): PatientsTabModel {
     return copy(user = user)
   }

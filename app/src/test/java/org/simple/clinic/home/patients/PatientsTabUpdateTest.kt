@@ -7,6 +7,7 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.LIGHT
 import java.time.LocalDate
 
@@ -87,6 +88,24 @@ class PatientsTabUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.appUpdateNudgePriorityUpdated(appUpdateNudgePriority)),
             hasEffects(ShowAppUpdateAvailable, TouchAppUpdateShownAtTime)
+        ))
+  }
+
+  @Test
+  fun `when app update nudge priority is critical and feature flag is enabled, then show critical app update dialog and update the model`() {
+    val updateSpec = UpdateSpec(PatientsTabUpdate(isNotifyAppUpdateAvailableV2Enabled = true))
+    val appUpdateNudgePriority = CRITICAL
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(RequiredInfoForShowingAppUpdateLoaded(isAppUpdateAvailable = true,
+            appUpdateNudgePriority = appUpdateNudgePriority,
+            appUpdateLastShownOn = LocalDate.of(2022, 3, 30),
+            currentDate = LocalDate.of(2022, 3, 31)
+        ))
+        .then(assertThatNext(
+            hasModel(defaultModel.appUpdateNudgePriorityUpdated(appUpdateNudgePriority)),
+            hasEffects(ShowCriticalAppUpdateDialog(appUpdateNudgePriority))
         ))
   }
 }

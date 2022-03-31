@@ -123,7 +123,7 @@ class PatientsTabUpdate(private val isNotifyAppUpdateAvailableV2Enabled: Boolean
   ): Next<PatientsTabModel, PatientsTabEffect> {
     return when (event.appUpdateNudgePriority!!) {
       LIGHT, MEDIUM -> showAppUpdateAvailableDialog(model, event)
-      CRITICAL, CRITICAL_SECURITY -> noChange()
+      CRITICAL, CRITICAL_SECURITY -> next(model.appUpdateNudgePriorityUpdated(event.appUpdateNudgePriority), ShowCriticalAppUpdateDialog(event.appUpdateNudgePriority))
     }
   }
 

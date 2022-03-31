@@ -3,7 +3,10 @@ package org.simple.clinic.drugstockreminders
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.TaskStackBuilder
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.work.RxWorker
@@ -21,6 +24,7 @@ import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.UpdateDrugStockReportsMonth
 import org.simple.clinic.util.UserClock
 import java.time.LocalDate
+import org.simple.clinic.setup.SetupActivity
 import java.time.format.DateTimeFormatter
 import java.util.Optional
 import javax.inject.Inject
@@ -94,12 +98,27 @@ class DrugStockWorker(
         .setTicker(context.getString(R.string.app_name))
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setStyle(NotificationCompat.BigTextStyle().bigText(notificationHeaderText))
+        .setContentIntent(openAppToHomeScreen())
         .build()
   }
 
   private fun formatDateForNotification(currentMonthsDate: String): String {
     val date = LocalDate.parse(currentMonthsDate)
     return monthAndYearDateFormatter.format(date)
+  }
+
+  private fun openAppToHomeScreen(): PendingIntent? {
+    val intent = Intent(context, SetupActivity::class.java)
+    val flag = setFlagBasedOnAndroidApis()
+    return PendingIntent.getActivity(context, 0, intent, flag)
+  }
+
+  private fun setFlagBasedOnAndroidApis(): Int {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+    } else {
+      PendingIntent.FLAG_CANCEL_CURRENT
+    }
   }
 
   private fun createNotificationChannel() {

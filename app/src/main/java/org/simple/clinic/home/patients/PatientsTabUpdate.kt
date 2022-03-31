@@ -92,7 +92,7 @@ class PatientsTabUpdate(private val isNotifyAppUpdateAvailableV2Enabled: Boolean
       noChange()
   }
 
-  private fun showAppUpdateAvailableMessage(event: RequiredInfoForShowingAppUpdateLoaded): Next<PatientsTabModel, PatientsTabEffect> {
+  private fun showAppUpdateAvailableDialog_Old(event: RequiredInfoForShowingAppUpdateLoaded): Next<PatientsTabModel, PatientsTabEffect> {
     val appUpdateLastShownOn = event.appUpdateLastShownOn
     val currentDate = event.currentDate
 
@@ -113,7 +113,7 @@ class PatientsTabUpdate(private val isNotifyAppUpdateAvailableV2Enabled: Boolean
     return if (isNotifyAppUpdateAvailableV2Enabled) {
       appUpdateNudgeBasedOnPriority(model, event)
     } else {
-      showAppUpdateAvailableMessage(event)
+      showAppUpdateAvailableDialog_Old(event)
     }
   }
 

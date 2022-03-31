@@ -8,7 +8,7 @@ import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.user.User
 import java.time.Duration
 
-class PatientsTabUpdate : Update<PatientsTabModel, PatientsTabEvent, PatientsTabEffect> {
+class PatientsTabUpdate(private val isNotifyAppUpdateAvailableV2Enabled: Boolean) : Update<PatientsTabModel, PatientsTabEvent, PatientsTabEffect> {
 
   override fun update(
       model: PatientsTabModel,

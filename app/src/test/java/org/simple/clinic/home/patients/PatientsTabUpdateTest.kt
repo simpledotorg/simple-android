@@ -10,7 +10,7 @@ import org.junit.Test
 
 class PatientsTabUpdateTest {
   private val defaultModel = PatientsTabModel.create()
-  private val updateSpec = UpdateSpec(PatientsTabUpdate())
+  private val updateSpec = UpdateSpec(PatientsTabUpdate(isNotifyAppUpdateAvailableV2Enabled = false))
 
   @Test
   fun `when update now button is clicked, then open Simple on play store`() {

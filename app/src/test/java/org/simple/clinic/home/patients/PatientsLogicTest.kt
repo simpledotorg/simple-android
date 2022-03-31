@@ -102,7 +102,7 @@ class PatientsLogicTest {
         events = uiEvents.ofType(),
         defaultModel = PatientsTabModel.create(),
         init = PatientsInit(isNotifyAppUpdateAvailableV2Enabled = false),
-        update = PatientsTabUpdate(),
+        update = PatientsTabUpdate(isNotifyAppUpdateAvailableV2Enabled = false),
         effectHandler = patientsEffectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )

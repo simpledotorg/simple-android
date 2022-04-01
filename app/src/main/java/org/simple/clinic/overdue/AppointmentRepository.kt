@@ -37,7 +37,6 @@ class AppointmentRepository @Inject constructor(
       appointmentFacilityUuid: UUID,
       creationFacilityUuid: UUID
   ): Appointment {
-
     val appointment = Appointment(
         uuid = appointmentUuid,
         patientUuid = patientUuid,
@@ -55,8 +54,6 @@ class AppointmentRepository @Inject constructor(
         creationFacilityUuid = creationFacilityUuid
     )
 
-    // TODO (vs) 20/05/20: Remove this side effect from this method
-    markOlderAppointmentsAsVisited(patientUuid)
     appointmentDao.save(listOf(appointment))
     return appointment
   }

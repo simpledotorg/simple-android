@@ -146,63 +146,6 @@ class AppointmentRepositoryAndroidTest {
   }
 
   @Test
-  fun when_creating_new_appointment_then_all_old_appointments_for_that_patient_should_be_marked_as_visited() {
-    // given
-    val firstAppointmentUuid = UUID.fromString("0bc9cdb3-bfe9-41e9-88b9-2a072c748c47")
-    val scheduledDateOfFirstAppointment = LocalDate.parse("2018-01-01")
-    val firstAppointmentScheduledAtTimestamp = Instant.now(clock)
-    appointmentRepository.schedule(
-        patientUuid = patientUuid,
-        appointmentUuid = firstAppointmentUuid,
-        appointmentDate = scheduledDateOfFirstAppointment,
-        appointmentType = Manual,
-        appointmentFacilityUuid = facility.uuid,
-        creationFacilityUuid = facility.uuid
-    )
-    markAppointmentSyncStatusAsDone(firstAppointmentUuid)
-
-    clock.advanceBy(Duration.ofHours(24))
-
-    val secondAppointmentUuid = UUID.fromString("ed31c3ae-8903-45fe-9ad3-0302dcba7fc6")
-    val scheduleDateOfSecondAppointment = LocalDate.parse("2018-02-01")
-    val secondAppointmentScheduledAtTimestamp = Instant.now(clock)
-
-    // when
-    appointmentRepository.schedule(
-        patientUuid = patientUuid,
-        appointmentUuid = secondAppointmentUuid,
-        appointmentDate = scheduleDateOfSecondAppointment,
-        appointmentType = Manual,
-        appointmentFacilityUuid = facility.uuid,
-        creationFacilityUuid = facility.uuid
-    )
-
-    // then
-    val firstAppointment = getAppointmentByUuid(firstAppointmentUuid)
-    with(firstAppointment) {
-      assertThat(patientUuid).isEqualTo(this@AppointmentRepositoryAndroidTest.patientUuid)
-      assertThat(scheduledDate).isEqualTo(scheduledDateOfFirstAppointment)
-      assertThat(status).isEqualTo(Visited)
-      assertThat(cancelReason).isEqualTo(null)
-      assertThat(syncStatus).isEqualTo(PENDING)
-      assertThat(createdAt).isEqualTo(firstAppointmentScheduledAtTimestamp)
-      assertThat(createdAt).isLessThan(secondAppointmentScheduledAtTimestamp)
-      assertThat(updatedAt).isEqualTo(secondAppointmentScheduledAtTimestamp)
-    }
-
-    val secondAppointment = getAppointmentByUuid(secondAppointmentUuid)
-    with(secondAppointment) {
-      assertThat(patientUuid).isEqualTo(this@AppointmentRepositoryAndroidTest.patientUuid)
-      assertThat(scheduledDate).isEqualTo(scheduleDateOfSecondAppointment)
-      assertThat(status).isEqualTo(Scheduled)
-      assertThat(cancelReason).isEqualTo(null)
-      assertThat(syncStatus).isEqualTo(PENDING)
-      assertThat(createdAt).isEqualTo(secondAppointmentScheduledAtTimestamp)
-      assertThat(updatedAt).isEqualTo(secondAppointmentScheduledAtTimestamp)
-    }
-  }
-
-  @Test
   fun deleted_blood_pressure_measurements_should_not_be_considered_when_fetching_overdue_appointments() {
     fun createBloodPressure(
         bpUuid: UUID,

@@ -143,7 +143,7 @@ class ScheduleAppointmentEffectHandlerTest {
   }
 
   @Test
-  fun `when schedule appointment for patient from next effect is received, then schedule appointment`() {
+  fun `when schedule appointment for patient from next effect is received, then mark older appointments as visited and schedule appointment`() {
     // given
     val scheduleDate = LocalDate.parse("2018-01-01")
 
@@ -173,7 +173,7 @@ class ScheduleAppointmentEffectHandlerTest {
   }
 
   @Test
-  fun `when schedule appointment for patient effect is received, then schedule appointment`() {
+  fun `when schedule appointment for patient effect is received, then mark older appointments as visited and schedule appointment`() {
     // given
     val scheduleDate = LocalDate.parse("2018-01-01")
 

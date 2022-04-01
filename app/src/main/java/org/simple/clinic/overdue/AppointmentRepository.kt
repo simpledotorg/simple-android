@@ -1,5 +1,6 @@
 package org.simple.clinic.overdue
 
+import androidx.annotation.VisibleForTesting
 import androidx.paging.PagingSource
 import io.reactivex.Observable
 import org.simple.clinic.home.overdue.OverdueAppointment
@@ -36,7 +37,6 @@ class AppointmentRepository @Inject constructor(
       appointmentFacilityUuid: UUID,
       creationFacilityUuid: UUID
   ): Appointment {
-
     val appointment = Appointment(
         uuid = appointmentUuid,
         patientUuid = patientUuid,
@@ -54,13 +54,11 @@ class AppointmentRepository @Inject constructor(
         creationFacilityUuid = creationFacilityUuid
     )
 
-    // TODO (vs) 20/05/20: Remove this side effect from this method
-    markOlderAppointmentsAsVisited(patientUuid)
     appointmentDao.save(listOf(appointment))
     return appointment
   }
 
-  private fun markOlderAppointmentsAsVisited(patientUuid: UUID) {
+  fun markOlderAppointmentsAsVisited(patientUuid: UUID) {
     appointmentDao.markOlderAppointmentsAsVisited(
         patientUuid = patientUuid,
         updatedStatus = Visited,
@@ -227,5 +225,10 @@ class AppointmentRepository @Inject constructor(
             instantToCompare = timestamp,
             pendingStatus = PENDING
         )
+  }
+
+  @VisibleForTesting
+  fun getAllAppointmentsForPatient(patientUuid: UUID): List<Appointment> {
+    return appointmentDao.getAllAppointmentsForPatient(patientUuid)
   }
 }

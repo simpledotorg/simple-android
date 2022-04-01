@@ -66,6 +66,9 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .doOnNext { scheduleAppointment ->
+            appointmentRepository.markOlderAppointmentsAsVisited(scheduleAppointment.patientUuid)
+          }
+          .doOnNext { scheduleAppointment ->
             appointmentRepository.schedule(
                 patientUuid = scheduleAppointment.patientUuid,
                 appointmentUuid = uuidGenerator.v4(),
@@ -139,6 +142,9 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
   private fun scheduleAppointmentForPatient(): ObservableTransformer<ScheduleAppointmentForPatient, ScheduleAppointmentEvent> {
     return ObservableTransformer { effects ->
       effects
+          .doOnNext { scheduleAppointment ->
+            appointmentRepository.markOlderAppointmentsAsVisited(scheduleAppointment.patientUuid)
+          }
           .doOnNext { scheduleAppointment ->
             appointmentRepository.schedule(
                 patientUuid = scheduleAppointment.patientUuid,

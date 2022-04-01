@@ -13,6 +13,7 @@
 - Bump sentry-android to 5.7.1
 - Bump sentry gradle plugin to 3.0.1
 - Implement showing app update nudges based on the priority in `PatientTabScreen`
+- Remove marking older appointments for a patient as a side effect when scheduling an appointment
 
 ### Features
 

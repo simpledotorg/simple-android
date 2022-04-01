@@ -37,6 +37,7 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientStatus
+import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.rules.LocalAuthenticationRule
@@ -141,63 +142,6 @@ class AppointmentRepositoryAndroidTest {
       assertThat(agreedToVisit).isNull()
       assertThat(syncStatus).isEqualTo(PENDING)
       assertThat(creationFacilityUuid).isEqualTo(creationFacility.uuid)
-    }
-  }
-
-  @Test
-  fun when_creating_new_appointment_then_all_old_appointments_for_that_patient_should_be_marked_as_visited() {
-    // given
-    val firstAppointmentUuid = UUID.fromString("0bc9cdb3-bfe9-41e9-88b9-2a072c748c47")
-    val scheduledDateOfFirstAppointment = LocalDate.parse("2018-01-01")
-    val firstAppointmentScheduledAtTimestamp = Instant.now(clock)
-    appointmentRepository.schedule(
-        patientUuid = patientUuid,
-        appointmentUuid = firstAppointmentUuid,
-        appointmentDate = scheduledDateOfFirstAppointment,
-        appointmentType = Manual,
-        appointmentFacilityUuid = facility.uuid,
-        creationFacilityUuid = facility.uuid
-    )
-    markAppointmentSyncStatusAsDone(firstAppointmentUuid)
-
-    clock.advanceBy(Duration.ofHours(24))
-
-    val secondAppointmentUuid = UUID.fromString("ed31c3ae-8903-45fe-9ad3-0302dcba7fc6")
-    val scheduleDateOfSecondAppointment = LocalDate.parse("2018-02-01")
-    val secondAppointmentScheduledAtTimestamp = Instant.now(clock)
-
-    // when
-    appointmentRepository.schedule(
-        patientUuid = patientUuid,
-        appointmentUuid = secondAppointmentUuid,
-        appointmentDate = scheduleDateOfSecondAppointment,
-        appointmentType = Manual,
-        appointmentFacilityUuid = facility.uuid,
-        creationFacilityUuid = facility.uuid
-    )
-
-    // then
-    val firstAppointment = getAppointmentByUuid(firstAppointmentUuid)
-    with(firstAppointment) {
-      assertThat(patientUuid).isEqualTo(this@AppointmentRepositoryAndroidTest.patientUuid)
-      assertThat(scheduledDate).isEqualTo(scheduledDateOfFirstAppointment)
-      assertThat(status).isEqualTo(Visited)
-      assertThat(cancelReason).isEqualTo(null)
-      assertThat(syncStatus).isEqualTo(PENDING)
-      assertThat(createdAt).isEqualTo(firstAppointmentScheduledAtTimestamp)
-      assertThat(createdAt).isLessThan(secondAppointmentScheduledAtTimestamp)
-      assertThat(updatedAt).isEqualTo(secondAppointmentScheduledAtTimestamp)
-    }
-
-    val secondAppointment = getAppointmentByUuid(secondAppointmentUuid)
-    with(secondAppointment) {
-      assertThat(patientUuid).isEqualTo(this@AppointmentRepositoryAndroidTest.patientUuid)
-      assertThat(scheduledDate).isEqualTo(scheduleDateOfSecondAppointment)
-      assertThat(status).isEqualTo(Scheduled)
-      assertThat(cancelReason).isEqualTo(null)
-      assertThat(syncStatus).isEqualTo(PENDING)
-      assertThat(createdAt).isEqualTo(secondAppointmentScheduledAtTimestamp)
-      assertThat(updatedAt).isEqualTo(secondAppointmentScheduledAtTimestamp)
     }
   }
 
@@ -2305,6 +2249,66 @@ class AppointmentRepositoryAndroidTest {
 
     setAppointmentSyncStatusToDone(appointmentForSomeOtherPatient.uuid)
     assertThat(appointmentRepository.hasAppointmentForPatientChangedSince(appointmentForSomeOtherPatient.patientUuid, oneSecondEarlier)).isFalse()
+  }
+
+  @Test
+  fun marking_older_appointments_as_visited_for_a_patient_should_work_as_expected() {
+
+    fun scheduledAppointmentsForPatient(patientUuid: PatientUuid): List<Appointment> {
+      return appointmentRepository.getAllAppointmentsForPatient(patientUuid)
+          .filter { it.status == Scheduled }
+    }
+
+    // given
+    val patient1 = UUID.fromString("1c36c4d3-c968-4ffc-90cd-4a1223b23634")
+    val patient2 = UUID.fromString("442c8244-d0e3-4e8c-a6ab-0336dfc76e97")
+
+    val threeMonthsOldAppointmentForPatient1 = TestData.appointment(
+        uuid = UUID.fromString("10d55987-f443-4094-b5e1-57327adea42b"),
+        status = Scheduled,
+        syncStatus = DONE,
+        patientUuid = patient1,
+        cancelReason = null
+    )
+
+    val twoMonthsOldAppointmentForPatient1 = TestData.appointment(
+        uuid = UUID.fromString("b00f842e-d402-4f61-8b82-b1fb437c9a23"),
+        status = Visited,
+        syncStatus = DONE,
+        patientUuid = patient1,
+        cancelReason = null
+    )
+
+    val oneMonthOldAppointmentForPatient1 = TestData.appointment(
+        uuid = UUID.fromString("1c2cbb8f-eac6-4f5e-975e-eda42908cbd3"),
+        status = Scheduled,
+        syncStatus = DONE,
+        patientUuid = patient1,
+        cancelReason = null
+    )
+
+    val oneMonthOldAppointmentForPatient2 = TestData.appointment(
+        uuid = UUID.fromString("569cc97a-949f-48d6-850e-e0baa5f66315"),
+        status = Scheduled,
+        syncStatus = DONE,
+        patientUuid = patient2,
+        cancelReason = null
+    )
+
+    appointmentRepository.save(listOf(
+        threeMonthsOldAppointmentForPatient1,
+        twoMonthsOldAppointmentForPatient1,
+        oneMonthOldAppointmentForPatient1,
+        oneMonthOldAppointmentForPatient2
+    ))
+
+    assertThat(scheduledAppointmentsForPatient(patient1)).isNotEmpty()
+
+    // when
+    appointmentRepository.markOlderAppointmentsAsVisited(patient1)
+
+    // then
+    assertThat(scheduledAppointmentsForPatient(patient1)).isEmpty()
   }
 
   private fun markAppointmentSyncStatusAsDone(vararg appointmentUuids: UUID) {

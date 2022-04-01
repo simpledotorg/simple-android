@@ -143,6 +143,9 @@ class ScheduleAppointmentEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .doOnNext { scheduleAppointment ->
+            appointmentRepository.markOlderAppointmentsAsVisited(scheduleAppointment.patientUuid)
+          }
+          .doOnNext { scheduleAppointment ->
             appointmentRepository.schedule(
                 patientUuid = scheduleAppointment.patientUuid,
                 appointmentUuid = uuidGenerator.v4(),

@@ -12,6 +12,7 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
@@ -163,6 +164,36 @@ class ScheduleAppointmentEffectHandlerTest {
         appointmentUuid = appointmentUuid,
         appointmentDate = scheduleDate,
         appointmentType = Manual,
+        appointmentFacilityUuid = facility.uuid,
+        creationFacilityUuid = facility.uuid
+    )
+    verifyNoMoreInteractions(repository)
+
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when schedule appointment for patient effect is received, then schedule appointment`() {
+    // given
+    val scheduleDate = LocalDate.parse("2018-01-01")
+
+    // when
+    effectHandlerTestCase.dispatch(ScheduleAppointmentForPatient(
+        patientUuid = patientUuid,
+        scheduledForDate = scheduleDate,
+        scheduledAtFacility = facility,
+        type = Automatic
+    ))
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(AppointmentScheduled)
+
+    verify(repository).markOlderAppointmentsAsVisited(patientUuid)
+    verify(repository).schedule(
+        patientUuid = patientUuid,
+        appointmentUuid = appointmentUuid,
+        appointmentDate = scheduleDate,
+        appointmentType = Automatic,
         appointmentFacilityUuid = facility.uuid,
         creationFacilityUuid = facility.uuid
     )

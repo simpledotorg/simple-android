@@ -6,11 +6,17 @@ import android.content.Context
 import android.os.Build
 import androidx.work.RxWorker
 import androidx.work.WorkerParameters
+import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Single
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.Found
 import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.NotFound
 import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.OtherError
+import org.simple.clinic.main.TypedPreference
+import org.simple.clinic.main.TypedPreference.Type.UpdateDrugStockReportsMonth
+import org.simple.clinic.util.UserClock
+import java.time.LocalDate
+import java.util.Optional
 import javax.inject.Inject
 
 class DrugStockWorker(
@@ -24,26 +30,40 @@ class DrugStockWorker(
   }
 
   @Inject
+  lateinit var clock: UserClock
+
+  @Inject
   lateinit var drugStockReminder: DrugStockReminder
+
+  @Inject
+  @TypedPreference(UpdateDrugStockReportsMonth)
+  lateinit var updateDrugStockReportsMonth: Preference<Optional<String>>
 
   private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
   init {
     ClinicApp.appComponent.inject(this)
   }
+
   override fun createWork(): Single<Result> {
     createNotificationChannel()
+
+    val formattedDate = LocalDate.now(clock).minusMonths(1).toString()
 
     return Single.create<Result?> {
       val response = drugStockReminder
           .reminderForDrugStock(formattedDate)
       when (response) {
         is Found -> { /* no op */ }
-        NotFound -> {/* no op */ }
+        NotFound -> drugStockReportNotFound(formattedDate)
         OtherError -> { /* no op */ }
       }
     }
   }
+
+  private fun drugStockReportNotFound(previousMonthsDate: String): Result {
+    updateDrugStockReportsMonth.set(Optional.of(previousMonthsDate))
+    return Result.failure()
   }
 
   private fun createNotificationChannel() {

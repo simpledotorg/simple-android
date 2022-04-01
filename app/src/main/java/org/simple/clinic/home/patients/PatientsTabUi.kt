@@ -9,4 +9,5 @@ interface PatientsTabUi {
   fun hideUserAccountStatus()
   fun showUserStatusAsWaitingForApproval()
   fun renderAppUpdateReason(appStalenessInMonths: Int)
+  fun showCriticalAppUpdateCard()
 }

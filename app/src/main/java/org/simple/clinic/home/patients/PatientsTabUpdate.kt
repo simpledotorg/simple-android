@@ -4,11 +4,16 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
+import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL_SECURITY
+import org.simple.clinic.appupdate.AppUpdateNudgePriority.LIGHT
+import org.simple.clinic.appupdate.AppUpdateNudgePriority.MEDIUM
 import org.simple.clinic.mobius.dispatch
+import org.simple.clinic.mobius.next
 import org.simple.clinic.user.User
 import java.time.Duration
 
-class PatientsTabUpdate : Update<PatientsTabModel, PatientsTabEvent, PatientsTabEffect> {
+class PatientsTabUpdate(private val isNotifyAppUpdateAvailableV2Enabled: Boolean) : Update<PatientsTabModel, PatientsTabEvent, PatientsTabEffect> {
 
   override fun update(
       model: PatientsTabModel,
@@ -24,7 +29,7 @@ class PatientsTabUpdate : Update<PatientsTabModel, PatientsTabEvent, PatientsTab
       is ScanCardIdButtonClicked -> openScanBpPassportScreen(event)
       is LoadedNumberOfPatientsRegistered -> next(model.numberOfPatientsRegisteredUpdated(event.numberOfPatientsRegistered))
       SimpleVideoClicked -> dispatch(OpenTrainingVideo)
-      is RequiredInfoForShowingAppUpdateLoaded -> showAppUpdateAvailableMessage(event)
+      is RequiredInfoForShowingAppUpdateLoaded -> showAppUpdateAvailableMessageBasedOnFeatureFlag(model, event)
       is AppStalenessLoaded -> next(model.updateAppStaleness(event.appStaleness))
       UpdateNowButtonClicked -> dispatch(OpenSimpleOnPlayStore)
     }
@@ -87,7 +92,7 @@ class PatientsTabUpdate : Update<PatientsTabModel, PatientsTabEvent, PatientsTab
       noChange()
   }
 
-  private fun showAppUpdateAvailableMessage(event: RequiredInfoForShowingAppUpdateLoaded): Next<PatientsTabModel, PatientsTabEffect> {
+  private fun showAppUpdateAvailableDialog_Old(event: RequiredInfoForShowingAppUpdateLoaded): Next<PatientsTabModel, PatientsTabEffect> {
     val appUpdateLastShownOn = event.appUpdateLastShownOn
     val currentDate = event.currentDate
 
@@ -97,6 +102,47 @@ class PatientsTabUpdate : Update<PatientsTabModel, PatientsTabEvent, PatientsTab
 
     return if (shouldShowAppUpdate)
       dispatch(ShowAppUpdateAvailable, TouchAppUpdateShownAtTime)
+    else
+      noChange()
+  }
+
+  private fun showAppUpdateAvailableMessageBasedOnFeatureFlag(
+      model: PatientsTabModel,
+      event: RequiredInfoForShowingAppUpdateLoaded
+  ): Next<PatientsTabModel, PatientsTabEffect> {
+    return if (isNotifyAppUpdateAvailableV2Enabled) {
+      appUpdateNudgeBasedOnPriority(model, event)
+    } else {
+      showAppUpdateAvailableDialog_Old(event)
+    }
+  }
+
+  private fun appUpdateNudgeBasedOnPriority(
+      model: PatientsTabModel,
+      event: RequiredInfoForShowingAppUpdateLoaded
+  ): Next<PatientsTabModel, PatientsTabEffect> {
+    val updatedModel = model.appUpdateNudgePriorityUpdated(event.appUpdateNudgePriority)
+
+    return when (event.appUpdateNudgePriority) {
+      LIGHT, MEDIUM -> showAppUpdateAvailableDialog(updatedModel, event)
+      CRITICAL, CRITICAL_SECURITY -> next(updatedModel, ShowCriticalAppUpdateDialog(event.appUpdateNudgePriority))
+      else -> noChange()
+    }
+  }
+
+  private fun showAppUpdateAvailableDialog(
+      model: PatientsTabModel,
+      event: RequiredInfoForShowingAppUpdateLoaded
+  ): Next<PatientsTabModel, PatientsTabEffect> {
+    val appUpdateLastShownOn = event.appUpdateLastShownOn
+    val currentDate = event.currentDate
+
+    val hasADayPassedSinceUpdateLastShown = appUpdateLastShownOn.isBefore(currentDate)
+
+    val shouldShowAppUpdate = event.isAppUpdateAvailable && hasADayPassedSinceUpdateLastShown
+
+    return if (shouldShowAppUpdate)
+      next(model, ShowAppUpdateAvailable, TouchAppUpdateShownAtTime)
     else
       noChange()
   }

@@ -26,7 +26,8 @@ class PatientsTabUiRenderer(
       toggleTrainingViewVisibility(model)
     }
 
-    if(model.hasAppStaleness) {
+    if (model.appUpdateNudgePriorityIsMedium && model.hasAppStaleness) {
+      ui.showCriticalAppUpdateCard()
       ui.renderAppUpdateReason(appStalenessInMonths(model.appStaleness!!))
     }
   }

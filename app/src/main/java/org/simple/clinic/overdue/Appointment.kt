@@ -279,6 +279,9 @@ data class Appointment(
     @Query(""" SELECT * FROM Appointment """)
     fun getAllAppointments(): List<Appointment>
 
+    @Query(""" SELECT * FROM Appointment WHERE patientUuid = :patientUuid """)
+    fun getAllAppointmentsForPatient(patientUuid: UUID): List<Appointment>
+
     @Query("""
         DELETE FROM Appointment
         WHERE 

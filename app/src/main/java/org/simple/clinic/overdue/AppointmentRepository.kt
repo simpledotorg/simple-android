@@ -228,4 +228,9 @@ class AppointmentRepository @Inject constructor(
             pendingStatus = PENDING
         )
   }
+
+  @VisibleForTesting
+  fun getAllAppointmentsForPatient(patientUuid: UUID): List<Appointment> {
+    return appointmentDao.getAllAppointmentsForPatient(patientUuid)
+  }
 }

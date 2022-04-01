@@ -37,6 +37,7 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientStatus
+import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.rules.LocalAuthenticationRule
@@ -2305,6 +2306,66 @@ class AppointmentRepositoryAndroidTest {
 
     setAppointmentSyncStatusToDone(appointmentForSomeOtherPatient.uuid)
     assertThat(appointmentRepository.hasAppointmentForPatientChangedSince(appointmentForSomeOtherPatient.patientUuid, oneSecondEarlier)).isFalse()
+  }
+
+  @Test
+  fun marking_older_appointments_as_visited_for_a_patient_should_work_as_expected() {
+
+    fun scheduledAppointmentsForPatient(patientUuid: PatientUuid): List<Appointment> {
+      return appointmentRepository.getAllAppointmentsForPatient(patientUuid)
+          .filter { it.status == Scheduled }
+    }
+
+    // given
+    val patient1 = UUID.fromString("1c36c4d3-c968-4ffc-90cd-4a1223b23634")
+    val patient2 = UUID.fromString("442c8244-d0e3-4e8c-a6ab-0336dfc76e97")
+
+    val threeMonthsOldAppointmentForPatient1 = TestData.appointment(
+        uuid = UUID.fromString("10d55987-f443-4094-b5e1-57327adea42b"),
+        status = Scheduled,
+        syncStatus = DONE,
+        patientUuid = patient1,
+        cancelReason = null
+    )
+
+    val twoMonthsOldAppointmentForPatient1 = TestData.appointment(
+        uuid = UUID.fromString("b00f842e-d402-4f61-8b82-b1fb437c9a23"),
+        status = Visited,
+        syncStatus = DONE,
+        patientUuid = patient1,
+        cancelReason = null
+    )
+
+    val oneMonthOldAppointmentForPatient1 = TestData.appointment(
+        uuid = UUID.fromString("1c2cbb8f-eac6-4f5e-975e-eda42908cbd3"),
+        status = Scheduled,
+        syncStatus = DONE,
+        patientUuid = patient1,
+        cancelReason = null
+    )
+
+    val oneMonthOldAppointmentForPatient2 = TestData.appointment(
+        uuid = UUID.fromString("569cc97a-949f-48d6-850e-e0baa5f66315"),
+        status = Scheduled,
+        syncStatus = DONE,
+        patientUuid = patient2,
+        cancelReason = null
+    )
+
+    appointmentRepository.save(listOf(
+        threeMonthsOldAppointmentForPatient1,
+        twoMonthsOldAppointmentForPatient1,
+        oneMonthOldAppointmentForPatient1,
+        oneMonthOldAppointmentForPatient2
+    ))
+
+    assertThat(scheduledAppointmentsForPatient(patient1)).isNotEmpty()
+
+    // when
+    appointmentRepository.markOlderAppointmentsAsVisited(patient1)
+
+    // then
+    assertThat(scheduledAppointmentsForPatient(patient1)).isEmpty()
   }
 
   private fun markAppointmentSyncStatusAsDone(vararg appointmentUuids: UUID) {

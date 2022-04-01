@@ -1,5 +1,6 @@
 package org.simple.clinic.overdue
 
+import androidx.annotation.VisibleForTesting
 import androidx.paging.PagingSource
 import io.reactivex.Observable
 import org.simple.clinic.home.overdue.OverdueAppointment
@@ -60,7 +61,7 @@ class AppointmentRepository @Inject constructor(
     return appointment
   }
 
-  private fun markOlderAppointmentsAsVisited(patientUuid: UUID) {
+  fun markOlderAppointmentsAsVisited(patientUuid: UUID) {
     appointmentDao.markOlderAppointmentsAsVisited(
         patientUuid = patientUuid,
         updatedStatus = Visited,

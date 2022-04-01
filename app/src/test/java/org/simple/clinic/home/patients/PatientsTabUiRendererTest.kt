@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
+import org.simple.clinic.appupdate.AppUpdateNudgePriority.MEDIUM
 import java.time.LocalDate
 
 class PatientsTabUiRendererTest {
@@ -12,14 +13,15 @@ class PatientsTabUiRendererTest {
   private val defaultModel = PatientsTabModel.create()
 
   @Test
-  fun `When app staleness is loaded and is present, then display app update nudge reason`() {
+  fun `When app staleness is loaded and app update nudge priority is medium, then show critical app update card and display app update nudge reason`() {
     //given
     val appStaleness = 75
 
     // when
-    uiRenderer.render(defaultModel.updateAppStaleness(appStaleness))
+    uiRenderer.render(defaultModel.updateAppStaleness(appStaleness).appUpdateNudgePriorityUpdated(MEDIUM))
 
     // then
+    verify(ui).showCriticalAppUpdateCard()
     verify(ui).renderAppUpdateReason(appStalenessInMonths = 2)
     verifyNoMoreInteractions(ui)
   }

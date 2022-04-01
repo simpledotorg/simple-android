@@ -3,6 +3,7 @@ package org.simple.clinic.home.patients
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.appupdate.AppUpdateNudgePriority
+import org.simple.clinic.appupdate.AppUpdateNudgePriority.MEDIUM
 import org.simple.clinic.user.User
 
 @Parcelize
@@ -32,6 +33,12 @@ data class PatientsTabModel(
   val hasAppStaleness
     get() = appStaleness != null
 
+  val hasAppUpdateNudgePriority
+    get() = appUpdateNudgePriority != null
+
+  val appUpdateNudgePriorityIsMedium
+    get() = hasAppUpdateNudgePriority && appUpdateNudgePriority == MEDIUM
+
   fun userLoaded(user: User): PatientsTabModel {
     return copy(user = user)
   }
@@ -44,7 +51,7 @@ data class PatientsTabModel(
     return copy(appStaleness = appStaleness)
   }
 
-  fun appUpdateNudgePriorityUpdated(appUpdateNudgePriority: AppUpdateNudgePriority): PatientsTabModel {
+  fun appUpdateNudgePriorityUpdated(appUpdateNudgePriority: AppUpdateNudgePriority?): PatientsTabModel {
     return copy(appUpdateNudgePriority = appUpdateNudgePriority)
   }
 }

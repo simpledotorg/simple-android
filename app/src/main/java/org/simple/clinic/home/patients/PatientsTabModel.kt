@@ -51,7 +51,7 @@ data class PatientsTabModel(
     return copy(appStaleness = appStaleness)
   }
 
-  fun appUpdateNudgePriorityUpdated(appUpdateNudgePriority: AppUpdateNudgePriority): PatientsTabModel {
+  fun appUpdateNudgePriorityUpdated(appUpdateNudgePriority: AppUpdateNudgePriority?): PatientsTabModel {
     return copy(appUpdateNudgePriority = appUpdateNudgePriority)
   }
 }

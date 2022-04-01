@@ -121,9 +121,12 @@ class PatientsTabUpdate(private val isNotifyAppUpdateAvailableV2Enabled: Boolean
       model: PatientsTabModel,
       event: RequiredInfoForShowingAppUpdateLoaded
   ): Next<PatientsTabModel, PatientsTabEffect> {
-    return when (event.appUpdateNudgePriority!!) {
-      LIGHT, MEDIUM -> showAppUpdateAvailableDialog(model, event)
-      CRITICAL, CRITICAL_SECURITY -> next(model.appUpdateNudgePriorityUpdated(event.appUpdateNudgePriority), ShowCriticalAppUpdateDialog(event.appUpdateNudgePriority))
+    val updatedModel = model.appUpdateNudgePriorityUpdated(event.appUpdateNudgePriority)
+
+    return when (event.appUpdateNudgePriority) {
+      LIGHT, MEDIUM -> showAppUpdateAvailableDialog(updatedModel, event)
+      CRITICAL, CRITICAL_SECURITY -> next(updatedModel, ShowCriticalAppUpdateDialog(event.appUpdateNudgePriority))
+      else -> noChange()
     }
   }
 
@@ -136,10 +139,10 @@ class PatientsTabUpdate(private val isNotifyAppUpdateAvailableV2Enabled: Boolean
 
     val hasADayPassedSinceUpdateLastShown = appUpdateLastShownOn.isBefore(currentDate)
 
-    val shouldShowAppUpdate = event.isAppUpdateAvailable && hasADayPassedSinceUpdateLastShown && event.appUpdateNudgePriority != null
+    val shouldShowAppUpdate = event.isAppUpdateAvailable && hasADayPassedSinceUpdateLastShown
 
     return if (shouldShowAppUpdate)
-      next(model.appUpdateNudgePriorityUpdated(event.appUpdateNudgePriority!!), ShowAppUpdateAvailable, TouchAppUpdateShownAtTime)
+      next(model, ShowAppUpdateAvailable, TouchAppUpdateShownAtTime)
     else
       noChange()
   }

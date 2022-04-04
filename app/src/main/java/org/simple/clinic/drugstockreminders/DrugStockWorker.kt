@@ -1,14 +1,17 @@
 package org.simple.clinic.drugstockreminders
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import androidx.core.app.NotificationCompat
 import androidx.work.RxWorker
 import androidx.work.WorkerParameters
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Single
 import org.simple.clinic.ClinicApp
+import org.simple.clinic.R
 import org.simple.clinic.di.DateFormatter
 import org.simple.clinic.di.DateFormatter.Type.MonthAndYear
 import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.Found
@@ -30,6 +33,7 @@ class DrugStockWorker(
   companion object {
     private const val NOTIFICATION_CHANNEL_ID = "org.simple.clinic.drugstockreminders"
     private const val NOTIFICATION_CHANNEL_NAME = "Drug Stock Reminders"
+    private const val NOTIFICATION_ID = 6
   }
 
   @Inject
@@ -70,12 +74,27 @@ class DrugStockWorker(
 
   private fun drugStockReportNotFound(previousMonthsDate: String): Result {
     updateDrugStockReportsMonth.set(Optional.of(previousMonthsDate))
+    notificationManager.notify(NOTIFICATION_ID, drugStockReminderNotification(previousMonthsDate))
     return Result.failure()
   }
 
   private fun drugStockReportFound(currentMonthsDate: String): Result {
     updateDrugStockReportsMonth.set(Optional.of(currentMonthsDate))
     return Result.success()
+  }
+
+  private fun drugStockReminderNotification(currentMonthsDate: String): Notification {
+    val monthAndYear = formatDateForNotification(currentMonthsDate)
+    val notificationHeaderText = context.getString(R.string.drug_stock_reminder_notification, monthAndYear)
+
+    return NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
+        .setSmallIcon(R.drawable.ic_app_update_notification_logo)
+        .setContentTitle(context.getString(R.string.app_name))
+        .setContentText(context.getString(R.string.drug_stock_reminder_notification, monthAndYear))
+        .setTicker(context.getString(R.string.app_name))
+        .setPriority(NotificationCompat.PRIORITY_HIGH)
+        .setStyle(NotificationCompat.BigTextStyle().bigText(notificationHeaderText))
+        .build()
   }
 
   private fun formatDateForNotification(currentMonthsDate: String): String {

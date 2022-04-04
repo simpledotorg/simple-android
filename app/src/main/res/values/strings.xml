@@ -944,4 +944,7 @@
   <string name="update_required_reason">App is %d months out of date</string>
   <string name="critical_update_required_card_update_button_text">UPDATE NOW</string>
 
+  <!-- Drug stock reminder notification -->
+  <string name="drug_stock_reminder_notification">Complete your pending drug stock report for %1$s</string>
+
 </resources>

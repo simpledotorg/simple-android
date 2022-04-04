@@ -30,7 +30,7 @@ class PatientSummaryInitTest {
                     CheckForInvalidPhone(patientUuid),
                     LoadMedicalOfficers,
                     LoadPatientRegistrationData(patientUuid),
-                    LoadClinicalDecisionSupport(patientUuid)
+                    LoadClinicalDecisionSupportInfo(patientUuid)
                 )
             )
         )
@@ -63,7 +63,7 @@ class PatientSummaryInitTest {
                 hasModel(model),
                 hasEffects(
                     LoadPatientSummaryProfile(patientUuid) as PatientSummaryEffect,
-                    LoadClinicalDecisionSupport(patientUuid)
+                    LoadClinicalDecisionSupportInfo(patientUuid)
                 )
             )
         )

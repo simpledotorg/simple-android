@@ -94,3 +94,5 @@ object NextAppointmentActionClicked : PatientSummaryEvent() {
 }
 
 object AssignedFacilityChanged : PatientSummaryEvent()
+
+data class ClinicalDecisionSupportInfoLoaded(val isNewestBpEntryHigh: Boolean) : PatientSummaryEvent()

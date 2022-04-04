@@ -524,4 +524,19 @@ class PatientSummaryEffectHandlerTest {
     verify(uiActions).refreshNextAppointment()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when load clinical decision support effect is received, then load clinical decision support info`() {
+    // given
+    val patientUuid = UUID.fromString("44daeb85-de4c-4807-8b31-6a88bf597cc7")
+
+    whenever(bloodPressureRepository.isNewestBpEntryHigh(patientUuid)).doReturn(Observable.just(true))
+
+    // when
+    testCase.dispatch(LoadClinicalDecisionSupport(patientUuid))
+
+    // then
+    testCase.assertOutgoingEvents(ClinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true))
+    verifyZeroInteractions(uiActions)
+  }
 }

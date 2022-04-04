@@ -70,9 +70,21 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(TriggerSync::class.java, triggerSync())
         .addTransformer(FetchHasShownMissingPhoneReminder::class.java, fetchHasShownMissingPhoneReminder(schedulersProvider.io()))
         .addTransformer(LoadMedicalOfficers::class.java, loadMedicalOfficers())
+        .addTransformer(LoadClinicalDecisionSupport::class.java, loadClinicalDecisionSupport())
         .addConsumer(PatientSummaryViewEffect::class.java, viewEffectsConsumer::accept)
         .addTransformer(LoadPatientRegistrationData::class.java, checkPatientRegistrationData())
         .build()
+  }
+
+  private fun loadClinicalDecisionSupport(): ObservableTransformer<LoadClinicalDecisionSupport, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .switchMap { bloodPressureRepository.isNewestBpEntryHigh(it.patientUuid) }
+          .map { isNewestBpEntryHigh ->
+            ClinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh)
+          }
+    }
   }
 
   private fun checkPatientRegistrationData(): ObservableTransformer<LoadPatientRegistrationData, PatientSummaryEvent> {

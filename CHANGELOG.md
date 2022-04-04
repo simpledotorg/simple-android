@@ -18,6 +18,7 @@
 - Update flipper to v0.141.0
 - Add a query to check whether the latest BP entry is high for the patient
 - Load clinical decision support info when the patient summary screen is created
+- Bump gradle to v7.4.2
 
 ### Features
 

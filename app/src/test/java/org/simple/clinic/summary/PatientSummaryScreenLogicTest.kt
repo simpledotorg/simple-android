@@ -76,6 +76,7 @@ class PatientSummaryScreenLogicTest {
 
   @Before
   fun setUp() {
+    whenever(bpRepository.isNewestBpEntryHigh(patientUuid)) doReturn Observable.just(true)
     whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just<Optional<PatientProfile>>(Optional.of(patientProfile))
     whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn Optional.empty()
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn Optional.empty()

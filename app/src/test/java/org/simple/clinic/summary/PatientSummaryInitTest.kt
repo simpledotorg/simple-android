@@ -29,7 +29,8 @@ class PatientSummaryInitTest {
                     LoadCurrentUserAndFacility,
                     CheckForInvalidPhone(patientUuid),
                     LoadMedicalOfficers,
-                    LoadPatientRegistrationData(patientUuid)
+                    LoadPatientRegistrationData(patientUuid),
+                    LoadClinicalDecisionSupport(patientUuid)
                 )
             )
         )
@@ -60,7 +61,10 @@ class PatientSummaryInitTest {
         .then(
             assertThatFirst(
                 hasModel(model),
-                hasEffects(LoadPatientSummaryProfile(patientUuid) as PatientSummaryEffect)
+                hasEffects(
+                    LoadPatientSummaryProfile(patientUuid) as PatientSummaryEffect,
+                    LoadClinicalDecisionSupport(patientUuid)
+                )
             )
         )
   }

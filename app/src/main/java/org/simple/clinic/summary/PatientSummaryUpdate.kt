@@ -62,6 +62,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
           model.currentFacility!!
       ))
       AssignedFacilityChanged -> dispatch(RefreshNextAppointment)
+      is ClinicalDecisionSupportInfoLoaded -> noChange()
     }
   }
 

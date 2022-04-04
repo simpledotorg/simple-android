@@ -16,6 +16,7 @@
 - Remove marking older appointments for a patient as a side effect when scheduling an appointment
 - Bump datadog to v1.3.0
 - Update flipper to v0.141.0
+- Add a query to check whether the latest BP entry is high for the patient
 
 ### Features
 

@@ -424,8 +424,8 @@ class PatientSummaryScreen :
       labelRegistered.visibility = VISIBLE
       facilityNameAndDateTextView.text = facilityNameAndDate
     } else {
-      facilityNameAndDateTextView.visibility = View.GONE
-      labelRegistered.visibility = View.GONE
+      facilityNameAndDateTextView.visibility = GONE
+      labelRegistered.visibility = GONE
     }
   }
 
@@ -572,7 +572,7 @@ class PatientSummaryScreen :
   }
 
   override fun hideTeleconsultButton() {
-    teleconsultButton.visibility = View.GONE
+    teleconsultButton.visibility = GONE
   }
 
   override fun showAssignedFacilityView() {
@@ -580,7 +580,7 @@ class PatientSummaryScreen :
   }
 
   override fun hideAssignedFacilityView() {
-    assignedFacilityView.visibility = View.GONE
+    assignedFacilityView.visibility = GONE
   }
 
   override fun registerSummaryModelUpdateCallback(callback: PatientSummaryModelUpdateCallback?) {
@@ -588,7 +588,7 @@ class PatientSummaryScreen :
   }
 
   override fun hideDoneButton() {
-    doneButtonFrame.visibility = View.GONE
+    doneButtonFrame.visibility = GONE
   }
 
   override fun showTeleconsultLogButton() {
@@ -658,11 +658,21 @@ class PatientSummaryScreen :
     clinicalDecisionSupportAlertView.translationY = clinicalDecisionSupportAlertView.height.unaryMinus().toFloat()
 
     val spring = clinicalDecisionSupportAlertView.spring(DynamicAnimation.TRANSLATION_Y)
+
+    val transition = AutoTransition().apply {
+      excludeChildren(clinicalDecisionSupportAlertView, true)
+      excludeTarget(R.id.newBPItemContainer, true)
+      excludeTarget(R.id.bloodSugarItemContainer, true)
+      excludeTarget(R.id.drugsSummaryContainer, true)
+      // We are doing this to wait for the router transitions to be done before we start this.
+      startDelay = 500
+    }
     val transitionListener = object : Transition.TransitionListener {
       override fun onTransitionStart(transition: Transition) {
       }
 
       override fun onTransitionEnd(transition: Transition) {
+        transition.removeListener(this)
         spring.animateToFinalPosition(0f)
       }
 
@@ -675,13 +685,43 @@ class PatientSummaryScreen :
       override fun onTransitionResume(transition: Transition) {
       }
     }
-
-    TransitionManager.beginDelayedTransition(summaryViewsContainer, AutoTransition().apply {
-      excludeChildren(clinicalDecisionSupportAlertView, true)
-      addListener(transitionListener)
-    })
+    transition.addListener(transitionListener)
+    TransitionManager.beginDelayedTransition(summaryViewsContainer, transition)
 
     clinicalDecisionSupportAlertView.visibility = VISIBLE
+  }
+
+  override fun hideClinicalDecisionSupportAlert() {
+    if (clinicalDecisionSupportAlertView.visibility != VISIBLE) return
+
+    val spring = clinicalDecisionSupportAlertView.spring(DynamicAnimation.TRANSLATION_Y)
+    (clinicalDecisionSupportAlertView.getTag(R.id.tag_clinical_decision_pending_end_listener) as?
+        DynamicAnimation.OnAnimationEndListener)?.let {
+      spring.removeEndListener(it)
+    }
+
+    val listener = object : DynamicAnimation.OnAnimationEndListener {
+      override fun onAnimationEnd(animation: DynamicAnimation<*>?, canceled: Boolean, value: Float, velocity: Float) {
+        spring.removeEndListener(this)
+        clinicalDecisionSupportAlertView.visibility = GONE
+      }
+    }
+    spring.addEndListener(listener)
+    clinicalDecisionSupportAlertView.setTag(R.id.tag_clinical_decision_pending_end_listener, listener)
+
+    val transition = AutoTransition().apply {
+      excludeChildren(clinicalDecisionSupportAlertView, true)
+      excludeTarget(R.id.newBPItemContainer, true)
+      excludeTarget(R.id.bloodSugarItemContainer, true)
+      excludeTarget(R.id.drugsSummaryContainer, true)
+    }
+    TransitionManager.beginDelayedTransition(summaryViewsContainer, transition)
+
+    spring.animateToFinalPosition(clinicalDecisionSupportAlertView.height.unaryMinus().toFloat())
+  }
+
+  override fun hideClinicalDecisionSupportAlertWithoutAnimation() {
+    clinicalDecisionSupportAlertView.visibility = GONE
   }
 
   interface Injector {

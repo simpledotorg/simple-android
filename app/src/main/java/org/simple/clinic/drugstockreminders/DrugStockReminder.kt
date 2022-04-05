@@ -42,7 +42,7 @@ class DrugStockReminder @Inject constructor(
         .map(::convertResponseToDrugStockReports)
 
     return if (drugStockReports.isNotEmpty())
-      Found(drugStockReports)
+      Found(responseBody)
     else
       NotFound
   }
@@ -58,7 +58,7 @@ class DrugStockReminder @Inject constructor(
   }
 
   sealed class Result {
-    data class Found(val drugStockReports: List<DrugStockReport>) : Result()
+    data class Found(val drugStockReminderResponse: DrugStockReminderResponsePayload) : Result()
     object NotFound : Result()
     object OtherError : Result()
   }

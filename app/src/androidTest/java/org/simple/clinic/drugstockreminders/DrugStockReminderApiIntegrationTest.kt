@@ -40,10 +40,10 @@ class DrugStockReminderApiIntegrationTest {
     val result = drugStockReminder.reminderForDrugStock(formattedDate) as Found
 
     // then
-    assertThat(result.drugStockReports).hasSize(1)
-    val drugStockReport = result.drugStockReports.first()
-    assertThat(drugStockReport.drugsInStock).isEqualTo(20)
-    assertThat(drugStockReport.drugsReceived).isEqualTo(20)
-    assertThat(drugStockReport.protocolDrugId).isEqualTo("2a6b78c3-a5ca-41d3-8ec9-70c0d7aaea79")
+    assertThat(result).isNotNull()
+    val drugStockReport = result.drugStockReminderResponse
+    assertThat(drugStockReport.month).isNotEmpty()
+    assertThat(drugStockReport.drugs).isNotNull()
+    assertThat(drugStockReport.facilityUuid).isNotNull()
   }
 }

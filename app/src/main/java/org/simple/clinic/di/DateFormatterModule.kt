@@ -7,6 +7,7 @@ import org.simple.clinic.di.DateFormatter.Type.Day
 import org.simple.clinic.di.DateFormatter.Type.FileDateTime
 import org.simple.clinic.di.DateFormatter.Type.FullYear
 import org.simple.clinic.di.DateFormatter.Type.Month
+import org.simple.clinic.di.DateFormatter.Type.MonthAndYear
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import java.time.chrono.Chronology
@@ -114,6 +115,16 @@ class DateFormatterModule {
       chronology: Chronology
   ): DateTimeFormatter {
     return DateTimeFormatter.ofPattern("yyyy", locale)
+        .withChronology(chronology)
+  }
+
+  @Provides
+  @DateFormatter(MonthAndYear)
+  fun providesFormatterForMonthAndYear(
+      locale: Locale,
+      chronology: Chronology
+  ): DateTimeFormatter {
+    return DateTimeFormatter.ofPattern("MMM-yyyy", locale)
         .withChronology(chronology)
   }
 }

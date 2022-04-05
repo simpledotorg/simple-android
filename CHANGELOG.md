@@ -24,6 +24,7 @@
 - Implemented the support for DrugStockReminder API
 - Show the clinical decision support banner in summary screen when newest BP entry is high for the patient
 - Hide clinical decision support alert banner when edit medicines are clicked
+- Bump asm to v9.3
 
 ### Features
 

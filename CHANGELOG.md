@@ -20,6 +20,7 @@
 - Load clinical decision support info when the patient summary screen is created
 - Bump gradle to v7.4.2
 - Bump kotlin to v1.6.20
+- Bump coroutines to v1.6.0
 
 ### Features
 

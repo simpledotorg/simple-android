@@ -28,21 +28,23 @@ class PatientSummaryViewRenderer(
       }
 
       renderNextAppointmentCard(model)
-
-      val canShowClinicalDecisionSupportAlert = model.hasPatientRegistrationData == true && model.readyToRender()
-      if (canShowClinicalDecisionSupportAlert) {
-        clinicalDecisionSupportCallback.pass(model.isNewestBpEntryHigh == true, ::renderClinicalDecisionSupportAlert)
-      } else {
-        ui.hideClinicalDecisionSupportAlertWithoutAnimation()
-      }
+      renderClinicalDecisionSupportAlert(model)
     }
   }
 
-  private fun renderClinicalDecisionSupportAlert(isNewestBpEntryHigh: Boolean) {
-    if (isNewestBpEntryHigh) {
-      ui.showClinicalDecisionSupportAlert()
-    } else {
-      ui.hideClinicalDecisionSupportAlert()
+  private fun renderClinicalDecisionSupportAlert(model: PatientSummaryModel) {
+    val canShowClinicalDecisionSupportAlert = model.hasPatientRegistrationData == true && model.readyToRender()
+    if (!canShowClinicalDecisionSupportAlert) {
+      ui.hideClinicalDecisionSupportAlertWithoutAnimation()
+      return
+    }
+
+    clinicalDecisionSupportCallback.pass(model.isNewestBpEntryHigh == true) { isNewestBpEntryHigh ->
+      if (isNewestBpEntryHigh) {
+        ui.showClinicalDecisionSupportAlert()
+      } else {
+        ui.hideClinicalDecisionSupportAlert()
+      }
     }
   }
 

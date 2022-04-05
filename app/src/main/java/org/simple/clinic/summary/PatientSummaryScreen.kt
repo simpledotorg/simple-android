@@ -664,6 +664,8 @@ class PatientSummaryScreen :
       excludeTarget(R.id.newBPItemContainer, true)
       excludeTarget(R.id.bloodSugarItemContainer, true)
       excludeTarget(R.id.drugsSummaryContainer, true)
+      // We are doing this to wait for the router transitions to be done before we start this.
+      startDelay = 500
     }
     val transitionListener = object : Transition.TransitionListener {
       override fun onTransitionStart(transition: Transition) {

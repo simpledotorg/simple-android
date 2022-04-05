@@ -28,8 +28,26 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.doOnDetach
 import androidx.core.widget.NestedScrollView
+import androidx.dynamicanimation.animation.DynamicAnimation
+import androidx.dynamicanimation.animation.DynamicAnimation.ALPHA
+import androidx.dynamicanimation.animation.DynamicAnimation.ROTATION
+import androidx.dynamicanimation.animation.DynamicAnimation.ROTATION_X
+import androidx.dynamicanimation.animation.DynamicAnimation.ROTATION_Y
+import androidx.dynamicanimation.animation.DynamicAnimation.SCALE_X
+import androidx.dynamicanimation.animation.DynamicAnimation.SCALE_Y
+import androidx.dynamicanimation.animation.DynamicAnimation.SCROLL_X
+import androidx.dynamicanimation.animation.DynamicAnimation.SCROLL_Y
+import androidx.dynamicanimation.animation.DynamicAnimation.TRANSLATION_X
+import androidx.dynamicanimation.animation.DynamicAnimation.TRANSLATION_Y
+import androidx.dynamicanimation.animation.DynamicAnimation.TRANSLATION_Z
+import androidx.dynamicanimation.animation.DynamicAnimation.X
+import androidx.dynamicanimation.animation.DynamicAnimation.Y
+import androidx.dynamicanimation.animation.DynamicAnimation.Z
+import androidx.dynamicanimation.animation.SpringAnimation
+import androidx.dynamicanimation.animation.SpringForce
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
+import org.simple.clinic.R
 import timber.log.Timber
 import java.time.Duration
 
@@ -305,6 +323,46 @@ fun RadioGroup.checkWithListener(@IdRes id: Int, onCheckedChangeListener: RadioG
   setOnCheckedChangeListener(null)
   check(id)
   setOnCheckedChangeListener(onCheckedChangeListener)
+}
+
+fun View.spring(
+    property: DynamicAnimation.ViewProperty,
+    damping: Float = SpringForce.DAMPING_RATIO_NO_BOUNCY,
+    stiffness: Float = 500f
+): SpringAnimation {
+  val key = getKey(property)
+  var springAnim = getTag(key) as? SpringAnimation?
+  if (springAnim == null) {
+    springAnim = SpringAnimation(this, property).apply {
+      spring = SpringForce().apply {
+        this.dampingRatio = damping
+        this.stiffness = stiffness
+      }
+    }
+    setTag(key, springAnim)
+  }
+
+  return springAnim
+}
+
+private fun getKey(property: DynamicAnimation.ViewProperty): Int {
+  return when (property) {
+    TRANSLATION_X -> R.id.spring_animation_translation_x
+    TRANSLATION_Y -> R.id.spring_animation_translation_y
+    TRANSLATION_Z -> R.id.spring_animation_translation_z
+    SCALE_X -> R.id.spring_animation_scale_x
+    SCALE_Y -> R.id.spring_animation_scale_y
+    ROTATION -> R.id.spring_animation_rotation
+    ROTATION_X -> R.id.spring_animation_rotation_x
+    ROTATION_Y -> R.id.spring_animation_rotation_y
+    X -> R.id.spring_animation_x
+    Y -> R.id.spring_animation_y
+    Z -> R.id.spring_animation_z
+    ALPHA -> R.id.spring_animation_alpha
+    SCROLL_X -> R.id.spring_animation_scrollx
+    SCROLL_Y -> R.id.spring_animation_scrollY
+    else -> 0
+  }
 }
 
 val Int.dp: Int

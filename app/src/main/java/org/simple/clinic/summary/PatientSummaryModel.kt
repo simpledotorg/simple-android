@@ -18,7 +18,8 @@ data class PatientSummaryModel(
     val userLoggedInStatus: User.LoggedInStatus?,
     val medicalOfficers: List<MedicalOfficer>?,
     val hasShownMeasurementsWarningDialog: Boolean,
-    val hasPatientRegistrationData: Boolean?
+    val hasPatientRegistrationData: Boolean?,
+    val isNewestBpEntryHigh: Boolean?
 ) : Parcelable, PatientSummaryChildModel {
 
   companion object {
@@ -32,7 +33,8 @@ data class PatientSummaryModel(
           userLoggedInStatus = null,
           medicalOfficers = null,
           hasShownMeasurementsWarningDialog = false,
-          hasPatientRegistrationData = null
+          hasPatientRegistrationData = null,
+          isNewestBpEntryHigh = null
       )
     }
   }
@@ -94,5 +96,9 @@ data class PatientSummaryModel(
 
   fun patientRegistrationDataLoaded(hasPatientRegistrationData: Boolean): PatientSummaryModel {
     return copy(hasPatientRegistrationData = hasPatientRegistrationData)
+  }
+
+  fun clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh: Boolean): PatientSummaryModel {
+    return copy(isNewestBpEntryHigh = isNewestBpEntryHigh)
   }
 }

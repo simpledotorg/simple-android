@@ -70,13 +70,13 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(TriggerSync::class.java, triggerSync())
         .addTransformer(FetchHasShownMissingPhoneReminder::class.java, fetchHasShownMissingPhoneReminder(schedulersProvider.io()))
         .addTransformer(LoadMedicalOfficers::class.java, loadMedicalOfficers())
-        .addTransformer(LoadClinicalDecisionSupport::class.java, loadClinicalDecisionSupport())
+        .addTransformer(LoadClinicalDecisionSupportInfo::class.java, loadClinicalDecisionSupport())
         .addConsumer(PatientSummaryViewEffect::class.java, viewEffectsConsumer::accept)
         .addTransformer(LoadPatientRegistrationData::class.java, checkPatientRegistrationData())
         .build()
   }
 
-  private fun loadClinicalDecisionSupport(): ObservableTransformer<LoadClinicalDecisionSupport, PatientSummaryEvent> {
+  private fun loadClinicalDecisionSupport(): ObservableTransformer<LoadClinicalDecisionSupportInfo, PatientSummaryEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())

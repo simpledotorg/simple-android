@@ -14,6 +14,10 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
+import androidx.dynamicanimation.animation.DynamicAnimation
+import androidx.transition.AutoTransition
+import androidx.transition.Transition
+import androidx.transition.TransitionManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.Init
@@ -66,6 +70,7 @@ import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.scrollToChild
+import org.simple.clinic.widgets.spring
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.format.DateTimeFormatter
 import java.util.UUID
@@ -156,6 +161,9 @@ class PatientSummaryScreen :
 
   private val nextAppointmentFacilityView
     get() = binding.nextAppointmentFacilityView
+
+  private val clinicalDecisionSupportAlertView
+    get() = binding.clinicalDecisionSupportBpHighAlert.rootView
 
   @Inject
   lateinit var router: Router
@@ -644,6 +652,36 @@ class PatientSummaryScreen :
 
   override fun refreshNextAppointment() {
     nextAppointmentFacilityView.refreshAppointmentDetails()
+  }
+
+  override fun showClinicalDecisionSupportAlert() {
+    clinicalDecisionSupportAlertView.translationY = clinicalDecisionSupportAlertView.height.unaryMinus().toFloat()
+
+    val spring = clinicalDecisionSupportAlertView.spring(DynamicAnimation.TRANSLATION_Y)
+    val transitionListener = object : Transition.TransitionListener {
+      override fun onTransitionStart(transition: Transition) {
+      }
+
+      override fun onTransitionEnd(transition: Transition) {
+        spring.animateToFinalPosition(0f)
+      }
+
+      override fun onTransitionCancel(transition: Transition) {
+      }
+
+      override fun onTransitionPause(transition: Transition) {
+      }
+
+      override fun onTransitionResume(transition: Transition) {
+      }
+    }
+
+    TransitionManager.beginDelayedTransition(summaryViewsContainer, AutoTransition().apply {
+      excludeChildren(clinicalDecisionSupportAlertView, true)
+      addListener(transitionListener)
+    })
+
+    clinicalDecisionSupportAlertView.visibility = VISIBLE
   }
 
   interface Injector {

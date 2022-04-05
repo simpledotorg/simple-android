@@ -16,4 +16,5 @@ interface PatientSummaryScreenUi {
   fun showNextAppointmentCard()
   fun hideNextAppointmentCard()
   fun showClinicalDecisionSupportAlert()
+  fun hideClinicalDecisionSupportAlert()
 }

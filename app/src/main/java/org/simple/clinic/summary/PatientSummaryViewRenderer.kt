@@ -39,6 +39,8 @@ class PatientSummaryViewRenderer(
   private fun renderClinicalDecisionSupportAlert(isNewestBpEntryHigh: Boolean) {
     if (isNewestBpEntryHigh) {
       ui.showClinicalDecisionSupportAlert()
+    } else {
+      ui.hideClinicalDecisionSupportAlert()
     }
   }
 

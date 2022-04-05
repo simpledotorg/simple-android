@@ -658,11 +658,19 @@ class PatientSummaryScreen :
     clinicalDecisionSupportAlertView.translationY = clinicalDecisionSupportAlertView.height.unaryMinus().toFloat()
 
     val spring = clinicalDecisionSupportAlertView.spring(DynamicAnimation.TRANSLATION_Y)
+
+    val transition = AutoTransition().apply {
+      excludeChildren(clinicalDecisionSupportAlertView, true)
+      excludeTarget(R.id.newBPItemContainer, true)
+      excludeTarget(R.id.bloodSugarItemContainer, true)
+      excludeTarget(R.id.drugsSummaryContainer, true)
+    }
     val transitionListener = object : Transition.TransitionListener {
       override fun onTransitionStart(transition: Transition) {
       }
 
       override fun onTransitionEnd(transition: Transition) {
+        transition.removeListener(this)
         spring.animateToFinalPosition(0f)
       }
 
@@ -675,11 +683,8 @@ class PatientSummaryScreen :
       override fun onTransitionResume(transition: Transition) {
       }
     }
-
-    TransitionManager.beginDelayedTransition(summaryViewsContainer, AutoTransition().apply {
-      excludeChildren(clinicalDecisionSupportAlertView, true)
-      addListener(transitionListener)
-    })
+    transition.addListener(transitionListener)
+    TransitionManager.beginDelayedTransition(summaryViewsContainer, transition)
 
     clinicalDecisionSupportAlertView.visibility = VISIBLE
   }
@@ -702,30 +707,15 @@ class PatientSummaryScreen :
     spring.addEndListener(listener)
     clinicalDecisionSupportAlertView.setTag(R.id.tag_clinical_decision_pending_end_listener, listener)
 
-    val transitionListener = object : Transition.TransitionListener {
-      override fun onTransitionStart(transition: Transition) {
-      }
-
-      override fun onTransitionEnd(transition: Transition) {
-        spring.animateToFinalPosition(clinicalDecisionSupportAlertView.height.unaryMinus().toFloat())
-      }
-
-      override fun onTransitionCancel(transition: Transition) {
-      }
-
-      override fun onTransitionPause(transition: Transition) {
-      }
-
-      override fun onTransitionResume(transition: Transition) {
-      }
-    }
-
-    TransitionManager.beginDelayedTransition(summaryViewsContainer, AutoTransition().apply {
+    val transition = AutoTransition().apply {
       excludeChildren(clinicalDecisionSupportAlertView, true)
-      addListener(transitionListener)
-    })
+      excludeTarget(R.id.newBPItemContainer, true)
+      excludeTarget(R.id.bloodSugarItemContainer, true)
+      excludeTarget(R.id.drugsSummaryContainer, true)
+    }
+    TransitionManager.beginDelayedTransition(summaryViewsContainer, transition)
 
-    clinicalDecisionSupportAlertView.visibility = VISIBLE
+    spring.animateToFinalPosition(clinicalDecisionSupportAlertView.height.unaryMinus().toFloat())
   }
 
   interface Injector {

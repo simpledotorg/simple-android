@@ -150,7 +150,13 @@
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:clipChildren="false"
+      android:clipToPadding="false"
       android:orientation="vertical">
+
+      <include
+        android:id="@+id/clinicalDecisionSupportBpHighAlert"
+        layout="@layout/view_clinical_decision_support_bp_high" />
 
       <org.simple.clinic.widgets.PatientStatusView
         android:id="@+id/patientDiedStatusView"

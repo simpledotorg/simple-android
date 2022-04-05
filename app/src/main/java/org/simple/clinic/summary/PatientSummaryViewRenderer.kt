@@ -1,12 +1,15 @@
 package org.simple.clinic.summary
 
 import org.simple.clinic.mobius.ViewRenderer
+import org.simple.clinic.util.ValueChangedCallback
 
 class PatientSummaryViewRenderer(
     private val ui: PatientSummaryScreenUi,
     private val isNextAppointmentFeatureEnabled: Boolean,
     private val modelUpdateCallback: PatientSummaryModelUpdateCallback
 ) : ViewRenderer<PatientSummaryModel> {
+
+  private val clinicalDecisionSupportCallback = ValueChangedCallback<Boolean>()
 
   override fun render(model: PatientSummaryModel) {
     modelUpdateCallback?.invoke(model)
@@ -25,6 +28,17 @@ class PatientSummaryViewRenderer(
       }
 
       renderNextAppointmentCard(model)
+
+      val canShowClinicalDecisionSupportAlert = model.hasPatientRegistrationData == true && model.readyToRender()
+      if (canShowClinicalDecisionSupportAlert) {
+        clinicalDecisionSupportCallback.pass(model.isNewestBpEntryHigh == true, ::renderClinicalDecisionSupportAlert)
+      }
+    }
+  }
+
+  private fun renderClinicalDecisionSupportAlert(isNewestBpEntryHigh: Boolean) {
+    if (isNewestBpEntryHigh) {
+      ui.showClinicalDecisionSupportAlert()
     }
   }
 

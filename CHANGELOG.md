@@ -22,6 +22,7 @@
 - Bump kotlin to v1.6.20
 - Bump coroutines to v1.6.0
 - Implemented the support for DrugStockReminder API
+- Show the clinical decision support banner in summary screen when newest BP entry is high for the patient
 
 ### Features
 

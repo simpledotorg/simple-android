@@ -33,7 +33,7 @@ object LoadMedicalOfficers : PatientSummaryEffect()
 
 data class LoadPatientRegistrationData(val patientUuid: UUID) : PatientSummaryEffect()
 
-data class LoadClinicalDecisionSupport(val patientUuid: UUID) : PatientSummaryEffect()
+data class LoadClinicalDecisionSupportInfo(val patientUuid: UUID) : PatientSummaryEffect()
 
 sealed class PatientSummaryViewEffect : PatientSummaryEffect()
 

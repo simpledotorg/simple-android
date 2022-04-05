@@ -533,7 +533,7 @@ class PatientSummaryEffectHandlerTest {
     whenever(bloodPressureRepository.isNewestBpEntryHigh(patientUuid)).doReturn(Observable.just(true))
 
     // when
-    testCase.dispatch(LoadClinicalDecisionSupport(patientUuid))
+    testCase.dispatch(LoadClinicalDecisionSupportInfo(patientUuid))
 
     // then
     testCase.assertOutgoingEvents(ClinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true))

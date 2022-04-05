@@ -32,6 +32,8 @@ class PatientSummaryViewRenderer(
       val canShowClinicalDecisionSupportAlert = model.hasPatientRegistrationData == true && model.readyToRender()
       if (canShowClinicalDecisionSupportAlert) {
         clinicalDecisionSupportCallback.pass(model.isNewestBpEntryHigh == true, ::renderClinicalDecisionSupportAlert)
+      } else {
+        ui.hideClinicalDecisionSupportAlertWithoutAnimation()
       }
     }
   }

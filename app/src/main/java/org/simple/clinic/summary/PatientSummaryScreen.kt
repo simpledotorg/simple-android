@@ -720,6 +720,10 @@ class PatientSummaryScreen :
     spring.animateToFinalPosition(clinicalDecisionSupportAlertView.height.unaryMinus().toFloat())
   }
 
+  override fun hideClinicalDecisionSupportAlertWithoutAnimation() {
+    clinicalDecisionSupportAlertView.visibility = GONE
+  }
+
   interface Injector {
     fun inject(target: PatientSummaryScreen)
   }

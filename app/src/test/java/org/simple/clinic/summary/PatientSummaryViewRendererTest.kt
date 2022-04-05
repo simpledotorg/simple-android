@@ -51,6 +51,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).showDiabetesView()
     verify(ui).hideTeleconsultButton()
     verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verifyNoMoreInteractions(ui)
   }
 
@@ -66,6 +67,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideDiabetesView()
     verify(ui).hideTeleconsultButton()
     verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verifyNoMoreInteractions(ui)
   }
 
@@ -104,6 +106,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideAssignedFacilityView()
     verify(ui).hidePatientDiedStatus()
     verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verifyNoMoreInteractions(ui)
   }
 
@@ -121,6 +124,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).showDiabetesView()
     verify(ui).hideTeleconsultButton()
     verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verifyNoMoreInteractions(ui)
   }
 
@@ -142,6 +146,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).showDiabetesView()
     verify(ui).showTeleconsultButton()
     verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verifyNoMoreInteractions(ui)
   }
 
@@ -159,6 +164,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).showDiabetesView()
     verify(ui).hideTeleconsultButton()
     verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verifyNoMoreInteractions(ui)
   }
 
@@ -198,6 +204,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).showAssignedFacilityView()
     verify(ui).hidePatientDiedStatus()
     verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verifyNoMoreInteractions(ui)
   }
 
@@ -237,6 +244,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideAssignedFacilityView()
     verify(ui).hidePatientDiedStatus()
     verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verifyNoMoreInteractions(ui)
   }
 
@@ -260,6 +268,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideDoneButton()
     verify(ui).showTeleconsultLogButton()
     verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verifyNoMoreInteractions(ui)
   }
 
@@ -297,6 +306,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideAssignedFacilityView()
     verify(ui).hidePatientDiedStatus()
     verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verifyNoMoreInteractions(ui)
   }
 
@@ -334,6 +344,7 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideAssignedFacilityView()
     verify(ui).showPatientDiedStatus()
     verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verifyNoMoreInteractions(ui)
   }
 
@@ -348,6 +359,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).showNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verifyNoMoreInteractions(ui)
   }
 
@@ -362,6 +374,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verifyNoMoreInteractions(ui)
   }
 
@@ -376,6 +389,7 @@ class PatientSummaryViewRendererTest {
 
     // then
     verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verifyNoMoreInteractions(ui)
   }
 
@@ -463,6 +477,21 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideDiabetesView()
     verify(ui).hideTeleconsultButton()
     verify(ui).hideClinicalDecisionSupportAlert()
+    verify(ui).hideNextAppointmentCard()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when clinical decision support alert cannot be shown, then hide the clinical decision support view without animation`() {
+    // given
+    val updatedModel = defaultModel
+        .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = false)
+
+    // when
+    uiRenderer.render(updatedModel)
+
+    // then
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verify(ui).hideNextAppointmentCard()
     verifyNoMoreInteractions(ui)
   }

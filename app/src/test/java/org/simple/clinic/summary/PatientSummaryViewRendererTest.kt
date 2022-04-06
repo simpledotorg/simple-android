@@ -37,7 +37,12 @@ class PatientSummaryViewRendererTest {
   private val defaultModel = PatientSummaryModel.from(ViewExistingPatient, UUID.fromString("6fdf088e-f6aa-40e9-9cc2-22e197b83470"))
   private val ui = mock<PatientSummaryScreenUi>()
 
-  private val uiRenderer = PatientSummaryViewRenderer(ui, isNextAppointmentFeatureEnabled = false) { /* no-op */ }
+  private val uiRenderer = PatientSummaryViewRenderer(
+      ui = ui,
+      isNextAppointmentFeatureEnabled = false,
+      modelUpdateCallback = { /* no-op */ },
+      isCdsAlertsFeatureEnabled= false
+  )
 
   @Test
   fun `when the facility supports diabetes management, the diabetes widget must be shown`() {
@@ -352,7 +357,7 @@ class PatientSummaryViewRendererTest {
   fun `when patient registration data is present and next appointment feature is enabled, then show the next appointment card`() {
     // given
     val modelWithPatientRegistrationData = defaultModel.patientRegistrationDataLoaded(hasPatientRegistrationData = true)
-    val uiRenderer = PatientSummaryViewRenderer(ui = ui, isNextAppointmentFeatureEnabled = true) { /* no-op */ }
+    val uiRenderer = PatientSummaryViewRenderer(ui = ui, isNextAppointmentFeatureEnabled = true, { /* no-op */ }, false)
 
     // when
     uiRenderer.render(modelWithPatientRegistrationData)
@@ -367,7 +372,7 @@ class PatientSummaryViewRendererTest {
   fun `when patient registration data is present and next appointment feature is disabled, then hide the next appointment card`() {
     // given
     val modelWithPatientRegistrationData = defaultModel.patientRegistrationDataLoaded(hasPatientRegistrationData = true)
-    val uiRenderer = PatientSummaryViewRenderer(ui = ui, isNextAppointmentFeatureEnabled = false) { /* no-op */ }
+    val uiRenderer = PatientSummaryViewRenderer(ui = ui, isNextAppointmentFeatureEnabled = false, { /* no-op */ }, false)
 
     // when
     uiRenderer.render(modelWithPatientRegistrationData)
@@ -394,7 +399,7 @@ class PatientSummaryViewRendererTest {
   }
 
   @Test
-  fun `when patient summary is ready to render, has patient registration data and newest BP entry is high, then show the clinical decision support view`() {
+  fun `when clinical decision support alert can be shown and newest BP entry is high, then show the clinical decision support view`() {
     // given
     val patientUuid = UUID.fromString("6274ca08-2432-43fe-ae04-35f623e5325c")
     val patient = TestData.patient(
@@ -422,6 +427,13 @@ class PatientSummaryViewRendererTest {
         .patientSummaryProfileLoaded(patientSummaryProfile = patientSummaryProfile)
         .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true)
 
+    val uiRenderer = PatientSummaryViewRenderer(
+        ui = ui,
+        isNextAppointmentFeatureEnabled = false,
+        modelUpdateCallback = { /* no-op */ },
+        isCdsAlertsFeatureEnabled = true
+    )
+
     // when
     uiRenderer.render(updatedModel)
 
@@ -438,7 +450,7 @@ class PatientSummaryViewRendererTest {
   }
 
   @Test
-  fun `when newest BP entry for the patient is not high, then hide the clinical decision support view`() {
+  fun `when clinical decision suppoert alerts can be shown and newest BP entry for the patient is not high, then hide the clinical decision support view`() {
     // given
     val patientUuid = UUID.fromString("6274ca08-2432-43fe-ae04-35f623e5325c")
     val patient = TestData.patient(
@@ -465,6 +477,13 @@ class PatientSummaryViewRendererTest {
         .currentFacilityLoaded(facility = facility)
         .patientSummaryProfileLoaded(patientSummaryProfile = patientSummaryProfile)
         .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = false)
+
+    val uiRenderer = PatientSummaryViewRenderer(
+        ui = ui,
+        isNextAppointmentFeatureEnabled = false,
+        modelUpdateCallback = { /* no-op */ },
+        isCdsAlertsFeatureEnabled = true
+    )
 
     // when
     uiRenderer.render(updatedModel)

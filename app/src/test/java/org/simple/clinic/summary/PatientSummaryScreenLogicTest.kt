@@ -69,7 +69,8 @@ class PatientSummaryScreenLogicTest {
   private val viewRenderer = PatientSummaryViewRenderer(
       ui = ui,
       isNextAppointmentFeatureEnabled = false,
-      modelUpdateCallback = { /* no-op */ }
+      modelUpdateCallback = { /* no-op */ },
+      isCdsAlertsFeatureEnabled = false
   )
 
   private lateinit var testFixture: MobiusTestFixture<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect>

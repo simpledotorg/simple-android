@@ -212,10 +212,12 @@ class PatientSummaryScreen :
   override fun uiRenderer(): ViewRenderer<PatientSummaryModel> {
     return PatientSummaryViewRenderer(
         ui = this,
-        isNextAppointmentFeatureEnabled = features.isEnabled(Feature.NextAppointment)
-    ) { model ->
-      modelUpdateCallback?.invoke(model)
-    }
+        isNextAppointmentFeatureEnabled = features.isEnabled(Feature.NextAppointment),
+        { model ->
+          modelUpdateCallback?.invoke(model)
+        },
+        isCdsAlertsFeatureEnabled = features.isEnabled(Feature.CDSAlerts)
+    )
   }
 
   override fun viewEffectHandler() = PatientSummaryViewEffectHandler(this)

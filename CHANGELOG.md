@@ -27,6 +27,7 @@
 - Bump asm to v9.3
 - Add feature flag for clinical decision support alerts
 - Update `isNewestBpEntryHigh` query
+- Add Hindi translations for CDS alert
 
 ### Features
 

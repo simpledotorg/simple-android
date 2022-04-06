@@ -747,4 +747,9 @@
   <string name="custom_drug_entry_sheet_save_button_text">सहेजें</string>
   <string name="custom_drug_entry_sheet_add_button_text">जोड़ें</string>
   <string name="custom_drug_entry_sheet_frequency_dialog_done">पूरा हुआ</string>
+
+  <!-- Clinical Decision Support Alerts -->
+  <string name="clinical_decision_support_alert_bp_high_title">बीपी ज़्यादा है | दवा बढ़ाएं ?</string>
+  <string name="clinical_decision_support_alert_bp_high_subtitle">यदि रोगी नियमित रूप से अपनी दवाएं ले रहे है, तो प्रोटोकॉल के अनुसार दवा बढ़ाएं |</string>
+
 </resources>

@@ -26,6 +26,7 @@
 - Hide clinical decision support alert banner when edit medicines are clicked
 - Bump asm to v9.3
 - Add feature flag for clinical decision support alerts
+- Update `isNewestBpEntryHigh` query
 
 ### Features
 

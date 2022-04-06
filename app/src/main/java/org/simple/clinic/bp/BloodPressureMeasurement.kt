@@ -226,7 +226,7 @@ data class BloodPressureMeasurement(
       WHERE
         BP.patientUuid = :patientUuid AND
         date(BP.recordedAt) == :currentDate AND
-        (BP.systolic > 140 OR BP.diastolic > 90) AND
+        (BP.systolic >= 140 OR BP.diastolic >= 90) AND
         BP.deletedAt IS NULL
       ORDER BY BP.recordedAt DESC
       LIMIT 1

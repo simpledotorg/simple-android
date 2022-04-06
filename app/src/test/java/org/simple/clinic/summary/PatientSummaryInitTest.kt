@@ -15,7 +15,9 @@ class PatientSummaryInitTest {
   private val patientUuid = UUID.fromString("fca8c3ad-75ca-4053-ba2f-e5c8ffda8991")
   private val defaultModel = PatientSummaryModel.from(ViewExistingPatient, patientUuid)
   private val facility = TestData.facility(uuid = UUID.fromString("6af0d0c5-4c5d-493f-bba9-0bcffde27e07"))
-  private val initSpec = InitSpec(PatientSummaryInit())
+  private val initSpec = InitSpec(PatientSummaryInit(
+      isCdsAlertsFeatureEnabled = true
+  ))
 
   @Test
   fun `when the screen is created, load the initial data`() {
@@ -31,6 +33,24 @@ class PatientSummaryInitTest {
                     LoadMedicalOfficers,
                     LoadPatientRegistrationData(patientUuid),
                     LoadClinicalDecisionSupportInfo(patientUuid)
+                )
+            )
+        )
+  }
+
+  @Test
+  fun `when the screen is created and cds alerts feature is disabled, then do not load cds info`() {
+    initSpec
+        .whenInit(defaultModel)
+        .then(
+            assertThatFirst(
+                hasModel(defaultModel),
+                hasEffects(
+                    LoadPatientSummaryProfile(patientUuid),
+                    LoadCurrentUserAndFacility,
+                    CheckForInvalidPhone(patientUuid),
+                    LoadMedicalOfficers,
+                    LoadPatientRegistrationData(patientUuid)
                 )
             )
         )
@@ -64,6 +84,38 @@ class PatientSummaryInitTest {
                 hasEffects(
                     LoadPatientSummaryProfile(patientUuid) as PatientSummaryEffect,
                     LoadClinicalDecisionSupportInfo(patientUuid)
+                )
+            )
+        )
+  }
+
+  @Test
+  fun `when the screen is restored and cds alerts feature is disabled, then do not load the cds info, user and current facility if already loaded`() {
+    val addressUuid = UUID.fromString("1bfe59b2-7eb9-408b-9a0b-e6d9d2f99fe4")
+
+    val profile = PatientSummaryProfile(
+        patient = TestData.patient(uuid = patientUuid, addressUuid = addressUuid),
+        address = TestData.patientAddress(uuid = addressUuid),
+        phoneNumber = null,
+        bpPassport = null,
+        alternativeId = null,
+        facility = facility
+    )
+    val facility = TestData.facility(uuid = UUID.fromString("9954b4e5-7126-41b1-94d8-74d84b8e0b20"))
+
+    val model = defaultModel
+        .completedCheckForInvalidPhone()
+        .patientSummaryProfileLoaded(profile)
+        .currentFacilityLoaded(facility)
+        .userLoggedInStatusLoaded(User.LoggedInStatus.LOGGED_IN)
+
+    initSpec
+        .whenInit(model)
+        .then(
+            assertThatFirst(
+                hasModel(model),
+                hasEffects(
+                    LoadPatientSummaryProfile(patientUuid) as PatientSummaryEffect
                 )
             )
         )

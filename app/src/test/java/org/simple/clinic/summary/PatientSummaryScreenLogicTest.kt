@@ -69,7 +69,8 @@ class PatientSummaryScreenLogicTest {
   private val viewRenderer = PatientSummaryViewRenderer(
       ui = ui,
       isNextAppointmentFeatureEnabled = false,
-      modelUpdateCallback = { /* no-op */ }
+      modelUpdateCallback = { /* no-op */ },
+      isCdsAlertsFeatureEnabled = false
   )
 
   private lateinit var testFixture: MobiusTestFixture<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect>
@@ -202,7 +203,7 @@ class PatientSummaryScreenLogicTest {
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = PatientSummaryModel.from(openIntention, patientUuid),
-        init = PatientSummaryInit(),
+        init = PatientSummaryInit(false),
         update = PatientSummaryUpdate(),
         effectHandler = effectHandler.build(),
         modelUpdateListener = viewRenderer::render

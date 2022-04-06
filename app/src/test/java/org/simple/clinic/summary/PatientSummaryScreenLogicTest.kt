@@ -203,7 +203,7 @@ class PatientSummaryScreenLogicTest {
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = PatientSummaryModel.from(openIntention, patientUuid),
-        init = PatientSummaryInit(),
+        init = PatientSummaryInit(false),
         update = PatientSummaryUpdate(),
         effectHandler = effectHandler.build(),
         modelUpdateListener = viewRenderer::render

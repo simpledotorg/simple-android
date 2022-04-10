@@ -28,6 +28,7 @@
 - Add feature flag for clinical decision support alerts
 - Update `isNewestBpEntryHigh` query
 - Add Hindi translations for CDS alert
+- Add remote config key for `NotifyAppUpdateAvailableV2` feature flag 
 
 ### Features
 

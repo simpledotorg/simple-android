@@ -34,6 +34,6 @@ enum class Feature(
   CallResultSyncEnabled(true),
   NextAppointment(false, "next_appointment_v1"),
   AddingHealthIDsFromEditPatient(false, "adding_health_ids_from_edit_patient"),
-  NotifyAppUpdateAvailableV2(false),
+  NotifyAppUpdateAvailableV2(false, "appupdate_enabled_v2"),
   CDSAlerts(false, "cds_alerts_v0")
 }

@@ -11,10 +11,6 @@
 - Update translations: `am-ET`, `ti-ET`, `om-ET`, `bn-BD`, `hi-IN`, `so-ET`, `si-LK`
 - Increase max character limit in overdue tab badge
 
-### Changes
-
-- [In Progress: 31 Mar 2022] Add stronger app update reminders
-
 ### Features
 
 - [In Progress: 05 Apr 2022] Messaging users to remind them to fill out drug stock report each month
@@ -50,6 +46,10 @@
 - Add remote config key for `NotifyAppUpdateAvailableV2` feature flag
 - Add GitHub action to cut a release branch
 - Use personal access token when checking out repo in `cut_release_branch` workflow
+
+### Changes
+
+- Add stronger app update reminders
 
 ### Fixes
 

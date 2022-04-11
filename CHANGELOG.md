@@ -30,6 +30,7 @@
 - Add Hindi translations for CDS alert
 - Add remote config key for `NotifyAppUpdateAvailableV2` feature flag 
 - Add GitHub action to cut a release branch
+- Use personal access token when checking out repo in `cut_release_branch` workflow
 
 ### Features
 

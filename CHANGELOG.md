@@ -4,6 +4,20 @@
 
 ### Internal
 
+- Bump Sentry to v5.7.2
+
+### Changes
+
+- [In Progress: 31 Mar 2022] Add stronger app update reminders
+
+### Features
+
+- [In Progress: 05 Apr 2022] Messaging users to remind them to fill out drug stock report each month
+
+## On Demo
+
+### Internal
+
 - Bump GH Actions `cache` to v3
 - Fix `trigger_demo_release` workflow running on every newly created branch
 - Implement critical app update card in `PatientsTabScreen`
@@ -30,14 +44,6 @@
 - Add Hindi translations for CDS alert
 - Add remote config key for `NotifyAppUpdateAvailableV2` feature flag 
 - Add GitHub action to cut a release branch
-
-### Features
-
-- [In Progress: 05 Apr 2022] Messaging users to remind them to fill out drug stock report each month
-
-### Changes
-
-- [In Progress: 31 Mar 2022] Add stronger app update reminders
 
 ### Fixes
 

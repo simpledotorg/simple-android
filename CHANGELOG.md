@@ -10,6 +10,8 @@
 - Bump gradle to v7.1.3
 - Update translations: `am-ET`, `ti-ET`, `om-ET`, `bn-BD`, `hi-IN`, `so-ET`, `si-LK`
 - Increase max character limit in overdue tab badge
+- Use personal access token when checking out repo in `cut_release_branch` workflow
+- Sync reports and progress data before patient sync
 
 ### Features
 
@@ -45,7 +47,6 @@
 - Add Hindi translations for CDS alert
 - Add remote config key for `NotifyAppUpdateAvailableV2` feature flag
 - Add GitHub action to cut a release branch
-- Use personal access token when checking out repo in `cut_release_branch` workflow
 
 ### Changes
 

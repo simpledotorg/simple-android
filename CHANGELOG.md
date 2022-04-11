@@ -29,6 +29,7 @@
 - Update `isNewestBpEntryHigh` query
 - Add Hindi translations for CDS alert
 - Add remote config key for `NotifyAppUpdateAvailableV2` feature flag 
+- Add GitHub action to cut a release branch
 
 ### Features
 

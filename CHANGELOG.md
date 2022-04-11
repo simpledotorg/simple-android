@@ -5,6 +5,7 @@
 ### Internal
 
 - Bump Sentry to v5.7.2
+- Bump Flipper to v0.142.0
 
 ### Changes
 

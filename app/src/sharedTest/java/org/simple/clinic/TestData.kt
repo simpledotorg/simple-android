@@ -1354,7 +1354,12 @@ object TestData {
       patientRecordedAt: Instant = Instant.parse("2021-07-01T00:00:00Z"),
       patientRegisteredFacilityId: UUID = UUID.randomUUID(),
       patientAssignedFacilityId: UUID? = null,
-      retainUntil: Instant? = null
+      retainUntil: Instant? = null,
+      patientAgeDetails: PatientAgeDetails = PatientAgeDetails(
+          ageValue = if (!generateDateOfBirth) Math.random().times(100).toInt() else null,
+          ageUpdatedAt = if (!generateDateOfBirth) Instant.now() else null,
+          dateOfBirth = if (generateDateOfBirth) LocalDate.parse("2018-01-01") else null
+      )
   ): ContactPatientProfile {
     val phoneNumbers = if (!patientPhoneNumber.isNullOrBlank()) {
       listOf(patientPhoneNumber(patientUuid = patientUuid, number = patientPhoneNumber, phoneType = PatientPhoneNumberType.Mobile))
@@ -1378,11 +1383,7 @@ object TestData {
             registeredFacilityId = patientRegisteredFacilityId,
             assignedFacilityId = patientAssignedFacilityId,
             retainUntil = retainUntil,
-            patientAgeDetails = PatientAgeDetails(
-                ageValue = if (!generateDateOfBirth) Math.random().times(100).toInt() else null,
-                ageUpdatedAt = if (!generateDateOfBirth) Instant.now() else null,
-                dateOfBirth = if (generateDateOfBirth) LocalDate.parse("2018-01-01") else null
-            )
+            patientAgeDetails = patientAgeDetails
         ),
         address = patientAddress(uuid = patientAddressUuid),
         phoneNumbers = phoneNumbers,

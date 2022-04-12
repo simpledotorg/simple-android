@@ -14,10 +14,10 @@ import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestData
-import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
+import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.RecentPatient
@@ -65,26 +65,38 @@ class LatestRecentPatientsLogicTest {
         TestData.recentPatient(
             uuid = patientUuid1,
             fullName = "Ajay Kumar",
-            age = Age(42, Instant.now(userClock)),
             gender = Transgender,
             updatedAt = Instant.now(userClock),
-            patientRecordedAt = Instant.now(userClock)
+            patientRecordedAt = Instant.now(userClock),
+            patientAgeDetails = PatientAgeDetails(
+                ageValue = 42,
+                ageUpdatedAt = Instant.now(userClock),
+                dateOfBirth = null
+            )
         ),
         TestData.recentPatient(
             uuid = patientUuid2,
             fullName = "Vijay Kumar",
-            age = Age(24, Instant.now(userClock)),
             gender = Male,
             updatedAt = Instant.now(userClock).minus(1, ChronoUnit.DAYS),
-            patientRecordedAt = Instant.now(userClock).minus(5, ChronoUnit.DAYS)
+            patientRecordedAt = Instant.now(userClock).minus(5, ChronoUnit.DAYS),
+            patientAgeDetails = PatientAgeDetails(
+                ageValue = 24,
+                ageUpdatedAt = Instant.now(userClock),
+                dateOfBirth = null
+            )
         ),
         TestData.recentPatient(
             uuid = patientUuid3,
             fullName = "Vinaya Kumari",
-            age = Age(27, Instant.now(userClock)),
             gender = Female,
             updatedAt = Instant.now(userClock).minus(3, ChronoUnit.DAYS),
-            patientRecordedAt = Instant.now(userClock).minus(10, ChronoUnit.DAYS)
+            patientRecordedAt = Instant.now(userClock).minus(10, ChronoUnit.DAYS),
+            patientAgeDetails = PatientAgeDetails(
+                ageValue = 27,
+                ageUpdatedAt = Instant.now(userClock),
+                dateOfBirth = null
+            )
         )
     )
 
@@ -137,32 +149,48 @@ class LatestRecentPatientsLogicTest {
         TestData.recentPatient(
             uuid = patientUuid1,
             fullName = "Ajay Kumar",
-            age = Age(42, Instant.now(userClock)),
             gender = Transgender,
             updatedAt = Instant.now(userClock),
-            patientRecordedAt = Instant.now(userClock)
+            patientRecordedAt = Instant.now(userClock),
+            patientAgeDetails = PatientAgeDetails(
+                ageValue = 42,
+                ageUpdatedAt = Instant.now(userClock),
+                dateOfBirth = null
+            )
         ),
         TestData.recentPatient(
             uuid = patientUuid2,
             fullName = "Vijay Kumar",
-            age = Age(24, Instant.now(userClock)),
             gender = Male,
             updatedAt = Instant.now(userClock).minus(1, ChronoUnit.DAYS),
-            patientRecordedAt = Instant.now(userClock).minus(3, ChronoUnit.DAYS)
+            patientRecordedAt = Instant.now(userClock).minus(3, ChronoUnit.DAYS),
+            patientAgeDetails = PatientAgeDetails(
+                ageValue = 24,
+                ageUpdatedAt = Instant.now(userClock),
+                dateOfBirth = null
+            )
         ),
         TestData.recentPatient(
             uuid = patientUuid3,
             fullName = "Vinaya Kumari",
-            age = Age(27, Instant.now(userClock)),
             gender = Female,
             updatedAt = Instant.now(userClock).minus(4, ChronoUnit.DAYS),
-            patientRecordedAt = Instant.now(userClock).minus(15, ChronoUnit.DAYS)
+            patientRecordedAt = Instant.now(userClock).minus(15, ChronoUnit.DAYS),
+            patientAgeDetails = PatientAgeDetails(
+                ageValue = 27,
+                ageUpdatedAt = Instant.now(userClock),
+                dateOfBirth = null
+            )
         ),
         TestData.recentPatient(
             uuid = patientUuid4,
             fullName = "Abhilash Devi",
-            age = Age(37, Instant.now(userClock)),
-            gender = Transgender
+            gender = Transgender,
+            patientAgeDetails = PatientAgeDetails(
+                ageValue = 37,
+                ageUpdatedAt = Instant.now(userClock),
+                dateOfBirth = null
+            )
         )
     )
     setupController(recentPatients = recentPatients)
@@ -219,12 +247,15 @@ class LatestRecentPatientsLogicTest {
 
     setupController(recentPatients = listOf(TestData.recentPatient(
         uuid = patientUuid,
-        dateOfBirth = LocalDate.parse("2018-01-01"),
         fullName = "Anish Acharya",
         gender = Male,
-        age = null,
         patientRecordedAt = Instant.parse("2018-01-01T00:00:00Z"),
-        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = null,
+            ageUpdatedAt = null,
+            dateOfBirth = LocalDate.parse("2018-01-01")
+        )
     )))
     verify(ui).updateRecentPatients(listOf(
         RecentPatientItem(

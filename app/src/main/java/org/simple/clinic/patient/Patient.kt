@@ -71,18 +71,8 @@ data class Patient(
     val retainUntil: Instant?
 ) : Parcelable {
 
-  val age: Age?
-    get() {
-      return if (ageDetails.type == PatientAgeDetails.Type.FROM_AGE)
-        Age(ageDetails.ageValue!!, ageDetails.ageUpdatedAt!!)
-      else
-        null
-    }
-
   fun withNameAndGender(fullName: String, gender: Gender): Patient =
       copy(fullName = fullName, gender = gender)
-
-  fun withAge(age: Age): Patient = copy(ageDetails = ageDetails.withAge(age))
 
   fun withDateOfBirth(dateOfBirth: LocalDate): Patient = copy(ageDetails = ageDetails.withDateOfBirth(dateOfBirth))
 

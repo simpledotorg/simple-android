@@ -29,7 +29,6 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengt
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFieldsFactory
-import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -321,7 +320,11 @@ class EditPatientScreenSaveTest {
               it.copy(
                   fullName = "Name",
                   gender = Gender.Male,
-                  ageDetails = PatientAgeDetails.fromAgeOrDate(null, LocalDate.of(1985, Month.MAY, 20))
+                  ageDetails = PatientAgeDetails(
+                      ageValue = null,
+                      ageUpdatedAt = null,
+                      dateOfBirth = LocalDate.of(1985, Month.MAY, 20)
+                  )
               )
             },
             createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") },
@@ -343,12 +346,14 @@ class EditPatientScreenSaveTest {
                 AgeChanged("22")),
             shouldSavePatient = true,
             createExpectedPatient = {
-              val expectedAge = Age(22, Instant.now(utcClock).plus(oneYear))
-
               it.copy(
                   fullName = "Name",
                   gender = Gender.Male,
-                  ageDetails = PatientAgeDetails.fromAgeOrDate(expectedAge, null)
+                  ageDetails = PatientAgeDetails(
+                      ageValue = 22,
+                      ageUpdatedAt = Instant.now(utcClock).plus(oneYear),
+                      dateOfBirth = null
+                  )
               )
             },
             createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") },
@@ -379,12 +384,14 @@ class EditPatientScreenSaveTest {
                 AgeChanged("25")),
             shouldSavePatient = true,
             createExpectedPatient = {
-              val expectedAge = Age(25, Instant.now(utcClock))
-
               it.copy(
                   fullName = "Name",
                   gender = Gender.Transgender,
-                  ageDetails = PatientAgeDetails.fromAgeOrDate(expectedAge, null)
+                  ageDetails = PatientAgeDetails(
+                      ageValue = 25,
+                      ageUpdatedAt = Instant.now(utcClock),
+                      dateOfBirth = null
+                  )
               )
             },
             createExpectedAddress = { it.copy(district = "District", state = "State") },
@@ -407,7 +414,11 @@ class EditPatientScreenSaveTest {
               it.copy(
                   fullName = "Name",
                   gender = Gender.Transgender,
-                  ageDetails = PatientAgeDetails.fromAgeOrDate(null, LocalDate.parse("1965-06-25"))
+                  ageDetails = PatientAgeDetails(
+                      ageValue = null,
+                      ageUpdatedAt = null,
+                      dateOfBirth = LocalDate.parse("1965-06-25")
+                  )
               )
             },
             createExpectedAddress = { it.copy(district = "District", state = "State") },
@@ -427,12 +438,14 @@ class EditPatientScreenSaveTest {
                 AgeChanged("25")),
             shouldSavePatient = true,
             createExpectedPatient = {
-              val expectedAge = Age(25, Instant.now(utcClock).plus(twoYears))
-
               it.copy(
                   fullName = "Name",
                   gender = Gender.Transgender,
-                  ageDetails = PatientAgeDetails.fromAgeOrDate(expectedAge, null)
+                  ageDetails = PatientAgeDetails(
+                      ageValue = 25,
+                      ageUpdatedAt = Instant.now(utcClock).plus(twoYears),
+                      dateOfBirth = null
+                  )
               )
             },
             createExpectedAddress = { it.copy(district = "District", state = "State") },

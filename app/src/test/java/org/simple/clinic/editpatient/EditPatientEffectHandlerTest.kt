@@ -341,8 +341,12 @@ class EditPatientEffectHandlerTest {
         patientUuid = UUID.fromString("6e7c5107-a762-453a-a5ef-b19c924f2f39"),
         generatePhoneNumber = false,
         generateBusinessId = false,
-        age = Age(35, currentTime),
-        dateOfBirth = null
+        generateDateOfBirth = false,
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = 35,
+            ageUpdatedAt = currentTime,
+            dateOfBirth = null
+        )
     )
     val ongoingEntry = EditablePatientEntry.from(
         patient = patientProfile.patient,
@@ -384,8 +388,12 @@ class EditPatientEffectHandlerTest {
         patientUuid = UUID.fromString("6e7c5107-a762-453a-a5ef-b19c924f2f39"),
         generatePhoneNumber = false,
         generateBusinessId = false,
-        age = Age(recordedAge, currentTime),
-        dateOfBirth = null
+        generateDateOfBirth = false,
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = recordedAge,
+            ageUpdatedAt = currentTime,
+            dateOfBirth = null
+        )
     )
     val ongoingEntry = EditablePatientEntry.from(
         patient = patientProfile.patient,

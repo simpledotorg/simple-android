@@ -1045,8 +1045,6 @@ object TestData {
       fullName: String = "Ashok Kumar",
       phoneNumber: String = "3.14159",
       gender: Gender = Gender.Male,
-      dateOfBirth: LocalDate? = null,
-      age: Age? = Age(45, Instant.now()),
       status: PatientStatus = PatientStatus.Active,
       address: PatientAddress = patientAddress(),
       assignedFacilityId: UUID? = null,

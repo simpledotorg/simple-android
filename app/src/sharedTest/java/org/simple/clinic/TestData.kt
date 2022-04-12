@@ -997,12 +997,17 @@ object TestData {
       phoneNumber: PatientPhoneNumber? = patientPhoneNumber(uuid = phoneNumberUuid, patientUuid = patientUuid),
       appointment: Appointment = appointment(uuid = appointmentUuid, patientUuid = patientUuid, facilityUuid = facilityUuid),
       patientAddress: OverduePatientAddress = overduePatientAddress(),
-      patientAssignedFacilityId: UUID? = null
+      patientAssignedFacilityId: UUID? = null,
+      patientAgeDetails: PatientAgeDetails = PatientAgeDetails(
+          ageValue = null,
+          ageUpdatedAt = null,
+          dateOfBirth = LocalDate.now(UTC).minusYears(30)
+      )
   ): OverdueAppointment {
     return OverdueAppointment(
         fullName = name,
         gender = gender,
-        ageDetails = PatientAgeDetails.fromAgeOrDate(age, dateOfBirth),
+        ageDetails = patientAgeDetails,
         appointment = appointment,
         phoneNumber = phoneNumber,
         patientAddress = patientAddress,

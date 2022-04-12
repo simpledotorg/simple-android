@@ -1082,12 +1082,17 @@ object TestData {
       dateOfBirth: LocalDate? = null,
       age: Age? = null,
       patientRecordedAt: Instant = Instant.parse("2018-01-01T00:00:00Z"),
-      updatedAt: Instant = Instant.parse("2018-01-01T00:00:00Z")
+      updatedAt: Instant = Instant.parse("2018-01-01T00:00:00Z"),
+      patientAgeDetails: PatientAgeDetails = PatientAgeDetails(
+          ageValue = null,
+          ageUpdatedAt = null,
+          dateOfBirth = null
+      )
   ) = RecentPatient(
       uuid = uuid,
       fullName = fullName,
       gender = gender,
-      ageDetails = PatientAgeDetails.fromAgeOrDate(age, dateOfBirth),
+      ageDetails = patientAgeDetails,
       patientRecordedAt = patientRecordedAt,
       updatedAt = updatedAt
   )

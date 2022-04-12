@@ -1055,13 +1055,18 @@ object TestData {
           type = BpPassport
       ),
       identifierSearchHelp: String? = null,
-      assignedFacilityName: String? = null
+      assignedFacilityName: String? = null,
+      patientAgeDetails: PatientAgeDetails = PatientAgeDetails(
+          ageValue = 45,
+          ageUpdatedAt = Instant.now(),
+          dateOfBirth = null
+      )
   ): PatientSearchResult {
     return PatientSearchResult(
         uuid = uuid,
         fullName = fullName,
         gender = gender,
-        ageDetails = PatientAgeDetails.fromAgeOrDate(age, dateOfBirth),
+        ageDetails = patientAgeDetails,
         status = status,
         assignedFacilityId = assignedFacilityId,
         assignedFacilityName = assignedFacilityName,

@@ -30,7 +30,6 @@ import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengt
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFieldsFactory
-import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
@@ -797,13 +796,24 @@ class EditPatientScreenFormTest {
       profile
 
     }.let { profile ->
+      val ageDetails = profile.patient.ageDetails
       if (ageValue != null) {
-        val age = Age(ageValue, Instant.now(utcClock))
-        return@let profile.copy(patient = profile.patient.withAge(age))
-
+        return@let profile.copy(patient = profile.patient.copy(
+            ageDetails = ageDetails.copy(
+                ageValue = ageValue,
+                ageUpdatedAt = Instant.now(utcClock),
+                dateOfBirth = null
+            )
+        ))
       } else if (dateOfBirthString != null) {
         val dateOfBirth = LocalDate.parse(dateOfBirthString)
-        return@let profile.copy(patient = profile.patient.withDateOfBirth(dateOfBirth))
+        return@let profile.copy(patient = profile.patient.copy(
+            ageDetails = ageDetails.copy(
+                ageValue = null,
+                ageUpdatedAt = null,
+                dateOfBirth = dateOfBirth
+            )
+        ))
       }
       profile
     }

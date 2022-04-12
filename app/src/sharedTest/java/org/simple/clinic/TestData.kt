@@ -177,14 +177,19 @@ object TestData {
       deletedReason: DeletedReason? = null,
       registeredFacilityId: UUID? = null,
       assignedFacilityId: UUID? = null,
-      retainUntil: Instant? = null
+      retainUntil: Instant? = null,
+      patientAgeDetails: PatientAgeDetails = PatientAgeDetails(
+          ageValue = Math.random().times(100).toInt(),
+          ageUpdatedAt = Instant.now(),
+          dateOfBirth = null
+      )
   ): Patient {
     return Patient(
         uuid = uuid,
         addressUuid = addressUuid,
         fullName = fullName,
         gender = gender,
-        ageDetails = PatientAgeDetails.fromAgeOrDate(age, dateOfBirth),
+        ageDetails = patientAgeDetails,
         status = status,
         createdAt = createdAt,
         updatedAt = updatedAt,

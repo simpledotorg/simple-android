@@ -221,21 +221,21 @@ class DeleteSyncGroupDatabaseAndroidTest {
     // given
     val patientInCurrentFacility = TestData.patientProfile(
         patientUuid = UUID.fromString("d1523ba6-bad3-42f2-a920-a503f1a503e3"),
+        syncStatus = SyncStatus.DONE,
         patientRegisteredFacilityId = currentFacility.uuid,
-        patientAssignedFacilityId = currentFacility.uuid,
-        syncStatus = SyncStatus.DONE
+        patientAssignedFacilityId = currentFacility.uuid
     )
     val patientInOtherFacilityInSyncGroup = TestData.patientProfile(
         patientUuid = UUID.fromString("cc131584-b88b-42b8-8f4c-29c93021765f"),
+        syncStatus = SyncStatus.DONE,
         patientRegisteredFacilityId = otherFacilityInCurrentSyncGroup.uuid,
-        patientAssignedFacilityId = otherFacilityInCurrentSyncGroup.uuid,
-        syncStatus = SyncStatus.DONE
+        patientAssignedFacilityId = otherFacilityInCurrentSyncGroup.uuid
     )
     val patientInOtherSyncGroup = TestData.patientProfile(
         patientUuid = UUID.fromString("5cbe9277-d18a-49ad-a73b-1840a7aba0a9"),
+        syncStatus = SyncStatus.DONE,
         patientRegisteredFacilityId = facilityInAnotherSyncGroup.uuid,
-        patientAssignedFacilityId = facilityInAnotherSyncGroup.uuid,
-        syncStatus = SyncStatus.DONE
+        patientAssignedFacilityId = facilityInAnotherSyncGroup.uuid
     )
     patientRepository.save(listOf(
         patientInCurrentFacility,
@@ -335,21 +335,21 @@ class DeleteSyncGroupDatabaseAndroidTest {
     // given
     val patientInCurrentFacility = TestData.patientProfile(
         patientUuid = UUID.fromString("d1523ba6-bad3-42f2-a920-a503f1a503e3"),
+        syncStatus = SyncStatus.DONE,
         patientRegisteredFacilityId = currentFacility.uuid,
-        patientAssignedFacilityId = currentFacility.uuid,
-        syncStatus = SyncStatus.DONE
+        patientAssignedFacilityId = currentFacility.uuid
     )
     val patientInOtherFacilityInSyncGroup = TestData.patientProfile(
         patientUuid = UUID.fromString("cc131584-b88b-42b8-8f4c-29c93021765f"),
+        syncStatus = SyncStatus.DONE,
         patientRegisteredFacilityId = otherFacilityInCurrentSyncGroup.uuid,
-        patientAssignedFacilityId = otherFacilityInCurrentSyncGroup.uuid,
-        syncStatus = SyncStatus.DONE
+        patientAssignedFacilityId = otherFacilityInCurrentSyncGroup.uuid
     )
     val patientInOtherSyncGroup = TestData.patientProfile(
         patientUuid = UUID.fromString("5cbe9277-d18a-49ad-a73b-1840a7aba0a9"),
+        syncStatus = SyncStatus.DONE,
         patientRegisteredFacilityId = facilityInAnotherSyncGroup.uuid,
-        patientAssignedFacilityId = facilityInAnotherSyncGroup.uuid,
-        syncStatus = SyncStatus.DONE
+        patientAssignedFacilityId = facilityInAnotherSyncGroup.uuid
     )
     patientRepository.save(listOf(
         patientInCurrentFacility,
@@ -449,21 +449,21 @@ class DeleteSyncGroupDatabaseAndroidTest {
     // given
     val patientInCurrentFacility = TestData.patientProfile(
         patientUuid = UUID.fromString("d1523ba6-bad3-42f2-a920-a503f1a503e3"),
+        syncStatus = SyncStatus.DONE,
         patientRegisteredFacilityId = currentFacility.uuid,
-        patientAssignedFacilityId = currentFacility.uuid,
-        syncStatus = SyncStatus.DONE
+        patientAssignedFacilityId = currentFacility.uuid
     )
     val patientInOtherFacilityInSyncGroup = TestData.patientProfile(
         patientUuid = UUID.fromString("cc131584-b88b-42b8-8f4c-29c93021765f"),
+        syncStatus = SyncStatus.DONE,
         patientRegisteredFacilityId = otherFacilityInCurrentSyncGroup.uuid,
-        patientAssignedFacilityId = otherFacilityInCurrentSyncGroup.uuid,
-        syncStatus = SyncStatus.DONE
+        patientAssignedFacilityId = otherFacilityInCurrentSyncGroup.uuid
     )
     val patientInOtherSyncGroup = TestData.patientProfile(
         patientUuid = UUID.fromString("5cbe9277-d18a-49ad-a73b-1840a7aba0a9"),
+        syncStatus = SyncStatus.DONE,
         patientRegisteredFacilityId = facilityInAnotherSyncGroup.uuid,
-        patientAssignedFacilityId = facilityInAnotherSyncGroup.uuid,
-        syncStatus = SyncStatus.DONE
+        patientAssignedFacilityId = facilityInAnotherSyncGroup.uuid
     )
     patientRepository.save(listOf(
         patientInCurrentFacility,
@@ -571,21 +571,21 @@ class DeleteSyncGroupDatabaseAndroidTest {
     // given
     val patientInCurrentFacility = TestData.patientProfile(
         patientUuid = UUID.fromString("d1523ba6-bad3-42f2-a920-a503f1a503e3"),
+        syncStatus = SyncStatus.DONE,
         patientRegisteredFacilityId = currentFacility.uuid,
-        patientAssignedFacilityId = currentFacility.uuid,
-        syncStatus = SyncStatus.DONE
+        patientAssignedFacilityId = currentFacility.uuid
     )
     val patientInOtherFacilityInSyncGroup = TestData.patientProfile(
         patientUuid = UUID.fromString("cc131584-b88b-42b8-8f4c-29c93021765f"),
+        syncStatus = SyncStatus.DONE,
         patientRegisteredFacilityId = otherFacilityInCurrentSyncGroup.uuid,
-        patientAssignedFacilityId = otherFacilityInCurrentSyncGroup.uuid,
-        syncStatus = SyncStatus.DONE
+        patientAssignedFacilityId = otherFacilityInCurrentSyncGroup.uuid
     )
     val patientInOtherSyncGroup = TestData.patientProfile(
         patientUuid = UUID.fromString("5cbe9277-d18a-49ad-a73b-1840a7aba0a9"),
+        syncStatus = SyncStatus.DONE,
         patientRegisteredFacilityId = facilityInAnotherSyncGroup.uuid,
-        patientAssignedFacilityId = facilityInAnotherSyncGroup.uuid,
-        syncStatus = SyncStatus.DONE
+        patientAssignedFacilityId = facilityInAnotherSyncGroup.uuid
     )
     patientRepository.save(listOf(
         patientInCurrentFacility,
@@ -685,21 +685,21 @@ class DeleteSyncGroupDatabaseAndroidTest {
     // given
     val patientInCurrentFacility = TestData.patientProfile(
         patientUuid = UUID.fromString("d1523ba6-bad3-42f2-a920-a503f1a503e3"),
+        syncStatus = SyncStatus.DONE,
         patientRegisteredFacilityId = currentFacility.uuid,
-        patientAssignedFacilityId = currentFacility.uuid,
-        syncStatus = SyncStatus.DONE
+        patientAssignedFacilityId = currentFacility.uuid
     )
     val patientInOtherFacilityInSyncGroup = TestData.patientProfile(
         patientUuid = UUID.fromString("cc131584-b88b-42b8-8f4c-29c93021765f"),
+        syncStatus = SyncStatus.DONE,
         patientRegisteredFacilityId = otherFacilityInCurrentSyncGroup.uuid,
-        patientAssignedFacilityId = otherFacilityInCurrentSyncGroup.uuid,
-        syncStatus = SyncStatus.DONE
+        patientAssignedFacilityId = otherFacilityInCurrentSyncGroup.uuid
     )
     val patientInOtherSyncGroup = TestData.patientProfile(
         patientUuid = UUID.fromString("5cbe9277-d18a-49ad-a73b-1840a7aba0a9"),
+        syncStatus = SyncStatus.DONE,
         patientRegisteredFacilityId = facilityInAnotherSyncGroup.uuid,
-        patientAssignedFacilityId = facilityInAnotherSyncGroup.uuid,
-        syncStatus = SyncStatus.DONE
+        patientAssignedFacilityId = facilityInAnotherSyncGroup.uuid
     )
     patientRepository.save(listOf(
         patientInCurrentFacility,

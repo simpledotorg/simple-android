@@ -1279,7 +1279,7 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun finding_a_patient_by_a_business_id_must_work_as_expected() {
-    val patientProfileTemplate = testData.patientProfile(syncStatus = DONE, generateBusinessId = false, generatePhoneNumber = false)
+    val patientProfileTemplate = testData.patientProfile(syncStatus = DONE, generatePhoneNumber = false, generateBusinessId = false)
 
     val uniqueBusinessIdentifier = "381cb64e-d958-41ee-8662-c445862f3523"
     val sharedBusinessIdentifier = "85e8f2f1-7a4e-4f43-81c3-566ca51f5d7a"
@@ -2050,12 +2050,12 @@ class PatientRepositoryAndroidTest {
     ) {
       val patientProfile = testData.patientProfile(
           patientUuid = patientUuid,
+          patientDeletedAt = if (isDeleted) Instant.now() else null,
           businessId = testData.businessId(
               uuid = bpPassportUuid,
               patientUuid = patientUuid,
               identifier = testData.identifier(value = identifier, type = BpPassport)
-          ),
-          patientDeletedAt = if (isDeleted) Instant.now() else null
+          )
       )
 
       patientRepository.save(listOf(patientProfile))
@@ -2798,8 +2798,8 @@ class PatientRepositoryAndroidTest {
           .patientProfile(
               patientUuid = patientUuid,
               patientName = patientName,
-              patientAssignedFacilityId = assignedFacilityId,
-              businessIds = businessIds
+              businessIds = businessIds,
+              patientAssignedFacilityId = assignedFacilityId
           )
 
       patientRepository.save(listOf(patientProfile))
@@ -2900,8 +2900,8 @@ class PatientRepositoryAndroidTest {
           .patientProfile(
               patientUuid = patientUuid,
               patientName = patientName,
-              patientAssignedFacilityId = assignedFacilityId,
-              businessIds = businessIds
+              businessIds = businessIds,
+              patientAssignedFacilityId = assignedFacilityId
           )
 
       patientRepository.save(listOf(patientProfile))
@@ -3009,12 +3009,12 @@ class PatientRepositoryAndroidTest {
       val patientProfile = TestData
           .patientProfile(
               patientUuid = patientUuid,
-              patientName = patientName,
-              patientAssignedFacilityId = assignedFacilityId,
               generatePhoneNumber = phoneNumber == null,
-              patientPhoneNumber = phoneNumber,
               generateBusinessId = businessIds.isEmpty(),
-              businessIds = businessIds
+              patientName = patientName,
+              patientPhoneNumber = phoneNumber,
+              businessIds = businessIds,
+              patientAssignedFacilityId = assignedFacilityId
           )
 
       patientRepository.save(listOf(patientProfile))
@@ -3134,8 +3134,6 @@ class PatientRepositoryAndroidTest {
     val patientProfile = TestData.patientProfile(
         patientUuid = patientId,
         patientAddressUuid = UUID.fromString("54ffa5de-535c-4d3e-a39e-9a231ec44d89"),
-        patientRegisteredFacilityId = phcObvious.uuid,
-        patientAssignedFacilityId = phcObvious.uuid,
         patientPhoneNumber = "1234567890",
         businessId = TestData.businessId(
             uuid = UUID.fromString("1f099ca9-2366-42f1-89fd-10a42092f163"),
@@ -3145,6 +3143,8 @@ class PatientRepositoryAndroidTest {
                 type = BpPassport
             )
         ),
+        patientRegisteredFacilityId = phcObvious.uuid,
+        patientAssignedFacilityId = phcObvious.uuid,
         retainUntil = Instant.parse("2018-01-07T00:00:00Z")
     )
 

@@ -119,8 +119,6 @@ object TestData {
       businessId: BusinessId? = if (generateBusinessId) businessId(patientUuid = patientUuid) else null,
       businessIds: List<BusinessId> = if (businessId != null) listOf(businessId) else emptyList(),
       generateDateOfBirth: Boolean = faker.bool.bool(),
-      dateOfBirth: LocalDate? = if (generateDateOfBirth) LocalDate.parse("1980-01-01") else null,
-      age: Age? = if (!generateDateOfBirth) Age(value = kotlin.random.Random.nextInt(30..100), updatedAt = Instant.parse("2018-01-01T00:00:00Z")) else null,
       gender: Gender = randomGender(),
       patientDeletedReason: DeletedReason? = null,
       patientCreatedAt: Instant = Instant.now(),

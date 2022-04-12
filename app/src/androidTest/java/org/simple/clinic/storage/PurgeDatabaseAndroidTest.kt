@@ -47,24 +47,24 @@ class PurgeDatabaseAndroidTest {
     // given
     val deletedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("2463850b-c294-4db4-906b-68d9ea8e99a1"),
+        syncStatus = SyncStatus.DONE,
         generatePhoneNumber = true,
         generateBusinessId = true,
-        patientDeletedAt = Instant.parse("2018-01-01T00:00:00Z"),
-        syncStatus = SyncStatus.DONE
+        patientDeletedAt = Instant.parse("2018-01-01T00:00:00Z")
     )
     val notDeletedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("427bfcf1-1b6c-42fa-903b-8527c594a0f9"),
+        syncStatus = SyncStatus.DONE,
         generatePhoneNumber = true,
         generateBusinessId = true,
-        syncStatus = SyncStatus.DONE,
         patientDeletedAt = null
     )
     val deletedButUnsyncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("3f31b541-afae-41a3-9eb3-6e269ad6fb5d"),
+        syncStatus = SyncStatus.PENDING,
         generatePhoneNumber = true,
         generateBusinessId = true,
-        patientDeletedAt = Instant.parse("2018-01-01T00:00:00Z"),
-        syncStatus = SyncStatus.PENDING
+        patientDeletedAt = Instant.parse("2018-01-01T00:00:00Z")
     )
     patientAddressDao.save(listOf(deletedPatientProfile.address, notDeletedPatientProfile.address, deletedButUnsyncedPatientProfile.address))
     patientDao.save(listOf(deletedPatientProfile.patient, notDeletedPatientProfile.patient, deletedButUnsyncedPatientProfile.patient))
@@ -89,13 +89,13 @@ class PurgeDatabaseAndroidTest {
     // given
     val syncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
-        generatePhoneNumber = false,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        generatePhoneNumber = false
     )
     val notSyncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
-        generatePhoneNumber = false,
-        syncStatus = SyncStatus.PENDING
+        syncStatus = SyncStatus.PENDING,
+        generatePhoneNumber = false
     )
     val deletedPhoneNumber = TestData.patientPhoneNumber(
         uuid = UUID.fromString("805b93ac-c53f-4a66-b845-e3c458fa0aa6"),
@@ -132,13 +132,13 @@ class PurgeDatabaseAndroidTest {
     // given
     val syncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        generateBusinessId = false
     )
     val notSyncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.PENDING
+        syncStatus = SyncStatus.PENDING,
+        generateBusinessId = false
     )
     val deletedBusinessId = TestData.businessId(
         uuid = UUID.fromString("805b93ac-c53f-4a66-b845-e3c458fa0aa6"),
@@ -177,13 +177,13 @@ class PurgeDatabaseAndroidTest {
     // given
     val syncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        generateBusinessId = false
     )
     val notSyncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.PENDING
+        syncStatus = SyncStatus.PENDING,
+        generateBusinessId = false
     )
     val deletedBloodPressureMeasurement = TestData.bloodPressureMeasurement(
         uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
@@ -224,13 +224,13 @@ class PurgeDatabaseAndroidTest {
     // given
     val syncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        generateBusinessId = false
     )
     val notSyncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.PENDING
+        syncStatus = SyncStatus.PENDING,
+        generateBusinessId = false
     )
     val deletedBloodSugarMeasurement = TestData.bloodSugarMeasurement(
         uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
@@ -271,13 +271,13 @@ class PurgeDatabaseAndroidTest {
     // given
     val syncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        generateBusinessId = false
     )
     val notSyncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.PENDING
+        syncStatus = SyncStatus.PENDING,
+        generateBusinessId = false
     )
     val deletedPrescription = TestData.prescription(
         uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
@@ -318,13 +318,13 @@ class PurgeDatabaseAndroidTest {
     // given
     val syncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        generateBusinessId = false
     )
     val notSyncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.PENDING
+        syncStatus = SyncStatus.PENDING,
+        generateBusinessId = false
     )
 
     val deletedAppointment = TestData.appointment(
@@ -369,13 +369,13 @@ class PurgeDatabaseAndroidTest {
     // given
     val syncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        generateBusinessId = false
     )
     val notSyncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.PENDING
+        syncStatus = SyncStatus.PENDING,
+        generateBusinessId = false
     )
     val deletedMedicalHistory = TestData.medicalHistory(
         uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
@@ -416,13 +416,13 @@ class PurgeDatabaseAndroidTest {
     // given
     val syncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        generateBusinessId = false
     )
     val notSyncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.PENDING
+        syncStatus = SyncStatus.PENDING,
+        generateBusinessId = false
     )
     val scheduledAppointment = TestData.appointment(
         uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
@@ -500,29 +500,29 @@ class PurgeDatabaseAndroidTest {
     // given
     val patientWithPassedRetentionTime = TestData.patientProfile(
         patientUuid = UUID.fromString("c3c84410-02f5-430e-a067-1830683a4d27"),
-        retainUntil = Instant.parse("2021-05-21T00:00:00Z"),
-        generateBusinessId = true,
-        generatePhoneNumber = true,
+        patientAddressUuid = UUID.fromString("a5b8a711-a9e0-4474-8b9f-3b6193ec6001"),
         syncStatus = SyncStatus.DONE,
+        generatePhoneNumber = true,
+        generateBusinessId = true,
         patientDeletedAt = Instant.parse("2021-02-21T00:00:00Z"),
-        patientAddressUuid = UUID.fromString("a5b8a711-a9e0-4474-8b9f-3b6193ec6001")
+        retainUntil = Instant.parse("2021-05-21T00:00:00Z")
     )
 
     val patientWithNullRetentionTime = TestData.patientProfile(
         patientUuid = UUID.fromString("6f8ae9d8-522e-4eed-8a0d-4be393669945"),
-        generateBusinessId = false,
-        generatePhoneNumber = true,
-        syncStatus = SyncStatus.DONE,
         patientAddressUuid = UUID.fromString("8e0f0203-b7e3-4d4a-91be-3bd3385a7ee5"),
+        syncStatus = SyncStatus.DONE,
+        generatePhoneNumber = true,
+        generateBusinessId = false,
         retainUntil = null
     )
 
     val patientWithNotPassedRetentionTime = TestData.patientProfile(
         patientUuid = UUID.fromString("afaea7ee-22cc-4a27-9906-309a377f83be"),
-        retainUntil = Instant.parse("2022-01-05T00:00:00Z"),
         syncStatus = SyncStatus.PENDING,
-        generateBusinessId = true,
         generatePhoneNumber = true,
+        generateBusinessId = true,
+        retainUntil = Instant.parse("2022-01-05T00:00:00Z"),
     )
 
     patientAddressDao.save(listOf(patientWithPassedRetentionTime.address, patientWithNotPassedRetentionTime.address, patientWithNullRetentionTime.address))
@@ -549,13 +549,13 @@ class PurgeDatabaseAndroidTest {
     val deletedPatientUuid = UUID.fromString("1f86c321-5539-44f8-8708-3bcc0e44feed")
     val syncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("73f22e49-669e-4959-843e-7684622c4184"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        generateBusinessId = false
     )
     val notSyncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("ee60db3e-9ecb-49aa-829c-474f707b3739"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.PENDING
+        syncStatus = SyncStatus.PENDING,
+        generateBusinessId = false
     )
     val deletedBloodPressureMeasurement = TestData.bloodPressureMeasurement(
         uuid = UUID.fromString("aa2c81ce-236c-4e4a-9ebd-f88a31afb15d"),

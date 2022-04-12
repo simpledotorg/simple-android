@@ -35,7 +35,6 @@ import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentPayload
 import org.simple.clinic.overdue.callresult.CallResult
 import org.simple.clinic.overdue.callresult.Outcome
-import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.CompleteMedicalRecord
 import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.Gender
@@ -98,7 +97,6 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset.UTC
 import java.util.UUID
-import kotlin.random.nextInt
 import org.simple.clinic.drugs.search.Answer as DrugAnswer
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer as TeleconsultRecordAnswer
 
@@ -1345,8 +1343,6 @@ object TestData {
       patientPhoneNumber: String? = if (generatePhoneNumber) faker.phoneNumber.phoneNumber() else null,
       businessId: BusinessId? = if (generateBusinessId) businessId(patientUuid = patientUuid) else null,
       generateDateOfBirth: Boolean = faker.bool.bool(),
-      dateOfBirth: LocalDate? = if (generateDateOfBirth) LocalDate.parse("1980-01-01") else null,
-      age: Age? = if (!generateDateOfBirth) Age(value = kotlin.random.Random.nextInt(30..100), updatedAt = Instant.parse("2018-01-01T00:00:00Z")) else null,
       gender: Gender = randomGender(),
       patientDeletedReason: DeletedReason? = null,
       patientCreatedAt: Instant = Instant.parse("2021-07-01T00:00:00Z"),

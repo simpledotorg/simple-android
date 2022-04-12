@@ -1079,8 +1079,6 @@ object TestData {
       uuid: UUID = UUID.randomUUID(),
       fullName: String = "fullName",
       gender: Gender = randomGender(),
-      dateOfBirth: LocalDate? = null,
-      age: Age? = null,
       patientRecordedAt: Instant = Instant.parse("2018-01-01T00:00:00Z"),
       updatedAt: Instant = Instant.parse("2018-01-01T00:00:00Z"),
       patientAgeDetails: PatientAgeDetails = PatientAgeDetails(

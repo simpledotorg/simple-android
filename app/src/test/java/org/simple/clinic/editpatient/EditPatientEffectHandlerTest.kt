@@ -32,7 +32,6 @@ import org.simple.clinic.newentry.form.StateField
 import org.simple.clinic.newentry.form.StreetAddressField
 import org.simple.clinic.newentry.form.VillageOrColonyField
 import org.simple.clinic.newentry.form.ZoneField
-import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientRepository
@@ -402,9 +401,10 @@ class EditPatientEffectHandlerTest {
         dateOfBirthFormatter = dateOfBirthFormatter,
         alternativeId = null
     ).updateAge(enteredAge.toString())
-    val expectedPatientToBeSaved = patientProfile.patient.withAgeDetails(PatientAgeDetails.fromAgeOrDate(
-        age = Age(enteredAge, currentTime + timeToAdvanceBy),
-        date = null
+    val expectedPatientToBeSaved = patientProfile.patient.withAgeDetails(PatientAgeDetails(
+        ageValue = enteredAge,
+        ageUpdatedAt = currentTime + timeToAdvanceBy,
+        dateOfBirth = null
     ))
     whenever(patientRepository.updatePatient(expectedPatientToBeSaved)).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(patientProfile.patientUuid, patientProfile.address)).thenReturn(Completable.complete())

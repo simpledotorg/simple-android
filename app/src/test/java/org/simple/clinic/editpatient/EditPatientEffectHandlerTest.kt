@@ -68,8 +68,11 @@ class EditPatientEffectHandlerTest {
   private val patient = TestData.patient(
       uuid = UUID.fromString("c9c9d4db-cd80-4b67-bf69-378de9656b49"),
       addressUuid = patientAddress.uuid,
-      age = null,
-      dateOfBirth = LocalDate.now(userClock).minusYears(30)
+      patientAgeDetails = PatientAgeDetails(
+          ageValue = null,
+          ageUpdatedAt = null,
+          dateOfBirth = LocalDate.now(userClock).minusYears(30)
+      )
   )
   private val phoneNumber = TestData.patientPhoneNumber(
       uuid = UUID.fromString("61638775-2815-4f59-b513-643cc2fe3c90"),

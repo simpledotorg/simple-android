@@ -597,16 +597,23 @@ class EditPatientScreenSaveTest {
     val patient = if (shouldHaveAge) {
       TestData.patient(
           uuid = patientUuid,
-          age = Age(20, Instant.now(utcClock)),
-          dateOfBirth = null,
-          addressUuid = addressUuid)
+          addressUuid = addressUuid,
+          patientAgeDetails = PatientAgeDetails(
+              ageValue = 20,
+              ageUpdatedAt = Instant.now(utcClock),
+              dateOfBirth = null
+          )
+      )
 
     } else {
       TestData.patient(
           uuid = patientUuid,
-          age = null,
-          dateOfBirth = LocalDate.now(utcClock),
-          addressUuid = addressUuid
+          addressUuid = addressUuid,
+          patientAgeDetails = PatientAgeDetails(
+              ageValue = null,
+              ageUpdatedAt = null,
+              dateOfBirth = LocalDate.now(utcClock)
+          )
       )
     }
 

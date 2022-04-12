@@ -139,21 +139,24 @@ object TestData {
     return PatientProfile(
         patient = patient(
             uuid = patientUuid,
-            fullName = patientName,
-            syncStatus = syncStatus,
             addressUuid = patientAddressUuid,
-            status = patientStatus,
-            deletedAt = patientDeletedAt,
-            age = age,
-            dateOfBirth = dateOfBirth,
+            fullName = patientName,
             gender = gender,
-            deletedReason = patientDeletedReason,
+            status = patientStatus,
             createdAt = patientCreatedAt,
             updatedAt = patientUpdatedAt,
+            deletedAt = patientDeletedAt,
             recordedAt = patientRecordedAt,
+            syncStatus = syncStatus,
+            deletedReason = patientDeletedReason,
             registeredFacilityId = patientRegisteredFacilityId,
             assignedFacilityId = patientAssignedFacilityId,
-            retainUntil = retainUntil
+            retainUntil = retainUntil,
+            patientAgeDetails = PatientAgeDetails(
+                ageValue = if (!generateDateOfBirth) Math.random().times(100).toInt() else null,
+                ageUpdatedAt = if (!generateDateOfBirth) Instant.now() else null,
+                dateOfBirth = if (generateDateOfBirth) LocalDate.parse("2018-01-01") else null
+            )
         ),
         address = patientAddress(uuid = patientAddressUuid),
         phoneNumbers = phoneNumbers,
@@ -1356,21 +1359,24 @@ object TestData {
     return ContactPatientProfile(
         patient = patient(
             uuid = patientUuid,
-            fullName = patientName,
-            syncStatus = syncStatus,
             addressUuid = patientAddressUuid,
-            status = patientStatus,
-            deletedAt = patientDeletedAt,
-            age = age,
-            dateOfBirth = dateOfBirth,
+            fullName = patientName,
             gender = gender,
-            deletedReason = patientDeletedReason,
+            status = patientStatus,
             createdAt = patientCreatedAt,
             updatedAt = patientUpdatedAt,
+            deletedAt = patientDeletedAt,
             recordedAt = patientRecordedAt,
+            syncStatus = syncStatus,
+            deletedReason = patientDeletedReason,
             registeredFacilityId = patientRegisteredFacilityId,
             assignedFacilityId = patientAssignedFacilityId,
-            retainUntil = retainUntil
+            retainUntil = retainUntil,
+            patientAgeDetails = PatientAgeDetails(
+                ageValue = if (!generateDateOfBirth) Math.random().times(100).toInt() else null,
+                ageUpdatedAt = if (!generateDateOfBirth) Instant.now() else null,
+                dateOfBirth = if (generateDateOfBirth) LocalDate.parse("2018-01-01") else null
+            )
         ),
         address = patientAddress(uuid = patientAddressUuid),
         phoneNumbers = phoneNumbers,

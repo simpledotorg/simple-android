@@ -37,6 +37,7 @@ import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
 import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.PatientPhoneNumber
@@ -755,8 +756,11 @@ class EditPatientScreenFormTest {
         patient = TestData.patient(
             uuid = patientUuid,
             addressUuid = addressUuid,
-            age = null,
-            dateOfBirth = LocalDate.parse("2018-01-01")
+            patientAgeDetails = PatientAgeDetails(
+                ageValue = null,
+                ageUpdatedAt = null,
+                dateOfBirth = LocalDate.parse("2018-01-01")
+            )
         ),
         address = TestData.patientAddress(uuid = addressUuid),
         phoneNumbers = phoneNumber?.let { listOf(TestData.patientPhoneNumber(patientUuid = patientUuid, number = it)) }

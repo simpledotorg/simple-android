@@ -531,10 +531,13 @@ class PatientRepositoryAndroidTest {
         addressUuid = addressToSave.uuid,
         fullName = "Old Name",
         gender = Gender.Male,
-        age = Age(30, Instant.now(clock)),
-        dateOfBirth = LocalDate.now(clock),
         createdAt = Instant.now(clock),
-        updatedAt = Instant.now(clock)
+        updatedAt = Instant.now(clock),
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = 30,
+            ageUpdatedAt = Instant.now(userClock),
+            dateOfBirth = LocalDate.now(userClock)
+        )
     )
 
     val patientProfile = PatientProfile(
@@ -577,8 +580,8 @@ class PatientRepositoryAndroidTest {
     val addressToSave = testData.patientAddress()
 
     val originalSavedPatient = testData.patient(
-        syncStatus = DONE,
-        addressUuid = addressToSave.uuid
+        addressUuid = addressToSave.uuid,
+        syncStatus = DONE
     )
 
     val patientProfile = PatientProfile(
@@ -637,8 +640,8 @@ class PatientRepositoryAndroidTest {
     val addressToSave = testData.patientAddress()
 
     val originalSavedPatient = testData.patient(
-        syncStatus = DONE,
-        addressUuid = addressToSave.uuid
+        addressUuid = addressToSave.uuid,
+        syncStatus = DONE
     )
 
     val patientProfile = PatientProfile(
@@ -1985,13 +1988,12 @@ class PatientRepositoryAndroidTest {
     patientRepository
         .updatePatient(testData.patient(
             uuid = patient1Uuid,
-            fullName = "new name",
             addressUuid = patient1AddressUuid,
-            age = recentPatient1.age,
-            dateOfBirth = recentPatient1.ageDetails.dateOfBirth,
+            fullName = "new name",
             gender = recentPatient1.gender,
             status = Active,
-            recordedAt = recentPatient1.patientRecordedAt
+            recordedAt = recentPatient1.patientRecordedAt,
+            patientAgeDetails = recentPatient1.ageDetails
         ))
         .blockingAwait()
 
@@ -2382,8 +2384,8 @@ class PatientRepositoryAndroidTest {
         createdAt = Instant.now(clock),
         updatedAt = Instant.now(clock),
         deletedAt = Instant.now(clock),
-        deletedReason = DeletedReason.AccidentalRegistration,
-        syncStatus = PENDING
+        syncStatus = PENDING,
+        deletedReason = DeletedReason.AccidentalRegistration
     )
     val patientAddress = TestData.patientAddress(
         uuid = patientAddressUuid
@@ -2977,7 +2979,7 @@ class PatientRepositoryAndroidTest {
 
     val patientWithOtherFacilityAssigned3 = UUID.fromString("46d01e03-a23a-423a-870d-3d09daf1aee8")
     createPatientWithNameAndAssignedFacilityID(
-        patientUuid =  patientWithOtherFacilityAssigned3,
+        patientUuid = patientWithOtherFacilityAssigned3,
         patientName = "Abhishek Ramesh",
         assignedFacilityId = otherFacility.uuid,
         businessIds = emptyList()
@@ -3103,7 +3105,7 @@ class PatientRepositoryAndroidTest {
 
     val patientWithOtherFacilityAssigned3 = UUID.fromString("703dce87-d510-4301-b8b7-373fbd7c8680")
     createPatientWithNameAndAssignedFacilityID(
-        patientUuid =  patientWithOtherFacilityAssigned3,
+        patientUuid = patientWithOtherFacilityAssigned3,
         patientName = "Abhishek Ramesh",
         assignedFacilityId = otherFacility.uuid,
         phoneNumber = "1234567890",

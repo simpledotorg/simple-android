@@ -992,8 +992,6 @@ object TestData {
       name: String = "somebody",
       isHighRisk: Boolean = false,
       gender: Gender = Gender.Transgender,
-      dateOfBirth: LocalDate? = LocalDate.now(UTC).minusYears(30),
-      age: Age? = null,
       phoneNumber: PatientPhoneNumber? = patientPhoneNumber(uuid = phoneNumberUuid, patientUuid = patientUuid),
       appointment: Appointment = appointment(uuid = appointmentUuid, patientUuid = patientUuid, facilityUuid = facilityUuid),
       patientAddress: OverduePatientAddress = overduePatientAddress(),

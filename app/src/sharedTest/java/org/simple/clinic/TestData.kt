@@ -168,8 +168,6 @@ object TestData {
       addressUuid: UUID = UUID.randomUUID(),
       fullName: String = faker.name.name(),
       gender: Gender = randomGender(),
-      dateOfBirth: LocalDate? = LocalDate.parse("1980-01-01"),
-      age: Age? = Age(value = Math.random().times(100).toInt(), updatedAt = Instant.now()),
       status: PatientStatus = PatientStatus.random(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),

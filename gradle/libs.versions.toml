@@ -91,7 +91,7 @@ google-services = "com.google.gms:google-services:4.3.10"
 
 itemanimators = "com.mikepenz:itemanimators:1.1.0"
 
-itext7 = "com.itextpdf:itext7-core:7.1.16"
+itext7 = "com.itextpdf:itext7-core:7.2.2"
 
 jackson-core = "com.fasterxml.jackson.core:jackson-core:2.13.2"
 

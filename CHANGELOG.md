@@ -6,6 +6,7 @@
 
 - Bump Sentry to v5.7.2
 - Bump Flipper to v0.142.0
+- Bump Mixpanel to v6.1.1
 
 ### Changes
 
@@ -43,7 +44,7 @@
 - Add feature flag for clinical decision support alerts
 - Update `isNewestBpEntryHigh` query
 - Add Hindi translations for CDS alert
-- Add remote config key for `NotifyAppUpdateAvailableV2` feature flag 
+- Add remote config key for `NotifyAppUpdateAvailableV2` feature flag
 - Add GitHub action to cut a release branch
 
 ### Fixes

@@ -818,4 +818,31 @@
     <item quantity="one">%d Techo barira chala keshinohu</item>
     <item quantity="other">%d barubate guudahooga</item>
   </plurals>
+
+  <!-- App update notification -->
+  <string name="app_update_notification_subtext">Eegote horonsidinani shota appilikeeshiine Google PlayStore gido haaronsidhe.</string>
+  <string name="critical_app_update_notification_subtext">Horo afidhino woyeeso kuneeti. shota appilikeeshiine Google PlayStore gido horoonsidhe.</string>
+
+  <!-- Critical app update dialog -->
+  <string name="critical_update_required_dialog_title">Lowonta horo afidhino woyeeso kuneeti.</string>
+  <string name="critical_update_required_dialog_content">Agarooshehona haaro lexora woyeesidhe.</string>
+  <string name="critical_security_update_required_reason">Appilikeeshiinete agarooshe haroonsa goofino.</string>
+  <string name="critical_update_required_dialog_update_button_text">XA HAROONIDHE</string>
+  <string name="critical_update_required_dialog_help_section_title">kaa\'lo?</string>
+  <string name="critical_update_required_dialog_help_section_content">Worooni nooha kissateni jaallanke wiini kaa\'lo afidhe</string>
+  <string name="critical_update_required_reason">Appilikeeshiine %d agana sa\'ino haronsinani yanan.</string>
+
+  <!-- Critical app update card -->
+  <string name="critical_update_required_card_title">lowonta horo afidhino woyeso</string>
+  <string name="critical_update_required_card_content">Agarooshehona haaro lexora woyeesidhe.</string>
+  <string name="update_required_reason">Appilikeeshiine %d agana sa\'ino haronsinani yanan.</string>
+  <string name="critical_update_required_card_update_button_text">XA HAROONIDHE</string>
+
+  <!-- Drug stock reminder notification -->
+  <string name="drug_stock_reminder_notification">Agarani noo\'neha xagichu duuno gudine egensise %1$s ra </string>
+  
+  <!-- Clinical Decision Support Alerts -->
+  <string name="clinical_decision_support_alert_bp_high_title">Mundeete xiinbbe lu\'phi yitino. Xagicho adha le\'de?</string>
+  <string name="clinical_decision_support_alert_bp_high_subtitle">Xiwamanchuniha xagicho adhate wogana yana yanate adhasi/se harun\'se.</string>
+
 </resources>

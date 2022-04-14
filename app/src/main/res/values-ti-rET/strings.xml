@@ -818,4 +818,31 @@
     <item quantity="one">%dመዓልታት ዘሕለፈ</item>
     <item quantity="other">%d መዓልታት ዘሕለፈ</item>
   </plurals>
+
+  <!-- App update notification -->
+  <string name="app_update_notification_subtext">በጃኻ ብዝተኻእለ መጠን ቀልጢፍካ ነቲ Simple ኣፕሊኬሽንካ ኣብ ናይ Google Play Store ኣመሓይሾ።</string>
+  <string name="critical_app_update_notification_subtext">ኣገዳሲ ምትዕርራያት ክርከብ ይከኣል እዩ። ነቲ Simple ኣፕሊኬሽንካ ኻብ ናይ Google Playstore ኣመሓይሾ።</string>
+
+  <!-- Critical app update dialog -->
+  <string name="critical_update_required_dialog_title">Critical update required</string>
+  <string name="critical_update_required_dialog_content">Update now for critical security changes and latest features</string>
+  <string name="critical_security_update_required_reason">App security is compromised</string>
+  <string name="critical_update_required_dialog_update_button_text">UPDATE NOW</string>
+  <string name="critical_update_required_dialog_help_section_title">Need help?</string>
+  <string name="critical_update_required_dialog_help_section_content">Tap on the button below to get help from our friendly support team</string>
+  <string name="critical_update_required_reason">App is %d months out of date</string>
+
+  <!-- Critical app update card -->
+  <string name="critical_update_required_card_title">Critical update</string>
+  <string name="critical_update_required_card_content">Update now for critical security changes and latest features</string>
+  <string name="update_required_reason">App is %d months out of date</string>
+  <string name="critical_update_required_card_update_button_text">UPDATE NOW</string>
+
+  <!-- Drug stock reminder notification -->
+  <string name="drug_stock_reminder_notification">Complete your pending drug stock report for %1$s</string>
+  
+  <!-- Clinical Decision Support Alerts -->
+  <string name="clinical_decision_support_alert_bp_high_title">BP is high. Increase medicines?</string>
+  <string name="clinical_decision_support_alert_bp_high_subtitle">Follow protocol, if patient takes their medicines regularly</string>
+
 </resources>

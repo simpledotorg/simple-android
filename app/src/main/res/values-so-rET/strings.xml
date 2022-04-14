@@ -60,8 +60,8 @@
   <string name="patiententry_age">Da\'da</string>
   <string name="patiententry_street_address">Cinwaanka guriga</string>
   <string name="patiententry_street_house_road_number">Lambarka guriga ama wadada</string>
-  <string name="patiententry_village_colony_ward">Xaafada / deegaan / Qeybta xaafada</string>
-  <string name="patiententry_village_ward">Xaafada / Qeybta xaafada</string>
+  <string name="patiententry_village_colony_ward">Xaafada / deegaan / Qaybta xaafada</string>
+  <string name="patiententry_village_ward">Xaafada / Qaybta xaafada</string>
   <string name="patiententry_kebele">Kebele</string>
   <string name="patiententry_zone">Union</string>
   <string name="patiententry_district">Gobalka</string>
@@ -819,4 +819,31 @@
     <item quantity="one">%d maalin wakhtigeedu dhaafatay</item>
     <item quantity="other">%d maalmaha wakhtigoodu dhammaaday</item>
   </plurals>
+
+  <!-- App update notification -->
+  <string name="app_update_notification_subtext">እባክህ ቀላል መተግበሪያህን በGoogle Play Store ውስጥ በተቻለ ፍጥነት ያዘምኑ።</string>
+  <string name="critical_app_update_notification_subtext">ጠቃሚ ዝማኔዎች ይገኛሉ። ቀላል መተግበሪያዎን ከGoogle Playstore ያዘምኑ።</string>
+
+  <!-- Critical app update dialog -->
+  <string name="critical_update_required_dialog_title">ወሳኝ ዝማኔ ያስፈልጋል</string>
+  <string name="critical_update_required_dialog_content">አስፈላጊ ለሆኑ የደህንነት ለውጦች እና የቅርብ ጊዜ ባህሪያት አሁን ያዘምኑ</string>
+  <string name="critical_security_update_required_reason">የመተግበሪያ ደህንነት ግምት ውስጥ ገብቶዋል።</string>
+  <string name="critical_update_required_dialog_update_button_text">አሁን ያዘምኑ</string>
+  <string name="critical_update_required_dialog_help_section_title">እርዳታ ይፈልጋሉ?</string>
+  <string name="critical_update_required_dialog_help_section_content">ከጓደኛዊ ድጋፍ ቡድናችን እርዳታ ለማግኘት ከታች ያለውን ቁልፍ መታ ያድርጉ።</string>
+  <string name="critical_update_required_reason">መተግበሪያው %d ወራት ያለፈበት ነው።</string>
+
+  <!-- Critical app update card -->
+  <string name="critical_update_required_card_title">ወሳኝ ዝማኔ</string>
+  <string name="critical_update_required_card_content">አስፈላጊ ለሆኑ የደህንነት ለውጦች እና የቅርብ ጊዜ ባህሪያት አሁን ያዘምኑ</string>
+  <string name="update_required_reason">መተግበሪያው  %d ወራት ያለፈበት ነው።</string>
+  <string name="critical_update_required_card_update_button_text">አሁን ያዘምኑ</string>
+
+  <!-- Drug stock reminder notification -->
+  <string name="drug_stock_reminder_notification">በመጠባበቅ ላይ ያለዎትን የ%1$s የመድኃኒት ክምችት ሪፖርት ያጠናቅቁ</string>
+  
+  <!-- Clinical Decision Support Alerts -->
+  <string name="clinical_decision_support_alert_bp_high_title">ቢፒ ከፍተኛ ነው። መድሃኒቶች ጨምረዋል?</string>
+  <string name="clinical_decision_support_alert_bp_high_subtitle">ሕመምተኛው አዘውትሮ መድሃኒቶቹን የሚወስድ ከሆነ ፕሮቶኮልን ይከተሉ</string>
+
 </resources>

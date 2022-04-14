@@ -818,4 +818,31 @@
     <item quantity="one">%d రోజు క్రితం గడువు ముగిసింది</item>
     <item quantity="other">%d రోజుల క్రితం గడువు ముగిసింది</item>
   </plurals>
+
+  <!-- App update notification -->
+  <string name="app_update_notification_subtext">దయచేసి వీలైనంత త్వరగా Google Play Storeలో మీ Simple యాప్‌ని అప్‌డేట్ చేయండి.</string>
+  <string name="critical_app_update_notification_subtext">ముఖ్యమైన అప్‌డేట్‌లు అందుబాటులో ఉన్నాయి. Google Playstore నుండి మీ Simple యాప్‌ను అప్‌డేట్ చేయండి.</string>
+
+  <!-- Critical app update dialog -->
+  <string name="critical_update_required_dialog_title">ఖచ్చితంగా అప్‌డేట్ చేయాల్సిన అవసరం ఉంది</string>
+  <string name="critical_update_required_dialog_content">కీలకమైన భద్రతా మార్పులు మరియు తాజా ఫీచర్‌ల కోసం ఇప్పుడే అప్‌డేట్ చేయండి</string>
+  <string name="critical_security_update_required_reason">యాప్ భద్రత రాజీ పడింది</string>
+  <string name="critical_update_required_dialog_update_button_text">ఇప్పుడే అప్‌డేట్ చేయండి</string>
+  <string name="critical_update_required_dialog_help_section_title">సహాయం కావాలా?</string>
+  <string name="critical_update_required_dialog_help_section_content">మా స్నేహపూర్వక మద్దతు బృందం నుండి సహాయం పొందడానికి దిగువ బటన్‌పై నొక్కండి</string>
+  <string name="critical_update_required_reason">యాప్‌కి %d నెలల గడువు ముగిసింది</string>
+
+  <!-- Critical app update card -->
+  <string name="critical_update_required_card_title">అత్యంత ముఖ్యమైన అప్‌డేట్</string>
+  <string name="critical_update_required_card_content">కీలకమైన భద్రతా మార్పులు మరియు తాజా ఫీచర్‌ల కోసం ఇప్పుడే అప్‌డేట్ చేయండి</string>
+  <string name="update_required_reason">యాప్‌కి %d నెలల గడువు ముగిసింది</string>
+  <string name="critical_update_required_card_update_button_text">ఇప్పుడే అప్‌డేట్ చేయండి</string>
+
+  <!-- Drug stock reminder notification -->
+  <string name="drug_stock_reminder_notification">%1$s కోసం పెండింగ్‌లో ఉన్న మీ మందుల స్టాక్ రిపోర్ట్‌ను పూర్తి చేయండి</string>
+  
+  <!-- Clinical Decision Support Alerts -->
+  <string name="clinical_decision_support_alert_bp_high_title">BP ఎక్కువగా ఉంది. మందులను పెంచాలా?</string>
+  <string name="clinical_decision_support_alert_bp_high_subtitle">రోగి వారి మందులను క్రమం తప్పకుండా తీసుకుంటే, ప్రోటోకాల్‌ను అనుసరించండి</string>
+
 </resources>

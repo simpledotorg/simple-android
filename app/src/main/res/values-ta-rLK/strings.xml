@@ -818,4 +818,31 @@
     <item quantity="one">குறித்த நாளை விட %d நாள் அதிகம்</item>
     <item quantity="other">குறித்த நாளை விட %d நாட்கள் அதிகம்</item>
   </plurals>
+
+  <!-- App update notification -->
+  <string name="app_update_notification_subtext">Google பிளே ஸ்டோர் மூலம் சிம்பிள் செயலியைக் கூடிய விரைவில் புதுப்பிக்கவும்.</string>
+  <string name="critical_app_update_notification_subtext">முக்கியப் புதுப்பிப்புகள் உள்ளன. Google ப்ளே ஸ்டோரிலிருந்து உங்கள் சிம்பிள் செயலியைப் புதுப்பிக்கவும்.</string>
+
+  <!-- Critical app update dialog -->
+  <string name="critical_update_required_dialog_title">அதிமுக்கியப் புதுப்பிப்பு தேவை</string>
+  <string name="critical_update_required_dialog_content">அதிமுக்கியமான பாதுகாப்பு மாற்றங்கள் மற்றும் சமீபத்திய அம்சங்களுக்கு இப்போதே புதுப்பிக்கவும்</string>
+  <string name="critical_security_update_required_reason">செயலியின் பாதுகாப்பு சமரசம் செய்யப்பட்டுள்ளது</string>
+  <string name="critical_update_required_dialog_update_button_text">இப்போது புதுப்பி</string>
+  <string name="critical_update_required_dialog_help_section_title">உதவி வேண்டுமா?</string>
+  <string name="critical_update_required_dialog_help_section_content">எங்கள் நட்பு ஆதரவுக் குழுவின் உதவியைப் பெற, கீழே உள்ள பொத்தானைத் தட்டவும்</string>
+  <string name="critical_update_required_reason">செயலி, %d மாதங்கள் பழையதாகிவிட்டது</string>
+
+  <!-- Critical app update card -->
+  <string name="critical_update_required_card_title">அதிமுக்கியப் புதுப்பிப்பு</string>
+  <string name="critical_update_required_card_content">அதிமுக்கியமான பாதுகாப்பு மாற்றங்கள் மற்றும் சமீபத்திய அம்சங்களுக்கு இப்போதே புதுப்பிக்கவும்</string>
+  <string name="update_required_reason">செயலி, %d மாதங்கள் பழையதாகிவிட்டது</string>
+  <string name="critical_update_required_card_update_button_text">இப்போது புதுப்பி</string>
+
+  <!-- Drug stock reminder notification -->
+  <string name="drug_stock_reminder_notification">%1$s-க்கான உங்கள் நிலுவையிலுள்ள மருந்து இருப்பு அறிக்கையை நிறைவு செய்யவும்</string>
+  
+  <!-- Clinical Decision Support Alerts -->
+  <string name="clinical_decision_support_alert_bp_high_title">பிபி அதிகம். மருந்துகளை அதிகரிக்கவா?</string>
+  <string name="clinical_decision_support_alert_bp_high_subtitle">நோயாளி தொடர்ந்து மருந்துகளை எடுத்துக் கொண்டால், நெறிமுறையைப் பின்பற்றவும்</string>
+
 </resources>

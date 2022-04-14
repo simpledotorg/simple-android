@@ -7,6 +7,7 @@
 - Bump Sentry to v5.7.2
 - Bump Flipper to v0.142.0
 - Bump Mixpanel to v6.1.1
+- Bump gradle to v7.1.3
 
 ### Changes
 

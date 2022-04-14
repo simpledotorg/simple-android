@@ -818,4 +818,31 @@
     <item quantity="one">%d ದಿನ ತಡವಾಗಿದೆ</item>
     <item quantity="other">%d ದಿನಗಳಷ್ಟು ತಡವಾಗಿದೆ</item>
   </plurals>
+
+  <!-- App update notification -->
+  <string name="app_update_notification_subtext">ಸಾಧ್ಯವಾದಷ್ಟು ಬೇಗ Google Play Store ನಲ್ಲಿ ನಿಮ್ಮ ಸಿಂಪಲ್ ಆ್ಯಪ್‌ ಅನ್ನು ದಯವಿಟ್ಟು ಅಪ್‌ಡೇಟ್ ಮಾಡಿ.</string>
+  <string name="critical_app_update_notification_subtext">ಪ್ರಮುಖ ಅಪ್‌ಡೇಟ್‌ಗಳು ಲಭ್ಯವಿವೆ. Google Playstore ನಿಂದ ನಿಮ್ಮ ಸಿಂಪಲ್ ಆ್ಯಪ್ ಅನ್ನು ಅಪ್‌ಡೇಟ್ ಮಾಡಿ.</string>
+
+  <!-- Critical app update dialog -->
+  <string name="critical_update_required_dialog_title">ಪ್ರಮುಖ ಅಪ್‌ಡೇಟ್ ಅಗತ್ಯವಿದೆ</string>
+  <string name="critical_update_required_dialog_content">ತೀರಾ ಪ್ರಮುಖವಾದ ಭದ್ರತೆ ಬದಲಾವಣೆಗಳು ಮತ್ತು ಇತ್ತೀಚಿನ ವೈಶಿಷ್ಟ್ಯಗಳಿಗಾಗಿ ಇದೀಗ ಅಪ್‌ಡೇಟ್ ಮಾಡಿ</string>
+  <string name="critical_security_update_required_reason">ಆ್ಯಪ್ ಭದ್ರತೆಗೆ ರಾಜಿಯಾಗಿದೆ</string>
+  <string name="critical_update_required_dialog_update_button_text">ಇದೀಗ ಅಪ್‌ಡೇಟ್ ಮಾಡಿ</string>
+  <string name="critical_update_required_dialog_help_section_title">ಸಹಾಯ ಅಗತ್ಯವಿದೆಯೇ?</string>
+  <string name="critical_update_required_dialog_help_section_content">ನಮ್ಮ ಸ್ನೇಹಪರ ಬೆಂಬಲ ತಂಡದಿಂದ ಸಹಾಯವನ್ನು ಪಡೆಯಲು ಕೆಳಗಿನ ಬಟನ್ ಮೇಲೆ ಟ್ಯಾಪ್ ಮಾಡಿ</string>
+  <string name="critical_update_required_reason">ಆ್ಯಪ್ %d ತಿಂಗಳುಗಳಷ್ಟು ಹಳೆಯದಾಗಿದೆ</string>
+
+  <!-- Critical app update card -->
+  <string name="critical_update_required_card_title">ತೀರಾ ಪ್ರಮುಖವಾದ ಅಪ್‌ಡೇಟ್</string>
+  <string name="critical_update_required_card_content">ತೀರಾ ಪ್ರಮುಖವಾದ ಭದ್ರತೆ ಬದಲಾವಣೆಗಳು ಮತ್ತು ಇತ್ತೀಚಿನ ವೈಶಿಷ್ಟ್ಯಗಳಿಗಾಗಿ ಇದೀಗ ಅಪ್‌ಡೇಟ್ ಮಾಡಿ</string>
+  <string name="update_required_reason">ಆ್ಯಪ್ %d ತಿಂಗಳುಗಳಷ್ಟು ಹಳೆಯದಾಗಿದೆ</string>
+  <string name="critical_update_required_card_update_button_text">ಇದೀಗ ಅಪ್‌ಡೇಟ್ ಮಾಡಿ</string>
+
+  <!-- Drug stock reminder notification -->
+  <string name="drug_stock_reminder_notification">%1$s ಗಾಗಿ ನಿಮ್ಮ ಬಾಕಿ ಇರುವ ಔಷಧ ಸ್ಟಾಕ್ ವರದಿಯನ್ನು ಪೂರ್ಣಗೊಳಿಸಿ</string>
+  
+  <!-- Clinical Decision Support Alerts -->
+  <string name="clinical_decision_support_alert_bp_high_title">ಬಿಪಿ ಅಧಿಕವಾಗಿದೆ. ಔಷಧಿಗಳನ್ನು ಹೆಚ್ಚಿಸುವುದೇ?</string>
+  <string name="clinical_decision_support_alert_bp_high_subtitle">ಒಂದು ವೇಳೆ ರೋಗಿಯು ತಮ್ಮ ಔಷಧಿಗಳನ್ನು ತೆಗೆದುಕೊಂಡರೆ, ಪ್ರೋಟೋಕಾಲ್ ಅನುಸರಿಸಿ</string>
+
 </resources>

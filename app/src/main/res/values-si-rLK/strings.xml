@@ -818,4 +818,31 @@
     <item quantity="one">දිනය %d ක කාලයක් ඉකුත් වී ඇත</item>
     <item quantity="other">දින %d ක කාලයක් ඉකුත් වී ඇත</item>
   </plurals>
+
+  <!-- App update notification -->
+  <string name="app_update_notification_subtext">කරුණාකර හැකි ඉක්මනින් Google Play Store හිදී ඔබගේ Simple යෙදුම යාවත්කාල කරන්න.</string>
+  <string name="critical_app_update_notification_subtext">වැදගත් යාවත්කාලයක් ලද හැකිව තිබේ. Google பிளேஸ்டோர் மூலம் சிம்பிள் செயலியைப் புதுப்பிக்கவும்.</string>
+
+  <!-- Critical app update dialog -->
+  <string name="critical_update_required_dialog_title">තීරණාත්මක යාවත්කාලය අවශ්‍යයි</string>
+  <string name="critical_update_required_dialog_content">තීරණාත්මක ආරක්ෂණ වෙනස්කම් සහ නවතම විශේෂාංග සඳහා දැන් යාවත්කාල කරන්න</string>
+  <string name="critical_security_update_required_reason">යෙදුම් ආරක්ෂාව මත විවේචනයට ලක් කර ඇත</string>
+  <string name="critical_update_required_dialog_update_button_text">දැන් යාවත්කාල කරන්න</string>
+  <string name="critical_update_required_dialog_help_section_title">උපකාර අවශ්‍යද?</string>
+  <string name="critical_update_required_dialog_help_section_content">අපගේ මිත්‍රශීලී සහායක කණ්ඩායමෙන් උපකාර ලබා ගැනීමට පහත බොත්තම මත තට්ටු කරන්න</string>
+  <string name="critical_update_required_reason">යෙදුම මාස %dක් පුරා කල් පැන තිබිණි</string>
+
+  <!-- Critical app update card -->
+  <string name="critical_update_required_card_title">තීරණාත්මක යාවත්කාලය</string>
+  <string name="critical_update_required_card_content">තීරණාත්මක ආරක්ෂණ වෙනස්කම් සහ නවතම විශේෂාංග සඳහා දැන් යාවත්කාල කරන්න</string>
+  <string name="update_required_reason">යෙදුම මාස %dක් පුරා කල් පැන තිබිණි</string>
+  <string name="critical_update_required_card_update_button_text">දැන් යාවත්කාල කරන්න</string>
+
+  <!-- Drug stock reminder notification -->
+  <string name="drug_stock_reminder_notification">ඔබගේ නියමිත ඖෂධ සඳහා %1$s තොග වාර්තාව සම්පූර්ණ කරන්න</string>
+  
+  <!-- Clinical Decision Support Alerts -->
+  <string name="clinical_decision_support_alert_bp_high_title">රුධිර පීඩනය ඉහළ ගොස් ඇත. ඖෂධ වැඩි කරන්නද?</string>
+  <string name="clinical_decision_support_alert_bp_high_subtitle">රෝගියා ඔවුන්ගේ ඖෂධ නිතිපතා ගන්නේ නම්, ප්‍රොටොකෝලය අනුගමනය කරන්න</string>
+
 </resources>

@@ -818,4 +818,31 @@
     <item quantity="one">%d ਦਿਨ ਓਵਰਡਿਊ ਹੈ</item>
     <item quantity="other">%d ਦਿਨ ਓਵਰਡਿਊ ਹਨ</item>
   </plurals>
+
+  <!-- App update notification -->
+  <string name="app_update_notification_subtext">ਕਿਰਪਾ ਕਰਕੇ ਜਿੰਨੀ ਜਲਦੀ ਹੋ ਸਕੇ Google Play Store ਵਿੱਚ ਆਪਣੀ ਸਧਾਰਨ ਐਪ ਨੂੰ ਅੱਪਡੇਟ ਕਰੋ।</string>
+  <string name="critical_app_update_notification_subtext">ਮਹੱਤਵਪੂਰਨ ਅੱਪਡੇਟ ਉਪਲਬਧ ਹਨ। Google Play Store ਤੋਂ ਆਪਣੀ ਸਧਾਰਨ ਐਪ ਨੂੰ ਅੱਪਡੇਟ ਕਰੋ।</string>
+
+  <!-- Critical app update dialog -->
+  <string name="critical_update_required_dialog_title">ਅਤਿਅੰਤ ਲੋੜੀਂਦੀ ਅੱਪਡੇਟ ਦੀ ਲੋੜ ਹੈ</string>
+  <string name="critical_update_required_dialog_content">ਅਤਿਅੰਤ ਲੋੜੀਂਦੇ ਸੁਰੱਖਿਆ ਬਦਲਾਵ ਅਤੇ ਨਵੀਨਤਮ ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ ਲਈ ਹੁਣੇ ਅੱਪਡੇਟ ਕਰੋ</string>
+  <string name="critical_security_update_required_reason">ਐਪ ਸੁਰੱਖਿਆ ਦੀ ਉਲੰਘਣਾ ਕੀਤੀ ਗਈ ਹੈ</string>
+  <string name="critical_update_required_dialog_update_button_text">ਹੁਣੇ ਅੱਪਡੇਟ ਕਰੋ</string>
+  <string name="critical_update_required_dialog_help_section_title">ਮਦਦ ਦੀ ਲੋੜ ਹੈ?</string>
+  <string name="critical_update_required_dialog_help_section_content">ਸਾਡੀ ਸਮਾਯੋਜਿਤ ਸਹਾਇਤਾ ਟੀਮ ਤੋਂ ਮਦਦ ਲੈਣ ਲਈ ਹੇਠਾਂ ਦਿੱਤੇ ਬਟਨ ਤੇ ਟੈਪ ਕਰੋ</string>
+  <string name="critical_update_required_reason">ਐਪ %d ਮਹੀਨੇ ਪੁਰਾਣੀ ਹੈ</string>
+
+  <!-- Critical app update card -->
+  <string name="critical_update_required_card_title">ਅਤਿਅੰਤ ਲੋੜੀਂਦੀ ਅੱਪਡੇਟ</string>
+  <string name="critical_update_required_card_content">ਅਤਿਅੰਤ ਲੋੜੀਂਦੇ ਸੁਰੱਖਿਆ ਬਦਲਾਵ ਅਤੇ ਨਵੀਨਤਮ ਵਿਸ਼ੇਸ਼ਤਾਵਾਂ ਲਈ ਹੁਣੇ ਅੱਪਡੇਟ ਕਰੋ</string>
+  <string name="update_required_reason">ਐਪ %d ਮਹੀਨੇ ਪੁਰਾਣੀ ਹੈ</string>
+  <string name="critical_update_required_card_update_button_text">ਹੁਣੇ ਅੱਪਡੇਟ ਕਰੋ</string>
+
+  <!-- Drug stock reminder notification -->
+  <string name="drug_stock_reminder_notification">%1$s ਲਈ ਆਪਣੀ ਲੰਬਿਤ ਡਰੱਗ ਸਟਾਕ ਰਿਪੋਰਟ ਨੂੰ ਪੂਰਾ ਕਰੋ</string>
+  
+  <!-- Clinical Decision Support Alerts -->
+  <string name="clinical_decision_support_alert_bp_high_title">BP ਜ਼ਿਆਦਾ ਹੈ। ਦਵਾਈਆਂ ਵਧਾਉਣੀਆਂ ਹਨ?</string>
+  <string name="clinical_decision_support_alert_bp_high_subtitle">ਜੇਕਰ ਮਰੀਜ਼ ਆਪਣੀਆਂ ਦਵਾਈਆਂ ਨਿਯਮਿਤ ਤੌਰ ਤੇ ਲੈਂਦਾ ਹੈ, ਤਾਂ ਪ੍ਰੋਟੋਕੋਲ ਦੀ ਪਾਲਣਾ ਕਰੋ</string>
+
 </resources>

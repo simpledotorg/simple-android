@@ -818,4 +818,31 @@
     <item quantity="one">%d দিন আগে সময় পার হয়ে গেছে</item>
     <item quantity="other">%d দিন আগে সময় পার হয়ে গেছে</item>
   </plurals>
+
+  <!-- App update notification -->
+  <string name="app_update_notification_subtext">অনুগ্রহ করে যত শীঘ্র সম্ভব Google Play Store-এ গিয়ে আপনার Simple অ্যাপটি আপডেট করুন।</string>
+  <string name="critical_app_update_notification_subtext">গুরুত্বপূর্ণ আপডেট উপলব্ধ। Google Playstore থেকে আপনার Simple অ্যাপটি আপডেট করুন।</string>
+
+  <!-- Critical app update dialog -->
+  <string name="critical_update_required_dialog_title">গুরুত্বপূর্ণ আপডেট আবশ্যক</string>
+  <string name="critical_update_required_dialog_content">সুরক্ষা সম্পর্কিত গুরুত্বপূর্ণ পরিবর্তনগুলি ও সাম্প্রতিকতম বৈশিষ্ট্যগুলির জন্য এখন আপডেট করুন</string>
+  <string name="critical_security_update_required_reason">অ্যাপের সুরক্ষার সাথে আপোষ করা হয়েছে</string>
+  <string name="critical_update_required_dialog_update_button_text">এখন আপডেট করুন</string>
+  <string name="critical_update_required_dialog_help_section_title">সাহায্য চাই?</string>
+  <string name="critical_update_required_dialog_help_section_content">আমাদের বন্ধুত্বপূর্ণ সহায়তা টিমের থেকে সাহায্য পেতে নিচের বোতামটিতে ট্যাপ করুন</string>
+  <string name="critical_update_required_reason">অ্যাপ %d মাস পুরানো</string>
+
+  <!-- Critical app update card -->
+  <string name="critical_update_required_card_title">গুরুত্বপূর্ণ আপডেট</string>
+  <string name="critical_update_required_card_content">সুরক্ষা সম্পর্কিত গুরুত্বপূর্ণ পরিবর্তনগুলি ও সাম্প্রতিকতম বৈশিষ্ট্যগুলির জন্য এখন আপডেট করুন</string>
+  <string name="update_required_reason">অ্যাপ %d মাস পুরানো</string>
+  <string name="critical_update_required_card_update_button_text">এখন আপডেট করুন</string>
+
+  <!-- Drug stock reminder notification -->
+  <string name="drug_stock_reminder_notification">%1$s-এর জন্য আপনার মুলতুবি থাকা ওষুধের স্টক রিপোর্ট সম্পূর্ণ করুন</string>
+  
+  <!-- Clinical Decision Support Alerts -->
+  <string name="clinical_decision_support_alert_bp_high_title">BP বেশি। ওষুধের মাত্রা বাড়াবেন?</string>
+  <string name="clinical_decision_support_alert_bp_high_subtitle">রোগী নিয়মিত তার ওষুধ গ্রহণ করলে প্রোটোকল অনুসরণ করুন</string>
+
 </resources>

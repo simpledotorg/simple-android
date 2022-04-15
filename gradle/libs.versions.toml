@@ -9,7 +9,7 @@ androidx-work = "2.7.1"
 
 dagger = "2.41"
 
-flipper = "0.141.0"
+flipper = "0.142.0"
 
 kotlin = "1.6.20"
 
@@ -30,7 +30,7 @@ room-metadataGenerator = "2.0.0"
 rx-binding = "3.1.0"
 
 [libraries]
-android-gradle-plugin = "com.android.tools.build:gradle:7.1.2"
+android-gradle-plugin = "com.android.tools.build:gradle:7.1.3"
 android-desugaring = "com.android.tools:desugar_jdk_libs:1.1.5"
 
 androidx-annotation-annotation = "androidx.annotation:annotation:1.3.0"
@@ -118,7 +118,7 @@ lottie = "com.airbnb.android:lottie:5.0.3"
 
 material = "com.google.android.material:material:1.4.0"
 
-mixpanel-android = "com.mixpanel.android:mixpanel-android:6.1.0"
+mixpanel-android = "com.mixpanel.android:mixpanel-android:6.1.1"
 
 mockito-kotlin = "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
 
@@ -157,7 +157,7 @@ rx-java = "io.reactivex.rxjava2:rxjava:2.2.21"
 rx-kotlin = "io.reactivex.rxjava2:rxkotlin:2.4.0"
 rx-preferences = "com.f2prateek.rx.preferences2:rx-preferences:2.0.1"
 
-sentry-android = "io.sentry:sentry-android:5.7.1"
+sentry-android = "io.sentry:sentry-android:5.7.3"
 sentry-gradle-plugin = "io.sentry:sentry-android-gradle-plugin:3.0.1"
 
 signaturepad = "com.github.gcacace:signature-pad:1.3.1"

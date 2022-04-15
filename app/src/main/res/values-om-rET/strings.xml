@@ -819,4 +819,32 @@
     <item quantity="one">Guyyaa %d irra darbe</item>
     <item quantity="other">%d guyyoonni kan irra darbe</item>
   </plurals>
+
+  <!-- App update notification -->
+  <string name="app_update_notification_subtext">Maaloo dafaatii appilikeeshinii Simple keessan Google Play Store irraa haaromfadhaa.</string>
+  <string name="critical_app_update_notification_subtext">Haaromsawwan barbaachisoon jiru.
+Appilikeeshinii Simple keessan Google PlayStore irraa haaromsadhaa.</string>
+
+  <!-- Critical app update dialog -->
+  <string name="critical_update_required_dialog_title">Haaromsi baay\'ee barbaachisaa ta\'e barbaachiseera.</string>
+  <string name="critical_update_required_dialog_content">Sonoota haaraa fi jijjiiramoota nageenyaa barbaachisoof ammuma haaromsaa.</string>
+  <string name="critical_security_update_required_reason">Nageenyi appilikeeshinii ilaalcha keessa galeera.</string>
+  <string name="critical_update_required_dialog_update_button_text">AMMUMA HAAROMSAA</string>
+  <string name="critical_update_required_dialog_help_section_title">Deeggarsa barbaadduu?</string>
+  <string name="critical_update_required_dialog_help_section_content">Garee deeggarsaa akka hiriyaa keenya gargaarsa argachuuf, biinkicha gadi qabaa.</string>
+  <string name="critical_update_required_reason">Appilikeeshiniinichi erga yeroon itti darbee ji\'a  %d fixeera.</string>
+
+  <!-- Critical app update card -->
+  <string name="critical_update_required_card_title">Haaromsa murteessaa ta\'e</string>
+  <string name="critical_update_required_card_content">Sonoota haaraa fi jijjiiramoota nageenyaa barbaachisoof ammuma haaromsaa.</string>
+  <string name="update_required_reason">Appilikeeshiniinichi erga yeroon itti darbee ji\'a  %d fixeera.</string>
+  <string name="critical_update_required_card_update_button_text">AMMUMA HAAROMSAA</string>
+
+  <!-- Drug stock reminder notification -->
+  <string name="drug_stock_reminder_notification">Gabaasa kuusaa qorichaa keessan hin xumuramin jiru %1$s f xumuraa.</string>
+  
+  <!-- Clinical Decision Support Alerts -->
+  <string name="clinical_decision_support_alert_bp_high_title">BPn olaanaa dha. Qorichoota dabaltuu?</string>
+  <string name="clinical_decision_support_alert_bp_high_subtitle">Akka dhukkubsataan seeraan qoricha isaanii fudhachaa jiran hordofaa.</string>
+
 </resources>

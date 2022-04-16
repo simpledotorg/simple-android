@@ -60,8 +60,8 @@
   <string name="patiententry_age">Da\'da</string>
   <string name="patiententry_street_address">Cinwaanka guriga</string>
   <string name="patiententry_street_house_road_number">Lambarka guriga ama wadada</string>
-  <string name="patiententry_village_colony_ward">Xaafada / deegaan / Qeybta xaafada</string>
-  <string name="patiententry_village_ward">Xaafada / Qeybta xaafada</string>
+  <string name="patiententry_village_colony_ward">Xaafada / deegaan / Qaybta xaafada</string>
+  <string name="patiententry_village_ward">Xaafada / Qaybta xaafada</string>
   <string name="patiententry_kebele">Kebele</string>
   <string name="patiententry_zone">Union</string>
   <string name="patiententry_district">Gobalka</string>
@@ -71,7 +71,7 @@
   <string name="patiententry_region">Gobalka</string>
   <string name="patiententry_doornumber_streetname">Lambarka albaabka, magaca dariiqa</string>
   <string name="patiententry_division_area">Tuulada iyo deegaanka</string>
-  <string name="patiententry_save_patient">Xigga</string>
+  <string name="patiententry_save_patient">Xiga</string>
   <string name="patiententry_error_empty_fullname">Gali magaca buuxa ee bukaanka</string>
   <string name="patiententry_error_empty_gender">Xullo jinsiga bukaanka</string>
   <string name="patiententry_error_empty_colony_or_village">Loo baahan yahay</string>
@@ -106,9 +106,9 @@
   <!--suppress UnusedResources -->
   <string name="tab_patient">Bukaanada</string>
   <!--suppress UnusedResources -->
-  <string name="tab_overdue">Waqtigiisa dhamaaday</string>
+  <string name="tab_overdue">Wakhtiga dhammaaday</string>
   <!--suppress UnusedResources -->
-  <string name="tab_progress">Hormarka</string>
+  <string name="tab_progress">Horumarka</string>
 
   <string name="home_search_patient_name_phone">Gali magaca bukaanka</string>
   <string name="patients_user_awaiting_approval_title">Sugaya ogolaanshaha</string>
@@ -144,7 +144,7 @@
   <string name="bloodpressureentry_error_systolic_300">Wadna garaaca kama badnaan karo 300</string>
   <string name="bloodpressureentry_error_diastolic_40">Joogsiga wadna garaaca kama yaraan karo  40</string>
   <string name="bloodpressureentry_error_diastolic_180">Joogsiga wadna garaaca kama badnaan karo 180</string>
-  <string name="bloodpressureentry_error_systolic_empty">Gej cadaadiska  wadna garaaca iyo joogsiga wadna garaaca </string>
+  <string name="bloodpressureentry_error_systolic_empty">Geli cadaadiska  wadna garaaca iyo joogsiga wadna garaaca </string>
   <string name="bloodpressureentry_error_diastolic_empty">Gej cadaadiska  wadna garaaca iyo joogsiga wadna garaaca </string>
   <string name="bloodpressureentry_error_date_invalid_pattern">Gali taariikh sax ah oo ah DD/MM/YYYY</string>
   <string name="bloodpressureentry_error_date_is_in_future">Taariikhdu ma noqon karto mustaqbalka</string>
@@ -217,7 +217,7 @@
   <string name="loginpin_go_back">Ku noqo shaashadda lambarka taleefanka</string>
 
   <!-- App lock -->
-  <string name="applock_logout">Adi ma aha?</string>
+  <string name="applock_logout">Adiga ma aha?</string>
   <string name="applock_reset_pin_alert_title">Dib u hagaaji lambarka sirta ah ee amniga?</string>
   <string name="applock_reset_pin_alert_message">Ma hubtaa inaad rabto inaad dib u samayso lambarkaaga sirta ah ee amniga?</string>
   <string name="applock_reset_pin_alert_confirm">Dib u samee</string>
@@ -275,7 +275,7 @@
   <string name="overdue_no_patients">Ma jiraan bukaanno daahay</string>
   <string name="overdue_empty_desc">Waxaad awoodi doontaa inaad wacdo bukaanada ka baaqda booqashadooda jadwalka ah ee akhriska cadaadiska dhiigga karka ee soo socda.</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
-  <string name="overdue_list_item_diagnosis_diabetes">Sokorow</string>
+  <string name="overdue_list_item_diagnosis_diabetes">Sonkorow</string>
   <string name="overdue_list_item_diagnosis_hypertension">Dhiig kar</string>
   <string name="overdue_list_item_diagnosis_none">Midna</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
@@ -344,8 +344,8 @@
   <string name="medicalhistory_diagnosis_hypertension_required">Baaritaanka dhiig karka (Wa loo baahan yahay)</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_diabetes">Sokorow</string>
-  <string name="medicalhistory_diagnosis_diabetes_required">Baaritaanka sokorawga (Wa loo baahan yahay)</string>
-  <string name="newmedicalhistory_next">Xigga</string>
+  <string name="medicalhistory_diagnosis_diabetes_required">Baaritaanka sonkorawga (Wa loo baahan yahay)</string>
+  <string name="newmedicalhistory_next">Xiga</string>
   <string name="newmedicalhistory_yes">Haa</string>
   <string name="newmedicalhistory_no">Maya</string>
   <string name="newmedicalhistory_history">Taariikh</string>
@@ -819,4 +819,31 @@
     <item quantity="one">%d maalin wakhtigeedu dhaafatay</item>
     <item quantity="other">%d maalmaha wakhtigoodu dhammaaday</item>
   </plurals>
+
+  <!-- App update notification -->
+  <string name="app_update_notification_subtext">እባክህ ቀላል መተግበሪያህን በGoogle Play Store ውስጥ በተቻለ ፍጥነት ያዘምኑ።</string>
+  <string name="critical_app_update_notification_subtext">ጠቃሚ ዝማኔዎች ይገኛሉ። ቀላል መተግበሪያዎን ከGoogle Playstore ያዘምኑ።</string>
+
+  <!-- Critical app update dialog -->
+  <string name="critical_update_required_dialog_title">ወሳኝ ዝማኔ ያስፈልጋል</string>
+  <string name="critical_update_required_dialog_content">አስፈላጊ ለሆኑ የደህንነት ለውጦች እና የቅርብ ጊዜ ባህሪያት አሁን ያዘምኑ</string>
+  <string name="critical_security_update_required_reason">የመተግበሪያ ደህንነት ግምት ውስጥ ገብቶዋል።</string>
+  <string name="critical_update_required_dialog_update_button_text">አሁን ያዘምኑ</string>
+  <string name="critical_update_required_dialog_help_section_title">እርዳታ ይፈልጋሉ?</string>
+  <string name="critical_update_required_dialog_help_section_content">ከጓደኛዊ ድጋፍ ቡድናችን እርዳታ ለማግኘት ከታች ያለውን ቁልፍ መታ ያድርጉ።</string>
+  <string name="critical_update_required_reason">መተግበሪያው %d ወራት ያለፈበት ነው።</string>
+
+  <!-- Critical app update card -->
+  <string name="critical_update_required_card_title">ወሳኝ ዝማኔ</string>
+  <string name="critical_update_required_card_content">አስፈላጊ ለሆኑ የደህንነት ለውጦች እና የቅርብ ጊዜ ባህሪያት አሁን ያዘምኑ</string>
+  <string name="update_required_reason">መተግበሪያው  %d ወራት ያለፈበት ነው።</string>
+  <string name="critical_update_required_card_update_button_text">አሁን ያዘምኑ</string>
+
+  <!-- Drug stock reminder notification -->
+  <string name="drug_stock_reminder_notification">በመጠባበቅ ላይ ያለዎትን የ%1$s የመድኃኒት ክምችት ሪፖርት ያጠናቅቁ</string>
+  
+  <!-- Clinical Decision Support Alerts -->
+  <string name="clinical_decision_support_alert_bp_high_title">ቢፒ ከፍተኛ ነው። መድሃኒቶች ጨምረዋል?</string>
+  <string name="clinical_decision_support_alert_bp_high_subtitle">ሕመምተኛው አዘውትሮ መድሃኒቶቹን የሚወስድ ከሆነ ፕሮቶኮልን ይከተሉ</string>
+
 </resources>

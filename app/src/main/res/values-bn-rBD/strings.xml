@@ -818,4 +818,31 @@
     <item quantity="one">%d দিন আগে সময় পার হয়ে গেছে</item>
     <item quantity="other">%d দিন আগে সময় পার হয়ে গেছে</item>
   </plurals>
+
+  <!-- App update notification -->
+  <string name="app_update_notification_subtext">দয়া করে যত শীঘ্র সম্ভব Google প্লে স্টোর-এ গিয়ে আপনার সিম্পল অ্যাপটি আপডেট করুন।</string>
+  <string name="critical_app_update_notification_subtext">গুরুত্বপূর্ণ হালনাগাদ উপলব্ধ। Google প্লেস্টোর থেকে আপনার সিম্পল অ্যাপটি আপডেট করুন।</string>
+
+  <!-- Critical app update dialog -->
+  <string name="critical_update_required_dialog_title">গুরুত্বপূর্ণ হালনাগাদ আবশ্যক</string>
+  <string name="critical_update_required_dialog_content">সুরক্ষা সম্পর্কিত গুরুত্বপূর্ণ পরিবর্তনগুলো ও সাম্প্রতিকতম বৈশিষ্ট্যগুলোর জন্য এখন হালনাগাদ করুন</string>
+  <string name="critical_security_update_required_reason">অ্যাপের সুরক্ষার সাথে আপোষ করা হয়েছে</string>
+  <string name="critical_update_required_dialog_update_button_text">এখন হালনাগাদ করুন</string>
+  <string name="critical_update_required_dialog_help_section_title">সাহায্য চাই?</string>
+  <string name="critical_update_required_dialog_help_section_content">আমাদের বন্ধুত্বপূর্ণ সহায়তা টিমের থেকে সাহায্য পেতে নিচের বোতামটিতে আলতো চাপ দিন</string>
+  <string name="critical_update_required_reason">অ্যাপ %d মাস পুরানো</string>
+
+  <!-- Critical app update card -->
+  <string name="critical_update_required_card_title">গুরুত্বপূর্ণ হালনাগাদ</string>
+  <string name="critical_update_required_card_content">সুরক্ষা সম্পর্কিত গুরুত্বপূর্ণ পরিবর্তনগুলো ও সাম্প্রতিকতম বৈশিষ্ট্যগুলোর জন্য এখন হালনাগাদ করুন</string>
+  <string name="update_required_reason">অ্যাপ %d মাস পুরানো</string>
+  <string name="critical_update_required_card_update_button_text">এখন হালনাগাদ করুন</string>
+
+  <!-- Drug stock reminder notification -->
+  <string name="drug_stock_reminder_notification">%1$s-এর জন্য আপনার মুলতুবি থাকা ওষুধের স্টক রিপোর্ট সম্পূর্ণ করুন</string>
+  
+  <!-- Clinical Decision Support Alerts -->
+  <string name="clinical_decision_support_alert_bp_high_title">বিপি বেশি। ওষুধের মাত্রা বাড়াবেন?</string>
+  <string name="clinical_decision_support_alert_bp_high_subtitle">রোগী নিয়মিত তার ওষুধ গ্রহণ করলে প্রোটোকল অনুসরণ করুন</string>
+
 </resources>

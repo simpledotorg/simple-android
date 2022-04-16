@@ -206,7 +206,7 @@ class HomeScreen :
       @Suppress("UsePropertyAccessSyntax")
       getOrCreateBadge().apply {
         isVisible = true
-        maxCharacterCount = 3
+        maxCharacterCount = 5
         number = count
       }
     }

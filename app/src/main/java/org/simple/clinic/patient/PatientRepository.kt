@@ -216,18 +216,21 @@ class PatientRepository @Inject constructor(
       requireNotNull(personalDetails)
       requireNotNull(address)
 
-      val dateOfBirth = personalDetails.dateOfBirth
+      val age = personalDetails.age?.toInt()
+      val dateOfBirth = personalDetails.dateOfBirth?.let {
+        dateOfBirthFormatter.parse(it, LocalDate::from)
+      }
 
       val patient = Patient(
           uuid = patientUuid,
           addressUuid = addressUuid,
           fullName = personalDetails.fullName,
           gender = personalDetails.gender!!,
-          ageDetails = PatientAgeDetails.fromAgeOrDate(personalDetails.age?.let { ageString ->
-            Age(ageString.toInt(), Instant.now(utcClock))
-          }, dateOfBirth?.let {
-            dateOfBirthFormatter.parse(dateOfBirth, LocalDate::from)
-          }),
+          ageDetails = PatientAgeDetails(
+              ageValue = age,
+              ageUpdatedAt = if (age != null) Instant.now(utcClock) else null,
+              dateOfBirth = dateOfBirth
+          ),
           status = PatientStatus.Active,
           createdAt = Instant.now(utcClock),
           updatedAt = Instant.now(utcClock),

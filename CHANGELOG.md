@@ -8,7 +8,7 @@
 - Bump Flipper to v0.142.0
 - Bump Mixpanel to v6.1.1
 - Bump gradle to v7.1.3
-- Update translations: `am-ET`, `ti-ET`, `om-ET`, `bn-BD`, `hi-IN`, `so-ET`
+- Update translations: `am-ET`, `ti-ET`, `om-ET`, `bn-BD`, `hi-IN`, `so-ET`, `si-LK`
 - Increase max character limit in overdue tab badge
 
 ### Changes

@@ -14,6 +14,7 @@
 - Sync reports and progress data before patient sync
 - Replace `age` and `dateOfBirth` in `TestData` factory methods with `PatientAgeDetails`
 - Bump Lint to v30.1.3
+- Bump Cirrus rebase-action to v1.6
 
 ### Features
 

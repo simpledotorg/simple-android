@@ -13,6 +13,7 @@
 - Use personal access token when checking out repo in `cut_release_branch` workflow
 - Sync reports and progress data before patient sync
 - Replace `age` and `dateOfBirth` in `TestData` factory methods with `PatientAgeDetails`
+- Bump Lint to v30.1.3
 
 ### Features
 

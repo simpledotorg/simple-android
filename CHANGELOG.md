@@ -8,7 +8,7 @@
 - Bump Flipper to v0.142.0
 - Bump Mixpanel to v6.1.1
 - Bump gradle to v7.1.3
-- Update translations: `am-ET`, `ti-ET`, `om-ET`, `bn-BD`, `hi-IN`, `so-ET`, `si-LK`, `te-IN`, `ta-IN`, `mr-IN`, `ta-LK`
+- Update translations: `am-ET`, `ti-ET`, `om-ET`, `bn-BD`, `hi-IN`, `so-ET`, `si-LK`, `te-IN`, `ta-IN`, `mr-IN`, `ta-LK`, `pa-IN`
 - Increase max character limit in overdue tab badge
 - Use personal access token when checking out repo in `cut_release_branch` workflow
 - Sync reports and progress data before patient sync

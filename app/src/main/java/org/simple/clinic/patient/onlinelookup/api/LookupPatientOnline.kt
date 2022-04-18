@@ -6,7 +6,6 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
-import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.CompleteMedicalRecord
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAgeDetails
@@ -74,7 +73,12 @@ class LookupPatientOnline @Inject constructor(
   private fun readPatientProfileFromResponse(
       response: CompleteMedicalRecordPayload,
   ): PatientProfile {
-    val age = if (response.age != null) Age(response.age, response.ageUpdatedAt!!) else null
+    val ageDetails = PatientAgeDetails(
+        ageValue = response.age,
+        ageUpdatedAt = response.ageUpdatedAt,
+        dateOfBirth = response.dateOfBirth
+    )
+
     val retainUntil = response.retention.computeRetainUntilTimestamp(
         instant = Instant.now(clock),
         fallbackRetentionDuration = fallbackRecordRetentionDuration
@@ -98,7 +102,7 @@ class LookupPatientOnline @Inject constructor(
             addressUuid = response.address.uuid,
             fullName = response.fullName,
             gender = response.gender,
-            ageDetails = PatientAgeDetails.fromAgeOrDate(age, response.dateOfBirth),
+            ageDetails = ageDetails,
             status = response.status,
             createdAt = response.createdAt,
             updatedAt = response.updatedAt,

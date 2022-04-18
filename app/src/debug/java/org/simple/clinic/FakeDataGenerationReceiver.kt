@@ -214,7 +214,11 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
         addressUuid = address.uuid,
         fullName = faker.name.name(),
         gender = randomGender(),
-        ageDetails = PatientAgeDetails.fromAgeOrDate(null, LocalDate.now(clock).minusYears(Random.nextInt(30..70).toLong())),
+        ageDetails = PatientAgeDetails(
+            ageValue = null,
+            ageUpdatedAt = null,
+            dateOfBirth = LocalDate.now(clock).minusYears(Random.nextInt(30..70).toLong())
+        ),
         status = PatientStatus.Active,
         createdAt = timestamp,
         updatedAt = timestamp,

@@ -87,9 +87,8 @@ class SyncModule {
     val optionalSyncs = if (features.isEnabled(Feature.CallResultSyncEnabled)) listOf(callResultSync) else emptyList()
 
     return listOf(
-        facilitySync, protocolSync, patientSync,
-        bloodPressureSync, medicalHistorySync, appointmentSync,
-        prescriptionSync, reportsSync, helpSync,
+        facilitySync, protocolSync, reportsSync, helpSync,
+        patientSync, bloodPressureSync, medicalHistorySync, appointmentSync, prescriptionSync,
         bloodSugarSync, teleconsultationMedicalOfficersSync,
         teleconsultRecordSync, drugSync
     ) + optionalSyncs

@@ -950,8 +950,8 @@ class PatientSummaryUpdateTest {
   fun `when back is clicked and patient is dead, then go back to previous screen`() {
     val patientUuid = UUID.fromString("c28e15d1-c83c-4d07-a839-b978e4482f30")
     val patient = TestData.patient(
-        uuid = patientUuid,
-        status = PatientStatus.Dead
+      uuid = patientUuid,
+      status = PatientStatus.Dead
     )
 
     val patientSummaryProfile = PatientSummaryProfile(
@@ -995,8 +995,8 @@ class PatientSummaryUpdateTest {
   fun `when done is clicked and patient is dead, then go back to previous screen`() {
     val patientUuid = UUID.fromString("c28e15d1-c83c-4d07-a839-b978e4482f30")
     val patient = TestData.patient(
-        uuid = patientUuid,
-        status = PatientStatus.Dead
+      uuid = patientUuid,
+      status = PatientStatus.Dead
     )
 
     val patientSummaryProfile = PatientSummaryProfile(

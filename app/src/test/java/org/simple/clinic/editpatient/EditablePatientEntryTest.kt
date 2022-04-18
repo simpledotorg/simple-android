@@ -5,7 +5,6 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
-import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.util.TestUtcClock
 import java.time.Clock
@@ -21,7 +20,13 @@ class EditablePatientEntryTest {
   @Test
   fun `when the patient has an age, then entry object should have age`() {
     val patientEntry = EditablePatientEntry.from(
-        TestData.patient().withAge(Age(99, Instant.now(clock))),
+        TestData.patient(
+            patientAgeDetails = PatientAgeDetails(
+                ageValue = 99,
+                ageUpdatedAt = Instant.now(clock),
+                dateOfBirth = null
+            )
+        ),
         TestData.patientAddress(),
         null,
         dateOfBirthFormat,
@@ -49,9 +54,10 @@ class EditablePatientEntryTest {
   @Test
   fun `when the patient has both age and date of birth, then entry object should pick date of birth`() {
     val patientEntry = EditablePatientEntry.from(
-        TestData.patient().copy(ageDetails = PatientAgeDetails.fromAgeOrDate(
-            age = Age(99, Instant.now(clock)),
-            date = LocalDate.now(clock)
+        TestData.patient().copy(ageDetails = PatientAgeDetails(
+            ageValue = 99,
+            ageUpdatedAt = Instant.now(clock),
+            dateOfBirth = LocalDate.now(clock)
         )),
         TestData.patientAddress(),
         null,
@@ -66,7 +72,11 @@ class EditablePatientEntryTest {
   @Test(expected = IllegalStateException::class)
   fun `when the patient does not have neither age nor date of birth, then throw an exception`() {
     EditablePatientEntry.from(
-        TestData.patient().copy(ageDetails = PatientAgeDetails.fromAgeOrDate(null, null)),
+        TestData.patient().copy(ageDetails = PatientAgeDetails(
+            ageValue = null,
+            ageUpdatedAt = null,
+            dateOfBirth = null
+        )),
         TestData.patientAddress(),
         null,
         dateOfBirthFormat,

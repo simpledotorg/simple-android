@@ -11,9 +11,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestData
 import org.simple.clinic.editpatient.EditPatientState.NOT_SAVING_PATIENT
-import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
 import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.PatientPhoneNumber
@@ -86,8 +86,11 @@ class EditPatientScreenCreatedTest {
       phoneNumber: String?
   ): PatientFormTestParams {
     val patientToReturn = TestData.patient(
-        age = Age(23, Instant.now(utcClock)),
-        dateOfBirth = null
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = 23,
+            ageUpdatedAt = Instant.now(utcClock),
+            dateOfBirth = null
+        )
     )
     val addressToReturn = TestData.patientAddress(uuid = patientToReturn.addressUuid, colonyOrVillage = colonyOrVillage)
     val phoneNumberToReturn = phoneNumber?.let { TestData.patientPhoneNumber(patientUuid = patientToReturn.uuid, number = it) }
@@ -104,7 +107,13 @@ class EditPatientScreenCreatedTest {
       phoneNumber: String?,
       dateOfBirth: LocalDate
   ): PatientFormTestParams {
-    val patientToReturn = TestData.patient(dateOfBirth = dateOfBirth, age = null)
+    val patientToReturn = TestData.patient(
+        patientAgeDetails = PatientAgeDetails(
+            dateOfBirth = dateOfBirth,
+            ageValue = null,
+            ageUpdatedAt = null
+        )
+    )
     val addressToReturn = TestData.patientAddress(uuid = patientToReturn.addressUuid, colonyOrVillage = colonyOrVillage)
     val phoneNumberToReturn = phoneNumber?.let { TestData.patientPhoneNumber(patientUuid = patientToReturn.uuid, number = it) }
 

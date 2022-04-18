@@ -33,10 +33,10 @@ class PatientRegistrationBenchmark : BaseBenchmarkTest() {
         patientUuid = patientUuid,
         patientAddressUuid = uuidGenerator.v4(),
         syncStatus = SyncStatus.DONE,
-        patientStatus = PatientStatus.Active,
-        patientDeletedAt = null,
         generatePhoneNumber = true,
         generateBusinessId = true,
+        patientStatus = PatientStatus.Active,
+        patientDeletedAt = null,
         generateDateOfBirth = true
     )
 

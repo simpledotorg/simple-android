@@ -32,7 +32,6 @@ import org.simple.clinic.newentry.form.StateField
 import org.simple.clinic.newentry.form.StreetAddressField
 import org.simple.clinic.newentry.form.VillageOrColonyField
 import org.simple.clinic.newentry.form.ZoneField
-import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientRepository
@@ -68,8 +67,11 @@ class EditPatientEffectHandlerTest {
   private val patient = TestData.patient(
       uuid = UUID.fromString("c9c9d4db-cd80-4b67-bf69-378de9656b49"),
       addressUuid = patientAddress.uuid,
-      age = null,
-      dateOfBirth = LocalDate.now(userClock).minusYears(30)
+      patientAgeDetails = PatientAgeDetails(
+          ageValue = null,
+          ageUpdatedAt = null,
+          dateOfBirth = LocalDate.now(userClock).minusYears(30)
+      )
   )
   private val phoneNumber = TestData.patientPhoneNumber(
       uuid = UUID.fromString("61638775-2815-4f59-b513-643cc2fe3c90"),
@@ -338,8 +340,12 @@ class EditPatientEffectHandlerTest {
         patientUuid = UUID.fromString("6e7c5107-a762-453a-a5ef-b19c924f2f39"),
         generatePhoneNumber = false,
         generateBusinessId = false,
-        age = Age(35, currentTime),
-        dateOfBirth = null
+        generateDateOfBirth = false,
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = 35,
+            ageUpdatedAt = currentTime,
+            dateOfBirth = null
+        )
     )
     val ongoingEntry = EditablePatientEntry.from(
         patient = patientProfile.patient,
@@ -381,8 +387,12 @@ class EditPatientEffectHandlerTest {
         patientUuid = UUID.fromString("6e7c5107-a762-453a-a5ef-b19c924f2f39"),
         generatePhoneNumber = false,
         generateBusinessId = false,
-        age = Age(recordedAge, currentTime),
-        dateOfBirth = null
+        generateDateOfBirth = false,
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = recordedAge,
+            ageUpdatedAt = currentTime,
+            dateOfBirth = null
+        )
     )
     val ongoingEntry = EditablePatientEntry.from(
         patient = patientProfile.patient,
@@ -391,9 +401,10 @@ class EditPatientEffectHandlerTest {
         dateOfBirthFormatter = dateOfBirthFormatter,
         alternativeId = null
     ).updateAge(enteredAge.toString())
-    val expectedPatientToBeSaved = patientProfile.patient.withAgeDetails(PatientAgeDetails.fromAgeOrDate(
-        age = Age(enteredAge, currentTime + timeToAdvanceBy),
-        date = null
+    val expectedPatientToBeSaved = patientProfile.patient.withAgeDetails(PatientAgeDetails(
+        ageValue = enteredAge,
+        ageUpdatedAt = currentTime + timeToAdvanceBy,
+        dateOfBirth = null
     ))
     whenever(patientRepository.updatePatient(expectedPatientToBeSaved)).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(patientProfile.patientUuid, patientProfile.address)).thenReturn(Completable.complete())

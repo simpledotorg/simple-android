@@ -35,7 +35,6 @@ import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentPayload
 import org.simple.clinic.overdue.callresult.CallResult
 import org.simple.clinic.overdue.callresult.Outcome
-import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.CompleteMedicalRecord
 import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.Gender
@@ -98,7 +97,6 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset.UTC
 import java.util.UUID
-import kotlin.random.nextInt
 import org.simple.clinic.drugs.search.Answer as DrugAnswer
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer as TeleconsultRecordAnswer
 
@@ -119,8 +117,6 @@ object TestData {
       businessId: BusinessId? = if (generateBusinessId) businessId(patientUuid = patientUuid) else null,
       businessIds: List<BusinessId> = if (businessId != null) listOf(businessId) else emptyList(),
       generateDateOfBirth: Boolean = faker.bool.bool(),
-      dateOfBirth: LocalDate? = if (generateDateOfBirth) LocalDate.parse("1980-01-01") else null,
-      age: Age? = if (!generateDateOfBirth) Age(value = kotlin.random.Random.nextInt(30..100), updatedAt = Instant.parse("2018-01-01T00:00:00Z")) else null,
       gender: Gender = randomGender(),
       patientDeletedReason: DeletedReason? = null,
       patientCreatedAt: Instant = Instant.now(),
@@ -128,7 +124,12 @@ object TestData {
       patientRecordedAt: Instant = Instant.parse("2018-01-01T00:00:00Z"),
       patientRegisteredFacilityId: UUID? = null,
       patientAssignedFacilityId: UUID? = null,
-      retainUntil: Instant? = null
+      retainUntil: Instant? = null,
+      patientAgeDetails: PatientAgeDetails = PatientAgeDetails(
+          ageValue = if (!generateDateOfBirth) Math.random().times(100).toInt() else null,
+          ageUpdatedAt = if (!generateDateOfBirth) Instant.parse("2018-01-01T00:00:00Z") else null,
+          dateOfBirth = if (generateDateOfBirth) LocalDate.parse("1980-01-01") else null
+      )
   ): PatientProfile {
     val phoneNumbers = if (!patientPhoneNumber.isNullOrBlank()) {
       listOf(patientPhoneNumber(patientUuid = patientUuid, number = patientPhoneNumber, phoneType = PatientPhoneNumberType.Mobile))
@@ -139,21 +140,20 @@ object TestData {
     return PatientProfile(
         patient = patient(
             uuid = patientUuid,
-            fullName = patientName,
-            syncStatus = syncStatus,
             addressUuid = patientAddressUuid,
-            status = patientStatus,
-            deletedAt = patientDeletedAt,
-            age = age,
-            dateOfBirth = dateOfBirth,
+            fullName = patientName,
             gender = gender,
-            deletedReason = patientDeletedReason,
+            status = patientStatus,
             createdAt = patientCreatedAt,
             updatedAt = patientUpdatedAt,
+            deletedAt = patientDeletedAt,
             recordedAt = patientRecordedAt,
+            syncStatus = syncStatus,
+            deletedReason = patientDeletedReason,
             registeredFacilityId = patientRegisteredFacilityId,
             assignedFacilityId = patientAssignedFacilityId,
-            retainUntil = retainUntil
+            retainUntil = retainUntil,
+            patientAgeDetails = patientAgeDetails
         ),
         address = patientAddress(uuid = patientAddressUuid),
         phoneNumbers = phoneNumbers,
@@ -165,8 +165,6 @@ object TestData {
       addressUuid: UUID = UUID.randomUUID(),
       fullName: String = faker.name.name(),
       gender: Gender = randomGender(),
-      dateOfBirth: LocalDate? = LocalDate.parse("1980-01-01"),
-      age: Age? = Age(value = Math.random().times(100).toInt(), updatedAt = Instant.now()),
       status: PatientStatus = PatientStatus.random(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
@@ -177,14 +175,19 @@ object TestData {
       deletedReason: DeletedReason? = null,
       registeredFacilityId: UUID? = null,
       assignedFacilityId: UUID? = null,
-      retainUntil: Instant? = null
+      retainUntil: Instant? = null,
+      patientAgeDetails: PatientAgeDetails = PatientAgeDetails(
+          ageValue = Math.random().times(100).toInt(),
+          ageUpdatedAt = Instant.now(),
+          dateOfBirth = null
+      )
   ): Patient {
     return Patient(
         uuid = uuid,
         addressUuid = addressUuid,
         fullName = fullName,
         gender = gender,
-        ageDetails = PatientAgeDetails.fromAgeOrDate(age, dateOfBirth),
+        ageDetails = patientAgeDetails,
         status = status,
         createdAt = createdAt,
         updatedAt = updatedAt,
@@ -987,17 +990,20 @@ object TestData {
       name: String = "somebody",
       isHighRisk: Boolean = false,
       gender: Gender = Gender.Transgender,
-      dateOfBirth: LocalDate? = LocalDate.now(UTC).minusYears(30),
-      age: Age? = null,
       phoneNumber: PatientPhoneNumber? = patientPhoneNumber(uuid = phoneNumberUuid, patientUuid = patientUuid),
       appointment: Appointment = appointment(uuid = appointmentUuid, patientUuid = patientUuid, facilityUuid = facilityUuid),
       patientAddress: OverduePatientAddress = overduePatientAddress(),
-      patientAssignedFacilityId: UUID? = null
+      patientAssignedFacilityId: UUID? = null,
+      patientAgeDetails: PatientAgeDetails = PatientAgeDetails(
+          ageValue = null,
+          ageUpdatedAt = null,
+          dateOfBirth = LocalDate.now(UTC).minusYears(30)
+      )
   ): OverdueAppointment {
     return OverdueAppointment(
         fullName = name,
         gender = gender,
-        ageDetails = PatientAgeDetails.fromAgeOrDate(age, dateOfBirth),
+        ageDetails = patientAgeDetails,
         appointment = appointment,
         phoneNumber = phoneNumber,
         patientAddress = patientAddress,
@@ -1037,8 +1043,6 @@ object TestData {
       fullName: String = "Ashok Kumar",
       phoneNumber: String = "3.14159",
       gender: Gender = Gender.Male,
-      dateOfBirth: LocalDate? = null,
-      age: Age? = Age(45, Instant.now()),
       status: PatientStatus = PatientStatus.Active,
       address: PatientAddress = patientAddress(),
       assignedFacilityId: UUID? = null,
@@ -1047,13 +1051,18 @@ object TestData {
           type = BpPassport
       ),
       identifierSearchHelp: String? = null,
-      assignedFacilityName: String? = null
+      assignedFacilityName: String? = null,
+      patientAgeDetails: PatientAgeDetails = PatientAgeDetails(
+          ageValue = 45,
+          ageUpdatedAt = Instant.now(),
+          dateOfBirth = null
+      )
   ): PatientSearchResult {
     return PatientSearchResult(
         uuid = uuid,
         fullName = fullName,
         gender = gender,
-        ageDetails = PatientAgeDetails.fromAgeOrDate(age, dateOfBirth),
+        ageDetails = patientAgeDetails,
         status = status,
         assignedFacilityId = assignedFacilityId,
         assignedFacilityName = assignedFacilityName,
@@ -1068,15 +1077,18 @@ object TestData {
       uuid: UUID = UUID.randomUUID(),
       fullName: String = "fullName",
       gender: Gender = randomGender(),
-      dateOfBirth: LocalDate? = null,
-      age: Age? = null,
       patientRecordedAt: Instant = Instant.parse("2018-01-01T00:00:00Z"),
-      updatedAt: Instant = Instant.parse("2018-01-01T00:00:00Z")
+      updatedAt: Instant = Instant.parse("2018-01-01T00:00:00Z"),
+      patientAgeDetails: PatientAgeDetails = PatientAgeDetails(
+          ageValue = null,
+          ageUpdatedAt = null,
+          dateOfBirth = null
+      )
   ) = RecentPatient(
       uuid = uuid,
       fullName = fullName,
       gender = gender,
-      ageDetails = PatientAgeDetails.fromAgeOrDate(age, dateOfBirth),
+      ageDetails = patientAgeDetails,
       patientRecordedAt = patientRecordedAt,
       updatedAt = updatedAt
   )
@@ -1331,8 +1343,6 @@ object TestData {
       patientPhoneNumber: String? = if (generatePhoneNumber) faker.phoneNumber.phoneNumber() else null,
       businessId: BusinessId? = if (generateBusinessId) businessId(patientUuid = patientUuid) else null,
       generateDateOfBirth: Boolean = faker.bool.bool(),
-      dateOfBirth: LocalDate? = if (generateDateOfBirth) LocalDate.parse("1980-01-01") else null,
-      age: Age? = if (!generateDateOfBirth) Age(value = kotlin.random.Random.nextInt(30..100), updatedAt = Instant.parse("2018-01-01T00:00:00Z")) else null,
       gender: Gender = randomGender(),
       patientDeletedReason: DeletedReason? = null,
       patientCreatedAt: Instant = Instant.parse("2021-07-01T00:00:00Z"),
@@ -1340,7 +1350,12 @@ object TestData {
       patientRecordedAt: Instant = Instant.parse("2021-07-01T00:00:00Z"),
       patientRegisteredFacilityId: UUID = UUID.randomUUID(),
       patientAssignedFacilityId: UUID? = null,
-      retainUntil: Instant? = null
+      retainUntil: Instant? = null,
+      patientAgeDetails: PatientAgeDetails = PatientAgeDetails(
+          ageValue = if (!generateDateOfBirth) Math.random().times(100).toInt() else null,
+          ageUpdatedAt = if (!generateDateOfBirth) Instant.now() else null,
+          dateOfBirth = if (generateDateOfBirth) LocalDate.parse("2018-01-01") else null
+      )
   ): ContactPatientProfile {
     val phoneNumbers = if (!patientPhoneNumber.isNullOrBlank()) {
       listOf(patientPhoneNumber(patientUuid = patientUuid, number = patientPhoneNumber, phoneType = PatientPhoneNumberType.Mobile))
@@ -1351,21 +1366,20 @@ object TestData {
     return ContactPatientProfile(
         patient = patient(
             uuid = patientUuid,
-            fullName = patientName,
-            syncStatus = syncStatus,
             addressUuid = patientAddressUuid,
-            status = patientStatus,
-            deletedAt = patientDeletedAt,
-            age = age,
-            dateOfBirth = dateOfBirth,
+            fullName = patientName,
             gender = gender,
-            deletedReason = patientDeletedReason,
+            status = patientStatus,
             createdAt = patientCreatedAt,
             updatedAt = patientUpdatedAt,
+            deletedAt = patientDeletedAt,
             recordedAt = patientRecordedAt,
+            syncStatus = syncStatus,
+            deletedReason = patientDeletedReason,
             registeredFacilityId = patientRegisteredFacilityId,
             assignedFacilityId = patientAssignedFacilityId,
-            retainUntil = retainUntil
+            retainUntil = retainUntil,
+            patientAgeDetails = patientAgeDetails
         ),
         address = patientAddress(uuid = patientAddressUuid),
         phoneNumbers = phoneNumbers,

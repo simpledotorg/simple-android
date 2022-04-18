@@ -7,6 +7,7 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFields
+import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
@@ -30,7 +31,11 @@ class EditPatientViewRendererTest {
       generatePhoneNumber = true,
       generateBusinessId = true,
       generateDateOfBirth = true,
-      dateOfBirth = LocalDate.parse("1990-03-09")
+      patientAgeDetails = PatientAgeDetails(
+          ageValue = null,
+          ageUpdatedAt = null,
+          dateOfBirth = LocalDate.parse("1990-03-09")
+      )
   )
 
   private val model = EditPatientModel.from(

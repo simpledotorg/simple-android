@@ -41,7 +41,7 @@ class PatientSummaryViewRendererTest {
       ui = ui,
       isNextAppointmentFeatureEnabled = false,
       modelUpdateCallback = { /* no-op */ },
-      isCdsAlertsFeatureEnabled= false
+      isCdsAlertsFeatureEnabled = false
   )
 
   @Test
@@ -179,8 +179,8 @@ class PatientSummaryViewRendererTest {
     val patientUuid = UUID.fromString("873e001f-fdc7-4e27-a734-5c9f15b22cdc")
     val patient = TestData.patient(
         uuid = patientUuid,
-        assignedFacilityId = UUID.fromString("170049b2-9a97-4da4-a46c-d791751819fd"),
-        status = PatientStatus.Active
+        status = PatientStatus.Active,
+        assignedFacilityId = UUID.fromString("170049b2-9a97-4da4-a46c-d791751819fd")
     )
     val patientAddress = TestData.patientAddress(patient.addressUuid)
     val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
@@ -219,8 +219,8 @@ class PatientSummaryViewRendererTest {
     val patientUuid = UUID.fromString("873e001f-fdc7-4e27-a734-5c9f15b22cdc")
     val patient = TestData.patient(
         uuid = patientUuid,
-        assignedFacilityId = null,
-        status = PatientStatus.Active
+        status = PatientStatus.Active,
+        assignedFacilityId = null
     )
     val patientAddress = TestData.patientAddress(patient.addressUuid)
     val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)

@@ -643,9 +643,9 @@ class AppointmentRepositoryAndroidTest {
     ) {
       val patientProfile = testData.patientProfile(
           patientUuid = patientUuid,
-          patientName = fullName,
           generatePhoneNumber = true,
-          generateBusinessId = false
+          generateBusinessId = false,
+          patientName = fullName
       )
       patientRepository.save(listOf(patientProfile))
 
@@ -1555,9 +1555,9 @@ class AppointmentRepositoryAndroidTest {
     ) {
       val patientProfile = testData.patientProfile(
           patientUuid = patientUuid,
-          patientName = fullName,
           generatePhoneNumber = true,
-          generateBusinessId = false
+          generateBusinessId = false,
+          patientName = fullName
       )
       patientRepository.save(listOf(patientProfile))
 
@@ -1894,8 +1894,8 @@ class AppointmentRepositoryAndroidTest {
       val patientProfile = TestData.patientProfile(
           patientUuid = patientUuid,
           generatePhoneNumber = true,
-          patientAssignedFacilityId = patientAssignedFacilityUuid,
-          patientStatus = patientStatus
+          patientStatus = patientStatus,
+          patientAssignedFacilityId = patientAssignedFacilityUuid
       )
       patientRepository.save(listOf(patientProfile))
 

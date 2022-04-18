@@ -105,14 +105,14 @@ class PatientSyncIntegrationTest {
       TestData.patientProfile(
           patientUuid = patientUuid,
           syncStatus = SyncStatus.PENDING,
-          patientRegisteredFacilityId = currentFacilityUuid,
-          patientAssignedFacilityId = currentFacilityUuid,
           generateBusinessId = false,
           businessId = TestData.businessId(
               patientUuid = patientUuid,
               identifier = identifier,
               identifierSearchHelp = BpPassport.shortCode(identifier)
-          )
+          ),
+          patientRegisteredFacilityId = currentFacilityUuid,
+          patientAssignedFacilityId = currentFacilityUuid
       )
     }
     assertThat(records).containsNoDuplicates()
@@ -142,14 +142,14 @@ class PatientSyncIntegrationTest {
       TestData.patientProfile(
           patientUuid = patientUuid,
           syncStatus = SyncStatus.PENDING,
-          patientRegisteredFacilityId = currentFacilityUuid,
-          patientAssignedFacilityId = currentFacilityUuid,
           generateBusinessId = false,
           businessId = TestData.businessId(
               patientUuid = patientUuid,
               identifier = identifier,
               identifierSearchHelp = BpPassport.shortCode(identifier)
-          )
+          ),
+          patientRegisteredFacilityId = currentFacilityUuid,
+          patientAssignedFacilityId = currentFacilityUuid
       )
     }
     assertThat(records).containsNoDuplicates()

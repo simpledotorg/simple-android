@@ -276,21 +276,21 @@ class BloodPressureRepositoryAndroidTest {
     val patient1Uuid = UUID.fromString("b8060a91-911e-4695-b905-20ff0d3fb8d5")
     val patient1 = TestData.patientProfile(
         patientUuid = patient1Uuid,
-        patientCreatedAt = Instant.parse("1999-10-01T00:00:00Z"),
-        patientRecordedAt = Instant.parse("1999-10-01T00:00:00Z"),
-        patientUpdatedAt = Instant.parse("1999-10-01T00:00:00Z"),
+        patientStatus = PatientStatus.Active,
         patientDeletedAt = null,
-        patientStatus = PatientStatus.Active
+        patientCreatedAt = Instant.parse("1999-10-01T00:00:00Z"),
+        patientUpdatedAt = Instant.parse("1999-10-01T00:00:00Z"),
+        patientRecordedAt = Instant.parse("1999-10-01T00:00:00Z")
     )
 
     val patient2Uuid = UUID.fromString("414ed968-3972-4723-8613-5b0b0ed65a5a")
     val patient2 = TestData.patientProfile(
         patientUuid = patient2Uuid,
-        patientCreatedAt = Instant.parse("1999-10-01T00:00:00Z"),
-        patientRecordedAt = Instant.parse("1999-10-01T00:00:00Z"),
-        patientUpdatedAt = Instant.parse("1999-10-01T00:00:00Z"),
+        patientStatus = PatientStatus.Active,
         patientDeletedAt = null,
-        patientStatus = PatientStatus.Active
+        patientCreatedAt = Instant.parse("1999-10-01T00:00:00Z"),
+        patientUpdatedAt = Instant.parse("1999-10-01T00:00:00Z"),
+        patientRecordedAt = Instant.parse("1999-10-01T00:00:00Z")
     )
 
     val twoMonthsOldBpForPatient1 = TestData.bloodPressureMeasurement(

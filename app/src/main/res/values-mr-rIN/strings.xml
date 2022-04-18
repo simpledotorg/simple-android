@@ -818,4 +818,31 @@
     <item quantity="one">%d दिवस ओव्‍हरड्यू</item>
     <item quantity="other">%d दिवस ओव्‍हरड्यू</item>
   </plurals>
+
+  <!-- App update notification -->
+  <string name="app_update_notification_subtext">कृपया आपले सिंपल ऍप Google प्ले स्टोअर मधून शक्य तितक्या लवकर अद्ययावत करा.</string>
+  <string name="critical_app_update_notification_subtext">महत्त्वाची अद्यतने उपलब्ध. आपले सिंपल ऍप Google प्लेस्टोअर मधून अद्ययावत करा.</string>
+
+  <!-- Critical app update dialog -->
+  <string name="critical_update_required_dialog_title">निर्णायक अद्यतन आवश्यक</string>
+  <string name="critical_update_required_dialog_content">निर्णायक सुरक्षितता बदल आणि नवीनतम वैशिष्ट्यांसाठी आत्ता अद्ययावत करा</string>
+  <string name="critical_security_update_required_reason">ऍप सुरक्षितता धोक्यात आहे</string>
+  <string name="critical_update_required_dialog_update_button_text">आत्ता अद्ययावत करा</string>
+  <string name="critical_update_required_dialog_help_section_title">मदत हवी आहे?</string>
+  <string name="critical_update_required_dialog_help_section_content">आमच्या मैत्रीपूर्ण समर्थन संघाकडून मदत मिळवण्यासाठी खालील बटणावर टॅप करा</string>
+  <string name="critical_update_required_reason">ऍप %d महिने कालबाह्य आहे</string>
+
+  <!-- Critical app update card -->
+  <string name="critical_update_required_card_title">निर्णायक अद्यतन</string>
+  <string name="critical_update_required_card_content">निर्णायक सुरक्षितता बदल आणि नवीनतम वैशिष्ट्यांसाठी आत्ता अद्ययावत करा</string>
+  <string name="update_required_reason">ऍप %d महिने कालबाह्य आहे</string>
+  <string name="critical_update_required_card_update_button_text">आत्ता अद्ययावत करा</string>
+
+  <!-- Drug stock reminder notification -->
+  <string name="drug_stock_reminder_notification">%1$s साठी आपला निलंबित औषध साठी अहवाल पूर्ण करा</string>
+  
+  <!-- Clinical Decision Support Alerts -->
+  <string name="clinical_decision_support_alert_bp_high_title">बीपी उच्च आहे. औषधे वाढवायची?</string>
+  <string name="clinical_decision_support_alert_bp_high_subtitle">जर रुग्ण त्यांची औषधे घेत असतील, तर प्रोटोकॉलचे अनुसरण करा</string>
+
 </resources>

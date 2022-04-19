@@ -12,6 +12,7 @@ import android.view.animation.AnimationUtils
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import com.f2prateek.rx.preferences2.Preference
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
@@ -35,6 +36,8 @@ import org.simple.clinic.enterotp.EnterOtpScreen
 import org.simple.clinic.feature.Feature.NotifyAppUpdateAvailableV2
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
+import org.simple.clinic.main.TypedPreference
+import org.simple.clinic.main.TypedPreference.Type.DrugStockReportLastCheckedAt
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -51,6 +54,7 @@ import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId
 import java.time.Instant
@@ -99,6 +103,10 @@ class PatientsTabScreen : BaseScreen<
 
   @Inject
   lateinit var userClock: UserClock
+
+  @Inject
+  @TypedPreference(DrugStockReportLastCheckedAt)
+  lateinit var drugStockReportLastCheckedAt: Preference<Instant>
 
   private val deferredEvents = DeferredEventSource<PatientsTabEvent>()
 
@@ -152,6 +160,9 @@ class PatientsTabScreen : BaseScreen<
 
   private val appUpdateCardUpdateReason
     get() = appUpdateCardLayout.criticalUpdateReason
+
+  private val drugStockReminderCardSubTitle
+    get() = binding.drugStockReminderCardLayout.drugStockReminderCardSubTitle
 
   override fun defaultModel() = PatientsTabModel.create()
 
@@ -353,7 +364,16 @@ class PatientsTabScreen : BaseScreen<
   }
 
   override fun showDrugStockReminderCard() {
+    val previousMonthAndYear = previousMonthAndYear()
+    drugStockReminderCardSubTitle.text = resources.getString(R.string.drug_stock_reminder_card_content, previousMonthAndYear)
+
     showHomeScreenBackground(R.id.drugStockReminderCardLayout)
+  }
+
+  private fun previousMonthAndYear(): String {
+    val localDate = drugStockReportLastCheckedAt.get().toLocalDateAtZone(userClock.zone)
+    val month = localDate.month.toString().lowercase().subSequence(0, 3)
+    return "${month}-${localDate.year}"
   }
 
   override fun openYouTubeLinkForSimpleVideo() {

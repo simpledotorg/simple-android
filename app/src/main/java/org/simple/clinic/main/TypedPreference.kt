@@ -16,6 +16,7 @@ annotation class TypedPreference(val value: Type) {
     IsLightAppUpdateNotificationShown,
     IsMediumAppUpdateNotificationShown,
     UpdateDrugStockReportsMonth,
-    DrugStockReportLastCheckedAt
+    DrugStockReportLastCheckedAt,
+    IsDrugStockReportFilled
   }
 }

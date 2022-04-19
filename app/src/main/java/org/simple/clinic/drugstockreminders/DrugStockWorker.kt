@@ -21,7 +21,6 @@ import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.NotFound
 import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.OtherError
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.IsDrugStockReportFilled
-import org.simple.clinic.main.TypedPreference.Type.UpdateDrugStockReportsMonth
 import org.simple.clinic.setup.SetupActivity
 import org.simple.clinic.util.UserClock
 import java.time.LocalDate
@@ -45,10 +44,6 @@ class DrugStockWorker(
 
   @Inject
   lateinit var drugStockReminder: DrugStockReminder
-
-  @Inject
-  @TypedPreference(UpdateDrugStockReportsMonth)
-  lateinit var updateDrugStockReportsMonth: Preference<Optional<String>>
 
   @Inject
   @TypedPreference(IsDrugStockReportFilled)
@@ -81,14 +76,12 @@ class DrugStockWorker(
   }
 
   private fun drugStockReportNotFound(previousMonthsDate: String): Result {
-    updateDrugStockReportsMonth.set(Optional.of(previousMonthsDate))
     notificationManager.notify(NOTIFICATION_ID, drugStockReminderNotification(previousMonthsDate))
     isDrugStockReportFilled.set(Optional.of(false))
     return Result.failure()
   }
 
   private fun drugStockReportFound(currentMonthsDate: String): Result {
-    updateDrugStockReportsMonth.set(Optional.of(currentMonthsDate))
     isDrugStockReportFilled.set(Optional.of(true))
     return Result.success()
   }

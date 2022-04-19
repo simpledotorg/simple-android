@@ -4,7 +4,6 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -22,9 +21,9 @@ import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.NotFound
 import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.OtherError
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.UpdateDrugStockReportsMonth
+import org.simple.clinic.setup.SetupActivity
 import org.simple.clinic.util.UserClock
 import java.time.LocalDate
-import org.simple.clinic.setup.SetupActivity
 import java.time.format.DateTimeFormatter
 import java.util.Optional
 import javax.inject.Inject
@@ -65,13 +64,13 @@ class DrugStockWorker(
 
     val formattedDate = LocalDate.now(clock).minusMonths(1).toString()
 
-    return Single.create<Result?> {
-      val response = drugStockReminder
-          .reminderForDrugStock(formattedDate)
-      when (response) {
+    return Single.create {
+      when (val response = drugStockReminder.reminderForDrugStock(formattedDate)) {
         is Found -> drugStockReportFound(response.drugStockReminderResponse.month)
         NotFound -> drugStockReportNotFound(formattedDate)
-        OtherError -> { /* no op */ }
+        OtherError -> {
+          /* no op */
+        }
       }
     }
   }

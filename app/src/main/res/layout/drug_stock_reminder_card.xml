@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_margin="@dimen/spacing_16"
+  android:background="?attr/colorSurface"
+  app:cardCornerRadius="@dimen/spacing_4"
+  app:cardElevation="@dimen/spacing_0">
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/spacing_16">
+
+    <com.google.android.material.textview.MaterialTextView
+      android:id="@+id/drugStockReminderCardTitle"
+      android:layout_width="@dimen/spacing_0"
+      android:layout_height="wrap_content"
+      android:text="@string/drug_stock_reminder_card_title"
+      android:textAppearance="?attr/textAppearanceSubtitle1Medium"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+      android:id="@+id/drugStockReminderCardSubTitle"
+      android:layout_width="@dimen/spacing_0"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_8"
+      android:layout_marginEnd="@dimen/spacing_16"
+      android:textAppearance="?attr/textAppearanceBody2"
+      android:textColor="@color/color_on_surface_67"
+      app:layout_constraintEnd_toStartOf="@id/icon"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/drugStockReminderCardTitle"
+      tools:text="@string/drug_stock_reminder_card_content" />
+
+    <ImageView
+      android:id="@+id/icon"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:srcCompat="@drawable/drug_stock_reminder_icon" />
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/updateNowButton"
+      android:layout_width="@dimen/spacing_0"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_16"
+      android:text="@string/drug_stock_reminder_button_text"
+      android:textAppearance="?attr/textAppearanceButtonBig"
+      android:theme="@style/ThemeOverlay.Simple.Blue2Primary"
+      app:elevation="@dimen/spacing_4"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/icon" />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

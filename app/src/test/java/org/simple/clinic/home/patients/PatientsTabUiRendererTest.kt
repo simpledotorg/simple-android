@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.MEDIUM
 import java.time.LocalDate
+import java.util.Optional
 
 class PatientsTabUiRendererTest {
   private val ui = mock<PatientsTabUi>()
@@ -23,6 +24,19 @@ class PatientsTabUiRendererTest {
     // then
     verify(ui).showCriticalAppUpdateCard()
     verify(ui).renderAppUpdateReason(appStalenessInMonths = 2)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when the previous months drug stock report is not filled, then show the drug stock reminder card`() {
+    // given
+    val model = defaultModel.updateIsDrugStockFilled(Optional.of(false))
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).showDrugStockReminderCard()
     verifyNoMoreInteractions(ui)
   }
 }

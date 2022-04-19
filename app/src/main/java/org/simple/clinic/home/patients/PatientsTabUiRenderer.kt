@@ -30,6 +30,10 @@ class PatientsTabUiRenderer(
       ui.showCriticalAppUpdateCard()
       ui.renderAppUpdateReason(appStalenessInMonths(model.appStaleness!!))
     }
+
+    if (model.isDrugStockReportFilled == false) {
+      ui.showDrugStockReminderCard()
+    }
   }
 
   private fun appStalenessInMonths(appStaleness: Int): Int {

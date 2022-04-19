@@ -8,6 +8,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.RxWorker
 import androidx.work.WorkerParameters
 import com.f2prateek.rx.preferences2.Preference
@@ -28,6 +30,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Optional
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class DrugStockWorker(
@@ -39,6 +42,14 @@ class DrugStockWorker(
     private const val NOTIFICATION_CHANNEL_ID = "org.simple.clinic.drugstockreminders"
     private const val NOTIFICATION_CHANNEL_NAME = "Drug Stock Reminders"
     private const val NOTIFICATION_ID = 6
+
+    fun createWorkRequest(
+        initialDelay: Long
+    ): OneTimeWorkRequest {
+      return OneTimeWorkRequestBuilder<DrugStockWorker>()
+          .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
+          .build()
+    }
   }
 
   @Inject

@@ -17,6 +17,7 @@
 - Bump Lint to v30.1.3
 - Bump Cirrus rebase-action to v1.6
 - Remove the `Age` class
+- Add preferences for drug stock reminder
 
 ### Features
 

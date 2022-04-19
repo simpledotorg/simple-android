@@ -62,12 +62,12 @@ class DrugStockWorker(
   override fun createWork(): Single<Result> {
     createNotificationChannel()
 
-    val formattedDate = LocalDate.now(clock).minusMonths(1).toString()
+    val previousMonthsDate = LocalDate.now(clock).minusMonths(1).toString()
 
     return Single.create {
-      when (val response = drugStockReminder.reminderForDrugStock(formattedDate)) {
-        is Found -> drugStockReportFound(response.drugStockReminderResponse.month)
-        NotFound -> drugStockReportNotFound(formattedDate)
+      when (drugStockReminder.reminderForDrugStock(previousMonthsDate)) {
+        is Found -> drugStockReportFound()
+        NotFound -> drugStockReportNotFound(previousMonthsDate)
         OtherError -> {
           /* no op */
         }
@@ -81,7 +81,7 @@ class DrugStockWorker(
     return Result.failure()
   }
 
-  private fun drugStockReportFound(currentMonthsDate: String): Result {
+  private fun drugStockReportFound(): Result {
     isDrugStockReportFilled.set(Optional.of(true))
     return Result.success()
   }
@@ -93,7 +93,7 @@ class DrugStockWorker(
     return NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
         .setSmallIcon(R.drawable.ic_app_update_notification_logo)
         .setContentTitle(context.getString(R.string.app_name))
-        .setContentText(context.getString(R.string.drug_stock_reminder_notification, monthAndYear))
+        .setContentText(notificationHeaderText)
         .setTicker(context.getString(R.string.app_name))
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setStyle(NotificationCompat.BigTextStyle().bigText(notificationHeaderText))
@@ -108,16 +108,13 @@ class DrugStockWorker(
 
   private fun openAppToHomeScreen(): PendingIntent? {
     val intent = Intent(context, SetupActivity::class.java)
-    val flag = setFlagBasedOnAndroidApis()
-    return PendingIntent.getActivity(context, 0, intent, flag)
-  }
-
-  private fun setFlagBasedOnAndroidApis(): Int {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+    val flag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
     } else {
       PendingIntent.FLAG_CANCEL_CURRENT
     }
+
+    return PendingIntent.getActivity(context, 0, intent, flag)
   }
 
   private fun createNotificationChannel() {

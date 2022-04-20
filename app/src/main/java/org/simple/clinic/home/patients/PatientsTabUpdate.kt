@@ -36,7 +36,7 @@ class PatientsTabUpdate(private val isNotifyAppUpdateAvailableV2Enabled: Boolean
       is AppStalenessLoaded -> next(model.updateAppStaleness(event.appStaleness))
       UpdateNowButtonClicked -> dispatch(OpenSimpleOnPlayStore)
       is DrugStockReportLoaded -> drugStockReportLoaded(event)
-      is RequiredInfoForShowingDrugStockReminderLoaded -> requiredInfoForDrugStockReminderLoaded(event)
+      is RequiredInfoForShowingDrugStockReminderLoaded -> requiredInfoForDrugStockReminderLoaded(event, model)
     }
   }
 
@@ -51,7 +51,8 @@ class PatientsTabUpdate(private val isNotifyAppUpdateAvailableV2Enabled: Boolean
   }
 
   private fun requiredInfoForDrugStockReminderLoaded(
-      event: RequiredInfoForShowingDrugStockReminderLoaded
+      event: RequiredInfoForShowingDrugStockReminderLoaded,
+      model: PatientsTabModel
   ): Next<PatientsTabModel, PatientsTabEffect> {
     val currentDate = event.currentDate
     val drugStockReportLastCheckedAt = event.drugStockReportLastCheckedAt
@@ -62,7 +63,7 @@ class PatientsTabUpdate(private val isNotifyAppUpdateAvailableV2Enabled: Boolean
     return if (hasADayPassedSinceDrugStockReportIsLastChecked) {
       dispatch(LoadDrugStockReportStatus(drugStockReportDate.toString()))
     } else {
-      noChange()
+      next(model.updateIsDrugStockFilled(event.isDrugStockReportFilled))
     }
   }
 

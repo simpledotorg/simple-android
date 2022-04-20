@@ -127,7 +127,7 @@ class PatientsTabUpdateTest {
   }
 
   @Test
-  fun `when required info for drug stock report is loaded and it is last checked today, then do nothing`() {
+  fun `when required info for drug stock report is loaded and it is last checked today, then update model`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(RequiredInfoForShowingDrugStockReminderLoaded(
@@ -136,7 +136,7 @@ class PatientsTabUpdateTest {
             isDrugStockReportFilled = Optional.of(true)
         ))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(defaultModel.updateIsDrugStockFilled(Optional.of(true))),
             hasNoEffects()
         ))
   }

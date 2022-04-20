@@ -63,7 +63,7 @@ class AppUpdateNotificationWorker(
     }
 
      private fun notificationScheduledTime(scheduledDateTime: LocalDateTime, currentDateTime: LocalDateTime): LocalDateTime {
-      return if (scheduledDateTime.isAfter(currentDateTime)) {
+      return if (currentDateTime.isAfter(scheduledDateTime)) {
         scheduledDateTime.plusDays(1)
       } else {
         scheduledDateTime

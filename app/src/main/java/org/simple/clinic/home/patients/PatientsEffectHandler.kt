@@ -42,11 +42,11 @@ class PatientsEffectHandler @AssistedInject constructor(
     @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>,
     @SimpleVideoConfig(NumberOfPatientsRegistered) private val numberOfPatientsRegisteredPref: Preference<Int>,
     @Named("app_update_last_shown_at") private val appUpdateDialogShownAtPref: Preference<Instant>,
-    @Assisted private val viewEffectsConsumer: Consumer<PatientsTabViewEffect>,
     @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
     private val drugStockReminder: DrugStockReminder,
     @TypedPreference(DrugStockReportLastCheckedAt) private val drugStockReportLastCheckedAt: Preference<Instant>,
-    @TypedPreference(IsDrugStockReportFilled) private val isDrugStockReportFilled: Preference<Optional<Boolean>>
+    @TypedPreference(IsDrugStockReportFilled) private val isDrugStockReportFilled: Preference<Optional<Boolean>>,
+    @Assisted private val viewEffectsConsumer: Consumer<PatientsTabViewEffect>
 ) {
 
   @AssistedFactory

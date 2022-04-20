@@ -59,11 +59,11 @@ class PatientsEffectHandlerTest {
       hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatusPreference,
       numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPreference,
       appUpdateDialogShownAtPref = appUpdateDialogShownPref,
-      viewEffectsConsumer = viewEffectHandler::handle,
       approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference,
       drugStockReminder = drugStockReminder,
       drugStockReportLastCheckedAt = drugStockReportLastCheckedAt,
-      isDrugStockReportFilled = isDrugStockReportFilled
+      isDrugStockReportFilled = isDrugStockReportFilled,
+      viewEffectsConsumer = viewEffectHandler::handle
   ).build()
 
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)

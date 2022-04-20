@@ -15,7 +15,7 @@ class AppUpdateNotificationScheduler @Inject constructor(
 ) {
 
   fun schedule() {
-    val schedule = AppUpdateNotificationSchedule(LocalDateTime.of(LocalDate.now(), LocalTime.of(8, 0, 0)))
+    val schedule = AppUpdateNotificationSchedule(LocalDate.now(userClock).atTime(8, 0))
 
     val workRequest = AppUpdateNotificationWorker.createWorkRequest(userClock, schedule)
 

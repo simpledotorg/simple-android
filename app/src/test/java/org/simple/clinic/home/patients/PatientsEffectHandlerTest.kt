@@ -193,4 +193,18 @@ class PatientsEffectHandlerTest {
     verify(drugStockReportLastCheckedAt).set(Instant.parse("2018-01-01T00:00:00Z"))
     verifyNoMoreInteractions(drugStockReportLastCheckedAt)
   }
+
+  @Test
+  fun `when touch is drug stock report filled effect is received, then update drug stock report filled status in preference`() {
+    // when
+    effectHandlerTestCase.dispatch(TouchIsDrugStockReportFilled(isDrugStockReportFilled = true))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verifyZeroInteractions(uiActions)
+
+    verify(isDrugStockReportFilled).set(Optional.of(true))
+    verifyNoMoreInteractions(drugStockReportLastCheckedAt)
+  }
 }

@@ -72,6 +72,9 @@ class PatientsEffectHandler @AssistedInject constructor(
         .addTransformer(LoadDrugStockReportStatus::class.java, loadDrugStockReportStatus())
         .addTransformer(LoadInfoForShowingDrugStockReminder::class.java, loadInfoForShowingDrugStockReminder())
         .addConsumer(TouchDrugStockReportLastCheckedAt::class.java, { drugStockReportLastCheckedAt.set(Instant.now(utcClock)) }, schedulers.io())
+        .addConsumer(TouchIsDrugStockReportFilled::class.java, {
+          isDrugStockReportFilled.set(Optional.of(it.isDrugStockReportFilled))
+        }, schedulers.io())
         .build()
   }
 

@@ -20,6 +20,7 @@
 - Add preferences for drug stock reminder
 - Fix the logic for notification schedule time in `AppUpdateNotificationWorker`
 - Fix API link for `DrugStockReminderApi#drugStockReminder`
+- Check drug stock report status when app is opened
 
 ### Features
 

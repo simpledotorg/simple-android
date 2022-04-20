@@ -19,6 +19,7 @@
 - Remove the `Age` class
 - Add preferences for drug stock reminder
 - Fix the logic for notification schedule time in `AppUpdateNotificationWorker`
+- Fix API link for `DrugStockReminderApi#drugStockReminder`
 
 ### Features
 

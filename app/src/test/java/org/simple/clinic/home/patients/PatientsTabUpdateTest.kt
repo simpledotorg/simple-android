@@ -9,6 +9,7 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.LIGHT
+import org.simple.clinic.drugstockreminders.DrugStockReminder
 import java.time.LocalDate
 import java.util.Optional
 
@@ -137,6 +138,22 @@ class PatientsTabUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when drug stock report is loaded, then update drug stock report last checked at and filled status`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DrugStockReportLoaded(
+            result = DrugStockReminder.Result.NotFound
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(
+                TouchDrugStockReportLastCheckedAt,
+                TouchIsDrugStockReportFilled(isDrugStockReportFilled = false)
+            )
         ))
   }
 }

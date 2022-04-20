@@ -8,6 +8,9 @@ import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL_SECURITY
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.LIGHT
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.MEDIUM
+import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.Found
+import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.NotFound
+import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.OtherError
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.user.User
@@ -32,9 +35,19 @@ class PatientsTabUpdate(private val isNotifyAppUpdateAvailableV2Enabled: Boolean
       is RequiredInfoForShowingAppUpdateLoaded -> showAppUpdateAvailableMessageBasedOnFeatureFlag(model, event)
       is AppStalenessLoaded -> next(model.updateAppStaleness(event.appStaleness))
       UpdateNowButtonClicked -> dispatch(OpenSimpleOnPlayStore)
-      is DrugStockReportLoaded -> noChange()
+      is DrugStockReportLoaded -> drugStockReportLoaded(event)
       is RequiredInfoForShowingDrugStockReminderLoaded -> requiredInfoForDrugStockReminderLoaded(event)
     }
+  }
+
+  private fun drugStockReportLoaded(event: DrugStockReportLoaded): Next<PatientsTabModel, PatientsTabEffect> {
+    val isDrugStockReportFilled = when (event.result) {
+      is Found -> true
+      NotFound -> false
+      OtherError -> throw IllegalArgumentException("Failed to get drug stock report")
+    }
+
+    return dispatch(TouchDrugStockReportLastCheckedAt, TouchIsDrugStockReportFilled(isDrugStockReportFilled))
   }
 
   private fun requiredInfoForDrugStockReminderLoaded(

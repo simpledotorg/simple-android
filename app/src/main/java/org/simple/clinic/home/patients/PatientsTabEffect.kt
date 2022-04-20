@@ -27,6 +27,8 @@ data class LoadDrugStockReportStatus(val date: String) : PatientsTabEffect()
 
 object LoadInfoForShowingDrugStockReminder : PatientsTabEffect()
 
+object TouchDrugStockReportLastCheckedAt : PatientsTabEffect()
+
 sealed class PatientsTabViewEffect : PatientsTabEffect()
 
 object OpenEnterOtpScreen : PatientsTabViewEffect()

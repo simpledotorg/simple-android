@@ -179,4 +179,18 @@ class PatientsEffectHandlerTest {
 
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when touch drug stock report last checked at preference effect is received, then update drug stock report last checked at preference`() {
+    // when
+    effectHandlerTestCase.dispatch(TouchDrugStockReportLastCheckedAt)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verifyZeroInteractions(uiActions)
+
+    verify(drugStockReportLastCheckedAt).set(Instant.parse("2018-01-01T00:00:00Z"))
+    verifyNoMoreInteractions(drugStockReportLastCheckedAt)
+  }
 }

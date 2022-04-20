@@ -5,13 +5,16 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.appupdate.AppUpdateNudgePriority
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.MEDIUM
 import org.simple.clinic.user.User
+import org.simple.clinic.util.toNullable
+import java.util.Optional
 
 @Parcelize
 data class PatientsTabModel(
     val user: User?,
     val numberOfPatientsRegistered: Int?,
     val appStaleness: Int?,
-    val appUpdateNudgePriority: AppUpdateNudgePriority?
+    val appUpdateNudgePriority: AppUpdateNudgePriority?,
+    val isDrugStockReportFilled: Boolean?
 ) : Parcelable {
 
   companion object {
@@ -20,7 +23,8 @@ data class PatientsTabModel(
         user = null,
         numberOfPatientsRegistered = null,
         appStaleness = null,
-        appUpdateNudgePriority = null
+        appUpdateNudgePriority = null,
+        isDrugStockReportFilled = null
     )
   }
 
@@ -53,5 +57,9 @@ data class PatientsTabModel(
 
   fun appUpdateNudgePriorityUpdated(appUpdateNudgePriority: AppUpdateNudgePriority?): PatientsTabModel {
     return copy(appUpdateNudgePriority = appUpdateNudgePriority)
+  }
+
+  fun updateIsDrugStockFilled(isDrugStockReportFilled: Optional<Boolean>): PatientsTabModel {
+    return copy(isDrugStockReportFilled = isDrugStockReportFilled.toNullable())
   }
 }

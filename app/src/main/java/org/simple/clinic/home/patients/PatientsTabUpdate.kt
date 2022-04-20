@@ -33,7 +33,23 @@ class PatientsTabUpdate(private val isNotifyAppUpdateAvailableV2Enabled: Boolean
       is AppStalenessLoaded -> next(model.updateAppStaleness(event.appStaleness))
       UpdateNowButtonClicked -> dispatch(OpenSimpleOnPlayStore)
       is DrugStockReportLoaded -> noChange()
-      is RequiredInfoForShowingDrugStockReminderLoaded -> noChange()
+      is RequiredInfoForShowingDrugStockReminderLoaded -> requiredInfoForDrugStockReminderLoaded(event)
+    }
+  }
+
+  private fun requiredInfoForDrugStockReminderLoaded(
+      event: RequiredInfoForShowingDrugStockReminderLoaded
+  ): Next<PatientsTabModel, PatientsTabEffect> {
+    val currentDate = event.currentDate
+    val drugStockReportLastCheckedAt = event.drugStockReportLastCheckedAt
+
+    val hasADayPassedSinceDrugStockReportIsLastChecked = drugStockReportLastCheckedAt.isBefore(currentDate)
+    val drugStockReportDate = currentDate.minusMonths(1).withDayOfMonth(1)
+
+    return if (hasADayPassedSinceDrugStockReportIsLastChecked) {
+      dispatch(LoadDrugStockReportStatus(drugStockReportDate.toString()))
+    } else {
+      noChange()
     }
   }
 

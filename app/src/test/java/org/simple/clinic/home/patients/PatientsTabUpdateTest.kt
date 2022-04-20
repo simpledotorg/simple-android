@@ -10,6 +10,7 @@ import org.junit.Test
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.LIGHT
 import java.time.LocalDate
+import java.util.Optional
 
 class PatientsTabUpdateTest {
   private val defaultModel = PatientsTabModel.create()
@@ -106,6 +107,36 @@ class PatientsTabUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.appUpdateNudgePriorityUpdated(appUpdateNudgePriority)),
             hasEffects(ShowCriticalAppUpdateDialog(appUpdateNudgePriority))
+        ))
+  }
+
+  @Test
+  fun `when required info for drug stock report is loaded and it is last checked before today, then load drug stock report status`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(RequiredInfoForShowingDrugStockReminderLoaded(
+            currentDate = LocalDate.parse("2018-02-10"),
+            drugStockReportLastCheckedAt = LocalDate.parse("2018-02-09"),
+            isDrugStockReportFilled = Optional.of(true)
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(LoadDrugStockReportStatus("2018-01-01"))
+        ))
+  }
+
+  @Test
+  fun `when required info for drug stock report is loaded and it is last checked today, then do nothing`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(RequiredInfoForShowingDrugStockReminderLoaded(
+            currentDate = LocalDate.parse("2018-02-10"),
+            drugStockReportLastCheckedAt = LocalDate.parse("2018-02-10"),
+            isDrugStockReportFilled = Optional.of(true)
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasNoEffects()
         ))
   }
 }

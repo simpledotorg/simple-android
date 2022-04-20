@@ -25,6 +25,8 @@ object ScheduleAppUpdateNotification : PatientsTabEffect()
 
 data class LoadDrugStockReportStatus(val date: String) : PatientsTabEffect()
 
+object LoadInfoForShowingDrugStockReminder : PatientsTabEffect()
+
 sealed class PatientsTabViewEffect : PatientsTabEffect()
 
 object OpenEnterOtpScreen : PatientsTabViewEffect()

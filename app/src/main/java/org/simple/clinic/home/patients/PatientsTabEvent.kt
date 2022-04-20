@@ -62,3 +62,9 @@ data class AppStalenessLoaded(val appStaleness: Int) : PatientsTabEvent()
 object UpdateNowButtonClicked : PatientsTabEvent()
 
 data class DrugStockReportLoaded(val result: DrugStockReminder.Result) : PatientsTabEvent()
+
+data class RequiredInfoForShowingDrugStockReminderLoaded(
+    val currentDate: LocalDate,
+    val drugStockReportLastCheckedAt: LocalDate,
+    val isDrugStockReportFilled: Optional<Boolean>
+) : PatientsTabEvent()

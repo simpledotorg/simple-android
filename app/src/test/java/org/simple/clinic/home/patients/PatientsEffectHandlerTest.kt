@@ -25,6 +25,7 @@ import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toUtcInstant
 import java.time.Instant
 import java.time.LocalDate
+import java.util.Optional
 
 class PatientsEffectHandlerTest {
   private val uiActions = mock<PatientsTabUiActions>()
@@ -35,6 +36,8 @@ class PatientsEffectHandlerTest {
   private val appUpdateDialogShownPref = mock<Preference<Instant>>()
   private val appUpdateNotificationScheduler = mock<AppUpdateNotificationScheduler>()
   private val drugStockReminder = mock<DrugStockReminder>()
+  private val drugStockReportLastCheckedAt = mock<Preference<Instant>>()
+  private val isDrugStockReportFilled = mock<Preference<Optional<Boolean>>>()
 
   private val date = LocalDate.parse("2018-01-01")
   private val utcClock = TestUtcClock(date)
@@ -58,7 +61,9 @@ class PatientsEffectHandlerTest {
       appUpdateDialogShownAtPref = appUpdateDialogShownPref,
       viewEffectsConsumer = viewEffectHandler::handle,
       approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference,
-      drugStockReminder = drugStockReminder
+      drugStockReminder = drugStockReminder,
+      drugStockReportLastCheckedAt = drugStockReportLastCheckedAt,
+      isDrugStockReportFilled = isDrugStockReportFilled
   ).build()
 
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
@@ -154,5 +159,24 @@ class PatientsEffectHandlerTest {
 
     verify(drugStockReminder).reminderForDrugStock(date = "2022-03-02")
     verifyNoMoreInteractions(drugStockReminder)
+  }
+
+  @Test
+  fun `when load info for showing drug stock reminder effect is received, then load the info`() {
+    // given
+    whenever(drugStockReportLastCheckedAt.get()) doReturn LocalDate.parse("2022-04-19").toUtcInstant(userClock)
+    whenever(isDrugStockReportFilled.get()) doReturn Optional.of(true)
+
+    // when
+    effectHandlerTestCase.dispatch(LoadInfoForShowingDrugStockReminder)
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(RequiredInfoForShowingDrugStockReminderLoaded(
+        currentDate = LocalDate.parse("2018-01-01"),
+        drugStockReportLastCheckedAt = LocalDate.parse("2022-04-19"),
+        isDrugStockReportFilled = Optional.of(true)
+    ))
+
+    verifyZeroInteractions(uiActions)
   }
 }

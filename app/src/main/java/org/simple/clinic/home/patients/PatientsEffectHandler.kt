@@ -14,6 +14,9 @@ import org.simple.clinic.appupdate.AppUpdateNotificationScheduler
 import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.drugstockreminders.DrugStockReminder
+import org.simple.clinic.main.TypedPreference
+import org.simple.clinic.main.TypedPreference.Type.DrugStockReportLastCheckedAt
+import org.simple.clinic.main.TypedPreference.Type.IsDrugStockReportFilled
 import org.simple.clinic.simplevideo.SimpleVideoConfig
 import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.NumberOfPatientsRegistered
 import org.simple.clinic.user.UserSession
@@ -25,6 +28,7 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toLocalDateAtZone
 import java.time.Instant
 import java.time.LocalDate
+import java.util.Optional
 import javax.inject.Named
 
 class PatientsEffectHandler @AssistedInject constructor(
@@ -40,7 +44,9 @@ class PatientsEffectHandler @AssistedInject constructor(
     @Named("app_update_last_shown_at") private val appUpdateDialogShownAtPref: Preference<Instant>,
     @Assisted private val viewEffectsConsumer: Consumer<PatientsTabViewEffect>,
     @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
-    private val drugStockReminder: DrugStockReminder
+    private val drugStockReminder: DrugStockReminder,
+    @TypedPreference(DrugStockReportLastCheckedAt) private val drugStockReportLastCheckedAt: Preference<Instant>,
+    @TypedPreference(IsDrugStockReportFilled) private val isDrugStockReportFilled: Preference<Optional<Boolean>>
 ) {
 
   @AssistedFactory
@@ -64,7 +70,25 @@ class PatientsEffectHandler @AssistedInject constructor(
         .addConsumer(ScheduleAppUpdateNotification::class.java, { appUpdateNotificationScheduler.schedule() }, schedulers.io())
         .addConsumer(PatientsTabViewEffect::class.java, viewEffectsConsumer::accept, schedulers.ui())
         .addTransformer(LoadDrugStockReportStatus::class.java, loadDrugStockReportStatus())
+        .addTransformer(LoadInfoForShowingDrugStockReminder::class.java, loadInfoForShowingDrugStockReminder())
         .build()
+  }
+
+  private fun loadInfoForShowingDrugStockReminder(): ObservableTransformer<LoadInfoForShowingDrugStockReminder, PatientsTabEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulers.io())
+          .map {
+            val drugStockReportLastCheckedAt = drugStockReportLastCheckedAt.get().toLocalDateAtZone(userClock.zone)
+            val isDrugStockReportFilled = isDrugStockReportFilled.get()
+
+            RequiredInfoForShowingDrugStockReminderLoaded(
+                currentDate = LocalDate.now(userClock),
+                drugStockReportLastCheckedAt = drugStockReportLastCheckedAt,
+                isDrugStockReportFilled = isDrugStockReportFilled
+            )
+          }
+    }
   }
 
   private fun loadDrugStockReportStatus(): ObservableTransformer<LoadDrugStockReportStatus, PatientsTabEvent> {

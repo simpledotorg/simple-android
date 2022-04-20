@@ -96,7 +96,9 @@ class PatientsLogicTest {
         appUpdateDialogShownAtPref = appUpdateDialogShownPref,
         viewEffectsConsumer = viewEffectHandler::handle,
         approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference,
-        drugStockReminder = mock()
+        drugStockReminder = mock(),
+        drugStockReportLastCheckedAt = mock(),
+        isDrugStockReportFilled = mock()
     )
 
     testFixture = MobiusTestFixture(

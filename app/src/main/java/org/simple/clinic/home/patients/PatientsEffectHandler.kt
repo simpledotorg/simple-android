@@ -13,6 +13,7 @@ import io.reactivex.ObservableTransformer
 import org.simple.clinic.appupdate.AppUpdateNotificationScheduler
 import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
+import org.simple.clinic.drugstockreminders.DrugStockReminder
 import org.simple.clinic.simplevideo.SimpleVideoConfig
 import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.NumberOfPatientsRegistered
 import org.simple.clinic.user.UserSession
@@ -38,7 +39,8 @@ class PatientsEffectHandler @AssistedInject constructor(
     @SimpleVideoConfig(NumberOfPatientsRegistered) private val numberOfPatientsRegisteredPref: Preference<Int>,
     @Named("app_update_last_shown_at") private val appUpdateDialogShownAtPref: Preference<Instant>,
     @Assisted private val viewEffectsConsumer: Consumer<PatientsTabViewEffect>,
-    @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>
+    @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
+    private val drugStockReminder: DrugStockReminder
 ) {
 
   @AssistedFactory
@@ -61,7 +63,17 @@ class PatientsEffectHandler @AssistedInject constructor(
         .addTransformer(LoadAppStaleness::class.java, loadAppStaleness())
         .addConsumer(ScheduleAppUpdateNotification::class.java, { appUpdateNotificationScheduler.schedule() }, schedulers.io())
         .addConsumer(PatientsTabViewEffect::class.java, viewEffectsConsumer::accept, schedulers.ui())
+        .addTransformer(LoadDrugStockReportStatus::class.java, loadDrugStockReportStatus())
         .build()
+  }
+
+  private fun loadDrugStockReportStatus(): ObservableTransformer<LoadDrugStockReportStatus, PatientsTabEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulers.io())
+          .map { drugStockReminder.reminderForDrugStock(it.date) }
+          .map(::DrugStockReportLoaded)
+    }
   }
 
   private fun refreshCurrentUser(): ObservableTransformer<RefreshUserDetails, PatientsTabEvent> {

@@ -32,6 +32,7 @@ class PatientsTabUpdate(private val isNotifyAppUpdateAvailableV2Enabled: Boolean
       is RequiredInfoForShowingAppUpdateLoaded -> showAppUpdateAvailableMessageBasedOnFeatureFlag(model, event)
       is AppStalenessLoaded -> next(model.updateAppStaleness(event.appStaleness))
       UpdateNowButtonClicked -> dispatch(OpenSimpleOnPlayStore)
+      is DrugStockReportLoaded -> noChange()
     }
   }
 

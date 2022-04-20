@@ -14,6 +14,8 @@ import org.simple.clinic.appupdate.AppUpdateNotificationScheduler
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
+import org.simple.clinic.drugstockreminders.DrugStockReminder
+import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.NotFound
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.refreshuser.RefreshCurrentUser
@@ -32,6 +34,7 @@ class PatientsEffectHandlerTest {
   private val checkAppUpdate = mock<CheckAppUpdateAvailability>()
   private val appUpdateDialogShownPref = mock<Preference<Instant>>()
   private val appUpdateNotificationScheduler = mock<AppUpdateNotificationScheduler>()
+  private val drugStockReminder = mock<DrugStockReminder>()
 
   private val date = LocalDate.parse("2018-01-01")
   private val utcClock = TestUtcClock(date)
@@ -54,7 +57,8 @@ class PatientsEffectHandlerTest {
       numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPreference,
       appUpdateDialogShownAtPref = appUpdateDialogShownPref,
       viewEffectsConsumer = viewEffectHandler::handle,
-      approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference
+      approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference,
+      drugStockReminder = drugStockReminder
   ).build()
 
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
@@ -133,5 +137,22 @@ class PatientsEffectHandlerTest {
         currentDate = LocalDate.of(2018, 1, 1),
         appUpdateNudgePriority = appUpdateNudgePriority
     ))
+  }
+
+  @Test
+  fun `when load drug stock reminder status effect is received, then load the drug stock reminder status`() {
+    // given
+    whenever(drugStockReminder.reminderForDrugStock("2022-03-02")) doReturn NotFound
+
+    // when
+    effectHandlerTestCase.dispatch(LoadDrugStockReportStatus(date = "2022-03-02"))
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(DrugStockReportLoaded(result = NotFound))
+
+    verifyZeroInteractions(uiActions)
+
+    verify(drugStockReminder).reminderForDrugStock(date = "2022-03-02")
+    verifyNoMoreInteractions(drugStockReminder)
   }
 }

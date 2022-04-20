@@ -142,14 +142,16 @@ class PatientsTabUpdateTest {
   }
 
   @Test
-  fun `when drug stock report is loaded, then update drug stock report last checked at and filled status`() {
+  fun `when drug stock report is loaded, then update drug stock report last checked at and filled status, and update model`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(DrugStockReportLoaded(
             result = DrugStockReminder.Result.NotFound
         ))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(
+                defaultModel.updateIsDrugStockFilled(Optional.of(false))
+            ),
             hasEffects(
                 TouchDrugStockReportLastCheckedAt,
                 TouchIsDrugStockReportFilled(isDrugStockReportFilled = false)

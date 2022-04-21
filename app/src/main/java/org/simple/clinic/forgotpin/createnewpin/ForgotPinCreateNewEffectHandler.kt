@@ -33,7 +33,6 @@ class ForgotPinCreateNewEffectHandler @AssistedInject constructor(
       .addTransformer(LoadLoggedInUser::class.java, loadLoggedInUser())
       .addTransformer(LoadCurrentFacility::class.java, loadFacility())
       .addTransformer(ValidatePin::class.java, validatePin())
-      .addAction(HideInvalidPinError::class.java, uiActions::hideInvalidPinError, schedulersProvider.ui())
       .addConsumer(ForgotPinCreateNewViewEffect::class.java, viewEffectsConsumer::accept)
       .build()
 

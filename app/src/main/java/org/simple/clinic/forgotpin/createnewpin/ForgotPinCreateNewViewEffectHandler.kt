@@ -11,6 +11,7 @@ class ForgotPinCreateNewViewEffectHandler(
     when (viewEffect) {
       ShowInvalidPinError -> uiActions.showInvalidPinError()
       is ShowConfirmPinScreen -> uiActions.showConfirmPinScreen(viewEffect.pin)
+      HideInvalidPinError -> uiActions.hideInvalidPinError()
     }.exhaustive()
   }
 }

@@ -100,6 +100,7 @@ class DrugStockWorker(
         }
       }
     }.doFinally {
+      updateDrugStockLastCheckedAtPreference()
       drugStockNotificationScheduler.schedule()
     }
   }
@@ -111,13 +112,11 @@ class DrugStockWorker(
   private fun drugStockReportNotFound(previousMonthsDate: String): Result {
     notificationManager.notify(NOTIFICATION_ID, drugStockReminderNotification(previousMonthsDate))
     isDrugStockReportFilled.set(Optional.of(false))
-    updateDrugStockLastCheckedAtPreference()
     return Result.failure()
   }
 
   private fun drugStockReportFound(): Result {
     isDrugStockReportFilled.set(Optional.of(true))
-    updateDrugStockLastCheckedAtPreference()
     return Result.success()
   }
 

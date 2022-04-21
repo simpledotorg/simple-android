@@ -24,3 +24,5 @@ object ShowUnexpectedError : ForgotPinConfirmPinEffect()
 object GoToHomeScreen : ForgotPinConfirmPinEffect()
 
 data class SyncPatientDataAndResetPin(val newPin: String) : ForgotPinConfirmPinEffect()
+
+sealed class ForgotPinConfirmPinViewEffect : ForgotPinConfirmPinEffect()

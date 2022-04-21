@@ -71,7 +71,12 @@ class ForgotPinCreateNewPinScreen : BaseScreen<
         .cast<ForgotPinCreateNewEvent>()
   }
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<ForgotPinCreateNewViewEffect>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<ForgotPinCreateNewViewEffect>) = effectHandlerFactory
+      .create(
+          uiActions = this,
+          viewEffectsConsumer = viewEffectsConsumer
+      )
+      .build()
 
   override fun uiRenderer() = ForgotPinCreateNewUiRenderer(this)
 

@@ -113,11 +113,13 @@ class ForgotPinCreateNewPinScreenLogicTest {
   }
 
   private fun setupController() {
+    val viewEffectHandler = ForgotPinCreateNewViewEffectHandler(uiActions = uiActions)
     val effectHandler = ForgotPinCreateNewEffectHandler(
         currentUser = Lazy { loggedInUser },
         currentFacility = Lazy { facility },
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = uiActions
+        uiActions = uiActions,
+        viewEffectsConsumer = viewEffectHandler::handle
     )
     val uiRenderer = ForgotPinCreateNewUiRenderer(ui)
 

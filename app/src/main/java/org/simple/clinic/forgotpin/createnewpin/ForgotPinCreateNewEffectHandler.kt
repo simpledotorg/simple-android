@@ -1,5 +1,6 @@
 package org.simple.clinic.forgotpin.createnewpin
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -15,12 +16,16 @@ class ForgotPinCreateNewEffectHandler @AssistedInject constructor(
     private val currentUser: Lazy<User>,
     private val currentFacility: Lazy<Facility>,
     private val schedulersProvider: SchedulersProvider,
-    @Assisted private val uiActions: UiActions
+    @Assisted private val uiActions: UiActions,
+    @Assisted private val viewEffectsConsumer: Consumer<ForgotPinCreateNewViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: UiActions): ForgotPinCreateNewEffectHandler
+    fun create(
+        uiActions: UiActions,
+        viewEffectsConsumer: Consumer<ForgotPinCreateNewViewEffect>
+    ): ForgotPinCreateNewEffectHandler
   }
 
   fun build(): ObservableTransformer<ForgotPinCreateNewEffect, ForgotPinCreateNewEvent> = RxMobius

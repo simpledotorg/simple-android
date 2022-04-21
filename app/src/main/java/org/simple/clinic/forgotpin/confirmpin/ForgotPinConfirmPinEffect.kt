@@ -11,8 +11,6 @@ data class ValidatePinConfirmation(
     val enteredPin: String
 ) : ForgotPinConfirmPinEffect()
 
-object ShowNetworkError : ForgotPinConfirmPinEffect()
-
 object ShowUnexpectedError : ForgotPinConfirmPinEffect()
 
 object GoToHomeScreen : ForgotPinConfirmPinEffect()
@@ -26,3 +24,5 @@ object HideError : ForgotPinConfirmPinViewEffect()
 object ShowMismatchedError : ForgotPinConfirmPinViewEffect()
 
 object ShowProgress : ForgotPinConfirmPinViewEffect()
+
+object ShowNetworkError : ForgotPinConfirmPinViewEffect()

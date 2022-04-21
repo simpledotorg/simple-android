@@ -9,7 +9,9 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.LIGHT
+import org.simple.clinic.drugstockreminders.DrugStockReminder
 import java.time.LocalDate
+import java.util.Optional
 
 class PatientsTabUpdateTest {
   private val defaultModel = PatientsTabModel.create()
@@ -106,6 +108,54 @@ class PatientsTabUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.appUpdateNudgePriorityUpdated(appUpdateNudgePriority)),
             hasEffects(ShowCriticalAppUpdateDialog(appUpdateNudgePriority))
+        ))
+  }
+
+  @Test
+  fun `when required info for drug stock report is loaded and it is last checked before today, then load drug stock report status`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(RequiredInfoForShowingDrugStockReminderLoaded(
+            currentDate = LocalDate.parse("2018-02-10"),
+            drugStockReportLastCheckedAt = LocalDate.parse("2018-02-09"),
+            isDrugStockReportFilled = Optional.of(true)
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(LoadDrugStockReportStatus("2018-01-01"))
+        ))
+  }
+
+  @Test
+  fun `when required info for drug stock report is loaded and it is last checked today, then update model`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(RequiredInfoForShowingDrugStockReminderLoaded(
+            currentDate = LocalDate.parse("2018-02-10"),
+            drugStockReportLastCheckedAt = LocalDate.parse("2018-02-10"),
+            isDrugStockReportFilled = Optional.of(true)
+        ))
+        .then(assertThatNext(
+            hasModel(defaultModel.updateIsDrugStockFilled(Optional.of(true))),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when drug stock report is loaded, then update drug stock report last checked at and filled status, and update model`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DrugStockReportLoaded(
+            result = DrugStockReminder.Result.NotFound
+        ))
+        .then(assertThatNext(
+            hasModel(
+                defaultModel.updateIsDrugStockFilled(Optional.of(false))
+            ),
+            hasEffects(
+                TouchDrugStockReportLastCheckedAt,
+                TouchIsDrugStockReportFilled(isDrugStockReportFilled = false)
+            )
         ))
   }
 }

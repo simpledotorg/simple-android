@@ -4,11 +4,18 @@ import com.spotify.mobius.First
 import com.spotify.mobius.First.first
 import com.spotify.mobius.Init
 
-class PatientsInit(private val isNotifyAppUpdateAvailableV2Enabled: Boolean) :
-    Init<PatientsTabModel, PatientsTabEffect> {
+class PatientsInit(
+    private val isNotifyAppUpdateAvailableV2Enabled: Boolean
+) : Init<PatientsTabModel, PatientsTabEffect> {
 
   override fun init(model: PatientsTabModel): First<PatientsTabModel, PatientsTabEffect> {
-    val effects = mutableSetOf(LoadUser, RefreshUserDetails, LoadNumberOfPatientsRegistered, LoadInfoForShowingAppUpdateMessage)
+    val effects = mutableSetOf(
+        LoadUser,
+        RefreshUserDetails,
+        LoadNumberOfPatientsRegistered,
+        LoadInfoForShowingAppUpdateMessage,
+        LoadInfoForShowingDrugStockReminder
+    )
 
     if (isNotifyAppUpdateAvailableV2Enabled) {
       effects.add(ScheduleAppUpdateNotification)

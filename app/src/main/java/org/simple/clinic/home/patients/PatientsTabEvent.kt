@@ -3,6 +3,7 @@ package org.simple.clinic.home.patients
 import android.Manifest
 import org.simple.clinic.activity.permissions.RequiresPermission
 import org.simple.clinic.appupdate.AppUpdateNudgePriority
+import org.simple.clinic.drugstockreminders.DrugStockReminder
 import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.user.User
 import org.simple.clinic.widgets.UiEvent
@@ -59,3 +60,11 @@ data class RequiredInfoForShowingAppUpdateLoaded(
 data class AppStalenessLoaded(val appStaleness: Int) : PatientsTabEvent()
 
 object UpdateNowButtonClicked : PatientsTabEvent()
+
+data class DrugStockReportLoaded(val result: DrugStockReminder.Result) : PatientsTabEvent()
+
+data class RequiredInfoForShowingDrugStockReminderLoaded(
+    val currentDate: LocalDate,
+    val drugStockReportLastCheckedAt: LocalDate,
+    val isDrugStockReportFilled: Optional<Boolean>
+) : PatientsTabEvent()

@@ -23,6 +23,14 @@ object LoadAppStaleness : PatientsTabEffect()
 
 object ScheduleAppUpdateNotification : PatientsTabEffect()
 
+data class LoadDrugStockReportStatus(val date: String) : PatientsTabEffect()
+
+object LoadInfoForShowingDrugStockReminder : PatientsTabEffect()
+
+object TouchDrugStockReportLastCheckedAt : PatientsTabEffect()
+
+data class TouchIsDrugStockReportFilled(val isDrugStockReportFilled: Boolean) : PatientsTabEffect()
+
 sealed class PatientsTabViewEffect : PatientsTabEffect()
 
 object OpenEnterOtpScreen : PatientsTabViewEffect()

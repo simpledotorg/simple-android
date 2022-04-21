@@ -14,6 +14,8 @@ import org.simple.clinic.appupdate.AppUpdateNotificationScheduler
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
+import org.simple.clinic.drugstockreminders.DrugStockReminder
+import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.NotFound
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.refreshuser.RefreshCurrentUser
@@ -23,6 +25,7 @@ import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toUtcInstant
 import java.time.Instant
 import java.time.LocalDate
+import java.util.Optional
 
 class PatientsEffectHandlerTest {
   private val uiActions = mock<PatientsTabUiActions>()
@@ -32,6 +35,9 @@ class PatientsEffectHandlerTest {
   private val checkAppUpdate = mock<CheckAppUpdateAvailability>()
   private val appUpdateDialogShownPref = mock<Preference<Instant>>()
   private val appUpdateNotificationScheduler = mock<AppUpdateNotificationScheduler>()
+  private val drugStockReminder = mock<DrugStockReminder>()
+  private val drugStockReportLastCheckedAt = mock<Preference<Instant>>()
+  private val isDrugStockReportFilled = mock<Preference<Optional<Boolean>>>()
 
   private val date = LocalDate.parse("2018-01-01")
   private val utcClock = TestUtcClock(date)
@@ -53,8 +59,11 @@ class PatientsEffectHandlerTest {
       hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatusPreference,
       numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPreference,
       appUpdateDialogShownAtPref = appUpdateDialogShownPref,
-      viewEffectsConsumer = viewEffectHandler::handle,
-      approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference
+      approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference,
+      drugStockReminder = drugStockReminder,
+      drugStockReportLastCheckedAt = drugStockReportLastCheckedAt,
+      isDrugStockReportFilled = isDrugStockReportFilled,
+      viewEffectsConsumer = viewEffectHandler::handle
   ).build()
 
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
@@ -133,5 +142,69 @@ class PatientsEffectHandlerTest {
         currentDate = LocalDate.of(2018, 1, 1),
         appUpdateNudgePriority = appUpdateNudgePriority
     ))
+  }
+
+  @Test
+  fun `when load drug stock reminder status effect is received, then load the drug stock reminder status`() {
+    // given
+    whenever(drugStockReminder.reminderForDrugStock("2022-03-02")) doReturn NotFound
+
+    // when
+    effectHandlerTestCase.dispatch(LoadDrugStockReportStatus(date = "2022-03-02"))
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(DrugStockReportLoaded(result = NotFound))
+
+    verifyZeroInteractions(uiActions)
+
+    verify(drugStockReminder).reminderForDrugStock(date = "2022-03-02")
+    verifyNoMoreInteractions(drugStockReminder)
+  }
+
+  @Test
+  fun `when load info for showing drug stock reminder effect is received, then load the info`() {
+    // given
+    whenever(drugStockReportLastCheckedAt.get()) doReturn LocalDate.parse("2022-04-19").toUtcInstant(userClock)
+    whenever(isDrugStockReportFilled.get()) doReturn Optional.of(true)
+
+    // when
+    effectHandlerTestCase.dispatch(LoadInfoForShowingDrugStockReminder)
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(RequiredInfoForShowingDrugStockReminderLoaded(
+        currentDate = LocalDate.parse("2018-01-01"),
+        drugStockReportLastCheckedAt = LocalDate.parse("2022-04-19"),
+        isDrugStockReportFilled = Optional.of(true)
+    ))
+
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when touch drug stock report last checked at preference effect is received, then update drug stock report last checked at preference`() {
+    // when
+    effectHandlerTestCase.dispatch(TouchDrugStockReportLastCheckedAt)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verifyZeroInteractions(uiActions)
+
+    verify(drugStockReportLastCheckedAt).set(Instant.parse("2018-01-01T00:00:00Z"))
+    verifyNoMoreInteractions(drugStockReportLastCheckedAt)
+  }
+
+  @Test
+  fun `when touch is drug stock report filled effect is received, then update drug stock report filled status in preference`() {
+    // when
+    effectHandlerTestCase.dispatch(TouchIsDrugStockReportFilled(isDrugStockReportFilled = true))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verifyZeroInteractions(uiActions)
+
+    verify(isDrugStockReportFilled).set(Optional.of(true))
+    verifyNoMoreInteractions(drugStockReportLastCheckedAt)
   }
 }

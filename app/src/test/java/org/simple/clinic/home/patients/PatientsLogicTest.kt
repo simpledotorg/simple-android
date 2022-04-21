@@ -61,6 +61,8 @@ class PatientsLogicTest {
   private val checkAppUpdate = mock<CheckAppUpdateAvailability>()
   private val appUpdateDialogShownPref = mock<Preference<Instant>>()
   private val appUpdateNotificationScheduler = mock<AppUpdateNotificationScheduler>()
+  private val drugStockReportLastCheckedAt = mock<Preference<Instant>>()
+  private val isDrugStockReportFilled = mock<Preference<Optional<Boolean>>>()
 
   private val date = LocalDate.parse("2018-01-01")
   private val dateAsInstant = Instant.parse("2018-01-01T00:00:00Z")
@@ -94,8 +96,11 @@ class PatientsLogicTest {
         hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatusPreference,
         numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPreference,
         appUpdateDialogShownAtPref = appUpdateDialogShownPref,
-        viewEffectsConsumer = viewEffectHandler::handle,
-        approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference
+        approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference,
+        drugStockReminder = mock(),
+        drugStockReportLastCheckedAt = drugStockReportLastCheckedAt,
+        isDrugStockReportFilled = isDrugStockReportFilled,
+        viewEffectsConsumer = viewEffectHandler::handle
     )
 
     testFixture = MobiusTestFixture(
@@ -121,7 +126,7 @@ class PatientsLogicTest {
     uiEvents.onNext(NewPatientClicked)
 
     // then
-    verify(ui, times(2)).hideUserAccountStatus()
+    verify(ui, times(3)).hideUserAccountStatus()
     verify(ui).showSyncIndicator()
     verify(ui).showSimpleVideo()
 
@@ -144,7 +149,7 @@ class PatientsLogicTest {
     uiEvents.onNext(ActivityResumed)
 
     // then
-    verify(ui, times(2)).hideUserAccountStatus()
+    verify(ui, times(3)).hideUserAccountStatus()
     verify(ui).showSyncIndicator()
     verify(ui).showSimpleVideo()
     verifyNoMoreInteractions(ui)
@@ -161,7 +166,7 @@ class PatientsLogicTest {
     verify(ui).hideSyncIndicator()
     verify(ui).showSimpleVideo()
 
-    verify(ui, times(2)).showUserStatusAsWaitingForApproval()
+    verify(ui, times(3)).showUserStatusAsWaitingForApproval()
 
     verifyNoMoreInteractions(ui)
     verifyNoMoreInteractions(uiActions)
@@ -177,7 +182,7 @@ class PatientsLogicTest {
     verify(ui).hideSyncIndicator()
     verify(ui).showSimpleVideo()
 
-    verify(ui, times(2)).showUserStatusAsWaitingForApproval()
+    verify(ui, times(3)).showUserStatusAsWaitingForApproval()
 
     verifyNoMoreInteractions(ui)
   }
@@ -188,7 +193,7 @@ class PatientsLogicTest {
     setupController(user = userApprovedForSyncing)
 
     // then
-    verify(ui, times(2)).hideUserAccountStatus()
+    verify(ui, times(3)).hideUserAccountStatus()
     verify(ui).showSyncIndicator()
     verify(ui).showSimpleVideo()
 
@@ -206,7 +211,7 @@ class PatientsLogicTest {
     )
 
     // then
-    verify(ui, times(2)).hideUserAccountStatus()
+    verify(ui, times(3)).hideUserAccountStatus()
     verify(ui).showSyncIndicator()
     verify(ui).showSimpleVideo()
 
@@ -228,7 +233,7 @@ class PatientsLogicTest {
     // then
     verify(ui).showSyncIndicator()
     verify(ui).showSimpleVideo()
-    verify(ui, times(2)).hideUserAccountStatus()
+    verify(ui, times(3)).hideUserAccountStatus()
 
     verify(uiActions, never()).showUserStatusAsApproved()
 
@@ -247,7 +252,7 @@ class PatientsLogicTest {
     // then
     verify(ui).showSyncIndicator()
     verify(ui).showSimpleVideo()
-    verify(ui, times(2)).hideUserAccountStatus()
+    verify(ui, times(3)).hideUserAccountStatus()
 
     verify(uiActions, never()).showUserStatusAsApproved()
 
@@ -266,7 +271,7 @@ class PatientsLogicTest {
     verify(refreshCurrentUser).refresh()
     verify(approvalStatusApprovedAtPreference).set(dateAsInstant)
 
-    verify(ui, times(2)).showUserStatusAsWaitingForApproval()
+    verify(ui, times(3)).showUserStatusAsWaitingForApproval()
     verify(ui).hideSyncIndicator()
     verify(ui).showSimpleVideo()
     verifyNoMoreInteractions(ui)
@@ -285,7 +290,7 @@ class PatientsLogicTest {
     verify(uiActions).showUserStatusAsApproved()
     verify(ui).showSyncIndicator()
     verify(ui).showSimpleVideo()
-    verify(ui, times(2)).hideUserAccountStatus()
+    verify(ui, times(3)).hideUserAccountStatus()
     verifyNoMoreInteractions(ui)
   }
 
@@ -302,7 +307,7 @@ class PatientsLogicTest {
     verify(ui).hideSyncIndicator()
     verify(ui).showSimpleVideo()
 
-    verify(ui, times(2)).showUserStatusAsPendingVerification()
+    verify(ui, times(3)).showUserStatusAsPendingVerification()
 
     verifyNoMoreInteractions(ui)
     verifyNoMoreInteractions(uiActions)
@@ -317,7 +322,7 @@ class PatientsLogicTest {
     )
 
     // then
-    verify(ui, times(2)).hideUserAccountStatus()
+    verify(ui, times(3)).hideUserAccountStatus()
     verify(ui).showSyncIndicator()
     verify(ui).showSimpleVideo()
 
@@ -336,7 +341,7 @@ class PatientsLogicTest {
     )
 
     // then
-    verify(ui, times(2)).showUserStatusAsPendingVerification()
+    verify(ui, times(3)).showUserStatusAsPendingVerification()
     verify(ui).hideSyncIndicator()
     verify(ui).showSimpleVideo()
 
@@ -356,7 +361,7 @@ class PatientsLogicTest {
 
     // then
     verify(ui).showSyncIndicator()
-    verify(ui, times(2)).hideUserAccountStatus()
+    verify(ui, times(3)).hideUserAccountStatus()
     verify(ui).showSimpleVideo()
 
     verifyNoMoreInteractions(ui)
@@ -373,7 +378,7 @@ class PatientsLogicTest {
     )
 
     // then
-    verify(ui, times(2)).showUserStatusAsPendingVerification()
+    verify(ui, times(3)).showUserStatusAsPendingVerification()
     verify(ui).hideSyncIndicator()
     verify(ui).showSimpleVideo()
 
@@ -393,7 +398,7 @@ class PatientsLogicTest {
     )
 
     // then
-    verify(ui, times(2)).showUserStatusAsWaitingForApproval()
+    verify(ui, times(3)).showUserStatusAsWaitingForApproval()
     verify(ui).hideSyncIndicator()
     verify(ui).showSimpleVideo()
 
@@ -455,7 +460,7 @@ class PatientsLogicTest {
     uiEvents.onNext(PatientsEnterCodeManuallyClicked())
 
     // then
-    verify(ui, times(2)).hideUserAccountStatus()
+    verify(ui, times(3)).hideUserAccountStatus()
     verify(ui).showSimpleVideo()
     verify(ui).showSyncIndicator()
     verify(uiActions).openEnterCodeManuallyScreen()
@@ -470,7 +475,7 @@ class PatientsLogicTest {
     uiEvents.onNext(ScanCardIdButtonClicked(permission = Optional.of(GRANTED)))
 
     // then
-    verify(ui, times(2)).hideUserAccountStatus()
+    verify(ui, times(3)).hideUserAccountStatus()
     verify(ui).showSimpleVideo()
     verify(ui).showSyncIndicator()
     verify(uiActions).openScanSimpleIdCardScreen()
@@ -485,7 +490,7 @@ class PatientsLogicTest {
     uiEvents.onNext(ScanCardIdButtonClicked(permission = Optional.of(DENIED)))
 
     // then
-    verify(ui, times(2)).hideUserAccountStatus()
+    verify(ui, times(3)).hideUserAccountStatus()
     verify(ui).showSimpleVideo()
     verify(ui).showSyncIndicator()
     verify(uiActions, never()).openScanSimpleIdCardScreen()
@@ -501,7 +506,7 @@ class PatientsLogicTest {
     )
 
     // then
-    verify(ui, times(2)).hideUserAccountStatus()
+    verify(ui, times(3)).hideUserAccountStatus()
     verify(ui).showSimpleVideo()
     verify(ui).showSyncIndicator()
     verify(uiActions).showAppUpdateDialog()
@@ -514,7 +519,7 @@ class PatientsLogicTest {
     setupController(appUpdateState = ShowAppUpdate(appUpdateNudgePriority = null))
 
     // then
-    verify(ui, times(2)).hideUserAccountStatus()
+    verify(ui, times(3)).hideUserAccountStatus()
     verify(ui).showSimpleVideo()
     verify(ui).showSyncIndicator()
     verify(uiActions, never()).showAppUpdateDialog()
@@ -530,7 +535,7 @@ class PatientsLogicTest {
     )
 
     // then
-    verify(ui, times(2)).hideUserAccountStatus()
+    verify(ui, times(3)).hideUserAccountStatus()
     verify(ui).showSimpleVideo()
     verify(ui).showSyncIndicator()
     verify(uiActions, never()).showAppUpdateDialog()
@@ -546,7 +551,7 @@ class PatientsLogicTest {
     )
 
     // then
-    verify(ui, times(2)).hideUserAccountStatus()
+    verify(ui, times(3)).hideUserAccountStatus()
     verify(ui).showSimpleVideo()
     verify(ui).showSyncIndicator()
     verify(uiActions, never()).showAppUpdateDialog()
@@ -560,7 +565,7 @@ class PatientsLogicTest {
     setupController(numberOfPatientsRegistered = 9)
 
     //then
-    verify(ui, times(2)).hideUserAccountStatus()
+    verify(ui, times(3)).hideUserAccountStatus()
     verify(ui).showSimpleVideo()
     verify(ui).showSyncIndicator()
     verify(ui).showSimpleVideo()
@@ -574,7 +579,7 @@ class PatientsLogicTest {
     setupController(numberOfPatientsRegistered = 10)
 
     //then
-    verify(ui, times(2)).hideUserAccountStatus()
+    verify(ui, times(3)).hideUserAccountStatus()
     verify(ui).showSyncIndicator()
     verify(ui, never()).showSimpleVideo()
     verify(ui).showIllustration()
@@ -589,11 +594,11 @@ class PatientsLogicTest {
     uiEvents.onNext(SimpleVideoClicked)
 
     //then
-    verify(ui, times(2)).hideUserAccountStatus()
+    verify(ui, times(3)).hideUserAccountStatus()
     verify(ui).showSimpleVideo()
     verify(ui).showSyncIndicator()
     verify(uiActions).openYouTubeLinkForSimpleVideo()
-    verify(ui, times(2)).hideUserAccountStatus()
+    verify(ui, times(3)).hideUserAccountStatus()
     verifyNoMoreInteractions(ui)
     //    verifyNoMoreInteractions(uiActions)
   }
@@ -658,6 +663,8 @@ class PatientsLogicTest {
     whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(hasUserDismissedApprovedStatus)
     whenever(approvalStatusApprovedAtPreference.get()).doReturn(approvalStatusApprovedAt)
     whenever(appUpdateDialogShownPref.get()).doReturn(appUpdateDialogShownAt)
+    whenever(drugStockReportLastCheckedAt.get()).doReturn(Instant.parse("2018-01-01T00:00:00Z"))
+    whenever(isDrugStockReportFilled.get()).doReturn(Optional.of(true))
   }
 
   private fun activateUi() {

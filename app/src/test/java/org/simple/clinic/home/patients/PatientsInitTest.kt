@@ -21,7 +21,8 @@ class PatientsInitTest {
                 LoadUser,
                 RefreshUserDetails,
                 LoadNumberOfPatientsRegistered,
-                LoadInfoForShowingAppUpdateMessage
+                LoadInfoForShowingAppUpdateMessage,
+                LoadInfoForShowingDrugStockReminder
             )
         ))
   }

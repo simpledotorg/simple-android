@@ -118,7 +118,6 @@ class ForgotPinCreateNewPinScreenLogicTest {
         currentUser = Lazy { loggedInUser },
         currentFacility = Lazy { facility },
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = uiActions,
         viewEffectsConsumer = viewEffectHandler::handle
     )
     val uiRenderer = ForgotPinCreateNewUiRenderer(ui)

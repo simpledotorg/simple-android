@@ -16,14 +16,12 @@ class ForgotPinCreateNewEffectHandler @AssistedInject constructor(
     private val currentUser: Lazy<User>,
     private val currentFacility: Lazy<Facility>,
     private val schedulersProvider: SchedulersProvider,
-    @Assisted private val uiActions: UiActions,
     @Assisted private val viewEffectsConsumer: Consumer<ForgotPinCreateNewViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        uiActions: UiActions,
         viewEffectsConsumer: Consumer<ForgotPinCreateNewViewEffect>
     ): ForgotPinCreateNewEffectHandler
   }

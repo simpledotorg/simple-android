@@ -29,7 +29,7 @@ class ForgotPinCreateNewPinScreen : BaseScreen<
     ForgotPinCreateNewModel,
     ForgotPinCreateNewEvent,
     ForgotPinCreateNewEffect,
-    Unit>(), ForgotPinCreateNewPinUi, UiActions {
+    ForgotPinCreateNewViewEffect>(), ForgotPinCreateNewPinUi, UiActions {
 
   @Inject
   lateinit var router: Router
@@ -71,7 +71,7 @@ class ForgotPinCreateNewPinScreen : BaseScreen<
         .cast<ForgotPinCreateNewEvent>()
   }
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<ForgotPinCreateNewViewEffect>) = effectHandlerFactory.create(this).build()
 
   override fun uiRenderer() = ForgotPinCreateNewUiRenderer(this)
 

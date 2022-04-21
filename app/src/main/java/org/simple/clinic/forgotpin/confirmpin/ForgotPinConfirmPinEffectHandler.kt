@@ -48,6 +48,7 @@ class ForgotPinConfirmPinEffectHandler @AssistedInject constructor(
       .addAction(ShowUnexpectedError::class.java, uiActions::showUnexpectedError, schedulersProvider.ui())
       .addAction(GoToHomeScreen::class.java, uiActions::goToHomeScreen, schedulersProvider.ui())
       .addTransformer(SyncPatientDataAndResetPin::class.java, syncPatientDataAndResetPin())
+      .addConsumer(ForgotPinConfirmPinViewEffect::class.java, viewEffectsConsumer::accept)
       .build()
 
   private fun syncPatientDataAndResetPin(): ObservableTransformer<SyncPatientDataAndResetPin, ForgotPinConfirmPinEvent> {

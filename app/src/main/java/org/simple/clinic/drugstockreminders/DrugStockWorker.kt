@@ -70,6 +70,9 @@ class DrugStockWorker(
   @DateFormatter(MonthAndYear)
   lateinit var monthAndYearDateFormatter: DateTimeFormatter
 
+  @Inject
+  lateinit var schedulers: SchedulersProvider
+
   private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
   init {
@@ -90,6 +93,10 @@ class DrugStockWorker(
         }
       }
     }
+  }
+
+  override fun getBackgroundScheduler(): Scheduler {
+    return schedulers.io()
   }
 
   private fun drugStockReportNotFound(previousMonthsDate: String): Result {

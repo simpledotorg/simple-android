@@ -39,6 +39,8 @@ class DrugStockWorker(
 ) : RxWorker(context, workerParams) {
 
   companion object {
+    const val DRUG_STOCK_NOTIFICATION_WORKER = "drug_stock_notification_worker"
+
     private const val NOTIFICATION_CHANNEL_ID = "org.simple.clinic.drugstockreminders"
     private const val NOTIFICATION_CHANNEL_NAME = "Drug Stock Reminders"
     private const val NOTIFICATION_ID = 6

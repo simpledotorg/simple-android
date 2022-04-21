@@ -75,6 +75,8 @@ class ForgotPinCreateNewPinScreen : BaseScreen<
 
   override fun uiRenderer() = ForgotPinCreateNewUiRenderer(this)
 
+  override fun viewEffectHandler() = ForgotPinCreateNewViewEffectHandler(uiActions = this)
+
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)

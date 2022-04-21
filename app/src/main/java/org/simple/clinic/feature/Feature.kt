@@ -35,5 +35,6 @@ enum class Feature(
   NextAppointment(false, "next_appointment_v1"),
   AddingHealthIDsFromEditPatient(false, "adding_health_ids_from_edit_patient"),
   NotifyAppUpdateAvailableV2(false, "appupdate_enabled_v2"),
-  CDSAlerts(false, "cds_alerts_v0")
+  CDSAlerts(false, "cds_alerts_v0"),
+  MonthlyDrugStockReportReminder(false, "monthly_drug_stock_report_reminders_v1")
 }

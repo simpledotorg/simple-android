@@ -32,6 +32,7 @@ import org.simple.clinic.appupdate.dialog.AppUpdateDialog
 import org.simple.clinic.databinding.ScreenPatientsBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.enterotp.EnterOtpScreen
+import org.simple.clinic.feature.Feature.MonthlyDrugStockReportReminder
 import org.simple.clinic.feature.Feature.NotifyAppUpdateAvailableV2
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
@@ -178,7 +179,10 @@ class PatientsTabScreen : BaseScreen<
 
   override fun createUpdate() = PatientsTabUpdate(features.isEnabled(NotifyAppUpdateAvailableV2))
 
-  override fun createInit() = PatientsInit(features.isEnabled(NotifyAppUpdateAvailableV2))
+  override fun createInit() = PatientsInit(
+      isNotifyAppUpdateAvailableV2Enabled = features.isEnabled(NotifyAppUpdateAvailableV2),
+      isMonthlyDrugStockReportReminderEnabled = features.isEnabled(MonthlyDrugStockReportReminder)
+  )
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<PatientsTabViewEffect>) = effectHandlerFactory.create(
       viewEffectsConsumer = viewEffectsConsumer

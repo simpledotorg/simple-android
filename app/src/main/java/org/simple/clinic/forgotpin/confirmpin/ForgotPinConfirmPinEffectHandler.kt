@@ -40,7 +40,6 @@ class ForgotPinConfirmPinEffectHandler @AssistedInject constructor(
       .subtypeEffectHandler<ForgotPinConfirmPinEffect, ForgotPinConfirmPinEvent>()
       .addTransformer(LoadLoggedInUser::class.java, loadLoggedInUser())
       .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
-      .addAction(HideError::class.java, uiActions::hideError, schedulersProvider.ui())
       .addTransformer(ValidatePinConfirmation::class.java, validatePinConfirmation())
       .addAction(ShowMismatchedError::class.java, uiActions::showPinMismatchedError, schedulersProvider.ui())
       .addAction(ShowProgress::class.java, uiActions::showProgress, schedulersProvider.ui())

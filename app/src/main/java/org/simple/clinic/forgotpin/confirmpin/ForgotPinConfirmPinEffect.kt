@@ -6,8 +6,6 @@ object LoadLoggedInUser : ForgotPinConfirmPinEffect()
 
 object LoadCurrentFacility : ForgotPinConfirmPinEffect()
 
-object HideError : ForgotPinConfirmPinEffect()
-
 data class ValidatePinConfirmation(
     val previousPin: String,
     val enteredPin: String
@@ -26,3 +24,5 @@ object GoToHomeScreen : ForgotPinConfirmPinEffect()
 data class SyncPatientDataAndResetPin(val newPin: String) : ForgotPinConfirmPinEffect()
 
 sealed class ForgotPinConfirmPinViewEffect : ForgotPinConfirmPinEffect()
+
+object HideError : ForgotPinConfirmPinViewEffect()

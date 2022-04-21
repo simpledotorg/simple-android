@@ -4,9 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.INVISIBLE
-import android.view.View.VISIBLE
+import android.view.View.*
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.annotation.StringRes
@@ -90,6 +88,8 @@ class ForgotPinConfirmPinScreen : BaseScreen<
   override fun createInit() = ForgotPinConfirmPinInit()
 
   override fun uiRenderer() = ForgotPinConfirmPinUiRenderer(this)
+
+  override fun viewEffectHandler() = ForgotPinConfirmPinViewEffectHandler(uiActions = this)
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

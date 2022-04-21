@@ -41,7 +41,6 @@ class ForgotPinConfirmPinEffectHandler @AssistedInject constructor(
       .addTransformer(LoadLoggedInUser::class.java, loadLoggedInUser())
       .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
       .addTransformer(ValidatePinConfirmation::class.java, validatePinConfirmation())
-      .addAction(GoToHomeScreen::class.java, uiActions::goToHomeScreen, schedulersProvider.ui())
       .addTransformer(SyncPatientDataAndResetPin::class.java, syncPatientDataAndResetPin())
       .addConsumer(ForgotPinConfirmPinViewEffect::class.java, viewEffectsConsumer::accept)
       .build()

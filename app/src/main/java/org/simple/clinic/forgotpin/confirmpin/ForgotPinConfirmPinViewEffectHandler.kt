@@ -14,6 +14,7 @@ class ForgotPinConfirmPinViewEffectHandler(
       ShowProgress -> uiActions.showProgress()
       ShowNetworkError -> uiActions.showNetworkError()
       ShowUnexpectedError -> uiActions.showUnexpectedError()
+      GoToHomeScreen -> uiActions.goToHomeScreen()
     }.exhaustive()
   }
 }

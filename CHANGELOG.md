@@ -22,10 +22,11 @@
 - Fix API link for `DrugStockReminderApi#drugStockReminder`
 - Check drug stock report status when app is opened
 - Schedule `DrugStock` API to run on 1st of every month at 8 AM
+- Add `DrugStockCard` in `PatientsTabScreen` and handle its visibility
 
 ### Features
 
-- [In Progress: 05 Apr 2022] Messaging users to remind them to fill out drug stock report each month
+- [In Progress: 21 Apr 2022] Messaging users to remind them to fill out drug stock report each month
 
 ## 2022-04-18-8216
 

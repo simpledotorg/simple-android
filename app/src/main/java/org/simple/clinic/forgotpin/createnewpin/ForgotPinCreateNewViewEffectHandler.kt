@@ -10,6 +10,7 @@ class ForgotPinCreateNewViewEffectHandler(
   override fun handle(viewEffect: ForgotPinCreateNewViewEffect) {
     when (viewEffect) {
       ShowInvalidPinError -> uiActions.showInvalidPinError()
+      is ShowConfirmPinScreen -> uiActions.showConfirmPinScreen(viewEffect.pin)
     }.exhaustive()
   }
 }

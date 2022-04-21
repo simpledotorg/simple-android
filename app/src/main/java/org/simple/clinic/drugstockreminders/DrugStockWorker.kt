@@ -13,6 +13,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.RxWorker
 import androidx.work.WorkerParameters
 import com.f2prateek.rx.preferences2.Preference
+import io.reactivex.Scheduler
 import io.reactivex.Single
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
@@ -26,6 +27,7 @@ import org.simple.clinic.main.TypedPreference.Type.DrugStockReportLastCheckedAt
 import org.simple.clinic.main.TypedPreference.Type.IsDrugStockReportFilled
 import org.simple.clinic.setup.SetupActivity
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -73,6 +75,9 @@ class DrugStockWorker(
   lateinit var monthAndYearDateFormatter: DateTimeFormatter
 
   @Inject
+  lateinit var drugStockNotificationScheduler: DrugStockNotificationScheduler
+
+  @Inject
   lateinit var schedulers: SchedulersProvider
 
   private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -86,7 +91,7 @@ class DrugStockWorker(
 
     val previousMonthsDate = LocalDate.now(clock).minusMonths(1).toString()
 
-    return Single.create {
+    return Single.create<Result> {
       when (drugStockReminder.reminderForDrugStock(previousMonthsDate)) {
         is Found -> drugStockReportFound()
         NotFound -> drugStockReportNotFound(previousMonthsDate)
@@ -94,6 +99,8 @@ class DrugStockWorker(
           /* no op */
         }
       }
+    }.doFinally {
+      drugStockNotificationScheduler.schedule()
     }
   }
 

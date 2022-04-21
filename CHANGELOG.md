@@ -21,6 +21,7 @@
 - Fix the logic for notification schedule time in `AppUpdateNotificationWorker`
 - Fix API link for `DrugStockReminderApi#drugStockReminder`
 - Check drug stock report status when app is opened
+- Schedule `DrugStock` API to run on 1st of every month at 8 AM
 
 ### Features
 

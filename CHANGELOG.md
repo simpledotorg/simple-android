@@ -23,6 +23,7 @@
 - Check drug stock report status when app is opened
 - Schedule `DrugStock` API to run on 1st of every month at 8 AM
 - Add `DrugStockCard` in `PatientsTabScreen` and handle its visibility
+- Add feature flag for monthly drug stock report reminders
 
 ### Features
 

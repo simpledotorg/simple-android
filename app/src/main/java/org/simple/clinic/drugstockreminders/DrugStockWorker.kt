@@ -8,9 +8,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.RxWorker
 import androidx.work.WorkerParameters
 import com.f2prateek.rx.preferences2.Preference
+import io.reactivex.Scheduler
 import io.reactivex.Single
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
@@ -24,10 +27,12 @@ import org.simple.clinic.main.TypedPreference.Type.DrugStockReportLastCheckedAt
 import org.simple.clinic.main.TypedPreference.Type.IsDrugStockReportFilled
 import org.simple.clinic.setup.SetupActivity
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Optional
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class DrugStockWorker(
@@ -36,9 +41,19 @@ class DrugStockWorker(
 ) : RxWorker(context, workerParams) {
 
   companion object {
+    const val DRUG_STOCK_NOTIFICATION_WORKER = "drug_stock_notification_worker"
+
     private const val NOTIFICATION_CHANNEL_ID = "org.simple.clinic.drugstockreminders"
     private const val NOTIFICATION_CHANNEL_NAME = "Drug Stock Reminders"
     private const val NOTIFICATION_ID = 6
+
+    fun createWorkRequest(
+        initialDelay: Long
+    ): OneTimeWorkRequest {
+      return OneTimeWorkRequestBuilder<DrugStockWorker>()
+          .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
+          .build()
+    }
   }
 
   @Inject
@@ -59,6 +74,12 @@ class DrugStockWorker(
   @DateFormatter(MonthAndYear)
   lateinit var monthAndYearDateFormatter: DateTimeFormatter
 
+  @Inject
+  lateinit var drugStockNotificationScheduler: DrugStockNotificationScheduler
+
+  @Inject
+  lateinit var schedulers: SchedulersProvider
+
   private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
   init {
@@ -70,7 +91,7 @@ class DrugStockWorker(
 
     val previousMonthsDate = LocalDate.now(clock).minusMonths(1).toString()
 
-    return Single.create {
+    return Single.create<Result> {
       when (drugStockReminder.reminderForDrugStock(previousMonthsDate)) {
         is Found -> drugStockReportFound()
         NotFound -> drugStockReportNotFound(previousMonthsDate)
@@ -78,19 +99,24 @@ class DrugStockWorker(
           /* no op */
         }
       }
+    }.doFinally {
+      updateDrugStockLastCheckedAtPreference()
+      drugStockNotificationScheduler.schedule()
     }
+  }
+
+  override fun getBackgroundScheduler(): Scheduler {
+    return schedulers.io()
   }
 
   private fun drugStockReportNotFound(previousMonthsDate: String): Result {
     notificationManager.notify(NOTIFICATION_ID, drugStockReminderNotification(previousMonthsDate))
     isDrugStockReportFilled.set(Optional.of(false))
-    updateDrugStockLastCheckedAtPreference()
     return Result.failure()
   }
 
   private fun drugStockReportFound(): Result {
     isDrugStockReportFilled.set(Optional.of(true))
-    updateDrugStockLastCheckedAtPreference()
     return Result.success()
   }
 

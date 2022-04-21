@@ -31,7 +31,7 @@ class PatientsTabUiRenderer(
       ui.renderAppUpdateReason(appStalenessInMonths(model.appStaleness!!))
     }
 
-    if (model.isDrugStockReportFilled == false) {
+    if (model.isDrugStockReportFilled == false && model.isRemindingToEnterDrugStockReportEnabled) {
       ui.showDrugStockReminderCard()
     }
   }

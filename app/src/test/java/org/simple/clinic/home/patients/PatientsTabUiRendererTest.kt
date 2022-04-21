@@ -30,7 +30,9 @@ class PatientsTabUiRendererTest {
   @Test
   fun `when the previous months drug stock report is not filled, then show the drug stock reminder card`() {
     // given
-    val model = defaultModel.updateIsDrugStockFilled(Optional.of(false))
+    val model = PatientsTabModel
+        .create(isRemindingToEnterDrugStockReportEnabled = true)
+        .updateIsDrugStockFilled(Optional.of(false))
 
     // when
     uiRenderer.render(model)

@@ -1,12 +1,15 @@
 package org.simple.clinic.forgotpin.createnewpin
 
 import org.simple.clinic.mobius.ViewEffectsHandler
+import org.simple.clinic.util.exhaustive
 
 class ForgotPinCreateNewViewEffectHandler(
     private val uiActions: UiActions
 ) : ViewEffectsHandler<ForgotPinCreateNewViewEffect> {
 
   override fun handle(viewEffect: ForgotPinCreateNewViewEffect) {
-    // no-op
+    when (viewEffect) {
+      ShowInvalidPinError -> uiActions.showInvalidPinError()
+    }.exhaustive()
   }
 }

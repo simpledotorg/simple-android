@@ -11,6 +11,7 @@ class ForgotPinConfirmPinViewEffectHandler(
     when (viewEffect) {
       HideError -> uiActions.hideError()
       ShowMismatchedError -> uiActions.showPinMismatchedError()
+      ShowProgress -> uiActions.showProgress()
     }.exhaustive()
   }
 }

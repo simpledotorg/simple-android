@@ -428,7 +428,6 @@ class ForgotPinConfirmPinScreenLogicTest {
         resetUserPin = resetUserPin,
         syncAndClearPatientData = syncAndClearPatientData,
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = uiActions,
         viewEffectsConsumer = viewEffectHandler::handle
     )
 

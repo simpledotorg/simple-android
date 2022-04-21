@@ -22,15 +22,23 @@ class PatientsTabUiRenderer(
       showAccountNotifications(model)
     }
 
+    renderPatientTabScreenCard(model)
+  }
+
+  private fun renderPatientTabScreenCard(model: PatientsTabModel) {
     val isDrugStockReportFilledOrNull = model.isDrugStockReportFilled == null || model.isDrugStockReportFilled
 
-    if (model.appUpdateNudgePriorityIsMedium && model.hasAppStaleness && isDrugStockReportFilledOrNull) {
-      ui.showCriticalAppUpdateCard()
-      ui.renderAppUpdateReason(appStalenessInMonths(model.appStaleness!!))
-    } else if (model.hasLoadedNumberOfPatientsRegistered && isDrugStockReportFilledOrNull) {
-      toggleTrainingViewVisibility(model)
-    } else if (model.isDrugStockReportFilled == false) {
-      ui.showDrugStockReminderCard()
+    when {
+      model.appUpdateNudgePriorityIsMedium && model.hasAppStaleness && isDrugStockReportFilledOrNull -> {
+        ui.showCriticalAppUpdateCard()
+        ui.renderAppUpdateReason(appStalenessInMonths(model.appStaleness!!))
+      }
+      model.hasLoadedNumberOfPatientsRegistered && isDrugStockReportFilledOrNull -> {
+        toggleTrainingViewVisibility(model)
+      }
+      model.isDrugStockReportFilled == false -> {
+        ui.showDrugStockReminderCard()
+      }
     }
   }
 

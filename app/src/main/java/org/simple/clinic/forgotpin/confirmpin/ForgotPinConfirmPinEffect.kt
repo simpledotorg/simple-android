@@ -11,8 +11,6 @@ data class ValidatePinConfirmation(
     val enteredPin: String
 ) : ForgotPinConfirmPinEffect()
 
-object ShowUnexpectedError : ForgotPinConfirmPinEffect()
-
 object GoToHomeScreen : ForgotPinConfirmPinEffect()
 
 data class SyncPatientDataAndResetPin(val newPin: String) : ForgotPinConfirmPinEffect()
@@ -26,3 +24,5 @@ object ShowMismatchedError : ForgotPinConfirmPinViewEffect()
 object ShowProgress : ForgotPinConfirmPinViewEffect()
 
 object ShowNetworkError : ForgotPinConfirmPinViewEffect()
+
+object ShowUnexpectedError : ForgotPinConfirmPinViewEffect()

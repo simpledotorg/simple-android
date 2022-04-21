@@ -13,6 +13,7 @@ class ForgotPinConfirmPinViewEffectHandler(
       ShowMismatchedError -> uiActions.showPinMismatchedError()
       ShowProgress -> uiActions.showProgress()
       ShowNetworkError -> uiActions.showNetworkError()
+      ShowUnexpectedError -> uiActions.showUnexpectedError()
     }.exhaustive()
   }
 }

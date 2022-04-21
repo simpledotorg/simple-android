@@ -11,7 +11,7 @@ class PatientsInitTest {
   private val defaultModel = PatientsTabModel.create()
 
   @Test
-  fun `when screen is created and feature flag is enabled, then schedule app update notification worker`() {
+  fun `when screen is created and app update v2 notification feature flag is enabled, then schedule app update notification worker`() {
     val initSpec = InitSpec(PatientsInit(
         isNotifyAppUpdateAvailableV2Enabled = true,
         isMonthlyDrugStockReportReminderEnabled = false

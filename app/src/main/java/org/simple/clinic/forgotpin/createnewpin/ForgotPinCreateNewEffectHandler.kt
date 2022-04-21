@@ -1,5 +1,6 @@
 package org.simple.clinic.forgotpin.createnewpin
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -15,12 +16,14 @@ class ForgotPinCreateNewEffectHandler @AssistedInject constructor(
     private val currentUser: Lazy<User>,
     private val currentFacility: Lazy<Facility>,
     private val schedulersProvider: SchedulersProvider,
-    @Assisted private val uiActions: UiActions
+    @Assisted private val viewEffectsConsumer: Consumer<ForgotPinCreateNewViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: UiActions): ForgotPinCreateNewEffectHandler
+    fun create(
+        viewEffectsConsumer: Consumer<ForgotPinCreateNewViewEffect>
+    ): ForgotPinCreateNewEffectHandler
   }
 
   fun build(): ObservableTransformer<ForgotPinCreateNewEffect, ForgotPinCreateNewEvent> = RxMobius
@@ -28,9 +31,7 @@ class ForgotPinCreateNewEffectHandler @AssistedInject constructor(
       .addTransformer(LoadLoggedInUser::class.java, loadLoggedInUser())
       .addTransformer(LoadCurrentFacility::class.java, loadFacility())
       .addTransformer(ValidatePin::class.java, validatePin())
-      .addAction(ShowInvalidPinError::class.java, uiActions::showInvalidPinError, schedulersProvider.ui())
-      .addConsumer(ShowConfirmPinScreen::class.java, { uiActions.showConfirmPinScreen(it.pin) }, schedulersProvider.ui())
-      .addAction(HideInvalidPinError::class.java, uiActions::hideInvalidPinError, schedulersProvider.ui())
+      .addConsumer(ForgotPinCreateNewViewEffect::class.java, viewEffectsConsumer::accept)
       .build()
 
   private fun validatePin(): ObservableTransformer<ValidatePin, ForgotPinCreateNewEvent> {

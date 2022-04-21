@@ -25,6 +25,7 @@
 - Migrate `ForgotPinCreateNewEffectHandler` to view effects
 - Add feature flag for monthly drug stock report reminders
 - Add `DrugStockCard` in `PatientsTabScreen` and handle its visibility
+- Cut release branch every week instead of every 2 weeks
 
 ### Features
 

@@ -8,8 +8,10 @@ object LoadCurrentFacility : ForgotPinCreateNewEffect()
 
 data class ValidatePin(val pin: String?) : ForgotPinCreateNewEffect()
 
-object ShowInvalidPinError : ForgotPinCreateNewEffect()
+sealed class ForgotPinCreateNewViewEffect : ForgotPinCreateNewEffect()
 
-data class ShowConfirmPinScreen(val pin: String) : ForgotPinCreateNewEffect()
+object ShowInvalidPinError : ForgotPinCreateNewViewEffect()
 
-object HideInvalidPinError : ForgotPinCreateNewEffect()
+data class ShowConfirmPinScreen(val pin: String) : ForgotPinCreateNewViewEffect()
+
+object HideInvalidPinError : ForgotPinCreateNewViewEffect()

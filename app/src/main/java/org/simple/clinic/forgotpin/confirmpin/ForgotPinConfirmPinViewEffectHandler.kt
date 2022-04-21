@@ -10,6 +10,7 @@ class ForgotPinConfirmPinViewEffectHandler(
   override fun handle(viewEffect: ForgotPinConfirmPinViewEffect) {
     when (viewEffect) {
       HideError -> uiActions.hideError()
+      ShowMismatchedError -> uiActions.showPinMismatchedError()
     }.exhaustive()
   }
 }

@@ -14,17 +14,21 @@ data class PatientsTabModel(
     val numberOfPatientsRegistered: Int?,
     val appStaleness: Int?,
     val appUpdateNudgePriority: AppUpdateNudgePriority?,
-    val isDrugStockReportFilled: Boolean?
+    val isDrugStockReportFilled: Boolean?,
+    val isRemindingToEnterDrugStockReportEnabled: Boolean
 ) : Parcelable {
 
   companion object {
 
-    fun create(): PatientsTabModel = PatientsTabModel(
+    fun create(
+        isRemindingToEnterDrugStockReportEnabled: Boolean
+    ): PatientsTabModel = PatientsTabModel(
         user = null,
         numberOfPatientsRegistered = null,
         appStaleness = null,
         appUpdateNudgePriority = null,
-        isDrugStockReportFilled = null
+        isDrugStockReportFilled = null,
+        isRemindingToEnterDrugStockReportEnabled = isRemindingToEnterDrugStockReportEnabled
     )
   }
 

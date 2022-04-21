@@ -33,6 +33,7 @@ import org.simple.clinic.appupdate.dialog.AppUpdateDialog
 import org.simple.clinic.databinding.ScreenPatientsBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.enterotp.EnterOtpScreen
+import org.simple.clinic.feature.Feature.MonthlyDrugStockReportReminder
 import org.simple.clinic.feature.Feature.NotifyAppUpdateAvailableV2
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
@@ -164,7 +165,7 @@ class PatientsTabScreen : BaseScreen<
   private val drugStockReminderCardSubTitle
     get() = binding.drugStockReminderCardLayout.drugStockReminderCardSubTitle
 
-  override fun defaultModel() = PatientsTabModel.create()
+  override fun defaultModel() = PatientsTabModel.create(features.isEnabled(MonthlyDrugStockReportReminder))
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenPatientsBinding.inflate(layoutInflater, container, false)

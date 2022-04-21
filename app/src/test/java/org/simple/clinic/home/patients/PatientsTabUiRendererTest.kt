@@ -11,7 +11,7 @@ import java.util.Optional
 class PatientsTabUiRendererTest {
   private val ui = mock<PatientsTabUi>()
   private val uiRenderer = PatientsTabUiRenderer(ui, LocalDate.of(2022, 3, 28))
-  private val defaultModel = PatientsTabModel.create()
+  private val defaultModel = PatientsTabModel.create(isRemindingToEnterDrugStockReportEnabled = false)
 
   @Test
   fun `When app staleness is loaded and app update nudge priority is medium, then show critical app update card and display app update nudge reason`() {

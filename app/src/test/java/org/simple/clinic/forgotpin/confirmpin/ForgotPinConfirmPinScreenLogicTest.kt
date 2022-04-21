@@ -420,6 +420,7 @@ class ForgotPinConfirmPinScreenLogicTest {
   }
 
   private fun setupController(pin: String) {
+    val viewEffectHandler = ForgotPinConfirmPinViewEffectHandler(uiActions)
     val effectHandler = ForgotPinConfirmPinEffectHandler(
         userSession = userSession,
         currentUser = Lazy { loggedInUser },
@@ -427,7 +428,8 @@ class ForgotPinConfirmPinScreenLogicTest {
         resetUserPin = resetUserPin,
         syncAndClearPatientData = syncAndClearPatientData,
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = uiActions
+        uiActions = uiActions,
+        viewEffectsConsumer = viewEffectHandler::handle
     )
 
     val uiRenderer = ForgotPinConfirmPinUiRenderer(ui)

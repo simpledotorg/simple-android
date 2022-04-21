@@ -1,5 +1,6 @@
 package org.simple.clinic.forgotpin.confirmpin
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -23,12 +24,16 @@ class ForgotPinConfirmPinEffectHandler @AssistedInject constructor(
     private val resetUserPin: ResetUserPin,
     private val syncAndClearPatientData: SyncAndClearPatientData,
     private val schedulersProvider: SchedulersProvider,
-    @Assisted private val uiActions: ForgotPinConfirmPinUiActions
+    @Assisted private val uiActions: ForgotPinConfirmPinUiActions,
+    @Assisted private val viewEffectsConsumer: Consumer<ForgotPinConfirmPinViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: ForgotPinConfirmPinUiActions): ForgotPinConfirmPinEffectHandler
+    fun create(
+        uiActions: ForgotPinConfirmPinUiActions,
+        viewEffectsConsumer: Consumer<ForgotPinConfirmPinViewEffect>
+    ): ForgotPinConfirmPinEffectHandler
   }
 
   fun build(): ObservableTransformer<ForgotPinConfirmPinEffect, ForgotPinConfirmPinEvent> = RxMobius

@@ -34,7 +34,7 @@ class ForgotPinConfirmPinScreen : BaseScreen<
     ForgotPinConfirmPinModel,
     ForgotPinConfirmPinEvent,
     ForgotPinConfirmPinEffect,
-    Unit>(), ForgotPinConfirmPinUi, ForgotPinConfirmPinUiActions {
+    ForgotPinConfirmPinViewEffect>(), ForgotPinConfirmPinUi, ForgotPinConfirmPinUiActions {
 
   @Inject
   lateinit var effectHandlerFactory: ForgotPinConfirmPinEffectHandler.Factory
@@ -83,13 +83,15 @@ class ForgotPinConfirmPinScreen : BaseScreen<
 
   override fun createUpdate() = ForgotPinConfirmPinUpdate()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
-      .create(this)
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<ForgotPinConfirmPinViewEffect>) = effectHandlerFactory
+      .create(viewEffectsConsumer = viewEffectsConsumer)
       .build()
 
   override fun createInit() = ForgotPinConfirmPinInit()
 
   override fun uiRenderer() = ForgotPinConfirmPinUiRenderer(this)
+
+  override fun viewEffectHandler() = ForgotPinConfirmPinViewEffectHandler(uiActions = this)
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

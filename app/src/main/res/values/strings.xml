@@ -946,7 +946,10 @@
 
   <!-- Drug stock reminder notification -->
   <string name="drug_stock_reminder_notification">Complete your pending drug stock report for %1$s</string>
-  
+  <string name="drug_stock_reminder_card_title">Drug Stock</string>
+  <string name="drug_stock_reminder_card_content">Complete your pending drug stock report for %1$s</string>
+  <string name="drug_stock_reminder_button_text">Enter Drug Stock</string>
+
   <!-- Clinical Decision Support Alerts -->
   <string name="clinical_decision_support_alert_bp_high_title">BP is high. Increase medicines?</string>
   <string name="clinical_decision_support_alert_bp_high_subtitle">Follow protocol, if patient takes their medicines regularly</string>

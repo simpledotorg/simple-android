@@ -22,13 +22,23 @@ class PatientsTabUiRenderer(
       showAccountNotifications(model)
     }
 
-    if (model.hasLoadedNumberOfPatientsRegistered) {
-      toggleTrainingViewVisibility(model)
-    }
+    renderPatientTabScreenCard(model)
+  }
 
-    if (model.appUpdateNudgePriorityIsMedium && model.hasAppStaleness) {
-      ui.showCriticalAppUpdateCard()
-      ui.renderAppUpdateReason(appStalenessInMonths(model.appStaleness!!))
+  private fun renderPatientTabScreenCard(model: PatientsTabModel) {
+    val isDrugStockReportFilledOrNull = model.isDrugStockReportFilled == null || model.isDrugStockReportFilled
+
+    when {
+      model.appUpdateNudgePriorityIsMedium && model.hasAppStaleness && isDrugStockReportFilledOrNull -> {
+        ui.showCriticalAppUpdateCard()
+        ui.renderAppUpdateReason(appStalenessInMonths(model.appStaleness!!))
+      }
+      model.hasLoadedNumberOfPatientsRegistered && isDrugStockReportFilledOrNull -> {
+        toggleTrainingViewVisibility(model)
+      }
+      model.isDrugStockReportFilled == false -> {
+        ui.showDrugStockReminderCard()
+      }
     }
   }
 

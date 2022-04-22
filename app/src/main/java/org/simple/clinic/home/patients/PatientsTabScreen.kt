@@ -30,6 +30,8 @@ import org.simple.clinic.appupdate.AppUpdateNudgePriority
 import org.simple.clinic.appupdate.criticalupdatedialog.CriticalAppUpdateDialog
 import org.simple.clinic.appupdate.dialog.AppUpdateDialog
 import org.simple.clinic.databinding.ScreenPatientsBinding
+import org.simple.clinic.di.DateFormatter
+import org.simple.clinic.di.DateFormatter.Type.MonthAndYear
 import org.simple.clinic.di.injector
 import org.simple.clinic.enterotp.EnterOtpScreen
 import org.simple.clinic.feature.Feature.MonthlyDrugStockReportReminder
@@ -56,6 +58,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId
 import java.time.Instant
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
 
@@ -100,6 +103,10 @@ class PatientsTabScreen : BaseScreen<
 
   @Inject
   lateinit var userClock: UserClock
+
+  @Inject
+  @DateFormatter(MonthAndYear)
+  lateinit var monthYearDateFormatter: DateTimeFormatter
 
   private val deferredEvents = DeferredEventSource<PatientsTabEvent>()
 
@@ -153,6 +160,9 @@ class PatientsTabScreen : BaseScreen<
 
   private val appUpdateCardUpdateReason
     get() = appUpdateCardLayout.criticalUpdateReason
+
+  private val drugStockReminderCardSubTitle
+    get() = binding.drugStockReminderCardLayout.drugStockReminderCardSubTitle
 
   override fun defaultModel() = PatientsTabModel.create()
 
@@ -354,6 +364,18 @@ class PatientsTabScreen : BaseScreen<
 
   override fun showCriticalAppUpdateCard() {
     showHomeScreenBackground(R.id.appUpdateCardLayout)
+  }
+
+  override fun showDrugStockReminderCard() {
+    val previousMonthAndYear = previousMonthAndYear()
+    drugStockReminderCardSubTitle.text = resources.getString(R.string.drug_stock_reminder_card_content, previousMonthAndYear)
+
+    showHomeScreenBackground(R.id.drugStockReminderCardLayout)
+  }
+
+  private fun previousMonthAndYear(): String {
+    val localDate = LocalDate.now(userClock).minusMonths(1)
+    return monthYearDateFormatter.format(localDate)
   }
 
   override fun openYouTubeLinkForSimpleVideo() {

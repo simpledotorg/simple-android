@@ -45,7 +45,7 @@
       app:srcCompat="@drawable/drug_stock_reminder_icon" />
 
     <com.google.android.material.button.MaterialButton
-      android:id="@+id/updateNowButton"
+      android:id="@+id/enterDrugStockButton"
       android:layout_width="@dimen/spacing_0"
       android:layout_height="wrap_content"
       android:layout_marginTop="@dimen/spacing_16"

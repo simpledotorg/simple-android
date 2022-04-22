@@ -249,5 +249,16 @@ jobs:
         with:
           ref: ${{github.ref}}
 
-      - name: Trigger a Bitrise build
+      - name: Trigger Demo Release
         run: kotlinc -script ".github/scripts/TriggerBitriseRelease.main.kts" "${{ github.ref }}" "${{ secrets.BITRISE_ACCESS_TOKEN }}" "${{ secrets.BITRISE_APP_SLUG }}" "${{ secrets.BITRISE_DEMO_WORKFLOW }}"
+
+  prod_release:
+    needs: [ qa_lint, qa_unit_tests, qa_android_tests, verify_release_bundles, verify_room_schemas ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{github.ref}}
+
+      - name: Trigger Prod Release
+        run: kotlinc -script ".github/scripts/TriggerBitriseRelease.main.kts" "${{ github.ref }}" "${{ secrets.BITRISE_ACCESS_TOKEN }}" "${{ secrets.BITRISE_APP_SLUG }}" "${{ secrets.BITRISE_PROD_WORKFLOW }}"

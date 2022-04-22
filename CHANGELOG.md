@@ -27,6 +27,7 @@
 - Add `DrugStockCard` in `PatientsTabScreen` and handle its visibility
 - Cut release branch every week instead of every 2 weeks
 - Trigger demo and prod release when release branch is created
+- Schedule `DrugStockNotifcationScheduler` in the `PatientsTabScreen`
 
 ### Features
 

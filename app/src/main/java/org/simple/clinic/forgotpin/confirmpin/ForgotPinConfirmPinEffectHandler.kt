@@ -1,5 +1,6 @@
 package org.simple.clinic.forgotpin.confirmpin
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -23,26 +24,21 @@ class ForgotPinConfirmPinEffectHandler @AssistedInject constructor(
     private val resetUserPin: ResetUserPin,
     private val syncAndClearPatientData: SyncAndClearPatientData,
     private val schedulersProvider: SchedulersProvider,
-    @Assisted private val uiActions: ForgotPinConfirmPinUiActions
+    @Assisted private val viewEffectsConsumer: Consumer<ForgotPinConfirmPinViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: ForgotPinConfirmPinUiActions): ForgotPinConfirmPinEffectHandler
+    fun create(viewEffectsConsumer: Consumer<ForgotPinConfirmPinViewEffect>): ForgotPinConfirmPinEffectHandler
   }
 
   fun build(): ObservableTransformer<ForgotPinConfirmPinEffect, ForgotPinConfirmPinEvent> = RxMobius
       .subtypeEffectHandler<ForgotPinConfirmPinEffect, ForgotPinConfirmPinEvent>()
       .addTransformer(LoadLoggedInUser::class.java, loadLoggedInUser())
       .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
-      .addAction(HideError::class.java, uiActions::hideError, schedulersProvider.ui())
       .addTransformer(ValidatePinConfirmation::class.java, validatePinConfirmation())
-      .addAction(ShowMismatchedError::class.java, uiActions::showPinMismatchedError, schedulersProvider.ui())
-      .addAction(ShowProgress::class.java, uiActions::showProgress, schedulersProvider.ui())
-      .addAction(ShowNetworkError::class.java, uiActions::showNetworkError, schedulersProvider.ui())
-      .addAction(ShowUnexpectedError::class.java, uiActions::showUnexpectedError, schedulersProvider.ui())
-      .addAction(GoToHomeScreen::class.java, uiActions::goToHomeScreen, schedulersProvider.ui())
       .addTransformer(SyncPatientDataAndResetPin::class.java, syncPatientDataAndResetPin())
+      .addConsumer(ForgotPinConfirmPinViewEffect::class.java, viewEffectsConsumer::accept)
       .build()
 
   private fun syncPatientDataAndResetPin(): ObservableTransformer<SyncPatientDataAndResetPin, ForgotPinConfirmPinEvent> {

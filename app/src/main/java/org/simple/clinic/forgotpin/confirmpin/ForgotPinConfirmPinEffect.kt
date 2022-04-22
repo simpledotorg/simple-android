@@ -6,21 +6,23 @@ object LoadLoggedInUser : ForgotPinConfirmPinEffect()
 
 object LoadCurrentFacility : ForgotPinConfirmPinEffect()
 
-object HideError : ForgotPinConfirmPinEffect()
-
 data class ValidatePinConfirmation(
     val previousPin: String,
     val enteredPin: String
 ) : ForgotPinConfirmPinEffect()
 
-object ShowMismatchedError : ForgotPinConfirmPinEffect()
-
-object ShowProgress : ForgotPinConfirmPinEffect()
-
-object ShowNetworkError : ForgotPinConfirmPinEffect()
-
-object ShowUnexpectedError : ForgotPinConfirmPinEffect()
-
-object GoToHomeScreen : ForgotPinConfirmPinEffect()
-
 data class SyncPatientDataAndResetPin(val newPin: String) : ForgotPinConfirmPinEffect()
+
+sealed class ForgotPinConfirmPinViewEffect : ForgotPinConfirmPinEffect()
+
+object HideError : ForgotPinConfirmPinViewEffect()
+
+object ShowMismatchedError : ForgotPinConfirmPinViewEffect()
+
+object ShowProgress : ForgotPinConfirmPinViewEffect()
+
+object ShowNetworkError : ForgotPinConfirmPinViewEffect()
+
+object ShowUnexpectedError : ForgotPinConfirmPinViewEffect()
+
+object GoToHomeScreen : ForgotPinConfirmPinViewEffect()

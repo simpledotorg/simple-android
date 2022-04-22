@@ -33,6 +33,7 @@ import org.simple.clinic.databinding.ScreenPatientsBinding
 import org.simple.clinic.di.DateFormatter
 import org.simple.clinic.di.DateFormatter.Type.MonthAndYear
 import org.simple.clinic.di.injector
+import org.simple.clinic.drugstockreminders.DrugStockNotificationScheduler
 import org.simple.clinic.enterotp.EnterOtpScreen
 import org.simple.clinic.feature.Feature.MonthlyDrugStockReportReminder
 import org.simple.clinic.feature.Feature.NotifyAppUpdateAvailableV2
@@ -107,6 +108,9 @@ class PatientsTabScreen : BaseScreen<
   @Inject
   @DateFormatter(MonthAndYear)
   lateinit var monthYearDateFormatter: DateTimeFormatter
+
+  @Inject
+  lateinit var drugStockNotificationScheduler: DrugStockNotificationScheduler
 
   private val deferredEvents = DeferredEventSource<PatientsTabEvent>()
 
@@ -211,6 +215,10 @@ class PatientsTabScreen : BaseScreen<
 
     homeIllustration.setImageResource(illustrationResourceId())
     simpleVideoIllustration.setImageResource(videoIllustrationResourceId())
+
+    if (features.isEnabled(MonthlyDrugStockReportReminder)) {
+      drugStockNotificationScheduler.schedule()
+    }
   }
 
   private fun videoIllustrationResourceId() = when (country.isoCountryCode) {

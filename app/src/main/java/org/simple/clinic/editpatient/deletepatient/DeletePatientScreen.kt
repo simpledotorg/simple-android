@@ -100,10 +100,7 @@ class DeletePatientScreen : BaseScreen<
   override fun createUpdate() = DeletePatientUpdate()
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<DeletePatientViewEffect>) = effectHandlerFactory
-      .create(
-          uiActions = this,
-          viewEffectsConsumer = viewEffectsConsumer
-      )
+      .create(viewEffectsConsumer = viewEffectsConsumer)
       .build()
 
   override fun uiRenderer() = DeletePatientViewRenderer(this)

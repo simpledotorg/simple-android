@@ -12,14 +12,12 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 class DeletePatientEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val schedulersProvider: SchedulersProvider,
-    @Assisted private val uiActions: UiActions,
     @Assisted private val viewEffectsConsumer: Consumer<DeletePatientViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        uiActions: UiActions,
         viewEffectsConsumer: Consumer<DeletePatientViewEffect>
     ): DeletePatientEffectHandler
   }

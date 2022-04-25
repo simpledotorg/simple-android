@@ -23,7 +23,6 @@ class DeletePatientEffectHandlerTest {
   private val effectHandler = DeletePatientEffectHandler(
       patientRepository = patientRepository,
       schedulersProvider = TrampolineSchedulersProvider(),
-      uiActions = uiActions,
       viewEffectsConsumer = viewEffectHandler::handle
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)

@@ -29,6 +29,7 @@
 - Schedule `DrugStockNotifcationScheduler` in the `PatientsTabScreen`
 - Migrate `ForgotPinConfirmPinEffectHandler` to use view effects
 - Bump Flipper to v0.143.0
+- Bump kotlin to v1.6.21
 
 ### Features
 

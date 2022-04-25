@@ -11,6 +11,7 @@ class DeletePatientViewEffectHandler(
     when (viewEffect) {
       is ShowConfirmDeleteDialog -> uiActions.showConfirmDeleteDialog(viewEffect.patientName, viewEffect.deletedReason)
       is ShowConfirmDiedDialog -> uiActions.showConfirmDiedDialog(viewEffect.patientName)
+      ShowHomeScreen -> uiActions.showHomeScreen()
     }.exhaustive()
   }
 }

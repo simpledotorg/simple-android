@@ -12,8 +12,6 @@ data class DeletePatient(
 
 data class MarkPatientAsDead(val patientUuid: UUID) : DeletePatientEffect()
 
-object ShowHomeScreen : DeletePatientEffect()
-
 data class LoadPatient(val patientUuid: UUID) : DeletePatientEffect()
 
 sealed class DeletePatientViewEffect : DeletePatientEffect()
@@ -24,3 +22,5 @@ data class ShowConfirmDeleteDialog(
 ) : DeletePatientViewEffect()
 
 data class ShowConfirmDiedDialog(val patientName: String) : DeletePatientViewEffect()
+
+object ShowHomeScreen : DeletePatientViewEffect()

@@ -105,6 +105,8 @@ class DeletePatientScreen : BaseScreen<
 
   override fun uiRenderer() = DeletePatientViewRenderer(this)
 
+  override fun viewEffectHandler() = DeletePatientViewEffectHandler(uiActions = this)
+
   override fun showDeleteReasons(
       patientDeleteReasons: List<PatientDeleteReason>,
       selectedReason: PatientDeleteReason?

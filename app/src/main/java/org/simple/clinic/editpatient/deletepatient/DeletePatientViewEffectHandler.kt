@@ -10,6 +10,7 @@ class DeletePatientViewEffectHandler(
   override fun handle(viewEffect: DeletePatientViewEffect) {
     when (viewEffect) {
       is ShowConfirmDeleteDialog -> uiActions.showConfirmDeleteDialog(viewEffect.patientName, viewEffect.deletedReason)
+      is ShowConfirmDiedDialog -> uiActions.showConfirmDiedDialog(viewEffect.patientName)
     }.exhaustive()
   }
 }

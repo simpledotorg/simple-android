@@ -33,6 +33,7 @@ class DeletePatientEffectHandler @AssistedInject constructor(
         .addTransformer(MarkPatientAsDead::class.java, markPatientAsDead())
         .addAction(ShowHomeScreen::class.java, { uiActions.showHomeScreen() }, schedulersProvider.ui())
         .addTransformer(LoadPatient::class.java, loadPatient())
+        .addConsumer(DeletePatientViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 

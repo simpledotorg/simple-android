@@ -27,7 +27,6 @@ class DeletePatientEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<DeletePatientEffect, DeletePatientEvent> {
     return RxMobius
         .subtypeEffectHandler<DeletePatientEffect, DeletePatientEvent>()
-        .addConsumer(ShowConfirmDeleteDialog::class.java, { uiActions.showConfirmDeleteDialog(it.patientName, it.deletedReason) }, schedulersProvider.ui())
         .addConsumer(ShowConfirmDiedDialog::class.java, { uiActions.showConfirmDiedDialog(it.patientName) }, schedulersProvider.ui())
         .addTransformer(DeletePatient::class.java, deletePatient())
         .addTransformer(MarkPatientAsDead::class.java, markPatientAsDead())

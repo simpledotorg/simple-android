@@ -5,11 +5,6 @@ import java.util.UUID
 
 sealed class DeletePatientEffect
 
-data class ShowConfirmDeleteDialog(
-    val patientName: String,
-    val deletedReason: DeletedReason
-) : DeletePatientEffect()
-
 data class ShowConfirmDiedDialog(val patientName: String) : DeletePatientEffect()
 
 data class DeletePatient(
@@ -24,3 +19,8 @@ object ShowHomeScreen : DeletePatientEffect()
 data class LoadPatient(val patientUuid: UUID) : DeletePatientEffect()
 
 sealed class DeletePatientViewEffect : DeletePatientEffect()
+
+data class ShowConfirmDeleteDialog(
+    val patientName: String,
+    val deletedReason: DeletedReason
+) : DeletePatientViewEffect()

@@ -5,7 +5,6 @@
 ### Internal
 
 - Bump Sentry to v5.7.2
-- Bump Flipper to v0.142.0
 - Bump Mixpanel to v6.1.1
 - Bump gradle to v7.1.3
 - Update translations: `am-ET`, `ti-ET`, `om-ET`, `bn-BD`, `hi-IN`, `so-ET`, `si-LK`, `te-IN`, `ta-IN`, `mr-IN`, `ta-LK`, `pa-IN`, `kn-IN`,
@@ -29,6 +28,7 @@
 - Trigger demo and prod release when release branch is created
 - Schedule `DrugStockNotifcationScheduler` in the `PatientsTabScreen`
 - Migrate `ForgotPinConfirmPinEffectHandler` to use view effects
+- Bump Flipper to v0.143.0
 
 ### Features
 

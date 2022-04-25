@@ -47,6 +47,7 @@
 - Schedule `DrugStockNotifcationScheduler` in the `PatientsTabScreen`
 - Migrate `ForgotPinConfirmPinEffectHandler` to use view effects
 - Bump Flipper to v0.143.0
+- Rename `trigger_demo_release` workflow name to `trigger_release`
 
 ## 2022-04-18-8216
 

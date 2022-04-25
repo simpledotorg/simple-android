@@ -36,7 +36,7 @@ class DeletePatientScreen : BaseScreen<
     DeletePatientModel,
     DeletePatientEvent,
     DeletePatientEffect,
-    Unit>(), UiActions, DeletePatientUi {
+    DeletePatientViewEffect>(), UiActions, DeletePatientUi {
 
   @Inject
   lateinit var router: Router
@@ -99,7 +99,7 @@ class DeletePatientScreen : BaseScreen<
 
   override fun createUpdate() = DeletePatientUpdate()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<DeletePatientViewEffect>) = effectHandlerFactory
       .create(this)
       .build()
 

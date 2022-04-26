@@ -4,6 +4,16 @@
 
 ### Internal
 
+- Bump kotlin to v1.6.21
+
+### Features
+
+- [In Progress: 22 Apr 2022] Messaging users to remind them to fill out drug stock report each month
+
+## On Demo
+
+### Internal
+
 - Bump Sentry to v5.7.2
 - Bump Mixpanel to v6.1.1
 - Bump gradle to v7.1.3
@@ -29,11 +39,6 @@
 - Schedule `DrugStockNotifcationScheduler` in the `PatientsTabScreen`
 - Migrate `ForgotPinConfirmPinEffectHandler` to use view effects
 - Bump Flipper to v0.143.0
-- Bump kotlin to v1.6.21
-
-### Features
-
-- [In Progress: 22 Apr 2022] Messaging users to remind them to fill out drug stock report each month
 
 ## 2022-04-18-8216
 

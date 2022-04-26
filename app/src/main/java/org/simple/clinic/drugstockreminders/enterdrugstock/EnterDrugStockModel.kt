@@ -15,6 +15,9 @@ data class EnterDrugStockModel(
     )
   }
 
+  val isDrugStockUrlLoaded: Boolean
+    get() = drugStockFormUrl.isNullOrEmpty().not()
+
   fun drugStockFormUrlLoaded(url: String?): EnterDrugStockModel {
     return copy(drugStockFormUrl = url)
   }

@@ -20,7 +20,7 @@ class EnterDrugStockScreen : BaseScreen<
     EnterDrugStockModel,
     Unit,
     Unit,
-    Unit>() {
+    Unit>(), EnterDrugStockUi {
 
   @Inject
   lateinit var router: Router
@@ -49,7 +49,11 @@ class EnterDrugStockScreen : BaseScreen<
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenEnterDrugStockBinding
       .inflate(layoutInflater, container, false)
 
-  override fun uiRenderer() = EnterDrugStockScreenUiRenderer()
+  override fun uiRenderer() = EnterDrugStockScreenUiRenderer(this)
+
+  override fun loadDrugStockForm(drugStockFormUrl: String) {
+    webView.loadUrl(drugStockFormUrl)
+  }
 
   interface Injector {
     fun inject(target: EnterDrugStockScreen)

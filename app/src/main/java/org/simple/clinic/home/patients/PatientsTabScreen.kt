@@ -34,6 +34,7 @@ import org.simple.clinic.di.DateFormatter
 import org.simple.clinic.di.DateFormatter.Type.MonthAndYear
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugstockreminders.DrugStockNotificationScheduler
+import org.simple.clinic.drugstockreminders.enterdrugstock.EnterDrugStockScreen
 import org.simple.clinic.enterotp.EnterOtpScreen
 import org.simple.clinic.feature.Feature.MonthlyDrugStockReportReminder
 import org.simple.clinic.feature.Feature.NotifyAppUpdateAvailableV2
@@ -352,6 +353,10 @@ class PatientsTabScreen : BaseScreen<
 
   override fun showCriticalAppUpdateDialog(appUpdateNudgePriority: AppUpdateNudgePriority) {
     router.push(CriticalAppUpdateDialog.Key(appUpdateNudgePriority))
+  }
+
+  override fun openEnterDrugStockScreen() {
+    router.push(EnterDrugStockScreen.Key())
   }
 
   private fun showHomeScreenBackground(@IdRes viewId: Int) {

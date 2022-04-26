@@ -207,4 +207,15 @@ class PatientsEffectHandlerTest {
     verify(isDrugStockReportFilled).set(Optional.of(true))
     verifyNoMoreInteractions(drugStockReportLastCheckedAt)
   }
+
+  @Test
+  fun `when open enter drug stock screen effect is received, then open enter drug stock screen`() {
+    // when
+    effectHandlerTestCase.dispatch(OpenEnterDrugStockScreen)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+    verify(uiActions).openEnterDrugStockScreen()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

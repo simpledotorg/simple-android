@@ -15,4 +15,5 @@ interface PatientsTabUiActions {
   fun openPatientSummary(patientId: UUID)
   fun openSimpleOnPlaystore()
   fun showCriticalAppUpdateDialog(appUpdateNudgePriority: AppUpdateNudgePriority)
+  fun openEnterDrugStockScreen()
 }

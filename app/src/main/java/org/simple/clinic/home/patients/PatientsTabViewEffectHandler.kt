@@ -17,6 +17,7 @@ class PatientsTabViewEffectHandler(
       ShowAppUpdateAvailable -> uiActions.showAppUpdateDialog()
       OpenSimpleOnPlayStore -> uiActions.openSimpleOnPlaystore()
       is ShowCriticalAppUpdateDialog -> uiActions.showCriticalAppUpdateDialog(viewEffect.appUpdateNudgePriority)
+      OpenEnterDrugStockScreen -> uiActions.openEnterDrugStockScreen()
     }
   }
 }

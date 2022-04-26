@@ -12,6 +12,7 @@ import android.view.animation.AnimationUtils
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
@@ -357,6 +358,14 @@ class PatientsTabScreen : BaseScreen<
 
   override fun openEnterDrugStockScreen() {
     router.push(EnterDrugStockScreen.Key())
+  }
+
+  override fun showNoActiveNetworkConnectionDialog() {
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(R.string.drug_stock_reminder_no_active_network_connection_dialog_title)
+        .setMessage(R.string.drug_stock_reminder__no_active_network_connection_dialog_message)
+        .setPositiveButton(R.string.drug_stock_reminder__no_active_network_connection_dialog_positive_button, null)
+        .show()
   }
 
   private fun showHomeScreenBackground(@IdRes viewId: Int) {

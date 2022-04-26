@@ -16,4 +16,5 @@ interface PatientsTabUiActions {
   fun openSimpleOnPlaystore()
   fun showCriticalAppUpdateDialog(appUpdateNudgePriority: AppUpdateNudgePriority)
   fun openEnterDrugStockScreen()
+  fun showNoActiveNetworkConnectionDialog()
 }

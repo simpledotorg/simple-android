@@ -18,6 +18,7 @@ class PatientsTabViewEffectHandler(
       OpenSimpleOnPlayStore -> uiActions.openSimpleOnPlaystore()
       is ShowCriticalAppUpdateDialog -> uiActions.showCriticalAppUpdateDialog(viewEffect.appUpdateNudgePriority)
       OpenEnterDrugStockScreen -> uiActions.openEnterDrugStockScreen()
+      ShowNoActiveNetworkConnectionDialog -> uiActions.showNoActiveNetworkConnectionDialog()
     }
   }
 }

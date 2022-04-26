@@ -218,4 +218,15 @@ class PatientsEffectHandlerTest {
     verify(uiActions).openEnterDrugStockScreen()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when show no active network connection dialog effect is received, then show no active network connection dialog`() {
+    // when
+    effectHandlerTestCase.dispatch(ShowNoActiveNetworkConnectionDialog)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+    verify(uiActions).showNoActiveNetworkConnectionDialog()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

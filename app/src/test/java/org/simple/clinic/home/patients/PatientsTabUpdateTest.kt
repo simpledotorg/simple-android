@@ -7,6 +7,8 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.analytics.NetworkConnectivityStatus.ACTIVE
+import org.simple.clinic.analytics.NetworkConnectivityStatus.INACTIVE
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.LIGHT
 import org.simple.clinic.drugstockreminders.DrugStockReminder
@@ -156,6 +158,28 @@ class PatientsTabUpdateTest {
                 TouchDrugStockReportLastCheckedAt,
                 TouchIsDrugStockReportFilled(isDrugStockReportFilled = false)
             )
+        ))
+  }
+
+  @Test
+  fun `when enter drug stock button is clicked and the network is not connected, then show no internet connection dialog`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(EnterDrugStockButtonClicked(networkStatus = Optional.of(INACTIVE)))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowNoActiveNetworkConnectionDialog)
+        ))
+  }
+
+  @Test
+  fun `when enter drug stock button is clicked and the network is connected, then enter drug stock screen`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(EnterDrugStockButtonClicked(networkStatus = Optional.of(ACTIVE)))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenEnterDrugStockScreen)
         ))
   }
 }

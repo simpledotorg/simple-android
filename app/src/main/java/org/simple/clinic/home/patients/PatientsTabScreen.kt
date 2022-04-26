@@ -167,8 +167,14 @@ class PatientsTabScreen : BaseScreen<
   private val appUpdateCardUpdateReason
     get() = appUpdateCardLayout.criticalUpdateReason
 
+  private val drugStockReminderCardLayout
+    get() = binding.drugStockReminderCardLayout
+
   private val drugStockReminderCardSubTitle
-    get() = binding.drugStockReminderCardLayout.drugStockReminderCardSubTitle
+    get() = drugStockReminderCardLayout.drugStockReminderCardSubTitle
+
+  private val enterDrugStockButton
+    get() = drugStockReminderCardLayout.enterDrugStockButton
 
   override fun defaultModel() = PatientsTabModel.create()
 
@@ -187,7 +193,8 @@ class PatientsTabScreen : BaseScreen<
           enterCodeManuallyClicks(),
           scanCardIdButtonClicks(),
           simpleVideoClicked(),
-          appUpdateCardUpdateNowClicked()
+          appUpdateCardUpdateNowClicked(),
+          enterDrugStockClicked()
       )
       .compose<UiEvent>(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
       .compose(ReportAnalyticsEvents())
@@ -268,6 +275,10 @@ class PatientsTabScreen : BaseScreen<
   private fun appUpdateCardUpdateNowClicked() = appUpdateCardUpdateNowButton
       .clicks()
       .map { UpdateNowButtonClicked }
+
+  private fun enterDrugStockClicked() = enterDrugStockButton
+      .clicks()
+      .map { EnterDrugStockButtonClicked() }
 
   override fun openPatientSearchScreen(additionalIdentifier: Identifier?) {
     val screenKey = InstantSearchScreenKey(

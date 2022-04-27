@@ -7,6 +7,7 @@
 - Bump kotlin to v1.6.21
 - Bump Lottie to v5.1.1
 - Migrate `DeletePatientEffectHandler` to use view effects
+- [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effects 
 
 ### Features
 

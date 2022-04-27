@@ -31,6 +31,10 @@ class CheckAppUpdateAvailability @Inject constructor(
     private val appVersionFetcher: AppVersionFetcher
 ) {
 
+  companion object {
+    const val UPDATE_PRIORITIES_DEFAULT_VALUE = 0
+  }
+
   fun listen(): Observable<AppUpdateState> {
     return updateManager
         .updateInfo()
@@ -68,13 +72,15 @@ class CheckAppUpdateAvailability @Inject constructor(
 
   @VisibleForTesting(otherwise = PRIVATE)
   fun shouldNudgeForUpdate(updateInfo: UpdateInfo): Observable<AppUpdateState> {
-    val appStaleness = appVersionStaleness(updateInfo.availableVersionCode)
+    val availableVersionCode = updateInfo.availableVersionCode
+    val appStaleness = appVersionStaleness(availableVersionCode)
+
     val appUpdatePriority = config
         .map {
           appUpdateNudgePriority(
               appStaleness = appStaleness,
               config = it,
-              appUpdatePriority = updateInfo.appUpdatePriority
+              appUpdatePriority = updatePriorities.getOrDefault(availableVersionCode.toString(), UPDATE_PRIORITIES_DEFAULT_VALUE)
           )
         }
 

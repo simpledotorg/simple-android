@@ -208,14 +208,14 @@ class CheckAppUpdateAvailabilityTest {
             appUpdatePriority = 0
         ),
         testCase(
-            versionCode = 120,
+            versionCode = 125,
             updateAvailabilityState = UpdateAvailability.UPDATE_AVAILABLE,
             isInAppUpdateEnabled = true,
             appUpdateState = ShowAppUpdate(appUpdateNudgePriority = AppUpdateNudgePriority.CRITICAL_SECURITY),
             appUpdatePriority = 5
         ),
         testCase(
-            versionCode = 33,
+            versionCode = 35,
             updateAvailabilityState = UpdateAvailability.UPDATE_AVAILABLE,
             isInAppUpdateEnabled = true,
             appUpdateState = ShowAppUpdate(appUpdateNudgePriority = AppUpdateNudgePriority.LIGHT),

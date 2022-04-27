@@ -10,7 +10,7 @@ class EnterDrugStockInitTest {
 
   @Test
   fun `when screen is created, then load the drug stock form url`() {
-    val defaultModel = EnterDrugStockModel
+    val defaultModel = EnterDrugStockModel.create()
     InitSpec(EnterDrugStockInit())
         .whenInit(defaultModel)
         .then(assertThatFirst(

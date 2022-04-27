@@ -4,4 +4,14 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-object EnterDrugStockModel : Parcelable
+data class EnterDrugStockModel(
+    val drugStockFormUrl: String?
+) : Parcelable {
+
+  companion object {
+
+    fun create() = EnterDrugStockModel(
+        drugStockFormUrl = null
+    )
+  }
+}

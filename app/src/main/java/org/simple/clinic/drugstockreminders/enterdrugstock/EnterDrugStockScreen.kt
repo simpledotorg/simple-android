@@ -44,7 +44,7 @@ class EnterDrugStockScreen : BaseScreen<
     webView.settings.javaScriptEnabled = true
   }
 
-  override fun defaultModel() = EnterDrugStockModel
+  override fun defaultModel() = EnterDrugStockModel.create()
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenEnterDrugStockBinding
       .inflate(layoutInflater, container, false)

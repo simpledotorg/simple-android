@@ -8,11 +8,12 @@
 - Bump Lottie to v5.1.1
 - Migrate `DeletePatientEffectHandler` to use view effects
 - Update `DrugStockReminderAPI` to include `DrugStockFormURL`
+- Handle opening of webView when enter drug stock button clicked
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effects
 
 ### Features
 
-- [In Progress: 22 Apr 2022] Messaging users to remind them to fill out drug stock report each month
+- Add support for monthly drug stock report reminders
 
 ## On Demo
 

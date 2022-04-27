@@ -47,8 +47,7 @@ class CheckAppUpdateAvailabilityTest {
     val isUpdateAvailable = updateAvailabilityState == UpdateAvailability.UPDATE_AVAILABLE
     val updateInfo = UpdateInfo(
         availableVersionCode = availableVersionCode,
-        isUpdateAvailable = isUpdateAvailable,
-        appUpdatePriority = 0
+        isUpdateAvailable = isUpdateAvailable
     )
 
     setup(isInAppUpdateEnabled = isInAppUpdateEnabled, isInAppUpdateEnabledV2 = false)
@@ -121,8 +120,7 @@ class CheckAppUpdateAvailabilityTest {
     val isUpdateAvailable = updateAvailabilityState == UpdateAvailability.UPDATE_AVAILABLE
     val updateInfo = UpdateInfo(
         availableVersionCode = availableVersionCode,
-        isUpdateAvailable = isUpdateAvailable,
-        appUpdatePriority = appUpdatePriority
+        isUpdateAvailable = isUpdateAvailable
     )
 
     setup(isInAppUpdateEnabled = false, isInAppUpdateEnabledV2 = isInAppUpdateEnabled)
@@ -228,7 +226,7 @@ class CheckAppUpdateAvailabilityTest {
   fun `app staleness should be loaded correctly`() {
     // given
     setup(isInAppUpdateEnabled = false, isInAppUpdateEnabledV2 = false)
-    val updateInfo = UpdateInfo(isUpdateAvailable = true, availableVersionCode = 150, appUpdatePriority = 0)
+    val updateInfo = UpdateInfo(isUpdateAvailable = true, availableVersionCode = 150)
     whenever(updateManager.updateInfo()).doReturn(Observable.just(updateInfo))
 
     // then

@@ -33,7 +33,6 @@ class PlayUpdateManager @Inject constructor(
 
   private fun createUpdateInfo(appUpdateInfo: AppUpdateInfo) = UpdateInfo(
       availableVersionCode = appUpdateInfo.availableVersionCode(),
-      isUpdateAvailable = appUpdateInfo.updateAvailability() == UPDATE_AVAILABLE,
-      appUpdatePriority = appUpdateInfo.updatePriority()
+      isUpdateAvailable = appUpdateInfo.updateAvailability() == UPDATE_AVAILABLE
   )
 }

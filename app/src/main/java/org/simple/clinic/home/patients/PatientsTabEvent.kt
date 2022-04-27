@@ -2,10 +2,12 @@ package org.simple.clinic.home.patients
 
 import android.Manifest
 import org.simple.clinic.activity.permissions.RequiresPermission
+import org.simple.clinic.analytics.NetworkConnectivityStatus
 import org.simple.clinic.appupdate.AppUpdateNudgePriority
 import org.simple.clinic.drugstockreminders.DrugStockReminder
 import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.user.User
+import org.simple.clinic.util.RequiresNetwork
 import org.simple.clinic.widgets.UiEvent
 import java.time.Instant
 import java.time.LocalDate
@@ -68,3 +70,10 @@ data class RequiredInfoForShowingDrugStockReminderLoaded(
     val drugStockReportLastCheckedAt: LocalDate,
     val isDrugStockReportFilled: Optional<Boolean>
 ) : PatientsTabEvent()
+
+data class EnterDrugStockButtonClicked(
+    override var networkStatus: Optional<NetworkConnectivityStatus> = Optional.empty()
+) : PatientsTabEvent(), RequiresNetwork {
+
+  override val analyticsName = "Patients:Enter Drug Stock Clicked"
+}

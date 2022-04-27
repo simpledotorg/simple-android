@@ -21,6 +21,7 @@ import org.simple.clinic.drugs.search.DrugsSearchScreen
 import org.simple.clinic.drugs.selection.EditMedicinesScreen
 import org.simple.clinic.drugs.selection.custom.CustomDrugEntrySheet
 import org.simple.clinic.drugs.selection.custom.drugfrequency.SelectDrugFrequencyDialog
+import org.simple.clinic.drugstockreminders.enterdrugstock.EnterDrugStockScreen
 import org.simple.clinic.editpatient.ConfirmDiscardChangesDialog
 import org.simple.clinic.editpatient.EditPatientScreen
 import org.simple.clinic.editpatient.deletepatient.DeletePatientScreen
@@ -145,7 +146,8 @@ interface TheActivityComponent :
     SelectOverdueDownloadFormatDialog.Injector,
     DeletePatientScreen.Injector,
     NextAppointmentCardView.Injector,
-    CriticalAppUpdateDialog.Injector {
+    CriticalAppUpdateDialog.Injector,
+    EnterDrugStockScreen.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory

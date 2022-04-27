@@ -12,6 +12,7 @@ import android.view.animation.AnimationUtils
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
@@ -34,6 +35,7 @@ import org.simple.clinic.di.DateFormatter
 import org.simple.clinic.di.DateFormatter.Type.MonthAndYear
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugstockreminders.DrugStockNotificationScheduler
+import org.simple.clinic.drugstockreminders.enterdrugstock.EnterDrugStockScreen
 import org.simple.clinic.enterotp.EnterOtpScreen
 import org.simple.clinic.feature.Feature.MonthlyDrugStockReportReminder
 import org.simple.clinic.feature.Feature.NotifyAppUpdateAvailableV2
@@ -53,6 +55,7 @@ import org.simple.clinic.simplevideo.SimpleVideoConfig
 import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.TrainingVideo
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.util.RuntimeNetworkStatus
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
@@ -112,6 +115,9 @@ class PatientsTabScreen : BaseScreen<
   @Inject
   lateinit var drugStockNotificationScheduler: DrugStockNotificationScheduler
 
+  @Inject
+  lateinit var runtimeNetworkStatus: RuntimeNetworkStatus<UiEvent>
+
   private val deferredEvents = DeferredEventSource<PatientsTabEvent>()
 
   @IdRes
@@ -165,8 +171,14 @@ class PatientsTabScreen : BaseScreen<
   private val appUpdateCardUpdateReason
     get() = appUpdateCardLayout.criticalUpdateReason
 
+  private val drugStockReminderCardLayout
+    get() = binding.drugStockReminderCardLayout
+
   private val drugStockReminderCardSubTitle
-    get() = binding.drugStockReminderCardLayout.drugStockReminderCardSubTitle
+    get() = drugStockReminderCardLayout.drugStockReminderCardSubTitle
+
+  private val enterDrugStockButton
+    get() = drugStockReminderCardLayout.enterDrugStockButton
 
   override fun defaultModel() = PatientsTabModel.create()
 
@@ -185,9 +197,11 @@ class PatientsTabScreen : BaseScreen<
           enterCodeManuallyClicks(),
           scanCardIdButtonClicks(),
           simpleVideoClicked(),
-          appUpdateCardUpdateNowClicked()
+          appUpdateCardUpdateNowClicked(),
+          enterDrugStockClicked()
       )
       .compose<UiEvent>(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
+      .compose(runtimeNetworkStatus::apply)
       .compose(ReportAnalyticsEvents())
       .cast<PatientsTabEvent>()
 
@@ -266,6 +280,10 @@ class PatientsTabScreen : BaseScreen<
   private fun appUpdateCardUpdateNowClicked() = appUpdateCardUpdateNowButton
       .clicks()
       .map { UpdateNowButtonClicked }
+
+  private fun enterDrugStockClicked() = enterDrugStockButton
+      .clicks()
+      .map { EnterDrugStockButtonClicked() }
 
   override fun openPatientSearchScreen(additionalIdentifier: Identifier?) {
     val screenKey = InstantSearchScreenKey(
@@ -352,6 +370,18 @@ class PatientsTabScreen : BaseScreen<
 
   override fun showCriticalAppUpdateDialog(appUpdateNudgePriority: AppUpdateNudgePriority) {
     router.push(CriticalAppUpdateDialog.Key(appUpdateNudgePriority))
+  }
+
+  override fun openEnterDrugStockScreen() {
+    router.push(EnterDrugStockScreen.Key())
+  }
+
+  override fun showNoActiveNetworkConnectionDialog() {
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(R.string.drug_stock_reminder_no_active_network_connection_dialog_title)
+        .setMessage(R.string.drug_stock_reminder__no_active_network_connection_dialog_message)
+        .setPositiveButton(R.string.drug_stock_reminder__no_active_network_connection_dialog_positive_button, null)
+        .show()
   }
 
   private fun showHomeScreenBackground(@IdRes viewId: Int) {

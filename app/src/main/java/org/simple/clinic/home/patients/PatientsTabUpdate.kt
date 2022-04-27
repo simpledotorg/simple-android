@@ -38,7 +38,20 @@ class PatientsTabUpdate(private val isNotifyAppUpdateAvailableV2Enabled: Boolean
       UpdateNowButtonClicked -> dispatch(OpenSimpleOnPlayStore)
       is DrugStockReportLoaded -> drugStockReportLoaded(event, model)
       is RequiredInfoForShowingDrugStockReminderLoaded -> requiredInfoForDrugStockReminderLoaded(event, model)
+      is EnterDrugStockButtonClicked -> enterDrugStockButtonClicked(event)
     }
+  }
+
+  private fun enterDrugStockButtonClicked(
+      event: EnterDrugStockButtonClicked
+  ): Next<PatientsTabModel, PatientsTabEffect> {
+    val effect = if (event.hasNetworkConnection) {
+      OpenEnterDrugStockScreen
+    } else {
+      ShowNoActiveNetworkConnectionDialog
+    }
+    
+    return dispatch(effect)
   }
 
   private fun drugStockReportLoaded(

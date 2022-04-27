@@ -50,3 +50,7 @@ object ShowAppUpdateAvailable : PatientsTabViewEffect()
 object OpenSimpleOnPlayStore : PatientsTabViewEffect()
 
 data class ShowCriticalAppUpdateDialog(val appUpdateNudgePriority: AppUpdateNudgePriority) : PatientsTabViewEffect()
+
+object OpenEnterDrugStockScreen : PatientsTabViewEffect()
+
+object ShowNoActiveNetworkConnectionDialog : PatientsTabViewEffect()

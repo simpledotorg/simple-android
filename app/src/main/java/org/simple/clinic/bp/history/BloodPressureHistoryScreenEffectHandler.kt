@@ -1,6 +1,7 @@
 package org.simple.clinic.bp.history
 
 import androidx.paging.PositionalDataSource
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -19,13 +20,15 @@ class BloodPressureHistoryScreenEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val schedulersProvider: SchedulersProvider,
     private val dataSourceFactory: BloodPressureHistoryListItemDataSourceFactory.Factory,
-    @Assisted private val uiActions: BloodPressureHistoryScreenUiActions
+    @Assisted private val uiActions: BloodPressureHistoryScreenUiActions,
+    @Assisted private val viewEffectsConsumer: Consumer<BloodPressureHistoryViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        uiActions: BloodPressureHistoryScreenUiActions
+        uiActions: BloodPressureHistoryScreenUiActions,
+        viewEffectsConsumer: Consumer<BloodPressureHistoryViewEffect>
     ): BloodPressureHistoryScreenEffectHandler
   }
 

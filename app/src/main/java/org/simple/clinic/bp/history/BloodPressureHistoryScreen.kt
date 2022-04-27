@@ -118,7 +118,11 @@ class BloodPressureHistoryScreen : BaseScreen<
 
   override fun createUpdate() = BloodPressureHistoryScreenUpdate()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<BloodPressureHistoryViewEffect>) = effectHandler.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<BloodPressureHistoryViewEffect>) = effectHandler
+      .create(
+          uiActions = this,
+          viewEffectsConsumer = viewEffectsConsumer
+      ).build()
 
   override fun uiRenderer() = BloodPressureHistoryScreenUiRenderer(this)
 

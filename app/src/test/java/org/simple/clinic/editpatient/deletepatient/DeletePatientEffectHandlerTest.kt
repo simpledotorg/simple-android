@@ -19,10 +19,11 @@ class DeletePatientEffectHandlerTest {
 
   private val patientRepository = mock<PatientRepository>()
   private val uiActions = mock<UiActions>()
+  private val viewEffectHandler = DeletePatientViewEffectHandler(uiActions)
   private val effectHandler = DeletePatientEffectHandler(
       patientRepository = patientRepository,
       schedulersProvider = TrampolineSchedulersProvider(),
-      uiActions = uiActions
+      viewEffectsConsumer = viewEffectHandler::handle
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 

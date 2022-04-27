@@ -35,7 +35,7 @@ class DrugStockReminderTest {
   }
 
   @Test
-  fun `when any response code apart from 200, 404 is received, the other error result must be returned`() {
+  fun `when any response code apart from 200 is received, the other error result must be returned`() {
     // given
     val fakeApiCall = FakeCall.error<DrugStockReminderResponsePayload>(
         data = "",
@@ -49,23 +49,6 @@ class DrugStockReminderTest {
 
     // then
     assertThat(response).isEqualTo(OtherError)
-  }
-
-  @Test
-  fun `when the server returns HTTP 404, then drug stock reports for previous month are not found`() {
-    // given
-    val previousMonthsDate = "2022-01-01"
-    val fakeCall = FakeCall.error<DrugStockReminderResponsePayload>(
-        data = "",
-        responseCode = 404
-    )
-    whenever(drugStockReminderApi.drugStockReminder(previousMonthsDate)).thenReturn(fakeCall)
-
-    // when
-    val response = drugStockReminder.reminderForDrugStock(date = previousMonthsDate)
-
-    // then
-    assertThat(response).isEqualTo(NotFound)
   }
 
   @Test

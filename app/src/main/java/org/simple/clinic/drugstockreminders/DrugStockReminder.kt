@@ -33,7 +33,6 @@ class DrugStockReminder @Inject constructor(
 
     return when (response.code()) {
       200 -> readResponse(response)
-      404 -> NotFound
       else -> OtherError
     }
   }

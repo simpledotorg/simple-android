@@ -14,4 +14,8 @@ data class EnterDrugStockModel(
         drugStockFormUrl = null
     )
   }
+
+  fun drugStockFormUrlLoaded(url: String?): EnterDrugStockModel {
+    return copy(drugStockFormUrl = url)
+  }
 }

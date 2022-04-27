@@ -44,6 +44,7 @@ class BloodPressureHistoryScreenEffectHandler @AssistedInject constructor(
 
           uiActions.showBloodPressures(dataSourceFactory)
         }, schedulersProvider.ui())
+        .addConsumer(BloodPressureHistoryViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 

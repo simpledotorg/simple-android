@@ -35,11 +35,18 @@ class EnterDrugStockScreen : BaseScreen<
   private val webView
     get() = binding.webView
 
+  override fun defaultModel() = EnterDrugStockModel.create()
+
+  override fun uiRenderer() = EnterDrugStockScreenUiRenderer(this)
+
   override fun createUpdate() = EnterDrugStockUpdate()
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandler.build()
 
   override fun createInit() = EnterDrugStockInit()
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenEnterDrugStockBinding
+      .inflate(layoutInflater, container, false)
 
   override fun onAttach(context: Context) {
     super.onAttach(context)
@@ -52,15 +59,10 @@ class EnterDrugStockScreen : BaseScreen<
     toolbar.setNavigationOnClickListener { router.pop() }
 
     webView.settings.javaScriptEnabled = true
-    webView.webViewClient = EnterDrugStockWebViewClient()
+    webView.webViewClient = EnterDrugStockWebViewClient(
+        backClicked = { router.pop() }
+    )
   }
-
-  override fun defaultModel() = EnterDrugStockModel.create()
-
-  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenEnterDrugStockBinding
-      .inflate(layoutInflater, container, false)
-
-  override fun uiRenderer() = EnterDrugStockScreenUiRenderer(this)
 
   override fun loadDrugStockForm(drugStockFormUrl: String) {
     webView.loadUrl(drugStockFormUrl)

@@ -7,10 +7,15 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.annotation.RequiresApi
 
-class EnterDrugStockWebViewClient : WebViewClient() {
+class EnterDrugStockWebViewClient(
+    private val backClicked: () -> Unit
+) : WebViewClient() {
 
   override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
     val requestUrl = request?.url?.toString() ?: return super.shouldOverrideUrlLoading(view, request)
+    if (requestUrl == "simple://progress-tab") {
+      backClicked.invoke()
+    }
     view?.loadUrl(requestUrl)
     return false
   }

@@ -122,6 +122,8 @@ class BloodPressureHistoryScreen : BaseScreen<
 
   override fun uiRenderer() = BloodPressureHistoryScreenUiRenderer(this)
 
+  override fun viewEffectHandler() = BloodPressureHistoryViewEffectHandler(uiActions = this)
+
   override fun bindView(
       layoutInflater: LayoutInflater,
       container: ViewGroup?

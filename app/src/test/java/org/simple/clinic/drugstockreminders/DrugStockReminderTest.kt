@@ -5,10 +5,8 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Test
 import org.simple.clinic.FakeCall
-import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.Found
 import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.NotFound
 import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.OtherError
-import java.lang.RuntimeException
 import java.util.UUID
 
 class DrugStockReminderTest {
@@ -74,6 +72,7 @@ class DrugStockReminderTest {
         response = DrugStockReminderResponsePayload(
             month = previousMonthsDate,
             facilityUuid = UUID.fromString("76e4cbc5-91dd-4af5-ae0c-2b7948073858"),
+            drugStockFormUrl = "drug_stock_form_url",
             drugs = emptyList()
         ),
         responseCode = 200

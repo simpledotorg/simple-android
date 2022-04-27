@@ -13,6 +13,9 @@ data class DrugStockReminderResponsePayload(
     @Json(name = "facility_id")
     val facilityUuid: UUID,
 
+    @Json(name = "drug_stock_form_url")
+    val drugStockFormUrl: String,
+
     @Json(name = "drugs")
     val drugs: List<DrugStockReportPayload>
 )

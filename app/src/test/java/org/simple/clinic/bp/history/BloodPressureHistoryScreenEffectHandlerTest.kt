@@ -29,12 +29,15 @@ class BloodPressureHistoryScreenEffectHandlerTest {
   private val patientUuid = UUID.fromString("433d058f-daef-47a7-8c61-95f1a220cbcb")
   private val uiActions = mock<BloodPressureHistoryScreenUiActions>()
   private val dataSourceFactory = mock<BloodPressureHistoryListItemDataSourceFactory.Factory>()
+  private val viewEffectHandler = BloodPressureHistoryViewEffectHandler(uiActions)
   private val effectHandler = BloodPressureHistoryScreenEffectHandler(
       bloodPressureRepository,
       patientRepository,
       TrampolineSchedulersProvider(),
       dataSourceFactory,
-      uiActions).build()
+      uiActions,
+      viewEffectHandler::handle
+  ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
   @After

@@ -52,6 +52,7 @@ class EnterDrugStockScreen : BaseScreen<
     toolbar.setNavigationOnClickListener { router.pop() }
 
     webView.settings.javaScriptEnabled = true
+    webView.webViewClient = EnterDrugStockWebViewClient()
   }
 
   override fun defaultModel() = EnterDrugStockModel.create()

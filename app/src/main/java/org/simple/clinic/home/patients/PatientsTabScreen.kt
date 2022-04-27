@@ -55,6 +55,7 @@ import org.simple.clinic.simplevideo.SimpleVideoConfig
 import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.TrainingVideo
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.util.RuntimeNetworkStatus
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
@@ -113,6 +114,9 @@ class PatientsTabScreen : BaseScreen<
 
   @Inject
   lateinit var drugStockNotificationScheduler: DrugStockNotificationScheduler
+
+  @Inject
+  lateinit var runtimeNetworkStatus: RuntimeNetworkStatus<UiEvent>
 
   private val deferredEvents = DeferredEventSource<PatientsTabEvent>()
 
@@ -197,6 +201,7 @@ class PatientsTabScreen : BaseScreen<
           enterDrugStockClicked()
       )
       .compose<UiEvent>(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
+      .compose(runtimeNetworkStatus::apply)
       .compose(ReportAnalyticsEvents())
       .cast<PatientsTabEvent>()
 

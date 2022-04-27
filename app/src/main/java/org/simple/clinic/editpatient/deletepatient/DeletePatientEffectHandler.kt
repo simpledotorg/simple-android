@@ -1,5 +1,6 @@
 package org.simple.clinic.editpatient.deletepatient
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -9,25 +10,25 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class DeletePatientEffectHandler @AssistedInject constructor(
-    val patientRepository: PatientRepository,
-    val schedulersProvider: SchedulersProvider,
-    @Assisted val uiActions: UiActions
+    private val patientRepository: PatientRepository,
+    private val schedulersProvider: SchedulersProvider,
+    @Assisted private val viewEffectsConsumer: Consumer<DeletePatientViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: UiActions): DeletePatientEffectHandler
+    fun create(
+        viewEffectsConsumer: Consumer<DeletePatientViewEffect>
+    ): DeletePatientEffectHandler
   }
 
   fun build(): ObservableTransformer<DeletePatientEffect, DeletePatientEvent> {
     return RxMobius
         .subtypeEffectHandler<DeletePatientEffect, DeletePatientEvent>()
-        .addConsumer(ShowConfirmDeleteDialog::class.java, { uiActions.showConfirmDeleteDialog(it.patientName, it.deletedReason) }, schedulersProvider.ui())
-        .addConsumer(ShowConfirmDiedDialog::class.java, { uiActions.showConfirmDiedDialog(it.patientName) }, schedulersProvider.ui())
         .addTransformer(DeletePatient::class.java, deletePatient())
         .addTransformer(MarkPatientAsDead::class.java, markPatientAsDead())
-        .addAction(ShowHomeScreen::class.java, { uiActions.showHomeScreen() }, schedulersProvider.ui())
         .addTransformer(LoadPatient::class.java, loadPatient())
+        .addConsumer(DeletePatientViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 

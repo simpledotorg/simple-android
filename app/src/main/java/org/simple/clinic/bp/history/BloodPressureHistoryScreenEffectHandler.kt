@@ -37,6 +37,7 @@ class BloodPressureHistoryScreenEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<BloodPressureHistoryScreenEffect, BloodPressureHistoryScreenEvent>()
         .addTransformer(LoadPatient::class.java, loadPatient(schedulersProvider.io()))
         .addConsumer(ShowBloodPressures::class.java, {
+          // TODO (SM): Convert this to paging source and then migrate `ShowBloodPressures` effect to view effect
           val dataSource = bloodPressureRepository.allBloodPressuresDataSource(it.patientUuid).create() as PositionalDataSource<BloodPressureMeasurement>
           val dataSourceFactory = dataSourceFactory.create(dataSource)
 

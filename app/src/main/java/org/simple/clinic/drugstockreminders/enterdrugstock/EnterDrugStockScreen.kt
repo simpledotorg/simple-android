@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.spotify.mobius.functions.Consumer
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.databinding.ScreenEnterDrugStockBinding
 import org.simple.clinic.di.injector
@@ -18,18 +19,27 @@ class EnterDrugStockScreen : BaseScreen<
     EnterDrugStockScreen.Key,
     ScreenEnterDrugStockBinding,
     EnterDrugStockModel,
-    Unit,
-    Unit,
+    EnterDrugStockEvent,
+    EnterDrugStockEffect,
     Unit>(), EnterDrugStockUi {
 
   @Inject
   lateinit var router: Router
+
+  @Inject
+  lateinit var effectHandler: EnterDrugStockEffectHandler
 
   private val toolbar
     get() = binding.toolbar
 
   private val webView
     get() = binding.webView
+
+  override fun createUpdate() = EnterDrugStockUpdate()
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandler.build()
+
+  override fun createInit() = EnterDrugStockInit()
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

@@ -52,7 +52,7 @@ class BloodPressureHistoryScreen : BaseScreen<
     BloodPressureHistoryScreenModel,
     BloodPressureHistoryScreenEvent,
     BloodPressureHistoryScreenEffect,
-    Unit>(), BloodPressureHistoryScreenUi, BloodPressureHistoryScreenUiActions {
+    BloodPressureHistoryViewEffect>(), BloodPressureHistoryScreenUi, BloodPressureHistoryScreenUiActions {
 
   @Inject
   lateinit var utcClock: UtcClock
@@ -118,7 +118,7 @@ class BloodPressureHistoryScreen : BaseScreen<
 
   override fun createUpdate() = BloodPressureHistoryScreenUpdate()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandler.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<BloodPressureHistoryViewEffect>) = effectHandler.create(this).build()
 
   override fun uiRenderer() = BloodPressureHistoryScreenUiRenderer(this)
 

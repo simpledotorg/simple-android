@@ -1,5 +1,6 @@
 package org.simple.clinic.drugstockreminders
 
+import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
@@ -7,13 +8,16 @@ import org.junit.Test
 import org.simple.clinic.FakeCall
 import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.NotFound
 import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.OtherError
+import java.util.Optional
 import java.util.UUID
 
 class DrugStockReminderTest {
 
   private val drugStockReminderApi = mock<DrugStockReminderApi>()
+  private val drugStockFormUrl = mock<Preference<Optional<String>>>()
   private val drugStockReminder = DrugStockReminder(
-      drugStockReminderApi = drugStockReminderApi
+      drugStockReminderApi = drugStockReminderApi,
+      drugStockFormUrl = drugStockFormUrl
   )
 
   @Test

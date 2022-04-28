@@ -12,7 +12,9 @@ import dagger.Provides
 import io.reactivex.Observable
 import org.intellij.lang.annotations.Language
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.main.TypedMap.Type.UpdatePriorities
 import org.simple.clinic.feature.Features
+import org.simple.clinic.main.TypedMap
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.IsLightAppUpdateNotificationShown
 import org.simple.clinic.main.TypedPreference.Type.IsMediumAppUpdateNotificationShown
@@ -76,6 +78,7 @@ open class AppUpdateModule {
     return rxSharedPreferences.getBoolean("is_medium_app_update_notification_shown", false)
   }
 
+  @TypedMap(UpdatePriorities)
   @Provides
   fun provideAppUpdatePriority(
       configReader: ConfigReader,

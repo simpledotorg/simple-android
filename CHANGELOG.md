@@ -9,6 +9,7 @@
 - Migrate `DeletePatientEffectHandler` to use view effects
 - Update `DrugStockReminderAPI` to include `DrugStockFormURL`
 - Handle opening of webView when enter drug stock button clicked
+- Bump Datadog SDK to v1.12.0
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effects
 
 ### Features

@@ -10,6 +10,7 @@ import com.squareup.moshi.Types
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Observable
+import org.intellij.lang.annotations.Language
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.feature.Features
 import org.simple.clinic.main.TypedPreference
@@ -73,5 +74,21 @@ open class AppUpdateModule {
       rxSharedPreferences: RxSharedPreferences
   ): Preference<Boolean> {
     return rxSharedPreferences.getBoolean("is_medium_app_update_notification_shown", false)
+  }
+
+  @Provides
+  fun provideAppUpdatePriority(
+      configReader: ConfigReader,
+      moshi: Moshi
+  ): Map<String, Int> {
+    val type = Types.newParameterizedType(Map::class.java, String::class.java, Integer::class.java)
+    val updatePrioritiesAdapter = moshi.adapter<Map<String, Int>>(type)
+
+    @Language("JSON")
+    val defaultJson = "{}"
+
+    val json = configReader.string("update_priorities", defaultJson)
+
+    return updatePrioritiesAdapter.fromJson(json)!!
   }
 }

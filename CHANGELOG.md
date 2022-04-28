@@ -11,6 +11,7 @@
 - Handle opening of webView when enter drug stock button clicked
 - Bump Datadog SDK to v1.12.0
 - Bump leakcanary to v2.9.1
+- Bump facebook flipper to v0.144.0
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effects
 
 ### Features

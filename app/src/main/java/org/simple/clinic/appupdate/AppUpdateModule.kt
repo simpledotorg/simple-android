@@ -12,9 +12,9 @@ import dagger.Provides
 import io.reactivex.Observable
 import org.intellij.lang.annotations.Language
 import org.simple.clinic.appconfig.Country
-import org.simple.clinic.main.TypedMap.Type.UpdatePriorities
 import org.simple.clinic.feature.Features
 import org.simple.clinic.main.TypedMap
+import org.simple.clinic.main.TypedMap.Type.UpdatePriorities
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.IsLightAppUpdateNotificationShown
 import org.simple.clinic.main.TypedPreference.Type.IsMediumAppUpdateNotificationShown
@@ -37,13 +37,15 @@ open class AppUpdateModule {
       appUpdateConfig: Observable<AppUpdateConfig>,
       updateManager: PlayUpdateManager,
       features: Features,
-      appVersionFetcher: AppVersionFetcher
+      appVersionFetcher: AppVersionFetcher,
+      @TypedMap(UpdatePriorities) updatePriorities: Map<String, Int>
   ): CheckAppUpdateAvailability {
     return CheckAppUpdateAvailability(
         config = appUpdateConfig,
         updateManager = updateManager,
         features = features,
-        appVersionFetcher = appVersionFetcher
+        appVersionFetcher = appVersionFetcher,
+        updatePriorities = updatePriorities
     )
   }
 

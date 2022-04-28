@@ -254,12 +254,16 @@ class CheckAppUpdateAvailabilityTest {
             Feature.NotifyAppUpdateAvailableV2 to isInAppUpdateEnabledV2
         )
     )
+
+    val updatePriorities = mapOf(Pair("125", 5), Pair("35", 1))
+
     checkUpdateAvailable = CheckAppUpdateAvailability(
         config = config,
         updateManager = updateManager,
         versionUpdateCheck = versionCodeCheck,
         features = features,
-        appVersionFetcher = appVersionFetcher
+        appVersionFetcher = appVersionFetcher,
+        updatePriorities = updatePriorities
     )
   }
 }

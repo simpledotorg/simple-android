@@ -15,6 +15,8 @@ import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.feature.Feature.NotifyAppUpdateAvailable
 import org.simple.clinic.feature.Feature.NotifyAppUpdateAvailableV2
 import org.simple.clinic.feature.Features
+import org.simple.clinic.main.TypedMap
+import org.simple.clinic.main.TypedMap.Type.UpdatePriorities
 import org.simple.clinic.settings.AppVersionFetcher
 import org.simple.clinic.util.toOptional
 import java.util.Optional
@@ -25,6 +27,7 @@ class CheckAppUpdateAvailability @Inject constructor(
     private val updateManager: UpdateManager,
     private val versionUpdateCheck: (Int, Int, AppUpdateConfig) -> Boolean = isVersionApplicableForUpdate,
     private val features: Features,
+    @TypedMap(UpdatePriorities) private val updatePriorities: Map<String, Int>,
     private val appVersionFetcher: AppVersionFetcher
 ) {
 

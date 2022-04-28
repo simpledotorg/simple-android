@@ -1,6 +1,6 @@
-# Trigger Bitrise to make a demo release on `release/*` branch creation
+# Trigger Bitrise to make a demo and prod release on `release/*` branch creation
 
-name: trigger_demo_release
+name: trigger_release
 
 on: create
 

@@ -10,6 +10,7 @@
 - Update `DrugStockReminderAPI` to include `DrugStockFormURL`
 - Handle opening of webView when enter drug stock button clicked
 - Bump Datadog SDK to v1.12.0
+- Bump leakcanary to v2.9.1
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effects
 
 ### Features

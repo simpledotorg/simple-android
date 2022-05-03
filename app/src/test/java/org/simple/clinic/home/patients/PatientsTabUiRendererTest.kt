@@ -43,6 +43,25 @@ class PatientsTabUiRendererTest {
   }
 
   @Test
+  fun `when drug stock reminder clashes with app update reminder, then show critical app update reminder card`() {
+    // given
+    val appStaleness = 75
+    val model = defaultModel
+        .updateIsDrugStockFilled(Optional.of(false))
+        .numberOfPatientsRegisteredUpdated(12)
+        .updateAppStaleness(appStaleness)
+        .appUpdateNudgePriorityUpdated(MEDIUM)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).showCriticalAppUpdateCard()
+    verify(ui).renderAppUpdateReason(appStalenessInMonths = 2)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
   fun `when the previous months drug stock report is not filled and registered patients are greater than 10, then show the drug stock reminder card`() {
     // given
     val model = defaultModel

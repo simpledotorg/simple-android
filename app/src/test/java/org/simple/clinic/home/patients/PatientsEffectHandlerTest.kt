@@ -84,20 +84,6 @@ class PatientsEffectHandlerTest {
   }
 
   @Test
-  fun `when load app staleness effect is received, then load app staleness`() {
-    // given
-    val appStaleness = 35
-    whenever(checkAppUpdate.loadAppStaleness()).doReturn(Observable.just(appStaleness))
-
-    // when
-    effectHandlerTestCase.dispatch(LoadAppStaleness)
-
-    // then
-    effectHandlerTestCase.assertOutgoingEvents(AppStalenessLoaded(appStaleness))
-    verifyZeroInteractions(uiActions)
-  }
-
-  @Test
   fun `when schedule app update notification effect is received, then schedule app update notification`() {
     // when
     effectHandlerTestCase.dispatch(ScheduleAppUpdateNotification)
@@ -128,7 +114,7 @@ class PatientsEffectHandlerTest {
     // given
     val appUpdateNudgePriority = CRITICAL
     val appUpdateLastShownOn = LocalDate.of(2022, 3, 22)
-    whenever(checkAppUpdate.listen()).doReturn(Observable.just(ShowAppUpdate(appUpdateNudgePriority)))
+    whenever(checkAppUpdate.listen()).doReturn(Observable.just(ShowAppUpdate(appUpdateNudgePriority, 181)))
     whenever(appUpdateDialogShownPref.get()).thenReturn(appUpdateLastShownOn.toUtcInstant(userClock))
 
     // when
@@ -140,7 +126,8 @@ class PatientsEffectHandlerTest {
         isAppUpdateAvailable = true,
         appUpdateLastShownOn = appUpdateLastShownOn,
         currentDate = LocalDate.of(2018, 1, 1),
-        appUpdateNudgePriority = appUpdateNudgePriority
+        appUpdateNudgePriority = appUpdateNudgePriority,
+        appStaleness = 181
     ))
   }
 

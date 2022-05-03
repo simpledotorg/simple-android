@@ -124,7 +124,7 @@ class SettingsEffectHandlerTest {
   @Test
   fun `when check app update availability effect is received, then app needs to check if an update is available`() {
     // given
-    val appUpdateState = ShowAppUpdate(appUpdateNudgePriority = null)
+    val appUpdateState = ShowAppUpdate(appUpdateNudgePriority = null, appStaleness = null)
     whenever(checkAppUpdateAvailability.listenAllUpdates()) doReturn Observable.just<AppUpdateState>(appUpdateState)
 
     // when

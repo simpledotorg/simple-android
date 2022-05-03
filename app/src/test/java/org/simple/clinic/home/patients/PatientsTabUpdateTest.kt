@@ -33,28 +33,14 @@ class PatientsTabUpdateTest {
   }
 
   @Test
-  fun `when app staleness is loaded, then update the model`() {
-    val appStaleness = 75
-
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(AppStalenessLoaded(appStaleness))
-        .then(
-            assertThatNext(
-                hasModel(defaultModel.updateAppStaleness(appStaleness)),
-                hasNoEffects()
-            )
-        )
-  }
-
-  @Test
   fun `when app update is available, update dialog was last shown yesterday and feature flag is disabled, then show app update dialog and touch app update shown time preference`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(RequiredInfoForShowingAppUpdateLoaded(isAppUpdateAvailable = true,
             appUpdateNudgePriority = null,
             appUpdateLastShownOn = LocalDate.of(2022, 3, 30),
-            currentDate = LocalDate.of(2022, 3, 31)
+            currentDate = LocalDate.of(2022, 3, 31),
+            appStaleness = null
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -69,7 +55,8 @@ class PatientsTabUpdateTest {
         .whenEvent(RequiredInfoForShowingAppUpdateLoaded(isAppUpdateAvailable = true,
             appUpdateNudgePriority = null,
             appUpdateLastShownOn = LocalDate.of(2022, 3, 31),
-            currentDate = LocalDate.of(2022, 3, 31)
+            currentDate = LocalDate.of(2022, 3, 31),
+            appStaleness = null
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -87,10 +74,11 @@ class PatientsTabUpdateTest {
         .whenEvent(RequiredInfoForShowingAppUpdateLoaded(isAppUpdateAvailable = true,
             appUpdateNudgePriority = appUpdateNudgePriority,
             appUpdateLastShownOn = LocalDate.of(2022, 3, 30),
-            currentDate = LocalDate.of(2022, 3, 31)
+            currentDate = LocalDate.of(2022, 3, 31),
+            appStaleness = 130
         ))
         .then(assertThatNext(
-            hasModel(defaultModel.appUpdateNudgePriorityUpdated(appUpdateNudgePriority)),
+            hasModel(defaultModel.appUpdateNudgePriorityUpdated(appUpdateNudgePriority).updateAppStaleness(130)),
             hasEffects(ShowAppUpdateAvailable, TouchAppUpdateShownAtTime)
         ))
   }
@@ -105,7 +93,8 @@ class PatientsTabUpdateTest {
         .whenEvent(RequiredInfoForShowingAppUpdateLoaded(isAppUpdateAvailable = true,
             appUpdateNudgePriority = appUpdateNudgePriority,
             appUpdateLastShownOn = LocalDate.of(2022, 3, 30),
-            currentDate = LocalDate.of(2022, 3, 31)
+            currentDate = LocalDate.of(2022, 3, 31),
+            appStaleness = null
         ))
         .then(assertThatNext(
             hasModel(defaultModel.appUpdateNudgePriorityUpdated(appUpdateNudgePriority)),

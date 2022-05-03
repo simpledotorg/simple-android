@@ -15,6 +15,7 @@
 - Enable monthly drug stock reminder feature flag
 - Add `updatePriorities` for security app update reminders as a Firebase remote config
 - Add `appStaleness` in `ShowAppUpdate`
+- Disable monthly drug stock reminder by default
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effects
 
 ### Features

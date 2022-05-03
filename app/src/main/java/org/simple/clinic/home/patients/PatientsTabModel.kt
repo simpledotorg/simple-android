@@ -51,7 +51,7 @@ data class PatientsTabModel(
     return copy(numberOfPatientsRegistered = numberOfPatientsRegistered)
   }
 
-  fun updateAppStaleness(appStaleness: Int): PatientsTabModel {
+  fun updateAppStaleness(appStaleness: Int?): PatientsTabModel {
     return copy(appStaleness = appStaleness)
   }
 

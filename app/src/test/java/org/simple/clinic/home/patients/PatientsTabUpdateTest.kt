@@ -90,10 +90,10 @@ class PatientsTabUpdateTest {
             appUpdateNudgePriority = appUpdateNudgePriority,
             appUpdateLastShownOn = LocalDate.of(2022, 3, 30),
             currentDate = LocalDate.of(2022, 3, 31),
-            appStaleness = null
+            appStaleness = 130
         ))
         .then(assertThatNext(
-            hasModel(defaultModel.appUpdateNudgePriorityUpdated(appUpdateNudgePriority)),
+            hasModel(defaultModel.appUpdateNudgePriorityUpdated(appUpdateNudgePriority).updateAppStaleness(130)),
             hasEffects(ShowAppUpdateAvailable, TouchAppUpdateShownAtTime)
         ))
   }

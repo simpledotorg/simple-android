@@ -17,6 +17,7 @@
 - Add `appStaleness` in `ShowAppUpdate`
 - Disable monthly drug stock reminder by default
 - Show critical update card if in case it clashes with drug stock reminder card
+- Fix `availableVersionCode` being used to get `updatePriorities` instead of `currentVersionCode`
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effects
 
 ### Features

@@ -32,7 +32,7 @@ class CheckAppUpdateAvailability @Inject constructor(
 ) {
 
   companion object {
-    const val UPDATE_PRIORITIES_DEFAULT_VALUE = 0
+    const val DEFAULT_UPDATE_PRIORITY = 0
   }
 
   fun listen(): Observable<AppUpdateState> {
@@ -80,7 +80,7 @@ class CheckAppUpdateAvailability @Inject constructor(
           appUpdateNudgePriority(
               appStaleness = appStaleness,
               config = it,
-              appUpdatePriority = updatePriorities.getOrDefault(availableVersionCode.toString(), UPDATE_PRIORITIES_DEFAULT_VALUE)
+              appUpdatePriority = updatePriorities.getOrDefault(availableVersionCode.toString(), DEFAULT_UPDATE_PRIORITY)
           )
         }
 

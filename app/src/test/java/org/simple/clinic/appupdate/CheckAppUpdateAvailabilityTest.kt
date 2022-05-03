@@ -47,8 +47,7 @@ class CheckAppUpdateAvailabilityTest {
     val isUpdateAvailable = updateAvailabilityState == UpdateAvailability.UPDATE_AVAILABLE
     val updateInfo = UpdateInfo(
         availableVersionCode = availableVersionCode,
-        isUpdateAvailable = isUpdateAvailable,
-        appUpdatePriority = 0
+        isUpdateAvailable = isUpdateAvailable
     )
 
     setup(isInAppUpdateEnabled = isInAppUpdateEnabled, isInAppUpdateEnabledV2 = false)
@@ -121,8 +120,7 @@ class CheckAppUpdateAvailabilityTest {
     val isUpdateAvailable = updateAvailabilityState == UpdateAvailability.UPDATE_AVAILABLE
     val updateInfo = UpdateInfo(
         availableVersionCode = availableVersionCode,
-        isUpdateAvailable = isUpdateAvailable,
-        appUpdatePriority = appUpdatePriority
+        isUpdateAvailable = isUpdateAvailable
     )
 
     setup(isInAppUpdateEnabled = false, isInAppUpdateEnabledV2 = isInAppUpdateEnabled)
@@ -208,14 +206,14 @@ class CheckAppUpdateAvailabilityTest {
             appUpdatePriority = 0
         ),
         testCase(
-            versionCode = 120,
+            versionCode = 125,
             updateAvailabilityState = UpdateAvailability.UPDATE_AVAILABLE,
             isInAppUpdateEnabled = true,
             appUpdateState = ShowAppUpdate(appUpdateNudgePriority = AppUpdateNudgePriority.CRITICAL_SECURITY),
             appUpdatePriority = 5
         ),
         testCase(
-            versionCode = 33,
+            versionCode = 35,
             updateAvailabilityState = UpdateAvailability.UPDATE_AVAILABLE,
             isInAppUpdateEnabled = true,
             appUpdateState = ShowAppUpdate(appUpdateNudgePriority = AppUpdateNudgePriority.LIGHT),
@@ -228,7 +226,7 @@ class CheckAppUpdateAvailabilityTest {
   fun `app staleness should be loaded correctly`() {
     // given
     setup(isInAppUpdateEnabled = false, isInAppUpdateEnabledV2 = false)
-    val updateInfo = UpdateInfo(isUpdateAvailable = true, availableVersionCode = 150, appUpdatePriority = 0)
+    val updateInfo = UpdateInfo(isUpdateAvailable = true, availableVersionCode = 150)
     whenever(updateManager.updateInfo()).doReturn(Observable.just(updateInfo))
 
     // then
@@ -254,12 +252,16 @@ class CheckAppUpdateAvailabilityTest {
             Feature.NotifyAppUpdateAvailableV2 to isInAppUpdateEnabledV2
         )
     )
+
+    val updatePriorities = mapOf(Pair("125", 5), Pair("35", 1))
+
     checkUpdateAvailable = CheckAppUpdateAvailability(
         config = config,
         updateManager = updateManager,
         versionUpdateCheck = versionCodeCheck,
         features = features,
-        appVersionFetcher = appVersionFetcher
+        appVersionFetcher = appVersionFetcher,
+        updatePriorities = updatePriorities
     )
   }
 }

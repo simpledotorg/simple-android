@@ -15,6 +15,8 @@ import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.feature.Feature.NotifyAppUpdateAvailable
 import org.simple.clinic.feature.Feature.NotifyAppUpdateAvailableV2
 import org.simple.clinic.feature.Features
+import org.simple.clinic.main.TypedMap
+import org.simple.clinic.main.TypedMap.Type.UpdatePriorities
 import org.simple.clinic.settings.AppVersionFetcher
 import org.simple.clinic.util.toOptional
 import java.util.Optional
@@ -25,8 +27,13 @@ class CheckAppUpdateAvailability @Inject constructor(
     private val updateManager: UpdateManager,
     private val versionUpdateCheck: (Int, Int, AppUpdateConfig) -> Boolean = isVersionApplicableForUpdate,
     private val features: Features,
+    @TypedMap(UpdatePriorities) private val updatePriorities: Map<String, Int>,
     private val appVersionFetcher: AppVersionFetcher
 ) {
+
+  companion object {
+    const val DEFAULT_UPDATE_PRIORITY = 0
+  }
 
   fun listen(): Observable<AppUpdateState> {
     return updateManager
@@ -65,13 +72,15 @@ class CheckAppUpdateAvailability @Inject constructor(
 
   @VisibleForTesting(otherwise = PRIVATE)
   fun shouldNudgeForUpdate(updateInfo: UpdateInfo): Observable<AppUpdateState> {
-    val appStaleness = appVersionStaleness(updateInfo.availableVersionCode)
+    val availableVersionCode = updateInfo.availableVersionCode
+    val appStaleness = appVersionStaleness(availableVersionCode)
+
     val appUpdatePriority = config
         .map {
           appUpdateNudgePriority(
               appStaleness = appStaleness,
               config = it,
-              appUpdatePriority = updateInfo.appUpdatePriority
+              appUpdatePriority = updatePriorities.getOrDefault(availableVersionCode.toString(), DEFAULT_UPDATE_PRIORITY)
           )
         }
 

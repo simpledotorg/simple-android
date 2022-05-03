@@ -97,13 +97,13 @@ class CheckAppUpdateAvailabilityTest {
             versionCode = 2,
             updateAvailabilityState = UpdateAvailability.UPDATE_AVAILABLE,
             isInAppUpdateEnabled = true,
-            appUpdateState = ShowAppUpdate(appUpdateNudgePriority = null)
+            appUpdateState = ShowAppUpdate(appUpdateNudgePriority = null, appStaleness = null)
         ),
         testCase(
             versionCode = 2111,
             updateAvailabilityState = UpdateAvailability.UPDATE_AVAILABLE,
             isInAppUpdateEnabled = true,
-            appUpdateState = ShowAppUpdate(appUpdateNudgePriority = null)
+            appUpdateState = ShowAppUpdate(appUpdateNudgePriority = null, appStaleness = null)
         )
     )
   }
@@ -181,42 +181,42 @@ class CheckAppUpdateAvailabilityTest {
             versionCode = 60,
             updateAvailabilityState = UpdateAvailability.UPDATE_AVAILABLE,
             isInAppUpdateEnabled = true,
-            appUpdateState = ShowAppUpdate(appUpdateNudgePriority = AppUpdateNudgePriority.LIGHT),
+            appUpdateState = ShowAppUpdate(appUpdateNudgePriority = AppUpdateNudgePriority.LIGHT, appStaleness = 59),
             appUpdatePriority = 0
         ),
         testCase(
             versionCode = 215,
             updateAvailabilityState = UpdateAvailability.UPDATE_AVAILABLE,
             isInAppUpdateEnabled = true,
-            appUpdateState = ShowAppUpdate(appUpdateNudgePriority = AppUpdateNudgePriority.CRITICAL),
+            appUpdateState = ShowAppUpdate(appUpdateNudgePriority = AppUpdateNudgePriority.CRITICAL, appStaleness = 214),
             appUpdatePriority = 0
         ),
         testCase(
             versionCode = 60,
             updateAvailabilityState = UpdateAvailability.UPDATE_AVAILABLE,
             isInAppUpdateEnabled = true,
-            appUpdateState = ShowAppUpdate(appUpdateNudgePriority = AppUpdateNudgePriority.LIGHT),
+            appUpdateState = ShowAppUpdate(appUpdateNudgePriority = AppUpdateNudgePriority.LIGHT, appStaleness = 59),
             appUpdatePriority = 0
         ),
         testCase(
             versionCode = 120,
             updateAvailabilityState = UpdateAvailability.UPDATE_AVAILABLE,
             isInAppUpdateEnabled = true,
-            appUpdateState = ShowAppUpdate(appUpdateNudgePriority = AppUpdateNudgePriority.MEDIUM),
+            appUpdateState = ShowAppUpdate(appUpdateNudgePriority = AppUpdateNudgePriority.MEDIUM, appStaleness = 119),
             appUpdatePriority = 0
         ),
         testCase(
             versionCode = 125,
             updateAvailabilityState = UpdateAvailability.UPDATE_AVAILABLE,
             isInAppUpdateEnabled = true,
-            appUpdateState = ShowAppUpdate(appUpdateNudgePriority = AppUpdateNudgePriority.CRITICAL_SECURITY),
+            appUpdateState = ShowAppUpdate(appUpdateNudgePriority = AppUpdateNudgePriority.CRITICAL_SECURITY, appStaleness = 124),
             appUpdatePriority = 5
         ),
         testCase(
             versionCode = 35,
             updateAvailabilityState = UpdateAvailability.UPDATE_AVAILABLE,
             isInAppUpdateEnabled = true,
-            appUpdateState = ShowAppUpdate(appUpdateNudgePriority = AppUpdateNudgePriority.LIGHT),
+            appUpdateState = ShowAppUpdate(appUpdateNudgePriority = AppUpdateNudgePriority.LIGHT, appStaleness = 34),
             appUpdatePriority = 1
         )
     )

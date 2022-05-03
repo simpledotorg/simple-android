@@ -54,7 +54,7 @@ class CheckAppUpdateAvailability @Inject constructor(
         .updateInfo()
         .map {
           if (it.isUpdateAvailable) {
-            ShowAppUpdate(appUpdateNudgePriority = null)
+            ShowAppUpdate(appUpdateNudgePriority = null, appStaleness = null)
           } else {
             DontShowAppUpdate
           }
@@ -88,7 +88,7 @@ class CheckAppUpdateAvailability @Inject constructor(
         .map { updatePriority ->
           val canShowAppUpdateNotification = updateInfo.isUpdateAvailable && updatePriority.isPresent
           if (features.isEnabled(NotifyAppUpdateAvailableV2) && canShowAppUpdateNotification) {
-            ShowAppUpdate(updatePriority.get())
+            ShowAppUpdate(updatePriority.get(), appStaleness)
           } else {
             DontShowAppUpdate
           }
@@ -102,7 +102,7 @@ class CheckAppUpdateAvailability @Inject constructor(
 
     val shouldShow = checkUpdate
         .filter { showUpdate -> showUpdate }
-        .map { ShowAppUpdate(appUpdateNudgePriority = null) }
+        .map { ShowAppUpdate(appUpdateNudgePriority = null, appStaleness = null) }
 
     val doNotShow = checkUpdate
         .filter { showUpdate -> showUpdate.not() }

@@ -34,7 +34,6 @@ class PatientsTabUpdate(private val isNotifyAppUpdateAvailableV2Enabled: Boolean
       is LoadedNumberOfPatientsRegistered -> next(model.numberOfPatientsRegisteredUpdated(event.numberOfPatientsRegistered))
       SimpleVideoClicked -> dispatch(OpenTrainingVideo)
       is RequiredInfoForShowingAppUpdateLoaded -> showAppUpdateAvailableMessageBasedOnFeatureFlag(model, event)
-      is AppStalenessLoaded -> next(model.updateAppStaleness(event.appStaleness))
       UpdateNowButtonClicked -> dispatch(OpenSimpleOnPlayStore)
       is DrugStockReportLoaded -> drugStockReportLoaded(event, model)
       is RequiredInfoForShowingDrugStockReminderLoaded -> requiredInfoForDrugStockReminderLoaded(event, model)
@@ -174,7 +173,7 @@ class PatientsTabUpdate(private val isNotifyAppUpdateAvailableV2Enabled: Boolean
       model: PatientsTabModel,
       event: RequiredInfoForShowingAppUpdateLoaded
   ): Next<PatientsTabModel, PatientsTabEffect> {
-    val updatedModel = model.appUpdateNudgePriorityUpdated(event.appUpdateNudgePriority)
+    val updatedModel = model.appUpdateNudgePriorityUpdated(event.appUpdateNudgePriority).updateAppStaleness(event.appStaleness)
 
     return when (event.appUpdateNudgePriority) {
       LIGHT, MEDIUM -> showAppUpdateAvailableDialog(updatedModel, event)

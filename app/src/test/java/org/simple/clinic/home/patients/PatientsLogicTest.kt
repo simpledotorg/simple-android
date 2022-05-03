@@ -505,7 +505,7 @@ class PatientsLogicTest {
     // when
     setupController(
         appUpdateDialogShownAt = dateAsInstant.minusMillis(1),
-        appUpdateState = ShowAppUpdate(appUpdateNudgePriority = null)
+        appUpdateState = ShowAppUpdate(appUpdateNudgePriority = null, appStaleness = null)
     )
 
     // then
@@ -519,7 +519,7 @@ class PatientsLogicTest {
   @Test
   fun `when an app update is available and the app update dialog has been shown on the current date, do not show the app update dialog`() {
     // when
-    setupController(appUpdateState = ShowAppUpdate(appUpdateNudgePriority = null))
+    setupController(appUpdateState = ShowAppUpdate(appUpdateNudgePriority = null, appStaleness = null))
 
     // then
     verify(ui, times(3)).hideUserAccountStatus()

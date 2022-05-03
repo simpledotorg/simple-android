@@ -60,8 +60,6 @@ data class RequiredInfoForShowingAppUpdateLoaded(
     val appStaleness: Int?
 ) : PatientsTabEvent()
 
-data class AppStalenessLoaded(val appStaleness: Int) : PatientsTabEvent()
-
 object UpdateNowButtonClicked : PatientsTabEvent()
 
 data class DrugStockReportLoaded(val result: DrugStockReminder.Result) : PatientsTabEvent()

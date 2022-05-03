@@ -84,20 +84,6 @@ class PatientsEffectHandlerTest {
   }
 
   @Test
-  fun `when load app staleness effect is received, then load app staleness`() {
-    // given
-    val appStaleness = 35
-    whenever(checkAppUpdate.loadAppStaleness()).doReturn(Observable.just(appStaleness))
-
-    // when
-    effectHandlerTestCase.dispatch(LoadAppStaleness)
-
-    // then
-    effectHandlerTestCase.assertOutgoingEvents(AppStalenessLoaded(appStaleness))
-    verifyZeroInteractions(uiActions)
-  }
-
-  @Test
   fun `when schedule app update notification effect is received, then schedule app update notification`() {
     // when
     effectHandlerTestCase.dispatch(ScheduleAppUpdateNotification)

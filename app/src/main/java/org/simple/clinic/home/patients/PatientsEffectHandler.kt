@@ -66,7 +66,6 @@ class PatientsEffectHandler @AssistedInject constructor(
         .addTransformer(LoadNumberOfPatientsRegistered::class.java, loadNumberOfPatientsRegistered())
         .addTransformer(LoadInfoForShowingAppUpdateMessage::class.java, loadInfoForShowingAppUpdate())
         .addConsumer(TouchAppUpdateShownAtTime::class.java, { appUpdateDialogShownAtPref.set(Instant.now(utcClock)) }, schedulers.io())
-        .addTransformer(LoadAppStaleness::class.java, loadAppStaleness())
         .addConsumer(ScheduleAppUpdateNotification::class.java, { appUpdateNotificationScheduler.schedule() }, schedulers.io())
         .addConsumer(PatientsTabViewEffect::class.java, viewEffectsConsumer::accept, schedulers.ui())
         .addTransformer(LoadDrugStockReportStatus::class.java, loadDrugStockReportStatus())
@@ -178,15 +177,6 @@ class PatientsEffectHandler @AssistedInject constructor(
                 appStaleness = (it as? AppUpdateState.ShowAppUpdate)?.appStaleness
             )
           }
-    }
-  }
-
-  private fun loadAppStaleness(): ObservableTransformer<LoadAppStaleness, PatientsTabEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulers.io())
-          .switchMap { checkAppUpdate.loadAppStaleness() }
-          .map(::AppStalenessLoaded)
     }
   }
 }

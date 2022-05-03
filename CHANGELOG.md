@@ -4,6 +4,12 @@
 
 ### Internal
 
+- [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effects
+
+## 2022-05-02-8233
+
+### Internal
+
 - Bump kotlin to v1.6.21
 - Bump Lottie to v5.1.1
 - Migrate `DeletePatientEffectHandler` to use view effects
@@ -13,13 +19,12 @@
 - Bump leakcanary to v2.9.1
 - Bump facebook flipper to v0.144.0
 - Enable monthly drug stock reminder feature flag
-- [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effects
 
 ### Features
 
 - Add support for monthly drug stock report reminders
 
-## On Demo
+## 2022-04-25-8224
 
 ### Internal
 

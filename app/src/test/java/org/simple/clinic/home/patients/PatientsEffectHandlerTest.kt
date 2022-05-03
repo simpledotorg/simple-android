@@ -128,7 +128,7 @@ class PatientsEffectHandlerTest {
     // given
     val appUpdateNudgePriority = CRITICAL
     val appUpdateLastShownOn = LocalDate.of(2022, 3, 22)
-    whenever(checkAppUpdate.listen()).doReturn(Observable.just(ShowAppUpdate(appUpdateNudgePriority)))
+    whenever(checkAppUpdate.listen()).doReturn(Observable.just(ShowAppUpdate(appUpdateNudgePriority, 181)))
     whenever(appUpdateDialogShownPref.get()).thenReturn(appUpdateLastShownOn.toUtcInstant(userClock))
 
     // when

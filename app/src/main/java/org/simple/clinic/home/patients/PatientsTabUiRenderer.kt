@@ -29,7 +29,7 @@ class PatientsTabUiRenderer(
     val isDrugStockReportFilledOrNull = model.isDrugStockReportFilled == null || model.isDrugStockReportFilled
 
     when {
-      model.appUpdateNudgePriorityIsMedium && model.hasAppStaleness && isDrugStockReportFilledOrNull -> {
+      model.appUpdateNudgePriorityIsMedium && model.hasAppStaleness -> {
         ui.showCriticalAppUpdateCard()
         ui.renderAppUpdateReason(appStalenessInMonths(model.appStaleness!!))
       }

@@ -140,7 +140,8 @@ class PatientsEffectHandlerTest {
         isAppUpdateAvailable = true,
         appUpdateLastShownOn = appUpdateLastShownOn,
         currentDate = LocalDate.of(2018, 1, 1),
-        appUpdateNudgePriority = appUpdateNudgePriority
+        appUpdateNudgePriority = appUpdateNudgePriority,
+        appStaleness = 181
     ))
   }
 

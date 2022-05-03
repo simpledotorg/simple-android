@@ -56,7 +56,8 @@ data class RequiredInfoForShowingAppUpdateLoaded(
     val isAppUpdateAvailable: Boolean,
     val appUpdateLastShownOn: LocalDate,
     val currentDate: LocalDate,
-    val appUpdateNudgePriority: AppUpdateNudgePriority?
+    val appUpdateNudgePriority: AppUpdateNudgePriority?,
+    val appStaleness: Int?
 ) : PatientsTabEvent()
 
 data class AppStalenessLoaded(val appStaleness: Int) : PatientsTabEvent()

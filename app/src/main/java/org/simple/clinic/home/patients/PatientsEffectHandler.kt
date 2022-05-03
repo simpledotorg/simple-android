@@ -174,7 +174,8 @@ class PatientsEffectHandler @AssistedInject constructor(
                 isAppUpdateAvailable = it is AppUpdateState.ShowAppUpdate,
                 appUpdateLastShownOn = updateLastShownOn,
                 currentDate = today,
-                appUpdateNudgePriority = (it as? AppUpdateState.ShowAppUpdate)?.appUpdateNudgePriority
+                appUpdateNudgePriority = (it as? AppUpdateState.ShowAppUpdate)?.appUpdateNudgePriority,
+                appStaleness = (it as? AppUpdateState.ShowAppUpdate)?.appStaleness
             )
           }
     }

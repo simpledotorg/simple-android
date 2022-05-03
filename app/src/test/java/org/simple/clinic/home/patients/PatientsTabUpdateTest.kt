@@ -54,7 +54,8 @@ class PatientsTabUpdateTest {
         .whenEvent(RequiredInfoForShowingAppUpdateLoaded(isAppUpdateAvailable = true,
             appUpdateNudgePriority = null,
             appUpdateLastShownOn = LocalDate.of(2022, 3, 30),
-            currentDate = LocalDate.of(2022, 3, 31)
+            currentDate = LocalDate.of(2022, 3, 31),
+            appStaleness = null
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -69,7 +70,8 @@ class PatientsTabUpdateTest {
         .whenEvent(RequiredInfoForShowingAppUpdateLoaded(isAppUpdateAvailable = true,
             appUpdateNudgePriority = null,
             appUpdateLastShownOn = LocalDate.of(2022, 3, 31),
-            currentDate = LocalDate.of(2022, 3, 31)
+            currentDate = LocalDate.of(2022, 3, 31),
+            appStaleness = null
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -87,7 +89,8 @@ class PatientsTabUpdateTest {
         .whenEvent(RequiredInfoForShowingAppUpdateLoaded(isAppUpdateAvailable = true,
             appUpdateNudgePriority = appUpdateNudgePriority,
             appUpdateLastShownOn = LocalDate.of(2022, 3, 30),
-            currentDate = LocalDate.of(2022, 3, 31)
+            currentDate = LocalDate.of(2022, 3, 31),
+            appStaleness = null
         ))
         .then(assertThatNext(
             hasModel(defaultModel.appUpdateNudgePriorityUpdated(appUpdateNudgePriority)),
@@ -105,7 +108,8 @@ class PatientsTabUpdateTest {
         .whenEvent(RequiredInfoForShowingAppUpdateLoaded(isAppUpdateAvailable = true,
             appUpdateNudgePriority = appUpdateNudgePriority,
             appUpdateLastShownOn = LocalDate.of(2022, 3, 30),
-            currentDate = LocalDate.of(2022, 3, 31)
+            currentDate = LocalDate.of(2022, 3, 31),
+            appStaleness = null
         ))
         .then(assertThatNext(
             hasModel(defaultModel.appUpdateNudgePriorityUpdated(appUpdateNudgePriority)),

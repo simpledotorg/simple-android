@@ -246,7 +246,7 @@ class PatientSummaryScreen :
   }
 
   override fun createInit(): Init<PatientSummaryModel, PatientSummaryEffect> {
-    return PatientSummaryInit(features.isEnabled(Feature.CDSAlerts))
+    return PatientSummaryInit()
   }
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<PatientSummaryViewEffect>): ObservableTransformer<PatientSummaryEffect, PatientSummaryEvent> {

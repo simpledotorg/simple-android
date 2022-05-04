@@ -15,9 +15,7 @@ class PatientSummaryInitTest {
   private val patientUuid = UUID.fromString("fca8c3ad-75ca-4053-ba2f-e5c8ffda8991")
   private val defaultModel = PatientSummaryModel.from(ViewExistingPatient, patientUuid)
   private val facility = TestData.facility(uuid = UUID.fromString("6af0d0c5-4c5d-493f-bba9-0bcffde27e07"))
-  private val initSpec = InitSpec(PatientSummaryInit(
-      isCdsAlertsFeatureEnabled = true
-  ))
+  private val initSpec = InitSpec(PatientSummaryInit())
 
   @Test
   fun `when the screen is created, load the initial data`() {
@@ -33,24 +31,6 @@ class PatientSummaryInitTest {
                     LoadMedicalOfficers,
                     LoadPatientRegistrationData(patientUuid),
                     CheckIfCDSSPilotIsEnabled
-                )
-            )
-        )
-  }
-
-  @Test
-  fun `when the screen is created and cds alerts feature is disabled, then do not check if cdss pilot is enabled`() {
-    initSpec
-        .whenInit(defaultModel)
-        .then(
-            assertThatFirst(
-                hasModel(defaultModel),
-                hasEffects(
-                    LoadPatientSummaryProfile(patientUuid),
-                    LoadCurrentUserAndFacility,
-                    CheckForInvalidPhone(patientUuid),
-                    LoadMedicalOfficers,
-                    LoadPatientRegistrationData(patientUuid)
                 )
             )
         )

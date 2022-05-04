@@ -1277,6 +1277,17 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when cdss pilot is not enabled for facility, then do nothing`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(CDSSPilotStatusChecked(isPilotEnabledForFacility = false))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasNoEffects()
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

@@ -35,6 +35,8 @@ data class LoadPatientRegistrationData(val patientUuid: UUID) : PatientSummaryEf
 
 data class LoadClinicalDecisionSupportInfo(val patientUuid: UUID) : PatientSummaryEffect()
 
+object CheckIfCDSSPilotIsEnabled : PatientSummaryEffect()
+
 sealed class PatientSummaryViewEffect : PatientSummaryEffect()
 
 data class HandleEditClick(

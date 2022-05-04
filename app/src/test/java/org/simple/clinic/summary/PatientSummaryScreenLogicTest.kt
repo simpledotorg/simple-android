@@ -197,6 +197,7 @@ class PatientSummaryScreenLogicTest {
         facilityRepository = facilityRepository,
         teleconsultationFacilityRepository = mock(),
         prescriptionRepository = mock(),
+        cdssPilotFacilities = { emptyList() },
         viewEffectsConsumer = viewEffectHandler::handle
     )
 

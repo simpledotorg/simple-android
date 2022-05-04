@@ -30,6 +30,7 @@ import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityRepository
 import org.simple.clinic.sync.DataSync
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator
 import java.time.Instant
@@ -73,6 +74,7 @@ class PatientSummaryEffectHandlerTest {
       facilityRepository = facilityRepository,
       teleconsultationFacilityRepository = teleconsultFacilityRepository,
       prescriptionRepository = prescriptionRepository,
+      cdssPilotFacilities = { emptyList() },
       viewEffectsConsumer = viewEffectHandler::handle
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -112,6 +114,7 @@ class PatientSummaryEffectHandlerTest {
         facilityRepository = facilityRepository,
         teleconsultationFacilityRepository = teleconsultFacilityRepository,
         prescriptionRepository = prescriptionRepository,
+        cdssPilotFacilities = { emptyList() },
         viewEffectsConsumer = viewEffectHandler::handle
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -168,6 +171,7 @@ class PatientSummaryEffectHandlerTest {
         facilityRepository = facilityRepository,
         teleconsultationFacilityRepository = teleconsultFacilityRepository,
         prescriptionRepository = prescriptionRepository,
+        cdssPilotFacilities = { emptyList() },
         viewEffectsConsumer = viewEffectHandler::handle
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -538,5 +542,44 @@ class PatientSummaryEffectHandlerTest {
     // then
     testCase.assertOutgoingEvents(ClinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true))
     verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when check if cdss pilot is enabled effect is received, then check the cdss enabled status`() {
+    // given
+    val cdssPilotFacilities = listOf(UUID.fromString("635bf319-d6bb-426e-b5f0-6003614ad4fe"))
+    val facility = TestData.facility(
+        uuid = UUID.fromString("635bf319-d6bb-426e-b5f0-6003614ad4fe"),
+        name = "CHC Obvious"
+    )
+    val effectHandler = PatientSummaryEffectHandler(
+        schedulersProvider = TestSchedulersProvider.trampoline(),
+        patientRepository = patientRepository,
+        bloodPressureRepository = bloodPressureRepository,
+        appointmentRepository = appointmentRepository,
+        missingPhoneReminderRepository = missingPhoneReminderRepository,
+        bloodSugarRepository = bloodSugarRepository,
+        dataSync = dataSync,
+        medicalHistoryRepository = medicalHistoryRepository,
+        country = TestData.country(),
+        currentUser = { user },
+        currentFacility = { facility },
+        uuidGenerator = uuidGenerator,
+        facilityRepository = facilityRepository,
+        teleconsultationFacilityRepository = teleconsultFacilityRepository,
+        prescriptionRepository = prescriptionRepository,
+        cdssPilotFacilities = { cdssPilotFacilities },
+        viewEffectsConsumer = viewEffectHandler::handle
+    )
+    val testCase = EffectHandlerTestCase(effectHandler = effectHandler.build())
+
+    // when
+    testCase.dispatch(CheckIfCDSSPilotIsEnabled)
+
+    // then
+    verifyZeroInteractions(uiActions)
+
+    testCase.assertOutgoingEvents(CDSSPilotStatusChecked(isPilotEnabledForFacility = true))
+    testCase.dispose()
   }
 }

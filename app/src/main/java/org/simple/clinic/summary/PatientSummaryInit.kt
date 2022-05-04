@@ -12,7 +12,7 @@ class PatientSummaryInit(val isCdsAlertsFeatureEnabled: Boolean) : Init<PatientS
     )
 
     if (isCdsAlertsFeatureEnabled) {
-      effects.add(LoadClinicalDecisionSupportInfo(model.patientUuid))
+      effects.add(CheckIfCDSSPilotIsEnabled)
     }
 
     if (!model.hasUserLoggedInStatus || !model.hasLoadedCurrentFacility) {

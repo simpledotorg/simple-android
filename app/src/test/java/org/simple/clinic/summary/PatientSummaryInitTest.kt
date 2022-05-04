@@ -32,14 +32,14 @@ class PatientSummaryInitTest {
                     CheckForInvalidPhone(patientUuid),
                     LoadMedicalOfficers,
                     LoadPatientRegistrationData(patientUuid),
-                    LoadClinicalDecisionSupportInfo(patientUuid)
+                    CheckIfCDSSPilotIsEnabled
                 )
             )
         )
   }
 
   @Test
-  fun `when the screen is created and cds alerts feature is disabled, then do not load cds info`() {
+  fun `when the screen is created and cds alerts feature is disabled, then do not check if cdss pilot is enabled`() {
     initSpec
         .whenInit(defaultModel)
         .then(
@@ -83,7 +83,7 @@ class PatientSummaryInitTest {
                 hasModel(model),
                 hasEffects(
                     LoadPatientSummaryProfile(patientUuid) as PatientSummaryEffect,
-                    LoadClinicalDecisionSupportInfo(patientUuid)
+                    CheckIfCDSSPilotIsEnabled
                 )
             )
         )

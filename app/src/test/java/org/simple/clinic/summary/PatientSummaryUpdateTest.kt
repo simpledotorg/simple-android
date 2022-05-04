@@ -1266,6 +1266,17 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when cdss pilot is enabled for facility, then load clinical decision support info`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(CDSSPilotStatusChecked(isPilotEnabledForFacility = true))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(LoadClinicalDecisionSupportInfo(patientUuid))
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

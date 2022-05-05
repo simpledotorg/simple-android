@@ -48,7 +48,7 @@ class PatientSummaryModule {
   ): List<UUID> {
     val type = Types.newParameterizedType(List::class.java, UUID::class.java)
     val adapter = moshi.adapter<List<UUID>>(type)
-    val json = configReader.string("cdss_pilot_facilities_ids", "[]")
+    val json = configReader.string("cdss_pilot_facilities_ids_v0", "[]")
 
     return try {
       adapter.fromJson(json)!!

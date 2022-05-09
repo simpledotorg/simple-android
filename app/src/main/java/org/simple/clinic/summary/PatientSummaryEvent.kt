@@ -96,3 +96,5 @@ object NextAppointmentActionClicked : PatientSummaryEvent() {
 object AssignedFacilityChanged : PatientSummaryEvent()
 
 data class ClinicalDecisionSupportInfoLoaded(val isNewestBpEntryHigh: Boolean) : PatientSummaryEvent()
+
+data class CDSSPilotStatusChecked(val isPilotEnabledForFacility: Boolean) : PatientSummaryEvent()

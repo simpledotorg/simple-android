@@ -48,6 +48,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val facilityRepository: FacilityRepository,
     private val teleconsultationFacilityRepository: TeleconsultationFacilityRepository,
     private val prescriptionRepository: PrescriptionRepository,
+    private val cdssPilotFacilities: Lazy<List<UUID>>,
     @Assisted private val viewEffectsConsumer: Consumer<PatientSummaryViewEffect>
 ) {
 
@@ -73,7 +74,19 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(LoadClinicalDecisionSupportInfo::class.java, loadClinicalDecisionSupport())
         .addConsumer(PatientSummaryViewEffect::class.java, viewEffectsConsumer::accept)
         .addTransformer(LoadPatientRegistrationData::class.java, checkPatientRegistrationData())
+        .addTransformer(CheckIfCDSSPilotIsEnabled::class.java, checkIfCDSSPilotIsEnabled())
         .build()
+  }
+
+  private fun checkIfCDSSPilotIsEnabled(): ObservableTransformer<CheckIfCDSSPilotIsEnabled, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map {
+            val currentFacilityId = currentFacility.get().uuid
+            CDSSPilotStatusChecked(isPilotEnabledForFacility = cdssPilotFacilities.get().contains(currentFacilityId))
+          }
+    }
   }
 
   private fun loadClinicalDecisionSupport(): ObservableTransformer<LoadClinicalDecisionSupportInfo, PatientSummaryEvent> {

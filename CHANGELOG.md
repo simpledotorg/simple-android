@@ -9,7 +9,8 @@
 - Disable monthly drug stock reminder by default
 - Show critical update card if in case it clashes with drug stock reminder card
 - Bump Google play services auth to v20.2.0
-- Fix critical app update dialog UI  
+- Fix critical app update dialog UI
+- Bump Mixpanel to v6.2.1
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effects
 
 ## 2022-05-02-8233

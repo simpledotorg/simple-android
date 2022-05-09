@@ -4,16 +4,13 @@ import com.spotify.mobius.First
 import com.spotify.mobius.First.first
 import com.spotify.mobius.Init
 
-class PatientSummaryInit(val isCdsAlertsFeatureEnabled: Boolean) : Init<PatientSummaryModel, PatientSummaryEffect> {
+class PatientSummaryInit : Init<PatientSummaryModel, PatientSummaryEffect> {
 
   override fun init(model: PatientSummaryModel): First<PatientSummaryModel, PatientSummaryEffect> {
-    val effects = mutableSetOf<PatientSummaryEffect>(
-        LoadPatientSummaryProfile(model.patientUuid)
+    val effects = mutableSetOf(
+        LoadPatientSummaryProfile(model.patientUuid),
+        CheckIfCDSSPilotIsEnabled
     )
-
-    if (isCdsAlertsFeatureEnabled) {
-      effects.add(LoadClinicalDecisionSupportInfo(model.patientUuid))
-    }
 
     if (!model.hasUserLoggedInStatus || !model.hasLoadedCurrentFacility) {
       effects.add(LoadCurrentUserAndFacility)

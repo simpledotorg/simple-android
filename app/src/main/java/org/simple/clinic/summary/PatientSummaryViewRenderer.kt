@@ -6,8 +6,7 @@ import org.simple.clinic.util.ValueChangedCallback
 class PatientSummaryViewRenderer(
     private val ui: PatientSummaryScreenUi,
     private val isNextAppointmentFeatureEnabled: Boolean,
-    private val modelUpdateCallback: PatientSummaryModelUpdateCallback,
-    val isCdsAlertsFeatureEnabled: Boolean
+    private val modelUpdateCallback: PatientSummaryModelUpdateCallback
 ) : ViewRenderer<PatientSummaryModel> {
 
   private val clinicalDecisionSupportCallback = ValueChangedCallback<Boolean>()
@@ -34,7 +33,7 @@ class PatientSummaryViewRenderer(
   }
 
   private fun renderClinicalDecisionSupportAlert(model: PatientSummaryModel) {
-    val canShowClinicalDecisionSupportAlert = model.hasPatientRegistrationData == true && model.readyToRender() && isCdsAlertsFeatureEnabled
+    val canShowClinicalDecisionSupportAlert = model.hasPatientRegistrationData == true && model.readyToRender()
     if (!canShowClinicalDecisionSupportAlert) {
       ui.hideClinicalDecisionSupportAlertWithoutAnimation()
       return

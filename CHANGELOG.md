@@ -4,6 +4,12 @@
 
 ### Internal
 
+- [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effects
+
+## 2022-05-09-8244
+
+### Internal
+
 - Add `updatePriorities` for security app update reminders as a Firebase remote config
 - Add `appStaleness` in `ShowAppUpdate`
 - Disable monthly drug stock reminder by default
@@ -11,7 +17,6 @@
 - Bump Google play services auth to v20.2.0
 - Fix critical app update dialog UI
 - Bump Mixpanel to v6.2.1
-- [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effects
 
 ## 2022-05-02-8233
 

@@ -80,6 +80,9 @@ class AppUpdateNotificationWorker(
   lateinit var schedulerProvider: SchedulersProvider
 
   @Inject
+  lateinit var appUpdateNotificationScheduler: AppUpdateNotificationScheduler
+
+  @Inject
   @TypedPreference(IsLightAppUpdateNotificationShown)
   lateinit var isLightAppUpdateNotificationShown: Preference<Boolean>
 
@@ -109,6 +112,10 @@ class AppUpdateNotificationWorker(
         .doOnError {
           Result.failure()
         }
+        .doFinally {
+          appUpdateNotificationScheduler.schedule()
+        }
+
   }
 
   private fun resetPreferences() {

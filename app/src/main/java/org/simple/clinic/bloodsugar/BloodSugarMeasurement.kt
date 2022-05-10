@@ -16,6 +16,7 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.bloodsugar.sync.BloodSugarMeasurementPayload
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
+import org.simple.clinic.util.Unicode
 import java.time.Instant
 import java.util.UUID
 
@@ -60,6 +61,10 @@ data class BloodSugarMeasurement(
       deletedAt = timestamps.deletedAt,
       recordedAt = recordedAt
   )
+
+  override fun toString(): String {
+    return "BloodSugarMeasurement(${Unicode.redacted})"
+  }
 
   @Dao
   interface RoomDao {

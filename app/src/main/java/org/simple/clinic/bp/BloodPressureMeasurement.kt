@@ -16,6 +16,7 @@ import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.util.Unicode
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
@@ -65,6 +66,10 @@ data class BloodPressureMeasurement(
         updatedAt = updatedAt,
         deletedAt = deletedAt,
         recordedAt = recordedAt)
+  }
+
+  override fun toString(): String {
+    return "BloodPressureMeasurement(${Unicode.redacted})"
   }
 
   @Dao

@@ -16,6 +16,7 @@ import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
+import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UtcClock
 import java.time.Instant
 import java.util.UUID
@@ -85,6 +86,10 @@ data class PrescribedDrug(
         durationInDays = durationInDays,
         teleconsultationId = teleconsultationId
     )
+  }
+
+  override fun toString(): String {
+    return "PrescribedDrug(${Unicode.redacted})"
   }
 
   fun refill(

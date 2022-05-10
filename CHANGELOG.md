@@ -5,6 +5,7 @@
 ### Internal
 
 - Enable CDSS alerts only in pilot facilities
+- Redact measurements PHI from logs
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effects
 
 ## 2022-05-09-8244

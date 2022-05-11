@@ -84,6 +84,7 @@ class ContactPatientEffectHandlerTest {
       userClock = userClock,
       schedulers = TestSchedulersProvider.trampoline(),
       currentFacility = { facility },
+      callResultRepository = callResultRepository,
       uiActions = uiActions
   ).build()
 

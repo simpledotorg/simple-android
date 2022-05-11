@@ -9,6 +9,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.overdue.callresult.CallResultRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.util.UserClock
@@ -23,6 +24,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     private val userClock: UserClock,
     private val schedulers: SchedulersProvider,
     private val currentFacility: Lazy<Facility>,
+    private val callResultRepository: CallResultRepository,
     @Assisted private val uiActions: ContactPatientUiActions
 ) {
 

@@ -9,6 +9,7 @@
 - Bump lint to v30.2.0
 - Bump Cirrus rebase-action to v1.7 
 - Bump firebase-config to v21.1.0 
+- Add query to fetch call result for the appointment
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effects
 
 ## 2022-05-09-8244

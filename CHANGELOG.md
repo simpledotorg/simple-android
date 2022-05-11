@@ -21,6 +21,10 @@
 - Fix critical app update dialog UI
 - Bump Mixpanel to v6.2.1
 
+### Fixes
+
+- Fix app update notifications not being scheduled
+
 ## 2022-05-02-8233
 
 ### Internal

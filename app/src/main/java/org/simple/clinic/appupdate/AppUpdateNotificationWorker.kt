@@ -9,11 +9,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import androidx.work.PeriodicWorkRequest
-import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.RxWorker
 import androidx.work.WorkerParameters
-import androidx.work.workDataOf
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Scheduler
 import io.reactivex.Single
@@ -51,13 +50,14 @@ class AppUpdateNotificationWorker(
     private const val NOTIFICATION_CRITICAL = 6
     private const val NOTIFICATION_CHANNEL_NAME = "Updates"
 
-    fun createWorkRequest(userClock: UserClock, schedule: AppUpdateNotificationSchedule): PeriodicWorkRequest {
+    fun createWorkRequest(userClock: UserClock, schedule: AppUpdateNotificationSchedule): OneTimeWorkRequest {
       val currentDateTime = LocalDateTime.now(userClock)
       val notificationScheduledTime = notificationScheduledTime(schedule.dateTime, currentDateTime)
 
       val initialDelay = Duration.between(currentDateTime, notificationScheduledTime).toMillis()
 
-      return PeriodicWorkRequestBuilder<AppUpdateNotificationWorker>(repeatInterval = Duration.ofDays(1))
+
+      return OneTimeWorkRequestBuilder<AppUpdateNotificationWorker>()
           .setInitialDelay(initialDelay, TimeUnit.MILLISECONDS)
           .build()
     }
@@ -78,6 +78,9 @@ class AppUpdateNotificationWorker(
 
   @Inject
   lateinit var schedulerProvider: SchedulersProvider
+
+  @Inject
+  lateinit var appUpdateNotificationScheduler: AppUpdateNotificationScheduler
 
   @Inject
   @TypedPreference(IsLightAppUpdateNotificationShown)
@@ -109,6 +112,10 @@ class AppUpdateNotificationWorker(
         .doOnError {
           Result.failure()
         }
+        .doFinally {
+          appUpdateNotificationScheduler.schedule()
+        }
+
   }
 
   private fun resetPreferences() {

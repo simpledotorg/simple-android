@@ -2,6 +2,7 @@ package org.simple.clinic.overdue.callresult
 
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.SynceableRepository
+import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
 
@@ -40,4 +41,6 @@ class CallResultRepository @Inject constructor(
       limit = limit,
       offset = offset
   )
+
+  fun callResultForAppointment(appointmentID: UUID): Optional<CallResult> = callResultDao.callResultForAppointment(appointmentID)
 }

@@ -82,7 +82,7 @@ edittext-pinentry = "com.alimuzaffar.lib:pinentryedittext:2.0.6"
 
 faker = "com.github.blocoio:faker:1.2.8"
 
-firebase-config = "com.google.firebase:firebase-config:21.0.2"
+firebase-config = "com.google.firebase:firebase-config:21.1.0"
 
 flipper-flipper = { module = "com.facebook.flipper:flipper", version.ref = "flipper" }
 flipper-networkPlugin = { module = "com.facebook.flipper:flipper-network-plugin", version.ref = "flipper" }

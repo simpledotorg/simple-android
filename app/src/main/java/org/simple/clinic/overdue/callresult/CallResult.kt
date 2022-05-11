@@ -14,6 +14,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.user.User
 import org.simple.clinic.util.UtcClock
+import java.util.Optional
 import java.util.UUID
 
 @Entity(tableName = "CallResult")
@@ -125,6 +126,15 @@ data class CallResult(
       WHERE syncStatus = :syncStatus
     """)
     fun countWithStatus(syncStatus: SyncStatus): Observable<Int>
+
+    @Query("""
+      SELECT * 
+      FROM CallResult
+      WHERE appointmentId = :appointmentUUID
+    """)
+    fun callResultForAppointment(
+        appointmentUUID: UUID
+    ): Optional<CallResult>
 
     @Query("""
       SELECT *

@@ -44,7 +44,7 @@ class ContactPatientUpdate(
 
       PatientMarkedAsAgreedToVisit,
       ReminderSetForAppointment -> dispatch(CloseScreen)
-      is CallResultForAppointmentLoaded -> noChange()
+      is CallResultForAppointmentLoaded -> next(model.callResultLoaded(event.callResult))
     }
   }
 

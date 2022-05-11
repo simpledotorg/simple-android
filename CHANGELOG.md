@@ -11,6 +11,7 @@
 - Bump firebase-config to v21.1.0 
 - Add query to fetch call result for the appointment
 - Bump Jackson to v2.13.3
+- [In Progress: 11 May 2022] Show call result status for the appointment in `ContactPatientBottomSheet`  
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effects
 
 ## 2022-05-09-8244

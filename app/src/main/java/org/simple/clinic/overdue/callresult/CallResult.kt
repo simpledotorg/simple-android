@@ -1,5 +1,6 @@
 package org.simple.clinic.overdue.callresult
 
+import android.os.Parcelable
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Entity
@@ -8,6 +9,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Observable
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.patient.SyncStatus
@@ -17,6 +19,7 @@ import org.simple.clinic.util.UtcClock
 import java.util.Optional
 import java.util.UUID
 
+@Parcelize
 @Entity(tableName = "CallResult")
 data class CallResult(
 
@@ -35,7 +38,7 @@ data class CallResult(
     val timestamps: Timestamps,
 
     val syncStatus: SyncStatus
-) {
+) : Parcelable {
 
   companion object {
     fun agreedToVisit(

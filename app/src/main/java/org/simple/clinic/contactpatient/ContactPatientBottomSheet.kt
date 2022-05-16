@@ -19,6 +19,9 @@ import io.reactivex.subjects.Subject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.activity.permissions.ActivityPermissionResult
+import org.simple.clinic.activity.permissions.RequestPermissions
+import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.databinding.SheetContactPatientBinding
 import org.simple.clinic.datepicker.DatePickerKeyFactory
 import org.simple.clinic.datepicker.DatePickerResult
@@ -33,18 +36,17 @@ import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
+import org.simple.clinic.overdue.callresult.Outcome
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.removeoverdueappointment.RemoveOverdueAppointmentScreen
-import org.simple.clinic.activity.permissions.ActivityPermissionResult
-import org.simple.clinic.activity.permissions.RequestPermissions
-import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.onBackPressed
 import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.valueOrEmpty
+import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -304,6 +306,10 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
   override fun enableNextReminderDateStepper() {
     setAppointmentReminderView.enableNextReminderDateStepper()
+  }
+
+  override fun showCallResult(callResult: Outcome, updatedAt: Instant) {
+    // Nothing to look at here, yet.
   }
 
   override fun switchToCallPatientView() {

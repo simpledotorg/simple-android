@@ -48,7 +48,17 @@ class ContactPatientEffectHandler @AssistedInject constructor(
         .addTransformer(SetReminderForAppointment::class.java, setReminderForAppointment(schedulers.io()))
         .addConsumer(OpenRemoveOverdueAppointmentScreen::class.java, ::openRemoveOverdueAppointmentScreen, schedulers.ui())
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
+        .addTransformer(LoadCallResultForAppointment::class.java, loadCallResultForAppointment())
         .build()
+  }
+
+  private fun loadCallResultForAppointment(): ObservableTransformer<LoadCallResultForAppointment, ContactPatientEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulers.io())
+          .map { callResultRepository.callResultForAppointment(it.appointmentId) }
+          .map(::CallResultForAppointmentLoaded)
+    }
   }
 
   private fun loadCurrentFacility(): ObservableTransformer<LoadCurrentFacility, ContactPatientEvent> {

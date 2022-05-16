@@ -1,10 +1,11 @@
 package org.simple.clinic.contactpatient
 
 import android.Manifest
+import org.simple.clinic.activity.permissions.RequiresPermission
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.overdue.callresult.CallResult
 import org.simple.clinic.platform.util.RuntimePermissionResult
-import org.simple.clinic.activity.permissions.RequiresPermission
 import org.simple.clinic.widgets.UiEvent
 import java.time.LocalDate
 import java.util.Optional
@@ -79,3 +80,5 @@ object RemindToCallLaterClicked : ContactPatientEvent() {
 object BackClicked : ContactPatientEvent()
 
 object RemoveFromOverdueListClicked : ContactPatientEvent()
+
+data class CallResultForAppointmentLoaded(val callResult: Optional<CallResult>) : ContactPatientEvent()

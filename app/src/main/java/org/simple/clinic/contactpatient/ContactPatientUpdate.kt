@@ -44,6 +44,7 @@ class ContactPatientUpdate(
 
       PatientMarkedAsAgreedToVisit,
       ReminderSetForAppointment -> dispatch(CloseScreen)
+      is CallResultForAppointmentLoaded -> noChange()
     }
   }
 

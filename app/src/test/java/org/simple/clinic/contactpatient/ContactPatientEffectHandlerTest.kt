@@ -296,4 +296,19 @@ class ContactPatientEffectHandlerTest {
     testCase.assertOutgoingEvents(CurrentFacilityLoaded(facility))
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when load call result for appointment effect is received, then load call result for appointment`() {
+    // given
+    val appointmentId = UUID.fromString("02642b80-1241-4862-a123-26f9dcb933ff")
+    val callResult = TestData.callResult(id = UUID.fromString("70e67c46-94ce-4c8c-ad19-22f383896ea8"), appointmentId = appointmentId)
+    whenever(callResultRepository.callResultForAppointment(appointmentId)).thenReturn(Optional.of(callResult))
+
+    // when
+    testCase.dispatch(LoadCallResultForAppointment(appointmentId = appointmentId))
+
+    // then
+    testCase.assertOutgoingEvents(CallResultForAppointmentLoaded(Optional.of(callResult)))
+    verifyZeroInteractions(uiActions)
+  }
 }

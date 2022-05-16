@@ -8,6 +8,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.PotentialAppointmentDate
+import org.simple.clinic.overdue.callresult.CallResult
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.util.ParcelableOptional
 import org.simple.clinic.util.UserClock
@@ -27,7 +28,8 @@ data class ContactPatientModel(
     val selectedAppointmentDate: LocalDate,
     val selectedRemoveAppointmentReason: RemoveAppointmentReason?,
     val contactPatientInfoProgressState: ContactPatientInfoProgressState?,
-    val currentFacility: Facility? = null
+    val currentFacility: Facility? = null,
+    val callResult: ParcelableOptional<CallResult>?
 ) : Parcelable {
 
   companion object {
@@ -47,7 +49,8 @@ data class ContactPatientModel(
           potentialAppointments = potentialAppointments,
           selectedAppointmentDate = potentialAppointments.first().scheduledFor,
           selectedRemoveAppointmentReason = null,
-          contactPatientInfoProgressState = null
+          contactPatientInfoProgressState = null,
+          callResult = null
       )
     }
   }
@@ -111,5 +114,9 @@ data class ContactPatientModel(
 
   fun currentFacilityLoaded(currentFacility: Facility): ContactPatientModel {
     return copy(currentFacility = currentFacility)
+  }
+
+  fun callResultLoaded(callResult: Optional<CallResult>): ContactPatientModel {
+    return copy(callResult = callResult.parcelable())
   }
 }

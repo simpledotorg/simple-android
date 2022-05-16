@@ -350,7 +350,7 @@
   <string name="newmedicalhistory_no">නැත</string>
   <string name="newmedicalhistory_history">ඉතිහාසය</string>
   <string name="newmedicalhistory_diagnosis">රෝග නිශ්චය (අවශ්‍යයි)</string>
-  <string name="medicalhistory_question_is_on_hypertension_treatment">රෝගියා පසුගිය මාසය තුල කිසියම් දිනකදී රුධිර පීඩනය පාලනය කිරීම සඳහා ඖෂධයක් ලබා ගත්තේද? (අවශ්‍යයි)</string>
+  <string name="medicalhistory_question_is_on_hypertension_treatment">මෙම රෝගියාගේ අධි රුධිරපීඩන ඖෂධ SIMPLE ප්රොටෝකෝලය මත පදනම්ව ආරම්භ වේද?</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">රෝගියා පසුගිය මාසය තුල කිසියම් දිනකදී දියවැඩියාව පාලනය කිරීම සඳහා ඖෂධයක් ලබා ගත්තේද? (අවශ්‍යයි)</string>
 
   <!--Prescribed Drug with Dosages Sheet-->

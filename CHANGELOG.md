@@ -10,6 +10,10 @@
 - [In Progress: 11 May 2022] Show call result status for the appointment in `ContactPatientBottomSheet`
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
+### Changes
+
+- Show ongoing hypertension treatment question for Sri Lanka
+
 ## 2022-05-16-8253
 
 ### Internal
@@ -17,8 +21,8 @@
 - Enable CDSS alerts only in pilot facilities
 - Redact measurements PHI from logs
 - Bump lint to v30.2.0
-- Bump Cirrus rebase-action to v1.7 
-- Bump firebase-config to v21.1.0 
+- Bump Cirrus rebase-action to v1.7
+- Bump firebase-config to v21.1.0
 - Add query to fetch call result for the appointment
 - Bump Jackson to v2.13.3
 

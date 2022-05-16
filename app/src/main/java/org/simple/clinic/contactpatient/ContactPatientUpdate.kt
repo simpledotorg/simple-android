@@ -56,7 +56,7 @@ class ContactPatientUpdate(
           .contactPatientInfoLoaded()
     }
 
-    return next(updatedModel)
+    return next(updatedModel, LoadCallResultForAppointment(event.overdueAppointment.get().uuid))
   }
 
   private fun patientProfileLoaded(model: ContactPatientModel, event: PatientProfileLoaded): Next<ContactPatientModel, ContactPatientEffect> {

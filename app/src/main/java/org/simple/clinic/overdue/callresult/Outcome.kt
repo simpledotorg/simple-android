@@ -1,11 +1,13 @@
 package org.simple.clinic.overdue.callresult
 
+import android.os.Parcelable
 import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 
-sealed class Outcome {
+sealed class Outcome : Parcelable {
 
   object TypeAdapter : SafeEnumTypeAdapter<Outcome>(
       knownMappings = mapOf(
@@ -17,12 +19,16 @@ sealed class Outcome {
       unknownEnumToStringConverter = { (it as Unknown).actualValue }
   )
 
+  @Parcelize
   object AgreedToVisit : Outcome()
 
+  @Parcelize
   object RemovedFromOverdueList : Outcome()
 
+  @Parcelize
   object RemindToCallLater : Outcome()
 
+  @Parcelize
   data class Unknown(val actualValue: String) : Outcome()
 
   class RoomTypeConverter {

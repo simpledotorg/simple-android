@@ -10,11 +10,13 @@ import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
+import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
+import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.TestUserClock
@@ -481,6 +483,29 @@ class ContactPatientUpdateTest {
         .whenEvent(CurrentFacilityLoaded(facility))
         .then(assertThatNext(
             hasModel(defaultModel.currentFacilityLoaded(facility)),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when call result for appointment is loaded, then update the model`() {
+    val model = defaultModel()
+        .contactPatientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Optional.of(overdueAppointment))
+
+    val callPatient = TestData.callResult(
+        id = UUID.fromString("0f59e8bb-9806-4134-af7f-a11bea2c244d"),
+        appointmentId = UUID.fromString("f6f8df78-c334-463a-86fa-b22dd20663ed"),
+        removeReason = AppointmentCancelReason.InvalidPhoneNumber,
+        deletedAt = null,
+        syncStatus = SyncStatus.DONE
+    )
+
+    spec
+        .given(model)
+        .whenEvent(CallResultForAppointmentLoaded(Optional.of(callPatient)))
+        .then(assertThatNext(
+            hasModel(model.callResultLoaded(Optional.of(callPatient))),
             hasNoEffects()
         ))
   }

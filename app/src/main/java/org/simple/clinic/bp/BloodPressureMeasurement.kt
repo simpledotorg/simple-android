@@ -224,7 +224,7 @@ data class BloodPressureMeasurement(
     @Query("""
       SELECT
         CASE
-            WHEN (COUNT(BP.uuid) == 1) THEN 1
+            WHEN (COUNT(BP.uuid) >= 1) THEN 1
             ELSE 0
         END
       FROM BloodPressureMeasurement BP

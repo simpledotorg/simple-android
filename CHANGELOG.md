@@ -6,6 +6,7 @@
 
 - Bump Sentry to v5.7.4  
 - Fix CDSS alert hiding when multiple BPs are added on the same day
+- Don't show CDSS alert for newly registered patients
 - [In Progress: 11 May 2022] Show call result status for the appointment in `ContactPatientBottomSheet`
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 

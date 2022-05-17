@@ -1,15 +1,20 @@
 package org.simple.clinic.summary
 
 import org.simple.clinic.mobius.ViewRenderer
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.ValueChangedCallback
+import org.simple.clinic.util.toLocalDateAtZone
+import java.time.LocalDate
 
 class PatientSummaryViewRenderer(
     private val ui: PatientSummaryScreenUi,
     private val isNextAppointmentFeatureEnabled: Boolean,
-    private val modelUpdateCallback: PatientSummaryModelUpdateCallback
+    private val modelUpdateCallback: PatientSummaryModelUpdateCallback,
+    private val userClock: UserClock
 ) : ViewRenderer<PatientSummaryModel> {
 
   private val clinicalDecisionSupportCallback = ValueChangedCallback<Boolean>()
+  private val today = LocalDate.now(userClock)
 
   override fun render(model: PatientSummaryModel) {
     modelUpdateCallback?.invoke(model)
@@ -28,7 +33,13 @@ class PatientSummaryViewRenderer(
       }
 
       renderNextAppointmentCard(model)
-      renderClinicalDecisionSupportAlert(model)
+
+      val patientRegistrationDate = model.patientSummaryProfile?.patient?.createdAt?.toLocalDateAtZone(userClock.zone)
+      if (patientRegistrationDate?.isBefore(today) == true) {
+        renderClinicalDecisionSupportAlert(model)
+      } else {
+        ui.hideClinicalDecisionSupportAlertWithoutAnimation()
+      }
     }
   }
 

@@ -10,6 +10,9 @@ import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.user.User
+import org.simple.clinic.util.TestUserClock
+import java.time.Instant
+import java.time.LocalDate
 import java.util.UUID
 
 class PatientSummaryViewRendererTest {
@@ -40,7 +43,8 @@ class PatientSummaryViewRendererTest {
   private val uiRenderer = PatientSummaryViewRenderer(
       ui = ui,
       isNextAppointmentFeatureEnabled = false,
-      modelUpdateCallback = { /* no-op */ }
+      modelUpdateCallback = { /* no-op */ },
+      userClock = TestUserClock(LocalDate.parse("2018-01-01"))
   )
 
   @Test
@@ -356,7 +360,12 @@ class PatientSummaryViewRendererTest {
   fun `when patient registration data is present and next appointment feature is enabled, then show the next appointment card`() {
     // given
     val modelWithPatientRegistrationData = defaultModel.patientRegistrationDataLoaded(hasPatientRegistrationData = true)
-    val uiRenderer = PatientSummaryViewRenderer(ui = ui, isNextAppointmentFeatureEnabled = true) { /* no-op */ }
+    val uiRenderer = PatientSummaryViewRenderer(
+        ui = ui,
+        isNextAppointmentFeatureEnabled = true,
+        modelUpdateCallback = { /* no-op */ },
+        userClock = TestUserClock(LocalDate.parse("2018-01-01"))
+    )
 
     // when
     uiRenderer.render(modelWithPatientRegistrationData)
@@ -371,7 +380,12 @@ class PatientSummaryViewRendererTest {
   fun `when patient registration data is present and next appointment feature is disabled, then hide the next appointment card`() {
     // given
     val modelWithPatientRegistrationData = defaultModel.patientRegistrationDataLoaded(hasPatientRegistrationData = true)
-    val uiRenderer = PatientSummaryViewRenderer(ui = ui, isNextAppointmentFeatureEnabled = false) { /* no-op */ }
+    val uiRenderer = PatientSummaryViewRenderer(
+        ui = ui,
+        isNextAppointmentFeatureEnabled = false,
+        modelUpdateCallback = { /* no-op */ },
+        userClock = TestUserClock(LocalDate.parse("2018-01-01"))
+    )
 
     // when
     uiRenderer.render(modelWithPatientRegistrationData)
@@ -403,7 +417,10 @@ class PatientSummaryViewRendererTest {
     val patientUuid = UUID.fromString("6274ca08-2432-43fe-ae04-35f623e5325c")
     val patient = TestData.patient(
         uuid = patientUuid,
-        status = PatientStatus.Dead
+        status = PatientStatus.Dead,
+        createdAt = Instant.parse("2017-12-30T00:00:00Z"),
+        updatedAt = Instant.parse("2017-12-30T00:00:00Z"),
+        recordedAt = Instant.parse("2017-12-30T00:00:00Z")
     )
     val patientAddress = TestData.patientAddress(patient.addressUuid)
     val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
@@ -429,7 +446,8 @@ class PatientSummaryViewRendererTest {
     val uiRenderer = PatientSummaryViewRenderer(
         ui = ui,
         isNextAppointmentFeatureEnabled = false,
-        modelUpdateCallback = { /* no-op */ }
+        modelUpdateCallback = { /* no-op */ },
+        userClock = TestUserClock(LocalDate.parse("2018-01-01"))
     )
 
     // when
@@ -453,7 +471,10 @@ class PatientSummaryViewRendererTest {
     val patientUuid = UUID.fromString("6274ca08-2432-43fe-ae04-35f623e5325c")
     val patient = TestData.patient(
         uuid = patientUuid,
-        status = PatientStatus.Dead
+        status = PatientStatus.Dead,
+        createdAt = Instant.parse("2017-12-30T00:00:00Z"),
+        recordedAt = Instant.parse("2017-12-30T00:00:00Z"),
+        updatedAt = Instant.parse("2017-12-30T00:00:00Z")
     )
     val patientAddress = TestData.patientAddress(patient.addressUuid)
     val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
@@ -479,7 +500,8 @@ class PatientSummaryViewRendererTest {
     val uiRenderer = PatientSummaryViewRenderer(
         ui = ui,
         isNextAppointmentFeatureEnabled = false,
-        modelUpdateCallback = { /* no-op */ }
+        modelUpdateCallback = { /* no-op */ },
+        userClock = TestUserClock(LocalDate.parse("2018-01-01"))
     )
 
     // when
@@ -509,6 +531,60 @@ class PatientSummaryViewRendererTest {
     // then
     verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verify(ui).hideNextAppointmentCard()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when patient is registered today and newest bp entry is high, then don't show clinical decision alert`() {
+    // given
+    val patientUuid = UUID.fromString("6fdf088e-f6aa-40e9-9cc2-22e197b83470")
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        status = PatientStatus.Active,
+        createdAt = Instant.parse("2018-01-01T00:00:00Z"),
+        recordedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+    val patientAddress = TestData.patientAddress(patient.addressUuid)
+    val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
+    val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", Identifier.IdentifierType.BpPassport))
+    val bangladeshNationalId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", Identifier.IdentifierType.BangladeshNationalId))
+    val facility = TestData.facility(uuid = UUID.fromString("fe559cb0-f76c-4f34-a3c7-4e696ae2883c"))
+
+    val patientSummaryProfile = PatientSummaryProfile(
+        patient = patient,
+        address = patientAddress,
+        phoneNumber = phoneNumber,
+        bpPassport = bpPassport,
+        alternativeId = bangladeshNationalId,
+        facility = facility
+    )
+
+    val model = defaultModel
+        .patientRegistrationDataLoaded(hasPatientRegistrationData = true)
+        .currentFacilityLoaded(facility = facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true)
+
+    val uiRenderer = PatientSummaryViewRenderer(
+        ui = ui,
+        isNextAppointmentFeatureEnabled = false,
+        modelUpdateCallback = { /* no-op */ },
+        userClock = TestUserClock(LocalDate.parse("2018-01-01"))
+    )
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).populatePatientProfile(patientSummaryProfile)
+    verify(ui).showEditButton()
+    verify(ui).hideAssignedFacilityView()
+    verify(ui).hidePatientDiedStatus()
+    verify(ui).hideNextAppointmentCard()
+    verify(ui).hideDiabetesView()
+    verify(ui).hideTeleconsultButton()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verifyNoMoreInteractions(ui)
   }
 }

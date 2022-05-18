@@ -75,7 +75,19 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addConsumer(PatientSummaryViewEffect::class.java, viewEffectsConsumer::accept)
         .addTransformer(LoadPatientRegistrationData::class.java, checkPatientRegistrationData())
         .addTransformer(CheckIfCDSSPilotIsEnabled::class.java, checkIfCDSSPilotIsEnabled())
+        .addTransformer(LoadLatestScheduledAppointment::class.java, loadLatestScheduledAppointment())
         .build()
+  }
+
+  private fun loadLatestScheduledAppointment(): ObservableTransformer<LoadLatestScheduledAppointment, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map {
+            val appointment = appointmentRepository.latestScheduledAppointmentForPatient(it.patientUuid)
+            LatestScheduledAppointmentLoaded(appointment)
+          }
+    }
   }
 
   private fun checkIfCDSSPilotIsEnabled(): ObservableTransformer<CheckIfCDSSPilotIsEnabled, PatientSummaryEvent> {

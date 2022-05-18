@@ -36,6 +36,8 @@ class ContactPatientUiRenderer(
     if (model.hasCallResult) {
       val callResult = model.callResult!!.get()
       ui.showCallResult(callResult.outcome, callResult.timestamps.updatedAt)
+    } else {
+      ui.hideCallResult()
     }
   }
 

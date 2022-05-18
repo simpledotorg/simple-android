@@ -312,6 +312,10 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     // Nothing to look at here, yet.
   }
 
+  override fun hideCallResult() {
+    // Nothing to look at here, yet.
+  }
+
   override fun switchToCallPatientView() {
     callPatientView.visibility = VISIBLE
     setAppointmentReminderView.visibility = GONE

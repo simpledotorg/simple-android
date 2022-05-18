@@ -72,7 +72,8 @@ class PatientSummaryScreenLogicTest {
       ui = ui,
       isNextAppointmentFeatureEnabled = false,
       modelUpdateCallback = { /* no-op */ },
-      userClock = TestUserClock(LocalDate.parse("2018-01-01"))
+      userClock = TestUserClock(LocalDate.parse("2018-01-01")),
+      cdssOverdueLimit = 2
   )
 
   private lateinit var testFixture: MobiusTestFixture<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect>

@@ -55,6 +55,7 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.displayLetterRes
+import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionScreen
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
@@ -190,6 +191,9 @@ class PatientSummaryScreen :
   @Inject
   lateinit var features: Features
 
+  @Inject
+  lateinit var configReader: ConfigReader
+
   private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
 
   private val snackbarActionClicks = PublishSubject.create<PatientSummaryEvent>()
@@ -216,7 +220,8 @@ class PatientSummaryScreen :
         modelUpdateCallback = { model ->
           modelUpdateCallback?.invoke(model)
         },
-        userClock = userClock
+        userClock = userClock,
+        cdssOverdueLimit = configReader.long("cdss_overdue_limit", 2).toInt()
     )
   }
 

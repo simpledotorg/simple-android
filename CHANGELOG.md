@@ -9,9 +9,9 @@
 - Bump flipper to v0.145.0
 - Don't show CDSS alert for newly registered patients
 - Add query to load latest scheduled appointment for the patient
+- Don't show CDSS alert for patient if appointment is more than 2 days overdue
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 - [In Progress: 11 May 2022] Show call result status for the appointment in `ContactPatientBottomSheet`
-- [In Progress: 18 May 2022] Don't show CDSS alert for patient if appointment is more than 2 days overdue
 
 ### Changes
 

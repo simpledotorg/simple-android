@@ -21,6 +21,7 @@ class ContactPatientUiRenderer(
     } else {
       ui.hideProgress()
       renderContactPatientUi(model)
+      renderCallResultOutcome(model)
     }
   }
 
@@ -28,6 +29,15 @@ class ContactPatientUiRenderer(
     when (model.uiMode) {
       CallPatient -> renderCallPatientView(model)
       SetAppointmentReminder -> renderSetAppointmentReminderView(model)
+    }
+  }
+
+  private fun renderCallResultOutcome(model: ContactPatientModel) {
+    if (model.hasCallResult) {
+      val callResult = model.callResult!!.get()
+      ui.showCallResult(callResult.outcome, callResult.timestamps.updatedAt)
+    } else {
+      ui.hideCallResult()
     }
   }
 

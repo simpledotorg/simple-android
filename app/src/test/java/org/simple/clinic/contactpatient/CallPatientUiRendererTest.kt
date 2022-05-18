@@ -10,9 +10,11 @@ import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
+import org.simple.clinic.overdue.callresult.Outcome
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.util.TestUserClock
+import java.time.Instant
 import java.time.LocalDate
 import java.time.Period
 import java.util.Optional
@@ -73,6 +75,7 @@ class CallPatientUiRendererTest {
     verify(ui).showPatientWithPhoneNumberUi()
     verify(ui).hidePatientWithNoPhoneNumberUi()
     verify(ui).setResultOfCallLabelText()
+    verify(ui).hideCallResult()
     verify(ui).showSecureCallUi()
     verify(ui).hideDeadPatientStatus()
     verify(ui).showNormalCallButtonText()
@@ -114,6 +117,7 @@ class CallPatientUiRendererTest {
     verify(ui).showPatientWithPhoneNumberCallResults()
     verify(ui).setResultOfCallLabelText()
     verify(ui).showSecureCallUi()
+    verify(ui).hideCallResult()
     verify(ui).showNormalCallButtonText()
     verify(ui).hideDeadPatientStatus()
     verifyNoMoreInteractions(ui)
@@ -150,6 +154,7 @@ class CallPatientUiRendererTest {
     verify(ui).showPatientWithPhoneNumberUi()
     verify(ui).hidePatientWithNoPhoneNumberUi()
     verify(ui).setResultOfCallLabelText()
+    verify(ui).hideCallResult()
     verify(ui).hideSecureCallUi()
     verify(ui).showCallButtonText()
     verify(ui).showPatientWithPhoneNumberCallResults()
@@ -176,6 +181,7 @@ class CallPatientUiRendererTest {
 
     // then
     verify(ui).hideProgress()
+    verify(ui).hideCallResult()
     verify(ui).showPatientWithNoPhoneNumberUi()
     verify(ui).hidePatientWithPhoneNumberUi()
     verify(ui).renderPatientDetails(PatientDetails(name = patientProfile.patient.fullName,
@@ -225,6 +231,7 @@ class CallPatientUiRendererTest {
         diagnosedWithHypertension = patientProfile.medicalHistory?.diagnosedWithHypertension,
         lastVisited = patientProfile.patientLastSeen))
     verify(ui).showSecureCallUi()
+    verify(ui).hideCallResult()
     verify(ui).showNormalCallButtonText()
     verify(ui).switchToCallPatientView()
     verify(ui).setResultOfCallLabelText()
@@ -272,6 +279,7 @@ class CallPatientUiRendererTest {
     verify(ui).setRegisterAtLabelText()
     verify(ui).switchToCallPatientView()
     verify(ui).showPatientWithNoPhoneNumberUi()
+    verify(ui).hideCallResult()
     verify(ui).hidePatientWithPhoneNumberUi()
     verify(ui).setResultLabelText()
     verify(ui).showPatientWithNoPhoneNumberResults()
@@ -316,6 +324,7 @@ class CallPatientUiRendererTest {
         lastVisited = patientProfile.patientLastSeen))
     verify(ui).setTransferredFromLabelText()
     verify(ui).switchToCallPatientView()
+    verify(ui).hideCallResult()
     verify(ui).showPatientWithNoPhoneNumberUi()
     verify(ui).hidePatientWithPhoneNumberUi()
     verify(ui).setResultLabelText()
@@ -361,6 +370,7 @@ class CallPatientUiRendererTest {
         diagnosedWithHypertension = patientProfile.medicalHistory?.diagnosedWithHypertension,
         lastVisited = patientProfile.patientLastSeen))
     verify(ui).switchToCallPatientView()
+    verify(ui).hideCallResult()
     verify(ui).hidePatientWithNoPhoneNumberUi()
     verify(ui).showPatientWithPhoneNumberUi()
     verify(ui).hidePatientWithPhoneNumberCallResults()
@@ -368,6 +378,99 @@ class CallPatientUiRendererTest {
     verify(ui).showSecureCallUi()
     verify(ui).showNormalCallButtonText()
     verify(ui).setTransferredFromLabelText()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when call result for appointment is present, render call result for appointment message in the ui`() {
+    // given
+    val appointmentId = UUID.fromString("c3b8c0f9-567e-45a5-b4aa-98f06d01aaa5")
+    val callResultOutcome = Outcome.RemindToCallLater
+    val updatedAt = Instant.parse("2018-01-01T00:00:00Z")
+    val callResult = TestData.callResult(
+        id = UUID.fromString("0135537e-f6a0-46d0-8e4d-009f938889bc"),
+        appointmentId = appointmentId,
+        outcome = callResultOutcome,
+        updatedAt = updatedAt)
+    val currentFacility = TestData.facility(
+        uuid = UUID.fromString("1749461e-0ff7-47d9-95e0-fa4337d118b3"),
+        name = "Bhatinda"
+    )
+    val patientProfile = TestData.contactPatientProfile(
+        patientUuid = patientUuid,
+        patientStatus = PatientStatus.Dead,
+        patientPhoneNumber = "1234567890",
+        generatePhoneNumber = false
+    )
+
+    // when
+    uiRenderer.render(defaultModel(phoneMaskFeatureEnabled = true)
+        .contactPatientProfileLoaded(patientProfile)
+        .contactPatientInfoLoaded()
+        .callResultLoaded(Optional.of(callResult)))
+
+    // then
+    verify(ui).hideProgress()
+    verify(ui).showCallResult(callResultOutcome, updatedAt)
+    verify(ui).renderPatientDetails(PatientDetails(name = patientProfile.patient.fullName,
+        gender = patientProfile.patient.gender,
+        age = patientProfile.patient.ageDetails.estimateAge(clock),
+        phoneNumber = patientProfile.phoneNumbers.first().number,
+        patientAddress = patientAddressText(patientProfile.address)!!,
+        registeredFacility = patientProfile.registeredFacility?.name,
+        diagnosedWithDiabetes = patientProfile.medicalHistory?.diagnosedWithDiabetes,
+        diagnosedWithHypertension = patientProfile.medicalHistory?.diagnosedWithHypertension,
+        lastVisited = patientProfile.patientLastSeen))
+    verify(ui).switchToCallPatientView()
+    verify(ui).hidePatientWithNoPhoneNumberUi()
+    verify(ui).showPatientWithPhoneNumberUi()
+    verify(ui).hidePatientWithPhoneNumberCallResults()
+    verify(ui).showDeadPatientStatus()
+    verify(ui).showSecureCallUi()
+    verify(ui).showNormalCallButtonText()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when call result for appointment is absent, hide call result for appointment message in the ui`() {
+    // given
+    val updatedAt = Instant.parse("2018-01-01T00:00:00Z")
+    val currentFacility = TestData.facility(
+        uuid = UUID.fromString("1749461e-0ff7-47d9-95e0-fa4337d118b3"),
+        name = "Bhatinda"
+    )
+    val patientProfile = TestData.contactPatientProfile(
+        patientUuid = patientUuid,
+        patientStatus = PatientStatus.Dead,
+        patientPhoneNumber = "1234567890",
+        generatePhoneNumber = false
+    )
+
+    // when
+    uiRenderer.render(defaultModel(phoneMaskFeatureEnabled = true)
+        .contactPatientProfileLoaded(patientProfile)
+        .contactPatientInfoLoaded()
+    )
+
+    // then
+    verify(ui).hideProgress()
+    verify(ui).hideCallResult()
+    verify(ui).renderPatientDetails(PatientDetails(name = patientProfile.patient.fullName,
+        gender = patientProfile.patient.gender,
+        age = patientProfile.patient.ageDetails.estimateAge(clock),
+        phoneNumber = patientProfile.phoneNumbers.first().number,
+        patientAddress = patientAddressText(patientProfile.address)!!,
+        registeredFacility = patientProfile.registeredFacility?.name,
+        diagnosedWithDiabetes = patientProfile.medicalHistory?.diagnosedWithDiabetes,
+        diagnosedWithHypertension = patientProfile.medicalHistory?.diagnosedWithHypertension,
+        lastVisited = patientProfile.patientLastSeen))
+    verify(ui).switchToCallPatientView()
+    verify(ui).hidePatientWithNoPhoneNumberUi()
+    verify(ui).showPatientWithPhoneNumberUi()
+    verify(ui).hidePatientWithPhoneNumberCallResults()
+    verify(ui).showDeadPatientStatus()
+    verify(ui).showSecureCallUi()
+    verify(ui).showNormalCallButtonText()
     verifyNoMoreInteractions(ui)
   }
 

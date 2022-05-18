@@ -9,6 +9,7 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityConfig
+import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentConfig
@@ -89,6 +90,20 @@ class ContactPatientUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.overdueAppointmentLoaded(appointment)),
             hasEffects(LoadCallResultForAppointment(overdueAppointment.uuid))
+        ))
+  }
+
+  @Test
+  fun `when the loaded overdue appointment is empty, the ui must be updated but load call result for appointment should not be called`() {
+    val appointment = Optional.empty<Appointment>()
+    val defaultModel = defaultModel()
+
+    spec
+        .given(defaultModel)
+        .whenEvent(OverdueAppointmentLoaded(appointment))
+        .then(assertThatNext(
+            hasModel(defaultModel.overdueAppointmentLoaded(appointment)),
+            hasNoEffects()
         ))
   }
 

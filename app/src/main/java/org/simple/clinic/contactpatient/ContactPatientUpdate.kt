@@ -56,7 +56,12 @@ class ContactPatientUpdate(
           .contactPatientInfoLoaded()
     }
 
-    return next(updatedModel, LoadCallResultForAppointment(event.overdueAppointment.get().uuid))
+    return if (event.overdueAppointment.isPresent) {
+      next(updatedModel, LoadCallResultForAppointment(event.overdueAppointment.get().uuid))
+    } else {
+      next(updatedModel)
+    }
+
   }
 
   private fun patientProfileLoaded(model: ContactPatientModel, event: PatientProfileLoaded): Next<ContactPatientModel, ContactPatientEffect> {

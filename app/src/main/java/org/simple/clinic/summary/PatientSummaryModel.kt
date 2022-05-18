@@ -72,6 +72,9 @@ data class PatientSummaryModel(
   val hasMedicalOfficers: Boolean
     get() = medicalOfficers.isNullOrEmpty().not()
 
+  val hasScheduledAppointment: Boolean
+    get() = scheduledAppointment != null && scheduledAppointment.isPresent()
+
   override fun readyToRender(): Boolean {
     return hasLoadedPatientSummaryProfile && hasLoadedCurrentFacility && hasPatientRegistrationData != null
   }

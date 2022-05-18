@@ -5,12 +5,14 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.ValueChangedCallback
 import org.simple.clinic.util.toLocalDateAtZone
 import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 class PatientSummaryViewRenderer(
     private val ui: PatientSummaryScreenUi,
     private val isNextAppointmentFeatureEnabled: Boolean,
     private val modelUpdateCallback: PatientSummaryModelUpdateCallback,
-    private val userClock: UserClock
+    private val userClock: UserClock,
+    private val cdssOverdueLimit: Int
 ) : ViewRenderer<PatientSummaryModel> {
 
   private val clinicalDecisionSupportCallback = ValueChangedCallback<Boolean>()
@@ -36,15 +38,35 @@ class PatientSummaryViewRenderer(
 
       val patientRegistrationDate = model.patientSummaryProfile?.patient?.createdAt?.toLocalDateAtZone(userClock.zone)
       if (patientRegistrationDate?.isBefore(today) == true) {
-        renderClinicalDecisionSupportAlert(model)
+        renderClinicalDecisionBasedOnAppointment(model)
       } else {
         ui.hideClinicalDecisionSupportAlertWithoutAnimation()
       }
     }
   }
 
+  private fun renderClinicalDecisionBasedOnAppointment(model: PatientSummaryModel) {
+    if (model.hasScheduledAppointment) {
+      renderClinicalDecisionBasedOnAppointmentOverdue(model)
+    } else {
+      renderClinicalDecisionSupportAlert(model)
+    }
+  }
+
+  private fun renderClinicalDecisionBasedOnAppointmentOverdue(model: PatientSummaryModel) {
+    val appointmentScheduleDate = model.scheduledAppointment!!.get().scheduledDate
+    val daysAppointmentOverdueFor = appointmentScheduleDate.until(today, ChronoUnit.DAYS)
+
+    if (daysAppointmentOverdueFor <= cdssOverdueLimit) {
+      renderClinicalDecisionSupportAlert(model)
+    } else {
+      ui.hideClinicalDecisionSupportAlertWithoutAnimation()
+    }
+  }
+
   private fun renderClinicalDecisionSupportAlert(model: PatientSummaryModel) {
     val canShowClinicalDecisionSupportAlert = model.hasPatientRegistrationData == true && model.readyToRender()
+
     if (!canShowClinicalDecisionSupportAlert) {
       ui.hideClinicalDecisionSupportAlertWithoutAnimation()
       return

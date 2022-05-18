@@ -2311,6 +2311,68 @@ class AppointmentRepositoryAndroidTest {
     assertThat(scheduledAppointmentsForPatient(patient1)).isEmpty()
   }
 
+  @Test
+  fun getting_latest_scheduled_appointment_for_a_patient_should_work_correctly() {
+    // given
+    val patientUuid = UUID.fromString("df4ccd88-aab6-42ff-ac52-40fb2291c000")
+    val visitedAppointment = TestData.appointment(
+        uuid = UUID.fromString("e02462dc-402a-4d81-bab9-c7a82f39d79f"),
+        patientUuid = patientUuid,
+        scheduledDate = LocalDate.parse("2018-02-01"),
+        status = Visited,
+        createdAt = Instant.parse("2018-01-01T00:00:00Z"),
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        deletedAt = null,
+        cancelReason = null,
+        agreedToVisit = true,
+        facilityUuid = facility.uuid,
+        creationFacilityUuid = facility.uuid,
+        appointmentType = Manual
+    )
+
+    val visitedAppointment2 = TestData.appointment(
+        uuid = UUID.fromString("230b2e75-2d4a-4bf9-bd4e-83899c83ec54"),
+        patientUuid = patientUuid,
+        scheduledDate = LocalDate.parse("2018-03-02"),
+        status = Visited,
+        createdAt = Instant.parse("2018-02-01T00:00:00Z"),
+        updatedAt = Instant.parse("2018-02-01T00:00:00Z"),
+        deletedAt = null,
+        cancelReason = null,
+        agreedToVisit = null,
+        facilityUuid = facility.uuid,
+        creationFacilityUuid = facility.uuid,
+        appointmentType = Manual
+    )
+
+    val scheduledAppointment = TestData.appointment(
+        uuid = UUID.fromString("230b2e75-2d4a-4bf9-bd4e-83899c83ec54"),
+        patientUuid = patientUuid,
+        scheduledDate = LocalDate.parse("2018-03-01"),
+        status = Scheduled,
+        createdAt = Instant.parse("2018-02-01T00:00:00Z"),
+        updatedAt = Instant.parse("2018-02-01T00:00:00Z"),
+        deletedAt = null,
+        cancelReason = null,
+        agreedToVisit = null,
+        facilityUuid = facility.uuid,
+        creationFacilityUuid = facility.uuid,
+        appointmentType = Manual
+    )
+
+    val patientProfile = TestData.patientProfile(patientUuid = patientUuid)
+
+    patientRepository.save(listOf(patientProfile))
+    facilityRepository.save(listOf(facility))
+    appointmentRepository.save(listOf(visitedAppointment, visitedAppointment2, scheduledAppointment))
+
+    // when
+    val expectedAppointment = appointmentRepository.latestScheduledAppointmentForPatient(patientUuid)
+
+    // then
+    assertThat(expectedAppointment).isEqualTo(scheduledAppointment)
+  }
+
   private fun markAppointmentSyncStatusAsDone(vararg appointmentUuids: UUID) {
     appointmentRepository.setSyncStatus(appointmentUuids.toList(), DONE)
   }

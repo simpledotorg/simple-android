@@ -3,9 +3,13 @@ package org.simple.clinic.summary
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
 import org.simple.clinic.user.User
+import org.simple.clinic.util.ParcelableOptional
+import org.simple.clinic.util.parcelable
+import org.simple.clinic.util.toOptional
 import java.util.UUID
 
 @Parcelize
@@ -19,7 +23,8 @@ data class PatientSummaryModel(
     val medicalOfficers: List<MedicalOfficer>?,
     val hasShownMeasurementsWarningDialog: Boolean,
     val hasPatientRegistrationData: Boolean?,
-    val isNewestBpEntryHigh: Boolean?
+    val isNewestBpEntryHigh: Boolean?,
+    val scheduledAppointment: ParcelableOptional<Appointment>?
 ) : Parcelable, PatientSummaryChildModel {
 
   companion object {
@@ -34,7 +39,8 @@ data class PatientSummaryModel(
           medicalOfficers = null,
           hasShownMeasurementsWarningDialog = false,
           hasPatientRegistrationData = null,
-          isNewestBpEntryHigh = null
+          isNewestBpEntryHigh = null,
+          scheduledAppointment = null
       )
     }
   }
@@ -100,5 +106,9 @@ data class PatientSummaryModel(
 
   fun clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh: Boolean): PatientSummaryModel {
     return copy(isNewestBpEntryHigh = isNewestBpEntryHigh)
+  }
+
+  fun scheduledAppointmentLoaded(appointment: Appointment?): PatientSummaryModel {
+    return copy(scheduledAppointment = appointment.toOptional().parcelable())
   }
 }

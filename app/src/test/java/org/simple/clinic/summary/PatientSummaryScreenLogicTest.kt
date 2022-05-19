@@ -33,11 +33,13 @@ import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Duration
+import java.time.LocalDate
 import java.util.Optional
 import java.util.UUID
 
@@ -68,8 +70,10 @@ class PatientSummaryScreenLogicTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val viewRenderer = PatientSummaryViewRenderer(
       ui = ui,
-      isNextAppointmentFeatureEnabled = false
-  ) { /* no-op */ }
+      isNextAppointmentFeatureEnabled = false,
+      modelUpdateCallback = { /* no-op */ },
+      userClock = TestUserClock(LocalDate.parse("2018-01-01"))
+  )
 
   private lateinit var testFixture: MobiusTestFixture<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect>
 

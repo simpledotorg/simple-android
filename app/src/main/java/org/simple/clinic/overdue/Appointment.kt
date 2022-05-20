@@ -346,5 +346,14 @@ data class Appointment(
         patientUuid = :patientUuid
     """)
     fun hasAppointmentForPatientChangedSince(patientUuid: UUID, instantToCompare: Instant, pendingStatus: SyncStatus): Boolean
+
+    @Query("""
+      SELECT * FROM Appointment
+      WHERE 
+        patientUuid = :patientUuid
+        AND deletedAt IS NULL AND status = 'scheduled'
+      GROUP BY patientUuid HAVING MAX(createdAt)
+    """)
+    fun latestScheduledAppointmentForPatient(patientUuid: UUID): Appointment?
   }
 }

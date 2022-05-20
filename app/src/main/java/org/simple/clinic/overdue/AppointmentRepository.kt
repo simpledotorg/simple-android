@@ -231,4 +231,8 @@ class AppointmentRepository @Inject constructor(
   fun getAllAppointmentsForPatient(patientUuid: UUID): List<Appointment> {
     return appointmentDao.getAllAppointmentsForPatient(patientUuid)
   }
+
+  fun latestScheduledAppointmentForPatient(patientUuid: UUID): Appointment? {
+    return appointmentDao.latestScheduledAppointmentForPatient(patientUuid)
+  }
 }

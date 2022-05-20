@@ -2,6 +2,7 @@ package org.simple.clinic.summary
 
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.MedicalHistory
+import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
 import org.simple.clinic.user.User
 import org.simple.clinic.widgets.UiEvent
@@ -98,3 +99,5 @@ object AssignedFacilityChanged : PatientSummaryEvent()
 data class ClinicalDecisionSupportInfoLoaded(val isNewestBpEntryHigh: Boolean) : PatientSummaryEvent()
 
 data class CDSSPilotStatusChecked(val isPilotEnabledForFacility: Boolean) : PatientSummaryEvent()
+
+data class LatestScheduledAppointmentLoaded(val appointment: Appointment?) : PatientSummaryEvent()

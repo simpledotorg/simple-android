@@ -64,6 +64,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       AssignedFacilityChanged -> dispatch(RefreshNextAppointment)
       is ClinicalDecisionSupportInfoLoaded -> next(model.clinicalDecisionSupportInfoLoaded(event.isNewestBpEntryHigh))
       is CDSSPilotStatusChecked -> cdssPilotStatusChecked(event, model)
+      is LatestScheduledAppointmentLoaded -> next(model.scheduledAppointmentLoaded(event.appointment))
     }
   }
 
@@ -72,7 +73,10 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       model: PatientSummaryModel
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     return if (event.isPilotEnabledForFacility) {
-      dispatch(LoadClinicalDecisionSupportInfo(model.patientUuid))
+      dispatch(
+          LoadClinicalDecisionSupportInfo(model.patientUuid),
+          LoadLatestScheduledAppointment(model.patientUuid)
+      )
     } else {
       noChange()
     }

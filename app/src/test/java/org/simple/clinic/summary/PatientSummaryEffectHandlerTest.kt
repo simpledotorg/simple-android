@@ -20,6 +20,7 @@ import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.overdue.Appointment.Status
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
@@ -581,5 +582,26 @@ class PatientSummaryEffectHandlerTest {
 
     testCase.assertOutgoingEvents(CDSSPilotStatusChecked(isPilotEnabledForFacility = true))
     testCase.dispose()
+  }
+
+  @Test
+  fun `when load latest scheduled appointment effect is received, then load the latest scheduled appointment`() {
+    // given
+    val patientUuid = UUID.fromString("952ad986-3b43-4567-bd86-79937b42759a")
+    val appointment = TestData.appointment(
+        uuid = UUID.fromString("5e27be58-ed65-4949-9dbb-fd7df12f9a1d"),
+        patientUuid = patientUuid,
+        status = Status.Scheduled
+    )
+
+    whenever(appointmentRepository.latestScheduledAppointmentForPatient(patientUuid)) doReturn appointment
+
+    // when
+    testCase.dispatch(LoadLatestScheduledAppointment(patientUuid))
+
+    // then
+    testCase.assertOutgoingEvents(LatestScheduledAppointmentLoaded(appointment))
+
+    verifyZeroInteractions(uiActions)
   }
 }

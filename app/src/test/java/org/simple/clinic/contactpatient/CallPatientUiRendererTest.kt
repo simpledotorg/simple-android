@@ -410,6 +410,7 @@ class CallPatientUiRendererTest {
     verify(ui).hideProgress()
     verify(ui).showCallResult()
     verify(ui).setupAgreedToVisitCallResultOutcome()
+    verify(ui).setCallResultUpdatedAtDate(LocalDate.of(2018,1,1))
     verify(ui).renderPatientDetails(PatientDetails(name = patientProfile.patient.fullName,
         gender = patientProfile.patient.gender,
         age = patientProfile.patient.ageDetails.estimateAge(clock),
@@ -459,6 +460,7 @@ class CallPatientUiRendererTest {
     verify(ui).hideProgress()
     verify(ui).showCallResult()
     verify(ui).setupRemindToCallLaterCallResultOutcome(11)
+    verify(ui).setCallResultUpdatedAtDate(LocalDate.of(2018,1,1))
     verify(ui).renderPatientDetails(PatientDetails(name = patientProfile.patient.fullName,
         gender = patientProfile.patient.gender,
         age = patientProfile.patient.ageDetails.estimateAge(clock),
@@ -509,6 +511,7 @@ class CallPatientUiRendererTest {
     verify(ui).hideProgress()
     verify(ui).showCallResult()
     verify(ui).setupRemovedFromListCallResultOutcome(AppointmentCancelReason.MovedToPrivatePractitioner)
+    verify(ui).setCallResultUpdatedAtDate(LocalDate.of(2018,1,1))
     verify(ui).renderPatientDetails(PatientDetails(name = patientProfile.patient.fullName,
         gender = patientProfile.patient.gender,
         age = patientProfile.patient.ageDetails.estimateAge(clock),

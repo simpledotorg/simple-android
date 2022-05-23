@@ -13,6 +13,7 @@ import org.simple.clinic.overdue.callresult.Outcome.Unknown
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.daysTill
+import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.extra.Days
 import java.time.LocalDate
 
@@ -43,6 +44,7 @@ class ContactPatientUiRenderer(
       val callResult = model.callResult!!.get()
       ui.showCallResult()
       setupCallResultOutcomeUI(model, callResult)
+      ui.setCallResultUpdatedAtDate(callResult.timestamps.updatedAt.toLocalDateAtZone(clock.zone))
     } else {
       ui.hideCallResult()
     }

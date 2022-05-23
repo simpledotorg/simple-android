@@ -338,6 +338,10 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     callPatientView.setupCallResultViewForRemovedFromList()
   }
 
+  override fun setCallResultUpdatedAtDate(callResultUpdatedAt: LocalDate) {
+    callPatientView.callResultLastUpdatedDate = dateTimeFormatter.format(callResultUpdatedAt)
+  }
+
   override fun switchToCallPatientView() {
     callPatientView.visibility = VISIBLE
     setAppointmentReminderView.visibility = GONE

@@ -411,7 +411,7 @@ class CallPatientUiRendererTest {
 
     // then
     verify(ui).hideProgress()
-    verify(ui).showCallResult(callResultOutcome, updatedAt)
+    verify(ui).showCallResult()
     verify(ui).renderPatientDetails(PatientDetails(name = patientProfile.patient.fullName,
         gender = patientProfile.patient.gender,
         age = patientProfile.patient.ageDetails.estimateAge(clock),

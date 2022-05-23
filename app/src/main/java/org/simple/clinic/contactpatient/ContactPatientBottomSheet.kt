@@ -36,7 +36,6 @@ import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
-import org.simple.clinic.overdue.callresult.Outcome
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
@@ -46,7 +45,6 @@ import org.simple.clinic.util.onBackPressed
 import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.valueOrEmpty
-import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -308,7 +306,7 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     setAppointmentReminderView.enableNextReminderDateStepper()
   }
 
-  override fun showCallResult(callResult: Outcome, updatedAt: Instant) {
+  override fun showCallResult() {
     // Nothing to look at here, yet.
   }
 

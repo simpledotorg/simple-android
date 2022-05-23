@@ -12,7 +12,9 @@ import org.simple.clinic.databinding.ContactpatientCallpatientBinding
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.resolveColor
 import org.simple.clinic.util.toLocalDateAtZone
+import org.simple.clinic.widgets.setCompoundDrawableStart
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.format.DateTimeFormatter
 
@@ -86,6 +88,18 @@ class CallPatientView(
   private val patientDiedStatusView
     get() = binding!!.patientDiedStatusView
 
+  private val callResultOutcomeCardView
+    get() = binding!!.callResultOutcomeCardView
+
+  private val callResultOutcomeTextView
+    get() = binding!!.callResultOutcomeTextView
+
+  private val lastUpdatedDateTextView
+    get() = binding!!.lastUpdatedDateTextView
+
+  private val callResultOutcomeIcon
+    get() = binding!!.callResultOutcomeIcon
+
   var secureCallingSectionVisible: Boolean = false
     set(value) {
       field = value
@@ -115,6 +129,48 @@ class CallPatientView(
       field = value
       registeredFacilityLabel.text = field
     }
+
+  var callResultOutcomeViewVisible: Boolean = false
+    set(value) {
+      field = value
+      callResultOutcomeCardView.visibility = if (field) View.VISIBLE else View.GONE
+    }
+
+  var callResultOutcomeText: String = ""
+    set(value) {
+      field = value
+      callResultOutcomeTextView.text = field
+    }
+
+  var callResultLastUpdatedDate: String = ""
+    set(value) {
+      field = value
+      lastUpdatedDateTextView.text = field
+    }
+
+  fun setupCallResultViewForAgreedToVisit() {
+    callResultOutcomeCardView.setCardBackgroundColor(context.resolveColor(R.color.simple_green_100))
+    callResultOutcomeCardView.strokeColor = context.resolveColor(R.color.simple_green_600)
+    callResultOutcomeTextView.setTextColor(context.resolveColor(R.color.simple_green_600))
+    lastUpdatedDateTextView.setTextColor(context.resolveColor(R.color.simple_green_600))
+    callResultOutcomeIcon.setImageResource(R.drawable.ic_check_circle_24px)
+  }
+
+  fun setupCallResultViewForRemovedFromList() {
+    callResultOutcomeCardView.setCardBackgroundColor(context.resolveColor(R.color.simple_red_100))
+    callResultOutcomeCardView.strokeColor = context.resolveColor(R.color.simple_red_600)
+    callResultOutcomeTextView.setTextColor(context.resolveColor(R.color.simple_red_600))
+    lastUpdatedDateTextView.setTextColor(context.resolveColor(R.color.simple_red_600))
+    callResultOutcomeIcon.setImageResource(R.drawable.ic_remove_circle_outline_24px)
+  }
+
+  fun setupCallResultViewForRemindToCallLater() {
+    callResultOutcomeCardView.setCardBackgroundColor(context.resolveColor(R.color.simple_yellow_100))
+    callResultOutcomeCardView.strokeColor = context.resolveColor(R.color.simple_yellow_600)
+    callResultOutcomeTextView.setTextColor(context.resolveColor(R.color.simple_yellow_600))
+    lastUpdatedDateTextView.setTextColor(context.resolveColor(R.color.simple_yellow_600))
+    callResultOutcomeIcon.setImageResource(R.drawable.ic_access_alarm_24px)
+  }
 
   var showPatientWithCallResultLayout: Boolean = false
     set(value) {

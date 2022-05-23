@@ -18,6 +18,7 @@
 ### Changes
 
 - Show ongoing hypertension treatment question for Sri Lanka
+- Redesign `ContactPatientBottomSheet` UI
 
 ## 2022-05-16-8253
 

@@ -68,17 +68,6 @@
     app:layout_constraintTop_toBottomOf="@id/patientAddressTextView"
     tools:text="CHC Bhatinda" />
 
-  <View
-    android:id="@+id/patientInfoSeparator"
-    android:layout_width="@dimen/spacing_0"
-    android:layout_height="@dimen/spacing_1"
-    android:layout_marginHorizontal="@dimen/spacing_24"
-    android:layout_marginVertical="@dimen/spacing_16"
-    android:background="@drawable/divider"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/registeredFacilityLabel" />
-
   <TextView
     android:id="@+id/phoneNumberLabel"
     android:layout_width="wrap_content"
@@ -91,7 +80,7 @@
     android:textColor="@color/color_on_surface_67"
     android:visibility="visible"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/patientInfoSeparator" />
+    app:layout_constraintTop_toBottomOf="@+id/registeredFacilityLabel" />
 
   <TextView
     android:id="@+id/phoneNumberTextView"
@@ -121,8 +110,7 @@
     android:textColor="@color/color_on_surface_67"
     app:layout_constraintBottom_toTopOf="@id/lastVisitedLabel"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/phoneNumberLabel"
-    app:layout_goneMarginTop="@dimen/spacing_16" />
+    app:layout_constraintTop_toBottomOf="@+id/phoneNumberLabel" />
 
   <TextView
     android:id="@+id/diagnosisTextView"
@@ -170,9 +158,8 @@
 
   <View
     android:id="@+id/diagnosisSeparator"
-    android:layout_width="@dimen/spacing_0"
+    android:layout_width="match_parent"
     android:layout_height="@dimen/spacing_1"
-    android:layout_marginHorizontal="@dimen/spacing_24"
     android:layout_marginTop="@dimen/spacing_16"
     android:background="@drawable/divider"
     app:layout_constraintEnd_toEndOf="parent"
@@ -225,17 +212,6 @@
     app:layout_constraintTop_toBottomOf="@id/resultOfCallLabel"
     tools:visibility="visible" />
 
-  <View
-    android:id="@+id/agreedToVisitSeparator"
-    android:layout_width="@dimen/spacing_0"
-    android:layout_height="@dimen/spacing_1"
-    android:layout_marginHorizontal="@dimen/spacing_24"
-    android:background="@drawable/divider"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/agreedToVisitTextView"
-    tools:visibility="visible" />
-
   <TextView
     android:id="@+id/remindToCallLaterTextView"
     style="@style/Widget.Simple.PatientContactCallResultItem"
@@ -246,18 +222,7 @@
     app:drawableStartCompat="@drawable/ic_radio_button_unchecked_yellow"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/agreedToVisitSeparator"
-    tools:visibility="visible" />
-
-  <View
-    android:id="@+id/remindToCallLaterSeparator"
-    android:layout_width="@dimen/spacing_0"
-    android:layout_height="@dimen/spacing_1"
-    android:layout_marginHorizontal="@dimen/spacing_24"
-    android:background="@drawable/divider"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/remindToCallLaterTextView"
+    app:layout_constraintTop_toBottomOf="@id/agreedToVisitTextView"
     tools:visibility="visible" />
 
   <TextView
@@ -272,7 +237,18 @@
     app:layout_constraintBottom_toTopOf="@id/barrier"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/remindToCallLaterSeparator"
+    app:layout_constraintTop_toBottomOf="@id/remindToCallLaterTextView"
+    tools:visibility="visible" />
+
+  <View
+    android:id="@+id/callResultsSeparator"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/spacing_1"
+    android:layout_marginTop="@dimen/spacing_16"
+    android:background="@drawable/divider"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/removeFromOverdueListTextView"
     tools:visibility="visible" />
 
   <androidx.constraintlayout.widget.Barrier

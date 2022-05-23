@@ -71,12 +71,15 @@ fun ViewGroup.hideKeyboard() {
 }
 
 fun EditText.setTextWithWatcher(textToSet: CharSequence?, textWatcher: TextWatcher) {
+  val selection = if (selectionStart > 0) {
+    selectionStart
+  } else {
+    text.length
+  }
+
   removeTextChangedListener(textWatcher)
   setText(textToSet)
-
-  // Cannot rely on textToSet. It's possible that the
-  // EditText modifies the text using InputFilters.
-  setSelection(text.length)
+  setSelection(selection)
   addTextChangedListener(textWatcher)
 }
 

@@ -26,6 +26,10 @@
 - Show ongoing hypertension treatment question for Sri Lanka
 - Redesign `ContactPatientBottomSheet` UI
 
+### Fixes
+
+- Fix text cursor jumping to end when editing patient details
+
 ## 2022-05-16-8253
 
 ### Internal

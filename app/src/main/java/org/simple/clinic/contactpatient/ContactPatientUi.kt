@@ -58,4 +58,5 @@ interface ContactPatientUi {
   fun hideCallResult()
 
   fun setupAgreedToVisitCallResultOutcome()
+  fun setupRemindToCallLaterCallResultOutcome(daysToRemindAppointmentIn: Int)
 }

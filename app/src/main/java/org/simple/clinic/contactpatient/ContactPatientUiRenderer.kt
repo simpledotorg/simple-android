@@ -13,6 +13,7 @@ import org.simple.clinic.overdue.callresult.Outcome.Unknown
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.daysTill
+import org.threeten.extra.Days
 import java.time.LocalDate
 
 class ContactPatientUiRenderer(
@@ -41,21 +42,25 @@ class ContactPatientUiRenderer(
     if (model.hasCallResult) {
       val callResult = model.callResult!!.get()
       ui.showCallResult()
-      setupCallResultOutcomeUI(callResult)
+      setupCallResultOutcomeUI(model, callResult)
     } else {
       ui.hideCallResult()
     }
   }
 
-  private fun setupCallResultOutcomeUI(callResult: CallResult) {
+  private fun setupCallResultOutcomeUI(model: ContactPatientModel, callResult: CallResult) {
     when (callResult.outcome) {
       AgreedToVisit -> ui.setupAgreedToVisitCallResultOutcome()
-      RemindToCallLater -> {
-      }
-      RemovedFromOverdueList -> {
-      }
-      is Unknown -> {
-      }
+      RemindToCallLater -> setupRemindToCallLaterCallResultOutcome(model.appointment.remindOn)
+      RemovedFromOverdueList -> {}
+      is Unknown -> {}
+    }
+  }
+
+  private fun setupRemindToCallLaterCallResultOutcome(remindOn: LocalDate?) {
+    if (remindOn != null) {
+      val duration = Days.between(LocalDate.now(clock), remindOn)
+      ui.setupRemindToCallLaterCallResultOutcome(duration.amount)
     }
   }
 

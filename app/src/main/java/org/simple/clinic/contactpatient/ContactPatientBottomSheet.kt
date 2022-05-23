@@ -307,11 +307,11 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   }
 
   override fun showCallResult() {
-    // Nothing to look at here, yet.
+    callPatientView.callResultOutcomeViewVisible = true
   }
 
   override fun hideCallResult() {
-    // Nothing to look at here, yet.
+    callPatientView.callResultOutcomeViewVisible = false
   }
 
   override fun switchToCallPatientView() {

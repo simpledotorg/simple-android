@@ -1,5 +1,6 @@
 package org.simple.clinic.contactpatient
 
+import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.TimeToAppointment
 import java.time.LocalDate
 
@@ -59,4 +60,5 @@ interface ContactPatientUi {
 
   fun setupAgreedToVisitCallResultOutcome()
   fun setupRemindToCallLaterCallResultOutcome(daysToRemindAppointmentIn: Int)
+  fun setupRemovedFromListCallResultOutcome(removeReason: AppointmentCancelReason)
 }

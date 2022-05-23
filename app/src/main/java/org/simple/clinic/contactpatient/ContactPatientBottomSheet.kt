@@ -34,8 +34,10 @@ import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
+import org.simple.clinic.overdue.displayTextRes
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
@@ -329,6 +331,11 @@ class ContactPatientBottomSheet : BaseBottomSheet<
         R.string.call_result_outcome_remind_to_call_later, daysToRemindAppointmentIn.toString(), dayOrDays
     )
     callPatientView.setupCallResultViewForRemindToCallLater()
+  }
+
+  override fun setupRemovedFromListCallResultOutcome(removeReason: AppointmentCancelReason) {
+    callPatientView.callResultOutcomeText = getString(R.string.call_result_outcome_removed) + getString(removeReason.displayTextRes)
+    callPatientView.setupCallResultViewForRemovedFromList()
   }
 
   override fun switchToCallPatientView() {

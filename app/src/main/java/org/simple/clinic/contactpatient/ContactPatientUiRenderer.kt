@@ -52,7 +52,7 @@ class ContactPatientUiRenderer(
     when (callResult.outcome) {
       AgreedToVisit -> ui.setupAgreedToVisitCallResultOutcome()
       RemindToCallLater -> setupRemindToCallLaterCallResultOutcome(model.appointment.remindOn)
-      RemovedFromOverdueList -> {}
+      RemovedFromOverdueList -> ui.setupRemovedFromListCallResultOutcome(callResult.removeReason!!)
       is Unknown -> {}
     }
   }

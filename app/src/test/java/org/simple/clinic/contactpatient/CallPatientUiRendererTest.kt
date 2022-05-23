@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.TestData
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
+import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.overdue.TimeToAppointment.Days
@@ -458,6 +459,56 @@ class CallPatientUiRendererTest {
     verify(ui).hideProgress()
     verify(ui).showCallResult()
     verify(ui).setupRemindToCallLaterCallResultOutcome(11)
+    verify(ui).renderPatientDetails(PatientDetails(name = patientProfile.patient.fullName,
+        gender = patientProfile.patient.gender,
+        age = patientProfile.patient.ageDetails.estimateAge(clock),
+        phoneNumber = patientProfile.phoneNumbers.first().number,
+        patientAddress = patientAddressText(patientProfile.address)!!,
+        registeredFacility = patientProfile.registeredFacility?.name,
+        diagnosedWithDiabetes = patientProfile.medicalHistory?.diagnosedWithDiabetes,
+        diagnosedWithHypertension = patientProfile.medicalHistory?.diagnosedWithHypertension,
+        lastVisited = patientProfile.patientLastSeen))
+    verify(ui).switchToCallPatientView()
+    verify(ui).hidePatientWithNoPhoneNumberUi()
+    verify(ui).showPatientWithPhoneNumberUi()
+    verify(ui).hidePatientWithPhoneNumberCallResults()
+    verify(ui).showDeadPatientStatus()
+    verify(ui).showSecureCallUi()
+    verify(ui).showNormalCallButtonText()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when call result for appointment is present and outcome is removed from list, render and setup call result for removed from list in the ui`() {
+    // given
+    val appointmentId = UUID.fromString("c3b8c0f9-567e-45a5-b4aa-98f06d01aaa5")
+    val callResultOutcome = Outcome.RemovedFromOverdueList
+    val updatedAt = Instant.parse("2018-01-01T00:00:00Z")
+    val appointment = TestData.appointment(uuid = appointmentId, remindOn = LocalDate.of(2018, 1, 12))
+    val callResult = TestData.callResult(
+        id = UUID.fromString("0135537e-f6a0-46d0-8e4d-009f938889bc"),
+        appointmentId = appointmentId,
+        outcome = callResultOutcome,
+        updatedAt = updatedAt,
+    removeReason = AppointmentCancelReason.MovedToPrivatePractitioner)
+    val patientProfile = TestData.contactPatientProfile(
+        patientUuid = patientUuid,
+        patientStatus = PatientStatus.Dead,
+        patientPhoneNumber = "1234567890",
+        generatePhoneNumber = false
+    )
+
+    // when
+    uiRenderer.render(defaultModel(phoneMaskFeatureEnabled = true)
+        .overdueAppointmentLoaded(Optional.of(appointment))
+        .contactPatientProfileLoaded(patientProfile)
+        .contactPatientInfoLoaded()
+        .callResultLoaded(Optional.of(callResult)))
+
+    // then
+    verify(ui).hideProgress()
+    verify(ui).showCallResult()
+    verify(ui).setupRemovedFromListCallResultOutcome(AppointmentCancelReason.MovedToPrivatePractitioner)
     verify(ui).renderPatientDetails(PatientDetails(name = patientProfile.patient.fullName,
         gender = patientProfile.patient.gender,
         age = patientProfile.patient.ageDetails.estimateAge(clock),

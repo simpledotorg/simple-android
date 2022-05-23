@@ -5,6 +5,11 @@ import org.simple.clinic.contactpatient.UiMode.SetAppointmentReminder
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
+import org.simple.clinic.overdue.callresult.CallResult
+import org.simple.clinic.overdue.callresult.Outcome.AgreedToVisit
+import org.simple.clinic.overdue.callresult.Outcome.RemindToCallLater
+import org.simple.clinic.overdue.callresult.Outcome.RemovedFromOverdueList
+import org.simple.clinic.overdue.callresult.Outcome.Unknown
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.daysTill
@@ -36,8 +41,21 @@ class ContactPatientUiRenderer(
     if (model.hasCallResult) {
       val callResult = model.callResult!!.get()
       ui.showCallResult()
+      setupCallResultOutcomeUI(callResult)
     } else {
       ui.hideCallResult()
+    }
+  }
+
+  private fun setupCallResultOutcomeUI(callResult: CallResult) {
+    when (callResult.outcome) {
+      AgreedToVisit -> ui.setupAgreedToVisitCallResultOutcome()
+      RemindToCallLater -> {
+      }
+      RemovedFromOverdueList -> {
+      }
+      is Unknown -> {
+      }
     }
   }
 

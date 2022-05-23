@@ -314,6 +314,11 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     callPatientView.callResultOutcomeViewVisible = false
   }
 
+  override fun setupAgreedToVisitCallResultOutcome() {
+    callPatientView.callResultOutcomeText = getString(R.string.call_result_outcome_agreed_to_visit)
+    callPatientView.setupCallResultViewForAgreedToVisit()
+  }
+
   override fun switchToCallPatientView() {
     callPatientView.visibility = VISIBLE
     setAppointmentReminderView.visibility = GONE

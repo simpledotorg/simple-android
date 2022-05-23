@@ -382,10 +382,10 @@ class CallPatientUiRendererTest {
   }
 
   @Test
-  fun `when call result for appointment is present, render call result for appointment message in the ui`() {
+  fun `when call result for appointment is present and outcome is agreed to visit, render and setup call result for appointment message in the ui`() {
     // given
     val appointmentId = UUID.fromString("c3b8c0f9-567e-45a5-b4aa-98f06d01aaa5")
-    val callResultOutcome = Outcome.RemindToCallLater
+    val callResultOutcome = Outcome.AgreedToVisit
     val updatedAt = Instant.parse("2018-01-01T00:00:00Z")
     val callResult = TestData.callResult(
         id = UUID.fromString("0135537e-f6a0-46d0-8e4d-009f938889bc"),
@@ -412,6 +412,7 @@ class CallPatientUiRendererTest {
     // then
     verify(ui).hideProgress()
     verify(ui).showCallResult()
+    verify(ui).setupAgreedToVisitCallResultOutcome()
     verify(ui).renderPatientDetails(PatientDetails(name = patientProfile.patient.fullName,
         gender = patientProfile.patient.gender,
         age = patientProfile.patient.ageDetails.estimateAge(clock),

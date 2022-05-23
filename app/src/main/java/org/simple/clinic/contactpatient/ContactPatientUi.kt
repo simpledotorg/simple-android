@@ -56,4 +56,6 @@ interface ContactPatientUi {
 
   fun showCallResult()
   fun hideCallResult()
+
+  fun setupAgreedToVisitCallResultOutcome()
 }

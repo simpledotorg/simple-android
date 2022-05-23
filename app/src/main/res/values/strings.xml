@@ -645,6 +645,7 @@
   <string name="contactpatient_moved_to_private">Moved to private practitioner</string>
   <string name="contactpatient_patient_died">Died</string>
   <string name="contactpatient_other_reason">Other reason</string>
+  <string name="contactpatient_unknown">Unknown</string>
   <string name="contactpatient_patient_registered_at">Registered at</string>
   <string name="contactpatient_patient_transfer_from">Transfer from</string>
   <string name="contactpatient_phone">Phone</string>

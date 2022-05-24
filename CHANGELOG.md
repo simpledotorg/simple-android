@@ -6,6 +6,7 @@
 
 - Bump flipper to v0.146.0
 - Fix test name in `PatientSummaryUpdateTest`
+- Bump mixpanel to v6.2.2  
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 - [In Progress: 16 May 2022] Show call result status for the appointment in `ContactPatientBottomSheet`
 

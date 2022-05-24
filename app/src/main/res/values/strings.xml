@@ -963,9 +963,12 @@
 
   <!-- Call Result Outcome Message -->
   <string name="call_result_outcome_agreed_to_visit">Agreed to visit</string>
-  <string name="call_result_outcome_remind_to_call_later_day">day</string>
-  <string name="call_result_outcome_remind_to_call_later_days">days</string>
-  <string name="call_result_outcome_remind_to_call_later">Remind in %1$s %2$s</string>
+
+  <plurals name="call_result_outcome_remind_to_call_later">
+    <item quantity="one"> Remind in %1$s day</item>
+    <item quantity="other"> Remind in %1$s days</item>
+  </plurals>
+
   <string name="call_result_outcome_removed">Removed:\u0020</string>
 
 </resources>

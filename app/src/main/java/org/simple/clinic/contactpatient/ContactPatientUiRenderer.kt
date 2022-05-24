@@ -5,10 +5,18 @@ import org.simple.clinic.contactpatient.UiMode.SetAppointmentReminder
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
+import org.simple.clinic.overdue.callresult.CallResult
+import org.simple.clinic.overdue.callresult.Outcome.AgreedToVisit
+import org.simple.clinic.overdue.callresult.Outcome.RemindToCallLater
+import org.simple.clinic.overdue.callresult.Outcome.RemovedFromOverdueList
+import org.simple.clinic.overdue.callresult.Outcome.Unknown
+import org.simple.clinic.overdue.displayTextRes
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.daysTill
+import org.simple.clinic.util.toLocalDateAtZone
 import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 class ContactPatientUiRenderer(
     private val ui: ContactPatientUi,
@@ -35,9 +43,27 @@ class ContactPatientUiRenderer(
   private fun renderCallResultOutcome(model: ContactPatientModel) {
     if (model.hasCallResult) {
       val callResult = model.callResult!!.get()
-      ui.showCallResult(callResult.outcome, callResult.timestamps.updatedAt)
+      ui.showCallResult()
+      setupCallResultOutcomeUI(model, callResult)
+      ui.setCallResultUpdatedAtDate(callResult.timestamps.updatedAt.toLocalDateAtZone(clock.zone))
     } else {
       ui.hideCallResult()
+    }
+  }
+
+  private fun setupCallResultOutcomeUI(model: ContactPatientModel, callResult: CallResult) {
+    when (callResult.outcome) {
+      AgreedToVisit -> ui.setupAgreedToVisitCallResultOutcome()
+      RemindToCallLater -> setupRemindToCallLaterCallResultOutcome(model.appointment.remindOn)
+      RemovedFromOverdueList -> ui.setupRemovedFromListCallResultOutcome(callResult.removeReason!!.displayTextRes)
+      is Unknown -> {}
+    }
+  }
+
+  private fun setupRemindToCallLaterCallResultOutcome(remindOn: LocalDate?) {
+    if (remindOn != null) {
+      val duration = LocalDate.now(clock).until(remindOn, ChronoUnit.DAYS)
+      ui.setupRemindToCallLaterCallResultOutcome(duration.toInt())
     }
   }
 

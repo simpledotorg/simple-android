@@ -134,6 +134,7 @@ data class CallResult(
       SELECT * 
       FROM CallResult
       WHERE appointmentId = :appointmentUUID
+      ORDER BY createdAt DESC LIMIT 1
     """)
     fun callResultForAppointment(
         appointmentUUID: UUID

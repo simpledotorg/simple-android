@@ -1,8 +1,7 @@
 package org.simple.clinic.contactpatient
 
+import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.TimeToAppointment
-import org.simple.clinic.overdue.callresult.Outcome
-import java.time.Instant
 import java.time.LocalDate
 
 interface ContactPatientUi {
@@ -56,6 +55,11 @@ interface ContactPatientUi {
   fun disableNextReminderDateStepper()
   fun enableNextReminderDateStepper()
 
-  fun showCallResult(callResult: Outcome, updatedAt: Instant)
+  fun showCallResult()
   fun hideCallResult()
+
+  fun setupAgreedToVisitCallResultOutcome()
+  fun setupRemindToCallLaterCallResultOutcome(daysToRemindAppointmentIn: Int)
+  fun setupRemovedFromListCallResultOutcome(removeReasonStringRes: Int)
+  fun setCallResultUpdatedAtDate(callResultUpdatedAt: LocalDate)
 }

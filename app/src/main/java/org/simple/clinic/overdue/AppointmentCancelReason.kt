@@ -6,6 +6,14 @@ import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.R
+import org.simple.clinic.overdue.AppointmentCancelReason.Dead
+import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
+import org.simple.clinic.overdue.AppointmentCancelReason.MovedToPrivatePractitioner
+import org.simple.clinic.overdue.AppointmentCancelReason.Other
+import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
+import org.simple.clinic.overdue.AppointmentCancelReason.TransferredToAnotherPublicHospital
+import org.simple.clinic.overdue.AppointmentCancelReason.Unknown
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 
 sealed class AppointmentCancelReason : Parcelable {
@@ -91,3 +99,14 @@ sealed class AppointmentCancelReason : Parcelable {
     fun random() = TypeAdapter.knownMappings.keys.shuffled().first()
   }
 }
+
+val AppointmentCancelReason.displayTextRes: Int
+  get() = when (this) {
+    Dead -> R.string.contactpatient_patient_died
+    InvalidPhoneNumber -> R.string.contactpatient_invalid_phone_number
+    MovedToPrivatePractitioner -> R.string.contactpatient_moved_to_private
+    Other -> R.string.contactpatient_other_reason
+    PatientNotResponding -> R.string.contactpatient_patient_is_not_responding
+    TransferredToAnotherPublicHospital -> R.string.contactpatient_public_hospital_transfer
+    is Unknown -> R.string.contactpatient_unknown
+  }

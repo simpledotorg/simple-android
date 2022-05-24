@@ -10,6 +10,67 @@
   tools:context="org.simple.clinic.contactpatient.views.CallPatientView"
   tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
+  <com.google.android.material.card.MaterialCardView
+    android:id="@+id/callResultOutcomeCardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/spacing_16"
+    android:visibility="gone"
+    app:cardCornerRadius="@dimen/spacing_4"
+    app:cardElevation="@dimen/spacing_0"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:strokeWidth="@dimen/spacing_1"
+    tools:cardBackgroundColor="@color/simple_green_100"
+    tools:strokeColor="@color/simple_green_600">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginHorizontal="@dimen/spacing_16"
+      android:layout_marginVertical="@dimen/spacing_12">
+
+      <ImageView
+        android:id="@+id/callResultOutcomeIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBaseline_toBaselineOf="@id/callResultOutcomeTextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_check_circle_24px" />
+
+      <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/callResultOutcomeTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/spacing_8"
+        android:gravity="center_vertical"
+        android:textAppearance="?attr/textAppearanceSubtitle2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/lastUpdatedDateTextView"
+        app:layout_constraintStart_toEndOf="@+id/callResultOutcomeIcon"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Agreed to visit"
+        tools:textColor="@color/simple_green_600" />
+
+      <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/lastUpdatedDateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:textAppearance="?attr/textAppearanceBody2"
+        app:layout_constraintBaseline_toBaselineOf="@+id/callResultOutcomeTextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/callResultOutcomeTextView"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="29-Mar-2022"
+        tools:textColor="@color/simple_green_600" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+  </com.google.android.material.card.MaterialCardView>
+
   <TextView
     android:id="@+id/nameTextView"
     android:layout_width="@dimen/spacing_0"
@@ -22,7 +83,7 @@
     app:layout_constraintBottom_toTopOf="@id/patientAddressTextView"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/callResultOutcomeCardView"
     tools:text="Anish Acharya, M, 43" />
 
   <TextView

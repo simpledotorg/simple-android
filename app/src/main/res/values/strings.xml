@@ -645,6 +645,7 @@
   <string name="contactpatient_moved_to_private">Moved to private practitioner</string>
   <string name="contactpatient_patient_died">Died</string>
   <string name="contactpatient_other_reason">Other reason</string>
+  <string name="contactpatient_unknown">Unknown</string>
   <string name="contactpatient_patient_registered_at">Registered at</string>
   <string name="contactpatient_patient_transfer_from">Transfer from</string>
   <string name="contactpatient_phone">Phone</string>
@@ -959,5 +960,15 @@
   <!-- Clinical Decision Support Alerts -->
   <string name="clinical_decision_support_alert_bp_high_title">BP is high. Increase medicines?</string>
   <string name="clinical_decision_support_alert_bp_high_subtitle">Follow protocol, if patient takes their medicines regularly</string>
+
+  <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">Agreed to visit</string>
+
+  <plurals name="call_result_outcome_remind_to_call_later">
+    <item quantity="one"> Remind in %1$s day</item>
+    <item quantity="other"> Remind in %1$s days</item>
+  </plurals>
+
+  <string name="call_result_outcome_removed">Removed: %1$s</string>
 
 </resources>

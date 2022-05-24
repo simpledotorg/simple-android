@@ -327,7 +327,8 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   }
 
   override fun setupRemovedFromListCallResultOutcome(removeReasonStringRes: Int) {
-    callPatientView.callResultOutcomeText = getString(R.string.call_result_outcome_removed) + getString(removeReasonStringRes)
+    val removeReason = getString(removeReasonStringRes)
+    callPatientView.callResultOutcomeText = getString(R.string.call_result_outcome_removed, removeReason)
     callPatientView.setupCallResultViewForRemovedFromList()
   }
 

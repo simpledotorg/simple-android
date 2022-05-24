@@ -969,6 +969,6 @@
     <item quantity="other"> Remind in %1$s days</item>
   </plurals>
 
-  <string name="call_result_outcome_removed">Removed:\u0020</string>
+  <string name="call_result_outcome_removed">Removed: %1$s</string>
 
 </resources>

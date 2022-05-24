@@ -148,30 +148,6 @@ class CallPatientView(
       lastUpdatedDateTextView.text = field
     }
 
-  fun setupCallResultViewForAgreedToVisit() {
-    callResultOutcomeCardView.setCardBackgroundColor(context.resolveColor(R.color.simple_green_100))
-    callResultOutcomeCardView.strokeColor = context.resolveColor(R.color.simple_green_600)
-    callResultOutcomeTextView.setTextColor(context.resolveColor(R.color.simple_green_600))
-    lastUpdatedDateTextView.setTextColor(context.resolveColor(R.color.simple_green_600))
-    callResultOutcomeIcon.setImageResource(R.drawable.ic_check_circle_24px)
-  }
-
-  fun setupCallResultViewForRemovedFromList() {
-    callResultOutcomeCardView.setCardBackgroundColor(context.resolveColor(R.color.simple_red_100))
-    callResultOutcomeCardView.strokeColor = context.resolveColor(R.color.simple_red_600)
-    callResultOutcomeTextView.setTextColor(context.resolveColor(R.color.simple_red_600))
-    lastUpdatedDateTextView.setTextColor(context.resolveColor(R.color.simple_red_600))
-    callResultOutcomeIcon.setImageResource(R.drawable.ic_remove_circle_outline_24px)
-  }
-
-  fun setupCallResultViewForRemindToCallLater() {
-    callResultOutcomeCardView.setCardBackgroundColor(context.resolveColor(R.color.simple_yellow_100))
-    callResultOutcomeCardView.strokeColor = context.resolveColor(R.color.simple_yellow_600)
-    callResultOutcomeTextView.setTextColor(context.resolveColor(R.color.simple_yellow_600))
-    lastUpdatedDateTextView.setTextColor(context.resolveColor(R.color.simple_yellow_600))
-    callResultOutcomeIcon.setImageResource(R.drawable.ic_access_alarm_24px)
-  }
-
   var showPatientWithCallResultLayout: Boolean = false
     set(value) {
       field = value
@@ -286,5 +262,29 @@ class CallPatientView(
     remindToCallLaterTextView.visibility = View.GONE
     callResultsSeparator.visibility = View.GONE
     removeFromOverdueListTextView.visibleOrGone(isVisible)
+  }
+
+  fun setupCallResultViewForAgreedToVisit() {
+    callResultOutcomeCardView.setCardBackgroundColor(context.resolveColor(R.color.simple_green_100))
+    callResultOutcomeCardView.strokeColor = context.resolveColor(R.color.simple_green_600)
+    callResultOutcomeTextView.setTextColor(context.resolveColor(R.color.simple_green_600))
+    lastUpdatedDateTextView.setTextColor(context.resolveColor(R.color.simple_green_600))
+    callResultOutcomeIcon.setImageResource(R.drawable.ic_check_circle_24px)
+  }
+
+  fun setupCallResultViewForRemovedFromList() {
+    callResultOutcomeCardView.setCardBackgroundColor(context.resolveColor(R.color.simple_red_100))
+    callResultOutcomeCardView.strokeColor = context.resolveColor(R.color.simple_red_600)
+    callResultOutcomeTextView.setTextColor(context.resolveColor(R.color.simple_red_600))
+    lastUpdatedDateTextView.setTextColor(context.resolveColor(R.color.simple_red_600))
+    callResultOutcomeIcon.setImageResource(R.drawable.ic_remove_circle_outline_24px)
+  }
+
+  fun setupCallResultViewForRemindToCallLater() {
+    callResultOutcomeCardView.setCardBackgroundColor(context.resolveColor(R.color.simple_yellow_100))
+    callResultOutcomeCardView.strokeColor = context.resolveColor(R.color.simple_yellow_600)
+    callResultOutcomeTextView.setTextColor(context.resolveColor(R.color.simple_yellow_600))
+    lastUpdatedDateTextView.setTextColor(context.resolveColor(R.color.simple_yellow_600))
+    callResultOutcomeIcon.setImageResource(R.drawable.ic_access_alarm_24px)
   }
 }

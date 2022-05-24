@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/spacing_8"
         android:gravity="center_vertical"
-        android:textAppearance="?attr/textAppearanceBody2"
+        android:textAppearance="?attr/textAppearanceSubtitle2"
         tools:textColor="@color/simple_green_600"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/lastUpdatedDateTextView"

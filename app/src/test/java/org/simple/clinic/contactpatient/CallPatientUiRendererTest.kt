@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
+import org.simple.clinic.R
 import org.simple.clinic.TestData
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.AppointmentCancelReason
@@ -487,12 +488,13 @@ class CallPatientUiRendererTest {
     val callResultOutcome = Outcome.RemovedFromOverdueList
     val updatedAt = Instant.parse("2018-01-01T00:00:00Z")
     val appointment = TestData.appointment(uuid = appointmentId, remindOn = LocalDate.of(2018, 1, 12))
+    val removeReasonStringRes = R.string.contactpatient_moved_to_private
     val callResult = TestData.callResult(
         id = UUID.fromString("0135537e-f6a0-46d0-8e4d-009f938889bc"),
         appointmentId = appointmentId,
         outcome = callResultOutcome,
         updatedAt = updatedAt,
-    removeReason = AppointmentCancelReason.MovedToPrivatePractitioner)
+        removeReason = AppointmentCancelReason.MovedToPrivatePractitioner)
     val patientProfile = TestData.contactPatientProfile(
         patientUuid = patientUuid,
         patientStatus = PatientStatus.Dead,
@@ -510,8 +512,8 @@ class CallPatientUiRendererTest {
     // then
     verify(ui).hideProgress()
     verify(ui).showCallResult()
-    verify(ui).setupRemovedFromListCallResultOutcome(AppointmentCancelReason.MovedToPrivatePractitioner)
-    verify(ui).setCallResultUpdatedAtDate(LocalDate.of(2018,1,1))
+    verify(ui).setupRemovedFromListCallResultOutcome(removeReasonStringRes)
+    verify(ui).setCallResultUpdatedAtDate(LocalDate.of(2018, 1, 1))
     verify(ui).renderPatientDetails(PatientDetails(name = patientProfile.patient.fullName,
         gender = patientProfile.patient.gender,
         age = patientProfile.patient.ageDetails.estimateAge(clock),

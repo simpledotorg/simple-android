@@ -10,6 +10,7 @@ import org.simple.clinic.overdue.callresult.Outcome.AgreedToVisit
 import org.simple.clinic.overdue.callresult.Outcome.RemindToCallLater
 import org.simple.clinic.overdue.callresult.Outcome.RemovedFromOverdueList
 import org.simple.clinic.overdue.callresult.Outcome.Unknown
+import org.simple.clinic.overdue.displayTextRes
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.daysTill
@@ -54,7 +55,7 @@ class ContactPatientUiRenderer(
     when (callResult.outcome) {
       AgreedToVisit -> ui.setupAgreedToVisitCallResultOutcome()
       RemindToCallLater -> setupRemindToCallLaterCallResultOutcome(model.appointment.remindOn)
-      RemovedFromOverdueList -> ui.setupRemovedFromListCallResultOutcome(callResult.removeReason!!)
+      RemovedFromOverdueList -> ui.setupRemovedFromListCallResultOutcome(callResult.removeReason!!.displayTextRes)
       is Unknown -> {}
     }
   }

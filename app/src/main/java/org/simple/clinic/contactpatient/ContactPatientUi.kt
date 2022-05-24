@@ -60,6 +60,6 @@ interface ContactPatientUi {
 
   fun setupAgreedToVisitCallResultOutcome()
   fun setupRemindToCallLaterCallResultOutcome(daysToRemindAppointmentIn: Int)
-  fun setupRemovedFromListCallResultOutcome(removeReason: AppointmentCancelReason)
+  fun setupRemovedFromListCallResultOutcome(removeReasonStringRes: Int)
   fun setCallResultUpdatedAtDate(callResultUpdatedAt: LocalDate)
 }

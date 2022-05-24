@@ -15,8 +15,8 @@ import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.daysTill
 import org.simple.clinic.util.toLocalDateAtZone
-import org.threeten.extra.Days
 import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 class ContactPatientUiRenderer(
     private val ui: ContactPatientUi,
@@ -62,8 +62,8 @@ class ContactPatientUiRenderer(
 
   private fun setupRemindToCallLaterCallResultOutcome(remindOn: LocalDate?) {
     if (remindOn != null) {
-      val duration = Days.between(LocalDate.now(clock), remindOn)
-      ui.setupRemindToCallLaterCallResultOutcome(duration.amount)
+      val duration = LocalDate.now(clock).until(remindOn, ChronoUnit.DAYS)
+      ui.setupRemindToCallLaterCallResultOutcome(duration.toInt())
     }
   }
 

@@ -8,8 +8,8 @@
 - Fix test name in `PatientSummaryUpdateTest`
 - Bump mixpanel to v6.2.2  
 - Bump datadog plugin to v1.4.0  
+- Show call result status for the appointment in `ContactPatientBottomSheet`
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
-- [In Progress: 16 May 2022] Show call result status for the appointment in `ContactPatientBottomSheet`
 
 ## 2022-05-23-8262
 

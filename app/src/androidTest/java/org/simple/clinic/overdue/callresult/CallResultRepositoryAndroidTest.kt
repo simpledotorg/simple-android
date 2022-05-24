@@ -15,6 +15,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.util.Rules
+import java.time.Instant
 import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
@@ -66,13 +67,34 @@ class CallResultRepositoryAndroidTest {
         appointmentId = appointmentId3,
         removeReason = InvalidPhoneNumber,
         deletedAt = null,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        createdAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+
+    val callResult4 = TestData.callResult(
+        id = UUID.fromString("1072a2b4-34ab-4581-bac2-35a4d220bf07"),
+        appointmentId = appointmentId3,
+        removeReason = InvalidPhoneNumber,
+        deletedAt = null,
+        syncStatus = SyncStatus.DONE,
+        createdAt = Instant.parse("2018-01-01T00:01:00Z")
+    )
+
+    val callResult5 = TestData.callResult(
+        id = UUID.fromString("f42aa744-2025-48bd-b787-b1f71569c578"),
+        appointmentId = appointmentId3,
+        removeReason = InvalidPhoneNumber,
+        deletedAt = null,
+        syncStatus = SyncStatus.DONE,
+        createdAt = Instant.parse("2018-01-01T00:02:00Z")
     )
 
     val callResultData = listOf(
         callResult1,
         callResult2,
-        callResult3
+        callResult3,
+        callResult4,
+        callResult5
     )
 
     callResultDao.save(callResultData)
@@ -80,6 +102,6 @@ class CallResultRepositoryAndroidTest {
     // then
     assertThat(callResultRepository.callResultForAppointment(appointmentId1)).isEqualTo(Optional.of(callResult1))
     assertThat(callResultRepository.callResultForAppointment(appointmentId2)).isEqualTo(Optional.of(callResult2))
-    assertThat(callResultRepository.callResultForAppointment(appointmentId3)).isEqualTo(Optional.of(callResult3))
+    assertThat(callResultRepository.callResultForAppointment(appointmentId3)).isEqualTo(Optional.of(callResult5))
   }
 }

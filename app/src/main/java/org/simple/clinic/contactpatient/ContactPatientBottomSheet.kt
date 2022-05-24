@@ -36,7 +36,6 @@ import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
-import org.simple.clinic.overdue.callresult.Outcome
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
@@ -46,7 +45,6 @@ import org.simple.clinic.util.onBackPressed
 import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.valueOrEmpty
-import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -308,12 +306,34 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     setAppointmentReminderView.enableNextReminderDateStepper()
   }
 
-  override fun showCallResult(callResult: Outcome, updatedAt: Instant) {
-    // Nothing to look at here, yet.
+  override fun showCallResult() {
+    callPatientView.callResultOutcomeViewVisible = true
   }
 
   override fun hideCallResult() {
-    // Nothing to look at here, yet.
+    callPatientView.callResultOutcomeViewVisible = false
+  }
+
+  override fun setupAgreedToVisitCallResultOutcome() {
+    callPatientView.callResultOutcomeText = getString(R.string.call_result_outcome_agreed_to_visit)
+    callPatientView.setupCallResultViewForAgreedToVisit()
+  }
+
+  override fun setupRemindToCallLaterCallResultOutcome(daysToRemindAppointmentIn: Int) {
+    callPatientView.callResultOutcomeText = resources.getQuantityString(
+        R.plurals.call_result_outcome_remind_to_call_later, daysToRemindAppointmentIn, daysToRemindAppointmentIn.toString()
+    )
+    callPatientView.setupCallResultViewForRemindToCallLater()
+  }
+
+  override fun setupRemovedFromListCallResultOutcome(removeReasonStringRes: Int) {
+    val removeReason = getString(removeReasonStringRes)
+    callPatientView.callResultOutcomeText = getString(R.string.call_result_outcome_removed, removeReason)
+    callPatientView.setupCallResultViewForRemovedFromList()
+  }
+
+  override fun setCallResultUpdatedAtDate(callResultUpdatedAt: LocalDate) {
+    callPatientView.callResultLastUpdatedDate = dateTimeFormatter.format(callResultUpdatedAt)
   }
 
   override fun switchToCallPatientView() {

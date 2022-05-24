@@ -15,15 +15,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/spacing_16"
-    app:cardElevation="@dimen/spacing_0"
     android:visibility="gone"
-    tools:cardBackgroundColor="@color/simple_green_100"
     app:cardCornerRadius="@dimen/spacing_4"
+    app:cardElevation="@dimen/spacing_0"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    tools:strokeColor="@color/simple_green_600"
-    app:strokeWidth="@dimen/spacing_1">
+    app:strokeWidth="@dimen/spacing_1"
+    tools:cardBackgroundColor="@color/simple_green_100"
+    tools:strokeColor="@color/simple_green_600">
 
     <androidx.constraintlayout.widget.ConstraintLayout
       android:layout_width="match_parent"
@@ -35,12 +35,11 @@
         android:id="@+id/callResultOutcomeIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:src="@drawable/ic_check_circle_24px"
         app:layout_constraintBaseline_toBaselineOf="@id/callResultOutcomeTextView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        />
+        tools:src="@drawable/ic_check_circle_24px" />
 
       <com.google.android.material.textview.MaterialTextView
         android:id="@+id/callResultOutcomeTextView"
@@ -49,12 +48,12 @@
         android:layout_marginHorizontal="@dimen/spacing_8"
         android:gravity="center_vertical"
         android:textAppearance="?attr/textAppearanceSubtitle2"
-        tools:textColor="@color/simple_green_600"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/lastUpdatedDateTextView"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@+id/callResultOutcomeIcon"
-        tools:text="Agreed to visit" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Agreed to visit"
+        tools:textColor="@color/simple_green_600" />
 
       <com.google.android.material.textview.MaterialTextView
         android:id="@+id/lastUpdatedDateTextView"
@@ -62,13 +61,13 @@
         android:layout_height="wrap_content"
         android:gravity="end"
         android:textAppearance="?attr/textAppearanceBody2"
-        tools:textColor="@color/simple_green_600"
+        app:layout_constraintBaseline_toBaselineOf="@+id/callResultOutcomeTextView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/callResultOutcomeTextView"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBaseline_toBaselineOf="@+id/callResultOutcomeTextView"
-        tools:text="29-Mar-2022" />
+        tools:text="29-Mar-2022"
+        tools:textColor="@color/simple_green_600" />
     </androidx.constraintlayout.widget.ConstraintLayout>
   </com.google.android.material.card.MaterialCardView>
 

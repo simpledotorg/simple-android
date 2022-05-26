@@ -42,8 +42,7 @@
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">ఈ జాబితాలో రోగి కనుగొనబడలేదా?</string>
   <string name="patientsearchresults_register_patient">కొత్త రోగి లాగా నమోదు చేసుకోండి</string>
-  <string name="patientsearchresults_item_last_seen">సందర్శించినవి</string>
-  <string name="patientsearchresults_item_phone_number">ఫోన్</string>
+    <string name="patientsearchresults_item_phone_number">ఫోన్</string>
   <string name="patientsearchresults_item_birthdate">పుట్టిన తేదీ</string>
 
   <!-- Manual patient entry -->
@@ -52,7 +51,6 @@
   <string name="patiententry_phone_number">ఫోన్ నంబర్</string>
   <string name="patiententry_bangladesh_national_id">జాతీయ గుర్తింపు కార్డ్ సంఖ్య</string>
   <string name="patiententry_ethiopia_medical_record_number">వైద్య రికార్డ్ నంబర్</string>
-  <string name="patiententry_sri_lanka_national_id">జాతీయ గుర్తింపు కార్డ్ సంఖ్య</string>
   <string name="patiententry_sri_lanka_personal_health_number">వ్యక్తిగత ఆరోగ్యం నంబర్</string>
   <string name="patiententry_date_of_birth_unfocused">పుట్టినతేదీ</string>
   <string name="patiententry_date_of_birth_focused">D.O.B (పుట్టినతేదీ): DD/MM/YYYY</string>
@@ -275,18 +273,12 @@
   <string name="overdue_no_patients">గడువు దాటిన రోగులు లేరు</string>
   <string name="overdue_empty_desc">షెడ్యూల్ చేసిన సందర్శనకు హాజరుకాని రోగులకు మీరు కాల్ చేసి ఫాలో-అప్ రక్తపోటు రీడింగ్ కోసం రావాలని కోరవచ్చు.</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
-  <string name="overdue_list_item_diagnosis_diabetes">మధుమేహం</string>
-  <string name="overdue_list_item_diagnosis_hypertension">అధిక రక్తపోటు</string>
-  <string name="overdue_list_item_diagnosis_none">ఏదీ కాదు</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s రోజు క్రితం గడువు ముగిసింది</item>
     <item quantity="other">%s రోజుల క్రితం గడువు ముగిసింది</item>
   </plurals>
   <string name="overdue_list_item_village">గ్రామం</string>
-  <string name="overduelist_diagnosis_label">Dx</string>
-  <string name="overduelist_visited">సందర్శించినవి</string>
   <string name="overduelist_high_risk">అధిక ప్రమాదం</string>
-  <string name="overduelist_transferred">వీరికి బదిలీ చేయబడింది</string>
   <string name="overdue_download">డౌన్‌లోడ్ చేయి</string>
   <string name="overdue_share">భాగస్వామ్యం చేయి</string>
 
@@ -349,7 +341,6 @@
   <string name="newmedicalhistory_yes">అవును</string>
   <string name="newmedicalhistory_no">కాదు</string>
   <string name="newmedicalhistory_history">చరిత్ర</string>
-  <string name="newmedicalhistory_diagnosis">రోగ నిర్ధారణ (అవసరం)</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">గత నెలలో రోగి ఎప్పుడైనా బిపి మందులు తీసుకున్నారా? (అవసరం)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">గత నెలలో రోగి ఎప్పుడైనా మధుమేహం మందులు తీసుకున్నారా? (అవసరం)</string>
 
@@ -450,7 +441,6 @@
 
   <!-- Select Country Screen -->
   <string name="selectcountry_logo_contentdescription">సింపుల్ లోగో</string>
-  <string name="selectcountry_next">తదుపరి</string>
   <string name="selectcountry_title">మీ దేశాన్ని ఎంచుకోండి</string>
   <string name="selectcountry_networkerror">ఇంటర్నెట్ కనెక్షన్ లేదు!</string>
   <string name="selectcountry_servererror">సర్వర్లో లోపం ఏర్పడింది! తర్వాత మళ్లీ ప్రయత్నించండి!</string>
@@ -793,7 +783,6 @@
   <!-- Select overdue download format dialog -->
   <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">స్ప్రెడ్‌షీట్</string>
   <string name="select_overdue_download_format_dialog_radio_button_pdf">PDF</string>
-  <string name="requires_microsoft_excel_to_view">వీక్షించడానికి Sheets లేదా Excel అవసరం</string>
   <string name="select_overdue_download_format_dialog_action_negative">రద్దు చేయి</string>
   <string name="select_overdue_download_format_dialog_title_download">ఇలా డౌన్‌లోడ్ చేయండి</string>
   <string name="select_overdue_download_format_dialog_title_share">ఇలా షేర్ చేయండి</string>

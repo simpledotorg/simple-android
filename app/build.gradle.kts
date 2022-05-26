@@ -316,7 +316,6 @@ dependencies {
    * Prod dependencies
    */
   implementation(libs.androidx.annotation.annotation)
-  implementation(libs.androidx.annotation.experimental)
   implementation(libs.androidx.appcompat)
   implementation(libs.androidx.cardview)
   implementation(libs.androidx.constraintlayout)

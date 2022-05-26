@@ -6,10 +6,15 @@
 
 - Bump flipper to v0.146.0
 - Fix test name in `PatientSummaryUpdateTest`
-- Bump mixpanel to v6.2.2  
-- Bump datadog plugin to v1.4.0  
+- Bump mixpanel to v6.2.2
+- Bump datadog plugin to v1.4.0
 - Show call result status for the appointment in `ContactPatientBottomSheet`
+- Limit instant search to alphanumeric characters
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
+
+### Fixes
+
+- Fix search crashing when searching with special characters
 
 ## 2022-05-23-8262
 

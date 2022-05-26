@@ -72,7 +72,7 @@
     <item name="android:insetBottom">@dimen/spacing_0</item>
     <item name="iconPadding">@dimen/spacing_8</item>
     <item name="iconGravity">textStart</item>
-    <item name="strokeColor">@color/mtrl_btn_stroke_color_selector</item>
+    <item name="strokeColor">@color/outline_btn_stroke_color_selector</item>
     <item name="android:textAppearance">?attr/textAppearanceButtonBig</item>
   </style>
 

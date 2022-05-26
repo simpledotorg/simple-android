@@ -30,6 +30,9 @@
     <ignore path="src/main/res/drawable/ic_video_illustration_ethiopia" />
     <ignore path="src/main/res/drawable/ic_video_illustration_sri_lanka" />
     <ignore path="src/main/res/drawable/ic_no_pending_patients_illustration.xml" />
+    <ignore path="src/main/res/drawable/drug_stock_reminder_icon.xml" />
+    <ignore path="src/main/res/drawable/ic_telegram_logo.xml" />
+    <ignore path="src/main/res/drawable/ic_whatsapp_logo.xml" />
   </issue>
 
   <issue id="UnusedResources">

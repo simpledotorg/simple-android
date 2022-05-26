@@ -30,7 +30,7 @@ class EnterDrugStockWebViewClient(
     handleError(webView = view, errorCode = error?.errorCode)
   }
 
-  @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+  @Suppress("OVERRIDE_DEPRECATION")
   override fun onReceivedError(
       view: WebView?,
       errorCode: Int,

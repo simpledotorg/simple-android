@@ -54,6 +54,7 @@
   <issue id="ParcelCreator" severity="informational" />
   <issue id="GradleDependency" severity="informational" />
   <issue id="PluralsCandidate" severity="informational" />
+  <issue id="CannotEnableHidden" severity="informational" />
 
   <!-- Required for Sentry  -->
   <issue id="InvalidPackage" severity="informational" />

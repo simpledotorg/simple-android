@@ -56,6 +56,9 @@
   <issue id="PluralsCandidate" severity="informational" />
   <issue id="CannotEnableHidden" severity="informational" />
 
+  <!-- Currently we are using duplicate id in different layout files -->
+  <issue id="DuplicateIncludedIds" severity="informational" />
+
   <!-- Required for Sentry  -->
   <issue id="InvalidPackage" severity="informational" />
 

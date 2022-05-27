@@ -10,6 +10,7 @@
 - Bump datadog plugin to v1.4.0
 - Show call result status for the appointment in `ContactPatientBottomSheet`
 - Limit instant search to alphanumeric characters
+- Add query to load all overdue appointments for a facility
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Fixes

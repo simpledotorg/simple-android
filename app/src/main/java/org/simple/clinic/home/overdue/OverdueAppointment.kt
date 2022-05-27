@@ -14,7 +14,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 @Parcelize
-data class OverdueAppointmentNew(
+data class OverdueAppointment(
 
     val fullName: String,
 
@@ -125,6 +125,6 @@ data class OverdueAppointmentNew(
     fun overdueAppointmentsInFacility(
         facilityUuid: UUID,
         scheduledBefore: LocalDate
-    ): List<OverdueAppointmentNew>
+    ): List<OverdueAppointment>
   }
 }

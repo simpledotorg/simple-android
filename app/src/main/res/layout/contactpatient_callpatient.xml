@@ -91,12 +91,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/spacing_24"
-    android:layout_marginTop="@dimen/spacing_16"
+    android:layout_marginTop="@dimen/spacing_8"
     android:maxLines="2"
     android:textAppearance="?attr/textAppearanceBody2"
     android:textColor="@color/color_on_surface_67"
     android:visibility="gone"
-    app:layout_constraintBottom_toTopOf="@+id/registeredFacilityLabel"
+    app:layout_constraintBottom_toTopOf="@+id/phoneNumberLabel"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/nameTextView"
     tools:text="House No. 14, Street No. 10/11, Guru Gobind Singh Nagar, Bhatinda" />
@@ -106,27 +106,28 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_24"
-    android:layout_marginTop="@dimen/spacing_10"
+    android:layout_marginTop="@dimen/spacing_8"
     android:maxLines="1"
     android:text="@string/contactpatient_patient_registered_at"
     android:textAppearance="?attr/textAppearanceBody2Bold"
     android:textColor="@color/color_on_surface_67"
+    app:layout_constraintBottom_toTopOf="@id/lastVisitedLabel"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/patientAddressTextView" />
+    app:layout_constraintTop_toBottomOf="@+id/diagnosisLabel" />
 
   <TextView
     android:id="@+id/registeredFacilityTextView"
     android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_8"
-    android:layout_marginTop="@dimen/spacing_10"
+    android:layout_marginTop="@dimen/spacing_8"
     android:layout_marginEnd="@dimen/spacing_24"
     android:maxLines="1"
     android:textAppearance="?attr/textAppearanceBody2"
     android:textColor="@color/color_on_surface_67"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toEndOf="@id/registeredFacilityLabel"
-    app:layout_constraintTop_toBottomOf="@id/patientAddressTextView"
+    app:layout_constraintTop_toBottomOf="@id/diagnosisLabel"
     tools:text="CHC Bhatinda" />
 
   <TextView
@@ -134,14 +135,14 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_24"
-    android:layout_marginTop="@dimen/spacing_16"
+    android:layout_marginTop="@dimen/spacing_8"
     android:maxLines="1"
     android:text="@string/contactpatient_phone"
     android:textAppearance="?attr/textAppearanceBody2Bold"
     android:textColor="@color/color_on_surface_67"
     android:visibility="visible"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/registeredFacilityLabel" />
+    app:layout_constraintTop_toBottomOf="@+id/patientAddressTextView" />
 
   <TextView
     android:id="@+id/phoneNumberTextView"
@@ -169,7 +170,7 @@
     android:text="@string/contactpatient_dx"
     android:textAppearance="?attr/textAppearanceBody2Bold"
     android:textColor="@color/color_on_surface_67"
-    app:layout_constraintBottom_toTopOf="@id/lastVisitedLabel"
+    app:layout_constraintBottom_toTopOf="@id/registeredFacilityLabel"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@+id/phoneNumberLabel" />
 
@@ -200,7 +201,7 @@
     android:textColor="@color/color_on_surface_67"
     app:layout_constraintBottom_toTopOf="@id/diagnosisSeparator"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/diagnosisLabel" />
+    app:layout_constraintTop_toBottomOf="@+id/registeredFacilityLabel" />
 
   <TextView
     android:id="@+id/lastVisitedTextView"
@@ -325,6 +326,7 @@
     android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginTop="@dimen/spacing_8"
     android:layout_marginEnd="@dimen/spacing_16"
     android:text="@string/contactpatient_help_text"
     android:textAlignment="center"

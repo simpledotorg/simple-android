@@ -86,7 +86,7 @@ class OverdueLogicTest {
 
   private fun setupController() {
     whenever(pagerFactory.createPager(
-        sourceFactory = any<PagingSourceFactory<Int, OverdueAppointment>>(),
+        sourceFactory = any<PagingSourceFactory<Int, OverdueAppointment_Old>>(),
         pageSize = eq(10),
         enablePlaceholders = eq(true),
         initialKey = eq(null)

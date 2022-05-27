@@ -7,7 +7,7 @@ interface OverdueUiActions {
   fun openPhoneMaskBottomSheet(patientUuid: UUID)
   fun openPatientSummary(patientUuid: UUID)
   fun showOverdueAppointments(
-      overdueAppointments: PagingData<OverdueAppointment>,
+      overdueAppointmentsOld: PagingData<OverdueAppointment_Old>,
       isDiabetesManagementEnabled: Boolean
   )
 

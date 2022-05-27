@@ -7,14 +7,14 @@ import org.simple.clinic.facility.Facility
 @Parcelize
 data class OverdueModel(
     val facility: Facility?,
-    val overdueAppointments: List<OverdueAppointment>?
+    val overdueAppointmentOlds: List<OverdueAppointment_Old>?
 ) : Parcelable {
 
   companion object {
     fun create(): OverdueModel {
       return OverdueModel(
           facility = null,
-          overdueAppointments = null
+          overdueAppointmentOlds = null
       )
     }
   }
@@ -23,7 +23,7 @@ data class OverdueModel(
     get() = facility!!.config.diabetesManagementEnabled
 
   val hasLoadedOverdueAppointments: Boolean
-    get() = overdueAppointments != null
+    get() = overdueAppointmentOlds != null
 
   val hasLoadedCurrentFacility: Boolean
     get() = facility != null
@@ -32,7 +32,7 @@ data class OverdueModel(
     return copy(facility = facility)
   }
 
-  fun overdueAppointmentsLoaded(appointments: List<OverdueAppointment>): OverdueModel {
-    return copy(overdueAppointments = appointments)
+  fun overdueAppointmentsLoaded(appointmentOlds: List<OverdueAppointment_Old>): OverdueModel {
+    return copy(overdueAppointmentOlds = appointmentOlds)
   }
 }

@@ -20,7 +20,7 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.home.overdue.OverdueAppointment
+import org.simple.clinic.home.overdue.OverdueAppointment_Old
 import org.simple.clinic.home.overdue.OverduePatientAddress
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.Answer.No
@@ -2606,7 +2606,7 @@ class AppointmentRepositoryAndroidTest {
       appointmentRepository.save(listOf(appointment))
     }
 
-    fun toOverdueAppointment(appointmentFacilityName: String?, registeredFacilityName: String?): OverdueAppointment {
+    fun toOverdueAppointment(appointmentFacilityName: String?, registeredFacilityName: String?): OverdueAppointment_Old {
       if (bloodPressureMeasurement == null && bloodSugarMeasurement == null) {
         throw AssertionError("Need a Blood Pressure Measurement or Blood Sugar Measurement to create an Overdue Appointment")
       } else {
@@ -2621,7 +2621,7 @@ class AppointmentRepositoryAndroidTest {
             district = patientProfile.address.district,
             state = patientProfile.address.state
         )
-        return OverdueAppointment(
+        return OverdueAppointment_Old(
             fullName = patientProfile.patient.fullName,
             gender = patientProfile.patient.gender,
             ageDetails = patientProfile.patient.ageDetails,

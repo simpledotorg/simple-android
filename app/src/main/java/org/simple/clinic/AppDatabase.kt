@@ -14,7 +14,7 @@ import org.simple.clinic.drugs.search.DrugCategory
 import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
-import org.simple.clinic.home.overdue.OverdueAppointmentNew
+import org.simple.clinic.home.overdue.OverdueAppointment_Old
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
@@ -148,9 +148,9 @@ abstract class AppDatabase : RoomDatabase() {
 
   abstract fun appointmentDao(): Appointment.RoomDao
 
-  abstract fun overdueAppointmentDao(): OverdueAppointment.RoomDao
+  abstract fun overdueAppointmentDao(): OverdueAppointment_Old.RoomDao
 
-  abstract fun overdueAppointmentNewDao(): OverdueAppointmentNew.RoomDao
+  abstract fun overdueAppointmentNewDao(): OverdueAppointment.RoomDao
 
   abstract fun medicalHistoryDao(): MedicalHistory.RoomDao
 

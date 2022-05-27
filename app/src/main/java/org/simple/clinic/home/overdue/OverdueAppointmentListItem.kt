@@ -27,7 +27,7 @@ sealed class OverdueAppointmentListItem : PagingItemAdapter.Item<UiEvent> {
   companion object {
 
     fun from(
-        appointments: PagingData<OverdueAppointment>,
+        appointments: PagingData<OverdueAppointment_Old>,
         clock: UserClock
     ): PagingData<OverdueAppointmentListItem> {
       return appointments
@@ -35,19 +35,19 @@ sealed class OverdueAppointmentListItem : PagingItemAdapter.Item<UiEvent> {
     }
 
     private fun from(
-        overdueAppointment: OverdueAppointment,
+        overdueAppointmentOld: OverdueAppointment_Old,
         clock: UserClock
     ): OverdueAppointmentListItem {
       return OverdueAppointmentRow(
-          appointmentUuid = overdueAppointment.appointment.uuid,
-          patientUuid = overdueAppointment.appointment.patientUuid,
-          name = overdueAppointment.fullName,
-          gender = overdueAppointment.gender,
-          age = overdueAppointment.ageDetails.estimateAge(clock),
-          phoneNumber = overdueAppointment.phoneNumber?.number,
-          overdueDays = daysBetweenNowAndDate(overdueAppointment.appointment.scheduledDate, clock),
-          isAtHighRisk = overdueAppointment.isAtHighRisk,
-          villageName = overdueAppointment.patientAddress.colonyOrVillage
+          appointmentUuid = overdueAppointmentOld.appointment.uuid,
+          patientUuid = overdueAppointmentOld.appointment.patientUuid,
+          name = overdueAppointmentOld.fullName,
+          gender = overdueAppointmentOld.gender,
+          age = overdueAppointmentOld.ageDetails.estimateAge(clock),
+          phoneNumber = overdueAppointmentOld.phoneNumber?.number,
+          overdueDays = daysBetweenNowAndDate(overdueAppointmentOld.appointment.scheduledDate, clock),
+          isAtHighRisk = overdueAppointmentOld.isAtHighRisk,
+          villageName = overdueAppointmentOld.patientAddress.colonyOrVillage
       )
     }
 

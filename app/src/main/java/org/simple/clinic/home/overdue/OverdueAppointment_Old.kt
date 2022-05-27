@@ -1,12 +1,12 @@
 package org.simple.clinic.home.overdue
 
 import android.os.Parcelable
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Query
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.overdue.Appointment
-import org.simple.clinic.overdue.callresult.CallResult
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientPhoneNumber
@@ -14,7 +14,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 @Parcelize
-data class OverdueAppointmentNew(
+data class OverdueAppointment_Old(
 
     val fullName: String,
 
@@ -23,17 +23,14 @@ data class OverdueAppointmentNew(
     @Embedded
     val ageDetails: PatientAgeDetails,
 
+    @Embedded(prefix = "appt_")
+    val appointment: Appointment,
+
     @Embedded(prefix = "phone_")
     val phoneNumber: PatientPhoneNumber?,
 
     @Embedded(prefix = "patient_address_")
     val patientAddress: OverduePatientAddress,
-
-    @Embedded(prefix = "appt_")
-    val appointment: Appointment,
-
-    @Embedded(prefix = "call_result_")
-    val callResult: CallResult?,
 
     val isAtHighRisk: Boolean,
 
@@ -69,26 +66,14 @@ data class OverdueAppointmentNew(
         ) AS isAtHighRisk,
         
         PA.streetAddress patient_address_streetAddress, PA.colonyOrVillage patient_address_colonyOrVillage,
-        PA.district patient_address_district, PA.state patient_address_state,
-        
-        CR.id call_result_id, CR.userId call_result_userId, CR.appointmentId call_result_appointmentId,
-        CR.removeReason call_result_removeReason, CR.outcome call_result_outcome, CR.createdAt call_result_createdAt,
-        CR.updatedAt call_result_updatedAt, CR.deletedAt call_result_deletedAt, CR.syncStatus call_result_syncStatus
+        PA.district patient_address_district, PA.state patient_address_state
 
       FROM Patient P
       
-      INNER JOIN (
-        SELECT * FROM Appointment
-        GROUP BY patientUuid HAVING MAX(createdAt)
-      ) A ON A.patientUuid = P.uuid
+      INNER JOIN Appointment A ON A.patientUuid = P.uuid
       LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid = P.uuid
       LEFT JOIN MedicalHistory MH ON MH.patientUuid = P.uuid
       LEFT JOIN PatientAddress PA ON PA.uuid = P.addressUuid
-      
-      LEFT JOIN (
-        SELECT * FROM CallResult
-        GROUP BY appointmentId HAVING MAX(createdAt)
-      ) CR ON CR.appointmentId = A.uuid
       
       LEFT JOIN (
         SELECT * 
@@ -108,13 +93,13 @@ data class OverdueAppointmentNew(
       
       WHERE
         IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid AND
-        appt_scheduledDate < :scheduledBefore AND
-        (appt_remindOn < :scheduledBefore OR appt_remindOn IS NULL) AND
+        (appt_scheduledDate > :scheduledAfter AND appt_scheduledDate < :scheduledBefore) AND
+        (appt_remindOn <:scheduledBefore OR appt_remindOn IS NULL) AND
         P.deletedAt IS NULL AND
         P.status != 'dead' AND 
         PPN.deletedAt IS NULL AND 
         A.deletedAt IS NULL AND 
-        (A.status = 'scheduled' OR A.status  = 'cancelled') AND 
+        A.status = 'scheduled' AND 
         (BP.recordedAt IS NOT NULL OR BloodSugar.recordedAt IS NOT NULL)
       GROUP BY appt_patientUuid
       ORDER BY 
@@ -122,9 +107,10 @@ data class OverdueAppointmentNew(
         appt_scheduledDate DESC, 
         appt_updatedAt ASC
     """)
-    fun overdueAppointmentsInFacility(
+    fun overdueInFacilityPagingSource(
         facilityUuid: UUID,
-        scheduledBefore: LocalDate
-    ): List<OverdueAppointmentNew>
+        scheduledBefore: LocalDate,
+        scheduledAfter: LocalDate
+    ): PagingSource<Int, OverdueAppointment_Old>
   }
 }

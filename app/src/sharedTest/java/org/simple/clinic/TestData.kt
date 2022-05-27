@@ -24,7 +24,7 @@ import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.facility.FacilityPayload
-import org.simple.clinic.home.overdue.OverdueAppointment
+import org.simple.clinic.home.overdue.OverdueAppointment_Old
 import org.simple.clinic.home.overdue.OverduePatientAddress
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.medicalhistory.Answer
@@ -999,8 +999,8 @@ object TestData {
           ageUpdatedAt = null,
           dateOfBirth = LocalDate.now(UTC).minusYears(30)
       )
-  ): OverdueAppointment {
-    return OverdueAppointment(
+  ): OverdueAppointment_Old {
+    return OverdueAppointment_Old(
         fullName = name,
         gender = gender,
         ageDetails = patientAgeDetails,

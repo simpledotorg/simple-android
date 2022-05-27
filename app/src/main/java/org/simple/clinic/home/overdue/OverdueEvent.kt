@@ -24,7 +24,7 @@ data class OverduePatientClicked(val patientUuid: UUID) : OverdueEvent() {
 }
 
 data class OverdueAppointmentsLoaded(
-    val overdueAppointments: PagingData<OverdueAppointment>
+    val overdueAppointmentsOld: PagingData<OverdueAppointment_Old>
 ) : OverdueEvent()
 
 data class DownloadOverdueListClicked(

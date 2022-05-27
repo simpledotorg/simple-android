@@ -4,6 +4,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.paging.PagingSource
 import io.reactivex.Observable
 import org.simple.clinic.home.overdue.OverdueAppointment
+import org.simple.clinic.home.overdue.OverdueAppointmentNew
 import org.simple.clinic.overdue.Appointment.AppointmentType
 import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
@@ -25,6 +26,7 @@ import javax.inject.Inject
 class AppointmentRepository @Inject constructor(
     private val appointmentDao: Appointment.RoomDao,
     private val overdueDao: OverdueAppointment.RoomDao,
+    private val overdueDaoNew: OverdueAppointmentNew.RoomDao,
     private val utcClock: UtcClock,
     private val appointmentConfig: AppointmentConfig
 ) : SynceableRepository<Appointment, AppointmentPayload> {
@@ -123,6 +125,16 @@ class AppointmentRepository @Inject constructor(
             scheduledBefore = since,
             scheduledAfter = since.minus(appointmentConfig.periodForIncludingOverdueAppointments)
         )
+  }
+
+  fun overdueAppointmentsInFacilityNew(
+      since: LocalDate,
+      facilityId: UUID
+  ): List<OverdueAppointmentNew> {
+    return overdueDaoNew.overdueAppointmentsInFacility(
+        facilityUuid = facilityId,
+        scheduledBefore = since
+    )
   }
 
   fun lastCreatedAppointmentForPatient(patientUuid: UUID): Optional<Appointment> {

@@ -12,6 +12,7 @@
 - Limit instant search to alphanumeric characters
 - Add query to load all overdue appointments for a facility
 - Bump lint to v30.2.1  
+- Add layouts for overdue appointments item types  
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Fixes

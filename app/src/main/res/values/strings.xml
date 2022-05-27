@@ -344,6 +344,8 @@
   <string name="overduelist_transferred">Transferred to</string>
   <string name="overdue_download">Download</string>
   <string name="overdue_share">Share</string>
+  <string name="overdue_no_pending_patients">No pending patients</string>
+  <string name="overdue_pending_list_button_see_all">See All</string>
 
   <!-- Facility change -->
 

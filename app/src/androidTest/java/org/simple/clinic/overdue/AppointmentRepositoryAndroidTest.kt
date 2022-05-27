@@ -33,10 +33,16 @@ import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.Appointment.Status.Visited
 import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
+import org.simple.clinic.overdue.callresult.CallResult
+import org.simple.clinic.overdue.callresult.CallResultRepository
+import org.simple.clinic.overdue.callresult.Outcome.RemindToCallLater
+import org.simple.clinic.overdue.callresult.Outcome.RemovedFromOverdueList
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientStatus
+import org.simple.clinic.patient.PatientStatus.Active
+import org.simple.clinic.patient.PatientStatus.Dead
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
@@ -77,6 +83,9 @@ class AppointmentRepositoryAndroidTest {
 
   @Inject
   lateinit var facilityRepository: FacilityRepository
+
+  @Inject
+  lateinit var callResultRepository: CallResultRepository
 
   @Inject
   lateinit var database: AppDatabase
@@ -1947,7 +1956,7 @@ class AppointmentRepositoryAndroidTest {
         scheduledDate = now.minusDays(1),
         facilityUuid = facility1Uuid,
         patientAssignedFacilityUuid = facility2Uuid,
-        patientStatus = PatientStatus.Active,
+        patientStatus = Active,
         appointmentId = appointmentWithOneDayOverdue
     )
     createOverdueAppointment(
@@ -1955,7 +1964,7 @@ class AppointmentRepositoryAndroidTest {
         scheduledDate = now.minusDays(10),
         facilityUuid = facility2Uuid,
         patientAssignedFacilityUuid = null,
-        patientStatus = PatientStatus.Active,
+        patientStatus = Active,
         appointmentId = appointmentWithTenDaysOverdue
     )
     createOverdueAppointment(
@@ -1963,7 +1972,7 @@ class AppointmentRepositoryAndroidTest {
         scheduledDate = now.minusDays(370),
         facilityUuid = facility1Uuid,
         patientAssignedFacilityUuid = null,
-        patientStatus = PatientStatus.Active,
+        patientStatus = Active,
         appointmentId = appointmentWithOverAnYearDaysOverdue
     )
     createOverdueAppointment(
@@ -1971,7 +1980,7 @@ class AppointmentRepositoryAndroidTest {
         scheduledDate = now.minusDays(20),
         facilityUuid = facility1Uuid,
         patientAssignedFacilityUuid = null,
-        patientStatus = PatientStatus.Dead,
+        patientStatus = Dead,
         appointmentId = appointmentForDeadPatient
     )
 
@@ -2371,6 +2380,204 @@ class AppointmentRepositoryAndroidTest {
 
     // then
     assertThat(expectedAppointment).isEqualTo(scheduledAppointment)
+  }
+
+  @Test
+  fun getting_overdue_appointments_in_a_facility_should_work_correctly() {
+    fun createOverdueAppointment(
+        appointmentUuid: UUID,
+        patientUuid: UUID,
+        scheduledDate: LocalDate,
+        remindOn: LocalDate?,
+        facilityUuid: UUID,
+        patientAssignedFacilityUuid: UUID?,
+        patientStatus: PatientStatus,
+        appointmentStatus: Appointment.Status,
+        callResult: CallResult?
+    ) {
+      val patientProfile = TestData.patientProfile(
+          patientUuid = patientUuid,
+          generatePhoneNumber = true,
+          patientAssignedFacilityId = patientAssignedFacilityUuid,
+          patientStatus = patientStatus
+      )
+      patientRepository.save(listOf(patientProfile))
+
+      val bp = TestData.bloodPressureMeasurement(
+          patientUuid = patientUuid,
+          facilityUuid = facilityUuid,
+          systolic = 120,
+          diastolic = 80
+      )
+      bpRepository.save(listOf(bp))
+
+      val bloodSugar = TestData.bloodSugarMeasurement(
+          patientUuid = patientUuid,
+          facilityUuid = facilityUuid,
+          reading = BloodSugarReading.fromMg("100", Random)
+      )
+      bloodSugarRepository.save(listOf(bloodSugar))
+
+      val appointment = TestData.appointment(
+          uuid = appointmentUuid,
+          patientUuid = patientUuid,
+          facilityUuid = facilityUuid,
+          scheduledDate = scheduledDate,
+          status = appointmentStatus,
+          cancelReason = null,
+          remindOn = remindOn
+      )
+      appointmentRepository.save(listOf(appointment))
+
+      if (callResult != null) {
+        callResultRepository.save(listOf(TestData.callResult(
+            appointmentId = appointmentUuid,
+            outcome = callResult.outcome,
+            removeReason = callResult.removeReason
+        )))
+      }
+    }
+
+    //given
+    val patientWithOneDayOverdue = UUID.fromString("8839c1cd-c07e-4064-8819-da8608f80287")
+    val patientWithFiveDayOverdue = UUID.fromString("b992b37a-9b5d-4f40-b296-34416861b0df")
+    val patientWithTenDaysOverdue = UUID.fromString("0f802d2b-953f-47d4-bc38-5b11c29f1638")
+    val patientWithFifteenDaysOverdue = UUID.fromString("316fd1b9-9883-4528-8ce7-08f73a31d05c")
+    val patientWithOverAnYearDaysOverdue = UUID.fromString("bb8726ba-6bae-4c0d-a542-0f16743049c7")
+    val deadPatientWithOverdue = UUID.fromString("1702e079-9eb5-4055-b21e-ed2adbd8bcf3")
+    val patientWithVisitedAppointment = UUID.fromString("7dadac68-d2d0-4d83-9531-361277db4a34")
+    val patientWithCancelledAppointment = UUID.fromString("51e03608-2274-4d8d-a4ba-da717095152a")
+    val patientWithAppointmentRemindedInFiveDaysSinceOverdue = UUID.fromString("1c0d4154-433d-4168-ab84-309505805ebd")
+
+    val now = LocalDate.now(clock)
+    val facility1Uuid = UUID.fromString("08f0d831-3d27-4e99-9404-b9d982ab3541")
+    val facility2Uuid = UUID.fromString("0cdab726-8b44-4775-9158-8637329f2ad3")
+
+    val facility1 = TestData.facility(uuid = facility1Uuid, name = "PHC Obvious")
+    val facility2 = TestData.facility(uuid = facility2Uuid, name = "PHC Bagta")
+
+    facilityRepository.save(listOf(facility1, facility2))
+
+    createOverdueAppointment(
+        appointmentUuid = UUID.fromString("13f868ba-feaa-4cb6-8ea7-c4f4fde3146e"),
+        patientUuid = patientWithOneDayOverdue,
+        scheduledDate = now.minusDays(1),
+        remindOn = null,
+        facilityUuid = facility1Uuid,
+        patientAssignedFacilityUuid = facility1Uuid,
+        patientStatus = Active,
+        appointmentStatus = Scheduled,
+        callResult = null
+    )
+    createOverdueAppointment(
+        appointmentUuid = UUID.fromString("cd58bee4-f11a-48d3-bb38-098cda21ca0e"),
+        patientUuid = patientWithFiveDayOverdue,
+        scheduledDate = now.minusDays(5),
+        remindOn = null,
+        facilityUuid = facility1Uuid,
+        patientAssignedFacilityUuid = null,
+        patientStatus = Active,
+        appointmentStatus = Scheduled,
+        callResult = null
+    )
+    createOverdueAppointment(
+        appointmentUuid = UUID.fromString("16cbb757-2b66-4770-bcfc-1084499465d2"),
+        patientUuid = patientWithTenDaysOverdue,
+        scheduledDate = now.minusDays(10),
+        remindOn = null,
+        facilityUuid = facility1Uuid,
+        patientAssignedFacilityUuid = facility2Uuid,
+        patientStatus = Active,
+        appointmentStatus = Scheduled,
+        callResult = null
+    )
+    createOverdueAppointment(
+        appointmentUuid = UUID.fromString("11458119-82aa-4d52-998e-61d8562179d7"),
+        patientUuid = patientWithFifteenDaysOverdue,
+        scheduledDate = now.minusDays(15),
+        remindOn = null,
+        facilityUuid = facility2Uuid,
+        patientAssignedFacilityUuid = facility1Uuid,
+        patientStatus = Active,
+        appointmentStatus = Scheduled,
+        callResult = null
+    )
+    createOverdueAppointment(
+        appointmentUuid = UUID.fromString("4cf067b1-ba91-4cdd-a178-04e112c3b55a"),
+        patientUuid = patientWithOverAnYearDaysOverdue,
+        scheduledDate = now.minusDays(370),
+        remindOn = null,
+        facilityUuid = facility1Uuid,
+        patientAssignedFacilityUuid = null,
+        patientStatus = Active,
+        appointmentStatus = Scheduled,
+        callResult = null
+    )
+    createOverdueAppointment(
+        appointmentUuid = UUID.fromString("d6c74eb5-e506-4bf1-a8e0-d1ec6b871c98"),
+        patientUuid = deadPatientWithOverdue,
+        scheduledDate = now.minusDays(7),
+        remindOn = null,
+        facilityUuid = facility1Uuid,
+        patientAssignedFacilityUuid = facility1Uuid,
+        patientStatus = Dead,
+        appointmentStatus = Scheduled,
+        callResult = null
+    )
+    createOverdueAppointment(
+        appointmentUuid = UUID.fromString("c20e2821-e761-458c-b8d3-1449866d305e"),
+        patientUuid = patientWithVisitedAppointment,
+        scheduledDate = now.minusDays(30),
+        remindOn = null,
+        facilityUuid = facility1Uuid,
+        patientAssignedFacilityUuid = null,
+        patientStatus = Active,
+        appointmentStatus = Visited,
+        callResult = null
+    )
+    createOverdueAppointment(
+        appointmentUuid = UUID.fromString("a1252589-b866-4386-afcb-f3a4ac3306a3"),
+        patientUuid = patientWithCancelledAppointment,
+        scheduledDate = now.minusDays(31),
+        remindOn = null,
+        facilityUuid = facility1Uuid,
+        patientAssignedFacilityUuid = null,
+        patientStatus = Active,
+        appointmentStatus = Cancelled,
+        callResult = TestData.callResult(
+            removeReason = PatientNotResponding,
+            outcome = RemovedFromOverdueList
+        )
+    )
+    createOverdueAppointment(
+        appointmentUuid = UUID.fromString("bd6239b2-914c-4414-8ae3-dae2583097c1"),
+        patientUuid = patientWithAppointmentRemindedInFiveDaysSinceOverdue,
+        scheduledDate = now.minusDays(2),
+        remindOn = now.minusDays(7),
+        facilityUuid = facility1Uuid,
+        patientAssignedFacilityUuid = null,
+        patientStatus = Active,
+        appointmentStatus = Scheduled,
+        callResult = TestData.callResult(
+            outcome = RemindToCallLater
+        )
+    )
+
+    //when
+    val overdueAppointments = appointmentRepository.overdueAppointmentsInFacilityNew(
+        since = now,
+        facilityId = facility1Uuid
+    ).map { it.appointment.patientUuid }
+
+    //then
+    assertThat(overdueAppointments).isEqualTo(listOf(
+        patientWithOneDayOverdue,
+        patientWithAppointmentRemindedInFiveDaysSinceOverdue,
+        patientWithFiveDayOverdue,
+        patientWithFifteenDaysOverdue,
+        patientWithCancelledAppointment,
+        patientWithOverAnYearDaysOverdue
+    ))
   }
 
   private fun markAppointmentSyncStatusAsDone(vararg appointmentUuids: UUID) {

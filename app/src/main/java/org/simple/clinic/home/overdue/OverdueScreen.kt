@@ -195,11 +195,11 @@ class OverdueScreen : BaseScreen<
   }
 
   override fun showOverdueAppointments(
-      overdueAppointments: PagingData<OverdueAppointment>,
+      overdueAppointmentsOld: PagingData<OverdueAppointment_Old>,
       isDiabetesManagementEnabled: Boolean
   ) {
     overdueListAdapter.submitData(lifecycle, OverdueAppointmentListItem.from(
-        appointments = overdueAppointments,
+        appointments = overdueAppointmentsOld,
         clock = userClock
     ))
   }

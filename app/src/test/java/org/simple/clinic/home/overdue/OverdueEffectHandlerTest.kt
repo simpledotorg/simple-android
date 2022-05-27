@@ -97,11 +97,11 @@ class OverdueEffectHandlerTest {
     val pagingData = PagingData.from(overdueAppointments)
 
     // when
-    effectHandlerTestCase.dispatch(ShowOverdueAppointments(overdueAppointments = pagingData,
+    effectHandlerTestCase.dispatch(ShowOverdueAppointments(overdueAppointmentsOld = pagingData,
         isDiabetesManagementEnabled = true))
 
     // then
-    verify(uiActions).showOverdueAppointments(overdueAppointments = pagingData,
+    verify(uiActions).showOverdueAppointments(overdueAppointmentsOld = pagingData,
         isDiabetesManagementEnabled = true)
   }
 
@@ -114,7 +114,7 @@ class OverdueEffectHandlerTest {
     ))
 
     whenever(pagerFactory.createPager(
-        sourceFactory = any<PagingSourceFactory<Int, OverdueAppointment>>(),
+        sourceFactory = any<PagingSourceFactory<Int, OverdueAppointment_Old>>(),
         pageSize = eq(overdueAppointmentsConfig.overdueAppointmentsLoadSize),
         enablePlaceholders = eq(true),
         initialKey = eq(null)

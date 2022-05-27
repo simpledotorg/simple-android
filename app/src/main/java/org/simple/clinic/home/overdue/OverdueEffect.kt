@@ -29,7 +29,7 @@ data class OpenContactPatientScreen(val patientUuid: UUID) : OverdueViewEffect()
 data class OpenPatientSummary(val patientUuid: UUID) : OverdueViewEffect()
 
 data class ShowOverdueAppointments(
-    val overdueAppointments: PagingData<OverdueAppointment>,
+    val overdueAppointmentsOld: PagingData<OverdueAppointment_Old>,
     val isDiabetesManagementEnabled: Boolean
 ) : OverdueViewEffect()
 

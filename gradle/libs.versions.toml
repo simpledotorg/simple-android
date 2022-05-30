@@ -9,7 +9,7 @@ androidx-work = "2.7.1"
 
 dagger = "2.42"
 
-flipper = "0.146.0"
+flipper = "0.147.0"
 
 kotlin = "1.6.21"
 

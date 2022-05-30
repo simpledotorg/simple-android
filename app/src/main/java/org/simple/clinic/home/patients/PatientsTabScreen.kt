@@ -209,7 +209,7 @@ class PatientsTabScreen : BaseScreen<
 
   override fun createInit() = PatientsInit(
       isNotifyAppUpdateAvailableV2Enabled = features.isEnabled(NotifyAppUpdateAvailableV2),
-      isMonthlyDrugStockReportReminderEnabled = features.isEnabled(MonthlyDrugStockReportReminder)
+      isMonthlyDrugStockReportReminderEnabledInIndia = features.isEnabled(MonthlyDrugStockReportReminder) && country.isoCountryCode == Country.INDIA
   )
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<PatientsTabViewEffect>) = effectHandlerFactory.create(

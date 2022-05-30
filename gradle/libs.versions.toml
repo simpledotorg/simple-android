@@ -100,7 +100,7 @@ jbcrypt = "org.mindrot:jbcrypt:0.4"
 junit = "junit:junit:4.13.2"
 junitParams = "pl.pragmatists:JUnitParams:1.1.1"
 
-kotlin-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:1.6.1"
+kotlin-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:1.6.2"
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk7", version.ref = "kotlin" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }

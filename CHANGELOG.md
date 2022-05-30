@@ -3,6 +3,8 @@
 ## Next Release
 
 ### Internal
+
+- Enable drug stock only for India
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-05-30-8273

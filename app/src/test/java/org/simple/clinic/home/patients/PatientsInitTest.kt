@@ -14,7 +14,7 @@ class PatientsInitTest {
   fun `when screen is created and app update v2 notification feature flag is enabled, then schedule app update notification worker`() {
     val initSpec = InitSpec(PatientsInit(
         isNotifyAppUpdateAvailableV2Enabled = true,
-        isMonthlyDrugStockReportReminderEnabled = false
+        isMonthlyDrugStockReportReminderEnabledInIndia = false
     ))
 
     initSpec
@@ -35,7 +35,7 @@ class PatientsInitTest {
   fun `when screen is created and monthly drug stock report reminder feature flag is enabled, then load info for showing drug stock reminder`() {
     val initSpec = InitSpec(PatientsInit(
         isNotifyAppUpdateAvailableV2Enabled = false,
-        isMonthlyDrugStockReportReminderEnabled = true
+        isMonthlyDrugStockReportReminderEnabledInIndia = true
     ))
 
     initSpec

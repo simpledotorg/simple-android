@@ -6,7 +6,7 @@ import com.spotify.mobius.Init
 
 class PatientsInit(
     private val isNotifyAppUpdateAvailableV2Enabled: Boolean,
-    private val isMonthlyDrugStockReportReminderEnabled: Boolean
+    private val isMonthlyDrugStockReportReminderEnabledInIndia: Boolean
 ) : Init<PatientsTabModel, PatientsTabEffect> {
 
   override fun init(model: PatientsTabModel): First<PatientsTabModel, PatientsTabEffect> {
@@ -21,7 +21,7 @@ class PatientsInit(
       effects.add(ScheduleAppUpdateNotification)
     }
 
-    if (isMonthlyDrugStockReportReminderEnabled) {
+    if (isMonthlyDrugStockReportReminderEnabledInIndia) {
       effects.add(LoadInfoForShowingDrugStockReminder)
     }
 

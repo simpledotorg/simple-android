@@ -8,7 +8,7 @@ import org.simple.clinic.FakeCall
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.NotFound
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline.Result.OtherError
 import org.simple.clinic.patient.sync.PatientSyncApi
-import org.simple.clinic.util.TestUtcClock
+import org.simple.sharedTestCode.util.TestUtcClock
 import java.time.Duration
 import java.time.Instant
 

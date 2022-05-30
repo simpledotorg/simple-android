@@ -13,7 +13,7 @@ import junitparams.Parameters
 import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.medicalhistory.Answer
@@ -28,10 +28,10 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.values
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
-import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.randomMedicalHistoryAnswer
+import org.simple.sharedTestCode.util.TestUtcClock
+import org.simple.sharedTestCode.util.randomMedicalHistoryAnswer
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.uuid.FakeUuidGenerator
+import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Instant

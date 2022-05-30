@@ -1,5 +1,6 @@
-package org.simple.clinic.uuid
+package org.simple.sharedTestCode.uuid
 
+import org.simple.clinic.uuid.UuidGenerator
 import java.util.UUID
 
 class FakeUuidGenerator(

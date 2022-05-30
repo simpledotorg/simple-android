@@ -8,7 +8,7 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.callresult.CallResult
 import org.simple.clinic.overdue.callresult.CallResultRepository
@@ -18,10 +18,10 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Rules
-import org.simple.clinic.util.TestUtcClock
+import org.simple.sharedTestCode.util.Rules
+import org.simple.sharedTestCode.util.TestUtcClock
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.randomRemoveReason
+import org.simple.sharedTestCode.util.randomRemoveReason
 import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject

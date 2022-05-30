@@ -2,7 +2,7 @@ package org.simple.clinic.benchmark.patientregistration
 
 import org.junit.Test
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.benchmark.BaseBenchmarkTest
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.patient.PatientRepository

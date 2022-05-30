@@ -2,7 +2,7 @@ package org.simple.clinic.instantsearch
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.instantsearch.InstantSearchResultsItemType.AssignedFacilityHeader
 import org.simple.clinic.instantsearch.InstantSearchResultsItemType.NearbyFacilitiesHeader
 import org.simple.clinic.instantsearch.InstantSearchResultsItemType.SearchResult

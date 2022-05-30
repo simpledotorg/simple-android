@@ -5,7 +5,7 @@ import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.SyncStatus
 import java.time.Instant

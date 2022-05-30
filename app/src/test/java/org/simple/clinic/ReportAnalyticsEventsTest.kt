@@ -9,7 +9,7 @@ import org.junit.Test
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.analytics.MockAnalyticsReporter.Event
 import org.simple.clinic.platform.analytics.Analytics
-import org.simple.clinic.util.RxErrorsRule
+import org.simple.sharedTestCode.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 
 class ReportAnalyticsEventsTest {

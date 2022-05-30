@@ -8,7 +8,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.login.UsersApi
 import org.simple.clinic.platform.analytics.Analytics
@@ -17,7 +17,7 @@ import org.simple.clinic.registration.RegistrationRequest
 import org.simple.clinic.registration.RegistrationResponse
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
-import org.simple.clinic.util.toPayload
+import org.simple.sharedTestCode.util.toPayload
 import java.util.Optional
 import java.util.UUID
 

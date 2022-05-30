@@ -7,7 +7,7 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.rules.SaveDatabaseRule
-import org.simple.clinic.util.Rules
+import org.simple.sharedTestCode.util.Rules
 import org.simple.clinic.util.UtcClock
 import java.time.Instant
 import java.util.UUID

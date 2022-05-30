@@ -15,7 +15,7 @@ import org.simple.clinic.summary.teleconsultation.sync.TeleconsultFacilityInfoAp
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityRepository
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationSync
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Rules
+import org.simple.sharedTestCode.util.Rules
 import javax.inject.Inject
 
 class TeleconsultationSyncIntegrationTest {

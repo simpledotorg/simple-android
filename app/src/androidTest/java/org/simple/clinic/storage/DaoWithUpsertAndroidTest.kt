@@ -8,12 +8,12 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
-import org.simple.clinic.util.Rules
+import org.simple.sharedTestCode.util.Rules
 import java.util.UUID
 import javax.inject.Inject
 

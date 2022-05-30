@@ -18,8 +18,8 @@ import org.simple.clinic.security.pin.PinEntryUi.Mode
 import org.simple.clinic.security.pin.verification.PinVerificationMethod
 import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.Correct
 import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.Incorrect
-import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestUtcClock
+import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.sharedTestCode.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture

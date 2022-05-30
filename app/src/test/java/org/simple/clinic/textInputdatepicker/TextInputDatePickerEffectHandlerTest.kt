@@ -12,7 +12,7 @@ import org.simple.clinic.textInputdatepicker.TextInputDatePickerEffect.UserEnter
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.NotValid.DateIsInPast
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.NotValid.InvalidPattern
 import org.simple.clinic.textInputdatepicker.TextInputDatePickerValidator.Result.NotValid.MaximumAllowedDateRange
-import org.simple.clinic.util.TestUserClock
+import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.time.LocalDate
 

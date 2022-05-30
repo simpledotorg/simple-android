@@ -2,7 +2,7 @@ package org.simple.clinic.patient
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.simple.clinic.util.TestUserClock
+import org.simple.sharedTestCode.util.TestUserClock
 import java.time.Instant
 import java.time.LocalDate
 

@@ -9,7 +9,7 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import junitparams.JUnitParamsRunner
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.medicalhistory.Answer.No

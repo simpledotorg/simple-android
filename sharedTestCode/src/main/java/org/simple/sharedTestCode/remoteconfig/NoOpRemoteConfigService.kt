@@ -1,4 +1,7 @@
-package org.simple.clinic.remoteconfig
+package org.simple.sharedTestCode.remoteconfig
+
+import org.simple.clinic.remoteconfig.ConfigReader
+import org.simple.clinic.remoteconfig.RemoteConfigService
 
 class NoOpRemoteConfigService(private val configReader: ConfigReader) : RemoteConfigService {
 

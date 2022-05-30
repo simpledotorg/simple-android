@@ -12,7 +12,7 @@ import org.simple.clinic.navigation.v2.History
 import org.simple.clinic.navigation.v2.Normal
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.storage.MemoryValue
-import org.simple.clinic.util.TestUtcClock
+import org.simple.sharedTestCode.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.time.Instant
 import java.util.Optional

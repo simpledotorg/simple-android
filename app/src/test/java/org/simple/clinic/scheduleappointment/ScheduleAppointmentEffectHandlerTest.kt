@@ -9,7 +9,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import dagger.Lazy
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
@@ -20,9 +20,9 @@ import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
-import org.simple.clinic.util.TestUserClock
+import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.uuid.FakeUuidGenerator
+import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import java.time.LocalDate
 import java.time.Period
 import java.util.Optional

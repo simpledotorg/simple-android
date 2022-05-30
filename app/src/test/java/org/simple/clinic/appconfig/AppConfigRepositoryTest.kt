@@ -12,7 +12,7 @@ import io.reactivex.Single
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.appconfig.StatesResult.StatesFetched
 import org.simple.clinic.appconfig.api.ManifestFetchApi
 import org.simple.clinic.util.ResolvedError

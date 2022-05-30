@@ -12,7 +12,7 @@ import org.simple.clinic.help.HelpRepository.Companion.HELP_KEY
 import org.simple.clinic.help.HelpSync
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.storage.text.TextStore
-import org.simple.clinic.util.Rules
+import org.simple.sharedTestCode.util.Rules
 import javax.inject.Inject
 
 

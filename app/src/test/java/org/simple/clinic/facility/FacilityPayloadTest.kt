@@ -2,7 +2,7 @@ package org.simple.clinic.facility
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.patient.SyncStatus
 

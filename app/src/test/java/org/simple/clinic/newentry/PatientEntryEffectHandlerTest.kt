@@ -10,7 +10,7 @@ import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.R
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.newentry.Field.PhoneNumber
@@ -31,7 +31,7 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.TestUserClock
+import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

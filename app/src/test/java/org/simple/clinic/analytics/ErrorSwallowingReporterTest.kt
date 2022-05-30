@@ -1,7 +1,7 @@
 package org.simple.clinic.analytics
 
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.platform.analytics.AnalyticsReporter
 import org.simple.clinic.platform.analytics.AnalyticsUser
 

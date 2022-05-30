@@ -2,7 +2,7 @@ package org.simple.clinic.bp
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import java.util.Random
 
 class BloodPressureLevelTest {

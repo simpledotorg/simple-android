@@ -4,6 +4,8 @@ plugins {
 }
 
 android {
+  namespace = "org.simple.clinic.platform"
+
   val compileSdkVersion: Int by rootProject.extra
   val minSdkVersion: Int by rootProject.extra
   val targetSdkVersion: Int by rootProject.extra

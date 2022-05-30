@@ -82,6 +82,8 @@ tasks.withType<Test> {
 }
 
 android {
+  namespace = "org.simple.clinic"
+
   val androidNdkVersion: String by project
   val compileSdkVersion: Int by rootProject.extra
   val minSdkVersion: Int by rootProject.extra

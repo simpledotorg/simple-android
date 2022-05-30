@@ -1,5 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="org.simple.clinic.qa.debug.test">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
   <instrumentation
     android:name="org.simple.clinic.AndroidTestJUnitRunner"

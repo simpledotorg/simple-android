@@ -15,11 +15,11 @@
       android:id="@+id/noPendingPatientsIllustrationView"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:src="@drawable/ic_no_pending_patients_illustration"
       app:layout_constraintBottom_toTopOf="@+id/noPendingPatientsTextView"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent" />
+      app:layout_constraintTop_toTopOf="parent"
+      app:srcCompat="@drawable/ic_no_pending_patients_illustration" />
 
     <com.google.android.material.textview.MaterialTextView
       android:id="@+id/noPendingPatientsTextView"

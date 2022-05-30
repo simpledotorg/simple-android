@@ -4,6 +4,12 @@
 
 ### Internal
 
+- [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
+
+## 2022-05-30-8273
+
+### Internal
+
 - Bump flipper to v0.146.0
 - Fix test name in `PatientSummaryUpdateTest`
 - Bump mixpanel to v6.2.2
@@ -14,10 +20,10 @@
 - Bump lint to v30.2.1
 - Add layouts for overdue appointments item types
 - Fix lint issues related to overdue layouts
-- [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Fixes
 
+- Fix enabling monthly drug stock reminder only for India
 - Fix search crashing when searching with special characters
 
 ## 2022-05-23-8262

@@ -230,7 +230,8 @@ class PatientsTabScreen : BaseScreen<
     homeIllustration.setImageResource(illustrationResourceId())
     simpleVideoIllustration.setImageResource(videoIllustrationResourceId())
 
-    if (features.isEnabled(MonthlyDrugStockReportReminder)) {
+    val isMonthlyDrugStockReminderEnabledInIndia = features.isEnabled(MonthlyDrugStockReportReminder) && country.isoCountryCode == Country.INDIA
+    if (isMonthlyDrugStockReminderEnabledInIndia) {
       drugStockNotificationScheduler.schedule()
     }
   }

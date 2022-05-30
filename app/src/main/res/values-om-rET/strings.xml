@@ -42,8 +42,7 @@
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">Tarree kana irratti dhubbubsataa argachuu hin dandanyee?</string>
   <string name="patientsearchresults_register_patient">Akka dhukkubsataa haaraatti galmeessi</string>
-  <string name="patientsearchresults_item_last_seen">Daawwatameera</string>
-  <string name="patientsearchresults_item_phone_number">Bilbila</string>
+    <string name="patientsearchresults_item_phone_number">Bilbila</string>
   <string name="patientsearchresults_item_birthdate">Guyyaa dhalootaa</string>
 
   <!-- Manual patient entry -->
@@ -52,7 +51,6 @@
   <string name="patiententry_phone_number">Lakkoofsa bilbilaa</string>
   <string name="patiententry_bangladesh_national_id">Lakkoosa eenyummeessaa biyyaalessa</string>
   <string name="patiententry_ethiopia_medical_record_number">Lakkoofsa Galmee Fayya</string>
-  <string name="patiententry_sri_lanka_national_id">Lakkoosa eenyummeessaa biyyaalessa</string>
   <string name="patiententry_sri_lanka_personal_health_number">Lakkoofa Fayyaa Dhuunfaa</string>
   <string name="patiententry_date_of_birth_unfocused">Guyyaa dhaloota</string>
   <string name="patiententry_date_of_birth_focused">G,Dh GG/JJ/WWWW</string>
@@ -276,18 +274,12 @@
   <string name="overdue_no_patients">Dhukkubsattoonni irra darbe hin jiran</string>
   <string name="overdue_empty_desc">Dhukkubsattoota sagantaa hordoffii dubbisa dhiibbaa dhiigaa isaanii bilbiluufii ni dandeessa.</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
-  <string name="overdue_list_item_diagnosis_diabetes">Sukkaara</string>
-  <string name="overdue_list_item_diagnosis_hypertension">Baayyina dhiiga</string>
-  <string name="overdue_list_item_diagnosis_none">Hin jiru</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">Guyyaa %s irra darbe</item>
     <item quantity="other">Guyyoota %s irra darbe</item>
   </plurals>
   <string name="overdue_list_item_village">Ganda</string>
-  <string name="overduelist_diagnosis_label">Dx</string>
-  <string name="overduelist_visited">Daawwatameera</string>
   <string name="overduelist_high_risk">Saaxilbahii ol aanaa</string>
-  <string name="overduelist_transferred">Dabarfameera gara</string>
   <string name="overdue_download">Buusicha</string>
   <string name="overdue_share">Raabsi</string>
 
@@ -350,7 +342,6 @@
   <string name="newmedicalhistory_yes">Eeyyee</string>
   <string name="newmedicalhistory_no">Lakki</string>
   <string name="newmedicalhistory_history">Seenaa</string>
-  <string name="newmedicalhistory_diagnosis">Qorannoo (Barbaadameera)</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">Dhukubsataan ji\'a darbe yeroo ta\'e keessa dawaa BP fudhateeraa? (Barbaadamaa)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">Ji\'a darbe keessa dhukkubsatichi dawaawwan sukkaaraa fudhatee jiraa? (Barbaadama)</string>
 
@@ -451,7 +442,6 @@
 
   <!-- Select Country Screen -->
   <string name="selectcountry_logo_contentdescription">Asxaa salphaa</string>
-  <string name="selectcountry_next">Kan itti aanu</string>
   <string name="selectcountry_title">biyya kee filadhu</string>
   <string name="selectcountry_networkerror">Hidhati interneetaa hin jiru!</string>
   <string name="selectcountry_servererror">Dogongora Sarvarii! Maaloo booda turii yaali!</string>
@@ -794,7 +784,6 @@
   <!-- Select overdue download format dialog -->
   <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">Spreadsheet</string>
   <string name="select_overdue_download_format_dialog_radio_button_pdf">PDF</string>
-  <string name="requires_microsoft_excel_to_view">Agarsiisuuf Excel yookiin Sheets barbaada</string>
   <string name="select_overdue_download_format_dialog_action_negative">Adda kuti</string>
   <string name="select_overdue_download_format_dialog_title_download">Bifa ittiin buustan filadhaa</string>
   <string name="select_overdue_download_format_dialog_title_share">Bifa ittiin qooddan filadhaa</string>

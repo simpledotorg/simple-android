@@ -42,8 +42,7 @@
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">ተሓካሚ ኣብዚ ዝርዝር ኣይተረኽበን?</string>
   <string name="patientsearchresults_register_patient">ከም ሓድሽ ተሓካሚ ተመዝገብ</string>
-  <string name="patientsearchresults_item_last_seen">ዝተርአየ</string>
-  <string name="patientsearchresults_item_phone_number">ስልኪ</string>
+    <string name="patientsearchresults_item_phone_number">ስልኪ</string>
   <string name="patientsearchresults_item_birthdate">ዝተወለደሉ/ ትሉ ዕለት</string>
 
   <!-- Manual patient entry -->
@@ -52,7 +51,6 @@
   <string name="patiententry_phone_number">ስልኪ ቑፅሪ</string>
   <string name="patiententry_bangladesh_national_id">ሃገራዊ መለለዪ ቑፅሪ</string>
   <string name="patiententry_ethiopia_medical_record_number">ቁፅሪ ሕክምናዊ መዝገብ</string>
-  <string name="patiententry_sri_lanka_national_id">ሃገራዊ መለለዪ ቑፅሪ</string>
   <string name="patiententry_sri_lanka_personal_health_number">ናይ ብሕቲ ቁጽሪ ጥዕና</string>
   <string name="patiententry_date_of_birth_unfocused">ዕለተ ትውልዲ</string>
   <string name="patiententry_date_of_birth_focused">ዕ.ት፡ ዕ/ወ/ዓ.ም</string>
@@ -275,18 +273,12 @@
   <string name="overdue_no_patients">ዝደንጎየ ተሓካሚ የለን</string>
   <string name="overdue_empty_desc">ንምክትታል ፀቕጢ ደም ቆጸራ ተመዲቡሎም ዝነበሩ እሞ ዘይመፅኡ ተሓከምቲ ክትድውለሎም ትኽእል ኢኻ/ኺ።</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
-  <string name="overdue_list_item_diagnosis_diabetes">ሕማም ሽኮርያ</string>
-  <string name="overdue_list_item_diagnosis_hypertension">ልዑል ፀቕጢ ደም</string>
-  <string name="overdue_list_item_diagnosis_none">ዋላ ሓደ የለን</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s መዓልቲ ደንጉዩ</item>
     <item quantity="other">%s መዓልታታ ደንጉዩ</item>
   </plurals>
   <string name="overdue_list_item_village">ቍሸት</string>
-  <string name="overduelist_diagnosis_label">ነፀርታ</string>
-  <string name="overduelist_visited">ዝተርአየ</string>
   <string name="overduelist_high_risk">ልዑል ስግኣት</string>
-  <string name="overduelist_transferred">ናብ ካሊእ ዝተዛወረ</string>
   <string name="overdue_download">ዳውንሎድ</string>
   <string name="overdue_share">ኣካፍል</string>
 
@@ -349,7 +341,6 @@
   <string name="newmedicalhistory_yes">እወ</string>
   <string name="newmedicalhistory_no">ኣይፋሉን</string>
   <string name="newmedicalhistory_history">ታሪኽ</string>
-  <string name="newmedicalhistory_diagnosis">ምርመራ (ተደልዩ)</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">እቲ ሕሙም ኣብ ዝሓለፈ ወርሒ መድሃኒት ቢፒ ወሲዱ ዶ?(ዝድለ)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">እቲ ሕሙም ኣብ ዝሓለፈ ወርሒ ኣብ ዝኾነ ይኹን እዋን ናይ ሽኮርያ መድሓኒት ወሲዱ ኔሩ ድዩ? (ኣገዳሲ) </string>
 
@@ -450,7 +441,6 @@
 
   <!-- Select Country Screen -->
   <string name="selectcountry_logo_contentdescription">ቀሊል ምልክት</string>
-  <string name="selectcountry_next">ዝቕፅል</string>
   <string name="selectcountry_title">ሃገርካ/ኪ ምረፅ/ፂ</string>
   <string name="selectcountry_networkerror">ኣገልግሎት ኢንተርኔት የለን</string>
   <string name="selectcountry_servererror">ጌጋ ኣብ ኣሳላጢ (ሰርቨር) ፀኒሕካ/ኪ መሊስካ/ኪ ፈትን/ኒ</string>
@@ -793,7 +783,6 @@
   <!-- Select overdue download format dialog -->
   <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">ዝርጉሕ ቀጸላ</string>
   <string name="select_overdue_download_format_dialog_radio_button_pdf">PDF</string>
-  <string name="requires_microsoft_excel_to_view">ንምርኣይ Sheets ወይ Excel የድሊ</string>
   <string name="select_overdue_download_format_dialog_action_negative"> ሰርዝ</string>
   <string name="select_overdue_download_format_dialog_title_download">ብኸምዚ መልክዕ ኣውርድ ወይ ዳውንሎድ ግበር</string>
   <string name="select_overdue_download_format_dialog_title_share">ብኸምዚ መልክዕ ኣካፍል</string>

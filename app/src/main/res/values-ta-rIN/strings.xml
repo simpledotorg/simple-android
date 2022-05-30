@@ -42,8 +42,7 @@
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">இந்தப் பட்டியலில் நோயாளியின் விவரங்களைக் கண்டறிய முடியவில்லையா?</string>
   <string name="patientsearchresults_register_patient">புதிய நோயாளியாகப் பதிவு செய்யவும்</string>
-  <string name="patientsearchresults_item_last_seen">வந்துள்ளார்</string>
-  <string name="patientsearchresults_item_phone_number">தொலைபேசி</string>
+    <string name="patientsearchresults_item_phone_number">தொலைபேசி</string>
   <string name="patientsearchresults_item_birthdate">பிறந்த தேதி</string>
 
   <!-- Manual patient entry -->
@@ -52,7 +51,6 @@
   <string name="patiententry_phone_number">தொலைபேசி எண்</string>
   <string name="patiententry_bangladesh_national_id">தேசிய ஐடி எண்</string>
   <string name="patiententry_ethiopia_medical_record_number">மருத்துவப் பதிவு எண்</string>
-  <string name="patiententry_sri_lanka_national_id">தேசிய ஐடி எண்</string>
   <string name="patiententry_sri_lanka_personal_health_number">தனிப்பட்ட சுகாதார எண்</string>
   <string name="patiententry_date_of_birth_unfocused">பிறந்த தேதி</string>
   <string name="patiententry_date_of_birth_focused">பிறந்த தேதி: DD/MM/YYYY</string>
@@ -275,18 +273,12 @@
   <string name="overdue_no_patients">குறித்த தேதிக்குள் வராதவர்கள் இல்லை</string>
   <string name="overdue_empty_desc">மீண்டும் இரத்த அழுத்த ரீடிங் எடுப்பதற்காகத் திட்டமிடப்பட்ட தேதியைத் தவறவிட்ட நோயாளிகளை நீங்கள் அழைக்க முடியும்.</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
-  <string name="overdue_list_item_diagnosis_diabetes">நீரிழிவு</string>
-  <string name="overdue_list_item_diagnosis_hypertension">உயர் இரத்த அழுத்தம்</string>
-  <string name="overdue_list_item_diagnosis_none">ஏதுமில்லை</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">குறித்த நாளை விட %s நாள் அதிகம்</item>
     <item quantity="other">குறித்த நாளை விட %s நாட்கள் அதிகம்</item>
   </plurals>
   <string name="overdue_list_item_village">கிராமம்</string>
-  <string name="overduelist_diagnosis_label">Dx</string>
-  <string name="overduelist_visited">வந்துள்ளார்</string>
   <string name="overduelist_high_risk">அதிக ஆபத்து</string>
-  <string name="overduelist_transferred">இதற்குப் பரிமாற்றவும்</string>
   <string name="overdue_download">பதிவிறக்கு</string>
   <string name="overdue_share">பகிர்</string>
 
@@ -349,7 +341,6 @@
   <string name="newmedicalhistory_yes">ஆம்</string>
   <string name="newmedicalhistory_no">இல்லை</string>
   <string name="newmedicalhistory_history">வரலாறு</string>
-  <string name="newmedicalhistory_diagnosis">நோய் கண்டறிதல் (அவசிய விவரம்)</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">கடந்த மாதத்தில் நோயாளி எப்போதாவது பிபி மருந்துகளை எடுத்துக்கொண்டாரா? (தேவையானவை)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">கடந்த மாதத்தில் நோயாளி எப்போதாவது நீரழிவுநோய் மருந்துகளை எடுத்துக்கொண்டாரா? (தேவையானவை)</string>
 
@@ -450,7 +441,6 @@
 
   <!-- Select Country Screen -->
   <string name="selectcountry_logo_contentdescription">சிம்பிள் லோகோ</string>
-  <string name="selectcountry_next">அடுத்து</string>
   <string name="selectcountry_title">உங்கள் நாட்டைத் தேர்ந்தெடுக்கவும்</string>
   <string name="selectcountry_networkerror">இணைய இணைப்பு இல்லை!</string>
   <string name="selectcountry_servererror">சேவையகத்தில் பிழை ஏற்பட்டுள்ளது! தயவுசெய்து சிறிது நேரம் கழித்து மீண்டும் முயலவும்!</string>
@@ -793,7 +783,6 @@
   <!-- Select overdue download format dialog -->
   <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">விரிதாள்</string>
   <string name="select_overdue_download_format_dialog_radio_button_pdf">PDF</string>
-  <string name="requires_microsoft_excel_to_view">பார்க்க, Sheets அல்லது Excel தேவை</string>
   <string name="select_overdue_download_format_dialog_action_negative">ரத்து செய்யவும்</string>
   <string name="select_overdue_download_format_dialog_title_download">இதாகப் பதிவிறக்கு</string>
   <string name="select_overdue_download_format_dialog_title_share">இதாகப் பகிர்</string>

@@ -82,6 +82,8 @@ tasks.withType<Test> {
 }
 
 android {
+  namespace = "org.simple.clinic"
+
   val androidNdkVersion: String by project
   val compileSdkVersion: Int by rootProject.extra
   val minSdkVersion: Int by rootProject.extra
@@ -316,7 +318,6 @@ dependencies {
    * Prod dependencies
    */
   implementation(libs.androidx.annotation.annotation)
-  implementation(libs.androidx.annotation.experimental)
   implementation(libs.androidx.appcompat)
   implementation(libs.androidx.cardview)
   implementation(libs.androidx.constraintlayout)

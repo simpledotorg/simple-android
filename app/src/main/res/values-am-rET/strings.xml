@@ -42,8 +42,7 @@
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">በዚህ ዝርዝር ውስጥ ታካሚውንውን ማግኘት አልተቻለም?</string>
   <string name="patientsearchresults_register_patient">እንደ አዲስ ታካሚ ይመዝገቡ</string>
-  <string name="patientsearchresults_item_last_seen">ጎብኝተዋል</string>
-  <string name="patientsearchresults_item_phone_number">ስልክ ቁጥር</string>
+    <string name="patientsearchresults_item_phone_number">ስልክ ቁጥር</string>
   <string name="patientsearchresults_item_birthdate">የትውልድ ቀን</string>
 
   <!-- Manual patient entry -->
@@ -52,7 +51,6 @@
   <string name="patiententry_phone_number">ስልክ ቁጥር</string>
   <string name="patiententry_bangladesh_national_id">ብሔራዊ መታወቂያ ቁጥር</string>
   <string name="patiententry_ethiopia_medical_record_number">የህክምና መዝገብ ቁጥር</string>
-  <string name="patiententry_sri_lanka_national_id">ብሔራዊ መታወቂያ ቁጥር</string>
   <string name="patiententry_sri_lanka_personal_health_number">የግል ጤና ቁጥር</string>
   <string name="patiententry_date_of_birth_unfocused">የትውልድ ቀን</string>
   <string name="patiententry_date_of_birth_focused">የ.ት.ቅ፡ ቀቀ/ወወ/ዐዐ</string>
@@ -275,18 +273,12 @@
   <string name="overdue_no_patients">ምንም የዘገየ ታካሚ የለም</string>
   <string name="overdue_empty_desc">ለቀጣይ የደም ግፊት ንባብ መርሃግብር ተቀጥረው ያልመጡትን ታካሚዎችመደወል ይችላሉ</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
-  <string name="overdue_list_item_diagnosis_diabetes">የስኳር በሽታ</string>
-  <string name="overdue_list_item_diagnosis_hypertension">ከፍተኛ የደም ግፊት</string>
-  <string name="overdue_list_item_diagnosis_none">ምንም</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s ቀን አልduል</item>
     <item quantity="other">%s ቀናት ጊዜው አልፎበታል</item>
   </plurals>
   <string name="overdue_list_item_village">መንደር</string>
-  <string name="overduelist_diagnosis_label">ምርመራ</string>
-  <string name="overduelist_visited">ጎብኝተዋል</string>
   <string name="overduelist_high_risk">ከፍተኛ ተጋላጭነት</string>
-  <string name="overduelist_transferred">ተላልፏል ወደ</string>
   <string name="overdue_download">አውርድ</string>
   <string name="overdue_share">ያጋሩ</string>
 
@@ -349,7 +341,6 @@
   <string name="newmedicalhistory_yes">አዎ</string>
   <string name="newmedicalhistory_no">አይ</string>
   <string name="newmedicalhistory_history">ታሪክ</string>
-  <string name="newmedicalhistory_diagnosis">ምርመራ (አስፈላጊ)</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">ባለፈው ወር ውስጥ ህመምተኞው በማንኛውም ጊዜ የBP መድሃኒት ወስዷል? (አስፈላጊ)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">በሽተኛው ባለፈው ወር ውስጥ የስኳር በሽታ መድኃኒቶችን ወስዶ ነበር? (ያስፈልጋል)</string>
 
@@ -450,7 +441,6 @@
 
   <!-- Select Country Screen -->
   <string name="selectcountry_logo_contentdescription">ቀላል አርማ</string>
-  <string name="selectcountry_next">ቀጣይ</string>
   <string name="selectcountry_title">ሀገርዎን ይምረጡ</string>
   <string name="selectcountry_networkerror">ምንም የበይነመረብ ግንኙነት የለም!</string>
   <string name="selectcountry_servererror">የሰርቨር ስህተት! እባክዎ ቆየት ብለው ይሞክሩ!</string>
@@ -793,7 +783,6 @@
   <!-- Select overdue download format dialog -->
   <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">ሉህ</string>
   <string name="select_overdue_download_format_dialog_radio_button_pdf">PDF</string>
-  <string name="requires_microsoft_excel_to_view">ለማየት ሉሆች ወይም ኤክሴል ያስፈልገዋል</string>
   <string name="select_overdue_download_format_dialog_action_negative">ይቅር</string>
   <string name="select_overdue_download_format_dialog_title_download">አውርድ እንደ</string>
   <string name="select_overdue_download_format_dialog_title_share">አካፍል እንደ</string>

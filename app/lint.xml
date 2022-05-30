@@ -30,6 +30,9 @@
     <ignore path="src/main/res/drawable/ic_video_illustration_ethiopia" />
     <ignore path="src/main/res/drawable/ic_video_illustration_sri_lanka" />
     <ignore path="src/main/res/drawable/ic_no_pending_patients_illustration.xml" />
+    <ignore path="src/main/res/drawable/drug_stock_reminder_icon.xml" />
+    <ignore path="src/main/res/drawable/ic_telegram_logo.xml" />
+    <ignore path="src/main/res/drawable/ic_whatsapp_logo.xml" />
   </issue>
 
   <issue id="UnusedResources">
@@ -50,6 +53,14 @@
 
   <issue id="ParcelCreator" severity="informational" />
   <issue id="GradleDependency" severity="informational" />
+  <issue id="PluralsCandidate" severity="informational" />
+  <issue id="CannotEnableHidden" severity="informational" />
+
+  <!-- Required for itext7 -->
+  <issue id="TrustAllX509TrustManager" severity="informational" />
+
+  <!-- Currently we are using duplicate id in different layout files -->
+  <issue id="DuplicateIncludedIds" severity="informational" />
 
   <!-- Required for Sentry  -->
   <issue id="InvalidPackage" severity="informational" />

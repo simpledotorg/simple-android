@@ -29,12 +29,23 @@
     <ignore path="src/main/res/drawable/ic_video_illustration_bangladesh" />
     <ignore path="src/main/res/drawable/ic_video_illustration_ethiopia" />
     <ignore path="src/main/res/drawable/ic_video_illustration_sri_lanka" />
+    <ignore path="src/main/res/drawable/ic_no_pending_patients_illustration.xml" />
   </issue>
 
   <issue id="UnusedResources">
     <ignore regexp="Widget.Simple.TextField.Layout.PatientEntry.AutoComplete" />
     <ignore regexp="Widget.Simple.TextField.AutoComplete" />
     <ignore regexp="ThemeOverlay.Simple.TextField.AutoComplete" />
+    <ignore regexp="overdue_section_header_grey" />
+    <ignore regexp="overdue_no_pending_patients" />
+    <ignore regexp="overdue_pending_list_button_see_all" />
+    <ignore regexp="ic_check_circle_outline_24px" />
+    <ignore regexp="ic_chevron_expand_24px" />
+    <ignore regexp="ic_chevron_expand_less_24px" />
+    <ignore regexp="ic_no_pending_patients_illustration" />
+    <ignore regexp="list_item_no_pending_patients" />
+    <ignore regexp="list_item_overdue_list_section_header" />
+    <ignore regexp="list_item_overdue_pending_list_see_all_button" />
   </issue>
 
   <issue id="ParcelCreator" severity="informational" />

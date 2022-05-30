@@ -42,7 +42,6 @@
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">Kuma jiro bukaanka liiskan?</string>
   <string name="patientsearchresults_register_patient">U diwaangali sidii bukaan cusub</string>
-  <string name="patientsearchresults_item_last_seen">Booqday</string>
   <string name="patientsearchresults_item_phone_number">Telefoonka</string>
   <string name="patientsearchresults_item_birthdate">Taariikhda dhalashada</string>
 
@@ -52,7 +51,6 @@
   <string name="patiententry_phone_number">Lambarka telefoonka</string>
   <string name="patiententry_bangladesh_national_id">Lambarka Aqoonsiga Qaranka</string>
   <string name="patiententry_ethiopia_medical_record_number">Lambarka Diiwaanka Caafimaadka</string>
-  <string name="patiententry_sri_lanka_national_id">Lambarka Aqoonsiga Qaranka</string>
   <string name="patiententry_sri_lanka_personal_health_number">Lambarka Caafimaadka Gaark ah</string>
   <string name="patiententry_date_of_birth_unfocused">Taariikhda dhalashada</string>
   <string name="patiententry_date_of_birth_focused">Taariikhda dhalashada: DD/MM/YYYY</string>
@@ -275,18 +273,12 @@
   <string name="overdue_no_patients">Ma jiraan bukaanno daahay</string>
   <string name="overdue_empty_desc">Waxaad awoodi doontaa inaad wacdo bukaanada ka baaqda booqashadooda jadwalka ah ee akhriska cadaadiska dhiigga karka ee soo socda.</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
-  <string name="overdue_list_item_diagnosis_diabetes">Sonkorow</string>
-  <string name="overdue_list_item_diagnosis_hypertension">Dhiig kar</string>
-  <string name="overdue_list_item_diagnosis_none">Midna</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s day overdue</item>
     <item quantity="other">%s maalmo hore</item>
   </plurals>
   <string name="overdue_list_item_village">Tuullada</string>
-  <string name="overduelist_diagnosis_label">Dx</string>
-  <string name="overduelist_visited">Booqday</string>
   <string name="overduelist_high_risk">Halis sare</string>
-  <string name="overduelist_transferred">Loo gudbiyay</string>
   <string name="overdue_download">Soo dejiso</string>
   <string name="overdue_share">La wadaag</string>
 
@@ -349,7 +341,6 @@
   <string name="newmedicalhistory_yes">Haa</string>
   <string name="newmedicalhistory_no">Maya</string>
   <string name="newmedicalhistory_history">Taariikh</string>
-  <string name="newmedicalhistory_diagnosis">Baaritaan (Loo baahanyahay)</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">Miyuu bukaanku qaatay dawooyinka BP wakhti kasta gudaha bishii la soo dhaafay? (Loo baahday)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">Miyuu qofku qaatay dawooyinka cudurka sonkorta wakhti kasta bishii la soo dhaafay? (Loo baahan yahay)</string>
 
@@ -450,7 +441,6 @@
 
   <!-- Select Country Screen -->
   <string name="selectcountry_logo_contentdescription">Sumada Simple</string>
-  <string name="selectcountry_next">Xigga</string>
   <string name="selectcountry_title">Xullo wadankaaga</string>
   <string name="selectcountry_networkerror">Malaha khadka internetka!</string>
   <string name="selectcountry_servererror">Cilad saafarka! Fadlan iskuday markale hadhow!</string>
@@ -794,7 +784,6 @@
   <!-- Select overdue download format dialog -->
   <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">Xaashida ballaadhan</string>
   <string name="select_overdue_download_format_dialog_radio_button_pdf">PDF</string>
-  <string name="requires_microsoft_excel_to_view">U baahan Xaashiyaha Ama Excell si loo arko</string>
   <string name="select_overdue_download_format_dialog_action_negative">Baaji</string>
   <string name="select_overdue_download_format_dialog_title_download">Soo deji</string>
   <string name="select_overdue_download_format_dialog_title_share">U wadaag sida</string>

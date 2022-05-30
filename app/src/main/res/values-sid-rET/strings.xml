@@ -42,8 +42,7 @@
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">Tene e’oni xiwamanicho di’afirato</string>
   <string name="patientsearchresults_register_patient">Haro xiwamanicho boresi</string>
-  <string name="patientsearchresults_item_last_seen">Lano’ni</string>
-  <string name="patientsearchresults_item_phone_number">Bilibila</string>
+    <string name="patientsearchresults_item_phone_number">Bilibila</string>
   <string name="patientsearchresults_item_birthdate">Illamate bara</string>
 
   <!-- Manual patient entry -->
@@ -52,7 +51,6 @@
   <string name="patiententry_phone_number">Bilibilu kiro</string>
   <string name="patiententry_bangladesh_national_id">I’maate afanishi  kiro</string>
   <string name="patiententry_ethiopia_medical_record_number">Fayimate afanishi kiro</string>
-  <string name="patiententry_sri_lanka_national_id">I’maate afanishi  kiro</string>
   <string name="patiententry_sri_lanka_personal_health_number">Fayimate kirro</string>
   <string name="patiententry_date_of_birth_unfocused">Illamate bara</string>
   <string name="patiententry_date_of_birth_focused">Illamate bara Bara/agana/diro</string>
@@ -275,18 +273,12 @@
   <string name="overdue_no_patients">Shima yanara keshino xiwamanichi dino</string>
   <string name="overdue_empty_desc">Qaxarote bara sorino xiwamanicho Mundeete xiiwo mageshitero la’ate konini anichite wosha danidato.</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
-  <string name="overdue_list_item_diagnosis_diabetes">Sukarete  xiso</string>
-  <string name="overdue_list_item_diagnosis_hypertension">Jawa munideti xiwo</string>
-  <string name="overdue_list_item_diagnosis_none">Foqa</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s Techo barira chala  keshinohu</item>
     <item quantity="other">%s Techo barira chala  keshinohu</item>
   </plurals>
   <string name="overdue_list_item_village">Qacha</string>
-  <string name="overduelist_diagnosis_label">Dx</string>
-  <string name="overduelist_visited">Lano’ni</string>
   <string name="overduelist_high_risk">Lowo/ jawa  qara</string>
-  <string name="overduelist_transferred">Sanisonihu</string>
   <string name="overdue_download">Dirisi</string>
   <string name="overdue_share">Behhi</string>
 
@@ -349,7 +341,6 @@
   <string name="newmedicalhistory_yes">E’e</string>
   <string name="newmedicalhistory_no">De’ni</string>
   <string name="newmedicalhistory_history">Xage</string>
-  <string name="newmedicalhistory_diagnosis">xiinixaloo</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">Xissantinoti sai agani giddo BP xagicho adhinoni? (Hasiisannoho)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">Sa\'i aganira xisamanchu sukarete xagicho adhino? (Hasisiro)</string>
 
@@ -450,7 +441,6 @@
 
   <!-- Select Country Screen -->
   <string name="selectcountry_logo_contentdescription">Simple badoshe</string>
-  <string name="selectcountry_next">Aniche</string>
   <string name="selectcountry_title">Ate goba dori</string>
   <string name="selectcountry_networkerror">Interineteti xadooshi dino</string>
   <string name="selectcountry_servererror">Interinetete ana qaru noo Gedenisa lede wonali</string>
@@ -793,7 +783,6 @@
   <!-- Select overdue download format dialog -->
   <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">spreedeshiitee</string>
   <string name="select_overdue_download_format_dialog_radio_button_pdf">pdafee</string>
-  <string name="requires_microsoft_excel_to_view">leelishate shiitee woole aexele hasisano </string>
   <string name="select_overdue_download_format_dialog_action_negative">Hoola</string>
   <string name="select_overdue_download_format_dialog_title_download">dirrinisa gede</string>
   <string name="select_overdue_download_format_dialog_title_share">beenkani gede</string>

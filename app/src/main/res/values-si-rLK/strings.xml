@@ -42,8 +42,7 @@
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">මෙම ලැයිස්තුවේ රෝගියාව සොයාගත නොහැක?</string>
   <string name="patientsearchresults_register_patient">නව රෝගියෙකු ලෙස ලියාපදිංචි කරන්න</string>
-  <string name="patientsearchresults_item_last_seen">හමුවිය</string>
-  <string name="patientsearchresults_item_phone_number">දුරකතනය</string>
+    <string name="patientsearchresults_item_phone_number">දුරකතනය</string>
   <string name="patientsearchresults_item_birthdate">උපන්දිනය</string>
 
   <!-- Manual patient entry -->
@@ -52,7 +51,6 @@
   <string name="patiententry_phone_number">දුරකතන අංකය</string>
   <string name="patiententry_bangladesh_national_id">ජාතික හැඳුනුම්පත් අංකය</string>
   <string name="patiententry_ethiopia_medical_record_number">වෛද්‍ය වාර්තා අංකය</string>
-  <string name="patiententry_sri_lanka_national_id">ජාති හැදු අංකය</string>
   <string name="patiententry_sri_lanka_personal_health_number">පුද්ගලික සෞඛ්‍ය අංකය</string>
   <string name="patiententry_date_of_birth_unfocused">උපන් දිනය</string>
   <string name="patiententry_date_of_birth_focused">උපන්දිනය: දින/මාස/වර්ෂය</string>
@@ -275,18 +273,12 @@
   <string name="overdue_no_patients">තවදුරටත් ඉතිරි වූ කිසිදු රෝගියකු නැත</string>
   <string name="overdue_empty_desc">රුධිර පීඩනය බැලීමේ පසු විපරම් හමුව මඟ හැරුණු රෝගීන්ට ඇමතීමට ඔබට හැකි වනු ඇත.</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
-  <string name="overdue_list_item_diagnosis_diabetes">දියවැඩියාව</string>
-  <string name="overdue_list_item_diagnosis_hypertension">අධි රුධිර පීඩනය</string>
-  <string name="overdue_list_item_diagnosis_none">කිසිවක් නැත</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">දිනය %s කල් ඉකුත් වී ඇත</item>
     <item quantity="other">දින %s ක් ඉකුත් වී ඇත</item>
   </plurals>
   <string name="overdue_list_item_village">ගම</string>
-  <string name="overduelist_diagnosis_label">Dx</string>
-  <string name="overduelist_visited">හමුවිය</string>
   <string name="overduelist_high_risk">ඉහළ අවදානම</string>
-  <string name="overduelist_transferred">මාරු කරන ලදී</string>
   <string name="overdue_download">බාගත කිරීම</string>
   <string name="overdue_share">බෙදා ගැනීම</string>
 
@@ -349,7 +341,6 @@
   <string name="newmedicalhistory_yes">ඔව්</string>
   <string name="newmedicalhistory_no">නැත</string>
   <string name="newmedicalhistory_history">ඉතිහාසය</string>
-  <string name="newmedicalhistory_diagnosis">රෝග නිශ්චය (අවශ්‍යයි)</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">මෙම රෝගියාගේ අධි රුධිරපීඩන ඖෂධ SIMPLE ප්රොටෝකෝලය මත පදනම්ව ආරම්භ වේද?</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">රෝගියා පසුගිය මාසය තුල කිසියම් දිනකදී දියවැඩියාව පාලනය කිරීම සඳහා ඖෂධයක් ලබා ගත්තේද? (අවශ්‍යයි)</string>
 
@@ -450,7 +441,6 @@
 
   <!-- Select Country Screen -->
   <string name="selectcountry_logo_contentdescription">Simple ලාංඡනය</string>
-  <string name="selectcountry_next">ඊළඟ</string>
   <string name="selectcountry_title">ඔබගේ රට තෝරාගන්න</string>
   <string name="selectcountry_networkerror">අන්තර්ජාල සබඳතාවයක් නොමැත!</string>
   <string name="selectcountry_servererror">සර්වර දෝෂයකි! කරුණාකර පසුව උත්සාහ කරන්න!</string>
@@ -793,7 +783,6 @@
   <!-- Select overdue download format dialog -->
   <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">පැතුරුම්පත</string>
   <string name="select_overdue_download_format_dialog_radio_button_pdf">PDF</string>
-  <string name="requires_microsoft_excel_to_view">බැලීමට Sheets හෝ Excel අවශ්‍ය වේ</string>
   <string name="select_overdue_download_format_dialog_action_negative">අවලංගු කරන්න</string>
   <string name="select_overdue_download_format_dialog_title_download">මෙම ආකාරයට බාගන්න</string>
   <string name="select_overdue_download_format_dialog_title_share">මෙම ආකාරයට බෙදාගන්න</string>

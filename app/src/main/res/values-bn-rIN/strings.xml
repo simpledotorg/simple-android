@@ -42,7 +42,6 @@
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">এই তালিকা রোগীকে খুঁজে পাচ্ছেন না?</string>
   <string name="patientsearchresults_register_patient">নতুন রোগী হিসাবে নিবন্ধন করুন</string>
-  <string name="patientsearchresults_item_last_seen">সাক্ষাৎ করেছেন</string>
   <string name="patientsearchresults_item_phone_number">ফোন</string>
   <string name="patientsearchresults_item_birthdate">জন্ম তারিখ</string>
 
@@ -52,7 +51,6 @@
   <string name="patiententry_phone_number">ফোন নম্বর	</string>
   <string name="patiententry_bangladesh_national_id">জাতীয় পরিচয়পত্র নম্বর</string>
   <string name="patiententry_ethiopia_medical_record_number">মেডিক্যাল রেকর্ড নম্বর</string>
-  <string name="patiententry_sri_lanka_national_id">জাতীয় পরিচয়পত্র নম্বর</string>
   <string name="patiententry_sri_lanka_personal_health_number">ব্যক্তিগত হেলথ নম্বর</string>
   <string name="patiententry_date_of_birth_unfocused">জন্ম তারিখ</string>
   <string name="patiententry_date_of_birth_focused">জন্মতারিখ: DD/MM/YYYY</string>
@@ -275,18 +273,12 @@
   <string name="overdue_no_patients">সময় পার হয়ে যাওয়া কোন রোগী নেই</string>
   <string name="overdue_empty_desc">যে রোগীরা ফলো আপ রক্তচাপ মাপার জন্য তাদের পূর্বনির্ধারিত সাক্ষাৎকার মিস করেছে আপনি সেই রোগীদের ফোন করতে পারবেন।</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
-  <string name="overdue_list_item_diagnosis_diabetes">ডায়াবেটিস</string>
-  <string name="overdue_list_item_diagnosis_hypertension">হাইপারটেনশন</string>
-  <string name="overdue_list_item_diagnosis_none">কোনটিই নয়</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s দিন আগে সময় পার হয়ে গেছে</item>
     <item quantity="other">%s দিন আগে সময় পার হয়ে গেছে</item>
   </plurals>
   <string name="overdue_list_item_village">গ্রাম</string>
-  <string name="overduelist_diagnosis_label">Dx</string>
-  <string name="overduelist_visited">সাক্ষাৎ করেছেন</string>
   <string name="overduelist_high_risk">অতিরিক্ত ঝুঁকিসম্পন্ন</string>
-  <string name="overduelist_transferred">যাকে ট্রান্সফার করা হয়েছে</string>
   <string name="overdue_download">ডাউনলোড করুন</string>
   <string name="overdue_share">শেয়ার করুন</string>
 
@@ -349,7 +341,6 @@
   <string name="newmedicalhistory_yes">হ্যাঁ</string>
   <string name="newmedicalhistory_no">না</string>
   <string name="newmedicalhistory_history">ইতিহাস</string>
-  <string name="newmedicalhistory_diagnosis">রোগ নির্ণয় (প্রয়োজন)</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">গত মাসে রোগী কি কোনও সময় বিপি-র ওষুধ খেয়েছিলেন? (আবশ্যিক)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">গত মাসে রোগী কি কোনও সময় ডায়াবেটিসের ওষুধ খেয়েছিলেন? (আবশ্যিক)</string>
 
@@ -450,7 +441,6 @@
 
   <!-- Select Country Screen -->
   <string name="selectcountry_logo_contentdescription">সাধারণ লোগো</string>
-  <string name="selectcountry_next">পরবর্তী</string>
   <string name="selectcountry_title">আপনার দেশ নির্বাচন করুন</string>
   <string name="selectcountry_networkerror">কোনো ইন্টারনেট সংযোগ নেই!</string>
   <string name="selectcountry_servererror">সার্ভার ত্রুটি! অনুগ্রহ করে পরে আবার চেষ্টা করুন!</string>
@@ -793,7 +783,6 @@
   <!-- Select overdue download format dialog -->
   <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">স্প্রেডশীট</string>
   <string name="select_overdue_download_format_dialog_radio_button_pdf">PDF</string>
-  <string name="requires_microsoft_excel_to_view">দেখার জন্য Sheets বা Excel প্রয়োজন</string>
   <string name="select_overdue_download_format_dialog_action_negative">বাতিল করুন</string>
   <string name="select_overdue_download_format_dialog_title_download">এই হিসাবে ডাউনলোড করুন</string>
   <string name="select_overdue_download_format_dialog_title_share">এই হিসাবে শেয়ার করুন</string>

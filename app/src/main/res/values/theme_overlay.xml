@@ -38,12 +38,6 @@
     <item name="colorPrimary">@color/color_on_surface_34</item>
   </style>
 
-  <style name="ThemeOverlay.Simple.Green2Primary" parent="">
-    <item name="colorPrimary">@color/simple_green_100</item>
-    <item name="colorOnPrimary">@color/simple_green_500</item>
-  </style>
-
-
   <style name="ThemeOverlay.Simple.Dialog" parent="ThemeOverlay.MaterialComponents.Dialog">
     <item name="colorSecondary">@color/simple_light_blue_500</item>
     <item name="materialButtonStyle">@style/Widget.Simple.Button.TextButton.Dialog.Flush</item>

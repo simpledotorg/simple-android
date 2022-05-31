@@ -5,13 +5,13 @@
 ### Internal
 
 - Enable drug stock only for India
-- Bump flipper to v0.147.0
 - Bump kotlin-coroutines to v1.6.2
 - Move shared test code to separate module
 - Remove overdue appointments list from `OverdueModel`
 - Remove pull reminder status from `README.md`
 - Change return type of `AppointmentRepository#overdueAppointmentsInFacilityNew` to `Observable<List<OverdueAppointment>>`
 - Load overdue appointments and break down into different sections
+- Bump Flipper to v0.147.1
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Changes

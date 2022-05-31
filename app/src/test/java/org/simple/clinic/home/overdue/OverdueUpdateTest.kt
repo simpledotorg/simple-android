@@ -7,11 +7,11 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.analytics.NetworkConnectivityStatus.ACTIVE
 import org.simple.clinic.analytics.NetworkConnectivityStatus.INACTIVE
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
+import org.simple.sharedTestCode.TestData
 import java.time.LocalDate
 import java.util.Optional
 import java.util.UUID
@@ -53,7 +53,7 @@ class OverdueUpdateTest {
 
     updateSpec
         .given(facilityLoadedModel)
-        .whenEvent(OverdueAppointmentsLoaded(overdueAppointments))
+        .whenEvent(OverdueAppointmentsLoaded_Old(overdueAppointments))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ShowOverdueAppointments(overdueAppointments, isDiabetesManagementEnabled = true))
@@ -75,7 +75,7 @@ class OverdueUpdateTest {
         .whenEvent(CurrentFacilityLoaded(facility))
         .then(assertThatNext(
             hasModel(defaultModel.currentFacilityLoaded(facility)),
-            hasEffects(LoadOverdueAppointments(dateOnClock, facility))
+            hasEffects(LoadOverdueAppointments_old(dateOnClock, facility))
         ))
   }
 

@@ -35,7 +35,7 @@ class OverdueEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<OverdueEffect, OverdueEvent>()
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
-        .addTransformer(LoadOverdueAppointments::class.java, loadOverdueAppointments())
+        .addTransformer(LoadOverdueAppointments_old::class.java, loadOverdueAppointmentsOld())
         .addConsumer(ScheduleDownload::class.java, ::scheduleDownload, schedulers.io())
         .addConsumer(OverdueViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
@@ -54,7 +54,7 @@ class OverdueEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun loadOverdueAppointments(): ObservableTransformer<LoadOverdueAppointments, OverdueEvent> {
+  private fun loadOverdueAppointmentsOld(): ObservableTransformer<LoadOverdueAppointments_old, OverdueEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulers.io())
@@ -70,7 +70,7 @@ class OverdueEffectHandler @AssistedInject constructor(
                 enablePlaceholders = true
             ).debounce(1, TimeUnit.SECONDS)
           }
-          .map(::OverdueAppointmentsLoaded)
+          .map(::OverdueAppointmentsLoaded_Old)
     }
   }
 }

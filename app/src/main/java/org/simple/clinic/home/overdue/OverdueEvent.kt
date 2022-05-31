@@ -23,7 +23,7 @@ data class OverduePatientClicked(val patientUuid: UUID) : OverdueEvent() {
   override val analyticsName = "Overdue Screen:Patient name clicked"
 }
 
-data class OverdueAppointmentsLoaded(
+data class OverdueAppointmentsLoaded_Old(
     val overdueAppointmentsOld: PagingData<OverdueAppointment_Old>
 ) : OverdueEvent()
 

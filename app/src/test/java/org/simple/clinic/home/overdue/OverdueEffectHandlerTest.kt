@@ -12,7 +12,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.analytics.NetworkCapabilitiesProvider
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.mobius.EffectHandlerTestCase
@@ -21,6 +20,7 @@ import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.PagingSourceFactory
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
+import org.simple.sharedTestCode.TestData
 import java.time.LocalDate
 import java.util.UUID
 
@@ -121,12 +121,12 @@ class OverdueEffectHandlerTest {
     )) doReturn Observable.just(overdueAppointments)
 
     // when
-    effectHandlerTestCase.dispatch(LoadOverdueAppointments(overdueSince = LocalDate.parse("2018-01-01"), facility = facility))
+    effectHandlerTestCase.dispatch(LoadOverdueAppointments_old(overdueSince = LocalDate.parse("2018-01-01"), facility = facility))
 
     // then
     verifyZeroInteractions(uiActions)
 
-    effectHandlerTestCase.assertOutgoingEvents(OverdueAppointmentsLoaded(overdueAppointments))
+    effectHandlerTestCase.assertOutgoingEvents(OverdueAppointmentsLoaded_Old(overdueAppointments))
   }
 
   @Test

@@ -2567,7 +2567,7 @@ class AppointmentRepositoryAndroidTest {
     val overdueAppointments = appointmentRepository.overdueAppointmentsInFacilityNew(
         since = now,
         facilityId = facility1Uuid
-    ).map { it.appointment.patientUuid }
+    ).blockingFirst().map { it.appointment.patientUuid }
 
     //then
     assertThat(overdueAppointments).isEqualTo(listOf(

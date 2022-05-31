@@ -25,6 +25,8 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import org.simple.sharedTestCode.TestData
 import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.sharedTestCode.util.TestUserClock
+import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
 
@@ -50,8 +52,8 @@ class OverdueLogicTest {
   private lateinit var testFixture: MobiusTestFixture<OverdueModel, OverdueEvent, OverdueEffect>
 
   private val overdueAppointments = PagingData.from(listOf(
-      TestData.overdueAppointment(appointmentUuid = UUID.fromString("829ca241-2266-47d1-be48-0952dd9b2cab")),
-      TestData.overdueAppointment(appointmentUuid = UUID.fromString("2cb1d2cd-b6e3-40dd-b2eb-4b690925c123"))
+      TestData.overdueAppointment_Old(appointmentUuid = UUID.fromString("829ca241-2266-47d1-be48-0952dd9b2cab")),
+      TestData.overdueAppointment_Old(appointmentUuid = UUID.fromString("2cb1d2cd-b6e3-40dd-b2eb-4b690925c123"))
   ))
 
   @After
@@ -101,6 +103,7 @@ class OverdueLogicTest {
             overdueAppointmentsLoadSize = 10
         ),
         overdueDownloadScheduler = mock<OverdueDownloadScheduler>(),
+        userClock = TestUserClock(Instant.parse("2018-01-01T00:00:00Z")),
         viewEffectsConsumer = OverdueViewEffectHandler(uiActions)::handle
     )
     testFixture = MobiusTestFixture(

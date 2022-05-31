@@ -130,7 +130,7 @@ class AppointmentRepository @Inject constructor(
   fun overdueAppointmentsInFacilityNew(
       since: LocalDate,
       facilityId: UUID
-  ): List<OverdueAppointment> {
+  ): Observable<List<OverdueAppointment>> {
     return overdueDao.overdueAppointmentsInFacility(
         facilityUuid = facilityId,
         scheduledBefore = since

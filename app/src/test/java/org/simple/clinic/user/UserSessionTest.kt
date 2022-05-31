@@ -21,7 +21,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.patient.PatientRepository
@@ -34,7 +34,7 @@ import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
-import org.simple.clinic.util.RxErrorsRule
+import org.simple.sharedTestCode.util.RxErrorsRule
 import java.util.Optional
 import java.util.UUID
 

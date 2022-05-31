@@ -5,7 +5,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import java.util.UUID
 

@@ -7,7 +7,7 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
@@ -17,8 +17,8 @@ import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency.BD
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency.OD
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Rules
-import org.simple.clinic.util.TestUtcClock
+import org.simple.sharedTestCode.util.Rules
+import org.simple.sharedTestCode.util.TestUtcClock
 import java.time.Duration
 import java.time.LocalDate
 import java.time.Month

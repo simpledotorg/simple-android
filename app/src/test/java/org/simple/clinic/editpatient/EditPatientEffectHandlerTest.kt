@@ -15,7 +15,7 @@ import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.R
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
@@ -39,12 +39,12 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.scanid.OpenedFrom
-import org.simple.clinic.util.TestUserClock
-import org.simple.clinic.util.TestUtcClock
+import org.simple.sharedTestCode.util.TestUserClock
+import org.simple.sharedTestCode.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
-import org.simple.clinic.uuid.FakeUuidGenerator
+import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate

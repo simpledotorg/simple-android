@@ -2,11 +2,11 @@ package org.simple.clinic.editpatient
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.editpatient.EditablePatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
 import org.simple.clinic.patient.PatientAgeDetails
-import org.simple.clinic.util.TestUtcClock
+import org.simple.sharedTestCode.util.TestUtcClock
 import java.time.Clock
 import java.time.Instant
 import java.time.LocalDate

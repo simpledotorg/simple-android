@@ -36,8 +36,8 @@ import org.simple.clinic.util.ResolvedError.NetworkRelated
 import org.simple.clinic.util.ResolvedError.ServerError
 import org.simple.clinic.util.ResolvedError.Unauthenticated
 import org.simple.clinic.util.ResolvedError.Unexpected
-import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestUtcClock
+import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.sharedTestCode.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture

@@ -10,7 +10,7 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySyncApi
@@ -18,7 +18,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.user.registeruser.RegisterUser
 import org.simple.clinic.user.registeruser.RegistrationResult
-import org.simple.clinic.util.Rules
+import org.simple.sharedTestCode.util.Rules
 import org.simple.clinic.util.toNullable
 import java.util.UUID
 import javax.inject.Inject

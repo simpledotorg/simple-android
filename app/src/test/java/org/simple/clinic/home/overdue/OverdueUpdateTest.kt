@@ -7,7 +7,7 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.analytics.NetworkConnectivityStatus.ACTIVE
 import org.simple.clinic.analytics.NetworkConnectivityStatus.INACTIVE
 import org.simple.clinic.facility.FacilityConfig

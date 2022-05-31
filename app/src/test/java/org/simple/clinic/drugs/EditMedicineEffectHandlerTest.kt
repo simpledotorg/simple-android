@@ -9,7 +9,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import dagger.Lazy
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.drugs.search.DrugFrequency.BD
 import org.simple.clinic.drugs.search.DrugFrequency.OD
 import org.simple.clinic.drugs.search.DrugFrequency.QDS
@@ -22,7 +22,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
-import org.simple.clinic.util.TestUtcClock
+import org.simple.sharedTestCode.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.uuid.UuidGenerator
 import java.time.Duration

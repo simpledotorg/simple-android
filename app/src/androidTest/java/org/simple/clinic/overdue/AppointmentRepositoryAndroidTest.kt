@@ -8,7 +8,7 @@ import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.PagingTestCase
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.BloodSugarRepository
@@ -51,9 +51,9 @@ import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.summary.nextappointment.NextAppointmentPatientProfile
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Rules
-import org.simple.clinic.util.TestUserClock
-import org.simple.clinic.util.TestUtcClock
+import org.simple.sharedTestCode.util.Rules
+import org.simple.sharedTestCode.util.TestUserClock
+import org.simple.sharedTestCode.util.TestUtcClock
 import org.simple.clinic.util.toNullable
 import org.simple.clinic.util.toUtcInstant
 import java.time.Duration

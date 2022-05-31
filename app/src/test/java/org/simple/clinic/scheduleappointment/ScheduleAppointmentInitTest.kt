@@ -9,7 +9,7 @@ import org.simple.clinic.newentry.ButtonState
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
-import org.simple.clinic.util.TestUserClock
+import org.simple.sharedTestCode.util.TestUserClock
 import java.time.LocalDate
 import java.time.Period
 import java.util.UUID

@@ -13,7 +13,7 @@ import org.simple.clinic.reports.ReportsSync
 import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.storage.text.TextStore
-import org.simple.clinic.util.Rules
+import org.simple.sharedTestCode.util.Rules
 import javax.inject.Inject
 
 

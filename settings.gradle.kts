@@ -6,5 +6,6 @@ include(
     ":mobius-base",
     ":simple-platform",
     ":simple-visuals",
-    ":lint"
+    ":lint",
+    ":sharedTestCode"
 )

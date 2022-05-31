@@ -7,7 +7,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Test
 import org.simple.clinic.FakeCall
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.login.UsersApi
 import org.simple.clinic.login.activateuser.ActivateUser.Result.IncorrectPin

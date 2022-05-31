@@ -17,7 +17,7 @@ import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.sync.SyncInterval
-import org.simple.clinic.util.Rules
+import org.simple.sharedTestCode.util.Rules
 import java.util.Optional
 import javax.inject.Inject
 

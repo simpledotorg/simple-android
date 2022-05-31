@@ -10,7 +10,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.bloodsugar.BloodSugarHistoryListItemDataSourceFactory
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarRepository

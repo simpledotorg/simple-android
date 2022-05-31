@@ -21,7 +21,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
@@ -40,8 +40,8 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestUserClock
+import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility

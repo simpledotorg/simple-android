@@ -11,7 +11,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
@@ -33,7 +33,7 @@ import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityR
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.uuid.FakeUuidGenerator
+import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import java.time.Instant
 import java.util.Optional
 import java.util.UUID

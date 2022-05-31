@@ -5,14 +5,14 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appconfig.Deployment
 import org.simple.clinic.setup.runcheck.Allowed
 import org.simple.clinic.setup.runcheck.Disallowed
 import org.simple.clinic.setup.runcheck.Disallowed.Reason.Rooted
 import org.simple.clinic.user.User
-import org.simple.clinic.util.TestUtcClock
+import org.simple.sharedTestCode.util.TestUtcClock
 import java.net.URI
 import java.time.Duration
 import java.time.Instant

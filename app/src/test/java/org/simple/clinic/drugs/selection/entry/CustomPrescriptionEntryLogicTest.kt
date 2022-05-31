@@ -17,13 +17,13 @@ import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntryUiRenderer.Companion.DOSAGE_PLACEHOLDER
-import org.simple.clinic.util.RxErrorsRule
+import org.simple.sharedTestCode.util.RxErrorsRule
 import org.simple.clinic.util.nullIfBlank
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.uuid.FakeUuidGenerator
+import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture

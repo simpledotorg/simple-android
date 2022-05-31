@@ -5,7 +5,7 @@ import com.spotify.mobius.test.FirstMatchers.hasModel
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.util.UUID

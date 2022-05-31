@@ -6,7 +6,7 @@ import dagger.Module
 import dagger.Provides
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.NoopSmsListenerOtp
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.appconfig.AppConfigModule
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.network.NetworkModule

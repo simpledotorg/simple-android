@@ -18,7 +18,7 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.clearpatientdata.SyncAndClearPatientData
@@ -28,7 +28,7 @@ import org.simple.clinic.user.resetpin.ResetPinResult.Success
 import org.simple.clinic.user.resetpin.ResetPinResult.UnexpectedError
 import org.simple.clinic.user.resetpin.ResetPinResult.UserNotFound
 import org.simple.clinic.user.resetpin.ResetUserPin
-import org.simple.clinic.util.RxErrorsRule
+import org.simple.sharedTestCode.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture

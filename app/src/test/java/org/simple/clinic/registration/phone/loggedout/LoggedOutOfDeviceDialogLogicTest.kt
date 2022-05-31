@@ -18,7 +18,7 @@ import org.junit.rules.TestRule
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserSession.LogoutResult.Failure
 import org.simple.clinic.user.UserSession.LogoutResult.Success
-import org.simple.clinic.util.RxErrorsRule
+import org.simple.sharedTestCode.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture

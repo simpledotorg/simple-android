@@ -1,4 +1,4 @@
-package org.simple.clinic.util
+package org.simple.sharedTestCode.util
 
 import org.junit.rules.RuleChain
 

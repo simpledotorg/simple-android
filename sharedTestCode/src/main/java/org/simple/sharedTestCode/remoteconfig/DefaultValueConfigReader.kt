@@ -1,4 +1,6 @@
-package org.simple.clinic.remoteconfig
+package org.simple.sharedTestCode.remoteconfig
+
+import org.simple.clinic.remoteconfig.ConfigReader
 
 class DefaultValueConfigReader : ConfigReader {
 

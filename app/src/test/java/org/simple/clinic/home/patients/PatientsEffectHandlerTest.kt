@@ -19,8 +19,8 @@ import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.NotFound
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.refreshuser.RefreshCurrentUser
-import org.simple.clinic.util.TestUserClock
-import org.simple.clinic.util.TestUtcClock
+import org.simple.sharedTestCode.util.TestUserClock
+import org.simple.sharedTestCode.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toUtcInstant
 import java.time.Instant

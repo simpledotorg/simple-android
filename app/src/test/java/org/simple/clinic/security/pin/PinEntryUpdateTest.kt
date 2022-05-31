@@ -7,7 +7,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.DEMO_USER_ID
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.security.pin.verification.LoginPinServerVerificationMethod
 import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.Correct
 import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.NetworkError

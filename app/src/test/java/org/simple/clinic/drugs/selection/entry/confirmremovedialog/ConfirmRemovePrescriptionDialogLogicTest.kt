@@ -13,7 +13,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.mobius.first
-import org.simple.clinic.util.RxErrorsRule
+import org.simple.sharedTestCode.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture

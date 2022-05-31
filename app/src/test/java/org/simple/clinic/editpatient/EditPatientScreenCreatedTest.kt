@@ -9,7 +9,7 @@ import junitparams.Parameters
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.editpatient.EditPatientState.NOT_SAVING_PATIENT
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -17,8 +17,8 @@ import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
 import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.PatientPhoneNumber
-import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestUtcClock
+import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.sharedTestCode.util.TestUtcClock
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter

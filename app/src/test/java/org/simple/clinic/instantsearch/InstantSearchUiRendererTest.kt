@@ -4,7 +4,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.instantsearch.InstantSearchProgressState.DONE
 import org.simple.clinic.instantsearch.InstantSearchProgressState.IN_PROGRESS
 import org.simple.clinic.instantsearch.InstantSearchProgressState.NO_RESULTS

@@ -28,7 +28,7 @@ import org.simple.clinic.user.finduser.FindUserResult.NetworkError
 import org.simple.clinic.user.finduser.FindUserResult.NotFound
 import org.simple.clinic.user.finduser.FindUserResult.UnexpectedError
 import org.simple.clinic.user.finduser.UserLookup
-import org.simple.clinic.util.RxErrorsRule
+import org.simple.sharedTestCode.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture

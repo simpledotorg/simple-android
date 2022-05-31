@@ -5,7 +5,7 @@ import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.user.User
 import java.util.UUID
 import javax.inject.Inject

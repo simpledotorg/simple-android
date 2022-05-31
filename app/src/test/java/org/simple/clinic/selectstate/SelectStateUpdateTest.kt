@@ -9,7 +9,7 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.util.ResolvedError.ServerError
 import retrofit2.HttpException
 import retrofit2.Response

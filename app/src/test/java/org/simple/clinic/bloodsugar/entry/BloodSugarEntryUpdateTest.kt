@@ -12,7 +12,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Before
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.bloodsugar.Random
@@ -23,7 +23,7 @@ import org.simple.clinic.bloodsugar.entry.BloodSugarSaveState.SAVING_BLOOD_SUGAR
 import org.simple.clinic.bloodsugar.entry.OpenAs.New
 import org.simple.clinic.bloodsugar.entry.OpenAs.Update
 import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooHigh
-import org.simple.clinic.util.TestUserClock
+import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern

@@ -7,14 +7,14 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.rules.SaveDatabaseRule
-import org.simple.clinic.util.Rules
+import org.simple.sharedTestCode.util.Rules
 import org.simple.clinic.util.UtcClock
 import java.time.Instant
 import java.time.temporal.ChronoUnit.DAYS

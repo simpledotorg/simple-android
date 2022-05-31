@@ -9,7 +9,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.appconfig.FetchError
 import org.simple.clinic.appconfig.FetchSucceeded

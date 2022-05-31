@@ -213,6 +213,7 @@ android {
     abortOnError = true
     checkReleaseBuilds = false
     checkDependencies = true
+    ignoreTestSources = true
   }
 
   compileOptions {
@@ -225,14 +226,8 @@ android {
   }
 
   sourceSets {
-    val sharedTestDir = "src/sharedTest/java"
-    getByName("test") {
-      java.srcDirs(sharedTestDir)
-    }
-
     getByName("androidTest") {
       assets.srcDirs(files("$projectDir/schemas"))
-      java.srcDirs(sharedTestDir)
     }
 
     getByName("main") {
@@ -434,6 +429,8 @@ dependencies {
 
   testImplementation(libs.kotlin.reflect)
 
+  testImplementation(projects.sharedTestCode)
+
   /**
    * Android test dependencies
    */
@@ -460,6 +457,8 @@ dependencies {
   androidTestImplementation(libs.truth)
 
   kaptAndroidTest(libs.dagger.compiler)
+
+  androidTestImplementation(projects.sharedTestCode)
 
   /**
    * Misc

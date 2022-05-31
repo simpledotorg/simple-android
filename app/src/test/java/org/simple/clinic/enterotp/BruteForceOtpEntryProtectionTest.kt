@@ -7,8 +7,8 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestUtcClock
+import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.sharedTestCode.util.TestUtcClock
 import java.time.Duration
 import java.time.Instant
 import java.util.Optional

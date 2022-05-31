@@ -9,13 +9,13 @@ import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.reports.ReportsSync
-import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestUtcClock
+import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.sharedTestCode.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.time.Instant
 import java.util.Optional

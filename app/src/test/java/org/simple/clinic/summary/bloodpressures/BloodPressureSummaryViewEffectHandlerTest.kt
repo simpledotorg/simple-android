@@ -10,7 +10,7 @@ import dagger.Lazy
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider

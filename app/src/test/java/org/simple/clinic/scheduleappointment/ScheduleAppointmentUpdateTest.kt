@@ -7,7 +7,7 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.newentry.ButtonState.SAVED
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
@@ -16,7 +16,7 @@ import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.NEXT_APPOINTMENT_ACTION_CLICK
-import org.simple.clinic.util.TestUserClock
+import org.simple.sharedTestCode.util.TestUserClock
 import java.time.LocalDate
 import java.time.Period
 import java.util.UUID

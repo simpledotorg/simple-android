@@ -14,10 +14,10 @@ class OverdueUpdate(
 
   override fun update(model: OverdueModel, event: OverdueEvent): Next<OverdueModel, OverdueEffect> {
     return when (event) {
-      is CurrentFacilityLoaded -> loadOverduePatients(model, event)
+      is CurrentFacilityLoaded -> loadOverduePatientsOld(model, event)
       is CallPatientClicked -> dispatch(OpenContactPatientScreen(event.patientUuid))
       is OverduePatientClicked -> dispatch(OpenPatientSummary(event.patientUuid))
-      is OverdueAppointmentsLoaded -> dispatch(ShowOverdueAppointments(event.overdueAppointmentsOld, model.isDiabetesManagementEnabled))
+      is OverdueAppointmentsLoaded_Old -> dispatch(ShowOverdueAppointments(event.overdueAppointmentsOld, model.isDiabetesManagementEnabled))
       is DownloadOverdueListClicked -> downloadOverdueListClicked(event)
       is ShareOverdueListClicked -> shareOverdueListClicked(event)
     }
@@ -51,9 +51,9 @@ class OverdueUpdate(
     return dispatch(effect)
   }
 
-  private fun loadOverduePatients(
+  private fun loadOverduePatientsOld(
       model: OverdueModel,
       event: CurrentFacilityLoaded
   ): Next<OverdueModel, OverdueEffect> =
-      next(model.currentFacilityLoaded(event.facility), LoadOverdueAppointments(date, event.facility))
+      next(model.currentFacilityLoaded(event.facility), LoadOverdueAppointments_old(date, event.facility))
 }

@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+  <string name="medicalhistory_question_is_on_hypertension_treatment">Is patient starting Simple treatment protocol for Hypertension?</string>
+</resources>

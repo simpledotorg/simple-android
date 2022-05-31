@@ -14,6 +14,10 @@
 - Load overdue appointments and break down into different sections
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
+### Changes
+
+- Update english text of hypertension treatment question for Sri Lanka
+
 ## 2022-05-30-8273
 
 ### Internal

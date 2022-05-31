@@ -8,7 +8,6 @@ import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.PagingTestCase
 import org.simple.clinic.TestClinicApp
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.BloodSugarRepository
@@ -51,16 +50,16 @@ import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.summary.nextappointment.NextAppointmentPatientProfile
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.toNullable
+import org.simple.clinic.util.toUtcInstant
+import org.simple.sharedTestCode.TestData
 import org.simple.sharedTestCode.util.Rules
 import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.sharedTestCode.util.TestUtcClock
-import org.simple.clinic.util.toNullable
-import org.simple.clinic.util.toUtcInstant
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
 
@@ -1843,53 +1842,6 @@ class AppointmentRepositoryAndroidTest {
     assertThat(latest_appointment_two_weeks_later.get()).isEqualTo(appointment_scheduled_a_week_in_the_future)
   }
 
-  @Suppress("LocalVariableName")
-  @Test
-  fun fetching_the_latest_overdue_appointment_for_a_patient_should_account_for_the_reminder_date() {
-    // given
-    val patientProfile = TestData.patientProfile(
-        patientUuid = patientUuid,
-        generatePhoneNumber = true
-    )
-    patientRepository.save(listOf(patientProfile))
-
-    val today = LocalDate.now(clock)
-    val aWeekInThePast = today.minusWeeks(1)
-    val aWeekInFuture = today.plusWeeks(1)
-
-    val bp_recorded_a_week_ago = TestData.bloodPressureMeasurement(
-        uuid = UUID.fromString("b916ca18-3e60-4e3c-a1b9-46504ddf0662"),
-        recordedAt = aWeekInThePast.toUtcInstant(userClock),
-        patientUuid = patientUuid,
-        userUuid = user.uuid,
-        facilityUuid = facility.uuid
-    )
-
-    val appointment_scheduled_for_today_with_reminder_a_week_in_the_future = TestData.appointment(
-        uuid = UUID.fromString("d7c7fdca-74e2-4248-93ea-ffb57c81c995"),
-        patientUuid = patientUuid,
-        facilityUuid = facility.uuid,
-        status = Scheduled,
-        scheduledDate = today,
-        remindOn = aWeekInFuture
-    )
-
-    bpRepository.save(listOf(
-        bp_recorded_a_week_ago
-    ))
-
-    appointmentRepository.save(listOf(
-        appointment_scheduled_for_today_with_reminder_a_week_in_the_future
-    ))
-
-    // then
-    val latest_appointment_today = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, today.plusDays(1))
-    assertThat(latest_appointment_today).isEqualTo(Optional.empty<Appointment>())
-
-    val latest_appointment_a_week_later = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, aWeekInFuture.plusDays(1))
-    assertThat(latest_appointment_a_week_later.get()).isEqualTo(appointment_scheduled_for_today_with_reminder_a_week_in_the_future)
-  }
-
   @Test
   fun patient_that_are_marked_as_dead_should_not_be_present_when_loading_overdue_appointments() {
     fun createOverdueAppointment(
@@ -2578,6 +2530,49 @@ class AppointmentRepositoryAndroidTest {
         patientWithCancelledAppointment,
         patientWithOverAnYearDaysOverdue
     ))
+  }
+
+  @Suppress("LocalVariableName")
+  @Test
+  fun fetching_the_latest_overdue_appointment_for_a_patient_should_account_for_cancelled_appointments() {
+    // given
+    val patientProfile = TestData.patientProfile(
+        patientUuid = patientUuid,
+        generatePhoneNumber = true
+    )
+    patientRepository.save(listOf(patientProfile))
+
+    val today = LocalDate.now(clock)
+    val aWeekInThePast = today.minusWeeks(1)
+    val aWeekInFuture = today.plusWeeks(1)
+
+    val bp_recorded_a_week_ago = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("b916ca18-3e60-4e3c-a1b9-46504ddf0662"),
+        recordedAt = aWeekInThePast.toUtcInstant(userClock),
+        patientUuid = patientUuid,
+        userUuid = user.uuid,
+        facilityUuid = facility.uuid
+    )
+
+    val appointment_cancelled = TestData.appointment(
+        uuid = UUID.fromString("764a4cf6-f09e-40c2-814b-f3283a49fac2"),
+        patientUuid = patientUuid,
+        facilityUuid = facility.uuid,
+        status = Cancelled,
+        remindOn = aWeekInFuture
+    )
+
+    bpRepository.save(listOf(
+        bp_recorded_a_week_ago
+    ))
+
+    appointmentRepository.save(listOf(
+        appointment_cancelled
+    ))
+
+    // then
+    val cancelled_appointment = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, aWeekInFuture.plusDays(1))
+    assertThat(cancelled_appointment.get()).isEqualTo(appointment_cancelled)
   }
 
   private fun markAppointmentSyncStatusAsDone(vararg appointmentUuids: UUID) {

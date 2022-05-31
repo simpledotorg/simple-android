@@ -10,6 +10,7 @@
 - Move shared test code to separate module
 - Remove overdue appointments list from `OverdueModel`
 - Remove pull reminder status from `README.md`
+- Change return type of `AppointmentRepository#overdueAppointmentsInFacilityNew` to `Observable<List<OverdueAppointment>>`
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-05-30-8273

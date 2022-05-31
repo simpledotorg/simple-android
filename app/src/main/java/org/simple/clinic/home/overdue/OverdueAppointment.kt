@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Query
+import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.callresult.CallResult
@@ -125,6 +126,6 @@ data class OverdueAppointment(
     fun overdueAppointmentsInFacility(
         facilityUuid: UUID,
         scheduledBefore: LocalDate
-    ): List<OverdueAppointment>
+    ): Observable<List<OverdueAppointment>>
   }
 }

@@ -1,7 +1,6 @@
 package org.simple.clinic.home.overdue
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
@@ -21,8 +20,21 @@ class OverdueUpdate(
       is OverdueAppointmentsLoaded_Old -> dispatch(ShowOverdueAppointments(event.overdueAppointmentsOld, model.isDiabetesManagementEnabled))
       is DownloadOverdueListClicked -> downloadOverdueListClicked(event)
       is ShareOverdueListClicked -> shareOverdueListClicked(event)
-      is OverdueAppointmentsLoaded -> noChange()
+      is OverdueAppointmentsLoaded -> overdueAppointmentsLoaded(event, model)
     }
+  }
+
+  private fun overdueAppointmentsLoaded(
+      event: OverdueAppointmentsLoaded,
+      model: OverdueModel
+  ): Next<OverdueModel, OverdueEffect> {
+    return next(model.overdueAppointmentsLoaded(
+        pendingAppointments = event.pendingAppointments,
+        agreedToVisitAppointments = event.agreedToVisitAppointments,
+        remindToCallLaterAppointments = event.remindToCallLaterAppointments,
+        removedFromOverdueAppointments = event.removedFromOverdueAppointments,
+        moreThanAnYearOverdueAppointments = event.moreThanAnYearOverdueAppointments
+    ))
   }
 
   private fun shareOverdueListClicked(event: ShareOverdueListClicked): Next<OverdueModel, OverdueEffect> {

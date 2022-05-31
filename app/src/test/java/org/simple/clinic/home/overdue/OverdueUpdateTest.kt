@@ -3,6 +3,7 @@ package org.simple.clinic.home.overdue
 import androidx.paging.PagingData
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
+import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
@@ -146,6 +147,45 @@ class OverdueUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenSharingInProgressDialog)
+        ))
+  }
+
+  @Test
+  fun `when overdue appointments are loaded, then update the model`() {
+    val pendingAppointments = listOf(
+        TestData.overdueAppointment(appointmentUuid = UUID.fromString("ad63a726-f0ab-4e95-a20e-bd394b4c7d3c"))
+    )
+    val agreedToVisitAppointments = listOf(
+        TestData.overdueAppointment(appointmentUuid = UUID.fromString("372871f0-0b11-4217-926f-9c5f2dce8202"))
+    )
+    val remindToCallLaterAppointments = listOf(
+        TestData.overdueAppointment(appointmentUuid = UUID.fromString("09ad7724-b3e2-4b1c-b490-7d7951b4150d"))
+    )
+    val removedFromOverdueAppointments = listOf(
+        TestData.overdueAppointment(appointmentUuid = UUID.fromString("e52d4555-d72d-4dfd-9b3e-21ead416e727"))
+    )
+    val moreThanAnYearOverdueAppointments = listOf(
+        TestData.overdueAppointment(appointmentUuid = UUID.fromString("20bb3b3a-908e-49b5-97ef-730eb2504bd9"))
+    )
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(OverdueAppointmentsLoaded(
+            pendingAppointments = pendingAppointments,
+            agreedToVisitAppointments = agreedToVisitAppointments,
+            remindToCallLaterAppointments = remindToCallLaterAppointments,
+            removedFromOverdueAppointments = removedFromOverdueAppointments,
+            moreThanAnYearOverdueAppointments = moreThanAnYearOverdueAppointments
+        ))
+        .then(assertThatNext(
+            hasModel(defaultModel.overdueAppointmentsLoaded(
+                pendingAppointments = pendingAppointments,
+                agreedToVisitAppointments = agreedToVisitAppointments,
+                remindToCallLaterAppointments = remindToCallLaterAppointments,
+                removedFromOverdueAppointments = removedFromOverdueAppointments,
+                moreThanAnYearOverdueAppointments = moreThanAnYearOverdueAppointments
+            )),
+            hasNoEffects()
         ))
   }
 }

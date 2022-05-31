@@ -27,6 +27,14 @@ data class OverdueAppointmentsLoaded_Old(
     val overdueAppointmentsOld: PagingData<OverdueAppointment_Old>
 ) : OverdueEvent()
 
+data class OverdueAppointmentsLoaded(
+    val pendingAppointments: List<OverdueAppointment>,
+    val agreedToVisitAppointments: List<OverdueAppointment>,
+    val remindToCallLaterAppointments: List<OverdueAppointment>,
+    val removedFromOverdueAppointments: List<OverdueAppointment>,
+    val moreThanAnYearOverdueAppointments: List<OverdueAppointment>
+) : OverdueEvent()
+
 data class DownloadOverdueListClicked(
     override var permission: Optional<RuntimePermissionResult> = Optional.empty(),
     override val permissionString: String = Manifest.permission.WRITE_EXTERNAL_STORAGE,

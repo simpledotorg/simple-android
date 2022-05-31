@@ -38,8 +38,8 @@ class OverdueUpdateTest {
   @Test
   fun `when overdue appointments are loaded, then show overdue appointments`() {
     val overdueAppointments = PagingData.from(listOf(
-        TestData.overdueAppointment(appointmentUuid = UUID.fromString("4e4baeba-3a8e-4453-ace1-d3149088aefc")),
-        TestData.overdueAppointment(appointmentUuid = UUID.fromString("79c4bda9-50cf-4484-8a2a-c5336ce8af84"))
+        TestData.overdueAppointment_Old(appointmentUuid = UUID.fromString("4e4baeba-3a8e-4453-ace1-d3149088aefc")),
+        TestData.overdueAppointment_Old(appointmentUuid = UUID.fromString("79c4bda9-50cf-4484-8a2a-c5336ce8af84"))
     ))
     val facility = TestData.facility(
         uuid = UUID.fromString("6d66fda7-7ca6-4431-ac3b-b570f1123624"),

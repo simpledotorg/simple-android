@@ -26,6 +26,7 @@ import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.facility.FacilityPayload
+import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.home.overdue.OverdueAppointment_Old
 import org.simple.clinic.home.overdue.OverduePatientAddress
 import org.simple.clinic.location.Coordinates
@@ -988,7 +989,7 @@ object TestData {
       state = state
   )
 
-  fun overdueAppointment(
+  fun overdueAppointment_Old(
       facilityUuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
       phoneNumberUuid: UUID = UUID.randomUUID(),
@@ -1015,6 +1016,38 @@ object TestData {
         patientAddress = patientAddress,
         isAtHighRisk = isHighRisk,
         patientAssignedFacilityUuid = patientAssignedFacilityId
+    )
+  }
+
+  fun overdueAppointment(
+      facilityUuid: UUID = UUID.randomUUID(),
+      patientUuid: UUID = UUID.randomUUID(),
+      phoneNumberUuid: UUID = UUID.randomUUID(),
+      appointmentUuid: UUID = UUID.randomUUID(),
+      name: String = "somebody",
+      isHighRisk: Boolean = false,
+      gender: Gender = Gender.Transgender,
+      phoneNumber: PatientPhoneNumber? = patientPhoneNumber(uuid = phoneNumberUuid, patientUuid = patientUuid),
+      appointment: Appointment = appointment(uuid = appointmentUuid, patientUuid = patientUuid, facilityUuid = facilityUuid),
+      patientAddress: OverduePatientAddress = overduePatientAddress(),
+      patientAssignedFacilityId: UUID? = null,
+      patientAgeDetails: PatientAgeDetails = PatientAgeDetails(
+          ageValue = null,
+          ageUpdatedAt = null,
+          dateOfBirth = LocalDate.now(UTC).minusYears(30)
+      ),
+      callResult: CallResult? = null
+  ): OverdueAppointment {
+    return OverdueAppointment(
+        fullName = name,
+        gender = gender,
+        ageDetails = patientAgeDetails,
+        appointment = appointment,
+        phoneNumber = phoneNumber,
+        patientAddress = patientAddress,
+        isAtHighRisk = isHighRisk,
+        patientAssignedFacilityUuid = patientAssignedFacilityId,
+        callResult = callResult
     )
   }
 

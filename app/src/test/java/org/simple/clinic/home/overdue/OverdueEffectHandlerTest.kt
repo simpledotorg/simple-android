@@ -15,12 +15,17 @@ import org.junit.Test
 import org.simple.clinic.analytics.NetworkCapabilitiesProvider
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.overdue.AppointmentCancelReason
+import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.overdue.callresult.Outcome
 import org.simple.clinic.overdue.download.OverdueDownloadScheduler
 import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.PagingSourceFactory
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.TestUserClock
+import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
 
@@ -42,13 +47,15 @@ class OverdueEffectHandlerTest {
   private val networkCapabilitiesProvider = mock<NetworkCapabilitiesProvider>()
   private val overdueDownloadScheduler = mock<OverdueDownloadScheduler>()
   private val viewEffectHandler = OverdueViewEffectHandler(uiActions)
+  private val appointmentRepository = mock<AppointmentRepository>()
   private val effectHandler = OverdueEffectHandler(
       schedulers = TestSchedulersProvider.trampoline(),
-      appointmentRepository = mock(),
+      appointmentRepository = appointmentRepository,
       currentFacilityStream = Observable.just(facility),
       pagerFactory = pagerFactory,
       overdueAppointmentsConfig = overdueAppointmentsConfig,
       overdueDownloadScheduler = overdueDownloadScheduler,
+      userClock = TestUserClock(Instant.parse("2018-01-01T00:00:00Z")),
       viewEffectsConsumer = viewEffectHandler::handle
   ).build()
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
@@ -87,10 +94,10 @@ class OverdueEffectHandlerTest {
   fun `when show overdue appointments effect is received, then show overdue appointments`() {
     // given
     val overdueAppointments = listOf(
-        TestData.overdueAppointment(
+        TestData.overdueAppointment_Old(
             appointmentUuid = UUID.fromString("e960f0dd-e575-4a1d-b8c1-6676097b4b54")
         ),
-        TestData.overdueAppointment(
+        TestData.overdueAppointment_Old(
             appointmentUuid = UUID.fromString("65c380ad-d2e4-49f5-a348-07e8d489dab1")
         )
     )
@@ -109,8 +116,8 @@ class OverdueEffectHandlerTest {
   fun `when load overdue appointments effect is received, then load overdue appointments with patients with no phone numbers`() {
     // given
     val overdueAppointments = PagingData.from(listOf(
-        TestData.overdueAppointment(appointmentUuid = UUID.fromString("94295f1e-9087-427e-be9d-552ab0581443")),
-        TestData.overdueAppointment(appointmentUuid = UUID.fromString("3379cdf4-9693-4ad8-b0d6-1006f6dd48ff"))
+        TestData.overdueAppointment_Old(appointmentUuid = UUID.fromString("94295f1e-9087-427e-be9d-552ab0581443")),
+        TestData.overdueAppointment_Old(appointmentUuid = UUID.fromString("3379cdf4-9693-4ad8-b0d6-1006f6dd48ff"))
     ))
 
     whenever(pagerFactory.createPager(
@@ -177,5 +184,117 @@ class OverdueEffectHandlerTest {
     // then
     verify(uiActions).openProgressForSharingDialog()
     effectHandlerTestCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when load overdue appointments effect is received, then load overdue appointments`() {
+    // given
+    val effectHandler = OverdueEffectHandler(
+        schedulers = TestSchedulersProvider.trampoline(),
+        appointmentRepository = appointmentRepository,
+        currentFacilityStream = Observable.just(facility),
+        pagerFactory = pagerFactory,
+        overdueAppointmentsConfig = overdueAppointmentsConfig,
+        overdueDownloadScheduler = overdueDownloadScheduler,
+        userClock = TestUserClock(Instant.parse("2018-03-01T00:00:00Z")),
+        viewEffectsConsumer = viewEffectHandler::handle
+    ).build()
+    val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
+
+
+    val pendingAppointmentUuid = UUID.fromString("ba2e8f01-9693-41e8-82f8-c24916c8f5b4")
+    val agreedToVisitAppointmentUuid = UUID.fromString("2730cc90-ceaf-4dbf-88ad-9d615dada766")
+    val removedAppointmentUuid = UUID.fromString("f2c271b8-c18b-4baf-8f04-dfc6552fc2eb")
+    val moreThanAYearAppointmentUuid = UUID.fromString("cb89b308-9118-4281-8bd6-f27fede037ff")
+
+    val pendingAppointment = TestData.overdueAppointment(
+        name = "Pending",
+        appointment = TestData.appointment(
+            uuid = pendingAppointmentUuid,
+            facilityUuid = facility.uuid,
+            scheduledDate = LocalDate.parse("2018-04-01"),
+            createdAt = Instant.parse("2018-01-01T00:00:00Z"),
+            updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+            deletedAt = null
+        )
+    )
+    val agreedToVisitAppointment = TestData.overdueAppointment(
+        name = "Agreed To Visit",
+        appointment = TestData.appointment(
+            uuid = agreedToVisitAppointmentUuid,
+            facilityUuid = facility.uuid,
+            scheduledDate = LocalDate.parse("2018-04-01"),
+            createdAt = Instant.parse("2018-01-01T00:00:00Z"),
+            updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+            deletedAt = null
+        ),
+        callResult = TestData.callResult(
+            appointmentId = agreedToVisitAppointmentUuid,
+            outcome = Outcome.AgreedToVisit
+        )
+    )
+
+    val removedAppointment = TestData.overdueAppointment(
+        name = "Removed",
+        appointment = TestData.appointment(
+            uuid = removedAppointmentUuid,
+            facilityUuid = facility.uuid,
+            scheduledDate = LocalDate.parse("2018-04-01"),
+            createdAt = Instant.parse("2018-01-01T00:00:00Z"),
+            updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+            deletedAt = null
+        ),
+        callResult = TestData.callResult(
+            appointmentId = removedAppointmentUuid,
+            removeReason = AppointmentCancelReason.PatientNotResponding,
+            outcome = Outcome.RemovedFromOverdueList
+        )
+    )
+    val moreThanAnYearAppointment = TestData.overdueAppointment(
+        name = "More Than An Year",
+        appointment = TestData.appointment(
+            uuid = moreThanAYearAppointmentUuid,
+            facilityUuid = facility.uuid,
+            scheduledDate = LocalDate.parse("2016-04-01"),
+            createdAt = Instant.parse("2016-01-01T00:00:00Z"),
+            updatedAt = Instant.parse("2016-01-01T00:00:00Z"),
+            deletedAt = null
+        ),
+        callResult = TestData.callResult(
+            appointmentId = moreThanAYearAppointmentUuid,
+            removeReason = AppointmentCancelReason.PatientNotResponding,
+            outcome = Outcome.RemovedFromOverdueList
+        )
+    )
+
+    val overdueAppointments = listOf(
+        pendingAppointment,
+        agreedToVisitAppointment,
+        removedAppointment,
+        moreThanAnYearAppointment
+    )
+
+    whenever(appointmentRepository.overdueAppointmentsInFacilityNew(
+        since = LocalDate.parse("2018-04-03"),
+        facilityId = facility.uuid
+    )) doReturn Observable.just(overdueAppointments)
+
+    // when
+    effectHandlerTestCase.dispatch(LoadOverdueAppointments(
+        overdueSince = LocalDate.parse("2018-04-03"),
+        facility = facility
+    ))
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(OverdueAppointmentsLoaded(
+        pendingAppointments = listOf(pendingAppointment),
+        agreedToVisitAppointments = listOf(agreedToVisitAppointment),
+        remindToCallLaterAppointments = emptyList(),
+        removedFromOverdueAppointments = listOf(removedAppointment),
+        moreThanAnYearOverdueAppointments = listOf(moreThanAnYearAppointment)
+    ))
+    effectHandlerTestCase.dispose()
+
+    verifyZeroInteractions(uiActions)
   }
 }

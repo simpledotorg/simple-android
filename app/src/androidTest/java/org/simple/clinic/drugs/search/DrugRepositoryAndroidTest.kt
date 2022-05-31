@@ -9,11 +9,11 @@ import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.PagingTestCase
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.protocol.ProtocolAndProtocolDrugs
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.rules.SaveDatabaseRule
-import org.simple.clinic.util.Rules
+import org.simple.sharedTestCode.util.Rules
 import java.util.UUID
 import javax.inject.Inject
 

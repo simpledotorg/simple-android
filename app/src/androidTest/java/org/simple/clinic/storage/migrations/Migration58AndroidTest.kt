@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.assertValues
 import org.simple.clinic.insert
 import org.simple.clinic.patient.SyncStatus

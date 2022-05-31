@@ -6,6 +6,7 @@ import org.simple.clinic.util.RelativeTimestamp.ExactDate
 import org.simple.clinic.util.RelativeTimestamp.Today
 import org.simple.clinic.util.RelativeTimestamp.WithinSixMonths
 import org.simple.clinic.util.RelativeTimestamp.Yesterday
+import org.simple.sharedTestCode.util.TestUserClock
 import java.time.Instant
 import java.time.LocalDate
 

@@ -8,7 +8,7 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
@@ -16,8 +16,8 @@ import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
-import org.simple.clinic.util.Rules
-import org.simple.clinic.util.RxErrorsRule
+import org.simple.sharedTestCode.util.Rules
+import org.simple.sharedTestCode.util.RxErrorsRule
 import org.simple.clinic.util.toOptional
 import java.util.Optional
 import java.util.UUID

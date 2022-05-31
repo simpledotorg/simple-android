@@ -6,7 +6,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.appconfig.StatesResult.StatesFetched
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.CountryV1

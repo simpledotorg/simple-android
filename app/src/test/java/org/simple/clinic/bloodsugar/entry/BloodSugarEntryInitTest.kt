@@ -9,7 +9,7 @@ import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bloodsugar.entry.OpenAs.New
 import org.simple.clinic.bloodsugar.entry.OpenAs.Update
 import org.simple.clinic.bloodsugar.entry.PrefillDate.PrefillCurrentDate
-import org.simple.clinic.util.TestUserClock
+import org.simple.sharedTestCode.util.TestUserClock
 import java.time.LocalDate
 import java.util.UUID
 

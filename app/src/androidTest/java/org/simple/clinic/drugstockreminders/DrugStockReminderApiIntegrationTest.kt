@@ -6,7 +6,7 @@ import org.junit.Ignore
 import org.junit.Test
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.drugstockreminders.DrugStockReminder.Result.Found
-import org.simple.clinic.util.TestUtcClock
+import org.simple.sharedTestCode.util.TestUtcClock
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

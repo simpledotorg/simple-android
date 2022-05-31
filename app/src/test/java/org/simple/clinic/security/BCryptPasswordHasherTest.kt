@@ -5,7 +5,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.security.ComparisonResult.DIFFERENT
 import org.simple.clinic.security.ComparisonResult.SAME
-import org.simple.clinic.util.RxErrorsRule
+import org.simple.sharedTestCode.util.RxErrorsRule
 
 class BCryptPasswordHasherTest {
 

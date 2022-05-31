@@ -1,4 +1,4 @@
-package org.simple.clinic.util
+package org.simple.sharedTestCode.util
 
 import com.tspoon.traceur.Traceur
 import io.reactivex.plugins.RxJavaPlugins

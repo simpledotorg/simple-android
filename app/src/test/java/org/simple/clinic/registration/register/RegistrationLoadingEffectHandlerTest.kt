@@ -4,13 +4,13 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.security.pin.JavaHashPasswordHasher
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.user.registeruser.RegisterUser
-import org.simple.clinic.util.TestUtcClock
+import org.simple.sharedTestCode.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.time.Instant
 import java.util.UUID

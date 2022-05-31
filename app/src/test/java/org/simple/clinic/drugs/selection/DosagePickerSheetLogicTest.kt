@@ -16,7 +16,7 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selection.dosage.DosageListItem
 import org.simple.clinic.drugs.selection.dosage.DosagePickerEffect
@@ -31,11 +31,11 @@ import org.simple.clinic.drugs.selection.dosage.DosagePickerUpdate
 import org.simple.clinic.drugs.selection.dosage.DosageSelected
 import org.simple.clinic.drugs.selection.dosage.NoneSelected
 import org.simple.clinic.protocol.ProtocolRepository
-import org.simple.clinic.util.RxErrorsRule
+import org.simple.sharedTestCode.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toNullable
 import org.simple.clinic.util.toOptional
-import org.simple.clinic.uuid.FakeUuidGenerator
+import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.Optional

@@ -7,11 +7,11 @@ import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import dagger.Lazy
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.uuid.FakeUuidGenerator
+import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.util.UUID

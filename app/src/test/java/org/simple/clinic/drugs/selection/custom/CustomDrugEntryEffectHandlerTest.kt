@@ -8,7 +8,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.search.DrugRepository
@@ -16,7 +16,7 @@ import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFreque
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.uuid.FakeUuidGenerator
+import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import java.util.UUID
 
 class CustomDrugEntryEffectHandlerTest {

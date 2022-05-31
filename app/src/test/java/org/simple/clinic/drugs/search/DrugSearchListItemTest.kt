@@ -2,7 +2,7 @@ package org.simple.clinic.drugs.search
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.drugs.search.DrugSearchListItem.BottomCornerCapItem
 import org.simple.clinic.drugs.search.DrugSearchListItem.Divider
 import org.simple.clinic.drugs.search.DrugSearchListItem.DrugSearchResult

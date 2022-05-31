@@ -12,7 +12,7 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
@@ -26,8 +26,8 @@ import org.simple.clinic.user.resetpin.ResetPinResult.NetworkError
 import org.simple.clinic.user.resetpin.ResetPinResult.Success
 import org.simple.clinic.user.resetpin.ResetPinResult.UnexpectedError
 import org.simple.clinic.user.resetpin.ResetPinResult.UserNotFound
-import org.simple.clinic.util.httpErrorResponse
-import org.simple.clinic.util.toPayload
+import org.simple.sharedTestCode.util.httpErrorResponse
+import org.simple.sharedTestCode.util.toPayload
 import java.io.IOException
 import java.util.Optional
 import java.util.UUID

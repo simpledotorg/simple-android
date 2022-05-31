@@ -8,7 +8,7 @@ import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.overdue.download.OverdueListDownloadApi
 import org.simple.clinic.rules.ServerAuthenticationRule
-import org.simple.clinic.util.Rules
+import org.simple.sharedTestCode.util.Rules
 import javax.inject.Inject
 
 class OverdueListDownloadApiIntegrationTest {

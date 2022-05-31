@@ -8,6 +8,7 @@
 - Bump flipper to v0.147.0
 - Bump kotlin-coroutines to v1.6.2
 - Move shared test code to separate module
+- Remove overdue appointments list from `OverdueModel`
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-05-30-8273

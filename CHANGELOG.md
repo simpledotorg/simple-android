@@ -19,6 +19,7 @@
 - Load overdue appointments when current facility is loaded and overdue sections feature is enabled
 - Rename agreed to visit call result text
 - Change colour of number and chevron in the section headers to blue
+- Rename remind to call later call result text
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Changes

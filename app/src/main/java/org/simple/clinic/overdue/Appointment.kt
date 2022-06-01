@@ -310,8 +310,8 @@ data class Appointment(
       WHERE 
         patientUuid = :patientUUID
         AND scheduledDate < :scheduledDate
-        AND (remindOn < :scheduledDate OR remindOn IS NULL)
-        AND deletedAt IS NULL AND status = 'scheduled'
+        AND deletedAt IS NULL 
+        AND status = 'scheduled' or status = 'cancelled'
       GROUP BY patientUuid HAVING MAX(scheduledDate)
     """)
     fun latestOverdueAppointmentForPatient(

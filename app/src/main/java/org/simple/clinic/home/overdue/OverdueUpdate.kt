@@ -8,19 +8,29 @@ import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import java.time.LocalDate
 
 class OverdueUpdate(
-    val date: LocalDate,
-    val canGeneratePdf: Boolean
+    private val date: LocalDate,
+    private val canGeneratePdf: Boolean,
+    private val isOverdueSectionsFeatureEnabled: Boolean
 ) : Update<OverdueModel, OverdueEvent, OverdueEffect> {
 
   override fun update(model: OverdueModel, event: OverdueEvent): Next<OverdueModel, OverdueEffect> {
     return when (event) {
-      is CurrentFacilityLoaded -> loadOverduePatientsOld(model, event)
+      is CurrentFacilityLoaded -> currentFacilityLoaded(model, event)
       is CallPatientClicked -> dispatch(OpenContactPatientScreen(event.patientUuid))
       is OverduePatientClicked -> dispatch(OpenPatientSummary(event.patientUuid))
       is OverdueAppointmentsLoaded_Old -> dispatch(ShowOverdueAppointments(event.overdueAppointmentsOld, model.isDiabetesManagementEnabled))
       is DownloadOverdueListClicked -> downloadOverdueListClicked(event)
       is ShareOverdueListClicked -> shareOverdueListClicked(event)
       is OverdueAppointmentsLoaded -> overdueAppointmentsLoaded(event, model)
+    }
+  }
+
+  private fun currentFacilityLoaded(model: OverdueModel, event: CurrentFacilityLoaded): Next<OverdueModel, OverdueEffect> {
+    val facilityLoadedModel = model.currentFacilityLoaded(event.facility)
+    return if (isOverdueSectionsFeatureEnabled) {
+      next(facilityLoadedModel, LoadOverdueAppointments(date, event.facility))
+    } else {
+      next(facilityLoadedModel, LoadOverdueAppointments_old(date, event.facility))
     }
   }
 
@@ -64,10 +74,4 @@ class OverdueUpdate(
 
     return dispatch(effect)
   }
-
-  private fun loadOverduePatientsOld(
-      model: OverdueModel,
-      event: CurrentFacilityLoaded
-  ): Next<OverdueModel, OverdueEffect> =
-      next(model.currentFacilityLoaded(event.facility), LoadOverdueAppointments_old(date, event.facility))
 }

@@ -109,7 +109,11 @@ class OverdueLogicTest {
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = OverdueModel.create(),
-        update = OverdueUpdate(dateOnClock, true),
+        update = OverdueUpdate(
+            date = dateOnClock,
+            canGeneratePdf = true,
+            isOverdueSectionsFeatureEnabled = false
+        ),
         effectHandler = effectHandler.build(),
         modelUpdateListener = { /* Nothing to do here */ },
         init = OverdueInit()

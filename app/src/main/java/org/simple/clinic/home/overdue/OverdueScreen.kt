@@ -35,6 +35,7 @@ import org.simple.clinic.databinding.ScreenOverdueBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Feature.OverdueListDownloadAndShare
+import org.simple.clinic.feature.Feature.OverdueSections
 import org.simple.clinic.feature.Features
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.navigation.v2.Router
@@ -163,7 +164,11 @@ class OverdueScreen : BaseScreen<
   override fun createUpdate(): Update<OverdueModel, OverdueEvent, OverdueEffect> {
     val date = LocalDate.now(userClock)
     val canGeneratePdf = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
-    return OverdueUpdate(date, canGeneratePdf)
+    return OverdueUpdate(
+        date = date,
+        canGeneratePdf = canGeneratePdf,
+        isOverdueSectionsFeatureEnabled = features.isEnabled(OverdueSections)
+    )
   }
 
   override fun createInit() = OverdueInit()

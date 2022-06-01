@@ -91,9 +91,9 @@ class ContactPatientUiRenderer(
   private fun renderPhoneNumberAndCallResults(model: ContactPatientModel) {
     when {
       model.patientProfileHasPhoneNumber && model.hasPatientDied -> renderDeadPatientWithPhoneNumber(model.secureCallingFeatureEnabled)
-      model.patientProfileHasPhoneNumber && !model.isAppointmentPresent -> renderPatientWithPhoneNumberAndNoAppointment(model.secureCallingFeatureEnabled)
-      model.patientProfileHasPhoneNumber && model.isAppointmentPresent -> renderPatientWithPhoneNumberAndAppointment(model.secureCallingFeatureEnabled)
-      !model.patientProfileHasPhoneNumber && model.isAppointmentPresent -> renderPatientWithNoPhoneNumberAndWithAppointment()
+      model.patientProfileHasPhoneNumber && !model.isOverdueAppointmentPresent -> renderPatientWithPhoneNumberAndNoAppointment(model.secureCallingFeatureEnabled)
+      model.patientProfileHasPhoneNumber && model.isOverdueAppointmentPresent -> renderPatientWithPhoneNumberAndAppointment(model.secureCallingFeatureEnabled)
+      !model.patientProfileHasPhoneNumber && model.isOverdueAppointmentPresent -> renderPatientWithNoPhoneNumberAndWithAppointment()
       else -> renderPatientWithoutPhoneNumberAndAppointment()
     }
   }

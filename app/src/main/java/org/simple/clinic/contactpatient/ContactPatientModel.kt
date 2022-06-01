@@ -67,10 +67,10 @@ data class ContactPatientModel(
   val patientProfileHasPhoneNumber: Boolean
     get() = !patientProfile?.phoneNumbers.isNullOrEmpty()
 
-  val hasLoadedAppointment: Boolean
+  val hasLoadedOverdueAppointment: Boolean
     get() = overdueAppointment != null
 
-  val isAppointmentPresent: Boolean
+  val isOverdueAppointmentPresent: Boolean
     get() = overdueAppointment?.isPresent() == true
 
   val hasRegisteredFacility: Boolean

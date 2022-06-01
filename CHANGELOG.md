@@ -16,6 +16,7 @@
 - Bump lottie to v5.2.0
 - Render overdue appointments when appointments are loaded and overdue sections feature is enabled
 - Add feature flag for overdue section improvements
+- Load overdue appointments when current facility is loaded and overdue sections feature is enabled
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Changes

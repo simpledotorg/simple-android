@@ -13,6 +13,7 @@
 - Load overdue appointments and break down into different sections
 - Bump Flipper to v0.147.1
 - Show call result section by default in ContactPatientBottomSheet
+- Bump lottie to v5.2.0
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Changes

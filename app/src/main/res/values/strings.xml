@@ -954,7 +954,7 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">Follow protocol, if patient takes their medicines regularly</string>
 
   <!-- Call Result Outcome Message -->
-  <string name="call_result_outcome_agreed_to_visit">Agreed to visit</string>
+  <string name="call_result_outcome_agreed_to_visit">Marked \'Agreed to visit\' on</string>
 
   <plurals name="call_result_outcome_remind_to_call_later">
     <item quantity="one"> Remind in %1$s day</item>

@@ -33,6 +33,13 @@ data class OverdueModel(
   val hasLoadedCurrentFacility: Boolean
     get() = facility != null
 
+  val hasLoadedOverdueAppointments: Boolean
+    get() = pendingAppointments != null &&
+        agreedToVisitAppointments != null &&
+        remindToCallLaterAppointments != null &&
+        removedFromOverdueAppointments != null &&
+        moreThanAnYearOverdueAppointments != null
+
   fun currentFacilityLoaded(facility: Facility): OverdueModel {
     return copy(facility = facility)
   }

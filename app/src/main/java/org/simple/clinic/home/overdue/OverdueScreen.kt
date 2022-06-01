@@ -33,6 +33,7 @@ import org.simple.clinic.databinding.ListItemOverduePatientBinding
 import org.simple.clinic.databinding.ListItemOverduePlaceholderBinding
 import org.simple.clinic.databinding.ScreenOverdueBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Feature.OverdueListDownloadAndShare
 import org.simple.clinic.feature.Features
 import org.simple.clinic.home.HomeScreen
@@ -67,7 +68,7 @@ class OverdueScreen : BaseScreen<
     OverdueModel,
     OverdueEvent,
     OverdueEffect,
-    OverdueViewEffect>(), OverdueUiActions {
+    OverdueViewEffect>(), OverdueUiActions, OverdueUi {
 
   @Inject
   lateinit var screenResults: ScreenResultBus
@@ -142,6 +143,11 @@ class OverdueScreen : BaseScreen<
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenOverdueBinding.inflate(layoutInflater, container, false)
+
+  override fun uiRenderer() = OverdueUiRenderer(
+      ui = this,
+      isOverdueSectionsFeatureEnabled = features.isEnabled(Feature.OverdueSections)
+  )
 
   override fun events() = Observable.mergeArray(
       overdueListAdapter.itemEvents,
@@ -232,6 +238,16 @@ class OverdueScreen : BaseScreen<
 
   override fun openProgressForSharingDialog() {
     router.push(SelectOverdueDownloadFormatDialog.Key(SharingInProgress))
+  }
+
+  override fun showOverdueAppointments(
+      pendingAppointments: List<OverdueAppointment>,
+      agreedToVisitAppointments: List<OverdueAppointment>,
+      remindToCallLaterAppointments: List<OverdueAppointment>,
+      removedFromOverdueAppointments: List<OverdueAppointment>,
+      moreThanAnYearOverdueAppointments: List<OverdueAppointment>
+  ) {
+    // TODO: Bind UI
   }
 
   private fun downloadOverdueListClicks(): Observable<UiEvent> {

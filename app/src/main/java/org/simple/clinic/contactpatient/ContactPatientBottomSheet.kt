@@ -320,9 +320,7 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   }
 
   override fun setupRemindToCallLaterCallResultOutcome(daysToRemindAppointmentIn: Int) {
-    callPatientView.callResultOutcomeText = resources.getQuantityString(
-        R.plurals.call_result_outcome_remind_to_call_later, daysToRemindAppointmentIn, daysToRemindAppointmentIn.toString()
-    )
+    callPatientView.callResultOutcomeText = resources.getString(R.string.call_result_outcome_remind_to_call_later)
     callPatientView.setupCallResultViewForRemindToCallLater()
   }
 

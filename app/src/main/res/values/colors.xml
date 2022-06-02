@@ -36,6 +36,5 @@
   <color name="translucent_background">#52000000</color>
 
   <color name="search_query_highlight">#52FFC800</color>
-  <color name="overdue_section_header_grey">#6C737A</color>
 
 </resources>

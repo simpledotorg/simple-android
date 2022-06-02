@@ -3,8 +3,10 @@ package org.simple.clinic.home.overdue
 import android.graphics.Rect
 import android.view.TouchDelegate
 import android.view.View
+import androidx.annotation.StringRes
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
+import org.simple.clinic.databinding.ListItemOverdueListSectionHeaderBinding
 import org.simple.clinic.databinding.ListItemOverduePatientBinding
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.displayIconRes
@@ -99,6 +101,21 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
 
         parent.touchDelegate = TouchDelegate(touchableArea, callButton)
       }
+    }
+  }
+
+  data class OverdueSectionHeader(
+      @StringRes val headerText: Int,
+      val count: Int
+  ) : OverdueAppointmentListItemNew() {
+    override fun layoutResId(): Int = R.layout.list_item_overdue_list_section_header
+
+    override fun render(holder: BindingViewHolder, subject: Subject<UiEvent>) {
+      val binding = holder.binding as ListItemOverdueListSectionHeaderBinding
+
+      binding.overdueSectionHeaderTextView.setText(headerText)
+      binding.overdueSectionHeaderIcon.text = count.toString()
+      // TO-DO handle chevron right and down icon here when handling the collapse
     }
   }
 }

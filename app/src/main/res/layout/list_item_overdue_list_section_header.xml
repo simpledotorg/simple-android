@@ -27,10 +27,10 @@
     android:drawablePadding="@dimen/spacing_8"
     android:gravity="center_vertical"
     android:textAppearance="?attr/textAppearanceTag"
-    android:textColor="@color/overdue_section_header_grey"
+    android:textColor="?attr/colorPrimary"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintTop_toTopOf="parent"
-    tools:drawableEnd="@drawable/ic_check_circle_outline_24px"
+    tools:drawableEnd="@drawable/ic_chevron_right_24px"
     tools:text="0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -126,4 +126,12 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
       // TO-Do handle this later
     }
   }
+
+  object NoPendingPatients : OverdueAppointmentListItemNew() {
+    override fun layoutResId(): Int = R.layout.list_item_no_pending_patients
+
+    override fun render(holder: BindingViewHolder, subject: Subject<UiEvent>) {
+      // TO-Do handle this later
+    }
+  }
 }

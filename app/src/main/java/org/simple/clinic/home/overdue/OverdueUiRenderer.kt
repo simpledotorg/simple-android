@@ -16,6 +16,7 @@ class OverdueUiRenderer(
           removedFromOverdueAppointments = model.removedFromOverdueAppointments.orEmpty(),
           moreThanAnYearOverdueAppointments = model.moreThanAnYearOverdueAppointments.orEmpty()
       )
+      ui.showOverdueCount(model.overdueCount)
     }
   }
 }

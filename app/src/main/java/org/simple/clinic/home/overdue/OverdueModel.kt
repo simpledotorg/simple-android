@@ -40,6 +40,13 @@ data class OverdueModel(
         removedFromOverdueAppointments != null &&
         moreThanAnYearOverdueAppointments != null
 
+  val overdueCount: Int
+    get() = pendingAppointments!!.size +
+        agreedToVisitAppointments!!.size +
+        remindToCallLaterAppointments!!.size +
+        removedFromOverdueAppointments!!.size +
+        moreThanAnYearOverdueAppointments!!.size
+
   fun currentFacilityLoaded(facility: Facility): OverdueModel {
     return copy(facility = facility)
   }

@@ -20,6 +20,7 @@
 - Rename agreed to visit call result text
 - Change colour of number and chevron in the section headers to blue
 - Rename remind to call later call result text
+- Show all overdue patients count instead of just pending patients in overdue tab
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Changes

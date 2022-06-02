@@ -118,4 +118,12 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
       // TO-DO handle chevron right and down icon here when handling the collapse
     }
   }
+
+  object SeeAllPendingAppointmentList : OverdueAppointmentListItemNew() {
+    override fun layoutResId(): Int = R.layout.list_item_overdue_pending_list_see_all_button
+
+    override fun render(holder: BindingViewHolder, subject: Subject<UiEvent>) {
+      // TO-Do handle this later
+    }
+  }
 }

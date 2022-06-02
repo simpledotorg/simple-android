@@ -259,6 +259,14 @@ class OverdueScreen : BaseScreen<
     (parentFragment as HomeScreen).overdueListCountUpdated(count)
   }
 
+  override fun showProgress() {
+    overdueProgressBar.visibility = View.VISIBLE
+  }
+
+  override fun hideProgress() {
+    overdueProgressBar.visibility = View.GONE
+  }
+
   private fun downloadOverdueListClicks(): Observable<UiEvent> {
     return downloadOverdueListButton
         .clicks()

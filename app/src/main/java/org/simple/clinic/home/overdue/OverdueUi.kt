@@ -10,4 +10,6 @@ interface OverdueUi {
   )
 
   fun showOverdueCount(count: Int)
+  fun showProgress()
+  fun hideProgress()
 }

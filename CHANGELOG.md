@@ -17,6 +17,7 @@
 - Render overdue appointments when appointments are loaded and overdue sections feature is enabled
 - Add feature flag for overdue section improvements
 - Load overdue appointments when current facility is loaded and overdue sections feature is enabled
+- Rename agreed to visit call result text
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Changes

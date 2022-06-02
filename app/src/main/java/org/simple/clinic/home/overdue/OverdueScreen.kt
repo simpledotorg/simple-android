@@ -255,6 +255,10 @@ class OverdueScreen : BaseScreen<
     // TODO: Bind UI
   }
 
+  override fun showOverdueCount(count: Int) {
+    (parentFragment as HomeScreen).overdueListCountUpdated(count)
+  }
+
   private fun downloadOverdueListClicks(): Observable<UiEvent> {
     return downloadOverdueListButton
         .clicks()
@@ -295,7 +299,7 @@ class OverdueScreen : BaseScreen<
     viewForEmptyList.visibleOrGone(isVisible = shouldShowEmptyView)
     overdueRecyclerView.visibleOrGone(isVisible = !shouldShowEmptyView)
 
-    (parentFragment as HomeScreen).overdueListCountUpdated(overdueListAdapter.itemCount)
+    showOverdueCount(overdueListAdapter.itemCount)
   }
 
   private fun loadingOverdueList() {

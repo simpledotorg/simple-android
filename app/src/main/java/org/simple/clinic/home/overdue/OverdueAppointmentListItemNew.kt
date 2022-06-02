@@ -10,15 +10,71 @@ import org.simple.clinic.databinding.ListItemOverdueListSectionHeaderBinding
 import org.simple.clinic.databinding.ListItemOverduePatientBinding
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.displayIconRes
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.dp
 import org.simple.clinic.widgets.executeOnNextMeasure
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import org.simple.clinic.widgets.visibleOrGone
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 import java.util.UUID
 
 sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
+
+  companion object {
+
+    fun from(
+        pendingAppointments: List<OverdueAppointment>,
+        agreedToVisitAppointments: List<OverdueAppointment>,
+        remindToCallLaterAppointments: List<OverdueAppointment>,
+        removedFromOverdueAppointments: List<OverdueAppointment>,
+        moreThanAnYearOverdueAppointments: List<OverdueAppointment>,
+        clock: UserClock
+    ): List<OverdueAppointmentListItemNew> {
+      val pendingToCallHeader = listOf(OverdueSectionHeader(R.string.overdue_pending_to_call_header, pendingAppointments.size))
+      val pendingToCallListItems = pendingAppointments.map { from(it, clock) }
+
+      val agreedToVisitHeader = listOf(OverdueSectionHeader(R.string.overdue_agreed_to_visit_call_header, pendingAppointments.size))
+      val agreedToVisitListItems = agreedToVisitAppointments.map { from(it, clock) }
+
+      val remindToCallHeader = listOf(OverdueSectionHeader(R.string.overdue_remind_to_call_header, pendingAppointments.size))
+      val remindToCallListItems = remindToCallLaterAppointments.map { from(it, clock) }
+
+      val removedFromOverdueListHeader = listOf(OverdueSectionHeader(R.string.overdue_removed_from_list_call_header, pendingAppointments.size))
+      val removedFromOverdueListItems = removedFromOverdueAppointments.map { from(it, clock) }
+
+      val moreThanAnOneYearOverdueHeader = listOf(OverdueSectionHeader(R.string.overdue_no_visit_in_one_year_call_header, pendingAppointments.size))
+      val moreThanAnOneYearOverdueListItems = moreThanAnYearOverdueAppointments.map { from(it, clock) }
+
+      return pendingToCallHeader + pendingToCallListItems + agreedToVisitHeader + agreedToVisitListItems + remindToCallHeader + remindToCallListItems + removedFromOverdueListHeader + removedFromOverdueListItems + moreThanAnOneYearOverdueHeader + moreThanAnOneYearOverdueListItems
+    }
+
+    private fun from(
+        overdueAppointment: OverdueAppointment,
+        clock: UserClock
+    ): OverdueAppointmentListItemNew {
+      return OverdueAppointmentRow(
+          appointmentUuid = overdueAppointment.appointment.uuid,
+          patientUuid = overdueAppointment.appointment.patientUuid,
+          name = overdueAppointment.fullName,
+          gender = overdueAppointment.gender,
+          age = overdueAppointment.ageDetails.estimateAge(clock),
+          phoneNumber = overdueAppointment.phoneNumber?.number,
+          overdueDays = daysBetweenNowAndDate(overdueAppointment.appointment.scheduledDate, clock),
+          isAtHighRisk = overdueAppointment.isAtHighRisk,
+          villageName = overdueAppointment.patientAddress.colonyOrVillage
+      )
+    }
+
+    private fun daysBetweenNowAndDate(
+        date: LocalDate,
+        clock: UserClock
+    ): Int {
+      return ChronoUnit.DAYS.between(date, LocalDate.now(clock)).toInt()
+    }
+  }
 
   data class OverdueAppointmentRow(
       val appointmentUuid: UUID,

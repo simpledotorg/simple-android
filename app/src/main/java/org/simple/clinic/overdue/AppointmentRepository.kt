@@ -230,6 +230,10 @@ class AppointmentRepository @Inject constructor(
     return appointmentDao.nextAppointmentPatientProfile(patientUuid)
   }
 
+  fun appointmentsForPatient(patientUuid: UUID): List<Appointment> {
+    return appointmentDao.appointmentsForPatient(patientUuid)
+  }
+
   fun hasAppointmentForPatientChangedSince(patientUuid: UUID, timestamp: Instant): Boolean {
     return appointmentDao
         .hasAppointmentForPatientChangedSince(

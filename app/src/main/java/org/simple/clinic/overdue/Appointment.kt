@@ -355,5 +355,13 @@ data class Appointment(
       GROUP BY patientUuid HAVING MAX(createdAt)
     """)
     fun latestScheduledAppointmentForPatient(patientUuid: UUID): Appointment?
+
+    @Query("""
+       SELECT * FROM Appointment
+       WHERE 
+         patientUuid = :patientUuid
+         AND deletedAt IS NULL
+    """)
+    fun appointmentsForPatient(patientUuid: UUID): List<Appointment>
   }
 }

@@ -8,7 +8,13 @@ class OverdueUiRenderer(
 ) : ViewRenderer<OverdueModel> {
 
   override fun render(model: OverdueModel) {
-    if (model.hasLoadedOverdueAppointments && isOverdueSectionsFeatureEnabled) {
+    if (isOverdueSectionsFeatureEnabled) {
+      loadOverdueSections(model)
+    }
+  }
+
+  private fun loadOverdueSections(model: OverdueModel) {
+    if (model.hasLoadedOverdueAppointments) {
       ui.showOverdueAppointments(
           pendingAppointments = model.pendingAppointments.orEmpty(),
           agreedToVisitAppointments = model.agreedToVisitAppointments.orEmpty(),
@@ -17,6 +23,9 @@ class OverdueUiRenderer(
           moreThanAnYearOverdueAppointments = model.moreThanAnYearOverdueAppointments.orEmpty()
       )
       ui.showOverdueCount(model.overdueCount)
+      ui.hideProgress()
+    } else {
+      ui.showProgress()
     }
   }
 }

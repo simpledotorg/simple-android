@@ -25,6 +25,7 @@
 - Implement minor overdue section layout improvements
 - Bump core-ktx to 1.8.0
 - Fix `RetentionType` getting obfuscated by R8/Proguard
+- Bump appcompat to v1.4.2
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 - [In Progress: 03 Jun 2022] Implement `OverdueAppointmentListItemNew` adapter
 

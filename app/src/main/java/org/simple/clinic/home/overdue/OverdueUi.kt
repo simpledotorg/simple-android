@@ -8,4 +8,6 @@ interface OverdueUi {
       removedFromOverdueAppointments: List<OverdueAppointment>,
       moreThanAnYearOverdueAppointments: List<OverdueAppointment>
   )
+
+  fun showOverdueCount(count: Int)
 }

@@ -23,6 +23,7 @@
 - Show all overdue patients count instead of just pending patients in overdue tab
 - Show progress bar when loading all overdue appointments
 - Implement minor overdue section layout improvements
+- Bump core-ktx to 1.8.0
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Changes

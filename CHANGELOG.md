@@ -24,6 +24,7 @@
 - Show progress bar when loading all overdue appointments
 - Implement minor overdue section layout improvements
 - Bump core-ktx to 1.8.0
+- Fix `RetentionType` getting obfuscated by R8/Proguard
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Changes

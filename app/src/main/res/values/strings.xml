@@ -338,6 +338,12 @@
   <string name="overdue_share">Share</string>
   <string name="overdue_no_pending_patients">No pending patients</string>
   <string name="overdue_pending_list_button_see_all">See All</string>
+  <string name="overdue_pending_to_call_header">PENDING TO CALL</string>
+  <string name="overdue_agreed_to_visit_call_header">AGREED TO VISIT</string>
+  <string name="overdue_remind_to_call_header">REMIND TO CALL LATER</string>
+  <string name="overdue_removed_from_list_call_header">REMOVED FROM LIST</string>
+  <string name="overdue_no_visit_in_one_year_call_header">NO VISIT IN 1 YEAR</string>
+
 
   <!-- Facility change -->
 

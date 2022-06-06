@@ -110,7 +110,6 @@ data class OverdueAppointment(
       WHERE
         IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid AND
         appt_scheduledDate < :scheduledBefore AND
-        (appt_remindOn < :scheduledBefore OR appt_remindOn IS NULL) AND
         P.deletedAt IS NULL AND
         P.status != 'dead' AND 
         PPN.deletedAt IS NULL AND 

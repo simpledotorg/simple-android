@@ -26,29 +26,29 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
   companion object {
 
     fun from(
-        pendingAppointments: List<OverdueAppointment>,
-        agreedToVisitAppointments: List<OverdueAppointment>,
-        remindToCallLaterAppointments: List<OverdueAppointment>,
-        removedFromOverdueAppointments: List<OverdueAppointment>,
-        moreThanAnYearOverdueAppointments: List<OverdueAppointment>,
+        overdueAppointmentSections: OverdueAppointmentSections,
         clock: UserClock
     ): List<OverdueAppointmentListItemNew> {
-      val pendingToCallHeader = listOf(OverdueSectionHeader(R.string.overdue_pending_to_call_header, pendingAppointments.size))
-      val pendingToCallListItems = pendingAppointments.map { from(it, clock) }
+      val pendingToCallHeader = listOf(OverdueSectionHeader(R.string.overdue_pending_to_call_header, overdueAppointmentSections.pendingAppointments.size))
+      val pendingToCallListItems = overdueAppointmentSections.pendingAppointments.map { from(it, clock) }
 
-      val agreedToVisitHeader = listOf(OverdueSectionHeader(R.string.overdue_agreed_to_visit_call_header, pendingAppointments.size))
-      val agreedToVisitListItems = agreedToVisitAppointments.map { from(it, clock) }
+      val agreedToVisitHeader = listOf(OverdueSectionHeader(R.string.overdue_agreed_to_visit_call_header, overdueAppointmentSections.agreedToVisitAppointments.size))
+      val agreedToVisitListItems = overdueAppointmentSections.agreedToVisitAppointments.map { from(it, clock) }
 
-      val remindToCallHeader = listOf(OverdueSectionHeader(R.string.overdue_remind_to_call_header, pendingAppointments.size))
-      val remindToCallListItems = remindToCallLaterAppointments.map { from(it, clock) }
+      val remindToCallHeader = listOf(OverdueSectionHeader(R.string.overdue_remind_to_call_header, overdueAppointmentSections.remindToCallLaterAppointments.size))
+      val remindToCallListItems = overdueAppointmentSections.remindToCallLaterAppointments.map { from(it, clock) }
 
-      val removedFromOverdueListHeader = listOf(OverdueSectionHeader(R.string.overdue_removed_from_list_call_header, pendingAppointments.size))
-      val removedFromOverdueListItems = removedFromOverdueAppointments.map { from(it, clock) }
+      val removedFromOverdueListHeader = listOf(OverdueSectionHeader(R.string.overdue_removed_from_list_call_header, overdueAppointmentSections.removedFromOverdueAppointments.size))
+      val removedFromOverdueListItems = overdueAppointmentSections.removedFromOverdueAppointments.map { from(it, clock) }
 
-      val moreThanAnOneYearOverdueHeader = listOf(OverdueSectionHeader(R.string.overdue_no_visit_in_one_year_call_header, pendingAppointments.size))
-      val moreThanAnOneYearOverdueListItems = moreThanAnYearOverdueAppointments.map { from(it, clock) }
+      val moreThanAnOneYearOverdueHeader = listOf(OverdueSectionHeader(R.string.overdue_no_visit_in_one_year_call_header, overdueAppointmentSections.moreThanAnYearOverdueAppointments.size))
+      val moreThanAnOneYearOverdueListItems = overdueAppointmentSections.moreThanAnYearOverdueAppointments.map { from(it, clock) }
 
-      return pendingToCallHeader + pendingToCallListItems + agreedToVisitHeader + agreedToVisitListItems + remindToCallHeader + remindToCallListItems + removedFromOverdueListHeader + removedFromOverdueListItems + moreThanAnOneYearOverdueHeader + moreThanAnOneYearOverdueListItems
+      return pendingToCallHeader + pendingToCallListItems +
+          agreedToVisitHeader + agreedToVisitListItems +
+          remindToCallHeader + remindToCallListItems +
+          removedFromOverdueListHeader + removedFromOverdueListItems +
+          moreThanAnOneYearOverdueHeader + moreThanAnOneYearOverdueListItems
     }
 
     private fun from(

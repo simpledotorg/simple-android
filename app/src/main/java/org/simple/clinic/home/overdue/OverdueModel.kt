@@ -7,22 +7,14 @@ import org.simple.clinic.facility.Facility
 @Parcelize
 data class OverdueModel(
     val facility: Facility?,
-    val pendingAppointments: List<OverdueAppointment>?,
-    val agreedToVisitAppointments: List<OverdueAppointment>?,
-    val remindToCallLaterAppointments: List<OverdueAppointment>?,
-    val removedFromOverdueAppointments: List<OverdueAppointment>?,
-    val moreThanAnYearOverdueAppointments: List<OverdueAppointment>?
+    val overdueAppointmentSections: OverdueAppointmentSections?
 ) : Parcelable {
 
   companion object {
     fun create(): OverdueModel {
       return OverdueModel(
           facility = null,
-          pendingAppointments = null,
-          agreedToVisitAppointments = null,
-          remindToCallLaterAppointments = null,
-          removedFromOverdueAppointments = null,
-          moreThanAnYearOverdueAppointments = null
+          overdueAppointmentSections = null
       )
     }
   }
@@ -34,36 +26,18 @@ data class OverdueModel(
     get() = facility != null
 
   val hasLoadedOverdueAppointments: Boolean
-    get() = pendingAppointments != null &&
-        agreedToVisitAppointments != null &&
-        remindToCallLaterAppointments != null &&
-        removedFromOverdueAppointments != null &&
-        moreThanAnYearOverdueAppointments != null
+    get() = overdueAppointmentSections != null
 
   val overdueCount: Int
-    get() = pendingAppointments!!.size +
-        agreedToVisitAppointments!!.size +
-        remindToCallLaterAppointments!!.size +
-        removedFromOverdueAppointments!!.size +
-        moreThanAnYearOverdueAppointments!!.size
+    get() = overdueAppointmentSections!!.overdueCount
 
   fun currentFacilityLoaded(facility: Facility): OverdueModel {
     return copy(facility = facility)
   }
 
   fun overdueAppointmentsLoaded(
-      pendingAppointments: List<OverdueAppointment>,
-      agreedToVisitAppointments: List<OverdueAppointment>,
-      remindToCallLaterAppointments: List<OverdueAppointment>,
-      removedFromOverdueAppointments: List<OverdueAppointment>,
-      moreThanAnYearOverdueAppointments: List<OverdueAppointment>
+      overdueAppointmentSections: OverdueAppointmentSections
   ): OverdueModel {
-    return copy(
-        pendingAppointments = pendingAppointments,
-        agreedToVisitAppointments = agreedToVisitAppointments,
-        remindToCallLaterAppointments = remindToCallLaterAppointments,
-        removedFromOverdueAppointments = removedFromOverdueAppointments,
-        moreThanAnYearOverdueAppointments = moreThanAnYearOverdueAppointments
-    )
+    return copy(overdueAppointmentSections = overdueAppointmentSections)
   }
 }

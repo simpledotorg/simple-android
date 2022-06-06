@@ -195,22 +195,22 @@ class OverdueUpdateTest {
         TestData.overdueAppointment(appointmentUuid = UUID.fromString("20bb3b3a-908e-49b5-97ef-730eb2504bd9"))
     )
 
+    val overdueAppointmentSections = OverdueAppointmentSections(
+        pendingAppointments = pendingAppointments,
+        agreedToVisitAppointments = agreedToVisitAppointments,
+        remindToCallLaterAppointments = remindToCallLaterAppointments,
+        removedFromOverdueAppointments = removedFromOverdueAppointments,
+        moreThanAnYearOverdueAppointments = moreThanAnYearOverdueAppointments
+    )
+
     updateSpec
         .given(defaultModel)
         .whenEvent(OverdueAppointmentsLoaded(
-            pendingAppointments = pendingAppointments,
-            agreedToVisitAppointments = agreedToVisitAppointments,
-            remindToCallLaterAppointments = remindToCallLaterAppointments,
-            removedFromOverdueAppointments = removedFromOverdueAppointments,
-            moreThanAnYearOverdueAppointments = moreThanAnYearOverdueAppointments
+            overdueAppointmentSections = overdueAppointmentSections
         ))
         .then(assertThatNext(
             hasModel(defaultModel.overdueAppointmentsLoaded(
-                pendingAppointments = pendingAppointments,
-                agreedToVisitAppointments = agreedToVisitAppointments,
-                remindToCallLaterAppointments = remindToCallLaterAppointments,
-                removedFromOverdueAppointments = removedFromOverdueAppointments,
-                moreThanAnYearOverdueAppointments = moreThanAnYearOverdueAppointments
+                overdueAppointmentSections = overdueAppointmentSections
             )),
             hasNoEffects()
         ))

@@ -287,11 +287,13 @@ class OverdueEffectHandlerTest {
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(OverdueAppointmentsLoaded(
-        pendingAppointments = listOf(pendingAppointment),
-        agreedToVisitAppointments = listOf(agreedToVisitAppointment),
-        remindToCallLaterAppointments = emptyList(),
-        removedFromOverdueAppointments = listOf(removedAppointment),
-        moreThanAnYearOverdueAppointments = listOf(moreThanAnYearAppointment)
+        overdueAppointmentSections = OverdueAppointmentSections(
+            pendingAppointments = listOf(pendingAppointment),
+            agreedToVisitAppointments = listOf(agreedToVisitAppointment),
+            remindToCallLaterAppointments = emptyList(),
+            removedFromOverdueAppointments = listOf(removedAppointment),
+            moreThanAnYearOverdueAppointments = listOf(moreThanAnYearAppointment)
+        )
     ))
     effectHandlerTestCase.dispose()
 

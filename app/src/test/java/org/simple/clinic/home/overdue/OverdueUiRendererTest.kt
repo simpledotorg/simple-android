@@ -24,24 +24,26 @@ class OverdueUiRendererTest {
     val overdueAppointmentsLoadedModel = defaultModel
         .currentFacilityLoaded(TestData.facility(uuid = UUID.fromString("b5e72d35-73e2-444b-a266-a02b73a6299a")))
         .overdueAppointmentsLoaded(
-            pendingAppointments = pendingAppointments,
-            agreedToVisitAppointments = agreedToVisitAppointments,
-            remindToCallLaterAppointments = emptyList(),
-            removedFromOverdueAppointments = removedFromOverdueAppointments,
-            moreThanAnYearOverdueAppointments = emptyList()
+            overdueAppointmentSections = OverdueAppointmentSections(
+                pendingAppointments = pendingAppointments,
+                agreedToVisitAppointments = agreedToVisitAppointments,
+                remindToCallLaterAppointments = emptyList(),
+                removedFromOverdueAppointments = removedFromOverdueAppointments,
+                moreThanAnYearOverdueAppointments = emptyList()
+            )
         )
 
     // when
     uiRenderer.render(overdueAppointmentsLoadedModel)
 
     // then
-    verify(ui).showOverdueAppointments(
+    verify(ui).showOverdueAppointments(OverdueAppointmentSections(
         pendingAppointments = pendingAppointments,
         agreedToVisitAppointments = agreedToVisitAppointments,
         remindToCallLaterAppointments = emptyList(),
         removedFromOverdueAppointments = removedFromOverdueAppointments,
         moreThanAnYearOverdueAppointments = emptyList()
-    )
+    ))
     verify(ui).showOverdueCount(3)
     verify(ui).hideProgress()
   }

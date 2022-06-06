@@ -245,13 +245,7 @@ class OverdueScreen : BaseScreen<
     router.push(SelectOverdueDownloadFormatDialog.Key(SharingInProgress))
   }
 
-  override fun showOverdueAppointments(
-      pendingAppointments: List<OverdueAppointment>,
-      agreedToVisitAppointments: List<OverdueAppointment>,
-      remindToCallLaterAppointments: List<OverdueAppointment>,
-      removedFromOverdueAppointments: List<OverdueAppointment>,
-      moreThanAnYearOverdueAppointments: List<OverdueAppointment>
-  ) {
+  override fun showOverdueAppointments(overdueAppointmentSections: OverdueAppointmentSections) {
     // TODO: Bind UI
   }
 

@@ -18,8 +18,25 @@ class OverdueUiRenderer(
       ui.showOverdueAppointments(model.overdueAppointmentSections!!, model.pendingListState)
       ui.showOverdueCount(model.overdueCount)
       ui.hideProgress()
+      renderOverdueListLoadedViews(model)
     } else {
-      ui.showProgress()
+      renderOverdueListLoadingViews()
+    }
+  }
+
+  private fun renderOverdueListLoadingViews() {
+    ui.showProgress()
+    ui.hideOverdueRecyclerView()
+    ui.hideNoOverduePatientsView()
+  }
+
+  private fun renderOverdueListLoadedViews(model: OverdueModel) {
+    if (model.isOverdueAppointmentSectionsListEmpty) {
+      ui.showNoOverduePatientsView()
+      ui.hideOverdueRecyclerView()
+    } else {
+      ui.hideNoOverduePatientsView()
+      ui.showOverdueRecyclerView()
     }
   }
 }

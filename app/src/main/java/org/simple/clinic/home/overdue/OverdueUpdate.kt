@@ -39,11 +39,7 @@ class OverdueUpdate(
       model: OverdueModel
   ): Next<OverdueModel, OverdueEffect> {
     return next(model.overdueAppointmentsLoaded(
-        pendingAppointments = event.pendingAppointments,
-        agreedToVisitAppointments = event.agreedToVisitAppointments,
-        remindToCallLaterAppointments = event.remindToCallLaterAppointments,
-        removedFromOverdueAppointments = event.removedFromOverdueAppointments,
-        moreThanAnYearOverdueAppointments = event.moreThanAnYearOverdueAppointments
+        overdueAppointmentSections = event.overdueAppointmentSections
     ))
   }
 

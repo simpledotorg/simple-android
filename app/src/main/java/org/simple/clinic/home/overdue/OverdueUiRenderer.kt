@@ -15,13 +15,7 @@ class OverdueUiRenderer(
 
   private fun loadOverdueSections(model: OverdueModel) {
     if (model.hasLoadedOverdueAppointments) {
-      ui.showOverdueAppointments(
-          pendingAppointments = model.pendingAppointments.orEmpty(),
-          agreedToVisitAppointments = model.agreedToVisitAppointments.orEmpty(),
-          remindToCallLaterAppointments = model.remindToCallLaterAppointments.orEmpty(),
-          removedFromOverdueAppointments = model.removedFromOverdueAppointments.orEmpty(),
-          moreThanAnYearOverdueAppointments = model.moreThanAnYearOverdueAppointments.orEmpty()
-      )
+      ui.showOverdueAppointments(model.overdueAppointmentSections!!)
       ui.showOverdueCount(model.overdueCount)
       ui.hideProgress()
     } else {

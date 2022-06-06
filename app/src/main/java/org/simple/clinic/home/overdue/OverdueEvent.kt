@@ -28,11 +28,7 @@ data class OverdueAppointmentsLoaded_Old(
 ) : OverdueEvent()
 
 data class OverdueAppointmentsLoaded(
-    val pendingAppointments: List<OverdueAppointment>,
-    val agreedToVisitAppointments: List<OverdueAppointment>,
-    val remindToCallLaterAppointments: List<OverdueAppointment>,
-    val removedFromOverdueAppointments: List<OverdueAppointment>,
-    val moreThanAnYearOverdueAppointments: List<OverdueAppointment>
+    val overdueAppointmentSections: OverdueAppointmentSections
 ) : OverdueEvent()
 
 data class DownloadOverdueListClicked(

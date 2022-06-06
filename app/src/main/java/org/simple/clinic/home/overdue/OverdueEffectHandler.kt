@@ -62,14 +62,15 @@ class OverdueEffectHandler @AssistedInject constructor(
                 overdueAppointments = overdueAppointments
             )
             val overdueSections = overdueAppointmentsWithInYear.groupBy { it.callResult?.outcome }
-
-            OverdueAppointmentsLoaded(
+            val overdueAppointmentSections = OverdueAppointmentSections(
                 pendingAppointments = overdueSections[null].orEmpty(),
                 agreedToVisitAppointments = overdueSections[Outcome.AgreedToVisit].orEmpty(),
                 remindToCallLaterAppointments = overdueSections[Outcome.RemindToCallLater].orEmpty(),
                 removedFromOverdueAppointments = overdueSections[Outcome.RemovedFromOverdueList].orEmpty(),
                 moreThanAnYearOverdueAppointments = overdueAppointmentMoreThanYear
             )
+
+            OverdueAppointmentsLoaded(overdueAppointmentSections = overdueAppointmentSections)
           }
     }
   }

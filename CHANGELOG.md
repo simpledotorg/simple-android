@@ -27,6 +27,7 @@
 - Fix `RetentionType` getting obfuscated by R8/Proguard
 - Bump appcompat to v1.4.2
 - Fetch the last created appointment for the patient when fetching the latest overdue appointment
+- Add wrapper class for overdue appointment sections
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 - [In Progress: 03 Jun 2022] Implement `OverdueAppointmentListItemNew` adapter
 

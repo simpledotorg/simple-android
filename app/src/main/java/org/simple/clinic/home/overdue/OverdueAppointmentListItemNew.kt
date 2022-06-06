@@ -30,7 +30,9 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
         clock: UserClock
     ): List<OverdueAppointmentListItemNew> {
       val pendingToCallHeader = listOf(OverdueSectionHeader(R.string.overdue_pending_to_call_header, overdueAppointmentSections.pendingAppointments.size))
-      val pendingToCallListItems = overdueAppointmentSections.pendingAppointments.map { from(it, clock) }
+      val pendingAppointmentsContent = overdueAppointmentSections.pendingAppointments
+          .map { from(it, clock) }
+          .ifEmpty { listOf(NoPendingPatients) }
 
       val agreedToVisitHeader = listOf(OverdueSectionHeader(R.string.overdue_agreed_to_visit_call_header, overdueAppointmentSections.agreedToVisitAppointments.size))
       val agreedToVisitListItems = overdueAppointmentSections.agreedToVisitAppointments.map { from(it, clock) }
@@ -44,7 +46,7 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
       val moreThanAnOneYearOverdueHeader = listOf(OverdueSectionHeader(R.string.overdue_no_visit_in_one_year_call_header, overdueAppointmentSections.moreThanAnYearOverdueAppointments.size))
       val moreThanAnOneYearOverdueListItems = overdueAppointmentSections.moreThanAnYearOverdueAppointments.map { from(it, clock) }
 
-      return pendingToCallHeader + pendingToCallListItems +
+      return pendingToCallHeader + pendingAppointmentsContent +
           agreedToVisitHeader + agreedToVisitListItems +
           remindToCallHeader + remindToCallListItems +
           removedFromOverdueListHeader + removedFromOverdueListItems +
@@ -184,10 +186,11 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
   }
 
   object NoPendingPatients : OverdueAppointmentListItemNew() {
+
     override fun layoutResId(): Int = R.layout.list_item_no_pending_patients
 
     override fun render(holder: BindingViewHolder, subject: Subject<UiEvent>) {
-      // TO-Do handle this later
+      /* no-op */
     }
   }
 }

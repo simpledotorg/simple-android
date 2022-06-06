@@ -1804,21 +1804,30 @@ class AppointmentRepositoryAndroidTest {
         patientUuid = patientUuid,
         facilityUuid = facility.uuid,
         status = Scheduled,
-        scheduledDate = today
+        scheduledDate = today,
+        createdAt = today.toUtcInstant(userClock),
+        updatedAt = today.toUtcInstant(userClock),
+        deletedAt = null
     )
     val appointment_scheduled_a_week_in_the_future = TestData.appointment(
         uuid = UUID.fromString("81ba3bfc-2579-43fe-9af8-7de79a75d37d"),
         patientUuid = patientUuid,
         facilityUuid = facility.uuid,
         status = Scheduled,
-        scheduledDate = aWeekInFuture
+        scheduledDate = aWeekInFuture,
+        createdAt = aWeekInFuture.toUtcInstant(userClock),
+        updatedAt = aWeekInFuture.toUtcInstant(userClock),
+        deletedAt = null
     )
     val visited_appointment_two_weeks_in_the_future = TestData.appointment(
         uuid = UUID.fromString("96cc19f4-44c3-45f4-a60a-50c55ea78445"),
         patientUuid = patientUuid,
         facilityUuid = facility.uuid,
         status = Visited,
-        scheduledDate = twoWeeksInFuture
+        scheduledDate = twoWeeksInFuture,
+        createdAt = twoWeeksInFuture.toUtcInstant(userClock),
+        updatedAt = twoWeeksInFuture.toUtcInstant(userClock),
+        deletedAt = null
     )
 
     bpRepository.save(listOf(
@@ -2559,7 +2568,11 @@ class AppointmentRepositoryAndroidTest {
         patientUuid = patientUuid,
         facilityUuid = facility.uuid,
         status = Cancelled,
-        remindOn = aWeekInFuture
+        scheduledDate = aWeekInFuture,
+        remindOn = aWeekInFuture.plusDays(1),
+        createdAt = aWeekInFuture.toUtcInstant(userClock),
+        updatedAt = aWeekInFuture.toUtcInstant(userClock),
+        deletedAt = null
     )
 
     bpRepository.save(listOf(

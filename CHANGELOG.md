@@ -4,6 +4,17 @@
 
 ### Internal
 
+- Add wrapper class for overdue appointment sections
+- Show no pending patients card when there are no pending overdue patients
+- Load appointments with a reminder when loading all overdue appointments for a facility
+- Update horizontal padding of overdue section header
+- [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
+- [In Progress: 03 Jun 2022] Implement `OverdueAppointmentListItemNew` adapter
+
+## 2022-06-06-8284
+
+### Internal
+
 - Enable drug stock only for India
 - Bump kotlin-coroutines to v1.6.2
 - Move shared test code to separate module
@@ -27,12 +38,6 @@
 - Fix `RetentionType` getting obfuscated by R8/Proguard
 - Bump appcompat to v1.4.2
 - Fetch the last created appointment for the patient when fetching the latest overdue appointment
-- Add wrapper class for overdue appointment sections
-- Show no pending patients card when there are no pending overdue patients
-- Load appointments with a reminder when loading all overdue appointments for a facility
-- Update horizontal padding of overdue section header
-- [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
-- [In Progress: 03 Jun 2022] Implement `OverdueAppointmentListItemNew` adapter
 
 ### Changes
 

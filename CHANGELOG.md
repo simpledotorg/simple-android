@@ -29,6 +29,7 @@
 - Fetch the last created appointment for the patient when fetching the latest overdue appointment
 - Add wrapper class for overdue appointment sections
 - Show no pending patients card when there are no pending overdue patients
+- Load appointments with a reminder when loading all overdue appointments for a facility
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 - [In Progress: 03 Jun 2022] Implement `OverdueAppointmentListItemNew` adapter
 

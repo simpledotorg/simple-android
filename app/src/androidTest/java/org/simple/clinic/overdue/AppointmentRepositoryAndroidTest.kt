@@ -2514,7 +2514,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentUuid = UUID.fromString("bd6239b2-914c-4414-8ae3-dae2583097c1"),
         patientUuid = patientWithAppointmentRemindedInFiveDaysSinceOverdue,
         scheduledDate = now.minusDays(2),
-        remindOn = now.minusDays(7),
+        remindOn = now.plusDays(7),
         facilityUuid = facility1Uuid,
         patientAssignedFacilityUuid = null,
         patientStatus = Active,

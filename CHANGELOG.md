@@ -30,6 +30,7 @@
 - Add wrapper class for overdue appointment sections
 - Show no pending patients card when there are no pending overdue patients
 - Load appointments with a reminder when loading all overdue appointments for a facility
+- Update horizontal padding of overdue section header
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 - [In Progress: 03 Jun 2022] Implement `OverdueAppointmentListItemNew` adapter
 

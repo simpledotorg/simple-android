@@ -4,7 +4,7 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:paddingHorizontal="@dimen/spacing_24"
+  android:paddingHorizontal="@dimen/spacing_8"
   android:paddingVertical="@dimen/spacing_16">
 
   <com.google.android.material.textview.MaterialTextView

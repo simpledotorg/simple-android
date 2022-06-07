@@ -11,6 +11,8 @@ import org.junit.Test
 import org.simple.clinic.analytics.NetworkConnectivityStatus.ACTIVE
 import org.simple.clinic.analytics.NetworkConnectivityStatus.INACTIVE
 import org.simple.clinic.facility.FacilityConfig
+import org.simple.clinic.home.overdue.PendingListState.SEE_ALL
+import org.simple.clinic.home.overdue.PendingListState.SEE_LESS
 import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import org.simple.sharedTestCode.TestData
 import java.time.LocalDate
@@ -214,5 +216,31 @@ class OverdueUpdateTest {
             )),
             hasNoEffects()
         ))
+  }
+
+  @Test
+  fun `when pending list footer is clicked and pending list state is see less, then change the pending list state to see all`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(PendingListFooterClicked)
+        .then(
+            assertThatNext(
+                hasModel(defaultModel.pendingListStateChanged(state = SEE_ALL)),
+                hasNoEffects()
+            )
+        )
+  }
+
+  @Test
+  fun `when pending list footer is clicked and pending list state is see all, then change the pending list state to see less`() {
+    updateSpec
+        .given(defaultModel.pendingListStateChanged(state = SEE_ALL))
+        .whenEvent(PendingListFooterClicked)
+        .then(
+            assertThatNext(
+                hasModel(defaultModel.pendingListStateChanged(state = SEE_LESS)),
+                hasNoEffects()
+            )
+        )
   }
 }

@@ -29,7 +29,10 @@ import org.simple.clinic.activity.permissions.RequestPermissions
 import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
+import org.simple.clinic.databinding.ListItemNoPendingPatientsBinding
+import org.simple.clinic.databinding.ListItemOverdueListSectionHeaderBinding
 import org.simple.clinic.databinding.ListItemOverduePatientBinding
+import org.simple.clinic.databinding.ListItemOverduePendingListSeeAllButtonBinding
 import org.simple.clinic.databinding.ListItemOverduePlaceholderBinding
 import org.simple.clinic.databinding.ScreenOverdueBinding
 import org.simple.clinic.di.injector
@@ -53,6 +56,7 @@ import org.simple.clinic.sync.SyncProgress
 import org.simple.clinic.util.RuntimeNetworkStatus
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
@@ -108,7 +112,7 @@ class OverdueScreen : BaseScreen<
   @Inject
   lateinit var runtimeNetworkStatus: RuntimeNetworkStatus<UiEvent>
 
-  private val overdueListAdapter = PagingItemAdapter(
+  private val overdueListAdapter_Old = PagingItemAdapter(
       diffCallback = OverdueAppointmentListItem.DiffCallback(),
       bindings = mapOf(
           R.layout.list_item_overdue_patient to { layoutInflater, parent ->
@@ -118,6 +122,24 @@ class OverdueScreen : BaseScreen<
       placeHolderBinding = R.layout.list_item_overdue_placeholder to { layoutInflater, parent ->
         ListItemOverduePlaceholderBinding.inflate(layoutInflater, parent, false)
       }
+  )
+
+  private val overdueListAdapter = ItemAdapter(
+      diffCallback = OverdueAppointmentListItemNew.DiffCallback(),
+      bindings = mapOf(
+          R.layout.list_item_overdue_patient to { layoutInflater, parent ->
+            ListItemOverduePatientBinding.inflate(layoutInflater, parent, false)
+          },
+          R.layout.list_item_overdue_list_section_header to { layoutInflater, parent ->
+            ListItemOverdueListSectionHeaderBinding.inflate(layoutInflater, parent, false)
+          },
+          R.layout.list_item_overdue_pending_list_see_all_button to { layoutInflater, parent ->
+            ListItemOverduePendingListSeeAllButtonBinding.inflate(layoutInflater, parent, false)
+          },
+          R.layout.list_item_no_pending_patients to { layoutInflater, parent ->
+            ListItemNoPendingPatientsBinding.inflate(layoutInflater, parent, false)
+          }
+      )
   )
 
   private val disposable = CompositeDisposable()
@@ -151,6 +173,7 @@ class OverdueScreen : BaseScreen<
   )
 
   override fun events() = Observable.mergeArray(
+      overdueListAdapter_Old.itemEvents,
       overdueListAdapter.itemEvents,
       downloadOverdueListClicks(),
       shareOverdueListClicks()
@@ -186,7 +209,11 @@ class OverdueScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    overdueRecyclerView.adapter = overdueListAdapter
+    overdueRecyclerView.adapter = if (features.isEnabled(OverdueSections)) {
+      overdueListAdapter
+    } else {
+      overdueListAdapter_Old
+    }
     overdueRecyclerView.layoutManager = LinearLayoutManager(context)
 
     val isOverdueListDownloadAndShareEnabled = features.isEnabled(OverdueListDownloadAndShare) && country.isoCountryCode == Country.INDIA
@@ -209,7 +236,7 @@ class OverdueScreen : BaseScreen<
       overdueAppointmentsOld: PagingData<OverdueAppointment_Old>,
       isDiabetesManagementEnabled: Boolean
   ) {
-    overdueListAdapter.submitData(lifecycle, OverdueAppointmentListItem.from(
+    overdueListAdapter_Old.submitData(lifecycle, OverdueAppointmentListItem.from(
         appointments = overdueAppointmentsOld,
         clock = userClock
     ))
@@ -246,7 +273,11 @@ class OverdueScreen : BaseScreen<
   }
 
   override fun showOverdueAppointments(overdueAppointmentSections: OverdueAppointmentSections) {
-    // TODO: Bind UI
+    overdueRecyclerView.visibility = View.VISIBLE
+    overdueListAdapter.submitList(OverdueAppointmentListItemNew.from(
+        overdueAppointmentSections = overdueAppointmentSections,
+        clock = userClock
+    ))
   }
 
   override fun showOverdueCount(count: Int) {
@@ -277,13 +308,13 @@ class OverdueScreen : BaseScreen<
     return Observables
         .combineLatest(
             lastSyncedState.asObservable(),
-            overdueListAdapter.loadStateFlow.asObservable()
+            overdueListAdapter_Old.loadStateFlow.asObservable()
         )
         .subscribe { (syncState, loadStates) ->
           val isSyncingPatientData = syncState.lastSyncProgress == SyncProgress.SYNCING
           val isLoadingInitialData = loadStates.refresh is LoadState.Loading
           val isOverdueListLoading = isSyncingPatientData || isLoadingInitialData
-          val hasNoAdapterItems = overdueListAdapter.itemCount == 0
+          val hasNoAdapterItems = overdueListAdapter_Old.itemCount == 0
 
           when {
             isOverdueListLoading && hasNoAdapterItems -> loadingOverdueList()
@@ -301,7 +332,7 @@ class OverdueScreen : BaseScreen<
     viewForEmptyList.visibleOrGone(isVisible = shouldShowEmptyView)
     overdueRecyclerView.visibleOrGone(isVisible = !shouldShowEmptyView)
 
-    showOverdueCount(overdueListAdapter.itemCount)
+    showOverdueCount(overdueListAdapter_Old.itemCount)
   }
 
   private fun loadingOverdueList() {

@@ -50,3 +50,5 @@ data class ShareOverdueListClicked(
 
   override val analyticsName = "Overdue Screen:Share clicked"
 }
+
+object PendingListFooterClicked : OverdueEvent()

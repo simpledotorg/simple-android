@@ -32,7 +32,7 @@ import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.databinding.ListItemNoPendingPatientsBinding
 import org.simple.clinic.databinding.ListItemOverdueListSectionHeaderBinding
 import org.simple.clinic.databinding.ListItemOverduePatientBinding
-import org.simple.clinic.databinding.ListItemOverduePendingListSeeAllButtonBinding
+import org.simple.clinic.databinding.ListItemOverduePendingListFooterBinding
 import org.simple.clinic.databinding.ListItemOverduePlaceholderBinding
 import org.simple.clinic.databinding.ScreenOverdueBinding
 import org.simple.clinic.di.injector
@@ -133,8 +133,8 @@ class OverdueScreen : BaseScreen<
           R.layout.list_item_overdue_list_section_header to { layoutInflater, parent ->
             ListItemOverdueListSectionHeaderBinding.inflate(layoutInflater, parent, false)
           },
-          R.layout.list_item_overdue_pending_list_see_all_button to { layoutInflater, parent ->
-            ListItemOverduePendingListSeeAllButtonBinding.inflate(layoutInflater, parent, false)
+          R.layout.list_item_overdue_pending_list_footer to { layoutInflater, parent ->
+            ListItemOverduePendingListFooterBinding.inflate(layoutInflater, parent, false)
           },
           R.layout.list_item_no_pending_patients to { layoutInflater, parent ->
             ListItemNoPendingPatientsBinding.inflate(layoutInflater, parent, false)

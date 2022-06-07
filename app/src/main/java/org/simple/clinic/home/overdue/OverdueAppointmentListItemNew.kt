@@ -47,12 +47,12 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
       val moreThanAnOneYearOverdueHeader = listOf(OverdueSectionHeader(R.string.overdue_no_visit_in_one_year_call_header, overdueAppointmentSections.moreThanAnYearOverdueAppointments.size))
       val moreThanAnOneYearOverdueListItems = overdueAppointmentSections.moreThanAnYearOverdueAppointments.map { from(it, clock) }
 
-      val seeAllPendingAppointmentListItem = listOf(SeeAllPendingAppointmentList)
+      val pendingListFooterItem = listOf(PendingListFooter)
 
       val dividerListItem = listOf(Divider)
 
       return pendingToCallHeader + pendingAppointmentsContent +
-          seeAllPendingAppointmentListItem + dividerListItem +
+          pendingListFooterItem + dividerListItem +
           agreedToVisitHeader + agreedToVisitListItems + dividerListItem +
           remindToCallHeader + remindToCallListItems + dividerListItem +
           removedFromOverdueListHeader + removedFromOverdueListItems + dividerListItem +
@@ -183,8 +183,8 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
     }
   }
 
-  object SeeAllPendingAppointmentList : OverdueAppointmentListItemNew() {
-    override fun layoutResId(): Int = R.layout.list_item_overdue_pending_list_see_all_button
+  object PendingListFooter : OverdueAppointmentListItemNew() {
+    override fun layoutResId(): Int = R.layout.list_item_overdue_pending_list_footer
 
     override fun render(holder: BindingViewHolder, subject: Subject<UiEvent>) {
       // TO-Do handle this later

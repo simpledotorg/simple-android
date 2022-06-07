@@ -12,6 +12,7 @@
 - Implement `OverdueAppointmentListItemNew` adapter
 - Rename `SeeAllPendingAppointmentList` to `PendingListFooter`
 - Handle pending list footer clicks
+- Fix app crashing after coming back to app from the background after the overdue list is loaded
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 - [In Progress: 03 Jun 2022] Implement `OverdueAppointmentListItemNew` adapter
 

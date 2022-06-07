@@ -1,6 +1,7 @@
 package org.simple.clinic.home.overdue
 
 import android.os.Parcelable
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.PendingListState.SEE_LESS
@@ -8,7 +9,8 @@ import org.simple.clinic.home.overdue.PendingListState.SEE_LESS
 @Parcelize
 data class OverdueModel(
     val facility: Facility?,
-    val overdueAppointmentSections: OverdueAppointmentSections?,
+    @IgnoredOnParcel
+    val overdueAppointmentSections: OverdueAppointmentSections? = null,
     val pendingListState: PendingListState
 ) : Parcelable {
 

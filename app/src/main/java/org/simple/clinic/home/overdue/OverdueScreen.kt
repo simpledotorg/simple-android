@@ -29,6 +29,7 @@ import org.simple.clinic.activity.permissions.RequestPermissions
 import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
+import org.simple.clinic.databinding.ListItemDividerBinding
 import org.simple.clinic.databinding.ListItemNoPendingPatientsBinding
 import org.simple.clinic.databinding.ListItemOverdueListSectionHeaderBinding
 import org.simple.clinic.databinding.ListItemOverduePatientBinding
@@ -138,6 +139,9 @@ class OverdueScreen : BaseScreen<
           },
           R.layout.list_item_no_pending_patients to { layoutInflater, parent ->
             ListItemNoPendingPatientsBinding.inflate(layoutInflater, parent, false)
+          },
+          R.layout.list_item_divider to { layoutInflater, parent ->
+            ListItemDividerBinding.inflate(layoutInflater, parent, false)
           }
       )
   )
@@ -272,11 +276,12 @@ class OverdueScreen : BaseScreen<
     router.push(SelectOverdueDownloadFormatDialog.Key(SharingInProgress))
   }
 
-  override fun showOverdueAppointments(overdueAppointmentSections: OverdueAppointmentSections) {
+  override fun showOverdueAppointments(overdueAppointmentSections: OverdueAppointmentSections, pendingListState: PendingListState) {
     overdueRecyclerView.visibility = View.VISIBLE
     overdueListAdapter.submitList(OverdueAppointmentListItemNew.from(
         overdueAppointmentSections = overdueAppointmentSections,
-        clock = userClock
+        clock = userClock,
+        pendingListState = pendingListState
     ))
   }
 

@@ -3,6 +3,7 @@ package org.simple.clinic.home.overdue
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Test
+import org.simple.clinic.home.overdue.PendingListState.SEE_LESS
 import org.simple.sharedTestCode.TestData
 import java.util.UUID
 
@@ -43,7 +44,8 @@ class OverdueUiRendererTest {
         remindToCallLaterAppointments = emptyList(),
         removedFromOverdueAppointments = removedFromOverdueAppointments,
         moreThanAnYearOverdueAppointments = emptyList()
-    ))
+    ),
+        pendingListState = SEE_LESS)
     verify(ui).showOverdueCount(3)
     verify(ui).hideProgress()
   }

@@ -338,6 +338,7 @@
   <string name="overdue_share">Share</string>
   <string name="overdue_no_pending_patients">No pending patients</string>
   <string name="overdue_pending_list_button_see_all">See All</string>
+  <string name="overdue_pending_list_button_see_less">See Less</string>
   <string name="overdue_pending_to_call_header">PENDING TO CALL</string>
   <string name="overdue_agreed_to_visit_call_header">AGREED TO VISIT</string>
   <string name="overdue_remind_to_call_header">REMIND TO CALL LATER</string>

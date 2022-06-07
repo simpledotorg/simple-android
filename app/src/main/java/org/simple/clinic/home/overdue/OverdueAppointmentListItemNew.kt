@@ -10,6 +10,8 @@ import org.simple.clinic.R
 import org.simple.clinic.databinding.ListItemOverdueListSectionHeaderBinding
 import org.simple.clinic.databinding.ListItemOverduePatientBinding
 import org.simple.clinic.databinding.ListItemOverduePendingListFooterBinding
+import org.simple.clinic.home.overdue.PendingListState.SEE_ALL
+import org.simple.clinic.home.overdue.PendingListState.SEE_LESS
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.util.UserClock
@@ -29,12 +31,11 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
 
     fun from(
         overdueAppointmentSections: OverdueAppointmentSections,
-        clock: UserClock
+        clock: UserClock,
+        pendingListState: PendingListState
     ): List<OverdueAppointmentListItemNew> {
       val pendingToCallHeader = listOf(OverdueSectionHeader(R.string.overdue_pending_to_call_header, overdueAppointmentSections.pendingAppointments.size))
-      val pendingAppointmentsContent = overdueAppointmentSections.pendingAppointments
-          .map { from(it, clock) }
-          .ifEmpty { listOf(NoPendingPatients) }
+      val pendingAppointmentsContent = generatePendingAppointmentsContent(overdueAppointmentSections, clock, pendingListState)
 
       val agreedToVisitHeader = listOf(OverdueSectionHeader(R.string.overdue_agreed_to_visit_call_header, overdueAppointmentSections.agreedToVisitAppointments.size))
       val agreedToVisitListItems = overdueAppointmentSections.agreedToVisitAppointments.map { from(it, clock) }
@@ -48,7 +49,7 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
       val moreThanAnOneYearOverdueHeader = listOf(OverdueSectionHeader(R.string.overdue_no_visit_in_one_year_call_header, overdueAppointmentSections.moreThanAnYearOverdueAppointments.size))
       val moreThanAnOneYearOverdueListItems = overdueAppointmentSections.moreThanAnYearOverdueAppointments.map { from(it, clock) }
 
-      val pendingListFooterItem = listOf(PendingListFooter)
+      val pendingListFooterItem = listOf(PendingListFooter(pendingListState))
 
       val dividerListItem = listOf(Divider)
 
@@ -58,6 +59,20 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
           remindToCallHeader + remindToCallListItems + dividerListItem +
           removedFromOverdueListHeader + removedFromOverdueListItems + dividerListItem +
           moreThanAnOneYearOverdueHeader + moreThanAnOneYearOverdueListItems
+    }
+
+    private fun generatePendingAppointmentsContent(
+        overdueAppointmentSections: OverdueAppointmentSections,
+        clock: UserClock,
+        pendingListState: PendingListState
+    ): List<OverdueAppointmentListItemNew> {
+      val pendingAppointmentsList = when (pendingListState) {
+        SEE_LESS -> overdueAppointmentSections.pendingAppointments.take(10)
+        SEE_ALL -> overdueAppointmentSections.pendingAppointments
+      }
+
+      return pendingAppointmentsList.map { from(it, clock) }
+          .ifEmpty { listOf(NoPendingPatients) }
     }
 
     private fun from(
@@ -184,7 +199,7 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
     }
   }
 
-  object PendingListFooter : OverdueAppointmentListItemNew() {
+  data class PendingListFooter(val pendingListState: PendingListState) : OverdueAppointmentListItemNew() {
     override fun layoutResId(): Int = R.layout.list_item_overdue_pending_list_footer
 
     override fun render(holder: BindingViewHolder, subject: Subject<UiEvent>) {
@@ -193,6 +208,13 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
       binding.overduePendingSeeAllOrLessButton.setOnClickListener {
         subject.onNext(PendingListFooterClicked)
       }
+
+      binding.overduePendingSeeAllOrLessButton.setText(pendingListFooterStringRes())
+    }
+
+    private fun pendingListFooterStringRes() = when (pendingListState) {
+      SEE_ALL -> R.string.overdue_pending_list_button_see_less
+      SEE_LESS -> R.string.overdue_pending_list_button_see_all
     }
   }
 

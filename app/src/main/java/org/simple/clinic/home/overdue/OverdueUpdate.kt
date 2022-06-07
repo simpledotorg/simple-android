@@ -2,6 +2,8 @@ package org.simple.clinic.home.overdue
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
+import org.simple.clinic.home.overdue.PendingListState.SEE_ALL
+import org.simple.clinic.home.overdue.PendingListState.SEE_LESS
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
@@ -22,7 +24,17 @@ class OverdueUpdate(
       is DownloadOverdueListClicked -> downloadOverdueListClicked(event)
       is ShareOverdueListClicked -> shareOverdueListClicked(event)
       is OverdueAppointmentsLoaded -> overdueAppointmentsLoaded(event, model)
+      PendingListFooterClicked -> pendingListFooterClicked(model)
     }
+  }
+
+  private fun pendingListFooterClicked(model: OverdueModel): Next<OverdueModel, OverdueEffect> {
+    val changedState = when (model.pendingListState) {
+      SEE_ALL -> SEE_LESS
+      SEE_LESS -> SEE_ALL
+    }
+
+    return next(model.pendingListStateChanged(changedState))
   }
 
   private fun currentFacilityLoaded(model: OverdueModel, event: CurrentFacilityLoaded): Next<OverdueModel, OverdueEffect> {

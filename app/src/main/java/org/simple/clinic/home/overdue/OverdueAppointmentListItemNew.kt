@@ -9,6 +9,7 @@ import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 import org.simple.clinic.databinding.ListItemOverdueListSectionHeaderBinding
 import org.simple.clinic.databinding.ListItemOverduePatientBinding
+import org.simple.clinic.databinding.ListItemOverduePendingListFooterBinding
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.util.UserClock
@@ -187,7 +188,11 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
     override fun layoutResId(): Int = R.layout.list_item_overdue_pending_list_footer
 
     override fun render(holder: BindingViewHolder, subject: Subject<UiEvent>) {
-      // TO-Do handle this later
+      val binding = holder.binding as ListItemOverduePendingListFooterBinding
+
+      binding.overduePendingSeeAllOrLessButton.setOnClickListener {
+        subject.onNext(PendingListFooterClicked)
+      }
     }
   }
 

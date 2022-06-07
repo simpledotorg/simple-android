@@ -11,6 +11,7 @@
 - Link overdue list adapter to the `RecyclerView` in `OverdueScreen`
 - Implement `OverdueAppointmentListItemNew` adapter
 - Rename `SeeAllPendingAppointmentList` to `PendingListFooter`
+- Handle pending list footer clicks
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 - [In Progress: 03 Jun 2022] Implement `OverdueAppointmentListItemNew` adapter
 

@@ -4,6 +4,7 @@ import android.graphics.Rect
 import android.view.TouchDelegate
 import android.view.View
 import androidx.annotation.StringRes
+import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 import org.simple.clinic.databinding.ListItemOverdueListSectionHeaderBinding
@@ -191,6 +192,26 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
 
     override fun render(holder: BindingViewHolder, subject: Subject<UiEvent>) {
       /* no-op */
+    }
+  }
+
+  class DiffCallback : DiffUtil.ItemCallback<OverdueAppointmentListItemNew>() {
+    override fun areItemsTheSame(
+        oldItem: OverdueAppointmentListItemNew,
+        newItem: OverdueAppointmentListItemNew
+    ): Boolean {
+      return when {
+        oldItem is OverdueAppointmentRow && newItem is OverdueAppointmentRow -> oldItem.patientUuid == newItem.patientUuid
+        oldItem is OverdueSectionHeader && newItem is OverdueSectionHeader -> oldItem.headerText == newItem.headerText
+        else -> false
+      }
+    }
+
+    override fun areContentsTheSame(
+        oldItem: OverdueAppointmentListItemNew,
+        newItem: OverdueAppointmentListItemNew
+    ): Boolean {
+      return oldItem == newItem
     }
   }
 }

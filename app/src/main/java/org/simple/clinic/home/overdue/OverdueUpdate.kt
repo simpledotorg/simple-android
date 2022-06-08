@@ -2,6 +2,7 @@ package org.simple.clinic.home.overdue
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
+import org.simple.clinic.R
 import org.simple.clinic.home.overdue.PendingListState.SEE_ALL
 import org.simple.clinic.home.overdue.PendingListState.SEE_LESS
 import org.simple.clinic.mobius.dispatch
@@ -25,6 +26,71 @@ class OverdueUpdate(
       is ShareOverdueListClicked -> shareOverdueListClicked(event)
       is OverdueAppointmentsLoaded -> overdueAppointmentsLoaded(event, model)
       PendingListFooterClicked -> pendingListFooterClicked(model)
+      is ChevronClicked -> chevronClicked(model, event.headerText)
+    }
+  }
+
+  private fun chevronClicked(model: OverdueModel, headerText: Int): Next<OverdueModel, OverdueEffect> {
+    val updatedModel = when (headerText) {
+      R.string.overdue_pending_to_call_header -> {
+        pendingChevronStateIsChanged(model)
+      }
+      R.string.overdue_agreed_to_visit_call_header -> {
+        agreedToVisitChevronStateIsChanged(model)
+      }
+      R.string.overdue_remind_to_call_header -> {
+        remindToCallChevronStateIsChanged(model)
+      }
+      R.string.overdue_removed_from_list_call_header -> {
+        removedFromOverdueChevronStateIsChanged(model)
+      }
+      R.string.overdue_no_visit_in_one_year_call_header -> {
+        moreThanAYearChevronStateIsChanged(model)
+      }
+      else -> {
+        model
+      }
+    }
+    return next(updatedModel)
+  }
+
+  private fun pendingChevronStateIsChanged(model: OverdueModel): OverdueModel {
+    return if (model.pendingHeaderExpanded) {
+      model.pendingChevronStateIsChanged(false)
+    } else {
+      model.pendingChevronStateIsChanged(true)
+    }
+  }
+
+  private fun agreedToVisitChevronStateIsChanged(model: OverdueModel): OverdueModel {
+    return if (model.agreedToVisitHeaderExpanded) {
+      model.agreedToVisitChevronStateIsChanged(false)
+    } else {
+      model.agreedToVisitChevronStateIsChanged(true)
+    }
+  }
+
+  private fun remindToCallChevronStateIsChanged(model: OverdueModel): OverdueModel {
+    return if (model.remindToCallLaterHeaderExpanded) {
+      model.remindToCallChevronStateIsChanged(false)
+    } else {
+      model.remindToCallChevronStateIsChanged(true)
+    }
+  }
+
+  private fun removedFromOverdueChevronStateIsChanged(model: OverdueModel): OverdueModel {
+    return if (model.removedFromOverdueListHeaderExpanded) {
+      model.removedFromOverdueChevronStateIsChanged(false)
+    } else {
+      model.removedFromOverdueChevronStateIsChanged(true)
+    }
+  }
+
+  private fun moreThanAYearChevronStateIsChanged(model: OverdueModel): OverdueModel {
+    return if (model.moreThanAnOneYearOverdueHeader) {
+      model.moreThanAYearChevronStateIsChanged(false)
+    } else {
+      model.moreThanAYearChevronStateIsChanged(true)
     }
   }
 

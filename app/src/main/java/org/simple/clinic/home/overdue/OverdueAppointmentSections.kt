@@ -20,4 +20,19 @@ data class OverdueAppointmentSections(
   val overdueCount: Int
     get() = pendingAppointments.size + agreedToVisitAppointments.size + remindToCallLaterAppointments.size +
         removedFromOverdueAppointments.size + moreThanAnYearOverdueAppointments.size
+
+  fun pendingChevronStateIsChanged(isPendingHeaderExpanded: Boolean): OverdueAppointmentSections =
+      copy(isPendingHeaderExpanded = isPendingHeaderExpanded)
+
+  fun agreedToVisitChevronStateIsChanged(isAgreedToVisitHeaderExpanded: Boolean): OverdueAppointmentSections =
+      copy(isAgreedToVisitHeaderExpanded = isAgreedToVisitHeaderExpanded)
+
+  fun remindToCallChevronStateIsChanged(isRemindToCallLaterHeaderExpanded: Boolean): OverdueAppointmentSections =
+      copy(isRemindToCallLaterHeaderExpanded = isRemindToCallLaterHeaderExpanded)
+
+  fun removedFromOverdueChevronStateIsChanged(isRemovedFromOverdueListHeaderExpanded: Boolean): OverdueAppointmentSections =
+      copy(isRemovedFromOverdueListHeaderExpanded = isRemovedFromOverdueListHeaderExpanded)
+
+  fun moreThanAYearChevronStateIsChanged(isMoreThanAnOneYearOverdueHeader: Boolean): OverdueAppointmentSections =
+      copy(isMoreThanAnOneYearOverdueHeader = isMoreThanAnOneYearOverdueHeader)
 }

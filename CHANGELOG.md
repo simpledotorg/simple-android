@@ -19,8 +19,9 @@
 - Don't show pending overdue list footer if there are no pending overdue appointments
 - Add pending list size for the default state as a firebase remote config
 - Purge old appointments that are synced
+- Implement `OverdueAppointmentListItemNew` adapter
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
-- [In Progress: 03 Jun 2022] Implement `OverdueAppointmentListItemNew` adapter
+- [In Progress: 10 Jun 2022] Handle collapse/expand states of overdue appointment sections
 
 ### Fixes
 

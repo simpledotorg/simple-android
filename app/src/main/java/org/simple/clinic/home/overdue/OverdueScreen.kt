@@ -277,7 +277,6 @@ class OverdueScreen : BaseScreen<
   }
 
   override fun showOverdueAppointments(overdueAppointmentSections: OverdueAppointmentSections, pendingListState: PendingListState) {
-    overdueRecyclerView.visibility = View.VISIBLE
     overdueListAdapter.submitList(OverdueAppointmentListItemNew.from(
         overdueAppointmentSections = overdueAppointmentSections,
         clock = userClock,
@@ -295,6 +294,22 @@ class OverdueScreen : BaseScreen<
 
   override fun hideProgress() {
     overdueProgressBar.visibility = View.GONE
+  }
+
+  override fun showNoOverduePatientsView() {
+    viewForEmptyList.visibility = View.VISIBLE
+  }
+
+  override fun hideNoOverduePatientsView() {
+    viewForEmptyList.visibility = View.GONE
+  }
+
+  override fun showOverdueRecyclerView() {
+    overdueRecyclerView.visibility = View.VISIBLE
+  }
+
+  override fun hideOverdueRecyclerView() {
+    overdueRecyclerView.visibility = View.GONE
   }
 
   private fun downloadOverdueListClicks(): Observable<UiEvent> {

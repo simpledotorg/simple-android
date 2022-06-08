@@ -227,7 +227,17 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
     }
   }
 
+  object Divider : OverdueAppointmentListItemNew() {
+
+    override fun layoutResId(): Int = R.layout.list_item_divider
+
+    override fun render(holder: BindingViewHolder, subject: Subject<UiEvent>) {
+      /* no-op */
+    }
+  }
+
   class DiffCallback : DiffUtil.ItemCallback<OverdueAppointmentListItemNew>() {
+
     override fun areItemsTheSame(
         oldItem: OverdueAppointmentListItemNew,
         newItem: OverdueAppointmentListItemNew
@@ -235,6 +245,9 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
       return when {
         oldItem is OverdueAppointmentRow && newItem is OverdueAppointmentRow -> oldItem.patientUuid == newItem.patientUuid
         oldItem is OverdueSectionHeader && newItem is OverdueSectionHeader -> oldItem.headerText == newItem.headerText
+        oldItem is PendingListFooter && newItem is PendingListFooter -> oldItem.pendingListState == newItem.pendingListState
+        oldItem is NoPendingPatients && newItem is NoPendingPatients -> true
+        oldItem is Divider && newItem is Divider -> true
         else -> false
       }
     }
@@ -244,15 +257,6 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
         newItem: OverdueAppointmentListItemNew
     ): Boolean {
       return oldItem == newItem
-    }
-  }
-
-  object Divider : OverdueAppointmentListItemNew() {
-
-    override fun layoutResId(): Int = R.layout.list_item_divider
-
-    override fun render(holder: BindingViewHolder, subject: Subject<UiEvent>) {
-      /* no-op */
     }
   }
 }

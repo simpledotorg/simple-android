@@ -34,31 +34,64 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
         clock: UserClock,
         pendingListState: PendingListState
     ): List<OverdueAppointmentListItemNew> {
-      val pendingToCallHeader = listOf(OverdueSectionHeader(R.string.overdue_pending_to_call_header, overdueAppointmentSections.pendingAppointments.size))
-      val pendingAppointmentsContent = generatePendingAppointmentsContent(overdueAppointmentSections, clock, pendingListState)
+      val pendingToCallListItem = pendingToCallItem(overdueAppointmentSections, clock, pendingListState)
+      val agreedToVisitListItem = agreedToVisitItem(overdueAppointmentSections, clock)
+      val remindToCallListItem = remindToCallItem(overdueAppointmentSections, clock)
+      val removedFromOverdueListItem = removedFromOverdueItem(overdueAppointmentSections, clock)
+      val moreThanAnOneYearOverdueListItem = moreThanAnOneYearOverdueItem(overdueAppointmentSections, clock)
+      val dividerListItem = listOf(Divider)
 
-      val agreedToVisitHeader = listOf(OverdueSectionHeader(R.string.overdue_agreed_to_visit_call_header, overdueAppointmentSections.agreedToVisitAppointments.size))
-      val agreedToVisitListItems = overdueAppointmentSections.agreedToVisitAppointments.map { from(it, clock) }
+      return pendingToCallListItem + dividerListItem +
+          agreedToVisitListItem + dividerListItem +
+          remindToCallListItem + dividerListItem +
+          removedFromOverdueListItem + dividerListItem +
+          moreThanAnOneYearOverdueListItem
+    }
 
-      val remindToCallHeader = listOf(OverdueSectionHeader(R.string.overdue_remind_to_call_header, overdueAppointmentSections.remindToCallLaterAppointments.size))
-      val remindToCallListItems = overdueAppointmentSections.remindToCallLaterAppointments.map { from(it, clock) }
-
-      val removedFromOverdueListHeader = listOf(OverdueSectionHeader(R.string.overdue_removed_from_list_call_header, overdueAppointmentSections.removedFromOverdueAppointments.size))
-      val removedFromOverdueListItems = overdueAppointmentSections.removedFromOverdueAppointments.map { from(it, clock) }
-
+    private fun moreThanAnOneYearOverdueItem(
+        overdueAppointmentSections: OverdueAppointmentSections,
+        clock: UserClock
+    ): List<OverdueAppointmentListItemNew> {
       val moreThanAnOneYearOverdueHeader = listOf(OverdueSectionHeader(R.string.overdue_no_visit_in_one_year_call_header, overdueAppointmentSections.moreThanAnYearOverdueAppointments.size))
       val moreThanAnOneYearOverdueListItems = overdueAppointmentSections.moreThanAnYearOverdueAppointments.map { from(it, clock) }
 
+      return moreThanAnOneYearOverdueHeader + moreThanAnOneYearOverdueListItems
+    }
+
+    private fun removedFromOverdueItem(
+        overdueAppointmentSections: OverdueAppointmentSections,
+        clock: UserClock
+    ): List<OverdueAppointmentListItemNew> {
+      val removedFromOverdueListHeader = listOf(OverdueSectionHeader(R.string.overdue_removed_from_list_call_header, overdueAppointmentSections.removedFromOverdueAppointments.size))
+      val removedFromOverdueListItems = overdueAppointmentSections.removedFromOverdueAppointments.map { from(it, clock) }
+
+      return removedFromOverdueListHeader + removedFromOverdueListItems
+    }
+
+    private fun remindToCallItem(overdueAppointmentSections: OverdueAppointmentSections, clock: UserClock): List<OverdueAppointmentListItemNew> {
+      val remindToCallHeader = listOf(OverdueSectionHeader(R.string.overdue_remind_to_call_header, overdueAppointmentSections.remindToCallLaterAppointments.size))
+      val remindToCallListItems = overdueAppointmentSections.remindToCallLaterAppointments.map { from(it, clock) }
+
+      return remindToCallHeader + remindToCallListItems
+    }
+
+    private fun agreedToVisitItem(overdueAppointmentSections: OverdueAppointmentSections, clock: UserClock): List<OverdueAppointmentListItemNew> {
+      val agreedToVisitHeader = listOf(OverdueSectionHeader(R.string.overdue_agreed_to_visit_call_header, overdueAppointmentSections.agreedToVisitAppointments.size))
+      val agreedToVisitListItems = overdueAppointmentSections.agreedToVisitAppointments.map { from(it, clock) }
+
+      return agreedToVisitHeader + agreedToVisitListItems
+    }
+
+    private fun pendingToCallItem(
+        overdueAppointmentSections: OverdueAppointmentSections,
+        clock: UserClock,
+        pendingListState: PendingListState
+    ): List<OverdueAppointmentListItemNew> {
+      val pendingToCallHeader = listOf(OverdueSectionHeader(R.string.overdue_pending_to_call_header, overdueAppointmentSections.pendingAppointments.size))
+      val pendingAppointmentsContent = generatePendingAppointmentsContent(overdueAppointmentSections, clock, pendingListState)
       val pendingListFooterItem = listOf(PendingListFooter(pendingListState))
 
-      val dividerListItem = listOf(Divider)
-
-      return pendingToCallHeader + pendingAppointmentsContent +
-          pendingListFooterItem + dividerListItem +
-          agreedToVisitHeader + agreedToVisitListItems + dividerListItem +
-          remindToCallHeader + remindToCallListItems + dividerListItem +
-          removedFromOverdueListHeader + removedFromOverdueListItems + dividerListItem +
-          moreThanAnOneYearOverdueHeader + moreThanAnOneYearOverdueListItems
+      return pendingToCallHeader + pendingAppointmentsContent + pendingListFooterItem
     }
 
     private fun generatePendingAppointmentsContent(

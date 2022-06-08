@@ -87,9 +87,12 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
         clock: UserClock,
         pendingListState: PendingListState
     ): List<OverdueAppointmentListItemNew> {
-      val pendingToCallHeader = listOf(OverdueSectionHeader(R.string.overdue_pending_to_call_header, overdueAppointmentSections.pendingAppointments.size))
+      val pendingAppointments = overdueAppointmentSections.pendingAppointments
+      val pendingToCallHeader = listOf(OverdueSectionHeader(R.string.overdue_pending_to_call_header, pendingAppointments.size))
       val pendingAppointmentsContent = generatePendingAppointmentsContent(overdueAppointmentSections, clock, pendingListState)
-      val pendingListFooterItem = listOf(PendingListFooter(pendingListState))
+
+      val showPendingListFooter = pendingAppointments.size > 10 && pendingAppointments.isNotEmpty()
+      val pendingListFooterItem = if(showPendingListFooter) listOf(PendingListFooter(pendingListState)) else emptyList()
 
       return pendingToCallHeader + pendingAppointmentsContent + pendingListFooterItem
     }

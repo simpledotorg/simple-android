@@ -16,6 +16,7 @@
 - Handle see all/see less button clicks for pending overdue list section
 - Fix views flashing in the overdue list
 - When overdue appointments are loaded or are loading, render appropriate views
+- Don't show pending overdue list footer if there are no pending overdue appointments
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 - [In Progress: 03 Jun 2022] Implement `OverdueAppointmentListItemNew` adapter
 

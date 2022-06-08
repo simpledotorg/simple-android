@@ -9,7 +9,12 @@ data class OverdueAppointmentSections(
     val agreedToVisitAppointments: List<OverdueAppointment>,
     val remindToCallLaterAppointments: List<OverdueAppointment>,
     val removedFromOverdueAppointments: List<OverdueAppointment>,
-    val moreThanAnYearOverdueAppointments: List<OverdueAppointment>
+    val moreThanAnYearOverdueAppointments: List<OverdueAppointment>,
+    val isPendingHeaderExpanded: Boolean,
+    val isAgreedToVisitHeaderExpanded: Boolean,
+    val isRemindToCallLaterHeaderExpanded: Boolean,
+    val isRemovedFromOverdueListHeaderExpanded: Boolean,
+    val isMoreThanAnOneYearOverdueHeader: Boolean,
 ) : Parcelable {
 
   val overdueCount: Int

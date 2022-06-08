@@ -46,6 +46,7 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.overdue.PendingAppointmentsConfig
 import org.simple.clinic.overdue.download.formatdialog.Download
 import org.simple.clinic.overdue.download.formatdialog.SelectOverdueDownloadFormatDialog
 import org.simple.clinic.overdue.download.formatdialog.Share
@@ -112,6 +113,9 @@ class OverdueScreen : BaseScreen<
 
   @Inject
   lateinit var runtimeNetworkStatus: RuntimeNetworkStatus<UiEvent>
+
+  @Inject
+  lateinit var pendingAppointmentsConfig: PendingAppointmentsConfig
 
   private val overdueListAdapter_Old = PagingItemAdapter(
       diffCallback = OverdueAppointmentListItem.DiffCallback(),
@@ -280,7 +284,8 @@ class OverdueScreen : BaseScreen<
     overdueListAdapter.submitList(OverdueAppointmentListItemNew.from(
         overdueAppointmentSections = overdueAppointmentSections,
         clock = userClock,
-        pendingListState = pendingListState
+        pendingListState = pendingListState,
+        pendingListDefaultStateSize = pendingAppointmentsConfig.pendingListDefaultStateSize
     ))
   }
 

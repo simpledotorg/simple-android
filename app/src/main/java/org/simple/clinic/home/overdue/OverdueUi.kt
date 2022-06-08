@@ -9,4 +9,10 @@ interface OverdueUi {
   fun showOverdueCount(count: Int)
   fun showProgress()
   fun hideProgress()
+
+  fun showNoOverduePatientsView()
+  fun hideNoOverduePatientsView()
+
+  fun showOverdueRecyclerView()
+  fun hideOverdueRecyclerView()
 }

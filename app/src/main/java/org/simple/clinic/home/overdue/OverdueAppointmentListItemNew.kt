@@ -32,9 +32,15 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
     fun from(
         overdueAppointmentSections: OverdueAppointmentSections,
         clock: UserClock,
-        pendingListState: PendingListState
+        pendingListState: PendingListState,
+        pendingListDefaultStateSize: Int
     ): List<OverdueAppointmentListItemNew> {
-      val pendingToCallListItem = pendingToCallItem(overdueAppointmentSections, clock, pendingListState)
+      val pendingToCallListItem = pendingToCallItem(
+          overdueAppointmentSections,
+          clock,
+          pendingListState,
+          pendingListDefaultStateSize
+      )
       val agreedToVisitListItem = agreedToVisitItem(overdueAppointmentSections, clock)
       val remindToCallListItem = remindToCallItem(overdueAppointmentSections, clock)
       val removedFromOverdueListItem = removedFromOverdueItem(overdueAppointmentSections, clock)
@@ -85,14 +91,15 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
     private fun pendingToCallItem(
         overdueAppointmentSections: OverdueAppointmentSections,
         clock: UserClock,
-        pendingListState: PendingListState
+        pendingListState: PendingListState,
+        pendingListDefaultStateSize: Int
     ): List<OverdueAppointmentListItemNew> {
       val pendingAppointments = overdueAppointmentSections.pendingAppointments
       val pendingToCallHeader = listOf(OverdueSectionHeader(R.string.overdue_pending_to_call_header, pendingAppointments.size))
-      val pendingAppointmentsContent = generatePendingAppointmentsContent(overdueAppointmentSections, clock, pendingListState)
+      val pendingAppointmentsContent = generatePendingAppointmentsContent(overdueAppointmentSections, clock, pendingListState, pendingListDefaultStateSize)
 
-      val showPendingListFooter = pendingAppointments.size > 10 && pendingAppointments.isNotEmpty()
-      val pendingListFooterItem = if(showPendingListFooter) listOf(PendingListFooter(pendingListState)) else emptyList()
+      val showPendingListFooter = pendingAppointments.size > pendingListDefaultStateSize && pendingAppointments.isNotEmpty()
+      val pendingListFooterItem = if (showPendingListFooter) listOf(PendingListFooter(pendingListState)) else emptyList()
 
       return pendingToCallHeader + pendingAppointmentsContent + pendingListFooterItem
     }
@@ -100,10 +107,11 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
     private fun generatePendingAppointmentsContent(
         overdueAppointmentSections: OverdueAppointmentSections,
         clock: UserClock,
-        pendingListState: PendingListState
+        pendingListState: PendingListState,
+        pendingListDefaultStateSize: Int
     ): List<OverdueAppointmentListItemNew> {
       val pendingAppointmentsList = when (pendingListState) {
-        SEE_LESS -> overdueAppointmentSections.pendingAppointments.take(10)
+        SEE_LESS -> overdueAppointmentSections.pendingAppointments.take(pendingListDefaultStateSize)
         SEE_ALL -> overdueAppointmentSections.pendingAppointments
       }
 

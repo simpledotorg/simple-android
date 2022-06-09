@@ -272,7 +272,11 @@ data class Appointment(
 
     @Query("""
       DELETE FROM Appointment
-      WHERE status IN ('cancelled', 'visited') AND syncStatus == 'DONE'
+      WHERE uuid <= (
+        SELECT uuid
+        FROM Appointment
+        GROUP BY patientUuid HAVING MAX(createdAt)
+      ) AND syncStatus == 'DONE'
     """)
     fun purgeUnusedAppointments()
 

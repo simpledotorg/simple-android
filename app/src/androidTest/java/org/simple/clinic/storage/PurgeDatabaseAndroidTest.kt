@@ -5,9 +5,9 @@ import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.SyncStatus
+import org.simple.sharedTestCode.TestData
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -412,87 +412,110 @@ class PurgeDatabaseAndroidTest {
   }
 
   @Test
-  fun purging_the_database_should_delete_cancelled_and_visited_appointments() {
+  fun purging_the_database_should_delete_all_synced_appointments_except_the_latest_one_for_patient() {
     // given
-    val syncedPatientProfile = TestData.patientProfile(
+    val patientProfile1 = TestData.patientProfile(
         patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
         syncStatus = SyncStatus.DONE,
         generateBusinessId = false
     )
-    val notSyncedPatientProfile = TestData.patientProfile(
+    val patientProfile2 = TestData.patientProfile(
         patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
         syncStatus = SyncStatus.PENDING,
         generateBusinessId = false
     )
-    val scheduledAppointment = TestData.appointment(
+    val scheduledAppointmentAndSyncedForPatient1 = TestData.appointment(
         uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
-        deletedAt = null,
         syncStatus = SyncStatus.DONE,
         status = Appointment.Status.Scheduled,
-        patientUuid = syncedPatientProfile.patientUuid
+        patientUuid = patientProfile1.patientUuid,
+        createdAt = Instant.parse("2022-01-01T00:00:00Z"),
+        updatedAt = Instant.parse("2022-01-01T00:00:00Z"),
+        deletedAt = null
     )
-    val cancelledAppointment = TestData.appointment(
+    val cancelledAppointmentAndSyncedForPatient1 = TestData.appointment(
         uuid = UUID.fromString("25492f9e-865d-4296-ab31-e5cc6141cd58"),
-        deletedAt = null,
         syncStatus = SyncStatus.DONE,
         status = Appointment.Status.Cancelled,
-        patientUuid = syncedPatientProfile.patientUuid
+        patientUuid = patientProfile1.patientUuid,
+        createdAt = Instant.parse("2022-02-01T00:00:00Z"),
+        updatedAt = Instant.parse("2022-02-01T00:00:00Z"),
+        deletedAt = null
     )
-    val cancelledButUnsyncedAppointment = TestData.appointment(
-        uuid = UUID.fromString("e17b4fed-a2cd-453d-b717-d60ca184892b"),
-        deletedAt = null,
-        syncStatus = SyncStatus.PENDING,
-        status = Appointment.Status.Cancelled,
-        patientUuid = notSyncedPatientProfile.patientUuid
-    )
-    val visitedAppointment = TestData.appointment(
+    val visitedButUnsyncedAppointmentForPatient1 = TestData.appointment(
         uuid = UUID.fromString("13333a77-f20d-4b96-9c11-c0b38ae99ce5"),
-        deletedAt = null,
-        syncStatus = SyncStatus.DONE,
-        status = Appointment.Status.Visited,
-        patientUuid = syncedPatientProfile.patientUuid
-    )
-    val visitedButUnsyncedAppointment = TestData.appointment(
-        uuid = UUID.fromString("927b08d3-b19e-4231-8d0b-dcf28e240474"),
-        deletedAt = null,
         syncStatus = SyncStatus.PENDING,
         status = Appointment.Status.Visited,
-        patientUuid = notSyncedPatientProfile.patientUuid
-    )
-    val appointmentWithUnknownStatus = TestData.appointment(
-        uuid = UUID.fromString("a89a3a34-8395-4a55-89b6-562146369ad1"),
+        patientUuid = patientProfile1.patientUuid,
+        createdAt = Instant.parse("2022-03-01T00:00:00Z"),
+        updatedAt = Instant.parse("2022-03-01T00:00:00Z"),
         deletedAt = null,
+    )
+    val appointmentWithUnknownStatusAndSyncedForPatient1 = TestData.appointment(
+        uuid = UUID.fromString("a89a3a34-8395-4a55-89b6-562146369ad1"),
         syncStatus = SyncStatus.DONE,
         status = Appointment.Status.Unknown("rescheduled"),
-        patientUuid = syncedPatientProfile.patientUuid
+        patientUuid = patientProfile1.patientUuid,
+        createdAt = Instant.parse("2022-04-01T00:00:00Z"),
+        updatedAt = Instant.parse("2022-04-01T00:00:00Z"),
+        deletedAt = null,
+    )
+    val scheduledAppointmentAndSyncedForPatient2 = TestData.appointment(
+        uuid = UUID.fromString("6eeed863-5f2a-4232-b0b2-374839c38a27"),
+        syncStatus = SyncStatus.DONE,
+        status = Appointment.Status.Scheduled,
+        patientUuid = patientProfile2.patientUuid,
+        createdAt = Instant.parse("2022-01-01T00:00:00Z"),
+        updatedAt = Instant.parse("2022-01-01T00:00:00Z"),
+        deletedAt = null
+    )
+    val cancelledButUnsyncedAppointmentForPatient2 = TestData.appointment(
+        uuid = UUID.fromString("e17b4fed-a2cd-453d-b717-d60ca184892b"),
+        syncStatus = SyncStatus.PENDING,
+        status = Appointment.Status.Cancelled,
+        patientUuid = patientProfile2.patientUuid,
+        createdAt = Instant.parse("2022-02-01T00:00:00Z"),
+        updatedAt = Instant.parse("2022-02-01T00:00:00Z"),
+        deletedAt = null
+    )
+    val visitedButUnsyncedAppointmentForPatient2 = TestData.appointment(
+        uuid = UUID.fromString("927b08d3-b19e-4231-8d0b-dcf28e240474"),
+        syncStatus = SyncStatus.PENDING,
+        status = Appointment.Status.Visited,
+        patientUuid = patientProfile2.patientUuid,
+        createdAt = Instant.parse("2022-03-01T00:00:00Z"),
+        updatedAt = Instant.parse("2022-03-01T00:00:00Z"),
+        deletedAt = null,
     )
 
     appointmentDao.save(listOf(
-        scheduledAppointment,
-        visitedAppointment,
-        cancelledAppointment,
-        visitedButUnsyncedAppointment,
-        cancelledButUnsyncedAppointment,
-        appointmentWithUnknownStatus
+        scheduledAppointmentAndSyncedForPatient1,
+        visitedButUnsyncedAppointmentForPatient1,
+        cancelledAppointmentAndSyncedForPatient1,
+        appointmentWithUnknownStatusAndSyncedForPatient1,
+        scheduledAppointmentAndSyncedForPatient2,
+        visitedButUnsyncedAppointmentForPatient2,
+        cancelledButUnsyncedAppointmentForPatient2,
     ))
 
-    assertThat(appointmentDao.getOne(scheduledAppointment.uuid)).isEqualTo(scheduledAppointment)
-    assertThat(appointmentDao.getOne(cancelledAppointment.uuid)).isEqualTo(cancelledAppointment)
-    assertThat(appointmentDao.getOne(cancelledButUnsyncedAppointment.uuid)).isEqualTo(cancelledButUnsyncedAppointment)
-    assertThat(appointmentDao.getOne(visitedAppointment.uuid)).isEqualTo(visitedAppointment)
-    assertThat(appointmentDao.getOne(visitedButUnsyncedAppointment.uuid)).isEqualTo(visitedButUnsyncedAppointment)
-    assertThat(appointmentDao.getOne(appointmentWithUnknownStatus.uuid)).isEqualTo(appointmentWithUnknownStatus)
+    assertThat(appointmentDao.getOne(scheduledAppointmentAndSyncedForPatient1.uuid)).isEqualTo(scheduledAppointmentAndSyncedForPatient1)
+    assertThat(appointmentDao.getOne(cancelledAppointmentAndSyncedForPatient1.uuid)).isEqualTo(cancelledAppointmentAndSyncedForPatient1)
+    assertThat(appointmentDao.getOne(visitedButUnsyncedAppointmentForPatient1.uuid)).isEqualTo(visitedButUnsyncedAppointmentForPatient1)
+    assertThat(appointmentDao.getOne(appointmentWithUnknownStatusAndSyncedForPatient1.uuid)).isEqualTo(appointmentWithUnknownStatusAndSyncedForPatient1)
+    assertThat(appointmentDao.getOne(scheduledAppointmentAndSyncedForPatient2.uuid)).isEqualTo(scheduledAppointmentAndSyncedForPatient2)
+    assertThat(appointmentDao.getOne(cancelledButUnsyncedAppointmentForPatient2.uuid)).isEqualTo(cancelledButUnsyncedAppointmentForPatient2)
+    assertThat(appointmentDao.getOne(visitedButUnsyncedAppointmentForPatient2.uuid)).isEqualTo(visitedButUnsyncedAppointmentForPatient2)
 
     // when
     appDatabase.purge(Instant.parse("2021-06-01T00:00:00Z"))
 
     // then
-    assertThat(appointmentDao.getOne(scheduledAppointment.uuid)).isEqualTo(scheduledAppointment)
-    assertThat(appointmentDao.getOne(cancelledAppointment.uuid)).isNull()
-    assertThat(appointmentDao.getOne(visitedAppointment.uuid)).isNull()
-    assertThat(appointmentDao.getOne(cancelledButUnsyncedAppointment.uuid)).isEqualTo(cancelledButUnsyncedAppointment)
-    assertThat(appointmentDao.getOne(visitedButUnsyncedAppointment.uuid)).isEqualTo(visitedButUnsyncedAppointment)
-    assertThat(appointmentDao.getOne(appointmentWithUnknownStatus.uuid)).isEqualTo(appointmentWithUnknownStatus)
+    assertThat(appointmentDao.getOne(scheduledAppointmentAndSyncedForPatient1.uuid)).isNull()
+    assertThat(appointmentDao.getOne(cancelledAppointmentAndSyncedForPatient1.uuid)).isNull()
+    assertThat(appointmentDao.getOne(visitedButUnsyncedAppointmentForPatient1.uuid)).isEqualTo(visitedButUnsyncedAppointmentForPatient1)
+    assertThat(appointmentDao.getOne(cancelledButUnsyncedAppointmentForPatient2.uuid)).isEqualTo(cancelledButUnsyncedAppointmentForPatient2)
+    assertThat(appointmentDao.getOne(visitedButUnsyncedAppointmentForPatient2.uuid)).isEqualTo(visitedButUnsyncedAppointmentForPatient2)
+    assertThat(appointmentDao.getOne(appointmentWithUnknownStatusAndSyncedForPatient1.uuid)).isEqualTo(appointmentWithUnknownStatusAndSyncedForPatient1)
   }
 
   @Test

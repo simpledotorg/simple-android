@@ -1,7 +1,6 @@
 package org.simple.clinic.home.overdue
 
 import android.Manifest
-import androidx.annotation.StringRes
 import androidx.paging.PagingData
 import org.simple.clinic.activity.permissions.RequiresPermission
 import org.simple.clinic.analytics.NetworkConnectivityStatus
@@ -54,4 +53,4 @@ data class ShareOverdueListClicked(
 
 object PendingListFooterClicked : OverdueEvent()
 
-data class ChevronClicked(@StringRes val headerText: Int) : OverdueEvent()
+data class ChevronClicked(val overdueAppointmentSectionTitle: OverdueAppointmentSectionTitle) : OverdueEvent()

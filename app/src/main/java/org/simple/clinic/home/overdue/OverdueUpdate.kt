@@ -2,7 +2,11 @@ package org.simple.clinic.home.overdue
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update
-import org.simple.clinic.R
+import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.AGREED_TO_VISIT
+import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.MORE_THAN_A_YEAR_OVERDUE
+import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.PENDING_TO_CALL
+import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.REMIND_TO_CALL
+import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.REMOVED_FROM_OVERDUE
 import org.simple.clinic.home.overdue.PendingListState.SEE_ALL
 import org.simple.clinic.home.overdue.PendingListState.SEE_LESS
 import org.simple.clinic.mobius.dispatch
@@ -26,29 +30,26 @@ class OverdueUpdate(
       is ShareOverdueListClicked -> shareOverdueListClicked(event)
       is OverdueAppointmentsLoaded -> overdueAppointmentsLoaded(event, model)
       PendingListFooterClicked -> pendingListFooterClicked(model)
-      is ChevronClicked -> chevronClicked(model, event.headerText)
+      is ChevronClicked -> chevronClicked(model, event.overdueAppointmentSectionTitle)
     }
   }
 
-  private fun chevronClicked(model: OverdueModel, headerText: Int): Next<OverdueModel, OverdueEffect> {
-    val updatedModel = when (headerText) {
-      R.string.overdue_pending_to_call_header -> {
+  private fun chevronClicked(model: OverdueModel, overdueAppointmentSectionTitle: OverdueAppointmentSectionTitle): Next<OverdueModel, OverdueEffect> {
+    val updatedModel = when (overdueAppointmentSectionTitle) {
+      PENDING_TO_CALL -> {
         pendingChevronStateIsChanged(model)
       }
-      R.string.overdue_agreed_to_visit_call_header -> {
+      AGREED_TO_VISIT -> {
         agreedToVisitChevronStateIsChanged(model)
       }
-      R.string.overdue_remind_to_call_header -> {
+      REMIND_TO_CALL -> {
         remindToCallChevronStateIsChanged(model)
       }
-      R.string.overdue_removed_from_list_call_header -> {
+      REMOVED_FROM_OVERDUE -> {
         removedFromOverdueChevronStateIsChanged(model)
       }
-      R.string.overdue_no_visit_in_one_year_call_header -> {
+      MORE_THAN_A_YEAR_OVERDUE -> {
         moreThanAYearChevronStateIsChanged(model)
-      }
-      else -> {
-        model
       }
     }
     return next(updatedModel)

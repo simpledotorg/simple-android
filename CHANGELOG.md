@@ -22,6 +22,10 @@
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 - [In Progress: 03 Jun 2022] Implement `OverdueAppointmentListItemNew` adapter
 
+### Fixes
+
+- Fix overdue list showing older scheduled appointments
+
 ## 2022-06-06-8284
 
 ### Internal

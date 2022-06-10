@@ -28,6 +28,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
+import org.simple.clinic.overdue.Appointment.Status
 import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.Appointment.Status.Visited
@@ -1966,7 +1967,11 @@ class AppointmentRepositoryAndroidTest {
         patientUuid: UUID,
         scheduledDate: LocalDate,
         facilityUuid: UUID,
-        patientAssignedFacilityUuid: UUID?
+        patientAssignedFacilityUuid: UUID?,
+        status: Status,
+        createdAt: Instant,
+        updatedAt: Instant,
+        deletedAt: Instant?
     ) {
       val patientProfile = TestData.patientProfile(
           patientUuid = patientUuid,
@@ -1994,8 +1999,11 @@ class AppointmentRepositoryAndroidTest {
           patientUuid = patientUuid,
           facilityUuid = facilityUuid,
           scheduledDate = scheduledDate,
-          status = Scheduled,
-          cancelReason = null
+          status = status,
+          cancelReason = null,
+          createdAt = createdAt,
+          updatedAt = updatedAt,
+          deletedAt = deletedAt
       )
       appointmentRepository.save(listOf(appointment))
     }
@@ -2006,6 +2014,7 @@ class AppointmentRepositoryAndroidTest {
     val patientWithTenDaysOverdue = UUID.fromString("50604030-303a-4979-bfda-297c169ed929")
     val patientWithFifteenDaysOverdue = UUID.fromString("a4e5c0e0-cacd-49bf-8663-ab4d19435c3b")
     val patientWithOverAnYearDaysOverdue = UUID.fromString("9e1c9dae-6bea-4463-8ad8-609d9118e20d")
+    val patientWithMultipleOverdueAppointments = UUID.fromString("c3159d7b-3327-4203-935e-2acbe3068d69")
 
     val now = LocalDate.now(clock)
     val facility1Uuid = UUID.fromString("4f3c6c64-3a2b-4f18-9179-978c2aa0b698")
@@ -2023,35 +2032,65 @@ class AppointmentRepositoryAndroidTest {
         patientUuid = patientWithOneDayOverdue,
         scheduledDate = now.minusDays(1),
         facilityUuid = facility1Uuid,
-        patientAssignedFacilityUuid = assignedFacility1Uuid
+        patientAssignedFacilityUuid = assignedFacility1Uuid,
+        status = Scheduled,
+        createdAt = Instant.parse("2018-01-01T00:00:00Z"),
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        deletedAt = null
     )
     createOverdueAppointment(
         patientUuid = patientWithFiveDayOverdue,
         scheduledDate = now.minusDays(5),
         facilityUuid = facility1Uuid,
-        patientAssignedFacilityUuid = null
+        patientAssignedFacilityUuid = null,
+        status = Scheduled,
+        createdAt = Instant.parse("2018-01-01T00:00:00Z"),
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        deletedAt = null
     )
     createOverdueAppointment(
         patientUuid = patientWithTenDaysOverdue,
         scheduledDate = now.minusDays(10),
         facilityUuid = facility1Uuid,
-        patientAssignedFacilityUuid = assignedFacility2Uuid
+        patientAssignedFacilityUuid = assignedFacility2Uuid,
+        status = Scheduled,
+        createdAt = Instant.parse("2018-01-01T00:00:00Z"),
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        deletedAt = null
     )
     createOverdueAppointment(
         patientUuid = patientWithFifteenDaysOverdue,
         scheduledDate = now.minusDays(15),
         facilityUuid = facility2Uuid,
-        patientAssignedFacilityUuid = assignedFacility1Uuid
+        patientAssignedFacilityUuid = assignedFacility1Uuid,
+        status = Scheduled,
+        createdAt = Instant.parse("2018-01-01T00:00:00Z"),
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        deletedAt = null
     )
     createOverdueAppointment(
         patientUuid = patientWithOverAnYearDaysOverdue,
         scheduledDate = now.minusDays(370),
         facilityUuid = facility1Uuid,
-        patientAssignedFacilityUuid = null
+        patientAssignedFacilityUuid = null,
+        status = Scheduled,
+        createdAt = Instant.parse("2018-01-01T00:00:00Z"),
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        deletedAt = null
+    )
+    createOverdueAppointment(
+        patientUuid = patientWithMultipleOverdueAppointments,
+        scheduledDate = now.minusDays(3),
+        facilityUuid = facility1Uuid,
+        patientAssignedFacilityUuid = assignedFacility1Uuid,
+        status = Scheduled,
+        createdAt = Instant.parse("2018-02-01T00:00:00Z"),
+        updatedAt = Instant.parse("2018-02-01T00:00:00Z"),
+        deletedAt = null
     )
 
     //when
-    val overdueAppointments = PagingTestCase(pagingSource = appointmentRepository.overdueAppointmentsInFacility(since = now,
+    val overduePatients = PagingTestCase(pagingSource = appointmentRepository.overdueAppointmentsInFacility(since = now,
         facilityId = facility1.uuid),
         loadSize = 10)
         .loadPage()
@@ -2059,7 +2098,12 @@ class AppointmentRepositoryAndroidTest {
         .map { it.appointment.patientUuid }
 
     //then
-    assertThat(overdueAppointments).isEqualTo(listOf(patientWithOneDayOverdue, patientWithFiveDayOverdue, patientWithFifteenDaysOverdue))
+    assertThat(overduePatients).isEqualTo(listOf(
+        patientWithOneDayOverdue,
+        patientWithMultipleOverdueAppointments,
+        patientWithFiveDayOverdue,
+        patientWithFifteenDaysOverdue
+    ))
   }
 
   @Test
@@ -2353,7 +2397,7 @@ class AppointmentRepositoryAndroidTest {
         facilityUuid: UUID,
         patientAssignedFacilityUuid: UUID?,
         patientStatus: PatientStatus,
-        appointmentStatus: Appointment.Status,
+        appointmentStatus: Status,
         callResult: CallResult?
     ) {
       val patientProfile = TestData.patientProfile(

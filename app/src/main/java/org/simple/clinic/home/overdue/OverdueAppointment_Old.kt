@@ -70,7 +70,11 @@ data class OverdueAppointment_Old(
 
       FROM Patient P
       
-      INNER JOIN Appointment A ON A.patientUuid = P.uuid
+      INNER JOIN (
+        SELECT *
+        FROM Appointment
+        GROUP BY patientUuid HAVING MAX(createdAt)
+      ) A ON A.patientUuid = P.uuid
       LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid = P.uuid
       LEFT JOIN MedicalHistory MH ON MH.patientUuid = P.uuid
       LEFT JOIN PatientAddress PA ON PA.uuid = P.addressUuid

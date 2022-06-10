@@ -21,6 +21,21 @@ class ReportsWebViewClient(
     return false
   }
 
+  override fun onPageFinished(view: WebView?, url: String?) {
+    /**
+     * Since we are loading the progress page from database,
+     * it doesn't have a proper URL. `about:blank` url here indicates
+     * that the progress tab is loaded.
+     *
+     * Once progress tab is loaded, we are clearing the WebView history,
+     * so that the system back navigation can be properly handled.
+     */
+    if (url == "about:blank") {
+      view?.clearHistory()
+    }
+    super.onPageFinished(view, url)
+  }
+
   @RequiresApi(Build.VERSION_CODES.M)
   override fun onReceivedError(
       view: WebView?,

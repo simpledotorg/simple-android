@@ -20,6 +20,7 @@
 - Add pending list size for the default state as a firebase remote config
 - Purge old appointments that are synced
 - Implement `OverdueAppointmentListItemNew` adapter
+- Fix progress page not handling system back clicks
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 - [In Progress: 10 Jun 2022] Handle collapse/expand states of overdue appointment sections
 

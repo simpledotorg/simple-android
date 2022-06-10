@@ -33,7 +33,9 @@ import org.simple.clinic.home.HomeTab.OVERDUE
 import org.simple.clinic.home.HomeTab.PATIENTS
 import org.simple.clinic.home.HomeTab.REPORTS
 import org.simple.clinic.home.help.HelpScreen
+import org.simple.clinic.home.report.ReportsScreen
 import org.simple.clinic.main.TheActivity
+import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -42,6 +44,7 @@ import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.exhaustive
+import org.simple.clinic.widgets.findCurrentFragment
 import org.simple.clinic.widgets.hideKeyboard
 import java.time.Instant
 import java.util.UUID
@@ -56,7 +59,8 @@ class HomeScreen :
         HomeScreenEffect,
         HomeScreenViewEffect>(),
     HomeScreenUi,
-    HomeScreenUiActions {
+    HomeScreenUiActions,
+    HandlesBack {
 
   @Inject
   lateinit var router: Router
@@ -159,6 +163,11 @@ class HomeScreen :
   override fun onDestroyView() {
     viewPager.adapter = null
     super.onDestroyView()
+  }
+
+  override fun onBackPressed(): Boolean {
+    val reportsScreen = viewPager.findCurrentFragment<ReportsScreen>(childFragmentManager)
+    return reportsScreen?.handleBackPress() ?: false
   }
 
   fun overdueListCountUpdated(count: Int) {

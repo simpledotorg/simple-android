@@ -10,6 +10,11 @@ import org.simple.clinic.R
 import org.simple.clinic.databinding.ListItemOverdueListSectionHeaderBinding
 import org.simple.clinic.databinding.ListItemOverduePatientBinding
 import org.simple.clinic.databinding.ListItemOverduePendingListFooterBinding
+import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.AGREED_TO_VISIT
+import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.MORE_THAN_A_YEAR_OVERDUE
+import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.PENDING_TO_CALL
+import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.REMIND_TO_CALL
+import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.REMOVED_FROM_OVERDUE
 import org.simple.clinic.home.overdue.PendingListState.SEE_ALL
 import org.simple.clinic.home.overdue.PendingListState.SEE_LESS
 import org.simple.clinic.patient.Gender
@@ -20,6 +25,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.dp
 import org.simple.clinic.widgets.executeOnNextMeasure
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
+import org.simple.clinic.widgets.setCompoundDrawableStart
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
@@ -58,7 +64,12 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
         overdueAppointmentSections: OverdueAppointmentSections,
         clock: UserClock
     ): List<OverdueAppointmentListItemNew> {
-      val moreThanAnOneYearOverdueHeader = listOf(OverdueSectionHeader(R.string.overdue_no_visit_in_one_year_call_header, overdueAppointmentSections.moreThanAnYearOverdueAppointments.size))
+      val moreThanAnOneYearOverdueHeader = listOf(
+          OverdueSectionHeader(R.string.overdue_no_visit_in_one_year_call_header,
+              overdueAppointmentSections.moreThanAnYearOverdueAppointments.size,
+              overdueAppointmentSections.isMoreThanAnOneYearOverdueHeader,
+              MORE_THAN_A_YEAR_OVERDUE
+          ))
       val moreThanAnOneYearOverdueListItems = overdueAppointmentSections.moreThanAnYearOverdueAppointments.map { from(it, clock) }
 
       return moreThanAnOneYearOverdueHeader + moreThanAnOneYearOverdueListItems
@@ -68,21 +79,36 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
         overdueAppointmentSections: OverdueAppointmentSections,
         clock: UserClock
     ): List<OverdueAppointmentListItemNew> {
-      val removedFromOverdueListHeader = listOf(OverdueSectionHeader(R.string.overdue_removed_from_list_call_header, overdueAppointmentSections.removedFromOverdueAppointments.size))
+      val removedFromOverdueListHeader = listOf(
+          OverdueSectionHeader(R.string.overdue_removed_from_list_call_header,
+              overdueAppointmentSections.removedFromOverdueAppointments.size,
+              overdueAppointmentSections.isRemovedFromOverdueListHeaderExpanded,
+              REMOVED_FROM_OVERDUE
+          ))
       val removedFromOverdueListItems = overdueAppointmentSections.removedFromOverdueAppointments.map { from(it, clock) }
 
       return removedFromOverdueListHeader + removedFromOverdueListItems
     }
 
     private fun remindToCallItem(overdueAppointmentSections: OverdueAppointmentSections, clock: UserClock): List<OverdueAppointmentListItemNew> {
-      val remindToCallHeader = listOf(OverdueSectionHeader(R.string.overdue_remind_to_call_header, overdueAppointmentSections.remindToCallLaterAppointments.size))
+      val remindToCallHeader = listOf(
+          OverdueSectionHeader(R.string.overdue_remind_to_call_header,
+              overdueAppointmentSections.remindToCallLaterAppointments.size,
+              overdueAppointmentSections.isRemindToCallLaterHeaderExpanded,
+              REMIND_TO_CALL
+          ))
       val remindToCallListItems = overdueAppointmentSections.remindToCallLaterAppointments.map { from(it, clock) }
 
       return remindToCallHeader + remindToCallListItems
     }
 
     private fun agreedToVisitItem(overdueAppointmentSections: OverdueAppointmentSections, clock: UserClock): List<OverdueAppointmentListItemNew> {
-      val agreedToVisitHeader = listOf(OverdueSectionHeader(R.string.overdue_agreed_to_visit_call_header, overdueAppointmentSections.agreedToVisitAppointments.size))
+      val agreedToVisitHeader = listOf(
+          OverdueSectionHeader(R.string.overdue_agreed_to_visit_call_header,
+              overdueAppointmentSections.agreedToVisitAppointments.size,
+              overdueAppointmentSections.isAgreedToVisitHeaderExpanded,
+              AGREED_TO_VISIT
+          ))
       val agreedToVisitListItems = overdueAppointmentSections.agreedToVisitAppointments.map { from(it, clock) }
 
       return agreedToVisitHeader + agreedToVisitListItems
@@ -95,7 +121,12 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
         pendingListDefaultStateSize: Int
     ): List<OverdueAppointmentListItemNew> {
       val pendingAppointments = overdueAppointmentSections.pendingAppointments
-      val pendingToCallHeader = listOf(OverdueSectionHeader(R.string.overdue_pending_to_call_header, pendingAppointments.size))
+      val pendingToCallHeader = listOf(
+          OverdueSectionHeader(R.string.overdue_pending_to_call_header,
+              overdueAppointmentSections.pendingAppointments.size,
+              overdueAppointmentSections.isPendingHeaderExpanded,
+              PENDING_TO_CALL
+          ))
       val pendingAppointmentsContent = generatePendingAppointmentsContent(overdueAppointmentSections, clock, pendingListState, pendingListDefaultStateSize)
 
       val showPendingListFooter = pendingAppointments.size > pendingListDefaultStateSize && pendingAppointments.isNotEmpty()
@@ -230,7 +261,9 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
 
   data class OverdueSectionHeader(
       @StringRes val headerText: Int,
-      val count: Int
+      val count: Int,
+      val isOverdueSectionHeaderExpanded: Boolean,
+      val overdueAppointmentSectionTitle: OverdueAppointmentSectionTitle
   ) : OverdueAppointmentListItemNew() {
     override fun layoutResId(): Int = R.layout.list_item_overdue_list_section_header
 
@@ -239,7 +272,15 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
 
       binding.overdueSectionHeaderTextView.setText(headerText)
       binding.overdueSectionHeaderIcon.text = count.toString()
-      // TO-DO handle chevron right and down icon here when handling the collapse
+      binding.overdueSectionHeaderIcon.setOnClickListener {
+        subject.onNext(ChevronClicked(overdueAppointmentSectionTitle))
+      }
+
+      if (isOverdueSectionHeaderExpanded) {
+        binding.overdueSectionHeaderIcon.setCompoundDrawableStart(R.drawable.ic_chevron_right_24px)
+      } else {
+        binding.overdueSectionHeaderIcon.setCompoundDrawableStart(R.drawable.ic_chevron_up_24px)
+      }
     }
   }
 

@@ -11,6 +11,11 @@ import org.junit.Test
 import org.simple.clinic.analytics.NetworkConnectivityStatus.ACTIVE
 import org.simple.clinic.analytics.NetworkConnectivityStatus.INACTIVE
 import org.simple.clinic.facility.FacilityConfig
+import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.AGREED_TO_VISIT
+import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.MORE_THAN_A_YEAR_OVERDUE
+import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.PENDING_TO_CALL
+import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.REMIND_TO_CALL
+import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.REMOVED_FROM_OVERDUE
 import org.simple.clinic.home.overdue.PendingListState.SEE_ALL
 import org.simple.clinic.home.overdue.PendingListState.SEE_LESS
 import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
@@ -239,6 +244,71 @@ class OverdueUpdateTest {
         .then(
             assertThatNext(
                 hasModel(defaultModel.pendingListStateChanged(state = SEE_LESS)),
+                hasNoEffects()
+            )
+        )
+  }
+
+  @Test
+  fun `when chevron is clicked in pending overdue header, then update the state in the model`() {
+    updateSpec
+        .given(defaultModel.pendingChevronStateIsChanged(true))
+        .whenEvent(ChevronClicked(PENDING_TO_CALL))
+        .then(
+            assertThatNext(
+                hasModel(defaultModel.pendingChevronStateIsChanged(false)),
+                hasNoEffects()
+            )
+        )
+  }
+
+  @Test
+  fun `when chevron is clicked in agreed to visit overdue header, then update the state in the model`() {
+    updateSpec
+        .given(defaultModel.agreedToVisitChevronStateIsChanged(true))
+        .whenEvent(ChevronClicked(AGREED_TO_VISIT))
+        .then(
+            assertThatNext(
+                hasModel(defaultModel.agreedToVisitChevronStateIsChanged(false)),
+                hasNoEffects()
+            )
+        )
+  }
+
+  @Test
+  fun `when chevron is clicked in removed from overdue header, then update the state in the model`() {
+    updateSpec
+        .given(defaultModel.removedFromOverdueChevronStateIsChanged(true))
+        .whenEvent(ChevronClicked(REMOVED_FROM_OVERDUE))
+        .then(
+            assertThatNext(
+                hasModel(defaultModel.removedFromOverdueChevronStateIsChanged(false)),
+                hasNoEffects()
+            )
+        )
+  }
+
+  @Test
+  fun `when chevron is clicked in remind to call overdue header, then update the state in the model`() {
+    updateSpec
+        .given(defaultModel.remindToCallChevronStateIsChanged(true))
+        .whenEvent(ChevronClicked(REMIND_TO_CALL))
+        .then(
+            assertThatNext(
+                hasModel(defaultModel.remindToCallChevronStateIsChanged(false)),
+                hasNoEffects()
+            )
+        )
+  }
+
+  @Test
+  fun `when chevron is clicked in more than an year overdue header, then update the state in the model`() {
+    updateSpec
+        .given(defaultModel.moreThanAYearChevronStateIsChanged(true))
+        .whenEvent(ChevronClicked(MORE_THAN_A_YEAR_OVERDUE))
+        .then(
+            assertThatNext(
+                hasModel(defaultModel.moreThanAYearChevronStateIsChanged(false)),
                 hasNoEffects()
             )
         )

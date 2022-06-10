@@ -86,6 +86,15 @@ class ReportsScreen : BaseScreen<
     noReportView.visibleOrGone(isVisible.not())
   }
 
+  fun handleBackPress(): Boolean {
+    return if (webView.canGoBack()) {
+      webView.goBack()
+      true
+    } else {
+      false
+    }
+  }
+
   interface Injector {
     fun inject(target: ReportsScreen)
   }

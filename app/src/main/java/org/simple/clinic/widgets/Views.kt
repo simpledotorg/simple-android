@@ -45,6 +45,8 @@ import androidx.dynamicanimation.animation.DynamicAnimation.Y
 import androidx.dynamicanimation.animation.DynamicAnimation.Z
 import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.dynamicanimation.animation.SpringForce
+import androidx.fragment.app.FragmentManager
+import androidx.viewpager2.widget.ViewPager2
 import com.jakewharton.rxbinding3.widget.textChanges
 import io.reactivex.Observable
 import org.simple.clinic.R
@@ -346,6 +348,10 @@ fun View.spring(
   }
 
   return springAnim
+}
+
+inline fun <reified T> ViewPager2.findCurrentFragment(fragmentManager: FragmentManager): T? {
+  return fragmentManager.findFragmentByTag("f$currentItem") as? T
 }
 
 private fun getKey(property: DynamicAnimation.ViewProperty): Int {

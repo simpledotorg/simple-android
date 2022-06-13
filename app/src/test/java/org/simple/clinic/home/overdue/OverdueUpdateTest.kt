@@ -230,7 +230,7 @@ class OverdueUpdateTest {
         .whenEvent(PendingListFooterClicked)
         .then(
             assertThatNext(
-                hasModel(defaultModel.pendingListStateChanged(state = SEE_ALL)),
+                hasModel(defaultModel.pendingListStateChanged(pendingListState = SEE_ALL)),
                 hasNoEffects()
             )
         )
@@ -239,11 +239,11 @@ class OverdueUpdateTest {
   @Test
   fun `when pending list footer is clicked and pending list state is see all, then change the pending list state to see less`() {
     updateSpec
-        .given(defaultModel.pendingListStateChanged(state = SEE_ALL))
+        .given(defaultModel.pendingListStateChanged(pendingListState = SEE_ALL))
         .whenEvent(PendingListFooterClicked)
         .then(
             assertThatNext(
-                hasModel(defaultModel.pendingListStateChanged(state = SEE_LESS)),
+                hasModel(defaultModel.pendingListStateChanged(pendingListState = SEE_LESS)),
                 hasNoEffects()
             )
         )

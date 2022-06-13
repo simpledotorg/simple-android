@@ -11,7 +11,8 @@ data class OverdueModel(
     val facility: Facility?,
     @IgnoredOnParcel
     val overdueAppointmentSections: OverdueAppointmentSections? = null,
-    val pendingListState: PendingListState
+    val pendingListState: PendingListState,
+    val overdueListSectionStates: OverdueListSectionStates
 ) : Parcelable {
 
   companion object {
@@ -19,7 +20,15 @@ data class OverdueModel(
       return OverdueModel(
           facility = null,
           overdueAppointmentSections = null,
-          pendingListState = SEE_LESS
+          pendingListState = SEE_LESS,
+          overdueListSectionStates = OverdueListSectionStates(
+              pendingListState = SEE_LESS,
+              isPendingHeaderExpanded = true,
+              isAgreedToVisitHeaderExpanded = false,
+              isRemindToCallLaterHeaderExpanded = false,
+              isRemovedFromOverdueListHeaderExpanded = false,
+              isMoreThanAnOneYearOverdueHeader = false
+          )
       )
     }
   }
@@ -40,19 +49,19 @@ data class OverdueModel(
     get() = overdueCount == 0
 
   val pendingHeaderExpanded: Boolean
-    get() = overdueAppointmentSections?.isPendingHeaderExpanded == true
+    get() = overdueListSectionStates.isPendingHeaderExpanded
 
   val agreedToVisitHeaderExpanded: Boolean
-    get() = overdueAppointmentSections?.isAgreedToVisitHeaderExpanded == true
+    get() = overdueListSectionStates.isAgreedToVisitHeaderExpanded
 
   val remindToCallLaterHeaderExpanded: Boolean
-    get() = overdueAppointmentSections?.isRemindToCallLaterHeaderExpanded == true
+    get() = overdueListSectionStates.isRemindToCallLaterHeaderExpanded
 
   val removedFromOverdueListHeaderExpanded: Boolean
-    get() = overdueAppointmentSections?.isRemovedFromOverdueListHeaderExpanded == true
+    get() = overdueListSectionStates.isRemovedFromOverdueListHeaderExpanded
 
   val moreThanAnOneYearOverdueHeader: Boolean
-    get() = overdueAppointmentSections?.isMoreThanAnOneYearOverdueHeader == true
+    get() = overdueListSectionStates.isMoreThanAnOneYearOverdueHeader
 
   fun currentFacilityLoaded(facility: Facility): OverdueModel {
     return copy(facility = facility)
@@ -64,27 +73,27 @@ data class OverdueModel(
     return copy(overdueAppointmentSections = overdueAppointmentSections)
   }
 
-  fun pendingListStateChanged(state: PendingListState): OverdueModel {
-    return copy(pendingListState = state)
+  fun pendingListStateChanged(pendingListState: PendingListState): OverdueModel {
+    return copy(overdueListSectionStates = overdueListSectionStates.pendingListStateChanged(pendingListState))
   }
 
   fun pendingChevronStateIsChanged(pendingChevronStateIsChanged: Boolean): OverdueModel {
-    return copy(overdueAppointmentSections = overdueAppointmentSections?.pendingChevronStateIsChanged(pendingChevronStateIsChanged))
+    return copy(overdueListSectionStates = overdueListSectionStates.pendingHeaderSectionStateChanged(pendingChevronStateIsChanged))
   }
 
   fun agreedToVisitChevronStateIsChanged(agreedToVisitChevronStateIsChanged: Boolean): OverdueModel {
-    return copy(overdueAppointmentSections = overdueAppointmentSections?.agreedToVisitChevronStateIsChanged(agreedToVisitChevronStateIsChanged))
+    return copy(overdueListSectionStates = overdueListSectionStates.agreedToVisitSectionStateChanged(agreedToVisitChevronStateIsChanged))
   }
 
   fun remindToCallChevronStateIsChanged(remindToCallChevronStateIsChanged: Boolean): OverdueModel {
-    return copy(overdueAppointmentSections = overdueAppointmentSections?.remindToCallChevronStateIsChanged(remindToCallChevronStateIsChanged))
+    return copy(overdueListSectionStates = overdueListSectionStates.remindToCallSectionStateChanged(remindToCallChevronStateIsChanged))
   }
 
   fun removedFromOverdueChevronStateIsChanged(removedFromOverdueChevronStateIsChanged: Boolean): OverdueModel {
-    return copy(overdueAppointmentSections = overdueAppointmentSections?.removedFromOverdueChevronStateIsChanged(removedFromOverdueChevronStateIsChanged))
+    return copy(overdueListSectionStates = overdueListSectionStates.removedFromOverdueSectionStateChanged(removedFromOverdueChevronStateIsChanged))
   }
 
   fun moreThanAYearChevronStateIsChanged(moreThanAYearChevronStateIsChanged: Boolean): OverdueModel {
-    return copy(overdueAppointmentSections = overdueAppointmentSections?.moreThanAYearChevronStateIsChanged(moreThanAYearChevronStateIsChanged))
+    return copy(overdueListSectionStates = overdueListSectionStates.moreThanAYearSectionStateChanged(moreThanAYearChevronStateIsChanged))
   }
 }

@@ -22,6 +22,7 @@
 - Implement `OverdueAppointmentListItemNew` adapter
 - Fix progress page not handling system back clicks
 - Bump Flipper to v0.149.0
+- Bump OkHttp to v4.10.0
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 - [In Progress: 10 Jun 2022] Handle collapse/expand states of overdue appointment sections
 

@@ -140,6 +140,16 @@ fun TextView.setCompoundDrawableStart(@DrawableRes drawableRes: Int) {
       compoundDrawablesRelative[3])
 }
 
+fun TextView.setCompoundDrawableEnd(@DrawableRes drawableRes: Int) {
+  val drawable = ContextCompat.getDrawable(context, drawableRes)
+  setCompoundDrawablesRelativeWithIntrinsicBounds(
+      compoundDrawablesRelative[0],
+      compoundDrawablesRelative[1],
+      drawable,
+      compoundDrawablesRelative[3])
+}
+
+
 fun TextView.setCompoundDrawableStart(drawable: Drawable?) {
   setCompoundDrawablesRelativeWithIntrinsicBounds(
       drawable,

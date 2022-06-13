@@ -11,7 +11,6 @@ data class OverdueModel(
     val facility: Facility?,
     @IgnoredOnParcel
     val overdueAppointmentSections: OverdueAppointmentSections? = null,
-    val pendingListState: PendingListState,
     val overdueListSectionStates: OverdueListSectionStates
 ) : Parcelable {
 
@@ -20,7 +19,6 @@ data class OverdueModel(
       return OverdueModel(
           facility = null,
           overdueAppointmentSections = null,
-          pendingListState = SEE_LESS,
           overdueListSectionStates = OverdueListSectionStates(
               pendingListState = SEE_LESS,
               isPendingHeaderExpanded = true,

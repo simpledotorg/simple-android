@@ -25,7 +25,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.dp
 import org.simple.clinic.widgets.executeOnNextMeasure
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
-import org.simple.clinic.widgets.setCompoundDrawableStart
+import org.simple.clinic.widgets.setCompoundDrawableEnd
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
@@ -308,14 +308,14 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
 
       binding.overdueSectionHeaderTextView.setText(headerText)
       binding.overdueSectionHeaderIcon.text = count.toString()
-      binding.overdueSectionHeaderIcon.setOnClickListener {
+      binding.root.setOnClickListener {
         subject.onNext(ChevronClicked(overdueAppointmentSectionTitle))
       }
 
       if (isOverdueSectionHeaderExpanded) {
-        binding.overdueSectionHeaderIcon.setCompoundDrawableStart(R.drawable.ic_chevron_right_24px)
+        binding.overdueSectionHeaderIcon.setCompoundDrawableEnd(R.drawable.ic_chevron_up_24px)
       } else {
-        binding.overdueSectionHeaderIcon.setCompoundDrawableStart(R.drawable.ic_chevron_up_24px)
+        binding.overdueSectionHeaderIcon.setCompoundDrawableEnd(R.drawable.ic_chevron_right_24px)
       }
     }
   }

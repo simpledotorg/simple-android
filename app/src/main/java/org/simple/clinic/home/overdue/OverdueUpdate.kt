@@ -96,7 +96,7 @@ class OverdueUpdate(
   }
 
   private fun pendingListFooterClicked(model: OverdueModel): Next<OverdueModel, OverdueEffect> {
-    val changedState = when (model.pendingListState) {
+    val changedState = when (model.overdueListSectionStates.pendingListState) {
       SEE_ALL -> SEE_LESS
       SEE_LESS -> SEE_ALL
     }

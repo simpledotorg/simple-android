@@ -70,7 +70,11 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
               overdueAppointmentSections.isMoreThanAnOneYearOverdueHeader,
               MORE_THAN_A_YEAR_OVERDUE
           ))
-      val moreThanAnOneYearOverdueListItems = overdueAppointmentSections.moreThanAnYearOverdueAppointments.map { from(it, clock) }
+
+      val moreThanAnOneYearOverdueListItems = expandedOverdueAppointmentList(
+          overdueAppointmentSections.isMoreThanAnOneYearOverdueHeader,
+          overdueAppointmentSections.moreThanAnYearOverdueAppointments,
+          clock)
 
       return moreThanAnOneYearOverdueHeader + moreThanAnOneYearOverdueListItems
     }
@@ -85,7 +89,11 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
               overdueAppointmentSections.isRemovedFromOverdueListHeaderExpanded,
               REMOVED_FROM_OVERDUE
           ))
-      val removedFromOverdueListItems = overdueAppointmentSections.removedFromOverdueAppointments.map { from(it, clock) }
+
+      val removedFromOverdueListItems = expandedOverdueAppointmentList(
+          overdueAppointmentSections.isRemovedFromOverdueListHeaderExpanded,
+          overdueAppointmentSections.removedFromOverdueAppointments,
+          clock)
 
       return removedFromOverdueListHeader + removedFromOverdueListItems
     }
@@ -97,7 +105,11 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
               overdueAppointmentSections.isRemindToCallLaterHeaderExpanded,
               REMIND_TO_CALL
           ))
-      val remindToCallListItems = overdueAppointmentSections.remindToCallLaterAppointments.map { from(it, clock) }
+
+      val remindToCallListItems = expandedOverdueAppointmentList(
+          overdueAppointmentSections.isRemindToCallLaterHeaderExpanded,
+          overdueAppointmentSections.remindToCallLaterAppointments,
+          clock)
 
       return remindToCallHeader + remindToCallListItems
     }
@@ -109,7 +121,11 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
               overdueAppointmentSections.isAgreedToVisitHeaderExpanded,
               AGREED_TO_VISIT
           ))
-      val agreedToVisitListItems = overdueAppointmentSections.agreedToVisitAppointments.map { from(it, clock) }
+
+      val agreedToVisitListItems = expandedOverdueAppointmentList(
+          overdueAppointmentSections.isAgreedToVisitHeaderExpanded,
+          overdueAppointmentSections.agreedToVisitAppointments,
+          clock)
 
       return agreedToVisitHeader + agreedToVisitListItems
     }
@@ -146,8 +162,28 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
         SEE_ALL -> overdueAppointmentSections.pendingAppointments
       }
 
-      return pendingAppointmentsList.map { from(it, clock) }
-          .ifEmpty { listOf(NoPendingPatients) }
+      val expandedPendingAppointmentList = expandedOverdueAppointmentList(
+          overdueAppointmentSections.isPendingHeaderExpanded,
+          pendingAppointmentsList,
+          clock)
+
+      return if (pendingAppointmentsList.isEmpty()) {
+        listOf(NoPendingPatients)
+      } else {
+        expandedPendingAppointmentList
+      }
+    }
+
+    private fun expandedOverdueAppointmentList(
+        isListExpanded: Boolean,
+        overdueAppointment: List<OverdueAppointment>,
+        clock: UserClock
+    ): List<OverdueAppointmentListItemNew> {
+      return if (isListExpanded) {
+        overdueAppointment.map { from(it, clock) }
+      } else {
+        emptyList()
+      }
     }
 
     private fun from(

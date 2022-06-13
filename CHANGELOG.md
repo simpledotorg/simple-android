@@ -4,6 +4,13 @@
 
 ### Internal
 
+- Fix inconsistent overdue section header UI
+- [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
+
+## 2022-06-13-8291
+
+### Internal
+
 - Add wrapper class for overdue appointment sections
 - Show no pending patients card when there are no pending overdue patients
 - Load appointments with a reminder when loading all overdue appointments for a facility
@@ -25,8 +32,6 @@
 - Bump OkHttp to v4.10.0
 - Handle collapse/expand states of overdue appointment sections
 - Fix no pending patients illustration is not collapsing
-- Fix inconsistent overdue section header UI
-- [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Fixes
 

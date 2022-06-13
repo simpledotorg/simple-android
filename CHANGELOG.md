@@ -25,6 +25,7 @@
 - Bump OkHttp to v4.10.0
 - Handle collapse/expand states of overdue appointment sections
 - Fix no pending patients illustration is not collapsing
+- Fix inconsistent overdue section header UI
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Fixes

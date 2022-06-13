@@ -167,7 +167,7 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
           pendingAppointmentsList,
           clock)
 
-      return if (pendingAppointmentsList.isEmpty()) {
+      return if (pendingAppointmentsList.isEmpty() && overdueAppointmentSections.isPendingHeaderExpanded) {
         listOf(NoPendingPatients)
       } else {
         expandedPendingAppointmentList

@@ -280,12 +280,17 @@ class OverdueScreen : BaseScreen<
     router.push(SelectOverdueDownloadFormatDialog.Key(SharingInProgress))
   }
 
-  override fun showOverdueAppointments(overdueAppointmentSections: OverdueAppointmentSections, pendingListState: PendingListState) {
+  override fun showOverdueAppointments(
+      overdueAppointmentSections: OverdueAppointmentSections,
+      pendingListState: PendingListState,
+      overdueListSectionStates: OverdueListSectionStates
+  ) {
     overdueListAdapter.submitList(OverdueAppointmentListItemNew.from(
         overdueAppointmentSections = overdueAppointmentSections,
         clock = userClock,
         pendingListState = pendingListState,
-        pendingListDefaultStateSize = pendingAppointmentsConfig.pendingListDefaultStateSize
+        pendingListDefaultStateSize = pendingAppointmentsConfig.pendingListDefaultStateSize,
+        overdueListSectionStates = overdueListSectionStates
     ))
   }
 

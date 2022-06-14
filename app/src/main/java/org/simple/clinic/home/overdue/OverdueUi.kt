@@ -3,7 +3,8 @@ package org.simple.clinic.home.overdue
 interface OverdueUi {
   fun showOverdueAppointments(
       overdueAppointmentSections: OverdueAppointmentSections,
-      pendingListState: PendingListState
+      pendingListState: PendingListState,
+      overdueListSectionStates: OverdueListSectionStates
   )
 
   fun showOverdueCount(count: Int)

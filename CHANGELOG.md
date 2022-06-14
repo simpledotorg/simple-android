@@ -10,6 +10,8 @@
 - Bump sentry-android to v6
 - Bump sentry android gradle plugin to v3.1.0
 - Bump Google Play Services Location to v20
+- Bump Sentry Gradle plugin to v3.1.1
+- Bump Sentry to v6.1.0
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-13-8291

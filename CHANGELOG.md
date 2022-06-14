@@ -7,6 +7,7 @@
 - Fix inconsistent overdue section header UI
 - Use `OverdueListSectionStates` to update overdue section states in `OverdueModel`
 - Use `OverdueListSectionStates` to check overdue section states in `OverdueAppointmentListItemNew`
+- Bump sentry-android to v6
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-13-8291

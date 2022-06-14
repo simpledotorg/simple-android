@@ -33,6 +33,14 @@ class OverdueUiRendererTest {
                 moreThanAnYearOverdueAppointments = emptyList()
             )
         )
+    val overdueListSectionStates = OverdueListSectionStates(
+        pendingListState = SEE_LESS,
+        isPendingHeaderExpanded = true,
+        isAgreedToVisitHeaderExpanded = false,
+        isRemindToCallLaterHeaderExpanded = false,
+        isRemovedFromOverdueListHeaderExpanded = false,
+        isMoreThanAnOneYearOverdueHeader = false
+    )
 
     // when
     uiRenderer.render(overdueAppointmentsLoadedModel)
@@ -45,7 +53,8 @@ class OverdueUiRendererTest {
         removedFromOverdueAppointments = removedFromOverdueAppointments,
         moreThanAnYearOverdueAppointments = emptyList()
     ),
-        pendingListState = SEE_LESS)
+        pendingListState = SEE_LESS,
+        overdueListSectionStates = overdueListSectionStates)
     verify(ui).showOverdueCount(3)
     verify(ui).hideProgress()
     verify(ui).hideNoOverduePatientsView()
@@ -66,6 +75,15 @@ class OverdueUiRendererTest {
                 moreThanAnYearOverdueAppointments = emptyList()
             )
         )
+    val overdueListSectionStates = OverdueListSectionStates(
+        pendingListState = SEE_LESS,
+        isPendingHeaderExpanded = true,
+        isAgreedToVisitHeaderExpanded = false,
+        isRemindToCallLaterHeaderExpanded = false,
+        isRemovedFromOverdueListHeaderExpanded = false,
+        isMoreThanAnOneYearOverdueHeader = false
+    )
+
 
     // when
     uiRenderer.render(overdueAppointmentsLoadedModel)
@@ -78,7 +96,8 @@ class OverdueUiRendererTest {
         removedFromOverdueAppointments = emptyList(),
         moreThanAnYearOverdueAppointments = emptyList()
     ),
-        pendingListState = SEE_LESS)
+        pendingListState = SEE_LESS,
+        overdueListSectionStates = overdueListSectionStates)
     verify(ui).showOverdueCount(0)
     verify(ui).hideProgress()
     verify(ui).showNoOverduePatientsView()

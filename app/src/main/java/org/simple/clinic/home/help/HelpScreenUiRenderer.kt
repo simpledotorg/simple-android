@@ -2,6 +2,7 @@ package org.simple.clinic.home.help
 
 import org.simple.clinic.help.HelpPullResult.NetworkError
 import org.simple.clinic.help.HelpPullResult.OtherError
+import org.simple.clinic.help.HelpPullResult.Success
 import org.simple.clinic.mobius.ViewRenderer
 
 class HelpScreenUiRenderer(private val ui: HelpScreenUi) : ViewRenderer<HelpScreenModel> {
@@ -24,6 +25,9 @@ class HelpScreenUiRenderer(private val ui: HelpScreenUi) : ViewRenderer<HelpScre
     when (model.helpPullResult!!) {
       NetworkError -> ui.showNetworkErrorMessage()
       OtherError -> ui.showUnexpectedErrorMessage()
+      Success -> {
+        /* no-op */
+      }
     }
   }
 }

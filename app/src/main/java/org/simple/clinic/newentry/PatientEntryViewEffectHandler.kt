@@ -1,6 +1,17 @@
 package org.simple.clinic.newentry
 
 import org.simple.clinic.mobius.ViewEffectsHandler
+import org.simple.clinic.newentry.Field.Age
+import org.simple.clinic.newentry.Field.BangladeshNationalId
+import org.simple.clinic.newentry.Field.ColonyOrVillage
+import org.simple.clinic.newentry.Field.DateOfBirth
+import org.simple.clinic.newentry.Field.District
+import org.simple.clinic.newentry.Field.FullName
+import org.simple.clinic.newentry.Field.Gender
+import org.simple.clinic.newentry.Field.PhoneNumber
+import org.simple.clinic.newentry.Field.State
+import org.simple.clinic.newentry.Field.StreetAddress
+import org.simple.clinic.newentry.Field.Zone
 import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.util.ValueChangedCallback
@@ -27,13 +38,16 @@ class PatientEntryViewEffectHandler(
 
   private fun hideValidationError(field: Field) {
     when (field) {
-      Field.FullName -> uiActions.showEmptyFullNameError(false)
-      Field.PhoneNumber -> hidePhoneLengthErrors()
-      Field.Age, Field.DateOfBirth -> hideDateOfBirthErrors()
-      Field.Gender -> uiActions.showMissingGenderError(false)
-      Field.ColonyOrVillage -> uiActions.showEmptyColonyOrVillageError(false)
-      Field.District -> uiActions.showEmptyDistrictError(false)
-      Field.State -> uiActions.showEmptyStateError(false)
+      FullName -> uiActions.showEmptyFullNameError(false)
+      PhoneNumber -> hidePhoneLengthErrors()
+      Age, DateOfBirth -> hideDateOfBirthErrors()
+      Gender -> uiActions.showMissingGenderError(false)
+      ColonyOrVillage -> uiActions.showEmptyColonyOrVillageError(false)
+      District -> uiActions.showEmptyDistrictError(false)
+      State -> uiActions.showEmptyStateError(false)
+      BangladeshNationalId, StreetAddress, Zone -> {
+        /* no-op */
+      }
     }
   }
 

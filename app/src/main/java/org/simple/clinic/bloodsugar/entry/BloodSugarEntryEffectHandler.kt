@@ -108,6 +108,9 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
       ErrorBloodSugarEmpty -> ui.showBloodSugarEmptyError()
       is ErrorBloodSugarTooHigh -> ui.showBloodSugarHighError(result.measurementType, unitPreference)
       is ErrorBloodSugarTooLow -> ui.showBloodSugarLowError(result.measurementType, unitPreference)
+      is ValidationResult.Valid -> {
+        /* no-op */
+      }
     }
   }
 

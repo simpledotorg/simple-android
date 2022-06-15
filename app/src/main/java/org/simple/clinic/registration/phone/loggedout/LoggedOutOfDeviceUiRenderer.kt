@@ -1,6 +1,7 @@
 package org.simple.clinic.registration.phone.loggedout
 
 import org.simple.clinic.mobius.ViewRenderer
+import org.simple.clinic.user.UserSession.LogoutResult.Failure
 import org.simple.clinic.user.UserSession.LogoutResult.Success
 
 class LoggedOutOfDeviceUiRenderer(private val ui: LoggedOutOfDeviceDialogUi) : ViewRenderer<LoggedOutOfDeviceModel> {
@@ -15,6 +16,9 @@ class LoggedOutOfDeviceUiRenderer(private val ui: LoggedOutOfDeviceDialogUi) : V
   private fun renderOkayButton(model: LoggedOutOfDeviceModel) {
     when (model.logoutResult!!) {
       is Success -> ui.enableOkayButton()
+      is Failure -> {
+        /* no-op */
+      }
     }
   }
 }

@@ -363,12 +363,18 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
     when (measurementType) {
       Random, PostPrandial, Fasting -> showBloodSugarErrorMessage(getString(R.string.bloodsugarentry_error_higher_limit))
       HbA1c -> showBloodSugarErrorMessage(getString(R.string.bloodsugarentry_error_higher_limit_hba1c))
+      is Unknown -> {
+        /* no-op */
+      }
     }
   }
 
   private fun showBloodSugarHighErrorForMmol(measurementType: BloodSugarMeasurementType) {
     when (measurementType) {
       Random, PostPrandial, Fasting -> showBloodSugarErrorMessage(getString(R.string.bloodsugarentry_error_higher_limit_mmol))
+      HbA1c, is Unknown -> {
+        /* no-op */
+      }
     }
   }
 
@@ -386,12 +392,18 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
     when (measurementType) {
       Random, PostPrandial, Fasting -> showBloodSugarErrorMessage(getString(R.string.bloodsugarentry_error_lower_limit))
       HbA1c -> showBloodSugarErrorMessage(getString(R.string.bloodsugarentry_error_lower_limit_hba1c))
+      is Unknown -> {
+        /* no-op */
+      }
     }
   }
 
   private fun showBloodSugarLowErrorForMmol(measurementType: BloodSugarMeasurementType) {
     when (measurementType) {
       Random, PostPrandial, Fasting -> showBloodSugarErrorMessage(getString(R.string.bloodsugarentry_error_lower_limit_mmol))
+      HbA1c, is Unknown -> {
+        /* no-op */
+      }
     }
   }
 

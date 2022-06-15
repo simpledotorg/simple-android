@@ -18,6 +18,9 @@ class CustomDrugEntryInit : Init<CustomDrugEntryModel, CustomDrugEntryEffect> {
     when (model.openAs) {
       is FromDrugList -> effects.add(FetchDrug(model.openAs.drugUuid))
       is Update -> effects.add(FetchPrescription(model.openAs.prescribedDrugUuid))
+      is FromDrugName -> {
+        /* no-op */
+      }
     }
 
     return first(updatedModel, effects)

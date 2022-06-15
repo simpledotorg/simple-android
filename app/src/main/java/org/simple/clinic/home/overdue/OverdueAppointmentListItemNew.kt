@@ -38,7 +38,6 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
     fun from(
         overdueAppointmentSections: OverdueAppointmentSections,
         clock: UserClock,
-        pendingListState: PendingListState,
         pendingListDefaultStateSize: Int,
         overdueListSectionStates: OverdueListSectionStates
     ): List<OverdueAppointmentListItemNew> {

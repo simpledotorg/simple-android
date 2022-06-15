@@ -53,7 +53,6 @@ class OverdueUiRendererTest {
         removedFromOverdueAppointments = removedFromOverdueAppointments,
         moreThanAnYearOverdueAppointments = emptyList()
     ),
-        pendingListState = SEE_LESS,
         overdueListSectionStates = overdueListSectionStates)
     verify(ui).showOverdueCount(3)
     verify(ui).hideProgress()
@@ -96,7 +95,6 @@ class OverdueUiRendererTest {
         removedFromOverdueAppointments = emptyList(),
         moreThanAnYearOverdueAppointments = emptyList()
     ),
-        pendingListState = SEE_LESS,
         overdueListSectionStates = overdueListSectionStates)
     verify(ui).showOverdueCount(0)
     verify(ui).hideProgress()

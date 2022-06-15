@@ -156,7 +156,7 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
           ))
       val pendingAppointmentsContent = generatePendingAppointmentsContent(overdueAppointmentSections, clock, pendingListDefaultStateSize, overdueListSectionStates)
 
-      val showPendingListFooter = pendingAppointments.size > pendingListDefaultStateSize && pendingAppointments.isNotEmpty()
+      val showPendingListFooter = pendingAppointments.size > pendingListDefaultStateSize && overdueListSectionStates.isPendingHeaderExpanded
       val pendingListFooterItem = if (showPendingListFooter) listOf(PendingListFooter(overdueListSectionStates.pendingListState)) else emptyList()
 
       return pendingToCallHeader + pendingAppointmentsContent + pendingListFooterItem

@@ -24,6 +24,9 @@ class EditMedicinesUiRenderer(private val ui: EditMedicinesUi) : ViewRenderer<Ed
         ui.showRefillMedicineButton()
         ui.hideDoneButton()
       }
+      null -> {
+        /* no-op */
+      }
     }
   }
 

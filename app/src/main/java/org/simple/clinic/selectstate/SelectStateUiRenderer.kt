@@ -34,6 +34,9 @@ class SelectStateUiRenderer(
       NetworkError -> ui.showNetworkErrorMessage()
       ServerError -> ui.showServerErrorMessage()
       UnexpectedError -> ui.showGenericErrorMessage()
+      null -> {
+        /* no-op */
+      }
     }
   }
 }

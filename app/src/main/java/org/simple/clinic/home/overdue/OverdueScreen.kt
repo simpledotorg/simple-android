@@ -35,9 +35,11 @@ import org.simple.clinic.databinding.ListItemOverdueListSectionHeaderBinding
 import org.simple.clinic.databinding.ListItemOverduePatientBinding
 import org.simple.clinic.databinding.ListItemOverduePendingListFooterBinding
 import org.simple.clinic.databinding.ListItemOverduePlaceholderBinding
+import org.simple.clinic.databinding.ListItemSearchOverduePatientButtonBinding
 import org.simple.clinic.databinding.ScreenOverdueBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Feature.OverdueInstantSearch
 import org.simple.clinic.feature.Feature.OverdueListDownloadAndShare
 import org.simple.clinic.feature.Feature.OverdueSections
 import org.simple.clinic.feature.Features
@@ -146,6 +148,9 @@ class OverdueScreen : BaseScreen<
           },
           R.layout.list_item_divider to { layoutInflater, parent ->
             ListItemDividerBinding.inflate(layoutInflater, parent, false)
+          },
+          R.layout.list_item_search_overdue_patient_button to { layoutInflater, parent ->
+            ListItemSearchOverduePatientButtonBinding.inflate(layoutInflater, parent, false)
           }
       )
   )
@@ -290,7 +295,8 @@ class OverdueScreen : BaseScreen<
         clock = userClock,
         pendingListState = pendingListState,
         pendingListDefaultStateSize = pendingAppointmentsConfig.pendingListDefaultStateSize,
-        overdueListSectionStates = overdueListSectionStates
+        overdueListSectionStates = overdueListSectionStates,
+        isOverdueInstantSearchEnabled = features.isEnabled(OverdueInstantSearch)
     ))
   }
 

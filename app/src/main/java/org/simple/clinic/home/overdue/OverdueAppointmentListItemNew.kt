@@ -40,8 +40,11 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
         clock: UserClock,
         pendingListState: PendingListState,
         pendingListDefaultStateSize: Int,
-        overdueListSectionStates: OverdueListSectionStates
+        overdueListSectionStates: OverdueListSectionStates,
+        isOverdueInstantSearchEnabled: Boolean
     ): List<OverdueAppointmentListItemNew> {
+      val searchOverduePatientsButtonListItem = searchOverduePatientItem(isOverdueInstantSearchEnabled)
+
       val pendingToCallListItem = pendingToCallItem(
           overdueAppointmentSections,
           clock,
@@ -54,12 +57,16 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
       val moreThanAnOneYearOverdueListItem = moreThanAnOneYearOverdueItem(overdueAppointmentSections, clock, overdueListSectionStates)
       val dividerListItem = listOf(Divider)
 
-      return pendingToCallListItem + dividerListItem +
+      return searchOverduePatientsButtonListItem +
+          pendingToCallListItem + dividerListItem +
           agreedToVisitListItem + dividerListItem +
           remindToCallListItem + dividerListItem +
           removedFromOverdueListItem + dividerListItem +
           moreThanAnOneYearOverdueListItem
     }
+
+    private fun searchOverduePatientItem(isOverdueInstantSearchEnabled: Boolean) =
+        if (isOverdueInstantSearchEnabled) listOf(SearchOverduePatientsButtonItem) else emptyList()
 
     private fun moreThanAnOneYearOverdueItem(
         overdueAppointmentSections: OverdueAppointmentSections,
@@ -356,6 +363,15 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
 
     override fun render(holder: BindingViewHolder, subject: Subject<UiEvent>) {
       /* no-op */
+    }
+  }
+
+  object SearchOverduePatientsButtonItem : OverdueAppointmentListItemNew() {
+
+    override fun layoutResId(): Int = R.layout.list_item_search_overdue_patient_button
+
+    override fun render(holder: BindingViewHolder, subject: Subject<UiEvent>) {
+      // Handle on click event later
     }
   }
 

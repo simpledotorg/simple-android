@@ -13,6 +13,7 @@
 - Bump Sentry Gradle plugin to v3.1.1
 - Bump Sentry to v6.1.0
 - Add developer flag for overdue search
+- Add search button in overdue patients list
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-13-8291

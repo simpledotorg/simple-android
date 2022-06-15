@@ -16,6 +16,7 @@
   - Use `OverdueListSectionStates` to update overdue section states in `OverdueModel`
   - Use `OverdueListSectionStates` to check overdue section states in `OverdueAppointmentListItemNew`
   - Remove unused section header state usages
+- Add developer flag for overdue search
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-13-8291

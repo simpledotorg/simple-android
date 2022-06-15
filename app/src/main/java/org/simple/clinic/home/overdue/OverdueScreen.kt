@@ -282,15 +282,13 @@ class OverdueScreen : BaseScreen<
 
   override fun showOverdueAppointments(
       overdueAppointmentSections: OverdueAppointmentSections,
-      pendingListState: PendingListState,
       overdueListSectionStates: OverdueListSectionStates
   ) {
     overdueListAdapter.submitList(OverdueAppointmentListItemNew.from(
-        overdueAppointmentSections = overdueAppointmentSections,
-        clock = userClock,
-        pendingListState = pendingListState,
-        pendingListDefaultStateSize = pendingAppointmentsConfig.pendingListDefaultStateSize,
-        overdueListSectionStates = overdueListSectionStates
+      overdueAppointmentSections = overdueAppointmentSections,
+      clock = userClock,
+      pendingListDefaultStateSize = pendingAppointmentsConfig.pendingListDefaultStateSize,
+      overdueListSectionStates = overdueListSectionStates
     ))
   }
 

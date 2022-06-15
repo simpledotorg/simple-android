@@ -13,6 +13,7 @@
 - Bump Sentry Gradle plugin to v3.1.1
 - Bump Sentry to v6.1.0
 - Bump Kotlin to v1.7.0
+- Hide footer when the pending section is collapsed
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-13-8291

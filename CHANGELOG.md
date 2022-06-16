@@ -24,6 +24,7 @@
 - Provide overdue search history string set from preferences
 - Add effect to load overdue search history
 - Show overdue search history when search query is empty
+- Load overdue search history when overdue search screen is opened
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-13-8291

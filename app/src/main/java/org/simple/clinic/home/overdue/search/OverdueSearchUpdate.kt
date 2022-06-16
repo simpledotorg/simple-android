@@ -1,6 +1,7 @@
 package org.simple.clinic.home.overdue.search
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.next
 
@@ -9,6 +10,11 @@ class OverdueSearchUpdate : Update<OverdueSearchModel, OverdueSearchEvent, Overd
   override fun update(model: OverdueSearchModel, event: OverdueSearchEvent): Next<OverdueSearchModel, OverdueSearchEffect> {
     return when (event) {
       is OverdueSearchHistoryLoaded -> next(model.overdueSearchHistoryLoaded(event.searchHistory))
+      is OverdueSearchQueryChanged -> next(
+          model.overdueSearchQueryChanged(event.searchQuery),
+          ValidateOverdueSearchQuery(event.searchQuery)
+      )
+      is OverdueSearchQueryValidated -> noChange()
     }
   }
 }

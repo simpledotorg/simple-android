@@ -3,6 +3,7 @@ package org.simple.clinic.patient
 import android.os.Parcelable
 import androidx.room.Dao
 import androidx.room.Entity
+import androidx.room.Fts4
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
@@ -103,3 +104,7 @@ data class PatientAddress(
     abstract fun getColonyOrVillages(): List<String>
   }
 }
+
+@Entity
+@Fts4(contentEntity = PatientAddress::class)
+data class PatientAddressFts(val uuid: UUID, val colonyOrVillage: String?)

@@ -25,6 +25,7 @@ import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientAddressFts
 import org.simple.clinic.patient.PatientFts
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberFts
@@ -90,12 +91,13 @@ import org.simple.clinic.drugs.search.Answer as DrugAnswer
       CallResult::class,
       PatientFts::class,
       PatientPhoneNumberFts::class,
-      BusinessIdFts::class
+      BusinessIdFts::class,
+      PatientAddressFts::class
     ],
     views = [
       PatientSearchResult::class
     ],
-    version = 102,
+    version = 103,
     exportSchema = true
 )
 @TypeConverters(

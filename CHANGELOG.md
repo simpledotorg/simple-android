@@ -18,6 +18,7 @@
   - Remove unused section header state usages
 - Add developer flag for overdue search
 - Add search button in overdue patients list
+- Implement FTS table for `PatientAddress`
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-13-8291

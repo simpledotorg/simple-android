@@ -23,6 +23,7 @@ import org.simple.clinic.drugstockreminders.DrugStockReminderApiModule
 import org.simple.clinic.enterotp.BruteForceOtpEntryProtectionModule
 import org.simple.clinic.facility.change.FacilityChangeModule
 import org.simple.clinic.home.overdue.OverdueAppointmentsConfigModule
+import org.simple.clinic.home.overdue.search.OverdueSearchModule
 import org.simple.clinic.instantsearch.InstantSearchConfigModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.LoginOtpSmsListenerModule
@@ -94,7 +95,8 @@ import javax.inject.Named
   DrugFrequencyModule::class,
   InfrastructureModule::class,
   AppUpdateModule::class,
-  DrugStockReminderApiModule::class
+  DrugStockReminderApiModule::class,
+  OverdueSearchModule::class
 ])
 class AppModule(private val appContext: Application) {
 

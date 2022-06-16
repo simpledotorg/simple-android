@@ -22,6 +22,7 @@
 - Define overdue appointment query as a `const` in `OverdueAppointment`
 - Bump Annotation library to v1.4.0
 - Provide overdue search history string set from preferences
+- Add effect to load overdue search history
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-13-8291

@@ -5,13 +5,20 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class OverdueSearchModel(
-    val overdueSearchHistory: Set<String>?
+    val overdueSearchHistory: Set<String>?,
+    val searchQuery: String?
 ) : Parcelable {
+
+  val hasSearchQuery: Boolean
+    get() = !searchQuery.isNullOrBlank()
 
   companion object {
 
     fun create(): OverdueSearchModel {
-      return OverdueSearchModel(overdueSearchHistory = null)
+      return OverdueSearchModel(
+          overdueSearchHistory = null,
+          searchQuery = null
+      )
     }
   }
 
@@ -19,5 +26,9 @@ data class OverdueSearchModel(
       overdueSearchHistory: Set<String>
   ): OverdueSearchModel {
     return copy(overdueSearchHistory = overdueSearchHistory)
+  }
+
+  fun overdueSearchQueryChanged(searchQuery: String): OverdueSearchModel {
+    return copy(searchQuery = searchQuery)
   }
 }

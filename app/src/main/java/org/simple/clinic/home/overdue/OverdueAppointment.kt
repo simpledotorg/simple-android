@@ -6,6 +6,7 @@ import androidx.room.Embedded
 import androidx.room.Query
 import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
+import org.intellij.lang.annotations.Language
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.callresult.CallResult
 import org.simple.clinic.patient.Gender
@@ -44,7 +45,10 @@ data class OverdueAppointment(
   @Dao
   interface RoomDao {
 
-    @Query("""
+    companion object {
+
+      @Language("RoomSql")
+      private const val OVERDUE_APPOINTMENTS_QUERY = """
       SELECT 
         P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.assignedFacilityId patientAssignedFacilityUuid,
         
@@ -106,16 +110,20 @@ data class OverdueAppointment(
             deletedAt IS NULL 
         GROUP BY patientUuid HAVING MAX(recordedAt)
       ) BloodSugar ON BloodSugar.patientUuid = P.uuid
-      
-      WHERE
-        IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid AND
-        appt_scheduledDate < :scheduledBefore AND
-        P.deletedAt IS NULL AND
-        P.status != 'dead' AND 
-        PPN.deletedAt IS NULL AND 
-        A.deletedAt IS NULL AND 
-        (A.status = 'scheduled' OR A.status  = 'cancelled') AND 
-        (BP.recordedAt IS NOT NULL OR BloodSugar.recordedAt IS NOT NULL)
+    """
+    }
+
+    @Query(""" 
+     $OVERDUE_APPOINTMENTS_QUERY 
+       WHERE
+         IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid AND
+         appt_scheduledDate < :scheduledBefore AND
+         P.deletedAt IS NULL AND
+         P.status != 'dead' AND 
+         PPN.deletedAt IS NULL AND 
+         A.deletedAt IS NULL AND 
+         (A.status = 'scheduled' OR A.status  = 'cancelled') AND 
+         (BP.recordedAt IS NOT NULL OR BloodSugar.recordedAt IS NOT NULL)
       GROUP BY appt_patientUuid
       ORDER BY 
         isAtHighRisk DESC, 

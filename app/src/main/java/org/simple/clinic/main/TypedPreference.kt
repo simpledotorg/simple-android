@@ -17,6 +17,7 @@ annotation class TypedPreference(val value: Type) {
     IsMediumAppUpdateNotificationShown,
     DrugStockReportLastCheckedAt,
     IsDrugStockReportFilled,
-    DrugStockFormURL
+    DrugStockFormURL,
+    OverdueSearchHistory
   }
 }

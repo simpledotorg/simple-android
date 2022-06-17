@@ -13,7 +13,7 @@ import org.simple.clinic.util.scheduler.TestSchedulersProvider
 
 class OverdueSearchEffectHandlerTest {
 
-  private val overdueSearchHistoryPreference = mock<Preference<Set<String>>>()
+  private val overdueSearchHistoryPreference = mock<Preference<String>>()
   private val overdueSearchConfig = OverdueSearchConfig(minLengthOfSearchQuery = 3)
   private val effectHandler = OverdueSearchEffectHandler(
       overdueSearchHistoryPreference = overdueSearchHistoryPreference,
@@ -30,11 +30,7 @@ class OverdueSearchEffectHandlerTest {
   @Test
   fun `when load search history effect is received, then load the search history`() {
     // given
-    val searchHistory = setOf(
-        "Babri",
-        "Narwar",
-        "Ramesh"
-    )
+    val searchHistory = "Babri, Narwar, Ramesh"
 
     whenever(overdueSearchHistoryPreference.asObservable()) doReturn Observable.just(searchHistory)
 
@@ -42,7 +38,11 @@ class OverdueSearchEffectHandlerTest {
     effectHandlerTestCase.dispatch(LoadOverdueSearchHistory)
 
     // then
-    effectHandlerTestCase.assertOutgoingEvents(OverdueSearchHistoryLoaded(searchHistory))
+    effectHandlerTestCase.assertOutgoingEvents(OverdueSearchHistoryLoaded(setOf(
+        "Babri",
+        "Narwar",
+        "Ramesh"
+    )))
   }
 
   @Test

@@ -28,6 +28,7 @@
 - Add overdue search query validator
 - Validate search query when overdue search query is changed
 - Bump overdue sections feature flag version to v1
+- Save overdue search history as `String` type in preferences
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-13-8291

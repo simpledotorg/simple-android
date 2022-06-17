@@ -1,6 +1,5 @@
 package org.simple.clinic.home.overdue.search
 
-import com.f2prateek.rx.preferences2.Preference
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
@@ -13,10 +12,10 @@ import org.simple.clinic.util.scheduler.TestSchedulersProvider
 
 class OverdueSearchEffectHandlerTest {
 
-  private val overdueSearchHistoryPreference = mock<Preference<String>>()
-  private val overdueSearchConfig = OverdueSearchConfig(minLengthOfSearchQuery = 3)
+  private val overdueSearchHistory = mock<OverdueSearchHistory>()
+  private val overdueSearchConfig = OverdueSearchConfig(minLengthOfSearchQuery = 3, searchHistoryLimit = 5)
   private val effectHandler = OverdueSearchEffectHandler(
-      overdueSearchHistoryPreference = overdueSearchHistoryPreference,
+      overdueSearchHistory = overdueSearchHistory,
       overdueSearchQueryValidator = OverdueSearchQueryValidator(overdueSearchConfig),
       schedulersProvider = TestSchedulersProvider.trampoline()
   ).build()
@@ -30,9 +29,13 @@ class OverdueSearchEffectHandlerTest {
   @Test
   fun `when load search history effect is received, then load the search history`() {
     // given
-    val searchHistory = "Babri, Narwar, Ramesh"
+    val searchHistory = setOf(
+        "Babri",
+        "Narwar",
+        "Ramesh"
+    )
 
-    whenever(overdueSearchHistoryPreference.asObservable()) doReturn Observable.just(searchHistory)
+    whenever(overdueSearchHistory.fetch()) doReturn Observable.just(searchHistory)
 
     // when
     effectHandlerTestCase.dispatch(LoadOverdueSearchHistory)

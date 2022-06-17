@@ -1,15 +1,12 @@
 package org.simple.clinic.home.overdue.search
 
-import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.ObservableTransformer
-import org.simple.clinic.main.TypedPreference
-import org.simple.clinic.main.TypedPreference.Type.OverdueSearchHistory
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import javax.inject.Inject
 
 class OverdueSearchEffectHandler @Inject constructor(
-    @TypedPreference(OverdueSearchHistory) private val overdueSearchHistoryPreference: Preference<String>,
+    private val overdueSearchHistory: OverdueSearchHistory,
     private val overdueSearchQueryValidator: OverdueSearchQueryValidator,
     private val schedulersProvider: SchedulersProvider
 ) {
@@ -35,11 +32,7 @@ class OverdueSearchEffectHandler @Inject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .switchMap { overdueSearchHistoryPreference.asObservable() }
-          .map {
-            // TODO (SM): Extract overdue search history handling to a separate class
-            it.split(", ").toSet()
-          }
+          .switchMap { overdueSearchHistory.fetch() }
           .map(::OverdueSearchHistoryLoaded)
     }
   }

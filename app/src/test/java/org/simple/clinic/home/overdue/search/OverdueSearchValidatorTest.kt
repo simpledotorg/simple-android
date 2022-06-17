@@ -9,7 +9,7 @@ import org.simple.clinic.home.overdue.search.OverdueSearchQueryValidator.Result.
 class OverdueSearchValidatorTest {
 
   private val validator = OverdueSearchQueryValidator(
-      overdueSearchConfig = OverdueSearchConfig(minLengthOfSearchQuery = 3)
+      overdueSearchConfig = OverdueSearchConfig(minLengthOfSearchQuery = 3, searchHistoryLimit = 5)
   )
 
   @Test

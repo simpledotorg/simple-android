@@ -30,6 +30,7 @@
 - Save overdue search history as `String` type in preferences
 - Implement `OverdueSearchHistory`
 - Bump Sentry to v6.1.1
+- Save search query to overdue search history when search query is valid
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-13-8291

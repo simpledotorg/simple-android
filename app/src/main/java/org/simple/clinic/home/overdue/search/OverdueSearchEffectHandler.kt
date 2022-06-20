@@ -16,7 +16,12 @@ class OverdueSearchEffectHandler @Inject constructor(
         .subtypeEffectHandler<OverdueSearchEffect, OverdueSearchEvent>()
         .addTransformer(LoadOverdueSearchHistory::class.java, loadOverdueSearchHistory())
         .addTransformer(ValidateOverdueSearchQuery::class.java, validateOverdueSearchQuery())
+        .addConsumer(AddQueryToOverdueSearchHistory::class.java, ::addQueryToSearchHistory)
         .build()
+  }
+
+  private fun addQueryToSearchHistory(effect: AddQueryToOverdueSearchHistory) {
+    overdueSearchHistory.add(effect.searchQuery)
   }
 
   private fun validateOverdueSearchQuery(): ObservableTransformer<ValidateOverdueSearchQuery, OverdueSearchEvent> {

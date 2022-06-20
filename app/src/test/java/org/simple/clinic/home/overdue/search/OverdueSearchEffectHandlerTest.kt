@@ -56,4 +56,16 @@ class OverdueSearchEffectHandlerTest {
     // then
     effectHandlerTestCase.assertOutgoingEvents(OverdueSearchQueryValidated(Valid("Babri")))
   }
+
+  @Test
+  fun `when add to search history effect is received, then add the search query to search history`() {
+    // given
+    val searchQuery = "Babri"
+
+    // when
+    effectHandlerTestCase.dispatch(AddQueryToOverdueSearchHistory(searchQuery))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+  }
 }

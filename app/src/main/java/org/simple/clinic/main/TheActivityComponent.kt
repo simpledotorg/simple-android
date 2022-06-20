@@ -35,6 +35,7 @@ import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.home.help.HelpScreen
 import org.simple.clinic.home.overdue.OverdueScreen
+import org.simple.clinic.home.overdue.search.OverdueSearchScreen
 import org.simple.clinic.home.patients.PatientsModule
 import org.simple.clinic.home.patients.PatientsTabScreen
 import org.simple.clinic.home.report.ReportsScreen
@@ -147,7 +148,8 @@ interface TheActivityComponent :
     DeletePatientScreen.Injector,
     NextAppointmentCardView.Injector,
     CriticalAppUpdateDialog.Injector,
-    EnterDrugStockScreen.Injector {
+    EnterDrugStockScreen.Injector,
+    OverdueSearchScreen.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory

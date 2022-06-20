@@ -47,6 +47,8 @@
     <ignore regexp="list_item_overdue_pending_list_see_all_button" />
     <ignore regexp="ic_chevron_right_24px" />
     <ignore regexp="ic_chevron_up_24px" />
+    <ignore regexp="ic_search_history" />
+    <ignore regexp="view_overdue_search_history" />
   </issue>
 
   <issue id="ParcelCreator" severity="informational" />

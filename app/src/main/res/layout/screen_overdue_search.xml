@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/overdue_search_root"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <com.google.android.material.appbar.AppBarLayout
+    android:id="@+id/overdue_search_app_bar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:theme="@style/ThemeOverlay.Simple.SurfacePrimary"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <com.google.android.material.appbar.MaterialToolbar
+      android:id="@+id/overdue_search_toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      app:contentInsetStartWithNavigation="@dimen/spacing_56"
+      app:navigationIcon="@drawable/ic_arrow_back_24dp"
+      app:navigationIconTint="?attr/colorOnPrimary">
+
+      <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/overdue_search_query_text_input"
+        style="@style/Widget.Simple.TextField.Layout.Search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:theme="@style/ThemeOverlay.Simple.Blue1Primary">
+
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/overdue_search_query_edit_text"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:digits="@string/instantsearch_allowed_characters"
+          android:hint="@string/overdue_search_hint"
+          android:imeOptions="actionSearch"
+          android:importantForAutofill="no"
+          android:inputType="textPersonName|textCapWords|textFilter|textNoSuggestions"
+          android:saveEnabled="false"
+          android:textAppearance="?attr/textAppearanceBody0"
+          android:textColor="?attr/colorOnSurface"
+          android:textColorHint="@color/color_on_surface_67"
+          tools:ignore="UnusedAttribute" />
+
+      </com.google.android.material.textfield.TextInputLayout>
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+      android:id="@+id/overdue_search_progress_indicator"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="bottom"
+      android:indeterminate="true"
+      android:theme="@style/ThemeOverlay.Simple.Blue1Primary"
+      android:visibility="gone"
+      tools:visibility="visible" />
+
+  </com.google.android.material.appbar.AppBarLayout>
+
+  <TextView
+    android:id="@+id/no_overdue_search_results_title_text_view"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/spacing_32"
+    android:layout_marginTop="@dimen/spacing_64"
+    android:text="@string/overdue_search_no_search_results_title"
+    android:textAlignment="center"
+    android:textAppearance="?attr/textAppearanceHeadline6"
+    android:textColor="@color/color_on_surface_67"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/overdue_search_app_bar" />
+
+  <TextView
+    android:id="@+id/no_overdue_search_results_desc_text_view"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/spacing_32"
+    android:layout_marginTop="@dimen/spacing_12"
+    android:gravity="center"
+    android:text="@string/overdue_search_no_search_results_desc"
+    android:textAppearance="?attr/textAppearanceBody1"
+    android:textColor="@color/color_on_surface_67"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/no_overdue_search_results_title_text_view" />
+
+  <androidx.constraintlayout.widget.Group
+    android:id="@+id/no_overdue_search_results_container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:visibility="gone"
+    app:constraint_referenced_ids="no_overdue_search_results_title_text_view, no_overdue_search_results_desc_text_view" />
+
+  <ListView
+    android:id="@+id/overdue_search_history_container"
+    android:layout_width="@dimen/spacing_0"
+    android:layout_height="@dimen/spacing_0"
+    android:layout_marginTop="@dimen/spacing_8"
+    android:orientation="vertical"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/overdue_search_app_bar" />
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/overdue_search_results"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:padding="@dimen/spacing_8"
+    android:visibility="gone"
+    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/overdue_search_app_bar" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

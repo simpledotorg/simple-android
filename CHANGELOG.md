@@ -9,7 +9,6 @@
 - Bump sentry android gradle plugin to v3.1.0
 - Bump Google Play Services Location to v20
 - Bump Sentry Gradle plugin to v3.1.1
-- Bump Sentry to v6.1.0
 - Bump Kotlin to v1.7.0
 - Hide footer when the pending section is collapsed
 - Restore expanded/collapsed states of Overdue Sections
@@ -30,6 +29,7 @@
 - Bump overdue sections feature flag version to v1
 - Save overdue search history as `String` type in preferences
 - Implement `OverdueSearchHistory`
+- Bump Sentry to v6.1.1
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-13-8291

@@ -38,11 +38,10 @@
 
   <!-- Patient search -->
   <string name="instantsearch_hint">ስም ፣ ስልክ ወይም መታወቂያ</string>
-
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">በዚህ ዝርዝር ውስጥ ታካሚውንውን ማግኘት አልተቻለም?</string>
   <string name="patientsearchresults_register_patient">እንደ አዲስ ታካሚ ይመዝገቡ</string>
-    <string name="patientsearchresults_item_phone_number">ስልክ ቁጥር</string>
+  <string name="patientsearchresults_item_phone_number">ስልክ ቁጥር</string>
   <string name="patientsearchresults_item_birthdate">የትውልድ ቀን</string>
 
   <!-- Manual patient entry -->
@@ -281,6 +280,15 @@
   <string name="overduelist_high_risk">ከፍተኛ ተጋላጭነት</string>
   <string name="overdue_download">አውርድ</string>
   <string name="overdue_share">ያጋሩ</string>
+  <string name="overdue_no_pending_patients">ተረ የሚጠቢቁ ታካሚዎች የሉም</string>
+  <string name="overdue_pending_list_button_see_all">ሁሉንም ይመልከቱ</string>
+  <string name="overdue_pending_list_button_see_less">በትንሹ ይመልከቱ</string>
+  <string name="overdue_pending_to_call_header">ደወልን የሚጠብቁ</string>
+  <string name="overdue_agreed_to_visit_call_header">ለመታየት የተስማሙ</string>
+  <string name="overdue_remind_to_call_header">በኋላ ለመደወል አስታውስ</string>
+  <string name="overdue_removed_from_list_call_header">ከተራ ያውጡ</string>
+  <string name="overdue_no_visit_in_one_year_call_header">በ 1 አመት ዉስጥ ጉብኝት የለም</string>
+
 
   <!-- Facility change -->
 
@@ -559,6 +567,7 @@
   <string name="contactpatient_moved_to_private">ወደ የግል ጤና ባለሙያው ወይም ተቋም ተዛውሯል</string>
   <string name="contactpatient_patient_died">በህይወት የለም</string>
   <string name="contactpatient_other_reason">ሌላ ምክንያት</string>
+  <string name="contactpatient_unknown">የማይታወቅ</string>
   <string name="contactpatient_patient_registered_at">የተመዘገበው በ</string>
   <string name="contactpatient_patient_transfer_from">የተላለፈው ከ</string>
   <string name="contactpatient_phone">ስልክ ቁጥር</string>
@@ -830,9 +839,31 @@
 
   <!-- Drug stock reminder notification -->
   <string name="drug_stock_reminder_notification">በመጠባበቅ ላይ ያለዎትን የመድኃኒት ክምችት ሪፖርት ያጠናቅቁ %1$s</string>
-  
+  <string name="drug_stock_reminder_card_title">የመድሃኒት ክምችት</string>
+  <string name="drug_stock_reminder_card_content">በመጠባበቅ ላይ ያለዎትን የመድኃኒት ክምችት ሪፖርት ያጠናቅቁ %1$s</string>
+  <string name="drug_stock_reminder_button_text">የመድሃኒት ክምችት ያስገቡ</string>
+
+  <!-- Drug stock reminder no active network connection dialog -->
+  <string name="drug_stock_reminder_no_active_network_connection_dialog_title">ኢንተርኔት የለም</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_message">በኢንተርኔትዎን ይፈትሹ እና እንደገና ይሞክሩ።</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_positive_button">እሺ</string>
+
+
   <!-- Clinical Decision Support Alerts -->
   <string name="clinical_decision_support_alert_bp_high_title">የደም ግፊት ከፍተኛ ነው። መድሃኒቶች ጨምረዋል?</string>
   <string name="clinical_decision_support_alert_bp_high_subtitle">ሕመምተኛው አዘውትሮ መድሃኒቶቹን የሚወስድ ከሆነ ፕሮቶኮልን ይከተሉ</string>
+
+  <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">በ ላይ \'ለመጎብኘት ተስማምተናል\' የሚል ምልክት ተደርጎበታል።</string>
+
+  <string name="call_result_outcome_remind_to_call_later">\'ለመደወል አስታውስ\' የሚል ምልክት ተደርጎበታል።</string>
+
+  <string name="call_result_outcome_removed">ተወግዷል፡ %1$s</string>
+
+  <!-- Overdue Instant Search -->
+  <string name="overdue_search_patient_name_or_village">በስም ወይም በመንደር ይፈልጉ</string>
+  <string name="overdue_search_hint">ስም ወይም መንደር ያስገቡ</string>
+  <string name="overdue_search_no_search_results_title">ምንም ሕመምተኞች አልተገኙም።</string>
+  <string name="overdue_search_no_search_results_desc">ከፍለጋህ ሁሉንም ያለፈባቸው ታካሚዎች እዚህ ታያለህ</string>
 
 </resources>

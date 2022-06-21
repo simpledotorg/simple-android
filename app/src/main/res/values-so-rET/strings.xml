@@ -38,6 +38,7 @@
 
   <!-- Patient search -->
   <string name="instantsearch_hint">Magaca, Talefoonka ama Aqoonsiga Qaran</string>
+  <string name="instantsearch_allowed_characters">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">Kuma jiro bukaanka liiskan?</string>
@@ -281,6 +282,15 @@
   <string name="overduelist_high_risk">Halis sare</string>
   <string name="overdue_download">Soo dejiso</string>
   <string name="overdue_share">La wadaag</string>
+  <string name="overdue_no_pending_patients">Ma jiraan bukaano hadhay</string>
+  <string name="overdue_pending_list_button_see_all">Arag dhamaan</string>
+  <string name="overdue_pending_list_button_see_less">Arag wax ka yar</string>
+  <string name="overdue_pending_to_call_header">SUGAYA WEICITAAN</string>
+  <string name="overdue_agreed_to_visit_call_header">AQBALAY BOOQASHO</string>
+  <string name="overdue_remind_to_call_header">XUSUUSI IN KA DIB LA SOO WACO</string>
+  <string name="overdue_removed_from_list_call_header">LAHA SAARAY LIISKA</string>
+  <string name="overdue_no_visit_in_one_year_call_header">MA JIRTO BOOQASHO GUDAHA 1 SANO</string>
+
 
   <!-- Facility change -->
 
@@ -560,6 +570,7 @@
   <string name="contactpatient_moved_to_private">U wareegay dhakhtar gaar ah</string>
   <string name="contactpatient_patient_died">Dhintay</string>
   <string name="contactpatient_other_reason">Sabab kale</string>
+  <string name="contactpatient_unknown">Lama garanayo</string>
   <string name="contactpatient_patient_registered_at">Laga diiwaangeliyay</string>
   <string name="contactpatient_patient_transfer_from">Ka soo wareeji</string>
   <string name="contactpatient_phone">Telefoonka</string>
@@ -830,9 +841,31 @@
 
   <!-- Drug stock reminder notification -->
   <string name="drug_stock_reminder_notification">በመጠባበቅ ላይ ያለዎትን የ%1$s የመድኃኒት ክምችት ሪፖርት ያጠናቅቁ</string>
-  
+  <string name="drug_stock_reminder_card_title">Kaydka Dawada</string>
+  <string name="drug_stock_reminder_card_content">በመጠባበቅ ላይ ያለዎትን የ%1$s የመድኃኒት ክምችት ሪፖርት ያጠናቅቁ</string>
+  <string name="drug_stock_reminder_button_text">Geli Kaydka Dawada</string>
+
+  <!-- Drug stock reminder no active network connection dialog -->
+  <string name="drug_stock_reminder_no_active_network_connection_dialog_title">Ma jiro internat</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_message">Hubi internatkaaga oo isku day mar dambe.</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_positive_button">Haye</string>
+
+
   <!-- Clinical Decision Support Alerts -->
   <string name="clinical_decision_support_alert_bp_high_title">ቢፒ ከፍተኛ ነው። መድሃኒቶች ጨምረዋል?</string>
   <string name="clinical_decision_support_alert_bp_high_subtitle">ሕመምተኛው አዘውትሮ መድሃኒቶቹን የሚወስድ ከሆነ ፕሮቶኮልን ይከተሉ</string>
+
+  <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">Looga calaamadiyay \"Aqbalay Booqashada\"</string>
+
+  <string name="call_result_outcome_remind_to_call_later">Looga calaamadiyay \'Xusuuusi  in la waco\'</string>
+
+  <string name="call_result_outcome_removed">Laga saaray %1$s</string>
+
+  <!-- Overdue Instant Search -->
+  <string name="overdue_search_patient_name_or_village">Ku baadh magaca ama xaafada</string>
+  <string name="overdue_search_hint">Geli magaca ama xaafada</string>
+  <string name="overdue_search_no_search_results_title">La helin wax bukaano ah</string>
+  <string name="overdue_search_no_search_results_desc">Waxaad ka arki doontaa bukaanada weli la filayo baadhitaankaaga halkan</string>
 
 </resources>

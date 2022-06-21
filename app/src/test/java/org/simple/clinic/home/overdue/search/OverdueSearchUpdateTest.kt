@@ -8,10 +8,12 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.home.overdue.search.OverdueSearchQueryValidator.Result.Valid
+import java.time.LocalDate
 
 class OverdueSearchUpdateTest {
 
-  private val updateSpec = UpdateSpec(OverdueSearchUpdate())
+  private val date = LocalDate.of(2022, 2, 23)
+  private val updateSpec = UpdateSpec(OverdueSearchUpdate(date))
   private val defaultModel = OverdueSearchModel.create()
 
   @Test
@@ -43,14 +45,14 @@ class OverdueSearchUpdateTest {
   }
 
   @Test
-  fun `when search query is validated and is valid, then update model and add query to search history`() {
+  fun `when search query is validated and is valid, then update model, add query to search history and search overdue patients`() {
     val searchQuery = "Babri"
     updateSpec
         .given(defaultModel)
         .whenEvent(OverdueSearchQueryValidated(Valid(searchQuery)))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(AddQueryToOverdueSearchHistory(searchQuery))
+            hasEffects(AddQueryToOverdueSearchHistory(searchQuery), SearchOverduePatients(searchQuery, date))
         ))
   }
 }

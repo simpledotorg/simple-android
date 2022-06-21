@@ -1,29 +1,48 @@
 package org.simple.clinic.home.overdue.search
 
+import androidx.paging.PagingData
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.home.overdue.search.OverdueSearchQueryValidator.Result.Valid
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.util.PagerFactory
+import org.simple.clinic.util.PagingSourceFactory
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
+import org.simple.sharedTestCode.TestData
+import java.time.LocalDate
 import java.util.UUID
 
 class OverdueSearchEffectHandlerTest {
 
+  private val pagingLoadSize = 15
+
   private val overdueSearchHistory = mock<OverdueSearchHistory>()
-  private val overdueSearchConfig = OverdueSearchConfig(minLengthOfSearchQuery = 3, searchHistoryLimit = 5)
+  private val overdueSearchConfig = OverdueSearchConfig(minLengthOfSearchQuery = 3, searchHistoryLimit = 5, pagingLoadSize = pagingLoadSize)
   private val uiActions = mock<OverdueSearchUiActions>()
   private val viewEffectHandler = OverdueSearchViewEffectHandler(uiActions)
+  private val appointmentRepository = mock<AppointmentRepository>()
+  private val pagerFactory = mock<PagerFactory>()
+  private val currentFacility = TestData.facility(uuid = UUID.fromString("94db5d90-d483-4755-892a-97fde5a870fe"))
   private val effectHandler = OverdueSearchEffectHandler(
       overdueSearchHistory = overdueSearchHistory,
       overdueSearchQueryValidator = OverdueSearchQueryValidator(overdueSearchConfig),
       schedulersProvider = TestSchedulersProvider.trampoline(),
-      viewEffectsConsumer = viewEffectHandler::handle
+      appointmentRepository = appointmentRepository,
+      pagerFactory = pagerFactory,
+      overdueSearchConfig = overdueSearchConfig,
+      currentFacility = { currentFacility },
+      viewEffectsConsumer = viewEffectHandler::handle,
   ).build()
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
 
@@ -103,5 +122,36 @@ class OverdueSearchEffectHandlerTest {
 
     verify(uiActions).openContactPatientSheet(patientUuid)
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when search overdue patient effect is received, then search overdue patient`() {
+    // given
+    val query = "Ani"
+    val overdueAppointment = listOf(TestData.overdueAppointment(
+        facilityUuid = currentFacility.uuid,
+        name = "Anish Acharya",
+        patientUuid = UUID.fromString("37259e96-e757-4608-aeae-f1a20b088f09")
+    ), TestData.overdueAppointment(
+        facilityUuid = currentFacility.uuid,
+        name = "Anirban Dar",
+        patientUuid = UUID.fromString("53659148-a157-4aa4-92fb-c0a7991ae872")
+    ))
+
+    val expectedPagingData = PagingData.from(overdueAppointment)
+
+    whenever(pagerFactory.createPager(
+        sourceFactory = any<PagingSourceFactory<Int, OverdueAppointment>>(),
+        pageSize = eq(pagingLoadSize),
+        enablePlaceholders = eq(false),
+        initialKey = eq(null)
+    )) doReturn Observable.just(expectedPagingData)
+
+    // when
+    effectHandlerTestCase.dispatch(SearchOverduePatients(query, LocalDate.of(2022, 3, 22)))
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(OverdueSearchResultsLoaded(expectedPagingData))
+    verifyZeroInteractions(uiActions)
   }
 }

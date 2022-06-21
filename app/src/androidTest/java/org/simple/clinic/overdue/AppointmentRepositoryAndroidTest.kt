@@ -2686,6 +2686,105 @@ class AppointmentRepositoryAndroidTest {
       }
     }
   }
+
+  @Test
+  fun searching_for_overdue_appointments_should_work_correctly() {
+    fun createOverdueAppointment(
+        patientName: String,
+        colonyOrVillageName: String,
+        patientAddressUuid: UUID,
+        patientUuid: UUID,
+        facilityUuid: UUID
+    ) {
+      val patientAddress = testData.patientAddress(
+          uuid = patientAddressUuid,
+          colonyOrVillage = colonyOrVillageName
+      )
+
+      val patientProfile = testData.patientProfile(
+          patientUuid = patientUuid,
+          generatePhoneNumber = true,
+          patientAddressUuid = patientAddressUuid,
+          patientName = patientName
+      )
+
+      patientRepository.save(listOf(patientProfile))
+      database.addressDao().save(listOf(patientAddress))
+
+      val bp = testData.bloodPressureMeasurement(
+          patientUuid = patientUuid,
+          facilityUuid = facilityUuid
+      )
+      bpRepository.save(listOf(bp))
+
+      val appointment = testData.appointment(
+          patientUuid = patientUuid,
+          facilityUuid = facilityUuid,
+          scheduledDate = LocalDate.now().minusDays(10),
+          status = Scheduled,
+          cancelReason = null
+      )
+      appointmentRepository.save(listOf(appointment))
+    }
+
+    // given
+    val searchQuery = "bar"
+    val facilityUuid = UUID.fromString("722111d2-459c-47a6-859c-ca3564fc374d")
+
+    val patient1WithMatchingName = UUID.fromString("7c7a09ce-d5b7-4c75-9983-01704d8e9cc6")
+    val patient2WithMatchingName = UUID.fromString("385cf640-ba6d-4fac-8098-612e2620643b")
+    val patientWithMatchingVillageName = UUID.fromString("0d165e45-d12d-4a4a-bbc4-5f01a7955486")
+    val patientWithNothingMatching = UUID.fromString("d2046ee2-8474-4202-989d-1f2eac2deb2a")
+
+    createOverdueAppointment(
+        patientName = "Barminder",
+        colonyOrVillageName = "CHC Bucha",
+        patientAddressUuid = UUID.fromString("a78fed33-db60-4cbc-b721-e487774be9e6"),
+        patientUuid = patient1WithMatchingName,
+        facilityUuid = facilityUuid
+    )
+    createOverdueAppointment(
+        patientName = "Misthi Barish",
+        colonyOrVillageName = "CHC Bathinda",
+        patientAddressUuid = UUID.fromString("7af1fd3a-b307-4b60-9b2a-e2c4188a73c4"),
+        patientUuid = patient2WithMatchingName,
+        facilityUuid = facilityUuid
+    )
+    createOverdueAppointment(
+        patientName = "Riya Mukherjee",
+        colonyOrVillageName = "CHC Barmia",
+        patientAddressUuid = UUID.fromString("3a563a7b-13d4-4a3a-a03c-651c33167216"),
+        patientUuid = patientWithMatchingVillageName,
+        facilityUuid = facilityUuid
+    )
+    createOverdueAppointment(
+        patientName = "Riya Mukherjee",
+        colonyOrVillageName = "CHC Bhatinda",
+        patientAddressUuid = UUID.fromString("0bc53ae9-cbc4-4076-901a-b915d4fd2cef"),
+        patientUuid = patientWithNothingMatching,
+        facilityUuid = facilityUuid
+    )
+
+    // when
+    val overduePatientUuids = PagingTestCase(pagingSource = appointmentRepository.searchOverduePatient(
+        searchQuery = searchQuery,
+        since = LocalDate.now(),
+        facilityId = facilityUuid),
+        loadSize = 10)
+        .loadPage()
+        .data
+        .map { it.appointment.patientUuid }
+
+    // then
+    assertThat(overduePatientUuids).containsExactly(
+        patient1WithMatchingName,
+        patient2WithMatchingName,
+        patientWithMatchingVillageName
+    )
+    assertThat(overduePatientUuids).doesNotContain(
+        patientWithNothingMatching
+    )
+  }
 }
 
 private fun PatientPhoneNumber.withPatientUuid(uuid: UUID): PatientPhoneNumber {

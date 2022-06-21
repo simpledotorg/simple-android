@@ -137,6 +137,18 @@ class AppointmentRepository @Inject constructor(
     )
   }
 
+  fun searchOverduePatient(
+      searchQuery: String,
+      since: LocalDate,
+      facilityId: UUID
+  ): PagingSource<Int, OverdueAppointment> {
+    return overdueDao.search(
+        query = searchQuery,
+        scheduledBefore = since,
+        facilityUuid = facilityId
+    )
+  }
+
   fun lastCreatedAppointmentForPatient(patientUuid: UUID): Optional<Appointment> {
     return appointmentDao.lastCreatedAppointmentForPatient(patientUuid).toOptional()
   }

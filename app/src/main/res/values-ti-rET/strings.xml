@@ -38,11 +38,10 @@
 
   <!-- Patient search -->
   <string name="instantsearch_hint">ስም፣ ስልኪ ቑፅሪ፣ ወይ መለለዪ መንነት</string>
-
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">ተሓካሚ ኣብዚ ዝርዝር ኣይተረኽበን?</string>
   <string name="patientsearchresults_register_patient">ከም ሓድሽ ተሓካሚ ተመዝገብ</string>
-    <string name="patientsearchresults_item_phone_number">ስልኪ</string>
+  <string name="patientsearchresults_item_phone_number">ስልኪ</string>
   <string name="patientsearchresults_item_birthdate">ዝተወለደሉ/ ትሉ ዕለት</string>
 
   <!-- Manual patient entry -->
@@ -281,6 +280,15 @@
   <string name="overduelist_high_risk">ልዑል ስግኣት</string>
   <string name="overdue_download">ዳውንሎድ</string>
   <string name="overdue_share">ኣካፍል</string>
+  <string name="overdue_no_pending_patients">ዝጽበዩ ሕሙማት የለውን</string>
+  <string name="overdue_pending_list_button_see_all">ኩሉ ርኣይ</string>
+  <string name="overdue_pending_list_button_see_less">ዝወሓደ ርአ</string>
+  <string name="overdue_pending_to_call_header">ክሳዕ ትድውለሉ</string>
+  <string name="overdue_agreed_to_visit_call_header">ንክጉብኒ ተሰማሚዑ</string>
+  <string name="overdue_remind_to_call_header">ጸኒሕካ ኽትድውለሉ ኣዘኻኽረካ</string>
+  <string name="overdue_removed_from_list_call_header">ካብ ዝርዝር ኣልጊሱ</string>
+  <string name="overdue_no_visit_in_one_year_call_header">ኣብ 1 ዓመት ምብጻሕ ኣይተገብረን</string>
+
 
   <!-- Facility change -->
 
@@ -559,6 +567,7 @@
   <string name="contactpatient_moved_to_private">ናብ ውልቀ በዓል ሞያ ተዛዊሩ</string>
   <string name="contactpatient_patient_died">ሞይቱ/ታ</string>
   <string name="contactpatient_other_reason">ካልእ ምኽንያት</string>
+  <string name="contactpatient_unknown">ዘይተፈለጠ</string>
   <string name="contactpatient_patient_registered_at">ተመዝጊቦም</string>
   <string name="contactpatient_patient_transfer_from">ካብ ምትሕልላፍ</string>
   <string name="contactpatient_phone">ስልኪ</string>
@@ -829,9 +838,31 @@
 
   <!-- Drug stock reminder notification -->
   <string name="drug_stock_reminder_notification">ነቲ ተሪፉካ ዘሎ ናይ መድሓኒት ጸብጻብ ብ %1$s ምልኣዮ</string>
-  
+  <string name="drug_stock_reminder_card_title">ኣክስዮን</string>
+  <string name="drug_stock_reminder_card_content">ነቲ ተሪፉካ ዘሎ ናይ መድሓኒት ጸብጻብ ብ %1$s ምልኣዮ</string>
+  <string name="drug_stock_reminder_button_text">ናብ ኣክስዮን ኣእቱ</string>
+
+  <!-- Drug stock reminder no active network connection dialog -->
+  <string name="drug_stock_reminder_no_active_network_connection_dialog_title">ኢንተርነት የለን</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_message">ኢንተርነትኩም ፈቲሽኩም ዳግማይ ሞክሩ።</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_positive_button">እሺ</string>
+
+
   <!-- Clinical Decision Support Alerts -->
   <string name="clinical_decision_support_alert_bp_high_title">BP ልዑል እዩ። መድሓኒት ምውሳኽ ድዩ?</string>
   <string name="clinical_decision_support_alert_bp_high_subtitle">እቲ ሕሙም ኣዘውቲሩ መድሓኒት ዝወስድ እንተ ዀይኑ ነቲ መምርሒ ስዓብ</string>
+
+  <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">ምልክት ዝተገበረሉ \'ክበጽሖ ፍቓደኛ</string>
+
+  <string name="call_result_outcome_remind_to_call_later">ምልክት ዝተገበረሉ \'ንኽትጽውዕ ተዘኻኽር\'</string>
+
+  <string name="call_result_outcome_removed">ዝተወገደ: %1$s</string>
+
+  <!-- Overdue Instant Search -->
+  <string name="overdue_search_patient_name_or_village">ብስም ወይ ብቁሸት ድለ</string>
+  <string name="overdue_search_hint">ስም ወይ ቁሸት ኣእቱ</string>
+  <string name="overdue_search_no_search_results_title">ዋላ ሓደ ሕሙም ኣይተረኽበን</string>
+  <string name="overdue_search_no_search_results_desc">ንዅሎም እቶም ግዜኦም ዝሓለፎም ሕሙማት ካብቲ ትደልይዎ ቦታ ኽትርእይዎም ኢኹም</string>
 
 </resources>

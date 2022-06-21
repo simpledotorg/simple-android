@@ -40,3 +40,5 @@ object OpenSelectDownloadFormatDialog : OverdueViewEffect()
 object OpenSelectShareFormatDialog : OverdueViewEffect()
 
 object OpenSharingInProgressDialog : OverdueViewEffect()
+
+object OpenOverdueSearch : OverdueViewEffect()

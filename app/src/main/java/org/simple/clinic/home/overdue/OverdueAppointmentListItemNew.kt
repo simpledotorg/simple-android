@@ -10,6 +10,7 @@ import org.simple.clinic.R
 import org.simple.clinic.databinding.ListItemOverdueListSectionHeaderBinding
 import org.simple.clinic.databinding.ListItemOverduePatientBinding
 import org.simple.clinic.databinding.ListItemOverduePendingListFooterBinding
+import org.simple.clinic.databinding.ListItemSearchOverduePatientButtonBinding
 import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.AGREED_TO_VISIT
 import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.MORE_THAN_A_YEAR_OVERDUE
 import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.PENDING_TO_CALL
@@ -370,7 +371,10 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
     override fun layoutResId(): Int = R.layout.list_item_search_overdue_patient_button
 
     override fun render(holder: BindingViewHolder, subject: Subject<UiEvent>) {
-      // Handle on click event later
+      val binding = holder.binding as ListItemSearchOverduePatientButtonBinding
+      binding.root.setOnClickListener {
+        subject.onNext(OverdueSearchButtonClicked)
+      }
     }
   }
 
@@ -395,6 +399,7 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
         oldItem is PendingListFooter && newItem is PendingListFooter -> oldItem.pendingListState == newItem.pendingListState
         oldItem is NoPendingPatients && newItem is NoPendingPatients -> true
         oldItem is Divider && newItem is Divider -> true
+        oldItem is SearchOverduePatientsButtonItem && newItem is SearchOverduePatientsButtonItem -> true
         else -> false
       }
     }

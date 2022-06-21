@@ -15,4 +15,5 @@ interface OverdueUiActions {
   fun openSelectDownloadFormatDialog()
   fun openSelectShareFormatDialog()
   fun openProgressForSharingDialog()
+  fun openOverdueSearch()
 }

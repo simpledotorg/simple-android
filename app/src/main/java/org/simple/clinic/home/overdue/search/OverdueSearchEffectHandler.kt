@@ -1,15 +1,24 @@
 package org.simple.clinic.home.overdue.search
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import javax.inject.Inject
 
-class OverdueSearchEffectHandler @Inject constructor(
+class OverdueSearchEffectHandler @AssistedInject constructor(
     private val overdueSearchHistory: OverdueSearchHistory,
     private val overdueSearchQueryValidator: OverdueSearchQueryValidator,
-    private val schedulersProvider: SchedulersProvider
+    private val schedulersProvider: SchedulersProvider,
+    @Assisted private val viewEffectsConsumer: Consumer<OverdueSearchViewEffect>
 ) {
+
+  @AssistedFactory
+  interface Factory {
+    fun create(viewEffectsConsumer: Consumer<OverdueSearchViewEffect>): OverdueSearchEffectHandler
+  }
 
   fun build(): ObservableTransformer<OverdueSearchEffect, OverdueSearchEvent> {
     return RxMobius
@@ -17,6 +26,7 @@ class OverdueSearchEffectHandler @Inject constructor(
         .addTransformer(LoadOverdueSearchHistory::class.java, loadOverdueSearchHistory())
         .addTransformer(ValidateOverdueSearchQuery::class.java, validateOverdueSearchQuery())
         .addConsumer(AddQueryToOverdueSearchHistory::class.java, ::addQueryToSearchHistory)
+        .addConsumer(OverdueSearchViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 

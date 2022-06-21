@@ -1,6 +1,7 @@
 package org.simple.clinic.home.overdue
 
 import android.os.Parcelable
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Query
@@ -80,13 +81,25 @@ data class OverdueAppointment(
         CR.removeReason call_result_removeReason, CR.outcome call_result_outcome, CR.createdAt call_result_createdAt,
         CR.updatedAt call_result_updatedAt, CR.deletedAt call_result_deletedAt, CR.syncStatus call_result_syncStatus
 
-      FROM Patient P
+      FROM (
+        SELECT * FROM Patient
+        WHERE deletedAt IS NULL AND status != 'dead'
+      ) P
       
       INNER JOIN (
-        SELECT * FROM Appointment
+        SELECT * FROM Appointment 
+        WHERE 
+          (patientUuid IN ( SELECT uuid FROM Patient WHERE assignedFacilityId = :facilityUuid ) OR facilityUuid = :facilityUuid) AND
+          deletedAt IS NULL AND 
+          (status = 'scheduled' OR status = 'cancelled') 
         GROUP BY patientUuid HAVING MAX(createdAt)
       ) A ON A.patientUuid = P.uuid
-      LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid = P.uuid
+
+      LEFT JOIN (
+        SELECT * FROM PatientPhoneNumber
+        WHERE deletedAt IS NULL 
+      ) PPN ON PPN.patientUuid = P.uuid
+
       LEFT JOIN MedicalHistory MH ON MH.patientUuid = P.uuid
       LEFT JOIN PatientAddress PA ON PA.uuid = P.addressUuid
       
@@ -99,7 +112,7 @@ data class OverdueAppointment(
         SELECT * 
         FROM BloodPressureMeasurement 
         WHERE (patientUuid IN ( SELECT uuid FROM Patient WHERE assignedFacilityId = :facilityUuid ) OR facilityUuid = :facilityUuid) AND
-            deletedAt IS NULL 
+            deletedAt IS NULL AND recordedAt IS NOT NULL
         GROUP BY patientUuid HAVING MAX(recordedAt)
       ) BP ON BP.patientUuid = P.uuid
       
@@ -107,23 +120,17 @@ data class OverdueAppointment(
         SELECT * 
         FROM BloodSugarMeasurements 
         WHERE (patientUuid IN ( SELECT uuid FROM Patient WHERE assignedFacilityId = :facilityUuid ) OR facilityUuid = :facilityUuid) AND
-            deletedAt IS NULL 
+            deletedAt IS NULL AND recordedAt IS NOT NULL
         GROUP BY patientUuid HAVING MAX(recordedAt)
       ) BloodSugar ON BloodSugar.patientUuid = P.uuid
     """
     }
 
     @Query(""" 
-     $OVERDUE_APPOINTMENTS_QUERY 
-       WHERE
-         IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid AND
-         appt_scheduledDate < :scheduledBefore AND
-         P.deletedAt IS NULL AND
-         P.status != 'dead' AND 
-         PPN.deletedAt IS NULL AND 
-         A.deletedAt IS NULL AND 
-         (A.status = 'scheduled' OR A.status  = 'cancelled') AND 
-         (BP.recordedAt IS NOT NULL OR BloodSugar.recordedAt IS NOT NULL)
+      $OVERDUE_APPOINTMENTS_QUERY 
+      WHERE
+        IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid AND
+        appt_scheduledDate < :scheduledBefore
       GROUP BY appt_patientUuid
       ORDER BY 
         isAtHighRisk DESC, 
@@ -134,5 +141,23 @@ data class OverdueAppointment(
         facilityUuid: UUID,
         scheduledBefore: LocalDate
     ): Observable<List<OverdueAppointment>>
+
+    @Query("""
+      $OVERDUE_APPOINTMENTS_QUERY
+      WHERE
+        (
+          P.uuid IN (SELECT uuid FROM PatientFts WHERE fullName MATCH "*"||:query||"*") OR
+          P.addressUuid IN (SELECT uuid FROM PatientAddressFts WHERE colonyOrVillage MATCH "*"||:query||"*")
+        ) AND
+        IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid AND
+        appt_scheduledDate < :scheduledBefore
+      GROUP BY appt_patientUuid
+      ORDER BY fullName COLLATE NOCASE
+    """)
+    fun search(
+        query: String,
+        facilityUuid: UUID,
+        scheduledBefore: LocalDate
+    ): PagingSource<Int, OverdueAppointment>
   }
 }

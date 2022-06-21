@@ -313,4 +313,15 @@ class OverdueUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when overdue search button is clicked, then open overdue search`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(OverdueSearchButtonClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenOverdueSearch)
+        ))
+  }
 }

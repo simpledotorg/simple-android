@@ -31,6 +31,7 @@ class OverdueUpdate(
       is OverdueAppointmentsLoaded -> overdueAppointmentsLoaded(event, model)
       PendingListFooterClicked -> pendingListFooterClicked(model)
       is ChevronClicked -> chevronClicked(model, event.overdueAppointmentSectionTitle)
+      OverdueSearchButtonClicked -> dispatch(OpenOverdueSearch)
     }
   }
 

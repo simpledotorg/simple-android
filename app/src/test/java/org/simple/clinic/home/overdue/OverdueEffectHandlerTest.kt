@@ -299,4 +299,16 @@ class OverdueEffectHandlerTest {
 
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when open overdue search view effect is received, then open the overdue search screen`() {
+    // when
+    effectHandlerTestCase.dispatch(OpenOverdueSearch)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openOverdueSearch()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

@@ -44,6 +44,7 @@ import org.simple.clinic.feature.Feature.OverdueListDownloadAndShare
 import org.simple.clinic.feature.Feature.OverdueSections
 import org.simple.clinic.feature.Features
 import org.simple.clinic.home.HomeScreen
+import org.simple.clinic.home.overdue.search.OverdueSearchScreen
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.ScreenResultBus
@@ -290,11 +291,11 @@ class OverdueScreen : BaseScreen<
       overdueListSectionStates: OverdueListSectionStates
   ) {
     overdueListAdapter.submitList(OverdueAppointmentListItemNew.from(
-      overdueAppointmentSections = overdueAppointmentSections,
-      clock = userClock,
-      pendingListDefaultStateSize = pendingAppointmentsConfig.pendingListDefaultStateSize,
-      overdueListSectionStates = overdueListSectionStates,
-      isOverdueInstantSearchEnabled = features.isEnabled(OverdueInstantSearch)
+        overdueAppointmentSections = overdueAppointmentSections,
+        clock = userClock,
+        pendingListDefaultStateSize = pendingAppointmentsConfig.pendingListDefaultStateSize,
+        overdueListSectionStates = overdueListSectionStates,
+        isOverdueInstantSearchEnabled = features.isEnabled(OverdueInstantSearch)
     ))
   }
 
@@ -324,6 +325,10 @@ class OverdueScreen : BaseScreen<
 
   override fun hideOverdueRecyclerView() {
     overdueRecyclerView.visibility = View.GONE
+  }
+
+  override fun openOverdueSearch() {
+    router.push(OverdueSearchScreen.Key())
   }
 
   private fun downloadOverdueListClicks(): Observable<UiEvent> {

@@ -97,7 +97,7 @@ import org.simple.clinic.drugs.search.Answer as DrugAnswer
     views = [
       PatientSearchResult::class
     ],
-    version = 103,
+    version = 104,
     exportSchema = true
 )
 @TypeConverters(

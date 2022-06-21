@@ -30,4 +30,17 @@ class OverdueBenchmark : BaseBenchmarkTest() {
 
     pagingTestCase.loadPage().data
   }
+
+  @Test
+  fun searching_overdue_patients_in_a_facility() {
+    val pagingTestCase = PagingTestCase(
+        pagingSource = appointmentRepository.searchOverduePatient(
+            searchQuery = "Ani",
+            since = LocalDate.now(),
+            facilityId = UUID.fromString("c68603b3-9293-4783-bd76-0dc425c0c5d2")
+        ),
+        loadSize = 50
+    )
+    pagingTestCase.loadPage().data
+  }
 }

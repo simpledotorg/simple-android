@@ -38,11 +38,10 @@
 
   <!-- Patient search -->
   <string name="instantsearch_hint">Maqaa, Bilbila, yookan Waraqaa Eenyummaa</string>
-
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">Tarree kana irratti dhubbubsataa argachuu hin dandanyee?</string>
   <string name="patientsearchresults_register_patient">Akka dhukkubsataa haaraatti galmeessi</string>
-    <string name="patientsearchresults_item_phone_number">Bilbila</string>
+  <string name="patientsearchresults_item_phone_number">Bilbila</string>
   <string name="patientsearchresults_item_birthdate">Guyyaa dhalootaa</string>
 
   <!-- Manual patient entry -->
@@ -282,6 +281,15 @@
   <string name="overduelist_high_risk">Saaxilbahii ol aanaa</string>
   <string name="overdue_download">Buusicha</string>
   <string name="overdue_share">Raabsi</string>
+  <string name="overdue_no_pending_patients">Dhukkubsataan eeggatu hin jiru</string>
+  <string name="overdue_pending_list_button_see_all">Hundaa ilaali</string>
+  <string name="overdue_pending_list_button_see_less">Xiqqeessii ilaali</string>
+  <string name="overdue_pending_to_call_header">WAAMICHA KAN EEGGATAN</string>
+  <string name="overdue_agreed_to_visit_call_header">ILAALAMUUDHAF KAN WALIIGALAMAN</string>
+  <string name="overdue_remind_to_call_header">BOODA AKKAN BILBILUUF NA YAADACHIISI</string>
+  <string name="overdue_removed_from_list_call_header">TARREERRAA KAASI</string>
+  <string name="overdue_no_visit_in_one_year_call_header">WAGGAA 1 KEESSATTI KAN HIN ILAALAMIN</string>
+
 
   <!-- Facility change -->
 
@@ -560,6 +568,7 @@
   <string name="contactpatient_moved_to_private">Eeggumsa dhuunfaatti sochoofameera</string>
   <string name="contactpatient_patient_died">Boqateera</string>
   <string name="contactpatient_other_reason">Sababa biraa</string>
+  <string name="contactpatient_unknown">Kan hin beekamne</string>
   <string name="contactpatient_patient_registered_at">Kan galmaa\'e</string>
   <string name="contactpatient_patient_transfer_from">Kan dabarfame</string>
   <string name="contactpatient_phone">Bilbila</string>
@@ -831,9 +840,31 @@ Appilikeeshinii Simple keessan Google PlayStore irraa haaromsadhaa.</string>
 
   <!-- Drug stock reminder notification -->
   <string name="drug_stock_reminder_notification">Gabaasa kuusaa qorichaa keessan hin xumuramin jiru %1$s f xumuraa.</string>
-  
+  <string name="drug_stock_reminder_card_title">Kuusa Dawaa</string>
+  <string name="drug_stock_reminder_card_content">Gabaasa kuusaa qorichaa keessan hin xumuramin jiru %1$s f xumuraa.</string>
+  <string name="drug_stock_reminder_button_text">Kuusaa Dawaa Galchi</string>
+
+  <!-- Drug stock reminder no active network connection dialog -->
+  <string name="drug_stock_reminder_no_active_network_connection_dialog_title">Interneetiin hin jiru</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_message">Interneetii keessan mirkaneeffachuun irra deebi\'aa yaalaa.</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_positive_button">Tole</string>
+
+
   <!-- Clinical Decision Support Alerts -->
   <string name="clinical_decision_support_alert_bp_high_title">BPn olaanaa dha. Qorichoota dabaltuu?</string>
   <string name="clinical_decision_support_alert_bp_high_subtitle">Akka dhukkubsataan seeraan qoricha isaanii fudhachaa jiran hordofaa.</string>
+
+  <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">\"Ilaalamuudhaaf kan waliigalame\" irratti mallattaa\'eera</string>
+
+  <string name="call_result_outcome_remind_to_call_later">\"Akkan bilbiluuf na yaadachiisii\" irratti mallattaa\'eera</string>
+
+  <string name="call_result_outcome_removed">Yaadachiifameera: %1$s</string>
+
+  <!-- Overdue Instant Search -->
+  <string name="overdue_search_patient_name_or_village">Maqaadhaan ykn gandaan barbaadi</string>
+  <string name="overdue_search_hint">Maqaa ykn ganda galchi</string>
+  <string name="overdue_search_no_search_results_title">Dhukkubsataan hin argamne</string>
+  <string name="overdue_search_no_search_results_desc">Dhukkubsatoota yeroon irra darbe barbaacha kee keessaa asii argatta</string>
 
 </resources>

@@ -39,7 +39,7 @@
 
   <!-- Patient search -->
   <string name="instantsearch_hint">Name, phone, or ID</string>
-  <string name="instantsearch_allowed_characters">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789</string>
+  <string name="instantsearch_allowed_characters" translatable="false">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 0123456789</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">Can’t find the patient in this list?</string>

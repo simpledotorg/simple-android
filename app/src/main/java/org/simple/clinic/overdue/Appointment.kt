@@ -26,7 +26,8 @@ import java.util.UUID
     tableName = "Appointment",
     indices = [
       Index("patientUuid", unique = false),
-      Index("creationFacilityUuid", unique = false)
+      Index("creationFacilityUuid", unique = false),
+      Index("facilityUuid", unique = false)
     ]
 )
 @Parcelize

@@ -11,6 +11,7 @@
 - Consume `OverdueSearchViewEffect` in `OverdueSearchEffectHandler`
 - Implement query to search overdue patients
 - Open overdue search screen when search button is clicked in overdue screen
+- Search for overdue patients when search query is valid
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-20-8300

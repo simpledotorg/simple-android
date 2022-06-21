@@ -8,8 +8,9 @@ import org.simple.clinic.home.overdue.search.OverdueSearchQueryValidator.Result.
 import org.simple.clinic.home.overdue.search.OverdueSearchQueryValidator.Result.Valid
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
+import java.time.LocalDate
 
-class OverdueSearchUpdate : Update<OverdueSearchModel, OverdueSearchEvent, OverdueSearchEffect> {
+class OverdueSearchUpdate(val date: LocalDate) : Update<OverdueSearchModel, OverdueSearchEvent, OverdueSearchEffect> {
 
   override fun update(model: OverdueSearchModel, event: OverdueSearchEvent): Next<OverdueSearchModel, OverdueSearchEffect> {
     return when (event) {
@@ -19,13 +20,13 @@ class OverdueSearchUpdate : Update<OverdueSearchModel, OverdueSearchEvent, Overd
           ValidateOverdueSearchQuery(event.searchQuery)
       )
       is OverdueSearchQueryValidated -> searchQueryValidated(event)
+      is OverdueSearchResultsLoaded -> noChange()
     }
   }
 
   private fun searchQueryValidated(event: OverdueSearchQueryValidated): Next<OverdueSearchModel, OverdueSearchEffect> {
     return when (val result = event.result) {
-      // TODO: Start overdue search
-      is Valid -> dispatch(AddQueryToOverdueSearchHistory(result.searchQuery))
+      is Valid -> dispatch(AddQueryToOverdueSearchHistory(result.searchQuery), SearchOverduePatients(result.searchQuery, date))
       Empty,
       LengthTooShort -> noChange()
     }

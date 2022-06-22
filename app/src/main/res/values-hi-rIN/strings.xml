@@ -38,11 +38,10 @@
 
   <!-- Patient search -->
   <string name="instantsearch_hint">नाम, फोन या ID</string>
-
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">क्या आप इस सूची में रोगी का नाम ढूंढ नहीं पाए?</string>
   <string name="patientsearchresults_register_patient">नए रोगी के तौर पर रजिस्टर करें</string>
-    <string name="patientsearchresults_item_phone_number">फोन</string>
+  <string name="patientsearchresults_item_phone_number">फोन</string>
   <string name="patientsearchresults_item_birthdate">जन्मदिन</string>
 
   <!-- Manual patient entry -->
@@ -281,6 +280,15 @@
   <string name="overduelist_high_risk">उच्च जोखिम</string>
   <string name="overdue_download">डाउनलोड</string>
   <string name="overdue_share">साझा करें</string>
+  <string name="overdue_no_pending_patients">कोई मरीज शेष नहीं</string>
+  <string name="overdue_pending_list_button_see_all">सभी देखें</string>
+  <string name="overdue_pending_list_button_see_less">कम देखें</string>
+  <string name="overdue_pending_to_call_header">कॉल करना शेष</string>
+  <string name="overdue_agreed_to_visit_call_header">विजिट के लिए राजी</string>
+  <string name="overdue_remind_to_call_header">बाद में कॉल करने के लिए याद दिलाएं</string>
+  <string name="overdue_removed_from_list_call_header">लिस्ट से हटाया गया</string>
+  <string name="overdue_no_visit_in_one_year_call_header">1 वर्ष में कोई विजिट नहीं</string>
+
 
   <!-- Facility change -->
 
@@ -559,6 +567,7 @@
   <string name="contactpatient_moved_to_private">निजी डॉक्टर के पास चला गया</string>
   <string name="contactpatient_patient_died">जीवित नहीं</string>
   <string name="contactpatient_other_reason">अन्य कारण</string>
+  <string name="contactpatient_unknown">अज्ञात</string>
   <string name="contactpatient_patient_registered_at">पर पंजीकृत</string>
   <string name="contactpatient_patient_transfer_from">से स्थानांतरित</string>
   <string name="contactpatient_phone">फोन</string>
@@ -829,9 +838,31 @@
 
   <!-- Drug stock reminder notification -->
   <string name="drug_stock_reminder_notification">%1$s के लिए अपनी लंबित ड्रग स्टॉक रिपोर्ट पूरी करें</string>
-  
+  <string name="drug_stock_reminder_card_title">दवाई की दुकान</string>
+  <string name="drug_stock_reminder_card_content">%1$s के लिए अपनी लंबित ड्रग स्टॉक रिपोर्ट पूरी करें</string>
+  <string name="drug_stock_reminder_button_text">दवाई की दुकान में प्रवेश करें</string>
+
+  <!-- Drug stock reminder no active network connection dialog -->
+  <string name="drug_stock_reminder_no_active_network_connection_dialog_title">इंटरनेट कनेक्ट नहीं है</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_message">अपना इंटरनेट कनेक्शन चेक करें और दोबारा कोशिश करें।</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_positive_button">ठीक है</string>
+
+
   <!-- Clinical Decision Support Alerts -->
   <string name="clinical_decision_support_alert_bp_high_title">बीपी बढ़ा हुआ है। दवाइयाँ बढ़ा दें?</string>
   <string name="clinical_decision_support_alert_bp_high_subtitle">अगर मरीज़ अपनी दवाइयाँ समय पर ले रहा हो, तो प्रोटोकॉल का पालन करें</string>
+
+  <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">को \'विजिट के लिए राजी हुए\' अंकित किया गया</string>
+
+  <string name="call_result_outcome_remind_to_call_later">को \'बाद में कॉल करने के लिए याद दिलाएं\' अंकित किया गया</string>
+
+  <string name="call_result_outcome_removed">हटाया गया: %1$s</string>
+
+  <!-- Overdue Instant Search -->
+  <string name="overdue_search_patient_name_or_village">नाम या गाँव के आधार पर खोजें</string>
+  <string name="overdue_search_hint">नाम या गाँव दर्ज करें</string>
+  <string name="overdue_search_no_search_results_title">को मरीज नहीं मिले</string>
+  <string name="overdue_search_no_search_results_desc">आप यहां अपनी खोज से सभी मरीजों को देख पाएंगे</string>
 
 </resources>

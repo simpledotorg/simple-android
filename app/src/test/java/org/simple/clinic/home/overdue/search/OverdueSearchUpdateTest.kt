@@ -84,4 +84,28 @@ class OverdueSearchUpdateTest {
             )
         )
   }
+
+  @Test
+  fun `when overdue patient is clicked, then open patient summary`() {
+    val patientUuid = UUID.fromString("4831397d-4314-49fb-9ec7-3ae0a70c25c1")
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(OverduePatientClicked(patientUuid))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenPatientSummary(patientUuid))
+        ))
+  }
+
+  @Test
+  fun `when call overdue patient is clicked, then open contact patient sheet`() {
+    val patientUuid = UUID.fromString("4831397d-4314-49fb-9ec7-3ae0a70c25c1")
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(CallPatientClicked(patientUuid))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenContactPatientSheet(patientUuid))
+        ))
+  }
 }

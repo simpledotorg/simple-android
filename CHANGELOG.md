@@ -16,6 +16,7 @@
 - Show search results when overdue search results are loaded
 - Handle user interactions for overdue search results
 - Implement overdue search results adapter
+- Handle overdue search load states
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-20-8300

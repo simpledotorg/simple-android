@@ -23,6 +23,7 @@ class OverdueSearchUpdate(val date: LocalDate) : Update<OverdueSearchModel, Over
       is OverdueSearchResultsLoaded -> next(model.overdueSearchResultsLoaded(event.overdueAppointments))
       is CallPatientClicked -> dispatch(OpenContactPatientSheet(event.patientUuid))
       is OverduePatientClicked -> dispatch(OpenPatientSummary(event.patientUuid))
+      is OverdueSearchHistoryClicked -> dispatch(SearchOverduePatients(event.searchQuery, date))
     }
   }
 

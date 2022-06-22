@@ -108,4 +108,16 @@ class OverdueSearchUpdateTest {
             hasEffects(OpenContactPatientSheet(patientUuid))
         ))
   }
+
+  @Test
+  fun `when search history item is clicked, then search overdue patients with selected search query`() {
+    val searchQuery = "Babri"
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(OverdueSearchHistoryClicked(searchQuery))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(SearchOverduePatients(searchQuery, date))
+        ))
+  }
 }

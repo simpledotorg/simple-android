@@ -19,3 +19,5 @@ data class OverdueSearchResultsLoaded(val overdueAppointments: PagingData<Overdu
 data class OverduePatientClicked(val patientUuid: UUID) : OverdueSearchEvent()
 
 data class CallPatientClicked(val patientUuid: UUID) : OverdueSearchEvent()
+
+data class OverdueSearchHistoryClicked(val searchQuery: String) : OverdueSearchEvent()

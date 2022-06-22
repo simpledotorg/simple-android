@@ -10,6 +10,17 @@ class OverdueSearchUiRenderer(
     if (!model.hasSearchQuery) {
       ui.showSearchHistory(model.overdueSearchHistory.orEmpty())
       ui.hideSearchResults()
+    } else {
+      ui.hideSearchHistory()
+      showOverdueSearchResults(model)
+    }
+  }
+
+  private fun showOverdueSearchResults(model: OverdueSearchModel) {
+    if (model.hasOverdueSearchResults) {
+      ui.showOverdueSearchResults(model.overdueSearchResults!!)
+    } else {
+      ui.hideSearchResults()
     }
   }
 }

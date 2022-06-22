@@ -20,7 +20,7 @@ class OverdueSearchUpdate(val date: LocalDate) : Update<OverdueSearchModel, Over
           ValidateOverdueSearchQuery(event.searchQuery)
       )
       is OverdueSearchQueryValidated -> searchQueryValidated(event)
-      is OverdueSearchResultsLoaded -> noChange()
+      is OverdueSearchResultsLoaded -> next(model.overdueSearchResultsLoaded(event.overdueAppointments))
     }
   }
 

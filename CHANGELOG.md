@@ -14,6 +14,7 @@
 - Search for overdue patients when search query is valid
 - Turn off translation for instant search allowed characters
 - Updated translations: `om-ET`, `pa-IN`, `kn-IN`, `so-ET`, `ti-ET`, `mr-IN`
+- Show search results when overdue search results are loaded
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-20-8300

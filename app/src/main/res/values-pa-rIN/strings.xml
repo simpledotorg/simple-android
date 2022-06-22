@@ -853,9 +853,9 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">ਜੇਕਰ ਮਰੀਜ਼ ਆਪਣੀਆਂ ਦਵਾਈਆਂ ਨਿਯਮਿਤ ਤੌਰ ਤੇ ਲੈਂਦਾ ਹੈ, ਤਾਂ ਪ੍ਰੋਟੋਕੋਲ ਦੀ ਪਾਲਣਾ ਕਰੋ</string>
 
   <!-- Call Result Outcome Message -->
-  <string name="call_result_outcome_agreed_to_visit">ਇਸ ਤਾਰੀਖ ਨੂੰ \'ਮੁਲਕਾਤ ਲਈ ਸਹਿਮਤ ਹੋਏ \'ਤੇ ਚਿੰਨ੍ਹਿਤ ਕੀਤਾ ਗਿਆ</string>
+  <string name="call_result_outcome_agreed_to_visit">ਇਸ ਤਾਰੀਖ ਨੂੰ \'ਮੁਲਕਾਤ ਲਈ ਸਹਿਮਤ ਹੋਏ\' ਤੇ ਚਿੰਨ੍ਹਿਤ ਕੀਤਾ ਗਿਆ</string>
 
-  <string name="call_result_outcome_remind_to_call_later">\'ਇਸ ਤਾਰੀਖ ਨੂੰ \'ਕਾਲ ਕਰਨ ਲਈ ਯਾਦ ਦਿਵਾਓ \'ਤੇ ਚਿੰਨ੍ਹਿਤ ਕੀਤਾ ਗਿਆ</string>
+  <string name="call_result_outcome_remind_to_call_later">ਇਸ ਤਾਰੀਖ ਨੂੰ \'ਕਾਲ ਕਰਨ ਲਈ ਯਾਦ ਦਿਵਾਓ\' ਤੇ ਚਿੰਨ੍ਹਿਤ ਕੀਤਾ ਗਿਆ</string>
 
   <string name="call_result_outcome_removed">ਹਟਾ ਦਿੱਤਾ ਗਿਆ: %1$s</string>
 

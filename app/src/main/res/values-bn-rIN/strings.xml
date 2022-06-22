@@ -38,7 +38,6 @@
 
   <!-- Patient search -->
   <string name="instantsearch_hint">নাম, ফোন বা ID</string>
-
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">এই তালিকা রোগীকে খুঁজে পাচ্ছেন না?</string>
   <string name="patientsearchresults_register_patient">নতুন রোগী হিসাবে নিবন্ধন করুন</string>
@@ -281,6 +280,15 @@
   <string name="overduelist_high_risk">অতিরিক্ত ঝুঁকিসম্পন্ন</string>
   <string name="overdue_download">ডাউনলোড করুন</string>
   <string name="overdue_share">শেয়ার করুন</string>
+  <string name="overdue_no_pending_patients">কোনো মুলতুবি রোগী নেই</string>
+  <string name="overdue_pending_list_button_see_all">সবাইকে দেখুন</string>
+  <string name="overdue_pending_list_button_see_less">কম দেখুন</string>
+  <string name="overdue_pending_to_call_header">কল করার জন্য মুলতুবি</string>
+  <string name="overdue_agreed_to_visit_call_header">ভিজিট করতে রাজি</string>
+  <string name="overdue_remind_to_call_header">পরে কল করার জন্য মনে করিয়ে দিন</string>
+  <string name="overdue_removed_from_list_call_header">তালিকা থেকে সরানো হয়েছে</string>
+  <string name="overdue_no_visit_in_one_year_call_header">1 বছরে কোন ভিজিট নেই</string>
+
 
   <!-- Facility change -->
 
@@ -559,6 +567,7 @@
   <string name="contactpatient_moved_to_private">প্রাইভেট প্র্যাকটিশনারের কাছে চলে গেছে</string>
   <string name="contactpatient_patient_died">মারা গেছে</string>
   <string name="contactpatient_other_reason">অন্য কারণ</string>
+  <string name="contactpatient_unknown">অজানা</string>
   <string name="contactpatient_patient_registered_at">যেখানে নিবন্ধীত</string>
   <string name="contactpatient_patient_transfer_from">এখান থেকে ট্রান্সফার করুন</string>
   <string name="contactpatient_phone">ফোন</string>
@@ -829,9 +838,31 @@
 
   <!-- Drug stock reminder notification -->
   <string name="drug_stock_reminder_notification">%1$s-এর জন্য আপনার মুলতুবি থাকা ওষুধের স্টক রিপোর্ট সম্পূর্ণ করুন</string>
-  
+  <string name="drug_stock_reminder_card_title">ওষুধের মজুদ</string>
+  <string name="drug_stock_reminder_card_content">%1$s-এর জন্য আপনার মুলতুবি থাকা ওষুধের স্টক রিপোর্ট সম্পূর্ণ করুন</string>
+  <string name="drug_stock_reminder_button_text">ওষুধের মজুদের পরিমাণ লিখুন</string>
+
+  <!-- Drug stock reminder no active network connection dialog -->
+  <string name="drug_stock_reminder_no_active_network_connection_dialog_title">কোনো ইন্টারনেট নেই</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_message">আপনার ইন্টারনেট পরীক্ষা করে আবার চেষ্টা করুন।</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_positive_button">ঠিক আছে</string>
+
+
   <!-- Clinical Decision Support Alerts -->
   <string name="clinical_decision_support_alert_bp_high_title">বিপি বেশি। ওষুধের মাত্রা বাড়াবেন?</string>
   <string name="clinical_decision_support_alert_bp_high_subtitle">রোগী নিয়মিত তার ওষুধ গ্রহণ করলে প্রোটোকল অনুসরণ করুন</string>
+
+  <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">\'পরিদর্শনে সম্মত\'-এ চিহ্নিত করা হয়েছে</string>
+
+  <string name="call_result_outcome_remind_to_call_later">\'কল করার জন্য মনে করিয়ে দিন\' হিসেবে চিহ্নিত করা হয়েছে</string>
+
+  <string name="call_result_outcome_removed">মুছে ফেলা হয়েছে: %1$s</string>
+
+  <!-- Overdue Instant Search -->
+  <string name="overdue_search_patient_name_or_village">নাম অথবা গ্রাম দিয়ে অনুসন্ধান করুন</string>
+  <string name="overdue_search_hint">নাম অথবা গ্রাম লিখুন</string>
+  <string name="overdue_search_no_search_results_title">কোনো রোগী পাওয়া যায়নি</string>
+  <string name="overdue_search_no_search_results_desc">আপনি আপনার অনুসন্ধানকৃত সকল বিলম্বকারী রোগীদের এখানে দেখতে পাবেন</string>
 
 </resources>

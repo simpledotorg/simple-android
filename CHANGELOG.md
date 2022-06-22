@@ -6,7 +6,6 @@
 
 - Save search query to overdue search history when search query is valid
 - Add layout for overdue search screen
-- Handle user interactions for overdue search results
 - Bump Sentry to v6.1.2
 - Consume `OverdueSearchViewEffect` in `OverdueSearchEffectHandler`
 - Implement query to search overdue patients
@@ -15,6 +14,7 @@
 - Turn off translation for instant search allowed characters
 - Updated translations: `om-ET`, `pa-IN`, `kn-IN`, `so-ET`, `ti-ET`, `mr-IN`
 - Show search results when overdue search results are loaded
+- Handle user interactions for overdue search results
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-20-8300

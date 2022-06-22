@@ -3,9 +3,10 @@ package org.simple.clinic.home.overdue.search
 import androidx.paging.PagingData
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.home.overdue.search.OverdueSearchQueryValidator.Result
+import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
-sealed class OverdueSearchEvent
+sealed class OverdueSearchEvent : UiEvent
 
 data class OverdueSearchHistoryLoaded(val searchHistory: Set<String>) : OverdueSearchEvent()
 

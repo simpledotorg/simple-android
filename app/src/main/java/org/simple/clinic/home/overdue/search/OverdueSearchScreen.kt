@@ -6,6 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.paging.LoadState
+import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.rx2.asObservable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.databinding.ListItemOverduePatientBinding
@@ -16,6 +19,7 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.widgets.PagingItemAdapter
+import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 
 class OverdueSearchScreen : BaseScreen<
@@ -41,11 +45,19 @@ class OverdueSearchScreen : BaseScreen<
       }
   )
 
+  private val disposable = CompositeDisposable()
+
   private val overdueSearchToolbar
     get() = binding.overdueSearchToolbar
 
   private val overdueSearchRecyclerView
     get() = binding.overdueSearchResults
+
+  private val overdueSearchProgressIndicator
+    get() = binding.overdueSearchProgressIndicator
+
+  private val noOverdueSearchResultsContainer
+    get() = binding.noOverdueSearchResultsContainer
 
   override fun defaultModel(): OverdueSearchModel {
     return OverdueSearchModel.create()
@@ -67,6 +79,41 @@ class OverdueSearchScreen : BaseScreen<
     }
 
     overdueSearchRecyclerView.adapter = overdueSearchListAdapter
+    disposable.add(overdueSearchResultsLoadStateListener())
+  }
+
+  private fun overdueSearchResultsLoadStateListener() = overdueSearchListAdapter
+      .loadStateFlow
+      .asObservable()
+      .subscribe { combinedLoadStates ->
+        val isLoadingInitialData = combinedLoadStates.refresh is LoadState.Loading
+        val hasNoAdapterItems = overdueSearchListAdapter.itemCount == 0
+
+        when {
+          isLoadingInitialData && hasNoAdapterItems -> loadingOverdueSearchResults()
+          else -> {
+            val shouldShowEmptyView = combinedLoadStates.append.endOfPaginationReached && hasNoAdapterItems
+
+            overdueSearchResultsLoaded(shouldShowEmptyView)
+          }
+        }
+      }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    disposable.clear()
+  }
+
+  private fun overdueSearchResultsLoaded(shouldShowEmptyView: Boolean) {
+    overdueSearchProgressIndicator.visibility = View.GONE
+    noOverdueSearchResultsContainer.visibleOrGone(isVisible = shouldShowEmptyView)
+    overdueSearchRecyclerView.visibleOrGone(isVisible = !shouldShowEmptyView)
+  }
+
+  private fun loadingOverdueSearchResults() {
+    overdueSearchProgressIndicator.visibility = View.VISIBLE
+    noOverdueSearchResultsContainer.visibility = View.GONE
+    overdueSearchRecyclerView.visibility = View.GONE
   }
 
   interface Injector {

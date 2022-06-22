@@ -38,11 +38,10 @@
 
   <!-- Patient search -->
   <string name="instantsearch_hint">ਨਾਮ, ਫ਼ੋਨ, ਜਾਂ ID</string>
-
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">ਇਸ ਸੂਚੀ ਵਿੱਚ ਮਰੀਜ਼ ਨਹੀਂ ਮਿਲਿਆ?</string>
   <string name="patientsearchresults_register_patient">ਇੱਕ ਨਵੇਂ ਮਰੀਜ਼ ਵਜੋਂ ਰਜਿਸਟਰ ਕਰੋ</string>
-    <string name="patientsearchresults_item_phone_number">ਫੋਨ</string>
+  <string name="patientsearchresults_item_phone_number">ਫੋਨ</string>
   <string name="patientsearchresults_item_birthdate">ਜਨਮ ਮਿਤੀ</string>
 
   <!-- Manual patient entry -->
@@ -281,6 +280,15 @@
   <string name="overduelist_high_risk">ਵੱਧ ਜੋਖਮ</string>
   <string name="overdue_download">ਡਾਉਨਲੋਡ ਕਰੋ</string>
   <string name="overdue_share">ਸ਼ੇਅਰ ਕਰੋ</string>
+  <string name="overdue_no_pending_patients">ਕੋਈ ਬਾਕੀ ਮਰੀਜ਼ ਨਹੀਂ</string>
+  <string name="overdue_pending_list_button_see_all">ਸਭ ਦੇਖੋ</string>
+  <string name="overdue_pending_list_button_see_less">ਘੱਟ ਦੇਖੋ</string>
+  <string name="overdue_pending_to_call_header">ਕਾਲ ਕਰਨ ਲਈ ਬਾਕੀ</string>
+  <string name="overdue_agreed_to_visit_call_header">ਮੁਲਕਾਤ ਲਈ ਸਹਿਮਤ ਮਰੀਜ਼</string>
+  <string name="overdue_remind_to_call_header">ਬਾਅਦ ਵਿੱਚ ਕਾਲ ਕਰਨ ਲਈ ਯਾਦ ਦਿਵਾਉਣਾ</string>
+  <string name="overdue_removed_from_list_call_header">ਸੂਚੀ ਵਿੱਚੋਂ ਹਟਾਏ ਗਏ ਮਰੀਜ਼</string>
+  <string name="overdue_no_visit_in_one_year_call_header">1 ਸਾਲ ਵਿੱਚ ਕੋਈ ਮੁਲਾਕਾਤ ਨਹੀਂ</string>
+
 
   <!-- Facility change -->
 
@@ -559,6 +567,7 @@
   <string name="contactpatient_moved_to_private">ਨਿੱਜੀ ਪ੍ਰੈਕਟੀਸ਼ਨਰ ਨੂੰ ਭੇਜਿਆ ਗਿਆ</string>
   <string name="contactpatient_patient_died">ਮਰ ਗਿਆ</string>
   <string name="contactpatient_other_reason">ਹੋਰ ਕਾਰਨ</string>
+  <string name="contactpatient_unknown">ਅਣਜਾਣ</string>
   <string name="contactpatient_patient_registered_at">\'ਤੇ ਰਜਿਸਟਰਡ</string>
   <string name="contactpatient_patient_transfer_from">ਤੋਂ ਟ੍ਰਾਂਸਫਰ ਕਰੋ</string>
   <string name="contactpatient_phone">ਫੋਨ</string>
@@ -829,9 +838,31 @@
 
   <!-- Drug stock reminder notification -->
   <string name="drug_stock_reminder_notification">%1$s ਲਈ ਆਪਣੀ ਲੰਬਿਤ ਡਰੱਗ ਸਟਾਕ ਰਿਪੋਰਟ ਨੂੰ ਪੂਰਾ ਕਰੋ</string>
-  
+  <string name="drug_stock_reminder_card_title">ਦਵਾਈਆਂ ਦਾ ਸਟਾਕ</string>
+  <string name="drug_stock_reminder_card_content">%1$s ਲਈ ਆਪਣੀ ਲੰਬਿਤ ਡਰੱਗ ਸਟਾਕ ਰਿਪੋਰਟ ਨੂੰ ਪੂਰਾ ਕਰੋ</string>
+  <string name="drug_stock_reminder_button_text">ਦਵਾਈਆਂ ਦਾ ਸਟਾਕ ਦਾਖਲ ਕਰੋ</string>
+
+  <!-- Drug stock reminder no active network connection dialog -->
+  <string name="drug_stock_reminder_no_active_network_connection_dialog_title">ਕੋਈ ਇੰਟਰਨੈੱਟ ਨਹੀਂ</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_message">ਆਪਣੇ ਇੰਟਰਨੈੱਟ ਦੀ ਜਾਂਚ ਕਰੋ ਅਤੇ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_positive_button">ਠੀਕ ਹੈ</string>
+
+
   <!-- Clinical Decision Support Alerts -->
   <string name="clinical_decision_support_alert_bp_high_title">ਬੀ.ਪੀ ਜ਼ਿਆਦਾ ਹੈ। ਦਵਾਈਆਂ ਵਧਾਉਣੀਆਂ ਹਨ?</string>
   <string name="clinical_decision_support_alert_bp_high_subtitle">ਜੇਕਰ ਮਰੀਜ਼ ਆਪਣੀਆਂ ਦਵਾਈਆਂ ਨਿਯਮਿਤ ਤੌਰ ਤੇ ਲੈਂਦਾ ਹੈ, ਤਾਂ ਪ੍ਰੋਟੋਕੋਲ ਦੀ ਪਾਲਣਾ ਕਰੋ</string>
+
+  <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">ਇਸ ਤਾਰੀਖ ਨੂੰ \'ਮੁਲਕਾਤ ਲਈ ਸਹਿਮਤ ਹੋਏ \'ਤੇ ਚਿੰਨ੍ਹਿਤ ਕੀਤਾ ਗਿਆ</string>
+
+  <string name="call_result_outcome_remind_to_call_later">\'ਇਸ ਤਾਰੀਖ ਨੂੰ \'ਕਾਲ ਕਰਨ ਲਈ ਯਾਦ ਦਿਵਾਓ \'ਤੇ ਚਿੰਨ੍ਹਿਤ ਕੀਤਾ ਗਿਆ</string>
+
+  <string name="call_result_outcome_removed">ਹਟਾ ਦਿੱਤਾ ਗਿਆ: %1$s</string>
+
+  <!-- Overdue Instant Search -->
+  <string name="overdue_search_patient_name_or_village">ਨਾਮ ਜਾਂ ਪਿੰਡ ਦੁਆਰਾ ਖੋਜ ਕਰੋ</string>
+  <string name="overdue_search_hint">ਨਾਮ ਜਾਂ ਪਿੰਡ ਦਰਜ ਕਰੋ</string>
+  <string name="overdue_search_no_search_results_title">ਕੋਈ ਮਰੀਜ਼ ਨਹੀਂ ਮਿਲਿਆ</string>
+  <string name="overdue_search_no_search_results_desc">ਤੁਸੀਂ ਇੱਥੇ ਆਪਣੀ ਖੋਜ ਨਾਲ ਸਾਰੇ ਬਾਕੀ ਮਰੀਜ਼ ਦੇਖੋਗੇ</string>
 
 </resources>

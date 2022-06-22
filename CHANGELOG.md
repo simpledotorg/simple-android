@@ -21,6 +21,7 @@
 - Prefill search query when the search history item is clicked
 - Bump coroutines to v1.6.3
 - Implement view effects to show overdue search results
+- Wire Mobius loop with overdue search screen UI
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-20-8300

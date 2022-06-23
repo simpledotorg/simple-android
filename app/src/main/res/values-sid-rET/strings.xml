@@ -38,11 +38,10 @@
 
   <!-- Patient search -->
   <string name="instantsearch_hint">Su’ma,bilbila,woy ayimma</string>
-
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">Tene e’oni xiwamanicho di’afirato</string>
   <string name="patientsearchresults_register_patient">Haro xiwamanicho boresi</string>
-    <string name="patientsearchresults_item_phone_number">Bilibila</string>
+  <string name="patientsearchresults_item_phone_number">Bilibila</string>
   <string name="patientsearchresults_item_birthdate">Illamate bara</string>
 
   <!-- Manual patient entry -->
@@ -281,6 +280,15 @@
   <string name="overduelist_high_risk">Lowo/ jawa  qara</string>
   <string name="overdue_download">Dirisi</string>
   <string name="overdue_share">Behhi</string>
+  <string name="overdue_no_pending_patients">Lexxitanni no xiwamaano dino</string>
+  <string name="overdue_pending_list_button_see_all">Womanika la’i</string>
+  <string name="overdue_pending_list_button_see_less">Ajishshe lai</string>
+  <string name="overdue_pending_to_call_header">Woshitaraati</string>
+  <string name="overdue_agreed_to_visit_call_header">Towaatate sumuu yitino</string>
+  <string name="overdue_remind_to_call_header">gedensa woshshate qaaqisi</string>
+  <string name="overdue_removed_from_list_call_header">tittiru giddonni hoolantu</string>
+  <string name="overdue_no_visit_in_one_year_call_header">1 diri giddo towaanyno dino</string>
+
 
   <!-- Facility change -->
 
@@ -559,6 +567,7 @@
   <string name="contactpatient_moved_to_private">Mitu dokiterichi mito  manicho chala la’anowa soya</string>
   <string name="contactpatient_patient_died">Reyino</string>
   <string name="contactpatient_other_reason">Wole korikata</string>
+  <string name="contactpatient_unknown">Dianfoonni</string>
   <string name="contactpatient_patient_registered_at">Borreessaminowi</string>
   <string name="contactpatient_patient_transfer_from">Daynowi</string>
   <string name="contactpatient_phone">Bilibila</string>
@@ -829,9 +838,31 @@
 
   <!-- Drug stock reminder notification -->
   <string name="drug_stock_reminder_notification">Agarani noo\'neha xagichu duuno gudine egensise %1$s ra </string>
-  
+  <string name="drug_stock_reminder_card_title">Xagichu duuno</string>
+  <string name="drug_stock_reminder_card_content">Agarani noo\'neha xagichu duuno gudine egensise %1$s ra </string>
+  <string name="drug_stock_reminder_button_text">Xagichu duuno eessi.</string>
+
+  <!-- Drug stock reminder no active network connection dialog -->
+  <string name="drug_stock_reminder_no_active_network_connection_dialog_title">interinete dino</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_message">interineteki buuxi lledeno wirro woonali</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_positive_button">Mahoye</string>
+
+
   <!-- Clinical Decision Support Alerts -->
   <string name="clinical_decision_support_alert_bp_high_title">Mundeete xiinbbe lu\'phi yitino. Xagicho adha le\'de?</string>
   <string name="clinical_decision_support_alert_bp_high_subtitle">Xiwamanchuniha xagicho adhate wogana yana yanate adhasi/se harun\'se.</string>
+
+  <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">\'towaatate sumuu yinoonni\' malaate</string>
+
+  <string name="call_result_outcome_remind_to_call_later">\'Woshshate qaagi\'malaate</string>
+
+  <string name="call_result_outcome_removed">Holloonni%1$s</string>
+
+  <!-- Overdue Instant Search -->
+  <string name="overdue_search_patient_name_or_village">Su\'munna olluunni hasi.</string>
+  <string name="overdue_search_hint">Su\'ma woy ollaa eessi</string>
+  <string name="overdue_search_no_search_results_title">Xissamaano diafantanno</string>
+  <string name="overdue_search_no_search_results_desc">Hasattokkinni hendoonnihu woroo ikkitino xissamaano la\"atto.</string>
 
 </resources>

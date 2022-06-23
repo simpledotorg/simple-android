@@ -19,6 +19,7 @@
 - Handle overdue search load states
 - Search overdue patients, when the search history item is clicked
 - Prefill search query when the search history item is clicked
+- Bump coroutines to v1.6.3
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-20-8300

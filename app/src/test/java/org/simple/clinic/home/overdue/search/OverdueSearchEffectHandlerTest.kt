@@ -154,4 +154,28 @@ class OverdueSearchEffectHandlerTest {
     effectHandlerTestCase.assertOutgoingEvents(OverdueSearchResultsLoaded(expectedPagingData))
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when show overdue search results effect is received, show overdue search results`() {
+    // given
+    val overdueAppointment = listOf(TestData.overdueAppointment(
+        facilityUuid = currentFacility.uuid,
+        name = "Anish Acharya",
+        patientUuid = UUID.fromString("37259e96-e757-4608-aeae-f1a20b088f09")
+    ), TestData.overdueAppointment(
+        facilityUuid = currentFacility.uuid,
+        name = "Anirban Dar",
+        patientUuid = UUID.fromString("53659148-a157-4aa4-92fb-c0a7991ae872")
+    ))
+
+    val expectedPagingData = PagingData.from(overdueAppointment)
+
+    // when
+    effectHandlerTestCase.dispatch(ShowOverdueSearchResults(expectedPagingData))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+    verify(uiActions).showOverdueSearchResults(expectedPagingData)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

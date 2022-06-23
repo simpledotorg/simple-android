@@ -38,11 +38,10 @@
 
   <!-- Patient search -->
   <string name="instantsearch_hint">పేరు, ఫోన్ లేదా ID</string>
-
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">ఈ జాబితాలో రోగి కనుగొనబడలేదా?</string>
   <string name="patientsearchresults_register_patient">కొత్త రోగి లాగా నమోదు చేసుకోండి</string>
-    <string name="patientsearchresults_item_phone_number">ఫోన్</string>
+  <string name="patientsearchresults_item_phone_number">ఫోన్</string>
   <string name="patientsearchresults_item_birthdate">పుట్టిన తేదీ</string>
 
   <!-- Manual patient entry -->
@@ -281,6 +280,15 @@
   <string name="overduelist_high_risk">అధిక ప్రమాదం</string>
   <string name="overdue_download">డౌన్‌లోడ్ చేయి</string>
   <string name="overdue_share">భాగస్వామ్యం చేయి</string>
+  <string name="overdue_no_pending_patients">పెండింగ్‌లో ఉన్న రోగులు లేరు</string>
+  <string name="overdue_pending_list_button_see_all">మొత్తం చూడండి</string>
+  <string name="overdue_pending_list_button_see_less">తక్కువ చూడండి</string>
+  <string name="overdue_pending_to_call_header">కాల్ చేయడానికి పెండింగ్‌లో ఉన్నవి</string>
+  <string name="overdue_agreed_to_visit_call_header">సందర్శించడానికి అంగీకరించారు</string>
+  <string name="overdue_remind_to_call_header">తర్వాత కాల్ చేయడాన్ని గుర్తు చేయి</string>
+  <string name="overdue_removed_from_list_call_header">జాబితా నుండి తీసివేయి</string>
+  <string name="overdue_no_visit_in_one_year_call_header">1 సంవత్సరంలో సందర్శన లేదు</string>
+
 
   <!-- Facility change -->
 
@@ -559,6 +567,7 @@
   <string name="contactpatient_moved_to_private">ప్రైవేట్ వై ద్యుల వద్దకు వెళ్లారు</string>
   <string name="contactpatient_patient_died">మరణించారు</string>
   <string name="contactpatient_other_reason">మరో కారణం</string>
+  <string name="contactpatient_unknown">తెలియదు</string>
   <string name="contactpatient_patient_registered_at">వద్ద రిజిస్టర్ చేయబడింది</string>
   <string name="contactpatient_patient_transfer_from">వీరి నుండి బదిలీ</string>
   <string name="contactpatient_phone">ఫోన్</string>
@@ -829,9 +838,31 @@
 
   <!-- Drug stock reminder notification -->
   <string name="drug_stock_reminder_notification">%1$s కోసం పెండింగ్‌లో ఉన్న మీ మందుల స్టాక్ రిపోర్ట్‌ను పూర్తి చేయండి</string>
-  
+  <string name="drug_stock_reminder_card_title">ఔషధం స్టాక్</string>
+  <string name="drug_stock_reminder_card_content">%1$s కోసం పెండింగ్‌లో ఉన్న మీ మందుల స్టాక్ రిపోర్ట్‌ను పూర్తి చేయండి</string>
+  <string name="drug_stock_reminder_button_text">ఔషధం స్టాక్ నమోదు చేయండి</string>
+
+  <!-- Drug stock reminder no active network connection dialog -->
+  <string name="drug_stock_reminder_no_active_network_connection_dialog_title">ఇంటర్నెట్ లేదు</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_message">మీ ఇంటర్నెట్‌ని సరిచూసుకుని, మళ్లీ ప్రయత్నించండి.</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_positive_button">సరే</string>
+
+
   <!-- Clinical Decision Support Alerts -->
   <string name="clinical_decision_support_alert_bp_high_title">బీపీ ఎక్కువగా ఉంది. మందులను పెంచాలా?</string>
   <string name="clinical_decision_support_alert_bp_high_subtitle">రోగి వారి మందులను క్రమం తప్పకుండా తీసుకుంటే, ప్రోటోకాల్‌ను అనుసరించండి</string>
+
+  <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">దీనిలో \'సందర్శించడానికి అంగీకరించారు\' గుర్తు పెట్టబడింది</string>
+
+  <string name="call_result_outcome_remind_to_call_later">దీనిలో \'కాల్ చేయడాన్ని గుర్తు చేయి\' గుర్తు పెట్టబడింది</string>
+
+  <string name="call_result_outcome_removed">తీసివేయబడింది: %1$s</string>
+
+  <!-- Overdue Instant Search -->
+  <string name="overdue_search_patient_name_or_village">పేరు లేదా గ్రామం ద్వారా శోధించండి</string>
+  <string name="overdue_search_hint">పేరు లేదా గ్రామం నమోదు చేయండి</string>
+  <string name="overdue_search_no_search_results_title">రోగులు కనుగొనబడలేదు</string>
+  <string name="overdue_search_no_search_results_desc">మీరు ఇక్కడ మీ శోధన నుండి గడువు ముగిసిన రోగులందరినీ చూస్తారు</string>
 
 </resources>

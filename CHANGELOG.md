@@ -12,7 +12,7 @@
 - Open overdue search screen when search button is clicked in overdue screen
 - Search for overdue patients when search query is valid
 - Turn off translation for instant search allowed characters
-- Updated translations: `om-ET`, `pa-IN`, `kn-IN`, `so-ET`, `ti-ET`, `mr-IN`, `te-IN`, `sid-ET`
+- Updated translations: `om-ET`, `pa-IN`, `kn-IN`, `so-ET`, `ti-ET`, `mr-IN`, `te-IN`, `sid-ET`, `ta-IN`
 - Show search results when overdue search results are loaded
 - Handle user interactions for overdue search results
 - Implement overdue search results adapter

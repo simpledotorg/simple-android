@@ -38,11 +38,10 @@
 
   <!-- Patient search -->
   <string name="instantsearch_hint">பெயர், தொலைபேசி அல்லது ID</string>
-
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">இந்தப் பட்டியலில் நோயாளியின் விவரங்களைக் கண்டறிய முடியவில்லையா?</string>
   <string name="patientsearchresults_register_patient">புதிய நோயாளியாகப் பதிவு செய்யவும்</string>
-    <string name="patientsearchresults_item_phone_number">தொலைபேசி</string>
+  <string name="patientsearchresults_item_phone_number">தொலைபேசி</string>
   <string name="patientsearchresults_item_birthdate">பிறந்த தேதி</string>
 
   <!-- Manual patient entry -->
@@ -281,6 +280,15 @@
   <string name="overduelist_high_risk">அதிக ஆபத்து</string>
   <string name="overdue_download">பதிவிறக்கு</string>
   <string name="overdue_share">பகிர்</string>
+  <string name="overdue_no_pending_patients">நிலுவையில் உள்ள நோயாளிகள் இல்லை</string>
+  <string name="overdue_pending_list_button_see_all">எல்லாவற்றையும் பார்க்கவும்</string>
+  <string name="overdue_pending_list_button_see_less">குறைவாகக் காட்டு</string>
+  <string name="overdue_pending_to_call_header">அழைப்பதற்காக நிலுவையில் உள்ளவர்கள்</string>
+  <string name="overdue_agreed_to_visit_call_header">வருகைக்கு ஒப்புக்கொண்டார்</string>
+  <string name="overdue_remind_to_call_header">பின்னர் அழைக்குமாறு நினைவூட்டுக</string>
+  <string name="overdue_removed_from_list_call_header">பட்டியலிலிருந்து அகற்றப்பட்டது</string>
+  <string name="overdue_no_visit_in_one_year_call_header">1 வருடத்திற்கு வருகை இல்லை</string>
+
 
   <!-- Facility change -->
 
@@ -559,6 +567,7 @@
   <string name="contactpatient_moved_to_private">தனியார் மருத்துவரிடம் மாறிச் சென்றுள்ளார்</string>
   <string name="contactpatient_patient_died">இறந்துவிட்டார்</string>
   <string name="contactpatient_other_reason">வேறு காரணம்</string>
+  <string name="contactpatient_unknown">தெரியவில்லை</string>
   <string name="contactpatient_patient_registered_at">இதில் பதிவு செய்யப்பட்டது</string>
   <string name="contactpatient_patient_transfer_from">இதிலிருந்து இடமாற்றவும்</string>
   <string name="contactpatient_phone">தொலைபேசி</string>
@@ -829,9 +838,31 @@
 
   <!-- Drug stock reminder notification -->
   <string name="drug_stock_reminder_notification">%1$sக்கான உங்கள் நிலுவையிலுள்ள மருந்துப் பொருட்கள் இருப்பு அறிக்கையை நிறைவு செய்யவும்</string>
-  
+  <string name="drug_stock_reminder_card_title">மருந்து இருப்பு</string>
+  <string name="drug_stock_reminder_card_content">%1$sக்கான உங்கள் நிலுவையிலுள்ள மருந்துப் பொருட்கள் இருப்பு அறிக்கையை நிறைவு செய்யவும்</string>
+  <string name="drug_stock_reminder_button_text">மருந்து இருப்பை உள்ளிடவும்</string>
+
+  <!-- Drug stock reminder no active network connection dialog -->
+  <string name="drug_stock_reminder_no_active_network_connection_dialog_title">இணையம் இல்லை</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_message">உங்கள் இணையத்தைச் சரிபார்த்து, மீண்டும் முயலவும்.</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_positive_button">சரி</string>
+
+
   <!-- Clinical Decision Support Alerts -->
   <string name="clinical_decision_support_alert_bp_high_title">பிபி அதிகமாக உள்ளது. மருந்து அளவுகளை அதிகரிக்கவா?</string>
   <string name="clinical_decision_support_alert_bp_high_subtitle">நோயாளி தொடர்ந்து மருந்துகளை எடுத்து வந்தால், நெறிமுறையைப் பின்பற்றவும்</string>
+
+  <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">இந்தத் தேதியில் \'வருகைக்கு ஒப்புக்கொண்டார்\' எனக் குறிக்கப்பட்டது</string>
+
+  <string name="call_result_outcome_remind_to_call_later">இந்தத் தேதியில் \'அழைக்குமாறு நினைவூட்டுக\' எனக் குறிக்கப்பட்டது</string>
+
+  <string name="call_result_outcome_removed">அகற்றப்பட்டது: %1$s</string>
+
+  <!-- Overdue Instant Search -->
+  <string name="overdue_search_patient_name_or_village">பெயர் அல்லது கிராமத்தின் படி தேடவும்</string>
+  <string name="overdue_search_hint">பெயர் அல்லது கிராமத்தை உள்ளிடவும்</string>
+  <string name="overdue_search_no_search_results_title">நோயாளிகள் எவரும் இல்லை</string>
+  <string name="overdue_search_no_search_results_desc">உங்கள் தேடலிலிருந்து அனைத்துக் காலதாமதமான நோயாளிகளையும் இங்கே காண்பீர்கள்</string>
 
 </resources>

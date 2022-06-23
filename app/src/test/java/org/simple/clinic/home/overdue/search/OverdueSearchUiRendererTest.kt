@@ -14,7 +14,7 @@ class OverdueSearchUiRendererTest {
   private val defaultModel = OverdueSearchModel.create()
 
   @Test
-  fun `when search query is empty, then display search history and hide search results`() {
+  fun `when search query is empty, then clear search query and display search history and hide search results`() {
     // given
     val searchHistory = setOf("Babri")
     val model = defaultModel
@@ -27,6 +27,8 @@ class OverdueSearchUiRendererTest {
     // then
     verify(ui).showSearchHistory(searchHistory)
     verify(ui).hideSearchResults()
+    verify(ui).renderSearchQuery("")
+    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -55,6 +57,7 @@ class OverdueSearchUiRendererTest {
     // then
     verify(ui).showOverdueSearchResults(overdueSearchResults)
     verify(ui).hideSearchHistory()
+    verify(ui).renderSearchQuery("Ani")
     verifyNoMoreInteractions(ui)
   }
 
@@ -69,6 +72,7 @@ class OverdueSearchUiRendererTest {
     // then
     verify(ui).hideSearchHistory()
     verify(ui).hideSearchResults()
+    verify(ui).renderSearchQuery("Ani")
     verifyNoMoreInteractions(ui)
   }
 }

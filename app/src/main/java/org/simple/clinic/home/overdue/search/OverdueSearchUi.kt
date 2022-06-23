@@ -8,4 +8,5 @@ interface OverdueSearchUi {
   fun hideSearchResults()
   fun showOverdueSearchResults(overdueSearchResults: PagingData<OverdueAppointment>)
   fun hideSearchHistory()
+  fun renderSearchQuery(searchQuery: String)
 }

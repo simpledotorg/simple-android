@@ -18,6 +18,7 @@
 - Implement overdue search results adapter
 - Handle overdue search load states
 - Search overdue patients, when the search history item is clicked
+- Prefill search query when the search history item is clicked
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-20-8300

@@ -14,15 +14,6 @@ class OverdueSearchUiRenderer(
       ui.hideSearchResults()
     } else {
       ui.hideSearchHistory()
-      showOverdueSearchResults(model)
-    }
-  }
-
-  private fun showOverdueSearchResults(model: OverdueSearchModel) {
-    if (model.hasOverdueSearchResults) {
-      ui.showOverdueSearchResults(model.overdueSearchResults!!)
-    } else {
-      ui.hideSearchResults()
     }
   }
 }

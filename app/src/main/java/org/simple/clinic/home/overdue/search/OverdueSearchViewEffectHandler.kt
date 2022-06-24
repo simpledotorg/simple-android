@@ -11,6 +11,7 @@ class OverdueSearchViewEffectHandler(
     when (viewEffect) {
       is OpenPatientSummary -> uiActions.openPatientSummaryScreen(viewEffect.patientUuid)
       is OpenContactPatientSheet -> uiActions.openContactPatientSheet(viewEffect.patientUuid)
+      is ShowOverdueSearchResults -> uiActions.showOverdueSearchResults(viewEffect.overdueSearchResults)
     }.exhaustive()
   }
 }

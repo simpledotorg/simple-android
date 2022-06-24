@@ -5,14 +5,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.paging.LoadState
 import androidx.paging.PagingData
+import androidx.recyclerview.widget.RecyclerView
+import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
+import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.itemClicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.rx2.asObservable
@@ -35,7 +40,9 @@ import org.simple.clinic.util.afterTextChangedWatcher
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.setTextWithWatcher
+import org.simple.clinic.widgets.showKeyboard
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.Instant
 import java.time.LocalDate
@@ -159,7 +166,14 @@ class OverdueSearchScreen : BaseScreen<
 
     overdueSearchRecyclerView.adapter = overdueSearchListAdapter
     overdueSearchHistoryContainer.adapter = searchHistoryAdapter
-    disposable.add(overdueSearchResultsLoadStateListener())
+
+    overdueSearchQueryEditText.showKeyboard()
+
+    disposable.addAll(
+        hideKeyboardOnSearchResultsScroll(),
+        hideKeyboardOnImeAction(),
+        overdueSearchResultsLoadStateListener()
+    )
   }
 
   private fun overdueSearchResultsLoadStateListener() = overdueSearchListAdapter
@@ -207,6 +221,23 @@ class OverdueSearchScreen : BaseScreen<
         lifecycle,
         OverdueAppointmentSearchListItem.from(searchResults, userClock)
     )
+  }
+
+  private fun hideKeyboardOnSearchResultsScroll(): Disposable {
+    return overdueSearchRecyclerView
+        .scrollStateChanges()
+        .filter { it == RecyclerView.SCROLL_STATE_DRAGGING }
+        .subscribe { hideKeyboard() }
+  }
+
+  private fun hideKeyboardOnImeAction(): Disposable {
+    return overdueSearchQueryEditText
+        .editorActions { actionId -> actionId == EditorInfo.IME_ACTION_SEARCH }
+        .subscribe { hideKeyboard() }
+  }
+
+  fun hideKeyboard() {
+    binding.root.hideKeyboard()
   }
 
   override fun hideSearchHistory() {

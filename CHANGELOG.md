@@ -28,6 +28,7 @@
 - Bump Google Services plugin to v4.3.12
 - Don't show no patients found error view when search query is empty
 - Don't show empty search history items in overdue search screen
+- Prefill search query when search history item is clicked
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-20-8300

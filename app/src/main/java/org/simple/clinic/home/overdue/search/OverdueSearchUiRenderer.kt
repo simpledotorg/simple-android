@@ -10,7 +10,6 @@ class OverdueSearchUiRenderer(
 ) : ViewRenderer<OverdueSearchModel> {
 
   override fun render(model: OverdueSearchModel) {
-    ui.renderSearchQuery(model.searchQuery.orEmpty())
     ui.hideProgress()
 
     if (model.hasSearchQuery) {

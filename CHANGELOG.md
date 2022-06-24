@@ -26,6 +26,7 @@
 - Handle keyboard visibility in overdue search screen
 - Bump mixpanel to v6.3.0
 - Bump Google Services plugin to v4.3.12
+- Don't show no patients found error view when search query is empty
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-20-8300

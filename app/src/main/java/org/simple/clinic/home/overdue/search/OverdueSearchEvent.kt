@@ -21,3 +21,5 @@ data class OverduePatientClicked(val patientUuid: UUID) : OverdueSearchEvent()
 data class CallPatientClicked(val patientUuid: UUID) : OverdueSearchEvent()
 
 data class OverdueSearchHistoryClicked(val searchQuery: String) : OverdueSearchEvent()
+
+data class OverdueSearchLoadStateChanged(val overdueSearchProgressState: OverdueSearchProgressState) : OverdueSearchEvent()

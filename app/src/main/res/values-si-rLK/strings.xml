@@ -38,11 +38,10 @@
 
   <!-- Patient search -->
   <string name="instantsearch_hint">නම, දුරකතනය, හෝ හැඳුනුම්පත</string>
-
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">මෙම ලැයිස්තුවේ රෝගියාව සොයාගත නොහැක?</string>
   <string name="patientsearchresults_register_patient">නව රෝගියෙකු ලෙස ලියාපදිංචි කරන්න</string>
-    <string name="patientsearchresults_item_phone_number">දුරකතනය</string>
+  <string name="patientsearchresults_item_phone_number">දුරකතනය</string>
   <string name="patientsearchresults_item_birthdate">උපන්දිනය</string>
 
   <!-- Manual patient entry -->
@@ -281,6 +280,15 @@
   <string name="overduelist_high_risk">ඉහළ අවදානම</string>
   <string name="overdue_download">බාගත කිරීම</string>
   <string name="overdue_share">බෙදා ගැනීම</string>
+  <string name="overdue_no_pending_patients">රෝගීන් රැඳී නොසිටී</string>
+  <string name="overdue_pending_list_button_see_all">සියල්ල බලන්න</string>
+  <string name="overdue_pending_list_button_see_less">අඩුවෙන් බලන්න</string>
+  <string name="overdue_pending_to_call_header">ඇමතීමට රැඳී සිටී</string>
+  <string name="overdue_agreed_to_visit_call_header">පැමිණීමට එකඟ විය</string>
+  <string name="overdue_remind_to_call_header">පසුව ඇමතීමට සිහිපත් කරන්න</string>
+  <string name="overdue_removed_from_list_call_header">ලැයිස්තුවෙන් ඉවත් කරන්න</string>
+  <string name="overdue_no_visit_in_one_year_call_header">1 වසරක් තුළ පැමිණීමක් නැත</string>
+
 
   <!-- Facility change -->
 
@@ -341,7 +349,7 @@
   <string name="newmedicalhistory_yes">ඔව්</string>
   <string name="newmedicalhistory_no">නැත</string>
   <string name="newmedicalhistory_history">ඉතිහාසය</string>
-  <string name="medicalhistory_question_is_on_hypertension_treatment">මෙම රෝගියාගේ අධි රුධිරපීඩන ඖෂධ SIMPLE ප්රොටෝකෝලය මත පදනම්ව ආරම්භ වේද?</string>
+  <string name="medicalhistory_question_is_on_hypertension_treatment">රෝගියා පසුගිය මාසය තුල කිසියම් දිනකදී රුධිර පීඩනය පාලනය කිරීම සඳහා ඖෂධයක් ලබා ගත්තේද? (අවශ්‍යයි)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">රෝගියා පසුගිය මාසය තුල කිසියම් දිනකදී දියවැඩියාව පාලනය කිරීම සඳහා ඖෂධයක් ලබා ගත්තේද? (අවශ්‍යයි)</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
@@ -559,6 +567,7 @@
   <string name="contactpatient_moved_to_private">පුද්ගලික වෛද්‍යවරයෙකු වෙත යවා ඇත</string>
   <string name="contactpatient_patient_died">මරණය සිදු විය</string>
   <string name="contactpatient_other_reason">වෙනත් හේතුවක්</string>
+  <string name="contactpatient_unknown">නොදනී</string>
   <string name="contactpatient_patient_registered_at">ලියාපදිංචි වී ඇත්තේ</string>
   <string name="contactpatient_patient_transfer_from">මාරුකර එවූයේ</string>
   <string name="contactpatient_phone">දුරකතනය</string>
@@ -829,9 +838,31 @@
 
   <!-- Drug stock reminder notification -->
   <string name="drug_stock_reminder_notification">ඔබගේ නියමිත ඖෂධ සඳහා %1$s තොග වාර්තාව සම්පූර්ණ කරන්න</string>
-  
+  <string name="drug_stock_reminder_card_title">ඖෂධ තොගය</string>
+  <string name="drug_stock_reminder_card_content">ඔබගේ නියමිත ඖෂධ සඳහා %1$s තොග වාර්තාව සම්පූර්ණ කරන්න</string>
+  <string name="drug_stock_reminder_button_text">ඖෂධ තොගයට ඇතුල්වන්න</string>
+
+  <!-- Drug stock reminder no active network connection dialog -->
+  <string name="drug_stock_reminder_no_active_network_connection_dialog_title">අන්තර්ජාලය නැත</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_message">ඔබගේ අන්තර්ජාලය පරීක්ෂා කර නැවත උත්සාහ කරන්න.</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_positive_button">හරි</string>
+
+
   <!-- Clinical Decision Support Alerts -->
   <string name="clinical_decision_support_alert_bp_high_title">බීපී ඉහළ ගොස් ඇත. ඖෂධ වැඩි කරන්නද?</string>
   <string name="clinical_decision_support_alert_bp_high_subtitle">රෝගියා ඔවුන්ගේ ඖෂධ නිතිපතා ගන්නේ නම්, ප්‍රොටොකෝලය අනුගමනය කරන්න</string>
+
+  <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">\'පැමිණීමට එකඟ විය\' සක්‍රීය ලෙස සලකුණු කෙරිණි</string>
+
+  <string name="call_result_outcome_remind_to_call_later">\'ඇමතීමට සිහිපත් කරන්න\' සක්‍රීය ලෙස සලකුණු කෙරිණි</string>
+
+  <string name="call_result_outcome_removed">ඉවත් කෙරිණි: %1$s</string>
+
+  <!-- Overdue Instant Search -->
+  <string name="overdue_search_patient_name_or_village">නම හෝ ගම මගින් සොයන්න</string>
+  <string name="overdue_search_hint">නම හෝ ගම ඇතුල් කරන්න</string>
+  <string name="overdue_search_no_search_results_title">රෝගීන් හමු නොවීය</string>
+  <string name="overdue_search_no_search_results_desc">මෙහි ඔබගේ සෙවීමෙන් ඔබ සියලුම කාලය පසු වූ රෝගීන් දකිනු ඇත</string>
 
 </resources>

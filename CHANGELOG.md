@@ -23,6 +23,7 @@
 - Implement view effects to show overdue search results
 - Wire Mobius loop with overdue search screen UI
 - Don't show no patients found error view when search query is empty
+- Prefill search query when search history item is clicked
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-20-8300

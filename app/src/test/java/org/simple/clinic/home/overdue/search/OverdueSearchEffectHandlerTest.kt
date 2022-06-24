@@ -178,4 +178,16 @@ class OverdueSearchEffectHandlerTest {
     verify(uiActions).showOverdueSearchResults(expectedPagingData)
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when set overdue search query effect is received, then set overdue search query`() {
+    // when
+    effectHandlerTestCase.dispatch(SetOverdueSearchQuery("Babri"))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).setOverdueSearchQuery("Babri")
+    verifyNoMoreInteractions(uiActions)
+  }
 }

@@ -24,7 +24,6 @@ class OverdueSearchUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verify(ui).renderSearchQuery("Ani")
     verify(ui).hideProgress()
     verify(ui).showProgress()
     verifyNoMoreInteractions(ui)
@@ -43,7 +42,6 @@ class OverdueSearchUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verify(ui).renderSearchQuery("")
     verify(ui).showSearchHistory(searchHistory)
     verify(ui).hideSearchResults()
     verify(ui).hideNoSearchResults()
@@ -64,7 +62,6 @@ class OverdueSearchUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verify(ui).renderSearchQuery("Ani")
     verify(ui).hideSearchHistory()
     verify(ui).hideSearchResults()
     verify(ui).showNoSearchResults()
@@ -85,7 +82,6 @@ class OverdueSearchUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verify(ui).renderSearchQuery("Ani")
     verify(ui).hideSearchHistory()
     verify(ui).hideNoSearchResults()
     verify(ui).hideProgress()
@@ -105,7 +101,6 @@ class OverdueSearchUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verify(ui).renderSearchQuery("")
     verify(ui).showSearchHistory(searchHistory)
     verify(ui).hideSearchResults()
     verify(ui).hideNoSearchResults()

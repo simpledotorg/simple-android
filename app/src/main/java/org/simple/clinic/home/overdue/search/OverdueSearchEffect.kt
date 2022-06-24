@@ -22,3 +22,5 @@ data class OpenPatientSummary(val patientUuid: UUID) : OverdueSearchViewEffect()
 data class OpenContactPatientSheet(val patientUuid: UUID) : OverdueSearchViewEffect()
 
 data class ShowOverdueSearchResults(val overdueSearchResults: PagingData<OverdueAppointment>) : OverdueSearchViewEffect()
+
+data class SetOverdueSearchQuery(val searchQuery: String) : OverdueSearchViewEffect()

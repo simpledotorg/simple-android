@@ -8,4 +8,5 @@ interface OverdueSearchUiActions {
   fun openPatientSummaryScreen(patientUuid: UUID)
   fun openContactPatientSheet(patientUuid: UUID)
   fun showOverdueSearchResults(searchResults: PagingData<OverdueAppointment>)
+  fun setOverdueSearchQuery(searchQuery: String)
 }

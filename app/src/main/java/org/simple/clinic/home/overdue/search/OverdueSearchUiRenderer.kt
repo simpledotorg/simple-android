@@ -1,5 +1,8 @@
 package org.simple.clinic.home.overdue.search
 
+import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.DONE
+import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.IN_PROGRESS
+import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.NO_RESULTS
 import org.simple.clinic.mobius.ViewRenderer
 
 class OverdueSearchUiRenderer(
@@ -8,12 +11,37 @@ class OverdueSearchUiRenderer(
 
   override fun render(model: OverdueSearchModel) {
     ui.renderSearchQuery(model.searchQuery.orEmpty())
+    ui.hideProgress()
 
-    if (!model.hasSearchQuery) {
-      ui.showSearchHistory(model.overdueSearchHistory.orEmpty())
-      ui.hideSearchResults()
+    if (model.hasSearchQuery) {
+      renderSearchResults(model)
     } else {
-      ui.hideSearchHistory()
+      ui.hideNoSearchResults()
+      ui.hideSearchResults()
+      ui.showSearchHistory(model.overdueSearchHistory.orEmpty())
     }
+  }
+
+  private fun renderSearchResults(model: OverdueSearchModel) {
+    when (model.overdueSearchProgressState) {
+      IN_PROGRESS -> ui.showProgress()
+      NO_RESULTS -> renderNoResults()
+      DONE -> renderResults()
+      null -> {
+        // No-op
+      }
+    }
+  }
+
+  private fun renderResults() {
+    ui.showSearchResults()
+    ui.hideSearchHistory()
+    ui.hideNoSearchResults()
+  }
+
+  private fun renderNoResults() {
+    ui.showNoSearchResults()
+    ui.hideSearchResults()
+    ui.hideSearchHistory()
   }
 }

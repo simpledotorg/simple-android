@@ -5,4 +5,9 @@ interface OverdueSearchUi {
   fun hideSearchResults()
   fun hideSearchHistory()
   fun renderSearchQuery(searchQuery: String)
+  fun hideProgress()
+  fun showProgress()
+  fun showSearchResults()
+  fun hideNoSearchResults()
+  fun showNoSearchResults()
 }

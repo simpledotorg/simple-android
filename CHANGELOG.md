@@ -22,6 +22,7 @@
 - Bump coroutines to v1.6.3
 - Implement view effects to show overdue search results
 - Wire Mobius loop with overdue search screen UI
+- Don't show no patients found error view when search query is empty
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-20-8300

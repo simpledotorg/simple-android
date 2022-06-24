@@ -6,7 +6,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class OverdueSearchModel(
     val overdueSearchHistory: Set<String>?,
-    val searchQuery: String?
+    val searchQuery: String?,
+    val overdueSearchProgressState: OverdueSearchProgressState?
 ) : Parcelable {
 
   val hasSearchQuery: Boolean
@@ -17,7 +18,8 @@ data class OverdueSearchModel(
     fun create(): OverdueSearchModel {
       return OverdueSearchModel(
           overdueSearchHistory = null,
-          searchQuery = null
+          searchQuery = null,
+          overdueSearchProgressState = null
       )
     }
   }
@@ -30,5 +32,9 @@ data class OverdueSearchModel(
 
   fun overdueSearchQueryChanged(searchQuery: String): OverdueSearchModel {
     return copy(searchQuery = searchQuery)
+  }
+
+  fun loadStateChanged(overdueSearchProgressState: OverdueSearchProgressState): OverdueSearchModel {
+    return copy(overdueSearchProgressState = overdueSearchProgressState)
   }
 }

@@ -25,6 +25,9 @@ import org.simple.clinic.databinding.ListItemOverduePlaceholderBinding
 import org.simple.clinic.databinding.ScreenOverdueSearchBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.overdue.OverdueAppointment
+import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.DONE
+import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.IN_PROGRESS
+import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.NO_RESULTS
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -36,7 +39,6 @@ import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setTextWithWatcher
-import org.simple.clinic.widgets.visibleOrGone
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
@@ -166,30 +168,17 @@ class OverdueSearchScreen : BaseScreen<
       .loadStateFlow
       .asObservable()
       .subscribe { combinedLoadStates ->
-        val isLoadingInitialData = combinedLoadStates.refresh is LoadState.Loading
+        val isLoadingData = combinedLoadStates.refresh is LoadState.Loading
+        val endOfPaginationReached = combinedLoadStates.append.endOfPaginationReached
         val hasNoAdapterItems = overdueSearchListAdapter.itemCount == 0
+        val showNoSearchResults = !isLoadingData && endOfPaginationReached && hasNoAdapterItems
 
         when {
-          isLoadingInitialData && hasNoAdapterItems -> loadingOverdueSearchResults()
-          else -> {
-            val shouldShowEmptyView = combinedLoadStates.append.endOfPaginationReached && hasNoAdapterItems
-
-            overdueSearchResultsLoaded(shouldShowEmptyView)
-          }
+          isLoadingData -> hotEvents.onNext(OverdueSearchLoadStateChanged(IN_PROGRESS))
+          showNoSearchResults -> hotEvents.onNext(OverdueSearchLoadStateChanged(NO_RESULTS))
+          else -> hotEvents.onNext(OverdueSearchLoadStateChanged(DONE))
         }
       }
-
-  private fun overdueSearchResultsLoaded(shouldShowEmptyView: Boolean) {
-    overdueSearchProgressIndicator.visibility = View.GONE
-    noOverdueSearchResultsContainer.visibleOrGone(isVisible = shouldShowEmptyView)
-    overdueSearchRecyclerView.visibleOrGone(isVisible = !shouldShowEmptyView)
-  }
-
-  private fun loadingOverdueSearchResults() {
-    overdueSearchProgressIndicator.visibility = View.VISIBLE
-    noOverdueSearchResultsContainer.visibility = View.GONE
-    overdueSearchRecyclerView.visibility = View.GONE
-  }
 
   override fun showSearchHistory(searchHistory: Set<String>) {
     overdueSearchHistoryContainer.visibility = View.VISIBLE
@@ -197,12 +186,16 @@ class OverdueSearchScreen : BaseScreen<
     searchHistoryAdapter.addAll(searchHistory)
   }
 
+  override fun showSearchResults() {
+    overdueSearchRecyclerView.visibility = View.VISIBLE
+  }
+
   override fun hideSearchResults() {
+    overdueSearchListAdapter.submitData(lifecycle, PagingData.empty())
     overdueSearchRecyclerView.visibility = View.GONE
   }
 
   override fun showOverdueSearchResults(searchResults: PagingData<OverdueAppointment>) {
-    overdueSearchRecyclerView.visibility = View.VISIBLE
     overdueSearchListAdapter.submitData(
         lifecycle,
         OverdueAppointmentSearchListItem.from(searchResults, userClock)
@@ -215,6 +208,22 @@ class OverdueSearchScreen : BaseScreen<
 
   override fun renderSearchQuery(searchQuery: String) {
     overdueSearchQueryEditText.setTextWithWatcher(searchQuery, searchQueryTextChanges)
+  }
+
+  override fun showProgress() {
+    overdueSearchProgressIndicator.visibility = View.VISIBLE
+  }
+
+  override fun hideProgress() {
+    overdueSearchProgressIndicator.visibility = View.GONE
+  }
+
+  override fun showNoSearchResults() {
+    noOverdueSearchResultsContainer.visibility = View.VISIBLE
+  }
+
+  override fun hideNoSearchResults() {
+    noOverdueSearchResultsContainer.visibility = View.GONE
   }
 
   override fun openPatientSummaryScreen(patientUuid: UUID) {

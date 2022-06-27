@@ -23,11 +23,17 @@ class OverdueSearchUpdate(val date: LocalDate) : Update<OverdueSearchModel, Over
       is OverdueSearchResultsLoaded -> dispatch(ShowOverdueSearchResults(event.overdueAppointments))
       is CallPatientClicked -> dispatch(OpenContactPatientSheet(event.patientUuid))
       is OverduePatientClicked -> dispatch(OpenPatientSummary(event.patientUuid))
-      is OverdueSearchHistoryClicked -> next(
-          model.overdueSearchQueryChanged(event.searchQuery),
-          SearchOverduePatients(event.searchQuery, date)
-      )
+      is OverdueSearchHistoryClicked -> dispatch(SetOverdueSearchQuery(event.searchQuery))
       is OverdueSearchLoadStateChanged -> next(model.loadStateChanged(event.overdueSearchProgressState))
+      OverdueSearchScreenShown -> overdueScreenShown(model)
+    }
+  }
+
+  private fun overdueScreenShown(model: OverdueSearchModel): Next<OverdueSearchModel, OverdueSearchEffect> {
+    return if (model.hasSearchQuery) {
+      dispatch(SetOverdueSearchQuery(model.searchQuery.orEmpty()))
+    } else {
+      noChange()
     }
   }
 

@@ -112,14 +112,14 @@ class OverdueSearchUpdateTest {
   }
 
   @Test
-  fun `when search history item is clicked, then update search query in model and search overdue patients with selected search query`() {
+  fun `when search history item is clicked, then set overdue search query`() {
     val searchQuery = "Babri"
     updateSpec
         .given(defaultModel)
         .whenEvent(OverdueSearchHistoryClicked(searchQuery))
         .then(assertThatNext(
-            hasModel(defaultModel.overdueSearchQueryChanged(searchQuery)),
-            hasEffects(SearchOverduePatients(searchQuery, date))
+            hasNoModel(),
+            hasEffects(SetOverdueSearchQuery("Babri"))
         ))
   }
 
@@ -134,6 +134,20 @@ class OverdueSearchUpdateTest {
         .then(assertThatNext(
             hasModel(loadStateChangedModel.loadStateChanged(IN_PROGRESS)),
             hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when overdue search screen is shown and search query is present, then set overdue search query`() {
+    val searchQueryModel = defaultModel
+        .overdueSearchQueryChanged("Babri")
+
+    updateSpec
+        .given(searchQueryModel)
+        .whenEvent(OverdueSearchScreenShown)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(SetOverdueSearchQuery("Babri"))
         ))
   }
 }

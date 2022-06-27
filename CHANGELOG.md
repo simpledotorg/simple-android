@@ -12,7 +12,8 @@
 - Open overdue search screen when search button is clicked in overdue screen
 - Search for overdue patients when search query is valid
 - Turn off translation for instant search allowed characters
-- Updated translations: `om-ET`, `kn-IN`, `so-ET`, `ti-ET`, `mr-IN`, `te-IN`, `sid-ET`, `ta-IN`, `bn-IN`, `hi-IN`, `pa-IN`, `ta-LK`, `am-ET`, `bn-BD`, `si-LK`
+- Updated translations: `om-ET`, `kn-IN`, `so-ET`, `ti-ET`, `mr-IN`, `te-IN`, `sid-ET`, `ta-IN`, `bn-IN`, `hi-IN`, `pa-IN`, `ta-LK`, `am-ET`,
+  `bn-BD`, `si-LK`
 - Show search results when overdue search results are loaded
 - Handle user interactions for overdue search results
 - Implement overdue search results adapter
@@ -23,6 +24,7 @@
 - Implement view effects to show overdue search results
 - Wire Mobius loop with overdue search screen UI
 - Handle keyboard visibility in overdue search screen
+- Bump mixpanel to v6.3.0
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-20-8300

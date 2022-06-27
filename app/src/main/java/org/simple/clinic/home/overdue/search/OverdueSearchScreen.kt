@@ -209,10 +209,10 @@ class OverdueSearchScreen : BaseScreen<
     overdueSearchRecyclerView.visibility = View.GONE
   }
 
-  override fun showOverdueSearchResults(searchResults: PagingData<OverdueAppointment>) {
+  override fun showOverdueSearchResults(searchResults: PagingData<OverdueAppointment>, searchQuery: String?) {
     overdueSearchListAdapter.submitData(
         lifecycle,
-        OverdueAppointmentSearchListItem.from(searchResults, userClock)
+        OverdueAppointmentSearchListItem.from(searchResults, userClock, searchQuery)
     )
   }
 

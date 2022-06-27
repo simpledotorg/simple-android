@@ -8,6 +8,8 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.DONE
+import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.IN_PROGRESS
 import org.simple.clinic.home.overdue.search.OverdueSearchQueryValidator.Result.Valid
 import org.simple.sharedTestCode.TestData
 import java.time.LocalDate
@@ -118,6 +120,20 @@ class OverdueSearchUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.overdueSearchQueryChanged(searchQuery)),
             hasEffects(SearchOverduePatients(searchQuery, date))
+        ))
+  }
+
+  @Test
+  fun `when load state is changed, then update the model`() {
+    val loadStateChangedModel = defaultModel
+        .loadStateChanged(DONE)
+
+    updateSpec
+        .given(loadStateChangedModel)
+        .whenEvent(OverdueSearchLoadStateChanged(IN_PROGRESS))
+        .then(assertThatNext(
+            hasModel(loadStateChangedModel.loadStateChanged(IN_PROGRESS)),
+            hasNoEffects()
         ))
   }
 }

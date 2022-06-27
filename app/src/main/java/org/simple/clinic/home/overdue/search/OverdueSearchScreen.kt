@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.itemClicks
+import com.jakewharton.rxbinding3.widget.textChanges
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -39,16 +40,16 @@ import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.afterTextChangedWatcher
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
-import org.simple.clinic.widgets.setTextWithWatcher
+import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class OverdueSearchScreen : BaseScreen<
@@ -90,13 +91,6 @@ class OverdueSearchScreen : BaseScreen<
 
   private val disposable = CompositeDisposable()
 
-  private val searchQueryTextChanges by unsafeLazy {
-    afterTextChangedWatcher { text ->
-      if (text != null)
-        hotEvents.onNext(OverdueSearchQueryChanged(text.trim().toString()))
-    }
-  }
-
   private val overdueSearchListAdapter = PagingItemAdapter(
       diffCallback = OverdueAppointmentSearchListItem.DiffCallback(),
       bindings = mapOf(
@@ -136,7 +130,8 @@ class OverdueSearchScreen : BaseScreen<
       .mergeArray(
           overdueSearchListAdapter.itemEvents,
           searchHistoryItemClicks(),
-          hotEvents
+          hotEvents,
+          overdueSearchQueryTextChanges()
       )
       .compose(ReportAnalyticsEvents())
       .cast<OverdueSearchEvent>()
@@ -154,6 +149,11 @@ class OverdueSearchScreen : BaseScreen<
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
+
+  override fun onStart() {
+    super.onStart()
+    hotEvents.onNext(OverdueSearchScreenShown)
   }
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?): ScreenOverdueSearchBinding {
@@ -237,10 +237,6 @@ class OverdueSearchScreen : BaseScreen<
     overdueSearchHistoryContainer.visibility = View.GONE
   }
 
-  override fun renderSearchQuery(searchQuery: String) {
-    overdueSearchQueryEditText.setTextWithWatcher(searchQuery, searchQueryTextChanges)
-  }
-
   override fun showProgress() {
     overdueSearchProgressIndicator.visibility = View.VISIBLE
   }
@@ -263,6 +259,20 @@ class OverdueSearchScreen : BaseScreen<
 
   override fun openContactPatientSheet(patientUuid: UUID) {
     router.push(ContactPatientBottomSheet.Key(patientUuid))
+  }
+
+  override fun setOverdueSearchQuery(searchQuery: String) {
+    overdueSearchQueryEditText.setTextAndCursor(searchQuery)
+  }
+
+  private fun overdueSearchQueryTextChanges(): Observable<UiEvent> {
+    return overdueSearchQueryEditText
+        .textChanges()
+        .skipInitialValue()
+        .debounce(300, TimeUnit.MILLISECONDS)
+        .map {
+          OverdueSearchQueryChanged(it.toString())
+        }
   }
 
   interface Injector {

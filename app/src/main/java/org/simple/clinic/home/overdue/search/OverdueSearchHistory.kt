@@ -36,6 +36,6 @@ class OverdueSearchHistory @Inject constructor(
   }
 
   private fun String.splitToSet(): Set<String> {
-    return split(SEARCH_HISTORY_SEPARATOR).toSet()
+    return split(SEARCH_HISTORY_SEPARATOR).filter { it.isNotBlank() }.toSet()
   }
 }

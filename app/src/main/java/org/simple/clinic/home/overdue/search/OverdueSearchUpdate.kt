@@ -27,6 +27,7 @@ class OverdueSearchUpdate(val date: LocalDate) : Update<OverdueSearchModel, Over
           model.overdueSearchQueryChanged(event.searchQuery),
           SearchOverduePatients(event.searchQuery, date)
       )
+      is OverdueSearchLoadStateChanged -> next(model.loadStateChanged(event.overdueSearchProgressState))
     }
   }
 

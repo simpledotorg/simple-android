@@ -1,8 +1,11 @@
 package org.simple.clinic.home.overdue.search
 
+import android.content.Context
 import android.graphics.Rect
 import android.view.TouchDelegate
 import android.view.View
+import androidx.core.text.backgroundColor
+import androidx.core.text.buildSpannedString
 import androidx.paging.PagingData
 import androidx.paging.map
 import androidx.recyclerview.widget.DiffUtil
@@ -13,12 +16,12 @@ import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.resolveColor
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.dp
 import org.simple.clinic.widgets.executeOnNextMeasure
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
-import org.simple.clinic.widgets.visibleOrGone
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import java.util.UUID
@@ -29,15 +32,17 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
 
     fun from(
         appointments: PagingData<OverdueAppointment>,
-        clock: UserClock
+        clock: UserClock,
+        searchQuery: String?
     ): PagingData<OverdueAppointmentSearchListItem> {
       return appointments
-          .map { overdueAppointment -> from(overdueAppointment, clock) }
+          .map { overdueAppointment -> from(overdueAppointment, clock, searchQuery) }
     }
 
     private fun from(
         overdueAppointment: OverdueAppointment,
-        clock: UserClock
+        clock: UserClock,
+        searchQuery: String?
     ): OverdueAppointmentSearchListItem {
       return OverdueAppointmentRow(
           appointmentUuid = overdueAppointment.appointment.uuid,
@@ -48,7 +53,8 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
           phoneNumber = overdueAppointment.phoneNumber?.number,
           overdueDays = daysBetweenNowAndDate(overdueAppointment.appointment.scheduledDate, clock),
           isAtHighRisk = overdueAppointment.isAtHighRisk,
-          villageName = overdueAppointment.patientAddress.colonyOrVillage
+          villageName = overdueAppointment.patientAddress.colonyOrVillage,
+          searchQuery = searchQuery
       )
     }
 
@@ -69,7 +75,8 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
       val phoneNumber: String? = null,
       val overdueDays: Int,
       val isAtHighRisk: Boolean,
-      val villageName: String?
+      val villageName: String?,
+      val searchQuery: String?
   ) : OverdueAppointmentSearchListItem() {
 
     override fun layoutResId(): Int = R.layout.list_item_overdue_patient
@@ -77,7 +84,7 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
     override fun render(holder: BindingViewHolder, subject: Subject<UiEvent>) {
       val binding = holder.binding as ListItemOverduePatientBinding
       setupEvents(binding, subject)
-      bindUi(holder)
+      bindUi(holder, searchQuery)
     }
 
     private fun setupEvents(
@@ -93,14 +100,15 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
       }
     }
 
-    private fun bindUi(holder: BindingViewHolder) {
+    private fun bindUi(holder: BindingViewHolder, searchQuery: String?) {
       val binding = holder.binding as ListItemOverduePatientBinding
       val context = holder.itemView.context
 
-      binding.patientNameTextView.text = context.getString(R.string.overdue_list_item_name_age, name, age.toString())
+      renderPatientName(context, binding, searchQuery)
+
       binding.patientGenderIcon.setImageResource(gender.displayIconRes)
-      binding.villageTextView.text = villageName.orEmpty()
-      binding.villageTextView.visibleOrGone(isVisible = !villageName.isNullOrBlank())
+
+      renderVillageName(context, binding, searchQuery)
 
       val callButtonDrawable = if (phoneNumber.isNullOrBlank()) {
         R.drawable.ic_overdue_no_phone_number
@@ -117,6 +125,64 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
           overdueDays,
           "$overdueDays"
       )
+    }
+
+    private fun renderPatientName(
+        context: Context,
+        binding: ListItemOverduePatientBinding,
+        searchQuery: String?
+    ) {
+      val nameAndAge = context.getString(R.string.overdue_list_item_name_age, name, age.toString())
+      binding.patientNameTextView.text = when (val it = getHighlightedPatientAttribute(searchQuery, nameAndAge)) {
+        is PatientAttribute.Highlighted -> highlight(
+            context = context,
+            text = it.value,
+            startIndex = it.highlightStart,
+            endIndex = it.highlightEnd
+        )
+        is PatientAttribute.Plain -> it.value
+      }
+    }
+
+    private fun renderVillageName(
+        context: Context,
+        binding: ListItemOverduePatientBinding,
+        searchQuery: String?
+    ) {
+      if (!villageName.isNullOrBlank()) {
+        binding.villageTextView.visibility = View.VISIBLE
+
+        binding.villageTextView.text = getHighlightedVillageName(context, searchQuery, villageName)
+      } else {
+        binding.villageTextView.visibility = View.GONE
+      }
+    }
+
+    private fun getHighlightedVillageName(
+        context: Context,
+        searchQuery: String?,
+        villageName: String
+    ) = when (val it = getHighlightedPatientAttribute(searchQuery, villageName)) {
+      is PatientAttribute.Highlighted -> highlight(
+          context = context,
+          text = it.value,
+          startIndex = it.highlightStart,
+          endIndex = it.highlightEnd
+      )
+      is PatientAttribute.Plain -> it.value
+    }
+
+    private fun highlight(
+        context: Context,
+        text: String,
+        startIndex: Int,
+        endIndex: Int
+    ) = buildSpannedString {
+      append(text.substring(0, startIndex))
+      backgroundColor(context.resolveColor(colorRes = R.color.search_query_highlight)) {
+        append(text.substring(startIndex, endIndex))
+      }
+      append(text.substring(endIndex, text.length))
     }
 
     private fun increaseCallButtonTapArea(callButton: View) {
@@ -142,6 +208,30 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
         parent.touchDelegate = TouchDelegate(touchableArea, callButton)
       }
     }
+  }
+
+  fun getHighlightedPatientAttribute(searchQuery: String?, patientAttribute: String): PatientAttribute {
+    val canHighlight = !searchQuery.isNullOrBlank() && patientAttribute.contains(searchQuery, ignoreCase = true)
+    return if (canHighlight) {
+      val startingIndexForHighlight = patientAttribute.indexOf(searchQuery!!, ignoreCase = true)
+      PatientAttribute.Highlighted(
+          value = patientAttribute,
+          highlightStart = startingIndexForHighlight,
+          highlightEnd = startingIndexForHighlight + searchQuery.length
+      )
+    } else {
+      PatientAttribute.Plain(value = patientAttribute)
+    }
+  }
+
+  sealed class PatientAttribute(open val value: String) {
+    data class Highlighted(
+        override val value: String,
+        val highlightStart: Int,
+        val highlightEnd: Int
+    ) : PatientAttribute(value)
+
+    data class Plain(override val value: String) : PatientAttribute(value)
   }
 
   class DiffCallback : DiffUtil.ItemCallback<OverdueAppointmentSearchListItem>() {

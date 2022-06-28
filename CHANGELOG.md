@@ -11,6 +11,7 @@
 - Bump flipper to v0.150.0
 - Bump sentry gradle plugin to v3.1.2
 - Bump sentry to v6.1.4
+- Bump Android desugar JDK library to v1.1.6
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-27-8310

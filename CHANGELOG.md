@@ -4,6 +4,13 @@
 
 ### Internal
 
+- Highlight search results with the matched search query
+- [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
+
+## 2022-06-27-8307
+
+### Internal
+
 - Save search query to overdue search history when search query is valid
 - Add layout for overdue search screen
 - Bump Sentry to v6.1.2
@@ -29,7 +36,6 @@
 - Don't show no patients found error view when search query is empty
 - Don't show empty search history items in overdue search screen
 - Prefill search query when search history item is clicked
-- [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-20-8300
 

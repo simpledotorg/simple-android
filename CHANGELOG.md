@@ -8,6 +8,7 @@
 - Highlight search results with the matched search query
 - Fix old synced appointments not getting deleted on purge
 - Bump datadog sdk to v1.13.0
+- Move existing search history item to the top when clicked
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-27-8307

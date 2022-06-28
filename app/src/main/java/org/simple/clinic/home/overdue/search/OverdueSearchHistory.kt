@@ -22,7 +22,10 @@ class OverdueSearchHistory @Inject constructor(
 
   fun add(searchQuery: String) {
     val searchHistory = overdueSearchHistoryPreference.get().splitToSet()
-    val searchHistoryLimit = if (searchHistory.size >= searchConfig.searchHistoryLimit) {
+    val searchHistoryLimit = if (
+        searchHistory.size >= searchConfig.searchHistoryLimit &&
+        !searchHistory.contains(searchQuery)
+    ) {
       // We are subtracting 1 to ensure our search history is within the specified limit.
       // To avoid having saving all the search queries, we are dropping older search queries that are
       // outside the limit

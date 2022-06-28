@@ -273,7 +273,7 @@ data class Appointment(
 
     @Query("""
       DELETE FROM Appointment
-      WHERE uuid <= (
+      WHERE uuid NOT IN (
         SELECT uuid
         FROM Appointment
         GROUP BY patientUuid HAVING MAX(createdAt)

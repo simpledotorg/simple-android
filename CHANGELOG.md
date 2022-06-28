@@ -6,6 +6,7 @@
 
 - Prefill search query when search history item is clicked
 - Highlight search results with the matched search query
+- Fix old synced appointments not getting deleted on purge
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-27-8307

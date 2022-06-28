@@ -37,5 +37,5 @@ enum class Feature(
   NotifyAppUpdateAvailableV2(false, "appupdate_enabled_v2"),
   MonthlyDrugStockReportReminder(false, "monthly_drug_stock_report_reminders_v1"),
   OverdueSections(false, "overdue_section_improvements_v1"),
-  OverdueInstantSearch(false)
+  OverdueInstantSearch(false, "overdue_instant_search_v1")
 }

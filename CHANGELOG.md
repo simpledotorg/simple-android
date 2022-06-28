@@ -13,6 +13,7 @@
 - Bump sentry to v6.1.4
 - Bump Android desugar JDK library to v1.1.6
 - Increase overdue search query text field debounce time
+- Add remote key for overdue search feature flag
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-27-8310

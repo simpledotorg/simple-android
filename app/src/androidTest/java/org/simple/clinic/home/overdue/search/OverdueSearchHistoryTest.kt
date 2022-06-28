@@ -65,4 +65,26 @@ class OverdueSearchHistoryTest {
         "Tandi"
     ))
   }
+
+  @Test
+  fun adding_already_existing_search_query_to_history_should_move_it_to_top() {
+    // given
+    val searchQuery = "Mehta"
+    val existingSearchHistory = "Babri, Ramesh, Mehta, Tandi, Narwar"
+
+    overdueSearchHistoryPreference.set(existingSearchHistory)
+
+    // when
+    overdueSearchHistory.add(searchQuery)
+
+    // then
+    val searchHistory = overdueSearchHistory.fetch().blockingFirst()
+    assertThat(searchHistory).isEqualTo(setOf(
+        "Mehta",
+        "Babri",
+        "Ramesh",
+        "Tandi",
+        "Narwar"
+    ))
+  }
 }

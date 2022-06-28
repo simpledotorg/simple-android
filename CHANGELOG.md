@@ -6,6 +6,12 @@
 
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
+## 2022-06-27-8310
+
+### Internal
+
+- Fix old synced appointments not getting deleted on purge
+
 ## 2022-06-27-8307
 
 ### Internal
@@ -34,7 +40,6 @@
 - Bump Google Services plugin to v4.3.12
 - Don't show no patients found error view when search query is empty
 - Don't show empty search history items in overdue search screen
-- Fix old synced appointments not getting deleted on purge
 
 ## 2022-06-20-8300
 

@@ -453,11 +453,20 @@ class PurgeDatabaseAndroidTest {
     )
     val appointmentWithUnknownStatusAndSyncedForPatient1 = TestData.appointment(
         uuid = UUID.fromString("a89a3a34-8395-4a55-89b6-562146369ad1"),
-        syncStatus = SyncStatus.DONE,
+        syncStatus = SyncStatus.PENDING,
         status = Appointment.Status.Unknown("rescheduled"),
         patientUuid = patientProfile1.patientUuid,
         createdAt = Instant.parse("2022-04-01T00:00:00Z"),
         updatedAt = Instant.parse("2022-04-01T00:00:00Z"),
+        deletedAt = null,
+    )
+    val visitedAppointmentAndSyncedForPatient1 = TestData.appointment(
+        uuid = UUID.fromString("121c04e3-a65b-4e5e-b4fe-eb149f1d2352"),
+        syncStatus = SyncStatus.DONE,
+        status = Appointment.Status.Visited,
+        patientUuid = patientProfile1.patientUuid,
+        createdAt = Instant.parse("2022-05-01T00:00:00Z"),
+        updatedAt = Instant.parse("2022-05-01T00:00:00Z"),
         deletedAt = null,
     )
     val scheduledAppointmentAndSyncedForPatient2 = TestData.appointment(
@@ -496,6 +505,7 @@ class PurgeDatabaseAndroidTest {
         scheduledAppointmentAndSyncedForPatient2,
         visitedButUnsyncedAppointmentForPatient2,
         cancelledButUnsyncedAppointmentForPatient2,
+        visitedAppointmentAndSyncedForPatient1
     ))
 
     assertThat(appointmentDao.getOne(scheduledAppointmentAndSyncedForPatient1.uuid)).isEqualTo(scheduledAppointmentAndSyncedForPatient1)
@@ -505,6 +515,7 @@ class PurgeDatabaseAndroidTest {
     assertThat(appointmentDao.getOne(scheduledAppointmentAndSyncedForPatient2.uuid)).isEqualTo(scheduledAppointmentAndSyncedForPatient2)
     assertThat(appointmentDao.getOne(cancelledButUnsyncedAppointmentForPatient2.uuid)).isEqualTo(cancelledButUnsyncedAppointmentForPatient2)
     assertThat(appointmentDao.getOne(visitedButUnsyncedAppointmentForPatient2.uuid)).isEqualTo(visitedButUnsyncedAppointmentForPatient2)
+    assertThat(appointmentDao.getOne(visitedAppointmentAndSyncedForPatient1.uuid)).isEqualTo(visitedAppointmentAndSyncedForPatient1)
 
     // when
     appDatabase.purge(Instant.parse("2021-06-01T00:00:00Z"))
@@ -516,6 +527,7 @@ class PurgeDatabaseAndroidTest {
     assertThat(appointmentDao.getOne(cancelledButUnsyncedAppointmentForPatient2.uuid)).isEqualTo(cancelledButUnsyncedAppointmentForPatient2)
     assertThat(appointmentDao.getOne(visitedButUnsyncedAppointmentForPatient2.uuid)).isEqualTo(visitedButUnsyncedAppointmentForPatient2)
     assertThat(appointmentDao.getOne(appointmentWithUnknownStatusAndSyncedForPatient1.uuid)).isEqualTo(appointmentWithUnknownStatusAndSyncedForPatient1)
+    assertThat(appointmentDao.getOne(visitedAppointmentAndSyncedForPatient1.uuid)).isEqualTo(visitedAppointmentAndSyncedForPatient1)
   }
 
   @Test

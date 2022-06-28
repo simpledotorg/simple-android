@@ -7,6 +7,6 @@ import java.util.UUID
 interface OverdueSearchUiActions {
   fun openPatientSummaryScreen(patientUuid: UUID)
   fun openContactPatientSheet(patientUuid: UUID)
-  fun showOverdueSearchResults(searchResults: PagingData<OverdueAppointment>)
+  fun showOverdueSearchResults(searchResults: PagingData<OverdueAppointment>, searchQuery: String?)
   fun setOverdueSearchQuery(searchQuery: String)
 }

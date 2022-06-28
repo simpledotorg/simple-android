@@ -9,6 +9,8 @@
 - Bump datadog sdk to v1.13.0
 - Move existing search history item to the top when clicked
 - Bump flipper to v0.150.0
+- Bump sentry gradle plugin to v3.1.2
+- Bump sentry to v6.1.4
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-27-8310

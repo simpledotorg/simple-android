@@ -10,8 +10,8 @@ data class DrugStockReportPayload(
     val protocolDrugId: UUID,
 
     @Json(name = "in_stock")
-    val drugsInStock: Int,
+    val drugsInStock: Int?,
 
     @Json(name = "received")
-    val drugsReceived: Int
+    val drugsReceived: Int?
 )

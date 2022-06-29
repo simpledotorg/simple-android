@@ -269,7 +269,7 @@ class OverdueSearchScreen : BaseScreen<
     return overdueSearchQueryEditText
         .textChanges()
         .skipInitialValue()
-        .debounce(300, TimeUnit.MILLISECONDS)
+        .debounce(500, TimeUnit.MILLISECONDS)
         .map {
           OverdueSearchQueryChanged(it.toString())
         }

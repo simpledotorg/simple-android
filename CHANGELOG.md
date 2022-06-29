@@ -15,6 +15,7 @@
 - Increase overdue search query text field debounce time
 - Add remote key for overdue search feature flag
 - Fix `JSONDataException` when parsing the drug stock response
+- Ignore `ReportsModel#reportsContent` on parcel
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-27-8310

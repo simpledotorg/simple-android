@@ -31,7 +31,7 @@ rx-binding = "3.1.0"
 
 [libraries]
 android-gradle-plugin = "com.android.tools.build:gradle:7.2.1"
-android-desugaring = "com.android.tools:desugar_jdk_libs:1.1.5"
+android-desugaring = "com.android.tools:desugar_jdk_libs:1.1.6"
 
 androidx-annotation-annotation = "androidx.annotation:annotation:1.4.0"
 

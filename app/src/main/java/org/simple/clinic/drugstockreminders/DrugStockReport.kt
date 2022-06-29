@@ -4,6 +4,6 @@ import java.util.UUID
 
 data class DrugStockReport(
     val protocolDrugId: UUID,
-    val drugsInStock: Int,
-    val drugsReceived: Int
+    val drugsInStock: Int?,
+    val drugsReceived: Int?
 )

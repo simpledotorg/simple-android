@@ -17,6 +17,7 @@
 - Fix `JSONDataException` when parsing the drug stock response
 - Ignore `ReportsModel#reportsContent` on parcel
 - Bump Facebook.soloader to v0.10.4
+- Bump CameraX dependencies to v1.1.0
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-27-8310

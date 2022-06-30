@@ -161,7 +161,7 @@ sentry-gradle-plugin = "io.sentry:sentry-android-gradle-plugin:3.1.2"
 
 signaturepad = "com.github.gcacace:signature-pad:1.3.1"
 
-soloader = "com.facebook.soloader:soloader:0.10.3"
+soloader = "com.facebook.soloader:soloader:0.10.4"
 
 sqlite-android = "com.github.requery:sqlite-android:3.36.0"
 

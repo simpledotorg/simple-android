@@ -19,6 +19,7 @@
 - Bump Facebook.soloader to v0.10.4
 - Bump CameraX dependencies to v1.1.0
 - Bump resync token for appointment sync API
+- Bump google-services to v4.3.13
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-27-8310

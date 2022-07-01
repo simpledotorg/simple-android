@@ -132,7 +132,9 @@ object TestData {
           ageValue = if (!generateDateOfBirth) Math.random().times(100).toInt() else null,
           ageUpdatedAt = if (!generateDateOfBirth) Instant.parse("2018-01-01T00:00:00Z") else null,
           dateOfBirth = if (generateDateOfBirth) LocalDate.parse("1980-01-01") else null
-      )
+      ),
+      patientAddressStreet: String = faker.address.streetName(),
+      patientAddressColonyOrVillage: String = faker.address.streetAddress()
   ): PatientProfile {
     val phoneNumbers = if (!patientPhoneNumber.isNullOrBlank()) {
       listOf(patientPhoneNumber(patientUuid = patientUuid, number = patientPhoneNumber, phoneType = PatientPhoneNumberType.Mobile))
@@ -158,7 +160,11 @@ object TestData {
             retainUntil = retainUntil,
             patientAgeDetails = patientAgeDetails
         ),
-        address = patientAddress(uuid = patientAddressUuid),
+        address = patientAddress(
+            uuid = patientAddressUuid,
+            streetAddress = patientAddressStreet,
+            colonyOrVillage = patientAddressColonyOrVillage
+        ),
         phoneNumbers = phoneNumbers,
         businessIds = businessIds)
   }

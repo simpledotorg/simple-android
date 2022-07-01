@@ -1,5 +1,6 @@
 package org.simple.clinic.overdue
 
+import android.database.Cursor
 import androidx.annotation.VisibleForTesting
 import androidx.paging.PagingSource
 import io.reactivex.Observable
@@ -258,5 +259,9 @@ class AppointmentRepository @Inject constructor(
 
   fun latestScheduledAppointmentForPatient(patientUuid: UUID): Appointment? {
     return appointmentDao.latestScheduledAppointmentForPatient(patientUuid)
+  }
+
+  fun appointmentAndPatientInformationForIds(ids: List<UUID>): Cursor {
+    return appointmentDao.appointmentAndPatientInformationForIds(ids)
   }
 }

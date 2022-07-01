@@ -20,6 +20,8 @@
 - Bump CameraX dependencies to v1.1.0
 - Bump resync token for appointment sync API
 - Bump google-services to v4.3.13
+- Use UI renderer to render overdue search results
+- Add support for caching paging data
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-27-8310

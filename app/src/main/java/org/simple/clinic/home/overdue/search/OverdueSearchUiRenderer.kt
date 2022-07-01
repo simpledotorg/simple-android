@@ -30,6 +30,8 @@ class OverdueSearchUiRenderer(
         // No-op
       }
     }
+
+    ui.setOverdueSearchResultsPagingData(model.overdueSearchResults, model.searchQuery.orEmpty())
   }
 
   private fun renderResults() {

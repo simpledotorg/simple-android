@@ -29,6 +29,8 @@ room-metadataGenerator = "2.0.0"
 
 rx-binding = "3.1.0"
 
+coroutines = "1.6.3"
+
 [libraries]
 android-gradle-plugin = "com.android.tools.build:gradle:7.2.1"
 android-desugaring = "com.android.tools:desugar_jdk_libs:1.1.6"
@@ -99,7 +101,8 @@ jbcrypt = "org.mindrot:jbcrypt:0.4"
 junit = "junit:junit:4.13.2"
 junitParams = "pl.pragmatists:JUnitParams:1.1.1"
 
-kotlin-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:1.6.3"
+kotlin-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-rx2", version.ref = "coroutines" }
+kotlin-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk7", version.ref = "kotlin" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }

@@ -29,6 +29,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryRepositoryAndroidTest
 import org.simple.clinic.overdue.AppointmentRepositoryAndroidTest
 import org.simple.clinic.overdue.OverdueListDownloadApiIntegrationTest
 import org.simple.clinic.overdue.callresult.CallResultRepositoryAndroidTest
+import org.simple.clinic.overdue.download.OverdueCsvGeneratorTest
 import org.simple.clinic.overdue.download.OverdueListDownloaderIntegrationTest
 import org.simple.clinic.patient.PatientRepositoryAndroidTest
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnlineApiIntegrationTest
@@ -148,4 +149,5 @@ interface TestAppComponent {
   fun inject(target: DrugStockReminderApiIntegrationTest)
   fun inject(target: CallResultRepositoryAndroidTest)
   fun inject(target: OverdueSearchHistoryTest)
+  fun inject(target: OverdueCsvGeneratorTest)
 }

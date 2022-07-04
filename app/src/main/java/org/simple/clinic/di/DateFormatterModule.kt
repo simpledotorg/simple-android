@@ -8,6 +8,8 @@ import org.simple.clinic.di.DateFormatter.Type.FileDateTime
 import org.simple.clinic.di.DateFormatter.Type.FullYear
 import org.simple.clinic.di.DateFormatter.Type.Month
 import org.simple.clinic.di.DateFormatter.Type.MonthAndYear
+import org.simple.clinic.di.DateFormatter.Type.OverdueCsvTitleDateTime
+import org.simple.clinic.di.DateFormatter.Type.OverduePatientRegistrationDate
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import java.time.chrono.Chronology
@@ -125,6 +127,26 @@ class DateFormatterModule {
       chronology: Chronology
   ): DateTimeFormatter {
     return DateTimeFormatter.ofPattern("MMM-yyyy", locale)
+        .withChronology(chronology)
+  }
+
+  @Provides
+  @DateFormatter(OverdueCsvTitleDateTime)
+  fun providesFormatterForOverdueCsvTitleDateTime(
+      locale: Locale,
+      chronology: Chronology
+  ): DateTimeFormatter {
+    return DateTimeFormatter.ofPattern("dd MMM yyyy hh:mm a", locale)
+        .withChronology(chronology)
+  }
+
+  @Provides
+  @DateFormatter(OverduePatientRegistrationDate)
+  fun providesFormatterForOverdueRegistrationDate(
+      locale: Locale,
+      chronology: Chronology
+  ): DateTimeFormatter {
+    return DateTimeFormatter.ofPattern("dd-MMM-yyyy", locale)
         .withChronology(chronology)
   }
 }

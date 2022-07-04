@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
@@ -119,7 +120,10 @@ class OverdueSearchScreen : BaseScreen<
   override fun createInit() = OverdueSearchInit()
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<OverdueSearchViewEffect>) = effectHandlerFactory
-      .create(viewEffectsConsumer)
+      .create(
+          viewEffectsConsumer = viewEffectsConsumer,
+          pagingCacheScope = viewLifecycleOwner.lifecycleScope
+      )
       .build()
 
   override fun uiRenderer() = OverdueSearchUiRenderer(this)
@@ -209,10 +213,10 @@ class OverdueSearchScreen : BaseScreen<
     overdueSearchRecyclerView.visibility = View.GONE
   }
 
-  override fun showOverdueSearchResults(searchResults: PagingData<OverdueAppointment>, searchQuery: String?) {
+  override fun setOverdueSearchResultsPagingData(overdueSearchResults: PagingData<OverdueAppointment>, searchQuery: String) {
     overdueSearchListAdapter.submitData(
         lifecycle,
-        OverdueAppointmentSearchListItem.from(searchResults, userClock, searchQuery)
+        OverdueAppointmentSearchListItem.from(overdueSearchResults, userClock, searchQuery)
     )
   }
 

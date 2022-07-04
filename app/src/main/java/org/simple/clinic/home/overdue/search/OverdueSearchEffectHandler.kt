@@ -7,6 +7,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
+import kotlinx.coroutines.CoroutineScope
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.util.PagerFactory
@@ -20,12 +21,16 @@ class OverdueSearchEffectHandler @AssistedInject constructor(
     private val pagerFactory: PagerFactory,
     private val overdueSearchConfig: OverdueSearchConfig,
     private val currentFacility: Lazy<Facility>,
-    @Assisted private val viewEffectsConsumer: Consumer<OverdueSearchViewEffect>
+    @Assisted private val viewEffectsConsumer: Consumer<OverdueSearchViewEffect>,
+    @Assisted private val pagingCacheScope: CoroutineScope
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(viewEffectsConsumer: Consumer<OverdueSearchViewEffect>): OverdueSearchEffectHandler
+    fun create(
+        viewEffectsConsumer: Consumer<OverdueSearchViewEffect>,
+        pagingCacheScope: CoroutineScope
+    ): OverdueSearchEffectHandler
   }
 
   fun build(): ObservableTransformer<OverdueSearchEffect, OverdueSearchEvent> {
@@ -65,17 +70,21 @@ class OverdueSearchEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .switchMap {
+          .map {
+            currentFacility.get().uuid to it
+          }
+          .switchMap { (facilityId, searchOverduePatientsEffect) ->
             pagerFactory.createPager(
                 sourceFactory = {
                   appointmentRepository.searchOverduePatient(
-                      it.searchQuery,
-                      it.since,
-                      currentFacility.get().uuid
+                      searchOverduePatientsEffect.searchQuery,
+                      searchOverduePatientsEffect.since,
+                      facilityId
                   )
                 },
                 pageSize = overdueSearchConfig.pagingLoadSize,
-                enablePlaceholders = false
+                enablePlaceholders = false,
+                cacheScope = pagingCacheScope
             )
           }
           .map(::OverdueSearchResultsLoaded)

@@ -355,6 +355,7 @@ dependencies {
   implementation(libs.jbcrypt)
 
   implementation(libs.kotlin.coroutines)
+  implementation(libs.kotlin.coroutines.test)
   implementation(libs.kotlin.stdlib)
 
   implementation(libs.logback.classic)

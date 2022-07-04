@@ -8,6 +8,7 @@ import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.PagingTestCase
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.assertValues
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.BloodSugarRepository
@@ -17,6 +18,7 @@ import org.simple.clinic.bloodsugar.PostPrandial
 import org.simple.clinic.bloodsugar.Random
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.home.overdue.OverdueAppointment_Old
@@ -32,11 +34,14 @@ import org.simple.clinic.overdue.Appointment.Status
 import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.Appointment.Status.Visited
+import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
 import org.simple.clinic.overdue.callresult.CallResult
 import org.simple.clinic.overdue.callresult.CallResultRepository
 import org.simple.clinic.overdue.callresult.Outcome.RemindToCallLater
 import org.simple.clinic.overdue.callresult.Outcome.RemovedFromOverdueList
+import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
@@ -46,6 +51,8 @@ import org.simple.clinic.patient.PatientStatus.Dead
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
+import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.summary.nextappointment.NextAppointmentPatientProfile
@@ -86,6 +93,9 @@ class AppointmentRepositoryAndroidTest {
 
   @Inject
   lateinit var callResultRepository: CallResultRepository
+
+  @Inject
+  lateinit var prescriptionRepository: PrescriptionRepository
 
   @Inject
   lateinit var database: AppDatabase
@@ -2630,6 +2640,190 @@ class AppointmentRepositoryAndroidTest {
     // then
     val cancelled_appointment = appointmentRepository.latestOverdueAppointmentForPatient(patientUuid, aWeekInFuture.plusDays(1))
     assertThat(cancelled_appointment.get()).isEqualTo(appointment_cancelled)
+  }
+
+  @Test
+  fun fetching_appointments_and_patient_information_for_given_ids_should_work_as_expected() {
+    // given
+    val patient1Uuid = UUID.fromString("714ea934-03c5-4d5f-9982-4f3b9f297622")
+    val patient2Uuid = UUID.fromString("4788154c-ebf3-4c0e-9141-668896351edc")
+    val patient3Uuid = UUID.fromString("73a2d3f8-1ca4-4c5a-9e6e-a3b99142643d")
+
+    val patient1 = TestData.patientProfile(
+        patientUuid = patient1Uuid,
+        generatePhoneNumber = false,
+        patientPhoneNumber = "1111111111",
+        generateBusinessId = false,
+        businessId = TestData.businessId(
+            patientUuid = patient1Uuid,
+            identifier = Identifier(
+                value = "773d3caf-91f8-47f0-8766-45cf9cefd743",
+                type = BpPassport
+            )
+        ),
+        gender = Gender.Male,
+        patientName = "Ramesh Murthy",
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = 47,
+            ageUpdatedAt = Instant.parse("2017-02-01T00:00:00Z"),
+            dateOfBirth = null
+        ),
+        patientCreatedAt = Instant.parse("2017-02-01T00:00:00Z"),
+        patientAddressStreet = "Achalesvara Square",
+        patientAddressColonyOrVillage = "821 Susheel Row"
+    )
+    val patient2 = TestData.patientProfile(patientUuid = patient2Uuid)
+    val patient3 = TestData.patientProfile(
+        patientUuid = patient3Uuid,
+        generatePhoneNumber = false,
+        patientPhoneNumber = "2222222222",
+        generateBusinessId = false,
+        businessId = TestData.businessId(
+            patientUuid = patient3Uuid,
+            identifier = Identifier(
+                value = "08b2a0fb-fe5d-47fd-ad73-2a8b594a3621",
+                type = BpPassport
+            )
+        ),
+        gender = Gender.Female,
+        patientName = "Shreya Mishra",
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = null,
+            ageUpdatedAt = Instant.parse("2017-01-01T00:00:00Z"),
+            dateOfBirth = LocalDate.parse("1987-01-01")
+        ),
+        patientCreatedAt = Instant.parse("2017-01-01T00:00:00Z"),
+        patientAddressStreet = "Marar Mountain",
+        patientAddressColonyOrVillage = "95906 Pillai Plaza"
+    )
+
+    val appointmentForPatient1UUID = UUID.fromString("13ad6674-ab3a-454a-aa12-a827cef374b0")
+    val appointmentForPatient2UUID = UUID.fromString("01472302-001d-4ac5-b93e-9477e3a09032")
+    val appointmentForPatient3UUID = UUID.fromString("a6ec46c1-2715-41fb-a60e-d5ccb8851526")
+
+    val appointmentForPatient1 = TestData.appointment(
+        uuid = appointmentForPatient1UUID,
+        patientUuid = patient1Uuid,
+        status = Scheduled,
+        scheduledDate = LocalDate.parse("2018-01-07"),
+        cancelReason = null,
+        appointmentType = Manual,
+        syncStatus = DONE
+    )
+    val appointmentForPatient2 = TestData.appointment(
+        uuid = appointmentForPatient2UUID,
+        patientUuid = patient2Uuid,
+        status = Cancelled,
+        cancelReason = PatientNotResponding,
+        appointmentType = Manual,
+        syncStatus = DONE
+    )
+    val appointmentForPatient3 = TestData.appointment(
+        uuid = appointmentForPatient3UUID,
+        patientUuid = patient3Uuid,
+        status = Cancelled,
+        scheduledDate = LocalDate.parse("2018-02-01"),
+        cancelReason = InvalidPhoneNumber,
+        appointmentType = Automatic,
+        syncStatus = PENDING
+    )
+
+    val prescribedDrugsForPatient1 = listOf(
+        TestData.prescription(
+            uuid = UUID.fromString("96a7c808-1f36-42db-8083-346f7b8726d3"),
+            name = "Amlodipine",
+            dosage = "25 mg",
+            isDeleted = false,
+            patientUuid = patient1Uuid
+        ),
+        TestData.prescription(
+            uuid = UUID.fromString("31d1c637-21dc-4453-8c78-10c1a5405523"),
+            name = "Atenolol",
+            dosage = "25 mg",
+            isDeleted = false,
+            patientUuid = patient1Uuid
+        ),
+        TestData.prescription(
+            uuid = UUID.fromString("e2350bf8-c2ab-4461-9708-f00cf2133453"),
+            name = "Aspirin",
+            dosage = "15 mg",
+            isDeleted = true,
+            patientUuid = patient1Uuid
+        )
+    )
+
+    val prescribedDrugsForPatient2 = listOf(
+        TestData.prescription(
+            uuid = UUID.fromString("cdc5569d-2572-4753-b5c2-951d13a1a84a"),
+            patientUuid = patient2Uuid,
+            isDeleted = false
+        )
+    )
+
+    val prescribedDrugsForPatient3 = listOf(
+        TestData.prescription(
+            uuid = UUID.fromString("7766017c-719e-4e12-b64a-3870f7a3b81b"),
+            name = "Captopril",
+            dosage = "10 mg",
+            isDeleted = false,
+            patientUuid = patient3Uuid
+        ),
+        TestData.prescription(
+            uuid = UUID.fromString("dcbf71ce-115d-4d5d-b4fd-10a292b92573"),
+            name = "Temisartan",
+            dosage = "15 mg",
+            isDeleted = false,
+            patientUuid = patient3Uuid
+        ),
+        TestData.prescription(
+            uuid = UUID.fromString("41468679-44b0-4170-a282-55431b33f8d8"),
+            name = "Aspirin",
+            dosage = "15 mg",
+            isDeleted = true,
+            patientUuid = patient3Uuid
+        )
+    )
+
+    patientRepository.save(listOf(patient1, patient2, patient3))
+    appointmentRepository.save(listOf(appointmentForPatient1, appointmentForPatient2, appointmentForPatient3))
+    prescriptionRepository.save(prescribedDrugsForPatient1 + prescribedDrugsForPatient2 + prescribedDrugsForPatient3)
+
+    // when
+    val appointmentsCursor = appointmentRepository.appointmentAndPatientInformationForIds(listOf(appointmentForPatient1UUID, appointmentForPatient3UUID))
+
+    // then
+    assertThat(appointmentsCursor.count).isEqualTo(2)
+    assertThat(appointmentsCursor.moveToNext()).isTrue()
+    appointmentsCursor.assertValues(mapOf(
+        "patientCreatedAt" to Instant.parse("2017-02-01T00:00:00Z"),
+        "identifierValue" to "773d3caf-91f8-47f0-8766-45cf9cefd743",
+        "patientName" to "Ramesh Murthy",
+        "patientGender" to "male",
+        "patientAgeValue" to "47",
+        "patientAgeUpdatedAt" to Instant.parse("2017-02-01T00:00:00Z"),
+        "patientDateOfBirth" to null,
+        "patientStreetAddress" to "Achalesvara Square",
+        "patientColonyOrVillage" to "821 Susheel Row",
+        "appointmentScheduledAt" to LocalDate.parse("2018-01-07"),
+        "patientPhoneNumber" to "1111111111",
+        "prescribedDrugs" to "Amlodipine 25 mg, Atenolol 25 mg"
+    ))
+    assertThat(appointmentsCursor.moveToNext()).isTrue()
+    appointmentsCursor.assertValues(mapOf(
+        "patientCreatedAt" to Instant.parse("2017-01-01T00:00:00Z"),
+        "identifierValue" to "08b2a0fb-fe5d-47fd-ad73-2a8b594a3621",
+        "patientName" to "Shreya Mishra",
+        "patientGender" to "female",
+        "patientAgeValue" to null,
+        "patientAgeUpdatedAt" to Instant.parse("2017-01-01T00:00:00Z"),
+        "patientDateOfBirth" to LocalDate.parse("1987-01-01"),
+        "patientStreetAddress" to "Marar Mountain",
+        "patientColonyOrVillage" to "95906 Pillai Plaza",
+        "appointmentScheduledAt" to LocalDate.parse("2018-02-01"),
+        "patientPhoneNumber" to "2222222222",
+        "prescribedDrugs" to "Captopril 10 mg, Temisartan 15 mg"
+    ))
+    assertThat(appointmentsCursor.moveToNext()).isFalse()
   }
 
   private fun markAppointmentSyncStatusAsDone(vararg appointmentUuids: UUID) {

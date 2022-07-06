@@ -11,6 +11,10 @@
 - Refactor `OverdueListDownloader`
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
+### Fixes
+
+- Fix CDSS alert not dismissing after modifying medicines
+
 ## 2022-07-04-8318
 
 ### Internal

@@ -7,7 +7,6 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
@@ -17,9 +16,11 @@ import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency.BD
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency.OD
 import org.simple.clinic.user.UserSession
+import org.simple.sharedTestCode.TestData
 import org.simple.sharedTestCode.util.Rules
 import org.simple.sharedTestCode.util.TestUtcClock
 import java.time.Duration
+import java.time.Instant
 import java.time.LocalDate
 import java.time.Month
 import java.util.UUID
@@ -346,5 +347,38 @@ class PrescriptionRepositoryAndroidTest {
 
     // then
     assertThat(prescribedDrugsCount).isEqualTo(2)
+  }
+
+  @Test
+  fun querying_whether_prescription_for_patient_has_changed_today_should_work_correctly() {
+    val patient1Uuid = UUID.fromString("2ff71470-ada2-41e7-9387-1a40311492c5")
+    val patient2Uuid = UUID.fromString("37c1c00f-5a32-4587-b97c-ac1a959eeba8")
+
+    val prescribedDrug1ForPatient1 = testData.prescription(
+        uuid = UUID.fromString("40397a70-abec-4031-be5b-9226c8228085"),
+        patientUuid = patient1Uuid,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+    val prescribedDrug2ForPatient1 = testData.prescription(
+        uuid = UUID.fromString("14631d3e-f5c8-4a7b-abc2-ddef0d947d65"),
+        patientUuid = patient1Uuid,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+    val prescribedDrug3ForPatient1 = testData.prescription(
+        uuid = UUID.fromString("bd5d8b30-55ed-4fe3-8dfe-cf1025b4ccff"),
+        patientUuid = patient1Uuid,
+        updatedAt = Instant.parse("2018-02-01T00:00:00Z")
+    )
+    val prescribedDrugForPatient2 = testData.prescription(
+        uuid = UUID.fromString("e6b4e1d7-b5ea-4e20-9b1c-a34c8633df6e"),
+        patientUuid = patient2Uuid,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+
+    database.prescriptionDao().save(listOf(prescribedDrug1ForPatient1, prescribedDrug2ForPatient1, prescribedDrug3ForPatient1, prescribedDrugForPatient2))
+
+    clock.setDate(LocalDate.parse("2018-02-01"))
+    assertThat(repository.hasPrescriptionForPatientChangedToday(patient1Uuid).blockingFirst()).isTrue()
+    assertThat(repository.hasPrescriptionForPatientChangedToday(patient2Uuid).blockingFirst()).isFalse()
   }
 }

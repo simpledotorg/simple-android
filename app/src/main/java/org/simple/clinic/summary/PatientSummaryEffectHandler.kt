@@ -105,9 +105,15 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .switchMap { bloodPressureRepository.isNewestBpEntryHigh(it.patientUuid) }
-          .map { isNewestBpEntryHigh ->
-            ClinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh)
+          .switchMap {
+            val patientUuid = it.patientUuid
+            bloodPressureRepository.isNewestBpEntryHigh(patientUuid).map { Pair(patientUuid, it) }
+          }
+          .switchMap { (patientUuid, isNewestBpEntryHigh) ->
+            prescriptionRepository.hasPrescriptionForPatientChangedToday(patientUuid).map { Pair(isNewestBpEntryHigh, it) }
+          }
+          .map { (isNewestBpEntryHigh, hasPrescriptionsChangedToday) ->
+            ClinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh, hasPrescriptionsChangedToday)
           }
     }
   }

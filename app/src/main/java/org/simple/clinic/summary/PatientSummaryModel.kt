@@ -24,6 +24,7 @@ data class PatientSummaryModel(
     val hasShownMeasurementsWarningDialog: Boolean,
     val hasPatientRegistrationData: Boolean?,
     val isNewestBpEntryHigh: Boolean?,
+    val hasPrescribedDrugsChangedToday: Boolean?,
     val scheduledAppointment: ParcelableOptional<Appointment>?
 ) : Parcelable, PatientSummaryChildModel {
 
@@ -40,6 +41,7 @@ data class PatientSummaryModel(
           hasShownMeasurementsWarningDialog = false,
           hasPatientRegistrationData = null,
           isNewestBpEntryHigh = null,
+          hasPrescribedDrugsChangedToday = null,
           scheduledAppointment = null
       )
     }
@@ -107,8 +109,8 @@ data class PatientSummaryModel(
     return copy(hasPatientRegistrationData = hasPatientRegistrationData)
   }
 
-  fun clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh: Boolean): PatientSummaryModel {
-    return copy(isNewestBpEntryHigh = isNewestBpEntryHigh)
+  fun clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh: Boolean, hasPrescribedDrugsChangedToday: Boolean): PatientSummaryModel {
+    return copy(isNewestBpEntryHigh = isNewestBpEntryHigh, hasPrescribedDrugsChangedToday = hasPrescribedDrugsChangedToday)
   }
 
   fun scheduledAppointmentLoaded(appointment: Appointment?): PatientSummaryModel {

@@ -7,8 +7,8 @@
 - Bump Camera view dependency to v1.1.0
 - Add query to fetch required information for generating overdue patients CSV
 - Implement overdue patients CSV generator
-- Bump flipper to v0.152.0
 - Refactor `OverdueListDownloader`
+- Bump flipper to v0.153.0
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Fixes

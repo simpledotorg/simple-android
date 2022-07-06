@@ -11,7 +11,6 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
@@ -33,6 +32,7 @@ import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityR
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.sharedTestCode.TestData
 import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import java.time.Instant
 import java.util.Optional
@@ -536,12 +536,17 @@ class PatientSummaryEffectHandlerTest {
     val patientUuid = UUID.fromString("44daeb85-de4c-4807-8b31-6a88bf597cc7")
 
     whenever(bloodPressureRepository.isNewestBpEntryHigh(patientUuid)).doReturn(Observable.just(true))
+    whenever(prescriptionRepository.hasPrescriptionForPatientChangedToday(patientUuid)).doReturn(Observable.just(true))
 
     // when
     testCase.dispatch(LoadClinicalDecisionSupportInfo(patientUuid))
 
     // then
-    testCase.assertOutgoingEvents(ClinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true))
+    testCase.assertOutgoingEvents(
+        ClinicalDecisionSupportInfoLoaded(
+            isNewestBpEntryHigh = true,
+            hasPrescribedDrugsChangedToday = true
+        ))
     verifyZeroInteractions(uiActions)
   }
 

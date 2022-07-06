@@ -4,12 +4,12 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.user.User
+import org.simple.sharedTestCode.TestData
 import org.simple.sharedTestCode.util.TestUserClock
 import java.time.Instant
 import java.time.LocalDate
@@ -415,7 +415,7 @@ class PatientSummaryViewRendererTest {
   }
 
   @Test
-  fun `when clinical decision support alert can be shown and newest BP entry is high, then show the clinical decision support view`() {
+  fun `when clinical decision support alert can be shown and newest BP entry is high and prescription drugs are not changed today, then show the clinical decision support view`() {
     // given
     val patientUuid = UUID.fromString("6274ca08-2432-43fe-ae04-35f623e5325c")
     val patient = TestData.patient(
@@ -444,7 +444,7 @@ class PatientSummaryViewRendererTest {
         .patientRegistrationDataLoaded(hasPatientRegistrationData = true)
         .currentFacilityLoaded(facility = facility)
         .patientSummaryProfileLoaded(patientSummaryProfile = patientSummaryProfile)
-        .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true)
+        .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true, hasPrescribedDrugsChangedToday = false)
 
     val uiRenderer = PatientSummaryViewRenderer(
         ui = ui,
@@ -465,6 +465,61 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideDiabetesView()
     verify(ui).hideTeleconsultButton()
     verify(ui).showClinicalDecisionSupportAlert()
+    verify(ui).hideNextAppointmentCard()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when clinical decision support alerts can be shown and newest BP entry for the patient is high and prescription drugs are changed today, then hide the clinical decision support view`() {
+    // given
+    val patientUuid = UUID.fromString("6274ca08-2432-43fe-ae04-35f623e5325c")
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        status = PatientStatus.Dead,
+        createdAt = Instant.parse("2017-12-30T00:00:00Z"),
+        recordedAt = Instant.parse("2017-12-30T00:00:00Z"),
+        updatedAt = Instant.parse("2017-12-30T00:00:00Z")
+    )
+    val patientAddress = TestData.patientAddress(patient.addressUuid)
+    val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
+    val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", Identifier.IdentifierType.BpPassport))
+    val bangladeshNationalId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", Identifier.IdentifierType.BangladeshNationalId))
+    val facility = TestData.facility(uuid = UUID.fromString("744ac1b1-8352-4793-876c-538fc1129239"))
+
+    val patientSummaryProfile = PatientSummaryProfile(
+        patient = patient,
+        address = patientAddress,
+        phoneNumber = phoneNumber,
+        bpPassport = bpPassport,
+        alternativeId = bangladeshNationalId,
+        facility = facility
+    )
+
+    val updatedModel = defaultModel
+        .patientRegistrationDataLoaded(hasPatientRegistrationData = true)
+        .currentFacilityLoaded(facility = facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile = patientSummaryProfile)
+        .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true, hasPrescribedDrugsChangedToday = true)
+
+    val uiRenderer = PatientSummaryViewRenderer(
+        ui = ui,
+        isNextAppointmentFeatureEnabled = false,
+        modelUpdateCallback = { /* no-op */ },
+        userClock = TestUserClock(LocalDate.parse("2018-01-01")),
+        cdssOverdueLimit = 2
+    )
+
+    // when
+    uiRenderer.render(updatedModel)
+
+    // then
+    verify(ui).populatePatientProfile(patientSummaryProfile)
+    verify(ui).showEditButton()
+    verify(ui).hideAssignedFacilityView()
+    verify(ui).showPatientDiedStatus()
+    verify(ui).hideDiabetesView()
+    verify(ui).hideTeleconsultButton()
+    verify(ui).hideClinicalDecisionSupportAlert()
     verify(ui).hideNextAppointmentCard()
     verifyNoMoreInteractions(ui)
   }
@@ -499,7 +554,7 @@ class PatientSummaryViewRendererTest {
         .patientRegistrationDataLoaded(hasPatientRegistrationData = true)
         .currentFacilityLoaded(facility = facility)
         .patientSummaryProfileLoaded(patientSummaryProfile = patientSummaryProfile)
-        .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = false)
+        .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = false, hasPrescribedDrugsChangedToday = true)
 
     val uiRenderer = PatientSummaryViewRenderer(
         ui = ui,
@@ -528,7 +583,7 @@ class PatientSummaryViewRendererTest {
   fun `when clinical decision support alert cannot be shown, then hide the clinical decision support view without animation`() {
     // given
     val updatedModel = defaultModel
-        .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = false)
+        .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = false, hasPrescribedDrugsChangedToday = true)
 
     // when
     uiRenderer.render(updatedModel)
@@ -569,7 +624,7 @@ class PatientSummaryViewRendererTest {
         .patientRegistrationDataLoaded(hasPatientRegistrationData = true)
         .currentFacilityLoaded(facility = facility)
         .patientSummaryProfileLoaded(patientSummaryProfile)
-        .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true)
+        .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true, hasPrescribedDrugsChangedToday = true)
 
     val uiRenderer = PatientSummaryViewRenderer(
         ui = ui,
@@ -629,7 +684,7 @@ class PatientSummaryViewRendererTest {
         .patientRegistrationDataLoaded(hasPatientRegistrationData = true)
         .currentFacilityLoaded(facility = facility)
         .patientSummaryProfileLoaded(patientSummaryProfile = patientSummaryProfile)
-        .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true)
+        .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true, hasPrescribedDrugsChangedToday = false)
         .scheduledAppointmentLoaded(appointment)
 
     val uiRenderer = PatientSummaryViewRenderer(
@@ -690,7 +745,7 @@ class PatientSummaryViewRendererTest {
         .patientRegistrationDataLoaded(hasPatientRegistrationData = true)
         .currentFacilityLoaded(facility = facility)
         .patientSummaryProfileLoaded(patientSummaryProfile = patientSummaryProfile)
-        .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true)
+        .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true, hasPrescribedDrugsChangedToday = false)
         .scheduledAppointmentLoaded(appointment)
 
     val uiRenderer = PatientSummaryViewRenderer(

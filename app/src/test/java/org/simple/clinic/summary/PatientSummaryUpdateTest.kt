@@ -7,7 +7,6 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
@@ -22,6 +21,7 @@ import org.simple.clinic.summary.AppointmentSheetOpenedFrom.NEXT_APPOINTMENT_ACT
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
+import org.simple.sharedTestCode.TestData
 import java.time.Instant
 import java.util.UUID
 
@@ -1302,6 +1302,20 @@ class PatientSummaryUpdateTest {
         .whenEvent(LatestScheduledAppointmentLoaded(appointment))
         .then(assertThatNext(
             hasModel(defaultModel.scheduledAppointmentLoaded(appointment)),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when clinical decision support info is loaded, then updated the model`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(ClinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true, hasPrescribedDrugsChangedToday = false))
+        .then(assertThatNext(
+            hasModel(defaultModel.clinicalDecisionSupportInfoLoaded(
+                isNewestBpEntryHigh = true,
+                hasPrescribedDrugsChangedToday = false
+            )),
             hasNoEffects()
         ))
   }

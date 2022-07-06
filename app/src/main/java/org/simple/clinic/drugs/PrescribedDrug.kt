@@ -11,6 +11,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.Transaction
 import io.reactivex.Flowable
+import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.patient.SyncStatus
@@ -19,6 +20,7 @@ import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UtcClock
 import java.time.Instant
+import java.time.LocalDate
 import java.util.UUID
 
 /**
@@ -208,6 +210,21 @@ data class PrescribedDrug(
         instantToCompare: Instant,
         pendingStatus: SyncStatus
     ): Boolean
+
+    @Query("""
+        SELECT (
+            CASE
+                WHEN (COUNT(uuid) > 0) THEN 1
+                ELSE 0
+            END
+        )
+        FROM PrescribedDrug
+        WHERE date(updatedAt) >= :currentDate AND patientUuid = :patientUuid
+    """)
+    abstract fun hasPrescriptionForPatientChangedToday(
+        patientUuid: UUID,
+        currentDate: LocalDate
+    ): Observable<Boolean>
 
     @Query("""
       DELETE FROM PrescribedDrug

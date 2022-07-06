@@ -72,8 +72,11 @@ class PatientSummaryViewRenderer(
       return
     }
 
-    clinicalDecisionSupportCallback.pass(model.isNewestBpEntryHigh == true) { isNewestBpEntryHigh ->
-      if (isNewestBpEntryHigh) {
+    clinicalDecisionSupportCallback.pass(
+        model.isNewestBpEntryHigh == true &&
+            model.hasPrescribedDrugsChangedToday == false
+    ) { showCdssAlert ->
+      if (showCdssAlert) {
         ui.showClinicalDecisionSupportAlert()
       } else {
         ui.hideClinicalDecisionSupportAlert()

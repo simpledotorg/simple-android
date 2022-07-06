@@ -14,6 +14,7 @@ import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.util.UtcClock
 import java.time.Duration
 import java.time.Instant
+import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 
@@ -191,5 +192,14 @@ class PrescriptionRepository @Inject constructor(
 
   fun prescriptionCountImmediate(patientUuid: UUID): Int {
     return dao.prescriptionCountImmediate(patientUuid)
+  }
+
+  fun hasPrescriptionForPatientChangedToday(patientUuid: UUID): Observable<Boolean> {
+    val currentDate = LocalDate.now(utcClock)
+    return dao
+        .hasPrescriptionForPatientChangedToday(
+            patientUuid = patientUuid,
+            currentDate = currentDate
+        )
   }
 }

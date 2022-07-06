@@ -62,7 +62,9 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
           model.currentFacility!!
       ))
       AssignedFacilityChanged -> dispatch(RefreshNextAppointment)
-      is ClinicalDecisionSupportInfoLoaded -> next(model.clinicalDecisionSupportInfoLoaded(event.isNewestBpEntryHigh))
+      is ClinicalDecisionSupportInfoLoaded -> next(
+          model.clinicalDecisionSupportInfoLoaded(event.isNewestBpEntryHigh, event.hasPrescribedDrugsChangedToday)
+      )
       is CDSSPilotStatusChecked -> cdssPilotStatusChecked(event, model)
       is LatestScheduledAppointmentLoaded -> next(model.scheduledAppointmentLoaded(event.appointment))
     }

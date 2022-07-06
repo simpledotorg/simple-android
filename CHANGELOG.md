@@ -26,6 +26,7 @@
 - Add query to fetch required information for generating overdue patients CSV
 - Implement overdue patients CSV generator
 - Bump flipper to v0.152.0
+- Refactor `OverdueListDownloader`
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-06-27-8310

@@ -11,7 +11,6 @@ import android.provider.MediaStore
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import io.reactivex.Single
-import okhttp3.ResponseBody
 import org.simple.clinic.overdue.download.OverdueListDownloadResult.DownloadFailed
 import org.simple.clinic.overdue.download.OverdueListDownloadResult.DownloadSuccessful
 import org.simple.clinic.overdue.download.OverdueListDownloadResult.NotEnoughStorage
@@ -20,6 +19,7 @@ import org.simple.clinic.overdue.download.OverdueListFileFormat.PDF
 import org.simple.clinic.util.CsvToPdfConverter
 import org.simple.clinic.util.UserClock
 import java.io.File
+import java.io.InputStream
 import java.io.OutputStream
 import java.time.LocalDate
 import javax.inject.Inject
@@ -44,7 +44,8 @@ class OverdueListDownloader @Inject constructor(
     return api
         .download()
         .map { responseBody ->
-          saveFileToDisk(fileFormat, responseBody)
+          saveFileToDisk(fileFormat = fileFormat,
+              inputStream = responseBody.byteStream())
         }
         .flatMap { path ->
           scanFile(path, fileFormat)
@@ -61,25 +62,26 @@ class OverdueListDownloader @Inject constructor(
     return api
         .download()
         .map { responseBody ->
-          saveFileToAppData(fileFormat, responseBody)
+          saveFileToAppData(fileFormat = fileFormat,
+              inputStream = responseBody.byteStream())
         }
         .map { uri -> DownloadSuccessful(uri) as OverdueListDownloadResult }
         .onErrorReturn { _ -> DownloadFailed }
   }
 
-  private fun saveFileToDisk(fileFormat: OverdueListFileFormat, responseBody: ResponseBody): String {
+  private fun saveFileToDisk(fileFormat: OverdueListFileFormat, inputStream: InputStream): String {
     val fileName = generateFileName(fileFormat)
 
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-      downloadApi29(fileName, responseBody, fileFormat)
+      downloadApi29(fileName, inputStream, fileFormat)
     } else {
-      downloadApi21(fileName, responseBody, fileFormat)
+      downloadApi21(fileName, inputStream, fileFormat)
     }
   }
 
   private fun saveFileToAppData(
       fileFormat: OverdueListFileFormat,
-      responseBody: ResponseBody
+      inputStream: InputStream
   ): Uri? {
     appContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
     val fileName = generateFileName(fileFormat)
@@ -89,7 +91,7 @@ class OverdueListDownloader @Inject constructor(
     )
     val outputStream = file.outputStream()
 
-    writeResponseToOutputStream(fileFormat, responseBody, outputStream)
+    writeResponseToOutputStream(fileFormat, inputStream, outputStream)
 
     return FileProvider.getUriForFile(appContext, appContext.packageName + ".provider", file)
   }
@@ -105,14 +107,14 @@ class OverdueListDownloader @Inject constructor(
 
   private fun downloadApi21(
       fileName: String,
-      responseBody: ResponseBody,
+      inputStream: InputStream,
       fileFormat: OverdueListFileFormat
   ): String {
     val downloadsFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
     val file = File(downloadsFolder, fileName)
     val outputStream = file.outputStream()
 
-    writeResponseToOutputStream(fileFormat, responseBody, outputStream)
+    writeResponseToOutputStream(fileFormat, inputStream, outputStream)
 
     return file.path
   }
@@ -120,7 +122,7 @@ class OverdueListDownloader @Inject constructor(
   @RequiresApi(Build.VERSION_CODES.Q)
   private fun downloadApi29(
       fileName: String,
-      responseBody: ResponseBody,
+      inputStream: InputStream,
       fileFormat: OverdueListFileFormat
   ): String {
     val collection = MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
@@ -133,7 +135,7 @@ class OverdueListDownloader @Inject constructor(
     val outputStream = appContext.contentResolver.openOutputStream(fileUri, "w")
         ?: throw Exception("ContentResolver couldn't open $fileUri outputStream")
 
-    writeResponseToOutputStream(fileFormat, responseBody, outputStream)
+    writeResponseToOutputStream(fileFormat, inputStream, outputStream)
 
     return getMediaStoreEntryPathApi29(fileUri)
         ?: throw Exception("ContentResolver couldn't find $fileUri")
@@ -141,20 +143,17 @@ class OverdueListDownloader @Inject constructor(
 
   private fun writeResponseToOutputStream(
       fileFormat: OverdueListFileFormat,
-      responseBody: ResponseBody,
+      inputStream: InputStream,
       outputStream: OutputStream
   ) {
     when (fileFormat) {
-      CSV -> responseBody.use {
-        outputStream.use {
-          responseBody.byteStream().copyTo(it)
+      CSV -> inputStream.use { closableInputStream ->
+        outputStream.use { closableOutputStream ->
+          closableInputStream.copyTo(closableOutputStream)
         }
       }
 
-      PDF -> csvToPdfConverter.convert(
-          responseBody.byteStream(),
-          outputStream
-      )
+      PDF -> csvToPdfConverter.convert(inputStream, outputStream)
     }
   }
 

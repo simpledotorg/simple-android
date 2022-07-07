@@ -18,17 +18,20 @@ import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import org.simple.clinic.overdue.download.OverdueListFileFormat.PDF
 import org.simple.clinic.util.CsvToPdfConverter
 import org.simple.clinic.util.UserClock
+import java.io.ByteArrayInputStream
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
 import java.time.LocalDate
+import java.util.UUID
 import javax.inject.Inject
 
 class OverdueListDownloader @Inject constructor(
     private val api: OverdueListDownloadApi,
     private val userClock: UserClock,
     private val appContext: Application,
-    private val csvToPdfConverter: CsvToPdfConverter
+    private val csvToPdfConverter: CsvToPdfConverter,
+    private val csvGenerator: OverdueCsvGenerator
 ) {
 
   companion object {
@@ -36,11 +39,42 @@ class OverdueListDownloader @Inject constructor(
     private const val MIN_REQ_SPACE = 10_00_0000L
   }
 
-  fun download(fileFormat: OverdueListFileFormat): Single<OverdueListDownloadResult> {
+  fun download(
+      fileFormat: OverdueListFileFormat,
+      ids: List<UUID> = emptyList()
+  ): Single<OverdueListDownloadResult> {
     if (!hasMinReqSpace()) {
       return Single.just(NotEnoughStorage)
     }
 
+    return if (ids.isEmpty()) {
+      downloadUsingApi(fileFormat)
+    } else {
+      downloadUsingRoom(fileFormat, ids)
+    }
+  }
+
+  private fun downloadUsingRoom(
+      fileFormat: OverdueListFileFormat,
+      ids: List<UUID>
+  ): Single<OverdueListDownloadResult> {
+    return Single.create {
+      try {
+        val csvOutputStream = csvGenerator.generate(ids)
+        val csvInputStream = ByteArrayInputStream(csvOutputStream.toByteArray())
+
+        it.onSuccess(saveFileToDisk(fileFormat, csvInputStream))
+      } catch (e: Throwable) {
+        it.onError(e)
+      }
+    }.flatMap { path ->
+      scanFile(path, fileFormat)
+    }.map { uri ->
+      DownloadSuccessful(uri) as OverdueListDownloadResult
+    }.onErrorReturn { _ -> DownloadFailed }
+  }
+
+  private fun downloadUsingApi(fileFormat: OverdueListFileFormat): Single<OverdueListDownloadResult> {
     return api
         .download()
         .map { responseBody ->
@@ -54,11 +88,41 @@ class OverdueListDownloader @Inject constructor(
         .onErrorReturn { _ -> DownloadFailed }
   }
 
-  fun downloadForShare(fileFormat: OverdueListFileFormat): Single<OverdueListDownloadResult> {
+  fun downloadForShare(
+      fileFormat: OverdueListFileFormat,
+      ids: List<UUID> = emptyList()
+  ): Single<OverdueListDownloadResult> {
     if (!hasMinReqSpace()) {
       return Single.just(NotEnoughStorage)
     }
 
+    return if (ids.isEmpty()) {
+      downloadForShareUsingApi(fileFormat)
+    } else {
+      downloadForShareUsingRoom(fileFormat, ids)
+    }
+  }
+
+  private fun downloadForShareUsingRoom(
+      fileFormat: OverdueListFileFormat,
+      ids: List<UUID>
+  ): Single<OverdueListDownloadResult> {
+    return Single.create {
+      try {
+        val csvOutputStream = csvGenerator.generate(ids)
+        val csvInputStream = ByteArrayInputStream(csvOutputStream.toByteArray())
+
+        val uri = saveFileToAppData(fileFormat = fileFormat, inputStream = csvInputStream)
+        it.onSuccess(uri)
+      } catch (e: Throwable) {
+        it.onError(e)
+      }
+    }.map { uri ->
+      DownloadSuccessful(uri) as OverdueListDownloadResult
+    }.onErrorReturn { _ -> DownloadFailed }
+  }
+
+  private fun downloadForShareUsingApi(fileFormat: OverdueListFileFormat): Single<OverdueListDownloadResult> {
     return api
         .download()
         .map { responseBody ->

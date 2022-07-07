@@ -181,7 +181,10 @@ class ScanSimpleIdScreen : BaseScreen<
         .requireLensFacing(CameraSelector.LENS_FACING_BACK)
         .build()
 
-    val preview = Preview.Builder().build()
+    val preview = Preview.Builder()
+        .setTargetAspectRatio(screenAspectRatio)
+        .setTargetRotation(rotation)
+        .build()
 
     val analyzer = ImageAnalysis.Builder()
         .setTargetAspectRatio(screenAspectRatio)
@@ -364,7 +367,7 @@ class ScanSimpleIdScreen : BaseScreen<
   }
 
   override fun setToolBarTitle(openedFrom: OpenedFrom) {
-    toolBar.title = when(openedFrom) {
+    toolBar.title = when (openedFrom) {
       OpenedFrom.InstantSearchScreen, OpenedFrom.PatientsTabScreen -> resources.getString(R.string.scansimpleid_bp_passport_or_national_health_id)
       OpenedFrom.EditPatientScreen.ToAddBpPassport -> resources.getString(R.string.scansimpleid_bp_passport_title)
       OpenedFrom.EditPatientScreen.ToAddNHID -> resources.getString(R.string.scansimpleid_national_id_title)

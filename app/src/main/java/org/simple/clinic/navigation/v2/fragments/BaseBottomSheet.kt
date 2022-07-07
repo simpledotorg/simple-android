@@ -117,7 +117,7 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
           .eventSources(additionalEventSources())
 
       @Suppress("UNCHECKED_CAST")
-      override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+      override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return MobiusLoopViewModel.create<M, E, F, V>(
             ::loop,
             startModel,

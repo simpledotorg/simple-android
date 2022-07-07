@@ -9,6 +9,7 @@
 - Implement overdue patients CSV generator
 - Refactor `OverdueListDownloader`
 - Bump flipper to v0.153.0
+- Set target aspect ration and rotation for QR code scanner preview
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Fixes

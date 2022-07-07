@@ -11,6 +11,7 @@
 - Bump flipper to v0.153.0
 - Set target aspect ration and rotation for QR code scanner preview
 - Use `OverdueListDownloader` for generating overdue patients CSV or PDF using `OverdueCsvGenerator`
+- Bump mixpanel to v6.4.0
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Fixes

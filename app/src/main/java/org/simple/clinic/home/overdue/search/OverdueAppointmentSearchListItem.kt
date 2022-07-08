@@ -33,19 +33,30 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
 
     fun from(
         appointments: PagingData<OverdueAppointment>,
+        selectedOverdueAppointments: Set<UUID>,
         clock: UserClock,
         searchQuery: String?,
         isOverdueSelectAndDownloadEnabled: Boolean
     ): PagingData<OverdueAppointmentSearchListItem> {
       return appointments
-          .map { overdueAppointment -> from(overdueAppointment, clock, searchQuery, isOverdueSelectAndDownloadEnabled) }
+          .map { overdueAppointment ->
+            val isAppointmentSelected = selectedOverdueAppointments.contains(overdueAppointment.appointment.uuid)
+            overdueAppointmentSearchListItem(
+                overdueAppointment = overdueAppointment,
+                clock = clock,
+                searchQuery = searchQuery,
+                isOverdueSelectAndDownloadEnabled = isOverdueSelectAndDownloadEnabled,
+                isSelected = isAppointmentSelected
+            )
+          }
     }
 
-    private fun from(
+    private fun overdueAppointmentSearchListItem(
         overdueAppointment: OverdueAppointment,
         clock: UserClock,
         searchQuery: String?,
-        isOverdueSelectAndDownloadEnabled: Boolean
+        isOverdueSelectAndDownloadEnabled: Boolean,
+        isSelected: Boolean
     ): OverdueAppointmentSearchListItem {
       return OverdueAppointmentRow(
           appointmentUuid = overdueAppointment.appointment.uuid,
@@ -58,7 +69,8 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
           isAtHighRisk = overdueAppointment.isAtHighRisk,
           villageName = overdueAppointment.patientAddress.colonyOrVillage,
           searchQuery = searchQuery,
-          isOverdueSelectAndDownloadEnabled = isOverdueSelectAndDownloadEnabled
+          isOverdueSelectAndDownloadEnabled = isOverdueSelectAndDownloadEnabled,
+          isSelected = isSelected
       )
     }
 
@@ -81,7 +93,8 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
       val isAtHighRisk: Boolean,
       val villageName: String?,
       val searchQuery: String?,
-      val isOverdueSelectAndDownloadEnabled: Boolean
+      val isOverdueSelectAndDownloadEnabled: Boolean,
+      val isSelected: Boolean
   ) : OverdueAppointmentSearchListItem() {
 
     override fun layoutResId(): Int = R.layout.list_item_overdue_patient
@@ -102,6 +115,10 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
 
       binding.overdueCardView.setOnClickListener {
         eventSubject.onNext(OverduePatientClicked(patientUuid))
+      }
+
+      binding.checkbox.setOnClickListener {
+        eventSubject.onNext(OverdueAppointmentCheckBoxClicked(appointmentUuid))
       }
     }
 
@@ -133,6 +150,8 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
 
       binding.checkbox.visibleOrGone(isOverdueSelectAndDownloadEnabled)
       binding.patientGenderIcon.visibleOrGone(!isOverdueSelectAndDownloadEnabled)
+
+      binding.checkbox.isChecked = isSelected
     }
 
     private fun renderPatientName(

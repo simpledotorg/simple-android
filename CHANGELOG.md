@@ -12,8 +12,9 @@
 - Set target aspect ration and rotation for QR code scanner preview
 - Use `OverdueListDownloader` for generating overdue patients CSV or PDF using `OverdueCsvGenerator`
 - Bump mixpanel to v6.4.0
-- Bump fragment to v1.5.0 
+- Bump fragment to v1.5.0
 - Show a checkbox when select overdue patients feature flag is enable
+- Handle selected overdue appointments state in overdue search screen
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Fixes

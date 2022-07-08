@@ -26,7 +26,22 @@ class OverdueSearchUpdate(val date: LocalDate) : Update<OverdueSearchModel, Over
       is OverdueSearchHistoryClicked -> dispatch(SetOverdueSearchQuery(event.searchQuery))
       is OverdueSearchLoadStateChanged -> next(model.loadStateChanged(event.overdueSearchProgressState))
       OverdueSearchScreenShown -> overdueScreenShown(model)
+      is OverdueAppointmentCheckBoxClicked -> overdueAppointmentCheckBoxClicked(model, event)
     }
+  }
+
+  private fun overdueAppointmentCheckBoxClicked(
+      model: OverdueSearchModel,
+      event: OverdueAppointmentCheckBoxClicked
+  ): Next<OverdueSearchModel, OverdueSearchEffect> {
+    val appointmentId = event.appointmentId
+    val updatedSelectedAppointments = if (model.selectedOverdueAppointments.contains(appointmentId)) {
+      model.selectedOverdueAppointments.filter { it != appointmentId }.toSet()
+    } else {
+      model.selectedOverdueAppointments + setOf(appointmentId)
+    }
+
+    return next(model.selectedOverdueAppointmentsChanged(updatedSelectedAppointments))
   }
 
   private fun overdueScreenShown(model: OverdueSearchModel): Next<OverdueSearchModel, OverdueSearchEffect> {

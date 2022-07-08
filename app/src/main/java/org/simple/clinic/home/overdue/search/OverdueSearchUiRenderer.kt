@@ -31,7 +31,7 @@ class OverdueSearchUiRenderer(
       }
     }
 
-    ui.setOverdueSearchResultsPagingData(model.overdueSearchResults, model.searchQuery.orEmpty())
+    ui.setOverdueSearchResultsPagingData(model.overdueSearchResults, model.selectedOverdueAppointments, model.searchQuery.orEmpty())
   }
 
   private fun renderResults() {

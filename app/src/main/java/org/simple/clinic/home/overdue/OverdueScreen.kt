@@ -42,6 +42,7 @@ import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Feature.OverdueInstantSearch
 import org.simple.clinic.feature.Feature.OverdueListDownloadAndShare
 import org.simple.clinic.feature.Feature.OverdueSections
+import org.simple.clinic.feature.Feature.OverdueSelectAndDownload
 import org.simple.clinic.feature.Features
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.home.overdue.search.OverdueSearchScreen
@@ -295,7 +296,8 @@ class OverdueScreen : BaseScreen<
         clock = userClock,
         pendingListDefaultStateSize = pendingAppointmentsConfig.pendingListDefaultStateSize,
         overdueListSectionStates = overdueListSectionStates,
-        isOverdueInstantSearchEnabled = features.isEnabled(OverdueInstantSearch)
+        isOverdueInstantSearchEnabled = features.isEnabled(OverdueInstantSearch),
+        isOverdueSelectAndDownloadEnabled = features.isEnabled(OverdueSelectAndDownload) && country.isoCountryCode == Country.INDIA
     ))
   }
 

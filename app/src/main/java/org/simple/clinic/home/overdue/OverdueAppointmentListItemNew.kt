@@ -41,7 +41,8 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
         clock: UserClock,
         pendingListDefaultStateSize: Int,
         overdueListSectionStates: OverdueListSectionStates,
-        isOverdueInstantSearchEnabled: Boolean
+        isOverdueInstantSearchEnabled: Boolean,
+        isOverdueSelectAndDownloadEnabled: Boolean
     ): List<OverdueAppointmentListItemNew> {
       val searchOverduePatientsButtonListItem = searchOverduePatientItem(isOverdueInstantSearchEnabled)
 
@@ -49,12 +50,13 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
           overdueAppointmentSections,
           clock,
           pendingListDefaultStateSize,
-          overdueListSectionStates
+          overdueListSectionStates,
+          isOverdueSelectAndDownloadEnabled
       )
-      val agreedToVisitListItem = agreedToVisitItem(overdueAppointmentSections, clock, overdueListSectionStates)
-      val remindToCallListItem = remindToCallItem(overdueAppointmentSections, clock, overdueListSectionStates)
-      val removedFromOverdueListItem = removedFromOverdueItem(overdueAppointmentSections, clock, overdueListSectionStates)
-      val moreThanAnOneYearOverdueListItem = moreThanAnOneYearOverdueItem(overdueAppointmentSections, clock, overdueListSectionStates)
+      val agreedToVisitListItem = agreedToVisitItem(overdueAppointmentSections, clock, overdueListSectionStates, isOverdueSelectAndDownloadEnabled)
+      val remindToCallListItem = remindToCallItem(overdueAppointmentSections, clock, overdueListSectionStates, isOverdueSelectAndDownloadEnabled)
+      val removedFromOverdueListItem = removedFromOverdueItem(overdueAppointmentSections, clock, overdueListSectionStates, isOverdueSelectAndDownloadEnabled)
+      val moreThanAnOneYearOverdueListItem = moreThanAnOneYearOverdueItem(overdueAppointmentSections, clock, overdueListSectionStates, isOverdueSelectAndDownloadEnabled)
       val dividerListItem = listOf(Divider)
 
       return searchOverduePatientsButtonListItem +
@@ -71,7 +73,8 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
     private fun moreThanAnOneYearOverdueItem(
         overdueAppointmentSections: OverdueAppointmentSections,
         clock: UserClock,
-        overdueListSectionStates: OverdueListSectionStates
+        overdueListSectionStates: OverdueListSectionStates,
+        isOverdueSelectAndDownloadEnabled: Boolean
     ): List<OverdueAppointmentListItemNew> {
       val moreThanAnOneYearOverdueHeader = listOf(
           OverdueSectionHeader(R.string.overdue_no_visit_in_one_year_call_header,
@@ -83,7 +86,8 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
       val moreThanAnOneYearOverdueListItems = expandedOverdueAppointmentList(
           overdueListSectionStates.isMoreThanAnOneYearOverdueHeader,
           overdueAppointmentSections.moreThanAnYearOverdueAppointments,
-          clock)
+          clock,
+          isOverdueSelectAndDownloadEnabled)
 
       return moreThanAnOneYearOverdueHeader + moreThanAnOneYearOverdueListItems
     }
@@ -91,7 +95,8 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
     private fun removedFromOverdueItem(
         overdueAppointmentSections: OverdueAppointmentSections,
         clock: UserClock,
-        overdueListSectionStates: OverdueListSectionStates
+        overdueListSectionStates: OverdueListSectionStates,
+        isOverdueSelectAndDownloadEnabled: Boolean
     ): List<OverdueAppointmentListItemNew> {
       val removedFromOverdueListHeader = listOf(
           OverdueSectionHeader(R.string.overdue_removed_from_list_call_header,
@@ -103,7 +108,8 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
       val removedFromOverdueListItems = expandedOverdueAppointmentList(
           overdueListSectionStates.isRemovedFromOverdueListHeaderExpanded,
           overdueAppointmentSections.removedFromOverdueAppointments,
-          clock)
+          clock,
+          isOverdueSelectAndDownloadEnabled)
 
       return removedFromOverdueListHeader + removedFromOverdueListItems
     }
@@ -111,7 +117,8 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
     private fun remindToCallItem(
         overdueAppointmentSections: OverdueAppointmentSections,
         clock: UserClock,
-        overdueListSectionStates: OverdueListSectionStates
+        overdueListSectionStates: OverdueListSectionStates,
+        isOverdueSelectAndDownloadEnabled: Boolean
     ): List<OverdueAppointmentListItemNew> {
       val remindToCallHeader = listOf(
           OverdueSectionHeader(R.string.overdue_remind_to_call_header,
@@ -123,7 +130,8 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
       val remindToCallListItems = expandedOverdueAppointmentList(
           overdueListSectionStates.isRemindToCallLaterHeaderExpanded,
           overdueAppointmentSections.remindToCallLaterAppointments,
-          clock)
+          clock,
+          isOverdueSelectAndDownloadEnabled)
 
       return remindToCallHeader + remindToCallListItems
     }
@@ -131,7 +139,8 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
     private fun agreedToVisitItem(
         overdueAppointmentSections: OverdueAppointmentSections,
         clock: UserClock,
-        overdueListSectionStates: OverdueListSectionStates
+        overdueListSectionStates: OverdueListSectionStates,
+        isOverdueSelectAndDownloadEnabled: Boolean
     ): List<OverdueAppointmentListItemNew> {
       val agreedToVisitHeader = listOf(
           OverdueSectionHeader(R.string.overdue_agreed_to_visit_call_header,
@@ -143,7 +152,8 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
       val agreedToVisitListItems = expandedOverdueAppointmentList(
           overdueListSectionStates.isAgreedToVisitHeaderExpanded,
           overdueAppointmentSections.agreedToVisitAppointments,
-          clock)
+          clock,
+          isOverdueSelectAndDownloadEnabled)
 
       return agreedToVisitHeader + agreedToVisitListItems
     }
@@ -152,7 +162,8 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
         overdueAppointmentSections: OverdueAppointmentSections,
         clock: UserClock,
         pendingListDefaultStateSize: Int,
-        overdueListSectionStates: OverdueListSectionStates
+        overdueListSectionStates: OverdueListSectionStates,
+        isOverdueSelectAndDownloadEnabled: Boolean
     ): List<OverdueAppointmentListItemNew> {
       val pendingAppointments = overdueAppointmentSections.pendingAppointments
       val pendingToCallHeader = listOf(
@@ -161,7 +172,7 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
               overdueListSectionStates.isPendingHeaderExpanded,
               PENDING_TO_CALL
           ))
-      val pendingAppointmentsContent = generatePendingAppointmentsContent(overdueAppointmentSections, clock, pendingListDefaultStateSize, overdueListSectionStates)
+      val pendingAppointmentsContent = generatePendingAppointmentsContent(overdueAppointmentSections, clock, pendingListDefaultStateSize, overdueListSectionStates, isOverdueSelectAndDownloadEnabled)
 
       val showPendingListFooter = pendingAppointments.size > pendingListDefaultStateSize && overdueListSectionStates.isPendingHeaderExpanded
       val pendingListFooterItem = if (showPendingListFooter) listOf(PendingListFooter(overdueListSectionStates.pendingListState)) else emptyList()
@@ -173,7 +184,8 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
         overdueAppointmentSections: OverdueAppointmentSections,
         clock: UserClock,
         pendingListDefaultStateSize: Int,
-        overdueListSectionStates: OverdueListSectionStates
+        overdueListSectionStates: OverdueListSectionStates,
+        isOverdueSelectAndDownloadEnabled: Boolean
     ): List<OverdueAppointmentListItemNew> {
       val pendingAppointmentsList = when (overdueListSectionStates.pendingListState) {
         SEE_LESS -> overdueAppointmentSections.pendingAppointments.take(pendingListDefaultStateSize)
@@ -183,7 +195,8 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
       val expandedPendingAppointmentList = expandedOverdueAppointmentList(
           overdueListSectionStates.isPendingHeaderExpanded,
           pendingAppointmentsList,
-          clock)
+          clock,
+          isOverdueSelectAndDownloadEnabled)
 
       return if (pendingAppointmentsList.isEmpty() && overdueListSectionStates.isPendingHeaderExpanded) {
         listOf(NoPendingPatients)
@@ -195,10 +208,11 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
     private fun expandedOverdueAppointmentList(
         isListExpanded: Boolean,
         overdueAppointment: List<OverdueAppointment>,
-        clock: UserClock
+        clock: UserClock,
+        isOverdueSelectAndDownloadEnabled: Boolean
     ): List<OverdueAppointmentListItemNew> {
       return if (isListExpanded) {
-        overdueAppointment.map { from(it, clock) }
+        overdueAppointment.map { from(it, clock, isOverdueSelectAndDownloadEnabled) }
       } else {
         emptyList()
       }
@@ -206,7 +220,8 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
 
     private fun from(
         overdueAppointment: OverdueAppointment,
-        clock: UserClock
+        clock: UserClock,
+        isOverdueSelectAndDownloadEnabled: Boolean
     ): OverdueAppointmentListItemNew {
       return OverdueAppointmentRow(
           appointmentUuid = overdueAppointment.appointment.uuid,
@@ -217,7 +232,8 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
           phoneNumber = overdueAppointment.phoneNumber?.number,
           overdueDays = daysBetweenNowAndDate(overdueAppointment.appointment.scheduledDate, clock),
           isAtHighRisk = overdueAppointment.isAtHighRisk,
-          villageName = overdueAppointment.patientAddress.colonyOrVillage
+          villageName = overdueAppointment.patientAddress.colonyOrVillage,
+          isOverdueSelectAndDownloadEnabled = isOverdueSelectAndDownloadEnabled
       )
     }
 
@@ -238,7 +254,8 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
       val phoneNumber: String? = null,
       val overdueDays: Int,
       val isAtHighRisk: Boolean,
-      val villageName: String?
+      val villageName: String?,
+      val isOverdueSelectAndDownloadEnabled: Boolean
   ) : OverdueAppointmentListItemNew() {
 
     override fun layoutResId(): Int = R.layout.list_item_overdue_patient
@@ -286,6 +303,9 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
           overdueDays,
           "$overdueDays"
       )
+
+      binding.checkbox.visibleOrGone(isOverdueSelectAndDownloadEnabled)
+      binding.patientGenderIcon.visibleOrGone(!isOverdueSelectAndDownloadEnabled)
     }
 
     private fun increaseCallButtonTapArea(callButton: View) {

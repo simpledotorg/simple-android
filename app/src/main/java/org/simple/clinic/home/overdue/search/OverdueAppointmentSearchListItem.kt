@@ -22,6 +22,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.dp
 import org.simple.clinic.widgets.executeOnNextMeasure
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
+import org.simple.clinic.widgets.visibleOrGone
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import java.util.UUID
@@ -33,16 +34,18 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
     fun from(
         appointments: PagingData<OverdueAppointment>,
         clock: UserClock,
-        searchQuery: String?
+        searchQuery: String?,
+        isOverdueSelectAndDownloadEnabled: Boolean
     ): PagingData<OverdueAppointmentSearchListItem> {
       return appointments
-          .map { overdueAppointment -> from(overdueAppointment, clock, searchQuery) }
+          .map { overdueAppointment -> from(overdueAppointment, clock, searchQuery, isOverdueSelectAndDownloadEnabled) }
     }
 
     private fun from(
         overdueAppointment: OverdueAppointment,
         clock: UserClock,
-        searchQuery: String?
+        searchQuery: String?,
+        isOverdueSelectAndDownloadEnabled: Boolean
     ): OverdueAppointmentSearchListItem {
       return OverdueAppointmentRow(
           appointmentUuid = overdueAppointment.appointment.uuid,
@@ -54,7 +57,8 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
           overdueDays = daysBetweenNowAndDate(overdueAppointment.appointment.scheduledDate, clock),
           isAtHighRisk = overdueAppointment.isAtHighRisk,
           villageName = overdueAppointment.patientAddress.colonyOrVillage,
-          searchQuery = searchQuery
+          searchQuery = searchQuery,
+          isOverdueSelectAndDownloadEnabled = isOverdueSelectAndDownloadEnabled
       )
     }
 
@@ -76,7 +80,8 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
       val overdueDays: Int,
       val isAtHighRisk: Boolean,
       val villageName: String?,
-      val searchQuery: String?
+      val searchQuery: String?,
+      val isOverdueSelectAndDownloadEnabled: Boolean
   ) : OverdueAppointmentSearchListItem() {
 
     override fun layoutResId(): Int = R.layout.list_item_overdue_patient
@@ -125,6 +130,9 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
           overdueDays,
           "$overdueDays"
       )
+
+      binding.checkbox.visibleOrGone(isOverdueSelectAndDownloadEnabled)
+      binding.patientGenderIcon.visibleOrGone(!isOverdueSelectAndDownloadEnabled)
     }
 
     private fun renderPatientName(

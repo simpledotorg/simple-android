@@ -26,11 +26,14 @@ import kotlinx.coroutines.rx2.asObservable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.databinding.ListItemOverduePatientBinding
 import org.simple.clinic.databinding.ListItemOverduePlaceholderBinding
 import org.simple.clinic.databinding.ScreenOverdueSearchBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.DONE
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.IN_PROGRESS
@@ -66,6 +69,12 @@ class OverdueSearchScreen : BaseScreen<
 
   @Inject
   lateinit var userClock: UserClock
+
+  @Inject
+  lateinit var features: Features
+
+  @Inject
+  lateinit var country: Country
 
   @Inject
   lateinit var effectHandlerFactory: OverdueSearchEffectHandler.Factory
@@ -216,7 +225,12 @@ class OverdueSearchScreen : BaseScreen<
   override fun setOverdueSearchResultsPagingData(overdueSearchResults: PagingData<OverdueAppointment>, searchQuery: String) {
     overdueSearchListAdapter.submitData(
         lifecycle,
-        OverdueAppointmentSearchListItem.from(overdueSearchResults, userClock, searchQuery)
+        OverdueAppointmentSearchListItem.from(
+            appointments = overdueSearchResults,
+            clock = userClock,
+            searchQuery = searchQuery,
+            isOverdueSelectAndDownloadEnabled = features.isEnabled(Feature.OverdueSelectAndDownload) && country.isoCountryCode == Country.INDIA
+        )
     )
   }
 

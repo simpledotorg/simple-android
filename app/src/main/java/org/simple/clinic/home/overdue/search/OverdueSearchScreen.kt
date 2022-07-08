@@ -222,11 +222,16 @@ class OverdueSearchScreen : BaseScreen<
     overdueSearchRecyclerView.visibility = View.GONE
   }
 
-  override fun setOverdueSearchResultsPagingData(overdueSearchResults: PagingData<OverdueAppointment>, searchQuery: String) {
+  override fun setOverdueSearchResultsPagingData(
+      overdueSearchResults: PagingData<OverdueAppointment>,
+      selectedOverdueAppointments: Set<UUID>,
+      searchQuery: String
+  ) {
     overdueSearchListAdapter.submitData(
         lifecycle,
         OverdueAppointmentSearchListItem.from(
             appointments = overdueSearchResults,
+            selectedOverdueAppointments = selectedOverdueAppointments,
             clock = userClock,
             searchQuery = searchQuery,
             isOverdueSelectAndDownloadEnabled = features.isEnabled(Feature.OverdueSelectAndDownload) && country.isoCountryCode == Country.INDIA

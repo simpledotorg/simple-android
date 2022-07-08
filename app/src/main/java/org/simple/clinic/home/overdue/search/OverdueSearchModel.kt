@@ -5,6 +5,7 @@ import androidx.paging.PagingData
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.home.overdue.OverdueAppointment
+import java.util.UUID
 
 @Parcelize
 data class OverdueSearchModel(
@@ -12,7 +13,9 @@ data class OverdueSearchModel(
     val searchQuery: String?,
     val overdueSearchProgressState: OverdueSearchProgressState?,
     @IgnoredOnParcel
-    val overdueSearchResults: PagingData<OverdueAppointment> = PagingData.empty()
+    val overdueSearchResults: PagingData<OverdueAppointment> = PagingData.empty(),
+    @IgnoredOnParcel
+    val selectedOverdueAppointments: Set<UUID> = emptySet()
 ) : Parcelable {
 
   val hasSearchQuery: Boolean
@@ -24,7 +27,8 @@ data class OverdueSearchModel(
       return OverdueSearchModel(
           overdueSearchHistory = null,
           searchQuery = null,
-          overdueSearchProgressState = null
+          overdueSearchProgressState = null,
+          selectedOverdueAppointments = emptySet()
       )
     }
   }
@@ -45,5 +49,9 @@ data class OverdueSearchModel(
 
   fun overdueSearchResultsLoaded(overdueSearchResults: PagingData<OverdueAppointment>): OverdueSearchModel {
     return copy(overdueSearchResults = overdueSearchResults)
+  }
+
+  fun selectedOverdueAppointmentsChanged(selectedOverdueAppointments: Set<UUID>): OverdueSearchModel {
+    return copy(selectedOverdueAppointments = selectedOverdueAppointments)
   }
 }

@@ -15,6 +15,7 @@
 - Bump fragment to v1.5.0
 - Show a checkbox when select overdue patients feature flag is enable
 - Handle selected overdue appointments state in overdue search screen
+- Bump kotlin to v1.7.10
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Fixes

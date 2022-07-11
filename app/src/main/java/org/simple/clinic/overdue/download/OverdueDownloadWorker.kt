@@ -23,6 +23,7 @@ import org.simple.clinic.R
 import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import org.simple.clinic.overdue.download.OverdueListFileFormat.PDF
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import java.util.UUID
 import javax.inject.Inject
 
 class OverdueDownloadWorker(
@@ -37,6 +38,8 @@ class OverdueDownloadWorker(
     private const val NOTIFICATION_CHANNEL_ID = "org.simple.clinic.Downloads"
     private const val NOTIFICATION_CHANNEL_NAME = "Downloads"
 
+    private const val KEY_SELECTED_APPOINTMENT_IDS = "selected_appointment_ids"
+
     private const val DOWNLOAD_IN_PROGRESS_NOTIFICATION_ID = 1
     private const val DOWNLOAD_SUCCESS_NOTIFICATION_ID = 2
     private const val DOWNLOAD_FAILED_NOTIFICATION_ID = 3
@@ -46,10 +49,13 @@ class OverdueDownloadWorker(
 
     private const val GOOGLE_SHEETS_PACKAGE_NAME = "com.google.android.apps.docs.editors.sheets"
 
-    fun workRequest(fileFormat: OverdueListFileFormat): OneTimeWorkRequest {
+    fun workRequest(fileFormat: OverdueListFileFormat, selectedAppointmentIds: Set<UUID>): OneTimeWorkRequest {
       return OneTimeWorkRequestBuilder<OverdueDownloadWorker>()
           .setInputData(workDataOf(
               KEY_DOWNLOAD_FORMAT to fileFormat.toString()
+          ))
+          .setInputData(workDataOf(
+              KEY_SELECTED_APPOINTMENT_IDS to selectedAppointmentIds.map { it.toString() }
           ))
           .build()
     }
@@ -80,9 +86,10 @@ class OverdueDownloadWorker(
 
     val downloadFormatString = inputData.getString(KEY_DOWNLOAD_FORMAT)!!
     val downloadFormat = OverdueListFileFormat.valueOf(downloadFormatString)
+    val selectedAppointmentIds = inputData.getStringArray(KEY_SELECTED_APPOINTMENT_IDS)?.map(UUID::fromString).orEmpty()
 
     return downloader
-        .download(downloadFormat)
+        .download(downloadFormat, selectedAppointmentIds)
         .map { result ->
           when (result) {
             is OverdueListDownloadResult.DownloadSuccessful -> downloadSuccess(result.uri, downloadFormat)

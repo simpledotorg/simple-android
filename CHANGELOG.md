@@ -18,6 +18,7 @@
 - Bump kotlin to v1.7.10
 - Hide overdue patients list item checkbox by default
 - Handle selected overdue appointments state in overdue screen
+- Add support for selected overdue appointments download
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Fixes

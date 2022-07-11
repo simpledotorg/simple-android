@@ -5,13 +5,16 @@ import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.PendingListState.SEE_LESS
+import java.util.UUID
 
 @Parcelize
 data class OverdueModel(
     val facility: Facility?,
     @IgnoredOnParcel
     val overdueAppointmentSections: OverdueAppointmentSections? = null,
-    val overdueListSectionStates: OverdueListSectionStates
+    val overdueListSectionStates: OverdueListSectionStates,
+    @IgnoredOnParcel
+    val selectedOverdueAppointments: Set<UUID> = emptySet()
 ) : Parcelable {
 
   companion object {
@@ -93,5 +96,9 @@ data class OverdueModel(
 
   fun moreThanAYearChevronStateIsChanged(moreThanAYearChevronStateIsChanged: Boolean): OverdueModel {
     return copy(overdueListSectionStates = overdueListSectionStates.moreThanAYearSectionStateChanged(moreThanAYearChevronStateIsChanged))
+  }
+
+  fun selectedOverdueAppointmentsChanged(selectedOverdueAppointments: Set<UUID>): OverdueModel {
+    return copy(selectedOverdueAppointments = selectedOverdueAppointments)
   }
 }

@@ -324,4 +324,43 @@ class OverdueUpdateTest {
             hasEffects(OpenOverdueSearch)
         ))
   }
+
+  @Test
+  fun `when overdue appointment checkbox is clicked and appointment is already selected, then unselect the appointment`() {
+    val appointmentId = UUID.fromString("7959606f-1b5f-4134-931b-e22765d1707b")
+    val selectedOverdueAppointments = setOf(appointmentId)
+    val selectedOverdueAppointmentsModel = defaultModel
+        .selectedOverdueAppointmentsChanged(selectedOverdueAppointments)
+
+    updateSpec
+        .given(selectedOverdueAppointmentsModel)
+        .whenEvent(OverdueAppointmentCheckBoxClicked(appointmentId))
+        .then(assertThatNext(
+            hasModel(
+                selectedOverdueAppointmentsModel
+                    .selectedOverdueAppointmentsChanged(emptySet())
+            ),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when overdue appointment checkbox is clicked and appointment is not already selected, then select the appointment`() {
+    val appointmentId1 = UUID.fromString("7959606f-1b5f-4134-931b-e22765d1707b")
+    val appointmentId2 = UUID.fromString("27734c02-dadc-460c-a8a5-cb9f9eb407d7")
+    val selectedOverdueAppointments = setOf(appointmentId1)
+    val selectedOverdueAppointmentsModel = defaultModel
+        .selectedOverdueAppointmentsChanged(selectedOverdueAppointments)
+
+    updateSpec
+        .given(selectedOverdueAppointmentsModel)
+        .whenEvent(OverdueAppointmentCheckBoxClicked(appointmentId2))
+        .then(assertThatNext(
+            hasModel(
+                selectedOverdueAppointmentsModel
+                    .selectedOverdueAppointmentsChanged(setOf(appointmentId1, appointmentId2))
+            ),
+            hasNoEffects()
+        ))
+  }
 }

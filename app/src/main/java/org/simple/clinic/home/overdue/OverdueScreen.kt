@@ -289,6 +289,7 @@ class OverdueScreen : BaseScreen<
 
   override fun showOverdueAppointments(
       overdueAppointmentSections: OverdueAppointmentSections,
+      selectedOverdueAppointments: Set<UUID>,
       overdueListSectionStates: OverdueListSectionStates
   ) {
     overdueListAdapter.submitList(OverdueAppointmentListItemNew.from(
@@ -297,7 +298,8 @@ class OverdueScreen : BaseScreen<
         pendingListDefaultStateSize = pendingAppointmentsConfig.pendingListDefaultStateSize,
         overdueListSectionStates = overdueListSectionStates,
         isOverdueInstantSearchEnabled = features.isEnabled(OverdueInstantSearch),
-        isOverdueSelectAndDownloadEnabled = features.isEnabled(OverdueSelectAndDownload) && country.isoCountryCode == Country.INDIA
+        isOverdueSelectAndDownloadEnabled = features.isEnabled(OverdueSelectAndDownload) && country.isoCountryCode == Country.INDIA,
+        selectedOverdueAppointments = selectedOverdueAppointments
     ))
   }
 

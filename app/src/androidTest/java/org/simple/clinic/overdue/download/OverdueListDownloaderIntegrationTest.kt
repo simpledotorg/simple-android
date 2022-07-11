@@ -34,7 +34,7 @@ class OverdueListDownloaderIntegrationTest {
   fun downloading_a_csv_should_work_correctly() {
     // when
     val result = overdueListDownloader
-        .download(OverdueListFileFormat.CSV)
+        .download(OverdueListFileFormat.CSV, emptyList())
         .blockingGet()
 
     // then
@@ -45,7 +45,7 @@ class OverdueListDownloaderIntegrationTest {
   fun downloading_a_pdf_should_work_correctly() {
     // when
     val result = overdueListDownloader
-        .download(OverdueListFileFormat.PDF)
+        .download(OverdueListFileFormat.PDF, emptyList())
         .blockingGet()
 
     // then

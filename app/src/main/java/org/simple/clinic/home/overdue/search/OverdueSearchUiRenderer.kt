@@ -17,6 +17,7 @@ class OverdueSearchUiRenderer(
     } else {
       ui.hideNoSearchResults()
       ui.hideSearchResults()
+      ui.hideDownloadAndShareButtons()
       ui.showSearchHistory(model.overdueSearchHistory.orEmpty())
     }
   }
@@ -38,11 +39,13 @@ class OverdueSearchUiRenderer(
     ui.showSearchResults()
     ui.hideSearchHistory()
     ui.hideNoSearchResults()
+    ui.showDownloadAndShareButtons()
   }
 
   private fun renderNoResults() {
     ui.showNoSearchResults()
     ui.hideSearchResults()
     ui.hideSearchHistory()
+    ui.hideDownloadAndShareButtons()
   }
 }

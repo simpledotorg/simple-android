@@ -18,4 +18,7 @@ interface OverdueSearchUi {
       selectedOverdueAppointments: Set<UUID>,
       searchQuery: String
   )
+
+  fun showDownloadAndShareButtons()
+  fun hideDownloadAndShareButtons()
 }

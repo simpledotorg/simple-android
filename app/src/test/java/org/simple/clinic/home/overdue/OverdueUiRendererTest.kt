@@ -22,6 +22,7 @@ class OverdueUiRendererTest {
     val pendingAppointments = listOf(TestData.overdueAppointment(appointmentUuid = UUID.fromString("b9c7b7f5-a9e4-4589-9cb9-5b92f650d7b0")))
     val agreedToVisitAppointments = listOf(TestData.overdueAppointment(appointmentUuid = UUID.fromString("9cb24c2a-02f9-4eec-aa05-d06ba4fcae82")))
     val removedFromOverdueAppointments = listOf(TestData.overdueAppointment(appointmentUuid = UUID.fromString("f2220d4d-96f7-4f23-9b2f-8f14e59a09df")))
+    val selectedAppointments = setOf(UUID.fromString("b9c7b7f5-a9e4-4589-9cb9-5b92f650d7b0"), UUID.fromString("f2220d4d-96f7-4f23-9b2f-8f14e59a09df"))
     val overdueAppointmentsLoadedModel = defaultModel
         .currentFacilityLoaded(TestData.facility(uuid = UUID.fromString("b5e72d35-73e2-444b-a266-a02b73a6299a")))
         .overdueAppointmentsLoaded(
@@ -33,6 +34,7 @@ class OverdueUiRendererTest {
                 moreThanAnYearOverdueAppointments = emptyList()
             )
         )
+        .selectedOverdueAppointmentsChanged(selectedAppointments)
     val overdueListSectionStates = OverdueListSectionStates(
         pendingListState = SEE_LESS,
         isPendingHeaderExpanded = true,
@@ -46,14 +48,17 @@ class OverdueUiRendererTest {
     uiRenderer.render(overdueAppointmentsLoadedModel)
 
     // then
-    verify(ui).showOverdueAppointments(OverdueAppointmentSections(
-        pendingAppointments = pendingAppointments,
-        agreedToVisitAppointments = agreedToVisitAppointments,
-        remindToCallLaterAppointments = emptyList(),
-        removedFromOverdueAppointments = removedFromOverdueAppointments,
-        moreThanAnYearOverdueAppointments = emptyList()
-    ),
-        overdueListSectionStates = overdueListSectionStates)
+    verify(ui).showOverdueAppointments(
+        OverdueAppointmentSections(
+            pendingAppointments = pendingAppointments,
+            agreedToVisitAppointments = agreedToVisitAppointments,
+            remindToCallLaterAppointments = emptyList(),
+            removedFromOverdueAppointments = removedFromOverdueAppointments,
+            moreThanAnYearOverdueAppointments = emptyList()
+        ),
+        selectedAppointments,
+        overdueListSectionStates = overdueListSectionStates
+    )
     verify(ui).showOverdueCount(3)
     verify(ui).hideProgress()
     verify(ui).hideNoOverduePatientsView()
@@ -88,14 +93,17 @@ class OverdueUiRendererTest {
     uiRenderer.render(overdueAppointmentsLoadedModel)
 
     // then
-    verify(ui).showOverdueAppointments(OverdueAppointmentSections(
-        pendingAppointments = emptyList(),
-        agreedToVisitAppointments = emptyList(),
-        remindToCallLaterAppointments = emptyList(),
-        removedFromOverdueAppointments = emptyList(),
-        moreThanAnYearOverdueAppointments = emptyList()
-    ),
-        overdueListSectionStates = overdueListSectionStates)
+    verify(ui).showOverdueAppointments(
+        OverdueAppointmentSections(
+            pendingAppointments = emptyList(),
+            agreedToVisitAppointments = emptyList(),
+            remindToCallLaterAppointments = emptyList(),
+            removedFromOverdueAppointments = emptyList(),
+            moreThanAnYearOverdueAppointments = emptyList()
+        ),
+        emptySet(),
+        overdueListSectionStates = overdueListSectionStates
+    )
     verify(ui).showOverdueCount(0)
     verify(ui).hideProgress()
     verify(ui).showNoOverduePatientsView()

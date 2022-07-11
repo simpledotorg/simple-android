@@ -41,7 +41,7 @@ class OverdueListDownloader @Inject constructor(
 
   fun download(
       fileFormat: OverdueListFileFormat,
-      ids: List<UUID> = emptyList()
+      ids: List<UUID>
   ): Single<OverdueListDownloadResult> {
     if (!hasMinReqSpace()) {
       return Single.just(NotEnoughStorage)

@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
@@ -96,6 +98,9 @@ class OverdueSearchScreen : BaseScreen<
 
   private val overdueSearchQueryEditText
     get() = binding.overdueSearchQueryEditText
+
+  private val downloadAndShareButtonFrame
+    get() = binding.downloadAndShareButtonFrame
 
   private val hotEvents = PublishSubject.create<UiEvent>()
 
@@ -208,13 +213,13 @@ class OverdueSearchScreen : BaseScreen<
       }
 
   override fun showSearchHistory(searchHistory: Set<String>) {
-    overdueSearchHistoryContainer.visibility = View.VISIBLE
+    overdueSearchHistoryContainer.visibility = VISIBLE
     searchHistoryAdapter.clear()
     searchHistoryAdapter.addAll(searchHistory)
   }
 
   override fun showSearchResults() {
-    overdueSearchRecyclerView.visibility = View.VISIBLE
+    overdueSearchRecyclerView.visibility = VISIBLE
   }
 
   override fun hideSearchResults() {
@@ -239,6 +244,14 @@ class OverdueSearchScreen : BaseScreen<
     )
   }
 
+  override fun showDownloadAndShareButtons() {
+    downloadAndShareButtonFrame.visibility = VISIBLE
+  }
+
+  override fun hideDownloadAndShareButtons() {
+    downloadAndShareButtonFrame.visibility = GONE
+  }
+
   private fun hideKeyboardOnSearchResultsScroll(): Disposable {
     return overdueSearchRecyclerView
         .scrollStateChanges()
@@ -261,7 +274,7 @@ class OverdueSearchScreen : BaseScreen<
   }
 
   override fun showProgress() {
-    overdueSearchProgressIndicator.visibility = View.VISIBLE
+    overdueSearchProgressIndicator.visibility = VISIBLE
   }
 
   override fun hideProgress() {
@@ -269,7 +282,7 @@ class OverdueSearchScreen : BaseScreen<
   }
 
   override fun showNoSearchResults() {
-    noOverdueSearchResultsContainer.visibility = View.VISIBLE
+    noOverdueSearchResultsContainer.visibility = VISIBLE
   }
 
   override fun hideNoSearchResults() {

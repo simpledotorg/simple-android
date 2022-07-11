@@ -34,7 +34,7 @@ class OverdueSearchUiRendererTest {
   }
 
   @Test
-  fun `when search query is empty and has no results, then display search history`() {
+  fun `when search query is empty and has no results, then display search history and hide download and share buttons`() {
     // given
     val searchHistory = setOf("Babri")
     val model = defaultModel
@@ -47,6 +47,7 @@ class OverdueSearchUiRendererTest {
 
     // then
     verify(ui).showSearchHistory(searchHistory)
+    verify(ui).hideDownloadAndShareButtons()
     verify(ui).hideSearchResults()
     verify(ui).hideNoSearchResults()
     verify(ui).hideProgress()
@@ -54,7 +55,7 @@ class OverdueSearchUiRendererTest {
   }
 
   @Test
-  fun `when search query is not empty and has no results, then display no search results`() {
+  fun `when search query is not empty and has no results, then display no search results and hide download and share buttons`() {
     // given
     val searchHistory = setOf("Babri")
     val model = defaultModel
@@ -71,11 +72,12 @@ class OverdueSearchUiRendererTest {
     verify(ui).showNoSearchResults()
     verify(ui).hideProgress()
     verify(ui).setOverdueSearchResultsPagingData(PagingData.empty(), emptySet(), searchQuery = "Ani")
+    verify(ui).hideDownloadAndShareButtons()
     verifyNoMoreInteractions(ui)
   }
 
   @Test
-  fun `when progress state is done, then render search results`() {
+  fun `when progress state is done, then render search results and show download and share buttons`() {
     // given
     val searchResults = PagingData.from(listOf(
         TestData.overdueAppointment(
@@ -108,6 +110,7 @@ class OverdueSearchUiRendererTest {
     verify(ui).hideProgress()
     verify(ui).showSearchResults()
     verify(ui).setOverdueSearchResultsPagingData(searchResults, selectedAppointments, searchQuery)
+    verify(ui).showDownloadAndShareButtons()
     verifyNoMoreInteractions(ui)
   }
 }

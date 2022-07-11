@@ -19,6 +19,7 @@
 - Hide overdue patients list item checkbox by default
 - Handle selected overdue appointments state in overdue screen
 - Add support for selected overdue appointments download
+- Show selected overdue appointments count in overdue screen
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Fixes

@@ -58,3 +58,5 @@ data class ChevronClicked(val overdueAppointmentSectionTitle: OverdueAppointment
 object OverdueSearchButtonClicked : OverdueEvent()
 
 data class OverdueAppointmentCheckBoxClicked(val appointmentId: UUID) : OverdueEvent()
+
+object ClearSelectedOverdueAppointments : OverdueEvent()

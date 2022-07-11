@@ -33,6 +33,7 @@ class OverdueUpdate(
       is ChevronClicked -> chevronClicked(model, event.overdueAppointmentSectionTitle)
       OverdueSearchButtonClicked -> dispatch(OpenOverdueSearch)
       is OverdueAppointmentCheckBoxClicked -> overdueAppointmentCheckBoxClicked(model, event)
+      ClearSelectedOverdueAppointments -> next(model.clearSelectedOverdueAppointments())
     }
   }
 

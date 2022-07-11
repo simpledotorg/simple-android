@@ -93,7 +93,7 @@
   </style>
 
   <style name="Widget.Simple.Button.Frame" parent="">
-    <item name="android:padding">@dimen/spacing_8</item>
+    <item name="android:padding">@dimen/spacing_12</item>
     <item name="android:background">?attr/colorPrimaryVariant</item>
     <item name="android:clipToPadding">false</item>
   </style>

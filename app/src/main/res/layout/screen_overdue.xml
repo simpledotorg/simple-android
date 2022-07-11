@@ -26,7 +26,7 @@
       android:paddingStart="@dimen/spacing_8"
       android:paddingTop="@dimen/spacing_8"
       android:paddingEnd="@dimen/spacing_8"
-      android:paddingBottom="@dimen/spacing_64"
+      android:paddingBottom="@dimen/spacing_128"
       android:visibility="gone" />
 
   </org.simple.clinic.util.NestedScrollableHost>
@@ -77,24 +77,59 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
+    android:orientation="vertical"
     android:visibility="gone"
     tools:visibility="visible">
 
-    <com.google.android.material.button.MaterialButton
-      android:id="@+id/downloadOverdueListButton"
-      android:layout_width="0dp"
+    <LinearLayout
+      android:id="@+id/selected_overdue_count_view"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_weight="1"
-      android:text="@string/overdue_download" />
+      android:layout_marginHorizontal="@dimen/spacing_12"
+      android:layout_marginBottom="@dimen/spacing_12"
+      android:visibility="gone"
+      tools:visibility="visible">
 
-    <com.google.android.material.button.MaterialButton
-      android:id="@+id/shareOverdueListButton"
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/spacing_16"
-      android:layout_weight="1"
-      android:text="@string/overdue_share"
-      android:theme="@style/ThemeOverlay.Simple.Green1Primary" />
+      <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/selected_overdue_appointments_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textAppearance="?attr/textAppearanceBody1"
+        android:textColor="?attr/colorOnBackground"
+        tools:text="2 selected" />
+
+      <com.google.android.material.button.MaterialButton
+        android:id="@+id/clear_selected_overdue_appointments_button"
+        style="?attr/borderlessButtonDenseStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/selected_overdue_clear"
+        android:textAppearance="?attr/textAppearanceTag" />
+
+    </LinearLayout>
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+
+      <com.google.android.material.button.MaterialButton
+        android:id="@+id/downloadOverdueListButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/overdue_download" />
+
+      <com.google.android.material.button.MaterialButton
+        android:id="@+id/shareOverdueListButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_weight="1"
+        android:text="@string/overdue_share"
+        android:theme="@style/ThemeOverlay.Simple.Green1Primary" />
+
+    </LinearLayout>
 
   </LinearLayout>
 

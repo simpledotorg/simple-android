@@ -1,6 +1,7 @@
 package org.simple.clinic.home.overdue
 
 import org.simple.clinic.mobius.ViewRenderer
+import java.util.UUID
 
 class OverdueUiRenderer(
     private val ui: OverdueUi,
@@ -23,8 +24,17 @@ class OverdueUiRenderer(
       ui.showOverdueCount(model.overdueCount)
       ui.hideProgress()
       renderOverdueListLoadedViews(model)
+      renderOverdueListSelectedCount(model.selectedOverdueAppointments)
     } else {
       renderOverdueListLoadingViews()
+    }
+  }
+
+  private fun renderOverdueListSelectedCount(selectedOverdueAppointments: Set<UUID>) {
+    if (selectedOverdueAppointments.isNotEmpty()) {
+      ui.showSelectedOverdueAppointmentCount(selectedOverdueAppointments.size)
+    } else {
+      ui.hideSelectedOverdueAppointmentCount()
     }
   }
 

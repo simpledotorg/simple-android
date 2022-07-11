@@ -363,4 +363,18 @@ class OverdueUpdateTest {
             hasNoEffects()
         ))
   }
+
+  @Test
+  fun `when clear all button is clicked, then clear selected overdue appointments`() {
+    val selectedAppointmentsModel = defaultModel
+        .selectedOverdueAppointmentsChanged(setOf(UUID.fromString("c4db5ddf-48a1-4bad-a3ff-e5bf861a12d3")))
+
+    updateSpec
+        .given(selectedAppointmentsModel)
+        .whenEvent(ClearSelectedOverdueAppointments)
+        .then(assertThatNext(
+            hasModel(selectedAppointmentsModel.selectedOverdueAppointmentsChanged(emptySet())),
+            hasNoEffects()
+        ))
+  }
 }

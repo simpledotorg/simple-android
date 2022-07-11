@@ -10,6 +10,10 @@ interface OverdueUi {
   )
 
   fun showOverdueCount(count: Int)
+
+  fun showSelectedOverdueAppointmentCount(selectedOverdueAppointments: Int)
+  fun hideSelectedOverdueAppointmentCount()
+
   fun showProgress()
   fun hideProgress()
 

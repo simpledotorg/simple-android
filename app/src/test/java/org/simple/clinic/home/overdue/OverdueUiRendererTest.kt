@@ -2,6 +2,7 @@ package org.simple.clinic.home.overdue
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.home.overdue.PendingListState.SEE_LESS
 import org.simple.sharedTestCode.TestData
@@ -123,5 +124,90 @@ class OverdueUiRendererTest {
     verify(ui).showProgress()
     verify(ui).hideNoOverduePatientsView()
     verify(ui).hideOverdueRecyclerView()
+  }
+
+  @Test
+  fun `when overdue appointments are selected, then show overdue selected count`() {
+    // given
+    val selectedAppointments = setOf(
+        UUID.fromString("801a16dc-9e6c-464c-aa07-993ae4926489"),
+        UUID.fromString("356099c9-b19d-4be4-8e1e-938eeda8ec66")
+    )
+
+    val pendingAppointments = listOf(
+        TestData.overdueAppointment(appointmentUuid = UUID.fromString("801a16dc-9e6c-464c-aa07-993ae4926489")),
+        TestData.overdueAppointment(appointmentUuid = UUID.fromString("356099c9-b19d-4be4-8e1e-938eeda8ec66"))
+    )
+    val selectedAppointmentsModel = defaultModel
+        .overdueAppointmentsLoaded(OverdueAppointmentSections(
+            pendingAppointments = pendingAppointments,
+            agreedToVisitAppointments = emptyList(),
+            remindToCallLaterAppointments = emptyList(),
+            removedFromOverdueAppointments = emptyList(),
+            moreThanAnYearOverdueAppointments = emptyList()
+        ))
+        .selectedOverdueAppointmentsChanged(selectedAppointments)
+
+    // when
+    uiRenderer.render(selectedAppointmentsModel)
+
+    // then
+    verify(ui).showOverdueAppointments(
+        OverdueAppointmentSections(
+            pendingAppointments = pendingAppointments,
+            agreedToVisitAppointments = emptyList(),
+            remindToCallLaterAppointments = emptyList(),
+            removedFromOverdueAppointments = emptyList(),
+            moreThanAnYearOverdueAppointments = emptyList()
+        ),
+        selectedOverdueAppointments = selectedAppointments,
+        overdueListSectionStates = selectedAppointmentsModel.overdueListSectionStates
+    )
+    verify(ui).showOverdueCount(2)
+    verify(ui).hideProgress()
+    verify(ui).hideNoOverduePatientsView()
+    verify(ui).showOverdueRecyclerView()
+    verify(ui).showSelectedOverdueAppointmentCount(2)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when no overdue appointments are selected, then hide overdue selected count`() {
+    // given
+    val pendingAppointments = listOf(
+        TestData.overdueAppointment(appointmentUuid = UUID.fromString("801a16dc-9e6c-464c-aa07-993ae4926489")),
+        TestData.overdueAppointment(appointmentUuid = UUID.fromString("356099c9-b19d-4be4-8e1e-938eeda8ec66"))
+    )
+    val selectedAppointmentsModel = defaultModel
+        .overdueAppointmentsLoaded(OverdueAppointmentSections(
+            pendingAppointments = pendingAppointments,
+            agreedToVisitAppointments = emptyList(),
+            remindToCallLaterAppointments = emptyList(),
+            removedFromOverdueAppointments = emptyList(),
+            moreThanAnYearOverdueAppointments = emptyList()
+        ))
+        .selectedOverdueAppointmentsChanged(emptySet())
+
+    // when
+    uiRenderer.render(selectedAppointmentsModel)
+
+    // then
+    verify(ui).showOverdueAppointments(
+        OverdueAppointmentSections(
+            pendingAppointments = pendingAppointments,
+            agreedToVisitAppointments = emptyList(),
+            remindToCallLaterAppointments = emptyList(),
+            removedFromOverdueAppointments = emptyList(),
+            moreThanAnYearOverdueAppointments = emptyList()
+        ),
+        selectedOverdueAppointments = emptySet(),
+        overdueListSectionStates = selectedAppointmentsModel.overdueListSectionStates
+    )
+    verify(ui).showOverdueCount(2)
+    verify(ui).hideProgress()
+    verify(ui).hideNoOverduePatientsView()
+    verify(ui).showOverdueRecyclerView()
+    verify(ui).hideSelectedOverdueAppointmentCount()
+    verifyNoMoreInteractions(ui)
   }
 }

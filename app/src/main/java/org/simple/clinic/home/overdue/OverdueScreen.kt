@@ -177,6 +177,15 @@ class OverdueScreen : BaseScreen<
   private val shareOverdueListButton
     get() = binding.shareOverdueListButton
 
+  private val selectedOverdueCountView
+    get() = binding.selectedOverdueCountView
+
+  private val selectedOverdueAppointmentsCountTextView
+    get() = binding.selectedOverdueAppointmentsTextView
+
+  private val clearSelectedOverdueAppointmentsButton
+    get() = binding.clearSelectedOverdueAppointmentsButton
+
   override fun defaultModel() = OverdueModel.create()
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
@@ -191,7 +200,8 @@ class OverdueScreen : BaseScreen<
       overdueListAdapter_Old.itemEvents,
       overdueListAdapter.itemEvents,
       downloadOverdueListClicks(),
-      shareOverdueListClicks()
+      shareOverdueListClicks(),
+      clearSelectedOverdueAppointmentClicks()
   )
       .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
       .compose(runtimeNetworkStatus::apply)
@@ -307,6 +317,15 @@ class OverdueScreen : BaseScreen<
     (parentFragment as HomeScreen).overdueListCountUpdated(count)
   }
 
+  override fun showSelectedOverdueAppointmentCount(selectedOverdueAppointments: Int) {
+    selectedOverdueCountView.visibility = View.VISIBLE
+    selectedOverdueAppointmentsCountTextView.text = getString(R.string.selected_overdue_count, selectedOverdueAppointments)
+  }
+
+  override fun hideSelectedOverdueAppointmentCount() {
+    selectedOverdueCountView.visibility = View.GONE
+  }
+
   override fun showProgress() {
     overdueProgressBar.visibility = View.VISIBLE
   }
@@ -383,6 +402,10 @@ class OverdueScreen : BaseScreen<
     viewForEmptyList.visibility = View.GONE
     overdueRecyclerView.visibility = View.GONE
   }
+
+  private fun clearSelectedOverdueAppointmentClicks() = clearSelectedOverdueAppointmentsButton
+      .clicks()
+      .map { ClearSelectedOverdueAppointments }
 
   interface Injector {
     fun inject(target: OverdueScreen)

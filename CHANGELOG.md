@@ -21,6 +21,7 @@
 - Add support for selected overdue appointments download
 - Show selected overdue appointments count in overdue screen
 - Show download and share button in overdue search screen when search results are loaded
+- Bump itext7 to 7.2.3
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Fixes

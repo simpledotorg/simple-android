@@ -56,3 +56,5 @@ object PendingListFooterClicked : OverdueEvent()
 data class ChevronClicked(val overdueAppointmentSectionTitle: OverdueAppointmentSectionTitle) : OverdueEvent()
 
 object OverdueSearchButtonClicked : OverdueEvent()
+
+data class OverdueAppointmentCheckBoxClicked(val appointmentId: UUID) : OverdueEvent()

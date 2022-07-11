@@ -1,8 +1,11 @@
 package org.simple.clinic.home.overdue
 
+import java.util.UUID
+
 interface OverdueUi {
   fun showOverdueAppointments(
       overdueAppointmentSections: OverdueAppointmentSections,
+      selectedOverdueAppointments: Set<UUID>,
       overdueListSectionStates: OverdueListSectionStates
   )
 

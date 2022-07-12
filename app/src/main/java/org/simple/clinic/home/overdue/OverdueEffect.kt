@@ -35,10 +35,10 @@ data class ShowOverdueAppointments(
 
 object ShowNoActiveNetworkConnectionDialog : OverdueViewEffect()
 
-object OpenSelectDownloadFormatDialog : OverdueViewEffect()
+data class OpenSelectDownloadFormatDialog(val selectedAppointmentIds: Set<UUID>) : OverdueViewEffect()
 
-object OpenSelectShareFormatDialog : OverdueViewEffect()
+data class OpenSelectShareFormatDialog(val selectedAppointmentIds: Set<UUID>) : OverdueViewEffect()
 
-object OpenSharingInProgressDialog : OverdueViewEffect()
+data class OpenSharingInProgressDialog(val selectedAppointmentIds: Set<UUID>) : OverdueViewEffect()
 
 object OpenOverdueSearch : OverdueViewEffect()

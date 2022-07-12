@@ -169,11 +169,20 @@ class OverdueEffectHandlerTest {
   @Test
   fun `when schedule download effect is received, then schedule the overdue list download`() {
     // when
-    effectHandlerTestCase.dispatch(ScheduleDownload(CSV))
+    val selectedAppointmentIds = setOf(UUID.fromString("618f0f3f-7ae0-4227-bb26-49ec10ed4ff0"))
+    effectHandlerTestCase.dispatch(ScheduleDownload(
+        fileFormat = CSV,
+        selectedAppointmentIds = selectedAppointmentIds
+    ))
 
     // given
     effectHandlerTestCase.assertNoOutgoingEvents()
     verifyZeroInteractions(uiActions)
+
+    verify(overdueDownloadScheduler).schedule(
+        fileFormat = CSV,
+        selectedAppointmentIds = selectedAppointmentIds
+    )
   }
 
   @Test

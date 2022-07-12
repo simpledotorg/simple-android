@@ -27,6 +27,7 @@ class OverdueSearchUpdate(val date: LocalDate) : Update<OverdueSearchModel, Over
       is OverdueSearchLoadStateChanged -> next(model.loadStateChanged(event.overdueSearchProgressState))
       OverdueSearchScreenShown -> overdueScreenShown(model)
       is OverdueAppointmentCheckBoxClicked -> overdueAppointmentCheckBoxClicked(model, event)
+      ClearSelectedOverdueAppointments -> next(model.clearSelectedOverdueAppointments())
     }
   }
 

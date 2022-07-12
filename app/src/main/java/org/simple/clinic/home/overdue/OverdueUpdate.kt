@@ -28,7 +28,7 @@ class OverdueUpdate(
       is OverduePatientClicked -> dispatch(OpenPatientSummary(event.patientUuid))
       is OverdueAppointmentsLoaded_Old -> dispatch(ShowOverdueAppointments(event.overdueAppointmentsOld, model.isDiabetesManagementEnabled))
       is DownloadOverdueListClicked -> downloadOverdueListClicked(event, model)
-      is ShareOverdueListClicked -> shareOverdueListClicked(event)
+      is ShareOverdueListClicked -> shareOverdueListClicked(event, model)
       is OverdueAppointmentsLoaded -> overdueAppointmentsLoaded(event, model)
       PendingListFooterClicked -> pendingListFooterClicked(model)
       is ChevronClicked -> chevronClicked(model, event.overdueAppointmentSectionTitle)
@@ -137,9 +137,9 @@ class OverdueUpdate(
     ))
   }
 
-  private fun shareOverdueListClicked(event: ShareOverdueListClicked): Next<OverdueModel, OverdueEffect> {
+  private fun shareOverdueListClicked(event: ShareOverdueListClicked, model: OverdueModel): Next<OverdueModel, OverdueEffect> {
     val effect = if (event.hasNetworkConnection) {
-      openDialogForShareEffect()
+      openDialogForShareEffect(model.selectedOverdueAppointments)
     } else {
       ShowNoActiveNetworkConnectionDialog
     }
@@ -149,7 +149,7 @@ class OverdueUpdate(
 
   private fun downloadOverdueListEffect(selectedAppointmentIds: Set<UUID>): OverdueEffect {
     return if (canGeneratePdf)
-      OpenSelectDownloadFormatDialog
+      OpenSelectDownloadFormatDialog(selectedAppointmentIds)
     else
       ScheduleDownload(
           fileFormat = CSV,
@@ -157,8 +157,11 @@ class OverdueUpdate(
       )
   }
 
-  private fun openDialogForShareEffect(): OverdueEffect {
-    return if (canGeneratePdf) OpenSelectShareFormatDialog else OpenSharingInProgressDialog
+  private fun openDialogForShareEffect(selectedAppointmentIds: Set<UUID>): OverdueEffect {
+    return if (canGeneratePdf)
+      OpenSelectShareFormatDialog(selectedAppointmentIds)
+    else
+      OpenSharingInProgressDialog(selectedAppointmentIds)
   }
 
   private fun downloadOverdueListClicked(

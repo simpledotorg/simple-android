@@ -14,11 +14,13 @@ import org.simple.clinic.overdue.download.OverdueListDownloadResult.DownloadSucc
 import org.simple.clinic.overdue.download.OverdueListDownloadResult.NotEnoughStorage
 import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import org.simple.clinic.overdue.download.OverdueListFileFormat.PDF
+import java.util.UUID
 
 class SelectOverdueDownloadFormatUpdateTest {
 
   private val updateSpec = UpdateSpec(SelectOverdueDownloadFormatUpdate())
-  private val defaultModel = SelectOverdueDownloadFormatModel.create(openAs = Share)
+  private val selectedAppointmentIds = setOf(UUID.fromString("25594531-fc73-498c-9675-7e7eea4eda39"))
+  private val defaultModel = SelectOverdueDownloadFormatModel.create(openAs = Share(selectedAppointmentIds))
 
   @Test
   fun `when download or share button is clicked and it's opened as share, then download for share`() {
@@ -29,14 +31,15 @@ class SelectOverdueDownloadFormatUpdateTest {
         .whenEvent(DownloadOrShareClicked)
         .then(assertThatNext(
             hasModel(overdueDownloadFormatUpdatedModel.overdueDownloadInProgress()),
-            hasEffects(DownloadForShare(CSV))
+            hasEffects(DownloadForShare(CSV, selectedAppointmentIds))
         ))
   }
 
   @Test
-  fun `when download or share button is clicked and it's opened as download, then schedule the download`() {
+  fun `when download or share button is clicked and it's opened as download, then schedule the download with selected ids`() {
+    val selectedAppointmentIds = setOf(UUID.fromString("3d03d6dd-049e-42cf-b929-b757877b1555"))
     val overdueDownloadFormatUpdatedModel = SelectOverdueDownloadFormatModel
-        .create(Download)
+        .create(Download(selectedAppointmentIds = selectedAppointmentIds))
         .overdueListDownloadFormatUpdated(CSV)
 
     updateSpec
@@ -44,7 +47,10 @@ class SelectOverdueDownloadFormatUpdateTest {
         .whenEvent(DownloadOrShareClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ScheduleDownload(CSV))
+            hasEffects(ScheduleDownload(
+                fileFormat = CSV,
+                selectedAppointmentIds = selectedAppointmentIds
+            ))
         ))
   }
 
@@ -96,7 +102,8 @@ class SelectOverdueDownloadFormatUpdateTest {
 
   @Test
   fun `when sheet is opened as progress for sharing and download or share button is clicked, then do nothing`() {
-    val progressForSharingModel = SelectOverdueDownloadFormatModel.create(SharingInProgress)
+    val selectedAppointmentIds = setOf(UUID.fromString("b4f1ae7b-295c-41ad-85c8-10bb83476fee"))
+    val progressForSharingModel = SelectOverdueDownloadFormatModel.create(SharingInProgress(selectedAppointmentIds))
 
     updateSpec
         .given(progressForSharingModel)
@@ -107,7 +114,7 @@ class SelectOverdueDownloadFormatUpdateTest {
         ))
   }
 
-   @Test
+  @Test
   fun `when there is not enough space to download the file, then open not enough storage error dialog`() {
     updateSpec
         .given(defaultModel)

@@ -35,7 +35,7 @@ class SelectOverdueDownloadFormatEffectHandler @AssistedInject constructor(
   private fun scheduleDownload(): ObservableTransformer<ScheduleDownload, SelectOverdueDownloadFormatEvent> {
     return ObservableTransformer { effects ->
       effects
-          .doOnNext { overdueDownloadScheduler.schedule(it.fileFormat) }
+          .doOnNext { overdueDownloadScheduler.schedule(it.fileFormat, it.selectedAppointmentIds) }
           .map { OverdueDownloadScheduled }
     }
   }
@@ -44,7 +44,7 @@ class SelectOverdueDownloadFormatEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .flatMapSingle { overdueListDownloader.downloadForShare(it.fileFormat) }
+          .flatMapSingle { overdueListDownloader.downloadForShare(it.fileFormat, it.selectedAppointmentIds.toList()) }
           .map(::FileDownloadedForSharing)
     }
   }

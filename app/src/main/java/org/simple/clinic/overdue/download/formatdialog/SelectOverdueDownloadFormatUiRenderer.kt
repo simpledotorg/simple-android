@@ -30,9 +30,9 @@ class SelectOverdueDownloadFormatUiRenderer(
     ui.setOverdueListFormat(model.overdueListFileFormat)
 
     when (model.openAs) {
-      Download -> renderDownloadUi()
-      Share -> renderShareUi()
-      SharingInProgress -> { // do nothing
+      is Download -> renderDownloadUi()
+      is Share -> renderShareUi()
+      is SharingInProgress -> { // do nothing
       }
     }.exhaustive()
   }

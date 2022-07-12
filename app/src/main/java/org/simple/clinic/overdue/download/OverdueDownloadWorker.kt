@@ -52,10 +52,8 @@ class OverdueDownloadWorker(
     fun workRequest(fileFormat: OverdueListFileFormat, selectedAppointmentIds: Set<UUID>): OneTimeWorkRequest {
       return OneTimeWorkRequestBuilder<OverdueDownloadWorker>()
           .setInputData(workDataOf(
-              KEY_DOWNLOAD_FORMAT to fileFormat.toString()
-          ))
-          .setInputData(workDataOf(
-              KEY_SELECTED_APPOINTMENT_IDS to selectedAppointmentIds.map { it.toString() }
+              KEY_DOWNLOAD_FORMAT to fileFormat.toString(),
+              KEY_SELECTED_APPOINTMENT_IDS to selectedAppointmentIds.map { it.toString() }.toTypedArray()
           ))
           .build()
     }

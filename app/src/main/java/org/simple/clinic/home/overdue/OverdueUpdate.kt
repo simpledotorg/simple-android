@@ -13,6 +13,7 @@ import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import java.time.LocalDate
+import java.util.UUID
 
 class OverdueUpdate(
     private val date: LocalDate,
@@ -26,7 +27,7 @@ class OverdueUpdate(
       is CallPatientClicked -> dispatch(OpenContactPatientScreen(event.patientUuid))
       is OverduePatientClicked -> dispatch(OpenPatientSummary(event.patientUuid))
       is OverdueAppointmentsLoaded_Old -> dispatch(ShowOverdueAppointments(event.overdueAppointmentsOld, model.isDiabetesManagementEnabled))
-      is DownloadOverdueListClicked -> downloadOverdueListClicked(event)
+      is DownloadOverdueListClicked -> downloadOverdueListClicked(event, model)
       is ShareOverdueListClicked -> shareOverdueListClicked(event)
       is OverdueAppointmentsLoaded -> overdueAppointmentsLoaded(event, model)
       PendingListFooterClicked -> pendingListFooterClicked(model)
@@ -146,17 +147,26 @@ class OverdueUpdate(
     return dispatch(effect)
   }
 
-  private fun downloadOverdueListEffect(): OverdueEffect {
-    return if (canGeneratePdf) OpenSelectDownloadFormatDialog else ScheduleDownload(CSV)
+  private fun downloadOverdueListEffect(selectedAppointmentIds: Set<UUID>): OverdueEffect {
+    return if (canGeneratePdf)
+      OpenSelectDownloadFormatDialog
+    else
+      ScheduleDownload(
+          fileFormat = CSV,
+          selectedAppointmentIds = selectedAppointmentIds
+      )
   }
 
   private fun openDialogForShareEffect(): OverdueEffect {
     return if (canGeneratePdf) OpenSelectShareFormatDialog else OpenSharingInProgressDialog
   }
 
-  private fun downloadOverdueListClicked(event: DownloadOverdueListClicked): Next<OverdueModel, OverdueEffect> {
+  private fun downloadOverdueListClicked(
+      event: DownloadOverdueListClicked,
+      model: OverdueModel
+  ): Next<OverdueModel, OverdueEffect> {
     val effect = if (event.hasNetworkConnection) {
-      downloadOverdueListEffect()
+      downloadOverdueListEffect(selectedAppointmentIds = model.selectedOverdueAppointments)
     } else {
       ShowNoActiveNetworkConnectionDialog
     }

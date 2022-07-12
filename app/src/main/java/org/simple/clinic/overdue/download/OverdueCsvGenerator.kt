@@ -21,7 +21,6 @@ import org.simple.clinic.overdue.download.OverdueCsvColumn.REGISTRATION_DATE
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toLocalDateAtZone
@@ -110,11 +109,11 @@ class OverdueCsvGenerator @Inject constructor(
   }
 
   private fun readPrescribedDrugs(cursor: Cursor): String {
-    return cursor.getString(cursor.getColumnIndexOrThrow("prescribedDrugs"))
+    return cursor.getStringOrNull(cursor.getColumnIndexOrThrow("prescribedDrugs")).orEmpty()
   }
 
   private fun readPatientPhoneNumber(cursor: Cursor): String {
-    return cursor.getString(cursor.getColumnIndexOrThrow("patientPhoneNumber"))
+    return cursor.getStringOrNull(cursor.getColumnIndexOrThrow("patientPhoneNumber")).orEmpty()
   }
 
   private fun readDaysOverdue(cursor: Cursor, now: LocalDateTime): String {
@@ -125,11 +124,11 @@ class OverdueCsvGenerator @Inject constructor(
   }
 
   private fun readPatientVillageOrColony(cursor: Cursor): String {
-    return cursor.getString(cursor.getColumnIndexOrThrow("patientColonyOrVillage"))
+    return cursor.getStringOrNull(cursor.getColumnIndexOrThrow("patientColonyOrVillage")).orEmpty()
   }
 
   private fun readPatientAddress(cursor: Cursor): String {
-    return cursor.getString(cursor.getColumnIndexOrThrow("patientStreetAddress"))
+    return cursor.getStringOrNull(cursor.getColumnIndexOrThrow("patientStreetAddress")).orEmpty()
   }
 
   private fun readPatientAge(cursor: Cursor): String {
@@ -170,13 +169,17 @@ class OverdueCsvGenerator @Inject constructor(
   private fun readPatientName(cursor: Cursor) = cursor.getString(cursor.getColumnIndexOrThrow("patientName"))
 
   private fun readBpPassportNumber(cursor: Cursor): String {
-    val bpPassportUuid = cursor.getString(cursor.getColumnIndexOrThrow("identifierValue"))
-    val identifier = Identifier(
-        value = bpPassportUuid,
-        type = BpPassport
-    )
+    val bpPassportUuid = cursor.getStringOrNull(cursor.getColumnIndexOrThrow("identifierValue"))
+    return if (!bpPassportUuid.isNullOrBlank()) {
+      val identifier = Identifier(
+          value = bpPassportUuid,
+          type = Identifier.IdentifierType.BpPassport
+      )
 
-    return identifier.displayValue()
+      identifier.displayValue()
+    } else {
+      ""
+    }
   }
 
   private fun readPatientRegistrationDate(cursor: Cursor): String {

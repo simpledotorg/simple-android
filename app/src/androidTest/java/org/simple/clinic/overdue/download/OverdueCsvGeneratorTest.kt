@@ -108,13 +108,7 @@ class OverdueCsvGeneratorTest {
         generatePhoneNumber = false,
         patientPhoneNumber = "2222222222",
         generateBusinessId = false,
-        businessId = TestData.businessId(
-            patientUuid = patient3Uuid,
-            identifier = Identifier(
-                value = "08b2a0fb-fe5d-47fd-ad73-2a8b594a3621",
-                type = Identifier.IdentifierType.BpPassport
-            )
-        ),
+        businessId = null,
         gender = Gender.Female,
         patientName = "Shreya Mishra",
         patientAgeDetails = PatientAgeDetails(
@@ -226,7 +220,7 @@ class OverdueCsvGeneratorTest {
       Overdue list downloaded at: 01 Jan 2018 12:00 AM
       Registration date,BP Passport number,Patient name,Gender,Age,Patient address,Patient village or colony,Days overdue,Patient phone,Latest medicines
       01-Feb-2017,773 3918,Ramesh Murthy,Male,47,Bhamini Burg,68691 Sarvin Drive,31,1111111111,"Amlodipine 25 mg, Atenolol 25 mg"
-      01-Jan-2017,082 0547,Shreya Mishra,Female,31,Enakshi Burg,18473 Vaishnavi Curve,25,2222222222,"Captopril 10 mg, Temisartan 15 mg"
+      01-Jan-2017,,Shreya Mishra,Female,31,Enakshi Burg,18473 Vaishnavi Curve,25,2222222222,"Captopril 10 mg, Temisartan 15 mg"
 
     """.trimIndent()
     assertThat(generatedCsv).isEqualTo(expectedCsv)

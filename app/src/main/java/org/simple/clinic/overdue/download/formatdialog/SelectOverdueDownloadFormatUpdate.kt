@@ -37,12 +37,12 @@ class SelectOverdueDownloadFormatUpdate : Update<SelectOverdueDownloadFormatMode
 
   private fun downloadOrShareClicked(model: SelectOverdueDownloadFormatModel): Next<SelectOverdueDownloadFormatModel, SelectOverdueDownloadFormatEffect> {
     return when (model.openAs) {
-      Share -> next(
+      is Share -> next(
           model.overdueDownloadInProgress(),
-          DownloadForShare(model.overdueListFileFormat)
+          DownloadForShare(model.overdueListFileFormat, model.openAs.selectedAppointmentIds)
       )
-      Download -> dispatch(ScheduleDownload(model.overdueListFileFormat))
-      SharingInProgress -> noChange()
+      is Download -> dispatch(ScheduleDownload(model.overdueListFileFormat, model.openAs.selectedAppointmentIds))
+      is SharingInProgress -> noChange()
     }
   }
 }

@@ -42,10 +42,10 @@ class SelectOverdueDownloadFormatEffectHandlerTest {
     // given
     val format = OverdueListFileFormat.CSV
 
-    whenever(overdueListDownloader.downloadForShare(format)) doReturn Single.just(DownloadSuccessful(downloadedUri))
+    whenever(overdueListDownloader.downloadForShare(format, emptyList())) doReturn Single.just(DownloadSuccessful(downloadedUri))
 
     // when
-    testCase.dispatch(DownloadForShare(format))
+    testCase.dispatch(DownloadForShare(format, emptySet()))
 
     // then
     testCase.assertOutgoingEvents(FileDownloadedForSharing(DownloadSuccessful(downloadedUri)))
@@ -74,7 +74,7 @@ class SelectOverdueDownloadFormatEffectHandlerTest {
     val format = OverdueListFileFormat.PDF
 
     // when
-    testCase.dispatch(ScheduleDownload(format))
+    testCase.dispatch(ScheduleDownload(format, emptySet()))
 
     // given
     testCase.assertOutgoingEvents(OverdueDownloadScheduled)

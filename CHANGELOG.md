@@ -16,6 +16,7 @@
 - Ignore deleted and old phone numbers when generating overdue CSV from database
 - Remove extra margin start and end for overdue search button
 - Download overdue search results in CSV format when PDF cannot be generated
+- Open select overdue download format when PDF can be generated in `OverdueSearchScreen`
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-07-11-8325

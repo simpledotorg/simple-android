@@ -42,7 +42,13 @@ class OverdueSearchUpdate(
   ): Next<OverdueSearchModel, OverdueSearchEffect> {
     val appointmentIds = model.selectedOverdueAppointments.ifEmpty { event.appointmentIds }
 
-    return if (!canGeneratePdf) dispatch(ScheduleDownload(CSV, appointmentIds)) else noChange()
+    val effect = if (canGeneratePdf) {
+      OpenSelectDownloadFormatDialog(appointmentIds)
+    } else {
+      ScheduleDownload(CSV, appointmentIds)
+    }
+
+    return dispatch(effect)
   }
 
   private fun overdueAppointmentCheckBoxClicked(

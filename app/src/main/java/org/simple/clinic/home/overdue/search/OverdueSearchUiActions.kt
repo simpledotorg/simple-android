@@ -6,4 +6,5 @@ interface OverdueSearchUiActions {
   fun openPatientSummaryScreen(patientUuid: UUID)
   fun openContactPatientSheet(patientUuid: UUID)
   fun setOverdueSearchQuery(searchQuery: String)
+  fun openSelectDownloadFormatDialog(appointmentIds: Set<UUID>)
 }

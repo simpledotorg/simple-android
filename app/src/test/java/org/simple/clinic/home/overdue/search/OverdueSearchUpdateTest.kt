@@ -235,4 +235,30 @@ class OverdueSearchUpdateTest {
             hasEffects(ScheduleDownload(CSV, appointmentIds))
         ))
   }
+
+  @Test
+  fun `when download overdue list button is clicked, network is connected, pdf can be generated but no appointments selected, then open select download format dialog`() {
+    val appointmentIds = setOf(UUID.fromString("28957fea-b234-4356-a2b2-443e3862f766"))
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DownloadOverdueListClicked(networkStatus = Optional.of(ACTIVE), appointmentIds = appointmentIds))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenSelectDownloadFormatDialog(selectedAppointmentIds = appointmentIds))
+        ))
+  }
+
+  @Test
+  fun `when download overdue list button is clicked, network is connected, pdf can be generated and appointments are selected, then open select download format dialog`() {
+    val selectedAppointmentIds = setOf(UUID.fromString("28957fea-b234-4356-a2b2-443e3862f766"))
+
+    updateSpec
+        .given(defaultModel.selectedOverdueAppointmentsChanged(selectedAppointmentIds))
+        .whenEvent(DownloadOverdueListClicked(networkStatus = Optional.of(ACTIVE), appointmentIds = emptySet()))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenSelectDownloadFormatDialog(selectedAppointmentIds = selectedAppointmentIds))
+        ))
+  }
 }

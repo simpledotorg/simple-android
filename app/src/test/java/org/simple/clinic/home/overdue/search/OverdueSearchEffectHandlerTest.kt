@@ -193,4 +193,16 @@ class OverdueSearchEffectHandlerTest {
         selectedAppointmentIds
     )
   }
+
+  @Test
+  fun `when open select download format dialog effect is received, then open the dialog`() {
+    // when
+    effectHandlerTestCase.dispatch(OpenSelectDownloadFormatDialog(emptySet()))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openSelectDownloadFormatDialog(emptySet())
+    verifyNoMoreInteractions(uiActions)
+  }
 }

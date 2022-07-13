@@ -25,3 +25,5 @@ data class OpenContactPatientSheet(val patientUuid: UUID) : OverdueSearchViewEff
 data class SetOverdueSearchQuery(val searchQuery: String) : OverdueSearchViewEffect()
 
 data class OpenSelectDownloadFormatDialog(val selectedAppointmentIds: Set<UUID>) : OverdueSearchViewEffect()
+
+object ShowNoActiveNetworkConnectionDialog : OverdueSearchViewEffect()

@@ -13,6 +13,7 @@ class OverdueSearchViewEffectHandler(
       is OpenContactPatientSheet -> uiActions.openContactPatientSheet(viewEffect.patientUuid)
       is SetOverdueSearchQuery -> uiActions.setOverdueSearchQuery(viewEffect.searchQuery)
       is OpenSelectDownloadFormatDialog -> uiActions.openSelectDownloadFormatDialog(viewEffect.selectedAppointmentIds)
+      ShowNoActiveNetworkConnectionDialog -> uiActions.showNoActiveNetworkConnectionDialog()
     }.exhaustive()
   }
 }

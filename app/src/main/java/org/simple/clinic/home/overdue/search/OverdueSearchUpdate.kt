@@ -40,6 +40,17 @@ class OverdueSearchUpdate(
       model: OverdueSearchModel,
       event: DownloadOverdueListClicked
   ): Next<OverdueSearchModel, OverdueSearchEffect> {
+    return if (event.hasNetworkConnection) {
+      downloadOverdueList(model, event)
+    } else {
+      dispatch(ShowNoActiveNetworkConnectionDialog)
+    }
+  }
+
+  private fun downloadOverdueList(
+      model: OverdueSearchModel,
+      event: DownloadOverdueListClicked
+  ): Next<OverdueSearchModel, OverdueSearchEffect> {
     val appointmentIds = model.selectedOverdueAppointments.ifEmpty { event.appointmentIds }
 
     val effect = if (canGeneratePdf) {

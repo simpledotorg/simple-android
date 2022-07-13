@@ -7,4 +7,5 @@ interface OverdueSearchUiActions {
   fun openContactPatientSheet(patientUuid: UUID)
   fun setOverdueSearchQuery(searchQuery: String)
   fun openSelectDownloadFormatDialog(appointmentIds: Set<UUID>)
+  fun showNoActiveNetworkConnectionDialog()
 }

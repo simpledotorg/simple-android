@@ -9,6 +9,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.analytics.NetworkConnectivityStatus.ACTIVE
+import org.simple.clinic.analytics.NetworkConnectivityStatus.INACTIVE
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.DONE
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.IN_PROGRESS
 import org.simple.clinic.home.overdue.search.OverdueSearchQueryValidator.Result.Valid
@@ -259,6 +260,17 @@ class OverdueSearchUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenSelectDownloadFormatDialog(selectedAppointmentIds = selectedAppointmentIds))
+        ))
+  }
+
+  @Test
+  fun `when download overdue list button is clicked and network is not connected, then show no active connection dialog`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DownloadOverdueListClicked(networkStatus = Optional.of(INACTIVE), appointmentIds = emptySet()))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowNoActiveNetworkConnectionDialog)
         ))
   }
 }

@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
@@ -347,6 +348,14 @@ class OverdueSearchScreen : BaseScreen<
 
   override fun openSelectDownloadFormatDialog(appointmentIds: Set<UUID>) {
     router.push(SelectOverdueDownloadFormatDialog.Key(Download(appointmentIds)))
+  }
+
+  override fun showNoActiveNetworkConnectionDialog() {
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(R.string.overdue_download_no_active_network_connection_dialog_title)
+        .setMessage(R.string.overdue_download_no_active_network_connection_dialog_message)
+        .setPositiveButton(R.string.overdue_download_no_active_network_connection_dialog_positive_button, null)
+        .show()
   }
 
   private fun overdueSearchQueryTextChanges(): Observable<UiEvent> {

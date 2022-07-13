@@ -1,6 +1,7 @@
 package org.simple.clinic.home.overdue.search
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.home.overdue.search.OverdueSearchQueryValidator.Result.Empty
@@ -8,9 +9,13 @@ import org.simple.clinic.home.overdue.search.OverdueSearchQueryValidator.Result.
 import org.simple.clinic.home.overdue.search.OverdueSearchQueryValidator.Result.Valid
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
+import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import java.time.LocalDate
 
-class OverdueSearchUpdate(val date: LocalDate) : Update<OverdueSearchModel, OverdueSearchEvent, OverdueSearchEffect> {
+class OverdueSearchUpdate(
+    private val date: LocalDate,
+    private val canGeneratePdf: Boolean
+) : Update<OverdueSearchModel, OverdueSearchEvent, OverdueSearchEffect> {
 
   override fun update(model: OverdueSearchModel, event: OverdueSearchEvent): Next<OverdueSearchModel, OverdueSearchEffect> {
     return when (event) {
@@ -27,7 +32,17 @@ class OverdueSearchUpdate(val date: LocalDate) : Update<OverdueSearchModel, Over
       is OverdueSearchLoadStateChanged -> next(model.loadStateChanged(event.overdueSearchProgressState))
       OverdueSearchScreenShown -> overdueScreenShown(model)
       is OverdueAppointmentCheckBoxClicked -> overdueAppointmentCheckBoxClicked(model, event)
+      is DownloadOverdueListClicked -> downloadOverdueListClicked(model, event)
     }
+  }
+
+  private fun downloadOverdueListClicked(
+      model: OverdueSearchModel,
+      event: DownloadOverdueListClicked
+  ): Next<OverdueSearchModel, OverdueSearchEffect> {
+    val appointmentIds = model.selectedOverdueAppointments.ifEmpty { event.appointmentIds }
+
+    return if (!canGeneratePdf) dispatch(ScheduleDownload(CSV, appointmentIds)) else noChange()
   }
 
   private fun overdueAppointmentCheckBoxClicked(

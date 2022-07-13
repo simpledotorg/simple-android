@@ -8,17 +8,20 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.analytics.NetworkConnectivityStatus.ACTIVE
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.DONE
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.IN_PROGRESS
 import org.simple.clinic.home.overdue.search.OverdueSearchQueryValidator.Result.Valid
+import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import org.simple.sharedTestCode.TestData
 import java.time.LocalDate
+import java.util.Optional
 import java.util.UUID
 
 class OverdueSearchUpdateTest {
 
   private val date = LocalDate.of(2022, 2, 23)
-  private val updateSpec = UpdateSpec(OverdueSearchUpdate(date))
+  private val updateSpec = UpdateSpec(OverdueSearchUpdate(date, true))
   private val defaultModel = OverdueSearchModel.create()
 
   @Test
@@ -189,6 +192,47 @@ class OverdueSearchUpdateTest {
                     .selectedOverdueAppointmentsChanged(setOf(appointmentId1, appointmentId2))
             ),
             hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when download overdue list button is clicked, network is connected and pdf can not be generated, then schedule download`() {
+    val updateSpec = UpdateSpec(OverdueSearchUpdate(date = date, canGeneratePdf = false))
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DownloadOverdueListClicked(networkStatus = Optional.of(ACTIVE), appointmentIds = emptySet()))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ScheduleDownload(fileFormat = CSV, selectedAppointmentIds = emptySet()))
+        ))
+  }
+
+  @Test
+  fun `when download overdue list button is clicked, network is connected and pdf cannot be generated and appointments are selected, then schedule downloading selected appointments`() {
+    val updateSpec = UpdateSpec(OverdueSearchUpdate(date = date, canGeneratePdf = false))
+    val selectedAppointmentIds = setOf(UUID.fromString("28957fea-b234-4356-a2b2-443e3862f766"))
+
+    updateSpec
+        .given(defaultModel.selectedOverdueAppointmentsChanged(selectedAppointmentIds))
+        .whenEvent(DownloadOverdueListClicked(networkStatus = Optional.of(ACTIVE), appointmentIds = emptySet()))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ScheduleDownload(CSV, selectedAppointmentIds))
+        ))
+  }
+
+  @Test
+  fun `when download overdue list button is clicked, network is connected and pdf cannot be generated but no appointments are selected, then schedule downloading with all appointments in the search result`() {
+    val updateSpec = UpdateSpec(OverdueSearchUpdate(date = date, canGeneratePdf = false))
+    val appointmentIds = setOf(UUID.fromString("28957fea-b234-4356-a2b2-443e3862f766"))
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DownloadOverdueListClicked(networkStatus = Optional.of(ACTIVE), appointmentIds = appointmentIds))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ScheduleDownload(CSV, appointmentIds))
         ))
   }
 }

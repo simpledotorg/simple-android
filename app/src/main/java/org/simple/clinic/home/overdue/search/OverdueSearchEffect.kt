@@ -1,5 +1,6 @@
 package org.simple.clinic.home.overdue.search
 
+import org.simple.clinic.overdue.download.OverdueListFileFormat
 import java.time.LocalDate
 import java.util.UUID
 
@@ -12,6 +13,8 @@ data class ValidateOverdueSearchQuery(val searchQuery: String) : OverdueSearchEf
 data class AddQueryToOverdueSearchHistory(val searchQuery: String) : OverdueSearchEffect()
 
 data class SearchOverduePatients(val searchQuery: String, val since: LocalDate) : OverdueSearchEffect()
+
+data class ScheduleDownload(val fileFormat: OverdueListFileFormat, val selectedAppointmentIds: Set<UUID>) : OverdueSearchEffect()
 
 sealed class OverdueSearchViewEffect : OverdueSearchEffect()
 

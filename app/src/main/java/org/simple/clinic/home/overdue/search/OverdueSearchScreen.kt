@@ -1,6 +1,7 @@
 package org.simple.clinic.home.overdue.search
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,19 +16,24 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
+import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.itemClicks
 import com.jakewharton.rxbinding3.widget.textChanges
+import com.spotify.mobius.Update
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.cast
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.rx2.asObservable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.activity.permissions.RequestPermissions
+import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.databinding.ListItemOverduePatientBinding
@@ -37,14 +43,17 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.home.overdue.OverdueAppointment
+import org.simple.clinic.home.overdue.search.OverdueAppointmentSearchListItem.OverdueAppointmentRow
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.DONE
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.IN_PROGRESS
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.NO_RESULTS
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.util.RuntimeNetworkStatus
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.PagingItemAdapter
@@ -79,6 +88,15 @@ class OverdueSearchScreen : BaseScreen<
   lateinit var country: Country
 
   @Inject
+  lateinit var runtimePermissions: RuntimePermissions
+
+  @Inject
+  lateinit var runtimeNetworkStatus: RuntimeNetworkStatus<UiEvent>
+
+  @Inject
+  lateinit var screenResults: ScreenResultBus
+
+  @Inject
   lateinit var effectHandlerFactory: OverdueSearchEffectHandler.Factory
 
   private val overdueSearchToolbar
@@ -101,6 +119,9 @@ class OverdueSearchScreen : BaseScreen<
 
   private val downloadAndShareButtonFrame
     get() = binding.downloadAndShareButtonFrame
+
+  private val downloadOverdueListButton
+    get() = binding.downloadOverdueListButton
 
   private val hotEvents = PublishSubject.create<UiEvent>()
 
@@ -129,7 +150,12 @@ class OverdueSearchScreen : BaseScreen<
 
   override fun defaultModel() = OverdueSearchModel.create()
 
-  override fun createUpdate() = OverdueSearchUpdate(LocalDate.now(userClock))
+  override fun createUpdate(): Update<OverdueSearchModel, OverdueSearchEvent, OverdueSearchEffect> {
+    val date = LocalDate.now(userClock)
+    val canGeneratePdf = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+
+    return OverdueSearchUpdate(date, canGeneratePdf)
+  }
 
   override fun createInit() = OverdueSearchInit()
 
@@ -149,8 +175,11 @@ class OverdueSearchScreen : BaseScreen<
           overdueSearchListAdapter.itemEvents,
           searchHistoryItemClicks(),
           hotEvents,
-          overdueSearchQueryTextChanges()
+          overdueSearchQueryTextChanges(),
+          downloadOverdueListClicks()
       )
+      .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
+      .compose(runtimeNetworkStatus::apply)
       .compose(ReportAnalyticsEvents())
       .cast<OverdueSearchEvent>()
 
@@ -162,6 +191,19 @@ class OverdueSearchScreen : BaseScreen<
 
           OverdueSearchHistoryClicked(searchQuery!!)
         }
+  }
+
+  private fun downloadOverdueListClicks(): Observable<UiEvent> {
+    val appointmentIds = overdueSearchListAdapter
+        .snapshot()
+        .items
+        .filterIsInstance<OverdueAppointmentRow>()
+        .map { it.appointmentUuid }
+        .toSet()
+
+    return downloadOverdueListButton
+        .clicks()
+        .map { DownloadOverdueListClicked(appointmentIds = appointmentIds) }
   }
 
   override fun onAttach(context: Context) {

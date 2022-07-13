@@ -10,6 +10,7 @@ import io.reactivex.ObservableTransformer
 import kotlinx.coroutines.CoroutineScope
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.overdue.download.OverdueDownloadScheduler
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
@@ -21,6 +22,7 @@ class OverdueSearchEffectHandler @AssistedInject constructor(
     private val pagerFactory: PagerFactory,
     private val overdueSearchConfig: OverdueSearchConfig,
     private val currentFacility: Lazy<Facility>,
+    private val overdueDownloadScheduler: OverdueDownloadScheduler,
     @Assisted private val viewEffectsConsumer: Consumer<OverdueSearchViewEffect>,
     @Assisted private val pagingCacheScope: CoroutineScope
 ) {
@@ -41,7 +43,12 @@ class OverdueSearchEffectHandler @AssistedInject constructor(
         .addConsumer(AddQueryToOverdueSearchHistory::class.java, ::addQueryToSearchHistory)
         .addTransformer(SearchOverduePatients::class.java, searchOverduePatients())
         .addConsumer(OverdueSearchViewEffect::class.java, viewEffectsConsumer::accept)
+        .addConsumer(ScheduleDownload::class.java, ::scheduleDownload, schedulersProvider.io())
         .build()
+  }
+
+  private fun scheduleDownload(effect: ScheduleDownload) {
+    overdueDownloadScheduler.schedule(effect.fileFormat, effect.selectedAppointmentIds)
   }
 
   private fun addQueryToSearchHistory(effect: AddQueryToOverdueSearchHistory) {

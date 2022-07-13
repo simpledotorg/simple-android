@@ -17,6 +17,8 @@ import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.home.overdue.search.OverdueSearchQueryValidator.Result.Valid
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.overdue.download.OverdueDownloadScheduler
+import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.PagingSourceFactory
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -36,6 +38,7 @@ class OverdueSearchEffectHandlerTest {
   private val pagerFactory = mock<PagerFactory>()
   private val currentFacility = TestData.facility(uuid = UUID.fromString("94db5d90-d483-4755-892a-97fde5a870fe"))
   private val pagingCacheScope = TestScope()
+  private val overdueDownloadScheduler = mock<OverdueDownloadScheduler>()
   private val effectHandler = OverdueSearchEffectHandler(
       overdueSearchHistory = overdueSearchHistory,
       overdueSearchQueryValidator = OverdueSearchQueryValidator(overdueSearchConfig),
@@ -44,6 +47,7 @@ class OverdueSearchEffectHandlerTest {
       pagerFactory = pagerFactory,
       overdueSearchConfig = overdueSearchConfig,
       currentFacility = { currentFacility },
+      overdueDownloadScheduler = overdueDownloadScheduler,
       viewEffectsConsumer = viewEffectHandler::handle,
       pagingCacheScope = pagingCacheScope
   ).build()
@@ -169,5 +173,24 @@ class OverdueSearchEffectHandlerTest {
 
     verify(uiActions).setOverdueSearchQuery("Babri")
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when schedule download effect is received, then schedule the overdue list download`() {
+    // when
+    val selectedAppointmentIds = setOf(UUID.fromString("618f0f3f-7ae0-4227-bb26-49ec10ed4ff0"))
+    effectHandlerTestCase.dispatch(ScheduleDownload(
+        fileFormat = CSV,
+        selectedAppointmentIds = selectedAppointmentIds
+    ))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+    verifyZeroInteractions(uiActions)
+
+    verify(overdueDownloadScheduler).schedule(
+        CSV,
+        selectedAppointmentIds
+    )
   }
 }

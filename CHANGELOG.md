@@ -4,6 +4,23 @@
 
 ### Internal
 
+- Handle selected overdue appointments state in overdue screen
+- Add support for selected overdue appointments download
+- Show selected overdue appointments count in overdue screen
+- Show download and share button in overdue search screen when search results are loaded
+- Bump itext7 to 7.2.3
+- Fix app crashing when scheduling overdue download worker
+- Handle nullable fields when generating overdue CSV from database
+- Add support for selected download and share in overdue screen
+- Bump Sentry to v6.2.1
+- Ignore deleted and old phone numbers when generating overdue CSV from database
+- Remove extra margin start and end for overdue search button
+- [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
+
+## 2022-07-11-8325
+
+### Internal
+
 - Bump Camera view dependency to v1.1.0
 - Add query to fetch required information for generating overdue patients CSV
 - Implement overdue patients CSV generator
@@ -17,18 +34,6 @@
 - Handle selected overdue appointments state in overdue search screen
 - Bump kotlin to v1.7.10
 - Hide overdue patients list item checkbox by default
-- Handle selected overdue appointments state in overdue screen
-- Add support for selected overdue appointments download
-- Show selected overdue appointments count in overdue screen
-- Show download and share button in overdue search screen when search results are loaded
-- Bump itext7 to 7.2.3
-- Fix app crashing when scheduling overdue download worker
-- Handle nullable fields when generating overdue CSV from database
-- Add support for selected download and share in overdue screen
-- Bump Sentry to v6.2.1
-- Ignore deleted and old phone numbers when generating overdue CSV from database
-- Remove extra margin start and end for overdue search button
-- [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Fixes
 

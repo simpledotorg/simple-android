@@ -25,8 +25,8 @@
 - Fix app crashing when scheduling overdue download worker
 - Handle nullable fields when generating overdue CSV from database
 - Add support for selected download and share in overdue screen
+- Bump Sentry to v6.2.1
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
-- [In Progress: 12 Jul 2022] Add support for selected download and share in overdue screen
 
 ### Fixes
 

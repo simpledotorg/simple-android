@@ -196,7 +196,7 @@ class PatientSummaryScreen :
 
   private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
 
-  private val snackbarActionClicks = PublishSubject.create<PatientSummaryEvent>()
+  private val hotEvents = PublishSubject.create<PatientSummaryEvent>()
   private val hardwareBackClicks = PublishSubject.create<Unit>()
   private val subscriptions = CompositeDisposable()
 
@@ -236,7 +236,7 @@ class PatientSummaryScreen :
             editButtonClicks(),
             phoneNumberClicks(),
             contactDoctorClicks(),
-            snackbarActionClicks,
+            hotEvents,
             logTeleconsultClicks(),
             changeAssignedFacilityClicks(),
             nextAppointmentActionClicks(),
@@ -611,7 +611,12 @@ class PatientSummaryScreen :
         .setTitle(R.string.warning_add_measurements_title)
         .setMessage(R.string.warning_add_measurements_message)
         .setPositiveButton(R.string.warning_add_measurements_positive_button, null)
-        .setNegativeButton(R.string.warning_add_measurements_negative_button, null)
+        .setNegativeButton(R.string.warning_add_measurements_negative_button) { _, _ ->
+          hotEvents.onNext(MeasurementWarningNotNowClicked(
+              patientUuid = screenKey.patientUuid,
+              screenCreatedTimestamp = screenKey.screenCreatedTimestamp
+          ))
+        }
         .show()
   }
 
@@ -620,7 +625,12 @@ class PatientSummaryScreen :
         .setTitle(R.string.warning_add_blood_pressure_title)
         .setMessage(R.string.warning_add_blood_pressure_message)
         .setPositiveButton(R.string.warning_add_blood_pressure_positive_button, null)
-        .setNegativeButton(R.string.warning_add_blood_pressure_negative_button, null)
+        .setNegativeButton(R.string.warning_add_blood_pressure_negative_button) { _, _ ->
+          hotEvents.onNext(MeasurementWarningNotNowClicked(
+              patientUuid = screenKey.patientUuid,
+              screenCreatedTimestamp = screenKey.screenCreatedTimestamp
+          ))
+        }
         .show()
   }
 
@@ -629,7 +639,12 @@ class PatientSummaryScreen :
         .setTitle(R.string.warning_add_blood_sugar_title)
         .setMessage(R.string.warning_add_blood_sugar_message)
         .setPositiveButton(R.string.warning_add_blood_sugar_positive_button, null)
-        .setNegativeButton(R.string.warning_add_blood_sugar_negative_button, null)
+        .setNegativeButton(R.string.warning_add_blood_sugar_negative_button) { _, _ ->
+          hotEvents.onNext(MeasurementWarningNotNowClicked(
+              patientUuid = screenKey.patientUuid,
+              screenCreatedTimestamp = screenKey.screenCreatedTimestamp
+          ))
+        }
         .show()
   }
 

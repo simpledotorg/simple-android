@@ -382,7 +382,11 @@ data class Appointment(
       FROM Appointment A
       INNER JOIN Patient P ON P.uuid = A.patientUuid
       LEFT JOIN PatientAddress PA ON PA.uuid = P.addressUuid
-      LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid = P.uuid AND PPN.deletedAt IS NULL
+      LEFT JOIN (
+        SELECT * FROM PatientPhoneNumber
+        WHERE deletedAt IS NULL
+        GROUP BY patientUuid HAVING MAX(createdAt)
+      ) PPN ON PPN.patientUuid = P.uuid AND PPN.deletedAt IS NULL
       LEFT JOIN (
         SELECT * FROM BusinessId
         WHERE identifierType = "simple_bp_passport" AND deletedAt IS NULL

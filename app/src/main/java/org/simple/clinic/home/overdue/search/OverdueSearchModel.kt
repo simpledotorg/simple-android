@@ -54,8 +54,4 @@ data class OverdueSearchModel(
   fun selectedOverdueAppointmentsChanged(selectedOverdueAppointments: Set<UUID>): OverdueSearchModel {
     return copy(selectedOverdueAppointments = selectedOverdueAppointments)
   }
-
-  fun clearSelectedOverdueAppointments(): OverdueSearchModel {
-    return copy(selectedOverdueAppointments = emptySet())
-  }
 }

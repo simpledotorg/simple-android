@@ -285,15 +285,15 @@ class OverdueScreen : BaseScreen<
     )
   }
 
-  override fun openSelectDownloadFormatDialog(selectedAppointmentIds: Set<UUID>) {
+  override fun openSelectDownloadFormatDialog() {
     router.push(SelectOverdueDownloadFormatDialog.Key(Download))
   }
 
-  override fun openSelectShareFormatDialog(selectedAppointmentIds: Set<UUID>) {
+  override fun openSelectShareFormatDialog() {
     router.push(SelectOverdueDownloadFormatDialog.Key(Share))
   }
 
-  override fun openProgressForSharingDialog(selectedAppointmentIds: Set<UUID>) {
+  override fun openProgressForSharingDialog() {
     router.push(SelectOverdueDownloadFormatDialog.Key(SharingInProgress))
   }
 

@@ -152,20 +152,20 @@ class OverdueEffectHandlerTest {
   @Test
   fun `when open select download format effect is received, then open select download format dialog`() {
     // when
-    effectHandlerTestCase.dispatch(OpenSelectDownloadFormatDialog(selectedAppointmentIds = emptySet()))
+    effectHandlerTestCase.dispatch(OpenSelectDownloadFormatDialog)
 
     // then
-    verify(uiActions).openSelectDownloadFormatDialog(selectedAppointmentIds = emptySet())
+    verify(uiActions).openSelectDownloadFormatDialog()
     effectHandlerTestCase.assertNoOutgoingEvents()
   }
 
   @Test
   fun `when open select share format effect is received, then open select download format dialog`() {
     // when
-    effectHandlerTestCase.dispatch(OpenSelectShareFormatDialog(selectedAppointmentIds = emptySet()))
+    effectHandlerTestCase.dispatch(OpenSelectShareFormatDialog)
 
     // then
-    verify(uiActions).openSelectShareFormatDialog(selectedAppointmentIds = emptySet())
+    verify(uiActions).openSelectShareFormatDialog()
     effectHandlerTestCase.assertNoOutgoingEvents()
   }
 
@@ -189,10 +189,10 @@ class OverdueEffectHandlerTest {
   @Test
   fun `when open progress for sharing dialog effect is received, then open progress for sharing dialog`() {
     // when
-    effectHandlerTestCase.dispatch(OpenSharingInProgressDialog(selectedAppointmentIds = emptySet()))
+    effectHandlerTestCase.dispatch(OpenSharingInProgressDialog)
 
     // then
-    verify(uiActions).openProgressForSharingDialog(selectedAppointmentIds = emptySet())
+    verify(uiActions).openProgressForSharingDialog()
     effectHandlerTestCase.assertNoOutgoingEvents()
   }
 

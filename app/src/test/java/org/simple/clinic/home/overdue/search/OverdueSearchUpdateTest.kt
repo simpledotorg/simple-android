@@ -154,41 +154,27 @@ class OverdueSearchUpdateTest {
   }
 
   @Test
-  fun `when overdue appointment checkbox is clicked and appointment is already selected, then unselect the appointment`() {
-    val appointmentId = UUID.fromString("7959606f-1b5f-4134-931b-e22765d1707b")
-    val selectedOverdueAppointments = setOf(appointmentId)
-    val selectedOverdueAppointmentsModel = defaultModel
-        .selectedOverdueAppointmentsChanged(selectedOverdueAppointments)
+  fun `when selected overdue appointments ids are loaded, then update the model`() {
+    val selectedAppointmentIds = setOf(UUID.fromString("dd1708db-9683-4699-b92f-152af3dda147"))
 
     updateSpec
-        .given(selectedOverdueAppointmentsModel)
-        .whenEvent(OverdueAppointmentCheckBoxClicked(appointmentId))
+        .given(defaultModel)
+        .whenEvent(SelectedOverdueAppointmentsLoaded(selectedAppointmentIds))
         .then(assertThatNext(
-            hasModel(
-                selectedOverdueAppointmentsModel
-                    .selectedOverdueAppointmentsChanged(emptySet())
-            ),
+            hasModel(defaultModel.selectedOverdueAppointmentsChanged(selectedAppointmentIds)),
             hasNoEffects()
         ))
   }
 
   @Test
-  fun `when overdue appointment checkbox is clicked and appointment is not already selected, then select the appointment`() {
-    val appointmentId1 = UUID.fromString("7959606f-1b5f-4134-931b-e22765d1707b")
-    val appointmentId2 = UUID.fromString("27734c02-dadc-460c-a8a5-cb9f9eb407d7")
-    val selectedOverdueAppointments = setOf(appointmentId1)
-    val selectedOverdueAppointmentsModel = defaultModel
-        .selectedOverdueAppointmentsChanged(selectedOverdueAppointments)
-
+  fun `when overdue appointment checkbox is clicked, then toggle overdue appointment selection`() {
+    val appointmentId = UUID.fromString("446a79bd-305b-444d-b400-974ea74f01ad")
     updateSpec
-        .given(selectedOverdueAppointmentsModel)
-        .whenEvent(OverdueAppointmentCheckBoxClicked(appointmentId2))
+        .given(defaultModel)
+        .whenEvent(OverdueAppointmentCheckBoxClicked(appointmentId))
         .then(assertThatNext(
-            hasModel(
-                selectedOverdueAppointmentsModel
-                    .selectedOverdueAppointmentsChanged(setOf(appointmentId1, appointmentId2))
-            ),
-            hasNoEffects()
+            hasNoModel(),
+            hasEffects(ToggleOverdueAppointmentSelection(appointmentId))
         ))
   }
 
@@ -199,10 +185,10 @@ class OverdueSearchUpdateTest {
 
     updateSpec
         .given(selectedAppointmentsModel)
-        .whenEvent(ClearSelectedOverdueAppointments)
+        .whenEvent(ClearSelectedOverdueAppointmentsClicked)
         .then(assertThatNext(
-            hasModel(selectedAppointmentsModel.selectedOverdueAppointmentsChanged(emptySet())),
-            hasNoEffects()
+            hasNoModel(),
+            hasEffects(ClearSelectedOverdueAppointments)
         ))
   }
 }

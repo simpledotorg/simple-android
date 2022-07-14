@@ -10,6 +10,7 @@ import io.reactivex.ObservableTransformer
 import kotlinx.coroutines.CoroutineScope
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.overdue.OverdueAppointmentSelector
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
@@ -21,6 +22,7 @@ class OverdueSearchEffectHandler @AssistedInject constructor(
     private val pagerFactory: PagerFactory,
     private val overdueSearchConfig: OverdueSearchConfig,
     private val currentFacility: Lazy<Facility>,
+    private val overdueAppointmentSelector: OverdueAppointmentSelector,
     @Assisted private val viewEffectsConsumer: Consumer<OverdueSearchViewEffect>,
     @Assisted private val pagingCacheScope: CoroutineScope
 ) {
@@ -41,7 +43,27 @@ class OverdueSearchEffectHandler @AssistedInject constructor(
         .addConsumer(AddQueryToOverdueSearchHistory::class.java, ::addQueryToSearchHistory)
         .addTransformer(SearchOverduePatients::class.java, searchOverduePatients())
         .addConsumer(OverdueSearchViewEffect::class.java, viewEffectsConsumer::accept)
+        .addConsumer(ToggleOverdueAppointmentSelection::class.java, ::toggleOverdueAppointmentSelection, schedulersProvider.computation())
+        .addTransformer(LoadSelectedOverdueAppointmentIds::class.java, loadSelectedOverdueAppointmentIds())
+        .addConsumer(ClearSelectedOverdueAppointments::class.java, ::clearSelectedOverdueAppointments)
         .build()
+  }
+
+  private fun clearSelectedOverdueAppointments(effect: ClearSelectedOverdueAppointments) {
+    overdueAppointmentSelector.clearSelection()
+  }
+
+  private fun loadSelectedOverdueAppointmentIds(): ObservableTransformer<LoadSelectedOverdueAppointmentIds, OverdueSearchEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.computation())
+          .switchMap { overdueAppointmentSelector.selectedAppointmentIdsStream }
+          .map(::SelectedOverdueAppointmentsLoaded)
+    }
+  }
+
+  private fun toggleOverdueAppointmentSelection(effect: ToggleOverdueAppointmentSelection) {
+    overdueAppointmentSelector.toggleSelection(effect.appointmentId)
   }
 
   private fun addQueryToSearchHistory(effect: AddQueryToOverdueSearchHistory) {

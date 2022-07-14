@@ -17,6 +17,7 @@ import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.home.overdue.search.OverdueSearchQueryValidator.Result.Valid
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.overdue.OverdueAppointmentSelector
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.PagingSourceFactory
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -36,6 +37,7 @@ class OverdueSearchEffectHandlerTest {
   private val pagerFactory = mock<PagerFactory>()
   private val currentFacility = TestData.facility(uuid = UUID.fromString("94db5d90-d483-4755-892a-97fde5a870fe"))
   private val pagingCacheScope = TestScope()
+  private val overdueAppointmentSelector = mock<OverdueAppointmentSelector>()
   private val effectHandler = OverdueSearchEffectHandler(
       overdueSearchHistory = overdueSearchHistory,
       overdueSearchQueryValidator = OverdueSearchQueryValidator(overdueSearchConfig),
@@ -44,6 +46,7 @@ class OverdueSearchEffectHandlerTest {
       pagerFactory = pagerFactory,
       overdueSearchConfig = overdueSearchConfig,
       currentFacility = { currentFacility },
+      overdueAppointmentSelector = overdueAppointmentSelector,
       viewEffectsConsumer = viewEffectHandler::handle,
       pagingCacheScope = pagingCacheScope
   ).build()
@@ -169,5 +172,55 @@ class OverdueSearchEffectHandlerTest {
 
     verify(uiActions).setOverdueSearchQuery("Babri")
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when toggle overdue appointment selection effect is received, then toggle the overdue appointment selection`() {
+    // given
+    val appointmentId = UUID.fromString("97667670-26b9-42ed-ab09-f7174c5ade7f")
+
+    // when
+    effectHandlerTestCase.dispatch(ToggleOverdueAppointmentSelection(appointmentId))
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(overdueAppointmentSelector).toggleSelection(appointmentId)
+    verifyNoMoreInteractions(overdueAppointmentSelector)
+
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when load selected overdue appointments effect is received, then load the selected overdue appointments`() {
+    // given
+    val selectedAppointmentIds = setOf(
+        UUID.fromString("b224924c-81b0-42ba-b876-cb6d8253e47c"),
+        UUID.fromString("3af05d37-8c6c-4a03-9b3c-81f3d5152bd0")
+    )
+
+    whenever(overdueAppointmentSelector.selectedAppointmentIdsStream) doReturn Observable.just(selectedAppointmentIds)
+
+    // when
+    effectHandlerTestCase.dispatch(LoadSelectedOverdueAppointmentIds)
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(SelectedOverdueAppointmentsLoaded(selectedAppointmentIds))
+
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when clear selected overdue appointments effect is received, then clear the selected overdue appointments`() {
+    // when
+    effectHandlerTestCase.dispatch(ClearSelectedOverdueAppointments)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(overdueAppointmentSelector).clearSelection()
+    verifyNoMoreInteractions(overdueAppointmentSelector)
+
+    verifyZeroInteractions(uiActions)
   }
 }

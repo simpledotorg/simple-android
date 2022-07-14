@@ -7,6 +7,6 @@ import org.simple.clinic.mobius.first
 class OverdueSearchInit : Init<OverdueSearchModel, OverdueSearchEffect> {
 
   override fun init(model: OverdueSearchModel): First<OverdueSearchModel, OverdueSearchEffect> {
-    return first(model, LoadOverdueSearchHistory)
+    return first(model, LoadOverdueSearchHistory, LoadSelectedOverdueAppointmentIds)
   }
 }

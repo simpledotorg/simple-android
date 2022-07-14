@@ -17,6 +17,7 @@
 - Remove extra margin start and end for overdue search button
 - Show selected overdue appointments count in overdue search screen
 - Implement `OverdueAppointmentSelector`
+- Use overdue appointment selector in overdue screen
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-07-11-8325

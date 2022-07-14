@@ -101,8 +101,4 @@ data class OverdueModel(
   fun selectedOverdueAppointmentsChanged(selectedOverdueAppointments: Set<UUID>): OverdueModel {
     return copy(selectedOverdueAppointments = selectedOverdueAppointments)
   }
-
-  fun clearSelectedOverdueAppointments(): OverdueModel {
-    return copy(selectedOverdueAppointments = emptySet())
-  }
 }

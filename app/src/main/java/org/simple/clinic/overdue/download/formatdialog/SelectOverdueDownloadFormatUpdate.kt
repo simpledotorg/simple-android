@@ -18,7 +18,21 @@ class SelectOverdueDownloadFormatUpdate : Update<SelectOverdueDownloadFormatMode
       is FileDownloadedForSharing -> fileDownloadedForSharing(model, event)
       OverdueDownloadScheduled, CancelClicked -> dispatch(Dismiss)
       is DownloadFormatChanged -> next(model.overdueListDownloadFormatUpdated(event.fileFormat))
+      is SelectedOverdueAppointmentsLoaded -> selectedOverdueAppointmentsLoaded(model, event)
     }
+  }
+
+  private fun selectedOverdueAppointmentsLoaded(
+      model: SelectOverdueDownloadFormatModel,
+      event: SelectedOverdueAppointmentsLoaded
+  ): Next<SelectOverdueDownloadFormatModel, SelectOverdueDownloadFormatEffect> {
+    val effect = when (model.openAs) {
+      is Download -> ScheduleDownload(model.overdueListFileFormat)
+      is Share,
+      is SharingInProgress -> DownloadForShare(model.overdueListFileFormat, event.selectedAppointmentIds)
+    }
+
+    return dispatch(effect)
   }
 
   private fun fileDownloadedForSharing(
@@ -37,11 +51,8 @@ class SelectOverdueDownloadFormatUpdate : Update<SelectOverdueDownloadFormatMode
 
   private fun downloadOrShareClicked(model: SelectOverdueDownloadFormatModel): Next<SelectOverdueDownloadFormatModel, SelectOverdueDownloadFormatEffect> {
     return when (model.openAs) {
-      is Share -> next(
-          model.overdueDownloadInProgress(),
-          DownloadForShare(model.overdueListFileFormat, model.openAs.selectedAppointmentIds)
-      )
-      is Download -> dispatch(ScheduleDownload(model.overdueListFileFormat))
+      is Share,
+      is Download -> next(model.overdueDownloadInProgress(), LoadSelectedOverdueAppointmentIds)
       is SharingInProgress -> noChange()
     }
   }

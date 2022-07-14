@@ -15,6 +15,7 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
+import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.itemClicks
 import com.jakewharton.rxbinding3.widget.textChanges
@@ -102,6 +103,15 @@ class OverdueSearchScreen : BaseScreen<
   private val downloadAndShareButtonFrame
     get() = binding.downloadAndShareButtonFrame
 
+  private val selectedOverdueCountView
+    get() = binding.selectedOverdueCountView
+
+  private val selectedOverdueAppointmentsCountTextView
+    get() = binding.selectedOverdueAppointmentsTextView
+
+  private val clearSelectedOverdueAppointmentsButton
+    get() = binding.clearSelectedOverdueAppointmentsButton
+
   private val hotEvents = PublishSubject.create<UiEvent>()
 
   private val disposable = CompositeDisposable()
@@ -149,10 +159,15 @@ class OverdueSearchScreen : BaseScreen<
           overdueSearchListAdapter.itemEvents,
           searchHistoryItemClicks(),
           hotEvents,
-          overdueSearchQueryTextChanges()
+          overdueSearchQueryTextChanges(),
+          clearSelectedOverdueAppointmentClicks()
       )
       .compose(ReportAnalyticsEvents())
       .cast<OverdueSearchEvent>()
+
+  private fun clearSelectedOverdueAppointmentClicks() = clearSelectedOverdueAppointmentsButton
+      .clicks()
+      .map { ClearSelectedOverdueAppointments }
 
   private fun searchHistoryItemClicks(): Observable<UiEvent> {
     return overdueSearchHistoryContainer
@@ -224,7 +239,7 @@ class OverdueSearchScreen : BaseScreen<
 
   override fun hideSearchResults() {
     overdueSearchListAdapter.submitData(lifecycle, PagingData.empty())
-    overdueSearchRecyclerView.visibility = View.GONE
+    overdueSearchRecyclerView.visibility = GONE
   }
 
   override fun setOverdueSearchResultsPagingData(
@@ -252,6 +267,15 @@ class OverdueSearchScreen : BaseScreen<
     downloadAndShareButtonFrame.visibility = GONE
   }
 
+  override fun showSelectedOverdueAppointmentCount(selectedOverdueAppointments: Int) {
+    selectedOverdueCountView.visibility = VISIBLE
+    selectedOverdueAppointmentsCountTextView.text = getString(R.string.selected_overdue_count, selectedOverdueAppointments)
+  }
+
+  override fun hideSelectedOverdueAppointmentCount() {
+    selectedOverdueCountView.visibility = GONE
+  }
+
   private fun hideKeyboardOnSearchResultsScroll(): Disposable {
     return overdueSearchRecyclerView
         .scrollStateChanges()
@@ -270,7 +294,7 @@ class OverdueSearchScreen : BaseScreen<
   }
 
   override fun hideSearchHistory() {
-    overdueSearchHistoryContainer.visibility = View.GONE
+    overdueSearchHistoryContainer.visibility = GONE
   }
 
   override fun showProgress() {
@@ -278,7 +302,7 @@ class OverdueSearchScreen : BaseScreen<
   }
 
   override fun hideProgress() {
-    overdueSearchProgressIndicator.visibility = View.GONE
+    overdueSearchProgressIndicator.visibility = GONE
   }
 
   override fun showNoSearchResults() {
@@ -286,7 +310,7 @@ class OverdueSearchScreen : BaseScreen<
   }
 
   override fun hideNoSearchResults() {
-    noOverdueSearchResultsContainer.visibility = View.GONE
+    noOverdueSearchResultsContainer.visibility = GONE
   }
 
   override fun openPatientSummaryScreen(patientUuid: UUID) {

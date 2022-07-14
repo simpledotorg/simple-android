@@ -59,4 +59,6 @@ object OverdueSearchButtonClicked : OverdueEvent()
 
 data class OverdueAppointmentCheckBoxClicked(val appointmentId: UUID) : OverdueEvent()
 
-object ClearSelectedOverdueAppointments : OverdueEvent()
+object ClearSelectedOverdueAppointmentsClicked : OverdueEvent()
+
+data class SelectedOverdueAppointmentsLoaded(val selectedAppointmentIds: Set<UUID>) : OverdueEvent()

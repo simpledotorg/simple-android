@@ -33,20 +33,10 @@ class OverdueUpdate(
       PendingListFooterClicked -> pendingListFooterClicked(model)
       is ChevronClicked -> chevronClicked(model, event.overdueAppointmentSectionTitle)
       OverdueSearchButtonClicked -> dispatch(OpenOverdueSearch)
-      is OverdueAppointmentCheckBoxClicked -> overdueAppointmentCheckBoxClicked(model, event)
-      ClearSelectedOverdueAppointments -> next(model.clearSelectedOverdueAppointments())
+      is OverdueAppointmentCheckBoxClicked -> dispatch(ToggleOverdueAppointmentSelection(event.appointmentId))
+      ClearSelectedOverdueAppointmentsClicked -> dispatch(ClearSelectedOverdueAppointments)
+      is SelectedOverdueAppointmentsLoaded -> next(model.selectedOverdueAppointmentsChanged(event.selectedAppointmentIds))
     }
-  }
-
-  private fun overdueAppointmentCheckBoxClicked(model: OverdueModel, event: OverdueAppointmentCheckBoxClicked): Next<OverdueModel, OverdueEffect> {
-    val appointmentId = event.appointmentId
-    val updatedSelectedAppointments = if (model.selectedOverdueAppointments.contains(appointmentId)) {
-      model.selectedOverdueAppointments.filter { it != appointmentId }.toSet()
-    } else {
-      model.selectedOverdueAppointments + setOf(appointmentId)
-    }
-
-    return next(model.selectedOverdueAppointmentsChanged(updatedSelectedAppointments))
   }
 
   private fun chevronClicked(model: OverdueModel, overdueAppointmentSectionTitle: OverdueAppointmentSectionTitle): Next<OverdueModel, OverdueEffect> {

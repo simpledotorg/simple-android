@@ -167,7 +167,7 @@ class OverdueSearchScreen : BaseScreen<
 
   private fun clearSelectedOverdueAppointmentClicks() = clearSelectedOverdueAppointmentsButton
       .clicks()
-      .map { ClearSelectedOverdueAppointments }
+      .map { ClearSelectedOverdueAppointmentsClicked }
 
   private fun searchHistoryItemClicks(): Observable<UiEvent> {
     return overdueSearchHistoryContainer

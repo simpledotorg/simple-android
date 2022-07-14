@@ -9,6 +9,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.overdue.OverdueAppointmentSelector
 import org.simple.clinic.overdue.callresult.Outcome
 import org.simple.clinic.overdue.download.OverdueDownloadScheduler
 import org.simple.clinic.util.PagerFactory
@@ -26,6 +27,7 @@ class OverdueEffectHandler @AssistedInject constructor(
     private val overdueAppointmentsConfig: OverdueAppointmentsConfig,
     private val overdueDownloadScheduler: OverdueDownloadScheduler,
     private val userClock: UserClock,
+    private val overdueAppointmentSelector: OverdueAppointmentSelector,
     @Assisted private val viewEffectsConsumer: Consumer<OverdueViewEffect>
 ) {
 
@@ -44,7 +46,27 @@ class OverdueEffectHandler @AssistedInject constructor(
         .addConsumer(ScheduleDownload::class.java, ::scheduleDownload, schedulers.io())
         .addConsumer(OverdueViewEffect::class.java, viewEffectsConsumer::accept)
         .addTransformer(LoadOverdueAppointments::class.java, loadOverdueAppointments())
+        .addConsumer(ToggleOverdueAppointmentSelection::class.java, ::toggleOverdueAppointmentSelection, schedulers.io())
+        .addTransformer(LoadSelectedOverdueAppointmentIds::class.java, loadSelectedOverdueAppointmentIds())
+        .addConsumer(ClearSelectedOverdueAppointments::class.java, ::clearSelectedOverdueAppointments)
         .build()
+  }
+
+  private fun clearSelectedOverdueAppointments(effect: ClearSelectedOverdueAppointments) {
+    overdueAppointmentSelector.clearSelection()
+  }
+
+  private fun loadSelectedOverdueAppointmentIds(): ObservableTransformer<LoadSelectedOverdueAppointmentIds, OverdueEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulers.computation())
+          .switchMap { overdueAppointmentSelector.selectedAppointmentIdsStream }
+          .map(::SelectedOverdueAppointmentsLoaded)
+    }
+  }
+
+  private fun toggleOverdueAppointmentSelection(effect: ToggleOverdueAppointmentSelection) {
+    overdueAppointmentSelector.toggleSelection(effect.appointmentId)
   }
 
   private fun loadOverdueAppointments(): ObservableTransformer<LoadOverdueAppointments, OverdueEvent> {

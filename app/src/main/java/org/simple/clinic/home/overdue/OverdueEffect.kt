@@ -22,6 +22,12 @@ data class LoadOverdueAppointments(
 
 data class ScheduleDownload(val fileFormat: OverdueListFileFormat, val selectedAppointmentIds: Set<UUID>) : OverdueEffect()
 
+data class ToggleOverdueAppointmentSelection(val appointmentId: UUID) : OverdueEffect()
+
+object LoadSelectedOverdueAppointmentIds : OverdueEffect()
+
+object ClearSelectedOverdueAppointments : OverdueEffect()
+
 sealed class OverdueViewEffect : OverdueEffect()
 
 data class OpenContactPatientScreen(val patientUuid: UUID) : OverdueViewEffect()

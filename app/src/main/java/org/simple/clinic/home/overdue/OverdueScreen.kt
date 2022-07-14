@@ -405,7 +405,7 @@ class OverdueScreen : BaseScreen<
 
   private fun clearSelectedOverdueAppointmentClicks() = clearSelectedOverdueAppointmentsButton
       .clicks()
-      .map { ClearSelectedOverdueAppointments }
+      .map { ClearSelectedOverdueAppointmentsClicked }
 
   interface Injector {
     fun inject(target: OverdueScreen)

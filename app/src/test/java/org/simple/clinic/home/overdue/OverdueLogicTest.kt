@@ -17,6 +17,7 @@ import org.junit.Test
 import org.simple.clinic.analytics.NetworkCapabilitiesProvider
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.overdue.OverdueAppointmentSelector
 import org.simple.clinic.overdue.download.OverdueDownloadScheduler
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.PagingSourceFactory
@@ -48,6 +49,7 @@ class OverdueLogicTest {
       )
   )
   private val dateOnClock = LocalDate.parse("2018-01-01")
+  private val overdueAppointmentSelector = mock<OverdueAppointmentSelector>()
 
   private lateinit var testFixture: MobiusTestFixture<OverdueModel, OverdueEvent, OverdueEffect>
 
@@ -94,6 +96,8 @@ class OverdueLogicTest {
         initialKey = eq(null)
     )) doReturn Observable.just(overdueAppointments)
 
+    whenever(overdueAppointmentSelector.selectedAppointmentIdsStream) doReturn Observable.just(emptySet())
+
     val effectHandler = OverdueEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
         appointmentRepository = repository,
@@ -104,6 +108,7 @@ class OverdueLogicTest {
         ),
         overdueDownloadScheduler = mock<OverdueDownloadScheduler>(),
         userClock = TestUserClock(Instant.parse("2018-01-01T00:00:00Z")),
+        overdueAppointmentSelector = overdueAppointmentSelector,
         viewEffectsConsumer = OverdueViewEffectHandler(uiActions)::handle
     )
     testFixture = MobiusTestFixture(

@@ -15,6 +15,7 @@
 - Bump Sentry to v6.2.1
 - Ignore deleted and old phone numbers when generating overdue CSV from database
 - Remove extra margin start and end for overdue search button
+- Show selected overdue appointments count in overdue search screen
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-07-11-8325

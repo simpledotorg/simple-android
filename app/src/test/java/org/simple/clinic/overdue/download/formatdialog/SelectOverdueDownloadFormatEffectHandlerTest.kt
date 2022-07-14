@@ -74,7 +74,7 @@ class SelectOverdueDownloadFormatEffectHandlerTest {
     val format = OverdueListFileFormat.PDF
 
     // when
-    testCase.dispatch(ScheduleDownload(format, emptySet()))
+    testCase.dispatch(ScheduleDownload(format))
 
     // given
     testCase.assertOutgoingEvents(OverdueDownloadScheduled)

@@ -13,30 +13,32 @@ class OverdueAppointmentSelector @Inject constructor() {
   val selectedAppointmentIdsStream: Observable<Set<UUID>>
     get() = this._selectedAppointmentIdsStream.map { it.toSet() }
 
-  private val selectedAppointmentIds = hashSetOf<UUID>()
+  private val _selectedAppointmentIds = hashSetOf<UUID>()
+  val selectedAppointmentIds: Set<UUID>
+    get() = _selectedAppointmentIds
 
   fun toggleSelection(appointmentId: UUID) {
-    if (selectedAppointmentIds.contains(appointmentId)) {
-      selectedAppointmentIds.remove(appointmentId)
+    if (_selectedAppointmentIds.contains(appointmentId)) {
+      _selectedAppointmentIds.remove(appointmentId)
     } else {
-      selectedAppointmentIds.add(appointmentId)
+      _selectedAppointmentIds.add(appointmentId)
     }
-    _selectedAppointmentIdsStream.onNext(selectedAppointmentIds)
+    _selectedAppointmentIdsStream.onNext(_selectedAppointmentIds)
   }
 
   fun replaceSelectedIds(newSelectedAppointmentIds: Set<UUID>) {
-    selectedAppointmentIds.clear()
-    selectedAppointmentIds.addAll(newSelectedAppointmentIds)
-    _selectedAppointmentIdsStream.onNext(selectedAppointmentIds)
+    _selectedAppointmentIds.clear()
+    _selectedAppointmentIds.addAll(newSelectedAppointmentIds)
+    _selectedAppointmentIdsStream.onNext(_selectedAppointmentIds)
   }
 
   fun clearSelection() {
-    selectedAppointmentIds.clear()
+    _selectedAppointmentIds.clear()
     _selectedAppointmentIdsStream.onNext(hashSetOf())
   }
 
   fun addSelectedIds(newSelectedAppointmentIds: Set<UUID>) {
-    selectedAppointmentIds.addAll(newSelectedAppointmentIds)
-    _selectedAppointmentIdsStream.onNext(selectedAppointmentIds)
+    _selectedAppointmentIds.addAll(newSelectedAppointmentIds)
+    _selectedAppointmentIdsStream.onNext(_selectedAppointmentIds)
   }
 }

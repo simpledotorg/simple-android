@@ -35,7 +35,7 @@ class SelectOverdueDownloadFormatEffectHandler @AssistedInject constructor(
   private fun scheduleDownload(): ObservableTransformer<ScheduleDownload, SelectOverdueDownloadFormatEvent> {
     return ObservableTransformer { effects ->
       effects
-          .doOnNext { overdueDownloadScheduler.schedule(it.fileFormat, it.selectedAppointmentIds) }
+          .doOnNext { overdueDownloadScheduler.schedule(it.fileFormat) }
           .map { OverdueDownloadScheduled }
     }
   }

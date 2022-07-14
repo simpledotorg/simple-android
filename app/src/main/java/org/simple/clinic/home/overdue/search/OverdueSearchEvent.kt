@@ -27,3 +27,5 @@ data class OverdueSearchLoadStateChanged(val overdueSearchProgressState: Overdue
 object OverdueSearchScreenShown : OverdueSearchEvent()
 
 data class OverdueAppointmentCheckBoxClicked(val appointmentId: UUID) : OverdueSearchEvent()
+
+object ClearSelectedOverdueAppointments : OverdueSearchEvent()

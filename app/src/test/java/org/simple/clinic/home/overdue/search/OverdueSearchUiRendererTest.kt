@@ -111,6 +111,84 @@ class OverdueSearchUiRendererTest {
     verify(ui).showSearchResults()
     verify(ui).setOverdueSearchResultsPagingData(searchResults, selectedAppointments, searchQuery)
     verify(ui).showDownloadAndShareButtons()
+    verify(ui).showSelectedOverdueAppointmentCount(1)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when overdue appointments are selected, then show overdue selected count`() {
+    // given
+    val searchResults = PagingData.from(listOf(
+        TestData.overdueAppointment(
+            patientUuid = UUID.fromString("45c8f51e-9e32-433a-82db-4cef17d836fd"),
+            appointment = TestData.appointment(
+                uuid = UUID.fromString("88d9643f-5533-4137-a522-03e2717bea69")
+            )
+        ),
+        TestData.overdueAppointment(
+            patientUuid = UUID.fromString("433b3c36-4f28-4a40-aede-93a5a7d36ed2"),
+            appointment = TestData.appointment(
+                uuid = UUID.fromString("dd738d46-ef9e-450f-9430-cf0b0fdffe53")
+            )
+        )
+    ))
+    val selectedAppointments = setOf(UUID.fromString("4ab9f2ee-64a0-48c9-99c4-35f46c2e43a4"))
+    val searchQuery = "Ani"
+    val model = defaultModel
+        .overdueSearchQueryChanged(searchQuery)
+        .overdueSearchResultsLoaded(searchResults)
+        .loadStateChanged(DONE)
+        .selectedOverdueAppointmentsChanged(selectedAppointments)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).hideSearchHistory()
+    verify(ui).hideNoSearchResults()
+    verify(ui).hideProgress()
+    verify(ui).showSearchResults()
+    verify(ui).setOverdueSearchResultsPagingData(searchResults, selectedAppointments, searchQuery)
+    verify(ui).showDownloadAndShareButtons()
+    verify(ui).showSelectedOverdueAppointmentCount(1)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when no overdue appointments are selected, then hide overdue selected count`() {
+    // given
+    // given
+    val searchResults = PagingData.from(listOf(
+        TestData.overdueAppointment(
+            patientUuid = UUID.fromString("5a319d3c-cee1-4914-8f1e-c077c37ec9a3"),
+            appointment = TestData.appointment(
+                uuid = UUID.fromString("042613d8-d2a3-4e1b-aa16-692480a745e0")
+            )
+        ),
+        TestData.overdueAppointment(
+            patientUuid = UUID.fromString("cef95686-12fb-46af-a25a-2b3842a7867d"),
+            appointment = TestData.appointment(
+                uuid = UUID.fromString("9c206891-e4c1-4f72-a72b-a03ac0ae021f")
+            )
+        )
+    ))
+    val searchQuery = "Ani"
+    val model = defaultModel
+        .overdueSearchQueryChanged(searchQuery)
+        .overdueSearchResultsLoaded(searchResults)
+        .loadStateChanged(DONE)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).hideSearchHistory()
+    verify(ui).hideNoSearchResults()
+    verify(ui).hideProgress()
+    verify(ui).showSearchResults()
+    verify(ui).setOverdueSearchResultsPagingData(searchResults, emptySet(), searchQuery)
+    verify(ui).showDownloadAndShareButtons()
+    verify(ui).hideSelectedOverdueAppointmentCount()
     verifyNoMoreInteractions(ui)
   }
 }

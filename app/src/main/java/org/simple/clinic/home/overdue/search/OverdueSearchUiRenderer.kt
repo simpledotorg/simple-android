@@ -4,6 +4,7 @@ import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.DONE
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.IN_PROGRESS
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.NO_RESULTS
 import org.simple.clinic.mobius.ViewRenderer
+import java.util.UUID
 
 class OverdueSearchUiRenderer(
     private val ui: OverdueSearchUi
@@ -26,13 +27,24 @@ class OverdueSearchUiRenderer(
     when (model.overdueSearchProgressState) {
       IN_PROGRESS -> ui.showProgress()
       NO_RESULTS -> renderNoResults()
-      DONE -> renderResults()
+      DONE -> {
+        renderResults()
+        renderOverdueListSelectedCount(model.selectedOverdueAppointments)
+      }
       null -> {
         // No-op
       }
     }
 
     ui.setOverdueSearchResultsPagingData(model.overdueSearchResults, model.selectedOverdueAppointments, model.searchQuery.orEmpty())
+  }
+
+  private fun renderOverdueListSelectedCount(selectedOverdueAppointments: Set<UUID>) {
+    if (selectedOverdueAppointments.isNotEmpty()) {
+      ui.showSelectedOverdueAppointmentCount(selectedOverdueAppointments.size)
+    } else {
+      ui.hideSelectedOverdueAppointmentCount()
+    }
   }
 
   private fun renderResults() {

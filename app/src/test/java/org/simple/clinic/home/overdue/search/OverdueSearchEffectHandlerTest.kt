@@ -14,6 +14,7 @@ import kotlinx.coroutines.test.TestScope
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.home.overdue.OverdueAppointment
+import org.simple.clinic.home.overdue.search.OverdueButtonType.DOWNLOAD
 import org.simple.clinic.home.overdue.search.OverdueSearchQueryValidator.Result.Valid
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.AppointmentRepository
@@ -237,13 +238,13 @@ class OverdueSearchEffectHandlerTest {
     )
 
     // when
-    effectHandlerTestCase.dispatch(ReplaceSelectedAppointmentIds(appointmentIds))
+    effectHandlerTestCase.dispatch(ReplaceSelectedAppointmentIds(appointmentIds, DOWNLOAD))
 
     // then
     verifyZeroInteractions(uiActions)
     verify(overdueAppointmentSelector).replaceSelectedIds(appointmentIds)
     verifyNoMoreInteractions(overdueAppointmentSelector)
-    effectHandlerTestCase.assertOutgoingEvents(SelectedAppointmentIdsReplaced)
+    effectHandlerTestCase.assertOutgoingEvents(SelectedAppointmentIdsReplaced(DOWNLOAD))
   }
 
   @Test
@@ -265,6 +266,28 @@ class OverdueSearchEffectHandlerTest {
 
     // then
     verify(uiActions).openSelectDownloadFormatDialog()
+    verifyNoMoreInteractions(uiActions)
+    effectHandlerTestCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when open select share format dialog effect is received, then open dialog`() {
+    // when
+    effectHandlerTestCase.dispatch(OpenSelectShareFormatDialog)
+
+    // then
+    verify(uiActions).openSelectShareFormatDialog()
+    verifyNoMoreInteractions(uiActions)
+    effectHandlerTestCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when open share in progress dialog effect is received, then open dialog`() {
+    // when
+    effectHandlerTestCase.dispatch(OpenShareInProgressDialog)
+
+    // then
+    verify(uiActions).openShareInProgressDialog()
     verifyNoMoreInteractions(uiActions)
     effectHandlerTestCase.assertNoOutgoingEvents()
   }

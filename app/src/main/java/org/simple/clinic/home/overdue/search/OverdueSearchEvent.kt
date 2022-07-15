@@ -32,9 +32,14 @@ object ClearSelectedOverdueAppointmentsClicked : OverdueSearchEvent()
 
 data class SelectedOverdueAppointmentsLoaded(val selectedAppointmentIds: Set<UUID>) : OverdueSearchEvent()
 
-object SelectedAppointmentIdsReplaced : OverdueSearchEvent()
+data class SelectedAppointmentIdsReplaced(val type: OverdueButtonType) : OverdueSearchEvent()
 
 data class DownloadButtonClicked(val searchResultsAppointmentIds: Set<UUID>) : OverdueSearchEvent() {
 
   override val analyticsName = "Overdue Search Screen:Download Clicked"
+}
+
+data class ShareButtonClicked(val searchResultsAppointmentIds: Set<UUID>) : OverdueSearchEvent() {
+
+  override val analyticsName = "Overdue Search Screen:Share Clicked"
 }

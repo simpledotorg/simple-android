@@ -8,6 +8,8 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.home.overdue.search.OverdueButtonType.DOWNLOAD
+import org.simple.clinic.home.overdue.search.OverdueButtonType.SHARE
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.DONE
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.IN_PROGRESS
 import org.simple.clinic.home.overdue.search.OverdueSearchQueryValidator.Result.Valid
@@ -235,7 +237,7 @@ class OverdueSearchUpdateTest {
         .whenEvent(DownloadButtonClicked(appointmentIds))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ReplaceSelectedAppointmentIds(appointmentIds))
+            hasEffects(ReplaceSelectedAppointmentIds(appointmentIds, DOWNLOAD))
         ))
   }
 
@@ -247,7 +249,7 @@ class OverdueSearchUpdateTest {
 
     updateSpec
         .given(selectedAppointmentIdsModel)
-        .whenEvent(SelectedAppointmentIdsReplaced)
+        .whenEvent(SelectedAppointmentIdsReplaced(DOWNLOAD))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenSelectDownloadFormatDialog)
@@ -262,11 +264,84 @@ class OverdueSearchUpdateTest {
 
     updateSpec
         .given(selectedAppointmentIdsModel)
-        .whenEvent(SelectedAppointmentIdsReplaced)
+        .whenEvent(SelectedAppointmentIdsReplaced(DOWNLOAD))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ScheduleDownload)
         ))
   }
 
+  @Test
+  fun `when share button is clicked, appointments are selected and pdf can be generated, then open select share format dialog`() {
+    val appointmentIds = setOf(UUID.fromString("6fc41403-8550-4749-aa94-c7320012e792"))
+    val selectedAppointmentIds = setOf(UUID.fromString("ad32f91d-3c7e-45c3-b544-fbdc996e44b3"))
+    val selectedAppointmentIdsModel = defaultModel.selectedOverdueAppointmentsChanged(selectedAppointmentIds)
+
+    updateSpec
+        .given(selectedAppointmentIdsModel)
+        .whenEvent(ShareButtonClicked(appointmentIds))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenSelectShareFormatDialog)
+        ))
+  }
+
+  @Test
+  fun `when share button is clicked, appointments are selected and pdf cannot be generated, then open share in progress dialog`() {
+    val appointmentIds = setOf(UUID.fromString("6fc41403-8550-4749-aa94-c7320012e792"))
+    val selectedAppointmentIds = setOf(UUID.fromString("ad32f91d-3c7e-45c3-b544-fbdc996e44b3"))
+    val updateSpec = UpdateSpec(OverdueSearchUpdate(date = date, canGeneratePdf = false))
+    val selectedAppointmentIdsModel = defaultModel.selectedOverdueAppointmentsChanged(selectedAppointmentIds)
+
+    updateSpec
+        .given(selectedAppointmentIdsModel)
+        .whenEvent(ShareButtonClicked(appointmentIds))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenShareInProgressDialog)
+        ))
+  }
+
+  @Test
+  fun `when share button is clicked and no appointments are selected, then replace selected appointment ids`() {
+    val appointmentIds = setOf(UUID.fromString("6fc41403-8550-4749-aa94-c7320012e792"))
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(ShareButtonClicked(appointmentIds))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ReplaceSelectedAppointmentIds(appointmentIds, SHARE))
+        ))
+  }
+
+  @Test
+  fun `when selected ids are replaced and pdf can be generated, then open select share format dialog`() {
+    val selectedAppointmentIds = setOf(UUID.fromString("ad32f91d-3c7e-45c3-b544-fbdc996e44b3"))
+    val selectedAppointmentIdsModel = defaultModel
+        .selectedOverdueAppointmentsChanged(selectedAppointmentIds)
+
+    updateSpec
+        .given(selectedAppointmentIdsModel)
+        .whenEvent(SelectedAppointmentIdsReplaced(SHARE))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenSelectShareFormatDialog)
+        ))
+  }
+
+  @Test
+  fun `when selected ids are replaced and pdf cannot be generated, then open share in progress dialog`() {
+    val selectedAppointmentIds = setOf(UUID.fromString("ad32f91d-3c7e-45c3-b544-fbdc996e44b3"))
+    val updateSpec = UpdateSpec(OverdueSearchUpdate(date = date, canGeneratePdf = false))
+    val selectedAppointmentIdsModel = defaultModel.selectedOverdueAppointmentsChanged(selectedAppointmentIds)
+
+    updateSpec
+        .given(selectedAppointmentIdsModel)
+        .whenEvent(SelectedAppointmentIdsReplaced(SHARE))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenShareInProgressDialog)
+        ))
+  }
 }

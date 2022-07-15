@@ -291,4 +291,15 @@ class OverdueSearchEffectHandlerTest {
     verifyNoMoreInteractions(uiActions)
     effectHandlerTestCase.assertNoOutgoingEvents()
   }
+
+  @Test
+  fun `when show no internet connection effect is received, then show dialog`() {
+    // when
+    effectHandlerTestCase.dispatch(ShowNoInternetConnectionDialog)
+
+    // then
+    verify(uiActions).showNoInternetConnectionDialog()
+    verifyNoMoreInteractions(uiActions)
+    effectHandlerTestCase.assertNoOutgoingEvents()
+  }
 }

@@ -8,6 +8,8 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.analytics.NetworkConnectivityStatus.ACTIVE
+import org.simple.clinic.analytics.NetworkConnectivityStatus.INACTIVE
 import org.simple.clinic.home.overdue.search.OverdueButtonType.DOWNLOAD
 import org.simple.clinic.home.overdue.search.OverdueButtonType.SHARE
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.DONE
@@ -15,6 +17,7 @@ import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.IN_PROGR
 import org.simple.clinic.home.overdue.search.OverdueSearchQueryValidator.Result.Valid
 import org.simple.sharedTestCode.TestData
 import java.time.LocalDate
+import java.util.Optional
 import java.util.UUID
 
 class OverdueSearchUpdateTest {
@@ -205,7 +208,7 @@ class OverdueSearchUpdateTest {
 
     updateSpec
         .given(selectedAppointmentIdsModel)
-        .whenEvent(DownloadButtonClicked(appointmentIds))
+        .whenEvent(DownloadButtonClicked(appointmentIds, networkStatus = Optional.of(ACTIVE)))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenSelectDownloadFormatDialog)
@@ -221,7 +224,7 @@ class OverdueSearchUpdateTest {
 
     updateSpec
         .given(selectedAppointmentIdsModel)
-        .whenEvent(DownloadButtonClicked(appointmentIds))
+        .whenEvent(DownloadButtonClicked(appointmentIds, networkStatus = Optional.of(ACTIVE)))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ScheduleDownload)
@@ -234,7 +237,7 @@ class OverdueSearchUpdateTest {
 
     updateSpec
         .given(defaultModel)
-        .whenEvent(DownloadButtonClicked(appointmentIds))
+        .whenEvent(DownloadButtonClicked(appointmentIds, networkStatus = Optional.of(ACTIVE)))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ReplaceSelectedAppointmentIds(appointmentIds, DOWNLOAD))
@@ -279,7 +282,7 @@ class OverdueSearchUpdateTest {
 
     updateSpec
         .given(selectedAppointmentIdsModel)
-        .whenEvent(ShareButtonClicked(appointmentIds))
+        .whenEvent(ShareButtonClicked(appointmentIds, networkStatus = Optional.of(ACTIVE)))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenSelectShareFormatDialog)
@@ -295,7 +298,7 @@ class OverdueSearchUpdateTest {
 
     updateSpec
         .given(selectedAppointmentIdsModel)
-        .whenEvent(ShareButtonClicked(appointmentIds))
+        .whenEvent(ShareButtonClicked(appointmentIds, networkStatus = Optional.of(ACTIVE)))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenShareInProgressDialog)
@@ -308,7 +311,7 @@ class OverdueSearchUpdateTest {
 
     updateSpec
         .given(defaultModel)
-        .whenEvent(ShareButtonClicked(appointmentIds))
+        .whenEvent(ShareButtonClicked(appointmentIds, networkStatus = Optional.of(ACTIVE)))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ReplaceSelectedAppointmentIds(appointmentIds, SHARE))
@@ -342,6 +345,28 @@ class OverdueSearchUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenShareInProgressDialog)
+        ))
+  }
+
+  @Test
+  fun `when download button is clicked and internet is not active, then show no internet connection dialog`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DownloadButtonClicked(searchResultsAppointmentIds = emptySet(), networkStatus = Optional.of(INACTIVE)))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowNoInternetConnectionDialog)
+        ))
+  }
+
+  @Test
+  fun `when share button is clicked and internet is not active, then show no internet connection dialog`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(ShareButtonClicked(searchResultsAppointmentIds = emptySet(), networkStatus = Optional.of(INACTIVE)))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowNoInternetConnectionDialog)
         ))
   }
 }

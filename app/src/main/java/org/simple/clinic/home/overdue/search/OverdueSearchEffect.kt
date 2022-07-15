@@ -36,3 +36,5 @@ object OpenSelectDownloadFormatDialog : OverdueSearchViewEffect()
 object OpenSelectShareFormatDialog : OverdueSearchViewEffect()
 
 object OpenShareInProgressDialog : OverdueSearchViewEffect()
+
+object ShowNoInternetConnectionDialog : OverdueSearchViewEffect()

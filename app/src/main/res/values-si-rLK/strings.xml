@@ -853,11 +853,6 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">රෝගියා ඔවුන්ගේ ඖෂධ නිතිපතා ගන්නේ නම්, ප්‍රොටොකෝලය අනුගමනය කරන්න</string>
 
   <!-- Call Result Outcome Message -->
-  <string name="call_result_outcome_agreed_to_visit">\'පැමිණීමට එකඟ විය\' සක්‍රීය ලෙස සලකුණු කෙරිණි</string>
-
-  <string name="call_result_outcome_remind_to_call_later">\'ඇමතීමට සිහිපත් කරන්න\' සක්‍රීය ලෙස සලකුණු කෙරිණි</string>
-
-  <string name="call_result_outcome_removed">ඉවත් කෙරිණි: %1$s</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">නම හෝ ගම මගින් සොයන්න</string>

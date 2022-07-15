@@ -853,11 +853,6 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">రోగి వారి మందులను క్రమం తప్పకుండా తీసుకుంటే, ప్రోటోకాల్‌ను అనుసరించండి</string>
 
   <!-- Call Result Outcome Message -->
-  <string name="call_result_outcome_agreed_to_visit">దీనిలో \'సందర్శించడానికి అంగీకరించారు\' గుర్తు పెట్టబడింది</string>
-
-  <string name="call_result_outcome_remind_to_call_later">దీనిలో \'కాల్ చేయడాన్ని గుర్తు చేయి\' గుర్తు పెట్టబడింది</string>
-
-  <string name="call_result_outcome_removed">తీసివేయబడింది: %1$s</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">పేరు లేదా గ్రామం ద్వారా శోధించండి</string>

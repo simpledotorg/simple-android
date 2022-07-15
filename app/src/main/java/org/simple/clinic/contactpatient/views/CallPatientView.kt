@@ -1,6 +1,7 @@
 package org.simple.clinic.contactpatient.views
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +15,6 @@ import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.resolveColor
 import org.simple.clinic.util.toLocalDateAtZone
-import org.simple.clinic.widgets.setCompoundDrawableStart
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.format.DateTimeFormatter
 
@@ -269,7 +269,10 @@ class CallPatientView(
     callResultOutcomeCardView.strokeColor = context.resolveColor(R.color.simple_green_600)
     callResultOutcomeTextView.setTextColor(context.resolveColor(R.color.simple_green_600))
     lastUpdatedDateTextView.setTextColor(context.resolveColor(R.color.simple_green_600))
-    callResultOutcomeIcon.setImageResource(R.drawable.ic_check_circle_24px)
+    callResultOutcomeIcon.imageTintList = ColorStateList.valueOf(
+        context.resolveColor(R.color.simple_green_600)
+    )
+    callResultOutcomeIcon.setImageResource(R.drawable.ic_check_circle_outline)
   }
 
   fun setupCallResultViewForRemovedFromList() {
@@ -277,6 +280,9 @@ class CallPatientView(
     callResultOutcomeCardView.strokeColor = context.resolveColor(R.color.simple_red_600)
     callResultOutcomeTextView.setTextColor(context.resolveColor(R.color.simple_red_600))
     lastUpdatedDateTextView.setTextColor(context.resolveColor(R.color.simple_red_600))
+    callResultOutcomeIcon.imageTintList = ColorStateList.valueOf(
+        context.resolveColor(R.color.simple_red_600)
+    )
     callResultOutcomeIcon.setImageResource(R.drawable.ic_remove_circle_outline_24px)
   }
 
@@ -285,6 +291,9 @@ class CallPatientView(
     callResultOutcomeCardView.strokeColor = context.resolveColor(R.color.simple_yellow_600)
     callResultOutcomeTextView.setTextColor(context.resolveColor(R.color.simple_yellow_600))
     lastUpdatedDateTextView.setTextColor(context.resolveColor(R.color.simple_yellow_600))
+    callResultOutcomeIcon.imageTintList = ColorStateList.valueOf(
+        context.resolveColor(R.color.simple_yellow_600)
+    )
     callResultOutcomeIcon.setImageResource(R.drawable.ic_access_alarm_24px)
   }
 }

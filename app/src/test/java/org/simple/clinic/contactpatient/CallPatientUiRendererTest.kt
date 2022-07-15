@@ -5,7 +5,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.R
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentConfig
@@ -15,6 +14,7 @@ import org.simple.clinic.overdue.TimeToAppointment.Weeks
 import org.simple.clinic.overdue.callresult.Outcome
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientStatus
+import org.simple.sharedTestCode.TestData
 import org.simple.sharedTestCode.util.TestUserClock
 import java.time.Instant
 import java.time.LocalDate
@@ -411,7 +411,7 @@ class CallPatientUiRendererTest {
     verify(ui).hideProgress()
     verify(ui).showCallResult()
     verify(ui).setupAgreedToVisitCallResultOutcome()
-    verify(ui).setCallResultUpdatedAtDate(LocalDate.of(2018,1,1))
+    verify(ui).setCallResultUpdatedAtDate(LocalDate.of(2018, 1, 1))
     verify(ui).renderPatientDetails(PatientDetails(name = patientProfile.patient.fullName,
         gender = patientProfile.patient.gender,
         age = patientProfile.patient.ageDetails.estimateAge(clock),
@@ -460,8 +460,8 @@ class CallPatientUiRendererTest {
     // then
     verify(ui).hideProgress()
     verify(ui).showCallResult()
-    verify(ui).setupRemindToCallLaterCallResultOutcome(11)
-    verify(ui).setCallResultUpdatedAtDate(LocalDate.of(2018,1,1))
+    verify(ui).setupRemindToCallLaterCallResultOutcome(LocalDate.of(2018, 1, 12))
+    verify(ui).setCallResultUpdatedAtDate(LocalDate.of(2018, 1, 1))
     verify(ui).renderPatientDetails(PatientDetails(name = patientProfile.patient.fullName,
         gender = patientProfile.patient.gender,
         age = patientProfile.patient.ageDetails.estimateAge(clock),

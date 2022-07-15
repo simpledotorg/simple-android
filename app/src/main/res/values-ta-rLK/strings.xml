@@ -853,11 +853,6 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">நோயாளி தொடர்ந்து மருந்துகளை எடுத்துக் கொண்டால், நெறிமுறையைப் பின்பற்றவும்</string>
 
   <!-- Call Result Outcome Message -->
-  <string name="call_result_outcome_agreed_to_visit">\'வருகை தர ஒப்புக்கொண்டார்\' என குறிக்கப்பட்ட தேதி</string>
-
-  <string name="call_result_outcome_remind_to_call_later">\'அழைக்க நினைவூட்டு\' என குறிக்கப்பட்ட தேதி</string>
-
-  <string name="call_result_outcome_removed">அகற்றப்பட்டது: %1$s</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">பெயர் அல்லது கிராமத்தின்படி தேடு</string>

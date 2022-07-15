@@ -853,11 +853,6 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">ಒಂದು ವೇಳೆ ರೋಗಿಯು ತಮ್ಮ ಔಷಧಿಗಳನ್ನು ತೆಗೆದುಕೊಂಡರೆ, ಪ್ರೋಟೋಕಾಲ್ ಅನುಸರಿಸಿ</string>
 
   <!-- Call Result Outcome Message -->
-  <string name="call_result_outcome_agreed_to_visit">\'ಭೇಟಿ ನೀಡುವುದಕ್ಕಾಗಿ ಒಪ್ಪಿದ್ದಾರೆ\' ಎಂಬುದಾಗಿ ಈ ದಿನಾಂಕದಂದು ಗುರುತು ಮಾಡಲಾಗಿದೆ</string>
-
-  <string name="call_result_outcome_remind_to_call_later">\'ಕರೆ ಮಾಡಲು ನೆನಪಿಸಿ\' ಎಂಬುದಾಗಿ ಈ ದಿನಾಂಕದಂದು ಗುರುತು ಮಾಡಲಾಗಿದೆ</string>
-
-  <string name="call_result_outcome_removed">ತೆಗೆದುಹಾಕಿರುವುದು: %1$s</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">ಹೆಸರು ಅಥವಾ ಗ್ರಾಮದ ಪ್ರಕಾರ ಹುಡುಕಿ</string>

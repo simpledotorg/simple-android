@@ -853,11 +853,6 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">রোগী নিয়মিত তার ওষুধ গ্রহণ করলে প্রোটোকল অনুসরণ করুন</string>
 
   <!-- Call Result Outcome Message -->
-  <string name="call_result_outcome_agreed_to_visit">\'সাক্ষাতের জন্য রাজি হয়েছে\' হিসেবে চিহ্নিত করা হয়েছে</string>
-
-  <string name="call_result_outcome_remind_to_call_later">\'কল করার জন্য মনে করিয়ে দিন\' হিসেবে চিহ্নিত করা হয়েছে</string>
-
-  <string name="call_result_outcome_removed">মুছে ফেলা হয়েছে: %1$s</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">নাম অথবা গ্রাম দিয়ে অনুসন্ধান করুন</string>

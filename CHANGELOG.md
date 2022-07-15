@@ -22,6 +22,7 @@
 - Use overdue appointment selector to fetch selected ids in overdue download worker
 - Use overdue appointment selector to fetch selected ids in overdue download format selection dialog
 - Remove unnecessary code in overdue screen
+- Update call result outcome design in contact patient bottom sheet
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Changes

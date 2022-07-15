@@ -855,11 +855,6 @@ Appilikeeshinii Simple keessan Google PlayStore irraa haaromsadhaa.</string>
   <string name="clinical_decision_support_alert_bp_high_subtitle">Akka dhukkubsataan seeraan qoricha isaanii fudhachaa jiran hordofaa.</string>
 
   <!-- Call Result Outcome Message -->
-  <string name="call_result_outcome_agreed_to_visit">\"Ilaalamuudhaaf kan waliigalame\" irratti mallattaa\'eera</string>
-
-  <string name="call_result_outcome_remind_to_call_later">\"Akkan bilbiluuf na yaadachiisii\" irratti mallattaa\'eera</string>
-
-  <string name="call_result_outcome_removed">Yaadachiifameera: %1$s</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">Maqaadhaan ykn gandaan barbaadi</string>

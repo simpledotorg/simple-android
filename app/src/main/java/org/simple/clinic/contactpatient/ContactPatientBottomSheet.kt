@@ -319,8 +319,12 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     callPatientView.setupCallResultViewForAgreedToVisit()
   }
 
-  override fun setupRemindToCallLaterCallResultOutcome(daysToRemindAppointmentIn: Int) {
-    callPatientView.callResultOutcomeText = resources.getString(R.string.call_result_outcome_remind_to_call_later)
+  override fun setupRemindToCallLaterCallResultOutcome(appointmentReminderDate: LocalDate) {
+    val formattedDate = dateTimeFormatter.format(appointmentReminderDate)
+    callPatientView.callResultOutcomeText = resources.getString(
+        R.string.call_result_outcome_remind_to_call_later,
+        formattedDate
+    )
     callPatientView.setupCallResultViewForRemindToCallLater()
   }
 
@@ -331,7 +335,11 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   }
 
   override fun setCallResultUpdatedAtDate(callResultUpdatedAt: LocalDate) {
-    callPatientView.callResultLastUpdatedDate = dateTimeFormatter.format(callResultUpdatedAt)
+    val formattedDate = dateTimeFormatter.format(callResultUpdatedAt)
+    callPatientView.callResultLastUpdatedDate = getString(
+        R.string.call_result_outcome_saved_at,
+        formattedDate
+    )
   }
 
   override fun switchToCallPatientView() {

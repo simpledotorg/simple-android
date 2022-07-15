@@ -15,6 +15,7 @@ class OverdueSearchViewEffectHandler(
       OpenSelectDownloadFormatDialog -> uiActions.openSelectDownloadFormatDialog()
       OpenSelectShareFormatDialog -> uiActions.openSelectShareFormatDialog()
       OpenShareInProgressDialog -> uiActions.openShareInProgressDialog()
+      ShowNoInternetConnectionDialog -> uiActions.showNoInternetConnectionDialog()
     }.exhaustive()
   }
 }

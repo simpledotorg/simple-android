@@ -9,4 +9,5 @@ interface OverdueSearchUiActions {
   fun openSelectDownloadFormatDialog()
   fun openSelectShareFormatDialog()
   fun openShareInProgressDialog()
+  fun showNoInternetConnectionDialog()
 }

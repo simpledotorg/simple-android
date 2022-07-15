@@ -13,6 +13,8 @@ class OverdueSearchViewEffectHandler(
       is OpenContactPatientSheet -> uiActions.openContactPatientSheet(viewEffect.patientUuid)
       is SetOverdueSearchQuery -> uiActions.setOverdueSearchQuery(viewEffect.searchQuery)
       OpenSelectDownloadFormatDialog -> uiActions.openSelectDownloadFormatDialog()
+      OpenSelectShareFormatDialog -> uiActions.openSelectShareFormatDialog()
+      OpenShareInProgressDialog -> uiActions.openShareInProgressDialog()
     }.exhaustive()
   }
 }

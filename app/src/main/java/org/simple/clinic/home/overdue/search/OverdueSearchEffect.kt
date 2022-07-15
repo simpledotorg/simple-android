@@ -19,7 +19,7 @@ object LoadSelectedOverdueAppointmentIds : OverdueSearchEffect()
 
 object ClearSelectedOverdueAppointments : OverdueSearchEffect()
 
-data class ReplaceSelectedAppointmentIds(val appointmentIds: Set<UUID>) : OverdueSearchEffect()
+data class ReplaceSelectedAppointmentIds(val appointmentIds: Set<UUID>, val type: OverdueButtonType) : OverdueSearchEffect()
 
 object ScheduleDownload : OverdueSearchEffect()
 
@@ -32,3 +32,7 @@ data class OpenContactPatientSheet(val patientUuid: UUID) : OverdueSearchViewEff
 data class SetOverdueSearchQuery(val searchQuery: String) : OverdueSearchViewEffect()
 
 object OpenSelectDownloadFormatDialog : OverdueSearchViewEffect()
+
+object OpenSelectShareFormatDialog : OverdueSearchViewEffect()
+
+object OpenShareInProgressDialog : OverdueSearchViewEffect()

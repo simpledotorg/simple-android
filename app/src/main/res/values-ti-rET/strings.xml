@@ -853,11 +853,6 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">እቲ ሕሙም ኣዘውቲሩ መድሓኒት ዝወስድ እንተ ዀይኑ ነቲ መምርሒ ስዓብ</string>
 
   <!-- Call Result Outcome Message -->
-  <string name="call_result_outcome_agreed_to_visit">ምልክት ዝተገበረሉ \'ክበጽሖ ፍቓደኛ</string>
-
-  <string name="call_result_outcome_remind_to_call_later">ምልክት ዝተገበረሉ \'ንኽትጽውዕ ተዘኻኽር\'</string>
-
-  <string name="call_result_outcome_removed">ዝተወገደ: %1$s</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">ብስም ወይ ብቁሸት ድለ</string>

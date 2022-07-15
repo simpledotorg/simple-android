@@ -961,11 +961,13 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">Follow protocol, if patient takes their medicines regularly</string>
 
   <!-- Call Result Outcome Message -->
-  <string name="call_result_outcome_agreed_to_visit">Marked \'Agreed to visit\' on</string>
+  <string name="call_result_outcome_agreed_to_visit">Agreed to visit</string>
 
-  <string name="call_result_outcome_remind_to_call_later">Marked \'Remind to call\' on</string>
+  <string name="call_result_outcome_remind_to_call_later">Call reminder set for %1$s</string>
 
   <string name="call_result_outcome_removed">Removed: %1$s</string>
+
+  <string name="call_result_outcome_saved_at">Saved %1$s</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">Search by name or village</string>

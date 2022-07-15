@@ -18,7 +18,10 @@ import java.util.UUID
 class OverdueSearchUpdateTest {
 
   private val date = LocalDate.of(2022, 2, 23)
-  private val updateSpec = UpdateSpec(OverdueSearchUpdate(date))
+  private val updateSpec = UpdateSpec(OverdueSearchUpdate(
+      date = date,
+      canGeneratePdf = true
+  ))
   private val defaultModel = OverdueSearchModel.create()
 
   @Test
@@ -191,4 +194,79 @@ class OverdueSearchUpdateTest {
             hasEffects(ClearSelectedOverdueAppointments)
         ))
   }
+
+  @Test
+  fun `when download button is clicked, appointments are selected and pdf can be generated, then open select download format dialog`() {
+    val appointmentIds = setOf(UUID.fromString("6fc41403-8550-4749-aa94-c7320012e792"))
+    val selectedAppointmentIds = setOf(UUID.fromString("ad32f91d-3c7e-45c3-b544-fbdc996e44b3"))
+    val selectedAppointmentIdsModel = defaultModel.selectedOverdueAppointmentsChanged(selectedAppointmentIds)
+
+    updateSpec
+        .given(selectedAppointmentIdsModel)
+        .whenEvent(DownloadButtonClicked(appointmentIds))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenSelectDownloadFormatDialog)
+        ))
+  }
+
+  @Test
+  fun `when download button is clicked, appointments are selected and pdf cannot be generated, then schedule download`() {
+    val appointmentIds = setOf(UUID.fromString("6fc41403-8550-4749-aa94-c7320012e792"))
+    val selectedAppointmentIds = setOf(UUID.fromString("ad32f91d-3c7e-45c3-b544-fbdc996e44b3"))
+    val updateSpec = UpdateSpec(OverdueSearchUpdate(date = date, canGeneratePdf = false))
+    val selectedAppointmentIdsModel = defaultModel.selectedOverdueAppointmentsChanged(selectedAppointmentIds)
+
+    updateSpec
+        .given(selectedAppointmentIdsModel)
+        .whenEvent(DownloadButtonClicked(appointmentIds))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ScheduleDownload)
+        ))
+  }
+
+  @Test
+  fun `when download button is clicked and no appointments are selected, then replace selected appointment ids`() {
+    val appointmentIds = setOf(UUID.fromString("6fc41403-8550-4749-aa94-c7320012e792"))
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DownloadButtonClicked(appointmentIds))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ReplaceSelectedAppointmentIds(appointmentIds))
+        ))
+  }
+
+  @Test
+  fun `when selected ids are replaced and pdf can be generated, then open select download format dialog`() {
+    val selectedAppointmentIds = setOf(UUID.fromString("ad32f91d-3c7e-45c3-b544-fbdc996e44b3"))
+    val selectedAppointmentIdsModel = defaultModel
+        .selectedOverdueAppointmentsChanged(selectedAppointmentIds)
+
+    updateSpec
+        .given(selectedAppointmentIdsModel)
+        .whenEvent(SelectedAppointmentIdsReplaced)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenSelectDownloadFormatDialog)
+        ))
+  }
+
+  @Test
+  fun `when selected ids are replaced and pdf cannot be generated, then schedule download`() {
+    val selectedAppointmentIds = setOf(UUID.fromString("ad32f91d-3c7e-45c3-b544-fbdc996e44b3"))
+    val updateSpec = UpdateSpec(OverdueSearchUpdate(date = date, canGeneratePdf = false))
+    val selectedAppointmentIdsModel = defaultModel.selectedOverdueAppointmentsChanged(selectedAppointmentIds)
+
+    updateSpec
+        .given(selectedAppointmentIdsModel)
+        .whenEvent(SelectedAppointmentIdsReplaced)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ScheduleDownload)
+        ))
+  }
+
 }

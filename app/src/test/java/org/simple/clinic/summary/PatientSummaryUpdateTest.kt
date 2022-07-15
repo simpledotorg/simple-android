@@ -1320,6 +1320,54 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when measurement warning dialog not now is clicked and patient is dead, then go back to previous screen`() {
+    val patientUuid = UUID.fromString("fb2a4f44-2df6-429c-9fc4-954ddea963bc")
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        status = PatientStatus.Dead
+    )
+
+    val patientSummaryProfile = PatientSummaryProfile(
+        patient = patient,
+        address = patientAddress,
+        phoneNumber = phoneNumber,
+        bpPassport = bpPassport,
+        alternativeId = bangladeshNationalId,
+        facility = facility
+    )
+
+    val model = defaultModel
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(MeasurementWarningNotNowClicked(patientUuid, Instant.parse("2018-01-01T00:00:00Z")))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoBackToPreviousScreen)
+        ))
+  }
+
+  @Test
+  fun `when measurement warning dialog not now is clicked and patient is not dead, the load data for back click`() {
+    val model = defaultModel
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(MeasurementWarningNotNowClicked(patientUuid, Instant.parse("2018-01-01T00:00:00Z")))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(LoadDataForBackClick(
+                patientUuid = patientUuid,
+                screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+            ))
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

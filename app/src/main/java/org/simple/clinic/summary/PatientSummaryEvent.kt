@@ -29,6 +29,13 @@ data class PatientSummaryDoneClicked(
   override val analyticsName = "Patient Summary:Done Clicked"
 }
 
+data class MeasurementWarningNotNowClicked(
+    val patientUuid: UUID,
+    val screenCreatedTimestamp: Instant
+) : PatientSummaryEvent() {
+  override val analyticsName = "Patient Summary:Measurement Warning Not Now Clicked"
+}
+
 data class CurrentUserAndFacilityLoaded(
     val user: User,
     val facility: Facility

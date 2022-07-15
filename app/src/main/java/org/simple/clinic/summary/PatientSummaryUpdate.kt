@@ -67,7 +67,20 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       )
       is CDSSPilotStatusChecked -> cdssPilotStatusChecked(event, model)
       is LatestScheduledAppointmentLoaded -> next(model.scheduledAppointmentLoaded(event.appointment))
+      is MeasurementWarningNotNowClicked -> measurementWarningNotNowClicked(model, event)
     }
+  }
+
+  private fun measurementWarningNotNowClicked(
+      model: PatientSummaryModel,
+      event: MeasurementWarningNotNowClicked
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    val effect = if (model.hasPatientDied)
+      GoBackToPreviousScreen
+    else
+      LoadDataForBackClick(event.patientUuid, event.screenCreatedTimestamp)
+
+    return dispatch(effect)
   }
 
   private fun cdssPilotStatusChecked(

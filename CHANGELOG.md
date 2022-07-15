@@ -26,6 +26,7 @@
 - Add support for select and download in overdue search screen
 - Add support for select and share in overdue search screen
 - Show no internet connection dialog when download/share button is clicked
+- Bump Material Design Components to v1.6.1
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Changes

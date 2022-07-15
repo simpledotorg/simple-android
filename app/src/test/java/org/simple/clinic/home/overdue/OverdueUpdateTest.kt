@@ -132,22 +132,7 @@ class OverdueUpdateTest {
         .whenEvent(DownloadOverdueListClicked(networkStatus = Optional.of(ACTIVE)))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenSelectDownloadFormatDialog(selectedAppointmentIds = emptySet()))
-        ))
-  }
-
-  @Test
-  fun `when download overdue list button is clicked, network is connected and pdf can be generated and has selected appointment, then open select download format dialog for selected appointments`() {
-    val selectedAppointmentIds = setOf(UUID.fromString("5d0585a9-bff7-411a-beec-905d9f6da831"))
-    val selectedAppointmentsModel = defaultModel
-        .selectedOverdueAppointmentsChanged(selectedAppointmentIds)
-
-    updateSpec
-        .given(selectedAppointmentsModel)
-        .whenEvent(DownloadOverdueListClicked(networkStatus = Optional.of(ACTIVE)))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(OpenSelectDownloadFormatDialog(selectedAppointmentIds = selectedAppointmentIds))
+            hasEffects(OpenSelectDownloadFormatDialog)
         ))
   }
 
@@ -182,22 +167,7 @@ class OverdueUpdateTest {
         .whenEvent(ShareOverdueListClicked(networkStatus = Optional.of(ACTIVE)))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenSelectShareFormatDialog(selectedAppointmentIds = emptySet()))
-        ))
-  }
-
-  @Test
-  fun `when share overdue list button is clicked, network is connected and pdf can be generated and has selected appointments, then open select share format dialog for selected appointments`() {
-    val selectedAppointmentIds = setOf(UUID.fromString("2fbcc833-7821-4c91-bd1b-90c1b54e3fad"))
-    val selectedAppointmentsModel = defaultModel
-        .selectedOverdueAppointmentsChanged(selectedAppointmentIds)
-
-    updateSpec
-        .given(selectedAppointmentsModel)
-        .whenEvent(ShareOverdueListClicked(networkStatus = Optional.of(ACTIVE)))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(OpenSelectShareFormatDialog(selectedAppointmentIds = selectedAppointmentIds))
+            hasEffects(OpenSelectShareFormatDialog)
         ))
   }
 
@@ -210,23 +180,7 @@ class OverdueUpdateTest {
         .whenEvent(ShareOverdueListClicked(networkStatus = Optional.of(ACTIVE)))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenSharingInProgressDialog(selectedAppointmentIds = emptySet()))
-        ))
-  }
-
-  @Test
-  fun `when share overdue list button is clicked, network is connected but pdf can not be generated and has selected appointments, then open progress for share dialog for selected appointments`() {
-    val updateSpec = UpdateSpec(OverdueUpdate(date = dateOnClock, canGeneratePdf = false, isOverdueSectionsFeatureEnabled = false))
-    val selectedAppointmentIds = setOf(UUID.fromString("79ad6fe2-7567-4473-9e32-285bc2d1b060"))
-    val selectedAppointmentsModel = defaultModel
-        .selectedOverdueAppointmentsChanged(selectedAppointmentIds)
-
-    updateSpec
-        .given(selectedAppointmentsModel)
-        .whenEvent(ShareOverdueListClicked(networkStatus = Optional.of(ACTIVE)))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(OpenSharingInProgressDialog(selectedAppointmentIds = selectedAppointmentIds))
+            hasEffects(OpenSharingInProgressDialog)
         ))
   }
 

@@ -10,7 +10,10 @@ import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import java.time.LocalDate
 
-class OverdueSearchUpdate(val date: LocalDate) : Update<OverdueSearchModel, OverdueSearchEvent, OverdueSearchEffect> {
+class OverdueSearchUpdate(
+    private val date: LocalDate,
+    private val canGeneratePdf: Boolean
+) : Update<OverdueSearchModel, OverdueSearchEvent, OverdueSearchEffect> {
 
   override fun update(model: OverdueSearchModel, event: OverdueSearchEvent): Next<OverdueSearchModel, OverdueSearchEffect> {
     return when (event) {
@@ -29,8 +32,22 @@ class OverdueSearchUpdate(val date: LocalDate) : Update<OverdueSearchModel, Over
       is OverdueAppointmentCheckBoxClicked -> dispatch(ToggleOverdueAppointmentSelection(event.appointmentId))
       ClearSelectedOverdueAppointmentsClicked -> dispatch(ClearSelectedOverdueAppointments)
       is SelectedOverdueAppointmentsLoaded -> next(model.selectedOverdueAppointmentsChanged(event.selectedAppointmentIds))
+      SelectedAppointmentIdsReplaced -> dispatch(downloadOverdueAppointmentsEffect())
+      is DownloadButtonClicked -> downloadButtonClicked(model, event)
     }
   }
+
+  private fun downloadButtonClicked(model: OverdueSearchModel, event: DownloadButtonClicked): Next<OverdueSearchModel, OverdueSearchEffect> {
+    val effect = if (model.selectedOverdueAppointments.isNotEmpty()) {
+      downloadOverdueAppointmentsEffect()
+    } else {
+      ReplaceSelectedAppointmentIds(event.searchResultsAppointmentIds)
+    }
+
+    return dispatch(effect)
+  }
+
+  private fun downloadOverdueAppointmentsEffect() = if (canGeneratePdf) OpenSelectDownloadFormatDialog else ScheduleDownload
 
   private fun overdueScreenShown(model: OverdueSearchModel): Next<OverdueSearchModel, OverdueSearchEffect> {
     return if (model.hasSearchQuery) {

@@ -11,6 +11,8 @@ import kotlinx.coroutines.CoroutineScope
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.OverdueAppointmentSelector
+import org.simple.clinic.overdue.download.OverdueDownloadScheduler
+import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
@@ -23,6 +25,7 @@ class OverdueSearchEffectHandler @AssistedInject constructor(
     private val overdueSearchConfig: OverdueSearchConfig,
     private val currentFacility: Lazy<Facility>,
     private val overdueAppointmentSelector: OverdueAppointmentSelector,
+    private val overdueDownloadScheduler: OverdueDownloadScheduler,
     @Assisted private val viewEffectsConsumer: Consumer<OverdueSearchViewEffect>,
     @Assisted private val pagingCacheScope: CoroutineScope
 ) {
@@ -46,7 +49,22 @@ class OverdueSearchEffectHandler @AssistedInject constructor(
         .addConsumer(ToggleOverdueAppointmentSelection::class.java, ::toggleOverdueAppointmentSelection, schedulersProvider.computation())
         .addTransformer(LoadSelectedOverdueAppointmentIds::class.java, loadSelectedOverdueAppointmentIds())
         .addConsumer(ClearSelectedOverdueAppointments::class.java, ::clearSelectedOverdueAppointments)
+        .addTransformer(ReplaceSelectedAppointmentIds::class.java, replaceSelectedAppointmentIds())
+        .addConsumer(ScheduleDownload::class.java, ::scheduleDownload)
         .build()
+  }
+
+  private fun scheduleDownload(effect: ScheduleDownload) {
+    overdueDownloadScheduler.schedule(CSV)
+  }
+
+  private fun replaceSelectedAppointmentIds(): ObservableTransformer<ReplaceSelectedAppointmentIds, OverdueSearchEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.computation())
+          .map { overdueAppointmentSelector.replaceSelectedIds(it.appointmentIds) }
+          .map { SelectedAppointmentIdsReplaced }
+    }
   }
 
   private fun clearSelectedOverdueAppointments(effect: ClearSelectedOverdueAppointments) {

@@ -48,6 +48,8 @@ import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.overdue.download.formatdialog.Download
 import org.simple.clinic.overdue.download.formatdialog.SelectOverdueDownloadFormatDialog
+import org.simple.clinic.overdue.download.formatdialog.Share
+import org.simple.clinic.overdue.download.formatdialog.SharingInProgress
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UserClock
@@ -119,6 +121,9 @@ class OverdueSearchScreen : BaseScreen<
   private val downloadButton
     get() = binding.downloadOverdueListButton
 
+  private val shareButton
+    get() = binding.shareOverdueListButton
+
   private val hotEvents = PublishSubject.create<UiEvent>()
 
   private val disposable = CompositeDisposable()
@@ -172,7 +177,8 @@ class OverdueSearchScreen : BaseScreen<
           hotEvents,
           overdueSearchQueryTextChanges(),
           clearSelectedOverdueAppointmentClicks(),
-          downloadButtonClicks()
+          downloadButtonClicks(),
+          shareButtonClicks()
       )
       .compose(ReportAnalyticsEvents())
       .cast<OverdueSearchEvent>()
@@ -191,20 +197,20 @@ class OverdueSearchScreen : BaseScreen<
         }
   }
 
-  private fun downloadButtonClicks(): Observable<UiEvent> {
-    return downloadButton
-        .clicks()
-        .map {
-          val searchResultsAppointmentIds = overdueSearchListAdapter
-              .snapshot()
-              .items
-              .filterIsInstance<OverdueAppointmentRow>()
-              .map { it.appointmentUuid }
-              .toSet()
+  private fun downloadButtonClicks(): Observable<UiEvent> = downloadButton
+      .clicks()
+      .map { DownloadButtonClicked(searchResultsAppointmentIds()) }
 
-          DownloadButtonClicked(searchResultsAppointmentIds)
-        }
-  }
+  private fun shareButtonClicks(): Observable<UiEvent> = shareButton
+      .clicks()
+      .map { ShareButtonClicked(searchResultsAppointmentIds()) }
+
+  private fun searchResultsAppointmentIds() = overdueSearchListAdapter
+      .snapshot()
+      .items
+      .filterIsInstance<OverdueAppointmentRow>()
+      .map { it.appointmentUuid }
+      .toSet()
 
   override fun onAttach(context: Context) {
     super.onAttach(context)
@@ -354,6 +360,14 @@ class OverdueSearchScreen : BaseScreen<
 
   override fun openSelectDownloadFormatDialog() {
     router.push(SelectOverdueDownloadFormatDialog.Key(Download))
+  }
+
+  override fun openSelectShareFormatDialog() {
+    router.push(SelectOverdueDownloadFormatDialog.Key(Share))
+  }
+
+  override fun openShareInProgressDialog() {
+    router.push(SelectOverdueDownloadFormatDialog.Key(SharingInProgress))
   }
 
   private fun overdueSearchQueryTextChanges(): Observable<UiEvent> {

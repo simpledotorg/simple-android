@@ -62,8 +62,11 @@ class OverdueSearchEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.computation())
-          .map { overdueAppointmentSelector.replaceSelectedIds(it.appointmentIds) }
-          .map { SelectedAppointmentIdsReplaced }
+          .map { (appointmentIds, buttonType) ->
+            overdueAppointmentSelector.replaceSelectedIds(appointmentIds)
+            return@map buttonType
+          }
+          .map { SelectedAppointmentIdsReplaced(it) }
     }
   }
 

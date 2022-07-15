@@ -24,6 +24,10 @@
 - Remove unnecessary code in overdue screen
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
+### Changes
+
+- Continue with current action when not now is clicked in measurement warning dialog
+
 ## 2022-07-11-8325
 
 ### Internal

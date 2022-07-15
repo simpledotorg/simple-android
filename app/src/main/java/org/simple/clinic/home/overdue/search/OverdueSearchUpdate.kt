@@ -41,10 +41,10 @@ class OverdueSearchUpdate(
   }
 
   private fun shareButtonClicked(model: OverdueSearchModel, event: ShareButtonClicked): Next<OverdueSearchModel, OverdueSearchEffect> {
-    val effect = if (model.selectedOverdueAppointments.isNotEmpty()) {
-      shareOverdueAppointmentsEffect()
-    } else {
-      ReplaceSelectedAppointmentIds(event.searchResultsAppointmentIds, SHARE)
+    val effect = when {
+      !event.hasNetworkConnection -> ShowNoInternetConnectionDialog
+      model.selectedOverdueAppointments.isNotEmpty() -> shareOverdueAppointmentsEffect()
+      else -> ReplaceSelectedAppointmentIds(event.searchResultsAppointmentIds, SHARE)
     }
 
     return dispatch(effect)
@@ -60,10 +60,10 @@ class OverdueSearchUpdate(
   }
 
   private fun downloadButtonClicked(model: OverdueSearchModel, event: DownloadButtonClicked): Next<OverdueSearchModel, OverdueSearchEffect> {
-    val effect = if (model.selectedOverdueAppointments.isNotEmpty()) {
-      downloadOverdueAppointmentsEffect()
-    } else {
-      ReplaceSelectedAppointmentIds(event.searchResultsAppointmentIds, DOWNLOAD)
+    val effect = when {
+      !event.hasNetworkConnection -> ShowNoInternetConnectionDialog
+      model.selectedOverdueAppointments.isNotEmpty() -> downloadOverdueAppointmentsEffect()
+      else -> ReplaceSelectedAppointmentIds(event.searchResultsAppointmentIds, DOWNLOAD)
     }
 
     return dispatch(effect)

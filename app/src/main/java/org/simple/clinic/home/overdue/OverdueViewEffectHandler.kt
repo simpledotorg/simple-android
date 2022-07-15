@@ -13,9 +13,9 @@ class OverdueViewEffectHandler(
       is OpenPatientSummary -> uiActions.openPatientSummary(viewEffect.patientUuid)
       is ShowOverdueAppointments -> uiActions.showOverdueAppointments(viewEffect.overdueAppointmentsOld, viewEffect.isDiabetesManagementEnabled)
       ShowNoActiveNetworkConnectionDialog -> uiActions.showNoActiveNetworkConnectionDialog()
-      is OpenSelectDownloadFormatDialog -> uiActions.openSelectDownloadFormatDialog(viewEffect.selectedAppointmentIds)
-      is OpenSelectShareFormatDialog -> uiActions.openSelectShareFormatDialog(viewEffect.selectedAppointmentIds)
-      is OpenSharingInProgressDialog -> uiActions.openProgressForSharingDialog(viewEffect.selectedAppointmentIds)
+      is OpenSelectDownloadFormatDialog -> uiActions.openSelectDownloadFormatDialog()
+      is OpenSelectShareFormatDialog -> uiActions.openSelectShareFormatDialog()
+      is OpenSharingInProgressDialog -> uiActions.openProgressForSharingDialog()
       OpenOverdueSearch -> uiActions.openOverdueSearch()
     }.exhaustive()
   }

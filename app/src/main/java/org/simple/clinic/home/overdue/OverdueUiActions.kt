@@ -12,8 +12,8 @@ interface OverdueUiActions {
   )
 
   fun showNoActiveNetworkConnectionDialog()
-  fun openSelectDownloadFormatDialog(selectedAppointmentIds: Set<UUID>)
-  fun openSelectShareFormatDialog(selectedAppointmentIds: Set<UUID>)
-  fun openProgressForSharingDialog(selectedAppointmentIds: Set<UUID>)
+  fun openSelectDownloadFormatDialog()
+  fun openSelectShareFormatDialog()
+  fun openProgressForSharingDialog()
   fun openOverdueSearch()
 }

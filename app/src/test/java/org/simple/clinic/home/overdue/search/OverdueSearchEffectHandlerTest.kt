@@ -18,6 +18,8 @@ import org.simple.clinic.home.overdue.search.OverdueSearchQueryValidator.Result.
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.OverdueAppointmentSelector
+import org.simple.clinic.overdue.download.OverdueDownloadScheduler
+import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.PagingSourceFactory
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -38,6 +40,7 @@ class OverdueSearchEffectHandlerTest {
   private val currentFacility = TestData.facility(uuid = UUID.fromString("94db5d90-d483-4755-892a-97fde5a870fe"))
   private val pagingCacheScope = TestScope()
   private val overdueAppointmentSelector = mock<OverdueAppointmentSelector>()
+  private val overdueDownloadScheduler = mock<OverdueDownloadScheduler>()
   private val effectHandler = OverdueSearchEffectHandler(
       overdueSearchHistory = overdueSearchHistory,
       overdueSearchQueryValidator = OverdueSearchQueryValidator(overdueSearchConfig),
@@ -47,6 +50,7 @@ class OverdueSearchEffectHandlerTest {
       overdueSearchConfig = overdueSearchConfig,
       currentFacility = { currentFacility },
       overdueAppointmentSelector = overdueAppointmentSelector,
+      overdueDownloadScheduler = overdueDownloadScheduler,
       viewEffectsConsumer = viewEffectHandler::handle,
       pagingCacheScope = pagingCacheScope
   ).build()
@@ -222,5 +226,46 @@ class OverdueSearchEffectHandlerTest {
     verifyNoMoreInteractions(overdueAppointmentSelector)
 
     verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when replace selected overdue appointment ids effect is received, then replace the selected ids`() {
+    // given
+    val appointmentIds = setOf(
+        UUID.fromString("e9fd3636-34d9-4959-9c83-065ef414b836"),
+        UUID.fromString("5e2a88d8-1556-44dd-940d-17736a311c6a")
+    )
+
+    // when
+    effectHandlerTestCase.dispatch(ReplaceSelectedAppointmentIds(appointmentIds))
+
+    // then
+    verifyZeroInteractions(uiActions)
+    verify(overdueAppointmentSelector).replaceSelectedIds(appointmentIds)
+    verifyNoMoreInteractions(overdueAppointmentSelector)
+    effectHandlerTestCase.assertOutgoingEvents(SelectedAppointmentIdsReplaced)
+  }
+
+  @Test
+  fun `when schedule download effect is received, then schedule download`() {
+    // when
+    effectHandlerTestCase.dispatch(ScheduleDownload)
+
+    // then
+    verify(overdueDownloadScheduler).schedule(CSV)
+    verifyNoMoreInteractions(overdueDownloadScheduler)
+    effectHandlerTestCase.assertNoOutgoingEvents()
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when open select download format dialog effect is received, then open dialog`() {
+    // when
+    effectHandlerTestCase.dispatch(OpenSelectDownloadFormatDialog)
+
+    // then
+    verify(uiActions).openSelectDownloadFormatDialog()
+    verifyNoMoreInteractions(uiActions)
+    effectHandlerTestCase.assertNoOutgoingEvents()
   }
 }

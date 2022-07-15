@@ -1,6 +1,7 @@
 package org.simple.clinic.home.overdue.search
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -38,12 +39,15 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.home.overdue.OverdueAppointment
+import org.simple.clinic.home.overdue.search.OverdueAppointmentSearchListItem.OverdueAppointmentRow
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.DONE
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.IN_PROGRESS
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.NO_RESULTS
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.overdue.download.formatdialog.Download
+import org.simple.clinic.overdue.download.formatdialog.SelectOverdueDownloadFormatDialog
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UserClock
@@ -112,6 +116,9 @@ class OverdueSearchScreen : BaseScreen<
   private val clearSelectedOverdueAppointmentsButton
     get() = binding.clearSelectedOverdueAppointmentsButton
 
+  private val downloadButton
+    get() = binding.downloadOverdueListButton
+
   private val hotEvents = PublishSubject.create<UiEvent>()
 
   private val disposable = CompositeDisposable()
@@ -139,7 +146,11 @@ class OverdueSearchScreen : BaseScreen<
 
   override fun defaultModel() = OverdueSearchModel.create()
 
-  override fun createUpdate() = OverdueSearchUpdate(LocalDate.now(userClock))
+  override fun createUpdate(): OverdueSearchUpdate {
+    val canGeneratePdf = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+
+    return OverdueSearchUpdate(LocalDate.now(userClock), canGeneratePdf)
+  }
 
   override fun createInit() = OverdueSearchInit()
 
@@ -160,7 +171,8 @@ class OverdueSearchScreen : BaseScreen<
           searchHistoryItemClicks(),
           hotEvents,
           overdueSearchQueryTextChanges(),
-          clearSelectedOverdueAppointmentClicks()
+          clearSelectedOverdueAppointmentClicks(),
+          downloadButtonClicks()
       )
       .compose(ReportAnalyticsEvents())
       .cast<OverdueSearchEvent>()
@@ -176,6 +188,21 @@ class OverdueSearchScreen : BaseScreen<
           val searchQuery = searchHistoryAdapter.getItem(it)
 
           OverdueSearchHistoryClicked(searchQuery!!)
+        }
+  }
+
+  private fun downloadButtonClicks(): Observable<UiEvent> {
+    return downloadButton
+        .clicks()
+        .map {
+          val searchResultsAppointmentIds = overdueSearchListAdapter
+              .snapshot()
+              .items
+              .filterIsInstance<OverdueAppointmentRow>()
+              .map { it.appointmentUuid }
+              .toSet()
+
+          DownloadButtonClicked(searchResultsAppointmentIds)
         }
   }
 
@@ -323,6 +350,10 @@ class OverdueSearchScreen : BaseScreen<
 
   override fun setOverdueSearchQuery(searchQuery: String) {
     overdueSearchQueryEditText.setTextAndCursor(searchQuery)
+  }
+
+  override fun openSelectDownloadFormatDialog() {
+    router.push(SelectOverdueDownloadFormatDialog.Key(Download))
   }
 
   private fun overdueSearchQueryTextChanges(): Observable<UiEvent> {

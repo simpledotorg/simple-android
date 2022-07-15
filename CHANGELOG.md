@@ -28,6 +28,7 @@
 - Show no internet connection dialog when download/share button is clicked
 - Bump Material Design Components to v1.6.1
 - Bump firebase config to v21.1.1
+- Bump Coroutines to v1.6.4
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Changes

@@ -7,15 +7,18 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
+import io.reactivex.Observable
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.overdue.OverdueAppointmentSelector
 import org.simple.clinic.overdue.download.OverdueDownloadScheduler
 import org.simple.clinic.overdue.download.OverdueListDownloadResult.DownloadSuccessful
 import org.simple.clinic.overdue.download.OverdueListDownloader
 import org.simple.clinic.overdue.download.OverdueListFileFormat
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
+import java.util.UUID
 
 class SelectOverdueDownloadFormatEffectHandlerTest {
 
@@ -23,10 +26,12 @@ class SelectOverdueDownloadFormatEffectHandlerTest {
   private val uiActions = mock<UiActions>()
   private val viewEffectHandler = SelectOverdueDownloadFormatViewEffectHandler(uiActions)
   private val overdueDownloadScheduler = mock<OverdueDownloadScheduler>()
+  private val overdueAppointmentSelector = mock<OverdueAppointmentSelector>()
   private val effectHandler = SelectOverdueDownloadFormatEffectHandler(
       overdueListDownloader = overdueListDownloader,
       schedulersProvider = TestSchedulersProvider.trampoline(),
       overdueDownloadScheduler = overdueDownloadScheduler,
+      overdueAppointmentSelector = overdueAppointmentSelector,
       viewEffectsConsumer = viewEffectHandler::handle
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -116,5 +121,20 @@ class SelectOverdueDownloadFormatEffectHandlerTest {
 
     verify(uiActions).openDownloadFailedErrorDialog()
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when load selected appointment ids effect is received, then load the selected appointment ids`() {
+    // given
+    val selectedAppointmentIds = setOf(
+        UUID.fromString("c84c9207-f132-4401-8d63-19df5adfd093")
+    )
+    whenever(overdueAppointmentSelector.selectedAppointmentIdsStream) doReturn Observable.just(selectedAppointmentIds)
+
+    // when
+    testCase.dispatch(LoadSelectedOverdueAppointmentIds)
+
+    // then
+    testCase.assertOutgoingEvents(SelectedOverdueAppointmentsLoaded(selectedAppointmentIds))
   }
 }

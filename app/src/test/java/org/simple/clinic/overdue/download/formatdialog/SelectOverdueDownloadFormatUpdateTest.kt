@@ -36,25 +36,6 @@ class SelectOverdueDownloadFormatUpdateTest {
   }
 
   @Test
-  fun `when download or share button is clicked and it's opened as download, then schedule the download with selected ids`() {
-    val selectedAppointmentIds = setOf(UUID.fromString("3d03d6dd-049e-42cf-b929-b757877b1555"))
-    val overdueDownloadFormatUpdatedModel = SelectOverdueDownloadFormatModel
-        .create(Download(selectedAppointmentIds = selectedAppointmentIds))
-        .overdueListDownloadFormatUpdated(CSV)
-
-    updateSpec
-        .given(overdueDownloadFormatUpdatedModel)
-        .whenEvent(DownloadOrShareClicked)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(ScheduleDownload(
-                fileFormat = CSV,
-                selectedAppointmentIds = selectedAppointmentIds
-            ))
-        ))
-  }
-
-  @Test
   fun `when file is downloaded for sharing, then share the downloaded file`() {
     val uri = mock<Uri>()
 

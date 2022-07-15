@@ -174,8 +174,7 @@ class OverdueEffectHandlerTest {
     // when
     val selectedAppointmentIds = setOf(UUID.fromString("618f0f3f-7ae0-4227-bb26-49ec10ed4ff0"))
     effectHandlerTestCase.dispatch(ScheduleDownload(
-        fileFormat = CSV,
-        selectedAppointmentIds = selectedAppointmentIds
+        fileFormat = CSV
     ))
 
     // given
@@ -183,8 +182,7 @@ class OverdueEffectHandlerTest {
     verifyZeroInteractions(uiActions)
 
     verify(overdueDownloadScheduler).schedule(
-        fileFormat = CSV,
-        selectedAppointmentIds = selectedAppointmentIds
+        fileFormat = CSV
     )
   }
 

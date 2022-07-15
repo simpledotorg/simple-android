@@ -41,7 +41,7 @@ class SelectOverdueDownloadFormatUpdate : Update<SelectOverdueDownloadFormatMode
           model.overdueDownloadInProgress(),
           DownloadForShare(model.overdueListFileFormat, model.openAs.selectedAppointmentIds)
       )
-      is Download -> dispatch(ScheduleDownload(model.overdueListFileFormat, model.openAs.selectedAppointmentIds))
+      is Download -> dispatch(ScheduleDownload(model.overdueListFileFormat))
       is SharingInProgress -> noChange()
     }
   }

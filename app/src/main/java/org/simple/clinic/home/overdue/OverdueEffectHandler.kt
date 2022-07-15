@@ -107,7 +107,7 @@ class OverdueEffectHandler @AssistedInject constructor(
   }
 
   private fun scheduleDownload(effect: ScheduleDownload) {
-    overdueDownloadScheduler.schedule(effect.fileFormat, effect.selectedAppointmentIds)
+    overdueDownloadScheduler.schedule(effect.fileFormat)
   }
 
   private fun loadCurrentFacility(): ObservableTransformer<LoadCurrentFacility, OverdueEvent> {

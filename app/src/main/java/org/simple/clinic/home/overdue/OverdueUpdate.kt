@@ -141,10 +141,7 @@ class OverdueUpdate(
     return if (canGeneratePdf)
       OpenSelectDownloadFormatDialog(selectedAppointmentIds)
     else
-      ScheduleDownload(
-          fileFormat = CSV,
-          selectedAppointmentIds = selectedAppointmentIds
-      )
+      ScheduleDownload(fileFormat = CSV)
   }
 
   private fun openDialogForShareEffect(selectedAppointmentIds: Set<UUID>): OverdueEffect {

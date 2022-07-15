@@ -160,23 +160,7 @@ class OverdueUpdateTest {
         .whenEvent(DownloadOverdueListClicked(networkStatus = Optional.of(ACTIVE)))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ScheduleDownload(fileFormat = CSV, selectedAppointmentIds = emptySet()))
-        ))
-  }
-
-  @Test
-  fun `when download overdue list button is clicked, network is connected and pdf cannot be generated and appointments are selected, then schedule downloading selected appointments`() {
-    val updateSpec = UpdateSpec(OverdueUpdate(date = dateOnClock, canGeneratePdf = false, isOverdueSectionsFeatureEnabled = false))
-    val selectedAppointmentIds = setOf(UUID.fromString("28957fea-b234-4356-a2b2-443e3862f766"))
-    val selectedAppointmentsModel = defaultModel
-        .selectedOverdueAppointmentsChanged(selectedAppointmentIds)
-
-    updateSpec
-        .given(selectedAppointmentsModel)
-        .whenEvent(DownloadOverdueListClicked(networkStatus = Optional.of(ACTIVE)))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(ScheduleDownload(CSV, selectedAppointmentIds))
+            hasEffects(ScheduleDownload(fileFormat = CSV))
         ))
   }
 

@@ -106,17 +106,48 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/overdue_search_app_bar" />
 
+  <LinearLayout
+    android:id="@+id/select_all_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_20"
+    android:layout_marginTop="@dimen/spacing_24"
+    android:orientation="horizontal"
+    android:visibility="gone"
+    app:layout_constraintTop_toBottomOf="@+id/overdue_search_app_bar">
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+      android:id="@+id/select_all_checkbox"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:minWidth="@dimen/spacing_24"
+      android:minHeight="@dimen/spacing_24"
+      android:textColor="?attr/colorPrimary" />
+
+    <TextView
+      android:id="@+id/select_all_textView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_4"
+      android:text="@string/overdue_search_all_appointments_selected"
+      android:textAppearance="?attr/textAppearanceBody2"
+      android:textColor="?attr/colorPrimary"
+      tools:text="SELECT ALL" />
+
+  </LinearLayout>
+
   <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/overdue_search_results"
     android:layout_width="match_parent"
     android:layout_height="0dp"
+    android:layout_marginTop="@dimen/spacing_24"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:padding="@dimen/spacing_8"
     android:visibility="gone"
     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
     app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/overdue_search_app_bar" />
+    app:layout_constraintTop_toBottomOf="@id/select_all_layout" />
 
   <LinearLayout
     android:id="@+id/download_and_share_button_frame"

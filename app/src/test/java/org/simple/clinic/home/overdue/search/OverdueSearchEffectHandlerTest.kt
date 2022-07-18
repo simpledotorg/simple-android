@@ -302,4 +302,18 @@ class OverdueSearchEffectHandlerTest {
     verifyNoMoreInteractions(uiActions)
     effectHandlerTestCase.assertNoOutgoingEvents()
   }
+
+  @Test
+  fun `when add all appointment ids effect is received, then all overdue appointments loaded`() {
+    // given
+    val allAppointmentIds = setOf(
+        UUID.fromString("9737ad9e-70f6-454e-9226-6eaa01c62645"))
+
+    // when
+    effectHandlerTestCase.dispatch(AddAllAppointmentIds(allAppointmentIds))
+
+    // then
+    verifyNoMoreInteractions(uiActions)
+    effectHandlerTestCase.assertOutgoingEvents(SelectedOverdueAppointmentsLoaded(allAppointmentIds))
+  }
 }

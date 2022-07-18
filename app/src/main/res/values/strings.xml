@@ -974,6 +974,7 @@
   <string name="overdue_search_hint">Enter name or village</string>
   <string name="overdue_search_no_search_results_title">No patients found</string>
   <string name="overdue_search_no_search_results_desc">You will see all overdue patients from your search here</string>
+  <string name="overdue_search_all_appointments_selected">SELECT ALL</string>
 
   <!-- Select and download overdue appointments -->
   <string name="selected_overdue_count">%1$d selected</string>

@@ -125,6 +125,9 @@ class OverdueSearchScreen : BaseScreen<
   private val shareButton
     get() = binding.shareOverdueListButton
 
+  private val selectAllCheckbox
+    get() = binding.selectAllCheckbox
+
   private val hotEvents = PublishSubject.create<UiEvent>()
 
   private val disposable = CompositeDisposable()
@@ -179,7 +182,8 @@ class OverdueSearchScreen : BaseScreen<
           overdueSearchQueryTextChanges(),
           clearSelectedOverdueAppointmentClicks(),
           downloadButtonClicks(),
-          shareButtonClicks()
+          shareButtonClicks(),
+          selectAllCheckboxClicks()
       )
       .compose(ReportAnalyticsEvents())
       .cast<OverdueSearchEvent>()
@@ -205,6 +209,10 @@ class OverdueSearchScreen : BaseScreen<
   private fun shareButtonClicks(): Observable<UiEvent> = shareButton
       .clicks()
       .map { ShareButtonClicked(searchResultsAppointmentIds()) }
+
+  private fun selectAllCheckboxClicks(): Observable<UiEvent> = selectAllCheckbox
+      .clicks()
+      .map { SelectAllCheckboxClicked(searchResultsAppointmentIds()) }
 
   private fun searchResultsAppointmentIds() = overdueSearchListAdapter
       .snapshot()

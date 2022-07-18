@@ -51,7 +51,20 @@ class OverdueSearchEffectHandler @AssistedInject constructor(
         .addConsumer(ClearSelectedOverdueAppointments::class.java, ::clearSelectedOverdueAppointments)
         .addTransformer(ReplaceSelectedAppointmentIds::class.java, replaceSelectedAppointmentIds())
         .addConsumer(ScheduleDownload::class.java, ::scheduleDownload)
+        .addTransformer(AddAllAppointmentIds::class.java, addAllAppointmentIds())
         .build()
+  }
+
+  private fun addAllAppointmentIds(): ObservableTransformer<AddAllAppointmentIds, OverdueSearchEvent>? {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.computation())
+          .map { (appointmentIds) ->
+            overdueAppointmentSelector.addSelectedIds(appointmentIds)
+            return@map appointmentIds
+          }
+          .map(::SelectedOverdueAppointmentsLoaded)
+    }
   }
 
   private fun scheduleDownload(effect: ScheduleDownload) {

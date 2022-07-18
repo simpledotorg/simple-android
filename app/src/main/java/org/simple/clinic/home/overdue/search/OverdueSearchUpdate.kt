@@ -37,6 +37,7 @@ class OverdueSearchUpdate(
       is SelectedAppointmentIdsReplaced -> selectedAppointmentIdsReplaced(event)
       is DownloadButtonClicked -> downloadButtonClicked(model, event)
       is ShareButtonClicked -> shareButtonClicked(model, event)
+      is SelectAllCheckboxClicked -> dispatch(AddAllAppointmentIds(event.searchResultsAppointmentIds))
     }
   }
 

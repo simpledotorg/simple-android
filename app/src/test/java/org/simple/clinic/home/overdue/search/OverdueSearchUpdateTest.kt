@@ -369,4 +369,18 @@ class OverdueSearchUpdateTest {
             hasEffects(ShowNoInternetConnectionDialog)
         ))
   }
+
+  @Test
+  fun `when select all button is clicked, then add all appointments Ids`() {
+    val allAppointmentIds = setOf(
+        UUID.fromString("7cfadc18-67b1-4973-b448-252fd804eae1"))
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(SelectAllCheckboxClicked(searchResultsAppointmentIds = allAppointmentIds))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(AddAllAppointmentIds(allAppointmentIds))
+        ))
+  }
 }

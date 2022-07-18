@@ -23,4 +23,6 @@ interface OverdueSearchUi {
   fun hideDownloadAndShareButtons()
   fun showSelectedOverdueAppointmentCount(selectedOverdueAppointments: Int)
   fun hideSelectedOverdueAppointmentCount()
+  fun showSelectAllLayout()
+  fun hideSelectAllLayout()
 }

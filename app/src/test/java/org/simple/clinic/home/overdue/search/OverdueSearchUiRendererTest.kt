@@ -51,11 +51,12 @@ class OverdueSearchUiRendererTest {
     verify(ui).hideSearchResults()
     verify(ui).hideNoSearchResults()
     verify(ui).hideProgress()
+    verify(ui).hideSelectAllLayout()
     verifyNoMoreInteractions(ui)
   }
 
   @Test
-  fun `when search query is not empty and has no results, then display no search results and hide download and share buttons`() {
+  fun `when search query is not empty and has no results, then display no search results and hide download and share buttons and select all layout`() {
     // given
     val searchHistory = setOf("Babri")
     val model = defaultModel
@@ -73,11 +74,12 @@ class OverdueSearchUiRendererTest {
     verify(ui).hideProgress()
     verify(ui).setOverdueSearchResultsPagingData(PagingData.empty(), emptySet(), searchQuery = "Ani")
     verify(ui).hideDownloadAndShareButtons()
+    verify(ui).hideSelectAllLayout()
     verifyNoMoreInteractions(ui)
   }
 
   @Test
-  fun `when progress state is done, then render search results and show download and share buttons`() {
+  fun `when progress state is done, then render search results and show download and share buttons and select all layout`() {
     // given
     val searchResults = PagingData.from(listOf(
         TestData.overdueAppointment(
@@ -112,6 +114,7 @@ class OverdueSearchUiRendererTest {
     verify(ui).setOverdueSearchResultsPagingData(searchResults, selectedAppointments, searchQuery)
     verify(ui).showDownloadAndShareButtons()
     verify(ui).showSelectedOverdueAppointmentCount(1)
+    verify(ui).showSelectAllLayout()
     verifyNoMoreInteractions(ui)
   }
 
@@ -151,6 +154,7 @@ class OverdueSearchUiRendererTest {
     verify(ui).setOverdueSearchResultsPagingData(searchResults, selectedAppointments, searchQuery)
     verify(ui).showDownloadAndShareButtons()
     verify(ui).showSelectedOverdueAppointmentCount(1)
+    verify(ui).showSelectAllLayout()
     verifyNoMoreInteractions(ui)
   }
 
@@ -189,6 +193,7 @@ class OverdueSearchUiRendererTest {
     verify(ui).setOverdueSearchResultsPagingData(searchResults, emptySet(), searchQuery)
     verify(ui).showDownloadAndShareButtons()
     verify(ui).hideSelectedOverdueAppointmentCount()
+    verify(ui).showSelectAllLayout()
     verifyNoMoreInteractions(ui)
   }
 }

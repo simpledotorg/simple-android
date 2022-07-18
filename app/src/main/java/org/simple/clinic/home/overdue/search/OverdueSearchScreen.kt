@@ -125,6 +125,9 @@ class OverdueSearchScreen : BaseScreen<
   private val shareButton
     get() = binding.shareOverdueListButton
 
+  private val selectAllLayout
+    get() = binding.selectAllLayout
+
   private val selectAllCheckbox
     get() = binding.selectAllCheckbox
 
@@ -316,6 +319,14 @@ class OverdueSearchScreen : BaseScreen<
 
   override fun hideSelectedOverdueAppointmentCount() {
     selectedOverdueCountView.visibility = GONE
+  }
+
+  override fun showSelectAllLayout() {
+    selectAllLayout.visibility = VISIBLE
+  }
+
+  override fun hideSelectAllLayout() {
+    selectAllLayout.visibility = GONE
   }
 
   private fun hideKeyboardOnSearchResultsScroll(): Disposable {

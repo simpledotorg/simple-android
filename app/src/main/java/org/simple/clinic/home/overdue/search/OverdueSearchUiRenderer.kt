@@ -52,6 +52,7 @@ class OverdueSearchUiRenderer(
     ui.hideSearchHistory()
     ui.hideNoSearchResults()
     ui.showDownloadAndShareButtons()
+    ui.showSelectAllLayout()
   }
 
   private fun renderNoResults() {
@@ -59,5 +60,6 @@ class OverdueSearchUiRenderer(
     ui.hideSearchResults()
     ui.hideSearchHistory()
     ui.hideDownloadAndShareButtons()
+    ui.hideSelectAllLayout()
   }
 }

@@ -29,7 +29,7 @@ room-metadataGenerator = "2.0.0"
 
 rx-binding = "3.1.0"
 
-coroutines = "1.6.3"
+coroutines = "1.6.4"
 
 [libraries]
 android-gradle-plugin = "com.android.tools.build:gradle:7.2.1"

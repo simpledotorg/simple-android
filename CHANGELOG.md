@@ -30,6 +30,7 @@
 - Bump firebase config to v21.1.1
 - Bump Coroutines to v1.6.4
 - Update overdue patient card spacings
+- Fix secure call button showing when securing calling is disabled for the facility
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Changes

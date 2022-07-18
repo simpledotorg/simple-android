@@ -405,7 +405,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:visibility="gone"
-    app:constraint_referenced_ids="phoneNumberLabel, phoneNumberTextView, normalCallButton, secureCallingGroup" />
+    app:constraint_referenced_ids="phoneNumberLabel, phoneNumberTextView, normalCallButton" />
 
   <androidx.constraintlayout.widget.Group
     android:id="@+id/patientWithNoPhoneNumberGroup"

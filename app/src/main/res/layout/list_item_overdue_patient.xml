@@ -13,12 +13,14 @@
     android:id="@+id/patient_details"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/spacing_16">
+    android:paddingBottom="@dimen/spacing_16">
 
     <ImageView
       android:id="@+id/patientGenderIcon"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_16"
+      android:layout_marginTop="@dimen/spacing_16"
       app:layout_constraintEnd_toStartOf="@id/patientNameTextView"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
@@ -28,12 +30,10 @@
       android:id="@+id/checkbox"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginStart="-4dp"
-      android:layout_marginTop="-4dp"
+      android:layout_marginStart="@dimen/spacing_4"
+      android:layout_marginTop="@dimen/spacing_4"
       android:layout_marginEnd="@dimen/spacing_4"
       android:visibility="gone"
-      android:minWidth="@dimen/spacing_24"
-      android:minHeight="@dimen/spacing_24"
       app:layout_constraintEnd_toStartOf="@id/patientNameTextView"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
@@ -43,6 +43,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/spacing_12"
+      android:layout_marginTop="@dimen/spacing_16"
       android:layout_marginEnd="@dimen/spacing_12"
       android:textAppearance="?attr/textAppearanceBody0Medium"
       android:textColor="?attr/colorPrimary"
@@ -115,6 +116,7 @@
       android:id="@+id/callButton"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginEnd="@dimen/spacing_16"
       android:background="?attr/selectableItemBackgroundBorderless"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"

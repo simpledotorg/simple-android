@@ -7,11 +7,13 @@ import android.view.View
 import androidx.core.text.backgroundColor
 import androidx.core.text.buildSpannedString
 import androidx.paging.PagingData
+import androidx.paging.insertHeaderItem
 import androidx.paging.map
 import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 import org.simple.clinic.databinding.ListItemOverduePatientBinding
+import org.simple.clinic.databinding.ListItemSearchOverdueSelectAllButtonBinding
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.displayIconRes
@@ -36,9 +38,10 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
         selectedOverdueAppointments: Set<UUID>,
         clock: UserClock,
         searchQuery: String?,
-        isOverdueSelectAndDownloadEnabled: Boolean
+        isOverdueSelectAndDownloadEnabled: Boolean,
+        searchResultsAppointmentIds: () -> Set<UUID>
     ): PagingData<OverdueAppointmentSearchListItem> {
-      return appointments
+      var overdueAppointments = appointments
           .map { overdueAppointment ->
             val isAppointmentSelected = selectedOverdueAppointments.contains(overdueAppointment.appointment.uuid)
             overdueAppointmentSearchListItem(
@@ -49,6 +52,13 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
                 isSelected = isAppointmentSelected
             )
           }
+
+      if (isOverdueSelectAndDownloadEnabled) {
+        overdueAppointments = overdueAppointments
+            .insertHeaderItem(item = SelectAllOverdueAppointmentButton(searchResultsAppointmentIds))
+      }
+
+      return overdueAppointments
     }
 
     private fun overdueAppointmentSearchListItem(
@@ -237,6 +247,20 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
     }
   }
 
+  data class SelectAllOverdueAppointmentButton(
+      private val searchResultsAppointmentIds: () -> Set<UUID>
+  ) : OverdueAppointmentSearchListItem() {
+
+    override fun layoutResId(): Int = R.layout.list_item_search_overdue_select_all_button
+
+    override fun render(holder: BindingViewHolder, subject: Subject<UiEvent>) {
+      val binding = holder.binding as ListItemSearchOverdueSelectAllButtonBinding
+      binding.root.setOnClickListener {
+        subject.onNext(SelectAllButtonClicked(searchResultsAppointmentIds()))
+      }
+    }
+  }
+
   fun getHighlightedPatientAttribute(searchQuery: String?, patientAttribute: String): PatientAttribute {
     val canHighlight = !searchQuery.isNullOrBlank() && patientAttribute.contains(searchQuery, ignoreCase = true)
     return if (canHighlight) {
@@ -268,6 +292,7 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
     ): Boolean {
       return when {
         oldItem is OverdueAppointmentRow && newItem is OverdueAppointmentRow -> oldItem.patientUuid == newItem.patientUuid
+        oldItem is SelectAllOverdueAppointmentButton && newItem is SelectAllOverdueAppointmentButton -> true
         else -> false
       }
     }

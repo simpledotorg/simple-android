@@ -35,6 +35,7 @@ import org.simple.clinic.appconfig.Country
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.databinding.ListItemOverduePatientBinding
 import org.simple.clinic.databinding.ListItemOverduePlaceholderBinding
+import org.simple.clinic.databinding.ListItemSearchOverdueSelectAllButtonBinding
 import org.simple.clinic.databinding.ScreenOverdueSearchBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
@@ -134,6 +135,9 @@ class OverdueSearchScreen : BaseScreen<
       bindings = mapOf(
           R.layout.list_item_overdue_patient to { layoutInflater, parent ->
             ListItemOverduePatientBinding.inflate(layoutInflater, parent, false)
+          },
+          R.layout.list_item_search_overdue_select_all_button to { layoutInflater, parent ->
+            ListItemSearchOverdueSelectAllButtonBinding.inflate(layoutInflater, parent, false)
           }
       ),
       placeHolderBinding = R.layout.list_item_overdue_placeholder to { layoutInflater, parent ->
@@ -288,7 +292,8 @@ class OverdueSearchScreen : BaseScreen<
             selectedOverdueAppointments = selectedOverdueAppointments,
             clock = userClock,
             searchQuery = searchQuery,
-            isOverdueSelectAndDownloadEnabled = features.isEnabled(Feature.OverdueSelectAndDownload) && country.isoCountryCode == Country.INDIA
+            isOverdueSelectAndDownloadEnabled = features.isEnabled(Feature.OverdueSelectAndDownload) && country.isoCountryCode == Country.INDIA,
+            searchResultsAppointmentIds = ::searchResultsAppointmentIds
         )
     )
   }

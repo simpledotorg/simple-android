@@ -978,5 +978,6 @@
   <!-- Select and download overdue appointments -->
   <string name="selected_overdue_count">%1$d selected</string>
   <string name="selected_overdue_clear">CLEAR</string>
+  <string name="selected_overdue_select_all_appointments">SELECT ALL</string>
 
 </resources>

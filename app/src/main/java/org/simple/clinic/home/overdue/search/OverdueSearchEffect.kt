@@ -38,3 +38,5 @@ object OpenSelectShareFormatDialog : OverdueSearchViewEffect()
 object OpenShareInProgressDialog : OverdueSearchViewEffect()
 
 object ShowNoInternetConnectionDialog : OverdueSearchViewEffect()
+
+data class SelectAllAppointmentIds(val appointmentIds: Set<UUID>) : OverdueSearchEffect()

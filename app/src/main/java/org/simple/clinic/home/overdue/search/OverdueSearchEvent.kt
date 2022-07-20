@@ -61,3 +61,7 @@ data class ShareButtonClicked(
 
   override val analyticsName = "Overdue Search Screen:Share Clicked"
 }
+
+data class SelectAllButtonClicked(val allAppointmentIds: Set<UUID>) : OverdueSearchEvent() {
+  override val analyticsName = "Overdue Search Screen:Select All Clicked"
+}

@@ -32,6 +32,7 @@
 - Update overdue patient card spacings
 - Fix secure call button showing when securing calling is disabled for the facility
 - Bump flipper to v0.154.0
+- Add support for selecting all overdue appointment search results
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Changes

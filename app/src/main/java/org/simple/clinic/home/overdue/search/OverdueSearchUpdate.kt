@@ -4,7 +4,10 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.home.overdue.search.OverdueButtonType.DOWNLOAD
+import org.simple.clinic.home.overdue.search.OverdueButtonType.SELECT_ALL
 import org.simple.clinic.home.overdue.search.OverdueButtonType.SHARE
+import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.DONE
+import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.IN_PROGRESS
 import org.simple.clinic.home.overdue.search.OverdueSearchQueryValidator.Result.Empty
 import org.simple.clinic.home.overdue.search.OverdueSearchQueryValidator.Result.LengthTooShort
 import org.simple.clinic.home.overdue.search.OverdueSearchQueryValidator.Result.Valid
@@ -37,37 +40,72 @@ class OverdueSearchUpdate(
       is SelectedAppointmentIdsReplaced -> selectedAppointmentIdsReplaced(event)
       is DownloadButtonClicked -> downloadButtonClicked(model, event)
       is ShareButtonClicked -> shareButtonClicked(model, event)
-      is SelectAllButtonClicked -> dispatch(SelectAllAppointmentIds(event.allAppointmentIds))
+      is SelectAllButtonClicked -> selectAllButtonClicked(model)
+      is SearchResultsAppointmentIdsLoaded -> searchResultsAppointmentIdsLoaded(model, event)
     }
   }
 
-  private fun shareButtonClicked(model: OverdueSearchModel, event: ShareButtonClicked): Next<OverdueSearchModel, OverdueSearchEffect> {
-    val effect = when {
-      !event.hasNetworkConnection -> ShowNoInternetConnectionDialog
-      model.selectedOverdueAppointments.isNotEmpty() -> shareOverdueAppointmentsEffect()
-      else -> ReplaceSelectedAppointmentIds(event.searchResultsAppointmentIds, SHARE)
+  private fun selectAllButtonClicked(model: OverdueSearchModel): Next<OverdueSearchModel, OverdueSearchEffect> {
+    return next(
+        model.loadStateChanged(IN_PROGRESS),
+        LoadSearchResultsAppointmentIds(
+            buttonType = SELECT_ALL,
+            searchQuery = model.searchQuery.orEmpty(),
+            since = date
+        )
+    )
+  }
+
+  private fun searchResultsAppointmentIdsLoaded(
+      model: OverdueSearchModel,
+      event: SearchResultsAppointmentIdsLoaded
+  ): Next<OverdueSearchModel, OverdueSearchEffect> {
+    val effect = when (event.buttonType) {
+      DOWNLOAD, SHARE -> ReplaceSelectedAppointmentIds(event.searchResultsAppointmentIds, event.buttonType)
+      SELECT_ALL -> SelectAllAppointmentIds(event.searchResultsAppointmentIds)
     }
 
-    return dispatch(effect)
+    return next(model.loadStateChanged(DONE), effect)
+  }
+
+  private fun shareButtonClicked(model: OverdueSearchModel, event: ShareButtonClicked): Next<OverdueSearchModel, OverdueSearchEffect> {
+    return when {
+      !event.hasNetworkConnection -> dispatch(ShowNoInternetConnectionDialog)
+      model.selectedOverdueAppointments.isNotEmpty() -> dispatch(shareOverdueAppointmentsEffect())
+      else -> next(
+          model.loadStateChanged(IN_PROGRESS),
+          LoadSearchResultsAppointmentIds(
+              buttonType = SHARE,
+              searchQuery = model.searchQuery.orEmpty(),
+              since = date
+          )
+      )
+    }
   }
 
   private fun selectedAppointmentIdsReplaced(event: SelectedAppointmentIdsReplaced): Next<OverdueSearchModel, OverdueSearchEffect> {
     val effect = when (event.type) {
       DOWNLOAD -> downloadOverdueAppointmentsEffect()
       SHARE -> shareOverdueAppointmentsEffect()
+      SELECT_ALL -> throw IllegalArgumentException("${event.type} cannot replace selected ids")
     }
 
     return dispatch(effect)
   }
 
   private fun downloadButtonClicked(model: OverdueSearchModel, event: DownloadButtonClicked): Next<OverdueSearchModel, OverdueSearchEffect> {
-    val effect = when {
-      !event.hasNetworkConnection -> ShowNoInternetConnectionDialog
-      model.selectedOverdueAppointments.isNotEmpty() -> downloadOverdueAppointmentsEffect()
-      else -> ReplaceSelectedAppointmentIds(event.searchResultsAppointmentIds, DOWNLOAD)
+    return when {
+      !event.hasNetworkConnection -> dispatch(ShowNoInternetConnectionDialog)
+      model.selectedOverdueAppointments.isNotEmpty() -> dispatch(downloadOverdueAppointmentsEffect())
+      else -> next(
+          model.loadStateChanged(IN_PROGRESS),
+          LoadSearchResultsAppointmentIds(
+              buttonType = DOWNLOAD,
+              searchQuery = model.searchQuery.orEmpty(),
+              since = date
+          )
+      )
     }
-
-    return dispatch(effect)
   }
 
   private fun downloadOverdueAppointmentsEffect() = if (canGeneratePdf) OpenSelectDownloadFormatDialog else ScheduleDownload

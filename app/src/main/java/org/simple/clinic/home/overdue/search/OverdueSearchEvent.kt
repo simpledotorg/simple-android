@@ -41,7 +41,6 @@ data class SelectedOverdueAppointmentsLoaded(val selectedAppointmentIds: Set<UUI
 data class SelectedAppointmentIdsReplaced(val type: OverdueButtonType) : OverdueSearchEvent()
 
 data class DownloadButtonClicked(
-    val searchResultsAppointmentIds: Set<UUID>,
     override var permission: Optional<RuntimePermissionResult> = Optional.empty(),
     override val permissionString: String = Manifest.permission.WRITE_EXTERNAL_STORAGE,
     override val permissionRequestCode: Int = 2,
@@ -52,7 +51,6 @@ data class DownloadButtonClicked(
 }
 
 data class ShareButtonClicked(
-    val searchResultsAppointmentIds: Set<UUID>,
     override var permission: Optional<RuntimePermissionResult> = Optional.empty(),
     override val permissionString: String = Manifest.permission.WRITE_EXTERNAL_STORAGE,
     override val permissionRequestCode: Int = 2,
@@ -62,7 +60,7 @@ data class ShareButtonClicked(
   override val analyticsName = "Overdue Search Screen:Share Clicked"
 }
 
-data class SelectAllButtonClicked(val allAppointmentIds: Set<UUID>) : OverdueSearchEvent() {
+object SelectAllButtonClicked : OverdueSearchEvent() {
   override val analyticsName = "Overdue Search Screen:Select All Clicked"
 }
 

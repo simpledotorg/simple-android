@@ -44,7 +44,6 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.home.overdue.OverdueAppointment
-import org.simple.clinic.home.overdue.search.OverdueAppointmentSearchListItem.OverdueAppointmentRow
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.DONE
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.IN_PROGRESS
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.NO_RESULTS
@@ -220,18 +219,11 @@ class OverdueSearchScreen : BaseScreen<
 
   private fun downloadButtonClicks(): Observable<UiEvent> = downloadButton
       .clicks()
-      .map { DownloadButtonClicked(searchResultsAppointmentIds()) }
+      .map { DownloadButtonClicked() }
 
   private fun shareButtonClicks(): Observable<UiEvent> = shareButton
       .clicks()
-      .map { ShareButtonClicked(searchResultsAppointmentIds()) }
-
-  private fun searchResultsAppointmentIds() = overdueSearchListAdapter
-      .snapshot()
-      .items
-      .filterIsInstance<OverdueAppointmentRow>()
-      .map { it.appointmentUuid }
-      .toSet()
+      .map { ShareButtonClicked() }
 
   override fun onAttach(context: Context) {
     super.onAttach(context)
@@ -308,8 +300,7 @@ class OverdueSearchScreen : BaseScreen<
             selectedOverdueAppointments = selectedOverdueAppointments,
             clock = userClock,
             searchQuery = searchQuery,
-            isOverdueSelectAndDownloadEnabled = features.isEnabled(Feature.OverdueSelectAndDownload) && country.isoCountryCode == Country.INDIA,
-            searchResultsAppointmentIds = ::searchResultsAppointmentIds
+            isOverdueSelectAndDownloadEnabled = features.isEnabled(Feature.OverdueSelectAndDownload) && country.isoCountryCode == Country.INDIA
         )
     )
   }

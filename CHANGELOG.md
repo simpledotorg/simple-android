@@ -36,6 +36,7 @@
 - Add support for runtime permissions and network status in overdue search screen
 - Implement `AppointmentRepository#searchOverduePatientsImmediate`
 - Fix search results appointments not getting fully downloaded/shared/selected
+- Remove unused code from overdue search
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Changes

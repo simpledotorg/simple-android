@@ -1,5 +1,5 @@
 package org.simple.clinic.home.overdue.search
 
 enum class OverdueButtonType {
-  DOWNLOAD, SHARE
+  DOWNLOAD, SHARE, SELECT_ALL
 }

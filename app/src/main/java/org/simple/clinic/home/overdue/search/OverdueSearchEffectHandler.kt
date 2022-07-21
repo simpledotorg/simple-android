@@ -52,7 +52,27 @@ class OverdueSearchEffectHandler @AssistedInject constructor(
         .addTransformer(ReplaceSelectedAppointmentIds::class.java, replaceSelectedAppointmentIds())
         .addConsumer(ScheduleDownload::class.java, ::scheduleDownload)
         .addConsumer(SelectAllAppointmentIds::class.java, ::selectAllAppointmentIds)
+        .addTransformer(LoadSearchResultsAppointmentIds::class.java, loadSearchResultsAppointmentIds())
         .build()
+  }
+
+  private fun loadSearchResultsAppointmentIds(): ObservableTransformer<LoadSearchResultsAppointmentIds, OverdueSearchEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { effect ->
+            val appointmentIds = appointmentRepository.searchOverduePatientsImmediate(
+                searchQuery = effect.searchQuery,
+                since = effect.since,
+                facilityId = currentFacility.get().uuid
+            ).map { it.appointment.uuid }.toSet()
+
+            SearchResultsAppointmentIdsLoaded(
+                buttonType = effect.buttonType,
+                searchResultsAppointmentIds = appointmentIds
+            )
+          }
+    }
   }
 
   private fun selectAllAppointmentIds(effect: SelectAllAppointmentIds) {

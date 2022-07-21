@@ -318,4 +318,28 @@ class OverdueSearchEffectHandlerTest {
     verifyNoMoreInteractions(overdueAppointmentSelector)
     effectHandlerTestCase.assertNoOutgoingEvents()
   }
+
+  @Test
+  fun `when load search results appointment ids effect is received, then load the search results appointment ids`() {
+    // given
+    val searchQuery = "Ani"
+    val since = LocalDate.parse("2018-01-01")
+    val appointmentUuid = UUID.fromString("46797d57-d6a9-4aee-9df5-355ced4bb9a4")
+    val overdueAppointments = listOf(
+        TestData.overdueAppointment(appointmentUuid = appointmentUuid)
+    )
+
+    whenever(appointmentRepository.searchOverduePatientsImmediate(searchQuery, since, currentFacility.uuid)) doReturn overdueAppointments
+
+    // when
+    effectHandlerTestCase.dispatch(LoadSearchResultsAppointmentIds(
+        buttonType = DOWNLOAD,
+        searchQuery = searchQuery,
+        since = since
+    ))
+
+    // then
+    verifyZeroInteractions(uiActions)
+    effectHandlerTestCase.assertOutgoingEvents(SearchResultsAppointmentIdsLoaded(DOWNLOAD, setOf(appointmentUuid)))
+  }
 }

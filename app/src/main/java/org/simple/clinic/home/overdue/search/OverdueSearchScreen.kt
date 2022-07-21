@@ -26,11 +26,14 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.cast
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.rx2.asObservable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.activity.permissions.RequestPermissions
+import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.databinding.ListItemOverduePatientBinding
@@ -47,6 +50,7 @@ import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.IN_PROGR
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.NO_RESULTS
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.overdue.download.formatdialog.Download
 import org.simple.clinic.overdue.download.formatdialog.SelectOverdueDownloadFormatDialog
@@ -54,6 +58,7 @@ import org.simple.clinic.overdue.download.formatdialog.Share
 import org.simple.clinic.overdue.download.formatdialog.SharingInProgress
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.util.RuntimeNetworkStatus
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.PagingItemAdapter
@@ -86,6 +91,15 @@ class OverdueSearchScreen : BaseScreen<
 
   @Inject
   lateinit var country: Country
+
+  @Inject
+  lateinit var runtimePermissions: RuntimePermissions
+
+  @Inject
+  lateinit var screenResults: ScreenResultBus
+
+  @Inject
+  lateinit var runtimeNetworkStatus: RuntimeNetworkStatus<UiEvent>
 
   @Inject
   lateinit var effectHandlerFactory: OverdueSearchEffectHandler.Factory
@@ -185,6 +199,8 @@ class OverdueSearchScreen : BaseScreen<
           downloadButtonClicks(),
           shareButtonClicks()
       )
+      .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
+      .compose(runtimeNetworkStatus::apply)
       .compose(ReportAnalyticsEvents())
       .cast<OverdueSearchEvent>()
 

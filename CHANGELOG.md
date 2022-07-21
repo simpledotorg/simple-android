@@ -33,6 +33,7 @@
 - Fix secure call button showing when securing calling is disabled for the facility
 - Bump flipper to v0.154.0
 - Add support for selecting all overdue appointment search results
+- Add support for runtime permissions and network status in overdue search screen
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Changes

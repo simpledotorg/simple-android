@@ -34,6 +34,7 @@
 - Bump flipper to v0.154.0
 - Add support for selecting all overdue appointment search results
 - Add support for runtime permissions and network status in overdue search screen
+- Implement `AppointmentRepository#searchOverduePatientsImmediate`
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Changes

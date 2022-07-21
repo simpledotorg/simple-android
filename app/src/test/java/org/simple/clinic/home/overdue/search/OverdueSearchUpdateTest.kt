@@ -11,6 +11,7 @@ import org.junit.Test
 import org.simple.clinic.analytics.NetworkConnectivityStatus.ACTIVE
 import org.simple.clinic.analytics.NetworkConnectivityStatus.INACTIVE
 import org.simple.clinic.home.overdue.search.OverdueButtonType.DOWNLOAD
+import org.simple.clinic.home.overdue.search.OverdueButtonType.SELECT_ALL
 import org.simple.clinic.home.overdue.search.OverdueButtonType.SHARE
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.DONE
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.IN_PROGRESS
@@ -232,15 +233,17 @@ class OverdueSearchUpdateTest {
   }
 
   @Test
-  fun `when download button is clicked and no appointments are selected, then replace selected appointment ids`() {
+  fun `when download button is clicked and no appointments are selected, then load search results appointment ids`() {
     val appointmentIds = setOf(UUID.fromString("6fc41403-8550-4749-aa94-c7320012e792"))
+    val searchQueryModel = defaultModel
+        .overdueSearchQueryChanged("Ani")
 
     updateSpec
-        .given(defaultModel)
+        .given(searchQueryModel)
         .whenEvent(DownloadButtonClicked(appointmentIds, networkStatus = Optional.of(ACTIVE)))
         .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(ReplaceSelectedAppointmentIds(appointmentIds, DOWNLOAD))
+            hasModel(searchQueryModel.loadStateChanged(IN_PROGRESS)),
+            hasEffects(LoadSearchResultsAppointmentIds(buttonType = DOWNLOAD, searchQuery = "Ani", since = date))
         ))
   }
 
@@ -306,15 +309,17 @@ class OverdueSearchUpdateTest {
   }
 
   @Test
-  fun `when share button is clicked and no appointments are selected, then replace selected appointment ids`() {
+  fun `when share button is clicked and no appointments are selected, then load search results appointment ids`() {
     val appointmentIds = setOf(UUID.fromString("6fc41403-8550-4749-aa94-c7320012e792"))
+    val searchQueryModel = defaultModel
+        .overdueSearchQueryChanged("Ani")
 
     updateSpec
-        .given(defaultModel)
+        .given(searchQueryModel)
         .whenEvent(ShareButtonClicked(appointmentIds, networkStatus = Optional.of(ACTIVE)))
         .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(ReplaceSelectedAppointmentIds(appointmentIds, SHARE))
+            hasModel(searchQueryModel.loadStateChanged(IN_PROGRESS)),
+            hasEffects(LoadSearchResultsAppointmentIds(buttonType = SHARE, searchQuery = "Ani", since = date))
         ))
   }
 
@@ -371,16 +376,65 @@ class OverdueSearchUpdateTest {
   }
 
   @Test
-  fun `when select all button is clicked, then select all appointment Ids`() {
-    val allAppointmentIds = setOf(
-        UUID.fromString("7cfadc18-67b1-4973-b448-252fd804eae1"))
+  fun `when select all button is clicked and no appointments are selected, then load search results appointment ids`() {
+    val appointmentIds = setOf(UUID.fromString("6fc41403-8550-4749-aa94-c7320012e792"))
+    val searchQueryModel = defaultModel
+        .overdueSearchQueryChanged("Ani")
+
+    updateSpec
+        .given(searchQueryModel)
+        .whenEvent(SelectAllButtonClicked(appointmentIds))
+        .then(assertThatNext(
+            hasModel(searchQueryModel.loadStateChanged(IN_PROGRESS)),
+            hasEffects(LoadSearchResultsAppointmentIds(buttonType = SELECT_ALL, searchQuery = "Ani", since = date))
+        ))
+  }
+
+  @Test
+  fun `when search results appointment ids are loaded and button type is download, then replace the selected appointment ids`() {
+    val searchResultsAppointmentIds = setOf(UUID.fromString("cccff90c-f739-40af-8cf3-05b4e3e8297b"))
 
     updateSpec
         .given(defaultModel)
-        .whenEvent(SelectAllButtonClicked(allAppointmentIds = allAppointmentIds))
+        .whenEvent(SearchResultsAppointmentIdsLoaded(
+            buttonType = DOWNLOAD,
+            searchResultsAppointmentIds = searchResultsAppointmentIds
+        ))
         .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(SelectAllAppointmentIds(allAppointmentIds))
+            hasModel(defaultModel.loadStateChanged(DONE)),
+            hasEffects(ReplaceSelectedAppointmentIds(appointmentIds = searchResultsAppointmentIds, type = DOWNLOAD))
+        ))
+  }
+
+  @Test
+  fun `when search results appointment ids are loaded and button type is share, then replace the selected appointment ids`() {
+    val searchResultsAppointmentIds = setOf(UUID.fromString("91f96958-1247-498b-8742-1b05c92ecb3e"))
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(SearchResultsAppointmentIdsLoaded(
+            buttonType = SHARE,
+            searchResultsAppointmentIds = searchResultsAppointmentIds
+        ))
+        .then(assertThatNext(
+            hasModel(defaultModel.loadStateChanged(DONE)),
+            hasEffects(ReplaceSelectedAppointmentIds(appointmentIds = searchResultsAppointmentIds, type = SHARE))
+        ))
+  }
+
+  @Test
+  fun `when search results appointment ids are loaded and button type is select all, then select all search results appointment ids`() {
+    val searchResultsAppointmentIds = setOf(UUID.fromString("91f96958-1247-498b-8742-1b05c92ecb3e"))
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(SearchResultsAppointmentIdsLoaded(
+            buttonType = SELECT_ALL,
+            searchResultsAppointmentIds = searchResultsAppointmentIds
+        ))
+        .then(assertThatNext(
+            hasModel(defaultModel.loadStateChanged(DONE)),
+            hasEffects(SelectAllAppointmentIds(appointmentIds = searchResultsAppointmentIds))
         ))
   }
 }

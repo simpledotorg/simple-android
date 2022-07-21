@@ -203,13 +203,12 @@ class OverdueSearchUpdateTest {
 
   @Test
   fun `when download button is clicked, appointments are selected and pdf can be generated, then open select download format dialog`() {
-    val appointmentIds = setOf(UUID.fromString("6fc41403-8550-4749-aa94-c7320012e792"))
     val selectedAppointmentIds = setOf(UUID.fromString("ad32f91d-3c7e-45c3-b544-fbdc996e44b3"))
     val selectedAppointmentIdsModel = defaultModel.selectedOverdueAppointmentsChanged(selectedAppointmentIds)
 
     updateSpec
         .given(selectedAppointmentIdsModel)
-        .whenEvent(DownloadButtonClicked(appointmentIds, networkStatus = Optional.of(ACTIVE)))
+        .whenEvent(DownloadButtonClicked(networkStatus = Optional.of(ACTIVE)))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenSelectDownloadFormatDialog)
@@ -218,14 +217,13 @@ class OverdueSearchUpdateTest {
 
   @Test
   fun `when download button is clicked, appointments are selected and pdf cannot be generated, then schedule download`() {
-    val appointmentIds = setOf(UUID.fromString("6fc41403-8550-4749-aa94-c7320012e792"))
     val selectedAppointmentIds = setOf(UUID.fromString("ad32f91d-3c7e-45c3-b544-fbdc996e44b3"))
     val updateSpec = UpdateSpec(OverdueSearchUpdate(date = date, canGeneratePdf = false))
     val selectedAppointmentIdsModel = defaultModel.selectedOverdueAppointmentsChanged(selectedAppointmentIds)
 
     updateSpec
         .given(selectedAppointmentIdsModel)
-        .whenEvent(DownloadButtonClicked(appointmentIds, networkStatus = Optional.of(ACTIVE)))
+        .whenEvent(DownloadButtonClicked(networkStatus = Optional.of(ACTIVE)))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ScheduleDownload)
@@ -234,13 +232,12 @@ class OverdueSearchUpdateTest {
 
   @Test
   fun `when download button is clicked and no appointments are selected, then load search results appointment ids`() {
-    val appointmentIds = setOf(UUID.fromString("6fc41403-8550-4749-aa94-c7320012e792"))
     val searchQueryModel = defaultModel
         .overdueSearchQueryChanged("Ani")
 
     updateSpec
         .given(searchQueryModel)
-        .whenEvent(DownloadButtonClicked(appointmentIds, networkStatus = Optional.of(ACTIVE)))
+        .whenEvent(DownloadButtonClicked(networkStatus = Optional.of(ACTIVE)))
         .then(assertThatNext(
             hasModel(searchQueryModel.loadStateChanged(IN_PROGRESS)),
             hasEffects(LoadSearchResultsAppointmentIds(buttonType = DOWNLOAD, searchQuery = "Ani", since = date))
@@ -279,13 +276,12 @@ class OverdueSearchUpdateTest {
 
   @Test
   fun `when share button is clicked, appointments are selected and pdf can be generated, then open select share format dialog`() {
-    val appointmentIds = setOf(UUID.fromString("6fc41403-8550-4749-aa94-c7320012e792"))
     val selectedAppointmentIds = setOf(UUID.fromString("ad32f91d-3c7e-45c3-b544-fbdc996e44b3"))
     val selectedAppointmentIdsModel = defaultModel.selectedOverdueAppointmentsChanged(selectedAppointmentIds)
 
     updateSpec
         .given(selectedAppointmentIdsModel)
-        .whenEvent(ShareButtonClicked(appointmentIds, networkStatus = Optional.of(ACTIVE)))
+        .whenEvent(ShareButtonClicked(networkStatus = Optional.of(ACTIVE)))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenSelectShareFormatDialog)
@@ -294,14 +290,13 @@ class OverdueSearchUpdateTest {
 
   @Test
   fun `when share button is clicked, appointments are selected and pdf cannot be generated, then open share in progress dialog`() {
-    val appointmentIds = setOf(UUID.fromString("6fc41403-8550-4749-aa94-c7320012e792"))
     val selectedAppointmentIds = setOf(UUID.fromString("ad32f91d-3c7e-45c3-b544-fbdc996e44b3"))
     val updateSpec = UpdateSpec(OverdueSearchUpdate(date = date, canGeneratePdf = false))
     val selectedAppointmentIdsModel = defaultModel.selectedOverdueAppointmentsChanged(selectedAppointmentIds)
 
     updateSpec
         .given(selectedAppointmentIdsModel)
-        .whenEvent(ShareButtonClicked(appointmentIds, networkStatus = Optional.of(ACTIVE)))
+        .whenEvent(ShareButtonClicked(networkStatus = Optional.of(ACTIVE)))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenShareInProgressDialog)
@@ -310,13 +305,12 @@ class OverdueSearchUpdateTest {
 
   @Test
   fun `when share button is clicked and no appointments are selected, then load search results appointment ids`() {
-    val appointmentIds = setOf(UUID.fromString("6fc41403-8550-4749-aa94-c7320012e792"))
     val searchQueryModel = defaultModel
         .overdueSearchQueryChanged("Ani")
 
     updateSpec
         .given(searchQueryModel)
-        .whenEvent(ShareButtonClicked(appointmentIds, networkStatus = Optional.of(ACTIVE)))
+        .whenEvent(ShareButtonClicked(networkStatus = Optional.of(ACTIVE)))
         .then(assertThatNext(
             hasModel(searchQueryModel.loadStateChanged(IN_PROGRESS)),
             hasEffects(LoadSearchResultsAppointmentIds(buttonType = SHARE, searchQuery = "Ani", since = date))
@@ -357,7 +351,7 @@ class OverdueSearchUpdateTest {
   fun `when download button is clicked and internet is not active, then show no internet connection dialog`() {
     updateSpec
         .given(defaultModel)
-        .whenEvent(DownloadButtonClicked(searchResultsAppointmentIds = emptySet(), networkStatus = Optional.of(INACTIVE)))
+        .whenEvent(DownloadButtonClicked(networkStatus = Optional.of(INACTIVE)))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ShowNoInternetConnectionDialog)
@@ -368,7 +362,7 @@ class OverdueSearchUpdateTest {
   fun `when share button is clicked and internet is not active, then show no internet connection dialog`() {
     updateSpec
         .given(defaultModel)
-        .whenEvent(ShareButtonClicked(searchResultsAppointmentIds = emptySet(), networkStatus = Optional.of(INACTIVE)))
+        .whenEvent(ShareButtonClicked(networkStatus = Optional.of(INACTIVE)))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ShowNoInternetConnectionDialog)
@@ -377,13 +371,12 @@ class OverdueSearchUpdateTest {
 
   @Test
   fun `when select all button is clicked and no appointments are selected, then load search results appointment ids`() {
-    val appointmentIds = setOf(UUID.fromString("6fc41403-8550-4749-aa94-c7320012e792"))
     val searchQueryModel = defaultModel
         .overdueSearchQueryChanged("Ani")
 
     updateSpec
         .given(searchQueryModel)
-        .whenEvent(SelectAllButtonClicked(appointmentIds))
+        .whenEvent(SelectAllButtonClicked)
         .then(assertThatNext(
             hasModel(searchQueryModel.loadStateChanged(IN_PROGRESS)),
             hasEffects(LoadSearchResultsAppointmentIds(buttonType = SELECT_ALL, searchQuery = "Ani", since = date))

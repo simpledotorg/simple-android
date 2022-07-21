@@ -39,7 +39,6 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
         clock: UserClock,
         searchQuery: String?,
         isOverdueSelectAndDownloadEnabled: Boolean,
-        searchResultsAppointmentIds: () -> Set<UUID>
     ): PagingData<OverdueAppointmentSearchListItem> {
       var overdueAppointments = appointments
           .map { overdueAppointment ->
@@ -55,7 +54,7 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
 
       if (isOverdueSelectAndDownloadEnabled) {
         overdueAppointments = overdueAppointments
-            .insertHeaderItem(item = SelectAllOverdueAppointmentButton(searchResultsAppointmentIds))
+            .insertHeaderItem(item = SelectAllOverdueAppointmentButton)
       }
 
       return overdueAppointments
@@ -247,16 +246,14 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
     }
   }
 
-  data class SelectAllOverdueAppointmentButton(
-      private val searchResultsAppointmentIds: () -> Set<UUID>
-  ) : OverdueAppointmentSearchListItem() {
+  object SelectAllOverdueAppointmentButton : OverdueAppointmentSearchListItem() {
 
     override fun layoutResId(): Int = R.layout.list_item_search_overdue_select_all_button
 
     override fun render(holder: BindingViewHolder, subject: Subject<UiEvent>) {
       val binding = holder.binding as ListItemSearchOverdueSelectAllButtonBinding
       binding.root.setOnClickListener {
-        subject.onNext(SelectAllButtonClicked(searchResultsAppointmentIds()))
+        subject.onNext(SelectAllButtonClicked)
       }
     }
   }

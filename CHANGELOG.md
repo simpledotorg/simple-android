@@ -38,6 +38,7 @@
 - Fix search results appointments not getting fully downloaded/shared/selected
 - Remove unused code from overdue search
 - Add overdue patients select and download feature flag key
+- Fix overdue search not displaying no patients found error view
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Changes

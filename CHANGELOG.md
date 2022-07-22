@@ -44,6 +44,10 @@
 
 - Continue with current action when not now is clicked in measurement warning dialog
 
+### Fixes
+
+- Fix app crashing when editing patient details
+
 ## 2022-07-11-8325
 
 ### Internal

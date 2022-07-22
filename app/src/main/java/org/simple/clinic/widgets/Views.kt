@@ -73,14 +73,21 @@ fun ViewGroup.hideKeyboard() {
 }
 
 fun EditText.setTextWithWatcher(textToSet: CharSequence?, textWatcher: TextWatcher) {
-  val selection = if (selectionStart > 0) {
-    selectionStart
-  } else {
-    text.length
-  }
+  // Preserving the cursor position before setting the text
+  val selectionStart = selectionStart
 
   removeTextChangedListener(textWatcher)
   setText(textToSet)
+
+  // Cannot rely on textToSet to get length as it's possible that the
+  // EditText modifies the text using InputFilters.
+  val length = length()
+  val selection = if (selectionStart in 1..length) {
+    selectionStart
+  } else {
+    length
+  }
+
   setSelection(selection)
   addTextChangedListener(textWatcher)
 }

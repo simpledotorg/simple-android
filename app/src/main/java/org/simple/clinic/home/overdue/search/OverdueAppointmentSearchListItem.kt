@@ -7,7 +7,7 @@ import android.view.View
 import androidx.core.text.backgroundColor
 import androidx.core.text.buildSpannedString
 import androidx.paging.PagingData
-import androidx.paging.insertHeaderItem
+import androidx.paging.insertSeparators
 import androidx.paging.map
 import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
@@ -40,7 +40,7 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
         searchQuery: String?,
         isOverdueSelectAndDownloadEnabled: Boolean,
     ): PagingData<OverdueAppointmentSearchListItem> {
-      var overdueAppointments = appointments
+      val overdueAppointments = appointments
           .map { overdueAppointment ->
             val isAppointmentSelected = selectedOverdueAppointments.contains(overdueAppointment.appointment.uuid)
             overdueAppointmentSearchListItem(
@@ -51,11 +51,13 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
                 isSelected = isAppointmentSelected
             )
           }
-
-      if (isOverdueSelectAndDownloadEnabled) {
-        overdueAppointments = overdueAppointments
-            .insertHeaderItem(item = SelectAllOverdueAppointmentButton)
-      }
+          .insertSeparators { before, after ->
+            if (before == null && after != null && isOverdueSelectAndDownloadEnabled) {
+              SelectAllOverdueAppointmentButton
+            } else {
+              null
+            }
+          }
 
       return overdueAppointments
     }

@@ -4,6 +4,26 @@
 
 ### Internal
 
+- Update overdue patient card spacings
+- Fix secure call button showing when securing calling is disabled for the facility
+- Bump flipper to v0.154.0
+- Add support for selecting all overdue appointment search results
+- Add support for runtime permissions and network status in overdue search screen
+- Implement `AppointmentRepository#searchOverduePatientsImmediate`
+- Fix search results appointments not getting fully downloaded/shared/selected
+- Remove unused code from overdue search
+- Add overdue patients select and download feature flag key
+- Fix overdue search not displaying no patients found error view
+- [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
+
+### Fixes
+
+- Fix app crashing when editing patient details
+
+## 2022-07-18-8333
+
+### Internal
+
 - Handle selected overdue appointments state in overdue screen
 - Add support for selected overdue appointments download
 - Show selected overdue appointments count in overdue screen
@@ -29,25 +49,10 @@
 - Bump Material Design Components to v1.6.1
 - Bump firebase config to v21.1.1
 - Bump Coroutines to v1.6.4
-- Update overdue patient card spacings
-- Fix secure call button showing when securing calling is disabled for the facility
-- Bump flipper to v0.154.0
-- Add support for selecting all overdue appointment search results
-- Add support for runtime permissions and network status in overdue search screen
-- Implement `AppointmentRepository#searchOverduePatientsImmediate`
-- Fix search results appointments not getting fully downloaded/shared/selected
-- Remove unused code from overdue search
-- Add overdue patients select and download feature flag key
-- Fix overdue search not displaying no patients found error view
-- [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Changes
 
 - Continue with current action when not now is clicked in measurement warning dialog
-
-### Fixes
-
-- Fix app crashing when editing patient details
 
 ## 2022-07-11-8325
 

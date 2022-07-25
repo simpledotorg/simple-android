@@ -408,7 +408,7 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
       }
 
       if (isOverdueSectionHeaderExpanded) {
-        binding.overdueSectionHeaderIcon.setCompoundDrawableEnd(R.drawable.ic_chevron_up_24px)
+        binding.overdueSectionHeaderIcon.setCompoundDrawableEnd(R.drawable.ic_chevron_down_24)
       } else {
         binding.overdueSectionHeaderIcon.setCompoundDrawableEnd(R.drawable.ic_chevron_right_24px)
       }

@@ -98,6 +98,7 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
 
     behavior = dialog.behavior
     behavior?.addBottomSheetCallback(bottomSheetCallback)
+    dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
 
     return dialog
   }

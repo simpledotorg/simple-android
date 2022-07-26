@@ -4,6 +4,14 @@
 
 ### Internal
 
+- Point accordion downwards when overdue list is expanded
+- Fix `ContactPatientBottomSheet` not opening completely
+- [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
+
+## 2022-07-25-8342
+
+### Internal
+
 - Update overdue patient card spacings
 - Fix secure call button showing when securing calling is disabled for the facility
 - Bump flipper to v0.154.0
@@ -14,9 +22,6 @@
 - Remove unused code from overdue search
 - Add overdue patients select and download feature flag key
 - Fix overdue search not displaying no patients found error view
-- Point accordion downwards when overdue list is expanded
-- Fix `ContactPatientBottomSheet` not opening completely
-- [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ### Fixes
 

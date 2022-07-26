@@ -2979,6 +2979,81 @@ class AppointmentRepositoryAndroidTest {
         patientWithNothingMatching
     )
   }
+
+  @Test
+  fun loading_overdue_search_suggestions_should_work_correctly() {
+    //given
+    val patientUuid = UUID.fromString("aedf5fa5-293e-4f49-b696-44b533233f3b")
+    val patientAddressUuid = UUID.fromString("02149198-975a-47c9-8083-d977292aaa00")
+    val currentFacility = TestData.facility(uuid = UUID.fromString("1ef483da-ee10-442b-b641-23a7a8484b84"))
+    val patientAddress1 = testData.patientAddress(
+        uuid = patientAddressUuid,
+        colonyOrVillage = "Earth"
+    )
+
+    val patientProfile1 = testData.patientProfile(
+        patientUuid = patientUuid,
+        generatePhoneNumber = true,
+        patientAddressUuid = patientAddressUuid,
+        patientRegisteredFacilityId = currentFacility.uuid,
+        patientName = "Anil"
+    )
+
+    val patientAddress2 = testData.patientAddress(
+        uuid = UUID.fromString("7ff6cea7-7175-4f5d-b6e8-80590b3e1560"),
+        colonyOrVillage = "Asia"
+    )
+
+    val patientProfile2 = testData.patientProfile(
+        patientUuid = UUID.fromString("c6cb4e79-df6e-4c39-b93a-62f7b26cc18f"),
+        generatePhoneNumber = true,
+        patientAddressUuid = patientAddress2.uuid,
+        patientRegisteredFacilityId = currentFacility.uuid,
+        patientName = "Anup"
+    )
+
+    val patientAddress3 = testData.patientAddress(
+        uuid = UUID.fromString("efec96ca-653d-4231-a678-edc21e135ad5"),
+        colonyOrVillage = "AnandNagar"
+    )
+
+    val patientProfile3 = testData.patientProfile(
+        patientUuid = UUID.fromString("01624086-b47e-4f34-a3ed-88153da8f211"),
+        generatePhoneNumber = true,
+        patientAddressUuid = patientAddress3.uuid,
+        patientRegisteredFacilityId = UUID.fromString("c1e61c1d-68be-4d64-81bb-3e1571fbdf76"),
+        patientName = "Anand"
+    )
+
+    patientRepository.save(listOf(patientProfile1, patientProfile2, patientProfile3))
+    database.addressDao().save(listOf(patientAddress1, patientAddress2, patientAddress3))
+
+    // when
+    val overdueSearchSuggestions1 = appointmentRepository.overdueSearchSuggestions("An")
+    val overdueSearchSuggestions2 = appointmentRepository.overdueSearchSuggestions("E")
+
+    // then
+    assertThat(overdueSearchSuggestions1).containsExactlyElementsIn(listOf(
+        OverdueSearchSuggestion("AnandNagar", false),
+        OverdueSearchSuggestion("Anand", true),
+        OverdueSearchSuggestion("Anil", true),
+        OverdueSearchSuggestion("Anup", true),
+    ))
+    assertThat(overdueSearchSuggestions2).containsExactlyElementsIn(listOf(
+        OverdueSearchSuggestion("Earth", false)
+    ))
+    assertThat(overdueSearchSuggestions1).doesNotContain(listOf(
+        OverdueSearchSuggestion("Asia", false),
+        OverdueSearchSuggestion("Earth", false)
+    ))
+    assertThat(overdueSearchSuggestions2).doesNotContain(listOf(
+        OverdueSearchSuggestion("AnandNagar", false),
+        OverdueSearchSuggestion("Anil", true),
+        OverdueSearchSuggestion("Anup", true),
+        OverdueSearchSuggestion("Anand", true),
+        OverdueSearchSuggestion("Asia", false)
+    ))
+  }
 }
 
 private fun PatientPhoneNumber.withPatientUuid(uuid: UUID): PatientPhoneNumber {

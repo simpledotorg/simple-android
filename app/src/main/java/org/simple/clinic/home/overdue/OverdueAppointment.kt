@@ -177,5 +177,25 @@ data class OverdueAppointment(
         facilityUuid: UUID,
         scheduledBefore: LocalDate
     ): List<OverdueAppointment>
+
+    @Query("""
+      SELECT fullName FROM PatientFts 
+        WHERE fullName 
+        MATCH "*"||:query||"*" 
+        ORDER BY fullName COLLATE NOCASE
+    """)
+    fun searchSuggestionsPatientName(
+        query: String
+    ): List<String>
+
+    @Query("""
+      SELECT colonyOrVillage FROM PatientAddressFts 
+        WHERE colonyOrVillage 
+        MATCH "*"||:query||"*"
+        ORDER BY colonyOrVillage COLLATE NOCASE
+    """)
+    fun searchSuggestionsVillageName(
+        query: String
+    ): List<String>
   }
 }

@@ -162,6 +162,15 @@ class AppointmentRepository @Inject constructor(
     )
   }
 
+  fun overdueSearchSuggestions(
+      searchQuery: String
+  ): List<OverdueSearchSuggestion> {
+    val patientNames = overdueDao.searchSuggestionsPatientName(query = searchQuery).map { OverdueSearchSuggestion.from(it, isResultPatientName = true) }
+    val villagesOrColonies = overdueDao.searchSuggestionsVillageName(query = searchQuery).map { OverdueSearchSuggestion.from(it, isResultPatientName = false) }
+
+    return villagesOrColonies + patientNames
+  }
+
   fun lastCreatedAppointmentForPatient(patientUuid: UUID): Optional<Appointment> {
     return appointmentDao.lastCreatedAppointmentForPatient(patientUuid).toOptional()
   }

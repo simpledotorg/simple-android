@@ -100,4 +100,14 @@
     <ignore path="src/main/res/drawable/ic_video_illustration_ethiopia" />
     <ignore path="src/main/res/drawable/ic_video_illustration_sri_lanka" />
   </issue>
+
+  <!--
+  Lint complains about certain language codes being used in certain regions.
+
+  Since it's possible to use any language in any region, we don't have to fully
+  enforce it for areas we specifically added upon request.
+  -->
+  <issue id="WrongRegion">
+    <ignore path="src/main/res/values-en-rLK" />
+  </issue>
 </lint>

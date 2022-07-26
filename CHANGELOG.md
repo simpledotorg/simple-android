@@ -29,6 +29,7 @@
 ### Fixes
 
 - Fix app crashing when editing patient details
+- Fix hypertension treatment question english translation for Sri Lanka
 
 ## 2022-07-18-8333
 

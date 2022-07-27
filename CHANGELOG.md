@@ -9,6 +9,7 @@
 - Update select and download feature flag key to v2
 - Bump Sentry to v6.3.0
 - Bump Sentry gradle plugin to v3.1.3
+- Bump dagger to v2.43
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-07-25-8342

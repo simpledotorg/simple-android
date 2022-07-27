@@ -13,6 +13,7 @@
 - Bump mixpanel to v6.5.1
 - Add overdue search v2 feature flag
 - Implement query to fetch village and patient names in the facility
+- Add custom text field component with chip input
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-07-25-8342

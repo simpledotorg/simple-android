@@ -366,6 +366,32 @@ data class Patient(
       WHERE uuid = :patientUuid
     """)
     abstract fun contactPatientProfileImmediate(patientUuid: UUID): ContactPatientProfile
+
+    @Query("""
+      SELECT DISTINCT * FROM (
+        SELECT colonyOrVillage 
+        FROM PatientAddress 
+        WHERE uuid IN (
+          SELECT DISTINCT P.addressUuid 
+          FROM Patient P    
+          WHERE P.assignedFacilityId = :facilityUuid
+          OR P.registeredFacilityId = :facilityUuid
+        ) 
+        AND colonyOrVillage IS NOT NULL
+
+        UNION 
+    
+        SELECT fullName 
+        FROM Patient 
+        WHERE ( 
+          assignedFacilityId = :facilityUuid OR   
+          registeredFacilityId = :facilityUuid 
+        )
+        AND fullName IS NOT NULL 
+      )
+     ORDER BY colonyOrVillage ASC   
+    """)
+    abstract fun villageAndPatientNamesInFacility(facilityUuid: UUID): List<String>
   }
 }
 

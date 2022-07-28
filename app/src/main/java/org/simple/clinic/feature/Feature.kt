@@ -38,5 +38,6 @@ enum class Feature(
   MonthlyDrugStockReportReminder(false, "monthly_drug_stock_report_reminders_v1"),
   OverdueSections(false, "overdue_section_improvements_v1"),
   OverdueInstantSearch(false, "overdue_instant_search_v1"),
+  OverdueSearchV2(false, "overdue_search_v2"),
   OverdueSelectAndDownload(false, "overdue_select_and_download_v2")
 }

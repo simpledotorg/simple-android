@@ -6,7 +6,6 @@
 
 - Point accordion downwards when overdue list is expanded
 - Fix `ContactPatientBottomSheet` not opening completely
-- Update select and download feature flag key to v2
 - Bump Sentry to v6.3.0
 - Bump Sentry gradle plugin to v3.1.3
 - Bump dagger to v2.43

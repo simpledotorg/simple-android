@@ -430,4 +430,19 @@ class OverdueSearchUpdateTest {
             hasEffects(SelectAllAppointmentIds(appointmentIds = searchResultsAppointmentIds))
         ))
   }
+
+  @Test
+  fun `when villages and patient names are loaded, then update the model`() {
+    val villagesAndPatientNames = listOf("Anand", "Anup", "Asia", "Earth")
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(VillagesAndPatientNamesLoaded(villagesAndPatientNames = villagesAndPatientNames))
+        .then(
+            assertThatNext(
+                hasModel(defaultModel.villagesAndPatientNamesLoaded(villageAndPatientNames = villagesAndPatientNames)),
+                hasNoEffects()
+            )
+        )
+  }
 }

@@ -55,4 +55,8 @@
     <attr name="statusIconTint" format="color" />
     <attr name="statusTextAppearance" format="reference" />
   </declare-styleable>
+
+  <declare-styleable name="ChipInputAutoCompleteTextView">
+    <attr name="hint" format="string" />
+  </declare-styleable>
 </resources>

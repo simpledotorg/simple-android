@@ -14,6 +14,7 @@
 
   <style name="ThemeOverlay.Simple.Blue1Primary" parent="">
     <item name="colorPrimary">@color/simple_light_blue_500</item>
+    <item name="colorOnPrimary">@color/white</item>
   </style>
 
   <style name="ThemeOverlay.Simple.Blue2Primary" parent="">

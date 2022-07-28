@@ -12,6 +12,7 @@
 - Bump dagger to v2.43
 - Bump mixpanel to v6.5.1
 - Add overdue search v2 feature flag
+- Implement query to fetch village and patient names in the facility
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-07-25-8342

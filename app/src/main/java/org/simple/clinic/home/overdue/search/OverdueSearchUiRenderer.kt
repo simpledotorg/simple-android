@@ -13,6 +13,10 @@ class OverdueSearchUiRenderer(
   override fun render(model: OverdueSearchModel) {
     ui.hideProgress()
 
+    if (model.hasVillageAndPatientNames) {
+      ui.setOverdueSearchSuggestions(model.villageAndPatientNames!!)
+    }
+
     if (model.hasSearchQuery) {
       renderSearchResults(model)
     } else {

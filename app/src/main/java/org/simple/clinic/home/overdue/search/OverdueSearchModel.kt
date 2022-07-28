@@ -15,11 +15,15 @@ data class OverdueSearchModel(
     @IgnoredOnParcel
     val overdueSearchResults: PagingData<OverdueAppointment> = PagingData.empty(),
     @IgnoredOnParcel
-    val selectedOverdueAppointments: Set<UUID> = emptySet()
+    val selectedOverdueAppointments: Set<UUID> = emptySet(),
+    val villageAndPatientNames: List<String>?
 ) : Parcelable {
 
   val hasSearchQuery: Boolean
     get() = !searchQuery.isNullOrBlank()
+
+  val hasVillageAndPatientNames: Boolean
+    get() = !villageAndPatientNames.isNullOrEmpty()
 
   companion object {
 
@@ -28,7 +32,8 @@ data class OverdueSearchModel(
           overdueSearchHistory = null,
           searchQuery = null,
           overdueSearchProgressState = null,
-          selectedOverdueAppointments = emptySet()
+          selectedOverdueAppointments = emptySet(),
+          villageAndPatientNames = null
       )
     }
   }
@@ -53,5 +58,9 @@ data class OverdueSearchModel(
 
   fun selectedOverdueAppointmentsChanged(selectedOverdueAppointments: Set<UUID>): OverdueSearchModel {
     return copy(selectedOverdueAppointments = selectedOverdueAppointments)
+  }
+
+  fun villagesAndPatientNamesLoaded(villageAndPatientNames: List<String>): OverdueSearchModel {
+    return copy(villageAndPatientNames = villageAndPatientNames)
   }
 }

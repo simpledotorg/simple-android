@@ -157,7 +157,6 @@ class OverdueSearchUiRendererTest {
   @Test
   fun `when no overdue appointments are selected, then hide overdue selected count`() {
     // given
-    // given
     val searchResults = PagingData.from(listOf(
         TestData.overdueAppointment(
             patientUuid = UUID.fromString("5a319d3c-cee1-4914-8f1e-c077c37ec9a3"),
@@ -189,6 +188,27 @@ class OverdueSearchUiRendererTest {
     verify(ui).setOverdueSearchResultsPagingData(searchResults, emptySet(), searchQuery)
     verify(ui).showDownloadAndShareButtons()
     verify(ui).hideSelectedOverdueAppointmentCount()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when search suggestions are loaded, then set overdue search suggestions`() {
+    // given
+    val villageAndPatientNames = listOf("Babri", "Narwar", "Anand Nagar")
+    val searchSuggestionsModel = defaultModel
+        .villagesAndPatientNamesLoaded(villageAndPatientNames)
+        .loadStateChanged(NO_RESULTS)
+
+    // when
+    uiRenderer.render(searchSuggestionsModel)
+
+    // then
+    verify(ui).setOverdueSearchSuggestions(villageAndPatientNames)
+    verify(ui).showSearchHistory(emptySet())
+    verify(ui).hideDownloadAndShareButtons()
+    verify(ui).hideSearchResults()
+    verify(ui).hideNoSearchResults()
+    verify(ui).hideProgress()
     verifyNoMoreInteractions(ui)
   }
 }

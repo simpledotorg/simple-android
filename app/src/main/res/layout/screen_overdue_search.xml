@@ -46,6 +46,14 @@
 
       </com.google.android.material.textfield.TextInputLayout>
 
+      <org.simple.clinic.widgets.ChipInputAutoCompleteTextView
+        android:id="@+id/overdue_search_chip_input_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.Simple.Blue1Primary"
+        android:visibility="gone"
+        app:hint="@string/overdue_search_hint" />
+
     </com.google.android.material.appbar.MaterialToolbar>
 
     <com.google.android.material.progressindicator.LinearProgressIndicator

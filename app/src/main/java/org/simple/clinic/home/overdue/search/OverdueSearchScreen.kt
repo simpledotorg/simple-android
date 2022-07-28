@@ -139,6 +139,9 @@ class OverdueSearchScreen : BaseScreen<
   private val shareButton
     get() = binding.shareOverdueListButton
 
+  private val overdueSearchChipInputTextView
+    get() = binding.overdueSearchChipInputTextView
+
   private val hotEvents = PublishSubject.create<UiEvent>()
 
   private val disposable = CompositeDisposable()
@@ -163,6 +166,15 @@ class OverdueSearchScreen : BaseScreen<
         requireContext(),
         R.layout.view_overdue_search_history,
         R.id.search_history_text,
+        mutableListOf()
+    )
+  }
+
+  private val searchSuggestionsAdapter by unsafeLazy {
+    ArrayAdapter<String>(
+        requireContext(),
+        R.layout.view_overdue_search_suggestion,
+        R.id.suggestion_text_view,
         mutableListOf()
     )
   }
@@ -389,6 +401,13 @@ class OverdueSearchScreen : BaseScreen<
         .setMessage(R.string.overdue_download_no_active_network_connection_dialog_message)
         .setPositiveButton(R.string.overdue_download_no_active_network_connection_dialog_positive_button, null)
         .show()
+  }
+
+  override fun setOverdueSearchSuggestions(searchSuggestions: List<String>) {
+    searchSuggestionsAdapter.clear()
+    searchSuggestionsAdapter.addAll(searchSuggestions)
+
+    overdueSearchChipInputTextView.setAdapter(searchSuggestionsAdapter)
   }
 
   private fun overdueSearchQueryTextChanges(): Observable<UiEvent> {

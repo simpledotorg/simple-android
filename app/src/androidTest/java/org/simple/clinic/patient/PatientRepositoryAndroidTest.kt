@@ -9,7 +9,6 @@ import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.PagingTestCase
 import org.simple.clinic.TestClinicApp
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.BloodSugarRepository
@@ -58,11 +57,12 @@ import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.storage.text.TextStore
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.extractIfPresent
+import org.simple.clinic.util.toNullable
+import org.simple.sharedTestCode.TestData
 import org.simple.sharedTestCode.util.Rules
 import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.sharedTestCode.util.TestUtcClock
-import org.simple.clinic.util.extractIfPresent
-import org.simple.clinic.util.toNullable
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
@@ -3389,5 +3389,64 @@ class PatientRepositoryAndroidTest {
 
     val updatedPatient = patientRepository.patient(patientProfile.patient.uuid).blockingFirst().get()
     assertThat(updatedPatient.syncStatus).isEqualTo(PENDING)
+  }
+
+  @Test
+  fun fetching_village_and_patient_names_in_facility_should_work_as_expected() {
+    //given
+    val patientUuid = UUID.fromString("aedf5fa5-293e-4f49-b696-44b533233f3b")
+    val patientAddressUuid = UUID.fromString("02149198-975a-47c9-8083-d977292aaa00")
+    val currentFacility = TestData.facility(uuid = UUID.fromString("1ef483da-ee10-442b-b641-23a7a8484b84"))
+    val patientAddress1 = testData.patientAddress(
+        uuid = patientAddressUuid,
+        colonyOrVillage = "Earth"
+    )
+
+    val patientProfile1 = testData.patientProfile(
+        patientUuid = patientUuid,
+        generatePhoneNumber = true,
+        patientAddressUuid = patientAddressUuid,
+        patientRegisteredFacilityId = currentFacility.uuid,
+        patientName = "Anil"
+    )
+
+    val patientAddress2 = testData.patientAddress(
+        uuid = UUID.fromString("7ff6cea7-7175-4f5d-b6e8-80590b3e1560"),
+        colonyOrVillage = "Anup"
+    )
+
+    val patientProfile2 = testData.patientProfile(
+        patientUuid = UUID.fromString("c6cb4e79-df6e-4c39-b93a-62f7b26cc18f"),
+        generatePhoneNumber = true,
+        patientAddressUuid = patientAddress2.uuid,
+        patientRegisteredFacilityId = currentFacility.uuid,
+        patientName = "Anup"
+    )
+
+    val patientAddress3 = testData.patientAddress(
+        uuid = UUID.fromString("efec96ca-653d-4231-a678-edc21e135ad5"),
+        colonyOrVillage = "AnandNagar"
+    )
+
+    val patientProfile3 = testData.patientProfile(
+        patientUuid = UUID.fromString("01624086-b47e-4f34-a3ed-88153da8f211"),
+        generatePhoneNumber = true,
+        patientAddressUuid = patientAddress3.uuid,
+        patientRegisteredFacilityId = UUID.fromString("c1e61c1d-68be-4d64-81bb-3e1571fbdf76"),
+        patientName = "Anand"
+    )
+
+    patientRepository.save(listOf(patientProfile1, patientProfile2, patientProfile3))
+    database.addressDao().save(listOf(patientAddress1, patientAddress2, patientAddress3))
+
+    // when
+    val searchSuggestionsList = patientRepository.villageAndPatientNamesInFacility(currentFacility.uuid)
+
+    // then
+    assertThat(searchSuggestionsList).containsExactlyElementsIn(listOf(
+        "Anil",
+        "Anup",
+        "Earth"
+    ))
   }
 }

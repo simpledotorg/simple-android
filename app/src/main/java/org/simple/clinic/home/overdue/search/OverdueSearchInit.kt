@@ -12,9 +12,10 @@ class OverdueSearchInit(
     val effects = mutableSetOf<OverdueSearchEffect>()
     if (isOverdueSearchV2Enabled) {
       effects.add(LoadVillageAndPatientNames)
+    } else {
+      effects.add(LoadOverdueSearchHistory)
     }
 
-    effects.add(LoadOverdueSearchHistory)
     effects.add(LoadSelectedOverdueAppointmentIds)
 
     return first(model, effects)

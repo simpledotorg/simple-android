@@ -15,6 +15,7 @@
 - Add custom text field component with chip input
 - Display search suggestions after loading in overdue search screen
 - Load village and patient names when overdue search screen is created
+- Don't show search history when overdue search v2 is enabled
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-07-25-8342

@@ -71,7 +71,7 @@ class OverdueSearchUpdateTest {
   }
 
   @Test
-  fun `when overdue search results are loaded, then update the model`() {
+  fun `when overdue search results are loaded, then set overdue search results paging data`() {
     val searchQuery = "Babri"
     val facilityUuid = UUID.fromString("7dba16a0-1090-41f6-8e0c-0d97989de898")
     val overdueAppointments = listOf(TestData.overdueAppointment(
@@ -92,8 +92,12 @@ class OverdueSearchUpdateTest {
         .whenEvent(OverdueSearchResultsLoaded(overdueSearchResults))
         .then(
             assertThatNext(
-                hasModel(searchQueryChangedModel.overdueSearchResultsLoaded(overdueSearchResults)),
-                hasNoEffects()
+                hasNoModel(),
+                hasEffects(SetOverdueSearchPagingData(
+                    overdueSearchResults = overdueSearchResults,
+                    selectedOverdueAppointments = emptySet(),
+                    searchQuery = searchQuery
+                ))
             )
         )
   }

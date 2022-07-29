@@ -31,6 +31,8 @@ data class LoadSearchResultsAppointmentIds(
     val since: LocalDate
 ) : OverdueSearchEffect()
 
+object LoadVillageAndPatientNames : OverdueSearchEffect()
+
 sealed class OverdueSearchViewEffect : OverdueSearchEffect()
 
 data class OpenPatientSummary(val patientUuid: UUID) : OverdueSearchViewEffect()

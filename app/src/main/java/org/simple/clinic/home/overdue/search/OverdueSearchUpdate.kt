@@ -42,6 +42,7 @@ class OverdueSearchUpdate(
       is ShareButtonClicked -> shareButtonClicked(model, event)
       is SelectAllButtonClicked -> selectAllButtonClicked(model)
       is SearchResultsAppointmentIdsLoaded -> searchResultsAppointmentIdsLoaded(model, event)
+      is VillagesAndPatientNamesLoaded -> next(model.villagesAndPatientNamesLoaded(event.villagesAndPatientNames))
     }
   }
 

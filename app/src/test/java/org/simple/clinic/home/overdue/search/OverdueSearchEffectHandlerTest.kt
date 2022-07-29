@@ -21,6 +21,7 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.OverdueAppointmentSelector
 import org.simple.clinic.overdue.download.OverdueDownloadScheduler
 import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.PagingSourceFactory
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
@@ -42,6 +43,7 @@ class OverdueSearchEffectHandlerTest {
   private val pagingCacheScope = TestScope()
   private val overdueAppointmentSelector = mock<OverdueAppointmentSelector>()
   private val overdueDownloadScheduler = mock<OverdueDownloadScheduler>()
+  private val patientRepository = mock<PatientRepository>()
   private val effectHandler = OverdueSearchEffectHandler(
       overdueSearchHistory = overdueSearchHistory,
       overdueSearchQueryValidator = OverdueSearchQueryValidator(overdueSearchConfig),
@@ -52,6 +54,7 @@ class OverdueSearchEffectHandlerTest {
       currentFacility = { currentFacility },
       overdueAppointmentSelector = overdueAppointmentSelector,
       overdueDownloadScheduler = overdueDownloadScheduler,
+      patientRepository = patientRepository,
       viewEffectsConsumer = viewEffectHandler::handle,
       pagingCacheScope = pagingCacheScope
   ).build()
@@ -341,5 +344,20 @@ class OverdueSearchEffectHandlerTest {
     // then
     verifyZeroInteractions(uiActions)
     effectHandlerTestCase.assertOutgoingEvents(SearchResultsAppointmentIdsLoaded(DOWNLOAD, setOf(appointmentUuid)))
+  }
+
+  @Test
+  fun `when load village and patient names effect is received, then load village and patient names`() {
+    //given
+    val villagesAndPatientNames = listOf("Anand", "Anup", "Asia", "Earth")
+
+    whenever(patientRepository.villageAndPatientNamesInFacility(currentFacility.uuid)) doReturn villagesAndPatientNames
+
+    // when
+    effectHandlerTestCase.dispatch(LoadVillageAndPatientNames)
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(VillagesAndPatientNamesLoaded(villagesAndPatientNames))
+    verifyZeroInteractions(uiActions)
   }
 }

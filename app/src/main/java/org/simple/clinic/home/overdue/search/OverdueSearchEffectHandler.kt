@@ -13,6 +13,7 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.OverdueAppointmentSelector
 import org.simple.clinic.overdue.download.OverdueDownloadScheduler
 import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
@@ -26,6 +27,7 @@ class OverdueSearchEffectHandler @AssistedInject constructor(
     private val currentFacility: Lazy<Facility>,
     private val overdueAppointmentSelector: OverdueAppointmentSelector,
     private val overdueDownloadScheduler: OverdueDownloadScheduler,
+    private val patientRepository: PatientRepository,
     @Assisted private val viewEffectsConsumer: Consumer<OverdueSearchViewEffect>,
     @Assisted private val pagingCacheScope: CoroutineScope
 ) {
@@ -53,7 +55,17 @@ class OverdueSearchEffectHandler @AssistedInject constructor(
         .addConsumer(ScheduleDownload::class.java, ::scheduleDownload)
         .addConsumer(SelectAllAppointmentIds::class.java, ::selectAllAppointmentIds)
         .addTransformer(LoadSearchResultsAppointmentIds::class.java, loadSearchResultsAppointmentIds())
+        .addTransformer(LoadVillageAndPatientNames::class.java, loadVillageAndPatientNames())
         .build()
+  }
+
+  private fun loadVillageAndPatientNames(): ObservableTransformer<LoadVillageAndPatientNames, OverdueSearchEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { patientRepository.villageAndPatientNamesInFacility(facilityUuid = currentFacility.get().uuid) }
+          .map(::VillagesAndPatientNamesLoaded)
+    }
   }
 
   private fun loadSearchResultsAppointmentIds(): ObservableTransformer<LoadSearchResultsAppointmentIds, OverdueSearchEvent> {

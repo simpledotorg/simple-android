@@ -68,3 +68,7 @@ data class SearchResultsAppointmentIdsLoaded(
     val buttonType: OverdueButtonType,
     val searchResultsAppointmentIds: Set<UUID>
 ) : OverdueSearchEvent()
+
+data class VillagesAndPatientNamesLoaded(
+    val villagesAndPatientNames: List<String>
+) : OverdueSearchEvent()

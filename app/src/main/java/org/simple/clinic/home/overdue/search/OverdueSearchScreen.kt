@@ -42,6 +42,7 @@ import org.simple.clinic.databinding.ListItemSearchOverdueSelectAllButtonBinding
 import org.simple.clinic.databinding.ScreenOverdueSearchBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Feature.OverdueSearchV2
 import org.simple.clinic.feature.Features
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.DONE
@@ -187,7 +188,7 @@ class OverdueSearchScreen : BaseScreen<
     return OverdueSearchUpdate(LocalDate.now(userClock), canGeneratePdf)
   }
 
-  override fun createInit() = OverdueSearchInit()
+  override fun createInit() = OverdueSearchInit(features.isEnabled(OverdueSearchV2))
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<OverdueSearchViewEffect>) = effectHandlerFactory
       .create(

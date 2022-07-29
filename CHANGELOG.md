@@ -17,6 +17,7 @@
 - Load village and patient names when overdue search screen is created
 - Don't show search history when overdue search v2 is enabled
 - Bump room to 2.4.3
+- Remove overdue search v2 feature flag key
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-07-25-8342

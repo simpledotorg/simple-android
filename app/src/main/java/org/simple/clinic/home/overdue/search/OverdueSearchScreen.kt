@@ -197,7 +197,10 @@ class OverdueSearchScreen : BaseScreen<
       )
       .build()
 
-  override fun uiRenderer() = OverdueSearchUiRenderer(this)
+  override fun uiRenderer() = OverdueSearchUiRenderer(
+      ui = this,
+      isOverdueSearchV2Enabled = features.isEnabled(OverdueSearchV2)
+  )
 
   override fun viewEffectHandler() = OverdueSearchViewEffectHandler(this)
 

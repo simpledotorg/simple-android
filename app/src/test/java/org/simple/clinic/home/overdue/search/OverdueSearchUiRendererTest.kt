@@ -13,7 +13,10 @@ import java.util.UUID
 
 class OverdueSearchUiRendererTest {
   private val ui = mock<OverdueSearchUi>()
-  private val uiRenderer = OverdueSearchUiRenderer(ui)
+  private val uiRenderer = OverdueSearchUiRenderer(
+      ui = ui,
+      isOverdueSearchV2Enabled = false
+  )
   private val defaultModel = OverdueSearchModel.create()
 
   @Test
@@ -205,6 +208,32 @@ class OverdueSearchUiRendererTest {
     // then
     verify(ui).setOverdueSearchSuggestions(villageAndPatientNames)
     verify(ui).showSearchHistory(emptySet())
+    verify(ui).hideDownloadAndShareButtons()
+    verify(ui).hideSearchResults()
+    verify(ui).hideNoSearchResults()
+    verify(ui).hideProgress()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when search query is empty and has no results and overdue search v2 is enabled, then don't display search history and hide download and share buttons`() {
+    // given
+    val searchHistory = setOf("Babri")
+    val model = defaultModel
+        .overdueSearchQueryChanged("")
+        .overdueSearchHistoryLoaded(searchHistory)
+        .loadStateChanged(NO_RESULTS)
+
+    val uiRenderer = OverdueSearchUiRenderer(
+        ui = ui,
+        isOverdueSearchV2Enabled = true
+    )
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).hideSearchHistory()
     verify(ui).hideDownloadAndShareButtons()
     verify(ui).hideSearchResults()
     verify(ui).hideNoSearchResults()

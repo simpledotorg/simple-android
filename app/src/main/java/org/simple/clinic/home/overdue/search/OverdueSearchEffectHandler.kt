@@ -70,7 +70,7 @@ class OverdueSearchEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulersProvider.io())
           .map { effect ->
-            val appointmentIds = appointmentRepository.searchOverduePatientsImmediate(
+            val appointmentIds = appointmentRepository.searchOverduePatientsImmediate_Old(
                 searchQuery = effect.searchQuery,
                 since = effect.since,
                 facilityId = currentFacility.get().uuid
@@ -153,7 +153,7 @@ class OverdueSearchEffectHandler @AssistedInject constructor(
           .switchMap { (facilityId, searchOverduePatientsEffect) ->
             pagerFactory.createPager(
                 sourceFactory = {
-                  appointmentRepository.searchOverduePatient(
+                  appointmentRepository.searchOverduePatient_Old(
                       searchOverduePatientsEffect.searchQuery,
                       searchOverduePatientsEffect.since,
                       facilityId

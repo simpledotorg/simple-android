@@ -330,7 +330,7 @@ class OverdueSearchEffectHandlerTest {
         TestData.overdueAppointment(appointmentUuid = appointmentUuid)
     )
 
-    whenever(appointmentRepository.searchOverduePatientsImmediate(searchQuery, since, currentFacility.uuid)) doReturn overdueAppointments
+    whenever(appointmentRepository.searchOverduePatientsImmediate_Old(searchQuery, since, currentFacility.uuid)) doReturn overdueAppointments
 
     // when
     effectHandlerTestCase.dispatch(LoadSearchResultsAppointmentIds(

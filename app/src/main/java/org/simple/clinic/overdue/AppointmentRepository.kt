@@ -138,12 +138,38 @@ class AppointmentRepository @Inject constructor(
     )
   }
 
-  fun searchOverduePatient(
+  fun searchOverduePatient_Old(
       searchQuery: String,
       since: LocalDate,
       facilityId: UUID
   ): PagingSource<Int, OverdueAppointment> {
+    return overdueDao.search_Old(
+        query = searchQuery,
+        scheduledBefore = since,
+        facilityUuid = facilityId
+    )
+  }
+
+  fun searchOverduePatient(
+      searchInputs: List<String>,
+      since: LocalDate,
+      facilityId: UUID
+  ): PagingSource<Int, OverdueAppointment> {
+    val query = transformSearchInputsIntoQuery(searchInputs)
+
     return overdueDao.search(
+        query = query,
+        scheduledBefore = since,
+        facilityUuid = facilityId
+    )
+  }
+
+  fun searchOverduePatientsImmediate_Old(
+      searchQuery: String,
+      since: LocalDate,
+      facilityId: UUID
+  ): List<OverdueAppointment> {
+    return overdueDao.searchImmediate_Old(
         query = searchQuery,
         scheduledBefore = since,
         facilityUuid = facilityId
@@ -151,16 +177,21 @@ class AppointmentRepository @Inject constructor(
   }
 
   fun searchOverduePatientsImmediate(
-      searchQuery: String,
+      searchInputs: List<String>,
       since: LocalDate,
       facilityId: UUID
   ): List<OverdueAppointment> {
+    val query = transformSearchInputsIntoQuery(searchInputs)
+
     return overdueDao.searchImmediate(
-        query = searchQuery,
+        query = query,
         scheduledBefore = since,
         facilityUuid = facilityId
     )
   }
+
+  private fun transformSearchInputsIntoQuery(searchInputs: List<String>) = searchInputs
+      .joinToString(separator = " OR ") { "*$it*" }
 
   fun lastCreatedAppointmentForPatient(patientUuid: UUID): Optional<Appointment> {
     return appointmentDao.lastCreatedAppointmentForPatient(patientUuid).toOptional()

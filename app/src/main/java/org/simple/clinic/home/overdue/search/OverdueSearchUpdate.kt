@@ -28,7 +28,11 @@ class OverdueSearchUpdate(
           ValidateOverdueSearchQuery(event.searchQuery)
       )
       is OverdueSearchQueryValidated -> searchQueryValidated(event)
-      is OverdueSearchResultsLoaded -> next(model.overdueSearchResultsLoaded(event.overdueAppointments))
+      is OverdueSearchResultsLoaded -> dispatch(SetOverdueSearchPagingData(
+          overdueSearchResults = event.overdueAppointments,
+          selectedOverdueAppointments = model.selectedOverdueAppointments,
+          searchQuery = model.searchQuery.orEmpty()
+      ))
       is CallPatientClicked -> dispatch(OpenContactPatientSheet(event.patientUuid))
       is OverduePatientClicked -> dispatch(OpenPatientSummary(event.patientUuid))
       is OverdueSearchHistoryClicked -> dispatch(SetOverdueSearchQuery(event.searchQuery))

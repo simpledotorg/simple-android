@@ -10,7 +10,6 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
-import kotlinx.coroutines.test.TestScope
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.home.overdue.OverdueAppointment
@@ -40,7 +39,6 @@ class OverdueSearchEffectHandlerTest {
   private val appointmentRepository = mock<AppointmentRepository>()
   private val pagerFactory = mock<PagerFactory>()
   private val currentFacility = TestData.facility(uuid = UUID.fromString("94db5d90-d483-4755-892a-97fde5a870fe"))
-  private val pagingCacheScope = TestScope()
   private val overdueAppointmentSelector = mock<OverdueAppointmentSelector>()
   private val overdueDownloadScheduler = mock<OverdueDownloadScheduler>()
   private val patientRepository = mock<PatientRepository>()
@@ -161,7 +159,7 @@ class OverdueSearchEffectHandlerTest {
     )) doReturn Observable.just(expectedPagingData)
 
     // when
-    effectHandlerTestCase.dispatch(SearchOverduePatients(query, LocalDate.of(2022, 3, 22)))
+    effectHandlerTestCase.dispatch(SearchOverduePatients_Old(query, LocalDate.of(2022, 3, 22)))
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(OverdueSearchResultsLoaded(expectedPagingData))
@@ -387,5 +385,35 @@ class OverdueSearchEffectHandlerTest {
         searchQuery = searchQuery
     )
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when search overdue patients effect is received, then search for overdue patients`() {
+    // given
+    val searchInputs = listOf(
+        "Babri",
+        "Narwar",
+        "Anandh"
+    )
+    val since = LocalDate.parse("2018-01-01")
+
+    val searchResults = PagingData.from(listOf(
+        TestData.overdueAppointment(appointmentUuid = UUID.fromString("0da6d783-0ba8-4c06-8a29-815d013bda6d"))
+    ))
+
+    whenever(pagerFactory.createPager(
+        sourceFactory = any<PagingSourceFactory<Int, OverdueAppointment>>(),
+        pageSize = eq(pagingLoadSize),
+        enablePlaceholders = eq(false),
+        initialKey = eq(null)
+    )) doReturn Observable.just(searchResults)
+
+    // when
+    effectHandlerTestCase.dispatch(SearchOverduePatients(searchInputs, since))
+
+    // then
+    verifyZeroInteractions(uiActions)
+
+    effectHandlerTestCase.assertOutgoingEvents(OverdueSearchResultsLoaded(searchResults))
   }
 }

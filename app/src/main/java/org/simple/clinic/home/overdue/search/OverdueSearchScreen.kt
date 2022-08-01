@@ -214,7 +214,8 @@ class OverdueSearchScreen : BaseScreen<
           overdueSearchQueryTextChanges(),
           clearSelectedOverdueAppointmentClicks(),
           downloadButtonClicks(),
-          shareButtonClicks()
+          shareButtonClicks(),
+          overdueSearchInputsChanges()
       )
       .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
       .compose(runtimeNetworkStatus::apply)
@@ -433,6 +434,13 @@ class OverdueSearchScreen : BaseScreen<
         .map {
           OverdueSearchQueryChanged(it.toString())
         }
+  }
+
+  private fun overdueSearchInputsChanges(): Observable<UiEvent> {
+    return overdueSearchChipInputTextView
+        .inputChanges
+        .debounce(500, TimeUnit.MILLISECONDS)
+        .map(::OverdueSearchInputsChanged)
   }
 
   interface Injector {

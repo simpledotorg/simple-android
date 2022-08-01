@@ -18,7 +18,7 @@ class OverdueSearchUiRenderer(
       ui.setOverdueSearchSuggestions(model.villageAndPatientNames!!)
     }
 
-    if (model.hasSearchQuery) {
+    if (model.hasSearchQuery || model.hasSearchInputs) {
       renderSearchResults(model)
     } else {
       ui.hideNoSearchResults()

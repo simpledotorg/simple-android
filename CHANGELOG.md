@@ -8,6 +8,7 @@
 - Show chip input text view in overdue search when overdue v2 search is enabled
 - Add overdue search query for supporting multiple search inputs
 - Fix overdue search history and results not showing in overdue search screen
+- Add multiple search inputs support in overdue search screen
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-08-01-8350

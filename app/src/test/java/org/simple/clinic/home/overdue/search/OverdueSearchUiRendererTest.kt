@@ -24,6 +24,7 @@ class OverdueSearchUiRendererTest {
     // given
     val model = defaultModel
         .overdueSearchQueryChanged("Ani")
+        .overdueSearchInputsChanged(searchInputs = listOf("Ani"))
         .loadStateChanged(IN_PROGRESS)
 
     // when
@@ -62,6 +63,7 @@ class OverdueSearchUiRendererTest {
     val searchHistory = setOf("Babri")
     val model = defaultModel
         .overdueSearchQueryChanged("Ani")
+        .overdueSearchInputsChanged(searchInputs = listOf("Ani"))
         .overdueSearchHistoryLoaded(searchHistory)
         .loadStateChanged(NO_RESULTS)
 
@@ -98,6 +100,7 @@ class OverdueSearchUiRendererTest {
     val searchQuery = "Ani"
     val model = defaultModel
         .overdueSearchQueryChanged(searchQuery)
+        .overdueSearchInputsChanged(listOf(searchQuery))
         .overdueSearchResultsLoaded(searchResults)
         .loadStateChanged(DONE)
         .selectedOverdueAppointmentsChanged(selectedAppointments)
@@ -136,6 +139,7 @@ class OverdueSearchUiRendererTest {
     val searchQuery = "Ani"
     val model = defaultModel
         .overdueSearchQueryChanged(searchQuery)
+        .overdueSearchInputsChanged(listOf(searchQuery))
         .overdueSearchResultsLoaded(searchResults)
         .loadStateChanged(DONE)
         .selectedOverdueAppointmentsChanged(selectedAppointments)
@@ -173,6 +177,7 @@ class OverdueSearchUiRendererTest {
     val searchQuery = "Ani"
     val model = defaultModel
         .overdueSearchQueryChanged(searchQuery)
+        .overdueSearchInputsChanged(listOf(searchQuery))
         .overdueSearchResultsLoaded(searchResults)
         .loadStateChanged(DONE)
 

@@ -66,7 +66,7 @@ class OverdueSearchUpdateTest {
         .whenEvent(OverdueSearchQueryValidated(Valid(searchQuery)))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(AddQueryToOverdueSearchHistory(searchQuery), SearchOverduePatients(searchQuery, date))
+            hasEffects(AddQueryToOverdueSearchHistory(searchQuery), SearchOverduePatients_Old(searchQuery, date))
         ))
   }
 
@@ -448,5 +448,21 @@ class OverdueSearchUpdateTest {
                 hasNoEffects()
             )
         )
+  }
+
+  @Test
+  fun `when overdue search inputs are changed, then update model and search overdue patients`() {
+    val searchInputs = listOf("Anand", "Anup", "Asia", "Earth")
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(OverdueSearchInputsChanged(searchInputs))
+        .then(assertThatNext(
+            hasModel(defaultModel.overdueSearchInputsChanged(searchInputs)),
+            hasEffects(SearchOverduePatients(
+                searchInputs = searchInputs,
+                since = date
+            ))
+        ))
   }
 }

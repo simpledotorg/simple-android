@@ -13,7 +13,7 @@ data class ValidateOverdueSearchQuery(val searchQuery: String) : OverdueSearchEf
 
 data class AddQueryToOverdueSearchHistory(val searchQuery: String) : OverdueSearchEffect()
 
-data class SearchOverduePatients(val searchQuery: String, val since: LocalDate) : OverdueSearchEffect()
+data class SearchOverduePatients_Old(val searchQuery: String, val since: LocalDate) : OverdueSearchEffect()
 
 data class ToggleOverdueAppointmentSelection(val appointmentId: UUID) : OverdueSearchEffect()
 
@@ -34,6 +34,11 @@ data class LoadSearchResultsAppointmentIds(
 ) : OverdueSearchEffect()
 
 object LoadVillageAndPatientNames : OverdueSearchEffect()
+
+data class SearchOverduePatients(
+    val searchInputs: List<String>,
+    val since: LocalDate
+) : OverdueSearchEffect()
 
 sealed class OverdueSearchViewEffect : OverdueSearchEffect()
 

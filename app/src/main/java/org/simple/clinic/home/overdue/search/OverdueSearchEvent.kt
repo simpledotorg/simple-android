@@ -72,3 +72,5 @@ data class SearchResultsAppointmentIdsLoaded(
 data class VillagesAndPatientNamesLoaded(
     val villagesAndPatientNames: List<String>
 ) : OverdueSearchEvent()
+
+data class OverdueSearchInputsChanged(val searchInputs: List<String>) : OverdueSearchEvent()

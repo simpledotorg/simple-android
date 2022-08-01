@@ -47,7 +47,18 @@ class OverdueSearchUpdate(
       is SelectAllButtonClicked -> selectAllButtonClicked(model)
       is SearchResultsAppointmentIdsLoaded -> searchResultsAppointmentIdsLoaded(model, event)
       is VillagesAndPatientNamesLoaded -> next(model.villagesAndPatientNamesLoaded(event.villagesAndPatientNames))
+      is OverdueSearchInputsChanged -> searchInputsChanged(model, event)
     }
+  }
+
+  private fun searchInputsChanged(model: OverdueSearchModel, event: OverdueSearchInputsChanged): Next<OverdueSearchModel, OverdueSearchEffect> {
+    return next(
+        model.overdueSearchInputsChanged(event.searchInputs),
+        SearchOverduePatients(
+            searchInputs = event.searchInputs,
+            since = date
+        )
+    )
   }
 
   private fun selectAllButtonClicked(model: OverdueSearchModel): Next<OverdueSearchModel, OverdueSearchEffect> {
@@ -127,7 +138,7 @@ class OverdueSearchUpdate(
 
   private fun searchQueryValidated(event: OverdueSearchQueryValidated): Next<OverdueSearchModel, OverdueSearchEffect> {
     return when (val result = event.result) {
-      is Valid -> dispatch(AddQueryToOverdueSearchHistory(result.searchQuery), SearchOverduePatients(result.searchQuery, date))
+      is Valid -> dispatch(AddQueryToOverdueSearchHistory(result.searchQuery), SearchOverduePatients_Old(result.searchQuery, date))
       Empty,
       LengthTooShort -> noChange()
     }

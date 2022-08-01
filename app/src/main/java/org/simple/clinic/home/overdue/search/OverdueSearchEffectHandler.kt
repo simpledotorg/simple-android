@@ -43,7 +43,7 @@ class OverdueSearchEffectHandler @AssistedInject constructor(
         .addTransformer(LoadOverdueSearchHistory::class.java, loadOverdueSearchHistory())
         .addTransformer(ValidateOverdueSearchQuery::class.java, validateOverdueSearchQuery())
         .addConsumer(AddQueryToOverdueSearchHistory::class.java, ::addQueryToSearchHistory)
-        .addTransformer(SearchOverduePatients::class.java, searchOverduePatients())
+        .addTransformer(SearchOverduePatients_Old::class.java, searchOverduePatients_Old())
         .addConsumer(OverdueSearchViewEffect::class.java, viewEffectsConsumer::accept)
         .addConsumer(ToggleOverdueAppointmentSelection::class.java, ::toggleOverdueAppointmentSelection, schedulersProvider.computation())
         .addTransformer(LoadSelectedOverdueAppointmentIds::class.java, loadSelectedOverdueAppointmentIds())
@@ -53,7 +53,29 @@ class OverdueSearchEffectHandler @AssistedInject constructor(
         .addConsumer(SelectAllAppointmentIds::class.java, ::selectAllAppointmentIds)
         .addTransformer(LoadSearchResultsAppointmentIds::class.java, loadSearchResultsAppointmentIds())
         .addTransformer(LoadVillageAndPatientNames::class.java, loadVillageAndPatientNames())
+        .addTransformer(SearchOverduePatients::class.java, searchOverduePatients())
         .build()
+  }
+
+  private fun searchOverduePatients(): ObservableTransformer<SearchOverduePatients, OverdueSearchEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .switchMap { (searchInputs, since) ->
+            pagerFactory.createPager(
+                sourceFactory = {
+                  appointmentRepository.searchOverduePatient(
+                      searchInputs = searchInputs,
+                      since = since,
+                      facilityId = currentFacility.get().uuid
+                  )
+                },
+                pageSize = overdueSearchConfig.pagingLoadSize,
+                enablePlaceholders = false
+            )
+          }
+          .map(::OverdueSearchResultsLoaded)
+    }
   }
 
   private fun loadVillageAndPatientNames(): ObservableTransformer<LoadVillageAndPatientNames, OverdueSearchEvent> {
@@ -143,7 +165,7 @@ class OverdueSearchEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun searchOverduePatients(): ObservableTransformer<SearchOverduePatients, OverdueSearchEvent> {
+  private fun searchOverduePatients_Old(): ObservableTransformer<SearchOverduePatients_Old, OverdueSearchEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())

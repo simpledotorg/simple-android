@@ -55,8 +55,7 @@ class OverdueSearchEffectHandlerTest {
       overdueAppointmentSelector = overdueAppointmentSelector,
       overdueDownloadScheduler = overdueDownloadScheduler,
       patientRepository = patientRepository,
-      viewEffectsConsumer = viewEffectHandler::handle,
-      pagingCacheScope = pagingCacheScope
+      viewEffectsConsumer = viewEffectHandler::handle
   ).build()
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
 
@@ -158,8 +157,7 @@ class OverdueSearchEffectHandlerTest {
         sourceFactory = any<PagingSourceFactory<Int, OverdueAppointment>>(),
         pageSize = eq(pagingLoadSize),
         enablePlaceholders = eq(false),
-        initialKey = eq(null),
-        cacheScope = eq(pagingCacheScope)
+        initialKey = eq(null)
     )) doReturn Observable.just(expectedPagingData)
 
     // when
@@ -359,5 +357,35 @@ class OverdueSearchEffectHandlerTest {
     // then
     effectHandlerTestCase.assertOutgoingEvents(VillagesAndPatientNamesLoaded(villagesAndPatientNames))
     verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when set overdue search paging data effect is received, then set overdue search paging data`() {
+    // give
+    val selectedOverdueAppointments = setOf(
+        UUID.fromString("931d4406-78d1-4cdf-aad5-d8f4a9e18f38")
+    )
+    val searchQuery = "Ani"
+    val searchResults = PagingData.from(listOf(
+        TestData.overdueAppointment(
+            patientUuid = UUID.fromString("92fc941d-a6f5-427f-a9f3-0e703373d03e"),
+            appointmentUuid = UUID.fromString("931d4406-78d1-4cdf-aad5-d8f4a9e18f38"),
+            name = "Anish Acharya"
+        )
+    ))
+
+    // when
+    effectHandlerTestCase.dispatch(SetOverdueSearchPagingData(
+        overdueSearchResults = searchResults,
+        selectedOverdueAppointments = selectedOverdueAppointments,
+        searchQuery = searchQuery
+    ))
+
+    verify(uiActions).setOverdueSearchResultsPagingData(
+        overdueSearchResults = searchResults,
+        selectedOverdueAppointments = selectedOverdueAppointments,
+        searchQuery = searchQuery
+    )
+    verifyNoMoreInteractions(uiActions)
   }
 }

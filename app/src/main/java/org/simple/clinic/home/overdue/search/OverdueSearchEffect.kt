@@ -1,5 +1,7 @@
 package org.simple.clinic.home.overdue.search
 
+import androidx.paging.PagingData
+import org.simple.clinic.home.overdue.OverdueAppointment
 import java.time.LocalDate
 import java.util.UUID
 
@@ -48,3 +50,9 @@ object OpenSelectShareFormatDialog : OverdueSearchViewEffect()
 object OpenShareInProgressDialog : OverdueSearchViewEffect()
 
 object ShowNoInternetConnectionDialog : OverdueSearchViewEffect()
+
+data class SetOverdueSearchPagingData(
+    val overdueSearchResults: PagingData<OverdueAppointment>,
+    val selectedOverdueAppointments: Set<UUID>,
+    val searchQuery: String
+) : OverdueSearchViewEffect()

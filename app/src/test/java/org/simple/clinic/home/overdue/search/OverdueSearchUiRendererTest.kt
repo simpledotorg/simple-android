@@ -32,7 +32,6 @@ class OverdueSearchUiRendererTest {
     // then
     verify(ui).hideProgress()
     verify(ui).showProgress()
-    verify(ui).setOverdueSearchResultsPagingData(PagingData.empty(), emptySet(), searchQuery = "Ani")
     verifyNoMoreInteractions(ui)
   }
 
@@ -74,7 +73,6 @@ class OverdueSearchUiRendererTest {
     verify(ui).hideSearchResults()
     verify(ui).showNoSearchResults()
     verify(ui).hideProgress()
-    verify(ui).setOverdueSearchResultsPagingData(PagingData.empty(), emptySet(), searchQuery = "Ani")
     verify(ui).hideDownloadAndShareButtons()
     verifyNoMoreInteractions(ui)
   }
@@ -112,7 +110,6 @@ class OverdueSearchUiRendererTest {
     verify(ui).hideNoSearchResults()
     verify(ui).hideProgress()
     verify(ui).showSearchResults()
-    verify(ui).setOverdueSearchResultsPagingData(searchResults, selectedAppointments, searchQuery)
     verify(ui).showDownloadAndShareButtons()
     verify(ui).showSelectedOverdueAppointmentCount(1)
     verifyNoMoreInteractions(ui)
@@ -151,7 +148,6 @@ class OverdueSearchUiRendererTest {
     verify(ui).hideNoSearchResults()
     verify(ui).hideProgress()
     verify(ui).showSearchResults()
-    verify(ui).setOverdueSearchResultsPagingData(searchResults, selectedAppointments, searchQuery)
     verify(ui).showDownloadAndShareButtons()
     verify(ui).showSelectedOverdueAppointmentCount(1)
     verifyNoMoreInteractions(ui)
@@ -188,7 +184,6 @@ class OverdueSearchUiRendererTest {
     verify(ui).hideNoSearchResults()
     verify(ui).hideProgress()
     verify(ui).showSearchResults()
-    verify(ui).setOverdueSearchResultsPagingData(searchResults, emptySet(), searchQuery)
     verify(ui).showDownloadAndShareButtons()
     verify(ui).hideSelectedOverdueAppointmentCount()
     verifyNoMoreInteractions(ui)

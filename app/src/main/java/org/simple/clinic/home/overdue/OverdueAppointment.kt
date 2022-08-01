@@ -154,6 +154,24 @@ data class OverdueAppointment(
       GROUP BY appt_patientUuid
       ORDER BY fullName COLLATE NOCASE
     """)
+    fun search_Old(
+        query: String,
+        facilityUuid: UUID,
+        scheduledBefore: LocalDate
+    ): PagingSource<Int, OverdueAppointment>
+
+    @Query("""
+      $OVERDUE_APPOINTMENTS_QUERY
+      WHERE
+        (
+          P.uuid IN (SELECT uuid FROM PatientFts WHERE fullName MATCH :query) OR
+          P.addressUuid IN (SELECT uuid FROM PatientAddressFts WHERE colonyOrVillage MATCH :query)
+        ) AND
+        IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid AND
+        appt_scheduledDate < :scheduledBefore
+      GROUP BY appt_patientUuid
+      ORDER BY fullName COLLATE NOCASE
+    """)
     fun search(
         query: String,
         facilityUuid: UUID,
@@ -166,6 +184,24 @@ data class OverdueAppointment(
         (
           P.uuid IN (SELECT uuid FROM PatientFts WHERE fullName MATCH "*"||:query||"*") OR
           P.addressUuid IN (SELECT uuid FROM PatientAddressFts WHERE colonyOrVillage MATCH "*"||:query||"*")
+        ) AND
+        IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid AND
+        appt_scheduledDate < :scheduledBefore
+      GROUP BY appt_patientUuid
+      ORDER BY fullName COLLATE NOCASE
+    """)
+    fun searchImmediate_Old(
+        query: String,
+        facilityUuid: UUID,
+        scheduledBefore: LocalDate
+    ): List<OverdueAppointment>
+
+    @Query("""
+      $OVERDUE_APPOINTMENTS_QUERY
+      WHERE
+        (
+          P.uuid IN (SELECT uuid FROM PatientFts WHERE fullName MATCH :query) OR
+          P.addressUuid IN (SELECT uuid FROM PatientAddressFts WHERE colonyOrVillage MATCH :query)
         ) AND
         IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid AND
         appt_scheduledDate < :scheduledBefore

@@ -2922,7 +2922,7 @@ class AppointmentRepositoryAndroidTest {
     }
 
     // given
-    val searchQuery = "bar"
+    val searchInputs = listOf("bar")
     val facilityUuid = UUID.fromString("722111d2-459c-47a6-859c-ca3564fc374d")
 
     val patient1WithMatchingName = UUID.fromString("7c7a09ce-d5b7-4c75-9983-01704d8e9cc6")
@@ -2960,8 +2960,8 @@ class AppointmentRepositoryAndroidTest {
     )
 
     // when
-    val overduePatientUuids = PagingTestCase(pagingSource = appointmentRepository.searchOverduePatient_Old(
-        searchQuery = searchQuery,
+    val overduePatientUuids = PagingTestCase(pagingSource = appointmentRepository.searchOverduePatient(
+        searchInputs = searchInputs,
         since = LocalDate.now(),
         facilityId = facilityUuid),
         loadSize = 10)

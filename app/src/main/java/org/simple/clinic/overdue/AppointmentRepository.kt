@@ -138,18 +138,6 @@ class AppointmentRepository @Inject constructor(
     )
   }
 
-  fun searchOverduePatient_Old(
-      searchQuery: String,
-      since: LocalDate,
-      facilityId: UUID
-  ): PagingSource<Int, OverdueAppointment> {
-    return overdueDao.search_Old(
-        query = searchQuery,
-        scheduledBefore = since,
-        facilityUuid = facilityId
-    )
-  }
-
   fun searchOverduePatient(
       searchInputs: List<String>,
       since: LocalDate,
@@ -159,18 +147,6 @@ class AppointmentRepository @Inject constructor(
 
     return overdueDao.search(
         query = query,
-        scheduledBefore = since,
-        facilityUuid = facilityId
-    )
-  }
-
-  fun searchOverduePatientsImmediate_Old(
-      searchQuery: String,
-      since: LocalDate,
-      facilityId: UUID
-  ): List<OverdueAppointment> {
-    return overdueDao.searchImmediate_Old(
-        query = searchQuery,
         scheduledBefore = since,
         facilityUuid = facilityId
     )
@@ -211,7 +187,6 @@ class AppointmentRepository @Inject constructor(
         newUpdatedAt = Instant.now(utcClock),
         createdBefore = startOfToday
     )
-
   }
 
   fun recordsWithSyncStatus(syncStatus: SyncStatus): List<Appointment> {

@@ -17,8 +17,6 @@ import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class OverdueSearchEffectHandler @AssistedInject constructor(
-    private val overdueSearchHistory: OverdueSearchHistory,
-    private val overdueSearchQueryValidator: OverdueSearchQueryValidator,
     private val schedulersProvider: SchedulersProvider,
     private val appointmentRepository: AppointmentRepository,
     private val pagerFactory: PagerFactory,
@@ -40,10 +38,6 @@ class OverdueSearchEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<OverdueSearchEffect, OverdueSearchEvent> {
     return RxMobius
         .subtypeEffectHandler<OverdueSearchEffect, OverdueSearchEvent>()
-        .addTransformer(LoadOverdueSearchHistory::class.java, loadOverdueSearchHistory())
-        .addTransformer(ValidateOverdueSearchQuery::class.java, validateOverdueSearchQuery())
-        .addConsumer(AddQueryToOverdueSearchHistory::class.java, ::addQueryToSearchHistory)
-        .addTransformer(SearchOverduePatients_Old::class.java, searchOverduePatients_Old())
         .addConsumer(OverdueSearchViewEffect::class.java, viewEffectsConsumer::accept)
         .addConsumer(ToggleOverdueAppointmentSelection::class.java, ::toggleOverdueAppointmentSelection, schedulersProvider.computation())
         .addTransformer(LoadSelectedOverdueAppointmentIds::class.java, loadSelectedOverdueAppointmentIds())
@@ -92,8 +86,8 @@ class OverdueSearchEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulersProvider.io())
           .map { effect ->
-            val appointmentIds = appointmentRepository.searchOverduePatientsImmediate_Old(
-                searchQuery = effect.searchQuery,
+            val appointmentIds = appointmentRepository.searchOverduePatientsImmediate(
+                searchInputs = effect.searchInputs,
                 since = effect.since,
                 facilityId = currentFacility.get().uuid
             ).map { it.appointment.uuid }.toSet()
@@ -141,51 +135,5 @@ class OverdueSearchEffectHandler @AssistedInject constructor(
 
   private fun toggleOverdueAppointmentSelection(effect: ToggleOverdueAppointmentSelection) {
     overdueAppointmentSelector.toggleSelection(effect.appointmentId)
-  }
-
-  private fun addQueryToSearchHistory(effect: AddQueryToOverdueSearchHistory) {
-    overdueSearchHistory.add(effect.searchQuery)
-  }
-
-  private fun validateOverdueSearchQuery(): ObservableTransformer<ValidateOverdueSearchQuery, OverdueSearchEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulersProvider.io())
-          .map { overdueSearchQueryValidator.validate(it.searchQuery) }
-          .map(::OverdueSearchQueryValidated)
-    }
-  }
-
-  private fun loadOverdueSearchHistory(): ObservableTransformer<LoadOverdueSearchHistory, OverdueSearchEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulersProvider.io())
-          .switchMap { overdueSearchHistory.fetch() }
-          .map(::OverdueSearchHistoryLoaded)
-    }
-  }
-
-  private fun searchOverduePatients_Old(): ObservableTransformer<SearchOverduePatients_Old, OverdueSearchEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulersProvider.io())
-          .map {
-            currentFacility.get().uuid to it
-          }
-          .switchMap { (facilityId, searchOverduePatientsEffect) ->
-            pagerFactory.createPager(
-                sourceFactory = {
-                  appointmentRepository.searchOverduePatient_Old(
-                      searchOverduePatientsEffect.searchQuery,
-                      searchOverduePatientsEffect.since,
-                      facilityId
-                  )
-                },
-                pageSize = overdueSearchConfig.pagingLoadSize,
-                enablePlaceholders = false
-            )
-          }
-          .map(::OverdueSearchResultsLoaded)
-    }
   }
 }

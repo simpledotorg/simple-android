@@ -8,7 +8,6 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.paging.LoadState
@@ -17,9 +16,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.recyclerview.scrollStateChanges
 import com.jakewharton.rxbinding3.view.clicks
-import com.jakewharton.rxbinding3.widget.editorActions
-import com.jakewharton.rxbinding3.widget.itemClicks
-import com.jakewharton.rxbinding3.widget.textChanges
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -41,7 +37,6 @@ import org.simple.clinic.databinding.ListItemSearchOverdueSelectAllButtonBinding
 import org.simple.clinic.databinding.ScreenOverdueSearchBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
-import org.simple.clinic.feature.Feature.OverdueSearchV2
 import org.simple.clinic.feature.Features
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.DONE
@@ -63,9 +58,6 @@ import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
-import org.simple.clinic.widgets.setTextAndCursor
-import org.simple.clinic.widgets.showKeyboard
-import org.simple.clinic.widgets.visibleOrGone
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
@@ -116,15 +108,6 @@ class OverdueSearchScreen : BaseScreen<
   private val noOverdueSearchResultsContainer
     get() = binding.noOverdueSearchResultsContainer
 
-  private val overdueSearchHistoryContainer
-    get() = binding.overdueSearchHistoryContainer
-
-  private val overdueSearchQueryTextInputLayout
-    get() = binding.overdueSearchQueryTextInput
-
-  private val overdueSearchQueryEditText
-    get() = binding.overdueSearchQueryEditText
-
   private val downloadAndShareButtonFrame
     get() = binding.downloadAndShareButtonFrame
 
@@ -165,15 +148,6 @@ class OverdueSearchScreen : BaseScreen<
       }
   )
 
-  private val searchHistoryAdapter by unsafeLazy {
-    ArrayAdapter<String>(
-        requireContext(),
-        R.layout.view_overdue_search_history,
-        R.id.search_history_text,
-        mutableListOf()
-    )
-  }
-
   private val searchSuggestionsAdapter by unsafeLazy {
     ArrayAdapter<String>(
         requireContext(),
@@ -191,7 +165,7 @@ class OverdueSearchScreen : BaseScreen<
     return OverdueSearchUpdate(LocalDate.now(userClock), canGeneratePdf)
   }
 
-  override fun createInit() = OverdueSearchInit(features.isEnabled(OverdueSearchV2))
+  override fun createInit() = OverdueSearchInit()
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<OverdueSearchViewEffect>) = effectHandlerFactory
       .create(
@@ -200,8 +174,7 @@ class OverdueSearchScreen : BaseScreen<
       .build()
 
   override fun uiRenderer() = OverdueSearchUiRenderer(
-      ui = this,
-      isOverdueSearchV2Enabled = features.isEnabled(OverdueSearchV2)
+      ui = this
   )
 
   override fun viewEffectHandler() = OverdueSearchViewEffectHandler(this)
@@ -209,9 +182,7 @@ class OverdueSearchScreen : BaseScreen<
   override fun events() = Observable
       .mergeArray(
           overdueSearchListAdapter.itemEvents,
-          searchHistoryItemClicks(),
           hotEvents,
-          overdueSearchQueryTextChanges(),
           clearSelectedOverdueAppointmentClicks(),
           downloadButtonClicks(),
           shareButtonClicks(),
@@ -226,16 +197,6 @@ class OverdueSearchScreen : BaseScreen<
       .clicks()
       .map { ClearSelectedOverdueAppointmentsClicked }
 
-  private fun searchHistoryItemClicks(): Observable<UiEvent> {
-    return overdueSearchHistoryContainer
-        .itemClicks()
-        .map {
-          val searchQuery = searchHistoryAdapter.getItem(it)
-
-          OverdueSearchHistoryClicked(searchQuery!!)
-        }
-  }
-
   private fun downloadButtonClicks(): Observable<UiEvent> = downloadButton
       .clicks()
       .map { DownloadButtonClicked() }
@@ -249,11 +210,6 @@ class OverdueSearchScreen : BaseScreen<
     context.injector<Injector>().inject(this)
   }
 
-  override fun onStart() {
-    super.onStart()
-    hotEvents.onNext(OverdueSearchScreenShown)
-  }
-
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?): ScreenOverdueSearchBinding {
     return ScreenOverdueSearchBinding.inflate(layoutInflater, container, false)
   }
@@ -265,23 +221,12 @@ class OverdueSearchScreen : BaseScreen<
     }
 
     overdueSearchRecyclerView.adapter = overdueSearchListAdapter
-    overdueSearchHistoryContainer.adapter = searchHistoryAdapter
 
-    val isV2SearchEnabled = features.isEnabled(Feature.OverdueSearchV2)
-
-    overdueSearchChipInputTextView.visibleOrGone(isV2SearchEnabled)
-    overdueSearchQueryTextInputLayout.visibleOrGone(!isV2SearchEnabled)
-
-    if (isV2SearchEnabled) {
-      overdueSearchChipInputTextView.showKeyboard()
-      overdueSearchChipInputTextView.setDropdownAnchor(R.id.overdue_search_app_bar)
-    } else {
-      overdueSearchQueryEditText.showKeyboard()
-    }
+    overdueSearchChipInputTextView.showKeyboard()
+    overdueSearchChipInputTextView.setDropdownAnchor(R.id.overdue_search_app_bar)
 
     disposable.addAll(
         hideKeyboardOnSearchResultsScroll(),
-        hideKeyboardOnImeAction(),
         overdueSearchResultsLoadStateListener()
     )
   }
@@ -302,12 +247,6 @@ class OverdueSearchScreen : BaseScreen<
         }
       }
 
-  override fun showSearchHistory(searchHistory: Set<String>) {
-    overdueSearchHistoryContainer.visibility = VISIBLE
-    searchHistoryAdapter.clear()
-    searchHistoryAdapter.addAll(searchHistory)
-  }
-
   override fun showSearchResults() {
     overdueSearchRecyclerView.visibility = VISIBLE
   }
@@ -318,8 +257,7 @@ class OverdueSearchScreen : BaseScreen<
 
   override fun setOverdueSearchResultsPagingData(
       overdueSearchResults: PagingData<OverdueAppointment>,
-      selectedOverdueAppointments: Set<UUID>,
-      searchQuery: String
+      selectedOverdueAppointments: Set<UUID>
   ) {
     overdueSearchListAdapter.submitData(
         lifecycle,
@@ -327,7 +265,6 @@ class OverdueSearchScreen : BaseScreen<
             appointments = overdueSearchResults,
             selectedOverdueAppointments = selectedOverdueAppointments,
             clock = userClock,
-            searchQuery = searchQuery,
             isOverdueSelectAndDownloadEnabled = features.isEnabled(Feature.OverdueSelectAndDownload) && country.isoCountryCode == Country.INDIA
         )
     )
@@ -357,18 +294,8 @@ class OverdueSearchScreen : BaseScreen<
         .subscribe { hideKeyboard() }
   }
 
-  private fun hideKeyboardOnImeAction(): Disposable {
-    return overdueSearchQueryEditText
-        .editorActions { actionId -> actionId == EditorInfo.IME_ACTION_SEARCH }
-        .subscribe { hideKeyboard() }
-  }
-
   fun hideKeyboard() {
     binding.root.hideKeyboard()
-  }
-
-  override fun hideSearchHistory() {
-    overdueSearchHistoryContainer.visibility = GONE
   }
 
   override fun showProgress() {
@@ -393,10 +320,6 @@ class OverdueSearchScreen : BaseScreen<
 
   override fun openContactPatientSheet(patientUuid: UUID) {
     router.push(ContactPatientBottomSheet.Key(patientUuid))
-  }
-
-  override fun setOverdueSearchQuery(searchQuery: String) {
-    overdueSearchQueryEditText.setTextAndCursor(searchQuery)
   }
 
   override fun openSelectDownloadFormatDialog() {
@@ -424,16 +347,6 @@ class OverdueSearchScreen : BaseScreen<
     searchSuggestionsAdapter.addAll(searchSuggestions)
 
     overdueSearchChipInputTextView.setAdapter(searchSuggestionsAdapter)
-  }
-
-  private fun overdueSearchQueryTextChanges(): Observable<UiEvent> {
-    return overdueSearchQueryEditText
-        .textChanges()
-        .skipInitialValue()
-        .debounce(500, TimeUnit.MILLISECONDS)
-        .map {
-          OverdueSearchQueryChanged(it.toString())
-        }
   }
 
   private fun overdueSearchInputsChanges(): Observable<UiEvent> {

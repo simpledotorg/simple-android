@@ -15,7 +15,6 @@ import org.simple.clinic.home.overdue.search.OverdueButtonType.SELECT_ALL
 import org.simple.clinic.home.overdue.search.OverdueButtonType.SHARE
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.DONE
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.IN_PROGRESS
-import org.simple.clinic.home.overdue.search.OverdueSearchQueryValidator.Result.Valid
 import org.simple.sharedTestCode.TestData
 import java.time.LocalDate
 import java.util.Optional
@@ -31,48 +30,8 @@ class OverdueSearchUpdateTest {
   private val defaultModel = OverdueSearchModel.create()
 
   @Test
-  fun `when overdue search history is loaded, then update the model`() {
-    val searchHistory = setOf(
-        "Babri",
-        "Ramesh"
-    )
-
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(OverdueSearchHistoryLoaded(searchHistory))
-        .then(assertThatNext(
-            hasModel(defaultModel.overdueSearchHistoryLoaded(searchHistory)),
-            hasNoEffects()
-        ))
-  }
-
-  @Test
-  fun `when overdue search query is changed, then validate the search query`() {
-    val searchQuery = "Babri"
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(OverdueSearchQueryChanged(searchQuery))
-        .then(assertThatNext(
-            hasModel(defaultModel.overdueSearchQueryChanged(searchQuery)),
-            hasEffects(ValidateOverdueSearchQuery(searchQuery))
-        ))
-  }
-
-  @Test
-  fun `when search query is validated and is valid, then update model, add query to search history and search overdue patients`() {
-    val searchQuery = "Babri"
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(OverdueSearchQueryValidated(Valid(searchQuery)))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(AddQueryToOverdueSearchHistory(searchQuery), SearchOverduePatients_Old(searchQuery, date))
-        ))
-  }
-
-  @Test
   fun `when overdue search results are loaded, then set overdue search results paging data`() {
-    val searchQuery = "Babri"
+    val searchInputs = listOf("Babri")
     val facilityUuid = UUID.fromString("7dba16a0-1090-41f6-8e0c-0d97989de898")
     val overdueAppointments = listOf(TestData.overdueAppointment(
         facilityUuid = facilityUuid,
@@ -85,18 +44,17 @@ class OverdueSearchUpdateTest {
     ))
 
     val overdueSearchResults = PagingData.from(overdueAppointments)
-    val searchQueryChangedModel = defaultModel.overdueSearchQueryChanged(searchQuery)
+    val searchInputsChangedModel = defaultModel.overdueSearchInputsChanged(searchInputs)
 
     updateSpec
-        .given(searchQueryChangedModel)
+        .given(searchInputsChangedModel)
         .whenEvent(OverdueSearchResultsLoaded(overdueSearchResults))
         .then(
             assertThatNext(
                 hasNoModel(),
                 hasEffects(SetOverdueSearchPagingData(
                     overdueSearchResults = overdueSearchResults,
-                    selectedOverdueAppointments = emptySet(),
-                    searchQuery = searchQuery
+                    selectedOverdueAppointments = emptySet()
                 ))
             )
         )
@@ -127,18 +85,6 @@ class OverdueSearchUpdateTest {
   }
 
   @Test
-  fun `when search history item is clicked, then set overdue search query`() {
-    val searchQuery = "Babri"
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(OverdueSearchHistoryClicked(searchQuery))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(SetOverdueSearchQuery("Babri"))
-        ))
-  }
-
-  @Test
   fun `when load state is changed, then update the model`() {
     val loadStateChangedModel = defaultModel
         .loadStateChanged(DONE)
@@ -149,20 +95,6 @@ class OverdueSearchUpdateTest {
         .then(assertThatNext(
             hasModel(loadStateChangedModel.loadStateChanged(IN_PROGRESS)),
             hasNoEffects()
-        ))
-  }
-
-  @Test
-  fun `when overdue search screen is shown and search query is present, then set overdue search query`() {
-    val searchQueryModel = defaultModel
-        .overdueSearchQueryChanged("Babri")
-
-    updateSpec
-        .given(searchQueryModel)
-        .whenEvent(OverdueSearchScreenShown)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(SetOverdueSearchQuery("Babri"))
         ))
   }
 
@@ -236,15 +168,15 @@ class OverdueSearchUpdateTest {
 
   @Test
   fun `when download button is clicked and no appointments are selected, then load search results appointment ids`() {
-    val searchQueryModel = defaultModel
-        .overdueSearchQueryChanged("Ani")
+    val searchInputsModel = defaultModel
+        .overdueSearchInputsChanged(listOf("Ani"))
 
     updateSpec
-        .given(searchQueryModel)
+        .given(searchInputsModel)
         .whenEvent(DownloadButtonClicked(networkStatus = Optional.of(ACTIVE)))
         .then(assertThatNext(
-            hasModel(searchQueryModel.loadStateChanged(IN_PROGRESS)),
-            hasEffects(LoadSearchResultsAppointmentIds(buttonType = DOWNLOAD, searchQuery = "Ani", since = date))
+            hasModel(searchInputsModel.loadStateChanged(IN_PROGRESS)),
+            hasEffects(LoadSearchResultsAppointmentIds(buttonType = DOWNLOAD, searchInputs = listOf("Ani"), since = date))
         ))
   }
 
@@ -309,15 +241,15 @@ class OverdueSearchUpdateTest {
 
   @Test
   fun `when share button is clicked and no appointments are selected, then load search results appointment ids`() {
-    val searchQueryModel = defaultModel
-        .overdueSearchQueryChanged("Ani")
+    val searchInputsModel = defaultModel
+        .overdueSearchInputsChanged(listOf("Ani"))
 
     updateSpec
-        .given(searchQueryModel)
+        .given(searchInputsModel)
         .whenEvent(ShareButtonClicked(networkStatus = Optional.of(ACTIVE)))
         .then(assertThatNext(
-            hasModel(searchQueryModel.loadStateChanged(IN_PROGRESS)),
-            hasEffects(LoadSearchResultsAppointmentIds(buttonType = SHARE, searchQuery = "Ani", since = date))
+            hasModel(searchInputsModel.loadStateChanged(IN_PROGRESS)),
+            hasEffects(LoadSearchResultsAppointmentIds(buttonType = SHARE, searchInputs = listOf("Ani"), since = date))
         ))
   }
 
@@ -375,15 +307,15 @@ class OverdueSearchUpdateTest {
 
   @Test
   fun `when select all button is clicked and no appointments are selected, then load search results appointment ids`() {
-    val searchQueryModel = defaultModel
-        .overdueSearchQueryChanged("Ani")
+    val searchInputsModel = defaultModel
+        .overdueSearchInputsChanged(listOf("Ani"))
 
     updateSpec
-        .given(searchQueryModel)
+        .given(searchInputsModel)
         .whenEvent(SelectAllButtonClicked)
         .then(assertThatNext(
-            hasModel(searchQueryModel.loadStateChanged(IN_PROGRESS)),
-            hasEffects(LoadSearchResultsAppointmentIds(buttonType = SELECT_ALL, searchQuery = "Ani", since = date))
+            hasModel(searchInputsModel.loadStateChanged(IN_PROGRESS)),
+            hasEffects(LoadSearchResultsAppointmentIds(buttonType = SELECT_ALL, searchInputs = listOf("Ani"), since = date))
         ))
   }
 

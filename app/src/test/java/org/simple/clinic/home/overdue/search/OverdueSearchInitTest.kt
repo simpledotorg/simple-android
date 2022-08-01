@@ -9,22 +9,10 @@ import org.junit.Test
 class OverdueSearchInitTest {
 
   @Test
-  fun `when overdue search screen is created, then load search history and selected overdue appointment ids`() {
+  fun `when overdue search screen is created, then load villages and patient names`() {
     val defaultModel = OverdueSearchModel.create()
 
-    InitSpec(OverdueSearchInit(isOverdueSearchV2Enabled = false))
-        .whenInit(defaultModel)
-        .then(assertThatFirst(
-            hasModel(defaultModel),
-            hasEffects(LoadOverdueSearchHistory, LoadSelectedOverdueAppointmentIds)
-        ))
-  }
-
-  @Test
-  fun `when overdue search screen is created and overdue search v2 is enabled, then load villages and patient names and don't load search history`() {
-    val defaultModel = OverdueSearchModel.create()
-
-    InitSpec(OverdueSearchInit(isOverdueSearchV2Enabled = true))
+    InitSpec(OverdueSearchInit())
         .whenInit(defaultModel)
         .then(assertThatFirst(
             hasModel(defaultModel),

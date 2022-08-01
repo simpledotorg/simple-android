@@ -4,6 +4,14 @@
 
 ### Internal
 
+- Bump fragment to v1.5.1
+- Show chip input text view in overdue search when overdue v2 search is enabled
+- [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
+
+## 2022-08-01-8350
+
+### Internal
+
 - Point accordion downwards when overdue list is expanded
 - Fix `ContactPatientBottomSheet` not opening completely
 - Bump Sentry to v6.3.0
@@ -19,9 +27,6 @@
 - Remove overdue search v2 feature flag key
 - Fix overdue search not searching on query changes
 - Bump dagger to v2.43.1
-- Bump fragment to v1.5.1
-- Show chip input text view in overdue search when overdue v2 search is enabled
-- [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-07-25-8342
 

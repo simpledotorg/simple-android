@@ -14,7 +14,6 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.home.overdue.search.OverdueButtonType.DOWNLOAD
-import org.simple.clinic.home.overdue.search.OverdueSearchQueryValidator.Result.Valid
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.OverdueAppointmentSelector
@@ -32,8 +31,7 @@ class OverdueSearchEffectHandlerTest {
 
   private val pagingLoadSize = 15
 
-  private val overdueSearchHistory = mock<OverdueSearchHistory>()
-  private val overdueSearchConfig = OverdueSearchConfig(minLengthOfSearchQuery = 3, searchHistoryLimit = 5, pagingLoadSize = pagingLoadSize)
+  private val overdueSearchConfig = OverdueSearchConfig(searchHistoryLimit = 5, pagingLoadSize = pagingLoadSize)
   private val uiActions = mock<OverdueSearchUiActions>()
   private val viewEffectHandler = OverdueSearchViewEffectHandler(uiActions)
   private val appointmentRepository = mock<AppointmentRepository>()
@@ -43,8 +41,6 @@ class OverdueSearchEffectHandlerTest {
   private val overdueDownloadScheduler = mock<OverdueDownloadScheduler>()
   private val patientRepository = mock<PatientRepository>()
   private val effectHandler = OverdueSearchEffectHandler(
-      overdueSearchHistory = overdueSearchHistory,
-      overdueSearchQueryValidator = OverdueSearchQueryValidator(overdueSearchConfig),
       schedulersProvider = TestSchedulersProvider.trampoline(),
       appointmentRepository = appointmentRepository,
       pagerFactory = pagerFactory,
@@ -60,49 +56,6 @@ class OverdueSearchEffectHandlerTest {
   @After
   fun tearDown() {
     effectHandlerTestCase.dispose()
-  }
-
-  @Test
-  fun `when load search history effect is received, then load the search history`() {
-    // given
-    val searchHistory = setOf(
-        "Babri",
-        "Narwar",
-        "Ramesh"
-    )
-
-    whenever(overdueSearchHistory.fetch()) doReturn Observable.just(searchHistory)
-
-    // when
-    effectHandlerTestCase.dispatch(LoadOverdueSearchHistory)
-
-    // then
-    effectHandlerTestCase.assertOutgoingEvents(OverdueSearchHistoryLoaded(setOf(
-        "Babri",
-        "Narwar",
-        "Ramesh"
-    )))
-  }
-
-  @Test
-  fun `when validate overdue search query effect is received, then validate the search query`() {
-    // when
-    effectHandlerTestCase.dispatch(ValidateOverdueSearchQuery("Babri"))
-
-    // then
-    effectHandlerTestCase.assertOutgoingEvents(OverdueSearchQueryValidated(Valid("Babri")))
-  }
-
-  @Test
-  fun `when add to search history effect is received, then add the search query to search history`() {
-    // given
-    val searchQuery = "Babri"
-
-    // when
-    effectHandlerTestCase.dispatch(AddQueryToOverdueSearchHistory(searchQuery))
-
-    // then
-    effectHandlerTestCase.assertNoOutgoingEvents()
   }
 
   @Test
@@ -138,7 +91,7 @@ class OverdueSearchEffectHandlerTest {
   @Test
   fun `when search overdue patient effect is received, then search overdue patient`() {
     // given
-    val query = "Ani"
+    val searchInputs = listOf("Ani")
     val overdueAppointment = listOf(TestData.overdueAppointment(
         facilityUuid = currentFacility.uuid,
         name = "Anish Acharya",
@@ -159,23 +112,11 @@ class OverdueSearchEffectHandlerTest {
     )) doReturn Observable.just(expectedPagingData)
 
     // when
-    effectHandlerTestCase.dispatch(SearchOverduePatients_Old(query, LocalDate.of(2022, 3, 22)))
+    effectHandlerTestCase.dispatch(SearchOverduePatients(searchInputs, LocalDate.of(2022, 3, 22)))
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(OverdueSearchResultsLoaded(expectedPagingData))
     verifyZeroInteractions(uiActions)
-  }
-
-  @Test
-  fun `when set overdue search query effect is received, then set overdue search query`() {
-    // when
-    effectHandlerTestCase.dispatch(SetOverdueSearchQuery("Babri"))
-
-    // then
-    effectHandlerTestCase.assertNoOutgoingEvents()
-
-    verify(uiActions).setOverdueSearchQuery("Babri")
-    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -321,19 +262,19 @@ class OverdueSearchEffectHandlerTest {
   @Test
   fun `when load search results appointment ids effect is received, then load the search results appointment ids`() {
     // given
-    val searchQuery = "Ani"
+    val searchInputs = listOf("Ani")
     val since = LocalDate.parse("2018-01-01")
     val appointmentUuid = UUID.fromString("46797d57-d6a9-4aee-9df5-355ced4bb9a4")
     val overdueAppointments = listOf(
         TestData.overdueAppointment(appointmentUuid = appointmentUuid)
     )
 
-    whenever(appointmentRepository.searchOverduePatientsImmediate_Old(searchQuery, since, currentFacility.uuid)) doReturn overdueAppointments
+    whenever(appointmentRepository.searchOverduePatientsImmediate(searchInputs, since, currentFacility.uuid)) doReturn overdueAppointments
 
     // when
     effectHandlerTestCase.dispatch(LoadSearchResultsAppointmentIds(
         buttonType = DOWNLOAD,
-        searchQuery = searchQuery,
+        searchInputs = searchInputs,
         since = since
     ))
 
@@ -363,7 +304,6 @@ class OverdueSearchEffectHandlerTest {
     val selectedOverdueAppointments = setOf(
         UUID.fromString("931d4406-78d1-4cdf-aad5-d8f4a9e18f38")
     )
-    val searchQuery = "Ani"
     val searchResults = PagingData.from(listOf(
         TestData.overdueAppointment(
             patientUuid = UUID.fromString("92fc941d-a6f5-427f-a9f3-0e703373d03e"),
@@ -375,14 +315,12 @@ class OverdueSearchEffectHandlerTest {
     // when
     effectHandlerTestCase.dispatch(SetOverdueSearchPagingData(
         overdueSearchResults = searchResults,
-        selectedOverdueAppointments = selectedOverdueAppointments,
-        searchQuery = searchQuery
+        selectedOverdueAppointments = selectedOverdueAppointments
     ))
 
     verify(uiActions).setOverdueSearchResultsPagingData(
         overdueSearchResults = searchResults,
-        selectedOverdueAppointments = selectedOverdueAppointments,
-        searchQuery = searchQuery
+        selectedOverdueAppointments = selectedOverdueAppointments
     )
     verifyNoMoreInteractions(uiActions)
   }

@@ -7,14 +7,6 @@ import java.util.UUID
 
 sealed class OverdueSearchEffect
 
-object LoadOverdueSearchHistory : OverdueSearchEffect()
-
-data class ValidateOverdueSearchQuery(val searchQuery: String) : OverdueSearchEffect()
-
-data class AddQueryToOverdueSearchHistory(val searchQuery: String) : OverdueSearchEffect()
-
-data class SearchOverduePatients_Old(val searchQuery: String, val since: LocalDate) : OverdueSearchEffect()
-
 data class ToggleOverdueAppointmentSelection(val appointmentId: UUID) : OverdueSearchEffect()
 
 object LoadSelectedOverdueAppointmentIds : OverdueSearchEffect()
@@ -29,7 +21,7 @@ data class SelectAllAppointmentIds(val appointmentIds: Set<UUID>) : OverdueSearc
 
 data class LoadSearchResultsAppointmentIds(
     val buttonType: OverdueButtonType,
-    val searchQuery: String,
+    val searchInputs: List<String>,
     val since: LocalDate
 ) : OverdueSearchEffect()
 
@@ -46,8 +38,6 @@ data class OpenPatientSummary(val patientUuid: UUID) : OverdueSearchViewEffect()
 
 data class OpenContactPatientSheet(val patientUuid: UUID) : OverdueSearchViewEffect()
 
-data class SetOverdueSearchQuery(val searchQuery: String) : OverdueSearchViewEffect()
-
 object OpenSelectDownloadFormatDialog : OverdueSearchViewEffect()
 
 object OpenSelectShareFormatDialog : OverdueSearchViewEffect()
@@ -58,6 +48,5 @@ object ShowNoInternetConnectionDialog : OverdueSearchViewEffect()
 
 data class SetOverdueSearchPagingData(
     val overdueSearchResults: PagingData<OverdueAppointment>,
-    val selectedOverdueAppointments: Set<UUID>,
-    val searchQuery: String
+    val selectedOverdueAppointments: Set<UUID>
 ) : OverdueSearchViewEffect()

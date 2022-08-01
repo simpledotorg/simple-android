@@ -22,37 +22,11 @@
       app:navigationIcon="@drawable/ic_arrow_back_24dp"
       app:navigationIconTint="?attr/colorOnPrimary">
 
-      <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/overdue_search_query_text_input"
-        style="@style/Widget.Simple.TextField.Layout.Search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:theme="@style/ThemeOverlay.Simple.Blue1Primary">
-
-        <com.google.android.material.textfield.TextInputEditText
-          android:id="@+id/overdue_search_query_edit_text"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:digits="@string/instantsearch_allowed_characters"
-          android:hint="@string/overdue_search_hint"
-          android:imeOptions="actionSearch"
-          android:importantForAutofill="no"
-          android:inputType="textPersonName|textCapWords|textFilter|textNoSuggestions"
-          android:saveEnabled="false"
-          android:textAppearance="?attr/textAppearanceBody0"
-          android:textColor="?attr/colorOnSurface"
-          android:textColorHint="@color/color_on_surface_67"
-          tools:ignore="UnusedAttribute" />
-
-      </com.google.android.material.textfield.TextInputLayout>
-
       <org.simple.clinic.widgets.ChipInputAutoCompleteTextView
         android:id="@+id/overdue_search_chip_input_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.Simple.Blue1Primary"
-        android:visibility="gone"
         app:hint="@string/overdue_search_hint" />
 
     </com.google.android.material.appbar.MaterialToolbar>
@@ -108,18 +82,6 @@
       android:layout_height="wrap_content"
       android:visibility="gone"
       app:constraint_referenced_ids="no_overdue_search_results_title_text_view, no_overdue_search_results_desc_text_view" />
-
-    <ListView
-      android:id="@+id/overdue_search_history_container"
-      android:layout_width="@dimen/spacing_0"
-      android:layout_height="@dimen/spacing_0"
-      android:layout_marginTop="@dimen/spacing_8"
-      android:orientation="vertical"
-      android:visibility="gone"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/overdue_search_results"

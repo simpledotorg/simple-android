@@ -65,6 +65,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
+import org.simple.clinic.widgets.visibleOrGone
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
@@ -117,6 +118,9 @@ class OverdueSearchScreen : BaseScreen<
 
   private val overdueSearchHistoryContainer
     get() = binding.overdueSearchHistoryContainer
+
+  private val overdueSearchQueryTextInputLayout
+    get() = binding.overdueSearchQueryTextInput
 
   private val overdueSearchQueryEditText
     get() = binding.overdueSearchQueryEditText
@@ -259,10 +263,17 @@ class OverdueSearchScreen : BaseScreen<
       router.pop()
     }
 
-    overdueSearchRecyclerView.adapter = overdueSearchListAdapter
-    overdueSearchHistoryContainer.adapter = searchHistoryAdapter
+    val isV2SearchEnabled = features.isEnabled(Feature.OverdueSearchV2)
 
-    overdueSearchQueryEditText.showKeyboard()
+    overdueSearchChipInputTextView.visibleOrGone(isV2SearchEnabled)
+    overdueSearchQueryTextInputLayout.visibleOrGone(!isV2SearchEnabled)
+
+    if (isV2SearchEnabled) {
+      overdueSearchChipInputTextView.showKeyboard()
+      overdueSearchChipInputTextView.setDropdownAnchor(R.id.overdue_search_app_bar)
+    } else {
+      overdueSearchQueryEditText.showKeyboard()
+    }
 
     disposable.addAll(
         hideKeyboardOnSearchResultsScroll(),

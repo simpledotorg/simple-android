@@ -263,6 +263,9 @@ class OverdueSearchScreen : BaseScreen<
       router.pop()
     }
 
+    overdueSearchRecyclerView.adapter = overdueSearchListAdapter
+    overdueSearchHistoryContainer.adapter = searchHistoryAdapter
+
     val isV2SearchEnabled = features.isEnabled(Feature.OverdueSearchV2)
 
     overdueSearchChipInputTextView.visibleOrGone(isV2SearchEnabled)

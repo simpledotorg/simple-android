@@ -1,8 +1,10 @@
 package org.simple.clinic.home.overdue.search
 
 import android.os.Parcelable
+import androidx.paging.PagingData
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.home.overdue.OverdueAppointment
 import java.util.UUID
 
 @Parcelize
@@ -11,7 +13,9 @@ data class OverdueSearchModel(
     @IgnoredOnParcel
     val selectedOverdueAppointments: Set<UUID> = emptySet(),
     val villageAndPatientNames: List<String>?,
-    val searchInputs: List<String>
+    val searchInputs: List<String>,
+    @IgnoredOnParcel
+    val overdueSearchResults: PagingData<OverdueAppointment> = PagingData.empty()
 ) : Parcelable {
 
   val hasSearchInputs: Boolean
@@ -27,7 +31,8 @@ data class OverdueSearchModel(
           overdueSearchProgressState = null,
           selectedOverdueAppointments = emptySet(),
           villageAndPatientNames = null,
-          searchInputs = emptyList()
+          searchInputs = emptyList(),
+          overdueSearchResults = PagingData.empty()
       )
     }
   }
@@ -46,5 +51,9 @@ data class OverdueSearchModel(
 
   fun overdueSearchInputsChanged(searchInputs: List<String>): OverdueSearchModel {
     return copy(searchInputs = searchInputs)
+  }
+
+  fun overdueSearchResultsLoaded(overdueSearchResults: PagingData<OverdueAppointment>): OverdueSearchModel {
+    return copy(overdueSearchResults = overdueSearchResults)
   }
 }

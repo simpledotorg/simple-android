@@ -15,10 +15,6 @@ class OverdueSearchViewEffectHandler(
       OpenSelectShareFormatDialog -> uiActions.openSelectShareFormatDialog()
       OpenShareInProgressDialog -> uiActions.openShareInProgressDialog()
       ShowNoInternetConnectionDialog -> uiActions.showNoInternetConnectionDialog()
-      is SetOverdueSearchPagingData -> uiActions.setOverdueSearchResultsPagingData(
-          overdueSearchResults = viewEffect.overdueSearchResults,
-          selectedOverdueAppointments = viewEffect.selectedOverdueAppointments
-      )
     }.exhaustive()
   }
 }

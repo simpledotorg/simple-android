@@ -127,7 +127,8 @@ class OverdueEffectHandlerTest {
         sourceFactory = any<PagingSourceFactory<Int, OverdueAppointment_Old>>(),
         pageSize = eq(overdueAppointmentsConfig.overdueAppointmentsLoadSize),
         enablePlaceholders = eq(true),
-        initialKey = eq(null)
+        initialKey = eq(null),
+        cacheScope = eq(null)
     )) doReturn Observable.just(overdueAppointments)
 
     // when

@@ -7,6 +7,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
+import kotlinx.coroutines.CoroutineScope
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.OverdueAppointmentSelector
@@ -25,13 +26,15 @@ class OverdueSearchEffectHandler @AssistedInject constructor(
     private val overdueAppointmentSelector: OverdueAppointmentSelector,
     private val overdueDownloadScheduler: OverdueDownloadScheduler,
     private val patientRepository: PatientRepository,
-    @Assisted private val viewEffectsConsumer: Consumer<OverdueSearchViewEffect>
+    @Assisted private val viewEffectsConsumer: Consumer<OverdueSearchViewEffect>,
+    @Assisted private val pagingCacheScope: () -> CoroutineScope
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        viewEffectsConsumer: Consumer<OverdueSearchViewEffect>
+        viewEffectsConsumer: Consumer<OverdueSearchViewEffect>,
+        pagingCacheScope: () -> CoroutineScope
     ): OverdueSearchEffectHandler
   }
 
@@ -65,7 +68,8 @@ class OverdueSearchEffectHandler @AssistedInject constructor(
                   )
                 },
                 pageSize = overdueSearchConfig.pagingLoadSize,
-                enablePlaceholders = false
+                enablePlaceholders = false,
+                cacheScope = pagingCacheScope.invoke()
             )
           }
           .map(::OverdueSearchResultsLoaded)

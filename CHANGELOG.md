@@ -11,6 +11,7 @@
 - Add multiple search inputs support in overdue search screen
 - Remove overdue search v1 implementation
 - Bump flipper to v0.156.0
+- Bump jgit version
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-08-01-8350

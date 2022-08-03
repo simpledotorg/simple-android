@@ -93,7 +93,8 @@ class OverdueLogicTest {
         sourceFactory = any<PagingSourceFactory<Int, OverdueAppointment_Old>>(),
         pageSize = eq(10),
         enablePlaceholders = eq(true),
-        initialKey = eq(null)
+        initialKey = eq(null),
+        cacheScope = eq(null)
     )) doReturn Observable.just(overdueAppointments)
 
     whenever(overdueAppointmentSelector.selectedAppointmentIdsStream) doReturn Observable.just(emptySet())

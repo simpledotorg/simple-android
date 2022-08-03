@@ -38,6 +38,8 @@ class OverdueSearchUiRenderer(
         // No-op
       }
     }
+
+    ui.setOverdueSearchResultsPagingData(model.overdueSearchResults, model.selectedOverdueAppointments)
   }
 
   private fun renderOverdueListSelectedCount(selectedOverdueAppointments: Set<UUID>) {

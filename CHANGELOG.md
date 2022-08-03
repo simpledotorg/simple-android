@@ -14,6 +14,7 @@
 - Bump jgit version
 - Fix select all not updating checkbox state in the overdue search screen
 - Bump Gradle to v7.5
+- Run prescription refill queries in a transaction
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-08-01-8350

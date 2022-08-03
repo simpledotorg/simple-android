@@ -202,4 +202,46 @@ class PrescriptionRepository @Inject constructor(
             currentDate = currentDate
         )
   }
+
+  fun refill(
+      prescriptions: List<PrescribedDrug>,
+      uuidGenerator: () -> UUID
+  ) {
+    val prescriptionIdsToDeleted = prescriptions.map { it.uuid }
+    val refilledPrescriptions = prescriptions.map {
+      it.refill(
+          uuid = uuidGenerator.invoke(),
+          facilityUuid = it.facilityUuid,
+          utcClock = utcClock
+      )
+    }
+
+    dao.refill(
+        prescriptionIdsToDelete = prescriptionIdsToDeleted,
+        updatedAt = Instant.now(utcClock),
+        refilledPrescriptions = refilledPrescriptions
+    )
+  }
+
+  fun refillForTeleconsulation(
+      prescriptions: List<PrescribedDrug>,
+      uuidGenerator: () -> UUID,
+      teleconsultationUuid: UUID
+  ) {
+    val prescriptionIdsToDeleted = prescriptions.map { it.uuid }
+    val refilledPrescriptions = prescriptions.map {
+      it.refillForTeleconsultation(
+          uuid = uuidGenerator.invoke(),
+          facilityUuid = it.facilityUuid,
+          utcClock = utcClock,
+          teleconsultationId = teleconsultationUuid
+      )
+    }
+
+    dao.refill(
+        prescriptionIdsToDelete = prescriptionIdsToDeleted,
+        updatedAt = Instant.now(utcClock),
+        refilledPrescriptions = refilledPrescriptions
+    )
+  }
 }

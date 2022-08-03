@@ -18,10 +18,7 @@ class OverdueSearchUpdate(
 
   override fun update(model: OverdueSearchModel, event: OverdueSearchEvent): Next<OverdueSearchModel, OverdueSearchEffect> {
     return when (event) {
-      is OverdueSearchResultsLoaded -> dispatch(SetOverdueSearchPagingData(
-          overdueSearchResults = event.overdueAppointments,
-          selectedOverdueAppointments = model.selectedOverdueAppointments
-      ))
+      is OverdueSearchResultsLoaded -> next(model.overdueSearchResultsLoaded(event.overdueAppointments))
       is CallPatientClicked -> dispatch(OpenContactPatientSheet(event.patientUuid))
       is OverduePatientClicked -> dispatch(OpenPatientSummary(event.patientUuid))
       is OverdueSearchLoadStateChanged -> next(model.loadStateChanged(event.overdueSearchProgressState))

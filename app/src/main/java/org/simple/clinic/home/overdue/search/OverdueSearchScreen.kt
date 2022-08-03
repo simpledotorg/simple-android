@@ -10,6 +10,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
@@ -169,7 +170,8 @@ class OverdueSearchScreen : BaseScreen<
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<OverdueSearchViewEffect>) = effectHandlerFactory
       .create(
-          viewEffectsConsumer = viewEffectsConsumer
+          viewEffectsConsumer = viewEffectsConsumer,
+          pagingCacheScope = { lifecycleScope }
       )
       .build()
 

@@ -9,6 +9,7 @@
 - Bump dagger to v2.43.2
 - Bump gradle to v7.5.1
 - Bump lint to v30.2.2
+- Remove ignore annotation in the drug stock reminder api integration test
 
 ## 2022-08-08-8359
 

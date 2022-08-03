@@ -19,6 +19,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.sharedTestCode.TestData
 import org.simple.sharedTestCode.util.Rules
 import org.simple.sharedTestCode.util.TestUtcClock
+import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
@@ -380,5 +381,107 @@ class PrescriptionRepositoryAndroidTest {
     clock.setDate(LocalDate.parse("2018-02-01"))
     assertThat(repository.hasPrescriptionForPatientChangedToday(patient1Uuid).blockingFirst()).isTrue()
     assertThat(repository.hasPrescriptionForPatientChangedToday(patient2Uuid).blockingFirst()).isFalse()
+  }
+
+  @Test
+  fun refilling_prescription_drugs_should_work_correctly() {
+    // given
+    val facilityUuid = UUID.fromString("c24ef276-9fd7-49c7-9583-ac88ae5f2cf9")
+    val patientUuid = UUID.fromString("8e447c7f-db83-41a5-8c8e-5362c6b0aa6c")
+    val refilledPrescriptionUuid = UUID.fromString("ce609cc8-fb6a-43b0-b7c8-d1c1156fee50")
+
+    val prescription = TestData.prescription(
+        uuid = UUID.fromString("59dcc1a1-9b9a-4a5d-8015-b62988c23034"),
+        name = "Amlodipine",
+        dosage = "10 mg",
+        facilityUuid = facilityUuid,
+        syncStatus = SyncStatus.DONE,
+        frequency = null,
+        durationInDays = null,
+        teleconsultationId = null,
+        patientUuid = patientUuid,
+        timestamps = Timestamps.create(clock)
+    )
+
+    val uuidGenerator = FakeUuidGenerator.fixed(refilledPrescriptionUuid)
+
+    val prescribedDrugs = listOf(prescription)
+    repository.save(prescribedDrugs)
+
+    // when
+    repository.refill(
+        prescriptions = prescribedDrugs,
+        uuidGenerator = { uuidGenerator.v4() }
+    )
+
+    // then
+    val refilledPrescriptions = repository.newestPrescriptionsForPatientImmediate(patientUuid)
+
+    assertThat(refilledPrescriptions).isEqualTo(listOf(
+        TestData.prescription(
+            uuid = refilledPrescriptionUuid,
+            name = "Amlodipine",
+            dosage = "10 mg",
+            facilityUuid = facilityUuid,
+            syncStatus = SyncStatus.PENDING,
+            frequency = null,
+            durationInDays = null,
+            teleconsultationId = null,
+            patientUuid = patientUuid,
+            timestamps = Timestamps.create(clock)
+        )
+    ))
+  }
+
+  @Test
+  fun refilling_prescription_drugs_for_teleconsultation_should_work_correctly() {
+    // given
+    val facilityUuid = UUID.fromString("cbbe7457-e40a-46e4-85e7-1553f4e759be")
+    val patientUuid = UUID.fromString("1dbeea19-78e3-4079-99eb-8828298ec342")
+    val refilledPrescriptionUuid = UUID.fromString("e0213731-144e-42ef-9536-9892a59e2b6a")
+    val teleconsultationUuid = UUID.fromString("23ed1c9a-8c5d-4e8d-8c1a-e8114ec930f6")
+
+    val prescription = TestData.prescription(
+        uuid = UUID.fromString("59dcc1a1-9b9a-4a5d-8015-b62988c23034"),
+        name = "Amlodipine",
+        dosage = "10 mg",
+        facilityUuid = facilityUuid,
+        syncStatus = SyncStatus.DONE,
+        frequency = null,
+        durationInDays = null,
+        teleconsultationId = null,
+        patientUuid = patientUuid,
+        timestamps = Timestamps.create(clock)
+    )
+
+    val uuidGenerator = FakeUuidGenerator.fixed(refilledPrescriptionUuid)
+
+    val prescribedDrugs = listOf(prescription)
+    repository.save(prescribedDrugs)
+
+    // when
+    repository.refillForTeleconsulation(
+        prescriptions = prescribedDrugs,
+        uuidGenerator = { uuidGenerator.v4() },
+        teleconsultationUuid = teleconsultationUuid
+    )
+
+    // then
+    val refilledPrescriptions = repository.newestPrescriptionsForPatientImmediate(patientUuid)
+
+    assertThat(refilledPrescriptions).isEqualTo(listOf(
+        TestData.prescription(
+            uuid = refilledPrescriptionUuid,
+            name = "Amlodipine",
+            dosage = "10 mg",
+            facilityUuid = facilityUuid,
+            syncStatus = SyncStatus.PENDING,
+            frequency = null,
+            durationInDays = null,
+            teleconsultationId = teleconsultationUuid,
+            patientUuid = patientUuid,
+            timestamps = Timestamps.create(clock)
+        )
+    ))
   }
 }

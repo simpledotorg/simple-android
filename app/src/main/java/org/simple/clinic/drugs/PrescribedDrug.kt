@@ -300,5 +300,21 @@ data class PrescribedDrug(
       isDeleted = 0
     """)
     abstract fun prescriptionCountImmediate(patientUuid: UUID): Int
+
+    @Transaction
+    open fun refill(
+        prescriptionIdsToDelete: List<UUID>,
+        updatedAt: Instant,
+        refilledPrescriptions: List<PrescribedDrug>,
+    ) {
+      softDeleteIds(
+          prescriptionIds = prescriptionIdsToDelete,
+          deleted = true,
+          updatedAt = updatedAt,
+          syncStatus = SyncStatus.PENDING
+      )
+
+      save(refilledPrescriptions)
+    }
   }
 }

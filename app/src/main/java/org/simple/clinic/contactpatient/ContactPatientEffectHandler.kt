@@ -25,14 +25,12 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val currentFacility: Lazy<Facility>,
     private val callResultRepository: CallResultRepository,
-    @Assisted private val uiActions: ContactPatientUiActions,
     @Assisted private val viewEffectsConsumer: Consumer<ContactPatientViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        uiActions: ContactPatientUiActions,
         viewEffectsConsumer: Consumer<ContactPatientViewEffect>
     ): ContactPatientEffectHandler
   }

@@ -85,7 +85,6 @@ class ContactPatientEffectHandlerTest {
       schedulers = TestSchedulersProvider.trampoline(),
       currentFacility = { facility },
       callResultRepository = callResultRepository,
-      uiActions = uiActions,
       viewEffectsConsumer = ContactPatientViewEffectHandler(uiActions)::handle
   ).build()
 

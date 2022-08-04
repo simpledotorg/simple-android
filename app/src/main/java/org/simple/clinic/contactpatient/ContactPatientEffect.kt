@@ -12,11 +12,6 @@ data class LoadLatestOverdueAppointment(val patientUuid: UUID) : ContactPatientE
 
 object LoadCurrentFacility : ContactPatientEffect()
 
-data class MaskedCallWithManualDialer(
-    val patientPhoneNumber: String,
-    val proxyPhoneNumber: String
-) : ContactPatientEffect()
-
 object CloseScreen : ContactPatientEffect()
 
 data class MarkPatientAsAgreedToVisit(val appointment: Appointment) : ContactPatientEffect()
@@ -44,6 +39,11 @@ data class DirectCallWithAutomaticDialer(val patientPhoneNumber: String) : Conta
 data class DirectCallWithManualDialer(val patientPhoneNumber: String) : ContactPatientViewEffect()
 
 data class MaskedCallWithAutomaticDialer(
+    val patientPhoneNumber: String,
+    val proxyPhoneNumber: String
+) : ContactPatientViewEffect()
+
+data class MaskedCallWithManualDialer(
     val patientPhoneNumber: String,
     val proxyPhoneNumber: String
 ) : ContactPatientViewEffect()

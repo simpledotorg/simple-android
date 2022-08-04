@@ -32,15 +32,15 @@ import org.simple.clinic.databinding.ListBloodSugarHistoryItemBinding
 import org.simple.clinic.databinding.ListNewBloodSugarButtonBinding
 import org.simple.clinic.databinding.ScreenBloodSugarHistoryBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.navigation.v2.ActivityResult
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
-import org.simple.clinic.navigation.v2.ScreenResultBus
-import org.simple.clinic.navigation.v2.ActivityResult
 import org.simple.clinic.summary.TYPE_PICKER_SHEET
 import org.simple.clinic.summary.bloodsugar.BloodSugarSummaryConfig
 import org.simple.clinic.util.UserClock
@@ -60,7 +60,7 @@ class BloodSugarHistoryScreen : BaseScreen<
     BloodSugarHistoryScreenModel,
     BloodSugarHistoryScreenEvent,
     BloodSugarHistoryScreenEffect,
-    Unit>(), BloodSugarHistoryScreenUi, BloodSugarHistoryScreenUiActions {
+    BloodSugarHistoryScreenViewEffect>(), BloodSugarHistoryScreenUi, BloodSugarHistoryScreenUiActions {
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -124,7 +124,11 @@ class BloodSugarHistoryScreen : BaseScreen<
 
   override fun createUpdate() = BloodSugarHistoryScreenUpdate()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<BloodSugarHistoryScreenViewEffect>) = effectHandlerFactory.create(
+      viewEffectsConsumer
+  ).build()
+
+  override fun viewEffectHandler() = BloodSugarHistoryScreenViewEffectHandler(this)
 
   override fun uiRenderer() = BloodSugarHistoryScreenUiRenderer(this)
 

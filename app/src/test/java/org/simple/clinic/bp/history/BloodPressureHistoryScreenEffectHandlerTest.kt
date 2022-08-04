@@ -11,7 +11,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.bp.BloodPressureHistoryListItemDataSourceFactory
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
@@ -19,6 +18,7 @@ import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.sharedTestCode.TestData
 import java.util.Optional
 import java.util.UUID
 
@@ -94,6 +94,20 @@ class BloodPressureHistoryScreenEffectHandlerTest {
   @Test
   fun `when show blood pressures effect is received, then show blood pressures`() {
     // given
+    val bloodPressureHistoryListItemDataSourceFactory = mock<BloodPressureHistoryListItemDataSourceFactory>()
+
+    // when
+    testCase.dispatch(ShowBloodPressures(bloodPressureHistoryListItemDataSourceFactory))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).showBloodPressures(bloodPressureHistoryListItemDataSourceFactory)
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when load blood pressure history effect is received, then load blood pressure history`() {
+    // given
     val bloodPressuresDataSourceFactory = mock<DataSource.Factory<Int, BloodPressureMeasurement>>()
     val bloodPressuresDataSource = mock<PositionalDataSource<BloodPressureMeasurement>>()
     val bloodPressureHistoryListItemDataSourceFactory = mock<BloodPressureHistoryListItemDataSourceFactory>()
@@ -103,11 +117,10 @@ class BloodPressureHistoryScreenEffectHandlerTest {
     whenever(dataSourceFactory.create(bloodPressuresDataSource)).thenReturn(bloodPressureHistoryListItemDataSourceFactory)
 
     // when
-    testCase.dispatch(ShowBloodPressures(patientUuid))
+    testCase.dispatch(LoadBloodPressureHistory(patientUuid))
 
     // then
-    testCase.assertNoOutgoingEvents()
-    verify(uiActions).showBloodPressures(bloodPressureHistoryListItemDataSourceFactory)
-    verifyNoMoreInteractions(uiActions)
+    testCase.assertOutgoingEvents(BloodPressuresHistoryLoaded(bloodPressureHistoryListItemDataSourceFactory))
+    verifyZeroInteractions(uiActions)
   }
 }

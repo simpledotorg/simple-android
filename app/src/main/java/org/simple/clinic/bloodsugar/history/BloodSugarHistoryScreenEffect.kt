@@ -9,6 +9,8 @@ data class LoadPatient(val patientUuid: UUID) : BloodSugarHistoryScreenEffect()
 
 data class ShowBloodSugars(val patientUuid: UUID) : BloodSugarHistoryScreenEffect()
 
+data class LoadBloodSugarHistory(val patientUuid: UUID) : BloodSugarHistoryScreenEffect()
+
 sealed class BloodSugarHistoryScreenViewEffect : BloodSugarHistoryScreenEffect()
 
 data class OpenBloodSugarEntrySheet(val patientUuid: UUID) : BloodSugarHistoryScreenViewEffect()

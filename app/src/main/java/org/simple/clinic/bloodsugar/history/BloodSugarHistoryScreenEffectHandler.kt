@@ -43,7 +43,23 @@ class BloodSugarHistoryScreenEffectHandler @AssistedInject constructor(
           uiActions.showBloodSugars(dataSourceFactory)
         }, schedulersProvider.ui())
         .addConsumer(BloodSugarHistoryScreenViewEffect::class.java, viewEffectsConsumer::accept)
+        .addTransformer(LoadBloodSugarHistory::class.java, loadBloodSugarHistory())
         .build()
+  }
+
+  private fun loadBloodSugarHistory(): ObservableTransformer<LoadBloodSugarHistory, BloodSugarHistoryScreenEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map {
+            val dataSource = bloodSugarRepository
+                .allBloodSugarsDataSource(it.patientUuid)
+                .create() as PositionalDataSource<BloodSugarMeasurement>
+
+            dataSourceFactory.create(dataSource)
+          }
+          .map(::BloodSugarHistoryLoaded)
+    }
   }
 
   private fun loadPatient(

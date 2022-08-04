@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import org.junit.After
@@ -98,6 +99,25 @@ class BloodSugarHistoryScreenEffectHandlerTest {
     testCase.assertNoOutgoingEvents()
     verify(uiActions).showBloodSugars(bloodSugarsHistoryListItemDataSourceFactory)
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when load blood sugar history effect is received, load blood sugar history`() {
+    // given
+    val bloodSugarsDataSourceFactory = mock<DataSource.Factory<Int, BloodSugarMeasurement>>()
+    val bloodSugarsDataSource = mock<PositionalDataSource<BloodSugarMeasurement>>()
+    val bloodSugarsHistoryListItemDataSourceFactory = mock<BloodSugarHistoryListItemDataSourceFactory>()
+
+    whenever(bloodSugarRepository.allBloodSugarsDataSource(patientUuid)).thenReturn(bloodSugarsDataSourceFactory)
+    whenever(bloodSugarsDataSourceFactory.create()).thenReturn(bloodSugarsDataSource)
+    whenever(dataSourceFactory.create(bloodSugarsDataSource)).thenReturn(bloodSugarsHistoryListItemDataSourceFactory)
+
+    // when
+    testCase.dispatch(LoadBloodSugarHistory(patientUuid))
+
+    // then
+    testCase.assertOutgoingEvents(BloodSugarHistoryLoaded(bloodSugarsHistoryListItemDataSourceFactory))
+    verifyZeroInteractions(uiActions)
   }
 
 }

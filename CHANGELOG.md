@@ -19,7 +19,7 @@
 - Use `PrescriptionRepository#refillForTeleconsulation` to refill prescriptions from teleconsult screen
 - Migrate `BloodSugarHistoryScreen` to use view effects
 - Trigger separate effects for loading and showing blood pressure history
-- [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
+- Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-08-01-8350
 

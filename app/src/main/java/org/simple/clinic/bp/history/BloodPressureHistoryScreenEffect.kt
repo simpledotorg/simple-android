@@ -8,10 +8,6 @@ sealed class BloodPressureHistoryScreenEffect
 
 data class LoadPatient(val patientUuid: UUID) : BloodPressureHistoryScreenEffect()
 
-data class ShowBloodPressures(
-    val bloodPressureHistoryDataSourceFactory: BloodPressureHistoryListItemDataSourceFactory
-) : BloodPressureHistoryScreenEffect()
-
 data class LoadBloodPressureHistory(val patientUuid: UUID) : BloodPressureHistoryScreenEffect()
 
 sealed class BloodPressureHistoryViewEffect : BloodPressureHistoryScreenEffect()
@@ -19,3 +15,7 @@ sealed class BloodPressureHistoryViewEffect : BloodPressureHistoryScreenEffect()
 data class OpenBloodPressureEntrySheet(val patientUuid: UUID) : BloodPressureHistoryViewEffect()
 
 data class OpenBloodPressureUpdateSheet(val bloodPressureMeasurement: BloodPressureMeasurement) : BloodPressureHistoryViewEffect()
+
+data class ShowBloodPressures(
+    val bloodPressureHistoryDataSourceFactory: BloodPressureHistoryListItemDataSourceFactory
+) : BloodPressureHistoryViewEffect()

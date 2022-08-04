@@ -35,7 +35,6 @@ class BloodPressureHistoryScreenEffectHandlerTest {
       patientRepository,
       TrampolineSchedulersProvider(),
       dataSourceFactory,
-      uiActions,
       viewEffectHandler::handle
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)

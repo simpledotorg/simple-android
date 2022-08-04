@@ -146,7 +146,8 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
   override fun createInit() = ContactPatientInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<ContactPatientViewEffect>) = effectHandlerFactory.create(this)
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<ContactPatientViewEffect>) = effectHandlerFactory
+      .create(this, viewEffectsConsumer)
       .build()
 
   override fun viewEffectsHandler() = ContactPatientViewEffectHandler(this)

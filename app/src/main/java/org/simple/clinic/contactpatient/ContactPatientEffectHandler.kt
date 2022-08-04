@@ -1,5 +1,6 @@
 package org.simple.clinic.contactpatient
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -25,12 +26,16 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
     private val currentFacility: Lazy<Facility>,
     private val callResultRepository: CallResultRepository,
-    @Assisted private val uiActions: ContactPatientUiActions
+    @Assisted private val uiActions: ContactPatientUiActions,
+    @Assisted private val viewEffectsConsumer: Consumer<ContactPatientViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: ContactPatientUiActions): ContactPatientEffectHandler
+    fun create(
+        uiActions: ContactPatientUiActions,
+        viewEffectsConsumer: Consumer<ContactPatientViewEffect>
+    ): ContactPatientEffectHandler
   }
 
   fun build(): ObservableTransformer<ContactPatientEffect, ContactPatientEvent> {

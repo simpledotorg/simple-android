@@ -10,6 +10,7 @@ class ContactPatientViewEffectHandler(
   override fun handle(viewEffect: ContactPatientViewEffect) {
     when (viewEffect) {
       is DirectCallWithAutomaticDialer -> uiActions.directlyCallPatient(viewEffect.patientPhoneNumber, Dialer.Automatic)
+      is DirectCallWithManualDialer -> uiActions.directlyCallPatient(viewEffect.patientPhoneNumber, Dialer.Manual)
     }.exhaustive()
   }
 }

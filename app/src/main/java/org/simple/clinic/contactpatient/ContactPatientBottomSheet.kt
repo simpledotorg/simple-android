@@ -149,6 +149,8 @@ class ContactPatientBottomSheet : BaseBottomSheet<
   override fun createEffectHandler(viewEffectsConsumer: Consumer<ContactPatientViewEffect>) = effectHandlerFactory.create(this)
       .build()
 
+  override fun viewEffectsHandler() = ContactPatientViewEffectHandler(this)
+
   override fun onAttach(context: Context) {
     super.onAttach(context)
 

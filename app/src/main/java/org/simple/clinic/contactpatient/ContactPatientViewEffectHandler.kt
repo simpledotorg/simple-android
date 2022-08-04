@@ -11,6 +11,7 @@ class ContactPatientViewEffectHandler(
     when (viewEffect) {
       is DirectCallWithAutomaticDialer -> uiActions.directlyCallPatient(viewEffect.patientPhoneNumber, Dialer.Automatic)
       is DirectCallWithManualDialer -> uiActions.directlyCallPatient(viewEffect.patientPhoneNumber, Dialer.Manual)
+      is MaskedCallWithAutomaticDialer -> uiActions.maskedCallPatient(viewEffect.patientPhoneNumber, viewEffect.proxyPhoneNumber, Dialer.Automatic)
     }.exhaustive()
   }
 }

@@ -43,7 +43,6 @@ class ContactPatientEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<ContactPatientEffect, ContactPatientEvent>()
         .addTransformer(LoadContactPatientProfile::class.java, loadContactPatientProfile(schedulers.io()))
         .addTransformer(LoadLatestOverdueAppointment::class.java, loadLatestOverdueAppointment(schedulers.io()))
-        .addConsumer(MaskedCallWithAutomaticDialer::class.java, { uiActions.maskedCallPatient(it.patientPhoneNumber, it.proxyPhoneNumber, Dialer.Automatic) }, schedulers.ui())
         .addConsumer(MaskedCallWithManualDialer::class.java, { uiActions.maskedCallPatient(it.patientPhoneNumber, it.proxyPhoneNumber, Dialer.Manual) }, schedulers.ui())
         .addAction(CloseScreen::class.java, uiActions::closeSheet, schedulers.ui())
         .addTransformer(MarkPatientAsAgreedToVisit::class.java, markPatientAsAgreedToVisit(schedulers.io()))

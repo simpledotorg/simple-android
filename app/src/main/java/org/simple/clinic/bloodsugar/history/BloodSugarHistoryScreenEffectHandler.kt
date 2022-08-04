@@ -1,6 +1,7 @@
 package org.simple.clinic.bloodsugar.history
 
 import androidx.paging.PositionalDataSource
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -19,12 +20,16 @@ class BloodSugarHistoryScreenEffectHandler @AssistedInject constructor(
     private val bloodSugarRepository: BloodSugarRepository,
     private val schedulersProvider: SchedulersProvider,
     private val dataSourceFactory: BloodSugarHistoryListItemDataSourceFactory.Factory,
-    @Assisted private val uiActions: BloodSugarHistoryScreenUiActions
+    @Assisted private val uiActions: BloodSugarHistoryScreenUiActions,
+    @Assisted private val viewEffectsConsumer: Consumer<BloodSugarHistoryScreenViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: BloodSugarHistoryScreenUiActions): BloodSugarHistoryScreenEffectHandler
+    fun create(
+        uiActions: BloodSugarHistoryScreenUiActions,
+        viewEffectsConsumer: Consumer<BloodSugarHistoryScreenViewEffect>
+    ): BloodSugarHistoryScreenEffectHandler
   }
 
   fun build(): ObservableTransformer<BloodSugarHistoryScreenEffect, BloodSugarHistoryScreenEvent> {

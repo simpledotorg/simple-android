@@ -10,7 +10,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.bloodsugar.BloodSugarHistoryListItemDataSourceFactory
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarRepository
@@ -18,6 +17,7 @@ import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.sharedTestCode.TestData
 import java.util.Optional
 import java.util.UUID
 
@@ -32,7 +32,8 @@ class BloodSugarHistoryScreenEffectHandlerTest {
       bloodSugarRepository,
       TrampolineSchedulersProvider(),
       dataSourceFactory,
-      uiActions).build()
+      uiActions,
+      BloodSugarHistoryScreenViewEffectHandler(uiActions)::handle).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
   @After

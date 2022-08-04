@@ -1,6 +1,8 @@
 package org.simple.clinic.teleconsultlog.teleconsultrecord.screen
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
@@ -8,7 +10,6 @@ import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.After
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
@@ -18,9 +19,10 @@ import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer.Yes
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultationType.Audio
-import org.simple.sharedTestCode.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.uuid.UuidGenerator
+import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.TestUtcClock
 import java.time.Duration
 import java.time.Instant
 import java.util.UUID
@@ -43,7 +45,6 @@ class TeleconsultRecordEffectHandlerTest {
 
   private val effectHandler = TeleconsultRecordEffectHandler(
       user = { user },
-      currentFacility = { facility },
       teleconsultRecordRepository = teleconsultRecordRepository,
       patientRepository = patientRepository,
       prescriptionRepository = prescriptionRepository,
@@ -237,35 +238,6 @@ class TeleconsultRecordEffectHandlerTest {
     )
     val prescriptions = listOf(drug1, drug2)
 
-    val clonedPrescriptions = listOf(
-        drug1.copy(
-            uuid = clonedDrug1Uuid,
-            facilityUuid = facility.uuid,
-            syncStatus = SyncStatus.PENDING,
-            timestamps = drug1.timestamps.copy(
-                createdAt = drug1.createdAt.plus(durationToAdvanceBy),
-                updatedAt = drug1.updatedAt.plus(durationToAdvanceBy),
-                deletedAt = null
-            ),
-            frequency = null,
-            durationInDays = null,
-            teleconsultationId = teleconsultRecordId
-        ),
-        drug2.copy(
-            uuid = clonedDrug2Uuid,
-            facilityUuid = facility.uuid,
-            syncStatus = SyncStatus.PENDING,
-            timestamps = drug2.timestamps.copy(
-                createdAt = drug2.createdAt.plus(durationToAdvanceBy),
-                updatedAt = drug2.updatedAt.plus(durationToAdvanceBy),
-                deletedAt = null
-            ),
-            frequency = null,
-            durationInDays = null,
-            teleconsultationId = teleconsultRecordId
-        )
-    )
-
     whenever(uuidGenerator.v4()).thenReturn(clonedDrug1Uuid, clonedDrug2Uuid)
     whenever(prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)) doReturn prescriptions
 
@@ -277,8 +249,11 @@ class TeleconsultRecordEffectHandlerTest {
     effectHandlerTestCase.assertOutgoingEvents(PatientPrescriptionsCloned)
 
     verify(prescriptionRepository).newestPrescriptionsForPatientImmediate(patientUuid)
-    verify(prescriptionRepository).softDeletePrescriptions(prescriptions)
-    verify(prescriptionRepository).save(clonedPrescriptions)
+    verify(prescriptionRepository).refillForTeleconsulation(
+        prescriptions = eq(prescriptions),
+        uuidGenerator = any(),
+        teleconsultationUuid = eq(teleconsultRecordId)
+    )
     verifyNoMoreInteractions(prescriptionRepository)
 
     verifyZeroInteractions(uiActions)

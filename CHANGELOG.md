@@ -16,6 +16,7 @@
 - Bump Gradle to v7.5
 - Run prescription refill queries in a transaction
 - Use `PrescriptionRepository#refill` to refill prescriptions from edit medicines screen
+- Use `PrescriptionRepository#refillForTeleconsulation` to refill prescriptions from teleconsult screen
 - [In Progress: 27 Apr 2022] Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 
 ## 2022-08-01-8350

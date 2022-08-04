@@ -8,8 +8,6 @@ sealed class BloodSugarHistoryScreenEffect
 
 data class LoadPatient(val patientUuid: UUID) : BloodSugarHistoryScreenEffect()
 
-data class ShowBloodSugars(val bloodSugarHistoryListItemDataSourceFactory: BloodSugarHistoryListItemDataSourceFactory) : BloodSugarHistoryScreenEffect()
-
 data class LoadBloodSugarHistory(val patientUuid: UUID) : BloodSugarHistoryScreenEffect()
 
 sealed class BloodSugarHistoryScreenViewEffect : BloodSugarHistoryScreenEffect()
@@ -17,3 +15,5 @@ sealed class BloodSugarHistoryScreenViewEffect : BloodSugarHistoryScreenEffect()
 data class OpenBloodSugarEntrySheet(val patientUuid: UUID) : BloodSugarHistoryScreenViewEffect()
 
 data class OpenBloodSugarUpdateSheet(val bloodSugarMeasurement: BloodSugarMeasurement) : BloodSugarHistoryScreenViewEffect()
+
+data class ShowBloodSugars(val bloodSugarHistoryListItemDataSourceFactory: BloodSugarHistoryListItemDataSourceFactory) : BloodSugarHistoryScreenViewEffect()

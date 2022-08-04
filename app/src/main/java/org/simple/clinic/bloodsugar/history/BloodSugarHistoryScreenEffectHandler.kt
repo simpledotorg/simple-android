@@ -36,7 +36,6 @@ class BloodSugarHistoryScreenEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<BloodSugarHistoryScreenEffect, BloodSugarHistoryScreenEvent>()
         .addTransformer(LoadPatient::class.java, loadPatient(schedulersProvider.io()))
-        .addConsumer(ShowBloodSugars::class.java, { uiActions.showBloodSugars(it.bloodSugarHistoryListItemDataSourceFactory) }, schedulersProvider.ui())
         .addConsumer(BloodSugarHistoryScreenViewEffect::class.java, viewEffectsConsumer::accept)
         .addTransformer(LoadBloodSugarHistory::class.java, loadBloodSugarHistory())
         .build()

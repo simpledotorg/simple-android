@@ -12,7 +12,6 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.callresult.CallResultRepository
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.phone.Dialer
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.time.LocalDate
@@ -43,7 +42,6 @@ class ContactPatientEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<ContactPatientEffect, ContactPatientEvent>()
         .addTransformer(LoadContactPatientProfile::class.java, loadContactPatientProfile(schedulers.io()))
         .addTransformer(LoadLatestOverdueAppointment::class.java, loadLatestOverdueAppointment(schedulers.io()))
-        .addAction(CloseScreen::class.java, uiActions::closeSheet, schedulers.ui())
         .addTransformer(MarkPatientAsAgreedToVisit::class.java, markPatientAsAgreedToVisit(schedulers.io()))
         .addConsumer(ShowManualDatePicker::class.java, { uiActions.showManualDatePicker(it.preselectedDate, it.datePickerBounds) }, schedulers.ui())
         .addTransformer(SetReminderForAppointment::class.java, setReminderForAppointment(schedulers.io()))

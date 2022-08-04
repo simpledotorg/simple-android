@@ -13,6 +13,7 @@ class ContactPatientViewEffectHandler(
       is DirectCallWithManualDialer -> uiActions.directlyCallPatient(viewEffect.patientPhoneNumber, Dialer.Manual)
       is MaskedCallWithAutomaticDialer -> uiActions.maskedCallPatient(viewEffect.patientPhoneNumber, viewEffect.proxyPhoneNumber, Dialer.Automatic)
       is MaskedCallWithManualDialer -> uiActions.maskedCallPatient(viewEffect.patientPhoneNumber, viewEffect.proxyPhoneNumber, Dialer.Manual)
+      CloseScreen -> uiActions.closeSheet()
     }.exhaustive()
   }
 }

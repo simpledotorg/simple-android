@@ -20,14 +20,12 @@ class BloodSugarHistoryScreenEffectHandler @AssistedInject constructor(
     private val bloodSugarRepository: BloodSugarRepository,
     private val schedulersProvider: SchedulersProvider,
     private val dataSourceFactory: BloodSugarHistoryListItemDataSourceFactory.Factory,
-    @Assisted private val uiActions: BloodSugarHistoryScreenUiActions,
     @Assisted private val viewEffectsConsumer: Consumer<BloodSugarHistoryScreenViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        uiActions: BloodSugarHistoryScreenUiActions,
         viewEffectsConsumer: Consumer<BloodSugarHistoryScreenViewEffect>
     ): BloodSugarHistoryScreenEffectHandler
   }

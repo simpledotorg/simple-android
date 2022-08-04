@@ -33,7 +33,6 @@ class BloodSugarHistoryScreenEffectHandlerTest {
       bloodSugarRepository,
       TrampolineSchedulersProvider(),
       dataSourceFactory,
-      uiActions,
       BloodSugarHistoryScreenViewEffectHandler(uiActions)::handle).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 

@@ -125,7 +125,6 @@ class BloodSugarHistoryScreen : BaseScreen<
   override fun createUpdate() = BloodSugarHistoryScreenUpdate()
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<BloodSugarHistoryScreenViewEffect>) = effectHandlerFactory.create(
-      this,
       viewEffectsConsumer
   ).build()
 

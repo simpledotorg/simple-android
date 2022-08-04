@@ -6,11 +6,11 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.bloodsugar.BloodSugarHistoryListItemDataSourceFactory
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarRepository
@@ -18,6 +18,7 @@ import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.sharedTestCode.TestData
 import java.util.Optional
 import java.util.UUID
 
@@ -32,7 +33,7 @@ class BloodSugarHistoryScreenEffectHandlerTest {
       bloodSugarRepository,
       TrampolineSchedulersProvider(),
       dataSourceFactory,
-      uiActions).build()
+      BloodSugarHistoryScreenViewEffectHandler(uiActions)::handle).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
   @After
@@ -82,6 +83,20 @@ class BloodSugarHistoryScreenEffectHandlerTest {
   @Test
   fun `when show blood sugars effect is received, then show blood sugars`() {
     // given
+    val bloodSugarsHistoryListItemDataSourceFactory = mock<BloodSugarHistoryListItemDataSourceFactory>()
+
+    // when
+    testCase.dispatch(ShowBloodSugars(bloodSugarsHistoryListItemDataSourceFactory))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).showBloodSugars(bloodSugarsHistoryListItemDataSourceFactory)
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when load blood sugar history effect is received, load blood sugar history`() {
+    // given
     val bloodSugarsDataSourceFactory = mock<DataSource.Factory<Int, BloodSugarMeasurement>>()
     val bloodSugarsDataSource = mock<PositionalDataSource<BloodSugarMeasurement>>()
     val bloodSugarsHistoryListItemDataSourceFactory = mock<BloodSugarHistoryListItemDataSourceFactory>()
@@ -91,12 +106,11 @@ class BloodSugarHistoryScreenEffectHandlerTest {
     whenever(dataSourceFactory.create(bloodSugarsDataSource)).thenReturn(bloodSugarsHistoryListItemDataSourceFactory)
 
     // when
-    testCase.dispatch(ShowBloodSugars(patientUuid))
+    testCase.dispatch(LoadBloodSugarHistory(patientUuid))
 
     // then
-    testCase.assertNoOutgoingEvents()
-    verify(uiActions).showBloodSugars(bloodSugarsHistoryListItemDataSourceFactory)
-    verifyNoMoreInteractions(uiActions)
+    testCase.assertOutgoingEvents(BloodSugarHistoryLoaded(bloodSugarsHistoryListItemDataSourceFactory))
+    verifyZeroInteractions(uiActions)
   }
 
 }

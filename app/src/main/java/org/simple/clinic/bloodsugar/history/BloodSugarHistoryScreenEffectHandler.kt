@@ -1,6 +1,7 @@
 package org.simple.clinic.bloodsugar.history
 
 import androidx.paging.PositionalDataSource
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -19,27 +20,38 @@ class BloodSugarHistoryScreenEffectHandler @AssistedInject constructor(
     private val bloodSugarRepository: BloodSugarRepository,
     private val schedulersProvider: SchedulersProvider,
     private val dataSourceFactory: BloodSugarHistoryListItemDataSourceFactory.Factory,
-    @Assisted private val uiActions: BloodSugarHistoryScreenUiActions
+    @Assisted private val viewEffectsConsumer: Consumer<BloodSugarHistoryScreenViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: BloodSugarHistoryScreenUiActions): BloodSugarHistoryScreenEffectHandler
+    fun create(
+        viewEffectsConsumer: Consumer<BloodSugarHistoryScreenViewEffect>
+    ): BloodSugarHistoryScreenEffectHandler
   }
 
   fun build(): ObservableTransformer<BloodSugarHistoryScreenEffect, BloodSugarHistoryScreenEvent> {
     return RxMobius
         .subtypeEffectHandler<BloodSugarHistoryScreenEffect, BloodSugarHistoryScreenEvent>()
         .addTransformer(LoadPatient::class.java, loadPatient(schedulersProvider.io()))
-        .addConsumer(OpenBloodSugarEntrySheet::class.java, { uiActions.openBloodSugarEntrySheet(it.patientUuid) }, schedulersProvider.ui())
-        .addConsumer(OpenBloodSugarUpdateSheet::class.java, { uiActions.openBloodSugarUpdateSheet(it.bloodSugarMeasurement) }, schedulersProvider.ui())
-        .addConsumer(ShowBloodSugars::class.java, {
-          val dataSource = bloodSugarRepository.allBloodSugarsDataSource(it.patientUuid).create() as PositionalDataSource<BloodSugarMeasurement>
-          val dataSourceFactory = dataSourceFactory.create(dataSource)
-
-          uiActions.showBloodSugars(dataSourceFactory)
-        }, schedulersProvider.ui())
+        .addConsumer(BloodSugarHistoryScreenViewEffect::class.java, viewEffectsConsumer::accept)
+        .addTransformer(LoadBloodSugarHistory::class.java, loadBloodSugarHistory())
         .build()
+  }
+
+  private fun loadBloodSugarHistory(): ObservableTransformer<LoadBloodSugarHistory, BloodSugarHistoryScreenEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map {
+            val dataSource = bloodSugarRepository
+                .allBloodSugarsDataSource(it.patientUuid)
+                .create() as PositionalDataSource<BloodSugarMeasurement>
+
+            dataSourceFactory.create(dataSource)
+          }
+          .map(::BloodSugarHistoryLoaded)
+    }
   }
 
   private fun loadPatient(

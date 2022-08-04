@@ -45,3 +45,5 @@ data class OpenRemoveOverdueAppointmentScreen(
 ) : ContactPatientEffect()
 
 data class LoadCallResultForAppointment(val appointmentId: UUID) : ContactPatientEffect()
+
+sealed class ContactPatientViewEffect : ContactPatientEffect()

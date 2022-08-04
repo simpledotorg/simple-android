@@ -9,6 +9,7 @@ class BloodSugarHistoryScreenViewEffectHandler(
   override fun handle(viewEffect: BloodSugarHistoryScreenViewEffect) {
     when (viewEffect) {
       is OpenBloodSugarEntrySheet -> uiActions.openBloodSugarEntrySheet(viewEffect.patientUuid)
+      is OpenBloodSugarUpdateSheet -> uiActions.openBloodSugarUpdateSheet(viewEffect.bloodSugarMeasurement)
     }.exhaustive()
   }
 }

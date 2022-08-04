@@ -43,7 +43,6 @@ class ContactPatientEffectHandler @AssistedInject constructor(
         .addTransformer(LoadContactPatientProfile::class.java, loadContactPatientProfile(schedulers.io()))
         .addTransformer(LoadLatestOverdueAppointment::class.java, loadLatestOverdueAppointment(schedulers.io()))
         .addTransformer(MarkPatientAsAgreedToVisit::class.java, markPatientAsAgreedToVisit(schedulers.io()))
-        .addConsumer(ShowManualDatePicker::class.java, { uiActions.showManualDatePicker(it.preselectedDate, it.datePickerBounds) }, schedulers.ui())
         .addTransformer(SetReminderForAppointment::class.java, setReminderForAppointment(schedulers.io()))
         .addConsumer(OpenRemoveOverdueAppointmentScreen::class.java, ::openRemoveOverdueAppointmentScreen, schedulers.ui())
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())

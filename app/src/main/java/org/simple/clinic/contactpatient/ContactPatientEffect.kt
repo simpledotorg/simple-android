@@ -14,11 +14,6 @@ object LoadCurrentFacility : ContactPatientEffect()
 
 data class MarkPatientAsAgreedToVisit(val appointment: Appointment) : ContactPatientEffect()
 
-data class ShowManualDatePicker(
-    val preselectedDate: LocalDate,
-    val datePickerBounds: ClosedRange<LocalDate>
-) : ContactPatientEffect()
-
 data class SetReminderForAppointment(
     val appointment: Appointment,
     val reminderDate: LocalDate
@@ -47,3 +42,8 @@ data class MaskedCallWithManualDialer(
 ) : ContactPatientViewEffect()
 
 object CloseScreen : ContactPatientViewEffect()
+
+data class ShowManualDatePicker(
+    val preselectedDate: LocalDate,
+    val datePickerBounds: ClosedRange<LocalDate>
+) : ContactPatientViewEffect()

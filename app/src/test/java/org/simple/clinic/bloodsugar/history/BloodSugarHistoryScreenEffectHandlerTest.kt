@@ -84,16 +84,10 @@ class BloodSugarHistoryScreenEffectHandlerTest {
   @Test
   fun `when show blood sugars effect is received, then show blood sugars`() {
     // given
-    val bloodSugarsDataSourceFactory = mock<DataSource.Factory<Int, BloodSugarMeasurement>>()
-    val bloodSugarsDataSource = mock<PositionalDataSource<BloodSugarMeasurement>>()
     val bloodSugarsHistoryListItemDataSourceFactory = mock<BloodSugarHistoryListItemDataSourceFactory>()
 
-    whenever(bloodSugarRepository.allBloodSugarsDataSource(patientUuid)).thenReturn(bloodSugarsDataSourceFactory)
-    whenever(bloodSugarsDataSourceFactory.create()).thenReturn(bloodSugarsDataSource)
-    whenever(dataSourceFactory.create(bloodSugarsDataSource)).thenReturn(bloodSugarsHistoryListItemDataSourceFactory)
-
     // when
-    testCase.dispatch(ShowBloodSugars(patientUuid))
+    testCase.dispatch(ShowBloodSugars(bloodSugarsHistoryListItemDataSourceFactory))
 
     // then
     testCase.assertNoOutgoingEvents()

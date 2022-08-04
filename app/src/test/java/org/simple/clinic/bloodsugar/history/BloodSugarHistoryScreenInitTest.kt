@@ -9,7 +9,7 @@ import java.util.UUID
 
 class BloodSugarHistoryScreenInitTest {
   @Test
-  fun `when screen is created, then load patient and all blood sugars`() {
+  fun `when screen is created, then load patient and blood sugar history`() {
     val patientUuid = UUID.fromString("4bc4432f-f01e-4d0b-80bf-bc8a48ece8fe")
     val model = BloodSugarHistoryScreenModel.create(patientUuid)
     val initSpec = InitSpec(BloodSugarHistoryScreenInit())
@@ -18,7 +18,7 @@ class BloodSugarHistoryScreenInitTest {
         .whenInit(model)
         .then(assertThatFirst(
             hasModel(model),
-            hasEffects(LoadPatient(patientUuid), ShowBloodSugars(model.patientUuid))
+            hasEffects(LoadPatient(patientUuid), LoadBloodSugarHistory(model.patientUuid))
         ))
   }
 }

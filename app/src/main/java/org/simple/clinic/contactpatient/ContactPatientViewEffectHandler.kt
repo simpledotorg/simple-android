@@ -15,6 +15,7 @@ class ContactPatientViewEffectHandler(
       is MaskedCallWithManualDialer -> uiActions.maskedCallPatient(viewEffect.patientPhoneNumber, viewEffect.proxyPhoneNumber, Dialer.Manual)
       CloseScreen -> uiActions.closeSheet()
       is ShowManualDatePicker -> uiActions.showManualDatePicker(viewEffect.preselectedDate, viewEffect.datePickerBounds)
+      is OpenRemoveOverdueAppointmentScreen -> uiActions.openRemoveOverdueAppointmentScreen(viewEffect.appointment)
     }.exhaustive()
   }
 }

@@ -44,7 +44,6 @@ class ContactPatientEffectHandler @AssistedInject constructor(
         .addTransformer(LoadLatestOverdueAppointment::class.java, loadLatestOverdueAppointment(schedulers.io()))
         .addTransformer(MarkPatientAsAgreedToVisit::class.java, markPatientAsAgreedToVisit(schedulers.io()))
         .addTransformer(SetReminderForAppointment::class.java, setReminderForAppointment(schedulers.io()))
-        .addConsumer(OpenRemoveOverdueAppointmentScreen::class.java, ::openRemoveOverdueAppointmentScreen, schedulers.ui())
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
         .addTransformer(LoadCallResultForAppointment::class.java, loadCallResultForAppointment())
         .addConsumer(ContactPatientViewEffect::class.java, viewEffectsConsumer::accept)
@@ -67,10 +66,6 @@ class ContactPatientEffectHandler @AssistedInject constructor(
           .map { currentFacility.get() }
           .map(::CurrentFacilityLoaded)
     }
-  }
-
-  private fun openRemoveOverdueAppointmentScreen(effect: OpenRemoveOverdueAppointmentScreen) {
-    uiActions.openRemoveOverdueAppointmentScreen(effect.appointment)
   }
 
   private fun loadContactPatientProfile(

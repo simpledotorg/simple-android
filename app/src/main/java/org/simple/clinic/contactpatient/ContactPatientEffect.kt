@@ -19,10 +19,6 @@ data class SetReminderForAppointment(
     val reminderDate: LocalDate
 ) : ContactPatientEffect()
 
-data class OpenRemoveOverdueAppointmentScreen(
-    val appointment: Appointment
-) : ContactPatientEffect()
-
 data class LoadCallResultForAppointment(val appointmentId: UUID) : ContactPatientEffect()
 
 sealed class ContactPatientViewEffect : ContactPatientEffect()
@@ -46,4 +42,8 @@ object CloseScreen : ContactPatientViewEffect()
 data class ShowManualDatePicker(
     val preselectedDate: LocalDate,
     val datePickerBounds: ClosedRange<LocalDate>
+) : ContactPatientViewEffect()
+
+data class OpenRemoveOverdueAppointmentScreen(
+    val appointment: Appointment
 ) : ContactPatientViewEffect()

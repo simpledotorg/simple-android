@@ -54,6 +54,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
         .addConsumer(OpenRemoveOverdueAppointmentScreen::class.java, ::openRemoveOverdueAppointmentScreen, schedulers.ui())
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
         .addTransformer(LoadCallResultForAppointment::class.java, loadCallResultForAppointment())
+        .addConsumer(ContactPatientViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 

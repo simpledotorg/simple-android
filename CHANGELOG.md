@@ -21,6 +21,7 @@
 - Trigger separate effects for loading and showing blood pressure history
 - Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 - Migrate `ContactPatientBottomSheet` to use view effects
+- Bump Sentry to v6.3.1
 
 ## 2022-08-01-8350
 

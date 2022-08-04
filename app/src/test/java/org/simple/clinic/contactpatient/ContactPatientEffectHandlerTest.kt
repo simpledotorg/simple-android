@@ -9,7 +9,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
@@ -21,11 +20,12 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.storage.Timestamps
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
+import org.simple.clinic.uuid.UuidGenerator
+import org.simple.sharedTestCode.TestData
 import org.simple.sharedTestCode.util.RxErrorsRule
 import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.sharedTestCode.util.TestUtcClock
-import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.uuid.UuidGenerator
 import java.time.LocalDate
 import java.util.Optional
 import java.util.UUID
@@ -85,7 +85,7 @@ class ContactPatientEffectHandlerTest {
       schedulers = TestSchedulersProvider.trampoline(),
       currentFacility = { facility },
       callResultRepository = callResultRepository,
-      uiActions = uiActions
+      viewEffectsConsumer = ContactPatientViewEffectHandler(uiActions)::handle
   ).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)

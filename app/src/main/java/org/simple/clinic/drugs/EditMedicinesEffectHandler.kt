@@ -15,7 +15,6 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.protocol.ProtocolRepository
-import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.uuid.UuidGenerator
 import java.util.UUID
@@ -25,7 +24,6 @@ class EditMedicinesEffectHandler @AssistedInject constructor(
     private val protocolRepository: ProtocolRepository,
     private val prescriptionRepository: PrescriptionRepository,
     private val facility: Lazy<Facility>,
-    private val utcClock: UtcClock,
     private val uuidGenerator: UuidGenerator,
     private val appointmentsRepository: AppointmentRepository,
     private val drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>,
@@ -61,27 +59,20 @@ class EditMedicinesEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulersProvider.io())
           .map { effect -> prescriptionRepository.newestPrescriptionsForPatientImmediate(effect.patientUuid) to effect }
-          .doOnNext { (prescriptions, _) -> clonePrescriptions(prescriptions) }
+          .doOnNext { (prescriptions, _) -> refillPrescriptions(prescriptions) }
           .doOnNext { (_, effect) -> updateAppointmentsAsVisited(effect.patientUuid) }
           .map { PrescribedMedicinesRefilled }
     }
   }
 
-  private fun clonePrescriptions(
+  private fun refillPrescriptions(
       prescriptions: List<PrescribedDrug>,
   ) {
     if (prescriptions.isNotEmpty()) {
-      prescriptionRepository.softDeletePrescriptions(prescriptions)
-
-      val clonedPrescriptions = prescriptions.map { prescribedDrug ->
-        prescribedDrug.refill(
-            uuid = uuidGenerator.v4(),
-            facilityUuid = facility.get().uuid,
-            utcClock = utcClock
-        )
-      }
-
-      prescriptionRepository.save(clonedPrescriptions)
+      prescriptionRepository.refill(
+          prescriptions = prescriptions,
+          uuidGenerator = { uuidGenerator.v4() }
+      )
     }
   }
 

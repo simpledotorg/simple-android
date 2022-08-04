@@ -14,6 +14,7 @@ class BloodPressureHistoryScreenUpdate : Update<BloodPressureHistoryScreenModel,
       is PatientLoaded -> next(model.patientLoaded(event.patient))
       is NewBloodPressureClicked -> dispatch(OpenBloodPressureEntrySheet(model.patientUuid))
       is BloodPressureClicked -> dispatch(OpenBloodPressureUpdateSheet(event.bloodPressureMeasurement))
+      is BloodPressuresHistoryLoaded -> dispatch(ShowBloodPressures(event.bloodPressureHistoryListItemDataSourceFactory))
     }
   }
 }

@@ -1,5 +1,6 @@
 package org.simple.clinic.bp.history
 
+import com.nhaarman.mockitokotlin2.mock
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
@@ -7,6 +8,7 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.bp.BloodPressureHistoryListItemDataSourceFactory
 import org.simple.sharedTestCode.TestData
 import java.util.UUID
 
@@ -59,5 +61,18 @@ class BloodPressureHistoryScreenUpdateTest {
                 hasEffects(OpenBloodPressureUpdateSheet(bloodPressureMeasurement) as BloodPressureHistoryScreenEffect)
             )
         )
+  }
+
+  @Test
+  fun `when blood pressure history is loaded, then show blood pressures`() {
+    val bloodPressureHistoryListItemDataSourceFactory = mock<BloodPressureHistoryListItemDataSourceFactory>()
+
+    updateSpec
+        .given(model)
+        .whenEvent(BloodPressuresHistoryLoaded(bloodPressureHistoryListItemDataSourceFactory))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowBloodPressures(bloodPressureHistoryListItemDataSourceFactory))
+        ))
   }
 }

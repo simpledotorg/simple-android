@@ -20,14 +20,12 @@ class BloodPressureHistoryScreenEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val schedulersProvider: SchedulersProvider,
     private val dataSourceFactory: BloodPressureHistoryListItemDataSourceFactory.Factory,
-    @Assisted private val uiActions: BloodPressureHistoryScreenUiActions,
     @Assisted private val viewEffectsConsumer: Consumer<BloodPressureHistoryViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
     fun create(
-        uiActions: BloodPressureHistoryScreenUiActions,
         viewEffectsConsumer: Consumer<BloodPressureHistoryViewEffect>
     ): BloodPressureHistoryScreenEffectHandler
   }
@@ -36,9 +34,6 @@ class BloodPressureHistoryScreenEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<BloodPressureHistoryScreenEffect, BloodPressureHistoryScreenEvent>()
         .addTransformer(LoadPatient::class.java, loadPatient(schedulersProvider.io()))
-        .addConsumer(ShowBloodPressures::class.java, {
-          uiActions.showBloodPressures(it.bloodPressureHistoryDataSourceFactory)
-        }, schedulersProvider.ui())
         .addConsumer(BloodPressureHistoryViewEffect::class.java, viewEffectsConsumer::accept)
         .addTransformer(LoadBloodPressureHistory::class.java, loadBloodPressureHistory())
         .build()

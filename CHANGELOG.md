@@ -20,6 +20,7 @@
 - Migrate `BloodSugarHistoryScreen` to use view effects
 - Trigger separate effects for loading and showing blood pressure history
 - Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
+- Migrate `ContactPatientBottomSheet` to use view effects
 
 ## 2022-08-01-8350
 

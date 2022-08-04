@@ -15,7 +15,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.drugs.AddNewPrescriptionClicked
 import org.simple.clinic.drugs.CustomPrescriptionClicked
 import org.simple.clinic.drugs.EditMedicinesEffect
@@ -35,13 +34,13 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
-import org.simple.sharedTestCode.util.RxErrorsRule
-import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
+import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.RxErrorsRule
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -57,7 +56,6 @@ class EditMedicinesScreenLogicTest {
   private val uiActions = mock<EditMedicinesUiActions>()
   private val protocolRepository = mock<ProtocolRepository>()
   private val uuidGenerator = mock<UuidGenerator>()
-  private val utcClock = mock<UtcClock>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val patientUuid = UUID.fromString("2e9a1721-5472-4ebb-9d1a-7e707645eb7b")
   private val protocolUuid = UUID.fromString("905a545c-1988-441b-9139-11ae00579883")
@@ -96,7 +94,6 @@ class EditMedicinesScreenLogicTest {
         protocolRepository = protocolRepository,
         prescriptionRepository = prescriptionRepository,
         facility = Lazy { facility },
-        utcClock = utcClock,
         uuidGenerator = uuidGenerator,
         appointmentsRepository = appointmentRepository,
         drugFrequencyToLabelMap = drugFrequencyToLabelMap,

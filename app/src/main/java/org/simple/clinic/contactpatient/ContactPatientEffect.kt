@@ -10,8 +10,6 @@ data class LoadContactPatientProfile(val patientUuid: UUID) : ContactPatientEffe
 
 data class LoadLatestOverdueAppointment(val patientUuid: UUID) : ContactPatientEffect()
 
-data class DirectCallWithAutomaticDialer(val patientPhoneNumber: String) : ContactPatientEffect()
-
 data class DirectCallWithManualDialer(val patientPhoneNumber: String) : ContactPatientEffect()
 
 object LoadCurrentFacility : ContactPatientEffect()
@@ -47,3 +45,5 @@ data class OpenRemoveOverdueAppointmentScreen(
 data class LoadCallResultForAppointment(val appointmentId: UUID) : ContactPatientEffect()
 
 sealed class ContactPatientViewEffect : ContactPatientEffect()
+
+data class DirectCallWithAutomaticDialer(val patientPhoneNumber: String) : ContactPatientViewEffect()

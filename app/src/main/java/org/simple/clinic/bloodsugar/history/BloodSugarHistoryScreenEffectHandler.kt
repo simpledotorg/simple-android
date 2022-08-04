@@ -44,6 +44,7 @@ class BloodSugarHistoryScreenEffectHandler @AssistedInject constructor(
 
           uiActions.showBloodSugars(dataSourceFactory)
         }, schedulersProvider.ui())
+        .addConsumer(BloodSugarHistoryScreenViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 

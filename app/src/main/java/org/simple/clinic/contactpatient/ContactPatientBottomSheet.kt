@@ -58,7 +58,7 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     ContactPatientModel,
     ContactPatientEvent,
     ContactPatientEffect,
-    Unit>(), ContactPatientUi, ContactPatientUiActions {
+    ContactPatientViewEffect>(), ContactPatientUi, ContactPatientUiActions {
 
   @Inject
   lateinit var phoneCaller: PhoneCaller
@@ -146,7 +146,7 @@ class ContactPatientBottomSheet : BaseBottomSheet<
 
   override fun createInit() = ContactPatientInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this)
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<ContactPatientViewEffect>) = effectHandlerFactory.create(this)
       .build()
 
   override fun onAttach(context: Context) {

@@ -498,7 +498,7 @@ class BloodSugarEntrySheet : BaseBottomSheet<
   }
 
   override fun showBloodSugarUnitSelectionDialog(bloodSugarUnitPreference: BloodSugarUnitPreference) {
-    BloodSugarUnitSelectionDialog.show(supportFragmentManager, bloodSugarUnitPreference)
+    BloodSugarUnitSelectionDialog.show(childFragmentManager, bloodSugarUnitPreference)
   }
 
   override fun showRemoveButton() {
@@ -518,7 +518,7 @@ class BloodSugarEntrySheet : BaseBottomSheet<
   }
 
   override fun showConfirmRemoveBloodSugarDialog(bloodSugarMeasurementUuid: UUID) {
-    ConfirmRemoveBloodSugarDialog.show(bloodSugarMeasurementUuid, supportFragmentManager)
+    ConfirmRemoveBloodSugarDialog.show(bloodSugarMeasurementUuid, childFragmentManager)
   }
 
   override fun onBloodSugarRemoved() {

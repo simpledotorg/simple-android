@@ -137,10 +137,6 @@ class BloodSugarEntrySheet : BaseBottomSheet<
   @Inject
   lateinit var router: Router
 
-  private val openAs: OpenAs by lazy {
-    intent.getParcelableExtra(KEY_OPEN_AS)!!
-  }
-
   private lateinit var binding: SheetBloodSugarEntryBinding
 
   private val rootLayout
@@ -198,7 +194,7 @@ class BloodSugarEntrySheet : BaseBottomSheet<
     get() = binding.bloodSugarReadingUnitLabel
 
   override fun defaultModel() = BloodSugarEntryModel
-      .create(LocalDate.now(userClock).year, openAs)
+      .create(LocalDate.now(userClock).year, screenKey.openAs)
 
   override fun bindView(inflater: LayoutInflater, container: ViewGroup?) = SheetBloodSugarEntryBinding
       .inflate(inflater, container, false)

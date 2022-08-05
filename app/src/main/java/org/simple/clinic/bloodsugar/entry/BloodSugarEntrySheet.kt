@@ -373,11 +373,11 @@ class BloodSugarEntrySheet : BaseBottomSheet<
 
   override fun showBloodSugarEntryScreen() {
     viewFlipper.inAnimation = AnimationUtils
-        .loadAnimation(this, R.anim.measurementinput_reading_entry_from_left)
+        .loadAnimation(requireContext(), R.anim.measurementinput_reading_entry_from_left)
         .apply { interpolator = FastOutSlowInInterpolator() }
 
     viewFlipper.outAnimation = AnimationUtils
-        .loadAnimation(this, R.anim.measurementinput_date_exit_to_right)
+        .loadAnimation(requireContext(), R.anim.measurementinput_date_exit_to_right)
         .apply { interpolator = FastOutSlowInInterpolator() }
 
     viewFlipper.displayedChildResId = R.id.bloodsugarentry_flipper_blood_sugar_entry
@@ -385,11 +385,11 @@ class BloodSugarEntrySheet : BaseBottomSheet<
 
   override fun showDateEntryScreen() {
     viewFlipper.inAnimation = AnimationUtils
-        .loadAnimation(this, R.anim.measurementinput_date_entry_from_right)
+        .loadAnimation(requireContext(), R.anim.measurementinput_date_entry_from_right)
         .apply { interpolator = FastOutSlowInInterpolator() }
 
     viewFlipper.outAnimation = AnimationUtils
-        .loadAnimation(this, R.anim.measurementinput_reading_exit_to_left)
+        .loadAnimation(requireContext(), R.anim.measurementinput_reading_exit_to_left)
         .apply { interpolator = FastOutSlowInInterpolator() }
 
     viewFlipper.displayedChildResId = R.id.bloodsugarentry_flipper_date_entry

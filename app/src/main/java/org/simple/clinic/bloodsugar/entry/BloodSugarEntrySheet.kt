@@ -1,6 +1,5 @@
 package org.simple.clinic.bloodsugar.entry
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -43,6 +42,7 @@ import org.simple.clinic.di.DateFormatter.Type.Day
 import org.simple.clinic.di.DateFormatter.Type.FullYear
 import org.simple.clinic.di.DateFormatter.Type.Month
 import org.simple.clinic.feature.Features
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.util.UserClock
@@ -74,7 +74,6 @@ class BloodSugarEntrySheet : BaseBottomSheet<
 
   companion object {
     private const val KEY_OPEN_AS = "openAs"
-    private const val EXTRA_WAS_BLOOD_SUGAR_SAVED = "wasBloodSugarSaved"
 
     fun intentForNewBloodSugar(
         context: Context,
@@ -133,6 +132,9 @@ class BloodSugarEntrySheet : BaseBottomSheet<
   @Inject
   @DateFormatter(FullYear)
   lateinit var fullYearDateFormatter: DateTimeFormatter
+
+  @Inject
+  lateinit var router: Router
 
   private val openAs: OpenAs by lazy {
     intent.getParcelableExtra(KEY_OPEN_AS)!!
@@ -299,10 +301,7 @@ class BloodSugarEntrySheet : BaseBottomSheet<
       .map { RemoveBloodSugarClicked }
 
   override fun setBloodSugarSavedResultAndFinish() {
-    val intent = Intent()
-    intent.putExtra(EXTRA_WAS_BLOOD_SUGAR_SAVED, true)
-    setResult(Activity.RESULT_OK, intent)
-    finish()
+    router.pop()
   }
 
   override fun hideBloodSugarErrorMessage() {
@@ -515,13 +514,7 @@ class BloodSugarEntrySheet : BaseBottomSheet<
   }
 
   override fun dismiss() {
-    finish()
-  }
-
-  override fun onBackgroundClick() {
-    if (bloodSugarReadingEditText.text.isNullOrBlank()) {
-      super.onBackgroundClick()
-    }
+    router.pop()
   }
 
   override fun showConfirmRemoveBloodSugarDialog(bloodSugarMeasurementUuid: UUID) {

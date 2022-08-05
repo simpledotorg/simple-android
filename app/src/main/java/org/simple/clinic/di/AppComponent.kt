@@ -3,7 +3,6 @@ package org.simple.clinic.di
 import dagger.Component
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.appupdate.AppUpdateNotificationWorker
-import org.simple.clinic.bloodsugar.entry.di.BloodSugarEntryComponent
 import org.simple.clinic.bloodsugar.selection.type.di.BloodSugarTypePickerSheetComponent
 import org.simple.clinic.bp.entry.di.BloodPressureEntryComponent
 import org.simple.clinic.deeplink.di.DeepLinkComponent
@@ -40,7 +39,6 @@ interface AppComponent {
 
   fun theActivityComponent(): TheActivityComponent.Factory
   fun setupActivityComponent(): SetupActivityComponent.Factory
-  fun bloodSugarEntryComponent(): BloodSugarEntryComponent.Factory
   fun bloodPressureEntryComponent(): BloodPressureEntryComponent.Factory
   fun dosagePickerSheetComponent(): DosagePickerSheetComponent.Factory
   fun bloodSugarTypePickerSheetComponent(): BloodSugarTypePickerSheetComponent.Factory

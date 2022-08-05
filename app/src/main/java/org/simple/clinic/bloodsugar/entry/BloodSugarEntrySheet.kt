@@ -3,7 +3,6 @@ package org.simple.clinic.bloodsugar.entry
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,12 +15,10 @@ import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
 import com.spotify.mobius.functions.Consumer
-import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.toObservable
 import kotlinx.parcelize.Parcelize
-import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
@@ -39,21 +36,17 @@ import org.simple.clinic.bloodsugar.entry.OpenAs.New
 import org.simple.clinic.bloodsugar.entry.OpenAs.Update
 import org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar.ConfirmRemoveBloodSugarDialog
 import org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar.ConfirmRemoveBloodSugarDialog.RemoveBloodSugarListener
-import org.simple.clinic.bloodsugar.entry.di.BloodSugarEntryComponent
 import org.simple.clinic.bloodsugar.unitselection.BloodSugarUnitSelectionDialog
 import org.simple.clinic.databinding.SheetBloodSugarEntryBinding
 import org.simple.clinic.di.DateFormatter
 import org.simple.clinic.di.DateFormatter.Type.Day
 import org.simple.clinic.di.DateFormatter.Type.FullYear
 import org.simple.clinic.di.DateFormatter.Type.Month
-import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
-import org.simple.clinic.util.withLocale
-import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.setTextAndCursor
@@ -140,8 +133,6 @@ class BloodSugarEntrySheet : BaseBottomSheet<
   @Inject
   @DateFormatter(FullYear)
   lateinit var fullYearDateFormatter: DateTimeFormatter
-
-  private lateinit var component: BloodSugarEntryComponent
 
   private val openAs: OpenAs by lazy {
     intent.getParcelableExtra(KEY_OPEN_AS)!!
@@ -241,29 +232,6 @@ class BloodSugarEntrySheet : BaseBottomSheet<
     super.onCreate(savedInstanceState)
     binding = SheetBloodSugarEntryBinding.inflate(layoutInflater)
     setContentView(binding.root)
-  }
-
-  override fun attachBaseContext(baseContext: Context) {
-    setupDi()
-
-    val wrappedContext = baseContext
-        .wrap { InjectorProviderContextWrapper.wrap(it, component) }
-        .wrap { ViewPumpContextWrapper.wrap(it) }
-
-    super.attachBaseContext(wrappedContext)
-    applyOverrideConfiguration(Configuration())
-  }
-
-  override fun applyOverrideConfiguration(overrideConfiguration: Configuration) {
-    super.applyOverrideConfiguration(overrideConfiguration.withLocale(locale, features))
-  }
-
-  private fun setupDi() {
-    component = ClinicApp.appComponent
-        .bloodSugarEntryComponent()
-        .create(activity = this)
-
-    component.inject(this)
   }
 
   private fun bloodSugarTextChanges() = bloodSugarReadingEditText.textChanges()

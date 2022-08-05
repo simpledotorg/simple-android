@@ -5,7 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.Fragment
@@ -13,8 +15,10 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.editorActions
 import com.jakewharton.rxbinding3.widget.textChanges
+import com.spotify.mobius.functions.Consumer
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.toObservable
 import kotlinx.parcelize.Parcelize
@@ -47,12 +51,12 @@ import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
-import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.setTextAndCursor
@@ -65,7 +69,14 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
-class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBloodSugarListener {
+class BloodSugarEntrySheet : BaseBottomSheet<
+    BloodSugarEntrySheet.Key,
+    SheetBloodSugarEntryBinding,
+    BloodSugarEntryModel,
+    BloodSugarEntryEvent,
+    BloodSugarEntryEffect,
+    Nothing>(), BloodSugarEntryUi, RemoveBloodSugarListener {
+
   enum class ScreenType {
     BLOOD_SUGAR_ENTRY,
     DATE_ENTRY
@@ -227,6 +238,40 @@ class BloodSugarEntrySheet : BottomSheetActivity(), BloodSugarEntryUi, RemoveBlo
 
   private val bloodSugarReadingUnitLabel
     get() = binding.bloodSugarReadingUnitLabel
+
+  override fun defaultModel() = BloodSugarEntryModel
+      .create(LocalDate.now(userClock).year, openAs)
+
+  override fun bindView(inflater: LayoutInflater, container: ViewGroup?) = SheetBloodSugarEntryBinding
+      .inflate(inflater, container, false)
+
+  override fun uiRenderer() = BloodSugarEntryUiRenderer(this)
+
+  override fun events() = Observable
+      .mergeArray(
+          bloodSugarTextChanges(),
+          imeDoneClicks(),
+          changeDateClicks(),
+          backClicks(),
+          hardwareBackPresses(),
+          screenTypeChanges(),
+          dayTextChanges(),
+          monthTextChanges(),
+          yearTextChanges(),
+          removeClicks(),
+          bloodSugarReadingUnitButtonClicks()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<BloodSugarEntryEvent>()
+
+  override fun createInit() = BloodSugarEntryInit()
+
+  override fun createUpdate() = bloodSugarEntryUpdate
+      .create(LocalDate.now(userTimeZone))
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Nothing>) = bloodSugarEntryEffectHandler
+      .create(this)
+      .build()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

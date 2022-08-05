@@ -33,10 +33,10 @@ import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
 import org.simple.clinic.feature.Feature.EditBloodSugar
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
-import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.ActivityResult
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenResultBus
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.summary.PatientSummaryChildView
 import org.simple.clinic.summary.PatientSummaryModelUpdateCallback
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -245,8 +245,10 @@ class BloodSugarSummaryView(
       bloodSugarMeasurementUuid: UUID,
       measurementType: BloodSugarMeasurementType
   ) {
-    val intent = BloodSugarEntrySheet.intentForUpdateBloodSugar(context, bloodSugarMeasurementUuid, measurementType)
-    context.startActivity(intent)
+    router.push(BloodSugarEntrySheet.Key.forUpdateBloodSugar(
+        bloodSugarMeasurementUuid = bloodSugarMeasurementUuid,
+        measurementType = measurementType
+    ))
   }
 
   override fun registerSummaryModelUpdateCallback(callback: PatientSummaryModelUpdateCallback?) {
@@ -266,13 +268,10 @@ class BloodSugarSummaryView(
 
   private fun showBloodSugarEntrySheet(intent: Intent) {
     val patientUuid = screenKey.patientUuid
-
-    val intentForNewBloodSugar = BloodSugarEntrySheet.intentForNewBloodSugar(
-        context,
-        patientUuid,
-        BloodSugarTypePickerSheet.selectedBloodSugarType(intent)
-    )
-    activity.startActivity(intentForNewBloodSugar)
+    router.push(BloodSugarEntrySheet.Key.forNewBloodSugar(
+        patientUuid = patientUuid,
+        measurementType = BloodSugarTypePickerSheet.selectedBloodSugarType(intent)
+    ))
   }
 
   private fun render(bloodSugarMeasurements: List<BloodSugarMeasurement>) {

@@ -1,7 +1,6 @@
 package org.simple.clinic.bloodsugar.entry
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -71,30 +70,6 @@ class BloodSugarEntrySheet : BaseBottomSheet<
   enum class ScreenType {
     BLOOD_SUGAR_ENTRY,
     DATE_ENTRY
-  }
-
-  companion object {
-    private const val KEY_OPEN_AS = "openAs"
-
-    fun intentForNewBloodSugar(
-        context: Context,
-        patientUuid: UUID,
-        measurementType: BloodSugarMeasurementType
-    ): Intent {
-      val intent = Intent(context, BloodSugarEntrySheet::class.java)
-      intent.putExtra(KEY_OPEN_AS, New(patientUuid, measurementType))
-      return intent
-    }
-
-    fun intentForUpdateBloodSugar(
-        context: Context,
-        bloodSugarMeasurementUuid: UUID,
-        measurementType: BloodSugarMeasurementType
-    ): Intent {
-      val intent = Intent(context, BloodSugarEntrySheet::class.java)
-      intent.putExtra(KEY_OPEN_AS, Update(bloodSugarMeasurementUuid, measurementType))
-      return intent
-    }
   }
 
   @Inject
@@ -550,6 +525,19 @@ class BloodSugarEntrySheet : BaseBottomSheet<
       override val analyticsName: String = "Blood Sugar Entry Sheet",
       override val type: ScreenType = ScreenType.Modal
   ) : ScreenKey() {
+
+    companion object {
+
+      fun forNewBloodSugar(
+          patientUuid: UUID,
+          measurementType: BloodSugarMeasurementType
+      ) = Key(openAs = New(patientUuid, measurementType))
+
+      fun forUpdateBloodSugar(
+          bloodSugarMeasurementUuid: UUID,
+          measurementType: BloodSugarMeasurementType
+      ) = Key(Update(bloodSugarMeasurementUuid, measurementType))
+    }
 
     override fun instantiateFragment(): Fragment {
       return BloodSugarEntrySheet()

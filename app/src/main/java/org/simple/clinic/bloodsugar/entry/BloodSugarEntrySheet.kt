@@ -490,7 +490,7 @@ class BloodSugarEntrySheet : BaseBottomSheet<
   }
 
   override fun onBloodSugarRemoved() {
-    dismiss()
+    router.popUntilInclusive(screenKey)
   }
 
   private fun showBloodSugarErrorMessage(message: String) {

@@ -41,6 +41,7 @@ import org.simple.clinic.di.DateFormatter
 import org.simple.clinic.di.DateFormatter.Type.Day
 import org.simple.clinic.di.DateFormatter.Type.FullYear
 import org.simple.clinic.di.DateFormatter.Type.Month
+import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -229,6 +230,11 @@ class BloodSugarEntrySheet : BaseBottomSheet<
   override fun createEffectHandler(viewEffectsConsumer: Consumer<Nothing>) = bloodSugarEntryEffectHandler
       .create(this)
       .build()
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -552,5 +558,9 @@ class BloodSugarEntrySheet : BaseBottomSheet<
     override fun instantiateFragment(): Fragment {
       return BloodSugarEntrySheet()
     }
+  }
+
+  interface Injector {
+    fun inject(target: BloodSugarEntrySheet)
   }
 }

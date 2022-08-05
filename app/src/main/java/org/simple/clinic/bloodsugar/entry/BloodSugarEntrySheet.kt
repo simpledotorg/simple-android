@@ -1,7 +1,6 @@
 package org.simple.clinic.bloodsugar.entry
 
 import android.content.Context
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -112,8 +111,6 @@ class BloodSugarEntrySheet : BaseBottomSheet<
   @Inject
   lateinit var router: Router
 
-  private lateinit var binding: SheetBloodSugarEntryBinding
-
   private val rootLayout
     get() = binding.rootLayout
 
@@ -205,12 +202,6 @@ class BloodSugarEntrySheet : BaseBottomSheet<
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)
-  }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    binding = SheetBloodSugarEntryBinding.inflate(layoutInflater)
-    setContentView(binding.root)
   }
 
   private fun bloodSugarTextChanges() = bloodSugarReadingEditText.textChanges()
@@ -515,9 +506,6 @@ class BloodSugarEntrySheet : BaseBottomSheet<
       visibility = View.VISIBLE
     }
   }
-
-  private fun getPaddedString(value: String): String =
-      value.padStart(length = 2, padChar = userInputDatePaddingCharacter.value)
 
   @Parcelize
   data class Key(

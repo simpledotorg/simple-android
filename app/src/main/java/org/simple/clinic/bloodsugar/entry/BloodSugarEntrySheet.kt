@@ -19,7 +19,6 @@ import com.spotify.mobius.functions.Consumer
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
-import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.toObservable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.ClinicApp
@@ -49,12 +48,10 @@ import org.simple.clinic.di.DateFormatter.Type.FullYear
 import org.simple.clinic.di.DateFormatter.Type.Month
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Features
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
 import org.simple.clinic.widgets.UiEvent
@@ -146,41 +143,8 @@ class BloodSugarEntrySheet : BaseBottomSheet<
 
   private lateinit var component: BloodSugarEntryComponent
 
-  private val uiRenderer = BloodSugarEntryUiRenderer(this)
-
   private val openAs: OpenAs by lazy {
     intent.getParcelableExtra(KEY_OPEN_AS)!!
-  }
-
-  private val delegate by unsafeLazy {
-    val defaultModel = BloodSugarEntryModel.create(LocalDate.now(userClock).year, openAs)
-
-    MobiusDelegate.forActivity(
-        events.ofType(),
-        defaultModel,
-        bloodSugarEntryUpdate.create(LocalDate.now(userTimeZone)),
-        bloodSugarEntryEffectHandler.create(this).build(),
-        BloodSugarEntryInit(),
-        uiRenderer::render
-    )
-  }
-
-  private val events: Observable<UiEvent> by unsafeLazy {
-    Observable.mergeArray(
-        bloodSugarTextChanges(),
-        imeDoneClicks(),
-        changeDateClicks(),
-        backClicks(),
-        hardwareBackPresses(),
-        screenTypeChanges(),
-        dayTextChanges(),
-        monthTextChanges(),
-        yearTextChanges(),
-        removeClicks(),
-        bloodSugarReadingUnitButtonClicks()
-    )
-        .compose(ReportAnalyticsEvents())
-        .share()
   }
 
   private lateinit var binding: SheetBloodSugarEntryBinding
@@ -277,22 +241,6 @@ class BloodSugarEntrySheet : BaseBottomSheet<
     super.onCreate(savedInstanceState)
     binding = SheetBloodSugarEntryBinding.inflate(layoutInflater)
     setContentView(binding.root)
-    delegate.onRestoreInstanceState(savedInstanceState)
-  }
-
-  override fun onStart() {
-    super.onStart()
-    delegate.start()
-  }
-
-  override fun onStop() {
-    super.onStop()
-    delegate.stop()
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    delegate.onSaveInstanceState(outState)
-    super.onSaveInstanceState(outState)
   }
 
   override fun attachBaseContext(baseContext: Context) {

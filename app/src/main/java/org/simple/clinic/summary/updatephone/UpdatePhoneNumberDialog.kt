@@ -9,17 +9,20 @@ import android.view.LayoutInflater
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.DialogPatientsummaryUpdatephoneBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
@@ -27,6 +30,7 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
+import java.util.UUID
 import javax.inject.Inject
 
 class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDialogUi, UpdatePhoneNumberUiActions {
@@ -184,5 +188,19 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment(), UpdatePhoneNumberDial
 
   interface Injector {
     fun inject(target: UpdatePhoneNumberDialog)
+  }
+
+  @Parcelize
+  data class Key(
+      val patientUuid: UUID,
+      override val analyticsName: String = "Update Phone Number Dialog",
+      override val type: ScreenType = ScreenType.Modal
+  ) : ScreenKey() {
+
+    override fun instantiateFragment(): Fragment {
+      return UpdatePhoneNumberDialog().apply {
+        isCancelable = false
+      }
+    }
   }
 }

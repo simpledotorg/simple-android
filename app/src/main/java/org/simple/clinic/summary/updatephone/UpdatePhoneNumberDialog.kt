@@ -22,6 +22,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.DialogPatientsummaryUpdatephoneBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseDialog
 import org.simple.clinic.patient.PatientUuid
@@ -78,6 +79,9 @@ class UpdatePhoneNumberDialog : BaseDialog<
 
   @Inject
   lateinit var effectHandlerFactory: UpdatePhoneNumberEffectHandler.Factory
+
+  @Inject
+  lateinit var router: Router
 
   private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
 
@@ -163,7 +167,7 @@ class UpdatePhoneNumberDialog : BaseDialog<
   }
 
   override fun closeDialog() {
-    dismiss()
+    router.pop()
   }
 
   interface Injector {

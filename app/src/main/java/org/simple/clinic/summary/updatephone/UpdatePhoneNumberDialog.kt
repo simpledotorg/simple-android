@@ -16,23 +16,19 @@ import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
-import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.DialogPatientsummaryUpdatephoneBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseDialog
 import org.simple.clinic.patient.PatientUuid
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setTextAndCursor
-import org.simple.clinic.widgets.showKeyboard
 import java.util.UUID
 import javax.inject.Inject
 
@@ -84,33 +80,6 @@ class UpdatePhoneNumberDialog : BaseDialog<
   lateinit var effectHandlerFactory: UpdatePhoneNumberEffectHandler.Factory
 
   private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
-  private val dialogEvents = PublishSubject.create<UiEvent>()
-  private val events by unsafeLazy {
-    val cancelButton = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_NEGATIVE)
-    val saveButton = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
-
-    Observable
-        .merge(
-            dialogCreates(),
-            cancelClicks(cancelButton),
-            saveClicks(saveButton)
-        )
-        .compose(ReportAnalyticsEvents())
-  }
-
-  private val delegate by unsafeLazy {
-    val patientUuid = requireArguments().getSerializable(KEY_PATIENT_UUID) as PatientUuid
-    val uiRenderer = UpdatePhoneNumberUiRenderer(this)
-
-    MobiusDelegate.forActivity(
-        events = dialogEvents.ofType(),
-        defaultModel = UpdatePhoneNumberModel.create(patientUuid),
-        init = UpdatePhoneNumberInit(),
-        update = UpdatePhoneNumberUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
 
   override fun defaultModel() = UpdatePhoneNumberModel.create(
       patientUuid = screenKey.patientUuid
@@ -148,16 +117,6 @@ class UpdatePhoneNumberDialog : BaseDialog<
     context.injector<Injector>().inject(this)
   }
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    delegate.onRestoreInstanceState(savedInstanceState)
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    delegate.onSaveInstanceState(outState)
-    super.onSaveInstanceState(outState)
-  }
-
   @SuppressLint("CheckResult", "InflateParams")
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     val layoutInflater = LayoutInflater.from(requireContext())
@@ -170,25 +129,6 @@ class UpdatePhoneNumberDialog : BaseDialog<
         .setPositiveButton(R.string.patientsummary_updatephone_save, null)
         .setNegativeButton(R.string.patientsummary_updatephone_cancel, null)
         .create()
-  }
-
-  override fun onStart() {
-    super.onStart()
-    binding!!.numberEditText.showKeyboard()
-    delegate.start()
-  }
-
-  override fun onStop() {
-    delegate.stop()
-    super.onStop()
-  }
-
-  @SuppressLint("CheckResult")
-  override fun onResume() {
-    super.onResume()
-    events
-        .takeUntil(screenDestroys)
-        .subscribe(dialogEvents::onNext)
   }
 
   override fun onDestroyView() {

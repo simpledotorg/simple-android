@@ -2,19 +2,17 @@ package org.simple.clinic.summary.updatephone
 
 import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -23,6 +21,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseDialog
+import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setTextAndCursor
 import java.util.UUID
 import javax.inject.Inject
@@ -47,6 +46,8 @@ class UpdatePhoneNumberDialog : BaseDialog<
   @Inject
   lateinit var router: Router
 
+  private val hotEvents = PublishSubject.create<UiEvent>()
+
   override fun defaultModel() = UpdatePhoneNumberModel.create(
       patientUuid = screenKey.patientUuid
   )
@@ -57,14 +58,7 @@ class UpdatePhoneNumberDialog : BaseDialog<
   override fun uiRenderer() = UpdatePhoneNumberUiRenderer(this)
 
   override fun events(): Observable<UpdatePhoneNumberEvent> {
-    val cancelButton = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_NEGATIVE)
-    val saveButton = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
-
-    return Observable
-        .merge(
-            cancelClicks(cancelButton),
-            saveClicks(saveButton)
-        )
+    return hotEvents
         .compose(ReportAnalyticsEvents())
         .cast()
   }
@@ -86,8 +80,12 @@ class UpdatePhoneNumberDialog : BaseDialog<
     return MaterialAlertDialogBuilder(requireContext())
         .setTitle(R.string.patientsummary_updatephone_dialog_title)
         .setMessage(R.string.patientsummary_updatephone_dialog_message)
-        .setPositiveButton(R.string.patientsummary_updatephone_save, null)
-        .setNegativeButton(R.string.patientsummary_updatephone_cancel, null)
+        .setPositiveButton(R.string.patientsummary_updatephone_save) { _, _ ->
+          hotEvents.onNext(UpdatePhoneNumberSaveClicked(number = numberEditText.text?.toString().orEmpty()))
+        }
+        .setNegativeButton(R.string.patientsummary_updatephone_cancel) { _, _ ->
+          hotEvents.onNext(UpdatePhoneNumberCancelClicked)
+        }
         .create()
   }
 
@@ -96,16 +94,6 @@ class UpdatePhoneNumberDialog : BaseDialog<
     (dialog as? AlertDialog)?.setView(view)
     return view
   }
-
-  private fun cancelClicks(cancelButton: Button) =
-      cancelButton
-          .clicks()
-          .map { UpdatePhoneNumberCancelClicked }
-
-  private fun saveClicks(saveButton: Button) =
-      saveButton
-          .clicks()
-          .map { UpdatePhoneNumberSaveClicked(number = numberEditText.text?.toString().orEmpty()) }
 
   override fun showBlankPhoneNumberError() {
     phoneInputLayout.error = getString(R.string.patientsummary_updatephone_error_phonenumber_empty)

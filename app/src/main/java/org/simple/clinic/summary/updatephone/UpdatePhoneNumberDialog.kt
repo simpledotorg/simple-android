@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
@@ -85,10 +86,15 @@ class UpdatePhoneNumberDialog : BaseDialog<
     return MaterialAlertDialogBuilder(requireContext())
         .setTitle(R.string.patientsummary_updatephone_dialog_title)
         .setMessage(R.string.patientsummary_updatephone_dialog_message)
-        .setView(binding.root)
         .setPositiveButton(R.string.patientsummary_updatephone_save, null)
         .setNegativeButton(R.string.patientsummary_updatephone_cancel, null)
         .create()
+  }
+
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    val view = super.onCreateView(inflater, container, savedInstanceState)
+    (dialog as? AlertDialog)?.setView(view)
+    return view
   }
 
   private fun cancelClicks(cancelButton: Button) =

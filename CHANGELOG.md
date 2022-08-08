@@ -22,6 +22,7 @@
 - Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
 - Migrate `ContactPatientBottomSheet` to use view effects
 - Bump Sentry to v6.3.1
+- Bump Mixpanel to v6.5.2
 
 ## 2022-08-01-8350
 

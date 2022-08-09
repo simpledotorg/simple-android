@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Next Release
+
+### Internal
+
+- Bump gradle to v7.2.2
+
 ## 2022-08-08-8359
 
 ### Internal

@@ -18,6 +18,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.DialogPatientsummaryAddphoneBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseDialog
 import org.simple.clinic.widgets.UiEvent
@@ -35,6 +36,9 @@ class AddPhoneNumberDialog : BaseDialog<
 
   @Inject
   lateinit var effectHandlerFactory: AddPhoneNumberEffectHandler.Factory
+
+  @Inject
+  lateinit var router: Router
 
   private val phoneNumberEditText
     get() = binding.phoneNumberEditText
@@ -109,7 +113,7 @@ class AddPhoneNumberDialog : BaseDialog<
   }
 
   override fun closeDialog() {
-    dismiss()
+    router.pop()
   }
 
   interface Injector {

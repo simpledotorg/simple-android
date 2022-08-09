@@ -6,6 +6,7 @@
 
 - Bump gradle to v7.2.2
 - Migrate `BloodSugarEntrySheet` to use `BaseBottomSheet`
+- Migrate `UpdatePhoneNumberDialog` to `BaseDialog`
 
 ## 2022-08-08-8359
 

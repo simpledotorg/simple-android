@@ -1,6 +1,5 @@
 package org.simple.clinic.summary.addphone
 
-import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
@@ -22,8 +20,6 @@ import org.simple.clinic.databinding.DialogPatientsummaryAddphoneBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseDialog
-import org.simple.clinic.patient.PatientUuid
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.showKeyboard
 import java.util.UUID
@@ -37,49 +33,14 @@ class AddPhoneNumberDialog : BaseDialog<
     AddPhoneNumberEffect,
     Nothing>(), AddPhoneNumberUi, UiActions {
 
-  companion object {
-    private const val FRAGMENT_TAG = "AddPhoneNumberDialog"
-    private const val KEY_PATIENT_UUID = "patientUuid"
-
-    fun show(patientUuid: PatientUuid, fragmentManager: FragmentManager) {
-      val existingFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG)
-
-      if (existingFragment != null) {
-        fragmentManager
-            .beginTransaction()
-            .remove(existingFragment)
-            .commitNowAllowingStateLoss()
-      }
-
-      val fragment = AddPhoneNumberDialog().apply {
-        isCancelable = false
-        arguments = Bundle(1).apply {
-          putSerializable(KEY_PATIENT_UUID, patientUuid)
-        }
-      }
-
-      fragmentManager
-          .beginTransaction()
-          .add(fragment, FRAGMENT_TAG)
-          .commitNowAllowingStateLoss()
-    }
-  }
-
   @Inject
   lateinit var effectHandlerFactory: AddPhoneNumberEffectHandler.Factory
 
-  private val patientUuid by unsafeLazy {
-    requireArguments().getSerializable(KEY_PATIENT_UUID) as PatientUuid
-  }
-
-  private var layout: View? = null
-  private var binding: DialogPatientsummaryAddphoneBinding? = null
-
   private val phoneNumberEditText
-    get() = binding!!.phoneNumberEditText
+    get() = binding.phoneNumberEditText
 
   private val phoneNumberInputLayout
-    get() = binding!!.phoneNumberInputLayout
+    get() = binding.phoneNumberInputLayout
 
   override fun defaultModel() = AddPhoneNumberModel.create(screenKey.patientUuid)
 
@@ -113,16 +74,10 @@ class AddPhoneNumberDialog : BaseDialog<
     return view
   }
 
-  @SuppressLint("CheckResult", "InflateParams")
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    val layoutInflater = LayoutInflater.from(requireContext())
-    binding = DialogPatientsummaryAddphoneBinding.inflate(layoutInflater)
-    layout = binding?.root
-
     return MaterialAlertDialogBuilder(requireContext())
         .setTitle(R.string.patientsummary_addphone_dialog_title)
         .setMessage(R.string.patientsummary_addphone_dialog_message)
-        .setView(layout)
         .setPositiveButton(R.string.patientsummary_addphone_save, null)
         .setNegativeButton(R.string.patientsummary_addphone_cancel, null)
         .create()
@@ -131,12 +86,6 @@ class AddPhoneNumberDialog : BaseDialog<
   override fun onActivityCreated(savedInstanceState: Bundle?) {
     super.onActivityCreated(savedInstanceState)
     phoneNumberEditText.showKeyboard()
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    binding = null
-    layout = null
   }
 
   private fun saveClicks(): Observable<UiEvent> {

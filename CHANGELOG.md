@@ -23,6 +23,7 @@
 - Migrate `ContactPatientBottomSheet` to use view effects
 - Bump Sentry to v6.3.1
 - Bump Mixpanel to v6.5.2
+- Bump Sentry plugin to v3.1.4
 
 ## 2022-08-01-8350
 

@@ -8,12 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
@@ -23,6 +24,7 @@ import org.simple.clinic.databinding.DialogPatientsummaryAddphoneBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseDialog
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -31,7 +33,13 @@ import org.simple.clinic.widgets.showKeyboard
 import java.util.UUID
 import javax.inject.Inject
 
-class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi, UiActions {
+class AddPhoneNumberDialog : BaseDialog<
+    AddPhoneNumberDialog.Key,
+    DialogPatientsummaryAddphoneBinding,
+    AddPhoneNumberModel,
+    AddPhoneNumberEvent,
+    AddPhoneNumberEffect,
+    Nothing>(), AddPhoneNumberUi, UiActions {
 
   companion object {
     private const val FRAGMENT_TAG = "AddPhoneNumberDialog"
@@ -98,6 +106,23 @@ class AddPhoneNumberDialog : AppCompatDialogFragment(), AddPhoneNumberUi, UiActi
 
   private val phoneNumberInputLayout
     get() = binding!!.phoneNumberInputLayout
+
+  override fun defaultModel() = AddPhoneNumberModel.create(screenKey.patientUuid)
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = DialogPatientsummaryAddphoneBinding
+      .inflate(layoutInflater, container, false)
+
+  override fun uiRenderer() = AddPhoneNumberUiRender(this)
+
+  override fun events() = saveClicks()
+      .compose(ReportAnalyticsEvents())
+      .cast<AddPhoneNumberEvent>()
+
+  override fun createUpdate() = AddPhoneNumberUpdate()
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Nothing>) = effectHandlerFactory
+      .create(this)
+      .build()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

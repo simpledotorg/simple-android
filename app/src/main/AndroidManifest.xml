@@ -108,11 +108,6 @@
       android:windowSoftInputMode="adjustResize" />
 
     <activity
-      android:name=".bloodsugar.entry.BloodSugarEntrySheet"
-      android:theme="@style/Theme.Simple.BottomSheetActivity"
-      android:windowSoftInputMode="adjustResize" />
-
-    <activity
       android:name=".registration.confirmfacility.ConfirmFacilitySheet"
       android:theme="@style/Theme.Simple.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />

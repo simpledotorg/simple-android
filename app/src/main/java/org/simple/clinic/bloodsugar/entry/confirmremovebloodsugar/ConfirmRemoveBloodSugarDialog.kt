@@ -65,7 +65,7 @@ class ConfirmRemoveBloodSugarDialog : AppCompatDialogFragment(), ConfirmRemoveBl
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<ConfirmRemoveBloodSugarDialogInjector>().inject(this)
-    removeBloodSugarListener = context as? RemoveBloodSugarListener
+    removeBloodSugarListener = parentFragment as? RemoveBloodSugarListener
     if (removeBloodSugarListener == null) {
       throw ClassCastException("$context must implement RemoveBloodSugarListener")
     }
@@ -86,7 +86,6 @@ class ConfirmRemoveBloodSugarDialog : AppCompatDialogFragment(), ConfirmRemoveBl
         .setTitle(R.string.bloodsugarentry_remove_blood_sugar_title)
         .setMessage(R.string.bloodsugarentry_remove_blood_sugar_message)
         .setPositiveButton(R.string.bloodsugarentry_remove_blood_sugar_confirm) { _, _ ->
-          removeBloodSugarListener?.onBloodSugarRemoved()
           events.onNext(RemoveBloodSugarClicked)
         }
         .setNegativeButton(R.string.bloodsugarentry_remove_blood_sugar_cancel, null)
@@ -109,7 +108,8 @@ class ConfirmRemoveBloodSugarDialog : AppCompatDialogFragment(), ConfirmRemoveBl
   }
 
   override fun closeDialog() {
-    dismiss()
+    // TODO: Use pop with result once migrated to navigation v2
+    removeBloodSugarListener?.onBloodSugarRemoved()
   }
 
   interface RemoveBloodSugarListener {

@@ -108,7 +108,9 @@ class AddPhoneNumberDialog : BaseDialog<
       container: ViewGroup?,
       savedInstanceState: Bundle?
   ): View? {
-    return layout
+    val view = super.onCreateView(inflater, container, savedInstanceState)
+    (dialog as? AlertDialog)?.setView(view)
+    return view
   }
 
   @SuppressLint("CheckResult", "InflateParams")

@@ -175,8 +175,10 @@ class BloodSugarHistoryScreen : BaseScreen<
   }
 
   override fun openBloodSugarUpdateSheet(measurement: BloodSugarMeasurement) {
-    val intent = BloodSugarEntrySheet.intentForUpdateBloodSugar(requireContext(), measurement.uuid, measurement.reading.type)
-    activity.startActivity(intent)
+    router.push(BloodSugarEntrySheet.Key.forUpdateBloodSugar(
+        bloodSugarMeasurementUuid = measurement.uuid,
+        measurementType = measurement.reading.type
+    ))
   }
 
   override fun showBloodSugars(dataSourceFactory: BloodSugarHistoryListItemDataSourceFactory) {
@@ -227,12 +229,10 @@ class BloodSugarHistoryScreen : BaseScreen<
   private fun showBloodSugarEntrySheet(intent: Intent) {
     val patientUuid = screenKey.patientId
 
-    val intentForNewBloodSugar = BloodSugarEntrySheet.intentForNewBloodSugar(
-        requireContext(),
-        patientUuid,
-        BloodSugarTypePickerSheet.selectedBloodSugarType(intent)
-    )
-    activity.startActivity(intentForNewBloodSugar)
+    router.push(BloodSugarEntrySheet.Key.forNewBloodSugar(
+        patientUuid = patientUuid,
+        measurementType = BloodSugarTypePickerSheet.selectedBloodSugarType(intent)
+    ))
   }
 
   private fun addNewBloodSugarClicked(): Observable<BloodSugarHistoryScreenEvent> {

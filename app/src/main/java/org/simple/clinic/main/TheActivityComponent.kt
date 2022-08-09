@@ -10,7 +10,10 @@ import io.reactivex.Observable
 import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.RxActivityLifecycle
 import org.simple.clinic.appupdate.criticalupdatedialog.CriticalAppUpdateDialog
+import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet
+import org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar.ConfirmRemoveBloodSugarDialogInjector
 import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreen
+import org.simple.clinic.bloodsugar.unitselection.BloodSugarUnitSelectionDialog.BloodSugarUnitSelectionDialogInjector
 import org.simple.clinic.bp.history.BloodPressureHistoryScreen
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.contactpatient.views.SetAppointmentReminderView
@@ -149,7 +152,10 @@ interface TheActivityComponent :
     NextAppointmentCardView.Injector,
     CriticalAppUpdateDialog.Injector,
     EnterDrugStockScreen.Injector,
-    OverdueSearchScreen.Injector {
+    OverdueSearchScreen.Injector,
+    BloodSugarEntrySheet.Injector,
+    ConfirmRemoveBloodSugarDialogInjector,
+    BloodSugarUnitSelectionDialogInjector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory

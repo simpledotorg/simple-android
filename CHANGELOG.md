@@ -5,6 +5,7 @@
 ### Internal
 
 - Bump gradle to v7.2.2
+- Migrate `BloodSugarEntrySheet` to use `BaseBottomSheet`
 
 ## 2022-08-08-8359
 

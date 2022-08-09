@@ -15,19 +15,15 @@ import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
-import io.reactivex.rxkotlin.ofType
-import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.DialogPatientsummaryAddphoneBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseDialog
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.showKeyboard
 import java.util.UUID
@@ -76,28 +72,6 @@ class AddPhoneNumberDialog : BaseDialog<
     requireArguments().getSerializable(KEY_PATIENT_UUID) as PatientUuid
   }
 
-  private val dialogEvents = PublishSubject.create<UiEvent>()
-
-  private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
-  private val events by unsafeLazy {
-    saveClicks()
-        .takeUntil(screenDestroys)
-        .compose(ReportAnalyticsEvents())
-        .share()
-  }
-
-  private val delegate: MobiusDelegate<AddPhoneNumberModel, AddPhoneNumberEvent, AddPhoneNumberEffect> by unsafeLazy {
-    val uiRenderer = AddPhoneNumberUiRender(this)
-
-    MobiusDelegate.forActivity(
-        events = dialogEvents.ofType(),
-        defaultModel = AddPhoneNumberModel.create(patientUuid),
-        update = AddPhoneNumberUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
-
   private var layout: View? = null
   private var binding: DialogPatientsummaryAddphoneBinding? = null
 
@@ -127,7 +101,6 @@ class AddPhoneNumberDialog : BaseDialog<
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     requireContext().injector<Injector>().inject(this)
-    delegate.onRestoreInstanceState(savedInstanceState)
   }
 
   override fun onCreateView(
@@ -153,11 +126,6 @@ class AddPhoneNumberDialog : BaseDialog<
         .create()
   }
 
-  override fun onSaveInstanceState(outState: Bundle) {
-    super.onSaveInstanceState(outState)
-    delegate.onSaveInstanceState(outState)
-  }
-
   override fun onActivityCreated(savedInstanceState: Bundle?) {
     super.onActivityCreated(savedInstanceState)
     phoneNumberEditText.showKeyboard()
@@ -165,27 +133,8 @@ class AddPhoneNumberDialog : BaseDialog<
 
   override fun onDestroyView() {
     super.onDestroyView()
-    screenDestroys.onNext(ScreenDestroyed())
     binding = null
     layout = null
-  }
-
-  override fun onStart() {
-    super.onStart()
-    delegate.start()
-  }
-
-  @SuppressLint("CheckResult")
-  override fun onResume() {
-    super.onResume()
-    events
-        .takeUntil(screenDestroys)
-        .subscribe(dialogEvents::onNext)
-  }
-
-  override fun onStop() {
-    super.onStop()
-    delegate.stop()
   }
 
   private fun saveClicks(): Observable<UiEvent> {

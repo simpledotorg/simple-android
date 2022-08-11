@@ -11,6 +11,7 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.inputmethod.EditorInfo
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.annotation.IdRes
@@ -76,6 +77,7 @@ class ChipInputAutoCompleteTextView(
     rootView.setOnClickListener { showKeyboard() }
 
     handleEditTextBackPress()
+    handleEditTextImeAction()
 
     dropDownConfig()
   }
@@ -129,6 +131,26 @@ class ChipInputAutoCompleteTextView(
         return@setOnKeyListener true
       }
       return@setOnKeyListener false
+    }
+  }
+
+  private fun handleEditTextImeAction() {
+    autoCompleteTextView.imeOptions = EditorInfo.IME_ACTION_SEARCH
+    autoCompleteTextView.inputType = EditorInfo.TYPE_TEXT_FLAG_CAP_WORDS or EditorInfo.TYPE_TEXT_VARIATION_PERSON_NAME
+    autoCompleteTextView.setHorizontallyScrolling(true)
+    autoCompleteTextView.maxLines = 1
+
+    autoCompleteTextView.setOnEditorActionListener { _, actionId, event ->
+      val canAddSearchInput = actionId == EditorInfo.IME_ACTION_SEARCH && !autoCompleteTextView.text.isNullOrBlank()
+
+      if (canAddSearchInput) {
+        val item = autoCompleteTextView.text.toString()
+        autoCompleteTextView.text.clear()
+        addChip(item)
+        return@setOnEditorActionListener true
+      }
+
+      return@setOnEditorActionListener false
     }
   }
 

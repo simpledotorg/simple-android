@@ -34,6 +34,7 @@
 - Bump Sentry to v6.3.1
 - Bump Mixpanel to v6.5.2
 - Bump Sentry plugin to v3.1.4
+- Add support for partial search input in overdue search screen
 
 ## 2022-08-01-8350
 

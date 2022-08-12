@@ -5,6 +5,8 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
+import org.simple.clinic.appconfig.Country
+import org.simple.clinic.feature.Feature
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.DONE
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.IN_PROGRESS
@@ -15,7 +17,8 @@ import java.util.UUID
 class OverdueSearchUiRendererTest {
   private val ui = mock<OverdueSearchUi>()
   private val uiRenderer = OverdueSearchUiRenderer(
-      ui = ui
+    ui = ui,
+    isOverdueSelectAndDownloadEnabled = true
   )
   private val defaultModel = OverdueSearchModel.create()
 
@@ -142,7 +145,7 @@ class OverdueSearchUiRendererTest {
   }
 
   @Test
-  fun `when no overdue appointments are selected, then hide overdue selected count`() {
+  fun `when no overdue appointments are selected and select and download feature is enabled, then hide overdue selected count`() {
     // given
     val searchQuery = "Ani"
     val overdueSearchResults = PagingData.from(listOf(
@@ -186,6 +189,35 @@ class OverdueSearchUiRendererTest {
     verify(ui).hideSearchResults()
     verify(ui).hideNoSearchResults()
     verify(ui).hideProgress()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when progress state is done and select and download feature is disabled, then render search results and hide download and share buttons`() {
+    // given
+    val uiRenderer = OverdueSearchUiRenderer(ui = ui, isOverdueSelectAndDownloadEnabled = false)
+    val overdueSearchResults = PagingData.from(listOf(
+        TestData.overdueAppointment(appointmentUuid = UUID.fromString("463241b0-ccf3-464f-a1b4-636fcfdb0447"))
+    ))
+    val searchQuery = "Ani"
+    val model = defaultModel
+        .overdueSearchInputsChanged(listOf(searchQuery))
+        .overdueSearchResultsLoaded(overdueSearchResults)
+        .loadStateChanged(DONE)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).setOverdueSearchResultsPagingData(
+        overdueSearchResults = overdueSearchResults,
+        selectedAppointments = emptySet()
+    )
+    verify(ui).hideNoSearchResults()
+    verify(ui).hideProgress()
+    verify(ui).showSearchResults()
+    verify(ui).hideDownloadAndShareButtons()
+    verify(ui).hideSelectedOverdueAppointmentCount()
     verifyNoMoreInteractions(ui)
   }
 }

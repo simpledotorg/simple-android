@@ -10,9 +10,11 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.reactivex.Observable
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
@@ -105,5 +107,16 @@ class LoggedOutOfDeviceDialog : AppCompatDialogFragment(), LoggedOutOfDeviceDial
 
   interface Injector {
     fun inject(target: LoggedOutOfDeviceDialog)
+  }
+
+  @Parcelize
+  data class Key(
+      override val type: ScreenType = ScreenType.Modal,
+      override val analyticsName: String = "Logged Out Of Device Dialog"
+  ) : ScreenKey() {
+
+    override fun instantiateFragment() = LoggedOutOfDeviceDialog().apply {
+      isCancelable = false
+    }
   }
 }

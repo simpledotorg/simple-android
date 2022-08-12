@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.FragmentManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
@@ -27,30 +26,6 @@ class LoggedOutOfDeviceDialog : BaseDialog<
     LoggedOutOfDeviceEvent,
     LoggedOutOfDeviceEffect,
     Nothing>(), LoggedOutOfDeviceDialogUi {
-
-  companion object {
-    private const val FRAGMENT_TAG = "LoggedOutOfDeviceDialog"
-
-    fun show(fragmentManager: FragmentManager) {
-      val existingFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG)
-
-      if (existingFragment != null) {
-        fragmentManager
-            .beginTransaction()
-            .remove(existingFragment)
-            .commit()
-      }
-
-      val fragment = LoggedOutOfDeviceDialog().apply {
-        isCancelable = false
-      }
-
-      fragmentManager
-          .beginTransaction()
-          .add(fragment, FRAGMENT_TAG)
-          .commit()
-    }
-  }
 
   @Inject
   lateinit var effectHandler: LoggedOutOfDeviceEffectHandler

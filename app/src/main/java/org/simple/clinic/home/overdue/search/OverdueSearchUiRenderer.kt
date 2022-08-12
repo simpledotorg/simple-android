@@ -7,7 +7,8 @@ import org.simple.clinic.mobius.ViewRenderer
 import java.util.UUID
 
 class OverdueSearchUiRenderer(
-    private val ui: OverdueSearchUi
+    private val ui: OverdueSearchUi,
+    private val isOverdueSelectAndDownloadEnabled: Boolean
 ) : ViewRenderer<OverdueSearchModel> {
 
   override fun render(model: OverdueSearchModel) {
@@ -53,7 +54,15 @@ class OverdueSearchUiRenderer(
   private fun renderResults() {
     ui.showSearchResults()
     ui.hideNoSearchResults()
-    ui.showDownloadAndShareButtons()
+    showDownloadAndShareButton()
+  }
+
+  private fun showDownloadAndShareButton() {
+    if (isOverdueSelectAndDownloadEnabled) {
+      ui.showDownloadAndShareButtons()
+    } else {
+      ui.hideDownloadAndShareButtons()
+    }
   }
 
   private fun renderNoResults() {

@@ -176,7 +176,8 @@ class OverdueSearchScreen : BaseScreen<
       .build()
 
   override fun uiRenderer() = OverdueSearchUiRenderer(
-      ui = this
+      ui = this,
+      isOverdueSelectAndDownloadEnabled = features.isEnabled(Feature.OverdueSelectAndDownload) && country.isoCountryCode == Country.INDIA
   )
 
   override fun viewEffectHandler() = OverdueSearchViewEffectHandler(this)

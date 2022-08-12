@@ -526,7 +526,7 @@ class PatientSummaryScreen :
   }
 
   override fun showAddPhoneDialog(patientUuid: UUID) {
-    AddPhoneNumberDialog.show(patientUuid, activity.supportFragmentManager)
+    router.push(AddPhoneNumberDialog.Key(patientUuid))
   }
 
   override fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier) {

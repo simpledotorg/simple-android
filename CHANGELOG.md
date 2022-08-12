@@ -10,6 +10,7 @@
 - Bump gradle to v7.5.1
 - Bump lint to v30.2.2
 - Migrate `AddPhoneNumberDialog` to `BaseDialog`
+- Fix download/share button showing in overdue search screen outside India
 
 ## 2022-08-08-8359
 

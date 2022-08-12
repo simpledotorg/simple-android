@@ -49,7 +49,7 @@ abstract class BaseDialog<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, 
 
   abstract fun defaultModel(): M
 
-  abstract fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?): B
+  abstract fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?): B?
 
   open fun uiRenderer(): ViewRenderer<M> = NoopViewRenderer()
 

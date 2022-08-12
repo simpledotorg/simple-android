@@ -15,7 +15,6 @@ import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseDialog
 import org.simple.clinic.util.unsafeLazy
@@ -60,19 +59,6 @@ class LoggedOutOfDeviceDialog : BaseDialog<
     (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
   }
 
-  private val delegate by unsafeLazy {
-    val uiRenderer = LoggedOutOfDeviceUiRenderer(this)
-
-    MobiusDelegate.forActivity(
-        events = Observable.never(),
-        defaultModel = LoggedOutOfDeviceModel.create(),
-        init = LoggedOutOfDeviceInit(),
-        update = LoggedOutOfDeviceUpdate(),
-        effectHandler = effectHandler.build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
-
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?): Nothing? {
     return null
   }
@@ -95,32 +81,12 @@ class LoggedOutOfDeviceDialog : BaseDialog<
     context.injector<Injector>().inject(this)
   }
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    delegate.onRestoreInstanceState(savedInstanceState)
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    delegate.onSaveInstanceState(outState)
-    super.onSaveInstanceState(outState)
-  }
-
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     return MaterialAlertDialogBuilder(requireContext())
         .setTitle(R.string.registration_loggedout_dialog_title)
         .setMessage(R.string.registration_loggedout_dialog_message)
         .setPositiveButton(R.string.registration_loggedout_dialog_confirm, null)
         .create()
-  }
-
-  override fun onStart() {
-    super.onStart()
-    delegate.start()
-  }
-
-  override fun onStop() {
-    delegate.stop()
-    super.onStop()
   }
 
   override fun enableOkayButton() {

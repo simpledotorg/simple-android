@@ -14,6 +14,7 @@
 - Add support for Android 13
   - Bump compile and target SDK to 32
 - Bump fragment to v1.5.2
+- Bump threeten-extra to v1.7.1
 
 ## 2022-08-08-8359
 

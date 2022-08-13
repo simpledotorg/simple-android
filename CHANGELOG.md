@@ -11,6 +11,8 @@
 - Bump lint to v30.2.2
 - Migrate `AddPhoneNumberDialog` to `BaseDialog`
 - Fix download/share button showing in overdue search screen outside India
+- Add support for Android 13
+  - Bump compile and target SDK to 32
 
 ## 2022-08-08-8359
 

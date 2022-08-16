@@ -18,6 +18,7 @@
 - Bump AppCompat to v1.5.0
 - Migrate `LoggedOutOfDeviceDialog` to `BaseDialog`
 - Bump flipper to v0.157.0
+- Fix app crashing when overdue search screen is opened
 
 ## 2022-08-08-8359
 

@@ -486,7 +486,7 @@ class BloodSugarEntrySheet : BaseBottomSheet<
   }
 
   override fun showConfirmRemoveBloodSugarDialog(bloodSugarMeasurementUuid: UUID) {
-    ConfirmRemoveBloodSugarDialog.show(bloodSugarMeasurementUuid, childFragmentManager)
+    router.push(ConfirmRemoveBloodSugarDialog.Key(bloodSugarMeasurementUuid))
   }
 
   override fun onBloodSugarRemoved() {

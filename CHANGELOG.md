@@ -17,6 +17,7 @@
 - Bump threeten-extra to v1.7.1
 - Bump AppCompat to v1.5.0
 - Migrate `LoggedOutOfDeviceDialog` to `BaseDialog`
+- Bump flipper to v0.157.0
 
 ## 2022-08-08-8359
 

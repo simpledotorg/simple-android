@@ -168,7 +168,7 @@ class RegistrationPhoneScreen :
   }
 
   override fun showLoggedOutOfDeviceDialog() {
-    LoggedOutOfDeviceDialog.show(activity.supportFragmentManager)
+    router.push(LoggedOutOfDeviceDialog.Key())
   }
 
   override fun showAccessDeniedScreen(number: String) {

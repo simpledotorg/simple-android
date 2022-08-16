@@ -20,7 +20,7 @@ import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
-import io.reactivex.disposables.Disposable
+import io.reactivex.disposables.CompositeDisposable
 import org.simple.clinic.mobius.ViewEffectsHandler
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.mobius.eventSources
@@ -35,8 +35,8 @@ abstract class BaseDialog<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, 
   }
 
   private lateinit var viewModel: MobiusLoopViewModel<M, E, F, V>
-  private lateinit var eventsDisposable: Disposable
 
+  private val eventsDisposable = CompositeDisposable()
   protected val screenKey by unsafeLazy { ScreenKey.key<K>(this) }
 
   private var _binding: B? = null
@@ -49,7 +49,7 @@ abstract class BaseDialog<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, 
 
   abstract fun defaultModel(): M
 
-  abstract fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?): B
+  abstract fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?): B?
 
   open fun uiRenderer(): ViewRenderer<M> = NoopViewRenderer()
 
@@ -96,7 +96,7 @@ abstract class BaseDialog<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, 
       }
     }).get()
 
-    eventsDisposable = events().subscribe { viewModel.dispatchEvent(it!!) }
+    eventsDisposable.add(events().subscribe { viewModel.dispatchEvent(it!!) })
 
     val uiRenderer = uiRenderer()
     viewModel.models.observe(viewLifecycleOwner, uiRenderer::render)

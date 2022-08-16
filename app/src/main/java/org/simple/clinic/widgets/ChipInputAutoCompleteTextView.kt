@@ -16,6 +16,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.annotation.IdRes
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.res.use
 import androidx.core.os.bundleOf
 import androidx.core.view.children
 import com.google.android.material.chip.Chip
@@ -55,7 +56,7 @@ class ChipInputAutoCompleteTextView(
   init {
     binding = ViewChipTextInputBinding.inflate(LayoutInflater.from(context), this, true)
 
-    val hint: String
+    var hint: String? = null
     context.obtainStyledAttributes(attrs, R.styleable.ChipInputAutoCompleteTextView).use { typedArray ->
       hint = typedArray.getString(R.styleable.ChipInputAutoCompleteTextView_hint).orEmpty()
     }
@@ -154,7 +155,7 @@ class ChipInputAutoCompleteTextView(
     }
   }
 
-  private fun inputChanges(hint: String) = _inputChanges
+  private fun inputChanges(hint: String?) = _inputChanges
       .subscribe {
         if (it.isEmpty()) {
           autoCompleteTextView.hint = hint

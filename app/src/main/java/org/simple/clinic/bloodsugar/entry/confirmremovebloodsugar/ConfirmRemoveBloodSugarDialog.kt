@@ -8,9 +8,11 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.util.unsafeLazy
 import java.util.UUID
 import javax.inject.Inject
@@ -114,5 +116,15 @@ class ConfirmRemoveBloodSugarDialog : AppCompatDialogFragment(), ConfirmRemoveBl
 
   interface RemoveBloodSugarListener {
     fun onBloodSugarRemoved()
+  }
+
+  @Parcelize
+  data class Key(
+      val bloodSugarUuid: UUID,
+      override val analyticsName: String = "Confirm Remove Blood Sugar Dialog",
+      override val type: ScreenType = ScreenType.Modal
+  ) : ScreenKey() {
+
+    override fun instantiateFragment() = ConfirmRemoveBloodSugarDialog()
   }
 }

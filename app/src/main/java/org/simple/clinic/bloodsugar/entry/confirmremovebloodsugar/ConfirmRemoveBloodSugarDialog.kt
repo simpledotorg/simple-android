@@ -5,7 +5,6 @@ import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
@@ -26,34 +25,6 @@ class ConfirmRemoveBloodSugarDialog : BaseDialog<
     ConfirmRemoveBloodSugarEvent,
     ConfirmRemoveBloodSugarEffect,
     Nothing>(), ConfirmRemoveBloodSugarUiActions {
-
-  companion object {
-    private const val KEY_BLOOD_SUGAR_UUID = "bloodSugarMeasurementUuid"
-
-    fun show(bloodSugarMeasurementUuid: UUID, fragmentManager: FragmentManager) {
-      val fragmentTag = "fragment_confirm_remove_blood_sugar"
-
-      val existingFragment = fragmentManager.findFragmentByTag(fragmentTag)
-
-      if (existingFragment != null) {
-        fragmentManager
-            .beginTransaction()
-            .remove(existingFragment)
-            .commitNowAllowingStateLoss()
-      }
-
-      val args = Bundle()
-      args.putSerializable(KEY_BLOOD_SUGAR_UUID, bloodSugarMeasurementUuid)
-
-      val fragment = ConfirmRemoveBloodSugarDialog()
-      fragment.arguments = args
-
-      fragmentManager
-          .beginTransaction()
-          .add(fragment, fragmentTag)
-          .commitNowAllowingStateLoss()
-    }
-  }
 
   @Inject
   lateinit var effectHandler: ConfirmRemoveBloodSugarEffectHandler.Factory

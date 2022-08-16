@@ -16,6 +16,7 @@
 - Bump fragment to v1.5.2
 - Bump threeten-extra to v1.7.1
 - Bump AppCompat to v1.5.0
+- Migrate `LoggedOutOfDeviceDialog` to `BaseDialog`
 
 ## 2022-08-08-8359
 

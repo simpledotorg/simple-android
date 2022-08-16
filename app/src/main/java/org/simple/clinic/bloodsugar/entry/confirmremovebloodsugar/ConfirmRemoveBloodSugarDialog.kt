@@ -14,10 +14,8 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseDialog
-import org.simple.clinic.util.unsafeLazy
 import java.util.UUID
 import javax.inject.Inject
 
@@ -62,17 +60,6 @@ class ConfirmRemoveBloodSugarDialog : BaseDialog<
 
   private val events = PublishSubject.create<ConfirmRemoveBloodSugarEvent>()
 
-  private val delegate by unsafeLazy {
-    val bloodSugarMeasurementUuid = requireArguments().getSerializable(KEY_BLOOD_SUGAR_UUID) as UUID
-
-    MobiusDelegate.forActivity(
-        events = events.ofType(),
-        defaultModel = ConfirmRemoveBloodSugarModel.create(bloodSugarMeasurementUuid),
-        update = ConfirmRemoveBloodSugarUpdate(),
-        effectHandler = effectHandler.create(this).build()
-    )
-  }
-
   private var removeBloodSugarListener: RemoveBloodSugarListener? = null
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?): Nothing? {
@@ -103,11 +90,6 @@ class ConfirmRemoveBloodSugarDialog : BaseDialog<
     super.onDetach()
   }
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    delegate.onRestoreInstanceState(savedInstanceState)
-  }
-
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     return MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_Simple_MaterialAlertDialog_Destructive)
         .setTitle(R.string.bloodsugarentry_remove_blood_sugar_title)
@@ -117,21 +99,6 @@ class ConfirmRemoveBloodSugarDialog : BaseDialog<
         }
         .setNegativeButton(R.string.bloodsugarentry_remove_blood_sugar_cancel, null)
         .create()
-  }
-
-  override fun onStart() {
-    super.onStart()
-    delegate.start()
-  }
-
-  override fun onStop() {
-    delegate.stop()
-    super.onStop()
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    delegate.onSaveInstanceState(outState)
-    super.onSaveInstanceState(outState)
   }
 
   override fun closeDialog() {

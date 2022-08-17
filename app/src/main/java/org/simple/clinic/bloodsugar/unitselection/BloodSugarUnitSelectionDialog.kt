@@ -1,6 +1,5 @@
 package org.simple.clinic.bloodsugar.unitselection
 
-import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
@@ -17,17 +16,14 @@ import com.jakewharton.rxbinding3.widget.checkedChanges
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
-import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.databinding.DialogBloodsugarSelectionunitBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseDialog
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import javax.inject.Inject
 
@@ -100,14 +96,6 @@ class BloodSugarUnitSelectionDialog : BaseDialog<
   }
 
   private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
-  private val dialogEvents = PublishSubject.create<BloodSugarUnitSelectionEvent>()
-  private val events by unsafeLazy {
-    val doneButton = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
-    Observable.mergeArray(
-        doneClicks(doneButton),
-        radioButtonClicks()
-    ).takeUntil(screenDestroys)
-  }
 
   private fun doneClicks(doneButton: Button): Observable<BloodSugarUnitSelectionEvent> {
 
@@ -124,29 +112,9 @@ class BloodSugarUnitSelectionDialog : BaseDialog<
         }
   }
 
-  private val delegate: MobiusDelegate<BloodSugarUnitSelectionModel, BloodSugarUnitSelectionEvent, BloodSugarUnitSelectionEffect> by unsafeLazy {
-    val bloodSugarUnitPreference = requireArguments().getSerializable(KEY_UNIT_PREF)
-
-    MobiusDelegate.forActivity(
-        events = dialogEvents.ofType(),
-        defaultModel = BloodSugarUnitSelectionModel.create(bloodSugarUnitPreference = bloodSugarUnitPreference as BloodSugarUnitPreference),
-        update = BloodSugarUnitSelectionUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        init = BloodSugarUnitSelectionInit()
-    )
-  }
-
-  @SuppressLint("InflateParams")
   override fun onAttach(context: Context) {
     super.onAttach(context)
-    layout = LayoutInflater.from(context).inflate(R.layout.dialog_bloodsugar_selectionunit, null)
-    binding = DialogBloodsugarSelectionunitBinding.bind(layout)
     context.injector<BloodSugarUnitSelectionDialogInjector>().inject(this)
-  }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    delegate.onRestoreInstanceState(savedInstanceState)
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -167,34 +135,6 @@ class BloodSugarUnitSelectionDialog : BaseDialog<
             else -> SaveBloodSugarUnitPreference(BloodSugarUnitPreference.Mg)
           }
         }
-  }
-
-  override fun onStart() {
-    super.onStart()
-    delegate.start()
-  }
-
-  override fun onStop() {
-    super.onStop()
-    delegate.stop()
-  }
-
-  override fun onDetach() {
-    super.onDetach()
-    binding = null
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    delegate.onSaveInstanceState(outState)
-    super.onSaveInstanceState(outState)
-  }
-
-  @SuppressLint("CheckResult")
-  override fun onResume() {
-    super.onResume()
-    events
-        .takeUntil(screenDestroys)
-        .subscribe(dialogEvents::onNext)
   }
 
   override fun onDestroyView() {

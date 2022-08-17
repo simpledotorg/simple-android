@@ -2,20 +2,18 @@ package org.simple.clinic.bloodsugar.unitselection
 
 import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.checkedChanges
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
@@ -36,6 +34,8 @@ class BloodSugarUnitSelectionDialog : BaseDialog<
 
   private val bloodSugarUnitGroup
     get() = binding.bloodSugarUnitGroup
+
+  private val hotEvents: PublishSubject<BloodSugarUnitSelectionEvent> = PublishSubject.create()
 
   @Inject
   lateinit var effectHandlerFactory: BloodSugarUnitSelectionEffectHandler.Factory
@@ -84,31 +84,7 @@ class BloodSugarUnitSelectionDialog : BaseDialog<
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<Nothing>) = effectHandlerFactory.create(this).build()
 
-  override fun events(): Observable<BloodSugarUnitSelectionEvent> {
-    val doneButton = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
-
-    return Observable
-        .merge<BloodSugarUnitSelectionEvent?> {
-          doneClicks(doneButton)
-          radioButtonClicks()
-        }
-        .cast()
-  }
-
-  private fun doneClicks(doneButton: Button): Observable<BloodSugarUnitSelectionEvent> {
-
-    val radioIdToBloodSugarUnits = mapOf(
-        R.id.bloodSugarUnitMg to BloodSugarUnitPreference.Mg,
-        R.id.bloodSugarUnitMmol to BloodSugarUnitPreference.Mmol
-    )
-
-    return doneButton
-        .clicks()
-        .map {
-          val bloodSugarUnitSelectionValue = radioIdToBloodSugarUnits.getValue(bloodSugarUnitGroup.checkedRadioButtonId)
-          DoneClicked(bloodSugarUnitSelection = bloodSugarUnitSelectionValue)
-        }
-  }
+  override fun events(): Observable<BloodSugarUnitSelectionEvent> = hotEvents.cast()
 
   override fun onAttach(context: Context) {
     super.onAttach(context)
@@ -116,9 +92,17 @@ class BloodSugarUnitSelectionDialog : BaseDialog<
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    val radioIdToBloodSugarUnits = mapOf(
+        R.id.bloodSugarUnitMg to BloodSugarUnitPreference.Mg,
+        R.id.bloodSugarUnitMmol to BloodSugarUnitPreference.Mmol
+    )
+
     return MaterialAlertDialogBuilder(requireContext())
         .setTitle(R.string.blood_sugar_unit_selection_choose)
-        .setPositiveButton(R.string.blood_sugar_unit_selection_done, null)
+        .setPositiveButton(R.string.blood_sugar_unit_selection_done) { _, _ ->
+          val bloodSugarUnitSelectionValue = radioIdToBloodSugarUnits.getValue(bloodSugarUnitGroup.checkedRadioButtonId)
+          hotEvents.onNext(DoneClicked(bloodSugarUnitSelectionValue))
+        }
         .create()
   }
 

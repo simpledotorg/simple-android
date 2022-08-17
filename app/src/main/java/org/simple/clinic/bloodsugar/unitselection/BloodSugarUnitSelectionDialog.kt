@@ -16,7 +16,6 @@ import com.jakewharton.rxbinding3.widget.checkedChanges
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
-import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
@@ -25,7 +24,6 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseDialog
-import org.simple.clinic.widgets.ScreenDestroyed
 import javax.inject.Inject
 
 class BloodSugarUnitSelectionDialog : BaseDialog<
@@ -35,8 +33,6 @@ class BloodSugarUnitSelectionDialog : BaseDialog<
     BloodSugarUnitSelectionEvent,
     BloodSugarUnitSelectionEffect,
     Nothing>(), BloodSugarUnitSelectionUiActions {
-
-  private lateinit var layout: View
 
   private val bloodSugarUnitGroup
     get() = binding.bloodSugarUnitGroup
@@ -99,8 +95,6 @@ class BloodSugarUnitSelectionDialog : BaseDialog<
         .cast()
   }
 
-  private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
-
   private fun doneClicks(doneButton: Button): Observable<BloodSugarUnitSelectionEvent> {
 
     val radioIdToBloodSugarUnits = mapOf(
@@ -144,11 +138,6 @@ class BloodSugarUnitSelectionDialog : BaseDialog<
             else -> SaveBloodSugarUnitPreference(BloodSugarUnitPreference.Mg)
           }
         }
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    screenDestroys.onNext(ScreenDestroyed())
   }
 
   override fun closeDialog() {

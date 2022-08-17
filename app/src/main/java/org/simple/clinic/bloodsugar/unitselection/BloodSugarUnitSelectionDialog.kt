@@ -124,9 +124,14 @@ class BloodSugarUnitSelectionDialog : BaseDialog<
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     return MaterialAlertDialogBuilder(requireContext())
         .setTitle(R.string.blood_sugar_unit_selection_choose)
-        .setView(layout)
         .setPositiveButton(R.string.blood_sugar_unit_selection_done, null)
         .create()
+  }
+
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    val view = super.onCreateView(inflater, container, savedInstanceState)
+    (dialog as? AlertDialog)?.setView(view)
+    return view
   }
 
   private fun radioButtonClicks(): Observable<BloodSugarUnitSelectionEvent> {

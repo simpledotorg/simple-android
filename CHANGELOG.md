@@ -19,6 +19,7 @@
 - Migrate `LoggedOutOfDeviceDialog` to `BaseDialog`
 - Bump flipper to v0.157.0
 - Fix app crashing when overdue search screen is opened
+- Bump AGP to v7.2.2
 
 ## 2022-08-08-8359
 

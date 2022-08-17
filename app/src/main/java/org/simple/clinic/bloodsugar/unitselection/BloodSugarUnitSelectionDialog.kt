@@ -22,6 +22,7 @@ import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.databinding.DialogBloodsugarSelectionunitBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseDialog
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -42,6 +43,9 @@ class BloodSugarUnitSelectionDialog : BaseDialog<
 
   @Inject
   lateinit var effectHandlerFactory: BloodSugarUnitSelectionEffectHandler.Factory
+
+  @Inject
+  lateinit var router: Router
 
   companion object {
 
@@ -143,7 +147,7 @@ class BloodSugarUnitSelectionDialog : BaseDialog<
   }
 
   override fun closeDialog() {
-    dismiss()
+    router.pop()
   }
 
   override fun prefillBloodSugarUnitSelection(blodSugarUnitPreference: BloodSugarUnitPreference) {

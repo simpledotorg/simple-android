@@ -4,6 +4,15 @@
 
 ### Internal
 
+- Bump AppCompat to v1.5.0
+- Migrate `LoggedOutOfDeviceDialog` to `BaseDialog`
+- Bump flipper to v0.157.0
+- Bump AGP to v7.2.2
+
+## 2022-08-15-8368
+
+### Internal
+
 - Migrate `BloodSugarEntrySheet` to use `BaseBottomSheet`
 - Migrate `UpdatePhoneNumberDialog` to `BaseDialog`
 - Bump dagger to v2.43.2
@@ -15,11 +24,7 @@
   - Bump compile and target SDK to 32
 - Bump fragment to v1.5.2
 - Bump threeten-extra to v1.7.1
-- Bump AppCompat to v1.5.0
-- Migrate `LoggedOutOfDeviceDialog` to `BaseDialog`
-- Bump flipper to v0.157.0
 - Fix app crashing when overdue search screen is opened
-- Bump AGP to v7.2.2
 
 ## 2022-08-08-8359
 

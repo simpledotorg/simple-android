@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE
+import androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
@@ -60,11 +63,22 @@ class ConfirmRemoveBloodSugarDialog : BaseDialog<
     return MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_Simple_MaterialAlertDialog_Destructive)
         .setTitle(R.string.bloodsugarentry_remove_blood_sugar_title)
         .setMessage(R.string.bloodsugarentry_remove_blood_sugar_message)
-        .setPositiveButton(R.string.bloodsugarentry_remove_blood_sugar_confirm) { _, _ ->
-          events.onNext(RemoveBloodSugarClicked)
-        }
+        .setPositiveButton(R.string.bloodsugarentry_remove_blood_sugar_confirm, null)
         .setNegativeButton(R.string.bloodsugarentry_remove_blood_sugar_cancel, null)
         .create()
+  }
+
+  override fun onResume() {
+    super.onResume()
+    val alertDialog = (dialog as AlertDialog)
+
+    alertDialog.getButton(BUTTON_POSITIVE).setOnClickListener {
+      events.onNext(RemoveBloodSugarClicked)
+    }
+
+    alertDialog.getButton(BUTTON_NEGATIVE).setOnClickListener {
+      router.pop()
+    }
   }
 
   override fun closeDialog() {

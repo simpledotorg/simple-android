@@ -466,7 +466,7 @@ class BloodSugarEntrySheet : BaseBottomSheet<
   }
 
   override fun showBloodSugarUnitSelectionDialog(bloodSugarUnitPreference: BloodSugarUnitPreference) {
-    BloodSugarUnitSelectionDialog.show(childFragmentManager, bloodSugarUnitPreference)
+    router.push(BloodSugarUnitSelectionDialog.Key(bloodSugarUnitPreference))
   }
 
   override fun showRemoveButton() {

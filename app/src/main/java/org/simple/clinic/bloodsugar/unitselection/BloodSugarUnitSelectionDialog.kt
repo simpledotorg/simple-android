@@ -1,42 +1,47 @@
 package org.simple.clinic.bloodsugar.unitselection
 
-import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
+import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.checkedChanges
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.databinding.DialogBloodsugarSelectionunitBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ScreenDestroyed
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseDialog
 import javax.inject.Inject
 
-class BloodSugarUnitSelectionDialog : AppCompatDialogFragment(), BloodSugarUnitSelectionUiActions {
-
-  private lateinit var layout: View
-
-  private var binding: DialogBloodsugarSelectionunitBinding? = null
+class BloodSugarUnitSelectionDialog : BaseDialog<
+    BloodSugarUnitSelectionDialog.Key,
+    DialogBloodsugarSelectionunitBinding,
+    BloodSugarUnitSelectionModel,
+    BloodSugarUnitSelectionEvent,
+    BloodSugarUnitSelectionEffect,
+    Nothing>(), BloodSugarUnitSelectionUiActions {
 
   private val bloodSugarUnitGroup
-    get() = binding!!.bloodSugarUnitGroup
+    get() = binding.bloodSugarUnitGroup
+
+  private val hotEvents: PublishSubject<BloodSugarUnitSelectionEvent> = PublishSubject.create()
 
   @Inject
   lateinit var effectHandlerFactory: BloodSugarUnitSelectionEffectHandler.Factory
+
+  @Inject
+  lateinit var router: Router
 
   companion object {
 
@@ -66,62 +71,45 @@ class BloodSugarUnitSelectionDialog : AppCompatDialogFragment(), BloodSugarUnitS
     }
   }
 
-  private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
-  private val dialogEvents = PublishSubject.create<BloodSugarUnitSelectionEvent>()
-  private val events by unsafeLazy {
-    val doneButton = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
-    Observable.mergeArray(
-        doneClicks(doneButton),
-        radioButtonClicks()
-    ).takeUntil(screenDestroys)
+  override fun bindView(
+      layoutInflater: LayoutInflater,
+      container: ViewGroup?
+  ) = DialogBloodsugarSelectionunitBinding.inflate(layoutInflater, container, false)
+
+  override fun defaultModel() = BloodSugarUnitSelectionModel.create(screenKey.bloodSugarUnitPreference)
+
+  override fun createUpdate() = BloodSugarUnitSelectionUpdate()
+
+  override fun createInit() = BloodSugarUnitSelectionInit()
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Nothing>) = effectHandlerFactory.create(this).build()
+
+  override fun events(): Observable<BloodSugarUnitSelectionEvent> = hotEvents.cast()
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<BloodSugarUnitSelectionDialogInjector>().inject(this)
   }
 
-  private fun doneClicks(doneButton: Button): Observable<BloodSugarUnitSelectionEvent> {
-
+  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     val radioIdToBloodSugarUnits = mapOf(
         R.id.bloodSugarUnitMg to BloodSugarUnitPreference.Mg,
         R.id.bloodSugarUnitMmol to BloodSugarUnitPreference.Mmol
     )
 
-    return doneButton
-        .clicks()
-        .map {
-          val bloodSugarUnitSelectionValue = radioIdToBloodSugarUnits.getValue(bloodSugarUnitGroup.checkedRadioButtonId)
-          DoneClicked(bloodSugarUnitSelection = bloodSugarUnitSelectionValue)
-        }
-  }
-
-  private val delegate: MobiusDelegate<BloodSugarUnitSelectionModel, BloodSugarUnitSelectionEvent, BloodSugarUnitSelectionEffect> by unsafeLazy {
-    val bloodSugarUnitPreference = requireArguments().getSerializable(KEY_UNIT_PREF)
-
-    MobiusDelegate.forActivity(
-        events = dialogEvents.ofType(),
-        defaultModel = BloodSugarUnitSelectionModel.create(bloodSugarUnitPreference = bloodSugarUnitPreference as BloodSugarUnitPreference),
-        update = BloodSugarUnitSelectionUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        init = BloodSugarUnitSelectionInit()
-    )
-  }
-
-  @SuppressLint("InflateParams")
-  override fun onAttach(context: Context) {
-    super.onAttach(context)
-    layout = LayoutInflater.from(context).inflate(R.layout.dialog_bloodsugar_selectionunit, null)
-    binding = DialogBloodsugarSelectionunitBinding.bind(layout)
-    context.injector<BloodSugarUnitSelectionDialogInjector>().inject(this)
-  }
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    delegate.onRestoreInstanceState(savedInstanceState)
-  }
-
-  override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     return MaterialAlertDialogBuilder(requireContext())
         .setTitle(R.string.blood_sugar_unit_selection_choose)
-        .setView(layout)
-        .setPositiveButton(R.string.blood_sugar_unit_selection_done, null)
+        .setPositiveButton(R.string.blood_sugar_unit_selection_done) { _, _ ->
+          val bloodSugarUnitSelectionValue = radioIdToBloodSugarUnits.getValue(bloodSugarUnitGroup.checkedRadioButtonId)
+          hotEvents.onNext(DoneClicked(bloodSugarUnitSelectionValue))
+        }
         .create()
+  }
+
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    val view = super.onCreateView(inflater, container, savedInstanceState)
+    (dialog as? AlertDialog)?.setView(view)
+    return view
   }
 
   private fun radioButtonClicks(): Observable<BloodSugarUnitSelectionEvent> {
@@ -136,41 +124,8 @@ class BloodSugarUnitSelectionDialog : AppCompatDialogFragment(), BloodSugarUnitS
         }
   }
 
-  override fun onStart() {
-    super.onStart()
-    delegate.start()
-  }
-
-  override fun onStop() {
-    super.onStop()
-    delegate.stop()
-  }
-
-  override fun onDetach() {
-    super.onDetach()
-    binding = null
-  }
-
-  override fun onSaveInstanceState(outState: Bundle) {
-    delegate.onSaveInstanceState(outState)
-    super.onSaveInstanceState(outState)
-  }
-
-  @SuppressLint("CheckResult")
-  override fun onResume() {
-    super.onResume()
-    events
-        .takeUntil(screenDestroys)
-        .subscribe(dialogEvents::onNext)
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    screenDestroys.onNext(ScreenDestroyed())
-  }
-
   override fun closeDialog() {
-    dismiss()
+    router.pop()
   }
 
   override fun prefillBloodSugarUnitSelection(blodSugarUnitPreference: BloodSugarUnitPreference) {
@@ -182,5 +137,15 @@ class BloodSugarUnitSelectionDialog : AppCompatDialogFragment(), BloodSugarUnitS
 
   interface BloodSugarUnitSelectionDialogInjector {
     fun inject(target: BloodSugarUnitSelectionDialog)
+  }
+
+  @Parcelize
+  data class Key(
+      val bloodSugarUnitPreference: BloodSugarUnitPreference,
+      override val type: ScreenType = ScreenType.Modal,
+      override val analyticsName: String = "Blood Sugar Unit Selection Dialog"
+  ) : ScreenKey() {
+
+    override fun instantiateFragment() = BloodSugarUnitSelectionDialog()
   }
 }

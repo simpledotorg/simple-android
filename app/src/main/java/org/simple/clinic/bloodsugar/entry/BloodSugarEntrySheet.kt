@@ -1,6 +1,8 @@
 package org.simple.clinic.bloodsugar.entry
 
 import android.content.Context
+import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +34,6 @@ import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet.ScreenType.DATE_E
 import org.simple.clinic.bloodsugar.entry.OpenAs.New
 import org.simple.clinic.bloodsugar.entry.OpenAs.Update
 import org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar.ConfirmRemoveBloodSugarDialog
-import org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar.ConfirmRemoveBloodSugarDialog.RemoveBloodSugarListener
 import org.simple.clinic.bloodsugar.unitselection.BloodSugarUnitSelectionDialog
 import org.simple.clinic.databinding.SheetBloodSugarEntryBinding
 import org.simple.clinic.di.DateFormatter
@@ -43,9 +44,11 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
+import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.setTextAndCursor
@@ -64,7 +67,7 @@ class BloodSugarEntrySheet : BaseBottomSheet<
     BloodSugarEntryModel,
     BloodSugarEntryEvent,
     BloodSugarEntryEffect,
-    Nothing>(), BloodSugarEntryUi, RemoveBloodSugarListener {
+    Nothing>(), BloodSugarEntryUi {
 
   enum class ScreenType {
     BLOOD_SUGAR_ENTRY,
@@ -202,6 +205,15 @@ class BloodSugarEntrySheet : BaseBottomSheet<
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    setFragmentResultListener(RemoveBloodSugar) { _, result ->
+      if (result is Succeeded) {
+        onBloodSugarRemoved()
+      }
+    }
   }
 
   private fun bloodSugarTextChanges() = bloodSugarReadingEditText.textChanges()
@@ -486,11 +498,11 @@ class BloodSugarEntrySheet : BaseBottomSheet<
   }
 
   override fun showConfirmRemoveBloodSugarDialog(bloodSugarMeasurementUuid: UUID) {
-    router.push(ConfirmRemoveBloodSugarDialog.Key(bloodSugarMeasurementUuid))
+    router.pushExpectingResult(RemoveBloodSugar, ConfirmRemoveBloodSugarDialog.Key(bloodSugarMeasurementUuid))
   }
 
-  override fun onBloodSugarRemoved() {
-    router.popUntilInclusive(screenKey)
+  private fun onBloodSugarRemoved() {
+    router.pop()
   }
 
   private fun showBloodSugarErrorMessage(message: String) {
@@ -535,4 +547,7 @@ class BloodSugarEntrySheet : BaseBottomSheet<
   interface Injector {
     fun inject(target: BloodSugarEntrySheet)
   }
+
+  @Parcelize
+  object RemoveBloodSugar : Parcelable
 }

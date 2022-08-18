@@ -3,6 +3,7 @@ package org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -13,7 +14,9 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.di.injector
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseDialog
 import java.util.UUID
 import javax.inject.Inject
@@ -29,9 +32,10 @@ class ConfirmRemoveBloodSugarDialog : BaseDialog<
   @Inject
   lateinit var effectHandler: ConfirmRemoveBloodSugarEffectHandler.Factory
 
-  private val events = PublishSubject.create<ConfirmRemoveBloodSugarEvent>()
+  @Inject
+  lateinit var router: Router
 
-  private var removeBloodSugarListener: RemoveBloodSugarListener? = null
+  private val events = PublishSubject.create<ConfirmRemoveBloodSugarEvent>()
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?): Nothing? {
     return null
@@ -50,15 +54,6 @@ class ConfirmRemoveBloodSugarDialog : BaseDialog<
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<ConfirmRemoveBloodSugarDialogInjector>().inject(this)
-    removeBloodSugarListener = parentFragment as? RemoveBloodSugarListener
-    if (removeBloodSugarListener == null) {
-      throw ClassCastException("$context must implement RemoveBloodSugarListener")
-    }
-  }
-
-  override fun onDetach() {
-    removeBloodSugarListener = null
-    super.onDetach()
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -73,12 +68,7 @@ class ConfirmRemoveBloodSugarDialog : BaseDialog<
   }
 
   override fun closeDialog() {
-    // TODO: Use pop with result once migrated to navigation v2
-    removeBloodSugarListener?.onBloodSugarRemoved()
-  }
-
-  interface RemoveBloodSugarListener {
-    fun onBloodSugarRemoved()
+    router.popWithResult(Succeeded(BloodSugarRemoved))
   }
 
   @Parcelize
@@ -90,4 +80,7 @@ class ConfirmRemoveBloodSugarDialog : BaseDialog<
 
     override fun instantiateFragment() = ConfirmRemoveBloodSugarDialog()
   }
+
+  @Parcelize
+  object BloodSugarRemoved : Parcelable
 }

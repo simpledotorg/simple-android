@@ -17,11 +17,13 @@ import com.jakewharton.rxbinding3.widget.checkedChanges
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.databinding.DialogBloodsugarSelectionunitBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import javax.inject.Inject
@@ -182,5 +184,15 @@ class BloodSugarUnitSelectionDialog : AppCompatDialogFragment(), BloodSugarUnitS
 
   interface BloodSugarUnitSelectionDialogInjector {
     fun inject(target: BloodSugarUnitSelectionDialog)
+  }
+
+  @Parcelize
+  data class Key(
+      private val bloodSugarUnitPreference: BloodSugarUnitPreference,
+      override val type: ScreenType = ScreenType.Modal,
+      override val analyticsName: String = "Blood Sugar Unit Selection Dialog"
+  ) : ScreenKey() {
+
+    override fun instantiateFragment() = BloodSugarUnitSelectionDialog()
   }
 }

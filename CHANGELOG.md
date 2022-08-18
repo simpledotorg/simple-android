@@ -9,6 +9,7 @@
 - Bump flipper to v0.157.0
 - Bump AGP to v7.2.2
 - Initialise `ViewModel` in `BaseDialog#onCreate`
+- Migrate `BloodSugarUnitSelectionDialog` to `BaseDialog`
 
 ## 2022-08-15-8368
 

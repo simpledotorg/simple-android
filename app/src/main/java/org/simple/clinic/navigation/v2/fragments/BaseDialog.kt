@@ -65,23 +65,11 @@ abstract class BaseDialog<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, 
 
   open fun additionalEventSources(): List<EventSource<E>> = emptyList()
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-    _binding = bindView(inflater, container)
-
-    return _binding?.root
-  }
-
-  override fun onStart() {
-    super.onStart()
-    dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-  }
-
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
     val startModel = savedInstanceState?.getParcelable(KEY_MODEL) ?: defaultModel()
 
-    viewModel = ViewModelProvider(viewModelStore, object : ViewModelProvider.Factory {
+    viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
       private fun loop(viewEffectsConsumer: Consumer<V>) = RxMobius
           .loop(createUpdate(), createEffectHandler(viewEffectsConsumer))
           .eventSources(additionalEventSources())
@@ -97,6 +85,22 @@ abstract class BaseDialog<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, 
     }).get()
 
     eventsDisposable.add(events().subscribe { viewModel.dispatchEvent(it!!) })
+
+  }
+
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    _binding = bindView(inflater, container)
+
+    return _binding?.root
+  }
+
+  override fun onStart() {
+    super.onStart()
+    dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
 
     val uiRenderer = uiRenderer()
     viewModel.models.observe(viewLifecycleOwner, uiRenderer::render)

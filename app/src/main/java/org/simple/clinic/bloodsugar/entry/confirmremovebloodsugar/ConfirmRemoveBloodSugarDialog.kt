@@ -3,21 +3,32 @@ package org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatDialogFragment
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import io.reactivex.rxkotlin.ofType
+import com.spotify.mobius.functions.Consumer
+import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseDialog
 import org.simple.clinic.util.unsafeLazy
 import java.util.UUID
 import javax.inject.Inject
 
-class ConfirmRemoveBloodSugarDialog : AppCompatDialogFragment(), ConfirmRemoveBloodSugarUiActions {
+class ConfirmRemoveBloodSugarDialog : BaseDialog<
+    ConfirmRemoveBloodSugarDialog.Key,
+    Nothing,
+    ConfirmRemoveBloodSugarModel,
+    ConfirmRemoveBloodSugarEvent,
+    ConfirmRemoveBloodSugarEffect,
+    Nothing>(), ConfirmRemoveBloodSugarUiActions {
+
   companion object {
     private const val KEY_BLOOD_SUGAR_UUID = "bloodSugarMeasurementUuid"
 
@@ -63,6 +74,20 @@ class ConfirmRemoveBloodSugarDialog : AppCompatDialogFragment(), ConfirmRemoveBl
   }
 
   private var removeBloodSugarListener: RemoveBloodSugarListener? = null
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?): Nothing? {
+    return null
+  }
+
+  override fun defaultModel() = ConfirmRemoveBloodSugarModel.create(screenKey.bloodSugarUuid)
+
+  override fun events(): Observable<ConfirmRemoveBloodSugarEvent> = events.cast()
+
+  override fun createUpdate() = ConfirmRemoveBloodSugarUpdate()
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Nothing>) = effectHandler
+      .create(this)
+      .build()
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

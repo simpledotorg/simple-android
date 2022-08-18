@@ -10,6 +10,7 @@
 - Bump AGP to v7.2.2
 - Initialise `ViewModel` in `BaseDialog#onCreate`
 - Migrate `BloodSugarUnitSelectionDialog` to `BaseDialog`
+- Migrate `ConfirmRemoveBloodSugarDialog` to `BaseDialog`
 
 ## 2022-08-15-8368
 

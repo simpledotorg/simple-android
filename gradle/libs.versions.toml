@@ -17,7 +17,7 @@ ktlint = "0.36.0"
 
 lint = "30.2.2"
 
-mobius = "1.5.8"
+mobius = "1.5.9"
 
 moshi = "1.13.0"
 

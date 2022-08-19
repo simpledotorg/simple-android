@@ -12,6 +12,7 @@
 - Migrate `BloodSugarUnitSelectionDialog` to `BaseDialog`
 - Migrate `ConfirmRemoveBloodSugarDialog` to `BaseDialog`
 - Bump flipper to v0.159.0
+- Bump Mobius to v1.5.9
 
 ## 2022-08-15-8368
 

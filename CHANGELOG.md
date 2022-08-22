@@ -4,6 +4,14 @@
 
 ### Internal
 
+- Bump flipper to v0.161.0
+- Bump mixpanel to v7.0.0
+- Bump mlkit barcode scanning to v18.1.0
+
+## 2022-08-22-8375
+
+### Internal
+
 - Bump AppCompat to v1.5.0
 - Migrate `LoggedOutOfDeviceDialog` to `BaseDialog`
 - Bump flipper to v0.157.0
@@ -14,9 +22,6 @@
 - Bump flipper to v0.159.0
 - Bump Mobius to v1.5.9
 - Bump Sentry to v6.4.0
-- Bump flipper to v0.161.0
-- Bump mixpanel to v7.0.0
-- Bump mlkit barcode scanning to v18.1.0
 
 ## 2022-08-15-8368
 

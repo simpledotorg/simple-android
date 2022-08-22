@@ -14,6 +14,7 @@
 - Bump flipper to v0.159.0
 - Bump Mobius to v1.5.9
 - Bump Sentry to v6.4.0
+- Bump flipper to v0.161.0
 
 ## 2022-08-15-8368
 

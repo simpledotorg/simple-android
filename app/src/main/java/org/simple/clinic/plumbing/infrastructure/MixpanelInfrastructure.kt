@@ -13,7 +13,7 @@ class MixpanelInfrastructure @Inject constructor(
 ): Infrastructure {
 
   override fun addDetails(user: User, country: Country, deployment: Deployment) {
-    val mixpanel = MixpanelAPI.getInstance(application, BuildConfig.MIXPANEL_TOKEN)
+    val mixpanel = MixpanelAPI.getInstance(application, BuildConfig.MIXPANEL_TOKEN, false)
 
     // We are deliberately not registering the user ID here because Mixpanel has a slightly tricky
     // flow for user identification where we need to track new registrations and logins differently.

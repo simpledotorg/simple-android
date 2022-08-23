@@ -15,6 +15,10 @@
 - Bump Mobius to v1.5.9
 - Bump Sentry to v6.4.0
 
+### Fixes
+
+- Fix app crashing when clicking on Overdue download or share buttons
+
 ## 2022-08-15-8368
 
 ### Internal

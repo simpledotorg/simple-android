@@ -83,13 +83,12 @@ abstract class BaseDialog<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, 
         ) as T
       }
     }).get()
-
-    eventsDisposable.add(events().subscribe { viewModel.dispatchEvent(it!!) })
-
   }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     _binding = bindView(inflater, container)
+
+    eventsDisposable.add(events().subscribe { viewModel.dispatchEvent(it!!) })
 
     return _binding?.root
   }

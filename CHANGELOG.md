@@ -8,6 +8,10 @@
 - Bump mixpanel to v7.0.0
 - Bump mlkit barcode scanning to v18.1.0
 
+### Fixes
+
+- Fix app crashing when clicking on Overdue download or share buttons
+
 ## 2022-08-22-8375
 
 ### Internal

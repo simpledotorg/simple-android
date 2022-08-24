@@ -18,6 +18,7 @@
 ### Fixes
 
 - Fix app crashing when clicking on Overdue download or share buttons
+- Fix app crashing when patient summary add phone number dialog is shown 
 
 ## 2022-08-15-8368
 

@@ -1,6 +1,7 @@
 package org.simple.clinic.summary.addphone
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -62,9 +63,9 @@ class AddPhoneNumberDialog : BaseDialog<
       .create(this)
       .build()
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    requireContext().injector<Injector>().inject(this)
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
   }
 
   override fun onCreateView(

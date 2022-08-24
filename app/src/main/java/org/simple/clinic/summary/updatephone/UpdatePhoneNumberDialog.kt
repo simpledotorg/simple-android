@@ -80,13 +80,22 @@ class UpdatePhoneNumberDialog : BaseDialog<
     return MaterialAlertDialogBuilder(requireContext())
         .setTitle(R.string.patientsummary_updatephone_dialog_title)
         .setMessage(R.string.patientsummary_updatephone_dialog_message)
-        .setPositiveButton(R.string.patientsummary_updatephone_save) { _, _ ->
-          hotEvents.onNext(UpdatePhoneNumberSaveClicked(number = numberEditText.text?.toString().orEmpty()))
-        }
-        .setNegativeButton(R.string.patientsummary_updatephone_cancel) { _, _ ->
-          hotEvents.onNext(UpdatePhoneNumberCancelClicked)
-        }
+        .setPositiveButton(R.string.patientsummary_updatephone_save, null)
+        .setNegativeButton(R.string.patientsummary_updatephone_cancel, null)
         .create()
+  }
+
+  override fun onResume() {
+    super.onResume()
+
+    val alertDialog = (dialog as AlertDialog)
+    alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+      hotEvents.onNext(UpdatePhoneNumberSaveClicked(number = numberEditText.text?.toString().orEmpty()))
+    }
+
+    alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener {
+      hotEvents.onNext(UpdatePhoneNumberCancelClicked)
+    }
   }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

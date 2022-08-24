@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.spotify.mobius.functions.Consumer
@@ -82,11 +83,19 @@ class AddPhoneNumberDialog : BaseDialog<
     return MaterialAlertDialogBuilder(requireContext())
         .setTitle(R.string.patientsummary_addphone_dialog_title)
         .setMessage(R.string.patientsummary_addphone_dialog_message)
-        .setPositiveButton(R.string.patientsummary_addphone_save) { _, _ ->
-          hotEvents.onNext(AddPhoneNumberSaveClicked(number = phoneNumberEditText.text.toString()))
-        }
+        .setPositiveButton(R.string.patientsummary_addphone_save, null)
         .setNegativeButton(R.string.patientsummary_addphone_cancel, null)
         .create()
+  }
+
+  override fun onResume() {
+    super.onResume()
+
+    val alertDialog = (dialog as? AlertDialog)
+
+    alertDialog?.getButton(BUTTON_POSITIVE)?.setOnClickListener {
+      hotEvents.onNext(AddPhoneNumberSaveClicked(number = phoneNumberEditText.text.toString()))
+    }
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

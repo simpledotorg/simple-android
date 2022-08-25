@@ -15,11 +15,11 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithDiabetes
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithHypertension
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAHeartAttack
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDisease
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
 import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
@@ -140,15 +140,15 @@ class MedicalHistorySummaryView(
   }
 
   private fun renderMedicalHistory(medicalHistory: MedicalHistory) {
-    heartAttackQuestionView.render(HAS_HAD_A_HEART_ATTACK, medicalHistory.hasHadHeartAttack, ::answerToggled)
-    strokeQuestionView.render(HAS_HAD_A_STROKE, medicalHistory.hasHadStroke, ::answerToggled)
-    kidneyDiseaseQuestionView.render(HAS_HAD_A_KIDNEY_DISEASE, medicalHistory.hasHadKidneyDisease, ::answerToggled)
-    diabetesQuestionView.render(DIAGNOSED_WITH_DIABETES, medicalHistory.diagnosedWithDiabetes, ::answerToggled)
+    heartAttackQuestionView.render(HasHadAHeartAttack, medicalHistory.hasHadHeartAttack, ::answerToggled)
+    strokeQuestionView.render(HasHadAStroke, medicalHistory.hasHadStroke, ::answerToggled)
+    kidneyDiseaseQuestionView.render(HasHadAKidneyDisease, medicalHistory.hasHadKidneyDisease, ::answerToggled)
+    diabetesQuestionView.render(DiagnosedWithDiabetes, medicalHistory.diagnosedWithDiabetes, ::answerToggled)
   }
 
   private fun renderDiagnosis(medicalHistory: MedicalHistory) {
-    hypertensionDiagnosisView.render(DIAGNOSED_WITH_HYPERTENSION, medicalHistory.diagnosedWithHypertension, ::answerToggled)
-    diabetesDiagnosisView.render(DIAGNOSED_WITH_DIABETES, medicalHistory.diagnosedWithDiabetes, ::answerToggled)
+    hypertensionDiagnosisView.render(DiagnosedWithHypertension, medicalHistory.diagnosedWithHypertension, ::answerToggled)
+    diabetesDiagnosisView.render(DiagnosedWithDiabetes, medicalHistory.diagnosedWithDiabetes, ::answerToggled)
   }
 
   override fun showDiagnosisView() {

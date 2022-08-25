@@ -5,9 +5,9 @@ import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.medicalhistory.Answer
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithHypertension
+import org.simple.sharedTestCode.TestData
 import java.util.UUID
 
 class MedicalHistorySummaryUpdateTest {
@@ -30,13 +30,13 @@ class MedicalHistorySummaryUpdateTest {
         .create(patientUuid)
         .medicalHistoryLoaded(medicalHistory)
 
-    val updatedMedicalHistory = medicalHistory.answered(DIAGNOSED_WITH_HYPERTENSION, Answer.Yes)
+    val updatedMedicalHistory = medicalHistory.answered(DiagnosedWithHypertension, Answer.Yes)
 
     UpdateSpec(MedicalHistorySummaryUpdate())
         .given(medicalHistoryLoadedModel)
-        .whenEvent(SummaryMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, Answer.Yes))
+        .whenEvent(SummaryMedicalHistoryAnswerToggled(DiagnosedWithHypertension, Answer.Yes))
         .then(assertThatNext(
-            hasModel(medicalHistoryLoadedModel.answerToggled(DIAGNOSED_WITH_HYPERTENSION, Answer.Yes)),
+            hasModel(medicalHistoryLoadedModel.answerToggled(DiagnosedWithHypertension, Answer.Yes)),
             hasEffects(SaveUpdatedMedicalHistory(updatedMedicalHistory))
         ))
   }

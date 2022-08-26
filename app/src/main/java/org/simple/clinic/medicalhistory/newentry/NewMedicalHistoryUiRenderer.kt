@@ -1,10 +1,10 @@
 package org.simple.clinic.medicalhistory.newentry
 
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithDiabetes
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithHypertension
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAHeartAttack
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDisease
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
 import org.simple.clinic.mobius.ViewRenderer
 
 class NewMedicalHistoryUiRenderer(
@@ -17,21 +17,21 @@ class NewMedicalHistoryUiRenderer(
     }
 
     with(model.ongoingMedicalHistoryEntry) {
-      ui.renderAnswerForQuestion(HAS_HAD_A_HEART_ATTACK, hasHadHeartAttack)
-      ui.renderAnswerForQuestion(HAS_HAD_A_KIDNEY_DISEASE, hasHadKidneyDisease)
-      ui.renderAnswerForQuestion(HAS_HAD_A_STROKE, hasHadStroke)
-      ui.renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, diagnosedWithHypertension)
+      ui.renderAnswerForQuestion(HasHadAHeartAttack, hasHadHeartAttack)
+      ui.renderAnswerForQuestion(HasHadAKidneyDisease, hasHadKidneyDisease)
+      ui.renderAnswerForQuestion(HasHadAStroke, hasHadStroke)
+      ui.renderDiagnosisAnswer(DiagnosedWithHypertension, diagnosedWithHypertension)
       renderHypertensionTreatmentQuestion(model)
 
       if (model.hasLoadedCurrentFacility && model.facilityDiabetesManagementEnabled) {
         ui.showDiabetesDiagnosisView()
         ui.hideDiabetesHistorySection()
-        ui.renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, hasDiabetes)
+        ui.renderDiagnosisAnswer(DiagnosedWithDiabetes, hasDiabetes)
         renderDiabetesTreatmentQuestion(model)
       } else {
         ui.hideDiabetesDiagnosisView()
         ui.showDiabetesHistorySection()
-        ui.renderAnswerForQuestion(DIAGNOSED_WITH_DIABETES, hasDiabetes)
+        ui.renderAnswerForQuestion(DiagnosedWithDiabetes, hasDiabetes)
       }
     }
 

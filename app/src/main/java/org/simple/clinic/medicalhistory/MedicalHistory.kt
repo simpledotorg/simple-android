@@ -12,13 +12,13 @@ import androidx.room.Query
 import io.reactivex.Flowable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.medicalhistory.Answer.Unanswered
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_DIABETES_TREATMENT
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_HYPERTENSION_TREATMENT
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithDiabetes
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithHypertension
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAHeartAttack
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDisease
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreatment
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
 import java.time.Instant
@@ -65,14 +65,13 @@ data class MedicalHistory(
 
   fun answered(question: MedicalHistoryQuestion, answer: Answer): MedicalHistory {
     return when (question) {
-      DIAGNOSED_WITH_HYPERTENSION -> copy(diagnosedWithHypertension = answer)
-      HAS_HAD_A_HEART_ATTACK -> copy(hasHadHeartAttack = answer)
-      HAS_HAD_A_STROKE -> copy(hasHadStroke = answer)
-      HAS_HAD_A_KIDNEY_DISEASE -> copy(hasHadKidneyDisease = answer)
-      DIAGNOSED_WITH_DIABETES -> copy(diagnosedWithDiabetes = answer)
-      IS_ON_HYPERTENSION_TREATMENT -> copy(isOnHypertensionTreatment = answer)
-      IS_ON_DIABETES_TREATMENT -> copy(isOnDiabetesTreatment = answer)
-      else -> this
+      DiagnosedWithHypertension -> copy(diagnosedWithHypertension = answer)
+      HasHadAHeartAttack -> copy(hasHadHeartAttack = answer)
+      HasHadAStroke -> copy(hasHadStroke = answer)
+      HasHadAKidneyDisease -> copy(hasHadKidneyDisease = answer)
+      DiagnosedWithDiabetes -> copy(diagnosedWithDiabetes = answer)
+      is IsOnHypertensionTreatment -> copy(isOnHypertensionTreatment = answer)
+      IsOnDiabetesTreatment -> copy(isOnDiabetesTreatment = answer)
     }
   }
 

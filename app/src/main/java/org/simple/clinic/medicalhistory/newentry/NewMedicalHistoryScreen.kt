@@ -23,13 +23,13 @@ import org.simple.clinic.databinding.ScreenNewMedicalHistoryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_DIABETES_TREATMENT
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_HYPERTENSION_TREATMENT
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithDiabetes
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithHypertension
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAHeartAttack
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDisease
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreatment
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
 import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
 import org.simple.clinic.medicalhistory.SelectOngoingDiabetesTreatmentErrorDialog
 import org.simple.clinic.medicalhistory.SelectOngoingHypertensionTreatmentErrorDialog
@@ -154,10 +154,10 @@ class NewMedicalHistoryScreen : BaseScreen<
 
   override fun renderAnswerForQuestion(question: MedicalHistoryQuestion, answer: Answer) {
     val view = when (question) {
-      HAS_HAD_A_HEART_ATTACK -> heartAttackQuestionView
-      HAS_HAD_A_STROKE -> strokeQuestionView
-      HAS_HAD_A_KIDNEY_DISEASE -> kidneyDiseaseQuestionView
-      DIAGNOSED_WITH_DIABETES -> diabetesQuestionView
+      HasHadAHeartAttack -> heartAttackQuestionView
+      HasHadAStroke -> strokeQuestionView
+      HasHadAKidneyDisease -> kidneyDiseaseQuestionView
+      DiagnosedWithDiabetes -> diabetesQuestionView
       else -> null
     }
 
@@ -187,14 +187,14 @@ class NewMedicalHistoryScreen : BaseScreen<
 
   override fun renderDiagnosisAnswer(question: MedicalHistoryQuestion, answer: Answer) {
     val view = when (question) {
-      DIAGNOSED_WITH_HYPERTENSION -> hypertensionDiagnosis
-      DIAGNOSED_WITH_DIABETES -> diabetesDiagnosis
+      DiagnosedWithHypertension -> hypertensionDiagnosis
+      DiagnosedWithDiabetes -> diabetesDiagnosis
       else -> null
     }
 
     val label = when (question) {
-      DIAGNOSED_WITH_HYPERTENSION -> R.string.medicalhistory_diagnosis_hypertension_required
-      DIAGNOSED_WITH_DIABETES -> R.string.medicalhistory_diagnosis_diabetes_required
+      DiagnosedWithHypertension -> R.string.medicalhistory_diagnosis_hypertension_required
+      DiagnosedWithDiabetes -> R.string.medicalhistory_diagnosis_diabetes_required
       else -> question.questionRes
     }
 
@@ -212,7 +212,10 @@ class NewMedicalHistoryScreen : BaseScreen<
   }
 
   override fun showHypertensionTreatmentQuestion(answer: Answer) {
-    hypertensionDiagnosis.renderTreatmentQuestion(IS_ON_HYPERTENSION_TREATMENT, answer) { questionForView, newAnswer ->
+    hypertensionDiagnosis.renderTreatmentQuestion(
+        question = IsOnHypertensionTreatment(country.isoCountryCode),
+        answer = answer
+    ) { questionForView, newAnswer ->
       hotEvents.onNext(NewMedicalHistoryAnswerToggled(questionForView, newAnswer))
     }
 
@@ -225,7 +228,7 @@ class NewMedicalHistoryScreen : BaseScreen<
   }
 
   override fun showDiabetesTreatmentQuestion(answer: Answer) {
-    diabetesDiagnosis.renderTreatmentQuestion(IS_ON_DIABETES_TREATMENT, answer) { questionForView, newAnswer ->
+    diabetesDiagnosis.renderTreatmentQuestion(IsOnDiabetesTreatment, answer) { questionForView, newAnswer ->
       hotEvents.onNext(NewMedicalHistoryAnswerToggled(questionForView, newAnswer))
     }
 

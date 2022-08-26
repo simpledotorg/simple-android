@@ -4,17 +4,17 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithDiabetes
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithHypertension
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAHeartAttack
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDisease
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
+import org.simple.sharedTestCode.TestData
 import java.util.UUID
 
 class NewMedicalHistoryUiRendererTest {
@@ -41,24 +41,24 @@ class NewMedicalHistoryUiRendererTest {
   fun `the medical history answers must be rendered`() {
     // given
     val model = defaultModel
-        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
-        .answerChanged(HAS_HAD_A_HEART_ATTACK, Yes)
-        .answerChanged(HAS_HAD_A_STROKE, No)
-        .answerChanged(HAS_HAD_A_KIDNEY_DISEASE, Unanswered)
+        .answerChanged(DiagnosedWithHypertension, Unanswered)
+        .answerChanged(HasHadAHeartAttack, Yes)
+        .answerChanged(HasHadAStroke, No)
+        .answerChanged(HasHadAKidneyDisease, Unanswered)
 
     // when
     uiRenderer.render(model)
 
     // then
-    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
+    verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
     verify(ui).hideHypertensionTreatmentQuestion()
-    verify(ui).renderAnswerForQuestion(HAS_HAD_A_HEART_ATTACK, Yes)
-    verify(ui).renderAnswerForQuestion(HAS_HAD_A_STROKE, No)
-    verify(ui).renderAnswerForQuestion(HAS_HAD_A_KIDNEY_DISEASE, Unanswered)
+    verify(ui).renderAnswerForQuestion(HasHadAHeartAttack, Yes)
+    verify(ui).renderAnswerForQuestion(HasHadAStroke, No)
+    verify(ui).renderAnswerForQuestion(HasHadAKidneyDisease, Unanswered)
     verify(ui).hideNextButtonProgress()
     verify(ui).hideDiabetesDiagnosisView()
     verify(ui).showDiabetesHistorySection()
-    verify(ui).renderAnswerForQuestion(DIAGNOSED_WITH_DIABETES, Unanswered)
+    verify(ui).renderAnswerForQuestion(DiagnosedWithDiabetes, Unanswered)
     verifyNoMoreInteractions(ui)
   }
 
@@ -67,8 +67,8 @@ class NewMedicalHistoryUiRendererTest {
     // given
     val model = defaultModel
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
-        .answerChanged(DIAGNOSED_WITH_DIABETES, No)
+        .answerChanged(DiagnosedWithHypertension, Yes)
+        .answerChanged(DiagnosedWithDiabetes, No)
 
     // when
     uiRenderer.render(model)
@@ -77,8 +77,8 @@ class NewMedicalHistoryUiRendererTest {
     verifyImplicitRenders()
     verify(ui).showDiabetesDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
-    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Yes)
-    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, No)
+    verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Yes)
+    verify(ui).renderDiagnosisAnswer(DiagnosedWithDiabetes, No)
     verify(ui).hideNextButtonProgress()
     verify(ui).showHypertensionTreatmentQuestion(Unanswered)
     verify(ui).hideDiabetesTreatmentQuestion()
@@ -90,7 +90,7 @@ class NewMedicalHistoryUiRendererTest {
     // given
     val model = defaultModel
         .currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
-        .answerChanged(DIAGNOSED_WITH_DIABETES, Yes)
+        .answerChanged(DiagnosedWithDiabetes, Yes)
 
     // when
     uiRenderer.render(model)
@@ -99,9 +99,9 @@ class NewMedicalHistoryUiRendererTest {
     verifyImplicitRenders()
     verify(ui).hideDiabetesDiagnosisView()
     verify(ui).showDiabetesHistorySection()
-    verify(ui).renderAnswerForQuestion(DIAGNOSED_WITH_DIABETES, Yes)
+    verify(ui).renderAnswerForQuestion(DiagnosedWithDiabetes, Yes)
     verify(ui).hideNextButtonProgress()
-    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
+    verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
     verify(ui).hideHypertensionTreatmentQuestion()
     verifyNoMoreInteractions(ui)
   }
@@ -117,12 +117,12 @@ class NewMedicalHistoryUiRendererTest {
 
     // then
     verifyImplicitRenders()
-    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
+    verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
     verify(ui).hideHypertensionTreatmentQuestion()
     verify(ui).showNextButtonProgress()
     verify(ui).hideDiabetesDiagnosisView()
     verify(ui).showDiabetesHistorySection()
-    verify(ui).renderAnswerForQuestion(DIAGNOSED_WITH_DIABETES, Unanswered)
+    verify(ui).renderAnswerForQuestion(DiagnosedWithDiabetes, Unanswered)
     verifyNoMoreInteractions(ui)
   }
 
@@ -131,7 +131,7 @@ class NewMedicalHistoryUiRendererTest {
     // given
     val model = defaultModel
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
+        .answerChanged(DiagnosedWithHypertension, Yes)
 
     // when
     uiRenderer.render(model)
@@ -140,8 +140,8 @@ class NewMedicalHistoryUiRendererTest {
     verifyImplicitRenders()
     verify(ui).showDiabetesDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
-    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Yes)
-    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Unanswered)
+    verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Yes)
+    verify(ui).renderDiagnosisAnswer(DiagnosedWithDiabetes, Unanswered)
     verify(ui).hideNextButtonProgress()
     verify(ui).showHypertensionTreatmentQuestion(Unanswered)
     verify(ui).hideDiabetesTreatmentQuestion()
@@ -154,7 +154,7 @@ class NewMedicalHistoryUiRendererTest {
     val bangladesh = TestData.country(isoCountryCode = Country.BANGLADESH)
     val model = NewMedicalHistoryModel.default(country = bangladesh)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .answerChanged(DIAGNOSED_WITH_HYPERTENSION, Yes)
+        .answerChanged(DiagnosedWithHypertension, Yes)
 
     // when
     uiRenderer.render(model)
@@ -163,8 +163,8 @@ class NewMedicalHistoryUiRendererTest {
     verifyImplicitRenders()
     verify(ui).showDiabetesDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
-    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Yes)
-    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Unanswered)
+    verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Yes)
+    verify(ui).renderDiagnosisAnswer(DiagnosedWithDiabetes, Unanswered)
     verify(ui).hideNextButtonProgress()
     verify(ui).hideHypertensionTreatmentQuestion()
     verify(ui).hideDiabetesTreatmentQuestion()
@@ -183,9 +183,9 @@ class NewMedicalHistoryUiRendererTest {
     // then
     verifyImplicitRenders()
     verify(ui).showDiabetesDiagnosisView()
-    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
+    verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
     verify(ui).hideDiabetesHistorySection()
-    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Unanswered)
+    verify(ui).renderDiagnosisAnswer(DiagnosedWithDiabetes, Unanswered)
     verify(ui).hideNextButtonProgress()
     verify(ui).hideHypertensionTreatmentQuestion()
     verify(ui).hideDiabetesTreatmentQuestion()
@@ -197,7 +197,7 @@ class NewMedicalHistoryUiRendererTest {
     // given
     val model = defaultModel
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .answerChanged(DIAGNOSED_WITH_DIABETES, Yes)
+        .answerChanged(DiagnosedWithDiabetes, Yes)
 
     // when
     uiRenderer.render(model)
@@ -206,8 +206,8 @@ class NewMedicalHistoryUiRendererTest {
     verifyImplicitRenders()
     verify(ui).showDiabetesDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
-    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
-    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Yes)
+    verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
+    verify(ui).renderDiagnosisAnswer(DiagnosedWithDiabetes, Yes)
     verify(ui).hideNextButtonProgress()
     verify(ui).hideHypertensionTreatmentQuestion()
     verify(ui).showDiabetesTreatmentQuestion(Unanswered)
@@ -220,7 +220,7 @@ class NewMedicalHistoryUiRendererTest {
     val bangladesh = TestData.country(isoCountryCode = Country.BANGLADESH)
     val model = NewMedicalHistoryModel.default(country = bangladesh)
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .answerChanged(DIAGNOSED_WITH_DIABETES, Yes)
+        .answerChanged(DiagnosedWithDiabetes, Yes)
 
     // when
     uiRenderer.render(model)
@@ -229,8 +229,8 @@ class NewMedicalHistoryUiRendererTest {
     verifyImplicitRenders()
     verify(ui).showDiabetesDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
-    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
-    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, Yes)
+    verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
+    verify(ui).renderDiagnosisAnswer(DiagnosedWithDiabetes, Yes)
     verify(ui).hideNextButtonProgress()
     verify(ui).hideHypertensionTreatmentQuestion()
     verify(ui).hideDiabetesTreatmentQuestion()
@@ -242,7 +242,7 @@ class NewMedicalHistoryUiRendererTest {
     // given
     val model = defaultModel
         .currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
-        .answerChanged(DIAGNOSED_WITH_DIABETES, No)
+        .answerChanged(DiagnosedWithDiabetes, No)
 
     // when
     uiRenderer.render(model)
@@ -251,8 +251,8 @@ class NewMedicalHistoryUiRendererTest {
     verifyImplicitRenders()
     verify(ui).showDiabetesDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
-    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
-    verify(ui).renderDiagnosisAnswer(DIAGNOSED_WITH_DIABETES, No)
+    verify(ui).renderDiagnosisAnswer(DiagnosedWithHypertension, Unanswered)
+    verify(ui).renderDiagnosisAnswer(DiagnosedWithDiabetes, No)
     verify(ui).hideNextButtonProgress()
     verify(ui).hideHypertensionTreatmentQuestion()
     verify(ui).hideDiabetesTreatmentQuestion()
@@ -260,8 +260,8 @@ class NewMedicalHistoryUiRendererTest {
   }
 
   private fun verifyImplicitRenders() {
-    verify(ui).renderAnswerForQuestion(HAS_HAD_A_HEART_ATTACK, Unanswered)
-    verify(ui).renderAnswerForQuestion(HAS_HAD_A_STROKE, Unanswered)
-    verify(ui).renderAnswerForQuestion(HAS_HAD_A_KIDNEY_DISEASE, Unanswered)
+    verify(ui).renderAnswerForQuestion(HasHadAHeartAttack, Unanswered)
+    verify(ui).renderAnswerForQuestion(HasHadAStroke, Unanswered)
+    verify(ui).renderAnswerForQuestion(HasHadAKidneyDisease, Unanswered)
   }
 }

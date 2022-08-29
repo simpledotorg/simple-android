@@ -14,6 +14,7 @@
 ### Fixes
 
 - Fix hypertension treatment question showing Sri Lanka translation in India
+- Fix spacing in the patient summary cards
 
 ## 2022-08-25-8383
 

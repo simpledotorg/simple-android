@@ -2,6 +2,7 @@ package org.simple.clinic.home.overdue
 
 import androidx.paging.PagingData
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.overdue.download.OverdueListFileFormat
 import java.time.LocalDate
 import java.util.UUID
 
@@ -19,11 +20,31 @@ data class LoadOverdueAppointments(
     val facility: Facility
 ) : OverdueEffect()
 
-data class OpenContactPatientScreen(val patientUuid: UUID) : OverdueEffect()
+data class ScheduleDownload(val fileFormat: OverdueListFileFormat) : OverdueEffect()
 
-data class OpenPatientSummary(val patientUuid: UUID) : OverdueEffect()
+data class ToggleOverdueAppointmentSelection(val appointmentId: UUID) : OverdueEffect()
+
+object LoadSelectedOverdueAppointmentIds : OverdueEffect()
+
+object ClearSelectedOverdueAppointments : OverdueEffect()
+
+sealed class OverdueViewEffect : OverdueEffect()
+
+data class OpenContactPatientScreen(val patientUuid: UUID) : OverdueViewEffect()
+
+data class OpenPatientSummary(val patientUuid: UUID) : OverdueViewEffect()
 
 data class ShowOverdueAppointments(
-    val overdueAppointments: PagingData<OverdueAppointment>,
+    val overdueAppointmentsOld: PagingData<OverdueAppointment_Old>,
     val isDiabetesManagementEnabled: Boolean
-) : OverdueEffect()
+) : OverdueViewEffect()
+
+object ShowNoActiveNetworkConnectionDialog : OverdueViewEffect()
+
+object OpenSelectDownloadFormatDialog : OverdueViewEffect()
+
+object OpenSelectShareFormatDialog : OverdueViewEffect()
+
+object OpenSharingInProgressDialog : OverdueViewEffect()
+
+object OpenOverdueSearch : OverdueViewEffect()

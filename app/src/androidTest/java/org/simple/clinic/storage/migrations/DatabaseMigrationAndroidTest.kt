@@ -12,7 +12,7 @@ import org.junit.rules.ExpectedException
 import org.junit.rules.RuleChain
 import org.simple.clinic.MigrationTestHelperWithForeignKeyConstraints
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.assertColumnCount
 import org.simple.clinic.assertColumns
 import org.simple.clinic.assertTableDoesNotExist
@@ -24,9 +24,9 @@ import org.simple.clinic.insert
 import org.simple.clinic.integer
 import org.simple.clinic.storage.inTransaction
 import org.simple.clinic.string
-import org.simple.clinic.util.Rules
-import org.simple.clinic.util.TestUserClock
-import org.simple.clinic.util.TestUtcClock
+import org.simple.sharedTestCode.util.Rules
+import org.simple.sharedTestCode.util.TestUserClock
+import org.simple.sharedTestCode.util.TestUtcClock
 import org.simple.clinic.util.generateEncounterUuid
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.uuid

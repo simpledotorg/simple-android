@@ -6,7 +6,7 @@ import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState.Allowed
 import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState.Blocked
 import org.simple.clinic.login.LoginResult.NetworkError
@@ -20,7 +20,7 @@ import java.util.UUID
 class EnterOtpUpdateTest {
   private val updateSpec = UpdateSpec(EnterOtpUpdate(loginOtpRequiredLength = 6))
   private val user = TestData.loggedInUser(uuid = UUID.fromString("6fc16e72-39a5-4568-86db-1f8b1c0c08d3"))
-  private val loginStartedModel = EnterOtpModel.create()
+  private val loginStartedModel = EnterOtpModel.create(minOtpRetries = 3, maxOtpEntriesAllowed = 5)
       .userLoaded(user)
       .enteredOtpValid()
       .loginStarted()
@@ -34,7 +34,7 @@ class EnterOtpUpdateTest {
         .whenEvent(LoginUserCompleted(result))
         .then(
             assertThatNext(
-                hasModel(loginStartedModel.loginFailed()),
+                hasModel(loginStartedModel.loginFinished()),
                 hasEffects(FailedLoginOtpAttempt(result), ClearPin)
             )
         )
@@ -48,7 +48,7 @@ class EnterOtpUpdateTest {
         .whenEvent(LoginUserCompleted(result))
         .then(
             assertThatNext(
-                hasModel(loginStartedModel.loginFailed()),
+                hasModel(loginStartedModel.loginFinished()),
                 hasEffects(ShowNetworkError, ClearPin)
             )
         )
@@ -62,7 +62,7 @@ class EnterOtpUpdateTest {
         .whenEvent(LoginUserCompleted(result))
         .then(
             assertThatNext(
-                hasModel(loginStartedModel.loginFailed()),
+                hasModel(loginStartedModel.loginFinished()),
                 hasEffects(ShowUnexpectedError, ClearPin)
             )
         )

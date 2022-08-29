@@ -6,38 +6,11 @@ on:
     types: [ created ]
 
 jobs:
-  # reactivecircus/android-emulator-runner@v2 requires MacOS to run on
-  # https://github.com/ReactiveCircus/android-emulator-runner
-  qa_android_tests:
-    # This job only runs for pull request comments and when the comment starts with `/instrumentedTests`
-    if: |
-      github.event.issue.pull_request != '' &&
-      contains(github.event.comment.body, '/instrumentedTests') &&
-      (
-        (github.event.issue.author_association == 'OWNER') ||
-        (github.event.issue.author_association == 'COLLABORATOR') ||
-        (github.event.issue.author_association == 'CONTRIBUTOR') ||
-        (github.event.issue.author_association == 'MEMBER')
-      )
-    runs-on: [ macos-latest ]
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: set up JDK
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-
-      - name: Turn on capturing of flaky tests
-        run: cat app/src/androidTest/resources/quarantine_ci.properties > app/src/androidTest/resources/quarantine.properties
-
-      - name: QA Android Tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          script: ./gradlew connectedQaDebugAndroidTest
-
   rebase_pr:
+    concurrency:
+      group: pr-rebease-${{ github.head_ref }}
+      cancel-in-progress: true
+
     # This job only runs for pull request comments and when the comment starts with `/rebase`
     if: |
       github.event.issue.pull_request != '' &&
@@ -50,22 +23,12 @@ jobs:
       )
     runs-on: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           token: ${{ secrets.SERVICES_ACCESS_TOKEN  }}
           persist-credentials: false
           fetch-depth: 0
       - name: Rebase
-        uses: cirrus-actions/rebase@1.4
+        uses: cirrus-actions/rebase@1.7
         env:
           GITHUB_TOKEN: ${{ secrets.SERVICES_ACCESS_TOKEN  }}
-
-  qa_purge_env:
-    runs-on: [ ubuntu-latest ]
-    needs: [ qa_android_tests ]
-    steps:
-      - name: Purge QA server
-        run: |
-          curl -v --request DELETE \
-          --url https://api-qa.simple.org/qa/purge \
-          --header 'Authorization: Bearer ${{ secrets.QA_PURGE_TOKEN }}'

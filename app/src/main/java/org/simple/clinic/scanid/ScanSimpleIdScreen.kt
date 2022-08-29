@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -21,12 +22,14 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding3.widget.editorActionEvents
 import com.jakewharton.rxbinding3.widget.textChangeEvents
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenScanSimpleBinding
@@ -36,6 +39,7 @@ import org.simple.clinic.feature.Feature.IndiaNationalHealthID
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.PatientPrefillInfo
 import org.simple.clinic.patient.businessid.Identifier
@@ -68,6 +72,10 @@ class ScanSimpleIdScreen : BaseScreen<
   companion object {
     private const val RATIO_4_3_VALUE = 4.0 / 3.0
     private const val RATIO_16_9_VALUE = 16.0 / 9.0
+
+    fun readIdentifier(result: Succeeded): Identifier {
+      return (result.result as ScannedIdentifier).identifier
+    }
   }
 
   @Inject
@@ -112,6 +120,9 @@ class ScanSimpleIdScreen : BaseScreen<
   private val scanErrorTextView
     get() = binding.scanErrorTextView
 
+  private val enteredCodeContainer
+    get() = binding.enteredCodeContainer
+
   private val keyboardVisibilityDetector = KeyboardVisibilityDetector()
   private val cameraExecutor = Executors.newSingleThreadExecutor()
   private val cameraProviderFuture by unsafeLazy {
@@ -120,7 +131,7 @@ class ScanSimpleIdScreen : BaseScreen<
 
   private val qrScans = PublishSubject.create<ScanSimpleIdEvent>()
 
-  override fun defaultModel() = ScanSimpleIdModel.create()
+  override fun defaultModel() = ScanSimpleIdModel.create(screenKey.openedFrom)
 
   override fun uiRenderer() = ScanSimpleIdUiRenderer(this)
 
@@ -170,7 +181,10 @@ class ScanSimpleIdScreen : BaseScreen<
         .requireLensFacing(CameraSelector.LENS_FACING_BACK)
         .build()
 
-    val preview = Preview.Builder().build()
+    val preview = Preview.Builder()
+        .setTargetAspectRatio(screenAspectRatio)
+        .setTargetRotation(rotation)
+        .build()
 
     val analyzer = ImageAnalysis.Builder()
         .setTargetAspectRatio(screenAspectRatio)
@@ -290,6 +304,24 @@ class ScanSimpleIdScreen : BaseScreen<
     }
   }
 
+  override fun goBackToEditPatientScreen(identifier: Identifier) {
+    router.popWithResult(Succeeded(ScannedIdentifier(identifier)))
+  }
+
+  override fun showPatientWithIdentifierExistsError() {
+    Snackbar
+        .make(binding.root, R.string.scansimpleid_identfier_already_exists, Snackbar.LENGTH_SHORT)
+        .setAction(R.string.scansimpleid_error_state_snackbar_ok) {}
+        .show()
+  }
+
+  override fun showInvalidQrCodeError() {
+    Snackbar
+        .make(binding.root, R.string.scansimpleid_invalid_qr_code, Snackbar.LENGTH_SHORT)
+        .setAction(R.string.scansimpleid_error_state_snackbar_ok) {}
+        .show()
+  }
+
   override fun showEnteredCodeValidationError(failure: EnteredCodeValidationResult) {
     enteredCodeErrorText.visibility = View.VISIBLE
     val validationErrorMessage = if (failure == Empty) {
@@ -330,9 +362,24 @@ class ScanSimpleIdScreen : BaseScreen<
     scanErrorTextView.visibility = View.VISIBLE
   }
 
+  override fun hideEnteredCodeContainerView() {
+    enteredCodeContainer.visibility = View.GONE
+  }
+
+  override fun setToolBarTitle(openedFrom: OpenedFrom) {
+    toolBar.title = when (openedFrom) {
+      OpenedFrom.InstantSearchScreen, OpenedFrom.PatientsTabScreen -> resources.getString(R.string.scansimpleid_bp_passport_or_national_health_id)
+      OpenedFrom.EditPatientScreen.ToAddBpPassport -> resources.getString(R.string.scansimpleid_bp_passport_title)
+      OpenedFrom.EditPatientScreen.ToAddNHID -> resources.getString(R.string.scansimpleid_national_id_title)
+    }
+  }
+
   interface Injector {
     fun inject(target: ScanSimpleIdScreen)
   }
+
+  @Parcelize
+  data class ScannedIdentifier(val identifier: Identifier) : Parcelable
 }
 
 class KeyboardVisibilityDetector {

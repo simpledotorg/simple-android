@@ -2,15 +2,15 @@ package org.simple.clinic.di
 
 import android.app.Application
 import android.content.Context
-import android.content.pm.PackageManager
+import android.content.pm.PackageInfo
 import android.content.res.Resources
 import android.os.Vibrator
 import androidx.work.WorkManager
 import com.f2prateek.rx.preferences2.Preference
 import com.google.android.gms.common.GoogleApiAvailability
-import com.google.firebase.perf.FirebasePerformance
 import dagger.Module
 import dagger.Provides
+import org.simple.clinic.BuildConfig
 import org.simple.clinic.appconfig.AppConfigModule
 import org.simple.clinic.appconfig.AppLockModule
 import org.simple.clinic.appconfig.CountryModule
@@ -18,14 +18,18 @@ import org.simple.clinic.appupdate.AppUpdateModule
 import org.simple.clinic.di.network.HttpInterceptorsModule
 import org.simple.clinic.di.network.NetworkModule
 import org.simple.clinic.di.network.RetrofitModule
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyModule
+import org.simple.clinic.drugstockreminders.DrugStockReminderApiModule
 import org.simple.clinic.enterotp.BruteForceOtpEntryProtectionModule
 import org.simple.clinic.facility.change.FacilityChangeModule
 import org.simple.clinic.home.overdue.OverdueAppointmentsConfigModule
+import org.simple.clinic.home.overdue.search.OverdueSearchModule
 import org.simple.clinic.instantsearch.InstantSearchConfigModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.LoginOtpSmsListenerModule
 import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.patient.PatientModule
+import org.simple.clinic.plumbing.infrastructure.InfrastructureModule
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.remoteconfig.RemoteConfigModule
 import org.simple.clinic.remoteconfig.firebase.FirebaseRemoteConfigModule
@@ -67,14 +71,11 @@ import javax.inject.Named
   PatientModule::class,
   SyncIndicatorModule::class,
   OnboardingModule::class,
-  AppUpdateModule::class,
   DataSyncOnApprovalModule::class,
   SimpleVideoModule::class,
   RemoteConfigModule::class,
   SettingsModule::class,
   AppConfigModule::class,
-  HttpInterceptorsModule::class,
-  RetrofitModule::class,
   FirebaseRemoteConfigModule::class,
   LoginOtpSmsListenerModule::class,
   HttpInterceptorsModule::class,
@@ -90,7 +91,12 @@ import javax.inject.Named
   InstantSearchConfigModule::class,
   CountryModule::class,
   OverdueAppointmentsConfigModule::class,
-  BruteForceOtpEntryProtectionModule::class
+  BruteForceOtpEntryProtectionModule::class,
+  DrugFrequencyModule::class,
+  InfrastructureModule::class,
+  AppUpdateModule::class,
+  DrugStockReminderApiModule::class,
+  OverdueSearchModule::class
 ])
 class AppModule(private val appContext: Application) {
 
@@ -136,11 +142,12 @@ class AppModule(private val appContext: Application) {
 
   @Provides
   @AppScope
-  fun providesPackageManager(): PackageManager = appContext.packageManager
+  fun providesPackageInfo(appContext: Application): PackageInfo {
+    return appContext
+        .packageManager
+        .getPackageInfo(BuildConfig.APPLICATION_ID, 0)
+  }
 
   @Provides
   fun providesGoogleApiAvailability() = GoogleApiAvailability.getInstance()
-
-  @Provides
-  fun providesFirebasePerformance() = FirebasePerformance.getInstance()
 }

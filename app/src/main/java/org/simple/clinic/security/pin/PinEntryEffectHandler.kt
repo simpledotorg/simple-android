@@ -7,6 +7,8 @@ import dagger.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
+import org.simple.clinic.DEMO_FACILITY
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.security.pin.PinEntryUi.Mode.BruteForceLocked
 import org.simple.clinic.security.pin.PinEntryUi.Mode.PinEntry
 import org.simple.clinic.security.pin.PinEntryUi.Mode.Progress
@@ -16,6 +18,7 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 class PinEntryEffectHandler @AssistedInject constructor(
     private val bruteForceProtection: BruteForceProtection,
     private val schedulersProvider: SchedulersProvider,
+    private val facilityRepository: FacilityRepository,
     @Assisted private val uiActions: UiActions,
     @Assisted private val pinVerificationMethod: PinVerificationMethod
 ) {
@@ -46,7 +49,17 @@ class PinEntryEffectHandler @AssistedInject constructor(
         .addAction(ShowNetworkError::class.java, { uiActions.showNetworkError() }, schedulersProvider.ui())
         .addAction(ShowServerError::class.java, { uiActions.showServerError() }, schedulersProvider.ui())
         .addAction(ShowUnexpectedError::class.java, { uiActions.showUnexpectedError() }, schedulersProvider.ui())
+        .addTransformer(SaveDemoFacility::class.java, saveDemoFacility())
         .build()
+  }
+
+  private fun saveDemoFacility(): ObservableTransformer<SaveDemoFacility, PinEntryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .doOnNext { facilityRepository.save(listOf(DEMO_FACILITY)) }
+          .map { DemoFacilitySaved(it.data) }
+    }
   }
 
   private fun loadPinEntryProtectedStates(

@@ -1,45 +1,42 @@
 package org.simple.clinic.registration.facility
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Parcelable
-import android.util.AttributeSet
-import android.widget.RelativeLayout
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenRegistrationFacilitySelectionBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.introvideoscreen.IntroVideoScreen
-import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.ActivityResult
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
+import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.ScreenResultBus
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.registration.confirmfacility.ConfirmFacilitySheet
-import org.simple.clinic.router.ScreenResultBus
-import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.extractSuccessful
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
 
-class RegistrationFacilitySelectionScreen(
-    context: Context,
-    attrs: AttributeSet
-) : RelativeLayout(context, attrs), RegistrationFacilitySelectionUiActions {
-
-  var binding: ScreenRegistrationFacilitySelectionBinding? = null
-
-  private val facilityPickerView
-    get() = binding!!.facilityPickerView
+class RegistrationFacilitySelectionScreen : BaseScreen<
+    RegistrationFacilitySelectionScreen.Key,
+    ScreenRegistrationFacilitySelectionBinding,
+    RegistrationFacilitySelectionModel,
+    RegistrationFacilitySelectionEvent,
+    RegistrationFacilitySelectionEffect,
+    RegistrationFacilitySelectionViewEffect>(), RegistrationFacilitySelectionUiActions {
 
   @Inject
   lateinit var router: Router
-
-  @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
 
   @Inject
   lateinit var activity: AppCompatActivity
@@ -50,58 +47,42 @@ class RegistrationFacilitySelectionScreen(
   @Inject
   lateinit var screenResultBus: ScreenResultBus
 
-  private val events by unsafeLazy {
-    Observable
-        .mergeArray(
-            facilityClicks(),
-            registrationFacilityConfirmations()
-        )
-        .compose(ReportAnalyticsEvents())
-        .share()
-  }
+  private val facilityPickerView
+    get() = binding.facilityPickerView
 
-  private val delegate by unsafeLazy {
-    val screenKey = screenKeyProvider.keyFor<RegistrationFacilitySelectionScreenKey>(this)
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenRegistrationFacilitySelectionBinding
+      .inflate(layoutInflater, container, false)
 
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = RegistrationFacilitySelectionModel.create(screenKey.ongoingRegistrationEntry),
-        update = RegistrationFacilitySelectionUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        init = RegistrationFacilitySelectionInit()
-    )
-  }
+  override fun createInit() = RegistrationFacilitySelectionInit()
 
-  @SuppressLint("CheckResult")
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    binding = ScreenRegistrationFacilitySelectionBinding.bind(this)
-    if (isInEditMode) {
-      return
-    }
+  override fun createUpdate() = RegistrationFacilitySelectionUpdate()
 
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationFacilitySelectionViewEffect>) = effectHandlerFactory
+      .create(viewEffectsConsumer = viewEffectsConsumer)
+      .build()
+
+  override fun viewEffectHandler() = RegistrationFacilitySelectionViewEffectHandler(this)
+
+  override fun defaultModel() = RegistrationFacilitySelectionModel.create(
+      entry = screenKey.ongoingRegistrationEntry
+  )
+
+  override fun events() = Observable
+      .mergeArray(
+          facilityClicks(),
+          registrationFacilityConfirmations()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<RegistrationFacilitySelectionEvent>()
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     facilityPickerView.backClicked = { router.pop() }
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    super.onDetachedFromWindow()
-    delegate.stop()
-    binding = null
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun facilityClicks(): Observable<RegistrationFacilitySelectionEvent> {
@@ -125,7 +106,7 @@ class RegistrationFacilitySelectionScreen(
   }
 
   override fun showConfirmFacilitySheet(facilityUuid: UUID, facilityName: String) {
-    val intent = ConfirmFacilitySheet.intentForConfirmFacilitySheet(context, facilityUuid, facilityName)
+    val intent = ConfirmFacilitySheet.intentForConfirmFacilitySheet(requireContext(), facilityUuid, facilityName)
     activity.startActivityForResult(intent, CONFIRM_FACILITY_SHEET)
   }
 
@@ -135,5 +116,14 @@ class RegistrationFacilitySelectionScreen(
 
   interface Injector {
     fun inject(target: RegistrationFacilitySelectionScreen)
+  }
+
+  @Parcelize
+  data class Key(
+      val ongoingRegistrationEntry: OngoingRegistrationEntry,
+      override val analyticsName: String = "Registration Facility Selection"
+  ) : ScreenKey() {
+
+    override fun instantiateFragment() = RegistrationFacilitySelectionScreen()
   }
 }

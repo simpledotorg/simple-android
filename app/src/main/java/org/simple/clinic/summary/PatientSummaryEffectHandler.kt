@@ -1,5 +1,6 @@
 package org.simple.clinic.summary
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -11,6 +12,7 @@ import io.reactivex.Scheduler
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
@@ -45,12 +47,16 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val uuidGenerator: UuidGenerator,
     private val facilityRepository: FacilityRepository,
     private val teleconsultationFacilityRepository: TeleconsultationFacilityRepository,
-    @Assisted private val uiActions: PatientSummaryUiActions
+    private val prescriptionRepository: PrescriptionRepository,
+    private val cdssPilotFacilities: Lazy<List<UUID>>,
+    @Assisted private val viewEffectsConsumer: Consumer<PatientSummaryViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: PatientSummaryUiActions): PatientSummaryEffectHandler
+    fun create(
+        viewEffectsConsumer: Consumer<PatientSummaryViewEffect>
+    ): PatientSummaryEffectHandler
   }
 
   fun build(): ObservableTransformer<PatientSummaryEffect, PatientSummaryEvent> {
@@ -58,33 +64,77 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<PatientSummaryEffect, PatientSummaryEvent>()
         .addTransformer(LoadPatientSummaryProfile::class.java, loadPatientSummaryProfile(schedulersProvider.io()))
         .addTransformer(LoadCurrentUserAndFacility::class.java, loadUserAndCurrentFacility())
-        .addConsumer(HandleEditClick::class.java, { uiActions.showEditPatientScreen(it.patientSummaryProfile, it.currentFacility) }, schedulersProvider.ui())
-        .addAction(GoBackToPreviousScreen::class.java, { uiActions.goToPreviousScreen() }, schedulersProvider.ui())
-        .addAction(GoToHomeScreen::class.java, { uiActions.goToHomeScreen() }, schedulersProvider.ui())
-        .addTransformer(CheckForInvalidPhone::class.java, checkForInvalidPhone(schedulersProvider.io(), schedulersProvider.ui()))
+        .addTransformer(CheckForInvalidPhone::class.java, checkForInvalidPhone(schedulersProvider.io()))
         .addTransformer(MarkReminderAsShown::class.java, markReminderAsShown(schedulersProvider.io()))
-        .addConsumer(ShowAddPhonePopup::class.java, { uiActions.showAddPhoneDialog(it.patientUuid) }, schedulersProvider.ui())
-        .addConsumer(ShowLinkIdWithPatientView::class.java, { uiActions.showLinkIdWithPatientView(it.patientUuid, it.identifier) }, schedulersProvider.ui())
-        .addConsumer(
-            ShowScheduleAppointmentSheet::class.java,
-            { uiActions.showScheduleAppointmentSheet(it.patientUuid, it.sheetOpenedFrom, it.currentFacility) },
-            schedulersProvider.ui()
-        )
         .addTransformer(LoadDataForBackClick::class.java, loadDataForBackClick(schedulersProvider.io()))
         .addTransformer(LoadDataForDoneClick::class.java, loadDataForDoneClick(schedulersProvider.io()))
         .addTransformer(TriggerSync::class.java, triggerSync())
-        .addAction(ShowDiagnosisError::class.java, { uiActions.showDiagnosisError() }, schedulersProvider.ui())
         .addTransformer(FetchHasShownMissingPhoneReminder::class.java, fetchHasShownMissingPhoneReminder(schedulersProvider.io()))
-        .addConsumer(OpenContactPatientScreen::class.java, { uiActions.openPatientContactSheet(it.patientUuid) }, schedulersProvider.ui())
-        .addConsumer(NavigateToTeleconsultRecordScreen::class.java, { uiActions.navigateToTeleconsultRecordScreen(it.patientUuid, it.teleconsultRecordId) }, schedulersProvider.ui())
         .addTransformer(LoadMedicalOfficers::class.java, loadMedicalOfficers())
-        .addConsumer(OpenContactDoctorSheet::class.java, { uiActions.openContactDoctorSheet(it.patientUuid) }, schedulersProvider.ui())
-        .addAction(ShowAddMeasurementsWarningDialog::class.java, uiActions::showAddMeasurementsWarningDialog, schedulersProvider.ui())
-        .addAction(ShowAddBloodPressureWarningDialog::class.java, uiActions::showAddBloodPressureWarningDialog, schedulersProvider.ui())
-        .addAction(ShowAddBloodSugarWarningDialog::class.java, uiActions::showAddBloodSugarWarningDialog, schedulersProvider.ui())
-        .addAction(OpenSelectFacilitySheet::class.java, uiActions::openSelectFacilitySheet, schedulersProvider.ui())
-        .addConsumer(DispatchNewAssignedFacility::class.java, { uiActions.dispatchNewAssignedFacility(it.facility) }, schedulersProvider.ui())
+        .addTransformer(LoadClinicalDecisionSupportInfo::class.java, loadClinicalDecisionSupport())
+        .addConsumer(PatientSummaryViewEffect::class.java, viewEffectsConsumer::accept)
+        .addTransformer(LoadPatientRegistrationData::class.java, checkPatientRegistrationData())
+        .addTransformer(CheckIfCDSSPilotIsEnabled::class.java, checkIfCDSSPilotIsEnabled())
+        .addTransformer(LoadLatestScheduledAppointment::class.java, loadLatestScheduledAppointment())
         .build()
+  }
+
+  private fun loadLatestScheduledAppointment(): ObservableTransformer<LoadLatestScheduledAppointment, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map {
+            val appointment = appointmentRepository.latestScheduledAppointmentForPatient(it.patientUuid)
+            LatestScheduledAppointmentLoaded(appointment)
+          }
+    }
+  }
+
+  private fun checkIfCDSSPilotIsEnabled(): ObservableTransformer<CheckIfCDSSPilotIsEnabled, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map {
+            val currentFacilityId = currentFacility.get().uuid
+            CDSSPilotStatusChecked(isPilotEnabledForFacility = cdssPilotFacilities.get().contains(currentFacilityId))
+          }
+    }
+  }
+
+  private fun loadClinicalDecisionSupport(): ObservableTransformer<LoadClinicalDecisionSupportInfo, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .switchMap {
+            val patientUuid = it.patientUuid
+            bloodPressureRepository.isNewestBpEntryHigh(patientUuid).map { Pair(patientUuid, it) }
+          }
+          .switchMap { (patientUuid, isNewestBpEntryHigh) ->
+            prescriptionRepository.hasPrescriptionForPatientChangedToday(patientUuid).map { Pair(isNewestBpEntryHigh, it) }
+          }
+          .map { (isNewestBpEntryHigh, hasPrescriptionsChangedToday) ->
+            ClinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh, hasPrescriptionsChangedToday)
+          }
+    }
+  }
+
+  private fun checkPatientRegistrationData(): ObservableTransformer<LoadPatientRegistrationData, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { effect ->
+            val patientUuid = effect.patientUuid
+            val countOfPrescribedDrugs = prescriptionRepository.prescriptionCountImmediate(patientUuid)
+            val countOfRecordedBloodPressures = bloodPressureRepository.bloodPressureCountImmediate(patientUuid)
+            val countOfRecordedBloodSugars = bloodSugarRepository.bloodSugarCountImmediate(patientUuid)
+
+            PatientRegistrationDataLoaded(
+                countOfPrescribedDrugs = countOfPrescribedDrugs,
+                countOfRecordedBloodPressures = countOfRecordedBloodPressures,
+                countOfRecordedBloodSugars = countOfRecordedBloodSugars
+            )
+          }
+    }
   }
 
   private fun loadMedicalOfficers(): ObservableTransformer<LoadMedicalOfficers, PatientSummaryEvent> {
@@ -147,22 +197,14 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     )
   }
 
-  // TODO(vs): 2020-02-19 Revisit after Mobius migration
   private fun checkForInvalidPhone(
-      backgroundWorkScheduler: Scheduler,
-      uiWorkScheduler: Scheduler
+      backgroundWorkScheduler: Scheduler
   ): ObservableTransformer<CheckForInvalidPhone, PatientSummaryEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(backgroundWorkScheduler)
-          .map { it.patientUuid to hasInvalidPhone(it.patientUuid) }
-          .observeOn(uiWorkScheduler)
-          .doOnNext { (patientUuid, isPhoneInvalid) ->
-            if (isPhoneInvalid) {
-              uiActions.showUpdatePhoneDialog(patientUuid)
-            }
-          }
-          .map { CompletedCheckForInvalidPhone }
+          .map { hasInvalidPhone(it.patientUuid) }
+          .map(::CompletedCheckForInvalidPhone)
     }
   }
 
@@ -196,9 +238,18 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 defaultHistoryUuid = uuidGenerator.v4(),
                 patientUuid = patientUuid
             )
+            val hasPatientMeasurementDataChanged = patientRepository.hasPatientMeasurementDataChangedSince(
+                patientUuid = patientUuid,
+                timestamp = timestamp
+            )
+            val hasAppointmentChanged = appointmentRepository.hasAppointmentForPatientChangedSince(
+                patientUuid = patientUuid,
+                timestamp = loadDataForBackClick.screenCreatedTimestamp
+            )
 
             DataForBackClickLoaded(
-                hasPatientDataChangedSinceScreenCreated = patientRepository.hasPatientDataChangedSince(patientUuid, timestamp),
+                hasPatientMeasurementDataChangedSinceScreenCreated = hasPatientMeasurementDataChanged,
+                hasAppointmentChangeSinceScreenCreated = hasAppointmentChanged,
                 countOfRecordedBloodPressures = countOfRecordedBloodPressures,
                 countOfRecordedBloodSugars = countOfRecordedBloodSugars,
                 medicalHistory = medicalHistory
@@ -213,16 +264,26 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .map { loadDataForBackClick ->
-            val patientUuid = loadDataForBackClick.patientUuid
+          .map { loadDataForDoneClick ->
+            val patientUuid = loadDataForDoneClick.patientUuid
             val countOfRecordedBloodPressures = bloodPressureRepository.bloodPressureCountImmediate(patientUuid)
             val countOfRecordedBloodSugars = bloodSugarRepository.bloodSugarCountImmediate(patientUuid)
             val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
                 defaultHistoryUuid = uuidGenerator.v4(),
                 patientUuid = patientUuid
             )
+            val hasPatientMeasurementDataChanged = patientRepository.hasPatientMeasurementDataChangedSince(
+                patientUuid = patientUuid,
+                timestamp = loadDataForDoneClick.screenCreatedTimestamp
+            )
+            val hasAppointmentChanged = appointmentRepository.hasAppointmentForPatientChangedSince(
+                patientUuid = patientUuid,
+                timestamp = loadDataForDoneClick.screenCreatedTimestamp
+            )
 
             DataForDoneClickLoaded(
+                hasPatientMeasurementDataChangedSinceScreenCreated = hasPatientMeasurementDataChanged,
+                hasAppointmentChangeSinceScreenCreated = hasAppointmentChanged,
                 countOfRecordedBloodPressures = countOfRecordedBloodPressures,
                 countOfRecordedBloodSugars = countOfRecordedBloodSugars,
                 medicalHistory = medicalHistory

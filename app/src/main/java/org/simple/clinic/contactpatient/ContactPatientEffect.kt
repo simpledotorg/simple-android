@@ -1,5 +1,6 @@
 package org.simple.clinic.contactpatient
 
+import org.simple.clinic.overdue.Appointment
 import java.time.LocalDate
 import java.util.UUID
 
@@ -9,37 +10,40 @@ data class LoadContactPatientProfile(val patientUuid: UUID) : ContactPatientEffe
 
 data class LoadLatestOverdueAppointment(val patientUuid: UUID) : ContactPatientEffect()
 
-data class DirectCallWithAutomaticDialer(val patientPhoneNumber: String) : ContactPatientEffect()
-
-data class DirectCallWithManualDialer(val patientPhoneNumber: String) : ContactPatientEffect()
-
 object LoadCurrentFacility : ContactPatientEffect()
+
+data class MarkPatientAsAgreedToVisit(val appointment: Appointment) : ContactPatientEffect()
+
+data class SetReminderForAppointment(
+    val appointment: Appointment,
+    val reminderDate: LocalDate
+) : ContactPatientEffect()
+
+data class LoadCallResultForAppointment(val appointmentId: UUID) : ContactPatientEffect()
+
+sealed class ContactPatientViewEffect : ContactPatientEffect()
+
+data class DirectCallWithAutomaticDialer(val patientPhoneNumber: String) : ContactPatientViewEffect()
+
+data class DirectCallWithManualDialer(val patientPhoneNumber: String) : ContactPatientViewEffect()
 
 data class MaskedCallWithAutomaticDialer(
     val patientPhoneNumber: String,
     val proxyPhoneNumber: String
-) : ContactPatientEffect()
+) : ContactPatientViewEffect()
 
 data class MaskedCallWithManualDialer(
     val patientPhoneNumber: String,
     val proxyPhoneNumber: String
-) : ContactPatientEffect()
+) : ContactPatientViewEffect()
 
-object CloseScreen : ContactPatientEffect()
-
-data class MarkPatientAsAgreedToVisit(val appointmentUuid: UUID) : ContactPatientEffect()
+object CloseScreen : ContactPatientViewEffect()
 
 data class ShowManualDatePicker(
     val preselectedDate: LocalDate,
     val datePickerBounds: ClosedRange<LocalDate>
-) : ContactPatientEffect()
-
-data class SetReminderForAppointment(
-    val appointmentUuid: UUID,
-    val reminderDate: LocalDate
-) : ContactPatientEffect()
+) : ContactPatientViewEffect()
 
 data class OpenRemoveOverdueAppointmentScreen(
-    val appointmentId: UUID,
-    val patientId: UUID
-) : ContactPatientEffect()
+    val appointment: Appointment
+) : ContactPatientViewEffect()

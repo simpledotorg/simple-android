@@ -93,7 +93,6 @@ sealed class InstantSearchResultsItemType : PagingItemAdapter.Item<InstantSearch
   data class SearchResult(
       val searchResultViewModel: PatientSearchResultViewModel,
       val currentFacilityId: UUID,
-      val assignedFacilityId: UUID?,
       val searchQuery: String?
   ) : InstantSearchResultsItemType() {
 
@@ -106,7 +105,6 @@ sealed class InstantSearchResultsItemType : PagingItemAdapter.Item<InstantSearch
         return SearchResult(
             searchResultViewModel = mapPatientSearchResultToViewModel(searchResult),
             currentFacilityId = currentFacilityId,
-            assignedFacilityId = searchResult.assignedFacilityId,
             searchQuery = searchQuery
         )
       }
@@ -119,14 +117,16 @@ sealed class InstantSearchResultsItemType : PagingItemAdapter.Item<InstantSearch
             ageDetails = searchResult.ageDetails,
             address = searchResult.address,
             phoneNumber = searchResult.phoneNumber,
-            lastSeen = searchResult.lastSeen,
-            identifier = searchResult.identifier
+            identifier = searchResult.identifier,
+            assignedFacilityId = searchResult.assignedFacilityId,
+            assignedFacilityName = searchResult.assignedFacilityName,
+            status = searchResult.status
         )
       }
     }
 
     val isAtCurrentFacility
-      get() = assignedFacilityId == currentFacilityId
+      get() = searchResultViewModel.assignedFacilityId == currentFacilityId
 
     override fun layoutResId(): Int = R.layout.list_patient_search
 

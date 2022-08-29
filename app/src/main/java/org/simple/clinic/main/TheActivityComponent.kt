@@ -9,7 +9,11 @@ import dagger.Subcomponent
 import io.reactivex.Observable
 import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.RxActivityLifecycle
+import org.simple.clinic.appupdate.criticalupdatedialog.CriticalAppUpdateDialog
+import org.simple.clinic.bloodsugar.entry.BloodSugarEntrySheet
+import org.simple.clinic.bloodsugar.entry.confirmremovebloodsugar.ConfirmRemoveBloodSugarDialogInjector
 import org.simple.clinic.bloodsugar.history.BloodSugarHistoryScreen
+import org.simple.clinic.bloodsugar.unitselection.BloodSugarUnitSelectionDialog.BloodSugarUnitSelectionDialogInjector
 import org.simple.clinic.bp.history.BloodPressureHistoryScreen
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.contactpatient.views.SetAppointmentReminderView
@@ -20,10 +24,10 @@ import org.simple.clinic.drugs.search.DrugsSearchScreen
 import org.simple.clinic.drugs.selection.EditMedicinesScreen
 import org.simple.clinic.drugs.selection.custom.CustomDrugEntrySheet
 import org.simple.clinic.drugs.selection.custom.drugfrequency.SelectDrugFrequencyDialog
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactoryModule
+import org.simple.clinic.drugstockreminders.enterdrugstock.EnterDrugStockScreen
 import org.simple.clinic.editpatient.ConfirmDiscardChangesDialog
 import org.simple.clinic.editpatient.EditPatientScreen
-import org.simple.clinic.editpatient.deletepatient.DeletePatientScreenInjector
+import org.simple.clinic.editpatient.deletepatient.DeletePatientScreen
 import org.simple.clinic.enterotp.EnterOtpScreen
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.change.FacilityChangeScreen
@@ -34,6 +38,7 @@ import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.home.help.HelpScreen
 import org.simple.clinic.home.overdue.OverdueScreen
+import org.simple.clinic.home.overdue.search.OverdueSearchScreen
 import org.simple.clinic.home.patients.PatientsModule
 import org.simple.clinic.home.patients.PatientsTabScreen
 import org.simple.clinic.home.report.ReportsScreen
@@ -43,13 +48,14 @@ import org.simple.clinic.login.applock.ConfirmResetPinDialog
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen
 import org.simple.clinic.navigation.di.FragmentScreenKeyModule
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.newentry.country.di.InputFieldsFactoryModule
-import org.simple.clinic.onboarding.OnboardingScreenInjector
+import org.simple.clinic.onboarding.OnboardingScreen
+import org.simple.clinic.overdue.download.formatdialog.SelectOverdueDownloadFormatDialog
 import org.simple.clinic.recentpatient.RecentPatientsScreen
 import org.simple.clinic.recentpatientsview.RecentPatientsView
 import org.simple.clinic.removeoverdueappointment.RemoveOverdueAppointmentScreen
-import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.scanid.ScanSimpleIdScreen
 import org.simple.clinic.scanid.scannedqrcode.ScannedQrCodeSheet
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
@@ -64,6 +70,7 @@ import org.simple.clinic.summary.bloodpressures.view.BloodPressureSummaryViewInj
 import org.simple.clinic.summary.bloodsugar.view.BloodSugarSummaryViewInjector
 import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet
 import org.simple.clinic.summary.medicalhistory.MedicalHistorySummaryViewInjector
+import org.simple.clinic.summary.nextappointment.NextAppointmentCardView
 import org.simple.clinic.summary.prescribeddrugs.DrugSummaryViewInjector
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.sync.indicator.SyncIndicatorView
@@ -80,7 +87,7 @@ import org.simple.clinic.widgets.PatientSearchResultItemView
 
 @Subcomponent(modules = [TheActivityModule::class])
 interface TheActivityComponent :
-    OnboardingScreenInjector,
+    OnboardingScreen.Injector,
     MedicalHistorySummaryViewInjector,
     DrugSummaryViewInjector,
     BloodSugarSummaryViewInjector,
@@ -90,7 +97,6 @@ interface TheActivityComponent :
     AccessDeniedScreenInjector,
     PinEntryCardView.Injector,
     EnterOtpScreen.Injector,
-    DeletePatientScreenInjector,
     PatientsTabScreen.Injector,
     HelpScreen.Injector,
     ReportsScreen.Injector,
@@ -140,7 +146,16 @@ interface TheActivityComponent :
     SyncIndicatorView.Injector,
     CustomDrugEntrySheet.Injector,
     SelectDrugFrequencyDialog.Injector,
-    FacilitySelectionScreen.Injector {
+    FacilitySelectionScreen.Injector,
+    SelectOverdueDownloadFormatDialog.Injector,
+    DeletePatientScreen.Injector,
+    NextAppointmentCardView.Injector,
+    CriticalAppUpdateDialog.Injector,
+    EnterDrugStockScreen.Injector,
+    OverdueSearchScreen.Injector,
+    BloodSugarEntrySheet.Injector,
+    ConfirmRemoveBloodSugarDialogInjector,
+    BloodSugarUnitSelectionDialogInjector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory
@@ -157,8 +172,7 @@ interface TheActivityComponent :
   PatientsModule::class,
   PagingModule::class,
   InputFieldsFactoryModule::class,
-  FragmentScreenKeyModule::class,
-  DrugFrequencyFactoryModule::class
+  FragmentScreenKeyModule::class
 ])
 class TheActivityModule {
 

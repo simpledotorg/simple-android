@@ -1,15 +1,18 @@
 package org.simple.clinic.selectcountry
 
 import android.content.Context
-import android.os.Parcelable
-import android.util.AttributeSet
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appconfig.AppConfigRepository
@@ -18,9 +21,9 @@ import org.simple.clinic.appconfig.displayname.CountryDisplayNameFetcher
 import org.simple.clinic.databinding.ListSelectcountryCountryViewBinding
 import org.simple.clinic.databinding.ScreenSelectcountryBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
+import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.selectcountry.adapter.Event
 import org.simple.clinic.selectcountry.adapter.SelectableCountryItem
 import org.simple.clinic.selectcountry.adapter.SelectableCountryItemDiffCallback
@@ -31,30 +34,13 @@ import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.indexOfChildId
 import javax.inject.Inject
 
-class SelectCountryScreen(
-    context: Context,
-    attributeSet: AttributeSet
-) : ConstraintLayout(context, attributeSet), SelectCountryUi, UiActions {
-
-  var binding: ScreenSelectcountryBinding? = null
-
-  private val countrySelectionViewFlipper
-    get() = binding!!.countrySelectionViewFlipper
-
-  private val supportedCountriesList
-    get() = binding!!.supportedCountriesList
-
-  private val tryAgain
-    get() = binding!!.tryAgain
-
-  private val nextButton
-    get() = binding!!.nextButton
-
-  private val errorMessageTextView
-    get() = binding!!.errorMessageTextView
-
-  private val nextButtonFrame
-    get() = binding!!.nextButtonFrame
+class SelectCountryScreen : BaseScreen<
+    SelectCountryScreen.Key,
+    ScreenSelectcountryBinding,
+    SelectCountryModel,
+    SelectCountryEvent,
+    SelectCountryEffect,
+    SelectCountryViewEffect>(), SelectCountryUi, UiActions {
 
   @Inject
   lateinit var appConfigRepository: AppConfigRepository
@@ -71,29 +57,20 @@ class SelectCountryScreen(
   @Inject
   lateinit var router: Router
 
-  private val uiRenderer = SelectCountryUiRenderer(this)
+  @Inject
+  lateinit var effectHandlerFactory: SelectCountryEffectHandler.Factory
 
-  private val events by unsafeLazy {
-    Observable
-        .merge(
-            nextClicks(),
-            retryClicks(),
-            countrySelectionChanges()
-        )
-        .compose(ReportAnalyticsEvents())
-        .cast<SelectCountryEvent>()
-  }
+  private val countrySelectionViewFlipper
+    get() = binding.countrySelectionViewFlipper
 
-  private val delegate by unsafeLazy {
-    MobiusDelegate.forView(
-        events = events,
-        defaultModel = SelectCountryModel.FETCHING,
-        init = SelectCountryInit(),
-        update = SelectCountryUpdate(),
-        effectHandler = SelectCountryEffectHandler.create(appConfigRepository, this, schedulersProvider),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
+  private val supportedCountriesList
+    get() = binding.supportedCountriesList
+
+  private val tryAgain
+    get() = binding.tryAgain
+
+  private val errorMessageTextView
+    get() = binding.errorMessageTextView
 
   private val supportedCountriesAdapter = ItemAdapter(
       diffCallback = SelectableCountryItemDiffCallback(),
@@ -116,19 +93,41 @@ class SelectCountryScreen(
     countrySelectionViewFlipper.indexOfChildId(R.id.errorContainer)
   }
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenSelectcountryBinding.inflate(layoutInflater,
+      container,
+      false)
 
-    binding = ScreenSelectcountryBinding.bind(this)
-    if (isInEditMode) {
-      return
-    }
+  override fun defaultModel() = SelectCountryModel.FETCHING
 
+  override fun events() = Observable
+      .merge(
+          retryClicks(),
+          countrySelectionChanges()
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<SelectCountryEvent>()
+
+  override fun createInit() = SelectCountryInit()
+
+  override fun createUpdate() = SelectCountryUpdate()
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<SelectCountryViewEffect>) = effectHandlerFactory
+      .create(viewEffectsConsumer)
+      .build()
+
+  override fun uiRenderer() = SelectCountryUiRenderer(this)
+
+  override fun viewEffectHandler() = SelectCountryViewEffectHandler(this)
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
     context.injector<SelectCountryScreenInjector>().inject(this)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
 
     setupCountriesList()
-
-    delegate.prepare()
   }
 
   private fun setupCountriesList() {
@@ -150,31 +149,6 @@ class SelectCountryScreen(
     return tryAgain
         .clicks()
         .map { RetryClicked }
-  }
-
-  private fun nextClicks(): Observable<NextClicked> {
-    return nextButton
-        .clicks()
-        .map { NextClicked }
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    binding = null
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   override fun showProgress() {
@@ -201,15 +175,15 @@ class SelectCountryScreen(
     countrySelectionViewFlipper.displayedChild = errorViewIndex
   }
 
-  override fun showNextButton() {
-    nextButtonFrame.visibility = VISIBLE
-  }
-
   override fun goToStateSelectionScreen() {
     router.push(SelectStateScreen.Key())
   }
 
-  override fun goToRegistrationScreen() {
-    router.push(RegistrationPhoneScreenKey())
+  @Parcelize
+  data class Key(
+      override val analyticsName: String = "Select Country"
+  ) : ScreenKey() {
+
+    override fun instantiateFragment() = SelectCountryScreen()
   }
 }

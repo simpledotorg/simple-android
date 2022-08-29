@@ -10,3 +10,5 @@ data class ChangeAssignedFacility(
     val patientUuid: UUID,
     val updatedAssignedFacilityId: UUID
 ) : AssignedFacilityEffect()
+
+object NotifyAssignedFacilityChanged : AssignedFacilityEffect()

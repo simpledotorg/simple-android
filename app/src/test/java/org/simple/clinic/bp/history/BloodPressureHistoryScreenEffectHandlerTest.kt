@@ -11,7 +11,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureHistoryListItemDataSourceFactory
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
@@ -19,6 +18,7 @@ import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.sharedTestCode.TestData
 import java.util.Optional
 import java.util.UUID
 
@@ -29,12 +29,14 @@ class BloodPressureHistoryScreenEffectHandlerTest {
   private val patientUuid = UUID.fromString("433d058f-daef-47a7-8c61-95f1a220cbcb")
   private val uiActions = mock<BloodPressureHistoryScreenUiActions>()
   private val dataSourceFactory = mock<BloodPressureHistoryListItemDataSourceFactory.Factory>()
+  private val viewEffectHandler = BloodPressureHistoryViewEffectHandler(uiActions)
   private val effectHandler = BloodPressureHistoryScreenEffectHandler(
       bloodPressureRepository,
       patientRepository,
       TrampolineSchedulersProvider(),
       dataSourceFactory,
-      uiActions).build()
+      viewEffectHandler::handle
+  ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
   @After
@@ -91,6 +93,20 @@ class BloodPressureHistoryScreenEffectHandlerTest {
   @Test
   fun `when show blood pressures effect is received, then show blood pressures`() {
     // given
+    val bloodPressureHistoryListItemDataSourceFactory = mock<BloodPressureHistoryListItemDataSourceFactory>()
+
+    // when
+    testCase.dispatch(ShowBloodPressures(bloodPressureHistoryListItemDataSourceFactory))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).showBloodPressures(bloodPressureHistoryListItemDataSourceFactory)
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when load blood pressure history effect is received, then load blood pressure history`() {
+    // given
     val bloodPressuresDataSourceFactory = mock<DataSource.Factory<Int, BloodPressureMeasurement>>()
     val bloodPressuresDataSource = mock<PositionalDataSource<BloodPressureMeasurement>>()
     val bloodPressureHistoryListItemDataSourceFactory = mock<BloodPressureHistoryListItemDataSourceFactory>()
@@ -100,11 +116,10 @@ class BloodPressureHistoryScreenEffectHandlerTest {
     whenever(dataSourceFactory.create(bloodPressuresDataSource)).thenReturn(bloodPressureHistoryListItemDataSourceFactory)
 
     // when
-    testCase.dispatch(ShowBloodPressures(patientUuid))
+    testCase.dispatch(LoadBloodPressureHistory(patientUuid))
 
     // then
-    testCase.assertNoOutgoingEvents()
-    verify(uiActions).showBloodPressures(bloodPressureHistoryListItemDataSourceFactory)
-    verifyNoMoreInteractions(uiActions)
+    testCase.assertOutgoingEvents(BloodPressuresHistoryLoaded(bloodPressureHistoryListItemDataSourceFactory))
+    verifyZeroInteractions(uiActions)
   }
 }

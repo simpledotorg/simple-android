@@ -11,18 +11,29 @@ data class ScanSimpleIdModel(
     val enteredCode: EnteredCodeInput?,
     val scanSearchState: ScanSearchState,
     val scanErrorState: ScanErrorState?,
-    val patientPrefillInfo: PatientPrefillInfo?
+    val patientPrefillInfo: PatientPrefillInfo?,
+    val openedFrom: OpenedFrom
 ) : Parcelable {
 
   companion object {
-    fun create() = ScanSimpleIdModel(enteredCode = null,
+    fun create(openedFrom: OpenedFrom) = ScanSimpleIdModel(enteredCode = null,
         scanSearchState = NotSearching,
         scanErrorState = null,
-        patientPrefillInfo = null)
+        patientPrefillInfo = null,
+        openedFrom = openedFrom)
   }
 
   val isSearching: Boolean
     get() = scanSearchState == Searching
+
+  val isOpenedFromEditPatientScreen
+    get() = openedFrom is OpenedFrom.EditPatientScreen
+
+  val isOpenedFromEditPatientScreenToAddBpPassport
+    get() = openedFrom == OpenedFrom.EditPatientScreen.ToAddBpPassport
+
+  val isOpenedFromEditPatientScreenToAddNhid
+    get() = openedFrom == OpenedFrom.EditPatientScreen.ToAddNHID
 
   fun enteredCodeChanged(enteredCode: EnteredCodeInput): ScanSimpleIdModel {
     return copy(enteredCode = enteredCode)

@@ -2,6 +2,7 @@ package org.simple.clinic.summary
 
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.MedicalHistory
+import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
 import org.simple.clinic.user.User
 import org.simple.clinic.widgets.UiEvent
@@ -21,8 +22,18 @@ data class PatientSummaryBackClicked(
 }
 
 // TODO(vs): 2020-01-16 Consider whether these should be moved to the effect handler as properties later
-data class PatientSummaryDoneClicked(val patientUuid: UUID) : PatientSummaryEvent() {
+data class PatientSummaryDoneClicked(
+    val patientUuid: UUID,
+    val screenCreatedTimestamp: Instant
+) : PatientSummaryEvent() {
   override val analyticsName = "Patient Summary:Done Clicked"
+}
+
+data class MeasurementWarningNotNowClicked(
+    val patientUuid: UUID,
+    val screenCreatedTimestamp: Instant
+) : PatientSummaryEvent() {
+  override val analyticsName = "Patient Summary:Measurement Warning Not Now Clicked"
 }
 
 data class CurrentUserAndFacilityLoaded(
@@ -36,18 +47,21 @@ data class ScheduledAppointment(val sheetOpenedFrom: AppointmentSheetOpenedFrom)
   override val analyticsName = "Patient Summary:Schedule Appointment Sheet Closed"
 }
 
-object CompletedCheckForInvalidPhone : PatientSummaryEvent()
+data class CompletedCheckForInvalidPhone(val isPhoneInvalid: Boolean) : PatientSummaryEvent()
 
 object PatientSummaryBloodPressureSaved : PatientSummaryEvent()
 
 data class DataForBackClickLoaded(
-    val hasPatientDataChangedSinceScreenCreated: Boolean,
+    val hasPatientMeasurementDataChangedSinceScreenCreated: Boolean,
+    val hasAppointmentChangeSinceScreenCreated: Boolean,
     val countOfRecordedBloodPressures: Int,
     val countOfRecordedBloodSugars: Int,
     val medicalHistory: MedicalHistory
 ) : PatientSummaryEvent()
 
 data class DataForDoneClickLoaded(
+    val hasPatientMeasurementDataChangedSinceScreenCreated: Boolean,
+    val hasAppointmentChangeSinceScreenCreated: Boolean,
     val countOfRecordedBloodPressures: Int,
     val countOfRecordedBloodSugars: Int,
     val medicalHistory: MedicalHistory
@@ -76,3 +90,21 @@ object ChangeAssignedFacilityClicked : PatientSummaryEvent() {
 data class NewAssignedFacilitySelected(val facility: Facility) : PatientSummaryEvent() {
   override val analyticsName: String = "Assigned Facility:Facility Selected"
 }
+
+data class PatientRegistrationDataLoaded(
+    val countOfPrescribedDrugs: Int,
+    val countOfRecordedBloodPressures: Int,
+    val countOfRecordedBloodSugars: Int
+) : PatientSummaryEvent()
+
+object NextAppointmentActionClicked : PatientSummaryEvent() {
+  override val analyticsName: String = "Next Appointment Card:Action Button Clicked"
+}
+
+object AssignedFacilityChanged : PatientSummaryEvent()
+
+data class ClinicalDecisionSupportInfoLoaded(val isNewestBpEntryHigh: Boolean, val hasPrescribedDrugsChangedToday: Boolean) : PatientSummaryEvent()
+
+data class CDSSPilotStatusChecked(val isPilotEnabledForFacility: Boolean) : PatientSummaryEvent()
+
+data class LatestScheduledAppointmentLoaded(val appointment: Appointment?) : PatientSummaryEvent()

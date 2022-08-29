@@ -1,25 +1,36 @@
 package org.simple.clinic.overdue
 
+import android.database.Cursor
 import android.os.Parcelable
 import androidx.annotation.VisibleForTesting
 import androidx.room.Dao
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import io.reactivex.Flowable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.summary.nextappointment.NextAppointmentPatientProfile
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
 
-@Entity(tableName = "Appointment")
+@Entity(
+    tableName = "Appointment",
+    indices = [
+      Index("patientUuid", unique = false),
+      Index("creationFacilityUuid", unique = false),
+      Index("facilityUuid", unique = false)
+    ]
+)
 @Parcelize
 data class Appointment(
     @PrimaryKey val uuid: UUID,
@@ -263,12 +274,19 @@ data class Appointment(
 
     @Query("""
       DELETE FROM Appointment
-      WHERE status IN ('cancelled', 'visited') AND syncStatus == 'DONE'
+      WHERE uuid NOT IN (
+        SELECT uuid
+        FROM Appointment
+        GROUP BY patientUuid HAVING MAX(createdAt)
+      ) AND syncStatus == 'DONE'
     """)
     fun purgeUnusedAppointments()
 
     @Query(""" SELECT * FROM Appointment """)
     fun getAllAppointments(): List<Appointment>
+
+    @Query(""" SELECT * FROM Appointment WHERE patientUuid = :patientUuid """)
+    fun getAllAppointmentsForPatient(patientUuid: UUID): List<Appointment>
 
     @Query("""
         DELETE FROM Appointment
@@ -292,5 +310,90 @@ data class Appointment(
 		    )
     """)
     fun purgeAppointmentsWhenPatientIsNull()
+
+    @Query("""
+      SELECT * FROM Appointment
+      WHERE 
+        patientUuid = :patientUUID
+        AND scheduledDate < :scheduledDate
+        AND deletedAt IS NULL 
+        AND status IS NOT 'visited'
+      ORDER BY createdAt DESC LIMIT 1
+    """)
+    fun latestOverdueAppointmentForPatient(
+        patientUUID: UUID,
+        scheduledDate: LocalDate
+    ): Appointment?
+
+    @Query("""
+      SELECT * FROM Appointment
+      WHERE 
+        patientUuid = :patientUuid AND
+        deletedAt IS NULL AND
+        status = 'scheduled' AND
+        appointmentType != 'automatic'
+      GROUP BY patientUuid HAVING MAX(scheduledDate)
+    """)
+    @Transaction
+    fun nextAppointmentPatientProfile(patientUuid: UUID): NextAppointmentPatientProfile?
+
+    @Query("""
+        SELECT (
+            CASE
+                WHEN (COUNT(uuid) > 0) THEN 1
+                ELSE 0
+            END
+        )
+        FROM Appointment
+        WHERE 
+        updatedAt > :instantToCompare AND
+        status = 'scheduled' AND 
+        syncStatus = :pendingStatus AND 
+        patientUuid = :patientUuid
+    """)
+    fun hasAppointmentForPatientChangedSince(patientUuid: UUID, instantToCompare: Instant, pendingStatus: SyncStatus): Boolean
+
+    @Query("""
+      SELECT * FROM Appointment
+      WHERE 
+        patientUuid = :patientUuid
+        AND deletedAt IS NULL AND status = 'scheduled'
+      GROUP BY patientUuid HAVING MAX(createdAt)
+    """)
+    fun latestScheduledAppointmentForPatient(patientUuid: UUID): Appointment?
+
+    @Query("""
+      SELECT
+       P.createdAt patientCreatedAt,
+       BI.identifier identifierValue,
+       P.fullName patientName,
+       P.gender patientGender,
+       P.age_value patientAgeValue,
+       P.age_updatedAt patientAgeUpdatedAt,
+       P.dateOfBirth patientDateOfBirth,
+       PA.streetAddress patientStreetAddress,
+       PA.colonyOrVillage patientColonyOrVillage,
+       A.scheduledDate appointmentScheduledAt,
+       PPN.number patientPhoneNumber,
+       (
+         SELECT GROUP_CONCAT((name || " " || dosage), ", ") nameAndDosage FROM PrescribedDrug
+         WHERE patientUuid = P.uuid AND isDeleted = 0
+       ) prescribedDrugs
+      FROM Appointment A
+      INNER JOIN Patient P ON P.uuid = A.patientUuid
+      LEFT JOIN PatientAddress PA ON PA.uuid = P.addressUuid
+      LEFT JOIN (
+        SELECT * FROM PatientPhoneNumber
+        WHERE deletedAt IS NULL
+        GROUP BY patientUuid HAVING MAX(createdAt)
+      ) PPN ON PPN.patientUuid = P.uuid AND PPN.deletedAt IS NULL
+      LEFT JOIN (
+        SELECT * FROM BusinessId
+        WHERE identifierType = "simple_bp_passport" AND deletedAt IS NULL
+        GROUP BY patientUuid HAVING MAX(createdAt)
+      ) BI ON BI.patientUuid = P.uuid
+      WHERE A.uuid IN (:ids)
+    """)
+    fun appointmentAndPatientInformationForIds(ids: List<UUID>): Cursor
   }
 }

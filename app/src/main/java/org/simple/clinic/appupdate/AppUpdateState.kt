@@ -6,7 +6,10 @@ import kotlinx.parcelize.Parcelize
 sealed class AppUpdateState : Parcelable {
 
   @Parcelize
-  object ShowAppUpdate : AppUpdateState()
+  data class ShowAppUpdate(
+      val appUpdateNudgePriority: AppUpdateNudgePriority?,
+      val appStaleness: Int?
+  ) : AppUpdateState()
 
   @Parcelize
   data class AppUpdateStateError(val exception: Throwable) : AppUpdateState()

@@ -15,6 +15,8 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetMedicineFrequencyBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.drugs.search.DrugFrequency
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency.BD
@@ -43,6 +45,18 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
   private val saveMedicineFrequencyButton
     get() = binding.saveMedicineFrequencyButton
 
+  private val medicineFrequencyOdRadioButton
+    get() = binding.medicineFrequencyOdRadioButton
+
+  private val medicineFrequencyBdRadioButton
+    get() = binding.medicineFrequencyBdRadioButton
+
+  private val medicineFrequencyTdsRadioButton
+    get() = binding.medicineFrequencyTdsRadioButton
+
+  private val medicineFrequencyQdsRadioButton
+    get() = binding.medicineFrequencyQdsRadioButton
+
   @Inject
   lateinit var locale: Locale
 
@@ -51,6 +65,9 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
 
   @Inject
   lateinit var features: Features
+
+  @Inject
+  lateinit var drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>
 
   private lateinit var component: MedicineFrequencyComponent
 
@@ -114,6 +131,20 @@ class MedicineFrequencySheet : BottomSheetActivity(), MedicineFrequencySheetUiAc
     binding = SheetMedicineFrequencyBinding.inflate(layoutInflater)
     setContentView(binding.root)
     medicineFrequencyTitleTextView.text = getString(R.string.drug_duration_title, medicineFrequencyExtra.name, medicineFrequencyExtra.dosage)
+    setDrugFrequencyLabels()
+
+  }
+
+  private fun setDrugFrequencyLabels() {
+    val medicineFrequencyToLabelMap = drugFrequencyToLabelMap
+        .mapKeys { (drugFrequency, _) ->
+          MedicineFrequency.fromDrugFrequency(drugFrequency)
+        }
+
+    medicineFrequencyOdRadioButton.text = medicineFrequencyToLabelMap[OD]!!.label
+    medicineFrequencyBdRadioButton.text = medicineFrequencyToLabelMap[BD]!!.label
+    medicineFrequencyTdsRadioButton.text = medicineFrequencyToLabelMap[TDS]!!.label
+    medicineFrequencyQdsRadioButton.text = medicineFrequencyToLabelMap[QDS]!!.label
   }
 
   private fun medicineFrequencyChanges(): Observable<MedicineFrequencyChanged> {

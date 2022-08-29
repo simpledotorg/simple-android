@@ -21,7 +21,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
@@ -38,10 +38,10 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.platform.analytics.Analytics
-import org.simple.clinic.registration.phone.LengthBasedNumberValidator
+import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestUserClock
+import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
@@ -62,18 +62,13 @@ class PatientEntryScreenLogicTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val ui = mock<PatientEntryUi>()
-  private val validationActions = mock<PatientEntryValidationActions>()
+  private val uiActions = mock<PatientEntryUiActions>()
   private val patientRepository = mock<PatientRepository>()
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
   private val userClock: UserClock = TestUserClock(LocalDate.parse("2018-01-01"))
   private val dobValidator = UserInputDateValidator(userClock, DateTimeFormatter.ofPattern("dd/MM/yyyy", ENGLISH))
-  private val numberValidator = LengthBasedNumberValidator(
-      minimumRequiredLengthMobile = 10,
-      maximumAllowedLengthMobile = 10,
-      minimumRequiredLengthLandlinesOrMobile = 6,
-      maximumAllowedLengthLandlinesOrMobile = 12
-  )
+  private val numberValidator = PhoneNumberValidator(minimumRequiredLength = 6)
   private val patientRegisteredCount = mock<Preference<Int>>()
   private val ageValidator = UserInputAgeValidator(userClock, DateTimeFormatter.ofPattern("dd/MM/yyyy", ENGLISH))
 
@@ -83,10 +78,7 @@ class PatientEntryScreenLogicTest {
 
   private val dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
 
-  private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider(
-      dateTimeFormatter = dateTimeFormatter,
-      today = LocalDate.now(userClock)
-  ))
+  private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider())
 
   private lateinit var errorConsumer: (Throwable) -> Unit
 
@@ -101,14 +93,14 @@ class PatientEntryScreenLogicTest {
             streetAddress = "street"
         )))
 
+    val viewEffectHandler = PatientEntryViewEffectHandler(uiActions)
     val effectHandler = PatientEntryEffectHandler(
         facilityRepository = facilityRepository,
         patientRepository = patientRepository,
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        patientRegisteredCount = patientRegisteredCount,
         inputFieldsFactory = inputFieldsFactory,
-        ui = ui,
-        validationActions = validationActions
+        patientRegisteredCount = patientRegisteredCount,
+        viewEffectsConsumer = viewEffectHandler::handle
     )
 
     fixture = MobiusTestFixture(
@@ -135,7 +127,7 @@ class PatientEntryScreenLogicTest {
 
     screenCreated()
 
-    verify(ui).prefillFields(OngoingNewPatientEntry(
+    verify(uiActions).prefillFields(OngoingNewPatientEntry(
         address = Address(
             colonyOrVillage = "",
             district = "district",
@@ -159,7 +151,7 @@ class PatientEntryScreenLogicTest {
 
     screenCreated()
 
-    verify(ui).prefillFields(OngoingNewPatientEntry(address = address))
+    verify(uiActions).prefillFields(OngoingNewPatientEntry(address = address))
   }
 
   @Test
@@ -202,7 +194,7 @@ class PatientEntryScreenLogicTest {
     verify(patientRegisteredCount).get()
     verify(patientRegisteredCount).set(1)
     verifyNoMoreInteractions(patientRegisteredCount)
-    verify(ui).openMedicalHistoryEntryScreen()
+    verify(uiActions).openMedicalHistoryEntryScreen()
   }
 
   @Test
@@ -249,7 +241,7 @@ class PatientEntryScreenLogicTest {
     verify(patientRegisteredCount).get()
     verify(patientRegisteredCount).set(1)
     verifyNoMoreInteractions(patientRegisteredCount)
-    verify(ui).openMedicalHistoryEntryScreen()
+    verify(uiActions).openMedicalHistoryEntryScreen()
   }
 
   @Test
@@ -329,8 +321,8 @@ class PatientEntryScreenLogicTest {
       onNext(DateOfBirthFocusChanged(hasFocus = false))
     }
 
-    verify(ui).setShowDatePatternInDateOfBirthLabel(false)
-    verify(ui).setShowDatePatternInDateOfBirthLabel(true)
+    verify(uiActions).setShowDatePatternInDateOfBirthLabel(false)
+    verify(uiActions).setShowDatePatternInDateOfBirthLabel(true)
   }
 
   @Test
@@ -377,18 +369,16 @@ class PatientEntryScreenLogicTest {
     }
 
     // These get invoked every time the phone number changes
-    verify(validationActions, times(3)).showLengthTooLongPhoneNumberError(false, 0)
-    verify(validationActions, times(3)).showLengthTooShortPhoneNumberError(false, 0)
+    verify(uiActions, times(3)).showLengthTooShortPhoneNumberError(false, 0)
 
-    verify(validationActions, atLeastOnce()).showEmptyFullNameError(true)
-    verify(validationActions, atLeastOnce()).showEmptyDateOfBirthAndAgeError(true)
-    verify(validationActions, atLeastOnce()).showInvalidDateOfBirthError(true)
-    verify(validationActions, atLeastOnce()).showMissingGenderError(true)
-    verify(validationActions, atLeastOnce()).showEmptyColonyOrVillageError(true)
-    verify(validationActions, atLeastOnce()).showEmptyDistrictError(true)
-    verify(validationActions, atLeastOnce()).showEmptyStateError(true)
-    verify(validationActions, atLeastOnce()).showLengthTooShortPhoneNumberError(true, 6)
-    verify(validationActions, atLeastOnce()).showLengthTooLongPhoneNumberError(true, 12)
+    verify(uiActions, atLeastOnce()).showEmptyFullNameError(true)
+    verify(uiActions, atLeastOnce()).showEmptyDateOfBirthAndAgeError(true)
+    verify(uiActions, atLeastOnce()).showInvalidDateOfBirthError(true)
+    verify(uiActions, atLeastOnce()).showMissingGenderError(true)
+    verify(uiActions, atLeastOnce()).showEmptyColonyOrVillageError(true)
+    verify(uiActions, atLeastOnce()).showEmptyDistrictError(true)
+    verify(uiActions, atLeastOnce()).showEmptyStateError(true)
+    verify(uiActions, atLeastOnce()).showLengthTooShortPhoneNumberError(true, 6)
   }
 
   @Test
@@ -450,14 +440,14 @@ class PatientEntryScreenLogicTest {
       onNext(ColonyOrVillageChanged(""))
     }
 
-    verify(validationActions).showEmptyFullNameError(false)
-    verify(validationActions, atLeastOnce()).showEmptyDateOfBirthAndAgeError(false)
-    verify(validationActions, atLeastOnce()).showInvalidDateOfBirthError(false)
-    verify(validationActions, atLeastOnce()).showDateOfBirthIsInFutureError(false)
-    verify(validationActions).showMissingGenderError(false)
-    verify(validationActions, atLeastOnce()).showEmptyColonyOrVillageError(false)
-    verify(validationActions).showEmptyDistrictError(false)
-    verify(validationActions).showEmptyStateError(false)
+    verify(uiActions).showEmptyFullNameError(false)
+    verify(uiActions, atLeastOnce()).showEmptyDateOfBirthAndAgeError(false)
+    verify(uiActions, atLeastOnce()).showInvalidDateOfBirthError(false)
+    verify(uiActions, atLeastOnce()).showDateOfBirthIsInFutureError(false)
+    verify(uiActions).showMissingGenderError(false)
+    verify(uiActions, atLeastOnce()).showEmptyColonyOrVillageError(false)
+    verify(uiActions).showEmptyDistrictError(false)
+    verify(uiActions).showEmptyStateError(false)
   }
 
   // TODO: Write these similarly structured regression tests in a smarter way.
@@ -480,7 +470,7 @@ class PatientEntryScreenLogicTest {
       onNext(SaveClicked)
     }
 
-    verify(ui, never()).openMedicalHistoryEntryScreen()
+    verify(uiActions, never()).openMedicalHistoryEntryScreen()
     verify(patientRepository, never()).saveOngoingEntry(any())
   }
 
@@ -502,7 +492,7 @@ class PatientEntryScreenLogicTest {
       onNext(SaveClicked)
     }
 
-    verify(ui, never()).openMedicalHistoryEntryScreen()
+    verify(uiActions, never()).openMedicalHistoryEntryScreen()
     verify(patientRepository, never()).saveOngoingEntry(any())
   }
 
@@ -524,7 +514,7 @@ class PatientEntryScreenLogicTest {
       onNext(SaveClicked)
     }
 
-    verify(ui, never()).openMedicalHistoryEntryScreen()
+    verify(uiActions, never()).openMedicalHistoryEntryScreen()
     verify(patientRepository, never()).saveOngoingEntry(any())
   }
 
@@ -548,7 +538,7 @@ class PatientEntryScreenLogicTest {
       onNext(SaveClicked)
     }
 
-    verify(ui).openMedicalHistoryEntryScreen()
+    verify(uiActions).openMedicalHistoryEntryScreen()
     verify(patientRepository).saveOngoingEntry(any())
     verify(patientRegisteredCount).set(any())
   }
@@ -565,7 +555,7 @@ class PatientEntryScreenLogicTest {
       onNext(GenderChanged(Optional.of(gender)))
     }
 
-    verify(ui, times(1)).scrollFormOnGenderSelection()
+    verify(uiActions, times(1)).scrollFormOnGenderSelection()
   }
 
   @Suppress("Unused")
@@ -593,9 +583,9 @@ class PatientEntryScreenLogicTest {
 
     // This is order dependent because finding the first field
     // with error is only possible once the errors are set.
-    val inOrder = inOrder(ui, validationActions)
-    inOrder.verify(validationActions).showEmptyDistrictError(true)
-    inOrder.verify(ui).scrollToFirstFieldWithError()
+    val inOrder = inOrder(uiActions)
+    inOrder.verify(uiActions).showEmptyDistrictError(true)
+    inOrder.verify(uiActions).scrollToFirstFieldWithError()
   }
 
   @Test

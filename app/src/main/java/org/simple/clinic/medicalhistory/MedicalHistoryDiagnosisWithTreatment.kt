@@ -1,5 +1,6 @@
 package org.simple.clinic.medicalhistory
 
+import android.animation.LayoutTransition
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -44,6 +45,10 @@ class MedicalHistoryDiagnosisWithTreatment(
   init {
     val layoutInflater = LayoutInflater.from(context)
     _binding = ListMedicalhistoryDiagnosisWithTreatmentBinding.inflate(layoutInflater, this)
+    layoutTransition = LayoutTransition().apply {
+      enableTransitionType(LayoutTransition.CHANGING)
+      setDuration(LayoutTransition.CHANGING, 150)
+    }
   }
 
   fun showTreatmentQuestion() {

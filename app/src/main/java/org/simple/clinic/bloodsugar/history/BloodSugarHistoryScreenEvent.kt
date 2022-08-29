@@ -1,5 +1,6 @@
 package org.simple.clinic.bloodsugar.history
 
+import org.simple.clinic.bloodsugar.BloodSugarHistoryListItemDataSourceFactory
 import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.widgets.UiEvent
@@ -15,3 +16,7 @@ object AddNewBloodSugarClicked : BloodSugarHistoryScreenEvent() {
 data class BloodSugarClicked(val bloodSugarMeasurement: BloodSugarMeasurement) : BloodSugarHistoryScreenEvent() {
   override val analyticsName: String = "Blood Sugar History:Blood Sugar Clicked"
 }
+
+data class BloodSugarHistoryLoaded(
+    val bloodSugarHistoryListItemDataSourceFactory: BloodSugarHistoryListItemDataSourceFactory
+) : BloodSugarHistoryScreenEvent()

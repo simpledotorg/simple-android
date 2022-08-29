@@ -8,4 +8,7 @@ interface PatientsTabUi {
   fun showUserStatusAsPendingVerification()
   fun hideUserAccountStatus()
   fun showUserStatusAsWaitingForApproval()
+  fun renderAppUpdateReason(appStalenessInMonths: Int)
+  fun showCriticalAppUpdateCard()
+  fun showDrugStockReminderCard()
 }

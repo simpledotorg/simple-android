@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-  <string name="app_name">ሲምፕል</string>
+  <string name="app_name">ቀላል</string>
 
   <!-- Common -->
   <string name="gender_female">ሴት</string>
@@ -11,8 +11,8 @@
   <!--suppress UnusedResources -->
   <string name="gender_female_letter">ሴ</string>
   <!--suppress UnusedResources -->
-  <string name="gender_trans_letter">ጾኢ</string>
-  <string name="api_unexpected_error">የሆነ ስህተት ተከስቷል። እባክዎ ደግመው ይሞክሩ</string>
+  <string name="gender_trans_letter">ጾእ</string>
+  <string name="api_unexpected_error">የሆነ ስህተት ተከስቷል። እባክዎ እንደገና ይሞክሩ</string>
   <string name="api_network_error">ምንም የበይነመረብ ግንኙነት የለም</string>
   <string name="api_server_error">የሰርቨር ስህተት! እባክዎ ቆየት ብለው ይሞክሩ።</string>
 
@@ -20,37 +20,37 @@
   <string name="country_india">ህንድ</string>
   <string name="country_bangladesh">ባንግላደሽ</string>
   <string name="country_ethiopia">ኢትዮጵያ</string>
-  <string name="country_sri_lanka">Sri Lanka</string>
+  <string name="country_sri_lanka">ስሪ ላንካ</string>
+  <string name="country_demo">ማሳያ ሀገር</string>
 
   <!-- Home -->
-  <string name="home_help">እርዳታ</string>
-  <string name="home_settings">ቅንጅቶች</string>
+  <string name="home_help">እገዛ</string>
+  <string name="home_settings">ቅንብሮች</string>
 
   <!--Business id Identifier -->
-  <string name="identifiertype_bp_passport">የደም ግፊት ፓስፖርት</string>
+  <string name="identifiertype_bp_passport">የቢፒ ፓስፖርት</string>
   <string name="identifiertype_bangladesh_national_id">ብሔራዊ መታወቂያ ቁጥር</string>
   <string name="identifiertype_ethiopia_medical_record_number">የህክምና መዝገብ ቁጥር</string>
   <string name="identifiertype_unknown">መታወቂያ</string>
   <string name="identifiertype_india_national_health_id">ብሔራዊ የጤና መታወቂያ</string>
   <string name="identifiertype_sri_lanka_national_id">ብሔራዊ መታወቂያ ቁጥር</string>
+  <string name="identifiertype_sri_lanka_personal_health_number">የግል ጤና ቁጥር</string>
 
   <!-- Patient search -->
   <string name="instantsearch_hint">ስም ፣ ስልክ ወይም መታወቂያ</string>
-
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">በዚህ ዝርዝር ውስጥ ታካሚውንውን ማግኘት አልተቻለም?</string>
   <string name="patientsearchresults_register_patient">እንደ አዲስ ታካሚ ይመዝገቡ</string>
-  <string name="patientsearchresults_item_last_seen">ጎብኝተዋል</string>
   <string name="patientsearchresults_item_phone_number">ስልክ ቁጥር</string>
   <string name="patientsearchresults_item_birthdate">የትውልድ ቀን</string>
 
   <!-- Manual patient entry -->
-  <string name="patiententry_contentdescription_up_button">ወደ ፍለጋ ተመለስ</string>
+  <string name="patiententry_contentdescription_up_button">ወደ ፍለጋ ይመለሱ</string>
   <string name="patiententry_full_name">የታካሚ ስም</string>
   <string name="patiententry_phone_number">ስልክ ቁጥር</string>
   <string name="patiententry_bangladesh_national_id">ብሔራዊ መታወቂያ ቁጥር</string>
   <string name="patiententry_ethiopia_medical_record_number">የህክምና መዝገብ ቁጥር</string>
-  <string name="patiententry_sri_lanka_national_id">ብሔራዊ መታወቂያ ቁጥር</string>
+  <string name="patiententry_sri_lanka_personal_health_number">የግል ጤና ቁጥር</string>
   <string name="patiententry_date_of_birth_unfocused">የትውልድ ቀን</string>
   <string name="patiententry_date_of_birth_focused">የ.ት.ቅ፡ ቀቀ/ወወ/ዐዐ</string>
   <string name="patiententry_dateofbirth_and_age_separator">ወይም</string>
@@ -79,7 +79,6 @@
   <string name="patiententry_error_dateofbirth_is_in_future">የታካሚውን የትውልድ ቀን ያስተካክሉ</string>
   <string name="patiententry_error_phonenumber_blank">የስልክ ቁጥር ባዶ ልሆን አይችልም</string>
   <string name="patiententry_error_phonenumber_length_less">የስልክ ቁጥር ከ %1$s ዲጂቶች በታች መሆን አይችልም</string>
-  <string name="patiententry_error_phonenumber_length_more">የስልክ ቁጥር ከ %1$s ዲጂቶች በላይ መሆን አይችልም</string>
   <string name="patiententry_identifier_bp_passport">የደም ግፊት ፓስፖርት</string>
   <string name="patiententry_consent_header">ስምምነት:\u0020</string>
   <string name="patiententry_consent_first_para">ከዚህ በታች መታ በማድረግ እዚህ ያስገቡት ማንኛውም የታካሚ መረጃ በተገቢው በተረጋገጠ ስምምነት የተገኘ መሆኑን ያረጋግጣሉ። ይህ ማለት ታካሚው ወይም የታካሚው ሞግዚት የግል መረጃ ወደ መተግበሪያው ውስጥ እንደሚገቡ ያውቃሉ፣ ምን መረጃ እየተሰበሰበ እንዳለ ይገነዘባሉ፣ እንዲሁም በመተግበሪያው ውስጥ የሚገኘውን የስልክ ቁጥር በመጠቀም በኤስኤምኤስ፣ በ WhatsApp ወይም በሌሎች መንገዶች ሊገናኙ እንደሚችሉ ያውቃሉ።</string>
@@ -97,6 +96,7 @@
   <string name="patientedit_confirm_discard_ok">ይወገዱ</string>
   <string name="patientedit_confirm_discard_cancel">ይቅር</string>
   <string name="patientedit_delete_patient">ያስወግዱ</string>
+  <string name="patientedit_add_button">ያክሉ</string>
 
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
@@ -272,20 +272,23 @@
   <string name="overdue_no_patients">ምንም የዘገየ ታካሚ የለም</string>
   <string name="overdue_empty_desc">ለቀጣይ የደም ግፊት ንባብ መርሃግብር ተቀጥረው ያልመጡትን ታካሚዎችመደወል ይችላሉ</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
-  <string name="overdue_list_item_diagnosis_diabetes">የስኳር በሽታ</string>
-  <string name="overdue_list_item_diagnosis_hypertension">ከፍተኛ የደም ግፊት</string>
-  <string name="overdue_list_item_diagnosis_none">ምንም</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s ቀን አልduል</item>
     <item quantity="other">%s ቀናት ጊዜው አልፎበታል</item>
   </plurals>
   <string name="overdue_list_item_village">መንደር</string>
-  <string name="overduelist_diagnosis_label">ምርመራ</string>
-  <string name="overduelist_visited">ጎብኝተዋል</string>
   <string name="overduelist_high_risk">ከፍተኛ ተጋላጭነት</string>
-  <string name="overduelist_transferred">ተላልፏል ወደ</string>
   <string name="overdue_download">አውርድ</string>
   <string name="overdue_share">ያጋሩ</string>
+  <string name="overdue_no_pending_patients">ተረ የሚጠቢቁ ታካሚዎች የሉም</string>
+  <string name="overdue_pending_list_button_see_all">ሁሉንም ይመልከቱ</string>
+  <string name="overdue_pending_list_button_see_less">በትንሹ ይመልከቱ</string>
+  <string name="overdue_pending_to_call_header">ደወልን የሚጠብቁ</string>
+  <string name="overdue_agreed_to_visit_call_header">ለመታየት የተስማሙ</string>
+  <string name="overdue_remind_to_call_header">በኋላ ለመደወል አስታውስ</string>
+  <string name="overdue_removed_from_list_call_header">ከተራ ያውጡ</string>
+  <string name="overdue_no_visit_in_one_year_call_header">በ 1 አመት ዉስጥ ጉብኝት የለም</string>
+
 
   <!-- Facility change -->
 
@@ -295,6 +298,10 @@
   <string name="enterotp_incorrect_code">ትክክል ያልሆነ ኮድ ፣ እባክዎ እንደገና ይሞክሩ</string>
   <string name="enterotp_resend_sms">ኤስኤምኤስ እንደገና ይላኩ</string>
   <string name="enterotp_sms_sent">አዲስ የማረጋገጫ SMS ተልኳል</string>
+  <string name="enterotp_try_again_after">በኋላ እንደገና ይሞክሩ</string>
+  <string name="otpentry_error_incorrect_otp_attempts_limit_reached" tools:ignore="PluralsCandidate">%s የተሳሳቱ ሙከራዎችን አድርገዋል</string>
+  <string name="otpentry_error_incorrect_otp_attempts_remaining">ትክክል ያልሆነ ኮድ፣  %s ሙከራዎች ይቀራሉ</string>
+  <!-- minutes:seconds -->
 
   <!-- Schedule appointment -->
   <string name="scheduleappointment_next_visit_in">ቀጣዩ ጉብኝት መርሃግብር በ</string>
@@ -342,8 +349,8 @@
   <string name="newmedicalhistory_yes">አዎ</string>
   <string name="newmedicalhistory_no">አይ</string>
   <string name="newmedicalhistory_history">ታሪክ</string>
-  <string name="newmedicalhistory_diagnosis">ምርመራ (አስፈላጊ)</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">ባለፈው ወር ውስጥ ህመምተኞው በማንኛውም ጊዜ የBP መድሃኒት ወስዷል? (አስፈላጊ)</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">በሽተኛው ባለፈው ወር ውስጥ የስኳር በሽታ መድኃኒቶችን ወስዶ ነበር? (ያስፈልጋል)</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">ምንም</string>
@@ -356,7 +363,11 @@
   <string name="scansimpleid_enteredcode_error_not_required_length">የደም ግፊት ፓስፖርት ቁጥር ከ 7 ቁጥሮች በታች ነው</string>
   <string name="scansimpleid_type_number">ወይም ቁጥር ይተይቡ</string>
   <string name="scansimpleid_invalid_qr_code">ትክክለኛ የጤና መታወቂያ ይቃኙ</string>
+  <string name="scansimpleid_error_state_snackbar_ok">እሺ</string>
+  <string name="scansimpleid_identfier_already_exists">መታወቂያ ለሌላ ታካሚ ተሰጥቷል።\nአዲስ የጤና መታወቂያ ይቃኙ።</string>
   <string name="scansimpleid_bp_passport_or_national_health_id">BP ፓስፖርት ቁጥር ወይም የብሔራዊ የጤና መታወቂያ</string>
+  <string name="scansimpleid_bp_passport_title">የደም ግፊት ፓስፖርት</string>
+  <string name="scansimpleid_national_id_title">ብሔራዊ መታወቂያ ቁጥር</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">ለመጣመር በመጠባበቅ ላይ </string>
@@ -438,7 +449,6 @@
 
   <!-- Select Country Screen -->
   <string name="selectcountry_logo_contentdescription">ቀላል አርማ</string>
-  <string name="selectcountry_next">ቀጣይ</string>
   <string name="selectcountry_title">ሀገርዎን ይምረጡ</string>
   <string name="selectcountry_networkerror">ምንም የበይነመረብ ግንኙነት የለም!</string>
   <string name="selectcountry_servererror">የሰርቨር ስህተት! እባክዎ ቆየት ብለው ይሞክሩ!</string>
@@ -522,13 +532,13 @@
   <string name="alertfacilitychange_facility_name">%s?</string>
 
   <!-- Prescribed Drug Summary -->
-  <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
   <string name="contactpatient_agreed_to_visit">ታካሚን ”ለመጎብኘት ተስማምቷል” ብለው ያመላክቱ</string>
   <string name="contactpatient_remind_call_later">በኋላ ላይ ለመደወል ያስታውሱ…</string>
   <string name="contactpatient_remove_from_list">ጊዜው ካለፈበት ዝርዝር ያስወግዱ…</string>
   <string name="contactpatient_result_of_call">የ ስልክ ጥሪ ውጤት</string>
+  <string name="contactpatient_call">ይደውሉ</string>
   <string name="contactpatient_call_normal">መደበኛ</string>
   <string name="contactpatient_call_secure">ደህንነቱ የተጠበቀ</string>
   <string name="contactpatient_help_text">ደህንነቱ የተጠበቀ ጥሪዎች ቁጥርዎን ይደብቃሉ እና ክፍያ ነፃ ናቸው</string>
@@ -557,6 +567,7 @@
   <string name="contactpatient_moved_to_private">ወደ የግል ጤና ባለሙያው ወይም ተቋም ተዛውሯል</string>
   <string name="contactpatient_patient_died">በህይወት የለም</string>
   <string name="contactpatient_other_reason">ሌላ ምክንያት</string>
+  <string name="contactpatient_unknown">የማይታወቅ</string>
   <string name="contactpatient_patient_registered_at">የተመዘገበው በ</string>
   <string name="contactpatient_patient_transfer_from">የተላለፈው ከ</string>
   <string name="contactpatient_phone">ስልክ ቁጥር</string>
@@ -722,6 +733,7 @@
   <!-- Select ongoing hypertension treatment dialog -->
   <string name="select_ongoing_hypertension_treatment_title">ባለፈው ወር ውስጥ ህመምተኞው በማንኛውም ጊዜ የBP መድሃኒት ወስዷል? </string>
   <string name="select_ongoing_hypertension_treatment_message">አዎ ወይንም አይን ይምረጡ</string>
+  <string name="select_ongoing_diabetes_treatment_message">ባለፈው ወር ውስጥ በሽተኛው በማንኛውም ጊዜ የስኳር በሽታ መድኃኒቶችን ከወሰደ ያረጋግጡ።</string>
   <string name="select_ongoing_hypertension_treatment_positive_action">እሺ</string>
 
   <!-- Custom drugs search -->
@@ -749,4 +761,104 @@
   <string name="custom_drug_entry_sheet_save_button_text">ሴቭ</string>
   <string name="custom_drug_entry_sheet_add_button_text">ያክሉ</string>
   <string name="custom_drug_entry_sheet_frequency_dialog_done">ተጠናቅቋል</string>
+  <!-- Select state screen -->
+  <string name="select_state_title">ክሊኒክዎ የት ነው?</string>
+  <string name="select_state_networkerror">ምንም የበይነመረብ ግንኙነት የለም!</string>
+  <string name="select_state_servererror">የሰርቨር ስህተት! እባክዎ ቆየት ብለው ይሞክሩ!</string>
+  <string name="select_state_genericerror">የሆነ ስህተት ተከስቷል! እባክዎ ቆየት ብለው ይሞክሩ!</string>
+
+  <!-- Patient status view -->
+  <string name="patient_status_died">በህይወት የለም</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">ምርመራ ይለወጥ?</string>
+  <string name="change_diagnosis_message">በሽተኛው የደም ግፊት ወይም የስኳር በሽታ እንዳለበት ከታወቀ እባክዎን አዎ ብለው ምልክት ያድርጉ።</string>
+  <string name="change_diagnosis_positive">ይቀይሩ</string>
+  <string name="change_diagnosis_negative">አሁን አይደለም</string>
+
+  <!-- Overdue download notification -->
+  <string name="overdue_download_notification_failed_title">ማውረድ አልተሳካም።</string>
+  <string name="overdue_download_notification_failed_subtitle">ከተወሰነ ጊዜ በኋላ እንደገና ይሞክሩ</string>
+  <string name="overdue_download_notification_in_progress_title">ጊዜው ያለፈበት የመስመር ዝርዝር በማውረድ ላይ</string>
+  <string name="overdue_download_notification_cancel">ይቅር</string>
+  <string name="overdue_download_notification_succeeded_title">ማውረድ ተጠናቅቋል</string>
+  <string name="overdue_download_notification_succeeded_subtitle">ለመክፈት ጠቅ ያድርጉ</string>
+
+  <!-- Overdue download no active network connection dialog -->
+  <string name="overdue_download_no_active_network_connection_dialog_title">ኢንተርኔት የለም</string>
+  <string name="overdue_download_no_active_network_connection_dialog_message">በኢንተርኔትዎን ይፈትሹ እና እንደገና ይሞክሩ።</string>
+  <string name="overdue_download_no_active_network_connection_dialog_positive_button">እሺ</string>
+
+  <!-- Select overdue download format dialog -->
+  <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">ሉህ</string>
+  <string name="select_overdue_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="select_overdue_download_format_dialog_action_negative">ይቅር</string>
+  <string name="select_overdue_download_format_dialog_title_download">አውርድ እንደ</string>
+  <string name="select_overdue_download_format_dialog_title_share">አካፍል እንደ</string>
+  <string name="select_overdue_download_format_dialog_action_positive_download">አውርድ</string>
+  <string name="select_overdue_download_format_dialog_action_positive_share">ያጋሩ</string>
+  <string name="select_overdue_download_format_dialog_share_with">አካፍል ከ</string>
+  <string name="not_enough_storage_error_dialog_title">በቂ ማከማቻ የለም</string>
+  <string name="not_enough_storage_error_dialog_message">ጥቂት ፋይሎችን ሰርዝ እና እንደገና ሞክር</string>
+  <string name="download_failed_error_dialog_title">ማውረድ አልተቻለም</string>
+  <string name="download_failed_error_dialog_message">የሆነ ስህተት ተከስቷል። ጥቂት ደቂቃዎችን ይጠብቁ እና እንደገና ይሞክሩ</string>
+  <string name="next_appointment_view_title">የክትትል ቀጠሮ</string>
+  <string name="next_appointment_view_add">ያክሉ</string>
+  <string name="next_appointment_view_change">ለውጥ</string>
+  <string name="next_appointment_none">ምንም</string>
+  <string name="next_appointment_appointment_at_facility">በ %s </string>
+  <string name="next_appointment_today">ዛሬ</string>
+  <plurals name="next_appointment_plurals">
+    <item quantity="one">%d ቀን</item>
+    <item quantity="other">%d ቀናት</item>
+  </plurals>
+  <plurals name="next_appointment_overdue_plurals">
+    <item quantity="one">%d ቀን አልduል</item>
+    <item quantity="other">%d ቀናት ጊዜው አልፎበታል</item>
+  </plurals>
+
+  <!-- App update notification -->
+  <string name="app_update_notification_subtext">እባክህ ቀላል መተግበሪያዎን በGoogle Play Store  ውስጥ በተቻለ ፍጥነት ያዘምኑ።</string>
+  <string name="critical_app_update_notification_subtext">ጠቃሚ ዝማኔዎች ይገኛሉ። ቀላል መተግበሪያዎን ከGoogle Playstore ያዘምኑ።</string>
+
+  <!-- Critical app update dialog -->
+  <string name="critical_update_required_dialog_title">ወሳኝ ዝማኔ ያስፈልጋል</string>
+  <string name="critical_update_required_dialog_content">አስፈላጊ ለሆኑ የደህንነት ለውጦች እና የቅርብ ጊዜ ባህሪያት አሁን ያዘምኑ</string>
+  <string name="critical_security_update_required_reason">የመተግበሪያ ደህንነት ግምት ውስጥ ገብቶዋል።
+ </string>
+  <string name="critical_update_required_dialog_update_button_text">አሁን ያዘምኑ</string>
+  <string name="critical_update_required_dialog_help_section_title">እርዳታ ይፈልጋሉ?</string>
+  <string name="critical_update_required_dialog_help_section_content">ከጓደኛዊ ድጋፍ ቡድናችን እርዳታ ለማግኘት ከታች ያለውን ቁልፍ መታ ያድርጉ።</string>
+  <string name="critical_update_required_reason">መተግበሪያ %d ወራት ያለፈበት ነው።</string>
+
+  <!-- Critical app update card -->
+  <string name="critical_update_required_card_title">ወሳኝ ዝማኔ</string>
+  <string name="critical_update_required_card_content">አስፈላጊ ለሆኑ የደህንነት ለውጦች እና የቅርብ ጊዜ ባህሪያት አሁን ያዘምኑ</string>
+  <string name="update_required_reason">መተግበሪያ %d ወራት ያለፈበት ነው።</string>
+  <string name="critical_update_required_card_update_button_text">አሁን ያዘምኑ</string>
+
+  <!-- Drug stock reminder notification -->
+  <string name="drug_stock_reminder_notification">በመጠባበቅ ላይ ያለዎትን የመድኃኒት ክምችት ሪፖርት ያጠናቅቁ %1$s</string>
+  <string name="drug_stock_reminder_card_title">የመድሃኒት ክምችት</string>
+  <string name="drug_stock_reminder_card_content">በመጠባበቅ ላይ ያለዎትን የመድኃኒት ክምችት ሪፖርት ያጠናቅቁ %1$s</string>
+  <string name="drug_stock_reminder_button_text">የመድሃኒት ክምችት ያስገቡ</string>
+
+  <!-- Drug stock reminder no active network connection dialog -->
+  <string name="drug_stock_reminder_no_active_network_connection_dialog_title">ኢንተርኔት የለም</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_message">በኢንተርኔትዎን ይፈትሹ እና እንደገና ይሞክሩ።</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_positive_button">እሺ</string>
+
+
+  <!-- Clinical Decision Support Alerts -->
+  <string name="clinical_decision_support_alert_bp_high_title">የደም ግፊት ከፍተኛ ነው። መድሃኒቶች ጨምረዋል?</string>
+  <string name="clinical_decision_support_alert_bp_high_subtitle">ሕመምተኛው አዘውትሮ መድሃኒቶቹን የሚወስድ ከሆነ ፕሮቶኮልን ይከተሉ</string>
+
+  <!-- Call Result Outcome Message -->
+
+  <!-- Overdue Instant Search -->
+  <string name="overdue_search_patient_name_or_village">በስም ወይም በመንደር ይፈልጉ</string>
+  <string name="overdue_search_hint">ስም ወይም መንደር ያስገቡ</string>
+  <string name="overdue_search_no_search_results_title">ምንም ሕመምተኞች አልተገኙም።</string>
+  <string name="overdue_search_no_search_results_desc">ከፍለጋህ ሁሉንም ያለፈባቸው ታካሚዎች እዚህ ታያለህ</string>
+
 </resources>

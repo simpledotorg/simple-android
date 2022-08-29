@@ -15,7 +15,9 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaNationalId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaPersonalHealthNumber
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
+import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 
@@ -30,28 +32,37 @@ data class Identifier(
 ) : Parcelable {
 
   fun displayValue(): String {
-    return when (type) {
-      BpPassport -> {
-        val shortCode = BpPassport.shortCode(this)
+    return try {
+      when (type) {
+        BpPassport -> {
+          val shortCode = BpPassport.shortCode(this)
 
-        val prefix = shortCode.substring(0, 3)
-        val suffix = shortCode.substring(3)
+          val prefix = shortCode.substring(0, 3)
+          val suffix = shortCode.substring(3)
 
-        "$prefix${Unicode.nonBreakingSpace}$suffix"
+          "$prefix${Unicode.nonBreakingSpace}$suffix"
+        }
+        BangladeshNationalId -> value
+        EthiopiaMedicalRecordNumber -> value
+        IndiaNationalHealthId -> {
+          val enteredCode = value
+          val prefix = enteredCode.substring(0, 2)
+          val subString1 = enteredCode.substring(2, 6)
+          val subString2 = enteredCode.substring(6, 10)
+          val suffix = enteredCode.substring(10)
+
+          "$prefix${Unicode.nonBreakingSpace}$subString1${Unicode.nonBreakingSpace}$subString2${Unicode.nonBreakingSpace}$suffix"
+        }
+        SriLankaNationalId -> value
+        SriLankaPersonalHealthNumber -> value
+        is Unknown -> value
       }
-      BangladeshNationalId -> value
-      EthiopiaMedicalRecordNumber -> value
-      IndiaNationalHealthId -> {
-        val enteredCode = value
-        val prefix = enteredCode.substring(0, 2)
-        val subString1 = enteredCode.substring(2, 6)
-        val subString2 = enteredCode.substring(6, 10)
-        val suffix = enteredCode.substring(10)
+    } catch (e: StringIndexOutOfBoundsException) {
+      // TODO (SM): Get more information on the crash and resolve the issue accordingly
+      val errorMessage = "Failed to parse the `Identifier` of type: $type, with value length: ${value.length}"
+      CrashReporter.report(StringIndexOutOfBoundsException(errorMessage))
 
-        "$prefix${Unicode.nonBreakingSpace}$subString1${Unicode.nonBreakingSpace}$subString2${Unicode.nonBreakingSpace}$suffix"
-      }
-      SriLankaNationalId -> value
-      is Unknown -> value
+      return value
     }
   }
 
@@ -62,6 +73,7 @@ data class Identifier(
       EthiopiaMedicalRecordNumber -> resources.getString(R.string.identifiertype_ethiopia_medical_record_number)
       IndiaNationalHealthId -> resources.getString(R.string.identifiertype_india_national_health_id)
       SriLankaNationalId -> resources.getString(R.string.identifiertype_sri_lanka_national_id)
+      SriLankaPersonalHealthNumber -> resources.getString(R.string.identifiertype_sri_lanka_personal_health_number)
       is Unknown -> resources.getString(R.string.identifiertype_unknown)
     }
   }
@@ -96,6 +108,9 @@ data class Identifier(
     object SriLankaNationalId : IdentifierType()
 
     @Parcelize
+    object SriLankaPersonalHealthNumber : IdentifierType()
+
+    @Parcelize
     data class Unknown(val actual: String) : IdentifierType()
 
     object TypeAdapter : SafeEnumTypeAdapter<IdentifierType>(
@@ -104,7 +119,8 @@ data class Identifier(
             BangladeshNationalId to "bangladesh_national_id",
             EthiopiaMedicalRecordNumber to "ethiopia_medical_record",
             IndiaNationalHealthId to "india_national_health_id",
-            SriLankaNationalId to "sri_lanka_national_id"
+            SriLankaNationalId to "sri_lanka_national_id",
+            SriLankaPersonalHealthNumber to "sri_lanka_personal_health_number"
         ),
         unknownStringToEnumConverter = { Unknown(it) },
         unknownEnumToStringConverter = { (it as Unknown).actual }
@@ -129,9 +145,6 @@ data class Identifier(
     }
 
     companion object {
-      @VisibleForTesting(otherwise = VisibleForTesting.NONE)
-      fun random() = TypeAdapter.knownMappings.keys.shuffled().first()
-
       @VisibleForTesting(otherwise = VisibleForTesting.NONE)
       fun values() = TypeAdapter.knownMappings.keys.toList()
     }

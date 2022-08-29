@@ -1,5 +1,6 @@
 package org.simple.clinic.registration.register
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -18,20 +19,22 @@ class RegistrationLoadingEffectHandler @AssistedInject constructor(
     private val registerUser: RegisterUser,
     private val clock: UtcClock,
     private val passwordHasher: PasswordHasher,
-    @Assisted private val uiActions: RegistrationLoadingUiActions
+    @Assisted private val viewEffectsConsumer: Consumer<RegistrationLoadingViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: RegistrationLoadingUiActions): RegistrationLoadingEffectHandler
+    fun create(
+        viewEffectsConsumer: Consumer<RegistrationLoadingViewEffect>
+    ): RegistrationLoadingEffectHandler
   }
 
   fun build(): ObservableTransformer<RegistrationLoadingEffect, RegistrationLoadingEvent> {
     return RxMobius
         .subtypeEffectHandler<RegistrationLoadingEffect, RegistrationLoadingEvent>()
         .addTransformer(RegisterUserAtFacility::class.java, registerUserAtFacility())
-        .addAction(GoToHomeScreen::class.java, uiActions::openHomeScreen, schedulers.ui())
         .addTransformer(ConvertRegistrationEntryToUserDetails::class.java, convertRegistrationEntryToUser())
+        .addConsumer(RegistrationLoadingViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 

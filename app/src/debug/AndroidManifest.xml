@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-  package="org.simple.clinic">
+  xmlns:tools="http://schemas.android.com/tools">
 
   <application
     android:name=".DebugClinicApp"
     android:icon="@mipmap/ic_launcher"
     tools:ignore="GoogleAppIndexingWarning"
     tools:replace="android:name,android:icon">
-
-    <meta-data
-      android:name="firebase_performance_collection_deactivated"
-      android:value="true" />
 
     <meta-data
       android:name="io.sentry.auto-init"
@@ -21,6 +16,7 @@
 
     <receiver
       android:name=".FakeDataGenerationReceiver"
+      android:exported="false"
       tools:ignore="ExportedReceiver">
       <intent-filter>
         <action android:name="org.simple.clinic.debug.GENERATE_FAKE_DATA" />
@@ -38,6 +34,7 @@
     <activity
       android:name=".WebviewTestActivity"
       android:enabled="false"
+      android:exported="true"
       android:label="WebViewTest">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />

@@ -3,8 +3,13 @@ package org.simple.clinic.summary
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
 import org.simple.clinic.user.User
+import org.simple.clinic.util.ParcelableOptional
+import org.simple.clinic.util.parcelable
+import org.simple.clinic.util.toOptional
 import java.util.UUID
 
 @Parcelize
@@ -16,7 +21,11 @@ data class PatientSummaryModel(
     val hasCheckedForInvalidPhone: Boolean,
     val userLoggedInStatus: User.LoggedInStatus?,
     val medicalOfficers: List<MedicalOfficer>?,
-    val hasShownMeasurementsWarningDialog: Boolean
+    val hasShownMeasurementsWarningDialog: Boolean,
+    val hasPatientRegistrationData: Boolean?,
+    val isNewestBpEntryHigh: Boolean?,
+    val hasPrescribedDrugsChangedToday: Boolean?,
+    val scheduledAppointment: ParcelableOptional<Appointment>?
 ) : Parcelable, PatientSummaryChildModel {
 
   companion object {
@@ -29,10 +38,17 @@ data class PatientSummaryModel(
           hasCheckedForInvalidPhone = false,
           userLoggedInStatus = null,
           medicalOfficers = null,
-          hasShownMeasurementsWarningDialog = false
+          hasShownMeasurementsWarningDialog = false,
+          hasPatientRegistrationData = null,
+          isNewestBpEntryHigh = null,
+          hasPrescribedDrugsChangedToday = null,
+          scheduledAppointment = null
       )
     }
   }
+
+  val hasPatientDied: Boolean
+    get() = patientSummaryProfile!!.patient.status == PatientStatus.Dead
 
   val hasLoadedPatientSummaryProfile: Boolean
     get() = patientSummaryProfile != null
@@ -58,8 +74,11 @@ data class PatientSummaryModel(
   val hasMedicalOfficers: Boolean
     get() = medicalOfficers.isNullOrEmpty().not()
 
+  val hasScheduledAppointment: Boolean
+    get() = scheduledAppointment != null && scheduledAppointment.isPresent()
+
   override fun readyToRender(): Boolean {
-    return hasLoadedPatientSummaryProfile && hasLoadedCurrentFacility
+    return hasLoadedPatientSummaryProfile && hasLoadedCurrentFacility && hasPatientRegistrationData != null
   }
 
   fun patientSummaryProfileLoaded(patientSummaryProfile: PatientSummaryProfile): PatientSummaryModel {
@@ -84,5 +103,17 @@ data class PatientSummaryModel(
 
   fun shownMeasurementsWarningDialog(): PatientSummaryModel {
     return copy(hasShownMeasurementsWarningDialog = true)
+  }
+
+  fun patientRegistrationDataLoaded(hasPatientRegistrationData: Boolean): PatientSummaryModel {
+    return copy(hasPatientRegistrationData = hasPatientRegistrationData)
+  }
+
+  fun clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh: Boolean, hasPrescribedDrugsChangedToday: Boolean): PatientSummaryModel {
+    return copy(isNewestBpEntryHigh = isNewestBpEntryHigh, hasPrescribedDrugsChangedToday = hasPrescribedDrugsChangedToday)
+  }
+
+  fun scheduledAppointmentLoaded(appointment: Appointment?): PatientSummaryModel {
+    return copy(scheduledAppointment = appointment.toOptional().parcelable())
   }
 }

@@ -13,25 +13,40 @@
     android:id="@+id/patient_details"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/spacing_16">
+    android:paddingBottom="@dimen/spacing_16">
 
     <ImageView
       android:id="@+id/patientGenderIcon"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_16"
+      android:layout_marginTop="@dimen/spacing_16"
+      app:layout_constraintEnd_toStartOf="@id/patientNameTextView"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
       tools:src="@drawable/ic_patient_female" />
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+      android:id="@+id/checkbox"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_4"
+      android:layout_marginTop="@dimen/spacing_4"
+      android:layout_marginEnd="@dimen/spacing_4"
+      android:visibility="gone"
+      app:layout_constraintEnd_toStartOf="@id/patientNameTextView"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
       android:id="@+id/patientNameTextView"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/spacing_12"
+      android:layout_marginTop="@dimen/spacing_16"
       android:layout_marginEnd="@dimen/spacing_12"
       android:textAppearance="?attr/textAppearanceBody0Medium"
       android:textColor="?attr/colorPrimary"
-      app:layout_constraintEnd_toStartOf="@id/callButton"
       app:layout_constraintHorizontal_bias="0"
       app:layout_constraintStart_toEndOf="@id/patientGenderIcon"
       app:layout_constraintTop_toTopOf="parent"
@@ -101,6 +116,7 @@
       android:id="@+id/callButton"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginEnd="@dimen/spacing_16"
       android:background="?attr/selectableItemBackgroundBorderless"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"

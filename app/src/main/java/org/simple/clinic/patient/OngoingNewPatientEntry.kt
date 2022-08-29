@@ -16,7 +16,6 @@ import org.simple.clinic.patient.PatientEntryValidationError.FullNameEmpty
 import org.simple.clinic.patient.PatientEntryValidationError.InvalidDateOfBirth
 import org.simple.clinic.patient.PatientEntryValidationError.MissingGender
 import org.simple.clinic.patient.PatientEntryValidationError.PersonalDetailsEmpty
-import org.simple.clinic.patient.PatientEntryValidationError.PhoneNumberLengthTooLong
 import org.simple.clinic.patient.PatientEntryValidationError.PhoneNumberLengthTooShort
 import org.simple.clinic.patient.PatientEntryValidationError.PhoneNumberNonNullButBlank
 import org.simple.clinic.patient.PatientEntryValidationError.StateEmpty
@@ -25,9 +24,7 @@ import org.simple.clinic.patient.ReminderConsent.Granted
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.Blank
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooLong
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LengthTooShort
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 import org.simple.clinic.util.toNullable
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator.Result.Invalid.ExceedsMaxAgeLimit
@@ -193,10 +190,9 @@ data class OngoingNewPatientEntry(
       numberValidator: PhoneNumberValidator,
       phoneNumber: PhoneNumber
   ) {
-    errors += when (val errorNumber = numberValidator.validate(phoneNumber.number, LANDLINE_OR_MOBILE)) {
+    errors += when (val errorNumber = numberValidator.validate(phoneNumber.number)) {
       is Blank -> listOf(PhoneNumberNonNullButBlank)
       is LengthTooShort -> listOf(PhoneNumberLengthTooShort(errorNumber.minimumAllowedNumberLength))
-      is LengthTooLong -> listOf(PhoneNumberLengthTooLong(errorNumber.maximumRequiredNumberLength))
       is PhoneNumberValidator.Result.ValidNumber -> listOf()
     }
   }

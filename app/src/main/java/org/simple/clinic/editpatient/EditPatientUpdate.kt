@@ -10,12 +10,13 @@ import org.simple.clinic.editpatient.EditPatientValidationError.DateOfBirthParse
 import org.simple.clinic.editpatient.EditPatientValidationError.DistrictEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.FullNameEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
-import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooLong
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.clinic.scanid.OpenedFrom.EditPatientScreen.ToAddBpPassport
+import org.simple.clinic.scanid.OpenedFrom.EditPatientScreen.ToAddNHID
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 
@@ -25,7 +26,7 @@ class EditPatientUpdate(
     private val ageValidator: UserInputAgeValidator
 ) : Update<EditPatientModel, EditPatientEvent, EditPatientEffect> {
   private val errorsForEventType = mapOf(
-      PhoneNumberChanged::class to setOf(PhoneNumberEmpty, PhoneNumberLengthTooLong(0), PhoneNumberLengthTooShort(0)),
+      PhoneNumberChanged::class to setOf(PhoneNumberEmpty, PhoneNumberLengthTooShort(0)),
       NameChanged::class to setOf(FullNameEmpty),
       ColonyOrVillageChanged::class to setOf(ColonyOrVillageEmpty),
       StateChanged::class to setOf(StateEmpty),
@@ -54,10 +55,21 @@ class EditPatientUpdate(
       is PatientSaved -> next(model.buttonStateChanged(EditPatientState.NOT_SAVING_PATIENT), GoBackEffect)
       is SaveClicked -> onSaveClicked(model)
       is AlternativeIdChanged -> next(model.updateAlternativeId(event.alternativeId))
-      is BpPassportsFetched -> dispatch(DisplayBpPassportsEffect(event.bpPasssports))
-      is InputFieldsLoaded -> dispatch(SetupUi(event.inputFields) as EditPatientEffect)
+      is BpPassportsFetched -> next(model.bpPassportsLoaded(event.bpPasssports))
+      is InputFieldsLoaded -> next(model.inputFieldsLoaded(event.inputFields))
       is ColonyOrVillagesFetched -> next(model.updateColonyOrVillagesList(event.colonyOrVillages))
+      is AddNHIDButtonClicked -> dispatch(OpenSimpleScanIdScreen(ToAddNHID))
+      is AddBpPassportButtonClicked -> dispatch(OpenSimpleScanIdScreen(ToAddBpPassport))
+      is BpPassportAdded -> addBpPassports(model, event)
     }
+  }
+
+  private fun addBpPassports(model: EditPatientModel, event: BpPassportAdded): Next<EditPatientModel, EditPatientEffect> {
+    val currentListOfBpPassports = model.currentListOfBpPassports
+    return if (currentListOfBpPassports.contains(event.identifier.last()))
+      next(model.addBpPassports(currentListOfBpPassports))
+    else
+      next(model.addBpPassports(currentListOfBpPassports + event.identifier))
   }
 
   private fun onTextFieldChanged(

@@ -150,7 +150,28 @@
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:clipChildren="false"
+      android:clipToPadding="false"
       android:orientation="vertical">
+
+      <include
+        android:id="@+id/clinicalDecisionSupportBpHighAlert"
+        layout="@layout/view_clinical_decision_support_bp_high" />
+
+      <org.simple.clinic.widgets.PatientStatusView
+        android:id="@+id/patientDiedStatusView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_8"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:layout_marginEnd="@dimen/spacing_8"
+        android:visibility="gone"
+        app:cardBackgroundColor="?attr/colorError"
+        app:statusIcon="@drawable/ic_patient_dead_32dp"
+        app:statusIconTint="?attr/colorOnError"
+        app:statusText="@string/patient_status_died"
+        app:statusTextColor="?attr/colorOnError"
+        tools:visibility="visible" />
 
       <org.simple.clinic.summary.prescribeddrugs.DrugSummaryView
         android:id="@+id/drugSummaryView"
@@ -176,6 +197,15 @@
         android:layout_marginTop="@dimen/spacing_8"
         android:layout_marginEnd="@dimen/spacing_8"
         android:visibility="gone" />
+
+      <org.simple.clinic.summary.nextappointment.NextAppointmentCardView
+        android:id="@+id/nextAppointmentFacilityView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_8"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:layout_marginEnd="@dimen/spacing_8"
+        android:visibility="visible" />
 
       <org.simple.clinic.summary.assignedfacility.AssignedFacilityView
         android:id="@+id/assignedFacilityView"

@@ -63,6 +63,14 @@
           android:id="@+id/simpleVideoLayout"
           layout="@layout/simple_video_layout" />
 
+        <include
+          android:id="@+id/appUpdateCardLayout"
+          layout="@layout/app_update_card" />
+
+        <include
+          android:id="@+id/drugStockReminderCardLayout"
+          layout="@layout/drug_stock_reminder_card" />
+
       </org.simple.clinic.widgets.ViewFlipperWithLayoutEditorPreview>
 
       <LinearLayout

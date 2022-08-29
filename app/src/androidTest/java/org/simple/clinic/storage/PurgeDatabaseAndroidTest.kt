@@ -5,9 +5,9 @@ import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.TestData
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.SyncStatus
+import org.simple.sharedTestCode.TestData
 import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -35,6 +35,8 @@ class PurgeDatabaseAndroidTest {
 
   private val prescribedDrugsDao by lazy { appDatabase.prescriptionDao() }
 
+  private val callResultDao by lazy { appDatabase.callResultDao() }
+
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
@@ -45,24 +47,24 @@ class PurgeDatabaseAndroidTest {
     // given
     val deletedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("2463850b-c294-4db4-906b-68d9ea8e99a1"),
+        syncStatus = SyncStatus.DONE,
         generatePhoneNumber = true,
         generateBusinessId = true,
-        patientDeletedAt = Instant.parse("2018-01-01T00:00:00Z"),
-        syncStatus = SyncStatus.DONE
+        patientDeletedAt = Instant.parse("2018-01-01T00:00:00Z")
     )
     val notDeletedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("427bfcf1-1b6c-42fa-903b-8527c594a0f9"),
+        syncStatus = SyncStatus.DONE,
         generatePhoneNumber = true,
         generateBusinessId = true,
-        syncStatus = SyncStatus.DONE,
         patientDeletedAt = null
     )
     val deletedButUnsyncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("3f31b541-afae-41a3-9eb3-6e269ad6fb5d"),
+        syncStatus = SyncStatus.PENDING,
         generatePhoneNumber = true,
         generateBusinessId = true,
-        patientDeletedAt = Instant.parse("2018-01-01T00:00:00Z"),
-        syncStatus = SyncStatus.PENDING
+        patientDeletedAt = Instant.parse("2018-01-01T00:00:00Z")
     )
     patientAddressDao.save(listOf(deletedPatientProfile.address, notDeletedPatientProfile.address, deletedButUnsyncedPatientProfile.address))
     patientDao.save(listOf(deletedPatientProfile.patient, notDeletedPatientProfile.patient, deletedButUnsyncedPatientProfile.patient))
@@ -87,13 +89,13 @@ class PurgeDatabaseAndroidTest {
     // given
     val syncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
-        generatePhoneNumber = false,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        generatePhoneNumber = false
     )
     val notSyncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
-        generatePhoneNumber = false,
-        syncStatus = SyncStatus.PENDING
+        syncStatus = SyncStatus.PENDING,
+        generatePhoneNumber = false
     )
     val deletedPhoneNumber = TestData.patientPhoneNumber(
         uuid = UUID.fromString("805b93ac-c53f-4a66-b845-e3c458fa0aa6"),
@@ -130,13 +132,13 @@ class PurgeDatabaseAndroidTest {
     // given
     val syncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        generateBusinessId = false
     )
     val notSyncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.PENDING
+        syncStatus = SyncStatus.PENDING,
+        generateBusinessId = false
     )
     val deletedBusinessId = TestData.businessId(
         uuid = UUID.fromString("805b93ac-c53f-4a66-b845-e3c458fa0aa6"),
@@ -175,13 +177,13 @@ class PurgeDatabaseAndroidTest {
     // given
     val syncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        generateBusinessId = false
     )
     val notSyncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.PENDING
+        syncStatus = SyncStatus.PENDING,
+        generateBusinessId = false
     )
     val deletedBloodPressureMeasurement = TestData.bloodPressureMeasurement(
         uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
@@ -222,13 +224,13 @@ class PurgeDatabaseAndroidTest {
     // given
     val syncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        generateBusinessId = false
     )
     val notSyncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.PENDING
+        syncStatus = SyncStatus.PENDING,
+        generateBusinessId = false
     )
     val deletedBloodSugarMeasurement = TestData.bloodSugarMeasurement(
         uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
@@ -269,13 +271,13 @@ class PurgeDatabaseAndroidTest {
     // given
     val syncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        generateBusinessId = false
     )
     val notSyncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.PENDING
+        syncStatus = SyncStatus.PENDING,
+        generateBusinessId = false
     )
     val deletedPrescription = TestData.prescription(
         uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
@@ -316,13 +318,13 @@ class PurgeDatabaseAndroidTest {
     // given
     val syncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        generateBusinessId = false
     )
     val notSyncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.PENDING
+        syncStatus = SyncStatus.PENDING,
+        generateBusinessId = false
     )
 
     val deletedAppointment = TestData.appointment(
@@ -367,13 +369,13 @@ class PurgeDatabaseAndroidTest {
     // given
     val syncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        generateBusinessId = false
     )
     val notSyncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.PENDING
+        syncStatus = SyncStatus.PENDING,
+        generateBusinessId = false
     )
     val deletedMedicalHistory = TestData.medicalHistory(
         uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
@@ -410,87 +412,122 @@ class PurgeDatabaseAndroidTest {
   }
 
   @Test
-  fun purging_the_database_should_delete_cancelled_and_visited_appointments() {
+  fun purging_the_database_should_delete_all_synced_appointments_except_the_latest_one_for_patient() {
     // given
-    val syncedPatientProfile = TestData.patientProfile(
+    val patientProfile1 = TestData.patientProfile(
         patientUuid = UUID.fromString("57d2ef99-59e7-4dc5-9cc5-4fe6917386b7"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        generateBusinessId = false
     )
-    val notSyncedPatientProfile = TestData.patientProfile(
+    val patientProfile2 = TestData.patientProfile(
         patientUuid = UUID.fromString("00001c29-a108-49b7-8db2-e867782c633f"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.PENDING
+        syncStatus = SyncStatus.PENDING,
+        generateBusinessId = false
     )
-    val scheduledAppointment = TestData.appointment(
+    val scheduledAppointmentAndSyncedForPatient1 = TestData.appointment(
         uuid = UUID.fromString("26170a3e-e04e-4488-9893-30e7e5463e0e"),
-        deletedAt = null,
         syncStatus = SyncStatus.DONE,
         status = Appointment.Status.Scheduled,
-        patientUuid = syncedPatientProfile.patientUuid
+        patientUuid = patientProfile1.patientUuid,
+        createdAt = Instant.parse("2022-01-01T00:00:00Z"),
+        updatedAt = Instant.parse("2022-01-01T00:00:00Z"),
+        deletedAt = null
     )
-    val cancelledAppointment = TestData.appointment(
+    val cancelledAppointmentAndSyncedForPatient1 = TestData.appointment(
         uuid = UUID.fromString("25492f9e-865d-4296-ab31-e5cc6141cd58"),
-        deletedAt = null,
         syncStatus = SyncStatus.DONE,
         status = Appointment.Status.Cancelled,
-        patientUuid = syncedPatientProfile.patientUuid
+        patientUuid = patientProfile1.patientUuid,
+        createdAt = Instant.parse("2022-02-01T00:00:00Z"),
+        updatedAt = Instant.parse("2022-02-01T00:00:00Z"),
+        deletedAt = null
     )
-    val cancelledButUnsyncedAppointment = TestData.appointment(
-        uuid = UUID.fromString("e17b4fed-a2cd-453d-b717-d60ca184892b"),
-        deletedAt = null,
-        syncStatus = SyncStatus.PENDING,
-        status = Appointment.Status.Cancelled,
-        patientUuid = notSyncedPatientProfile.patientUuid
-    )
-    val visitedAppointment = TestData.appointment(
+    val visitedButUnsyncedAppointmentForPatient1 = TestData.appointment(
         uuid = UUID.fromString("13333a77-f20d-4b96-9c11-c0b38ae99ce5"),
-        deletedAt = null,
-        syncStatus = SyncStatus.DONE,
-        status = Appointment.Status.Visited,
-        patientUuid = syncedPatientProfile.patientUuid
-    )
-    val visitedButUnsyncedAppointment = TestData.appointment(
-        uuid = UUID.fromString("927b08d3-b19e-4231-8d0b-dcf28e240474"),
-        deletedAt = null,
         syncStatus = SyncStatus.PENDING,
         status = Appointment.Status.Visited,
-        patientUuid = notSyncedPatientProfile.patientUuid
-    )
-    val appointmentWithUnknownStatus = TestData.appointment(
-        uuid = UUID.fromString("a89a3a34-8395-4a55-89b6-562146369ad1"),
+        patientUuid = patientProfile1.patientUuid,
+        createdAt = Instant.parse("2022-03-01T00:00:00Z"),
+        updatedAt = Instant.parse("2022-03-01T00:00:00Z"),
         deletedAt = null,
-        syncStatus = SyncStatus.DONE,
+    )
+    val appointmentWithUnknownStatusAndSyncedForPatient1 = TestData.appointment(
+        uuid = UUID.fromString("a89a3a34-8395-4a55-89b6-562146369ad1"),
+        syncStatus = SyncStatus.PENDING,
         status = Appointment.Status.Unknown("rescheduled"),
-        patientUuid = syncedPatientProfile.patientUuid
+        patientUuid = patientProfile1.patientUuid,
+        createdAt = Instant.parse("2022-04-01T00:00:00Z"),
+        updatedAt = Instant.parse("2022-04-01T00:00:00Z"),
+        deletedAt = null,
+    )
+    val visitedAppointmentAndSyncedForPatient1 = TestData.appointment(
+        uuid = UUID.fromString("121c04e3-a65b-4e5e-b4fe-eb149f1d2352"),
+        syncStatus = SyncStatus.DONE,
+        status = Appointment.Status.Visited,
+        patientUuid = patientProfile1.patientUuid,
+        createdAt = Instant.parse("2022-05-01T00:00:00Z"),
+        updatedAt = Instant.parse("2022-05-01T00:00:00Z"),
+        deletedAt = null,
+    )
+    val scheduledAppointmentAndSyncedForPatient2 = TestData.appointment(
+        uuid = UUID.fromString("6eeed863-5f2a-4232-b0b2-374839c38a27"),
+        syncStatus = SyncStatus.DONE,
+        status = Appointment.Status.Scheduled,
+        patientUuid = patientProfile2.patientUuid,
+        createdAt = Instant.parse("2022-01-01T00:00:00Z"),
+        updatedAt = Instant.parse("2022-01-01T00:00:00Z"),
+        deletedAt = null
+    )
+    val cancelledButUnsyncedAppointmentForPatient2 = TestData.appointment(
+        uuid = UUID.fromString("e17b4fed-a2cd-453d-b717-d60ca184892b"),
+        syncStatus = SyncStatus.PENDING,
+        status = Appointment.Status.Cancelled,
+        patientUuid = patientProfile2.patientUuid,
+        createdAt = Instant.parse("2022-02-01T00:00:00Z"),
+        updatedAt = Instant.parse("2022-02-01T00:00:00Z"),
+        deletedAt = null
+    )
+    val visitedButUnsyncedAppointmentForPatient2 = TestData.appointment(
+        uuid = UUID.fromString("927b08d3-b19e-4231-8d0b-dcf28e240474"),
+        syncStatus = SyncStatus.PENDING,
+        status = Appointment.Status.Visited,
+        patientUuid = patientProfile2.patientUuid,
+        createdAt = Instant.parse("2022-03-01T00:00:00Z"),
+        updatedAt = Instant.parse("2022-03-01T00:00:00Z"),
+        deletedAt = null,
     )
 
     appointmentDao.save(listOf(
-        scheduledAppointment,
-        visitedAppointment,
-        cancelledAppointment,
-        visitedButUnsyncedAppointment,
-        cancelledButUnsyncedAppointment,
-        appointmentWithUnknownStatus
+        scheduledAppointmentAndSyncedForPatient1,
+        visitedButUnsyncedAppointmentForPatient1,
+        cancelledAppointmentAndSyncedForPatient1,
+        appointmentWithUnknownStatusAndSyncedForPatient1,
+        scheduledAppointmentAndSyncedForPatient2,
+        visitedButUnsyncedAppointmentForPatient2,
+        cancelledButUnsyncedAppointmentForPatient2,
+        visitedAppointmentAndSyncedForPatient1
     ))
 
-    assertThat(appointmentDao.getOne(scheduledAppointment.uuid)).isEqualTo(scheduledAppointment)
-    assertThat(appointmentDao.getOne(cancelledAppointment.uuid)).isEqualTo(cancelledAppointment)
-    assertThat(appointmentDao.getOne(cancelledButUnsyncedAppointment.uuid)).isEqualTo(cancelledButUnsyncedAppointment)
-    assertThat(appointmentDao.getOne(visitedAppointment.uuid)).isEqualTo(visitedAppointment)
-    assertThat(appointmentDao.getOne(visitedButUnsyncedAppointment.uuid)).isEqualTo(visitedButUnsyncedAppointment)
-    assertThat(appointmentDao.getOne(appointmentWithUnknownStatus.uuid)).isEqualTo(appointmentWithUnknownStatus)
+    assertThat(appointmentDao.getOne(scheduledAppointmentAndSyncedForPatient1.uuid)).isEqualTo(scheduledAppointmentAndSyncedForPatient1)
+    assertThat(appointmentDao.getOne(cancelledAppointmentAndSyncedForPatient1.uuid)).isEqualTo(cancelledAppointmentAndSyncedForPatient1)
+    assertThat(appointmentDao.getOne(visitedButUnsyncedAppointmentForPatient1.uuid)).isEqualTo(visitedButUnsyncedAppointmentForPatient1)
+    assertThat(appointmentDao.getOne(appointmentWithUnknownStatusAndSyncedForPatient1.uuid)).isEqualTo(appointmentWithUnknownStatusAndSyncedForPatient1)
+    assertThat(appointmentDao.getOne(scheduledAppointmentAndSyncedForPatient2.uuid)).isEqualTo(scheduledAppointmentAndSyncedForPatient2)
+    assertThat(appointmentDao.getOne(cancelledButUnsyncedAppointmentForPatient2.uuid)).isEqualTo(cancelledButUnsyncedAppointmentForPatient2)
+    assertThat(appointmentDao.getOne(visitedButUnsyncedAppointmentForPatient2.uuid)).isEqualTo(visitedButUnsyncedAppointmentForPatient2)
+    assertThat(appointmentDao.getOne(visitedAppointmentAndSyncedForPatient1.uuid)).isEqualTo(visitedAppointmentAndSyncedForPatient1)
 
     // when
     appDatabase.purge(Instant.parse("2021-06-01T00:00:00Z"))
 
     // then
-    assertThat(appointmentDao.getOne(scheduledAppointment.uuid)).isEqualTo(scheduledAppointment)
-    assertThat(appointmentDao.getOne(cancelledAppointment.uuid)).isNull()
-    assertThat(appointmentDao.getOne(visitedAppointment.uuid)).isNull()
-    assertThat(appointmentDao.getOne(cancelledButUnsyncedAppointment.uuid)).isEqualTo(cancelledButUnsyncedAppointment)
-    assertThat(appointmentDao.getOne(visitedButUnsyncedAppointment.uuid)).isEqualTo(visitedButUnsyncedAppointment)
-    assertThat(appointmentDao.getOne(appointmentWithUnknownStatus.uuid)).isEqualTo(appointmentWithUnknownStatus)
+    assertThat(appointmentDao.getOne(scheduledAppointmentAndSyncedForPatient1.uuid)).isNull()
+    assertThat(appointmentDao.getOne(cancelledAppointmentAndSyncedForPatient1.uuid)).isNull()
+    assertThat(appointmentDao.getOne(visitedButUnsyncedAppointmentForPatient1.uuid)).isEqualTo(visitedButUnsyncedAppointmentForPatient1)
+    assertThat(appointmentDao.getOne(cancelledButUnsyncedAppointmentForPatient2.uuid)).isEqualTo(cancelledButUnsyncedAppointmentForPatient2)
+    assertThat(appointmentDao.getOne(visitedButUnsyncedAppointmentForPatient2.uuid)).isEqualTo(visitedButUnsyncedAppointmentForPatient2)
+    assertThat(appointmentDao.getOne(appointmentWithUnknownStatusAndSyncedForPatient1.uuid)).isEqualTo(appointmentWithUnknownStatusAndSyncedForPatient1)
+    assertThat(appointmentDao.getOne(visitedAppointmentAndSyncedForPatient1.uuid)).isEqualTo(visitedAppointmentAndSyncedForPatient1)
   }
 
   @Test
@@ -498,29 +535,29 @@ class PurgeDatabaseAndroidTest {
     // given
     val patientWithPassedRetentionTime = TestData.patientProfile(
         patientUuid = UUID.fromString("c3c84410-02f5-430e-a067-1830683a4d27"),
-        retainUntil = Instant.parse("2021-05-21T00:00:00Z"),
-        generateBusinessId = true,
-        generatePhoneNumber = true,
+        patientAddressUuid = UUID.fromString("a5b8a711-a9e0-4474-8b9f-3b6193ec6001"),
         syncStatus = SyncStatus.DONE,
+        generatePhoneNumber = true,
+        generateBusinessId = true,
         patientDeletedAt = Instant.parse("2021-02-21T00:00:00Z"),
-        patientAddressUuid = UUID.fromString("a5b8a711-a9e0-4474-8b9f-3b6193ec6001")
+        retainUntil = Instant.parse("2021-05-21T00:00:00Z")
     )
 
     val patientWithNullRetentionTime = TestData.patientProfile(
         patientUuid = UUID.fromString("6f8ae9d8-522e-4eed-8a0d-4be393669945"),
-        generateBusinessId = false,
-        generatePhoneNumber = true,
-        syncStatus = SyncStatus.DONE,
         patientAddressUuid = UUID.fromString("8e0f0203-b7e3-4d4a-91be-3bd3385a7ee5"),
+        syncStatus = SyncStatus.DONE,
+        generatePhoneNumber = true,
+        generateBusinessId = false,
         retainUntil = null
     )
 
     val patientWithNotPassedRetentionTime = TestData.patientProfile(
         patientUuid = UUID.fromString("afaea7ee-22cc-4a27-9906-309a377f83be"),
-        retainUntil = Instant.parse("2022-01-05T00:00:00Z"),
         syncStatus = SyncStatus.PENDING,
-        generateBusinessId = true,
         generatePhoneNumber = true,
+        generateBusinessId = true,
+        retainUntil = Instant.parse("2022-01-05T00:00:00Z"),
     )
 
     patientAddressDao.save(listOf(patientWithPassedRetentionTime.address, patientWithNotPassedRetentionTime.address, patientWithNullRetentionTime.address))
@@ -547,13 +584,13 @@ class PurgeDatabaseAndroidTest {
     val deletedPatientUuid = UUID.fromString("1f86c321-5539-44f8-8708-3bcc0e44feed")
     val syncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("73f22e49-669e-4959-843e-7684622c4184"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.DONE
+        syncStatus = SyncStatus.DONE,
+        generateBusinessId = false
     )
     val notSyncedPatientProfile = TestData.patientProfile(
         patientUuid = UUID.fromString("ee60db3e-9ecb-49aa-829c-474f707b3739"),
-        generateBusinessId = false,
-        syncStatus = SyncStatus.PENDING
+        syncStatus = SyncStatus.PENDING,
+        generateBusinessId = false
     )
     val deletedBloodPressureMeasurement = TestData.bloodPressureMeasurement(
         uuid = UUID.fromString("aa2c81ce-236c-4e4a-9ebd-f88a31afb15d"),
@@ -736,5 +773,39 @@ class PurgeDatabaseAndroidTest {
     // then
     assertThat(prescribedDrugsDao.getOne(deletedPrescribedDrug.uuid)).isNull()
     assertThat(prescribedDrugsDao.getOne(notDeletedPrescribedDrug.uuid)).isEqualTo(notDeletedPrescribedDrug)
+  }
+
+  @Test
+  fun purging_the_database_should_delete_soft_deleted_call_results() {
+    // given
+    val deletedCallResult = TestData.callResult(
+        id = UUID.fromString("57e5bc23-0865-48d7-8e3b-34b111b318f2"),
+        deletedAt = Instant.parse("2018-01-01T00:00:02Z"),
+        syncStatus = SyncStatus.DONE
+    )
+    val notDeletedCallResult = TestData.callResult(
+        id = UUID.fromString("2bd34f85-052e-4c1b-a110-b7a92097762a"),
+        deletedAt = null,
+        syncStatus = SyncStatus.DONE
+    )
+    val deletedButUnsyncedCallResult = TestData.callResult(
+        id = UUID.fromString("b924feac-72de-48dc-93d5-74c4bd774a0f"),
+        deletedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        syncStatus = SyncStatus.PENDING
+    )
+
+    callResultDao.save(listOf(deletedCallResult, notDeletedCallResult, deletedButUnsyncedCallResult))
+
+    assertThat(callResultDao.getOne(deletedCallResult.id)).isEqualTo(deletedCallResult)
+    assertThat(callResultDao.getOne(notDeletedCallResult.id)).isEqualTo(notDeletedCallResult)
+    assertThat(callResultDao.getOne(deletedButUnsyncedCallResult.id)).isEqualTo(deletedButUnsyncedCallResult)
+
+    // when
+    appDatabase.purge(Instant.parse("2018-01-01T00:00:00Z"))
+
+    // then
+    assertThat(callResultDao.getOne(deletedCallResult.id)).isNull()
+    assertThat(callResultDao.getOne(notDeletedCallResult.id)).isEqualTo(notDeletedCallResult)
+    assertThat(callResultDao.getOne(deletedButUnsyncedCallResult.id)).isEqualTo(deletedButUnsyncedCallResult)
   }
 }

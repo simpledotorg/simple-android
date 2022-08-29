@@ -17,7 +17,7 @@ import junitparams.Parameters
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.editpatient.EditPatientState.NOT_SAVING_PATIENT
 import org.simple.clinic.editpatient.EditPatientValidationError.BothDateOfBirthAndAgeAdsent
 import org.simple.clinic.editpatient.EditPatientValidationError.ColonyOrVillageEmpty
@@ -26,29 +26,28 @@ import org.simple.clinic.editpatient.EditPatientValidationError.DateOfBirthParse
 import org.simple.clinic.editpatient.EditPatientValidationError.DistrictEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.FullNameEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
-import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooLong
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFieldsFactory
-import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
 import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.registration.phone.LengthBasedNumberValidator
-import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestUserClock
-import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.sharedTestCode.util.TestUserClock
+import org.simple.sharedTestCode.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.uuid.FakeUuidGenerator
+import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
@@ -69,7 +68,6 @@ class EditPatientScreenFormTest {
 
   private val uiEvents = PublishSubject.create<EditPatientEvent>()
   private val ui: EditPatientUi = mock()
-  private val viewRenderer = EditPatientViewRenderer(ui)
 
   private val utcClock: TestUtcClock = TestUtcClock()
   private val userClock: TestUserClock = TestUserClock()
@@ -79,12 +77,11 @@ class EditPatientScreenFormTest {
   private val country = TestData.country()
   private val user = TestData.loggedInUser()
 
-  private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider(
-      dateTimeFormatter = dateOfBirthFormat,
-      today = LocalDate.now(userClock)
-  ))
+  private val viewRenderer = EditPatientViewRenderer(ui)
 
-  private val viewEffectHandler = EditPatientViewEffectHandler(userClock, ui)
+  private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider())
+
+  private val viewEffectHandler = EditPatientViewEffectHandler(ui)
 
   @Test
   @Parameters(method = "params for hiding errors on text changes")
@@ -116,8 +113,8 @@ class EditPatientScreenFormTest {
     return listOf(
         HidingErrorsOnTextChangeParams(NameChanged(""), setOf(FullNameEmpty)),
         HidingErrorsOnTextChangeParams(NameChanged("Name"), setOf(FullNameEmpty)),
-        HidingErrorsOnTextChangeParams(PhoneNumberChanged(""), setOf(PhoneNumberEmpty, PhoneNumberLengthTooShort(0), PhoneNumberLengthTooLong(0))),
-        HidingErrorsOnTextChangeParams(PhoneNumberChanged("12345"), setOf(PhoneNumberEmpty, PhoneNumberLengthTooShort(0), PhoneNumberLengthTooLong(0))),
+        HidingErrorsOnTextChangeParams(PhoneNumberChanged(""), setOf(PhoneNumberEmpty, PhoneNumberLengthTooShort(0))),
+        HidingErrorsOnTextChangeParams(PhoneNumberChanged("12345"), setOf(PhoneNumberEmpty, PhoneNumberLengthTooShort(0))),
         HidingErrorsOnTextChangeParams(ColonyOrVillageChanged(""), setOf(ColonyOrVillageEmpty)),
         HidingErrorsOnTextChangeParams(ColonyOrVillageChanged("Colony"), setOf(ColonyOrVillageEmpty)),
         HidingErrorsOnTextChangeParams(StateChanged(""), setOf(StateEmpty)),
@@ -758,8 +755,11 @@ class EditPatientScreenFormTest {
         patient = TestData.patient(
             uuid = patientUuid,
             addressUuid = addressUuid,
-            age = null,
-            dateOfBirth = LocalDate.parse("2018-01-01")
+            patientAgeDetails = PatientAgeDetails(
+                ageValue = null,
+                ageUpdatedAt = null,
+                dateOfBirth = LocalDate.parse("2018-01-01")
+            )
         ),
         address = TestData.patientAddress(uuid = addressUuid),
         phoneNumbers = phoneNumber?.let { listOf(TestData.patientPhoneNumber(patientUuid = patientUuid, number = it)) }
@@ -796,13 +796,24 @@ class EditPatientScreenFormTest {
       profile
 
     }.let { profile ->
+      val ageDetails = profile.patient.ageDetails
       if (ageValue != null) {
-        val age = Age(ageValue, Instant.now(utcClock))
-        return@let profile.copy(patient = profile.patient.withAge(age))
-
+        return@let profile.copy(patient = profile.patient.copy(
+            ageDetails = ageDetails.copy(
+                ageValue = ageValue,
+                ageUpdatedAt = Instant.now(utcClock),
+                dateOfBirth = null
+            )
+        ))
       } else if (dateOfBirthString != null) {
         val dateOfBirth = LocalDate.parse(dateOfBirthString)
-        return@let profile.copy(patient = profile.patient.withDateOfBirth(dateOfBirth))
+        return@let profile.copy(patient = profile.patient.copy(
+            ageDetails = ageDetails.copy(
+                ageValue = null,
+                ageUpdatedAt = null,
+                dateOfBirth = dateOfBirth
+            )
+        ))
       }
       profile
     }
@@ -825,20 +836,12 @@ class EditPatientScreenFormTest {
         viewEffectsConsumer = viewEffectHandler::handle
     )
 
-    val numberValidator = LengthBasedNumberValidator(
-        minimumRequiredLengthMobile = 10,
-        maximumAllowedLengthMobile = 10,
-        minimumRequiredLengthLandlinesOrMobile = 6,
-        maximumAllowedLengthLandlinesOrMobile = 12
-    )
+    val numberValidator = PhoneNumberValidator(minimumRequiredLength = 6)
 
     val fixture = MobiusTestFixture<EditPatientModel, EditPatientEvent, EditPatientEffect>(
         events = uiEvents,
-        defaultModel = EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null, NOT_SAVING_PATIENT),
+        defaultModel = EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null, NOT_SAVING_PATIENT, false, false),
         init = EditPatientInit(patient = patient,
-            address = address,
-            phoneNumber = phoneNumber,
-            bangladeshNationalId = null,
             isVillageTypeAheadEnabled = true),
         update = EditPatientUpdate(
             numberValidator = numberValidator,

@@ -20,7 +20,7 @@ import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
-import org.simple.clinic.router.ScreenResultBus
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.summary.PatientSummaryChildView
 import org.simple.clinic.summary.PatientSummaryModelUpdateCallback
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -177,7 +177,12 @@ class DrugSummaryView(
       prescriptions
           .map { drug ->
             val drugItemView = LayoutInflater.from(context).inflate(R.layout.list_patientsummary_prescripton_drug, this, false) as DrugSummaryItemView
-            drugItemView.render(drug.name, drug.dosage.orEmpty(), dateFormatter.format(drug.updatedAt.toLocalDateAtZone(userClock.zone)))
+            drugItemView.render(
+                drugName = drug.name,
+                drugDosage = drug.dosage,
+                drugFrequency = drug.frequency,
+                dateFormatter.format(drug.updatedAt.toLocalDateAtZone(userClock.zone))
+            )
             drugItemView
           }
           .forEach(drugsSummaryContainer::addView)

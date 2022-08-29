@@ -18,6 +18,9 @@ class ScreenFragmentCompat : Fragment(), HandlesBack {
     ScreenKey.key<ScreenKeyCompat>(this).key
   }
 
+  val screenName: String
+    get() = key.analyticsName
+
   override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,

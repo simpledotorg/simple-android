@@ -28,12 +28,19 @@ class AssignedFacilityEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<AssignedFacilityEffect, AssignedFacilityEvent> = RxMobius
       .subtypeEffectHandler<AssignedFacilityEffect, AssignedFacilityEvent>()
       .addTransformer(LoadAssignedFacility::class.java, loadAssignedFacility())
-      .addConsumer(ChangeAssignedFacility::class.java, { changeAssignedFacility(it) }, schedulersProvider.io())
+      .addTransformer(ChangeAssignedFacility::class.java, changeAssignedFacility())
+      .addAction(NotifyAssignedFacilityChanged::class.java, uiActions::notifyAssignedFacilityChanged, schedulersProvider.ui())
       .build()
 
-  private fun changeAssignedFacility(effect: ChangeAssignedFacility) {
-    val (patientUuid, assignedFacilityId) = effect
-    patientRepository.updateAssignedFacilityId(patientUuid, assignedFacilityId)
+  private fun changeAssignedFacility(): ObservableTransformer<ChangeAssignedFacility, AssignedFacilityEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { (patientUuid, assignedFacilityId) ->
+            patientRepository.updateAssignedFacilityId(patientUuid, assignedFacilityId)
+          }
+          .map { AssignedFacilityChanged }
+    }
   }
 
   private fun loadAssignedFacility(): ObservableTransformer<LoadAssignedFacility, AssignedFacilityEvent> {

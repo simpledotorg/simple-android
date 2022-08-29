@@ -16,9 +16,8 @@ import org.simple.clinic.SECURITY_PIN_LENGTH
 import org.simple.clinic.databinding.ScreenRegistrationConfirmPinBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.registration.location.RegistrationLocationPermissionScreenKey
+import org.simple.clinic.registration.location.RegistrationLocationPermissionScreen
 import org.simple.clinic.registration.pin.RegistrationPinScreenKey
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.widgets.hideKeyboard
@@ -32,7 +31,7 @@ class RegistrationConfirmPinScreen :
         RegistrationConfirmPinModel,
         RegistrationConfirmPinEvent,
         RegistrationConfirmPinEffect,
-        Unit>(),
+        RegistrationConfirmPinViewEffect>(),
     RegistrationConfirmPinUi,
     RegistrationConfirmPinUiActions {
 
@@ -77,7 +76,12 @@ class RegistrationConfirmPinScreen :
 
   override fun createInit() = RegistrationConfirmPinInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationConfirmPinViewEffect>) =
+      effectHandlerFactory.create(
+          viewEffectsConsumer = viewEffectsConsumer
+      ).build()
+
+  override fun viewEffectHandler() = RegistrationConfirmPinViewEffectHandler(this)
 
   override fun onAttach(context: Context) {
     super.onAttach(context)
@@ -107,7 +111,7 @@ class RegistrationConfirmPinScreen :
 
   private fun doneClicks(): Observable<RegistrationConfirmPinDoneClicked>? {
     val imeDoneClicks = confirmPinEditText
-        .editorActions() { it == EditorInfo.IME_ACTION_DONE }
+        .editorActions { it == EditorInfo.IME_ACTION_DONE }
         .map { RegistrationConfirmPinDoneClicked() }
 
     val pinAutoSubmits = confirmPinEditText
@@ -132,7 +136,7 @@ class RegistrationConfirmPinScreen :
 
   override fun openFacilitySelectionScreen(entry: OngoingRegistrationEntry) {
     binding.root.hideKeyboard()
-    router.push(RegistrationLocationPermissionScreenKey(entry).wrap())
+    router.push(RegistrationLocationPermissionScreen.Key(entry))
   }
 
   override fun goBackToPinScreen(entry: OngoingRegistrationEntry) {

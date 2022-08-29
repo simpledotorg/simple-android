@@ -14,6 +14,10 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
+import androidx.dynamicanimation.animation.DynamicAnimation
+import androidx.transition.AutoTransition
+import androidx.transition.Transition
+import androidx.transition.TransitionManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.Init
@@ -36,6 +40,8 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreenExpectingResult
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.mobius.ViewRenderer
@@ -49,6 +55,7 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.displayLetterRes
+import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionScreen
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
@@ -64,6 +71,7 @@ import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.scrollToChild
+import org.simple.clinic.widgets.spring
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.format.DateTimeFormatter
 import java.util.UUID
@@ -77,7 +85,7 @@ class PatientSummaryScreen :
         PatientSummaryModel,
         PatientSummaryEvent,
         PatientSummaryEffect,
-        Unit>(),
+        PatientSummaryViewEffect>(),
     PatientSummaryScreenUi,
     PatientSummaryUiActions,
     PatientSummaryChildView,
@@ -149,6 +157,15 @@ class PatientSummaryScreen :
   private val doneButtonFrame
     get() = binding.doneButtonFrame
 
+  private val patientDiedStatusView
+    get() = binding.patientDiedStatusView
+
+  private val nextAppointmentFacilityView
+    get() = binding.nextAppointmentFacilityView
+
+  private val clinicalDecisionSupportAlertView
+    get() = binding.clinicalDecisionSupportBpHighAlert.rootView
+
   @Inject
   lateinit var router: Router
 
@@ -171,9 +188,15 @@ class PatientSummaryScreen :
   @Inject
   lateinit var whatsAppMessageSender: WhatsAppMessageSender
 
+  @Inject
+  lateinit var features: Features
+
+  @Inject
+  lateinit var configReader: ConfigReader
+
   private var modelUpdateCallback: PatientSummaryModelUpdateCallback? = null
 
-  private val snackbarActionClicks = PublishSubject.create<PatientSummaryEvent>()
+  private val hotEvents = PublishSubject.create<PatientSummaryEvent>()
   private val hardwareBackClicks = PublishSubject.create<Unit>()
   private val subscriptions = CompositeDisposable()
 
@@ -191,10 +214,18 @@ class PatientSummaryScreen :
   }
 
   override fun uiRenderer(): ViewRenderer<PatientSummaryModel> {
-    return PatientSummaryViewRenderer(ui = this) { model ->
-      modelUpdateCallback?.invoke(model)
-    }
+    return PatientSummaryViewRenderer(
+        ui = this,
+        isNextAppointmentFeatureEnabled = features.isEnabled(Feature.NextAppointment),
+        modelUpdateCallback = { model ->
+          modelUpdateCallback?.invoke(model)
+        },
+        userClock = userClock,
+        cdssOverdueLimit = configReader.long("cdss_overdue_limit", 2).toInt()
+    )
   }
+
+  override fun viewEffectHandler() = PatientSummaryViewEffectHandler(this)
 
   override fun events(): Observable<PatientSummaryEvent> {
     return Observable
@@ -205,9 +236,11 @@ class PatientSummaryScreen :
             editButtonClicks(),
             phoneNumberClicks(),
             contactDoctorClicks(),
-            snackbarActionClicks,
+            hotEvents,
             logTeleconsultClicks(),
             changeAssignedFacilityClicks(),
+            nextAppointmentActionClicks(),
+            assignedFacilityChanges()
         )
         .compose(ReportAnalyticsEvents())
         .cast()
@@ -221,8 +254,10 @@ class PatientSummaryScreen :
     return PatientSummaryInit()
   }
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>): ObservableTransformer<PatientSummaryEffect, PatientSummaryEvent> {
-    return effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<PatientSummaryViewEffect>): ObservableTransformer<PatientSummaryEffect, PatientSummaryEvent> {
+    return effectHandlerFactory.create(
+        viewEffectsConsumer = viewEffectsConsumer
+    ).build()
   }
 
   override fun additionalEventSources() = listOf(
@@ -312,7 +347,11 @@ class PatientSummaryScreen :
     )
   }
 
-  private fun doneClicks() = doneButton.clicks().map { PatientSummaryDoneClicked(screenKey.patientUuid) }
+  private fun doneClicks() = doneButton
+      .clicks()
+      .map {
+        PatientSummaryDoneClicked(screenKey.patientUuid, screenKey.screenCreatedTimestamp)
+      }
 
   private fun contactDoctorClicks() = teleconsultButton.clicks().map { ContactDoctorClicked }
 
@@ -331,6 +370,22 @@ class PatientSummaryScreen :
       assignedFacilityView.changeAssignedFacilityClicks = { emitter.onNext(ChangeAssignedFacilityClicked) }
 
       emitter.setCancellable { assignedFacilityView.changeAssignedFacilityClicks = null }
+    }
+  }
+
+  private fun nextAppointmentActionClicks(): Observable<PatientSummaryEvent> {
+    return Observable.create { emitter ->
+      nextAppointmentFacilityView.nextAppointmentActionClicks = { emitter.onNext(NextAppointmentActionClicked) }
+
+      emitter.setCancellable { nextAppointmentFacilityView.nextAppointmentActionClicks = null }
+    }
+  }
+
+  private fun assignedFacilityChanges(): Observable<AssignedFacilityChanged> {
+    return Observable.create { emitter ->
+      assignedFacilityView.assignedFacilityChanges = { emitter.onNext(AssignedFacilityChanged) }
+
+      emitter.setCancellable { assignedFacilityView.assignedFacilityChanges = null }
     }
   }
 
@@ -372,12 +427,12 @@ class PatientSummaryScreen :
       val recordedDate = dateFormatter.format(recordedAt.toLocalDateAtZone(userClock.zone))
       val facilityNameAndDate = requireContext().getString(R.string.patientsummary_registered_facility, recordedDate, registeredFacilityName)
 
-      facilityNameAndDateTextView.visibility = View.VISIBLE
-      labelRegistered.visibility = View.VISIBLE
+      facilityNameAndDateTextView.visibility = VISIBLE
+      labelRegistered.visibility = VISIBLE
       facilityNameAndDateTextView.text = facilityNameAndDate
     } else {
-      facilityNameAndDateTextView.visibility = View.GONE
-      labelRegistered.visibility = View.GONE
+      facilityNameAndDateTextView.visibility = GONE
+      labelRegistered.visibility = GONE
     }
   }
 
@@ -467,11 +522,11 @@ class PatientSummaryScreen :
   }
 
   override fun showUpdatePhoneDialog(patientUuid: UUID) {
-    UpdatePhoneNumberDialog.show(patientUuid, activity.supportFragmentManager)
+    router.push(UpdatePhoneNumberDialog.Key(patientUuid))
   }
 
   override fun showAddPhoneDialog(patientUuid: UUID) {
-    AddPhoneNumberDialog.show(patientUuid, activity.supportFragmentManager)
+    router.push(AddPhoneNumberDialog.Key(patientUuid))
   }
 
   override fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier) {
@@ -481,7 +536,7 @@ class PatientSummaryScreen :
   }
 
   override fun showEditButton() {
-    editPatientButton.visibility = View.VISIBLE
+    editPatientButton.visibility = VISIBLE
   }
 
   override fun showDiabetesView() {
@@ -520,19 +575,19 @@ class PatientSummaryScreen :
   }
 
   override fun showTeleconsultButton() {
-    teleconsultButton.visibility = View.VISIBLE
+    teleconsultButton.visibility = VISIBLE
   }
 
   override fun hideTeleconsultButton() {
-    teleconsultButton.visibility = View.GONE
+    teleconsultButton.visibility = GONE
   }
 
   override fun showAssignedFacilityView() {
-    assignedFacilityView.visibility = View.VISIBLE
+    assignedFacilityView.visibility = VISIBLE
   }
 
   override fun hideAssignedFacilityView() {
-    assignedFacilityView.visibility = View.GONE
+    assignedFacilityView.visibility = GONE
   }
 
   override fun registerSummaryModelUpdateCallback(callback: PatientSummaryModelUpdateCallback?) {
@@ -540,11 +595,11 @@ class PatientSummaryScreen :
   }
 
   override fun hideDoneButton() {
-    doneButtonFrame.visibility = View.GONE
+    doneButtonFrame.visibility = GONE
   }
 
   override fun showTeleconsultLogButton() {
-    logTeleconsultButtonFrame.visibility = View.VISIBLE
+    logTeleconsultButtonFrame.visibility = VISIBLE
   }
 
   override fun navigateToTeleconsultRecordScreen(patientUuid: UUID, teleconsultRecordId: UUID) {
@@ -556,7 +611,12 @@ class PatientSummaryScreen :
         .setTitle(R.string.warning_add_measurements_title)
         .setMessage(R.string.warning_add_measurements_message)
         .setPositiveButton(R.string.warning_add_measurements_positive_button, null)
-        .setNegativeButton(R.string.warning_add_measurements_negative_button, null)
+        .setNegativeButton(R.string.warning_add_measurements_negative_button) { _, _ ->
+          hotEvents.onNext(MeasurementWarningNotNowClicked(
+              patientUuid = screenKey.patientUuid,
+              screenCreatedTimestamp = screenKey.screenCreatedTimestamp
+          ))
+        }
         .show()
   }
 
@@ -565,7 +625,12 @@ class PatientSummaryScreen :
         .setTitle(R.string.warning_add_blood_pressure_title)
         .setMessage(R.string.warning_add_blood_pressure_message)
         .setPositiveButton(R.string.warning_add_blood_pressure_positive_button, null)
-        .setNegativeButton(R.string.warning_add_blood_pressure_negative_button, null)
+        .setNegativeButton(R.string.warning_add_blood_pressure_negative_button) { _, _ ->
+          hotEvents.onNext(MeasurementWarningNotNowClicked(
+              patientUuid = screenKey.patientUuid,
+              screenCreatedTimestamp = screenKey.screenCreatedTimestamp
+          ))
+        }
         .show()
   }
 
@@ -574,7 +639,12 @@ class PatientSummaryScreen :
         .setTitle(R.string.warning_add_blood_sugar_title)
         .setMessage(R.string.warning_add_blood_sugar_message)
         .setPositiveButton(R.string.warning_add_blood_sugar_positive_button, null)
-        .setNegativeButton(R.string.warning_add_blood_sugar_negative_button, null)
+        .setNegativeButton(R.string.warning_add_blood_sugar_negative_button) { _, _ ->
+          hotEvents.onNext(MeasurementWarningNotNowClicked(
+              patientUuid = screenKey.patientUuid,
+              screenCreatedTimestamp = screenKey.screenCreatedTimestamp
+          ))
+        }
         .show()
   }
 
@@ -584,6 +654,96 @@ class PatientSummaryScreen :
 
   override fun dispatchNewAssignedFacility(facility: Facility) {
     assignedFacilityView.onNewAssignedFacilitySelected(facility)
+  }
+
+  override fun hidePatientDiedStatus() {
+    patientDiedStatusView.visibility = GONE
+  }
+
+  override fun showPatientDiedStatus() {
+    patientDiedStatusView.visibility = VISIBLE
+  }
+
+  override fun showNextAppointmentCard() {
+    nextAppointmentFacilityView.visibility = VISIBLE
+  }
+
+  override fun hideNextAppointmentCard() {
+    nextAppointmentFacilityView.visibility = GONE
+  }
+
+  override fun refreshNextAppointment() {
+    nextAppointmentFacilityView.refreshAppointmentDetails()
+  }
+
+  override fun showClinicalDecisionSupportAlert() {
+    clinicalDecisionSupportAlertView.translationY = clinicalDecisionSupportAlertView.height.unaryMinus().toFloat()
+
+    val spring = clinicalDecisionSupportAlertView.spring(DynamicAnimation.TRANSLATION_Y)
+
+    val transition = AutoTransition().apply {
+      excludeChildren(clinicalDecisionSupportAlertView, true)
+      excludeTarget(R.id.newBPItemContainer, true)
+      excludeTarget(R.id.bloodSugarItemContainer, true)
+      excludeTarget(R.id.drugsSummaryContainer, true)
+      // We are doing this to wait for the router transitions to be done before we start this.
+      startDelay = 500
+    }
+    val transitionListener = object : Transition.TransitionListener {
+      override fun onTransitionStart(transition: Transition) {
+      }
+
+      override fun onTransitionEnd(transition: Transition) {
+        transition.removeListener(this)
+        spring.animateToFinalPosition(0f)
+      }
+
+      override fun onTransitionCancel(transition: Transition) {
+      }
+
+      override fun onTransitionPause(transition: Transition) {
+      }
+
+      override fun onTransitionResume(transition: Transition) {
+      }
+    }
+    transition.addListener(transitionListener)
+    TransitionManager.beginDelayedTransition(summaryViewsContainer, transition)
+
+    clinicalDecisionSupportAlertView.visibility = VISIBLE
+  }
+
+  override fun hideClinicalDecisionSupportAlert() {
+    if (clinicalDecisionSupportAlertView.visibility != VISIBLE) return
+
+    val spring = clinicalDecisionSupportAlertView.spring(DynamicAnimation.TRANSLATION_Y)
+    (clinicalDecisionSupportAlertView.getTag(R.id.tag_clinical_decision_pending_end_listener) as?
+        DynamicAnimation.OnAnimationEndListener)?.let {
+      spring.removeEndListener(it)
+    }
+
+    val listener = object : DynamicAnimation.OnAnimationEndListener {
+      override fun onAnimationEnd(animation: DynamicAnimation<*>?, canceled: Boolean, value: Float, velocity: Float) {
+        spring.removeEndListener(this)
+        clinicalDecisionSupportAlertView.visibility = GONE
+      }
+    }
+    spring.addEndListener(listener)
+    clinicalDecisionSupportAlertView.setTag(R.id.tag_clinical_decision_pending_end_listener, listener)
+
+    val transition = AutoTransition().apply {
+      excludeChildren(clinicalDecisionSupportAlertView, true)
+      excludeTarget(R.id.newBPItemContainer, true)
+      excludeTarget(R.id.bloodSugarItemContainer, true)
+      excludeTarget(R.id.drugsSummaryContainer, true)
+    }
+    TransitionManager.beginDelayedTransition(summaryViewsContainer, transition)
+
+    spring.animateToFinalPosition(clinicalDecisionSupportAlertView.height.unaryMinus().toFloat())
+  }
+
+  override fun hideClinicalDecisionSupportAlertWithoutAnimation() {
+    clinicalDecisionSupportAlertView.visibility = GONE
   }
 
   interface Injector {

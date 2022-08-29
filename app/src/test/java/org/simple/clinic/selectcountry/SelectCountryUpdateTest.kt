@@ -7,7 +7,7 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 
 class SelectCountryUpdateTest {
 
@@ -63,22 +63,7 @@ class SelectCountryUpdateTest {
         .whenEvent(CountryChosen(bangladesh))
         .then(assertThatNext(
             hasModel(model.countryChosen(bangladesh)),
-            hasNoEffects()
-        ))
-  }
-
-  @Test
-  fun `when next is clicked, then save country`() {
-    val model = defaultModel
-        .manifestFetched(countries)
-        .countryChosen(bangladesh)
-
-    spec
-        .given(model)
-        .whenEvent(NextClicked)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(SaveCountryEffect(country = bangladesh) as SelectCountryEffect)
+            hasEffects(SaveCountryEffect(bangladesh))
         ))
   }
 
@@ -93,46 +78,6 @@ class SelectCountryUpdateTest {
         .then(assertThatNext(
             hasModel(model.fetching()),
             hasEffects(FetchManifest as SelectCountryEffect)
-        ))
-  }
-
-  @Test
-  fun `when deployment is saved, then go to registration screen`() {
-    val model = defaultModel
-        .manifestFetched(countries)
-        .countryChosen(india)
-
-    spec
-        .given(model)
-        .whenEvent(DeploymentSaved)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(GoToRegistrationScreen)
-        ))
-  }
-
-  @Test
-  fun `when selected country is saved and there is only one deployment, then save deployment`() {
-    val deployment = TestData.deployment(
-        endPoint = "https://in.simple.org",
-        displayName = "IHCI"
-    )
-    val india = TestData.country(
-        isoCountryCode = "IN",
-        displayName = "India",
-        isdCode = "91",
-        deployments = listOf(deployment)
-    )
-    val model = defaultModel
-        .manifestFetched(countries)
-        .countryChosen(india)
-
-    spec
-        .given(model)
-        .whenEvent(CountrySaved)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(SaveDeployment(deployment))
         ))
   }
 

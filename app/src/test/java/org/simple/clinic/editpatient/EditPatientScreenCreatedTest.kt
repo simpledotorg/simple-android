@@ -1,43 +1,28 @@
 package org.simple.clinic.editpatient
 
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Observable
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.editpatient.EditPatientState.NOT_SAVING_PATIENT
-import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
-import org.simple.clinic.newentry.country.InputFieldsFactory
-import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientAgeDetails.Type.EXACT
 import org.simple.clinic.patient.PatientAgeDetails.Type.FROM_AGE
 import org.simple.clinic.patient.PatientPhoneNumber
-import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.registration.phone.LengthBasedNumberValidator
-import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestUserClock
-import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.util.toOptional
-import org.simple.clinic.uuid.FakeUuidGenerator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
-import org.simple.mobius.migration.MobiusTestFixture
+import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.sharedTestCode.util.TestUtcClock
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class EditPatientScreenCreatedTest {
@@ -47,51 +32,30 @@ class EditPatientScreenCreatedTest {
 
   private val ui: EditPatientUi = mock()
   private val utcClock: TestUtcClock = TestUtcClock()
-  private val userClock: TestUserClock = TestUserClock()
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
-  private val patientRepository = mock<PatientRepository>()
-  private val country = TestData.country()
-  private val user = TestData.loggedInUser()
 
-  private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider(
-      dateTimeFormatter = dateOfBirthFormat,
-      today = LocalDate.now(userClock)
-  ))
-
-  private val viewEffectHandler = EditPatientViewEffectHandler(userClock, ui)
+  private val viewRenderer = EditPatientViewRenderer(ui)
 
   @Test
   @Parameters(method = "params for prefilling fields on screen created")
   fun `when screen is created then the existing patient data must be prefilled`(
       patientFormTestParams: PatientFormTestParams
   ) {
+    // given
     val (patient, address, phoneNumber) = patientFormTestParams
+    val model = EditPatientModel
+        .from(patient, address, phoneNumber, dateOfBirthFormat, null, NOT_SAVING_PATIENT, false, false)
 
-    whenever(patientRepository.bangladeshNationalIdForPatient(patient.uuid)) doReturn Observable.never()
+    // when
+    viewRenderer.render(model)
 
-    val patientProfile = TestData.patientProfile(patientUuid = patient.uuid, generateBusinessId = true)
-    whenever(patientRepository.patientProfile(patient.uuid)) doReturn Observable.just(patientProfile.toOptional())
-
-    screenCreated(patient, address, phoneNumber)
-
-    verify(ui).displayBpPassports(patientProfile.businessIds.map { it.identifier.displayValue() })
-
-    if (patientFormTestParams.shouldSetColonyOrVillage) {
-      verify(ui).setColonyOrVillage(address.colonyOrVillage!!)
-    } else {
-      verify(ui, never()).setColonyOrVillage(any())
-    }
-
+    // then
     verify(ui).setDistrict(address.district)
     verify(ui).setState(address.state)
     verify(ui).setGender(patient.gender)
     verify(ui).setPatientName(patient.fullName)
-
-    if (patientFormTestParams.shouldSetPhoneNumber) {
-      verify(ui).setPatientPhoneNumber(phoneNumber!!.number)
-    } else {
-      verify(ui, never()).setPatientPhoneNumber(any())
-    }
+    verify(ui).setColonyOrVillage(address.colonyOrVillage.orEmpty())
+    verify(ui).setPatientPhoneNumber(phoneNumber?.number.orEmpty())
 
     if (patientFormTestParams.shouldSetAge) {
       verify(ui).setPatientAge(any())
@@ -100,7 +64,7 @@ class EditPatientScreenCreatedTest {
     }
 
     if (patientFormTestParams.shouldSetDateOfBirth) {
-      verify(ui).setPatientDateOfBirth(patient.ageDetails.dateOfBirth!!)
+      verify(ui).setPatientDateOfBirth(patient.ageDetails.dateOfBirth!!.format(dateOfBirthFormat))
     } else {
       verify(ui, never()).setPatientDateOfBirth(any())
     }
@@ -122,8 +86,11 @@ class EditPatientScreenCreatedTest {
       phoneNumber: String?
   ): PatientFormTestParams {
     val patientToReturn = TestData.patient(
-        age = Age(23, Instant.now(utcClock)),
-        dateOfBirth = null
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = 23,
+            ageUpdatedAt = Instant.now(utcClock),
+            dateOfBirth = null
+        )
     )
     val addressToReturn = TestData.patientAddress(uuid = patientToReturn.addressUuid, colonyOrVillage = colonyOrVillage)
     val phoneNumberToReturn = phoneNumber?.let { TestData.patientPhoneNumber(patientUuid = patientToReturn.uuid, number = it) }
@@ -140,7 +107,13 @@ class EditPatientScreenCreatedTest {
       phoneNumber: String?,
       dateOfBirth: LocalDate
   ): PatientFormTestParams {
-    val patientToReturn = TestData.patient(dateOfBirth = dateOfBirth, age = null)
+    val patientToReturn = TestData.patient(
+        patientAgeDetails = PatientAgeDetails(
+            dateOfBirth = dateOfBirth,
+            ageValue = null,
+            ageUpdatedAt = null
+        )
+    )
     val addressToReturn = TestData.patientAddress(uuid = patientToReturn.addressUuid, colonyOrVillage = colonyOrVillage)
     val phoneNumberToReturn = phoneNumber?.let { TestData.patientPhoneNumber(patientUuid = patientToReturn.uuid, number = it) }
 
@@ -156,9 +129,6 @@ class EditPatientScreenCreatedTest {
       val address: PatientAddress,
       val phoneNumber: PatientPhoneNumber?
   ) {
-    val shouldSetColonyOrVillage: Boolean
-      get() = address.colonyOrVillage.isNullOrBlank().not()
-
     val shouldSetPhoneNumber: Boolean
       get() = phoneNumber != null
 
@@ -167,47 +137,5 @@ class EditPatientScreenCreatedTest {
 
     val shouldSetDateOfBirth: Boolean
       get() = patient.ageDetails.type == EXACT
-  }
-
-  private fun screenCreated(
-      patient: Patient,
-      address: PatientAddress,
-      phoneNumber: PatientPhoneNumber?
-  ) {
-    val editPatientEffectHandler = EditPatientEffectHandler(
-        patientRepository = patientRepository,
-        utcClock = utcClock,
-        schedulersProvider = TrampolineSchedulersProvider(),
-        country = country,
-        uuidGenerator = FakeUuidGenerator.fixed(UUID.fromString("4a08c52c-ebef-44a2-9de4-02916e703a47")),
-        currentUser = dagger.Lazy { user },
-        inputFieldsFactory = inputFieldsFactory,
-        dateOfBirthFormatter = dateOfBirthFormat,
-        viewEffectsConsumer = viewEffectHandler::handle
-    )
-
-    val numberValidator = LengthBasedNumberValidator(
-        minimumRequiredLengthMobile = 10,
-        maximumAllowedLengthMobile = 10,
-        minimumRequiredLengthLandlinesOrMobile = 6,
-        maximumAllowedLengthLandlinesOrMobile = 12
-    )
-
-    MobiusTestFixture<EditPatientModel, EditPatientEvent, EditPatientEffect>(
-        events = Observable.never<EditPatientEvent>(),
-        defaultModel = EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null, NOT_SAVING_PATIENT),
-        init = EditPatientInit(patient = patient,
-            address = address,
-            phoneNumber = phoneNumber,
-            bangladeshNationalId = null,
-            isVillageTypeAheadEnabled = true),
-        update = EditPatientUpdate(
-            numberValidator = numberValidator,
-            dobValidator = UserInputDateValidator(userClock, dateOfBirthFormat),
-            ageValidator = UserInputAgeValidator(userClock, dateOfBirthFormat)
-        ),
-        effectHandler = editPatientEffectHandler.build(),
-        modelUpdateListener = { /* nothing here */ }
-    ).start()
   }
 }

@@ -76,8 +76,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:hint="@string/custom_drug_entry_sheet_dosage"
-      android:imeOptions="actionNext"
-      android:inputType="number" />
+      android:imeOptions="actionNext" />
 
   </com.google.android.material.textfield.TextInputLayout>
 
@@ -118,11 +117,12 @@
     android:layout_marginTop="@dimen/spacing_24"
     app:layout_constraintTop_toBottomOf="@+id/dosageTextInputLayout">
 
-    <com.google.android.material.button.MaterialButton
+    <org.simple.clinic.widgets.ProgressMaterialButton
       android:id="@+id/saveButton"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="@string/custom_drug_entry_sheet_save_button_text" />
+      android:text="@string/custom_drug_entry_sheet_save_button_text"
+      app:buttonState="enabled"/>
   </FrameLayout>
 
   <androidx.constraintlayout.widget.Group

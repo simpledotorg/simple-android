@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.button.MaterialButton xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/searchOverduePatientButton"
+  style="@style/Widget.Simple.Button.OutlinedButton.Big"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginTop="@dimen/spacing_8"
+  android:text="@string/overdue_search_patient_name_or_village"
+  android:textAppearance="?attr/textAppearanceBody0"
+  app:backgroundTint="?attr/colorSurface"
+  app:icon="@drawable/ic_search_24dp"
+  tools:ignore="MissingPrefix,RtlSymmetry" />

@@ -31,7 +31,7 @@ class RegistrationFullNameScreen :
         RegistrationNameModel,
         RegistrationNameEvent,
         RegistrationNameEffect,
-        Unit>(),
+        RegistrationNameViewEffect>(),
     RegistrationNameUi,
     RegistrationNameUiActions {
 
@@ -75,7 +75,13 @@ class RegistrationFullNameScreen :
 
   override fun createInit() = RegistrationNameInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationNameViewEffect>) =
+      effectHandlerFactory
+          .create(
+              viewEffectConsumer = viewEffectsConsumer
+          ).build()
+
+  override fun viewEffectHandler() = RegistrationNameViewEffectHandler(this)
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

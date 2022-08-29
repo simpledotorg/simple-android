@@ -7,8 +7,8 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestUtcClock
+import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.sharedTestCode.util.TestUtcClock
 import java.time.Duration
 import java.time.Instant
 import java.util.Optional
@@ -20,7 +20,7 @@ class BruteForceOtpEntryProtectionTest {
 
   private val preferenceState = mock<Preference<BruteForceOtpProtectionState>>()
   private val clock = TestUtcClock()
-  private val config = BruteForceOtpEntryProtectionConfig(limitOfFailedAttempts = 5, blockDuration = Duration.ofMinutes(20))
+  private val config = BruteForceOtpEntryProtectionConfig(limitOfFailedAttempts = 5, blockDuration = Duration.ofMinutes(20), minOtpEntries = 3)
 
   private val bruteForceOtpEntryProtection = BruteForceOtpEntryProtection(clock, config, preferenceState)
 
@@ -53,7 +53,7 @@ class BruteForceOtpEntryProtectionTest {
   }
 
   @Test
-  fun `when incrementing the otp failed attempts and the otp limit was already reached then the blocked-at time should not be updated`() {
+  fun `when otp limit was already reached then the blocked-at time and the number of attempts should not be updated`() {
     val timeOfLastAttempt = Instant.now(clock)
     val bruteForceOtpProtectionState = BruteForceOtpProtectionState(
         failedLoginOtpAttempt = config.limitOfFailedAttempts,
@@ -64,7 +64,7 @@ class BruteForceOtpEntryProtectionTest {
     bruteForceOtpEntryProtection.incrementFailedOtpAttempt()
 
     verify(preferenceState).set(BruteForceOtpProtectionState(
-        failedLoginOtpAttempt = config.limitOfFailedAttempts + 1,
+        failedLoginOtpAttempt = config.limitOfFailedAttempts,
         limitReachedAt = Optional.of(timeOfLastAttempt)))
   }
 }

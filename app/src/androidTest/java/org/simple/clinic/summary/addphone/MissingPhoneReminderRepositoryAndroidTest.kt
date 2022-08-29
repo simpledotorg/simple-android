@@ -6,7 +6,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.util.Rules
+import org.simple.clinic.rules.SaveDatabaseRule
+import org.simple.sharedTestCode.util.Rules
 import org.simple.clinic.util.UtcClock
 import java.time.Instant
 import java.util.UUID
@@ -24,7 +25,9 @@ class MissingPhoneReminderRepositoryAndroidTest {
   lateinit var clock: UtcClock
 
   @get:Rule
-  val ruleChain: RuleChain = Rules.global()
+  val ruleChain: RuleChain = Rules
+      .global()
+      .around(SaveDatabaseRule())
 
   private val patientUuid = UUID.randomUUID()
 

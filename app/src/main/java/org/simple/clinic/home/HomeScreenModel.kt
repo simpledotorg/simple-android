@@ -30,7 +30,7 @@ data class HomeScreenModel(
     return copy(facility = facility)
   }
 
-  fun overdueAppointmentCountLoaded(overdueAppointmentCount: Int): HomeScreenModel {
+  fun overdueAppointmentCountUpdated(overdueAppointmentCount: Int): HomeScreenModel {
     return copy(overdueAppointmentCount = overdueAppointmentCount)
   }
 }

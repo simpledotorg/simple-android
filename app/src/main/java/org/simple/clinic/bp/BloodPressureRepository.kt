@@ -11,6 +11,7 @@ import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.util.UtcClock
 import java.time.Instant
+import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 
@@ -152,5 +153,11 @@ class BloodPressureRepository @Inject constructor(
             limit = limit,
             offset = offset
         )
+  }
+
+  fun isNewestBpEntryHigh(patientUuid: UUID): Observable<Boolean> {
+    val currentDate = LocalDate.now(utcClock)
+
+    return dao.isNewestBpEntryHigh(patientUuid = patientUuid, currentDate = currentDate)
   }
 }

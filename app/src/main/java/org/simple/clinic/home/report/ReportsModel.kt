@@ -1,12 +1,16 @@
 package org.simple.clinic.home.report
 
 import android.os.Parcelable
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.util.toNullable
 import java.util.Optional
 
 @Parcelize
-data class ReportsModel(val reportsContent: String?) : Parcelable {
+data class ReportsModel(
+    @IgnoredOnParcel
+    val reportsContent: String? = null
+) : Parcelable {
 
   companion object {
     fun create() = ReportsModel(reportsContent = null)

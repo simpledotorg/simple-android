@@ -11,3 +11,5 @@ data class SaveSelectedState(val state: State) : SelectStateEffect()
 sealed class SelectStateViewEffect : SelectStateEffect()
 
 object GoToRegistrationScreen : SelectStateViewEffect()
+
+object ReplaceCurrentScreenWithRegistrationScreen : SelectStateViewEffect()

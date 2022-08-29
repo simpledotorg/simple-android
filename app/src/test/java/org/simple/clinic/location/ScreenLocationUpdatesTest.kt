@@ -15,9 +15,9 @@ import org.simple.clinic.location.LocationUpdate.Unavailable
 import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
-import org.simple.clinic.util.RuntimePermissions
-import org.simple.clinic.util.TestElapsedRealtimeClock
-import org.simple.clinic.util.advanceTimeBy
+import org.simple.clinic.activity.permissions.RuntimePermissions
+import org.simple.sharedTestCode.util.TestElapsedRealtimeClock
+import org.simple.sharedTestCode.util.advanceTimeBy
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.time.Duration

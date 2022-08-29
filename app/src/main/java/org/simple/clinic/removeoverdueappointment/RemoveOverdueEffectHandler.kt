@@ -1,5 +1,6 @@
 package org.simple.clinic.removeoverdueappointment
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -13,13 +14,14 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 class RemoveOverdueEffectHandler @AssistedInject constructor(
     private val appointmentRepository: AppointmentRepository,
     private val patientRepository: PatientRepository,
+    private val cancelAppointmentWithReason: CancelAppointmentWithReason,
     private val schedulersProvider: SchedulersProvider,
-    @Assisted private val uiActions: RemoveOverdueUiActions
+    @Assisted private val viewEffectsConsumer: Consumer<RemoveOverdueViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: RemoveOverdueUiActions): RemoveOverdueEffectHandler
+    fun create(viewEffectsConsumer: Consumer<RemoveOverdueViewEffect>): RemoveOverdueEffectHandler
   }
 
   fun build(): ObservableTransformer<RemoveOverdueEffect, RemoveOverdueEvent> = RxMobius
@@ -29,7 +31,7 @@ class RemoveOverdueEffectHandler @AssistedInject constructor(
       .addTransformer(CancelAppointment::class.java, cancelAppointment())
       .addTransformer(MarkPatientAsMovedToPrivate::class.java, markPatientAsMovedToPrivate())
       .addTransformer(MarkPatientAsTransferredToAnotherFacility::class.java, markPatientAsMovedToAnotherFacility())
-      .addAction(GoBackAfterAppointmentRemoval::class.java, uiActions::goBackAfterAppointmentRemoval, schedulersProvider.ui())
+      .addConsumer(RemoveOverdueViewEffect::class.java, viewEffectsConsumer::accept)
       .build()
 
   private fun markPatientAsMovedToAnotherFacility(): ObservableTransformer<MarkPatientAsTransferredToAnotherFacility, RemoveOverdueEvent> {
@@ -56,7 +58,7 @@ class RemoveOverdueEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .doOnNext { appointmentRepository.cancelWithReason(it.appointmentUuid, it.reason) }
+          .doOnNext { cancelAppointmentWithReason.execute(it.appointment, it.reason) }
           .map { AppointmentMarkedAsCancelled }
     }
   }
@@ -65,7 +67,6 @@ class RemoveOverdueEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .doOnNext { appointmentRepository.cancelWithReason(it.appointmentId, AppointmentCancelReason.Dead) }
           .doOnNext { patientRepository.updatePatientStatusToDead(it.patientId) }
           .map { PatientMarkedAsDead }
     }

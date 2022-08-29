@@ -14,8 +14,8 @@ import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowed
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
-import org.simple.clinic.util.Rules
-import org.simple.clinic.util.TestUtcClock
+import org.simple.sharedTestCode.util.Rules
+import org.simple.sharedTestCode.util.TestUtcClock
 import java.time.Duration
 import java.time.Instant
 import java.util.concurrent.TimeUnit
@@ -109,5 +109,7 @@ class BruteForceProtectionAndroidTest {
     advanceTimeByMillis(1)
     stateChangeObserver.assertValueAt(2, Allowed(attemptsMade = 0, attemptsRemaining = config.limitOfFailedAttempts))
     stateChangeObserver.assertValueCount(3)
+
+    stateChangeObserver.dispose()
   }
 }

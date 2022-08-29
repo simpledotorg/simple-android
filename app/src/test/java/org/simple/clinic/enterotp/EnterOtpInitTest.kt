@@ -11,7 +11,7 @@ class EnterOtpInitTest {
   @Test
   fun `when screen is created, then load the otp entry states`() {
     val initSpec = InitSpec(EnterOtpInit())
-    val defaultModel = EnterOtpModel.create()
+    val defaultModel = EnterOtpModel.create(minOtpRetries = 3, maxOtpEntriesAllowed = 5)
     initSpec
         .whenInit(defaultModel)
         .then(

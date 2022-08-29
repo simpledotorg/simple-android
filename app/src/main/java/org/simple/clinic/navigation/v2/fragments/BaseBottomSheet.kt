@@ -43,6 +43,9 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
 
   protected val screenKey by unsafeLazy { ScreenKey.key<K>(this) }
 
+  val screenName: String
+    get() = screenKey.analyticsName
+
   private var _binding: B? = null
 
   protected val binding: B
@@ -95,6 +98,7 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
 
     behavior = dialog.behavior
     behavior?.addBottomSheetCallback(bottomSheetCallback)
+    dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
 
     return dialog
   }
@@ -114,7 +118,7 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
           .eventSources(additionalEventSources())
 
       @Suppress("UNCHECKED_CAST")
-      override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+      override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return MobiusLoopViewModel.create<M, E, F, V>(
             ::loop,
             startModel,

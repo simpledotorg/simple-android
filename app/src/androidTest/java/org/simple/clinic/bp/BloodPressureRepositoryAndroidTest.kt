@@ -6,13 +6,16 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
+import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.user.User
-import org.simple.clinic.util.Rules
-import org.simple.clinic.util.TestUtcClock
+import org.simple.sharedTestCode.util.Rules
+import org.simple.sharedTestCode.util.TestUtcClock
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
@@ -42,10 +45,14 @@ class BloodPressureRepositoryAndroidTest {
   @Inject
   lateinit var facility: Facility
 
+  @Inject
+  lateinit var patientRepository: PatientRepository
+
   @get:Rule
   val ruleChain: RuleChain = Rules
       .global()
       .around(LocalAuthenticationRule())
+      .around(SaveDatabaseRule())
 
   @Before
   fun setUp() {
@@ -261,5 +268,147 @@ class BloodPressureRepositoryAndroidTest {
             bpRecordRightNow,
             bpRecordADayInPast
         ))
+  }
+
+  @Test
+  fun checking_if_newest_blood_pressure_entry_is_high_for_a_patient_should_work_correctly() {
+    // given
+    val patient1Uuid = UUID.fromString("b8060a91-911e-4695-b905-20ff0d3fb8d5")
+    val patient1 = TestData.patientProfile(
+        patientUuid = patient1Uuid,
+        patientStatus = PatientStatus.Active,
+        patientDeletedAt = null,
+        patientCreatedAt = Instant.parse("1999-10-01T00:00:00Z"),
+        patientUpdatedAt = Instant.parse("1999-10-01T00:00:00Z"),
+        patientRecordedAt = Instant.parse("1999-10-01T00:00:00Z")
+    )
+
+    val patient2Uuid = UUID.fromString("414ed968-3972-4723-8613-5b0b0ed65a5a")
+    val patient2 = TestData.patientProfile(
+        patientUuid = patient2Uuid,
+        patientStatus = PatientStatus.Active,
+        patientDeletedAt = null,
+        patientCreatedAt = Instant.parse("1999-10-01T00:00:00Z"),
+        patientUpdatedAt = Instant.parse("1999-10-01T00:00:00Z"),
+        patientRecordedAt = Instant.parse("1999-10-01T00:00:00Z")
+    )
+
+    val patient3Uuid = UUID.fromString("df519ae8-1b0a-4d81-b916-f7bb26faa1ba")
+    val patient3 = TestData.patientProfile(
+        patientUuid = patient3Uuid,
+        patientStatus = PatientStatus.Active,
+        patientDeletedAt = null,
+        patientCreatedAt = Instant.parse("1999-10-01T00:00:00Z"),
+        patientUpdatedAt = Instant.parse("1999-10-01T00:00:00Z"),
+        patientRecordedAt = Instant.parse("1999-10-01T00:00:00Z")
+    )
+
+    val twoMonthsOldBpForPatient1 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("cfeef99e-8477-4c78-9b81-b205b0b6d50d"),
+        patientUuid = patient1Uuid,
+        systolic = 145,
+        diastolic = 90,
+        createdAt = Instant.parse("1999-10-01T00:00:00Z"),
+        recordedAt = Instant.parse("1999-10-01T00:00:00Z"),
+        updatedAt = Instant.parse("1999-10-01T00:00:00Z"),
+        deletedAt = null
+    )
+    val deletedOneMonthOldBpForPatient1 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("3e383092-f2f0-4b88-abd6-4253d710080a"),
+        patientUuid = patient1Uuid,
+        systolic = 132,
+        diastolic = 85,
+        createdAt = Instant.parse("1999-11-01T00:00:00Z"),
+        recordedAt = Instant.parse("1999-11-01T00:00:00Z"),
+        updatedAt = Instant.parse("1999-11-01T00:00:00Z"),
+        deletedAt = Instant.parse("1999-11-01T00:00:00Z")
+    )
+    val oneMonthOldBpForPatient1 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("53134f7b-3acf-4ea6-acde-505cd45851da"),
+        patientUuid = patient1Uuid,
+        systolic = 130,
+        diastolic = 85,
+        createdAt = Instant.parse("1999-12-01T00:00:00Z"),
+        recordedAt = Instant.parse("1999-12-01T00:00:00Z"),
+        updatedAt = Instant.parse("1999-12-01T00:00:00Z"),
+        deletedAt = null
+    )
+    val newestBpForPatient1 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("89888e1f-e02d-47a1-8ad3-bf6e60021a92"),
+        patientUuid = patient1Uuid,
+        systolic = 145,
+        diastolic = 90,
+        createdAt = Instant.parse("2000-01-01T00:00:00Z"),
+        recordedAt = Instant.parse("2000-01-01T00:00:00Z"),
+        updatedAt = Instant.parse("2000-01-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    val oneMonthOldBpForPatient2 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("dd280b11-939c-4c1f-975f-8485d7562c21"),
+        patientUuid = patient2Uuid,
+        systolic = 150,
+        diastolic = 92,
+        createdAt = Instant.parse("1999-12-01T00:00:00Z"),
+        recordedAt = Instant.parse("1999-12-01T00:00:00Z"),
+        updatedAt = Instant.parse("1999-12-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    val newestBpForPatient2 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("e2026b41-9418-4126-ab81-e6d83465087b"),
+        patientUuid = patient2Uuid,
+        systolic = 120,
+        diastolic = 80,
+        createdAt = Instant.parse("2000-01-01T00:00:00Z"),
+        recordedAt = Instant.parse("2000-01-01T00:00:00Z"),
+        updatedAt = Instant.parse("2000-01-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    val twoMinutesOldBpForPatient3 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("1beac089-6c6e-44db-9e3b-0af4c4144dbb"),
+        patientUuid = patient3Uuid,
+        systolic = 150,
+        diastolic = 92,
+        createdAt = Instant.parse("2000-01-01T00:02:00Z"),
+        recordedAt = Instant.parse("2000-01-01T00:02:00Z"),
+        updatedAt = Instant.parse("2000-01-01T00:02:00Z"),
+        deletedAt = null
+    )
+
+    val newestBpForPatient3 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("3d948d3b-6d8f-4608-bde0-d8750fef75d4"),
+        patientUuid = patient3Uuid,
+        systolic = 150,
+        diastolic = 90,
+        createdAt = Instant.parse("2000-01-01T00:03:00Z"),
+        recordedAt = Instant.parse("2000-01-01T00:03:00Z"),
+        updatedAt = Instant.parse("2000-01-01T00:03:00Z"),
+        deletedAt = null
+    )
+
+    patientRepository.save(listOf(patient1, patient2, patient3))
+
+    repository.save(listOf(
+        twoMonthsOldBpForPatient1,
+        deletedOneMonthOldBpForPatient1,
+        oneMonthOldBpForPatient1,
+        newestBpForPatient1,
+        oneMonthOldBpForPatient2,
+        newestBpForPatient2,
+        twoMinutesOldBpForPatient3,
+        newestBpForPatient3
+    ))
+
+    // when
+    val isNewestBpEntryHighForPatient1 = repository.isNewestBpEntryHigh(patient1Uuid).blockingFirst()
+    val isNewestBpEntryHighForPatient2 = repository.isNewestBpEntryHigh(patient2Uuid).blockingFirst()
+    val isNewestBpEntryHighForPatient3 = repository.isNewestBpEntryHigh(patient3Uuid).blockingFirst()
+
+    // then
+    assertThat(isNewestBpEntryHighForPatient1).isTrue()
+    assertThat(isNewestBpEntryHighForPatient2).isFalse()
+    assertThat(isNewestBpEntryHighForPatient3).isTrue()
   }
 }

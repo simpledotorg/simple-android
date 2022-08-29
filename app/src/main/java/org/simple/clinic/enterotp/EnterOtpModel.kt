@@ -15,23 +15,33 @@ data class EnterOtpModel(
     val isAsyncOperationOngoing: Boolean,
     val protectedState: ProtectedState,
 
-    ) : Parcelable {
+    val minOtpRetries: Int,
+    val maxOtpEntriesAllowed: Int
+) : Parcelable {
 
   companion object {
 
-    fun create(): EnterOtpModel {
+    fun create(
+        minOtpRetries: Int,
+        maxOtpEntriesAllowed: Int
+    ): EnterOtpModel {
       return EnterOtpModel(
           user = null,
           otpValidationResult = ValidationResult.NotValidated,
           asyncOpError = null,
           isAsyncOperationOngoing = false,
-          protectedState = ProtectedState.Allowed(0,5)
+          protectedState = ProtectedState.Allowed(0, maxOtpEntriesAllowed),
+          minOtpRetries = minOtpRetries,
+          maxOtpEntriesAllowed = maxOtpEntriesAllowed
       )
     }
   }
 
   val hasNoIncorrectPinEntries: Boolean
     get() = (protectedState as ProtectedState.Allowed).attemptsMade == 0
+
+  val hasReachedMinPinRetries: Boolean
+    get() = (protectedState as ProtectedState.Allowed).attemptsMade >= minOtpRetries
 
   val hasLoadedUser: Boolean
     get() = user != null
@@ -57,10 +67,6 @@ data class EnterOtpModel(
 
   fun loginFinished(): EnterOtpModel {
     return copy(isAsyncOperationOngoing = false, asyncOpError = null)
-  }
-
-  fun loginFailed(): EnterOtpModel {
-    return copy(isAsyncOperationOngoing = false)
   }
 
   fun requestLoginOtpStarted(): EnterOtpModel {

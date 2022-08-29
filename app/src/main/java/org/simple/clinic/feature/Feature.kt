@@ -10,7 +10,6 @@ enum class Feature(
   NotifyAppUpdateAvailable(false, "appupdate_enabled"),
   DeletePatient(true, "delete_patient_feature_enabled"),
   SecureCalling(false, "phonenumbermasker_masking_enabled"),
-  LogSavedStateSizes(false, "log_saved_state_sizes_enabled"),
 
   /**
    * API levels 21 and 22 cause a framework level crash in appcompat 1.2.0 when overriding
@@ -28,10 +27,16 @@ enum class Feature(
   InstantSearchQrCode(true, "instant_search_qr_code"),
   EthiopianCalendar(true, "ethiopian_calendar"),
   IndiaNationalHealthID(true, "india_national_health_id"),
-  OverdueListChanges(false, "overdue_list_ui_changes"),
-  OverdueListDownloadAndShare(false, "overdue_list_download_and_share"),
-  CustomDrugSearchScreen(false, "custom_drug_search_screen"),
+  OverdueListDownloadAndShare(true, "download_and_share_overdue_list"),
+  CustomDrugSearchScreen(true, "drug_search_screen"),
   OnlinePatientLookup(true, "online_patient_lookup"),
   HttpRequestBodyCompression(false, "http_request_body_compression_enabled"),
-  CallResultSyncEnabled(false)
+  CallResultSyncEnabled(true),
+  NextAppointment(false, "next_appointment_v1"),
+  AddingHealthIDsFromEditPatient(false, "adding_health_ids_from_edit_patient"),
+  NotifyAppUpdateAvailableV2(false, "appupdate_enabled_v2"),
+  MonthlyDrugStockReportReminder(false, "monthly_drug_stock_report_reminders_v1"),
+  OverdueSections(false, "overdue_section_improvements_v1"),
+  OverdueInstantSearch(false, "overdue_instant_search_v2"),
+  OverdueSelectAndDownload(false, "overdue_select_and_download_v2"),
 }

@@ -9,13 +9,11 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.work.ExistingWorkPolicy.REPLACE
 import androidx.work.WorkManager
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
-import org.simple.clinic.R
 import org.simple.clinic.deeplink.DeepLinkResult
 import org.simple.clinic.deeplink.OpenPatientSummary
 import org.simple.clinic.deeplink.OpenPatientSummaryWithTeleconsultLog
@@ -30,18 +28,16 @@ import org.simple.clinic.home.patients.LoggedOutOnOtherDeviceDialog
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.login.applock.AppLockScreenKey
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.History
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.registerorlogin.AuthenticationActivity
 import org.simple.clinic.remoteconfig.UpdateRemoteConfigWorker
 import org.simple.clinic.remoteconfig.UpdateRemoteConfigWorker.Companion.REMOTE_CONFIG_SYNC_WORKER
-import org.simple.clinic.router.ScreenResultBus
-import org.simple.clinic.router.screen.ActivityPermissionResult
-import org.simple.clinic.router.screen.ActivityResult
+import org.simple.clinic.navigation.v2.ScreenResultBus
+import org.simple.clinic.activity.permissions.ActivityPermissionResult
+import org.simple.clinic.navigation.v2.ActivityResult
 import org.simple.clinic.storage.MemoryValue
-import org.simple.clinic.summary.OpenIntention
-import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncSetup
 import org.simple.clinic.user.UnauthorizeUser
@@ -49,6 +45,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.finishWithoutAnimations
+import org.simple.clinic.util.popWithParcelableResult
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
@@ -63,6 +60,10 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
   companion object {
     private const val EXTRA_DEEP_LINK_RESULT = "TheActivity.EXTRA_DEEP_LINK_RESULT"
     private const val EXTRA_IS_FRESH_AUTHENTICATION = "TheActivity.EXTRA_IS_FRESH_AUTHENTICATION"
+
+    fun readDeepLinkResult(intent: Intent): DeepLinkResult? {
+      return intent.popWithParcelableResult(EXTRA_DEEP_LINK_RESULT)
+    }
 
     fun newIntent(
         context: Context,
@@ -176,7 +177,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
         events = Observable.never(),
         defaultModel = defaultModel,
         update = TheActivityUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
+        effectHandler = effectHandlerFactory.create(this, router::currentHistory).build(),
         init = TheActivityInit(),
         modelUpdateListener = uiRenderer::render
     )
@@ -204,21 +205,6 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
       dataSync.fireAndForgetSync()
       workManager.enqueueUniqueWork(REMOTE_CONFIG_SYNC_WORKER, REPLACE, UpdateRemoteConfigWorker.createWorkRequest())
     }
-
-    if (intent.hasExtra(EXTRA_DEEP_LINK_RESULT)) {
-      handleDeepLinkResult()
-    }
-  }
-
-  private fun handleDeepLinkResult() {
-    when (val deepLinkResult = intent.getParcelableExtra<DeepLinkResult>(EXTRA_DEEP_LINK_RESULT)) {
-      is OpenPatientSummary -> showPatientSummaryForDeepLink(deepLinkResult)
-      is ShowPatientNotFound -> showPatientNotFoundErrorDialog()
-      is ShowNoPatientUuid -> showNoPatientUuidErrorDialog()
-      is OpenPatientSummaryWithTeleconsultLog -> showPatientSummaryWithTeleconsultLogForDeepLink(deepLinkResult)
-      is ShowTeleconsultNotAllowed -> showTeleconsultNotAllowedErrorDialog()
-    }
-    intent.removeExtra(EXTRA_DEEP_LINK_RESULT)
   }
 
   override fun attachBaseContext(baseContext: Context) {
@@ -313,52 +299,7 @@ class TheActivity : AppCompatActivity(), TheActivityUi {
     router.clearHistoryAndPush(AccessDeniedScreenKey(fullName))
   }
 
-  override fun showInitialScreen(screenKey: ScreenKey) {
-    router.clearHistoryAndPush(screenKey)
-  }
-
-  private fun showPatientSummaryForDeepLink(deepLinkResult: OpenPatientSummary) {
-    router.push(
-        PatientSummaryScreenKey(
-            patientUuid = deepLinkResult.patientUuid,
-            intention = OpenIntention.ViewExistingPatient,
-            screenCreatedTimestamp = Instant.now(utcClock)
-        )
-    )
-  }
-
-  private fun showPatientSummaryWithTeleconsultLogForDeepLink(deepLinkResult: OpenPatientSummaryWithTeleconsultLog) {
-    router.push(
-        PatientSummaryScreenKey(
-            patientUuid = deepLinkResult.patientUuid,
-            intention = OpenIntention.ViewExistingPatientWithTeleconsultLog(deepLinkResult.teleconsultRecordId),
-            screenCreatedTimestamp = Instant.now(utcClock)
-        )
-    )
-  }
-
-  private fun showPatientNotFoundErrorDialog() {
-    MaterialAlertDialogBuilder(this)
-        .setTitle(R.string.deeplink_patient_profile_not_found)
-        .setMessage(R.string.deeplink_patient_profile_not_found_desc)
-        .setPositiveButton(R.string.deeplink_patient_profile_not_found_positive_action, null)
-        .show()
-  }
-
-  private fun showNoPatientUuidErrorDialog() {
-    MaterialAlertDialogBuilder(this)
-        .setTitle(R.string.deeplink_no_patient)
-        .setMessage(R.string.deeplink_no_patient_desc)
-        .setPositiveButton(R.string.deeplink_no_patient_positive_action, null)
-        .show()
-  }
-
-
-  private fun showTeleconsultNotAllowedErrorDialog() {
-    MaterialAlertDialogBuilder(this)
-        .setTitle(R.string.deeplink_medical_officer_not_authorised_to_log_teleconsult)
-        .setMessage(R.string.deeplink_please_check_with_your_supervisor)
-        .setPositiveButton(R.string.deeplink_okay_positive_action, null)
-        .show()
+  override fun setCurrentScreenHistory(newHistory: History) {
+    router.replaceHistory(newHistory)
   }
 }

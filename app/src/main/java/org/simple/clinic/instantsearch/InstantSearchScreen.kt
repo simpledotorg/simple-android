@@ -26,6 +26,8 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.activity.permissions.RequestPermissions
+import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.databinding.ListPatientSearchBinding
 import org.simple.clinic.databinding.ListPatientSearchHeaderBinding
 import org.simple.clinic.databinding.ScreenInstantSearchBinding
@@ -39,20 +41,18 @@ import org.simple.clinic.instantsearch.InstantSearchProgressState.DONE
 import org.simple.clinic.instantsearch.InstantSearchProgressState.IN_PROGRESS
 import org.simple.clinic.instantsearch.InstantSearchProgressState.NO_RESULTS
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.scanid.scannedqrcode.NationalHealthIDErrorDialog
 import org.simple.clinic.scanid.scannedqrcode.ScannedQrCodeSheet
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
-import org.simple.clinic.util.RequestPermissions
-import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.widgets.PagingItemAdapter
@@ -75,7 +75,7 @@ class InstantSearchScreen :
         InstantSearchModel,
         InstantSearchEvent,
         InstantSearchEffect,
-        Unit>(),
+        InstantSearchViewEffect>(),
     InstantSearchUi,
     InstantSearchUiActions {
 
@@ -172,9 +172,13 @@ class InstantSearchScreen :
 
   override fun createInit() = InstantSearchInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<InstantSearchViewEffect>) = effectHandlerFactory.create(
+      viewEffectsConsumer = viewEffectsConsumer
+  ).build()
 
   override fun uiRenderer() = InstantSearchUiRenderer(this)
+
+  override fun viewEffectHandler() = InstantSearchViewEffectHandler(this)
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

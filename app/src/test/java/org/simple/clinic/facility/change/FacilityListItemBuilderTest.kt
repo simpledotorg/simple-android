@@ -5,14 +5,14 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.facility.change.FacilityListItem.FacilityOption
 import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Address
 import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Name
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.location.DistanceCalculator
 import org.simple.clinic.util.Distance
-import org.simple.clinic.util.RxErrorsRule
+import org.simple.sharedTestCode.util.RxErrorsRule
 
 class FacilityListItemBuilderTest {
 

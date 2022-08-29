@@ -8,7 +8,7 @@ import org.simple.clinic.platform.analytics.AnalyticsUser
 
 class MixpanelAnalyticsReporter(app: ClinicApp) : AnalyticsReporter {
 
-  private val mixpanel: MixpanelAPI = MixpanelAPI.getInstance(app, BuildConfig.MIXPANEL_TOKEN)
+  private val mixpanel: MixpanelAPI = MixpanelAPI.getInstance(app, BuildConfig.MIXPANEL_TOKEN, false)
 
   override fun setLoggedInUser(user: AnalyticsUser, isANewRegistration: Boolean) {
     synchronized(mixpanel) {
@@ -19,12 +19,13 @@ class MixpanelAnalyticsReporter(app: ClinicApp) : AnalyticsReporter {
       }
 
       mixpanel.identify(userId)
+
+      // The current facility, deployment, etc are being tracked in `MixpanelInfrastructure`
       with(mixpanel.people) {
         identify(userId)
-        set("name", user.name)
+        set("id", userId)
       }
     }
-
   }
 
   override fun resetUser() {

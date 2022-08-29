@@ -7,6 +7,13 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestDataModule
 import org.simple.clinic.appconfig.AppConfigRepositoryAndroidTest
 import org.simple.clinic.appconfig.SelectedCountryPersistenceAndroidTest
+import org.simple.clinic.benchmark.BenchmarkTestRule
+import org.simple.clinic.benchmark.CanaryBenchmarkTest
+import org.simple.clinic.benchmark.bp.BloodPressureEntryBenchmark
+import org.simple.clinic.benchmark.overdue.OverdueBenchmark
+import org.simple.clinic.benchmark.patientlookup.PatientLookupBenchmark
+import org.simple.clinic.benchmark.patientregistration.PatientRegistrationBenchmark
+import org.simple.clinic.benchmark.recentpatient.RecentPatientsBenchmark
 import org.simple.clinic.bloodsugar.BloodSugarHistoryListItemDataSourceTest
 import org.simple.clinic.bloodsugar.BloodSugarRepositoryAndroidTest
 import org.simple.clinic.bp.BloodPressureHistoryListItemDataSourceTest
@@ -14,16 +21,22 @@ import org.simple.clinic.bp.BloodPressureRepositoryAndroidTest
 import org.simple.clinic.drugs.PrescriptionRepositoryAndroidTest
 import org.simple.clinic.drugs.search.DrugRepositoryAndroidTest
 import org.simple.clinic.drugs.search.sync.DrugSyncIntegrationTest
+import org.simple.clinic.drugstockreminders.DrugStockReminderApiIntegrationTest
 import org.simple.clinic.facility.FacilityRepositoryAndroidTest
 import org.simple.clinic.login.LoginUserWithOtpServerIntegrationTest
 import org.simple.clinic.medicalhistory.MedicalHistoryRepositoryAndroidTest
 import org.simple.clinic.overdue.AppointmentRepositoryAndroidTest
+import org.simple.clinic.overdue.OverdueListDownloadApiIntegrationTest
+import org.simple.clinic.overdue.callresult.CallResultRepositoryAndroidTest
+import org.simple.clinic.overdue.download.OverdueCsvGeneratorTest
+import org.simple.clinic.overdue.download.OverdueListDownloaderIntegrationTest
 import org.simple.clinic.patient.PatientRepositoryAndroidTest
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnlineApiIntegrationTest
 import org.simple.clinic.protocolv2.ProtocolRepositoryAndroidTest
 import org.simple.clinic.protocolv2.sync.ProtocolSyncAndroidTest
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.rules.RegisterPatientRule
+import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.rules.ServerRegistrationAtFacilityRule
 import org.simple.clinic.security.pin.BruteForceProtectionAndroidTest
@@ -122,4 +135,17 @@ interface TestAppComponent {
   fun inject(target: DrugSyncIntegrationTest)
   fun inject(target: CallResultSyncIntegrationTest)
   fun inject(target: AppConfigRepositoryAndroidTest)
+  fun inject(target: OverdueListDownloadApiIntegrationTest)
+  fun inject(target: OverdueListDownloaderIntegrationTest)
+  fun inject(target: SaveDatabaseRule)
+  fun inject(target: BenchmarkTestRule)
+  fun inject(target: CanaryBenchmarkTest)
+  fun inject(target: PatientLookupBenchmark)
+  fun inject(target: OverdueBenchmark)
+  fun inject(target: PatientRegistrationBenchmark)
+  fun inject(target: BloodPressureEntryBenchmark)
+  fun inject(target: RecentPatientsBenchmark)
+  fun inject(target: DrugStockReminderApiIntegrationTest)
+  fun inject(target: CallResultRepositoryAndroidTest)
+  fun inject(target: OverdueCsvGeneratorTest)
 }

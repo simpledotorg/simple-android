@@ -9,7 +9,7 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.util.ResolvedError.ServerError
 import retrofit2.HttpException
 import retrofit2.Response
@@ -33,6 +33,22 @@ class SelectStateUpdateTest {
             hasModel(defaultModel.statesLoaded(states)),
             hasNoEffects()
         ))
+  }
+
+  @Test
+  fun `when states are fetched successfully and there's only one state received, then save the state`() {
+    val states = listOf(
+        TestData.state(displayName = "Maharashtra")
+    )
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(StatesFetched(states))
+        .then(
+            assertThatNext(
+                hasModel(defaultModel.statesLoaded(states)),
+                hasEffects(SaveSelectedState(state = states.first()))
+            )
+        )
   }
 
   @Test
@@ -94,24 +110,22 @@ class SelectStateUpdateTest {
         .whenEvent(StateChanged(state))
         .then(assertThatNext(
             hasModel(statesLoadedModel.stateChanged(state)),
-            hasNoEffects()
+            hasEffects(SaveSelectedState(state))
         ))
   }
 
   @Test
-  fun `when next is clicked, then save state`() {
-    val state = TestData.state(displayName = "Andhra Pradesh")
-    val states = listOf(state)
-    val stateSelectedModel = defaultModel
-        .statesLoaded(states)
-        .stateChanged(state)
+  fun `when the model has only one state, then replace the current screen with registration screen`() {
+    val state = listOf(TestData.state(displayName = "Maharashtra"))
+    val loadedStateModel = defaultModel
+        .statesLoaded(state)
 
     updateSpec
-        .given(stateSelectedModel)
-        .whenEvent(NextClicked)
+        .given(loadedStateModel)
+        .whenEvent(StateSaved)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(SaveSelectedState(state))
+            hasEffects(ReplaceCurrentScreenWithRegistrationScreen)
         ))
   }
 

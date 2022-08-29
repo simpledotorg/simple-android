@@ -21,6 +21,7 @@
   <string name="country_bangladesh">Baangilaadeesh</string>
   <string name="country_ethiopia">Itoophiyaa</string>
   <string name="country_sri_lanka">Sri Lanka</string>
+  <string name="country_demo">Biyya Demo</string>
 
   <!-- Home -->
   <string name="home_help">Gargaarsa</string>
@@ -33,14 +34,13 @@
   <string name="identifiertype_unknown">ID</string>
   <string name="identifiertype_india_national_health_id">Waraqaa Eenyummaa Fayyaa Biyyaalessaa</string>
   <string name="identifiertype_sri_lanka_national_id">Lakkoosa eenyummeessaa biyyaalessa</string>
+  <string name="identifiertype_sri_lanka_personal_health_number">Lakkoofa Fayyaa Dhuunfaa</string>
 
   <!-- Patient search -->
   <string name="instantsearch_hint">Maqaa, Bilbila, yookan Waraqaa Eenyummaa</string>
-
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">Tarree kana irratti dhubbubsataa argachuu hin dandanyee?</string>
   <string name="patientsearchresults_register_patient">Akka dhukkubsataa haaraatti galmeessi</string>
-  <string name="patientsearchresults_item_last_seen">Daawwatameera</string>
   <string name="patientsearchresults_item_phone_number">Bilbila</string>
   <string name="patientsearchresults_item_birthdate">Guyyaa dhalootaa</string>
 
@@ -50,7 +50,7 @@
   <string name="patiententry_phone_number">Lakkoofsa bilbilaa</string>
   <string name="patiententry_bangladesh_national_id">Lakkoosa eenyummeessaa biyyaalessa</string>
   <string name="patiententry_ethiopia_medical_record_number">Lakkoofsa Galmee Fayya</string>
-  <string name="patiententry_sri_lanka_national_id">Lakkoosa eenyummeessaa biyyaalessa</string>
+  <string name="patiententry_sri_lanka_personal_health_number">Lakkoofa Fayyaa Dhuunfaa</string>
   <string name="patiententry_date_of_birth_unfocused">Guyyaa dhaloota</string>
   <string name="patiententry_date_of_birth_focused">G,Dh GG/JJ/WWWW</string>
   <string name="patiententry_dateofbirth_and_age_separator">Yookan</string>
@@ -79,7 +79,6 @@
   <string name="patiententry_error_dateofbirth_is_in_future">Guyyaa dhaloota dhukkubsataa sirreessi</string>
   <string name="patiententry_error_phonenumber_blank">Lakkoofsi bilbilaa duwwaa ta\'uu hin danda\'u</string>
   <string name="patiententry_error_phonenumber_length_less">Lakkoofsi bilbilaa dijitii %1$sgadi ta\'uu hin danda\'u</string>
-  <string name="patiententry_error_phonenumber_length_more">Lakkoofsi bilbilaa dijitii %1$sol ta\'uu hin danda\'u</string>
   <string name="patiententry_identifier_bp_passport">Paaspoortii BP</string>
   <string name="patiententry_consent_header">Hayyama:\u0020</string>
   <string name="patiententry_consent_first_para">Kan armaan gadii kana tuquudhaan, ati ragaan dhukkuubsataa ati galchite kamiyyuu hayyama hubatamaa jalatti kan funaaname ta’uu mirkaneessita. Kana jechuun dhukkubsataan yookan eegduun seera qabeessi ati ragaalee kanniin akka apppiitti galchaa jirtu ni beeku jechuudha, ragaan maalii akka sassaabbamu, fii tarii karaa SMS, WhatsApp, yookan maloota biraa lakkoofsa bilbilaa appicha keessatti kenname fayyadamanii qunammamuu akka danda’an beeku.</string>
@@ -97,6 +96,7 @@
   <string name="patientedit_confirm_discard_ok">Dhiisi</string>
   <string name="patientedit_confirm_discard_cancel">Adda kuti</string>
   <string name="patientedit_delete_patient">Haqi</string>
+  <string name="patientedit_add_button">Dabali</string>
 
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
@@ -273,20 +273,23 @@
   <string name="overdue_no_patients">Dhukkubsattoonni irra darbe hin jiran</string>
   <string name="overdue_empty_desc">Dhukkubsattoota sagantaa hordoffii dubbisa dhiibbaa dhiigaa isaanii bilbiluufii ni dandeessa.</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
-  <string name="overdue_list_item_diagnosis_diabetes">Sukkaara</string>
-  <string name="overdue_list_item_diagnosis_hypertension">Baayyina dhiiga</string>
-  <string name="overdue_list_item_diagnosis_none">Hin jiru</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">Guyyaa %s irra darbe</item>
     <item quantity="other">Guyyoota %s irra darbe</item>
   </plurals>
   <string name="overdue_list_item_village">Ganda</string>
-  <string name="overduelist_diagnosis_label">Dx</string>
-  <string name="overduelist_visited">Daawwatameera</string>
   <string name="overduelist_high_risk">Saaxilbahii ol aanaa</string>
-  <string name="overduelist_transferred">Dabarfameera gara</string>
   <string name="overdue_download">Buusicha</string>
   <string name="overdue_share">Raabsi</string>
+  <string name="overdue_no_pending_patients">Dhukkubsataan eeggatu hin jiru</string>
+  <string name="overdue_pending_list_button_see_all">Hundaa ilaali</string>
+  <string name="overdue_pending_list_button_see_less">Xiqqeessii ilaali</string>
+  <string name="overdue_pending_to_call_header">WAAMICHA KAN EEGGATAN</string>
+  <string name="overdue_agreed_to_visit_call_header">ILAALAMUUDHAF KAN WALIIGALAMAN</string>
+  <string name="overdue_remind_to_call_header">BOODA AKKAN BILBILUUF NA YAADACHIISI</string>
+  <string name="overdue_removed_from_list_call_header">TARREERRAA KAASI</string>
+  <string name="overdue_no_visit_in_one_year_call_header">WAGGAA 1 KEESSATTI KAN HIN ILAALAMIN</string>
+
 
   <!-- Facility change -->
 
@@ -296,6 +299,10 @@
   <string name="enterotp_incorrect_code">Koodii  dogongoraa, maaloo deebisii yaali</string>
   <string name="enterotp_resend_sms">SMS deebisii ergi</string>
   <string name="enterotp_sms_sent">Mirkaneeffannaan SMS biraa ergameera</string>
+  <string name="enterotp_try_again_after">Booda deebi’ii yaali</string>
+  <string name="otpentry_error_incorrect_otp_attempts_limit_reached" tools:ignore="PluralsCandidate">Yaalii dogongoraa %s taasistee jirta</string>
+  <string name="otpentry_error_incorrect_otp_attempts_remaining">Koodii sirrii hin taane,  yaaliiwwan %s tu hafe </string>
+  <!-- minutes:seconds -->
 
   <!-- Schedule appointment -->
   <string name="scheduleappointment_next_visit_in">Daawwannaa itti aanu karoorsi</string>
@@ -343,8 +350,8 @@
   <string name="newmedicalhistory_yes">Eeyyee</string>
   <string name="newmedicalhistory_no">Lakki</string>
   <string name="newmedicalhistory_history">Seenaa</string>
-  <string name="newmedicalhistory_diagnosis">Qorannoo (Barbaadameera)</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">Dhukubsataan ji\'a darbe yeroo ta\'e keessa dawaa BP fudhateeraa? (Barbaadamaa)</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">Ji\'a darbe keessa dhukkubsatichi dawaawwan sukkaaraa fudhatee jiraa? (Barbaadama)</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">Hin jiru</string>
@@ -357,7 +364,11 @@
   <string name="scansimpleid_enteredcode_error_not_required_length">Lakkoofsi paaspoortii PB dijitiiwwan 7 gadi</string>
   <string name="scansimpleid_type_number">Yookaan lakkoobsa barreessi</string>
   <string name="scansimpleid_invalid_qr_code">Waraqaa eenyummaa fayyaa sirrii garagalchi</string>
+  <string name="scansimpleid_error_state_snackbar_ok">Tole</string>
+  <string name="scansimpleid_identfier_already_exists">Lakkoofsi eenyummeessaa kun nama biraaf kennameera; kan biraa yaalaa.</string>
   <string name="scansimpleid_bp_passport_or_national_health_id">Paaspoortii BP yookan Waraqaa Eenyummaa Fayyaa Biyyaalessaa</string>
+  <string name="scansimpleid_bp_passport_title">Paaspoortii BP</string>
+  <string name="scansimpleid_national_id_title">Lakkoosa eenyummeessaa biyyaalessa</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">Mirkana ilaalamaa jira</string>
@@ -439,7 +450,6 @@
 
   <!-- Select Country Screen -->
   <string name="selectcountry_logo_contentdescription">Asxaa salphaa</string>
-  <string name="selectcountry_next">Kan itti aanu</string>
   <string name="selectcountry_title">biyya kee filadhu</string>
   <string name="selectcountry_networkerror">Hidhati interneetaa hin jiru!</string>
   <string name="selectcountry_servererror">Dogongora Sarvarii! Maaloo booda turii yaali!</string>
@@ -523,13 +533,13 @@
   <string name="alertfacilitychange_facility_name">%s?</string>
 
   <!-- Prescribed Drug Summary -->
-  <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
   <string name="contactpatient_agreed_to_visit">Dhukkubsataa \“dhufuudhaaf kan waliigale” jedhii milikkiteessi.</string>
   <string name="contactpatient_remind_call_later">Booddee na yaadachiisi…</string>
   <string name="contactpatient_remove_from_list">Tarree  irra darbeerraa kaasi…</string>
   <string name="contactpatient_result_of_call">Bu’aa bilbiluu</string>
+  <string name="contactpatient_call">Waamaa</string>
   <string name="contactpatient_call_normal">Sirrii</string>
   <string name="contactpatient_call_secure">Eegamaa</string>
   <string name="contactpatient_help_text">Bilbila kee eeggadhu lakkoofsa kee dhoksi fii bilisaan</string>
@@ -558,6 +568,7 @@
   <string name="contactpatient_moved_to_private">Eeggumsa dhuunfaatti sochoofameera</string>
   <string name="contactpatient_patient_died">Boqateera</string>
   <string name="contactpatient_other_reason">Sababa biraa</string>
+  <string name="contactpatient_unknown">Kan hin beekamne</string>
   <string name="contactpatient_patient_registered_at">Kan galmaa\'e</string>
   <string name="contactpatient_patient_transfer_from">Kan dabarfame</string>
   <string name="contactpatient_phone">Bilbila</string>
@@ -723,6 +734,7 @@
   <!-- Select ongoing hypertension treatment dialog -->
   <string name="select_ongoing_hypertension_treatment_title">Dhukkubsataan ji\'a darbe keessa yeroo ta\'etti dawaa BP fudhateera?</string>
   <string name="select_ongoing_hypertension_treatment_message">Eeyyee yookan lakkii filadhu</string>
+  <string name="select_ongoing_diabetes_treatment_message">Ji\'a darbe keessa dhukkubsatichi dawaawwan sukkaaraa fudhatee jira taanaan mirkaneessi.</string>
   <string name="select_ongoing_hypertension_treatment_positive_action">Tole</string>
 
   <!-- Custom drugs search -->
@@ -742,7 +754,7 @@
   <string name="warning_add_blood_sugar_message">Yoo danda\'ame, dubbisa sukkaara dhiigaa ammaa dhukkubsataa kanaaf dabali</string>
   <string name="warning_add_blood_sugar_positive_button">Sukkaara Dhiiga dabali</string>
   <string name="warning_add_blood_sugar_negative_button">Amma miti</string>
-  
+
   <!-- Custom drug entry sheet -->
   <string name="custom_drug_entry_sheet_remove">Balleessi</string>
   <string name="custom_drug_entry_sheet_dosage">Hamma fudhanna</string>
@@ -750,4 +762,104 @@
   <string name="custom_drug_entry_sheet_save_button_text">Ol kaa’i</string>
   <string name="custom_drug_entry_sheet_add_button_text">Dabali</string>
   <string name="custom_drug_entry_sheet_frequency_dialog_done">Taasifameera</string>
-  </resources>
+  <!-- Select state screen -->
+  <string name="select_state_title">Kilinikiin kee eessa?</string>
+  <string name="select_state_networkerror">Hidhati interneetaa hin jiru!</string>
+  <string name="select_state_servererror">Dogongora Sarvarii! Maaloo booda turii yaali!</string>
+  <string name="select_state_genericerror">Wanti ta’e dogongorameera! Maaloo booda turii yaali!</string>
+
+  <!-- Patient status view -->
+  <string name="patient_status_died">Boqateera</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">Qorannoo jijjiiri?</string>
+  <string name="change_diagnosis_message">Maaloo dhukkubsataan sukkaara yookan dhiibbaa dhiigaa qaba taanaa EEYYEE irratti mallattoo kaa\'i.</string>
+  <string name="change_diagnosis_positive">JIJJIIRI</string>
+  <string name="change_diagnosis_negative">AMMA MITI</string>
+
+  <!-- Overdue download notification -->
+  <string name="overdue_download_notification_failed_title">Buusuun in kufe</string>
+  <string name="overdue_download_notification_failed_subtitle">Yeroo xiqqoo booda shaakalaa</string>
+  <string name="overdue_download_notification_in_progress_title">Toora tarreeffama buusaa guyyaa irra darbanii</string>
+  <string name="overdue_download_notification_cancel">Adda kuti</string>
+  <string name="overdue_download_notification_succeeded_title">Buusuun raawwateera</string>
+  <string name="overdue_download_notification_succeeded_subtitle">Banuuf cuqaasaa</string>
+
+  <!-- Overdue download no active network connection dialog -->
+  <string name="overdue_download_no_active_network_connection_dialog_title">Interneetiin hin jiru</string>
+  <string name="overdue_download_no_active_network_connection_dialog_message">Interneetii keessan mirkaneeffachuun irra deebi\'aa yaalaa.</string>
+  <string name="overdue_download_no_active_network_connection_dialog_positive_button">Tole</string>
+
+  <!-- Select overdue download format dialog -->
+  <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">Spreadsheet</string>
+  <string name="select_overdue_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="select_overdue_download_format_dialog_action_negative">Adda kuti</string>
+  <string name="select_overdue_download_format_dialog_title_download">Bifa ittiin buustan filadhaa</string>
+  <string name="select_overdue_download_format_dialog_title_share">Bifa ittiin qooddan filadhaa</string>
+  <string name="select_overdue_download_format_dialog_action_positive_download">Buusicha</string>
+  <string name="select_overdue_download_format_dialog_action_positive_share">Raabsi</string>
+  <string name="select_overdue_download_format_dialog_share_with">Kan ittiin qooddan filadhaa</string>
+  <string name="not_enough_storage_error_dialog_title">Kuusaa ga\'aan hin jiru</string>
+  <string name="not_enough_storage_error_dialog_message">Faayila haaraa balleessuun irra deebi\'aa yaalaa</string>
+  <string name="download_failed_error_dialog_title">Buusuu hin dandeenye</string>
+  <string name="download_failed_error_dialog_message">Wanti ta\'e sirrii miti. Xiqqooshee turaa irra deebi\'aa yaalaa</string>
+  <string name="next_appointment_view_title">Beellama hordofaa</string>
+  <string name="next_appointment_view_add">Dabali</string>
+  <string name="next_appointment_view_change">Jijjiiri</string>
+  <string name="next_appointment_none">Hin jiru</string>
+  <string name="next_appointment_appointment_at_facility">%stti</string>
+  <string name="next_appointment_today">Har’a</string>
+  <plurals name="next_appointment_plurals">
+    <item quantity="one">%dguyyoota</item>
+    <item quantity="other">%d guyyoota</item>
+  </plurals>
+  <plurals name="next_appointment_overdue_plurals">
+    <item quantity="one">Guyyaa %d irra darbe</item>
+    <item quantity="other">%d guyyoonni kan irra darbe</item>
+  </plurals>
+
+  <!-- App update notification -->
+  <string name="app_update_notification_subtext">Maaloo dafaatii appilikeeshinii Simple keessan Google Play Store irraa haaromfadhaa.</string>
+  <string name="critical_app_update_notification_subtext">Haaromsawwan barbaachisoon jiru.
+Appilikeeshinii Simple keessan Google PlayStore irraa haaromsadhaa.</string>
+
+  <!-- Critical app update dialog -->
+  <string name="critical_update_required_dialog_title">Haaromsi baay\'ee barbaachisaa ta\'e barbaachiseera.</string>
+  <string name="critical_update_required_dialog_content">Sonoota haaraa fi jijjiiramoota nageenyaa barbaachisoof ammuma haaromsaa.</string>
+  <string name="critical_security_update_required_reason">Nageenyi appilikeeshinii ilaalcha keessa galeera.</string>
+  <string name="critical_update_required_dialog_update_button_text">AMMUMA HAAROMSAA</string>
+  <string name="critical_update_required_dialog_help_section_title">Deeggarsa barbaadduu?</string>
+  <string name="critical_update_required_dialog_help_section_content">Garee deeggarsaa akka hiriyaa keenya gargaarsa argachuuf, biinkicha gadi qabaa.</string>
+  <string name="critical_update_required_reason">Appilikeeshiniinichi erga yeroon itti darbee ji\'a  %d fixeera.</string>
+
+  <!-- Critical app update card -->
+  <string name="critical_update_required_card_title">Haaromsa murteessaa ta\'e</string>
+  <string name="critical_update_required_card_content">Sonoota haaraa fi jijjiiramoota nageenyaa barbaachisoof ammuma haaromsaa.</string>
+  <string name="update_required_reason">Appilikeeshiniinichi erga yeroon itti darbee ji\'a  %d fixeera.</string>
+  <string name="critical_update_required_card_update_button_text">AMMUMA HAAROMSAA</string>
+
+  <!-- Drug stock reminder notification -->
+  <string name="drug_stock_reminder_notification">Gabaasa kuusaa qorichaa keessan hin xumuramin jiru %1$s f xumuraa.</string>
+  <string name="drug_stock_reminder_card_title">Kuusa Dawaa</string>
+  <string name="drug_stock_reminder_card_content">Gabaasa kuusaa qorichaa keessan hin xumuramin jiru %1$s f xumuraa.</string>
+  <string name="drug_stock_reminder_button_text">Kuusaa Dawaa Galchi</string>
+
+  <!-- Drug stock reminder no active network connection dialog -->
+  <string name="drug_stock_reminder_no_active_network_connection_dialog_title">Interneetiin hin jiru</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_message">Interneetii keessan mirkaneeffachuun irra deebi\'aa yaalaa.</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_positive_button">Tole</string>
+
+
+  <!-- Clinical Decision Support Alerts -->
+  <string name="clinical_decision_support_alert_bp_high_title">BPn olaanaa dha. Qorichoota dabaltuu?</string>
+  <string name="clinical_decision_support_alert_bp_high_subtitle">Akka dhukkubsataan seeraan qoricha isaanii fudhachaa jiran hordofaa.</string>
+
+  <!-- Call Result Outcome Message -->
+
+  <!-- Overdue Instant Search -->
+  <string name="overdue_search_patient_name_or_village">Maqaadhaan ykn gandaan barbaadi</string>
+  <string name="overdue_search_hint">Maqaa ykn ganda galchi</string>
+  <string name="overdue_search_no_search_results_title">Dhukkubsataan hin argamne</string>
+  <string name="overdue_search_no_search_results_desc">Dhukkubsatoota yeroon irra darbe barbaacha kee keessaa asii argatta</string>
+
+</resources>

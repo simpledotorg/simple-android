@@ -7,13 +7,13 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.drugs.search.DrugFrequency.BD
 import org.simple.clinic.drugs.search.DrugFrequency.OD
 import org.simple.clinic.drugs.search.DrugFrequency.QDS
 import org.simple.clinic.drugs.search.DrugFrequency.TDS
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItems
+import org.simple.clinic.drugs.selection.custom.ButtonState.SAVING
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import java.util.UUID
 
@@ -25,20 +25,12 @@ class CustomDrugEntryUpdateTest {
   private val dosagePlaceholder = "mg"
   private val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(drugName), dosagePlaceholder)
 
-  private val drugFrequencyChoiceItems = listOf(
-      DrugFrequencyChoiceItem(drugFrequency = null, label = "None"),
-      DrugFrequencyChoiceItem(drugFrequency = OD, label = "OD"),
-      DrugFrequencyChoiceItem(drugFrequency = BD, label = "BD"),
-      DrugFrequencyChoiceItem(drugFrequency = TDS, label = "TDS"),
-      DrugFrequencyChoiceItem(drugFrequency = QDS, label = "QDS")
-  )
-
-  private val drugFrequencyToFrequencyChoiceItemMap = mapOf(
-      null to DrugFrequencyChoiceItem(drugFrequency = null, label = "None"),
-      OD to DrugFrequencyChoiceItem(drugFrequency = OD, label = "OD"),
-      BD to DrugFrequencyChoiceItem(drugFrequency = BD, label = "BD"),
-      TDS to DrugFrequencyChoiceItem(drugFrequency = TDS, label = "TDS"),
-      QDS to DrugFrequencyChoiceItem(drugFrequency = QDS, label = "QDS")
+  private val drugFrequencyToLabelMap = mapOf(
+      null to DrugFrequencyLabel(label = "None"),
+      OD to DrugFrequencyLabel(label = "OD"),
+      BD to DrugFrequencyLabel(label = "BD"),
+      TDS to DrugFrequencyLabel(label = "TDS"),
+      QDS to DrugFrequencyLabel(label = "QDS")
   )
 
   @Test
@@ -69,20 +61,20 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
-  fun `when edit frequency is clicked, then show edit frequency dialog and pass drug frequency choice list`() {
+  fun `when edit frequency is clicked, then show edit frequency dialog and clear focus from dosage edit text`() {
     val frequency = OD
-    updateSpec.given(defaultModel.frequencyEdited(frequency).drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap))
+    updateSpec.given(defaultModel.frequencyEdited(frequency).drugFrequencyToLabelMapLoaded(drugFrequencyToLabelMap))
         .whenEvent(EditFrequencyClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowEditFrequencyDialog(frequency, drugFrequencyChoiceItems))
+            hasEffects(ShowEditFrequencyDialog(frequency), ClearFocusFromDosageEditText)
         ))
   }
 
   @Test
   fun `when frequency is edited, then update the model and set drug frequency in the ui`() {
     val frequency = OD
-    val drugNameLoadedModel = defaultModel.drugNameLoaded(drugName).drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap)
+    val drugNameLoadedModel = defaultModel.drugNameLoaded(drugName).drugFrequencyToLabelMapLoaded(drugFrequencyToLabelMap)
     val frequencyRes = "OD"
 
     updateSpec.given(drugNameLoadedModel)
@@ -95,7 +87,7 @@ class CustomDrugEntryUpdateTest {
 
   @Test
   fun `when frequency is edited with a null value, then update the model and set drug frequency with the frequency in the ui`() {
-    val drugNameLoadedModel = defaultModel.drugNameLoaded(drugName).drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap)
+    val drugNameLoadedModel = defaultModel.drugNameLoaded(drugName).drugFrequencyToLabelMapLoaded(drugFrequencyToLabelMap)
     val frequencyLabel = "None"
 
     updateSpec.given(drugNameLoadedModel)
@@ -107,52 +99,65 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
-  fun `when add button is clicked and the sheet is opened in create mode from drug list with edited dosage and frequency values, then add the drug to the custom drug list`() {
+  fun `when add button is clicked and the sheet is opened in create mode from drug list with edited dosage and frequency values, then add the drug to the custom drug list and set button progress state to saving`() {
     val dosage = "200 mg"
     val frequency = OD
     val drugUuid = UUID.fromString("6106544f-2b18-410d-992b-81860a08f02a")
     val drug = TestData.drug(id = drugUuid, name = drugName)
-    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugList(drugUuid), dosagePlaceholder).drugNameLoaded(drugName).rxNormCodeEdited(drug.rxNormCode)
+    val model = CustomDrugEntryModel
+        .default(openAs = OpenAs.New.FromDrugList(drugUuid), dosagePlaceholder)
+        .drugNameLoaded(drugName)
+        .rxNormCodeEdited(drug.rxNormCode)
+        .dosageEdited(dosage)
+        .frequencyEdited(frequency)
 
     updateSpec
-        .given(defaultModel.dosageEdited(dosage).frequencyEdited(frequency))
+        .given(model)
         .whenEvent(AddMedicineButtonClicked(patientUuid))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(model.saveButtonStateChanged(SAVING)),
             hasEffects(SaveCustomDrugToPrescription(patientUuid, drugName, dosage, drug.rxNormCode, frequency))
         ))
   }
 
 
   @Test
-  fun `when add button is clicked and the sheet is opened in create mode from drug name with edited dosage and frequency values, then add the drug to the custom drug list`() {
+  fun `when add button is clicked and the sheet is opened in create mode from drug name with edited dosage and frequency values, then add the drug to the custom drug list and set button progress state to saving`() {
     val dosage = "200 mg"
     val frequency = OD
-    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(drugName), dosagePlaceholder).drugNameLoaded(drugName)
+    val model = CustomDrugEntryModel
+        .default(openAs = OpenAs.New.FromDrugName(drugName), dosagePlaceholder)
+        .drugNameLoaded(drugName)
+        .dosageEdited(dosage)
+        .frequencyEdited(frequency)
 
     updateSpec
-        .given(defaultModel.dosageEdited(dosage).frequencyEdited(frequency))
+        .given(model)
         .whenEvent(AddMedicineButtonClicked(patientUuid))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(model.saveButtonStateChanged(SAVING)),
             hasEffects(SaveCustomDrugToPrescription(patientUuid, drugName, dosage, null, frequency))
         ))
   }
 
   @Test
-  fun `when save button is clicked, then update the prescription in the repository`() {
-    val dosage = "200 mg"
+  fun `when save button is clicked and dosage is invalid, then update the prescription in the repository without the dosage and set button progress state to saving`() {
+    val dosage = "mg"
     val frequency = OD
     val prescribedDrugUuid = UUID.fromString("96633994-6e4d-4528-b796-f03ae016553a")
-    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.Update(prescribedDrugUuid), dosagePlaceholder)
+    val model = CustomDrugEntryModel
+        .default(openAs = OpenAs.Update(prescribedDrugUuid), dosagePlaceholder)
+        .drugNameLoaded(drugName)
+        .dosageEdited(dosage)
+        .frequencyEdited(frequency)
 
     updateSpec
-        .given(defaultModel.drugNameLoaded(drugName).dosageEdited(dosage).frequencyEdited(frequency))
+        .given(model)
         .whenEvent(AddMedicineButtonClicked(patientUuid))
         .then(
             assertThatNext(
-                hasNoModel(),
-                hasEffects(UpdatePrescription(patientUuid, prescribedDrugUuid, drugName, dosage, null, frequency))
+                hasModel(model.saveButtonStateChanged(SAVING)),
+                hasEffects(UpdatePrescription(patientUuid, prescribedDrugUuid, drugName, null, null, frequency))
             )
         )
   }
@@ -169,26 +174,31 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
-  fun `when the drug is fetched and is not deleted, then update the model, set frequency and update the progress state to done`() {
+  fun `when the drug is fetched, is not deleted and has a numeric dosage value, then update the model, set frequency, show keyboard and set cursor position`() {
     val prescribedDrugUuid = UUID.fromString("96633994-6e4d-4528-b796-f03ae016553a")
     val drugFrequency = OD
     val dosage = "12mg"
+    val position = 2
     val prescribedDrug = TestData.prescription(uuid = prescribedDrugUuid, name = drugName, isDeleted = false, frequency = MedicineFrequency.OD, dosage = dosage)
-    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.Update(prescribedDrugUuid), dosagePlaceholder).drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap)
+    val defaultModel = CustomDrugEntryModel
+        .default(openAs = OpenAs.Update(prescribedDrugUuid), dosagePlaceholder)
+        .drugFrequencyToLabelMapLoaded(drugFrequencyToLabelMap)
     val frequencyRes = "OD"
+
+    val updatedModel = defaultModel
+        .drugNameLoaded(drugName)
+        .dosageEdited(dosage = dosage)
+        .frequencyEdited(frequency = drugFrequency)
+        .rxNormCodeEdited(prescribedDrug.rxNormCode)
+        .drugInfoProgressStateLoaded()
 
     updateSpec
         .given(defaultModel)
         .whenEvent(PrescribedDrugFetched(prescribedDrug))
         .then(
             assertThatNext(
-                hasModel(defaultModel
-                    .drugNameLoaded(drugName)
-                    .dosageEdited(dosage = dosage)
-                    .frequencyEdited(frequency = drugFrequency)
-                    .rxNormCodeEdited(prescribedDrug.rxNormCode)
-                    .drugInfoProgressStateLoaded()),
-                hasEffects(SetDrugFrequency(frequencyRes), SetDrugDosage(dosage)))
+                hasModel(updatedModel),
+                hasEffects(SetDrugFrequency(frequencyRes), SetDrugDosage(dosage), ShowKeyboard, SetCursorPosition(position)))
         )
   }
 
@@ -218,19 +228,55 @@ class CustomDrugEntryUpdateTest {
   }
 
   @Test
-  fun `when drug is fetched, then update the model with drug values, set drug frequency, dosage and update the progress state to done`() {
+  fun `when drug is fetched and dosage has numeric values, then update the model with drug values, set drug frequency, dosage, show keyboard and set cursor position`() {
     val drugUuid = UUID.fromString("6bbc5bbe-863c-472a-b962-1fd3198e20d1")
-    val drug = TestData.drug(id = drugUuid, frequency = OD)
+    val dosage = "10 mg/ 150 mg"
+    val position = 10
+    val drug = TestData.drug(id = drugUuid, frequency = OD, dosage = dosage)
     val frequencyRes = "OD"
-    val drugFrequencyChoiceItemsLoaded = defaultModel.drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap)
+    val drugFrequencyChoiceItemsLoaded = defaultModel.drugFrequencyToLabelMapLoaded(drugFrequencyToLabelMap)
+
+    val updateModel = drugFrequencyChoiceItemsLoaded
+        .drugNameLoaded(drug.name)
+        .dosageEdited(drug.dosage)
+        .frequencyEdited(drug.frequency)
+        .rxNormCodeEdited(drug.rxNormCode)
+        .drugInfoProgressStateLoaded()
 
     updateSpec
         .given(drugFrequencyChoiceItemsLoaded)
         .whenEvent(DrugFetched(drug))
         .then(
             assertThatNext(
-                hasModel(drugFrequencyChoiceItemsLoaded.drugNameLoaded(drug.name).dosageEdited(drug.dosage).frequencyEdited(drug.frequency).rxNormCodeEdited(drug.rxNormCode).drugInfoProgressStateLoaded()),
-                hasEffects(SetDrugFrequency(frequencyRes), SetDrugDosage(drug.dosage))
+                hasModel(updateModel),
+                hasEffects(SetDrugFrequency(frequencyRes), SetDrugDosage(drug.dosage), ShowKeyboard, SetCursorPosition(position))
+            )
+        )
+  }
+
+  @Test
+  fun `when drug is fetched and dosage does not have a numeric values, then update the model with drug values, set drug frequency, dosage, show keyboard and set cursor position`() {
+    val drugUuid = UUID.fromString("6bbc5bbe-863c-472a-b962-1fd3198e20d1")
+    val dosage = "mg"
+    val position = 0
+    val drug = TestData.drug(id = drugUuid, frequency = OD, dosage = dosage)
+    val frequencyRes = "OD"
+    val drugFrequencyChoiceItemsLoaded = defaultModel.drugFrequencyToLabelMapLoaded(drugFrequencyToLabelMap)
+
+    val updateModel = drugFrequencyChoiceItemsLoaded
+        .drugNameLoaded(drug.name)
+        .dosageEdited(drug.dosage)
+        .frequencyEdited(drug.frequency)
+        .rxNormCodeEdited(drug.rxNormCode)
+        .drugInfoProgressStateLoaded()
+
+    updateSpec
+        .given(drugFrequencyChoiceItemsLoaded)
+        .whenEvent(DrugFetched(drug))
+        .then(
+            assertThatNext(
+                hasModel(updateModel),
+                hasEffects(SetDrugFrequency(frequencyRes), SetDrugDosage(drug.dosage), ShowKeyboard, SetCursorPosition(position))
             )
         )
   }
@@ -239,10 +285,10 @@ class CustomDrugEntryUpdateTest {
   fun `when drug frequency choice items are loaded, then update the model with a map of frequency to frequency choice items`() {
     updateSpec
         .given(defaultModel)
-        .whenEvent(DrugFrequencyChoiceItemsLoaded(DrugFrequencyChoiceItems(drugFrequencyChoiceItems)))
+        .whenEvent(DrugFrequencyChoiceItemsLoaded(drugFrequencyToLabelMap))
         .then(
             assertThatNext(
-                hasModel(defaultModel.drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap))
+                hasModel(defaultModel.drugFrequencyToLabelMapLoaded(drugFrequencyToLabelMap))
             )
         )
   }

@@ -8,7 +8,6 @@ import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordInfo
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
@@ -20,7 +19,6 @@ import java.time.Instant
 
 class TeleconsultRecordEffectHandler @AssistedInject constructor(
     private val user: Lazy<User>,
-    private val currentFacility: Lazy<Facility>,
     private val teleconsultRecordRepository: TeleconsultRecordRepository,
     private val patientRepository: PatientRepository,
     private val prescriptionRepository: PrescriptionRepository,
@@ -63,18 +61,11 @@ class TeleconsultRecordEffectHandler @AssistedInject constructor(
       effect: ClonePatientPrescriptions
   ) {
     if (prescriptions.isNotEmpty()) {
-      prescriptionRepository.softDeletePrescriptions(prescriptions)
-
-      val clonedPrescriptions = prescriptions.map { prescribedDrug ->
-        prescribedDrug.refillForTeleconsultation(
-            uuid = uuidGenerator.v4(),
-            facilityUuid = currentFacility.get().uuid,
-            teleconsultationId = effect.teleconsultRecordId,
-            utcClock = utcClock
-        )
-      }
-
-      prescriptionRepository.save(clonedPrescriptions)
+      prescriptionRepository.refillForTeleconsulation(
+          prescriptions = prescriptions,
+          uuidGenerator = { uuidGenerator.v4() },
+          teleconsultationUuid = effect.teleconsultRecordId
+      )
     }
   }
 

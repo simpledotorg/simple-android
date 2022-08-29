@@ -1,14 +1,18 @@
 package org.simple.clinic.overdue
 
+import android.database.Cursor
+import androidx.annotation.VisibleForTesting
 import androidx.paging.PagingSource
 import io.reactivex.Observable
-import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
+import org.simple.clinic.home.overdue.OverdueAppointment_Old
 import org.simple.clinic.overdue.Appointment.AppointmentType
 import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.Appointment.Status.Visited
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.patient.SyncStatus.PENDING
+import org.simple.clinic.summary.nextappointment.NextAppointmentPatientProfile
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
@@ -22,6 +26,7 @@ import javax.inject.Inject
 
 class AppointmentRepository @Inject constructor(
     private val appointmentDao: Appointment.RoomDao,
+    private val overdueDaoOld: OverdueAppointment_Old.RoomDao,
     private val overdueDao: OverdueAppointment.RoomDao,
     private val utcClock: UtcClock,
     private val appointmentConfig: AppointmentConfig
@@ -35,7 +40,6 @@ class AppointmentRepository @Inject constructor(
       appointmentFacilityUuid: UUID,
       creationFacilityUuid: UUID
   ): Appointment {
-
     val appointment = Appointment(
         uuid = appointmentUuid,
         patientUuid = patientUuid,
@@ -46,25 +50,23 @@ class AppointmentRepository @Inject constructor(
         remindOn = null,
         agreedToVisit = null,
         appointmentType = appointmentType,
-        syncStatus = SyncStatus.PENDING,
+        syncStatus = PENDING,
         createdAt = Instant.now(utcClock),
         updatedAt = Instant.now(utcClock),
         deletedAt = null,
         creationFacilityUuid = creationFacilityUuid
     )
 
-    // TODO (vs) 20/05/20: Remove this side effect from this method
-    markOlderAppointmentsAsVisited(patientUuid)
     appointmentDao.save(listOf(appointment))
     return appointment
   }
 
-  private fun markOlderAppointmentsAsVisited(patientUuid: UUID) {
+  fun markOlderAppointmentsAsVisited(patientUuid: UUID) {
     appointmentDao.markOlderAppointmentsAsVisited(
         patientUuid = patientUuid,
         updatedStatus = Visited,
         scheduledStatus = Scheduled,
-        newSyncStatus = SyncStatus.PENDING,
+        newSyncStatus = PENDING,
         newUpdatedAt = Instant.now(utcClock)
     )
   }
@@ -73,7 +75,7 @@ class AppointmentRepository @Inject constructor(
     appointmentDao.saveRemindDate(
         appointmentUUID = appointmentUuid,
         reminderDate = reminderDate,
-        newSyncStatus = SyncStatus.PENDING,
+        newSyncStatus = PENDING,
         newUpdatedAt = Instant.now(utcClock)
     )
   }
@@ -82,7 +84,7 @@ class AppointmentRepository @Inject constructor(
     appointmentDao.markAsAgreedToVisit(
         appointmentUUID = appointmentUuid,
         reminderDate = LocalDate.now(userClock).plusMonths(1),
-        newSyncStatus = SyncStatus.PENDING,
+        newSyncStatus = PENDING,
         newUpdatedAt = Instant.now(utcClock)
     )
   }
@@ -91,7 +93,7 @@ class AppointmentRepository @Inject constructor(
     appointmentDao.markAsVisited(
         appointmentUuid = appointmentUuid,
         newStatus = Visited,
-        newSyncStatus = SyncStatus.PENDING,
+        newSyncStatus = PENDING,
         newUpdatedAt = Instant.now(utcClock)
     )
   }
@@ -101,7 +103,7 @@ class AppointmentRepository @Inject constructor(
         appointmentUuid = appointmentUuid,
         cancelReason = reason,
         newStatus = Cancelled,
-        newSyncStatus = SyncStatus.PENDING,
+        newSyncStatus = PENDING,
         newUpdatedAt = Instant.now(utcClock)
     )
   }
@@ -114,23 +116,11 @@ class AppointmentRepository @Inject constructor(
     return appointmentDao.count().toObservable()
   }
 
-  fun overdueAppointmentsInFacility_old(
-      since: LocalDate,
-      facilityId: UUID
-  ): PagingSource<Int, OverdueAppointment> {
-    return overdueDao
-        .overdueInFacilityPagingSource_old(
-            facilityUuid = facilityId,
-            scheduledBefore = since,
-            scheduledAfter = since.minus(appointmentConfig.periodForIncludingOverdueAppointments)
-        )
-  }
-
   fun overdueAppointmentsInFacility(
       since: LocalDate,
       facilityId: UUID
-  ): PagingSource<Int, OverdueAppointment> {
-    return overdueDao
+  ): PagingSource<Int, OverdueAppointment_Old> {
+    return overdueDaoOld
         .overdueInFacilityPagingSource(
             facilityUuid = facilityId,
             scheduledBefore = since,
@@ -138,16 +128,46 @@ class AppointmentRepository @Inject constructor(
         )
   }
 
-  fun overdueAppointmentsCount(
+  fun overdueAppointmentsInFacilityNew(
       since: LocalDate,
-      facility: Facility
-  ): Observable<Int> {
-    return overdueDao.overdueAtFacilityCount(
-        facilityUuid = facility.uuid,
-        scheduledBefore = since,
-        scheduledAfter = since.minus(appointmentConfig.periodForIncludingOverdueAppointments)
-    ).map { it.size }
+      facilityId: UUID
+  ): Observable<List<OverdueAppointment>> {
+    return overdueDao.overdueAppointmentsInFacility(
+        facilityUuid = facilityId,
+        scheduledBefore = since
+    )
   }
+
+  fun searchOverduePatient(
+      searchInputs: List<String>,
+      since: LocalDate,
+      facilityId: UUID
+  ): PagingSource<Int, OverdueAppointment> {
+    val query = transformSearchInputsIntoQuery(searchInputs)
+
+    return overdueDao.search(
+        query = query,
+        scheduledBefore = since,
+        facilityUuid = facilityId
+    )
+  }
+
+  fun searchOverduePatientsImmediate(
+      searchInputs: List<String>,
+      since: LocalDate,
+      facilityId: UUID
+  ): List<OverdueAppointment> {
+    val query = transformSearchInputsIntoQuery(searchInputs)
+
+    return overdueDao.searchImmediate(
+        query = query,
+        scheduledBefore = since,
+        facilityUuid = facilityId
+    )
+  }
+
+  private fun transformSearchInputsIntoQuery(searchInputs: List<String>) = searchInputs
+      .joinToString(separator = " OR ") { "*$it*" }
 
   fun lastCreatedAppointmentForPatient(patientUuid: UUID): Optional<Appointment> {
     return appointmentDao.lastCreatedAppointmentForPatient(patientUuid).toOptional()
@@ -163,11 +183,10 @@ class AppointmentRepository @Inject constructor(
         patientUuid = patientUuid,
         updatedStatus = Visited,
         scheduledStatus = Scheduled,
-        newSyncStatus = SyncStatus.PENDING,
+        newSyncStatus = PENDING,
         newUpdatedAt = Instant.now(utcClock),
         createdBefore = startOfToday
     )
-
   }
 
   fun recordsWithSyncStatus(syncStatus: SyncStatus): List<Appointment> {
@@ -187,7 +206,7 @@ class AppointmentRepository @Inject constructor(
   }
 
   override fun mergeWithLocalData(payloads: List<AppointmentPayload>) {
-    val dirtyRecords = appointmentDao.recordIdsWithSyncStatus(SyncStatus.PENDING)
+    val dirtyRecords = appointmentDao.recordIdsWithSyncStatus(PENDING)
 
     val payloadsToSave = payloads
         .filterNot { it.uuid in dirtyRecords }
@@ -218,14 +237,14 @@ class AppointmentRepository @Inject constructor(
 
   override fun pendingSyncRecordCount(): Observable<Int> {
     return appointmentDao
-        .countWithStatus(SyncStatus.PENDING)
+        .countWithStatus(PENDING)
         .toObservable()
   }
 
   override fun pendingSyncRecords(limit: Int, offset: Int): List<Appointment> {
     return appointmentDao
         .recordsWithSyncStatusBatched(
-            syncStatus = SyncStatus.PENDING,
+            syncStatus = PENDING,
             limit = limit,
             offset = offset
         )
@@ -234,7 +253,33 @@ class AppointmentRepository @Inject constructor(
   fun latestOverdueAppointmentForPatient(
       patientUuid: UUID,
       date: LocalDate
-  ): Optional<OverdueAppointment> {
-    return overdueDao.latestForPatient(patientUuid, date).toOptional()
+  ): Optional<Appointment> {
+    return appointmentDao.latestOverdueAppointmentForPatient(patientUuid, date).toOptional()
+  }
+
+  fun nextAppointmentPatientProfile(patientUuid: UUID): NextAppointmentPatientProfile? {
+    return appointmentDao.nextAppointmentPatientProfile(patientUuid)
+  }
+
+  fun hasAppointmentForPatientChangedSince(patientUuid: UUID, timestamp: Instant): Boolean {
+    return appointmentDao
+        .hasAppointmentForPatientChangedSince(
+            patientUuid = patientUuid,
+            instantToCompare = timestamp,
+            pendingStatus = PENDING
+        )
+  }
+
+  @VisibleForTesting
+  fun getAllAppointmentsForPatient(patientUuid: UUID): List<Appointment> {
+    return appointmentDao.getAllAppointmentsForPatient(patientUuid)
+  }
+
+  fun latestScheduledAppointmentForPatient(patientUuid: UUID): Appointment? {
+    return appointmentDao.latestScheduledAppointmentForPatient(patientUuid)
+  }
+
+  fun appointmentAndPatientInformationForIds(ids: List<UUID>): Cursor {
+    return appointmentDao.appointmentAndPatientInformationForIds(ids)
   }
 }

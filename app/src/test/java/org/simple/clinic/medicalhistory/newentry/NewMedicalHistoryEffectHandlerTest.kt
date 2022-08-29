@@ -7,11 +7,11 @@ import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import dagger.Lazy
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.uuid.FakeUuidGenerator
+import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.util.UUID
@@ -100,6 +100,30 @@ class NewMedicalHistoryEffectHandlerTest {
 
     // then
     verify(uiActions).showHypertensionDiagnosisRequiredErrorDialog()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when show change diagnosis error effect is received, then show change diagnosis error dialog`() {
+    // when
+    testCase.dispatch(ShowChangeDiagnosisErrorDialog)
+
+    // then
+    verify(uiActions).showChangeDiagnosisErrorDialog()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when show select ongoing diabetes treatment error effect is received, then show ongoing diabetes treatment error dialog`() {
+    // when
+    testCase.dispatch(ShowOngoingDiabetesTreatmentErrorDialog)
+
+    // then
+    verify(uiActions).showOngoingDiabetesTreatmentErrorDialog()
     verifyNoMoreInteractions(uiActions)
 
     testCase.assertNoOutgoingEvents()

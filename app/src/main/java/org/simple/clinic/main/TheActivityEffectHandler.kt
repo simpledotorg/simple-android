@@ -6,6 +6,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.navigation.v2.History
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.user.NewlyVerifiedUser
@@ -22,12 +23,16 @@ class TheActivityEffectHandler @AssistedInject constructor(
     private val utcClock: UtcClock,
     private val patientRepository: PatientRepository,
     private val lockAfterTimestamp: MemoryValue<Optional<Instant>>,
-    @Assisted private val uiActions: TheActivityUiActions
+    @Assisted private val uiActions: TheActivityUiActions,
+    @Assisted private val provideCurrentScreenHistory: () -> History
 ) {
 
   @AssistedFactory
   interface InjectionFactory {
-    fun create(uiActions: TheActivityUiActions): TheActivityEffectHandler
+    fun create(
+        uiActions: TheActivityUiActions,
+        provideCurrentScreenHistory: () -> History
+    ): TheActivityEffectHandler
   }
 
   fun build(): ObservableTransformer<TheActivityEffect, TheActivityEvent> {
@@ -42,7 +47,7 @@ class TheActivityEffectHandler @AssistedInject constructor(
         .addTransformer(ListenForUserDisapprovals::class.java, listenForUserDisapprovals())
         .addTransformer(ClearPatientData::class.java, clearPatientData())
         .addTransformer(ShowAccessDeniedScreen::class.java, openAccessDeniedScreen())
-        .addConsumer(ShowInitialScreen::class.java, { uiActions.showInitialScreen(it.screen) }, schedulers.ui())
+        .addConsumer(SetCurrentScreenHistory::class.java, { uiActions.setCurrentScreenHistory(it.history) }, schedulers.ui())
         .build()
   }
 
@@ -55,7 +60,8 @@ class TheActivityEffectHandler @AssistedInject constructor(
             InitialScreenInfoLoaded(
                 user = it,
                 currentTimestamp = Instant.now(utcClock),
-                lockAtTimestamp = lockAfterTimestamp.get()
+                lockAtTimestamp = lockAfterTimestamp.get(),
+                currentHistory = provideCurrentScreenHistory()
             )
           }
     }

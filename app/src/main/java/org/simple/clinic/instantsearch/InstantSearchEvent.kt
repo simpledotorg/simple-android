@@ -6,7 +6,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.scanid.scannedqrcode.BlankScannedQRCodeResult
-import org.simple.clinic.util.RequiresPermission
+import org.simple.clinic.activity.permissions.RequiresPermission
 import org.simple.clinic.widgets.UiEvent
 import java.util.Optional
 import java.util.UUID

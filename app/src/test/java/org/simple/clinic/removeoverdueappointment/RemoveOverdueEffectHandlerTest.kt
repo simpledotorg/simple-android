@@ -4,13 +4,23 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
+import com.nhaarman.mockitokotlin2.whenever
 import org.junit.After
 import org.junit.Test
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.overdue.callresult.CallResult
+import org.simple.clinic.overdue.callresult.CallResultRepository
+import org.simple.clinic.overdue.callresult.Outcome
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.storage.Timestamps
+import org.simple.sharedTestCode.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
+import org.simple.clinic.uuid.UuidGenerator
+import java.time.Instant
 import java.util.UUID
 
 class RemoveOverdueEffectHandlerTest {
@@ -18,11 +28,24 @@ class RemoveOverdueEffectHandlerTest {
   private val appointmentRepository = mock<AppointmentRepository>()
   private val patientRepository = mock<PatientRepository>()
   private val uiActions = mock<RemoveOverdueUiActions>()
+  private val uuidGenerator = mock<UuidGenerator>()
+  private val callResultRepository = mock<CallResultRepository>()
+  private val utcClock = TestUtcClock(Instant.parse("2018-01-01T00:00:00Z"))
+  private val user = TestData.loggedInUser(uuid = UUID.fromString("95455934-8399-479f-b1a7-0ebec9d04c9e"))
+  private val cancelAppointmentWithReason = CancelAppointmentWithReason(
+      appointmentRepository = appointmentRepository,
+      callResultRepository = callResultRepository,
+      uuidGenerator = uuidGenerator,
+      utcClock = utcClock,
+      currentUser = { user }
+  )
+
   private val effectHandler = RemoveOverdueEffectHandler(
       appointmentRepository = appointmentRepository,
       patientRepository = patientRepository,
+      cancelAppointmentWithReason = cancelAppointmentWithReason,
       schedulersProvider = TestSchedulersProvider.trampoline(),
-      uiActions = uiActions
+      viewEffectsConsumer = RemoveOverdueViewEffectHandler(uiActions)::handle
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
@@ -49,7 +72,7 @@ class RemoveOverdueEffectHandlerTest {
   }
 
   @Test
-  fun `when mark patient as dead effect is received, then cancel appointment and update patient status`() {
+  fun `when mark patient as dead effect is received, then update patient status`() {
     // given
     val patientId = UUID.fromString("6a87ea63-2ef4-4d27-b8ef-a07f1706cb67")
     val appointmentId = UUID.fromString("0affc37a-7344-493e-8768-6175c96c905e")
@@ -58,8 +81,7 @@ class RemoveOverdueEffectHandlerTest {
     testCase.dispatch(MarkPatientAsDead(patientId, appointmentId))
 
     // then
-    verify(appointmentRepository).cancelWithReason(appointmentId, AppointmentCancelReason.Dead)
-    verifyNoMoreInteractions(appointmentRepository)
+    verifyZeroInteractions(appointmentRepository)
 
     verify(patientRepository).updatePatientStatusToDead(patientId)
     verifyNoMoreInteractions(patientRepository)
@@ -73,14 +95,30 @@ class RemoveOverdueEffectHandlerTest {
   fun `when cancel appointment effect is received, then cancel the appointment`() {
     // given
     val appointmentId = UUID.fromString("3a908737-17c8-44e6-b4f9-03a46a185189")
+    val appointment = TestData.appointment(uuid = appointmentId)
     val cancelReason = AppointmentCancelReason.random()
 
+    val callResultId = UUID.fromString("3d3fb748-0ad5-4f8b-b3ad-e12856094a2b")
+    whenever(uuidGenerator.v4()).thenReturn(callResultId)
+
     // when
-    testCase.dispatch(CancelAppointment(appointmentId, cancelReason))
+    testCase.dispatch(CancelAppointment(appointment, cancelReason))
 
     // then
     verify(appointmentRepository).cancelWithReason(appointmentId, cancelReason)
     verifyNoMoreInteractions(appointmentRepository)
+
+    val expectedCallResult = CallResult(
+        id = callResultId,
+        userId = user.uuid,
+        appointmentId = appointmentId,
+        removeReason = cancelReason,
+        outcome = Outcome.RemovedFromOverdueList,
+        timestamps = Timestamps.create(utcClock),
+        syncStatus = SyncStatus.PENDING
+    )
+    verify(callResultRepository).save(listOf(expectedCallResult))
+    verifyNoMoreInteractions(callResultRepository)
 
     verifyZeroInteractions(uiActions)
 

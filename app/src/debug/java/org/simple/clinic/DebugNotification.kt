@@ -23,11 +23,17 @@ object DebugNotification {
       notificationManager.createNotificationChannel(NotificationChannel(NOTIF_CHANNEL_ID, "Debug", NotificationManager.IMPORTANCE_MIN))
     }
 
+    val syncPendingIntentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_CANCEL_CURRENT
+    } else {
+      PendingIntent.FLAG_CANCEL_CURRENT
+    }
     val syncPendingIntent = PendingIntent.getBroadcast(
         context,
         0,
         Intent(context, DebugNotificationActionReceiver::class.java),
-        PendingIntent.FLAG_CANCEL_CURRENT)
+        syncPendingIntentFlags)
+
     val syncAction = NotificationCompat.Action(R.drawable.ic_favorite_20dp, "Sync data", syncPendingIntent)
 
     val notif = NotificationCompat.Builder(context, NOTIF_CHANNEL_ID)

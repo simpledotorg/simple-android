@@ -20,7 +20,7 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.util.RuntimePermissions
+import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
@@ -98,7 +98,7 @@ class FacilityChangeScreen :
   }
 
   private fun setupUiComponents() {
-    facilityPickerView.backClicked = router::pop
+    facilityPickerView.backClicked = { router.pop() }
   }
 
   private fun facilityClicks(): Observable<UiEvent> {

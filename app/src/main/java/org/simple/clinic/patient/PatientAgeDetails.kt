@@ -73,14 +73,6 @@ data class PatientAgeDetails(
     return ageRecordedAtDate.minusYears(ageValue!!.toLong()).toLocalDate()
   }
 
-  fun withAge(age: Age): PatientAgeDetails {
-    return copy(
-        ageValue = age.value,
-        ageUpdatedAt = age.updatedAt,
-        dateOfBirth = null
-    )
-  }
-
   fun withDateOfBirth(dateOfBirth: LocalDate): PatientAgeDetails {
     return copy(
         ageValue = null,
@@ -98,16 +90,6 @@ data class PatientAgeDetails(
         ageUpdatedAt = Instant.now(clock),
         dateOfBirth = null
     )
-  }
-
-  companion object {
-    fun fromAgeOrDate(age: Age?, date: LocalDate?): PatientAgeDetails {
-      return when {
-        date != null -> PatientAgeDetails(null, null, date)
-        age != null -> PatientAgeDetails(age.value, age.updatedAt, null)
-        else -> throw IllegalStateException("Both age AND dateOfBirth cannot be null!")
-      }
-    }
   }
 
   enum class Type {

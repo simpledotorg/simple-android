@@ -9,7 +9,7 @@ import org.simple.clinic.databinding.PrescribedDrugWithDosageListItemBinding
 import org.simple.clinic.drugs.selection.dosage.DosageListItem.WithDosage
 import org.simple.clinic.drugs.selection.dosage.DosageListItem.WithoutDosage
 import org.simple.clinic.protocol.ProtocolDrug
-import org.simple.clinic.router.util.resolveColor
+import org.simple.clinic.util.resolveColor
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 

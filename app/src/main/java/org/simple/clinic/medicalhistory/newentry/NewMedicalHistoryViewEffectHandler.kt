@@ -1,6 +1,7 @@
 package org.simple.clinic.medicalhistory.newentry
 
 import org.simple.clinic.mobius.ViewEffectsHandler
+import org.simple.clinic.util.exhaustive
 
 class NewMedicalHistoryViewEffectHandler(
     private val uiActions: NewMedicalHistoryUiActions
@@ -12,6 +13,8 @@ class NewMedicalHistoryViewEffectHandler(
       ShowOngoingHypertensionTreatmentError -> uiActions.showOngoingHypertensionTreatmentErrorDialog()
       ShowDiagnosisRequiredError -> uiActions.showDiagnosisRequiredErrorDialog()
       ShowHypertensionDiagnosisRequiredError -> uiActions.showHypertensionDiagnosisRequiredErrorDialog()
-    }
+      ShowChangeDiagnosisErrorDialog -> uiActions.showChangeDiagnosisErrorDialog()
+      ShowOngoingDiabetesTreatmentErrorDialog -> uiActions.showOngoingDiabetesTreatmentErrorDialog()
+    }.exhaustive()
   }
 }

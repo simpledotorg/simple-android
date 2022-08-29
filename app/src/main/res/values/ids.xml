@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <item name="spring_animation_translation_x" type="id" />
+  <item name="spring_animation_translation_y" type="id" />
+  <item name="spring_animation_translation_z" type="id" />
+  <item name="spring_animation_scale_x" type="id" />
+  <item name="spring_animation_scale_y" type="id" />
+  <item name="spring_animation_rotation" type="id" />
+  <item name="spring_animation_rotation_x" type="id" />
+  <item name="spring_animation_rotation_y" type="id" />
+  <item name="spring_animation_x" type="id" />
+  <item name="spring_animation_y" type="id" />
+  <item name="spring_animation_z" type="id" />
+  <item name="spring_animation_alpha" type="id" />
+  <item name="spring_animation_scrollx" type="id" />
+  <item name="spring_animation_scrollY" type="id" />
+  <item name="tag_clinical_decision_pending_end_listener" type="id" />
+</resources>

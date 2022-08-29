@@ -21,6 +21,7 @@
   <string name="country_bangladesh">බංග්ලාදේශය</string>
   <string name="country_ethiopia">ඉතියෝපියාව</string>
   <string name="country_sri_lanka">ශ්‍රී ලංකාව</string>
+  <string name="country_demo">ආදර්ශන රට</string>
 
   <!-- Home -->
   <string name="home_help">සහාය</string>
@@ -31,16 +32,15 @@
   <string name="identifiertype_bangladesh_national_id">ජාතික හැදු</string>
   <string name="identifiertype_ethiopia_medical_record_number">වෛද්‍ය වාර්තා අංකය</string>
   <string name="identifiertype_unknown">හැඳුනුම්පත</string>
-  <string name="identifiertype_india_national_health_id">ජාතික සෞඛ්‍ය හැදු</string>
+  <string name="identifiertype_india_national_health_id">ජාතික සෞඛ්‍ය හැඳුනුම්පත</string>
   <string name="identifiertype_sri_lanka_national_id">ජාතික හැදු</string>
+  <string name="identifiertype_sri_lanka_personal_health_number">පුද්ගලික සෞඛ්‍ය අංකය</string>
 
   <!-- Patient search -->
-  <string name="instantsearch_hint">නම, දුරකතනය, හෝ හැදු.</string>
-
+  <string name="instantsearch_hint">නම, දුරකතනය, හෝ හැඳුනුම්පත</string>
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">මෙම ලැයිස්තුවේ රෝගියාව සොයාගත නොහැක?</string>
   <string name="patientsearchresults_register_patient">නව රෝගියෙකු ලෙස ලියාපදිංචි කරන්න</string>
-  <string name="patientsearchresults_item_last_seen">හමුවිය</string>
   <string name="patientsearchresults_item_phone_number">දුරකතනය</string>
   <string name="patientsearchresults_item_birthdate">උපන්දිනය</string>
 
@@ -48,9 +48,9 @@
   <string name="patiententry_contentdescription_up_button">නැවත සෙවීම වෙත යන්න</string>
   <string name="patiententry_full_name">රෝගියාගේ නම</string>
   <string name="patiententry_phone_number">දුරකතන අංකය</string>
-  <string name="patiententry_bangladesh_national_id">ජාති හැදු අංකය</string>
+  <string name="patiententry_bangladesh_national_id">ජාතික හැඳුනුම්පත් අංකය</string>
   <string name="patiententry_ethiopia_medical_record_number">වෛද්‍ය වාර්තා අංකය</string>
-  <string name="patiententry_sri_lanka_national_id">ජාති හැදු අංකය</string>
+  <string name="patiententry_sri_lanka_personal_health_number">පුද්ගලික සෞඛ්‍ය අංකය</string>
   <string name="patiententry_date_of_birth_unfocused">උපන් දිනය</string>
   <string name="patiententry_date_of_birth_focused">උපන්දිනය: දින/මාස/වර්ෂය</string>
   <string name="patiententry_dateofbirth_and_age_separator">හෝ</string>
@@ -79,11 +79,10 @@
   <string name="patiententry_error_dateofbirth_is_in_future">රෝගියාගේ උපන්දිනය තහවුරු කරන්න</string>
   <string name="patiententry_error_phonenumber_blank">දුරකතන අංකය හිස්ව තැබිය නොහැක</string>
   <string name="patiententry_error_phonenumber_length_less">දුරකතන අංකය, අංක %1$s ට වඩා අඩු විය නොහැකිය</string>
-  <string name="patiententry_error_phonenumber_length_more">දුරකතන අංකය, අංක %1$s ට වඩා වැඩි විය නොහැකිය</string>
   <string name="patiententry_identifier_bp_passport">බීපී පාස්පෝර්ට්</string>
   <string name="patiententry_consent_header">කැමැත්ත ප්‍රකාශ කිරීම:\u0020</string>
-  <string name="patiententry_consent_first_para">පහළ තට්ටු කිරීමෙන්, ඔබ මෙහි ඇතුලත් කරනු ලබන ඕනෑම රෝගියෙකුගේ දත්තයක් ම ඔහුගේ යෝග්‍ය හා දැනුවත් අභිමතය මත ලබාගත් දත්ත බවට තහවුරු කරනු ලැබේ. මෙහි අර්ථය වන්නේ, රෝගියෙකු හෝ නෛතික බාරකරු, ඔබ ඔවුන්ගේ පුද්ගලික දත්ත යෙදවුමට ඇතුලත් කරන බව දන්නා බවත්, කුමන දත්ත රැස් කරන්නේ ද යන්න අවබෝධ කර ගන්නා බවත්, එම දත්තයන්ට SMS, WhatsApp මඟින් හෝ යෙදවුමට සපයා ඇති දුරකතන අංක‍ය භාවිතයෙන් වෙනත් ක්‍රම වලට හෝ පිවිසිය හැකි බව දන්නා බවත්ය.</string>
-  <string name="patiententry_consent_second_para">ඔබ විසින් බලය පවරනු ලබන ඕනෑම අයෙකුට, හෝ ඔබ සේවය කරන සෞඛ්‍යරැකවරණ සැපයුම්කරුට හෝ, ඔබ මෙහි ඇතුලත් කරනු ලබන රෝගියාගේ දත්ත සහ තොරතුරු සඳහා පිවිසුමක් ඇත. රෝගියා හෝ ඔහුගේ නෛතික බාරකරු මෙම යෙදවුම තුලින් ලබා ගන්නා දත්ත සඳහා පිවිසුමක් ඇත්තේ කා හට ද යන්න අවබෝධ කර ගන්නා බවත්, පිවිසුම සඳහා අභිමතය ලබා දෙන බවත්, යෙදවුම භාවිතය මඟින්, ඔබ තහවුරු කරනු ලබයි.</string>
+  <string name="patiententry_consent_first_para">පහළ තට්ටු කිරීමෙන්, ඔබ මෙහි ඇතුලත් කරනු ලබන රෝගියෙකුගේ ඕනෑම දත්තයක් එම රෝගියාගේ නිසි දැනුවත් කැමැත්ත ප්‍රකාශ කිරීම මත ලබාගත් දත්ත බවට තහවුරු කරනු ලැබේ. එනම්, රෝගියෙකු හෝ නෛතික බාරකරු, ඔබ ඔවුන්ගේ පුද්ගලික දත්ත යෙදවුමට ඇතුලත් කරන බව දන්නා බවත්, කුමන දත්ත රැස් කරන්නේ ද යන්න අවබෝධ කර ගන්නා බවත්, යෙදවුමට සපයා ඇති දුරකතන අංක‍ය භාවිතයෙන් SMS, WhatsApp හෝ වෙනත් ක්‍රම වලින් ඔවුන් සමඟ සම්බන්ධ විය හැකි බව දන්නා බවත්ය.</string>
+  <string name="patiententry_consent_second_para">ඔබ විසින් බලය පවරනු ලබන ඕනෑම අයෙකුට, හෝ ඔබ සේවය කරන සෞඛ්‍ය රැකවරණ සැපයුම්කරුට හෝ, ඔබ මෙහි ඇතුලත් කරනු ලබන රෝගියාගේ දත්ත සහ තොරතුරු සඳහා පිවිසීමට හැකිය. යෙදවුම භාවිතය මඟින්, රෝගියා හෝ ඔහුගේ නෛතික බාරකරු මෙම යෙදවුම තුලින් ලබා ගන්නා දත්ත සඳහා පිවිසීමට හැකියාව ඇත්තේ කා හට ද යන්න අවබෝධ කර ගන්නා බවත්, පිවිසුම සඳහා සිය කැමැත්ත ලබා දෙන බවත්, ඔබ විසින් තහවුරු කරනු ලබයි.</string>
   <string name="patiententry_consent_whatsapp_sms_reminders">WhatsApp / SMS සිහිකැඳවනයන්</string>
   <string name="patiententry_consent_sms_reminders">SMS සිහිකැඳවනයන්</string>
   <string name="patiententry_age_exceeds_max_limit_error">වයස අවුරුදු 120 ට වැඩි විය නොහැකිය</string>
@@ -97,6 +96,7 @@
   <string name="patientedit_confirm_discard_ok">බැහැර කරන්න</string>
   <string name="patientedit_confirm_discard_cancel">අවලංගු කරන්න</string>
   <string name="patientedit_delete_patient">මකන්න</string>
+  <string name="patientedit_add_button">එක් කරන්න</string>
 
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
@@ -128,7 +128,7 @@
 
   <!-- Blood pressure entry -->
   <string name="bloodpressureentry_sheet_title_enter_blood_pressure">රුධිර පීඩනය</string>
-  <string name="bloodpressureentry_sheet_title_edit_blood_pressure">රුධිර පීඩනය සංස්කරණය කරන්න</string>
+  <string name="bloodpressureentry_sheet_title_edit_blood_pressure">රුධිර පීඩනය සංස්කරණය කරන්න</string>
   <string name="bloodpressureentry_sheet_title_enter_date">පැමිණි දිනය</string>
   <string name="bloodpressureentry_remove">ඉවත් කරන්න</string>
   <string name="bloodpressureentry_systolic">සන්‍යස්ථ (Systolic)</string>
@@ -144,7 +144,7 @@
   <string name="bloodpressureentry_error_systolic_empty">සන්‍යස්ථ සහ වින්‍යස්ථ පීඩනයන් ඇතුල් කරන්න</string>
   <string name="bloodpressureentry_error_diastolic_empty">සන්‍යස්ථ සහ වින්‍යස්ථ පීඩනයන් ඇතුල් කරන්න</string>
   <string name="bloodpressureentry_error_date_invalid_pattern">දින/මාස/අවුරුදු ආකාරයෙන් වලංගු දිනයක් ඇතුල් කරන්න</string>
-  <string name="bloodpressureentry_error_date_is_in_future">දිනය අනාගත කාලයෙන් තැබිය නොහැකිය</string>
+  <string name="bloodpressureentry_error_date_is_in_future">දිනය අනාගතයේ දිනයක් විය නොහැක.</string>
   <string name="bloodpressureentry_remove_bp_title">රුධිර පීඩනය ඉවත් කරන්න</string>
   <string name="bloodpressureentry_remove_bp_message">මෙම රුධිර පීඩන වාර්තාව කිරීම ඉවත් කිරීමට අවශ්‍ය බව ඔබට විශ්වාස ද?</string>
   <string name="bloodpressureentry_remove_bp_confirm">ඉවත් කරන්න</string>
@@ -215,15 +215,15 @@
 
   <!-- App lock -->
   <string name="applock_logout">ඔබ නොවේද?</string>
-  <string name="applock_reset_pin_alert_title">ඔබගේ ආරක්ෂක PIN නැවත සකසන්න?</string>
-  <string name="applock_reset_pin_alert_message">ඔබට ඔබගේ ආරක්ෂක PIN නැවත සැකසීමට අවශ්‍ය බවට විශ්වාස ද?</string>
+  <string name="applock_reset_pin_alert_title">ඔබගේ පුද්ගලික හඳුනා ගැනීමේ අංකය (PIN) නැවත සැකසීම අවශ්‍යද?</string>
+  <string name="applock_reset_pin_alert_message">ඔබට ඔබගේ පුද්ගලික හඳුනා ගැනීමේ අංකය (PIN) නැවත සැකසීමට අවශ්‍ය බවට විශ්වාස ද?</string>
   <string name="applock_reset_pin_alert_confirm">නැවත සකසන්න</string>
   <string name="applock_reset_pin_alert_cancel">අවලංගු කරන්න</string>
 
   <!-- PIN entry -->
-  <string name="pinentry_forgotpin">PIN අමතකයි?</string>
+  <string name="pinentry_forgotpin">පුද්ගලික හඳුනා ගැනීමේ අංකය (PIN) අමතකද?</string>
   <string name="pinentry_error_incorrect_pin_on_first_attempt">ඇතුලත් කළ පුද්ගලික හඳුනා ගැනීමේ අංකය මින් පෙර ඇතුලත් කළ පුද්ගලික හඳුනා ගැනීමේ අංකය සමඟ නොගැලපේ</string>
-  <string name="pinentry_error_incorrect_pin_attempts_remaining" tools:ignore="PluralsCandidate">වැරදි PIN, උත්සාහයන් %s ඉතිරිව ඇත</string>
+  <string name="pinentry_error_incorrect_pin_attempts_remaining" tools:ignore="PluralsCandidate">වැරදි පුද්ගලික හඳුනා ගැනීමේ අංකයකි, උත්සාහයන් %s ක් ඉතිරිව ඇත</string>
   <string name="pinentry_error_incorrect_pin_attempts_limit_reached" tools:ignore="PluralsCandidate">ඔබ වැරදි උත්සාහයන් %s සිදු කර ඇත</string>
   <string name="pinentry_pin_number_hint">ඔබගේ ආරක්ෂක PIN</string>
   <string name="pinentry_bruteforcelock_timer_label">පසුව නැවත උත්සාහ කරන්න</string>
@@ -242,13 +242,13 @@
   <string name="registrationname_next">ඊළඟ</string>
   <string name="registrationname_name_and_role_hint">උදා: හෙද නිලධාරිනී දීපා සිං</string>
 
-  <string name="registrationpin_pin_label">ඔබගේ ආරක්ෂක PIN නිර්මාණය කරන්න</string>
-  <string name="registrationpin_pin_hint">ඔබගේ PIN මතක තබා ගන්න, ඔබට එය පසුව අවශ්‍ය වනු ඇත</string>
-  <string name="registrationpin_error_incomplete_pin">PIN ඉතා කෙටිය. කරුණාකර අංක 4ක් ඇතුළත් කරන්න.</string>
+  <string name="registrationpin_pin_label">ඔබගේ පුද්ගලික හඳුනා ගැනීමේ අංකය (PIN) නිර්මාණය කරන්න</string>
+  <string name="registrationpin_pin_hint">ඔබගේ පුද්ගලික හඳුනා ගැනීමේ අංකය (PIN) මතක තබා ගන්න, ඔබට එය පසුව අවශ්‍ය වනු ඇත</string>
+  <string name="registrationpin_error_incomplete_pin">පුද්ගලික හඳුනා ගැනීමේ අංකය (PIN) ඉතා කෙටිය. කරුණාකර අංක 4ක් ඇතුළත් කරන්න.</string>
 
-  <string name="registrationconfirmpin_confirm_pin_label">ආරක්ෂක PIN නැවත ඇතුළත් කරන්න</string>
+  <string name="registrationconfirmpin_confirm_pin_label">පුද්ගලික හඳුනා ගැනීමේ අංකය (PIN) නැවත ඇතුළත් කරන්න</string>
   <string name="registrationconfirmpin_error_pin_mismatch">ඇතුලත් කළ පුද්ගලික හඳුනා ගැනීමේ අංකය මින් පෙර ඇතුලත් කළ පුද්ගලික හඳුනා ගැනීමේ අංකය සමඟ නොගැලපේ</string>
-  <string name="registrationconfirmpin_reset_pin">PIN නැවත සකසන්න</string>
+  <string name="registrationconfirmpin_reset_pin">පුද්ගලික හඳුනා ගැනීමේ අංකය (PIN) නැවත සකසන්න</string>
 
   <string name="registrationlocation_screen_title">සිටින ස්ථානය සඳහා පිවිසුම</string>
   <string name="registrationlocation_skip_permission">මඟ හරින්න</string>
@@ -259,12 +259,12 @@
   <!-- Onboarding -->
   <string name="onboarding_get_started">ආරම්භ කරන්න</string>
   <string name="screenonboarding_intro_1">අධ්‍යාතතිය \සහිත‍ රෝගීන් \nදහස් ගනනක් \nසොයා</string>
-  <string name="screenonboarding_intro_1_hypertension">\ අධ්‍යාතතිය</string>
+  <string name="screenonboarding_intro_1_hypertension">\ අධි රුධිර පීඩනය</string>
   <string name="screenonboarding_intro_2">රුධිර පීඩනයන් \n</string>
   <string name="screenonboarding_intro_2_bp">හා ඖෂධ වාර්තාවන් \n</string>
   <string name="screenonboarding_intro_2_and">\පවත්වාගෙන</string>
   <string name="screenonboarding_intro_2_medicines">\ යන්න</string>
-  <string name="screenonboarding_intro_3">හමුවීම් සඳහා </string>
+  <string name="screenonboarding_intro_3">පැමිණි රෝගීන්</string>
   <string name="screenonboarding_intro_3_reminder">\nනැවත පැමිණීමට</string>
   <string name="screenonboarding_intro_3_visits">\nසිහිකැඳවන පණිවුඩ රෝගීන්ට ලැබේ</string>
 
@@ -272,29 +272,36 @@
   <string name="overdue_no_patients">තවදුරටත් ඉතිරි වූ කිසිදු රෝගියකු නැත</string>
   <string name="overdue_empty_desc">රුධිර පීඩනය බැලීමේ පසු විපරම් හමුව මඟ හැරුණු රෝගීන්ට ඇමතීමට ඔබට හැකි වනු ඇත.</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
-  <string name="overdue_list_item_diagnosis_diabetes">දියවැඩියාව</string>
-  <string name="overdue_list_item_diagnosis_hypertension">අධ්‍යාතතිය</string>
-  <string name="overdue_list_item_diagnosis_none">කිසිවක් නැත</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">දිනය %s කල් ඉකුත් වී ඇත</item>
     <item quantity="other">දින %s ක් ඉකුත් වී ඇත</item>
   </plurals>
   <string name="overdue_list_item_village">ගම</string>
-  <string name="overduelist_diagnosis_label">Dx</string>
-  <string name="overduelist_visited">හමුවිය</string>
   <string name="overduelist_high_risk">ඉහළ අවදානම</string>
-  <string name="overduelist_transferred">මාරු කරන ලදී</string>
   <string name="overdue_download">බාගත කිරීම</string>
   <string name="overdue_share">බෙදා ගැනීම</string>
+  <string name="overdue_no_pending_patients">රෝගීන් රැඳී නොසිටී</string>
+  <string name="overdue_pending_list_button_see_all">සියල්ල බලන්න</string>
+  <string name="overdue_pending_list_button_see_less">අඩුවෙන් බලන්න</string>
+  <string name="overdue_pending_to_call_header">ඇමතීමට රැඳී සිටී</string>
+  <string name="overdue_agreed_to_visit_call_header">පැමිණීමට එකඟ විය</string>
+  <string name="overdue_remind_to_call_header">පසුව ඇමතීමට සිහිපත් කරන්න</string>
+  <string name="overdue_removed_from_list_call_header">ලැයිස්තුවෙන් ඉවත් කරන්න</string>
+  <string name="overdue_no_visit_in_one_year_call_header">1 වසරක් තුළ පැමිණීමක් නැත</string>
+
 
   <!-- Facility change -->
 
   <!-- Enter OTP -->
-  <string name="enterotp_check_sms_sent_to">වෙත යවන ලද SMS පරීක්ෂා කරන්න</string>
+  <string name="enterotp_check_sms_sent_to">වෙත යවන ලද කෙටි පණිවුඩය (SMS) පරීක්ෂා කරන්න</string>
   <string name="enterotp_enter_verification_code">සත්‍යාපන කේතය ඇතුළත් කරන්න</string>
   <string name="enterotp_incorrect_code">වැරදි කේතයකි, නැවත උත්සාහ කරන්න</string>
-  <string name="enterotp_resend_sms">SMS නැවත යවන්න</string>
-  <string name="enterotp_sms_sent">නව සත්‍යාපන SMS යවන ලදී</string>
+  <string name="enterotp_resend_sms">කෙටි පණිවුඩය (SMS) නැවත යවන්න</string>
+  <string name="enterotp_sms_sent">නව සත්‍යාපන කෙටි පණිවුඩය (SMS) යවන ලදී</string>
+  <string name="enterotp_try_again_after">පසුව නැවත උත්සාහ කරන්න</string>
+  <string name="otpentry_error_incorrect_otp_attempts_limit_reached" tools:ignore="PluralsCandidate">ඔබ වැරදි උත්සාහයන් %s සිදු කර ඇත</string>
+  <string name="otpentry_error_incorrect_otp_attempts_remaining">වැරදි පුද්ගලික කේතයකි, උත්සාහයන් %s ක් ඉතිරිව ඇත</string>
+  <!-- minutes:seconds -->
 
   <!-- Schedule appointment -->
   <string name="scheduleappointment_next_visit_in">නැවත පැමිණිය යුතු දිනය</string>
@@ -315,14 +322,14 @@
   </plurals>
 
   <!-- Forgot PIN -->
-  <string name="forgotpin_create_new_pin">නව ආරක්ෂක PIN නිර්මාණය කරන්න</string>
-  <string name="forgotpin_create_new_pin_invalid_pin">PIN ඉතා කෙටිය. කරුණාකර අංක 4ක් ඇතුළත් කරන්න.</string>
-  <string name="forgotpin_confirm_pin">ආරක්ෂක PIN නැවත ඇතුළත් කරන්න</string>
-  <string name="forgotpin_confirm_pin_message">එය තහවුරු කිරීමට නැවත PIN ඇතුළු කරන්න</string>
+  <string name="forgotpin_create_new_pin">නව පුද්ගලික හඳුනා ගැනීමේ අංකය (PIN) නිර්මාණය කරන්න</string>
+  <string name="forgotpin_create_new_pin_invalid_pin">පුද්ගලික හඳුනා ගැනීමේ අංකය (PIN) ඉතා කෙටිය. කරුණාකර අංක 4ක් ඇතුළත් කරන්න.</string>
+  <string name="forgotpin_confirm_pin">පුද්ගලික හඳුනා ගැනීමේ අංකය (PIN) නැවත ඇතුළත් කරන්න</string>
+  <string name="forgotpin_confirm_pin_message">තහවුරු කිරීමට නැවත පුද්ගලික හඳුනා ගැනීමේ අංකය (PIN) ඇතුළු කරන්න</string>
   <string name="forgotpin_error_pin_mismatch">PIN මුල් PIN හා නොගැලපේ</string>
 
   <!-- Reports -->
-  <string name="reports_come_back_later">පසුව ආපසු එන්න</string>
+  <string name="reports_come_back_later">පසුව නැවත පිවිසෙන්න</string>
   <string name="reports_you_will_be_able_to_see">මෙතැනින් ඔබගේ සායනයේ රුධිර පීඩන වාර්තා බැලීමට හැකිය.</string>
 
   <!-- Medical History -->
@@ -342,8 +349,8 @@
   <string name="newmedicalhistory_yes">ඔව්</string>
   <string name="newmedicalhistory_no">නැත</string>
   <string name="newmedicalhistory_history">ඉතිහාසය</string>
-  <string name="newmedicalhistory_diagnosis">රෝග නිශ්චය (අවශ්‍යයි)</string>
-  <string name="medicalhistory_question_is_on_hypertension_treatment">පසුගිය මාසයේ කිසියම් විටෙක රෝගියා රුධිර පීඩන ඖෂධ ගත්තේ ද? (අවශ්‍යය)</string>
+  <string name="medicalhistory_question_is_on_hypertension_treatment">රෝගියා පසුගිය මාසය තුල කිසියම් දිනකදී රුධිර පීඩනය පාලනය කිරීම සඳහා ඖෂධයක් ලබා ගත්තේද? (අවශ්‍යයි)</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">රෝගියා පසුගිය මාසය තුල කිසියම් දිනකදී දියවැඩියාව පාලනය කිරීම සඳහා ඖෂධයක් ලබා ගත්තේද? (අවශ්‍යයි)</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">කිසිවක් නැත</string>
@@ -351,17 +358,21 @@
   <string name="prescribed_drug_with_dosages_sheet_drug_name">මාත්‍රාව %s</string>
 
   <!--Scan Simple ID-->
-  <string name="scansimpleid_title">රුපී බලපත්‍රය හෝ ජාතික හැදු. අංකය</string>
-  <string name="scansimpleid_enteredcode_error_empty">රුපී බලපත්‍රය අංකය හෝ ජාතික සෞඛ්‍ය හැදු. අංකය ඇතුලත් කරන්න</string>
-  <string name="scansimpleid_enteredcode_error_not_required_length">වලංගු රුපී බලපත්‍රය අංකයක් හෝ ජාතික සෞඛ්‍ය හැදු. අංකයක් ඇතුලත් කරන්න</string>
+  <string name="scansimpleid_title">බීපී පාස්පෝර්ට් හෝ ජාතික හැඳුනුම්පත් අංකය</string>
+  <string name="scansimpleid_enteredcode_error_empty">බීපී පාස්පෝර්ට් අංකය හෝ ජාතික සෞඛ්‍ය හැඳුනුම්පත් අංකය ඇතුලත් කරන්න</string>
+  <string name="scansimpleid_enteredcode_error_not_required_length">වලංගු බීපී පාස්පෝර්ට් අංකය හෝ ජාතික සෞඛ්‍ය හැඳුනුම්පත් අංකය ඇතුලත් කරන්න</string>
   <string name="scansimpleid_type_number">හෝ අංකය ටයිප් කරන්න</string>
-  <string name="scansimpleid_invalid_qr_code">වලංගු සෞඛ්‍ය හැදු. අංකයක් ස්කෑන් කරන්න</string>
-  <string name="scansimpleid_bp_passport_or_national_health_id">රුපී බලපත්‍රය අංකය හෝ ජාතික සෞඛ්‍ය හැදු. අංකය</string>
+  <string name="scansimpleid_invalid_qr_code">වලංගු සෞඛ්‍ය හැඳුනුම්පතක් ස්කෑන් කරන්න</string>
+  <string name="scansimpleid_error_state_snackbar_ok">හරි</string>
+  <string name="scansimpleid_identfier_already_exists">හැඳුනුම දැනටමත් වෙනත් රෝගියෙකුට දී ඇත.\nනව සෞඛ්‍ය හැඳුනුමක් ස්කෑන් කරන්න.</string>
+  <string name="scansimpleid_bp_passport_or_national_health_id">බීපී පාස්පෝර්ට් අංකය හෝ ජාතික සෞඛ්‍ය හැඳුනුම්පත් අංකය</string>
+  <string name="scansimpleid_bp_passport_title">බීපී පාස්පෝර්ට්</string>
+  <string name="scansimpleid_national_id_title">ජාතික හැදු</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">සමමුහුර්ත කිරීමට අපේක්ෂිතයි</string>
   <string name="syncindicator_status_failed">සමමුහුර්ත කිරීමට අසමත් විය</string>
-  <string name="syncindicator_status_syncing">සමමුහුර්ත කරමින්</string>
+  <string name="syncindicator_status_syncing">සමමුහුර්ත වෙමින් පවතියි</string>
   <string name="syncindicator_status_synced_just_now">මේ දැන් සමමුහුර්ත කරන ලදී</string>
   <string name="syncindicator_status_synced_min_ago">විනාඩි %s කට පෙර සමමුහුර්ත කරන ලදී</string>
   <string name="syncindicator_dialog_error_network">රෝගීන්ගේ වාර්තා සමමුහුර්ත කිරීම සඳහා, ඔබ සතුව ක්‍රියාකාරී අන්තර්ජාල සබඳතාවයක් ඇති බව තහවුරු කරන්න.</string>
@@ -377,7 +388,7 @@
   <!-- Link Id Sheet-->
   <string name="linkidwithpatient_button_yes">ඔව්</string>
   <string name="linkidwithpatient_button_back">ආපසු</string>
-  <string name="linkidwithpatient_text">හැඳුනුම්පත එකතු කරන්නේ</string>
+  <string name="linkidwithpatient_text">හැඳුනුම්පත එකතු කරන්න</string>
   <string name="linkidwithpatient_patient_text">%1$s?</string>
 
   <!-- Add ID to Patient: Search -->
@@ -401,7 +412,7 @@
 
   <!--Registration loader screen -->
   <string name="registrationloader_error_unexpected_title">යම් දෝෂයක් සිදු විය</string>
-  <string name="registrationloader_error_unexpected_message">කරුණාකර ටික වේලාවකට පසු නැවත උත්සාහ කරන්න, නැතහොත් ඔබගේ අධීක්ෂකවරයා හා සම්බන්ධ වන්න.</string>
+  <string name="registrationloader_error_unexpected_message">කරුණාකර ටික වේලාවකට පසු නැවත උත්සාහ කරන්න, නැතහොත් ඔබගේ අධීක්ෂණ නිලධාරියා හා සම්බන්ධ වන්න.</string>
   <string name="registrationloader_error_internet_connection_title">අන්තර්ජාල සබඳතාවයක් නොමැත</string>
   <!--suppress UnusedResources -->
   <string name="registrationloader_retry">නැවත උත්සාහ කරන්න</string>
@@ -418,7 +429,7 @@
   <string name="settings_user_name_icon_content">පරිශීලක නම නිරූපකය සැකසීම</string>
   <string name="settings_user_phone_icon_content">පරිශීලක දුරකතන අංක නිරූපකය සැකසීම</string>
   <string name="settings_current_language_icon_content">වර්තමාන භාෂා නිරූපකය සැකසීම</string>
-  <string name="settings_app_version_icon_content">යෙදවුම් අනුවාදයේ අයිකනය සැකසීම</string>
+  <string name="settings_app_version_icon_content">යෙදවුම් අනුවාදයේ නිරූපකය සැකසීම</string>
   <string name="settings_name">නම</string>
   <string name="settings_number">දුරකතන අංකය</string>
   <string name="settings_language">භාෂාව</string>
@@ -438,7 +449,6 @@
 
   <!-- Select Country Screen -->
   <string name="selectcountry_logo_contentdescription">Simple ලාංඡනය</string>
-  <string name="selectcountry_next">ඊළඟ</string>
   <string name="selectcountry_title">ඔබගේ රට තෝරාගන්න</string>
   <string name="selectcountry_networkerror">අන්තර්ජාල සබඳතාවයක් නොමැත!</string>
   <string name="selectcountry_servererror">සර්වර දෝෂයකි! කරුණාකර පසුව උත්සාහ කරන්න!</string>
@@ -463,27 +473,27 @@
   <string name="bloodsugarentry_error_higher_limit">අගය 1000 mg/dLට වඩා වැඩි විය නොහැකිය</string>
   <string name="bloodsugarentry_error_higher_limit_hba1c">අගය 25\u0025ට වඩා වැඩි විය නොහැකිය</string>
   <string name="bloodsugarentry_error_higher_limit_mmol">අගය 55.49 mmol/Lට වඩා වැඩි විය නොහැකිය</string>
-  <string name="bloodsugarentry_error_empty">අගය හිස් විය නොහැකිය</string>
+  <string name="bloodsugarentry_error_empty">අගය හිස්ව තැබිය නොහැකිය</string>
   <string name="bloodsugarentry_error_date_invalid_pattern">දින/මාස/අවුරුදු ආකාරයෙන් වලංගු දිනයක් ඇතුල් කරන්න</string>
   <string name="bloodsugarentry_error_date_is_in_future">දිනය අනාගත කාලයෙන් තැබිය නොහැකිය</string>
   <string name="bloodsugarentry_random_title">අහඹු රුධි‍ර ගත සීනි මට්ටම</string>
-  <string name="bloodsugarentry_post_prandial_title">ආහාරයට පසු රුධිර ගත සීනි</string>
-  <string name="bloodsugarentry_fasting_title">නිරාහාර රුධිර ගත සීනි</string>
+  <string name="bloodsugarentry_post_prandial_title">ආහාරයට පසු රුධිර ගත සීනි මට්ටම</string>
+  <string name="bloodsugarentry_fasting_title">නිරාහාර රුධිර ගත සීනි මට්ටම</string>
   <string name="bloodsugarentry_remove">ඉවත් කරන්න</string>
-  <string name="bloodsugarentry_edit_random_title">අහඹු රුධිරයේ සීනි මට්ටම සංස්කරණය කරන්න</string>
-  <string name="bloodsugarentry_edit_post_prandial_title">රාත්‍රී ආහාරයට පසු රුධිරයේ සීනි මට්ටම සංස්කරණය කරන්න</string>
-  <string name="bloodsugarentry_edit_fasting_title">නිරාහාර රුධිරයේ සීනි මට්ටම සංස්කරණය කරන්න</string>
+  <string name="bloodsugarentry_edit_random_title">අහඹු රුධිරගත සීනි මට්ටම සංස්කරණය කරන්න</string>
+  <string name="bloodsugarentry_edit_post_prandial_title">ආහාරයට පසු රුධිරගත සීනි මට්ටම සංස්කරණය කරන්න</string>
+  <string name="bloodsugarentry_edit_fasting_title">නිරාහාර රුධිරගත සීනි මට්ටම සංස්කරණය කරන්න</string>
   <string name="bloodsugarentry_edit_hba1c_title">HbA1c සංස්කරණය කරන්න</string>
   <string name="bloodsugarentry_date_change">වෙනස් කරන්න</string>
 
   <!-- Confirm remove blood sugar dialog -->
-  <string name="bloodsugarentry_remove_blood_sugar_title">රුධිරයේ සීනි මට්ටම ඉවත් කරන්න</string>
-  <string name="bloodsugarentry_remove_blood_sugar_message">මෙම රුධිරයේ සීනි මට්ටමේ වාර්තාව ඉවත් කිරීමට අවශ්‍ය බවට ඔබට විශ්වාස ද?</string>
+  <string name="bloodsugarentry_remove_blood_sugar_title">රුධිරගත සීනි මට්ටම ඉවත් කරන්න</string>
+  <string name="bloodsugarentry_remove_blood_sugar_message">රුධිරගත සීනි මට්ටම පිළිබඳ මෙම වාර්තාව ඉවත් කිරීමට අවශ්‍ය බවට ඔබට විශ්වාස ද?</string>
   <string name="bloodsugarentry_remove_blood_sugar_confirm">ඉවත් කරන්න</string>
   <string name="bloodsugarentry_remove_blood_sugar_cancel">අවලංගු කරන්න</string>
 
   <!-- Blood Sugar Summary view -->
-  <string name="bloodsugarsummaryview_no_blood_sugars">කිසිදු රුධිරයේ සීනි මට්ටමක් එකතු කර නැත</string>
+  <string name="bloodsugarsummaryview_no_blood_sugars">රුධිරගත සීනි මට්ටම පිළිබඳ කිසිදු වාර්තාවක් එක් කර නැත</string>
   <string name="bloodsugarsummaryview_add_blood_sugar_button">දියවැඩියාව</string>
   <!-- Blood Pressure History screen -->
   <string name="bloodpressurehistory_add_bp_button">රුධිර පීඩනය</string>
@@ -522,13 +532,13 @@
   <string name="alertfacilitychange_facility_name">%s?</string>
 
   <!-- Prescribed Drug Summary -->
-  <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
-  <string name="contactpatient_agreed_to_visit">\"හමුවීමට එකඟ විය\" ලෙස රෝගියා ලකුණු කරන්න</string>
+  <string name="contactpatient_agreed_to_visit">\"පැමිණීමට එකඟ විය\" ලෙස රෝගියා ලකුණු කරන්න</string>
   <string name="contactpatient_remind_call_later">පසුව ඇමතීමට සිහිකැඳවන්න…</string>
   <string name="contactpatient_remove_from_list">කල් ගතවූ ලැයිස්තුවෙන් ඉවත් කරන්න…</string>
   <string name="contactpatient_result_of_call">ඇමතුමේ ප්‍රතිඵලය</string>
+  <string name="contactpatient_call">අමතන්න</string>
   <string name="contactpatient_call_normal">සාමාන්‍ය</string>
   <string name="contactpatient_call_secure">ආරක්ෂිත</string>
   <string name="contactpatient_help_text">ආරක්ෂිත ඇමතුම්, ඔබ‍ගේ අංකය සඟවන්න සහ ගාස්තු රහිතයි</string>
@@ -553,18 +563,19 @@
   <string name="contactpatient_patient_already_visited">රෝගීයා දැනටමත් පැමිණ ඇත</string>
   <string name="contactpatient_patient_is_not_responding">රෝගියා ප්‍රතිචාර දක්වන්නේ නැත</string>
   <string name="contactpatient_invalid_phone_number">දුරකතන අංකය ක්‍රියා නොකරයි</string>
-  <string name="contactpatient_public_hospital_transfer">වෙනත් පොදු සෞඛ්‍ය පහසුකමකට මාරු කර ඇත</string>
-  <string name="contactpatient_moved_to_private">පුද්ගලික වෛදවරයකු වෙත යවා ඇත</string>
+  <string name="contactpatient_public_hospital_transfer">වෙනත් රජයේ සෞඛ්‍ය ආයතනයකට මාරු කර ඇත</string>
+  <string name="contactpatient_moved_to_private">පුද්ගලික වෛද්‍යවරයෙකු වෙත යවා ඇත</string>
   <string name="contactpatient_patient_died">මරණය සිදු විය</string>
   <string name="contactpatient_other_reason">වෙනත් හේතුවක්</string>
-  <string name="contactpatient_patient_registered_at">‍හි දී ලියාපදිංචි විය</string>
-  <string name="contactpatient_patient_transfer_from">වෙතින් මාරු කරන්න</string>
+  <string name="contactpatient_unknown">නොදනී</string>
+  <string name="contactpatient_patient_registered_at">ලියාපදිංචි වී ඇත්තේ</string>
+  <string name="contactpatient_patient_transfer_from">මාරුකර එවූයේ</string>
   <string name="contactpatient_phone">දුරකතනය</string>
   <string name="contactpatient_dx">Dx</string>
   <string name="contactpatient_visited">හමුවිය</string>
   <string name="contactpatient_no_phone_number">දුරකථන අංකයක් නැත</string>
   <string name="contactpatient_diagnosis_diabetes">දියවැඩියාව</string>
-  <string name="contactpatient_diagnosis_hypertension">අධ්‍යාතතිය</string>
+  <string name="contactpatient_diagnosis_hypertension">අධි රුධිර පීඩනය</string>
   <string name="contactpatient_diagnosis_none">කිසිවක් නැත</string>
 
   <!-- Deep link -->
@@ -572,12 +583,12 @@
   <string name="deeplink_patient_profile_not_found_desc">කරුණාකර ඔබගේ අන්තර්ජාල සබඳතාවය පරීක්ෂා කර රෝගීන් සමමුහුර්ත කරන්න</string>
   <string name="deeplink_patient_profile_not_found_positive_action">හරි</string>
   <string name="deeplink_no_patient">රෝගියා හමුවූයේ නැත</string>
-  <string name="deeplink_no_patient_desc">ටෙලිඋපදේශනය ආරම්භ කර, සෞඛ්‍යරක්ෂණ සේවකයාගෙන් රෝගීන්ගේ තොරතුරු ඉල්ලා සිටින්න</string>
+  <string name="deeplink_no_patient_desc">ටෙලි උපදේශනය ආරම්භ කර, සෞඛ්‍ය සේවකයාගෙන් රෝගියා පිළිබඳ තොරතුරු ඉල්ලා සිටින්න</string>
   <string name="deeplink_no_patient_positive_action">හරි</string>
 
   <!-- Delete patient -->
   <string name="deletepatient_select_a_reason">හේතුවක් තෝරා ගන්න</string>
-  <string name="deletereason_duplicate_patient">මේ අනුපිටපත් වූ රෝගියෙකි</string>
+  <string name="deletereason_duplicate_patient">මෙය රෝගියා පිළිබඳ නැවත පිටපත් වූ වාර්තාවකි</string>
   <string name="deletereason_accidental_registration">රෝගියා වැරදීමකින් ලියාපදිංචි වී ඇත</string>
   <string name="deletereason_died">මරණය සිදු විය</string>
   <string name="deletereason_confirm_title">රෝගියා පිළිබඳ විස්තර මකන්න?</string>
@@ -617,10 +628,10 @@
   <string name="drug_duration_max_error">ඖෂධ ලබා දෙන කාල පරාසය දින %1$s වඩා වැඩිවිය නොහැකිය</string>
 
   <!-- Teleconsultation success-->
-  <string name="screen_teleconsult_success_add_prescription">බෙහෙත් වට්ටෝරුව එකතු කරන්න?</string>
+  <string name="screen_teleconsult_success_add_prescription">බෙහෙත් වට්ටෝරුව එක් කරන්න?</string>
   <string name="screen_teleconsult_success_yes">ඔව්</string>
   <string name="screen_teleconsult_success_no">නැත</string>
-  <string name="screen_teleconsult_success_teleconsult_recorded">ටෙලිඋපදේශනය වාර්තා කරන ලදී</string>
+  <string name="screen_teleconsult_success_teleconsult_recorded">ටෙලි උපදේශනය පටිගත කරන ලදී</string>
   <string name="screen_teleconsult_success_patient_information">%1$s, %2$s, %3$s</string>
   <string name="sheet_medicine_frequency_od">OD</string>
   <string name="sheet_medicine_frequency_bd">BD</string>
@@ -629,7 +640,7 @@
   <string name="sheet_medicine_frequency_save">සුරකින්න</string>
 
   <!-- Teleconsult Record Screen -->
-  <string name="screen_teleconsult_record">ටෙලිඋපදේශන වාර්තාව</string>
+  <string name="screen_teleconsult_record">පටිගත කළ ටෙලි උපදේශනය</string>
   <string name="screen_teleconsult_record_type">ටෙලිඋපදේශන මාදිලිය</string>
   <string name="screen_teleconsult_record_type_audio">ශ්‍රව්‍ය ඇමතුම</string>
   <string name="screen_teleconsult_record_type_video">වීඩියෝ ඇමතුම</string>
@@ -637,7 +648,7 @@
   <string name="screen_teleconsult_record_patient_took_medicine">රෝගියා නිතිපතා අධි රුධිර පීඩනය සහ දියවැඩියාවට එරෙහි ඖෂධ ලබා ගනී</string>
   <string name="screen_teleconsult_record_patient_consented">රෝගියා ටෙලි උපදේශනය සඳහා කැමැත්ත ලබා දී ඇත</string>
   <string name="screen_teleconsult_record_done">අවසන්</string>
-  <string name="teleconsultnotrecordeddialog_title">ටෙලිඋපදේශනය වාර්තා වී නැත</string>
+  <string name="teleconsultnotrecordeddialog_title">ටෙලි උපදේශනය පටිගත වී නැත</string>
   <string name="teleconsultnotrecordeddialog_body">අවලංගු කිරීමට අවශ්‍ය යැයි ඔබට විශ්වාස ද?</string>
   <string name="teleconsultnotrecordeddialog_positive_button_text">ඔව්</string>
   <string name="teleconsultnotrecordeddialog_negative_button_text">නැත</string>
@@ -671,7 +682,7 @@
   <string name="screen_teleconsult_share_prescription_done">අවසන්</string>
   <string name="screen_teleconsult_share_prescription_image_using">යොදාගන්නා පින්තූරය බෙදා ගන්න</string>
   <string name="screen_teleconsult_share_prescription_title">බෙහෙත් වට්ටෝරුව</string>
-  <string name="screen_teleconsult_share_prescription_image_saved">බෙහෙත් වට්ටෝරුව බාගැනීම් තුළ සුරැක ඇත</string>
+  <string name="screen_teleconsult_share_prescription_image_saved">බෙහෙත් වට්ටෝරුව Downloads වල සුරකින ලදී</string>
 
   <!-- Select diagnosis error alert dialog -->
   <string name="select_diagnosis_error_diagnosis_required">රෝග නිශ්චය අවශ්‍යයි</string>
@@ -697,7 +708,7 @@
   <string name="sheet_bp_passport_register_new_patient">නව රෝගියා ලියාපදංචි කරන්න</string>
   <string name="sheet_bp_passport_add_to_existing_patient">දැනටමත් සිටින රෝගියෙකුට එකතු කරන්න</string>
   <string name="sheet_bp_passport_number">බීපී පාස්පෝට් %1$s</string>
-  <string name="sheet_national_health_id">ජාතික සෞඛ්‍ය හැදු. %1$s</string>
+  <string name="sheet_national_health_id">ජාතික සෞඛ්‍ය හැඳුනුම්පත %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">%1$s ට අනුයුක්ත කර ඇත</string>
@@ -720,12 +731,13 @@
   <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">හරි</string>
 
   <!-- Select ongoing hypertension treatment dialog -->
-  <string name="select_ongoing_hypertension_treatment_title">පසුගිය මාසයේ කිසියම් විටෙක රෝගියා රුධිර පීඩන ඖෂධ ගත්තේ ද?</string>
+  <string name="select_ongoing_hypertension_treatment_title">රෝගියා පසුගිය මාසයේ කිසියම් හෝ වෙලාවක අධි රුධිර පීඩනය සඳහා ඖෂධ ලබා ගත්තේද?</string>
   <string name="select_ongoing_hypertension_treatment_message">ඔව් හෝ නැත තෝරන්න.</string>
+  <string name="select_ongoing_diabetes_treatment_message">රෝගියා පසුගිය මාසය තුල කිසියම් දිනකදී දියවැඩියාව පාලනය කිරීම සඳහා ඖෂධයක් ලබා ගත්තේ නම් එය තහවුරු කරන්න.</string>
   <string name="select_ongoing_hypertension_treatment_positive_action">හරි</string>
 
   <!-- Custom drugs search -->
-  <string name="customdrugssearch_hint">ඖෂධයේ නම ඇතුල් කරන්න</string>
+  <string name="customdrugssearch_hint">ඖෂධයේ නම ඇතුලත් කරන්න</string>
   <string name="customdrugssearch_item_name_separator">,\u0020</string>
 
   <!-- Warning dialogs -->
@@ -749,4 +761,103 @@
   <string name="custom_drug_entry_sheet_save_button_text">සුරකින්න</string>
   <string name="custom_drug_entry_sheet_add_button_text">එකතු කරන්න</string>
   <string name="custom_drug_entry_sheet_frequency_dialog_done">අවසන්</string>
+  <!-- Select state screen -->
+  <string name="select_state_title">ඔබේ සායනය ඇත්තේ කොහේ ද?</string>
+  <string name="select_state_networkerror">අන්තර්ජාල සබඳතාවයක් නොමැත!</string>
+  <string name="select_state_servererror">සර්වර දෝෂයකි! කරුණාකර පසුව උත්සාහ කරන්න!</string>
+  <string name="select_state_genericerror">යම් දෝෂයක් සිදු විය! කරුණාකර පසුව උත්සාහ කරන්න!</string>
+
+  <!-- Patient status view -->
+  <string name="patient_status_died">මරණය සිදු විය</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">රෝග නිශ්චය වෙනස් කරන්න ද?</string>
+  <string name="change_diagnosis_message">රෝගියාට කිසියම් දිනක අධි රුධිර පීඩනය හෝ දියවැඩියාව ඇති බවට නිශ්චය කර ඇත්නම් ඔව් ලෙස සලකුණු කරන්න.</string>
+  <string name="change_diagnosis_positive">වෙනස් කරන්න</string>
+  <string name="change_diagnosis_negative">දැන් නොවේ</string>
+
+  <!-- Overdue download notification -->
+  <string name="overdue_download_notification_failed_title">බාගැනීම අසාර්ථක විය</string>
+  <string name="overdue_download_notification_failed_subtitle">මද වේලාවකින් නැවත උත්සාහ කරන්න</string>
+  <string name="overdue_download_notification_in_progress_title">කල් ඉකුත් වූ පේළි ලැයිස්තුව බාගැනේ</string>
+  <string name="overdue_download_notification_cancel">අවලංගු කරන්න</string>
+  <string name="overdue_download_notification_succeeded_title">බාගැනීම සම්පූර්ණයි</string>
+  <string name="overdue_download_notification_succeeded_subtitle">විවෘත කිරීමට ක්ලික් කරන්න</string>
+
+  <!-- Overdue download no active network connection dialog -->
+  <string name="overdue_download_no_active_network_connection_dialog_title">අන්තර්ජාලය නැත</string>
+  <string name="overdue_download_no_active_network_connection_dialog_message">ඔබගේ අන්තර්ජාලය පරීක්ෂා කර නැවත උත්සාහ කරන්න.</string>
+  <string name="overdue_download_no_active_network_connection_dialog_positive_button">හරි</string>
+
+  <!-- Select overdue download format dialog -->
+  <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">පැතුරුම්පත</string>
+  <string name="select_overdue_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="select_overdue_download_format_dialog_action_negative">අවලංගු කරන්න</string>
+  <string name="select_overdue_download_format_dialog_title_download">මෙම ආකාරයට බාගන්න</string>
+  <string name="select_overdue_download_format_dialog_title_share">මෙම ආකාරයට බෙදාගන්න</string>
+  <string name="select_overdue_download_format_dialog_action_positive_download">බාගත කිරීම</string>
+  <string name="select_overdue_download_format_dialog_action_positive_share">බෙදා ගැනීම</string>
+  <string name="select_overdue_download_format_dialog_share_with">මේ සමග බෙදාගන්න</string>
+  <string name="not_enough_storage_error_dialog_title">ප්‍රමාණවත් ගබඩාවක් නොමැත</string>
+  <string name="not_enough_storage_error_dialog_message">ගොනු කිහිපයක් මකා නැවත උත්සාහ කරන්න</string>
+  <string name="download_failed_error_dialog_title">බාගත නොහැක</string>
+  <string name="download_failed_error_dialog_message">යමක් වැරදුනි. මිනිත්තු කිහිපයක් රැඳී සිට නැවත උත්සාහ කරන්න</string>
+  <string name="next_appointment_view_title">හමුවීම වේලාව අනුව යන්න</string>
+  <string name="next_appointment_view_add">එකතු කරන්න</string>
+  <string name="next_appointment_view_change">වෙනස් කරන්න</string>
+  <string name="next_appointment_none">කිසිවක් නැත</string>
+  <string name="next_appointment_appointment_at_facility">%s ට</string>
+  <string name="next_appointment_today">අද</string>
+  <plurals name="next_appointment_plurals">
+    <item quantity="one">දින %d ක්</item>
+    <item quantity="other">දින %d ක්</item>
+  </plurals>
+  <plurals name="next_appointment_overdue_plurals">
+    <item quantity="one">දිනය %d ක කාලයක් ඉකුත් වී ඇත</item>
+    <item quantity="other">දින %d ක කාලයක් ඉකුත් වී ඇත</item>
+  </plurals>
+
+  <!-- App update notification -->
+  <string name="app_update_notification_subtext">කරුණාකර හැකි ඉක්මනින් Google මාර්ගගත ගබඩාවෙහි දී ඔබගේ සිම්පල් යෙදුම යාවත්කාල කරන්න.</string>
+  <string name="critical_app_update_notification_subtext">වැදගත් යාවත්කාලයක් ලද හැකිව තිබේ. Google මාර්ගගත ගබඩාවෙහි දී ඔබගේ සිම්පල් යෙදුම යාවත්කාල කරන්න.</string>
+
+  <!-- Critical app update dialog -->
+  <string name="critical_update_required_dialog_title">තීරණාත්මක යාවත්කාලය අවශ්‍යයි</string>
+  <string name="critical_update_required_dialog_content">තීරණාත්මක ආරක්ෂණ වෙනස්කම් සහ නවතම විශේෂාංග සඳහා දැන් යාවත්කාල කරන්න</string>
+  <string name="critical_security_update_required_reason">යෙදුම් ආරක්ෂාව මත විවේචනයට ලක් කර ඇත</string>
+  <string name="critical_update_required_dialog_update_button_text">දැන් යාවත්කාල කරන්න</string>
+  <string name="critical_update_required_dialog_help_section_title">උපකාර අවශ්‍යද?</string>
+  <string name="critical_update_required_dialog_help_section_content">අපගේ මිත්‍රශීලී සහායක කණ්ඩායමෙන් උපකාර ලබා ගැනීමට පහත බොත්තම මත තට්ටු කරන්න</string>
+  <string name="critical_update_required_reason">යෙදුම මාස %dක් පුරා කල් පැන තිබිණි</string>
+
+  <!-- Critical app update card -->
+  <string name="critical_update_required_card_title">තීරණාත්මක යාවත්කාලය</string>
+  <string name="critical_update_required_card_content">තීරණාත්මක ආරක්ෂණ වෙනස්කම් සහ නවතම විශේෂාංග සඳහා දැන් යාවත්කාල කරන්න</string>
+  <string name="update_required_reason">යෙදුම මාස %dක් පුරා කල් පැන තිබිණි</string>
+  <string name="critical_update_required_card_update_button_text">දැන් යාවත්කාල කරන්න</string>
+
+  <!-- Drug stock reminder notification -->
+  <string name="drug_stock_reminder_notification">ඔබගේ නියමිත ඖෂධ සඳහා %1$s තොග වාර්තාව සම්පූර්ණ කරන්න</string>
+  <string name="drug_stock_reminder_card_title">ඖෂධ තොගය</string>
+  <string name="drug_stock_reminder_card_content">ඔබගේ නියමිත ඖෂධ සඳහා %1$s තොග වාර්තාව සම්පූර්ණ කරන්න</string>
+  <string name="drug_stock_reminder_button_text">ඖෂධ තොගයට ඇතුල්වන්න</string>
+
+  <!-- Drug stock reminder no active network connection dialog -->
+  <string name="drug_stock_reminder_no_active_network_connection_dialog_title">අන්තර්ජාලය නැත</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_message">ඔබගේ අන්තර්ජාලය පරීක්ෂා කර නැවත උත්සාහ කරන්න.</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_positive_button">හරි</string>
+
+
+  <!-- Clinical Decision Support Alerts -->
+  <string name="clinical_decision_support_alert_bp_high_title">බීපී ඉහළ ගොස් ඇත. ඖෂධ වැඩි කරන්නද?</string>
+  <string name="clinical_decision_support_alert_bp_high_subtitle">රෝගියා ඔවුන්ගේ ඖෂධ නිතිපතා ගන්නේ නම්, ප්‍රොටොකෝලය අනුගමනය කරන්න</string>
+
+  <!-- Call Result Outcome Message -->
+
+  <!-- Overdue Instant Search -->
+  <string name="overdue_search_patient_name_or_village">නම හෝ ගම මගින් සොයන්න</string>
+  <string name="overdue_search_hint">නම හෝ ගම ඇතුල් කරන්න</string>
+  <string name="overdue_search_no_search_results_title">රෝගීන් හමු නොවීය</string>
+  <string name="overdue_search_no_search_results_desc">මෙහි ඔබගේ සෙවීමෙන් ඔබ සියලුම කාලය පසු වූ රෝගීන් දකිනු ඇත</string>
+
 </resources>

@@ -47,4 +47,16 @@
       <enum name="in-current-group" value="1" />
     </attr>
   </declare-styleable>
+
+  <declare-styleable name="PatientStatusView">
+    <attr name="statusIcon" format="reference" />
+    <attr name="statusText" format="string" />
+    <attr name="statusTextColor" format="color" />
+    <attr name="statusIconTint" format="color" />
+    <attr name="statusTextAppearance" format="reference" />
+  </declare-styleable>
+
+  <declare-styleable name="ChipInputAutoCompleteTextView">
+    <attr name="hint" format="string" />
+  </declare-styleable>
 </resources>

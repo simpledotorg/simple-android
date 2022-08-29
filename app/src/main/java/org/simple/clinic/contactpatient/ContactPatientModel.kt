@@ -5,9 +5,11 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.contactpatient.ContactPatientInfoProgressState.DONE
 import org.simple.clinic.contactpatient.ContactPatientInfoProgressState.IN_PROGRESS
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.home.overdue.OverdueAppointment
+import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.PotentialAppointmentDate
+import org.simple.clinic.overdue.callresult.CallResult
+import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.util.ParcelableOptional
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.parcelable
@@ -20,14 +22,14 @@ data class ContactPatientModel(
     val patientUuid: UUID,
     val uiMode: UiMode,
     val patientProfile: ContactPatientProfile? = null,
-    val appointment: ParcelableOptional<OverdueAppointment>? = null,
+    val overdueAppointment: ParcelableOptional<Appointment>? = null,
     val secureCallingFeatureEnabled: Boolean,
     val potentialAppointments: List<PotentialAppointmentDate>,
     val selectedAppointmentDate: LocalDate,
     val selectedRemoveAppointmentReason: RemoveAppointmentReason?,
     val contactPatientInfoProgressState: ContactPatientInfoProgressState?,
-    val overdueListChangesFeatureEnabled: Boolean,
-    val currentFacility: Facility? = null
+    val currentFacility: Facility? = null,
+    val callResult: ParcelableOptional<CallResult>?
 ) : Parcelable {
 
   companion object {
@@ -36,8 +38,7 @@ data class ContactPatientModel(
         appointmentConfig: AppointmentConfig,
         userClock: UserClock,
         mode: UiMode,
-        secureCallFeatureEnabled: Boolean,
-        overdueListChangesFeatureEnabled: Boolean
+        secureCallFeatureEnabled: Boolean
     ): ContactPatientModel {
       val potentialAppointments = PotentialAppointmentDate.from(appointmentConfig.remindAppointmentsIn, userClock)
 
@@ -49,10 +50,13 @@ data class ContactPatientModel(
           selectedAppointmentDate = potentialAppointments.first().scheduledFor,
           selectedRemoveAppointmentReason = null,
           contactPatientInfoProgressState = null,
-          overdueListChangesFeatureEnabled = overdueListChangesFeatureEnabled
+          callResult = null
       )
     }
   }
+
+  val hasPatientDied: Boolean
+    get() = patientProfile?.patient?.status == PatientStatus.Dead
 
   val hasCurrentFacility: Boolean
     get() = currentFacility != null
@@ -63,30 +67,36 @@ data class ContactPatientModel(
   val patientProfileHasPhoneNumber: Boolean
     get() = !patientProfile?.phoneNumbers.isNullOrEmpty()
 
-  val hasLoadedAppointment: Boolean
-    get() = appointment != null
+  val hasLoadedOverdueAppointment: Boolean
+    get() = overdueAppointment != null
 
-  val isAppointmentPresent: Boolean
-    get() = appointment?.isPresent() == true
+  val isOverdueAppointmentPresent: Boolean
+    get() = overdueAppointment?.isPresent() == true
 
   val hasRegisteredFacility: Boolean
-    get() = appointment?.isPresent() == true && appointment.get().patientRegisteredFacilityID != null
+    get() = patientProfile != null && patientProfile.patient.registeredFacilityId != null
 
-  val appointmentIsInRegisteredFacility: Boolean
-    get() = appointment?.get()?.patientRegisteredFacilityID == currentFacility?.uuid
+  val patientIsAtRegisteredFacility: Boolean
+    get() = patientProfile != null && patientProfile.patient.registeredFacilityId == currentFacility?.uuid
+
+  val appointment: Appointment
+    get() = overdueAppointment!!.get()
 
   val appointmentUuid: UUID
-    get() = appointment!!.get().appointment.uuid
+    get() = appointment.uuid
 
   val isPatientContactInfoLoaded: Boolean
     get() = contactPatientInfoProgressState == DONE
+
+  val hasCallResult: Boolean
+    get() = callResult != null && callResult.isPresent()
 
   fun contactPatientProfileLoaded(contactPatientProfile: ContactPatientProfile): ContactPatientModel {
     return copy(patientProfile = contactPatientProfile)
   }
 
-  fun overdueAppointmentLoaded(appointment: Optional<OverdueAppointment>): ContactPatientModel {
-    return copy(appointment = appointment.parcelable())
+  fun overdueAppointmentLoaded(appointment: Optional<Appointment>): ContactPatientModel {
+    return copy(overdueAppointment = appointment.parcelable())
   }
 
   fun reminderDateSelected(date: PotentialAppointmentDate): ContactPatientModel {
@@ -95,10 +105,6 @@ data class ContactPatientModel(
 
   fun changeUiModeTo(newMode: UiMode): ContactPatientModel {
     return copy(uiMode = newMode)
-  }
-
-  fun removeAppointmentReasonSelected(reason: RemoveAppointmentReason): ContactPatientModel {
-    return copy(selectedRemoveAppointmentReason = reason)
   }
 
   fun contactPatientInfoLoaded(): ContactPatientModel {
@@ -111,5 +117,9 @@ data class ContactPatientModel(
 
   fun currentFacilityLoaded(currentFacility: Facility): ContactPatientModel {
     return copy(currentFacility = currentFacility)
+  }
+
+  fun callResultLoaded(callResult: Optional<CallResult>): ContactPatientModel {
+    return copy(callResult = callResult.parcelable())
   }
 }

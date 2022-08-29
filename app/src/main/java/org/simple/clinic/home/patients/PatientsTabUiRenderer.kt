@@ -3,9 +3,12 @@ package org.simple.clinic.home.patients
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.user.User
 import org.simple.clinic.util.ValueChangedCallback
+import java.time.LocalDate
+import java.time.Period
 
 class PatientsTabUiRenderer(
-    private val ui: PatientsTabUi
+    private val ui: PatientsTabUi,
+    private val currentDate: LocalDate
 ) : ViewRenderer<PatientsTabModel> {
 
   private val userChangedCallback = ValueChangedCallback<User>()
@@ -19,9 +22,29 @@ class PatientsTabUiRenderer(
       showAccountNotifications(model)
     }
 
-    if (model.hasLoadedNumberOfPatientsRegistered) {
-      toggleTrainingViewVisibility(model)
+    renderPatientTabScreenCard(model)
+  }
+
+  private fun renderPatientTabScreenCard(model: PatientsTabModel) {
+    val isDrugStockReportFilledOrNull = model.isDrugStockReportFilled == null || model.isDrugStockReportFilled
+
+    when {
+      model.appUpdateNudgePriorityIsMedium && model.hasAppStaleness -> {
+        ui.showCriticalAppUpdateCard()
+        ui.renderAppUpdateReason(appStalenessInMonths(model.appStaleness!!))
+      }
+      model.hasLoadedNumberOfPatientsRegistered && isDrugStockReportFilledOrNull -> {
+        toggleTrainingViewVisibility(model)
+      }
+      model.isDrugStockReportFilled == false -> {
+        ui.showDrugStockReminderCard()
+      }
     }
+  }
+
+  private fun appStalenessInMonths(appStaleness: Int): Int {
+    val lastUpdatedDate = currentDate.minusDays(appStaleness.toLong())
+    return Period.between(lastUpdatedDate, currentDate).months
   }
 
   private fun showAccountNotifications(model: PatientsTabModel) {

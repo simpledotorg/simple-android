@@ -2,7 +2,7 @@ package org.simple.clinic.location
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.simple.clinic.util.TestElapsedRealtimeClock
+import org.simple.sharedTestCode.util.TestElapsedRealtimeClock
 import java.time.Duration
 
 class LocationUpdateTest {

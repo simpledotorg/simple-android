@@ -19,38 +19,40 @@ data class SearchWithCriteria(
     val facility: Facility
 ) : InstantSearchEffect()
 
+data class ValidateSearchQuery(val searchQuery: String) : InstantSearchEffect()
+
+data class SaveNewOngoingPatientEntry(val ongoingNewPatientEntry: OngoingNewPatientEntry) : InstantSearchEffect()
+
+data class CheckIfPatientAlreadyHasAnExistingNHID(val patientId: UUID) : InstantSearchEffect()
+
+sealed class InstantSearchViewEffect : InstantSearchEffect()
+
 data class ShowAllPatients(
     val patients: PagingData<PatientSearchResult>,
     val facility: Facility
-) : InstantSearchEffect()
+) : InstantSearchViewEffect()
 
 data class ShowPatientSearchResults(
     val patients: PagingData<PatientSearchResult>,
     val facility: Facility,
     val searchQuery: String
-) : InstantSearchEffect()
+) : InstantSearchViewEffect()
 
-data class ValidateSearchQuery(val searchQuery: String) : InstantSearchEffect()
-
-data class OpenPatientSummary(val patientId: UUID) : InstantSearchEffect()
+data class OpenPatientSummary(val patientId: UUID) : InstantSearchViewEffect()
 
 data class OpenLinkIdWithPatientScreen(
     val patientId: UUID,
     val identifier: Identifier
-) : InstantSearchEffect()
+) : InstantSearchViewEffect()
 
-data class OpenScannedQrCodeSheet(val identifier: Identifier) : InstantSearchEffect()
+data class OpenScannedQrCodeSheet(val identifier: Identifier) : InstantSearchViewEffect()
 
-data class SaveNewOngoingPatientEntry(val ongoingNewPatientEntry: OngoingNewPatientEntry) : InstantSearchEffect()
+data class OpenPatientEntryScreen(val facility: Facility) : InstantSearchViewEffect()
 
-data class OpenPatientEntryScreen(val facility: Facility) : InstantSearchEffect()
+object ShowKeyboard : InstantSearchViewEffect()
 
-object ShowKeyboard : InstantSearchEffect()
+object OpenQrCodeScanner : InstantSearchViewEffect()
 
-object OpenQrCodeScanner : InstantSearchEffect()
+object ShowNHIDErrorDialog : InstantSearchViewEffect()
 
-data class CheckIfPatientAlreadyHasAnExistingNHID(val patientId: UUID) : InstantSearchEffect()
-
-object ShowNHIDErrorDialog : InstantSearchEffect()
-
-data class PrefillSearchQuery(val searchQuery: String) : InstantSearchEffect()
+data class PrefillSearchQuery(val searchQuery: String) : InstantSearchViewEffect()

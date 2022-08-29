@@ -1,30 +1,35 @@
 package org.simple.clinic.forgotpin.createnewpin
 
 import android.content.Context
-import android.os.Parcelable
-import android.util.AttributeSet
+import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.RelativeLayout
+import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.widget.editorActions
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.cast
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenForgotpinCreatepinBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreenKey
-import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreen
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
-import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
-class ForgotPinCreateNewPinScreen(
-    context: Context,
-    attributeSet: AttributeSet?
-) : RelativeLayout(context, attributeSet), ForgotPinCreateNewPinUi, UiActions {
+class ForgotPinCreateNewPinScreen : BaseScreen<
+    ForgotPinCreateNewPinScreen.Key,
+    ScreenForgotpinCreatepinBinding,
+    ForgotPinCreateNewModel,
+    ForgotPinCreateNewEvent,
+    ForgotPinCreateNewEffect,
+    ForgotPinCreateNewViewEffect>(), ForgotPinCreateNewPinUi, UiActions {
 
   @Inject
   lateinit var router: Router
@@ -32,72 +37,56 @@ class ForgotPinCreateNewPinScreen(
   @Inject
   lateinit var effectHandlerFactory: ForgotPinCreateNewEffectHandler.Factory
 
-  private var binding: ScreenForgotpinCreatepinBinding? = null
-
   private val createPinEditText
-    get() = binding!!.createPinEditText
+    get() = binding.createPinEditText
 
   private val userFullNameTextView
-    get() = binding!!.userFullNameTextView
+    get() = binding.userFullNameTextView
 
   private val facilityNameTextView
-    get() = binding!!.facilityNameTextView
+    get() = binding.facilityNameTextView
 
   private val createPinErrorTextView
-    get() = binding!!.createPinErrorTextView
+    get() = binding.createPinErrorTextView
 
-  private val events by unsafeLazy {
-    Observable
+  private val appLockRoot
+    get() = binding.applockRoot
+
+  override fun defaultModel() = ForgotPinCreateNewModel.create()
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenForgotpinCreatepinBinding.inflate(layoutInflater, container, false)
+
+  override fun createUpdate() = ForgotPinCreateNewUpdate()
+
+  override fun createInit() = ForgotPinCreateNewInit()
+
+  override fun events(): Observable<ForgotPinCreateNewEvent> {
+    return Observable
         .merge(
             pinTextChanges(),
             pinSubmitClicked()
         )
         .compose(ReportAnalyticsEvents())
+        .cast<ForgotPinCreateNewEvent>()
   }
 
-  private val delegate by unsafeLazy {
-    val uiRenderer = ForgotPinCreateNewUiRenderer(this)
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<ForgotPinCreateNewViewEffect>) = effectHandlerFactory
+      .create(viewEffectsConsumer = viewEffectsConsumer)
+      .build()
 
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = ForgotPinCreateNewModel.create(),
-        update = ForgotPinCreateNewUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        init = ForgotPinCreateNewInit(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
+  override fun uiRenderer() = ForgotPinCreateNewUiRenderer(this)
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
+  override fun viewEffectHandler() = ForgotPinCreateNewViewEffectHandler(uiActions = this)
 
-    binding = ScreenForgotpinCreatepinBinding.bind(this)
-
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     createPinEditText.showKeyboard()
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    binding = null
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun pinTextChanges() =
@@ -123,8 +112,8 @@ class ForgotPinCreateNewPinScreen(
   }
 
   override fun showConfirmPinScreen(pin: String) {
-    hideKeyboard()
-    router.push(ForgotPinConfirmPinScreenKey(pin).wrap())
+    appLockRoot.hideKeyboard()
+    router.push(ForgotPinConfirmPinScreen.Key(pin))
   }
 
   override fun hideInvalidPinError() {
@@ -133,5 +122,12 @@ class ForgotPinCreateNewPinScreen(
 
   interface Injector {
     fun inject(target: ForgotPinCreateNewPinScreen)
+  }
+
+  @Parcelize
+  data class Key(
+      override val analyticsName: String = "Forgot PIN Create New PIN"
+  ) : ScreenKey() {
+    override fun instantiateFragment(): Fragment = ForgotPinCreateNewPinScreen()
   }
 }

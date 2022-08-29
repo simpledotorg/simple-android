@@ -5,4 +5,6 @@ interface ScanSimpleIdUi {
   fun hideSearchingForPatient()
   fun hideScanError()
   fun showScanError()
+  fun hideEnteredCodeContainerView()
+  fun setToolBarTitle(openedFrom: OpenedFrom)
 }

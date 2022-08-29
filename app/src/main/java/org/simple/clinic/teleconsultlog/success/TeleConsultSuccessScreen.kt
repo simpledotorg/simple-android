@@ -1,43 +1,46 @@
 package org.simple.clinic.teleconsultlog.success
 
 import android.content.Context
-import android.os.Parcelable
-import android.util.AttributeSet
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.databinding.ScreenTeleconsultSuccessBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
+import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.displayLetterRes
-import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionScreenKey
+import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionScreen
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.unsafeLazy
 import java.util.UUID
 import javax.inject.Inject
 
-class TeleConsultSuccessScreen(
-    context: Context,
-    attributeSet: AttributeSet
-) : ConstraintLayout(context, attributeSet), TeleConsultSuccessScreenUiActions, TeleConsultSuccessUi {
-
-  private var binding: ScreenTeleconsultSuccessBinding? = null
+class TeleConsultSuccessScreen : BaseScreen<
+    TeleConsultSuccessScreen.Key,
+    ScreenTeleconsultSuccessBinding,
+    TeleConsultSuccessModel,
+    TeleConsultSuccessEvent,
+    TeleConsultSuccessEffect,
+    Unit>(), TeleConsultSuccessScreenUiActions, TeleConsultSuccessUi {
 
   private val prescriptionNoButton
-    get() = binding!!.prescriptionNoButton
+    get() = binding.prescriptionNoButton
 
   private val prescriptionYesButton
-    get() = binding!!.prescriptionYesButton
+    get() = binding.prescriptionYesButton
 
   private val toolbar
-    get() = binding!!.toolbar
+    get() = binding.toolbar
 
   @Inject
   lateinit var effectHandler: TeleConsultSuccessEffectHandler.Factory
@@ -48,38 +51,34 @@ class TeleConsultSuccessScreen(
   @Inject
   lateinit var userClock: UserClock
 
-  @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
+  override fun defaultModel() = TeleConsultSuccessModel.create(screenKey.patientUuid, screenKey.teleconsultRecordId)
 
-  private val events: Observable<TeleConsultSuccessEvent> by unsafeLazy {
-    Observable
-        .merge(
-            yesClicks(),
-            noClicks()
-        )
-  }
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenTeleconsultSuccessBinding.inflate(layoutInflater, container, false)
 
-  private val uiRenderer = TeleConsultSuccessUiRenderer(this)
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) =
+      effectHandler.create(this).build()
 
-  private val mobiusDelegate: MobiusDelegate<TeleConsultSuccessModel, TeleConsultSuccessEvent, TeleConsultSuccessEffect> by unsafeLazy {
-    val screenKey = screenKeyProvider.keyFor<TeleConsultSuccessScreenKey>(this)
-    MobiusDelegate.forView(
-        events = events,
-        defaultModel = TeleConsultSuccessModel.create(screenKey.patientUuid, screenKey.teleconsultRecordId),
-        init = TeleConsultSuccessInit(),
-        update = TeleConsultSuccessUpdate(),
-        effectHandler = effectHandler.create(this).build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
+  override fun createUpdate() = TeleConsultSuccessUpdate()
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
-    binding = ScreenTeleconsultSuccessBinding.bind(this)
+  override fun createInit() = TeleConsultSuccessInit()
+
+  override fun events(): Observable<TeleConsultSuccessEvent> =
+      Observable
+          .merge(
+              yesClicks(),
+              noClicks()
+          )
+
+  override fun uiRenderer() = TeleConsultSuccessUiRenderer(this)
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     backClicks()
   }
 
@@ -97,31 +96,12 @@ class TeleConsultSuccessScreen(
     }
   }
 
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    mobiusDelegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    super.onDetachedFromWindow()
-    binding = null
-    mobiusDelegate.stop()
-  }
-
-  override fun onSaveInstanceState(): Parcelable {
-    return mobiusDelegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(mobiusDelegate.onRestoreInstanceState(state))
-  }
-
   override fun goToHomeScreen() {
     router.clearHistoryAndPush(HomeScreenKey)
   }
 
   override fun goToPrescriptionScreen(patientUuid: UUID, teleconsultRecordId: UUID) {
-    router.push(TeleconsultPrescriptionScreenKey(patientUuid = patientUuid, teleconsultRecordId = teleconsultRecordId).wrap())
+    router.push(TeleconsultPrescriptionScreen.Key(patientUuid = patientUuid, teleconsultRecordId = teleconsultRecordId))
   }
 
   override fun showPatientInfo(patient: Patient) {
@@ -138,4 +118,12 @@ class TeleConsultSuccessScreen(
     fun inject(target: TeleConsultSuccessScreen)
   }
 
+  @Parcelize
+  data class Key(
+      val patientUuid: UUID,
+      val teleconsultRecordId: UUID,
+      override val analyticsName: String = "TeleConsultation Success"
+  ) : ScreenKey() {
+    override fun instantiateFragment(): Fragment = TeleConsultSuccessScreen()
+  }
 }

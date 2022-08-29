@@ -14,24 +14,37 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.clinic.R
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
-import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
-import org.simple.clinic.patient.Age
+import org.simple.clinic.newentry.form.AgeField
+import org.simple.clinic.newentry.form.AlternativeIdInputField
+import org.simple.clinic.newentry.form.DateOfBirthField
+import org.simple.clinic.newentry.form.DistrictField
+import org.simple.clinic.newentry.form.GenderField
+import org.simple.clinic.newentry.form.LandlineOrMobileField
+import org.simple.clinic.newentry.form.PatientNameField
+import org.simple.clinic.newentry.form.StateField
+import org.simple.clinic.newentry.form.StreetAddressField
+import org.simple.clinic.newentry.form.VillageOrColonyField
+import org.simple.clinic.newentry.form.ZoneField
+import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
-import org.simple.clinic.util.TestUserClock
-import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.scanid.OpenedFrom
+import org.simple.sharedTestCode.util.TestUserClock
+import org.simple.sharedTestCode.util.TestUtcClock
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
-import org.simple.clinic.uuid.FakeUuidGenerator
+import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
@@ -48,14 +61,17 @@ class EditPatientEffectHandlerTest {
   private val utcClock = TestUtcClock(Instant.parse("2018-01-01T00:00:00Z"))
   private val patientRepository = mock<PatientRepository>()
   private val dateOfBirthFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
-  private val viewEffectHandler = EditPatientViewEffectHandler(userClock, ui)
+  private val viewEffectHandler = EditPatientViewEffectHandler(ui)
 
   private val patientAddress = TestData.patientAddress(uuid = UUID.fromString("85d0b5f1-af84-4a6b-938e-5166f8c27666"))
   private val patient = TestData.patient(
       uuid = UUID.fromString("c9c9d4db-cd80-4b67-bf69-378de9656b49"),
       addressUuid = patientAddress.uuid,
-      age = null,
-      dateOfBirth = LocalDate.now(userClock).minusYears(30)
+      patientAgeDetails = PatientAgeDetails(
+          ageValue = null,
+          ageUpdatedAt = null,
+          dateOfBirth = LocalDate.now(userClock).minusYears(30)
+      )
   )
   private val phoneNumber = TestData.patientPhoneNumber(
       uuid = UUID.fromString("61638775-2815-4f59-b513-643cc2fe3c90"),
@@ -71,10 +87,20 @@ class EditPatientEffectHandlerTest {
   private val india = TestData.country(isoCountryCode = Country.INDIA)
   private val bangladesh = TestData.country(isoCountryCode = Country.BANGLADESH)
 
-  private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider(
-      dateTimeFormatter = dateOfBirthFormatter,
-      today = LocalDate.now(userClock)
+  private val inputFields = InputFields(listOf(
+      PatientNameField(R.string.patiententry_full_name),
+      AgeField(R.string.patiententry_age),
+      DateOfBirthField(R.string.patiententry_date_of_birth_unfocused),
+      LandlineOrMobileField(R.string.patiententry_phone_number),
+      GenderField(_labelResId = 0, allowedGenders = setOf(Gender.Male, Gender.Female, Gender.Transgender)),
+      AlternativeIdInputField(R.string.patiententry_bangladesh_national_id),
+      StreetAddressField(R.string.patiententry_street_house_road_number),
+      VillageOrColonyField(R.string.patiententry_village_ward),
+      ZoneField(R.string.patiententry_zone),
+      DistrictField(R.string.patiententry_upazila),
+      StateField(R.string.patiententry_district)
   ))
+  private val inputFieldsFactory = mock<InputFieldsFactory>()
 
   private val entry = EditablePatientEntry.from(
       patient = patient,
@@ -282,27 +308,15 @@ class EditPatientEffectHandlerTest {
 
   @Test
   fun `when the load input fields effect is received, the input fields must be loaded`() {
+    // given
+    whenever(inputFieldsFactory.provideFields()) doReturn inputFields.fields
+
     // when
     testCase.dispatch(LoadInputFields)
 
     // then
-    val expectedFields = inputFieldsFactory.provideFields()
-    testCase.assertOutgoingEvents(InputFieldsLoaded(InputFields(expectedFields)))
+    testCase.assertOutgoingEvents(InputFieldsLoaded(InputFields(inputFields.fields)))
     verifyZeroInteractions(ui)
-  }
-
-  @Test
-  fun `when the setup UI effect is received, the UI must be setup with the input fields`() {
-    // given
-    val inputFields = InputFields(inputFieldsFactory.provideFields())
-
-    // when
-    testCase.dispatch(SetupUi(inputFields))
-
-    // then
-    testCase.assertNoOutgoingEvents()
-    verify(ui).setupUi(inputFields)
-    verifyNoMoreInteractions(ui)
   }
 
   @Test
@@ -326,8 +340,12 @@ class EditPatientEffectHandlerTest {
         patientUuid = UUID.fromString("6e7c5107-a762-453a-a5ef-b19c924f2f39"),
         generatePhoneNumber = false,
         generateBusinessId = false,
-        age = Age(35, currentTime),
-        dateOfBirth = null
+        generateDateOfBirth = false,
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = 35,
+            ageUpdatedAt = currentTime,
+            dateOfBirth = null
+        )
     )
     val ongoingEntry = EditablePatientEntry.from(
         patient = patientProfile.patient,
@@ -369,8 +387,12 @@ class EditPatientEffectHandlerTest {
         patientUuid = UUID.fromString("6e7c5107-a762-453a-a5ef-b19c924f2f39"),
         generatePhoneNumber = false,
         generateBusinessId = false,
-        age = Age(recordedAge, currentTime),
-        dateOfBirth = null
+        generateDateOfBirth = false,
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = recordedAge,
+            ageUpdatedAt = currentTime,
+            dateOfBirth = null
+        )
     )
     val ongoingEntry = EditablePatientEntry.from(
         patient = patientProfile.patient,
@@ -379,9 +401,10 @@ class EditPatientEffectHandlerTest {
         dateOfBirthFormatter = dateOfBirthFormatter,
         alternativeId = null
     ).updateAge(enteredAge.toString())
-    val expectedPatientToBeSaved = patientProfile.patient.withAgeDetails(PatientAgeDetails.fromAgeOrDate(
-        age = Age(enteredAge, currentTime + timeToAdvanceBy),
-        date = null
+    val expectedPatientToBeSaved = patientProfile.patient.withAgeDetails(PatientAgeDetails(
+        ageValue = enteredAge,
+        ageUpdatedAt = currentTime + timeToAdvanceBy,
+        dateOfBirth = null
     ))
     whenever(patientRepository.updatePatient(expectedPatientToBeSaved)).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(patientProfile.patientUuid, patientProfile.address)).thenReturn(Completable.complete())
@@ -402,5 +425,94 @@ class EditPatientEffectHandlerTest {
     verify(patientRepository).updatePatient(expectedPatientToBeSaved)
     verify(patientRepository).updateAddressForPatient(patientProfile.patientUuid, patientProfile.address)
     verifyNoMoreInteractions(patientRepository)
+  }
+
+  @Test
+  fun `when open scan simple id screen effect is received, then open scan simple id screen`() {
+    // given
+    val openedFrom = OpenedFrom.EditPatientScreen.ToAddNHID
+
+    // when
+    testCase.dispatch(OpenSimpleScanIdScreen(openedFrom))
+
+    // then
+    verify(ui).openSimpleScanIdScreen(openedFrom)
+    testCase.assertNoOutgoingEvents()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when save the patient effect is received, then link the newly added bp passport to the patient`() {
+    // given
+    val identifierUuid = UUID.fromString("a2df66fd-e207-47c4-af4c-e59ffa7cf706")
+
+    val effectHandler = EditPatientEffectHandler(
+        patientRepository = patientRepository,
+        utcClock = utcClock,
+        schedulersProvider = TestSchedulersProvider.trampoline(),
+        country = bangladesh,
+        uuidGenerator = FakeUuidGenerator.fixed(identifierUuid),
+        currentUser = Lazy { user },
+        inputFieldsFactory = inputFieldsFactory,
+        dateOfBirthFormatter = dateOfBirthFormatter,
+        viewEffectsConsumer = viewEffectHandler::handle
+    )
+
+    val testCase = EffectHandlerTestCase(effectHandler.build())
+    val bpPassportBusinessId1 = TestData.businessId(
+        uuid = identifierUuid,
+        patientUuid = patient.uuid,
+        identifier = Identifier("e116bf4c-53e0-46a3-b95d-295d7178d66e", BpPassport)
+    )
+    val bpPassportBusinessId2 = TestData.businessId(
+        uuid = identifierUuid,
+        patientUuid = patient.uuid,
+        identifier = Identifier("dc7a2b25-1fa6-44b4-bdef-faaad6764118", BpPassport)
+    )
+    val listOfBpPassports = listOf(bpPassportBusinessId1.identifier, bpPassportBusinessId2.identifier)
+
+    whenever(patientRepository.updatePatient(patient)) doReturn Completable.complete()
+    whenever(patientRepository.updateAddressForPatient(patient.uuid, patientAddress)) doReturn Completable.complete()
+    whenever(patientRepository.updatePhoneNumberForPatient(patient.uuid, phoneNumber)) doReturn Completable.complete()
+    whenever(facilityRepository.currentFacility()) doReturn (Observable.just(facility))
+    whenever(patientRepository.createBusinessIdFromIdentifier(
+        id = identifierUuid,
+        patientUuid = patient.uuid,
+        identifier = bpPassportBusinessId1.identifier,
+        user = user
+    )) doReturn bpPassportBusinessId1
+    whenever(patientRepository.createBusinessIdFromIdentifier(
+        id = identifierUuid,
+        patientUuid = patient.uuid,
+        identifier = bpPassportBusinessId2.identifier,
+        user = user
+    )) doReturn bpPassportBusinessId2
+
+    // when
+    testCase.dispatch(SavePatientEffect(entry.addBpPassports(listOfBpPassports), patient, patientAddress, phoneNumber, null))
+
+    // then
+    verify(patientRepository).updatePatient(patient)
+    verify(patientRepository).updateAddressForPatient(patient.uuid, patientAddress)
+    verify(patientRepository).updatePhoneNumberForPatient(patient.uuid, phoneNumber)
+    verify(patientRepository).createBusinessIdFromIdentifier(
+        id = identifierUuid,
+        patientUuid = patient.uuid,
+        identifier = bpPassportBusinessId1.identifier,
+        user = user
+    )
+    verify(patientRepository).createBusinessIdFromIdentifier(
+        id = identifierUuid,
+        patientUuid = patient.uuid,
+        identifier = bpPassportBusinessId2.identifier,
+        user = user
+    )
+    verify(patientRepository).addIdentifiersToPatient(
+        patientUuid = patient.uuid,
+        businessIds = listOf(bpPassportBusinessId1, bpPassportBusinessId2)
+    )
+    verifyNoMoreInteractions(patientRepository)
+    testCase.assertOutgoingEvents(PatientSaved)
+    verifyZeroInteractions(ui)
   }
 }

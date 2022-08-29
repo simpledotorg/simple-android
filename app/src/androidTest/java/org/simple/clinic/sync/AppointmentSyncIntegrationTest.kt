@@ -9,16 +9,17 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.AppointmentSync
 import org.simple.clinic.overdue.AppointmentSyncApi
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.RegisterPatientRule
+import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Rules
+import org.simple.sharedTestCode.util.Rules
 import org.simple.clinic.util.unsafeLazy
 import java.util.Optional
 import java.util.UUID
@@ -54,6 +55,7 @@ class AppointmentSyncIntegrationTest {
       .around(ServerAuthenticationRule())
       // Needed because the server only syncs resources if a patient exists
       .around(RegisterPatientRule(patientUuid))
+      .around(SaveDatabaseRule())
 
   private lateinit var sync: AppointmentSync
 
@@ -82,11 +84,6 @@ class AppointmentSyncIntegrationTest {
         lastPullToken = lastPullToken,
         config = config
     )
-  }
-
-  @After
-  fun tearDown() {
-    resetLocalData()
   }
 
   private fun resetLocalData() {

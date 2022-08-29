@@ -4,9 +4,11 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.DEMO_USER_ID
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowed
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
+import org.simple.clinic.security.pin.verification.LoginPinServerVerificationMethod.UserData
 import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.Correct
 import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.Incorrect
 import org.simple.clinic.security.pin.verification.PinVerificationMethod.VerificationResult.NetworkError
@@ -30,7 +32,7 @@ class PinEntryUpdate(
       is PinEntryStateChanged -> Next.dispatch(effectsForStateChange(event.state))
       is PinVerified -> {
         when (event.result) {
-          is Correct -> dispatch(RecordSuccessfulAttempt, CorrectPinEntered(event.result.data))
+          is Correct -> correctPin(event)
           is Incorrect -> dispatch(AllowPinEntry, RecordFailedAttempt, ClearPin)
           // Will be filled in later when we implement PIN verification
           // via the server API call.
@@ -41,6 +43,16 @@ class PinEntryUpdate(
       }
       is PinAuthenticated -> noChange()
       PinEntryDoneClicked -> noChange()
+      is DemoFacilitySaved -> dispatch(RecordSuccessfulAttempt, CorrectPinEntered(event.data))
+    }
+  }
+
+  private fun correctPin(event: PinVerified): Next<PinEntryModel, PinEntryEffect> {
+    val data = (event.result as Correct).data
+    return if (data is UserData && data.uuid == DEMO_USER_ID) {
+      dispatch(SaveDemoFacility(data))
+    } else {
+      dispatch(RecordSuccessfulAttempt, CorrectPinEntered(event.result.data))
     }
   }
 

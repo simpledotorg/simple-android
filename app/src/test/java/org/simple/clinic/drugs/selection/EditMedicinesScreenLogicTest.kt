@@ -1,6 +1,7 @@
 package org.simple.clinic.drugs.selection
 
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import dagger.Lazy
@@ -14,7 +15,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.TestData
 import org.simple.clinic.drugs.AddNewPrescriptionClicked
 import org.simple.clinic.drugs.CustomPrescriptionClicked
 import org.simple.clinic.drugs.EditMedicinesEffect
@@ -24,23 +24,23 @@ import org.simple.clinic.drugs.EditMedicinesInit
 import org.simple.clinic.drugs.EditMedicinesModel
 import org.simple.clinic.drugs.EditMedicinesUiRenderer
 import org.simple.clinic.drugs.EditMedicinesUpdate
+import org.simple.clinic.drugs.EditMedicinesViewEffectHandler
 import org.simple.clinic.drugs.PrescribedDrugsDoneClicked
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.ProtocolDrugClicked
 import org.simple.clinic.drugs.search.DrugFrequency
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
-import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
+import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.RxErrorsRule
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -56,7 +56,6 @@ class EditMedicinesScreenLogicTest {
   private val uiActions = mock<EditMedicinesUiActions>()
   private val protocolRepository = mock<ProtocolRepository>()
   private val uuidGenerator = mock<UuidGenerator>()
-  private val utcClock = mock<UtcClock>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val patientUuid = UUID.fromString("2e9a1721-5472-4ebb-9d1a-7e707645eb7b")
   private val protocolUuid = UUID.fromString("905a545c-1988-441b-9139-11ae00579883")
@@ -67,14 +66,21 @@ class EditMedicinesScreenLogicTest {
   )
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val appointmentRepository = mock<AppointmentRepository>()
-  private val drugFrequencyFactory = mock<DrugFrequencyFactory>()
 
-  private val medicineFrequencyToFrequencyChoiceItemMap = mapOf(
-      null to DrugFrequencyChoiceItem(drugFrequency = null, label = "None"),
-      MedicineFrequency.OD to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.OD, label = "OD"),
-      MedicineFrequency.BD to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.BD, label = "BD"),
-      MedicineFrequency.TDS to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.TDS, label = "TDS"),
-      MedicineFrequency.QDS to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.QDS, label = "QDS")
+  private val drugFrequencyToLabelMap = mapOf(
+      null to DrugFrequencyLabel(label = "None"),
+      DrugFrequency.OD to DrugFrequencyLabel(label = "OD"),
+      DrugFrequency.BD to DrugFrequencyLabel(label = "BD"),
+      DrugFrequency.TDS to DrugFrequencyLabel(label = "TDS"),
+      DrugFrequency.QDS to DrugFrequencyLabel(label = "QDS")
+  )
+
+  private val medicineFrequencyToLabelMap = mapOf(
+      null to DrugFrequencyLabel(label = "None"),
+      MedicineFrequency.OD to DrugFrequencyLabel(label = "OD"),
+      MedicineFrequency.BD to DrugFrequencyLabel(label = "BD"),
+      MedicineFrequency.TDS to DrugFrequencyLabel(label = "TDS"),
+      MedicineFrequency.QDS to DrugFrequencyLabel(label = "QDS")
   )
 
   private lateinit var fixture: MobiusTestFixture<EditMedicinesModel, EditMedicinesEvent, EditMedicinesEffect>
@@ -82,21 +88,21 @@ class EditMedicinesScreenLogicTest {
   @Before
   fun setup() {
     val editMedicinesUiRenderer = EditMedicinesUiRenderer(ui)
+    val viewEffectsConsumer = EditMedicinesViewEffectHandler(uiActions)::handle
     val effectHandler = EditMedicinesEffectHandler(
-        uiActions = uiActions,
         schedulersProvider = TrampolineSchedulersProvider(),
         protocolRepository = protocolRepository,
         prescriptionRepository = prescriptionRepository,
         facility = Lazy { facility },
-        utcClock = utcClock,
         uuidGenerator = uuidGenerator,
         appointmentsRepository = appointmentRepository,
-        drugFrequencyFactory = drugFrequencyFactory
+        drugFrequencyToLabelMap = drugFrequencyToLabelMap,
+        viewEffectsConsumer = viewEffectsConsumer
     )
 
     fixture = MobiusTestFixture(
         uiEvents.ofType(),
-        EditMedicinesModel.create(patientUuid).medicineFrequencyToFrequencyChoiceItemMapLoaded(medicineFrequencyToFrequencyChoiceItemMap),
+        EditMedicinesModel.create(patientUuid).medicineFrequencyToLabelMapLoaded(medicineFrequencyToLabelMap),
         EditMedicinesInit(),
         EditMedicinesUpdate(LocalDate.of(2020, 11, 12), ZoneOffset.UTC),
         effectHandler.build(),
@@ -176,19 +182,19 @@ class EditMedicinesScreenLogicTest {
             drugName = amlodipine10mg.name,
             prescribedDrug = amlodipine10mgPrescription,
             hasTopCorners = true,
-            medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
-        CustomPrescribedDrugListItem(prescribedDrug = telmisartan9000mgPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
-        CustomPrescribedDrugListItem(prescribedDrug = reesesPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
-        CustomPrescribedDrugListItem(prescribedDrug = fooPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
-        CustomPrescribedDrugListItem(prescribedDrug = barPrescription, hasTopCorners = false, medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap),
+            medicineFrequencyToLabelMap = medicineFrequencyToLabelMap),
+        CustomPrescribedDrugListItem(prescribedDrug = telmisartan9000mgPrescription, hasTopCorners = false, medicineFrequencyToLabelMap = medicineFrequencyToLabelMap),
+        CustomPrescribedDrugListItem(prescribedDrug = reesesPrescription, hasTopCorners = false, medicineFrequencyToLabelMap = medicineFrequencyToLabelMap),
+        CustomPrescribedDrugListItem(prescribedDrug = fooPrescription, hasTopCorners = false, medicineFrequencyToLabelMap = medicineFrequencyToLabelMap),
+        CustomPrescribedDrugListItem(prescribedDrug = barPrescription, hasTopCorners = false, medicineFrequencyToLabelMap = medicineFrequencyToLabelMap),
         ProtocolDrugListItem(
             id = 1,
             drugName = telmisartan40mg.name,
             prescribedDrug = null,
             hasTopCorners = false,
-            medicineFrequencyToFrequencyChoiceItemMap = medicineFrequencyToFrequencyChoiceItemMap))
+            medicineFrequencyToLabelMap = medicineFrequencyToLabelMap))
 
-    verify(ui).populateDrugsList(expectedUiModels)
+    verify(ui, times(2)).populateDrugsList(expectedUiModels)
   }
 
   @Test

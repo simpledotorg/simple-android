@@ -1,0 +1,261 @@
+package org.simple.clinic.overdue.download
+
+import android.app.Application
+import android.content.ContentValues
+import android.media.MediaScannerConnection
+import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.os.StatFs
+import android.provider.MediaStore
+import androidx.annotation.RequiresApi
+import androidx.core.content.FileProvider
+import io.reactivex.Single
+import org.simple.clinic.overdue.download.OverdueListDownloadResult.DownloadFailed
+import org.simple.clinic.overdue.download.OverdueListDownloadResult.DownloadSuccessful
+import org.simple.clinic.overdue.download.OverdueListDownloadResult.NotEnoughStorage
+import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
+import org.simple.clinic.overdue.download.OverdueListFileFormat.PDF
+import org.simple.clinic.util.CsvToPdfConverter
+import org.simple.clinic.util.UserClock
+import java.io.ByteArrayInputStream
+import java.io.File
+import java.io.InputStream
+import java.io.OutputStream
+import java.time.LocalDate
+import java.util.UUID
+import javax.inject.Inject
+
+class OverdueListDownloader @Inject constructor(
+    private val api: OverdueListDownloadApi,
+    private val userClock: UserClock,
+    private val appContext: Application,
+    private val csvToPdfConverter: CsvToPdfConverter,
+    private val csvGenerator: OverdueCsvGenerator
+) {
+
+  companion object {
+    private const val DOWNLOAD_FILE_NAME_PREFIX = "overdue-list-"
+    private const val MIN_REQ_SPACE = 10_00_0000L
+  }
+
+  fun download(
+      fileFormat: OverdueListFileFormat,
+      ids: List<UUID>
+  ): Single<OverdueListDownloadResult> {
+    if (!hasMinReqSpace()) {
+      return Single.just(NotEnoughStorage)
+    }
+
+    return if (ids.isEmpty()) {
+      downloadUsingApi(fileFormat)
+    } else {
+      downloadUsingRoom(fileFormat, ids)
+    }
+  }
+
+  private fun downloadUsingRoom(
+      fileFormat: OverdueListFileFormat,
+      ids: List<UUID>
+  ): Single<OverdueListDownloadResult> {
+    return Single.create {
+      try {
+        val csvOutputStream = csvGenerator.generate(ids)
+        val csvInputStream = ByteArrayInputStream(csvOutputStream.toByteArray())
+
+        it.onSuccess(saveFileToDisk(fileFormat, csvInputStream))
+      } catch (e: Throwable) {
+        it.onError(e)
+      }
+    }.flatMap { path ->
+      scanFile(path, fileFormat)
+    }.map { uri ->
+      DownloadSuccessful(uri) as OverdueListDownloadResult
+    }.onErrorReturn { _ -> DownloadFailed }
+  }
+
+  private fun downloadUsingApi(fileFormat: OverdueListFileFormat): Single<OverdueListDownloadResult> {
+    return api
+        .download()
+        .map { responseBody ->
+          saveFileToDisk(fileFormat = fileFormat,
+              inputStream = responseBody.byteStream())
+        }
+        .flatMap { path ->
+          scanFile(path, fileFormat)
+        }
+        .map { uri -> DownloadSuccessful(uri) as OverdueListDownloadResult }
+        .onErrorReturn { _ -> DownloadFailed }
+  }
+
+  fun downloadForShare(
+      fileFormat: OverdueListFileFormat,
+      ids: List<UUID> = emptyList()
+  ): Single<OverdueListDownloadResult> {
+    if (!hasMinReqSpace()) {
+      return Single.just(NotEnoughStorage)
+    }
+
+    return if (ids.isEmpty()) {
+      downloadForShareUsingApi(fileFormat)
+    } else {
+      downloadForShareUsingRoom(fileFormat, ids)
+    }
+  }
+
+  private fun downloadForShareUsingRoom(
+      fileFormat: OverdueListFileFormat,
+      ids: List<UUID>
+  ): Single<OverdueListDownloadResult> {
+    return Single.create {
+      try {
+        val csvOutputStream = csvGenerator.generate(ids)
+        val csvInputStream = ByteArrayInputStream(csvOutputStream.toByteArray())
+
+        val uri = saveFileToAppData(fileFormat = fileFormat, inputStream = csvInputStream)
+        it.onSuccess(uri)
+      } catch (e: Throwable) {
+        it.onError(e)
+      }
+    }.map { uri ->
+      DownloadSuccessful(uri) as OverdueListDownloadResult
+    }.onErrorReturn { _ -> DownloadFailed }
+  }
+
+  private fun downloadForShareUsingApi(fileFormat: OverdueListFileFormat): Single<OverdueListDownloadResult> {
+    return api
+        .download()
+        .map { responseBody ->
+          saveFileToAppData(fileFormat = fileFormat,
+              inputStream = responseBody.byteStream())
+        }
+        .map { uri -> DownloadSuccessful(uri) as OverdueListDownloadResult }
+        .onErrorReturn { _ -> DownloadFailed }
+  }
+
+  private fun saveFileToDisk(fileFormat: OverdueListFileFormat, inputStream: InputStream): String {
+    val fileName = generateFileName(fileFormat)
+
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+      downloadApi29(fileName, inputStream, fileFormat)
+    } else {
+      downloadApi21(fileName, inputStream, fileFormat)
+    }
+  }
+
+  private fun saveFileToAppData(
+      fileFormat: OverdueListFileFormat,
+      inputStream: InputStream
+  ): Uri? {
+    appContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+    val fileName = generateFileName(fileFormat)
+    val file = File(
+        appContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
+        fileName
+    )
+    val outputStream = file.outputStream()
+
+    writeResponseToOutputStream(fileFormat, inputStream, outputStream)
+
+    return FileProvider.getUriForFile(appContext, appContext.packageName + ".provider", file)
+  }
+
+  private fun scanFile(
+      path: String,
+      fileFormat: OverdueListFileFormat
+  ) = Single.create<Uri> { emitter ->
+    MediaScannerConnection.scanFile(appContext, arrayOf(path), arrayOf(fileFormat.mimeType)) { _, uri ->
+      emitter.onSuccess(uri)
+    }
+  }
+
+  private fun downloadApi21(
+      fileName: String,
+      inputStream: InputStream,
+      fileFormat: OverdueListFileFormat
+  ): String {
+    val downloadsFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+    val file = File(downloadsFolder, fileName)
+    val outputStream = file.outputStream()
+
+    writeResponseToOutputStream(fileFormat, inputStream, outputStream)
+
+    return file.path
+  }
+
+  @RequiresApi(Build.VERSION_CODES.Q)
+  private fun downloadApi29(
+      fileName: String,
+      inputStream: InputStream,
+      fileFormat: OverdueListFileFormat
+  ): String {
+    val collection = MediaStore.Downloads.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+    val file = ContentValues().apply {
+      put(MediaStore.Downloads.DISPLAY_NAME, fileName)
+    }
+    val fileUri = appContext.contentResolver.insert(collection, file)
+        ?: throw Exception("MediaStore Uri couldn't be created")
+
+    val outputStream = appContext.contentResolver.openOutputStream(fileUri, "w")
+        ?: throw Exception("ContentResolver couldn't open $fileUri outputStream")
+
+    writeResponseToOutputStream(fileFormat, inputStream, outputStream)
+
+    return getMediaStoreEntryPathApi29(fileUri)
+        ?: throw Exception("ContentResolver couldn't find $fileUri")
+  }
+
+  private fun writeResponseToOutputStream(
+      fileFormat: OverdueListFileFormat,
+      inputStream: InputStream,
+      outputStream: OutputStream
+  ) {
+    when (fileFormat) {
+      CSV -> inputStream.use { closableInputStream ->
+        outputStream.use { closableOutputStream ->
+          closableInputStream.copyTo(closableOutputStream)
+        }
+      }
+
+      PDF -> csvToPdfConverter.convert(inputStream, outputStream)
+    }
+  }
+
+  private fun generateFileName(fileFormat: OverdueListFileFormat): String {
+    val localDateNow = LocalDate.now(userClock)
+    val fileExtension = when (fileFormat) {
+      CSV -> "csv"
+      PDF -> "pdf"
+    }
+    return "$DOWNLOAD_FILE_NAME_PREFIX$localDateNow.$fileExtension"
+  }
+
+  private fun getMediaStoreEntryPathApi29(uri: Uri): String? {
+    val cursor = appContext.contentResolver.query(
+        uri,
+        arrayOf(MediaStore.Files.FileColumns.DATA),
+        null,
+        null,
+        null
+    ) ?: return null
+
+    return cursor.use {
+      if (!cursor.moveToFirst()) {
+        return@use null
+      }
+
+      return cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATA))
+    }
+  }
+
+  private fun hasMinReqSpace(): Boolean {
+    // If we cannot get access to the directory, we will allow saving to directory and fail with
+    // error if there isn't enough space
+    val dir = appContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+        ?: return true
+    val statFs = StatFs(dir.path)
+    val availableSpace = statFs.availableBlocksLong * statFs.blockSizeLong
+
+    return availableSpace >= MIN_REQ_SPACE
+  }
+}

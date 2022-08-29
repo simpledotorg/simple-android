@@ -1,5 +1,6 @@
 package org.simple.clinic.recentpatient
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -19,25 +20,22 @@ class AllRecentPatientsEffectHandler @AssistedInject constructor(
     private val currentFacility: Lazy<Facility>,
     private val pagerFactory: PagerFactory,
     @PagingSize(AllRecentPatients) private val allRecentPatientsPagingSize: Int,
-    @Assisted private val uiActions: AllRecentPatientsUiActions
+    @Assisted private val viewEffectsConsumer: Consumer<AllRecentPatientsViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: AllRecentPatientsUiActions): AllRecentPatientsEffectHandler
+    fun create(
+        viewEffectsConsumer: Consumer<AllRecentPatientsViewEffect>
+    ): AllRecentPatientsEffectHandler
   }
 
   fun build(): ObservableTransformer<AllRecentPatientsEffect, AllRecentPatientsEvent> {
     return RxMobius
         .subtypeEffectHandler<AllRecentPatientsEffect, AllRecentPatientsEvent>()
         .addTransformer(LoadAllRecentPatients::class.java, loadAllRecentPatients())
-        .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientUuid) }, schedulersProvider.ui())
-        .addConsumer(ShowRecentPatients::class.java, ::showRecentPatients, schedulersProvider.ui())
+        .addConsumer(AllRecentPatientsViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
-  }
-
-  private fun showRecentPatients(effect: ShowRecentPatients) {
-    uiActions.showRecentPatients(effect.recentPatients)
   }
 
   private fun loadAllRecentPatients(): ObservableTransformer<LoadAllRecentPatients, AllRecentPatientsEvent> {
@@ -49,7 +47,8 @@ class AllRecentPatientsEffectHandler @AssistedInject constructor(
 
             pagerFactory.createPager(
                 sourceFactory = { patientRepository.recentPatients(facilityUuid = facilityId) },
-                pageSize = allRecentPatientsPagingSize
+                pageSize = allRecentPatientsPagingSize,
+                enablePlaceholders = false
             )
           }
           .map(::RecentPatientsLoaded)

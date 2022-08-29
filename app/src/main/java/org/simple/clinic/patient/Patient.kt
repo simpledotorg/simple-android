@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Fts4
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Query
@@ -30,7 +31,8 @@ import java.util.UUID
           onUpdate = ForeignKey.CASCADE)
     ],
     indices = [
-      Index("addressUuid")
+      Index("addressUuid", unique = false),
+      Index("assignedFacilityId", unique = false)
     ])
 @Parcelize
 data class Patient(
@@ -69,18 +71,8 @@ data class Patient(
     val retainUntil: Instant?
 ) : Parcelable {
 
-  val age: Age?
-    get() {
-      return if (ageDetails.type == PatientAgeDetails.Type.FROM_AGE)
-        Age(ageDetails.ageValue!!, ageDetails.ageUpdatedAt!!)
-      else
-        null
-    }
-
   fun withNameAndGender(fullName: String, gender: Gender): Patient =
       copy(fullName = fullName, gender = gender)
-
-  fun withAge(age: Age): Patient = copy(ageDetails = ageDetails.withAge(age))
 
   fun withDateOfBirth(dateOfBirth: LocalDate): Patient = copy(ageDetails = ageDetails.withDateOfBirth(dateOfBirth))
 
@@ -374,5 +366,35 @@ data class Patient(
       WHERE uuid = :patientUuid
     """)
     abstract fun contactPatientProfileImmediate(patientUuid: UUID): ContactPatientProfile
+
+    @Query("""
+      SELECT DISTINCT * FROM (
+        SELECT colonyOrVillage 
+        FROM PatientAddress 
+        WHERE uuid IN (
+          SELECT DISTINCT P.addressUuid 
+          FROM Patient P    
+          WHERE P.assignedFacilityId = :facilityUuid
+          OR P.registeredFacilityId = :facilityUuid
+        ) 
+        AND colonyOrVillage IS NOT NULL
+
+        UNION 
+    
+        SELECT fullName 
+        FROM Patient 
+        WHERE ( 
+          assignedFacilityId = :facilityUuid OR   
+          registeredFacilityId = :facilityUuid 
+        )
+        AND fullName IS NOT NULL 
+      )
+     ORDER BY colonyOrVillage ASC   
+    """)
+    abstract fun villageAndPatientNamesInFacility(facilityUuid: UUID): List<String>
   }
 }
+
+@Entity
+@Fts4(contentEntity = Patient::class)
+data class PatientFts(val uuid: UUID, val fullName: String)

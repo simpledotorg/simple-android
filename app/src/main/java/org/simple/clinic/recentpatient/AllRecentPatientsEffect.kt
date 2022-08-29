@@ -8,6 +8,8 @@ sealed class AllRecentPatientsEffect
 
 object LoadAllRecentPatients : AllRecentPatientsEffect()
 
-data class OpenPatientSummary(val patientUuid: UUID) : AllRecentPatientsEffect()
+sealed class AllRecentPatientsViewEffect : AllRecentPatientsEffect()
 
-data class ShowRecentPatients(val recentPatients: PagingData<RecentPatient>) : AllRecentPatientsEffect()
+data class OpenPatientSummary(val patientUuid: UUID) : AllRecentPatientsViewEffect()
+
+data class ShowRecentPatients(val recentPatients: PagingData<RecentPatient>) : AllRecentPatientsViewEffect()

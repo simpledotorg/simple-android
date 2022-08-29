@@ -6,14 +6,14 @@ import com.spotify.mobius.test.FirstMatchers.hasNoEffects
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.facility.FacilityConfig
-import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
-import org.simple.clinic.util.TestUserClock
+import org.simple.sharedTestCode.util.TestUserClock
 import java.time.LocalDate
 import java.time.Period
 import java.util.Optional
@@ -53,17 +53,11 @@ class ContactPatientInitTest {
             teleconsultationEnabled = false
         )
     )
-    val overdueAppointment = TestData.overdueAppointment(
+    val overdueAppointment = TestData.appointment(
+        uuid = UUID.fromString("43cbf33f-102c-45e7-86b2-ea0e7601f45e"),
         facilityUuid = UUID.fromString("a607a97f-4bf6-4ce6-86a3-b266059c7734"),
         patientUuid = patientUuid,
-        patientAddress = TestData.overduePatientAddress(
-            streetAddress = null,
-            colonyOrVillage = null,
-            district = "Bhatinda",
-            state = "Punjab"),
-        patientRegisteredFacilityName = "Bhatinda",
-        diagnosedWithDiabetes = Answer.Yes,
-        diagnosedWithHypertension = Answer.No
+        status = Scheduled
     )
 
     val model = defaultModel()
@@ -98,9 +92,7 @@ class ContactPatientInitTest {
         appointmentConfig = appointmentConfig,
         userClock = userClock,
         mode = mode,
-        secureCallFeatureEnabled = phoneMaskFeatureEnabled,
-        overdueListChangesFeatureEnabled = overdueListChangesFeatureEnabled
+        secureCallFeatureEnabled = phoneMaskFeatureEnabled
     )
   }
 }
-

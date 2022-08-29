@@ -10,16 +10,16 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.setup.runcheck.AllowApplicationToRun
 import org.simple.clinic.setup.runcheck.Allowed
 import org.simple.clinic.setup.runcheck.Disallowed.Reason
 import org.simple.clinic.user.User
-import org.simple.clinic.util.TestUserClock
-import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.sharedTestCode.util.TestUserClock
+import org.simple.sharedTestCode.util.TestUtcClock
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import java.time.Instant
 import java.util.Optional
 import java.util.UUID
@@ -30,25 +30,25 @@ class SetupActivityEffectHandlerTest {
   private val uiActions = mock<UiActions>()
   private val userDao = mock<User.RoomDao>()
   private val appConfigRepository = mock<AppConfigRepository>()
-  private val fallbackCountry = TestData.country()
   private val appDatabase = mock<org.simple.clinic.AppDatabase>()
   private val databaseMaintenanceRunAtPreference = mock<Preference<Optional<Instant>>>()
   private val clock = TestUtcClock(Instant.parse("2018-01-01T00:00:00Z"))
   private val userClock = TestUserClock(Instant.parse("2021-07-11T00:00:00Z"))
   private val allowApplicationToRun = mock<AllowApplicationToRun>()
+  private val loadV1Country = mock<LoadV1Country>()
 
   private val effectHandler = SetupActivityEffectHandler(
       uiActions = uiActions,
       userDao = userDao,
       appConfigRepository = appConfigRepository,
-      schedulersProvider = TrampolineSchedulersProvider(),
+      schedulersProvider = TestSchedulersProvider.trampoline(),
       appDatabase = appDatabase,
       clock = clock,
       allowApplicationToRun = allowApplicationToRun,
       onboardingCompletePreference = onboardingCompletePreference,
-      fallbackCountry = fallbackCountry,
       databaseMaintenanceRunAt = databaseMaintenanceRunAtPreference,
-      userClock = userClock
+      userClock = userClock,
+      loadV1Country = loadV1Country
   ).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -69,6 +69,17 @@ class SetupActivityEffectHandlerTest {
     val country = TestData.country()
     whenever(appConfigRepository.currentCountry()) doReturn country
 
+    val v1Country = mapOf(
+        "country_code" to "IN",
+        "endpoint" to "https://api.simple.org/api/v1",
+        "display_name" to "India",
+        "isd_code" to "91"
+    )
+    whenever(loadV1Country.load()).thenReturn(Optional.of(v1Country))
+
+    val currentDeployment = TestData.deployment()
+    whenever(appConfigRepository.currentDeployment()).thenReturn(currentDeployment)
+
     // when
     testCase.dispatch(FetchUserDetails)
 
@@ -76,7 +87,9 @@ class SetupActivityEffectHandlerTest {
     testCase.assertOutgoingEvents(UserDetailsFetched(
         hasUserCompletedOnboarding = true,
         loggedInUser = Optional.of(user),
-        userSelectedCountry = Optional.of(country)
+        userSelectedCountry = Optional.of(country),
+        userSelectedCountryV1 = Optional.of(v1Country),
+        currentDeployment = Optional.of(currentDeployment)
     ))
     verifyZeroInteractions(uiActions)
   }
@@ -125,16 +138,6 @@ class SetupActivityEffectHandlerTest {
     testCase.assertNoOutgoingEvents()
     verify(uiActions).showCountrySelectionScreen()
     verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
-  fun `the fallback country must be set as the selected country when the set fallback country as selected effect is received`() {
-    // when
-    testCase.dispatch(SetFallbackCountryAsCurrentCountry)
-
-    // then
-    testCase.assertOutgoingEvents(FallbackCountrySetAsSelected)
-    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -188,6 +191,39 @@ class SetupActivityEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(AppAllowedToRunCheckCompleted(allowedToRun))
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when the save country and deployment effect is received, the country and deployment must be saved`() {
+    // given
+    val deploymentToSave = TestData.deployment()
+    val countryToSave = TestData.country(deployments = listOf(deploymentToSave))
+
+    // when
+    testCase.dispatch(SaveCountryAndDeployment(countryToSave, deploymentToSave))
+
+    // then
+    verify(appConfigRepository).saveCurrentCountry(countryToSave)
+    verify(appConfigRepository).saveDeployment(deploymentToSave)
+    verifyNoMoreInteractions(appConfigRepository)
+
+    testCase.assertOutgoingEvents(CountryAndDeploymentSaved)
+
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when delete stored country v1 effect is received, then delete stored country v1 preference`() {
+    // when
+    testCase.dispatch(DeleteStoredCountryV1)
+
+    // then
+    verify(appConfigRepository).deleteStoredCountryV1()
+    verifyNoMoreInteractions(appConfigRepository)
+
+    testCase.assertOutgoingEvents(StoredCountryV1Deleted)
+
     verifyZeroInteractions(uiActions)
   }
 }

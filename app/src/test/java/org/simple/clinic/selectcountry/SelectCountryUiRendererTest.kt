@@ -4,7 +4,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 
 class SelectCountryUiRendererTest {
 
@@ -86,22 +86,6 @@ class SelectCountryUiRendererTest {
 
     // then
     verify(ui).displayGenericErrorMessage()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when the user has chosen a country, show the next button`() {
-    // given
-    val model = defaultModel
-        .manifestFetched(countries)
-        .countryChosen(bangladesh)
-
-    // when
-    renderer.render(model)
-
-    // then
-    verify(ui).displaySupportedCountries(countries, bangladesh)
-    verify(ui).showNextButton()
     verifyNoMoreInteractions(ui)
   }
 

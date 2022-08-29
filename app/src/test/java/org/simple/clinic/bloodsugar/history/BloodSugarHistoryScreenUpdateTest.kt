@@ -1,5 +1,6 @@
 package org.simple.clinic.bloodsugar.history
 
+import com.nhaarman.mockitokotlin2.mock
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
@@ -7,7 +8,8 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.clinic.bloodsugar.BloodSugarHistoryListItemDataSourceFactory
+import org.simple.sharedTestCode.TestData
 import java.util.UUID
 
 class BloodSugarHistoryScreenUpdateTest {
@@ -49,6 +51,19 @@ class BloodSugarHistoryScreenUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenBloodSugarUpdateSheet(bloodSugar) as BloodSugarHistoryScreenEffect)
+        ))
+  }
+
+  @Test
+  fun `when blood sugar history is loaded, then show blood sugar`() {
+    val bloodSugarsHistoryListItemDataSourceFactory = mock<BloodSugarHistoryListItemDataSourceFactory>()
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(BloodSugarHistoryLoaded(bloodSugarsHistoryListItemDataSourceFactory))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowBloodSugars(bloodSugarsHistoryListItemDataSourceFactory))
         ))
   }
 }

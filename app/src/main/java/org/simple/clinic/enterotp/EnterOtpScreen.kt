@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
@@ -41,7 +43,7 @@ class EnterOtpScreen : BaseScreen<
     EnterOtpModel,
     EnterOtpEvent,
     EnterOtpEffect,
-    Unit>(), EnterOtpUi, EnterOtpUiActions {
+    EnterOtpViewEffect>(), EnterOtpUi, EnterOtpUiActions {
 
   companion object {
     private const val MILLIS_IN_SECOND = 1000L
@@ -60,6 +62,9 @@ class EnterOtpScreen : BaseScreen<
 
   @Inject
   lateinit var utcClock: UtcClock
+
+  @Inject
+  lateinit var config: BruteForceOtpEntryProtectionConfig
 
   private val otpEntryEditText
     get() = binding.otpEntryEditText
@@ -100,7 +105,9 @@ class EnterOtpScreen : BaseScreen<
       field = value
     }
 
-  override fun defaultModel() = EnterOtpModel.create()
+  override fun defaultModel() = EnterOtpModel.create(
+      minOtpRetries = config.minOtpEntries,
+      maxOtpEntriesAllowed = config.limitOfFailedAttempts)
 
   override fun bindView(
       layoutInflater: LayoutInflater,
@@ -118,8 +125,10 @@ class EnterOtpScreen : BaseScreen<
   override fun createUpdate() = EnterOtpUpdate(LOGIN_OTP_LENGTH)
 
   override fun createEffectHandler(
-      viewEffectsConsumer: Consumer<Unit>
-  ) = effectHandlerFactory.create(this).build()
+      viewEffectsConsumer: Consumer<EnterOtpViewEffect>
+  ) = effectHandlerFactory.create(viewEffectsConsumer = viewEffectsConsumer).build()
+
+  override fun viewEffectHandler() = EnterOtpViewEffectHandler(this)
 
   override fun createInit() = EnterOtpInit()
 
@@ -132,7 +141,6 @@ class EnterOtpScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    otpEntryEditText.showKeyboard()
     backButton.setOnClickListener { goBack() }
   }
 
@@ -175,20 +183,14 @@ class EnterOtpScreen : BaseScreen<
     showError(resources.getString(R.string.api_network_error))
   }
 
-  override fun showServerError(error: String) {
-    showError(error)
-    otpEntryEditText.showKeyboard()
-  }
-
   override fun showIncorrectOtpError() {
     showError(resources.getString(R.string.enterotp_incorrect_code))
-    otpEntryEditText.showKeyboard()
   }
 
   private fun showError(error: String) {
     smsSentTextView.visibility = View.GONE
     errorTextView.text = error
-    errorTextView.visibility = View.VISIBLE
+    errorTextView.visibility = VISIBLE
   }
 
   override fun hideError() {
@@ -197,18 +199,18 @@ class EnterOtpScreen : BaseScreen<
 
   override fun showProgress() {
     TransitionManager.beginDelayedTransition(rootLayout)
-    validateOtpProgressBar.visibility = View.VISIBLE
+    validateOtpProgressBar.visibility = VISIBLE
     otpEntryContainer.visibility = View.INVISIBLE
   }
 
   override fun hideProgress() {
     TransitionManager.beginDelayedTransition(rootLayout)
     validateOtpProgressBar.visibility = View.INVISIBLE
-    otpEntryContainer.visibility = View.VISIBLE
+    otpEntryContainer.visibility = VISIBLE
   }
 
   override fun showSmsSentMessage() {
-    smsSentTextView.visibility = View.VISIBLE
+    smsSentTextView.visibility = VISIBLE
   }
 
   override fun showOtpEntryMode(mode: OtpEntryMode) {
@@ -238,15 +240,19 @@ class EnterOtpScreen : BaseScreen<
 
   override fun showLimitReachedError(attemptsMade: Int) {
     showError(resources.getString(R.string.otpentry_error_incorrect_otp_attempts_limit_reached, attemptsMade.toString()))
+    rootLayout.hideKeyboard()
   }
 
-  override fun showFailedAttemptOtpError(attemptsMade: Int, attemptsRemaining: Int) {
-    if (attemptsMade >= 3) {
-      showError(resources.getString(R.string.otpentry_error_incorrect_otp_attempts_remaining, attemptsRemaining.toString()))
-    } else {
-      showError(resources.getString(R.string.otpentry_error_incorrect_otp_attempt))
-    }
-    otpEntryEditText.showKeyboard()
+  override fun showResendSmsButton() {
+    resendSmsButton.visibility = VISIBLE
+  }
+
+  override fun hideResendSmsButton() {
+    resendSmsButton.visibility = GONE
+  }
+
+  override fun showFailedAttemptOtpError(attemptsRemaining: Int) {
+    showError(resources.getString(R.string.otpentry_error_incorrect_otp_attempts_remaining, attemptsRemaining.toString()))
   }
 
   override fun clearPin() {

@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding3.view.clicks
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import com.spotify.mobius.functions.Consumer
@@ -33,6 +34,8 @@ import org.simple.clinic.drugs.EditMedicinesInit
 import org.simple.clinic.drugs.EditMedicinesModel
 import org.simple.clinic.drugs.EditMedicinesUiRenderer
 import org.simple.clinic.drugs.EditMedicinesUpdate
+import org.simple.clinic.drugs.EditMedicinesViewEffect
+import org.simple.clinic.drugs.EditMedicinesViewEffectHandler
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescribedDrugsDoneClicked
 import org.simple.clinic.drugs.PresribedDrugsRefillClicked
@@ -62,7 +65,7 @@ class EditMedicinesScreen :
         EditMedicinesModel,
         EditMedicinesEvent,
         EditMedicinesEffect,
-        Unit>(), EditMedicinesUi, EditMedicinesUiActions {
+        EditMedicinesViewEffect>(), EditMedicinesUi, EditMedicinesUiActions {
 
   @Inject
   lateinit var router: Router
@@ -109,6 +112,13 @@ class EditMedicinesScreen :
       )
   )
 
+  private val adapterObserver = object : RecyclerView.AdapterDataObserver() {
+    override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+      if (positionStart == 0 && itemCount == 1) recyclerView.smoothScrollToPosition(0)
+      super.onItemRangeInserted(positionStart, itemCount)
+    }
+  }
+
   private val patientUuid by unsafeLazy {
     screenKey.patientUuid
   }
@@ -134,7 +144,9 @@ class EditMedicinesScreen :
 
   override fun createInit() = EditMedicinesInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<EditMedicinesViewEffect>) = effectHandlerFactory.create(viewEffectsConsumer).build()
+
+  override fun viewEffectHandler() = EditMedicinesViewEffectHandler(this)
 
   override fun onAttach(context: Context) {
     super.onAttach(context)
@@ -146,6 +158,8 @@ class EditMedicinesScreen :
     toolbar.setNavigationOnClickListener { router.pop() }
     recyclerView.setHasFixedSize(false)
     recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+    adapter.registerAdapterDataObserver(adapterObserver)
     recyclerView.adapter = adapter
 
     val fadeAnimator = DefaultItemAnimator()
@@ -182,19 +196,12 @@ class EditMedicinesScreen :
       recyclerView.itemAnimator = animator
     }
 
-    val newAdapterItems = protocolDrugItems + AddNewPrescriptionListItem
-
-    val hasNewItems = (adapter.itemCount == 0).not() && adapter.itemCount < newAdapterItems.size
-    adapter.submitList(newAdapterItems)
-
-    // Scroll to end to show newly added prescriptions.
-    if (hasNewItems) {
-      recyclerView.postDelayed(::scrollListToLastPosition, 300)
-    }
+    adapter.submitList(protocolDrugItems + AddNewPrescriptionListItem)
   }
 
-  private fun scrollListToLastPosition() {
-    recyclerView.smoothScrollToPosition(recyclerView.adapter!!.itemCount - 1)
+  override fun onDestroyView() {
+    adapter.unregisterAdapterDataObserver(adapterObserver)
+    super.onDestroyView()
   }
 
   override fun showNewPrescriptionEntrySheet(patientUuid: UUID) {

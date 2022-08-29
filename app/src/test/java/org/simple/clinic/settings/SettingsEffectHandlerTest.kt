@@ -10,7 +10,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
@@ -36,7 +36,7 @@ class SettingsEffectHandlerTest {
       schedulersProvider = TrampolineSchedulersProvider(),
       appVersionFetcher = appVersionFetcher,
       appUpdateAvailability = checkAppUpdateAvailability,
-      uiActions = uiActions
+      viewEffectsConsumer = SettingsViewEffectHandler(uiActions)::handle
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
@@ -110,12 +110,11 @@ class SettingsEffectHandlerTest {
   @Test
   fun `when load app version effect is received, the app version must be loaded`() {
     // given
-    val applicationId = "org.simple"
     val versionName = "1.0.0"
-    whenever(appVersionFetcher.appVersion(applicationId)) doReturn versionName
+    whenever(appVersionFetcher.appVersion()) doReturn versionName
 
     // when
-    testCase.dispatch(LoadAppVersionEffect(applicationId))
+    testCase.dispatch(LoadAppVersionEffect)
 
     // then
     verifyZeroInteractions(uiActions)
@@ -125,7 +124,7 @@ class SettingsEffectHandlerTest {
   @Test
   fun `when check app update availability effect is received, then app needs to check if an update is available`() {
     // given
-    val appUpdateState = ShowAppUpdate
+    val appUpdateState = ShowAppUpdate(appUpdateNudgePriority = null, appStaleness = null)
     whenever(checkAppUpdateAvailability.listenAllUpdates()) doReturn Observable.just<AppUpdateState>(appUpdateState)
 
     // when

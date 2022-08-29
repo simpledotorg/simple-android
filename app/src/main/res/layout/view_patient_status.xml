@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  tools:parentTag="com.google.android.material.card.MaterialCardView">
+
+  <com.google.android.material.textview.MaterialTextView
+    android:id="@+id/statusTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/spacing_16"
+    android:drawablePadding="@dimen/spacing_8"
+    android:gravity="center_vertical"
+    android:textAppearance="?attr/textAppearanceHeadline6"
+    android:textColor="?attr/colorOnSurface"
+    app:drawableStartCompat="@drawable/ic_patient_dead_32dp"
+    app:drawableTint="?attr/colorOnSurface"
+    tools:text="@string/patient_status_died" />
+
+</merge>

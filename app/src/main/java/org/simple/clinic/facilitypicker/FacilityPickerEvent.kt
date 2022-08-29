@@ -17,8 +17,6 @@ data class SearchQueryChanged(val query: String) : FacilityPickerEvent() {
   override val analyticsName = "Facility Picker:Search Query Changed"
 }
 
-data class TotalFacilityCountLoaded(val count: Int) : FacilityPickerEvent()
-
 data class FacilityClicked(val facility: Facility) : FacilityPickerEvent() {
   override val analyticsName = "Facility Picker:Done Clicked"
 }

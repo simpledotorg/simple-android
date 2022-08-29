@@ -16,9 +16,8 @@ class SelectStateUiRenderer(
       ui.hideProgress()
     }
 
-    if (model.hasStates) {
+    if (model.hasMoreThanOneState) {
       ui.showStates(model.states!!, model.selectedState)
-      renderNextButton(model)
     } else {
       ui.hideStates()
     }
@@ -35,10 +34,9 @@ class SelectStateUiRenderer(
       NetworkError -> ui.showNetworkErrorMessage()
       ServerError -> ui.showServerErrorMessage()
       UnexpectedError -> ui.showGenericErrorMessage()
+      null -> {
+        /* no-op */
+      }
     }
-  }
-
-  private fun renderNextButton(model: SelectStateModel) {
-    if (model.hasSelectedState) ui.showNextButton()
   }
 }

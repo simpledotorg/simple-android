@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.button.MaterialButton xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/search_overdue_select_all_button"
+  style="?attr/borderlessButtonDenseStyle"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:layout_marginBottom="@dimen/spacing_8"
+  android:paddingHorizontal="@dimen/spacing_18"
+  android:paddingVertical="@dimen/spacing_18"
+  android:paddingTop="@dimen/spacing_16"
+  android:paddingBottom="@dimen/spacing_16"
+  android:text="@string/selected_overdue_select_all_appointments"
+  android:textAppearance="?attr/textAppearanceButton"
+  app:layout_constraintStart_toStartOf="parent"
+  app:layout_constraintTop_toBottomOf="@+id/overdue_search_app_bar" />

@@ -21,6 +21,7 @@ import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
 private typealias ChangeAssignedFacilityClicked = () -> Unit
+private typealias AssignedFacilityChanges = () -> Unit
 
 class AssignedFacilityView(
     context: Context,
@@ -28,6 +29,7 @@ class AssignedFacilityView(
 ) : MaterialCardView(context, attrs), AssignedFacilityUi, UiActions, PatientSummaryChildView {
 
   var changeAssignedFacilityClicks: ChangeAssignedFacilityClicked? = null
+  var assignedFacilityChanges: AssignedFacilityChanges? = null
 
   private var binding: PatientsummaryAssignedFacilityContentBinding? = null
 
@@ -111,6 +113,10 @@ class AssignedFacilityView(
 
   override fun registerSummaryModelUpdateCallback(callback: PatientSummaryModelUpdateCallback?) {
     modelUpdateCallback = callback
+  }
+
+  override fun notifyAssignedFacilityChanged() {
+    assignedFacilityChanges?.invoke()
   }
 
   fun onNewAssignedFacilitySelected(facility: Facility) {

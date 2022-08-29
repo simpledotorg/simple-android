@@ -9,8 +9,7 @@ import org.simple.clinic.location.LocationUpdate
 data class FacilityPickerModel(
     val searchQuery: String,
     val facilities: List<Facility>?,
-    val currentLocation: LocationUpdate?,
-    val totalFacilityCount: Int?
+    val currentLocation: LocationUpdate?
 ) : Parcelable {
 
   companion object {
@@ -18,8 +17,7 @@ data class FacilityPickerModel(
       return FacilityPickerModel(
           searchQuery = "",
           facilities = null,
-          currentLocation = null,
-          totalFacilityCount = null
+          currentLocation = null
       )
     }
   }
@@ -29,9 +27,6 @@ data class FacilityPickerModel(
 
   val hasFetchedLocation: Boolean
     get() = currentLocation != null
-
-  val hasLoadedTotalFacilityCount: Boolean
-    get() = totalFacilityCount != null
 
   fun queryChanged(query: String): FacilityPickerModel {
     return copy(searchQuery = query)
@@ -43,9 +38,5 @@ data class FacilityPickerModel(
 
   fun locationFetched(locationUpdate: LocationUpdate): FacilityPickerModel {
     return copy(currentLocation = locationUpdate)
-  }
-
-  fun facilityCountLoaded(count: Int): FacilityPickerModel {
-    return copy(totalFacilityCount = count)
   }
 }

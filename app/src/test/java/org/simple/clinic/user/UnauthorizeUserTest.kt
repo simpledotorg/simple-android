@@ -13,7 +13,7 @@ import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.util.ResolvedError
 import org.simple.clinic.util.ResolvedError.NetworkRelated

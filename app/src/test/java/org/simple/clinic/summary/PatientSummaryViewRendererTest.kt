@@ -4,11 +4,15 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
-import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityConfig
+import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.user.User
+import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.TestUserClock
+import java.time.Instant
+import java.time.LocalDate
 import java.util.UUID
 
 class PatientSummaryViewRendererTest {
@@ -36,7 +40,13 @@ class PatientSummaryViewRendererTest {
   private val defaultModel = PatientSummaryModel.from(ViewExistingPatient, UUID.fromString("6fdf088e-f6aa-40e9-9cc2-22e197b83470"))
   private val ui = mock<PatientSummaryScreenUi>()
 
-  private val uiRenderer = PatientSummaryViewRenderer(ui, modelUpdateCallback = { /* no-op */ })
+  private val uiRenderer = PatientSummaryViewRenderer(
+      ui = ui,
+      isNextAppointmentFeatureEnabled = false,
+      modelUpdateCallback = { /* no-op */ },
+      userClock = TestUserClock(LocalDate.parse("2018-01-01")),
+      cdssOverdueLimit = 2
+  )
 
   @Test
   fun `when the facility supports diabetes management, the diabetes widget must be shown`() {
@@ -49,6 +59,8 @@ class PatientSummaryViewRendererTest {
     // then
     verify(ui).showDiabetesView()
     verify(ui).hideTeleconsultButton()
+    verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verifyNoMoreInteractions(ui)
   }
 
@@ -63,6 +75,8 @@ class PatientSummaryViewRendererTest {
     // then
     verify(ui).hideDiabetesView()
     verify(ui).hideTeleconsultButton()
+    verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verifyNoMoreInteractions(ui)
   }
 
@@ -70,7 +84,10 @@ class PatientSummaryViewRendererTest {
   fun `when profile summary is loaded, then populate patient profile and show edit button`() {
     // given
     val patientUuid = UUID.fromString("873e001f-fdc7-4e27-a734-5c9f15b22cdc")
-    val patient = TestData.patient(patientUuid)
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        status = PatientStatus.Active
+    )
     val patientAddress = TestData.patientAddress(patient.addressUuid)
     val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
     val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", Identifier.IdentifierType.BpPassport))
@@ -96,6 +113,9 @@ class PatientSummaryViewRendererTest {
     verify(ui).populatePatientProfile(patientSummaryProfile)
     verify(ui).showEditButton()
     verify(ui).hideAssignedFacilityView()
+    verify(ui).hidePatientDiedStatus()
+    verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verifyNoMoreInteractions(ui)
   }
 
@@ -112,6 +132,8 @@ class PatientSummaryViewRendererTest {
     // then
     verify(ui).showDiabetesView()
     verify(ui).hideTeleconsultButton()
+    verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verifyNoMoreInteractions(ui)
   }
 
@@ -132,6 +154,8 @@ class PatientSummaryViewRendererTest {
     // then
     verify(ui).showDiabetesView()
     verify(ui).showTeleconsultButton()
+    verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verifyNoMoreInteractions(ui)
   }
 
@@ -148,6 +172,8 @@ class PatientSummaryViewRendererTest {
     // then
     verify(ui).showDiabetesView()
     verify(ui).hideTeleconsultButton()
+    verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verifyNoMoreInteractions(ui)
   }
 
@@ -155,7 +181,11 @@ class PatientSummaryViewRendererTest {
   fun `show assigned facility view if patient has assigned facility`() {
     // given
     val patientUuid = UUID.fromString("873e001f-fdc7-4e27-a734-5c9f15b22cdc")
-    val patient = TestData.patient(uuid = patientUuid, assignedFacilityId = UUID.fromString("170049b2-9a97-4da4-a46c-d791751819fd"))
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        status = PatientStatus.Active,
+        assignedFacilityId = UUID.fromString("170049b2-9a97-4da4-a46c-d791751819fd")
+    )
     val patientAddress = TestData.patientAddress(patient.addressUuid)
     val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
     val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", Identifier.IdentifierType.BpPassport))
@@ -181,6 +211,9 @@ class PatientSummaryViewRendererTest {
     verify(ui).populatePatientProfile(patientSummaryProfile)
     verify(ui).showEditButton()
     verify(ui).showAssignedFacilityView()
+    verify(ui).hidePatientDiedStatus()
+    verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verifyNoMoreInteractions(ui)
   }
 
@@ -190,6 +223,7 @@ class PatientSummaryViewRendererTest {
     val patientUuid = UUID.fromString("873e001f-fdc7-4e27-a734-5c9f15b22cdc")
     val patient = TestData.patient(
         uuid = patientUuid,
+        status = PatientStatus.Active,
         assignedFacilityId = null
     )
     val patientAddress = TestData.patientAddress(patient.addressUuid)
@@ -217,6 +251,9 @@ class PatientSummaryViewRendererTest {
     verify(ui).populatePatientProfile(patientSummaryProfile)
     verify(ui).showEditButton()
     verify(ui).hideAssignedFacilityView()
+    verify(ui).hidePatientDiedStatus()
+    verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
     verifyNoMoreInteractions(ui)
   }
 
@@ -239,6 +276,498 @@ class PatientSummaryViewRendererTest {
     verify(ui).hideTeleconsultButton()
     verify(ui).hideDoneButton()
     verify(ui).showTeleconsultLogButton()
+    verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when patient is not dead, then hide patient died status view`() {
+    // given
+    val patientUuid = UUID.fromString("53223c27-405c-4bbf-87e7-0bb35207c955")
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        status = PatientStatus.Active
+    )
+    val patientAddress = TestData.patientAddress(patient.addressUuid)
+    val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
+    val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", Identifier.IdentifierType.BpPassport))
+    val bangladeshNationalId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", Identifier.IdentifierType.BangladeshNationalId))
+    val facility = TestData.facility(uuid = UUID.fromString("a8a541d3-7cc4-492b-92f3-4fac3e4b88f8"))
+
+    val patientSummaryProfile = PatientSummaryProfile(
+        patient = patient,
+        address = patientAddress,
+        phoneNumber = phoneNumber,
+        bpPassport = bpPassport,
+        alternativeId = bangladeshNationalId,
+        facility = facility
+    )
+
+    val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).populatePatientProfile(patientSummaryProfile)
+    verify(ui).showEditButton()
+    verify(ui).hideAssignedFacilityView()
+    verify(ui).hidePatientDiedStatus()
+    verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when patient is dead, then show patient died status view`() {
+    // given
+    val patientUuid = UUID.fromString("830a8adc-b4d1-4b30-8b22-e8ee2412693b")
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        status = PatientStatus.Dead
+    )
+    val patientAddress = TestData.patientAddress(patient.addressUuid)
+    val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
+    val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", Identifier.IdentifierType.BpPassport))
+    val bangladeshNationalId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", Identifier.IdentifierType.BangladeshNationalId))
+    val facility = TestData.facility(uuid = UUID.fromString("0dae915f-7a4f-458d-9434-10d783ec3f33"))
+
+    val patientSummaryProfile = PatientSummaryProfile(
+        patient = patient,
+        address = patientAddress,
+        phoneNumber = phoneNumber,
+        bpPassport = bpPassport,
+        alternativeId = bangladeshNationalId,
+        facility = facility
+    )
+
+    val model = defaultModel.patientSummaryProfileLoaded(patientSummaryProfile)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).populatePatientProfile(patientSummaryProfile)
+    verify(ui).showEditButton()
+    verify(ui).hideAssignedFacilityView()
+    verify(ui).showPatientDiedStatus()
+    verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when patient registration data is present and next appointment feature is enabled, then show the next appointment card`() {
+    // given
+    val modelWithPatientRegistrationData = defaultModel.patientRegistrationDataLoaded(hasPatientRegistrationData = true)
+    val uiRenderer = PatientSummaryViewRenderer(
+        ui = ui,
+        isNextAppointmentFeatureEnabled = true,
+        modelUpdateCallback = { /* no-op */ },
+        userClock = TestUserClock(LocalDate.parse("2018-01-01")),
+        cdssOverdueLimit = 2
+    )
+
+    // when
+    uiRenderer.render(modelWithPatientRegistrationData)
+
+    // then
+    verify(ui).showNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when patient registration data is present and next appointment feature is disabled, then hide the next appointment card`() {
+    // given
+    val modelWithPatientRegistrationData = defaultModel.patientRegistrationDataLoaded(hasPatientRegistrationData = true)
+    val uiRenderer = PatientSummaryViewRenderer(
+        ui = ui,
+        isNextAppointmentFeatureEnabled = false,
+        modelUpdateCallback = { /* no-op */ },
+        userClock = TestUserClock(LocalDate.parse("2018-01-01")),
+        cdssOverdueLimit = 2
+    )
+
+    // when
+    uiRenderer.render(modelWithPatientRegistrationData)
+
+    // then
+    verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when patient registration data is not present, then hide the next appointment card`() {
+    // given
+    val modelWithPatientRegistrationData = defaultModel
+        .patientRegistrationDataLoaded(hasPatientRegistrationData = false)
+
+    // when
+    uiRenderer.render(modelWithPatientRegistrationData)
+
+    // then
+    verify(ui).hideNextAppointmentCard()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when clinical decision support alert can be shown and newest BP entry is high and prescription drugs are not changed today, then show the clinical decision support view`() {
+    // given
+    val patientUuid = UUID.fromString("6274ca08-2432-43fe-ae04-35f623e5325c")
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        status = PatientStatus.Dead,
+        createdAt = Instant.parse("2017-12-30T00:00:00Z"),
+        updatedAt = Instant.parse("2017-12-30T00:00:00Z"),
+        recordedAt = Instant.parse("2017-12-30T00:00:00Z")
+    )
+    val patientAddress = TestData.patientAddress(patient.addressUuid)
+    val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
+    val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", Identifier.IdentifierType.BpPassport))
+    val bangladeshNationalId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", Identifier.IdentifierType.BangladeshNationalId))
+    val facility = TestData.facility(uuid = UUID.fromString("744ac1b1-8352-4793-876c-538fc1129239"))
+
+    val patientSummaryProfile = PatientSummaryProfile(
+        patient = patient,
+        address = patientAddress,
+        phoneNumber = phoneNumber,
+        bpPassport = bpPassport,
+        alternativeId = bangladeshNationalId,
+        facility = facility
+    )
+
+    val updatedModel = defaultModel
+        .patientRegistrationDataLoaded(hasPatientRegistrationData = true)
+        .currentFacilityLoaded(facility = facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile = patientSummaryProfile)
+        .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true, hasPrescribedDrugsChangedToday = false)
+
+    val uiRenderer = PatientSummaryViewRenderer(
+        ui = ui,
+        isNextAppointmentFeatureEnabled = false,
+        modelUpdateCallback = { /* no-op */ },
+        userClock = TestUserClock(LocalDate.parse("2018-01-01")),
+        cdssOverdueLimit = 2
+    )
+
+    // when
+    uiRenderer.render(updatedModel)
+
+    // then
+    verify(ui).populatePatientProfile(patientSummaryProfile)
+    verify(ui).showEditButton()
+    verify(ui).hideAssignedFacilityView()
+    verify(ui).showPatientDiedStatus()
+    verify(ui).hideDiabetesView()
+    verify(ui).hideTeleconsultButton()
+    verify(ui).showClinicalDecisionSupportAlert()
+    verify(ui).hideNextAppointmentCard()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when clinical decision support alerts can be shown and newest BP entry for the patient is high and prescription drugs are changed today, then hide the clinical decision support view`() {
+    // given
+    val patientUuid = UUID.fromString("6274ca08-2432-43fe-ae04-35f623e5325c")
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        status = PatientStatus.Dead,
+        createdAt = Instant.parse("2017-12-30T00:00:00Z"),
+        recordedAt = Instant.parse("2017-12-30T00:00:00Z"),
+        updatedAt = Instant.parse("2017-12-30T00:00:00Z")
+    )
+    val patientAddress = TestData.patientAddress(patient.addressUuid)
+    val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
+    val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", Identifier.IdentifierType.BpPassport))
+    val bangladeshNationalId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", Identifier.IdentifierType.BangladeshNationalId))
+    val facility = TestData.facility(uuid = UUID.fromString("744ac1b1-8352-4793-876c-538fc1129239"))
+
+    val patientSummaryProfile = PatientSummaryProfile(
+        patient = patient,
+        address = patientAddress,
+        phoneNumber = phoneNumber,
+        bpPassport = bpPassport,
+        alternativeId = bangladeshNationalId,
+        facility = facility
+    )
+
+    val updatedModel = defaultModel
+        .patientRegistrationDataLoaded(hasPatientRegistrationData = true)
+        .currentFacilityLoaded(facility = facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile = patientSummaryProfile)
+        .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true, hasPrescribedDrugsChangedToday = true)
+
+    val uiRenderer = PatientSummaryViewRenderer(
+        ui = ui,
+        isNextAppointmentFeatureEnabled = false,
+        modelUpdateCallback = { /* no-op */ },
+        userClock = TestUserClock(LocalDate.parse("2018-01-01")),
+        cdssOverdueLimit = 2
+    )
+
+    // when
+    uiRenderer.render(updatedModel)
+
+    // then
+    verify(ui).populatePatientProfile(patientSummaryProfile)
+    verify(ui).showEditButton()
+    verify(ui).hideAssignedFacilityView()
+    verify(ui).showPatientDiedStatus()
+    verify(ui).hideDiabetesView()
+    verify(ui).hideTeleconsultButton()
+    verify(ui).hideClinicalDecisionSupportAlert()
+    verify(ui).hideNextAppointmentCard()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when clinical decision support alerts can be shown and newest BP entry for the patient is not high, then hide the clinical decision support view`() {
+    // given
+    val patientUuid = UUID.fromString("6274ca08-2432-43fe-ae04-35f623e5325c")
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        status = PatientStatus.Dead,
+        createdAt = Instant.parse("2017-12-30T00:00:00Z"),
+        recordedAt = Instant.parse("2017-12-30T00:00:00Z"),
+        updatedAt = Instant.parse("2017-12-30T00:00:00Z")
+    )
+    val patientAddress = TestData.patientAddress(patient.addressUuid)
+    val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
+    val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", Identifier.IdentifierType.BpPassport))
+    val bangladeshNationalId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", Identifier.IdentifierType.BangladeshNationalId))
+    val facility = TestData.facility(uuid = UUID.fromString("744ac1b1-8352-4793-876c-538fc1129239"))
+
+    val patientSummaryProfile = PatientSummaryProfile(
+        patient = patient,
+        address = patientAddress,
+        phoneNumber = phoneNumber,
+        bpPassport = bpPassport,
+        alternativeId = bangladeshNationalId,
+        facility = facility
+    )
+
+    val updatedModel = defaultModel
+        .patientRegistrationDataLoaded(hasPatientRegistrationData = true)
+        .currentFacilityLoaded(facility = facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile = patientSummaryProfile)
+        .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = false, hasPrescribedDrugsChangedToday = true)
+
+    val uiRenderer = PatientSummaryViewRenderer(
+        ui = ui,
+        isNextAppointmentFeatureEnabled = false,
+        modelUpdateCallback = { /* no-op */ },
+        userClock = TestUserClock(LocalDate.parse("2018-01-01")),
+        cdssOverdueLimit = 2
+    )
+
+    // when
+    uiRenderer.render(updatedModel)
+
+    // then
+    verify(ui).populatePatientProfile(patientSummaryProfile)
+    verify(ui).showEditButton()
+    verify(ui).hideAssignedFacilityView()
+    verify(ui).showPatientDiedStatus()
+    verify(ui).hideDiabetesView()
+    verify(ui).hideTeleconsultButton()
+    verify(ui).hideClinicalDecisionSupportAlert()
+    verify(ui).hideNextAppointmentCard()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when clinical decision support alert cannot be shown, then hide the clinical decision support view without animation`() {
+    // given
+    val updatedModel = defaultModel
+        .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = false, hasPrescribedDrugsChangedToday = true)
+
+    // when
+    uiRenderer.render(updatedModel)
+
+    // then
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
+    verify(ui).hideNextAppointmentCard()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when patient is registered today and newest bp entry is high, then don't show clinical decision alert`() {
+    // given
+    val patientUuid = UUID.fromString("6fdf088e-f6aa-40e9-9cc2-22e197b83470")
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        status = PatientStatus.Active,
+        createdAt = Instant.parse("2018-01-01T00:00:00Z"),
+        recordedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+    val patientAddress = TestData.patientAddress(patient.addressUuid)
+    val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
+    val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", Identifier.IdentifierType.BpPassport))
+    val bangladeshNationalId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", Identifier.IdentifierType.BangladeshNationalId))
+    val facility = TestData.facility(uuid = UUID.fromString("fe559cb0-f76c-4f34-a3c7-4e696ae2883c"))
+
+    val patientSummaryProfile = PatientSummaryProfile(
+        patient = patient,
+        address = patientAddress,
+        phoneNumber = phoneNumber,
+        bpPassport = bpPassport,
+        alternativeId = bangladeshNationalId,
+        facility = facility
+    )
+
+    val model = defaultModel
+        .patientRegistrationDataLoaded(hasPatientRegistrationData = true)
+        .currentFacilityLoaded(facility = facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+        .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true, hasPrescribedDrugsChangedToday = true)
+
+    val uiRenderer = PatientSummaryViewRenderer(
+        ui = ui,
+        isNextAppointmentFeatureEnabled = false,
+        modelUpdateCallback = { /* no-op */ },
+        userClock = TestUserClock(LocalDate.parse("2018-01-01")),
+        cdssOverdueLimit = 2
+    )
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).populatePatientProfile(patientSummaryProfile)
+    verify(ui).showEditButton()
+    verify(ui).hideAssignedFacilityView()
+    verify(ui).hidePatientDiedStatus()
+    verify(ui).hideNextAppointmentCard()
+    verify(ui).hideDiabetesView()
+    verify(ui).hideTeleconsultButton()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when appointment is not over cdss overdue limit and clinical decision alert can be shown, then render clinical decision support`() {
+    // given
+    val patientUuid = UUID.fromString("6274ca08-2432-43fe-ae04-35f623e5325c")
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        status = PatientStatus.Dead,
+        createdAt = Instant.parse("2017-12-30T00:00:00Z"),
+        updatedAt = Instant.parse("2017-12-30T00:00:00Z"),
+        recordedAt = Instant.parse("2017-12-30T00:00:00Z")
+    )
+    val patientAddress = TestData.patientAddress(patient.addressUuid)
+    val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
+    val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", Identifier.IdentifierType.BpPassport))
+    val bangladeshNationalId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", Identifier.IdentifierType.BangladeshNationalId))
+    val facility = TestData.facility(uuid = UUID.fromString("744ac1b1-8352-4793-876c-538fc1129239"))
+
+    val patientSummaryProfile = PatientSummaryProfile(
+        patient = patient,
+        address = patientAddress,
+        phoneNumber = phoneNumber,
+        bpPassport = bpPassport,
+        alternativeId = bangladeshNationalId,
+        facility = facility
+    )
+
+    val appointment = TestData.appointment(
+        uuid = UUID.fromString("fd7d65be-05e4-4ab4-869f-ba9d96f7c556"),
+        scheduledDate = LocalDate.parse("2018-01-01")
+    )
+
+    val updatedModel = defaultModel
+        .patientRegistrationDataLoaded(hasPatientRegistrationData = true)
+        .currentFacilityLoaded(facility = facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile = patientSummaryProfile)
+        .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true, hasPrescribedDrugsChangedToday = false)
+        .scheduledAppointmentLoaded(appointment)
+
+    val uiRenderer = PatientSummaryViewRenderer(
+        ui = ui,
+        isNextAppointmentFeatureEnabled = false,
+        modelUpdateCallback = { /* no-op */ },
+        userClock = TestUserClock(LocalDate.parse("2018-01-01")),
+        cdssOverdueLimit = 2
+    )
+
+    // when
+    uiRenderer.render(updatedModel)
+
+    // then
+    verify(ui).populatePatientProfile(patientSummaryProfile)
+    verify(ui).showEditButton()
+    verify(ui).hideAssignedFacilityView()
+    verify(ui).showPatientDiedStatus()
+    verify(ui).hideDiabetesView()
+    verify(ui).hideTeleconsultButton()
+    verify(ui).showClinicalDecisionSupportAlert()
+    verify(ui).hideNextAppointmentCard()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when appointment is over the cdss overdue limit, then don't show the cdss alert`() {
+    // given
+    val patientUuid = UUID.fromString("6274ca08-2432-43fe-ae04-35f623e5325c")
+    val patient = TestData.patient(
+        uuid = patientUuid,
+        status = PatientStatus.Dead,
+        createdAt = Instant.parse("2017-12-30T00:00:00Z"),
+        updatedAt = Instant.parse("2017-12-30T00:00:00Z"),
+        recordedAt = Instant.parse("2017-12-30T00:00:00Z")
+    )
+    val patientAddress = TestData.patientAddress(patient.addressUuid)
+    val phoneNumber = TestData.patientPhoneNumber(patientUuid = patientUuid)
+    val bpPassport = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("526 780", Identifier.IdentifierType.BpPassport))
+    val bangladeshNationalId = TestData.businessId(patientUuid = patientUuid, identifier = Identifier("123456789012", Identifier.IdentifierType.BangladeshNationalId))
+    val facility = TestData.facility(uuid = UUID.fromString("744ac1b1-8352-4793-876c-538fc1129239"))
+
+    val patientSummaryProfile = PatientSummaryProfile(
+        patient = patient,
+        address = patientAddress,
+        phoneNumber = phoneNumber,
+        bpPassport = bpPassport,
+        alternativeId = bangladeshNationalId,
+        facility = facility
+    )
+
+    val appointment = TestData.appointment(
+        uuid = UUID.fromString("fd7d65be-05e4-4ab4-869f-ba9d96f7c556"),
+        scheduledDate = LocalDate.parse("2018-01-01")
+    )
+
+    val updatedModel = defaultModel
+        .patientRegistrationDataLoaded(hasPatientRegistrationData = true)
+        .currentFacilityLoaded(facility = facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile = patientSummaryProfile)
+        .clinicalDecisionSupportInfoLoaded(isNewestBpEntryHigh = true, hasPrescribedDrugsChangedToday = false)
+        .scheduledAppointmentLoaded(appointment)
+
+    val uiRenderer = PatientSummaryViewRenderer(
+        ui = ui,
+        isNextAppointmentFeatureEnabled = false,
+        modelUpdateCallback = { /* no-op */ },
+        userClock = TestUserClock(LocalDate.parse("2018-01-08")),
+        cdssOverdueLimit = 2
+    )
+
+    // when
+    uiRenderer.render(updatedModel)
+
+    // then
+    verify(ui).populatePatientProfile(patientSummaryProfile)
+    verify(ui).showEditButton()
+    verify(ui).hideAssignedFacilityView()
+    verify(ui).showPatientDiedStatus()
+    verify(ui).hideDiabetesView()
+    verify(ui).hideTeleconsultButton()
+    verify(ui).hideClinicalDecisionSupportAlertWithoutAnimation()
+    verify(ui).hideNextAppointmentCard()
     verifyNoMoreInteractions(ui)
   }
 }

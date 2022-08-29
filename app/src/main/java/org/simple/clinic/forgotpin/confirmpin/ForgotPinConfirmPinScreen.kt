@@ -1,32 +1,40 @@
 package org.simple.clinic.forgotpin.confirmpin
 
 import android.content.Context
-import android.os.Parcelable
-import android.util.AttributeSet
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.View.GONE
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.RelativeLayout
 import androidx.annotation.StringRes
 import com.jakewharton.rxbinding3.widget.editorActions
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.cast
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenForgotpinConfirmpinBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.home.HomeScreenKey
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
-import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import org.simple.clinic.widgets.textChanges
 import javax.inject.Inject
 
-class ForgotPinConfirmPinScreen(
-    context: Context,
-    attributeSet: AttributeSet?
-) : RelativeLayout(context, attributeSet), ForgotPinConfirmPinUi, ForgotPinConfirmPinUiActions {
+class ForgotPinConfirmPinScreen : BaseScreen<
+    ForgotPinConfirmPinScreen.Key,
+    ScreenForgotpinConfirmpinBinding,
+    ForgotPinConfirmPinModel,
+    ForgotPinConfirmPinEvent,
+    ForgotPinConfirmPinEffect,
+    ForgotPinConfirmPinViewEffect>(), ForgotPinConfirmPinUi, ForgotPinConfirmPinUiActions {
 
   @Inject
   lateinit var effectHandlerFactory: ForgotPinConfirmPinEffectHandler.Factory
@@ -34,87 +42,66 @@ class ForgotPinConfirmPinScreen(
   @Inject
   lateinit var router: Router
 
-  @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
-
-  private var binding: ScreenForgotpinConfirmpinBinding? = null
-
   private val pinEntryEditText
-    get() = binding!!.pinEntryEditText
+    get() = binding.pinEntryEditText
 
   private val backButton
-    get() = binding!!.backButton
+    get() = binding.backButton
 
   private val userNameTextView
-    get() = binding!!.userNameTextView
+    get() = binding.userNameTextView
 
   private val facilityNameTextView
-    get() = binding!!.facilityNameTextView
+    get() = binding.facilityNameTextView
 
   private val pinErrorTextView
-    get() = binding!!.pinErrorTextView
+    get() = binding.pinErrorTextView
 
   private val pinEntryHintTextView
-    get() = binding!!.pinEntryHintTextView
+    get() = binding.pinEntryHintTextView
 
   private val progressBar
-    get() = binding!!.progressBar
+    get() = binding.progressBar
 
   private val pinEntryContainer
-    get() = binding!!.pinEntryContainer
+    get() = binding.pinEntryContainer
 
-  private val events by unsafeLazy {
-    Observable
+  override fun defaultModel() = ForgotPinConfirmPinModel.create(previousPin = screenKey.enteredPin)
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenForgotpinConfirmpinBinding.inflate(layoutInflater, container, false)
+
+  override fun events(): Observable<ForgotPinConfirmPinEvent> {
+    return Observable
         .merge(
             pinSubmits(),
             pinTextChanges()
         )
         .compose(ReportAnalyticsEvents())
+        .cast()
   }
 
-  private val delegate by unsafeLazy {
-    val screenKey = screenKeyProvider.keyFor<ForgotPinConfirmPinScreenKey>(this)
-    val uiRenderer = ForgotPinConfirmPinUiRenderer(this)
+  override fun createUpdate() = ForgotPinConfirmPinUpdate()
 
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = ForgotPinConfirmPinModel.create(previousPin = screenKey.enteredPin),
-        init = ForgotPinConfirmPinInit(),
-        update = ForgotPinConfirmPinUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<ForgotPinConfirmPinViewEffect>) = effectHandlerFactory
+      .create(viewEffectsConsumer = viewEffectsConsumer)
+      .build()
 
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
+  override fun createInit() = ForgotPinConfirmPinInit()
 
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    binding = null
-    super.onDetachedFromWindow()
-  }
+  override fun uiRenderer() = ForgotPinConfirmPinUiRenderer(this)
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
+  override fun viewEffectHandler() = ForgotPinConfirmPinViewEffectHandler(uiActions = this)
 
-    binding = ScreenForgotpinConfirmpinBinding.bind(this)
-
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     pinEntryEditText.showKeyboard()
-
     backButton.setOnClickListener { goBack() }
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun pinSubmits() =
@@ -158,7 +145,7 @@ class ForgotPinConfirmPinScreen(
   override fun showProgress() {
     progressBar.visibility = VISIBLE
     pinEntryContainer.visibility = INVISIBLE
-    hideKeyboard()
+    pinEntryContainer.hideKeyboard()
   }
 
   private fun hideProgress() {
@@ -180,5 +167,13 @@ class ForgotPinConfirmPinScreen(
 
   interface Injector {
     fun inject(target: ForgotPinConfirmPinScreen)
+  }
+
+  @Parcelize
+  data class Key(
+      val enteredPin: String,
+      override val analyticsName: String = "Forgot PIN Confirm PIN"
+  ) : ScreenKey() {
+    override fun instantiateFragment() = ForgotPinConfirmPinScreen()
   }
 }

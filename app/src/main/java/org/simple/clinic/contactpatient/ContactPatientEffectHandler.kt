@@ -1,5 +1,6 @@
 package org.simple.clinic.contactpatient
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -9,8 +10,8 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.overdue.callresult.CallResultRepository
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.phone.Dialer
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.time.LocalDate
@@ -18,15 +19,20 @@ import java.time.LocalDate
 class ContactPatientEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val appointmentRepository: AppointmentRepository,
-    private val clock: UserClock,
+    private val createReminderForAppointment: CreateReminderForAppointment,
+    private val recordPatientAgreedToVisit: RecordPatientAgreedToVisit,
+    private val userClock: UserClock,
     private val schedulers: SchedulersProvider,
     private val currentFacility: Lazy<Facility>,
-    @Assisted private val uiActions: ContactPatientUiActions
+    private val callResultRepository: CallResultRepository,
+    @Assisted private val viewEffectsConsumer: Consumer<ContactPatientViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: ContactPatientUiActions): ContactPatientEffectHandler
+    fun create(
+        viewEffectsConsumer: Consumer<ContactPatientViewEffect>
+    ): ContactPatientEffectHandler
   }
 
   fun build(): ObservableTransformer<ContactPatientEffect, ContactPatientEvent> {
@@ -34,17 +40,21 @@ class ContactPatientEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<ContactPatientEffect, ContactPatientEvent>()
         .addTransformer(LoadContactPatientProfile::class.java, loadContactPatientProfile(schedulers.io()))
         .addTransformer(LoadLatestOverdueAppointment::class.java, loadLatestOverdueAppointment(schedulers.io()))
-        .addConsumer(DirectCallWithAutomaticDialer::class.java, { uiActions.directlyCallPatient(it.patientPhoneNumber, Dialer.Automatic) }, schedulers.ui())
-        .addConsumer(DirectCallWithManualDialer::class.java, { uiActions.directlyCallPatient(it.patientPhoneNumber, Dialer.Manual) }, schedulers.ui())
-        .addConsumer(MaskedCallWithAutomaticDialer::class.java, { uiActions.maskedCallPatient(it.patientPhoneNumber, it.proxyPhoneNumber, Dialer.Automatic) }, schedulers.ui())
-        .addConsumer(MaskedCallWithManualDialer::class.java, { uiActions.maskedCallPatient(it.patientPhoneNumber, it.proxyPhoneNumber, Dialer.Manual) }, schedulers.ui())
-        .addAction(CloseScreen::class.java, uiActions::closeSheet, schedulers.ui())
         .addTransformer(MarkPatientAsAgreedToVisit::class.java, markPatientAsAgreedToVisit(schedulers.io()))
-        .addConsumer(ShowManualDatePicker::class.java, { uiActions.showManualDatePicker(it.preselectedDate, it.datePickerBounds) }, schedulers.ui())
         .addTransformer(SetReminderForAppointment::class.java, setReminderForAppointment(schedulers.io()))
-        .addConsumer(OpenRemoveOverdueAppointmentScreen::class.java, ::openRemoveOverdueAppointmentScreen, schedulers.ui())
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
+        .addTransformer(LoadCallResultForAppointment::class.java, loadCallResultForAppointment())
+        .addConsumer(ContactPatientViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
+  }
+
+  private fun loadCallResultForAppointment(): ObservableTransformer<LoadCallResultForAppointment, ContactPatientEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulers.io())
+          .map { callResultRepository.callResultForAppointment(it.appointmentId) }
+          .map(::CallResultForAppointmentLoaded)
+    }
   }
 
   private fun loadCurrentFacility(): ObservableTransformer<LoadCurrentFacility, ContactPatientEvent> {
@@ -54,10 +64,6 @@ class ContactPatientEffectHandler @AssistedInject constructor(
           .map { currentFacility.get() }
           .map(::CurrentFacilityLoaded)
     }
-  }
-
-  private fun openRemoveOverdueAppointmentScreen(effect: OpenRemoveOverdueAppointmentScreen) {
-    uiActions.openRemoveOverdueAppointmentScreen(effect.appointmentId, effect.patientId)
   }
 
   private fun loadContactPatientProfile(
@@ -78,7 +84,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .map { appointmentRepository.latestOverdueAppointmentForPatient(it.patientUuid, LocalDate.now(clock)) }
+          .map { appointmentRepository.latestOverdueAppointmentForPatient(it.patientUuid, LocalDate.now(userClock)) }
           .map(::OverdueAppointmentLoaded)
     }
   }
@@ -89,7 +95,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .doOnNext { appointmentRepository.markAsAgreedToVisit(it.appointmentUuid, clock) }
+          .doOnNext { recordPatientAgreedToVisit.execute(it.appointment) }
           .map { PatientMarkedAsAgreedToVisit }
     }
   }
@@ -100,7 +106,7 @@ class ContactPatientEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .doOnNext { (appointmentUuid, reminderDate) -> appointmentRepository.createReminder(appointmentUuid, reminderDate) }
+          .doOnNext { (appointment, reminderDate) -> createReminderForAppointment.execute(appointment, reminderDate) }
           .map { ReminderSetForAppointment }
     }
   }

@@ -9,7 +9,7 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.SyncStatus
@@ -17,9 +17,10 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncApi
+import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Rules
+import org.simple.sharedTestCode.util.Rules
 import org.simple.clinic.util.unsafeLazy
 import java.util.Optional
 import java.util.UUID
@@ -51,6 +52,7 @@ class PatientSyncIntegrationTest {
   val ruleChain: RuleChain = Rules
       .global()
       .around(ServerAuthenticationRule())
+      .around(SaveDatabaseRule())
 
   private lateinit var patientSync: PatientSync
 
@@ -81,11 +83,6 @@ class PatientSyncIntegrationTest {
     )
   }
 
-  @After
-  fun tearDown() {
-    resetLocalData()
-  }
-
   private fun resetLocalData() {
     clearPatientData()
     lastPullToken.delete()
@@ -108,14 +105,14 @@ class PatientSyncIntegrationTest {
       TestData.patientProfile(
           patientUuid = patientUuid,
           syncStatus = SyncStatus.PENDING,
-          patientRegisteredFacilityId = currentFacilityUuid,
-          patientAssignedFacilityId = currentFacilityUuid,
           generateBusinessId = false,
           businessId = TestData.businessId(
               patientUuid = patientUuid,
               identifier = identifier,
               identifierSearchHelp = BpPassport.shortCode(identifier)
-          )
+          ),
+          patientRegisteredFacilityId = currentFacilityUuid,
+          patientAssignedFacilityId = currentFacilityUuid
       )
     }
     assertThat(records).containsNoDuplicates()
@@ -145,14 +142,14 @@ class PatientSyncIntegrationTest {
       TestData.patientProfile(
           patientUuid = patientUuid,
           syncStatus = SyncStatus.PENDING,
-          patientRegisteredFacilityId = currentFacilityUuid,
-          patientAssignedFacilityId = currentFacilityUuid,
           generateBusinessId = false,
           businessId = TestData.businessId(
               patientUuid = patientUuid,
               identifier = identifier,
               identifierSearchHelp = BpPassport.shortCode(identifier)
-          )
+          ),
+          patientRegisteredFacilityId = currentFacilityUuid,
+          patientAssignedFacilityId = currentFacilityUuid
       )
     }
     assertThat(records).containsNoDuplicates()

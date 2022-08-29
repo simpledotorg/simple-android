@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:paddingHorizontal="@dimen/spacing_24"
+  android:paddingTop="@dimen/spacing_24"
+  android:paddingBottom="@dimen/spacing_8"
+  tools:background="?attr/colorSurface">
+
+  <com.google.android.material.progressindicator.CircularProgressIndicator
+    android:id="@+id/progressIndicator"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/spacing_64"
+    android:indeterminate="true"
+    android:visibility="gone"
+    app:layout_constraintBottom_toTopOf="@id/buttonBar"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:visibility="visible" />
+
+  <com.google.android.material.textview.MaterialTextView
+    android:id="@+id/dialogTitleTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:textAppearance="?attr/textAppearanceHeadline6"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:text="Download as" />
+
+  <!-- Applying negative margin, since radio button has a padding which cannot be adjusted
+   and we need to align start of radio button with title-->
+  <RadioGroup
+    android:id="@+id/overdueDownloadFormatRadioGroup"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="-4dp"
+    android:layout_marginTop="@dimen/spacing_16"
+    android:layout_marginBottom="@dimen/spacing_24"
+    app:layout_constraintBottom_toTopOf="@id/buttonBar"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/dialogTitleTextView">
+
+    <com.google.android.material.radiobutton.MaterialRadioButton
+      android:id="@+id/downloadAsPdfRadioButton"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="@dimen/spacing_8"
+      android:text="@string/select_overdue_download_format_dialog_radio_button_pdf"
+      android:textAppearance="?attr/textAppearanceBody0"
+      android:textColor="?attr/colorOnSurface"
+      tools:checked="true" />
+
+    <com.google.android.material.radiobutton.MaterialRadioButton
+      android:id="@+id/downloadAsCsvRadioButton"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="@dimen/spacing_8"
+      android:text="@string/select_overdue_download_format_dialog_radio_button_spreadsheet"
+      android:textAppearance="?attr/textAppearanceBody0"
+      android:textColor="?attr/colorOnSurface" />
+  </RadioGroup>
+
+  <LinearLayout
+    android:id="@+id/buttonBar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintVertical_bias="1">
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/cancelButton"
+      style="@style/Widget.Simple.Button.TextButton.Dialog.Flush"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/select_overdue_download_format_dialog_action_negative"
+      android:textColor="@color/color_on_surface_67" />
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/downloadOrShareButton"
+      style="@style/Widget.Simple.Button.TextButton.Dialog.Flush"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_8"
+      tools:text="Download" />
+
+  </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

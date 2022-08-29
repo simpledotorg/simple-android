@@ -2,14 +2,19 @@ package org.simple.clinic.contactpatient
 
 import org.simple.clinic.contactpatient.UiMode.CallPatient
 import org.simple.clinic.contactpatient.UiMode.SetAppointmentReminder
-import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
+import org.simple.clinic.overdue.callresult.CallResult
+import org.simple.clinic.overdue.callresult.Outcome.AgreedToVisit
+import org.simple.clinic.overdue.callresult.Outcome.RemindToCallLater
+import org.simple.clinic.overdue.callresult.Outcome.RemovedFromOverdueList
+import org.simple.clinic.overdue.callresult.Outcome.Unknown
+import org.simple.clinic.overdue.displayTextRes
 import org.simple.clinic.patient.PatientAddress
-import org.simple.clinic.util.ParcelableOptional
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.daysTill
+import org.simple.clinic.util.toLocalDateAtZone
 import java.time.LocalDate
 
 class ContactPatientUiRenderer(
@@ -20,21 +25,43 @@ class ContactPatientUiRenderer(
   override fun render(model: ContactPatientModel) {
     if (!model.isPatientContactInfoLoaded) {
       ui.showProgress()
-      return
+    } else {
+      ui.hideProgress()
+      renderContactPatientUi(model)
+      renderCallResultOutcome(model)
     }
+  }
 
-    ui.hideProgress()
+  private fun renderContactPatientUi(model: ContactPatientModel) {
     when (model.uiMode) {
-      CallPatient -> renderCallPatientViewBasedOnFeatureFlag(model)
+      CallPatient -> renderCallPatientView(model)
       SetAppointmentReminder -> renderSetAppointmentReminderView(model)
     }
   }
 
-  private fun renderCallPatientViewBasedOnFeatureFlag(model: ContactPatientModel) {
-    if (model.overdueListChangesFeatureEnabled) {
-      renderCallPatientView(model)
+  private fun renderCallResultOutcome(model: ContactPatientModel) {
+    if (model.hasCallResult) {
+      val callResult = model.callResult!!.get()
+      ui.showCallResult()
+      setupCallResultOutcomeUI(model, callResult)
+      ui.setCallResultUpdatedAtDate(callResult.timestamps.updatedAt.toLocalDateAtZone(clock.zone))
     } else {
-      renderCallPatientView_Old(model)
+      ui.hideCallResult()
+    }
+  }
+
+  private fun setupCallResultOutcomeUI(model: ContactPatientModel, callResult: CallResult) {
+    when (callResult.outcome) {
+      AgreedToVisit -> ui.setupAgreedToVisitCallResultOutcome()
+      RemindToCallLater -> setupRemindToCallLaterCallResultOutcome(model.appointment.remindOn)
+      RemovedFromOverdueList -> ui.setupRemovedFromListCallResultOutcome(callResult.removeReason!!.displayTextRes)
+      is Unknown -> {}
+    }
+  }
+
+  private fun setupRemindToCallLaterCallResultOutcome(remindOn: LocalDate?) {
+    if (remindOn != null) {
+      ui.setupRemindToCallLaterCallResultOutcome(remindOn)
     }
   }
 
@@ -45,64 +72,78 @@ class ContactPatientUiRenderer(
     ui.switchToSetAppointmentReminderView()
   }
 
-  private fun renderCallPatientView_Old(model: ContactPatientModel) {
-    if (model.hasLoadedPatientProfile) {
-      renderPatientProfile_Old(model.patientProfile!!)
-    }
-
-    if (model.hasLoadedAppointment) {
-      toggleCallResultSection(model.appointment!!)
-    }
-
-    if (model.secureCallingFeatureEnabled) {
-      ui.showSecureCallUi_Old()
-    } else {
-      ui.hideSecureCallUi_Old()
-    }
-
-    ui.switchToCallPatientView_Old()
-  }
-
   private fun renderCallPatientView(model: ContactPatientModel) {
     if (model.hasLoadedPatientProfile) {
       renderPatientProfile(model.patientProfile!!)
     }
 
     if (model.hasRegisteredFacility && model.hasCurrentFacility) {
-      renderPatientFacilityLabel(model.appointmentIsInRegisteredFacility)
+      renderPatientFacilityLabel(model.patientIsAtRegisteredFacility)
     }
 
-    if (model.patientProfileHasPhoneNumber && model.isAppointmentPresent.not()) {
-      loadPatientWithPhoneNumber()
-      loadSecureCallingUi(model)
-    } else if (model.patientProfileHasPhoneNumber && model.isAppointmentPresent) {
-      showPatientCallResult()
-      loadSecureCallingUi(model)
-    } else if (!model.patientProfileHasPhoneNumber && model.isAppointmentPresent) {
-      ui.showPatientWithNoPhoneNumberUi()
-      ui.hidePatientWithPhoneNumberUi()
-      ui.setResultLabelText()
-      ui.showPatientWithNoPhoneNumberResults()
-    } else {
-      ui.showPatientWithNoPhoneNumberUi()
-      ui.hidePatientWithPhoneNumberUi()
-      ui.setResultLabelText()
-    }
+    renderPhoneNumberAndCallResults(model)
 
     ui.switchToCallPatientView()
   }
 
-  private fun showPatientCallResult() {
-    ui.showPatientWithCallResultUi()
-    ui.setResultOfCallLabelText()
-    ui.showPatientWithPhoneNumberUi()
-    ui.hidePatientWithNoPhoneNumberUi()
+  private fun renderPhoneNumberAndCallResults(model: ContactPatientModel) {
+    when {
+      model.patientProfileHasPhoneNumber && model.hasPatientDied -> renderDeadPatientWithPhoneNumber(model.secureCallingFeatureEnabled)
+      model.patientProfileHasPhoneNumber && !model.isOverdueAppointmentPresent -> renderPatientWithPhoneNumberAndNoAppointment(model.secureCallingFeatureEnabled)
+      model.patientProfileHasPhoneNumber && model.isOverdueAppointmentPresent -> renderPatientWithPhoneNumberAndAppointment(model.secureCallingFeatureEnabled)
+      !model.patientProfileHasPhoneNumber && model.isOverdueAppointmentPresent -> renderPatientWithNoPhoneNumberAndWithAppointment()
+      else -> renderPatientWithoutPhoneNumberAndAppointment()
+    }
   }
 
-  private fun loadPatientWithPhoneNumber() {
+  private fun renderDeadPatientWithPhoneNumber(isSecureCallingEnabled: Boolean) {
     ui.showPatientWithPhoneNumberUi()
     ui.hidePatientWithNoPhoneNumberUi()
-    ui.hidePatientWithCallResultUi()
+    ui.hidePatientWithPhoneNumberCallResults()
+    ui.showDeadPatientStatus()
+    renderSecureCalling(isSecureCallingEnabled)
+  }
+
+  private fun renderPatientWithoutPhoneNumberAndAppointment() {
+    ui.showPatientWithNoPhoneNumberUi()
+    ui.hidePatientWithPhoneNumberUi()
+    ui.setResultLabelText()
+    ui.hideDeadPatientStatus()
+  }
+
+  private fun renderPatientWithNoPhoneNumberAndWithAppointment() {
+    ui.showPatientWithNoPhoneNumberUi()
+    ui.hidePatientWithPhoneNumberUi()
+    ui.showPatientWithNoPhoneNumberResults()
+    ui.setResultLabelText()
+    ui.hideDeadPatientStatus()
+  }
+
+  private fun renderPatientWithPhoneNumberAndAppointment(isSecureCallingEnabled: Boolean) {
+    ui.showPatientWithPhoneNumberUi()
+    ui.showPatientWithPhoneNumberCallResults()
+    ui.setResultOfCallLabelText()
+    ui.hidePatientWithNoPhoneNumberUi()
+    ui.hideDeadPatientStatus()
+    renderSecureCalling(isSecureCallingEnabled)
+  }
+
+  private fun renderPatientWithPhoneNumberAndNoAppointment(isSecureCallingEnabled: Boolean) {
+    ui.showPatientWithPhoneNumberUi()
+    ui.hidePatientWithNoPhoneNumberUi()
+    ui.hidePatientWithPhoneNumberCallResults()
+    ui.hideDeadPatientStatus()
+    renderSecureCalling(isSecureCallingEnabled)
+  }
+
+  private fun renderSecureCalling(isSecureCallingEnabled: Boolean) {
+    if (isSecureCallingEnabled) {
+      ui.showSecureCallUi()
+      ui.showNormalCallButtonText()
+    } else {
+      ui.hideSecureCallUi()
+      ui.showCallButtonText()
+    }
   }
 
   private fun renderPatientFacilityLabel(appointmentIsInRegisteredFacility: Boolean) {
@@ -110,14 +151,6 @@ class ContactPatientUiRenderer(
       ui.setRegisterAtLabelText()
     } else {
       ui.setTransferredFromLabelText()
-    }
-  }
-
-  private fun loadSecureCallingUi(model: ContactPatientModel) {
-    if (model.secureCallingFeatureEnabled) {
-      ui.showSecureCallUi()
-    } else {
-      ui.hideSecureCallUi()
     }
   }
 
@@ -138,17 +171,11 @@ class ContactPatientUiRenderer(
     }
   }
 
-  private fun renderSelectedAppointmentDate(
-      model: ContactPatientModel
-  ) {
-    val exactlyMatchingReminderPeriod = findReminderPeriodExactlyMatchingDate(model.potentialAppointments, model.selectedAppointmentDate)
-    val selectedReminderPeriod = exactlyMatchingReminderPeriod
-        ?: daysUntilTodayFrom(model.selectedAppointmentDate)
+  private fun renderSelectedAppointmentDate(model: ContactPatientModel) {
+    val exactlyMatchingReminderPeriod = timeToAppointmentForDate(model.potentialAppointments, model.selectedAppointmentDate)
+    val selectedAppointmentReminderPeriod = exactlyMatchingReminderPeriod ?: daysUntilTodayFrom(model.selectedAppointmentDate)
 
-    ui.renderSelectedAppointmentDate(
-        selectedReminderPeriod,
-        model.selectedAppointmentDate
-    )
+    ui.renderSelectedAppointmentDate(selectedAppointmentReminderPeriod, model.selectedAppointmentDate)
   }
 
   private fun daysUntilTodayFrom(date: LocalDate): TimeToAppointment.Days {
@@ -156,37 +183,14 @@ class ContactPatientUiRenderer(
     return TimeToAppointment.Days(today daysTill date)
   }
 
-  private fun findReminderPeriodExactlyMatchingDate(
+  private fun timeToAppointmentForDate(
       potentialAppointmentDates: List<PotentialAppointmentDate>,
       date: LocalDate
   ): TimeToAppointment? {
     return potentialAppointmentDates.firstOrNull { it.scheduledFor == date }?.timeToAppointment
   }
 
-  private fun toggleCallResultSection(appointment: ParcelableOptional<OverdueAppointment>) {
-    if (appointment.isEmpty()) {
-      ui.hideCallResultSection_Old()
-    } else {
-      ui.showCallResultSection_Old()
-    }
-  }
-
-  private fun renderPatientProfile_Old(
-      patientProfile: ContactPatientProfile
-  ) {
-    val patientAge = patientProfile.patient.ageDetails.estimateAge(clock)
-
-    ui.renderPatientDetails_Old(
-        name = patientProfile.patient.fullName,
-        gender = patientProfile.patient.gender,
-        age = patientAge,
-        phoneNumber = patientProfile.phoneNumbers.first().number
-    )
-  }
-
-  private fun renderPatientProfile(
-      patientProfile: ContactPatientProfile
-  ) {
+  private fun renderPatientProfile(patientProfile: ContactPatientProfile) {
     val patientAge = patientProfile.patient.ageDetails.estimateAge(clock)
 
     ui.renderPatientDetails(PatientDetails(

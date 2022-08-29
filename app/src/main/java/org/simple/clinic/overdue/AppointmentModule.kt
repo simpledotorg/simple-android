@@ -6,9 +6,11 @@ import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.home.overdue.OverdueAppointment
+import org.simple.clinic.home.overdue.OverdueAppointment_Old
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Months
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
+import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.util.preference.StringPreferenceConverter
 import org.simple.clinic.util.preference.getOptional
 import retrofit2.Retrofit
@@ -36,8 +38,13 @@ class AppointmentModule {
   }
 
   @Provides
-  fun overdueAppointmentDao(appDatabase: AppDatabase): OverdueAppointment.RoomDao {
+  fun overdueAppointmentDao(appDatabase: AppDatabase): OverdueAppointment_Old.RoomDao {
     return appDatabase.overdueAppointmentDao()
+  }
+
+  @Provides
+  fun overdueAppointmentDaoNew(appDatabase: AppDatabase): OverdueAppointment.RoomDao {
+    return appDatabase.overdueAppointmentNewDao()
   }
 
   @Provides
@@ -129,4 +136,7 @@ class AppointmentModule {
         Weeks(12)
     )
   }
+
+  @Provides
+  fun providePendingAppointmentsConfig(configReader: ConfigReader) = PendingAppointmentsConfig.read(configReader)
 }

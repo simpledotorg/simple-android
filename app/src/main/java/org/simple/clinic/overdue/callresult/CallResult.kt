@@ -1,5 +1,6 @@
 package org.simple.clinic.overdue.callresult
 
+import android.os.Parcelable
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Entity
@@ -8,14 +9,17 @@ import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Observable
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.user.User
 import org.simple.clinic.util.UtcClock
+import java.util.Optional
 import java.util.UUID
 
+@Parcelize
 @Entity(tableName = "CallResult")
 data class CallResult(
 
@@ -34,7 +38,7 @@ data class CallResult(
     val timestamps: Timestamps,
 
     val syncStatus: SyncStatus
-) {
+) : Parcelable {
 
   companion object {
     fun agreedToVisit(
@@ -127,6 +131,16 @@ data class CallResult(
     fun countWithStatus(syncStatus: SyncStatus): Observable<Int>
 
     @Query("""
+      SELECT * 
+      FROM CallResult
+      WHERE appointmentId = :appointmentUUID
+      ORDER BY createdAt DESC LIMIT 1
+    """)
+    fun callResultForAppointment(
+        appointmentUUID: UUID
+    ): Optional<CallResult>
+
+    @Query("""
       SELECT *
       FROM CallResult
       WHERE syncStatus = :syncStatus
@@ -142,5 +156,23 @@ data class CallResult(
       DELETE FROM CallResult
     """)
     fun clear()
+
+    @Query("""
+      SELECT *
+      FROM CallResult
+      WHERE id = :id
+    """)
+    fun getOne(
+        id: UUID
+    ): CallResult?
+
+    @Query("""
+      DELETE
+      FROM CallResult
+      WHERE
+        deletedAt IS NOT NULL
+        AND syncStatus == 'DONE'
+    """)
+    fun purgeDeleted()
   }
 }

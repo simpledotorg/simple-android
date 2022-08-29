@@ -3,7 +3,9 @@ package org.simple.clinic.summary.medicalhistory
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.summary.PatientSummaryChildModel
 import java.util.UUID
 
@@ -36,5 +38,9 @@ data class MedicalHistorySummaryModel(
 
   fun currentFacilityLoaded(facility: Facility): MedicalHistorySummaryModel {
     return copy(currentFacility = facility)
+  }
+
+  fun answerToggled(question: MedicalHistoryQuestion, answer: Answer): MedicalHistorySummaryModel {
+    return copy(medicalHistory = medicalHistory!!.answered(question, answer))
   }
 }

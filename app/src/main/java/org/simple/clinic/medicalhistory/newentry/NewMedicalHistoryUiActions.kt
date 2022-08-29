@@ -7,4 +7,6 @@ interface NewMedicalHistoryUiActions {
   fun showOngoingHypertensionTreatmentErrorDialog()
   fun showDiagnosisRequiredErrorDialog()
   fun showHypertensionDiagnosisRequiredErrorDialog()
+  fun showChangeDiagnosisErrorDialog()
+  fun showOngoingDiabetesTreatmentErrorDialog()
 }

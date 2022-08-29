@@ -12,11 +12,11 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.PagingSourceFactory
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
+import org.simple.sharedTestCode.TestData
 import java.util.UUID
 
 class DrugSearchEffectHandlerTest {
@@ -58,7 +58,9 @@ class DrugSearchEffectHandlerTest {
     whenever(pagerFactory.createPager(
         sourceFactory = any<PagingSourceFactory<Int, Drug>>(),
         pageSize = eq(drugsSearchResultsPageSize),
-        initialKey = eq(null)
+        enablePlaceholders = eq(false),
+        initialKey = eq(null),
+        cacheScope = eq(null)
     )) doReturn Observable.just(searchResults)
 
     // when

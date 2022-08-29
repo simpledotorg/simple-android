@@ -1,23 +1,23 @@
 package org.simple.clinic.splash
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.util.AttributeSet
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.airbnb.lottie.LottieDrawable
 import kotlinx.parcelize.Parcelize
-import org.simple.clinic.R
 import org.simple.clinic.databinding.ScreenSplashBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
-import org.simple.clinic.onboarding.OnboardingScreen.OnboardingScreenKey
-import org.simple.clinic.router.screen.FullScreenKey
+import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.onboarding.OnboardingScreen
 import javax.inject.Inject
 
-class SplashScreen(
-    context: Context,
-    attributeSet: AttributeSet
-) : ConstraintLayout(context, attributeSet) {
+@SuppressLint("CustomSplashScreen")
+class SplashScreen : Fragment() {
 
   @Inject
   lateinit var router: Router
@@ -30,15 +30,18 @@ class SplashScreen(
   private val nextButton
     get() = binding!!.nextButton
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    binding = ScreenSplashBinding.bind(this)
-    if (isInEditMode) {
-      return
-    }
-
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
 
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    binding = ScreenSplashBinding.inflate(inflater, container, false)
+    return binding?.root
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     with(splashLottieView) {
       setAnimation("splash_animation.json")
       repeatCount = LottieDrawable.INFINITE
@@ -46,13 +49,13 @@ class SplashScreen(
     }
 
     nextButton.setOnClickListener {
-      router.clearHistoryAndPush(OnboardingScreenKey.wrap())
+      router.clearHistoryAndPush(OnboardingScreen.Key())
     }
   }
 
-  override fun onDetachedFromWindow() {
+  override fun onDestroyView() {
+    super.onDestroyView()
     binding = null
-    super.onDetachedFromWindow()
   }
 
   interface Injector {
@@ -60,10 +63,10 @@ class SplashScreen(
   }
 
   @Parcelize
-  object SplashScreenKey : FullScreenKey {
+  data class Key(
+      override val analyticsName: String = "Splash Screen"
+  ) : ScreenKey() {
 
-    override val analyticsName = "Splash Screen"
-
-    override fun layoutRes() = R.layout.screen_splash
+    override fun instantiateFragment() = SplashScreen()
   }
 }

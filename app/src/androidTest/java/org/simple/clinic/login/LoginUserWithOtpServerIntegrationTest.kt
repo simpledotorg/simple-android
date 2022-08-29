@@ -11,7 +11,7 @@ import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
-import org.simple.clinic.util.Rules
+import org.simple.sharedTestCode.util.Rules
 import org.simple.clinic.util.toNullable
 import javax.inject.Inject
 import javax.inject.Named

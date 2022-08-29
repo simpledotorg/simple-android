@@ -2,14 +2,16 @@ package org.simple.clinic.di
 
 import dagger.Component
 import org.simple.clinic.ClinicApp
-import org.simple.clinic.bloodsugar.entry.di.BloodSugarEntryComponent
+import org.simple.clinic.appupdate.AppUpdateNotificationWorker
 import org.simple.clinic.bloodsugar.selection.type.di.BloodSugarTypePickerSheetComponent
 import org.simple.clinic.bp.entry.di.BloodPressureEntryComponent
 import org.simple.clinic.deeplink.di.DeepLinkComponent
 import org.simple.clinic.drugs.selection.dosage.di.DosagePickerSheetComponent
 import org.simple.clinic.drugs.selection.entry.di.CustomPrescriptionEntrySheetComponent
+import org.simple.clinic.drugstockreminders.DrugStockWorker
 import org.simple.clinic.login.OtpSmsReceiver
 import org.simple.clinic.main.TheActivityComponent
+import org.simple.clinic.overdue.download.OverdueDownloadWorker
 import org.simple.clinic.registerorlogin.AuthenticationActivityComponent
 import org.simple.clinic.remoteconfig.UpdateRemoteConfigWorker
 import org.simple.clinic.setup.SetupActivityComponent
@@ -31,10 +33,12 @@ interface AppComponent {
   fun inject(target: UpdateRemoteConfigWorker)
   fun inject(target: OtpSmsReceiver)
   fun inject(target: DataSync)
+  fun inject(target: OverdueDownloadWorker)
+  fun inject(target: AppUpdateNotificationWorker)
+  fun inject(target: DrugStockWorker)
 
   fun theActivityComponent(): TheActivityComponent.Factory
   fun setupActivityComponent(): SetupActivityComponent.Factory
-  fun bloodSugarEntryComponent(): BloodSugarEntryComponent.Factory
   fun bloodPressureEntryComponent(): BloodPressureEntryComponent.Factory
   fun dosagePickerSheetComponent(): DosagePickerSheetComponent.Factory
   fun bloodSugarTypePickerSheetComponent(): BloodSugarTypePickerSheetComponent.Factory

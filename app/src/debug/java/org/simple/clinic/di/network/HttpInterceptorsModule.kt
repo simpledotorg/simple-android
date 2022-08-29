@@ -1,5 +1,6 @@
 package org.simple.clinic.di.network
 
+import com.datadog.android.DatadogInterceptor
 import com.facebook.flipper.plugins.network.FlipperOkhttpInterceptor
 import com.facebook.flipper.plugins.network.NetworkFlipperPlugin
 import dagger.Module
@@ -24,6 +25,7 @@ class HttpInterceptorsModule {
     }
 
     return listOf(
+        DatadogInterceptor(),
         loggedInInterceptor,
         appInfoHttpInterceptor,
         loggingInterceptor,

@@ -5,7 +5,8 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.drugs.search.DrugFrequency
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
+import org.simple.clinic.drugs.selection.custom.ButtonState.SAVING
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import java.util.UUID
 
 class CustomDrugEntryUiRendererTest {
@@ -15,15 +16,17 @@ class CustomDrugEntryUiRendererTest {
   private val drugName = "Amlodipine"
   private val dosagePlaceholder = "mg"
 
-  private val drugFrequencyToFrequencyChoiceItemMap = mapOf(
-      null to DrugFrequencyChoiceItem(drugFrequency = null, label = "None"),
-      DrugFrequency.OD to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.OD, label = "OD"),
-      DrugFrequency.BD to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.BD, label = "BD"),
-      DrugFrequency.TDS to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.TDS, label = "TDS"),
-      DrugFrequency.QDS to DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.QDS, label = "QDS")
+  private val drugFrequencyToLabelMap = mapOf(
+      null to DrugFrequencyLabel(label = "None"),
+      DrugFrequency.OD to DrugFrequencyLabel(label = "OD"),
+      DrugFrequency.BD to DrugFrequencyLabel(label = "BD"),
+      DrugFrequency.TDS to DrugFrequencyLabel(label = "TDS"),
+      DrugFrequency.QDS to DrugFrequencyLabel(label = "QDS")
   )
 
-  private val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.New.FromDrugName(drugName), dosagePlaceholder).drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap)
+  private val defaultModel = CustomDrugEntryModel
+      .default(openAs = OpenAs.New.FromDrugName(drugName), dosagePlaceholder)
+      .drugFrequencyToLabelMapLoaded(drugFrequencyToLabelMap)
 
   @Test
   fun `when drug dosage focus is changed and dosage is null, then set drug dosage text with the placeholder and move the cursor to the beginning`() {
@@ -44,7 +47,6 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).setSheetTitle(drugName, null, frequencyLabel)
     verify(ui).hideProgressBar()
     verify(ui).showCustomDrugEntryUi()
-    verify(ui).showKeyboard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -52,7 +54,11 @@ class CustomDrugEntryUiRendererTest {
   fun `when drug dosage focus is changed and dosage is not null but only contains the placeholder, then set drug dosage text as an empty string and update the sheet title`() {
     // given
     val dosageText = "mg"
-    val drugDosageChangedModel = defaultModel.drugNameLoaded(drugName).dosageEdited(dosageText).dosageFocusChanged(hasFocus = false).drugInfoProgressStateLoaded()
+    val drugDosageChangedModel = defaultModel
+        .drugNameLoaded(drugName)
+        .dosageEdited(dosageText)
+        .dosageFocusChanged(hasFocus = false)
+        .drugInfoProgressStateLoaded()
     val frequencyLabel = "None"
 
     // when
@@ -65,7 +71,6 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).setSheetTitle(drugName, dosageText, frequencyLabel)
     verify(ui).hideProgressBar()
     verify(ui).showCustomDrugEntryUi()
-    verify(ui).showKeyboard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -73,7 +78,10 @@ class CustomDrugEntryUiRendererTest {
   fun `when the screen is loaded in update mode, then render the drug name and setup ui for updating drug entry`() {
     // given
     val prescribedDrugUuid = UUID.fromString("96633994-6e4d-4528-b796-f03ae016553a")
-    val defaultModel = CustomDrugEntryModel.default(openAs = OpenAs.Update(prescribedDrugUuid), dosagePlaceholder).drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap).drugInfoProgressStateLoaded()
+    val defaultModel = CustomDrugEntryModel
+        .default(openAs = OpenAs.Update(prescribedDrugUuid), dosagePlaceholder)
+        .drugFrequencyToLabelMapLoaded(drugFrequencyToLabelMap)
+        .drugInfoProgressStateLoaded()
     val frequencyLabel = "None"
 
     // when
@@ -85,7 +93,6 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).setSheetTitle(null, null, frequencyLabel)
     verify(ui).hideProgressBar()
     verify(ui).showCustomDrugEntryUi()
-    verify(ui).showKeyboard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -104,7 +111,6 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).setSheetTitle(drugName, drugDosage, frequencyLabel)
     verify(ui).hideProgressBar()
     verify(ui).showCustomDrugEntryUi()
-    verify(ui).showKeyboard()
     verifyNoMoreInteractions(ui)
   }
 
@@ -132,8 +138,26 @@ class CustomDrugEntryUiRendererTest {
     verify(ui).showCustomDrugEntryUi()
     verify(ui).hideRemoveButton()
     verify(ui).setButtonTextAsAdd()
-    verify(ui).showKeyboard()
     verify(ui).setSheetTitle(null, null, frequencyLabel)
+    verifyNoMoreInteractions(ui)
+  }
+
+
+  @Test
+  fun `when add button is clicked and info is being added or updated, then show progress state in the save button`() {
+    // given
+    val frequencyLabel = "None"
+
+    // when
+    uiRenderer.render(defaultModel.drugInfoProgressStateLoaded().saveButtonStateChanged(SAVING))
+
+    // then
+    verify(ui).hideProgressBar()
+    verify(ui).showCustomDrugEntryUi()
+    verify(ui).hideRemoveButton()
+    verify(ui).setButtonTextAsAdd()
+    verify(ui).setSheetTitle(null, null, frequencyLabel)
+    verify(ui).showSaveButtonProgressState()
     verifyNoMoreInteractions(ui)
   }
 }

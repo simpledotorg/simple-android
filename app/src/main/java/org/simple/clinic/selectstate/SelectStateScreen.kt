@@ -38,12 +38,6 @@ class SelectStateScreen : BaseScreen<
   @Inject
   lateinit var router: Router
 
-  private val nextButtonFrame
-    get() = binding.nextButtonFrame
-
-  private val nextButton
-    get() = binding.nextButton
-
   private val statesListGroup
     get() = binding.statesListGroup
 
@@ -103,7 +97,6 @@ class SelectStateScreen : BaseScreen<
 
   override fun events() = Observable
       .mergeArray(
-          nextButtonClicks(),
           retryButtonClicks(),
           stateSelectedEvents()
       )
@@ -117,10 +110,6 @@ class SelectStateScreen : BaseScreen<
 
   override fun hideStates() {
     statesListGroup.visibility = View.GONE
-  }
-
-  override fun showNextButton() {
-    nextButtonFrame.visibility = View.VISIBLE
   }
 
   override fun showNetworkErrorMessage() {
@@ -154,16 +143,14 @@ class SelectStateScreen : BaseScreen<
     router.push(RegistrationPhoneScreenKey())
   }
 
+  override fun replaceCurrentScreenToRegistrationScreen() {
+    router.replaceTop(RegistrationPhoneScreenKey())
+  }
+
   private fun stateSelectedEvents(): Observable<UiEvent> {
     return statesAdapter
         .itemEvents
         .map { StateChanged(it.state) }
-  }
-
-  private fun nextButtonClicks(): Observable<UiEvent> {
-    return nextButton
-        .clicks()
-        .map { NextClicked }
   }
 
   private fun retryButtonClicks(): Observable<UiEvent> {

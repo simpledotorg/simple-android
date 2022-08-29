@@ -16,7 +16,7 @@ import junitparams.Parameters
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.editpatient.EditPatientState.NOT_SAVING_PATIENT
 import org.simple.clinic.editpatient.EditPatientValidationError.BothDateOfBirthAndAgeAdsent
 import org.simple.clinic.editpatient.EditPatientValidationError.ColonyOrVillageEmpty
@@ -25,12 +25,10 @@ import org.simple.clinic.editpatient.EditPatientValidationError.DateOfBirthParse
 import org.simple.clinic.editpatient.EditPatientValidationError.DistrictEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.FullNameEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
-import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooLong
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
 import org.simple.clinic.newentry.country.InputFieldsFactory
-import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -41,12 +39,12 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PhoneNumberDetails
-import org.simple.clinic.registration.phone.LengthBasedNumberValidator
-import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestUserClock
-import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.sharedTestCode.util.TestUserClock
+import org.simple.sharedTestCode.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.uuid.FakeUuidGenerator
+import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
@@ -68,7 +66,6 @@ class EditPatientScreenSaveTest {
 
   private val uiEvents = PublishSubject.create<EditPatientEvent>()
   private val ui: EditPatientUi = mock()
-  private val viewRenderer = EditPatientViewRenderer(ui)
   private val patientRepository: PatientRepository = mock()
   private val country = TestData.country()
 
@@ -79,12 +76,11 @@ class EditPatientScreenSaveTest {
   private val generatedPhoneUuid = UUID.fromString("ada3ea24-819b-42e4-ac21-51bcf61cebac")
   private val user = TestData.loggedInUser()
 
-  private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider(
-      dateTimeFormatter = dateOfBirthFormat,
-      today = LocalDate.now(userClock)
-  ))
+  private val viewRenderer = EditPatientViewRenderer(ui)
 
-  private val viewEffectHandler = EditPatientViewEffectHandler(userClock, ui)
+  private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider())
+
+  private val viewEffectHandler = EditPatientViewEffectHandler(ui)
 
   @Test
   fun `when save is clicked, patient name should be validated`() {
@@ -324,7 +320,11 @@ class EditPatientScreenSaveTest {
               it.copy(
                   fullName = "Name",
                   gender = Gender.Male,
-                  ageDetails = PatientAgeDetails.fromAgeOrDate(null, LocalDate.of(1985, Month.MAY, 20))
+                  ageDetails = PatientAgeDetails(
+                      ageValue = null,
+                      ageUpdatedAt = null,
+                      dateOfBirth = LocalDate.of(1985, Month.MAY, 20)
+                  )
               )
             },
             createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") },
@@ -346,12 +346,14 @@ class EditPatientScreenSaveTest {
                 AgeChanged("22")),
             shouldSavePatient = true,
             createExpectedPatient = {
-              val expectedAge = Age(22, Instant.now(utcClock).plus(oneYear))
-
               it.copy(
                   fullName = "Name",
                   gender = Gender.Male,
-                  ageDetails = PatientAgeDetails.fromAgeOrDate(expectedAge, null)
+                  ageDetails = PatientAgeDetails(
+                      ageValue = 22,
+                      ageUpdatedAt = Instant.now(utcClock).plus(oneYear),
+                      dateOfBirth = null
+                  )
               )
             },
             createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") },
@@ -382,12 +384,14 @@ class EditPatientScreenSaveTest {
                 AgeChanged("25")),
             shouldSavePatient = true,
             createExpectedPatient = {
-              val expectedAge = Age(25, Instant.now(utcClock))
-
               it.copy(
                   fullName = "Name",
                   gender = Gender.Transgender,
-                  ageDetails = PatientAgeDetails.fromAgeOrDate(expectedAge, null)
+                  ageDetails = PatientAgeDetails(
+                      ageValue = 25,
+                      ageUpdatedAt = Instant.now(utcClock),
+                      dateOfBirth = null
+                  )
               )
             },
             createExpectedAddress = { it.copy(district = "District", state = "State") },
@@ -410,7 +414,11 @@ class EditPatientScreenSaveTest {
               it.copy(
                   fullName = "Name",
                   gender = Gender.Transgender,
-                  ageDetails = PatientAgeDetails.fromAgeOrDate(null, LocalDate.parse("1965-06-25"))
+                  ageDetails = PatientAgeDetails(
+                      ageValue = null,
+                      ageUpdatedAt = null,
+                      dateOfBirth = LocalDate.parse("1965-06-25")
+                  )
               )
             },
             createExpectedAddress = { it.copy(district = "District", state = "State") },
@@ -430,12 +438,14 @@ class EditPatientScreenSaveTest {
                 AgeChanged("25")),
             shouldSavePatient = true,
             createExpectedPatient = {
-              val expectedAge = Age(25, Instant.now(utcClock).plus(twoYears))
-
               it.copy(
                   fullName = "Name",
                   gender = Gender.Transgender,
-                  ageDetails = PatientAgeDetails.fromAgeOrDate(expectedAge, null)
+                  ageDetails = PatientAgeDetails(
+                      ageValue = 25,
+                      ageUpdatedAt = Instant.now(utcClock).plus(twoYears),
+                      dateOfBirth = null
+                  )
               )
             },
             createExpectedAddress = { it.copy(district = "District", state = "State") },
@@ -569,7 +579,7 @@ class EditPatientScreenSaveTest {
                 DistrictChanged("District"),
                 StateChanged("State"),
                 GenderChanged(Gender.Transgender),
-                PhoneNumberChanged("12345678901234")),
+                PhoneNumberChanged("12345")),
             shouldSavePatient = false),
         createSavePatientTestParams(
             patientProfile = createPatientProfile(shouldAddNumber = true, shouldHaveAge = false),
@@ -600,16 +610,23 @@ class EditPatientScreenSaveTest {
     val patient = if (shouldHaveAge) {
       TestData.patient(
           uuid = patientUuid,
-          age = Age(20, Instant.now(utcClock)),
-          dateOfBirth = null,
-          addressUuid = addressUuid)
+          addressUuid = addressUuid,
+          patientAgeDetails = PatientAgeDetails(
+              ageValue = 20,
+              ageUpdatedAt = Instant.now(utcClock),
+              dateOfBirth = null
+          )
+      )
 
     } else {
       TestData.patient(
           uuid = patientUuid,
-          age = null,
-          dateOfBirth = LocalDate.now(utcClock),
-          addressUuid = addressUuid
+          addressUuid = addressUuid,
+          patientAgeDetails = PatientAgeDetails(
+              ageValue = null,
+              ageUpdatedAt = null,
+              dateOfBirth = LocalDate.now(utcClock)
+          )
       )
     }
 
@@ -792,28 +809,6 @@ class EditPatientScreenSaveTest {
         ),
         ValidateFieldsTestParams(
             TestData.patientPhoneNumber(),
-            "Name",
-            "",
-            "District",
-            "",
-            "1",
-            null,
-            setOf(PhoneNumberLengthTooLong(12), ColonyOrVillageEmpty, StateEmpty),
-            "12345678901234"
-        ),
-        ValidateFieldsTestParams(
-            null,
-            "Name",
-            "",
-            "District",
-            "",
-            null,
-            "24/24/2000",
-            setOf(PhoneNumberLengthTooLong(12), ColonyOrVillageEmpty, StateEmpty, DateOfBirthParseError),
-            "12345678901234"
-        ),
-        ValidateFieldsTestParams(
-            TestData.patientPhoneNumber(),
             "",
             "Colony",
             "District",
@@ -919,8 +914,6 @@ class EditPatientScreenSaveTest {
   private fun `params for validating phone numbers`(): List<ValidatePhoneNumberTestParams> {
     return listOf(
         ValidatePhoneNumberTestParams(null, "1234", PhoneNumberLengthTooShort(6)),
-        ValidatePhoneNumberTestParams(null, "12345678901234", PhoneNumberLengthTooLong(12)),
-        ValidatePhoneNumberTestParams(TestData.patientPhoneNumber(), "12345678901234", PhoneNumberLengthTooLong(12)),
         ValidatePhoneNumberTestParams(TestData.patientPhoneNumber(), "", PhoneNumberEmpty),
         ValidatePhoneNumberTestParams(TestData.patientPhoneNumber(), "1234", PhoneNumberLengthTooShort(6))
     )
@@ -974,20 +967,12 @@ class EditPatientScreenSaveTest {
         viewEffectsConsumer = viewEffectHandler::handle
     )
 
-    val numberValidator = LengthBasedNumberValidator(
-        minimumRequiredLengthMobile = 10,
-        maximumAllowedLengthMobile = 10,
-        minimumRequiredLengthLandlinesOrMobile = 6,
-        maximumAllowedLengthLandlinesOrMobile = 12
-    )
+    val numberValidator = PhoneNumberValidator(minimumRequiredLength = 6)
 
     val fixture = MobiusTestFixture<EditPatientModel, EditPatientEvent, EditPatientEffect>(
         events = uiEvents,
-        defaultModel = EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null, NOT_SAVING_PATIENT),
+        defaultModel = EditPatientModel.from(patient, address, phoneNumber, dateOfBirthFormat, null, NOT_SAVING_PATIENT, false, false),
         init = EditPatientInit(patient = patient,
-            address = address,
-            phoneNumber = phoneNumber,
-            bangladeshNationalId = null,
             isVillageTypeAheadEnabled = true),
         update = EditPatientUpdate(
             numberValidator = numberValidator,

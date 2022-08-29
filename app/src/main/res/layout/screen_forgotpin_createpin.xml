@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/applock_root"
   android:layout_width="match_parent"
@@ -98,4 +98,4 @@
 
   </com.google.android.material.card.MaterialCardView>
 
-</org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen>
+</RelativeLayout>

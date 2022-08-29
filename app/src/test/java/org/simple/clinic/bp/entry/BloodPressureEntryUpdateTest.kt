@@ -11,7 +11,7 @@ import org.simple.clinic.bp.BloodPressureReading
 import org.simple.clinic.bp.ValidationResult.ErrorDiastolicEmpty
 import org.simple.clinic.bp.ValidationResult.ErrorSystolicEmpty
 import org.simple.clinic.bp.entry.BloodPressureSaveState.SAVING_BLOOD_PRESSURE
-import org.simple.clinic.util.TestUserClock
+import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid

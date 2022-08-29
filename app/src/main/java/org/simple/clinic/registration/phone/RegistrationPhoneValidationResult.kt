@@ -14,9 +14,6 @@ sealed class RegistrationPhoneValidationResult : Parcelable {
     object TooShort : Invalid()
 
     @Parcelize
-    object TooLong : Invalid()
-
-    @Parcelize
     object Blank : Invalid()
   }
 }

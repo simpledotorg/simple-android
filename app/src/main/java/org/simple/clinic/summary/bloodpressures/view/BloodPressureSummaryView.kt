@@ -27,8 +27,8 @@ import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
-import org.simple.clinic.router.ScreenResultBus
-import org.simple.clinic.router.screen.ActivityResult
+import org.simple.clinic.navigation.v2.ScreenResultBus
+import org.simple.clinic.navigation.v2.ActivityResult
 import org.simple.clinic.summary.PatientSummaryChildView
 import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.summary.PatientSummaryModelUpdateCallback

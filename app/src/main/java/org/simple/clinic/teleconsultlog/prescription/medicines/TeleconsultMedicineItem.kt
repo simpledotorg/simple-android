@@ -5,6 +5,7 @@ import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 import org.simple.clinic.databinding.ListItemTeleconsultMedicineBinding
 import org.simple.clinic.drugs.PrescribedDrug
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
@@ -13,7 +14,8 @@ import java.time.Duration
 data class TeleconsultMedicineItem(
     val prescribedDrug: PrescribedDrug,
     val defaultDuration: Duration,
-    val defaultFrequency: MedicineFrequency
+    val defaultFrequency: MedicineFrequency,
+    val medicineFrequencyToLabelMap: Map<MedicineFrequency?, DrugFrequencyLabel>
 ) : ItemAdapter.Item<TeleconsultMedicineItemEvent> {
 
   companion object {
@@ -21,14 +23,16 @@ data class TeleconsultMedicineItem(
     fun from(
         medicines: List<PrescribedDrug>,
         defaultDuration: Duration,
-        defaultFrequency: MedicineFrequency
+        defaultFrequency: MedicineFrequency,
+        medicineFrequencyToLabelMap: Map<MedicineFrequency?, DrugFrequencyLabel>
     ): List<TeleconsultMedicineItem> {
       return medicines
           .map { prescribedDrug ->
             TeleconsultMedicineItem(
                 prescribedDrug = prescribedDrug,
                 defaultDuration = defaultDuration,
-                defaultFrequency = defaultFrequency
+                defaultFrequency = defaultFrequency,
+                medicineFrequencyToLabelMap = medicineFrequencyToLabelMap
             )
           }
     }
@@ -47,7 +51,8 @@ data class TeleconsultMedicineItem(
     )
 
     val frequency = prescribedDrug.frequency ?: defaultFrequency
-    binding.medicineFrequencyButton.text = frequency.toString()
+    val frequencyLabel = medicineFrequencyToLabelMap[frequency]!!.label
+    binding.medicineFrequencyButton.text = frequencyLabel
 
     val durationInDays = prescribedDrug.durationInDays ?: defaultDuration.toDays().toInt()
     binding.medicineDurationButton.text = context.resources.getQuantityString(

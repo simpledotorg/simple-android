@@ -7,4 +7,5 @@ interface ScheduleAppointmentUiActions {
   fun showManualDateSelector(date: LocalDate)
   fun closeSheet()
   fun openTeleconsultStatusSheet(teleconsultRecordUuid: UUID)
+  fun closeSheetWithoutResult()
 }

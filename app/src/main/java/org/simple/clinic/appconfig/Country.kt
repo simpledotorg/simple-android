@@ -29,10 +29,11 @@ data class Country(
   val alternativeIdentifierType: Identifier.IdentifierType?
     get() {
       return when (isoCountryCode) {
+        DEMO,
+        INDIA -> Identifier.IdentifierType.IndiaNationalHealthId
         BANGLADESH -> Identifier.IdentifierType.BangladeshNationalId
         ETHIOPIA -> Identifier.IdentifierType.EthiopiaMedicalRecordNumber
-        INDIA -> Identifier.IdentifierType.IndiaNationalHealthId
-        SRI_LANKA -> Identifier.IdentifierType.SriLankaNationalId
+        SRI_LANKA -> Identifier.IdentifierType.SriLankaPersonalHealthNumber
         else -> null
       }
     }
@@ -69,5 +70,6 @@ data class Country(
     const val BANGLADESH = "BD"
     const val ETHIOPIA = "ET"
     const val SRI_LANKA = "LK"
+    const val DEMO = "DEMO"
   }
 }

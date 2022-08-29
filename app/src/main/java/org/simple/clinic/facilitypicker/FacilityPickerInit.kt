@@ -35,10 +35,6 @@ class FacilityPickerInit(
       ))
     }
 
-    if (!model.hasLoadedTotalFacilityCount) {
-      effects.add(LoadTotalFacilityCount)
-    }
-
     val loadFacilitiesEffect = when (pickFrom) {
       AllFacilities -> LoadFacilitiesWithQuery(model.searchQuery)
       InCurrentGroup -> LoadFacilitiesInCurrentGroup(model.searchQuery)

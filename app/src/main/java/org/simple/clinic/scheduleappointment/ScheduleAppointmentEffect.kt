@@ -36,3 +36,5 @@ data class ShowDatePicker(val selectedDate: LocalDate) : ScheduleAppointmentView
 object CloseSheet : ScheduleAppointmentViewEffect()
 
 data class GoToTeleconsultStatusSheet(val teleconsultRecordUuid: UUID) : ScheduleAppointmentViewEffect()
+
+object CloseSheetWithoutResult : ScheduleAppointmentViewEffect()

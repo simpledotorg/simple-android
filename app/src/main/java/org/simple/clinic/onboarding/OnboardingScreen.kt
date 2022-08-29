@@ -1,14 +1,17 @@
 package org.simple.clinic.onboarding
 
 import android.content.Context
+import android.os.Bundle
 import android.text.style.ForegroundColorSpan
 import android.text.style.TextAppearanceSpan
-import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.parcelize.Parcelize
@@ -16,19 +19,21 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenOnboardingBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.registerorlogin.AuthenticationActivity
-import org.simple.clinic.router.screen.FullScreenKey
-import org.simple.clinic.router.util.resolveColor
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.finishWithoutAnimations
-import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.util.resolveColor
 import javax.inject.Inject
 
-class OnboardingScreen(
-    context: Context,
-    attributeSet: AttributeSet
-) : ConstraintLayout(context, attributeSet), OnboardingUi {
+class OnboardingScreen : BaseScreen<
+    OnboardingScreen.Key,
+    ScreenOnboardingBinding,
+    OnboardingModel,
+    OnboardingEvent,
+    OnboardingEffect,
+    OnboardingViewEffect>(), OnboardingUi {
 
   @Inject
   lateinit var onboardingEffectHandler: OnboardingEffectHandler.Factory
@@ -36,58 +41,45 @@ class OnboardingScreen(
   @Inject
   lateinit var activity: AppCompatActivity
 
-  private var binding: ScreenOnboardingBinding? = null
-
   private val getStartedButton
-    get() = binding!!.getStartedButton
+    get() = binding.getStartedButton
 
   private val introOneTextView
-    get() = binding!!.introOneTextView
+    get() = binding.introOneTextView
 
   private val introTwoTextView
-    get() = binding!!.introTwoTextView
+    get() = binding.introTwoTextView
 
   private val introThreeTextView
-    get() = binding!!.introThreeTextView
+    get() = binding.introThreeTextView
 
-  private val events: Observable<OnboardingEvent> by unsafeLazy {
-    getStartedClicks()
-        .compose(ReportAnalyticsEvents())
-        .cast<OnboardingEvent>()
+  override fun defaultModel() = OnboardingModel
+
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
+      ScreenOnboardingBinding.inflate(layoutInflater, container, false)
+
+  override fun createUpdate() = OnboardingUpdate()
+
+  override fun viewEffectHandler() = OnboardingViewEffectHandler(this)
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<OnboardingViewEffect>) = onboardingEffectHandler
+      .create(viewEffectsConsumer = viewEffectsConsumer)
+      .build()
+
+  override fun events() = getStartedClicks()
+      .compose(ReportAnalyticsEvents())
+      .cast<OnboardingEvent>()
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
   }
 
-  private val delegate by unsafeLazy {
-    MobiusDelegate.forView(
-        events,
-        OnboardingModel,
-        OnboardingUpdate(),
-        onboardingEffectHandler.create(this).build()
-    )
-  }
-
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    binding = ScreenOnboardingBinding.bind(this)
-    if (isInEditMode) {
-      return
-    }
-
-    context.injector<OnboardingScreenInjector>().inject(this)
-
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     setIntroOneTextView()
     setIntroTwoTextView()
     setIntroThreeTextView()
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    binding = null
-    super.onDetachedFromWindow()
   }
 
   private fun getStartedClicks(): Observable<OnboardingEvent> {
@@ -109,13 +101,13 @@ class OnboardingScreen(
 
   private fun setIntroOneTextView() {
     val onboardingEmphasisTextSpan = TextAppearanceSpan(context, R.style.TextAppearance_Simple_Subtitle1_Medium)
-    val onboardingEmphasisColorSpan = ForegroundColorSpan(context.resolveColor(attrRes = R.attr.colorOnBackground))
+    val onboardingEmphasisColorSpan = ForegroundColorSpan(requireContext().resolveColor(attrRes = R.attr.colorOnBackground))
 
     val introOneFormattedString = buildSpannedString {
-      append(context.getString(R.string.screenonboarding_intro_1))
+      append(requireContext().getString(R.string.screenonboarding_intro_1))
 
       inSpans(onboardingEmphasisTextSpan, onboardingEmphasisColorSpan) {
-        append(context.getString(R.string.screenonboarding_intro_1_hypertension))
+        append(requireContext().getString(R.string.screenonboarding_intro_1_hypertension))
       }
     }
 
@@ -124,22 +116,22 @@ class OnboardingScreen(
 
   private fun setIntroTwoTextView() {
     val introTwoFormattedString = buildSpannedString {
-      append(context.getString(R.string.screenonboarding_intro_2))
+      append(requireContext().getString(R.string.screenonboarding_intro_2))
 
       inSpans(
           TextAppearanceSpan(context, R.style.TextAppearance_Simple_Subtitle1_Medium),
-          ForegroundColorSpan(context.resolveColor(attrRes = R.attr.colorOnBackground))
+          ForegroundColorSpan(requireContext().resolveColor(attrRes = R.attr.colorOnBackground))
       ) {
-        append(context.getString(R.string.screenonboarding_intro_2_bp))
+        append(requireContext().getString(R.string.screenonboarding_intro_2_bp))
       }
 
-      append(context.getString(R.string.screenonboarding_intro_2_and))
+      append(requireContext().getString(R.string.screenonboarding_intro_2_and))
 
       inSpans(
           TextAppearanceSpan(context, R.style.TextAppearance_Simple_Subtitle1_Medium),
-          ForegroundColorSpan(context.resolveColor(attrRes = R.attr.colorOnBackground))
+          ForegroundColorSpan(requireContext().resolveColor(attrRes = R.attr.colorOnBackground))
       ) {
-        append(context.getString(R.string.screenonboarding_intro_2_medicines))
+        append(requireContext().getString(R.string.screenonboarding_intro_2_medicines))
       }
     }
 
@@ -148,26 +140,29 @@ class OnboardingScreen(
 
   private fun setIntroThreeTextView() {
     val onboardingEmphasisTextSpan = TextAppearanceSpan(context, R.style.TextAppearance_Simple_Subtitle1_Medium)
-    val onboardingEmphasisColorSpan = ForegroundColorSpan(context.resolveColor(attrRes = R.attr.colorOnBackground))
+    val onboardingEmphasisColorSpan = ForegroundColorSpan(requireContext().resolveColor(attrRes = R.attr.colorOnBackground))
 
     val introThreeFormattedString = buildSpannedString {
-      append(context.getString(R.string.screenonboarding_intro_3))
+      append(requireContext().getString(R.string.screenonboarding_intro_3))
 
       inSpans(onboardingEmphasisTextSpan, onboardingEmphasisColorSpan) {
-        append(context.getString(R.string.screenonboarding_intro_3_reminder))
+        append(requireContext().getString(R.string.screenonboarding_intro_3_reminder))
       }
 
-      append(context.getString(R.string.screenonboarding_intro_3_visits))
+      append(requireContext().getString(R.string.screenonboarding_intro_3_visits))
     }
 
     introThreeTextView.text = introThreeFormattedString
   }
 
   @Parcelize
-  object OnboardingScreenKey : FullScreenKey {
+  data class Key(
+      override val analyticsName: String = "Onboarding Screen"
+  ) : ScreenKey() {
+    override fun instantiateFragment() = OnboardingScreen()
+  }
 
-    override val analyticsName = "Onboarding Screen"
-
-    override fun layoutRes() = R.layout.screen_onboarding
+  interface Injector {
+    fun inject(target: OnboardingScreen)
   }
 }

@@ -9,6 +9,9 @@ annotation class DateFormatter(val value: Type) {
     FileDateTime,
     Day,
     Month,
-    FullYear
+    FullYear,
+    MonthAndYear,
+    OverdueCsvTitleDateTime,
+    OverduePatientRegistrationDate
   }
 }

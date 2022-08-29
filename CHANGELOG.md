@@ -1,6 +1,882 @@
 # CHANGELOG
 
 ## Next Release
+
+### Internal
+
+- Bump flipper to v0.161.0
+- Bump mixpanel to v7.0.0
+- Bump mlkit barcode scanning to v18.1.0
+- Bump datadog plugin to v1.5.0
+- Use heroku 20 on review apps
+
+### Fixes
+
+- Fix hypertension treatment question showing Sri Lanka translation in India
+
+## 2022-08-25-8383
+
+### Fixes
+
+- Fix app crashing when patient summary add phone number dialog is shown
+
+## 2022-08-23-8378
+
+### Fixes
+
+- Fix app crashing when clicking on Overdue download or share buttons
+
+## 2022-08-22-8375
+
+### Internal
+
+- Bump AppCompat to v1.5.0
+- Migrate `LoggedOutOfDeviceDialog` to `BaseDialog`
+- Bump flipper to v0.157.0
+- Bump AGP to v7.2.2
+- Initialise `ViewModel` in `BaseDialog#onCreate`
+- Migrate `BloodSugarUnitSelectionDialog` to `BaseDialog`
+- Migrate `ConfirmRemoveBloodSugarDialog` to `BaseDialog`
+- Bump flipper to v0.159.0
+- Bump Mobius to v1.5.9
+- Bump Sentry to v6.4.0
+
+## 2022-08-15-8368
+
+### Internal
+
+- Migrate `BloodSugarEntrySheet` to use `BaseBottomSheet`
+- Migrate `UpdatePhoneNumberDialog` to `BaseDialog`
+- Bump dagger to v2.43.2
+- Bump gradle to v7.5.1
+- Bump lint to v30.2.2
+- Migrate `AddPhoneNumberDialog` to `BaseDialog`
+- Fix download/share button showing in overdue search screen outside India
+- Add support for Android 13
+  - Bump compile and target SDK to 32
+- Bump fragment to v1.5.2
+- Bump threeten-extra to v1.7.1
+- Fix app crashing when overdue search screen is opened
+
+## 2022-08-08-8359
+
+### Internal
+
+- Bump fragment to v1.5.1
+- Show chip input text view in overdue search when overdue v2 search is enabled
+- Add overdue search query for supporting multiple search inputs
+- Fix overdue search history and results not showing in overdue search screen
+- Add multiple search inputs support in overdue search screen
+- Remove overdue search v1 implementation
+- Bump flipper to v0.156.0
+- Bump jgit version
+- Fix select all not updating checkbox state in the overdue search screen
+- Bump Gradle to v7.5
+- Run prescription refill queries in a transaction
+- Use `PrescriptionRepository#refill` to refill prescriptions from edit medicines screen
+- Use `PrescriptionRepository#refillForTeleconsulation` to refill prescriptions from teleconsult screen
+- Migrate `BloodSugarHistoryScreen` to use view effects
+- Trigger separate effects for loading and showing blood pressure history
+- Migrate `BloodPressureHistoryScreenEffectHandler` to use view effect
+- Migrate `ContactPatientBottomSheet` to use view effects
+- Bump Sentry to v6.3.1
+- Bump Mixpanel to v6.5.2
+- Bump Sentry plugin to v3.1.4
+- Add support for partial search input in overdue search screen
+
+## 2022-08-01-8350
+
+### Internal
+
+- Point accordion downwards when overdue list is expanded
+- Fix `ContactPatientBottomSheet` not opening completely
+- Bump Sentry to v6.3.0
+- Bump Sentry gradle plugin to v3.1.3
+- Bump mixpanel to v6.5.1
+- Add overdue search v2 feature flag
+- Implement query to fetch village and patient names in the facility
+- Add custom text field component with chip input
+- Display search suggestions after loading in overdue search screen
+- Load village and patient names when overdue search screen is created
+- Don't show search history when overdue search v2 is enabled
+- Bump room to 2.4.3
+- Remove overdue search v2 feature flag key
+- Fix overdue search not searching on query changes
+- Bump dagger to v2.43.1
+
+## 2022-07-25-8342
+
+### Internal
+
+- Update overdue patient card spacings
+- Fix secure call button showing when securing calling is disabled for the facility
+- Bump flipper to v0.154.0
+- Add support for selecting all overdue appointment search results
+- Add support for runtime permissions and network status in overdue search screen
+- Implement `AppointmentRepository#searchOverduePatientsImmediate`
+- Fix search results appointments not getting fully downloaded/shared/selected
+- Remove unused code from overdue search
+- Add overdue patients select and download feature flag key
+- Fix overdue search not displaying no patients found error view
+
+### Fixes
+
+- Fix app crashing when editing patient details
+- Fix hypertension treatment question english translation for Sri Lanka
+
+## 2022-07-18-8333
+
+### Internal
+
+- Handle selected overdue appointments state in overdue screen
+- Add support for selected overdue appointments download
+- Show selected overdue appointments count in overdue screen
+- Show download and share button in overdue search screen when search results are loaded
+- Bump itext7 to 7.2.3
+- Fix app crashing when scheduling overdue download worker
+- Handle nullable fields when generating overdue CSV from database
+- Add support for selected download and share in overdue screen
+- Bump Sentry to v6.2.1
+- Ignore deleted and old phone numbers when generating overdue CSV from database
+- Remove extra margin start and end for overdue search button
+- Show selected overdue appointments count in overdue search screen
+- Implement `OverdueAppointmentSelector`
+- Use overdue appointment selector in overdue screen
+- Use overdue appointment selector in overdue search screen
+- Use overdue appointment selector to fetch selected ids in overdue download worker
+- Use overdue appointment selector to fetch selected ids in overdue download format selection dialog
+- Remove unnecessary code in overdue screen
+- Update call result outcome design in contact patient bottom sheet
+- Add support for select and download in overdue search screen
+- Add support for select and share in overdue search screen
+- Show no internet connection dialog when download/share button is clicked
+- Bump Material Design Components to v1.6.1
+- Bump firebase config to v21.1.1
+- Bump Coroutines to v1.6.4
+
+### Changes
+
+- Continue with current action when not now is clicked in measurement warning dialog
+
+## 2022-07-11-8325
+
+### Internal
+
+- Bump Camera view dependency to v1.1.0
+- Add query to fetch required information for generating overdue patients CSV
+- Implement overdue patients CSV generator
+- Refactor `OverdueListDownloader`
+- Bump flipper to v0.153.0
+- Set target aspect ration and rotation for QR code scanner preview
+- Use `OverdueListDownloader` for generating overdue patients CSV or PDF using `OverdueCsvGenerator`
+- Bump mixpanel to v6.4.0
+- Bump fragment to v1.5.0
+- Show a checkbox when select overdue patients feature flag is enable
+- Handle selected overdue appointments state in overdue search screen
+- Bump kotlin to v1.7.10
+- Hide overdue patients list item checkbox by default
+
+### Fixes
+
+- Fix CDSS alert not dismissing after modifying medicines
+
+## 2022-07-04-8318
+
+### Internal
+
+- Prefill search query when search history item is clicked
+- Highlight search results with the matched search query
+- Bump datadog sdk to v1.13.0
+- Move existing search history item to the top when clicked
+- Bump flipper to v0.150.0
+- Bump sentry gradle plugin to v3.1.2
+- Bump sentry to v6.1.4
+- Bump Android desugar JDK library to v1.1.6
+- Increase overdue search query text field debounce time
+- Add remote key for overdue search feature flag
+- Fix `JSONDataException` when parsing the drug stock response
+- Ignore `ReportsModel#reportsContent` on parcel
+- Bump Facebook.soloader to v0.10.4
+- Bump CameraX dependencies to v1.1.0
+- Bump resync token for appointment sync API
+- Bump google-services to v4.3.13
+- Use UI renderer to render overdue search results
+- Add support for caching paging data
+
+## 2022-06-27-8310
+
+### Internal
+
+- Fix old synced appointments not getting deleted on purge
+
+## 2022-06-27-8307
+
+### Internal
+
+- Save search query to overdue search history when search query is valid
+- Add layout for overdue search screen
+- Bump Sentry to v6.1.2
+- Consume `OverdueSearchViewEffect` in `OverdueSearchEffectHandler`
+- Implement query to search overdue patients
+- Open overdue search screen when search button is clicked in overdue screen
+- Search for overdue patients when search query is valid
+- Turn off translation for instant search allowed characters
+- Updated translations: `om-ET`, `kn-IN`, `so-ET`, `ti-ET`, `mr-IN`, `te-IN`, `sid-ET`, `ta-IN`, `bn-IN`, `hi-IN`, `pa-IN`, `ta-LK`, `am-ET`,
+  `bn-BD`, `si-LK`
+- Show search results when overdue search results are loaded
+- Handle user interactions for overdue search results
+- Implement overdue search results adapter
+- Handle overdue search load states
+- Search overdue patients, when the search history item is clicked
+- Prefill search query when the search history item is clicked
+- Bump coroutines to v1.6.3
+- Implement view effects to show overdue search results
+- Wire Mobius loop with overdue search screen UI
+- Handle keyboard visibility in overdue search screen
+- Bump mixpanel to v6.3.0
+- Bump Google Services plugin to v4.3.12
+- Don't show no patients found error view when search query is empty
+- Don't show empty search history items in overdue search screen
+
+## 2022-06-20-8300
+
+### Internal
+
+- Fix inconsistent overdue section header UI
+- Bump sentry-android to v6
+- Bump sentry android gradle plugin to v3.1.0
+- Bump Google Play Services Location to v20
+- Bump Sentry Gradle plugin to v3.1.1
+- Bump Kotlin to v1.7.0
+- Hide footer when the pending section is collapsed
+- Restore expanded/collapsed states of Overdue Sections
+  - Use `OverdueListSectionStates` to update overdue section states in `OverdueModel`
+  - Use `OverdueListSectionStates` to check overdue section states in `OverdueAppointmentListItemNew`
+  - Remove unused section header state usages
+- Add developer flag for overdue search
+- Add search button in overdue patients list
+- Implement FTS table for `PatientAddress`
+- Define overdue appointment query as a `const` in `OverdueAppointment`
+- Bump Annotation library to v1.4.0
+- Provide overdue search history string set from preferences
+- Add effect to load overdue search history
+- Show overdue search history when search query is empty
+- Load overdue search history when overdue search screen is opened
+- Add overdue search query validator
+- Validate search query when overdue search query is changed
+- Bump overdue sections feature flag version to v1
+- Save overdue search history as `String` type in preferences
+- Implement `OverdueSearchHistory`
+- Bump Sentry to v6.1.1
+
+## 2022-06-13-8291
+
+### Internal
+
+- Add wrapper class for overdue appointment sections
+- Show no pending patients card when there are no pending overdue patients
+- Load appointments with a reminder when loading all overdue appointments for a facility
+- Update horizontal padding of overdue section header
+- Link overdue list adapter to the `RecyclerView` in `OverdueScreen`
+- Implement `OverdueAppointmentListItemNew` adapter
+- Rename `SeeAllPendingAppointmentList` to `PendingListFooter`
+- Handle pending list footer clicks
+- Fix app crashing after coming back to app from the background after the overdue list is loaded
+- Handle see all/see less button clicks for pending overdue list section
+- Fix views flashing in the overdue list
+- When overdue appointments are loaded or are loading, render appropriate views
+- Don't show pending overdue list footer if there are no pending overdue appointments
+- Add pending list size for the default state as a firebase remote config
+- Purge old appointments that are synced
+- Implement `OverdueAppointmentListItemNew` adapter
+- Fix progress page not handling system back clicks
+- Bump Flipper to v0.149.0
+- Bump OkHttp to v4.10.0
+- Handle collapse/expand states of overdue appointment sections
+- Fix no pending patients illustration is not collapsing
+
+### Fixes
+
+- Fix overdue list showing older scheduled appointments
+
+## 2022-06-06-8284
+
+### Internal
+
+- Enable drug stock only for India
+- Bump kotlin-coroutines to v1.6.2
+- Move shared test code to separate module
+- Remove overdue appointments list from `OverdueModel`
+- Remove pull reminder status from `README.md`
+- Change return type of `AppointmentRepository#overdueAppointmentsInFacilityNew` to `Observable<List<OverdueAppointment>>`
+- Load overdue appointments and break down into different sections
+- Bump Flipper to v0.147.1
+- Show call result section by default in ContactPatientBottomSheet
+- Bump lottie to v5.2.0
+- Render overdue appointments when appointments are loaded and overdue sections feature is enabled
+- Add feature flag for overdue section improvements
+- Load overdue appointments when current facility is loaded and overdue sections feature is enabled
+- Rename agreed to visit call result text
+- Change colour of number and chevron in the section headers to blue
+- Rename remind to call later call result text
+- Show all overdue patients count instead of just pending patients in overdue tab
+- Show progress bar when loading all overdue appointments
+- Implement minor overdue section layout improvements
+- Bump core-ktx to 1.8.0
+- Fix `RetentionType` getting obfuscated by R8/Proguard
+- Bump appcompat to v1.4.2
+- Fetch the last created appointment for the patient when fetching the latest overdue appointment
+
+### Changes
+
+- Update english text of hypertension treatment question for Sri Lanka
+
+## 2022-05-30-8273
+
+### Internal
+
+- Bump flipper to v0.146.0
+- Fix test name in `PatientSummaryUpdateTest`
+- Bump mixpanel to v6.2.2
+- Bump datadog plugin to v1.4.0
+- Show call result status for the appointment in `ContactPatientBottomSheet`
+- Limit instant search to alphanumeric characters
+- Add query to load all overdue appointments for a facility
+- Bump lint to v30.2.1
+- Add layouts for overdue appointments item types
+- Fix lint issues related to overdue layouts
+
+### Fixes
+
+- Fix search crashing when searching with special characters
+
+## 2022-05-23-8262
+
+### Internal
+
+- Bump Sentry to v5.7.4
+- Fix CDSS alert hiding when multiple BPs are added on the same day
+- Bump flipper to v0.145.0
+- Don't show CDSS alert for newly registered patients
+- Add query to load latest scheduled appointment for the patient
+- Don't show CDSS alert for patient if appointment is more than 2 days overdue
+- Bump ConstraintLayout to v2.1.4
+
+### Changes
+
+- Show ongoing hypertension treatment question for Sri Lanka
+- Redesign `ContactPatientBottomSheet` UI
+
+### Fixes
+
+- Fix text cursor jumping to end when editing patient details
+
+## 2022-05-16-8253
+
+### Internal
+
+- Enable CDSS alerts only in pilot facilities
+- Redact measurements PHI from logs
+- Bump lint to v30.2.0
+- Bump Cirrus rebase-action to v1.7
+- Bump firebase-config to v21.1.0
+- Add query to fetch call result for the appointment
+- Bump Jackson to v2.13.3
+
+## 2022-05-09-8244
+
+### Internal
+
+- Add `updatePriorities` for security app update reminders as a Firebase remote config
+- Add `appStaleness` in `ShowAppUpdate`
+- Disable monthly drug stock reminder by default
+- Show critical update card if in case it clashes with drug stock reminder card
+- Bump Google play services auth to v20.2.0
+- Fix critical app update dialog UI
+- Bump Mixpanel to v6.2.1
+
+### Fixes
+
+- Fix app update notifications not being scheduled
+
+## 2022-05-02-8233
+
+### Internal
+
+- Bump kotlin to v1.6.21
+- Bump Lottie to v5.1.1
+- Migrate `DeletePatientEffectHandler` to use view effects
+- Update `DrugStockReminderAPI` to include `DrugStockFormURL`
+- Handle opening of webView when enter drug stock button clicked
+- Bump Datadog SDK to v1.12.0
+- Bump leakcanary to v2.9.1
+- Bump facebook flipper to v0.144.0
+- Enable monthly drug stock reminder feature flag
+
+### Features
+
+- Add support for monthly drug stock report reminders
+
+## 2022-04-25-8224
+
+### Internal
+
+- Bump Sentry to v5.7.2
+- Bump Mixpanel to v6.1.1
+- Bump gradle to v7.1.3
+- Update translations: `am-ET`, `ti-ET`, `om-ET`, `bn-BD`, `hi-IN`, `so-ET`, `si-LK`, `te-IN`, `ta-IN`, `mr-IN`, `ta-LK`, `pa-IN`, `kn-IN`,
+  `sid-ET`, `bn-IN`
+- Increase max character limit in overdue tab badge
+- Use personal access token when checking out repo in `cut_release_branch` workflow
+- Sync reports and progress data before patient sync
+- Replace `age` and `dateOfBirth` in `TestData` factory methods with `PatientAgeDetails`
+- Bump Lint to v30.1.3
+- Bump Cirrus rebase-action to v1.6
+- Remove the `Age` class
+- Add preferences for drug stock reminder
+- Fix the logic for notification schedule time in `AppUpdateNotificationWorker`
+- Fix API link for `DrugStockReminderApi#drugStockReminder`
+- Check drug stock report status when app is opened
+- Schedule `DrugStock` API to run on 1st of every month at 8 AM
+- Migrate `ForgotPinCreateNewEffectHandler` to view effects
+- Add feature flag for monthly drug stock report reminders
+- Add `DrugStockCard` in `PatientsTabScreen` and handle its visibility
+- Cut release branch every week instead of every 2 weeks
+- Trigger demo and prod release when release branch is created
+- Schedule `DrugStockNotifcationScheduler` in the `PatientsTabScreen`
+- Migrate `ForgotPinConfirmPinEffectHandler` to use view effects
+- Bump Flipper to v0.143.0
+- Rename `trigger_demo_release` workflow name to `trigger_release`
+
+## 2022-04-18-8216
+
+### Internal
+
+- Bump GH Actions `cache` to v3
+- Fix `trigger_demo_release` workflow running on every newly created branch
+- Implement critical app update card in `PatientsTabScreen`
+- Bump flipper to v0.140.0
+- Use `RecyclerView.AdapterDataObserver` to scroll to top when drugs are added
+- Update AVD disk size to 8GB in GH Actions
+- Bump sentry-android to 5.7.1
+- Bump sentry gradle plugin to 3.0.1
+- Implement showing app update nudges based on the priority in `PatientTabScreen`
+- Remove marking older appointments for a patient as a side effect when scheduling an appointment
+- Bump datadog to v1.3.0
+- Update flipper to v0.141.0
+- Add a query to check whether the latest BP entry is high for the patient
+- Load clinical decision support info when the patient summary screen is created
+- Bump gradle to v7.4.2
+- Bump kotlin to v1.6.20
+- Bump coroutines to v1.6.0
+- Implemented the support for DrugStockReminder API
+- Show the clinical decision support banner in summary screen when newest BP entry is high for the patient
+- Hide clinical decision support alert banner when edit medicines are clicked
+- Bump asm to v9.3
+- Add feature flag for clinical decision support alerts
+- Update `isNewestBpEntryHigh` query
+- Add Hindi translations for CDS alert
+- Add remote config key for `NotifyAppUpdateAvailableV2` feature flag
+- Add GitHub action to cut a release branch
+
+### Changes
+
+- Add stronger app update reminders
+
+### Fixes
+
+- Fix recycler view crash when refilling drugs
+
+## 2022-04-04-8192
+
+### Internal
+
+- Bump fragment to v1.4.1
+- Bump firebase to v21.0.2
+- Bump flipper to v0.138.0
+- Bump sentry to v5.6.3
+- Bump paging to v3.1.1
+- Handle background notifications for prioritised app updates
+- Bump Sentry Gradle plugin to v3.0.0
+- Add `DrugStockReminder` api support
+- Bump Sentry to v5.7.0
+- Add GH Action to trigger a demo release on Bitrise when release branch is created
+- Run CI checks in `trigger_demo_release` workflow
+- Cancel in progress demo release workflow when new release action is triggered
+- Pass Simple Bitrise app slug to `TriggerBitriseRelease` script
+- Add `CriticalAppUpdateDialog`
+
+## 2022-03-21-8173
+
+### Internal
+
+- Bump AGP to 7.1.2
+- Bump lint to v30.1.2
+- Bump Lottie to v5.0.2
+- Use full text search when searching for patients
+- Bump flipper to v0.137.0
+- Bump GH Actions `upload-artifact` to v3
+- Bump logback to v1.2.11
+- Move wildcard formatting to search query
+- Update GH Actions `checkout` to v3
+- Bump Lottie to v5.0.3
+- Bump Jackson to v2.13.2
+- Bump mixpanel-android to 6.1.0
+- Bump Sentry to v5.6.2
+- Bump Gradle to v7.4.1
+- Display patient search results in alphabetical order
+
+### Changes
+
+- Improve patient search performance
+- Improve loading recent patients performance
+- Improve loading overdue patients performance
+- Show patient died status for dead patients in search results
+
+## 2022-03-07-8157
+
+### Internal
+
+- Migrate `HelpScreen` to user view effects
+- Bump Sentry Gradle plugin to v2.1.5
+- Update translations: `am-ET`, `ta-LK`, `kn-IN`, `bn-BD`, `bn-IN`. `pa-IN`, `mr-IN`, `ta-IN`, `si-LK`, `sid-ET`, `te-IN`, `so-ET`, `ti-ET`, `om-ET`
+  , `ta-LK`
+- Bump sentry to 5.6.1
+- Provide `AppUpdateHelpContact` based on the `Country`
+- Bump flipper to v0.136.0
+- Remove `isFlexibleUpdateType` as parameter from `UpdateInfo`
+- Provide `PackageInfo` as dependency for `AppVersionFetcher`
+- Bump Lottie to v5.0.1
+- Update proguard rule to keep enum classes only for iText library
+- Add support for prioritised nudges in `CheckAppUpdateAvailability`
+- Use `OnConflictStrategy.ABORT` when updating using upsert
+- Bump opencsv to v5.6
+- Update Room to v2.4.2
+- Update GH Actions `setup-jdk` to v3
+
+## 2022-02-21-8141
+
+### Internal
+
+- Remove `InputField#validate`
+- Migrate `RegistrationFullNameScreen` to use view effects
+- Migrate `RegistrationLoadingScreen` to use view effects
+- Bump Flipper to v0.131.1
+- Migrate `RegistrationLocationPermissionScreen` to use view effects
+- Bump Lottie to v4.2.2
+- Bump ConstraintLayout to v2.1.3
+- Bump Preferences to v1.2.0
+- Migrate `RegistrationConfirmPinScreen` to use view effects
+- Migrate `OnboardingScreen` to use view effects
+- Bump desugar JDK library to v1.1.5
+- Migrate `RecentPatientsScreen` to use view effects
+- Fix `OnboardingScreen` not opening registration screen
+- Mark `Appointment#nextAppointmentPatientProfile` query as a transaction
+- Remove Gradle Versions plugin
+- Migrate `RegistrationPinScreen` to use view effects
+- Migrate `RegistrationFacilitySelectionScreen` to use view effects
+- Bump Lint to v30.1.1
+- Stop sending user location information to Mixpanel
+- Bump Jackson to v2.13.1
+- Bump Room to v2.4.1
+- Migrate `LoginPinScreen` to use view effects
+- Bump AGP to v7.1.1
+- Stop sending username to analytics
+- Stop reporting SQL performance metrics to Mixpanel
+- Ignore updating to Material 3 dependency
+- Bump Kotlin to v1.6.10
+- Bump Moshi to v1.13.0
+- Bump ItemAnimators to v1.1.0
+- Bump Mixpanel to v6.0.0
+- Migrate `AppLockScreen` to use view effects
+- Bump Gradle to v7.4
+- Bump RootBeer to 0.1.0
+- Bump Google Play Services
+  - Auth to v20.1.0
+  - Location to v19.0.1
+  - Barcode Scanning to v18.0.0
+- Bump leakcanary to 2.8.1
+- Bump coroutines to v1.6.0
+- Remove Google Guava dependency
+- Bump Dagger to v2.41
+
+## 2022-02-07-8126
+
+### Internal
+
+- Bump Gradle to v7.3.3
+- Remove version range for zxing dependency in the version catalog
+- Bump WorkManager to v2.7.1
+- Bump Google Play Services
+  - MLKit Barcode Scanning to v16.2.1
+  - Authentication to v19.2.0
+- Update renovate bot config
+- Bump OkHttp to v4.9.3
+- Ignore automatic appointments when fetching next appointment details
+- Bump AGP to v7.0.4
+- Bump Play Core to v1.10.3
+- Bump androidx-cameraView to 1.0.0-alpha32
+- Bump Github action script to v5.1.0
+- Bump Lint to v30.0.4
+- Bump Dagger to v2.40.5
+- Bump facebook.soloader to 0.10.3
+- Bump Mobius to v1.5.8
+- Request camera permissions when add bp passport button is clicked in `EditPatientScreen`
+- Run renovate bot daily after 12 am
+- Update next appointment card UI specifications
+- Set toolbar title in `ScanSimpleIdScreen` based on where it's opened from
+- Implement adding `NHID` in `EditPatientScreen`
+- Request camera permission when add nhid button is clicked in `EditPatientScreen`
+- Fix when scanned QR code error is shown the progress state continues to show
+- Refactor `addBPPassport` and `addNHIDButton` to use `MaterialButton`
+- Fix two duplicate NHIDs end up rendering in `EditPatientScreen`
+- Bump firebase config to v21.0.1
+- Add facility protocol and group UUID in demo facility
+- Update assigned facility card UI specifications
+- Set India timezone for renovate bot to run schedules
+- Move adding health ids from edit patient behind a feature flag
+- Display National Health ID before BP Passports in `EditPatientScreen`
+- Bump google-services to 4.3.10
+- Add highlight when a new alternate id is added
+- Bump Google Truth to v1.1.3
+- Bump Mixpanel to v5.9.6
+- Bump androidx-annotation
+- Add benchmark test for loading overdue appointments in a facility
+- Support scanning list of unique Bp passports in `EditPatientScreen`
+- Add benchmark test for patient registration queries
+- Handle visibility of Bp Passport label and button when scan health id from edit patient is enabled
+- Migrate `ScannedQrCodeSheet` to use view effects
+- Bump lint to v30.1.0
+- Bump Flipper to v0.131.0
+- Add benchmark test for creating a new bp entry
+- Migrate `CustomDrugEntrySheet` to user view effects
+- Migrate `SettingsScreen` to use view effects
+- Bump Paging to v3.1.0
+- Migrate `RemoveOverdueAppointmentScreen` to user view effects
+- Remove Spotless Gradle plugin
+- Remove code formatting checks GH Action
+- Bump AppCompat to v1.4.1
+- Update the highlight alignment for newly added NHID or BP passport
+- Add highlight when newly scanned bp passports are added
+- Index `patientUuid` in tables that are joined in `OverdueAppointment` database view
+- Fix broken back button in `EditPatientScreen`
+- Fix uneven spacing between health ID labels and `ADD` button
+
+### Changes
+
+- Add health ID's from edit patient screen
+
+## 2022-02-01-8118
+
+### Internal
+
+- Don't run auto request review action in draft PRs
+- Implement `NextAppointmentCardView`
+- Show next appointment card in patient summary screen
+- Refresh appointment details when appointment is scheduled or assigned facility is changed
+- Fix appointment not refreshing after assigned facility is changed
+- Add double non breaking spaces between appointment date and status
+- Debounce overdue updates to prevent running out of view effect queue size
+- Stop loading total facility count when facility picker view is created
+- Update `hasAppointmentForPatientChangedSince` query to only consider `Scheduled` appointments
+- Update GH Actions `setup-jdk` to v2
+- Bump Datadog SDK version
+- Rename next appointment title string
+- Add support for demo country
+
+### Changes
+
+- View next appointment information in patient summary screen
+- Change appointment bottom sheet display logic
+  - Schedule appointment sheet is now only opened from patient summary screen when BP or Blood Sugar or Prescription is changed
+
+## 2022-01-11-8098
+
+### Internal
+
+- Inject a new `AppDatabase` in instrumented tests instead of using a singleton instance
+- Add support for writing performance regression test suites
+- Remove QA Android tests from PR comment GH Action
+- Return early if the required `Timeout` conditions are not satisfied in `TimeoutCallAdapterFactory`
+- Enable auto merge of PR when assigning reviewer
+
+### Fixes
+
+- Fix help screen not opening on button click
+
+## 2021-12-28-8079
+
+### Internal
+
+- Remove duplicate included modules in `AppModule`
+- Use hardcoded user in server integration tests
+- Add support to set custom animations for `Router` transactions
+- Migrate `DeletePatientScreen` to a fragment
+- Migrate `TeleconsultPrescriptionScreen` to a fragment
+- Report `StringIndexOutOfBoundsException` when building identifier display value
+- Migrate `HelpScreen` to a Fragment
+- Use `StringPreferenceConverter` for getting selected state from preferences
+- Use view render to setup UI and fill fields in edit screen
+- Remove unused properties from `SetupActivityModel`
+- Fix text change events not triggering in edit patient screen
+- Add support for running Heroku cleanup instance manually
+- Migrate `EditMedicineScreen` to use view effects
+- Migrate `OverdueScreen` to use view effects
+- Add a specific endpoint network timeout
+
+### Fixes
+
+- Fix app crashing when changing facility while app is not connected to network
+
+## 2021-12-08-8060
+
+### Fixes
+
+- Fix Sri Lanka personal health number not rendering in the patient entry and edit screens
+
+## 2021-12-06-8056
+
+### Internal
+
+- Ask storage permission when download/share button is clicked
+- Add common download function for downloading overdue list
+- Fix flaky paging test cases
+- Remove post delayed callbacks when view is detached from window
+- Remove canceling previously scheduled periodic work in `SyncScheduler`
+- Change SQL performance reporting to use begin and end hooks
+- Use view binding to inflate layout in `BaseDialog`
+- Fix overdue list file name in `OverdueListDownloader`
+- Send performance monitoring events to Datadog
+- Bump Mobius to v1.5.6
+- Enable overdue list download and share feature in India only
+- Extend `RxWorker` in `OverdueDownloadWorker`
+- Implement overdue list download/share format dialog
+- Set user ID as user property in `MixpanelAnalyticsReporter`
+- Provide a standardized mechanism to update user and deployment details in third-party tooling
+- Improve Room annotation processing
+  - Enable star projection of queries
+  - Enable incremental annotation processing
+- Use `IO` scheduler for doing background tasks in `OverdueDownloadWorker`
+- Download/Share CSV only for API below 24
+- Show error dialog when overdue list download fails
+- Fix sharing downloaded overdue list through Whatsapp is not working
+- Enable `OverdueListDownloadAndShare` feature flag
+- Make PDF as the default for downloading Overdue lists
+- Default to opening Google Sheets for Spreadsheets
+
+### Changes
+
+- Add option to download & share overdue list
+
+### Fixes
+
+- Fix medical history answers toggle not switching when selected
+
+## 2021-11-24-8041
+
+### Internal
+
+- Bump Mixpanel to v5.9.5
+- Set user ID as user property in `MixpanelAnalyticsReporter`
+
+## 2021-11-23-8038
+
+### Internal
+
+- Bump Dagger to v2.40
+- Bump WorkManager to v2.7.0
+- Migrate `SplashScreen` to a fragment
+- Bump Core-KTX to v1.7.0
+- Migrate `InstantSearchScreen` to use view effects
+- Migrate `LinkIdWithPatientEffectHandler` to use view effects
+- Migrate `PatientSummaryScreen` to use view effects
+- Migrate `OnBoardingScreen` to a Fragment
+- Migrate `SettingsScreen` to a Fragment
+- Bump Coroutines to v1.5.2
+- Implement `OverdueListDownloader`
+- Cancel in progress GH actions when new action is started with same group name
+- Migrate `HomeScreen` to use view effects
+- Migrate `TeleConsultSuccessScreen` to a Fragment
+- Migrate `ForgotPinCreateNewPinScreen` to a Fragment
+- Create demo user for Google Play reviews
+- Migrate `PatientEntryScreen` to use view effects
+- Bump Gradle to 7.3
+- Implement `OverdueDownloadWorker`
+- Show no internet connection dialog when download/share button is clicked
+- Save databases in failed instrumented tests as test artifacts
+- Migrate `IntroVideoScreen` to use view effects
+
+### Fixes
+
+- Fix diabetes treatment input required dialog showing when diabetes management is disabled
+
+## 2021-11-02-8005
+
+### Internal
+
+- Allow only latin digits in the phone number entry
+- Bump AGP to v7.0.3
+- Migrate `RegistrationFacilitySelectionScreen` to a fragment
+- Migrate `RegistrationLocationPermissionScreen` to a fragment
+- Migrate `RegistrationLoadingScreen` to a fragment
+- Remove `FragmentScreenKeyModule` from `AuthenticationActivityComponent`
+- Remove `:router` package
+- Remove dependency on `com.squareup.flow:flow`
+- Migrate `SelectCountryScreen` to use view effects
+- Migrate `EnterOtpScreen` to use view effects
+- Implement CSV to PDF file converter
+- Add `OverdueListDownloadApi`
+- Migrate `ForgotPinConfirmPinScreen` to a Fragment
+- Remove tool for capturing of flaky tests
+
+### Fixes
+
+- Fix overdue screen progress state during initial sync
+
+## 2021-10-18-7990
+
+### Internal
+
+- Migrate `SelectCountryScreen` to a fragment
+- Bump Mobius to v1.5.5
+- Enable custom drug search feature
+- Enable placeholders in overdue screen
+- Use overdue list count to display the count in the tab bar
+- Change `TheActivity` to load the entire screen history instead of a single screen key
+- Add support for Android 12
+  - Bump compile & target SDK to 31
+  - Add exported attr in `AndroidManifest.xml` for activities/services/receivers with intent filters
+  - Add `ACCESS_COARSE_LOCATION` permission
+- Fetch appointment directly in contact patient sheet
+- Updated translations: `so-ET`, `pa-IN`, `bn-BD`, `mr-IN`, `bn-IN`, `ta-LK`, `am-ET`, `sid-ET`, `kn-IN`, `om-ET`, `si-LK`, `ta-IN`, `te-IN`
+- Bump CameraX dependencies
+- Remove unused params from `OverdueAppointment`
+- Bump Dagger to v2.39.1
+- Enable call result sync
+- Scope the construction of `RxSharedPreferences` to the application
+- Remove flow for setting a fallback country for India users when moving to a build supporting country selection
+- Move migration of v1 Country to `SetupActivity` from the DI provider
+
+### Changes
+
+- Purge call results when database purges run
+- Scroll to top when drugs list content is changed in edit medicines screen
+- Render custom drug frequency in drug summary view
+- Change "Normal" button text to "Call" in patient contact sheet if secure call is disabled
+
+### Fixes
+
+- Fix country selection list content hidden behind Android navigation bar
+- Fix screen backstack not getting maintained when app is restored from background
+
+## 2021-10-05-7973
+
+### Fixes
+
+- Fix state selection list content hidden behind Android navigation bar
+
+## 2021-10-04-7971
+
 ### Internal
 
 - Add a progress state in `CustomDrugEntrySheet`
@@ -8,30 +884,64 @@
 - Add integration tests for `AppConfigRepository`
 - Change `SynceableRepository#save()` to be a synchronous call
 - Change server environment in integration tests to `android_review`
-- [In Progress: 14 Sep 2021] Record call results instead of updating the same appointment record
-- [In Progress: 31 Aug 2021] Refactor logic around providing drug frequencies label depending on the country
-- [In Progress: 2 Sep 2021] Add a progress state in `CustomDrugEntrySheet`
-- Use heroku 20 on review apps
+- Update `verify_pr_description` CI validation check to Shortcut links
+- Unify appointment cancellation flow in `RemoveOverdueScreen`
+- Implement showing medicine frequency labels depending on the country in `TeleconsultMedicinesView` and `MedicineFrequencySheet`
+- Add support for syncing diabetes treatment question
+- Use Kotlin script for PR comment check GH Action
+- Bump Kotlin to v1.5.31
+- Remove overdue list changes feature flag
+- Implement providing drug frequencies label depending on the country in `DrugSearchScreen`
+- Add progress state in the save button when the drug is being added/updated in `CustomDrugEntrySheet`
+- Handle `ShowKeyboard` as a Ui Action instead of rendering it in the `UiRenderer`
+- Refactor `ContactPatientUiRenderer`
+- Provide drug frequencies to label as a map
+- Show ongoing diabetes treatment required dialog in diagnosis screen
+- Record call results instead of updating the same appointment record
+- Fix `Country` v2 migration not running
+- Convert commit and push bash script to Kotlin script
+- Show state selection screen after country is selected
+- Add Sri Lanka personal health number business identifier
+- Enable custom drug search feature
+- Inject `DrugFrequencyToLabelMap` directly in `TeleconsultMedicinesView` instead of handling it in the effect handler
 
 ### Changes
 
-- Show alpha numeric keyboard for national ID text field in patient entry and edit screen
-- [In Progress: 19 Aug 2021] UI improvements for medical history screen
+- Hide resend sms button when OTP attempts are blocked
+- Show patient died status in patient summary screen & contact patient bottom sheet
+- Go back to the previous screen when done/back is clicked in the patient summary screen when the patient is marked as dead
+- Show change diagnosis dialog when patient is not diagnosed with HTN or diabetes when registering
+- UI improvements for medical history screen
   - Show hypertension diagnosis and treatment in single card
   - Show separate cards for hypertension and diabetes diagnosis
   - Show hypertension diagnosis even when facility doesn't have diabetes management enabled
-- [In Progress: 22 Jul 2021] Add option to download & share overdue list
-- [In Progress: 14 Jul 2021] Medication screen improvements
+  - Added diabetes treatment question in medical history screen
+- Medication screen improvements
   - Search for commonly used drugs
-- [In Progress: 06 Aug 2021] Add support for Sri Lanka
-- [In Progress: 25 Aug 2021] Implement providing drug frequencies label depending on the country
-- [In-progress: 13 Sep 2021] Restrict OTP entries to 5 attempts
+  - New custom drug entry/edit sheet
+- Add support for Sri Lanka
+- Add support for displaying drug frequencies label depending on the country
+- Restrict OTP entries to 5 attempts
+- Remove next button from state selection screen, you can now select a state to go to next screen
+- Remove next button from the country selection screen, you can now select a country to go to next screen
+- Custom Drug Entry Sheet UI Improvements
+- Navigate back to `SelectCountryScreen` from `RegistrationPhoneScreen` when there's only one state present in the country
+- Show personal health number text field in patient entry/edit screens
 
 ### Fixes
 
 - Fix select country & state screen overlapping next button
+- Fix contact patient bottom sheet not showing correct results
+- Fix multiple medical history answers selection in patient summary screen
 
-## Demo
+## 2021-09-23-7958
+
+### Fixes
+
+- Fix app not displaying national ID and proper illustration in Sri Lanka
+
+## 2021-09-20-7952
+
 ### Internal
 
 - Change `ScheduleAppointmentSheet` to use Mobius view effects
@@ -49,6 +959,7 @@
 - Change `EditPatientScreen` to use Mobius view effects
 - Update `.editorconfig` rules
 - Show facilities from selected state during sign up
+- Use `Object` class for parsing old `Country` json
 
 ### Features
 
@@ -62,7 +973,14 @@
   - Update drug frequency edit text ui
 - Add ellipsis to long drug name in `PatientSummaryScreen` & `EditMedicineScreen`
 - Add a unicode character instead of space in `DrugSearchScreen` search results
-- Updated translations: `mr-IN`, `bn-IN`, `bn-BD`, `kn-IN`, `pa-IN`, `am-ET`, `sid-ET`, `ta-LK`, `hi-IN`, `ti-ET`, `so-ET`, `si-LK`, `te-IN`, `ta-IN`, `om-ET`
+- Updated translations: `mr-IN`, `bn-IN`, `bn-BD`, `kn-IN`, `pa-IN`, `am-ET`, `sid-ET`, `ta-LK`, `hi-IN`, `ti-ET`, `so-ET`, `si-LK`, `te-IN`, `ta-IN`
+  , `om-ET`
+- Show alpha numeric keyboard for national ID text field in patient entry and edit screen
+- Remove maximum character limit for phone numbers
+
+### Fixes
+
+- Fix patient summary going back to home screen when opening teleconsult links
 
 ## 2021-09-08-7939
 

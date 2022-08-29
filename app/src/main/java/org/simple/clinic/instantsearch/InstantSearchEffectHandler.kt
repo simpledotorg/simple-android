@@ -1,5 +1,6 @@
 package org.simple.clinic.instantsearch
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -19,12 +20,12 @@ class InstantSearchEffectHandler @AssistedInject constructor(
     private val instantSearchConfig: InstantSearchConfig,
     private val pagerFactory: PagerFactory,
     private val schedulers: SchedulersProvider,
-    @Assisted private val uiActions: InstantSearchUiActions
+    @Assisted private val viewEffectsConsumer: Consumer<InstantSearchViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: InstantSearchUiActions): InstantSearchEffectHandler
+    fun create(viewEffectsConsumer: Consumer<InstantSearchViewEffect>): InstantSearchEffectHandler
   }
 
   fun build(): ObservableTransformer<InstantSearchEffect, InstantSearchEvent> = RxMobius
@@ -32,24 +33,11 @@ class InstantSearchEffectHandler @AssistedInject constructor(
       .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
       .addTransformer(LoadAllPatients::class.java, loadAllPatients())
       .addTransformer(SearchWithCriteria::class.java, searchWithCriteria())
-      .addConsumer(ShowAllPatients::class.java, { uiActions.showAllPatients(it.patients, it.facility) }, schedulers.ui())
-      .addConsumer(ShowPatientSearchResults::class.java, { uiActions.showPatientsSearchResults(it.patients, it.facility, it.searchQuery) }, schedulers.ui())
       .addTransformer(ValidateSearchQuery::class.java, validateSearchQuery())
-      .addConsumer(OpenPatientSummary::class.java, { uiActions.openPatientSummary(it.patientId) }, schedulers.ui())
-      .addConsumer(OpenLinkIdWithPatientScreen::class.java, { uiActions.openLinkIdWithPatientScreen(it.patientId, it.identifier) }, schedulers.ui())
-      .addConsumer(OpenScannedQrCodeSheet::class.java, { uiActions.openScannedQrCodeSheet(it.identifier) }, schedulers.ui())
       .addTransformer(SaveNewOngoingPatientEntry::class.java, saveNewOngoingPatientEntry())
-      .addConsumer(OpenPatientEntryScreen::class.java, { uiActions.openPatientEntryScreen(it.facility) }, schedulers.ui())
-      .addAction(ShowKeyboard::class.java, { uiActions.showKeyboard() }, schedulers.ui())
-      .addAction(OpenQrCodeScanner::class.java, uiActions::openQrCodeScanner, schedulers.ui())
       .addTransformer(CheckIfPatientAlreadyHasAnExistingNHID::class.java, checkIfPatientAlreadyHasAnExistingNHID())
-      .addAction(ShowNHIDErrorDialog::class.java, uiActions::showNHIDErrorDialog, schedulers.ui())
-      .addConsumer(PrefillSearchQuery::class.java, ::prefillSearchQuery, schedulers.ui())
+      .addConsumer(InstantSearchViewEffect::class.java, viewEffectsConsumer::accept)
       .build()
-
-  private fun prefillSearchQuery(effect: PrefillSearchQuery) {
-    uiActions.prefillSearchQuery(effect.searchQuery)
-  }
 
   private fun saveNewOngoingPatientEntry(): ObservableTransformer<SaveNewOngoingPatientEntry, InstantSearchEvent> {
     return ObservableTransformer { effects ->
@@ -97,8 +85,9 @@ class InstantSearchEffectHandler @AssistedInject constructor(
           .observeOn(schedulers.io())
           .switchMap {
             pagerFactory.createPager(
-                sourceFactory = { patientRepository.searchPagingSource(it.criteria, it.facility.uuid) },
-                pageSize = instantSearchConfig.pagingLoadSize
+                sourceFactory = { patientRepository.search(it.criteria, it.facility.uuid) },
+                pageSize = instantSearchConfig.pagingLoadSize,
+                enablePlaceholders = false
             )
           }
           .map(::SearchResultsLoaded)
@@ -112,7 +101,8 @@ class InstantSearchEffectHandler @AssistedInject constructor(
           .switchMap { (facility) ->
             pagerFactory.createPager(
                 sourceFactory = { patientRepository.allPatientsInFacility(facilityId = facility.uuid) },
-                pageSize = instantSearchConfig.pagingLoadSize
+                pageSize = instantSearchConfig.pagingLoadSize,
+                enablePlaceholders = false
             )
           }
           .map(::AllPatientsInFacilityLoaded)

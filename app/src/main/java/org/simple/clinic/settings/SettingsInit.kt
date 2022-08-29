@@ -14,7 +14,7 @@ class SettingsInit : Init<SettingsModel, SettingsEffect> {
     }
 
     if (!model.appVersionQueried) {
-      effects.add(LoadAppVersionEffect(model.applicationId))
+      effects.add(LoadAppVersionEffect)
     }
 
     return first(model, effects)

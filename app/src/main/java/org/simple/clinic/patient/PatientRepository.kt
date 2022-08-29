@@ -48,23 +48,12 @@ class PatientRepository @Inject constructor(
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
 
-  fun searchPagingSource(criteria: PatientSearchCriteria, facilityId: UUID): PagingSource<Int, PatientSearchResult> {
-    return when (criteria) {
-      is Name -> searchByNamePagingSource(criteria.patientName, facilityId)
-      is NumericCriteria -> searchByNumberPagingSource(criteria.numericCriteria, facilityId)
+  fun search(criteria: PatientSearchCriteria, facilityId: UUID): PagingSource<Int, PatientSearchResult> {
+    val query = when (criteria) {
+      is Name -> criteria.patientName
+      is NumericCriteria -> criteria.numericCriteria
     }
-  }
-
-  private fun searchByNamePagingSource(patientName: String, facilityId: UUID): PagingSource<Int, PatientSearchResult> {
-    return database
-        .patientSearchDao()
-        .searchByNamePagingSource(patientName, facilityId)
-  }
-
-  private fun searchByNumberPagingSource(query: String, facilityId: UUID): PagingSource<Int, PatientSearchResult> {
-    return database
-        .patientSearchDao()
-        .searchByNumberPagingSource(query, facilityId)
+    return database.patientSearchDao().search(query, facilityId)
   }
 
   fun patient(uuid: UUID): Observable<Optional<Patient>> {
@@ -227,18 +216,21 @@ class PatientRepository @Inject constructor(
       requireNotNull(personalDetails)
       requireNotNull(address)
 
-      val dateOfBirth = personalDetails.dateOfBirth
+      val age = personalDetails.age?.toInt()
+      val dateOfBirth = personalDetails.dateOfBirth?.let {
+        dateOfBirthFormatter.parse(it, LocalDate::from)
+      }
 
       val patient = Patient(
           uuid = patientUuid,
           addressUuid = addressUuid,
           fullName = personalDetails.fullName,
           gender = personalDetails.gender!!,
-          ageDetails = PatientAgeDetails.fromAgeOrDate(personalDetails.age?.let { ageString ->
-            Age(ageString.toInt(), Instant.now(utcClock))
-          }, dateOfBirth?.let {
-            dateOfBirthFormatter.parse(dateOfBirth, LocalDate::from)
-          }),
+          ageDetails = PatientAgeDetails(
+              ageValue = age,
+              ageUpdatedAt = if (age != null) Instant.now(utcClock) else null,
+              dateOfBirth = dateOfBirth
+          ),
           status = PatientStatus.Active,
           createdAt = Instant.now(utcClock),
           updatedAt = Instant.now(utcClock),
@@ -351,7 +343,7 @@ class PatientRepository @Inject constructor(
     }
   }
 
-  private fun createBusinessIdFromIdentifier(
+  fun createBusinessIdFromIdentifier(
       id: UUID,
       patientUuid: UUID,
       identifier: Identifier,
@@ -474,7 +466,7 @@ class PatientRepository @Inject constructor(
   fun clearPatientData(): Completable {
     return Completable
         .fromCallable { database.clearAppData() }
-        .andThen(reportsRepository.deleteReports())
+        .doOnComplete { reportsRepository.deleteReports() }
   }
 
   fun recentPatients(facilityUuid: UUID, limit: Int): Observable<List<RecentPatient>> =
@@ -533,6 +525,10 @@ class PatientRepository @Inject constructor(
     return Completable.fromAction {
       database.businessIdDao().save(listOf(businessId))
     }
+  }
+
+  private fun saveBusinessIds(businessIds: List<BusinessId>) {
+    database.businessIdDao().save(businessIds)
   }
 
   private fun createBusinessIdMetaDataForIdentifier(
@@ -677,6 +673,16 @@ class PatientRepository @Inject constructor(
         .or(bloodSugarsChangedSince)
   }
 
+  fun hasPatientMeasurementDataChangedSince(patientUuid: UUID, timestamp: Instant): Boolean {
+    val bpsChangedSince = haveBpsForPatientChangedSince(patientUuid, timestamp)
+    val bloodSugarsChangedSince = haveBloodSugarsForPatientChangedSince(patientUuid, timestamp)
+    val prescriptionsChangedSince = hasPrescriptionForPatientChangedSince(patientUuid, timestamp)
+
+    return bpsChangedSince
+        .or(bloodSugarsChangedSince)
+        .or(prescriptionsChangedSince)
+  }
+
   fun patientProfileImmediate(patientUuid: UUID): Optional<PatientProfile> {
     return database.patientDao().patientProfileImmediate(patientUuid).toOptional()
   }
@@ -728,8 +734,22 @@ class PatientRepository @Inject constructor(
     }
   }
 
+  fun addIdentifiersToPatient(
+      patientUuid: UUID,
+      businessIds: List<BusinessId>
+  ) {
+    database.runInTransaction {
+      saveBusinessIds(businessIds)
+      setSyncStatus(listOf(patientUuid), PENDING)
+    }
+  }
+
   fun contactPatientProfileImmediate(patientUuid: UUID): ContactPatientProfile {
     return database.patientDao().contactPatientProfileImmediate(patientUuid)
+  }
+
+  fun villageAndPatientNamesInFacility(facilityUuid: UUID): List<String> {
+    return database.patientDao().villageAndPatientNamesInFacility(facilityUuid)
   }
 
   private data class BusinessIdMetaAndVersion(

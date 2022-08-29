@@ -36,7 +36,8 @@
       android:layout_height="wrap_content"
       android:layout_gravity="center"
       android:paddingVertical="@dimen/spacing_8"
-      app:chipSpacingHorizontal="@dimen/spacing_8">
+      app:chipSpacingHorizontal="@dimen/spacing_8"
+      app:singleSelection="true">
 
       <com.google.android.material.chip.Chip
         android:id="@+id/yesChip"

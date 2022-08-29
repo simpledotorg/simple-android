@@ -15,7 +15,7 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.displayLetterRes
-import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionScreenKey
+import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionScreen.Key
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.unsafeLazy
 import java.time.LocalDate
@@ -53,7 +53,7 @@ class TeleconsultPatientInfoView constructor(
   lateinit var screenKeyProvider: ScreenKeyProvider
 
   private val delegate by unsafeLazy {
-    val screenKey = screenKeyProvider.keyFor<TeleconsultPrescriptionScreenKey>(this)
+    val screenKey = screenKeyProvider.keyFor<Key>(this)
     val uiRenderer = TeleconsultPatientInfoUiRenderer(this)
 
     MobiusDelegate.forView(

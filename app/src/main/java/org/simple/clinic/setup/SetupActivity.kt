@@ -12,20 +12,19 @@ import io.reactivex.Observable
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
+import org.simple.clinic.activity.permissions.ActivityPermissionResult
 import org.simple.clinic.activity.placeholder.PlaceholderScreen
 import org.simple.clinic.databinding.ActivitySetupBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Features
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.ActivityResult
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.registerorlogin.AuthenticationActivity
-import org.simple.clinic.router.ScreenResultBus
-import org.simple.clinic.router.screen.ActivityPermissionResult
-import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.setup.runcheck.Disallowed
-import org.simple.clinic.splash.SplashScreen.SplashScreenKey
+import org.simple.clinic.splash.SplashScreen
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.disablePendingTransitions
@@ -158,7 +157,7 @@ class SetupActivity : AppCompatActivity(), UiActions {
   }
 
   private fun navigateToSplashScreen() {
-    router.clearHistoryAndPush(SplashScreenKey.wrap())
+    router.clearHistoryAndPush(SplashScreen.Key())
   }
 
   override fun showCountrySelectionScreen() {

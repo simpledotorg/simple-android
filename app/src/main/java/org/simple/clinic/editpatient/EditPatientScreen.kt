@@ -2,14 +2,16 @@ package org.simple.clinic.editpatient
 
 import android.content.Context
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.RadioButton
 import androidx.core.view.isGone
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
@@ -17,15 +19,17 @@ import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding3.view.clicks
-import com.jakewharton.rxbinding3.widget.checkedChanges
-import com.jakewharton.rxbinding3.widget.textChanges
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.activity.permissions.RequestPermissions
+import org.simple.clinic.activity.permissions.RuntimePermissions
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.databinding.PatientEditAlternateIdViewBinding
 import org.simple.clinic.databinding.PatientEditBpPassportViewBinding
 import org.simple.clinic.databinding.ScreenEditPatientBinding
@@ -41,17 +45,18 @@ import org.simple.clinic.editpatient.EditPatientValidationError.DateOfBirthParse
 import org.simple.clinic.editpatient.EditPatientValidationError.DistrictEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.FullNameEmpty
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberEmpty
-import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooLong
 import org.simple.clinic.editpatient.EditPatientValidationError.PhoneNumberLengthTooShort
 import org.simple.clinic.editpatient.EditPatientValidationError.StateEmpty
-import org.simple.clinic.editpatient.deletepatient.DeletePatientScreenKey
+import org.simple.clinic.editpatient.deletepatient.DeletePatientScreen
+import org.simple.clinic.feature.Feature.AddingHealthIDsFromEditPatient
 import org.simple.clinic.feature.Feature.DeletePatient
 import org.simple.clinic.feature.Feature.VillageTypeAhead
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
-import org.simple.clinic.navigation.v2.compat.wrap
+import org.simple.clinic.navigation.v2.ScreenResultBus
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.form.AgeField
@@ -75,27 +80,30 @@ import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaNationalId
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.clinic.scanid.OpenedFrom
+import org.simple.clinic.scanid.ScanSimpleIdScreen
+import org.simple.clinic.scanid.ScanSimpleIdScreenKey
+import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.afterTextChangedWatcher
 import org.simple.clinic.util.exhaustive
+import org.simple.clinic.util.resolveColor
+import org.simple.clinic.util.setFragmentResultListener
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.Enabled
 import org.simple.clinic.widgets.ProgressMaterialButton.ButtonState.InProgress
+import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+import org.simple.clinic.widgets.checkWithListener
 import org.simple.clinic.widgets.scrollToChild
-import org.simple.clinic.widgets.setTextAndCursor
-import org.simple.clinic.widgets.textChanges
+import org.simple.clinic.widgets.setTextWithWatcher
 import org.simple.clinic.widgets.visibleOrGone
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
@@ -128,10 +136,19 @@ class EditPatientScreen : BaseScreen<
   lateinit var effectHandlerFactory: EditPatientEffectHandler.Factory
 
   @Inject
-  lateinit var viewEffectHandler: EditPatientViewEffectHandler.Factory
+  lateinit var features: Features
 
   @Inject
-  lateinit var features: Features
+  lateinit var userClock: UserClock
+
+  @Inject
+  lateinit var runtimePermissions: RuntimePermissions
+
+  @Inject
+  lateinit var screenResults: ScreenResultBus
+
+  @Inject
+  lateinit var country: Country
 
   private val rootView
     get() = binding.root
@@ -235,7 +252,14 @@ class EditPatientScreen : BaseScreen<
   private val saveButton
     get() = binding.saveButton
 
+  private val addBpPassportButton
+    get() = binding.addBpPassportButton
+
+  private val addNHIDButton
+    get() = binding.addNHIDButton
+
   private val hardwareBackPressEvents = PublishSubject.create<BackClicked>()
+  private val hotEvents = PublishSubject.create<UiEvent>()
 
   private val villageTypeAheadAdapter by unsafeLazy {
     ArrayAdapter<String>(
@@ -246,20 +270,79 @@ class EditPatientScreen : BaseScreen<
     )
   }
 
+  private val fullNameEditTextChanges by unsafeLazy {
+    afterTextChangedWatcher { text ->
+      hotEvents.onNext(NameChanged(text?.toString().orEmpty()))
+    }
+  }
+
+  private val phoneNumberTextChanges by unsafeLazy {
+    afterTextChangedWatcher { text ->
+      hotEvents.onNext(PhoneNumberChanged(text?.toString().orEmpty()))
+    }
+  }
+
+  private val districtTextChanges by unsafeLazy {
+    afterTextChangedWatcher { text ->
+      hotEvents.onNext(DistrictChanged(text?.toString().orEmpty()))
+    }
+  }
+
+  private val stateTextChanges by unsafeLazy {
+    afterTextChangedWatcher { text ->
+      hotEvents.onNext(StateChanged(text?.toString().orEmpty()))
+    }
+  }
+
+  private val colonyOrVillageTextChanges by unsafeLazy {
+    afterTextChangedWatcher { text ->
+      hotEvents.onNext(ColonyOrVillageChanged(text?.toString().orEmpty()))
+    }
+  }
+
+  private val alternateIdTextChanges by unsafeLazy {
+    afterTextChangedWatcher { text ->
+      hotEvents.onNext(AlternativeIdChanged(text?.toString().orEmpty()))
+    }
+  }
+
+  private val dateOfBirthTextChanges by unsafeLazy {
+    afterTextChangedWatcher { text ->
+      hotEvents.onNext(DateOfBirthChanged(text?.toString().orEmpty()))
+    }
+  }
+
+  private val ageTextChanges by unsafeLazy {
+    afterTextChangedWatcher { text ->
+      hotEvents.onNext(AgeChanged(text?.toString().orEmpty()))
+    }
+  }
+
+  private val zoneTextChanges by unsafeLazy {
+    afterTextChangedWatcher { text ->
+      hotEvents.onNext(ZoneChanged(text?.toString().orEmpty()))
+    }
+  }
+
+  private val streetAddressTextChanges by unsafeLazy {
+    afterTextChangedWatcher { text ->
+      hotEvents.onNext(StreetAddressChanged(text?.toString().orEmpty()))
+    }
+  }
+
   override fun defaultModel() = EditPatientModel.from(
       patient = screenKey.patient,
       address = screenKey.address,
       phoneNumber = screenKey.phoneNumber,
       dateOfBirthFormatter = dateOfBirthFormat,
       bangladeshNationalId = screenKey.bangladeshNationalId,
-      saveButtonState = EditPatientState.NOT_SAVING_PATIENT
+      saveButtonState = EditPatientState.NOT_SAVING_PATIENT,
+      isUserCountryIndia = country.isoCountryCode == Country.INDIA,
+      isAddingHealthIDsFromEditPatientEnabled = features.isEnabled(AddingHealthIDsFromEditPatient)
   )
 
   override fun createInit() = EditPatientInit(
       patient = screenKey.patient,
-      address = screenKey.address,
-      phoneNumber = screenKey.phoneNumber,
-      bangladeshNationalId = screenKey.bangladeshNationalId,
       isVillageTypeAheadEnabled = features.isEnabled(VillageTypeAhead)
   )
 
@@ -271,24 +354,18 @@ class EditPatientScreen : BaseScreen<
 
   override fun uiRenderer() = EditPatientViewRenderer(this)
 
-  override fun viewEffectHandler() = viewEffectHandler.create(this)
+  override fun viewEffectHandler() = EditPatientViewEffectHandler(this)
 
   override fun events() = Observable.mergeArray(
       saveClicks(),
-      nameTextChanges(),
-      phoneNumberTextChanges(),
-      districtTextChanges(),
-      stateTextChanges(),
-      colonyTextChanges(),
-      genderChanges(),
-      dateOfBirthTextChanges(),
       dateOfBirthFocusChanges(),
-      ageTextChanges(),
       backClicks(),
-      bangladeshNationalIdChanges(),
-      zoneEditText.textChanges(::ZoneChanged),
-      streetAddressEditText.textChanges(::StreetAddressChanged)
-  ).compose(ReportAnalyticsEvents())
+      addBpPassportClicks(),
+      addNHIDButtonClicks(),
+      hotEvents
+  )
+      .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
+      .compose(ReportAnalyticsEvents())
       .cast<EditPatientEvent>()
 
   override fun bindView(
@@ -303,11 +380,34 @@ class EditPatientScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    setAdapterWhenVillageTypeAheadIsEnabled()
+
+    deletePatient.setOnClickListener { router.push(DeletePatientScreen.Key(screenKey.patient.uuid)) }
+
+    handleScanIdentifierResult()
+  }
+
+  private fun setAdapterWhenVillageTypeAheadIsEnabled() {
     if (features.isEnabled(VillageTypeAhead)) {
       colonyOrVillageEditText.setAdapter(villageTypeAheadAdapter)
     }
+  }
 
-    deletePatient.setOnClickListener { router.push(DeletePatientScreenKey(screenKey.patient.uuid).wrap()) }
+  private fun handleScanIdentifierResult() {
+    setFragmentResultListener(ScanBpPassport, ScanIndiaNationalHealthID) { requestKey, result ->
+      if (result !is Succeeded) return@setFragmentResultListener
+
+      when (requestKey) {
+        ScanBpPassport -> {
+          val scannedBpPassport = ScanSimpleIdScreen.readIdentifier(result)
+          hotEvents.onNext(BpPassportAdded(listOf(scannedBpPassport)))
+        }
+        ScanIndiaNationalHealthID -> {
+          val scannedIndiaNHID = ScanSimpleIdScreen.readIdentifier(result)
+          hotEvents.onNext(AlternativeIdChanged(scannedIndiaNHID.value))
+        }
+      }
+    }
   }
 
   override fun setupUi(inputFields: InputFields) {
@@ -321,6 +421,45 @@ class EditPatientScreen : BaseScreen<
   override fun setColonyOrVillagesAutoComplete(colonyOrVillageList: List<String>) {
     villageTypeAheadAdapter.clear()
     villageTypeAheadAdapter.addAll(colonyOrVillageList)
+  }
+
+  override fun openSimpleScanIdScreen(openedFrom: OpenedFrom) {
+    val requestType = when (openedFrom) {
+      is OpenedFrom.EditPatientScreen.ToAddBpPassport -> ScanBpPassport
+      is OpenedFrom.EditPatientScreen.ToAddNHID -> ScanIndiaNationalHealthID
+      else -> throw IllegalArgumentException("Unknown opened from: $openedFrom")
+    }
+
+    router.pushExpectingResult(requestType, ScanSimpleIdScreenKey(openedFrom))
+  }
+
+  override fun showAddNHIDButton() {
+    addNHIDButton.visibility = VISIBLE
+  }
+
+  override fun hideAddNHIDButton() {
+    addNHIDButton.visibility = GONE
+  }
+
+  override fun showIndiaNHIDLabel() {
+    alternateIdLabel.visibility = VISIBLE
+    alternateIdLabel.text = resources.getString(R.string.identifiertype_india_national_health_id)
+  }
+
+  override fun showBPPassportButton() {
+    addBpPassportButton.visibility = VISIBLE
+  }
+
+  override fun showBpPassportLabel() {
+    bpPassportsLabel.visibility = VISIBLE
+  }
+
+  override fun hideBpPassportLabel() {
+    bpPassportsLabel.visibility = GONE
+  }
+
+  override fun hideBpPassportButton() {
+    addBpPassportButton.visibility = GONE
   }
 
   private fun showOrHideInputFields(inputFields: InputFields) {
@@ -399,28 +538,8 @@ class EditPatientScreen : BaseScreen<
     return saveButton.clicks().map { SaveClicked }
   }
 
-  private fun nameTextChanges(): Observable<EditPatientEvent> {
-    return fullNameEditText.textChanges().map { NameChanged(it.toString()) }
-  }
-
-  private fun phoneNumberTextChanges(): Observable<EditPatientEvent> {
-    return phoneNumberEditText.textChanges().map { PhoneNumberChanged(it.toString()) }
-  }
-
-  private fun districtTextChanges(): Observable<EditPatientEvent> {
-    return districtEditText.textChanges().map { DistrictChanged(it.toString()) }
-  }
-
-  private fun stateTextChanges(): Observable<EditPatientEvent> {
-    return stateEditText.textChanges().map { StateChanged(it.toString()) }
-  }
-
-  private fun bangladeshNationalIdChanges(): Observable<EditPatientEvent> {
-    return alternativeIdInputEditText.textChanges().map { AlternativeIdChanged(it.toString()) }
-  }
-
-  private fun colonyTextChanges(): Observable<EditPatientEvent> {
-    return colonyOrVillageEditText.textChanges().map { ColonyOrVillageChanged(it.toString()) }
+  private fun addNHIDButtonClicks(): Observable<EditPatientEvent> {
+    return addNHIDButton.clicks().map { AddNHIDButtonClicked() }
   }
 
   private fun backClicks(): Observable<EditPatientEvent> {
@@ -433,89 +552,103 @@ class EditPatientScreen : BaseScreen<
         .cast()
   }
 
-  private fun genderChanges(): Observable<EditPatientEvent> {
+  private fun addBpPassportClicks(): Observable<EditPatientEvent> {
+    return addBpPassportButton.clicks().map { AddBpPassportButtonClicked() }
+  }
+
+  private fun dateOfBirthFocusChanges(): Observable<EditPatientEvent> = dateOfBirthEditText.focusChanges.map(::DateOfBirthFocusChanged)
+
+  override fun displayBpPassports(bpPassports: List<BPPassportListItem>) {
+    bpPassportsContainer.removeAllViews()
+
+    bpPassportsContainer.visibleOrGone(bpPassports.isNotEmpty())
+
+    bpPassports.forEach { identifier ->
+      inflateBpPassportView(identifier)
+    }
+  }
+
+  private fun highlightNewlyScannedBpPassports(bpPassportView: PatientEditBpPassportViewBinding) {
+    bpPassportView.bpPassportIdentifier.setBackgroundColor(requireContext().resolveColor(R.color.simple_yellow_100))
+
+    val verticalPadding = resources.getDimensionPixelSize(R.dimen.spacing_4)
+
+    bpPassportView.bpPassportIdentifier.updatePadding(top = verticalPadding, bottom = verticalPadding)
+  }
+
+  private fun inflateBpPassportView(identifier: BPPassportListItem) {
+    val layoutInflater = LayoutInflater.from(requireContext())
+    val bpPassportView = PatientEditBpPassportViewBinding.inflate(layoutInflater, rootView, false)
+
+    // Setting a negative margin, so that the highlighted BP passports can be rendered
+    // little bit outside of the parent view as per design requirements.
+    bpPassportView.root.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+      marginStart = resources.getDimensionPixelSize(R.dimen.spacing_8).unaryMinus()
+    }
+    bpPassportView.bpPassportIdentifier.text = identifier.identifierValue
+    bpPassportsContainer.addView(bpPassportView.root)
+
+    if (identifier.isHighlighted) {
+      highlightNewlyScannedBpPassports(bpPassportView)
+    }
+  }
+
+  override fun setPatientName(name: String) {
+    fullNameEditText.setTextWithWatcher(name, fullNameEditTextChanges)
+  }
+
+  override fun setPatientPhoneNumber(number: String) {
+    phoneNumberEditText.setTextWithWatcher(number, phoneNumberTextChanges)
+  }
+
+  override fun setColonyOrVillage(colonyOrVillage: String) {
+    colonyOrVillageEditText.setTextWithWatcher(colonyOrVillage, colonyOrVillageTextChanges)
+  }
+
+  override fun setDistrict(district: String) {
+    districtEditText.setTextWithWatcher(district, districtTextChanges)
+  }
+
+  override fun setState(state: String) {
+    stateEditText.setTextWithWatcher(state, stateTextChanges)
+  }
+
+  override fun setStreetAddress(streetAddress: String?) {
+    streetAddressEditText.setTextWithWatcher(streetAddress, streetAddressTextChanges)
+  }
+
+  override fun setZone(zone: String?) {
+    zoneEditText.setTextWithWatcher(zone, zoneTextChanges)
+  }
+
+  override fun setGender(gender: Gender) {
+    val checkedId = when (gender) {
+      Male -> maleRadioButton.id
+      Female -> femaleRadioButton.id
+      Transgender -> transgenderRadioButton.id
+      is Unknown -> {
+        CrashReporter.report(IllegalStateException("Heads-up: unknown gender ${gender.actualValue} found in ${EditPatientScreen::class.java.name}"))
+        View.NO_ID
+      }
+    }
+
     val radioIdToGenders = mapOf(
         R.id.femaleRadioButton to Female,
         R.id.maleRadioButton to Male,
         R.id.transgenderRadioButton to Transgender)
 
-    return genderRadioGroup
-        .checkedChanges()
-        .filter { it != -1 }
-        .map { checkedId ->
-          val gender = radioIdToGenders.getValue(checkedId)
-          GenderChanged(gender)
-        }
-  }
-
-  private fun dateOfBirthTextChanges(): Observable<EditPatientEvent> = dateOfBirthEditText.textChanges(::DateOfBirthChanged)
-
-  private fun dateOfBirthFocusChanges(): Observable<EditPatientEvent> = dateOfBirthEditText.focusChanges.map(::DateOfBirthFocusChanged)
-
-  private fun ageTextChanges(): Observable<EditPatientEvent> = ageEditText.textChanges(::AgeChanged)
-
-  override fun displayBpPassports(identifiers: List<String>) {
-    bpPassportsContainer.removeAllViews()
-    identifiers.forEach { identifier -> inflateBpPassportView(identifier) }
-
-    bpPassportsLabel.visibleOrGone(identifiers.isNotEmpty())
-  }
-
-  private fun inflateBpPassportView(identifier: String) {
-    val layoutInflater = LayoutInflater.from(requireContext())
-    val bpPassportView = PatientEditBpPassportViewBinding.inflate(layoutInflater, rootView, false)
-    bpPassportView.bpPassportIdentifier.text = identifier
-    bpPassportsContainer.addView(bpPassportView.root)
-  }
-
-  override fun setPatientName(name: String) {
-    fullNameEditText.setTextAndCursor(name)
-  }
-
-  override fun setPatientPhoneNumber(number: String) {
-    phoneNumberEditText.setTextAndCursor(number)
-  }
-
-  override fun setColonyOrVillage(colonyOrVillage: String) {
-    colonyOrVillageEditText.setTextAndCursor(colonyOrVillage)
-  }
-
-  override fun setDistrict(district: String) {
-    districtEditText.setTextAndCursor(district)
-  }
-
-  override fun setState(state: String) {
-    stateEditText.setTextAndCursor(state)
-  }
-
-  override fun setStreetAddress(streetAddress: String?) {
-    streetAddressEditText.setTextAndCursor(streetAddress)
-  }
-
-  override fun setZone(zone: String?) {
-    zoneEditText.setTextAndCursor(zone)
-  }
-
-  override fun setGender(gender: Gender) {
-    val genderButton: RadioButton? = when (gender) {
-      Male -> maleRadioButton
-      Female -> femaleRadioButton
-      Transgender -> transgenderRadioButton
-      is Unknown -> {
-        CrashReporter.report(IllegalStateException("Heads-up: unknown gender ${gender.actualValue} found in ${EditPatientScreen::class.java.name}"))
-        null
-      }
+    genderRadioGroup.checkWithListener(checkedId) { _, updatedCheckedId ->
+      val updatedGender = radioIdToGenders.getValue(updatedCheckedId)
+      hotEvents.onNext(GenderChanged(updatedGender))
     }
-
-    genderButton?.isChecked = true
   }
 
-  override fun setPatientAge(age: Int) {
-    ageEditText.setTextAndCursor(age.toString())
+  override fun setPatientAge(age: String) {
+    ageEditText.setTextWithWatcher(age, ageTextChanges)
   }
 
-  override fun setPatientDateOfBirth(dateOfBirth: LocalDate) {
-    dateOfBirthEditText.setTextAndCursor(dateOfBirthFormat.format(dateOfBirth))
+  override fun setPatientDateOfBirth(dateOfBirth: String) {
+    dateOfBirthEditText.setTextWithWatcher(dateOfBirth, dateOfBirthTextChanges)
   }
 
   override fun showValidationErrors(errors: Set<EditPatientValidationError>) {
@@ -524,7 +657,6 @@ class EditPatientScreen : BaseScreen<
         FullNameEmpty -> showEmptyFullNameError(true)
         PhoneNumberEmpty -> showPhoneNumberEmptyError()
         is PhoneNumberLengthTooShort -> showLengthTooShortPhoneNumberError(it.minimumAllowedNumberLength)
-        is PhoneNumberLengthTooLong -> showLengthTooLongPhoneNumberError(it.maximumAllowedNumberLength)
         ColonyOrVillageEmpty -> showEmptyColonyOrVillageError(true)
         DistrictEmpty -> showEmptyDistrictError(true)
         StateEmpty -> showEmptyStateError(true)
@@ -547,8 +679,7 @@ class EditPatientScreen : BaseScreen<
         }
 
         PhoneNumberEmpty,
-        is PhoneNumberLengthTooShort,
-        is PhoneNumberLengthTooLong -> {
+        is PhoneNumberLengthTooShort -> {
           hidePhoneNumberError()
         }
 
@@ -621,10 +752,6 @@ class EditPatientScreen : BaseScreen<
 
   private fun showLengthTooShortPhoneNumberError(requiredNumberLength: Int) {
     phoneNumberInputLayout.error = getString(R.string.patientedit_error_phonenumber_length_less, requiredNumberLength.toString())
-  }
-
-  private fun showLengthTooLongPhoneNumberError(requiredNumberLength: Int) {
-    phoneNumberInputLayout.error = getString(R.string.patientedit_error_phonenumber_length_more, requiredNumberLength.toString())
   }
 
   private fun showInvalidaDateOfBithError() {
@@ -725,34 +852,47 @@ class EditPatientScreen : BaseScreen<
     saveButton.setButtonState(Enabled)
   }
 
-  override fun setAlternateId(alternateId: Identifier) {
-    when (alternateId.type) {
-      BangladeshNationalId,
-      SriLankaNationalId,
-      EthiopiaMedicalRecordNumber -> setAlternateIdTextField(alternateId)
-      IndiaNationalHealthId -> setAlternateIdContainer(alternateId)
-      else -> throw IllegalArgumentException("Unknown alternate id: $alternateId")
-    }
+  override fun setAlternateIdTextField(alternateId: String) {
+    alternativeIdInputEditText.setTextWithWatcher(alternateId, alternateIdTextChanges)
   }
 
-  private fun setAlternateIdTextField(alternateId: Identifier) {
-    alternativeIdInputEditText.setTextAndCursor(alternateId.displayValue())
-  }
-
-  private fun setAlternateIdContainer(alternateId: Identifier) {
+  override fun setAlternateIdContainer(alternateId: Identifier, hasHighlight: Boolean) {
     alternateIdLabel.visibility = VISIBLE
     alternateIdLabel.text = alternateId.displayType(resources)
 
     alternateIdContainer.visibility = VISIBLE
 
-    inflateAlternateIdView(alternateId.displayValue())
+    inflateAlternateIdView(alternateId.displayValue(), hasHighlight)
   }
 
-  private fun inflateAlternateIdView(identifier: String) {
+  private fun inflateAlternateIdView(identifier: String, hasHighlight: Boolean) {
     val layoutInflater = LayoutInflater.from(requireContext())
     val alternateIdView = PatientEditAlternateIdViewBinding.inflate(layoutInflater, rootView, false)
+
+    // Setting a negative margin, so that the highlighted alternative ids can be rendered
+    // little bit outside of the parent view as per design requirements.
+    alternateIdView.root.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+      marginStart = resources.getDimensionPixelSize(R.dimen.spacing_8).unaryMinus()
+    }
     alternateIdView.alternateIdentifier.text = identifier
+    alternateIdContainer.removeAllViews()
+
+    setHighlight(hasHighlight, alternateIdView)
+
     alternateIdContainer.addView(alternateIdView.root)
+  }
+
+  private fun setHighlight(
+      hasHighlight: Boolean,
+      alternateIdView: PatientEditAlternateIdViewBinding
+  ) {
+    if (hasHighlight) {
+      alternateIdView.alternateIdentifier.setBackgroundColor(requireContext().resolveColor(R.color.simple_yellow_100))
+
+      val verticalPadding = resources.getDimensionPixelSize(R.dimen.spacing_4)
+
+      alternateIdView.alternateIdentifier.updatePadding(top = verticalPadding, bottom = verticalPadding)
+    }
   }
 
   override fun onBackPressed(): Boolean {
@@ -775,4 +915,10 @@ class EditPatientScreen : BaseScreen<
 
     override fun instantiateFragment() = EditPatientScreen()
   }
+
+  @Parcelize
+  object ScanBpPassport : Parcelable
+
+  @Parcelize
+  object ScanIndiaNationalHealthID : Parcelable
 }

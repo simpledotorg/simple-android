@@ -3,7 +3,6 @@ package org.simple.clinic.drugs
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.facility.Facility
@@ -15,12 +14,12 @@ import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.util.UtcClock
 import java.time.Duration
 import java.time.Instant
+import java.time.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 
 @AppScope
 class PrescriptionRepository @Inject constructor(
-    private val database: AppDatabase,
     private val dao: PrescribedDrug.RoomDao,
     private val utcClock: UtcClock
 ) : SynceableRepository<PrescribedDrug, PrescribedDrugPayload> {
@@ -85,10 +84,10 @@ class PrescriptionRepository @Inject constructor(
 
   fun softDeletePrescription(prescriptionUuid: UUID): Completable {
     return Completable.fromAction {
-      database.runInTransaction {
-        dao.softDelete(prescriptionUuid, deleted = true, updatedAt = Instant.now())
-        dao.updateSyncStatusForIds(listOf(prescriptionUuid), SyncStatus.PENDING)
-      }
+      dao.softDeletePrescription(
+          prescriptionUuid = prescriptionUuid,
+          timestamp = Instant.now()
+      )
     }
   }
 
@@ -188,6 +187,61 @@ class PrescriptionRepository @Inject constructor(
         deleted = true,
         updatedAt = Instant.now(utcClock),
         syncStatus = SyncStatus.PENDING
+    )
+  }
+
+  fun prescriptionCountImmediate(patientUuid: UUID): Int {
+    return dao.prescriptionCountImmediate(patientUuid)
+  }
+
+  fun hasPrescriptionForPatientChangedToday(patientUuid: UUID): Observable<Boolean> {
+    val currentDate = LocalDate.now(utcClock)
+    return dao
+        .hasPrescriptionForPatientChangedToday(
+            patientUuid = patientUuid,
+            currentDate = currentDate
+        )
+  }
+
+  fun refill(
+      prescriptions: List<PrescribedDrug>,
+      uuidGenerator: () -> UUID
+  ) {
+    val prescriptionIdsToDeleted = prescriptions.map { it.uuid }
+    val refilledPrescriptions = prescriptions.map {
+      it.refill(
+          uuid = uuidGenerator.invoke(),
+          facilityUuid = it.facilityUuid,
+          utcClock = utcClock
+      )
+    }
+
+    dao.refill(
+        prescriptionIdsToDelete = prescriptionIdsToDeleted,
+        updatedAt = Instant.now(utcClock),
+        refilledPrescriptions = refilledPrescriptions
+    )
+  }
+
+  fun refillForTeleconsulation(
+      prescriptions: List<PrescribedDrug>,
+      uuidGenerator: () -> UUID,
+      teleconsultationUuid: UUID
+  ) {
+    val prescriptionIdsToDeleted = prescriptions.map { it.uuid }
+    val refilledPrescriptions = prescriptions.map {
+      it.refillForTeleconsultation(
+          uuid = uuidGenerator.invoke(),
+          facilityUuid = it.facilityUuid,
+          utcClock = utcClock,
+          teleconsultationId = teleconsultationUuid
+      )
+    }
+
+    dao.refill(
+        prescriptionIdsToDelete = prescriptionIdsToDeleted,
+        updatedAt = Instant.now(utcClock),
+        refilledPrescriptions = refilledPrescriptions
     )
   }
 }

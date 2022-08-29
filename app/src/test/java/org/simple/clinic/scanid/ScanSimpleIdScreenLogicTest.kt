@@ -9,7 +9,7 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.mobius.first
 import org.simple.clinic.patient.onlinelookup.api.LookupPatientOnline
@@ -146,7 +146,7 @@ class ScanSimpleIdScreenLogicTest {
         init = Init { first(it) },
         update = ScanSimpleIdUpdate(isIndianNHIDSupportEnabled = true, isOnlinePatientLookupEnabled = true),
         effectHandler = effectHandler.build(),
-        defaultModel = ScanSimpleIdModel.create(),
+        defaultModel = ScanSimpleIdModel.create(OpenedFrom.PatientsTabScreen),
         modelUpdateListener = { /* no-op */ }
     )
 

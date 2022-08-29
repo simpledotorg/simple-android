@@ -5,18 +5,21 @@ on:
     branches:
       - release/*
   pull_request:
-    branches:
-      - master
   workflow_dispatch:
+  workflow_call:
+
+concurrency:
+  group: ci-${{ github.head_ref }}
+  cancel-in-progress: true
 
 jobs:
   qa_lint:
     runs-on: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Cache Gradle build
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -26,8 +29,9 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: set up JDK
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
+          distribution: 'zulu'
           java-version: 11
 
       - name: QA Lint
@@ -36,10 +40,10 @@ jobs:
   qa_unit_tests:
     runs-on: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Cache Gradle build
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -49,8 +53,9 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: set up JDK
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
+          distribution: 'zulu'
           java-version: 11
 
       - name: QA Unit Tests
@@ -62,16 +67,17 @@ jobs:
     runs-on: [ macos-latest ]
     timeout-minutes: 60
     env:
-      AVD_API_LEVEL: 27
+      AVD_API_LEVEL: 30
+      AVD_ARCH: x86_64
       HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
     steps:
       - name: Checkout Android source
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: android-app
 
       - name: Checkout server app source
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: simpledotorg/simple-server
           fetch-depth: 0 # Full clone needed for Heroku deploys (https://devcenter.heroku.com/changelog-items/775)
@@ -83,7 +89,7 @@ jobs:
 
       - name: Cache node modules
         id: node-dependency-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             node_modules
@@ -97,8 +103,14 @@ jobs:
       - name: Link Heroku CLI globally
         run: npm link heroku
 
+      - name: Install Heroku Buildpacks registry
+        run: heroku plugins:install buildpack-registry
+
+      - name: Link Heroku CLI globally
+        run: heroku plugins:install buildpacks
+
       - name: Cache Gradle build
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -108,27 +120,30 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Cache AVD
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: avd-cache
         with:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: ${{ runner.os }}-avd-${{ env.AVD_API_LEVEL }}
+          key: ${{ runner.os }}-avd-${{ env.AVD_API_LEVEL }}-${{ env.AVD_ARCH }}
 
       - name: create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ env.AVD_API_LEVEL }}
+          arch: ${{ env.AVD_ARCH }}
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
+          disk-size: 8G
           script: echo "Generated AVD snapshot for caching."
 
       - name: set up JDK
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
+          distribution: 'zulu'
           java-version: 11
 
       - name: Generate server app name
@@ -145,17 +160,33 @@ jobs:
           android-app \
           ${{ secrets.HEROKU_SECRET_PROPERTIES }}
 
-      - name: Turn on capturing of flaky tests
-        run: cat android-app/app/src/androidTest/resources/quarantine_ci.properties > android-app/app/src/androidTest/resources/quarantine.properties
-
       - name: QA Android Tests
+        id: run-instrumented-tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ env.AVD_API_LEVEL }}
+          arch: ${{ env.AVD_ARCH }}
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: android-app/gradlew -p android-app --build-cache --no-daemon -PmanifestEndpoint=https://${{ steps.generate-server-app-name.outputs.heroku_app_name }}.herokuapp.com/api/ connectedQaDebugAndroidTest
+          disk-size: 8G
+          script: |
+            adb root
+            mkdir -p android-app/app/build/outputs/test-artifacts
+            android-app/gradlew -p android-app --build-cache --no-daemon -PmanifestEndpoint=https://${{ steps.generate-server-app-name.outputs.heroku_app_name }}.herokuapp.com/api/ installQaDebug installQaDebugAndroidTest
+            adb shell am instrument -w -e filter org.simple.clinic.benchmark.SelectBenchmarkTests -e benchmark_app_performance false  org.simple.clinic.qa.debug.test/org.simple.clinic.AndroidTestJUnitRunner >android-app/app/build/outputs/test-artifacts/logs.txt 2>android-app/app/build/outputs/test-artifacts/logs.txt
+            cat android-app/app/build/outputs/test-artifacts/logs.txt
+            adb pull /storage/emulated/0/Android/data/org.simple.clinic.qa.debug/ android-app/app/build/outputs/test-artifacts/ || true
+            adb uninstall org.simple.clinic.qa.debug
+            adb uninstall org.simple.clinic.qa.debug.test
+            ! grep -q "FAILURES\!\!\!" android-app/app/build/outputs/test-artifacts/logs.txt
+
+      - name: Upload failed test artifacts
+        if: always() && steps.run-instrumented-tests.outcome != 'success'
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-artifacts
+          path: android-app/app/build/outputs/test-artifacts
 
       - name: Teardown Heroku instance
         if: always() && (steps.start-simple-server.outcome != 'success' || contains(github.ref, '/release/'))
@@ -167,11 +198,12 @@ jobs:
   mobius_migration_tests:
     runs-on: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: set up JDK
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
+          distribution: 'zulu'
           java-version: 11
 
       - name: Mobius Migration Tests
@@ -183,11 +215,12 @@ jobs:
       matrix:
         buildType: [ 'Production' ]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: set up JDK
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
+          distribution: 'zulu'
           java-version: 11
 
       - name: Build ${{ matrix.buildType }} Release bundle
@@ -201,13 +234,13 @@ jobs:
     runs-on: [ ubuntu-latest ]
     steps:
       - name: Checkout master
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: master
           path: master
 
       - name: Checkout current
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: current
 
@@ -218,31 +251,22 @@ jobs:
     runs-on: [ ubuntu-latest ]
     if: github.event_name == 'pull_request'
     steps:
+      - uses: actions/checkout@v3
       - name: Verify PR description
-        run: |
-          QUOTED_PR_DESCRIPTION="$(printf "%q" "${{github.event.pull_request.body}}")"
-          PR_DESCRIPTION="$QUOTED_PR_DESCRIPTION"
-          STORY_LINK_REGEX='https:\/\/app.clubhouse.io\/simpledotorg\/story\/[0-9]+\/[A-Za-z0-9_-]+'
-
-          if [[ $PR_DESCRIPTION =~ $STORY_LINK_REGEX ]]; then
-            exit 0
-          else
-            echo "PR description doesn't contain a valid story link"
-            exit 1
-          fi
+        run: kotlinc -script ".github/scripts/PrCommentCheck.main.kts" "${{ github.event.pull_request.body }}"
 
   verify_changelog_updated:
     runs-on: [ ubuntu-latest ]
     if: github.event_name == 'pull_request'
     steps:
       - name: Checkout master
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: master
           path: master
 
       - name: Checkout current
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: current
 
@@ -253,7 +277,7 @@ jobs:
     runs-on: [ ubuntu-latest ]
     if: github.event_name == 'pull_request'
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{github.event.pull_request.head.ref}}
           fetch-depth: 0

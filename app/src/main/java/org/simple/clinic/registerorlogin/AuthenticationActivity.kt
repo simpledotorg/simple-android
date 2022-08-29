@@ -15,10 +15,10 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
-import org.simple.clinic.router.ScreenResultBus
-import org.simple.clinic.router.screen.ActivityPermissionResult
-import org.simple.clinic.router.screen.ActivityResult
-import org.simple.clinic.selectcountry.SelectCountryScreenKey
+import org.simple.clinic.navigation.v2.ScreenResultBus
+import org.simple.clinic.activity.permissions.ActivityPermissionResult
+import org.simple.clinic.navigation.v2.ActivityResult
+import org.simple.clinic.selectcountry.SelectCountryScreen
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.util.withLocale
 import org.simple.clinic.util.wrap
@@ -147,7 +147,7 @@ class AuthenticationActivity : AppCompatActivity(), AuthenticationUiActions {
   }
 
   override fun openCountrySelectionScreen() {
-    router.clearHistoryAndPush(SelectCountryScreenKey().wrap())
+    router.clearHistoryAndPush(SelectCountryScreen.Key())
   }
 
   override fun openRegistrationPhoneScreen() {

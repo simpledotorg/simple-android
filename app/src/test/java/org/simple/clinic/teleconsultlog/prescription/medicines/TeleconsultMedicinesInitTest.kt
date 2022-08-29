@@ -14,7 +14,7 @@ class TeleconsultMedicinesInitTest {
   private val initSpec = InitSpec(TeleconsultMedicinesInit())
 
   @Test
-  fun `when screen is created, then load initial data`() {
+  fun `when screen is created, then load patient medicines`() {
     initSpec
         .whenInit(model)
         .then(assertThatFirst(

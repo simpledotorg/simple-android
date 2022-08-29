@@ -1,4 +1,3 @@
-import com.google.firebase.perf.plugin.FirebasePerfExtension
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.simple.rmg.RoomMetadataGenerator
@@ -13,19 +12,27 @@ plugins {
   kotlin("kapt")
   id("kotlin-parcelize")
   id("io.sentry.android.gradle")
-  id("com.google.firebase.firebase-perf")
   id("plugins.git.install-hooks")
+  id("com.datadoghq.dd-sdk-android-gradle-plugin")
+  id("androidx.benchmark")
 }
 
 sentry {
-  autoUpload.set(false)
+  includeProguardMapping.set(true)
+  autoUploadProguardMapping.set(false)
+
+  // We are using our own instrumentation tooling for Room queries
+  // Look at [ADR 013: SQL Performance Profiling (v2)]
+  tracingInstrumentation {
+    enabled.set(false)
+  }
 }
 
 kapt {
   arguments {
     arg("room.schemaLocation", "$projectDir/schemas")
-    arg("room.incremental", false)
-    arg("room.expandProjection", false)
+    arg("room.incremental", true)
+    arg("room.expandProjection", true)
   }
 }
 
@@ -75,6 +82,8 @@ tasks.withType<Test> {
 }
 
 android {
+  namespace = "org.simple.clinic"
+
   val androidNdkVersion: String by project
   val compileSdkVersion: Int by rootProject.extra
   val minSdkVersion: Int by rootProject.extra
@@ -112,9 +121,12 @@ android {
     val sentryEnvironment: String by project
     val mixpanelToken: String by project
     val manifestEndpoint: String by project
-    val fallbackApiEndpoint: String by project
     val disableScreenshot: String by project
     val allowRootedDevice: String by project
+    val datadogServiceName: String by project
+    val datadogApplicationId: String by project
+    val datadogClientToken: String by project
+    val datadogEnvironment: String by project
 
     addManifestPlaceholders(mapOf(
         "sentryDsn" to sentryDsn,
@@ -123,9 +135,12 @@ android {
 
     buildConfigField("String", "MIXPANEL_TOKEN", "\"$mixpanelToken\"")
     buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
-    buildConfigField("String", "FALLBACK_ENDPOINT", "\"$fallbackApiEndpoint\"")
     buildConfigField("boolean", "DISABLE_SCREENSHOT", disableScreenshot)
     buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", allowRootedDevice)
+    buildConfigField("String", "DATADOG_SERVICE_NAME", "\"$datadogServiceName\"")
+    buildConfigField("String", "DATADOG_APPLICATION_ID", "\"$datadogApplicationId\"")
+    buildConfigField("String", "DATADOG_CLIENT_TOKEN", "\"$datadogClientToken\"")
+    buildConfigField("String", "DATADOG_ENVIRONMENT", "\"$datadogEnvironment\"")
   }
 
   buildTypes {
@@ -133,7 +148,6 @@ android {
       applicationIdSuffix = ".debug"
       isMinifyEnabled = false
       isShrinkResources = false
-      configure<FirebasePerfExtension> { setInstrumentationEnabled(false) }
     }
 
     val runProguard: String by project
@@ -195,10 +209,11 @@ android {
   }
 
   lint {
-    isWarningsAsErrors = true
-    isAbortOnError = true
-    isCheckReleaseBuilds = false
-    isCheckDependencies = true
+    warningsAsErrors = true
+    abortOnError = true
+    checkReleaseBuilds = false
+    checkDependencies = true
+    ignoreTestSources = true
   }
 
   compileOptions {
@@ -211,14 +226,8 @@ android {
   }
 
   sourceSets {
-    val sharedTestDir = "src/sharedTest/java"
-    getByName("test") {
-      java.srcDirs(sharedTestDir)
-    }
-
     getByName("androidTest") {
       assets.srcDirs(files("$projectDir/schemas"))
-      java.srcDirs(sharedTestDir)
     }
 
     getByName("main") {
@@ -304,7 +313,6 @@ dependencies {
    * Prod dependencies
    */
   implementation(libs.androidx.annotation.annotation)
-  implementation(libs.androidx.annotation.experimental)
   implementation(libs.androidx.appcompat)
   implementation(libs.androidx.cardview)
   implementation(libs.androidx.constraintlayout)
@@ -339,15 +347,15 @@ dependencies {
   implementation(libs.edittext.pinentry)
 
   implementation(libs.firebase.config)
-  implementation(libs.firebase.performance.perf)
-
-  implementation(libs.flow)
 
   implementation(libs.itemanimators)
+
+  implementation(libs.itext7)
 
   implementation(libs.jbcrypt)
 
   implementation(libs.kotlin.coroutines)
+  implementation(libs.kotlin.coroutines.test)
   implementation(libs.kotlin.stdlib)
 
   implementation(libs.logback.classic)
@@ -359,6 +367,10 @@ dependencies {
   implementation(libs.mixpanel.android)
 
   implementation(libs.okhttp.interceptor.logging)
+
+  implementation(libs.openCsv) {
+    exclude(module = "commons-logging")
+  }
 
   implementation(libs.play.core)
   implementation(libs.play.services.auth)
@@ -391,7 +403,6 @@ dependencies {
   implementation(libs.zxing)
 
   implementation(projects.mobiusBase)
-  implementation(projects.router)
   implementation(projects.simplePlatform)
   implementation(projects.simpleVisuals)
 
@@ -415,9 +426,11 @@ dependencies {
 
   testImplementation(libs.mockito.kotlin)
 
-  testImplementation(libs.quarantine)
-
   testImplementation(libs.truth)
+
+  testImplementation(libs.kotlin.reflect)
+
+  testImplementation(projects.sharedTestCode)
 
   /**
    * Android test dependencies
@@ -440,15 +453,13 @@ dependencies {
 
   androidTestImplementation(libs.faker)
 
-  androidTestImplementation(libs.quarantine) {
-    exclude(group = "com.fasterxml.jackson.core", module = "jackson-core")
-  }
-
   androidTestImplementation(libs.androidx.room.testing)
 
   androidTestImplementation(libs.truth)
 
   kaptAndroidTest(libs.dagger.compiler)
+
+  androidTestImplementation(projects.sharedTestCode)
 
   /**
    * Misc
@@ -458,6 +469,10 @@ dependencies {
   lintChecks(projects.lint)
 
   runtimeOnly(libs.jackson.core)
+
+  implementation(libs.datadog.sdk)
+
+  androidTestImplementation(libs.apache.commons.math)
 }
 
 // This must always be present at the bottom of this file, as per:

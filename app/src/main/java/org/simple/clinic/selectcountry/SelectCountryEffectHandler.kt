@@ -1,6 +1,10 @@
 package org.simple.clinic.selectcountry
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.appconfig.FetchError
@@ -8,44 +12,24 @@ import org.simple.clinic.appconfig.FetchSucceeded
 import org.simple.clinic.appconfig.ManifestFetchResult
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
-class SelectCountryEffectHandler(
+class SelectCountryEffectHandler @AssistedInject constructor(
     private val appConfigRepository: AppConfigRepository,
-    private val uiActions: UiActions,
-    private val schedulersProvider: SchedulersProvider
+    private val schedulersProvider: SchedulersProvider,
+    @Assisted private val viewEffectsConsumer: Consumer<SelectCountryViewEffect>
 ) {
 
-  companion object {
-    fun create(
-        appConfigRepository: AppConfigRepository,
-        uiActions: UiActions,
-        schedulersProvider: SchedulersProvider
-    ): ObservableTransformer<SelectCountryEffect, SelectCountryEvent> {
-      return SelectCountryEffectHandler(
-          appConfigRepository,
-          uiActions,
-          schedulersProvider
-      ).build()
-    }
+  @AssistedFactory
+  interface Factory {
+    fun create(viewEffectsConsumer: Consumer<SelectCountryViewEffect>): SelectCountryEffectHandler
   }
 
-  private fun build(): ObservableTransformer<SelectCountryEffect, SelectCountryEvent> {
+  fun build(): ObservableTransformer<SelectCountryEffect, SelectCountryEvent> {
     return RxMobius
         .subtypeEffectHandler<SelectCountryEffect, SelectCountryEvent>()
         .addTransformer(FetchManifest::class.java, fetchManifest())
         .addTransformer(SaveCountryEffect::class.java, saveCountry())
-        .addAction(GoToStateSelectionScreen::class.java, uiActions::goToStateSelectionScreen, schedulersProvider.ui())
-        .addTransformer(SaveDeployment::class.java, saveDeployment())
-        .addAction(GoToRegistrationScreen::class.java, uiActions::goToRegistrationScreen, schedulersProvider.ui())
+        .addConsumer(SelectCountryViewEffect::class.java) { viewEffect -> viewEffectsConsumer.accept(viewEffect) }
         .build()
-  }
-
-  private fun saveDeployment(): ObservableTransformer<SaveDeployment, SelectCountryEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulersProvider.io())
-          .doOnNext { appConfigRepository.saveDeployment(it.deployment) }
-          .map { DeploymentSaved }
-    }
   }
 
   private fun fetchManifest(): ObservableTransformer<FetchManifest, SelectCountryEvent> {

@@ -5,7 +5,7 @@ import com.spotify.mobius.test.FirstMatchers.hasModel
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
-import org.simple.clinic.util.TestUtcClock
+import org.simple.sharedTestCode.util.TestUtcClock
 import java.time.Instant
 
 class SetupActivityInitTest {

@@ -16,11 +16,16 @@ import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.util.Unicode
 import java.time.Instant
+import java.time.LocalDate
 import java.util.UUID
 
 @Parcelize
-@Entity(indices = [Index("patientUuid", unique = false)])
+@Entity(indices = [
+  Index("patientUuid", unique = false),
+  Index("facilityUuid", unique = false)
+])
 data class BloodPressureMeasurement(
     @PrimaryKey
     val uuid: UUID,
@@ -61,6 +66,10 @@ data class BloodPressureMeasurement(
         updatedAt = updatedAt,
         deletedAt = deletedAt,
         recordedAt = recordedAt)
+  }
+
+  override fun toString(): String {
+    return "BloodPressureMeasurement(${Unicode.redacted})"
   }
 
   @Dao
@@ -211,5 +220,22 @@ data class BloodPressureMeasurement(
 		    )
     """)
     fun purgeBloodPressureMeasurementWhenPatientIsNull()
+
+    @Query("""
+      SELECT
+        CASE
+            WHEN (COUNT(BP.uuid) >= 1) THEN 1
+            ELSE 0
+        END
+      FROM BloodPressureMeasurement BP
+      WHERE
+        BP.patientUuid = :patientUuid AND
+        date(BP.recordedAt) == :currentDate AND
+        (BP.systolic >= 140 OR BP.diastolic >= 90) AND
+        BP.deletedAt IS NULL
+      ORDER BY BP.recordedAt DESC
+      LIMIT 1
+    """)
+    fun isNewestBpEntryHigh(patientUuid: UUID, currentDate: LocalDate): Observable<Boolean>
   }
 }

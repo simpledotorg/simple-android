@@ -62,6 +62,7 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Bangladesh
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaNationalId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaPersonalHealthNumber
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.toOptional
@@ -87,7 +88,9 @@ class PatientEntryScreen : BaseScreen<
     PatientEntryModel,
     PatientEntryEvent,
     PatientEntryEffect,
-    Unit>(), PatientEntryUi, PatientEntryValidationActions {
+    PatientEntryViewEffect>(),
+    PatientEntryUi,
+    PatientEntryUiActions {
 
   @Inject
   lateinit var router: Router
@@ -263,11 +266,15 @@ class PatientEntryScreen : BaseScreen<
 
   override fun createUpdate() = PatientEntryUpdate(phoneNumberValidator, dobValidator, ageValidator)
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) = effectHandlerFactory
-      .create(ui = this, validationActions = this)
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<PatientEntryViewEffect>) = effectHandlerFactory
+      .create(viewEffectsConsumer = viewEffectsConsumer)
       .build()
 
   override fun uiRenderer() = PatientEntryUiRenderer(this)
+
+  override fun viewEffectHandler() = PatientEntryViewEffectHandler(
+      uiActions = this
+  )
 
   override fun events() = Observable
       .merge(formChanges(), saveClicks(), consentChanges())
@@ -475,6 +482,7 @@ class PatientEntryScreen : BaseScreen<
     when (alternateId.type) {
       BangladeshNationalId,
       SriLankaNationalId,
+      SriLankaPersonalHealthNumber,
       EthiopiaMedicalRecordNumber -> setAlternateIdTextField(alternateId)
       IndiaNationalHealthId -> setAlternateIdContainer(alternateId)
       else -> throw IllegalArgumentException("Unknown alternate id: $alternateId")
@@ -568,14 +576,6 @@ class PatientEntryScreen : BaseScreen<
   override fun showLengthTooShortPhoneNumberError(show: Boolean, requiredNumberLength: Int) {
     if (show) {
       phoneNumberInputLayout.error = getString(R.string.patiententry_error_phonenumber_length_less, requiredNumberLength.toString())
-    } else {
-      phoneNumberInputLayout.error = null
-    }
-  }
-
-  override fun showLengthTooLongPhoneNumberError(show: Boolean, requiredNumberLength: Int) {
-    if (show) {
-      phoneNumberInputLayout.error = getString(R.string.patiententry_error_phonenumber_length_more, requiredNumberLength.toString())
     } else {
       phoneNumberInputLayout.error = null
     }

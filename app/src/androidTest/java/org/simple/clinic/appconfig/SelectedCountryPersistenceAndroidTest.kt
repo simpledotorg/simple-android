@@ -7,8 +7,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.TestData
-import org.simple.clinic.util.Rules
+import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.Rules
 import java.util.Optional
 import javax.inject.Inject
 

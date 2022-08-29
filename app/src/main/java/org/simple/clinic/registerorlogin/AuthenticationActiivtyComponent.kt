@@ -7,7 +7,6 @@ import org.simple.clinic.deniedaccess.AccessDeniedScreenInjector
 import org.simple.clinic.facilitypicker.FacilityPickerView
 import org.simple.clinic.introvideoscreen.IntroVideoScreen
 import org.simple.clinic.login.pin.LoginPinScreen
-import org.simple.clinic.navigation.di.FragmentScreenKeyModule
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreen
 import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreen
@@ -17,14 +16,12 @@ import org.simple.clinic.registration.phone.RegistrationPhoneScreen
 import org.simple.clinic.registration.phone.loggedout.LoggedOutOfDeviceDialog
 import org.simple.clinic.registration.pin.RegistrationPinScreen
 import org.simple.clinic.registration.register.RegistrationLoadingScreen
-import org.simple.clinic.router.ScreenResultBus
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.selectcountry.SelectCountryScreenInjector
 import org.simple.clinic.selectstate.SelectStateScreen
 
-@Subcomponent(modules = [
-  FragmentScreenKeyModule::class
-])
+@Subcomponent
 interface AuthenticationActivityComponent :
     RegistrationPhoneScreen.Injector,
     AccessDeniedScreenInjector,

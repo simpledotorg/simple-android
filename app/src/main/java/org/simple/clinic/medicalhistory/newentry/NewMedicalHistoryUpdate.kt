@@ -1,7 +1,6 @@
 package org.simple.clinic.medicalhistory.newentry
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
@@ -21,12 +20,15 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
       is OngoingPatientEntryLoaded -> next(model.ongoingPatientEntryLoaded(event.ongoingNewPatientEntry))
       is CurrentFacilityLoaded -> currentFacilityLoaded(event, model)
       is SyncTriggered -> dispatch(OpenPatientSummaryScreen(event.registeredPatientUuid))
-      else -> noChange()
+      is ChangeDiagnosisNotNowClicked -> registerPatient(model)
     }
   }
 
   private fun saveClicked(model: NewMedicalHistoryModel): Next<NewMedicalHistoryModel, NewMedicalHistoryEffect> {
     return when {
+      model.showChangeDiagnosisError -> {
+        next(model.changeDiagnosisErrorShown(), ShowChangeDiagnosisErrorDialog)
+      }
       model.facilityDiabetesManagementEnabled && !model.hasAnsweredBothDiagnosisQuestions -> {
         dispatch(ShowDiagnosisRequiredError)
       }
@@ -36,11 +38,15 @@ class NewMedicalHistoryUpdate : Update<NewMedicalHistoryModel, NewMedicalHistory
       model.showOngoingHypertensionTreatment && !model.answeredIsOnHypertensionTreatment -> {
         dispatch(ShowOngoingHypertensionTreatmentError)
       }
-      else -> {
-        next(model.registeringPatient(), RegisterPatient(model.ongoingMedicalHistoryEntry))
+      model.showOngoingDiabetesTreatment && !model.answeredIsOnDiabetesTreatment -> {
+        dispatch(ShowOngoingDiabetesTreatmentErrorDialog)
       }
+      else -> registerPatient(model)
     }
   }
+
+  private fun registerPatient(model: NewMedicalHistoryModel): Next<NewMedicalHistoryModel, NewMedicalHistoryEffect> =
+      next(model.registeringPatient(), RegisterPatient(model.ongoingMedicalHistoryEntry))
 
   private fun currentFacilityLoaded(
       event: CurrentFacilityLoaded,

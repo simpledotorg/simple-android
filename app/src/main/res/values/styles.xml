@@ -46,9 +46,20 @@
     <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.Red2Primary</item>
   </style>
 
+  <style name="Widget.Simple.Button.Red1">
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.Red1Primary</item>
+  </style>
+
   <style name="Widget.Simple.Button.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
     <item name="android:insetTop">@dimen/spacing_0</item>
     <item name="android:insetBottom">@dimen/spacing_0</item>
+    <item name="android:textAppearance">?attr/textAppearanceButton</item>
+  </style>
+
+  <style name="Widget.Simple.Button.TextButton.Dense">
+    <item name="android:minHeight">@dimen/spacing_32</item>
+    <item name="android:paddingRight">@dimen/spacing_0</item>
+    <item name="android:paddingLeft">@dimen/spacing_0</item>
     <item name="android:textAppearance">?attr/textAppearanceButton</item>
   </style>
 
@@ -61,7 +72,7 @@
     <item name="android:insetBottom">@dimen/spacing_0</item>
     <item name="iconPadding">@dimen/spacing_8</item>
     <item name="iconGravity">textStart</item>
-    <item name="strokeColor">@color/mtrl_btn_stroke_color_selector</item>
+    <item name="strokeColor">@color/outline_btn_stroke_color_selector</item>
     <item name="android:textAppearance">?attr/textAppearanceButtonBig</item>
   </style>
 
@@ -82,7 +93,7 @@
   </style>
 
   <style name="Widget.Simple.Button.Frame" parent="">
-    <item name="android:padding">@dimen/spacing_8</item>
+    <item name="android:padding">@dimen/spacing_12</item>
     <item name="android:background">?attr/colorPrimaryVariant</item>
     <item name="android:clipToPadding">false</item>
   </style>
@@ -176,17 +187,6 @@
   </style>
 
   <!-- Simple App Views -->
-  <style name="Widget.Simple.PatientContactCallResultItem_Old" parent="">
-    <item name="android:textAppearance">?attr/textAppearanceBody2</item>
-    <item name="android:textColor">?attr/colorPrimary</item>
-    <item name="android:paddingStart">@dimen/spacing_16</item>
-    <item name="android:background">?attr/selectableItemBackground</item>
-    <item name="android:drawablePadding">@dimen/spacing_8</item>
-    <item name="android:gravity">center_vertical</item>
-    <item name="android:paddingBottom">@dimen/spacing_12</item>
-    <item name="android:paddingTop">@dimen/spacing_12</item>
-  </style>
-
   <style name="Widget.Simple.PatientContactCallResultItem" parent="">
     <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     <item name="android:textColor">?attr/colorPrimary</item>

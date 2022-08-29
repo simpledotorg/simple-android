@@ -8,8 +8,6 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.transition.ChangeBounds
-import androidx.transition.TransitionManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
@@ -25,13 +23,15 @@ import org.simple.clinic.databinding.ScreenNewMedicalHistoryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_HYPERTENSION_TREATMENT
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithDiabetes
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithHypertension
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAHeartAttack
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDisease
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreatment
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
 import org.simple.clinic.medicalhistory.SelectDiagnosisErrorDialog
+import org.simple.clinic.medicalhistory.SelectOngoingDiabetesTreatmentErrorDialog
 import org.simple.clinic.medicalhistory.SelectOngoingHypertensionTreatmentErrorDialog
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -95,7 +95,7 @@ class NewMedicalHistoryScreen : BaseScreen<
   private val diabetesDiagnosis
     get() = binding.diabetesDiagnosis
 
-  private val questionViewEvents: Subject<NewMedicalHistoryEvent> = PublishSubject.create()
+  private val hotEvents: Subject<NewMedicalHistoryEvent> = PublishSubject.create()
 
   override fun defaultModel() = NewMedicalHistoryModel.default(country)
 
@@ -108,7 +108,7 @@ class NewMedicalHistoryScreen : BaseScreen<
 
   override fun events() = Observable
       .merge(
-          questionViewEvents,
+          hotEvents,
           saveClicks()
       )
       .compose(ReportAnalyticsEvents())
@@ -154,15 +154,15 @@ class NewMedicalHistoryScreen : BaseScreen<
 
   override fun renderAnswerForQuestion(question: MedicalHistoryQuestion, answer: Answer) {
     val view = when (question) {
-      HAS_HAD_A_HEART_ATTACK -> heartAttackQuestionView
-      HAS_HAD_A_STROKE -> strokeQuestionView
-      HAS_HAD_A_KIDNEY_DISEASE -> kidneyDiseaseQuestionView
-      DIAGNOSED_WITH_DIABETES -> diabetesQuestionView
+      HasHadAHeartAttack -> heartAttackQuestionView
+      HasHadAStroke -> strokeQuestionView
+      HasHadAKidneyDisease -> kidneyDiseaseQuestionView
+      DiagnosedWithDiabetes -> diabetesQuestionView
       else -> null
     }
 
     view?.render(question, answer) { questionForView, newAnswer ->
-      questionViewEvents.onNext(NewMedicalHistoryAnswerToggled(questionForView, newAnswer))
+      hotEvents.onNext(NewMedicalHistoryAnswerToggled(questionForView, newAnswer))
     }
   }
 
@@ -187,19 +187,19 @@ class NewMedicalHistoryScreen : BaseScreen<
 
   override fun renderDiagnosisAnswer(question: MedicalHistoryQuestion, answer: Answer) {
     val view = when (question) {
-      DIAGNOSED_WITH_HYPERTENSION -> hypertensionDiagnosis
-      DIAGNOSED_WITH_DIABETES -> diabetesDiagnosis
+      DiagnosedWithHypertension -> hypertensionDiagnosis
+      DiagnosedWithDiabetes -> diabetesDiagnosis
       else -> null
     }
 
     val label = when (question) {
-      DIAGNOSED_WITH_HYPERTENSION -> R.string.medicalhistory_diagnosis_hypertension_required
-      DIAGNOSED_WITH_DIABETES -> R.string.medicalhistory_diagnosis_diabetes_required
+      DiagnosedWithHypertension -> R.string.medicalhistory_diagnosis_hypertension_required
+      DiagnosedWithDiabetes -> R.string.medicalhistory_diagnosis_diabetes_required
       else -> question.questionRes
     }
 
     view?.renderDiagnosis(label, question, answer) { questionForView, newAnswer ->
-      questionViewEvents.onNext(NewMedicalHistoryAnswerToggled(questionForView, newAnswer))
+      hotEvents.onNext(NewMedicalHistoryAnswerToggled(questionForView, newAnswer))
     }
   }
 
@@ -212,10 +212,12 @@ class NewMedicalHistoryScreen : BaseScreen<
   }
 
   override fun showHypertensionTreatmentQuestion(answer: Answer) {
-    hypertensionDiagnosis.renderTreatmentQuestion(IS_ON_HYPERTENSION_TREATMENT, answer) { questionForView, newAnswer ->
-      questionViewEvents.onNext(NewMedicalHistoryAnswerToggled(questionForView, newAnswer))
+    hypertensionDiagnosis.renderTreatmentQuestion(
+        question = IsOnHypertensionTreatment(country.isoCountryCode),
+        answer = answer
+    ) { questionForView, newAnswer ->
+      hotEvents.onNext(NewMedicalHistoryAnswerToggled(questionForView, newAnswer))
     }
-    TransitionManager.beginDelayedTransition(scrollView, ChangeBounds())
 
     hypertensionDiagnosis.showTreatmentQuestion()
   }
@@ -225,8 +227,25 @@ class NewMedicalHistoryScreen : BaseScreen<
     hypertensionDiagnosis.clearTreatmentChipGroup()
   }
 
+  override fun showDiabetesTreatmentQuestion(answer: Answer) {
+    diabetesDiagnosis.renderTreatmentQuestion(IsOnDiabetesTreatment, answer) { questionForView, newAnswer ->
+      hotEvents.onNext(NewMedicalHistoryAnswerToggled(questionForView, newAnswer))
+    }
+
+    diabetesDiagnosis.showTreatmentQuestion()
+  }
+
+  override fun hideDiabetesTreatmentQuestion() {
+    diabetesDiagnosis.hideTreatmentQuestion()
+    diabetesDiagnosis.clearTreatmentChipGroup()
+  }
+
   override fun showOngoingHypertensionTreatmentErrorDialog() {
     SelectOngoingHypertensionTreatmentErrorDialog.show(fragmentManager = activity.supportFragmentManager)
+  }
+
+  override fun showOngoingDiabetesTreatmentErrorDialog() {
+    SelectOngoingDiabetesTreatmentErrorDialog.show(fragmentManager = activity.supportFragmentManager)
   }
 
   override fun showDiagnosisRequiredErrorDialog() {
@@ -238,6 +257,17 @@ class NewMedicalHistoryScreen : BaseScreen<
         .setTitle(getString(R.string.select_diagnosis_error_diagnosis_required))
         .setMessage(getString(R.string.select_diagnosis_error_enter_diagnosis_hypertension))
         .setPositiveButton(getString(R.string.select_diagnosis_error_ok), null)
+        .show()
+  }
+
+  override fun showChangeDiagnosisErrorDialog() {
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(getString(R.string.change_diagnosis_title))
+        .setMessage(getString(R.string.change_diagnosis_message))
+        .setPositiveButton(getString(R.string.change_diagnosis_positive), null)
+        .setNegativeButton(getString(R.string.change_diagnosis_negative)) { _, _ ->
+          hotEvents.onNext(ChangeDiagnosisNotNowClicked)
+        }
         .show()
   }
 

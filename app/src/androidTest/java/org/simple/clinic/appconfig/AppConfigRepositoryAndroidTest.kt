@@ -1,11 +1,16 @@
 package org.simple.clinic.appconfig
 
+import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.appconfig.StatesResult.StatesFetched
+import org.simple.clinic.main.TypedPreference
+import org.simple.clinic.main.TypedPreference.Type.CountryV1
+import java.util.Optional
 import javax.inject.Inject
 
 class AppConfigRepositoryAndroidTest {
@@ -13,9 +18,18 @@ class AppConfigRepositoryAndroidTest {
   @Inject
   lateinit var appConfigRepository: AppConfigRepository
 
+  @TypedPreference(CountryV1)
+  @Inject
+  lateinit var countryV1Preference: Preference<Optional<String>>
+
   @Before
   fun setup() {
     TestClinicApp.appComponent().inject(this)
+  }
+
+  @After
+  fun tearDown() {
+    countryV1Preference.delete()
   }
 
   @Test
@@ -87,5 +101,25 @@ class AppConfigRepositoryAndroidTest {
 
     // then
     assertThat(statesResult is StatesFetched).isTrue()
+  }
+
+  @Test
+  fun deleting_the_country_v1_should_delete_it_from_preferences() {
+    // given
+    val storedCountryJson = """
+      |{
+      | "country_code": "IN",
+      | "endpoint": "https://api.simple.org/api/v1",
+      | "display_name": "India",
+      | "isd_code": "91"
+      |}
+    """.trimMargin()
+    countryV1Preference.set(Optional.of(storedCountryJson))
+
+    // when
+    appConfigRepository.deleteStoredCountryV1()
+
+    // then
+    assertThat(countryV1Preference.get()).isEqualTo(Optional.empty<String>())
   }
 }

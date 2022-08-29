@@ -7,16 +7,20 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.facility.FacilityConfig
+import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.overdue.Appointment.Status.Scheduled
+import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
+import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.platform.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.platform.util.RuntimePermissionResult.GRANTED
-import org.simple.clinic.util.TestUserClock
+import org.simple.sharedTestCode.util.TestUserClock
 import java.time.LocalDate
 import java.time.Period
 import java.util.Optional
@@ -31,14 +35,11 @@ class ContactPatientUpdateTest {
       patientUuid = patientUuid,
       patientPhoneNumber = patientPhoneNumber
   )
-  private val overdueAppointment = TestData.overdueAppointment(
+  private val overdueAppointment = TestData.appointment(
       patientUuid = patientUuid,
       facilityUuid = UUID.fromString("c97a8b30-8094-4c93-9ad6-ecc100130943"),
-      phoneNumber = patientProfile.phoneNumbers.first(),
-      appointmentUuid = appointmentUuid,
-      gender = patientProfile.patient.gender,
-      age = patientProfile.patient.age,
-      dateOfBirth = patientProfile.patient.ageDetails.dateOfBirth
+      uuid = appointmentUuid,
+      status = Scheduled
   )
   private val proxyPhoneNumberForSecureCalls = "9999988888"
   private val timeToAppointments = listOf(
@@ -79,8 +80,22 @@ class ContactPatientUpdateTest {
   }
 
   @Test
-  fun `when the overdue appointment is loaded, the ui must be updated`() {
+  fun `when the overdue appointment is loaded, the ui must be updated and load call result for appointment`() {
     val appointment = Optional.of(overdueAppointment)
+    val defaultModel = defaultModel()
+
+    spec
+        .given(defaultModel)
+        .whenEvent(OverdueAppointmentLoaded(appointment))
+        .then(assertThatNext(
+            hasModel(defaultModel.overdueAppointmentLoaded(appointment)),
+            hasEffects(LoadCallResultForAppointment(overdueAppointment.uuid))
+        ))
+  }
+
+  @Test
+  fun `when the loaded overdue appointment is empty, the ui must be updated but load call result for appointment should not be called`() {
+    val appointment = Optional.empty<Appointment>()
     val defaultModel = defaultModel()
 
     spec
@@ -93,7 +108,7 @@ class ContactPatientUpdateTest {
   }
 
   @Test
-  fun `when the overdue appointment is loaded and patient profile is loaded, the ui must be updated`() {
+  fun `when the overdue appointment is loaded and patient profile is loaded, the ui must be updated and load call result for appointment`() {
     val appointment = Optional.of(overdueAppointment)
     val defaultModel = defaultModel()
         .contactPatientProfileLoaded(patientProfile)
@@ -104,7 +119,7 @@ class ContactPatientUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.overdueAppointmentLoaded(appointment)
                 .contactPatientInfoLoaded()),
-            hasNoEffects()
+            hasEffects(LoadCallResultForAppointment(overdueAppointment.uuid))
         ))
   }
 
@@ -194,7 +209,7 @@ class ContactPatientUpdateTest {
         .whenEvent(PatientAgreedToVisitClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(MarkPatientAsAgreedToVisit(appointmentUuid) as ContactPatientEffect)
+            hasEffects(MarkPatientAsAgreedToVisit(overdueAppointment) as ContactPatientEffect)
         ))
   }
 
@@ -378,7 +393,7 @@ class ContactPatientUpdateTest {
         .reminderDateSelected(currentReminderDate)
 
     val expectedEffect = SetReminderForAppointment(
-        appointmentUuid = appointmentUuid,
+        appointment = overdueAppointment,
         reminderDate = currentSelectedDate
     )
     spec
@@ -462,7 +477,7 @@ class ContactPatientUpdateTest {
         .whenEvent(RemoveFromOverdueListClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenRemoveOverdueAppointmentScreen(appointmentUuid, patientUuid))
+            hasEffects(OpenRemoveOverdueAppointmentScreen(overdueAppointment))
         ))
   }
 
@@ -487,6 +502,29 @@ class ContactPatientUpdateTest {
         ))
   }
 
+  @Test
+  fun `when call result for appointment is loaded, then update the model`() {
+    val model = defaultModel()
+        .contactPatientProfileLoaded(patientProfile)
+        .overdueAppointmentLoaded(Optional.of(overdueAppointment))
+
+    val callPatient = TestData.callResult(
+        id = UUID.fromString("0f59e8bb-9806-4134-af7f-a11bea2c244d"),
+        appointmentId = UUID.fromString("f6f8df78-c334-463a-86fa-b22dd20663ed"),
+        removeReason = AppointmentCancelReason.InvalidPhoneNumber,
+        deletedAt = null,
+        syncStatus = SyncStatus.DONE
+    )
+
+    spec
+        .given(model)
+        .whenEvent(CallResultForAppointmentLoaded(Optional.of(callPatient)))
+        .then(assertThatNext(
+            hasModel(model.callResultLoaded(Optional.of(callPatient))),
+            hasNoEffects()
+        ))
+  }
+
   private fun defaultModel(
       phoneMaskFeatureEnabled: Boolean = false,
       remindAppointmentsIn: List<TimeToAppointment> = this.timeToAppointments,
@@ -506,8 +544,7 @@ class ContactPatientUpdateTest {
         appointmentConfig = appointmentConfig,
         userClock = clock,
         mode = mode,
-        secureCallFeatureEnabled = phoneMaskFeatureEnabled,
-        overdueListChangesFeatureEnabled = overdueListChangesFeatureEnabled
+        secureCallFeatureEnabled = phoneMaskFeatureEnabled
     )
   }
 }

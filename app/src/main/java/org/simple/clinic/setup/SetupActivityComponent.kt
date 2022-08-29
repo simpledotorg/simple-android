@@ -4,11 +4,11 @@ import androidx.appcompat.app.AppCompatActivity
 import dagger.BindsInstance
 import dagger.Subcomponent
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.onboarding.OnboardingScreenInjector
+import org.simple.clinic.onboarding.OnboardingScreen
 import org.simple.clinic.splash.SplashScreen
 
 @Subcomponent(modules = [SetupActivityModule::class])
-interface SetupActivityComponent : OnboardingScreenInjector, SplashScreen.Injector {
+interface SetupActivityComponent : OnboardingScreen.Injector, SplashScreen.Injector {
 
   fun inject(target: SetupActivity)
 

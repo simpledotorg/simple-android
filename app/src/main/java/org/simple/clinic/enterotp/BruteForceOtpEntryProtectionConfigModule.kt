@@ -8,6 +8,6 @@ import java.time.Duration
 class BruteForceOtpEntryProtectionConfigModule {
   @Provides
   fun config(): BruteForceOtpEntryProtectionConfig {
-    return BruteForceOtpEntryProtectionConfig(limitOfFailedAttempts = 5, blockDuration = Duration.ofMinutes(20))
+    return BruteForceOtpEntryProtectionConfig(limitOfFailedAttempts = 5, blockDuration = Duration.ofMinutes(20), minOtpEntries = 3)
   }
 }

@@ -70,6 +70,22 @@ fun SupportSQLiteDatabase.assertViewExists(viewName: String) {
   }
 }
 
+fun SupportSQLiteDatabase.assertIndexDoesNotExist(indexName: String) {
+  query("""
+    SELECT DISTINCT "name" FROM sqlite_master WHERE type='index' and name='$indexName'
+  """).use {
+    Truth.assertWithMessage("Expected that [$indexName] does not exist, but found it exists").that(it.count).isEqualTo(0)
+  }
+}
+
+fun SupportSQLiteDatabase.assertIndexExists(indexName: String) {
+  query("""
+    SELECT DISTINCT "name" FROM sqlite_master WHERE type='index' and name='$indexName'
+  """).use {
+    Truth.assertWithMessage("Expected that [$indexName] exists, but found it does not exist").that(it.count).isEqualTo(1)
+  }
+}
+
 fun SupportSQLiteDatabase.assertColumns(tableName: String, expectedColumns: Set<String>) {
   query("""
     SELECT * FROM "$tableName" LIMIT 0

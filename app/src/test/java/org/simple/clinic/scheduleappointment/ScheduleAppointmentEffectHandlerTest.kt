@@ -9,19 +9,20 @@ import com.nhaarman.mockitokotlin2.whenever
 import dagger.Lazy
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
-import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
+import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepository
-import org.simple.clinic.util.TestUserClock
+import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.uuid.FakeUuidGenerator
+import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import java.time.LocalDate
 import java.time.Period
 import java.util.Optional
@@ -142,21 +143,74 @@ class ScheduleAppointmentEffectHandlerTest {
   }
 
   @Test
-  fun `when schedule sppointment for patient from next is received then schedule appointment`() {
+  fun `when schedule appointment for patient from next effect is received, then mark older appointments as visited and schedule appointment`() {
     // given
-    val facility = TestData.facility(uuid = UUID.fromString("e4a1f4d7-2444-4686-a6ae-3d15ddb42916"))
+    val scheduleDate = LocalDate.parse("2018-01-01")
 
     // when
     effectHandlerTestCase.dispatch(ScheduleAppointmentForPatientFromNext(
         patientUuid = patientUuid,
-        scheduledForDate = LocalDate.now(),
+        scheduledForDate = scheduleDate,
         scheduledAtFacility = facility,
-        type = Appointment.AppointmentType.Manual
+        type = Manual
     ))
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(AppointmentScheduledForPatientFromNext)
+
+    verify(repository).markOlderAppointmentsAsVisited(patientUuid)
+    verify(repository).schedule(
+        patientUuid = patientUuid,
+        appointmentUuid = appointmentUuid,
+        appointmentDate = scheduleDate,
+        appointmentType = Manual,
+        appointmentFacilityUuid = facility.uuid,
+        creationFacilityUuid = facility.uuid
+    )
+    verifyNoMoreInteractions(repository)
+
     verifyZeroInteractions(uiActions)
   }
 
+  @Test
+  fun `when schedule appointment for patient effect is received, then mark older appointments as visited and schedule appointment`() {
+    // given
+    val scheduleDate = LocalDate.parse("2018-01-01")
+
+    // when
+    effectHandlerTestCase.dispatch(ScheduleAppointmentForPatient(
+        patientUuid = patientUuid,
+        scheduledForDate = scheduleDate,
+        scheduledAtFacility = facility,
+        type = Automatic
+    ))
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(AppointmentScheduled)
+
+    verify(repository).markOlderAppointmentsAsVisited(patientUuid)
+    verify(repository).schedule(
+        patientUuid = patientUuid,
+        appointmentUuid = appointmentUuid,
+        appointmentDate = scheduleDate,
+        appointmentType = Automatic,
+        appointmentFacilityUuid = facility.uuid,
+        creationFacilityUuid = facility.uuid
+    )
+    verifyNoMoreInteractions(repository)
+
+    verifyZeroInteractions(uiActions)
+  }
+
+  @Test
+  fun `when close sheet without result effect is received, then close the sheet without result`() {
+    // when
+    effectHandlerTestCase.dispatch(CloseSheetWithoutResult)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).closeSheetWithoutResult()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

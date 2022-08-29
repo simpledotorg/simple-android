@@ -8,7 +8,6 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.PhoneNumberValidator
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 import org.simple.clinic.util.extractIfPresent
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
@@ -31,7 +30,6 @@ class UpdatePhoneNumberEffectHandler @AssistedInject constructor(
       .addTransformer(ValidatePhoneNumber::class.java, validatePhoneNumber())
       .addAction(ShowBlankPhoneNumberError::class.java, uiActions::showBlankPhoneNumberError, schedulersProvider.ui())
       .addConsumer(ShowPhoneNumberTooShortError::class.java, { uiActions.showPhoneNumberTooShortError(it.minimumAllowedNumberLength) }, schedulersProvider.ui())
-      .addConsumer(ShowPhoneNumberTooLongError::class.java, { uiActions.showPhoneNumberTooLongError(it.maximumRequiredNumberLength) }, schedulersProvider.ui())
       .addAction(CloseDialog::class.java, uiActions::closeDialog, schedulersProvider.ui())
       .addTransformer(SaveNewPhoneNumber::class.java, saveNewPhoneNumber())
       .addTransformer(SaveExistingPhoneNumber::class.java, saveExistingPhoneNumber())
@@ -85,7 +83,7 @@ class UpdatePhoneNumberEffectHandler @AssistedInject constructor(
   private fun validatePhoneNumber(): ObservableTransformer<ValidatePhoneNumber, UpdatePhoneNumberEvent> {
     return ObservableTransformer { effects ->
       effects
-          .map { it.phoneNumber to validator.validate(number = it.phoneNumber, type = LANDLINE_OR_MOBILE) }
+          .map { it.phoneNumber to validator.validate(number = it.phoneNumber) }
           .map { (phoneNumber, validationResult) -> PhoneNumberValidated(phoneNumber, validationResult) }
     }
   }

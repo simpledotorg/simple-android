@@ -5,17 +5,21 @@ import android.content.res.Resources
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.BuildConfig
-import org.simple.clinic.TestData
+import org.simple.clinic.NoopSmsListenerOtp
 import org.simple.clinic.appconfig.AppConfigModule
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.di.network.NetworkModule
+import org.simple.clinic.drugstockreminders.DrugStockReminderApiModule
+import org.simple.clinic.home.overdue.search.OverdueSearchModule
 import org.simple.clinic.login.LoginModule
+import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.sync.SyncModule
 import org.simple.clinic.util.scheduler.DefaultSchedulersProvider
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.sharedTestCode.TestData
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.util.Locale
@@ -34,7 +38,9 @@ import java.util.Locale
   SyncModule::class,
   DateFormatterModule::class,
   UuidGeneratorModule::class,
-  TestSyncConfigModule::class
+  TestSyncConfigModule::class,
+  DrugStockReminderApiModule::class,
+  OverdueSearchModule::class
 ])
 class TestAppModule(private val application: Application) {
 
@@ -65,4 +71,7 @@ class TestAppModule(private val application: Application) {
         isdCode = "91"
     )
   }
+
+  @Provides
+  fun provideLoginOtpSmsListener(): LoginOtpSmsListener = NoopSmsListenerOtp()
 }

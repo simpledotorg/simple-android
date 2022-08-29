@@ -3,9 +3,10 @@ package org.simple.clinic.drugs.selection.custom
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.drugs.search.DrugFrequency
+import org.simple.clinic.drugs.selection.custom.ButtonState.SAVING
 import org.simple.clinic.drugs.selection.custom.DrugInfoProgressState.DONE
 import org.simple.clinic.drugs.selection.custom.DrugInfoProgressState.IN_PROGRESS
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 
 @Parcelize
 data class CustomDrugEntryModel(
@@ -16,9 +17,9 @@ data class CustomDrugEntryModel(
     val frequency: DrugFrequency?,
     val rxNormCode: String?,
     val dosagePlaceholder: String,
-    val drugFrequencyChoiceItems: List<DrugFrequencyChoiceItem>?,
-    val drugFrequencyToFrequencyChoiceItemMap: Map<DrugFrequency?, DrugFrequencyChoiceItem>?,
-    val drugInfoProgressState: DrugInfoProgressState?
+    val drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>?,
+    val drugInfoProgressState: DrugInfoProgressState?,
+    val saveButtonState: ButtonState?
 ) : Parcelable {
   companion object {
     fun default(
@@ -32,13 +33,16 @@ data class CustomDrugEntryModel(
         frequency = null,
         rxNormCode = null,
         dosagePlaceholder = dosagePlaceholder,
-        drugFrequencyChoiceItems = null,
-        drugFrequencyToFrequencyChoiceItemMap = null,
-        drugInfoProgressState = null)
+        drugFrequencyToLabelMap = null,
+        drugInfoProgressState = null,
+        saveButtonState = null)
   }
 
   val isCustomDrugEntrySheetInfoLoaded: Boolean
     get() = drugInfoProgressState == DONE
+
+  val isSaveButtonInProgressState: Boolean
+    get() = saveButtonState == SAVING
 
   fun dosageEdited(dosage: String?): CustomDrugEntryModel {
     return copy(dosage = dosage)
@@ -60,8 +64,8 @@ data class CustomDrugEntryModel(
     return copy(rxNormCode = rxNormCode)
   }
 
-  fun drugFrequencyToFrequencyChoiceItemMapLoaded(drugFrequencyToFrequencyChoiceItemMap: Map<DrugFrequency?, DrugFrequencyChoiceItem>?): CustomDrugEntryModel {
-    return copy(drugFrequencyToFrequencyChoiceItemMap = drugFrequencyToFrequencyChoiceItemMap)
+  fun drugFrequencyToLabelMapLoaded(drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>?): CustomDrugEntryModel {
+    return copy(drugFrequencyToLabelMap = drugFrequencyToLabelMap)
   }
 
   fun drugInfoProgressStateLoaded(): CustomDrugEntryModel {
@@ -70,5 +74,9 @@ data class CustomDrugEntryModel(
 
   fun drugInfoProgressStateLoading(): CustomDrugEntryModel {
     return copy(drugInfoProgressState = IN_PROGRESS)
+  }
+
+  fun saveButtonStateChanged(saveButtonState: ButtonState): CustomDrugEntryModel {
+    return copy(saveButtonState = saveButtonState)
   }
 }

@@ -5,7 +5,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import java.util.UUID
 import javax.inject.Inject
 

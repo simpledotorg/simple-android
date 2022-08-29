@@ -10,4 +10,13 @@ sealed class OpenedFrom : Parcelable {
 
   @Parcelize
   object InstantSearchScreen : OpenedFrom()
+
+  sealed class EditPatientScreen : OpenedFrom() {
+
+    @Parcelize
+    object ToAddNHID : EditPatientScreen()
+
+    @Parcelize
+    object ToAddBpPassport : EditPatientScreen()
+  }
 }

@@ -32,6 +32,7 @@ if [ $serverAppAlreadyExists = false ]; then
   heroku addons:create --app=$herokuAppName --wait --name="${herokuAppName}-postgres" heroku-postgresql:hobby-dev
   heroku buildpacks:add --index 1 --app=$herokuAppName heroku/nodejs
   heroku buildpacks:add --index 2 --app=$herokuAppName heroku/ruby
+  heroku buildpacks:add --index 3 --app=$herokuAppName https://github.com/weibeld/heroku-buildpack-run.git
 fi
 
 echo "Starting the Simple server on Heroku"
@@ -42,7 +43,7 @@ resultOfServerPush=$?
 resultOfSeedDataSetup=0
 if [ $serverAppAlreadyExists = false ]; then
   echo "Setting up initial seed data"
-  (cd $serverAppDirectory && heroku run rails db:schema:load db:seed)
+  (cd $serverAppDirectory && heroku run rails db:structure:load:with_data db:seed)
   resultOfSeedDataSetup=$?
 fi
 

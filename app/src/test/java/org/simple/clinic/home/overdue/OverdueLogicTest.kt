@@ -14,15 +14,20 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.clinic.analytics.NetworkCapabilitiesProvider
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.overdue.OverdueAppointmentSelector
+import org.simple.clinic.overdue.download.OverdueDownloadScheduler
 import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.PagingSourceFactory
-import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
+import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.sharedTestCode.util.TestUserClock
+import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
 
@@ -35,6 +40,7 @@ class OverdueLogicTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val repository = mock<AppointmentRepository>()
   private val pagerFactory = mock<PagerFactory>()
+  private val networkCapabilitiesProvider = mock<NetworkCapabilitiesProvider>()
   private val facility = TestData.facility(
       uuid = UUID.fromString("f4430584-eeaf-4352-b1f5-c21cc96faa6c"),
       facilityConfig = FacilityConfig(
@@ -43,12 +49,13 @@ class OverdueLogicTest {
       )
   )
   private val dateOnClock = LocalDate.parse("2018-01-01")
+  private val overdueAppointmentSelector = mock<OverdueAppointmentSelector>()
 
   private lateinit var testFixture: MobiusTestFixture<OverdueModel, OverdueEvent, OverdueEffect>
 
   private val overdueAppointments = PagingData.from(listOf(
-      TestData.overdueAppointment(appointmentUuid = UUID.fromString("829ca241-2266-47d1-be48-0952dd9b2cab")),
-      TestData.overdueAppointment(appointmentUuid = UUID.fromString("2cb1d2cd-b6e3-40dd-b2eb-4b690925c123"))
+      TestData.overdueAppointment_Old(appointmentUuid = UUID.fromString("829ca241-2266-47d1-be48-0952dd9b2cab")),
+      TestData.overdueAppointment_Old(appointmentUuid = UUID.fromString("2cb1d2cd-b6e3-40dd-b2eb-4b690925c123"))
   ))
 
   @After
@@ -83,10 +90,14 @@ class OverdueLogicTest {
 
   private fun setupController() {
     whenever(pagerFactory.createPager(
-        sourceFactory = any<PagingSourceFactory<Int, OverdueAppointment>>(),
+        sourceFactory = any<PagingSourceFactory<Int, OverdueAppointment_Old>>(),
         pageSize = eq(10),
-        initialKey = eq(null)
+        enablePlaceholders = eq(true),
+        initialKey = eq(null),
+        cacheScope = eq(null)
     )) doReturn Observable.just(overdueAppointments)
+
+    whenever(overdueAppointmentSelector.selectedAppointmentIdsStream) doReturn Observable.just(emptySet())
 
     val effectHandler = OverdueEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
@@ -96,12 +107,19 @@ class OverdueLogicTest {
         overdueAppointmentsConfig = OverdueAppointmentsConfig(
             overdueAppointmentsLoadSize = 10
         ),
-        uiActions = uiActions
+        overdueDownloadScheduler = mock<OverdueDownloadScheduler>(),
+        userClock = TestUserClock(Instant.parse("2018-01-01T00:00:00Z")),
+        overdueAppointmentSelector = overdueAppointmentSelector,
+        viewEffectsConsumer = OverdueViewEffectHandler(uiActions)::handle
     )
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = OverdueModel.create(),
-        update = OverdueUpdate(dateOnClock, false),
+        update = OverdueUpdate(
+            date = dateOnClock,
+            canGeneratePdf = true,
+            isOverdueSectionsFeatureEnabled = false
+        ),
         effectHandler = effectHandler.build(),
         modelUpdateListener = { /* Nothing to do here */ },
         init = OverdueInit()

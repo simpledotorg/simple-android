@@ -1,6 +1,5 @@
 package org.simple.clinic.bp.entry
 
-import com.google.firebase.perf.metrics.AddTrace
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -166,7 +165,6 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
     updatePatientRecordedAtDate(createdBloodPressureMeasurement, entryDate)
   }
 
-  @AddTrace(name = "bpEntry_markAppointmentsVisited")
   private fun markOlderAppointmentsAsVisited(bloodPressureMeasurement: BloodPressureMeasurement) {
     appointmentsRepository.markAppointmentsCreatedBeforeTodayAsVisited(bloodPressureMeasurement.patientUuid)
   }
@@ -205,14 +203,12 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
 
   }
 
-  @AddTrace(name = "bpEntry_storeUpdatedBp")
   private fun storeUpdateBloodPressureMeasurement(
       bloodPressureMeasurement: BloodPressureMeasurement
   ) {
     bloodPressureRepository.updateMeasurement(bloodPressureMeasurement)
   }
 
-  @AddTrace(name = "bpEntry_updatePatientRecordedAt")
   private fun updatePatientRecordedAtDate(
       bloodPressureMeasurement: BloodPressureMeasurement,
       entryDate: Instant
@@ -236,7 +232,6 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
     )
   }
 
-  @AddTrace(name = "bpEntry_storeNewBp")
   private fun storeNewBloodPressureMeasurement(
       user: User,
       currentFacility: Facility,
@@ -252,6 +247,5 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
         uuid = uuidGenerator.v4())
   }
 
-  @AddTrace(name = "bpEntry_getExistingBp")
   private fun getExistingBloodPressureMeasurement(bpUuid: UUID) = bloodPressureRepository.measurementImmediate(bpUuid)
 }

@@ -35,7 +35,7 @@ class AddPhoneNumberEffectHandler @AssistedInject constructor(
   private fun validatePhoneNumber(): ObservableTransformer<ValidatePhoneNumber, AddPhoneNumberEvent> {
     return ObservableTransformer { effects ->
       effects
-          .map { it.newNumber to validator.validate(it.newNumber, type = PhoneNumberValidator.Type.LANDLINE_OR_MOBILE) }
+          .map { it.newNumber to validator.validate(it.newNumber) }
           .map { (newNumber, result) -> PhoneNumberValidated(newNumber, result) }
     }
   }

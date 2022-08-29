@@ -6,6 +6,7 @@ import dagger.Lazy
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
@@ -101,9 +102,42 @@ class EditPatientEffectHandler @AssistedInject constructor(
       Observable.merge(
           createOrUpdatePhoneNumber(sharedSavePatientEffects),
           savePatient(sharedSavePatientEffects),
-          handleAlternativeId(sharedSavePatientEffects)
+          handleAlternativeId(sharedSavePatientEffects),
+          linkBpPassportToThePatient(sharedSavePatientEffects)
       )
     }
+  }
+
+  private fun linkBpPassportToThePatient(
+      savePatientEffects: Observable<SavePatientEffect>
+  ): Observable<EditPatientEvent> {
+    return savePatientEffects
+        .filter(::isBpPassportAdded)
+        .flatMapCompletable { savePatientEffect ->
+          Completable.fromAction {
+            val businessIds = createBusinessIdsFromIdentifiers(savePatientEffect)
+            patientRepository
+                .addIdentifiersToPatient(
+                    patientUuid = savePatientEffect.ongoingEntry.patientUuid,
+                    businessIds = businessIds
+                )
+          }
+        }
+        .toObservable()
+  }
+
+  private fun createBusinessIdsFromIdentifiers(savePatientEffect: SavePatientEffect): List<BusinessId> {
+    return savePatientEffect.ongoingEntry
+        .bpPassports
+        .orEmpty()
+        .map {
+          patientRepository.createBusinessIdFromIdentifier(
+              id = uuidGenerator.v4(),
+              patientUuid = savePatientEffect.ongoingEntry.patientUuid,
+              identifier = it,
+              user = currentUser.get()
+          )
+        }
   }
 
   private fun savePatient(savePatientEffects: Observable<SavePatientEffect>): Observable<EditPatientEvent> {
@@ -305,6 +339,8 @@ class EditPatientEffectHandler @AssistedInject constructor(
   private fun isAlternativeIdAdded(it: SavePatientEffect) = it.saveAlternativeId == null && it.ongoingEntry.alternativeId.isNotBlank()
 
   private fun isAlternativeIdCleared(it: SavePatientEffect) = it.saveAlternativeId != null && it.ongoingEntry.alternativeId.isBlank()
+
+  private fun isBpPassportAdded(it: SavePatientEffect) = it.ongoingEntry.bpPassports?.isNotEmpty() == true
 
   private fun loadInputFields(): ObservableTransformer<LoadInputFields, EditPatientEvent> {
     return ObservableTransformer { effects ->

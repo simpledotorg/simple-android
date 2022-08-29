@@ -16,8 +16,8 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.ReminderConsent.Denied
 import org.simple.clinic.patient.ReminderConsent.Granted
-import org.simple.clinic.registration.phone.LengthBasedNumberValidator
-import org.simple.clinic.util.TestUserClock
+import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -27,12 +27,7 @@ import java.util.Locale
 import java.util.Optional
 
 class PatientEntryUpdateTest {
-  private val phoneNumberValidator = LengthBasedNumberValidator(
-      minimumRequiredLengthMobile = 10,
-      maximumAllowedLengthMobile = 10,
-      minimumRequiredLengthLandlinesOrMobile = 6,
-      maximumAllowedLengthLandlinesOrMobile = 12
-  )
+  private val phoneNumberValidator = PhoneNumberValidator(minimumRequiredLength = 6)
 
   private val localDate = LocalDate.parse("2020-01-01")
   private val userClock: UserClock = TestUserClock(localDate)
@@ -43,10 +38,7 @@ class PatientEntryUpdateTest {
   private val updateSpec = UpdateSpec(update)
   private val defaultModel = PatientEntryModel.DEFAULT
 
-  private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider(
-      dateTimeFormatter = dateOfBirthFormat,
-      today = LocalDate.now(userClock)
-  ))
+  private val inputFieldsFactory = InputFieldsFactory(BangladeshInputFieldsProvider())
 
   @Test
   fun `when the user grants reminder consent, update the model`() {
@@ -128,32 +120,6 @@ class PatientEntryUpdateTest {
             )
         )
   }
-
-  @Test
-  fun `when the user enters phone number which is too long, then show error`() {
-    val errors: List<PatientEntryValidationError> = listOf(PatientEntryValidationError.PhoneNumberLengthTooLong(12))
-    val model = defaultModel
-        .fullNameChanged("Name")
-        .ageChanged("21")
-        .genderChanged(Optional.of(Gender.Male))
-        .phoneNumberChanged("7721083838380")
-        .streetAddressChanged("street")
-        .colonyOrVillageChanged("village")
-        .districtChanged("district")
-        .stateChanged("state")
-        .zoneChanged("zone")
-
-    updateSpec
-        .given(model)
-        .`when`(SaveClicked)
-        .then(
-            assertThatNext(
-                hasNoModel(),
-                hasEffects(ShowValidationErrors(errors) as PatientEntryEffect)
-            )
-        )
-  }
-
 
   @Test
   fun `when the user doesn't enter date of birth and age, then show error`() {

@@ -16,7 +16,7 @@ import org.junit.Test
 import org.simple.clinic.help.HelpPullResult
 import org.simple.clinic.help.HelpRepository
 import org.simple.clinic.help.HelpSync
-import org.simple.clinic.util.RxErrorsRule
+import org.simple.sharedTestCode.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
@@ -197,11 +197,12 @@ class HelpScreenLogicTest {
   }
 
   private fun setupController() {
+    val viewEffectHandler = HelpScreenViewEffectHandler(uiActions)
     val effectHandler = HelpScreenEffectHandler(
         helpRepository = helpRepository,
         helpSync = helpSync,
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = uiActions
+        viewEffectsConsumer = viewEffectHandler::handle
     )
     val uiRenderer = HelpScreenUiRenderer(ui)
 

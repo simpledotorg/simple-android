@@ -1,11 +1,22 @@
 package org.simple.clinic.summary
 
 import org.simple.clinic.mobius.ViewRenderer
+import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.ValueChangedCallback
+import org.simple.clinic.util.toLocalDateAtZone
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 
 class PatientSummaryViewRenderer(
     private val ui: PatientSummaryScreenUi,
-    private val modelUpdateCallback: PatientSummaryModelUpdateCallback
+    private val isNextAppointmentFeatureEnabled: Boolean,
+    private val modelUpdateCallback: PatientSummaryModelUpdateCallback,
+    private val userClock: UserClock,
+    private val cdssOverdueLimit: Int
 ) : ViewRenderer<PatientSummaryModel> {
+
+  private val clinicalDecisionSupportCallback = ValueChangedCallback<Boolean>()
+  private val today = LocalDate.now(userClock)
 
   override fun render(model: PatientSummaryModel) {
     modelUpdateCallback?.invoke(model)
@@ -15,12 +26,77 @@ class PatientSummaryViewRenderer(
         populatePatientProfile(model.patientSummaryProfile!!)
         showEditButton()
         setupUiForAssignedFacility(model)
+        renderPatientDiedStatus(model)
       }
 
       if (model.hasLoadedCurrentFacility) {
         setupUiForDiabetesManagement(model.isDiabetesManagementEnabled)
         setupUiForTeleconsult(model)
       }
+
+      renderNextAppointmentCard(model)
+
+      val patientRegistrationDate = model.patientSummaryProfile?.patient?.createdAt?.toLocalDateAtZone(userClock.zone)
+      if (patientRegistrationDate?.isBefore(today) == true) {
+        renderClinicalDecisionBasedOnAppointment(model)
+      } else {
+        ui.hideClinicalDecisionSupportAlertWithoutAnimation()
+      }
+    }
+  }
+
+  private fun renderClinicalDecisionBasedOnAppointment(model: PatientSummaryModel) {
+    if (model.hasScheduledAppointment) {
+      renderClinicalDecisionBasedOnAppointmentOverdue(model)
+    } else {
+      renderClinicalDecisionSupportAlert(model)
+    }
+  }
+
+  private fun renderClinicalDecisionBasedOnAppointmentOverdue(model: PatientSummaryModel) {
+    val appointmentScheduleDate = model.scheduledAppointment!!.get().scheduledDate
+    val daysAppointmentOverdueFor = appointmentScheduleDate.until(today, ChronoUnit.DAYS)
+
+    if (daysAppointmentOverdueFor <= cdssOverdueLimit) {
+      renderClinicalDecisionSupportAlert(model)
+    } else {
+      ui.hideClinicalDecisionSupportAlertWithoutAnimation()
+    }
+  }
+
+  private fun renderClinicalDecisionSupportAlert(model: PatientSummaryModel) {
+    val canShowClinicalDecisionSupportAlert = model.hasPatientRegistrationData == true && model.readyToRender()
+
+    if (!canShowClinicalDecisionSupportAlert) {
+      ui.hideClinicalDecisionSupportAlertWithoutAnimation()
+      return
+    }
+
+    clinicalDecisionSupportCallback.pass(
+        model.isNewestBpEntryHigh == true &&
+            model.hasPrescribedDrugsChangedToday == false
+    ) { showCdssAlert ->
+      if (showCdssAlert) {
+        ui.showClinicalDecisionSupportAlert()
+      } else {
+        ui.hideClinicalDecisionSupportAlert()
+      }
+    }
+  }
+
+  private fun renderNextAppointmentCard(model: PatientSummaryModel) {
+    if (isNextAppointmentFeatureEnabled && model.hasPatientRegistrationData == true) {
+      ui.showNextAppointmentCard()
+    } else {
+      ui.hideNextAppointmentCard()
+    }
+  }
+
+  private fun renderPatientDiedStatus(model: PatientSummaryModel) {
+    if (model.hasPatientDied) {
+      ui.showPatientDiedStatus()
+    } else {
+      ui.hidePatientDiedStatus()
     }
   }
 

@@ -10,7 +10,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.sync.DataSync

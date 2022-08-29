@@ -7,6 +7,7 @@ import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Fts4
 import androidx.room.Index
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -25,6 +26,7 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.EthiopiaMedicalRecordNumber
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.IndiaNationalHealthId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaNationalId
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.SriLankaPersonalHealthNumber
 import org.simple.clinic.patient.sync.BusinessIdPayload
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 import java.time.Instant
@@ -103,6 +105,7 @@ data class BusinessId(
           EthiopiaMedicalRecordNumber -> MedicalRecordNumberMetaDataV1
           IndiaNationalHealthId -> IndiaNationalHealthIdMetaDataV1
           SriLankaNationalId -> SriLankaNationIdMetaDataV1
+          SriLankaPersonalHealthNumber -> SriLankaPersonalHealthNumberMetaDataV1
           is IdentifierType.Unknown -> null
         }
 
@@ -126,6 +129,9 @@ data class BusinessId(
     object SriLankaNationIdMetaDataV1 : MetaDataVersion()
 
     @Parcelize
+    object SriLankaPersonalHealthNumberMetaDataV1 : MetaDataVersion()
+
+    @Parcelize
     data class Unknown(val actual: String) : MetaDataVersion()
 
     object TypeAdapter : SafeEnumTypeAdapter<MetaDataVersion>(
@@ -134,7 +140,8 @@ data class BusinessId(
             BangladeshNationalIdMetaDataV1 to "org.simple.bangladesh_national_id.meta.v1",
             MedicalRecordNumberMetaDataV1 to "org.simple.ethiopia_medical_record.meta.v1",
             IndiaNationalHealthIdMetaDataV1 to "org.simple.india_national_health_id.meta.v1",
-            SriLankaNationIdMetaDataV1 to "org.simple.sri_lanka_national_id.meta.v1"
+            SriLankaNationIdMetaDataV1 to "org.simple.sri_lanka_national_id.meta.v1",
+            SriLankaPersonalHealthNumberMetaDataV1 to "org.simple.sri_lanka_personal_health_number.meta.v1"
         ),
         unknownStringToEnumConverter = { Unknown(it) },
         unknownEnumToStringConverter = { (it as Unknown).actual }
@@ -196,3 +203,6 @@ data class BusinessId(
   }
 }
 
+@Entity
+@Fts4(contentEntity = BusinessId::class)
+data class BusinessIdFts(val patientUuid: UUID, val searchHelp: String)

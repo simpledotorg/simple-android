@@ -8,17 +8,15 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Completable
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.search.DrugRepository
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItem
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyChoiceItems
-import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyFactory
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
-import org.simple.clinic.uuid.FakeUuidGenerator
+import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import java.util.UUID
 
 class CustomDrugEntryEffectHandlerTest {
@@ -32,15 +30,13 @@ class CustomDrugEntryEffectHandlerTest {
   private val uuidGenerator = FakeUuidGenerator.fixed(customDrugUUID)
   private val drugName = "Amlodipine"
 
-  private val drugFrequencyChoiceItems = listOf(
-      DrugFrequencyChoiceItem(drugFrequency = null, label = "None"),
-      DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.OD, label = "OD"),
-      DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.BD, label = "BD"),
-      DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.TDS, label = "TDS"),
-      DrugFrequencyChoiceItem(drugFrequency = DrugFrequency.QDS, label = "QDS")
+  private val drugFrequencyToLabelMap = mapOf(
+      null to DrugFrequencyLabel(label = "None"),
+      DrugFrequency.OD to DrugFrequencyLabel(label = "OD"),
+      DrugFrequency.BD to DrugFrequencyLabel(label = "BD"),
+      DrugFrequency.TDS to DrugFrequencyLabel(label = "TDS"),
+      DrugFrequency.QDS to DrugFrequencyLabel(label = "QDS")
   )
-
-  private val drugFrequencyFactory = mock<DrugFrequencyFactory>()
 
   private val effectHandler = CustomDrugEntryEffectHandler(
       TestSchedulersProvider.trampoline(),
@@ -48,8 +44,9 @@ class CustomDrugEntryEffectHandlerTest {
       drugRepository,
       { facility },
       uuidGenerator,
-      drugFrequencyFactory,
-      uiActions).build()
+      drugFrequencyToLabelMap,
+      CustomDrugEntryViewEffectHandler(uiActions)::handle
+  ).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)
 
@@ -64,11 +61,11 @@ class CustomDrugEntryEffectHandlerTest {
     val frequency = DrugFrequency.OD
 
     // when
-    testCase.dispatch(ShowEditFrequencyDialog(frequency, drugFrequencyChoiceItems))
+    testCase.dispatch(ShowEditFrequencyDialog(frequency))
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(uiActions).showEditFrequencyDialog(frequency, drugFrequencyChoiceItems)
+    verify(uiActions).showEditFrequencyDialog(frequency)
   }
 
   @Test
@@ -233,8 +230,7 @@ class CustomDrugEntryEffectHandlerTest {
     testCase.dispatch(LoadDrugFrequencyChoiceItems)
 
     // then
-    val expectedResult = drugFrequencyFactory.provideFields()
-    testCase.assertOutgoingEvents(DrugFrequencyChoiceItemsLoaded(DrugFrequencyChoiceItems(expectedResult)))
+    testCase.assertOutgoingEvents(DrugFrequencyChoiceItemsLoaded(drugFrequencyToLabelMap))
     verifyZeroInteractions(uiActions)
   }
 
@@ -246,6 +242,42 @@ class CustomDrugEntryEffectHandlerTest {
     // then
     testCase.assertNoOutgoingEvents()
     verify(uiActions).hideKeyboard()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when show keyboard effect is received, then show keyboard`() {
+    // when
+    testCase.dispatch(ShowKeyboard)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).showKeyboard()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when clear focus from edit text effect is received, then clear focus from edit text`() {
+    // when
+    testCase.dispatch(ClearFocusFromDosageEditText)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).clearFocusFromDosageEditText()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when set cursor position effect is received, then set cursor position`() {
+    // given
+    val position = 5
+
+    // when
+    testCase.dispatch(SetCursorPosition(position))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+    verify(uiActions).setCursorPosition(position)
     verifyNoMoreInteractions(uiActions)
   }
 }

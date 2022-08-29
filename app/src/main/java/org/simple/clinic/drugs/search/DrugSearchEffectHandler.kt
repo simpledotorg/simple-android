@@ -48,7 +48,8 @@ class DrugSearchEffectHandler @AssistedInject constructor(
             val currentFacilityProtocolId = currentFacility.get().protocolUuid
             pagerFactory.createPager(
                 sourceFactory = { drugsRepository.searchForNonProtocolDrugs(it.searchQuery, currentFacilityProtocolId) },
-                pageSize = drugsSearchResultsPageSize
+                pageSize = drugsSearchResultsPageSize,
+                enablePlaceholders = false
             )
           }
           .map(::DrugsSearchResultsLoaded)

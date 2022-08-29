@@ -1,5 +1,4 @@
 ![Build Status](https://github.com/simpledotorg/simple-android/workflows/CI/badge.svg)
-[![pullreminders](https://pullreminders.com/badge.svg)](https://pullreminders.com?ref=badge)
 
 # Simple
 
@@ -51,7 +50,7 @@ source <path to shell configuration file>
 
 ```sh
 brew tap AdoptOpenJDK/openjdk
-brew cask install adoptopenjdk11
+brew install adoptopenjdk11
 ```
 
 6. Add the installed JDK to `jEnv`

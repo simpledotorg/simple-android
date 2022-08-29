@@ -14,17 +14,17 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.TestData
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_HYPERTENSION_TREATMENT
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithDiabetes
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithHypertension
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAHeartAttack
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDisease
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreatment
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.Gender
@@ -32,12 +32,13 @@ import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.uuid.UuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
+import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.util.UUID
@@ -114,11 +115,12 @@ class NewMedicalHistoryScreenLogicTest {
     // when
     startMobiusLoop(uuidGenerator = uuidGenerator, ongoingPatientEntry = patientEntry)
 
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, No))
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_HEART_ATTACK, No))
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_STROKE, No))
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_KIDNEY_DISEASE, Yes))
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_DIABETES, Yes))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(DiagnosedWithHypertension, No))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HasHadAHeartAttack, No))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HasHadAStroke, No))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HasHadAKidneyDisease, Yes))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(DiagnosedWithDiabetes, Yes))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(IsOnDiabetesTreatment, Yes))
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
     // then
@@ -142,7 +144,8 @@ class NewMedicalHistoryScreenLogicTest {
               hasHadStroke = No,
               hasHadKidneyDisease = Yes,
               diagnosedWithHypertension = No,
-              hasDiabetes = Yes
+              hasDiabetes = Yes,
+              isOnDiabetesTreatment = Yes
           )
       )
       verify(uiActions).openPatientSummaryScreen(savedPatient.patientUuid)
@@ -177,8 +180,8 @@ class NewMedicalHistoryScreenLogicTest {
     // when
     startMobiusLoop(uuidGenerator = uuidGenerator, ongoingPatientEntry = patientEntry)
 
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, Yes))
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(IS_ON_HYPERTENSION_TREATMENT, Yes))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(DiagnosedWithHypertension, Yes))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(IsOnHypertensionTreatment(Country.INDIA), Yes))
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
     // then
@@ -240,19 +243,19 @@ class NewMedicalHistoryScreenLogicTest {
     startMobiusLoop(uuidGenerator = uuidGenerator, ongoingPatientEntry = patientEntry)
 
     // Initial answers
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, No))
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_HEART_ATTACK, No))
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_STROKE, No))
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_KIDNEY_DISEASE, Yes))
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_DIABETES, Yes))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(DiagnosedWithHypertension, No))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HasHadAHeartAttack, No))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HasHadAStroke, No))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HasHadAKidneyDisease, Yes))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(DiagnosedWithDiabetes, Yes))
 
     // Updated answers
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, Yes))
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_HEART_ATTACK, Unanswered))
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_STROKE, Unanswered))
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HAS_HAD_A_KIDNEY_DISEASE, No))
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(DIAGNOSED_WITH_DIABETES, No))
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(IS_ON_HYPERTENSION_TREATMENT, Yes))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(DiagnosedWithHypertension, Yes))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HasHadAHeartAttack, Unanswered))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HasHadAStroke, Unanswered))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(HasHadAKidneyDisease, No))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(DiagnosedWithDiabetes, No))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(IsOnHypertensionTreatment(Country.INDIA), Yes))
 
     uiEvents.onNext(SaveMedicalHistoryClicked())
 

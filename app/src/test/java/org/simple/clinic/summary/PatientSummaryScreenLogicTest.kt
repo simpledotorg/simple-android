@@ -16,7 +16,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.FacilityRepository
@@ -32,12 +32,14 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
-import org.simple.clinic.util.RxErrorsRule
+import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.uuid.FakeUuidGenerator
+import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.time.Duration
+import java.time.LocalDate
 import java.util.Optional
 import java.util.UUID
 
@@ -66,12 +68,19 @@ class PatientSummaryScreenLogicTest {
   )
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val viewRenderer = PatientSummaryViewRenderer(ui, modelUpdateCallback = { /* no-op */ })
+  private val viewRenderer = PatientSummaryViewRenderer(
+      ui = ui,
+      isNextAppointmentFeatureEnabled = false,
+      modelUpdateCallback = { /* no-op */ },
+      userClock = TestUserClock(LocalDate.parse("2018-01-01")),
+      cdssOverdueLimit = 2
+  )
 
   private lateinit var testFixture: MobiusTestFixture<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect>
 
   @Before
   fun setUp() {
+    whenever(bpRepository.isNewestBpEntryHigh(patientUuid)) doReturn Observable.just(true)
     whenever(patientRepository.patientProfile(patientUuid)) doReturn Observable.just<Optional<PatientProfile>>(Optional.of(patientProfile))
     whenever(patientRepository.latestPhoneNumberForPatient(patientUuid)) doReturn Optional.empty()
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)) doReturn Optional.empty()
@@ -174,6 +183,7 @@ class PatientSummaryScreenLogicTest {
   }
 
   private fun startMobiusLoop(openIntention: OpenIntention) {
+    val viewEffectHandler = PatientSummaryViewEffectHandler(uiActions)
     val effectHandler = PatientSummaryEffectHandler(
         schedulersProvider = TrampolineSchedulersProvider(),
         patientRepository = patientRepository,
@@ -189,7 +199,9 @@ class PatientSummaryScreenLogicTest {
         uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid),
         facilityRepository = facilityRepository,
         teleconsultationFacilityRepository = mock(),
-        uiActions = uiActions
+        prescriptionRepository = mock(),
+        cdssPilotFacilities = { emptyList() },
+        viewEffectsConsumer = viewEffectHandler::handle
     )
 
     testFixture = MobiusTestFixture(

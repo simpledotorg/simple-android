@@ -3,8 +3,6 @@ plugins {
 }
 
 dependencies {
-  implementation(libs.guava)
-
   implementation(libs.kotlin.stdlib)
 
   implementation(libs.mobius.core)

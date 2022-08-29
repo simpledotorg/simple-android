@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="?attr/selectableItemBackground"
+  android:clickable="true"
+  android:focusable="true"
+  android:paddingHorizontal="@dimen/spacing_8"
+  android:paddingVertical="@dimen/spacing_16">
+
+  <com.google.android.material.textview.MaterialTextView
+    android:id="@+id/overdueSectionHeaderTextView"
+    android:layout_width="@dimen/spacing_0"
+    android:layout_height="wrap_content"
+    android:textAllCaps="true"
+    android:textAppearance="?attr/textAppearanceTag"
+    android:textColor="@color/color_on_surface_67"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toStartOf="@+id/overdueSectionHeaderIcon"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:text="Agreed to visit" />
+
+  <com.google.android.material.textview.MaterialTextView
+    android:id="@+id/overdueSectionHeaderIcon"
+    android:layout_width="@dimen/spacing_0"
+    android:layout_height="wrap_content"
+    android:drawablePadding="@dimen/spacing_8"
+    android:gravity="center_vertical"
+    android:textAppearance="?attr/textAppearanceTag"
+    android:textColor="?attr/colorPrimary"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:drawableEnd="@drawable/ic_chevron_right_24px"
+    tools:text="0" />
+</androidx.constraintlayout.widget.ConstraintLayout>

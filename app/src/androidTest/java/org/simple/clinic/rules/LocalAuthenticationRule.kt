@@ -5,9 +5,8 @@ import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.user.User
-import org.simple.clinic.user.UserSession
 import java.util.UUID
 import javax.inject.Inject
 
@@ -15,9 +14,6 @@ import javax.inject.Inject
  * Runs every test with a local user.
  **/
 class LocalAuthenticationRule : TestRule {
-
-  @Inject
-  lateinit var userSession: UserSession
 
   @Inject
   lateinit var testData: TestData
@@ -57,6 +53,6 @@ class LocalAuthenticationRule : TestRule {
         registrationFacilityUuid = registrationFacilityUuid,
         currentFacilityUuid = registrationFacilityUuid
     )
-    userSession.storeUser(user).blockingAwait()
+    appDatabase.userDao().createOrUpdate(user)
   }
 }

@@ -1,5 +1,6 @@
 package org.simple.clinic.settings
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -17,21 +18,23 @@ class SettingsEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val appVersionFetcher: AppVersionFetcher,
     private val appUpdateAvailability: CheckAppUpdateAvailability,
-    @Assisted private val uiActions: UiActions
+    @Assisted private val viewEffectsConsumer: Consumer<SettingsViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: UiActions): SettingsEffectHandler
+    fun create(
+        viewEffectsConsumer: Consumer<SettingsViewEffect>
+    ): SettingsEffectHandler
   }
 
   fun build(): ObservableTransformer<SettingsEffect, SettingsEvent> = RxMobius
       .subtypeEffectHandler<SettingsEffect, SettingsEvent>()
       .addTransformer(LoadUserDetailsEffect::class.java, loadUserDetails())
       .addTransformer(LoadCurrentLanguageEffect::class.java, loadCurrentSelectedLanguage())
-      .addAction(OpenLanguageSelectionScreenEffect::class.java, uiActions::openLanguageSelectionScreen, schedulersProvider.ui())
       .addTransformer(LoadAppVersionEffect::class.java, loadAppVersion())
       .addTransformer(CheckAppUpdateAvailable::class.java, checkAppUpdateAvailability())
+      .addConsumer(SettingsViewEffect::class.java, viewEffectsConsumer::accept)
       .build()
 
   private fun loadUserDetails(): ObservableTransformer<LoadUserDetailsEffect, SettingsEvent> {
@@ -55,7 +58,7 @@ class SettingsEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effectStream ->
       effectStream
           .map { appVersionEffect ->
-            val appVersionName = appVersionFetcher.appVersion(appVersionEffect.applicationId)
+            val appVersionName = appVersionFetcher.appVersion()
             AppVersionLoaded(appVersionName)
           }
     }

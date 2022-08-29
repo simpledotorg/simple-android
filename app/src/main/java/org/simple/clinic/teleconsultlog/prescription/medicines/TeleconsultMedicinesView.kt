@@ -16,17 +16,20 @@ import org.simple.clinic.databinding.ListItemTeleconsultMedicineBinding
 import org.simple.clinic.databinding.ViewTeleconsultMedicinesBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.PrescribedDrug
+import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.mobius.MobiusDelegate
+import org.simple.clinic.navigation.v2.ActivityResult
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
-import org.simple.clinic.router.ScreenResultBus
-import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.teleconsultlog.drugduration.DrugDuration
 import org.simple.clinic.teleconsultlog.drugduration.DrugDurationSheet
+import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequencySheet
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequencySheetExtra
-import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionScreenKey
+import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionScreen.Key
 import org.simple.clinic.util.extractSuccessful
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.DividerItemDecorator
@@ -54,6 +57,11 @@ class TeleconsultMedicinesView(
   private val emptyMedicinesTextView
     get() = binding!!.emptyMedicinesTextView
 
+  private val medicineFrequencyToLabelMap by lazy {
+    drugFrequencyToLabelMap
+        .mapKeys { (drugFrequency, _) -> MedicineFrequency.fromDrugFrequency(drugFrequency) }
+  }
+
   @Inject
   lateinit var effectHandlerFactory: TeleconsultMedicinesEffectHandler.Factory
 
@@ -72,6 +80,9 @@ class TeleconsultMedicinesView(
   @Inject
   lateinit var screenKeyProvider: ScreenKeyProvider
 
+  @Inject
+  lateinit var drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>
+
   companion object {
     private const val DRUG_FREQUENCY_SHEET = 1
     private const val DRUG_DURATION_SHEET = 2
@@ -83,7 +94,7 @@ class TeleconsultMedicinesView(
   }
 
   private val screenKey by unsafeLazy {
-    screenKeyProvider.keyFor<TeleconsultPrescriptionScreenKey>(this)
+    screenKeyProvider.keyFor<Key>(this)
   }
 
   private val events by unsafeLazy {
@@ -148,14 +159,17 @@ class TeleconsultMedicinesView(
     medicinesRecyclerView.addItemDecoration(DividerItemDecorator(context, 0, 0))
   }
 
-  override fun renderMedicines(medicines: List<PrescribedDrug>) {
+  override fun renderMedicines(
+      medicines: List<PrescribedDrug>
+  ) {
     emptyMedicinesTextView.visibility = GONE
     medicinesRecyclerView.visibility = VISIBLE
 
     teleconsultMedicinesAdapter.submitList(TeleconsultMedicineItem.from(
         medicines = medicines,
         defaultDuration = teleconsultMedicinesConfig.defaultDuration,
-        defaultFrequency = teleconsultMedicinesConfig.defaultFrequency
+        defaultFrequency = teleconsultMedicinesConfig.defaultFrequency,
+        medicineFrequencyToLabelMap = medicineFrequencyToLabelMap
     ))
   }
 

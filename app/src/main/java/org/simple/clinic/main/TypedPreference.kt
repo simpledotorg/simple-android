@@ -7,10 +7,17 @@ annotation class TypedPreference(val value: Type) {
 
   enum class Type {
     OnboardingComplete,
-    FallbackCountry,
     DatabaseMaintenanceRunAt,
     MedicalRegistrationId,
     FacilitySyncGroupSwitchedAt,
-    LastDrugPullToken
+    LastDrugPullToken,
+    SelectedState,
+    CountryV1,
+    IsLightAppUpdateNotificationShown,
+    IsMediumAppUpdateNotificationShown,
+    DrugStockReportLastCheckedAt,
+    IsDrugStockReportFilled,
+    DrugStockFormURL,
+    OverdueSearchHistory
   }
 }

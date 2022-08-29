@@ -8,7 +8,7 @@ import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.PatientRepository
@@ -19,10 +19,11 @@ class DeletePatientEffectHandlerTest {
 
   private val patientRepository = mock<PatientRepository>()
   private val uiActions = mock<UiActions>()
+  private val viewEffectHandler = DeletePatientViewEffectHandler(uiActions)
   private val effectHandler = DeletePatientEffectHandler(
       patientRepository = patientRepository,
       schedulersProvider = TrampolineSchedulersProvider(),
-      uiActions = uiActions
+      viewEffectsConsumer = viewEffectHandler::handle
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 

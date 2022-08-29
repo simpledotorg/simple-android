@@ -1,6 +1,7 @@
 package org.simple.clinic.contactpatient.views
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import org.simple.clinic.databinding.ContactpatientCallpatientBinding
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.resolveColor
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.format.DateTimeFormatter
@@ -37,6 +39,9 @@ class CallPatientView(
 
   private val remindToCallLaterTextView
     get() = binding!!.remindToCallLaterTextView
+
+  private val callResultsSeparator
+    get() = binding!!.callResultsSeparator
 
   private val removeFromOverdueListTextView
     get() = binding!!.removeFromOverdueListTextView
@@ -80,11 +85,20 @@ class CallPatientView(
   private val lastVisitedLabel
     get() = binding!!.lastVisitedLabel
 
-  private val patientWithCallResultGroup
-    get() = binding!!.patientWithCallResultGroup
+  private val patientDiedStatusView
+    get() = binding!!.patientDiedStatusView
 
-  private val patientWithNoPhoneNumberResultsGroup
-    get() = binding!!.patientWithNoPhoneNumberResultGroup
+  private val callResultOutcomeCardView
+    get() = binding!!.callResultOutcomeCardView
+
+  private val callResultOutcomeTextView
+    get() = binding!!.callResultOutcomeTextView
+
+  private val lastUpdatedDateTextView
+    get() = binding!!.lastUpdatedDateTextView
+
+  private val callResultOutcomeIcon
+    get() = binding!!.callResultOutcomeIcon
 
   var secureCallingSectionVisible: Boolean = false
     set(value) {
@@ -116,16 +130,46 @@ class CallPatientView(
       registeredFacilityLabel.text = field
     }
 
+  var callResultOutcomeViewVisible: Boolean = false
+    set(value) {
+      field = value
+      callResultOutcomeCardView.visibility = if (field) View.VISIBLE else View.GONE
+    }
+
+  var callResultOutcomeText: String = ""
+    set(value) {
+      field = value
+      callResultOutcomeTextView.text = field
+    }
+
+  var callResultLastUpdatedDate: String = ""
+    set(value) {
+      field = value
+      lastUpdatedDateTextView.text = field
+    }
+
   var showPatientWithCallResultLayout: Boolean = false
     set(value) {
       field = value
-      patientWithCallResultGroup.visibility = if (field) View.VISIBLE else View.GONE
+      renderPatientWithPhoneNumberResults(field)
     }
 
   var showPatientWithNoPhoneNumberResults: Boolean = false
     set(value) {
       field = value
-      patientWithNoPhoneNumberResultsGroup.visibility = if (field) View.VISIBLE else View.GONE
+      renderPatientWithNoPhoneNumberResults(field)
+    }
+
+  var showPatientDiedStatus: Boolean = false
+    set(value) {
+      field = value
+      patientDiedStatusView.visibility = if (field) View.VISIBLE else View.GONE
+    }
+
+  var normalCallButtonText: String = resources.getString(R.string.contactpatient_call_normal)
+    set(value) {
+      field = value
+      normalCallButton.text = field
     }
 
   var agreedToVisitClicked: AgreedToVisitClicked? = null
@@ -202,5 +246,54 @@ class CallPatientView(
         .map { (_, diagnosisTitle) -> diagnosisTitle }
         .ifEmpty { listOf(resources.getString(R.string.contactpatient_diagnosis_none)) }
         .joinToString()
+  }
+
+  private fun renderPatientWithPhoneNumberResults(isVisible: Boolean) {
+    resultOfCallLabelTextView.visibleOrGone(isVisible)
+    agreedToVisitTextView.visibleOrGone(isVisible)
+    remindToCallLaterTextView.visibleOrGone(isVisible)
+    callResultsSeparator.visibleOrGone(isVisible)
+    removeFromOverdueListTextView.visibleOrGone(isVisible)
+  }
+
+  private fun renderPatientWithNoPhoneNumberResults(isVisible: Boolean) {
+    resultOfCallLabelTextView.visibleOrGone(isVisible)
+    agreedToVisitTextView.visibleOrGone(isVisible)
+    remindToCallLaterTextView.visibility = View.GONE
+    callResultsSeparator.visibility = View.GONE
+    removeFromOverdueListTextView.visibleOrGone(isVisible)
+  }
+
+  fun setupCallResultViewForAgreedToVisit() {
+    callResultOutcomeCardView.setCardBackgroundColor(context.resolveColor(R.color.simple_green_100))
+    callResultOutcomeCardView.strokeColor = context.resolveColor(R.color.simple_green_600)
+    callResultOutcomeTextView.setTextColor(context.resolveColor(R.color.simple_green_600))
+    lastUpdatedDateTextView.setTextColor(context.resolveColor(R.color.simple_green_600))
+    callResultOutcomeIcon.imageTintList = ColorStateList.valueOf(
+        context.resolveColor(R.color.simple_green_600)
+    )
+    callResultOutcomeIcon.setImageResource(R.drawable.ic_check_circle_outline)
+  }
+
+  fun setupCallResultViewForRemovedFromList() {
+    callResultOutcomeCardView.setCardBackgroundColor(context.resolveColor(R.color.simple_red_100))
+    callResultOutcomeCardView.strokeColor = context.resolveColor(R.color.simple_red_600)
+    callResultOutcomeTextView.setTextColor(context.resolveColor(R.color.simple_red_600))
+    lastUpdatedDateTextView.setTextColor(context.resolveColor(R.color.simple_red_600))
+    callResultOutcomeIcon.imageTintList = ColorStateList.valueOf(
+        context.resolveColor(R.color.simple_red_600)
+    )
+    callResultOutcomeIcon.setImageResource(R.drawable.ic_remove_circle_outline_24px)
+  }
+
+  fun setupCallResultViewForRemindToCallLater() {
+    callResultOutcomeCardView.setCardBackgroundColor(context.resolveColor(R.color.simple_yellow_100))
+    callResultOutcomeCardView.strokeColor = context.resolveColor(R.color.simple_yellow_600)
+    callResultOutcomeTextView.setTextColor(context.resolveColor(R.color.simple_yellow_600))
+    lastUpdatedDateTextView.setTextColor(context.resolveColor(R.color.simple_yellow_600))
+    callResultOutcomeIcon.imageTintList = ColorStateList.valueOf(
+        context.resolveColor(R.color.simple_yellow_600)
+    )
+    callResultOutcomeIcon.setImageResource(R.drawable.ic_access_alarm_24px)
   }
 }

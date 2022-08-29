@@ -29,21 +29,22 @@ class ContactPatientUpdate(
       is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.currentFacility))
       is NormalCallClicked -> directlyCallPatient(model, event)
       is SecureCallClicked -> maskedCallPatient(model, event)
-      PatientAgreedToVisitClicked -> dispatch(MarkPatientAsAgreedToVisit(model.appointmentUuid))
+      PatientAgreedToVisitClicked -> dispatch(MarkPatientAsAgreedToVisit(model.appointment))
       NextReminderDateClicked -> selectNextReminderDate(model)
       PreviousReminderDateClicked -> selectPreviousReminderDate(model)
       is ManualDateSelected -> updateWithManuallySelectedDate(event, model)
       AppointmentDateClicked -> showManualDatePicker(model)
       SaveAppointmentReminderClicked -> {
-        val appointmentUuid = model.appointmentUuid
-        dispatch(SetReminderForAppointment(appointmentUuid, model.selectedAppointmentDate))
+        val appointment = model.appointment
+        dispatch(SetReminderForAppointment(appointment, model.selectedAppointmentDate))
       }
       RemindToCallLaterClicked -> next(model.changeUiModeTo(SetAppointmentReminder))
       BackClicked -> backClicks(model)
-      RemoveFromOverdueListClicked -> dispatch(OpenRemoveOverdueAppointmentScreen(model.appointmentUuid, model.patientUuid))
+      RemoveFromOverdueListClicked -> dispatch(OpenRemoveOverdueAppointmentScreen(model.appointment))
 
       PatientMarkedAsAgreedToVisit,
       ReminderSetForAppointment -> dispatch(CloseScreen)
+      is CallResultForAppointmentLoaded -> next(model.callResultLoaded(event.callResult))
     }
   }
 
@@ -55,11 +56,16 @@ class ContactPatientUpdate(
           .contactPatientInfoLoaded()
     }
 
-    return next(updatedModel)
+    return if (event.overdueAppointment.isPresent) {
+      next(updatedModel, LoadCallResultForAppointment(event.overdueAppointment.get().uuid))
+    } else {
+      next(updatedModel)
+    }
+
   }
 
   private fun patientProfileLoaded(model: ContactPatientModel, event: PatientProfileLoaded): Next<ContactPatientModel, ContactPatientEffect> {
-    val updatedModel = if (!model.hasLoadedAppointment) {
+    val updatedModel = if (!model.hasLoadedOverdueAppointment) {
       model.contactPatientProfileLoaded(event.patientProfile)
     } else {
       model.contactPatientProfileLoaded(event.patientProfile)

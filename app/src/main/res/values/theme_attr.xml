@@ -17,4 +17,7 @@
   <attr name="textAppearanceBody2Bold" format="reference" />
   <attr name="textAppearanceButtonBig" format="reference" />
   <attr name="textAppearanceTag" format="reference" />
+
+  <!-- Styles -->
+  <attr name="borderlessButtonDenseStyle" format="reference" />
 </resources>

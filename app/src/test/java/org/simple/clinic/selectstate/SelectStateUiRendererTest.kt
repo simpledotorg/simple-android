@@ -4,7 +4,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 
 class SelectStateUiRendererTest {
 
@@ -16,7 +16,9 @@ class SelectStateUiRendererTest {
   @Test
   fun `when states list is fetched, then show states list`() {
     // given
-    val states = listOf(TestData.state(displayName = "Andhra Pradesh"))
+    val andhraPradesh = TestData.state(displayName = "Andhra Pradesh")
+    val maharashtra = TestData.state(displayName = "Maharashtra")
+    val states = listOf(andhraPradesh, maharashtra)
     val statesLoadedModel = defaultModel
         .statesLoaded(states)
 
@@ -25,26 +27,6 @@ class SelectStateUiRendererTest {
 
     // then
     verify(ui).showStates(states = states, selectedState = null)
-    verify(ui).hideErrorView()
-    verify(ui).hideProgress()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when state is selected, then show next button`() {
-    // given
-    val andhraPradesh = TestData.state(displayName = "Andhra Pradesh")
-    val states = listOf(andhraPradesh)
-    val stateSelectedModel = defaultModel
-        .statesLoaded(states)
-        .stateChanged(andhraPradesh)
-
-    // when
-    uiRenderer.render(stateSelectedModel)
-
-    // then
-    verify(ui).showStates(states = states, selectedState = andhraPradesh)
-    verify(ui).showNextButton()
     verify(ui).hideErrorView()
     verify(ui).hideProgress()
     verifyNoMoreInteractions(ui)

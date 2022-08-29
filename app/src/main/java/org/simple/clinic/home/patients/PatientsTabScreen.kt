@@ -12,30 +12,42 @@ import android.view.animation.AnimationUtils
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.PLAY_STORE_URL_FOR_SIMPLE
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.activity.ActivityLifecycle
 import org.simple.clinic.activity.ActivityLifecycle.Resumed
+import org.simple.clinic.activity.permissions.RequestPermissions
+import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.appconfig.Country
+import org.simple.clinic.appupdate.AppUpdateNudgePriority
+import org.simple.clinic.appupdate.criticalupdatedialog.CriticalAppUpdateDialog
 import org.simple.clinic.appupdate.dialog.AppUpdateDialog
 import org.simple.clinic.databinding.ScreenPatientsBinding
+import org.simple.clinic.di.DateFormatter
+import org.simple.clinic.di.DateFormatter.Type.MonthAndYear
 import org.simple.clinic.di.injector
+import org.simple.clinic.drugstockreminders.DrugStockNotificationScheduler
+import org.simple.clinic.drugstockreminders.enterdrugstock.EnterDrugStockScreen
 import org.simple.clinic.enterotp.EnterOtpScreen
+import org.simple.clinic.feature.Feature.MonthlyDrugStockReportReminder
+import org.simple.clinic.feature.Feature.NotifyAppUpdateAvailableV2
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
-import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.simplevideo.SimpleVideo
@@ -43,12 +55,14 @@ import org.simple.clinic.simplevideo.SimpleVideoConfig
 import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.TrainingVideo
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
-import org.simple.clinic.util.RequestPermissions
-import org.simple.clinic.util.RuntimePermissions
+import org.simple.clinic.util.RuntimeNetworkStatus
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId
 import java.time.Instant
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
 
@@ -90,6 +104,19 @@ class PatientsTabScreen : BaseScreen<
 
   @Inject
   lateinit var features: Features
+
+  @Inject
+  lateinit var userClock: UserClock
+
+  @Inject
+  @DateFormatter(MonthAndYear)
+  lateinit var monthYearDateFormatter: DateTimeFormatter
+
+  @Inject
+  lateinit var drugStockNotificationScheduler: DrugStockNotificationScheduler
+
+  @Inject
+  lateinit var runtimeNetworkStatus: RuntimeNetworkStatus<UiEvent>
 
   private val deferredEvents = DeferredEventSource<PatientsTabEvent>()
 
@@ -135,12 +162,30 @@ class PatientsTabScreen : BaseScreen<
   private val simpleVideoDurationTextView
     get() = simpleVideoLayout.simpleVideoDurationTextView
 
+  private val appUpdateCardLayout
+    get() = binding.appUpdateCardLayout
+
+  private val appUpdateCardUpdateNowButton
+    get() = appUpdateCardLayout.updateNowButton
+
+  private val appUpdateCardUpdateReason
+    get() = appUpdateCardLayout.criticalUpdateReason
+
+  private val drugStockReminderCardLayout
+    get() = binding.drugStockReminderCardLayout
+
+  private val drugStockReminderCardSubTitle
+    get() = drugStockReminderCardLayout.drugStockReminderCardSubTitle
+
+  private val enterDrugStockButton
+    get() = drugStockReminderCardLayout.enterDrugStockButton
+
   override fun defaultModel() = PatientsTabModel.create()
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenPatientsBinding.inflate(layoutInflater, container, false)
 
-  override fun uiRenderer() = PatientsTabUiRenderer(this)
+  override fun uiRenderer() = PatientsTabUiRenderer(this, LocalDate.now(userClock))
 
   override fun viewEffectHandler() = PatientsTabViewEffectHandler(this)
 
@@ -151,15 +196,21 @@ class PatientsTabScreen : BaseScreen<
           dismissApprovedStatusClicks(),
           enterCodeManuallyClicks(),
           scanCardIdButtonClicks(),
-          simpleVideoClicked()
+          simpleVideoClicked(),
+          appUpdateCardUpdateNowClicked(),
+          enterDrugStockClicked()
       )
       .compose<UiEvent>(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
+      .compose(runtimeNetworkStatus::apply)
       .compose(ReportAnalyticsEvents())
       .cast<PatientsTabEvent>()
 
-  override fun createUpdate() = PatientsTabUpdate()
+  override fun createUpdate() = PatientsTabUpdate(features.isEnabled(NotifyAppUpdateAvailableV2))
 
-  override fun createInit() = PatientsInit()
+  override fun createInit() = PatientsInit(
+      isNotifyAppUpdateAvailableV2Enabled = features.isEnabled(NotifyAppUpdateAvailableV2),
+      isMonthlyDrugStockReportReminderEnabledInIndia = features.isEnabled(MonthlyDrugStockReportReminder) && country.isoCountryCode == Country.INDIA
+  )
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<PatientsTabViewEffect>) = effectHandlerFactory.create(
       viewEffectsConsumer = viewEffectsConsumer
@@ -178,6 +229,11 @@ class PatientsTabScreen : BaseScreen<
 
     homeIllustration.setImageResource(illustrationResourceId())
     simpleVideoIllustration.setImageResource(videoIllustrationResourceId())
+
+    val isMonthlyDrugStockReminderEnabledInIndia = features.isEnabled(MonthlyDrugStockReportReminder) && country.isoCountryCode == Country.INDIA
+    if (isMonthlyDrugStockReminderEnabledInIndia) {
+      drugStockNotificationScheduler.schedule()
+    }
   }
 
   private fun videoIllustrationResourceId() = when (country.isoCountryCode) {
@@ -222,6 +278,14 @@ class PatientsTabScreen : BaseScreen<
       .clicks()
       .map { SimpleVideoClicked }
 
+  private fun appUpdateCardUpdateNowClicked() = appUpdateCardUpdateNowButton
+      .clicks()
+      .map { UpdateNowButtonClicked }
+
+  private fun enterDrugStockClicked() = enterDrugStockButton
+      .clicks()
+      .map { EnterDrugStockButtonClicked() }
+
   override fun openPatientSearchScreen(additionalIdentifier: Identifier?) {
     val screenKey = InstantSearchScreenKey(
         additionalIdentifier = additionalIdentifier,
@@ -250,6 +314,10 @@ class PatientsTabScreen : BaseScreen<
 
   override fun showUserStatusAsWaitingForApproval() {
     showUserAccountStatus(R.id.userStatusAwaitingApproval)
+  }
+
+  override fun renderAppUpdateReason(appStalenessInMonths: Int) {
+    appUpdateCardUpdateReason.text = resources.getString(R.string.update_required_reason, appStalenessInMonths)
   }
 
   override fun showUserStatusAsApproved() {
@@ -290,6 +358,33 @@ class PatientsTabScreen : BaseScreen<
     router.push(PatientSummaryScreenKey(patientId, OpenIntention.ViewExistingPatient, Instant.now(utcClock)))
   }
 
+  override fun openSimpleOnPlaystore() {
+    val packageManager = requireContext().packageManager
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(PLAY_STORE_URL_FOR_SIMPLE))
+
+    if (intent.resolveActivity(packageManager) != null) {
+      requireContext().startActivity(intent)
+    } else {
+      CrashReporter.report(ActivityNotFoundException("Unable to open play store url because no supporting apps were found."))
+    }
+  }
+
+  override fun showCriticalAppUpdateDialog(appUpdateNudgePriority: AppUpdateNudgePriority) {
+    router.push(CriticalAppUpdateDialog.Key(appUpdateNudgePriority))
+  }
+
+  override fun openEnterDrugStockScreen() {
+    router.push(EnterDrugStockScreen.Key())
+  }
+
+  override fun showNoActiveNetworkConnectionDialog() {
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(R.string.drug_stock_reminder_no_active_network_connection_dialog_title)
+        .setMessage(R.string.drug_stock_reminder__no_active_network_connection_dialog_message)
+        .setPositiveButton(R.string.drug_stock_reminder__no_active_network_connection_dialog_positive_button, null)
+        .show()
+  }
+
   private fun showHomeScreenBackground(@IdRes viewId: Int) {
     illustrationLayout.apply {
       displayedChild = indexOfChildId(viewId)
@@ -304,6 +399,22 @@ class PatientsTabScreen : BaseScreen<
 
   override fun showIllustration() {
     showHomeScreenBackground(R.id.homeIllustration)
+  }
+
+  override fun showCriticalAppUpdateCard() {
+    showHomeScreenBackground(R.id.appUpdateCardLayout)
+  }
+
+  override fun showDrugStockReminderCard() {
+    val previousMonthAndYear = previousMonthAndYear()
+    drugStockReminderCardSubTitle.text = resources.getString(R.string.drug_stock_reminder_card_content, previousMonthAndYear)
+
+    showHomeScreenBackground(R.id.drugStockReminderCardLayout)
+  }
+
+  private fun previousMonthAndYear(): String {
+    val localDate = LocalDate.now(userClock).minusMonths(1)
+    return monthYearDateFormatter.format(localDate)
   }
 
   override fun openYouTubeLinkForSimpleVideo() {

@@ -22,9 +22,6 @@ data class TeleconsultMedicinesModel(
   val hasMedicines: Boolean
     get() = medicines != null
 
-  val medicinesNotNullorEmpty: Boolean
-    get() = !medicines.isNullOrEmpty()
-
   fun medicinesLoaded(medicines: List<PrescribedDrug>): TeleconsultMedicinesModel {
     return copy(medicines = medicines)
   }

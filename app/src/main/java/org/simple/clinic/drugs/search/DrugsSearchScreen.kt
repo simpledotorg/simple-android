@@ -23,6 +23,7 @@ import org.simple.clinic.databinding.ScreenDrugsSearchBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.selection.custom.CustomDrugEntrySheet
 import org.simple.clinic.drugs.selection.custom.OpenAs
+import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -48,6 +49,9 @@ class DrugsSearchScreen : BaseScreen<
 
   @Inject
   lateinit var router: Router
+
+  @Inject
+  lateinit var drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>
 
   private val adapter = PagingItemAdapter(
       diffCallback = DrugSearchListItem.DiffCallback(),
@@ -126,8 +130,13 @@ class DrugsSearchScreen : BaseScreen<
 
   override fun setDrugSearchResults(searchResults: PagingData<Drug>) {
     val searchQuery = searchQueryEditText.text?.toString().orEmpty()
+
     drugSearchResultsList.scrollToPosition(0)
-    adapter.submitData(lifecycle, DrugSearchListItem.from(searchResults, searchQuery))
+    adapter.submitData(lifecycle, DrugSearchListItem.from(
+        searchResults,
+        searchQuery,
+        drugFrequencyToLabelMap
+    ))
   }
 
   override fun openCustomDrugEntrySheetFromDrugList(drugUuid: UUID, patientUuid: UUID) {

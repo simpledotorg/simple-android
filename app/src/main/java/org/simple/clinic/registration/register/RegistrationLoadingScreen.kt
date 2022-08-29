@@ -1,108 +1,89 @@
 package org.simple.clinic.registration.register
 
 import android.content.Context
-import android.os.Parcelable
-import android.util.AttributeSet
+import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.LinearLayout
-import androidx.appcompat.app.AppCompatActivity
+import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
-import io.reactivex.rxkotlin.ofType
+import com.spotify.mobius.functions.Consumer
+import io.reactivex.rxkotlin.cast
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenRegistrationLoadingBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.main.TheActivity
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
+import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.util.disableAnimations
 import org.simple.clinic.util.finishWithoutAnimations
-import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
-class RegistrationLoadingScreen(
-    context: Context,
-    attrs: AttributeSet
-) : LinearLayout(context, attrs), RegistrationLoadingUi, RegistrationLoadingUiActions {
-
-  var binding: ScreenRegistrationLoadingBinding? = null
+class RegistrationLoadingScreen : BaseScreen<
+    RegistrationLoadingScreen.Key,
+    ScreenRegistrationLoadingBinding,
+    RegistrationLoadingModel,
+    RegistrationLoadingEvent,
+    RegistrationLoadingEffect,
+    RegistrationLoadingViewEffect>(), RegistrationLoadingUi, RegistrationLoadingUiActions {
 
   private val loaderBack
-    get() = binding!!.loaderBack
+    get() = binding.loaderBack
 
   private val errorRetryButton
-    get() = binding!!.errorRetryButton
+    get() = binding.errorRetryButton
 
   private val errorTitle
-    get() = binding!!.errorTitle
+    get() = binding.errorTitle
 
   private val errorMessage
-    get() = binding!!.errorMessage
+    get() = binding.errorMessage
 
   private val viewSwitcher
-    get() = binding!!.viewSwitcher
+    get() = binding.root
 
   @Inject
   lateinit var router: Router
 
   @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
-
-  @Inject
   lateinit var effectHandlerFactory: RegistrationLoadingEffectHandler.Factory
 
-  @Inject
-  lateinit var activity: AppCompatActivity
+  override fun events() = retryClicks()
+      .compose(ReportAnalyticsEvents())
+      .cast<RegistrationLoadingEvent>()
 
-  private val events by unsafeLazy {
-    retryClicks()
-        .compose(ReportAnalyticsEvents())
-        .share()
-  }
+  override fun defaultModel() = RegistrationLoadingModel.create(screenKey.registrationEntry)
 
-  private val delegate by unsafeLazy {
-    val screenKey = screenKeyProvider.keyFor<RegistrationLoadingScreenKey>(this)
-    val uiRenderer = RegistrationLoadingUiRenderer(this)
+  override fun createInit() = RegistrationLoadingInit()
 
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = RegistrationLoadingModel.create(screenKey.registrationEntry),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        update = RegistrationLoadingUpdate(),
-        init = RegistrationLoadingInit(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
+  override fun createUpdate() = RegistrationLoadingUpdate()
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationLoadingViewEffect>) = effectHandlerFactory
+      .create(
+          viewEffectsConsumer = viewEffectsConsumer
+      )
+      .build()
 
-    binding = ScreenRegistrationLoadingBinding.bind(this)
+  override fun uiRenderer() = RegistrationLoadingUiRenderer(this)
+
+  override fun viewEffectHandler() = RegistrationLoadingViewEffectHandler(this)
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
 
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenRegistrationLoadingBinding
+      .inflate(layoutInflater, container, false)
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
     loaderBack.setOnClickListener {
       router.pop()
     }
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    binding = null
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun retryClicks() = errorRetryButton
@@ -112,11 +93,11 @@ class RegistrationLoadingScreen(
 
   override fun openHomeScreen() {
     val intent = TheActivity
-        .newIntent(activity, isFreshAuthentication = true)
+        .newIntent(requireContext(), isFreshAuthentication = true)
         .disableAnimations()
 
-    activity.startActivity(intent)
-    activity.finishWithoutAnimations()
+    requireActivity().startActivity(intent)
+    requireActivity().finishWithoutAnimations()
   }
 
   override fun showNetworkError() {
@@ -138,5 +119,14 @@ class RegistrationLoadingScreen(
 
   interface Injector {
     fun inject(target: RegistrationLoadingScreen)
+  }
+
+  @Parcelize
+  data class Key(
+      val registrationEntry: OngoingRegistrationEntry,
+      override val analyticsName: String = "Ongoing Registration"
+  ) : ScreenKey() {
+
+    override fun instantiateFragment() = RegistrationLoadingScreen()
   }
 }

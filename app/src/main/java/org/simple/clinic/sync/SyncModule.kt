@@ -32,6 +32,7 @@ import org.simple.clinic.overdue.AppointmentSync
 import org.simple.clinic.overdue.callresult.CallResultRepository
 import org.simple.clinic.overdue.callresult.CallResultSync
 import org.simple.clinic.overdue.callresult.di.CallResultModule
+import org.simple.clinic.overdue.download.di.OverdueListDownloadModule
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncModule
@@ -60,7 +61,8 @@ import javax.inject.Named
   ReportsModule::class,
   HelpModule::class,
   DrugModule::class,
-  CallResultModule::class
+  CallResultModule::class,
+  OverdueListDownloadModule::class
 ])
 class SyncModule {
 
@@ -85,9 +87,8 @@ class SyncModule {
     val optionalSyncs = if (features.isEnabled(Feature.CallResultSyncEnabled)) listOf(callResultSync) else emptyList()
 
     return listOf(
-        facilitySync, protocolSync, patientSync,
-        bloodPressureSync, medicalHistorySync, appointmentSync,
-        prescriptionSync, reportsSync, helpSync,
+        facilitySync, protocolSync, reportsSync, helpSync,
+        patientSync, bloodPressureSync, medicalHistorySync, appointmentSync, prescriptionSync,
         bloodSugarSync, teleconsultationMedicalOfficersSync,
         teleconsultRecordSync, drugSync
     ) + optionalSyncs

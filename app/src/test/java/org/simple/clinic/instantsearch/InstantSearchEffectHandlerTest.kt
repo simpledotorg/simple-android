@@ -12,7 +12,6 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchCriteria
@@ -24,6 +23,7 @@ import org.simple.clinic.util.PagerFactory
 import org.simple.clinic.util.PagingSourceFactory
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toOptional
+import org.simple.sharedTestCode.TestData
 import java.util.UUID
 
 class InstantSearchEffectHandlerTest {
@@ -37,6 +37,7 @@ class InstantSearchEffectHandlerTest {
   private val patientRepository = mock<PatientRepository>()
   private val uiActions = mock<InstantSearchUiActions>()
   private val pagerFactory = mock<PagerFactory>()
+  private val viewEffectHandler = InstantSearchViewEffectHandler(uiActions)
   private val effectHandler = InstantSearchEffectHandler(
       currentFacility = { facility },
       patientRepository = patientRepository,
@@ -47,7 +48,7 @@ class InstantSearchEffectHandlerTest {
       ),
       pagerFactory = pagerFactory,
       schedulers = TestSchedulersProvider.trampoline(),
-      uiActions = uiActions
+      viewEffectsConsumer = viewEffectHandler::handle
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
@@ -78,7 +79,9 @@ class InstantSearchEffectHandlerTest {
     whenever(pagerFactory.createPager(
         sourceFactory = any<PagingSourceFactory<Int, PatientSearchResult>>(),
         pageSize = eq(pagingLoadSize),
-        initialKey = eq(null)
+        enablePlaceholders = eq(false),
+        initialKey = eq(null),
+        cacheScope = eq(null)
     )) doReturn Observable.just(expectedPagingData)
 
     // when
@@ -108,7 +111,9 @@ class InstantSearchEffectHandlerTest {
     whenever(pagerFactory.createPager(
         sourceFactory = any<PagingSourceFactory<Int, PatientSearchResult>>(),
         pageSize = eq(pagingLoadSize),
-        initialKey = eq(null)
+        enablePlaceholders = eq(false),
+        initialKey = eq(null),
+        cacheScope = eq(null)
     )) doReturn Observable.just(patients)
 
     // when

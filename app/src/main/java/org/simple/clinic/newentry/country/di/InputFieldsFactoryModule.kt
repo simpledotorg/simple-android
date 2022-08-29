@@ -15,11 +15,7 @@ import org.simple.clinic.newentry.country.InputFieldsProvider
 import org.simple.clinic.newentry.country.SriLankaInputFieldsProvider
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.remoteconfig.RemoteConfigService
-import org.simple.clinic.util.UserClock
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.UUID
-import javax.inject.Named
 
 @Module
 class InputFieldsFactoryModule {
@@ -27,18 +23,15 @@ class InputFieldsFactoryModule {
   @Provides
   fun provideInputFieldsProvider(
       country: Country,
-      @Named("date_for_user_input") dateTimeFormatter: DateTimeFormatter,
-      userClock: UserClock,
       currentFacility: Lazy<Facility>,
       chennaiFacilityGroupIds: Lazy<Set<UUID>>
   ): InputFieldsProvider {
-    val date = LocalDate.now(userClock)
-
     return when (val isoCountryCode = country.isoCountryCode) {
-      Country.INDIA -> IndiaInputFieldsProvider(dateTimeFormatter, date, currentFacility, chennaiFacilityGroupIds)
-      Country.BANGLADESH -> BangladeshInputFieldsProvider(dateTimeFormatter, date)
-      Country.ETHIOPIA -> EthiopiaInputFieldsProvider(dateTimeFormatter, date)
-      Country.SRI_LANKA -> SriLankaInputFieldsProvider(dateTimeFormatter, date)
+      Country.DEMO,
+      Country.INDIA -> IndiaInputFieldsProvider(currentFacility, chennaiFacilityGroupIds)
+      Country.BANGLADESH -> BangladeshInputFieldsProvider()
+      Country.ETHIOPIA -> EthiopiaInputFieldsProvider()
+      Country.SRI_LANKA -> SriLankaInputFieldsProvider()
       else -> throw IllegalArgumentException("Unknown country code: $isoCountryCode")
     }
   }

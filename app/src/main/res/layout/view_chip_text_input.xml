@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/input_view_root"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:clipToPadding="false"
+  android:paddingVertical="@dimen/spacing_8"
+  tools:background="?attr/colorSurface">
+
+  <androidx.constraintlayout.helper.widget.Flow
+    android:id="@+id/flow_helper"
+    android:layout_width="@dimen/spacing_0"
+    android:layout_height="wrap_content"
+    app:constraint_referenced_ids="auto_complete_text_view"
+    app:flow_horizontalBias="0"
+    app:flow_horizontalGap="@dimen/spacing_8"
+    app:flow_horizontalStyle="packed"
+    app:flow_maxElementsWrap="3"
+    app:flow_verticalGap="@dimen/spacing_8"
+    app:flow_wrapMode="chain"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+  <com.google.android.material.textfield.MaterialAutoCompleteTextView
+    android:id="@+id/auto_complete_text_view"
+    android:layout_width="@dimen/spacing_0"
+    android:layout_height="wrap_content"
+    android:backgroundTint="@android:color/transparent"
+    android:digits="@string/instantsearch_allowed_characters"
+    android:importantForAutofill="no"
+    android:paddingTop="@dimen/spacing_0"
+    android:paddingBottom="@dimen/spacing_0"
+    android:popupElevation="@dimen/spacing_2"
+    android:saveEnabled="false"
+    android:textAppearance="?attr/textAppearanceBody0"
+    android:textColor="?attr/colorOnSurface"
+    android:textColorHint="@color/color_on_surface_67"
+    android:theme="@style/ThemeOverlay.Simple.TextField"
+    app:layout_constraintWidth_min="@dimen/spacing_128"
+    tools:ignore="UnusedAttribute" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

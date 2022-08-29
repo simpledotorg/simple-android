@@ -1,5 +1,6 @@
 package org.simple.clinic.enterotp
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -21,31 +22,29 @@ class EnterOtpEffectHandler @AssistedInject constructor(
     private val loginUserWithOtp: LoginUserWithOtp,
     private val activateUser: ActivateUser,
     private val bruteForceProtection: BruteForceOtpEntryProtection,
-    @Assisted private val uiActions: EnterOtpUiActions
+    @Assisted private val viewEffectsConsumer: Consumer<EnterOtpViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(uiActions: EnterOtpUiActions): EnterOtpEffectHandler
+    fun create(
+        viewEffectsConsumer: Consumer<EnterOtpViewEffect>
+    ): EnterOtpEffectHandler
   }
 
   fun build(): ObservableTransformer<EnterOtpEffect, EnterOtpEvent> {
     return RxMobius
         .subtypeEffectHandler<EnterOtpEffect, EnterOtpEvent>()
         .addTransformer(LoadUser::class.java, loadUser())
-        .addAction(ClearPin::class.java, uiActions::clearPin, schedulers.ui())
         .addAction(TriggerSync::class.java, dataSync::fireAndForgetSync)
         .addAction(ClearLoginEntry::class.java, ongoingLoginEntryRepository::clearLoginEntry)
         .addTransformer(LoginUser::class.java, loginUser())
-        .addAction(GoBack::class.java, uiActions::goBack, schedulers.ui())
         .addTransformer(ListenForUserBackgroundVerification::class.java, waitForUserBackgroundVerifications())
         .addTransformer(RequestLoginOtp::class.java, activateUser())
-        .addAction(ShowSmsSentMessage::class.java, uiActions::showSmsSentMessage, schedulers.ui())
         .addConsumer(FailedLoginOtpAttempt::class.java, { bruteForceProtection.incrementFailedOtpAttempt() }, schedulers.io())
-        .addAction(ShowNetworkError::class.java, uiActions::showNetworkError, schedulers.ui())
-        .addAction(ShowUnexpectedError::class.java, uiActions::showUnexpectedError, schedulers.ui())
         .addTransformer(LoadOtpEntryProtectedStates::class.java, loadOtpEntryStates())
         .addAction(ResetOtpAttemptLimit::class.java, { bruteForceProtection.resetFailedAttempts() }, schedulers.io())
+        .addConsumer(EnterOtpViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 

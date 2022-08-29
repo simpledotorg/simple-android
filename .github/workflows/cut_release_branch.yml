@@ -1,0 +1,18 @@
+on:
+  # Run the workflow every day at 12 PM IST (6:30 AM UTC)
+  schedule:
+    - cron: '30 6 * * *'
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+          token: ${{ secrets.SERVICES_ACCESS_TOKEN }}
+
+      - name: Cut release branch
+        run: kotlinc -script ".github/scripts/CutReleaseBranch.main.kts"
+        env:
+          CUT_RELEASE_BRANCH: ${{ secrets.CUT_RELEASE_BRANCH_ENABLED }}

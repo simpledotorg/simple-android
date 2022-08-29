@@ -1,11 +1,8 @@
 package org.simple.clinic.newentry.form
 
-import org.simple.clinic.newentry.form.ValidationError.MissingValue
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class DistrictField(
     private val _labelResId: Int
-) : InputField<String>(_labelResId) {
-  override fun validate(value: String): Set<ValidationError> {
-    return if (value.isBlank()) setOf(MissingValue) else emptySet()
-  }
-}
+) : InputField<String>(_labelResId)

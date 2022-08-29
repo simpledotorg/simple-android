@@ -14,19 +14,14 @@ import org.simple.clinic.newentry.form.StreetAddressField
 import org.simple.clinic.newentry.form.VillageOrColonyField
 import org.simple.clinic.newentry.form.ZoneField
 import org.simple.clinic.patient.Gender
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
-class BangladeshInputFieldsProvider(
-    private val dateTimeFormatter: DateTimeFormatter,
-    private val today: LocalDate
-) : InputFieldsProvider {
+class BangladeshInputFieldsProvider : InputFieldsProvider {
 
   override fun provide(): List<InputField<*>> {
     return listOf(
         PatientNameField(R.string.patiententry_full_name),
         AgeField(R.string.patiententry_age),
-        DateOfBirthField(dateTimeFormatter, today, R.string.patiententry_date_of_birth_unfocused),
+        DateOfBirthField(R.string.patiententry_date_of_birth_unfocused),
         LandlineOrMobileField(R.string.patiententry_phone_number),
         GenderField(_labelResId = 0, allowedGenders = setOf(Gender.Male, Gender.Female, Gender.Transgender)),
         AlternativeIdInputField(R.string.patiententry_bangladesh_national_id),

@@ -15,7 +15,6 @@ import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.reports.ReportsSync
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import retrofit2.HttpException
 import java.time.Instant
 import java.util.Optional
 import javax.inject.Named
@@ -55,23 +54,19 @@ class ConfirmFacilityChangeEffectHandler @AssistedInject constructor(
           .observeOn(io)
           .doOnNext(facilityRepository::setCurrentFacilityImmediate)
           .doOnNext { isFacilitySwitchedPreference.set(true) }
-          .doOnNext { clearAndSyncReports(io) }
+          .doOnNext { clearAndSyncReports() }
           .map(::FacilityChanged)
     }
   }
 
-  private fun clearAndSyncReports(scheduler: Scheduler) {
-    reportsRepository
-        .deleteReports()
-        .doOnComplete {
-          try {
-            reportsSync.pull()
-          } catch (e: HttpException) {
-            CrashReporter.report(e)
-          }
-        }
-        .subscribeOn(scheduler)
-        .subscribe()
+  private fun clearAndSyncReports() {
+    reportsRepository.deleteReports()
+
+    try {
+      reportsSync.pull()
+    } catch (e: Exception) {
+      CrashReporter.report(e)
+    }
   }
 
   private fun loadCurrentFacility(): ObservableTransformer<LoadCurrentFacility, ConfirmFacilityChangeEvent> {

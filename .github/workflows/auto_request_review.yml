@@ -10,7 +10,8 @@ jobs:
     if: |
       github.event.label.name != 'work in progress' &&
       github.event.pull_request.requested_reviewers[0] == null &&
-      github.event.pull_request.requested_teams[0] == null
+      github.event.pull_request.requested_teams[0] == null &&
+      github.event.pull_request.draft == false
     runs-on: [ ubuntu-latest ]
     steps:
       - name: Request Android Devs for review
@@ -18,3 +19,8 @@ jobs:
         with:
           token: ${{ secrets.SERVICES_ACCESS_TOKEN }}
           config: .github/reviewers.yml
+      - name: Enable auto merge
+        run: gh pr merge --auto -d -s "$PR_URL"
+        env:
+          PR_URL: ${{github.event.pull_request.html_url}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}

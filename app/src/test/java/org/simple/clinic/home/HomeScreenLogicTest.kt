@@ -1,26 +1,19 @@
 package org.simple.clinic.home
 
-import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.feature.Feature
-import org.simple.clinic.feature.Features
-import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.remoteconfig.DefaultValueConfigReader
-import org.simple.clinic.remoteconfig.NoOpRemoteConfigService
-import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestUserClock
+import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
@@ -36,7 +29,6 @@ class HomeScreenLogicTest {
 
   private val ui = mock<HomeScreenUi>()
   private val uiActions = mock<HomeScreenUiActions>()
-  private val appointmentRepository = mock<AppointmentRepository>()
   private val clock = TestUserClock()
 
   private lateinit var testFixture: MobiusTestFixture<HomeScreenModel, HomeScreenEvent, HomeScreenEffect>
@@ -57,18 +49,17 @@ class HomeScreenLogicTest {
         uuid = UUID.fromString("5b2136b8-11d5-4e20-8703-087281679aee"),
         name = "CHC Nathana"
     )
-    val date = LocalDate.parse("2018-01-01")
-
-    whenever(appointmentRepository.overdueAppointmentsCount(date, facility1)) doReturn Observable.just(3)
-    whenever(appointmentRepository.overdueAppointmentsCount(date, facility2)) doReturn Observable.just(0)
 
     // when
     setupController(Observable.just(facility1, facility2))
 
+    uiEvents.onNext(OverdueAppointmentCountUpdated(3))
+    uiEvents.onNext(OverdueAppointmentCountUpdated(0))
+
     // then
-    verify(ui, times(2)).setFacility("CHC Buchho")
-    verify(ui, times(2)).setFacility("CHC Nathana")
-    verify(ui, times(2)).showOverdueAppointmentCount(3)
+    verify(ui).setFacility("CHC Buchho")
+    verify(ui, times(3)).setFacility("CHC Nathana")
+    verify(ui).showOverdueAppointmentCount(3)
     verify(ui).removeOverdueAppointmentCount()
     verifyNoMoreInteractions(ui, uiActions)
   }
@@ -80,13 +71,11 @@ class HomeScreenLogicTest {
         uuid = UUID.fromString("e497355e-723c-4b35-b55a-778a6233b720"),
         name = "CHC Buchho"
     )
-    val date = LocalDate.parse("2018-01-01")
-
-    whenever(appointmentRepository.overdueAppointmentsCount(date, facility)) doReturn Observable.just(0)
 
     // when
     setupController(Observable.just(facility))
     uiEvents.onNext(HomeFacilitySelectionClicked)
+    uiEvents.onNext(OverdueAppointmentCountUpdated(0))
 
     // then
     verify(ui, times(2)).setFacility("CHC Buchho")
@@ -98,27 +87,21 @@ class HomeScreenLogicTest {
   private fun setupController(facilityStream: Observable<Facility>) {
     clock.setDate(LocalDate.parse("2018-01-01"))
 
+    val viewEffectHandler = HomeScreenViewEffectHandler(uiActions)
     val effectHandler = HomeScreenEffectHandler(
         currentFacilityStream = facilityStream,
-        appointmentRepository = appointmentRepository,
         patientRepository = mock(),
-        userClock = clock,
         schedulersProvider = TestSchedulersProvider.trampoline(),
-        uiActions = uiActions
+        viewEffectsConsumer = viewEffectHandler::handle
     )
 
     val uiRenderer = HomeScreenUiRenderer(ui)
-
-    val features = Features(
-        remoteConfigService = NoOpRemoteConfigService(DefaultValueConfigReader()),
-        overrides = mapOf(Feature.OverdueCount to true)
-    )
 
     testFixture = MobiusTestFixture(
         events = uiEvents.ofType(),
         defaultModel = HomeScreenModel.create(),
         init = HomeScreenInit(),
-        update = HomeScreenUpdate(features),
+        update = HomeScreenUpdate(),
         effectHandler = effectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )

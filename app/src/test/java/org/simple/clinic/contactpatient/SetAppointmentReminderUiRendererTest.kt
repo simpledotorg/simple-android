@@ -9,7 +9,7 @@ import org.simple.clinic.overdue.PotentialAppointmentDate
 import org.simple.clinic.overdue.TimeToAppointment
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
-import org.simple.clinic.util.TestUserClock
+import org.simple.sharedTestCode.util.TestUserClock
 import java.time.LocalDate
 import java.time.Period
 import java.util.UUID
@@ -43,6 +43,7 @@ class SetAppointmentReminderUiRendererTest {
 
     // then
     verify(ui).hideProgress()
+    verify(ui).hideCallResult()
     verify(ui).switchToSetAppointmentReminderView()
     verify(ui).enablePreviousReminderDateStepper()
     verify(ui).enableNextReminderDateStepper()
@@ -67,6 +68,7 @@ class SetAppointmentReminderUiRendererTest {
 
     // then
     verify(ui).hideProgress()
+    verify(ui).hideCallResult()
     verify(ui).switchToSetAppointmentReminderView()
     verify(ui).renderSelectedAppointmentDate(reminderPeriod, selectedReminderDate.scheduledFor)
     verify(ui).enableNextReminderDateStepper()
@@ -91,6 +93,7 @@ class SetAppointmentReminderUiRendererTest {
 
     // then
     verify(ui).hideProgress()
+    verify(ui).hideCallResult()
     verify(ui).switchToSetAppointmentReminderView()
     verify(ui).renderSelectedAppointmentDate(reminderPeriod, selectedReminderDate.scheduledFor)
     verify(ui).enableNextReminderDateStepper()
@@ -115,6 +118,7 @@ class SetAppointmentReminderUiRendererTest {
 
     // then
     verify(ui).hideProgress()
+    verify(ui).hideCallResult()
     verify(ui).switchToSetAppointmentReminderView()
     verify(ui).renderSelectedAppointmentDate(reminderPeriod, selectedReminderDate.scheduledFor)
     verify(ui).enablePreviousReminderDateStepper()
@@ -139,6 +143,7 @@ class SetAppointmentReminderUiRendererTest {
 
     // then
     verify(ui).hideProgress()
+    verify(ui).hideCallResult()
     verify(ui).switchToSetAppointmentReminderView()
     verify(ui).renderSelectedAppointmentDate(reminderPeriod, selectedReminderDate.scheduledFor)
     verify(ui).enablePreviousReminderDateStepper()
@@ -163,6 +168,7 @@ class SetAppointmentReminderUiRendererTest {
 
     // then
     verify(ui).hideProgress()
+    verify(ui).hideCallResult()
     verify(ui).switchToSetAppointmentReminderView()
     verify(ui).renderSelectedAppointmentDate(reminderPeriod, selectedReminderDate.scheduledFor)
     verify(ui).enablePreviousReminderDateStepper()
@@ -189,8 +195,7 @@ class SetAppointmentReminderUiRendererTest {
         appointmentConfig = appointmentConfig,
         userClock = clock,
         mode = UiMode.SetAppointmentReminder,
-        secureCallFeatureEnabled = phoneMaskFeatureEnabled,
-        overdueListChangesFeatureEnabled = overdueListChangesFeatureEnabled
+        secureCallFeatureEnabled = phoneMaskFeatureEnabled
     )
   }
 }

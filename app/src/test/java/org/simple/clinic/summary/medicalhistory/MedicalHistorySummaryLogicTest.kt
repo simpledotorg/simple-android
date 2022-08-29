@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import dagger.Lazy
-import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -14,7 +13,7 @@ import junitparams.Parameters
 import org.junit.After
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.TestData
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.medicalhistory.Answer
@@ -22,19 +21,21 @@ import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_DIABETES
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.values
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithDiabetes
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DiagnosedWithHypertension
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAHeartAttack
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAKidneyDisease
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreatment
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
-import org.simple.clinic.util.TestUtcClock
-import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.clinic.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
+import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.TestUtcClock
+import org.simple.sharedTestCode.util.randomMedicalHistoryAnswer
+import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import java.time.Instant
 import java.util.UUID
 
@@ -78,7 +79,7 @@ class MedicalHistorySummaryLogicTest {
   @Test
   fun `patient's medical history should be populated`() {
     // given
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
+    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
 
     // when
     setupController()
@@ -108,7 +109,7 @@ class MedicalHistorySummaryLogicTest {
     val updatedMedicalHistory = medicalHistory.answered(question, newAnswer)
     val now = Instant.now(clock)
 
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
+    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
 
     // when
     setupController()
@@ -121,7 +122,7 @@ class MedicalHistorySummaryLogicTest {
   @Test
   fun `when the current facility supports diabetes management, show the diagnosis view and hide the diabetes history question`() {
     // given
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
+    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
 
     // when
     setupController(facility = facilityWithDiabetesManagementEnabled)
@@ -136,7 +137,7 @@ class MedicalHistorySummaryLogicTest {
   @Test
   fun `when the current facility does not support diabetes management, hide the diagnosis view and show the diabetes history question`() {
     // given
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
+    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
 
     // when
     setupController()
@@ -151,14 +152,17 @@ class MedicalHistorySummaryLogicTest {
   @Test
   fun `when the diagnosed with hypertension answer is changed, clear the diagnosis error`() {
     // given
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
+    val updatedMedicalHistory = medicalHistory.answered(DiagnosedWithHypertension, Yes)
+
+    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
 
     // when
     setupController(facility = facilityWithDiabetesManagementEnabled)
-    events.onNext(SummaryMedicalHistoryAnswerToggled(DIAGNOSED_WITH_HYPERTENSION, Yes))
+    events.onNext(SummaryMedicalHistoryAnswerToggled(DiagnosedWithHypertension, Yes))
 
     // then
     verify(ui).populateMedicalHistory(medicalHistory)
+    verify(ui).populateMedicalHistory(updatedMedicalHistory)
     verify(ui).showDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
     verifyNoMoreInteractions(ui)
@@ -167,14 +171,17 @@ class MedicalHistorySummaryLogicTest {
   @Test
   fun `when the diagnosed with diabetes answer is changed, clear the diagnosis error`() {
     // given
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
+    val updatedMedicalHistory = medicalHistory.answered(DiagnosedWithDiabetes, No)
+
+    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
 
     // when
     setupController(facility = facilityWithDiabetesManagementEnabled)
-    events.onNext(SummaryMedicalHistoryAnswerToggled(DIAGNOSED_WITH_DIABETES, No))
+    events.onNext(SummaryMedicalHistoryAnswerToggled(DiagnosedWithDiabetes, No))
 
     // then
     verify(ui).populateMedicalHistory(medicalHistory)
+    verify(ui).populateMedicalHistory(updatedMedicalHistory)
     verify(ui).showDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
     verifyNoMoreInteractions(ui)
@@ -183,14 +190,17 @@ class MedicalHistorySummaryLogicTest {
   @Test
   fun `when the has had kidney disease answer is changed, do not clear the diagnosis error`() {
     // given
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
+    val updatedMedicalHistory = medicalHistory.answered(HasHadAKidneyDisease, Yes)
+
+    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
 
     // when
     setupController(facility = facilityWithDiabetesManagementEnabled)
-    events.onNext(SummaryMedicalHistoryAnswerToggled(HAS_HAD_A_KIDNEY_DISEASE, Yes))
+    events.onNext(SummaryMedicalHistoryAnswerToggled(HasHadAKidneyDisease, Yes))
 
     // then
     verify(ui).populateMedicalHistory(medicalHistory)
+    verify(ui).populateMedicalHistory(updatedMedicalHistory)
     verify(ui).showDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
     verifyNoMoreInteractions(ui)
@@ -199,14 +209,17 @@ class MedicalHistorySummaryLogicTest {
   @Test
   fun `when the has had heart attack answer is changed, do not clear the diagnosis error`() {
     // given
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
+    val updatedMedicalHistory = medicalHistory.answered(HasHadAHeartAttack, No)
+
+    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
 
     // when
     setupController(facility = facilityWithDiabetesManagementEnabled)
-    events.onNext(SummaryMedicalHistoryAnswerToggled(HAS_HAD_A_HEART_ATTACK, No))
+    events.onNext(SummaryMedicalHistoryAnswerToggled(HasHadAHeartAttack, No))
 
     // then
     verify(ui).populateMedicalHistory(medicalHistory)
+    verify(ui).populateMedicalHistory(updatedMedicalHistory)
     verify(ui).showDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
     verifyNoMoreInteractions(ui)
@@ -215,14 +228,17 @@ class MedicalHistorySummaryLogicTest {
   @Test
   fun `when the has had a stroke answer is changed, do not clear the diagnosis error`() {
     // given
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
+    val updatedMedicalHistory = medicalHistory.answered(HasHadAStroke, Yes)
+
+    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
 
     // when
     setupController(facility = facilityWithDiabetesManagementEnabled)
-    events.onNext(SummaryMedicalHistoryAnswerToggled(HAS_HAD_A_STROKE, Yes))
+    events.onNext(SummaryMedicalHistoryAnswerToggled(HasHadAStroke, Yes))
 
     // then
     verify(ui).populateMedicalHistory(medicalHistory)
+    verify(ui).populateMedicalHistory(updatedMedicalHistory)
     verify(ui).showDiagnosisView()
     verify(ui).hideDiabetesHistorySection()
     verifyNoMoreInteractions(ui)
@@ -230,7 +246,15 @@ class MedicalHistorySummaryLogicTest {
 
   @Suppress("unused")
   fun medicalHistoryQuestionsAndAnswers(): List<List<Any>> {
-    val questions = values().asList()
+    val questions = listOf(
+        DiagnosedWithHypertension,
+        IsOnHypertensionTreatment(Country.INDIA),
+        DiagnosedWithDiabetes,
+        IsOnDiabetesTreatment,
+        HasHadAHeartAttack,
+        HasHadAStroke,
+        HasHadAKidneyDisease
+    )
     return questions
         .map { question -> listOf(question, randomMedicalHistoryAnswer()) }
         .toList()

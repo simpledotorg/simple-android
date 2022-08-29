@@ -1,9 +1,14 @@
 package org.simple.clinic.editpatient
 
+import android.Manifest
+import org.simple.clinic.activity.permissions.RequiresPermission
 import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.businessid.BusinessId
+import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.widgets.UiEvent
+import java.util.Optional
 
 sealed class EditPatientEvent : UiEvent
 
@@ -72,3 +77,23 @@ data class AlternativeIdChanged(val alternativeId: String) : EditPatientEvent() 
 data class InputFieldsLoaded(val inputFields: InputFields) : EditPatientEvent()
 
 data class ColonyOrVillagesFetched(val colonyOrVillages: List<String>) : EditPatientEvent()
+
+data class AddNHIDButtonClicked(
+    override var permission: Optional<RuntimePermissionResult> = Optional.empty(),
+    override val permissionString: String = Manifest.permission.CAMERA,
+    override val permissionRequestCode: Int = 2
+) : EditPatientEvent(), RequiresPermission {
+  override val analyticsName = "Edit Patient Entry:Add NHID Button Clicked"
+}
+
+data class AddBpPassportButtonClicked(
+    override var permission: Optional<RuntimePermissionResult> = Optional.empty(),
+    override val permissionString: String = Manifest.permission.CAMERA,
+    override val permissionRequestCode: Int = 1
+) : EditPatientEvent(), RequiresPermission {
+  override val analyticsName = "Edit Patient Entry:Add Bp Passport Clicked"
+}
+
+data class BpPassportAdded(val identifier: List<Identifier>) : EditPatientEvent() {
+  override val analyticsName: String = "Edit Patient Entry:Bp Passport Added"
+}

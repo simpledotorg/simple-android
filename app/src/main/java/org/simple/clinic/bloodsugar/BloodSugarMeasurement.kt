@@ -5,6 +5,7 @@ import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.PrimaryKey
@@ -15,10 +16,17 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.bloodsugar.sync.BloodSugarMeasurementPayload
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
+import org.simple.clinic.util.Unicode
 import java.time.Instant
 import java.util.UUID
 
-@Entity(tableName = "BloodSugarMeasurements")
+@Entity(
+    tableName = "BloodSugarMeasurements",
+    indices = [
+      Index("patientUuid", unique = false),
+      Index("facilityUuid", unique = false)
+    ]
+)
 @Parcelize
 data class BloodSugarMeasurement(
     @PrimaryKey
@@ -53,6 +61,10 @@ data class BloodSugarMeasurement(
       deletedAt = timestamps.deletedAt,
       recordedAt = recordedAt
   )
+
+  override fun toString(): String {
+    return "BloodSugarMeasurement(${Unicode.redacted})"
+  }
 
   @Dao
   interface RoomDao {

@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.FrameLayout
-import org.simple.clinic.R
 import org.simple.clinic.databinding.PatientsummaryDrugItemContentBinding
+import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 
 class DrugSummaryItemView constructor(
     context: Context,
@@ -25,8 +25,16 @@ class DrugSummaryItemView constructor(
     binding = PatientsummaryDrugItemContentBinding.inflate(layoutInflater, this, true)
   }
 
-  fun render(drugName: String, drugDosage: String, drugDate: String) {
-    prescribedDrugName.text = context.getString(R.string.prescribeddrugsummary_item_name, drugName, drugDosage)
+  fun render(
+      drugName: String,
+      drugDosage: String?,
+      drugFrequency: MedicineFrequency?,
+      drugDate: String
+  ) {
+    val drugWithDosageAndFrequency = listOfNotNull(drugName, drugDosage, drugFrequency)
+        .joinToString(separator = " ")
+
+    prescribedDrugName.text = drugWithDosageAndFrequency
     prescribedDrugDate.text = drugDate
   }
 

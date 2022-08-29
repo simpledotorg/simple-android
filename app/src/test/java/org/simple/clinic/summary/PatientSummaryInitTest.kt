@@ -5,7 +5,7 @@ import com.spotify.mobius.test.FirstMatchers.hasModel
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.user.User
 import java.util.UUID
@@ -28,7 +28,9 @@ class PatientSummaryInitTest {
                     LoadPatientSummaryProfile(patientUuid),
                     LoadCurrentUserAndFacility,
                     CheckForInvalidPhone(patientUuid),
-                    LoadMedicalOfficers
+                    LoadMedicalOfficers,
+                    LoadPatientRegistrationData(patientUuid),
+                    CheckIfCDSSPilotIsEnabled
                 )
             )
         )
@@ -59,7 +61,42 @@ class PatientSummaryInitTest {
         .then(
             assertThatFirst(
                 hasModel(model),
-                hasEffects(LoadPatientSummaryProfile(patientUuid) as PatientSummaryEffect)
+                hasEffects(
+                    LoadPatientSummaryProfile(patientUuid) as PatientSummaryEffect,
+                    CheckIfCDSSPilotIsEnabled
+                )
+            )
+        )
+  }
+
+  @Test
+  fun `when the screen is restored and cds alerts feature is disabled, then do not load the cds info, user and current facility if already loaded`() {
+    val addressUuid = UUID.fromString("1bfe59b2-7eb9-408b-9a0b-e6d9d2f99fe4")
+
+    val profile = PatientSummaryProfile(
+        patient = TestData.patient(uuid = patientUuid, addressUuid = addressUuid),
+        address = TestData.patientAddress(uuid = addressUuid),
+        phoneNumber = null,
+        bpPassport = null,
+        alternativeId = null,
+        facility = facility
+    )
+    val facility = TestData.facility(uuid = UUID.fromString("9954b4e5-7126-41b1-94d8-74d84b8e0b20"))
+
+    val model = defaultModel
+        .completedCheckForInvalidPhone()
+        .patientSummaryProfileLoaded(profile)
+        .currentFacilityLoaded(facility)
+        .userLoggedInStatusLoaded(User.LoggedInStatus.LOGGED_IN)
+
+    initSpec
+        .whenInit(model)
+        .then(
+            assertThatFirst(
+                hasModel(model),
+                hasEffects(
+                    LoadPatientSummaryProfile(patientUuid) as PatientSummaryEffect
+                )
             )
         )
   }

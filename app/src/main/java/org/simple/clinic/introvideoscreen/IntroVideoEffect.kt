@@ -2,6 +2,8 @@ package org.simple.clinic.introvideoscreen
 
 sealed class IntroVideoEffect
 
-object OpenVideo : IntroVideoEffect()
+sealed class IntroVideoViewEffect : IntroVideoEffect()
 
-object OpenHome : IntroVideoEffect()
+object OpenVideo : IntroVideoViewEffect()
+
+object OpenHome : IntroVideoViewEffect()

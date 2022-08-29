@@ -17,14 +17,6 @@
     tools:progress="100"
     tools:visibility="visible" />
 
-  <org.simple.clinic.contactpatient.views.CallPatientView_Old
-    android:id="@+id/callPatientView_Old"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="bottom"
-    android:visibility="gone"
-    tools:visibility="gone" />
-
   <org.simple.clinic.contactpatient.views.CallPatientView
     android:id="@+id/callPatientView"
     android:layout_width="match_parent"

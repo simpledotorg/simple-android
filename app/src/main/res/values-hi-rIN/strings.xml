@@ -21,6 +21,7 @@
   <string name="country_bangladesh">बांग्लादेश</string>
   <string name="country_ethiopia">इथियोपिया</string>
   <string name="country_sri_lanka">श्रीलंका</string>
+  <string name="country_demo">डेमो देश</string>
 
   <!-- Home -->
   <string name="home_help">सहायता</string>
@@ -33,14 +34,13 @@
   <string name="identifiertype_unknown">आईडी</string>
   <string name="identifiertype_india_national_health_id">राष्ट्रीय स्वास्थ्य आईडी</string>
   <string name="identifiertype_sri_lanka_national_id">राष्ट्रीय आईडी संख्या</string>
+  <string name="identifiertype_sri_lanka_personal_health_number">व्यक्तिगत स्वास्थ्य संख्या</string>
 
   <!-- Patient search -->
   <string name="instantsearch_hint">नाम, फोन या ID</string>
-
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">क्या आप इस सूची में रोगी का नाम ढूंढ नहीं पाए?</string>
   <string name="patientsearchresults_register_patient">नए रोगी के तौर पर रजिस्टर करें</string>
-  <string name="patientsearchresults_item_last_seen">विज़िट की गई</string>
   <string name="patientsearchresults_item_phone_number">फोन</string>
   <string name="patientsearchresults_item_birthdate">जन्मदिन</string>
 
@@ -50,7 +50,7 @@
   <string name="patiententry_phone_number">फ़ोन नंबर</string>
   <string name="patiententry_bangladesh_national_id">राष्ट्रीय आईडी संख्या</string>
   <string name="patiententry_ethiopia_medical_record_number">वैद्यकीय रेकॉर्ड क्रमांक</string>
-  <string name="patiententry_sri_lanka_national_id">राष्ट्रीय आईडी संख्या</string>
+  <string name="patiententry_sri_lanka_personal_health_number">व्यक्तिगत स्वास्थ्य संख्या</string>
   <string name="patiententry_date_of_birth_unfocused">जन्म तिथि</string>
   <string name="patiententry_date_of_birth_focused">जन्म तिथि: DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">या</string>
@@ -79,7 +79,6 @@
   <string name="patiententry_error_dateofbirth_is_in_future">रोगी की जन्म तिथि ठीक करें</string>
   <string name="patiententry_error_phonenumber_blank">फ़ोन नंबर को खाली नहीं छोड़ा जा सकता</string>
   <string name="patiententry_error_phonenumber_length_less">फ़ोन नंबर में  %1$s से कम अंक नहीं हो सकते</string>
-  <string name="patiententry_error_phonenumber_length_more">फ़ोन नंबर में  %1$s से अधिक अंक नहीं हो सकते</string>
   <string name="patiententry_identifier_bp_passport">बीपी पासपोर्ट</string>
   <string name="patiententry_consent_header">सहमति:\u0020</string>
   <string name="patiententry_consent_first_para">नीचे टैप करके, आप इस बात की पुष्टि करते हैं कि रोगी के संबंध में आपके द्वारा लिखा गया कोई भी डेटा उचित सूचित सहमति के अंतर्गत प्राप्त किया गया है। इसका मतलब यह है कि रोगी या कानूनी अभिभावक को इस बात की जानकारी है कि आप ऐप में उनका व्यक्तिगत डेटा लिख रहे हैं, वह इस बात को समझता है कि किस डेटा को एकत्र किया जा रहा है, और उसे यह पता है कि वे ऐप में दिए गए फ़ोन नंबर का उपयोग करके SMS, WhatsApp, या अन्य तरीकों से संपर्क कर सकते हैं।</string>
@@ -97,6 +96,7 @@
   <string name="patientedit_confirm_discard_ok">छोड़ें</string>
   <string name="patientedit_confirm_discard_cancel">रद्द करें</string>
   <string name="patientedit_delete_patient">हटाएं</string>
+  <string name="patientedit_add_button">जोड़ें</string>
 
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
@@ -272,20 +272,23 @@
   <string name="overdue_no_patients">किसी रोगी अतिदेय सूची में नहीं</string>
   <string name="overdue_empty_desc">आप उन रोगियों को कॉल कर पाएंगे जो अपने फ़ॉलो-अप रक्तचाप रीडिंग करवाने के लिए अपनी नियत विज़िट पर नहीं आए।</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
-  <string name="overdue_list_item_diagnosis_diabetes">मधुमेह</string>
-  <string name="overdue_list_item_diagnosis_hypertension">हाइपरटेंशन</string>
-  <string name="overdue_list_item_diagnosis_none">कोई नहीं</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s दिन अधिक हो गया है</item>
     <item quantity="other">%s दिन अधिक हो गए हैं</item>
   </plurals>
   <string name="overdue_list_item_village">गांव</string>
-  <string name="overduelist_diagnosis_label">Dx</string>
-  <string name="overduelist_visited">विज़िट की गई</string>
   <string name="overduelist_high_risk">उच्च जोखिम</string>
-  <string name="overduelist_transferred">पर स्थानांतरित किया गया</string>
   <string name="overdue_download">डाउनलोड</string>
   <string name="overdue_share">साझा करें</string>
+  <string name="overdue_no_pending_patients">कोई मरीज शेष नहीं</string>
+  <string name="overdue_pending_list_button_see_all">सभी देखें</string>
+  <string name="overdue_pending_list_button_see_less">कम देखें</string>
+  <string name="overdue_pending_to_call_header">कॉल करना शेष</string>
+  <string name="overdue_agreed_to_visit_call_header">विजिट के लिए राजी</string>
+  <string name="overdue_remind_to_call_header">बाद में कॉल करने के लिए याद दिलाएं</string>
+  <string name="overdue_removed_from_list_call_header">लिस्ट से हटाया गया</string>
+  <string name="overdue_no_visit_in_one_year_call_header">1 वर्ष में कोई विजिट नहीं</string>
+
 
   <!-- Facility change -->
 
@@ -295,6 +298,10 @@
   <string name="enterotp_incorrect_code">गलत कोड, कृपया फिर कोशिश करें</string>
   <string name="enterotp_resend_sms">SMS फिर से भेजें</string>
   <string name="enterotp_sms_sent">नया सत्यापन SMS भेजा गया</string>
+  <string name="enterotp_try_again_after">बाद में फिर से कोशिश करें</string>
+  <string name="otpentry_error_incorrect_otp_attempts_limit_reached" tools:ignore="PluralsCandidate">आप %s बार गलत प्रयास कर चुके हैं</string>
+  <string name="otpentry_error_incorrect_otp_attempts_remaining">कोड गलत है, %s प्रयास बाकी हैं</string>
+  <!-- minutes:seconds -->
 
   <!-- Schedule appointment -->
   <string name="scheduleappointment_next_visit_in">अगली मुलाकात इतने समय बाद नियत की गई</string>
@@ -342,8 +349,8 @@
   <string name="newmedicalhistory_yes">हाँ</string>
   <string name="newmedicalhistory_no">नहीं</string>
   <string name="newmedicalhistory_history">इतिहास</string>
-  <string name="newmedicalhistory_diagnosis">निदान (आवश्यक)</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">क्या रोगी ने पिछले महीने में कभी भी बीपी की दवाएं ली हैं? (आवश्यक है)</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">क्या रोगी ने पिछले महीने में कभी भी मधुमेह की दवाएं ली हैं? (आवश्यक है)</string>
 
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">कोई नहीं</string>
@@ -356,7 +363,11 @@
   <string name="scansimpleid_enteredcode_error_not_required_length">बीपी पासपोर्ट नंबर की लंबाई 7 अंकों से कम है</string>
   <string name="scansimpleid_type_number">या संख्या टाइप करें</string>
   <string name="scansimpleid_invalid_qr_code">मान्य स्वास्थ्य ID स्कैन करें</string>
+  <string name="scansimpleid_error_state_snackbar_ok">ठीक है</string>
+  <string name="scansimpleid_identfier_already_exists">यह आईडी पहले ही किसी और मरीज़ को दी जा चुकी है।\nनई हेल्थ आईडी स्कैन करें।</string>
   <string name="scansimpleid_bp_passport_or_national_health_id">बीपी पासपोर्ट या राष्ट्रीय स्वास्थ्य ID</string>
+  <string name="scansimpleid_bp_passport_title">बीपी पासपोर्ट</string>
+  <string name="scansimpleid_national_id_title">राष्ट्रीय आईडी संख्या</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">सिंक लंबित है</string>
@@ -438,7 +449,6 @@
 
   <!-- Select Country Screen -->
   <string name="selectcountry_logo_contentdescription">सिंपल का लोगो</string>
-  <string name="selectcountry_next">आगे</string>
   <string name="selectcountry_title">अपना देश चुनें</string>
   <string name="selectcountry_networkerror">इंटरनेट कनेक्शन नहीं है!</string>
   <string name="selectcountry_servererror">सर्वर में त्रुटि! कृपया बाद में दुबारा कोशिश करें!</string>
@@ -522,13 +532,13 @@
   <string name="alertfacilitychange_facility_name">%s?</string>
 
   <!-- Prescribed Drug Summary -->
-  <string name="prescribeddrugsummary_item_name">%1$s %2$s</string>
 
   <!-- Contact patient -->
   <string name="contactpatient_agreed_to_visit">रोगी को \"मुलाकात के लिए सहमत\" के रूप में चिन्हित करें</string>
   <string name="contactpatient_remind_call_later">बाद में कॉल करना याद दिलाएं…</string>
   <string name="contactpatient_remove_from_list">अतिदेय सूची से हटाएं…</string>
   <string name="contactpatient_result_of_call">कॉल का परिणाम</string>
+  <string name="contactpatient_call">कॉल करें</string>
   <string name="contactpatient_call_normal">सामान्य</string>
   <string name="contactpatient_call_secure">सुरक्षित</string>
   <string name="contactpatient_help_text">सुरक्षित कॉल से आपका नंबर छिपा रहता है और यह नंबर टोल फ़्री होता है</string>
@@ -557,6 +567,7 @@
   <string name="contactpatient_moved_to_private">निजी डॉक्टर के पास चला गया</string>
   <string name="contactpatient_patient_died">जीवित नहीं</string>
   <string name="contactpatient_other_reason">अन्य कारण</string>
+  <string name="contactpatient_unknown">अज्ञात</string>
   <string name="contactpatient_patient_registered_at">पर पंजीकृत</string>
   <string name="contactpatient_patient_transfer_from">से स्थानांतरित</string>
   <string name="contactpatient_phone">फोन</string>
@@ -722,6 +733,7 @@
   <!-- Select ongoing hypertension treatment dialog -->
   <string name="select_ongoing_hypertension_treatment_title">क्या रोगी ने पिछले महीने में कभी भी बीपी की दवाएं ली हैं?</string>
   <string name="select_ongoing_hypertension_treatment_message">हां या नहीं चुनें।</string>
+  <string name="select_ongoing_diabetes_treatment_message">पुष्टि करें कि क्या रोगी ने पिछले महीने में कभी भी मधुमेह की दवाएं ली हैं।</string>
   <string name="select_ongoing_hypertension_treatment_positive_action">ठीक है</string>
 
   <!-- Custom drugs search -->
@@ -749,4 +761,103 @@
   <string name="custom_drug_entry_sheet_save_button_text">सहेजें</string>
   <string name="custom_drug_entry_sheet_add_button_text">जोड़ें</string>
   <string name="custom_drug_entry_sheet_frequency_dialog_done">पूरा हुआ</string>
+  <!-- Select state screen -->
+  <string name="select_state_title">आपका क्लिनिक कहाँ है?</string>
+  <string name="select_state_networkerror">इंटरनेट कनेक्शन नहीं है!</string>
+  <string name="select_state_servererror">सर्वर में त्रुटि! कृपया बाद में दुबारा कोशिश करें!</string>
+  <string name="select_state_genericerror">कुछ गलत हो गया! कृपया बाद में दुबारा कोशिश करें!</string>
+
+  <!-- Patient status view -->
+  <string name="patient_status_died">जीवित नहीं</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">निदान का तरीका बदलें?</string>
+  <string name="change_diagnosis_message">अगर रोगी को कभी उच्च रक्तचाप या मधुमेह का निदान किया गया है, तो कृपया हाँ चिह्नित करें।</string>
+  <string name="change_diagnosis_positive">बदलें</string>
+  <string name="change_diagnosis_negative">अभी नहीं</string>
+
+  <!-- Overdue download notification -->
+  <string name="overdue_download_notification_failed_title">डाउनलोड विफल हुआ</string>
+  <string name="overdue_download_notification_failed_subtitle">कुछ समय बाद फिर से कोशिश करें</string>
+  <string name="overdue_download_notification_in_progress_title">ओवरड्यू लाइन सूची डाउनलोड की जा रही है</string>
+  <string name="overdue_download_notification_cancel">रद्द करें</string>
+  <string name="overdue_download_notification_succeeded_title">डाउनलोड पूरा हुआ</string>
+  <string name="overdue_download_notification_succeeded_subtitle">खोलने के लिए क्लिक करें</string>
+
+  <!-- Overdue download no active network connection dialog -->
+  <string name="overdue_download_no_active_network_connection_dialog_title">इंटरनेट कनेक्ट नहीं है</string>
+  <string name="overdue_download_no_active_network_connection_dialog_message">अपना इंटरनेट कनेक्शन चेक करें और दोबारा कोशिश करें।</string>
+  <string name="overdue_download_no_active_network_connection_dialog_positive_button">ठीक है</string>
+
+  <!-- Select overdue download format dialog -->
+  <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">स्प्रैडशीट</string>
+  <string name="select_overdue_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="select_overdue_download_format_dialog_action_negative">रद्द करें</string>
+  <string name="select_overdue_download_format_dialog_title_download">इस रूप में डाउनलोड करें</string>
+  <string name="select_overdue_download_format_dialog_title_share">इस रूप में शेयर करें</string>
+  <string name="select_overdue_download_format_dialog_action_positive_download">डाउनलोड</string>
+  <string name="select_overdue_download_format_dialog_action_positive_share">साझा करें</string>
+  <string name="select_overdue_download_format_dialog_share_with">इनके साथ शेयर करें</string>
+  <string name="not_enough_storage_error_dialog_title">पर्याप्त स्टोरेज नहीं है</string>
+  <string name="not_enough_storage_error_dialog_message">कुछ फ़ाइलें डिलीट करें और दोबारा कोशिश करें</string>
+  <string name="download_failed_error_dialog_title">डाउनलोड नहीं कर सके</string>
+  <string name="download_failed_error_dialog_message">कोई गड़बड़ी हुई। थोड़ी देर इंतज़ार करें, फिर दोबारा कोशिश करें</string>
+  <string name="next_appointment_view_title">फ़ॉलो-अप अपॉइंटमेंट</string>
+  <string name="next_appointment_view_add">जोड़ें</string>
+  <string name="next_appointment_view_change">बदलें</string>
+  <string name="next_appointment_none">कोई नहीं</string>
+  <string name="next_appointment_appointment_at_facility">%s पर</string>
+  <string name="next_appointment_today">आज</string>
+  <plurals name="next_appointment_plurals">
+    <item quantity="one">%d दिन</item>
+    <item quantity="other">%d दिन</item>
+  </plurals>
+  <plurals name="next_appointment_overdue_plurals">
+    <item quantity="one">%d दिन अधिक हो गया है</item>
+    <item quantity="other">%d दिन अधिक हो गए हैं</item>
+  </plurals>
+
+  <!-- App update notification -->
+  <string name="app_update_notification_subtext">कृपया Google प्ले स्टोर में जाकर अपनी सिम्पल ऐप जल्द से जल्द अपडेट कर लें।</string>
+  <string name="critical_app_update_notification_subtext">महत्वपूर्ण अपडेट उपलब्ध हैं। अपनी सिम्पल ऐप को Google प्लेस्टोर से अपडेट कर लें।</string>
+
+  <!-- Critical app update dialog -->
+  <string name="critical_update_required_dialog_title">बेहद महत्वपूर्ण अपडेट ज़रूरी है</string>
+  <string name="critical_update_required_dialog_content">बेहद महत्वपूर्ण सुरक्षा बदलाव और नए फ़ीचर पाने के लिए अभी अपडेट करें</string>
+  <string name="critical_security_update_required_reason">ऐप की सुरक्षा कमज़ोर पड़ गई है</string>
+  <string name="critical_update_required_dialog_update_button_text">अभी अपडेट करें</string>
+  <string name="critical_update_required_dialog_help_section_title">मदद चाहिए?</string>
+  <string name="critical_update_required_dialog_help_section_content">हमारी सहायता टीम से मदद पाने के लिए नीचे दिए गए बटन पर टैप करें</string>
+  <string name="critical_update_required_reason">ऐप %d महीने पुरानी हो चुकी है</string>
+
+  <!-- Critical app update card -->
+  <string name="critical_update_required_card_title">बेहद महत्वपूर्ण अपडेट</string>
+  <string name="critical_update_required_card_content">बेहद महत्वपूर्ण सुरक्षा बदलाव और नए फ़ीचर पाने के लिए अभी अपडेट करें</string>
+  <string name="update_required_reason">ऐप %d महीने पुरानी हो चुकी है</string>
+  <string name="critical_update_required_card_update_button_text">अभी अपडेट करें</string>
+
+  <!-- Drug stock reminder notification -->
+  <string name="drug_stock_reminder_notification">%1$s के लिए अपनी लंबित ड्रग स्टॉक रिपोर्ट पूरी करें</string>
+  <string name="drug_stock_reminder_card_title">दवाई की दुकान</string>
+  <string name="drug_stock_reminder_card_content">%1$s के लिए अपनी लंबित ड्रग स्टॉक रिपोर्ट पूरी करें</string>
+  <string name="drug_stock_reminder_button_text">दवाई की दुकान में प्रवेश करें</string>
+
+  <!-- Drug stock reminder no active network connection dialog -->
+  <string name="drug_stock_reminder_no_active_network_connection_dialog_title">इंटरनेट कनेक्ट नहीं है</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_message">अपना इंटरनेट कनेक्शन चेक करें और दोबारा कोशिश करें।</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_positive_button">ठीक है</string>
+
+
+  <!-- Clinical Decision Support Alerts -->
+  <string name="clinical_decision_support_alert_bp_high_title">बीपी बढ़ा हुआ है। दवाइयाँ बढ़ा दें?</string>
+  <string name="clinical_decision_support_alert_bp_high_subtitle">अगर मरीज़ अपनी दवाइयाँ समय पर ले रहा हो, तो प्रोटोकॉल का पालन करें</string>
+
+  <!-- Call Result Outcome Message -->
+
+  <!-- Overdue Instant Search -->
+  <string name="overdue_search_patient_name_or_village">नाम या गाँव के आधार पर खोजें</string>
+  <string name="overdue_search_hint">नाम या गाँव दर्ज करें</string>
+  <string name="overdue_search_no_search_results_title">को मरीज नहीं मिले</string>
+  <string name="overdue_search_no_search_results_desc">आप यहां अपनी खोज से देर तक नहीं आए हुए सभी मरीजों को देख पाएंगे</string>
+
 </resources>

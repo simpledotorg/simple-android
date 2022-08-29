@@ -4,7 +4,6 @@ sealed class EditPatientValidationError(val analyticsName: String) {
   object FullNameEmpty : EditPatientValidationError("Patient Edit:Name is empty")
   object PhoneNumberEmpty : EditPatientValidationError("Patient Edit:Phone Number is empty")
   data class PhoneNumberLengthTooShort(val minimumAllowedNumberLength: Int) : EditPatientValidationError("Patient Edit:Phone Number is less than 6 digits")
-  data class PhoneNumberLengthTooLong(val maximumAllowedNumberLength: Int) : EditPatientValidationError("Patient Edit:Phone Number is more than 12 digits")
   object ColonyOrVillageEmpty : EditPatientValidationError("Patient Edit:Colony or village empty")
   object DistrictEmpty : EditPatientValidationError("Patient Edit:District empty")
   object StateEmpty : EditPatientValidationError("Patient Edit:State empty")

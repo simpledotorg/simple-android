@@ -13,8 +13,7 @@ import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.user.OngoingRegistrationEntry
-import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.sharedTestCode.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
 import java.util.UUID
@@ -138,8 +137,7 @@ class RegistrationNameScreenLogicTest {
 
     val uiRenderer = RegistrationNameUiRenderer(ui)
     val effectHandler = RegistrationNameEffectHandler(
-        schedulers = TrampolineSchedulersProvider(),
-        uiActions = uiActions
+        viewEffectConsumer = RegistrationNameViewEffectHandler(uiActions)::handle
     )
 
     testFixture = MobiusTestFixture(

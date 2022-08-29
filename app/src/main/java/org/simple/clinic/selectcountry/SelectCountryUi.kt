@@ -8,5 +8,4 @@ interface SelectCountryUi {
   fun displayNetworkErrorMessage()
   fun displayServerErrorMessage()
   fun displayGenericErrorMessage()
-  fun showNextButton()
 }

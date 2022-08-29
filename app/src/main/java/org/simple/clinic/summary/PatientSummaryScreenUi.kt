@@ -11,4 +11,11 @@ interface PatientSummaryScreenUi {
   fun hideAssignedFacilityView()
   fun hideDoneButton()
   fun showTeleconsultLogButton()
+  fun hidePatientDiedStatus()
+  fun showPatientDiedStatus()
+  fun showNextAppointmentCard()
+  fun hideNextAppointmentCard()
+  fun showClinicalDecisionSupportAlert()
+  fun hideClinicalDecisionSupportAlert()
+  fun hideClinicalDecisionSupportAlertWithoutAnimation()
 }

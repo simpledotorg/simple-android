@@ -1,51 +1,50 @@
 package org.simple.clinic.registration.location
 
 import android.content.Context
-import android.os.Parcelable
-import android.util.AttributeSet
-import android.widget.RelativeLayout
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.activity.permissions.ActivityPermissionResult
+import org.simple.clinic.activity.permissions.RequestPermissions
+import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.databinding.ScreenRegistrationLocationPermissionBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.compat.wrap
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
-import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreenKey
-import org.simple.clinic.router.ScreenResultBus
-import org.simple.clinic.router.screen.ActivityPermissionResult
+import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.ScreenResultBus
+import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreen
 import org.simple.clinic.user.OngoingRegistrationEntry
-import org.simple.clinic.util.RequestPermissions
-import org.simple.clinic.util.RuntimePermissions
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.hideKeyboard
 import javax.inject.Inject
 
-class RegistrationLocationPermissionScreen(
-    context: Context,
-    attrs: AttributeSet
-) : RelativeLayout(context, attrs), RegistrationLocationPermissionUi {
-
-  var binding: ScreenRegistrationLocationPermissionBinding? = null
+class RegistrationLocationPermissionScreen : BaseScreen<
+    RegistrationLocationPermissionScreen.Key,
+    ScreenRegistrationLocationPermissionBinding,
+    RegistrationLocationPermissionModel,
+    RegistrationLocationPermissionEvent,
+    RegistrationLocationPermissionEffect,
+    RegistrationLocationPermissionViewEffect>(), RegistrationLocationPermissionUi {
 
   private val allowAccessButton
-    get() = binding!!.allowAccessButton
+    get() = binding.allowAccessButton
 
   private val skipButton
-    get() = binding!!.skipButton
+    get() = binding.skipButton
 
   private val toolbar
-    get() = binding!!.toolbar
+    get() = binding.toolbar
 
   @Inject
   lateinit var router: Router
-
-  @Inject
-  lateinit var screenKeyProvider: ScreenKeyProvider
 
   @Inject
   lateinit var runtimePermissions: RuntimePermissions
@@ -56,70 +55,49 @@ class RegistrationLocationPermissionScreen(
   @Inject
   lateinit var screenResults: ScreenResultBus
 
-  private val screenKey by unsafeLazy { screenKeyProvider.keyFor<RegistrationLocationPermissionScreenKey>(this) }
+  override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) = ScreenRegistrationLocationPermissionBinding
+      .inflate(layoutInflater, container, false)
 
-  private val events by unsafeLazy {
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationLocationPermissionViewEffect>) = effectHandlerFactory
+      .create(viewEffectsConsumer)
+      .build()
+
+  override fun createInit() = RegistrationLocationPermissionInit()
+
+  override fun createUpdate() = RegistrationLocationPermissionUpdate()
+
+  override fun defaultModel() = RegistrationLocationPermissionModel.create(screenKey.ongoingRegistrationEntry)
+
+  override fun viewEffectHandler() = RegistrationLocationPermissionViewEffectHandler(this)
+
+  override fun events(): Observable<RegistrationLocationPermissionEvent> {
     val permissionResults = screenResults
         .streamResults()
         .ofType<ActivityPermissionResult>()
 
-    Observable
+    return Observable
         .merge(
             allowLocationClicks(),
             skipClicks()
         )
         .compose(RequestPermissions<UiEvent>(runtimePermissions, permissionResults))
         .compose(ReportAnalyticsEvents())
-        .share()
+        .cast()
   }
 
-  private val delegate by unsafeLazy {
-    val uiRenderer = RegistrationLocationPermissionUiRenderer(this)
+  override fun uiRenderer() = RegistrationLocationPermissionUiRenderer(this)
 
-    MobiusDelegate.forView(
-        events = events.ofType(),
-        defaultModel = RegistrationLocationPermissionModel.create(screenKey.ongoingRegistrationEntry),
-        update = RegistrationLocationPermissionUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        init = RegistrationLocationPermissionInit(),
-        modelUpdateListener = uiRenderer::render
-    )
-  }
-
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    binding = ScreenRegistrationLocationPermissionBinding.bind(this)
-    if (isInEditMode) {
-      return
-    }
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
     context.injector<Injector>().inject(this)
+  }
 
-    toolbar.setOnClickListener {
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+
+    toolbar.setNavigationOnClickListener {
       router.pop()
     }
-
-    // Can't tell why, but the keyboard stays
-    // visible on coming from the previous screen.
-    hideKeyboard()
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    binding = null
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
   private fun allowLocationClicks(): Observable<RegistrationLocationPermissionEvent> {
@@ -135,10 +113,19 @@ class RegistrationLocationPermissionScreen(
   }
 
   override fun openFacilitySelectionScreen(registrationEntry: OngoingRegistrationEntry) {
-    router.push(RegistrationFacilitySelectionScreenKey(registrationEntry).wrap())
+    router.push(RegistrationFacilitySelectionScreen.Key(registrationEntry))
   }
 
   interface Injector {
     fun inject(target: RegistrationLocationPermissionScreen)
+  }
+
+  @Parcelize
+  data class Key(
+      val ongoingRegistrationEntry: OngoingRegistrationEntry,
+      override val analyticsName: String = "Registration Location Permission"
+  ) : ScreenKey() {
+
+    override fun instantiateFragment() = RegistrationLocationPermissionScreen()
   }
 }

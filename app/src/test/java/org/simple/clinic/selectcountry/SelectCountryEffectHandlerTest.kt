@@ -9,14 +9,14 @@ import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.appconfig.FetchError
 import org.simple.clinic.appconfig.FetchSucceeded
 import org.simple.clinic.appconfig.ManifestFetchResult
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.util.ResolvedError.NetworkRelated
-import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 
 class SelectCountryEffectHandlerTest {
 
@@ -30,7 +30,13 @@ class SelectCountryEffectHandlerTest {
       isdCode = "91"
   )
 
-  private val effectHandler = SelectCountryEffectHandler.create(repository, uiActions, TrampolineSchedulersProvider())
+  private val viewEffectHandler = SelectCountryViewEffectHandler(uiActions)
+
+  private val effectHandler = SelectCountryEffectHandler(
+      repository,
+      TestSchedulersProvider.trampoline(),
+      viewEffectHandler::handle
+  ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
   @After
@@ -102,36 +108,6 @@ class SelectCountryEffectHandlerTest {
     verifyZeroInteractions(repository)
     testCase.assertNoOutgoingEvents()
     verify(uiActions).goToStateSelectionScreen()
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
-  fun `when save deployment effect is received, then save deployment`() {
-    // given
-    val deployment = TestData.deployment(
-        displayName = "IHCI",
-        endPoint = "https://in.simple.org/"
-    )
-
-    // when
-    testCase.dispatch(SaveDeployment(deployment))
-
-    // then
-    testCase.assertOutgoingEvents(DeploymentSaved)
-    verify(repository).saveDeployment(deployment)
-    verifyNoMoreInteractions(repository)
-    verifyZeroInteractions(uiActions)
-  }
-
-  @Test
-  fun `when go to registration screen effect is received, then go to registration screen`() {
-    // when
-    testCase.dispatch(GoToRegistrationScreen)
-
-    // then
-    testCase.assertNoOutgoingEvents()
-    verifyZeroInteractions(repository)
-    verify(uiActions).goToRegistrationScreen()
     verifyNoMoreInteractions(uiActions)
   }
 }

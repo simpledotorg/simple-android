@@ -7,18 +7,21 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.TestData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
+import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.storage.Timestamps
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency.BD
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency.OD
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Rules
-import org.simple.clinic.util.TestUtcClock
+import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.Rules
+import org.simple.sharedTestCode.util.TestUtcClock
+import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import java.time.Duration
+import java.time.Instant
 import java.time.LocalDate
 import java.time.Month
 import java.util.UUID
@@ -49,6 +52,7 @@ class PrescriptionRepositoryAndroidTest {
   val rules: RuleChain = Rules
       .global()
       .around(LocalAuthenticationRule())
+      .around(SaveDatabaseRule())
 
   @Before
   fun setUp() {
@@ -306,6 +310,178 @@ class PrescriptionRepositoryAndroidTest {
         isDeleted = true,
         timestamps = prescribedDrug3.timestamps.copy(updatedAt = prescribedDrug3.updatedAt.plus(durationToAdvanceBy)),
         syncStatus = SyncStatus.PENDING
+    ))
+  }
+
+  @Test
+  fun fetching_prescribed_drugs_count_should_work_as_expected() {
+    // given
+    val patientUuid = UUID.fromString("9199c684-655d-42c9-9f2b-298b849a2516")
+    val prescribedDrug1 = TestData.prescription(
+        uuid = UUID.fromString("e20f4571-09c5-40d4-9521-5453fb5f1d4f"),
+        patientUuid = patientUuid,
+        timestamps = Timestamps.create(clock),
+        syncStatus = SyncStatus.DONE,
+        isDeleted = false
+    )
+
+    val prescribedDrug2 = TestData.prescription(
+        uuid = UUID.fromString("191159ff-cd05-4357-934b-1035ed5ba50f"),
+        patientUuid = patientUuid,
+        timestamps = Timestamps.create(clock),
+        syncStatus = SyncStatus.DONE,
+        isDeleted = false
+    )
+
+    val prescribedDrug3 = TestData.prescription(
+        uuid = UUID.fromString("fc4d3170-568c-4a10-8ce8-5457469aebe4"),
+        patientUuid = patientUuid,
+        timestamps = Timestamps.create(clock),
+        syncStatus = SyncStatus.DONE,
+        isDeleted = true
+    )
+
+    repository.save(listOf(prescribedDrug1, prescribedDrug2, prescribedDrug3))
+
+    // when
+    val prescribedDrugsCount = repository.prescriptionCountImmediate(patientUuid = patientUuid)
+
+    // then
+    assertThat(prescribedDrugsCount).isEqualTo(2)
+  }
+
+  @Test
+  fun querying_whether_prescription_for_patient_has_changed_today_should_work_correctly() {
+    val patient1Uuid = UUID.fromString("2ff71470-ada2-41e7-9387-1a40311492c5")
+    val patient2Uuid = UUID.fromString("37c1c00f-5a32-4587-b97c-ac1a959eeba8")
+
+    val prescribedDrug1ForPatient1 = testData.prescription(
+        uuid = UUID.fromString("40397a70-abec-4031-be5b-9226c8228085"),
+        patientUuid = patient1Uuid,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+    val prescribedDrug2ForPatient1 = testData.prescription(
+        uuid = UUID.fromString("14631d3e-f5c8-4a7b-abc2-ddef0d947d65"),
+        patientUuid = patient1Uuid,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+    val prescribedDrug3ForPatient1 = testData.prescription(
+        uuid = UUID.fromString("bd5d8b30-55ed-4fe3-8dfe-cf1025b4ccff"),
+        patientUuid = patient1Uuid,
+        updatedAt = Instant.parse("2018-02-01T00:00:00Z")
+    )
+    val prescribedDrugForPatient2 = testData.prescription(
+        uuid = UUID.fromString("e6b4e1d7-b5ea-4e20-9b1c-a34c8633df6e"),
+        patientUuid = patient2Uuid,
+        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+
+    database.prescriptionDao().save(listOf(prescribedDrug1ForPatient1, prescribedDrug2ForPatient1, prescribedDrug3ForPatient1, prescribedDrugForPatient2))
+
+    clock.setDate(LocalDate.parse("2018-02-01"))
+    assertThat(repository.hasPrescriptionForPatientChangedToday(patient1Uuid).blockingFirst()).isTrue()
+    assertThat(repository.hasPrescriptionForPatientChangedToday(patient2Uuid).blockingFirst()).isFalse()
+  }
+
+  @Test
+  fun refilling_prescription_drugs_should_work_correctly() {
+    // given
+    val facilityUuid = UUID.fromString("c24ef276-9fd7-49c7-9583-ac88ae5f2cf9")
+    val patientUuid = UUID.fromString("8e447c7f-db83-41a5-8c8e-5362c6b0aa6c")
+    val refilledPrescriptionUuid = UUID.fromString("ce609cc8-fb6a-43b0-b7c8-d1c1156fee50")
+
+    val prescription = TestData.prescription(
+        uuid = UUID.fromString("59dcc1a1-9b9a-4a5d-8015-b62988c23034"),
+        name = "Amlodipine",
+        dosage = "10 mg",
+        facilityUuid = facilityUuid,
+        syncStatus = SyncStatus.DONE,
+        frequency = null,
+        durationInDays = null,
+        teleconsultationId = null,
+        patientUuid = patientUuid,
+        timestamps = Timestamps.create(clock)
+    )
+
+    val uuidGenerator = FakeUuidGenerator.fixed(refilledPrescriptionUuid)
+
+    val prescribedDrugs = listOf(prescription)
+    repository.save(prescribedDrugs)
+
+    // when
+    repository.refill(
+        prescriptions = prescribedDrugs,
+        uuidGenerator = { uuidGenerator.v4() }
+    )
+
+    // then
+    val refilledPrescriptions = repository.newestPrescriptionsForPatientImmediate(patientUuid)
+
+    assertThat(refilledPrescriptions).isEqualTo(listOf(
+        TestData.prescription(
+            uuid = refilledPrescriptionUuid,
+            name = "Amlodipine",
+            dosage = "10 mg",
+            facilityUuid = facilityUuid,
+            syncStatus = SyncStatus.PENDING,
+            frequency = null,
+            durationInDays = null,
+            teleconsultationId = null,
+            patientUuid = patientUuid,
+            timestamps = Timestamps.create(clock)
+        )
+    ))
+  }
+
+  @Test
+  fun refilling_prescription_drugs_for_teleconsultation_should_work_correctly() {
+    // given
+    val facilityUuid = UUID.fromString("cbbe7457-e40a-46e4-85e7-1553f4e759be")
+    val patientUuid = UUID.fromString("1dbeea19-78e3-4079-99eb-8828298ec342")
+    val refilledPrescriptionUuid = UUID.fromString("e0213731-144e-42ef-9536-9892a59e2b6a")
+    val teleconsultationUuid = UUID.fromString("23ed1c9a-8c5d-4e8d-8c1a-e8114ec930f6")
+
+    val prescription = TestData.prescription(
+        uuid = UUID.fromString("59dcc1a1-9b9a-4a5d-8015-b62988c23034"),
+        name = "Amlodipine",
+        dosage = "10 mg",
+        facilityUuid = facilityUuid,
+        syncStatus = SyncStatus.DONE,
+        frequency = null,
+        durationInDays = null,
+        teleconsultationId = null,
+        patientUuid = patientUuid,
+        timestamps = Timestamps.create(clock)
+    )
+
+    val uuidGenerator = FakeUuidGenerator.fixed(refilledPrescriptionUuid)
+
+    val prescribedDrugs = listOf(prescription)
+    repository.save(prescribedDrugs)
+
+    // when
+    repository.refillForTeleconsulation(
+        prescriptions = prescribedDrugs,
+        uuidGenerator = { uuidGenerator.v4() },
+        teleconsultationUuid = teleconsultationUuid
+    )
+
+    // then
+    val refilledPrescriptions = repository.newestPrescriptionsForPatientImmediate(patientUuid)
+
+    assertThat(refilledPrescriptions).isEqualTo(listOf(
+        TestData.prescription(
+            uuid = refilledPrescriptionUuid,
+            name = "Amlodipine",
+            dosage = "10 mg",
+            facilityUuid = facilityUuid,
+            syncStatus = SyncStatus.PENDING,
+            frequency = null,
+            durationInDays = null,
+            teleconsultationId = teleconsultationUuid,
+            patientUuid = patientUuid,
+            timestamps = Timestamps.create(clock)
+        )
     ))
   }
 }

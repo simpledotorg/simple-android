@@ -2,53 +2,22 @@ package org.simple.clinic.patient
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
-import org.simple.clinic.util.TestUserClock
+import org.simple.sharedTestCode.util.TestUserClock
 import java.time.Instant
 import java.time.LocalDate
 
 class PatientAgeDetailsTest {
 
   @Test
-  fun `date of birth must be guessed from the age correctly`() {
-    val clock = TestUserClock()
-
-    // given
-    val `age recorded on the same day` = Age(
-        value = 30,
-        updatedAt = Instant.parse("2018-01-01T00:00:00Z")
-    )
-    val `age recorded a year earlier` = Age(
-        value = 30,
-        updatedAt = Instant.parse("2017-01-01T00:00:00Z")
-    )
-
-    // when
-    val `dob from age recorded on the same day` = PatientAgeDetails(`age recorded on the same day`.value, `age recorded on the same day`.updatedAt, null)
-    val `dob from age recorded a year earlier` = PatientAgeDetails(`age recorded a year earlier`.value, `age recorded a year earlier`.updatedAt, null)
-
-    // the
-    assertThat(`dob from age recorded on the same day`)
-        .isEqualTo(PatientAgeDetails(
-            ageValue = `dob from age recorded on the same day`.ageValue,
-            ageUpdatedAt = `dob from age recorded on the same day`.ageUpdatedAt,
-            dateOfBirth = null
-        ))
-    assertThat(`dob from age recorded a year earlier`)
-        .isEqualTo(PatientAgeDetails(
-            ageValue = `dob from age recorded a year earlier`.ageValue,
-            ageUpdatedAt = `dob from age recorded a year earlier`.ageUpdatedAt,
-            dateOfBirth = null
-        ))
-  }
-
-  @Test
   fun `the current age must be estimated from the DateOfBirth correctly`() {
     // given
-    val age = Age(value = 30, updatedAt = Instant.parse("2018-01-01T00:00:00Z"))
-
     fun estimateAgeAtDate(date: LocalDate): Int {
       val clock = TestUserClock(date)
-      return PatientAgeDetails(age.value, age.updatedAt, null).estimateAge(clock)
+      return PatientAgeDetails(
+          ageValue = 30,
+          ageUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+          dateOfBirth = null
+      ).estimateAge(clock)
     }
 
     // then
@@ -80,8 +49,11 @@ class PatientAgeDetailsTest {
     val currentTime = Instant.parse("2020-01-01T00:00:00Z")
     val clock = TestUserClock(currentTime)
 
-    val age = Age(value = 30, updatedAt = Instant.parse("2018-01-01T00:00:00Z"))
-    val dateOfBirth = PatientAgeDetails(age.value, age.updatedAt, null)
+    val dateOfBirth = PatientAgeDetails(
+        ageValue = 30,
+        ageUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        dateOfBirth = null
+    )
 
     // when
     val estimatedAge = dateOfBirth.estimateAge(clock)
@@ -115,8 +87,11 @@ class PatientAgeDetailsTest {
     val currentTime = Instant.parse("2020-01-01T00:00:00Z")
     val clock = TestUserClock(currentTime)
 
-    val age = Age(value = 30, updatedAt = Instant.parse("2018-01-01T00:00:00Z"))
-    val dateOfBirth = PatientAgeDetails(age.value, age.updatedAt, null)
+    val dateOfBirth = PatientAgeDetails(
+        ageValue = 30,
+        ageUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        dateOfBirth = null
+    )
 
     // when
     val estimatedDateOfBirth = dateOfBirth.approximateDateOfBirth(clock)

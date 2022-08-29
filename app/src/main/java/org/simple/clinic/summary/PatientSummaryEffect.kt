@@ -11,62 +11,79 @@ data class LoadPatientSummaryProfile(val patientUuid: UUID) : PatientSummaryEffe
 
 object LoadCurrentUserAndFacility : PatientSummaryEffect()
 
-data class HandleEditClick(
-    val patientSummaryProfile: PatientSummaryProfile,
-    val currentFacility: Facility
-) : PatientSummaryEffect()
-
-object GoBackToPreviousScreen : PatientSummaryEffect()
-
-object GoToHomeScreen : PatientSummaryEffect()
-
 data class CheckForInvalidPhone(val patientUuid: UUID) : PatientSummaryEffect()
 
 data class MarkReminderAsShown(val patientUuid: UUID) : PatientSummaryEffect()
-
-data class ShowAddPhonePopup(val patientUuid: UUID) : PatientSummaryEffect()
-
-data class ShowLinkIdWithPatientView(
-    val patientUuid: UUID,
-    val identifier: Identifier
-) : PatientSummaryEffect()
-
-data class ShowScheduleAppointmentSheet(
-    val patientUuid: UUID,
-    val sheetOpenedFrom: AppointmentSheetOpenedFrom,
-    val currentFacility: Facility
-) : PatientSummaryEffect()
 
 data class LoadDataForBackClick(
     val patientUuid: UUID,
     val screenCreatedTimestamp: Instant
 ) : PatientSummaryEffect()
 
-data class LoadDataForDoneClick(val patientUuid: UUID) : PatientSummaryEffect()
+data class LoadDataForDoneClick(
+    val patientUuid: UUID,
+    val screenCreatedTimestamp: Instant
+) : PatientSummaryEffect()
 
 data class TriggerSync(val sheetOpenedFrom: AppointmentSheetOpenedFrom) : PatientSummaryEffect()
 
-object ShowDiagnosisError : PatientSummaryEffect()
-
 data class FetchHasShownMissingPhoneReminder(val patientUuid: UUID) : PatientSummaryEffect()
 
-data class OpenContactPatientScreen(val patientUuid: UUID) : PatientSummaryEffect()
+object LoadMedicalOfficers : PatientSummaryEffect()
+
+data class LoadPatientRegistrationData(val patientUuid: UUID) : PatientSummaryEffect()
+
+data class LoadClinicalDecisionSupportInfo(val patientUuid: UUID) : PatientSummaryEffect()
+
+object CheckIfCDSSPilotIsEnabled : PatientSummaryEffect()
+
+data class LoadLatestScheduledAppointment(val patientUuid: UUID) : PatientSummaryEffect()
+
+sealed class PatientSummaryViewEffect : PatientSummaryEffect()
+
+data class HandleEditClick(
+    val patientSummaryProfile: PatientSummaryProfile,
+    val currentFacility: Facility
+) : PatientSummaryViewEffect()
+
+object GoBackToPreviousScreen : PatientSummaryViewEffect()
+
+object GoToHomeScreen : PatientSummaryViewEffect()
+
+data class ShowAddPhonePopup(val patientUuid: UUID) : PatientSummaryViewEffect()
+
+data class ShowUpdatePhonePopup(val patientUuid: UUID) : PatientSummaryViewEffect()
+
+data class ShowLinkIdWithPatientView(
+    val patientUuid: UUID,
+    val identifier: Identifier
+) : PatientSummaryViewEffect()
+
+data class ShowScheduleAppointmentSheet(
+    val patientUuid: UUID,
+    val sheetOpenedFrom: AppointmentSheetOpenedFrom,
+    val currentFacility: Facility
+) : PatientSummaryViewEffect()
+
+object ShowDiagnosisError : PatientSummaryViewEffect()
+
+data class OpenContactPatientScreen(val patientUuid: UUID) : PatientSummaryViewEffect()
 
 data class NavigateToTeleconsultRecordScreen(
     val patientUuid: UUID,
     val teleconsultRecordId: UUID
-) : PatientSummaryEffect()
+) : PatientSummaryViewEffect()
 
-object LoadMedicalOfficers : PatientSummaryEffect()
+data class OpenContactDoctorSheet(val patientUuid: UUID) : PatientSummaryViewEffect()
 
-data class OpenContactDoctorSheet(val patientUuid: UUID) : PatientSummaryEffect()
+object ShowAddMeasurementsWarningDialog : PatientSummaryViewEffect()
 
-object ShowAddMeasurementsWarningDialog : PatientSummaryEffect()
+object ShowAddBloodPressureWarningDialog : PatientSummaryViewEffect()
 
-object ShowAddBloodPressureWarningDialog : PatientSummaryEffect()
+object ShowAddBloodSugarWarningDialog : PatientSummaryViewEffect()
 
-object ShowAddBloodSugarWarningDialog : PatientSummaryEffect()
+object OpenSelectFacilitySheet : PatientSummaryViewEffect()
 
-object OpenSelectFacilitySheet : PatientSummaryEffect()
+data class DispatchNewAssignedFacility(val facility: Facility) : PatientSummaryViewEffect()
 
-data class DispatchNewAssignedFacility(val facility: Facility) : PatientSummaryEffect()
+object RefreshNextAppointment : PatientSummaryViewEffect()

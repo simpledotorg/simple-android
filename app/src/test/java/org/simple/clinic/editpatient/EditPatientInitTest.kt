@@ -5,7 +5,7 @@ import com.spotify.mobius.test.FirstMatchers.hasModel
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.util.UUID
@@ -18,19 +18,25 @@ class EditPatientInitTest {
   private val bangladeshNationalId = TestData.businessId(UUID.fromString("c9be5e5d-770c-4f37-a9de-2c304dfebfcd"))
   private val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
   private val initSpec = InitSpec(EditPatientInit(patient = patient,
-      address = patientAddress,
-      phoneNumber = patientPhoneNumber,
-      bangladeshNationalId = bangladeshNationalId,
       isVillageTypeAheadEnabled = true))
 
   @Test
   fun `when screen is created, then load initial data`() {
     val patientUuid = UUID.fromString("e40f42f4-0867-4891-ac77-95df5fe1fdef")
-    val defaultModel = EditPatientModel.from(patient, patientAddress, patientPhoneNumber, dateOfBirthFormat, bangladeshNationalId, EditPatientState.NOT_SAVING_PATIENT)
+    val defaultModel = EditPatientModel.from(
+      patient,
+      patientAddress,
+      patientPhoneNumber,
+      dateOfBirthFormat,
+      bangladeshNationalId,
+      EditPatientState.NOT_SAVING_PATIENT,
+      false,
+      false
+    )
 
     initSpec.whenInit(defaultModel).then(assertThatFirst(
         hasModel(defaultModel),
-        hasEffects(PrefillFormEffect(patient, patientAddress, patientPhoneNumber, bangladeshNationalId),
+        hasEffects(
             FetchBpPassportsEffect(patientUuid),
             LoadInputFields,
             FetchColonyOrVillagesEffect
@@ -41,16 +47,22 @@ class EditPatientInitTest {
   @Test
   fun `when screen is created and village type ahead is not enabled, then do not fetch colony or villages`() {
     val patientUuid = UUID.fromString("e40f42f4-0867-4891-ac77-95df5fe1fdef")
-    val defaultModel = EditPatientModel.from(patient, patientAddress, patientPhoneNumber, dateOfBirthFormat, bangladeshNationalId, EditPatientState.NOT_SAVING_PATIENT)
+    val defaultModel = EditPatientModel.from(
+      patient,
+      patientAddress,
+      patientPhoneNumber,
+      dateOfBirthFormat,
+      bangladeshNationalId,
+      EditPatientState.NOT_SAVING_PATIENT,
+      false,
+      false
+    )
     val initSpec = InitSpec(EditPatientInit(patient = patient,
-        address = patientAddress,
-        phoneNumber = patientPhoneNumber,
-        bangladeshNationalId = bangladeshNationalId,
         isVillageTypeAheadEnabled = false))
 
     initSpec.whenInit(defaultModel).then(assertThatFirst(
         hasModel(defaultModel),
-        hasEffects(PrefillFormEffect(patient, patientAddress, patientPhoneNumber, bangladeshNationalId),
+        hasEffects(
             FetchBpPassportsEffect(patientUuid),
             LoadInputFields
         )
@@ -61,11 +73,20 @@ class EditPatientInitTest {
   fun `when screen is restored, then don't fetch colony or villages`() {
     val colonyOrVillages = listOf("Colony1", "Colony2", "Colony3", "Colony4")
 
-    val updatedVillageOrColonyNamesModel = EditPatientModel.from(patient, patientAddress, patientPhoneNumber, dateOfBirthFormat, bangladeshNationalId, EditPatientState.NOT_SAVING_PATIENT).updateColonyOrVillagesList(colonyOrVillages)
+    val updatedVillageOrColonyNamesModel = EditPatientModel.from(
+      patient,
+      patientAddress,
+      patientPhoneNumber,
+      dateOfBirthFormat,
+      bangladeshNationalId,
+      EditPatientState.NOT_SAVING_PATIENT,
+      false,
+      false
+    ).updateColonyOrVillagesList(colonyOrVillages)
 
     initSpec.whenInit(updatedVillageOrColonyNamesModel).then(assertThatFirst(
         hasModel(updatedVillageOrColonyNamesModel),
-        hasEffects(PrefillFormEffect(patient, patientAddress, patientPhoneNumber, bangladeshNationalId),
+        hasEffects(
             FetchBpPassportsEffect(patientUuid),
             LoadInputFields
         )

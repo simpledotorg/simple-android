@@ -7,7 +7,7 @@ import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.TestData
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.appconfig.StatesResult
 import org.simple.clinic.appconfig.StatesResult.FetchError
@@ -90,6 +90,18 @@ class SelectStateEffectHandlerTest {
 
     // then
     verify(uiActions).goToRegistrationScreen()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when replace current screen to registration screen effect is received, then replace current screen with registration screen`() {
+    // when
+    testCase.dispatch(ReplaceCurrentScreenWithRegistrationScreen)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).replaceCurrentScreenToRegistrationScreen()
     verifyNoMoreInteractions(uiActions)
   }
 }

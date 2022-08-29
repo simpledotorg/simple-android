@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.contactpatient.RemoveAppointmentReason
 import java.util.UUID
 
@@ -14,7 +15,11 @@ class RemoveOverdueUiRendererTest {
 
   private val appointmentId = UUID.fromString("ce68996f-8b20-47b7-80c8-c0e6fdd5bda7")
   private val patientId = UUID.fromString("06b6f782-8298-4a0c-a0e9-bc30f5055991")
-  private val defaultModel = RemoveOverdueModel.create(appointmentId, patientId)
+  private val appointment = TestData.appointment(
+      uuid = appointmentId,
+      patientUuid = patientId
+  )
+  private val defaultModel = RemoveOverdueModel.create(appointment)
 
   @Test
   fun `when a cancel reason is not selected, then done button must be disabled`() {

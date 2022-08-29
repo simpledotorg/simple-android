@@ -14,6 +14,7 @@ import org.simple.clinic.drugs.search.DrugCategory
 import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
+import org.simple.clinic.home.overdue.OverdueAppointment_Old
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
@@ -24,7 +25,10 @@ import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientAddressFts
+import org.simple.clinic.patient.PatientFts
 import org.simple.clinic.patient.PatientPhoneNumber
+import org.simple.clinic.patient.PatientPhoneNumberFts
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.PatientStatus
@@ -32,6 +36,7 @@ import org.simple.clinic.patient.RecentPatient
 import org.simple.clinic.patient.ReminderConsent
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.businessid.BusinessId
+import org.simple.clinic.patient.businessid.BusinessIdFts
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.DatabaseOptimizationEvent
@@ -83,13 +88,16 @@ import org.simple.clinic.drugs.search.Answer as DrugAnswer
       TeleconsultationFacilityMedicalOfficersCrossRef::class,
       TeleconsultRecord::class,
       Drug::class,
-      CallResult::class
+      CallResult::class,
+      PatientFts::class,
+      PatientPhoneNumberFts::class,
+      BusinessIdFts::class,
+      PatientAddressFts::class
     ],
     views = [
-      OverdueAppointment::class,
       PatientSearchResult::class
     ],
-    version = 96,
+    version = 104,
     exportSchema = true
 )
 @TypeConverters(
@@ -142,7 +150,9 @@ abstract class AppDatabase : RoomDatabase() {
 
   abstract fun appointmentDao(): Appointment.RoomDao
 
-  abstract fun overdueAppointmentDao(): OverdueAppointment.RoomDao
+  abstract fun overdueAppointmentDao(): OverdueAppointment_Old.RoomDao
+
+  abstract fun overdueAppointmentNewDao(): OverdueAppointment.RoomDao
 
   abstract fun medicalHistoryDao(): MedicalHistory.RoomDao
 
@@ -188,6 +198,7 @@ abstract class AppDatabase : RoomDatabase() {
       teleconsultMedicalOfficersDao().clear()
       teleconsultFacilityWithMedicalOfficersDao().clear()
       teleconsultRecordDao().clear()
+      callResultDao().clear()
     }
   }
 
@@ -208,30 +219,31 @@ abstract class AppDatabase : RoomDatabase() {
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
   fun purge(now: Instant) {
     runInTransaction {
-      withPatientDao(now)
-      withBloodPressureDao()
-      withBloodSugarDao()
-      withAppointmentDao()
-      withMedicalHistoryDao()
-      withPrescriptionDao()
+      purgeUnnecessaryPatients(now)
+      purgeUnnecessaryBloodPressures()
+      purgeUnnecessaryBloodSugars()
+      purgeUnnecessaryAppointments()
+      purgeUnnecessaryMedicalHistories()
+      purgeUnnecessaryPrescriptions()
+      purgeUnnecessaryCallResults()
     }
   }
 
-  private fun withPrescriptionDao() {
+  private fun purgeUnnecessaryPrescriptions() {
     with(prescriptionDao()) {
       purgeDeleted()
       purgePrescribedDrugWhenPatientIsNull()
     }
   }
 
-  private fun withMedicalHistoryDao() {
+  private fun purgeUnnecessaryMedicalHistories() {
     with(medicalHistoryDao()) {
       purgeDeleted()
       purgeMedicalHistoryWhenPatientIsNull()
     }
   }
 
-  private fun withAppointmentDao() {
+  private fun purgeUnnecessaryAppointments() {
     with(appointmentDao()) {
       purgeDeleted()
       purgeUnusedAppointments()
@@ -239,27 +251,31 @@ abstract class AppDatabase : RoomDatabase() {
     }
   }
 
-  private fun withBloodSugarDao() {
+  private fun purgeUnnecessaryBloodSugars() {
     with(bloodSugarDao()) {
       purgeDeleted()
       purgeBloodSugarMeasurementWhenPatientIsNull()
     }
   }
 
-  private fun withBloodPressureDao() {
+  private fun purgeUnnecessaryBloodPressures() {
     with(bloodPressureDao()) {
       purgeDeleted()
       purgeBloodPressureMeasurementWhenPatientIsNull()
     }
   }
 
-  private fun withPatientDao(now: Instant) {
+  private fun purgeUnnecessaryPatients(now: Instant) {
     with(patientDao()) {
       purgeDeleted()
       purgeDeletedPhoneNumbers()
       purgeDeletedBusinessIds()
       purgePatientAfterRetentionTime(now)
     }
+  }
+
+  private fun purgeUnnecessaryCallResults() {
+    callResultDao().purgeDeleted()
   }
 
   private fun vacuumDatabase() {

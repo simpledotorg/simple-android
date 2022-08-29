@@ -36,3 +36,9 @@ data class OpenPatientSearch(
     val initialSearchQuery: String?,
     val patientPrefillInfo: PatientPrefillInfo?
 ) : ScanSimpleIdViewEffect()
+
+data class GoBackToEditPatientScreen(
+    val identifier: Identifier
+) : ScanSimpleIdViewEffect()
+
+data class ShowScannedQrCodeError(val scanErrorState: ScanErrorState) : ScanSimpleIdViewEffect()

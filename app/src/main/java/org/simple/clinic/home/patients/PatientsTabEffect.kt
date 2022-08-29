@@ -1,5 +1,6 @@
 package org.simple.clinic.home.patients
 
+import org.simple.clinic.appupdate.AppUpdateNudgePriority
 import org.simple.clinic.patient.businessid.Identifier
 
 sealed class PatientsTabEffect
@@ -18,6 +19,18 @@ object LoadInfoForShowingAppUpdateMessage : PatientsTabEffect()
 
 object TouchAppUpdateShownAtTime : PatientsTabEffect()
 
+object LoadAppStaleness : PatientsTabEffect()
+
+object ScheduleAppUpdateNotification : PatientsTabEffect()
+
+data class LoadDrugStockReportStatus(val date: String) : PatientsTabEffect()
+
+object LoadInfoForShowingDrugStockReminder : PatientsTabEffect()
+
+object TouchDrugStockReportLastCheckedAt : PatientsTabEffect()
+
+data class TouchIsDrugStockReportFilled(val isDrugStockReportFilled: Boolean) : PatientsTabEffect()
+
 sealed class PatientsTabViewEffect : PatientsTabEffect()
 
 object OpenEnterOtpScreen : PatientsTabViewEffect()
@@ -33,3 +46,11 @@ object OpenScanBpPassportScreen : PatientsTabViewEffect()
 object OpenTrainingVideo : PatientsTabViewEffect()
 
 object ShowAppUpdateAvailable : PatientsTabViewEffect()
+
+object OpenSimpleOnPlayStore : PatientsTabViewEffect()
+
+data class ShowCriticalAppUpdateDialog(val appUpdateNudgePriority: AppUpdateNudgePriority) : PatientsTabViewEffect()
+
+object OpenEnterDrugStockScreen : PatientsTabViewEffect()
+
+object ShowNoActiveNetworkConnectionDialog : PatientsTabViewEffect()

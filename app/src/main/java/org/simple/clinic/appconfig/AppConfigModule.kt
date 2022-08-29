@@ -7,7 +7,11 @@ import dagger.Module
 import dagger.Provides
 import org.simple.clinic.appconfig.api.ManifestFetchApi
 import org.simple.clinic.appconfig.displayname.CountryDisplayNameFetcherModule
+import org.simple.clinic.main.TypedPreference
+import org.simple.clinic.main.TypedPreference.Type.CountryV1
+import org.simple.clinic.main.TypedPreference.Type.SelectedState
 import org.simple.clinic.util.preference.MoshiObjectPreferenceConverter
+import org.simple.clinic.util.preference.StringPreferenceConverter
 import org.simple.clinic.util.preference.getOptional
 import retrofit2.Retrofit
 import java.util.Optional
@@ -39,12 +43,19 @@ class AppConfigModule {
     return rxSharedPreferences.getOptional("preference_selected_deployment_v1", deploymentPreferenceConverter)
   }
 
+  @TypedPreference(SelectedState)
   @Provides
   fun providesSelectedState(
-      rxSharedPreferences: RxSharedPreferences,
-      moshi: Moshi
+      rxSharedPreferences: RxSharedPreferences
   ): Preference<Optional<String>> {
-    val statePreferenceConverter = MoshiObjectPreferenceConverter(moshi, String::class.java)
-    return rxSharedPreferences.getOptional("preference_selected_state_v1", statePreferenceConverter, Optional.empty())
+    return rxSharedPreferences.getOptional("preference_selected_state_v1", StringPreferenceConverter())
+  }
+
+  @TypedPreference(CountryV1)
+  @Provides
+  fun provideCountryV1Preference(
+      rxSharedPreferences: RxSharedPreferences
+  ): Preference<Optional<String>> {
+    return rxSharedPreferences.getOptional("preference_selected_country_v1", StringPreferenceConverter())
   }
 }

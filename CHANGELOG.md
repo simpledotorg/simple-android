@@ -7,6 +7,7 @@
 - Bump flipper to v0.161.0
 - Bump mixpanel to v7.0.0
 - Bump mlkit barcode scanning to v18.1.0
+- Bump datadog plugin to v1.5.0
 
 ### Fixes
 

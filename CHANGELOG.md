@@ -11,8 +11,13 @@
 
 ### Fixes
 
-- Fix app crashing when patient summary add phone number dialog is shown
 - Fix hypertension treatment question showing Sri Lanka translation in India
+
+## 2022-08-25-8383
+
+### Fixes
+
+- Fix app crashing when patient summary add phone number dialog is shown
 
 ## 2022-08-23-8378
 

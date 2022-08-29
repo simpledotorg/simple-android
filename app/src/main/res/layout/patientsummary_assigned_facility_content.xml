@@ -3,19 +3,48 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:layout_height="wrap_content"
-  android:padding="@dimen/spacing_16">
+  android:layout_height="wrap_content">
+
+  <androidx.constraintlayout.widget.Guideline
+    android:id="@+id/startGuideline"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:layout_constraintGuide_begin="@dimen/spacing_16" />
+
+  <androidx.constraintlayout.widget.Guideline
+    android:id="@+id/topGuideline"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:layout_constraintGuide_begin="@dimen/spacing_16" />
+
+  <androidx.constraintlayout.widget.Guideline
+    android:id="@+id/endGuideline"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:layout_constraintGuide_end="@dimen/spacing_16" />
+
+  <androidx.constraintlayout.widget.Guideline
+    android:id="@+id/bottomGuideline"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:layout_constraintGuide_end="@dimen/spacing_16" />
 
   <TextView
     android:id="@+id/assignedFacilityTitleTextView"
-    android:layout_width="wrap_content"
+    android:layout_width="@dimen/spacing_0"
     android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/spacing_8"
     android:text="@string/assigned_facility_view_title"
     android:textAppearance="?attr/textAppearanceSubtitle1Medium"
     android:textColor="?attr/colorOnSurface"
-    app:layout_constraintBottom_toBottomOf="@id/changeAssignedFacilityButton"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="@id/changeAssignedFacilityButton" />
+    app:layout_constraintBottom_toTopOf="@id/assignedFacilityTextView"
+    app:layout_constraintEnd_toStartOf="@id/changeAssignedFacilityButton"
+    app:layout_constraintStart_toEndOf="@id/startGuideline"
+    app:layout_constraintTop_toBottomOf="@id/topGuideline" />
 
   <TextView
     android:id="@+id/assignedFacilityTextView"
@@ -24,9 +53,9 @@
     android:layout_marginTop="@dimen/spacing_8"
     android:textAppearance="?attr/textAppearanceBody1"
     android:textColor="?attr/colorOnSurface"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="@id/assignedFacilityTitleTextView"
+    app:layout_constraintBottom_toTopOf="@id/bottomGuideline"
+    app:layout_constraintEnd_toStartOf="@id/endGuideline"
+    app:layout_constraintStart_toEndOf="@id/startGuideline"
     app:layout_constraintTop_toBottomOf="@id/assignedFacilityTitleTextView"
     tools:text="CHC Obvious" />
 
@@ -35,9 +64,11 @@
     style="?attr/borderlessButtonDenseStyle"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/spacing_4"
     android:text="@string/assigned_facility_view_change"
-    android:textAlignment="textEnd"
+    app:layout_constraintBottom_toBottomOf="@id/assignedFacilityTitleTextView"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    app:layout_constraintStart_toEndOf="@id/assignedFacilityTitleTextView"
+    app:layout_constraintTop_toTopOf="@id/assignedFacilityTitleTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

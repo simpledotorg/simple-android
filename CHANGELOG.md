@@ -1719,4 +1719,3 @@
 
 - Fix: crash if multiple histories are present for the same patient
 - Fix: crash if empty systolic or diastolic blood pressure value is submitted
-- Use heroku 20 on review apps

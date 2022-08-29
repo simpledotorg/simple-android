@@ -10,20 +10,12 @@ import org.simple.clinic.R
 import org.simple.clinic.di.injector
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.user.UserSession
 import javax.inject.Inject
 
 class ConfirmResetPinDialog : AppCompatDialogFragment() {
 
   @Inject
-  lateinit var userSession: UserSession
-
-  @Inject
   lateinit var router: Router
-
-  @Inject
-  lateinit var patientRepository: PatientRepository
 
   companion object {
     fun show(fragmentManager: FragmentManager) {

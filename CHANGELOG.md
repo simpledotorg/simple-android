@@ -9,6 +9,7 @@
 - Bump mlkit barcode scanning to v18.1.0
 - Bump datadog plugin to v1.5.0
 - Use heroku 20 on review apps
+- Remove unnecessary dependencies from `ConfirmResetPinDialog`
 
 ### Fixes
 

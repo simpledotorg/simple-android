@@ -27,6 +27,7 @@ if [ $serverAppAlreadyExists = false ]; then
   pip3 install requests
   $androidAppDirectory/.github/scripts/server_heroku_env_setup.py $serverAppDirectory/app.json $herokuAppName $herokuApiKey "$decodedHerokuEnvProperties"
 
+  heroku stack:set --app=$herokuAppName heroku-20
   heroku addons:create --app=$herokuAppName --wait --name="${herokuAppName}-redis" heroku-redis:hobby-dev
   heroku addons:create --app=$herokuAppName --wait --name="${herokuAppName}-postgres" heroku-postgresql:hobby-dev
   heroku buildpacks:add --index 1 --app=$herokuAppName heroku/nodejs

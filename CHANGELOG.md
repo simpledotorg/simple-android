@@ -9,6 +9,8 @@
 - Use heroku 20 on review apps
 - Remove unnecessary dependencies from `ConfirmResetPinDialog`
 - Bump flipper to v0.162.0
+- Bump Sentry to v6.4.1
+- Bump Sentry plugin to v3.1.5
 
 ### Fixes
 

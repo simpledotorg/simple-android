@@ -6,6 +6,10 @@
 
 - Bump firebase remote config to v21.1.2
 
+### Fixes
+
+- Fix overdue count in the app not matching with the count from the dashboard
+
 ## 2022-08-30-8400
 
 ### Internal

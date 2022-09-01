@@ -90,8 +90,7 @@ data class OverdueAppointment(
         SELECT * FROM Appointment 
         WHERE 
           (patientUuid IN ( SELECT uuid FROM Patient WHERE assignedFacilityId = :facilityUuid ) OR facilityUuid = :facilityUuid) AND
-          deletedAt IS NULL AND 
-          (status = 'scheduled' OR status = 'cancelled') 
+          deletedAt IS NULL
         GROUP BY patientUuid HAVING MAX(createdAt)
       ) A ON A.patientUuid = P.uuid
 
@@ -130,7 +129,8 @@ data class OverdueAppointment(
       $OVERDUE_APPOINTMENTS_QUERY 
       WHERE
         IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid AND
-        appt_scheduledDate < :scheduledBefore
+        appt_scheduledDate < :scheduledBefore AND
+        appt_status != "visited"
       GROUP BY appt_patientUuid
       ORDER BY 
         isAtHighRisk DESC, 
@@ -150,7 +150,8 @@ data class OverdueAppointment(
           P.addressUuid IN (SELECT uuid FROM PatientAddressFts WHERE colonyOrVillage MATCH :query)
         ) AND
         IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid AND
-        appt_scheduledDate < :scheduledBefore
+        appt_scheduledDate < :scheduledBefore AND
+        appt_status != "visited"
       GROUP BY appt_patientUuid
       ORDER BY fullName COLLATE NOCASE
     """)
@@ -168,7 +169,8 @@ data class OverdueAppointment(
           P.addressUuid IN (SELECT uuid FROM PatientAddressFts WHERE colonyOrVillage MATCH :query)
         ) AND
         IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid AND
-        appt_scheduledDate < :scheduledBefore
+        appt_scheduledDate < :scheduledBefore AND
+        appt_status != "visited"
       GROUP BY appt_patientUuid
       ORDER BY fullName COLLATE NOCASE
     """)

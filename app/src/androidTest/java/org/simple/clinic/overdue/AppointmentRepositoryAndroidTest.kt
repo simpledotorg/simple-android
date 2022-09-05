@@ -2595,6 +2595,145 @@ class AppointmentRepositoryAndroidTest {
     ))
   }
 
+  @Test
+  fun when_fetching_overdue_appointments_only_latest_appointments_that_are_not_visited_should_be_considered() {
+    fun createOverdueAppointment(
+        appointmentUuid: UUID,
+        patientUuid: UUID,
+        scheduledDate: LocalDate,
+        remindOn: LocalDate?,
+        facilityUuid: UUID,
+        patientAssignedFacilityUuid: UUID?,
+        patientStatus: PatientStatus,
+        appointmentStatus: Status,
+        callResult: CallResult?,
+        appointmentCreatedAt: Instant
+    ) {
+      val patientProfile = TestData.patientProfile(
+          patientUuid = patientUuid,
+          generatePhoneNumber = true,
+          patientAssignedFacilityId = patientAssignedFacilityUuid,
+          patientStatus = patientStatus
+      )
+      patientRepository.save(listOf(patientProfile))
+
+      val bp = TestData.bloodPressureMeasurement(
+          patientUuid = patientUuid,
+          facilityUuid = facilityUuid,
+          systolic = 120,
+          diastolic = 80
+      )
+      bpRepository.save(listOf(bp))
+
+      val bloodSugar = TestData.bloodSugarMeasurement(
+          patientUuid = patientUuid,
+          facilityUuid = facilityUuid,
+          reading = BloodSugarReading.fromMg("100", Random)
+      )
+      bloodSugarRepository.save(listOf(bloodSugar))
+
+      val appointment = TestData.appointment(
+          uuid = appointmentUuid,
+          patientUuid = patientUuid,
+          facilityUuid = facilityUuid,
+          scheduledDate = scheduledDate,
+          status = appointmentStatus,
+          cancelReason = null,
+          remindOn = remindOn,
+          createdAt = appointmentCreatedAt
+      )
+      appointmentRepository.save(listOf(appointment))
+
+      if (callResult != null) {
+        callResultRepository.save(listOf(TestData.callResult(
+            appointmentId = appointmentUuid,
+            outcome = callResult.outcome,
+            removeReason = callResult.removeReason
+        )))
+      }
+    }
+
+    //given
+    val patientOne = UUID.fromString("ba25f40c-5d9c-4163-a834-0305f841a978")
+    val patientTwo = UUID.fromString("9d447143-6acc-4475-a2a7-9a60e9f39271")
+
+    val now = LocalDate.now(clock)
+    val facilityUuid = UUID.fromString("08f0d831-3d27-4e99-9404-b9d982ab3541")
+    val facility = TestData.facility(uuid = facilityUuid, name = "PHC Obvious")
+
+    facilityRepository.save(listOf(facility))
+
+    createOverdueAppointment(
+        appointmentUuid = UUID.fromString("40db60d8-855b-40c4-915b-c515d50a5894"),
+        patientUuid = patientOne,
+        scheduledDate = now.minusMonths(1),
+        remindOn = null,
+        facilityUuid = facilityUuid,
+        patientAssignedFacilityUuid = facilityUuid,
+        patientStatus = Active,
+        appointmentStatus = Visited,
+        callResult = null,
+        appointmentCreatedAt = Instant.parse("2017-11-12T00:00:00Z")
+    )
+    createOverdueAppointment(
+        appointmentUuid = UUID.fromString("51197cc5-6a10-4607-b782-036ff8810647"),
+        patientUuid = patientOne,
+        scheduledDate = now.minusDays(2),
+        remindOn = null,
+        facilityUuid = facilityUuid,
+        patientAssignedFacilityUuid = null,
+        patientStatus = Active,
+        appointmentStatus = Scheduled,
+        callResult = null,
+        appointmentCreatedAt = Instant.parse("2017-12-12T00:00:00Z")
+    )
+    createOverdueAppointment(
+        appointmentUuid = UUID.fromString("1146fa98-73e4-46ea-b6a5-34feed863952"),
+        patientUuid = patientTwo,
+        scheduledDate = now.minusMonths(3),
+        remindOn = null,
+        facilityUuid = facilityUuid,
+        patientAssignedFacilityUuid = facilityUuid,
+        patientStatus = Active,
+        appointmentStatus = Visited,
+        callResult = null,
+        appointmentCreatedAt = Instant.parse("2017-10-12T00:00:00Z")
+    )
+    createOverdueAppointment(
+        appointmentUuid = UUID.fromString("7bd6fee8-dc21-47c7-b6b2-5c648c75ca8f"),
+        patientUuid = patientTwo,
+        scheduledDate = now.minusMonths(2),
+        remindOn = null,
+        facilityUuid = facilityUuid,
+        patientAssignedFacilityUuid = facilityUuid,
+        patientStatus = Active,
+        appointmentStatus = Scheduled,
+        callResult = null,
+        appointmentCreatedAt = Instant.parse("2017-11-12T00:00:00Z")
+    )
+    createOverdueAppointment(
+        appointmentUuid = UUID.fromString("be7747c8-e966-460e-bc0c-b9b841e020e7"),
+        patientUuid = patientTwo,
+        scheduledDate = now.minusDays(10),
+        remindOn = null,
+        facilityUuid = facilityUuid,
+        patientAssignedFacilityUuid = facilityUuid,
+        patientStatus = Active,
+        appointmentStatus = Visited,
+        callResult = null,
+        appointmentCreatedAt = Instant.parse("2017-12-12T00:00:00Z")
+    )
+
+    //when
+    val overdueAppointments = appointmentRepository.overdueAppointmentsInFacilityNew(
+        since = now,
+        facilityId = facilityUuid
+    ).blockingFirst().map { it.appointment.patientUuid }
+
+    //then
+    assertThat(overdueAppointments).isEqualTo(listOf(patientOne))
+  }
+
   @Suppress("LocalVariableName")
   @Test
   fun fetching_the_latest_overdue_appointment_for_a_patient_should_account_for_cancelled_appointments() {

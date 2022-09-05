@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Next Release
+
+### Internal
+
+- Bump firebase remote config to v21.1.2
+
 ## 2022-08-30-8400
 
 ### Internal

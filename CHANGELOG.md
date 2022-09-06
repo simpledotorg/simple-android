@@ -8,6 +8,7 @@
 - Bump Google play services auth to v20.3.0
 - Bump datadog gradle plugin to v1.5.1
 - Bump Open CSV to v5.7.0
+- Bump Jackson to v2.13.4
 
 ### Fixes
 

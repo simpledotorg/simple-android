@@ -5,6 +5,7 @@
 ### Internal
 
 - Bump firebase remote config to v21.1.2
+- Bump Google play services auth to v20.3.0
 
 ### Fixes
 

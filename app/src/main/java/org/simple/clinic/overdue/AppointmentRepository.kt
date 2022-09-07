@@ -160,6 +160,17 @@ class AppointmentRepository @Inject constructor(
     )
   }
 
+  fun remindToCallLaterOverdueAppointmentsInFacility(
+      since: LocalDate,
+      facilityId: UUID
+  ): PagingSource<Int, OverdueAppointment> {
+    return overdueDao.remindToCallLaterOverdueAppointmentsInFacility(
+        facilityUuid = facilityId,
+        scheduledAfter = since.minus(appointmentConfig.periodForIncludingOverdueAppointments),
+        scheduledBefore = since
+    )
+  }
+
   fun searchOverduePatient(
       searchInputs: List<String>,
       since: LocalDate,

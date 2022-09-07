@@ -20,6 +20,11 @@ data class LoadOverdueAppointments(
     val facility: Facility
 ) : OverdueEffect()
 
+data class LoadOverdueSections(
+    val overdueSince: LocalDate,
+    val facility: Facility
+) : OverdueEffect()
+
 data class ScheduleDownload(val fileFormat: OverdueListFileFormat) : OverdueEffect()
 
 data class ToggleOverdueAppointmentSelection(val appointmentId: UUID) : OverdueEffect()

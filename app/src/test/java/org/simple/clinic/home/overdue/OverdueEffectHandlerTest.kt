@@ -373,4 +373,63 @@ class OverdueEffectHandlerTest {
 
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when load overdue sections effect is received, then load overdue sections`() {
+    // given
+    val effectHandler = OverdueEffectHandler(
+        schedulers = TestSchedulersProvider.trampoline(),
+        appointmentRepository = appointmentRepository,
+        currentFacilityStream = Observable.just(facility),
+        pagerFactory = pagerFactory,
+        overdueAppointmentsConfig = overdueAppointmentsConfig,
+        overdueDownloadScheduler = overdueDownloadScheduler,
+        userClock = TestUserClock(Instant.parse("2018-03-01T00:00:00Z")),
+        overdueAppointmentSelector = overdueAppointmentSelector,
+        viewEffectsConsumer = viewEffectHandler::handle
+    ).build()
+    val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
+
+    val overdueAppointment = TestData.overdueAppointment(
+        name = "Overdue Appointment",
+        appointment = TestData.appointment(
+            uuid = UUID.fromString("4c17335f-4e42-44c7-ae0c-d1ce200a2157"),
+            facilityUuid = facility.uuid,
+            scheduledDate = LocalDate.parse("2018-04-01"),
+            createdAt = Instant.parse("2018-01-01T00:00:00Z"),
+            updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+            deletedAt = null
+        )
+    )
+    val overdueAppointments = PagingData.from(listOf(overdueAppointment))
+
+    // Since it's currently not possible to have specific paging source factory mocks for different
+    // overdue appointments types. We are just mocking a single pager factory and return the same overdue appointment
+    // for all overdue appointment types.
+    whenever(pagerFactory.createPager(
+        sourceFactory = any<PagingSourceFactory<Int, OverdueAppointment>>(),
+        pageSize = eq(overdueAppointmentsConfig.overdueAppointmentsLoadSize),
+        enablePlaceholders = eq(true),
+        initialKey = eq(null),
+        cacheScope = eq(null)
+    )) doReturn Observable.just(overdueAppointments)
+
+    // when
+    effectHandlerTestCase.dispatch(LoadOverdueSections(
+        overdueSince = LocalDate.parse("2018-04-03"),
+        facility = facility
+    ))
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(OverdueSectionsLoaded(
+        pendingAppointments = overdueAppointments,
+        agreedToVisitAppointments = overdueAppointments,
+        remindToCallLaterAppointments = overdueAppointments,
+        removedOverdueAppointments = overdueAppointments,
+        moreThanAnYearOverdueAppointments = overdueAppointments
+    ))
+    effectHandlerTestCase.dispose()
+
+    verifyZeroInteractions(uiActions)
+  }
 }

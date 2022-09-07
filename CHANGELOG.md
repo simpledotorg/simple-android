@@ -11,6 +11,7 @@
 - Bump Jackson to v2.13.4
 - Bump mixpanel to v7.0.1
 - Add query for getting pending appointments as a paging source
+- Add query for getting agreed to visit appointments as a paging source
 
 ### Fixes
 

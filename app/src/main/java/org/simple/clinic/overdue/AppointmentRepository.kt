@@ -182,6 +182,16 @@ class AppointmentRepository @Inject constructor(
     )
   }
 
+  fun moreThanAnYearOverduePatientInFacility(
+      since: LocalDate,
+      facilityId: UUID
+  ): PagingSource<Int, OverdueAppointment> {
+    return overdueDao.moreThanAnYearOverduePatientInFacility(
+        facilityUuid = facilityId,
+        scheduledBefore = since.minus(appointmentConfig.periodForIncludingOverdueAppointments)
+    )
+  }
+
   fun searchOverduePatient(
       searchInputs: List<String>,
       since: LocalDate,

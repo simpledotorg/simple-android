@@ -265,8 +265,7 @@ class AppointmentRepository @Inject constructor(
     return appointmentDao
         .hasAppointmentForPatientChangedSince(
             patientUuid = patientUuid,
-            instantToCompare = timestamp,
-            pendingStatus = PENDING
+            instantToCompare = timestamp
         )
   }
 

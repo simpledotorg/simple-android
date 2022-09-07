@@ -348,10 +348,9 @@ data class Appointment(
         WHERE 
         updatedAt > :instantToCompare AND
         status = 'scheduled' AND 
-        syncStatus = :pendingStatus AND 
         patientUuid = :patientUuid
     """)
-    fun hasAppointmentForPatientChangedSince(patientUuid: UUID, instantToCompare: Instant, pendingStatus: SyncStatus): Boolean
+    fun hasAppointmentForPatientChangedSince(patientUuid: UUID, instantToCompare: Instant): Boolean
 
     @Query("""
       SELECT * FROM Appointment

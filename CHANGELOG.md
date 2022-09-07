@@ -12,6 +12,7 @@
 - Bump mixpanel to v7.0.1
 - Add query for getting pending appointments as a paging source
 - Add query for getting agreed to visit appointments as a paging source
+- Add query for getting remind to call later appointments as a paging source
 
 ### Fixes
 

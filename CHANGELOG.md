@@ -10,12 +10,14 @@
 - Bump Open CSV to v5.7.0
 - Bump Jackson to v2.13.4
 - Bump mixpanel to v7.0.1
+- Add query for getting pending appointments as a paging source
 
 ### Fixes
 
 - Fix overdue count in the app not matching with the count from the dashboard
 - Fix appointment sheet showing after follow-up visit is added
 - Fix ID search not working from scan screen
+- [In Progress: 07-Sep-2022] Fix app crashing when loading overdue appointments
 
 ## 2022-08-30-8400
 

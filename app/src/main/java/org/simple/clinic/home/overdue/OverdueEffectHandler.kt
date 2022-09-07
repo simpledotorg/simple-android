@@ -1,5 +1,6 @@
 package org.simple.clinic.home.overdue
 
+import androidx.paging.PagingData
 import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
@@ -49,7 +50,97 @@ class OverdueEffectHandler @AssistedInject constructor(
         .addConsumer(ToggleOverdueAppointmentSelection::class.java, ::toggleOverdueAppointmentSelection, schedulers.io())
         .addTransformer(LoadSelectedOverdueAppointmentIds::class.java, loadSelectedOverdueAppointmentIds())
         .addConsumer(ClearSelectedOverdueAppointments::class.java, ::clearSelectedOverdueAppointments)
+        .addTransformer(LoadOverdueSections::class.java, loadOverdueSections())
         .build()
+  }
+
+  private fun loadOverdueSections(): ObservableTransformer<LoadOverdueSections, OverdueEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .switchMap { effect ->
+            Observable.zip(
+                loadPendingOverdueAppointments(effect).subscribeOn(schedulers.io()),
+                loadAgreedToVisitOverdueAppointments(effect).subscribeOn(schedulers.io()),
+                loadRemindToCallLaterAppointments(effect).subscribeOn(schedulers.io()),
+                loadRemovedOverdueAppointments(effect).subscribeOn(schedulers.io()),
+                loadMoreThanAnYearOverdueAppointments(effect).subscribeOn(schedulers.io())
+            ) { pendingAppointments, agreedToVisitAppointments, remindToCallLaterAppointments, removedOverdueAppointments,
+                moreThanAnYearOverdueAppointments ->
+              OverdueSectionsLoaded(
+                  pendingAppointments = pendingAppointments,
+                  agreedToVisitAppointments = agreedToVisitAppointments,
+                  remindToCallLaterAppointments = remindToCallLaterAppointments,
+                  removedOverdueAppointments = removedOverdueAppointments,
+                  moreThanAnYearOverdueAppointments = moreThanAnYearOverdueAppointments
+              )
+            }
+          }
+    }
+  }
+
+  private fun loadPendingOverdueAppointments(effect: LoadOverdueSections): Observable<PagingData<OverdueAppointment>> {
+    return pagerFactory.createPager(
+        sourceFactory = {
+          appointmentRepository.pendingOverdueAppointmentsInFacility(
+              since = effect.overdueSince,
+              facilityId = effect.facility.uuid
+          )
+        },
+        pageSize = overdueAppointmentsConfig.overdueAppointmentsLoadSize,
+        enablePlaceholders = true
+    )
+  }
+
+  private fun loadAgreedToVisitOverdueAppointments(effect: LoadOverdueSections): Observable<PagingData<OverdueAppointment>> {
+    return pagerFactory.createPager(
+        sourceFactory = {
+          appointmentRepository.agreedToVisitOverdueAppointmentsInFacility(
+              since = effect.overdueSince,
+              facilityId = effect.facility.uuid
+          )
+        },
+        pageSize = overdueAppointmentsConfig.overdueAppointmentsLoadSize,
+        enablePlaceholders = true
+    )
+  }
+
+  private fun loadRemindToCallLaterAppointments(effect: LoadOverdueSections): Observable<PagingData<OverdueAppointment>> {
+    return pagerFactory.createPager(
+        sourceFactory = {
+          appointmentRepository.remindToCallLaterOverdueAppointmentsInFacility(
+              since = effect.overdueSince,
+              facilityId = effect.facility.uuid
+          )
+        },
+        pageSize = overdueAppointmentsConfig.overdueAppointmentsLoadSize,
+        enablePlaceholders = true
+    )
+  }
+
+  private fun loadRemovedOverdueAppointments(effect: LoadOverdueSections): Observable<PagingData<OverdueAppointment>> {
+    return pagerFactory.createPager(
+        sourceFactory = {
+          appointmentRepository.removedOverdueAppointmentsInFacility(
+              since = effect.overdueSince,
+              facilityId = effect.facility.uuid
+          )
+        },
+        pageSize = overdueAppointmentsConfig.overdueAppointmentsLoadSize,
+        enablePlaceholders = true
+    )
+  }
+
+  private fun loadMoreThanAnYearOverdueAppointments(effect: LoadOverdueSections): Observable<PagingData<OverdueAppointment>> {
+    return pagerFactory.createPager(
+        sourceFactory = {
+          appointmentRepository.moreThanAnYearOverduePatientInFacility(
+              since = effect.overdueSince,
+              facilityId = effect.facility.uuid
+          )
+        },
+        pageSize = overdueAppointmentsConfig.overdueAppointmentsLoadSize,
+        enablePlaceholders = true
+    )
   }
 
   private fun clearSelectedOverdueAppointments(effect: ClearSelectedOverdueAppointments) {

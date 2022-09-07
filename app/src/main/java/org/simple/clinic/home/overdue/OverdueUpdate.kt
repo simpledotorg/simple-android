@@ -1,6 +1,7 @@
 package org.simple.clinic.home.overdue
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.AGREED_TO_VISIT
 import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.MORE_THAN_A_YEAR_OVERDUE
@@ -35,6 +36,7 @@ class OverdueUpdate(
       is OverdueAppointmentCheckBoxClicked -> dispatch(ToggleOverdueAppointmentSelection(event.appointmentId))
       ClearSelectedOverdueAppointmentsClicked -> dispatch(ClearSelectedOverdueAppointments)
       is SelectedOverdueAppointmentsLoaded -> next(model.selectedOverdueAppointmentsChanged(event.selectedAppointmentIds))
+      is OverdueSectionsLoaded -> noChange()
     }
   }
 

@@ -11,6 +11,7 @@
 - Add query for getting agreed to visit appointments as a paging source
 - Add query for getting remind to call later appointments as a paging source
 - Add query for getting removed overdue appointments as a paging source
+- Add query for getting more than a year overdue appointments as a paging source
 
 ### Fixes
 

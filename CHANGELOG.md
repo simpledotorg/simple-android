@@ -7,10 +7,12 @@
 - Bump firebase remote config to v21.1.2
 - Bump Google play services auth to v20.3.0
 - Bump datadog gradle plugin to v1.5.1
+- Add query for getting pending appointments as a paging source
 
 ### Fixes
 
 - Fix overdue count in the app not matching with the count from the dashboard
+- [In Progress: 07-Sep-2022] Fix app crashing when loading overdue appointments
 
 ## 2022-08-30-8400
 

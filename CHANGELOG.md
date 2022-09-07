@@ -16,6 +16,7 @@
 - Add query for getting removed overdue appointments as a paging source
 - Add query for getting more than a year overdue appointments as a paging source
 - Add effect to load overdue sections
+- Load overdue sections when screen is created
 
 ### Fixes
 

@@ -113,7 +113,7 @@ class OverdueUpdate(
   private fun currentFacilityLoaded(model: OverdueModel, event: CurrentFacilityLoaded): Next<OverdueModel, OverdueEffect> {
     val facilityLoadedModel = model.currentFacilityLoaded(event.facility)
     return if (isOverdueSectionsFeatureEnabled) {
-      next(facilityLoadedModel, LoadOverdueAppointments(date, event.facility))
+      next(facilityLoadedModel, LoadOverdueAppointments(date, event.facility), LoadOverdueSections(date, event.facility))
     } else {
       next(facilityLoadedModel, LoadOverdueAppointments_old(date, event.facility))
     }

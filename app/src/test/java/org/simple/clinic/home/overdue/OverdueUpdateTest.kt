@@ -363,4 +363,29 @@ class OverdueUpdateTest {
             hasEffects(ToggleOverdueAppointmentSelection(appointmentId))
         ))
   }
+
+  @Test
+  fun `when current facility is loaded and overdue sections feature is enabled, then load overdue sections`() {
+    val facility = TestData.facility(
+        uuid = UUID.fromString("6d66fda7-7ca6-4431-ac3b-b570f1123624"),
+        facilityConfig = FacilityConfig(
+            diabetesManagementEnabled = true,
+            teleconsultationEnabled = false
+        )
+    )
+
+    val updateSpec = UpdateSpec(OverdueUpdate(
+        date = dateOnClock,
+        canGeneratePdf = true,
+        isOverdueSectionsFeatureEnabled = true
+    ))
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(CurrentFacilityLoaded(facility))
+        .then(assertThatNext(
+            hasModel(defaultModel.currentFacilityLoaded(facility)),
+            hasEffects(LoadOverdueSections(dateOnClock, facility))
+        ))
+  }
 }

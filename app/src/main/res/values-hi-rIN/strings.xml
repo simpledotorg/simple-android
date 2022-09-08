@@ -277,8 +277,7 @@
     <item quantity="other">%s दिन अधिक हो गए हैं</item>
   </plurals>
   <string name="overdue_list_item_village">गांव</string>
-  <string name="overduelist_high_risk">उच्च जोखिम</string>
-  <string name="overdue_download">डाउनलोड</string>
+    <string name="overdue_download">डाउनलोड</string>
   <string name="overdue_share">साझा करें</string>
   <string name="overdue_no_pending_patients">कोई मरीज शेष नहीं</string>
   <string name="overdue_pending_list_button_see_all">सभी देखें</string>

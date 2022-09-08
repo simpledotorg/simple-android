@@ -277,8 +277,7 @@
     <item quantity="other">%s Techo barira chala  keshinohu</item>
   </plurals>
   <string name="overdue_list_item_village">Qacha</string>
-  <string name="overduelist_high_risk">Lowo/ jawa  qara</string>
-  <string name="overdue_download">Dirisi</string>
+    <string name="overdue_download">Dirisi</string>
   <string name="overdue_share">Behhi</string>
   <string name="overdue_no_pending_patients">Lexxitanni no xiwamaano dino</string>
   <string name="overdue_pending_list_button_see_all">Womanika la’i</string>

@@ -35,12 +35,12 @@ class OverdueSearchUpdateTest {
     val facilityUuid = UUID.fromString("7dba16a0-1090-41f6-8e0c-0d97989de898")
     val overdueAppointments = listOf(TestData.overdueAppointment(
         facilityUuid = facilityUuid,
-        name = "Anish Acharya",
-        patientUuid = UUID.fromString("37259e96-e757-4608-aeae-f1a20b088f09")
+        patientUuid = UUID.fromString("37259e96-e757-4608-aeae-f1a20b088f09"),
+        name = "Anish Acharya"
     ), TestData.overdueAppointment(
         facilityUuid = facilityUuid,
-        name = "Anirban Dar",
-        patientUuid = UUID.fromString("53659148-a157-4aa4-92fb-c0a7991ae872")
+        patientUuid = UUID.fromString("53659148-a157-4aa4-92fb-c0a7991ae872"),
+        name = "Anirban Dar"
     ))
 
     val overdueSearchResults = PagingData.from(overdueAppointments)

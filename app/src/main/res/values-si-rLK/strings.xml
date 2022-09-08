@@ -277,8 +277,7 @@
     <item quantity="other">දින %s ක් ඉකුත් වී ඇත</item>
   </plurals>
   <string name="overdue_list_item_village">ගම</string>
-  <string name="overduelist_high_risk">ඉහළ අවදානම</string>
-  <string name="overdue_download">බාගත කිරීම</string>
+    <string name="overdue_download">බාගත කිරීම</string>
   <string name="overdue_share">බෙදා ගැනීම</string>
   <string name="overdue_no_pending_patients">රෝගීන් රැඳී නොසිටී</string>
   <string name="overdue_pending_list_button_see_all">සියල්ල බලන්න</string>

@@ -278,8 +278,7 @@
     <item quantity="other">Guyyoota %s irra darbe</item>
   </plurals>
   <string name="overdue_list_item_village">Ganda</string>
-  <string name="overduelist_high_risk">Saaxilbahii ol aanaa</string>
-  <string name="overdue_download">Buusicha</string>
+    <string name="overdue_download">Buusicha</string>
   <string name="overdue_share">Raabsi</string>
   <string name="overdue_no_pending_patients">Dhukkubsataan eeggatu hin jiru</string>
   <string name="overdue_pending_list_button_see_all">Hundaa ilaali</string>

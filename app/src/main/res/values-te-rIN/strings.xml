@@ -277,8 +277,7 @@
     <item quantity="other">%s రోజుల క్రితం గడువు ముగిసింది</item>
   </plurals>
   <string name="overdue_list_item_village">గ్రామం</string>
-  <string name="overduelist_high_risk">అధిక ప్రమాదం</string>
-  <string name="overdue_download">డౌన్‌లోడ్ చేయి</string>
+    <string name="overdue_download">డౌన్‌లోడ్ చేయి</string>
   <string name="overdue_share">భాగస్వామ్యం చేయి</string>
   <string name="overdue_no_pending_patients">పెండింగ్‌లో ఉన్న రోగులు లేరు</string>
   <string name="overdue_pending_list_button_see_all">మొత్తం చూడండి</string>

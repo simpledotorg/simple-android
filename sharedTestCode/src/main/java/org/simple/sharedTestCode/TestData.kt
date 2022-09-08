@@ -1001,7 +1001,6 @@ object TestData {
       phoneNumberUuid: UUID = UUID.randomUUID(),
       appointmentUuid: UUID = UUID.randomUUID(),
       name: String = "somebody",
-      isHighRisk: Boolean = false,
       gender: Gender = Gender.Transgender,
       phoneNumber: PatientPhoneNumber? = patientPhoneNumber(uuid = phoneNumberUuid, patientUuid = patientUuid),
       appointment: Appointment = appointment(uuid = appointmentUuid, patientUuid = patientUuid, facilityUuid = facilityUuid),
@@ -1020,7 +1019,6 @@ object TestData {
         appointment = appointment,
         phoneNumber = phoneNumber,
         patientAddress = patientAddress,
-        isAtHighRisk = isHighRisk,
         patientAssignedFacilityUuid = patientAssignedFacilityId
     )
   }
@@ -1031,7 +1029,6 @@ object TestData {
       phoneNumberUuid: UUID = UUID.randomUUID(),
       appointmentUuid: UUID = UUID.randomUUID(),
       name: String = "somebody",
-      isHighRisk: Boolean = false,
       gender: Gender = Gender.Transgender,
       phoneNumber: PatientPhoneNumber? = patientPhoneNumber(uuid = phoneNumberUuid, patientUuid = patientUuid),
       appointment: Appointment = appointment(uuid = appointmentUuid, patientUuid = patientUuid, facilityUuid = facilityUuid),
@@ -1048,12 +1045,11 @@ object TestData {
         fullName = name,
         gender = gender,
         ageDetails = patientAgeDetails,
-        appointment = appointment,
         phoneNumber = phoneNumber,
         patientAddress = patientAddress,
-        isAtHighRisk = isHighRisk,
-        patientAssignedFacilityUuid = patientAssignedFacilityId,
-        callResult = callResult
+        appointment = appointment,
+        callResult = callResult,
+        patientAssignedFacilityUuid = patientAssignedFacilityId
     )
   }
 

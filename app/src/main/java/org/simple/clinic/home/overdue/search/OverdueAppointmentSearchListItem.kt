@@ -71,7 +71,6 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
           age = overdueAppointment.ageDetails.estimateAge(clock),
           phoneNumber = overdueAppointment.phoneNumber?.number,
           overdueDays = daysBetweenNowAndDate(overdueAppointment.appointment.scheduledDate, clock),
-          isAtHighRisk = overdueAppointment.isAtHighRisk,
           villageName = overdueAppointment.patientAddress.colonyOrVillage,
           isOverdueSelectAndDownloadEnabled = isOverdueSelectAndDownloadEnabled,
           isSelected = isSelected
@@ -94,7 +93,6 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
       val age: Int,
       val phoneNumber: String? = null,
       val overdueDays: Int,
-      val isAtHighRisk: Boolean,
       val villageName: String?,
       val isOverdueSelectAndDownloadEnabled: Boolean,
       val isSelected: Boolean
@@ -142,8 +140,6 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
       }
       binding.callButton.setImageResource(callButtonDrawable)
       increaseCallButtonTapArea(callButton = binding.callButton)
-
-      binding.isAtHighRiskTextView.visibility = if (isAtHighRisk) View.VISIBLE else View.GONE
 
       binding.overdueDaysTextView.text = context.resources.getQuantityString(
           R.plurals.overdue_list_item_appointment_overdue_days,

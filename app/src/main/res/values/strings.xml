@@ -333,7 +333,6 @@
     <item quantity="other">%s days overdue</item>
   </plurals>
   <string name="overdue_list_item_village">Village</string>
-  <string name="overduelist_high_risk">High risk</string>
   <string name="overdue_download">Download</string>
   <string name="overdue_share">Share</string>
   <string name="overdue_no_pending_patients">No pending patients</string>

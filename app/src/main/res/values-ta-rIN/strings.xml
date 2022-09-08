@@ -277,8 +277,7 @@
     <item quantity="other">குறித்த நாளை விட %s நாட்கள் அதிகம்</item>
   </plurals>
   <string name="overdue_list_item_village">கிராமம்</string>
-  <string name="overduelist_high_risk">அதிக ஆபத்து</string>
-  <string name="overdue_download">பதிவிறக்கு</string>
+    <string name="overdue_download">பதிவிறக்கு</string>
   <string name="overdue_share">பகிர்</string>
   <string name="overdue_no_pending_patients">நிலுவையில் உள்ள நோயாளிகள் இல்லை</string>
   <string name="overdue_pending_list_button_see_all">எல்லாவற்றையும் பார்க்கவும்</string>

@@ -86,28 +86,13 @@
       app:constraint_referenced_ids="villageLabel, villageTextView" />
 
     <TextView
-      android:id="@+id/isAtHighRiskTextView"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:background="@drawable/background_overdue_high_risk_label"
-      android:paddingStart="@dimen/spacing_8"
-      android:paddingEnd="@dimen/spacing_8"
-      android:text="@string/overduelist_high_risk"
-      android:textAllCaps="true"
-      android:textAppearance="?attr/textAppearanceTag"
-      android:textColor="?attr/colorError"
-      app:layout_constraintStart_toStartOf="@id/patientNameTextView"
-      app:layout_constraintTop_toBottomOf="@id/villageBarrier" />
-
-    <TextView
       android:id="@+id/overdueDaysTextView"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/spacing_8"
       android:layout_marginEnd="@dimen/spacing_8"
       android:textAppearance="?attr/textAppearanceBody2"
       android:textColor="?attr/colorError"
-      app:layout_constraintStart_toEndOf="@id/isAtHighRiskTextView"
+      app:layout_constraintStart_toStartOf="@id/villageLabel"
       app:layout_constraintTop_toBottomOf="@id/villageBarrier"
       app:layout_goneMarginStart="@dimen/spacing_0"
       tools:text="4 day overdue" />

@@ -277,8 +277,7 @@
     <item quantity="other">%s ದಿನಗಳಷ್ಟು ತಡವಾಗಿದೆ</item>
   </plurals>
   <string name="overdue_list_item_village">ಗ್ರಾಮ</string>
-  <string name="overduelist_high_risk">ಹೆಚ್ಚಿನ ಅಪಾಯ</string>
-  <string name="overdue_download">ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</string>
+    <string name="overdue_download">ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</string>
   <string name="overdue_share">ಹಂಚಿಕೊಳ್ಳಿ</string>
   <string name="overdue_no_pending_patients">ಯಾವುದೇ ಬಾಕಿ ಇರುವ ರೋಗಿಗಳಿಲ್ಲ</string>
   <string name="overdue_pending_list_button_see_all">ಎಲ್ಲವನ್ನು ವೀಕ್ಷಿಸಿ</string>

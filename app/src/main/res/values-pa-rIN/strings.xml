@@ -277,8 +277,7 @@
     <item quantity="other">%s ਦਿਨ ਓਵਰਡਿਊ ਹਨ</item>
   </plurals>
   <string name="overdue_list_item_village">ਪਿੰਡ</string>
-  <string name="overduelist_high_risk">ਵੱਧ ਜੋਖਮ</string>
-  <string name="overdue_download">ਡਾਉਨਲੋਡ ਕਰੋ</string>
+    <string name="overdue_download">ਡਾਉਨਲੋਡ ਕਰੋ</string>
   <string name="overdue_share">ਸ਼ੇਅਰ ਕਰੋ</string>
   <string name="overdue_no_pending_patients">ਕੋਈ ਬਾਕੀ ਮਰੀਜ਼ ਨਹੀਂ</string>
   <string name="overdue_pending_list_button_see_all">ਸਭ ਦੇਖੋ</string>

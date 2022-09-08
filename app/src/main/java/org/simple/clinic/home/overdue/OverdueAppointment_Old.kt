@@ -32,8 +32,6 @@ data class OverdueAppointment_Old(
     @Embedded(prefix = "patient_address_")
     val patientAddress: OverduePatientAddress,
 
-    val isAtHighRisk: Boolean,
-
     val patientAssignedFacilityUuid: UUID?
 ) : Parcelable {
 
@@ -52,19 +50,6 @@ data class OverdueAppointment_Old(
         PPN.uuid phone_uuid, PPN.patientUuid phone_patientUuid, PPN.number phone_number, PPN.phoneType phone_phoneType, PPN.active phone_active,
         PPN.createdAt phone_createdAt, PPN.updatedAt phone_updatedAt, PPN.deletedAt phone_deletedAt,
         
-        (
-            CASE
-                WHEN BloodSugar.reading_type = 'fasting' AND CAST (BloodSugar.reading_value AS REAL) >= 200 THEN 1
-                WHEN BloodSugar.reading_type = 'random' AND CAST (BloodSugar.reading_value AS REAL) >= 300 THEN 1
-                WHEN BloodSugar.reading_type = 'post_prandial' AND CAST (BloodSugar.reading_value AS REAL) >= 300 THEN 1
-                WHEN BloodSugar.reading_type = 'hba1c' AND CAST (BloodSugar.reading_value AS REAL) >= 9 THEN 1
-                WHEN BP.systolic >= 180 OR BP.diastolic >= 110 THEN 1
-                WHEN (MH.hasHadHeartAttack = 'yes' OR MH.hasHadStroke = 'yes') AND (BP.systolic >= 140 OR BP.diastolic >= 110) 
-                    THEN 1 
-                ELSE 0
-            END
-        ) AS isAtHighRisk,
-        
         PA.streetAddress patient_address_streetAddress, PA.colonyOrVillage patient_address_colonyOrVillage,
         PA.district patient_address_district, PA.state patient_address_state
 
@@ -76,24 +61,7 @@ data class OverdueAppointment_Old(
         GROUP BY patientUuid HAVING MAX(createdAt)
       ) A ON A.patientUuid = P.uuid
       LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid = P.uuid
-      LEFT JOIN MedicalHistory MH ON MH.patientUuid = P.uuid
       LEFT JOIN PatientAddress PA ON PA.uuid = P.addressUuid
-      
-      LEFT JOIN (
-        SELECT * 
-        FROM BloodPressureMeasurement 
-        WHERE (patientUuid IN ( SELECT uuid FROM Patient WHERE assignedFacilityId = :facilityUuid ) OR facilityUuid = :facilityUuid) AND
-            deletedAt IS NULL 
-        GROUP BY patientUuid HAVING MAX(recordedAt)
-      ) BP ON BP.patientUuid = P.uuid
-      
-      LEFT JOIN (
-        SELECT * 
-        FROM BloodSugarMeasurements 
-        WHERE (patientUuid IN ( SELECT uuid FROM Patient WHERE assignedFacilityId = :facilityUuid ) OR facilityUuid = :facilityUuid) AND
-            deletedAt IS NULL 
-        GROUP BY patientUuid HAVING MAX(recordedAt)
-      ) BloodSugar ON BloodSugar.patientUuid = P.uuid
       
       WHERE
         IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid AND
@@ -103,11 +71,9 @@ data class OverdueAppointment_Old(
         P.status != 'dead' AND 
         PPN.deletedAt IS NULL AND 
         A.deletedAt IS NULL AND 
-        A.status = 'scheduled' AND 
-        (BP.recordedAt IS NOT NULL OR BloodSugar.recordedAt IS NOT NULL)
+        A.status = 'scheduled'
       GROUP BY appt_patientUuid
       ORDER BY 
-        isAtHighRisk DESC, 
         appt_scheduledDate DESC, 
         appt_updatedAt ASC
     """)

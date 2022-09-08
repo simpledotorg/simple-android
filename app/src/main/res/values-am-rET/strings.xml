@@ -277,8 +277,7 @@
     <item quantity="other">%s ቀናት ጊዜው አልፎበታል</item>
   </plurals>
   <string name="overdue_list_item_village">መንደር</string>
-  <string name="overduelist_high_risk">ከፍተኛ ተጋላጭነት</string>
-  <string name="overdue_download">አውርድ</string>
+    <string name="overdue_download">አውርድ</string>
   <string name="overdue_share">ያጋሩ</string>
   <string name="overdue_no_pending_patients">ተረ የሚጠቢቁ ታካሚዎች የሉም</string>
   <string name="overdue_pending_list_button_see_all">ሁሉንም ይመልከቱ</string>

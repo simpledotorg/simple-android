@@ -277,8 +277,7 @@
     <item quantity="other">%s maalmo hore</item>
   </plurals>
   <string name="overdue_list_item_village">Tuullada</string>
-  <string name="overduelist_high_risk">Halis sare</string>
-  <string name="overdue_download">Soo dejiso</string>
+    <string name="overdue_download">Soo dejiso</string>
   <string name="overdue_share">La wadaag</string>
   <string name="overdue_no_pending_patients">Ma jiraan bukaano hadhay</string>
   <string name="overdue_pending_list_button_see_all">Arag dhamaan</string>

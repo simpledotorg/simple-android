@@ -277,8 +277,7 @@
     <item quantity="other">%s দিন আগে সময় পার হয়ে গেছে</item>
   </plurals>
   <string name="overdue_list_item_village">গ্রাম</string>
-  <string name="overduelist_high_risk">অতিরিক্ত ঝুঁকি</string>
-  <string name="overdue_download">ডাউনলোড করুন</string>
+    <string name="overdue_download">ডাউনলোড করুন</string>
   <string name="overdue_share">ভাগ করুন</string>
   <string name="overdue_no_pending_patients">কোনো অপেক্ষারত রোগী নেই</string>
   <string name="overdue_pending_list_button_see_all">সবাইকে দেখুন</string>

@@ -97,12 +97,12 @@ class OverdueSearchEffectHandlerTest {
     val searchInputs = listOf("Ani")
     val overdueAppointment = listOf(TestData.overdueAppointment(
         facilityUuid = currentFacility.uuid,
-        name = "Anish Acharya",
-        patientUuid = UUID.fromString("37259e96-e757-4608-aeae-f1a20b088f09")
+        patientUuid = UUID.fromString("37259e96-e757-4608-aeae-f1a20b088f09"),
+        name = "Anish Acharya"
     ), TestData.overdueAppointment(
         facilityUuid = currentFacility.uuid,
-        name = "Anirban Dar",
-        patientUuid = UUID.fromString("53659148-a157-4aa4-92fb-c0a7991ae872")
+        patientUuid = UUID.fromString("53659148-a157-4aa4-92fb-c0a7991ae872"),
+        name = "Anirban Dar"
     ))
 
     val expectedPagingData = PagingData.from(overdueAppointment)

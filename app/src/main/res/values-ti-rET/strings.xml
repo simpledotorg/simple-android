@@ -277,8 +277,7 @@
     <item quantity="other">%s መዓልታታ ደንጉዩ</item>
   </plurals>
   <string name="overdue_list_item_village">ቍሸት</string>
-  <string name="overduelist_high_risk">ልዑል ስግኣት</string>
-  <string name="overdue_download">ዳውንሎድ</string>
+    <string name="overdue_download">ዳውንሎድ</string>
   <string name="overdue_share">ኣካፍል</string>
   <string name="overdue_no_pending_patients">ዝጽበዩ ሕሙማት የለውን</string>
   <string name="overdue_pending_list_button_see_all">ኩሉ ርኣይ</string>

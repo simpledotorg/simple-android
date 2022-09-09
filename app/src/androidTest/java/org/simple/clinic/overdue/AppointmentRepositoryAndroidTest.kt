@@ -1300,15 +1300,15 @@ class AppointmentRepositoryAndroidTest {
     assertThat(appointmentRepository.hasAppointmentForPatientChangedSince(patientUuid, fiveMinuteLater)).isFalse()
 
     setAppointmentSyncStatusToDone(appointment2ForPatient.uuid)
-    assertThat(appointmentRepository.hasAppointmentForPatientChangedSince(patientUuid, fiftyNineSecondsLater)).isFalse()
+    assertThat(appointmentRepository.hasAppointmentForPatientChangedSince(patientUuid, fiftyNineSecondsLater)).isTrue()
     assertThat(appointmentRepository.hasAppointmentForPatientChangedSince(patientUuid, oneSecondEarlier)).isTrue()
 
     setAppointmentSyncStatusToDone(appointment1ForPatient.uuid)
-    assertThat(appointmentRepository.hasAppointmentForPatientChangedSince(patientUuid, oneSecondEarlier)).isFalse()
+    assertThat(appointmentRepository.hasAppointmentForPatientChangedSince(patientUuid, oneSecondEarlier)).isTrue()
     assertThat(appointmentRepository.hasAppointmentForPatientChangedSince(appointmentForSomeOtherPatient.patientUuid, oneSecondEarlier)).isTrue()
 
     setAppointmentSyncStatusToDone(appointmentForSomeOtherPatient.uuid)
-    assertThat(appointmentRepository.hasAppointmentForPatientChangedSince(appointmentForSomeOtherPatient.patientUuid, oneSecondEarlier)).isFalse()
+    assertThat(appointmentRepository.hasAppointmentForPatientChangedSince(appointmentForSomeOtherPatient.patientUuid, oneSecondEarlier)).isTrue()
   }
 
   @Test

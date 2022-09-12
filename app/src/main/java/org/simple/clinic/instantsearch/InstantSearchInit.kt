@@ -17,6 +17,8 @@ class InstantSearchInit : Init<InstantSearchModel, InstantSearchEffect> {
 
     if (!modelToEmit.hasFacility) effects.add(LoadCurrentFacility)
 
+    if (modelToEmit.hasSearchQuery) effects.add(ValidateSearchQuery(model.searchQuery!!))
+
     return first(modelToEmit, effects)
   }
 }

@@ -1439,7 +1439,9 @@ object TestData {
       createdAt: Instant = Instant.parse("2018-01-01T00:00:00Z"),
       updatedAt: Instant = Instant.parse("2018-01-01T00:00:00Z"),
       deletedAt: Instant? = null,
-      syncStatus: SyncStatus = SyncStatus.DONE
+      syncStatus: SyncStatus = SyncStatus.DONE,
+      patientId: UUID = UUID.fromString("53c27f08-8f63-4c41-8495-530f9e482e23"),
+      facilityUuid: UUID = UUID.fromString("38e04f2b-95ff-4a76-a24d-0b3b73d64eca")
   ) = CallResult(
       id = id,
       userId = userId,
@@ -1447,6 +1449,8 @@ object TestData {
       removeReason = removeReason,
       outcome = outcome,
       timestamps = Timestamps(createdAt, updatedAt, deletedAt),
-      syncStatus = syncStatus
+      syncStatus = syncStatus,
+      patientId = patientId,
+      facilityId = facilityUuid
   )
 }

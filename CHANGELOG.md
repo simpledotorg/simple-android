@@ -14,6 +14,7 @@
 
 - Fix overdue count in the app not matching with the count from the dashboard
 - Fix appointment sheet showing after follow-up visit is added
+- Fix ID search not working from scan screen
 
 ## 2022-08-30-8400
 

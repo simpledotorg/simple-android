@@ -9,6 +9,7 @@
 - Bump datadog gradle plugin to v1.5.1
 - Bump Open CSV to v5.7.0
 - Bump Jackson to v2.13.4
+- Bump mixpanel to v7.0.1
 
 ### Fixes
 

@@ -7,7 +7,6 @@ import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.junit.After
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentRepository
@@ -17,9 +16,10 @@ import org.simple.clinic.overdue.callresult.Outcome
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
-import org.simple.sharedTestCode.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.uuid.UuidGenerator
+import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.TestUtcClock
 import java.time.Instant
 import java.util.UUID
 
@@ -31,7 +31,10 @@ class RemoveOverdueEffectHandlerTest {
   private val uuidGenerator = mock<UuidGenerator>()
   private val callResultRepository = mock<CallResultRepository>()
   private val utcClock = TestUtcClock(Instant.parse("2018-01-01T00:00:00Z"))
-  private val user = TestData.loggedInUser(uuid = UUID.fromString("95455934-8399-479f-b1a7-0ebec9d04c9e"))
+  private val user = TestData.loggedInUser(
+      uuid = UUID.fromString("95455934-8399-479f-b1a7-0ebec9d04c9e"),
+      currentFacilityUuid = UUID.fromString("b7e68669-5352-4d14-9f74-1037709c92d4")
+  )
   private val cancelAppointmentWithReason = CancelAppointmentWithReason(
       appointmentRepository = appointmentRepository,
       callResultRepository = callResultRepository,
@@ -95,7 +98,9 @@ class RemoveOverdueEffectHandlerTest {
   fun `when cancel appointment effect is received, then cancel the appointment`() {
     // given
     val appointmentId = UUID.fromString("3a908737-17c8-44e6-b4f9-03a46a185189")
-    val appointment = TestData.appointment(uuid = appointmentId)
+    val patientId = UUID.fromString("c1514de4-e11c-4637-9d68-298d5bb61f64")
+    val facilityId = UUID.fromString("013ae0b4-7204-42aa-8ee7-3abbc8dde7a2")
+    val appointment = TestData.appointment(uuid = appointmentId, patientUuid = patientId, facilityUuid = facilityId)
     val cancelReason = AppointmentCancelReason.random()
 
     val callResultId = UUID.fromString("3d3fb748-0ad5-4f8b-b3ad-e12856094a2b")
@@ -111,6 +116,8 @@ class RemoveOverdueEffectHandlerTest {
     val expectedCallResult = CallResult(
         id = callResultId,
         userId = user.uuid,
+        patientId = patientId,
+        facilityId = user.currentFacilityUuid,
         appointmentId = appointmentId,
         removeReason = cancelReason,
         outcome = Outcome.RemovedFromOverdueList,

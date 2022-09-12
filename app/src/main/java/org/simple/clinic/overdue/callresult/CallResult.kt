@@ -28,6 +28,10 @@ data class CallResult(
 
     val userId: UUID,
 
+    val patientId: UUID?,
+
+    val facilityId: UUID?,
+
     val appointmentId: UUID,
 
     val removeReason: AppointmentCancelReason?,
@@ -50,6 +54,8 @@ data class CallResult(
     ) = CallResult(
         id = id,
         userId = user.uuid,
+        patientId = appointment.patientUuid,
+        facilityId = user.currentFacilityUuid,
         appointmentId = appointment.uuid,
         removeReason = null,
         outcome = Outcome.AgreedToVisit,
@@ -66,6 +72,8 @@ data class CallResult(
     ) = CallResult(
         id = id,
         userId = user.uuid,
+        patientId = appointment.patientUuid,
+        facilityId = user.currentFacilityUuid,
         appointmentId = appointment.uuid,
         removeReason = null,
         outcome = Outcome.RemindToCallLater,
@@ -83,6 +91,8 @@ data class CallResult(
     ) = CallResult(
         id = id,
         userId = user.uuid,
+        patientId = appointment.patientUuid,
+        facilityId = user.currentFacilityUuid,
         appointmentId = appointment.uuid,
         removeReason = removeReason,
         outcome = Outcome.RemovedFromOverdueList,

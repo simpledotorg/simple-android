@@ -10,6 +10,7 @@
 - Bump Open CSV to v5.7.0
 - Bump Jackson to v2.13.4
 - Bump mixpanel to v7.0.1
+- Add `patientId` and `facilityId` columns in `CallResult` table
 
 ### Fixes
 

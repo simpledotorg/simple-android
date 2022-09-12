@@ -197,7 +197,7 @@ class ContactPatientEffectHandlerTest {
 
     // when
     val appointmentUuid = UUID.fromString("6d47fc9e-76dd-4aa3-b3dd-171e90cadc58")
-    val appointment = TestData.appointment(uuid = appointmentUuid)
+    val appointment = TestData.appointment(uuid = appointmentUuid, patientUuid = patientUuid, facilityUuid = facility.uuid)
     testCase.dispatch(MarkPatientAsAgreedToVisit(appointment))
 
     // then
@@ -207,6 +207,8 @@ class ContactPatientEffectHandlerTest {
     val expectedCallResult = CallResult(
         id = callResultId,
         userId = user.uuid,
+        patientId = patientUuid,
+        facilityId = user.currentFacilityUuid,
         appointmentId = appointmentUuid,
         removeReason = null,
         outcome = Outcome.AgreedToVisit,
@@ -243,7 +245,7 @@ class ContactPatientEffectHandlerTest {
   fun `when the set reminder effect is received, a reminder date must be set for the appointment for the given date`() {
     // given
     val appointmentUuid = UUID.fromString("10fec427-9509-4237-8493-bef8c3f0a5c2")
-    val appointment = TestData.appointment(uuid = appointmentUuid)
+    val appointment = TestData.appointment(uuid = appointmentUuid, patientUuid = patientUuid, facilityUuid = facility.uuid)
     val reminderDate = LocalDate.parse("2018-01-01")
     val callResultId = UUID.fromString("08556750-df29-4305-8747-fe3e11be58ae")
     whenever(uuidGenerator.v4()).thenReturn(callResultId)
@@ -258,6 +260,8 @@ class ContactPatientEffectHandlerTest {
     val expectedCallResult = CallResult(
         id = callResultId,
         userId = user.uuid,
+        patientId = patientUuid,
+        facilityId = user.currentFacilityUuid,
         appointmentId = appointmentUuid,
         removeReason = null,
         outcome = Outcome.RemindToCallLater,

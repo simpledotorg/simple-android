@@ -15,6 +15,12 @@ data class CallResultPayload(
     @Json(name = "user_id")
     val userId: UUID,
 
+    @Json(name = "patient_id")
+    val patientId: UUID?,
+
+    @Json(name = "facility_id")
+    val facilityId: UUID?,
+
     @Json(name = "appointment_id")
     val appointmentId: UUID,
 

@@ -3,6 +3,8 @@ package org.simple.clinic.overdue.callresult
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.simple.clinic.overdue.AppointmentCancelReason
+import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.storage.Timestamps
 import java.time.Instant
 import java.util.UUID
 
@@ -38,4 +40,23 @@ data class CallResultPayload(
 
     @Json(name = "deleted_at")
     val deletedAt: Instant?
-)
+) {
+
+  fun toDatabaseModel(syncStatus: SyncStatus): CallResult {
+    return CallResult(
+        id = id,
+        userId = userId,
+        patientId = patientId,
+        facilityId = facilityId,
+        appointmentId = appointmentId,
+        removeReason = removeReason,
+        outcome = outcome,
+        timestamps = Timestamps(
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+            deletedAt = deletedAt
+        ),
+        syncStatus = syncStatus
+    )
+  }
+}

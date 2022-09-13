@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Next Release
+
+### Internal
+
+- Enable tracking automatic events from Mixpanel
+
 ## 2022-09-12-8414
 
 ### Internal

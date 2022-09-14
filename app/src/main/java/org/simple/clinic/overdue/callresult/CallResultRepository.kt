@@ -1,6 +1,8 @@
 package org.simple.clinic.overdue.callresult
 
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.patient.SyncStatus.DONE
+import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.sync.SynceableRepository
 import java.util.Optional
 import java.util.UUID
@@ -29,18 +31,26 @@ class CallResultRepository @Inject constructor(
   }
 
   override fun mergeWithLocalData(payloads: List<CallResultPayload>) {
-    // Not necessary since this is not a resource which we current sync *to* the device
+    val pendingRecords = callResultDao.recordIdsWithSyncStatus(PENDING)
+
+    val payloadsToSave = payloads
+        .filterNot { it.id in pendingRecords }
+        .map { it.toDatabaseModel(DONE) }
+
+    callResultDao.save(payloadsToSave)
   }
 
   override fun recordCount() = callResultDao.recordCount()
 
-  override fun pendingSyncRecordCount() = callResultDao.countWithStatus(SyncStatus.PENDING)
+  override fun pendingSyncRecordCount() = callResultDao.countWithStatus(PENDING)
 
   override fun pendingSyncRecords(limit: Int, offset: Int) = callResultDao.recordsWithSyncStatusBatched(
-      syncStatus = SyncStatus.PENDING,
+      syncStatus = PENDING,
       limit = limit,
       offset = offset
   )
 
   fun callResultForAppointment(appointmentID: UUID): Optional<CallResult> = callResultDao.callResultForAppointment(appointmentID)
+
+  fun recordsWithSyncStatus(syncStatus: SyncStatus): List<CallResult> = callResultDao.recordsWithSyncStatus(syncStatus)
 }

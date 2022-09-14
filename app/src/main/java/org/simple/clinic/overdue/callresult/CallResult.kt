@@ -184,5 +184,19 @@ data class CallResult(
         AND syncStatus == 'DONE'
     """)
     fun purgeDeleted()
+
+    @Query("""
+      SELECT * 
+      FROM CallResult
+      WHERE syncStatus = :status
+    """)
+    fun recordsWithSyncStatus(status: SyncStatus): List<CallResult>
+
+    @Query("""
+      SELECT id 
+      FROM CallResult
+      WHERE syncStatus = :status
+    """)
+    fun recordIdsWithSyncStatus(status: SyncStatus): List<UUID>
   }
 }

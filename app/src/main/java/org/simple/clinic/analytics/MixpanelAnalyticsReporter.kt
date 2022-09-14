@@ -5,8 +5,12 @@ import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.platform.analytics.AnalyticsReporter
 import org.simple.clinic.platform.analytics.AnalyticsUser
+import org.simple.clinic.storage.monitoring.Sampler
 
-class MixpanelAnalyticsReporter(app: ClinicApp) : AnalyticsReporter {
+class MixpanelAnalyticsReporter(
+    app: ClinicApp,
+    private val sampler: Sampler
+) : AnalyticsReporter {
 
   private val mixpanel: MixpanelAPI = MixpanelAPI.getInstance(app, BuildConfig.MIXPANEL_TOKEN, true)
 
@@ -35,8 +39,10 @@ class MixpanelAnalyticsReporter(app: ClinicApp) : AnalyticsReporter {
   }
 
   override fun createEvent(event: String, props: Map<String, Any>) {
-    synchronized(mixpanel) {
-      mixpanel.trackMap(event, props)
+    if (sampler.sample) {
+      synchronized(mixpanel) {
+        mixpanel.trackMap(event, props)
+      }
     }
   }
 }

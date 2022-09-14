@@ -5,6 +5,7 @@
 ### Internal
 
 - Enable tracking automatic events from Mixpanel
+- Bump AppCompat to v1.5.1
 
 ## 2022-09-12-8414
 

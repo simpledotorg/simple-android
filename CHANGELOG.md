@@ -17,6 +17,7 @@
 - Bump Jackson to v2.13.4
 - Bump mixpanel to v7.0.1
 - Add `patientId` and `facilityId` columns in `CallResult` table
+- Add sync support for pulling overdue call results
 
 ### Fixes
 

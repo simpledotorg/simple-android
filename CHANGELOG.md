@@ -7,6 +7,7 @@
 - Bump AppCompat to v1.5.1
 - Enable tracking automatic events from Mixpanel
 - Sample events sent to Mixpanel
+- Bump AGP to v7.3.0
 
 ## 2022-09-12-8414
 

@@ -8,6 +8,7 @@
 - Enable tracking automatic events from Mixpanel
 - Sample events sent to Mixpanel
 - Bump AGP to v7.3.0
+- Remove `ConfigReader` injection from `ReleaseClinicApp`
 
 ## 2022-09-12-8414
 

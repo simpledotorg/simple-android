@@ -8,20 +8,15 @@ import org.simple.clinic.analytics.swallowErrors
 import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.DaggerAppComponent
-import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.storage.monitoring.Sampler
 import org.simple.clinic.util.unsafeLazy
 import org.slf4j.LoggerFactory
-import javax.inject.Inject
 
 @SuppressLint("Registered")
 class ReleaseClinicApp : ClinicApp() {
 
-  @Inject
-  lateinit var configReader: ConfigReader
-
   override val analyticsReporters by unsafeLazy {
-    val mixpanelSamplingRate = configReader.double("mixpanel_sampling_rate", 0.0)
+    val mixpanelSamplingRate = remoteConfig.double("mixpanel_sampling_rate", 0.0)
     val sampler = Sampler(mixpanelSamplingRate.toFloat())
 
     listOf(MixpanelAnalyticsReporter(

@@ -13,6 +13,7 @@
   - Bump compile and target SDK to 33
 - Bump google services to v4.3.14
 - Bump Android desugar JDK library to v1.2.2
+- Bump eclipse jgit to v6.3.0.202209071007-r
 
 ## 2022-09-12-8414
 

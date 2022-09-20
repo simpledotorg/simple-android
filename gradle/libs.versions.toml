@@ -88,7 +88,7 @@ firebase-config = "com.google.firebase:firebase-config:21.1.2"
 flipper-flipper = { module = "com.facebook.flipper:flipper", version.ref = "flipper" }
 flipper-networkPlugin = { module = "com.facebook.flipper:flipper-network-plugin", version.ref = "flipper" }
 
-google-services = "com.google.gms:google-services:4.3.13"
+google-services = "com.google.gms:google-services:4.3.14"
 
 itemanimators = "com.mikepenz:itemanimators:1.1.0"
 

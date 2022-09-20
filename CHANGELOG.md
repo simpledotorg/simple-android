@@ -11,6 +11,7 @@
 - Remove `ConfigReader` injection from `ReleaseClinicApp`
 - Add support for Android 13
   - Bump compile and target SDK to 33
+- Bump google services to v4.3.14
 
 ## 2022-09-12-8414
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env kscript
 
 @file:Repository("https://repo1.maven.org/maven2/")
-@file:DependsOn("org.eclipse.jgit:org.eclipse.jgit:6.2.0.202206071550-r")
+@file:DependsOn("org.eclipse.jgit:org.eclipse.jgit:6.3.0.202209071007-r")
 @file:CompilerOptions("-jvm-target", "1.8")
 
 import org.eclipse.jgit.api.Git

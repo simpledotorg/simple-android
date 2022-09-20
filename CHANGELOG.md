@@ -9,6 +9,8 @@
 - Sample events sent to Mixpanel
 - Bump AGP to v7.3.0
 - Remove `ConfigReader` injection from `ReleaseClinicApp`
+- Add support for Android 13
+  - Bump compile and target SDK to 33
 
 ## 2022-09-12-8414
 

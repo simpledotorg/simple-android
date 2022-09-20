@@ -1,8 +1,8 @@
 buildscript {
   extra.apply {
-    set("compileSdkVersion", 32)
+    set("compileSdkVersion", 33)
     set("minSdkVersion", 21)
-    set("targetSdkVersion", 32)
+    set("targetSdkVersion", 33)
   }
 
   repositories {

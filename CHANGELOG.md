@@ -15,6 +15,13 @@
 - Bump Android desugar JDK library to v1.2.2
 - Bump eclipse jgit to v6.3.0.202209071007-r
 
+## 2022-09-16-8420
+
+### Internal
+
+- Add `patientId` and `facilityId` columns in `CallResult` table
+- Add sync support for pulling overdue call results
+
 ## 2022-09-12-8414
 
 ### Internal
@@ -25,8 +32,6 @@
 - Bump Open CSV to v5.7.0
 - Bump Jackson to v2.13.4
 - Bump mixpanel to v7.0.1
-- Add `patientId` and `facilityId` columns in `CallResult` table
-- Add sync support for pulling overdue call results
 
 ### Fixes
 

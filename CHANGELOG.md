@@ -16,6 +16,7 @@
 - Bump eclipse jgit to v6.3.0.202209071007-r
 - Bump Sentry to v6.4.1
 - Bump Sentry Gradle Plugin to v3.1.6
+- Bump datadog sdk to v1.14.0
 
 ## 2022-09-16-8420
 

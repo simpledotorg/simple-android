@@ -34,13 +34,13 @@ workingDirectory.run {
 
   val currentDate = LocalDate.now(ZoneId.of("Asia/Kolkata"))
   val lastReleaseDate = releaseDateFromBranch(lastReleaseBranch)
-  val releaseDate = lastReleaseDate.plusWeeks(1)
+  val expectedReleaseDate = lastReleaseDate.plusWeeks(1)
 
   if (
-      currentDate.isEqual(releaseDate) &&
+      currentDate >= expectedReleaseDate &&
       currentDate.dayOfWeek == DayOfWeek.MONDAY
   ) {
-    val branchName = "release/$releaseDate"
+    val branchName = "release/$expectedReleaseDate"
 
     git.branchCreate().setName(branchName).call()
 

@@ -35,7 +35,7 @@ coroutines = "1.6.4"
 android-gradle-plugin = "com.android.tools.build:gradle:7.3.0"
 android-desugaring = "com.android.tools:desugar_jdk_libs:1.2.2"
 
-androidx-annotation-annotation = "androidx.annotation:annotation:1.4.0"
+androidx-annotation-annotation = "androidx.annotation:annotation:1.5.0"
 
 # When bumping this dependency verify whether `org.simple.clinic.feature.Feature.ChangeLanguage`
 # can be enabled again.

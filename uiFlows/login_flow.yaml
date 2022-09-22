@@ -1,0 +1,18 @@
+appId: org.simple.clinic
+---
+- clearState
+- launchApp
+- tapOn: "Next"
+- tapOn: "Get started"
+- tapOn:
+    text: "India"
+- tapOn:
+    text: "Maharashtra"
+- inputText: ${number}
+- tapOn: "Next"
+- assertVisible:
+    text: "Your security PIN"
+- inputText: ${pin}
+- tapOn: "Enter code"
+- inputText: ${otp}
+- tapOn: "Got it"

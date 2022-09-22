@@ -151,10 +151,15 @@ android {
     }
 
     val runProguard: String by project
+    val maestroTests: String by project
+
     getByName("release") {
       isDebuggable = false
       isMinifyEnabled = runProguard.toBoolean()
       isShrinkResources = runProguard.toBoolean()
+      if(maestroTests.toBoolean()) {
+        signingConfig =  getByName("debug").signingConfig
+      }
     }
   }
 

@@ -1,7 +1,7 @@
 package org.simple.clinic.appupdate
 
 import androidx.annotation.VisibleForTesting
-import androidx.annotation.VisibleForTesting.PRIVATE
+import androidx.annotation.VisibleForTesting.Companion.PRIVATE
 import io.reactivex.Observable
 import org.simple.clinic.CRITICAL_SECURITY_APP_UPDATE_PRIORITY
 import org.simple.clinic.LIGHT_APP_UPDATE_PRIORITY

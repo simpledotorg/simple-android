@@ -19,6 +19,7 @@
 - Bump datadog sdk to v1.14.0
 - Cut a release branch if current date is greater than or equal to expected release date
 - Bump androidx-annotation to v1.5.0
+- Fix incompatible types in androidx-annotation library update
 
 ## 2022-09-16-8420
 

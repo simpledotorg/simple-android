@@ -20,6 +20,7 @@
 - Cut a release branch if current date is greater than or equal to expected release date
 - Bump androidx-annotation to v1.5.0
 - Fix incompatible types in androidx-annotation library update
+- Bump Fragment to v1.5.3
 
 ## 2022-09-16-8420
 

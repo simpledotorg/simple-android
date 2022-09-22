@@ -17,6 +17,7 @@
 - Bump Sentry to v6.4.1
 - Bump Sentry Gradle Plugin to v3.1.6
 - Bump datadog sdk to v1.14.0
+- Cut a release branch if current date is greater than or equal to expected release date
 
 ## 2022-09-16-8420
 

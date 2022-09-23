@@ -1,4 +1,4 @@
-appId: org.simple.clinic
+appId: org.simple.clinic.staging
 ---
 - clearState
 - launchApp

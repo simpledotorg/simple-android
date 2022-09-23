@@ -21,6 +21,7 @@
 - Bump androidx-annotation to v1.5.0
 - Fix incompatible types in androidx-annotation library update
 - Add Maestro UI test for login flow
+- Add github action to verify maestro tests
 
 ## 2022-09-16-8420
 

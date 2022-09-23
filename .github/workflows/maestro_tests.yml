@@ -1,0 +1,43 @@
+name: Maestro tests
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: maestro-tests
+  cancel-in-progress: true
+
+jobs:
+  maestro-tests:
+    runs-on: [ macos-latest ]
+    steps:
+      - name: Checkout Android source
+        uses: actions/checkout@v3
+
+      - name: set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: 11
+
+      - name: Install Maestro
+        run: |
+          brew tap mobile-dev-inc/tap
+          brew install maestro
+
+      - name: Maestro tests
+        id: run-maestro-tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 31
+          arch: x86_64
+          disable-animations: true
+          disk-size: 8G
+          script: |
+            adb root
+            ./gradlew -PmaestroTests=true -PsentryDsn=${{ secrets.SENTRY_DSN }} -PsentryEnvironment=staging :app:installStagingRelease
+            maestro test -e number=1111111111 -e pin=0000 -e otp=000000 uiFlows/login_flow.yaml
+            adb uninstall org.simple.clinic.staging

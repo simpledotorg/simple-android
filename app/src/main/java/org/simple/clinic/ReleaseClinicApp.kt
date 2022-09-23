@@ -3,6 +3,7 @@ package org.simple.clinic
 import android.annotation.SuppressLint
 import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
+import org.simple.clinic.analytics.DatadogAnalyticsReporter
 import org.simple.clinic.analytics.MixpanelAnalyticsReporter
 import org.simple.clinic.analytics.swallowErrors
 import org.simple.clinic.di.AppComponent
@@ -19,10 +20,16 @@ class ReleaseClinicApp : ClinicApp() {
     val mixpanelSamplingRate = remoteConfig.double("mixpanel_sampling_rate", 0.0)
     val sampler = Sampler(mixpanelSamplingRate.toFloat())
 
-    listOf(MixpanelAnalyticsReporter(
-        app = this,
-        sampler = sampler
-    ).swallowErrors())
+    listOf(
+        MixpanelAnalyticsReporter(
+            app = this,
+            sampler = sampler
+        ).swallowErrors(),
+
+        DatadogAnalyticsReporter(
+            sampler = sampler
+        ).swallowErrors()
+    )
   }
 
   override val crashReporterSinks by unsafeLazy { listOf(sentryCrashReporterSink) }

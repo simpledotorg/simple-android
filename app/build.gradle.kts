@@ -127,7 +127,6 @@ android {
     val datadogApplicationId: String by project
     val datadogClientToken: String by project
     val datadogEnvironment: String by project
-    val maestroTest: String by project
 
     addManifestPlaceholders(mapOf(
         "sentryDsn" to sentryDsn,
@@ -152,11 +151,15 @@ android {
     }
 
     val runProguard: String by project
+    val maestroTests: String by project
+
     getByName("release") {
       isDebuggable = false
       isMinifyEnabled = runProguard.toBoolean()
       isShrinkResources = runProguard.toBoolean()
-      signingConfig = if(properties.get("maestroTest") == "true") getByName("debug").signingConfig else null
+      if(maestroTests.toBoolean()) {
+        signingConfig =  getByName("debug").signingConfig
+      }
     }
   }
 

@@ -37,18 +37,20 @@ jobs:
           arch: x86_64
           disable-animations: true
           disk-size: 8G
-          script: |
+          script: >
             adb root
-            ./gradlew 
-            -PmaestroTests=true -PsentryDsn=${{ secrets.SENTRY_DSN }} 
-            -PsentryEnvironment=staging 
-            -PmanifestEndpoint=${{ secrets.MANIFEST_ENDPOINT }} 
+            
+            ./gradlew
+            -PmaestroTests=true
+            -PsentryDsn=${{ secrets.SENTRY_DSN }}
+            -PsentryEnvironment=staging
+            -PmanifestEndpoint=${{ secrets.MANIFEST_ENDPOINT }}
             :app:installStagingRelease
-
-            maestro test 
-            -e number=${{ secrets.TEST_LOGIN_PHONE_NUMBER }} 
-            -e pin=${{ secrets.TEST_LOGIN_PIN }} 
-            -e otp=${{ secrets.TEST_LOGIN_OTP }} 
+            
+            maestro test
+            -e number=${{ secrets.TEST_LOGIN_PHONE_NUMBER }}
+            -e pin=${{ secrets.TEST_LOGIN_PIN }}
+            -e otp=${{ secrets.TEST_LOGIN_OTP }}
             uiFlows/login_flow.yaml
-
+            
             adb uninstall org.simple.clinic.staging

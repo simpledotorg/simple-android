@@ -22,6 +22,7 @@
 - Fix incompatible types in androidx-annotation library update
 - Add Maestro UI test for login flow
 - Add github action to verify maestro tests
+- Bump Fragment to v1.5.3
 
 ## 2022-09-16-8420
 

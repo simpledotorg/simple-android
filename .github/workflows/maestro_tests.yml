@@ -51,6 +51,6 @@ jobs:
             -e number=${{ secrets.TEST_LOGIN_PHONE_NUMBER }}
             -e pin=${{ secrets.TEST_LOGIN_PIN }}
             -e otp=${{ secrets.TEST_LOGIN_OTP }}
-            uiFlows/login_flow.yaml
+            maestroUiFlows/login_flow.yaml
             
             adb uninstall org.simple.clinic.staging

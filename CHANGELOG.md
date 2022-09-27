@@ -23,6 +23,7 @@
 - Add Maestro UI test for login flow
 - Add github action to verify maestro tests
 - Bump Fragment to v1.5.3
+- Bump Lint to v30.3.0
 
 ## 2022-09-16-8420
 

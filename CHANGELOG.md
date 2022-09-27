@@ -4,6 +4,14 @@
 
 ### Internal
 
+- Bump Lint to v30.3.0
+- Bump Flipper to v0.164.0
+- Rename `uiFlows` directory to `maestroUiFlows`
+
+## 2022-09-26-8435
+
+### Internal
+
 - Bump AppCompat to v1.5.1
 - Enable tracking automatic events from Mixpanel
 - Sample events sent to Mixpanel
@@ -23,9 +31,6 @@
 - Add Maestro UI test for login flow
 - Add github action to verify maestro tests
 - Bump Fragment to v1.5.3
-- Bump Lint to v30.3.0
-- Bump Flipper to v0.164.0
-- Rename `uiFlows` directory to `maestroUiFlows`
 
 ## 2022-09-16-8420
 

@@ -25,6 +25,7 @@
 - Bump Fragment to v1.5.3
 - Bump Lint to v30.3.0
 - Bump Flipper to v0.164.0
+- Rename `uiFlows` directory to `maestroUiFlows`
 
 ## 2022-09-16-8420
 

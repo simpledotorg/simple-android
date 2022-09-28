@@ -40,7 +40,7 @@ workingDirectory.run {
       currentDate >= expectedReleaseDate &&
       currentDate.dayOfWeek == DayOfWeek.MONDAY
   ) {
-    val branchName = "release/$expectedReleaseDate"
+    val branchName = "release/$currentDate"
 
     git.branchCreate().setName(branchName).call()
 

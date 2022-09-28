@@ -7,6 +7,7 @@
 - Bump Lint to v30.3.0
 - Bump Flipper to v0.164.0
 - Rename `uiFlows` directory to `maestroUiFlows`
+- Use the date at which the release branch is cut as the branch name
 
 ## 2022-09-26-8435
 

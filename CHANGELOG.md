@@ -8,6 +8,7 @@
 - Bump Flipper to v0.164.0
 - Rename `uiFlows` directory to `maestroUiFlows`
 - Use the date at which the release branch is cut as the branch name
+- Change concurrency group name for maestro tests workflow
 
 ## 2022-09-26-8435
 

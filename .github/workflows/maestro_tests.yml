@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: maestro-tests
+  group: maestro-tests-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:

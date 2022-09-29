@@ -10,6 +10,7 @@
 - Use the date at which the release branch is cut as the branch name
 - Change concurrency group name for maestro tests workflow
 - Bump Moshi to v1.14.0
+- Add query to fetch patient line list data
 
 ## 2022-09-26-8435
 

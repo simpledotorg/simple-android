@@ -752,6 +752,18 @@ class PatientRepository @Inject constructor(
     return database.patientDao().villageAndPatientNamesInFacility(facilityUuid)
   }
 
+  fun patientLineList(
+      facilityId: UUID,
+      bpCreatedAfter: LocalDate,
+      bpCreatedBefore: LocalDate
+  ): List<PatientLineListRow> {
+    return database.patientDao().patientLineListCursor(
+        facilityId = facilityId,
+        bpCreatedAfter = bpCreatedAfter,
+        bpCreateBefore = bpCreatedBefore
+    )
+  }
+
   private data class BusinessIdMetaAndVersion(
       val metaData: String,
       val metaDataVersion: MetaDataVersion

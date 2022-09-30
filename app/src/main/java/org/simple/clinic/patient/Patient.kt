@@ -392,6 +392,54 @@ data class Patient(
      ORDER BY colonyOrVillage ASC   
     """)
     abstract fun villageAndPatientNamesInFacility(facilityUuid: UUID): List<String>
+
+    @Query("""
+      SELECT 
+        P.fullName patientName,
+        P.gender gender,
+        P.status status,
+        P.age_value,
+        P.age_updatedAt,
+        P.dateOfBirth,
+        P.createdAt registrationDate,
+        RF.name registrationFacilityName,
+        AF.name assignedFacilityName,
+        PA.streetAddress streetAddress,
+        PA.colonyOrVillage colonyOrVillage,
+        PPN.number patientPhoneNumber,
+        MH.diagnosedWithHypertension diagnosedWithHypertension,
+        MH.hasDiabetes diagnosedWithDiabetes,
+
+        BP.uuid bp_uuid, BP.systolic bp_systolic, BP.diastolic bp_diastolic, BP.syncStatus bp_syncStatus,
+        BP.userUuid bp_userUuid, BP.facilityUuid bp_facilityUuid, BP.patientUuid bp_patientUuid, BP.createdAt bp_createdAt,
+        BP.updatedAt bp_updatedAt, BP.deletedAt bp_deletedAt, BP.recordedAt bp_recordedAt
+
+      FROM Patient P
+      LEFT JOIN PatientAddress PA ON PA.uuid = P.addressUuid
+      LEFT JOIN (
+        SELECT * FROM PatientPhoneNumber
+        GROUP BY patientUuid HAVING MAX(createdAt)
+      ) PPN on PPN.patientUuid = P.uuid AND PPN.deletedAt IS NULL
+      LEFT JOIN Facility RF ON RF.uuid = P.registeredFacilityId
+      LEFT JOIN Facility AF ON AF.uuid = P.registeredFacilityId
+      LEFT JOIN MedicalHistory MH ON MH.patientUuid = P.uuid
+      LEFT JOIN (
+        SELECT * FROM BloodPressureMeasurement 
+        WHERE  deletedAt IS NULL
+        GROUP BY patientUuid HAVING MAX(createdAt)
+      ) BP ON (
+        BP.patientUuid = P.uuid AND
+        BP.createdAt >= :bpCreatedAfter AND
+        BP.createdAt <= :bpCreateBefore
+      )
+      
+      WHERE registeredFacilityId = :facilityId OR assignedFacilityId = :facilityId
+    """)
+    abstract fun patientLineListCursor(
+        facilityId: UUID,
+        bpCreatedAfter: LocalDate,
+        bpCreateBefore: LocalDate
+    ): List<PatientLineListRow>
   }
 }
 

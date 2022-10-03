@@ -11,6 +11,7 @@
 - Change concurrency group name for maestro tests workflow
 - Bump Moshi to v1.14.0
 - Add query to fetch patient line list data
+- Bump core-ktx to v1.9.0
 
 ## 2022-09-26-8435
 

@@ -157,8 +157,8 @@ android {
       isDebuggable = false
       isMinifyEnabled = runProguard.toBoolean()
       isShrinkResources = runProguard.toBoolean()
-      if(maestroTests.toBoolean()) {
-        signingConfig =  getByName("debug").signingConfig
+      if (maestroTests.toBoolean()) {
+        signingConfig = getByName("debug").signingConfig
       }
     }
   }
@@ -245,6 +245,10 @@ android {
     jniLibs.excludes.add("lib/mips/libsqlite3x.so")
     jniLibs.excludes.add("lib/mips64/libsqlite3x.so")
     jniLibs.excludes.add("lib/armeabi/libsqlite3x.so")
+
+    resources {
+      excludes.add("/META-INF/INDEX.LIST")
+    }
   }
 
   bundle {

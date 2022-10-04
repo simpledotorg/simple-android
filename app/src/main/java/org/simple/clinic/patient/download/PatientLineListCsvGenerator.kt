@@ -25,6 +25,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 private enum class PatientLineListColumn(@StringRes val value: Int) {
+  SNO(R.string.patient_line_list_column_sno),
   NAME(R.string.patient_line_list_column_name),
   SEX(R.string.patient_line_list_column_sex),
   AGE(R.string.patient_line_list_column_age),
@@ -88,8 +89,8 @@ class PatientLineListCsvGenerator @Inject constructor(
     csvWriter.writeNext(arrayOf(title), false)
     csvWriter.writeNext(columnNames, false)
 
-    patientLineList.forEach { patientLineListRow ->
-      val patientLineListRowColumns = patientLineListRowColumns(patientLineListRow)
+    patientLineList.forEachIndexed { index, patientLineListRow ->
+      val patientLineListRowColumns = patientLineListRowColumns(index, patientLineListRow)
 
       csvWriter.writeNext(patientLineListRowColumns, false)
     }
@@ -99,8 +100,16 @@ class PatientLineListCsvGenerator @Inject constructor(
     return outputStream
   }
 
-  private fun patientLineListRowColumns(patientLineListRow: PatientLineListRow): Array<String> {
+  private fun patientLineListRowColumns(
+      index: Int,
+      patientLineListRow: PatientLineListRow
+  ): Array<String> {
     val columns = mutableListOf<String>()
+
+    // Since Kotlin list index start from 0, we are adding 1 to offset
+    // for S.No
+    val sNo = index + 1
+    columns.add(sNo.toString())
 
     with(patientLineListRow) {
       columns.add(patientName)

@@ -6,6 +6,9 @@
 
 - Bump datadog sdk to v1.14.1
 - Bump Kotlin to v1.7.20
+- Add missing fields in `PatientLineListRow`
+  - Added latest BP passport
+  - Added registration and assigned facility IDs
 
 ## 2022-10-03-8443
 

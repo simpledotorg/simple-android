@@ -402,7 +402,9 @@ data class Patient(
         P.age_updatedAt,
         P.dateOfBirth,
         P.createdAt registrationDate,
+        RF.uuid registrationFacilityId,
         RF.name registrationFacilityName,
+        AF.uuid assignedFacilityId,
         AF.name assignedFacilityName,
         PA.streetAddress streetAddress,
         PA.colonyOrVillage colonyOrVillage,
@@ -412,7 +414,12 @@ data class Patient(
 
         BP.uuid bp_uuid, BP.systolic bp_systolic, BP.diastolic bp_diastolic, BP.syncStatus bp_syncStatus,
         BP.userUuid bp_userUuid, BP.facilityUuid bp_facilityUuid, BP.patientUuid bp_patientUuid, BP.createdAt bp_createdAt,
-        BP.updatedAt bp_updatedAt, BP.deletedAt bp_deletedAt, BP.recordedAt bp_recordedAt
+        BP.updatedAt bp_updatedAt, BP.deletedAt bp_deletedAt, BP.recordedAt bp_recordedAt,
+        
+        BI.uuid bp_passport_uuid, BI.patientUuid bp_passport_patientUuid,
+        BI.identifier bp_passport_identifier, BI.identifierType bp_passport_identifierType,
+        BI.meta bp_passport_meta, BI.metaVersion bp_passport_metaVersion, BI.createdAt bp_passport_createdAt,
+        BI.updatedAt bp_passport_updatedAt, BI.deletedAt bp_passport_deletedAt, BI.searchHelp bp_passport_searchHelp
 
       FROM Patient P
       LEFT JOIN PatientAddress PA ON PA.uuid = P.addressUuid
@@ -431,6 +438,14 @@ data class Patient(
         BP.patientUuid = P.uuid AND
         BP.createdAt >= :bpCreatedAfter AND
         BP.createdAt <= :bpCreateBefore
+      )
+      LEFT JOIN (
+        SELECT * FROM BusinessId
+        WHERE deletedAt IS NULL
+        GROUP BY patientUuid HAVING MAX(createdAt)
+      ) BI ON (
+        BI.patientUuid = P.uuid AND
+        BI.identifierType = "simple_bp_passport"
       )
       
       WHERE registeredFacilityId = :facilityId OR assignedFacilityId = :facilityId

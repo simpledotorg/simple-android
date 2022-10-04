@@ -3472,7 +3472,8 @@ class PatientRepositoryAndroidTest {
         identifier = Identifier(
             value = "3e1f35cc-94dc-4cef-8796-ac2aa138dddd",
             type = BpPassport
-        )
+        ),
+        createdAt = Instant.parse("2017-12-01T00:00:00Z")
     )
 
     val patient1BusinessId2 = TestData.businessId(
@@ -3481,7 +3482,8 @@ class PatientRepositoryAndroidTest {
         identifier = Identifier(
             value = "a84e4ef7-b330-4048-8936-944dc2fc46d1",
             type = BpPassport
-        )
+        ),
+        createdAt = Instant.parse("2018-01-01T00:00:00Z")
     )
 
     val patient2BusinessId1 = TestData.businessId(
@@ -3490,7 +3492,8 @@ class PatientRepositoryAndroidTest {
         identifier = Identifier(
             value = "2725766f-d7fd-47ad-85b2-4500d1db01d1",
             type = BpPassport
-        )
+        ),
+        createdAt = Instant.parse("2018-01-01T00:00:00Z")
     )
 
     val patientProfile1 = TestData.patientProfile(
@@ -3617,14 +3620,17 @@ class PatientRepositoryAndroidTest {
                 dateOfBirth = null
             ),
             registrationDate = Instant.parse("2017-01-01T00:00:00Z"),
+            registrationFacilityId = facilityId,
             registrationFacilityName = "PHC Obvious",
+            assignedFacilityId = facilityId,
             assignedFacilityName = "PHC Obvious",
             streetAddress = "45 Marigold Lane",
             colonyOrVillage = "Carroll Gardens",
             patientPhoneNumber = "1111111111",
             diagnosedWithHypertension = Yes,
             diagnosedWithDiabetes = No,
-            latestBloodPressureMeasurement = patient1Bp2
+            latestBloodPressureMeasurement = patient1Bp2,
+            bpPassport = patient1BusinessId2
         ),
         PatientLineListRow(
             patientName = "Pooja Kumari",
@@ -3636,14 +3642,17 @@ class PatientRepositoryAndroidTest {
                 dateOfBirth = null
             ),
             registrationDate = Instant.parse("2017-01-01T00:00:00Z"),
+            registrationFacilityId = facilityId,
             registrationFacilityName = "PHC Obvious",
+            assignedFacilityId = facilityId,
             assignedFacilityName = "PHC Obvious",
             streetAddress = "45 Marigold Lane",
             colonyOrVillage = "Carroll Gardens",
             patientPhoneNumber = "6666666666",
             diagnosedWithHypertension = Yes,
             diagnosedWithDiabetes = Yes,
-            latestBloodPressureMeasurement = patient2Bp1
+            latestBloodPressureMeasurement = patient2Bp1,
+            bpPassport = patient2BusinessId1
         )
     )
   }

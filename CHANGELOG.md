@@ -4,6 +4,13 @@
 
 ### Internal
 
+- Bump datadog sdk to v1.14.1
+- Bump Kotlin to v1.7.20
+
+## 2022-10-03-8443
+
+### Internal
+
 - Bump Lint to v30.3.0
 - Bump Flipper to v0.164.0
 - Rename `uiFlows` directory to `maestroUiFlows`
@@ -12,7 +19,6 @@
 - Bump Moshi to v1.14.0
 - Add query to fetch patient line list data
 - Bump core-ktx to v1.9.0
-- Bump Kotlin to v1.7.20
 
 ## 2022-09-26-8435
 

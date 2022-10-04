@@ -9,6 +9,7 @@
 - Add missing fields in `PatientLineListRow`
   - Added latest BP passport
   - Added registration and assigned facility IDs
+- Implement patient line list CSV generator
 
 ## 2022-10-03-8443
 

@@ -10,6 +10,7 @@
   - Added latest BP passport
   - Added registration and assigned facility IDs
 - Implement patient line list CSV generator
+- Add serial numbers in patient line list CSV
 
 ## 2022-10-03-8443
 

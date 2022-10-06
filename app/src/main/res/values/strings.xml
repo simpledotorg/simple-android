@@ -982,6 +982,7 @@
 
   <!-- Patient line list -->
   <string name="patient_line_list_title" translatable="false">IHCI Register, %1$d registered patients, %2$d assigned patients</string>
+  <string name="patient_line_list_column_sno" translatable="false">S.No</string>
   <string name="patient_line_list_column_name" translatable="false">Name</string>
   <string name="patient_line_list_column_sex" translatable="false">Sex</string>
   <string name="patient_line_list_column_age" translatable="false">Age</string>

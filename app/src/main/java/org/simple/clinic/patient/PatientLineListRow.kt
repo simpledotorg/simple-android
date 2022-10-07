@@ -21,8 +21,8 @@ data class PatientLineListRow(
     val streetAddress: String?,
     val colonyOrVillage: String?,
     val patientPhoneNumber: String?,
-    val diagnosedWithHypertension: Answer,
-    val diagnosedWithDiabetes: Answer,
+    val diagnosedWithHypertension: Answer?,
+    val diagnosedWithDiabetes: Answer?,
     @Embedded(prefix = "bp_")
     val latestBloodPressureMeasurement: BloodPressureMeasurement?,
     @Embedded(prefix = "bp_passport_")

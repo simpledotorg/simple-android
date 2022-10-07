@@ -12,6 +12,7 @@
 - Implement patient line list CSV generator
 - Add serial numbers in patient line list CSV
 - Add patient line list downloader
+- Mark `diagnosedWithHypertension` and `diagnosedWithDiabetes` as nullable in `PatientLineListRow`
 
 ## 2022-10-03-8443
 

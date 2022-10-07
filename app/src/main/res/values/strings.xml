@@ -1010,4 +1010,12 @@
   <string name="patient_line_list_gender_female" translatable="false">F</string>
   <string name="patient_line_list_gender_trans" translatable="false">T</string>
   <string name="patient_line_list_gender_unknown" translatable="false">U</string>
+
+  <string name="patient_line_list_download_notification_failed_title">Download Failed</string>
+  <string name="patient_line_list_download_notification_failed_subtitle">Try again in some time</string>
+  <string name="patient_line_list_download_notification_in_progress_title">Downloading patient line list</string>
+  <string name="patient_line_list_download_notification_cancel">Cancel</string>
+  <string name="patient_line_list_download_notification_succeeded_title">Download complete</string>
+  <string name="patient_line_list_download_notification_succeeded_subtitle">Click to open</string>
+
 </resources>

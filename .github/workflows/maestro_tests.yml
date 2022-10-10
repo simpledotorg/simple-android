@@ -52,5 +52,6 @@ jobs:
             -e pin=${{ secrets.TEST_LOGIN_PIN }}
             -e otp=${{ secrets.TEST_LOGIN_OTP }}
             maestroUiFlows/login_flow.yaml
+            --platform android
             
             adb uninstall org.simple.clinic.staging

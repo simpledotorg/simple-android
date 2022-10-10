@@ -13,6 +13,8 @@
 - Add serial numbers in patient line list CSV
 - Add patient line list downloader
 - Mark `diagnosedWithHypertension` and `diagnosedWithDiabetes` as nullable in `PatientLineListRow`
+- Bump Sentry to v6.5.0
+- Bump Sentry Gradle Plugin to v3.1.7
 
 ## 2022-10-03-8443
 

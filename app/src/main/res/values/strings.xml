@@ -981,7 +981,7 @@
   <string name="selected_overdue_select_all_appointments">SELECT ALL</string>
 
   <!-- Patient line list -->
-  <string name="patient_line_list_title" translatable="false">IHCI Register, %1$d registered patients, %2$d assigned patients</string>
+  <string name="patient_line_list_title" translatable="false">IHCI Register</string>
   <string name="patient_line_list_column_sno" translatable="false">S.No</string>
   <string name="patient_line_list_column_name" translatable="false">Name</string>
   <string name="patient_line_list_column_sex" translatable="false">Sex</string>

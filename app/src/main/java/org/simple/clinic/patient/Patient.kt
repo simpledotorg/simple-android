@@ -13,6 +13,7 @@ import androidx.room.Transaction
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
+import org.intellij.lang.annotations.Language
 import org.simple.clinic.contactpatient.ContactPatientProfile
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
@@ -80,6 +81,68 @@ data class Patient(
 
   @Dao
   abstract class RoomDao : DaoWithUpsert<Patient>() {
+
+    companion object {
+
+      @Language("RoomSql")
+      private const val PATIENT_LINE_LIST_QUERY = """
+        SELECT 
+          P.fullName patientName,
+          P.gender gender,
+          P.status status,
+          P.age_value,
+          P.age_updatedAt,
+          P.dateOfBirth,
+          P.createdAt registrationDate,
+          RF.uuid registrationFacilityId,
+          RF.name registrationFacilityName,
+          AF.uuid assignedFacilityId,
+          AF.name assignedFacilityName,
+          PA.streetAddress streetAddress,
+          PA.colonyOrVillage colonyOrVillage,
+          PPN.number patientPhoneNumber,
+          MH.diagnosedWithHypertension diagnosedWithHypertension,
+          MH.hasDiabetes diagnosedWithDiabetes,
+  
+          BP.uuid bp_uuid, BP.systolic bp_systolic, BP.diastolic bp_diastolic, BP.syncStatus bp_syncStatus,
+          BP.userUuid bp_userUuid, BP.facilityUuid bp_facilityUuid, BP.patientUuid bp_patientUuid, BP.createdAt bp_createdAt,
+          BP.updatedAt bp_updatedAt, BP.deletedAt bp_deletedAt, BP.recordedAt bp_recordedAt,
+          
+          BI.uuid bp_passport_uuid, BI.patientUuid bp_passport_patientUuid,
+          BI.identifier bp_passport_identifier, BI.identifierType bp_passport_identifierType,
+          BI.meta bp_passport_meta, BI.metaVersion bp_passport_metaVersion, BI.createdAt bp_passport_createdAt,
+          BI.updatedAt bp_passport_updatedAt, BI.deletedAt bp_passport_deletedAt, BI.searchHelp bp_passport_searchHelp
+
+        FROM Patient P
+        LEFT JOIN PatientAddress PA ON PA.uuid = P.addressUuid
+        LEFT JOIN (
+          SELECT * FROM PatientPhoneNumber
+          GROUP BY patientUuid HAVING MAX(createdAt)
+        ) PPN on PPN.patientUuid = P.uuid AND PPN.deletedAt IS NULL
+        LEFT JOIN Facility RF ON RF.uuid = P.registeredFacilityId
+        LEFT JOIN Facility AF ON AF.uuid = P.registeredFacilityId
+        LEFT JOIN MedicalHistory MH ON MH.patientUuid = P.uuid
+        LEFT JOIN (
+          SELECT * FROM BloodPressureMeasurement 
+          WHERE  deletedAt IS NULL
+          GROUP BY patientUuid HAVING MAX(createdAt)
+        ) BP ON (
+          BP.patientUuid = P.uuid AND
+          BP.createdAt >= :bpCreatedAfter AND
+          BP.createdAt <= :bpCreateBefore
+        )
+        LEFT JOIN (
+          SELECT * FROM BusinessId
+          WHERE deletedAt IS NULL
+          GROUP BY patientUuid HAVING MAX(createdAt)
+        ) BI ON (
+          BI.patientUuid = P.uuid AND
+          BI.identifierType = "simple_bp_passport"
+        )
+
+        WHERE registeredFacilityId = :facilityId OR assignedFacilityId = :facilityId
+      """
+    }
 
     @Query("SELECT * FROM patient")
     abstract fun allPatients(): Flowable<List<Patient>>
@@ -394,67 +457,24 @@ data class Patient(
     abstract fun villageAndPatientNamesInFacility(facilityUuid: UUID): List<String>
 
     @Query("""
-      SELECT 
-        P.fullName patientName,
-        P.gender gender,
-        P.status status,
-        P.age_value,
-        P.age_updatedAt,
-        P.dateOfBirth,
-        P.createdAt registrationDate,
-        RF.uuid registrationFacilityId,
-        RF.name registrationFacilityName,
-        AF.uuid assignedFacilityId,
-        AF.name assignedFacilityName,
-        PA.streetAddress streetAddress,
-        PA.colonyOrVillage colonyOrVillage,
-        PPN.number patientPhoneNumber,
-        MH.diagnosedWithHypertension diagnosedWithHypertension,
-        MH.hasDiabetes diagnosedWithDiabetes,
-
-        BP.uuid bp_uuid, BP.systolic bp_systolic, BP.diastolic bp_diastolic, BP.syncStatus bp_syncStatus,
-        BP.userUuid bp_userUuid, BP.facilityUuid bp_facilityUuid, BP.patientUuid bp_patientUuid, BP.createdAt bp_createdAt,
-        BP.updatedAt bp_updatedAt, BP.deletedAt bp_deletedAt, BP.recordedAt bp_recordedAt,
-        
-        BI.uuid bp_passport_uuid, BI.patientUuid bp_passport_patientUuid,
-        BI.identifier bp_passport_identifier, BI.identifierType bp_passport_identifierType,
-        BI.meta bp_passport_meta, BI.metaVersion bp_passport_metaVersion, BI.createdAt bp_passport_createdAt,
-        BI.updatedAt bp_passport_updatedAt, BI.deletedAt bp_passport_deletedAt, BI.searchHelp bp_passport_searchHelp
-
-      FROM Patient P
-      LEFT JOIN PatientAddress PA ON PA.uuid = P.addressUuid
-      LEFT JOIN (
-        SELECT * FROM PatientPhoneNumber
-        GROUP BY patientUuid HAVING MAX(createdAt)
-      ) PPN on PPN.patientUuid = P.uuid AND PPN.deletedAt IS NULL
-      LEFT JOIN Facility RF ON RF.uuid = P.registeredFacilityId
-      LEFT JOIN Facility AF ON AF.uuid = P.registeredFacilityId
-      LEFT JOIN MedicalHistory MH ON MH.patientUuid = P.uuid
-      LEFT JOIN (
-        SELECT * FROM BloodPressureMeasurement 
-        WHERE  deletedAt IS NULL
-        GROUP BY patientUuid HAVING MAX(createdAt)
-      ) BP ON (
-        BP.patientUuid = P.uuid AND
-        BP.createdAt >= :bpCreatedAfter AND
-        BP.createdAt <= :bpCreateBefore
-      )
-      LEFT JOIN (
-        SELECT * FROM BusinessId
-        WHERE deletedAt IS NULL
-        GROUP BY patientUuid HAVING MAX(createdAt)
-      ) BI ON (
-        BI.patientUuid = P.uuid AND
-        BI.identifierType = "simple_bp_passport"
-      )
-      
-      WHERE registeredFacilityId = :facilityId OR assignedFacilityId = :facilityId
+      $PATIENT_LINE_LIST_QUERY
+      LIMIT 1000 OFFSET :offset
     """)
-    abstract fun patientLineListCursor(
+    abstract fun patientLineListRows(
+        facilityId: UUID,
+        bpCreatedAfter: LocalDate,
+        bpCreateBefore: LocalDate,
+        offset: Int
+    ): List<PatientLineListRow>
+
+    @Query("""
+      SELECT COUNT(*) FROM ($PATIENT_LINE_LIST_QUERY)
+    """)
+    abstract fun patientLineListCount(
         facilityId: UUID,
         bpCreatedAfter: LocalDate,
         bpCreateBefore: LocalDate
-    ): List<PatientLineListRow>
+    ): Int
   }
 }
 

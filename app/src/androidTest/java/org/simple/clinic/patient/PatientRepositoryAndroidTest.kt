@@ -3602,10 +3602,11 @@ class PatientRepositoryAndroidTest {
     bloodPressureRepository.save(listOf(patient1Bp1, patient1Bp2, patient2Bp1))
 
     // when
-    val patientLineListRows = patientRepository.patientLineList(
+    val patientLineListRows = patientRepository.patientLineListRows(
         facilityId = facilityId,
         bpCreatedAfter = LocalDate.parse("2018-01-01"),
-        bpCreatedBefore = LocalDate.parse("2018-03-31")
+        bpCreatedBefore = LocalDate.parse("2018-03-31"),
+        offset = 0
     )
 
     // then

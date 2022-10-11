@@ -752,12 +752,26 @@ class PatientRepository @Inject constructor(
     return database.patientDao().villageAndPatientNamesInFacility(facilityUuid)
   }
 
-  fun patientLineList(
+  fun patientLineListRows(
+      facilityId: UUID,
+      bpCreatedAfter: LocalDate,
+      bpCreatedBefore: LocalDate,
+      offset: Int
+  ): List<PatientLineListRow> {
+    return database.patientDao().patientLineListRows(
+        facilityId = facilityId,
+        bpCreatedAfter = bpCreatedAfter,
+        bpCreateBefore = bpCreatedBefore,
+        offset = offset
+    )
+  }
+
+  fun patientLineListCount(
       facilityId: UUID,
       bpCreatedAfter: LocalDate,
       bpCreatedBefore: LocalDate
-  ): List<PatientLineListRow> {
-    return database.patientDao().patientLineListCursor(
+  ): Int {
+    return database.patientDao().patientLineListCount(
         facilityId = facilityId,
         bpCreatedAfter = bpCreatedAfter,
         bpCreateBefore = bpCreatedBefore

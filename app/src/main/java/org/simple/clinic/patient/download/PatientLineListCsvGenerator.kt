@@ -57,20 +57,7 @@ class PatientLineListCsvGenerator @Inject constructor(
     val outputStream = ByteArrayOutputStream()
     val csvWriter = CSVWriter(OutputStreamWriter(outputStream))
 
-    val patientLineList = patientRepository.patientLineList(
-        facilityId = facilityId,
-        bpCreatedAfter = bpCreatedAfter,
-        bpCreatedBefore = bpCreatedBefore
-    )
-
-    val registeredPatientsCount = patientLineList.count { it.registrationFacilityId == facilityId }
-    val assignedPatientsCount = patientLineList.count { it.assignedFacilityId == facilityId }
-
-    val title = resources.getString(
-        R.string.patient_line_list_title,
-        registeredPatientsCount,
-        assignedPatientsCount
-    )
+    val title = resources.getString(R.string.patient_line_list_title)
 
     val reportStartMonthName = monthNameDateFormatter.format(bpCreatedAfter)
     val reportEndMonthName = monthNameDateFormatter.format(bpCreatedBefore)
@@ -89,10 +76,28 @@ class PatientLineListCsvGenerator @Inject constructor(
     csvWriter.writeNext(arrayOf(title), false)
     csvWriter.writeNext(columnNames, false)
 
-    patientLineList.forEachIndexed { index, patientLineListRow ->
-      val patientLineListRowColumns = patientLineListRowColumns(index, patientLineListRow)
+    var offset = 0
+    val patientLineListCount = patientRepository.patientLineListCount(
+        facilityId = facilityId,
+        bpCreatedAfter = bpCreatedAfter,
+        bpCreatedBefore = bpCreatedBefore
+    )
 
-      csvWriter.writeNext(patientLineListRowColumns, false)
+    while (offset < patientLineListCount) {
+      val patientLineList = patientRepository.patientLineListRows(
+          facilityId = facilityId,
+          bpCreatedAfter = bpCreatedAfter,
+          bpCreatedBefore = bpCreatedBefore,
+          offset = offset
+      )
+
+      patientLineList.forEachIndexed { index, patientLineListRow ->
+        val patientLineListRowColumns = patientLineListRowColumns(index, offset, patientLineListRow)
+
+        csvWriter.writeNext(patientLineListRowColumns, false)
+      }
+
+      offset += patientLineList.size
     }
 
     csvWriter.close()
@@ -102,13 +107,14 @@ class PatientLineListCsvGenerator @Inject constructor(
 
   private fun patientLineListRowColumns(
       index: Int,
+      offset: Int,
       patientLineListRow: PatientLineListRow
   ): Array<String> {
     val columns = mutableListOf<String>()
 
-    // Since Kotlin list index start from 0, we are adding 1 to offset
-    // for S.No
-    val sNo = index + 1
+    // Since Kotlin list index start from 0, we are adding 1 to (index + current offset)
+    // to offset for S.No in the entire patient line list
+    val sNo = (index + offset) + 1
     columns.add(sNo.toString())
 
     with(patientLineListRow) {

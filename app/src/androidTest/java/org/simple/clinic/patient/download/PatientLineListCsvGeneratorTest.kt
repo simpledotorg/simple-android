@@ -207,7 +207,7 @@ class PatientLineListCsvGeneratorTest {
 
     // then
     val expectedCsv = """
-      "IHCI Register, 2 registered patients, 2 assigned patients"
+      IHCI Register
       S.No,Name,Sex,Age,Registration date,Registration facility,Assigned facility,BP Passport,Street address,Village,Phone,Diagnosis,Jan-Mar Visit: HTN Controlled?,Status
       1,Ramesh Prasad,M,65,01/01/2017,PHC Obvious,,844 7330,45 Marigold Lane,Carroll Gardens,1111111111,HTN,Controlled,
       2,Pooja Kumari,F,45,01/01/2017,PHC Obvious,,272 5766,45 Marigold Lane,Carroll Gardens,6666666666,HTN + DM,-,Died

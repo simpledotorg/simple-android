@@ -7,6 +7,7 @@
 - Mark `diagnosedWithHypertension` and `diagnosedWithDiabetes` as nullable in `PatientLineListRow`
 - Bump Sentry to v6.5.0
 - Bump Sentry Gradle Plugin to v3.1.7
+- Add background worker for downloading patient line list
 
 ## 2022-10-11-8452
 

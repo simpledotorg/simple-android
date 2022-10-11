@@ -8,6 +8,7 @@
 - Bump Sentry to v6.5.0
 - Bump Sentry Gradle Plugin to v3.1.7
 - Add background worker for downloading patient line list
+- Bump Flipper to v0.169.0
 
 ## 2022-10-11-8452
 

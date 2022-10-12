@@ -44,8 +44,6 @@ class PatientLineListDownloader @Inject constructor(
   }
 
   fun download(
-      bpCreatedAfter: LocalDate,
-      bpCreatedBefore: LocalDate,
       fileFormat: PatientLineListFileFormat
   ): Single<PatientLineListDownloadResult> {
     if (!hasMinReqSpace()) {
@@ -58,11 +56,7 @@ class PatientLineListDownloader @Inject constructor(
       val facilityName = facility.name
 
       try {
-        val csvOutputStream = patientLineListCsvGenerator.generate(
-            facilityId = facilityId,
-            bpCreatedAfter = bpCreatedAfter,
-            bpCreatedBefore = bpCreatedBefore
-        )
+        val csvOutputStream = patientLineListCsvGenerator.generate(facilityId = facilityId)
         val csvInputStream = ByteArrayInputStream(csvOutputStream.toByteArray())
 
         it.onSuccess(saveFileToDisk(fileFormat, facilityName, csvInputStream))

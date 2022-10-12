@@ -26,7 +26,6 @@ import org.simple.clinic.patient.download.PatientLineListDownloadResult.NotEnoug
 import org.simple.clinic.patient.download.PatientLineListFileFormat.CSV
 import org.simple.clinic.patient.download.PatientLineListFileFormat.PDF
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import java.time.LocalDate
 import javax.inject.Inject
 
 class PatientLinetListDownloadWorker(
@@ -38,8 +37,6 @@ class PatientLinetListDownloadWorker(
     const val TAG = "patient_line_list_download_worker"
 
     private const val KEY_DOWNLOAD_FORMAT = "download_format"
-    private const val KEY_BP_CREATED_AFTER = "bp_created_after"
-    private const val KEY_BP_CREATED_BEFORE = "bp_created_before"
 
     private const val NOTIFICATION_CHANNEL_ID = "org.simple.clinic.Downloads"
     private const val NOTIFICATION_CHANNEL_NAME = "Downloads"
@@ -54,15 +51,11 @@ class PatientLinetListDownloadWorker(
     private const val GOOGLE_SHEETS_PACKAGE_NAME = "com.google.android.apps.docs.editors.sheets"
 
     fun workRequest(
-        fileFormat: PatientLineListFileFormat,
-        bpCreatedAfter: LocalDate,
-        bpCreatedBefore: LocalDate
+        fileFormat: PatientLineListFileFormat
     ): OneTimeWorkRequest {
       return OneTimeWorkRequestBuilder<PatientLinetListDownloadWorker>()
           .setInputData(workDataOf(
-              KEY_DOWNLOAD_FORMAT to fileFormat.toString(),
-              KEY_BP_CREATED_AFTER to bpCreatedAfter.toString(),
-              KEY_BP_CREATED_BEFORE to bpCreatedBefore.toString()
+              KEY_DOWNLOAD_FORMAT to fileFormat.toString()
           ))
           .build()
     }
@@ -94,13 +87,8 @@ class PatientLinetListDownloadWorker(
     val downloadFormatString = inputData.getString(KEY_DOWNLOAD_FORMAT)!!
     val downloadFormat = PatientLineListFileFormat.valueOf(downloadFormatString)
 
-    val bpCreatedAfter = LocalDate.parse(inputData.getString(KEY_BP_CREATED_AFTER))
-    val bpCreatedBefore = LocalDate.parse(inputData.getString(KEY_BP_CREATED_BEFORE))
-
     return downloader
         .download(
-            bpCreatedAfter = bpCreatedAfter,
-            bpCreatedBefore = bpCreatedBefore,
             fileFormat = downloadFormat
         )
         .map { result ->

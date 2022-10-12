@@ -44,7 +44,7 @@ class PatientLineListCsvGeneratorTest {
   fun setup() {
     TestClinicApp.appComponent().inject(this)
 
-    userClock.setDate(LocalDate.parse("2018-01-01"))
+    userClock.setDate(LocalDate.parse("2018-04-15"))
   }
 
   @Test
@@ -200,9 +200,7 @@ class PatientLineListCsvGeneratorTest {
 
     // when
     val generatedCsv = patientLineListCsvGenerator.generate(
-        facilityId = facilityId,
-        bpCreatedAfter = LocalDate.parse("2018-01-01"),
-        bpCreatedBefore = LocalDate.parse("2018-03-31")
+        facilityId = facilityId
     ).toString()
 
     // then

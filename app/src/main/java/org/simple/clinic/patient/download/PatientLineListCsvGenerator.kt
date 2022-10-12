@@ -10,6 +10,7 @@ import org.simple.clinic.di.DateFormatter
 import org.simple.clinic.di.DateFormatter.Type.MonthName
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientLineListRow
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientStatus
@@ -20,6 +21,8 @@ import java.io.ByteArrayOutputStream
 import java.io.OutputStreamWriter
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.temporal.TemporalAdjusters.firstDayOfMonth
+import java.time.temporal.TemporalAdjusters.lastDayOfMonth
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -46,14 +49,23 @@ class PatientLineListCsvGenerator @Inject constructor(
     private val patientRepository: PatientRepository,
     private val userClock: UserClock,
     @Named("date_for_user_input") private val dateFormatter: DateTimeFormatter,
-    @DateFormatter(MonthName) private val monthNameDateFormatter: DateTimeFormatter
+    @DateFormatter(MonthName) private val monthNameDateFormatter: DateTimeFormatter,
+    private val patientConfig: PatientConfig
 ) {
 
-  fun generate(
-      facilityId: UUID,
-      bpCreatedAfter: LocalDate,
-      bpCreatedBefore: LocalDate
-  ): ByteArrayOutputStream {
+  /**
+   * Generate patient line list for the given facility with control status
+   * calculated for the last 3 completed trailing months
+   */
+  fun generate(facilityId: UUID): ByteArrayOutputStream {
+    val currentDate = LocalDate.now(userClock)
+    val bpCreatedBefore = currentDate
+        .minusMonths(1)
+        .with(lastDayOfMonth())
+    val bpCreatedAfter = bpCreatedBefore
+        .minus(patientConfig.periodForCalculatingLineListHtnControl)
+        .with(firstDayOfMonth())
+
     val outputStream = ByteArrayOutputStream()
     val csvWriter = CSVWriter(OutputStreamWriter(outputStream))
 
@@ -61,17 +73,7 @@ class PatientLineListCsvGenerator @Inject constructor(
 
     val reportStartMonthName = monthNameDateFormatter.format(bpCreatedAfter)
     val reportEndMonthName = monthNameDateFormatter.format(bpCreatedBefore)
-
-    val columnNames = PatientLineListColumn
-        .values()
-        .map {
-          if (it == PatientLineListColumn.CONTROL_STATUS) {
-            resources.getString(it.value, reportStartMonthName, reportEndMonthName)
-          } else {
-            resources.getString(it.value)
-          }
-        }
-        .toTypedArray()
+    val columnNames = patientLineListColumns(reportStartMonthName, reportEndMonthName)
 
     csvWriter.writeNext(arrayOf(title), false)
     csvWriter.writeNext(columnNames, false)
@@ -103,6 +105,22 @@ class PatientLineListCsvGenerator @Inject constructor(
     csvWriter.close()
 
     return outputStream
+  }
+
+  private fun patientLineListColumns(
+      reportStartMonthName: String,
+      reportEndMonthName: String
+  ): Array<String> {
+    return PatientLineListColumn
+        .values()
+        .map {
+          if (it == PatientLineListColumn.CONTROL_STATUS) {
+            resources.getString(it.value, reportStartMonthName, reportEndMonthName)
+          } else {
+            resources.getString(it.value)
+          }
+        }
+        .toTypedArray()
   }
 
   private fun patientLineListRowColumns(

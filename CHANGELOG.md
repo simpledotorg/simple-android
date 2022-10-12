@@ -10,6 +10,7 @@
 - Add background worker for downloading patient line list
 - Bump Flipper to v0.169.0
 - Use paginated data for generating patient line list CSV
+- Enable large table support when converting CSV to PDF
 
 ## 2022-10-11-8452
 

@@ -11,6 +11,7 @@
 - Bump Flipper to v0.169.0
 - Use paginated data for generating patient line list CSV
 - Enable large table support when converting CSV to PDF
+- Move `bpCreatedAfter` and `bpCreatedBefore` date calculation to `PatientLineListCsvGenerator#generate`
 
 ## 2022-10-11-8452
 

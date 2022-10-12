@@ -1,9 +1,11 @@
 package org.simple.clinic.patient
 
 import org.simple.clinic.remoteconfig.ConfigReader
+import java.time.Period
 
 data class PatientConfig(
-    val recentPatientLimit: Int
+    val recentPatientLimit: Int,
+    val periodForCalculatingLineListHtnControl: Period
 ) {
 
   companion object {
@@ -15,7 +17,8 @@ data class PatientConfig(
           .toInt()
 
       return PatientConfig(
-          recentPatientLimit = numberOfRecentPatients
+          recentPatientLimit = numberOfRecentPatients,
+          periodForCalculatingLineListHtnControl = Period.ofMonths(2)
       )
     }
   }

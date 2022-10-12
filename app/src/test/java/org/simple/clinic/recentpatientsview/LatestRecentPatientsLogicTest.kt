@@ -13,7 +13,6 @@ import io.reactivex.subjects.Subject
 import org.junit.After
 import org.junit.Rule
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
@@ -21,13 +20,15 @@ import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.RecentPatient
-import org.simple.sharedTestCode.util.RxErrorsRule
-import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
+import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.sharedTestCode.util.TestUserClock
 import java.time.Instant
 import java.time.LocalDate
+import java.time.Period
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.UUID
@@ -298,7 +299,8 @@ class LatestRecentPatientsLogicTest {
     whenever(patientRepository.recentPatients(facility.uuid, recentPatientLimitPlusOne)) doReturn Observable.just(recentPatients)
 
     val config = PatientConfig(
-        recentPatientLimit = recentPatientLimit
+        recentPatientLimit = recentPatientLimit,
+        periodForCalculatingLineListHtnControl = Period.ofMonths(2)
     )
 
     val effectHandler = LatestRecentPatientsEffectHandler(

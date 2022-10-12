@@ -15,8 +15,6 @@ class PatientLineListScheduler @Inject constructor(
       bpCreatedBefore: LocalDate
   ) {
     val workRequest = PatientLinetListDownloadWorker.workRequest(
-        bpCreatedAfter = bpCreatedAfter,
-        bpCreatedBefore = bpCreatedBefore,
         fileFormat = fileFormat
     )
 

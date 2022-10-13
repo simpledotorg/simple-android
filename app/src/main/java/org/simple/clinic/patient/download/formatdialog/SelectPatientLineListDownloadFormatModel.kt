@@ -11,4 +11,8 @@ data class SelectPatientLineListDownloadFormatModel(
         fileFormat = PatientLineListFileFormat.PDF
     )
   }
+
+  fun fileFormatChanged(fileFormat: PatientLineListFileFormat): SelectPatientLineListDownloadFormatModel {
+    return copy(fileFormat = fileFormat)
+  }
 }

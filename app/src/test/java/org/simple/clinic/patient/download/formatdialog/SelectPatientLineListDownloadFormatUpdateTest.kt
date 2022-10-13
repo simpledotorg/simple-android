@@ -1,11 +1,14 @@
 package org.simple.clinic.patient.download.formatdialog
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
+import com.spotify.mobius.test.NextMatchers.hasModel
+import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.patient.download.PatientLineListFileFormat
+
 
 class SelectPatientLineListDownloadFormatUpdateTest {
 
@@ -22,6 +25,17 @@ class SelectPatientLineListDownloadFormatUpdateTest {
             hasEffects(
                 SchedulePatientLineListDownload(fileFormat = PatientLineListFileFormat.PDF)
             )
+        ))
+  }
+
+  @Test
+  fun `when download file format is changed, then update the model`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DownloadFileFormatChanged(PatientLineListFileFormat.CSV))
+        .then(assertThatNext(
+            hasModel(defaultModel.fileFormatChanged(PatientLineListFileFormat.CSV)),
+            hasNoEffects()
         ))
   }
 }

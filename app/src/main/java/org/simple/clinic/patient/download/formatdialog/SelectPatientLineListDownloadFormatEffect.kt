@@ -7,3 +7,5 @@ sealed class PatientLineListDownloadFormatEffect
 data class SchedulePatientLineListDownload(
     val fileFormat: PatientLineListFileFormat
 ) : PatientLineListDownloadFormatEffect()
+
+object Dismiss : PatientLineListDownloadFormatEffect()

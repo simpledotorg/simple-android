@@ -38,4 +38,15 @@ class SelectPatientLineListDownloadFormatUpdateTest {
             hasNoEffects()
         ))
   }
+
+  @Test
+  fun `when cancel button is clicked, then dismiss the dialog`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(CancelButtonClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(Dismiss)
+        ))
+  }
 }

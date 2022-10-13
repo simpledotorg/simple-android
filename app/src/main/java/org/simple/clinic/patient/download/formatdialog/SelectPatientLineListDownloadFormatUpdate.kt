@@ -17,6 +17,7 @@ class SelectPatientLineListDownloadFormatUpdate : Update<
     return when (event) {
       DownloadButtonClicked -> dispatch(SchedulePatientLineListDownload(model.fileFormat))
       is DownloadFileFormatChanged -> next(model.fileFormatChanged(event.fileFormat))
+      CancelButtonClicked -> dispatch(Dismiss)
     }
   }
 }

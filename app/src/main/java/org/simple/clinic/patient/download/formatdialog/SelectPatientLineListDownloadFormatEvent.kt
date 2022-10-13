@@ -11,3 +11,5 @@ object DownloadButtonClicked : SelectPatientLineListDownloadFormatEvent() {
 }
 
 data class DownloadFileFormatChanged(val fileFormat: PatientLineListFileFormat) : SelectPatientLineListDownloadFormatEvent()
+
+object CancelButtonClicked : SelectPatientLineListDownloadFormatEvent()

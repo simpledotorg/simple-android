@@ -10,20 +10,32 @@ import org.simple.clinic.patient.download.PatientLineListScheduler
 
 class SelectLineListDownloadFormatEffectHandlerTest {
 
+  private val uiActions = mock<UiActions>()
+  private val viewEffectHandler = SelectLineListFormatViewEffectHandler(uiActions)
+  private val patientLineListScheduler = mock<PatientLineListScheduler>()
+  private val effectHandler = SelectLineListDownloadFormatEffectHandler(
+      patientLineListScheduler = patientLineListScheduler,
+      viewEffectsConsumer = viewEffectHandler::handle
+  )
+  private val testCase = EffectHandlerTestCase(effectHandler.build())
+
   @Test
   fun `when schedule patient line list download effect is received, then schedule download`() {
-    // given
-    val patientLineListScheduler = mock<PatientLineListScheduler>()
-    val effectHandler = SelectLineListDownloadFormatEffectHandler(
-        patientLineListScheduler = patientLineListScheduler
-    )
-    val testCase = EffectHandlerTestCase(effectHandler.build())
-
     // when
     testCase.dispatch(SchedulePatientLineListDownload(PatientLineListFileFormat.PDF))
 
     // then
     verify(patientLineListScheduler).schedule(PatientLineListFileFormat.PDF)
     verifyNoMoreInteractions(patientLineListScheduler)
+  }
+
+  @Test
+  fun `when dismiss effect is received, then dismiss the dialog`() {
+    // when
+    testCase.dispatch(Dismiss)
+
+    // then
+    verify(uiActions).dismiss()
+    verifyNoMoreInteractions(uiActions)
   }
 }

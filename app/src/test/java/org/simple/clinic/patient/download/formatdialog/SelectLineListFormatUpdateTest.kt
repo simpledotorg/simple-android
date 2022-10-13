@@ -10,10 +10,10 @@ import org.junit.Test
 import org.simple.clinic.patient.download.PatientLineListFileFormat
 
 
-class SelectPatientLineListDownloadFormatUpdateTest {
+class SelectLineListFormatUpdateTest {
 
-  private val updateSpec = UpdateSpec(SelectPatientLineListDownloadFormatUpdate())
-  private val defaultModel = SelectPatientLineListDownloadFormatModel.create()
+  private val updateSpec = UpdateSpec(SelectLineListFormatUpdate())
+  private val defaultModel = SelectLineListFormatModel.create()
 
   @Test
   fun `when download button is clicked, then start download`() {

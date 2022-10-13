@@ -2,17 +2,17 @@ package org.simple.clinic.patient.download.formatdialog
 
 import org.simple.clinic.patient.download.PatientLineListFileFormat
 
-data class SelectPatientLineListDownloadFormatModel(
+data class SelectLineListFormatModel(
     val fileFormat: PatientLineListFileFormat
 ) {
   companion object {
 
-    fun create() = SelectPatientLineListDownloadFormatModel(
+    fun create() = SelectLineListFormatModel(
         fileFormat = PatientLineListFileFormat.PDF
     )
   }
 
-  fun fileFormatChanged(fileFormat: PatientLineListFileFormat): SelectPatientLineListDownloadFormatModel {
+  fun fileFormatChanged(fileFormat: PatientLineListFileFormat): SelectLineListFormatModel {
     return copy(fileFormat = fileFormat)
   }
 }

@@ -8,12 +8,12 @@ import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.download.PatientLineListFileFormat
 import org.simple.clinic.patient.download.PatientLineListScheduler
 
-class SelectLineListDownloadFormatEffectHandlerTest {
+class SelectLineListFormatEffectHandlerTest {
 
   private val uiActions = mock<UiActions>()
   private val viewEffectHandler = SelectLineListFormatViewEffectHandler(uiActions)
   private val patientLineListScheduler = mock<PatientLineListScheduler>()
-  private val effectHandler = SelectLineListDownloadFormatEffectHandler(
+  private val effectHandler = SelectLineListFormatEffectHandler(
       patientLineListScheduler = patientLineListScheduler,
       viewEffectsConsumer = viewEffectHandler::handle
   )

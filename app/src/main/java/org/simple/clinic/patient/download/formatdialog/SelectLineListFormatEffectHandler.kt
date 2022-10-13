@@ -8,7 +8,7 @@ import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.patient.download.PatientLineListScheduler
 
-class SelectLineListDownloadFormatEffectHandler @AssistedInject constructor(
+class SelectLineListFormatEffectHandler @AssistedInject constructor(
     private val patientLineListScheduler: PatientLineListScheduler,
     @Assisted private val viewEffectsConsumer: Consumer<SelectLineListFormatViewEffect>
 ) {
@@ -17,11 +17,11 @@ class SelectLineListDownloadFormatEffectHandler @AssistedInject constructor(
   interface Factory {
     fun create(
         viewEffectsConsumer: Consumer<SelectLineListFormatViewEffect>
-    ): SelectLineListDownloadFormatEffectHandler
+    ): SelectLineListFormatEffectHandler
   }
 
-  fun build(): ObservableTransformer<PatientLineListDownloadFormatEffect, SelectPatientLineListDownloadFormatEvent> = RxMobius
-      .subtypeEffectHandler<PatientLineListDownloadFormatEffect, SelectPatientLineListDownloadFormatEvent>()
+  fun build(): ObservableTransformer<SelectLineListFormatEffect, SelectLineListFormatEvent> = RxMobius
+      .subtypeEffectHandler<SelectLineListFormatEffect, SelectLineListFormatEvent>()
       .addConsumer(SchedulePatientLineListDownload::class.java, ::scheduleDownload)
       .addConsumer(SelectLineListFormatViewEffect::class.java, viewEffectsConsumer::accept)
       .build()

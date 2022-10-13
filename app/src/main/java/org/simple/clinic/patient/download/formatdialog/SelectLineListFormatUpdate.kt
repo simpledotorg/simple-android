@@ -5,15 +5,15 @@ import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
 
-class SelectPatientLineListDownloadFormatUpdate : Update<
-    SelectPatientLineListDownloadFormatModel,
-    SelectPatientLineListDownloadFormatEvent,
-    PatientLineListDownloadFormatEffect> {
+class SelectLineListFormatUpdate : Update<
+    SelectLineListFormatModel,
+    SelectLineListFormatEvent,
+    SelectLineListFormatEffect> {
 
   override fun update(
-      model: SelectPatientLineListDownloadFormatModel,
-      event: SelectPatientLineListDownloadFormatEvent
-  ): Next<SelectPatientLineListDownloadFormatModel, PatientLineListDownloadFormatEffect> {
+      model: SelectLineListFormatModel,
+      event: SelectLineListFormatEvent
+  ): Next<SelectLineListFormatModel, SelectLineListFormatEffect> {
     return when (event) {
       DownloadButtonClicked -> dispatch(SchedulePatientLineListDownload(model.fileFormat))
       is DownloadFileFormatChanged -> next(model.fileFormatChanged(event.fileFormat))

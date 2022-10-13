@@ -2,12 +2,12 @@ package org.simple.clinic.patient.download.formatdialog
 
 import org.simple.clinic.patient.download.PatientLineListFileFormat
 
-sealed class PatientLineListDownloadFormatEffect
+sealed class SelectLineListFormatEffect
 
 data class SchedulePatientLineListDownload(
     val fileFormat: PatientLineListFileFormat
-) : PatientLineListDownloadFormatEffect()
+) : SelectLineListFormatEffect()
 
-sealed class SelectLineListFormatViewEffect : PatientLineListDownloadFormatEffect()
+sealed class SelectLineListFormatViewEffect : SelectLineListFormatEffect()
 
 object Dismiss : SelectLineListFormatViewEffect()

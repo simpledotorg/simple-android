@@ -37,6 +37,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.drugstockreminders.DrugStockNotificationScheduler
 import org.simple.clinic.drugstockreminders.enterdrugstock.EnterDrugStockScreen
 import org.simple.clinic.enterotp.EnterOtpScreen
+import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Feature.MonthlyDrugStockReportReminder
 import org.simple.clinic.feature.Feature.NotifyAppUpdateAvailableV2
 import org.simple.clinic.feature.Feature.PatientLineListDownload
@@ -186,7 +187,11 @@ class PatientsTabScreen : BaseScreen<
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenPatientsBinding.inflate(layoutInflater, container, false)
 
-  override fun uiRenderer() = PatientsTabUiRenderer(this, LocalDate.now(userClock))
+  override fun uiRenderer() = PatientsTabUiRenderer(
+      ui = this,
+      currentDate = LocalDate.now(userClock),
+      isPatientLineListEnabled = features.isEnabled(Feature.PatientLineListDownload)
+  )
 
   override fun viewEffectHandler() = PatientsTabViewEffectHandler(this)
 
@@ -412,6 +417,14 @@ class PatientsTabScreen : BaseScreen<
     drugStockReminderCardSubTitle.text = resources.getString(R.string.drug_stock_reminder_card_content, previousMonthAndYear)
 
     showHomeScreenBackground(R.id.drugStockReminderCardLayout)
+  }
+
+  override fun showPatientLineListDownload(facilityName: String) {
+    // Nothing to do here yet
+  }
+
+  override fun hidePatientLineListDownload() {
+    // Nothing to do here yet
   }
 
   private fun previousMonthAndYear(): String {

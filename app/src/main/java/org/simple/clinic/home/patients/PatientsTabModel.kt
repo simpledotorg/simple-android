@@ -31,6 +31,9 @@ data class PatientsTabModel(
     )
   }
 
+  val hasFacility: Boolean
+    get() = facility != null
+
   val hasLoadedUser: Boolean
     get() = user != null
 

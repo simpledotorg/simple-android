@@ -11,4 +11,6 @@ interface PatientsTabUi {
   fun renderAppUpdateReason(appStalenessInMonths: Int)
   fun showCriticalAppUpdateCard()
   fun showDrugStockReminderCard()
+  fun showPatientLineListDownload(facilityName: String)
+  fun hidePatientLineListDownload()
 }

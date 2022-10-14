@@ -8,7 +8,8 @@ import java.time.Period
 
 class PatientsTabUiRenderer(
     private val ui: PatientsTabUi,
-    private val currentDate: LocalDate
+    private val currentDate: LocalDate,
+    private val isPatientLineListEnabled: Boolean
 ) : ViewRenderer<PatientsTabModel> {
 
   private val userChangedCallback = ValueChangedCallback<User>()
@@ -23,6 +24,18 @@ class PatientsTabUiRenderer(
     }
 
     renderPatientTabScreenCard(model)
+
+    if (isPatientLineListEnabled) {
+      renderPatientLineListDownloadCard(model)
+    }
+  }
+
+  private fun renderPatientLineListDownloadCard(model: PatientsTabModel) {
+    if (model.hasFacility) {
+      ui.showPatientLineListDownload(model.facility!!.name)
+    } else {
+      ui.hidePatientLineListDownload()
+    }
   }
 
   private fun renderPatientTabScreenCard(model: PatientsTabModel) {

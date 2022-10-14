@@ -38,6 +38,8 @@ class PatientsTabUpdate(private val isNotifyAppUpdateAvailableV2Enabled: Boolean
       is DrugStockReportLoaded -> drugStockReportLoaded(event, model)
       is RequiredInfoForShowingDrugStockReminderLoaded -> requiredInfoForDrugStockReminderLoaded(event, model)
       is EnterDrugStockButtonClicked -> enterDrugStockButtonClicked(event)
+      is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility))
+      is PatientLineListDownloadButtonClicked -> dispatch(OpenPatientLineListDownloadDialog)
     }
   }
 
@@ -49,7 +51,7 @@ class PatientsTabUpdate(private val isNotifyAppUpdateAvailableV2Enabled: Boolean
     } else {
       ShowNoActiveNetworkConnectionDialog
     }
-    
+
     return dispatch(effect)
   }
 

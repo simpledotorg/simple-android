@@ -37,8 +37,10 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.drugstockreminders.DrugStockNotificationScheduler
 import org.simple.clinic.drugstockreminders.enterdrugstock.EnterDrugStockScreen
 import org.simple.clinic.enterotp.EnterOtpScreen
+import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Feature.MonthlyDrugStockReportReminder
 import org.simple.clinic.feature.Feature.NotifyAppUpdateAvailableV2
+import org.simple.clinic.feature.Feature.PatientLineListDownload
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.mobius.DeferredEventSource
@@ -47,6 +49,7 @@ import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.download.formatdialog.SelectLineListFormatDialog
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
@@ -180,12 +183,28 @@ class PatientsTabScreen : BaseScreen<
   private val enterDrugStockButton
     get() = drugStockReminderCardLayout.enterDrugStockButton
 
+  private val patientLineListLayout
+    get() = binding.patientLineListLayout
+
+  private val patientLineListDownloadCard
+    get() = binding.patientLineListDownloadCard
+
+  private val patientLineListDownloadDescTextView
+    get() = patientLineListDownloadCard.descTextView
+
+  private val patientLineListDownloadButton
+    get() = patientLineListDownloadCard.downloadButton
+
   override fun defaultModel() = PatientsTabModel.create()
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenPatientsBinding.inflate(layoutInflater, container, false)
 
-  override fun uiRenderer() = PatientsTabUiRenderer(this, LocalDate.now(userClock))
+  override fun uiRenderer() = PatientsTabUiRenderer(
+      ui = this,
+      currentDate = LocalDate.now(userClock),
+      isPatientLineListEnabled = features.isEnabled(Feature.PatientLineListDownload)
+  )
 
   override fun viewEffectHandler() = PatientsTabViewEffectHandler(this)
 
@@ -198,7 +217,8 @@ class PatientsTabScreen : BaseScreen<
           scanCardIdButtonClicks(),
           simpleVideoClicked(),
           appUpdateCardUpdateNowClicked(),
-          enterDrugStockClicked()
+          enterDrugStockClicked(),
+          patientLineListDownloadButtonClicks()
       )
       .compose<UiEvent>(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
       .compose(runtimeNetworkStatus::apply)
@@ -209,7 +229,8 @@ class PatientsTabScreen : BaseScreen<
 
   override fun createInit() = PatientsInit(
       isNotifyAppUpdateAvailableV2Enabled = features.isEnabled(NotifyAppUpdateAvailableV2),
-      isMonthlyDrugStockReportReminderEnabledInIndia = features.isEnabled(MonthlyDrugStockReportReminder) && country.isoCountryCode == Country.INDIA
+      isMonthlyDrugStockReportReminderEnabledInIndia = features.isEnabled(MonthlyDrugStockReportReminder) && country.isoCountryCode == Country.INDIA,
+      isPatientLineListEnabled = features.isEnabled(PatientLineListDownload)
   )
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<PatientsTabViewEffect>) = effectHandlerFactory.create(
@@ -411,6 +432,23 @@ class PatientsTabScreen : BaseScreen<
 
     showHomeScreenBackground(R.id.drugStockReminderCardLayout)
   }
+
+  override fun showPatientLineListDownload(facilityName: String) {
+    patientLineListLayout.visibility = View.VISIBLE
+    patientLineListDownloadDescTextView.text = getString(R.string.patient_line_list_download_card_desc, facilityName)
+  }
+
+  override fun hidePatientLineListDownload() {
+    patientLineListLayout.visibility = View.GONE
+  }
+
+  override fun openPatientLineListDownloadDialog() {
+    router.push(SelectLineListFormatDialog.Key())
+  }
+
+  private fun patientLineListDownloadButtonClicks() = patientLineListDownloadButton
+      .clicks()
+      .map { PatientLineListDownloadButtonClicked() }
 
   private fun previousMonthAndYear(): String {
     val localDate = LocalDate.now(userClock).minusMonths(1)

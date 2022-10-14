@@ -5,6 +5,7 @@ import org.simple.clinic.activity.permissions.RequiresPermission
 import org.simple.clinic.analytics.NetworkConnectivityStatus
 import org.simple.clinic.appupdate.AppUpdateNudgePriority
 import org.simple.clinic.drugstockreminders.DrugStockReminder
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.user.User
 import org.simple.clinic.util.RequiresNetwork
@@ -76,3 +77,5 @@ data class EnterDrugStockButtonClicked(
 
   override val analyticsName = "Patients:Enter Drug Stock Clicked"
 }
+
+data class CurrentFacilityLoaded(val facility: Facility) : PatientsTabEvent()

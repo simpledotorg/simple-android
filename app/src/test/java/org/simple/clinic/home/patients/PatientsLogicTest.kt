@@ -17,7 +17,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.appupdate.AppUpdateNotificationScheduler
 import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.AppUpdateState.AppUpdateStateError
@@ -34,13 +33,14 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.user.refreshuser.RefreshCurrentUser
-import org.simple.sharedTestCode.util.RxErrorsRule
-import org.simple.sharedTestCode.util.TestUserClock
-import org.simple.sharedTestCode.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
+import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.sharedTestCode.util.TestUserClock
+import org.simple.sharedTestCode.util.TestUtcClock
 import java.net.SocketTimeoutException
 import java.time.Instant
 import java.time.LocalDate
@@ -85,6 +85,7 @@ class PatientsLogicTest {
   fun setUp() {
     val uiRenderer = PatientsTabUiRenderer(ui, LocalDate.of(2021, 3, 22))
     val viewEffectHandler = PatientsTabViewEffectHandler(uiActions)
+    val facility = TestData.facility()
     val patientsEffectHandler = PatientsEffectHandler(
         schedulers = TestSchedulersProvider.trampoline(),
         refreshCurrentUser = refreshCurrentUser,
@@ -100,6 +101,7 @@ class PatientsLogicTest {
         drugStockReminder = mock(),
         drugStockReportLastCheckedAt = drugStockReportLastCheckedAt,
         isDrugStockReportFilled = isDrugStockReportFilled,
+        currentFacility = Observable.just(facility),
         viewEffectsConsumer = viewEffectHandler::handle
     )
 

@@ -14,7 +14,8 @@ class PatientsInitTest {
   fun `when screen is created and app update v2 notification feature flag is enabled, then schedule app update notification worker`() {
     val initSpec = InitSpec(PatientsInit(
         isNotifyAppUpdateAvailableV2Enabled = true,
-        isMonthlyDrugStockReportReminderEnabledInIndia = false
+        isMonthlyDrugStockReportReminderEnabledInIndia = false,
+        isPatientLineListEnabled = false
     ))
 
     initSpec
@@ -35,7 +36,8 @@ class PatientsInitTest {
   fun `when screen is created and monthly drug stock report reminder feature flag is enabled, then load info for showing drug stock reminder`() {
     val initSpec = InitSpec(PatientsInit(
         isNotifyAppUpdateAvailableV2Enabled = false,
-        isMonthlyDrugStockReportReminderEnabledInIndia = true
+        isMonthlyDrugStockReportReminderEnabledInIndia = true,
+        isPatientLineListEnabled = false
     ))
 
     initSpec
@@ -48,6 +50,49 @@ class PatientsInitTest {
                 LoadNumberOfPatientsRegistered,
                 LoadInfoForShowingAppUpdateMessage,
                 LoadInfoForShowingDrugStockReminder
+            )
+        ))
+  }
+
+  @Test
+  fun `when screen is created and patient line list feature flag is enabled, then load current facility`() {
+    val initSpec = InitSpec(PatientsInit(
+        isNotifyAppUpdateAvailableV2Enabled = false,
+        isMonthlyDrugStockReportReminderEnabledInIndia = false,
+        isPatientLineListEnabled = true
+    ))
+
+    initSpec
+        .whenInit(defaultModel)
+        .then(assertThatFirst(
+            hasModel(defaultModel),
+            hasEffects(
+                LoadUser,
+                RefreshUserDetails,
+                LoadNumberOfPatientsRegistered,
+                LoadInfoForShowingAppUpdateMessage,
+                LoadCurrentFacility
+            )
+        ))
+  }
+
+  @Test
+  fun `when screen is created and patient line list feature flag is disable, then don't load current facility`() {
+    val initSpec = InitSpec(PatientsInit(
+        isNotifyAppUpdateAvailableV2Enabled = false,
+        isMonthlyDrugStockReportReminderEnabledInIndia = false,
+        isPatientLineListEnabled = false
+    ))
+
+    initSpec
+        .whenInit(defaultModel)
+        .then(assertThatFirst(
+            hasModel(defaultModel),
+            hasEffects(
+                LoadUser,
+                RefreshUserDetails,
+                LoadNumberOfPatientsRegistered,
+                LoadInfoForShowingAppUpdateMessage
             )
         ))
   }

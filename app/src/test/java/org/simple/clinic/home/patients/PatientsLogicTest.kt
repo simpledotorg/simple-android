@@ -110,7 +110,8 @@ class PatientsLogicTest {
         defaultModel = PatientsTabModel.create(),
         init = PatientsInit(
             isNotifyAppUpdateAvailableV2Enabled = false,
-            isMonthlyDrugStockReportReminderEnabledInIndia = true
+            isMonthlyDrugStockReportReminderEnabledInIndia = true,
+            isPatientLineListEnabled = false
         ),
         update = PatientsTabUpdate(isNotifyAppUpdateAvailableV2Enabled = false),
         effectHandler = patientsEffectHandler.build(),

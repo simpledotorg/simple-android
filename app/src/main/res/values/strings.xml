@@ -1018,4 +1018,10 @@
   <string name="patient_line_list_download_notification_succeeded_title">Download complete</string>
   <string name="patient_line_list_download_notification_succeeded_subtitle">Click to open</string>
 
+  <string name="select_patient_line_list_download_format_dialog_radio_button_spreadsheet">Spreadsheet</string>
+  <string name="select_patient_line_list_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="select_patient_line_list_download_format_dialog_action_negative">Cancel</string>
+  <string name="select_patient_line_list_download_format_dialog_title_download">Download as</string>
+  <string name="select_patient_line_list_download_format_dialog_action_positive">Download</string>
+
 </resources>

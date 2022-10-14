@@ -12,7 +12,7 @@
 - Use paginated data for generating patient line list CSV
 - Enable large table support when converting CSV to PDF
 - Move `bpCreatedAfter` and `bpCreatedBefore` date calculation to `PatientLineListCsvGenerator#generate`
-- [In Progress: 13-Oct-2022] Add select line list format dialog
+- Add select line list format dialog
 
 ## 2022-10-11-8452
 

@@ -79,3 +79,12 @@ data class EnterDrugStockButtonClicked(
 }
 
 data class CurrentFacilityLoaded(val facility: Facility) : PatientsTabEvent()
+
+data class PatientLineListDownloadButtonClicked(
+    override var permission: Optional<RuntimePermissionResult> = Optional.empty(),
+    override val permissionString: String = Manifest.permission.WRITE_EXTERNAL_STORAGE,
+    override val permissionRequestCode: Int = 1
+) : PatientsTabEvent(), RequiresPermission {
+
+  override val analyticsName = "Patients:Patient Line List Download Clicked"
+}

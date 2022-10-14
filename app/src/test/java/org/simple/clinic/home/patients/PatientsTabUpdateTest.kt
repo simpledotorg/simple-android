@@ -188,4 +188,21 @@ class PatientsTabUpdateTest {
             hasNoEffects()
         ))
   }
+
+  @Test
+  fun `when patient line list download button is clicked, then open patient line list download dialog`() {
+    val facility = TestData.facility(
+        uuid = UUID.fromString("325b17b1-8cc9-4ee6-9e44-6793bcdccb5f")
+    )
+    val model = defaultModel
+        .currentFacilityLoaded(facility = facility)
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientLineListDownloadButtonClicked())
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenPatientLineListDownloadDialog)
+        ))
+  }
 }

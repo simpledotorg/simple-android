@@ -183,6 +183,18 @@ class PatientsTabScreen : BaseScreen<
   private val enterDrugStockButton
     get() = drugStockReminderCardLayout.enterDrugStockButton
 
+  private val patientLineListLayout
+    get() = binding.patientLineListLayout
+
+  private val patientLineListDownloadCard
+    get() = binding.patientLineListDownloadCard
+
+  private val patientLineListDownloadDescTextView
+    get() = patientLineListDownloadCard.descTextView
+
+  private val patientLineListDownloadButton
+    get() = patientLineListDownloadCard.downloadButton
+
   override fun defaultModel() = PatientsTabModel.create()
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
@@ -205,7 +217,8 @@ class PatientsTabScreen : BaseScreen<
           scanCardIdButtonClicks(),
           simpleVideoClicked(),
           appUpdateCardUpdateNowClicked(),
-          enterDrugStockClicked()
+          enterDrugStockClicked(),
+          patientLineListDownloadButtonClicks()
       )
       .compose<UiEvent>(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
       .compose(runtimeNetworkStatus::apply)
@@ -421,16 +434,21 @@ class PatientsTabScreen : BaseScreen<
   }
 
   override fun showPatientLineListDownload(facilityName: String) {
-    // Nothing to do here yet
+    patientLineListLayout.visibility = View.VISIBLE
+    patientLineListDownloadDescTextView.text = getString(R.string.patient_line_list_download_card_desc, facilityName)
   }
 
   override fun hidePatientLineListDownload() {
-    // Nothing to do here yet
+    patientLineListLayout.visibility = View.GONE
   }
 
   override fun openPatientLineListDownloadDialog() {
     router.push(SelectLineListFormatDialog.Key())
   }
+
+  private fun patientLineListDownloadButtonClicks() = patientLineListDownloadButton
+      .clicks()
+      .map { PatientLineListDownloadButtonClicked() }
 
   private fun previousMonthAndYear(): String {
     val localDate = LocalDate.now(userClock).minusMonths(1)

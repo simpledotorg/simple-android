@@ -5,12 +5,18 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.MEDIUM
+import org.simple.sharedTestCode.TestData
 import java.time.LocalDate
 import java.util.Optional
+import java.util.UUID
 
 class PatientsTabUiRendererTest {
   private val ui = mock<PatientsTabUi>()
-  private val uiRenderer = PatientsTabUiRenderer(ui, LocalDate.of(2022, 3, 28))
+  private val uiRenderer = PatientsTabUiRenderer(
+      ui = ui,
+      currentDate = LocalDate.of(2022, 3, 28),
+      isPatientLineListEnabled = false
+  )
   private val defaultModel = PatientsTabModel.create()
 
   @Test
@@ -117,6 +123,46 @@ class PatientsTabUiRendererTest {
 
     // then
     verify(ui).showSimpleVideo()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when patient line list download is enabled and facility is loaded, then show patient line list download option`() {
+    // given
+    val uiRenderer = PatientsTabUiRenderer(
+        ui = ui,
+        currentDate = LocalDate.parse("2018-01-01"),
+        isPatientLineListEnabled = true
+    )
+    val facility = TestData.facility(
+        uuid = UUID.fromString("fe8f9b3f-0de1-4f0f-8d8e-89fa061adf9e"),
+        name = "PHC Obvious"
+    )
+    val model = defaultModel
+        .currentFacilityLoaded(facility)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).showPatientLineListDownload(facilityName = "PHC Obvious")
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when patient line list download is enabled and facility is not loaded, then hide patient line list download option`() {
+    // given
+    val uiRenderer = PatientsTabUiRenderer(
+        ui = ui,
+        currentDate = LocalDate.parse("2018-01-01"),
+        isPatientLineListEnabled = true
+    )
+
+    // when
+    uiRenderer.render(defaultModel)
+
+    // then
+    verify(ui).hidePatientLineListDownload()
     verifyNoMoreInteractions(ui)
   }
 }

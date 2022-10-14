@@ -38,7 +38,7 @@ class PatientsTabUpdate(private val isNotifyAppUpdateAvailableV2Enabled: Boolean
       is DrugStockReportLoaded -> drugStockReportLoaded(event, model)
       is RequiredInfoForShowingDrugStockReminderLoaded -> requiredInfoForDrugStockReminderLoaded(event, model)
       is EnterDrugStockButtonClicked -> enterDrugStockButtonClicked(event)
-      is CurrentFacilityLoaded -> noChange()
+      is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility))
     }
   }
 

@@ -12,8 +12,10 @@ import org.simple.clinic.analytics.NetworkConnectivityStatus.INACTIVE
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.LIGHT
 import org.simple.clinic.drugstockreminders.DrugStockReminder
+import org.simple.sharedTestCode.TestData
 import java.time.LocalDate
 import java.util.Optional
+import java.util.UUID
 
 class PatientsTabUpdateTest {
   private val defaultModel = PatientsTabModel.create()
@@ -169,6 +171,21 @@ class PatientsTabUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenEnterDrugStockScreen)
+        ))
+  }
+
+  @Test
+  fun `when current facility is loaded, then update the model`() {
+    val facility = TestData.facility(
+        uuid = UUID.fromString("325b17b1-8cc9-4ee6-9e44-6793bcdccb5f")
+    )
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(CurrentFacilityLoaded(facility))
+        .then(assertThatNext(
+            hasModel(defaultModel.currentFacilityLoaded(facility)),
+            hasNoEffects()
         ))
   }
 }

@@ -14,6 +14,10 @@
 - Move `bpCreatedAfter` and `bpCreatedBefore` date calculation to `PatientLineListCsvGenerator#generate`
 - Add select line list format dialog
 
+### Features
+
+- Add patient line list download option
+
 ## 2022-10-11-8452
 
 ### Internal

@@ -233,4 +233,15 @@ class PatientsEffectHandlerTest {
     effectHandlerTestCase.assertOutgoingEvents(CurrentFacilityLoaded(facility))
     verifyZeroInteractions(uiActions)
   }
+
+  @Test
+  fun `when open patient line list download dialog effect is received, then open the dialog`() {
+    // when
+    effectHandlerTestCase.dispatch(OpenPatientLineListDownloadDialog)
+    
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+    verify(uiActions).openPatientLineListDownloadDialog()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

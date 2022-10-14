@@ -56,3 +56,5 @@ data class ShowCriticalAppUpdateDialog(val appUpdateNudgePriority: AppUpdateNudg
 object OpenEnterDrugStockScreen : PatientsTabViewEffect()
 
 object ShowNoActiveNetworkConnectionDialog : PatientsTabViewEffect()
+
+object OpenPatientLineListDownloadDialog : PatientsTabViewEffect()

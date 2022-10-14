@@ -49,6 +49,7 @@ import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.download.formatdialog.SelectLineListFormatDialog
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
@@ -425,6 +426,10 @@ class PatientsTabScreen : BaseScreen<
 
   override fun hidePatientLineListDownload() {
     // Nothing to do here yet
+  }
+
+  override fun openPatientLineListDownloadDialog() {
+    router.push(SelectLineListFormatDialog.Key())
   }
 
   private fun previousMonthAndYear(): String {

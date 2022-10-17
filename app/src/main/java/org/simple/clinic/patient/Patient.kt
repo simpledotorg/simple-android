@@ -120,7 +120,7 @@ data class Patient(
           GROUP BY patientUuid HAVING MAX(createdAt)
         ) PPN on PPN.patientUuid = P.uuid AND PPN.deletedAt IS NULL
         LEFT JOIN Facility RF ON RF.uuid = P.registeredFacilityId
-        LEFT JOIN Facility AF ON AF.uuid = P.registeredFacilityId
+        LEFT JOIN Facility AF ON AF.uuid = P.assignedFacilityId
         LEFT JOIN MedicalHistory MH ON MH.patientUuid = P.uuid
         LEFT JOIN (
           SELECT * FROM BloodPressureMeasurement 

@@ -117,8 +117,9 @@ data class Patient(
         LEFT JOIN PatientAddress PA ON PA.uuid = P.addressUuid
         LEFT JOIN (
           SELECT * FROM PatientPhoneNumber
+          WHERE deletedAt IS NULL
           GROUP BY patientUuid HAVING MAX(createdAt)
-        ) PPN on PPN.patientUuid = P.uuid AND PPN.deletedAt IS NULL
+        ) PPN on PPN.patientUuid = P.uuid
         LEFT JOIN Facility RF ON RF.uuid = P.registeredFacilityId
         LEFT JOIN Facility AF ON AF.uuid = P.assignedFacilityId
         LEFT JOIN MedicalHistory MH ON MH.patientUuid = P.uuid

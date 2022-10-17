@@ -3453,11 +3453,17 @@ class PatientRepositoryAndroidTest {
   @Test
   fun fetching_the_patient_line_list_data_should_work_correctly() {
     // given
-    val facilityId = UUID.fromString("c3087644-b2c8-4ecb-8210-7eae8cda789a")
+    val facilityId1 = UUID.fromString("c3087644-b2c8-4ecb-8210-7eae8cda789a")
+    val facilityId2 = UUID.fromString("bf942b13-c18b-4816-9315-1a9fac7a7a72")
 
-    val facility = TestData.facility(
-        uuid = facilityId,
+    val facility1 = TestData.facility(
+        uuid = facilityId1,
         name = "PHC Obvious"
+    )
+
+    val facility2 = TestData.facility(
+        uuid = facilityId2,
+        name = "PHC Simple"
     )
 
     val patient1Id = UUID.fromString("308ff58b-40ee-480e-a254-182b9ceba9f0")
@@ -3513,8 +3519,8 @@ class PatientRepositoryAndroidTest {
             ageUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
             dateOfBirth = null
         ),
-        patientRegisteredFacilityId = facilityId,
-        patientAssignedFacilityId = facilityId,
+        patientRegisteredFacilityId = facilityId1,
+        patientAssignedFacilityId = facilityId1,
         patientStatus = Active,
         patientCreatedAt = Instant.parse("2017-01-01T00:00:00Z"),
         patientUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
@@ -3538,8 +3544,8 @@ class PatientRepositoryAndroidTest {
             ageUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
             dateOfBirth = null
         ),
-        patientRegisteredFacilityId = facilityId,
-        patientAssignedFacilityId = facilityId,
+        patientRegisteredFacilityId = facilityId1,
+        patientAssignedFacilityId = facilityId2,
         patientStatus = Dead,
         patientCreatedAt = Instant.parse("2017-01-01T00:00:00Z"),
         patientUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
@@ -3563,7 +3569,7 @@ class PatientRepositoryAndroidTest {
     val patient1Bp1 = TestData.bloodPressureMeasurement(
         uuid = UUID.fromString("5acbe694-2b40-4d7b-8ffa-0b2ebe27784f"),
         patientUuid = patient1Id,
-        facilityUuid = facilityId,
+        facilityUuid = facilityId1,
         systolic = 140,
         diastolic = 95,
         createdAt = Instant.parse("2018-02-01T00:00:00Z"),
@@ -3575,7 +3581,7 @@ class PatientRepositoryAndroidTest {
     val patient1Bp2 = TestData.bloodPressureMeasurement(
         uuid = UUID.fromString("d2e77bc7-b342-43fe-96a3-4d46fefe2969"),
         patientUuid = patient1Id,
-        facilityUuid = facilityId,
+        facilityUuid = facilityId1,
         systolic = 120,
         diastolic = 80,
         createdAt = Instant.parse("2018-03-01T00:00:00Z"),
@@ -3587,7 +3593,7 @@ class PatientRepositoryAndroidTest {
     val patient2Bp1 = TestData.bloodPressureMeasurement(
         uuid = UUID.fromString("05c669a4-bf09-4119-8b20-0be9aa8b31f8"),
         patientUuid = patient2Id,
-        facilityUuid = facilityId,
+        facilityUuid = facilityId1,
         systolic = 140,
         diastolic = 95,
         createdAt = Instant.parse("2018-02-01T00:00:00Z"),
@@ -3596,14 +3602,14 @@ class PatientRepositoryAndroidTest {
         deletedAt = null
     )
 
-    facilityRepository.save(listOf(facility))
+    facilityRepository.save(listOf(facility1, facility2))
     patientRepository.save(listOf(patientProfile1, patientProfile2))
     medicalHistoryRepository.save(listOf(patient1MedicalHistory, patient2MedicalHistory))
     bloodPressureRepository.save(listOf(patient1Bp1, patient1Bp2, patient2Bp1))
 
     // when
     val patientLineListRows = patientRepository.patientLineListRows(
-        facilityId = facilityId,
+        facilityId = facilityId1,
         bpCreatedAfter = LocalDate.parse("2018-01-01"),
         bpCreatedBefore = LocalDate.parse("2018-03-31"),
         offset = 0
@@ -3621,9 +3627,9 @@ class PatientRepositoryAndroidTest {
                 dateOfBirth = null
             ),
             registrationDate = Instant.parse("2017-01-01T00:00:00Z"),
-            registrationFacilityId = facilityId,
+            registrationFacilityId = facilityId1,
             registrationFacilityName = "PHC Obvious",
-            assignedFacilityId = facilityId,
+            assignedFacilityId = facilityId1,
             assignedFacilityName = "PHC Obvious",
             streetAddress = "45 Marigold Lane",
             colonyOrVillage = "Carroll Gardens",
@@ -3643,10 +3649,10 @@ class PatientRepositoryAndroidTest {
                 dateOfBirth = null
             ),
             registrationDate = Instant.parse("2017-01-01T00:00:00Z"),
-            registrationFacilityId = facilityId,
+            registrationFacilityId = facilityId1,
             registrationFacilityName = "PHC Obvious",
-            assignedFacilityId = facilityId,
-            assignedFacilityName = "PHC Obvious",
+            assignedFacilityId = facilityId2,
+            assignedFacilityName = "PHC Simple",
             streetAddress = "45 Marigold Lane",
             colonyOrVillage = "Carroll Gardens",
             patientPhoneNumber = "6666666666",

@@ -15,6 +15,7 @@
 - Add select line list format dialog
 - Bump AGP to v7.3.1
 - Bump asm to v9.4
+- Fix patient line list not showing assigned facility name
 
 ### Features
 

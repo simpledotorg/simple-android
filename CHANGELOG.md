@@ -13,6 +13,7 @@
 - Enable large table support when converting CSV to PDF
 - Move `bpCreatedAfter` and `bpCreatedBefore` date calculation to `PatientLineListCsvGenerator#generate`
 - Add select line list format dialog
+- Bump AGP to v7.3.1
 
 ### Features
 

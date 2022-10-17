@@ -14,6 +14,7 @@
 - Move `bpCreatedAfter` and `bpCreatedBefore` date calculation to `PatientLineListCsvGenerator#generate`
 - Add select line list format dialog
 - Bump AGP to v7.3.1
+- Bump asm to v9.4
 
 ### Features
 

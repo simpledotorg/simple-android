@@ -16,6 +16,7 @@
 - Bump AGP to v7.3.1
 - Bump asm to v9.4
 - Fix patient line list not showing assigned facility name
+- Bump firebase remote config to v21.2.0
 
 ### Features
 

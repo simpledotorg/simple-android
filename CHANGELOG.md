@@ -17,6 +17,10 @@
 - Bump asm to v9.4
 - Fix patient line list not showing assigned facility name
 - Bump firebase remote config to v21.2.0
+- Update patient line list query
+  - Filter out deleted patients
+  - Use latest phone number that is not deleted
+  - Use latest recorded BP
 
 ### Features
 

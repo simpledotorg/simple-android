@@ -117,15 +117,16 @@ data class Patient(
         LEFT JOIN PatientAddress PA ON PA.uuid = P.addressUuid
         LEFT JOIN (
           SELECT * FROM PatientPhoneNumber
+          WHERE deletedAt IS NULL
           GROUP BY patientUuid HAVING MAX(createdAt)
-        ) PPN on PPN.patientUuid = P.uuid AND PPN.deletedAt IS NULL
+        ) PPN on PPN.patientUuid = P.uuid
         LEFT JOIN Facility RF ON RF.uuid = P.registeredFacilityId
         LEFT JOIN Facility AF ON AF.uuid = P.assignedFacilityId
         LEFT JOIN MedicalHistory MH ON MH.patientUuid = P.uuid
         LEFT JOIN (
           SELECT * FROM BloodPressureMeasurement 
           WHERE  deletedAt IS NULL
-          GROUP BY patientUuid HAVING MAX(createdAt)
+          GROUP BY patientUuid HAVING MAX(recordedAt)
         ) BP ON (
           BP.patientUuid = P.uuid AND
           BP.createdAt >= :bpCreatedAfter AND
@@ -140,7 +141,9 @@ data class Patient(
           BI.identifierType = "simple_bp_passport"
         )
 
-        WHERE registeredFacilityId = :facilityId OR assignedFacilityId = :facilityId
+        WHERE
+          registeredFacilityId = :facilityId OR assignedFacilityId = :facilityId AND
+          P.deletedAt IS NULL
       """
     }
 

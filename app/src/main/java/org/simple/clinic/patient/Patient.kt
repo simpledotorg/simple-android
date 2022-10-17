@@ -140,7 +140,9 @@ data class Patient(
           BI.identifierType = "simple_bp_passport"
         )
 
-        WHERE registeredFacilityId = :facilityId OR assignedFacilityId = :facilityId
+        WHERE
+          registeredFacilityId = :facilityId OR assignedFacilityId = :facilityId AND
+          P.deletedAt IS NULL
       """
     }
 

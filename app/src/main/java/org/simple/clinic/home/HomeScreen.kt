@@ -229,17 +229,19 @@ class HomeScreen :
   }
 
   private fun handleDeepLinkResult() {
-    val deepLinkResult = TheActivity.readDeepLinkResult(intent = requireActivity().intent)
-    when (deepLinkResult) {
-      is OpenPatientSummary -> showPatientSummary(deepLinkResult.patientUuid)
-      is OpenPatientSummaryWithTeleconsultLog -> showPatientSummaryWithTeleconsultLog(deepLinkResult.patientUuid, deepLinkResult.teleconsultRecordId)
-      ShowNoPatientUuid -> showNoPatientUuidErrorDialog()
-      ShowPatientNotFound -> showPatientNotFoundErrorDialog()
-      ShowTeleconsultNotAllowed -> showTeleconsultNotAllowedErrorDialog()
-      null -> {
-        //No-op
-      }
-    }.exhaustive()
+    getActivity()?.let { activity ->
+      val deepLinkResult = TheActivity.readDeepLinkResult(intent = activity.intent)
+      when (deepLinkResult) {
+        is OpenPatientSummary -> showPatientSummary(deepLinkResult.patientUuid)
+        is OpenPatientSummaryWithTeleconsultLog -> showPatientSummaryWithTeleconsultLog(deepLinkResult.patientUuid, deepLinkResult.teleconsultRecordId)
+        ShowNoPatientUuid -> showNoPatientUuidErrorDialog()
+        ShowPatientNotFound -> showPatientNotFoundErrorDialog()
+        ShowTeleconsultNotAllowed -> showTeleconsultNotAllowedErrorDialog()
+        null -> {
+          //No-op
+        }
+      }.exhaustive()
+    }
   }
 
   private fun showPatientSummary(patientUuid: UUID) {

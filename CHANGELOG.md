@@ -22,6 +22,10 @@
 
 - Add patient line list download option
 
+### Fixes
+
+- Fix app crashing when handling deep link results
+
 ## 2022-10-11-8452
 
 ### Internal

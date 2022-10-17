@@ -126,7 +126,7 @@ data class Patient(
         LEFT JOIN (
           SELECT * FROM BloodPressureMeasurement 
           WHERE  deletedAt IS NULL
-          GROUP BY patientUuid HAVING MAX(createdAt)
+          GROUP BY patientUuid HAVING MAX(recordedAt)
         ) BP ON (
           BP.patientUuid = P.uuid AND
           BP.createdAt >= :bpCreatedAfter AND

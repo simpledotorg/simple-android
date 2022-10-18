@@ -4,6 +4,20 @@
 
 ### Internal
 
+- Update patient line list query
+  - Filter out deleted patients
+  - Use latest phone number that is not deleted
+  - Use latest recorded BP
+- Bump lint to v30.3.1
+
+### Fixes
+
+- Fix app crashing when handling deep link results
+
+## 2022-10-17-8463
+
+### Internal
+
 - Mark `diagnosedWithHypertension` and `diagnosedWithDiabetes` as nullable in `PatientLineListRow`
 - Bump Sentry to v6.5.0
 - Bump Sentry Gradle Plugin to v3.1.7
@@ -17,19 +31,10 @@
 - Bump asm to v9.4
 - Fix patient line list not showing assigned facility name
 - Bump firebase remote config to v21.2.0
-- Update patient line list query
-  - Filter out deleted patients
-  - Use latest phone number that is not deleted
-  - Use latest recorded BP
-- Bump lint to v30.3.1
 
 ### Features
 
 - Add patient line list download option
-
-### Fixes
-
-- Fix app crashing when handling deep link results
 
 ## 2022-10-11-8452
 

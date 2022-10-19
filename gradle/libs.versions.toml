@@ -141,7 +141,7 @@ openCsv = "com.opencsv:opencsv:5.7.0"
 
 play-core = "com.google.android.play:core:1.10.3"
 play-services-auth = "com.google.android.gms:play-services-auth:20.3.0"
-play-services-location = "com.google.android.gms:play-services-location:20.0.0"
+play-services-location = "com.google.android.gms:play-services-location:21.0.0"
 play-services-mlkit-barcode = "com.google.android.gms:play-services-mlkit-barcode-scanning:18.1.0"
 
 rootbeer = "com.scottyab:rootbeer-lib:0.1.0"

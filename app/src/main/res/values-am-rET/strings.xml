@@ -199,17 +199,6 @@
   <string name="patient_prescribeddrugs_screen_title">መድኃኒቶች</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">ሌላ መድሃኒት ያክሉ</string>
 
-  <string name="customprescription_enter_medicine">መድሃኒት ያስገቡ</string>
-  <string name="customprescription_edit_medicine">መድሃኒት ያርትዑ</string>
-  <string name="customprescription_save_drug">ሴቭ</string>
-  <string name="customprescription_drug_name_hint">የመድኃኒት ስም</string>
-  <string name="customprescription_drug_dosage_hint">የመድኃኒት መጠን</string>
-
-  <string name="customprescription_delete_title">መድሃኒት ያስወግዱ</string>
-  <string name="customprescription_delete_message">እርግጠኛ ነዎት ይህን መድሃኒት ለማስወገድ ይፈልጋሉ?</string>
-  <string name="customprescription_delete_confirm">ያስወግዱ</string>
-  <string name="customprescription_delete_cancel">ይቅር</string>
-
   <!-- Login -->
   <string name="loginpin_go_back">ወደ ስልክ ቁጥር ማያ ገጽ ይመለሱ</string>
 
@@ -277,7 +266,7 @@
     <item quantity="other">%s ቀናት ጊዜው አልፎበታል</item>
   </plurals>
   <string name="overdue_list_item_village">መንደር</string>
-    <string name="overdue_download">አውርድ</string>
+  <string name="overdue_download">አውርድ</string>
   <string name="overdue_share">ያጋሩ</string>
   <string name="overdue_no_pending_patients">ተረ የሚጠቢቁ ታካሚዎች የሉም</string>
   <string name="overdue_pending_list_button_see_all">ሁሉንም ይመልከቱ</string>

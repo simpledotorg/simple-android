@@ -9,6 +9,7 @@
   - Use latest phone number that is not deleted
   - Use latest recorded BP
 - Bump lint to v30.3.1
+- Bump sentry gradle plugin to v3.2.0
 
 ### Fixes
 

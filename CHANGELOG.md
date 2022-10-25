@@ -14,6 +14,7 @@
 - Remove old custom prescription entry components
 - Bump Material Design Components to v1.7.0
 - Bump mixpanel to v7.2.0
+- Bump auto request review to v0.8.0
 
 ### Fixes
 

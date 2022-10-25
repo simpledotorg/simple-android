@@ -13,6 +13,7 @@
 - Bump google play services location to v21.0.0
 - Remove old custom prescription entry components
 - Bump Material Design Components to v1.7.0
+- Bump mixpanel to v7.2.0
 
 ### Fixes
 

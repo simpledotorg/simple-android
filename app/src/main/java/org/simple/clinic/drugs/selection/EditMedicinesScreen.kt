@@ -44,8 +44,6 @@ import org.simple.clinic.drugs.search.DrugsSearchScreen
 import org.simple.clinic.drugs.selection.custom.CustomDrugEntrySheet
 import org.simple.clinic.drugs.selection.custom.OpenAs
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
-import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
-import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -205,11 +203,7 @@ class EditMedicinesScreen :
   }
 
   override fun showNewPrescriptionEntrySheet(patientUuid: UUID) {
-    if (features.isEnabled(Feature.CustomDrugSearchScreen)) {
-      router.push(DrugsSearchScreen.Key(patientId = patientUuid))
-    } else {
-      activity.startActivity(CustomPrescriptionEntrySheet.intentForAddNewPrescription(requireContext(), patientUuid))
-    }
+    router.push(DrugsSearchScreen.Key(patientId = patientUuid))
   }
 
   override fun goBackToPatientSummary() {
@@ -225,11 +219,7 @@ class EditMedicinesScreen :
   }
 
   override fun showUpdateCustomPrescriptionSheet(prescribedDrug: PrescribedDrug) {
-    if (features.isEnabled(Feature.CustomDrugSearchScreen)) {
-      router.push(CustomDrugEntrySheet.Key(OpenAs.Update(prescribedDrug.uuid), prescribedDrug.patientUuid))
-    } else {
-      activity.startActivity(CustomPrescriptionEntrySheet.intentForUpdatingPrescription(requireContext(), prescribedDrug.patientUuid, prescribedDrug.uuid))
-    }
+    router.push(CustomDrugEntrySheet.Key(OpenAs.Update(prescribedDrug.uuid), prescribedDrug.patientUuid))
   }
 
   private fun protocolDrugClicks(): Observable<UiEvent> {

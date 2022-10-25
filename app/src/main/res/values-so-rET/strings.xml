@@ -199,17 +199,6 @@
   <string name="patient_prescribeddrugs_screen_title">Daawooyin</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">Ku dar daawo kale</string>
 
-  <string name="customprescription_enter_medicine">Geli daawo</string>
-  <string name="customprescription_edit_medicine">Tafatir daawada</string>
-  <string name="customprescription_save_drug">Keydi</string>
-  <string name="customprescription_drug_name_hint">Magaca daawada</string>
-  <string name="customprescription_drug_dosage_hint">Qiyaas qaadashada daawada</string>
-
-  <string name="customprescription_delete_title">Saar daawada</string>
-  <string name="customprescription_delete_message">Ma hubtaa inaad rabto inaad ka saarto daawadan?</string>
-  <string name="customprescription_delete_confirm">Saar</string>
-  <string name="customprescription_delete_cancel">Baaji</string>
-
   <!-- Login -->
   <string name="loginpin_go_back">Ku noqo shaashadda lambarka taleefanka</string>
 
@@ -277,7 +266,7 @@
     <item quantity="other">%s maalmo hore</item>
   </plurals>
   <string name="overdue_list_item_village">Tuullada</string>
-    <string name="overdue_download">Soo dejiso</string>
+  <string name="overdue_download">Soo dejiso</string>
   <string name="overdue_share">La wadaag</string>
   <string name="overdue_no_pending_patients">Ma jiraan bukaano hadhay</string>
   <string name="overdue_pending_list_button_see_all">Arag dhamaan</string>

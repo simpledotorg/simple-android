@@ -28,7 +28,6 @@ enum class Feature(
   EthiopianCalendar(true, "ethiopian_calendar"),
   IndiaNationalHealthID(true, "india_national_health_id"),
   OverdueListDownloadAndShare(true, "download_and_share_overdue_list"),
-  CustomDrugSearchScreen(true, "drug_search_screen"),
   OnlinePatientLookup(true, "online_patient_lookup"),
   HttpRequestBodyCompression(false, "http_request_body_compression_enabled"),
   CallResultSyncEnabled(true),

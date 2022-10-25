@@ -199,17 +199,6 @@
   <string name="patient_prescribeddrugs_screen_title">መድሓኒታት</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">ካልእ መድሓኒት ወስኽ</string>
 
-  <string name="customprescription_enter_medicine">መድሓኒት ኣእትው/ዊ</string>
-  <string name="customprescription_edit_medicine">መድሃኒት ኣሪምካ/ኪ ጽሓፍ/ፊ</string>
-  <string name="customprescription_save_drug">ምዕቃብ</string>
-  <string name="customprescription_drug_name_hint">ሽም መድሃኒት</string>
-  <string name="customprescription_drug_dosage_hint">መጠን</string>
-
-  <string name="customprescription_delete_title">መድሓኒት ሰርዝ</string>
-  <string name="customprescription_delete_message">ነዚ መድሃኒት ንምስራዝ ርግፀኛ ዲኻ/ኺ?</string>
-  <string name="customprescription_delete_confirm">ምልጋስ </string>
-  <string name="customprescription_delete_cancel">ሰርዝ</string>
-
   <!-- Login -->
   <string name="loginpin_go_back">ናብ ናይ ስልኪ ቁፅሪ ስክሪን ተመለስ</string>
 
@@ -277,7 +266,7 @@
     <item quantity="other">%s መዓልታታ ደንጉዩ</item>
   </plurals>
   <string name="overdue_list_item_village">ቍሸት</string>
-    <string name="overdue_download">ዳውንሎድ</string>
+  <string name="overdue_download">ዳውንሎድ</string>
   <string name="overdue_share">ኣካፍል</string>
   <string name="overdue_no_pending_patients">ዝጽበዩ ሕሙማት የለውን</string>
   <string name="overdue_pending_list_button_see_all">ኩሉ ርኣይ</string>

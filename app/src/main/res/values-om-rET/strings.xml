@@ -199,17 +199,6 @@
   <string name="patient_prescribeddrugs_screen_title">Dawaawwan</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">Dawaa biraa galchi</string>
 
-  <string name="customprescription_enter_medicine">Dawaa galchi</string>
-  <string name="customprescription_edit_medicine">Dawaa gulaali</string>
-  <string name="customprescription_save_drug">Ol kaa’i</string>
-  <string name="customprescription_drug_name_hint">Maqaa dawa</string>
-  <string name="customprescription_drug_dosage_hint">Hamma fudhanna</string>
-
-  <string name="customprescription_delete_title">Dawaa balleessi</string>
-  <string name="customprescription_delete_message">Shakkii malee dawaa kana balleessuu barbaaddaa?</string>
-  <string name="customprescription_delete_confirm">Balleessi</string>
-  <string name="customprescription_delete_cancel">Adda kuti</string>
-
   <!-- Login -->
   <string name="loginpin_go_back">Gara fuula lakkoofsa bilbilaatti duuba deebi’i</string>
 
@@ -278,7 +267,7 @@
     <item quantity="other">Guyyoota %s irra darbe</item>
   </plurals>
   <string name="overdue_list_item_village">Ganda</string>
-    <string name="overdue_download">Buusicha</string>
+  <string name="overdue_download">Buusicha</string>
   <string name="overdue_share">Raabsi</string>
   <string name="overdue_no_pending_patients">Dhukkubsataan eeggatu hin jiru</string>
   <string name="overdue_pending_list_button_see_all">Hundaa ilaali</string>

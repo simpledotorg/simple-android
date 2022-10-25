@@ -199,17 +199,6 @@
   <string name="patient_prescribeddrugs_screen_title">औषधे</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">दुसरे औषध जोडा</string>
 
-  <string name="customprescription_enter_medicine">औषध प्रविष्‍ट करा</string>
-  <string name="customprescription_edit_medicine">औषध संपादित करा</string>
-  <string name="customprescription_save_drug">जतन करा</string>
-  <string name="customprescription_drug_name_hint">औषधाचे नाव</string>
-  <string name="customprescription_drug_dosage_hint">डोस</string>
-
-  <string name="customprescription_delete_title">औषध काढून टाका</string>
-  <string name="customprescription_delete_message">तुम्‍ही हे औषध दूर करू इच्छित असल्‍याची आपल्‍याला खात्री आहे?</string>
-  <string name="customprescription_delete_confirm">काढून टाका</string>
-  <string name="customprescription_delete_cancel">रद्द करा</string>
-
   <!-- Login -->
   <string name="loginpin_go_back">फोन नंबर स्‍क्रीनवर परत जा</string>
 
@@ -277,7 +266,7 @@
     <item quantity="other">%s दिवस ओव्‍हरड्यू</item>
   </plurals>
   <string name="overdue_list_item_village">गाव</string>
-    <string name="overdue_download">डाउनलोड करा</string>
+  <string name="overdue_download">डाउनलोड करा</string>
   <string name="overdue_share">सामायिक करा</string>
   <string name="overdue_no_pending_patients">कोणतेही उर्वरित रुग्ण नाहीत</string>
   <string name="overdue_pending_list_button_see_all">सर्व पहा</string>

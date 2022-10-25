@@ -199,17 +199,6 @@
   <string name="patient_prescribeddrugs_screen_title">మందులు</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">మరో మందును జోడించు</string>
 
-  <string name="customprescription_enter_medicine">మందులను నమోదు చేయండి</string>
-  <string name="customprescription_edit_medicine">మందులను సవరించు</string>
-  <string name="customprescription_save_drug">సేవ్ చేయి</string>
-  <string name="customprescription_drug_name_hint">మందు పేరు</string>
-  <string name="customprescription_drug_dosage_hint">మోతాదు</string>
-
-  <string name="customprescription_delete_title">మందును తీసివేయి</string>
-  <string name="customprescription_delete_message">ఈ మందును ఖచ్చితంగా తీసివేయాలా?</string>
-  <string name="customprescription_delete_confirm">తీసివేయి</string>
-  <string name="customprescription_delete_cancel">రద్దు చేయి</string>
-
   <!-- Login -->
   <string name="loginpin_go_back">తిరిగి ఫోన్ నంబర్ స్క్రీన్‌లోకి వెళ్లు</string>
 
@@ -277,7 +266,7 @@
     <item quantity="other">%s రోజుల క్రితం గడువు ముగిసింది</item>
   </plurals>
   <string name="overdue_list_item_village">గ్రామం</string>
-    <string name="overdue_download">డౌన్‌లోడ్ చేయి</string>
+  <string name="overdue_download">డౌన్‌లోడ్ చేయి</string>
   <string name="overdue_share">భాగస్వామ్యం చేయి</string>
   <string name="overdue_no_pending_patients">పెండింగ్‌లో ఉన్న రోగులు లేరు</string>
   <string name="overdue_pending_list_button_see_all">మొత్తం చూడండి</string>

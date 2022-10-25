@@ -93,11 +93,6 @@
       android:windowSoftInputMode="adjustResize" />
 
     <activity
-      android:name=".drugs.selection.entry.CustomPrescriptionEntrySheet"
-      android:theme="@style/Theme.Simple.BottomSheetActivity"
-      android:windowSoftInputMode="adjustResize" />
-
-    <activity
       android:name=".bp.entry.BloodPressureEntrySheet"
       android:theme="@style/Theme.Simple.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />

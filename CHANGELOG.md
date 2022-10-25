@@ -11,6 +11,7 @@
 - Bump lint to v30.3.1
 - Bump sentry gradle plugin to v3.2.0
 - Bump google play services location to v21.0.0
+- Remove old custom prescription entry components
 
 ### Fixes
 

@@ -199,17 +199,6 @@
   <string name="patient_prescribeddrugs_screen_title">ওষুধপত্র</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">অন্য একটি ওষুধ যোগ করুন</string>
 
-  <string name="customprescription_enter_medicine">ওষুধের নাম লিখুন</string>
-  <string name="customprescription_edit_medicine">ওষুধের নাম সম্পাদনা করুন</string>
-  <string name="customprescription_save_drug">সংরক্ষণ করুন</string>
-  <string name="customprescription_drug_name_hint">ওষুধের নাম</string>
-  <string name="customprescription_drug_dosage_hint">ওষুধের মাত্রা</string>
-
-  <string name="customprescription_delete_title">ওষুধটি অপসারণ করুন</string>
-  <string name="customprescription_delete_message">আপনি কি এই ওষুধটি অপসারণ করার বিষয়ে নিশ্চিত?</string>
-  <string name="customprescription_delete_confirm">অপসারণ করুন</string>
-  <string name="customprescription_delete_cancel">বাতিল করুন</string>
-
   <!-- Login -->
   <string name="loginpin_go_back">আপনার ফোন নম্বর স্ক্রিনে ফিরুন</string>
 
@@ -277,7 +266,7 @@
     <item quantity="other">%s দিন আগে সময় পার হয়ে গেছে</item>
   </plurals>
   <string name="overdue_list_item_village">গ্রাম</string>
-    <string name="overdue_download">ডাউনলোড করুন</string>
+  <string name="overdue_download">ডাউনলোড করুন</string>
   <string name="overdue_share">ভাগ করুন</string>
   <string name="overdue_no_pending_patients">কোনো অপেক্ষারত রোগী নেই</string>
   <string name="overdue_pending_list_button_see_all">সবাইকে দেখুন</string>

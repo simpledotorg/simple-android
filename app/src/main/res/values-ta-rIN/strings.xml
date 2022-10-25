@@ -199,17 +199,6 @@
   <string name="patient_prescribeddrugs_screen_title">மருந்துகள்</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">மற்றொரு மருந்தைச் சேர்க்கவும்</string>
 
-  <string name="customprescription_enter_medicine">மருந்தை எழுதவும்</string>
-  <string name="customprescription_edit_medicine">மருந்தைத் திருத்தவும்</string>
-  <string name="customprescription_save_drug">சேமிக்கவும்</string>
-  <string name="customprescription_drug_name_hint">மருந்தின் பெயர்</string>
-  <string name="customprescription_drug_dosage_hint">அளவு</string>
-
-  <string name="customprescription_delete_title">மருந்தை அகற்றவும்</string>
-  <string name="customprescription_delete_message">இந்த மருந்தை அகற்ற விரும்புகிறீர்களா?</string>
-  <string name="customprescription_delete_confirm">அகற்றவும்</string>
-  <string name="customprescription_delete_cancel">ரத்து செய்யவும்</string>
-
   <!-- Login -->
   <string name="loginpin_go_back">தொலைபேசி எண் திரைக்குச் செல்லவும்</string>
 
@@ -277,7 +266,7 @@
     <item quantity="other">குறித்த நாளை விட %s நாட்கள் அதிகம்</item>
   </plurals>
   <string name="overdue_list_item_village">கிராமம்</string>
-    <string name="overdue_download">பதிவிறக்கு</string>
+  <string name="overdue_download">பதிவிறக்கு</string>
   <string name="overdue_share">பகிர்</string>
   <string name="overdue_no_pending_patients">நிலுவையில் உள்ள நோயாளிகள் இல்லை</string>
   <string name="overdue_pending_list_button_see_all">எல்லாவற்றையும் பார்க்கவும்</string>

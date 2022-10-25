@@ -250,18 +250,6 @@
   <string name="patient_prescribeddrugs_screen_title">Medicines</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">Add another medicine</string>
 
-  <string name="customprescription_enter_medicine">Enter medicine</string>
-  <string name="customprescription_edit_medicine">Edit medicine</string>
-  <string name="customprescription_save_drug">Save</string>
-  <string name="customprescription_drug_name_hint">Medicine name</string>
-  <string name="customprescription_dosage_placeholder" translatable="false">mg</string>
-  <string name="customprescription_drug_dosage_hint">Dosage</string>
-
-  <string name="customprescription_delete_title">Remove medicine</string>
-  <string name="customprescription_delete_message">Are you sure you want to remove this medicine?</string>
-  <string name="customprescription_delete_confirm">Remove</string>
-  <string name="customprescription_delete_cancel">Cancel</string>
-
   <!-- Login -->
   <string name="loginpin_go_back">Go back to phone number screen</string>
 

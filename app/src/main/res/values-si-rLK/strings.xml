@@ -199,17 +199,6 @@
   <string name="patient_prescribeddrugs_screen_title">ඖෂධ</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">තවත් ඖෂධයක් එකතු කරන්න</string>
 
-  <string name="customprescription_enter_medicine">ඖෂධය ඇතුළු කරන්න</string>
-  <string name="customprescription_edit_medicine">ඖෂධය සංස්කරණය කරන්න</string>
-  <string name="customprescription_save_drug">සුරකින්න</string>
-  <string name="customprescription_drug_name_hint">ඖෂධයේ නම</string>
-  <string name="customprescription_drug_dosage_hint">මාත්‍රාව</string>
-
-  <string name="customprescription_delete_title">ඖෂධය ඉවත් කරන්න</string>
-  <string name="customprescription_delete_message">ඔබට මෙම ඖෂධය ඉවත් කිරීමට අවශ්‍ය බව විශ්වාස ද?</string>
-  <string name="customprescription_delete_confirm">ඉවත් කරන්න</string>
-  <string name="customprescription_delete_cancel">අවලංගු කරන්න</string>
-
   <!-- Login -->
   <string name="loginpin_go_back">දුරකතන අංක තිරයට ආපසු යන්න</string>
 
@@ -277,7 +266,7 @@
     <item quantity="other">දින %s ක් ඉකුත් වී ඇත</item>
   </plurals>
   <string name="overdue_list_item_village">ගම</string>
-    <string name="overdue_download">බාගත කිරීම</string>
+  <string name="overdue_download">බාගත කිරීම</string>
   <string name="overdue_share">බෙදා ගැනීම</string>
   <string name="overdue_no_pending_patients">රෝගීන් රැඳී නොසිටී</string>
   <string name="overdue_pending_list_button_see_all">සියල්ල බලන්න</string>

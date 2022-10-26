@@ -16,6 +16,7 @@
 - Bump mixpanel to v7.2.0
 - Bump auto request review to v0.8.0
 - Bump Fragment to v1.5.4
+- Run overdue appointment queries in a transaction
 
 ### Fixes
 

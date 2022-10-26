@@ -5,6 +5,7 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Query
+import androidx.room.Transaction
 import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
 import org.intellij.lang.annotations.Language
@@ -93,6 +94,7 @@ data class OverdueAppointment(
     """
     }
 
+    @Transaction
     @Query(""" 
       $OVERDUE_APPOINTMENTS_QUERY 
       WHERE
@@ -109,6 +111,7 @@ data class OverdueAppointment(
         scheduledBefore: LocalDate
     ): Observable<List<OverdueAppointment>>
 
+    @Transaction
     @Query("""
       $OVERDUE_APPOINTMENTS_QUERY
       WHERE
@@ -128,6 +131,7 @@ data class OverdueAppointment(
         scheduledBefore: LocalDate
     ): PagingSource<Int, OverdueAppointment>
 
+    @Transaction
     @Query("""
       $OVERDUE_APPOINTMENTS_QUERY
       WHERE

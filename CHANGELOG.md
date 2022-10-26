@@ -17,6 +17,7 @@
 - Bump auto request review to v0.8.0
 - Bump Fragment to v1.5.4
 - Run overdue appointment queries in a transaction
+- Bump flipper to v0.171.1
 
 ### Fixes
 

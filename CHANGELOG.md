@@ -19,6 +19,7 @@
 - Run overdue appointment queries in a transaction
 - Bump flipper to v0.171.1
 - Bump Open CSV to v5.7.1
+- Bump iText to v7.2.4
 
 ### Fixes
 

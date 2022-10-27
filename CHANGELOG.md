@@ -24,6 +24,7 @@
 ### Fixes
 
 - Fix app crashing when handling deep link results
+- Fix diabetes warning dialog showing in patient screen for facilities with diabetes management disabled
 
 ## 2022-10-17-8463
 

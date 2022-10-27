@@ -843,6 +843,34 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
+  fun `when patient is diagnosed with diabetes and has no recorded measurements and diabetes management is not enabled for facility, then clicking on done should show schedule appointment sheet if measurements are changed`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForDoneClickLoaded(
+            hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = false,
+            countOfRecordedBloodPressures = 0,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("bdc93463-1577-42df-a6ff-b0526dc0b680"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = No,
+                hasDiabetes = Yes
+            )
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowScheduleAppointmentSheet(
+                patientUuid = patientUuid,
+                sheetOpenedFrom = DONE_CLICK,
+                currentFacility = facilityWithDiabetesManagementDisabled
+            ))
+        ))
+  }
+
+  @Test
   fun `when patient is diagnosed with hypertension and diabetes and has no recorded measurements, then clicking on back should show add measurements warning`() {
     val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
 
@@ -911,6 +939,34 @@ class PatientSummaryUpdateTest {
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
             hasEffects(ShowAddBloodSugarWarningDialog)
+        ))
+  }
+
+  @Test
+  fun `when patient is diagnosed with diabetes and has no recorded measurements and diabetes management is not enabled for facility, then clicking on back should show schedule appointment sheet if measurements are changed`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementDisabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForBackClickLoaded(
+            hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = false,
+            countOfRecordedBloodPressures = 0,
+            countOfRecordedBloodSugars = 0,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("909d198e-c905-4d07-aa39-d209be63765e"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = No,
+                hasDiabetes = Yes
+            )
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowScheduleAppointmentSheet(
+                patientUuid = patientUuid,
+                sheetOpenedFrom = BACK_CLICK,
+                currentFacility = facilityWithDiabetesManagementDisabled
+            ))
         ))
   }
 

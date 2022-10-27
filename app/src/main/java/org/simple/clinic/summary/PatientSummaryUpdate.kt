@@ -40,6 +40,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
           countOfRecordedBloodSugars = event.countOfRecordedBloodSugars,
           medicalHistory = event.medicalHistory
       )
+
       is DataForDoneClickLoaded -> dataForHandlingDoneClickLoaded(
           model = model,
           countOfRecordedBloodPressures = event.countOfRecordedBloodPressures,
@@ -48,6 +49,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
           hasPatientMeasurementDataChangedSinceScreenCreated = event.hasPatientMeasurementDataChangedSinceScreenCreated,
           hasAppointmentChangedSinceScreenCreated = event.hasAppointmentChangeSinceScreenCreated
       )
+
       is SyncTriggered -> scheduleAppointmentSheetClosed(model, event.sheetOpenedFrom)
       is ContactPatientClicked -> dispatch(OpenContactPatientScreen(model.patientUuid))
       ContactDoctorClicked -> dispatch(OpenContactDoctorSheet(model.patientUuid))
@@ -61,10 +63,12 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
           NEXT_APPOINTMENT_ACTION_CLICK,
           model.currentFacility!!
       ))
+
       AssignedFacilityChanged -> dispatch(RefreshNextAppointment)
       is ClinicalDecisionSupportInfoLoaded -> next(
           model.clinicalDecisionSupportInfoLoaded(event.isNewestBpEntryHigh, event.hasPrescribedDrugsChangedToday)
       )
+
       is CDSSPilotStatusChecked -> cdssPilotStatusChecked(event, model)
       is LatestScheduledAppointmentLoaded -> next(model.scheduledAppointmentLoaded(event.appointment))
       is MeasurementWarningNotNowClicked -> measurementWarningNotNowClicked(model, event)
@@ -179,7 +183,13 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     val canShowAppointmentSheet = hasPatientMeasurementDataChangedSinceScreenCreated && !hasAppointmentChangedSinceScreenCreated
     val hasAtLeastOneMeasurementRecorded = countOfRecordedBloodPressures + countOfRecordedBloodSugars > 0
     val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && medicalHistory.diagnosisRecorded.not() && model.isDiabetesManagementEnabled
-    val measurementWarningEffect = validateMeasurements(countOfRecordedBloodSugars, countOfRecordedBloodPressures, medicalHistory, model.hasShownMeasurementsWarningDialog)
+    val measurementWarningEffect = validateMeasurements(
+        isDiabetesManagementEnabled = model.isDiabetesManagementEnabled,
+        countOfRecordedBloodSugars = countOfRecordedBloodSugars,
+        countOfRecordedBloodPressures = countOfRecordedBloodPressures,
+        medicalHistory = medicalHistory,
+        hasShownMeasurementsWarningDialog = model.hasShownMeasurementsWarningDialog
+    )
 
     return when {
       shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
@@ -203,7 +213,12 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     val shouldShowDiagnosisError = hasAtLeastOneMeasurementRecorded && medicalHistory.diagnosisRecorded.not() && model.isDiabetesManagementEnabled
     val shouldGoToPreviousScreen = openIntention is ViewExistingPatient
     val shouldGoToHomeScreen = openIntention is LinkIdWithPatient || openIntention is ViewNewPatient || openIntention is ViewExistingPatientWithTeleconsultLog
-    val measurementWarningEffect = validateMeasurements(countOfRecordedBloodSugars, countOfRecordedBloodPressures, medicalHistory, model.hasShownMeasurementsWarningDialog)
+    val measurementWarningEffect = validateMeasurements(
+        isDiabetesManagementEnabled = model.isDiabetesManagementEnabled,
+        countOfRecordedBloodSugars = countOfRecordedBloodSugars,
+        countOfRecordedBloodPressures = countOfRecordedBloodPressures,
+        medicalHistory = medicalHistory,
+        hasShownMeasurementsWarningDialog = model.hasShownMeasurementsWarningDialog)
 
     return when {
       shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
@@ -216,6 +231,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
   }
 
   private fun validateMeasurements(
+      isDiabetesManagementEnabled: Boolean,
       countOfRecordedBloodSugars: Int,
       countOfRecordedBloodPressures: Int,
       medicalHistory: MedicalHistory,
@@ -228,7 +244,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     val hasAtLeastOneMeasurementRecorded = countOfRecordedBloodPressures + countOfRecordedBloodSugars > 0
     val shouldShowAddMeasurementsWarning = medicalHistory.diagnosedWithHypertension == Yes && medicalHistory.diagnosedWithDiabetes == Yes && !hasAtLeastOneMeasurementRecorded
     val shouldShowAddBloodPressureWarning = medicalHistory.diagnosedWithHypertension == Yes && countOfRecordedBloodPressures == 0
-    val shouldShownAddBloodSugarWarning = medicalHistory.diagnosedWithDiabetes == Yes && countOfRecordedBloodSugars == 0
+    val shouldShownAddBloodSugarWarning = medicalHistory.diagnosedWithDiabetes == Yes && countOfRecordedBloodSugars == 0 && isDiabetesManagementEnabled
 
     return when {
       shouldShowAddMeasurementsWarning -> ShowAddMeasurementsWarningDialog

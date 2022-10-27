@@ -203,7 +203,7 @@ class PatientsTabScreen : BaseScreen<
   override fun uiRenderer() = PatientsTabUiRenderer(
       ui = this,
       currentDate = LocalDate.now(userClock),
-      isPatientLineListEnabled = features.isEnabled(Feature.PatientLineListDownload)
+      isPatientLineListEnabled = features.isEnabled(Feature.PatientLineListDownload) && country.isoCountryCode == Country.INDIA
   )
 
   override fun viewEffectHandler() = PatientsTabViewEffectHandler(this)
@@ -230,7 +230,7 @@ class PatientsTabScreen : BaseScreen<
   override fun createInit() = PatientsInit(
       isNotifyAppUpdateAvailableV2Enabled = features.isEnabled(NotifyAppUpdateAvailableV2),
       isMonthlyDrugStockReportReminderEnabledInIndia = features.isEnabled(MonthlyDrugStockReportReminder) && country.isoCountryCode == Country.INDIA,
-      isPatientLineListEnabled = features.isEnabled(PatientLineListDownload)
+      isPatientLineListEnabled = features.isEnabled(PatientLineListDownload) && country.isoCountryCode == Country.INDIA
   )
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<PatientsTabViewEffect>) = effectHandlerFactory.create(

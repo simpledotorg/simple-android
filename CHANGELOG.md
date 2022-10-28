@@ -14,6 +14,7 @@
 - Bump Open CSV to v5.7.1
 - Bump iText to v7.2.4
 - Enable patient line list download for Indian users only
+- Bump Sentry to v6.6.0
 
 ## 2022-10-26-8474
 

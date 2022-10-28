@@ -4,13 +4,6 @@
 
 ### Internal
 
-- Update patient line list query
-  - Filter out deleted patients
-  - Use latest phone number that is not deleted
-  - Use latest recorded BP
-- Bump lint to v30.3.1
-- Bump sentry gradle plugin to v3.2.0
-- Bump google play services location to v21.0.0
 - Remove old custom prescription entry components
 - Bump Material Design Components to v1.7.0
 - Bump mixpanel to v7.2.0
@@ -21,6 +14,18 @@
 - Bump Open CSV to v5.7.1
 - Bump iText to v7.2.4
 - Enable patient line list download for Indian users only
+
+## 2022-10-26-8474
+
+### Internal
+
+- Update patient line list query
+  - Filter out deleted patients
+  - Use latest phone number that is not deleted
+  - Use latest recorded BP
+- Bump lint to v30.3.1
+- Bump sentry gradle plugin to v3.2.0
+- Bump google play services location to v21.0.0
 
 ### Fixes
 

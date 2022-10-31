@@ -9,6 +9,7 @@
 - Add missing `uses-feature` in `AndroidManifest`
 - Add color scheme for Tamil Nadu app
 - Request notification permission on devices running Android 13
+- Add a product flavor for TamilNadu app
 
 ## 2022-10-31-8480
 

@@ -199,6 +199,12 @@ android {
     create("production") {
       dimension = "track"
     }
+
+    create("tamilNadu") {
+      dimension = "track"
+      applicationIdSuffix = ".tamilnadu"
+      manifestPlaceholders["appTheme"] = "@style/Theme.Thanks"
+    }
   }
 
   androidComponents {
@@ -207,7 +213,8 @@ android {
         "stagingDebug",
         "sandboxDebug",
         "productionDebug",
-        "securityDebug"
+        "securityDebug",
+        "tamilNaduDebug"
     )
 
     beforeVariants { variant ->
@@ -273,7 +280,8 @@ android {
         "assembleStagingRelease",
         "assembleSandboxRelease",
         "assembleProductionRelease",
-        "assembleSecurityRelease"
+        "assembleSecurityRelease",
+        "assembleTamilNaduRelease"
     )
 
     assembleReleaseTasks.forEach { buildType ->
@@ -285,7 +293,8 @@ android {
         "kaptSandboxReleaseKotlin" to "sandboxRelease",
         "kaptStagingReleaseKotlin" to "stagingRelease",
         "kaptSecurityReleaseKotlin" to "securityRelease",
-        "kaptProductionReleaseKotlin" to "productionRelease"
+        "kaptProductionReleaseKotlin" to "productionRelease",
+        "kaptTamilNaduReleaseKotlin" to "tamilNaduRelease"
     )
 
     kaptTasks.forEach { (buildType, sourceSetName) ->

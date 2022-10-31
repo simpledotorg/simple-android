@@ -15,6 +15,7 @@
 - Bump iText to v7.2.4
 - Enable patient line list download for Indian users only
 - Bump Sentry to v6.6.0
+- Add renovate package rule for Flipper updates
 
 ## 2022-10-26-8474
 

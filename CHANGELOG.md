@@ -4,6 +4,12 @@
 
 ### Internal
 
+- Add renovate package rule for Flipper updates
+
+## 2022-10-31-8480
+
+### Internal
+
 - Remove old custom prescription entry components
 - Bump Material Design Components to v1.7.0
 - Bump mixpanel to v7.2.0
@@ -15,7 +21,6 @@
 - Bump iText to v7.2.4
 - Enable patient line list download for Indian users only
 - Bump Sentry to v6.6.0
-- Add renovate package rule for Flipper updates
 
 ## 2022-10-26-8474
 

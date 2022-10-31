@@ -5,6 +5,7 @@
 ### Internal
 
 - Add renovate package rule for Flipper updates
+- Show all facilities in the state when changing assigned or appointment facility
 
 ## 2022-10-31-8480
 

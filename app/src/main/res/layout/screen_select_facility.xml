@@ -10,6 +10,6 @@
     android:id="@+id/facilityPickerView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:pickFrom="in-current-group" />
+    app:pickFrom="all-facilities" />
 
 </FrameLayout>

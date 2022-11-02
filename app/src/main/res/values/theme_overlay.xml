@@ -119,7 +119,7 @@
   </style>
 
   <style name="ThemeOverlay.Simple.TabLayout" parent="">
-    <item name="colorPrimary">@color/simple_dark_blue_800</item>
+    <item name="colorPrimary">?attr/colorToolbarPrimary</item>
     <item name="colorSurface">@color/simple_dark_grey</item>
     <item name="colorOnSurface">@color/white</item>
   </style>

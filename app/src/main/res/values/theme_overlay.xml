@@ -129,6 +129,11 @@
     <item name="colorOnSurface">@color/white</item>
   </style>
 
+  <style name="ThemeOverlay.Simple.AppBarLayout" parent="">
+    <item name="colorPrimary">?attr/colorToolbarPrimary</item>
+    <item name="colorOnPrimary">@color/white</item>
+  </style>
+
   <!-- Screen Specific Theme Overlays -->
   <style name="ThemeOverlay.Simple.SplashScreen" parent="">
     <item name="android:colorBackground">@color/simple_dark_blue_800</item>

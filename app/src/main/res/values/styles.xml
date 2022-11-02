@@ -2,7 +2,7 @@
 <resources>
   <!-- AppBar -->
   <style name="Widget.Simple.AppBarLayout" parent="Widget.MaterialComponents.AppBarLayout.Primary">
-    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.Blue0Primary</item>
+    <item name="materialThemeOverlay">@style/ThemeOverlay.Simple.AppBarLayout</item>
   </style>
 
   <!-- Toolbar -->

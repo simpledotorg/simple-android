@@ -7,11 +7,6 @@
     <item name="colorOnPrimary">?attr/colorOnSurface</item>
   </style>
 
-  <style name="ThemeOverlay.Simple.Blue0Primary" parent="">
-    <item name="colorPrimary">@color/simple_dark_blue_800</item>
-    <item name="colorOnPrimary">@color/white</item>
-  </style>
-
   <style name="ThemeOverlay.Simple.Blue1Primary" parent="">
     <item name="colorPrimary">@color/simple_light_blue_500</item>
     <item name="colorOnPrimary">@color/white</item>

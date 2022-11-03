@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- Screen Specific Theme Overlays -->
+  <style name="ThemeOverlay.Simple.SplashScreen" parent="">
+    <item name="android:colorBackground">@color/thanks_green_500</item>
+  </style>
+
+  <style name="ThemeOverlay.Simple.IntroVideoScreen" parent="">
+    <item name="android:colorBackground">@color/thanks_green_500</item>
+    <item name="colorOnBackground">@color/white</item>
+    <item name="colorOnSurface">@color/white</item>
+  </style>
+
+</resources>

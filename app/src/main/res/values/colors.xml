@@ -37,4 +37,10 @@
 
   <color name="search_query_highlight">#52FFC800</color>
 
+  <!-- Tamil Nadu -->
+  <color name="thanks_green_500">#106466</color>
+  <color name="thanks_green_600">#0F5C5E</color>
+
+  <color name="thanks_teal_500">#20C8CC</color>
+
 </resources>

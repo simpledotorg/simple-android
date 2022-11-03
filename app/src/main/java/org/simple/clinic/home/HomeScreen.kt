@@ -1,6 +1,7 @@
 package org.simple.clinic.home
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -15,10 +16,13 @@ import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.activity.permissions.RequestPermissions
+import org.simple.clinic.activity.permissions.RuntimePermissions
 import org.simple.clinic.databinding.ScreenHomeBinding
 import org.simple.clinic.deeplink.OpenPatientSummary
 import org.simple.clinic.deeplink.OpenPatientSummaryWithTeleconsultLog
@@ -80,6 +84,9 @@ class HomeScreen :
   @Inject
   lateinit var features: Features
 
+  @Inject
+  lateinit var runtimePermissions: RuntimePermissions
+
   private val homeScreenRootLayout
     get() = binding.homeScreenRootLayout
 
@@ -116,6 +123,7 @@ class HomeScreen :
           facilitySelectionClicks(),
           hotEvents
       )
+      .compose(RequestPermissions(runtimePermissions, screenResults.streamResults().ofType()))
       .compose(ReportAnalyticsEvents())
       .cast<HomeScreenEvent>()
 
@@ -136,6 +144,10 @@ class HomeScreen :
     super.onViewCreated(view, savedInstanceState)
     setupToolBar()
     setupHelpClicks()
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      hotEvents.onNext(RequestNotificationPermission())
+    }
 
     // Keyboard stays open after login finishes, not sure why.
     homeScreenRootLayout.hideKeyboard()

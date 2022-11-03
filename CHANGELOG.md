@@ -8,6 +8,7 @@
 - Show all facilities in the state when changing assigned or appointment facility
 - Add missing `uses-feature` in `AndroidManifest`
 - Add color scheme for Tamil Nadu app
+- Request notification permission on devices running Android 13
 
 ## 2022-10-31-8480
 

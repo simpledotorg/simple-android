@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.airbnb.lottie.LottieDrawable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.databinding.ScreenSplashBinding
 import org.simple.clinic.di.injector
@@ -24,9 +23,6 @@ class SplashScreen : Fragment() {
 
   private var binding: ScreenSplashBinding? = null
 
-  private val splashLottieView
-    get() = binding!!.splashLottieView
-
   private val nextButton
     get() = binding!!.nextButton
 
@@ -42,12 +38,6 @@ class SplashScreen : Fragment() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    with(splashLottieView) {
-      setAnimation("splash_animation.json")
-      repeatCount = LottieDrawable.INFINITE
-      playAnimation()
-    }
-
     nextButton.setOnClickListener {
       router.clearHistoryAndPush(OnboardingScreen.Key())
     }

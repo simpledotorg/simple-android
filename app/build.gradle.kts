@@ -141,6 +141,8 @@ android {
     buildConfigField("String", "DATADOG_APPLICATION_ID", "\"$datadogApplicationId\"")
     buildConfigField("String", "DATADOG_CLIENT_TOKEN", "\"$datadogClientToken\"")
     buildConfigField("String", "DATADOG_ENVIRONMENT", "\"$datadogEnvironment\"")
+
+    manifestPlaceholders["appTheme"] = "@style/Theme.Simple"
   }
 
   buildTypes {

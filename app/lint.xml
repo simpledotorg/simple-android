@@ -47,6 +47,10 @@
     <ignore regexp="list_item_overdue_pending_list_see_all_button" />
     <ignore regexp="ic_search_history" />
     <ignore regexp="view_overdue_search_history" />
+    <ignore regexp="thanks_green_500" />
+    <ignore regexp="thanks_green_600" />
+    <ignore regexp="thanks_teal_500" />
+    <ignore regexp="Theme.Thanks" />
   </issue>
 
   <issue id="ParcelCreator" severity="informational" />

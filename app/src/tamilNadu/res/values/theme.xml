@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <style name="Theme.Thanks" parent="Theme.Simple">
+    <item name="android:statusBarColor">@color/thanks_green_600</item>
+
+    <!-- Custom Attrs -->
+    <item name="colorToolbarPrimary">@color/thanks_green_500</item>
+    <item name="colorToolbarPrimaryVariant">@color/thanks_green_600</item>
+  </style>
+
+</resources>

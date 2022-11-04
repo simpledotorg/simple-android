@@ -16,6 +16,7 @@
 - Remove max SDK version for storage permissions
 - Bump AndroidX test dependencies
 - Show intro video screen based on registration config flag
+- Remove Simple video from `PatientsTabScreen`
 
 ## 2022-11-07-8490
 

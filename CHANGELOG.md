@@ -10,6 +10,7 @@
 - Add color scheme for Tamil Nadu app
 - Request notification permission on devices running Android 13
 - Add a product flavor for TamilNadu app
+- Bump google play services location to v21.0.1
 
 ## 2022-10-31-8480
 

@@ -1,11 +1,14 @@
 package org.simple.clinic.home
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Parcelable
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -219,6 +222,17 @@ class HomeScreen :
     router.pushExpectingResult(ChangeCurrentFacility, FacilityChangeScreen.Key())
   }
 
+  override fun showNotificationPermissionDeniedDialog() {
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(R.string.notification_permission_denied_title)
+        .setMessage(R.string.notification_permission_denied_message)
+        .setPositiveButton(R.string.notification_permission_denied_positive_button) { _, _ ->
+          openAppInfo()
+        }
+        .setNegativeButton(R.string.notification_permission_denied_negetive_button, null)
+        .show()
+  }
+
   override fun showOverdueAppointmentCount(count: Int) {
     val overdueTabIndex = tabs.indexOf(OVERDUE)
     val overdueTab = homeTabLayout.getTabAt(overdueTabIndex)
@@ -298,6 +312,12 @@ class HomeScreen :
         .setMessage(R.string.deeplink_please_check_with_your_supervisor)
         .setPositiveButton(R.string.deeplink_okay_positive_action, null)
         .show()
+  }
+
+  private fun openAppInfo() {
+    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+    intent.data = Uri.fromParts("package", requireContext().packageName, null)
+    startActivity(intent)
   }
 
   interface Injector {

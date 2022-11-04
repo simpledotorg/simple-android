@@ -7,3 +7,5 @@ object LoadCurrentFacility : HomeScreenEffect()
 sealed class HomeScreenViewEffect : HomeScreenEffect()
 
 object OpenFacilitySelection : HomeScreenViewEffect()
+
+object ShowNotificationPermissionDenied : HomeScreenViewEffect()

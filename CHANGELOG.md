@@ -11,6 +11,7 @@
 - Request notification permission on devices running Android 13
 - Add a product flavor for TamilNadu app
 - Bump google play services location to v21.0.1
+- Bump Sentry Gradle Plugin to v3.2.1
 
 ## 2022-10-31-8480
 

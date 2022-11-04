@@ -25,7 +25,11 @@
     android:adjustViewBounds="true"
     app:layout_constraintBottom_toTopOf="@+id/nextButtonFrame"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent" />
+    app:layout_constraintStart_toStartOf="parent"
+    app:lottie_autoPlay="true"
+    app:lottie_fileName="splash_animation.json"
+    app:lottie_repeatCount="@integer/lottie_repeat_infinite"
+    app:lottie_repeatMode="restart" />
 
   <FrameLayout
     android:id="@+id/nextButtonFrame"

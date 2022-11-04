@@ -409,8 +409,6 @@
 
   <!-- Simple video -->
   <string name="simple_video_duration">%s ਮਿੰਟ</string>
-  <string name="simple_video_watch">ਵੀਡੀਓ ਦੇਖੋ</string>
-  <string name="simple_video_how_to_use">ਇਸ ਐਪ ਦੀ ਵਰਤੋਂ ਕਿਵੇਂ ਕਰਨੀ ਹੈ</string>
 
   <!-- Settings -->
   <string name="settings_title">ਸੈਟਿੰਗਾਂ</string>

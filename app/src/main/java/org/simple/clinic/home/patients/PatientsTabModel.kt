@@ -37,9 +37,6 @@ data class PatientsTabModel(
   val hasLoadedUser: Boolean
     get() = user != null
 
-  val hasLoadedNumberOfPatientsRegistered: Boolean
-    get() = numberOfPatientsRegistered != null
-
   val hasAppStaleness
     get() = appStaleness != null
 
@@ -51,10 +48,6 @@ data class PatientsTabModel(
 
   fun userLoaded(user: User): PatientsTabModel {
     return copy(user = user)
-  }
-
-  fun numberOfPatientsRegisteredUpdated(numberOfPatientsRegistered: Int): PatientsTabModel {
-    return copy(numberOfPatientsRegistered = numberOfPatientsRegistered)
   }
 
   fun updateAppStaleness(appStaleness: Int?): PatientsTabModel {

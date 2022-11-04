@@ -41,7 +41,6 @@ class PatientsEffectHandler @AssistedInject constructor(
     private val checkAppUpdate: CheckAppUpdateAvailability,
     private val appUpdateNotificationScheduler: AppUpdateNotificationScheduler,
     @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>,
-    @SimpleVideoConfig(NumberOfPatientsRegistered) private val numberOfPatientsRegisteredPref: Preference<Int>,
     @Named("app_update_last_shown_at") private val appUpdateDialogShownAtPref: Preference<Instant>,
     @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
     private val drugStockReminder: DrugStockReminder,
@@ -65,7 +64,6 @@ class PatientsEffectHandler @AssistedInject constructor(
         .addTransformer(LoadUser::class.java, loadUser())
         .addTransformer(LoadInfoForShowingApprovalStatus::class.java, loadRequiredInfoForShowingApprovalStatus())
         .addConsumer(SetDismissedApprovalStatus::class.java, { hasUserDismissedApprovedStatusPref.set(it.dismissedStatus) }, schedulers.io())
-        .addTransformer(LoadNumberOfPatientsRegistered::class.java, loadNumberOfPatientsRegistered())
         .addTransformer(LoadInfoForShowingAppUpdateMessage::class.java, loadInfoForShowingAppUpdate())
         .addConsumer(TouchAppUpdateShownAtTime::class.java, { appUpdateDialogShownAtPref.set(Instant.now(utcClock)) }, schedulers.io())
         .addConsumer(ScheduleAppUpdateNotification::class.java, { appUpdateNotificationScheduler.schedule() }, schedulers.io())
@@ -162,14 +160,6 @@ class PatientsEffectHandler @AssistedInject constructor(
                 hasBeenDismissed = hasUserDismissedApprovedStatusPref.get()
             )
           }
-    }
-  }
-
-  private fun loadNumberOfPatientsRegistered(): ObservableTransformer<LoadNumberOfPatientsRegistered, PatientsTabEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .switchMap { numberOfPatientsRegisteredPref.asObservable().subscribeOn(schedulers.io()) }
-          .map(::LoadedNumberOfPatientsRegistered)
     }
   }
 

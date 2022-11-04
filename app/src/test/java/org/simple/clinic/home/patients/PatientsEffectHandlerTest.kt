@@ -63,7 +63,6 @@ class PatientsEffectHandlerTest {
       checkAppUpdate = checkAppUpdate,
       appUpdateNotificationScheduler = appUpdateNotificationScheduler,
       hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatusPreference,
-      numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPreference,
       appUpdateDialogShownAtPref = appUpdateDialogShownPref,
       approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference,
       drugStockReminder = drugStockReminder,

@@ -409,9 +409,6 @@
 
   <!-- Simple video -->
   <string name="simple_video_duration">%s ደቂቃዎች</string>
-  <string name="simple_video_watch">ቪዲዮን ይመልከቱ</string>
-  <string name="simple_video_how_to_use">ይህንን መተግበሪያ እንዴት ልጠቀመው</string>
-
   <!-- Settings -->
   <string name="settings_title">ቅንብሮች ወይም settings</string>
   <string name="settings_user_name_icon_content">የቅንብሮች የተጠቃሚ ስም ምልክት ወይም icon</string>

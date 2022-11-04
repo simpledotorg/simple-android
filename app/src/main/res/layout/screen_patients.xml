@@ -60,7 +60,7 @@
           tools:ignore="ContentDescription" />
 
         <include
-          android:id="@+id/simpleVideoLayout"
+          android:id="@+id/simpleIllustrationLayout"
           layout="@layout/simple_video_layout" />
 
         <include

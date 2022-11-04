@@ -53,9 +53,6 @@ import org.simple.clinic.patient.download.formatdialog.SelectLineListFormatDialo
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
-import org.simple.clinic.simplevideo.SimpleVideo
-import org.simple.clinic.simplevideo.SimpleVideoConfig
-import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.TrainingVideo
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RuntimeNetworkStatus
@@ -91,10 +88,6 @@ class PatientsTabScreen : BaseScreen<
 
   @Inject
   lateinit var country: Country
-
-  @Inject
-  @SimpleVideoConfig(TrainingVideo)
-  lateinit var simpleVideo: SimpleVideo
 
   @Inject
   lateinit var runtimePermissions: RuntimePermissions
@@ -156,14 +149,11 @@ class PatientsTabScreen : BaseScreen<
   private val illustrationLayout
     get() = binding.illustrationLayout
 
-  private val simpleVideoLayout
-    get() = binding.simpleVideoLayout
+  private val simpleIllustrationLayout
+    get() = binding.simpleIllustrationLayout
 
   private val simpleVideoIllustration
-    get() = simpleVideoLayout.simpleVideoIllustration
-
-  private val simpleVideoDurationTextView
-    get() = simpleVideoLayout.simpleVideoDurationTextView
+    get() = simpleIllustrationLayout.simpleIllustration
 
   private val appUpdateCardLayout
     get() = binding.appUpdateCardLayout
@@ -215,7 +205,6 @@ class PatientsTabScreen : BaseScreen<
           dismissApprovedStatusClicks(),
           enterCodeManuallyClicks(),
           scanCardIdButtonClicks(),
-          simpleVideoClicked(),
           appUpdateCardUpdateNowClicked(),
           enterDrugStockClicked(),
           patientLineListDownloadButtonClicks()
@@ -293,11 +282,6 @@ class PatientsTabScreen : BaseScreen<
   private fun enterCodeManuallyClicks() = enterCodeButton.clicks().map { PatientsEnterCodeManuallyClicked() }
 
   private fun scanCardIdButtonClicks() = scanSimpleCardButton.clicks().map { ScanCardIdButtonClicked() }
-
-  private fun simpleVideoClicked() = simpleVideoLayout
-      .root
-      .clicks()
-      .map { SimpleVideoClicked }
 
   private fun appUpdateCardUpdateNowClicked() = appUpdateCardUpdateNowButton
       .clicks()
@@ -413,11 +397,6 @@ class PatientsTabScreen : BaseScreen<
     illustrationLayout.visibility = View.VISIBLE
   }
 
-  override fun showSimpleVideo() {
-    simpleVideoDurationTextView.text = resources.getString(R.string.simple_video_duration, simpleVideo.duration)
-    showHomeScreenBackground(R.id.simpleVideoLayout)
-  }
-
   override fun showIllustration() {
     showHomeScreenBackground(R.id.homeIllustration)
   }
@@ -453,17 +432,6 @@ class PatientsTabScreen : BaseScreen<
   private fun previousMonthAndYear(): String {
     val localDate = LocalDate.now(userClock).minusMonths(1)
     return monthYearDateFormatter.format(localDate)
-  }
-
-  override fun openYouTubeLinkForSimpleVideo() {
-    val packageManager = requireContext().packageManager
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(simpleVideo.url))
-
-    if (intent.resolveActivity(packageManager) != null) {
-      requireContext().startActivity(intent)
-    } else {
-      CrashReporter.report(ActivityNotFoundException("Unable to play simple video because no supporting apps were found."))
-    }
   }
 
   interface Injector {

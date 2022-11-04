@@ -14,7 +14,6 @@ class PatientsInit(
     val effects = mutableSetOf(
         LoadUser,
         RefreshUserDetails,
-        LoadNumberOfPatientsRegistered,
         LoadInfoForShowingAppUpdateMessage
     )
 

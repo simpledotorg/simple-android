@@ -409,8 +409,6 @@
 
   <!-- Simple video -->
   <string name="simple_video_duration">%s মিনিট</string>
-  <string name="simple_video_watch">ভিডিও দেখুন</string>
-  <string name="simple_video_how_to_use">এই অ্যাপটি কীভাবে ব্যবহার করবেন</string>
 
   <!-- Settings -->
   <string name="settings_title">সেটিংস</string>

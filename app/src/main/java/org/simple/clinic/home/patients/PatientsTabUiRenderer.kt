@@ -46,7 +46,7 @@ class PatientsTabUiRenderer(
         ui.showCriticalAppUpdateCard()
         ui.renderAppUpdateReason(appStalenessInMonths(model.appStaleness!!))
       }
-      model.hasLoadedNumberOfPatientsRegistered && isDrugStockReportFilledOrNull -> {
+      isDrugStockReportFilledOrNull -> {
         toggleTrainingViewVisibility(model)
       }
       model.isDrugStockReportFilled == false -> {
@@ -82,12 +82,7 @@ class PatientsTabUiRenderer(
 
   private fun toggleTrainingViewVisibility(model: PatientsTabModel) {
     numberOfPatientsRegisteredChangedCallback.pass(model.numberOfPatientsRegistered!!) { numberOfPatientsRegistered ->
-      // TODO (vs) 27/05/20: Move this magic number to the constructor
-      if (numberOfPatientsRegistered < 10) {
-        ui.showSimpleVideo()
-      } else {
-        ui.showIllustration()
-      }
+      ui.showIllustration()
     }
   }
 

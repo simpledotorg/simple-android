@@ -409,8 +409,6 @@
 
   <!-- Simple video -->
   <string name="simple_video_duration">%s Bixilisa</string>
-  <string name="simple_video_watch">Vedio la’a</string>
-  <string name="simple_video_how_to_use">Konne assiisaancho horoonsi’nanni gara</string>
 
   <!-- Settings -->
   <string name="settings_title">Qinessa</string>

@@ -13,7 +13,6 @@ class PatientsTabViewEffectHandler(
       ShowUserWasApproved -> uiActions.showUserStatusAsApproved()
       HideUserAccountStatus -> uiActions.hideUserAccountStatus()
       OpenScanBpPassportScreen -> uiActions.openScanSimpleIdCardScreen()
-      OpenTrainingVideo -> uiActions.openYouTubeLinkForSimpleVideo()
       ShowAppUpdateAvailable -> uiActions.showAppUpdateDialog()
       OpenSimpleOnPlayStore -> uiActions.openSimpleOnPlaystore()
       is ShowCriticalAppUpdateDialog -> uiActions.showCriticalAppUpdateDialog(viewEffect.appUpdateNudgePriority)

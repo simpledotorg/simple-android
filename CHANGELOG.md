@@ -4,6 +4,15 @@
 
 ### Internal
 
+- Bump Jackson to v2.14.0
+- Bump sentry to v.6.7.0
+- Update patient lookup exception message when reporting
+- Add illustrations for Tamil Nadu app
+
+## 2022-11-07-8490
+
+### Internal
+
 - Add renovate package rule for Flipper updates
 - Show all facilities in the state when changing assigned or appointment facility
 - Add missing `uses-feature` in `AndroidManifest`
@@ -15,10 +24,6 @@
 - Move splash screen lottie config to XML
 - Show notification permission rationale dialog when user doesn’t allow notification permission
 - Update app icons and strings for Tamil Nadu app
-- Bump Jackson to v2.14.0
-- Bump sentry to v.6.7.0
-- Update patient lookup exception message when reporting
-- Add illustrations for Tamil Nadu app
 
 ## 2022-10-31-8480
 

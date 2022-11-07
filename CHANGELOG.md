@@ -15,6 +15,7 @@
 - Move splash screen lottie config to XML
 - Show notification permission rationale dialog when user doesn’t allow notification permission
 - Update app icons and strings for Tamil Nadu app
+- Bump Jackson to v2.14.0
 
 ## 2022-10-31-8480
 

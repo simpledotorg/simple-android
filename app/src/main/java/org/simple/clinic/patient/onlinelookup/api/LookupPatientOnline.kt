@@ -34,7 +34,7 @@ class LookupPatientOnline @Inject constructor(
     return try {
       lookupPatientOnServer(identifier)
     } catch (e: Exception) {
-      CrashReporter.report(e)
+      CrashReporter.report(Throwable("Failed to lookup patient:", e))
       OtherError
     }
   }

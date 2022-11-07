@@ -17,6 +17,7 @@
 - Update app icons and strings for Tamil Nadu app
 - Bump Jackson to v2.14.0
 - Bump sentry to v.6.7.0
+- Update patient lookup exception message when reporting
 
 ## 2022-10-31-8480
 

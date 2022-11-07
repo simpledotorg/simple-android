@@ -1015,4 +1015,10 @@
   <string name="patient_line_list_download_card_desc">List of all patients registered or assigned to %1$s</string>
   <string name="patient_line_list_download_card_button">Download</string>
 
+  <!--Notification permission denied dialog-->
+  <string name="notification_permission_denied_title">Turn on notifications</string>
+  <string name="notification_permission_denied_message">Simple needs permission to show you important reminders.Turn on under Permissions &gt; Notifications</string>
+  <string name="notification_permission_denied_positive_button">GO TO APP SETTINGS</string>
+  <string name="notification_permission_denied_negetive_button">NOT NOW</string>
+
 </resources>

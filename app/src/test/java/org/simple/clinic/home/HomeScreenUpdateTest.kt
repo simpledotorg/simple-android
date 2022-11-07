@@ -1,5 +1,6 @@
 package org.simple.clinic.home
 
+import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
@@ -24,14 +25,14 @@ class HomeScreenUpdateTest {
   }
 
   @Test
-  fun `when notification permission is not granted, then do nothing`() {
+  fun `when notification permission is not granted, then show notification permission denied dialog`() {
     val defaultModel = HomeScreenModel.create()
     UpdateSpec(HomeScreenUpdate())
         .given(defaultModel)
         .whenEvent(RequestNotificationPermission(permission = Optional.of(DENIED)))
         .then(assertThatNext(
             hasNoModel(),
-            hasNoEffects()
+            hasEffects(ShowNotificationPermissionDenied)
         ))
   }
 }

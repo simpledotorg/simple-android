@@ -16,7 +16,16 @@ class HomeScreenUpdate : Update<HomeScreenModel, HomeScreenEvent, HomeScreenEffe
       HomeFacilitySelectionClicked -> dispatch(OpenFacilitySelection)
       is CurrentFacilityLoaded -> next(model.facilityLoaded(event.facility))
       is OverdueAppointmentCountUpdated -> next(model.overdueAppointmentCountUpdated(event.overdueAppointmentCount))
-      is RequestNotificationPermission -> noChange()
+      is RequestNotificationPermission -> notificationPermissionDenied(event)
     }
+  }
+
+  private fun notificationPermissionDenied(
+      event: RequestNotificationPermission
+  ): Next<HomeScreenModel, HomeScreenEffect> {
+    return if (event.isPermissionGranted)
+      noChange()
+    else
+      dispatch(ShowNotificationPermissionDenied)
   }
 }

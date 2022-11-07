@@ -13,6 +13,7 @@
 - Bump google play services location to v21.0.1
 - Bump Sentry Gradle Plugin to v3.2.1
 - Move splash screen lottie config to XML
+- Show notification permission rationale dialog when user doesn’t allow notification permission
 
 ## 2022-10-31-8480
 

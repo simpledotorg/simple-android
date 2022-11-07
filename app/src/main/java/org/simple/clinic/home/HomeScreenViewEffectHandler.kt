@@ -10,6 +10,7 @@ class HomeScreenViewEffectHandler(
   override fun handle(viewEffect: HomeScreenViewEffect) {
     when (viewEffect) {
       OpenFacilitySelection -> uiActions.openFacilitySelection()
+      ShowNotificationPermissionDenied -> uiActions.showNotificationPermissionDeniedDialog()
     }.exhaustive()
   }
 }

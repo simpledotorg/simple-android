@@ -12,7 +12,7 @@ import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.sharedTestCode.TestData
 import java.util.UUID
 
-class HomeScreenViewEffectHandlerTest {
+class HomeScreenEffectHandlerTest {
 
   private val facility = TestData.facility(
       uuid = UUID.fromString("251deca2-d219-4863-80fc-e7d48cb22b1b"),

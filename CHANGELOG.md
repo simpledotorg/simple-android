@@ -18,7 +18,7 @@
 - Bump Jackson to v2.14.0
 - Bump sentry to v.6.7.0
 - Update patient lookup exception message when reporting
-- Add layout for splash screen in TamilNadu
+- Add illustrations for Tamil Nadu app
 
 ## 2022-10-31-8480
 

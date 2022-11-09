@@ -18,8 +18,6 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.DrugStockReportLastCheckedAt
 import org.simple.clinic.main.TypedPreference.Type.IsDrugStockReportFilled
-import org.simple.clinic.simplevideo.SimpleVideoConfig
-import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.NumberOfPatientsRegistered
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.refreshuser.RefreshCurrentUser
 import org.simple.clinic.util.UserClock

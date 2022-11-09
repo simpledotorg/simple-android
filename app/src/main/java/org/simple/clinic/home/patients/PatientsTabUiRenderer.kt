@@ -14,8 +14,6 @@ class PatientsTabUiRenderer(
 
   private val userChangedCallback = ValueChangedCallback<User>()
 
-  private val numberOfPatientsRegisteredChangedCallback = ValueChangedCallback<Int>()
-
   override fun render(model: PatientsTabModel) {
     if (model.hasLoadedUser) {
       toggleSyncIndicatorVisibility(model)
@@ -47,7 +45,7 @@ class PatientsTabUiRenderer(
         ui.renderAppUpdateReason(appStalenessInMonths(model.appStaleness!!))
       }
       isDrugStockReportFilledOrNull -> {
-        toggleTrainingViewVisibility(model)
+       toggleTrainingViewVisibility(model)
       }
       model.isDrugStockReportFilled == false -> {
         ui.showDrugStockReminderCard()
@@ -81,9 +79,7 @@ class PatientsTabUiRenderer(
   }
 
   private fun toggleTrainingViewVisibility(model: PatientsTabModel) {
-    numberOfPatientsRegisteredChangedCallback.pass(model.numberOfPatientsRegistered!!) { numberOfPatientsRegistered ->
       ui.showIllustration()
-    }
   }
 
   private fun renderSyncIndicatorVisibility(user: User) {

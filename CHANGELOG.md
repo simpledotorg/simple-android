@@ -10,6 +10,7 @@
 - Add illustrations for Tamil Nadu app
 - Bump Kotlin to v1.7.21
 - Fix Tamil Nadu `google-services.json` not present in correct folder
+- Bump androidx-test-junit to v1.1.4
 
 ## 2022-11-07-8490
 

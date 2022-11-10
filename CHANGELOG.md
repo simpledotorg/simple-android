@@ -9,6 +9,7 @@
 - Update patient lookup exception message when reporting
 - Add illustrations for Tamil Nadu app
 - Bump Kotlin to v1.7.21
+- Fix Tamil Nadu `google-services.json` not present in correct folder
 
 ## 2022-11-07-8490
 

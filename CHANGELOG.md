@@ -8,6 +8,7 @@
 - Bump sentry to v.6.7.0
 - Update patient lookup exception message when reporting
 - Add illustrations for Tamil Nadu app
+- Bump Kotlin to v1.7.21
 
 ## 2022-11-07-8490
 

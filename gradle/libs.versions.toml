@@ -4,7 +4,6 @@ androidx-camera = "1.1.0"
 androidx-cameraView = "1.1.0"
 androidx-paging = "3.1.1"
 androidx-room = "2.4.3"
-androidx-test = "1.4.0"
 androidx-work = "2.7.1"
 
 dagger = "2.43.2"
@@ -66,8 +65,8 @@ androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "
 androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "androidx-room" }
 
 androidx-test-junit = "androidx.test.ext:junit:1.1.4"
-androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test" }
-androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidx-test" }
+androidx-test-runner = "androidx.test:runner:1.5.1"
+androidx-test-rules = "androidx.test:rules:1.5.0"
 
 androidx-work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
 androidx-work-rxjava = { module = "androidx.work:work-rxjava2", version.ref = "androidx-work" }

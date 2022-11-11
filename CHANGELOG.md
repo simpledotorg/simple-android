@@ -12,6 +12,7 @@
 - Fix Tamil Nadu `google-services.json` not present in correct folder
 - Bump androidx-test-junit to v1.1.4
 - Remove max SDK version for storage permissions
+- Bump AndroidX test dependencies
 
 ## 2022-11-07-8490
 

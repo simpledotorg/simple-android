@@ -56,7 +56,7 @@ class RegistrationFacilitySelectionScreen : BaseScreen<
 
   override fun createInit() = RegistrationFacilitySelectionInit()
 
-  override fun createUpdate() = RegistrationFacilitySelectionUpdate()
+  override fun createUpdate() = RegistrationFacilitySelectionUpdate(showIntroVideoScreen = true)
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationFacilitySelectionViewEffect>) = effectHandlerFactory
       .create(viewEffectsConsumer = viewEffectsConsumer)

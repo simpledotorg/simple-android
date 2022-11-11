@@ -1,6 +1,5 @@
 package org.simple.clinic.newentry
 
-import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.atLeastOnce
@@ -21,7 +20,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.country.BangladeshInputFieldsProvider
@@ -39,15 +37,15 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Bangladesh
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.registration.phone.PhoneNumberValidator
-import org.simple.clinic.user.UserSession
-import org.simple.sharedTestCode.util.RxErrorsRule
-import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputAgeValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.mobius.migration.MobiusTestFixture
+import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.RxErrorsRule
+import org.simple.sharedTestCode.util.TestUserClock
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -65,11 +63,9 @@ class PatientEntryScreenLogicTest {
   private val uiActions = mock<PatientEntryUiActions>()
   private val patientRepository = mock<PatientRepository>()
   private val facilityRepository = mock<FacilityRepository>()
-  private val userSession = mock<UserSession>()
   private val userClock: UserClock = TestUserClock(LocalDate.parse("2018-01-01"))
   private val dobValidator = UserInputDateValidator(userClock, DateTimeFormatter.ofPattern("dd/MM/yyyy", ENGLISH))
   private val numberValidator = PhoneNumberValidator(minimumRequiredLength = 6)
-  private val patientRegisteredCount = mock<Preference<Int>>()
   private val ageValidator = UserInputAgeValidator(userClock, DateTimeFormatter.ofPattern("dd/MM/yyyy", ENGLISH))
 
   private val uiEvents = PublishSubject.create<PatientEntryEvent>()
@@ -99,7 +95,6 @@ class PatientEntryScreenLogicTest {
         patientRepository = patientRepository,
         schedulersProvider = TestSchedulersProvider.trampoline(),
         inputFieldsFactory = inputFieldsFactory,
-        patientRegisteredCount = patientRegisteredCount,
         viewEffectsConsumer = viewEffectHandler::handle
     )
 
@@ -160,7 +155,6 @@ class PatientEntryScreenLogicTest {
     whenever(patientRepository.allColoniesOrVillagesInPatientAddress()).thenReturn(colonyOrVillages)
 
     whenever(patientRepository.ongoingEntry()).doReturn(OngoingNewPatientEntry())
-    whenever(patientRegisteredCount.get()).doReturn(0)
     screenCreated()
 
     with(uiEvents) {
@@ -191,9 +185,6 @@ class PatientEntryScreenLogicTest {
     ))
     verify(patientRepository).allColoniesOrVillagesInPatientAddress()
     verifyNoMoreInteractions(patientRepository)
-    verify(patientRegisteredCount).get()
-    verify(patientRegisteredCount).set(1)
-    verifyNoMoreInteractions(patientRegisteredCount)
     verify(uiActions).openMedicalHistoryEntryScreen()
   }
 
@@ -205,7 +196,6 @@ class PatientEntryScreenLogicTest {
     whenever(patientRepository.allColoniesOrVillagesInPatientAddress()).thenReturn(colonyOrVillages)
 
     whenever(patientRepository.ongoingEntry()).doReturn(OngoingNewPatientEntry())
-    whenever(patientRegisteredCount.get()).doReturn(0)
     screenCreated()
 
     with(uiEvents) {
@@ -238,37 +228,7 @@ class PatientEntryScreenLogicTest {
     ))
     verify(patientRepository).allColoniesOrVillagesInPatientAddress()
     verifyNoMoreInteractions(patientRepository)
-    verify(patientRegisteredCount).get()
-    verify(patientRegisteredCount).set(1)
-    verifyNoMoreInteractions(patientRegisteredCount)
     verify(uiActions).openMedicalHistoryEntryScreen()
-  }
-
-  @Test
-  fun `when save is clicked and patient is saved then patient registered count should be incremented`() {
-    val existingPatientRegisteredCount = 5
-    val ongoingEntry = OngoingNewPatientEntry(
-        personalDetails = PersonalDetails("Ashok", "12/04/1993", age = null, gender = Transgender),
-        address = Address(
-            colonyOrVillage = "colony",
-            district = "district",
-            state = "state",
-            streetAddress = "streetAddress",
-            zone = "zone"
-        ),
-        phoneNumber = OngoingNewPatientEntry.PhoneNumber("1234567890")
-    )
-
-    whenever(patientRepository.ongoingEntry()).doReturn(ongoingEntry)
-    whenever(patientRegisteredCount.get()).doReturn(existingPatientRegisteredCount)
-    screenCreated()
-
-    with(uiEvents) {
-      onNext(SaveClicked)
-    }
-
-    verify(patientRepository).saveOngoingEntry(ongoingEntry)
-    verify(patientRegisteredCount).set(existingPatientRegisteredCount + 1)
   }
 
   @Test
@@ -522,7 +482,6 @@ class PatientEntryScreenLogicTest {
   @Test
   fun `regression test for validations 4`() {
     whenever(patientRepository.ongoingEntry()).doReturn(OngoingNewPatientEntry())
-    whenever(patientRegisteredCount.get()).doReturn(0)
     screenCreated()
 
     with(uiEvents) {
@@ -540,7 +499,6 @@ class PatientEntryScreenLogicTest {
 
     verify(uiActions).openMedicalHistoryEntryScreen()
     verify(patientRepository).saveOngoingEntry(any())
-    verify(patientRegisteredCount).set(any())
   }
 
   @Test
@@ -592,7 +550,6 @@ class PatientEntryScreenLogicTest {
   fun `when the ongoing entry has an identifier it must be retained when accepting input`() {
     val identifier = Identifier(value = "id", type = BpPassport)
     whenever(patientRepository.ongoingEntry()).doReturn(OngoingNewPatientEntry(identifier = identifier))
-    whenever(patientRegisteredCount.get()).doReturn(0)
     screenCreated()
 
     with(uiEvents) {

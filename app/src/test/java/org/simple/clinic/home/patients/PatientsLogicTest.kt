@@ -95,7 +95,6 @@ class PatientsLogicTest {
         checkAppUpdate = checkAppUpdate,
         appUpdateNotificationScheduler = appUpdateNotificationScheduler,
         hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatusPreference,
-        numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPreference,
         appUpdateDialogShownAtPref = appUpdateDialogShownPref,
         approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference,
         drugStockReminder = mock(),
@@ -538,21 +537,9 @@ class PatientsLogicTest {
   }
 
   @Test
-  fun `when screen is created then display simple video if patient registered count is less than 10`() {
+  fun `when screen is created then display illustration`() {
     //when
-    setupController(numberOfPatientsRegistered = 9)
-
-    //then
-    verify(ui, times(3)).hideUserAccountStatus()
-    verify(ui).showSyncIndicator()
-    verify(ui, never()).showIllustration()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when screen is created then display illustration if patient registered count is at least 10`() {
-    //when
-    setupController(numberOfPatientsRegistered = 10)
+    setupController()
 
     //then
     verify(ui, times(3)).hideUserAccountStatus()
@@ -563,7 +550,6 @@ class PatientsLogicTest {
 
   private fun setupController(
       user: User = userApprovedForSyncing,
-      numberOfPatientsRegistered: Int = 0,
       hasUserDismissedApprovedStatus: Boolean = false,
       approvalStatusApprovedAt: Instant = dateAsInstant.minus(1, ChronoUnit.DAYS),
       refreshCurrentUserCompletable: Completable = Completable.complete(),
@@ -573,7 +559,6 @@ class PatientsLogicTest {
     setupStubs(
         userStream = Observable.just(user.toOptional()),
         refreshCurrentUserCompletable = refreshCurrentUserCompletable,
-        numberOfPatientsRegistered = numberOfPatientsRegistered,
         hasUserDismissedApprovedStatus = hasUserDismissedApprovedStatus,
         approvalStatusApprovedAt = approvalStatusApprovedAt,
         appUpdateDialogShownAt = appUpdateDialogShownAt,
@@ -584,7 +569,6 @@ class PatientsLogicTest {
 
   private fun setupControllerWithUserStream(
       userStream: Observable<Optional<User>>,
-      numberOfPatientsRegistered: Int = 0,
       hasUserDismissedApprovedStatus: Boolean = false,
       approvalStatusApprovedAt: Instant = dateAsInstant.minus(1, ChronoUnit.DAYS),
       refreshCurrentUserCompletable: Completable = Completable.complete(),
@@ -594,7 +578,6 @@ class PatientsLogicTest {
     setupStubs(
         userStream = userStream,
         refreshCurrentUserCompletable = refreshCurrentUserCompletable,
-        numberOfPatientsRegistered = numberOfPatientsRegistered,
         hasUserDismissedApprovedStatus = hasUserDismissedApprovedStatus,
         approvalStatusApprovedAt = approvalStatusApprovedAt,
         appUpdateDialogShownAt = appUpdateDialogShownAt,
@@ -606,7 +589,6 @@ class PatientsLogicTest {
   private fun setupStubs(
       userStream: Observable<Optional<User>>,
       refreshCurrentUserCompletable: Completable,
-      numberOfPatientsRegistered: Int,
       hasUserDismissedApprovedStatus: Boolean,
       approvalStatusApprovedAt: Instant,
       appUpdateDialogShownAt: Instant,
@@ -615,8 +597,6 @@ class PatientsLogicTest {
     whenever(userSession.loggedInUser()).doReturn(userStream)
     whenever(refreshCurrentUser.refresh()).doReturn(refreshCurrentUserCompletable)
     whenever(checkAppUpdate.listen()).doReturn(appUpdateStream)
-    whenever(numberOfPatientsRegisteredPreference.get()).doReturn(numberOfPatientsRegistered)
-    whenever(numberOfPatientsRegisteredPreference.asObservable()).doReturn(Observable.just(numberOfPatientsRegistered))
     whenever(hasUserDismissedApprovedStatusPreference.asObservable()).doReturn(Observable.just(hasUserDismissedApprovedStatus))
     whenever(hasUserDismissedApprovedStatusPreference.get()).doReturn(hasUserDismissedApprovedStatus)
     whenever(approvalStatusApprovedAtPreference.get()).doReturn(approvalStatusApprovedAt)

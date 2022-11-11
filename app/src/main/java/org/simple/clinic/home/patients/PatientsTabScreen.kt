@@ -149,12 +149,6 @@ class PatientsTabScreen : BaseScreen<
   private val illustrationLayout
     get() = binding.illustrationLayout
 
-  private val simpleIllustrationLayout
-    get() = binding.simpleIllustrationLayout
-
-  private val simpleVideoIllustration
-    get() = simpleIllustrationLayout.simpleIllustration
-
   private val appUpdateCardLayout
     get() = binding.appUpdateCardLayout
 
@@ -238,20 +232,11 @@ class PatientsTabScreen : BaseScreen<
     setupApprovalStatusAnimations()
 
     homeIllustration.setImageResource(illustrationResourceId())
-    simpleVideoIllustration.setImageResource(videoIllustrationResourceId())
 
     val isMonthlyDrugStockReminderEnabledInIndia = features.isEnabled(MonthlyDrugStockReportReminder) && country.isoCountryCode == Country.INDIA
     if (isMonthlyDrugStockReminderEnabledInIndia) {
       drugStockNotificationScheduler.schedule()
     }
-  }
-
-  private fun videoIllustrationResourceId() = when (country.isoCountryCode) {
-    Country.INDIA -> R.drawable.ic_video_illustration_india
-    Country.BANGLADESH -> R.drawable.ic_video_illustration_bangladesh
-    Country.ETHIOPIA -> R.drawable.ic_video_illustration_ethiopia
-    Country.SRI_LANKA -> R.drawable.ic_video_illustration_sri_lanka
-    else -> R.drawable.ic_video_illustration_default
   }
 
   private fun illustrationResourceId(): Int =

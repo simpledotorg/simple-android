@@ -37,18 +37,16 @@ class PatientsTabUiRenderer(
   }
 
   private fun renderPatientTabScreenCard(model: PatientsTabModel) {
-    val isDrugStockReportFilledOrNull = model.isDrugStockReportFilled == null || model.isDrugStockReportFilled
-
     when {
       model.appUpdateNudgePriorityIsMedium && model.hasAppStaleness -> {
         ui.showCriticalAppUpdateCard()
         ui.renderAppUpdateReason(appStalenessInMonths(model.appStaleness!!))
       }
-      isDrugStockReportFilledOrNull -> {
-       toggleTrainingViewVisibility(model)
-      }
       model.isDrugStockReportFilled == false -> {
         ui.showDrugStockReminderCard()
+      }
+      else -> {
+        ui.showIllustration()
       }
     }
   }
@@ -76,10 +74,6 @@ class PatientsTabUiRenderer(
     userChangedCallback.pass(model.user!!) { user ->
       renderSyncIndicatorVisibility(user)
     }
-  }
-
-  private fun toggleTrainingViewVisibility(model: PatientsTabModel) {
-      ui.showIllustration()
   }
 
   private fun renderSyncIndicatorVisibility(user: User) {

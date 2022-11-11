@@ -72,7 +72,6 @@ class PatientEntryEffectHandlerTest {
       patientRepository = patientRepository,
       schedulersProvider = TrampolineSchedulersProvider(),
       inputFieldsFactory = inputFieldsFactory,
-      patientRegisteredCount = mock(),
       viewEffectsConsumer = viewEffectHandler::handle
   )
 

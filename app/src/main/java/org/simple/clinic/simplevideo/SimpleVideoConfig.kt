@@ -6,7 +6,6 @@ import javax.inject.Qualifier
 annotation class SimpleVideoConfig(val value: Type) {
 
   enum class Type {
-    TrainingVideo,
-    NumberOfPatientsRegistered
+    TrainingVideo
   }
 }

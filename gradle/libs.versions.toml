@@ -65,7 +65,7 @@ androidx-room-rx2 = { module = "androidx.room:room-rxjava2", version.ref = "andr
 androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "androidx-room" }
 androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "androidx-room" }
 
-androidx-test-junit = "androidx.test.ext:junit:1.1.3"
+androidx-test-junit = "androidx.test.ext:junit:1.1.4"
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test" }
 androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidx-test" }
 

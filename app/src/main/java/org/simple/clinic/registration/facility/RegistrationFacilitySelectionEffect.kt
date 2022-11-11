@@ -10,3 +10,5 @@ sealed class RegistrationFacilitySelectionViewEffect : RegistrationFacilitySelec
 data class OpenConfirmFacilitySheet(val facility: Facility) : RegistrationFacilitySelectionViewEffect()
 
 data class MoveToIntroVideoScreen(val registrationEntry: OngoingRegistrationEntry) : RegistrationFacilitySelectionViewEffect()
+
+data class MoveToRegistrationLoadingScreen(val registrationEntry: OngoingRegistrationEntry) : RegistrationFacilitySelectionViewEffect()

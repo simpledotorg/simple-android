@@ -20,6 +20,7 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.registration.confirmfacility.ConfirmFacilitySheet
 import org.simple.clinic.registration.register.RegistrationLoadingScreen
 import org.simple.clinic.user.OngoingRegistrationEntry
@@ -48,6 +49,9 @@ class RegistrationFacilitySelectionScreen : BaseScreen<
   @Inject
   lateinit var screenResultBus: ScreenResultBus
 
+  @Inject
+  lateinit var registrationConfig: RegistrationConfig
+
   private val facilityPickerView
     get() = binding.facilityPickerView
 
@@ -56,7 +60,9 @@ class RegistrationFacilitySelectionScreen : BaseScreen<
 
   override fun createInit() = RegistrationFacilitySelectionInit()
 
-  override fun createUpdate() = RegistrationFacilitySelectionUpdate(showIntroVideoScreen = true)
+  override fun createUpdate() = RegistrationFacilitySelectionUpdate(
+      showIntroVideoScreen = registrationConfig.showIntroVideoScreen
+  )
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<RegistrationFacilitySelectionViewEffect>) = effectHandlerFactory
       .create(viewEffectsConsumer = viewEffectsConsumer)

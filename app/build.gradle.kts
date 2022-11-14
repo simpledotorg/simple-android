@@ -14,7 +14,6 @@ plugins {
   id("io.sentry.android.gradle")
   id("plugins.git.install-hooks")
   id("com.datadoghq.dd-sdk-android-gradle-plugin")
-  id("androidx.benchmark")
 }
 
 sentry {

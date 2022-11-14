@@ -186,8 +186,6 @@ zxing = "com.google.zxing:core:3.3.3"
 
 apache-commons-math = "org.apache.commons:commons-math3:3.6.1"
 
-benchmark-gradle-plugin = "androidx.benchmark:benchmark-gradle-plugin:1.0.0"
-
 [bundles]
 androidx-camera = ["androidx-camera-core", "androidx-camera-camera2", "androidx-camera-view", "androidx-camera-lifecycle"]
 androidx-paging = ["androidx-paging-common", "androidx-paging-runtime", "androidx-paging-rx2"]

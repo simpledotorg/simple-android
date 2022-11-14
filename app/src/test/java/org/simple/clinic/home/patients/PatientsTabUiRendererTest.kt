@@ -128,6 +128,7 @@ class PatientsTabUiRendererTest {
 
     // then
     verify(ui).showPatientLineListDownload(facilityName = "PHC Obvious")
+    verify(ui).showIllustration()
     verifyNoMoreInteractions(ui)
   }
 
@@ -145,6 +146,7 @@ class PatientsTabUiRendererTest {
 
     // then
     verify(ui).hidePatientLineListDownload()
+    verify(ui).showIllustration()
     verifyNoMoreInteractions(ui)
   }
 }

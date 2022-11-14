@@ -131,8 +131,9 @@ class PatientsLogicTest {
     uiEvents.onNext(NewPatientClicked)
 
     // then
-    verify(ui, times(3)).hideUserAccountStatus()
+    verify(ui, times(2)).hideUserAccountStatus()
     verify(ui).showSyncIndicator()
+    verify(ui, times(3)).showIllustration()
 
     verify(uiActions).openPatientSearchScreen(null)
 
@@ -153,8 +154,9 @@ class PatientsLogicTest {
     uiEvents.onNext(ActivityResumed)
 
     // then
-    verify(ui, times(3)).hideUserAccountStatus()
+    verify(ui, times(2)).hideUserAccountStatus()
     verify(ui).showSyncIndicator()
+    verify(ui, times(3)).showIllustration()
     verifyNoMoreInteractions(ui)
 
     verify(refreshCurrentUser).refresh()
@@ -167,7 +169,8 @@ class PatientsLogicTest {
 
     // then
     verify(ui).hideSyncIndicator()
-    verify(ui, times(3)).showUserStatusAsWaitingForApproval()
+    verify(ui, times(2)).showUserStatusAsWaitingForApproval()
+    verify(ui, times(3)).showIllustration()
 
     verifyNoMoreInteractions(ui)
     verifyNoMoreInteractions(uiActions)
@@ -181,7 +184,8 @@ class PatientsLogicTest {
 
     // then
     verify(ui).hideSyncIndicator()
-    verify(ui, times(3)).showUserStatusAsWaitingForApproval()
+    verify(ui, times(2)).showUserStatusAsWaitingForApproval()
+    verify(ui, times(3)).showIllustration()
 
     verifyNoMoreInteractions(ui)
   }
@@ -192,10 +196,11 @@ class PatientsLogicTest {
     setupController(user = userApprovedForSyncing)
 
     // then
-    verify(ui, times(3)).hideUserAccountStatus()
+    verify(ui, times(2)).hideUserAccountStatus()
     verify(ui).showSyncIndicator()
 
     verify(ui, never()).showUserStatusAsWaitingForApproval()
+    verify(ui, times(3)).showIllustration()
 
     verifyNoMoreInteractions(ui)
   }
@@ -209,8 +214,9 @@ class PatientsLogicTest {
     )
 
     // then
-    verify(ui, times(3)).hideUserAccountStatus()
+    verify(ui, times(2)).hideUserAccountStatus()
     verify(ui).showSyncIndicator()
+    verify(ui, times(3)).showIllustration()
     verify(uiActions).showUserStatusAsApproved()
 
     verifyNoMoreInteractions(ui)
@@ -228,7 +234,8 @@ class PatientsLogicTest {
 
     // then
     verify(ui).showSyncIndicator()
-    verify(ui, times(3)).hideUserAccountStatus()
+    verify(ui, times(2)).hideUserAccountStatus()
+    verify(ui, times(3)).showIllustration()
 
     verify(uiActions, never()).showUserStatusAsApproved()
 
@@ -246,7 +253,8 @@ class PatientsLogicTest {
 
     // then
     verify(ui).showSyncIndicator()
-    verify(ui, times(3)).hideUserAccountStatus()
+    verify(ui, times(2)).hideUserAccountStatus()
+    verify(ui, times(3)).showIllustration()
 
     verify(uiActions, never()).showUserStatusAsApproved()
 
@@ -265,8 +273,9 @@ class PatientsLogicTest {
     verify(refreshCurrentUser).refresh()
     verify(approvalStatusApprovedAtPreference).set(dateAsInstant)
 
-    verify(ui, times(3)).showUserStatusAsWaitingForApproval()
+    verify(ui, times(2)).showUserStatusAsWaitingForApproval()
     verify(ui).hideSyncIndicator()
+    verify(ui, times(3)).showIllustration()
     verifyNoMoreInteractions(ui)
     verifyNoMoreInteractions(uiActions)
   }
@@ -282,7 +291,8 @@ class PatientsLogicTest {
 
     verify(uiActions).showUserStatusAsApproved()
     verify(ui).showSyncIndicator()
-    verify(ui, times(3)).hideUserAccountStatus()
+    verify(ui, times(3)).showIllustration()
+    verify(ui, times(2)).hideUserAccountStatus()
     verifyNoMoreInteractions(ui)
   }
 
@@ -297,7 +307,8 @@ class PatientsLogicTest {
 
     // then
     verify(ui).hideSyncIndicator()
-    verify(ui, times(3)).showUserStatusAsPendingVerification()
+    verify(ui, times(2)).showUserStatusAsPendingVerification()
+    verify(ui, times(3)).showIllustration()
 
     verifyNoMoreInteractions(ui)
     verifyNoMoreInteractions(uiActions)
@@ -312,8 +323,9 @@ class PatientsLogicTest {
     )
 
     // then
-    verify(ui, times(3)).hideUserAccountStatus()
+    verify(ui, times(2)).hideUserAccountStatus()
     verify(ui).showSyncIndicator()
+    verify(ui, times(3)).showIllustration()
 
     verify(ui, never()).showUserStatusAsPendingVerification()
 
@@ -330,8 +342,9 @@ class PatientsLogicTest {
     )
 
     // then
-    verify(ui, times(3)).showUserStatusAsPendingVerification()
+    verify(ui, times(2)).showUserStatusAsPendingVerification()
     verify(ui).hideSyncIndicator()
+    verify(ui, times(3)).showIllustration()
 
     verify(uiActions, never()).hideUserAccountStatus()
 
@@ -349,7 +362,8 @@ class PatientsLogicTest {
 
     // then
     verify(ui).showSyncIndicator()
-    verify(ui, times(3)).hideUserAccountStatus()
+    verify(ui, times(2)).hideUserAccountStatus()
+    verify(ui, times(3)).showIllustration()
 
     verifyNoMoreInteractions(ui)
   }
@@ -365,8 +379,9 @@ class PatientsLogicTest {
     )
 
     // then
-    verify(ui, times(3)).showUserStatusAsPendingVerification()
+    verify(ui, times(2)).showUserStatusAsPendingVerification()
     verify(ui).hideSyncIndicator()
+    verify(ui, times(3)).showIllustration()
 
     verify(uiActions, never()).hideUserAccountStatus()
 
@@ -384,9 +399,9 @@ class PatientsLogicTest {
     )
 
     // then
-    verify(ui, times(3)).showUserStatusAsWaitingForApproval()
+    verify(ui, times(2)).showUserStatusAsWaitingForApproval()
     verify(ui).hideSyncIndicator()
-
+    verify(ui, times(3)).showIllustration()
     verify(uiActions, never()).hideUserAccountStatus()
 
     verifyNoMoreInteractions(ui)
@@ -413,6 +428,7 @@ class PatientsLogicTest {
     verify(ui).hideSyncIndicator()
     verify(ui).showUserStatusAsPendingVerification()
     verify(uiActions, never()).hideUserAccountStatus()
+    verify(ui, times(3)).showIllustration()
     verifyNoMoreInteractions(ui)
     verifyNoMoreInteractions(uiActions)
     clearInvocations(ui)
@@ -424,6 +440,7 @@ class PatientsLogicTest {
     // then
     verify(ui).showSyncIndicator()
     verify(ui).hideUserAccountStatus()
+    verify(ui).showIllustration()
     verifyNoMoreInteractions(ui)
     verifyNoMoreInteractions(uiActions)
     clearInvocations(ui)
@@ -432,6 +449,7 @@ class PatientsLogicTest {
     // when
     userSubject.onNext(userAfterLoggingIn.toOptional())
     verify(ui).hideUserAccountStatus()
+    verify(ui).showIllustration()
     verifyNoMoreInteractions(ui)
     verifyNoMoreInteractions(uiActions)
   }
@@ -444,8 +462,9 @@ class PatientsLogicTest {
     uiEvents.onNext(PatientsEnterCodeManuallyClicked())
 
     // then
-    verify(ui, times(3)).hideUserAccountStatus()
+    verify(ui, times(2)).hideUserAccountStatus()
     verify(ui).showSyncIndicator()
+    verify(ui, times(3)).showIllustration()
     verify(uiActions).openEnterCodeManuallyScreen()
     verifyNoMoreInteractions(ui)
   }
@@ -458,8 +477,9 @@ class PatientsLogicTest {
     uiEvents.onNext(ScanCardIdButtonClicked(permission = Optional.of(GRANTED)))
 
     // then
-    verify(ui, times(3)).hideUserAccountStatus()
+    verify(ui, times(2)).hideUserAccountStatus()
     verify(ui).showSyncIndicator()
+    verify(ui, times(3)).showIllustration()
     verify(uiActions).openScanSimpleIdCardScreen()
     verifyNoMoreInteractions(ui)
   }
@@ -472,8 +492,9 @@ class PatientsLogicTest {
     uiEvents.onNext(ScanCardIdButtonClicked(permission = Optional.of(DENIED)))
 
     // then
-    verify(ui, times(3)).hideUserAccountStatus()
+    verify(ui, times(2)).hideUserAccountStatus()
     verify(ui).showSyncIndicator()
+    verify(ui, times(3)).showIllustration()
     verify(uiActions, never()).openScanSimpleIdCardScreen()
     verifyNoMoreInteractions(ui)
   }
@@ -487,8 +508,9 @@ class PatientsLogicTest {
     )
 
     // then
-    verify(ui, times(3)).hideUserAccountStatus()
+    verify(ui, times(2)).hideUserAccountStatus()
     verify(ui).showSyncIndicator()
+    verify(ui, times(3)).showIllustration()
     verify(uiActions).showAppUpdateDialog()
     verifyNoMoreInteractions(ui)
   }
@@ -499,8 +521,9 @@ class PatientsLogicTest {
     setupController(appUpdateState = ShowAppUpdate(appUpdateNudgePriority = null, appStaleness = null))
 
     // then
-    verify(ui, times(3)).hideUserAccountStatus()
+    verify(ui, times(2)).hideUserAccountStatus()
     verify(ui).showSyncIndicator()
+    verify(ui, times(3)).showIllustration()
     verify(uiActions, never()).showAppUpdateDialog()
     verifyNoMoreInteractions(ui)
   }
@@ -514,9 +537,10 @@ class PatientsLogicTest {
     )
 
     // then
-    verify(ui, times(3)).hideUserAccountStatus()
+    verify(ui, times(2)).hideUserAccountStatus()
     verify(ui).showSyncIndicator()
     verify(uiActions, never()).showAppUpdateDialog()
+    verify(ui, times(3)).showIllustration()
     verifyNoMoreInteractions(ui)
   }
 
@@ -529,8 +553,9 @@ class PatientsLogicTest {
     )
 
     // then
-    verify(ui, times(3)).hideUserAccountStatus()
+    verify(ui, times(2)).hideUserAccountStatus()
     verify(ui).showSyncIndicator()
+    verify(ui, times(3)).showIllustration()
     verify(uiActions, never()).showAppUpdateDialog()
     verifyNoMoreInteractions(ui)
     //    verifyNoMoreInteractions(uiActions)
@@ -542,9 +567,9 @@ class PatientsLogicTest {
     setupController()
 
     //then
-    verify(ui, times(3)).hideUserAccountStatus()
+    verify(ui, times(2)).hideUserAccountStatus()
     verify(ui).showSyncIndicator()
-    verify(ui).showIllustration()
+    verify(ui, times(3)).showIllustration()
     verifyNoMoreInteractions(ui)
   }
 

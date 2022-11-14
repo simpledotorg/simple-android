@@ -2,6 +2,10 @@
 
 ## Next Release
 
+### Internal
+
+- Bump datadog sdk to v1.15.0
+
 ## 2022-11-14-8505
 
 ### Internal

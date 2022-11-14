@@ -60,10 +60,6 @@
           tools:ignore="ContentDescription" />
 
         <include
-          android:id="@+id/simpleVideoLayout"
-          layout="@layout/simple_video_layout" />
-
-        <include
           android:id="@+id/appUpdateCardLayout"
           layout="@layout/app_update_card" />
 

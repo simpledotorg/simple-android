@@ -3,6 +3,7 @@ package org.simple.clinic.home.patients
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import org.junit.Test
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.MEDIUM
 import org.simple.sharedTestCode.TestData
@@ -23,10 +24,9 @@ class PatientsTabUiRendererTest {
   fun `When app staleness is loaded and app update nudge priority is medium and, then show critical app update card and display app update nudge reason`() {
     //given
     val appStaleness = 75
-    val model = defaultModel.numberOfPatientsRegisteredUpdated(12)
 
     // when
-    uiRenderer.render(model.updateAppStaleness(appStaleness).appUpdateNudgePriorityUpdated(MEDIUM))
+    uiRenderer.render(defaultModel.updateAppStaleness(appStaleness).appUpdateNudgePriorityUpdated(MEDIUM))
 
     // then
     verify(ui).showCriticalAppUpdateCard()
@@ -54,7 +54,6 @@ class PatientsTabUiRendererTest {
     val appStaleness = 75
     val model = defaultModel
         .updateIsDrugStockFilled(Optional.of(false))
-        .numberOfPatientsRegisteredUpdated(12)
         .updateAppStaleness(appStaleness)
         .appUpdateNudgePriorityUpdated(MEDIUM)
 
@@ -72,7 +71,6 @@ class PatientsTabUiRendererTest {
     // given
     val model = defaultModel
         .updateIsDrugStockFilled(Optional.of(false))
-        .numberOfPatientsRegisteredUpdated(12)
 
     // when
     uiRenderer.render(model)
@@ -87,7 +85,6 @@ class PatientsTabUiRendererTest {
     // given
     val model = defaultModel
         .updateIsDrugStockFilled(Optional.of(true))
-        .numberOfPatientsRegisteredUpdated(12)
 
     // when
     uiRenderer.render(model)
@@ -102,28 +99,13 @@ class PatientsTabUiRendererTest {
     // given
     val model = defaultModel
         .updateIsDrugStockFilled(Optional.of(true))
-        .numberOfPatientsRegisteredUpdated(0)
 
     // when
     uiRenderer.render(model)
 
     // then
-    verify(ui).showSimpleVideo()
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when the previous months drug stock report is null and the number of patients registered are less than 10, then show simple video`() {
-    // given
-    val model = defaultModel
-        .numberOfPatientsRegisteredUpdated(8)
-
-    // when
-    uiRenderer.render(model)
-
-    // then
-    verify(ui).showSimpleVideo()
-    verifyNoMoreInteractions(ui)
+    verify(ui).showIllustration()
+    verifyZeroInteractions(ui)
   }
 
   @Test
@@ -146,6 +128,7 @@ class PatientsTabUiRendererTest {
 
     // then
     verify(ui).showPatientLineListDownload(facilityName = "PHC Obvious")
+    verify(ui).showIllustration()
     verifyNoMoreInteractions(ui)
   }
 
@@ -163,6 +146,7 @@ class PatientsTabUiRendererTest {
 
     // then
     verify(ui).hidePatientLineListDownload()
+    verify(ui).showIllustration()
     verifyNoMoreInteractions(ui)
   }
 }

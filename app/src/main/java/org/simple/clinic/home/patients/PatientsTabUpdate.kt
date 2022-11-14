@@ -31,8 +31,6 @@ class PatientsTabUpdate(private val isNotifyAppUpdateAvailableV2Enabled: Boolean
       is DataForShowingApprovedStatusLoaded -> showUserApprovedStatus(event)
       is UserApprovedStatusDismissed -> dispatch(HideUserAccountStatus, SetDismissedApprovalStatus(dismissedStatus = true))
       is ScanCardIdButtonClicked -> openScanBpPassportScreen(event)
-      is LoadedNumberOfPatientsRegistered -> next(model.numberOfPatientsRegisteredUpdated(event.numberOfPatientsRegistered))
-      SimpleVideoClicked -> dispatch(OpenTrainingVideo)
       is RequiredInfoForShowingAppUpdateLoaded -> showAppUpdateAvailableMessageBasedOnFeatureFlag(model, event)
       UpdateNowButtonClicked -> dispatch(OpenSimpleOnPlayStore)
       is DrugStockReportLoaded -> drugStockReportLoaded(event, model)

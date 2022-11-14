@@ -1,25 +1,16 @@
 package org.simple.clinic.simplevideo
 
-import com.f2prateek.rx.preferences2.Preference
-import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import dagger.Module
 import dagger.Provides
 import org.intellij.lang.annotations.Language
 import org.simple.clinic.remoteconfig.ConfigReader
-import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.NumberOfPatientsRegistered
 import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.TrainingVideo
 import java.util.Locale
 
 @Module
 class SimpleVideoModule {
-
-  @Provides
-  @SimpleVideoConfig(NumberOfPatientsRegistered)
-  fun provideCountOfRegisteredPatients(rxSharedPreferences: RxSharedPreferences): Preference<Int> {
-    return rxSharedPreferences.getInteger("number_of_patients_registered", 0)
-  }
 
   @Provides
   @SimpleVideoConfig(TrainingVideo)

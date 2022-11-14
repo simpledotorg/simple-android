@@ -47,12 +47,6 @@ data class ScanCardIdButtonClicked(
   override val analyticsName: String = "Patients:Scan Simple Card Clicked:"
 }
 
-data class LoadedNumberOfPatientsRegistered(val numberOfPatientsRegistered: Int) : PatientsTabEvent()
-
-object SimpleVideoClicked : PatientsTabEvent() {
-  override val analyticsName = "Patients:Simple Video Clicked"
-}
-
 data class RequiredInfoForShowingAppUpdateLoaded(
     val isAppUpdateAvailable: Boolean,
     val appUpdateLastShownOn: LocalDate,

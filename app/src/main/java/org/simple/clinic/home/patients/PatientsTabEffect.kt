@@ -13,8 +13,6 @@ object LoadInfoForShowingApprovalStatus : PatientsTabEffect()
 
 data class SetDismissedApprovalStatus(val dismissedStatus: Boolean) : PatientsTabEffect()
 
-object LoadNumberOfPatientsRegistered : PatientsTabEffect()
-
 object LoadInfoForShowingAppUpdateMessage : PatientsTabEffect()
 
 object TouchAppUpdateShownAtTime : PatientsTabEffect()
@@ -44,8 +42,6 @@ object ShowUserWasApproved : PatientsTabViewEffect()
 object HideUserAccountStatus : PatientsTabViewEffect()
 
 object OpenScanBpPassportScreen : PatientsTabViewEffect()
-
-object OpenTrainingVideo : PatientsTabViewEffect()
 
 object ShowAppUpdateAvailable : PatientsTabViewEffect()
 

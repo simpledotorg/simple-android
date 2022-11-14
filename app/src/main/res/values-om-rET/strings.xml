@@ -410,8 +410,6 @@
 
   <!-- Simple video -->
   <string name="simple_video_duration">Daqiiqaawwan %s</string>
-  <string name="simple_video_watch">Viidiyoo daawwadhu</string>
-  <string name="simple_video_how_to_use">Hedda kana akkamiin fayyadama</string>
 
   <!-- Settings -->
   <string name="settings_title">Teessuma</string>

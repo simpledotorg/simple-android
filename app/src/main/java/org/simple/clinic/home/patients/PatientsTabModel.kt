@@ -12,7 +12,6 @@ import java.util.Optional
 @Parcelize
 data class PatientsTabModel(
     val user: User?,
-    val numberOfPatientsRegistered: Int?,
     val appStaleness: Int?,
     val appUpdateNudgePriority: AppUpdateNudgePriority?,
     val isDrugStockReportFilled: Boolean?,
@@ -23,7 +22,6 @@ data class PatientsTabModel(
 
     fun create(): PatientsTabModel = PatientsTabModel(
         user = null,
-        numberOfPatientsRegistered = null,
         appStaleness = null,
         appUpdateNudgePriority = null,
         isDrugStockReportFilled = null,
@@ -37,9 +35,6 @@ data class PatientsTabModel(
   val hasLoadedUser: Boolean
     get() = user != null
 
-  val hasLoadedNumberOfPatientsRegistered: Boolean
-    get() = numberOfPatientsRegistered != null
-
   val hasAppStaleness
     get() = appStaleness != null
 
@@ -51,10 +46,6 @@ data class PatientsTabModel(
 
   fun userLoaded(user: User): PatientsTabModel {
     return copy(user = user)
-  }
-
-  fun numberOfPatientsRegisteredUpdated(numberOfPatientsRegistered: Int): PatientsTabModel {
-    return copy(numberOfPatientsRegistered = numberOfPatientsRegistered)
   }
 
   fun updateAppStaleness(appStaleness: Int?): PatientsTabModel {

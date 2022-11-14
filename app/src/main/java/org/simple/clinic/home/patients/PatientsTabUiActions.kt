@@ -10,7 +10,6 @@ interface PatientsTabUiActions {
   fun showUserStatusAsApproved()
   fun hideUserAccountStatus()
   fun openScanSimpleIdCardScreen()
-  fun openYouTubeLinkForSimpleVideo()
   fun showAppUpdateDialog()
   fun openPatientSummary(patientId: UUID)
   fun openSimpleOnPlaystore()

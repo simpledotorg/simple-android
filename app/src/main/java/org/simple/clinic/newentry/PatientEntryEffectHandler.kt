@@ -1,6 +1,5 @@
 package org.simple.clinic.newentry
 
-import com.f2prateek.rx.preferences2.Preference
 import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
@@ -15,8 +14,6 @@ import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.newentry.country.InputFieldsFactory
 import org.simple.clinic.patient.OngoingNewPatientEntry.Address
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.simplevideo.SimpleVideoConfig
-import org.simple.clinic.simplevideo.SimpleVideoConfig.Type.NumberOfPatientsRegistered
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class PatientEntryEffectHandler @AssistedInject constructor(
@@ -24,7 +21,6 @@ class PatientEntryEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val schedulersProvider: SchedulersProvider,
     private val inputFieldsFactory: InputFieldsFactory,
-    @SimpleVideoConfig(NumberOfPatientsRegistered) private val patientRegisteredCount: Preference<Int>,
     @Assisted private val viewEffectsConsumer: Consumer<PatientEntryViewEffect>
 ) {
 
@@ -84,7 +80,6 @@ class PatientEntryEffectHandler @AssistedInject constructor(
           .map { it.entry }
           .subscribeOn(scheduler)
           .doOnNext(patientRepository::saveOngoingEntry)
-          .doOnNext { patientRegisteredCount.set(patientRegisteredCount.get().plus(1)) }
           .map { PatientEntrySaved }
     }
   }

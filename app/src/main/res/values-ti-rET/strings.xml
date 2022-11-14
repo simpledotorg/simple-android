@@ -409,8 +409,6 @@
 
   <!-- Simple video -->
   <string name="simple_video_duration">%s ደቓይቕ</string>
-  <string name="simple_video_watch">ቪድዮ ተመልከት</string>
-  <string name="simple_video_how_to_use">ነዛ ኣፕሊኬሽን እዚኣ ብኸመይ ከም እትጥቀመላ</string>
 
   <!-- Settings -->
   <string name="settings_title">መቓን</string>

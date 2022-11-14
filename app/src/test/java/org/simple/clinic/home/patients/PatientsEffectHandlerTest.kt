@@ -45,7 +45,6 @@ class PatientsEffectHandlerTest {
   private val utcClock = TestUtcClock(date)
   private val userClock = TestUserClock(date)
 
-  private val numberOfPatientsRegisteredPreference = mock<Preference<Int>>()
   private val refreshCurrentUser = mock<RefreshCurrentUser>()
 
   private val viewEffectHandler = PatientsTabViewEffectHandler(uiActions)
@@ -63,7 +62,6 @@ class PatientsEffectHandlerTest {
       checkAppUpdate = checkAppUpdate,
       appUpdateNotificationScheduler = appUpdateNotificationScheduler,
       hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatusPreference,
-      numberOfPatientsRegisteredPref = numberOfPatientsRegisteredPreference,
       appUpdateDialogShownAtPref = appUpdateDialogShownPref,
       approvalStatusUpdatedAtPref = approvalStatusApprovedAtPreference,
       drugStockReminder = drugStockReminder,

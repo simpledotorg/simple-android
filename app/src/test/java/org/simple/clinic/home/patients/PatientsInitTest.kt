@@ -26,7 +26,6 @@ class PatientsInitTest {
                 ScheduleAppUpdateNotification,
                 LoadUser,
                 RefreshUserDetails,
-                LoadNumberOfPatientsRegistered,
                 LoadInfoForShowingAppUpdateMessage
             )
         ))
@@ -47,7 +46,6 @@ class PatientsInitTest {
             hasEffects(
                 LoadUser,
                 RefreshUserDetails,
-                LoadNumberOfPatientsRegistered,
                 LoadInfoForShowingAppUpdateMessage,
                 LoadInfoForShowingDrugStockReminder
             )
@@ -69,7 +67,6 @@ class PatientsInitTest {
             hasEffects(
                 LoadUser,
                 RefreshUserDetails,
-                LoadNumberOfPatientsRegistered,
                 LoadInfoForShowingAppUpdateMessage,
                 LoadCurrentFacility
             )
@@ -91,7 +88,6 @@ class PatientsInitTest {
             hasEffects(
                 LoadUser,
                 RefreshUserDetails,
-                LoadNumberOfPatientsRegistered,
                 LoadInfoForShowingAppUpdateMessage
             )
         ))

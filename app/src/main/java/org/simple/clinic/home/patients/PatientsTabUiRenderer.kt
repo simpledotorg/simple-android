@@ -14,8 +14,6 @@ class PatientsTabUiRenderer(
 
   private val userChangedCallback = ValueChangedCallback<User>()
 
-  private val numberOfPatientsRegisteredChangedCallback = ValueChangedCallback<Int>()
-
   override fun render(model: PatientsTabModel) {
     if (model.hasLoadedUser) {
       toggleSyncIndicatorVisibility(model)
@@ -39,18 +37,16 @@ class PatientsTabUiRenderer(
   }
 
   private fun renderPatientTabScreenCard(model: PatientsTabModel) {
-    val isDrugStockReportFilledOrNull = model.isDrugStockReportFilled == null || model.isDrugStockReportFilled
-
     when {
       model.appUpdateNudgePriorityIsMedium && model.hasAppStaleness -> {
         ui.showCriticalAppUpdateCard()
         ui.renderAppUpdateReason(appStalenessInMonths(model.appStaleness!!))
       }
-      model.hasLoadedNumberOfPatientsRegistered && isDrugStockReportFilledOrNull -> {
-        toggleTrainingViewVisibility(model)
-      }
       model.isDrugStockReportFilled == false -> {
         ui.showDrugStockReminderCard()
+      }
+      else -> {
+        ui.showIllustration()
       }
     }
   }
@@ -77,17 +73,6 @@ class PatientsTabUiRenderer(
   private fun toggleSyncIndicatorVisibility(model: PatientsTabModel) {
     userChangedCallback.pass(model.user!!) { user ->
       renderSyncIndicatorVisibility(user)
-    }
-  }
-
-  private fun toggleTrainingViewVisibility(model: PatientsTabModel) {
-    numberOfPatientsRegisteredChangedCallback.pass(model.numberOfPatientsRegistered!!) { numberOfPatientsRegistered ->
-      // TODO (vs) 27/05/20: Move this magic number to the constructor
-      if (numberOfPatientsRegistered < 10) {
-        ui.showSimpleVideo()
-      } else {
-        ui.showIllustration()
-      }
     }
   }
 

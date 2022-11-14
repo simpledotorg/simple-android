@@ -6,7 +6,7 @@ androidx-paging = "3.1.1"
 androidx-room = "2.4.3"
 androidx-work = "2.7.1"
 
-dagger = "2.43.2"
+dagger = "2.44.2"
 
 flipper = "0.171.1"
 

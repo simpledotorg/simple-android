@@ -80,7 +80,7 @@ class RegistrationFacilitySelectionLogicTest {
         events = uiEvents.ofType(),
         defaultModel = RegistrationFacilitySelectionModel.create(ongoingRegistrationEntry),
         init = RegistrationFacilitySelectionInit(),
-        update = RegistrationFacilitySelectionUpdate(),
+        update = RegistrationFacilitySelectionUpdate(true),
         effectHandler = effectHandler.build(),
         modelUpdateListener = { /* Nothing to do here */ }
     )

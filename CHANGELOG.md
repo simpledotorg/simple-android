@@ -13,6 +13,7 @@
 - Bump androidx-test-junit to v1.1.4
 - Remove max SDK version for storage permissions
 - Bump AndroidX test dependencies
+- Show intro video screen based on registration config flag
 
 ## 2022-11-07-8490
 

@@ -50,4 +50,18 @@ class RegistrationFacilitySelectionEffectHandlerTest {
     verifyNoMoreInteractions(uiActions)
     testCase.assertNoOutgoingEvents()
   }
+
+  @Test
+  fun `when move to registration loading screen effect is received, then move to registration loading screen`() {
+    // given
+    val ongoingRegistrationEntry = TestData.ongoingRegistrationEntry(uuid = UUID.fromString("79ae24ef-6ca2-4380-882d-050b271928da"))
+
+    // when
+    testCase.dispatch(MoveToRegistrationLoadingScreen(ongoingRegistrationEntry))
+
+    // then
+    verify(uiActions).openRegistrationLoadingScreen(ongoingRegistrationEntry)
+    verifyNoMoreInteractions(uiActions)
+    testCase.assertNoOutgoingEvents()
+  }
 }

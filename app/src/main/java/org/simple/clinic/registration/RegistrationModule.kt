@@ -4,7 +4,9 @@ import dagger.Module
 import dagger.Provides
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 
-@Module
+@Module(
+    includes = [RegistrationConfigModule::class]
+)
 class RegistrationModule {
 
   @Provides

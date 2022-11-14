@@ -8,6 +8,7 @@
 - Bump Dagger to v2.44.2
 - Bump Sentry Gradle Plugin to v3.3.0
 - Bump leakcanary to v2.10
+- Remove Benchmark plugin
 
 ## 2022-11-14-8505
 

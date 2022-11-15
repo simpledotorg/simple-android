@@ -57,28 +57,28 @@ jobs:
             adb uninstall ${appId}
 
       - name: Tamil Nadu Maestro tests
-          id: run-maestro-tests
-          uses: reactivecircus/android-emulator-runner@v2
-          with:
-            api-level: 31
-            arch: x86_64
-            disable-animations: true
-            disk-size: 8G
-            script: >
-              adb root
-              
-              ./gradlew
-              -PmaestroTests=true
-              -PsentryDsn=${{ secrets.SENTRY_DSN }}
-              -PsentryEnvironment=staging
-              -PmanifestEndpoint=${{ secrets.MANIFEST_ENDPOINT }}
-              :app:installTamilNNaduRelease
-              
-              maestro test
-              -e appId = org.simple.clinic.tamilnadu
-              -e number=${{ secrets.TEST_LOGIN_PHONE_NUMBER }}
-              -e pin=${{ secrets.TEST_LOGIN_PIN }}
-              -e otp=${{ secrets.TEST_LOGIN_OTP }}
-              maestroUiFlows/login_flow.yaml
-              
-              adb uninstall ${appId}
+        id: run-tamilnadu-maestro-tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 31
+          arch: x86_64
+          disable-animations: true
+          disk-size: 8G
+          script: >
+            adb root
+            
+            ./gradlew
+            -PmaestroTests=true
+            -PsentryDsn=${{ secrets.SENTRY_DSN }}
+            -PsentryEnvironment=staging
+            -PmanifestEndpoint=${{ secrets.MANIFEST_ENDPOINT }}
+            :app:installTamilNNaduRelease
+            
+            maestro test
+            -e appId = org.simple.clinic.tamilnadu
+            -e number=${{ secrets.TEST_LOGIN_PHONE_NUMBER }}
+            -e pin=${{ secrets.TEST_LOGIN_PIN }}
+            -e otp=${{ secrets.TEST_LOGIN_OTP }}
+            maestroUiFlows/login_flow.yaml
+            
+            adb uninstall ${appId}

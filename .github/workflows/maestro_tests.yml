@@ -29,39 +29,33 @@ jobs:
           brew tap mobile-dev-inc/tap
           brew install maestro
 
-  maestro-simple-test:
-      needs: maestro-tests
-      steps:
-        - name: Simple Maestro tests
-            id: run-simple-maestro-tests
-            uses: reactivecircus/android-emulator-runner@v2
-            with:
-              api-level: 31
-              arch: x86_64
-              disable-animations: true
-              disk-size: 8G
-              script: >
-                adb root
-                
-                ./gradlew
-                -PmaestroTests=true
-                -PsentryDsn=${{ secrets.SENTRY_DSN }}
-                -PsentryEnvironment=staging
-                -PmanifestEndpoint=${{ secrets.MANIFEST_ENDPOINT }}
-                :app:installStagingRelease
-                
-                maestro test
-                -e appId = org.simple.clinic.staging
-                -e number=${{ secrets.TEST_LOGIN_PHONE_NUMBER }}
-                -e pin=${{ secrets.TEST_LOGIN_PIN }}
-                -e otp=${{ secrets.TEST_LOGIN_OTP }}
-                maestroUiFlows/login_flow.yaml
-                
-                adb uninstall ${appId}
+      - name: Simple Maestro tests
+        id: run-maestro-tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 31
+          arch: x86_64
+          disable-animations: true
+          disk-size: 8G
+          script: >
+            adb root
+            
+            ./gradlew
+            -PmaestroTests=true
+            -PsentryDsn=${{ secrets.SENTRY_DSN }}
+            -PsentryEnvironment=staging
+            -PmanifestEndpoint=${{ secrets.MANIFEST_ENDPOINT }}
+            :app:installStagingRelease
+            
+            maestro test
+            -e appId = org.simple.clinic.staging
+            -e number=${{ secrets.TEST_LOGIN_PHONE_NUMBER }}
+            -e pin=${{ secrets.TEST_LOGIN_PIN }}
+            -e otp=${{ secrets.TEST_LOGIN_OTP }}
+            maestroUiFlows/login_flow.yaml
+            
+            adb uninstall ${appId}
 
-  maestro-tamilnadu-test:
-    needs: maestro-tests
-    steps:
       - name: Tamil Nadu Maestro tests
           id: run-tamilnadu-maestro-tests
           uses: reactivecircus/android-emulator-runner@v2
@@ -78,7 +72,7 @@ jobs:
               -PsentryDsn=${{ secrets.SENTRY_DSN }}
               -PsentryEnvironment=staging
               -PmanifestEndpoint=${{ secrets.MANIFEST_ENDPOINT }}
-              :app:installTamilNaduRelease
+              :app:installTamilNNaduRelease
               
               maestro test
               -e appId = org.simple.clinic.tamilnadu

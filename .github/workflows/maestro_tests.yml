@@ -48,7 +48,7 @@ jobs:
             :app:installStagingRelease
             
             maestro test
-            -e appId = org.simple.clinic.staging
+            -e appId=org.simple.clinic.staging
             -e number=${{ secrets.TEST_LOGIN_PHONE_NUMBER }}
             -e pin=${{ secrets.TEST_LOGIN_PIN }}
             -e otp=${{ secrets.TEST_LOGIN_OTP }}
@@ -75,7 +75,7 @@ jobs:
             :app:installTamilNaduRelease
             
             maestro test
-            -e appId = org.simple.clinic.tamilnadu
+            -e appId=org.simple.clinic.tamilnadu
             -e number=${{ secrets.TEST_LOGIN_PHONE_NUMBER }}
             -e pin=${{ secrets.TEST_LOGIN_PIN }}
             -e otp=${{ secrets.TEST_LOGIN_OTP }}

@@ -57,6 +57,7 @@ jobs:
             adb uninstall ${appId}
 
       - name: Tamil Nadu Maestro tests
+          id: run-maestro-tests
           uses: reactivecircus/android-emulator-runner@v2
           with:
             api-level: 31

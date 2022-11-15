@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  maestro-setup:
+  maestro-tests:
     runs-on: [ macos-latest ]
     steps:
       - name: Checkout Android source
@@ -30,7 +30,7 @@ jobs:
           brew install maestro
 
   maestro-simple-test:
-      needs: maestro-setup
+      needs: maestro-tests
       steps:
         - name: Simple Maestro tests
             id: run-simple-maestro-tests
@@ -60,7 +60,7 @@ jobs:
                 adb uninstall ${appId}
 
   maestro-tamilnadu-test:
-    needs: maestro-setup
+    needs: maestro-tests
     steps:
       - name: Tamil Nadu Maestro tests
           id: run-tamilnadu-maestro-tests

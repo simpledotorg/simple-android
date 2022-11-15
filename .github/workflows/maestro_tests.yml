@@ -54,7 +54,7 @@ jobs:
             -e otp=${{ secrets.TEST_LOGIN_OTP }}
             maestroUiFlows/login_flow.yaml
             
-            adb uninstall ${appId}
+            adb uninstall org.simple.clinic.staging
 
       - name: Tamil Nadu Maestro tests
         id: run-tamilnadu-maestro-tests
@@ -81,4 +81,4 @@ jobs:
             -e otp=${{ secrets.TEST_LOGIN_OTP }}
             maestroUiFlows/login_flow.yaml
             
-            adb uninstall ${appId}
+            adb uninstall org.simple.clinic.tamilnadu

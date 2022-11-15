@@ -72,7 +72,7 @@ jobs:
             -PsentryDsn=${{ secrets.SENTRY_DSN }}
             -PsentryEnvironment=staging
             -PmanifestEndpoint=${{ secrets.MANIFEST_ENDPOINT }}
-            :app:installTamilNNaduRelease
+            :app:installTamilNaduRelease
             
             maestro test
             -e appId = org.simple.clinic.tamilnadu

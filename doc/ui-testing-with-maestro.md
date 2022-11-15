@@ -7,7 +7,8 @@ Simple has different product flavours and it is important to verify the integrit
 
 Setup Maestro CLI on the system with the [Homebrew](https://brew.sh/)
 
-    brew tap mobile-dev-inc/tap brew install maestro 
+    brew tap mobile-dev-inc/tap
+    brew install maestro 
 
 ## Understating Flows
 

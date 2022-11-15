@@ -9,6 +9,7 @@
 - Bump Sentry Gradle Plugin to v3.3.0
 - Bump leakcanary to v2.10
 - Replace Tamil Nadu app logo and illustrations with DPH logo
+- Bump Benchmark Gradle Plugin to v1.1.1
 
 ## 2022-11-14-8505
 

@@ -1,7 +1,7 @@
 
 # UI testing with Maestro
 
-Simple has different product flavours and it is important to verify the integrity of the UI across these variants. As Maestro offers a single binary tool that works anywhere with declarative yet robust syntax and has a quick learning curve, we use it for UI testing in Simple.
+Simple have nurse's login flow which is a P0 flow for the app and also to move forward and register patients in the app. UI tests were necessary for login flow so that it helps us understand if the flow is working as expected and if there's no blocker to using the app. As Maestro offers a single binary tool that works anywhere with declarative yet robust syntax and has a quick learning curve, we use it for UI testing in Simple.
 
 ##  Install the Maestro CLI
 

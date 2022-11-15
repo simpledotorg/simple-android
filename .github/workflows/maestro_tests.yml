@@ -30,6 +30,7 @@ jobs:
           brew install maestro
 
       - name: Simple Maestro tests
+        id: run-maestro-tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 31

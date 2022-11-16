@@ -30,6 +30,27 @@ jobs:
           brew tap mobile-dev-inc/tap
           brew install maestro
 
+      - name: Cache AVD
+        uses: actions/cache@v3
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: ${{ runner.os }}-avd-${{ env.AVD_API_LEVEL }}-${{ env.AVD_ARCH }}
+
+      - name: create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ env.AVD_API_LEVEL }}
+          arch: ${{ env.AVD_ARCH }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          disk-size: 8G
+          script: echo "Generated AVD snapshot for caching."
+
       - name: Maestro tests
         id: run-maestro-tests
         uses: reactivecircus/android-emulator-runner@v2

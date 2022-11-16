@@ -1,14 +1,15 @@
 
+
 # UI testing with Maestro
 
-Simple have nurse's login flow which is a P0 flow for the app and also to move forward and register patients in the app. UI tests were necessary for login flow so that it helps us understand if the flow is working as expected and if there's no blocker to using the app. As Maestro offers a single binary tool that works anywhere with declarative yet robust syntax and has a quick learning curve, we use it for UI testing in Simple.
+We cannot detect crashes that occur while navigating through the screens, opening the app, incompatible image assets etc with the help of Unit or Integration tests. Opening and navigating through the app manually is the only way to identify them. Crashes like these can be detected via UI tests where we write tests for a set of screen interactions. We use Maestro for UI testing in Simple as it offers a single binary tool that works anywhere with declarative yet robust syntax and has a quick learning curve.
 
 ##  Install the Maestro CLI
 
 Setup Maestro CLI on the system with the [Homebrew](https://brew.sh/)
 
-    brew tap mobile-dev-inc/tap
-    brew install maestro 
+     brew tap mobile-dev-inc/tap 
+     brew install maestro   
 
 ## Understating Flows
 
@@ -22,10 +23,36 @@ A **Flow** is a series of steps that tell Maestro how to navigate the applicatio
 
 More Maestro flow commands can be found [here](https://maestro.mobile.dev/).
 
-Here is an example of how to test login flow in Simple. Flow can be found [here](https://github.com/simpledotorg/simple-android/blob/master/maestroUiFlows/login_flow.yaml)
+Below is an example of how to test login flow in Simple. Flow can be found [here](https://github.com/simpledotorg/simple-android/blob/master/maestroUiFlows/login_flow.yaml)
+
+    appId: org.simple.clinic.staging
+    ---
+    - clearState
+    - launchApp
+    - tapOn: "Next"
+    - tapOn: "Get started"
+    - tapOn:
+        below:
+          id: "select_country_title"
+    - tapOn:
+        below:
+          id: "select_state_title"
+    - inputText: ${number}
+    - tapOn: "Next"
+    - assertVisible:
+        text: "Your security PIN"
+    - inputText: ${pin}
+    - tapOn: "Enter code"
+    - inputText: ${otp}
+    - tapOn: "Got it"
+
 
 ## Running a Flow
 
 Flow can be run using the `maestro test` command.
 
     maestro test login_flow.yaml
+
+Params to the flow can be given from the terminal as given below
+
+    maestro test -e number=0123456789 -e pin=0000 -e otp=000000 uiFlows/login_flow.yaml

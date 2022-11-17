@@ -99,6 +99,10 @@ android {
   // strips debug symbols from the APK.
   ndkVersion = androidNdkVersion
 
+  // Benchmark Gradle Plugin sets test build type as release, so it doesn't generate debug Android tasks.
+  // Since we run Android tests on debug builds. We are setting it to debug.
+  testBuildType = "debug"
+
   defaultConfig {
     applicationId = "org.simple.clinic"
     minSdk = minSdkVersion
@@ -159,8 +163,8 @@ android {
       isDebuggable = false
       isMinifyEnabled = runProguard.toBoolean()
       isShrinkResources = runProguard.toBoolean()
-      if(maestroTests.toBoolean()) {
-        signingConfig =  getByName("debug").signingConfig
+      if (maestroTests.toBoolean()) {
+        signingConfig = getByName("debug").signingConfig
       }
     }
   }

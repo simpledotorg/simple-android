@@ -13,6 +13,7 @@
 - Bump sentry to v6.7.1
 - Use built-in caching functionality when setting up JDK in GH Actions
 - Bump mixpanel to v7.2.1
+- Update Tamil Nadu app name to DPH THANKS
 
 ## 2022-11-14-8505
 

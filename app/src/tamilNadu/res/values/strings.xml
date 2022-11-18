@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">THANKS</string>
+  <string name="app_name">DPH THANKS</string>
 
   <!-- App update : Dialog -->
   <string name="appupdatedialog_body">You will be taken to Google Play Store to update THANKS app.</string>

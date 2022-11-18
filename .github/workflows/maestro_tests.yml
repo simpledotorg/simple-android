@@ -42,6 +42,9 @@ jobs:
       - name: create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
+        env:
+          AVD_API_LEVEL: 30
+          AVD_ARCH: x86_64
         with:
           api-level: ${{ env.AVD_API_LEVEL }}
           arch: ${{ env.AVD_ARCH }}

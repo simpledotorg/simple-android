@@ -119,7 +119,7 @@ lottie = "com.airbnb.android:lottie:5.2.0"
 
 material = "com.google.android.material:material:1.7.0"
 
-mixpanel-android = "com.mixpanel.android:mixpanel-android:7.2.0"
+mixpanel-android = "com.mixpanel.android:mixpanel-android:7.2.1"
 
 mockito-kotlin = "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
 

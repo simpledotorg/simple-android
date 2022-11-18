@@ -24,6 +24,7 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 11
+          cache: 'gradle'
 
       - name: Benchmark tests
         id: run-benchmark-tests

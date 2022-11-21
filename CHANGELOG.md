@@ -15,6 +15,7 @@
 - Bump mixpanel to v7.2.1
 - Update Tamil Nadu app name to DPH THANKS
 - Bump Faker to v1.2.9
+- Bump sqlite-android version to 3.39.2
 
 ## 2022-11-14-8505
 

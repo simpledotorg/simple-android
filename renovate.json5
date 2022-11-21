@@ -18,7 +18,9 @@
   "timezone": "Asia/Kolkata",
   "ignoreDeps": [
     // Ignoring zxing update. Since update requires Java 8+ runtime.
-    "com.google.zxing:core"
+    "com.google.zxing:core",
+    // We only use this to turn off logs related to Mobius#ControllerStateBase in release app
+    "ch.qos.logback:logback-classic"
   ],
   "prConcurrentLimit": 5
 }

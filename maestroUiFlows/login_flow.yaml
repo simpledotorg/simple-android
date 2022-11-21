@@ -10,11 +10,11 @@ appId: org.simple.clinic.staging
 - tapOn:
     below:
       id: "select_state_title"
-- inputText: ${number}
+- inputText: "6664266642"
 - tapOn: "Next"
 - assertVisible:
     text: "Your security PIN"
-- inputText: ${pin}
+- inputText: "1712"
 - tapOn: "Enter code"
-- inputText: ${otp}
+- inputText: "000000"
 - tapOn: "Got it"

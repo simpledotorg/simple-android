@@ -17,6 +17,7 @@
 - Bump Faker to v1.2.9
 - Bump sqlite-android version to 3.39.2
 - Bump sentry to v.6.8.0
+- Cache AVD when running Maestro tests in GH Actions
 
 ## 2022-11-14-8505
 

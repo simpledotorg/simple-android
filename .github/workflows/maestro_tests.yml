@@ -72,10 +72,6 @@ jobs:
             -PmanifestEndpoint=${{ secrets.MANIFEST_ENDPOINT }}
             :app:installStagingRelease
             
-            maestro test
-            -e number=${{ secrets.TEST_LOGIN_PHONE_NUMBER }}
-            -e pin=${{ secrets.TEST_LOGIN_PIN }}
-            -e otp=${{ secrets.TEST_LOGIN_OTP }}
-            maestroUiFlows/login_flow.yaml
+            maestro test maestroUiFlows/login_flow.yaml
             
             adb uninstall org.simple.clinic.staging

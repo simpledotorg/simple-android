@@ -18,6 +18,7 @@
 - Bump sqlite-android version to 3.39.2
 - Bump sentry to v.6.8.0
 - Cache AVD when running Maestro tests in GH Actions
+- Bump google play services auth to v20.4.0
 
 ## 2022-11-14-8505
 

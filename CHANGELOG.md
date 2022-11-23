@@ -4,6 +4,18 @@
 
 ### Internal
 
+- Bump Faker to v1.2.9
+- Bump sqlite-android version to 3.39.2
+- Bump sentry to v.6.8.0
+- Cache AVD when running Maestro tests in GH Actions
+- Bump google play services auth to v20.4.0
+- Move test login details into Maestro login flow
+- Bump Jackson to v2.14.1
+
+## 2022-11-21-8514
+
+### Internal
+
 - Bump datadog sdk to v1.15.0
 - Bump Dagger to v2.44.2
 - Bump Sentry Gradle Plugin to v3.3.0
@@ -14,13 +26,6 @@
 - Use built-in caching functionality when setting up JDK in GH Actions
 - Bump mixpanel to v7.2.1
 - Update Tamil Nadu app name to DPH THANKS
-- Bump Faker to v1.2.9
-- Bump sqlite-android version to 3.39.2
-- Bump sentry to v.6.8.0
-- Cache AVD when running Maestro tests in GH Actions
-- Bump google play services auth to v20.4.0
-- Move test login details into Maestro login flow
-- Bump Jackson to v2.14.1
 
 ## 2022-11-14-8505
 

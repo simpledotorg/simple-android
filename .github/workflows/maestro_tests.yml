@@ -67,8 +67,8 @@ jobs:
             
             ./gradlew
             -PmaestroTests=true
-            -PsentryDsn=${{ secrets.SENTRY_DSN }}
-            -PsentryEnvironment=staging
+            -PsentryDsn=""
+            -PsentryEnvironment=""
             -PmanifestEndpoint=${{ secrets.MANIFEST_ENDPOINT }}
             :app:installStagingRelease
             

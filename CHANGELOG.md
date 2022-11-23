@@ -20,6 +20,7 @@
 - Cache AVD when running Maestro tests in GH Actions
 - Bump google play services auth to v20.4.0
 - Move test login details into Maestro login flow
+- Bump Jackson to v2.14.1
 
 ## 2022-11-14-8505
 

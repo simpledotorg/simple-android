@@ -62,9 +62,7 @@ jobs:
           arch: x86_64
           disable-animations: true
           disk-size: 8G
-          script: >
-            adb root
-            
+          script: >            
             ./gradlew
             -PmaestroTests=true
             -PsentryDsn=""

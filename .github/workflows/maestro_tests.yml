@@ -70,6 +70,6 @@ jobs:
             -PmanifestEndpoint=${{ secrets.MANIFEST_ENDPOINT }}
             :app:installStagingRelease
             
-            maestro test maestroUiFlows/login_flow.yaml
+            maestro test --format junit --output maestro-test-report.xml maestroUiFlows
             
             adb uninstall org.simple.clinic.staging

@@ -63,15 +63,20 @@ jobs:
           disable-animations: true
           disk-size: 8G
           script: >
-            adb root
-            
             ./gradlew
             -PmaestroTests=true
-            -PsentryDsn=${{ secrets.SENTRY_DSN }}
-            -PsentryEnvironment=staging
+            -PsentryDsn=""
+            -PsentryEnvironment=""
             -PmanifestEndpoint=${{ secrets.MANIFEST_ENDPOINT }}
             :app:installStagingRelease
             
-            maestro test maestroUiFlows/login_flow.yaml
+            maestro test --format junit --output maestro-test-report.xml maestroUiFlows
             
             adb uninstall org.simple.clinic.staging
+
+      - name: Upload test report
+        uses: actions/upload-artifact@v3
+        with:
+          name: maestro-test-report
+          path: /maestro-test-report.xml
+

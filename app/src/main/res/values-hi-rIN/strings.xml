@@ -199,6 +199,17 @@
   <string name="patient_prescribeddrugs_screen_title">दवाएं</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">कोई और दवा जोड़ें</string>
 
+  <string name="customprescription_enter_medicine">दवा लिखें</string>
+  <string name="customprescription_edit_medicine">दवा का संपादन करें</string>
+  <string name="customprescription_save_drug">सहेजें</string>
+  <string name="customprescription_drug_name_hint">दवा का नाम</string>
+  <string name="customprescription_drug_dosage_hint">मात्रा</string>
+
+  <string name="customprescription_delete_title">दवा हटाएं</string>
+  <string name="customprescription_delete_message">क्या आप वाकई इस दवा को हटाना चाहते हैं?</string>
+  <string name="customprescription_delete_confirm">हटाएं</string>
+  <string name="customprescription_delete_cancel">रद्द करें</string>
+
   <!-- Login -->
   <string name="loginpin_go_back">फ़ोन नंबर स्क्रीन पर वापस जाएं</string>
 
@@ -262,10 +273,11 @@
   <string name="overdue_empty_desc">आप उन रोगियों को कॉल कर पाएंगे जो अपने फ़ॉलो-अप रक्तचाप रीडिंग करवाने के लिए अपनी नियत विज़िट पर नहीं आए।</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
-    <item quantity="one">%s दिन अधिक हो गया है</item>
-    <item quantity="other">%s दिन अधिक हो गए हैं</item>
+    <item quantity="one">%s दिन बाकी है</item>
+    <item quantity="other">%s दिन बाकी है</item>
   </plurals>
   <string name="overdue_list_item_village">गांव</string>
+  <string name="overduelist_high_risk">उच्च जोखिम</string>
   <string name="overdue_download">डाउनलोड</string>
   <string name="overdue_share">साझा करें</string>
   <string name="overdue_no_pending_patients">कोई मरीज शेष नहीं</string>
@@ -409,6 +421,8 @@
 
   <!-- Simple video -->
   <string name="simple_video_duration">%s मिनट</string>
+  <string name="simple_video_watch">वीडियो देखें</string>
+  <string name="simple_video_how_to_use">इस ऐप को कैसे इस्तेमाल करें</string>
 
   <!-- Settings -->
   <string name="settings_title">सेटिंग्स</string>
@@ -839,6 +853,11 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">अगर मरीज़ अपनी दवाइयाँ समय पर ले रहा हो, तो प्रोटोकॉल का पालन करें</string>
 
   <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">को \'विजिट के लिए राजी हुए\' अंकित किया गया</string>
+
+  <string name="call_result_outcome_remind_to_call_later">को \'बाद में कॉल करने के लिए याद दिलाएं\' अंकित किया गया</string>
+
+  <string name="call_result_outcome_removed">हटाया गया: %1$s</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">नाम या गाँव के आधार पर खोजें</string>

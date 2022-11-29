@@ -199,6 +199,17 @@
   <string name="patient_prescribeddrugs_screen_title">औषधे</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">दुसरे औषध जोडा</string>
 
+  <string name="customprescription_enter_medicine">औषध प्रविष्‍ट करा</string>
+  <string name="customprescription_edit_medicine">औषध संपादित करा</string>
+  <string name="customprescription_save_drug">जतन करा</string>
+  <string name="customprescription_drug_name_hint">औषधाचे नाव</string>
+  <string name="customprescription_drug_dosage_hint">डोस</string>
+
+  <string name="customprescription_delete_title">औषध काढून टाका</string>
+  <string name="customprescription_delete_message">तुम्‍ही हे औषध दूर करू इच्छित असल्‍याची आपल्‍याला खात्री आहे?</string>
+  <string name="customprescription_delete_confirm">काढून टाका</string>
+  <string name="customprescription_delete_cancel">रद्द करा</string>
+
   <!-- Login -->
   <string name="loginpin_go_back">फोन नंबर स्‍क्रीनवर परत जा</string>
 
@@ -266,6 +277,7 @@
     <item quantity="other">%s दिवस ओव्‍हरड्यू</item>
   </plurals>
   <string name="overdue_list_item_village">गाव</string>
+  <string name="overduelist_high_risk">उच्‍च धोका</string>
   <string name="overdue_download">डाउनलोड करा</string>
   <string name="overdue_share">सामायिक करा</string>
   <string name="overdue_no_pending_patients">कोणतेही उर्वरित रुग्ण नाहीत</string>
@@ -409,6 +421,8 @@
 
   <!-- Simple video -->
   <string name="simple_video_duration">%s मिनिटे</string>
+  <string name="simple_video_watch">व्हिडिओ पहा</string>
+  <string name="simple_video_how_to_use">हे अॅप कसे वापरावे</string>
 
   <!-- Settings -->
   <string name="settings_title">सेटिंग्ज</string>
@@ -839,6 +853,11 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">जर रुग्ण त्यांची औषधे घेत असतील, तर प्रोटोकॉलचे अनुसरण करा</string>
 
   <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">रोजी \'भेट देण्यास सहमत आहे\' अशी खूण केली</string>
+
+  <string name="call_result_outcome_remind_to_call_later">रोजी \'कॉल करण्याची आठवण करून द्या\' चिन्हांकित केले</string>
+
+  <string name="call_result_outcome_removed">काढले: %1$s</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">नाव किंवा गावानुसार शोधा</string>

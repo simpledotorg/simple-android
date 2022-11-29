@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-  <string name="app_name">Simple</string>
+  <string name="app_name">Shota</string>
 
   <!-- Common -->
   <string name="gender_female">TEE</string>
@@ -133,7 +133,7 @@
   <string name="bloodpressureentry_remove">Kayisi</string>
   <string name="bloodpressureentry_systolic">Systolic</string>
   <string name="bloodpressureentry_diastolic">Diastolic</string>
-  <string name="bloodpressureentry_day">Bara</string>
+  <string name="bloodpressureentry_day">Barra</string>
   <string name="bloodpressureentry_month">Agana</string>
   <string name="bloodpressureentry_year">Diro</string>
   <string name="bloodpressureentry_error_systolic_more">Systolic diastolic wini roora hasisano</string>
@@ -143,7 +143,7 @@
   <string name="bloodpressureentry_error_diastolic_180">Diastolic 180  aleni  higa dihasisano</string>
   <string name="bloodpressureentry_error_systolic_empty">Systolic na diastolic xiwo esi</string>
   <string name="bloodpressureentry_error_diastolic_empty">Systolic na diastolic xiwo esi</string>
-  <string name="bloodpressureentry_error_date_invalid_pattern">Techo bara esi Bara/agana/diro</string>
+  <string name="bloodpressureentry_error_date_invalid_pattern">Horote/garu barra eesse Barra/Agana/Diro</string>
   <string name="bloodpressureentry_error_date_is_in_future">Bara alibira qolite boresitoti</string>
   <string name="bloodpressureentry_remove_bp_title">Mundeete xiiwo kayisi</string>
   <string name="bloodpressureentry_remove_bp_message">Tene mundeete xiiwo hunate hasiratoni?</string>
@@ -262,8 +262,8 @@
   <string name="overdue_empty_desc">Qaxarote bara sorino xiwamanicho Mundeete xiiwo mageshitero la’ate konini anichite wosha danidato.</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
-    <item quantity="one">%s Techo barira chala  keshinohu</item>
-    <item quantity="other">%s Techo barira chala  keshinohu</item>
+    <item quantity="one">%s day overdue</item>
+    <item quantity="other">%s days overdue</item>
   </plurals>
   <string name="overdue_list_item_village">Qacha</string>
   <string name="overdue_download">Dirisi</string>
@@ -297,16 +297,16 @@
   <string name="scheduleappointment_done">Gofino</string>
   <string name="scheduleappointment_next">Aniche</string>
   <plurals name="scheduleappointment_appointment_in_days">
-    <item quantity="one">%s Bara</item>
-    <item quantity="other">%s Baruba</item>
+    <item quantity="one">%s day</item>
+    <item quantity="other">%s days</item>
   </plurals>
   <plurals name="scheduleappointment_appointment_in_weeks">
-    <item quantity="one">%s Lamaala</item>
-    <item quantity="other">%s Lamaala</item>
+    <item quantity="one">%s week</item>
+    <item quantity="other">%s weeks</item>
   </plurals>
   <plurals name="scheduleappointment_appointment_in_months">
-    <item quantity="one">%s Agana</item>
-    <item quantity="other">%s Agana</item>
+    <item quantity="one">%s month</item>
+    <item quantity="other">%s months</item>
   </plurals>
 
   <!-- Forgot PIN -->
@@ -336,7 +336,7 @@
   <string name="newmedicalhistory_next">Aniche</string>
   <string name="newmedicalhistory_yes">E’e</string>
   <string name="newmedicalhistory_no">De’ni</string>
-  <string name="newmedicalhistory_history">Xage</string>
+  <string name="newmedicalhistory_history">Xagge</string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">Xissantinoti sai agani giddo BP xagicho adhinoni? (Hasiisannoho)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">Sa\'i aganira xisamanchu sukarete xagicho adhino? (Hasisiro)</string>
 
@@ -450,7 +450,7 @@
   <string name="bloodsugartype_fbs">Mudoteni Mundeete sukkaare (FBS)</string>
   <string name="bloodsugartype_ppbs">Postprandial Mundeete sukkaare (PPBS)</string>
   <string name="bloodsugarentry_sheet_title_enter_date">Lanoni bara</string>
-  <string name="bloodsugarentry_day">Bara</string>
+  <string name="bloodsugarentry_day">Barra</string>
   <string name="bloodsugarentry_month">Agana</string>
   <string name="bloodsugarentry_year">Diro</string>
   <string name="bloodsugarentry_error_lower_limit">Dawaro 30mg/l  aja dihasisano</string>
@@ -460,7 +460,7 @@
   <string name="bloodsugarentry_error_higher_limit_hba1c">Dawaro 25/u0025  sa’a dihasisano</string>
   <string name="bloodsugarentry_error_higher_limit_mmol">Dawaro 55.49mmol/l sa’a dihasisano</string>
   <string name="bloodsugarentry_error_empty">Dawaro fano ikitonike</string>
-  <string name="bloodsugarentry_error_date_invalid_pattern">Techo bara esi Bara/agana/diro</string>
+  <string name="bloodsugarentry_error_date_invalid_pattern">Horote/garu barra eesse Barra/Agana/Diro</string>
   <string name="bloodsugarentry_error_date_is_in_future">Bara alibira qolite boresitoti</string>
   <string name="bloodsugarentry_random_title">Hedeweelcho Mundeete sukkaare</string>
   <string name="bloodsugarentry_post_prandial_title">Postprandial Mundeete sukkaare</string>
@@ -491,7 +491,7 @@
 
   <!-- Summary CV History view -->
   <string name="medicalhistorysummaryview_history">Xagge</string>
-  <string name="medicalhistorysummaryview_diagnosis">Diaginoosise (hansoonniri)</string>
+  <string name="medicalhistorysummaryview_diagnosis">xiinixaloo</string>
 
   <!-- Summary prescriptions view -->
   <string name="drugsummaryview_no_medicines">Ledoni xagichi dino</string>
@@ -530,20 +530,20 @@
   <string name="contactpatient_help_text">Tene bilibilini qole bilibilate didanidamanohe</string>
   <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
   <string name="contactpatient_call_later_in">Gedenisa bilibili</string>
-  <string name="contactpatient_change">Soorro</string>
+  <string name="contactpatient_change">Soori</string>
   <string name="contactpatient_done">Gofino</string>
   <string name="contactpatient_result">Guma</string>
   <plurals name="contactpatient_days">
-    <item quantity="one">%s Bara</item>
-    <item quantity="other">%s Baruba</item>
+    <item quantity="one">%s day</item>
+    <item quantity="other">%s days</item>
   </plurals>
   <plurals name="contactpatient_weeks">
-    <item quantity="one">%s Lamaala</item>
-    <item quantity="other">%s Lamaala</item>
+    <item quantity="one">%s week</item>
+    <item quantity="other">%s weeks</item>
   </plurals>
   <plurals name="contactpatient_months">
-    <item quantity="one">%s Agana</item>
-    <item quantity="other">%s Agana</item>
+    <item quantity="one">%s month</item>
+    <item quantity="other">%s months</item>
   </plurals>
   <string name="contactpatient_select_a_reason">Korikata dori</string>
   <string name="contactpatient_patient_already_visited">Buxamino Xiwamanichoti</string>
@@ -570,7 +570,7 @@
   <string name="deeplink_patient_profile_not_found_positive_action">Mahooye</string>
   <string name="deeplink_no_patient">Xiwamanichu di’afamino</string>
   <string name="deeplink_no_patient_desc">Bilibiluni asinani hasawana fayimate agaroshi akati taje xiwamachoho kula Hanafi</string>
-  <string name="deeplink_no_patient_positive_action">Mahooye</string>
+  <string name="deeplink_no_patient_positive_action">Mahoye</string>
 
   <!-- Delete patient -->
   <string name="deletepatient_select_a_reason">Korikata dori</string>
@@ -652,8 +652,8 @@
   <string name="view_teleconsult_medicines_edit">Tashi</string>
   <string name="view_teleconsult_medicines_required_error">Ledi Shimuni mito xagicho ledi</string>
   <plurals name="list_item_teleconsult_medicine_duration">
-    <item quantity="one">%1$s Mito bara</item>
-    <item quantity="other">%1$s Mito bara</item>
+    <item quantity="one">%1$s day</item>
+    <item quantity="other">%1$s days</item>
   </plurals>
 
   <!-- Teleconsult Doctor Info View -->
@@ -674,7 +674,7 @@
   <string name="select_diagnosis_error_diagnosis_required">Mirimaruni  hasanitano</string>
   <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">Lamuniku xibira yano hypertension and diabetesmirimera dorii</string>
   <string name="select_diagnosis_error_enter_diagnosis_hypertension">Mundeete tumo buuxo gara doori</string>
-  <string name="select_diagnosis_error_ok">Mahooye</string>
+  <string name="select_diagnosis_error_ok">Mahoye</string>
   <string name="sheet_teleconsult_status_title">Bilibiluni asinani hasawi xorishi eke gofino?</string>
   <string name="sheet_teleconsult_status_yes">E’e</string>
   <string name="sheet_teleconsult_status_no">De’ni</string>
@@ -720,7 +720,7 @@
   <string name="select_ongoing_hypertension_treatment_title">Xissantinoti sai agani giddo BP xagicho adhinoni?</string>
   <string name="select_ongoing_hypertension_treatment_message">Ee woy Dee\'ni doori.</string>
   <string name="select_ongoing_diabetes_treatment_message">Sa\'a aganira xisamanchu sukaret xagicho adhasi xunsa.</string>
-  <string name="select_ongoing_hypertension_treatment_positive_action">Maahoyye</string>
+  <string name="select_ongoing_hypertension_treatment_positive_action">Mahoye</string>
 
   <!-- Custom drugs search -->
   <string name="customdrugssearch_hint">Xagichu su’ma wori</string>
@@ -795,12 +795,12 @@
   <string name="next_appointment_appointment_at_facility">chala %s</string>
   <string name="next_appointment_today">Techo</string>
   <plurals name="next_appointment_plurals">
-    <item quantity="one">1%d barubara</item>
-    <item quantity="other">%d barubara</item>
+    <item quantity="one">%d day</item>
+    <item quantity="other">%d days</item>
   </plurals>
   <plurals name="next_appointment_overdue_plurals">
-    <item quantity="one">%d Techo barira chala keshinohu</item>
-    <item quantity="other">%d barubate guudahooga</item>
+    <item quantity="one">%d day overdue</item>
+    <item quantity="other">%d days overdue</item>
   </plurals>
 
   <!-- App update notification -->
@@ -839,11 +839,45 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">Xiwamanchuniha xagicho adhate wogana yana yanate adhasi/se harun\'se.</string>
 
   <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">Agreed to visit</string>
+
+  <string name="call_result_outcome_remind_to_call_later">Call reminder set for %1$s</string>
+
+  <string name="call_result_outcome_removed">Holloonni%1$s</string>
+
+  <string name="call_result_outcome_saved_at">Saved %1$s</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">Su\'munna olluunni hasi.</string>
   <string name="overdue_search_hint">Su\'ma woy ollaa eessi</string>
   <string name="overdue_search_no_search_results_title">Xissamaano diafantanno</string>
   <string name="overdue_search_no_search_results_desc">Hasattokkinni hendoonnihu woroo ikkitino xissamaano la\"atto.</string>
+
+  <!-- Select and download overdue appointments -->
+  <string name="selected_overdue_count">%1$d selected</string>
+  <string name="selected_overdue_clear">CLEAR</string>
+  <string name="selected_overdue_select_all_appointments">SELECT ALL</string>
+
+  <string name="patient_line_list_download_notification_failed_title">driisa hoonigoni</string>
+  <string name="patient_line_list_download_notification_failed_subtitle">woole yanara wiiro woonali</string>
+  <string name="patient_line_list_download_notification_in_progress_title">Downloading patient line list</string>
+  <string name="patient_line_list_download_notification_cancel">Hoola</string>
+  <string name="patient_line_list_download_notification_succeeded_title">drisa guumulantino</string>
+  <string name="patient_line_list_download_notification_succeeded_subtitle">faanate kissi</string>
+
+  <string name="select_patient_line_list_download_format_dialog_radio_button_spreadsheet">spreedeshiitee</string>
+  <string name="select_patient_line_list_download_format_dialog_radio_button_pdf">pdafee</string>
+  <string name="select_patient_line_list_download_format_dialog_action_negative">Hoola</string>
+  <string name="select_patient_line_list_download_format_dialog_title_download">dirrinisa gede</string>
+  <string name="select_patient_line_list_download_format_dialog_action_positive">Dirisi</string>
+  <string name="patient_line_list_download_card_title">IHCI patient register</string>
+  <string name="patient_line_list_download_card_desc">List of all patients registered or assigned to %1$s</string>
+  <string name="patient_line_list_download_card_button">Dirisi</string>
+
+  <!--Notification permission denied dialog-->
+  <string name="notification_permission_denied_title">Turn on notifications</string>
+  <string name="notification_permission_denied_message">Simple needs permission to show you important reminders.Turn on under Permissions &gt; Notifications</string>
+  <string name="notification_permission_denied_positive_button">GO TO APP SETTINGS</string>
+  <string name="notification_permission_denied_negetive_button">Dixati</string>
 
 </resources>

@@ -4,7 +4,7 @@
 
 ### Changes
 
-- Updated translations: `mr_IN`
+- Updated translations: `mr_IN`, `ta_LK`
 
 ## 2022-11-28-8523
 

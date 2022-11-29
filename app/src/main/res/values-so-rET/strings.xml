@@ -7,9 +7,9 @@
   <string name="gender_male">Lab</string>
   <string name="gender_transgender">Labeeb</string>
   <!--suppress UnusedResources -->
-  <string name="gender_male_letter">M</string>
+  <string name="gender_male_letter">L</string>
   <!--suppress UnusedResources -->
-  <string name="gender_female_letter">F</string>
+  <string name="gender_female_letter">Dh</string>
   <!--suppress UnusedResources -->
   <string name="gender_trans_letter">T</string>
   <string name="api_unexpected_error">Waxbaa qaldamay. Fadlan iskuday markale.</string>
@@ -50,7 +50,7 @@
   <string name="patiententry_phone_number">Lambarka telefoonka</string>
   <string name="patiententry_bangladesh_national_id">Lambarka Aqoonsiga Qaranka</string>
   <string name="patiententry_ethiopia_medical_record_number">Lambarka Diiwaanka Caafimaadka</string>
-  <string name="patiententry_sri_lanka_personal_health_number">Lambarka Caafimaadka Gaark ah</string>
+  <string name="patiententry_sri_lanka_personal_health_number">Lambarka Caafimaadka Gaarka ah</string>
   <string name="patiententry_date_of_birth_unfocused">Taariikhda dhalashada</string>
   <string name="patiententry_date_of_birth_focused">Taariikhda dhalashada: DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">Ama</string>
@@ -143,7 +143,7 @@
   <string name="bloodpressureentry_error_diastolic_180">Joogsiga wadna garaaca kama badnaan karo 180</string>
   <string name="bloodpressureentry_error_systolic_empty">Geli cadaadiska  wadna garaaca iyo joogsiga wadna garaaca </string>
   <string name="bloodpressureentry_error_diastolic_empty">Gej cadaadiska  wadna garaaca iyo joogsiga wadna garaaca </string>
-  <string name="bloodpressureentry_error_date_invalid_pattern">Gali taariikh sax ah oo ah DD/MM/YYYY</string>
+  <string name="bloodpressureentry_error_date_invalid_pattern">Gali taariikh sax ah oo ah MM/BB/SSSS</string>
   <string name="bloodpressureentry_error_date_is_in_future">Taariikhdu ma noqon karto mustaqbalka</string>
   <string name="bloodpressureentry_remove_bp_title">Ka saar BP</string>
   <string name="bloodpressureentry_remove_bp_message">Ma hubtaa inaad rabto inaad ka saarto duubistaan cadaadiska dhiigga?</string>
@@ -198,6 +198,17 @@
   <!-- Prescribed drugs -->
   <string name="patient_prescribeddrugs_screen_title">Daawooyin</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">Ku dar daawo kale</string>
+
+  <string name="customprescription_enter_medicine">Geli daawo</string>
+  <string name="customprescription_edit_medicine">Tafatir daawada</string>
+  <string name="customprescription_save_drug">Keydi</string>
+  <string name="customprescription_drug_name_hint">Magaca daawada</string>
+  <string name="customprescription_drug_dosage_hint">Qiyaas qaadashada daawada</string>
+
+  <string name="customprescription_delete_title">Saar daawada</string>
+  <string name="customprescription_delete_message">Ma hubtaa inaad rabto inaad ka saarto daawadan?</string>
+  <string name="customprescription_delete_confirm">Saar</string>
+  <string name="customprescription_delete_cancel">Baaji</string>
 
   <!-- Login -->
   <string name="loginpin_go_back">Ku noqo shaashadda lambarka taleefanka</string>
@@ -266,6 +277,7 @@
     <item quantity="other">%s maalmo hore</item>
   </plurals>
   <string name="overdue_list_item_village">Tuullada</string>
+  <string name="overduelist_high_risk">Halis sare</string>
   <string name="overdue_download">Soo dejiso</string>
   <string name="overdue_share">La wadaag</string>
   <string name="overdue_no_pending_patients">Ma jiraan bukaano hadhay</string>
@@ -409,6 +421,8 @@
 
   <!-- Simple video -->
   <string name="simple_video_duration">%s daqiiqo</string>
+  <string name="simple_video_watch">Daawo Fiidyawga</string>
+  <string name="simple_video_how_to_use">Sida loo isticmaala abkan</string>
 
   <!-- Settings -->
   <string name="settings_title">Setinka</string>
@@ -460,7 +474,7 @@
   <string name="bloodsugarentry_error_higher_limit_hba1c">Qiyaastu kam badan karto 25\u0025</string>
   <string name="bloodsugarentry_error_higher_limit_mmol">Qiyaastu kam badan karto 55.49 mmol/L</string>
   <string name="bloodsugarentry_error_empty">Qiyaastu ma madnaan karto</string>
-  <string name="bloodsugarentry_error_date_invalid_pattern">Gali taariikh sax ah oo ah DD/MM/YYYY</string>
+  <string name="bloodsugarentry_error_date_invalid_pattern">Gali taariikh sax ah oo ah MM/BB/SSSS</string>
   <string name="bloodsugarentry_error_date_is_in_future">Taariikhdu ma noqon karto mustaqbalka</string>
   <string name="bloodsugarentry_random_title">Sonkorta dhiiga oo aan kala sooc lahayn</string>
   <string name="bloodsugarentry_post_prandial_title">Sonkorta dhiigga ka dib cuntada</string>
@@ -805,17 +819,17 @@
   </plurals>
 
   <!-- App update notification -->
-  <string name="app_update_notification_subtext">እባክህ ቀላል መተግበሪያህን በGoogle Play Store ውስጥ በተቻለ ፍጥነት ያዘምኑ።</string>
-  <string name="critical_app_update_notification_subtext">ጠቃሚ ዝማኔዎች ይገኛሉ። ቀላል መተግበሪያዎን ከGoogle Playstore ያዘምኑ።</string>
+  <string name="app_update_notification_subtext">Fadlan ka cusboonaysii app-kaaga Simple Google Play Store sida ugu dhakhsaha badan.</string>
+  <string name="critical_app_update_notification_subtext">Cusboonaysiino muhiim ah ayaa la heleyaa. Ka cusboonaysiiso app-kaaga Simple Google Playstore.</string>
 
   <!-- Critical app update dialog -->
-  <string name="critical_update_required_dialog_title">ወሳኝ ዝማኔ ያስፈልጋል</string>
+  <string name="critical_update_required_dialog_title">Cusboonaysiinta wareega ayaa loo baahan yahay</string>
   <string name="critical_update_required_dialog_content">አስፈላጊ ለሆኑ የደህንነት ለውጦች እና የቅርብ ጊዜ ባህሪያት አሁን ያዘምኑ</string>
-  <string name="critical_security_update_required_reason">የመተግበሪያ ደህንነት ግምት ውስጥ ገብቶዋል።</string>
-  <string name="critical_update_required_dialog_update_button_text">አሁን ያዘምኑ</string>
-  <string name="critical_update_required_dialog_help_section_title">እርዳታ ይፈልጋሉ?</string>
-  <string name="critical_update_required_dialog_help_section_content">ከጓደኛዊ ድጋፍ ቡድናችን እርዳታ ለማግኘት ከታች ያለውን ቁልፍ መታ ያድርጉ።</string>
-  <string name="critical_update_required_reason">መተግበሪያው %d ወራት ያለፈበት ነው።</string>
+  <string name="critical_security_update_required_reason">App-ka amaankiisa ayaa la jabsaday</string>
+  <string name="critical_update_required_dialog_update_button_text">IMINKA CUSBOONAYSII</string>
+  <string name="critical_update_required_dialog_help_section_title">Kaalmo miyaad u baahan tahay?</string>
+  <string name="critical_update_required_dialog_help_section_content">Taabo badhanka hoose si aad kaalmo uga hesho kooxdeena taageerada oo soo dhawayn leh</string>
+  <string name="critical_update_required_reason">App-ku waxa %d uu soo dhaafay wakhtigii la cusboonaynayay hal bil ah</string>
 
   <!-- Critical app update card -->
   <string name="critical_update_required_card_title">ወሳኝ ዝማኔ</string>
@@ -840,6 +854,11 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">ሕመምተኛው አዘውትሮ መድሃኒቶቹን የሚወስድ ከሆነ ፕሮቶኮልን ይከተሉ</string>
 
   <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">Looga calaamadiyay \"Aqbalay Booqashada\"</string>
+
+  <string name="call_result_outcome_remind_to_call_later">Looga calaamadiyay \'Xusuuusi  in la waco\'</string>
+
+  <string name="call_result_outcome_removed">Laga saaray %1$s</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">Ku baadh magaca ama xaafada</string>

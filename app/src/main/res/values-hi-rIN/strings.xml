@@ -49,7 +49,7 @@
   <string name="patiententry_full_name">रोगी का नाम</string>
   <string name="patiententry_phone_number">फ़ोन नंबर</string>
   <string name="patiententry_bangladesh_national_id">राष्ट्रीय आईडी संख्या</string>
-  <string name="patiententry_ethiopia_medical_record_number">वैद्यकीय रेकॉर्ड क्रमांक</string>
+  <string name="patiententry_ethiopia_medical_record_number">मेडिकल रिकॉर्ड संख्या</string>
   <string name="patiententry_sri_lanka_personal_health_number">व्यक्तिगत स्वास्थ्य संख्या</string>
   <string name="patiententry_date_of_birth_unfocused">जन्म तिथि</string>
   <string name="patiententry_date_of_birth_focused">जन्म तिथि: DD/MM/YYYY</string>
@@ -262,8 +262,8 @@
   <string name="overdue_empty_desc">आप उन रोगियों को कॉल कर पाएंगे जो अपने फ़ॉलो-अप रक्तचाप रीडिंग करवाने के लिए अपनी नियत विज़िट पर नहीं आए।</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
-    <item quantity="one">%s दिन अधिक हो गया है</item>
-    <item quantity="other">%s दिन अधिक हो गए हैं</item>
+    <item quantity="one">%s दिन बाकी है</item>
+    <item quantity="other">%s दिन बाकी है</item>
   </plurals>
   <string name="overdue_list_item_village">गांव</string>
   <string name="overdue_download">डाउनलोड</string>
@@ -305,7 +305,7 @@
     <item quantity="other">%s सप्ताह</item>
   </plurals>
   <plurals name="scheduleappointment_appointment_in_months">
-    <item quantity="one">%s महीना</item>
+    <item quantity="one">%s महीने</item>
     <item quantity="other">%s महीने</item>
   </plurals>
 
@@ -542,7 +542,7 @@
     <item quantity="other">%s सप्ताह</item>
   </plurals>
   <plurals name="contactpatient_months">
-    <item quantity="one">%s महीना</item>
+    <item quantity="one">%s महीने</item>
     <item quantity="other">%s महीने</item>
   </plurals>
   <string name="contactpatient_select_a_reason">किसी कारण का चयन करें</string>
@@ -799,8 +799,8 @@
     <item quantity="other">%d दिन</item>
   </plurals>
   <plurals name="next_appointment_overdue_plurals">
-    <item quantity="one">%d दिन अधिक हो गया है</item>
-    <item quantity="other">%d दिन अधिक हो गए हैं</item>
+    <item quantity="one">%d दिन बाकी है</item>
+    <item quantity="other">%d दिन बाकी है</item>
   </plurals>
 
   <!-- App update notification -->
@@ -839,11 +839,45 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">अगर मरीज़ अपनी दवाइयाँ समय पर ले रहा हो, तो प्रोटोकॉल का पालन करें</string>
 
   <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">विज़िट के लिए सहमत दी</string>
+
+  <string name="call_result_outcome_remind_to_call_later">कॉल रिमाइंडर %1$s पर सेट किया गया है</string>
+
+  <string name="call_result_outcome_removed">हटाया गया: %1$s</string>
+
+  <string name="call_result_outcome_saved_at">%1$s सेव किए गए</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">नाम या गाँव के आधार पर खोजें</string>
   <string name="overdue_search_hint">नाम या गाँव दर्ज करें</string>
   <string name="overdue_search_no_search_results_title">को मरीज नहीं मिले</string>
   <string name="overdue_search_no_search_results_desc">आप यहां अपनी खोज से देर तक नहीं आए हुए सभी मरीजों को देख पाएंगे</string>
+
+  <!-- Select and download overdue appointments -->
+  <string name="selected_overdue_count">%1$d चुना गया</string>
+  <string name="selected_overdue_clear">साफ़ करें</string>
+  <string name="selected_overdue_select_all_appointments">सभी चुनें</string>
+
+  <string name="patient_line_list_download_notification_failed_title">डाउनलोड विफल हुआ</string>
+  <string name="patient_line_list_download_notification_failed_subtitle">कुछ समय बाद फिर से कोशिश करें</string>
+  <string name="patient_line_list_download_notification_in_progress_title">ओवरड्यू लाइन सूची डाउनलोड हो रही है</string>
+  <string name="patient_line_list_download_notification_cancel">रद्द करें</string>
+  <string name="patient_line_list_download_notification_succeeded_title">डाउनलोड पूरा हुआ</string>
+  <string name="patient_line_list_download_notification_succeeded_subtitle">खोलने के लिए क्लिक करें</string>
+
+  <string name="select_patient_line_list_download_format_dialog_radio_button_spreadsheet">स्प्रैडशीट</string>
+  <string name="select_patient_line_list_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="select_patient_line_list_download_format_dialog_action_negative">रद्द करें</string>
+  <string name="select_patient_line_list_download_format_dialog_title_download">इस रूप में डाउनलोड करें</string>
+  <string name="select_patient_line_list_download_format_dialog_action_positive">डाउनलोड</string>
+  <string name="patient_line_list_download_card_title">IHCI रोगी रजिस्टर</string>
+  <string name="patient_line_list_download_card_desc">%1$s पर रजिस्टर या असाइन किए गए सभी रोगियों की सूची</string>
+  <string name="patient_line_list_download_card_button">डाउनलोड</string>
+
+  <!--Notification permission denied dialog-->
+  <string name="notification_permission_denied_title">नोटिफ़िकेशन चालू करें</string>
+  <string name="notification_permission_denied_message">Simple को आपको ज़रूरी रिमाइंडर दिखाने के लिए अनुमति की ज़रूरत है। अनुमति &gt; नोटिफ़िकेशन के ज़रिए चालू करें</string>
+  <string name="notification_permission_denied_positive_button">ऐप सेटिंग पर जाएँ</string>
+  <string name="notification_permission_denied_negetive_button">अभी नहीं</string>
 
 </resources>

@@ -262,8 +262,8 @@
   <string name="overdue_empty_desc">షెడ్యూల్ చేసిన సందర్శనకు హాజరుకాని రోగులకు మీరు కాల్ చేసి ఫాలో-అప్ రక్తపోటు రీడింగ్ కోసం రావాలని కోరవచ్చు.</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
-    <item quantity="one">%s రోజు క్రితం గడువు ముగిసింది</item>
-    <item quantity="other">%s రోజుల క్రితం గడువు ముగిసింది</item>
+    <item quantity="one">%s రోజుల గడువు మించింది</item>
+    <item quantity="other">%s రోజుల గడువు మించింది</item>
   </plurals>
   <string name="overdue_list_item_village">గ్రామం</string>
   <string name="overdue_download">డౌన్‌లోడ్ చేయి</string>
@@ -297,7 +297,7 @@
   <string name="scheduleappointment_done">పూర్తయింది</string>
   <string name="scheduleappointment_next">తదుపరి</string>
   <plurals name="scheduleappointment_appointment_in_days">
-    <item quantity="one">%s రోజు</item>
+    <item quantity="one">%s రోజులు</item>
     <item quantity="other">%s రోజులు</item>
   </plurals>
   <plurals name="scheduleappointment_appointment_in_weeks">
@@ -534,7 +534,7 @@
   <string name="contactpatient_done">పూర్తయింది</string>
   <string name="contactpatient_result">ఫలితం</string>
   <plurals name="contactpatient_days">
-    <item quantity="one">%s రోజు</item>
+    <item quantity="one">%s రోజులు</item>
     <item quantity="other">%s రోజులు</item>
   </plurals>
   <plurals name="contactpatient_weeks">
@@ -542,7 +542,7 @@
     <item quantity="other">%s వారాలు</item>
   </plurals>
   <plurals name="contactpatient_months">
-    <item quantity="one">%s నెల</item>
+    <item quantity="one">%s నెలలు</item>
     <item quantity="other">%s నెలలు</item>
   </plurals>
   <string name="contactpatient_select_a_reason">కారణాన్ని ఎంచుకోండి</string>
@@ -652,7 +652,7 @@
   <string name="view_teleconsult_medicines_edit">సవరించు</string>
   <string name="view_teleconsult_medicines_required_error">కనీసం ఒక ఔషదం జోడించండి</string>
   <plurals name="list_item_teleconsult_medicine_duration">
-    <item quantity="one">%1$s రోజు</item>
+    <item quantity="one">%1$s రోజులు</item>
     <item quantity="other">%1$s రోజులు</item>
   </plurals>
 
@@ -795,12 +795,12 @@
   <string name="next_appointment_appointment_at_facility">సమయం %s</string>
   <string name="next_appointment_today">ఈరోజు</string>
   <plurals name="next_appointment_plurals">
-    <item quantity="one">%d రోజు</item>
+    <item quantity="one">%d రోజులు</item>
     <item quantity="other">%d రోజులు</item>
   </plurals>
   <plurals name="next_appointment_overdue_plurals">
-    <item quantity="one">%d రోజు క్రితం గడువు ముగిసింది</item>
-    <item quantity="other">%d రోజుల క్రితం గడువు ముగిసింది</item>
+    <item quantity="one">%d రోజుల గడువు మించింది</item>
+    <item quantity="other">%d రోజుల గడువు మించింది</item>
   </plurals>
 
   <!-- App update notification -->
@@ -839,11 +839,45 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">రోగి వారి మందులను క్రమం తప్పకుండా తీసుకుంటే, ప్రోటోకాల్‌ను అనుసరించండి</string>
 
   <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">సందర్శించడానికి అంగీకరించడమైంది</string>
+
+  <string name="call_result_outcome_remind_to_call_later">కాల్ రిమైండర్ %1$sకు సెట్ చేయబడింది</string>
+
+  <string name="call_result_outcome_removed">తీసివేయబడింది: %1$s</string>
+
+  <string name="call_result_outcome_saved_at">ఆదా చేయబడినది %1$s</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">పేరు లేదా గ్రామం ద్వారా శోధించండి</string>
   <string name="overdue_search_hint">పేరు లేదా గ్రామం నమోదు చేయండి</string>
   <string name="overdue_search_no_search_results_title">రోగులు కనుగొనబడలేదు</string>
   <string name="overdue_search_no_search_results_desc">మీరు ఇక్కడ మీ శోధన నుండి గడువు ముగిసిన రోగులందరినీ చూస్తారు</string>
+
+  <!-- Select and download overdue appointments -->
+  <string name="selected_overdue_count">%1$d ఎంపిక చేయబడింది</string>
+  <string name="selected_overdue_clear">తుడిచివేయండి</string>
+  <string name="selected_overdue_select_all_appointments">అన్నింటినీ ఎంపిక చేయండి</string>
+
+  <string name="patient_line_list_download_notification_failed_title">డౌన్‌లోడ్ విఫలమైంది</string>
+  <string name="patient_line_list_download_notification_failed_subtitle">కొద్ది సమయంలో మళ్లీ ప్రయత్నించండి</string>
+  <string name="patient_line_list_download_notification_in_progress_title">రోగి వరుస జాబితా డౌన్‌లోడ్ అవుతోంది</string>
+  <string name="patient_line_list_download_notification_cancel">రద్దు చేయి</string>
+  <string name="patient_line_list_download_notification_succeeded_title">డౌన్‌లోడ్ పూర్తయింది</string>
+  <string name="patient_line_list_download_notification_succeeded_subtitle">తెరవడానికి క్లిక్ చేయండి</string>
+
+  <string name="select_patient_line_list_download_format_dialog_radio_button_spreadsheet">స్ప్రెడ్‌షీట్</string>
+  <string name="select_patient_line_list_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="select_patient_line_list_download_format_dialog_action_negative">రద్దు చేయి</string>
+  <string name="select_patient_line_list_download_format_dialog_title_download">ఇలా డౌన్‌లోడ్ చేయండి</string>
+  <string name="select_patient_line_list_download_format_dialog_action_positive">డౌన్‌లోడ్ చేయి</string>
+  <string name="patient_line_list_download_card_title">IHCI రోగి రిజిస్టర్</string>
+  <string name="patient_line_list_download_card_desc">రిజిస్టర్ అయిన రోగులందరి లేదా %1$sకు కేటాయించబడిన వారి జాబితా</string>
+  <string name="patient_line_list_download_card_button">డౌన్‌లోడ్ చేయి</string>
+
+  <!--Notification permission denied dialog-->
+  <string name="notification_permission_denied_title">నోటిఫికేషన్లను ఆన్ చేయండి</string>
+  <string name="notification_permission_denied_message">మీకు ముఖ్యమైన రిమైండర్లను చూపడానికి సింపుల్ కి మీ అనుమతి అవసరం. అనుమతులు &gt; నోటిఫికేషన్ల క్రింద ఆన్ చేయండి</string>
+  <string name="notification_permission_denied_positive_button">యాప్ సెట్టింగ్‌లకు వెళ్ళండి</string>
+  <string name="notification_permission_denied_negetive_button">ఇప్పుడు వద్దు</string>
 
 </resources>

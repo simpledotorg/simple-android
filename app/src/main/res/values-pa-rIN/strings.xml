@@ -262,7 +262,7 @@
   <string name="overdue_empty_desc">ਤੁਸੀਂ ਇੱਕ ਫੋਲੋ-ਅੱਪ ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ ਰੀਡਿੰਗ ਲਈ ਅਜਿਹੇ ਮਰੀਜ਼ਾਂ ਨੂੰ ਬੁਲਾਉਣ ਦੇ ਯੋਗ ਹੋਵੋਗੇ ਜੋ ਆਪਣੀ ਨਿਰਧਾਰਤ ਮੁਲਾਕਾਤ ਖੁੰਝਾ ਦਿੰਦੇ ਹਨ।</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
-    <item quantity="one">%s ਦਿਨ ਓਵਰਡਿਊ ਹੈ</item>
+    <item quantity="one">%s ਦਿਨ ਓਵਰਡਿਊ ਹਨ</item>
     <item quantity="other">%s ਦਿਨ ਓਵਰਡਿਊ ਹਨ</item>
   </plurals>
   <string name="overdue_list_item_village">ਪਿੰਡ</string>
@@ -799,7 +799,7 @@
     <item quantity="other">%d ਦਿਨ</item>
   </plurals>
   <plurals name="next_appointment_overdue_plurals">
-    <item quantity="one">%d ਦਿਨ ਓਵਰਡਿਊ ਹੈ</item>
+    <item quantity="one">%d ਦਿਨ ਓਵਰਡਿਊ ਹਨ</item>
     <item quantity="other">%d ਦਿਨ ਓਵਰਡਿਊ ਹਨ</item>
   </plurals>
 
@@ -839,11 +839,45 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">ਜੇਕਰ ਮਰੀਜ਼ ਆਪਣੀਆਂ ਦਵਾਈਆਂ ਨਿਯਮਿਤ ਤੌਰ ਤੇ ਲੈਂਦਾ ਹੈ, ਤਾਂ ਪ੍ਰੋਟੋਕੋਲ ਦੀ ਪਾਲਣਾ ਕਰੋ</string>
 
   <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">ਵਿਜ਼ਿਟ ਕਰਨ ਲਈ ਸਹਿਮਤ ਹੋਏ</string>
+
+  <string name="call_result_outcome_remind_to_call_later">%1$s ਲਈ ਕਾਲ ਰਿਮਾਈਂਡਰ ਸੈੱਟ ਕੀਤਾ ਗਿਆ</string>
+
+  <string name="call_result_outcome_removed">ਹਟਾ ਦਿੱਤਾ ਗਿਆ: %1$s</string>
+
+  <string name="call_result_outcome_saved_at">%1$s ਨੂੰ ਸੁਰੱਖਿਅਤ ਕੀਤਾ ਗਿਆ</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">ਨਾਮ ਜਾਂ ਪਿੰਡ ਦੁਆਰਾ ਖੋਜ ਕਰੋ</string>
   <string name="overdue_search_hint">ਨਾਮ ਜਾਂ ਪਿੰਡ ਦਰਜ ਕਰੋ</string>
   <string name="overdue_search_no_search_results_title">ਕੋਈ ਮਰੀਜ਼ ਨਹੀਂ ਮਿਲਿਆ</string>
   <string name="overdue_search_no_search_results_desc">ਤੁਸੀਂ ਇੱਥੇ ਆਪਣੀ ਖੋਜ ਨਾਲ ਸਾਰੇ ਬਾਕੀ ਮਰੀਜ਼ ਦੇਖੋਗੇ</string>
+
+  <!-- Select and download overdue appointments -->
+  <string name="selected_overdue_count">%1$d ਦੀ ਚੋਣ ਕੀਤੀ ਗਈ</string>
+  <string name="selected_overdue_clear">ਸਾਫ਼</string>
+  <string name="selected_overdue_select_all_appointments">ਸਾਰਿਆ ਦੀ ਚੋਣ ਕਰੋ</string>
+
+  <string name="patient_line_list_download_notification_failed_title">ਡਾਊਨਲੋਡ ਅਸਫਲ ਰਿਹਾ</string>
+  <string name="patient_line_list_download_notification_failed_subtitle">ਕੁਝ ਸਮੇਂ ਬਾਅਦ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ</string>
+  <string name="patient_line_list_download_notification_in_progress_title">ਮਰੀਜ਼ਾਂ ਦੀ ਲਾਈਨ ਸੂਚੀ ਨੂੰ ਡਾਊਨਲੋਡ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ</string>
+  <string name="patient_line_list_download_notification_cancel">ਰੱਦ ਕਰੋ</string>
+  <string name="patient_line_list_download_notification_succeeded_title">ਡਾਊਨਲੋਡ ਪੂਰਾ ਹੋਇਆ</string>
+  <string name="patient_line_list_download_notification_succeeded_subtitle">ਖੋਲ੍ਹਣ ਲਈ ਕਲਿੱਕ ਕਰੋ</string>
+
+  <string name="select_patient_line_list_download_format_dialog_radio_button_spreadsheet">ਸਪ੍ਰੈਡਸ਼ੀਟ</string>
+  <string name="select_patient_line_list_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="select_patient_line_list_download_format_dialog_action_negative">ਰੱਦ ਕਰੋ</string>
+  <string name="select_patient_line_list_download_format_dialog_title_download">ਇਸ ਤਰ੍ਹਾਂ ਡਾਊਨਲੋਡ ਕਰੋ</string>
+  <string name="select_patient_line_list_download_format_dialog_action_positive">ਡਾਉਨਲੋਡ ਕਰੋ</string>
+  <string name="patient_line_list_download_card_title">IHCI ਮਰੀਜ਼ ਰਜਿਸਟਰ</string>
+  <string name="patient_line_list_download_card_desc">%1$s ਨੂੰ ਰਜਿਸਟਰ ਕੀਤੇ ਜਾਂ ਨਿਰਧਾਰਿਤ ਕੀਤੇ ਗਏ ਸਾਰੇ ਮਰੀਜ਼ਾਂ ਦੀ ਸੂਚੀ</string>
+  <string name="patient_line_list_download_card_button">ਡਾਉਨਲੋਡ ਕਰੋ</string>
+
+  <!--Notification permission denied dialog-->
+  <string name="notification_permission_denied_title">ਸੂਚਨਾਵਾਂ ਚਾਲੂ ਕਰੋ</string>
+  <string name="notification_permission_denied_message">ਸਿੰਪਲ ਨੂੰ ਤੁਹਾਨੂੰ ਮਹੱਤਵਪੂਰਨ ਰੀਮਾਈਂਡਰ ਦਿਖਾਉਣ ਲਈ ਇਜਾਜ਼ਤ ਦੀ ਲੋੜ ਹੈ। ਅਨੁਮਤੀਆਂ &gt; ਸੂਚਨਾਵਾਂ ਦੇ ਅਧੀਨ ਚਾਲੂ ਕਰੋ</string>
+  <string name="notification_permission_denied_positive_button">ਐਪ ਸੈਟਿੰਗਾਂ \'ਤੇ ਜਾਓ</string>
+  <string name="notification_permission_denied_negetive_button">ਹਾਲੇ ਨਹੀਂ</string>
 
 </resources>

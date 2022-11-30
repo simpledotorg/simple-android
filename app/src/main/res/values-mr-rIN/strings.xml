@@ -876,7 +876,7 @@
 
   <!--Notification permission denied dialog-->
   <string name="notification_permission_denied_title">सूचना चालू करा</string>
-  <string name="notification_permission_denied_message">तुम्हाला महत्त्वाचे स्मरणपत्रे दाखवण्यासाठी साध्या परवानगीची आवश्यकता आहे. परवानग्या &gt; सूचना अंतर्गत चालू करा</string>
+  <string name="notification_permission_denied_message">तुम्हाला महत्त्वाचे स्मरणपत्रे दाखवण्यासाठी Simple परवानगीची आवश्यकता आहे. परवानग्या &gt; सूचना अंतर्गत चालू करा</string>
   <string name="notification_permission_denied_positive_button">अ‍ॅप सेटिंग्ज वर जा</string>
   <string name="notification_permission_denied_negetive_button">आता नाही</string>
 

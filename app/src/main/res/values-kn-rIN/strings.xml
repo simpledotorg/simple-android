@@ -262,7 +262,7 @@
   <string name="overdue_empty_desc">ನೀವು ರಕ್ತದ ಒತ್ತಡದ ರೀಡಿಂಗ್‌ನ ಫಾಲೋ ಅಪ್ ಮಾಡುವುದಕ್ಕಾಗಿ ತಮ್ಮ ನಿಗದಿತ ಭೇಟಿಯನ್ನು ತಪ್ಪಿಸಿಕೊಂಡ ರೋಗಿಗಳಿಗೆ ಕರೆ ಮಾಡಲು ಸಾಧ್ಯವಾಗುತ್ತದೆ.</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
-    <item quantity="one">%s ದಿನ ತಡವಾಗಿದೆ</item>
+    <item quantity="one">%s ದಿನದಷ್ಟು ತಡವಾಗಿದೆ</item>
     <item quantity="other">%s ದಿನಗಳಷ್ಟು ತಡವಾಗಿದೆ</item>
   </plurals>
   <string name="overdue_list_item_village">ಗ್ರಾಮ</string>
@@ -799,7 +799,7 @@
     <item quantity="other">%d ದಿನಗಳು</item>
   </plurals>
   <plurals name="next_appointment_overdue_plurals">
-    <item quantity="one">%d ದಿನ ತಡವಾಗಿದೆ</item>
+    <item quantity="one">%d ದಿನದಷ್ಟು ತಡವಾಗಿದೆ</item>
     <item quantity="other">%d ದಿನಗಳಷ್ಟು ತಡವಾಗಿದೆ</item>
   </plurals>
 
@@ -839,11 +839,45 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">ಒಂದು ವೇಳೆ ರೋಗಿಯು ತಮ್ಮ ಔಷಧಿಗಳನ್ನು ತೆಗೆದುಕೊಂಡರೆ, ಪ್ರೋಟೋಕಾಲ್ ಅನುಸರಿಸಿ</string>
 
   <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">ಭೇಟಿ ನೀಡಲು ಒಪ್ಪಿದ್ದಾರೆ</string>
+
+  <string name="call_result_outcome_remind_to_call_later">%1$s ಗೆ ಕರೆ ರಿಮೈಂಡರ್ ಹೊಂದಿಸಲಾಗಿದೆ</string>
+
+  <string name="call_result_outcome_removed">ತೆಗೆದುಹಾಕಿರುವುದು: %1$s</string>
+
+  <string name="call_result_outcome_saved_at">ಉಳಿಸಲಾಗಿರುವುದು %1$s</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">ಹೆಸರು ಅಥವಾ ಗ್ರಾಮದ ಪ್ರಕಾರ ಹುಡುಕಿ</string>
   <string name="overdue_search_hint">ಹೆಸರು ಅಥವಾ ಗ್ರಾಮವನ್ನು ನಮೂದಿಸಿ</string>
   <string name="overdue_search_no_search_results_title">ಯಾವುದೇ ರೋಗಿಗಳು ಕಂಡುಬಂದಿಲ್ಲ</string>
   <string name="overdue_search_no_search_results_desc">ಎಲ್ಲಾ ಬಾಕಿ ಇರುವ ರೋಗಿಗಳನ್ನು ಇಲ್ಲಿ ನಿಮ್ಮ ಹುಡುಕಾಟದಿಂದ ನೀವು ನೋಡುತ್ತೀರಿ</string>
+
+  <!-- Select and download overdue appointments -->
+  <string name="selected_overdue_count">%1$d ಆಯ್ಕೆಮಾಡಲಾಗಿದೆ</string>
+  <string name="selected_overdue_clear">ತೆರವುಗೊಳಿಸಿ</string>
+  <string name="selected_overdue_select_all_appointments">ಎಲ್ಲಾ ಆಯ್ಕೆಮಾಡಿ</string>
+
+  <string name="patient_line_list_download_notification_failed_title">ಡೌನ್‌ಲೋಡ್ ವಿಫಲವಾಗಿದೆ</string>
+  <string name="patient_line_list_download_notification_failed_subtitle">ಸ್ವಲ್ಪ ಸಮಯದಲ್ಲಿ ಮತ್ತೊಮ್ಮೆ ಪ್ರಯತ್ನಿಸಿ</string>
+  <string name="patient_line_list_download_notification_in_progress_title">ರೋಗಿ ಲೈನ್ ಪಟ್ಟಿಯನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಲಾಗುತ್ತಿದೆ</string>
+  <string name="patient_line_list_download_notification_cancel">ರದ್ದುಮಾಡಿ</string>
+  <string name="patient_line_list_download_notification_succeeded_title">ಡೌನ್‌ಲೋಡ್ ಪೂರ್ಣಗೊಂಡಿದೆ</string>
+  <string name="patient_line_list_download_notification_succeeded_subtitle">ತೆರೆಯಲು ಕ್ಲಿಕ್ ಮಾಡಿ</string>
+
+  <string name="select_patient_line_list_download_format_dialog_radio_button_spreadsheet">ಸ್ಪ್ರೆಡ್‌ಶೀಟ್</string>
+  <string name="select_patient_line_list_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="select_patient_line_list_download_format_dialog_action_negative">ರದ್ದುಮಾಡಿ</string>
+  <string name="select_patient_line_list_download_format_dialog_title_download">ಹೀಗೆ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</string>
+  <string name="select_patient_line_list_download_format_dialog_action_positive">ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</string>
+  <string name="patient_line_list_download_card_title">IHCI ರೋಗಿ ರಿಜಿಸ್ಟರ್</string>
+  <string name="patient_line_list_download_card_desc">ನೋಂದಣಿ ಮಾಡಿಕೊಂಡಿರುವ ಅಥವಾ %1$s ಗೆ ನಿಯೋಜಿತರಾಗಿರುವ ಎಲ್ಲಾ ರೋಗಿಗಳ ಪಟ್ಟಿ</string>
+  <string name="patient_line_list_download_card_button">ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</string>
+
+  <!--Notification permission denied dialog-->
+  <string name="notification_permission_denied_title">ಅಧಿಸೂಚನೆಗಳನ್ನು ಆನ್ ಮಾಡಿ</string>
+  <string name="notification_permission_denied_message">ನಿಮಗೆ ಪ್ರಮುಖ ರಿಮೈಂಡರ್‌ಗಳನ್ನು ತೋರಿಸುವುದಕ್ಕಾಗಿ ಸಿಂಪಲ್‌ಗೆ ಅನುಮತಿ ಅಗತ್ಯವಿರುತ್ತದೆ. ಅನುಮತಿಗಳು &gt; ಅಧಿಸೂಚನೆಗಳು ಎಂಬಲ್ಲಿ ಆನ್ ಮಾಡಿ</string>
+  <string name="notification_permission_denied_positive_button">ಆ್ಯಪ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು ಎಂಬಲ್ಲಿಗೆ ಹೋಗಿ</string>
+  <string name="notification_permission_denied_negetive_button">ಈಗ ಬೇಡ</string>
 
 </resources>

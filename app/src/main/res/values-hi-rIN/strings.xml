@@ -272,7 +272,7 @@
   <string name="overdue_pending_list_button_see_all">सभी देखें</string>
   <string name="overdue_pending_list_button_see_less">कम देखें</string>
   <string name="overdue_pending_to_call_header">कॉल करना शेष</string>
-  <string name="overdue_agreed_to_visit_call_header">विजिट के लिए राजी</string>
+  <string name="overdue_agreed_to_visit_call_header">विज़िट करने के लिए सहमत हैं</string>
   <string name="overdue_remind_to_call_header">बाद में कॉल करने के लिए याद दिलाएं</string>
   <string name="overdue_removed_from_list_call_header">लिस्ट से हटाया गया</string>
   <string name="overdue_no_visit_in_one_year_call_header">1 वर्ष में कोई विजिट नहीं</string>

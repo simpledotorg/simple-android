@@ -262,8 +262,8 @@
   <string name="overdue_empty_desc">फॉलो-अप रक्‍त्‍दाब रिडिंगसाठी शेड्यूल भेट विसरलेल्‍या रूग्णांना तुम्‍ही कॉल करू शकाल.</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
-    <item quantity="one">%s दिवस ओव्‍हरड्यू</item>
-    <item quantity="other">%s दिवस ओव्‍हरड्यू</item>
+    <item quantity="one">%s दिवस थकीत</item>
+    <item quantity="other">%s दिवस थकीत</item>
   </plurals>
   <string name="overdue_list_item_village">गाव</string>
   <string name="overdue_download">डाउनलोड करा</string>
@@ -369,7 +369,7 @@
 
   <!-- Help Screen -->
   <string name="help_title">मदत</string>
-  <string name="help_no_connection">कोणतेही इंटरनेट कनेक्‍शन नाही</string>
+  <string name="help_no_connection">इंटरनेट कनेक्‍शन नाही</string>
   <string name="help_something_went_wrong">काहीतरी चुकले</string>
   <string name="help_try_again">पुन्‍हा प्रयत्‍न करा</string>
 
@@ -799,8 +799,8 @@
     <item quantity="other">%d दिवस</item>
   </plurals>
   <plurals name="next_appointment_overdue_plurals">
-    <item quantity="one">%d दिवस ओव्‍हरड्यू</item>
-    <item quantity="other">%d दिवस ओव्‍हरड्यू</item>
+    <item quantity="one">%d दिवस थकीत</item>
+    <item quantity="other">%d दिवस थकीत</item>
   </plurals>
 
   <!-- App update notification -->
@@ -839,11 +839,45 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">जर रुग्ण त्यांची औषधे घेत असतील, तर प्रोटोकॉलचे अनुसरण करा</string>
 
   <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">भेट देण्याचे मान्य केले</string>
+
+  <string name="call_result_outcome_remind_to_call_later">%1$s साठी कॉल स्मरणपत्र सेट केले</string>
+
+  <string name="call_result_outcome_removed">काढले: %1$s</string>
+
+  <string name="call_result_outcome_saved_at">%1$s जतन केले</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">नाव किंवा गावानुसार शोधा</string>
   <string name="overdue_search_hint">नाव किंवा गाव प्रविष्ट करा</string>
   <string name="overdue_search_no_search_results_title">रुग्ण आढळले नाहीत</string>
   <string name="overdue_search_no_search_results_desc">तुमच्या शोधातून तुम्हाला सर्व थकबाकी असलेले रुग्ण येथे दिसतील</string>
+
+  <!-- Select and download overdue appointments -->
+  <string name="selected_overdue_count">%1$d निवडले</string>
+  <string name="selected_overdue_clear">साफ करा</string>
+  <string name="selected_overdue_select_all_appointments">सर्व निवडा</string>
+
+  <string name="patient_line_list_download_notification_failed_title">डाउनलोड अयशस्वी</string>
+  <string name="patient_line_list_download_notification_failed_subtitle">काही वेळाने पुन्हा प्रयत्न करा</string>
+  <string name="patient_line_list_download_notification_in_progress_title">रुग्णांची यादी डाउनलोड करत आहे</string>
+  <string name="patient_line_list_download_notification_cancel">रद्द करा</string>
+  <string name="patient_line_list_download_notification_succeeded_title">डाउनलोड पूर्ण झाले</string>
+  <string name="patient_line_list_download_notification_succeeded_subtitle">उघडण्यासाठी क्लिक करा</string>
+
+  <string name="select_patient_line_list_download_format_dialog_radio_button_spreadsheet">स्प्रेडशीट</string>
+  <string name="select_patient_line_list_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="select_patient_line_list_download_format_dialog_action_negative">रद्द करा</string>
+  <string name="select_patient_line_list_download_format_dialog_title_download">म्हणून डाउनलोड करा</string>
+  <string name="select_patient_line_list_download_format_dialog_action_positive">डाउनलोड करा</string>
+  <string name="patient_line_list_download_card_title">IHCI रुग्ण नोंदणीपुस्तक</string>
+  <string name="patient_line_list_download_card_desc">%1$s ला नोंदणीकृत किंवा नियुक्त केलेल्या सर्व रुग्णांची यादी</string>
+  <string name="patient_line_list_download_card_button">डाउनलोड करा</string>
+
+  <!--Notification permission denied dialog-->
+  <string name="notification_permission_denied_title">सूचना चालू करा</string>
+  <string name="notification_permission_denied_message">तुम्हाला महत्त्वाचे स्मरणपत्रे दाखवण्यासाठी साध्या परवानगीची आवश्यकता आहे. परवानग्या &gt; सूचना अंतर्गत चालू करा</string>
+  <string name="notification_permission_denied_positive_button">अ‍ॅप सेटिंग्ज वर जा</string>
+  <string name="notification_permission_denied_negetive_button">आता नाही</string>
 
 </resources>

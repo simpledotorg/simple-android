@@ -2,6 +2,10 @@
 
 ## Next Release
 
+### Changes
+
+- Updated translations: `mr_IN`
+
 ## 2022-11-28-8523
 
 ### Internal

@@ -5,16 +5,6 @@
   "schedule": [
     "after 12am and before 2am on the first day of the month"
   ],
-  "packageRules": [
-    {
-      "matchPackagePatterns": [
-        "com.facebook.flipper"
-      ],
-      "schedule": [
-        "after 12am and before 2am on the first day of the month"
-      ]
-    }
-  ],
   "timezone": "Asia/Kolkata",
   "ignoreDeps": [
     // Ignoring zxing update. Since update requires Java 8+ runtime.

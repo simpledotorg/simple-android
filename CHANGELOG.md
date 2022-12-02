@@ -5,6 +5,7 @@
 ### Changes
 
 - Updated translations: `mr_IN`, `ta_LK`, `hi_IN`
+- Bump Kotlin to v1.7.22
 
 ## 2022-11-28-8523
 

@@ -3,7 +3,7 @@
     "config:base"
   ],
   "schedule": [
-    "after 12am and before 2am on the first day of the month"
+    "after 12am and before 2am on the first wednesday of the month"
   ],
   "timezone": "Asia/Kolkata",
   "ignoreDeps": [

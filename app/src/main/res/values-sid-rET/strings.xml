@@ -199,6 +199,17 @@
   <string name="patient_prescribeddrugs_screen_title">Xagicho</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">Ledi Wole xagicho</string>
 
+  <string name="customprescription_enter_medicine">Xagicho esi</string>
+  <string name="customprescription_edit_medicine">Tashi xagicho</string>
+  <string name="customprescription_save_drug">Gamiba asi</string>
+  <string name="customprescription_drug_name_hint">Xagichu su’ma</string>
+  <string name="customprescription_drug_dosage_hint">Shima yanara chala keshanoha</string>
+
+  <string name="customprescription_delete_title">Xagicho kayisi</string>
+  <string name="customprescription_delete_message">Kone xagicho hunate hasiratoni?</string>
+  <string name="customprescription_delete_confirm">Kayisi</string>
+  <string name="customprescription_delete_cancel">Hoola</string>
+
   <!-- Login -->
   <string name="loginpin_go_back">Badhera bilibbilu kirowa higi</string>
 
@@ -266,6 +277,7 @@
     <item quantity="other">%s Techo barira chala  keshinohu</item>
   </plurals>
   <string name="overdue_list_item_village">Qacha</string>
+  <string name="overduelist_high_risk">Lowo/ jawa  qara</string>
   <string name="overdue_download">Dirisi</string>
   <string name="overdue_share">Behhi</string>
   <string name="overdue_no_pending_patients">Lexxitanni no xiwamaano dino</string>
@@ -409,6 +421,8 @@
 
   <!-- Simple video -->
   <string name="simple_video_duration">%s Bixilisa</string>
+  <string name="simple_video_watch">Vedio la’a</string>
+  <string name="simple_video_how_to_use">Konne assiisaancho horoonsi’nanni gara</string>
 
   <!-- Settings -->
   <string name="settings_title">Qinessa</string>
@@ -498,7 +512,7 @@
 
   <!-- Access Denied screen -->
   <string name="accessdeniedscreen_title_access_denied">Sa’a didanidinanni</string>
-  <string name="accessdeniedscreen_description">shootu gaarin afira dedanidato. qaru noha lawe leliha ikiro la’anichiki ledo xadi.\n\nShimuni  APP (Horonisiranicho) hunite aguri Horonisiranicho w iro qoli wole Simple App (Horonisiranicho) Play store gidoni dirisi</string>
+  <string name="accessdeniedscreen_description">Simple horoonsira hoollihero. qaru noha lawe leliha ikiro la’anichiki ledo xadi.\n\nShimuni  APP (Horonisiranicho) hunite aguri Horonisiranicho w iro qoli wole Simple App (Horonisiranicho) Play store gidoni dirisi.</string>
 
   <!-- Confirm Facility change sheet -->
   <string name="confirmfacilitychange_title">Dariga sori</string>
@@ -804,8 +818,8 @@
   </plurals>
 
   <!-- App update notification -->
-  <string name="app_update_notification_subtext">Eegote horonsidinani shota appilikeeshiine Google PlayStore gido haaronsidhe.</string>
-  <string name="critical_app_update_notification_subtext">Horo afidhino woyeeso kuneeti. shota appilikeeshiine Google PlayStore gido horoonsidhe.</string>
+  <string name="app_update_notification_subtext">Eegote horonsidinani Simple appilikeeshiine Google PlayStore gido haaronsidhe.</string>
+  <string name="critical_app_update_notification_subtext">Horo afidhino woyeeso kuneeti. Simple appilikeeshiine Google PlayStore gido horoonsidhe.</string>
 
   <!-- Critical app update dialog -->
   <string name="critical_update_required_dialog_title">Lowonta horo afidhino woyeeso kuneeti.</string>
@@ -839,6 +853,11 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">Xiwamanchuniha xagicho adhate wogana yana yanate adhasi/se harun\'se.</string>
 
   <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">\'towaatate sumuu yinoonni\' malaate</string>
+
+  <string name="call_result_outcome_remind_to_call_later">\'Woshshate qaagi\'malaate</string>
+
+  <string name="call_result_outcome_removed">Holloonni%1$s</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">Su\'munna olluunni hasi.</string>

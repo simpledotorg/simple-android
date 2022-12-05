@@ -871,12 +871,12 @@
   <string name="select_patient_line_list_download_format_dialog_title_download">இதாகப் பதிவிறக்கு</string>
   <string name="select_patient_line_list_download_format_dialog_action_positive">பதிவிறக்கப்பட்டது</string>
   <string name="patient_line_list_download_card_title">IHCI நோயாளர் பதிவு</string>
-  <string name="patient_line_list_download_card_desc">%1$sக்குப் பதிவுசெய்யப்பட்ட அல்லது ஒதுக்கப்பட்ட அனைத்து நோயாளர்களின் பட்டியல்</string>
+  <string name="patient_line_list_download_card_desc">%1$s க்குப் பதிவுசெய்யப்பட்ட அல்லது ஒதுக்கப்பட்ட அனைத்து நோயாளர்களின் பட்டியல்</string>
   <string name="patient_line_list_download_card_button">பதிவிறக்கப்பட்டது</string>
 
   <!--Notification permission denied dialog-->
   <string name="notification_permission_denied_title">அறிவிப்புகளை இயக்கவும்</string>
-  <string name="notification_permission_denied_message">முக்கியமான நினைவூட்டல்களை உங்களுக்குக் காட்டுவதற்கு சிம்பிள்-க்கு அனுமதி தேவைப்படுகின்றது.அனுமதிகள் &gt; அறிவிப்புகள் என்பதன் கீழ் இயக்கவும்</string>
+  <string name="notification_permission_denied_message">முக்கியமான நினைவூட்டல்களை உங்களுக்குக் காட்டுவதற்கு சிம்பிள் செயலிக்கு அனுமதி தேவைப்படுகின்றது.அனுமதிகள் &gt; அறிவிப்புகள் என்பதன் கீழ் இயக்கவும்</string>
   <string name="notification_permission_denied_positive_button">செயலி அமைப்புகளுக்குச் செல்லவும்</string>
   <string name="notification_permission_denied_negetive_button">இப்போது வேண்டாம்</string>
 

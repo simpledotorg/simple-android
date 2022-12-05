@@ -4,7 +4,7 @@
 
 ### Changes
 
-- Updated translations: `ta_LK`, `hi_IN`, `mr_IN`
+- Updated translations: `ta_LK`, `hi_IN`, `mr_IN`, `ta-LK`
 - Bump Kotlin to v1.7.22
 - Bump eclipse jgit to v6.4.0.202211300538-r
 

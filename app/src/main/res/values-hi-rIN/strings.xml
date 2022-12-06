@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-  <string name="app_name">सिंपल</string>
+  <string name="app_name">Simple</string>
 
   <!-- Common -->
   <string name="gender_female">महिला</string>
@@ -272,7 +272,7 @@
   <string name="overdue_pending_list_button_see_all">सभी देखें</string>
   <string name="overdue_pending_list_button_see_less">कम देखें</string>
   <string name="overdue_pending_to_call_header">कॉल करना शेष</string>
-  <string name="overdue_agreed_to_visit_call_header">विजिट के लिए राजी</string>
+  <string name="overdue_agreed_to_visit_call_header">विज़िट करने के लिए सहमत हैं</string>
   <string name="overdue_remind_to_call_header">बाद में कॉल करने के लिए याद दिलाएं</string>
   <string name="overdue_removed_from_list_call_header">लिस्ट से हटाया गया</string>
   <string name="overdue_no_visit_in_one_year_call_header">1 वर्ष में कोई विजिट नहीं</string>
@@ -839,13 +839,13 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">अगर मरीज़ अपनी दवाइयाँ समय पर ले रहा हो, तो प्रोटोकॉल का पालन करें</string>
 
   <!-- Call Result Outcome Message -->
-  <string name="call_result_outcome_agreed_to_visit">विजिट करने के लिए सहमत हैं</string>
+  <string name="call_result_outcome_agreed_to_visit">विज़िट करने के लिए सहमत हैं</string>
 
-  <string name="call_result_outcome_remind_to_call_later">कॉल रिमाइंडर %1$s पर सेट किया गया है</string>
+  <string name="call_result_outcome_remind_to_call_later">कॉल रिमाइंडर %1$s के लिए सेट किया गया है</string>
 
   <string name="call_result_outcome_removed">हटाया गया: %1$s</string>
 
-  <string name="call_result_outcome_saved_at">%1$s सेव किए गए</string>
+  <string name="call_result_outcome_saved_at">%1$s सहेजे गए</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">नाम या गाँव के आधार पर खोजें</string>
@@ -876,7 +876,7 @@
 
   <!--Notification permission denied dialog-->
   <string name="notification_permission_denied_title">नोटिफ़िकेशन चालू करें</string>
-  <string name="notification_permission_denied_message">Simple को आपको ज़रूरी रिमाइंडर दिखाने के लिए अनुमति की ज़रूरत है। अनुमति &gt; नोटिफ़िकेशन में जाकर चालू करें</string>
+  <string name="notification_permission_denied_message">सिंपल को आपको ज़रूरी रिमाइंडर दिखाने के लिए अनुमति की ज़रूरत है। अनुमति &gt; नोटिफ़िकेशन में जाकर चालू करें</string>
   <string name="notification_permission_denied_positive_button">ऐप सेटिंग पर जाएँ</string>
   <string name="notification_permission_denied_negetive_button">अभी नहीं</string>
 

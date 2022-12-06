@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Next Release
+
+### Changes
+- Updated translations: `te-IN`
+
 ## 2022-12-05-8531
 
 ### Changes

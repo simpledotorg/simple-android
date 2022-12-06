@@ -27,6 +27,7 @@
 - Bump Jackson to v2.14.1
 - Update Maestro test command to run multiple flows in GH Actions
 - Bump Gradle to v7.6
+- Bump flipper to v0.176.0
 
 ## 2022-11-21-8514
 

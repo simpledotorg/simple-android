@@ -3,7 +3,7 @@
 ## Next Release
 
 ### Changes
-- Updated translations: `te-IN`
+- Updated translations: `te-IN`, `kn-IN`
 
 ## 2022-12-05-8531
 

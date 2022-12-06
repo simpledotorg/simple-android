@@ -3,7 +3,8 @@
 ## Next Release
 
 ### Changes
-- Updated translations: `te_IN`, `kn_IN`, `hi_IN`, `bn_BD`, `sid_ET`, `si_LK`, `bn_IN`, `ta_IN`
+- Updated translations: `te_IN`, `kn_IN`, `hi_IN`, `bn_BD`, `sid_ET`, `si_LK`, `bn_IN`, `ta_IN`, 
+  `pa_IN`
 
 ## 2022-12-05-8531
 

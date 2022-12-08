@@ -91,6 +91,20 @@ jobs:
       - name: Link Heroku CLI globally
         run: heroku plugins:install buildpacks
 
+      - name: Generate server app name
+        id: generate-server-app-name
+        run: android-app/.github/scripts/generate_heroku_app_name.sh ${{ github.ref }}
+
+      - name: Deploy the server on Heroku
+        id: start-simple-server
+        run: |
+          android-app/.github/scripts/setup_heroku_instance.sh \
+          ${{ steps.generate-server-app-name.outputs.heroku_app_name }} \
+          ${{ env.HEROKU_API_KEY }} \
+          server-app \
+          android-app \
+          ${{ secrets.HEROKU_SECRET_PROPERTIES }}
+
       - name: Cache AVD
         uses: actions/cache@v3
         id: avd-cache
@@ -118,20 +132,6 @@ jobs:
           distribution: 'zulu'
           java-version: 11
           cache: 'gradle'
-
-      - name: Generate server app name
-        id: generate-server-app-name
-        run: android-app/.github/scripts/generate_heroku_app_name.sh ${{ github.ref }}
-
-      - name: Deploy the server on Heroku
-        id: start-simple-server
-        run: |
-          android-app/.github/scripts/setup_heroku_instance.sh \
-          ${{ steps.generate-server-app-name.outputs.heroku_app_name }} \
-          ${{ env.HEROKU_API_KEY }} \
-          server-app \
-          android-app \
-          ${{ secrets.HEROKU_SECRET_PROPERTIES }}
 
       - name: QA Android Tests
         id: run-instrumented-tests

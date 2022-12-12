@@ -3,6 +3,7 @@
 ## Next Release
 
 ### Changes
+- Bump heroku review app resources
 - Updated translations: `te_IN`, `kn_IN`, `hi_IN`, `bn_BD`, `sid_ET`, `si_LK`, `bn_IN`, `ta_IN`, `pa_IN`
 - Bump Facebook.soloader to v0.10.5
 - Bump sentry to v6.9.1

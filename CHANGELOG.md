@@ -6,6 +6,7 @@
 - Updated translations: `te_IN`, `kn_IN`, `hi_IN`, `bn_BD`, `sid_ET`, `si_LK`, `bn_IN`, `ta_IN`, `pa_IN`
 - Bump Facebook.soloader to v0.10.5
 - Bump sentry to v6.9.1
+- Bump flipper to v0.176.0
 
 ## 2022-12-05-8531
 
@@ -28,7 +29,6 @@
 - Bump Jackson to v2.14.1
 - Update Maestro test command to run multiple flows in GH Actions
 - Bump Gradle to v7.6
-- Bump flipper to v0.176.0
 
 ## 2022-11-21-8514
 

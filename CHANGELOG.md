@@ -7,6 +7,7 @@
 - Bump Facebook.soloader to v0.10.5
 - Bump sentry to v6.9.1
 - Bump flipper to v0.176.0
+- Remove `app_name` form translated strings and make it untranslatable
 
 ## 2022-12-05-8531
 

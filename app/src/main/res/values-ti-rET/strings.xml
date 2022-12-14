@@ -1,5 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+  <string name="app_name">ቀሊል</string>
+
   <!-- Common -->
   <string name="gender_female">ኣንስተይቲ</string>
   <string name="gender_male">ተባዕታይ</string>
@@ -28,7 +30,7 @@
   <!--Business id Identifier -->
   <string name="identifiertype_bp_passport">BP Passport</string>
   <string name="identifiertype_bangladesh_national_id">ሃገራዊ መለለዪ </string>
-  <string name="identifiertype_ethiopia_medical_record_number">ቁፅሪ  መዝገብ ሕክምና</string>
+  <string name="identifiertype_ethiopia_medical_record_number">ቁፅሪ ሕክምናዊ መዝገብ</string>
   <string name="identifiertype_unknown">መለለዪ </string>
   <string name="identifiertype_india_national_health_id">ሃገራዊ ናይ ጥዕና መለለዪ መንነት</string>
   <string name="identifiertype_sri_lanka_national_id">ሃገራዊ መለለዪ </string>
@@ -127,8 +129,8 @@
   <!-- Blood pressure entry -->
   <string name="bloodpressureentry_sheet_title_enter_blood_pressure">ፀቕጢ ደም</string>
   <string name="bloodpressureentry_sheet_title_edit_blood_pressure">ፀቕጢ ደም ኣርም</string>
-  <string name="bloodpressureentry_sheet_title_enter_date">ዕለት ዑደት</string>
-  <string name="bloodpressureentry_remove"> ሰረዝ</string>
+  <string name="bloodpressureentry_sheet_title_enter_date">ዑደት ዝግበረሉ ዕለት </string>
+  <string name="bloodpressureentry_remove">ምልጋስ </string>
   <string name="bloodpressureentry_systolic">ስያስቶሊክ</string>
   <string name="bloodpressureentry_diastolic">ዲያስቶሊክ</string>
   <string name="bloodpressureentry_day">መዓልቲ</string>
@@ -145,7 +147,7 @@
   <string name="bloodpressureentry_error_date_is_in_future">ዕለት ኣብ መፃኢ ክኸውን ኣይኽእልን</string>
   <string name="bloodpressureentry_remove_bp_title">ተመዝጊቡ ዘሎ ፀቕጢ ደም እለዮ/እለዪዮ</string>
   <string name="bloodpressureentry_remove_bp_message">ተመዝጊቡ ዘሎ ፀቕጢ ደም ንምልጋስ እርግጸኛ ዲኻ/ኺ?</string>
-  <string name="bloodpressureentry_remove_bp_confirm">ምልጋስ</string>
+  <string name="bloodpressureentry_remove_bp_confirm">ምልጋስ </string>
   <string name="bloodpressureentry_remove_bp_cancel"> ሰርዝ</string>
   <string name="bloodpressureentry_date_change">ለውጢ</string>
 
@@ -163,12 +165,12 @@
   <string name="patientsummary_updatephone_dialog_message">ስልኪ ቁፅሪ ተሓካሚ ኣቐዲሙ ግጉይ ተባሂሉ ኔሩ</string>
   <string name="patientsummary_updatephone_phone_hint">ስልኪ ቑፅሪ</string>
   <string name="patientsummary_updatephone_save">ምዕቃብ</string>
-  <string name="patientsummary_updatephone_cancel">ምዝላል</string>
+  <string name="patientsummary_updatephone_cancel">ዝለል</string>
   <string name="patientsummary_addphone_dialog_title">ስልኪ ቁፅሪ ብሓድሽ ተክእ</string>
   <string name="patientsummary_addphone_dialog_message">ናይ ተሓካሚ ስልኪ ቁፅሪ ኣብ ግዜ ምዝገባ ኣይተመዝገበን</string>
   <string name="patientsummary_addphone_phone_hint">ስልኪ ቑፅሪ</string>
   <string name="patientsummary_addphone_save">ምዕቃብ</string>
-  <string name="patientsummary_addphone_cancel">ምዝላል</string>
+  <string name="patientsummary_addphone_cancel">ዝለል</string>
   <string name="patientsummary_toolbar_title">%1$s,%2$s,%3$s</string>
 
   <string name="patientsummary_teleconsult">ቴሌኮንሳልት</string>
@@ -233,12 +235,12 @@
   <string name="registrationpin_pin_hint">ውልቃዊ ቁፅሪ መንነትካ/ኪ ዘክር፡ ደሓር ከድልየካ’ዩ</string>
   <string name="registrationpin_error_incomplete_pin">ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ ኣዝዩ ሓጺሩ’ሎ። ብኽብረትኩም 4 ቁፅርታት ኣእትው።</string>
 
-  <string name="registrationconfirmpin_confirm_pin_label">ንምርግጋፅ ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ መሊስካ/ኪ ኣእትው/ዊ</string>
+  <string name="registrationconfirmpin_confirm_pin_label">ንምርግጋፅ ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ መሊስካ/ኪ ዳግማይ ኣእትው/ዊ</string>
   <string name="registrationconfirmpin_error_pin_mismatch">ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ ምስ ናይ መጀመርያ ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ ኣይሰማማዕን’ዩ</string>
   <string name="registrationconfirmpin_reset_pin">ውልቃዊ ቁፅሪ መንነት ኣዕርይ/ዪ</string>
 
   <string name="registrationlocation_screen_title">ናይ ቦታ ሓበሬታ ምርካብ</string>
-  <string name="registrationlocation_skip_permission">ምዝላል</string>
+  <string name="registrationlocation_skip_permission">ዝለል</string>
   <string name="registrationlocation_permission_rationale_description">ዘለኻዮ ቦታ ትካለ ሕክምናኻ ንምርካብ ክሕግዘና’ዩ</string>
   <string name="registrationlocation_permission_rationale_title">ትካል ሕክምናኻ ቀልጢፍካ ርኸብ</string>
   <string name="registrationlocation_allow_access">ቦታ ንምርካብ ፍቓድ ሃብ</string>
@@ -260,8 +262,8 @@
   <string name="overdue_empty_desc">ንምክትታል ፀቕጢ ደም ቆጸራ ተመዲቡሎም ዝነበሩ እሞ ዘይመፅኡ ተሓከምቲ ክትድውለሎም ትኽእል ኢኻ/ኺ።</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
-    <item quantity="one">%s መዓልቲ ደንጉዩ</item>
-    <item quantity="other">%s መዓልታታ ደንጉዩ</item>
+    <item quantity="one">%s ንደንጎየ ብመዓልታት</item>
+    <item quantity="other">%s ብመዓልታት ዝደንጎየ</item>
   </plurals>
   <string name="overdue_list_item_village">ቍሸት</string>
   <string name="overdue_download">ዳውንሎድ</string>
@@ -295,21 +297,21 @@
   <string name="scheduleappointment_done">ተፈፂሙ</string>
   <string name="scheduleappointment_next">ዝቕፅል</string>
   <plurals name="scheduleappointment_appointment_in_days">
-    <item quantity="one">%sመዓልቲ</item>
-    <item quantity="other">%sመዓልታት</item>
+    <item quantity="one">%s መዓልታት</item>
+    <item quantity="other">%s መዓልታት</item>
   </plurals>
   <plurals name="scheduleappointment_appointment_in_weeks">
-    <item quantity="one">%sሰሙን</item>
-    <item quantity="other">%sሰሙናት</item>
+    <item quantity="one">%s ሰሙናት</item>
+    <item quantity="other">%s ሰሙናት</item>
   </plurals>
   <plurals name="scheduleappointment_appointment_in_months">
-    <item quantity="one">%sወርሒ</item>
-    <item quantity="other">%sኣዋርሕ</item>
+    <item quantity="one">%s ኣዋርሕ</item>
+    <item quantity="other">%s ኣዋርሕ</item>
   </plurals>
 
   <!-- Forgot PIN -->
   <string name="forgotpin_create_new_pin">ሓድሽ ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ ፍጠር (ስራሕ)</string>
-  <string name="forgotpin_create_new_pin_invalid_pin">ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ ኣዝዩ ሓፂሩ’ሎ ኣርባዕተ ቁፅርታት ኣእትው/ዊ</string>
+  <string name="forgotpin_create_new_pin_invalid_pin">ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ ኣዝዩ ሓጺሩ’ሎ። ብኽብረትኩም 4 ቁፅርታት ኣእትው።</string>
   <string name="forgotpin_confirm_pin">ንምርግጋፅ ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ መሊስካ/ኪ ዳግማይ ኣእትው/ዊ</string>
   <string name="forgotpin_confirm_pin_message">ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅርኻ/ኺ ንምርግጋፅ ዳግማይ ኣይትው/ዊ</string>
   <string name="forgotpin_error_pin_mismatch">ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ ምስ ናይ መጀመርያ ናይ ውሕስነት ውልቃዊ መለለዪ ቁፅሪ ኣይሰማማዕን’ዩ</string>
@@ -435,7 +437,7 @@
   <string name="selectcountry_logo_contentdescription">ቀሊል ምልክት</string>
   <string name="selectcountry_title">ሃገርካ/ኪ ምረፅ/ፂ</string>
   <string name="selectcountry_networkerror">ኣገልግሎት ኢንተርኔት የለን</string>
-  <string name="selectcountry_servererror">ጌጋ ኣብ ኣሳላጢ (ሰርቨር) ፀኒሕካ/ኪ መሊስካ/ኪ ፈትን/ኒ</string>
+  <string name="selectcountry_servererror">ጌጋ ኣብ ኣሳላጢ ወይ ሰርቨር ፀኒሕካ/ኪ! መሊስካ/ኪ ፈትን/ኒ!</string>
   <string name="selectcountry_genericerror">ዝኾነ ጌጋ ኣጋጢሙ ኣሎ ፀኒሕካ/ኪ መሊስካ/ኪ ፈትን/ኒ</string>
   <string name="selectcountry_retry">መሊስካ/ኪ ፈትን/ኒ</string>
   <string name="scheduleappointment_at">ኣብ</string>
@@ -532,16 +534,16 @@
   <string name="contactpatient_done">ተሰሪሑ</string>
   <string name="contactpatient_result">ውፅኢት</string>
   <plurals name="contactpatient_days">
-    <item quantity="one">%sመዓልቲ</item>
-    <item quantity="other">%sመዓልታት</item>
+    <item quantity="one">%s መዓልታት</item>
+    <item quantity="other">%s መዓልታት</item>
   </plurals>
   <plurals name="contactpatient_weeks">
-    <item quantity="one">%sሰሙን</item>
-    <item quantity="other">%sሰሙናት</item>
+    <item quantity="one">%s ሰሙናት</item>
+    <item quantity="other">%s ሰሙናት</item>
   </plurals>
   <plurals name="contactpatient_months">
-    <item quantity="one">%sወርሒ</item>
-    <item quantity="other">%sኣዋርሕ</item>
+    <item quantity="one">%s ኣዋርሕ</item>
+    <item quantity="other">%s ኣዋርሕ</item>
   </plurals>
   <string name="contactpatient_select_a_reason">ምኽንያት ምረፅ</string>
   <string name="contactpatient_patient_already_visited">ተሓካሚ መሊሱ ዐደት ገይሩ’ሎ</string>
@@ -578,7 +580,7 @@
   <string name="deletereason_confirm_title">ን ተሓካሚ ኣጥፍእ?</string>
   <string name="deletereason_confirm_message">እዚ %1$s ከወግድ እዩ</string>
   <string name="deletereason_confirm_positive">ኣጥፍእ</string>
-  <string name="deletereason_confirm_negative">ሰርዝ</string>
+  <string name="deletereason_confirm_negative"> ሰርዝ</string>
 
   <!-- Splash screen -->
   <string name="screensplash_next">ዝቕፅል</string>
@@ -793,12 +795,12 @@
   <string name="next_appointment_appointment_at_facility">ኣብ %s</string>
   <string name="next_appointment_today">ሎሚ መዓልቲ</string>
   <plurals name="next_appointment_plurals">
-    <item quantity="one">%d መዓልታት</item>
-    <item quantity="other">%d መዓልታት</item>
+    <item quantity="one">%d መዓልቲ</item>
+    <item quantity="other">%d days</item>
   </plurals>
   <plurals name="next_appointment_overdue_plurals">
-    <item quantity="one">%dመዓልታት ዘሕለፈ</item>
-    <item quantity="other">%d መዓልታት ዘሕለፈ</item>
+    <item quantity="one">%d ብመዓልታት ዝደንጎየ</item>
+    <item quantity="other">%d ብመዓልታት ዝደንጎየ</item>
   </plurals>
 
   <!-- App update notification -->
@@ -837,11 +839,45 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">እቲ ሕሙም ኣዘውቲሩ መድሓኒት ዝወስድ እንተ ዀይኑ ነቲ መምርሒ ስዓብ</string>
 
   <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">ንምብጻሕ ተሰማሚዑ</string>
+
+  <string name="call_result_outcome_remind_to_call_later">ን %1$sናይ ጻውዒት መዘከሪ ተዳልዩ</string>
+
+  <string name="call_result_outcome_removed">ዝተወገደ: %1$s</string>
+
+  <string name="call_result_outcome_saved_at">ተዓቂቡ%1$s</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">ብስም ወይ ብቁሸት ድለ</string>
   <string name="overdue_search_hint">ስም ወይ ቁሸት ኣእቱ</string>
   <string name="overdue_search_no_search_results_title">ዋላ ሓደ ሕሙም ኣይተረኽበን</string>
   <string name="overdue_search_no_search_results_desc">ንዅሎም እቶም ግዜኦም ዝሓለፎም ሕሙማት ካብቲ ትደልይዎ ቦታ ኽትርእይዎም ኢኹም</string>
+
+  <!-- Select and download overdue appointments -->
+  <string name="selected_overdue_count">%1$d ተመሪጹ</string>
+  <string name="selected_overdue_clear">ደምስስ</string>
+  <string name="selected_overdue_select_all_appointments">ኩሉ ምረጽ</string>
+
+  <string name="patient_line_list_download_notification_failed_title">ዳውንሎድ ክገብር ወይ ከውርድ ኣይከኣለን</string>
+  <string name="patient_line_list_download_notification_failed_subtitle">ካልእ ግዜ ዳግማይ ሞክሩ</string>
+  <string name="patient_line_list_download_notification_in_progress_title">ዝርዝር መስመር ተሓከምቲ ምውራድ</string>
+  <string name="patient_line_list_download_notification_cancel"> ሰርዝ</string>
+  <string name="patient_line_list_download_notification_succeeded_title">ዳውንሎድ ተገይሩ ወይ ወሪዱ</string>
+  <string name="patient_line_list_download_notification_succeeded_subtitle">ንክኽፈት ጠውቑ</string>
+
+  <string name="select_patient_line_list_download_format_dialog_radio_button_spreadsheet">ዝርጉሕ ቀጸላ</string>
+  <string name="select_patient_line_list_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="select_patient_line_list_download_format_dialog_action_negative"> ሰርዝ</string>
+  <string name="select_patient_line_list_download_format_dialog_title_download">ብኸምዚ መልክዕ ኣውርድ ወይ ዳውንሎድ ግበር</string>
+  <string name="select_patient_line_list_download_format_dialog_action_positive">ዳውንሎድ</string>
+  <string name="patient_line_list_download_card_title">IHCI ናይ ተሓካሚ መዝገብ</string>
+  <string name="patient_line_list_download_card_desc">ናብ %1$s ዝተመደቡ ወይ ዝተመዝገቡ ኩሎም ተሓከምቲ ዘርዝር</string>
+  <string name="patient_line_list_download_card_button">ዳውንሎድ</string>
+
+  <!--Notification permission denied dialog-->
+  <string name="notification_permission_denied_title">መዘኻኸሪታት ወልዕ</string>
+  <string name="notification_permission_denied_message">ኣገደስቲ መዘኻኸሪታት ንከርእየካ ናይ ቀለልቲ ጠልባት ፍቓድ። ኣብ ትሕቲ ፍቓድ ምውላዕ &gt; መተሓሳሰቢ ብምኻድ ፍቓድ ሃብ።</string>
+  <string name="notification_permission_denied_positive_button">ናብ App Settings ኪድ</string>
+  <string name="notification_permission_denied_negetive_button">ሕጂ ኣይኮነን</string>
 
 </resources>

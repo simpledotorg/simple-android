@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+  <string name="app_name">Salphaa</string>
 
   <!-- Common -->
   <string name="gender_female">Dubara</string>
@@ -262,8 +263,8 @@
   <string name="overdue_empty_desc">Dhukkubsattoota sagantaa hordoffii dubbisa dhiibbaa dhiigaa isaanii bilbiluufii ni dandeessa.</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
-    <item quantity="one">Guyyaa %s irra darbe</item>
-    <item quantity="other">Guyyoota %s irra darbe</item>
+    <item quantity="one">%s guyyaa irra darbe</item>
+    <item quantity="other">%s guyyoota irra darbe</item>
   </plurals>
   <string name="overdue_list_item_village">Ganda</string>
   <string name="overdue_download">Buusicha</string>
@@ -297,16 +298,16 @@
   <string name="scheduleappointment_done">Taasifameera</string>
   <string name="scheduleappointment_next">Kan itti aanu</string>
   <plurals name="scheduleappointment_appointment_in_days">
-    <item quantity="one">Guyyaa %s</item>
-    <item quantity="other">Guyyoota %s</item>
+    <item quantity="one">%sguyyaa</item>
+    <item quantity="other">%s guyyoota</item>
   </plurals>
   <plurals name="scheduleappointment_appointment_in_weeks">
-    <item quantity="one">Torban %s</item>
-    <item quantity="other">Torbanoota %s</item>
+    <item quantity="one">%s torban</item>
+    <item quantity="other">%s torbanoota</item>
   </plurals>
   <plurals name="scheduleappointment_appointment_in_months">
-    <item quantity="one">Ji’a %s</item>
-    <item quantity="other">Ji’ota %s</item>
+    <item quantity="one">%s ji\'a</item>
+    <item quantity="other">%s ji\'oota</item>
   </plurals>
 
   <!-- Forgot PIN -->
@@ -534,16 +535,16 @@
   <string name="contactpatient_done">Taasifameera</string>
   <string name="contactpatient_result">Bu\'a</string>
   <plurals name="contactpatient_days">
-    <item quantity="one">Guyyaa %s</item>
-    <item quantity="other">Guyyoota %s</item>
+    <item quantity="one">%s guyyaa</item>
+    <item quantity="other">%s guyyoota</item>
   </plurals>
   <plurals name="contactpatient_weeks">
-    <item quantity="one">Torban %s</item>
-    <item quantity="other">Torbanoota %s</item>
+    <item quantity="one">%s torban</item>
+    <item quantity="other">%s torbanoota</item>
   </plurals>
   <plurals name="contactpatient_months">
-    <item quantity="one">Ji’a %s</item>
-    <item quantity="other">Ji’ota %s</item>
+    <item quantity="one">%s ji\'a</item>
+    <item quantity="other">%s ji\'oota</item>
   </plurals>
   <string name="contactpatient_select_a_reason">Sababa filadhu</string>
   <string name="contactpatient_patient_already_visited">Dhukkubsataan sirumaa daawwatameera</string>
@@ -652,8 +653,8 @@
   <string name="view_teleconsult_medicines_edit">Gulaali</string>
   <string name="view_teleconsult_medicines_required_error">Xiqqatu dawaa tokko dabali</string>
   <plurals name="list_item_teleconsult_medicine_duration">
-    <item quantity="one">%1$s day</item>
-    <item quantity="other">%1$s Guyyoota</item>
+    <item quantity="one">%1$s guyyaa</item>
+    <item quantity="other">%1$s guyyoota</item>
   </plurals>
 
   <!-- Teleconsult Doctor Info View -->
@@ -795,12 +796,12 @@
   <string name="next_appointment_appointment_at_facility">%stti</string>
   <string name="next_appointment_today">Har’a</string>
   <plurals name="next_appointment_plurals">
-    <item quantity="one">%dguyyoota</item>
+    <item quantity="one">%d guyyaa</item>
     <item quantity="other">%d guyyoota</item>
   </plurals>
   <plurals name="next_appointment_overdue_plurals">
-    <item quantity="one">Guyyaa %d irra darbe</item>
-    <item quantity="other">%d guyyoonni kan irra darbe</item>
+    <item quantity="one">%dguyyaa irra darbe</item>
+    <item quantity="other">%d guyyoota irra darban</item>
   </plurals>
 
   <!-- App update notification -->
@@ -840,11 +841,45 @@ Appilikeeshinii Simple keessan Google PlayStore irraa haaromsadhaa.</string>
   <string name="clinical_decision_support_alert_bp_high_subtitle">Akka dhukkubsataan seeraan qoricha isaanii fudhachaa jiran hordofaa.</string>
 
   <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">Ilaaludhaaf waliigaleera</string>
+
+  <string name="call_result_outcome_remind_to_call_later">Yaadachiisni bilbilaa gaafa %1$s irratti ta\'eera</string>
+
+  <string name="call_result_outcome_removed">Yaadachiifameera: %1$s</string>
+
+  <string name="call_result_outcome_saved_at">%1$sol kaa\'ameera</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">Maqaadhaan ykn gandaan barbaadi</string>
   <string name="overdue_search_hint">Maqaa ykn ganda galchi</string>
   <string name="overdue_search_no_search_results_title">Dhukkubsataan hin argamne</string>
   <string name="overdue_search_no_search_results_desc">Dhukkubsatoota yeroon irra darbe barbaacha kee keessaa asii argatta</string>
+
+  <!-- Select and download overdue appointments -->
+  <string name="selected_overdue_count">%1$dfilatameera</string>
+  <string name="selected_overdue_clear">QULQULLEESSI</string>
+  <string name="selected_overdue_select_all_appointments">HUNDAA FILADHU</string>
+
+  <string name="patient_line_list_download_notification_failed_title">Buusuun in kufe</string>
+  <string name="patient_line_list_download_notification_failed_subtitle">Yeroo xiqqoo booda shaakalaa</string>
+  <string name="patient_line_list_download_notification_in_progress_title">Tarree sarara dhukkubsataa buusuu</string>
+  <string name="patient_line_list_download_notification_cancel">Adda kuti</string>
+  <string name="patient_line_list_download_notification_succeeded_title">Buusuun raawwateera</string>
+  <string name="patient_line_list_download_notification_succeeded_subtitle">Banuuf cuqaasaa</string>
+
+  <string name="select_patient_line_list_download_format_dialog_radio_button_spreadsheet">Spreadsheet</string>
+  <string name="select_patient_line_list_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="select_patient_line_list_download_format_dialog_action_negative">Adda kuti</string>
+  <string name="select_patient_line_list_download_format_dialog_title_download">Bifa ittiin buustan filadhaa</string>
+  <string name="select_patient_line_list_download_format_dialog_action_positive">Buusicha</string>
+  <string name="patient_line_list_download_card_title">Galmeessa dhukkubsataa IHCI</string>
+  <string name="patient_line_list_download_card_desc">Tarree dhukkubsattoota galmaa\'anii ykn %1$stti kennamanii</string>
+  <string name="patient_line_list_download_card_button">Buusicha</string>
+
+  <!--Notification permission denied dialog-->
+  <string name="notification_permission_denied_title">Yaadachiisa ibsi</string>
+  <string name="notification_permission_denied_message">Simple si yaadachiisudhaaf hayyama qabaachuu barbaada. Hayyamawwanii &gt; Yaadachiisuttuwwan jalatti ibsi</string>
+  <string name="notification_permission_denied_positive_button">GARA TEESSOO APPIITTI JIJJIIRI</string>
+  <string name="notification_permission_denied_negetive_button">AMMA MITI</string>
 
 </resources>

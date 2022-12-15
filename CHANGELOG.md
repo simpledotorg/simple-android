@@ -6,6 +6,7 @@
 
 - Remove `app_name` form translated strings and make it untranslatable
 - Updated translations: `so_ET`
+- Remove `CommitAndPush` script
 
 ## 2022-12-12-8539
 

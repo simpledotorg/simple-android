@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+  <string name="app_name">ቀላል</string>
 
   <!-- Common -->
   <string name="gender_female">ሴት</string>
@@ -78,7 +79,7 @@
   <string name="patiententry_error_dateofbirth_is_in_future">የታካሚውን የትውልድ ቀን ያስተካክሉ</string>
   <string name="patiententry_error_phonenumber_blank">የስልክ ቁጥር ባዶ ልሆን አይችልም</string>
   <string name="patiententry_error_phonenumber_length_less">የስልክ ቁጥር ከ %1$s ዲጂቶች በታች መሆን አይችልም</string>
-  <string name="patiententry_identifier_bp_passport">የደም ግፊት ፓስፖርት</string>
+  <string name="patiententry_identifier_bp_passport">የቢፒ ፓስፖርት</string>
   <string name="patiententry_consent_header">ስምምነት:\u0020</string>
   <string name="patiententry_consent_first_para">ከዚህ በታች መታ በማድረግ እዚህ ያስገቡት ማንኛውም የታካሚ መረጃ በተገቢው በተረጋገጠ ስምምነት የተገኘ መሆኑን ያረጋግጣሉ። ይህ ማለት ታካሚው ወይም የታካሚው ሞግዚት የግል መረጃ ወደ መተግበሪያው ውስጥ እንደሚገቡ ያውቃሉ፣ ምን መረጃ እየተሰበሰበ እንዳለ ይገነዘባሉ፣ እንዲሁም በመተግበሪያው ውስጥ የሚገኘውን የስልክ ቁጥር በመጠቀም በኤስኤምኤስ፣ በ WhatsApp ወይም በሌሎች መንገዶች ሊገናኙ እንደሚችሉ ያውቃሉ።</string>
   <string name="patiententry_consent_second_para">እርስዎ የፈቀዱለት ማንኛውም ሰው ወይም እርስዎ የሚሰሩለት የጤና ባለሙያ ፤ እዚህ ያስገቡትን የታካሚ መረጃዎች ማግኘት ይችላል። መተግበሪያውን በመጠቀም ታካሚው ወይም የታካሚው ሞግዚት በዚህ መተግበሪያ አማካኝነት የተገኘውን መረጃ ማን መድረስ እንደሚችል መገንዘባቸውን እና ተሰማሚነታቸውን አረጋግጠዋል።</string>
@@ -89,7 +90,7 @@
   <string name="patiententry_town_area">ከተማ / አከባቢ</string>
   <string name="patiententry_province">ግዛት</string>
 
-  <string name="patientedit_save_patient">አስቀምጥ</string>
+  <string name="patientedit_save_patient">ሴቭ</string>
   <string name="patientedit_bp_passports_label">የደም ግፊት ፓስፖርቶች</string>
   <string name="patientedit_confirm_discard_title">ለውጦች ይወገዱ?</string>
   <string name="patientedit_confirm_discard_ok">ይወገዱ</string>
@@ -155,7 +156,7 @@
   <string name="patientsummary_prescriptions_add">መድኃኒቶች</string>
   <string name="patientsummary_prescriptions_update">መድኃኒቶችን ያርትዑ</string>
   <string name="patientsummary_bp_add_new">ደም ግፊት</string>
-  <string name="patientsummary_finish_saving_patient">ሴቭ ያድርጉ</string>
+  <string name="patientsummary_finish_saving_patient">ሴቭ</string>
   <string name="patientsummary_finish_refill_medicine">መድኃኒት እንደገና ይሙሉ</string>
   <string name="patientsummary_bp_none_added">ምንም የደም ግፊት አልገባም</string>
   <string name="patientsummary_edit">ያርትዑ ወይም ያስተካክሉ</string>
@@ -261,8 +262,8 @@
   <string name="overdue_empty_desc">ለቀጣይ የደም ግፊት ንባብ መርሃግብር ተቀጥረው ያልመጡትን ታካሚዎችመደወል ይችላሉ</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
-    <item quantity="one">%s ቀን አልduል</item>
-    <item quantity="other">%s ቀናት ጊዜው አልፎበታል</item>
+    <item quantity="one">%s ያለፈበት ቀን</item>
+    <item quantity="other">%s ያለፈባቸው ቀናቶች</item>
   </plurals>
   <string name="overdue_list_item_village">መንደር</string>
   <string name="overdue_download">አውርድ</string>
@@ -300,11 +301,11 @@
     <item quantity="other">%s ቀናት</item>
   </plurals>
   <plurals name="scheduleappointment_appointment_in_weeks">
-    <item quantity="one">%sሳምንት</item>
+    <item quantity="one">%s ሳምንት</item>
     <item quantity="other">%s ሳምንታት</item>
   </plurals>
   <plurals name="scheduleappointment_appointment_in_months">
-    <item quantity="one">%sወር</item>
+    <item quantity="one">%s ወር</item>
     <item quantity="other">%s ወራት</item>
   </plurals>
 
@@ -313,7 +314,7 @@
   <string name="forgotpin_create_new_pin_invalid_pin">PIN በጣም አጭር ነው። እባክዎ 4 ቁጥሮች ያስገቡ።</string>
   <string name="forgotpin_confirm_pin">የደህንነት PIN እንደገና ያስገቡ</string>
   <string name="forgotpin_confirm_pin_message">እሱን ለማረጋገጥ PINዎን እንደገና ያስገቡ</string>
-  <string name="forgotpin_error_pin_mismatch">PIN ከዋናው ፒን ጋር አይዛመድም</string>
+  <string name="forgotpin_error_pin_mismatch">ፒኑ ከዋናው ፒን ጋር አይዛመድም</string>
 
   <!-- Reports -->
   <string name="reports_come_back_later">በኋላ ተመልሰው ይምጡ</string>
@@ -335,7 +336,7 @@
   <string name="newmedicalhistory_next">ቀጣይ</string>
   <string name="newmedicalhistory_yes">አዎ</string>
   <string name="newmedicalhistory_no">አይ</string>
-  <string name="newmedicalhistory_history">ታሪክ</string>
+  <string name="newmedicalhistory_history">ታሪክ </string>
   <string name="medicalhistory_question_is_on_hypertension_treatment">ባለፈው ወር ውስጥ ህመምተኞው በማንኛውም ጊዜ የBP መድሃኒት ወስዷል? (አስፈላጊ)</string>
   <string name="medicalhistory_question_is_on_diabetes_treatment">በሽተኛው ባለፈው ወር ውስጥ የስኳር በሽታ መድኃኒቶችን ወስዶ ነበር? (ያስፈልጋል)</string>
 
@@ -353,7 +354,7 @@
   <string name="scansimpleid_error_state_snackbar_ok">እሺ</string>
   <string name="scansimpleid_identfier_already_exists">መታወቂያ ለሌላ ታካሚ ተሰጥቷል።\nአዲስ የጤና መታወቂያ ይቃኙ።</string>
   <string name="scansimpleid_bp_passport_or_national_health_id">BP ፓስፖርት ቁጥር ወይም የብሔራዊ የጤና መታወቂያ</string>
-  <string name="scansimpleid_bp_passport_title">የደም ግፊት ፓስፖርት</string>
+  <string name="scansimpleid_bp_passport_title">የቢፒ ፓስፖርት</string>
   <string name="scansimpleid_national_id_title">ብሔራዊ መታወቂያ ቁጥር</string>
 
   <!--- Sync Indicator-->
@@ -367,7 +368,7 @@
   <string name="syncindicator_dialog_error_server">አሁን አጣማሪ ሰርቨሮች ዝቅ ብለዋል፤ እባክዎን ቆይተው እንደገና ይሞክሩ ወይም ከተቆጣጣሪዎ ጋር ይገናኙ ፡፡</string>
 
   <!-- Help Screen -->
-  <string name="help_title">እርዳታ</string>
+  <string name="help_title">እገዛ</string>
   <string name="help_no_connection">ምንም የበይነመረብ ግንኙነት የለም</string>
   <string name="help_something_went_wrong">የሆነ ስህተት ተከስቷል</string>
   <string name="help_try_again">ድጋሚ ይሞክሩ</string>
@@ -408,8 +409,9 @@
 
   <!-- Simple video -->
   <string name="simple_video_duration">%s ደቂቃዎች</string>
+
   <!-- Settings -->
-  <string name="settings_title">ቅንብሮች ወይም settings</string>
+  <string name="settings_title">ቅንብሮች</string>
   <string name="settings_user_name_icon_content">የቅንብሮች የተጠቃሚ ስም ምልክት ወይም icon</string>
   <string name="settings_user_phone_icon_content">የቅንብሮች ተጠቃሚ ስልክ ቁጥር ምልክት ወይም icon</string>
   <string name="settings_current_language_icon_content">የቅንብሮች የአሁን ቋንቋ ምልክት</string>
@@ -536,12 +538,12 @@
     <item quantity="other">%s ቀናት</item>
   </plurals>
   <plurals name="contactpatient_weeks">
-    <item quantity="one">%sሳምንት</item>
+    <item quantity="one">%s ሳምንት</item>
     <item quantity="other">%s ሳምንታት</item>
   </plurals>
   <plurals name="contactpatient_months">
-    <item quantity="one">%sወር</item>
-    <item quantity="other">%s ወራት</item>
+    <item quantity="one">%s ወር</item>
+    <item quantity="other">%sወራቶች</item>
   </plurals>
   <string name="contactpatient_select_a_reason">ምክንያት ይምረጡ</string>
   <string name="contactpatient_patient_already_visited">ህመምተኛው ቀድሞውኑ ጎብኝቷል</string>
@@ -650,7 +652,7 @@
   <string name="view_teleconsult_medicines_edit">ያርትዑ ወይም ያስተካክሉ</string>
   <string name="view_teleconsult_medicines_required_error">Xiqqatu dawaa tokko dabali</string>
   <plurals name="list_item_teleconsult_medicine_duration">
-    <item quantity="one">%1$s day</item>
+    <item quantity="one">%1$s ቀን</item>
     <item quantity="other">%1$s ቀናት</item>
   </plurals>
 
@@ -797,8 +799,8 @@
     <item quantity="other">%d ቀናት</item>
   </plurals>
   <plurals name="next_appointment_overdue_plurals">
-    <item quantity="one">%d ቀን አልduል</item>
-    <item quantity="other">%d ቀናት ጊዜው አልፎበታል</item>
+    <item quantity="one">%dቀን ያለፈበት</item>
+    <item quantity="other">%d ያለፈባቸው ቃናቶች</item>
   </plurals>
 
   <!-- App update notification -->
@@ -838,11 +840,45 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">ሕመምተኛው አዘውትሮ መድሃኒቶቹን የሚወስድ ከሆነ ፕሮቶኮልን ይከተሉ</string>
 
   <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">ለመጎብኘት ተስማምተዋል።</string>
+
+  <string name="call_result_outcome_remind_to_call_later">የ%1$s ጥሪ አስታዋሽ ተቀናብሯል።</string>
+
+  <string name="call_result_outcome_removed">ተወግዷል፡ %1$s</string>
+
+  <string name="call_result_outcome_saved_at">%1$s ተቀምጧል</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">በስም ወይም በመንደር ይፈልጉ</string>
   <string name="overdue_search_hint">ስም ወይም መንደር ያስገቡ</string>
   <string name="overdue_search_no_search_results_title">ምንም ሕመምተኞች አልተገኙም።</string>
   <string name="overdue_search_no_search_results_desc">ከፍለጋህ ሁሉንም ያለፈባቸው ታካሚዎች እዚህ ታያለህ</string>
+
+  <!-- Select and download overdue appointments -->
+  <string name="selected_overdue_count">%1$d ተመርጧል</string>
+  <string name="selected_overdue_clear">ያጽዱ</string>
+  <string name="selected_overdue_select_all_appointments">ሁሉንም ምረጥ</string>
+
+  <string name="patient_line_list_download_notification_failed_title">ማውረድ አልተሳካም።</string>
+  <string name="patient_line_list_download_notification_failed_subtitle">ከተወሰነ ጊዜ በኋላ እንደገና ይሞክሩ</string>
+  <string name="patient_line_list_download_notification_in_progress_title">የታካሚ መስመር ዝርዝር በማውረድ ላይ</string>
+  <string name="patient_line_list_download_notification_cancel">ይቅር</string>
+  <string name="patient_line_list_download_notification_succeeded_title">ማውረድ ተጠናቅቋል</string>
+  <string name="patient_line_list_download_notification_succeeded_subtitle">ለመክፈት ጠቅ ያድርጉ</string>
+
+  <string name="select_patient_line_list_download_format_dialog_radio_button_spreadsheet">ሉህ</string>
+  <string name="select_patient_line_list_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="select_patient_line_list_download_format_dialog_action_negative">ይቅር</string>
+  <string name="select_patient_line_list_download_format_dialog_title_download">አውርድ እንደ</string>
+  <string name="select_patient_line_list_download_format_dialog_action_positive">አውርድ</string>
+  <string name="patient_line_list_download_card_title">የ IHCI ታካሚ ምዝገባ</string>
+  <string name="patient_line_list_download_card_desc">የተመዘገቡ ወይም  ወደ %1$s የተመደቡ የሁሉም ታካሚዎች ዝርዝር</string>
+  <string name="patient_line_list_download_card_button">አውርድ</string>
+
+  <!--Notification permission denied dialog-->
+  <string name="notification_permission_denied_title">ማሳወቂያዎችን ያብሩ</string>
+  <string name="notification_permission_denied_message">ቀላል አስፈላጊ አስታዋሾችን ለእርስዎ ለማሳየት ፍቃድ ይፈልጋል።በፍቃዶች ስር ያብሩ &gt; ማሳወቂያዎች</string>
+  <string name="notification_permission_denied_positive_button">ወደ የመተግበሪያ ቅንብሮች ይሂዱ</string>
+  <string name="notification_permission_denied_negetive_button">አሁን አይደለም</string>
 
 </resources>

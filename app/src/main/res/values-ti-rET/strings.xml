@@ -1,5 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+  <string name="app_name">ቀሊል</string>
+
   <!-- Common -->
   <string name="gender_female">ኣንስተይቲ</string>
   <string name="gender_male">ተባዕታይ</string>
@@ -197,6 +199,17 @@
   <string name="patient_prescribeddrugs_screen_title">መድሓኒታት</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">ካልእ መድሓኒት ወስኽ</string>
 
+  <string name="customprescription_enter_medicine">መድሓኒት ኣእትው/ዊ</string>
+  <string name="customprescription_edit_medicine">መድሃኒት ኣሪምካ/ኪ ጽሓፍ/ፊ</string>
+  <string name="customprescription_save_drug">ምዕቃብ</string>
+  <string name="customprescription_drug_name_hint">ሽም መድሃኒት</string>
+  <string name="customprescription_drug_dosage_hint">መጠን</string>
+
+  <string name="customprescription_delete_title">መድሓኒት ሰርዝ</string>
+  <string name="customprescription_delete_message">ነዚ መድሃኒት ንምስራዝ ርግፀኛ ዲኻ/ኺ?</string>
+  <string name="customprescription_delete_confirm">ምልጋስ </string>
+  <string name="customprescription_delete_cancel">ሰርዝ</string>
+
   <!-- Login -->
   <string name="loginpin_go_back">ናብ ናይ ስልኪ ቁፅሪ ስክሪን ተመለስ</string>
 
@@ -264,6 +277,7 @@
     <item quantity="other">%s መዓልታታ ደንጉዩ</item>
   </plurals>
   <string name="overdue_list_item_village">ቍሸት</string>
+  <string name="overduelist_high_risk">ልዑል ስግኣት</string>
   <string name="overdue_download">ዳውንሎድ</string>
   <string name="overdue_share">ኣካፍል</string>
   <string name="overdue_no_pending_patients">ዝጽበዩ ሕሙማት የለውን</string>
@@ -407,6 +421,8 @@
 
   <!-- Simple video -->
   <string name="simple_video_duration">%s ደቓይቕ</string>
+  <string name="simple_video_watch">ቪድዮ ተመልከት</string>
+  <string name="simple_video_how_to_use">ነዛ ኣፕሊኬሽን እዚኣ ብኸመይ ከም እትጥቀመላ</string>
 
   <!-- Settings -->
   <string name="settings_title">መቓን</string>
@@ -837,6 +853,11 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">እቲ ሕሙም ኣዘውቲሩ መድሓኒት ዝወስድ እንተ ዀይኑ ነቲ መምርሒ ስዓብ</string>
 
   <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">ምልክት ዝተገበረሉ \'ክበጽሖ ፍቓደኛ</string>
+
+  <string name="call_result_outcome_remind_to_call_later">ምልክት ዝተገበረሉ \'ንኽትጽውዕ ተዘኻኽር\'</string>
+
+  <string name="call_result_outcome_removed">ዝተወገደ: %1$s</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">ብስም ወይ ብቁሸት ድለ</string>

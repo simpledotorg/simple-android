@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+  <string name="app_name">সিম্পিল</string>
 
   <!-- Common -->
   <string name="gender_female">মহিলা</string>
@@ -198,6 +199,17 @@
   <string name="patient_prescribeddrugs_screen_title">ওষুধপত্র</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">অন্য একটি ওষুধ যোগ করুন</string>
 
+  <string name="customprescription_enter_medicine">ওষুধের নাম লিখুন</string>
+  <string name="customprescription_edit_medicine">ওষুধের নাম সম্পাদনা করুন</string>
+  <string name="customprescription_save_drug">সংরক্ষণ করুন</string>
+  <string name="customprescription_drug_name_hint">ওষুধের নাম</string>
+  <string name="customprescription_drug_dosage_hint">ওষুধের মাত্রা</string>
+
+  <string name="customprescription_delete_title">ওষুধটি অপসারণ করুন</string>
+  <string name="customprescription_delete_message">আপনি কি এই ওষুধটি অপসারণ করার বিষয়ে নিশ্চিত?</string>
+  <string name="customprescription_delete_confirm">অপসারণ করুন</string>
+  <string name="customprescription_delete_cancel">বাতিল করুন</string>
+
   <!-- Login -->
   <string name="loginpin_go_back">আপনার ফোন নম্বর স্ক্রিনে ফিরুন</string>
 
@@ -265,6 +277,7 @@
     <item quantity="other">%s দিন আগে সময় পার হয়ে গেছে</item>
   </plurals>
   <string name="overdue_list_item_village">গ্রাম</string>
+  <string name="overduelist_high_risk">অতিরিক্ত ঝুঁকি</string>
   <string name="overdue_download">ডাউনলোড করুন</string>
   <string name="overdue_share">ভাগ করুন</string>
   <string name="overdue_no_pending_patients">কোনো অপেক্ষারত রোগী নেই</string>
@@ -408,6 +421,8 @@
 
   <!-- Simple video -->
   <string name="simple_video_duration">%s মিনিট</string>
+  <string name="simple_video_watch">ভিডিও দেখুন</string>
+  <string name="simple_video_how_to_use">এই অ্যাপটি কীভাবে ব্যবহার করবেন</string>
 
   <!-- Settings -->
   <string name="settings_title">সেটিংস</string>
@@ -838,45 +853,16 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">রোগী নিয়মিত তার ওষুধ গ্রহণ করলে প্রোটোকল অনুসরণ করুন</string>
 
   <!-- Call Result Outcome Message -->
-  <string name="call_result_outcome_agreed_to_visit">দেখা করতে রাজি হয়েছেন</string>
+  <string name="call_result_outcome_agreed_to_visit">\'সাক্ষাতের জন্য রাজি হয়েছে\' হিসেবে চিহ্নিত করা হয়েছে</string>
 
-  <string name="call_result_outcome_remind_to_call_later">%1$s এর জন্য কল রিমাইন্ডার সেট করা হয়েছে</string>
+  <string name="call_result_outcome_remind_to_call_later">\'কল করার জন্য মনে করিয়ে দিন\' হিসেবে চিহ্নিত করা হয়েছে</string>
 
   <string name="call_result_outcome_removed">মুছে ফেলা হয়েছে: %1$s</string>
-
-  <string name="call_result_outcome_saved_at">সংরক্ষিত %1$s</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">নাম অথবা গ্রাম দিয়ে অনুসন্ধান করুন</string>
   <string name="overdue_search_hint">নাম অথবা গ্রাম লিখুন</string>
   <string name="overdue_search_no_search_results_title">কোনো রোগী পাওয়া যায়নি</string>
   <string name="overdue_search_no_search_results_desc">আপনি আপনার অনুসন্ধানকৃত সকল বিলম্বকারী রোগীদের এখানে দেখতে পাবেন</string>
-
-  <!-- Select and download overdue appointments -->
-  <string name="selected_overdue_count">%1$d নির্বাচন করা হয়েছে</string>
-  <string name="selected_overdue_clear">পরিষ্কার করুন</string>
-  <string name="selected_overdue_select_all_appointments">সব নির্বাচন করুন</string>
-
-  <string name="patient_line_list_download_notification_failed_title">ডাউনলোড ব্যর্থ যায়নি</string>
-  <string name="patient_line_list_download_notification_failed_subtitle">কিছু সময়ের মধ্যে আবার চেষ্টা করুন</string>
-  <string name="patient_line_list_download_notification_in_progress_title">রোগীর লাইনের তালিকা ডাউনলোড করা হচ্ছে</string>
-  <string name="patient_line_list_download_notification_cancel">বাতিল করুন</string>
-  <string name="patient_line_list_download_notification_succeeded_title">ডাউনলোড সম্পূর্ণ হয়েছে</string>
-  <string name="patient_line_list_download_notification_succeeded_subtitle">খুলতে ক্লিক করুন</string>
-
-  <string name="select_patient_line_list_download_format_dialog_radio_button_spreadsheet">স্প্রেডশীট</string>
-  <string name="select_patient_line_list_download_format_dialog_radio_button_pdf">PDF</string>
-  <string name="select_patient_line_list_download_format_dialog_action_negative">বাতিল করুন</string>
-  <string name="select_patient_line_list_download_format_dialog_title_download">এই হিসাবে ডাউনলোড করুন</string>
-  <string name="select_patient_line_list_download_format_dialog_action_positive">ডাউনলোড করুন</string>
-  <string name="patient_line_list_download_card_title">IHCI রোগীর নিবন্ধন</string>
-  <string name="patient_line_list_download_card_desc">%1$s-এ নিবন্ধিত বা অ্যাসাইন করা সমস্ত রোগীর তালিকা</string>
-  <string name="patient_line_list_download_card_button">ডাউনলোড করুন</string>
-
-  <!--Notification permission denied dialog-->
-  <string name="notification_permission_denied_title">বিজ্ঞপ্তি চালু করুন</string>
-  <string name="notification_permission_denied_message">আপনাকে গুরুত্বপূর্ণ রিমাইন্ডার দেখানোর জন্য সিম্পলের অনুমতি প্রয়োজন। অনুমতি &gt; বিজ্ঞপ্তি থেকে চালু করুন</string>
-  <string name="notification_permission_denied_positive_button">অ্যাপ সেটিংসে যান</string>
-  <string name="notification_permission_denied_negetive_button">এখন না</string>
 
 </resources>

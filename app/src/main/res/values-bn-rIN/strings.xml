@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+  <string name="app_name">Simple</string>
 
   <!-- Common -->
   <string name="gender_female">মহিলা</string>
@@ -154,7 +155,7 @@
   <string name="patientsummary_contentdescription_up_button">ফিরে যান</string>
   <string name="patientsummary_prescriptions_add">ওষুধগুলো যোগ করুন</string>
   <string name="patientsummary_prescriptions_update">ওষুধগুলো আপডেট করুন</string>
-  <string name="patientsummary_bp_add_new">নতুন বিপি</string>
+  <string name="patientsummary_bp_add_new">রক্তচাপ</string>
   <string name="patientsummary_finish_saving_patient">সংরক্ষণ করুন</string>
   <string name="patientsummary_finish_refill_medicine">ওষুধ রিফিল করুন</string>
   <string name="patientsummary_bp_none_added">কোন রক্তচাপ যোগ করা হয়নি</string>
@@ -162,14 +163,14 @@
 
   <string name="patientsummary_updatephone_dialog_title">ফোন নম্বর আপডেট করুন</string>
   <string name="patientsummary_updatephone_dialog_message">রোগীর ফোন নম্বর আগে ভুল  হিসাবে চিহ্নিত হয়েছে</string>
-  <string name="patientsummary_updatephone_phone_hint">ফোন নম্বর	</string>
+  <string name="patientsummary_updatephone_phone_hint">ফোন নম্বর</string>
   <string name="patientsummary_updatephone_save">সংরক্ষণ করুন</string>
-  <string name="patientsummary_updatephone_cancel">ছেড়ে যান/ পরেরটায় যান</string>
+  <string name="patientsummary_updatephone_cancel">ছেড়ে যান</string>
   <string name="patientsummary_addphone_dialog_title">ফোন নম্বর আপডেট করুন</string>
   <string name="patientsummary_addphone_dialog_message">রেজিস্ট্রেশনের সময় রোগীর ফোন নম্বর লেখা হয়নি</string>
-  <string name="patientsummary_addphone_phone_hint">ফোন নম্বর	</string>
+  <string name="patientsummary_addphone_phone_hint">ফোন নম্বর</string>
   <string name="patientsummary_addphone_save">সংরক্ষণ করুন</string>
-  <string name="patientsummary_addphone_cancel">ছেড়ে যান/ পরেরটায় যান</string>
+  <string name="patientsummary_addphone_cancel">ছেড়ে যান</string>
   <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
 
   <string name="patientsummary_teleconsult">টেলি-পরামর্শ</string>
@@ -197,6 +198,17 @@
   <!-- Prescribed drugs -->
   <string name="patient_prescribeddrugs_screen_title">ওষুধগুলো যোগ করুন</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">অন্য একটি ওষুধ যোগ করুন</string>
+
+  <string name="customprescription_enter_medicine">ওষুধ লিখুন</string>
+  <string name="customprescription_edit_medicine">ওষুধের নাম সঠিক করুন</string>
+  <string name="customprescription_save_drug">সংরক্ষণ করুন</string>
+  <string name="customprescription_drug_name_hint">ওষুধের নাম</string>
+  <string name="customprescription_drug_dosage_hint">ওষুধের মাত্রা</string>
+
+  <string name="customprescription_delete_title">ওষুধটি অপসারণ করুন</string>
+  <string name="customprescription_delete_message">আপনি কি এই ওষুধটি অপসারণ করতে চাওয়ার বিষয়ে নিশ্চিত?</string>
+  <string name="customprescription_delete_confirm">অপসারণ করুন</string>
+  <string name="customprescription_delete_cancel">বাতিল করুন</string>
 
   <!-- Login -->
   <string name="loginpin_go_back">আপনার ফোন নম্বর স্ক্রিনে ফিরুন</string>
@@ -232,7 +244,7 @@
 
   <string name="registrationpin_pin_label">আপনার সুরক্ষা পিনটি তৈরি করুন</string>
   <string name="registrationpin_pin_hint">আপনার পিনটি মনে রাখবেন, এটি আপনার পরে প্রয়োজন হতে পারে</string>
-  <string name="registrationpin_error_incomplete_pin">পিনটি অত্যন্ত সংক্ষিপ্ত। অনুগ্রহ করে 4টি নতুন নম্বর লিখুন।</string>
+  <string name="registrationpin_error_incomplete_pin">পিনটি অত্যন্ত সংক্ষিপ্ত। অনুগ্রহ করে ৪ (চার) টি নতুন নম্বর লিখুন।</string>
 
   <string name="registrationconfirmpin_confirm_pin_label">সুরক্ষা পিনটি আবার লিখুন</string>
   <string name="registrationconfirmpin_error_pin_mismatch">পিনটি আসল পিনটির সাথে মেলে না</string>
@@ -265,6 +277,7 @@
     <item quantity="other">%s দিন আগে সময় পার হয়ে গেছে</item>
   </plurals>
   <string name="overdue_list_item_village">গ্রাম</string>
+  <string name="overduelist_high_risk">অতিরিক্ত ঝুঁকিসম্পন্ন</string>
   <string name="overdue_download">ডাউনলোড করুন</string>
   <string name="overdue_share">শেয়ার করুন</string>
   <string name="overdue_no_pending_patients">কোনো মুলতুবি রোগী নেই</string>
@@ -368,7 +381,7 @@
 
   <!-- Help Screen -->
   <string name="help_title">সাহায্য</string>
-  <string name="help_no_connection">কোন ইন্টারনেট সংযোগ নেই</string>
+  <string name="help_no_connection">কোনও ইন্টারনেট সংযোগ নেই</string>
   <string name="help_something_went_wrong">কিছু গন্ডগোল হয়েছে</string>
   <string name="help_try_again">আবার চেষ্টা করুন</string>
 
@@ -400,7 +413,7 @@
   <!--Registration loader screen -->
   <string name="registrationloader_error_unexpected_title">কিছু গন্ডগোল হয়েছে</string>
   <string name="registrationloader_error_unexpected_message">অনুগ্রহ করে কিছু সময় পরে আবার চেষ্টা করুন বা আপনার সুপারভাইজারের সাথে যোগাযোগ করুন৷</string>
-  <string name="registrationloader_error_internet_connection_title">কোন ইন্টারনেট সংযোগ নেই</string>
+  <string name="registrationloader_error_internet_connection_title">কোনও ইন্টারনেট সংযোগ নেই</string>
   <!--suppress UnusedResources -->
   <string name="registrationloader_retry">আবার চেষ্টা করুন</string>
 
@@ -408,6 +421,8 @@
 
   <!-- Simple video -->
   <string name="simple_video_duration">%s মিনিট</string>
+  <string name="simple_video_watch">ভিডিও দেখুন</string>
+  <string name="simple_video_how_to_use">এই অ্যাপটি কীভাবে ব্যবহার করবেন</string>
 
   <!-- Settings -->
   <string name="settings_title">সেটিংস</string>
@@ -416,7 +431,7 @@
   <string name="settings_current_language_icon_content">বর্তমান ভাষা সেটিংস</string>
   <string name="settings_app_version_icon_content">সেটিংস অ্যাপ সংস্করণ আইকন</string>
   <string name="settings_name">নাম</string>
-  <string name="settings_number">ফোন নম্বর	</string>
+  <string name="settings_number">ফোন নম্বর</string>
   <string name="settings_language">ভাষা</string>
   <string name="settings_change">পরিবর্তন</string>
   <string name="settings_language_hint">ভাষা নির্বাচন করুন</string>
@@ -479,13 +494,13 @@
 
   <!-- Blood Sugar Summary view -->
   <string name="bloodsugarsummaryview_no_blood_sugars">কোনও ব্লাড সুগার যোগ করা হয়নি</string>
-  <string name="bloodsugarsummaryview_add_blood_sugar_button">ডায়াবেটিস আছে</string>
+  <string name="bloodsugarsummaryview_add_blood_sugar_button">ডায়াবেটিস</string>
   <!-- Blood Pressure History screen -->
   <string name="bloodpressurehistory_add_bp_button">নতুন বিপি</string>
   <string name="bloodpressurehistory_toolbar_title">%1$s, %2$s, %3$s</string>
 
   <!-- Blood Sugar History screen -->
-  <string name="bloodsugarhistory_add_blood_sugar_button">ডায়াবেটিস আছে</string>
+  <string name="bloodsugarhistory_add_blood_sugar_button">ডায়াবেটিস</string>
   <string name="bloodsugarhistory_toolbar_title">%1$s, %2$s, %3$s</string>
 
   <!-- Summary CV History view -->
@@ -530,7 +545,7 @@
   <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
   <string name="contactpatient_call_later_in">পরে ফোন করুন</string>
   <string name="contactpatient_change">পরিবর্তন</string>
-  <string name="contactpatient_done">সম্পন্ন</string>
+  <string name="contactpatient_done">সম্পন্ন হয়েছে</string>
   <string name="contactpatient_result">ফলাফল</string>
   <plurals name="contactpatient_days">
     <item quantity="one">%s দিন</item>
@@ -838,45 +853,16 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">রোগী নিয়মিত তার ওষুধ গ্রহণ করলে প্রোটোকল অনুসরণ করুন</string>
 
   <!-- Call Result Outcome Message -->
-  <string name="call_result_outcome_agreed_to_visit">ভিজিট করতে সম্মত হয়েছি</string>
+  <string name="call_result_outcome_agreed_to_visit">\'পরিদর্শনে সম্মত\'-এ চিহ্নিত করা হয়েছে</string>
 
-  <string name="call_result_outcome_remind_to_call_later">%1$s-এর জন্য কল রিমাইন্ডার সেট করা হয়েছে</string>
+  <string name="call_result_outcome_remind_to_call_later">\'কল করতে মনে করিয়ে দিন\'-এ চিহ্নিত করা হয়েছে</string>
 
   <string name="call_result_outcome_removed">সরানো হয়েছে: %1$s</string>
-
-  <string name="call_result_outcome_saved_at">%1$s সেভ করা হয়েছে</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">নাম বা গ্রাম দ্বারা অনুসন্ধান করুন</string>
   <string name="overdue_search_hint">নাম বা গ্রাম লিখুন</string>
   <string name="overdue_search_no_search_results_title">কোনো রোগী পাওয়া যায়নি</string>
   <string name="overdue_search_no_search_results_desc">আপনি এখানে আপনার অনুসন্ধান থেকে সমস্ত পরিশোধ সময়াতীত রোগী দেখতে পাবেন</string>
-
-  <!-- Select and download overdue appointments -->
-  <string name="selected_overdue_count">%1$d নির্বাচন করা হয়েছে</string>
-  <string name="selected_overdue_clear">মুছুন</string>
-  <string name="selected_overdue_select_all_appointments">সব বাছুন</string>
-
-  <string name="patient_line_list_download_notification_failed_title">ডাউনলোড ব্যর্থ হয়েছে</string>
-  <string name="patient_line_list_download_notification_failed_subtitle">কিছু সময়ের মধ্যে আবার চেষ্টা করুন</string>
-  <string name="patient_line_list_download_notification_in_progress_title">রোগীর লাইন তালিকা ডাউনলোড করা হচ্ছে</string>
-  <string name="patient_line_list_download_notification_cancel">বাতিল করুন</string>
-  <string name="patient_line_list_download_notification_succeeded_title">ডাউনলোড সম্পূর্ণ হয়েছে</string>
-  <string name="patient_line_list_download_notification_succeeded_subtitle">খুলতে ক্লিক করুন</string>
-
-  <string name="select_patient_line_list_download_format_dialog_radio_button_spreadsheet">স্প্রেডশীট</string>
-  <string name="select_patient_line_list_download_format_dialog_radio_button_pdf">PDF</string>
-  <string name="select_patient_line_list_download_format_dialog_action_negative">বাতিল করুন</string>
-  <string name="select_patient_line_list_download_format_dialog_title_download">এই হিসাবে ডাউনলোড করুন</string>
-  <string name="select_patient_line_list_download_format_dialog_action_positive">ডাউনলোড করুন</string>
-  <string name="patient_line_list_download_card_title">IHCI রোগীর রেজিস্টার</string>
-  <string name="patient_line_list_download_card_desc">%1$s-এ রেজিস্টার অথবা অ্যাসাইন করা সব রোগীর তালিকা</string>
-  <string name="patient_line_list_download_card_button">ডাউনলোড করুন</string>
-
-  <!--Notification permission denied dialog-->
-  <string name="notification_permission_denied_title">বিজ্ঞপ্তি চালু করুন</string>
-  <string name="notification_permission_denied_message">আপনাকে গুরুত্বপূর্ণ রিমাইন্ডার দেখাতে \'সিম্পেল\'-এর অনুমতি প্রয়োজন। \'অনুমতি &gt; বিজ্ঞপ্তি\'-এ চালু করুন</string>
-  <string name="notification_permission_denied_positive_button">\'অ্যাপ সেটিংস\'-এ যান</string>
-  <string name="notification_permission_denied_negetive_button">এখন না</string>
 
 </resources>

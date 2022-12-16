@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+  <string name="app_name">Simple</string>
 
   <!-- Common -->
   <string name="gender_female">ස්ත්‍රී</string>
@@ -198,6 +199,17 @@
   <string name="patient_prescribeddrugs_screen_title">ඖෂධ</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">තවත් ඖෂධයක් එකතු කරන්න</string>
 
+  <string name="customprescription_enter_medicine">ඖෂධය ඇතුළු කරන්න</string>
+  <string name="customprescription_edit_medicine">ඖෂධය සංස්කරණය කරන්න</string>
+  <string name="customprescription_save_drug">සුරකින්න</string>
+  <string name="customprescription_drug_name_hint">ඖෂධයේ නම</string>
+  <string name="customprescription_drug_dosage_hint">මාත්‍රාව</string>
+
+  <string name="customprescription_delete_title">ඖෂධය ඉවත් කරන්න</string>
+  <string name="customprescription_delete_message">ඔබට මෙම ඖෂධය ඉවත් කිරීමට අවශ්‍ය බව විශ්වාස ද?</string>
+  <string name="customprescription_delete_confirm">ඉවත් කරන්න</string>
+  <string name="customprescription_delete_cancel">අවලංගු කරන්න</string>
+
   <!-- Login -->
   <string name="loginpin_go_back">දුරකතන අංක තිරයට ආපසු යන්න</string>
 
@@ -261,10 +273,11 @@
   <string name="overdue_empty_desc">රුධිර පීඩනය බැලීමේ පසු විපරම් හමුව මඟ හැරුණු රෝගීන්ට ඇමතීමට ඔබට හැකි වනු ඇත.</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
-    <item quantity="one">දින %s ක කාලයක් ඉකුත් වී ඇත</item>
-    <item quantity="other">දින %s ක කාලයක් ඉකුත් වී ඇත</item>
+    <item quantity="one">දිනය %s කල් ඉකුත් වී ඇත</item>
+    <item quantity="other">දින %s ක් ඉකුත් වී ඇත</item>
   </plurals>
   <string name="overdue_list_item_village">ගම</string>
+  <string name="overduelist_high_risk">ඉහළ අවදානම</string>
   <string name="overdue_download">බාගත කිරීම</string>
   <string name="overdue_share">බෙදා ගැනීම</string>
   <string name="overdue_no_pending_patients">රෝගීන් රැඳී නොසිටී</string>
@@ -296,15 +309,15 @@
   <string name="scheduleappointment_done">අවසන්</string>
   <string name="scheduleappointment_next">ඊළඟ</string>
   <plurals name="scheduleappointment_appointment_in_days">
-    <item quantity="one">දිනය %s</item>
+    <item quantity="one">දින %s</item>
     <item quantity="other">දින %s</item>
   </plurals>
   <plurals name="scheduleappointment_appointment_in_weeks">
-    <item quantity="one">සතිය %s</item>
+    <item quantity="one">සති %s</item>
     <item quantity="other">සති %s</item>
   </plurals>
   <plurals name="scheduleappointment_appointment_in_months">
-    <item quantity="one">මාසය %s</item>
+    <item quantity="one">මාස %s</item>
     <item quantity="other">මාස %s</item>
   </plurals>
 
@@ -313,7 +326,7 @@
   <string name="forgotpin_create_new_pin_invalid_pin">පුද්ගලික හඳුනා ගැනීමේ අංකය (PIN) ඉතා කෙටිය. කරුණාකර අංක 4ක් ඇතුළත් කරන්න.</string>
   <string name="forgotpin_confirm_pin">පුද්ගලික හඳුනා ගැනීමේ අංකය (PIN) නැවත ඇතුළත් කරන්න</string>
   <string name="forgotpin_confirm_pin_message">තහවුරු කිරීමට නැවත පුද්ගලික හඳුනා ගැනීමේ අංකය (PIN) ඇතුළු කරන්න</string>
-  <string name="forgotpin_error_pin_mismatch">ඇතුලත් කළ පුද්ගලික හඳුනා ගැනීමේ අංකය මින් පෙර ඇතුලත් කළ පුද්ගලික හඳුනා ගැනීමේ අංකය සමඟ නොගැලපේ</string>
+  <string name="forgotpin_error_pin_mismatch">PIN මුල් PIN හා නොගැලපේ</string>
 
   <!-- Reports -->
   <string name="reports_come_back_later">පසුව නැවත පිවිසෙන්න</string>
@@ -327,7 +340,7 @@
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_kidney">වකුගඩු රෝගය</string>
   <!--suppress UnusedResources -->
-  <string name="medicalhistory_diagnosis_hypertension">අධි රුධිර පීඩනය</string>
+  <string name="medicalhistory_diagnosis_hypertension">අධ්‍යාතතිය</string>
   <string name="medicalhistory_diagnosis_hypertension_required">අධි රුධිර පීඩන රෝග විනිශ්චය (අවශ්‍යයි)</string>
   <!--suppress UnusedResources -->
   <string name="medicalhistory_diagnosis_diabetes">දියවැඩියාව</string>
@@ -408,6 +421,8 @@
 
   <!-- Simple video -->
   <string name="simple_video_duration">විනාඩි %s</string>
+  <string name="simple_video_watch">වීඩියෝ නරඹන්න</string>
+  <string name="simple_video_how_to_use">මෙම යෙදුම භාවිතා කරන ආකාරය</string>
 
   <!-- Settings -->
   <string name="settings_title">සැකසුම්</string>
@@ -460,7 +475,7 @@
   <string name="bloodsugarentry_error_higher_limit_mmol">අගය 55.49 mmol/Lට වඩා වැඩි විය නොහැකිය</string>
   <string name="bloodsugarentry_error_empty">අගය හිස්ව තැබිය නොහැකිය</string>
   <string name="bloodsugarentry_error_date_invalid_pattern">දින/මාස/අවුරුදු ආකාරයෙන් වලංගු දිනයක් ඇතුල් කරන්න</string>
-  <string name="bloodsugarentry_error_date_is_in_future">දිනය අනාගතයේ දිනයක් විය නොහැක.</string>
+  <string name="bloodsugarentry_error_date_is_in_future">දිනය අනාගත කාලයෙන් තැබිය නොහැකිය</string>
   <string name="bloodsugarentry_random_title">අහඹු රුධි‍ර ගත සීනි මට්ටම</string>
   <string name="bloodsugarentry_post_prandial_title">ආහාරයට පසු රුධිර ගත සීනි මට්ටම</string>
   <string name="bloodsugarentry_fasting_title">නිරාහාර රුධිර ගත සීනි මට්ටම</string>
@@ -533,15 +548,15 @@
   <string name="contactpatient_done">අවසන්</string>
   <string name="contactpatient_result">ප්‍රතිඵලය</string>
   <plurals name="contactpatient_days">
-    <item quantity="one">දිනය %s</item>
+    <item quantity="one">දින %s</item>
     <item quantity="other">දින %s</item>
   </plurals>
   <plurals name="contactpatient_weeks">
-    <item quantity="one">සතිය %s</item>
+    <item quantity="one">සති %s</item>
     <item quantity="other">සති %s</item>
   </plurals>
   <plurals name="contactpatient_months">
-    <item quantity="one">මාසය %s</item>
+    <item quantity="one">මාස %s</item>
     <item quantity="other">මාස %s</item>
   </plurals>
   <string name="contactpatient_select_a_reason">හේතුවක් තෝරා ගන්න</string>
@@ -651,7 +666,7 @@
   <string name="view_teleconsult_medicines_edit">සංස්කරණය කරන්න</string>
   <string name="view_teleconsult_medicines_required_error">අවම වශයෙන් එක් ඖෂධයක් එකතු කරන්න</string>
   <plurals name="list_item_teleconsult_medicine_duration">
-    <item quantity="one">දිනය %1$s</item>
+    <item quantity="one">දින %1$s</item>
     <item quantity="other">දින %1$s</item>
   </plurals>
 
@@ -794,11 +809,11 @@
   <string name="next_appointment_appointment_at_facility">%s ට</string>
   <string name="next_appointment_today">අද</string>
   <plurals name="next_appointment_plurals">
-    <item quantity="one">දිනය %d</item>
-    <item quantity="other">දින %d</item>
+    <item quantity="one">දින %d ක්</item>
+    <item quantity="other">දින %d ක්</item>
   </plurals>
   <plurals name="next_appointment_overdue_plurals">
-    <item quantity="one">දින %d ක කාලයක් ඉකුත් වී ඇත</item>
+    <item quantity="one">දිනය %d ක කාලයක් ඉකුත් වී ඇත</item>
     <item quantity="other">දින %d ක කාලයක් ඉකුත් වී ඇත</item>
   </plurals>
 
@@ -838,45 +853,16 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">රෝගියා ඔවුන්ගේ ඖෂධ නිතිපතා ගන්නේ නම්, ප්‍රොටොකෝලය අනුගමනය කරන්න</string>
 
   <!-- Call Result Outcome Message -->
-  <string name="call_result_outcome_agreed_to_visit">සංචාරය කිරීමට එකඟ විය</string>
+  <string name="call_result_outcome_agreed_to_visit">\'පැමිණීමට එකඟ විය\' සක්‍රීය ලෙස සලකුණු කෙරිණි</string>
 
-  <string name="call_result_outcome_remind_to_call_later">ඇමතුම් සිහිකැඳවීම %1$s සඳහා සකසා ඇත</string>
+  <string name="call_result_outcome_remind_to_call_later">\'ඇමතීමට සිහිපත් කරන්න\' සක්‍රීය ලෙස සලකුණු කෙරිණි</string>
 
   <string name="call_result_outcome_removed">ඉවත් කෙරිණි: %1$s</string>
-
-  <string name="call_result_outcome_saved_at">%1$s ක් සුරකින ලදී</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">නම හෝ ගම මගින් සොයන්න</string>
   <string name="overdue_search_hint">නම හෝ ගම ඇතුල් කරන්න</string>
   <string name="overdue_search_no_search_results_title">රෝගීන් හමු නොවීය</string>
   <string name="overdue_search_no_search_results_desc">මෙහි ඔබගේ සෙවීමෙන් ඔබ සියලුම කාලය පසු වූ රෝගීන් දකිනු ඇත</string>
-
-  <!-- Select and download overdue appointments -->
-  <string name="selected_overdue_count">%1$d ක් තෝරන ලදී</string>
-  <string name="selected_overdue_clear">මකන්න</string>
-  <string name="selected_overdue_select_all_appointments">සියල්ල තෝරන්න</string>
-
-  <string name="patient_line_list_download_notification_failed_title">බාගැනීම අසාර්ථක විය</string>
-  <string name="patient_line_list_download_notification_failed_subtitle">මද වේලාවකින් නැවත උත්සාහ කරන්න</string>
-  <string name="patient_line_list_download_notification_in_progress_title">රෝගීන්ගේ පේළි ලැයිස්තුව බාගත කරමින්</string>
-  <string name="patient_line_list_download_notification_cancel">අවලංගු කරන්න</string>
-  <string name="patient_line_list_download_notification_succeeded_title">බාගැනීම සම්පූර්ණයි</string>
-  <string name="patient_line_list_download_notification_succeeded_subtitle">විවෘත කිරීමට ක්ලික් කරන්න</string>
-
-  <string name="select_patient_line_list_download_format_dialog_radio_button_spreadsheet">පැතුරුම්පත</string>
-  <string name="select_patient_line_list_download_format_dialog_radio_button_pdf">PDF</string>
-  <string name="select_patient_line_list_download_format_dialog_action_negative">අවලංගු කරන්න</string>
-  <string name="select_patient_line_list_download_format_dialog_title_download">මෙම ආකාරයට බාගන්න</string>
-  <string name="select_patient_line_list_download_format_dialog_action_positive">බාගත කිරීම</string>
-  <string name="patient_line_list_download_card_title">IHCI රෝගී ලේඛනය</string>
-  <string name="patient_line_list_download_card_desc">%1$s වෙත ලියාපදිංචි වී ඇති හෝ වෙන් කර ඇති සියලුම රෝගීන්ගේ ලැයිස්තුව</string>
-  <string name="patient_line_list_download_card_button">බාගත කිරීම</string>
-
-  <!--Notification permission denied dialog-->
-  <string name="notification_permission_denied_title">දැනුම්දීම් සක්‍රීය කරන්න</string>
-  <string name="notification_permission_denied_message">ඔබට වැදගත් සිහිකැඳවීම් පෙන්වීම සඳහා සිම්ප්ල් හට අවසරය අවශ්‍යයි. අවසර &gt; දැනුම්දීම් යටතේ සක්‍රීය කරන්න</string>
-  <string name="notification_permission_denied_positive_button">යෙදුම් සැකසුම් වෙත යන්න</string>
-  <string name="notification_permission_denied_negetive_button">දැන් නොවේ</string>
 
 </resources>

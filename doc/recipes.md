@@ -4,3 +4,4 @@ This document shows how we are handling some commonly used use-cases like featur
 
 1. [How to use feature flags](recipes/feature-flags.md)
 2. [How to add a new sync resource](recipes/adding-sync-resource.md)
+3. [How to migrate database versions](recipes/migrating-database-versions.md)

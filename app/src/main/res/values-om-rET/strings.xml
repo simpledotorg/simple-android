@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+  <string name="app_name">Salphaa</string>
 
   <!-- Common -->
   <string name="gender_female">Dubara</string>
@@ -198,6 +199,17 @@
   <string name="patient_prescribeddrugs_screen_title">Dawaawwan</string>
   <string name="patient_prescribeddrugs_add_custom_prescription">Dawaa biraa galchi</string>
 
+  <string name="customprescription_enter_medicine">Dawaa galchi</string>
+  <string name="customprescription_edit_medicine">Dawaa gulaali</string>
+  <string name="customprescription_save_drug">Ol kaa’i</string>
+  <string name="customprescription_drug_name_hint">Maqaa dawa</string>
+  <string name="customprescription_drug_dosage_hint">Hamma fudhanna</string>
+
+  <string name="customprescription_delete_title">Dawaa balleessi</string>
+  <string name="customprescription_delete_message">Shakkii malee dawaa kana balleessuu barbaaddaa?</string>
+  <string name="customprescription_delete_confirm">Balleessi</string>
+  <string name="customprescription_delete_cancel">Adda kuti</string>
+
   <!-- Login -->
   <string name="loginpin_go_back">Gara fuula lakkoofsa bilbilaatti duuba deebi’i</string>
 
@@ -266,6 +278,7 @@
     <item quantity="other">Guyyoota %s irra darbe</item>
   </plurals>
   <string name="overdue_list_item_village">Ganda</string>
+  <string name="overduelist_high_risk">Saaxilbahii ol aanaa</string>
   <string name="overdue_download">Buusicha</string>
   <string name="overdue_share">Raabsi</string>
   <string name="overdue_no_pending_patients">Dhukkubsataan eeggatu hin jiru</string>
@@ -409,6 +422,8 @@
 
   <!-- Simple video -->
   <string name="simple_video_duration">Daqiiqaawwan %s</string>
+  <string name="simple_video_watch">Viidiyoo daawwadhu</string>
+  <string name="simple_video_how_to_use">Hedda kana akkamiin fayyadama</string>
 
   <!-- Settings -->
   <string name="settings_title">Teessuma</string>
@@ -840,6 +855,11 @@ Appilikeeshinii Simple keessan Google PlayStore irraa haaromsadhaa.</string>
   <string name="clinical_decision_support_alert_bp_high_subtitle">Akka dhukkubsataan seeraan qoricha isaanii fudhachaa jiran hordofaa.</string>
 
   <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">\"Ilaalamuudhaaf kan waliigalame\" irratti mallattaa\'eera</string>
+
+  <string name="call_result_outcome_remind_to_call_later">\"Akkan bilbiluuf na yaadachiisii\" irratti mallattaa\'eera</string>
+
+  <string name="call_result_outcome_removed">Yaadachiifameera: %1$s</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">Maqaadhaan ykn gandaan barbaadi</string>

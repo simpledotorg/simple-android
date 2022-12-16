@@ -1,5 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+  <string name="app_name">Simple</string>
 
   <!-- Common -->
   <string name="gender_female">स्त्री</string>

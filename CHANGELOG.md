@@ -2,6 +2,8 @@
 
 ## Next Release
 
+## 2022-12-19-8547
+
 ### Internal
 
 - Remove `app_name` form translated strings and make it untranslatable

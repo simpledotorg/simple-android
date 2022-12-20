@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 106,
-    "identityHash": "28238441a0039e0b90d9bc7d9538f48a",
+    "identityHash": "eb671fe5c5091c6acd4b0c7aa378cfe5",
     "entities": [
       {
         "tableName": "Patient",
@@ -2018,7 +2018,7 @@
       },
       {
         "tableName": "Questionnaire",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `questionnaire_type` TEXT NOT NULL, `layout` TEXT NOT NULL, PRIMARY KEY(`uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `questionnaire_type` TEXT NOT NULL, `layout` TEXT NOT NULL, PRIMARY KEY(`questionnaire_type`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -2041,7 +2041,7 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "uuid"
+            "questionnaire_type"
           ],
           "autoGenerate": false
         },
@@ -2057,7 +2057,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '28238441a0039e0b90d9bc7d9538f48a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'eb671fe5c5091c6acd4b0c7aa378cfe5')"
     ]
   }
 }

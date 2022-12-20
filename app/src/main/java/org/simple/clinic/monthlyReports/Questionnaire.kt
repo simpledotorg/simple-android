@@ -9,10 +9,10 @@ import java.util.UUID
 @Entity(tableName = "Questionnaire")
 @Parcelize
 data class Questionnaire(
-    @PrimaryKey
     val uuid: UUID,
 
-    val questionnaire_type: QuestionnaireType,
+    @PrimaryKey
+    val questionnaire_type: String,
 
     val layout: String,
 ) : Parcelable

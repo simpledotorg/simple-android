@@ -15,7 +15,7 @@ class Migration_106 @Inject constructor() : Migration(105, 106) {
           "uuid" TEXT NOT NULL, 
           "questionnaire_type" TEXT NOT NULL, 
           "layout" TEXT NOT NULL,
-          PRIMARY KEY("uuid")
+          PRIMARY KEY("questionnaire_type")
         )
       """)
     }

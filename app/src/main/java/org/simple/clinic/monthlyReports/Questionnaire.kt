@@ -12,7 +12,7 @@ data class Questionnaire(
     val uuid: UUID,
 
     @PrimaryKey
-    val questionnaire_type: String,
+    val questionnaire_type: QuestionnaireType,
 
     val layout: String,
 ) : Parcelable

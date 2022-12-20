@@ -18,6 +18,7 @@ import org.simple.clinic.home.overdue.OverdueAppointment_Old
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.monthlyReports.Questionnaire
+import org.simple.clinic.monthlyReports.QuestionnaireType
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.callresult.CallResult
@@ -130,7 +131,8 @@ import org.simple.clinic.drugs.search.Answer as DrugAnswer
     DrugCategory.RoomTypeConverter::class,
     DrugAnswer.RoomTypeConverter::class,
     DrugFrequency.RoomTypeConverter::class,
-    Outcome.RoomTypeConverter::class
+    Outcome.RoomTypeConverter::class,
+    QuestionnaireType.RoomTypeConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
 

@@ -5,7 +5,8 @@
 ### Internal
 
 - Add `Questionnaire`s table
-
+- Replace deprecated `set-output` command in GH Actions
+- Fix renovate config to open updates on first day of the month
 
 ## 2022-12-19-8547
 
@@ -13,8 +14,7 @@
 
 - Remove `app_name` form translated strings and make it untranslatable
 - Updated translations: `so_ET`
-- Remove `CommitAndPush` script
-- Replace deprecated `set-output` command in GH Actions 
+- Remove `CommitAndPush` script 
 
 ## 2022-12-12-8539
 

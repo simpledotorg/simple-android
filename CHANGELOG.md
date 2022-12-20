@@ -2,6 +2,11 @@
 
 ## Next Release
 
+### Internal
+
+- Add `Questionnaire`s table
+
+
 ## 2022-12-19-8547
 
 ### Internal

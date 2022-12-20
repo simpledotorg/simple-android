@@ -11,4 +11,4 @@ fi
 
 echo "Heroku app name: ${herokuAppName}"
 
-echo "::set-output name=heroku_app_name::${herokuAppName}"
+echo "heroku_app_name=$herokuAppName" >> $GITHUB_OUTPUT

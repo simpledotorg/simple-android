@@ -12,4 +12,4 @@ hashed=$(shasum <<< stringToHash | cut -f 1 -d ' ')
 
 echo "Hashed \"${stringToHash}\" -> \"${hashed}\""
 
-echo "::set-output name=node_dep_hash::${hashed}"
+echo "node_dep_hash=$hashed" >> $GITHUB_OUTPUT

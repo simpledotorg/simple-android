@@ -1,6 +1,7 @@
-package org.simple.clinic.monthlyReports
+package org.simple.clinic.monthlyReports.questionnaire
 
 import android.os.Parcelable
+import androidx.annotation.VisibleForTesting
 import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
@@ -34,9 +35,15 @@ sealed class QuestionnaireType : Parcelable {
     @ToJson
     fun toJson(measurementType: QuestionnaireType?): String? = TypeAdapter.fromEnum(measurementType)
   }
+
+  companion object {
+    @VisibleForTesting
+    fun random(): QuestionnaireType = TypeAdapter.knownMappings.keys.shuffled().first()
+  }
 }
 
 @Parcelize
+@VisibleForTesting
 object MonthlyScreeningReports : QuestionnaireType()
 
 @Parcelize

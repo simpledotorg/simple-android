@@ -25,6 +25,7 @@ import org.simple.clinic.drugstockreminders.DrugStockReminderApiIntegrationTest
 import org.simple.clinic.facility.FacilityRepositoryAndroidTest
 import org.simple.clinic.login.LoginUserWithOtpServerIntegrationTest
 import org.simple.clinic.medicalhistory.MedicalHistoryRepositoryAndroidTest
+import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireRepositoryAndroidTest
 import org.simple.clinic.overdue.AppointmentRepositoryAndroidTest
 import org.simple.clinic.overdue.OverdueListDownloadApiIntegrationTest
 import org.simple.clinic.overdue.callresult.CallResultRepositoryAndroidTest
@@ -63,6 +64,7 @@ import org.simple.clinic.sync.MedicalHistorySyncIntegrationTest
 import org.simple.clinic.sync.PatientSyncIntegrationTest
 import org.simple.clinic.sync.PrescriptionSyncIntegrationTest
 import org.simple.clinic.sync.ProtocolSyncIntegrationTest
+import org.simple.clinic.sync.QuestionnaireSyncIntegrationTest
 import org.simple.clinic.sync.ReportsSyncIntegrationTest
 import org.simple.clinic.sync.TeleconsultationSyncIntegrationTest
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepositoryAndroidTest
@@ -152,4 +154,6 @@ interface TestAppComponent {
   fun inject(target: OverdueCsvGeneratorTest)
   fun inject(target: PatientLineListCsvGeneratorTest)
   fun inject(target: PatientLineListDownloaderTest)
+  fun inject(target: QuestionnaireRepositoryAndroidTest)
+  fun inject(target: QuestionnaireSyncIntegrationTest)
 }

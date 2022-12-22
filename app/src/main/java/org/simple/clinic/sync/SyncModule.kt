@@ -26,6 +26,9 @@ import org.simple.clinic.main.TypedPreference.Type.FacilitySyncGroupSwitchedAt
 import org.simple.clinic.medicalhistory.MedicalHistoryModule
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
+import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireRepository
+import org.simple.clinic.monthlyReports.questionnaire.di.QuestionnaireModule
+import org.simple.clinic.monthlyReports.questionnaire.sync.QuestionnaireSync
 import org.simple.clinic.overdue.AppointmentModule
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.AppointmentSync
@@ -62,7 +65,8 @@ import javax.inject.Named
   HelpModule::class,
   DrugModule::class,
   CallResultModule::class,
-  OverdueListDownloadModule::class
+  OverdueListDownloadModule::class,
+  QuestionnaireModule::class
 ])
 class SyncModule {
 
@@ -82,7 +86,8 @@ class SyncModule {
       teleconsultationMedicalOfficersSync: TeleconsultationSync,
       teleconsultRecordSync: TeleconsultRecordSync,
       drugSync: DrugSync,
-      callResultSync: CallResultSync
+      callResultSync: CallResultSync,
+      questionnaireSync: QuestionnaireSync
   ): List<ModelSync> {
     val optionalSyncs = if (features.isEnabled(Feature.CallResultSyncEnabled)) listOf(callResultSync) else emptyList()
 
@@ -90,10 +95,11 @@ class SyncModule {
         facilitySync, protocolSync, reportsSync, helpSync,
         patientSync, bloodPressureSync, medicalHistorySync, appointmentSync, prescriptionSync,
         bloodSugarSync, teleconsultationMedicalOfficersSync,
-        teleconsultRecordSync, drugSync
+        teleconsultRecordSync, drugSync, questionnaireSync
     ) + optionalSyncs
   }
 
+  //Todo Sid - is questionnaireRepository parameter required in constructor
   @Provides
   @Named("frequently_syncing_repositories")
   fun frequentlySyncingRepositories(
@@ -105,7 +111,8 @@ class SyncModule {
       prescriptionSyncRepository: PrescriptionRepository,
       bloodSugarRepository: BloodSugarRepository,
       teleconsultRecordRepository: TeleconsultRecordRepository,
-      callResultRepository: CallResultRepository
+      callResultRepository: CallResultRepository,
+      questionnaireSyncRepository: QuestionnaireRepository
   ): List<SynceableRepository<*, *>> {
     val optionalRepositories = if (features.isEnabled(Feature.CallResultSyncEnabled)) listOf(callResultRepository) else emptyList()
 
@@ -116,7 +123,8 @@ class SyncModule {
         appointmentSyncRepository,
         prescriptionSyncRepository,
         bloodSugarRepository,
-        teleconsultRecordRepository
+        teleconsultRecordRepository,
+        questionnaireSyncRepository
     ) + optionalRepositories
   }
 

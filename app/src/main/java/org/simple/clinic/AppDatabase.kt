@@ -17,8 +17,8 @@ import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.home.overdue.OverdueAppointment_Old
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
-import org.simple.clinic.monthlyReports.Questionnaire
-import org.simple.clinic.monthlyReports.QuestionnaireType
+import org.simple.clinic.monthlyReports.questionnaire.Questionnaire
+import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireType
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.callresult.CallResult
@@ -188,6 +188,8 @@ abstract class AppDatabase : RoomDatabase() {
 
   abstract fun callResultDao(): CallResult.RoomDao
 
+  abstract fun questionnaireDao(): Questionnaire.RoomDao
+
   fun clearAppData() {
     runInTransaction {
       patientDao().clear()
@@ -203,6 +205,9 @@ abstract class AppDatabase : RoomDatabase() {
       teleconsultFacilityWithMedicalOfficersDao().clear()
       teleconsultRecordDao().clear()
       callResultDao().clear()
+
+      //Todo Sid - Do we need to clear the questionnaire table
+      questionnaireDao().clearData()
     }
   }
 

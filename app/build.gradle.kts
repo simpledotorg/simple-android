@@ -2,10 +2,6 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.simple.rmg.RoomMetadataGenerator
 
-repositories {
-  maven(url = "https://jitpack.io")
-}
-
 plugins {
   id("com.android.application")
   kotlin("android")

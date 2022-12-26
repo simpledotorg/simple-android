@@ -4,6 +4,9 @@
 
 ### Internal
 
+## 2022-12-26-8555
+
+### Internal
 - Add `Questionnaire`s table
 - Replace deprecated `set-output` command in GH Actions
 - Fix renovate config to open updates on first day of the month

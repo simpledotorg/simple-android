@@ -23,10 +23,3 @@ buildscript {
     classpath(libs.benchmark.gradle.plugin)
   }
 }
-
-allprojects {
-  repositories {
-    google()
-    mavenCentral()
-  }
-}

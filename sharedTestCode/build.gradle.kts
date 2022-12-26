@@ -1,7 +1,3 @@
-repositories {
-  maven(url = "https://jitpack.io")
-}
-
 plugins {
   id("com.android.library")
   kotlin("android")

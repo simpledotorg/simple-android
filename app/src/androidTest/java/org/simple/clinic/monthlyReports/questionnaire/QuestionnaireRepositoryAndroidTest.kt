@@ -1,6 +1,6 @@
 package org.simple.clinic.monthlyReports.questionnaire
 
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -37,8 +37,7 @@ class QuestionnaireRepositoryAndroidTest {
     val questionnaires = listOf(
         TestData.questionnaire(
             uuid = UUID.fromString("ef5b7656-a6df-459c-a5b0-80d100721597"),
-            questionnaireType = MonthlyScreeningReports,
-            layout = "Test Questionnaire 1"
+            questionnaireType = MonthlyScreeningReports
         )
     )
 
@@ -48,7 +47,7 @@ class QuestionnaireRepositoryAndroidTest {
     // then
     val savedQuestionnaires = questionnaireRepository.questionnaires()
 
-    Truth.assertThat(savedQuestionnaires).isEqualTo(questionnaires)
+    assertThat(savedQuestionnaires).isEqualTo(questionnaires)
   }
 
   @Test
@@ -57,8 +56,7 @@ class QuestionnaireRepositoryAndroidTest {
     val questionnaires = listOf(
         TestData.questionnaire(
             uuid = UUID.fromString("e445737a-8adf-496d-9f0f-5af5cec58446"),
-            questionnaireType = MonthlyScreeningReports,
-            layout = "Test Questionnaire 1"
+            questionnaireType = MonthlyScreeningReports
         )
     )
 
@@ -66,8 +64,7 @@ class QuestionnaireRepositoryAndroidTest {
 
     val newMonthlyScreeningQuestionnaire = TestData.questionnaire(
         uuid = UUID.fromString("9b72f35a-05cd-4d13-82cd-73fcc3dd738b"),
-        questionnaireType = MonthlyScreeningReports,
-        layout = "Test Questionnaire 2"
+        questionnaireType = MonthlyScreeningReports
     )
 
     // when
@@ -76,6 +73,6 @@ class QuestionnaireRepositoryAndroidTest {
     // then
     val monthlyScreeningQuestionnaire = questionnaireRepository.questionnairesByType(MonthlyScreeningReports)
 
-    Truth.assertThat(monthlyScreeningQuestionnaire).isEqualTo(newMonthlyScreeningQuestionnaire)
+    assertThat(monthlyScreeningQuestionnaire).isEqualTo(newMonthlyScreeningQuestionnaire)
   }
 }

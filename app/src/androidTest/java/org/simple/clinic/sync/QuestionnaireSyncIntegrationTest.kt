@@ -20,6 +20,7 @@ import org.simple.sharedTestCode.util.Rules
 import java.util.Optional
 import javax.inject.Inject
 
+@Ignore("the qa api is under development")
 class QuestionnaireSyncIntegrationTest {
 
   @Inject
@@ -80,7 +81,6 @@ class QuestionnaireSyncIntegrationTest {
     appDatabase.questionnaireDao().clearData()
   }
 
-  @Ignore("the qa api is under development")
   @Test
   fun syncing_records_should_work_as_expected() {
     // when

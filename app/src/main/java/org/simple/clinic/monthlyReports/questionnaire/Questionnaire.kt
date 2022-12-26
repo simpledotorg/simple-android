@@ -9,8 +9,6 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
-import org.simple.clinic.monthlyReports.questionnaire.sync.QuestionnairePayload
-import org.simple.clinic.util.Unicode
 import java.util.UUID
 
 @Entity(tableName = "Questionnaire")
@@ -23,17 +21,6 @@ data class Questionnaire(
 
     val layout: String,
 ) : Parcelable {
-
-  fun toPayload(): QuestionnairePayload {
-    return QuestionnairePayload(
-        uuid = uuid,
-        questionnaireType = questionnaire_type,
-        layout = layout)
-  }
-
-  override fun toString(): String {
-    return "Questionnaire(${Unicode.redacted})"
-  }
 
   @Dao
   interface RoomDao {

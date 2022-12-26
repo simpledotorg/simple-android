@@ -11,7 +11,7 @@ interface QuestionnaireSyncApi {
   @GET("v4/questionnaires/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,
-      @Query("questionnaire_dsl_version") questionnaireDslVersion: String? = null,
-      @Query("process_token") lastPullToken: String? = null
+      @Query("process_token") lastPullToken: String? = null,
+      @Query("dsl_version") questionnaireDslVersion: String = "1",
   ): Call<QuestionnairePullResponse>
 }

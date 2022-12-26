@@ -24,7 +24,7 @@ sealed class QuestionnaireType : Parcelable {
     fun toEnum(value: String?): QuestionnaireType? = TypeAdapter.toEnum(value)
 
     @TypeConverter
-    fun fromEnum(measurementType: QuestionnaireType?): String? = TypeAdapter.fromEnum(measurementType)
+    fun fromEnum(questionnaireType: QuestionnaireType?): String? = TypeAdapter.fromEnum(questionnaireType)
   }
 
   class MoshiTypeAdapter {
@@ -33,7 +33,7 @@ sealed class QuestionnaireType : Parcelable {
     fun fromJson(value: String?): QuestionnaireType? = TypeAdapter.toEnum(value)
 
     @ToJson
-    fun toJson(measurementType: QuestionnaireType?): String? = TypeAdapter.fromEnum(measurementType)
+    fun toJson(questionnaireType: QuestionnaireType?): String? = TypeAdapter.fromEnum(questionnaireType)
   }
 
   companion object {

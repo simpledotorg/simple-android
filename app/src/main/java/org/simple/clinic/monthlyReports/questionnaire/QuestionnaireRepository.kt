@@ -8,7 +8,6 @@ import org.simple.clinic.sync.SynceableRepository
 import java.util.UUID
 import javax.inject.Inject
 
-//Todo Sid - Do we need app scope here?
 @AppScope
 class QuestionnaireRepository @Inject constructor(
     private val dao: Questionnaire.RoomDao

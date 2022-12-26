@@ -22,8 +22,7 @@ class QuestionnaireSync @Inject constructor(
 
   override val name: String = "Questionnaire"
 
-  //Todo Sid - what should be the value for this boolean
-  override val requiresSyncApprovedUser = true
+  override val requiresSyncApprovedUser = false
 
   override fun push() {
     /* Nothing to do here */
@@ -32,8 +31,6 @@ class QuestionnaireSync @Inject constructor(
   override fun pull() {
     val batchSize = config.pullBatchSize
 
-    //Todo Sid - Dsl version will be a global constant stored in the app
-    val dslVersion = "v1"
-    syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, dslVersion, it).execute().read()!! }
+    syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().read()!! }
   }
 }

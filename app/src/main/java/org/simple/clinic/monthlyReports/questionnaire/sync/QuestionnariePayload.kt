@@ -15,12 +15,12 @@ data class QuestionnairePayload(
     val questionnaireType: QuestionnaireType,
 
     @Json(name = "layout")
-    val layout: String,
+    val layout: Map<String, Any>,
 ) {
 
   fun toDatabaseModel() = Questionnaire(
       uuid = uuid,
       questionnaire_type = questionnaireType,
-      layout = layout
+      layout = layout.toString()
   )
 }

@@ -16,32 +16,32 @@ classes `Parcelable` so that we can save and restore the state across screen con
 ```kotlin
 @Parcelize
 data class ChangeLanguageModel(
-    val currentLanguage: Language?,
-    val userSelectedLanguage: Language?,
-    val supportedLanguages: List<Language>,
-    val manuallyRestarted: Boolean
-): Parcelable {
+  val currentLanguage: Language?,
+  val userSelectedLanguage: Language?,
+  val supportedLanguages: List<Language>,
+  val manuallyRestarted: Boolean
+) : Parcelable {
 
   val haveLanguagesBeenFetched: Boolean
     get() = currentLanguage != null && supportedLanguages.isNotEmpty()
 
   companion object {
     val FETCHING_LANGUAGES = ChangeLanguageModel(
-        currentLanguage = null,
-        userSelectedLanguage = null,
-        supportedLanguages = emptyList(),
-        manuallyRestarted = false
+      currentLanguage = null,
+      userSelectedLanguage = null,
+      supportedLanguages = emptyList(),
+      manuallyRestarted = false
     )
   }
 
   fun withCurrentLanguage(currentLanguage: Language): ChangeLanguageModel {
     return copy(currentLanguage = currentLanguage)
-        .coerceUserSelectedLanguage()
+      .coerceUserSelectedLanguage()
   }
 
   fun withSupportedLanguages(supportedLanguages: List<Language>): ChangeLanguageModel {
     return copy(supportedLanguages = supportedLanguages)
-        .coerceUserSelectedLanguage()
+      .coerceUserSelectedLanguage()
   }
 
   fun withUserSelectedLanguage(userSelectedLanguage: Language): ChangeLanguageModel {
@@ -114,8 +114,8 @@ easy.
 class ChangeLanguageUpdate : Update<ChangeLanguageModel, ChangeLanguageEvent, ChangeLanguageEffect> {
 
   override fun update(
-      model: ChangeLanguageModel,
-      event: ChangeLanguageEvent
+    model: ChangeLanguageModel,
+    event: ChangeLanguageEvent
   ): Next<ChangeLanguageModel, ChangeLanguageEffect> {
     return when (event) {
       is CurrentLanguageLoadedEvent -> next(model.withCurrentLanguage(event.language))
@@ -139,9 +139,9 @@ sometimes UI).
 
 ```kotlin
 class ChangeLanguageEffectHandler @AssistedInject constructor(
-    private val schedulersProvider: SchedulersProvider,
-    private val settingsRepository: SettingsRepository,
-    @Assisted private val uiActions: UiActions
+  private val schedulersProvider: SchedulersProvider,
+  private val settingsRepository: SettingsRepository,
+  @Assisted private val uiActions: UiActions
 ) {
 
   @AssistedFactory
@@ -151,50 +151,50 @@ class ChangeLanguageEffectHandler @AssistedInject constructor(
 
   fun build(): ObservableTransformer<ChangeLanguageEffect, ChangeLanguageEvent> {
     return RxMobius
-        .subtypeEffectHandler<ChangeLanguageEffect, ChangeLanguageEvent>()
-        .addTransformer(LoadCurrentLanguageEffect::class.java, loadCurrentSelectedLanguage(schedulersProvider.io()))
-        .addTransformer(LoadSupportedLanguagesEffect::class.java, loadSupportedLanguages(schedulersProvider.io()))
-        .addTransformer(UpdateCurrentLanguageEffect::class.java, updateCurrentLanguage(schedulersProvider.io()))
-        .addAction(GoBack::class.java, uiActions::goBackToPreviousScreen, schedulersProvider.ui())
-        .addAction(RestartActivity::class.java, uiActions::restartActivity, schedulersProvider.ui())
-        .build()
+      .subtypeEffectHandler<ChangeLanguageEffect, ChangeLanguageEvent>()
+      .addTransformer(LoadCurrentLanguageEffect::class.java, loadCurrentSelectedLanguage(schedulersProvider.io()))
+      .addTransformer(LoadSupportedLanguagesEffect::class.java, loadSupportedLanguages(schedulersProvider.io()))
+      .addTransformer(UpdateCurrentLanguageEffect::class.java, updateCurrentLanguage(schedulersProvider.io()))
+      .addAction(GoBack::class.java, uiActions::goBackToPreviousScreen, schedulersProvider.ui())
+      .addAction(RestartActivity::class.java, uiActions::restartActivity, schedulersProvider.ui())
+      .build()
   }
 
   private fun loadCurrentSelectedLanguage(scheduler: Scheduler): ObservableTransformer<LoadCurrentLanguageEffect, ChangeLanguageEvent> {
     return ObservableTransformer { effectStream ->
       effectStream
-          .flatMapSingle {
-            settingsRepository
-                .getCurrentLanguage()
-                .subscribeOn(scheduler)
-          }
-          .map(::CurrentLanguageLoadedEvent)
+        .flatMapSingle {
+          settingsRepository
+            .getCurrentLanguage()
+            .subscribeOn(scheduler)
+        }
+        .map(::CurrentLanguageLoadedEvent)
     }
   }
 
   private fun loadSupportedLanguages(scheduler: Scheduler): ObservableTransformer<LoadSupportedLanguagesEffect, ChangeLanguageEvent> {
     return ObservableTransformer { effectStream ->
       effectStream
-          .flatMapSingle {
-            settingsRepository
-                .getSupportedLanguages()
-                .subscribeOn(scheduler)
-          }
-          .map(::SupportedLanguagesLoadedEvent)
+        .flatMapSingle {
+          settingsRepository
+            .getSupportedLanguages()
+            .subscribeOn(scheduler)
+        }
+        .map(::SupportedLanguagesLoadedEvent)
     }
   }
 
   private fun updateCurrentLanguage(scheduler: Scheduler): ObservableTransformer<UpdateCurrentLanguageEffect, ChangeLanguageEvent> {
     return ObservableTransformer { effectStream ->
       effectStream
-          .map { it.newLanguage }
-          .flatMapSingle { newLanguage ->
-            settingsRepository
-                .setCurrentLanguage(newLanguage)
-                .subscribeOn(scheduler)
-                .toSingleDefault(newLanguage)
-          }
-          .map { CurrentLanguageChangedEvent }
+        .map { it.newLanguage }
+        .flatMapSingle { newLanguage ->
+          settingsRepository
+            .setCurrentLanguage(newLanguage)
+            .subscribeOn(scheduler)
+            .toSingleDefault(newLanguage)
+        }
+        .map { CurrentLanguageChangedEvent }
     }
   }
 }
@@ -265,101 +265,69 @@ interface UiActions {
 
 ### Wiring it all together
 
-We have implemented a
-class, [`MobiusDelegate`](https://github.com/simpledotorg/simple-android/blob/6da548b36c3cceb3e3db344c09a0f5ae588fc2c0/mobius-base/src/main/java/org/simple/clinic/mobius/MobiusDelegate.kt)
-, which is a light wrapper around `Mobius` and `RxJava`, and is designed to encapsulate the work of tying the `Mobius` loop to the Android component
-lifecycle.
+We have implemented [`BaseScreen`](https://github.com/simpledotorg/simple-android/blob/master/doc/arch/011-screen-navigation-v2.md)
+, which is a abstract class extending the fragment to support our navigation framework, and is designed to encapsulate the work of tying the `Mobius`
+loop to the Android component lifecycle.
 
 ```kotlin
-class ChangeLanguageScreen(
-    context: Context,
-    attributeSet: AttributeSet
-) : ConstraintLayout(context, attributeSet), ChangeLanguageUi, UiActions {
+class ChangeLanguageScreen : BaseScreen<
+        ChangeLanguageScreen.Key,
+        ScreenChangeLanguageBinding,
+        ChangeLanguageModel,
+        ChangeLanguageEvent,
+        ChangeLanguageEffect,
+        Unit>(), ChangeLanguageUi, UiActions {
 
   @Inject
   lateinit var schedulersProvider: SchedulersProvider
 
   @Inject
-  lateinit var activity: AppCompatActivity
-  
-  @Inject
   lateinit var effectHandlerFactory: ChangeLanguageEffectHandler.Factory
 
   private val languagesAdapter = ItemAdapter(ChangeLanguageListItem.DiffCallback())
 
-  private val events: Observable<ChangeLanguageEvent> by unsafeLazy {
-    Observable
-        .merge(
-            doneButtonClicks(),
-            languageSelections()
-        )
-        .compose(ReportAnalyticsEvents())
-        .cast<ChangeLanguageEvent>()
-  }
-
-  private val uiRenderer = ChangeLanguageUiRenderer(this)
-
-  private val delegate: MobiusDelegate<ChangeLanguageModel, ChangeLanguageEvent, ChangeLanguageEffect> by unsafeLazy {
-    MobiusDelegate.forView(
-        events = events,
-        defaultModel = ChangeLanguageModel.FETCHING_LANGUAGES,
-        init = ChangeLanguageInit(),
-        update = ChangeLanguageUpdate(),
-        effectHandler = effectHandlerFactory.create(this).build(),
-        modelUpdateListener = uiRenderer::render
+  override fun events() = Observable
+    .merge(
+      doneButtonClicks(),
+      languageSelections()
     )
+    .compose(ReportAnalyticsEvents())
+    .cast<ChangeLanguageEvent>()
+
+
+  override fun uiRenderer() = ChangeLanguageUiRenderer(this)
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
   }
 
-  override fun onFinishInflate() {
-    super.onFinishInflate()
-    if (isInEditMode) {
-      return
-    }
-
-    TheActivity.component.inject(this)
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
 
     setupLanguagesList()
-    toolbar.setNavigationOnClickListener { screenRouter.pop() }
+    toolbar.setNavigationOnClickListener { router.pop() }
   }
 
   private fun setupLanguagesList() {
     languagesList.apply {
       setHasFixedSize(true)
-      layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
       adapter = languagesAdapter
     }
   }
 
   private fun languageSelections(): Observable<SelectLanguageEvent> {
     return languagesAdapter
-        .itemEvents
-        .ofType<ListItemClicked>()
-        .map { it.language }
-        .map(::SelectLanguageEvent)
+      .itemEvents
+      .ofType<ListItemClicked>()
+      .map { it.language }
+      .map(::SelectLanguageEvent)
   }
 
   private fun doneButtonClicks(): Observable<SaveCurrentLanguageEvent> {
     return RxView
-        .clicks(doneButton)
-        .map { SaveCurrentLanguageEvent }
-  }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    delegate.start()
-  }
-
-  override fun onDetachedFromWindow() {
-    delegate.stop()
-    super.onDetachedFromWindow()
-  }
-
-  override fun onSaveInstanceState(): Parcelable? {
-    return delegate.onSaveInstanceState(super.onSaveInstanceState())
-  }
-
-  override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
+      .clicks(doneButton)
+      .map { SaveCurrentLanguageEvent }
   }
 
   override fun displayLanguages(supportedLanguages: List<Language>, selectedLanguage: Language?) {
@@ -379,7 +347,15 @@ class ChangeLanguageScreen(
   }
 
   override fun restartActivity() {
-    activity.recreate()
+    requireActivity().recreate()
+  }
+
+  @Parcelize
+  data class Key(
+    override val analyticsName: String = "Language Selection"
+  ) : ScreenKey() {
+
+    override fun instantiateFragment() = ChangeLanguageScreen()
   }
 }
 ```
@@ -452,10 +428,12 @@ include methods to:
 spec
   .given(defaultModel)
   .whenEvent(CurrentLanguageLoadedEvent(englishIndia))
-  .then(assertThatNext(
-    hasModel(defaultModel.withCurrentLanguage(englishIndia)),
-    hasNoEffects()
-  ))
+  .then(
+    assertThatNext(
+      hasModel(defaultModel.withCurrentLanguage(englishIndia)),
+      hasNoEffects()
+    )
+  )
 ```
 
 Following is a sample of a complete test for an `Update` class.
@@ -473,12 +451,14 @@ class ChangeLanguageUpdateTest {
   @Test
   fun `when the current language is loaded, the ui must be updated`() {
     spec
-        .given(defaultModel)
-        .whenEvent(CurrentLanguageLoadedEvent(englishIndia))
-        .then(assertThatNext(
-            hasModel(defaultModel.withCurrentLanguage(englishIndia)),
-            hasNoEffects()
-        ))
+      .given(defaultModel)
+      .whenEvent(CurrentLanguageLoadedEvent(englishIndia))
+      .then(
+        assertThatNext(
+          hasModel(defaultModel.withCurrentLanguage(englishIndia)),
+          hasNoEffects()
+        )
+      )
   }
 
   @Test
@@ -486,58 +466,66 @@ class ChangeLanguageUpdateTest {
     val supportedLanguages = listOf(englishIndia, hindiIndia)
 
     spec
-        .given(defaultModel)
-        .whenEvent(SupportedLanguagesLoadedEvent(supportedLanguages))
-        .then(assertThatNext(
-            hasModel(defaultModel.withSupportedLanguages(supportedLanguages)),
-            hasNoEffects()
-        ))
+      .given(defaultModel)
+      .whenEvent(SupportedLanguagesLoadedEvent(supportedLanguages))
+      .then(
+        assertThatNext(
+          hasModel(defaultModel.withSupportedLanguages(supportedLanguages)),
+          hasNoEffects()
+        )
+      )
   }
 
   @Test
   fun `when the user selects a language, the ui must be updated`() {
     val model = defaultModel
-        .withCurrentLanguage(englishIndia)
-        .withSupportedLanguages(listOf(englishIndia, hindiIndia))
+      .withCurrentLanguage(englishIndia)
+      .withSupportedLanguages(listOf(englishIndia, hindiIndia))
 
     spec
-        .given(model)
-        .whenEvent(SelectLanguageEvent(hindiIndia))
-        .then(assertThatNext(
-            hasModel(model.withUserSelectedLanguage(hindiIndia)),
-            hasNoEffects()
-        ))
+      .given(model)
+      .whenEvent(SelectLanguageEvent(hindiIndia))
+      .then(
+        assertThatNext(
+          hasModel(model.withUserSelectedLanguage(hindiIndia)),
+          hasNoEffects()
+        )
+      )
   }
 
   @Test
   fun `when the current language is changed, then restart the activity`() {
     val model = defaultModel
-        .withCurrentLanguage(englishIndia)
-        .withSupportedLanguages(listOf(englishIndia, hindiIndia))
+      .withCurrentLanguage(englishIndia)
+      .withSupportedLanguages(listOf(englishIndia, hindiIndia))
 
     spec
-        .given(model)
-        .whenEvent(CurrentLanguageChangedEvent)
-        .then(assertThatNext(
-            hasModel(model.restarted()),
-            hasEffects(RestartActivity as ChangeLanguageEffect)
-        ))
+      .given(model)
+      .whenEvent(CurrentLanguageChangedEvent)
+      .then(
+        assertThatNext(
+          hasModel(model.restarted()),
+          hasEffects(RestartActivity as ChangeLanguageEffect)
+        )
+      )
   }
 
   @Test
   fun `when the user clicks save, the current language must be set to the user selected language`() {
     val model = defaultModel
-        .withCurrentLanguage(englishIndia)
-        .withSupportedLanguages(listOf(englishIndia, hindiIndia))
-        .withUserSelectedLanguage(hindiIndia)
+      .withCurrentLanguage(englishIndia)
+      .withSupportedLanguages(listOf(englishIndia, hindiIndia))
+      .withUserSelectedLanguage(hindiIndia)
 
     spec
-        .given(model)
-        .whenEvent(SaveCurrentLanguageEvent)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(UpdateCurrentLanguageEffect(hindiIndia) as ChangeLanguageEffect)
-        ))
+      .given(model)
+      .whenEvent(SaveCurrentLanguageEvent)
+      .then(
+        assertThatNext(
+          hasNoModel(),
+          hasEffects(UpdateCurrentLanguageEffect(hindiIndia) as ChangeLanguageEffect)
+        )
+      )
   }
 }
 ```
@@ -576,7 +564,7 @@ class ChangeLanguageUiRendererTest {
   fun `when the current language has not been fetched, do nothing`() {
     // given
     val model = defaultModel
-        .withSupportedLanguages(listOf(englishIndia, hindiIndia))
+      .withSupportedLanguages(listOf(englishIndia, hindiIndia))
 
     // when
     renderer.render(model)
@@ -589,7 +577,7 @@ class ChangeLanguageUiRendererTest {
   fun `when the supported languages have not been fetched, do nothing`() {
     // given
     val model = defaultModel
-        .withCurrentLanguage(englishIndia)
+      .withCurrentLanguage(englishIndia)
 
     // when
     renderer.render(model)
@@ -602,8 +590,8 @@ class ChangeLanguageUiRendererTest {
   fun `if the user has selected a language, render the ui with the selected language`() {
     // given
     val model = defaultModel
-        .withSupportedLanguages(supportedLanguages)
-        .withCurrentLanguage(englishIndia)
+      .withSupportedLanguages(supportedLanguages)
+      .withCurrentLanguage(englishIndia)
 
     // when
     renderer.render(model)
@@ -618,8 +606,8 @@ class ChangeLanguageUiRendererTest {
   fun `if the user is using the system default language, render the ui without any selected language`() {
     // given
     val model = defaultModel
-        .withCurrentLanguage(SystemDefaultLanguage)
-        .withSupportedLanguages(supportedLanguages)
+      .withCurrentLanguage(SystemDefaultLanguage)
+      .withSupportedLanguages(supportedLanguages)
 
     // when
     renderer.render(model)
@@ -644,11 +632,13 @@ Both of these will be tested in different ways. For the former, we have implemen
 to assert that specific effects result in emitting zero or more events. We also use `Mockito` here to stub out external dependencies.
 
 ```kotlin
-private val testCase = EffectHandlerTestCase(ChangeLanguageEffectHandler.create(
-      schedulersProvider = TrampolineSchedulersProvider(),
-      settingsRepository = settingsRepository,
-      uiActions = uiActions
-))
+private val testCase = EffectHandlerTestCase(
+  ChangeLanguageEffectHandler.create(
+    schedulersProvider = TrampolineSchedulersProvider(),
+    settingsRepository = settingsRepository,
+    uiActions = uiActions
+  )
+)
 
 testCase.dispatch(LoadSupportedLanguagesEffect)
 
@@ -659,11 +649,13 @@ The latter case is tested by creating a mock instance of the `UiActions` interfa
 when certain effects are dispatched to the `EffectHandler`.
 
 ```kotlin
-private val testCase = EffectHandlerTestCase(ChangeLanguageEffectHandler.create(
-      schedulersProvider = TrampolineSchedulersProvider(),
-      settingsRepository = settingsRepository,
-      uiActions = uiActions
-))
+private val testCase = EffectHandlerTestCase(
+  ChangeLanguageEffectHandler.create(
+    schedulersProvider = TrampolineSchedulersProvider(),
+    settingsRepository = settingsRepository,
+    uiActions = uiActions
+  )
+)
 
 testCase.dispatch(RestartActivity)
 
@@ -678,11 +670,13 @@ class ChangeLanguageEffectHandlerTest {
   private val settingsRepository = mock<SettingsRepository>()
   private val uiActions = mock<UiActions>()
 
-  private val testCase = EffectHandlerTestCase(ChangeLanguageEffectHandler.create(
+  private val testCase = EffectHandlerTestCase(
+    ChangeLanguageEffectHandler.create(
       schedulersProvider = TrampolineSchedulersProvider(),
       settingsRepository = settingsRepository,
       uiActions = uiActions
-  ))
+    )
+  )
 
   @After
   fun tearDown() {
@@ -706,9 +700,9 @@ class ChangeLanguageEffectHandlerTest {
   fun `the list of supported languages must be fetched when the load supported languages effect is received`() {
     // given
     val supportedLanguages = listOf(
-        SystemDefaultLanguage,
-        ProvidedLanguage(displayName = "English", languageCode = "en_IN"),
-        ProvidedLanguage(displayName = "हिंदी", languageCode = "hi_IN")
+      SystemDefaultLanguage,
+      ProvidedLanguage(displayName = "English", languageCode = "en_IN"),
+      ProvidedLanguage(displayName = "हिंदी", languageCode = "hi_IN")
     )
     whenever(settingsRepository.getSupportedLanguages()).doReturn(Single.just(supportedLanguages))
 

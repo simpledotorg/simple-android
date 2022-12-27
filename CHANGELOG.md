@@ -11,6 +11,7 @@
 - Replace deprecated `set-output` command in GH Actions
 - Fix renovate config to open updates on first day of the month
 - Use dependency resolution management to configure dependency resolution for all projects
+- Update adding a new screen document
 
 ## 2022-12-19-8547
 

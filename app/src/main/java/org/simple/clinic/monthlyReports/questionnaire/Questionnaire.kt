@@ -9,6 +9,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
+import java.time.Instant
 import java.util.UUID
 
 @Entity(tableName = "Questionnaire")
@@ -20,6 +21,8 @@ data class Questionnaire(
     val questionnaire_type: QuestionnaireType,
 
     val layout: String,
+
+    val deletedAt: Instant?
 ) : Parcelable {
 
   @Dao

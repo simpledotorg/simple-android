@@ -284,7 +284,25 @@ class ChangeLanguageScreen : BaseScreen<
   @Inject
   lateinit var effectHandlerFactory: ChangeLanguageEffectHandler.Factory
 
-  private val languagesAdapter = ItemAdapter(ChangeLanguageListItem.DiffCallback())
+  private val languagesAdapter = ItemAdapter(
+    diffCallback = ChangeLanguageListItem.DiffCallback(),
+    bindings = mapOf(
+      R.layout.list_change_language_view to { layoutInflater, parent ->
+        ListChangeLanguageViewBinding.inflate(layoutInflater, parent, false)
+      }
+    )
+  )
+
+  override fun defaultModel() = ChangeLanguageModel.FETCHING_LANGUAGES
+
+  override fun createInit() = ChangeLanguageInit()
+
+  override fun createUpdate() = ChangeLanguageUpdate()
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<Unit>) =
+    effectHandlerFactory.create(this).build()
+
+  override fun uiRenderer() = ChangeLanguageUiRenderer(this)
 
   override fun events() = Observable
     .merge(
@@ -294,13 +312,10 @@ class ChangeLanguageScreen : BaseScreen<
     .compose(ReportAnalyticsEvents())
     .cast<ChangeLanguageEvent>()
 
-
-  override fun uiRenderer() = ChangeLanguageUiRenderer(this)
-
-  override fun onAttach(context: Context) {
-    super.onAttach(context)
-    context.injector<Injector>().inject(this)
-  }
+  override fun bindView(
+    layoutInflater: LayoutInflater,
+    container: ViewGroup?
+  ) = ScreenChangeLanguageBinding.inflate(layoutInflater, container, false)
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
@@ -347,7 +362,8 @@ class ChangeLanguageScreen : BaseScreen<
   }
 
   override fun restartActivity() {
-    requireActivity().recreate()
+    startActivity(TheActivity.newIntent(requireContext(), isFreshAuthentication = true))
+    requireActivity().finish()
   }
 
   @Parcelize
@@ -360,12 +376,8 @@ class ChangeLanguageScreen : BaseScreen<
 }
 ```
 
-This class also has an alternate factory function, `MobiusDelegate#forActivity`, which is meant to be used when the screen being built is an
-independent `Activity` or `Fragment` instead of a custom `View`. This was done because of the differences in how a `View` and an `Activity` manage
-their state saving and restoration.
-
-A future plan is to unify these two factories in some fashion. An upcoming release of `Mobius` with support for the Android Architecture Components is
-in active development and this might be a possible solution when it's ready.
+We also have alternate abstract classes, `BaseDialog` and `BaseBottomSheet` which are meant to be used when we have a dialog or a bottom sheet inside
+the screen.
 
 ### Testing
 

@@ -1,8 +1,8 @@
 package org.simple.clinic.monthlyReports.questionnaire.component
 
 import com.squareup.moshi.JsonClass
+import kotlinx.parcelize.Parcelize
 
 @JsonClass(generateAdapter = true)
-data class UnknownComponent(
-    override val type: String = ""
-) : BaseComponent(type = type)
+@Parcelize
+class UnknownComponent : BaseComponent()

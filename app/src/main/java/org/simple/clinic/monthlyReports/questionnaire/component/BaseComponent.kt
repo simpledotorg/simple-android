@@ -6,5 +6,5 @@ import kotlinx.parcelize.Parcelize
 
 @JsonClass(generateAdapter = true)
 @Parcelize
-open class BaseComponent(open val type: String) : Parcelable
+open class BaseComponent : Parcelable
 

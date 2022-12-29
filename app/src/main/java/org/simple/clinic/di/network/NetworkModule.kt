@@ -2,7 +2,6 @@ package org.simple.clinic.di.network
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.EnumJsonAdapter
-import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -15,10 +14,6 @@ import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireComponentType
 import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireType
-import org.simple.clinic.monthlyReports.questionnaire.component.BaseComponent
-import org.simple.clinic.monthlyReports.questionnaire.component.ComponentType
-import org.simple.clinic.monthlyReports.questionnaire.component.UnknownComponent
-import org.simple.clinic.monthlyReports.questionnaire.component.ViewGroup
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.callresult.Outcome

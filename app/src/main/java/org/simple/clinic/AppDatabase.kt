@@ -63,6 +63,7 @@ import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.room.InstantRoomTypeConverter
 import org.simple.clinic.util.room.LocalDateRoomTypeConverter
+import org.simple.clinic.util.room.QuestionnaireLayoutRoomTypeConverter
 import org.simple.clinic.util.room.UuidRoomTypeConverter
 import java.time.Instant
 import org.simple.clinic.drugs.search.Answer as DrugAnswer
@@ -132,7 +133,8 @@ import org.simple.clinic.drugs.search.Answer as DrugAnswer
     DrugAnswer.RoomTypeConverter::class,
     DrugFrequency.RoomTypeConverter::class,
     Outcome.RoomTypeConverter::class,
-    QuestionnaireType.RoomTypeConverter::class
+    QuestionnaireType.RoomTypeConverter::class,
+    QuestionnaireLayoutRoomTypeConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
 

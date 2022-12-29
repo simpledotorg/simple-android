@@ -3,6 +3,7 @@ package org.simple.clinic.di
 import android.app.Application
 import androidx.room.Room
 import androidx.sqlite.db.SupportSQLiteOpenHelper
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
@@ -15,6 +16,7 @@ import org.simple.clinic.storage.text.TextRecord
 import org.simple.clinic.storage.text.TextStoreModule
 import org.simple.clinic.summary.PatientSummaryModule
 import org.simple.clinic.user.User
+import org.simple.clinic.util.room.QuestionnaireLayoutRoomTypeConverter
 
 @Module(includes = [
   RoomMigrationsModule::class,
@@ -31,11 +33,13 @@ class TestStorageModule {
   @Provides
   fun appDatabase(
       appContext: Application,
-      factory: SupportSQLiteOpenHelper.Factory
+      factory: SupportSQLiteOpenHelper.Factory,
+      moshi: Moshi
   ): AppDatabase {
 
     return Room.databaseBuilder(appContext, AppDatabase::class.java, "test-db")
         .openHelperFactory(factory)
+        .addTypeConverter(QuestionnaireLayoutRoomTypeConverter(moshi))
         .apply { allowMainThreadQueries() }
         .build()
   }

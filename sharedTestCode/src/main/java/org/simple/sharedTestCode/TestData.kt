@@ -33,8 +33,14 @@ import org.simple.clinic.location.Coordinates
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
+import org.simple.clinic.monthlyReports.questionnaire.Header
+import org.simple.clinic.monthlyReports.questionnaire.InputField
 import org.simple.clinic.monthlyReports.questionnaire.Questionnaire
+import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireLayout
+import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireLayoutComponent
 import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireType
+import org.simple.clinic.monthlyReports.questionnaire.SubHeader
+import org.simple.clinic.monthlyReports.questionnaire.ViewGroup
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentPayload
@@ -1463,7 +1469,20 @@ object TestData {
   ) = Questionnaire(
       uuid = uuid,
       questionnaire_type = questionnaireType,
-      layout = "{item=[{item=[{text=translation missing: en.Outpatient department visits, type=integer, display={view_type=input_field, orientation=vertical}, link_id=outpatient_department_visits, validations={max=1000000.0, min=0.0}}], text=translation missing: en.Monthly OPD visits for adults >30 years old, type=group, display={view_type=sub_header, orientation=vertical}, link_id=monthly_opd_visits}, {item=[{item=[{text=translation missing: en.Male, type=integer, display={view_type=input_field}, link_id=blood_pressure_checks_male, validations={max=1000000.0, min=0.0}}, {text=translation missing: en.Female, type=integer, display={view_type=input_field}, link_id=blood_pressure_checks_female, validations={max=1000000.0, min=0.0}}], text=translation missing: en.Total BP Checks done, type=group, display={view_type=sub_header, orientation=horizontal}, link_id=total_bp_checks}, {item=[{text=translation missing: en.Male, type=integer, display={view_type=input_field}, link_id=blood_sugar_checks_male, validations={max=1000000.0, min=0.0}}, {text=translation missing: en.Female, type=integer, display={view_type=input_field}, link_id=blood_sugar_checks_female, validations={max=1000000.0, min=0.0}}, {text=translation missing: en.Transgender, type=integer, display={view_type=input_field}, link_id=blood_sugar_checks_transgender, validations={max=1000000.0, min=0.0}}], text=translation missing: en.Total blood sugar checks done, display={view_type=sub_header_group, orientation=horizontal}, link_id=total_blood_sugar_checks}], text=translation missing: en.HTN & DM SCREENING, type=group, display={view_type=header_group, orientation=vertical}, link_id=htm_and_dm_screening}]}",
+      layout = QuestionnaireLayout(
+          components = listOf(
+              QuestionnaireLayoutComponent(id = "monthly_opd_visits_view_group", type = ViewGroup, text = null, subComponents = listOf(
+                  QuestionnaireLayoutComponent(id = "monthly_opd_visits_header", type = Header, text = "Monthly OPD visits for adults >30 years old", subComponents = null),
+                  QuestionnaireLayoutComponent(id = "monthly_opd_visits_sub_header", type = SubHeader, text = null, subComponents = null),
+                  QuestionnaireLayoutComponent(id = "monthly_opd_visits_input_field", type = InputField, text = "Outpatient department visits", subComponents = null)
+              )),
+              QuestionnaireLayoutComponent(id = "monthly_ipd_visits_view_group", type = ViewGroup, text = null, subComponents = listOf(
+                  QuestionnaireLayoutComponent(id = "monthly_ipd_visits_header", type = Header, text = "Monthly IPD visits for adults >30 years old", subComponents = null),
+                  QuestionnaireLayoutComponent(id = "monthly_ipd_visits_sub_header", type = SubHeader, text = null, subComponents = null),
+                  QuestionnaireLayoutComponent(id = "monthly_ipd_visits_input_field", type = InputField, text = "Inpatient department visits", subComponents = null)
+              ))
+          )
+      ),
       deletedAt = null
   )
 }

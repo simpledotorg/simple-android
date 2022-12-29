@@ -20,7 +20,7 @@ data class Questionnaire(
     @PrimaryKey
     val questionnaire_type: QuestionnaireType,
 
-    val layout: String,
+    val layout: QuestionnaireLayout,
 
     val deletedAt: Instant?
 ) : Parcelable {

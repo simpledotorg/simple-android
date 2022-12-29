@@ -12,6 +12,7 @@ import org.simple.clinic.di.AppScope
 import org.simple.clinic.drugs.search.DrugCategory
 import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireComponentType
 import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireType
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
@@ -83,6 +84,7 @@ class NetworkModule {
         .add(Outcome.MoshiTypeAdapter())
         .add(ContactType.MoshiTypeAdapter())
         .add(QuestionnaireType.MoshiTypeAdapter())
+        .add(QuestionnaireComponentType.MoshiTypeAdapter())
         .build()
 
     val patientPayloadNullSerializingAdapter = moshi.adapter(PatientPayload::class.java).serializeNulls()

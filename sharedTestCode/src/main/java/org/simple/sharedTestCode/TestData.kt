@@ -33,14 +33,9 @@ import org.simple.clinic.location.Coordinates
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
-//import org.simple.clinic.monthlyReports.questionnaire.component.Header
-//import org.simple.clinic.monthlyReports.questionnaire.component.InputField
 import org.simple.clinic.monthlyReports.questionnaire.Questionnaire
 import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireLayout
-//import org.simple.clinic.monthlyReports.questionnaire.component.QuestionnaireLayoutComponent
 import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireType
-//import org.simple.clinic.monthlyReports.questionnaire.component.SubHeader
-import org.simple.clinic.monthlyReports.questionnaire.component.ViewGroup
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentPayload

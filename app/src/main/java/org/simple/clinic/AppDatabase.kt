@@ -207,9 +207,6 @@ abstract class AppDatabase : RoomDatabase() {
       teleconsultFacilityWithMedicalOfficersDao().clear()
       teleconsultRecordDao().clear()
       callResultDao().clear()
-
-      //Todo Sid - Do we need to clear the questionnaire table
-      questionnaireDao().clearData()
     }
   }
 

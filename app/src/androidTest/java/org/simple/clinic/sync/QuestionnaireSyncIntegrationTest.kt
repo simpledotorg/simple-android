@@ -1,7 +1,7 @@
 package org.simple.clinic.sync
 
 import com.f2prateek.rx.preferences2.Preference
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Rule
@@ -15,6 +15,7 @@ import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireRepository
 import org.simple.clinic.monthlyReports.questionnaire.sync.QuestionnaireSync
 import org.simple.clinic.monthlyReports.questionnaire.sync.QuestionnaireSyncApi
 import org.simple.clinic.rules.SaveDatabaseRule
+import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.sharedTestCode.util.Rules
 import java.util.Optional
 import javax.inject.Inject
@@ -41,7 +42,7 @@ class QuestionnaireSyncIntegrationTest {
   @get:Rule
   val ruleChain: RuleChain = Rules
       .global()
-      //      .around(ServerAuthenticationRule())
+      .around(ServerAuthenticationRule())
       .around(SaveDatabaseRule())
 
   private lateinit var sync: QuestionnaireSync
@@ -83,12 +84,12 @@ class QuestionnaireSyncIntegrationTest {
   @Test
   fun syncing_records_should_work_as_expected() {
     // when
-    Truth.assertThat(repository.recordCount().blockingFirst()).isEqualTo(0)
+    assertThat(repository.recordCount().blockingFirst()).isEqualTo(0)
     sync.pull()
 
     // then
     val pulledRecords = repository.questionnaires()
 
-    Truth.assertThat(pulledRecords).isNotEmpty()
+    assertThat(pulledRecords).isNotEmpty()
   }
 }

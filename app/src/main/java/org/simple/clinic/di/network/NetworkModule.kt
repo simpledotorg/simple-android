@@ -2,6 +2,7 @@ package org.simple.clinic.di.network
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.EnumJsonAdapter
+import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import okhttp3.Interceptor
@@ -14,6 +15,10 @@ import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireComponentType
 import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireType
+import org.simple.clinic.monthlyReports.questionnaire.component.BaseComponent
+import org.simple.clinic.monthlyReports.questionnaire.component.ComponentType
+import org.simple.clinic.monthlyReports.questionnaire.component.UnknownComponent
+import org.simple.clinic.monthlyReports.questionnaire.component.ViewGroup
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.callresult.Outcome
@@ -38,6 +43,7 @@ import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.moshi.InstantMoshiAdapter
 import org.simple.clinic.util.moshi.LocalDateMoshiAdapter
 import org.simple.clinic.util.moshi.MoshiOptionalAdapterFactory
+import org.simple.clinic.util.moshi.QuestionnairePolymorphicJsonAdapterFactoryProvider
 import org.simple.clinic.util.moshi.URIMoshiAdapter
 import org.simple.clinic.util.moshi.UuidMoshiAdapter
 import java.util.concurrent.TimeUnit
@@ -85,6 +91,8 @@ class NetworkModule {
         .add(ContactType.MoshiTypeAdapter())
         .add(QuestionnaireType.MoshiTypeAdapter())
         .add(QuestionnaireComponentType.MoshiTypeAdapter())
+        .add(QuestionnairePolymorphicJsonAdapterFactoryProvider().getFactory())
+        //        .add(KotlinJsonAdapterFactory())
         .build()
 
     val patientPayloadNullSerializingAdapter = moshi.adapter(PatientPayload::class.java).serializeNulls()

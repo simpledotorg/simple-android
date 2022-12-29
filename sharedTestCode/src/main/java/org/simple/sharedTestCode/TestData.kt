@@ -33,14 +33,14 @@ import org.simple.clinic.location.Coordinates
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
-import org.simple.clinic.monthlyReports.questionnaire.Header
-import org.simple.clinic.monthlyReports.questionnaire.InputField
+//import org.simple.clinic.monthlyReports.questionnaire.component.Header
+//import org.simple.clinic.monthlyReports.questionnaire.component.InputField
 import org.simple.clinic.monthlyReports.questionnaire.Questionnaire
 import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireLayout
-import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireLayoutComponent
+//import org.simple.clinic.monthlyReports.questionnaire.component.QuestionnaireLayoutComponent
 import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireType
-import org.simple.clinic.monthlyReports.questionnaire.SubHeader
-import org.simple.clinic.monthlyReports.questionnaire.ViewGroup
+//import org.simple.clinic.monthlyReports.questionnaire.component.SubHeader
+import org.simple.clinic.monthlyReports.questionnaire.component.ViewGroup
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentPayload
@@ -1470,18 +1470,7 @@ object TestData {
       uuid = uuid,
       questionnaire_type = questionnaireType,
       layout = QuestionnaireLayout(
-          components = listOf(
-              QuestionnaireLayoutComponent(id = "monthly_opd_visits_view_group", type = ViewGroup, text = null, subComponents = listOf(
-                  QuestionnaireLayoutComponent(id = "monthly_opd_visits_header", type = Header, text = "Monthly OPD visits for adults >30 years old", subComponents = null),
-                  QuestionnaireLayoutComponent(id = "monthly_opd_visits_sub_header", type = SubHeader, text = null, subComponents = null),
-                  QuestionnaireLayoutComponent(id = "monthly_opd_visits_input_field", type = InputField, text = "Outpatient department visits", subComponents = null)
-              )),
-              QuestionnaireLayoutComponent(id = "monthly_ipd_visits_view_group", type = ViewGroup, text = null, subComponents = listOf(
-                  QuestionnaireLayoutComponent(id = "monthly_ipd_visits_header", type = Header, text = "Monthly IPD visits for adults >30 years old", subComponents = null),
-                  QuestionnaireLayoutComponent(id = "monthly_ipd_visits_sub_header", type = SubHeader, text = null, subComponents = null),
-                  QuestionnaireLayoutComponent(id = "monthly_ipd_visits_input_field", type = InputField, text = "Inpatient department visits", subComponents = null)
-              ))
-          )
+          components = listOf()
       ),
       deletedAt = null
   )

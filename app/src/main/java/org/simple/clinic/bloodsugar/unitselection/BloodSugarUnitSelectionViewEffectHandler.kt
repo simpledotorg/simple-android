@@ -7,6 +7,8 @@ class BloodSugarUnitSelectionViewEffectHandler(
 ) : ViewEffectsHandler<BloodSugarUnitSelectionViewEffect> {
 
   override fun handle(viewEffect: BloodSugarUnitSelectionViewEffect) {
-    // no-op
+    when (viewEffect) {
+      CloseDialog -> uiActions.closeDialog()
+    }
   }
 }

@@ -265,7 +265,8 @@ interface UiActions {
 
 ### Wiring it all together
 
-We have implemented [`BaseScreen`](https://github.com/simpledotorg/simple-android/blob/master/doc/arch/011-screen-navigation-v2.md)
+We have
+implemented [`BaseScreen`](https://github.com/simpledotorg/simple-android/blob/2389bbcd78fae50e30be0791fa7f470753dfeecb/app/src/main/java/org/simple/clinic/navigation/v2/fragments/BaseScreen.kt#L1-L125)
 , which is a abstract class extending the fragment to support our navigation framework, and is designed to encapsulate the work of tying the `Mobius`
 loop to the Android component lifecycle.
 

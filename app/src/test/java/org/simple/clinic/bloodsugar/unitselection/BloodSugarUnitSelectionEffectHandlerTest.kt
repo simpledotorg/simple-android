@@ -19,7 +19,6 @@ class BloodSugarUnitSelectionEffectHandlerTest {
   private val effectHandler = BloodSugarUnitSelectionEffectHandler(
       schedulersProvider = TestSchedulersProvider.trampoline(),
       bloodSugarUnitPreference = bloodSugarUnitPreference,
-      uiActions = uiActions,
       viewEffectsConsumer = viewEffectHandler::handle
   ).build()
 

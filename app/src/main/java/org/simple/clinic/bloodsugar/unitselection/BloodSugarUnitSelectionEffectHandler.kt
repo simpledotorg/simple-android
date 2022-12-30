@@ -13,16 +13,12 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 class BloodSugarUnitSelectionEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val bloodSugarUnitPreference: Preference<BloodSugarUnitPreference>,
-    @Assisted private val uiActions: BloodSugarUnitSelectionUiActions,
     @Assisted val viewEffectsConsumer: Consumer<BloodSugarUnitSelectionViewEffect>
 ) {
 
   @AssistedFactory
   interface Factory {
-    fun create(
-        uiActions: BloodSugarUnitSelectionUiActions,
-        viewEffectsConsumer: Consumer<BloodSugarUnitSelectionViewEffect>
-    ): BloodSugarUnitSelectionEffectHandler
+    fun create(viewEffectsConsumer: Consumer<BloodSugarUnitSelectionViewEffect>): BloodSugarUnitSelectionEffectHandler
   }
 
   fun build(): ObservableTransformer<BloodSugarUnitSelectionEffect, BloodSugarUnitSelectionEvent> {

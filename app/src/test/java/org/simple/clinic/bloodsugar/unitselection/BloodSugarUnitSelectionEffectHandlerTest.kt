@@ -15,10 +15,12 @@ class BloodSugarUnitSelectionEffectHandlerTest {
 
   private val bloodSugarUnitPreference = mock<Preference<BloodSugarUnitPreference>>()
   private val uiActions = mock<BloodSugarUnitSelectionUiActions>()
+  private val viewEffectHandler = BloodSugarUnitSelectionViewEffectHandler(uiActions)
   private val effectHandler = BloodSugarUnitSelectionEffectHandler(
       schedulersProvider = TestSchedulersProvider.trampoline(),
       bloodSugarUnitPreference = bloodSugarUnitPreference,
-      uiActions = uiActions
+      uiActions = uiActions,
+      viewEffectsConsumer = viewEffectHandler::handle
   ).build()
 
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)

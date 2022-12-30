@@ -82,7 +82,10 @@ class BloodSugarUnitSelectionDialog : BaseDialog<
 
   override fun createInit() = BloodSugarUnitSelectionInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<BloodSugarUnitSelectionViewEffect>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<BloodSugarUnitSelectionViewEffect>) = effectHandlerFactory.create(
+      uiActions = this,
+      viewEffectsConsumer = viewEffectsConsumer
+  ).build()
 
   override fun events(): Observable<BloodSugarUnitSelectionEvent> = hotEvents.cast()
 

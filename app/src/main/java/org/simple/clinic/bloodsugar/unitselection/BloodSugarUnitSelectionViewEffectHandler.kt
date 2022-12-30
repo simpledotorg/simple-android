@@ -9,6 +9,7 @@ class BloodSugarUnitSelectionViewEffectHandler(
   override fun handle(viewEffect: BloodSugarUnitSelectionViewEffect) {
     when (viewEffect) {
       CloseDialog -> uiActions.closeDialog()
+      is PreFillBloodSugarUnitSelected -> uiActions.prefillBloodSugarUnitSelection(viewEffect.bloodSugarUnitPreference)
     }
   }
 }

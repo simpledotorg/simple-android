@@ -29,7 +29,6 @@ class BloodSugarUnitSelectionEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<BloodSugarUnitSelectionEffect, BloodSugarUnitSelectionEvent>()
         .addTransformer(SaveBloodSugarUnitSelection::class.java, updateBloodSugarUnitPreferenceSelection())
-        .addConsumer(PreFillBloodSugarUnitSelected::class.java, { uiActions.prefillBloodSugarUnitSelection(it.bloodSugarUnitPreference) }, schedulersProvider.ui())
         .addConsumer(BloodSugarUnitSelectionViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }

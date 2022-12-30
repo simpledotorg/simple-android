@@ -26,6 +26,7 @@ import org.simple.clinic.main.TypedPreference.Type.FacilitySyncGroupSwitchedAt
 import org.simple.clinic.medicalhistory.MedicalHistoryModule
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
+import org.simple.clinic.monthlyReports.questionnaire.di.QuestionnaireModule
 import org.simple.clinic.overdue.AppointmentModule
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.AppointmentSync
@@ -62,7 +63,8 @@ import javax.inject.Named
   HelpModule::class,
   DrugModule::class,
   CallResultModule::class,
-  OverdueListDownloadModule::class
+  OverdueListDownloadModule::class,
+  QuestionnaireModule::class
 ])
 class SyncModule {
 

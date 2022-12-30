@@ -17,8 +17,9 @@ import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.home.overdue.OverdueAppointment_Old
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
-import org.simple.clinic.monthlyReports.Questionnaire
-import org.simple.clinic.monthlyReports.QuestionnaireType
+import org.simple.clinic.monthlyReports.questionnaire.Questionnaire
+import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireLayout
+import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireType
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.callresult.CallResult
@@ -132,7 +133,8 @@ import org.simple.clinic.drugs.search.Answer as DrugAnswer
     DrugAnswer.RoomTypeConverter::class,
     DrugFrequency.RoomTypeConverter::class,
     Outcome.RoomTypeConverter::class,
-    QuestionnaireType.RoomTypeConverter::class
+    QuestionnaireType.RoomTypeConverter::class,
+    QuestionnaireLayout.RoomTypeConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
 
@@ -187,6 +189,8 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun drugDao(): Drug.RoomDao
 
   abstract fun callResultDao(): CallResult.RoomDao
+
+  abstract fun questionnaireDao(): Questionnaire.RoomDao
 
   fun clearAppData() {
     runInTransaction {

@@ -33,6 +33,10 @@ import org.simple.clinic.location.Coordinates
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
+import org.simple.clinic.monthlyReports.questionnaire.Questionnaire
+import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireLayout
+import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireType
+import org.simple.clinic.monthlyReports.questionnaire.component.ViewGroup
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentPayload
@@ -1453,4 +1457,23 @@ object TestData {
       patientId = patientId,
       facilityId = facilityUuid
   )
+
+  fun questionnaire(
+      uuid: UUID = UUID.fromString("f9a42c9f-01fe-40c5-b625-64b3e9868d5e"),
+      questionnaireType: QuestionnaireType = QuestionnaireType.random(),
+      layout: QuestionnaireLayout = getTestQuestionnaireLayout()
+  ) = Questionnaire(
+      uuid = uuid,
+      questionnaire_type = questionnaireType,
+      layout = layout,
+      deletedAt = null
+  )
+
+  private fun getTestQuestionnaireLayout() = QuestionnaireLayout(
+      components = listOf(
+          ViewGroup(id = "monthly_opd_visits",
+              children = listOf(
+                  ViewGroup("monthly_opd_visits_header", children = null)
+              ))
+      ))
 }

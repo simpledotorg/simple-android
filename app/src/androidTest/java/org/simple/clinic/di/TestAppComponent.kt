@@ -64,6 +64,7 @@ import org.simple.clinic.sync.MedicalHistorySyncIntegrationTest
 import org.simple.clinic.sync.PatientSyncIntegrationTest
 import org.simple.clinic.sync.PrescriptionSyncIntegrationTest
 import org.simple.clinic.sync.ProtocolSyncIntegrationTest
+import org.simple.clinic.sync.QuestionnaireSyncIntegrationTest
 import org.simple.clinic.sync.ReportsSyncIntegrationTest
 import org.simple.clinic.sync.TeleconsultationSyncIntegrationTest
 import org.simple.clinic.teleconsultlog.teleconsultrecord.TeleconsultRecordRepositoryAndroidTest
@@ -154,4 +155,5 @@ interface TestAppComponent {
   fun inject(target: PatientLineListCsvGeneratorTest)
   fun inject(target: PatientLineListDownloaderTest)
   fun inject(target: QuestionnaireRepositoryAndroidTest)
+  fun inject(target: QuestionnaireSyncIntegrationTest)
 }

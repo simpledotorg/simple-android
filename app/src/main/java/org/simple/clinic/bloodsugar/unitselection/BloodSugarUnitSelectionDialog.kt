@@ -30,7 +30,7 @@ class BloodSugarUnitSelectionDialog : BaseDialog<
     BloodSugarUnitSelectionModel,
     BloodSugarUnitSelectionEvent,
     BloodSugarUnitSelectionEffect,
-    Nothing>(), BloodSugarUnitSelectionUiActions {
+    BloodSugarUnitSelectionViewEffect>(), BloodSugarUnitSelectionUiActions {
 
   private val bloodSugarUnitGroup
     get() = binding.bloodSugarUnitGroup
@@ -82,7 +82,7 @@ class BloodSugarUnitSelectionDialog : BaseDialog<
 
   override fun createInit() = BloodSugarUnitSelectionInit()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Nothing>) = effectHandlerFactory.create(this).build()
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<BloodSugarUnitSelectionViewEffect>) = effectHandlerFactory.create(this).build()
 
   override fun events(): Observable<BloodSugarUnitSelectionEvent> = hotEvents.cast()
 

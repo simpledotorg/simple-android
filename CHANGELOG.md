@@ -2,8 +2,11 @@
 
 ## Next Release
 
+### Internal
+
 - Update adding a new screen document
 - Added deleted_at column to `Questionnaire`s table
+- Migrate `BloodSugarUnitSelectionDialog` to use view effects
 
 ### Internal
 

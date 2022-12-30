@@ -6,6 +6,8 @@ sealed class BloodSugarUnitSelectionEffect
 
 data class SaveBloodSugarUnitSelection(val bloodSugarUnitSelection: BloodSugarUnitPreference) : BloodSugarUnitSelectionEffect()
 
-object CloseDialog : BloodSugarUnitSelectionEffect()
+sealed class BloodSugarUnitSelectionViewEffect : BloodSugarUnitSelectionEffect()
 
-data class PreFillBloodSugarUnitSelected(val bloodSugarUnitPreference: BloodSugarUnitPreference) : BloodSugarUnitSelectionEffect()
+object CloseDialog : BloodSugarUnitSelectionViewEffect()
+
+data class PreFillBloodSugarUnitSelected(val bloodSugarUnitPreference: BloodSugarUnitPreference) : BloodSugarUnitSelectionViewEffect()

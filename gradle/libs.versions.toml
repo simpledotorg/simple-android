@@ -167,7 +167,7 @@ soloader = "com.facebook.soloader:soloader:0.10.5"
 
 sqlite-android = "com.github.requery:sqlite-android:3.39.2"
 
-threeten-extra = "org.threeten:threeten-extra:1.7.1"
+threeten-extra = "org.threeten:threeten-extra:1.7.2"
 
 timber = "com.jakewharton.timber:timber:5.0.1"
 

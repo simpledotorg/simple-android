@@ -1,7 +1,7 @@
+package org.simple.clinic.monthlyReports.questionnaire.sync
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import org.simple.clinic.monthlyReports.questionnaire.sync.QuestionnairePayload
 import org.simple.clinic.sync.DataPullResponse
 
 @JsonClass(generateAdapter = true)

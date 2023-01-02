@@ -8,6 +8,7 @@
 - Migrate `BloodSugarUnitSelectionDialog` to use view effects
 - Add deleted_at column to `Questionnaire`s table
 - Add Questionnaire repository
+- Bump fragment-ktx to v1.5.5
 
 ### Internal
 

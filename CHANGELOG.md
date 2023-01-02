@@ -9,6 +9,7 @@
 - Add deleted_at column to `Questionnaire`s table
 - Add Questionnaire repository
 - Bump fragment-ktx to v1.5.5
+- Bump threeten-extra to v1.7.2
 
 ### Internal
 

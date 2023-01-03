@@ -1,6 +1,11 @@
 # CHANGELOG
 
 ## Next Release
+- Bump threeten-extra to v1.7.2
+
+### Internal
+
+## 2023-01-02-8563
 
 ### Internal
 
@@ -9,15 +14,13 @@
 - Add deleted_at column to `Questionnaire`s table
 - Add Questionnaire repository
 - Bump fragment-ktx to v1.5.5
-- Bump threeten-extra to v1.7.2
 - Add Questionnaire sync resource
 - Remove Questionnaire sync resource from syncs
-
-### Internal
 
 ## 2022-12-26-8555
 
 ### Internal
+
 - Add `Questionnaire`s table
 - Replace deprecated `set-output` command in GH Actions
 - Fix renovate config to open updates on first day of the month

@@ -1,9 +1,10 @@
 # CHANGELOG
 
 ## Next Release
-- Bump threeten-extra to v1.7.2
 
 ### Internal
+
+- Bump threeten-extra to v1.7.2
 
 ## 2023-01-02-8563
 

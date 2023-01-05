@@ -33,10 +33,21 @@ import org.simple.clinic.location.Coordinates
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
+import org.simple.clinic.monthlyReports.questionnaire.MonthlyScreeningReports
 import org.simple.clinic.monthlyReports.questionnaire.Questionnaire
-import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireLayout
 import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireType
-import org.simple.clinic.monthlyReports.questionnaire.component.ViewGroup
+import org.simple.clinic.monthlyReports.questionnaire.component.BaseComponentData
+import org.simple.clinic.monthlyReports.questionnaire.component.HeaderComponentData
+import org.simple.clinic.monthlyReports.questionnaire.component.ViewGroupComponentData
+import org.simple.clinic.monthlyReports.questionnaire.component.InputFieldComponentData
+import org.simple.clinic.monthlyReports.questionnaire.component.LineSeparatorComponentData
+import org.simple.clinic.monthlyReports.questionnaire.component.SeparatorComponentData
+import org.simple.clinic.monthlyReports.questionnaire.component.SubHeaderComponentData
+import org.simple.clinic.monthlyReports.questionnaire.component.properties.ComponentDisplayProperties
+import org.simple.clinic.monthlyReports.questionnaire.component.properties.Horizontal
+import org.simple.clinic.monthlyReports.questionnaire.component.properties.InputFieldValidations
+import org.simple.clinic.monthlyReports.questionnaire.component.properties.Vertical
+import org.simple.clinic.monthlyReports.questionnaire.component.properties.Integer
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentPayload
@@ -1460,8 +1471,8 @@ object TestData {
 
   fun questionnaire(
       uuid: UUID = UUID.fromString("f9a42c9f-01fe-40c5-b625-64b3e9868d5e"),
-      questionnaireType: QuestionnaireType = QuestionnaireType.random(),
-      layout: QuestionnaireLayout = getTestQuestionnaireLayout()
+      questionnaireType: QuestionnaireType = MonthlyScreeningReports,
+      layout: BaseComponentData = getTestQuestionnaireLayout()
   ) = Questionnaire(
       uuid = uuid,
       questionnaire_type = questionnaireType,
@@ -1469,11 +1480,39 @@ object TestData {
       deletedAt = null
   )
 
-  private fun getTestQuestionnaireLayout() = QuestionnaireLayout(
-      components = listOf(
-          ViewGroup(id = "monthly_opd_visits",
+  private fun getTestQuestionnaireLayout() = ViewGroupComponentData(
+      displayProperties = ComponentDisplayProperties(
+          orientation = Vertical
+      ),
+      children = listOf(
+          SubHeaderComponentData(
+              text = "Monthly OPD visits for adults >30 years old"
+          ),
+          InputFieldComponentData(
+              id = "outpatient_department_visits",
+              text = "Outpatient department visits",
+              type = Integer,
+              validations = InputFieldValidations(min = 0, max = 1000000)
+          ),
+          HeaderComponentData(text = "HTN & DM SCREENING"),
+          SubHeaderComponentData(text = "Total BP Checks done"),
+          ViewGroupComponentData(
+              displayProperties = ComponentDisplayProperties(orientation = Horizontal),
               children = listOf(
-                  ViewGroup("monthly_opd_visits_header", children = null)
-              ))
-      ))
+                  InputFieldComponentData(
+                      id = "blood_pressure_checks_male",
+                      text = "Male",
+                      type = Integer,
+                      validations = InputFieldValidations(min = 0, max = 1000000)),
+                  InputFieldComponentData(
+                      id = "blood_pressure_checks_female",
+                      text = "Female",
+                      type = Integer,
+                      validations = InputFieldValidations(min = 0, max = 1000000))
+              )
+          ),
+          SeparatorComponentData(),
+          LineSeparatorComponentData(),
+      )
+  )
 }

@@ -6,10 +6,8 @@ import kotlinx.parcelize.Parcelize
 
 @JsonClass(generateAdapter = true)
 @Parcelize
-data class ViewGroup(
-    @Json(name = "link_id")
-    val id: String,
+data class SubHeaderComponentData(
+    @Json(name = "text")
+    val text: String
+) : BaseComponentData()
 
-    @Json(name = "item")
-    val children: List<BaseComponent>?
-) : BaseComponent()

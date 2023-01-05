@@ -13,6 +13,8 @@ import org.simple.clinic.drugs.search.DrugCategory
 import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireType
+import org.simple.clinic.monthlyReports.questionnaire.component.properties.InputFieldType
+import org.simple.clinic.monthlyReports.questionnaire.component.properties.OrientationType
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.callresult.Outcome
@@ -37,7 +39,7 @@ import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.moshi.InstantMoshiAdapter
 import org.simple.clinic.util.moshi.LocalDateMoshiAdapter
 import org.simple.clinic.util.moshi.MoshiOptionalAdapterFactory
-import org.simple.clinic.util.moshi.QuestionnaireLayoutJsonAdapter
+import org.simple.clinic.monthlyReports.questionnaire.BaseComponentDataPolymorphicJsonAdapter
 import org.simple.clinic.util.moshi.URIMoshiAdapter
 import org.simple.clinic.util.moshi.UuidMoshiAdapter
 import java.util.concurrent.TimeUnit
@@ -84,7 +86,9 @@ class NetworkModule {
         .add(Outcome.MoshiTypeAdapter())
         .add(ContactType.MoshiTypeAdapter())
         .add(QuestionnaireType.MoshiTypeAdapter())
-        .add(QuestionnaireLayoutJsonAdapter().getFactory())
+        .add(OrientationType.MoshiTypeAdapter())
+        .add(InputFieldType.MoshiTypeAdapter())
+        .add(BaseComponentDataPolymorphicJsonAdapter().getFactory())
         .build()
 
     val patientPayloadNullSerializingAdapter = moshi.adapter(PatientPayload::class.java).serializeNulls()

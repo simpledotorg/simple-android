@@ -19,6 +19,7 @@ annotation class TypedPreference(val value: Type) {
     IsDrugStockReportFilled,
     DrugStockFormURL,
     OverdueSearchHistory,
-    LastCallResultPullToken
+    LastCallResultPullToken,
+    LastQuestionnairePullToken
   }
 }

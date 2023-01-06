@@ -11,6 +11,7 @@
 - Bump fragment-ktx to v1.5.5
 - Bump threeten-extra to v1.7.2
 - Add Questionnaire sync resource
+- Remove Questionnaire sync resource from syncs
 
 ### Internal
 

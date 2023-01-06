@@ -4,7 +4,13 @@
 
 ### Internal
 
+## 2023-01-09-8563
+
+### Internal
+
 - Bump threeten-extra to v1.7.2
+- Add Questionnaire sync resource
+- Remove Questionnaire sync resource from syncs
 
 ## 2023-01-02-8563
 
@@ -15,8 +21,6 @@
 - Add deleted_at column to `Questionnaire`s table
 - Add Questionnaire repository
 - Bump fragment-ktx to v1.5.5
-- Add Questionnaire sync resource
-- Remove Questionnaire sync resource from syncs
 
 ## 2022-12-26-8555
 
@@ -33,7 +37,7 @@
 
 - Remove `app_name` form translated strings and make it untranslatable
 - Updated translations: `so_ET`
-- Remove `CommitAndPush` script 
+- Remove `CommitAndPush` script
 
 ## 2022-12-12-8539
 

@@ -111,6 +111,12 @@ class QuestionnaireEntryScreen : BaseScreen<
   override fun goBack() {
   }
 
+  override fun showProgress() {
+  }
+
+  override fun hideProgress() {
+  }
+
   interface Injector {
     fun inject(target: QuestionnaireEntryScreen)
   }

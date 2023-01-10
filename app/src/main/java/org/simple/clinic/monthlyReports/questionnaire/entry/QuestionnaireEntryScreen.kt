@@ -5,7 +5,10 @@ import android.view.ViewGroup
 import com.spotify.mobius.functions.Consumer
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.databinding.ScreenQuestionnaireEntryFormBinding
+import org.simple.clinic.drugs.EditMedicinesViewEffectHandler
 import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireType
+import org.simple.clinic.monthlyReports.questionnaire.component.BaseComponentData
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -18,6 +21,9 @@ class QuestionnaireEntryScreen : BaseScreen<
     QuestionnaireEntryEvent,
     QuestionnaireEntryEffect,
     QuestionnaireEntryViewEffect>(), QuestionnaireEntryUi {
+
+  @Inject
+  lateinit var router: Router
 
   @Inject
   lateinit var schedulersProvider: SchedulersProvider
@@ -33,6 +39,8 @@ class QuestionnaireEntryScreen : BaseScreen<
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<QuestionnaireEntryViewEffect>) =
       effectHandlerFactory.create(viewEffectsConsumer = viewEffectsConsumer).build()
+
+  override fun viewEffectHandler() = QuestionnaireEntryViewEffectHandler(this)
 
   override fun uiRenderer() = QuestionnaireEntryUiRenderer(this)
 
@@ -50,10 +58,10 @@ class QuestionnaireEntryScreen : BaseScreen<
     override fun instantiateFragment() = QuestionnaireEntryScreen()
   }
 
-  override fun showProgress() {
+  override fun displayQuestionnaireFormLayout(layout: BaseComponentData) {
   }
 
-  override fun hideProgress() {
+  override fun goBack() {
   }
 
   interface Injector {

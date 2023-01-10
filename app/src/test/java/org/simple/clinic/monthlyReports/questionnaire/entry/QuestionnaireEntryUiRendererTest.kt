@@ -1,0 +1,34 @@
+package org.simple.clinic.monthlyReports.questionnaire.entry
+
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import org.junit.Test
+import org.simple.sharedTestCode.TestData
+import java.util.UUID
+
+class QuestionnaireEntryUiRendererTest {
+
+  private val ui = mock<QuestionnaireEntryUi>()
+  private val uiRenderer = QuestionnaireEntryUiRenderer(ui)
+
+  private val defaultModel = QuestionnaireEntryModel.default()
+
+  @Test
+  fun `when questionnaire form loaded, then render questionnaire form layout`() {
+    // given
+    val questionnaire = TestData.questionnaire(
+        uuid = UUID.fromString("43d8c0b3-3341-4147-9a08-aac27e7f721f")
+    )
+
+    val model = defaultModel
+        .formLoaded(questionnaire)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).displayQuestionnaireFormLayout(questionnaire.layout)
+    verifyNoMoreInteractions(ui)
+  }
+}

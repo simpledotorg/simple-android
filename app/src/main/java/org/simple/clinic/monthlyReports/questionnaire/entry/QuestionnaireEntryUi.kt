@@ -1,6 +1,8 @@
 package org.simple.clinic.monthlyReports.questionnaire.entry
 
+import org.simple.clinic.monthlyReports.questionnaire.component.BaseComponentData
+
 interface QuestionnaireEntryUi {
-  fun showProgress()
-  fun hideProgress()
+  fun displayQuestionnaireFormLayout(layout: BaseComponentData)
+  fun goBack()
 }

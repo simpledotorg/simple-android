@@ -1,11 +1,12 @@
 package org.simple.clinic.monthlyReports.questionnaire.entry
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.spotify.mobius.functions.Consumer
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.databinding.ScreenQuestionnaireEntryFormBinding
-import org.simple.clinic.drugs.EditMedicinesViewEffectHandler
+import org.simple.clinic.di.injector
 import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireType
 import org.simple.clinic.monthlyReports.questionnaire.component.BaseComponentData
 import org.simple.clinic.navigation.v2.Router
@@ -48,6 +49,11 @@ class QuestionnaireEntryScreen : BaseScreen<
       layoutInflater: LayoutInflater,
       container: ViewGroup?
   ) = ScreenQuestionnaireEntryFormBinding.inflate(layoutInflater, container, false)
+
+  override fun onAttach(context: Context) {
+    super.onAttach(context)
+    context.injector<Injector>().inject(this)
+  }
 
   @Parcelize
   data class Key(

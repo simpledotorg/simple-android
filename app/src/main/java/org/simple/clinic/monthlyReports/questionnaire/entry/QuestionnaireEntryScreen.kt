@@ -81,13 +81,14 @@ class QuestionnaireEntryScreen : BaseScreen<
   override fun displayQuestionnaireFormLayout(layout: BaseComponentData) {
   }
 
-  override fun goBack() {
-  }
 
   override fun showProgress() {
   }
 
   override fun hideProgress() {
+  }
+
+  override fun goBack() {
   }
 
   interface Injector {

@@ -11,7 +11,6 @@ class QuestionnaireEntryUiRenderer(private val ui: QuestionnaireEntryUi) : ViewR
     } else {
       //no-op
     }
-
     if (model.hasFacility) {
       renderFacility(model)
     }

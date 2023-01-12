@@ -5,12 +5,15 @@ import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class QuestionnaireEntryEffectHandler @AssistedInject constructor(
+    private val currentFacility: Observable<Facility>,
     private val questionnaireRepository: QuestionnaireRepository,
     private val schedulersProvider: SchedulersProvider,
     @Assisted private val viewEffectsConsumer: Consumer<QuestionnaireEntryViewEffect>
@@ -25,12 +28,24 @@ class QuestionnaireEntryEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<QuestionnaireEntryEffect, QuestionnaireEntryEvent> {
     return RxMobius
         .subtypeEffectHandler<QuestionnaireEntryEffect, QuestionnaireEntryEvent>()
+        .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility(schedulersProvider.io()))
         .addTransformer(LoadQuestionnaireFormEffect::class.java, loadQuestionnaireLayout(schedulersProvider.io()))
         .addConsumer(QuestionnaireEntryViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 
-  private fun loadQuestionnaireLayout(scheduler: Scheduler): ObservableTransformer<LoadQuestionnaireFormEffect, QuestionnaireEntryEvent> {
+  private fun loadCurrentFacility(scheduler: Scheduler):
+      ObservableTransformer<LoadCurrentFacility, QuestionnaireEntryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(scheduler)
+          .switchMap { currentFacility }
+          .map(::CurrentFacilityLoaded)
+    }
+  }
+
+  private fun loadQuestionnaireLayout(scheduler: Scheduler):
+      ObservableTransformer<LoadQuestionnaireFormEffect, QuestionnaireEntryEvent> {
     return ObservableTransformer { loadQuestionnaireForm ->
       loadQuestionnaireForm
           .observeOn(scheduler)

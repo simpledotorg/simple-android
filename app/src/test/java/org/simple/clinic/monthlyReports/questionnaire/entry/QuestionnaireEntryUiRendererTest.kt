@@ -31,4 +31,23 @@ class QuestionnaireEntryUiRendererTest {
     verify(ui).displayQuestionnaireFormLayout(questionnaire.layout)
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when current facility loaded, then set facility title`() {
+    // given
+    val facility = TestData.facility(
+        uuid = UUID.fromString("d05d20cf-858b-432a-a312-f402681e56b3"),
+        name = "PHC Simple"
+    )
+
+    val model = defaultModel
+        .currentFacilityLoaded(facility)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).setFacility(facility.name)
+    verifyNoMoreInteractions(ui)
+  }
 }

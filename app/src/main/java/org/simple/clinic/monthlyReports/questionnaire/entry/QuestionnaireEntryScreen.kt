@@ -1,7 +1,9 @@
 package org.simple.clinic.monthlyReports.questionnaire.entry
 
 import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.spotify.mobius.functions.Consumer
 import kotlinx.parcelize.Parcelize
@@ -32,6 +34,9 @@ class QuestionnaireEntryScreen : BaseScreen<
   @Inject
   lateinit var effectHandlerFactory: QuestionnaireEntryEffectHandler.Factory
 
+  private val questionnaireFormToolbar
+    get() = binding.questionnaireFormToolbar
+
   override fun defaultModel() = QuestionnaireEntryModel.default()
 
   override fun createInit() = QuestionnaireEntryInit(screenKey.questionnaireType)
@@ -55,6 +60,11 @@ class QuestionnaireEntryScreen : BaseScreen<
     context.injector<Injector>().inject(this)
   }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    questionnaireFormToolbar.setNavigationOnClickListener { router.pop() }
+  }
+
   @Parcelize
   data class Key(
       val questionnaireType: QuestionnaireType,
@@ -62,6 +72,10 @@ class QuestionnaireEntryScreen : BaseScreen<
   ) : ScreenKey() {
 
     override fun instantiateFragment() = QuestionnaireEntryScreen()
+  }
+
+  override fun setFacility(facilityName: String) {
+    questionnaireFormToolbar.title = facilityName
   }
 
   override fun displayQuestionnaireFormLayout(layout: BaseComponentData) {

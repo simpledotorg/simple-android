@@ -6,6 +6,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.sharedTestCode.TestData
+import java.util.UUID
 
 class QuestionnaireEntryUpdateTest {
 
@@ -24,6 +25,21 @@ class QuestionnaireEntryUpdateTest {
         .whenEvent(QuestionnaireFormFetched(questionnaire))
         .then(assertThatNext(
             hasModel(defaultModel.formLoaded(questionnaire)),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when current facility is loaded, then update the model`() {
+    val facility = TestData.facility(
+        uuid = UUID.fromString("7dc68c5a-952d-46e7-83b1-070ce3d32600")
+    )
+
+    spec
+        .given(defaultModel)
+        .whenEvent(CurrentFacilityLoaded(facility))
+        .then(assertThatNext(
+            hasModel(defaultModel.currentFacilityLoaded(facility)),
             hasNoEffects()
         ))
   }

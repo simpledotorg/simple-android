@@ -9,6 +9,6 @@ class QuestionnaireEntryInit(
     private val questionnaireType: QuestionnaireType
 ) : Init<QuestionnaireEntryModel, QuestionnaireEntryEffect> {
   override fun init(model: QuestionnaireEntryModel): First<QuestionnaireEntryModel, QuestionnaireEntryEffect> {
-    return first(model, LoadQuestionnaireFormEffect(questionnaireType))
+    return first(model, LoadCurrentFacility, LoadQuestionnaireFormEffect(questionnaireType))
   }
 }

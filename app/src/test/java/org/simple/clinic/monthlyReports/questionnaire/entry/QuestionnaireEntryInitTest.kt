@@ -20,6 +20,7 @@ class QuestionnaireEntryInitTest {
         .then(assertThatFirst(
             hasModel(defaultModel),
             hasEffects(
+                LoadCurrentFacility,
                 LoadQuestionnaireFormEffect(questionnaireType),
             )
         ))

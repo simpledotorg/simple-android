@@ -1019,4 +1019,6 @@
   <string name="notification_permission_denied_positive_button">GO TO APP SETTINGS</string>
   <string name="notification_permission_denied_negetive_button">NOT NOW</string>
 
+  <!--Monthly screen reports-->
+  <string name="monthly_screening_reports_submit_btn_text">Submit</string>
 </resources>

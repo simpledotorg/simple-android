@@ -418,6 +418,9 @@ dependencies {
 
   implementation(libs.zxing)
 
+  implementation(libs.airbnb.epoxy)
+  kapt(libs.airbnb.epoxy.processor)
+
   implementation(projects.mobiusBase)
   implementation(projects.simplePlatform)
   implementation(projects.simpleVisuals)

@@ -8,6 +8,9 @@ import org.simple.clinic.monthlyReports.questionnaire.component.properties.Compo
 @JsonClass(generateAdapter = true)
 @Parcelize
 data class ViewGroupComponentData(
+    @Json(name = "link_id")
+    val id: String?,
+
     @Json(name = "display_properties")
     val displayProperties: ComponentDisplayProperties,
 

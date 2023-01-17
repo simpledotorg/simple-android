@@ -1481,11 +1481,13 @@ object TestData {
   )
 
   private fun getTestQuestionnaireLayout() = ViewGroupComponentData(
+      id = UUID.fromString("1a96dd04-2fe6-4d8e-b930-5137ddd962a0").toString(),
       displayProperties = ComponentDisplayProperties(
           orientation = Vertical
       ),
       children = listOf(
           SubHeaderComponentData(
+              id = UUID.fromString("a738cd39-bbae-49ec-b5a7-f1d24cf721a8").toString(),
               text = "Monthly OPD visits for adults >30 years old"
           ),
           InputFieldComponentData(
@@ -1494,9 +1496,16 @@ object TestData {
               type = Integer,
               validations = InputFieldValidations(min = 0, max = 1000000)
           ),
-          HeaderComponentData(text = "HTN & DM SCREENING"),
-          SubHeaderComponentData(text = "Total BP Checks done"),
+          HeaderComponentData(
+              id = UUID.fromString("e30a726f-4e72-4ae0-977b-b2d01c215025").toString(),
+              text = "HTN & DM SCREENING"
+          ),
+          SubHeaderComponentData(
+              id = UUID.fromString("5022472f-3d49-4aa4-8807-7a97fc45533b").toString(),
+              text = "Total BP Checks done"
+          ),
           ViewGroupComponentData(
+              id = UUID.fromString("0c5a2aee-b619-4418-bfff-6683bf2b3052").toString(),
               displayProperties = ComponentDisplayProperties(orientation = Horizontal),
               children = listOf(
                   InputFieldComponentData(
@@ -1511,8 +1520,8 @@ object TestData {
                       validations = InputFieldValidations(min = 0, max = 1000000))
               )
           ),
-          SeparatorComponentData(),
-          LineSeparatorComponentData(),
+          SeparatorComponentData(id = UUID.fromString("f6169041-4cde-41de-a449-906673bd7c65").toString()),
+          LineSeparatorComponentData(id = UUID.fromString("cfb25781-0f6d-437e-9404-319a9710694d").toString()),
       )
   )
 }

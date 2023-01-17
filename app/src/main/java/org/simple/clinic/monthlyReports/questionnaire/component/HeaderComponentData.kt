@@ -7,6 +7,9 @@ import kotlinx.parcelize.Parcelize
 @JsonClass(generateAdapter = true)
 @Parcelize
 data class HeaderComponentData(
+    @Json(name = "link_id")
+    val id: String?,
+
     @Json(name = "text")
     val text: String
 ) : BaseComponentData()

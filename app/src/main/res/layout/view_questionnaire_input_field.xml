@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.textfield.TextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/fullNameInputLayout"
+  style="@style/Widget.Simple.TextField.Layout.PatientEntry"
+  android:layout_width="100dp"
+  android:layout_weight="1"
+  android:layout_height="wrap_content"
+  android:saveEnabled="false">
+
+  <com.google.android.material.textfield.TextInputEditText
+    android:id="@+id/fullNameEditText"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="@string/patientedit_full_name"
+    android:imeOptions="flagNoFullscreen"
+    android:inputType="textPersonName|textCapWords"
+    android:saveEnabled="false" />
+
+</com.google.android.material.textfield.TextInputLayout>

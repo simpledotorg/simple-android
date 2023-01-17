@@ -44,6 +44,8 @@ import org.simple.clinic.feature.Feature.PatientLineListDownload
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.mobius.DeferredEventSource
+import org.simple.clinic.monthlyReports.questionnaire.MonthlyScreeningReports
+import org.simple.clinic.monthlyReports.questionnaire.entry.QuestionnaireEntryScreen
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.ScreenResultBus
@@ -364,7 +366,7 @@ class PatientsTabScreen : BaseScreen<
   }
 
   override fun openEnterDrugStockScreen() {
-    router.push(EnterDrugStockScreen.Key())
+    router.push(QuestionnaireEntryScreen.Key(MonthlyScreeningReports))
   }
 
   override fun showNoActiveNetworkConnectionDialog() {

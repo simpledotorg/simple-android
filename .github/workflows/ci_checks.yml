@@ -81,6 +81,9 @@ jobs:
       - name: Install Heroku CLI
         run: npm uninstall -g heroku; npm install -g heroku@7.67.2
 
+      - name: Version of heroku
+        run: heroku -v
+
       - name: Install Heroku Buildpacks registry
         run: heroku plugins:install buildpack-registry
 

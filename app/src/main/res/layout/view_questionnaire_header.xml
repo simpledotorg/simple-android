@@ -3,8 +3,7 @@
   android:id="@+id/headerTextView"
   android:layout_width="wrap_content"
   android:layout_height="wrap_content"
-  android:layout_marginTop="8dp"
-  android:layout_marginEnd="8dp"
-  android:layout_marginBottom="8dp"
-  android:textAllCaps="false"
-  android:textStyle="bold" />
+  android:textAllCaps="true"
+  android:layout_marginHorizontal="@dimen/spacing_16"
+  android:textAppearance="?attr/textAppearanceBody2Bold"
+  android:textColor="#2FA7AE"/>

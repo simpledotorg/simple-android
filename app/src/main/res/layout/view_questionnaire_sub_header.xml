@@ -3,8 +3,6 @@
   android:id="@+id/subHeaderTextView"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:layout_marginTop="8dp"
-  android:layout_marginEnd="8dp"
-  android:layout_marginBottom="8dp"
-  android:textAllCaps="false"
-  android:textColor="@color/simple_dark_blue_800" />
+  android:layout_marginHorizontal="@dimen/spacing_16"
+  android:layout_marginTop="@dimen/spacing_24"
+  android:textAppearance="?attr/textAppearanceBody2Bold" />

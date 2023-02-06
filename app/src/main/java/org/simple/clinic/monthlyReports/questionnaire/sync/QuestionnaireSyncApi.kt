@@ -8,10 +8,10 @@ import retrofit2.http.Query
 interface QuestionnaireSyncApi {
 
   @Headers(value = ["X-RESYNC-TOKEN: 1"])
-  @GET("v4/questionnaires/sync")
+  @GET("/test.simple")
   fun pull(
-      @Query("limit") recordsToPull: Int,
-      @Query("process_token") lastPullToken: String? = null,
-      @Query("dsl_version") dslVersion: Int = 1,
+      //      @Query("limit") recordsToPull: Int,
+      //      @Query("process_token") lastPullToken: String? = null,
+      //      @Query("dsl_version") dslVersion: Int = 1,
   ): Call<QuestionnairePullResponse>
 }

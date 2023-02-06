@@ -24,7 +24,7 @@ open class QuestionnaireModule {
   }
 
   @Provides
-  fun syncApi(@Named("for_deployment") retrofit: Retrofit): QuestionnaireSyncApi {
+  fun syncApi(@Named("for_test") retrofit: Retrofit): QuestionnaireSyncApi {
     return retrofit.create(QuestionnaireSyncApi::class.java)
   }
 

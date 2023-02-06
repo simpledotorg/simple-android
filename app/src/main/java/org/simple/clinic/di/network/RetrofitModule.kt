@@ -40,6 +40,15 @@ class RetrofitModule {
 
   @Provides
   @AppScope
+  @Named("for_test")
+  fun testConfigurationRetrofit(commonRetrofitBuilder: Retrofit.Builder): Retrofit {
+    return commonRetrofitBuilder
+        .baseUrl("https://fa402185-1431-4d8a-815f-2dd5330e1119.mock.pstmn.io")
+        .build()
+  }
+
+  @Provides
+  @AppScope
   @Named("for_deployment")
   fun retrofit(
       deployment: Deployment,

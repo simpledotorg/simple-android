@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
-import org.simple.clinic.monthlyReports.questionnaire.component.BaseComponentData
+import org.simple.clinic.monthlyReports.questionnaire.sync.QuestionnaireLayout
 import java.time.Instant
 import java.util.UUID
 
@@ -21,7 +21,7 @@ data class Questionnaire(
     @PrimaryKey
     val questionnaire_type: QuestionnaireType,
 
-    val layout: BaseComponentData,
+    val layout: QuestionnaireLayout,
 
     val deletedAt: Instant?
 ) : Parcelable {

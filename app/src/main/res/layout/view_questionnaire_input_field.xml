@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.textfield.TextInputLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:id="@+id/fullNameInputLayout"
-  style="@style/Widget.Simple.TextField.Layout.PatientEntry"
-  android:layout_width="100dp"
-  android:layout_weight="1"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:saveEnabled="false">
+  android:layout_marginHorizontal="@dimen/spacing_4"
+  android:layout_marginVertical="@dimen/spacing_8"
+  android:baselineAligned="false">
 
-  <com.google.android.material.textfield.TextInputEditText
-    android:id="@+id/fullNameEditText"
-    android:layout_width="match_parent"
+  <com.google.android.material.textfield.TextInputLayout
+    android:id="@+id/textInputLayout"
+    style="@style/Widget.Simple.TextField.Layout.PatientEntry"
+    android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:hint="@string/patientedit_full_name"
-    android:imeOptions="flagNoFullscreen"
-    android:inputType="textPersonName|textCapWords"
-    android:saveEnabled="false" />
+    android:layout_weight="1"
+    android:saveEnabled="false">
 
-</com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputEditText
+      android:id="@+id/textEditText"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:hint="@string/patientedit_full_name"
+      android:imeOptions="flagNoFullscreen"
+      android:inputType="textPersonName|textCapWords"
+      android:saveEnabled="false" />
+
+  </com.google.android.material.textfield.TextInputLayout>
+</LinearLayout>

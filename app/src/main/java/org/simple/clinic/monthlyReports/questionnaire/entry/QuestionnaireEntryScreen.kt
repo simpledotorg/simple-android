@@ -11,8 +11,8 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.databinding.ScreenQuestionnaireEntryFormBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireType
-import org.simple.clinic.monthlyReports.questionnaire.component.BaseComponentData
 import org.simple.clinic.monthlyReports.questionnaire.entry.epoxy.controller.QuestionnaireEntryFormController
+import org.simple.clinic.monthlyReports.questionnaire.sync.QuestionnaireLayout
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -86,8 +86,8 @@ class QuestionnaireEntryScreen : BaseScreen<
     questionnaireFormToolbar.title = facilityName
   }
 
-  override fun displayQuestionnaireFormLayout(layout: BaseComponentData) {
-    questionnaireFormController.questionnaireFormLayout = layout
+  override fun displayQuestionnaireFormLayout(layout: QuestionnaireLayout) {
+    questionnaireFormController.setData(layout.items)
   }
 
   private fun initRecyclerView() {

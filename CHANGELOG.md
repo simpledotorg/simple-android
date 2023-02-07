@@ -4,6 +4,7 @@
 
 ### Internal
 - Update heroku version in ci_checks
+- Bump androidx-test-runner to v1.5.2
 
 ## 2023-01-09-8572
 

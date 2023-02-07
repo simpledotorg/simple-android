@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   maestro-tests:
-    runs-on: [ macos-latest ]
+    runs-on: [ macos-11 ]
     steps:
       - name: Checkout Android source
         uses: actions/checkout@v3

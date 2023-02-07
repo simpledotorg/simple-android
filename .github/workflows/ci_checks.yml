@@ -46,7 +46,7 @@ jobs:
   # reactivecircus/android-emulator-runner@v2 requires MacOS to run on
   # https://github.com/ReactiveCircus/android-emulator-runner
   qa_android_tests:
-    runs-on: [ macos-latest ]
+    runs-on: [ macos-11 ]
     timeout-minutes: 60
     env:
       AVD_API_LEVEL: 30
@@ -79,16 +79,12 @@ jobs:
           key: ${{ runner.os }}-npm-${{ steps.create_node_modules_hash.outputs.node_dep_hash }}
 
       - name: Install Heroku CLI
-        if: steps.node-dependency-cache.outputs.cache-hit != 'true'
-        run: npm install heroku
-
-      - name: Link Heroku CLI globally
-        run: npm link heroku
+        run: npm uninstall -g heroku; npm install -g heroku@7.67.2
 
       - name: Install Heroku Buildpacks registry
         run: heroku plugins:install buildpack-registry
 
-      - name: Link Heroku CLI globally
+      - name: Install heroku buildpacks plugin
         run: heroku plugins:install buildpacks
 
       - name: Generate server app name

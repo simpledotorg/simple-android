@@ -14,7 +14,7 @@ jobs:
   # reactivecircus/android-emulator-runner@v2 requires MacOS to run on
   # https://github.com/ReactiveCircus/android-emulator-runner
   benchmark_suite:
-    runs-on: [ macos-latest ]
+    runs-on: [ macos-11 ]
     steps:
       - name: Checkout Android source
         uses: actions/checkout@v3

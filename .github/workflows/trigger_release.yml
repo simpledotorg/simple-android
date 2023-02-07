@@ -44,7 +44,7 @@ jobs:
   # reactivecircus/android-emulator-runner@v2 requires MacOS to run on
   # https://github.com/ReactiveCircus/android-emulator-runner
   qa_android_tests:
-    runs-on: macos-latest
+    runs-on: macos-11
     if: ${{ contains(github.ref, 'refs/heads/release/') }}
     timeout-minutes: 60
     env:

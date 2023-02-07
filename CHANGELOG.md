@@ -3,6 +3,7 @@
 ## Next Release
 
 ### Internal
+- Update heroku version in ci_checks
 
 ## 2023-01-09-8572
 

@@ -30,8 +30,6 @@ class QuestionnaireSync @Inject constructor(
 
   override fun pull() {
     val batchSize = config.pullBatchSize
-
-    syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull().execute().read()!! }
-    //    syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().read()!! }
+    syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it).execute().read()!! }
   }
 }

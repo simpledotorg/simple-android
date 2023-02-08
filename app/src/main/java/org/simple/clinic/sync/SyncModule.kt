@@ -86,7 +86,7 @@ class SyncModule {
       teleconsultRecordSync: TeleconsultRecordSync,
       drugSync: DrugSync,
       callResultSync: CallResultSync,
-      questionnaireSync: QuestionnaireSync
+      questionnaireSync: QuestionnaireSync,
   ): List<ModelSync> {
     val optionalSyncs = if (features.isEnabled(Feature.CallResultSyncEnabled)) listOf(callResultSync) else emptyList()
 

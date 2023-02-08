@@ -4,6 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.simple.clinic.monthlyReports.questionnaire.Questionnaire
 import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireType
+import org.simple.clinic.monthlyReports.questionnaire.component.BaseComponentData
 import java.time.Instant
 import java.util.UUID
 
@@ -16,7 +17,7 @@ data class QuestionnairePayload(
     val questionnaireType: QuestionnaireType,
 
     @Json(name = "layout")
-    val layout: QuestionnaireLayout,
+    val layout: BaseComponentData,
 
     @Json(name = "deleted_at")
     val deletedAt: Instant?,

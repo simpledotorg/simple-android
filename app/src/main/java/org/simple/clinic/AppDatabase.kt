@@ -1,5 +1,6 @@
 package org.simple.clinic
 
+import android.text.InputType
 import androidx.annotation.VisibleForTesting
 import androidx.annotation.WorkerThread
 import androidx.room.Database

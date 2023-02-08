@@ -33,10 +33,22 @@ import org.simple.clinic.location.Coordinates
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
+import org.simple.clinic.monthlyReports.questionnaire.MonthlyScreeningReports
 import org.simple.clinic.monthlyReports.questionnaire.Questionnaire
-import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireLayout
 import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireType
-import org.simple.clinic.monthlyReports.questionnaire.component.ViewGroup
+import org.simple.clinic.monthlyReports.questionnaire.component.BaseComponentData
+import org.simple.clinic.monthlyReports.questionnaire.component.HeaderComponentData
+import org.simple.clinic.monthlyReports.questionnaire.component.InputFieldComponentData
+import org.simple.clinic.monthlyReports.questionnaire.component.InputViewGroupComponentData
+import org.simple.clinic.monthlyReports.questionnaire.component.LineSeparatorComponentData
+import org.simple.clinic.monthlyReports.questionnaire.component.SeparatorComponentData
+import org.simple.clinic.monthlyReports.questionnaire.component.SubHeaderComponentData
+import org.simple.clinic.monthlyReports.questionnaire.component.ViewGroupComponentData
+import org.simple.clinic.monthlyReports.questionnaire.component.properties.ComponentDisplayProperties
+import org.simple.clinic.monthlyReports.questionnaire.component.properties.Horizontal
+import org.simple.clinic.monthlyReports.questionnaire.component.properties.InputFieldValidations
+import org.simple.clinic.monthlyReports.questionnaire.component.properties.Integer
+import org.simple.clinic.monthlyReports.questionnaire.component.properties.Vertical
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentPayload
@@ -1460,8 +1472,8 @@ object TestData {
 
   fun questionnaire(
       uuid: UUID = UUID.fromString("f9a42c9f-01fe-40c5-b625-64b3e9868d5e"),
-      questionnaireType: QuestionnaireType = QuestionnaireType.random(),
-      layout: QuestionnaireLayout = getTestQuestionnaireLayout()
+      questionnaireType: QuestionnaireType = MonthlyScreeningReports,
+      layout: BaseComponentData = getTestQuestionnaireLayout()
   ) = Questionnaire(
       uuid = uuid,
       questionnaire_type = questionnaireType,
@@ -1469,11 +1481,67 @@ object TestData {
       deletedAt = null
   )
 
-  private fun getTestQuestionnaireLayout() = QuestionnaireLayout(
-      components = listOf(
-          ViewGroup(id = "monthly_opd_visits",
+  private fun getTestQuestionnaireLayout() = ViewGroupComponentData(
+      id = UUID.fromString("ff78b2d4-3e95-457c-bbb0-57cb8c2b2715").toString(),
+      type = "group",
+      displayProperties = ComponentDisplayProperties(orientation = Vertical),
+      children = listOf(
+          SubHeaderComponentData(
+              type = "display",
+              text = "Monthly OPD visits for adults >30 years old",
+              id = UUID.fromString("269045f7-c504-4ac4-9e63-864baf298bc8").toString()
+          ),
+          InputViewGroupComponentData(
+              id = UUID.fromString("6901b3fd-2d06-4366-b7fb-ccb0fbc6a539").toString(),
+              type = "group",
+              displayProperties = ComponentDisplayProperties(orientation = Horizontal),
               children = listOf(
-                  ViewGroup("monthly_opd_visits_header", children = null)
-              ))
-      ))
+                  InputFieldComponentData(
+                      id = "outpatient_department_visits",
+                      linkId = "monthly_screening_reports.outpatient_department_visits",
+                      text = "Outpatient department visits",
+                      type = Integer,
+                      validations = InputFieldValidations(min = 0, max = 1000000)
+                  )
+              )
+          ),
+          HeaderComponentData(
+              type = "display",
+              text = "HTN & DM SCREENING",
+              id = UUID.fromString("f8527375-eb6a-4e9f-a261-ae8afecb1ac6").toString()
+          ),
+          SubHeaderComponentData(
+              type = "display",
+              text = "Total BP Checks done",
+              id = UUID.fromString("38cf0223-1b89-4676-a71b-68a20c30a543").toString()
+          ),
+          InputViewGroupComponentData(
+              type = "display",
+              id = UUID.fromString("6901b3fd-2d06-4366-b7fb-ccb0fbc6a539").toString(),
+              displayProperties = ComponentDisplayProperties(orientation = Horizontal),
+              children = listOf(
+                  InputFieldComponentData(
+                      id = "blood_pressure_checks_male",
+                      linkId = "monthly_screening_reports.blood_pressure_checks_male",
+                      text = "Male",
+                      type = Integer,
+                      validations = InputFieldValidations(min = 0, max = 1000000)),
+                  InputFieldComponentData(
+                      id = "blood_pressure_checks_female",
+                      linkId = "monthly_screening_reports.blood_pressure_checks_female",
+                      text = "Female",
+                      type = Integer,
+                      validations = InputFieldValidations(min = 0, max = 1000000))
+              )
+          ),
+          SeparatorComponentData(
+              id = UUID.fromString("9d38cb13-4f6b-4bcc-af43-3fd80f2edc18").toString(),
+              type = "display"
+          ),
+          LineSeparatorComponentData(
+              id = UUID.fromString("154b6890-52c3-410d-8dd0-4eb11ec1a680").toString(),
+              type = "display"
+          ),
+      )
+  )
 }

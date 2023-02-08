@@ -1,5 +1,6 @@
 package org.simple.clinic
 
+import android.text.InputType
 import androidx.annotation.VisibleForTesting
 import androidx.annotation.WorkerThread
 import androidx.room.Database
@@ -18,8 +19,10 @@ import org.simple.clinic.home.overdue.OverdueAppointment_Old
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.monthlyReports.questionnaire.Questionnaire
-import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireLayout
 import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireType
+import org.simple.clinic.monthlyReports.questionnaire.component.BaseComponentData
+import org.simple.clinic.monthlyReports.questionnaire.component.properties.InputFieldType
+import org.simple.clinic.monthlyReports.questionnaire.component.properties.OrientationType
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.callresult.CallResult
@@ -134,7 +137,9 @@ import org.simple.clinic.drugs.search.Answer as DrugAnswer
     DrugFrequency.RoomTypeConverter::class,
     Outcome.RoomTypeConverter::class,
     QuestionnaireType.RoomTypeConverter::class,
-    QuestionnaireLayout.RoomTypeConverter::class
+    BaseComponentData.RoomTypeConverter::class,
+    InputFieldType.RoomTypeConverter::class,
+    OrientationType.RoomTypeConverter::class,
 )
 abstract class AppDatabase : RoomDatabase() {
 

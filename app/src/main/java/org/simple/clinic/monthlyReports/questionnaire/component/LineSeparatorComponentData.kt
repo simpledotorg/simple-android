@@ -1,10 +1,15 @@
 package org.simple.clinic.monthlyReports.questionnaire.component
 
-import android.os.Parcelable
+import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.Parcelize
 
 @JsonClass(generateAdapter = true)
 @Parcelize
-open class BaseComponent : Parcelable
+data class LineSeparatorComponentData(
+    @Json(name = "id")
+    val id: String?,
 
+    @Json(name = "type")
+    val type: String,
+) : BaseComponentData()

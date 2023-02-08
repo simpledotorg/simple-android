@@ -7,7 +7,7 @@ import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireLayout
+import org.simple.clinic.monthlyReports.questionnaire.component.BaseComponentData
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.patient.PatientSearchResult
@@ -39,7 +39,7 @@ class TestStorageModule {
 
     return Room.databaseBuilder(appContext, AppDatabase::class.java, "test-db")
         .openHelperFactory(factory)
-        .addTypeConverter(QuestionnaireLayout.RoomTypeConverter(moshi))
+        .addTypeConverter(BaseComponentData.RoomTypeConverter(moshi))
         .apply { allowMainThreadQueries() }
         .build()
   }

@@ -22,7 +22,7 @@ class QuestionnaireSync @Inject constructor(
 
   override val name: String = "Questionnaire"
 
-  override val requiresSyncApprovedUser = false
+  override val requiresSyncApprovedUser = true
 
   override fun push() {
     /* Nothing to do here */

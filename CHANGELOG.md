@@ -7,6 +7,7 @@
 - Bump androidx-test-runner to v1.5.2
 - Bump androidx-test-junit to v1.1.5
 - Add Questionnaire screening form json parser
+- Mobius arch setup for questionnaire form
 
 ## 2023-01-09-8572
 

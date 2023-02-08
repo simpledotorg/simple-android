@@ -10,7 +10,7 @@ import dagger.Provides
 import io.requery.android.database.sqlite.SQLiteGlobal
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
-import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireLayout
+import org.simple.clinic.monthlyReports.questionnaire.component.BaseComponentData
 import org.simple.clinic.storage.migrations.RoomMigrationsModule
 import org.simple.clinic.storage.text.TextRecord
 import org.simple.clinic.storage.text.TextStoreModule
@@ -46,7 +46,7 @@ class StorageModule {
     return Room.databaseBuilder(appContext, AppDatabase::class.java, "red-db")
         .openHelperFactory(factory)
         .addMigrations(*migrations.toTypedArray())
-        .addTypeConverter(QuestionnaireLayout.RoomTypeConverter(moshi))
+        .addTypeConverter(BaseComponentData.RoomTypeConverter(moshi))
         .setQueryExecutor(queryExecutor)
         .build()
   }

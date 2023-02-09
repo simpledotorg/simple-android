@@ -18,7 +18,7 @@ import org.simple.clinic.home.overdue.OverdueAppointment_Old
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.monthlyReports.questionnaire.Questionnaire
-import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireResponse
+import org.simple.clinic.questionnaireResponse.QuestionnaireResponse
 import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireType
 import org.simple.clinic.monthlyReports.questionnaire.component.BaseComponentData
 import org.simple.clinic.monthlyReports.questionnaire.component.properties.InputFieldType

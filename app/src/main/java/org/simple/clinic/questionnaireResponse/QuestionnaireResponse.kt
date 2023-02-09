@@ -1,10 +1,11 @@
-package org.simple.clinic.monthlyReports.questionnaire
+package org.simple.clinic.questionnaireResponse
 
 import android.os.Parcelable
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireType
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
 import java.util.UUID

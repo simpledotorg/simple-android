@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 108,
-    "identityHash": "ee7e19832fd8656a8e481e65d3df7cb0",
+    "identityHash": "8e2a262cd2ea3fefd1561e536f66d131",
     "entities": [
       {
         "tableName": "Patient",
@@ -2056,7 +2056,7 @@
       },
       {
         "tableName": "QuestionnaireResponse",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `questionnaireId` TEXT NOT NULL, `questionnaireType` TEXT NOT NULL, `facilityId` TEXT NOT NULL, `lastUpdatedByUserId` TEXT NOT NULL, `content` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `deletedAt` TEXT, PRIMARY KEY(`uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `questionnaireId` TEXT NOT NULL, `questionnaireType` TEXT NOT NULL, `facilityId` TEXT NOT NULL, `lastUpdatedByUserId` TEXT NOT NULL, `content` TEXT NOT NULL, `syncStatus` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, `deletedAt` TEXT, PRIMARY KEY(`uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -2091,6 +2091,12 @@
           {
             "fieldPath": "content",
             "columnName": "content",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "syncStatus",
+            "columnName": "syncStatus",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -2131,7 +2137,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ee7e19832fd8656a8e481e65d3df7cb0')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8e2a262cd2ea3fefd1561e536f66d131')"
     ]
   }
 }

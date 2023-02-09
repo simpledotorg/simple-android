@@ -21,6 +21,7 @@ class Migration_108 @Inject constructor() : Migration(107, 108) {
           "createdAt" TEXT NOT NULL,
           "updatedAt" TEXT NOT NULL,
           "deletedAt" TEXT,
+          "syncStatus" TEXT NOT NULL,
           PRIMARY KEY("uuid")
         )
       """)

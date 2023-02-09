@@ -5,6 +5,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.storage.Timestamps
 import java.util.UUID
 
@@ -26,4 +27,6 @@ data class QuestionnaireResponse(
 
     @Embedded
     val timestamps: Timestamps,
+
+    val syncStatus: SyncStatus
 ) : Parcelable

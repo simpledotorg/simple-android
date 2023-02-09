@@ -8,7 +8,7 @@ import com.airbnb.epoxy.EpoxyModelWithHolder
 import org.simple.clinic.R
 
 @SuppressLint("NonConstantResourceId")
-@EpoxyModelClass(layout = R.layout.view_questionnaire_section_separator)
+@EpoxyModelClass(layout = R.layout.view_questionnaire_vertical_separator)
 abstract class SeparatorEpoxyModel : EpoxyModelWithHolder<SeparatorEpoxyModel.Holder>() {
 
   class Holder : EpoxyHolder() {

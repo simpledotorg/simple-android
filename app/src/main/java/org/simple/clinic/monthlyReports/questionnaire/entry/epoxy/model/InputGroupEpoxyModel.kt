@@ -21,14 +21,19 @@ abstract class InputGroupEpoxyModel : EpoxyModelWithHolder<InputGroupEpoxyModel.
   override fun bind(holder: Holder) {
     val items = inputViewGroupComponentData.children
     if (items != null) {
+      setLayoutManager(holder.recyclerView, items.count())
+
       val inputFieldAdapter = InputFieldAdapter()
-      holder.recyclerView.layoutManager = GridLayoutManager(
-          holder.recyclerView.context,
-          if (items.count() > 1) 2 else 1
-      )
       holder.recyclerView.adapter = inputFieldAdapter
       inputFieldAdapter.submitList(items)
     }
+  }
+
+  private fun setLayoutManager(recyclerView: RecyclerView, itemCount: Int) {
+    recyclerView.layoutManager = GridLayoutManager(
+        recyclerView.context,
+        if (itemCount > 1) 2 else 1
+    )
   }
 
   class Holder : EpoxyHolder() {

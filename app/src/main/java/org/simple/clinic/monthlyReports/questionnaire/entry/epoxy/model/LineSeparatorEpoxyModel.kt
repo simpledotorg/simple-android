@@ -9,7 +9,7 @@ import org.simple.clinic.R
 
 @SuppressLint("NonConstantResourceId")
 @EpoxyModelClass(layout = R.layout.view_questionnaire_line_separator)
-abstract class LineSeparatorEpoxyModel : EpoxyModelWithHolder<SeparatorEpoxyModel.Holder>() {
+abstract class LineSeparatorEpoxyModel : EpoxyModelWithHolder<LineSeparatorEpoxyModel.Holder>() {
 
   class Holder : EpoxyHolder() {
     override fun bindView(itemView: View) {

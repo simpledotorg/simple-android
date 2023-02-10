@@ -22,10 +22,11 @@
 
   </com.google.android.material.appbar.AppBarLayout>
 
-  <androidx.recyclerview.widget.RecyclerView
+  <com.airbnb.epoxy.EpoxyRecyclerView
     android:id="@+id/questionnaire_form_recycler_view"
     android:layout_width="match_parent"
     android:layout_height="0dp"
+    android:paddingBottom="@dimen/spacing_24"
     android:clipToPadding="false"
     app:layout_constraintBottom_toTopOf="@id/button_frame"
     app:layout_constraintTop_toBottomOf="@id/questionnaire_form_appbar"

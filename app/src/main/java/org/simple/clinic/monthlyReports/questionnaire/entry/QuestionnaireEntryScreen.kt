@@ -5,12 +5,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.spotify.mobius.functions.Consumer
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.databinding.ScreenQuestionnaireEntryFormBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireType
 import org.simple.clinic.monthlyReports.questionnaire.component.BaseComponentData
+import org.simple.clinic.monthlyReports.questionnaire.component.ViewGroupComponentData
+import org.simple.clinic.monthlyReports.questionnaire.entry.epoxy.controller.QuestionnaireEntryFormController
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -36,6 +39,11 @@ class QuestionnaireEntryScreen : BaseScreen<
 
   private val questionnaireFormToolbar
     get() = binding.questionnaireFormToolbar
+
+  private val questionnaireFormRecyclerView
+    get() = binding.questionnaireFormRecyclerView
+
+  private val questionnaireFormController: QuestionnaireEntryFormController by lazy { QuestionnaireEntryFormController() }
 
   override fun defaultModel() = QuestionnaireEntryModel.default()
 
@@ -63,6 +71,7 @@ class QuestionnaireEntryScreen : BaseScreen<
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     questionnaireFormToolbar.setNavigationOnClickListener { router.pop() }
+    initRecyclerView()
   }
 
   @Parcelize
@@ -79,6 +88,24 @@ class QuestionnaireEntryScreen : BaseScreen<
   }
 
   override fun displayQuestionnaireFormLayout(layout: BaseComponentData) {
+    if (layout is ViewGroupComponentData) {
+      questionnaireFormController.setData(layout.children)
+    }
+  }
+
+  private fun initRecyclerView() {
+    questionnaireFormRecyclerView.apply {
+      layoutManager = LinearLayoutManager(context)
+      setHasFixedSize(true)
+      setController(questionnaireFormController)
+    }
+  }
+
+
+  override fun showProgress() {
+  }
+
+  override fun hideProgress() {
   }
 
   override fun goBack() {

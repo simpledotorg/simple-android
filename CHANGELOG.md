@@ -8,6 +8,7 @@
 - Bump androidx-test-junit to v1.1.5
 - Add Questionnaire screening form json parser
 - Mobius arch setup for questionnaire form
+- Epoxy model setup for questionnaire form
 
 ## 2023-01-09-8572
 

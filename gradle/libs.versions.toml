@@ -87,6 +87,9 @@ firebase-config = "com.google.firebase:firebase-config:21.2.0"
 flipper-flipper = { module = "com.facebook.flipper:flipper", version.ref = "flipper" }
 flipper-networkPlugin = { module = "com.facebook.flipper:flipper-network-plugin", version.ref = "flipper" }
 
+airbnb-epoxy = "com.airbnb.android:epoxy:5.1.1"
+airbnb-epoxy-processor = "com.airbnb.android:epoxy-processor:5.1.1"
+
 google-services = "com.google.gms:google-services:4.3.14"
 
 itemanimators = "com.mikepenz:itemanimators:1.1.0"

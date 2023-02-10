@@ -1019,6 +1019,40 @@
   <string name="notification_permission_denied_positive_button">GO TO APP SETTINGS</string>
   <string name="notification_permission_denied_negetive_button">NOT NOW</string>
 
+  <!--English Calendar Month short forms-->
+  <string name="month_short_jan">Jan</string><!-- January -->
+  <string name="month_short_feb">Feb</string><!-- February -->
+  <string name="month_short_mar">Mar</string><!-- March -->
+  <string name="month_short_apr">Apr</string><!-- April -->
+  <string name="month_short_may">May</string><!-- May -->
+  <string name="month_short_jun">Jun</string><!-- June -->
+  <string name="month_short_jul">Jul</string><!-- July -->
+  <string name="month_short_aug">Aug</string><!-- August -->
+  <string name="month_short_sep">Sep</string><!-- September -->
+  <string name="month_short_oct">Oct</string><!-- October -->
+  <string name="month_short_nov">Nov</string><!-- November -->
+  <string name="month_short_dec">Dec</string><!-- December -->
+
+  <!--Ethiopian Calendar Month short forms-->
+  <string name="month_short_mes">Mes</string><!-- Meskerem -->
+  <string name="month_short_tik">Tik</string><!-- Tikimt -->
+  <string name="month_short_hid">Hid</string><!-- Hidar -->
+  <string name="month_short_tah">Tah</string><!-- Tahsas -->
+  <string name="month_short_tir">Tir</string><!-- Tir -->
+  <string name="month_short_yak">Yak</string><!-- Yakatit -->
+  <string name="month_short_mag">Mag</string><!-- Maggabit -->
+  <string name="month_short_miy">Miy</string><!-- Miyazya -->
+  <string name="month_short_gin">Gin</string><!-- Ginbot -->
+  <string name="month_short_sen">Sen</string><!-- Sene -->
+  <string name="month_short_ham">Ham</string><!-- Hamle -->
+  <string name="month_short_neh">Neh</string><!-- Nehasa -->
+  <string name="month_short_pag">Pag</string><!-- Pagume -->
+
   <!--Monthly screen reports-->
+  <string name="monthly_screening_reports">Monthly screening reports</string>
+  <string name="monthly_screening_reports_report">report</string><!--Jan 2023 report-->
+  <string name="monthly_screening_reports_screening_report">screening report</string><!--Jan 2023 screening report-->
   <string name="monthly_screening_reports_submit_btn_text">Submit</string>
+  <string name="monthly_screening_reports_submit_report">Submit report</string>
+  <string name="monthly_screening_reports_submitted">Submitted</string><!--Will also be used for Submitted Jan 27, 06:24pm-->
 </resources>

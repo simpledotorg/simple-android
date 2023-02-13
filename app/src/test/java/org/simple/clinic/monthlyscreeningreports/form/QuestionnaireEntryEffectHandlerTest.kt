@@ -8,13 +8,6 @@ import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.mobius.EffectHandlerTestCase
-import org.simple.clinic.monthlyscreeningreports.form.CurrentFacilityLoaded
-import org.simple.clinic.monthlyscreeningreports.form.LoadCurrentFacility
-import org.simple.clinic.monthlyscreeningreports.form.LoadQuestionnaireFormEffect
-import org.simple.clinic.monthlyscreeningreports.form.QuestionnaireEntryEffectHandler
-import org.simple.clinic.monthlyscreeningreports.form.QuestionnaireEntryUi
-import org.simple.clinic.monthlyscreeningreports.form.QuestionnaireEntryViewEffectHandler
-import org.simple.clinic.monthlyscreeningreports.form.QuestionnaireFormFetched
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.clinic.questionnaire.QuestionnaireRepository
 import org.simple.clinic.util.scheduler.TestSchedulersProvider

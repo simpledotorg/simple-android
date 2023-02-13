@@ -5,10 +5,6 @@ import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.clinic.monthlyscreeningreports.form.CurrentFacilityLoaded
-import org.simple.clinic.monthlyscreeningreports.form.QuestionnaireEntryModel
-import org.simple.clinic.monthlyscreeningreports.form.QuestionnaireEntryUpdate
-import org.simple.clinic.monthlyscreeningreports.form.QuestionnaireFormFetched
 import org.simple.sharedTestCode.TestData
 import java.util.UUID
 

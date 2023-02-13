@@ -8,6 +8,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.Update
 import io.reactivex.Flowable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireType
@@ -42,6 +43,15 @@ data class QuestionnaireResponse(
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(questionnaireResponses: List<QuestionnaireResponse>)
 
+    @Query("SELECT * FROM QuestionnaireResponse WHERE uuid = :uuid LIMIT 1")
+    fun getOne(uuid: UUID): QuestionnaireResponse?
+
+    @Query("SELECT * FROM QuestionnaireResponse WHERE questionnaireType = :type")
+    fun getByQuestionnaireType(type: QuestionnaireType): List<QuestionnaireResponse>
+
+    @Update
+    fun updateQuestionnaireResponse(questionnaireResponse: QuestionnaireResponse)
+
     @Query("SELECT * FROM QuestionnaireResponse WHERE syncStatus = :status")
     fun withSyncStatus(status: SyncStatus): List<QuestionnaireResponse>
 
@@ -61,9 +71,6 @@ data class QuestionnaireResponse(
 
     @Query("UPDATE QuestionnaireResponse SET syncStatus = :newStatus WHERE uuid IN (:uuids)")
     fun updateSyncStatusForIds(uuids: List<UUID>, newStatus: SyncStatus)
-
-    @Query("SELECT * FROM QuestionnaireResponse WHERE uuid = :uuid LIMIT 1")
-    fun getOne(uuid: UUID): QuestionnaireResponse?
 
     @Query("SELECT uuid FROM QuestionnaireResponse WHERE syncStatus = :syncStatus")
     fun recordIdsWithSyncStatus(syncStatus: SyncStatus): List<UUID>

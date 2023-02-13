@@ -2,14 +2,18 @@ package org.simple.clinic.questionnaireResponse
 
 import io.reactivex.Observable
 import org.simple.clinic.di.AppScope
+import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireType
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.SynceableRepository
+import org.simple.clinic.util.UtcClock
+import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
 @AppScope
 class QuestionnaireResponseRepository @Inject constructor(
     val dao: QuestionnaireResponse.RoomDao,
+    val utcClock: UtcClock
 ) : SynceableRepository<QuestionnaireResponse, QuestionnaireResponsePayload> {
 
   fun save(record: QuestionnaireResponse) {
@@ -20,8 +24,23 @@ class QuestionnaireResponseRepository @Inject constructor(
     dao.save(records)
   }
 
+  fun questionnaireResponsesByType(questionnaireType: QuestionnaireType): List<QuestionnaireResponse> {
+    return dao.getByQuestionnaireType(questionnaireType)
+  }
+
   fun questionnaireResponse(uuid: UUID): QuestionnaireResponse? {
     return dao.getOne(uuid)
+  }
+
+  fun updateQuestionnaireResponse(questionnaireResponse: QuestionnaireResponse) {
+    val updatedQuestionnaireResponse = questionnaireResponse.copy(
+        timestamps = questionnaireResponse.timestamps.copy(
+            updatedAt = Instant.now(utcClock)
+        ),
+        syncStatus = SyncStatus.PENDING
+    )
+
+    dao.updateQuestionnaireResponse(updatedQuestionnaireResponse)
   }
 
   fun recordsWithSyncStatus(syncStatus: SyncStatus): List<QuestionnaireResponse> {

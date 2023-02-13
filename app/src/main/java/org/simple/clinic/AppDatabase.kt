@@ -18,6 +18,7 @@ import org.simple.clinic.home.overdue.OverdueAppointment_Old
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.monthlyReports.questionnaire.Questionnaire
+import org.simple.clinic.questionnaireResponse.QuestionnaireResponse
 import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireType
 import org.simple.clinic.monthlyReports.questionnaire.component.BaseComponentData
 import org.simple.clinic.monthlyReports.questionnaire.component.properties.InputFieldType
@@ -66,6 +67,7 @@ import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.room.InstantRoomTypeConverter
 import org.simple.clinic.util.room.LocalDateRoomTypeConverter
+import org.simple.clinic.util.room.MapRoomTypeConverter
 import org.simple.clinic.util.room.UuidRoomTypeConverter
 import java.time.Instant
 import org.simple.clinic.drugs.search.Answer as DrugAnswer
@@ -98,12 +100,13 @@ import org.simple.clinic.drugs.search.Answer as DrugAnswer
       PatientPhoneNumberFts::class,
       BusinessIdFts::class,
       PatientAddressFts::class,
-      Questionnaire::class
+      Questionnaire::class,
+      QuestionnaireResponse::class
     ],
     views = [
       PatientSearchResult::class
     ],
-    version = 107,
+    version = 108,
     exportSchema = true
 )
 @TypeConverters(
@@ -139,6 +142,7 @@ import org.simple.clinic.drugs.search.Answer as DrugAnswer
     BaseComponentData.RoomTypeConverter::class,
     InputFieldType.RoomTypeConverter::class,
     OrientationType.RoomTypeConverter::class,
+    MapRoomTypeConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
 

@@ -101,7 +101,6 @@ class QuestionnaireEntryScreen : BaseScreen<
     }
   }
 
-
   override fun showProgress() {
   }
 

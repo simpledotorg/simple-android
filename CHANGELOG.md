@@ -3,14 +3,18 @@
 ## Next Release
 
 ### Internal
+- Add `QuestionnaireResponse`s table
+- Add `QuestionnaireResponseRepository`
+
+## 2023-02-13-8607
+
+## Internal
 - Update heroku version in ci_checks
 - Bump androidx-test-runner to v1.5.2
 - Bump androidx-test-junit to v1.1.5
 - Add Questionnaire screening form json parser
 - Mobius arch setup for questionnaire form
 - Epoxy model setup for questionnaire form
-- Add `QuestionnaireResponse`s table
-- Add `QuestionnaireResponseRepository`
 
 ## 2023-01-09-8572
 

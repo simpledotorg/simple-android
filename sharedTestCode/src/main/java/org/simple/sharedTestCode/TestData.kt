@@ -1575,6 +1575,8 @@ object TestData {
         "monthly_screening_reports.outpatient_department_visits" to 5000,
         "monthly_screening_reports.blood_pressure_checks_male" to 2200,
         "monthly_screening_reports.blood_pressure_checks_female" to 1800,
+        "monthly_screening_reports.gender" to "Male",
+        "monthly_screening_reports.is_smoking" to true,
     )
   }
 }

@@ -1552,7 +1552,7 @@ object TestData {
       questionnaireType: QuestionnaireType = MonthlyScreeningReports,
       facilityId: UUID = UUID.fromString("7ac2d657-6868-441c-9c0c-5c4a5dba87d7"),
       lastUpdatedByUserId: UUID = UUID.fromString("773810ea-850f-40f1-8ec2-259adc3549a3"),
-      content: Map<String, String> = getQuestionnaireResponseContent(),
+      content: Map<String, Any> = getQuestionnaireResponseContent(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
@@ -1570,11 +1570,11 @@ object TestData {
     )
   }
 
-  private fun getQuestionnaireResponseContent(): Map<String, String> {
+  private fun getQuestionnaireResponseContent(): Map<String, Any> {
     return mapOf(
-        "1000" to "monthly_screening_reports.outpatient_department_visits",
-        "1200" to "monthly_screening_reports.blood_pressure_checks_male",
-        "800" to "monthly_screening_reports.blood_pressure_checks_female",
+        "monthly_screening_reports.outpatient_department_visits" to 5000,
+        "monthly_screening_reports.blood_pressure_checks_male" to 2200,
+        "monthly_screening_reports.blood_pressure_checks_female" to 1800,
     )
   }
 }

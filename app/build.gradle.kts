@@ -421,6 +421,8 @@ dependencies {
   implementation(libs.airbnb.epoxy)
   kapt(libs.airbnb.epoxy.processor)
 
+  implementation(libs.gson)
+
   implementation(projects.mobiusBase)
   implementation(projects.simplePlatform)
   implementation(projects.simpleVisuals)

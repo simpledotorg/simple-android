@@ -11,9 +11,9 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.LastQuestionnairePullToken
-import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireRepository
-import org.simple.clinic.monthlyReports.questionnaire.sync.QuestionnaireSync
-import org.simple.clinic.monthlyReports.questionnaire.sync.QuestionnaireSyncApi
+import org.simple.clinic.questionnaire.QuestionnaireRepository
+import org.simple.clinic.questionnaire.sync.QuestionnaireSync
+import org.simple.clinic.questionnaire.sync.QuestionnaireSyncApi
 import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.sharedTestCode.util.Rules

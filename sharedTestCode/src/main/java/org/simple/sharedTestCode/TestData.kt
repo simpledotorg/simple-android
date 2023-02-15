@@ -33,22 +33,22 @@ import org.simple.clinic.location.Coordinates
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
-import org.simple.clinic.monthlyReports.questionnaire.MonthlyScreeningReports
-import org.simple.clinic.monthlyReports.questionnaire.Questionnaire
-import org.simple.clinic.monthlyReports.questionnaire.QuestionnaireType
-import org.simple.clinic.monthlyReports.questionnaire.component.BaseComponentData
-import org.simple.clinic.monthlyReports.questionnaire.component.HeaderComponentData
-import org.simple.clinic.monthlyReports.questionnaire.component.InputFieldComponentData
-import org.simple.clinic.monthlyReports.questionnaire.component.InputViewGroupComponentData
-import org.simple.clinic.monthlyReports.questionnaire.component.LineSeparatorComponentData
-import org.simple.clinic.monthlyReports.questionnaire.component.SeparatorComponentData
-import org.simple.clinic.monthlyReports.questionnaire.component.SubHeaderComponentData
-import org.simple.clinic.monthlyReports.questionnaire.component.ViewGroupComponentData
-import org.simple.clinic.monthlyReports.questionnaire.component.properties.ComponentDisplayProperties
-import org.simple.clinic.monthlyReports.questionnaire.component.properties.Horizontal
-import org.simple.clinic.monthlyReports.questionnaire.component.properties.InputFieldValidations
-import org.simple.clinic.monthlyReports.questionnaire.component.properties.Integer
-import org.simple.clinic.monthlyReports.questionnaire.component.properties.Vertical
+import org.simple.clinic.questionnaire.MonthlyScreeningReports
+import org.simple.clinic.questionnaire.Questionnaire
+import org.simple.clinic.questionnaire.QuestionnaireType
+import org.simple.clinic.questionnaire.component.BaseComponentData
+import org.simple.clinic.questionnaire.component.HeaderComponentData
+import org.simple.clinic.questionnaire.component.InputFieldComponentData
+import org.simple.clinic.questionnaire.component.InputViewGroupComponentData
+import org.simple.clinic.questionnaire.component.LineSeparatorComponentData
+import org.simple.clinic.questionnaire.component.SeparatorComponentData
+import org.simple.clinic.questionnaire.component.SubHeaderComponentData
+import org.simple.clinic.questionnaire.component.ViewGroupComponentData
+import org.simple.clinic.questionnaire.component.properties.ComponentDisplayProperties
+import org.simple.clinic.questionnaire.component.properties.Horizontal
+import org.simple.clinic.questionnaire.component.properties.InputFieldValidations
+import org.simple.clinic.questionnaire.component.properties.Integer
+import org.simple.clinic.questionnaire.component.properties.Vertical
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentPayload
@@ -84,6 +84,7 @@ import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.protocol.sync.ProtocolDrugPayload
 import org.simple.clinic.protocol.sync.ProtocolPayload
+import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.scanid.IndiaNHIDGender
 import org.simple.clinic.scanid.IndiaNHIDInfoPayload
 import org.simple.clinic.storage.Timestamps
@@ -1544,4 +1545,36 @@ object TestData {
           ),
       )
   )
+
+  fun questionnaireResponse(
+      uuid: UUID = UUID.fromString("b780d18c-93df-4d0d-a18c-02f72ca757be"),
+      questionnaireId: UUID = UUID.fromString("84801306-d28e-4755-b027-8e6f80e67daa"),
+      questionnaireType: QuestionnaireType = MonthlyScreeningReports,
+      facilityId: UUID = UUID.fromString("7ac2d657-6868-441c-9c0c-5c4a5dba87d7"),
+      lastUpdatedByUserId: UUID = UUID.fromString("773810ea-850f-40f1-8ec2-259adc3549a3"),
+      content: Map<String, String> = getQuestionnaireResponseContent(),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null,
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
+  ): QuestionnaireResponse {
+    return QuestionnaireResponse(
+        uuid = uuid,
+        questionnaireId = questionnaireId,
+        questionnaireType = questionnaireType,
+        facilityId = facilityId,
+        lastUpdatedByUserId = lastUpdatedByUserId,
+        content = content,
+        timestamps = Timestamps(createdAt, updatedAt, deletedAt),
+        syncStatus = syncStatus
+    )
+  }
+
+  private fun getQuestionnaireResponseContent(): Map<String, String> {
+    return mapOf(
+        "1000" to "monthly_screening_reports.outpatient_department_visits",
+        "1200" to "monthly_screening_reports.blood_pressure_checks_male",
+        "800" to "monthly_screening_reports.blood_pressure_checks_female",
+    )
+  }
 }

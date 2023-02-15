@@ -10,7 +10,7 @@ import dagger.Provides
 import io.requery.android.database.sqlite.SQLiteGlobal
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
-import org.simple.clinic.monthlyReports.questionnaire.component.BaseComponentData
+import org.simple.clinic.questionnaire.component.BaseComponentData
 import org.simple.clinic.storage.migrations.RoomMigrationsModule
 import org.simple.clinic.storage.text.TextRecord
 import org.simple.clinic.storage.text.TextStoreModule

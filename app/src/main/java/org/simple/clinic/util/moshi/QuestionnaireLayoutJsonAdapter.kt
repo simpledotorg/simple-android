@@ -1,15 +1,15 @@
 package org.simple.clinic.util.moshi
 
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
-import org.simple.clinic.monthlyReports.questionnaire.component.BaseComponentData
-import org.simple.clinic.monthlyReports.questionnaire.component.HeaderComponentData
-import org.simple.clinic.monthlyReports.questionnaire.component.InputFieldComponentData
-import org.simple.clinic.monthlyReports.questionnaire.component.InputViewGroupComponentData
-import org.simple.clinic.monthlyReports.questionnaire.component.LineSeparatorComponentData
-import org.simple.clinic.monthlyReports.questionnaire.component.SeparatorComponentData
-import org.simple.clinic.monthlyReports.questionnaire.component.SubHeaderComponentData
-import org.simple.clinic.monthlyReports.questionnaire.component.UnknownComponent
-import org.simple.clinic.monthlyReports.questionnaire.component.ViewGroupComponentData
+import org.simple.clinic.questionnaire.component.BaseComponentData
+import org.simple.clinic.questionnaire.component.HeaderComponentData
+import org.simple.clinic.questionnaire.component.InputFieldComponentData
+import org.simple.clinic.questionnaire.component.InputViewGroupComponentData
+import org.simple.clinic.questionnaire.component.LineSeparatorComponentData
+import org.simple.clinic.questionnaire.component.SeparatorComponentData
+import org.simple.clinic.questionnaire.component.SubHeaderComponentData
+import org.simple.clinic.questionnaire.component.UnknownComponent
+import org.simple.clinic.questionnaire.component.ViewGroupComponentData
 
 class QuestionnaireLayoutJsonAdapter {
 

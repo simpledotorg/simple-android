@@ -24,7 +24,7 @@ data class QuestionnaireResponsePayload(
     val facilityId: UUID,
 
     @Json(name = "last_updated_by_user_id")
-    val lastUpdatedByUserId: UUID,
+    val lastUpdatedByUserId: UUID?,
 
     @Json(name = "content")
     val content: Map<String, Any>,

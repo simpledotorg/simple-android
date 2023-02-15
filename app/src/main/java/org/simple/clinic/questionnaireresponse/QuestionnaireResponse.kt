@@ -30,7 +30,7 @@ data class QuestionnaireResponse(
 
     val facilityId: UUID,
 
-    val lastUpdatedByUserId: UUID,
+    val lastUpdatedByUserId: UUID?,
 
     val content: Map<String, @RawValue Any>,
 

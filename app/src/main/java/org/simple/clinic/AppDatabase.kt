@@ -22,7 +22,6 @@ import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.questionnaire.QuestionnaireType
 import org.simple.clinic.questionnaire.component.BaseComponentData
 import org.simple.clinic.questionnaire.component.properties.InputFieldType
-import org.simple.clinic.questionnaire.component.properties.OrientationType
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.callresult.CallResult
@@ -141,7 +140,6 @@ import org.simple.clinic.drugs.search.Answer as DrugAnswer
     QuestionnaireType.RoomTypeConverter::class,
     BaseComponentData.RoomTypeConverter::class,
     InputFieldType.RoomTypeConverter::class,
-    OrientationType.RoomTypeConverter::class,
     MapRoomTypeConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {

@@ -44,11 +44,8 @@ import org.simple.clinic.questionnaire.component.LineSeparatorComponentData
 import org.simple.clinic.questionnaire.component.SeparatorComponentData
 import org.simple.clinic.questionnaire.component.SubHeaderComponentData
 import org.simple.clinic.questionnaire.component.ViewGroupComponentData
-import org.simple.clinic.questionnaire.component.properties.ComponentDisplayProperties
-import org.simple.clinic.questionnaire.component.properties.Horizontal
 import org.simple.clinic.questionnaire.component.properties.InputFieldValidations
 import org.simple.clinic.questionnaire.component.properties.Integer
-import org.simple.clinic.questionnaire.component.properties.Vertical
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentPayload
@@ -1485,7 +1482,6 @@ object TestData {
   private fun getTestQuestionnaireLayout() = ViewGroupComponentData(
       id = UUID.fromString("ff78b2d4-3e95-457c-bbb0-57cb8c2b2715").toString(),
       type = "group",
-      displayProperties = ComponentDisplayProperties(orientation = Vertical),
       children = listOf(
           SubHeaderComponentData(
               type = "display",
@@ -1495,7 +1491,6 @@ object TestData {
           InputViewGroupComponentData(
               id = UUID.fromString("6901b3fd-2d06-4366-b7fb-ccb0fbc6a539").toString(),
               type = "group",
-              displayProperties = ComponentDisplayProperties(orientation = Horizontal),
               children = listOf(
                   InputFieldComponentData(
                       id = "outpatient_department_visits",
@@ -1519,7 +1514,6 @@ object TestData {
           InputViewGroupComponentData(
               type = "display",
               id = UUID.fromString("6901b3fd-2d06-4366-b7fb-ccb0fbc6a539").toString(),
-              displayProperties = ComponentDisplayProperties(orientation = Horizontal),
               children = listOf(
                   InputFieldComponentData(
                       id = "blood_pressure_checks_male",

@@ -1,4 +1,4 @@
-package org.simple.clinic.monthlyscreeningreports.form.entry
+package org.simple.clinic.monthlyscreeningreports.form
 
 import com.spotify.mobius.test.FirstMatchers.hasModel
 import com.spotify.mobius.test.FirstMatchers.hasEffects

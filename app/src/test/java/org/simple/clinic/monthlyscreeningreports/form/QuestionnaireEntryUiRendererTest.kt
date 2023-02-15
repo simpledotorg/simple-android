@@ -1,4 +1,4 @@
-package org.simple.clinic.monthlyscreeningreports.form.entry
+package org.simple.clinic.monthlyscreeningreports.form
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify

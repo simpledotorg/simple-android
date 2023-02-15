@@ -10,13 +10,9 @@ import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.main.TypedPreference
-import org.simple.clinic.main.TypedPreference.Type.LastQuestionnairePullToken
 import org.simple.clinic.main.TypedPreference.Type.LastQuestionnaireResponsePullToken
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
-import org.simple.clinic.questionnaire.QuestionnaireRepository
-import org.simple.clinic.questionnaire.sync.QuestionnaireSync
-import org.simple.clinic.questionnaire.sync.QuestionnaireSyncApi
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponseRepository
 import org.simple.clinic.questionnaireresponse.sync.QuestionnaireResponseSync
@@ -38,24 +34,14 @@ class QuestionnaireResponseSyncIntegrationTest {
   lateinit var appDatabase: AppDatabase
 
   @Inject
-  lateinit var questionnaireRepository: QuestionnaireRepository
-
-  @Inject
-  lateinit var questionnaireResponseRepository: QuestionnaireResponseRepository
-
-  @Inject
-  @TypedPreference(LastQuestionnairePullToken)
-  lateinit var questionnaireLastPullToken: Preference<Optional<String>>
+  lateinit var repository: QuestionnaireResponseRepository
 
   @Inject
   @TypedPreference(LastQuestionnaireResponsePullToken)
   lateinit var lastPullToken: Preference<Optional<String>>
 
   @Inject
-  lateinit var questionnaireSyncApi: QuestionnaireSyncApi
-
-  @Inject
-  lateinit var questionnaireResponseSyncApi: QuestionnaireResponseSyncApi
+  lateinit var syncApi: QuestionnaireResponseSyncApi
 
   @Inject
   lateinit var userSession: UserSession
@@ -69,9 +55,7 @@ class QuestionnaireResponseSyncIntegrationTest {
       .around(ServerAuthenticationRule())
       .around(SaveDatabaseRule())
 
-  private lateinit var questionnaireSync: QuestionnaireSync
-
-  private lateinit var questionnaireResponseSync: QuestionnaireResponseSync
+  private lateinit var sync: QuestionnaireResponseSync
 
   private val batchSize = 3
   private lateinit var config: SyncConfig
@@ -91,32 +75,18 @@ class QuestionnaireResponseSyncIntegrationTest {
         name = ""
     )
 
-    questionnaireSync = QuestionnaireSync(
+    sync = QuestionnaireResponseSync(
         syncCoordinator = SyncCoordinator(),
-        api = questionnaireSyncApi,
-        repository = questionnaireRepository,
-        lastPullToken = questionnaireLastPullToken,
-        config = config
-    )
-
-    questionnaireResponseSync = QuestionnaireResponseSync(
-        syncCoordinator = SyncCoordinator(),
-        api = questionnaireResponseSyncApi,
-        repository = questionnaireResponseRepository,
+        api = syncApi,
+        repository = repository,
         lastPullToken = lastPullToken,
         config = config
     )
   }
 
   private fun resetLocalData() {
-    clearQuestionnaireData()
     clearQuestionnaireResponseData()
     lastPullToken.delete()
-    questionnaireLastPullToken.delete()
-  }
-
-  private fun clearQuestionnaireData() {
-    appDatabase.questionnaireDao().clearData()
   }
 
   private fun clearQuestionnaireResponseData() {
@@ -126,36 +96,34 @@ class QuestionnaireResponseSyncIntegrationTest {
   @Test
   fun syncing_records_should_work_as_expected() {
     // given
-    val totalNumberOfRecords = batchSize * 2 + 1
+    sync.pull()
+    val questionnaireResponseList = repository.questionnaireResponsesByType(MonthlyScreeningReports)
 
-    questionnaireSync.pull()
-    val monthlyScreeningReportQuestionnaire = questionnaireRepository.questionnairesByType(MonthlyScreeningReports)
-
-    Truth.assertThat(monthlyScreeningReportQuestionnaire).isNotNull()
-
-    val records = (1..totalNumberOfRecords).map {
-      val uuid = UUID.randomUUID()
+    val updatedQuestionnaireResponseList = questionnaireResponseList.map {
       TestData.questionnaireResponse(
-          uuid = uuid,
-          questionnaireId = monthlyScreeningReportQuestionnaire.uuid,
-          questionnaireType = monthlyScreeningReportQuestionnaire.questionnaire_type,
-          facilityId = currentFacilityUuid,
-          syncStatus = SyncStatus.PENDING
+          uuid = it.uuid,
+          questionnaireId = it.questionnaireId,
+          questionnaireType = it.questionnaireType,
+          facilityId = currentFacilityUuid
       )
     }
-    Truth.assertThat(records).containsNoDuplicates()
 
-    questionnaireResponseRepository.save(records)
-    Truth.assertThat(questionnaireResponseRepository.pendingSyncRecordCount().blockingFirst()).isEqualTo(totalNumberOfRecords)
+    Truth.assertThat(updatedQuestionnaireResponseList).containsNoDuplicates()
+
+    updatedQuestionnaireResponseList.forEach {
+      repository.updateQuestionnaireResponse(it)
+    }
+
+    Truth.assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(updatedQuestionnaireResponseList.count())
 
     // when
-    questionnaireResponseSync.push()
+    sync.push()
     clearQuestionnaireResponseData()
-    questionnaireResponseSync.pull()
+    sync.pull()
 
     // then
-    val expectedPulledRecords = records.map { it.syncCompleted() }
-    val pulledRecords = questionnaireResponseRepository.recordsWithSyncStatus(SyncStatus.DONE)
+    val expectedPulledRecords = updatedQuestionnaireResponseList.map { it.syncCompleted() }
+    val pulledRecords = repository.recordsWithSyncStatus(SyncStatus.DONE)
 
     Truth.assertThat(pulledRecords).containsAtLeastElementsIn(expectedPulledRecords)
   }

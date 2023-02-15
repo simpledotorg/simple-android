@@ -46,7 +46,7 @@ import org.simple.clinic.instantsearch.InstantSearchScreen
 import org.simple.clinic.login.applock.AppLockScreen
 import org.simple.clinic.login.applock.ConfirmResetPinDialog
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen
-import org.simple.clinic.monthlyReports.questionnaire.entry.QuestionnaireEntryScreen
+import org.simple.clinic.monthlyscreeningreports.form.QuestionnaireEntryScreen
 import org.simple.clinic.navigation.di.FragmentScreenKeyModule
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenResultBus

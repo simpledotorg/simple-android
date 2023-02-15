@@ -7,7 +7,7 @@ import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.monthlyReports.questionnaire.component.BaseComponentData
+import org.simple.clinic.questionnaire.component.BaseComponentData
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.patient.PatientSearchResult

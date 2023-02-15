@@ -26,8 +26,8 @@ import org.simple.clinic.main.TypedPreference.Type.FacilitySyncGroupSwitchedAt
 import org.simple.clinic.medicalhistory.MedicalHistoryModule
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
-import org.simple.clinic.monthlyReports.questionnaire.di.QuestionnaireModule
-import org.simple.clinic.monthlyReports.questionnaire.di.QuestionnaireResponseModule
+import org.simple.clinic.questionnaire.di.QuestionnaireModule
+import org.simple.clinic.questionnaireresponse.di.QuestionnaireResponseModule
 import org.simple.clinic.overdue.AppointmentModule
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.AppointmentSync
@@ -40,7 +40,6 @@ import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncModule
 import org.simple.clinic.protocol.ProtocolModule
 import org.simple.clinic.protocol.sync.ProtocolSync
-import org.simple.clinic.questionnaireResponse.QuestionnaireResponse
 import org.simple.clinic.reports.ReportsModule
 import org.simple.clinic.reports.ReportsSync
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationSync

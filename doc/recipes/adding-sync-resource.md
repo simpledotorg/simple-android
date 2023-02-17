@@ -31,7 +31,7 @@ data class BloodSugarPullResponse(
 4. Create a Retrofit Api interface for adding the HTTP `GET` and `POST` requests for pulling and pushing records respectively.
 5. Add a new `Repository` that implements `SynceableRepository<T,P>`. Use the table `BloodSugarMeasurement` as `T` and payload
    class `BloodSugarMeasurementPayload` as `P`. This repository is used as an interface between the API and the database.
-6. Implement the overridden methods in the repository class by adding queries in the corresponding `Dao`. While most if the methods here are backed by
+6. Implement the overridden methods in the repository class by adding queries in the corresponding `Dao`. While most of the methods here are backed by
    straightforward queries, there is one in particular that can be challenging.
 
  ```Kotlin

@@ -1027,6 +1027,7 @@
   <string name="monthly_screening_reports_submit_report">Submit report</string>
   <string name="monthly_screening_reports_submitted">Submitted</string><!--Submitted, Submitted Nov 27, 06:24pm, October 2022 report submitted-->
   <string name="monthly_screening_reports_complete">Complete!</string>
+  <string name="monthly_screening_reports_done">Done</string>
   <string name="monthly_screening_reports_unsaved_changes_title">Unsaved changes</string>
   <string name="monthly_screening_reports_unsaved_changes_text">Unsaved changes will be lost.</string>
   <string name="monthly_screening_reports_leave_page_text">Are you sure you want to leave?</string>

@@ -5,10 +5,6 @@ import com.spotify.mobius.test.FirstMatchers.hasEffects
 import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
-import org.simple.clinic.monthlyscreeningreports.form.LoadCurrentFacility
-import org.simple.clinic.monthlyscreeningreports.form.LoadQuestionnaireFormEffect
-import org.simple.clinic.monthlyscreeningreports.form.QuestionnaireEntryInit
-import org.simple.clinic.monthlyscreeningreports.form.QuestionnaireEntryModel
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
 
 class QuestionnaireEntryInitTest {

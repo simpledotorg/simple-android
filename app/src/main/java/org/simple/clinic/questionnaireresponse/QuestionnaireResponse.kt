@@ -13,6 +13,7 @@ import io.reactivex.Flowable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.questionnaire.QuestionnaireType
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.questionnaireresponse.sync.QuestionnaireResponsePayload
 import org.simple.clinic.storage.Timestamps
 import java.util.UUID
 
@@ -37,6 +38,19 @@ data class QuestionnaireResponse(
 
     val syncStatus: SyncStatus
 ) : Parcelable {
+
+  fun toPayload() = QuestionnaireResponsePayload(
+      uuid = uuid,
+      questionnaireId = questionnaireId,
+      questionnaireType = questionnaireType,
+      facilityId = facilityId,
+      lastUpdatedByUserId = lastUpdatedByUserId,
+      createdAt = timestamps.createdAt,
+      updatedAt = timestamps.updatedAt,
+      deletedAt = timestamps.deletedAt,
+      content = content
+  )
+
   @Dao
   interface RoomDao {
 

@@ -2,6 +2,7 @@ package org.simple.clinic.monthlyscreeningreports.form
 
 import com.google.common.truth.Truth
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
@@ -19,6 +20,7 @@ import java.time.Instant
 import java.util.UUID
 import javax.inject.Inject
 
+@Ignore("the qa api is under development")
 class QuestionnaireResponseRepositoryAndroidTest {
 
   @Inject

@@ -80,17 +80,21 @@ class QuestionnaireResponseRepositoryAndroidTest {
     // when
     clock.advanceBy(durationToAdvanceBy)
     questionnaireResponseRepository.updateQuestionnaireResponse(questionnaireResponse.copy(content = mapOf(
-        "2000" to "monthly_screening_reports.outpatient_department_visits",
-        "2200" to "monthly_screening_reports.blood_pressure_checks_male",
-        "2800" to "monthly_screening_reports.blood_pressure_checks_female",
+        "monthly_screening_reports.outpatient_department_visits" to 6000.0,
+        "monthly_screening_reports.blood_pressure_checks_male" to 2700.0,
+        "monthly_screening_reports.blood_pressure_checks_female" to 2300.0,
+        "monthly_screening_reports.gender" to "Female",
+        "monthly_screening_reports.is_smoking" to false
     )))
 
     // then
     val expected = questionnaireResponse.copy(
         content = mapOf(
-            "2000" to "monthly_screening_reports.outpatient_department_visits",
-            "2200" to "monthly_screening_reports.blood_pressure_checks_male",
-            "2800" to "monthly_screening_reports.blood_pressure_checks_female",
+            "monthly_screening_reports.outpatient_department_visits" to 6000.0,
+            "monthly_screening_reports.blood_pressure_checks_male" to 2700.0,
+            "monthly_screening_reports.blood_pressure_checks_female" to 2300.0,
+            "monthly_screening_reports.gender" to "Female",
+            "monthly_screening_reports.is_smoking" to false
         ),
         timestamps = questionnaireResponse.timestamps.copy(
             updatedAt = questionnaireResponse.timestamps.updatedAt.plus(durationToAdvanceBy)

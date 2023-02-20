@@ -3,12 +3,15 @@
 ## Next Release
 
 ### Internal
+
 - Add `QuestionnaireResponse`s table
 - Add `QuestionnaireResponseRepository`
+- Add Questionnaire response sync resource
 
 ## 2023-02-13-8607
 
 ## Internal
+
 - Update heroku version in ci_checks
 - Bump androidx-test-runner to v1.5.2
 - Bump androidx-test-junit to v1.1.5

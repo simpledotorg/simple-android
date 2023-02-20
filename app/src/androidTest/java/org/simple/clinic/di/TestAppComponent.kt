@@ -65,6 +65,7 @@ import org.simple.clinic.sync.MedicalHistorySyncIntegrationTest
 import org.simple.clinic.sync.PatientSyncIntegrationTest
 import org.simple.clinic.sync.PrescriptionSyncIntegrationTest
 import org.simple.clinic.sync.ProtocolSyncIntegrationTest
+import org.simple.clinic.sync.QuestionnaireResponseSyncIntegrationTest
 import org.simple.clinic.sync.QuestionnaireSyncIntegrationTest
 import org.simple.clinic.sync.ReportsSyncIntegrationTest
 import org.simple.clinic.sync.TeleconsultationSyncIntegrationTest
@@ -158,4 +159,5 @@ interface TestAppComponent {
   fun inject(target: QuestionnaireRepositoryAndroidTest)
   fun inject(target: QuestionnaireSyncIntegrationTest)
   fun inject(target: QuestionnaireResponseRepositoryAndroidTest)
+  fun inject(target: QuestionnaireResponseSyncIntegrationTest)
 }

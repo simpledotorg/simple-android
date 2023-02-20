@@ -11,8 +11,10 @@ import androidx.room.Query
 import androidx.room.Update
 import io.reactivex.Flowable
 import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 import org.simple.clinic.questionnaire.QuestionnaireType
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.questionnaireresponse.sync.QuestionnaireResponsePayload
 import org.simple.clinic.storage.Timestamps
 import java.util.UUID
 
@@ -28,15 +30,28 @@ data class QuestionnaireResponse(
 
     val facilityId: UUID,
 
-    val lastUpdatedByUserId: UUID,
+    val lastUpdatedByUserId: UUID?,
 
-    val content: Map<String, String>,
+    val content: Map<String, @RawValue Any>,
 
     @Embedded
     val timestamps: Timestamps,
 
     val syncStatus: SyncStatus
 ) : Parcelable {
+
+  fun toPayload() = QuestionnaireResponsePayload(
+      uuid = uuid,
+      questionnaireId = questionnaireId,
+      questionnaireType = questionnaireType,
+      facilityId = facilityId,
+      lastUpdatedByUserId = lastUpdatedByUserId,
+      createdAt = timestamps.createdAt,
+      updatedAt = timestamps.updatedAt,
+      deletedAt = timestamps.deletedAt,
+      content = content
+  )
+
   @Dao
   interface RoomDao {
 

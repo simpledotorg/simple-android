@@ -47,6 +47,7 @@ import org.simple.clinic.login.applock.AppLockScreen
 import org.simple.clinic.login.applock.ConfirmResetPinDialog
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen
 import org.simple.clinic.monthlyscreeningreports.form.QuestionnaireEntryScreen
+import org.simple.clinic.monthlyscreeningreports.list.MonthlyScreeningReportListScreen
 import org.simple.clinic.navigation.di.FragmentScreenKeyModule
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenResultBus
@@ -159,7 +160,8 @@ interface TheActivityComponent :
     ConfirmRemoveBloodSugarDialogInjector,
     BloodSugarUnitSelectionDialogInjector,
     SelectLineListFormatDialog.Injector,
-    QuestionnaireEntryScreen.Injector {
+    QuestionnaireEntryScreen.Injector,
+    MonthlyScreeningReportListScreen.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory

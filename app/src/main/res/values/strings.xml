@@ -1012,6 +1012,7 @@
   <string name="patient_line_list_download_card_title">IHCI patient register</string>
   <string name="patient_line_list_download_card_desc">List of all patients registered or assigned to %1$s</string>
   <string name="patient_line_list_download_card_button">Download</string>
+  <string name="patient_line_list_download_link">Download IHCI patient register</string>
 
   <!--Notification permission denied dialog-->
   <string name="notification_permission_denied_title">Turn on notifications</string>
@@ -1021,12 +1022,14 @@
 
   <!--Monthly screen reports-->
   <string name="monthly_screening_reports">Monthly screening reports</string>
-  <string name="monthly_screening_reports_report">report</string><!--Oct 2023 report-->
-  <string name="monthly_screening_reports_screening_report">screening report</string><!--Oct 2022 screening report-->
-  <string name="monthly_screening_reports_submit_btn_text">Submit</string>
+  <string name="monthly_screening_reports_report">%1$s report</string><!--Oct 2023 report-->
   <string name="monthly_screening_reports_submit_report">Submit report</string>
-  <string name="monthly_screening_reports_submitted">Submitted</string><!--Submitted, Submitted Nov 27, 06:24pm, October 2022 report submitted-->
+  <string name="monthly_screening_reports_submitted">Submitted</string>
+  <string name="monthly_screening_reports_screening_report">%1$s screening report</string><!--Oct 2022 screening report-->
+  <string name="monthly_screening_reports_submitted_with_date_and_time">Submitted %1$s</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="monthly_screening_reports_submit_btn_text">Submit</string>
   <string name="monthly_screening_reports_complete">Complete!</string>
+  <string name="monthly_screening_reports_submitted_with_date">%1$s report submitted</string><!--October 2022 report submitted-->
   <string name="monthly_screening_reports_done">Done</string>
   <string name="monthly_screening_reports_unsaved_changes_title">Unsaved changes</string>
   <string name="monthly_screening_reports_unsaved_changes_text">Unsaved changes will be lost.\nAre you sure you want to leave?</string>

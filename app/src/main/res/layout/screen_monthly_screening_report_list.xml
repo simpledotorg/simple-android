@@ -106,30 +106,6 @@
       android:layout_height="wrap_content"
       android:text="@string/monthly_screening_reports_done" />
 
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/monthly_screening_reports_unsaved_changes_title" />
-
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/monthly_screening_reports_unsaved_changes_text" />
-
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/monthly_screening_reports_leave_page_text" />
-
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/monthly_screening_reports_stay_title" />
-
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/monthly_screening_reports_leave_page_title" />
   </LinearLayout>
 
 

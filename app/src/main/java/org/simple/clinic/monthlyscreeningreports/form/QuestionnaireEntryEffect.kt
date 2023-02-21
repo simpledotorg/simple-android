@@ -11,3 +11,5 @@ data class LoadQuestionnaireFormEffect(val questionnaireType: QuestionnaireType)
 sealed class QuestionnaireEntryViewEffect : QuestionnaireEntryEffect()
 
 object GoBack : QuestionnaireEntryViewEffect()
+
+object ShowUnsavedChangesWarningDialog : QuestionnaireEntryViewEffect()

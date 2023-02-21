@@ -1,5 +1,6 @@
 package org.simple.clinic.monthlyscreeningreports.form
 
+import com.spotify.mobius.test.NextMatchers
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.UpdateSpec
@@ -41,6 +42,17 @@ class QuestionnaireEntryUpdateTest {
         .then(assertThatNext(
             hasModel(defaultModel.currentFacilityLoaded(facility)),
             hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when back is clicked, then show unsaved changes warning dialog`() {
+    spec
+        .given(defaultModel)
+        .whenEvent(QuestionnaireEntryBackClicked)
+        .then(assertThatNext(
+            NextMatchers.hasNoModel(),
+            NextMatchers.hasEffects(ShowUnsavedChangesWarningDialog)
         ))
   }
 }

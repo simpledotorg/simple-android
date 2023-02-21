@@ -2,6 +2,8 @@ package org.simple.clinic.monthlyscreeningreports.form
 
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
@@ -20,7 +22,6 @@ class QuestionnaireEntryEffectHandlerTest {
   private val questionnaireRepository = mock<QuestionnaireRepository>()
   private val viewEffectHandler = QuestionnaireEntryViewEffectHandler(ui)
   private val questionnaireType = MonthlyScreeningReports
-  private val questionnaire = TestData.questionnaire(uuid = UUID.fromString("85d0b5f1-af84-4a6b-938e-5166f8c27666"))
 
   private val facility = TestData.facility(
       uuid = UUID.fromString("e8075335-f766-4605-8216-41bf79189609"),
@@ -67,5 +68,17 @@ class QuestionnaireEntryEffectHandlerTest {
     // then
     testCase.assertOutgoingEvents(CurrentFacilityLoaded(facility))
     verifyZeroInteractions(ui)
+  }
+
+  @Test
+  fun `when show unsaved changes warning dialog effect is received, then show unsaved changes warning dialog`() {
+    // when
+    testCase.dispatch(ShowUnsavedChangesWarningDialog)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(ui).showUnsavedChangesWarningDialog()
+    verifyNoMoreInteractions(ui)
   }
 }

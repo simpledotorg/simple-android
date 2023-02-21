@@ -1029,8 +1029,7 @@
   <string name="monthly_screening_reports_complete">Complete!</string>
   <string name="monthly_screening_reports_done">Done</string>
   <string name="monthly_screening_reports_unsaved_changes_title">Unsaved changes</string>
-  <string name="monthly_screening_reports_unsaved_changes_text">Unsaved changes will be lost.</string>
-  <string name="monthly_screening_reports_leave_page_text">Are you sure you want to leave?</string>
+  <string name="monthly_screening_reports_unsaved_changes_text">Unsaved changes will be lost.\nAre you sure you want to leave?</string>
   <string name="monthly_screening_reports_stay_title">STAY ON THIS PAGE</string>
   <string name="monthly_screening_reports_leave_page_title">LEAVE THIS PAGE</string>
 </resources>

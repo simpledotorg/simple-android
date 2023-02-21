@@ -44,11 +44,8 @@ import org.simple.clinic.questionnaire.component.LineSeparatorComponentData
 import org.simple.clinic.questionnaire.component.SeparatorComponentData
 import org.simple.clinic.questionnaire.component.SubHeaderComponentData
 import org.simple.clinic.questionnaire.component.ViewGroupComponentData
-import org.simple.clinic.questionnaire.component.properties.ComponentDisplayProperties
-import org.simple.clinic.questionnaire.component.properties.Horizontal
 import org.simple.clinic.questionnaire.component.properties.InputFieldValidations
 import org.simple.clinic.questionnaire.component.properties.Integer
-import org.simple.clinic.questionnaire.component.properties.Vertical
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentPayload
@@ -1485,7 +1482,6 @@ object TestData {
   private fun getTestQuestionnaireLayout() = ViewGroupComponentData(
       id = UUID.fromString("ff78b2d4-3e95-457c-bbb0-57cb8c2b2715").toString(),
       type = "group",
-      displayProperties = ComponentDisplayProperties(orientation = Vertical),
       children = listOf(
           SubHeaderComponentData(
               type = "display",
@@ -1495,7 +1491,6 @@ object TestData {
           InputViewGroupComponentData(
               id = UUID.fromString("6901b3fd-2d06-4366-b7fb-ccb0fbc6a539").toString(),
               type = "group",
-              displayProperties = ComponentDisplayProperties(orientation = Horizontal),
               children = listOf(
                   InputFieldComponentData(
                       id = "outpatient_department_visits",
@@ -1519,7 +1514,6 @@ object TestData {
           InputViewGroupComponentData(
               type = "display",
               id = UUID.fromString("6901b3fd-2d06-4366-b7fb-ccb0fbc6a539").toString(),
-              displayProperties = ComponentDisplayProperties(orientation = Horizontal),
               children = listOf(
                   InputFieldComponentData(
                       id = "blood_pressure_checks_male",
@@ -1552,7 +1546,7 @@ object TestData {
       questionnaireType: QuestionnaireType = MonthlyScreeningReports,
       facilityId: UUID = UUID.fromString("7ac2d657-6868-441c-9c0c-5c4a5dba87d7"),
       lastUpdatedByUserId: UUID = UUID.fromString("773810ea-850f-40f1-8ec2-259adc3549a3"),
-      content: Map<String, String> = getQuestionnaireResponseContent(),
+      content: Map<String, Any> = getQuestionnaireResponseContent(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
@@ -1570,11 +1564,13 @@ object TestData {
     )
   }
 
-  private fun getQuestionnaireResponseContent(): Map<String, String> {
+  private fun getQuestionnaireResponseContent(): Map<String, Any> {
     return mapOf(
-        "1000" to "monthly_screening_reports.outpatient_department_visits",
-        "1200" to "monthly_screening_reports.blood_pressure_checks_male",
-        "800" to "monthly_screening_reports.blood_pressure_checks_female",
+        "monthly_screening_reports.outpatient_department_visits" to 5000.0,
+        "monthly_screening_reports.blood_pressure_checks_male" to 2200.0,
+        "monthly_screening_reports.blood_pressure_checks_female" to 1800.0,
+        "monthly_screening_reports.gender" to "Male",
+        "monthly_screening_reports.is_smoking" to true,
     )
   }
 }

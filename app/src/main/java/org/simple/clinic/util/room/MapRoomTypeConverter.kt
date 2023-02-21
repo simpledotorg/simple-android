@@ -8,14 +8,14 @@ import javax.inject.Inject
 
 class MapRoomTypeConverter @Inject constructor() {
   @TypeConverter
-  fun fromMap(value: Map<String, String>): String {
+  fun fromMap(value: Map<String, Any>): String {
     val gson = Gson()
     return gson.toJson(value)
   }
 
   @TypeConverter
-  fun toMap(value: String): Map<String, String> {
-    val mapType: Type = object : TypeToken<Map<String?, String?>?>() {}.type
+  fun toMap(value: String): Map<String, Any> {
+    val mapType: Type = object : TypeToken<Map<String?, Any?>?>() {}.type
     return Gson().fromJson(value, mapType)
   }
 }

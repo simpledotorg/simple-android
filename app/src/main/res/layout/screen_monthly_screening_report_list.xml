@@ -115,6 +115,11 @@
       android:layout_height="wrap_content"
       android:text="@string/monthly_screening_reports_done" />
 
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/patient_line_list_download_link" />
+
   </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

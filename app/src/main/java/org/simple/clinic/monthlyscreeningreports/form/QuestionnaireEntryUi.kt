@@ -6,6 +6,7 @@ interface QuestionnaireEntryUi {
   fun setFacility(facilityName: String)
   fun displayQuestionnaireFormLayout(layout: BaseComponentData)
   fun goBack()
+  fun showUnsavedChangesWarningDialog()
   fun showProgress()
   fun hideProgress()
 }

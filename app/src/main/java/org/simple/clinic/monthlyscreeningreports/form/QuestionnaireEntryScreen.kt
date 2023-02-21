@@ -6,18 +6,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
+import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
+import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenQuestionnaireEntryFormBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.questionnaire.QuestionnaireType
 import org.simple.clinic.questionnaire.component.BaseComponentData
 import org.simple.clinic.questionnaire.component.ViewGroupComponentData
 import org.simple.clinic.monthlyscreeningreports.form.epoxy.controller.QuestionnaireEntryFormController
+import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
 class QuestionnaireEntryScreen : BaseScreen<
@@ -26,7 +35,9 @@ class QuestionnaireEntryScreen : BaseScreen<
     QuestionnaireEntryModel,
     QuestionnaireEntryEvent,
     QuestionnaireEntryEffect,
-    QuestionnaireEntryViewEffect>(), QuestionnaireEntryUi {
+    QuestionnaireEntryViewEffect>(),
+    QuestionnaireEntryUi,
+    HandlesBack {
 
   @Inject
   lateinit var router: Router
@@ -37,11 +48,17 @@ class QuestionnaireEntryScreen : BaseScreen<
   @Inject
   lateinit var effectHandlerFactory: QuestionnaireEntryEffectHandler.Factory
 
-  private val questionnaireFormToolbar
-    get() = binding.questionnaireFormToolbar
+  private val backButton
+    get() = binding.backButton
+
+  private val facilityTextView
+    get() = binding.facilityTextView
 
   private val questionnaireFormRecyclerView
     get() = binding.questionnaireFormRecyclerView
+
+  private val hotEvents = PublishSubject.create<QuestionnaireEntryEvent>()
+  private val hardwareBackClicks = PublishSubject.create<Unit>()
 
   private val questionnaireFormController: QuestionnaireEntryFormController by lazy { QuestionnaireEntryFormController() }
 
@@ -55,6 +72,16 @@ class QuestionnaireEntryScreen : BaseScreen<
       effectHandlerFactory.create(viewEffectsConsumer = viewEffectsConsumer).build()
 
   override fun viewEffectHandler() = QuestionnaireEntryViewEffectHandler(this)
+
+  override fun events(): Observable<QuestionnaireEntryEvent> {
+    return Observable
+        .mergeArray(
+            backClicks(),
+            hotEvents
+        )
+        .compose(ReportAnalyticsEvents())
+        .cast()
+  }
 
   override fun uiRenderer() = QuestionnaireEntryUiRenderer(this)
 
@@ -70,7 +97,6 @@ class QuestionnaireEntryScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    questionnaireFormToolbar.setNavigationOnClickListener { router.pop() }
     initRecyclerView()
   }
 
@@ -84,7 +110,7 @@ class QuestionnaireEntryScreen : BaseScreen<
   }
 
   override fun setFacility(facilityName: String) {
-    questionnaireFormToolbar.title = facilityName
+    facilityTextView.text = facilityName
   }
 
   override fun displayQuestionnaireFormLayout(layout: BaseComponentData) {
@@ -101,6 +127,14 @@ class QuestionnaireEntryScreen : BaseScreen<
     }
   }
 
+  private fun backClicks(): Observable<UiEvent> {
+    return backButton.clicks()
+        .mergeWith(hardwareBackClicks)
+        .map {
+          QuestionnaireEntryBackClicked
+        }
+  }
+
   override fun showProgress() {
   }
 
@@ -108,9 +142,26 @@ class QuestionnaireEntryScreen : BaseScreen<
   }
 
   override fun goBack() {
+    router.pop()
+  }
+
+  override fun showUnsavedChangesWarningDialog() {
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(R.string.monthly_screening_reports_unsaved_changes_title)
+        .setMessage(R.string.monthly_screening_reports_unsaved_changes_text)
+        .setPositiveButton(R.string.monthly_screening_reports_stay_title, null)
+        .setNegativeButton(R.string.monthly_screening_reports_leave_page_title) { _, _ ->
+          hotEvents.onNext(UnsavedChangesWarningLeavePageClicked)
+        }
+        .show()
   }
 
   interface Injector {
     fun inject(target: QuestionnaireEntryScreen)
+  }
+
+  override fun onBackPressed(): Boolean {
+    hardwareBackClicks.onNext(Unit)
+    return true
   }
 }

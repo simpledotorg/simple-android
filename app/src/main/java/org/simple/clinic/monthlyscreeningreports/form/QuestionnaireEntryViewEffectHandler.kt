@@ -9,6 +9,7 @@ class QuestionnaireEntryViewEffectHandler(
   override fun handle(viewEffect: QuestionnaireEntryViewEffect) {
     when (viewEffect) {
       is GoBack -> ui.goBack()
+      is ShowUnsavedChangesWarningDialog -> ui.showUnsavedChangesWarningDialog()
     }
   }
 }

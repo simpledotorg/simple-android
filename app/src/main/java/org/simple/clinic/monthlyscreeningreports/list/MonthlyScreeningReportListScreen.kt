@@ -9,7 +9,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.databinding.ScreenMonthlyReportListBinding
+import org.simple.clinic.databinding.ScreenMonthlyScreeningReportListBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 class MonthlyScreeningReportListScreen : BaseScreen<
     MonthlyScreeningReportListScreen.Key,
-    ScreenMonthlyReportListBinding,
+    ScreenMonthlyScreeningReportListBinding,
     MonthlyScreeningReportListModel,
     MonthlyScreeningReportListEvent,
     MonthlyScreeningReportListEffect,
@@ -68,7 +68,7 @@ class MonthlyScreeningReportListScreen : BaseScreen<
   override fun bindView(
       layoutInflater: LayoutInflater,
       container: ViewGroup?
-  ) = ScreenMonthlyReportListBinding.inflate(layoutInflater, container, false)
+  ) = ScreenMonthlyScreeningReportListBinding.inflate(layoutInflater, container, false)
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

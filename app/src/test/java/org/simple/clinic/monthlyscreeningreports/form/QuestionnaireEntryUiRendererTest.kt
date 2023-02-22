@@ -56,4 +56,22 @@ class QuestionnaireEntryUiRendererTest {
     verify(ui).setFacility(facility.name)
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when questionnaire response loaded, then render questionnaire response`() {
+    // given
+    val questionnaireResponse = TestData.questionnaireResponse(
+        uuid = UUID.fromString("4145d792-7f97-43c1-908c-702b98d738c3")
+    )
+
+    val model = defaultModel
+        .responseLoaded(questionnaireResponse)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).displayQuestionnaireResponse(questionnaireResponse)
+    verifyNoMoreInteractions(ui)
+  }
 }

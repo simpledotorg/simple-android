@@ -27,6 +27,7 @@ import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 import javax.inject.Inject
 
 class QuestionnaireEntryScreen : BaseScreen<
@@ -102,6 +103,7 @@ class QuestionnaireEntryScreen : BaseScreen<
 
   @Parcelize
   data class Key(
+      val id: UUID,
       val questionnaireType: QuestionnaireType,
       override val analyticsName: String = "$questionnaireType questionnaire entry form"
   ) : ScreenKey() {

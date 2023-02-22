@@ -9,117 +9,68 @@
   tools:context=".summary.PatientSummaryScreen">
 
   <LinearLayout
+    android:id="@+id/monthlyScreeningReportListHeader"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:background="?attr/colorToolbarPrimary"
+    android:elevation="@dimen/elevation_toolbar"
+    android:orientation="horizontal"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent">
+    app:layout_constraintTop_toTopOf="parent"
+    tools:ignore="UnusedAttribute">
+
+    <ImageButton
+      android:id="@+id/backButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="?selectableItemBackgroundBorderless"
+      android:contentDescription="@string/patientsummary_contentdescription_up_button"
+      android:padding="@dimen/spacing_12"
+      app:srcCompat="@drawable/ic_arrow_back_24dp"
+      app:tint="?attr/colorOnToolbarPrimary" />
 
     <LinearLayout
-      android:id="@+id/monthlyScreeningReportListHeader"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:background="?attr/colorToolbarPrimary"
-      android:elevation="@dimen/elevation_toolbar"
-      android:orientation="horizontal"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toTopOf="parent"
-      tools:ignore="UnusedAttribute">
+      android:orientation="vertical"
+      android:paddingBottom="@dimen/spacing_16">
 
-      <ImageButton
-        android:id="@+id/backButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="?selectableItemBackgroundBorderless"
-        android:contentDescription="@string/patientsummary_contentdescription_up_button"
-        android:padding="@dimen/spacing_12"
-        app:srcCompat="@drawable/ic_arrow_back_24dp"
-        app:tint="?attr/colorOnToolbarPrimary" />
-
-      <LinearLayout
+      <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/spacing_16">
+        android:layout_marginTop="@dimen/spacing_8"
+        android:maxLines="1"
+        android:paddingStart="@dimen/spacing_8"
+        android:paddingEnd="@dimen/spacing_16"
+        android:text="@string/monthly_screening_reports"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textColor="?attr/colorOnToolbarPrimary" />
 
-        <TextView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/spacing_8"
-          android:maxLines="1"
-          android:paddingStart="@dimen/spacing_8"
-          android:paddingEnd="@dimen/spacing_16"
-          android:text="@string/monthly_screening_reports"
-          android:textAppearance="?attr/textAppearanceHeadline6"
-          android:textColor="?attr/colorOnToolbarPrimary" />
+      <TextView
+        android:id="@+id/facilityTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_4"
+        android:drawablePadding="@dimen/spacing_8"
+        android:paddingStart="@dimen/spacing_8"
+        android:paddingEnd="@dimen/spacing_16"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="@color/color_on_toolbar_primary_72"
+        app:drawableStartCompat="@drawable/ic_location_20dp"
+        app:drawableTint="@color/color_on_toolbar_primary_72"
+        tools:text="DH Arigar Anna" />
 
-        <TextView
-          android:id="@+id/facilityTextView"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/spacing_4"
-          android:drawablePadding="@dimen/spacing_8"
-          android:paddingStart="@dimen/spacing_8"
-          android:paddingEnd="@dimen/spacing_16"
-          android:textAppearance="?attr/textAppearanceBody2"
-          android:textColor="@color/color_on_toolbar_primary_72"
-          app:drawableStartCompat="@drawable/ic_location_20dp"
-          app:drawableTint="@color/color_on_toolbar_primary_72"
-          tools:text="DH Arigar Anna" />
-
-      </LinearLayout>
     </LinearLayout>
-
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/monthly_screening_reports_report" />
-
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/monthly_screening_reports_screening_report" />
-
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/monthly_screening_reports_submitted_with_date_and_time" />
-
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/monthly_screening_reports_submitted_with_date" />
-
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/monthly_screening_reports_submit_btn_text" />
-
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/monthly_screening_reports_submit_report" />
-
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/monthly_screening_reports_submitted" />
-
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/monthly_screening_reports_complete" />
-
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/monthly_screening_reports_done" />
-
-    <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/patient_line_list_download_link" />
-
   </LinearLayout>
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/monthlyReportRecyclerView"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:clipToPadding="false"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/monthlyScreeningReportListHeader" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -70,7 +70,6 @@
       </LinearLayout>
     </LinearLayout>
 
-
     <TextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -80,6 +79,16 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:text="@string/monthly_screening_reports_screening_report" />
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/monthly_screening_reports_submitted_with_date_and_time" />
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/monthly_screening_reports_submitted_with_date" />
 
     <TextView
       android:layout_width="wrap_content"
@@ -106,7 +115,11 @@
       android:layout_height="wrap_content"
       android:text="@string/monthly_screening_reports_done" />
 
-  </LinearLayout>
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/patient_line_list_download_link" />
 
+  </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

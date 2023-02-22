@@ -81,7 +81,7 @@
     app:layout_constraintBottom_toBottomOf="parent">
 
     <com.google.android.material.button.MaterialButton
-      android:id="@+id/questionnaire_form_refill"
+      android:id="@+id/submitButton"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_margin="@dimen/spacing_8"

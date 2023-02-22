@@ -14,6 +14,10 @@ class QuestionnaireEntryUiRenderer(private val ui: QuestionnaireEntryUi) : ViewR
     if (model.hasFacility) {
       renderFacility(model)
     }
+
+    if (model.questionnaireResponse != null) {
+      ui.displayQuestionnaireResponse(model.questionnaireResponse)
+    }
   }
 
   private fun renderFacility(model: QuestionnaireEntryModel) {

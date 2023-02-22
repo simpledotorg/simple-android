@@ -17,6 +17,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenQuestionnaireEntryFormBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.monthlyscreeningreports.complete.MonthlyScreeningReportCompleteScreen
 import org.simple.clinic.questionnaire.QuestionnaireType
 import org.simple.clinic.questionnaire.component.BaseComponentData
 import org.simple.clinic.questionnaire.component.ViewGroupComponentData
@@ -25,6 +26,7 @@ import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -49,6 +51,8 @@ class QuestionnaireEntryScreen : BaseScreen<
   @Inject
   lateinit var effectHandlerFactory: QuestionnaireEntryEffectHandler.Factory
 
+  var questionnaireResponse: QuestionnaireResponse? = null
+
   private val backButton
     get() = binding.backButton
 
@@ -58,6 +62,9 @@ class QuestionnaireEntryScreen : BaseScreen<
   private val questionnaireFormRecyclerView
     get() = binding.questionnaireFormRecyclerView
 
+  private val submitButton
+    get() = binding.submitButton
+
   private val hotEvents = PublishSubject.create<QuestionnaireEntryEvent>()
   private val hardwareBackClicks = PublishSubject.create<Unit>()
 
@@ -65,7 +72,7 @@ class QuestionnaireEntryScreen : BaseScreen<
 
   override fun defaultModel() = QuestionnaireEntryModel.default()
 
-  override fun createInit() = QuestionnaireEntryInit(screenKey.questionnaireType)
+  override fun createInit() = QuestionnaireEntryInit(screenKey.questionnaireType, screenKey.id)
 
   override fun createUpdate() = QuestionnaireEntryUpdate()
 
@@ -78,6 +85,7 @@ class QuestionnaireEntryScreen : BaseScreen<
     return Observable
         .mergeArray(
             backClicks(),
+            submitClicks(),
             hotEvents
         )
         .compose(ReportAnalyticsEvents())
@@ -121,6 +129,10 @@ class QuestionnaireEntryScreen : BaseScreen<
     }
   }
 
+  override fun displayQuestionnaireResponse(questionnaireResponse: QuestionnaireResponse) {
+    this.questionnaireResponse = questionnaireResponse
+  }
+
   private fun initRecyclerView() {
     questionnaireFormRecyclerView.apply {
       layoutManager = LinearLayoutManager(context)
@@ -134,6 +146,13 @@ class QuestionnaireEntryScreen : BaseScreen<
         .mergeWith(hardwareBackClicks)
         .map {
           QuestionnaireEntryBackClicked
+        }
+  }
+
+  private fun submitClicks(): Observable<UiEvent> {
+    return submitButton.clicks()
+        .map {
+          SubmitButtonClicked(requireNotNull(questionnaireResponse))
         }
   }
 
@@ -156,6 +175,10 @@ class QuestionnaireEntryScreen : BaseScreen<
           hotEvents.onNext(UnsavedChangesWarningLeavePageClicked)
         }
         .show()
+  }
+
+  override fun goToMonthlyReportsCompleteScreen() {
+    router.push(MonthlyScreeningReportCompleteScreen.Key("October 2022"))
   }
 
   interface Injector {

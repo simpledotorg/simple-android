@@ -4,16 +4,19 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.questionnaire.Questionnaire
+import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 
 @Parcelize
 data class QuestionnaireEntryModel(
     val facility: Facility?,
-    val questionnaire: Questionnaire?
+    val questionnaire: Questionnaire?,
+    val questionnaireResponse: QuestionnaireResponse?
 ) : Parcelable {
   companion object {
     fun default() = QuestionnaireEntryModel(
         facility = null,
         questionnaire = null,
+        questionnaireResponse = null
     )
   }
 
@@ -26,5 +29,9 @@ data class QuestionnaireEntryModel(
 
   fun formLoaded(questionnaire: Questionnaire): QuestionnaireEntryModel {
     return copy(questionnaire = questionnaire)
+  }
+
+  fun responseLoaded(questionnaireResponse: QuestionnaireResponse): QuestionnaireEntryModel {
+    return copy(questionnaireResponse = questionnaireResponse)
   }
 }

@@ -8,7 +8,6 @@ import org.simple.clinic.databinding.MonthlyScreeningReportItemViewBinding
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
-import org.simple.clinic.widgets.visibleOrGone
 import java.util.UUID
 
 data class MonthlyScreeningReportItem(
@@ -24,7 +23,7 @@ data class MonthlyScreeningReportItem(
       return questionnaireResponses.map {
         MonthlyScreeningReportItem(
             uuid = it.uuid,
-            submitted = it.content["submitted"] as Boolean,
+            submitted = it.content["month_string"] as String == "2023-01",
             month = it.content["month_string"] as String
         )
       }
@@ -41,7 +40,10 @@ data class MonthlyScreeningReportItem(
       subject.onNext(Event.ListItemClicked(uuid))
     }
 
-    binding.statusImageView.visibleOrGone(submitted)
+    binding.statusImageView.setImageResource(
+        if (submitted) R.drawable.ic_report_submitted
+        else R.drawable.ic_submit_report
+    )
 
     binding.statusTextView.text = context.resources.getString(
         if (submitted) R.string.monthly_screening_reports_submitted
@@ -78,6 +80,4 @@ data class MonthlyScreeningReportItem(
       return oldItem == newItem
     }
   }
-
-
 }

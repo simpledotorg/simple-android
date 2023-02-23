@@ -4,27 +4,18 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
+  android:background="?android:attr/selectableItemBackground"
   android:paddingHorizontal="@dimen/monthly_screening_report_item_container_horizontal_padding"
-  android:paddingTop="@dimen/monthly_screening_report_item_container_vertical_padding"
-  android:background="?android:attr/selectableItemBackground">
+  android:paddingTop="@dimen/monthly_screening_report_item_container_vertical_padding">
 
-  <FrameLayout
-    android:id="@+id/imageContainer"
-    android:layout_width="36dp"
-    android:layout_height="42dp"
-    android:background="@color/white"
+  <ImageView
+    android:id="@+id/statusImageView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent">
-
-    <ImageView
-      android:id="@+id/statusImageView"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center"
-      app:srcCompat="@drawable/ic_check"
-      tools:ignore="ContentDescription" />
-
-  </FrameLayout>
+    app:layout_constraintTop_toTopOf="parent"
+    tools:ignore="ContentDescription"
+    tools:src="@drawable/ic_report_submitted" />
 
   <TextView
     android:id="@+id/monthTextView"
@@ -37,8 +28,8 @@
     android:textColor="?attr/colorPrimary"
     app:layout_constraintBottom_toTopOf="@id/statusTextView"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toEndOf="@+id/imageContainer"
-    app:layout_constraintTop_toTopOf="@+id/imageContainer"
+    app:layout_constraintStart_toEndOf="@+id/statusImageView"
+    app:layout_constraintTop_toTopOf="@+id/statusImageView"
     tools:text="Oct 2022 report" />
 
   <TextView

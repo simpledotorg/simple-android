@@ -11,6 +11,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenQuestionnaireEntryFormBinding
@@ -29,6 +30,7 @@ import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.questionnaire.component.InputViewGroupComponentData
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.scheduler.SchedulersProvider

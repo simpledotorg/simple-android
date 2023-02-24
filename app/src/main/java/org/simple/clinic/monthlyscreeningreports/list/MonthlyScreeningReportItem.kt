@@ -23,8 +23,16 @@ data class MonthlyScreeningReportItem(
       return questionnaireResponses.map {
         MonthlyScreeningReportItem(
             uuid = it.uuid,
-            submitted = it.content["month_string"] as String == "2023-01",
-            month = it.content["month_string"] as String
+            submitted = try {
+              it.content["submitted"] as Boolean
+            } catch (ex: Exception) {
+              false
+            },
+            month = try {
+              it.content["month_string"] as String
+            } catch (ex: Exception) {
+              ""
+            }
         )
       }
     }

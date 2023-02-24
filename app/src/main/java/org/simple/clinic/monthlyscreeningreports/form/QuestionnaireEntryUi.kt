@@ -5,8 +5,7 @@ import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 
 interface QuestionnaireEntryUi {
   fun setFacility(facilityName: String)
-  fun displayQuestionnaireFormLayout(layout: BaseComponentData)
-  fun displayQuestionnaireResponse(questionnaireResponse: QuestionnaireResponse)
+  fun displayQuestionnaireFormLayout(layout: BaseComponentData, response: QuestionnaireResponse)
   fun goBack()
   fun showUnsavedChangesWarningDialog()
   fun goToMonthlyReportsCompleteScreen()

@@ -62,15 +62,13 @@
     </LinearLayout>
   </LinearLayout>
 
-  <com.airbnb.epoxy.EpoxyRecyclerView
-    android:id="@+id/questionnaire_form_recycler_view"
+  <androidx.compose.ui.platform.ComposeView
+    android:id="@+id/compose_view"
     android:layout_width="match_parent"
     android:layout_height="0dp"
-    android:clipToPadding="false"
     android:paddingBottom="@dimen/spacing_24"
     app:layout_constraintBottom_toTopOf="@id/button_frame"
-    app:layout_constraintTop_toBottomOf="@id/monthlyScreeningReportListHeader"
-    app:layout_constraintVertical_bias="0" />
+    app:layout_constraintTop_toBottomOf="@id/monthlyScreeningReportListHeader" />
 
   <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/button_frame"

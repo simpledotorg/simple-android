@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-
   <!-- Common -->
   <string name="gender_female">Dheddig</string>
   <string name="gender_male">Lab</string>
@@ -873,6 +872,7 @@
   <string name="patient_line_list_download_card_title">Bukaanka ka duwaan gashan IHCI</string>
   <string name="patient_line_list_download_card_desc">Qor dhamaan bukaanka duwaan gashan ama saxeexay %1$s</string>
   <string name="patient_line_list_download_card_button">Soo dejiso</string>
+  <string name="patient_line_list_download_link">Dajiso diiwaaniyaha bukaanka IHCI</string>
 
   <!--Notification permission denied dialog-->
   <string name="notification_permission_denied_title">Shid wargelinta</string>
@@ -880,4 +880,19 @@
   <string name="notification_permission_denied_positive_button">QABO SETINKA APP-KA</string>
   <string name="notification_permission_denied_negetive_button">HADDA MAAHA</string>
 
+  <!--Monthly screen reports-->
+  <string name="monthly_screening_reports">Wargelinada baaritaanka bil-laha</string>
+  <string name="monthly_screening_reports_report">%1$s wargelin</string><!--Oct 2023 report-->
+  <string name="monthly_screening_reports_submit_report">Gudbi wargelinta</string>
+  <string name="monthly_screening_reports_submitted">La gudbiyay</string>
+  <string name="monthly_screening_reports_screening_report">%1$s wargelinta baaritaanka</string><!--Oct 2022 screening report-->
+  <string name="monthly_screening_reports_submitted_with_date_and_time">La gudbiyay %1$s</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="monthly_screening_reports_submit_btn_text">Gudbi</string>
+  <string name="monthly_screening_reports_complete">Dhameystir!</string>
+  <string name="monthly_screening_reports_submitted_with_date">%1$s wargelinta la gudbiyay</string><!--October 2022 report submitted-->
+  <string name="monthly_screening_reports_done">La dhameeyay</string>
+  <string name="monthly_screening_reports_unsaved_changes_title">Isbadelada aan la keydin</string>
+  <string name="monthly_screening_reports_unsaved_changes_text">Isbadelada aan la keydin way lumeysaa.\nMa hubtaa inaad rabtid inaad ka tagtid?</string>
+  <string name="monthly_screening_reports_stay_title">KU JIR BOGGAAN</string>
+  <string name="monthly_screening_reports_leave_page_title">KA TAG BOGGAAN</string>
 </resources>

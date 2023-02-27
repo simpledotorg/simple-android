@@ -34,7 +34,8 @@ val DEMO_FACILITY = Facility(
     deletedAt = null,
     config = FacilityConfig(
         diabetesManagementEnabled = true,
-        teleconsultationEnabled = false
+        teleconsultationEnabled = false,
+        monthlyScreeningReportsEnabled = false
     ),
     syncGroup = ""
 )

@@ -9,8 +9,7 @@ class PatientsTabLinkUpdate :
   override fun update(model: PatientsTabLinkModel, event: PatientsTabLinkEvent):
       Next<PatientsTabLinkModel, PatientsTabLinkEffect> {
     return when (event) {
-      is MonthlyScreeningReportsFormFetched -> Next.next(model.formLoaded(event.questionnaire))
-      is MonthlyScreeningReportsListFetched -> Next.next(model.reportListLoaded(event.questionnaireResponseList))
+      is CurrentFacilityLoaded -> Next.next(model.currentFacilityLoaded(event.facility))
       is MonthlyScreeningReportsClicked -> dispatch(OpenMonthlyScreeningReportsListScreen)
       is DownloadPatientLineListClicked -> dispatch(OpenPatientLineListDownloadDialog)
     }

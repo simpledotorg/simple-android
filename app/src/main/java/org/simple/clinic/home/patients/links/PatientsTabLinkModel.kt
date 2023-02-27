@@ -2,27 +2,23 @@ package org.simple.clinic.home.patients.links
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import org.simple.clinic.questionnaire.Questionnaire
-import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
+import org.simple.clinic.facility.Facility
 
 @Parcelize
 data class PatientsTabLinkModel(
-    val questionnaire: Questionnaire?,
-    val questionnaireResponseList: List<QuestionnaireResponse>?
+    val facility: Facility?,
 ) : Parcelable {
   companion object {
     fun default() = PatientsTabLinkModel(
-        questionnaire = null,
-        questionnaireResponseList = null
+        facility = null,
     )
   }
 
-  fun formLoaded(questionnaire: Questionnaire): PatientsTabLinkModel {
-    return copy(questionnaire = questionnaire)
-  }
+  val monthlyScreeningReportsEnabled: Boolean
+    get() = facility?.config?.monthlyScreeningReportsEnabled == true
 
-  fun reportListLoaded(questionnaireResponseList: List<QuestionnaireResponse>): PatientsTabLinkModel {
-    return copy(questionnaireResponseList = questionnaireResponseList)
+  fun currentFacilityLoaded(facility: Facility): PatientsTabLinkModel {
+    return copy(facility = facility)
   }
 }
 

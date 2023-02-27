@@ -4,16 +4,14 @@ import com.spotify.mobius.rx2.RxMobius
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
-import org.simple.clinic.questionnaire.MonthlyScreeningReports
-import org.simple.clinic.questionnaire.QuestionnaireRepository
-import org.simple.clinic.questionnaireresponse.QuestionnaireResponseRepository
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class PatientsTabLinkEffectHandler @AssistedInject constructor(
-    private val questionnaireRepository: QuestionnaireRepository,
-    private val questionnaireResponseRepository: QuestionnaireResponseRepository,
+    private val currentFacility: Observable<Facility>,
     private val schedulersProvider: SchedulersProvider,
     @Assisted private val uiActions: PatientsTabLinkUiActions
 ) {
@@ -25,30 +23,19 @@ class PatientsTabLinkEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<PatientsTabLinkEffect, PatientsTabLinkEvent> {
     return RxMobius
         .subtypeEffectHandler<PatientsTabLinkEffect, PatientsTabLinkEvent>()
-        .addTransformer(LoadMonthlyScreeningReportsFormEffect::class.java, loadMonthlyScreeningReportsFormEffect(schedulersProvider.io()))
-        .addTransformer(LoadMonthlyScreeningReportsListEffect::class.java, loadMonthlyScreeningReportsListEffect(schedulersProvider.io()))
+        .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility(schedulersProvider.io()))
         .addAction(OpenMonthlyScreeningReportsListScreen::class.java, { uiActions.openMonthlyScreeningReports() }, schedulersProvider.ui())
         .addAction(OpenPatientLineListDownloadDialog::class.java, { uiActions.openPatientLineListDownloadDialog() }, schedulersProvider.ui())
         .build()
   }
 
-  private fun loadMonthlyScreeningReportsFormEffect(scheduler: Scheduler):
-      ObservableTransformer<LoadMonthlyScreeningReportsFormEffect, PatientsTabLinkEvent> {
-    return ObservableTransformer { loadQuestionnaireForm ->
-      loadQuestionnaireForm
+  private fun loadCurrentFacility(scheduler: Scheduler):
+      ObservableTransformer<LoadCurrentFacility, PatientsTabLinkEvent> {
+    return ObservableTransformer { effects ->
+      effects
           .observeOn(scheduler)
-          .map { questionnaireRepository.questionnairesByType(MonthlyScreeningReports) }
-          .map { MonthlyScreeningReportsFormFetched(it) }
-    }
-  }
-
-  private fun loadMonthlyScreeningReportsListEffect(scheduler: Scheduler):
-      ObservableTransformer<LoadMonthlyScreeningReportsListEffect, PatientsTabLinkEvent> {
-    return ObservableTransformer { loadQuestionnaireResponse ->
-      loadQuestionnaireResponse
-          .observeOn(scheduler)
-          .map { questionnaireResponseRepository.questionnaireResponsesByType(MonthlyScreeningReports) }
-          .map { MonthlyScreeningReportsListFetched(it) }
+          .switchMap { currentFacility }
+          .map(::CurrentFacilityLoaded)
     }
   }
 }

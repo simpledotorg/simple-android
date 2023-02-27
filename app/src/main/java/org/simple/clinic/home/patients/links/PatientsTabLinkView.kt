@@ -73,6 +73,9 @@ class PatientsTabLinkView(
   private val binding = PatientsTabLinkViewBinding.inflate(LayoutInflater.from(context),
       this)
 
+  private val patientTabLinksContainer
+    get() = binding.patientTabLinksContainer
+
   private val monthlyScreeningReportContainer
     get() = binding.monthlyScreeningReportContainer
 
@@ -124,10 +127,12 @@ class PatientsTabLinkView(
     fun inject(target: PatientsTabLinkView)
   }
 
-  override fun showOrHideMonthlyScreeningReportsView(isVisible: Boolean) {
+  override fun showOrHideLinkView(isVisible: Boolean) {
+    patientTabLinksContainer.visibleOrGone(isVisible)
   }
 
-  override fun showOrHideLinkView(isVisible: Boolean) {
+  override fun showOrHideMonthlyScreeningReportsView(isVisible: Boolean) {
+    monthlyScreeningReportContainer.visibleOrGone(isVisible)
   }
 
   override fun showOrHidePatientLineListDownload(isVisible: Boolean) {

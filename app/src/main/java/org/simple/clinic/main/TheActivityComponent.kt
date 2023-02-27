@@ -56,6 +56,7 @@ import org.simple.clinic.newentry.country.di.InputFieldsFactoryModule
 import org.simple.clinic.onboarding.OnboardingScreen
 import org.simple.clinic.overdue.download.formatdialog.SelectOverdueDownloadFormatDialog
 import org.simple.clinic.patient.download.formatdialog.SelectLineListFormatDialog
+import org.simple.clinic.home.patients.links.PatientsTabLinkView
 import org.simple.clinic.recentpatient.RecentPatientsScreen
 import org.simple.clinic.recentpatientsview.RecentPatientsView
 import org.simple.clinic.removeoverdueappointment.RemoveOverdueAppointmentScreen
@@ -161,7 +162,7 @@ interface TheActivityComponent :
     BloodSugarUnitSelectionDialogInjector,
     SelectLineListFormatDialog.Injector,
     QuestionnaireEntryScreen.Injector,
-    MonthlyScreeningReportListScreen.Injector {
+    PatientsTabLinkView.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory

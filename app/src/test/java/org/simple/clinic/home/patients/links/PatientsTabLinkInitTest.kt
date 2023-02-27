@@ -10,7 +10,7 @@ class PatientsTabLinkInitTest {
 
 
   @Test
-  fun `when screen is created and patient line list feature flag is enabled, then load current facility`() {
+  fun `when screen is created, then load current facility`() {
     val initSpec = InitSpec(PatientsTabLinkInit())
 
     initSpec
@@ -18,8 +18,7 @@ class PatientsTabLinkInitTest {
         .then(InitSpec.assertThatFirst(
             FirstMatchers.hasModel(defaultModel),
             FirstMatchers.hasEffects(
-                LoadMonthlyScreeningReportsFormEffect,
-                LoadMonthlyScreeningReportsListEffect
+                LoadCurrentFacility
             )
         ))
   }

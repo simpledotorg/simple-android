@@ -422,7 +422,7 @@ object TestData {
       updatedAt: Instant = Instant.now(),
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       deletedAt: Instant? = null,
-      facilityConfig: FacilityConfig = FacilityConfig(diabetesManagementEnabled = false, teleconsultationEnabled = false),
+      facilityConfig: FacilityConfig = FacilityConfig(diabetesManagementEnabled = false, teleconsultationEnabled = false, monthlyScreeningReportsEnabled = false),
       syncGroup: String = ""
   ): Facility {
     return Facility(

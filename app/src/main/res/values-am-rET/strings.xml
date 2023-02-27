@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-
   <!-- Common -->
   <string name="gender_female">ሴት</string>
   <string name="gender_male">ወንድ</string>
@@ -408,6 +407,7 @@
 
   <!-- Simple video -->
   <string name="simple_video_duration">%s ደቂቃዎች</string>
+
   <!-- Settings -->
   <string name="settings_title">ቅንብሮች ወይም settings</string>
   <string name="settings_user_name_icon_content">የቅንብሮች የተጠቃሚ ስም ምልክት ወይም icon</string>
@@ -838,6 +838,13 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">ሕመምተኛው አዘውትሮ መድሃኒቶቹን የሚወስድ ከሆነ ፕሮቶኮልን ይከተሉ</string>
 
   <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">ለመጎብኘት ተስማምተዋል።</string>
+
+  <string name="call_result_outcome_remind_to_call_later">የ%1$s ጥሪ አስታዋሽ ተቀናብሯል።</string>
+
+  <string name="call_result_outcome_removed">ተወግዷል፡ %1$s</string>
+
+  <string name="call_result_outcome_saved_at">%1$s ተቀምጧል</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">በስም ወይም በመንደር ይፈልጉ</string>
@@ -845,4 +852,47 @@
   <string name="overdue_search_no_search_results_title">ምንም ሕመምተኞች አልተገኙም።</string>
   <string name="overdue_search_no_search_results_desc">ከፍለጋህ ሁሉንም ያለፈባቸው ታካሚዎች እዚህ ታያለህ</string>
 
+  <!-- Select and download overdue appointments -->
+  <string name="selected_overdue_count">%1$d ተመርጧል</string>
+  <string name="selected_overdue_clear">ያጽዱ</string>
+  <string name="selected_overdue_select_all_appointments">ሁሉንም ምረጥ</string>
+
+  <string name="patient_line_list_download_notification_failed_title">ማውረድ አልተሳካም።</string>
+  <string name="patient_line_list_download_notification_failed_subtitle">ከተወሰነ ጊዜ በኋላ እንደገና ይሞክሩ</string>
+  <string name="patient_line_list_download_notification_in_progress_title">የታካሚ መስመር ዝርዝር በማውረድ ላይ</string>
+  <string name="patient_line_list_download_notification_cancel">ይቅር</string>
+  <string name="patient_line_list_download_notification_succeeded_title">ማውረድ ተጠናቅቋል</string>
+  <string name="patient_line_list_download_notification_succeeded_subtitle">ለመክፈት ጠቅ ያድርጉ</string>
+
+  <string name="select_patient_line_list_download_format_dialog_radio_button_spreadsheet">ሉህ</string>
+  <string name="select_patient_line_list_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="select_patient_line_list_download_format_dialog_action_negative">ይቅር</string>
+  <string name="select_patient_line_list_download_format_dialog_title_download">አውርድ እንደ</string>
+  <string name="select_patient_line_list_download_format_dialog_action_positive">አውርድ</string>
+  <string name="patient_line_list_download_card_title">የ IHCI ታካሚ ምዝገባ</string>
+  <string name="patient_line_list_download_card_desc">የተመዘገቡ ወይም  ወደ %1$s የተመደቡ የሁሉም ታካሚዎች ዝርዝር</string>
+  <string name="patient_line_list_download_card_button">አውርድ</string>
+  <string name="patient_line_list_download_link">የ IHCI ታካሚ መዝገብ ያውርዱ</string>
+
+  <!--Notification permission denied dialog-->
+  <string name="notification_permission_denied_title">ማሳወቂያዎችን ያብሩ</string>
+  <string name="notification_permission_denied_message">ቀላል አስፈላጊ አስታዋሾችን ለእርስዎ ለማሳየት ፍቃድ ይፈልጋል።በፍቃዶች ስር ያብሩ &gt; ማሳወቂያዎች</string>
+  <string name="notification_permission_denied_positive_button">ወደ የመተግበሪያ ቅንብሮች ይሂዱ</string>
+  <string name="notification_permission_denied_negetive_button">አሁን አይደለም</string>
+
+  <!--Monthly screen reports-->
+  <string name="monthly_screening_reports">ወርሃዊ የማጣሪያ ሪፖርቶች</string>
+  <string name="monthly_screening_reports_report">%1$s ሪፖርቶች</string><!--Oct 2023 report-->
+  <string name="monthly_screening_reports_submit_report">ሪፖርት ያስገቡ</string>
+  <string name="monthly_screening_reports_submitted">ገብቷል</string>
+  <string name="monthly_screening_reports_screening_report">%1$s የማጣሪያ ሪፖርቶች</string><!--Oct 2022 screening report-->
+  <string name="monthly_screening_reports_submitted_with_date_and_time">%1$s ገብቷል</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="monthly_screening_reports_submit_btn_text">ያስገቡ</string>
+  <string name="monthly_screening_reports_complete">ያጠናቁ!</string>
+  <string name="monthly_screening_reports_submitted_with_date">%1$s ሪፖርት ገብቷል</string><!--October 2022 report submitted-->
+  <string name="monthly_screening_reports_done">ተጠናቅቋል</string>
+  <string name="monthly_screening_reports_unsaved_changes_title">ያልተቀመጡ ለውጦች</string>
+  <string name="monthly_screening_reports_unsaved_changes_text">ያልተቀመጡ ለውጦች ይጠፋሉ።\nእርግጠኛ ነዎት መውጣት ይፈልጋሉ?</string>
+  <string name="monthly_screening_reports_stay_title">በዚህ ገጽ ላይ ይቆዩ</string>
+  <string name="monthly_screening_reports_leave_page_title">ከዚህ ገጽ ይውጡ</string>
 </resources>

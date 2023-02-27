@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-
   <!-- Common -->
   <string name="gender_female">Dubara</string>
   <string name="gender_male">Dhiira</string>
@@ -840,6 +839,13 @@ Appilikeeshinii Simple keessan Google PlayStore irraa haaromsadhaa.</string>
   <string name="clinical_decision_support_alert_bp_high_subtitle">Akka dhukkubsataan seeraan qoricha isaanii fudhachaa jiran hordofaa.</string>
 
   <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">Ilaaludhaaf waliigaleera</string>
+
+  <string name="call_result_outcome_remind_to_call_later">Yaadachiisni bilbilaa gaafa %1$s irratti ta\'eera</string>
+
+  <string name="call_result_outcome_removed">Yaadachiifameera: %1$s</string>
+
+  <string name="call_result_outcome_saved_at">%1$sol kaa\'ameera</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">Maqaadhaan ykn gandaan barbaadi</string>
@@ -847,4 +853,47 @@ Appilikeeshinii Simple keessan Google PlayStore irraa haaromsadhaa.</string>
   <string name="overdue_search_no_search_results_title">Dhukkubsataan hin argamne</string>
   <string name="overdue_search_no_search_results_desc">Dhukkubsatoota yeroon irra darbe barbaacha kee keessaa asii argatta</string>
 
+  <!-- Select and download overdue appointments -->
+  <string name="selected_overdue_count">%1$dfilatameera</string>
+  <string name="selected_overdue_clear">QULQULLEESSI</string>
+  <string name="selected_overdue_select_all_appointments">HUNDAA FILADHU</string>
+
+  <string name="patient_line_list_download_notification_failed_title">Buusuun in kufe</string>
+  <string name="patient_line_list_download_notification_failed_subtitle">Yeroo xiqqoo booda shaakalaa</string>
+  <string name="patient_line_list_download_notification_in_progress_title">Tarree sarara dhukkubsataa buusuu</string>
+  <string name="patient_line_list_download_notification_cancel">Adda kuti</string>
+  <string name="patient_line_list_download_notification_succeeded_title">Buusuun raawwateera</string>
+  <string name="patient_line_list_download_notification_succeeded_subtitle">Banuuf cuqaasaa</string>
+
+  <string name="select_patient_line_list_download_format_dialog_radio_button_spreadsheet">Spreadsheet</string>
+  <string name="select_patient_line_list_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="select_patient_line_list_download_format_dialog_action_negative">Adda kuti</string>
+  <string name="select_patient_line_list_download_format_dialog_title_download">Bifa ittiin buustan filadhaa</string>
+  <string name="select_patient_line_list_download_format_dialog_action_positive">Buusicha</string>
+  <string name="patient_line_list_download_card_title">Galmeessa dhukkubsataa IHCI</string>
+  <string name="patient_line_list_download_card_desc">Tarree dhukkubsattoota galmaa\'anii ykn %1$stti kennamanii</string>
+  <string name="patient_line_list_download_card_button">Buusicha</string>
+  <string name="patient_line_list_download_link">Galmeessa dhukkubsataa IHCI buusaa</string>
+
+  <!--Notification permission denied dialog-->
+  <string name="notification_permission_denied_title">Yaadachiisa ibsi</string>
+  <string name="notification_permission_denied_message">Simple si yaadachiisudhaaf hayyama qabaachuu barbaada. Hayyamawwanii &gt; Yaadachiisuttuwwan jalatti ibsi</string>
+  <string name="notification_permission_denied_positive_button">GARA TEESSOO APPIITTI JIJJIIRI</string>
+  <string name="notification_permission_denied_negetive_button">AMMA MITI</string>
+
+  <!--Monthly screen reports-->
+  <string name="monthly_screening_reports">Gabaasaalee qorannoo ji\'aa</string>
+  <string name="monthly_screening_reports_report">Gabaasa %1$s</string><!--Oct 2023 report-->
+  <string name="monthly_screening_reports_submit_report">Gabaasa galchaa</string>
+  <string name="monthly_screening_reports_submitted">Galfameera</string>
+  <string name="monthly_screening_reports_screening_report">Gabaasa qorannoo %1$s</string><!--Oct 2022 screening report-->
+  <string name="monthly_screening_reports_submitted_with_date_and_time">%1$s galfameera</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="monthly_screening_reports_submit_btn_text">Galchaa</string>
+  <string name="monthly_screening_reports_complete">Guutuudha!</string>
+  <string name="monthly_screening_reports_submitted_with_date">Gabaasni %1$s galfameera</string><!--October 2022 report submitted-->
+  <string name="monthly_screening_reports_done">Taasifameera</string>
+  <string name="monthly_screening_reports_unsaved_changes_title">Jijjiiramoota ol hin kaa\'amin</string>
+  <string name="monthly_screening_reports_unsaved_changes_text">Jijjiiramootni ol hin kaa\'amin ni badu.\nDhugamatti bahuu barbaadduu?</string>
+  <string name="monthly_screening_reports_stay_title">FUULA KANARRA TURAA</string>
+  <string name="monthly_screening_reports_leave_page_title">FUULA KANARRRAA BAHAA</string>
 </resources>

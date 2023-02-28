@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-
   <!-- Common -->
   <string name="gender_female">ಮಹಿಳೆ</string>
   <string name="gender_male">ಪುರುಷ</string>
@@ -872,6 +871,7 @@
   <string name="patient_line_list_download_card_title">IHCI ರೋಗಿ ರಿಜಿಸ್ಟರ್</string>
   <string name="patient_line_list_download_card_desc">ನೋಂದಣಿ ಮಾಡಿಕೊಂಡಿರುವ ಅಥವಾ %1$s ಗೆ ನಿಯೋಜಿತರಾಗಿರುವ ಎಲ್ಲಾ ರೋಗಿಗಳ ಪಟ್ಟಿ</string>
   <string name="patient_line_list_download_card_button">ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</string>
+  <string name="patient_line_list_download_link">IHCI ರೋಗಿ ರಿಜಿಸ್ಟರ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</string>
 
   <!--Notification permission denied dialog-->
   <string name="notification_permission_denied_title">ಅಧಿಸೂಚನೆಗಳನ್ನು ಆನ್ ಮಾಡಿ</string>
@@ -879,4 +879,19 @@
   <string name="notification_permission_denied_positive_button">ಆ್ಯಪ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು ಎಂಬಲ್ಲಿಗೆ ಹೋಗಿ</string>
   <string name="notification_permission_denied_negetive_button">ಈಗ ಬೇಡ</string>
 
+  <!--Monthly screen reports-->
+  <string name="monthly_screening_reports">ಮಾಸಿಕ ಸ್ಕ್ರೀನಿಂಗ್ ವರದಿಗಳು</string>
+  <string name="monthly_screening_reports_report">%1$s ವರದಿ</string><!--Oct 2023 report-->
+  <string name="monthly_screening_reports_submit_report">ವರದಿ ಸಲ್ಲಿಸಿ</string>
+  <string name="monthly_screening_reports_submitted">ಸಲ್ಲಿಸಲಾಗಿದೆ</string>
+  <string name="monthly_screening_reports_screening_report">%1$s ಸ್ಕ್ರೀನಿಂಗ್ ವರದಿ</string><!--Oct 2022 screening report-->
+  <string name="monthly_screening_reports_submitted_with_date_and_time">ಸಲ್ಲಿಸಲಾಗಿದೆ %1$s</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="monthly_screening_reports_submit_btn_text">ಸಲ್ಲಿಸಿ</string>
+  <string name="monthly_screening_reports_complete">ಪೂರ್ಣಗೊಂಡಿದೆ!</string>
+  <string name="monthly_screening_reports_submitted_with_date">%1$s ವರದಿ ಸಲ್ಲಿಸಲಾಗಿದೆ</string><!--October 2022 report submitted-->
+  <string name="monthly_screening_reports_done">ಪೂರ್ಣಗೊಳಿಸಲಾಗಿದೆ</string>
+  <string name="monthly_screening_reports_unsaved_changes_title">ಉಳಿಸದ ಬದಲಾವಣೆಗಳು</string>
+  <string name="monthly_screening_reports_unsaved_changes_text">ಉಳಿಸದ ಬದಲಾವಣೆಗಳು ಕಳೆದು ಹೋಗುತ್ತವೆ.\nನೀವು ತೊರೆಯಲು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
+  <string name="monthly_screening_reports_stay_title">ಈ ಪುಟದಲ್ಲಿಯೇ ಇರಿ</string>
+  <string name="monthly_screening_reports_leave_page_title">ಈ ಪುಟ ತೊರೆಯಿರಿ</string>
 </resources>

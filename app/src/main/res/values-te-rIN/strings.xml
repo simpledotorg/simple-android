@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-
   <!-- Common -->
   <string name="gender_female">మహిళ</string>
   <string name="gender_male">పురుషుడు</string>
@@ -872,6 +871,7 @@
   <string name="patient_line_list_download_card_title">IHCI రోగి రిజిస్టర్</string>
   <string name="patient_line_list_download_card_desc">రిజిస్టర్ అయిన రోగులందరి లేదా %1$sకు కేటాయించబడిన వారి జాబితా</string>
   <string name="patient_line_list_download_card_button">డౌన్‌లోడ్ చేయి</string>
+  <string name="patient_line_list_download_link">IHCI రోగి రిజిస్టర్‌ను డౌన్‌లోడ్ చేయండి</string>
 
   <!--Notification permission denied dialog-->
   <string name="notification_permission_denied_title">నోటిఫికేషన్లను ఆన్ చేయండి</string>
@@ -879,4 +879,19 @@
   <string name="notification_permission_denied_positive_button">యాప్ సెట్టింగ్‌లకు వెళ్ళండి</string>
   <string name="notification_permission_denied_negetive_button">ఇప్పుడు వద్దు</string>
 
+  <!--Monthly screen reports-->
+  <string name="monthly_screening_reports">నెలవారీ స్క్రీనింగ్ రిపోర్ట్‌లు</string>
+  <string name="monthly_screening_reports_report">%1$s రిపోర్ట్</string><!--Oct 2023 report-->
+  <string name="monthly_screening_reports_submit_report">రిపోర్ట్‌ని సమర్పించండి</string>
+  <string name="monthly_screening_reports_submitted">సమర్పించబడింది</string>
+  <string name="monthly_screening_reports_screening_report">%1$s స్క్రీనింగ్ రిపోర్ట్</string><!--Oct 2022 screening report-->
+  <string name="monthly_screening_reports_submitted_with_date_and_time">సమర్పించబడింది %1$s</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="monthly_screening_reports_submit_btn_text">సమర్పించు</string>
+  <string name="monthly_screening_reports_complete">పూర్తి చేయి!</string>
+  <string name="monthly_screening_reports_submitted_with_date">%1$s రిపోర్ట్ సమర్పించబడింది</string><!--October 2022 report submitted-->
+  <string name="monthly_screening_reports_done">పూర్తయింది</string>
+  <string name="monthly_screening_reports_unsaved_changes_title">సేవ్ చేయని మార్పులు</string>
+  <string name="monthly_screening_reports_unsaved_changes_text">సేవ్ చేసని మార్పులు కోల్పోవచ్చు.\nమీరు ఖచ్చితంగా నిష్క్రమించాలనుకుంటున్నారా?</string>
+  <string name="monthly_screening_reports_stay_title">ఈ పేజీపై ఉండాలా</string>
+  <string name="monthly_screening_reports_leave_page_title">ఈ పేజీ నుండి నిష్క్రమించు</string>
 </resources>

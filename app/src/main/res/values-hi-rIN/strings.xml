@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-
   <!-- Common -->
   <string name="gender_female">महिला</string>
   <string name="gender_male">पुरूष</string>
@@ -872,6 +871,7 @@
   <string name="patient_line_list_download_card_title">IHCI रोगी रजिस्टर</string>
   <string name="patient_line_list_download_card_desc">%1$s पर रजिस्टर या असाइन किए गए सभी रोगियों की सूची</string>
   <string name="patient_line_list_download_card_button">डाउनलोड</string>
+  <string name="patient_line_list_download_link">IHCI रोगी रजिस्टर डाउनलोड करें</string>
 
   <!--Notification permission denied dialog-->
   <string name="notification_permission_denied_title">नोटिफ़िकेशन चालू करें</string>
@@ -879,4 +879,19 @@
   <string name="notification_permission_denied_positive_button">ऐप सेटिंग पर जाएँ</string>
   <string name="notification_permission_denied_negetive_button">अभी नहीं</string>
 
+  <!--Monthly screen reports-->
+  <string name="monthly_screening_reports">मासिक स्क्रीनिंग रिपोर्ट</string>
+  <string name="monthly_screening_reports_report">%1$s रिपोर्ट</string><!--Oct 2023 report-->
+  <string name="monthly_screening_reports_submit_report">रिपोर्ट सबमिट करें</string>
+  <string name="monthly_screening_reports_submitted">सबमिट की गई</string>
+  <string name="monthly_screening_reports_screening_report">%1$s स्क्रीनिंग रिपोर्ट</string><!--Oct 2022 screening report-->
+  <string name="monthly_screening_reports_submitted_with_date_and_time">सबमिट की गई %1$s</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="monthly_screening_reports_submit_btn_text">सबमिट</string>
+  <string name="monthly_screening_reports_complete">पूरा हुआ!</string>
+  <string name="monthly_screening_reports_submitted_with_date">%1$s रिपोर्ट सबमिट हो गई</string><!--October 2022 report submitted-->
+  <string name="monthly_screening_reports_done">पूरा हुआ</string>
+  <string name="monthly_screening_reports_unsaved_changes_title">नहीं सहेजे गए बदलाव</string>
+  <string name="monthly_screening_reports_unsaved_changes_text">नहीं सहेजे गए बदलाव खो जाएंगे.\nक्या आप वाकई छोड़ना चाहते हैं?</string>
+  <string name="monthly_screening_reports_stay_title">इसी पेज पर रहें</string>
+  <string name="monthly_screening_reports_leave_page_title">इस पेज को छोड़ें</string>
 </resources>

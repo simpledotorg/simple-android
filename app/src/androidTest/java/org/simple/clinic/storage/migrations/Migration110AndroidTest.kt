@@ -51,7 +51,7 @@ class Migration110AndroidTest : BaseDatabaseMigrationTest(109, 110) {
           "location_longitude" to 77.5955252,
           "createdAt" to Instant.parse("2018-01-01T00:00:00Z"),
           "updatedAt" to Instant.parse("2018-01-01T00:00:00Z"),
-          "syncStatus" to "Done",
+          "syncStatus" to "DONE",
           "deletedAt" to null,
           "syncGroup" to "",
           "config_diabetesManagementEnabled" to true,

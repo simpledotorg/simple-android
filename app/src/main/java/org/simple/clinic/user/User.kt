@@ -209,6 +209,7 @@ data class User(
          F.syncStatus,
          F.config_diabetesManagementEnabled,
          F.config_teleconsultationEnabled,
+         F.config_monthlyScreeningReportsEnabled,
          F.syncGroup
         FROM Facility F
         INNER JOIN LoggedInUser ON LoggedInUser.currentFacilityUuid = F.uuid

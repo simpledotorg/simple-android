@@ -464,7 +464,7 @@ object TestData {
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
-      facilityConfig: FacilityConfig = FacilityConfig(diabetesManagementEnabled = false, teleconsultationEnabled = false),
+      facilityConfig: FacilityConfig = FacilityConfig(diabetesManagementEnabled = false, teleconsultationEnabled = false, monthlyScreeningReportsEnabled = false),
       syncGroup: String? = null
   ): FacilityPayload {
     return FacilityPayload(

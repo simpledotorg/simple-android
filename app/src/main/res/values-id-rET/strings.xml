@@ -1,0 +1,897 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+  <!-- Common -->
+  <string name="gender_female">TEE</string>
+  <string name="gender_male">KOO</string>
+  <string name="gender_transgender">Akata sora</string>
+  <!--suppress UnusedResources -->
+  <string name="gender_male_letter">Koo</string>
+  <!--suppress UnusedResources -->
+  <string name="gender_female_letter">Tee</string>
+  <!--suppress UnusedResources -->
+  <string name="gender_trans_letter">T</string>
+  <string name="api_unexpected_error">Shimuri digaraho/ shimu qari no. Qolite wonalli.</string>
+  <string name="api_network_error">Interinetete ana qaru no</string>
+  <string name="api_server_error">Interinetete ana qaru noo Shimare keshite wonali.</string>
+
+  <!-- Country names -->
+  <string name="country_india">Inidiya</string>
+  <string name="country_bangladesh">Banigiladish</string>
+  <string name="country_ethiopia">Itophiya</string>
+  <string name="country_sri_lanka">Sirilaanka</string>
+  <string name="country_demo">wo\'onalishu gobba</string>
+
+  <!-- Home -->
+  <string name="home_help">Kaalo</string>
+  <string name="home_settings">Qinessa</string>
+
+  <!--Business id Identifier -->
+  <string name="identifiertype_bp_passport">Mundeete xiiwo passporte</string>
+  <string name="identifiertype_bangladesh_national_id">Dagoomu ayimma</string>
+  <string name="identifiertype_ethiopia_medical_record_number">Fayimate afanishi kiro</string>
+  <string name="identifiertype_unknown">I’mate Afanishu kaarde</string>
+  <string name="identifiertype_india_national_health_id">Dagoomu Fayyimate ayimma</string>
+  <string name="identifiertype_sri_lanka_national_id">Dagoomu ayimma</string>
+  <string name="identifiertype_sri_lanka_personal_health_number">Fayimate kirro</string>
+
+  <!-- Patient search -->
+  <string name="instantsearch_hint">Su’ma,bilbila,woy ayimma</string>
+  <!-- Patient search results -->
+  <string name="patientsearchresults_register_patient_rationale">Tene e’oni xiwamanicho di’afirato</string>
+  <string name="patientsearchresults_register_patient">Haro xiwamanicho boresi</string>
+  <string name="patientsearchresults_item_phone_number">Bilibila</string>
+  <string name="patientsearchresults_item_birthdate">Illamate bara</string>
+
+  <!-- Manual patient entry -->
+  <string name="patiententry_contentdescription_up_button">Badhe hige haasi</string>
+  <string name="patiententry_full_name">Xiwamanichu su’ma</string>
+  <string name="patiententry_phone_number">Bilibilu kiro</string>
+  <string name="patiententry_bangladesh_national_id">I’maate afanishi  kiro</string>
+  <string name="patiententry_ethiopia_medical_record_number">Fayimate afanishi kiro</string>
+  <string name="patiententry_sri_lanka_personal_health_number">Fayimate kirro</string>
+  <string name="patiententry_date_of_birth_unfocused">Illamate bara</string>
+  <string name="patiententry_date_of_birth_focused">Illamate bara Bara/agana/diro</string>
+  <string name="patiententry_dateofbirth_and_age_separator">Woyi</string>
+  <string name="patiententry_age">Diro</string>
+  <string name="patiententry_street_address">Minu kiro</string>
+  <string name="patiententry_street_house_road_number">Minuna dogote kiro</string>
+  <string name="patiententry_village_colony_ward">Qoxesa</string>
+  <string name="patiententry_village_ward">Qariqara</string>
+  <string name="patiententry_kebele">Ollaa</string>
+  <string name="patiententry_zone">Mitimma</string>
+  <string name="patiententry_district">Qacha</string>
+  <string name="patiententry_woreda">Zoone</string>
+  <string name="patiententry_upazila">Upazila</string>
+  <string name="patiententry_state">Goba</string>
+  <string name="patiententry_region">Qoqqowo</string>
+  <string name="patiententry_doornumber_streetname">Chufanu kiro /Dogote suma</string>
+  <string name="patiententry_division_area">Qoxesa</string>
+  <string name="patiententry_save_patient">Aniche</string>
+  <string name="patiententry_error_empty_fullname">Woma Maateti suma  esi</string>
+  <string name="patiententry_error_empty_gender">Xiwamanichu akata dori</string>
+  <string name="patiententry_error_empty_colony_or_village">Hanisonihu</string>
+  <string name="patiententry_error_empty_district">Hanisonihu</string>
+  <string name="patiententry_error_state_empty">Hanisonihu</string>
+  <string name="patiententry_error_both_dateofbirth_and_age_empty">Minuna dogote kiro</string>
+  <string name="patiententry_error_invalid_dateofbirth">Xiwamanichu illamino bara esi Bara/agana/diro</string>
+  <string name="patiententry_error_dateofbirth_is_in_future">Xiwamanichu ilamino bara tashi</string>
+  <string name="patiententry_error_phonenumber_blank">Bilibilu kiro fano ikitonike</string>
+  <string name="patiententry_error_phonenumber_length_less">Bilibilu kiro %1$s woroni ikitonike</string>
+  <string name="patiententry_identifier_bp_passport">Mundeete xiiwo passporte</string>
+  <string name="patiententry_consent_header">Bitima:\u0020</string>
+  <string name="patiententry_consent_first_para">Koni alibani xiwamanichu akata boresotoha ikirona xaa la’ate baxitiro hasisanore wonishite la’a danidato. Xiwamanichu woyi xiwamanicho agarano mani afana wodanicha hasisanosari ati koni xisamanichu taje la’ani nooto gede tini yano tene tajje hito mashalaqe amadinoro tene mashalaqe sokateni,SMS soka,WhatsApp woyi wolu danini yano bilibilu kiro horosirateni la’a danidato.</string>
+  <string name="patiententry_consent_second_para">Koni alibani boresototi xiwamaichu tajje hedhuro ateno ikitiro woluatewini tene tajje la’ate fajo uyitoro ayewa loosanoha ikkirono la’a danidano. Kone horosiranicho horosidhe koni  alibani boresamino xiwamanich afimate mashalaqqena tajjesi la’ate isi woyi isi maate afe wodanichitena horosirana la’a danidato.</string>
+  <string name="patiententry_consent_whatsapp_sms_reminders">WhatsApp / SMS soka qagisa</string>
+  <string name="patiententry_consent_sms_reminders">SMS soka  qagisa</string>
+  <string name="patiententry_age_exceeds_max_limit_error">Diru 120 aleni sa’a di’nosi</string>
+  <string name="patiententry_age_exceeds_min_limit_error">Diru serote 0 ledo tallo ika di’nosi</string>
+  <string name="patiententry_town_area">Quchuma / Darga</string>
+  <string name="patiententry_province">Woreda</string>
+
+  <string name="patientedit_save_patient">Gamiba asi</string>
+  <string name="patientedit_bp_passports_label">Mundeete xiiwo passporte</string>
+  <string name="patientedit_confirm_discard_title">Horonisinoniha ikino dafira sorinonis?</string>
+  <string name="patientedit_confirm_discard_ok">Horosinoniho</string>
+  <string name="patientedit_confirm_discard_cancel">Hoola</string>
+  <string name="patientedit_delete_patient">Huni</string>
+  <string name="patientedit_add_button">leda</string>
+
+  <!-- Home: Tabs -->
+  <!-- Lint fails to find usages for these strings. -->
+  <!--suppress UnusedResources -->
+  <string name="tab_patient">Xiwamanicho</string>
+  <!--suppress UnusedResources -->
+  <string name="tab_overdue">Shima yanara challa keshanore</string>
+  <!--suppress UnusedResources -->
+  <string name="tab_progress">Bunixegunidonikiha</string>
+
+  <string name="home_search_patient_name_phone">Su’ma, bilbila,woy ayimma eessi</string>
+  <string name="patients_user_awaiting_approval_title">Agadhi afashaho</string>
+  <string name="patients_user_awaiting_approval_message">Muleki noo fayimate mini gidoni  Mite hinige buxoniha ikkiro xa’moto xiwamanichi taje afira danidato.</string>
+  <string name="patients_user_approved_title">Koni alibani buxonihe!</string>
+  <string name="patients_awaiting_sms_verification_title">Shima gesha agari SMS soka  sonikemohena</string>
+  <string name="patients_user_approved_message">Konini anichite fayimate mini wominiku xiwamanichi taje afirato</string>
+  <string name="patients_awaiting_sms_verification_message">Muleki noo fayimate mini gidoni Mite hinige buxoniha ikkiro xamoto xiwamanichi taje afira danidato</string>
+  <string name="patients_dismiss_user_approved_status">Afirito</string>
+  <string name="patients_enter_code">Buxote kiro esi</string>
+  <string name="patients_you_are_now_logged_in">Gutaho Xiwamanichu taje afanitino</string>
+  <string name="patients_loggedoutalert_title">Baruni mite hige  horote gidora e’a danidato</string>
+  <string name="patients_loggedoutalert_message">Baruni mite hige  horote gidora fulla  danidato</string>
+  <string name="patients_loggedoutalert_dismiss">Afirito</string>
+  <string name="patients_scan_simple_card">Iskaanete Ayimma</string>
+  <string name="patients_recentpatients_title">Muli</string>
+  <string name="patients_recentpatients_no_recent_patients">Xaa xiwamanichu dino</string>
+  <string name="patients_recentpatients_see_all">Womanika la’i</string>
+  <string name="patients_recentpatients_nameage">%1$s, %2$s</string>
+
+  <!-- Blood pressure entry -->
+  <string name="bloodpressureentry_sheet_title_enter_blood_pressure">Mundeete xiiwo</string>
+  <string name="bloodpressureentry_sheet_title_edit_blood_pressure">Mundeete xiiwo tashi</string>
+  <string name="bloodpressureentry_sheet_title_enter_date">Lanoni bara</string>
+  <string name="bloodpressureentry_remove">Kayisi</string>
+  <string name="bloodpressureentry_systolic">Systolic</string>
+  <string name="bloodpressureentry_diastolic">Diastolic</string>
+  <string name="bloodpressureentry_day">Barra</string>
+  <string name="bloodpressureentry_month">Agana</string>
+  <string name="bloodpressureentry_year">Diro</string>
+  <string name="bloodpressureentry_error_systolic_more">Systolic diastolic wini roora hasisano</string>
+  <string name="bloodpressureentry_error_systolic_70">Systolic 70 woroni higa dihasisano</string>
+  <string name="bloodpressureentry_error_systolic_300">Systolic 300 aleni  higa dihasisano</string>
+  <string name="bloodpressureentry_error_diastolic_40">Diastolic  40  woron  higa dihasisano</string>
+  <string name="bloodpressureentry_error_diastolic_180">Diastolic 180  aleni  higa dihasisano</string>
+  <string name="bloodpressureentry_error_systolic_empty">Systolic na diastolic xiwo esi</string>
+  <string name="bloodpressureentry_error_diastolic_empty">Systolic na diastolic xiwo esi</string>
+  <string name="bloodpressureentry_error_date_invalid_pattern">Horote/garu barra eesse Barra/Agana/Diro</string>
+  <string name="bloodpressureentry_error_date_is_in_future">Bara alibira qolite boresitoti</string>
+  <string name="bloodpressureentry_remove_bp_title">Mundeete xiiwo kayisi</string>
+  <string name="bloodpressureentry_remove_bp_message">Tene mundeete xiiwo hunate hasiratoni?</string>
+  <string name="bloodpressureentry_remove_bp_confirm">Kayisi</string>
+  <string name="bloodpressureentry_remove_bp_cancel">Hoola</string>
+  <string name="bloodpressureentry_date_change">Soori</string>
+
+  <!-- Patient summary -->
+  <string name="patientsummary_contentdescription_up_button">Badhera higi</string>
+  <string name="patientsummary_prescriptions_add">Xagicho</string>
+  <string name="patientsummary_prescriptions_update">tashi Xagicho</string>
+  <string name="patientsummary_bp_add_new">Mundeete xiiwo</string>
+  <string name="patientsummary_finish_saving_patient">Gamiba asi</string>
+  <string name="patientsummary_finish_refill_medicine">Xagicho Qolite wonishi</string>
+  <string name="patientsummary_bp_none_added">Ledoniti Mundeete xiiwo dino</string>
+  <string name="patientsummary_edit">Tashi</string>
+
+  <string name="patientsummary_updatephone_dialog_title">Bilibilu kiro wiro qolite woyesi</string>
+  <string name="patientsummary_updatephone_dialog_message">Koni alibani boresino xiwamanichu bilibilu kiro horote ana dino</string>
+  <string name="patientsummary_updatephone_phone_hint">Bilibilu kiro</string>
+  <string name="patientsummary_updatephone_save">Gamiba asi</string>
+  <string name="patientsummary_updatephone_cancel">Sa’i</string>
+  <string name="patientsummary_addphone_dialog_title">Bilibilu kiro wiro qolite woyesi</string>
+  <string name="patientsummary_addphone_dialog_message">Xiwamanichu boresami wote bilibilu kiro diboresanitino</string>
+  <string name="patientsummary_addphone_phone_hint">Bilibilu kiro</string>
+  <string name="patientsummary_addphone_save">Gamiba asi</string>
+  <string name="patientsummary_addphone_cancel">Sa’i</string>
+  <string name="patientsummary_toolbar_title">%1$s, %2$s, %3$s</string>
+
+  <string name="patientsummary_teleconsult">Tele consult /bilibiluni asinani hasawa</string>
+  <string name="patientsummary_log_teleconsult">Bilibilu kirora suuda uhi</string>
+
+  <string name="patientsummary_registered_faciliy_title">Boresamo</string>
+  <string name="patientsummary_registered_facility">%1$s a %2$s</string>
+
+  <string name="bloodpressuresummaryview_see_all_button">Wo’manika la’i</string>
+
+  <!-- Lint fails to find usages for these strings. -->
+  <!--suppress UnusedResources -->
+  <string name="bloodpressure_level_low">Shima</string>
+  <!--suppress UnusedResources -->
+  <string name="bloodpressure_level_high">Jawa</string>
+
+  <string name="bloodsugar_level_low">Shima</string>
+  <string name="bloodsugar_level_high">Jawa</string>
+
+  <string name="timestamp_today">Techo</string>
+  <string name="timestamp_yesterday">Bero</string>
+  <!--suppress PluralsCandidate -->
+  <string name="timestamp_days_ago">%s E’mibara</string>
+
+  <!-- Prescribed drugs -->
+  <string name="patient_prescribeddrugs_screen_title">Xagicho</string>
+  <string name="patient_prescribeddrugs_add_custom_prescription">Ledi Wole xagicho</string>
+
+  <!-- Login -->
+  <string name="loginpin_go_back">Badhera bilibbilu kirowa higi</string>
+
+  <!-- App lock -->
+  <string name="applock_logout">Di’ateti?</string>
+  <string name="applock_reset_pin_alert_title">Wiro  qoli PIN kiro?</string>
+  <string name="applock_reset_pin_alert_message">Tene PIN kiro wiro qolate hasiratoni?</string>
+  <string name="applock_reset_pin_alert_confirm">Wiro qolli</string>
+  <string name="applock_reset_pin_alert_cancel">Hoola</string>
+
+  <!-- PIN entry -->
+  <string name="pinentry_forgotpin">PIN hawomo?</string>
+  <string name="pinentry_error_incorrect_pin_on_first_attempt">Esototi PIN kiro ditalitinona aleni noote ledo</string>
+  <string name="pinentry_error_incorrect_pin_attempts_remaining" tools:ignore="PluralsCandidate">Ditalitino PIN, %s gatinoheti</string>
+  <string name="pinentry_error_incorrect_pin_attempts_limit_reached" tools:ignore="PluralsCandidate">Horosirotohu %s ditalitino</string>
+  <string name="pinentry_pin_number_hint">Ateti PIN kiroki</string>
+  <string name="pinentry_bruteforcelock_timer_label">Gedenani qolite wonali</string>
+  <!-- minutes:seconds -->
+
+  <!-- Registration -->
+  <string name="registrationphone_phone_number_label">Silkeki boresi</string>
+  <string name="registrationphone_error_invalid_number">Silkiki kiro talitinoro  la’i. Lawanani  wote Shima lawano.</string>
+  <string name="registration_loggedout_dialog_title">Fula danidato</string>
+  <string name="registration_loggedout_dialog_message">Egotena e’e ka’e Hanafi</string>
+  <string name="registration_loggedout_dialog_confirm">Mahooye</string>
+  <string name="registrationphone_next">Aniche</string>
+
+  <string name="registrationname_name_label">Woma su’maki kuli’e</string>
+  <string name="registrationname_error_empty_name">Woma su’maki boressi</string>
+  <string name="registrationname_next">Aniche</string>
+  <string name="registrationname_name_and_role_hint">Lawishsha: Neerse Deeppa Siin</string>
+
+  <string name="registrationpin_pin_label">Haro PIN kiro kalaqiri</string>
+  <string name="registrationpin_pin_hint">PIN kiroki qagi , gedenisani hasisanohena</string>
+  <string name="registrationpin_error_incomplete_pin">PIN shimate. Kiro 4 gesha anichite egotena  esi.</string>
+
+  <string name="registrationconfirmpin_confirm_pin_label">Qolite PIN kiro esi</string>
+  <string name="registrationconfirmpin_error_pin_mismatch">Esototi PIN kiro ditalitinona aleni noote ledo</string>
+  <string name="registrationconfirmpin_reset_pin">Wiro qoli PIN</string>
+
+  <string name="registrationlocation_screen_title">Dariiga hassa</string>
+  <string name="registrationlocation_skip_permission">Sa’i</string>
+  <string name="registrationlocation_permission_rationale_description">Ate dariga afiranike aate kilinike afirate kalitanoke</string>
+  <string name="registrationlocation_permission_rationale_title">Raake ate kilinike afirate</string>
+  <string name="registrationlocation_allow_access">Dariga afirate kalitanota xawisi</string>
+
+  <!-- Onboarding -->
+  <string name="onboarding_get_started">Hanafate qixawino</string>
+  <string name="screenonboarding_intro_1">Haasi \&amp;afoni \n kumu geshi xiwamano \n</string>
+  <string name="screenonboarding_intro_1_hypertension">\ Jawa munidete xiwo</string>
+  <string name="screenonboarding_intro_2">Kalite xorishi \n</string>
+  <string name="screenonboarding_intro_2_bp">Mundeete xiiwo \n</string>
+  <string name="screenonboarding_intro_2_and">\&amp;</string>
+  <string name="screenonboarding_intro_2_medicines">\ Xagicho</string>
+  <string name="screenonboarding_intro_3">Xiwamanicho adhi</string>
+  <string name="screenonboarding_intro_3_reminder">\nSoka qagissi</string>
+  <string name="screenonboarding_intro_3_visits">\nLa’ata higi</string>
+
+  <!-- Overdue List -->
+  <string name="overdue_no_patients">Shima yanara keshino xiwamanichi dino</string>
+  <string name="overdue_empty_desc">Qaxarote bara sorino xiwamanicho Mundeete xiiwo mageshitero la’ate konini anichite wosha danidato.</string>
+  <string name="overdue_list_item_name_age">%s, %s</string>
+  <plurals name="overdue_list_item_appointment_overdue_days">
+    <item quantity="one">%s day overdue</item>
+    <item quantity="other">%s days overdue</item>
+  </plurals>
+  <string name="overdue_list_item_village">Qacha</string>
+  <string name="overdue_download">Dirisi</string>
+  <string name="overdue_share">Behhi</string>
+  <string name="overdue_no_pending_patients">Lexxitanni no xiwamaano dino</string>
+  <string name="overdue_pending_list_button_see_all">Womanika la’i</string>
+  <string name="overdue_pending_list_button_see_less">Ajishshe lai</string>
+  <string name="overdue_pending_to_call_header">Woshitaraati</string>
+  <string name="overdue_agreed_to_visit_call_header">Towaatate sumuu yitino</string>
+  <string name="overdue_remind_to_call_header">gedensa woshshate qaaqisi</string>
+  <string name="overdue_removed_from_list_call_header">tittiru giddonni hoolantu</string>
+  <string name="overdue_no_visit_in_one_year_call_header">1 diri giddo towaanyno dino</string>
+
+
+  <!-- Facility change -->
+
+  <!-- Enter OTP -->
+  <string name="enterotp_check_sms_sent_to">Sonikonihe SMS soka  buxi</string>
+  <string name="enterotp_enter_verification_code">Sonikonihe kiro esi</string>
+  <string name="enterotp_incorrect_code">Kiro raguni di’esoto egoteni wiro qolite wonali</string>
+  <string name="enterotp_resend_sms">SMS soka  wiro qolite soyi</string>
+  <string name="enterotp_sms_sent">Haro SMS soka  sonikoni</string>
+  <string name="enterotp_try_again_after">Gedenani qolite wonali</string>
+  <string name="otpentry_error_incorrect_otp_attempts_limit_reached" tools:ignore="PluralsCandidate">Horosirotohu %s ditalitino</string>
+  <string name="otpentry_error_incorrect_otp_attempts_remaining">Gara, %s ikitinoki kirro</string>
+  <!-- minutes:seconds -->
+
+  <!-- Schedule appointment -->
+  <string name="scheduleappointment_next_visit_in">Wolu barini la’ate</string>
+  <string name="scheduleappointment_not_now">Di’xaa</string>
+  <string name="scheduleappointment_done">Gofino</string>
+  <string name="scheduleappointment_next">Aniche</string>
+  <plurals name="scheduleappointment_appointment_in_days">
+    <item quantity="one">%s day</item>
+    <item quantity="other">%s days</item>
+  </plurals>
+  <plurals name="scheduleappointment_appointment_in_weeks">
+    <item quantity="one">%s week</item>
+    <item quantity="other">%s weeks</item>
+  </plurals>
+  <plurals name="scheduleappointment_appointment_in_months">
+    <item quantity="one">%s month</item>
+    <item quantity="other">%s months</item>
+  </plurals>
+
+  <!-- Forgot PIN -->
+  <string name="forgotpin_create_new_pin">Haaro PIN woori</string>
+  <string name="forgotpin_create_new_pin_invalid_pin">PIN shimate. Kiro 4 gesha anichite egotena  esi.</string>
+  <string name="forgotpin_confirm_pin">Qolite PIN kiro esi</string>
+  <string name="forgotpin_confirm_pin_message">PIN kiro wiro qolite esi la’a</string>
+  <string name="forgotpin_error_pin_mismatch">Esototi PIN kiro ditalitinona aleni noote ledo</string>
+
+  <!-- Reports -->
+  <string name="reports_come_back_later">Gedenisani badhera higi</string>
+  <string name="reports_you_will_be_able_to_see">Munideti xiwo magesha ikitinoro muleki no kilinikeni la’a danidato</string>
+
+  <!-- Medical History -->
+  <!--suppress UnusedResources used in enum -->
+  <string name="medicalhistory_question_heartattack">Wodanu xiso</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_stroke">Stroke</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_kidney">Afalete xiso</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_diagnosis_hypertension">Jawa munideti xiwo</string>
+  <string name="medicalhistory_diagnosis_hypertension_required">Saibbo Mundeete tumo buuxo gara (Hasiissanno)</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_diagnosis_diabetes">Sukarete  xiso</string>
+  <string name="medicalhistory_diagnosis_diabetes_required">Sukkaarete dhibbi buuxo gara (Hasiissanno)</string>
+  <string name="newmedicalhistory_next">Aniche</string>
+  <string name="newmedicalhistory_yes">E’e</string>
+  <string name="newmedicalhistory_no">De’ni</string>
+  <string name="newmedicalhistory_history">Xagge</string>
+  <string name="medicalhistory_question_is_on_hypertension_treatment">Xissantinoti sai agani giddo BP xagicho adhinoni? (Hasiisannoho)</string>
+  <string name="medicalhistory_question_is_on_diabetes_treatment">Sa\'i aganira xisamanchu sukarete xagicho adhino? (Hasisiro)</string>
+
+  <!--Prescribed Drug with Dosages Sheet-->
+  <string name="prescribed_drugs_dosage_none">Foqa</string>
+  <string name="prescribed_drugs_dosage_remove">Kayisi</string>
+  <string name="prescribed_drug_with_dosages_sheet_drug_name">%s Shima yanara chala keshano gede fajjinonihu</string>
+
+  <!--Scan Simple ID-->
+  <string name="scansimpleid_title">BP Paasipoorte woy Dagoommitete ayyimma</string>
+  <string name="scansimpleid_enteredcode_error_empty">BP Paasipoorte kiiro woy Dagoommitte fayyimate ayimma essi</string>
+  <string name="scansimpleid_enteredcode_error_not_required_length">Wodho agartino BP paasipoorte kiiro woy Dagoomu fayyimate ayimma eessi</string>
+  <string name="scansimpleid_type_number">Woy kiiro boreessi.</string>
+  <string name="scansimpleid_invalid_qr_code">Garunnita fayyimate ayimma iskaane assi</string>
+  <string name="scansimpleid_error_state_snackbar_ok">Mahoye</string>
+  <string name="scansimpleid_identfier_already_exists">ayimmate kiiro wooleho uuyinoni.\fayyimate ayimma kiiro haaro iskanne assi </string>
+  <string name="scansimpleid_bp_passport_or_national_health_id">BP Passipoorte woy Dagoomu fayyimate ayimma</string>
+  <string name="scansimpleid_bp_passport_title">Mundeete xiiwo passporte</string>
+  <string name="scansimpleid_national_id_title">Dagoomu ayimma</string>
+
+  <!--- Sync Indicator-->
+  <string name="syncindicator_status_pending">Lawishishuni asii</string>
+  <string name="syncindicator_status_failed">Lawishishu dixadino</string>
+  <string name="syncindicator_status_syncing">Lawishisha ana …….</string>
+  <string name="syncindicator_status_synced_just_now">Xaa lawishisha  asi</string>
+  <string name="syncindicator_status_synced_min_ago">Shimu%s bixilisa alibani synced ikino</string>
+  <string name="syncindicator_dialog_error_network">Xiwamanichu dawaro la’ate interinetete xadoshi noro buxi.</string>
+  <string name="syncindicator_dialog_button_text">Mahooye</string>
+  <string name="syncindicator_dialog_error_server">Shimu yana alibanin lawishishunihu ditalino ubino La’anichoki afirate egotena shimare agarite wonali</string>
+
+  <!-- Help Screen -->
+  <string name="help_title">Kaalo</string>
+  <string name="help_no_connection">Interinetete ana qaru no</string>
+  <string name="help_something_went_wrong">Shimuri di garaho</string>
+  <string name="help_try_again">Qolite wonali</string>
+
+  <!-- Link Id Sheet-->
+  <string name="linkidwithpatient_button_yes">E’e</string>
+  <string name="linkidwithpatient_button_back">Badhera</string>
+  <string name="linkidwithpatient_text">Aymma giddora eesse</string>
+  <string name="linkidwithpatient_patient_text">%1$s?</string>
+
+  <!-- Add ID to Patient: Search -->
+
+  <!-- Recent Patients -->
+  <string name="recent_patients_toolbar_title">Muli</string>
+
+  <!-- Recent Patients Item View -->
+  <string name="recent_patients_itemview_last_seen">Lanoni:\u0020</string>
+  <string name="recent_patients_itemview_new_registration">Haaro boresame</string>
+
+  <!-- Add ID to Patient: Search Results-->
+
+  <!-- App update : Dialog -->
+  <string name="appupdatedialog_title">maalate woyesi</string>
+  <string name="appupdatedialog_body">Horonisiranicho woyesate Google gamiboshiniwini Simple.</string>
+  <string name="appupdatedialog_positive_button_text">Woyesi</string>
+  <string name="appupdatedialog_negative_button_text">Dixaa</string>
+
+  <!-- All Patients In Facility View-->
+
+  <!--Registration loader screen -->
+  <string name="registrationloader_error_unexpected_title">Shimuri di garaho</string>
+  <string name="registrationloader_error_unexpected_message">La’anichoki afirate egotena shimare agarite wonali.</string>
+  <string name="registrationloader_error_internet_connection_title">Interinetete ana qaru no</string>
+  <!--suppress UnusedResources -->
+  <string name="registrationloader_retry">Lede wonali</string>
+
+  <!-- Short code search -->
+
+  <!-- Simple video -->
+  <string name="simple_video_duration">%s Bixilisa</string>
+
+  <!-- Settings -->
+  <string name="settings_title">Qinessa</string>
+  <string name="settings_user_name_icon_content">Tene Qinessa horosirano  manichi su’mi</string>
+  <string name="settings_user_phone_icon_content">Tene Qinessa horosirano  manichi bilibilu kiro</string>
+  <string name="settings_current_language_icon_content">Xaa s Qinessa horonisirate ana noo qaali</string>
+  <string name="settings_app_version_icon_content">Qinessate horonisani horonisiranicho woyesi</string>
+  <string name="settings_name">Su’ma</string>
+  <string name="settings_number">Bilibilu kiro</string>
+  <string name="settings_language">Qaale</string>
+  <string name="settings_change">Soori</string>
+  <string name="settings_language_hint">qale dori</string>
+  <string name="settings_software">Software</string>
+  <string name="settings_update">Woyesi</string>
+  <string name="settings_software_version">Version %1$s</string>
+
+  <!-- Change language screen -->
+  <string name="changelanguage_title">qale dori</string>
+  <string name="changelanguage_done">Gofino</string>
+
+  <!-- Placeholder -->
+  <string name="placeholder_loading_title">Shimare agari…</string>
+  <string name="placeholder_loading_message">Database maintenance in progress. Tini shima bixilisa adhitano</string>
+
+  <!-- Select Country Screen -->
+  <string name="selectcountry_logo_contentdescription">Simple badoshe</string>
+  <string name="selectcountry_title">Ate goba dori</string>
+  <string name="selectcountry_networkerror">Interineteti xadooshi dino</string>
+  <string name="selectcountry_servererror">Interinetete ana qaru noo Gedenisa lede wonali</string>
+  <string name="selectcountry_genericerror">Shimuri digaraho Gedenisa lede wonali</string>
+  <string name="selectcountry_retry">Qolite wonali</string>
+  <string name="scheduleappointment_at">Qucho</string>
+  <string name="scheduleappointment_change">Soori</string>
+
+  <!-- BloodSugar type picker -->
+  <string name="bloodsugartype_picker_title">Bikanicho dori</string>
+  <string name="bloodsugartype_picker_desc">Gaara  ikitikiha ikiro RBS dori</string>
+  <string name="bloodsugartype_rbs">Hedeweelcho Mundeete sukkaare (RBS)</string>
+  <string name="bloodsugartype_fbs">Mudoteni Mundeete sukkaare (FBS)</string>
+  <string name="bloodsugartype_ppbs">Postprandial Mundeete sukkaare (PPBS)</string>
+  <string name="bloodsugarentry_sheet_title_enter_date">Lanoni bara</string>
+  <string name="bloodsugarentry_day">Barra</string>
+  <string name="bloodsugarentry_month">Agana</string>
+  <string name="bloodsugarentry_year">Diro</string>
+  <string name="bloodsugarentry_error_lower_limit">Dawaro 30mg/l  aja dihasisano</string>
+  <string name="bloodsugarentry_error_lower_limit_hba1c">Dawaro 3/u0025  aja dihasisano</string>
+  <string name="bloodsugarentry_error_lower_limit_mmol">Dawaro 1.66mmol/l aja dihasisano</string>
+  <string name="bloodsugarentry_error_higher_limit">Dawaro 1000mg/dl sa’a dihasisano</string>
+  <string name="bloodsugarentry_error_higher_limit_hba1c">Dawaro 25/u0025  sa’a dihasisano</string>
+  <string name="bloodsugarentry_error_higher_limit_mmol">Dawaro 55.49mmol/l sa’a dihasisano</string>
+  <string name="bloodsugarentry_error_empty">Dawaro fano ikitonike</string>
+  <string name="bloodsugarentry_error_date_invalid_pattern">Horote/garu barra eesse Barra/Agana/Diro</string>
+  <string name="bloodsugarentry_error_date_is_in_future">Bara alibira qolite boresitoti</string>
+  <string name="bloodsugarentry_random_title">Hedeweelcho Mundeete sukkaare</string>
+  <string name="bloodsugarentry_post_prandial_title">Postprandial Mundeete sukkaare</string>
+  <string name="bloodsugarentry_fasting_title">Mudoteni Mundeete sukkaare</string>
+  <string name="bloodsugarentry_remove">Kayisi</string>
+  <string name="bloodsugarentry_edit_random_title">Hedeweelcho Mundeete sukkaare tashi</string>
+  <string name="bloodsugarentry_edit_post_prandial_title">Postprandial Mundeete sukkaaretashi</string>
+  <string name="bloodsugarentry_edit_fasting_title">Mudoteni Mundeete sukkaare tashi</string>
+  <string name="bloodsugarentry_edit_hba1c_title">HbA1ctashi</string>
+  <string name="bloodsugarentry_date_change">Soori</string>
+
+  <!-- Confirm remove blood sugar dialog -->
+  <string name="bloodsugarentry_remove_blood_sugar_title">Mundeete sukkaare kayisi?</string>
+  <string name="bloodsugarentry_remove_blood_sugar_message">Tene munideti xiso hunate hasirato</string>
+  <string name="bloodsugarentry_remove_blood_sugar_confirm">Kayisi</string>
+  <string name="bloodsugarentry_remove_blood_sugar_cancel">Hoola</string>
+
+  <!-- Blood Sugar Summary view -->
+  <string name="bloodsugarsummaryview_no_blood_sugars">Ledonihu munideti xiso  dino</string>
+  <string name="bloodsugarsummaryview_add_blood_sugar_button">Sukarete  xiso</string>
+  <!-- Blood Pressure History screen -->
+  <string name="bloodpressurehistory_add_bp_button">Mundeete xiiwo</string>
+  <string name="bloodpressurehistory_toolbar_title">%1$s, %2$s, %3$s</string>
+
+  <!-- Blood Sugar History screen -->
+  <string name="bloodsugarhistory_add_blood_sugar_button">Sukarete  xiso</string>
+  <string name="bloodsugarhistory_toolbar_title">%1$s, %2$s, %3$s</string>
+
+  <!-- Summary CV History view -->
+  <string name="medicalhistorysummaryview_history">Xagge</string>
+  <string name="medicalhistorysummaryview_diagnosis">xiinixaloo</string>
+
+  <!-- Summary prescriptions view -->
+  <string name="drugsummaryview_no_medicines">Ledoni xagichi dino</string>
+
+  <!-- Access Denied screen -->
+  <string name="accessdeniedscreen_title_access_denied">Sa’a didanidinanni</string>
+  <string name="accessdeniedscreen_description">Simple horoonsira hoollihero. qaru noha lawe leliha ikiro la’anichiki ledo xadi.\n\nShimuni APP Simple hunte aguri Horonisiranicho w iro qoli wole Simple App Play store gidoni dirisi.</string>
+
+  <!-- Confirm Facility change sheet -->
+  <string name="confirmfacilitychange_title">Dariga sori</string>
+  <string name="confirmfacilitychange_negative_button">Hoola</string>
+  <string name="confirmfacilitychange_positive_button">E’e</string>
+  <string name="confirmfacilitychange_facility_name">%s?</string>
+
+  <!-- Registration Confirm Facility Change Sheet -->
+  <string name="registrationconfirmfacility_title">Ati hako?</string>
+  <string name="registrationconfirmfacility_positive_button">E’e</string>
+  <string name="registrationconfirmfacility_negative_button">Hoola</string>
+
+  <!-- Alert facility change -->
+  <string name="alertfacilitychange_title">Ati hako?</string>
+  <string name="alertfacilitychange_yes_button">E’e</string>
+  <string name="alertfacilitychange_change_button">Soori</string>
+  <string name="alertfacilitychange_facility_name">%s?</string>
+
+  <!-- Prescribed Drug Summary -->
+
+  <!-- Contact patient -->
+  <string name="contactpatient_agreed_to_visit">Xiwamanichoho malatisi \"la’ate su’mu yoo\"</string>
+  <string name="contactpatient_remind_call_later">Gedenani qoole dowolate qago uhhi…</string>
+  <string name="contactpatient_remove_from_list">Shima yanara chala keshanoriwini kayisi…</string>
+  <string name="contactpatient_result_of_call">Dawarote  a’ate bilibili</string>
+  <string name="contactpatient_call">Bilbile</string>
+  <string name="contactpatient_call_normal">Rosaminoho</string>
+  <string name="contactpatient_call_secure">Agaramino dariga</string>
+  <string name="contactpatient_help_text">Tene bilibilini qole bilibilate didanidamanohe</string>
+  <string name="contactpatient_patientdetails">%1$s, %2$s, %3$s</string>
+  <string name="contactpatient_call_later_in">Gedenisa bilibili</string>
+  <string name="contactpatient_change">Soori</string>
+  <string name="contactpatient_done">Gofino</string>
+  <string name="contactpatient_result">Guma</string>
+  <plurals name="contactpatient_days">
+    <item quantity="one">%s day</item>
+    <item quantity="other">%s days</item>
+  </plurals>
+  <plurals name="contactpatient_weeks">
+    <item quantity="one">%s week</item>
+    <item quantity="other">%s weeks</item>
+  </plurals>
+  <plurals name="contactpatient_months">
+    <item quantity="one">%s month</item>
+    <item quantity="other">%s months</item>
+  </plurals>
+  <string name="contactpatient_select_a_reason">Korikata dori</string>
+  <string name="contactpatient_patient_already_visited">Buxamino Xiwamanichoti</string>
+  <string name="contactpatient_patient_is_not_responding">Xiwamanichu diqolano</string>
+  <string name="contactpatient_invalid_phone_number">Bilibilu kiro di’losano</string>
+  <string name="contactpatient_public_hospital_transfer">Wole fayimate minira qole sayisa /soya</string>
+  <string name="contactpatient_moved_to_private">Mitu dokiterichi mito  manicho chala la’anowa soya</string>
+  <string name="contactpatient_patient_died">Reyino</string>
+  <string name="contactpatient_other_reason">Wole korikata</string>
+  <string name="contactpatient_unknown">Dianfoonni</string>
+  <string name="contactpatient_patient_registered_at">Borreessaminowi</string>
+  <string name="contactpatient_patient_transfer_from">Daynowi</string>
+  <string name="contactpatient_phone">Bilibila</string>
+  <string name="contactpatient_dx">Dx</string>
+  <string name="contactpatient_visited">Lano’ni</string>
+  <string name="contactpatient_no_phone_number">Silkete kiiro dino</string>
+  <string name="contactpatient_diagnosis_diabetes">Sukarete  xiso</string>
+  <string name="contactpatient_diagnosis_hypertension">Jawa munideti xiwo</string>
+  <string name="contactpatient_diagnosis_none">Foqa</string>
+
+  <!-- Deep link -->
+  <string name="deeplink_patient_profile_not_found">Xiwamanichu taje di’afanitino</string>
+  <string name="deeplink_patient_profile_not_found_desc">Egotena intwrinwte nooro xisamanichu akataa lawisise la’isii</string>
+  <string name="deeplink_patient_profile_not_found_positive_action">Mahooye</string>
+  <string name="deeplink_no_patient">Xiwamanichu di’afamino</string>
+  <string name="deeplink_no_patient_desc">Bilibiluni asinani hasawana fayimate agaroshi akati taje xiwamachoho kula Hanafi</string>
+  <string name="deeplink_no_patient_positive_action">Mahoye</string>
+
+  <!-- Delete patient -->
+  <string name="deletepatient_select_a_reason">Korikata dori</string>
+  <string name="deletereason_duplicate_patient">Kuni dawarame boresamino xiwamanichoti</string>
+  <string name="deletereason_accidental_registration">Xiwamanichu sorote boresamino</string>
+  <string name="deletereason_died">Reyino</string>
+  <string name="deletereason_confirm_title">Xiwamanicho huni?</string>
+  <string name="deletereason_confirm_message">Tini ba’ino %1$s</string>
+  <string name="deletereason_confirm_positive">Huni</string>
+  <string name="deletereason_confirm_negative">Hoola</string>
+
+  <!-- Splash screen -->
+  <string name="screensplash_next">Aniche</string>
+
+  <!-- Contact doctor sheet -->
+  <string name="contactdoctor_new_title">Dokiterichu noo</string>
+  <string name="contactdoctor_new_subtitle">WhatsApp  horosiri</string>
+
+  <!-- Intro Video Screen -->
+  <string name="screenintrovideo_how_to_use_simple_app">Simple app hitoni horosinaniro</string>
+  <string name="screenintrovideo_watch_video">Vedio la’a</string>
+  <string name="screenintrovideo_skip">Sa’i</string>
+
+  <!-- Assigned Facility -->
+  <string name="assigned_facility_view_title">Urinishate kuli</string>
+  <string name="assigned_facility_view_change">Soori</string>
+
+  <!-- Facility Picker -->
+  <string name="facilitypicker_search_hint">Horote/owaantete su’ma eessi</string>
+  <!-- Street, District, State -->
+  <string name="facilitypicker_header_suggested_facilities">Doroni kilinike</string>
+  <string name="facilitypicker_header_all_facilities">Wo’ma  fayimate kilinike</string>
+
+  <!--  TeleMedicine User Signature-->
+  <string name="screen_signature_sign_in_this_box">Koni gidoni e’e danidato</string>
+
+  <!-- Drug Duration -->
+  <string name="drug_duration_title">%1$s %2$s</string>
+  <string name="drugDurationLabel">Bara</string>
+  <string name="drug_duration_empty_error">Xagichu ana noo bara di manixani</string>
+  <string name="drug_duration_max_error">Xagichu ana noo bara %1$s bari aleni higonike</string>
+
+  <!-- Teleconsultation success-->
+  <string name="screen_teleconsult_success_add_prescription">Xagichoho hajajo uhii?</string>
+  <string name="screen_teleconsult_success_yes">E’e</string>
+  <string name="screen_teleconsult_success_no">De’ni</string>
+  <string name="screen_teleconsult_success_teleconsult_recorded">Bilibiluni asinani  hasawa xorisha</string>
+  <string name="screen_teleconsult_success_patient_information">%1$s, %2$s, %3$s</string>
+  <string name="sheet_medicine_frequency_od">OD</string>
+  <string name="sheet_medicine_frequency_bd">BD</string>
+  <string name="sheet_medicine_frequency_tds">TDS</string>
+  <string name="sheet_medicine_frequency_qds">QDS</string>
+  <string name="sheet_medicine_frequency_save">Gamiba asi</string>
+
+  <!-- Teleconsult Record Screen -->
+  <string name="screen_teleconsult_record">Bilibiluni asinani  hasawa xorisha asa</string>
+  <string name="screen_teleconsult_record_type">Bilibiluni asina hasawi  maa danati</string>
+  <string name="screen_teleconsult_record_type_audio">Qallu bilibila</string>
+  <string name="screen_teleconsult_record_type_video">Vedio bilibili</string>
+  <string name="screen_teleconsult_record_type_message">Soka</string>
+  <string name="screen_teleconsult_record_patient_took_medicine">Xiwamanichu anti-hypertensive and anti-diabetic yinani  xagi garuni adhani noo</string>
+  <string name="screen_teleconsult_record_patient_consented">Bilibiluni hasanibani hasawi naa xiwamanichoho mashaleqe a’a</string>
+  <string name="screen_teleconsult_record_done">Gofino</string>
+  <string name="teleconsultnotrecordeddialog_title">Bilibiluni asinani  hasawa dixorishama</string>
+  <string name="teleconsultnotrecordeddialog_body">Tene hunate hasirato</string>
+  <string name="teleconsultnotrecordeddialog_positive_button_text">E’e</string>
+  <string name="teleconsultnotrecordeddialog_negative_button_text">De’ni</string>
+
+  <!-- Deeplink Teleconsult not authorised-->
+  <string name="deeplink_medical_officer_not_authorised_to_log_teleconsult">Bilibiluni asinani  hasawa  asate hajo dila’anohe</string>
+  <string name="deeplink_please_check_with_your_supervisor">Egotena la’anichu suma buxxi</string>
+  <string name="deeplink_okay_positive_action">Mahooye</string>
+
+  <string name="screen_teleconsult_prescription_next">Aniche</string>
+
+  <!-- Teleconsult Medicines View -->
+  <string name="view_teleconsult_medicines">Xagicho</string>
+  <string name="view_teleconsult_medicines_add">Ledi</string>
+  <string name="view_teleconsult_medicines_edit">Tashi</string>
+  <string name="view_teleconsult_medicines_required_error">Ledi Shimuni mito xagicho ledi</string>
+  <plurals name="list_item_teleconsult_medicine_duration">
+    <item quantity="one">%1$s day</item>
+    <item quantity="other">%1$s days</item>
+  </plurals>
+
+  <!-- Teleconsult Doctor Info View -->
+  <string name="view_teleconsult_doctor_info_instructions">Xisamanote hajajo  kuli</string>
+  <string name="view_teleconsult_doctor_info_registration_id">Fayimate mine boresamito afanishu kiro</string>
+  <string name="view_teleconsult_doctor_info_acknowledgement">Xagicho hajajani woraqati ana malatisateni fajo uhhi %1$s</string>
+  <string name="view_teleconsult_doctor_info_add_signature">Ledi Malate</string>
+  <string name="view_teleconsult_doctor_info_signature_error">Ledi Malate</string>
+
+  <string name="screen_teleconsult_share_prescription_download">Dirisi</string>
+  <string name="screen_teleconsult_share_prescription_share">Behhi</string>
+  <string name="screen_teleconsult_share_prescription_done">Gofino</string>
+  <string name="screen_teleconsult_share_prescription_image_using">Doroni mi’sile behhi</string>
+  <string name="screen_teleconsult_share_prescription_title">Hajajo</string>
+  <string name="screen_teleconsult_share_prescription_image_saved">Xagichu hajajani woraqati dirinisaniwini gamiba asi</string>
+
+  <!-- Select diagnosis error alert dialog -->
+  <string name="select_diagnosis_error_diagnosis_required">Mirimaruni  hasanitano</string>
+  <string name="select_diagnosis_error_enter_diagnosis_both_hypertension_diabetes">Lamuniku xibira yano hypertension and diabetesmirimera dorii</string>
+  <string name="select_diagnosis_error_enter_diagnosis_hypertension">Mundeete tumo buuxo gara doori</string>
+  <string name="select_diagnosis_error_ok">Mahoye</string>
+  <string name="sheet_teleconsult_status_title">Bilibiluni asinani hasawi xorishi eke gofino?</string>
+  <string name="sheet_teleconsult_status_yes">E’e</string>
+  <string name="sheet_teleconsult_status_no">De’ni</string>
+  <string name="sheet_teleconsult_status_waiting">Shimare agarii</string>
+  <string name="sheet_teleconsult_status_done">Gofino</string>
+
+  <!-- Setup activity -->
+  <string name="setup_cannot_run">Kone Horonisiranichohoronisira didanidato</string>
+  <string name="setup_rooted">Simple ruute ikkino uduunnichira  horonsira didandiinanni.</string>
+  <string name="setup_close">Chuffi</string>
+
+  <!-- Blood sugar unit selection dialog -->
+  <string name="blood_sugar_unit_selection_choose">Doori</string>
+  <string name="blood_sugar_unit_selection_done">Gofino</string>
+
+  <!-- BP passport sheet -->
+  <string name="sheet_bp_passport_register_new_patient">Haro xiwamanicho boresi</string>
+  <string name="sheet_bp_passport_add_to_existing_patient">Fuloha xawanicho ledi</string>
+  <string name="sheet_bp_passport_number">Mundeete xiiwo passporte  %1$s</string>
+  <string name="sheet_national_health_id">Dagoomu fayyimmate ayimma %1$s</string>
+
+  <!-- Instant search -->
+  <string name="patientinstantsearch_assigned_facility_header">La’ate %1$s</string>
+  <string name="patientinstantsearch_nearby_facilities_header">Muli urishawini</string>
+  <string name="patientsearch_error_no_patients_in_facility">boresaminohu Wominiku xiwamanote sumi koni woroni no dafira hasirato taje la’a danidato.</string>
+  <string name="patientsearch_error_no_search_results">Hasito xiwamanichi dino</string>
+  <string name="patientsearch_error_no_patients_in_facility_heading">E’no xiwamanichi dino %1$s</string>
+
+  <!-- Text Input DatePicker sheet -->
+  <string name="sheet_text_input_date_picker_enter_a_date">Barra eesse</string>
+  <string name="sheet_text_input_date_picker_day">Barra</string>
+  <string name="sheet_text_input_date_picker_month">Agana</string>
+  <string name="sheet_text_input_date_picker_year">Diro</string>
+  <string name="sheet_text_input_date_picker_enter_valid_date">Horote/garu barra eesse Barra/Agana/Diro</string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_in_past">Barra Albilicho eessi </string>
+  <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">Diru Mitu aleeni ikka dinosi</string>
+
+  <!-- National Health Id -->
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">Dagoomu fayyimmate ayimma noote yaalaanchu   Ayimma ledo digaammanni</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">Mahoye</string>
+
+  <!-- Select ongoing hypertension treatment dialog -->
+  <string name="select_ongoing_hypertension_treatment_title">Xissantinoti sai agani giddo BP xagicho adhinoni?</string>
+  <string name="select_ongoing_hypertension_treatment_message">Ee woy Dee\'ni doori.</string>
+  <string name="select_ongoing_diabetes_treatment_message">Sa\'a aganira xisamanchu sukaret xagicho adhasi xunsa.</string>
+  <string name="select_ongoing_hypertension_treatment_positive_action">Mahoye</string>
+
+  <!-- Custom drugs search -->
+  <string name="customdrugssearch_hint">Xagichu su’ma wori</string>
+  <string name="customdrugssearch_item_name_separator">,\u0020</string>
+
+  <!-- Warning dialogs -->
+  <string name="warning_add_measurements_title">BP nna mundeete sukkaare wori?</string>
+  <string name="warning_add_measurements_message">Dandiittoro, kunni xissamaanchira xa noosita mundeete tumonna mundeete sukkaare deerri niwaawe wori.</string>
+  <string name="warning_add_measurements_positive_button">Niwaawe wori</string>
+  <string name="warning_add_measurements_negative_button">Di’xaa</string>
+  <string name="warning_add_blood_pressure_title">BP wori?</string>
+  <string name="warning_add_blood_pressure_message">Dandiittoro, kunni xissamaanchira  xa noosita mundeete tumo deerri niwaawe wori.</string>
+  <string name="warning_add_blood_pressure_positive_button">Mundeete tumo wori</string>
+  <string name="warning_add_blood_pressure_negative_button">Di’xaa</string>
+  <string name="warning_add_blood_sugar_title">Mundeete sukkaare wori?</string>
+  <string name="warning_add_blood_sugar_message">Dandiittoro, kunni xissamaanchira  xa noosita mundeete sukkaare deerri niwaawe wori.</string>
+  <string name="warning_add_blood_sugar_positive_button">Mundeete sukkaare wori</string>
+  <string name="warning_add_blood_sugar_negative_button">Di’xaa</string>
+
+  <!-- Custom drug entry sheet -->
+  <string name="custom_drug_entry_sheet_remove">Kayisi</string>
+  <string name="custom_drug_entry_sheet_dosage">Shima yanara chala keshanoha</string>
+  <string name="custom_drug_entry_sheet_frequency">Marri-higo</string>
+  <string name="custom_drug_entry_sheet_save_button_text">Gamiba asi</string>
+  <string name="custom_drug_entry_sheet_add_button_text">Ledi</string>
+  <string name="custom_drug_entry_sheet_frequency_dialog_done">Gofino</string>
+  <!-- Select state screen -->
+  <string name="select_state_title">Kilinike\'ne hikoti?</string>
+  <string name="select_state_networkerror">Interineteti xadooshi dino</string>
+  <string name="select_state_servererror">Interinetete ana qaru noo Gedenisa lede wonali</string>
+  <string name="select_state_genericerror">Shimuri digaraho Gedenisa lede wonali</string>
+
+  <!-- Patient status view -->
+  <string name="patient_status_died">Reyino</string>
+
+  <!-- Change diagnosis error dialog -->
+  <string name="change_diagnosis_title">Anfoniha xibu dana soora?</string>
+  <string name="change_diagnosis_message">Xisamanchu koni albani Mundete lexa xiso woyimi sukare afantinosiro Yes malate ase</string>
+  <string name="change_diagnosis_positive">Sooro</string>
+  <string name="change_diagnosis_negative">Dixati</string>
+
+  <!-- Overdue download notification -->
+  <string name="overdue_download_notification_failed_title">driisa hoonigoni</string>
+  <string name="overdue_download_notification_failed_subtitle">woole yanara wiiro woonali</string>
+  <string name="overdue_download_notification_in_progress_title">akaatis garin drisaa</string>
+  <string name="overdue_download_notification_cancel">Hoola</string>
+  <string name="overdue_download_notification_succeeded_title">drisa guumulantino</string>
+  <string name="overdue_download_notification_succeeded_subtitle">faanate kissi</string>
+
+  <!-- Overdue download no active network connection dialog -->
+  <string name="overdue_download_no_active_network_connection_dialog_title">interinete dino</string>
+  <string name="overdue_download_no_active_network_connection_dialog_message">interineteki buuxi lledeno wirro woonali</string>
+  <string name="overdue_download_no_active_network_connection_dialog_positive_button">Mahoye</string>
+
+  <!-- Select overdue download format dialog -->
+  <string name="select_overdue_download_format_dialog_radio_button_spreadsheet">spreedeshiitee</string>
+  <string name="select_overdue_download_format_dialog_radio_button_pdf">pdafee</string>
+  <string name="select_overdue_download_format_dialog_action_negative">Hoola</string>
+  <string name="select_overdue_download_format_dialog_title_download">dirrinisa gede</string>
+  <string name="select_overdue_download_format_dialog_title_share">beenkani gede</string>
+  <string name="select_overdue_download_format_dialog_action_positive_download">Dirisi</string>
+  <string name="select_overdue_download_format_dialog_action_positive_share">Behhi</string>
+  <string name="select_overdue_download_format_dialog_share_with">beehato gede </string>
+  <string name="not_enough_storage_error_dialog_title">iikado baasse dinno</string>
+  <string name="not_enough_storage_error_dialog_message">shima filee huunte wiiro woonali</string>
+  <string name="download_failed_error_dialog_title">dirisa dedanidinoni</string>
+  <string name="download_failed_error_dialog_message">shimu qaaru noona shima yaana gedensani wiiro woonali</string>
+  <string name="next_appointment_view_title">xaadoshiki gaarini</string>
+  <string name="next_appointment_view_add">Ledi</string>
+  <string name="next_appointment_view_change">Soori</string>
+  <string name="next_appointment_none">Foqa</string>
+  <string name="next_appointment_appointment_at_facility">chala %s</string>
+  <string name="next_appointment_today">Techo</string>
+  <plurals name="next_appointment_plurals">
+    <item quantity="one">%d day</item>
+    <item quantity="other">%d days</item>
+  </plurals>
+  <plurals name="next_appointment_overdue_plurals">
+    <item quantity="one">%d day overdue</item>
+    <item quantity="other">%d days overdue</item>
+  </plurals>
+
+  <!-- App update notification -->
+  <string name="app_update_notification_subtext">Eegote horonsidinani Simple appilikeeshiine Google PlayStore gido haaronsidhe.</string>
+  <string name="critical_app_update_notification_subtext">Horo afidhino woyeeso kuneeti. Simple appilikeeshiine Google PlayStore gido horoonsidhe.</string>
+
+  <!-- Critical app update dialog -->
+  <string name="critical_update_required_dialog_title">Lowonta horo afidhino woyeeso kuneeti.</string>
+  <string name="critical_update_required_dialog_content">Agarooshehona haaro lexora woyeesidhe.</string>
+  <string name="critical_security_update_required_reason">Appilikeeshiinete agarooshe haroonsa goofino.</string>
+  <string name="critical_update_required_dialog_update_button_text">XA HAROONIDHE</string>
+  <string name="critical_update_required_dialog_help_section_title">kaa\'lo?</string>
+  <string name="critical_update_required_dialog_help_section_content">Worooni nooha kissateni jaallanke wiini kaa\'lo afidhe</string>
+  <string name="critical_update_required_reason">Appilikeeshiine %d agana sa\'ino haronsinani yanan.</string>
+
+  <!-- Critical app update card -->
+  <string name="critical_update_required_card_title">lowonta horo afidhino woyeso</string>
+  <string name="critical_update_required_card_content">Agarooshehona haaro lexora woyeesidhe.</string>
+  <string name="update_required_reason">Appilikeeshiine %d agana sa\'ino haronsinani yanan.</string>
+  <string name="critical_update_required_card_update_button_text">XA HAROONIDHE</string>
+
+  <!-- Drug stock reminder notification -->
+  <string name="drug_stock_reminder_notification">Agarani noo\'neha xagichu duuno gudine egensise %1$s ra </string>
+  <string name="drug_stock_reminder_card_title">Xagichu duuno</string>
+  <string name="drug_stock_reminder_card_content">Agarani noo\'neha xagichu duuno gudine egensise %1$s ra </string>
+  <string name="drug_stock_reminder_button_text">Xagichu duuno eessi.</string>
+
+  <!-- Drug stock reminder no active network connection dialog -->
+  <string name="drug_stock_reminder_no_active_network_connection_dialog_title">interinete dino</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_message">interineteki buuxi lledeno wirro woonali</string>
+  <string name="drug_stock_reminder__no_active_network_connection_dialog_positive_button">Mahoye</string>
+
+
+  <!-- Clinical Decision Support Alerts -->
+  <string name="clinical_decision_support_alert_bp_high_title">Mundeete xiinbbe lu\'phi yitino. Xagicho adha le\'de?</string>
+  <string name="clinical_decision_support_alert_bp_high_subtitle">Xiwamanchuniha xagicho adhate wogana yana yanate adhasi/se harun\'se.</string>
+
+  <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">Agreed to visit</string>
+
+  <string name="call_result_outcome_remind_to_call_later">Call reminder set for %1$s</string>
+
+  <string name="call_result_outcome_removed">Holloonni%1$s</string>
+
+  <string name="call_result_outcome_saved_at">Saved %1$s</string>
+
+  <!-- Overdue Instant Search -->
+  <string name="overdue_search_patient_name_or_village">Su\'munna olluunni hasi.</string>
+  <string name="overdue_search_hint">Su\'ma woy ollaa eessi</string>
+  <string name="overdue_search_no_search_results_title">Xissamaano diafantanno</string>
+  <string name="overdue_search_no_search_results_desc">Hasattokkinni hendoonnihu woroo ikkitino xissamaano la\"atto.</string>
+
+  <!-- Select and download overdue appointments -->
+  <string name="selected_overdue_count">%1$d selected</string>
+  <string name="selected_overdue_clear">CLEAR</string>
+  <string name="selected_overdue_select_all_appointments">SELECT ALL</string>
+
+  <string name="patient_line_list_download_notification_failed_title">driisa hoonigoni</string>
+  <string name="patient_line_list_download_notification_failed_subtitle">woole yanara wiiro woonali</string>
+  <string name="patient_line_list_download_notification_in_progress_title">Downloading patient line list</string>
+  <string name="patient_line_list_download_notification_cancel">Hoola</string>
+  <string name="patient_line_list_download_notification_succeeded_title">drisa guumulantino</string>
+  <string name="patient_line_list_download_notification_succeeded_subtitle">faanate kissi</string>
+
+  <string name="select_patient_line_list_download_format_dialog_radio_button_spreadsheet">spreedeshiitee</string>
+  <string name="select_patient_line_list_download_format_dialog_radio_button_pdf">pdafee</string>
+  <string name="select_patient_line_list_download_format_dialog_action_negative">Hoola</string>
+  <string name="select_patient_line_list_download_format_dialog_title_download">dirrinisa gede</string>
+  <string name="select_patient_line_list_download_format_dialog_action_positive">Dirisi</string>
+  <string name="patient_line_list_download_card_title">IHCI patient register</string>
+  <string name="patient_line_list_download_card_desc">List of all patients registered or assigned to %1$s</string>
+  <string name="patient_line_list_download_card_button">Dirisi</string>
+  <string name="patient_line_list_download_link">Xiwamaanote suma borro IHCL diri\'se</string>
+
+  <!--Notification permission denied dialog-->
+  <string name="notification_permission_denied_title">Turn on notifications</string>
+  <string name="notification_permission_denied_message">Simple needs permission to show you important reminders.Turn on under Permissions &gt; Notifications</string>
+  <string name="notification_permission_denied_positive_button">GO TO APP SETTINGS</string>
+  <string name="notification_permission_denied_negetive_button">Dixati</string>
+
+  <!--Monthly screen reports-->
+  <string name="monthly_screening_reports">Aganunita laooshe xawisano borro</string>
+  <string name="monthly_screening_reports_report">%1$s xawisaancho borro</string><!--Oct 2023 report-->
+  <string name="monthly_screening_reports_submit_report">Xawisaancho borro eesse</string>
+  <string name="monthly_screening_reports_submitted">Eesinooni</string>
+  <string name="monthly_screening_reports_screening_report">%1$s xawisaancho borro</string><!--Oct 2022 screening report-->
+  <string name="monthly_screening_reports_submitted_with_date_and_time">Eesinooni %1$s</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="monthly_screening_reports_submit_btn_text">Eesse</string>
+  <string name="monthly_screening_reports_complete">Gudde</string>
+  <string name="monthly_screening_reports_submitted_with_date">%1$s xawisaancho borro e\'ino</string><!--October 2022 report submitted-->
+  <string name="monthly_screening_reports_done">Gofino</string>
+  <string name="monthly_screening_reports_unsaved_changes_title">Woroniki woyyo</string>
+  <string name="monthly_screening_reports_unsaved_changes_text">Worronikit woyyo ba\'ars dandiitano.\nAgurte fulate mu\'dhotto?</string>
+  <string name="monthly_screening_reports_stay_title">KAWIICHO KEESHI</string>
+  <string name="monthly_screening_reports_leave_page_title">KAWIICHIN FULI</string>
+</resources>

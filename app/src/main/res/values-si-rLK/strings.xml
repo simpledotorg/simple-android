@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-
   <!-- Common -->
   <string name="gender_female">ස්ත්‍රී</string>
   <string name="gender_male">පුරුෂ</string>
@@ -872,6 +871,7 @@
   <string name="patient_line_list_download_card_title">IHCI රෝගී ලේඛනය</string>
   <string name="patient_line_list_download_card_desc">%1$s වෙත ලියාපදිංචි වී ඇති හෝ වෙන් කර ඇති සියලුම රෝගීන්ගේ ලැයිස්තුව</string>
   <string name="patient_line_list_download_card_button">බාගත කිරීම</string>
+  <string name="patient_line_list_download_link">IHCI රෝගී ලේඛනය බාගන්න</string>
 
   <!--Notification permission denied dialog-->
   <string name="notification_permission_denied_title">දැනුම්දීම් සක්‍රීය කරන්න</string>
@@ -879,4 +879,19 @@
   <string name="notification_permission_denied_positive_button">යෙදුම් සැකසුම් වෙත යන්න</string>
   <string name="notification_permission_denied_negetive_button">දැන් නොවේ</string>
 
+  <!--Monthly screen reports-->
+  <string name="monthly_screening_reports">මාසික පරීක්ෂණ වාර්තා</string>
+  <string name="monthly_screening_reports_report">%1$s වාර්තාව</string><!--Oct 2023 report-->
+  <string name="monthly_screening_reports_submit_report">වාර්තාව භාර දෙන්න</string>
+  <string name="monthly_screening_reports_submitted">භාර දෙනු ලැබිණි</string>
+  <string name="monthly_screening_reports_screening_report">%1$s පරීක්ෂණ වාර්තාව</string><!--Oct 2022 screening report-->
+  <string name="monthly_screening_reports_submitted_with_date_and_time">භාර දෙනු ලැබිණි %1$s</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="monthly_screening_reports_submit_btn_text">භාර දෙන්න</string>
+  <string name="monthly_screening_reports_complete">සම්පූර්ණයි!</string>
+  <string name="monthly_screening_reports_submitted_with_date">%1$s වාර්තාව භාර දෙනු ලැබිණි</string><!--October 2022 report submitted-->
+  <string name="monthly_screening_reports_done">අවසන්</string>
+  <string name="monthly_screening_reports_unsaved_changes_title">සුරැකුම් නොකළ වෙනස්කම්</string>
+  <string name="monthly_screening_reports_unsaved_changes_text">සුරැකුම් නොකළ වෙනස්කම් අහිමි වෙනු ඇත.\nඔබට පිට වීමට අවශ්‍ය බව විශ්වාසද?</string>
+  <string name="monthly_screening_reports_stay_title">මෙම පිටුවේ රැඳී සිටින්න</string>
+  <string name="monthly_screening_reports_leave_page_title">මෙම පිටුවෙන් පිටවන්න</string>
 </resources>

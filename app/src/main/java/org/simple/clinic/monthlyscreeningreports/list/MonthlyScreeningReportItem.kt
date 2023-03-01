@@ -8,6 +8,8 @@ import org.simple.clinic.databinding.MonthlyScreeningReportItemViewBinding
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 data class MonthlyScreeningReportItem(
@@ -18,22 +20,46 @@ data class MonthlyScreeningReportItem(
 
   companion object {
     fun from(
-        questionnaireResponses: List<QuestionnaireResponse>
+        questionnaireResponses: List<QuestionnaireResponse>,
+        dateTimeFormatter: DateTimeFormatter
     ): List<MonthlyScreeningReportItem> {
-      return questionnaireResponses.map {
-        MonthlyScreeningReportItem(
-            uuid = it.uuid,
-            submitted = try {
-              it.content["submitted"] as Boolean
-            } catch (ex: Exception) {
-              false
-            },
-            month = try {
-              it.content["month_string"] as String
-            } catch (ex: Exception) {
-              ""
-            }
-        )
+      return questionnaireResponses
+          .sortedByDescending { formatToLocalDate(it.content) }
+          .map {
+            MonthlyScreeningReportItem(
+                uuid = it.uuid,
+                submitted = getSubmitStatusString(it.content),
+                month = getMonthYearString(it.content, dateTimeFormatter)
+            )
+          }
+    }
+
+    private fun getSubmitStatusString(content: Map<String, Any>): Boolean {
+      return try {
+        content["submitted"] as Boolean
+      } catch (ex: Exception) {
+        false
+      }
+    }
+
+    private fun getMonthYearString(
+        content: Map<String, Any>,
+        dateTimeFormatter: DateTimeFormatter
+    ): String {
+      return try {
+        val date = formatToLocalDate(content)
+        return dateTimeFormatter.format(date)
+      } catch (ex: Exception) {
+        ""
+      }
+    }
+
+    private fun formatToLocalDate(content: Map<String, Any>): LocalDate? {
+      return try {
+        val monthString = content["month_string"] as String
+        LocalDate.parse(monthString.plus("-01"))
+      } catch (ex: Exception) {
+        null
       }
     }
   }

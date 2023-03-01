@@ -11,13 +11,14 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.RawValue
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenQuestionnaireEntryFormBinding
+import org.simple.clinic.di.DateFormatter
 import org.simple.clinic.di.injector
 import org.simple.clinic.monthlyscreeningreports.complete.MonthlyScreeningReportCompleteScreen
 import org.simple.clinic.monthlyscreeningreports.form.compose.QuestionnaireFormContainer
+import org.simple.clinic.monthlyscreeningreports.util.getScreeningMonth
 import org.simple.clinic.questionnaire.QuestionnaireType
 import org.simple.clinic.questionnaire.component.BaseComponentData
 import org.simple.clinic.questionnaire.component.ViewGroupComponentData
@@ -25,10 +26,10 @@ import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.questionnaire.component.InputViewGroupComponentData
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.widgets.UiEvent
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
 
@@ -46,6 +47,10 @@ class QuestionnaireEntryScreen : BaseScreen<
   lateinit var router: Router
 
   @Inject
+  @DateFormatter(DateFormatter.Type.MonthAndYear)
+  lateinit var monthAndYearDateFormatter: DateTimeFormatter
+
+  @Inject
   lateinit var schedulersProvider: SchedulersProvider
 
   @Inject
@@ -57,6 +62,9 @@ class QuestionnaireEntryScreen : BaseScreen<
 
   private val backButton
     get() = binding.backButton
+
+  private val monthTextView
+    get() = binding.monthTextView
 
   private val facilityTextView
     get() = binding.facilityTextView
@@ -126,6 +134,8 @@ class QuestionnaireEntryScreen : BaseScreen<
   }
 
   override fun displayQuestionnaireFormLayout(layout: BaseComponentData, response: QuestionnaireResponse) {
+    setMonthTextView(response)
+
     questionnaireResponse = response
     content = requireNotNull(questionnaireResponse).content.toMutableMap()
     if (layout is ViewGroupComponentData) {
@@ -139,6 +149,13 @@ class QuestionnaireEntryScreen : BaseScreen<
         }
       }
     }
+  }
+
+  private fun setMonthTextView(response: QuestionnaireResponse) {
+    monthTextView.text = context?.resources?.getString(
+        R.string.monthly_screening_reports_screening_report,
+        getScreeningMonth(response.content, monthAndYearDateFormatter)
+    )
   }
 
   private fun backClicks(): Observable<UiEvent> {

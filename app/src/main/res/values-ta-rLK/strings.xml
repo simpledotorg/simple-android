@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-
   <!-- Common -->
   <string name="gender_female">பெண்</string>
   <string name="gender_male">ஆண்</string>
@@ -872,6 +871,7 @@
   <string name="patient_line_list_download_card_title">IHCI நோயாளர் பதிவு</string>
   <string name="patient_line_list_download_card_desc">%1$s க்குப் பதிவுசெய்யப்பட்ட அல்லது ஒதுக்கப்பட்ட அனைத்து நோயாளர்களின் பட்டியல்</string>
   <string name="patient_line_list_download_card_button">பதிவிறக்கப்பட்டது</string>
+  <string name="patient_line_list_download_link">IHCI நோயாளர் பதிவேட்டைப் பதிவிறக்கம் செய்யவும்</string>
 
   <!--Notification permission denied dialog-->
   <string name="notification_permission_denied_title">அறிவிப்புகளை இயக்கவும்</string>
@@ -879,4 +879,19 @@
   <string name="notification_permission_denied_positive_button">செயலி அமைப்புகளுக்குச் செல்லவும்</string>
   <string name="notification_permission_denied_negetive_button">இப்போது வேண்டாம்</string>
 
+  <!--Monthly screen reports-->
+  <string name="monthly_screening_reports">மாதாந்திர ஆராய்வு அறிக்கைகள்</string>
+  <string name="monthly_screening_reports_report">%1$s அறிக்கை</string><!--Oct 2023 report-->
+  <string name="monthly_screening_reports_submit_report">அறிக்கையைச் சமர்ப்பிக்கவும்</string>
+  <string name="monthly_screening_reports_submitted">சமர்ப்பிக்கப்பட்டது</string>
+  <string name="monthly_screening_reports_screening_report">%1$s அறிக்கையை ஆய்வு செய்தல்</string><!--Oct 2022 screening report-->
+  <string name="monthly_screening_reports_submitted_with_date_and_time">%1$s சமர்ப்பிக்கப்பட்டது</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="monthly_screening_reports_submit_btn_text">சமர்ப்பிக்கவும்</string>
+  <string name="monthly_screening_reports_complete">நிறைவு செய்யவும்!</string>
+  <string name="monthly_screening_reports_submitted_with_date">%1$s அறிக்கை சமர்ப்பிக்கப்பட்டது</string><!--October 2022 report submitted-->
+  <string name="monthly_screening_reports_done">முடிந்தது</string>
+  <string name="monthly_screening_reports_unsaved_changes_title">சேமிக்கப்படாத மாற்றங்கள்</string>
+  <string name="monthly_screening_reports_unsaved_changes_text">சேமிக்கப்படாத மாற்றங்கள் இழக்கப்படும்.\nநீங்கள் நிச்சயமாக வெளியேற விரும்புகிறீர்களா?</string>
+  <string name="monthly_screening_reports_stay_title">இந்தப் பக்கத்தில் தொடர்ந்து இருக்கவும்</string>
+  <string name="monthly_screening_reports_leave_page_title">இந்தப் பக்கத்தை விட்டு வெளியேறவும்</string>
 </resources>

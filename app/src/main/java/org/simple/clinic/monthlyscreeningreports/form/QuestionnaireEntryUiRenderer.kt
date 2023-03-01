@@ -6,8 +6,8 @@ class QuestionnaireEntryUiRenderer(private val ui: QuestionnaireEntryUi) : ViewR
   override fun render(model: QuestionnaireEntryModel) {
     val questionnaireForm = model.questionnaire
 
-    if (questionnaireForm?.layout != null) {
-      ui.displayQuestionnaireFormLayout(questionnaireForm.layout)
+    if (questionnaireForm?.layout != null && model.questionnaireResponse != null) {
+      ui.displayQuestionnaireFormLayout(questionnaireForm.layout, model.questionnaireResponse)
     } else {
       //no-op
     }

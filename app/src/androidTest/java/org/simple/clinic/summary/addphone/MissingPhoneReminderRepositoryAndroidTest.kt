@@ -49,12 +49,12 @@ class MissingPhoneReminderRepositoryAndroidTest {
   @Test
   fun when_a_missing_phone_reminder_is_present_for_a_patient_then_checking_whether_a_reminder_has_been_shown_should_return_true() {
     // given
-    val `patient who has been shown reminder` = UUID.fromString("b9eac296-9b12-4601-8462-e07b5338acd3")
+    val patientWhoHasBeenShownReminder = UUID.fromString("b9eac296-9b12-4601-8462-e07b5338acd3")
 
-    repository.markReminderAsShownFor(`patient who has been shown reminder`).blockingAwait()
+    repository.markReminderAsShownFor(patientWhoHasBeenShownReminder).blockingAwait()
 
     // when
-    val hasASavedReminder = repository.hasShownReminderForPatient(`patient who has been shown reminder`)
+    val hasASavedReminder = repository.hasShownReminderForPatient(patientWhoHasBeenShownReminder)
 
     // then
     assertThat(hasASavedReminder).isTrue()
@@ -64,13 +64,13 @@ class MissingPhoneReminderRepositoryAndroidTest {
   @Test
   fun when_a_missing_phone_reminder_is_not_present_for_a_patient_then_checking_whether_a_reminder_has_been_shown_should_return_false() {
     //given
-    val `patient who has been shown reminder` = UUID.fromString("b9eac296-9b12-4601-8462-e07b5338acd3")
-    val `patient who has not been shown reminder` = UUID.fromString("d0414d6d-9813-4d85-ad61-634f7cddab76")
+    val patientWhoHasBeenShownReminder = UUID.fromString("b9eac296-9b12-4601-8462-e07b5338acd3")
+    val patientWhoHasNotBeenShownReminder = UUID.fromString("d0414d6d-9813-4d85-ad61-634f7cddab76")
 
-    repository.markReminderAsShownFor(`patient who has been shown reminder`).blockingAwait()
+    repository.markReminderAsShownFor(patientWhoHasBeenShownReminder).blockingAwait()
 
     // when
-    val hasASavedReminder = repository.hasShownReminderForPatient(`patient who has not been shown reminder`)
+    val hasASavedReminder = repository.hasShownReminderForPatient(patientWhoHasNotBeenShownReminder)
 
     // then
     assertThat(hasASavedReminder).isFalse()

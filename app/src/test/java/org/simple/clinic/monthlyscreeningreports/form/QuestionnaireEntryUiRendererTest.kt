@@ -15,20 +15,26 @@ class QuestionnaireEntryUiRendererTest {
   private val defaultModel = QuestionnaireEntryModel.default()
 
   @Test
-  fun `when questionnaire form loaded, then render questionnaire form layout`() {
+  fun `when questionnaire form and response is loaded, then render questionnaire form layout`() {
     // given
     val questionnaire = TestData.questionnaire(
         uuid = UUID.fromString("43d8c0b3-3341-4147-9a08-aac27e7f721f")
     )
 
+    val questionnaireResponse = TestData.questionnaireResponse(
+        uuid = UUID.fromString("4145d792-7f97-43c1-908c-702b98d738c3"),
+        questionnaireId = questionnaire.uuid
+    )
+
     val model = defaultModel
         .formLoaded(questionnaire)
+        .responseLoaded(questionnaireResponse)
 
     // when
     uiRenderer.render(model)
 
     // then
-    verify(ui).displayQuestionnaireFormLayout(questionnaire.layout)
+    verify(ui).displayQuestionnaireFormLayout(questionnaire.layout, questionnaireResponse)
     verifyNoMoreInteractions(ui)
   }
 

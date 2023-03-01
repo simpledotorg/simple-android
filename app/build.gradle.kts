@@ -167,6 +167,11 @@ android {
 
   buildFeatures {
     viewBinding = true
+    compose = true
+  }
+
+  composeOptions {
+    kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
   }
 
   flavorDimensions.add("track")
@@ -427,6 +432,13 @@ dependencies {
   implementation(projects.simplePlatform)
   implementation(projects.simpleVisuals)
 
+  val composeBom = platform(libs.androidx.compose.bom)
+  implementation(composeBom)
+  androidTestImplementation(composeBom)
+  implementation(libs.androidx.compose.material3)
+  implementation(libs.androidx.compose.material.iconsExtended)
+  implementation(libs.androidx.compose.ui.tooling.preview)
+  debugImplementation(libs.androidx.compose.ui.tooling)
   /**
    * Unit test dependencies
    */

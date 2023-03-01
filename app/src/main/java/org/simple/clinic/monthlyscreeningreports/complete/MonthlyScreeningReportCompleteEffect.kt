@@ -1,0 +1,7 @@
+package org.simple.clinic.monthlyscreeningreports.complete
+
+sealed class MonthlyScreeningReportCompleteEffect
+
+sealed class MonthlyScreeningReportCompleteViewEffect : MonthlyScreeningReportCompleteEffect()
+
+object GoToMonthlyReportListScreen : MonthlyScreeningReportCompleteViewEffect()

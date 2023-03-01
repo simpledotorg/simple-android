@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="?android:attr/selectableItemBackground"
+  android:paddingHorizontal="@dimen/monthly_screening_report_item_container_horizontal_padding"
+  android:paddingTop="@dimen/monthly_screening_report_item_container_vertical_padding">
+
+  <ImageView
+    android:id="@+id/statusImageView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:ignore="ContentDescription"
+    tools:src="@drawable/ic_report_submitted" />
+
+  <TextView
+    android:id="@+id/monthTextView"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginBottom="@dimen/spacing_4"
+    android:textAppearance="?attr/textAppearanceSubtitle1"
+    android:textColor="?attr/colorPrimary"
+    app:layout_constraintBottom_toTopOf="@id/statusTextView"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toEndOf="@+id/statusImageView"
+    app:layout_constraintTop_toTopOf="@+id/statusImageView"
+    tools:text="Oct 2022 report" />
+
+  <TextView
+    android:id="@+id/statusTextView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textAppearance="?attr/textAppearanceBody2"
+    app:layout_constraintStart_toStartOf="@+id/monthTextView"
+    app:layout_constraintTop_toBottomOf="@id/monthTextView"
+    tools:text="Submit report" />
+
+  <ImageView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:layout_constraintBottom_toBottomOf="@id/statusTextView"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="@id/monthTextView"
+    app:srcCompat="@drawable/ic_chevron_right_24px"
+    app:tint="@color/color_on_surface_67" />
+
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:layout_marginTop="@dimen/monthly_screening_report_item_container_vertical_padding"
+    android:background="@drawable/divider"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/statusTextView" />
+</androidx.constraintlayout.widget.ConstraintLayout>

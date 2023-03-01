@@ -152,10 +152,26 @@ class QuestionnaireEntryScreen : BaseScreen<
     facilityTextView.text = facilityName
   }
 
-  override fun displayQuestionnaireFormLayout(layout: BaseComponentData, response: QuestionnaireResponse) {
-    setMonthTextView(response)
-    setSubmittedDateAndTimeView(response)
+  override fun setToolbarMonth(response: QuestionnaireResponse) {
+    monthTextView.text = context?.resources?.getString(
+        R.string.monthly_screening_reports_screening_report,
+        getScreeningMonth(response.content, monthAndYearDateFormatter)
+    )
+  }
 
+  override fun setSubmittedView(response: QuestionnaireResponse) {
+    val isSubmitted = getScreeningSubmitStatus(response.content)
+    submittedDateAndTimeContainer.visibleOrGone(isSubmitted)
+
+    if (isSubmitted) {
+      val updatedAt = response.timestamps.updatedAt
+      submittedDateAndTimeTextView.text = context?.resources?.getString(
+          R.string.monthly_screening_reports_submitted_with_date_and_time,
+          submittedDateTimeFormatter.format(updatedAt.toLocalDateTimeAtZone(userClock.zone)))
+    }
+  }
+
+  override fun displayQuestionnaireFormLayout(layout: BaseComponentData, response: QuestionnaireResponse) {
     questionnaireResponse = response
     content = requireNotNull(questionnaireResponse).content.toMutableMap()
     if (layout is ViewGroupComponentData) {
@@ -168,25 +184,6 @@ class QuestionnaireEntryScreen : BaseScreen<
           )
         }
       }
-    }
-  }
-
-  private fun setMonthTextView(response: QuestionnaireResponse) {
-    monthTextView.text = context?.resources?.getString(
-        R.string.monthly_screening_reports_screening_report,
-        getScreeningMonth(response.content, monthAndYearDateFormatter)
-    )
-  }
-
-  private fun setSubmittedDateAndTimeView(response: QuestionnaireResponse) {
-    val isSubmitted = getScreeningSubmitStatus(response.content)
-    submittedDateAndTimeContainer.visibleOrGone(isSubmitted)
-
-    if (isSubmitted) {
-      val updatedAt = response.timestamps.updatedAt
-      submittedDateAndTimeTextView.text = context?.resources?.getString(
-          R.string.monthly_screening_reports_submitted_with_date_and_time,
-          submittedDateTimeFormatter.format(updatedAt.toLocalDateTimeAtZone(userClock.zone)))
     }
   }
 

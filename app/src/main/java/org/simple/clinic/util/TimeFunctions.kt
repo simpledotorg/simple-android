@@ -3,6 +3,7 @@ package org.simple.clinic.util
 import org.simple.clinic.overdue.TimeToAppointment
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZoneOffset.UTC
@@ -12,6 +13,12 @@ fun Instant.toLocalDateAtZone(zone: ZoneId): LocalDate {
   return this.atZone(UTC)
       .withZoneSameInstant(zone)
       .toLocalDate()
+}
+
+fun Instant.toLocalDateTimeAtZone(zone: ZoneId): LocalDateTime {
+  return this.atZone(UTC)
+      .withZoneSameInstant(zone)
+      .toLocalDateTime()
 }
 
 fun LocalDate.toUtcInstant(userClock: UserClock): Instant {

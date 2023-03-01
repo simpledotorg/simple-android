@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
+
+  <LinearLayout
+    android:id="@+id/patientTabLinksContainer"
+    android:visibility="gone"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_18"
+    android:orientation="vertical"
+    android:padding="@dimen/spacing_8">
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
+      android:layout_marginTop="2dp"
+      android:layout_marginBottom="2dp"
+      android:paddingVertical="@dimen/spacing_8"
+      android:text="@string/patients_links_title"
+      android:textAllCaps="true"
+      android:textAppearance="?attr/textAppearanceTag"
+      android:textColor="@color/color_on_surface_67" />
+
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:background="@drawable/divider" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/monthlyScreeningReportContainer"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="?android:attr/selectableItemBackground"
+      android:orientation="horizontal"
+      android:paddingTop="@dimen/spacing_18"
+      android:visibility="gone"
+      tools:ignore="UseCompoundDrawables">
+
+      <ImageView
+        android:id="@+id/monthlyScreeningReportIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_report" />
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginEnd="@dimen/spacing_16"
+        android:text="@string/monthly_screening_reports"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:textColor="?attr/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="@id/monthlyScreeningReportIcon"
+        app:layout_constraintStart_toEndOf="@id/monthlyScreeningReportIcon"
+        app:layout_constraintTop_toTopOf="@id/monthlyScreeningReportIcon" />
+
+      <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/spacing_18"
+        android:background="@drawable/divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/monthlyScreeningReportIcon" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:id="@+id/downloadPatientLineListContainer"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="?android:attr/selectableItemBackground"
+      android:orientation="horizontal"
+      android:paddingTop="@dimen/spacing_18"
+      android:visibility="gone"
+      tools:ignore="UseCompoundDrawables">
+
+      <ImageView
+        android:id="@+id/downloadPatientLineListIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_download_24dp"
+        app:tint="?attr/colorPrimary" />
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginEnd="@dimen/spacing_16"
+        android:text="@string/patient_line_list_download_link"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:textColor="?attr/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="@id/downloadPatientLineListIcon"
+        app:layout_constraintStart_toEndOf="@id/downloadPatientLineListIcon"
+        app:layout_constraintTop_toTopOf="@id/downloadPatientLineListIcon" />
+
+      <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/spacing_18"
+        android:background="@drawable/divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/downloadPatientLineListIcon" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+  </LinearLayout>
+</merge>

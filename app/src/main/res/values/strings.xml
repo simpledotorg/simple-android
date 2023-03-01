@@ -157,6 +157,7 @@
   <string name="patients_recentpatients_no_recent_patients">No recent patients</string>
   <string name="patients_recentpatients_see_all">See All</string>
   <string name="patients_recentpatients_nameage">%1$s, %2$s</string>
+  <string name="patients_links_title">Links</string>
 
   <!-- Blood pressure entry -->
   <string name="bloodpressureentry_sheet_title_enter_blood_pressure">Blood pressure</string>

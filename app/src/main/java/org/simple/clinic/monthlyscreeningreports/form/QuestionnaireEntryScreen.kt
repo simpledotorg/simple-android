@@ -229,7 +229,7 @@ class QuestionnaireEntryScreen : BaseScreen<
   }
 
   override fun goToMonthlyReportsCompleteScreen() {
-    router.push(MonthlyScreeningReportCompleteScreen.Key("October 2022"))
+    router.push(MonthlyScreeningReportCompleteScreen.Key(screenKey.id))
   }
 
   interface Injector {

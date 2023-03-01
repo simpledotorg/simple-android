@@ -15,10 +15,13 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenQuestionnaireEntryFormBinding
 import org.simple.clinic.di.DateFormatter
+import org.simple.clinic.di.DateFormatter.Type.MonthAndYear
+import org.simple.clinic.di.DateFormatter.Type.SubmittedDateTime
 import org.simple.clinic.di.injector
 import org.simple.clinic.monthlyscreeningreports.complete.MonthlyScreeningReportCompleteScreen
 import org.simple.clinic.monthlyscreeningreports.form.compose.QuestionnaireFormContainer
 import org.simple.clinic.monthlyscreeningreports.util.getScreeningMonth
+import org.simple.clinic.monthlyscreeningreports.util.getScreeningSubmitStatus
 import org.simple.clinic.questionnaire.QuestionnaireType
 import org.simple.clinic.questionnaire.component.BaseComponentData
 import org.simple.clinic.questionnaire.component.ViewGroupComponentData
@@ -27,8 +30,11 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
+import org.simple.clinic.util.toLocalDateTimeAtZone
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.visibleOrGone
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
@@ -47,8 +53,15 @@ class QuestionnaireEntryScreen : BaseScreen<
   lateinit var router: Router
 
   @Inject
-  @DateFormatter(DateFormatter.Type.MonthAndYear)
+  lateinit var userClock: UserClock
+
+  @Inject
+  @DateFormatter(MonthAndYear)
   lateinit var monthAndYearDateFormatter: DateTimeFormatter
+
+  @Inject
+  @DateFormatter(SubmittedDateTime)
+  lateinit var submittedDateTimeFormatter: DateTimeFormatter
 
   @Inject
   lateinit var schedulersProvider: SchedulersProvider
@@ -68,6 +81,12 @@ class QuestionnaireEntryScreen : BaseScreen<
 
   private val facilityTextView
     get() = binding.facilityTextView
+
+  private val submittedDateAndTimeContainer
+    get() = binding.submittedDateAndTimeContainer
+
+  private val submittedDateAndTimeTextView
+    get() = binding.submittedDateAndTimeTextView
 
   private val submitButton
     get() = binding.submitButton
@@ -135,6 +154,7 @@ class QuestionnaireEntryScreen : BaseScreen<
 
   override fun displayQuestionnaireFormLayout(layout: BaseComponentData, response: QuestionnaireResponse) {
     setMonthTextView(response)
+    setSubmittedDateAndTimeView(response)
 
     questionnaireResponse = response
     content = requireNotNull(questionnaireResponse).content.toMutableMap()
@@ -156,6 +176,18 @@ class QuestionnaireEntryScreen : BaseScreen<
         R.string.monthly_screening_reports_screening_report,
         getScreeningMonth(response.content, monthAndYearDateFormatter)
     )
+  }
+
+  private fun setSubmittedDateAndTimeView(response: QuestionnaireResponse) {
+    val isSubmitted = getScreeningSubmitStatus(response.content)
+    submittedDateAndTimeContainer.visibleOrGone(isSubmitted)
+
+    if (isSubmitted) {
+      val updatedAt = response.timestamps.updatedAt
+      submittedDateAndTimeTextView.text = context?.resources?.getString(
+          R.string.monthly_screening_reports_submitted_with_date_and_time,
+          submittedDateTimeFormatter.format(updatedAt.toLocalDateTimeAtZone(userClock.zone)))
+    }
   }
 
   private fun backClicks(): Observable<UiEvent> {

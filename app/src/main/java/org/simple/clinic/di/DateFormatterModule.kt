@@ -11,6 +11,7 @@ import org.simple.clinic.di.DateFormatter.Type.MonthAndYear
 import org.simple.clinic.di.DateFormatter.Type.MonthName
 import org.simple.clinic.di.DateFormatter.Type.OverdueCsvTitleDateTime
 import org.simple.clinic.di.DateFormatter.Type.OverduePatientRegistrationDate
+import org.simple.clinic.di.DateFormatter.Type.SubmittedDateTime
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import java.time.chrono.Chronology
@@ -158,6 +159,16 @@ class DateFormatterModule {
       chronology: Chronology
   ): DateTimeFormatter {
     return DateTimeFormatter.ofPattern("dd-MMM-yyyy", locale)
+        .withChronology(chronology)
+  }
+
+  @Provides
+  @DateFormatter(SubmittedDateTime)
+  fun providesFormatterForSubmittedDate(
+      locale: Locale,
+      chronology: Chronology
+  ): DateTimeFormatter {
+    return DateTimeFormatter.ofPattern("MMM dd, hh:mm a", locale)
         .withChronology(chronology)
   }
 }

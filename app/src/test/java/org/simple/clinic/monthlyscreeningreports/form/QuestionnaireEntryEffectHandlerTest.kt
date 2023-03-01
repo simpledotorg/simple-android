@@ -12,6 +12,7 @@ import org.junit.Test
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.clinic.questionnaire.QuestionnaireRepository
+import org.simple.clinic.questionnaireresponse.QuestionnaireResponseRepository
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.sharedTestCode.TestData
 import java.util.UUID
@@ -20,6 +21,7 @@ class QuestionnaireEntryEffectHandlerTest {
 
   private val ui = mock<QuestionnaireEntryUi>()
   private val questionnaireRepository = mock<QuestionnaireRepository>()
+  private val questionnaireResponseRepository = mock<QuestionnaireResponseRepository>()
   private val viewEffectHandler = QuestionnaireEntryViewEffectHandler(ui)
   private val questionnaireType = MonthlyScreeningReports
 
@@ -30,6 +32,7 @@ class QuestionnaireEntryEffectHandlerTest {
 
   private val effectHandler = QuestionnaireEntryEffectHandler(
       questionnaireRepository = questionnaireRepository,
+      questionnaireResponseRepository = questionnaireResponseRepository,
       schedulersProvider = TestSchedulersProvider.trampoline(),
       viewEffectsConsumer = viewEffectHandler::handle,
       currentFacility = Observable.just(facility),
@@ -57,6 +60,36 @@ class QuestionnaireEntryEffectHandlerTest {
 
     //then
     testCase.assertOutgoingEvents(QuestionnaireFormFetched(questionnaire))
+    verifyZeroInteractions(ui)
+  }
+
+  @Test
+  fun `when load questionnaire response effect is received then questionnaire response should be fetched`() {
+    //given
+    val questionnaireResponse = TestData.questionnaireResponse(
+        uuid = UUID.fromString("825423b6-4639-44e9-b11d-c5da5ede8071")
+    )
+
+    whenever(questionnaireResponseRepository.questionnaireResponse(questionnaireResponse.uuid)) doReturn questionnaireResponse
+
+    //when
+    testCase.dispatch(LoadQuestionnaireResponseEffect(questionnaireResponse.uuid))
+
+    //then
+    testCase.assertOutgoingEvents(QuestionnaireResponseFetched(questionnaireResponse))
+    verifyZeroInteractions(ui)
+  }
+
+  @Test
+  fun `when save questionnaire response effect is received then questionnaire response should be saved`() {
+    //given
+    val questionnaire = TestData.questionnaireResponse()
+
+    //when
+    testCase.dispatch(SaveQuestionnaireResponseEffect(questionnaire))
+
+    //then
+    testCase.assertOutgoingEvents(QuestionnaireResponseSaved)
     verifyZeroInteractions(ui)
   }
 

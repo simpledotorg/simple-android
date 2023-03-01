@@ -1,11 +1,9 @@
 package org.simple.clinic.monthlyscreeningreports.form
 
 import android.content.Context
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
@@ -13,20 +11,25 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenQuestionnaireEntryFormBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.monthlyscreeningreports.complete.MonthlyScreeningReportCompleteScreen
+import org.simple.clinic.monthlyscreeningreports.form.compose.QuestionnaireFormContainer
 import org.simple.clinic.questionnaire.QuestionnaireType
 import org.simple.clinic.questionnaire.component.BaseComponentData
 import org.simple.clinic.questionnaire.component.ViewGroupComponentData
-import org.simple.clinic.monthlyscreeningreports.form.epoxy.controller.QuestionnaireEntryFormController
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.questionnaire.component.InputViewGroupComponentData
+import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 import javax.inject.Inject
 
 class QuestionnaireEntryScreen : BaseScreen<
@@ -48,23 +51,35 @@ class QuestionnaireEntryScreen : BaseScreen<
   @Inject
   lateinit var effectHandlerFactory: QuestionnaireEntryEffectHandler.Factory
 
+  var questionnaireResponse: QuestionnaireResponse? = null
+
+  var content = mutableMapOf<String, Any>()
+
   private val backButton
     get() = binding.backButton
 
   private val facilityTextView
     get() = binding.facilityTextView
 
-  private val questionnaireFormRecyclerView
-    get() = binding.questionnaireFormRecyclerView
+  private val submitButton
+    get() = binding.submitButton
 
   private val hotEvents = PublishSubject.create<QuestionnaireEntryEvent>()
   private val hardwareBackClicks = PublishSubject.create<Unit>()
 
-  private val questionnaireFormController: QuestionnaireEntryFormController by lazy { QuestionnaireEntryFormController() }
+  //  private val questionnaireFormController: QuestionnaireEntryFormController by lazy {
+  //    QuestionnaireEntryFormController {
+  //      questionnaireResponse?.content = questionnaireResponse?.content?.plus(it)!!
+  //      val viewGroup = preFillLayout(questionnaireLayout!!, questionnaireResponse!!)
+  //      if (viewGroup != null) {
+  //        questionnaireFormController.setData(viewGroup.children)
+  //      }
+  //    }
+  //  }
 
   override fun defaultModel() = QuestionnaireEntryModel.default()
 
-  override fun createInit() = QuestionnaireEntryInit(screenKey.questionnaireType)
+  override fun createInit() = QuestionnaireEntryInit(screenKey.questionnaireType, screenKey.id)
 
   override fun createUpdate() = QuestionnaireEntryUpdate()
 
@@ -77,6 +92,7 @@ class QuestionnaireEntryScreen : BaseScreen<
     return Observable
         .mergeArray(
             backClicks(),
+            submitClicks(),
             hotEvents
         )
         .compose(ReportAnalyticsEvents())
@@ -95,13 +111,9 @@ class QuestionnaireEntryScreen : BaseScreen<
     context.injector<Injector>().inject(this)
   }
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    initRecyclerView()
-  }
-
   @Parcelize
   data class Key(
+      val id: UUID,
       val questionnaireType: QuestionnaireType,
       override val analyticsName: String = "$questionnaireType questionnaire entry form"
   ) : ScreenKey() {
@@ -113,17 +125,19 @@ class QuestionnaireEntryScreen : BaseScreen<
     facilityTextView.text = facilityName
   }
 
-  override fun displayQuestionnaireFormLayout(layout: BaseComponentData) {
+  override fun displayQuestionnaireFormLayout(layout: BaseComponentData, response: QuestionnaireResponse) {
+    questionnaireResponse = response
+    content = requireNotNull(questionnaireResponse).content.toMutableMap()
     if (layout is ViewGroupComponentData) {
-      questionnaireFormController.setData(layout.children)
-    }
-  }
-
-  private fun initRecyclerView() {
-    questionnaireFormRecyclerView.apply {
-      layoutManager = LinearLayoutManager(context)
-      setHasFixedSize(true)
-      setController(questionnaireFormController)
+      binding.composeView.apply {
+        setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        setContent {
+          QuestionnaireFormContainer(
+              viewGroupComponentData = layout,
+              content = content
+          )
+        }
+      }
     }
   }
 
@@ -132,6 +146,15 @@ class QuestionnaireEntryScreen : BaseScreen<
         .mergeWith(hardwareBackClicks)
         .map {
           QuestionnaireEntryBackClicked
+        }
+  }
+
+  private fun submitClicks(): Observable<UiEvent> {
+    return submitButton.clicks()
+        .map {
+          content["submitted"] = true
+          //          questionnaireResponse?.content?.put("submitted", true)
+          SubmitButtonClicked(requireNotNull(questionnaireResponse))
         }
   }
 
@@ -154,6 +177,10 @@ class QuestionnaireEntryScreen : BaseScreen<
           hotEvents.onNext(UnsavedChangesWarningLeavePageClicked)
         }
         .show()
+  }
+
+  override fun goToMonthlyReportsCompleteScreen() {
+    router.push(MonthlyScreeningReportCompleteScreen.Key("October 2022"))
   }
 
   interface Injector {

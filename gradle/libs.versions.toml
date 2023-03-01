@@ -10,7 +10,7 @@ dagger = "2.44.2"
 
 flipper = "0.176.0"
 
-kotlin = "1.7.22"
+kotlin = "1.8.0"
 
 ktlint = "0.36.0"
 
@@ -29,6 +29,10 @@ room-metadataGenerator = "2.0.0"
 rx-binding = "3.1.0"
 
 coroutines = "1.6.4"
+
+compose-compiler = "1.4.0"
+
+androidx-compose-bom = "2023.01.00"
 
 [libraries]
 android-gradle-plugin = "com.android.tools.build:gradle:7.3.1"
@@ -192,6 +196,15 @@ zxing = "com.google.zxing:core:3.3.3"
 apache-commons-math = "org.apache.commons:commons-math3:3.6.1"
 
 benchmark-gradle-plugin = "androidx.benchmark:benchmark-gradle-plugin:1.1.1"
+
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "androidx-compose-bom" }
+androidx-compose-ui = { module = "androidx.compose.ui:ui" }
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+androidx-compose-material = { module = "androidx.compose.material:material" }
+androidx-compose-material-iconsExtended = { module = "androidx.compose.material:material-icons-extended" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+androidx-compose-materialWindow = { module = "androidx.compose.material3:material3-window-size-class" }
 
 [bundles]
 androidx-camera = ["androidx-camera-core", "androidx-camera-camera2", "androidx-camera-view", "androidx-camera-lifecycle"]

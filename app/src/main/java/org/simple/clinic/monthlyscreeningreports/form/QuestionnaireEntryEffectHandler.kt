@@ -2,6 +2,7 @@ package org.simple.clinic.monthlyscreeningreports.form
 
 import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
+import dagger.Lazy
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -11,10 +12,12 @@ import io.reactivex.Scheduler
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.questionnaire.QuestionnaireRepository
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponseRepository
+import org.simple.clinic.user.User
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class QuestionnaireEntryEffectHandler @AssistedInject constructor(
     private val currentFacility: Observable<Facility>,
+    private val currentUser: Lazy<User>,
     private val questionnaireRepository: QuestionnaireRepository,
     private val questionnaireResponseRepository: QuestionnaireResponseRepository,
     private val schedulersProvider: SchedulersProvider,
@@ -73,7 +76,10 @@ class QuestionnaireEntryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { saveQuestionnaireResponse ->
       saveQuestionnaireResponse
           .observeOn(scheduler)
-          .map { questionnaireResponseRepository.updateQuestionnaireResponse(it.questionnaireResponse) }
+          .map {
+            val user = currentUser.get()
+            questionnaireResponseRepository.updateQuestionnaireResponse(user, it.questionnaireResponse)
+          }
           .map { QuestionnaireResponseSaved }
     }
   }

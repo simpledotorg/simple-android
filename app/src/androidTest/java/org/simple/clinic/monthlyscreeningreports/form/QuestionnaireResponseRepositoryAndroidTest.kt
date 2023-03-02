@@ -10,7 +10,9 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponseRepository
+import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.rules.SaveDatabaseRule
+import org.simple.clinic.user.User
 import org.simple.sharedTestCode.TestData
 import org.simple.sharedTestCode.util.Rules
 import org.simple.sharedTestCode.util.TestUtcClock
@@ -25,14 +27,18 @@ class QuestionnaireResponseRepositoryAndroidTest {
   lateinit var database: AppDatabase
 
   @Inject
-  lateinit var questionnaireResponseRepository: QuestionnaireResponseRepository
+  lateinit var repository: QuestionnaireResponseRepository
 
   @Inject
   lateinit var clock: TestUtcClock
 
+  @Inject
+  lateinit var user: User
+
   @get:Rule
   val rules: RuleChain = Rules
       .global()
+      .around(LocalAuthenticationRule())
       .around(SaveDatabaseRule())
 
   @Before
@@ -56,11 +62,11 @@ class QuestionnaireResponseRepositoryAndroidTest {
     )
 
     // when
-    questionnaireResponseRepository.save(questionnaireResponses)
+    repository.save(questionnaireResponses)
 
     // then
     val savedMonthlyReportsQuestionnaires =
-        questionnaireResponseRepository.questionnaireResponsesByType(MonthlyScreeningReports)
+        repository.questionnaireResponsesByType(MonthlyScreeningReports).blockingFirst()
 
     Truth.assertThat(savedMonthlyReportsQuestionnaires).isEqualTo(questionnaireResponses)
   }
@@ -75,17 +81,19 @@ class QuestionnaireResponseRepositoryAndroidTest {
         updatedAt = Instant.now(clock),
         syncStatus = SyncStatus.DONE
     )
-    questionnaireResponseRepository.save(questionnaireResponse)
+    repository.save(questionnaireResponse)
 
     // when
     clock.advanceBy(durationToAdvanceBy)
-    questionnaireResponseRepository.updateQuestionnaireResponse(questionnaireResponse.copy(content = mapOf(
-        "monthly_screening_reports.outpatient_department_visits" to 6000.0,
-        "monthly_screening_reports.blood_pressure_checks_male" to 2700.0,
-        "monthly_screening_reports.blood_pressure_checks_female" to 2300.0,
-        "monthly_screening_reports.gender" to "Female",
-        "monthly_screening_reports.is_smoking" to false
-    )))
+    repository.updateQuestionnaireResponse(
+        user,
+        questionnaireResponse.copy(content = mapOf(
+            "monthly_screening_reports.outpatient_department_visits" to 6000.0,
+            "monthly_screening_reports.blood_pressure_checks_male" to 2700.0,
+            "monthly_screening_reports.blood_pressure_checks_female" to 2300.0,
+            "monthly_screening_reports.gender" to "Female",
+            "monthly_screening_reports.is_smoking" to false
+        )))
 
     // then
     val expected = questionnaireResponse.copy(
@@ -99,9 +107,10 @@ class QuestionnaireResponseRepositoryAndroidTest {
         timestamps = questionnaireResponse.timestamps.copy(
             updatedAt = questionnaireResponse.timestamps.updatedAt.plus(durationToAdvanceBy)
         ),
-        syncStatus = SyncStatus.PENDING
+        syncStatus = SyncStatus.PENDING,
+        lastUpdatedByUserId = user.uuid
     )
 
-    Truth.assertThat(questionnaireResponseRepository.questionnaireResponse(questionnaireResponse.uuid)).isEqualTo(expected)
+    Truth.assertThat(repository.questionnaireResponse(questionnaireResponse.uuid)).isEqualTo(expected)
   }
 }

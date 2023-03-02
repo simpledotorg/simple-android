@@ -30,7 +30,10 @@ fun InputField(
   var text by remember { mutableStateOf(getValue(inputFieldComponentData, content)) }
   TextField(
       value = text,
-      onValueChange = { text = it },
+      onValueChange = {
+        text = it
+        setValue(it, inputFieldComponentData, content)
+      },
       label = { Text(text = inputFieldComponentData.text) },
       singleLine = true,
       shape = RoundedCornerShape(0.dp),
@@ -69,4 +72,20 @@ private fun getValue(
       else -> content[inputFieldComponentData.linkId].toString()
     }
   } else ""
+}
+
+private fun setValue(
+    value: String,
+    inputFieldComponentData: InputFieldComponentData,
+    content: MutableMap<String, Any>
+) {
+  when (inputFieldComponentData.type) {
+    is Integer -> {
+      try {
+        content[inputFieldComponentData.linkId] = value.toInt()
+      } catch (_: Exception) {
+      }
+    }
+    else -> content[inputFieldComponentData.linkId] = value
+  }
 }

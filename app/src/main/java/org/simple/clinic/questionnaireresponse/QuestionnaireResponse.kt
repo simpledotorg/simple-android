@@ -62,7 +62,7 @@ data class QuestionnaireResponse(
     fun getOne(uuid: UUID): QuestionnaireResponse?
 
     @Query("SELECT * FROM QuestionnaireResponse WHERE questionnaireType = :type")
-    fun getByQuestionnaireType(type: QuestionnaireType): List<QuestionnaireResponse>
+    fun getByQuestionnaireType(type: QuestionnaireType): Flowable<List<QuestionnaireResponse>>
 
     @Update
     fun updateQuestionnaireResponse(questionnaireResponse: QuestionnaireResponse)

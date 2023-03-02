@@ -30,12 +30,19 @@ class QuestionnaireEntryEffectHandlerTest {
       name = "PHC Simple"
   )
 
+  private val user = TestData.loggedInUser(
+      uuid = UUID.fromString("5f8c9705-6732-4d1c-aea3-3b5ab10d4a0e"),
+      registrationFacilityUuid = facility.uuid,
+      currentFacilityUuid = facility.uuid
+  )
+
   private val effectHandler = QuestionnaireEntryEffectHandler(
       questionnaireRepository = questionnaireRepository,
       questionnaireResponseRepository = questionnaireResponseRepository,
       schedulersProvider = TestSchedulersProvider.trampoline(),
       viewEffectsConsumer = viewEffectHandler::handle,
       currentFacility = Observable.just(facility),
+      currentUser = { user }
   )
 
   private val testCase = EffectHandlerTestCase(effectHandler.build())

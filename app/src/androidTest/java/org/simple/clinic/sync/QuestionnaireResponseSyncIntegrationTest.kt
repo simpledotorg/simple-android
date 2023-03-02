@@ -19,6 +19,7 @@ import org.simple.clinic.questionnaireresponse.sync.QuestionnaireResponseSync
 import org.simple.clinic.questionnaireresponse.sync.QuestionnaireResponseSyncApi
 import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.rules.ServerAuthenticationRule
+import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.unsafeLazy
 import org.simple.sharedTestCode.TestData
@@ -62,6 +63,8 @@ class QuestionnaireResponseSyncIntegrationTest {
 
   private val currentFacilityUuid: UUID by unsafeLazy { userSession.loggedInUserImmediate()!!.currentFacilityUuid }
 
+  private val loggedInUser: User by unsafeLazy { userSession.loggedInUserImmediate()!! }
+
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
@@ -97,7 +100,7 @@ class QuestionnaireResponseSyncIntegrationTest {
   fun syncing_records_should_work_as_expected() {
     // given
     sync.pull()
-    val questionnaireResponseList = repository.questionnaireResponsesByType(MonthlyScreeningReports)
+    val questionnaireResponseList = repository.questionnaireResponsesByType(MonthlyScreeningReports).blockingFirst()
 
     val updatedQuestionnaireResponseList = questionnaireResponseList.map {
       TestData.questionnaireResponse(
@@ -111,7 +114,7 @@ class QuestionnaireResponseSyncIntegrationTest {
     Truth.assertThat(updatedQuestionnaireResponseList).containsNoDuplicates()
 
     updatedQuestionnaireResponseList.forEach {
-      repository.updateQuestionnaireResponse(it)
+      repository.updateQuestionnaireResponse(loggedInUser, it)
     }
 
     Truth.assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(updatedQuestionnaireResponseList.count())

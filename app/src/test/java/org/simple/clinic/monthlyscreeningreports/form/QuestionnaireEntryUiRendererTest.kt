@@ -35,6 +35,8 @@ class QuestionnaireEntryUiRendererTest {
 
     // then
     verify(ui).displayQuestionnaireFormLayout(questionnaire.layout, questionnaireResponse)
+    verify(ui).setSubmittedView(questionnaireResponse)
+    verify(ui).setToolbarMonth(questionnaireResponse)
     verifyNoMoreInteractions(ui)
   }
 

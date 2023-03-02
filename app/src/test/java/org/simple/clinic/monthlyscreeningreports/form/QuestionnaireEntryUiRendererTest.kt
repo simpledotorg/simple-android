@@ -35,6 +35,27 @@ class QuestionnaireEntryUiRendererTest {
 
     // then
     verify(ui).displayQuestionnaireFormLayout(questionnaire.layout, questionnaireResponse)
+    verify(ui).setSubmittedView(questionnaireResponse)
+    verify(ui).setToolbarMonth(questionnaireResponse)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when questionnaire response is loaded, then render toolbar and month view`() {
+    // given
+    val questionnaireResponse = TestData.questionnaireResponse(
+        uuid = UUID.fromString("4145d792-7f97-43c1-908c-702b98d738c3")
+    )
+
+    val model = defaultModel
+        .responseLoaded(questionnaireResponse)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).setToolbarMonth(questionnaireResponse)
+    verify(ui).setSubmittedView(questionnaireResponse)
     verifyNoMoreInteractions(ui)
   }
 

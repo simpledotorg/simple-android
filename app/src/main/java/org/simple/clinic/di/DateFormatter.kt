@@ -13,6 +13,8 @@ annotation class DateFormatter(val value: Type) {
     MonthAndYear,
     OverdueCsvTitleDateTime,
     OverduePatientRegistrationDate,
-    MonthName
+    MonthName,
+    SubmittedDate,
+    SubmittedDateTime,
   }
 }

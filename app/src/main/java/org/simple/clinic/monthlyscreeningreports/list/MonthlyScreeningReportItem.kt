@@ -5,9 +5,13 @@ import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 import org.simple.clinic.databinding.MonthlyScreeningReportItemViewBinding
+import org.simple.clinic.monthlyscreeningreports.util.formatScreeningMonthStringToLocalDate
+import org.simple.clinic.monthlyscreeningreports.util.getScreeningMonth
+import org.simple.clinic.monthlyscreeningreports.util.getScreeningSubmitStatus
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 data class MonthlyScreeningReportItem(
@@ -18,23 +22,18 @@ data class MonthlyScreeningReportItem(
 
   companion object {
     fun from(
-        questionnaireResponses: List<QuestionnaireResponse>
+        questionnaireResponses: List<QuestionnaireResponse>,
+        dateTimeFormatter: DateTimeFormatter
     ): List<MonthlyScreeningReportItem> {
-      return questionnaireResponses.map {
-        MonthlyScreeningReportItem(
-            uuid = it.uuid,
-            submitted = try {
-              it.content["submitted"] as Boolean
-            } catch (ex: Exception) {
-              false
-            },
-            month = try {
-              it.content["month_string"] as String
-            } catch (ex: Exception) {
-              ""
-            }
-        )
-      }
+      return questionnaireResponses
+          .sortedByDescending { formatScreeningMonthStringToLocalDate(it.content) }
+          .map {
+            MonthlyScreeningReportItem(
+                uuid = it.uuid,
+                submitted = getScreeningSubmitStatus(it.content),
+                month = getScreeningMonth(it.content, dateTimeFormatter)
+            )
+          }
     }
   }
 

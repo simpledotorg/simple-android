@@ -16,6 +16,8 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.MonthlyScreeningReportItemViewBinding
 import org.simple.clinic.databinding.ScreenMonthlyScreeningReportListBinding
+import org.simple.clinic.di.DateFormatter
+import org.simple.clinic.di.DateFormatter.Type.MonthAndYear
 import org.simple.clinic.di.injector
 import org.simple.clinic.monthlyscreeningreports.form.QuestionnaireEntryScreen
 import org.simple.clinic.navigation.v2.Router
@@ -26,6 +28,7 @@ import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
 
@@ -42,6 +45,10 @@ class MonthlyScreeningReportListScreen : BaseScreen<
 
   @Inject
   lateinit var schedulersProvider: SchedulersProvider
+
+  @Inject
+  @DateFormatter(MonthAndYear)
+  lateinit var monthAndYearDateFormatter: DateTimeFormatter
 
   @Inject
   lateinit var effectHandlerFactory: MonthlyScreeningReportListEffectHandler.Factory
@@ -133,7 +140,7 @@ class MonthlyScreeningReportListScreen : BaseScreen<
   }
 
   override fun displayMonthlyReportList(responseList: List<QuestionnaireResponse>) {
-    val reportList = MonthlyScreeningReportItem.from(responseList)
+    val reportList = MonthlyScreeningReportItem.from(responseList, monthAndYearDateFormatter)
     monthlyReportItemAdapter.submitList(reportList)
   }
 

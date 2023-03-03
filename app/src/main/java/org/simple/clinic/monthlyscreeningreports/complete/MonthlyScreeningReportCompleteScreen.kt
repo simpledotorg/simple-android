@@ -1,9 +1,7 @@
 package org.simple.clinic.monthlyscreeningreports.complete
 
 import android.content.Context
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
@@ -14,14 +12,20 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenMonthlyScreeningReportCompleteBinding
+import org.simple.clinic.di.DateFormatter
+import org.simple.clinic.di.DateFormatter.Type.SubmittedDate
 import org.simple.clinic.di.injector
 import org.simple.clinic.monthlyscreeningreports.list.MonthlyScreeningReportListScreen
+import org.simple.clinic.monthlyscreeningreports.util.formatScreeningMonthStringToLocalDate
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.widgets.UiEvent
+import java.time.format.DateTimeFormatter
+import java.util.UUID
 import javax.inject.Inject
 
 class MonthlyScreeningReportCompleteScreen : BaseScreen<
@@ -41,6 +45,10 @@ class MonthlyScreeningReportCompleteScreen : BaseScreen<
   lateinit var schedulersProvider: SchedulersProvider
 
   @Inject
+  @DateFormatter(SubmittedDate)
+  lateinit var submittedDateFormatter: DateTimeFormatter
+
+  @Inject
   lateinit var effectHandlerFactory: MonthlyScreeningReportCompleteEffectHandler.Factory
 
   private val monthSubmittedTextView
@@ -54,6 +62,8 @@ class MonthlyScreeningReportCompleteScreen : BaseScreen<
   override fun defaultModel() = MonthlyScreeningReportCompleteModel.default()
 
   override fun createUpdate() = MonthlyScreeningReportCompleteUpdate()
+
+  override fun createInit() = MonthlyScreeningReportCompleteInit(screenKey.id)
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<MonthlyScreeningReportCompleteViewEffect>) =
       effectHandlerFactory.create(viewEffectsConsumer = viewEffectsConsumer).build()
@@ -69,6 +79,8 @@ class MonthlyScreeningReportCompleteScreen : BaseScreen<
         .cast()
   }
 
+  override fun uiRenderer() = MonthlyScreeningReportCompleteUiRenderer(this)
+
   override fun bindView(
       layoutInflater: LayoutInflater,
       container: ViewGroup?
@@ -77,15 +89,6 @@ class MonthlyScreeningReportCompleteScreen : BaseScreen<
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)
-  }
-
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    monthSubmittedTextView.text =
-        context?.resources?.getString(
-            R.string.monthly_screening_reports_submitted_with_date,
-            "October 2022"
-        )
   }
 
   private fun doneClicks(): Observable<UiEvent> {
@@ -98,7 +101,7 @@ class MonthlyScreeningReportCompleteScreen : BaseScreen<
 
   @Parcelize
   data class Key(
-      val month: String,
+      val id: UUID,
       override val analyticsName: String = "Monthly Screening Reports Complete Screen"
   ) : ScreenKey() {
 
@@ -107,6 +110,14 @@ class MonthlyScreeningReportCompleteScreen : BaseScreen<
 
   interface Injector {
     fun inject(target: MonthlyScreeningReportCompleteScreen)
+  }
+
+  override fun showMonthCompletedView(response: QuestionnaireResponse) {
+    monthSubmittedTextView.text =
+        context?.resources?.getString(
+            R.string.monthly_screening_reports_submitted_with_date,
+            submittedDateFormatter.format(formatScreeningMonthStringToLocalDate(response.content))
+        )
   }
 
   override fun goToMonthlyReportListScreen() {

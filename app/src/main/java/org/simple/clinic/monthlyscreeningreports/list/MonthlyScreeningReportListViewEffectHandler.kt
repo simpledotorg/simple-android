@@ -9,6 +9,7 @@ class MonthlyScreeningReportListViewEffectHandler(
   override fun handle(viewEffect: MonthlyScreeningReportListViewEffect) {
     when (viewEffect) {
       is GoBack -> ui.goBack()
+      is OpenMonthlyScreeningForm -> ui.openMonthlyScreeningForm(viewEffect.uuid)
     }
   }
 }

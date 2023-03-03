@@ -18,12 +18,17 @@ abstract class InputGroupEpoxyModel : EpoxyModelWithHolder<InputGroupEpoxyModel.
   @EpoxyAttribute
   lateinit var inputViewGroupComponentData: InputViewGroupComponentData
 
+  @EpoxyAttribute
+  lateinit var action: (Map<String, Any>) -> Unit
+
   override fun bind(holder: Holder) {
     val items = inputViewGroupComponentData.children
     if (items != null) {
       setLayoutManager(holder.recyclerView, items.count())
 
-      val inputFieldAdapter = InputFieldAdapter()
+      val inputFieldAdapter = InputFieldAdapter {
+        action.invoke(it)
+      }
       holder.recyclerView.adapter = inputFieldAdapter
       inputFieldAdapter.submitList(items)
     }

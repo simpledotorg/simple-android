@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-
   <!-- Common -->
   <string name="gender_female">মহিলা</string>
   <string name="gender_male">পুরুষ</string>
@@ -872,6 +871,7 @@
   <string name="patient_line_list_download_card_title">IHCI রোগীর রেজিস্টার</string>
   <string name="patient_line_list_download_card_desc">%1$s-এ রেজিস্টার অথবা অ্যাসাইন করা সব রোগীর তালিকা</string>
   <string name="patient_line_list_download_card_button">ডাউনলোড করুন</string>
+  <string name="patient_line_list_download_link">IHCI রোগীর রেজিস্টার ডাউনলোড করুন</string>
 
   <!--Notification permission denied dialog-->
   <string name="notification_permission_denied_title">বিজ্ঞপ্তি চালু করুন</string>
@@ -879,4 +879,19 @@
   <string name="notification_permission_denied_positive_button">\'অ্যাপ সেটিংস\'-এ যান</string>
   <string name="notification_permission_denied_negetive_button">এখন না</string>
 
+  <!--Monthly screen reports-->
+  <string name="monthly_screening_reports">মাসিক স্ক্রিনিং রিপোর্ট</string>
+  <string name="monthly_screening_reports_report">%1$s রিপোর্ট</string><!--Oct 2023 report-->
+  <string name="monthly_screening_reports_submit_report">রিপোর্ট জমা দিন</string>
+  <string name="monthly_screening_reports_submitted">জমা দেওয়া হয়েছে</string>
+  <string name="monthly_screening_reports_screening_report">%1$s স্ক্রিনিং রিপোর্ট</string><!--Oct 2022 screening report-->
+  <string name="monthly_screening_reports_submitted_with_date_and_time">%1$s জমা দেওয়া হয়েছে</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="monthly_screening_reports_submit_btn_text">জমা দিন</string>
+  <string name="monthly_screening_reports_complete">সম্পূর্ণ হয়েছে!</string>
+  <string name="monthly_screening_reports_submitted_with_date">%1$s রিপোর্ট জমা দেওয়া হয়েছে</string><!--October 2022 report submitted-->
+  <string name="monthly_screening_reports_done">সম্পন্ন</string>
+  <string name="monthly_screening_reports_unsaved_changes_title">সেভ না করা পরিবর্তন</string>
+  <string name="monthly_screening_reports_unsaved_changes_text">সেভ না করা পরিবর্তন মুছে যাবে।\nআপনি কি সত্যি ছেড়ে আসতে চান?</string>
+  <string name="monthly_screening_reports_stay_title">এই পেজে থাকুন</string>
+  <string name="monthly_screening_reports_leave_page_title">এই পেজটি ছেড়ে আসুন</string>
 </resources>

@@ -215,6 +215,8 @@ abstract class AppDatabase : RoomDatabase() {
       teleconsultFacilityWithMedicalOfficersDao().clear()
       teleconsultRecordDao().clear()
       callResultDao().clear()
+      questionnaireDao().clear()
+      questionnaireResponseDao().clear()
     }
   }
 
@@ -242,6 +244,7 @@ abstract class AppDatabase : RoomDatabase() {
       purgeUnnecessaryMedicalHistories()
       purgeUnnecessaryPrescriptions()
       purgeUnnecessaryCallResults()
+      purgeUnnecessaryQuestionnaireResponses()
     }
   }
 
@@ -292,6 +295,10 @@ abstract class AppDatabase : RoomDatabase() {
 
   private fun purgeUnnecessaryCallResults() {
     callResultDao().purgeDeleted()
+  }
+
+  private fun purgeUnnecessaryQuestionnaireResponses() {
+    questionnaireResponseDao().purgeDeleted()
   }
 
   private fun vacuumDatabase() {

@@ -78,7 +78,7 @@ class QuestionnaireSyncIntegrationTest {
   }
 
   private fun clearQuestionnaireData() {
-    appDatabase.questionnaireDao().clearData()
+    appDatabase.questionnaireDao().clear()
   }
 
   @Test

@@ -1,8 +1,10 @@
 package org.simple.clinic.home.patients.links
 
+import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
@@ -63,6 +65,8 @@ class PatientsTabLinkEffectHandlerTest {
 
   @Test
   fun `when open monthly screening report list screen is received, then open the screen`() {
+    whenever(repository.questionnaireResponsesByType(MonthlyScreeningReports)) doReturn Observable.just(listOf(questionnaireResponse))
+
     // when
     effectHandlerTestCase.dispatch(OpenMonthlyScreeningReportsListScreen)
 

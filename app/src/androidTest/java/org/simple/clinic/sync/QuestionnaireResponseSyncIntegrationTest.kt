@@ -3,7 +3,6 @@ package org.simple.clinic.sync
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
@@ -28,7 +27,6 @@ import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
 
-@Ignore("the qa api is under development")
 class QuestionnaireResponseSyncIntegrationTest {
 
   @Inject
@@ -98,7 +96,6 @@ class QuestionnaireResponseSyncIntegrationTest {
 
   @Test
   fun syncing_records_should_work_as_expected() {
-    // given
     sync.pull()
     val questionnaireResponseList = repository.questionnaireResponsesByType(MonthlyScreeningReports).blockingFirst()
 
@@ -119,17 +116,16 @@ class QuestionnaireResponseSyncIntegrationTest {
 
     Truth.assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(updatedQuestionnaireResponseList.count())
 
-    // when
     sync.push()
-    clearQuestionnaireResponseData()
-    sync.pull()
 
-    // then
-    val expectedPulledRecords = updatedQuestionnaireResponseList.map { it.syncCompleted() }
-    val pulledRecords = repository.recordsWithSyncStatus(SyncStatus.DONE)
+    Truth.assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(0)
 
-    Truth.assertThat(pulledRecords).containsAtLeastElementsIn(expectedPulledRecords)
+    val modifiedRecord = updatedQuestionnaireResponseList[1].copy(
+        content = mapOf(
+            "monthly_screening_reports.new_field" to 10,
+        )
+    )
+    repository.updateQuestionnaireResponse(loggedInUser, modifiedRecord)
+    Truth.assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(1)
   }
-
-  private fun QuestionnaireResponse.syncCompleted(): QuestionnaireResponse = copy(syncStatus = SyncStatus.DONE)
 }

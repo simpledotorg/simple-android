@@ -20,7 +20,7 @@ import org.simple.sharedTestCode.util.Rules
 import java.util.Optional
 import javax.inject.Inject
 
-@Ignore("the qa api is under development")
+@Ignore("the review env doesn't contain any data")
 class QuestionnaireSyncIntegrationTest {
 
   @Inject

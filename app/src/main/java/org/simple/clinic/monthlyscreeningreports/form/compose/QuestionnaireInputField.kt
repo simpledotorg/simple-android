@@ -27,12 +27,12 @@ fun InputField(
     inputFieldComponentData: InputFieldComponentData,
     content: MutableMap<String, Any>
 ) {
-  var text by remember { mutableStateOf(getValue(inputFieldComponentData, content)) }
+  var text by remember { mutableStateOf(getContentValueAsString(inputFieldComponentData, content)) }
   TextField(
       value = text,
       onValueChange = {
         text = it
-        setValue(it, inputFieldComponentData, content)
+        setContentValue(it, inputFieldComponentData, content)
       },
       label = { Text(text = inputFieldComponentData.text) },
       singleLine = true,
@@ -56,7 +56,7 @@ fun InputField(
   )
 }
 
-private fun getValue(
+private fun getContentValueAsString(
     inputFieldComponentData: InputFieldComponentData,
     content: Map<String, Any>
 ): String {
@@ -74,7 +74,7 @@ private fun getValue(
   } else ""
 }
 
-private fun setValue(
+private fun setContentValue(
     value: String,
     inputFieldComponentData: InputFieldComponentData,
     content: MutableMap<String, Any>

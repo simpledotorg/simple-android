@@ -10,9 +10,7 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.LastQuestionnaireResponsePullToken
-import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
-import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponseRepository
 import org.simple.clinic.questionnaireresponse.sync.QuestionnaireResponseSync
 import org.simple.clinic.questionnaireresponse.sync.QuestionnaireResponseSyncApi

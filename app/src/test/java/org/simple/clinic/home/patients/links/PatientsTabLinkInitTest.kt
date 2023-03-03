@@ -18,7 +18,8 @@ class PatientsTabLinkInitTest {
         .then(InitSpec.assertThatFirst(
             FirstMatchers.hasModel(defaultModel),
             FirstMatchers.hasEffects(
-                LoadCurrentFacility
+                LoadCurrentFacility,
+                LoadMonthlyScreeningReportResponseList
             )
         ))
   }

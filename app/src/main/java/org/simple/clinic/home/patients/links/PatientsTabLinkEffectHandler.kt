@@ -8,10 +8,13 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.questionnaire.MonthlyScreeningReports
+import org.simple.clinic.questionnaireresponse.QuestionnaireResponseRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class PatientsTabLinkEffectHandler @AssistedInject constructor(
     private val currentFacility: Observable<Facility>,
+    private val questionnaireResponseRepository: QuestionnaireResponseRepository,
     private val schedulersProvider: SchedulersProvider,
     @Assisted private val uiActions: PatientsTabLinkUiActions
 ) {
@@ -24,6 +27,7 @@ class PatientsTabLinkEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<PatientsTabLinkEffect, PatientsTabLinkEvent>()
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility(schedulersProvider.io()))
+        .addTransformer(LoadMonthlyScreeningReportResponseList::class.java, loadMonthlyScreeningReportResponseList(schedulersProvider.io()))
         .addAction(OpenMonthlyScreeningReportsListScreen::class.java, { uiActions.openMonthlyScreeningReports() }, schedulersProvider.ui())
         .addAction(OpenPatientLineListDownloadDialog::class.java, { uiActions.openPatientLineListDownloadDialog() }, schedulersProvider.ui())
         .build()
@@ -36,6 +40,16 @@ class PatientsTabLinkEffectHandler @AssistedInject constructor(
           .observeOn(scheduler)
           .switchMap { currentFacility }
           .map(::CurrentFacilityLoaded)
+    }
+  }
+
+  private fun loadMonthlyScreeningReportResponseList(scheduler: Scheduler):
+      ObservableTransformer<LoadMonthlyScreeningReportResponseList, PatientsTabLinkEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(scheduler)
+          .switchMap { questionnaireResponseRepository.questionnaireResponsesByType(MonthlyScreeningReports) }
+          .map(::MonthlyScreeningReportResponseListLoaded)
     }
   }
 }

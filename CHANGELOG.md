@@ -3,6 +3,8 @@
 ## Next Release
 
 ### Internal
+- Add `enable_monthly_screening_reports` to Features
+- Add Monthly screening report feature based on feature flag
 
 ## 2023-02-20-8615
 

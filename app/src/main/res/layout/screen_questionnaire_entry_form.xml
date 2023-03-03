@@ -35,13 +35,13 @@
       android:paddingBottom="@dimen/spacing_16">
 
       <TextView
+        android:id="@+id/monthTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_8"
         android:maxLines="1"
         android:paddingStart="@dimen/spacing_8"
         android:paddingEnd="@dimen/spacing_16"
-        android:text="@string/monthly_screening_reports"
         android:textAppearance="?attr/textAppearanceHeadline6"
         android:textColor="?attr/colorOnToolbarPrimary" />
 
@@ -62,15 +62,39 @@
     </LinearLayout>
   </LinearLayout>
 
-  <com.airbnb.epoxy.EpoxyRecyclerView
-    android:id="@+id/questionnaire_form_recycler_view"
+  <LinearLayout
+    android:id="@+id/submittedDateAndTimeContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/simple_green_100"
+    android:gravity="center"
+    android:padding="@dimen/spacing_16"
+    android:visibility="gone"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/monthlyScreeningReportListHeader"
+    tools:ignore="UseCompoundDrawables">
+
+    <ImageView
+      android:layout_width="14dp"
+      android:layout_height="14dp"
+      app:srcCompat="@drawable/ic_check_circle" />
+
+    <TextView
+      android:id="@+id/submittedDateAndTimeTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_10"
+      android:gravity="center"
+      tools:text="@string/monthly_screening_reports_submitted_with_date_and_time" />
+  </LinearLayout>
+
+  <androidx.compose.ui.platform.ComposeView
+    android:id="@+id/compose_view"
     android:layout_width="match_parent"
     android:layout_height="0dp"
-    android:clipToPadding="false"
     android:paddingBottom="@dimen/spacing_24"
     app:layout_constraintBottom_toTopOf="@id/button_frame"
-    app:layout_constraintTop_toBottomOf="@id/monthlyScreeningReportListHeader"
-    app:layout_constraintVertical_bias="0" />
+    app:layout_constraintTop_toBottomOf="@id/submittedDateAndTimeContainer" />
 
   <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/button_frame"
@@ -81,7 +105,7 @@
     app:layout_constraintBottom_toBottomOf="parent">
 
     <com.google.android.material.button.MaterialButton
-      android:id="@+id/questionnaire_form_refill"
+      android:id="@+id/submitButton"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_margin="@dimen/spacing_8"

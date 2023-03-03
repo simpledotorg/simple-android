@@ -41,4 +41,17 @@ class MonthlyScreeningReportListUpdateTest {
             NextMatchers.hasNoEffects()
         ))
   }
+
+  @Test
+  fun `when monthly report is clicked, then open monthly report form`() {
+    val questionnaire = TestData.questionnaireResponse()
+
+    spec
+        .given(defaultModel)
+        .whenEvent(MonthlyScreeningReportItemClicked(questionnaire.uuid))
+        .then(UpdateSpec.assertThatNext(
+            NextMatchers.hasNoModel(),
+            NextMatchers.hasEffects(OpenMonthlyScreeningForm(questionnaire.uuid))
+        ))
+  }
 }

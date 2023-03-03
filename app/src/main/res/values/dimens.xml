@@ -43,4 +43,7 @@
   <dimen name="patientsummary_drug_summary_item_container_bottom_padding_8">8dp</dimen>
   <dimen name="patientsummary_drug_summary_item_container_bottom_padding_24">24dp</dimen>
   <dimen name="spacing_18">18dp</dimen>
+
+  <dimen name="monthly_screening_report_item_container_vertical_padding">19dp</dimen>
+  <dimen name="monthly_screening_report_item_container_horizontal_padding">22dp</dimen>
 </resources>

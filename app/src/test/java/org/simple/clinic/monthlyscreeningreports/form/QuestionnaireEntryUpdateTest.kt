@@ -46,6 +46,30 @@ class QuestionnaireEntryUpdateTest {
   }
 
   @Test
+  fun `when questionnaire response is fetched, then update the model`() {
+    val questionnaireResponse = TestData.questionnaireResponse()
+
+    spec
+        .given(defaultModel)
+        .whenEvent(QuestionnaireResponseFetched(questionnaireResponse))
+        .then(assertThatNext(
+            hasModel(defaultModel.responseLoaded(questionnaireResponse)),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when questionnaire response is saved, then go to complete screen`() {
+    spec
+        .given(defaultModel)
+        .whenEvent(QuestionnaireResponseSaved)
+        .then(assertThatNext(
+            NextMatchers.hasNoModel(),
+            NextMatchers.hasEffects(GoToMonthlyReportsCompleteScreen)
+        ))
+  }
+
+  @Test
   fun `when back is clicked, then show unsaved changes warning dialog`() {
     spec
         .given(defaultModel)
@@ -53,6 +77,18 @@ class QuestionnaireEntryUpdateTest {
         .then(assertThatNext(
             NextMatchers.hasNoModel(),
             NextMatchers.hasEffects(ShowUnsavedChangesWarningDialog)
+        ))
+  }
+
+  @Test
+  fun `when submit btn is clicked, then save questionnaire response`() {
+    val questionnaireResponse = TestData.questionnaireResponse()
+    spec
+        .given(defaultModel)
+        .whenEvent(SubmitButtonClicked(questionnaireResponse))
+        .then(assertThatNext(
+            NextMatchers.hasNoModel(),
+            NextMatchers.hasEffects(SaveQuestionnaireResponseEffect(questionnaireResponse))
         ))
   }
 }

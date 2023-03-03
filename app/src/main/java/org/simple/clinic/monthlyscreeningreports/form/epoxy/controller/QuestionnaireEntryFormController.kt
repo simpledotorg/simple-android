@@ -13,24 +13,32 @@ import org.simple.clinic.monthlyscreeningreports.form.epoxy.model.lineSeparator
 import org.simple.clinic.monthlyscreeningreports.form.epoxy.model.separator
 import org.simple.clinic.monthlyscreeningreports.form.epoxy.model.subHeader
 
-class QuestionnaireEntryFormController : TypedEpoxyController<List<BaseComponentData>>() {
+class QuestionnaireEntryFormController(
+    private val onTextChange: (Map<String, Any>) -> Unit
+) : TypedEpoxyController<List<BaseComponentData>>() {
 
   override fun buildModels(data: List<BaseComponentData>) {
     data.forEach {
       when (it) {
         is HeaderComponentData -> getHeaderComponent(it)
         is SubHeaderComponentData -> getSubHeaderComponent(it)
-        is InputViewGroupComponentData -> getInputViewGroupComponent(it)
+        is InputViewGroupComponentData -> getInputViewGroupComponent(it, onTextChange)
         is SeparatorComponentData -> getSeparatorComponent(it)
         is LineSeparatorComponentData -> getLineSeparatorComponent(it)
       }
     }
   }
 
-  private fun getInputViewGroupComponent(inputViewGroupComponentData: InputViewGroupComponentData) {
+  private fun getInputViewGroupComponent(
+      inputViewGroupComponentData: InputViewGroupComponentData,
+      textChange: (Map<String, Any>) -> Unit
+  ) {
     inputGroup {
       id(inputViewGroupComponentData.id)
       inputViewGroupComponentData(inputViewGroupComponentData)
+      action {
+        textChange.invoke(it as Map<String, Any>)
+      }
     }
   }
 

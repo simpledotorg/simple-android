@@ -46,6 +46,7 @@ import org.simple.clinic.instantsearch.InstantSearchScreen
 import org.simple.clinic.login.applock.AppLockScreen
 import org.simple.clinic.login.applock.ConfirmResetPinDialog
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen
+import org.simple.clinic.monthlyscreeningreports.complete.MonthlyScreeningReportCompleteScreen
 import org.simple.clinic.monthlyscreeningreports.form.QuestionnaireEntryScreen
 import org.simple.clinic.monthlyscreeningreports.list.MonthlyScreeningReportListScreen
 import org.simple.clinic.navigation.di.FragmentScreenKeyModule
@@ -56,6 +57,7 @@ import org.simple.clinic.newentry.country.di.InputFieldsFactoryModule
 import org.simple.clinic.onboarding.OnboardingScreen
 import org.simple.clinic.overdue.download.formatdialog.SelectOverdueDownloadFormatDialog
 import org.simple.clinic.patient.download.formatdialog.SelectLineListFormatDialog
+import org.simple.clinic.home.patients.links.PatientsTabLinkView
 import org.simple.clinic.recentpatient.RecentPatientsScreen
 import org.simple.clinic.recentpatientsview.RecentPatientsView
 import org.simple.clinic.removeoverdueappointment.RemoveOverdueAppointmentScreen
@@ -161,7 +163,9 @@ interface TheActivityComponent :
     BloodSugarUnitSelectionDialogInjector,
     SelectLineListFormatDialog.Injector,
     QuestionnaireEntryScreen.Injector,
-    MonthlyScreeningReportListScreen.Injector {
+    PatientsTabLinkView.Injector,
+    MonthlyScreeningReportListScreen.Injector,
+    MonthlyScreeningReportCompleteScreen.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory

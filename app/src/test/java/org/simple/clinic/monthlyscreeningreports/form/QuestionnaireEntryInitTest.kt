@@ -6,10 +6,13 @@ import com.spotify.mobius.test.InitSpec
 import com.spotify.mobius.test.InitSpec.assertThatFirst
 import org.junit.Test
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
+import org.simple.sharedTestCode.TestData
 
 class QuestionnaireEntryInitTest {
   private val questionnaireType = MonthlyScreeningReports
-  private val spec = InitSpec(QuestionnaireEntryInit(questionnaireType))
+  private val questionnaireResponse = TestData.questionnaireResponse()
+
+  private val spec = InitSpec(QuestionnaireEntryInit(questionnaireType, questionnaireResponse.uuid))
 
   @Test
   fun `when screen is created, then load initial data`() {
@@ -22,6 +25,7 @@ class QuestionnaireEntryInitTest {
             hasEffects(
                 LoadCurrentFacility,
                 LoadQuestionnaireFormEffect(questionnaireType),
+                LoadQuestionnaireResponseEffect(questionnaireResponse.uuid)
             )
         ))
   }

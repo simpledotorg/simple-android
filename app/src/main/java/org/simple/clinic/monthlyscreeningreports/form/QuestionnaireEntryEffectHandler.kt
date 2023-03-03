@@ -10,11 +10,13 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.questionnaire.QuestionnaireRepository
+import org.simple.clinic.questionnaireresponse.QuestionnaireResponseRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class QuestionnaireEntryEffectHandler @AssistedInject constructor(
     private val currentFacility: Observable<Facility>,
     private val questionnaireRepository: QuestionnaireRepository,
+    private val questionnaireResponseRepository: QuestionnaireResponseRepository,
     private val schedulersProvider: SchedulersProvider,
     @Assisted private val viewEffectsConsumer: Consumer<QuestionnaireEntryViewEffect>
 ) {
@@ -30,6 +32,8 @@ class QuestionnaireEntryEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<QuestionnaireEntryEffect, QuestionnaireEntryEvent>()
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility(schedulersProvider.io()))
         .addTransformer(LoadQuestionnaireFormEffect::class.java, loadQuestionnaireLayout(schedulersProvider.io()))
+        .addTransformer(LoadQuestionnaireResponseEffect::class.java, loadQuestionnaireResponse(schedulersProvider.io()))
+        .addTransformer(SaveQuestionnaireResponseEffect::class.java, saveQuestionnaireResponse(schedulersProvider.io()))
         .addConsumer(QuestionnaireEntryViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
@@ -51,6 +55,26 @@ class QuestionnaireEntryEffectHandler @AssistedInject constructor(
           .observeOn(scheduler)
           .map { questionnaireRepository.questionnairesByType(it.questionnaireType) }
           .map { QuestionnaireFormFetched(it) }
+    }
+  }
+
+  private fun loadQuestionnaireResponse(scheduler: Scheduler):
+      ObservableTransformer<LoadQuestionnaireResponseEffect, QuestionnaireEntryEvent> {
+    return ObservableTransformer { loadQuestionnaireResponse ->
+      loadQuestionnaireResponse
+          .observeOn(scheduler)
+          .map { questionnaireResponseRepository.questionnaireResponse(it.questionnaireResponseId) }
+          .map { QuestionnaireResponseFetched(it) }
+    }
+  }
+
+  private fun saveQuestionnaireResponse(scheduler: Scheduler):
+      ObservableTransformer<SaveQuestionnaireResponseEffect, QuestionnaireEntryEvent> {
+    return ObservableTransformer { saveQuestionnaireResponse ->
+      saveQuestionnaireResponse
+          .observeOn(scheduler)
+          .map { questionnaireResponseRepository.updateQuestionnaireResponse(it.questionnaireResponse) }
+          .map { QuestionnaireResponseSaved }
     }
   }
 }

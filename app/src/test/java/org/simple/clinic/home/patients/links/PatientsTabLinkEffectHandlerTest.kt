@@ -55,6 +55,8 @@ class PatientsTabLinkEffectHandlerTest {
 
   @Test
   fun `when load monthly report response list effect is received, then load monthly report response list`() {
+    whenever(repository.questionnaireResponsesByType(MonthlyScreeningReports)) doReturn Observable.just(listOf(questionnaireResponse))
+
     // when
     effectHandlerTestCase.dispatch(LoadMonthlyScreeningReportResponseList)
 
@@ -65,8 +67,6 @@ class PatientsTabLinkEffectHandlerTest {
 
   @Test
   fun `when open monthly screening report list screen is received, then open the screen`() {
-    whenever(repository.questionnaireResponsesByType(MonthlyScreeningReports)) doReturn Observable.just(listOf(questionnaireResponse))
-
     // when
     effectHandlerTestCase.dispatch(OpenMonthlyScreeningReportsListScreen)
 

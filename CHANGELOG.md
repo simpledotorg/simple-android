@@ -6,6 +6,8 @@
 - Add `enable_monthly_screening_reports` to Features
 - Add Monthly screening report feature based on feature flag
 
+- Update translations: `am-ET`, `ti-ET`, `om-ET`, `bn-BD`, `hi-IN`, `so-ET`, `si-LK`, `te-IN`, `ta-IN`, `mr-IN`, `ta-LK`, `pa-IN`, `kn-IN`
+
 ## 2023-02-20-8615
 
 ### Internal

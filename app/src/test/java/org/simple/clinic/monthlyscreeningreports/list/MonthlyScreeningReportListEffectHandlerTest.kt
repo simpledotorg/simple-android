@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.toFlowable
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.mobius.EffectHandlerTestCase
@@ -41,8 +42,8 @@ class MonthlyScreeningReportListEffectHandlerTest {
   }
 
   @Test
-  fun `when load questionnaire reponse list effect is received then questionnaire response list should be fetched`() {
-    whenever(questionnaireResponseRepository.questionnaireResponsesByType(MonthlyScreeningReports)) doReturn listOf(questionnaireResponse)
+  fun `when load questionnaire response list effect is received then questionnaire response list should be fetched`() {
+    whenever(questionnaireResponseRepository.questionnaireResponsesByType(MonthlyScreeningReports)) doReturn Observable.just(listOf(questionnaireResponse))
 
     //when
     testCase.dispatch(LoadMonthlyReportListEffect)

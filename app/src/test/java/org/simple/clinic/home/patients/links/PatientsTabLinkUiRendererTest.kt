@@ -5,32 +5,45 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.facility.FacilityConfig
+import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.sharedTestCode.TestData
+import java.util.UUID
 
 class PatientsTabLinkUiRendererTest {
   private val ui = mock<PatientsTabLinkUi>()
   private val defaultModel = PatientsTabLinkModel.default()
 
   @Test
-  fun `when monthlyScreeningReportsEnabled is enabled, then show monthly screening link option`() {
+  fun `when monthlyScreeningReportsEnabled is enabled and response list is loaded, then show monthly screening link option`() {
     // given
     val facility = TestData.facility(facilityConfig = FacilityConfig(
         diabetesManagementEnabled = false,
         monthlyScreeningReportsEnabled = true
     ))
+
+    val questionnaireResponseList = listOf(
+        TestData.questionnaireResponse(
+            uuid = UUID.fromString("e5ba4172-6c1c-41b5-a38a-51ed9dfbf34e"),
+            questionnaireType = MonthlyScreeningReports
+        ))
+
     val uiRenderer = PatientsTabLinkUiRenderer(
         ui = ui,
-        isPatientLineListEnabled = true
+        isPatientLineListEnabled = false
     )
 
 
     // when
-    uiRenderer.render(defaultModel.currentFacilityLoaded(facility))
+    uiRenderer.render(
+        defaultModel
+            .currentFacilityLoaded(facility)
+            .monthlyScreeningReportResponseListLoaded(questionnaireResponseList)
+    )
 
     // then
     verify(ui).showOrHideLinkView(true)
     verify(ui).showOrHideMonthlyScreeningReportsView(true)
-    verify(ui).showOrHidePatientLineListDownload(true)
+    verify(ui).showOrHidePatientLineListDownload(false)
     verifyNoMoreInteractions(ui)
   }
 
@@ -93,8 +106,26 @@ class PatientsTabLinkUiRendererTest {
 
     // then
     verify(ui).showOrHideLinkView(true)
-    verify(ui).showOrHideMonthlyScreeningReportsView(false)
     verify(ui).showOrHidePatientLineListDownload(true)
+    verify(ui).showOrHideMonthlyScreeningReportsView(false)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when patient line list download is disabled, then hide patient line list download option`() {
+    // given
+    val uiRenderer = PatientsTabLinkUiRenderer(
+        ui = ui,
+        isPatientLineListEnabled = false
+    )
+
+    // when
+    uiRenderer.render(defaultModel)
+
+    // then
+    verify(ui).showOrHideLinkView(false)
+    verify(ui).showOrHidePatientLineListDownload(false)
+    verify(ui).showOrHideMonthlyScreeningReportsView(false)
     verifyNoMoreInteractions(ui)
   }
 }

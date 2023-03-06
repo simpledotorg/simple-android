@@ -40,6 +40,8 @@ import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncModule
 import org.simple.clinic.protocol.ProtocolModule
 import org.simple.clinic.protocol.sync.ProtocolSync
+import org.simple.clinic.questionnaire.sync.QuestionnaireSync
+import org.simple.clinic.questionnaireresponse.sync.QuestionnaireResponseSync
 import org.simple.clinic.reports.ReportsModule
 import org.simple.clinic.reports.ReportsSync
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationSync
@@ -87,15 +89,19 @@ class SyncModule {
       teleconsultRecordSync: TeleconsultRecordSync,
       drugSync: DrugSync,
       callResultSync: CallResultSync,
+      questionnaireSync: QuestionnaireSync,
+      questionnaireResponseSync: QuestionnaireResponseSync,
   ): List<ModelSync> {
     val optionalSyncs = if (features.isEnabled(Feature.CallResultSyncEnabled)) listOf(callResultSync) else emptyList()
+    val questionnaireSyncs = if (features.isEnabled(Feature.MonthlyScreeningReportsEnabled))
+      listOf(questionnaireSync, questionnaireResponseSync) else emptyList()
 
     return listOf(
         facilitySync, protocolSync, reportsSync, helpSync,
         patientSync, bloodPressureSync, medicalHistorySync, appointmentSync, prescriptionSync,
         bloodSugarSync, teleconsultationMedicalOfficersSync,
         teleconsultRecordSync, drugSync
-    ) + optionalSyncs
+    ) + optionalSyncs + questionnaireSyncs
   }
 
   @Provides

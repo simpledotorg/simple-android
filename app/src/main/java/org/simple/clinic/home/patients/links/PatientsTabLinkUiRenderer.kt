@@ -20,9 +20,9 @@ class PatientsTabLinkUiRenderer @AssistedInject constructor(
 
   override fun render(model: PatientsTabLinkModel) {
     ui.showOrHidePatientLineListDownload(isPatientLineListEnabled)
-    ui.showOrHideMonthlyScreeningReportsView(model.monthlyScreeningReportsEnabled)
+    ui.showOrHideMonthlyScreeningReportsView(model.showMonthlyScreeningLink)
     ui.showOrHideLinkView(
-        isPatientLineListEnabled || model.monthlyScreeningReportsEnabled
+        isPatientLineListEnabled || model.showMonthlyScreeningLink
     )
   }
 }

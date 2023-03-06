@@ -50,7 +50,7 @@ class MonthlyScreeningReportListEffectHandler @AssistedInject constructor(
     return ObservableTransformer { loadQuestionnaireResponseList ->
       loadQuestionnaireResponseList
           .observeOn(scheduler)
-          .map { questionnaireResponseRepository.questionnaireResponsesByType(MonthlyScreeningReports) }
+          .switchMap { questionnaireResponseRepository.questionnaireResponsesByType(MonthlyScreeningReports) }
           .map { MonthlyScreeningReportListFetched(it) }
     }
   }

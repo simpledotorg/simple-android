@@ -41,6 +41,6 @@ data class Questionnaire(
     fun count(): Observable<Int>
 
     @Query("DELETE FROM questionnaire")
-    fun clearData(): Int
+    fun clear(): Int
   }
 }

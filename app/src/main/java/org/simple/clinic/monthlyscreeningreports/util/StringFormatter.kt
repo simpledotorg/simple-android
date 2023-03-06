@@ -25,8 +25,8 @@ fun getScreeningSubmitStatus(content: Map<String, Any>): Boolean {
 
 fun formatScreeningMonthStringToLocalDate(content: Map<String, Any>): LocalDate? {
   return try {
-    val monthString = content["month_string"] as String
-    LocalDate.parse(monthString.plus("-01"))
+    val monthString = content["month_date"] as String
+    LocalDate.parse(monthString)
   } catch (ex: Exception) {
     null
   }

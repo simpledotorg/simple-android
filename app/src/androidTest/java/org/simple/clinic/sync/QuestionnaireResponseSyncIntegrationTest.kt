@@ -11,14 +11,13 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.LastQuestionnaireResponsePullToken
-import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
-import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponseRepository
 import org.simple.clinic.questionnaireresponse.sync.QuestionnaireResponseSync
 import org.simple.clinic.questionnaireresponse.sync.QuestionnaireResponseSyncApi
 import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.rules.ServerAuthenticationRule
+import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.unsafeLazy
 import org.simple.sharedTestCode.TestData
@@ -27,7 +26,7 @@ import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
 
-@Ignore("the qa api is under development")
+@Ignore("the review env doesn't contain any data")
 class QuestionnaireResponseSyncIntegrationTest {
 
   @Inject
@@ -62,6 +61,8 @@ class QuestionnaireResponseSyncIntegrationTest {
 
   private val currentFacilityUuid: UUID by unsafeLazy { userSession.loggedInUserImmediate()!!.currentFacilityUuid }
 
+  private val loggedInUser: User by unsafeLazy { userSession.loggedInUserImmediate()!! }
+
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
@@ -95,9 +96,8 @@ class QuestionnaireResponseSyncIntegrationTest {
 
   @Test
   fun syncing_records_should_work_as_expected() {
-    // given
     sync.pull()
-    val questionnaireResponseList = repository.questionnaireResponsesByType(MonthlyScreeningReports)
+    val questionnaireResponseList = repository.questionnaireResponsesByType(MonthlyScreeningReports).blockingFirst()
 
     val updatedQuestionnaireResponseList = questionnaireResponseList.map {
       TestData.questionnaireResponse(
@@ -111,22 +111,21 @@ class QuestionnaireResponseSyncIntegrationTest {
     Truth.assertThat(updatedQuestionnaireResponseList).containsNoDuplicates()
 
     updatedQuestionnaireResponseList.forEach {
-      repository.updateQuestionnaireResponse(it)
+      repository.updateQuestionnaireResponse(loggedInUser, it)
     }
 
     Truth.assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(updatedQuestionnaireResponseList.count())
 
-    // when
     sync.push()
-    clearQuestionnaireResponseData()
-    sync.pull()
 
-    // then
-    val expectedPulledRecords = updatedQuestionnaireResponseList.map { it.syncCompleted() }
-    val pulledRecords = repository.recordsWithSyncStatus(SyncStatus.DONE)
+    Truth.assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(0)
 
-    Truth.assertThat(pulledRecords).containsAtLeastElementsIn(expectedPulledRecords)
+    val modifiedRecord = updatedQuestionnaireResponseList[1].copy(
+        content = mapOf(
+            "monthly_screening_reports.new_field" to 10,
+        )
+    )
+    repository.updateQuestionnaireResponse(loggedInUser, modifiedRecord)
+    Truth.assertThat(repository.pendingSyncRecordCount().blockingFirst()).isEqualTo(1)
   }
-
-  private fun QuestionnaireResponse.syncCompleted(): QuestionnaireResponse = copy(syncStatus = SyncStatus.DONE)
 }

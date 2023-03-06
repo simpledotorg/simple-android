@@ -94,16 +94,6 @@ class QuestionnaireEntryScreen : BaseScreen<
   private val hotEvents = PublishSubject.create<QuestionnaireEntryEvent>()
   private val hardwareBackClicks = PublishSubject.create<Unit>()
 
-  //  private val questionnaireFormController: QuestionnaireEntryFormController by lazy {
-  //    QuestionnaireEntryFormController {
-  //      questionnaireResponse?.content = questionnaireResponse?.content?.plus(it)!!
-  //      val viewGroup = preFillLayout(questionnaireLayout!!, questionnaireResponse!!)
-  //      if (viewGroup != null) {
-  //        questionnaireFormController.setData(viewGroup.children)
-  //      }
-  //    }
-  //  }
-
   override fun defaultModel() = QuestionnaireEntryModel.default()
 
   override fun createInit() = QuestionnaireEntryInit(screenKey.questionnaireType, screenKey.id)
@@ -174,6 +164,7 @@ class QuestionnaireEntryScreen : BaseScreen<
   override fun displayQuestionnaireFormLayout(layout: BaseComponentData, response: QuestionnaireResponse) {
     questionnaireResponse = response
     content = requireNotNull(questionnaireResponse).content.toMutableMap()
+
     if (layout is ViewGroupComponentData) {
       binding.composeView.apply {
         setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
@@ -199,8 +190,10 @@ class QuestionnaireEntryScreen : BaseScreen<
     return submitButton.clicks()
         .map {
           content["submitted"] = true
-          //          questionnaireResponse?.content?.put("submitted", true)
-          SubmitButtonClicked(requireNotNull(questionnaireResponse))
+          val updatedQuestionnaireResponse = questionnaireResponse?.copy(
+              content = content
+          )
+          SubmitButtonClicked(requireNotNull(updatedQuestionnaireResponse))
         }
   }
 

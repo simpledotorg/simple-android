@@ -38,5 +38,6 @@ enum class Feature(
   OverdueSections(false, "overdue_section_improvements_v1"),
   OverdueInstantSearch(false, "overdue_instant_search_v2"),
   OverdueSelectAndDownload(false, "overdue_select_and_download_v2"),
-  PatientLineListDownload(false, "patient_line_list_download_v2")
+  PatientLineListDownload(false, "patient_line_list_download_v2"),
+  MonthlyScreeningReportsEnabled(false, "enable_monthly_screening_reports"),
 }

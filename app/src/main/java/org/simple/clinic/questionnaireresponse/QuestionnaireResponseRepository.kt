@@ -6,6 +6,7 @@ import org.simple.clinic.questionnaire.QuestionnaireType
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.questionnaireresponse.sync.QuestionnaireResponsePayload
 import org.simple.clinic.sync.SynceableRepository
+import org.simple.clinic.user.User
 import org.simple.clinic.util.UtcClock
 import java.time.Instant
 import java.util.UUID
@@ -25,16 +26,22 @@ class QuestionnaireResponseRepository @Inject constructor(
     dao.save(records)
   }
 
-  fun questionnaireResponsesByType(questionnaireType: QuestionnaireType): List<QuestionnaireResponse> {
-    return dao.getByQuestionnaireType(questionnaireType)
+  fun questionnaireResponsesByType(questionnaireType: QuestionnaireType): Observable<List<QuestionnaireResponse>> {
+    return dao
+        .getByQuestionnaireType(questionnaireType)
+        .toObservable()
   }
 
   fun questionnaireResponse(uuid: UUID): QuestionnaireResponse? {
     return dao.getOne(uuid)
   }
 
-  fun updateQuestionnaireResponse(questionnaireResponse: QuestionnaireResponse) {
+  fun updateQuestionnaireResponse(
+      loggedInUser: User,
+      questionnaireResponse: QuestionnaireResponse
+  ) {
     val updatedQuestionnaireResponse = questionnaireResponse.copy(
+        lastUpdatedByUserId = loggedInUser.uuid,
         timestamps = questionnaireResponse.timestamps.copy(
             updatedAt = Instant.now(utcClock)
         ),

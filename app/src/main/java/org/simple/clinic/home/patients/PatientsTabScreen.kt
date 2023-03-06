@@ -37,8 +37,8 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.drugstockreminders.DrugStockNotificationScheduler
 import org.simple.clinic.drugstockreminders.enterdrugstock.EnterDrugStockScreen
 import org.simple.clinic.enterotp.EnterOtpScreen
-import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Feature.MonthlyDrugStockReportReminder
+import org.simple.clinic.feature.Feature.MonthlyScreeningReportsEnabled
 import org.simple.clinic.feature.Feature.NotifyAppUpdateAvailableV2
 import org.simple.clinic.feature.Feature.PatientLineListDownload
 import org.simple.clinic.feature.Features
@@ -187,7 +187,7 @@ class PatientsTabScreen : BaseScreen<
   override fun uiRenderer() = PatientsTabUiRenderer(
       ui = this,
       currentDate = LocalDate.now(userClock),
-      isPatientLineListEnabled = features.isEnabled(Feature.PatientLineListDownload) && country.isoCountryCode == Country.INDIA
+      isPatientLineListEnabled = features.isEnabled(PatientLineListDownload) && features.isDisabled(MonthlyScreeningReportsEnabled) && country.isoCountryCode == Country.INDIA
   )
 
   override fun viewEffectHandler() = PatientsTabViewEffectHandler(this)

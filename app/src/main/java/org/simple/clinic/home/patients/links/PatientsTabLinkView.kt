@@ -57,7 +57,9 @@ class PatientsTabLinkView(
   private val delegate by unsafeLazy {
     val uiRenderer = uiRendererFactory.create(
         this,
-        isPatientLineListEnabled = features.isEnabled(Feature.PatientLineListDownload) && country.isoCountryCode == Country.INDIA
+        isPatientLineListEnabled = features.isEnabled(Feature.PatientLineListDownload)
+            && features.isEnabled(Feature.MonthlyScreeningReportsEnabled)
+            && country.isoCountryCode == Country.INDIA
     )
 
     MobiusDelegate.forView(

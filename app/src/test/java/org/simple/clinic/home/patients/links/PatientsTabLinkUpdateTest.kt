@@ -3,6 +3,7 @@ package org.simple.clinic.home.patients.links
 import com.spotify.mobius.test.NextMatchers
 import com.spotify.mobius.test.UpdateSpec
 import org.junit.Test
+import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.sharedTestCode.TestData
 import java.util.UUID
 
@@ -21,6 +22,24 @@ class PatientsTabLinkUpdateTest {
         .whenEvent(CurrentFacilityLoaded(facility))
         .then(UpdateSpec.assertThatNext(
             NextMatchers.hasModel(defaultModel.currentFacilityLoaded(facility)),
+            NextMatchers.hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when monthly screening report response list is loaded, then update the model`() {
+    val questionnaireResponse = listOf(
+        TestData.questionnaireResponse(
+            uuid = UUID.fromString("d8173ed8-fca2-4455-984a-e5b5e9d81412"),
+            questionnaireType = MonthlyScreeningReports
+        )
+    )
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(MonthlyScreeningReportResponseListLoaded(questionnaireResponse))
+        .then(UpdateSpec.assertThatNext(
+            NextMatchers.hasModel(defaultModel.monthlyScreeningReportResponseListLoaded(questionnaireResponse)),
             NextMatchers.hasNoEffects()
         ))
   }

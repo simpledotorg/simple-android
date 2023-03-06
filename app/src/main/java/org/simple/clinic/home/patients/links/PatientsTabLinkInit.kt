@@ -8,7 +8,8 @@ class PatientsTabLinkInit : Init<PatientsTabLinkModel, PatientsTabLinkEffect> {
 
   override fun init(model: PatientsTabLinkModel): First<PatientsTabLinkModel, PatientsTabLinkEffect> {
     return first(model,
-        LoadCurrentFacility
+        LoadCurrentFacility,
+        LoadMonthlyScreeningReportResponseList
     )
   }
 }

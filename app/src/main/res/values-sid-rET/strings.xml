@@ -872,6 +872,7 @@
   <string name="patient_line_list_download_card_title">IHCI patient register</string>
   <string name="patient_line_list_download_card_desc">List of all patients registered or assigned to %1$s</string>
   <string name="patient_line_list_download_card_button">Dirisi</string>
+  <string name="patient_line_list_download_link">Xiwamaanote suma borro IHCL diri\'se</string>
 
   <!--Notification permission denied dialog-->
   <string name="notification_permission_denied_title">Turn on notifications</string>
@@ -879,4 +880,19 @@
   <string name="notification_permission_denied_positive_button">GO TO APP SETTINGS</string>
   <string name="notification_permission_denied_negetive_button">Dixati</string>
 
+  <!--Monthly screen reports-->
+  <string name="monthly_screening_reports">Aganunita laooshu odoo</string>
+  <string name="monthly_screening_reports_report">%1$s odoo</string><!--Oct 2023 report-->
+  <string name="monthly_screening_reports_submit_report">Odoo eesse</string>
+  <string name="monthly_screening_reports_submitted">Eesinooni</string>
+  <string name="monthly_screening_reports_screening_report">%1$s xawisaancho odoo eesinooni</string><!--Oct 2022 screening report-->
+  <string name="monthly_screening_reports_submitted_with_date_and_time">Eesinooni %1$s</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="monthly_screening_reports_submit_btn_text">Eesse</string>
+  <string name="monthly_screening_reports_complete">Gudde</string>
+  <string name="monthly_screening_reports_submitted_with_date">%1$s odoo e\'ino</string><!--October 2022 report submitted-->
+  <string name="monthly_screening_reports_done">Gofino</string>
+  <string name="monthly_screening_reports_unsaved_changes_title">Woroniki woyyo</string>
+  <string name="monthly_screening_reports_unsaved_changes_text">Worronikit woyyo ba\'ars dandiitano.\nAgurte fulate mu\'dhotto?</string>
+  <string name="monthly_screening_reports_stay_title">KAWIICHO KEESHI</string>
+  <string name="monthly_screening_reports_leave_page_title">KAWIICHIN FULI</string>
 </resources>

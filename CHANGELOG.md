@@ -3,10 +3,27 @@
 ## Next Release
 
 ### Internal
-- Add `enable_monthly_screening_reports` to Features
-- Add Monthly screening report feature based on feature flag
 
-- Update translations: `am-ET`, `ti-ET`, `om-ET`, `bn-BD`, `hi-IN`, `so-ET`, `si-LK`, `te-IN`, `ta-IN`, `mr-IN`, `ta-LK`, `pa-IN`, `kn-IN`
+- Add `enable_monthly_screening_reports` to Features
+- Update translations: `sid-ET`
+
+### Features
+
+- Add Monthly screening report feature based on feature flag
+- Enable questionnaire sync resources based on feature flag
+- Enable `Monthly Screening Reports` and `Download IHCI patient register` Links based on feature flag
+
+## 2023-03-06-8634
+
+### Internal
+
+- Add Jetpack compose for server driven UI
+- Update translations: `am-ET`, `om-ET`, `so-ET`, `si-LK`, `pa-IN`, `ta-LK`, `bn-BD`, `te-IN`, `ta-IN`, `hi-IN`, `kn-IN`, `bn-IN`, `mr-IN`
+- Bump Jackson to v2.14.2
+- Bump google play services auth to v20.4.1
+- Use full date time formatter when rendering submitted date in monthly screening reports
+- Add `Monthly Screening Reports` and `Download IHCI patient register` Links to home screen with hidden visibility
+- Add `Monthly Screening Reports` flow screens
 
 ## 2023-02-20-8615
 

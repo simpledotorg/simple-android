@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<View xmlns:android="http://schemas.android.com/apk/res/android"
-  android:id="@+id/separatorView"
-  android:layout_width="match_parent"
-  android:layout_height="1dp"
-  android:layout_marginHorizontal="@dimen/spacing_16"
-  android:layout_marginVertical="@dimen/spacing_64"
-  android:background="@drawable/divider" />
-

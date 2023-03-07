@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-  android:id="@+id/headerTextView"
-  android:layout_width="wrap_content"
-  android:layout_height="wrap_content"
-  android:textAllCaps="true"
-  android:layout_marginHorizontal="@dimen/spacing_16"
-  android:textAppearance="?attr/textAppearanceBody2Bold"
-  android:textColor="#2FA7AE"/>

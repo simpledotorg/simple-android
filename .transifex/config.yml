@@ -13,13 +13,13 @@ settings:
     bn_IN: bn-rIN
     hi_IN: hi-rIN
     kn_IN: kn-rIN
-    mr: mr-rIN
-    om: om-rET
-    pa: pa-rIN
+    mr:    mr-rIN
+    om:    om-rET
+    pa:    pa-rIN
     si_LK: si-rLK
-    sid: sid-rET
-    so: so-rET
+    sid:   sid-rET
+    so:    so-rET
     ta_IN: ta-rIN
     ta_LK: ta-rLK
     te_IN: te-rIN
-    ti: ti-rET
+    ti:    ti-rET

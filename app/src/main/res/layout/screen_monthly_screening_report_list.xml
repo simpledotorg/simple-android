@@ -56,7 +56,7 @@
         android:paddingEnd="@dimen/spacing_16"
         android:textAppearance="?attr/textAppearanceBody2"
         android:textColor="@color/color_on_toolbar_primary_72"
-        app:drawableStartCompat="@drawable/ic_location_20dp"
+        app:drawableStartCompat="@drawable/ic_location_16dp"
         app:drawableTint="@color/color_on_toolbar_primary_72"
         tools:text="DH Arigar Anna" />
 

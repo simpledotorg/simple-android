@@ -55,7 +55,7 @@
         android:paddingEnd="@dimen/spacing_16"
         android:textAppearance="?attr/textAppearanceBody2"
         android:textColor="@color/color_on_toolbar_primary_72"
-        app:drawableStartCompat="@drawable/ic_location_20dp"
+        app:drawableStartCompat="@drawable/ic_location_16dp"
         app:drawableTint="@color/color_on_toolbar_primary_72"
         tools:text="DH Arigar Anna" />
 
@@ -67,8 +67,8 @@
     android:layout_width="match_parent"
     android:layout_height="0dp"
     app:layout_constraintBottom_toTopOf="@id/button_frame"
-    app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/monthlyScreeningReportListHeader">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -83,8 +83,8 @@
         android:gravity="center"
         android:padding="@dimen/spacing_16"
         android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="UseCompoundDrawables">
 
@@ -107,8 +107,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/submittedDateAndTimeContainer" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

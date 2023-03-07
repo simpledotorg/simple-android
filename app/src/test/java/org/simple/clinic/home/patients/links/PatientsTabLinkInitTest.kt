@@ -19,7 +19,8 @@ class PatientsTabLinkInitTest {
             FirstMatchers.hasModel(defaultModel),
             FirstMatchers.hasEffects(
                 LoadCurrentFacility,
-                LoadMonthlyScreeningReportResponseList
+                LoadMonthlyScreeningReportResponseList,
+                LoadMonthlyScreeningReportForm
             )
         ))
   }

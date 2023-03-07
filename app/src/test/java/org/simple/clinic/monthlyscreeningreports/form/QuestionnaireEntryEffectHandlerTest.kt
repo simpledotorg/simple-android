@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.mobius.EffectHandlerTestCase
@@ -41,7 +40,7 @@ class QuestionnaireEntryEffectHandlerTest {
       questionnaireResponseRepository = questionnaireResponseRepository,
       schedulersProvider = TestSchedulersProvider.trampoline(),
       viewEffectsConsumer = viewEffectHandler::handle,
-      currentFacility = Observable.just(facility),
+      currentFacility = { facility },
       currentUser = { user }
   )
 
@@ -60,7 +59,7 @@ class QuestionnaireEntryEffectHandlerTest {
         questionnaireType = questionnaireType
     )
 
-    whenever(questionnaireRepository.questionnairesByType(questionnaireType)) doReturn questionnaire
+    whenever(questionnaireRepository.questionnairesByTypeImmediate(questionnaireType)) doReturn questionnaire
 
     //when
     testCase.dispatch(LoadQuestionnaireFormEffect(questionnaireType))

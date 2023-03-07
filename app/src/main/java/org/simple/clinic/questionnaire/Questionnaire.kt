@@ -7,6 +7,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.questionnaire.component.BaseComponentData
@@ -34,8 +35,11 @@ data class Questionnaire(
     @Query("SELECT * FROM Questionnaire")
     fun getAllQuestionnaires(): List<Questionnaire>
 
-    @Query("SELECT * FROM Questionnaire WHERE questionnaire_type == :type")
-    fun getQuestionnaireByType(type: QuestionnaireType): Questionnaire
+    @Query("SELECT * FROM Questionnaire WHERE questionnaire_type == :type LIMIT 1")
+    fun getQuestionnaireByType(type: QuestionnaireType): Flowable<Questionnaire>
+
+    @Query("SELECT * FROM Questionnaire WHERE questionnaire_type == :type LIMIT 1")
+    fun getQuestionnaireByTypeImmediate(type: QuestionnaireType): Questionnaire
 
     @Query("SELECT COUNT(questionnaire_type) FROM questionnaire")
     fun count(): Observable<Int>

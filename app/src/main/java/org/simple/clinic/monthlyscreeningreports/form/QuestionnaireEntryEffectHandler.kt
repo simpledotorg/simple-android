@@ -6,7 +6,6 @@ import dagger.Lazy
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.facility.Facility
@@ -16,7 +15,7 @@ import org.simple.clinic.user.User
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class QuestionnaireEntryEffectHandler @AssistedInject constructor(
-    private val currentFacility: Observable<Facility>,
+    private val currentFacility: Lazy<Facility>,
     private val currentUser: Lazy<User>,
     private val questionnaireRepository: QuestionnaireRepository,
     private val questionnaireResponseRepository: QuestionnaireResponseRepository,
@@ -46,7 +45,7 @@ class QuestionnaireEntryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .switchMap { currentFacility }
+          .map { currentFacility.get() }
           .map(::CurrentFacilityLoaded)
     }
   }
@@ -56,7 +55,7 @@ class QuestionnaireEntryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { loadQuestionnaireForm ->
       loadQuestionnaireForm
           .observeOn(scheduler)
-          .map { questionnaireRepository.questionnairesByType(it.questionnaireType) }
+          .map { questionnaireRepository.questionnairesByTypeImmediate(it.questionnaireType) }
           .map { QuestionnaireFormFetched(it) }
     }
   }

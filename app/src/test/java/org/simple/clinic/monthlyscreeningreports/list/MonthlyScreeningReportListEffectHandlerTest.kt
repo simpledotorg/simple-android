@@ -5,7 +5,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.toFlowable
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.mobius.EffectHandlerTestCase
@@ -31,7 +30,7 @@ class MonthlyScreeningReportListEffectHandlerTest {
       questionnaireResponseRepository = questionnaireResponseRepository,
       schedulersProvider = TestSchedulersProvider.trampoline(),
       viewEffectsConsumer = viewEffectHandler::handle,
-      currentFacility = Observable.just(facility),
+      currentFacility = { facility },
   )
 
   private val testCase = EffectHandlerTestCase(effectHandler.build())

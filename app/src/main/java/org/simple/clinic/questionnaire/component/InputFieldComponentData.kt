@@ -1,10 +1,8 @@
 package org.simple.clinic.questionnaire.component
 
-import androidx.room.Ignore
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.Parcelize
-import kotlinx.parcelize.RawValue
 import org.simple.clinic.questionnaire.component.properties.InputFieldType
 import org.simple.clinic.questionnaire.component.properties.InputFieldValidations
 

@@ -32,13 +32,13 @@ data class Questionnaire(
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(questionnaires: List<Questionnaire>)
 
-    @Query("SELECT * FROM Questionnaire")
+    @Query("SELECT * FROM Questionnaire WHERE deletedAt IS NULL")
     fun getAllQuestionnaires(): List<Questionnaire>
 
-    @Query("SELECT * FROM Questionnaire WHERE questionnaire_type == :type LIMIT 1")
+    @Query("SELECT * FROM Questionnaire WHERE questionnaire_type == :type AND deletedAt IS NULL LIMIT 1")
     fun getQuestionnaireByType(type: QuestionnaireType): Flowable<Questionnaire>
 
-    @Query("SELECT * FROM Questionnaire WHERE questionnaire_type == :type LIMIT 1")
+    @Query("SELECT * FROM Questionnaire WHERE questionnaire_type == :type AND deletedAt IS NULL LIMIT 1")
     fun getQuestionnaireByTypeImmediate(type: QuestionnaireType): Questionnaire
 
     @Query("SELECT COUNT(questionnaire_type) FROM questionnaire")
@@ -46,5 +46,11 @@ data class Questionnaire(
 
     @Query("DELETE FROM questionnaire")
     fun clear(): Int
+
+    @Query("""
+      DELETE FROM Questionnaire
+      WHERE deletedAt IS NOT NULL
+    """)
+    fun purgeDeleted()
   }
 }

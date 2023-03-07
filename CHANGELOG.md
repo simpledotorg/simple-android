@@ -6,6 +6,7 @@
 
 - Add `enable_monthly_screening_reports` to Features
 - Update translations: `sid-ET`
+- Remove epoxy code and dependencies
 
 ### Features
 

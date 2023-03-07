@@ -54,7 +54,7 @@ class PatientsTabLinkUiRendererTest {
   }
 
   @Test
-  fun `when monthly screening report list is not loaded, the hide monthly screening link option`() {
+  fun `when monthly screening report form not loaded, the hide monthly screening link option`() {
     // given
     val facility = TestData.facility(facilityConfig = FacilityConfig(
         diabetesManagementEnabled = false,
@@ -88,7 +88,7 @@ class PatientsTabLinkUiRendererTest {
   }
 
   @Test
-  fun `when monthly screening report form is not loaded, the hide monthly screening link option`() {
+  fun `when monthly screening list is not loaded, the hide monthly screening link option`() {
     // given
     val facility = TestData.facility(facilityConfig = FacilityConfig(
         diabetesManagementEnabled = false,

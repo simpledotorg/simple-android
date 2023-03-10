@@ -112,7 +112,7 @@ class MonthlyScreeningReportCompleteScreen : BaseScreen<
     fun inject(target: MonthlyScreeningReportCompleteScreen)
   }
 
-  override fun showMonthCompletedView(response: QuestionnaireResponse) {
+  override fun showCompletedDateTimeTextView(response: QuestionnaireResponse) {
     monthSubmittedTextView.text =
         context?.resources?.getString(
             R.string.monthly_screening_reports_submitted_with_date,

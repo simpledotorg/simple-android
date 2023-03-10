@@ -8,7 +8,7 @@ class MonthlyScreeningReportCompleteUiRenderer(
   override fun render(model: MonthlyScreeningReportCompleteModel) {
 
     if (model.questionnaireResponse != null) {
-      ui.showMonthCompletedView(model.questionnaireResponse)
+      ui.showCompletedDateTimeTextView(model.questionnaireResponse)
     }
   }
 }

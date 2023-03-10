@@ -29,7 +29,7 @@ class MonthlyScreeningReportCompleteUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verify(ui).showMonthCompletedView(questionnaireResponse)
+    verify(ui).showCompletedDateTimeTextView(questionnaireResponse)
     verifyNoMoreInteractions(ui)
   }
 }

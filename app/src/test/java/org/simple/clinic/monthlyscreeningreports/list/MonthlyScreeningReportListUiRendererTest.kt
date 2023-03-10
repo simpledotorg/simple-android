@@ -28,7 +28,7 @@ class MonthlyScreeningReportListUiRendererTest {
     uiRenderer.render(model)
 
     // then
-    verify(ui).displayMonthlyReportList(listOf(questionnaireResponse))
+    verify(ui).displayMonthlyScreeningReportList(listOf(questionnaireResponse))
     verifyNoMoreInteractions(ui)
   }
 

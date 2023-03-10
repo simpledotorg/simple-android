@@ -30,7 +30,7 @@ class MonthlyScreeningReportListEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<MonthlyScreeningReportListEffect, MonthlyScreeningReportListEvent>()
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility(schedulersProvider.io()))
-        .addTransformer(LoadMonthlyReportListEffect::class.java, loadQuestionnaireResponseList(schedulersProvider.io()))
+        .addTransformer(LoadMonthlyScreeningReportListEffect::class.java, loadQuestionnaireResponseList(schedulersProvider.io()))
         .addConsumer(MonthlyScreeningReportListViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
@@ -46,7 +46,7 @@ class MonthlyScreeningReportListEffectHandler @AssistedInject constructor(
   }
 
   private fun loadQuestionnaireResponseList(scheduler: Scheduler):
-      ObservableTransformer<LoadMonthlyReportListEffect, MonthlyScreeningReportListEvent> {
+      ObservableTransformer<LoadMonthlyScreeningReportListEffect, MonthlyScreeningReportListEvent> {
     return ObservableTransformer { loadQuestionnaireResponseList ->
       loadQuestionnaireResponseList
           .observeOn(scheduler)

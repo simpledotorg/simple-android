@@ -6,7 +6,7 @@ sealed class MonthlyScreeningReportListEffect
 
 object LoadCurrentFacility : MonthlyScreeningReportListEffect()
 
-object LoadMonthlyReportListEffect : MonthlyScreeningReportListEffect()
+object LoadMonthlyScreeningReportListEffect : MonthlyScreeningReportListEffect()
 
 sealed class MonthlyScreeningReportListViewEffect : MonthlyScreeningReportListEffect()
 

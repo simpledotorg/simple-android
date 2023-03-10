@@ -9,7 +9,7 @@ class MonthlyScreeningReportCompleteUpdate :
   override fun update(model: MonthlyScreeningReportCompleteModel, event: MonthlyScreeningReportCompleteEvent):
       Next<MonthlyScreeningReportCompleteModel, MonthlyScreeningReportCompleteEffect> {
     return when (event) {
-      is DoneButtonClicked -> dispatch(GoToMonthlyReportListScreen)
+      is DoneButtonClicked -> dispatch(GoToMonthlyScreeningReportListScreen)
       is QuestionnaireResponseFetched -> Next.next(model.questionnaireResponseLoaded(event.questionnaireResponse))
     }
   }

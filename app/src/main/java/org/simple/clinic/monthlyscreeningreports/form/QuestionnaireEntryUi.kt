@@ -10,7 +10,7 @@ interface QuestionnaireEntryUi {
   fun displayQuestionnaireFormLayout(layout: BaseComponentData, response: QuestionnaireResponse)
   fun goBack()
   fun showUnsavedChangesWarningDialog()
-  fun goToMonthlyReportsCompleteScreen()
+  fun goToMonthlyScreeningReportsCompleteScreen()
   fun showProgress()
   fun hideProgress()
 }

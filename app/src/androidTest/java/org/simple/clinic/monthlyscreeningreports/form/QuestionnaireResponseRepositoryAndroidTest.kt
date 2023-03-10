@@ -74,10 +74,10 @@ class QuestionnaireResponseRepositoryAndroidTest {
     repository.save(questionnaireResponses)
 
     // then
-    val savedMonthlyReportsQuestionnaires =
+    val savedMonthlyScreeningReportsQuestionnaires =
         repository.questionnaireResponsesByType(MonthlyScreeningReports, facility.uuid).blockingFirst()
 
-    Truth.assertThat(savedMonthlyReportsQuestionnaires).isEqualTo(questionnaireResponses)
+    Truth.assertThat(savedMonthlyScreeningReportsQuestionnaires).isEqualTo(questionnaireResponses)
   }
 
   @Test

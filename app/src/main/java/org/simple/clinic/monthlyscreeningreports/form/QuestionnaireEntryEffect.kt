@@ -20,4 +20,4 @@ object GoBack : QuestionnaireEntryViewEffect()
 
 object ShowUnsavedChangesWarningDialog : QuestionnaireEntryViewEffect()
 
-object GoToMonthlyReportsCompleteScreen : QuestionnaireEntryViewEffect()
+object GoToMonthlyScreeningReportsCompleteScreen : QuestionnaireEntryViewEffect()

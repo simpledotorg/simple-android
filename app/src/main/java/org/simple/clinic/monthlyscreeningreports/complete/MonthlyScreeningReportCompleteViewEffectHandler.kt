@@ -8,7 +8,7 @@ class MonthlyScreeningReportCompleteViewEffectHandler(
 
   override fun handle(viewEffect: MonthlyScreeningReportCompleteViewEffect) {
     when (viewEffect) {
-      GoToMonthlyReportListScreen -> ui.goToMonthlyReportListScreen()
+      GoToMonthlyScreeningReportListScreen -> ui.goToMonthlyScreeningReportListScreen()
     }
   }
 }

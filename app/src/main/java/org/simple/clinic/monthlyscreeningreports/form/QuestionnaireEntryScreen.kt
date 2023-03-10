@@ -220,7 +220,7 @@ class QuestionnaireEntryScreen : BaseScreen<
         .show()
   }
 
-  override fun goToMonthlyReportsCompleteScreen() {
+  override fun goToMonthlyScreeningReportsCompleteScreen() {
     router.push(MonthlyScreeningReportCompleteScreen.Key(screenKey.id))
   }
 

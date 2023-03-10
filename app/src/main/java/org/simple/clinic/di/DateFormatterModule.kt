@@ -11,8 +11,8 @@ import org.simple.clinic.di.DateFormatter.Type.MonthAndYear
 import org.simple.clinic.di.DateFormatter.Type.MonthName
 import org.simple.clinic.di.DateFormatter.Type.OverdueCsvTitleDateTime
 import org.simple.clinic.di.DateFormatter.Type.OverduePatientRegistrationDate
-import org.simple.clinic.di.DateFormatter.Type.SubmittedDate
-import org.simple.clinic.di.DateFormatter.Type.SubmittedDateTime
+import org.simple.clinic.di.DateFormatter.Type.FullMonthAndYear
+import org.simple.clinic.di.DateFormatter.Type.FormSubmissionDateTime
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import java.time.chrono.Chronology
@@ -164,8 +164,8 @@ class DateFormatterModule {
   }
 
   @Provides
-  @DateFormatter(SubmittedDate)
-  fun providesFormatterForSubmittedDate(
+  @DateFormatter(FullMonthAndYear)
+  fun providesFormatterForFullMonthAndYear(
       locale: Locale,
       chronology: Chronology
   ): DateTimeFormatter {
@@ -174,8 +174,8 @@ class DateFormatterModule {
   }
 
   @Provides
-  @DateFormatter(SubmittedDateTime)
-  fun providesFormatterForSubmittedDateTime(
+  @DateFormatter(FormSubmissionDateTime)
+  fun providesFormatterForFormSubmissionDateTime(
       locale: Locale,
       chronology: Chronology
   ): DateTimeFormatter {

@@ -16,7 +16,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenQuestionnaireEntryFormBinding
 import org.simple.clinic.di.DateFormatter
 import org.simple.clinic.di.DateFormatter.Type.MonthAndYear
-import org.simple.clinic.di.DateFormatter.Type.SubmittedDateTime
+import org.simple.clinic.di.DateFormatter.Type.FormSubmissionDateTime
 import org.simple.clinic.di.injector
 import org.simple.clinic.monthlyscreeningreports.complete.MonthlyScreeningReportCompleteScreen
 import org.simple.clinic.monthlyscreeningreports.form.compose.QuestionnaireFormContainer
@@ -61,8 +61,8 @@ class QuestionnaireEntryScreen : BaseScreen<
   lateinit var monthAndYearDateFormatter: DateTimeFormatter
 
   @Inject
-  @DateFormatter(SubmittedDateTime)
-  lateinit var submittedDateTimeFormatter: DateTimeFormatter
+  @DateFormatter(FormSubmissionDateTime)
+  lateinit var formSubmissionDateTimeFormatter: DateTimeFormatter
 
   @Inject
   lateinit var schedulersProvider: SchedulersProvider
@@ -158,7 +158,7 @@ class QuestionnaireEntryScreen : BaseScreen<
       val updatedAt = response.timestamps.updatedAt
       submittedDateAndTimeTextView.text = context?.resources?.getString(
           R.string.monthly_screening_reports_submitted_with_date_and_time,
-          submittedDateTimeFormatter.format(updatedAt.toLocalDateTimeAtZone(userClock.zone)))
+          formSubmissionDateTimeFormatter.format(updatedAt.toLocalDateTimeAtZone(userClock.zone)))
     }
   }
 

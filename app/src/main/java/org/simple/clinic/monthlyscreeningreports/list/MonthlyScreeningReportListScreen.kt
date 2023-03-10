@@ -163,6 +163,11 @@ class MonthlyScreeningReportListScreen : BaseScreen<
     router.pop()
   }
 
+  override fun onDestroyView() {
+    monthlyReportRecyclerView.adapter = null
+    super.onDestroyView()
+  }
+
   interface Injector {
     fun inject(target: MonthlyScreeningReportListScreen)
   }

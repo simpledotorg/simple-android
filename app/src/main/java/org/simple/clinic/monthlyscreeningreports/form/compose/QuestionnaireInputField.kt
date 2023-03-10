@@ -89,11 +89,22 @@ private fun setContentValue(
 ) {
   when (inputFieldComponentData.type) {
     is Integer -> {
-      try {
-        content[inputFieldComponentData.linkId] = value.toInt()
-      } catch (_: Exception) {
-      }
+      setIntegerContentValue(value, inputFieldComponentData, content)
     }
     else -> content[inputFieldComponentData.linkId] = value
+  }
+}
+
+private fun setIntegerContentValue(
+    value: String,
+    inputFieldComponentData: InputFieldComponentData,
+    content: MutableMap<String, Any>
+) {
+  try {
+    content[inputFieldComponentData.linkId] = value.toInt()
+  } catch (ex: Exception) {
+    if (value.isEmpty()) {
+      content.remove(inputFieldComponentData.linkId)
+    }
   }
 }

@@ -49,24 +49,33 @@ class QuestionnaireResponseRepositoryAndroidTest {
   @Test
   fun saving_questionnaire_responses_should_work_correctly() {
     // given
+    val facility = TestData.facility(
+        uuid = UUID.fromString("e8075335-f766-4605-8216-41bf79189609"),
+        name = "PHC Simple"
+    )
+
     val questionnaireResponses = listOf(
         TestData.questionnaireResponse(
             uuid = UUID.fromString("519bc6c3-9bde-4e48-b75b-eb31170b6a48"),
+            facilityId = facility.uuid,
         ),
         TestData.questionnaireResponse(
             uuid = UUID.fromString("9058a06a-c793-4951-b339-762107e700fc"),
+            facilityId = facility.uuid,
         ),
         TestData.questionnaireResponse(
             uuid = UUID.fromString("9f3c9b1b-c5ad-45cd-9dfb-d73ad34bf328"),
+            facilityId = facility.uuid,
         )
     )
+
 
     // when
     repository.save(questionnaireResponses)
 
     // then
     val savedMonthlyReportsQuestionnaires =
-        repository.questionnaireResponsesByType(MonthlyScreeningReports).blockingFirst()
+        repository.questionnaireResponsesByType(MonthlyScreeningReports, facility.uuid).blockingFirst()
 
     Truth.assertThat(savedMonthlyReportsQuestionnaires).isEqualTo(questionnaireResponses)
   }

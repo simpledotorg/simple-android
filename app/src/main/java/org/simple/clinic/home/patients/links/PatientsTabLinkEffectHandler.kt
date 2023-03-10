@@ -51,7 +51,10 @@ class PatientsTabLinkEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .switchMap { questionnaireResponseRepository.questionnaireResponsesByType(MonthlyScreeningReports) }
+          .switchMap { currentFacility }
+          .switchMap { facility ->
+            questionnaireResponseRepository.questionnaireResponsesByType(MonthlyScreeningReports, facility.uuid)
+          }
           .map(::MonthlyScreeningReportResponseListLoaded)
     }
   }

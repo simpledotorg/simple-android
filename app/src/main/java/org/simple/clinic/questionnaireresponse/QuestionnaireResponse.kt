@@ -61,8 +61,8 @@ data class QuestionnaireResponse(
     @Query("SELECT * FROM QuestionnaireResponse WHERE uuid = :uuid LIMIT 1")
     fun getOne(uuid: UUID): QuestionnaireResponse?
 
-    @Query("SELECT * FROM QuestionnaireResponse WHERE questionnaireType = :type AND deletedAt IS NULL")
-    fun getByQuestionnaireType(type: QuestionnaireType): Flowable<List<QuestionnaireResponse>>
+    @Query("SELECT * FROM QuestionnaireResponse WHERE questionnaireType = :type AND facilityId = :currentFacilityId AND deletedAt IS NULL")
+    fun getByQuestionnaireType(type: QuestionnaireType, currentFacilityId: UUID): Flowable<List<QuestionnaireResponse>>
 
     @Update
     fun updateQuestionnaireResponse(questionnaireResponse: QuestionnaireResponse)

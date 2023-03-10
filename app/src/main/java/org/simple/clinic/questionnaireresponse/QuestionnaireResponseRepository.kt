@@ -26,9 +26,12 @@ class QuestionnaireResponseRepository @Inject constructor(
     dao.save(records)
   }
 
-  fun questionnaireResponsesByType(questionnaireType: QuestionnaireType): Observable<List<QuestionnaireResponse>> {
+  fun questionnaireResponsesByType(
+      questionnaireType: QuestionnaireType,
+      currentFacilityId: UUID
+  ): Observable<List<QuestionnaireResponse>> {
     return dao
-        .getByQuestionnaireType(questionnaireType)
+        .getByQuestionnaireType(questionnaireType, currentFacilityId)
         .toObservable()
   }
 

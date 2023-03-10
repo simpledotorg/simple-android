@@ -34,6 +34,7 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toLocalDateTimeAtZone
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.format.DateTimeFormatter
 import java.util.UUID
@@ -204,6 +205,7 @@ class QuestionnaireEntryScreen : BaseScreen<
   }
 
   override fun goBack() {
+    binding.root.hideKeyboard()
     router.pop()
   }
 

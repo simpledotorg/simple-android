@@ -47,7 +47,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_report" />
+        app:srcCompat="@drawable/ic_form" />
 
       <TextView
         android:id="@+id/monthlyScreeningReportText"

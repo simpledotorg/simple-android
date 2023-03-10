@@ -15,7 +15,7 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent"
     tools:ignore="ContentDescription"
-    tools:src="@drawable/ic_report_submitted" />
+    tools:src="@drawable/ic_form_submitted" />
 
   <TextView
     android:id="@+id/monthTextView"

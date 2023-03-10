@@ -48,8 +48,8 @@ data class MonthlyScreeningReportItem(
     }
 
     binding.statusImageView.setImageResource(
-        if (submitted) R.drawable.ic_report_submitted
-        else R.drawable.ic_submit_report
+        if (submitted) R.drawable.ic_form_submitted
+        else R.drawable.ic_form_not_submitted
     )
 
     binding.statusTextView.text = context.resources.getString(

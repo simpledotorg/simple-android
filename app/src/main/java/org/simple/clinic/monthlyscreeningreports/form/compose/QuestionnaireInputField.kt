@@ -12,10 +12,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import org.simple.clinic.R
 import org.simple.clinic.questionnaire.component.InputFieldComponentData
@@ -27,12 +29,18 @@ fun InputField(
     inputFieldComponentData: InputFieldComponentData,
     content: MutableMap<String, Any>
 ) {
-  var text by remember { mutableStateOf(getContentValueAsString(inputFieldComponentData, content)) }
+  val initValue = getContentValueAsString(inputFieldComponentData, content)
+  var text by remember {
+    mutableStateOf(TextFieldValue(
+        text = initValue,
+        selection = TextRange(initValue.length)
+    ))
+  }
   TextField(
       value = text,
       onValueChange = {
         text = it
-        setContentValue(it, inputFieldComponentData, content)
+        setContentValue(it.text, inputFieldComponentData, content)
       },
       label = { Text(text = inputFieldComponentData.text) },
       singleLine = true,

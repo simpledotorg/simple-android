@@ -12,7 +12,7 @@ class QuestionnaireEntryUiRendererTest {
   private val ui = mock<QuestionnaireEntryUi>()
   private val uiRenderer = QuestionnaireEntryUiRenderer(ui)
 
-  private val defaultModel = QuestionnaireEntryModel.default()
+  private val defaultModel = QuestionnaireEntryModel.from(questionnaireResponse = TestData.questionnaireResponse())
 
   @Test
   fun `when questionnaire form and response is loaded, then render questionnaire form layout`() {
@@ -21,41 +21,14 @@ class QuestionnaireEntryUiRendererTest {
         uuid = UUID.fromString("43d8c0b3-3341-4147-9a08-aac27e7f721f")
     )
 
-    val questionnaireResponse = TestData.questionnaireResponse(
-        uuid = UUID.fromString("4145d792-7f97-43c1-908c-702b98d738c3"),
-        questionnaireId = questionnaire.uuid
-    )
-
     val model = defaultModel
         .formLoaded(questionnaire)
-        .responseLoaded(questionnaireResponse)
 
     // when
     uiRenderer.render(model)
 
     // then
-    verify(ui).displayQuestionnaireFormLayout(questionnaire.layout, questionnaireResponse)
-    verify(ui).setSubmittedView(questionnaireResponse)
-    verify(ui).setToolbarMonth(questionnaireResponse)
-    verifyNoMoreInteractions(ui)
-  }
-
-  @Test
-  fun `when questionnaire response is loaded, then render toolbar and month view`() {
-    // given
-    val questionnaireResponse = TestData.questionnaireResponse(
-        uuid = UUID.fromString("4145d792-7f97-43c1-908c-702b98d738c3")
-    )
-
-    val model = defaultModel
-        .responseLoaded(questionnaireResponse)
-
-    // when
-    uiRenderer.render(model)
-
-    // then
-    verify(ui).setToolbarMonth(questionnaireResponse)
-    verify(ui).setSubmittedView(questionnaireResponse)
+    verify(ui).displayQuestionnaireFormLayout(questionnaire.layout)
     verifyNoMoreInteractions(ui)
   }
 

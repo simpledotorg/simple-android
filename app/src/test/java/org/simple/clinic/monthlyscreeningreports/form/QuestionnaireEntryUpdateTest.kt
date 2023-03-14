@@ -11,7 +11,7 @@ import java.util.UUID
 
 class QuestionnaireEntryUpdateTest {
 
-  private val defaultModel = QuestionnaireEntryModel.default()
+  private val defaultModel = QuestionnaireEntryModel.from(questionnaireResponse = TestData.questionnaireResponse())
 
   private val update = QuestionnaireEntryUpdate()
 
@@ -41,19 +41,6 @@ class QuestionnaireEntryUpdateTest {
         .whenEvent(CurrentFacilityLoaded(facility))
         .then(assertThatNext(
             hasModel(defaultModel.currentFacilityLoaded(facility)),
-            hasNoEffects()
-        ))
-  }
-
-  @Test
-  fun `when questionnaire response is fetched, then update the model`() {
-    val questionnaireResponse = TestData.questionnaireResponse()
-
-    spec
-        .given(defaultModel)
-        .whenEvent(QuestionnaireResponseFetched(questionnaireResponse))
-        .then(assertThatNext(
-            hasModel(defaultModel.responseLoaded(questionnaireResponse)),
             hasNoEffects()
         ))
   }

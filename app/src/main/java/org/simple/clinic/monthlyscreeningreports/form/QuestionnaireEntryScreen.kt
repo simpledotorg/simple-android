@@ -1,7 +1,9 @@
 package org.simple.clinic.monthlyscreeningreports.form
 
 import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -37,7 +39,6 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.format.DateTimeFormatter
-import java.util.UUID
 import javax.inject.Inject
 
 class QuestionnaireEntryScreen : BaseScreen<
@@ -70,8 +71,6 @@ class QuestionnaireEntryScreen : BaseScreen<
   @Inject
   lateinit var effectHandlerFactory: QuestionnaireEntryEffectHandler.Factory
 
-  var questionnaireResponse: QuestionnaireResponse? = null
-
   var content = mutableMapOf<String, Any>()
 
   private val backButton
@@ -95,9 +94,9 @@ class QuestionnaireEntryScreen : BaseScreen<
   private val hotEvents = PublishSubject.create<QuestionnaireEntryEvent>()
   private val hardwareBackClicks = PublishSubject.create<Unit>()
 
-  override fun defaultModel() = QuestionnaireEntryModel.default()
+  override fun defaultModel() = QuestionnaireEntryModel.from(questionnaireResponse = screenKey.questionnaireResponse)
 
-  override fun createInit() = QuestionnaireEntryInit(screenKey.questionnaireType, screenKey.id)
+  override fun createInit() = QuestionnaireEntryInit(screenKey.questionnaireType)
 
   override fun createUpdate() = QuestionnaireEntryUpdate()
 
@@ -129,10 +128,16 @@ class QuestionnaireEntryScreen : BaseScreen<
     context.injector<Injector>().inject(this)
   }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    setToolbarMonth(screenKey.questionnaireResponse)
+    setSubmittedView(screenKey.questionnaireResponse)
+  }
+
   @Parcelize
   data class Key(
-      val id: UUID,
       val questionnaireType: QuestionnaireType,
+      val questionnaireResponse: QuestionnaireResponse,
       override val analyticsName: String = "$questionnaireType questionnaire entry form"
   ) : ScreenKey() {
 
@@ -143,14 +148,14 @@ class QuestionnaireEntryScreen : BaseScreen<
     facilityTextView.text = facilityName
   }
 
-  override fun setToolbarMonth(response: QuestionnaireResponse) {
+  private fun setToolbarMonth(response: QuestionnaireResponse) {
     monthTextView.text = context?.resources?.getString(
         R.string.monthly_screening_reports_screening_report,
         getScreeningMonth(response.content, monthAndYearDateFormatter)
     )
   }
 
-  override fun setSubmittedView(response: QuestionnaireResponse) {
+  private fun setSubmittedView(response: QuestionnaireResponse) {
     val isSubmitted = getScreeningSubmitStatus(response.content)
     submittedDateAndTimeContainer.visibleOrGone(isSubmitted)
 
@@ -162,9 +167,8 @@ class QuestionnaireEntryScreen : BaseScreen<
     }
   }
 
-  override fun displayQuestionnaireFormLayout(layout: BaseComponentData, response: QuestionnaireResponse) {
-    questionnaireResponse = response
-    content = requireNotNull(questionnaireResponse).content.toMutableMap()
+  override fun displayQuestionnaireFormLayout(layout: BaseComponentData) {
+    content = screenKey.questionnaireResponse.content.toMutableMap()
 
     if (layout is ViewGroupComponentData) {
       binding.composeView.apply {
@@ -191,17 +195,11 @@ class QuestionnaireEntryScreen : BaseScreen<
     return submitButton.clicks()
         .map {
           content["submitted"] = true
-          val updatedQuestionnaireResponse = questionnaireResponse?.copy(
+          val updatedQuestionnaireResponse = screenKey.questionnaireResponse.copy(
               content = content
           )
-          SubmitButtonClicked(requireNotNull(updatedQuestionnaireResponse))
+          SubmitButtonClicked(updatedQuestionnaireResponse)
         }
-  }
-
-  override fun showProgress() {
-  }
-
-  override fun hideProgress() {
   }
 
   override fun goBack() {
@@ -221,7 +219,7 @@ class QuestionnaireEntryScreen : BaseScreen<
   }
 
   override fun goToMonthlyScreeningReportsCompleteScreen() {
-    router.push(MonthlyScreeningReportCompleteScreen.Key(screenKey.id))
+    router.push(MonthlyScreeningReportCompleteScreen.Key(screenKey.questionnaireResponse.uuid))
   }
 
   interface Injector {

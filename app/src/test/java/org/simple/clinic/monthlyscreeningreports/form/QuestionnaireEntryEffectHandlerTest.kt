@@ -70,23 +70,6 @@ class QuestionnaireEntryEffectHandlerTest {
   }
 
   @Test
-  fun `when load questionnaire response effect is received then questionnaire response should be fetched`() {
-    //given
-    val questionnaireResponse = TestData.questionnaireResponse(
-        uuid = UUID.fromString("825423b6-4639-44e9-b11d-c5da5ede8071")
-    )
-
-    whenever(questionnaireResponseRepository.questionnaireResponse(questionnaireResponse.uuid)) doReturn questionnaireResponse
-
-    //when
-    testCase.dispatch(LoadQuestionnaireResponseEffect(questionnaireResponse.uuid))
-
-    //then
-    testCase.assertOutgoingEvents(QuestionnaireResponseFetched(questionnaireResponse))
-    verifyZeroInteractions(ui)
-  }
-
-  @Test
   fun `when save questionnaire response effect is received then questionnaire response should be saved`() {
     //given
     val questionnaire = TestData.questionnaireResponse()

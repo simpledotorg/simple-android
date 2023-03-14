@@ -1,6 +1,6 @@
 package org.simple.clinic.monthlyscreeningreports.list
 
-import java.util.UUID
+import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 
 sealed class MonthlyScreeningReportListEffect
 
@@ -12,6 +12,8 @@ sealed class MonthlyScreeningReportListViewEffect : MonthlyScreeningReportListEf
 
 object GoBack : MonthlyScreeningReportListViewEffect()
 
-data class OpenMonthlyScreeningForm(val uuid: UUID) : MonthlyScreeningReportListViewEffect()
+data class OpenMonthlyScreeningForm(
+    val questionnaireResponse: QuestionnaireResponse
+) : MonthlyScreeningReportListViewEffect()
 
 

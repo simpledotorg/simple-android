@@ -34,7 +34,6 @@ class QuestionnaireEntryEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<QuestionnaireEntryEffect, QuestionnaireEntryEvent>()
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility(schedulersProvider.io()))
         .addTransformer(LoadQuestionnaireFormEffect::class.java, loadQuestionnaireLayout(schedulersProvider.io()))
-        .addTransformer(LoadQuestionnaireResponseEffect::class.java, loadQuestionnaireResponse(schedulersProvider.io()))
         .addTransformer(SaveQuestionnaireResponseEffect::class.java, saveQuestionnaireResponse(schedulersProvider.io()))
         .addConsumer(QuestionnaireEntryViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
@@ -57,16 +56,6 @@ class QuestionnaireEntryEffectHandler @AssistedInject constructor(
           .observeOn(scheduler)
           .map { questionnaireRepository.questionnairesByTypeImmediate(it.questionnaireType) }
           .map { QuestionnaireFormFetched(it) }
-    }
-  }
-
-  private fun loadQuestionnaireResponse(scheduler: Scheduler):
-      ObservableTransformer<LoadQuestionnaireResponseEffect, QuestionnaireEntryEvent> {
-    return ObservableTransformer { loadQuestionnaireResponse ->
-      loadQuestionnaireResponse
-          .observeOn(scheduler)
-          .map { questionnaireResponseRepository.questionnaireResponse(it.questionnaireResponseId) }
-          .map { QuestionnaireResponseFetched(it) }
     }
   }
 

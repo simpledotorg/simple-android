@@ -10,13 +10,13 @@ import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 data class QuestionnaireEntryModel(
     val facility: Facility?,
     val questionnaire: Questionnaire?,
-    val questionnaireResponse: QuestionnaireResponse?
+    val questionnaireResponse: QuestionnaireResponse
 ) : Parcelable {
   companion object {
-    fun default() = QuestionnaireEntryModel(
+    fun from(questionnaireResponse: QuestionnaireResponse) = QuestionnaireEntryModel(
         facility = null,
         questionnaire = null,
-        questionnaireResponse = null
+        questionnaireResponse = questionnaireResponse
     )
   }
 
@@ -28,10 +28,9 @@ data class QuestionnaireEntryModel(
   }
 
   fun formLoaded(questionnaire: Questionnaire): QuestionnaireEntryModel {
-    return copy(questionnaire = questionnaire)
-  }
-
-  fun responseLoaded(questionnaireResponse: QuestionnaireResponse): QuestionnaireEntryModel {
-    return copy(questionnaireResponse = questionnaireResponse)
+    return copy(
+        questionnaire = questionnaire,
+        questionnaireResponse = questionnaireResponse.copy(questionnaireId = questionnaire.uuid)
+    )
   }
 }

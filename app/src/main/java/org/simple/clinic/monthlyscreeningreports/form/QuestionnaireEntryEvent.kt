@@ -11,8 +11,6 @@ data class CurrentFacilityLoaded(val facility: Facility) : QuestionnaireEntryEve
 
 data class QuestionnaireFormFetched(val questionnaire: Questionnaire) : QuestionnaireEntryEvent()
 
-data class QuestionnaireResponseFetched(val questionnaireResponse: QuestionnaireResponse) : QuestionnaireEntryEvent()
-
 object QuestionnaireResponseSaved : QuestionnaireEntryEvent()
 
 object QuestionnaireEntryBackClicked : QuestionnaireEntryEvent() {

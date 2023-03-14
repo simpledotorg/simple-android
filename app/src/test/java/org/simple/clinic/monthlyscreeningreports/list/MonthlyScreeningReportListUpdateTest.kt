@@ -48,10 +48,10 @@ class MonthlyScreeningReportListUpdateTest {
 
     spec
         .given(defaultModel)
-        .whenEvent(MonthlyScreeningReportItemClicked(questionnaire.uuid))
+        .whenEvent(MonthlyScreeningReportItemClicked(questionnaire))
         .then(UpdateSpec.assertThatNext(
             NextMatchers.hasNoModel(),
-            NextMatchers.hasEffects(OpenMonthlyScreeningForm(questionnaire.uuid))
+            NextMatchers.hasEffects(OpenMonthlyScreeningForm(questionnaire))
         ))
   }
 }

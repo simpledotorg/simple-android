@@ -6,13 +6,8 @@ class QuestionnaireEntryUiRenderer(private val ui: QuestionnaireEntryUi) : ViewR
   override fun render(model: QuestionnaireEntryModel) {
     val questionnaireForm = model.questionnaire
 
-    if (model.questionnaireResponse != null) {
-      ui.setToolbarMonth(model.questionnaireResponse)
-      ui.setSubmittedView(model.questionnaireResponse)
-    }
-
-    if (questionnaireForm?.layout != null && model.questionnaireResponse != null) {
-      ui.displayQuestionnaireFormLayout(questionnaireForm.layout, model.questionnaireResponse)
+    if (questionnaireForm?.layout != null) {
+      ui.displayQuestionnaireFormLayout(questionnaireForm.layout)
     } else {
       //no-op
     }

@@ -29,7 +29,6 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import java.time.format.DateTimeFormatter
-import java.util.UUID
 import javax.inject.Inject
 
 class MonthlyScreeningReportListScreen : BaseScreen<
@@ -123,7 +122,7 @@ class MonthlyScreeningReportListScreen : BaseScreen<
     return monthlyScreeningReportItemAdapter
         .itemEvents
         .ofType<MonthlyScreeningReportItem.Event.ListItemClicked>()
-        .map { it.id }
+        .map { it.questionnaireResponse }
         .map(::MonthlyScreeningReportItemClicked)
   }
 
@@ -150,11 +149,11 @@ class MonthlyScreeningReportListScreen : BaseScreen<
   override fun hideProgress() {
   }
 
-  override fun openMonthlyScreeningForm(uuid: UUID) {
+  override fun openMonthlyScreeningForm(questionnaireResponse: QuestionnaireResponse) {
     router.push(
         QuestionnaireEntryScreen.Key(
-            id = uuid,
-            questionnaireType = MonthlyScreeningReports
+            questionnaireType = MonthlyScreeningReports,
+            questionnaireResponse = questionnaireResponse
         )
     )
   }

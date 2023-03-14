@@ -28,9 +28,20 @@ data class QuestionnaireEntryModel(
   }
 
   fun formLoaded(questionnaire: Questionnaire): QuestionnaireEntryModel {
+    return copy(questionnaire = questionnaire)
+  }
+
+  fun updateContent(content: MutableMap<String, Any>): QuestionnaireEntryModel {
+    setSubmitStatusToTrue(content)
     return copy(
-        questionnaire = questionnaire,
-        questionnaireResponse = questionnaireResponse.copy(questionnaireId = questionnaire.uuid)
+        questionnaireResponse = questionnaireResponse.copy(
+            content = content,
+            questionnaireId = requireNotNull(questionnaire).uuid
+        )
     )
+  }
+
+  private fun setSubmitStatusToTrue(content: MutableMap<String, Any>) {
+    content["submitted"] = true
   }
 }

@@ -193,13 +193,7 @@ class QuestionnaireEntryScreen : BaseScreen<
 
   private fun submitClicks(): Observable<UiEvent> {
     return submitButton.clicks()
-        .map {
-          content["submitted"] = true
-          val updatedQuestionnaireResponse = screenKey.questionnaireResponse.copy(
-              content = content
-          )
-          SubmitButtonClicked(updatedQuestionnaireResponse)
-        }
+        .map { SubmitButtonClicked(content) }
   }
 
   override fun goBack() {

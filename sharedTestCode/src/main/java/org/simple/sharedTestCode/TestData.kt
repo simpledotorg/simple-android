@@ -1564,7 +1564,7 @@ object TestData {
     )
   }
 
-  private fun getQuestionnaireResponseContent(): Map<String, Any> {
+  fun getQuestionnaireResponseContent(): Map<String, Any> {
     return mapOf(
         "monthly_screening_reports.outpatient_department_visits" to 5000.0,
         "monthly_screening_reports.blood_pressure_checks_male" to 2200.0,

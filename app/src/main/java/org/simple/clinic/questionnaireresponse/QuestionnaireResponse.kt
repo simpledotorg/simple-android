@@ -62,10 +62,10 @@ data class QuestionnaireResponse(
     fun getOne(uuid: UUID): QuestionnaireResponse?
 
     @Query("SELECT * FROM QuestionnaireResponse WHERE questionnaireType = :type AND facilityId = :currentFacilityId AND deletedAt IS NULL")
-    fun getByQuestionnaireType(type: QuestionnaireType, currentFacilityId: UUID): Flowable<List<QuestionnaireResponse>>
+    fun getFilteredBy(type: QuestionnaireType, currentFacilityId: UUID): Flowable<List<QuestionnaireResponse>>
 
     @Update
-    fun updateQuestionnaireResponse(questionnaireResponse: QuestionnaireResponse)
+    fun update(questionnaireResponse: QuestionnaireResponse)
 
     @Query("SELECT * FROM QuestionnaireResponse WHERE syncStatus = :status")
     fun withSyncStatus(status: SyncStatus): List<QuestionnaireResponse>

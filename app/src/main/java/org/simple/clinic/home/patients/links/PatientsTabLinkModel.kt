@@ -9,14 +9,14 @@ import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 @Parcelize
 data class PatientsTabLinkModel(
     val facility: Facility?,
-    val questionnaireResponseList: List<QuestionnaireResponse>?,
-    val questionnaireForm: Questionnaire?,
+    val monthlyScreeningReportsResponseList: List<QuestionnaireResponse>?,
+    val monthlyScreeningReportsForm: Questionnaire?,
 ) : Parcelable {
   companion object {
     fun default() = PatientsTabLinkModel(
         facility = null,
-        questionnaireResponseList = null,
-        questionnaireForm = null
+        monthlyScreeningReportsResponseList = null,
+        monthlyScreeningReportsForm = null
     )
   }
 
@@ -24,10 +24,10 @@ data class PatientsTabLinkModel(
     get() = facility?.config?.monthlyScreeningReportsEnabled == true
 
   private val isMonthlyScreeningReportResponseListNotEmpty: Boolean
-    get() = questionnaireResponseList?.isNotEmpty() == true
+    get() = monthlyScreeningReportsResponseList?.isNotEmpty() == true
 
   private val isMonthlyScreeningReportFormPresent: Boolean
-    get() = questionnaireForm != null
+    get() = monthlyScreeningReportsForm != null
 
   val showMonthlyScreeningLink: Boolean
     get() = monthlyScreeningReportsEnabled &&
@@ -41,13 +41,13 @@ data class PatientsTabLinkModel(
   fun monthlyScreeningReportResponseListLoaded(
       questionnaireResponseList: List<QuestionnaireResponse>
   ): PatientsTabLinkModel {
-    return copy(questionnaireResponseList = questionnaireResponseList)
+    return copy(monthlyScreeningReportsResponseList = questionnaireResponseList)
   }
 
   fun monthlyScreeningReportFormLoaded(
       questionnaireForm: Questionnaire
   ): PatientsTabLinkModel {
-    return copy(questionnaireForm = questionnaireForm)
+    return copy(monthlyScreeningReportsForm = questionnaireForm)
   }
 }
 

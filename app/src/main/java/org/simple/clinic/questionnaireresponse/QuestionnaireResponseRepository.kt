@@ -31,7 +31,7 @@ class QuestionnaireResponseRepository @Inject constructor(
       currentFacilityId: UUID
   ): Observable<List<QuestionnaireResponse>> {
     return dao
-        .getByQuestionnaireType(questionnaireType, currentFacilityId)
+        .getFilteredBy(questionnaireType, currentFacilityId)
         .toObservable()
   }
 
@@ -51,7 +51,7 @@ class QuestionnaireResponseRepository @Inject constructor(
         syncStatus = SyncStatus.PENDING
     )
 
-    dao.updateQuestionnaireResponse(updatedQuestionnaireResponse)
+    dao.update(updatedQuestionnaireResponse)
   }
 
   fun recordsWithSyncStatus(syncStatus: SyncStatus): List<QuestionnaireResponse> {

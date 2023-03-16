@@ -75,7 +75,7 @@ class QuestionnaireResponseRepositoryAndroidTest {
 
     // then
     val savedMonthlyScreeningReportsQuestionnaires =
-        repository.questionnaireResponsesByType(MonthlyScreeningReports, facility.uuid).blockingFirst()
+        repository.questionnaireResponsesFilteredBy(MonthlyScreeningReports, facility.uuid).blockingFirst()
 
     Truth.assertThat(savedMonthlyScreeningReportsQuestionnaires).isEqualTo(questionnaireResponses)
   }

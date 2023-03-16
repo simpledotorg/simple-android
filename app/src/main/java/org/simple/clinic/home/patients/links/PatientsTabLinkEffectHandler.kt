@@ -53,7 +53,7 @@ class PatientsTabLinkEffectHandler @AssistedInject constructor(
           .observeOn(scheduler)
           .switchMap { currentFacility }
           .switchMap { facility ->
-            questionnaireResponseRepository.questionnaireResponsesByType(MonthlyScreeningReports, facility.uuid)
+            questionnaireResponseRepository.questionnaireResponsesFilteredBy(MonthlyScreeningReports, facility.uuid)
           }
           .map(::MonthlyScreeningReportResponseListLoaded)
     }

@@ -93,9 +93,11 @@ class SyncModule {
       questionnaireResponseSync: QuestionnaireResponseSync,
   ): List<ModelSync> {
     val optionalSyncs = if (features.isEnabled(Feature.CallResultSyncEnabled)) listOf(callResultSync) else emptyList()
+    val questionnaireSyncs = if (features.isEnabled(Feature.MonthlyScreeningReportsEnabled))
+      listOf(questionnaireSync, questionnaireResponseSync) else emptyList()
 
-    return listOf(
-        facilitySync, questionnaireSync, questionnaireResponseSync, protocolSync, reportsSync, helpSync,
+    return listOf(facilitySync) + questionnaireSyncs + listOf(
+        protocolSync, reportsSync, helpSync,
         patientSync, bloodPressureSync, medicalHistorySync, appointmentSync, prescriptionSync,
         bloodSugarSync, teleconsultationMedicalOfficersSync,
         teleconsultRecordSync, drugSync

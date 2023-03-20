@@ -10,8 +10,10 @@ class PatientsTabLinkInitTest {
 
 
   @Test
-  fun `when screen is created, then load current facility`() {
-    val initSpec = InitSpec(PatientsTabLinkInit())
+  fun `when screen is created, and monthly screening report feature flag is enabled, then load questionnaire data`() {
+    val initSpec = InitSpec(PatientsTabLinkInit(
+        isMonthlyScreeningReportsEnabled = true
+    ))
 
     initSpec
         .whenInit(defaultModel)
@@ -22,6 +24,20 @@ class PatientsTabLinkInitTest {
                 LoadMonthlyScreeningReportResponseList,
                 LoadMonthlyScreeningReportForm
             )
+        ))
+  }
+
+  @Test
+  fun `when screen is created, and monthly screening report feature flag is disabled, then don't load questionnaire data`() {
+    val initSpec = InitSpec(PatientsTabLinkInit(
+        isMonthlyScreeningReportsEnabled = false
+    ))
+
+    initSpec
+        .whenInit(defaultModel)
+        .then(InitSpec.assertThatFirst(
+            FirstMatchers.hasModel(defaultModel),
+            FirstMatchers.hasNoEffects()
         ))
   }
 }

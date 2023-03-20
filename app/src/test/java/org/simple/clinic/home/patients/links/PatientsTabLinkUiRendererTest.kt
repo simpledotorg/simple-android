@@ -37,7 +37,6 @@ class PatientsTabLinkUiRendererTest {
         isPatientLineListEnabled = false
     )
 
-
     // when
     uiRenderer.render(
         defaultModel

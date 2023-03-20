@@ -15,7 +15,6 @@ class PatientsInitTest {
     val initSpec = InitSpec(PatientsInit(
         isNotifyAppUpdateAvailableV2Enabled = true,
         isMonthlyDrugStockReportReminderEnabledInIndia = false,
-        isPatientLineListEnabled = false
     ))
 
     initSpec
@@ -36,7 +35,6 @@ class PatientsInitTest {
     val initSpec = InitSpec(PatientsInit(
         isNotifyAppUpdateAvailableV2Enabled = false,
         isMonthlyDrugStockReportReminderEnabledInIndia = true,
-        isPatientLineListEnabled = false
     ))
 
     initSpec
@@ -48,47 +46,6 @@ class PatientsInitTest {
                 RefreshUserDetails,
                 LoadInfoForShowingAppUpdateMessage,
                 LoadInfoForShowingDrugStockReminder
-            )
-        ))
-  }
-
-  @Test
-  fun `when screen is created and patient line list feature flag is enabled, then load current facility`() {
-    val initSpec = InitSpec(PatientsInit(
-        isNotifyAppUpdateAvailableV2Enabled = false,
-        isMonthlyDrugStockReportReminderEnabledInIndia = false,
-        isPatientLineListEnabled = true
-    ))
-
-    initSpec
-        .whenInit(defaultModel)
-        .then(assertThatFirst(
-            hasModel(defaultModel),
-            hasEffects(
-                LoadUser,
-                RefreshUserDetails,
-                LoadInfoForShowingAppUpdateMessage,
-                LoadCurrentFacility
-            )
-        ))
-  }
-
-  @Test
-  fun `when screen is created and patient line list feature flag is disable, then don't load current facility`() {
-    val initSpec = InitSpec(PatientsInit(
-        isNotifyAppUpdateAvailableV2Enabled = false,
-        isMonthlyDrugStockReportReminderEnabledInIndia = false,
-        isPatientLineListEnabled = false
-    ))
-
-    initSpec
-        .whenInit(defaultModel)
-        .then(assertThatFirst(
-            hasModel(defaultModel),
-            hasEffects(
-                LoadUser,
-                RefreshUserDetails,
-                LoadInfoForShowingAppUpdateMessage
             )
         ))
   }

@@ -79,4 +79,4 @@ jobs:
         with:
           name: maestro-test-report
           path: /maestro-test-report.xml
-
+        if: always()

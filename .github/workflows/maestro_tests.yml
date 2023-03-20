@@ -78,5 +78,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: maestro-test-report
-          path: /maestro-test-report.xml
+          path: ./maestro-test-report.xml
         if: always()

@@ -21,13 +21,11 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.refreshuser.RefreshCurrentUser
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toUtcInstant
-import org.simple.sharedTestCode.TestData
 import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.sharedTestCode.util.TestUtcClock
 import java.time.Instant
 import java.time.LocalDate
 import java.util.Optional
-import java.util.UUID
 
 class PatientsEffectHandlerTest {
   private val uiActions = mock<PatientsTabUiActions>()
@@ -49,10 +47,6 @@ class PatientsEffectHandlerTest {
 
   private val viewEffectHandler = PatientsTabViewEffectHandler(uiActions)
 
-  private val facility = TestData.facility(
-      uuid = UUID.fromString("7e599a46-c9f4-40f6-8f9f-16b650640157"),
-      name = "PHC Obvious"
-  )
   private val effectHandler = PatientsEffectHandler(
       schedulers = TestSchedulersProvider.trampoline(),
       refreshCurrentUser = refreshCurrentUser,
@@ -67,7 +61,6 @@ class PatientsEffectHandlerTest {
       drugStockReminder = drugStockReminder,
       drugStockReportLastCheckedAt = drugStockReportLastCheckedAt,
       isDrugStockReportFilled = isDrugStockReportFilled,
-      currentFacility = Observable.just(facility),
       viewEffectsConsumer = viewEffectHandler::handle
   ).build()
 
@@ -219,27 +212,6 @@ class PatientsEffectHandlerTest {
     // then
     effectHandlerTestCase.assertNoOutgoingEvents()
     verify(uiActions).showNoActiveNetworkConnectionDialog()
-    verifyNoMoreInteractions(uiActions)
-  }
-
-  @Test
-  fun `when load current facility effect is received, then load current facility`() {
-    // when
-    effectHandlerTestCase.dispatch(LoadCurrentFacility)
-
-    // then
-    effectHandlerTestCase.assertOutgoingEvents(CurrentFacilityLoaded(facility))
-    verifyZeroInteractions(uiActions)
-  }
-
-  @Test
-  fun `when open patient line list download dialog effect is received, then open the dialog`() {
-    // when
-    effectHandlerTestCase.dispatch(OpenPatientLineListDownloadDialog)
-    
-    // then
-    effectHandlerTestCase.assertNoOutgoingEvents()
-    verify(uiActions).openPatientLineListDownloadDialog()
     verifyNoMoreInteractions(uiActions)
   }
 }

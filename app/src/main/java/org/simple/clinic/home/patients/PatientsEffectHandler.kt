@@ -14,7 +14,6 @@ import org.simple.clinic.appupdate.AppUpdateNotificationScheduler
 import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.drugstockreminders.DrugStockReminder
-import org.simple.clinic.facility.Facility
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.DrugStockReportLastCheckedAt
 import org.simple.clinic.main.TypedPreference.Type.IsDrugStockReportFilled
@@ -44,7 +43,6 @@ class PatientsEffectHandler @AssistedInject constructor(
     private val drugStockReminder: DrugStockReminder,
     @TypedPreference(DrugStockReportLastCheckedAt) private val drugStockReportLastCheckedAt: Preference<Instant>,
     @TypedPreference(IsDrugStockReportFilled) private val isDrugStockReportFilled: Preference<Optional<Boolean>>,
-    private val currentFacility: Observable<Facility>,
     @Assisted private val viewEffectsConsumer: Consumer<PatientsTabViewEffect>
 ) {
 
@@ -72,17 +70,7 @@ class PatientsEffectHandler @AssistedInject constructor(
         .addConsumer(TouchIsDrugStockReportFilled::class.java, {
           isDrugStockReportFilled.set(Optional.of(it.isDrugStockReportFilled))
         }, schedulers.io())
-        .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
         .build()
-  }
-
-  private fun loadCurrentFacility(): ObservableTransformer<LoadCurrentFacility, PatientsTabEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulers.io())
-          .switchMap { currentFacility }
-          .map(::CurrentFacilityLoaded)
-    }
   }
 
   private fun loadInfoForShowingDrugStockReminder(): ObservableTransformer<LoadInfoForShowingDrugStockReminder, PatientsTabEvent> {
@@ -116,7 +104,7 @@ class PatientsEffectHandler @AssistedInject constructor(
       effects
           .map { createRefreshUserCompletable() }
           .doOnNext(::runRefreshUserTask)
-          .flatMap { Observable.empty<PatientsTabEvent>() }
+          .flatMap { Observable.empty() }
     }
   }
 

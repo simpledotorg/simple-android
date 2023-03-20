@@ -5,7 +5,6 @@ import org.simple.clinic.activity.permissions.RequiresPermission
 import org.simple.clinic.analytics.NetworkConnectivityStatus
 import org.simple.clinic.appupdate.AppUpdateNudgePriority
 import org.simple.clinic.drugstockreminders.DrugStockReminder
-import org.simple.clinic.facility.Facility
 import org.simple.clinic.platform.util.RuntimePermissionResult
 import org.simple.clinic.user.User
 import org.simple.clinic.util.RequiresNetwork
@@ -70,15 +69,4 @@ data class EnterDrugStockButtonClicked(
 ) : PatientsTabEvent(), RequiresNetwork {
 
   override val analyticsName = "Patients:Enter Drug Stock Clicked"
-}
-
-data class CurrentFacilityLoaded(val facility: Facility) : PatientsTabEvent()
-
-data class PatientLineListDownloadButtonClicked(
-    override var permission: Optional<RuntimePermissionResult> = Optional.empty(),
-    override val permissionString: String = Manifest.permission.WRITE_EXTERNAL_STORAGE,
-    override val permissionRequestCode: Int = 1
-) : PatientsTabEvent(), RequiresPermission {
-
-  override val analyticsName = "Patients:Patient Line List Download Clicked"
 }

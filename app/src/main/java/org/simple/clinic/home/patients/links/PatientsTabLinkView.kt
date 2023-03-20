@@ -58,7 +58,6 @@ class PatientsTabLinkView(
     val uiRenderer = uiRendererFactory.create(
         this,
         isPatientLineListEnabled = features.isEnabled(Feature.PatientLineListDownload)
-            && features.isEnabled(Feature.MonthlyScreeningReportsEnabled)
             && country.isoCountryCode == Country.INDIA
     )
 
@@ -67,7 +66,9 @@ class PatientsTabLinkView(
         defaultModel = PatientsTabLinkModel.default(),
         update = PatientsTabLinkUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
-        init = PatientsTabLinkInit(),
+        init = PatientsTabLinkInit(
+            isMonthlyScreeningReportsEnabled = features.isEnabled(Feature.MonthlyScreeningReportsEnabled)
+        ),
         modelUpdateListener = uiRenderer::render
     )
   }

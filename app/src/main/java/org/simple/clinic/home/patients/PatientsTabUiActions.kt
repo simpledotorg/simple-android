@@ -16,5 +16,4 @@ interface PatientsTabUiActions {
   fun showCriticalAppUpdateDialog(appUpdateNudgePriority: AppUpdateNudgePriority)
   fun openEnterDrugStockScreen()
   fun showNoActiveNetworkConnectionDialog()
-  fun openPatientLineListDownloadDialog()
 }

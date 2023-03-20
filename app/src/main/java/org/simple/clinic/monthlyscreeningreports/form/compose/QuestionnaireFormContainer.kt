@@ -16,7 +16,7 @@ import org.simple.clinic.questionnaire.component.ViewGroupComponentData
 @Composable
 fun QuestionnaireFormContainer(
     viewGroupComponentData: ViewGroupComponentData,
-    content: MutableMap<String, Any>
+    content: MutableMap<String, Any?>
 ) {
   Column(
       modifier = Modifier

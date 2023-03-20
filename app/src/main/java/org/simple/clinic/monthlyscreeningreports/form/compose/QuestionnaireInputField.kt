@@ -23,7 +23,7 @@ import org.simple.clinic.questionnaire.component.properties.Integer
 @Composable
 fun InputField(
     inputFieldComponentData: InputFieldComponentData,
-    content: MutableMap<String, Any>
+    content: MutableMap<String, Any?>
 ) {
   val initValue = getContentValueAsString(inputFieldComponentData, content)
   var text by remember {
@@ -54,7 +54,7 @@ fun InputField(
 
 private fun getContentValueAsString(
     inputFieldComponentData: InputFieldComponentData,
-    content: Map<String, Any>
+    content: Map<String, Any?>
 ): String {
   return if (content.containsKey(inputFieldComponentData.linkId)) {
     when (inputFieldComponentData.type) {
@@ -73,7 +73,7 @@ private fun getContentValueAsString(
 private fun setContentValue(
     value: String,
     inputFieldComponentData: InputFieldComponentData,
-    content: MutableMap<String, Any>
+    content: MutableMap<String, Any?>
 ) {
   when (inputFieldComponentData.type) {
     is Integer -> {
@@ -86,13 +86,13 @@ private fun setContentValue(
 private fun setIntegerContentValue(
     value: String,
     inputFieldComponentData: InputFieldComponentData,
-    content: MutableMap<String, Any>
+    content: MutableMap<String, Any?>
 ) {
+  if (value.isEmpty()) {
+    content[inputFieldComponentData.linkId] = null
+  }
   try {
     content[inputFieldComponentData.linkId] = value.toInt()
-  } catch (ex: Exception) {
-    if (value.isEmpty()) {
-      content.remove(inputFieldComponentData.linkId)
-    }
+  } catch (_: Exception) {
   }
 }

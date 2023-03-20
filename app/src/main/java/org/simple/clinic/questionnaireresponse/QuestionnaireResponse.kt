@@ -32,7 +32,7 @@ data class QuestionnaireResponse(
 
     val lastUpdatedByUserId: UUID?,
 
-    val content: Map<String, @RawValue Any>,
+    val content: Map<String, @RawValue Any?>,
 
     @Embedded
     val timestamps: Timestamps,

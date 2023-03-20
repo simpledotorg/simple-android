@@ -31,7 +31,7 @@ data class QuestionnaireEntryModel(
     return copy(questionnaire = questionnaire)
   }
 
-  fun updateContent(content: MutableMap<String, Any>): QuestionnaireEntryModel {
+  fun updateContent(content: MutableMap<String, Any?>): QuestionnaireEntryModel {
     setSubmitStatusToTrue(content)
     return copy(
         questionnaireResponse = questionnaireResponse.copy(
@@ -41,7 +41,7 @@ data class QuestionnaireEntryModel(
     )
   }
 
-  private fun setSubmitStatusToTrue(content: MutableMap<String, Any>) {
+  private fun setSubmitStatusToTrue(content: MutableMap<String, Any?>) {
     content["submitted"] = true
   }
 }

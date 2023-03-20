@@ -20,5 +20,5 @@ object UnsavedChangesWarningLeavePageClicked : QuestionnaireEntryEvent() {
   override val analyticsName = "Monthly Screening Report Form:Unsaved Changes Warning Leave Page Clicked"
 }
 
-data class SubmitButtonClicked(val content: MutableMap<String, Any>) : QuestionnaireEntryEvent()
+data class SubmitButtonClicked(val content: MutableMap<String, Any?>) : QuestionnaireEntryEvent()
 

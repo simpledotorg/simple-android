@@ -71,7 +71,7 @@ class QuestionnaireEntryScreen : BaseScreen<
   @Inject
   lateinit var effectHandlerFactory: QuestionnaireEntryEffectHandler.Factory
 
-  var content = mutableMapOf<String, Any>()
+  var content = mutableMapOf<String, Any?>()
 
   private val backButton
     get() = binding.backButton

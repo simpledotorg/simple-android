@@ -90,9 +90,10 @@ private fun setIntegerContentValue(
 ) {
   if (value.isEmpty()) {
     content[inputFieldComponentData.linkId] = null
-  }
-  try {
-    content[inputFieldComponentData.linkId] = value.toInt()
-  } catch (_: Exception) {
+  } else {
+    try {
+      content[inputFieldComponentData.linkId] = value.toInt()
+    } catch (_: Exception) {
+    }
   }
 }

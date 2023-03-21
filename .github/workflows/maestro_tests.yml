@@ -66,14 +66,16 @@ jobs:
           disable-animations: true
           disk-size: 8G
           script: >
+            echo $PATH
+
+            $HOME/.maestro/bin/maestro --version
+            
             ./gradlew
             -PmaestroTests=true
             -PsentryDsn=""
             -PsentryEnvironment=""
             -PmanifestEndpoint=${{ secrets.MANIFEST_ENDPOINT }}
             :app:installStagingRelease
-            
-            echo $PATH
             
             $HOME/.maestro/bin/maestro test --format junit --output maestro-test-report.xml maestroUiFlows
             

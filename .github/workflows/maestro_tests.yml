@@ -27,8 +27,7 @@ jobs:
 
       - name: Install Maestro
         run: |
-          brew tap mobile-dev-inc/tap
-          brew install maestro
+          export MAESTRO_VERSION="1.23.0"; curl -Ls "https://get.maestro.mobile.dev" | bash
 
       - name: Cache AVD
         uses: actions/cache@v3

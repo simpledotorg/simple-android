@@ -868,9 +868,6 @@
   <string name="select_patient_line_list_download_format_dialog_action_negative">ರದ್ದುಮಾಡಿ</string>
   <string name="select_patient_line_list_download_format_dialog_title_download">ಹೀಗೆ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</string>
   <string name="select_patient_line_list_download_format_dialog_action_positive">ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</string>
-  <string name="patient_line_list_download_card_title">IHCI ರೋಗಿ ರಿಜಿಸ್ಟರ್</string>
-  <string name="patient_line_list_download_card_desc">ನೋಂದಣಿ ಮಾಡಿಕೊಂಡಿರುವ ಅಥವಾ %1$s ಗೆ ನಿಯೋಜಿತರಾಗಿರುವ ಎಲ್ಲಾ ರೋಗಿಗಳ ಪಟ್ಟಿ</string>
-  <string name="patient_line_list_download_card_button">ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</string>
   <string name="patient_line_list_download_link">IHCI ರೋಗಿ ರಿಜಿಸ್ಟರ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ</string>
 
   <!--Notification permission denied dialog-->

@@ -869,9 +869,6 @@
   <string name="select_patient_line_list_download_format_dialog_action_negative">ይቅር</string>
   <string name="select_patient_line_list_download_format_dialog_title_download">አውርድ እንደ</string>
   <string name="select_patient_line_list_download_format_dialog_action_positive">አውርድ</string>
-  <string name="patient_line_list_download_card_title">የ IHCI ታካሚ ምዝገባ</string>
-  <string name="patient_line_list_download_card_desc">የተመዘገቡ ወይም  ወደ %1$s የተመደቡ የሁሉም ታካሚዎች ዝርዝር</string>
-  <string name="patient_line_list_download_card_button">አውርድ</string>
   <string name="patient_line_list_download_link">የ IHCI ታካሚ መዝገብ ያውርዱ</string>
 
   <!--Notification permission denied dialog-->

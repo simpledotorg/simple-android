@@ -868,9 +868,6 @@
   <string name="select_patient_line_list_download_format_dialog_action_negative">ரத்துசெய்</string>
   <string name="select_patient_line_list_download_format_dialog_title_download">இதாகப் பதிவிறக்கு</string>
   <string name="select_patient_line_list_download_format_dialog_action_positive">பதிவிறக்கப்பட்டது</string>
-  <string name="patient_line_list_download_card_title">IHCI நோயாளர் பதிவு</string>
-  <string name="patient_line_list_download_card_desc">%1$s க்குப் பதிவுசெய்யப்பட்ட அல்லது ஒதுக்கப்பட்ட அனைத்து நோயாளர்களின் பட்டியல்</string>
-  <string name="patient_line_list_download_card_button">பதிவிறக்கப்பட்டது</string>
   <string name="patient_line_list_download_link">IHCI நோயாளர் பதிவேட்டைப் பதிவிறக்கம் செய்யவும்</string>
 
   <!--Notification permission denied dialog-->

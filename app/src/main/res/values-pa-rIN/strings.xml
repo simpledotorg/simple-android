@@ -868,9 +868,6 @@
   <string name="select_patient_line_list_download_format_dialog_action_negative">ਰੱਦ ਕਰੋ</string>
   <string name="select_patient_line_list_download_format_dialog_title_download">ਇਸ ਤਰ੍ਹਾਂ ਡਾਊਨਲੋਡ ਕਰੋ</string>
   <string name="select_patient_line_list_download_format_dialog_action_positive">ਡਾਉਨਲੋਡ ਕਰੋ</string>
-  <string name="patient_line_list_download_card_title">IHCI ਮਰੀਜ਼ ਰਜਿਸਟਰ</string>
-  <string name="patient_line_list_download_card_desc">%1$s ਨੂੰ ਰਜਿਸਟਰ ਕੀਤੇ ਜਾਂ ਨਿਰਧਾਰਿਤ ਕੀਤੇ ਗਏ ਸਾਰੇ ਮਰੀਜ਼ਾਂ ਦੀ ਸੂਚੀ</string>
-  <string name="patient_line_list_download_card_button">ਡਾਉਨਲੋਡ ਕਰੋ</string>
   <string name="patient_line_list_download_link">IHCI ਮਰੀਜ਼ ਰਜਿਸਟਰ ਡਾਊਨਲੋਡ ਕਰੋ</string>
 
   <!--Notification permission denied dialog-->

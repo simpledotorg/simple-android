@@ -1010,9 +1010,6 @@
   <string name="select_patient_line_list_download_format_dialog_action_negative">Cancel</string>
   <string name="select_patient_line_list_download_format_dialog_title_download">Download as</string>
   <string name="select_patient_line_list_download_format_dialog_action_positive">Download</string>
-  <string name="patient_line_list_download_card_title">IHCI patient register</string>
-  <string name="patient_line_list_download_card_desc">List of all patients registered or assigned to %1$s</string>
-  <string name="patient_line_list_download_card_button">Download</string>
   <string name="patient_line_list_download_link">Download IHCI patient register</string>
 
   <!--Notification permission denied dialog-->

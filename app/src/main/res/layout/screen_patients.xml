@@ -112,29 +112,6 @@
         android:paddingTop="@dimen/spacing_8"
         android:paddingBottom="@dimen/spacing_16" />
 
-      <LinearLayout
-        android:id="@+id/patient_line_list_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:orientation="vertical"
-        android:paddingHorizontal="@dimen/spacing_8"
-        android:paddingBottom="@dimen/spacing_48"
-        android:visibility="gone">
-
-        <View
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="@dimen/spacing_16"
-          android:background="@drawable/divider" />
-
-        <include
-          android:id="@+id/patient_line_list_download_card"
-          layout="@layout/item_patient_line_list_download_card" />
-
-      </LinearLayout>
-
     </LinearLayout>
 
   </androidx.core.widget.NestedScrollView>

@@ -30,8 +30,6 @@ jobs:
           export MAESTRO_VERSION="1.23.0"
           export MAESTRO_DIR="$HOME/.maestro"
           curl -Ls "https://get.maestro.mobile.dev" | bash
-          export PATH="$PATH":"$MAESTRO_DIR/bin"
-          export PATH="$PATH":"/Users/runner/.maestro/bin"
 
       - name: Cache AVD
         uses: actions/cache@v3
@@ -66,10 +64,6 @@ jobs:
           disable-animations: true
           disk-size: 8G
           script: >
-            echo $PATH
-
-            $HOME/.maestro/bin/maestro --version
-            
             ./gradlew
             -PmaestroTests=true
             -PsentryDsn=""
@@ -77,6 +71,8 @@ jobs:
             -PmanifestEndpoint=${{ secrets.MANIFEST_ENDPOINT }}
             :app:installStagingRelease
             
+            # When installing Maestro manually, it doesn't get discovered in the path.
+            # Hence, providing absolute path to binary.
             $HOME/.maestro/bin/maestro test --format junit --output maestro-test-report.xml maestroUiFlows
             
             adb uninstall org.simple.clinic.staging

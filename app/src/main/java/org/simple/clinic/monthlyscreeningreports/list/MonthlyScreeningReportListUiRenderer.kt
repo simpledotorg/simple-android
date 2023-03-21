@@ -8,7 +8,7 @@ class MonthlyScreeningReportListUiRenderer(private val ui: MonthlyScreeningRepor
     val responseList = model.questionnaireResponses
 
     if (!responseList.isNullOrEmpty()) {
-      ui.displayMonthlyReportList(responseList)
+      ui.displayMonthlyScreeningReportList(responseList)
     } else {
       //no-op
     }

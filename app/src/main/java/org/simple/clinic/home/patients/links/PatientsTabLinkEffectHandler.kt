@@ -9,11 +9,13 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
+import org.simple.clinic.questionnaire.QuestionnaireRepository
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponseRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
 class PatientsTabLinkEffectHandler @AssistedInject constructor(
     private val currentFacility: Observable<Facility>,
+    private val questionnaireRepository: QuestionnaireRepository,
     private val questionnaireResponseRepository: QuestionnaireResponseRepository,
     private val schedulersProvider: SchedulersProvider,
     @Assisted private val uiActions: PatientsTabLinkUiActions
@@ -28,6 +30,7 @@ class PatientsTabLinkEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<PatientsTabLinkEffect, PatientsTabLinkEvent>()
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility(schedulersProvider.io()))
         .addTransformer(LoadMonthlyScreeningReportResponseList::class.java, loadMonthlyScreeningReportResponseList(schedulersProvider.io()))
+        .addTransformer(LoadMonthlyScreeningReportForm::class.java, loadMonthlyScreeningReportForm(schedulersProvider.io()))
         .addAction(OpenMonthlyScreeningReportsListScreen::class.java, { uiActions.openMonthlyScreeningReports() }, schedulersProvider.ui())
         .addAction(OpenPatientLineListDownloadDialog::class.java, { uiActions.openPatientLineListDownloadDialog() }, schedulersProvider.ui())
         .build()
@@ -48,8 +51,21 @@ class PatientsTabLinkEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
-          .switchMap { questionnaireResponseRepository.questionnaireResponsesByType(MonthlyScreeningReports) }
+          .switchMap { currentFacility }
+          .switchMap { facility ->
+            questionnaireResponseRepository.questionnaireResponsesFilteredBy(MonthlyScreeningReports, facility.uuid)
+          }
           .map(::MonthlyScreeningReportResponseListLoaded)
+    }
+  }
+
+  private fun loadMonthlyScreeningReportForm(scheduler: Scheduler):
+      ObservableTransformer<LoadMonthlyScreeningReportForm, PatientsTabLinkEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(scheduler)
+          .switchMap { questionnaireRepository.questionnairesByType(MonthlyScreeningReports) }
+          .map(::MonthlyScreeningReportFormLoaded)
     }
   }
 }

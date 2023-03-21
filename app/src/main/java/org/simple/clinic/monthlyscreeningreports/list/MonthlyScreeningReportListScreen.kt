@@ -29,7 +29,6 @@ import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import java.time.format.DateTimeFormatter
-import java.util.UUID
 import javax.inject.Inject
 
 class MonthlyScreeningReportListScreen : BaseScreen<
@@ -59,10 +58,10 @@ class MonthlyScreeningReportListScreen : BaseScreen<
   private val facilityTextView
     get() = binding.facilityTextView
 
-  private val monthlyReportRecyclerView
-    get() = binding.monthlyReportRecyclerView
+  private val monthlyScreeningReportRecyclerView
+    get() = binding.monthlyScreeningReportRecyclerView
 
-  private val monthlyReportItemAdapter = ItemAdapter(
+  private val monthlyScreeningReportItemAdapter = ItemAdapter(
       diffCallback = MonthlyScreeningReportItem.DiffCallback(),
       bindings = mapOf(
           R.layout.monthly_screening_report_item_view to { layoutInflater, parent ->
@@ -106,9 +105,9 @@ class MonthlyScreeningReportListScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    monthlyReportRecyclerView.apply {
+    monthlyScreeningReportRecyclerView.apply {
       layoutManager = LinearLayoutManager(context)
-      adapter = monthlyReportItemAdapter
+      adapter = monthlyScreeningReportItemAdapter
     }
   }
 
@@ -120,10 +119,10 @@ class MonthlyScreeningReportListScreen : BaseScreen<
   }
 
   private fun reportSelection(): Observable<MonthlyScreeningReportListEvent> {
-    return monthlyReportItemAdapter
+    return monthlyScreeningReportItemAdapter
         .itemEvents
         .ofType<MonthlyScreeningReportItem.Event.ListItemClicked>()
-        .map { it.id }
+        .map { it.questionnaireResponse }
         .map(::MonthlyScreeningReportItemClicked)
   }
 
@@ -139,9 +138,9 @@ class MonthlyScreeningReportListScreen : BaseScreen<
     facilityTextView.text = facilityName
   }
 
-  override fun displayMonthlyReportList(responseList: List<QuestionnaireResponse>) {
+  override fun displayMonthlyScreeningReportList(responseList: List<QuestionnaireResponse>) {
     val reportList = MonthlyScreeningReportItem.from(responseList, monthAndYearDateFormatter)
-    monthlyReportItemAdapter.submitList(reportList)
+    monthlyScreeningReportItemAdapter.submitList(reportList)
   }
 
   override fun showProgress() {
@@ -150,17 +149,22 @@ class MonthlyScreeningReportListScreen : BaseScreen<
   override fun hideProgress() {
   }
 
-  override fun openMonthlyScreeningForm(uuid: UUID) {
+  override fun openMonthlyScreeningForm(questionnaireResponse: QuestionnaireResponse) {
     router.push(
         QuestionnaireEntryScreen.Key(
-            id = uuid,
-            questionnaireType = MonthlyScreeningReports
+            questionnaireType = MonthlyScreeningReports,
+            questionnaireResponse = questionnaireResponse
         )
     )
   }
 
   override fun goBack() {
     router.pop()
+  }
+
+  override fun onDestroyView() {
+    monthlyScreeningReportRecyclerView.adapter = null
+    super.onDestroyView()
   }
 
   interface Injector {

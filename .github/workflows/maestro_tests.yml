@@ -27,8 +27,9 @@ jobs:
 
       - name: Install Maestro
         run: |
-          brew tap mobile-dev-inc/tap
-          brew install maestro
+          export MAESTRO_VERSION="1.23.0"
+          export MAESTRO_DIR="$HOME/.maestro"
+          curl -Ls "https://get.maestro.mobile.dev" | bash
 
       - name: Cache AVD
         uses: actions/cache@v3
@@ -70,7 +71,9 @@ jobs:
             -PmanifestEndpoint=${{ secrets.MANIFEST_ENDPOINT }}
             :app:installStagingRelease
             
-            maestro test --format junit --output maestro-test-report.xml maestroUiFlows
+            # When installing Maestro manually, it doesn't get discovered in the path.
+            # Hence, providing absolute path to binary.
+            $HOME/.maestro/bin/maestro test --format junit --output maestro-test-report.xml maestroUiFlows
             
             adb uninstall org.simple.clinic.staging
 
@@ -78,5 +81,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: maestro-test-report
-          path: /maestro-test-report.xml
-
+          path: ./maestro-test-report.xml
+        if: always()

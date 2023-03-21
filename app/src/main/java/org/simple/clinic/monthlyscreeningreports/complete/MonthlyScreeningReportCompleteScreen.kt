@@ -13,7 +13,7 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenMonthlyScreeningReportCompleteBinding
 import org.simple.clinic.di.DateFormatter
-import org.simple.clinic.di.DateFormatter.Type.SubmittedDate
+import org.simple.clinic.di.DateFormatter.Type.FullMonthAndYear
 import org.simple.clinic.di.injector
 import org.simple.clinic.monthlyscreeningreports.list.MonthlyScreeningReportListScreen
 import org.simple.clinic.monthlyscreeningreports.util.formatScreeningMonthStringToLocalDate
@@ -45,8 +45,8 @@ class MonthlyScreeningReportCompleteScreen : BaseScreen<
   lateinit var schedulersProvider: SchedulersProvider
 
   @Inject
-  @DateFormatter(SubmittedDate)
-  lateinit var submittedDateFormatter: DateTimeFormatter
+  @DateFormatter(FullMonthAndYear)
+  lateinit var fullMonthAndYearFormatter: DateTimeFormatter
 
   @Inject
   lateinit var effectHandlerFactory: MonthlyScreeningReportCompleteEffectHandler.Factory
@@ -112,15 +112,15 @@ class MonthlyScreeningReportCompleteScreen : BaseScreen<
     fun inject(target: MonthlyScreeningReportCompleteScreen)
   }
 
-  override fun showMonthCompletedView(response: QuestionnaireResponse) {
+  override fun showFormSubmissionMonthAndYearTextView(response: QuestionnaireResponse) {
     monthSubmittedTextView.text =
         context?.resources?.getString(
             R.string.monthly_screening_reports_submitted_with_date,
-            submittedDateFormatter.format(formatScreeningMonthStringToLocalDate(response.content))
+            fullMonthAndYearFormatter.format(formatScreeningMonthStringToLocalDate(response.content))
         )
   }
 
-  override fun goToMonthlyReportListScreen() {
+  override fun goToMonthlyScreeningReportListScreen() {
     router.popUntil(MonthlyScreeningReportListScreen.Key())
   }
 

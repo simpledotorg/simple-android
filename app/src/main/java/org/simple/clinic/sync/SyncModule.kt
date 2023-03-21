@@ -96,12 +96,12 @@ class SyncModule {
     val questionnaireSyncs = if (features.isEnabled(Feature.MonthlyScreeningReportsEnabled))
       listOf(questionnaireSync, questionnaireResponseSync) else emptyList()
 
-    return listOf(
-        facilitySync, protocolSync, reportsSync, helpSync,
+    return listOf(facilitySync) + questionnaireSyncs + listOf(
+        protocolSync, reportsSync, helpSync,
         patientSync, bloodPressureSync, medicalHistorySync, appointmentSync, prescriptionSync,
         bloodSugarSync, teleconsultationMedicalOfficersSync,
         teleconsultRecordSync, drugSync
-    ) + optionalSyncs + questionnaireSyncs
+    ) + optionalSyncs
   }
 
   @Provides

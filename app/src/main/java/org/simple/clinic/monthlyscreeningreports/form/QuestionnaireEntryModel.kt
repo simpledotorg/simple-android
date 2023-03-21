@@ -10,13 +10,13 @@ import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 data class QuestionnaireEntryModel(
     val facility: Facility?,
     val questionnaire: Questionnaire?,
-    val questionnaireResponse: QuestionnaireResponse?
+    val questionnaireResponse: QuestionnaireResponse
 ) : Parcelable {
   companion object {
-    fun default() = QuestionnaireEntryModel(
+    fun from(questionnaireResponse: QuestionnaireResponse) = QuestionnaireEntryModel(
         facility = null,
         questionnaire = null,
-        questionnaireResponse = null
+        questionnaireResponse = questionnaireResponse
     )
   }
 
@@ -31,7 +31,17 @@ data class QuestionnaireEntryModel(
     return copy(questionnaire = questionnaire)
   }
 
-  fun responseLoaded(questionnaireResponse: QuestionnaireResponse): QuestionnaireEntryModel {
-    return copy(questionnaireResponse = questionnaireResponse)
+  fun updateContent(content: MutableMap<String, Any?>): QuestionnaireEntryModel {
+    setSubmitStatusToTrue(content)
+    return copy(
+        questionnaireResponse = questionnaireResponse.copy(
+            content = content,
+            questionnaireId = requireNotNull(questionnaire).uuid
+        )
+    )
+  }
+
+  private fun setSubmitStatusToTrue(content: MutableMap<String, Any?>) {
+    content["submitted"] = true
   }
 }

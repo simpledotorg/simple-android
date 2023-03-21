@@ -3,7 +3,6 @@ package org.simple.clinic.monthlyscreeningreports.list
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.widgets.UiEvent
-import java.util.UUID
 
 sealed class MonthlyScreeningReportListEvent : UiEvent
 
@@ -15,6 +14,8 @@ object BackButtonClicked : MonthlyScreeningReportListEvent() {
   override val analyticsName = "Monthly Screening Reports List:Back Clicked"
 }
 
-data class MonthlyScreeningReportItemClicked(val uuid: UUID) : MonthlyScreeningReportListEvent() {
+data class MonthlyScreeningReportItemClicked(
+    val questionnaireResponse: QuestionnaireResponse
+) : MonthlyScreeningReportListEvent() {
   override val analyticsName = "Monthly Screening Reports: Item clicked"
 }

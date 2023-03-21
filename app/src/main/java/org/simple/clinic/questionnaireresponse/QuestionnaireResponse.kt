@@ -32,7 +32,7 @@ data class QuestionnaireResponse(
 
     val lastUpdatedByUserId: UUID?,
 
-    val content: Map<String, @RawValue Any>,
+    val content: Map<String, @RawValue Any?>,
 
     @Embedded
     val timestamps: Timestamps,
@@ -61,11 +61,11 @@ data class QuestionnaireResponse(
     @Query("SELECT * FROM QuestionnaireResponse WHERE uuid = :uuid LIMIT 1")
     fun getOne(uuid: UUID): QuestionnaireResponse?
 
-    @Query("SELECT * FROM QuestionnaireResponse WHERE questionnaireType = :type")
-    fun getByQuestionnaireType(type: QuestionnaireType): Flowable<List<QuestionnaireResponse>>
+    @Query("SELECT * FROM QuestionnaireResponse WHERE questionnaireType = :type AND facilityId = :currentFacilityId AND deletedAt IS NULL")
+    fun getFilteredBy(type: QuestionnaireType, currentFacilityId: UUID): Flowable<List<QuestionnaireResponse>>
 
     @Update
-    fun updateQuestionnaireResponse(questionnaireResponse: QuestionnaireResponse)
+    fun update(questionnaireResponse: QuestionnaireResponse)
 
     @Query("SELECT * FROM QuestionnaireResponse WHERE syncStatus = :status")
     fun withSyncStatus(status: SyncStatus): List<QuestionnaireResponse>
@@ -104,8 +104,5 @@ data class QuestionnaireResponse(
       WHERE deletedAt IS NOT NULL AND syncStatus == 'DONE'
     """)
     fun purgeDeleted()
-
-    @Query(""" SELECT * FROM QuestionnaireResponse """)
-    fun getAllQuestionnaireResponse(): List<QuestionnaireResponse>
   }
 }

@@ -12,11 +12,11 @@ class QuestionnaireEntryInitTest {
   private val questionnaireType = MonthlyScreeningReports
   private val questionnaireResponse = TestData.questionnaireResponse()
 
-  private val spec = InitSpec(QuestionnaireEntryInit(questionnaireType, questionnaireResponse.uuid))
+  private val spec = InitSpec(QuestionnaireEntryInit(questionnaireType))
 
   @Test
   fun `when screen is created, then load initial data`() {
-    val defaultModel = QuestionnaireEntryModel.default()
+    val defaultModel = QuestionnaireEntryModel.from(questionnaireResponse = questionnaireResponse)
 
     spec
         .whenInit(defaultModel)
@@ -25,7 +25,6 @@ class QuestionnaireEntryInitTest {
             hasEffects(
                 LoadCurrentFacility,
                 LoadQuestionnaireFormEffect(questionnaireType),
-                LoadQuestionnaireResponseEffect(questionnaireResponse.uuid)
             )
         ))
   }

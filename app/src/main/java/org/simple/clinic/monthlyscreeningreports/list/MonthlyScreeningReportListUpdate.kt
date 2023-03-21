@@ -12,7 +12,7 @@ class MonthlyScreeningReportListUpdate :
       is BackButtonClicked -> Next.dispatch(setOf(GoBack))
       is CurrentFacilityLoaded -> Next.next(model.currentFacilityLoaded(event.facility))
       is MonthlyScreeningReportListFetched -> Next.next(model.responseListLoaded(event.responseList))
-      is MonthlyScreeningReportItemClicked -> dispatch(OpenMonthlyScreeningForm(event.uuid))
+      is MonthlyScreeningReportItemClicked -> dispatch(OpenMonthlyScreeningForm(event.questionnaireResponse))
     }
   }
 }

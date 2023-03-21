@@ -10,6 +10,7 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
+import org.simple.clinic.questionnaire.QuestionnaireRepository
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponseRepository
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.sharedTestCode.TestData
@@ -17,7 +18,8 @@ import java.util.UUID
 
 class PatientsTabLinkEffectHandlerTest {
   private val uiActions = mock<PatientsTabLinkUiActions>()
-  private val repository = mock<QuestionnaireResponseRepository>()
+  private val responseRepository = mock<QuestionnaireResponseRepository>()
+  private val formRepository = mock<QuestionnaireRepository>()
 
   private val facility = TestData.facility(
       uuid = UUID.fromString("e8075335-f766-4605-8216-41bf79189609"),
@@ -29,9 +31,15 @@ class PatientsTabLinkEffectHandlerTest {
       questionnaireType = MonthlyScreeningReports
   )
 
+  private val questionnaire = TestData.questionnaire(
+      uuid = UUID.fromString("890aeeb5-d6c5-4a28-ab3c-fca0e193aa6f"),
+      questionnaireType = MonthlyScreeningReports
+  )
+
   private val effectHandler = PatientsTabLinkEffectHandler(
       currentFacility = Observable.just(facility),
-      questionnaireResponseRepository = repository,
+      questionnaireRepository = formRepository,
+      questionnaireResponseRepository = responseRepository,
       schedulersProvider = TestSchedulersProvider.trampoline(),
       uiActions = uiActions,
   ).build()
@@ -55,13 +63,25 @@ class PatientsTabLinkEffectHandlerTest {
 
   @Test
   fun `when load monthly report response list effect is received, then load monthly report response list`() {
-    whenever(repository.questionnaireResponsesByType(MonthlyScreeningReports)) doReturn Observable.just(listOf(questionnaireResponse))
+    whenever(responseRepository.questionnaireResponsesFilteredBy(MonthlyScreeningReports, facility.uuid)) doReturn Observable.just(listOf(questionnaireResponse))
 
     // when
     effectHandlerTestCase.dispatch(LoadMonthlyScreeningReportResponseList)
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(MonthlyScreeningReportResponseListLoaded(listOf(questionnaireResponse)))
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when load monthly report form effect is received, then load monthly report form`() {
+    whenever(formRepository.questionnairesByType(MonthlyScreeningReports)) doReturn Observable.just(questionnaire)
+
+    // when
+    effectHandlerTestCase.dispatch(LoadMonthlyScreeningReportForm)
+
+    // then
+    effectHandlerTestCase.assertOutgoingEvents(MonthlyScreeningReportFormLoaded(questionnaire))
     verifyNoMoreInteractions(uiActions)
   }
 

@@ -18,7 +18,6 @@ class PatientsTabViewEffectHandler(
       is ShowCriticalAppUpdateDialog -> uiActions.showCriticalAppUpdateDialog(viewEffect.appUpdateNudgePriority)
       OpenEnterDrugStockScreen -> uiActions.openEnterDrugStockScreen()
       ShowNoActiveNetworkConnectionDialog -> uiActions.showNoActiveNetworkConnectionDialog()
-      OpenPatientLineListDownloadDialog -> uiActions.openPatientLineListDownloadDialog()
     }
   }
 }

@@ -55,26 +55,26 @@ class QuestionnaireRepositoryAndroidTest {
   @Test
   fun saving_questionnaire_should_delete_existing_entries_with_same_questionnaire_type_if_exist() {
     // given
-    val questionnaires = listOf(
+    val monthlyScreeningReportsQuestionnaires = listOf(
         TestData.questionnaire(
             uuid = UUID.fromString("e445737a-8adf-496d-9f0f-5af5cec58446"),
             questionnaireType = MonthlyScreeningReports
         )
     )
 
-    questionnaireRepository.save(questionnaires)
+    questionnaireRepository.save(monthlyScreeningReportsQuestionnaires)
 
-    val newMonthlyScreeningQuestionnaire = TestData.questionnaire(
+    val newMonthlyScreeningReportsQuestionnaire = TestData.questionnaire(
         uuid = UUID.fromString("9b72f35a-05cd-4d13-82cd-73fcc3dd738b"),
         questionnaireType = MonthlyScreeningReports
     )
 
     // when
-    questionnaireRepository.save(listOf(newMonthlyScreeningQuestionnaire))
+    questionnaireRepository.save(listOf(newMonthlyScreeningReportsQuestionnaire))
 
     // then
-    val monthlyScreeningQuestionnaire = questionnaireRepository.questionnairesByType(MonthlyScreeningReports)
+    val monthlyScreeningQuestionnaire = questionnaireRepository.questionnairesByTypeImmediate(MonthlyScreeningReports)
 
-    assertThat(monthlyScreeningQuestionnaire).isEqualTo(newMonthlyScreeningQuestionnaire)
+    assertThat(monthlyScreeningQuestionnaire).isEqualTo(newMonthlyScreeningReportsQuestionnaire)
   }
 }

@@ -868,9 +868,6 @@
   <string name="select_patient_line_list_download_format_dialog_action_negative">రద్దు చేయి</string>
   <string name="select_patient_line_list_download_format_dialog_title_download">ఇలా డౌన్‌లోడ్ చేయండి</string>
   <string name="select_patient_line_list_download_format_dialog_action_positive">డౌన్‌లోడ్ చేయి</string>
-  <string name="patient_line_list_download_card_title">IHCI రోగి రిజిస్టర్</string>
-  <string name="patient_line_list_download_card_desc">రిజిస్టర్ అయిన రోగులందరి లేదా %1$sకు కేటాయించబడిన వారి జాబితా</string>
-  <string name="patient_line_list_download_card_button">డౌన్‌లోడ్ చేయి</string>
   <string name="patient_line_list_download_link">IHCI రోగి రిజిస్టర్‌ను డౌన్‌లోడ్ చేయండి</string>
 
   <!--Notification permission denied dialog-->

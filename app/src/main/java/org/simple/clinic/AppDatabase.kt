@@ -298,6 +298,7 @@ abstract class AppDatabase : RoomDatabase() {
   }
 
   private fun purgeUnnecessaryQuestionnaireResponses() {
+    questionnaireDao().purgeDeleted()
     questionnaireResponseDao().purgeDeleted()
   }
 

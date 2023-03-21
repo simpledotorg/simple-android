@@ -27,6 +27,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.onlinelookup.api.DurationFromSecondsMoshiAdapter
 import org.simple.clinic.patient.onlinelookup.api.RetentionType
 import org.simple.clinic.patient.sync.PatientPayload
+import org.simple.clinic.questionnaireresponse.sync.QuestionnaireResponsePayload
 import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.scanid.IndiaNHIDDateOfBirthMoshiAdapter
 import org.simple.clinic.scanid.IndiaNHIDGender
@@ -90,10 +91,12 @@ class NetworkModule {
         .build()
 
     val patientPayloadNullSerializingAdapter = moshi.adapter(PatientPayload::class.java).serializeNulls()
+    val questionnaireResponsePayloadNullSerializingAdapter = moshi.adapter(QuestionnaireResponsePayload::class.java).serializeNulls()
 
     return moshi
         .newBuilder()
         .add(PatientPayload::class.java, patientPayloadNullSerializingAdapter)
+        .add(QuestionnaireResponsePayload::class.java, questionnaireResponsePayloadNullSerializingAdapter)
         .build()
   }
 

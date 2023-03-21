@@ -45,6 +45,22 @@ class PatientsTabLinkUpdateTest {
   }
 
   @Test
+  fun `when monthly screening report form is loaded, then update the model`() {
+    val questionnaire = TestData.questionnaire(
+        uuid = UUID.fromString("3185486d-15b7-429c-a472-260aeca2a49a"),
+        questionnaireType = MonthlyScreeningReports
+    )
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(MonthlyScreeningReportFormLoaded(questionnaire))
+        .then(UpdateSpec.assertThatNext(
+            NextMatchers.hasModel(defaultModel.monthlyScreeningReportFormLoaded(questionnaire)),
+            NextMatchers.hasNoEffects()
+        ))
+  }
+
+  @Test
   fun `when monthly screening report list button is clicked, then open monthly screening report list screen`() {
     updateSpec
         .given(defaultModel)

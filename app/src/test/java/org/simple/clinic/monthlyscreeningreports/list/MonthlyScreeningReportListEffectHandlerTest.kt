@@ -5,7 +5,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.toFlowable
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.mobius.EffectHandlerTestCase
@@ -31,7 +30,7 @@ class MonthlyScreeningReportListEffectHandlerTest {
       questionnaireResponseRepository = questionnaireResponseRepository,
       schedulersProvider = TestSchedulersProvider.trampoline(),
       viewEffectsConsumer = viewEffectHandler::handle,
-      currentFacility = Observable.just(facility),
+      currentFacility = { facility },
   )
 
   private val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -43,10 +42,10 @@ class MonthlyScreeningReportListEffectHandlerTest {
 
   @Test
   fun `when load questionnaire response list effect is received then questionnaire response list should be fetched`() {
-    whenever(questionnaireResponseRepository.questionnaireResponsesByType(MonthlyScreeningReports)) doReturn Observable.just(listOf(questionnaireResponse))
+    whenever(questionnaireResponseRepository.questionnaireResponsesFilteredBy(MonthlyScreeningReports, facility.uuid)) doReturn Observable.just(listOf(questionnaireResponse))
 
     //when
-    testCase.dispatch(LoadMonthlyReportListEffect)
+    testCase.dispatch(LoadMonthlyScreeningReportListEffect)
 
     //then
     testCase.assertOutgoingEvents(MonthlyScreeningReportListFetched(listOf(questionnaireResponse)))

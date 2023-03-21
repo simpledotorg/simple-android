@@ -4,7 +4,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 fun getScreeningMonth(
-    content: Map<String, Any>,
+    content: Map<String, Any?>,
     dateTimeFormatter: DateTimeFormatter
 ): String {
   return try {
@@ -15,7 +15,7 @@ fun getScreeningMonth(
   }
 }
 
-fun getScreeningSubmitStatus(content: Map<String, Any>): Boolean {
+fun getScreeningSubmitStatus(content: Map<String, Any?>): Boolean {
   return try {
     content["submitted"] as Boolean
   } catch (ex: Exception) {
@@ -23,7 +23,7 @@ fun getScreeningSubmitStatus(content: Map<String, Any>): Boolean {
   }
 }
 
-fun formatScreeningMonthStringToLocalDate(content: Map<String, Any>): LocalDate? {
+fun formatScreeningMonthStringToLocalDate(content: Map<String, Any?>): LocalDate? {
   return try {
     val monthString = content["month_date"] as String
     LocalDate.parse(monthString)

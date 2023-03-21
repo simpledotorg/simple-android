@@ -868,9 +868,6 @@
   <string name="select_patient_line_list_download_format_dialog_action_negative">අවලංගු කරන්න</string>
   <string name="select_patient_line_list_download_format_dialog_title_download">මෙම ආකාරයට බාගන්න</string>
   <string name="select_patient_line_list_download_format_dialog_action_positive">බාගත කිරීම</string>
-  <string name="patient_line_list_download_card_title">IHCI රෝගී ලේඛනය</string>
-  <string name="patient_line_list_download_card_desc">%1$s වෙත ලියාපදිංචි වී ඇති හෝ වෙන් කර ඇති සියලුම රෝගීන්ගේ ලැයිස්තුව</string>
-  <string name="patient_line_list_download_card_button">බාගත කිරීම</string>
   <string name="patient_line_list_download_link">IHCI රෝගී ලේඛනය බාගන්න</string>
 
   <!--Notification permission denied dialog-->

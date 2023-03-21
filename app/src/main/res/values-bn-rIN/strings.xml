@@ -868,9 +868,6 @@
   <string name="select_patient_line_list_download_format_dialog_action_negative">বাতিল করুন</string>
   <string name="select_patient_line_list_download_format_dialog_title_download">এই হিসাবে ডাউনলোড করুন</string>
   <string name="select_patient_line_list_download_format_dialog_action_positive">ডাউনলোড করুন</string>
-  <string name="patient_line_list_download_card_title">IHCI রোগীর রেজিস্টার</string>
-  <string name="patient_line_list_download_card_desc">%1$s-এ রেজিস্টার অথবা অ্যাসাইন করা সব রোগীর তালিকা</string>
-  <string name="patient_line_list_download_card_button">ডাউনলোড করুন</string>
   <string name="patient_line_list_download_link">IHCI রোগীর রেজিস্টার ডাউনলোড করুন</string>
 
   <!--Notification permission denied dialog-->

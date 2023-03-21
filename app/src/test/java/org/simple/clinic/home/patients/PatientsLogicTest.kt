@@ -83,7 +83,7 @@ class PatientsLogicTest {
 
   @Before
   fun setUp() {
-    val uiRenderer = PatientsTabUiRenderer(ui, LocalDate.of(2021, 3, 22), false)
+    val uiRenderer = PatientsTabUiRenderer(ui, LocalDate.of(2021, 3, 22))
     val viewEffectHandler = PatientsTabViewEffectHandler(uiActions)
     val facility = TestData.facility()
     val patientsEffectHandler = PatientsEffectHandler(
@@ -100,7 +100,6 @@ class PatientsLogicTest {
         drugStockReminder = mock(),
         drugStockReportLastCheckedAt = drugStockReportLastCheckedAt,
         isDrugStockReportFilled = isDrugStockReportFilled,
-        currentFacility = Observable.just(facility),
         viewEffectsConsumer = viewEffectHandler::handle
     )
 
@@ -110,7 +109,6 @@ class PatientsLogicTest {
         init = PatientsInit(
             isNotifyAppUpdateAvailableV2Enabled = false,
             isMonthlyDrugStockReportReminderEnabledInIndia = true,
-            isPatientLineListEnabled = false
         ),
         update = PatientsTabUpdate(isNotifyAppUpdateAvailableV2Enabled = false),
         effectHandler = patientsEffectHandler.build(),

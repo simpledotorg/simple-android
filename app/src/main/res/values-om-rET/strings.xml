@@ -870,9 +870,6 @@ Appilikeeshinii Simple keessan Google PlayStore irraa haaromsadhaa.</string>
   <string name="select_patient_line_list_download_format_dialog_action_negative">Adda kuti</string>
   <string name="select_patient_line_list_download_format_dialog_title_download">Bifa ittiin buustan filadhaa</string>
   <string name="select_patient_line_list_download_format_dialog_action_positive">Buusicha</string>
-  <string name="patient_line_list_download_card_title">Galmeessa dhukkubsataa IHCI</string>
-  <string name="patient_line_list_download_card_desc">Tarree dhukkubsattoota galmaa\'anii ykn %1$stti kennamanii</string>
-  <string name="patient_line_list_download_card_button">Buusicha</string>
   <string name="patient_line_list_download_link">Galmeessa dhukkubsataa IHCI buusaa</string>
 
   <!--Notification permission denied dialog-->

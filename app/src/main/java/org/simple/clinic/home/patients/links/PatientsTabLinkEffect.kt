@@ -6,6 +6,8 @@ object LoadCurrentFacility : PatientsTabLinkEffect()
 
 object LoadMonthlyScreeningReportResponseList : PatientsTabLinkEffect()
 
+object LoadMonthlyScreeningReportForm : PatientsTabLinkEffect()
+
 object OpenMonthlyScreeningReportsListScreen : PatientsTabLinkEffect()
 
 object OpenPatientLineListDownloadDialog : PatientsTabLinkEffect()

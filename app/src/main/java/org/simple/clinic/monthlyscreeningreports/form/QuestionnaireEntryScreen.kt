@@ -1,7 +1,9 @@
 package org.simple.clinic.monthlyscreeningreports.form
 
 import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -16,7 +18,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenQuestionnaireEntryFormBinding
 import org.simple.clinic.di.DateFormatter
 import org.simple.clinic.di.DateFormatter.Type.MonthAndYear
-import org.simple.clinic.di.DateFormatter.Type.SubmittedDateTime
+import org.simple.clinic.di.DateFormatter.Type.FormSubmissionDateTime
 import org.simple.clinic.di.injector
 import org.simple.clinic.monthlyscreeningreports.complete.MonthlyScreeningReportCompleteScreen
 import org.simple.clinic.monthlyscreeningreports.form.compose.QuestionnaireFormContainer
@@ -34,9 +36,9 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toLocalDateTimeAtZone
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.format.DateTimeFormatter
-import java.util.UUID
 import javax.inject.Inject
 
 class QuestionnaireEntryScreen : BaseScreen<
@@ -60,8 +62,8 @@ class QuestionnaireEntryScreen : BaseScreen<
   lateinit var monthAndYearDateFormatter: DateTimeFormatter
 
   @Inject
-  @DateFormatter(SubmittedDateTime)
-  lateinit var submittedDateTimeFormatter: DateTimeFormatter
+  @DateFormatter(FormSubmissionDateTime)
+  lateinit var formSubmissionDateTimeFormatter: DateTimeFormatter
 
   @Inject
   lateinit var schedulersProvider: SchedulersProvider
@@ -69,9 +71,7 @@ class QuestionnaireEntryScreen : BaseScreen<
   @Inject
   lateinit var effectHandlerFactory: QuestionnaireEntryEffectHandler.Factory
 
-  var questionnaireResponse: QuestionnaireResponse? = null
-
-  var content = mutableMapOf<String, Any>()
+  var content = mutableMapOf<String, Any?>()
 
   private val backButton
     get() = binding.backButton
@@ -94,9 +94,9 @@ class QuestionnaireEntryScreen : BaseScreen<
   private val hotEvents = PublishSubject.create<QuestionnaireEntryEvent>()
   private val hardwareBackClicks = PublishSubject.create<Unit>()
 
-  override fun defaultModel() = QuestionnaireEntryModel.default()
+  override fun defaultModel() = QuestionnaireEntryModel.from(questionnaireResponse = screenKey.questionnaireResponse)
 
-  override fun createInit() = QuestionnaireEntryInit(screenKey.questionnaireType, screenKey.id)
+  override fun createInit() = QuestionnaireEntryInit(screenKey.questionnaireType)
 
   override fun createUpdate() = QuestionnaireEntryUpdate()
 
@@ -128,10 +128,16 @@ class QuestionnaireEntryScreen : BaseScreen<
     context.injector<Injector>().inject(this)
   }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    setToolbarMonth(screenKey.questionnaireResponse)
+    setSubmittedView(screenKey.questionnaireResponse)
+  }
+
   @Parcelize
   data class Key(
-      val id: UUID,
       val questionnaireType: QuestionnaireType,
+      val questionnaireResponse: QuestionnaireResponse,
       override val analyticsName: String = "$questionnaireType questionnaire entry form"
   ) : ScreenKey() {
 
@@ -142,14 +148,14 @@ class QuestionnaireEntryScreen : BaseScreen<
     facilityTextView.text = facilityName
   }
 
-  override fun setToolbarMonth(response: QuestionnaireResponse) {
+  private fun setToolbarMonth(response: QuestionnaireResponse) {
     monthTextView.text = context?.resources?.getString(
         R.string.monthly_screening_reports_screening_report,
         getScreeningMonth(response.content, monthAndYearDateFormatter)
     )
   }
 
-  override fun setSubmittedView(response: QuestionnaireResponse) {
+  private fun setSubmittedView(response: QuestionnaireResponse) {
     val isSubmitted = getScreeningSubmitStatus(response.content)
     submittedDateAndTimeContainer.visibleOrGone(isSubmitted)
 
@@ -157,13 +163,12 @@ class QuestionnaireEntryScreen : BaseScreen<
       val updatedAt = response.timestamps.updatedAt
       submittedDateAndTimeTextView.text = context?.resources?.getString(
           R.string.monthly_screening_reports_submitted_with_date_and_time,
-          submittedDateTimeFormatter.format(updatedAt.toLocalDateTimeAtZone(userClock.zone)))
+          formSubmissionDateTimeFormatter.format(updatedAt.toLocalDateTimeAtZone(userClock.zone)))
     }
   }
 
-  override fun displayQuestionnaireFormLayout(layout: BaseComponentData, response: QuestionnaireResponse) {
-    questionnaireResponse = response
-    content = requireNotNull(questionnaireResponse).content.toMutableMap()
+  override fun displayQuestionnaireFormLayout(layout: BaseComponentData) {
+    content = screenKey.questionnaireResponse.content.toMutableMap()
 
     if (layout is ViewGroupComponentData) {
       binding.composeView.apply {
@@ -188,22 +193,11 @@ class QuestionnaireEntryScreen : BaseScreen<
 
   private fun submitClicks(): Observable<UiEvent> {
     return submitButton.clicks()
-        .map {
-          content["submitted"] = true
-          val updatedQuestionnaireResponse = questionnaireResponse?.copy(
-              content = content
-          )
-          SubmitButtonClicked(requireNotNull(updatedQuestionnaireResponse))
-        }
-  }
-
-  override fun showProgress() {
-  }
-
-  override fun hideProgress() {
+        .map { SubmitButtonClicked(content) }
   }
 
   override fun goBack() {
+    binding.root.hideKeyboard()
     router.pop()
   }
 
@@ -218,8 +212,8 @@ class QuestionnaireEntryScreen : BaseScreen<
         .show()
   }
 
-  override fun goToMonthlyReportsCompleteScreen() {
-    router.push(MonthlyScreeningReportCompleteScreen.Key(screenKey.id))
+  override fun goToMonthlyScreeningReportsCompleteScreen() {
+    router.push(MonthlyScreeningReportCompleteScreen.Key(screenKey.questionnaireResponse.uuid))
   }
 
   interface Injector {

@@ -869,9 +869,6 @@
   <string name="select_patient_line_list_download_format_dialog_action_negative">Baaji</string>
   <string name="select_patient_line_list_download_format_dialog_title_download">Soo deji</string>
   <string name="select_patient_line_list_download_format_dialog_action_positive">Soo dejiso</string>
-  <string name="patient_line_list_download_card_title">Bukaanka ka duwaan gashan IHCI</string>
-  <string name="patient_line_list_download_card_desc">Qor dhamaan bukaanka duwaan gashan ama saxeexay %1$s</string>
-  <string name="patient_line_list_download_card_button">Soo dejiso</string>
   <string name="patient_line_list_download_link">Dajiso diiwaaniyaha bukaanka IHCI</string>
 
   <!--Notification permission denied dialog-->

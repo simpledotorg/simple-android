@@ -29,8 +29,6 @@ object TouchDrugStockReportLastCheckedAt : PatientsTabEffect()
 
 data class TouchIsDrugStockReportFilled(val isDrugStockReportFilled: Boolean) : PatientsTabEffect()
 
-object LoadCurrentFacility : PatientsTabEffect()
-
 sealed class PatientsTabViewEffect : PatientsTabEffect()
 
 object OpenEnterOtpScreen : PatientsTabViewEffect()
@@ -52,5 +50,3 @@ data class ShowCriticalAppUpdateDialog(val appUpdateNudgePriority: AppUpdateNudg
 object OpenEnterDrugStockScreen : PatientsTabViewEffect()
 
 object ShowNoActiveNetworkConnectionDialog : PatientsTabViewEffect()
-
-object OpenPatientLineListDownloadDialog : PatientsTabViewEffect()

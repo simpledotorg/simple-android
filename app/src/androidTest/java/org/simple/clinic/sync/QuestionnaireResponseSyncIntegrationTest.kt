@@ -97,7 +97,7 @@ class QuestionnaireResponseSyncIntegrationTest {
   @Test
   fun syncing_records_should_work_as_expected() {
     sync.pull()
-    val questionnaireResponseList = repository.questionnaireResponsesByType(MonthlyScreeningReports).blockingFirst()
+    val questionnaireResponseList = repository.questionnaireResponsesFilteredBy(MonthlyScreeningReports, currentFacilityUuid).blockingFirst()
 
     val updatedQuestionnaireResponseList = questionnaireResponseList.map {
       TestData.questionnaireResponse(

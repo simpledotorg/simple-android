@@ -8,6 +8,6 @@ class MonthlyScreeningReportListInit(
 ) : Init<MonthlyScreeningReportListModel, MonthlyScreeningReportListEffect> {
   override fun init(model: MonthlyScreeningReportListModel):
       First<MonthlyScreeningReportListModel, MonthlyScreeningReportListEffect> {
-    return first(model, LoadCurrentFacility, LoadMonthlyReportListEffect)
+    return first(model, LoadCurrentFacility, LoadMonthlyScreeningReportListEffect)
   }
 }

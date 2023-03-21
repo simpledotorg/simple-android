@@ -15,7 +15,6 @@ data class PatientsTabModel(
     val appStaleness: Int?,
     val appUpdateNudgePriority: AppUpdateNudgePriority?,
     val isDrugStockReportFilled: Boolean?,
-    val facility: Facility?
 ) : Parcelable {
 
   companion object {
@@ -25,12 +24,8 @@ data class PatientsTabModel(
         appStaleness = null,
         appUpdateNudgePriority = null,
         isDrugStockReportFilled = null,
-        facility = null
     )
   }
-
-  val hasFacility: Boolean
-    get() = facility != null
 
   val hasLoadedUser: Boolean
     get() = user != null
@@ -58,9 +53,5 @@ data class PatientsTabModel(
 
   fun updateIsDrugStockFilled(isDrugStockReportFilled: Optional<Boolean>): PatientsTabModel {
     return copy(isDrugStockReportFilled = isDrugStockReportFilled.toNullable())
-  }
-
-  fun currentFacilityLoaded(facility: Facility): PatientsTabModel {
-    return copy(facility = facility)
   }
 }

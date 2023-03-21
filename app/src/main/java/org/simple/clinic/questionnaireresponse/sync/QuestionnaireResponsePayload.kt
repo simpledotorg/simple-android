@@ -27,7 +27,7 @@ data class QuestionnaireResponsePayload(
     val lastUpdatedByUserId: UUID?,
 
     @Json(name = "content")
-    val content: Map<String, Any>,
+    val content: Map<String, Any?>,
 
     @Json(name = "created_at")
     val createdAt: Instant,

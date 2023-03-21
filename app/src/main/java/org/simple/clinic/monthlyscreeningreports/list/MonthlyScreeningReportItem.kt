@@ -12,12 +12,10 @@ import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.recyclerview.BindingViewHolder
 import java.time.format.DateTimeFormatter
-import java.util.UUID
 
 data class MonthlyScreeningReportItem(
-    val uuid: UUID,
-    val submitted: Boolean,
-    val month: String
+    val questionnaireResponse: QuestionnaireResponse,
+    val dateTimeFormatter: DateTimeFormatter
 ) : ItemAdapter.Item<MonthlyScreeningReportItem.Event> {
 
   companion object {
@@ -29,9 +27,8 @@ data class MonthlyScreeningReportItem(
           .sortedByDescending { formatScreeningMonthStringToLocalDate(it.content) }
           .map {
             MonthlyScreeningReportItem(
-                uuid = it.uuid,
-                submitted = getScreeningSubmitStatus(it.content),
-                month = getScreeningMonth(it.content, dateTimeFormatter)
+                questionnaireResponse = it,
+                dateTimeFormatter = dateTimeFormatter
             )
           }
     }
@@ -44,21 +41,24 @@ data class MonthlyScreeningReportItem(
     val binding = holder.binding as MonthlyScreeningReportItemViewBinding
 
     holder.itemView.setOnClickListener {
-      subject.onNext(Event.ListItemClicked(uuid))
+      subject.onNext(Event.ListItemClicked(questionnaireResponse))
     }
 
+    val isSubmitted = getScreeningSubmitStatus(questionnaireResponse.content)
+    val month = getScreeningMonth(questionnaireResponse.content, dateTimeFormatter)
+
     binding.statusImageView.setImageResource(
-        if (submitted) R.drawable.ic_report_submitted
-        else R.drawable.ic_submit_report
+        if (isSubmitted) R.drawable.ic_form_submitted
+        else R.drawable.ic_form_not_submitted
     )
 
     binding.statusTextView.text = context.resources.getString(
-        if (submitted) R.string.monthly_screening_reports_submitted
+        if (isSubmitted) R.string.monthly_screening_reports_submitted
         else R.string.monthly_screening_reports_submit_report
     )
 
     binding.statusTextView.setTextColor(ContextCompat.getColor(context,
-        if (submitted) R.color.simple_green_500
+        if (isSubmitted) R.color.simple_green_500
         else R.color.color_on_surface_67
     ))
 
@@ -69,7 +69,7 @@ data class MonthlyScreeningReportItem(
   }
 
   sealed class Event {
-    data class ListItemClicked(val id: UUID) : Event()
+    data class ListItemClicked(val questionnaireResponse: QuestionnaireResponse) : Event()
   }
 
   class DiffCallback : DiffUtil.ItemCallback<MonthlyScreeningReportItem>() {
@@ -77,7 +77,7 @@ data class MonthlyScreeningReportItem(
         oldItem: MonthlyScreeningReportItem,
         newItem: MonthlyScreeningReportItem
     ): Boolean {
-      return oldItem.uuid == newItem.uuid
+      return oldItem.questionnaireResponse.uuid == newItem.questionnaireResponse.uuid
     }
 
     override fun areContentsTheSame(

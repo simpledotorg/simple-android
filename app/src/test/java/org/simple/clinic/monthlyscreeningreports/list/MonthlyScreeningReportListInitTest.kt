@@ -17,7 +17,7 @@ class MonthlyScreeningReportListInitTest {
             FirstMatchers.hasModel(defaultModel),
             FirstMatchers.hasEffects(
                 LoadCurrentFacility,
-                LoadMonthlyReportListEffect,
+                LoadMonthlyScreeningReportListEffect,
             )
         ))
   }

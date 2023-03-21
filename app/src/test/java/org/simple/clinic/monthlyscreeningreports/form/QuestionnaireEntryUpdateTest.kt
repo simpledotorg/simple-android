@@ -3,6 +3,7 @@ package org.simple.clinic.monthlyscreeningreports.form
 import com.spotify.mobius.test.NextMatchers
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -11,7 +12,7 @@ import java.util.UUID
 
 class QuestionnaireEntryUpdateTest {
 
-  private val defaultModel = QuestionnaireEntryModel.default()
+  private val defaultModel = QuestionnaireEntryModel.from(questionnaireResponse = TestData.questionnaireResponse())
 
   private val update = QuestionnaireEntryUpdate()
 
@@ -46,26 +47,13 @@ class QuestionnaireEntryUpdateTest {
   }
 
   @Test
-  fun `when questionnaire response is fetched, then update the model`() {
-    val questionnaireResponse = TestData.questionnaireResponse()
-
-    spec
-        .given(defaultModel)
-        .whenEvent(QuestionnaireResponseFetched(questionnaireResponse))
-        .then(assertThatNext(
-            hasModel(defaultModel.responseLoaded(questionnaireResponse)),
-            hasNoEffects()
-        ))
-  }
-
-  @Test
   fun `when questionnaire response is saved, then go to complete screen`() {
     spec
         .given(defaultModel)
         .whenEvent(QuestionnaireResponseSaved)
         .then(assertThatNext(
-            NextMatchers.hasNoModel(),
-            NextMatchers.hasEffects(GoToMonthlyReportsCompleteScreen)
+            hasNoModel(),
+            NextMatchers.hasEffects(GoToMonthlyScreeningReportsCompleteScreen)
         ))
   }
 
@@ -75,20 +63,21 @@ class QuestionnaireEntryUpdateTest {
         .given(defaultModel)
         .whenEvent(QuestionnaireEntryBackClicked)
         .then(assertThatNext(
-            NextMatchers.hasNoModel(),
+            hasNoModel(),
             NextMatchers.hasEffects(ShowUnsavedChangesWarningDialog)
         ))
   }
 
   @Test
   fun `when submit btn is clicked, then save questionnaire response`() {
-    val questionnaireResponse = TestData.questionnaireResponse()
+    val content = TestData.getQuestionnaireResponseContent().toMutableMap()
+    val model = defaultModel.formLoaded(TestData.questionnaire())
     spec
-        .given(defaultModel)
-        .whenEvent(SubmitButtonClicked(questionnaireResponse))
+        .given(model)
+        .whenEvent(SubmitButtonClicked(content))
         .then(assertThatNext(
-            NextMatchers.hasNoModel(),
-            NextMatchers.hasEffects(SaveQuestionnaireResponseEffect(questionnaireResponse))
+            hasNoModel(),
+            NextMatchers.hasEffects(SaveQuestionnaireResponseEffect(model.updateContent(content).questionnaireResponse))
         ))
   }
 }

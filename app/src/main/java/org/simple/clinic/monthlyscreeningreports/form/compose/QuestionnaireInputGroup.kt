@@ -16,7 +16,7 @@ import org.simple.clinic.questionnaire.component.InputViewGroupComponentData
 @Composable
 fun InputGroup(
     inputViewGroupComponentData: InputViewGroupComponentData,
-    content: MutableMap<String, Any>
+    content: MutableMap<String, Any?>
 ) {
   val inputFields = inputViewGroupComponentData.children
   if (!inputFields.isNullOrEmpty()) {

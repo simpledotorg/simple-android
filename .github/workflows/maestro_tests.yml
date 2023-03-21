@@ -31,6 +31,7 @@ jobs:
           export MAESTRO_DIR="$HOME/.maestro"
           curl -Ls "https://get.maestro.mobile.dev" | bash
           export PATH="$PATH":"$MAESTRO_DIR/bin"
+          export PATH="$PATH":"/Users/runner/.maestro/bin"
 
       - name: Cache AVD
         uses: actions/cache@v3

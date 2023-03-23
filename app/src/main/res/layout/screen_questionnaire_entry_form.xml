@@ -99,7 +99,7 @@
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_10"
           android:gravity="center"
-          tools:text="@string/monthly_screening_reports_submitted_with_date_and_time" />
+          tools:text="@string/reports_submitted_with_date_and_time" />
       </LinearLayout>
 
       <androidx.compose.ui.platform.ComposeView
@@ -129,7 +129,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_margin="@dimen/spacing_8"
-      android:text="@string/monthly_screening_reports_submit_btn_text"
+      android:text="@string/reports_submit_btn_text"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"

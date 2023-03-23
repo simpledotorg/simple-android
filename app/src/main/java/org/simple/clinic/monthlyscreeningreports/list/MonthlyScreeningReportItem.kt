@@ -53,8 +53,8 @@ data class MonthlyScreeningReportItem(
     )
 
     binding.statusTextView.text = context.resources.getString(
-        if (isSubmitted) R.string.monthly_screening_reports_submitted
-        else R.string.monthly_screening_reports_submit_report
+        if (isSubmitted) R.string.reports_submitted
+        else R.string.reports_submit_report
     )
 
     binding.statusTextView.setTextColor(ContextCompat.getColor(context,
@@ -63,7 +63,7 @@ data class MonthlyScreeningReportItem(
     ))
 
     binding.monthTextView.text = context.resources.getString(
-        R.string.monthly_screening_reports_report,
+        R.string.reports_report,
         month
     )
   }

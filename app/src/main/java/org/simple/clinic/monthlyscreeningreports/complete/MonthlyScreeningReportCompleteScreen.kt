@@ -115,7 +115,7 @@ class MonthlyScreeningReportCompleteScreen : BaseScreen<
   override fun showFormSubmissionMonthAndYearTextView(response: QuestionnaireResponse) {
     monthSubmittedTextView.text =
         context?.resources?.getString(
-            R.string.monthly_screening_reports_submitted_with_date,
+            R.string.reports_submitted_with_date,
             fullMonthAndYearFormatter.format(formatScreeningMonthStringToLocalDate(response.content))
         )
   }

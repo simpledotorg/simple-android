@@ -878,19 +878,22 @@ Appilikeeshinii Simple keessan Google PlayStore irraa haaromsadhaa.</string>
   <string name="notification_permission_denied_positive_button">GARA TEESSOO APPIITTI JIJJIIRI</string>
   <string name="notification_permission_denied_negetive_button">AMMA MITI</string>
 
+  <!--reports-->
+  <string name="reports_report">Gabaasa %1$s</string><!--Oct 2023 report-->
+  <string name="reports_submit_report">Gabaasa galchaa</string>
+  <string name="reports_submitted">Galfameera</string>
+  <string name="reports_submitted_with_date_and_time">%1$s galfameera</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="reports_submit_btn_text">Galchaa</string>
+  <string name="reports_complete">Guutuudha!</string>
+  <string name="reports_submitted_with_date">Gabaasni %1$s galfameera</string><!--October 2022 report submitted-->
+  <string name="reports_done">Taasifameera</string>
+  <string name="reports_unsaved_changes_title">Jijjiiramoota ol hin kaa\'amin</string>
+  <string name="reports_unsaved_changes_text">Jijjiiramootni ol hin kaa\'amin ni badu.\nDhugamatti bahuu barbaadduu?</string>
+  <string name="reports_stay_title">FUULA KANARRA TURAA</string>
+  <string name="reports_leave_page_title">FUULA KANARRRAA BAHAA</string>
+
   <!--Monthly screen reports-->
   <string name="monthly_screening_reports">Gabaasaalee qorannoo ji\'aa</string>
-  <string name="monthly_screening_reports_report">Gabaasa %1$s</string><!--Oct 2023 report-->
-  <string name="monthly_screening_reports_submit_report">Gabaasa galchaa</string>
-  <string name="monthly_screening_reports_submitted">Galfameera</string>
   <string name="monthly_screening_reports_screening_report">Gabaasa qorannoo %1$s</string><!--Oct 2022 screening report-->
-  <string name="monthly_screening_reports_submitted_with_date_and_time">%1$s galfameera</string><!--Submitted Nov 27, 06:24pm-->
-  <string name="monthly_screening_reports_submit_btn_text">Galchaa</string>
-  <string name="monthly_screening_reports_complete">Guutuudha!</string>
-  <string name="monthly_screening_reports_submitted_with_date">Gabaasni %1$s galfameera</string><!--October 2022 report submitted-->
-  <string name="monthly_screening_reports_done">Taasifameera</string>
-  <string name="monthly_screening_reports_unsaved_changes_title">Jijjiiramoota ol hin kaa\'amin</string>
-  <string name="monthly_screening_reports_unsaved_changes_text">Jijjiiramootni ol hin kaa\'amin ni badu.\nDhugamatti bahuu barbaadduu?</string>
-  <string name="monthly_screening_reports_stay_title">FUULA KANARRA TURAA</string>
-  <string name="monthly_screening_reports_leave_page_title">FUULA KANARRRAA BAHAA</string>
+
 </resources>

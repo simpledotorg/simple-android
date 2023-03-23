@@ -876,19 +876,22 @@
   <string name="notification_permission_denied_positive_button">ਐਪ ਸੈਟਿੰਗਾਂ \'ਤੇ ਜਾਓ</string>
   <string name="notification_permission_denied_negetive_button">ਹਾਲੇ ਨਹੀਂ</string>
 
+  <!--reports-->
+  <string name="reports_report">%1$s ਦੀ ਰਿਪੋਰਟ</string><!--Oct 2023 report-->
+  <string name="reports_submit_report">ਰਿਪੋਰਟ ਸਬਮਿਟ ਕਰੋ</string>
+  <string name="reports_submitted">ਸਬਮਿਟ ਕੀਤਾ ਗਿਆ</string>
+  <string name="reports_submitted_with_date_and_time">%1$s ਨੂੰ ਸਬਮਿਟ ਕੀਤਾ ਗਿਆ</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="reports_submit_btn_text">ਸਬਮਿਟ ਕਰੋ</string>
+  <string name="reports_complete">ਮੁਕੰਮਲ!</string>
+  <string name="reports_submitted_with_date">%1$s ਦੀ ਰਿਪੋਰਟ ਸਬਮਿਟ ਕੀਤੀ ਗਈ</string><!--October 2022 report submitted-->
+  <string name="reports_done">ਹੋ ਗਿਆ</string>
+  <string name="reports_unsaved_changes_title">ਅਣ-ਸੁਰੱਖਿਅਤ ਬਦਲਾਵ</string>
+  <string name="reports_unsaved_changes_text">ਅਣ-ਸੁਰੱਖਿਅਤ ਬਦਲਾਵ ਗੁੰਮ ਹੋ ਜਾਣਗੇ।\nਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਛੱਡਣਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
+  <string name="reports_stay_title">ਇਸ ਪੰਨੇ ਤੇ ਬਣੇ ਰਹੋ</string>
+  <string name="reports_leave_page_title">ਇਹ ਪੰਨਾ ਛੱਡੋ</string>
+
   <!--Monthly screen reports-->
   <string name="monthly_screening_reports">ਮਹੀਨਾਵਾਰ ਸਕ੍ਰੀਨਿੰਗ ਰਿਪੋਰਟਾਂ</string>
-  <string name="monthly_screening_reports_report">%1$s ਦੀ ਰਿਪੋਰਟ</string><!--Oct 2023 report-->
-  <string name="monthly_screening_reports_submit_report">ਰਿਪੋਰਟ ਸਬਮਿਟ ਕਰੋ</string>
-  <string name="monthly_screening_reports_submitted">ਸਬਮਿਟ ਕੀਤਾ ਗਿਆ</string>
   <string name="monthly_screening_reports_screening_report">%1$s ਦੀ ਸਕ੍ਰੀਨਿੰਗ ਰਿਪੋਰਟ</string><!--Oct 2022 screening report-->
-  <string name="monthly_screening_reports_submitted_with_date_and_time">%1$s ਨੂੰ ਸਬਮਿਟ ਕੀਤਾ ਗਿਆ</string><!--Submitted Nov 27, 06:24pm-->
-  <string name="monthly_screening_reports_submit_btn_text">ਸਬਮਿਟ ਕਰੋ</string>
-  <string name="monthly_screening_reports_complete">ਮੁਕੰਮਲ!</string>
-  <string name="monthly_screening_reports_submitted_with_date">%1$s ਦੀ ਰਿਪੋਰਟ ਸਬਮਿਟ ਕੀਤੀ ਗਈ</string><!--October 2022 report submitted-->
-  <string name="monthly_screening_reports_done">ਹੋ ਗਿਆ</string>
-  <string name="monthly_screening_reports_unsaved_changes_title">ਅਣ-ਸੁਰੱਖਿਅਤ ਬਦਲਾਵ</string>
-  <string name="monthly_screening_reports_unsaved_changes_text">ਅਣ-ਸੁਰੱਖਿਅਤ ਬਦਲਾਵ ਗੁੰਮ ਹੋ ਜਾਣਗੇ।\nਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਛੱਡਣਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
-  <string name="monthly_screening_reports_stay_title">ਇਸ ਪੰਨੇ ਤੇ ਬਣੇ ਰਹੋ</string>
-  <string name="monthly_screening_reports_leave_page_title">ਇਹ ਪੰਨਾ ਛੱਡੋ</string>
+
 </resources>

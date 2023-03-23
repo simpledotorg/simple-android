@@ -877,19 +877,22 @@
   <string name="notification_permission_denied_positive_button">ወደ የመተግበሪያ ቅንብሮች ይሂዱ</string>
   <string name="notification_permission_denied_negetive_button">አሁን አይደለም</string>
 
+  <!--reports-->
+  <string name="reports_report">%1$s ሪፖርቶች</string><!--Oct 2023 report-->
+  <string name="reports_submit_report">ሪፖርት ያስገቡ</string>
+  <string name="reports_submitted">ገብቷል</string>
+  <string name="reports_submitted_with_date_and_time">%1$s ገብቷል</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="reports_submit_btn_text">ያስገቡ</string>
+  <string name="reports_complete">ያጠናቁ!</string>
+  <string name="reports_submitted_with_date">%1$s ሪፖርት ገብቷል</string><!--October 2022 report submitted-->
+  <string name="reports_done">ተጠናቅቋል</string>
+  <string name="reports_unsaved_changes_title">ያልተቀመጡ ለውጦች</string>
+  <string name="reports_unsaved_changes_text">ያልተቀመጡ ለውጦች ይጠፋሉ።\nእርግጠኛ ነዎት መውጣት ይፈልጋሉ?</string>
+  <string name="reports_stay_title">በዚህ ገጽ ላይ ይቆዩ</string>
+  <string name="reports_leave_page_title">ከዚህ ገጽ ይውጡ</string>
+
   <!--Monthly screen reports-->
   <string name="monthly_screening_reports">ወርሃዊ የማጣሪያ ሪፖርቶች</string>
-  <string name="monthly_screening_reports_report">%1$s ሪፖርቶች</string><!--Oct 2023 report-->
-  <string name="monthly_screening_reports_submit_report">ሪፖርት ያስገቡ</string>
-  <string name="monthly_screening_reports_submitted">ገብቷል</string>
   <string name="monthly_screening_reports_screening_report">%1$s የማጣሪያ ሪፖርቶች</string><!--Oct 2022 screening report-->
-  <string name="monthly_screening_reports_submitted_with_date_and_time">%1$s ገብቷል</string><!--Submitted Nov 27, 06:24pm-->
-  <string name="monthly_screening_reports_submit_btn_text">ያስገቡ</string>
-  <string name="monthly_screening_reports_complete">ያጠናቁ!</string>
-  <string name="monthly_screening_reports_submitted_with_date">%1$s ሪፖርት ገብቷል</string><!--October 2022 report submitted-->
-  <string name="monthly_screening_reports_done">ተጠናቅቋል</string>
-  <string name="monthly_screening_reports_unsaved_changes_title">ያልተቀመጡ ለውጦች</string>
-  <string name="monthly_screening_reports_unsaved_changes_text">ያልተቀመጡ ለውጦች ይጠፋሉ።\nእርግጠኛ ነዎት መውጣት ይፈልጋሉ?</string>
-  <string name="monthly_screening_reports_stay_title">በዚህ ገጽ ላይ ይቆዩ</string>
-  <string name="monthly_screening_reports_leave_page_title">ከዚህ ገጽ ይውጡ</string>
+
 </resources>

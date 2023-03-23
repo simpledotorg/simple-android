@@ -876,19 +876,22 @@
   <string name="notification_permission_denied_positive_button">अ‍ॅप सेटिंग्ज वर जा</string>
   <string name="notification_permission_denied_negetive_button">आता नाही</string>
 
+  <!--reports-->
+  <string name="reports_report">%1$s अहवाल</string><!--Oct 2023 report-->
+  <string name="reports_submit_report">अहवाल सबमिट करा</string>
+  <string name="reports_submitted">सबमिट केले</string>
+  <string name="reports_submitted_with_date_and_time">%1$sसबमिट केले </string><!--Submitted Nov 27, 06:24pm-->
+  <string name="reports_submit_btn_text">सबमिट करा</string>
+  <string name="reports_complete">पूर्ण!</string>
+  <string name="reports_submitted_with_date">%1$s अहवाल सबमिट केला</string><!--October 2022 report submitted-->
+  <string name="reports_done">पूर्ण झाले</string>
+  <string name="reports_unsaved_changes_title">जतन न केलेले बदल</string>
+  <string name="reports_unsaved_changes_text">जतन न केलेले बदल गमावले जातील.\nतुम्हाला नक्की सोडायचे आहे का?</string>
+  <string name="reports_stay_title">या पृष्ठावर रहा</string>
+  <string name="reports_leave_page_title">हे पृष्ठ सोडा</string>
+
   <!--Monthly screen reports-->
   <string name="monthly_screening_reports">मासिक तपासणी अहवाल</string>
-  <string name="monthly_screening_reports_report">%1$s अहवाल</string><!--Oct 2023 report-->
-  <string name="monthly_screening_reports_submit_report">अहवाल सबमिट करा</string>
-  <string name="monthly_screening_reports_submitted">सबमिट केले</string>
   <string name="monthly_screening_reports_screening_report">%1$s स्क्रीनिंग अहवाल</string><!--Oct 2022 screening report-->
-  <string name="monthly_screening_reports_submitted_with_date_and_time">%1$sसबमिट केले </string><!--Submitted Nov 27, 06:24pm-->
-  <string name="monthly_screening_reports_submit_btn_text">सबमिट करा</string>
-  <string name="monthly_screening_reports_complete">पूर्ण!</string>
-  <string name="monthly_screening_reports_submitted_with_date">%1$s अहवाल सबमिट केला</string><!--October 2022 report submitted-->
-  <string name="monthly_screening_reports_done">पूर्ण झाले</string>
-  <string name="monthly_screening_reports_unsaved_changes_title">जतन न केलेले बदल</string>
-  <string name="monthly_screening_reports_unsaved_changes_text">जतन न केलेले बदल गमावले जातील.\nतुम्हाला नक्की सोडायचे आहे का?</string>
-  <string name="monthly_screening_reports_stay_title">या पृष्ठावर रहा</string>
-  <string name="monthly_screening_reports_leave_page_title">हे पृष्ठ सोडा</string>
+
 </resources>

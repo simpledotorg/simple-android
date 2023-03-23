@@ -162,7 +162,7 @@ class QuestionnaireEntryScreen : BaseScreen<
     if (isSubmitted) {
       val updatedAt = response.timestamps.updatedAt
       submittedDateAndTimeTextView.text = context?.resources?.getString(
-          R.string.monthly_screening_reports_submitted_with_date_and_time,
+          R.string.reports_submitted_with_date_and_time,
           formSubmissionDateTimeFormatter.format(updatedAt.toLocalDateTimeAtZone(userClock.zone)))
     }
   }
@@ -203,10 +203,10 @@ class QuestionnaireEntryScreen : BaseScreen<
 
   override fun showUnsavedChangesWarningDialog() {
     MaterialAlertDialogBuilder(requireContext())
-        .setTitle(R.string.monthly_screening_reports_unsaved_changes_title)
-        .setMessage(R.string.monthly_screening_reports_unsaved_changes_text)
-        .setPositiveButton(R.string.monthly_screening_reports_stay_title, null)
-        .setNegativeButton(R.string.monthly_screening_reports_leave_page_title) { _, _ ->
+        .setTitle(R.string.reports_unsaved_changes_title)
+        .setMessage(R.string.reports_unsaved_changes_text)
+        .setPositiveButton(R.string.reports_stay_title, null)
+        .setNegativeButton(R.string.reports_leave_page_title) { _, _ ->
           hotEvents.onNext(UnsavedChangesWarningLeavePageClicked)
         }
         .show()

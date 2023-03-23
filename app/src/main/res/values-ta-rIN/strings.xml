@@ -876,19 +876,22 @@
   <string name="notification_permission_denied_positive_button">செயலி அமைப்புகளுக்குச் செல்லவும்</string>
   <string name="notification_permission_denied_negetive_button">இப்போது வேண்டாம்</string>
 
+  <!--reports-->
+  <string name="reports_report">%1$s அறிக்கை</string><!--Oct 2023 report-->
+  <string name="reports_submit_report">அறிக்கையைச் சமர்ப்பிக்கவும்</string>
+  <string name="reports_submitted">சமர்ப்பிக்கப்பட்டது</string>
+  <string name="reports_submitted_with_date_and_time">%1$s சமர்ப்பிக்கப்பட்டது</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="reports_submit_btn_text">சமர்ப்பி</string>
+  <string name="reports_complete">நிறைவு!</string>
+  <string name="reports_submitted_with_date">%1$s அறிக்கை சமர்ப்பிக்கப்பட்டது</string><!--October 2022 report submitted-->
+  <string name="reports_done">முடிந்தது</string>
+  <string name="reports_unsaved_changes_title">சேமிக்கப்படாத மாற்றங்கள்</string>
+  <string name="reports_unsaved_changes_text">சேமிக்கப்படாத மாற்றங்கள் தொலைந்துபோகும்.\nஉறுதியாக வெளியேற விரும்புகிறீர்களா?</string>
+  <string name="reports_stay_title">இந்தப் பக்கத்தில் இருக்கவும்</string>
+  <string name="reports_leave_page_title">இந்தப் பக்கத்திலிருந்து வெளியேறவும்</string>
+
   <!--Monthly screen reports-->
   <string name="monthly_screening_reports">மாதாந்தரத் தகுதிச்சோதனை அறிக்கைகள்</string>
-  <string name="monthly_screening_reports_report">%1$s அறிக்கை</string><!--Oct 2023 report-->
-  <string name="monthly_screening_reports_submit_report">அறிக்கையைச் சமர்ப்பிக்கவும்</string>
-  <string name="monthly_screening_reports_submitted">சமர்ப்பிக்கப்பட்டது</string>
   <string name="monthly_screening_reports_screening_report">%1$s தகுதிச்சோதனை அறிக்கை</string><!--Oct 2022 screening report-->
-  <string name="monthly_screening_reports_submitted_with_date_and_time">%1$s சமர்ப்பிக்கப்பட்டது</string><!--Submitted Nov 27, 06:24pm-->
-  <string name="monthly_screening_reports_submit_btn_text">சமர்ப்பி</string>
-  <string name="monthly_screening_reports_complete">நிறைவு!</string>
-  <string name="monthly_screening_reports_submitted_with_date">%1$s அறிக்கை சமர்ப்பிக்கப்பட்டது</string><!--October 2022 report submitted-->
-  <string name="monthly_screening_reports_done">முடிந்தது</string>
-  <string name="monthly_screening_reports_unsaved_changes_title">சேமிக்கப்படாத மாற்றங்கள்</string>
-  <string name="monthly_screening_reports_unsaved_changes_text">சேமிக்கப்படாத மாற்றங்கள் தொலைந்துபோகும்.\nஉறுதியாக வெளியேற விரும்புகிறீர்களா?</string>
-  <string name="monthly_screening_reports_stay_title">இந்தப் பக்கத்தில் இருக்கவும்</string>
-  <string name="monthly_screening_reports_leave_page_title">இந்தப் பக்கத்திலிருந்து வெளியேறவும்</string>
+
 </resources>

@@ -876,19 +876,22 @@
   <string name="notification_permission_denied_positive_button">অ্যাপ সেটিংসে যান</string>
   <string name="notification_permission_denied_negetive_button">এখন না</string>
 
+  <!--reports-->
+  <string name="reports_report">%1$s রিপোর্ট</string><!--Oct 2023 report-->
+  <string name="reports_submit_report">রিপোর্ট জমা দিন</string>
+  <string name="reports_submitted">জমা দেওয়া হয়েছে</string>
+  <string name="reports_submitted_with_date_and_time">%1$s জমা দেওয়া হয়েছে</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="reports_submit_btn_text">জমা দিন</string>
+  <string name="reports_complete">সম্পন্ন করুন!</string>
+  <string name="reports_submitted_with_date">%1$s রিপোর্ট জমা দেওয়া হয়েছে</string><!--October 2022 report submitted-->
+  <string name="reports_done">সম্পন্ন</string>
+  <string name="reports_unsaved_changes_title">অসংরক্ষিত পরিবর্তন</string>
+  <string name="reports_unsaved_changes_text">অসংরক্ষিত পরিবর্তন পরবর্তিতে থাকবে না।\nআপনি কি নিশ্চিত আপনি বের হয়ে যেতে চান?</string>
+  <string name="reports_stay_title">এই পেজে থাকুন</string>
+  <string name="reports_leave_page_title">এই পেজ থেকে চলে যান</string>
+
   <!--Monthly screen reports-->
   <string name="monthly_screening_reports">মাসিক স্ক্রিনিং রিপোর্ট</string>
-  <string name="monthly_screening_reports_report">%1$s রিপোর্ট</string><!--Oct 2023 report-->
-  <string name="monthly_screening_reports_submit_report">রিপোর্ট জমা দিন</string>
-  <string name="monthly_screening_reports_submitted">জমা দেওয়া হয়েছে</string>
   <string name="monthly_screening_reports_screening_report">%1$s স্ক্রিনিং রিপোর্ট</string><!--Oct 2022 screening report-->
-  <string name="monthly_screening_reports_submitted_with_date_and_time">%1$s জমা দেওয়া হয়েছে</string><!--Submitted Nov 27, 06:24pm-->
-  <string name="monthly_screening_reports_submit_btn_text">জমা দিন</string>
-  <string name="monthly_screening_reports_complete">সম্পন্ন করুন!</string>
-  <string name="monthly_screening_reports_submitted_with_date">%1$s রিপোর্ট জমা দেওয়া হয়েছে</string><!--October 2022 report submitted-->
-  <string name="monthly_screening_reports_done">সম্পন্ন</string>
-  <string name="monthly_screening_reports_unsaved_changes_title">অসংরক্ষিত পরিবর্তন</string>
-  <string name="monthly_screening_reports_unsaved_changes_text">অসংরক্ষিত পরিবর্তন পরবর্তিতে থাকবে না।\nআপনি কি নিশ্চিত আপনি বের হয়ে যেতে চান?</string>
-  <string name="monthly_screening_reports_stay_title">এই পেজে থাকুন</string>
-  <string name="monthly_screening_reports_leave_page_title">এই পেজ থেকে চলে যান</string>
+
 </resources>

@@ -890,7 +890,7 @@
   <string name="reports_stay_title">මෙම පිටුවේ රැඳී සිටින්න</string>
   <string name="reports_leave_page_title">මෙම පිටුවෙන් පිටවන්න</string>
 
-  !--Monthly screen reports-->
+  !--Monthly screen reports--&gt;
   <string name="monthly_screening_reports">මාසික පරීක්ෂණ වාර්තා</string>
   <string name="monthly_screening_reports_screening_report">%1$s පරීක්ෂණ වාර්තාව</string><!--Oct 2022 screening report-->
 

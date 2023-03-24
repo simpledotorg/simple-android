@@ -2,6 +2,12 @@
 
 ## Next Release
 
+### Changes
+
+- Move `Download IHCI patient register` option to links section
+
+## 2023-03-20-8650
+
 ### Internal
 
 - Add `enable_monthly_screening_reports` to Features

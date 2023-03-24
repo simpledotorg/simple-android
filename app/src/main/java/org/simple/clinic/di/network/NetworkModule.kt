@@ -38,6 +38,7 @@ import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.moshi.InstantMoshiAdapter
 import org.simple.clinic.util.moshi.LocalDateMoshiAdapter
+import org.simple.clinic.util.moshi.MapWithAnyValueTypeMoshiAdapter
 import org.simple.clinic.util.moshi.MoshiOptionalAdapterFactory
 import org.simple.clinic.util.moshi.QuestionnaireLayoutJsonAdapter
 import org.simple.clinic.util.moshi.URIMoshiAdapter
@@ -88,6 +89,7 @@ class NetworkModule {
         .add(QuestionnaireType.MoshiTypeAdapter())
         .add(QuestionnaireLayoutJsonAdapter().getFactory())
         .add(InputFieldType.MoshiTypeAdapter())
+        .add(MapWithAnyValueTypeMoshiAdapter())
         .build()
 
     val patientPayloadNullSerializingAdapter = moshi.adapter(PatientPayload::class.java).serializeNulls()

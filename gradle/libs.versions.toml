@@ -93,7 +93,7 @@ flipper-networkPlugin = { module = "com.facebook.flipper:flipper-network-plugin"
 
 gson = "com.google.code.gson:gson:2.10.1"
 
-google-services = "com.google.gms:google-services:4.3.14"
+google-services = "com.google.gms:google-services:4.3.15"
 
 itemanimators = "com.mikepenz:itemanimators:1.1.0"
 

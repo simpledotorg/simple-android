@@ -8,18 +8,19 @@ filters:
     translation_files_expression: 'app/src/main/res/values-<lang>/strings.xml'
 settings:
   language_mapping:
-    am_ET: am-rET
-    bn_BD: bn-rBD
-    bn_IN: bn-rIN
-    hi_IN: hi-rIN
-    kn_IN: kn-rIN
-    mr:    mr-rIN
-    om:    om-rET
-    pa:    pa-rIN
-    si_LK: si-rLK
-    sid:   sid-rET
-    so:    so-rET
-    ta_IN: ta-rIN
-    ta_LK: ta-rLK
-    te_IN: te-rIN
-    ti:    ti-rET
+    am_ET:  am-rET
+    bn_BD:  bn-rBD
+    bn_IN:  bn-rIN
+    hi_IN:  hi-rIN
+    kn_IN:  kn-rIN
+    mr:     mr-rIN
+    om:     om-rET
+    pa:     pa-rIN
+    si_LK:  si-rLK
+    sid:    sid-rET
+    so:     so-rET
+    ta_IN:  ta-rIN
+    ta_LK:  ta-rLK
+    te_IN:  te-rIN
+    ti:     ti-rET
+    es_419: es-419

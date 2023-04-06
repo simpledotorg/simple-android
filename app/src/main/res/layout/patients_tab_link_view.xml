@@ -61,7 +61,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/monthlyDrugStockReportsIcon"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="@string/monthly_drug_stock_reports_drug_stock_reports" />
 
       <View
         android:layout_width="match_parent"

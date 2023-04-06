@@ -38,6 +38,13 @@
       <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="@string/monthly_supplies_reports"
+        android:visibility="gone"
+        tools:text="@string/monthly_drug_stock_reports" />
+
+      <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_8"
         android:maxLines="1"
         android:paddingStart="@dimen/spacing_8"

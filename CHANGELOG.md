@@ -2,6 +2,10 @@
 
 ## Next Release
 
+### Internal
+
+## 2023-03-30-8663
+
 ### Changes
 
 - Move `Download IHCI patient register` option to links section

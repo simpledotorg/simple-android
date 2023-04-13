@@ -123,6 +123,7 @@
   <string name="patients_recentpatients_no_recent_patients">ናይ ቀረባ ግዜ ተሓካሚ/ት የለን/የላን</string>
   <string name="patients_recentpatients_see_all">ኩሉ ርኣይ</string>
   <string name="patients_recentpatients_nameage">%1$s, %2$s</string>
+  <string name="patients_links_title">መላግቦታት</string>
 
   <!-- Blood pressure entry -->
   <string name="bloodpressureentry_sheet_title_enter_blood_pressure">ፀቕጢ ደም</string>
@@ -837,6 +838,13 @@
   <string name="clinical_decision_support_alert_bp_high_subtitle">እቲ ሕሙም ኣዘውቲሩ መድሓኒት ዝወስድ እንተ ዀይኑ ነቲ መምርሒ ስዓብ</string>
 
   <!-- Call Result Outcome Message -->
+  <string name="call_result_outcome_agreed_to_visit">ንምብጻሕ ተሰማሚዑ</string>
+
+  <string name="call_result_outcome_remind_to_call_later">ን %1$sናይ ጻውዒት መዘከሪ ተዳልዩ</string>
+
+  <string name="call_result_outcome_removed">ዝተወገደ: %1$s</string>
+
+  <string name="call_result_outcome_saved_at">ተዓቂቡ%1$s</string>
 
   <!-- Overdue Instant Search -->
   <string name="overdue_search_patient_name_or_village">ብስም ወይ ብቁሸት ድለ</string>
@@ -844,4 +852,57 @@
   <string name="overdue_search_no_search_results_title">ዋላ ሓደ ሕሙም ኣይተረኽበን</string>
   <string name="overdue_search_no_search_results_desc">ንዅሎም እቶም ግዜኦም ዝሓለፎም ሕሙማት ካብቲ ትደልይዎ ቦታ ኽትርእይዎም ኢኹም</string>
 
+  <!-- Select and download overdue appointments -->
+  <string name="selected_overdue_count">%1$d ተመሪጹ</string>
+  <string name="selected_overdue_clear">ደምስስ</string>
+  <string name="selected_overdue_select_all_appointments">ኩሉ ምረጽ</string>
+
+  <string name="patient_line_list_download_notification_failed_title">ዳውንሎድ ክገብር ወይ ከውርድ ኣይከኣለን</string>
+  <string name="patient_line_list_download_notification_failed_subtitle">ካልእ ግዜ ዳግማይ ሞክሩ</string>
+  <string name="patient_line_list_download_notification_in_progress_title">ዝርዝር መስመር ተሓከምቲ ምውራድ</string>
+  <string name="patient_line_list_download_notification_cancel"> ሰርዝ</string>
+  <string name="patient_line_list_download_notification_succeeded_title">ዳውንሎድ ተገይሩ ወይ ወሪዱ</string>
+  <string name="patient_line_list_download_notification_succeeded_subtitle">ንክኽፈት ጠውቑ</string>
+
+  <string name="select_patient_line_list_download_format_dialog_radio_button_spreadsheet">ዝርጉሕ ቀጸላ</string>
+  <string name="select_patient_line_list_download_format_dialog_radio_button_pdf">PDF</string>
+  <string name="select_patient_line_list_download_format_dialog_action_negative"> ሰርዝ</string>
+  <string name="select_patient_line_list_download_format_dialog_title_download">ብኸምዚ መልክዕ ኣውርድ ወይ ዳውንሎድ ግበር</string>
+  <string name="select_patient_line_list_download_format_dialog_action_positive">ዳውንሎድ</string>
+  <string name="patient_line_list_download_link">ናይ IHCI መመዝገቢ ተሓከምቲ ኣውርዱ</string>
+
+  <!--Notification permission denied dialog-->
+  <string name="notification_permission_denied_title">መዘኻኸሪታት ወልዕ</string>
+  <string name="notification_permission_denied_message">ኣገደስቲ መዘኻኸሪታት ንከርእየካ ናይ ቀለልቲ ጠልባት ፍቓድ። ኣብ ትሕቲ ፍቓድ ምውላዕ &gt; መተሓሳሰቢ ብምኻድ ፍቓድ ሃብ።</string>
+  <string name="notification_permission_denied_positive_button">ናብ App Settings ኪድ</string>
+  <string name="notification_permission_denied_negetive_button">ሕጂ ኣይኮነን</string>
+
+  <!--reports-->
+  <string name="reports_report">%1$s ጸብጽቡ</string><!--Oct 2023 report-->
+  <string name="reports_submit_btn_text">ኣቕርቡ</string>
+  <string name="reports_complete">ወድኡ!</string>
+  <string name="reports_done">ተሰሪሑ</string>
+  <string name="reports_submitted_with_date_and_time">ቐሪቡእዩ %1$s</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="reports_submit_report">ጸብጻብ ኣቕርቡ</string>
+  <string name="reports_submitted">ቐሪቡ እዩ</string>
+  <string name="reports_submitted_with_date">%1$s ጸብጻብ ቐሪቡ እዩ</string><!--October 2022 report submitted-->
+  <string name="reports_unsaved_changes_title">ዘይተ ሓዙ ለውጥታት</string>
+  <string name="reports_unsaved_changes_text">ዘይተሓዙ ለውጥታት ክጠፍኡ እዮም።\ nን ምውጻእ ርግጸኛ ዲኹም?</string>
+  <string name="reports_stay_title">ኣብ’ዚ ገጽ ጽንሑ</string>
+  <string name="reports_leave_page_title">ካብ’ ዚ ገጽ ውጽኡ</string>
+
+  <!--Monthly screen reports-->
+  <string name="monthly_screening_report">ወርሓዊ ጸብጻብ መጻረዪ</string>
+  <string name="monthly_screening_reports">ወርሓዊ ጸብጻባት መጻረዪ</string>
+  <string name="monthly_screening_reports_screening_report">%1$s ጸብጻብ መጻረዪ</string><!--Oct 2022 screening report-->
+
+  <!--Monthly drug stock reports-->
+  <string name="monthly_drug_stock_report">ወርሓዊ ጸብጻብ መኽዘን መድሓኒት</string>
+  <string name="monthly_drug_stock_reports">ወርሓዊ ጸብጻባት መኽዘን መድሓኒት</string>
+  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$sታት ጸብጻብ መኽዘን መድሓኒት</string><!--Oct 2022 drug stock report-->
+
+  <!--Monthly supplies reports-->
+  <string name="monthly_supplies_report">ወርሓዊ ጸብጻብ ቀረባት</string>
+  <string name="monthly_supplies_reports">ወርሓዊ ጸብጻባት ቀረባት</string>
+  <string name="monthly_supplies_report_supplies_report">%1$sታት ጸብጻብ ቀረባት </string><!--Oct 2022 supplies report-->
 </resources>

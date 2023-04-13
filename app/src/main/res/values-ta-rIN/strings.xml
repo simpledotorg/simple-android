@@ -123,6 +123,7 @@
   <string name="patients_recentpatients_no_recent_patients">சமீபத்திய நோயாளிகள் இல்லை</string>
   <string name="patients_recentpatients_see_all">எல்லாவற்றையும் பார்க்கவும்</string>
   <string name="patients_recentpatients_nameage">%1$s, %2$s</string>
+  <string name="patients_links_title">இணைப்புகள்</string>
 
   <!-- Blood pressure entry -->
   <string name="bloodpressureentry_sheet_title_enter_blood_pressure">இரத்த அழுத்தம்</string>
@@ -878,20 +879,30 @@
 
   <!--reports-->
   <string name="reports_report">%1$s அறிக்கை</string><!--Oct 2023 report-->
-  <string name="reports_submit_report">அறிக்கையைச் சமர்ப்பிக்கவும்</string>
-  <string name="reports_submitted">சமர்ப்பிக்கப்பட்டது</string>
-  <string name="reports_submitted_with_date_and_time">%1$s சமர்ப்பிக்கப்பட்டது</string><!--Submitted Nov 27, 06:24pm-->
   <string name="reports_submit_btn_text">சமர்ப்பி</string>
   <string name="reports_complete">நிறைவு!</string>
-  <string name="reports_submitted_with_date">%1$s அறிக்கை சமர்ப்பிக்கப்பட்டது</string><!--October 2022 report submitted-->
   <string name="reports_done">முடிந்தது</string>
+  <string name="reports_submitted_with_date_and_time">%1$s சமர்ப்பிக்கப்பட்டது</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="reports_submit_report">அறிக்கையைச் சமர்ப்பிக்கவும்</string>
+  <string name="reports_submitted">சமர்ப்பிக்கப்பட்டது</string>
+  <string name="reports_submitted_with_date">%1$s அறிக்கை சமர்ப்பிக்கப்பட்டது</string><!--October 2022 report submitted-->
   <string name="reports_unsaved_changes_title">சேமிக்கப்படாத மாற்றங்கள்</string>
   <string name="reports_unsaved_changes_text">சேமிக்கப்படாத மாற்றங்கள் தொலைந்துபோகும்.\nஉறுதியாக வெளியேற விரும்புகிறீர்களா?</string>
   <string name="reports_stay_title">இந்தப் பக்கத்தில் இருக்கவும்</string>
   <string name="reports_leave_page_title">இந்தப் பக்கத்திலிருந்து வெளியேறவும்</string>
 
   <!--Monthly screen reports-->
+  <string name="monthly_screening_report">மாதாந்திரத் தகுதிச்சோதனை அறிக்கை</string>
   <string name="monthly_screening_reports">மாதாந்தரத் தகுதிச்சோதனை அறிக்கைகள்</string>
   <string name="monthly_screening_reports_screening_report">%1$s தகுதிச்சோதனை அறிக்கை</string><!--Oct 2022 screening report-->
 
+  <!--Monthly drug stock reports-->
+  <string name="monthly_drug_stock_report">மாதாந்திர மருந்து இருப்பு அறிக்கை</string>
+  <string name="monthly_drug_stock_reports">மாதாந்திர மருந்து இருப்பு அறிக்கைகள்</string>
+  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$sமருந்து இருப்பு அறிக்கை</string><!--Oct 2022 drug stock report-->
+
+  <!--Monthly supplies reports-->
+  <string name="monthly_supplies_report">மாதாந்திரப் பொருட்கள் அறிக்கை</string>
+  <string name="monthly_supplies_reports">மாதாந்திரப் பொருட்கள் அறிக்கைகள்</string>
+  <string name="monthly_supplies_report_supplies_report">%1$s பொருட்கள் அறிக்கை</string><!--Oct 2022 supplies report-->
 </resources>

@@ -6,6 +6,11 @@ on:
       - release/*
   pull_request:
   workflow_dispatch:
+    inputs:
+      simple-server-branch:
+        required: false
+        type: string
+        default: master
   workflow_call:
 
 concurrency:

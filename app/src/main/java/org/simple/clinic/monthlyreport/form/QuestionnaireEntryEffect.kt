@@ -17,4 +17,4 @@ object GoBack : QuestionnaireEntryViewEffect()
 
 object ShowUnsavedChangesWarningDialog : QuestionnaireEntryViewEffect()
 
-object GoToMonthlyScreeningReportsCompleteScreen : QuestionnaireEntryViewEffect()
+object GoToMonthlyReportsCompleteScreen : QuestionnaireEntryViewEffect()

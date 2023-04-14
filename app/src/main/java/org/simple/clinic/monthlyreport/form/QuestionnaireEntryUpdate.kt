@@ -12,7 +12,7 @@ class QuestionnaireEntryUpdate :
     return when (event) {
       is CurrentFacilityLoaded -> next(model.currentFacilityLoaded(event.facility))
       is QuestionnaireFormFetched -> next(model.formLoaded(event.questionnaire))
-      is QuestionnaireResponseSaved -> dispatch(GoToMonthlyScreeningReportsCompleteScreen)
+      is QuestionnaireResponseSaved -> dispatch(GoToMonthlyReportsCompleteScreen)
       is QuestionnaireEntryBackClicked -> dispatch(ShowUnsavedChangesWarningDialog)
       is UnsavedChangesWarningLeavePageClicked -> dispatch(GoBack)
       is SubmitButtonClicked -> {

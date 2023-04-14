@@ -13,11 +13,11 @@ data class QuestionnaireFormFetched(val questionnaire: Questionnaire) : Question
 object QuestionnaireResponseSaved : QuestionnaireEntryEvent()
 
 object QuestionnaireEntryBackClicked : QuestionnaireEntryEvent() {
-  override val analyticsName = "Monthly Screening Report Form:Back Clicked"
+  override val analyticsName = "Monthly Report Form:Back Clicked"
 }
 
 object UnsavedChangesWarningLeavePageClicked : QuestionnaireEntryEvent() {
-  override val analyticsName = "Monthly Screening Report Form:Unsaved Changes Warning Leave Page Clicked"
+  override val analyticsName = "Monthly Report Form:Unsaved Changes Warning Leave Page Clicked"
 }
 
 data class SubmitButtonClicked(val content: MutableMap<String, Any?>) : QuestionnaireEntryEvent()

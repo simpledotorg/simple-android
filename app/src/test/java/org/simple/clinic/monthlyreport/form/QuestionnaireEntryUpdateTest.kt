@@ -53,7 +53,7 @@ class QuestionnaireEntryUpdateTest {
         .whenEvent(QuestionnaireResponseSaved)
         .then(assertThatNext(
             hasNoModel(),
-            NextMatchers.hasEffects(GoToMonthlyScreeningReportsCompleteScreen)
+            NextMatchers.hasEffects(GoToMonthlyReportsCompleteScreen)
         ))
   }
 

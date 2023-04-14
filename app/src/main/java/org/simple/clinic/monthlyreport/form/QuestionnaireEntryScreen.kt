@@ -31,6 +31,9 @@ import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.questionnaire.MonthlyDrugReports
+import org.simple.clinic.questionnaire.MonthlyScreeningReports
+import org.simple.clinic.questionnaire.MonthlySuppliesReports
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -149,8 +152,14 @@ class QuestionnaireEntryScreen : BaseScreen<
   }
 
   private fun setToolbarMonth(response: QuestionnaireResponse) {
+    val stringResource = when (screenKey.questionnaireType) {
+      is MonthlyScreeningReports -> R.string.monthly_screening_reports_screening_report
+      is MonthlySuppliesReports -> R.string.monthly_supplies_report_supplies_report
+      is MonthlyDrugReports -> R.string.monthly_drug_stock_reports_drug_stock_reports
+      else -> R.string.monthly_screening_reports_screening_report
+    }
     monthTextView.text = context?.resources?.getString(
-        R.string.monthly_screening_reports_screening_report,
+        stringResource,
         getMonthlyReportFormattedMonthString(response.content, monthAndYearDateFormatter)
     )
   }
@@ -212,7 +221,7 @@ class QuestionnaireEntryScreen : BaseScreen<
         .show()
   }
 
-  override fun goToMonthlyScreeningReportsCompleteScreen() {
+  override fun goToMonthlyReportsCompleteScreen() {
     router.push(MonthlyScreeningReportCompleteScreen.Key(screenKey.questionnaireResponse.uuid, screenKey.questionnaireType))
   }
 

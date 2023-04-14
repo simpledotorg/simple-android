@@ -10,7 +10,7 @@ class QuestionnaireEntryViewEffectHandler(
     when (viewEffect) {
       is GoBack -> ui.goBack()
       is ShowUnsavedChangesWarningDialog -> ui.showUnsavedChangesWarningDialog()
-      is GoToMonthlyScreeningReportsCompleteScreen -> ui.goToMonthlyScreeningReportsCompleteScreen()
+      is GoToMonthlyReportsCompleteScreen -> ui.goToMonthlyReportsCompleteScreen()
     }
   }
 }

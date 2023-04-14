@@ -1,8 +1,11 @@
 package org.simple.clinic.monthlyscreeningreports.form.compose
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -15,6 +18,8 @@ import java.util.Locale
 fun Header(headerComponentData: HeaderComponentData) {
   Text(
       text = headerComponentData.text.uppercase(Locale.ROOT),
+      modifier = Modifier.padding(
+          top = dimensionResource(id = R.dimen.spacing_24)),
       style = TextStyle(
           color = colorResource(id = R.color.simple_teal),
           fontSize = 14.sp,
@@ -24,3 +29,4 @@ fun Header(headerComponentData: HeaderComponentData) {
       )
   )
 }
+

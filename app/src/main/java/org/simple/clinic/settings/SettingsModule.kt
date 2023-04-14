@@ -24,22 +24,23 @@ class SettingsModule {
       @Named("preference_user_selected_locale") userSelectedLocalePreference: Preference<Optional<Locale>>
   ): SettingsRepository {
     val supportedLanguages = listOf<Language>(
-        ProvidedLanguage(displayName = "English", languageCode = "en-IN"),
-        ProvidedLanguage(displayName = "हिंदी", languageCode = "hi-IN"),
-        ProvidedLanguage(displayName = "ਪੰਜਾਬੀ", languageCode = "pa-IN"),
-        ProvidedLanguage(displayName = "বাঙালি", languageCode = "bn-IN"),
-        ProvidedLanguage(displayName = "ಕನ್ನಡ", languageCode = "kn-IN"),
-        ProvidedLanguage(displayName = "मराठी", languageCode = "mr-IN"),
-        ProvidedLanguage(displayName = "తెలుగు", languageCode = "te-IN"),
-        ProvidedLanguage(displayName = "বাংলা", languageCode = "bn-BD"),
-        ProvidedLanguage(displayName = "ትግርኛ", languageCode = "ti-ET"),
         ProvidedLanguage(displayName = "Afan Oromo", languageCode = "om-ET"),
         ProvidedLanguage(displayName = "አማርኛ", languageCode = "am-ET"),
-        ProvidedLanguage(displayName = "தமிழ் (இந்தியா)", languageCode = "ta-IN"),
-        ProvidedLanguage(displayName = "தமிழ் (இலங்கை)", languageCode = "ta-LK"),
+        ProvidedLanguage(displayName = "বাংলা", languageCode = "bn-BD"),
+        ProvidedLanguage(displayName = "বাঙালি", languageCode = "bn-IN"),
+        ProvidedLanguage(displayName = "English", languageCode = "en-IN"),
+        ProvidedLanguage(displayName = "Español", languageCode = "es"),
+        ProvidedLanguage(displayName = "हिंदी", languageCode = "hi-IN"),
+        ProvidedLanguage(displayName = "ಕನ್ನಡ", languageCode = "kn-IN"),
+        ProvidedLanguage(displayName = "मराठी", languageCode = "mr-IN"),
+        ProvidedLanguage(displayName = "ਪੰਜਾਬੀ", languageCode = "pa-IN"),
         ProvidedLanguage(displayName = "Soomaali", languageCode = "so-ET"),
         ProvidedLanguage(displayName = "Sidama", languageCode = "sid-ET"),
-        ProvidedLanguage(displayName = "සිංහල", languageCode = "si-LK")
+        ProvidedLanguage(displayName = "සිංහල", languageCode = "si-LK"),
+        ProvidedLanguage(displayName = "తెలుగు", languageCode = "te-IN"),
+        ProvidedLanguage(displayName = "ትግርኛ", languageCode = "ti-ET"),
+        ProvidedLanguage(displayName = "தமிழ் (இந்தியா)", languageCode = "ta-IN"),
+        ProvidedLanguage(displayName = "தமிழ் (இலங்கை)", languageCode = "ta-LK"),
     )
 
     return PreferencesSettingsRepository(

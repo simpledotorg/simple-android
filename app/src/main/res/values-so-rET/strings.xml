@@ -123,6 +123,7 @@
   <string name="patients_recentpatients_no_recent_patients">Ma lahan bukaanno dhow</string>
   <string name="patients_recentpatients_see_all">Arag dhamaan</string>
   <string name="patients_recentpatients_nameage">%1$s, %2$s</string>
+  <string name="patients_links_title">Linkiyada</string>
 
   <!-- Blood pressure entry -->
   <string name="bloodpressureentry_sheet_title_enter_blood_pressure">Dhiig kar</string>
@@ -879,20 +880,30 @@
 
   <!--reports-->
   <string name="reports_report">%1$s wargelin</string><!--Oct 2023 report-->
-  <string name="reports_submit_report">Gudbi wargelinta</string>
-  <string name="reports_submitted">La gudbiyay</string>
-  <string name="reports_submitted_with_date_and_time">La gudbiyay %1$s</string><!--Submitted Nov 27, 06:24pm-->
   <string name="reports_submit_btn_text">Gudbi</string>
   <string name="reports_complete">Dhameystir!</string>
-  <string name="reports_submitted_with_date">%1$s wargelinta la gudbiyay</string><!--October 2022 report submitted-->
   <string name="reports_done">La dhameeyay</string>
+  <string name="reports_submitted_with_date_and_time">La gudbiyay %1$s</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="reports_submit_report">Gudbi wargelinta</string>
+  <string name="reports_submitted">La gudbiyay</string>
+  <string name="reports_submitted_with_date">%1$s wargelinta la gudbiyay</string><!--October 2022 report submitted-->
   <string name="reports_unsaved_changes_title">Isbadelada aan la keydin</string>
   <string name="reports_unsaved_changes_text">Isbadelada aan la keydin way lumeysaa.\nMa hubtaa inaad rabtid inaad ka tagtid?</string>
   <string name="reports_stay_title">KU JIR BOGGAAN</string>
   <string name="reports_leave_page_title">KA TAG BOGGAAN</string>
 
   <!--Monthly screen reports-->
+  <string name="monthly_screening_report">Warbixinta baadhida bilaha ah</string>
   <string name="monthly_screening_reports">Wargelinada baaritaanka bil-laha</string>
   <string name="monthly_screening_reports_screening_report">%1$s wargelinta baaritaanka</string><!--Oct 2022 screening report-->
 
+  <!--Monthly drug stock reports-->
+  <string name="monthly_drug_stock_report">Warbixinta alaabta dawada la hayo ee bilaha ah</string>
+  <string name="monthly_drug_stock_reports">Warbixinaha alaabta dawada la hayo ee bilaha ah</string>
+  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$swarbixinta alaabta dawada la hayo</string><!--Oct 2022 drug stock report-->
+
+  <!--Monthly supplies reports-->
+  <string name="monthly_supplies_report">Warbixinta saadka bilaha ah</string>
+  <string name="monthly_supplies_reports">Warbixinaha saadka bilaha ah</string>
+  <string name="monthly_supplies_report_supplies_report">%1$s warbixinta saadka</string><!--Oct 2022 supplies report-->
 </resources>

@@ -1,0 +1,16 @@
+package org.simple.clinic.monthlyreport.form
+
+import org.simple.clinic.mobius.ViewEffectsHandler
+
+class QuestionnaireEntryViewEffectHandler(
+    private val ui: QuestionnaireEntryUi
+) : ViewEffectsHandler<QuestionnaireEntryViewEffect> {
+
+  override fun handle(viewEffect: QuestionnaireEntryViewEffect) {
+    when (viewEffect) {
+      is GoBack -> ui.goBack()
+      is ShowUnsavedChangesWarningDialog -> ui.showUnsavedChangesWarningDialog()
+      is GoToMonthlyScreeningReportsCompleteScreen -> ui.goToMonthlyScreeningReportsCompleteScreen()
+    }
+  }
+}

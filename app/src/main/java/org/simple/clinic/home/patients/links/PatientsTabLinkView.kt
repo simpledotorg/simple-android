@@ -16,9 +16,10 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.monthlyscreeningreports.list.MonthlyScreeningReportListScreen
+import org.simple.clinic.monthlyreport.list.MonthlyReportListScreen
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.patient.download.formatdialog.SelectLineListFormatDialog
+import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
@@ -143,7 +144,7 @@ class PatientsTabLinkView(
   }
 
   override fun openMonthlyScreeningReports() {
-    router.push(MonthlyScreeningReportListScreen.Key())
+    router.push(MonthlyReportListScreen.Key(MonthlyScreeningReports))
   }
 
   override fun openPatientLineListDownloadDialog() {

@@ -69,6 +69,7 @@ jobs:
           repository: simpledotorg/simple-server
           fetch-depth: 0 # Full clone needed for Heroku deploys (https://devcenter.heroku.com/changelog-items/775)
           path: server-app
+          ref: ${{ inputs.simple-server-branch }}
 
       - name: Create node dependency hash
         id: create_node_modules_hash

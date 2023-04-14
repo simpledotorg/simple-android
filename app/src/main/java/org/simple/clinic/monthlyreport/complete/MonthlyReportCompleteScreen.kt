@@ -11,7 +11,7 @@ import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.databinding.ScreenMonthlyScreeningReportCompleteBinding
+import org.simple.clinic.databinding.ScreenMonthlyReportCompleteBinding
 import org.simple.clinic.di.DateFormatter
 import org.simple.clinic.di.DateFormatter.Type.FullMonthAndYear
 import org.simple.clinic.di.injector
@@ -29,14 +29,14 @@ import java.time.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
 
-class MonthlyScreeningReportCompleteScreen : BaseScreen<
-    MonthlyScreeningReportCompleteScreen.Key,
-    ScreenMonthlyScreeningReportCompleteBinding,
-    MonthlyScreeningReportCompleteModel,
-    MonthlyScreeningReportCompleteEvent,
-    MonthlyScreeningReportCompleteEffect,
-    MonthlyScreeningReportCompleteViewEffect>(),
-    MonthlyScreeningReportCompleteUi,
+class MonthlyReportCompleteScreen : BaseScreen<
+    MonthlyReportCompleteScreen.Key,
+    ScreenMonthlyReportCompleteBinding,
+    MonthlyReportCompleteModel,
+    MonthlyReportCompleteEvent,
+    MonthlyReportCompleteEffect,
+    MonthlyReportCompleteViewEffect>(),
+    MonthlyReportCompleteUi,
     HandlesBack {
 
   @Inject
@@ -50,7 +50,7 @@ class MonthlyScreeningReportCompleteScreen : BaseScreen<
   lateinit var fullMonthAndYearFormatter: DateTimeFormatter
 
   @Inject
-  lateinit var effectHandlerFactory: MonthlyScreeningReportCompleteEffectHandler.Factory
+  lateinit var effectHandlerFactory: MonthlyReportCompleteEffectHandler.Factory
 
   private val monthSubmittedTextView
     get() = binding.monthSubmittedTextView
@@ -60,18 +60,18 @@ class MonthlyScreeningReportCompleteScreen : BaseScreen<
 
   private val hardwareBackClicks = PublishSubject.create<Unit>()
 
-  override fun defaultModel() = MonthlyScreeningReportCompleteModel.default()
+  override fun defaultModel() = MonthlyReportCompleteModel.default()
 
-  override fun createUpdate() = MonthlyScreeningReportCompleteUpdate()
+  override fun createUpdate() = MonthlyReportCompleteUpdate()
 
-  override fun createInit() = MonthlyScreeningReportCompleteInit(screenKey.id)
+  override fun createInit() = MonthlyReportCompleteInit(screenKey.id)
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<MonthlyScreeningReportCompleteViewEffect>) =
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<MonthlyReportCompleteViewEffect>) =
       effectHandlerFactory.create(viewEffectsConsumer = viewEffectsConsumer).build()
 
-  override fun viewEffectHandler() = MonthlyScreeningReportCompleteViewEffectHandler(this)
+  override fun viewEffectHandler() = MonthlyReportCompleteViewEffectHandler(this)
 
-  override fun events(): Observable<MonthlyScreeningReportCompleteEvent> {
+  override fun events(): Observable<MonthlyReportCompleteEvent> {
     return Observable
         .mergeArray(
             doneClicks(),
@@ -80,12 +80,12 @@ class MonthlyScreeningReportCompleteScreen : BaseScreen<
         .cast()
   }
 
-  override fun uiRenderer() = MonthlyScreeningReportCompleteUiRenderer(this)
+  override fun uiRenderer() = MonthlyReportCompleteUiRenderer(this)
 
   override fun bindView(
       layoutInflater: LayoutInflater,
       container: ViewGroup?
-  ) = ScreenMonthlyScreeningReportCompleteBinding.inflate(layoutInflater, container, false)
+  ) = ScreenMonthlyReportCompleteBinding.inflate(layoutInflater, container, false)
 
   override fun onAttach(context: Context) {
     super.onAttach(context)
@@ -107,11 +107,11 @@ class MonthlyScreeningReportCompleteScreen : BaseScreen<
       override val analyticsName: String = "$questionnaireType Complete Screen"
   ) : ScreenKey() {
 
-    override fun instantiateFragment() = MonthlyScreeningReportCompleteScreen()
+    override fun instantiateFragment() = MonthlyReportCompleteScreen()
   }
 
   interface Injector {
-    fun inject(target: MonthlyScreeningReportCompleteScreen)
+    fun inject(target: MonthlyReportCompleteScreen)
   }
 
   override fun showFormSubmissionMonthAndYearTextView(response: QuestionnaireResponse) {
@@ -122,7 +122,7 @@ class MonthlyScreeningReportCompleteScreen : BaseScreen<
         )
   }
 
-  override fun goToMonthlyScreeningReportListScreen() {
+  override fun goToMonthlyReportListScreen() {
     router.popUntil(MonthlyReportListScreen.Key(screenKey.questionnaireType))
   }
 

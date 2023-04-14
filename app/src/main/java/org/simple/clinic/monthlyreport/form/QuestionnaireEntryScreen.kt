@@ -20,7 +20,7 @@ import org.simple.clinic.di.DateFormatter
 import org.simple.clinic.di.DateFormatter.Type.MonthAndYear
 import org.simple.clinic.di.DateFormatter.Type.FormSubmissionDateTime
 import org.simple.clinic.di.injector
-import org.simple.clinic.monthlyreport.complete.MonthlyScreeningReportCompleteScreen
+import org.simple.clinic.monthlyreport.complete.MonthlyReportCompleteScreen
 import org.simple.clinic.monthlyreport.form.compose.QuestionnaireFormContainer
 import org.simple.clinic.monthlyreport.util.getMonthlyReportFormattedMonthString
 import org.simple.clinic.monthlyreport.util.getMonthlyReportSubmitStatus
@@ -222,7 +222,7 @@ class QuestionnaireEntryScreen : BaseScreen<
   }
 
   override fun goToMonthlyReportsCompleteScreen() {
-    router.push(MonthlyScreeningReportCompleteScreen.Key(screenKey.questionnaireResponse.uuid, screenKey.questionnaireType))
+    router.push(MonthlyReportCompleteScreen.Key(screenKey.questionnaireResponse.uuid, screenKey.questionnaireType))
   }
 
   interface Injector {

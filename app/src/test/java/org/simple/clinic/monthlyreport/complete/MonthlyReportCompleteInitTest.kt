@@ -5,14 +5,14 @@ import com.spotify.mobius.test.InitSpec
 import org.junit.Test
 import org.simple.sharedTestCode.TestData
 
-class MonthlyScreeningReportCompleteInitTest {
+class MonthlyReportCompleteInitTest {
   private val questionnaireResponse = TestData.questionnaireResponse()
 
-  private val spec = InitSpec(MonthlyScreeningReportCompleteInit(questionnaireResponse.uuid))
+  private val spec = InitSpec(MonthlyReportCompleteInit(questionnaireResponse.uuid))
 
   @Test
   fun `when screen is created, then load initial data`() {
-    val defaultModel = MonthlyScreeningReportCompleteModel.default()
+    val defaultModel = MonthlyReportCompleteModel.default()
 
     spec
         .whenInit(defaultModel)

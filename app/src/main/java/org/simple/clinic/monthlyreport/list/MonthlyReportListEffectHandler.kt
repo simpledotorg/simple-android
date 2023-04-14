@@ -9,7 +9,6 @@ import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponseRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
@@ -50,7 +49,7 @@ class MonthlyReportListEffectHandler @AssistedInject constructor(
     return ObservableTransformer { loadQuestionnaireResponseList ->
       loadQuestionnaireResponseList
           .observeOn(scheduler)
-          .switchMap { questionnaireResponseRepository.questionnaireResponsesFilteredBy(MonthlyScreeningReports, currentFacility.get().uuid) }
+          .switchMap { questionnaireResponseRepository.questionnaireResponsesFilteredBy(it.questionnaireType, currentFacility.get().uuid) }
           .map { MonthlyReportListFetched(it) }
     }
   }

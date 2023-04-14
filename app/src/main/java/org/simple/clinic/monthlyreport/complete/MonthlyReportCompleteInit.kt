@@ -5,12 +5,12 @@ import com.spotify.mobius.Init
 import org.simple.clinic.mobius.first
 import java.util.UUID
 
-class MonthlyScreeningReportCompleteInit(
+class MonthlyReportCompleteInit(
     private val questionnaireResponseId: UUID
-) : Init<MonthlyScreeningReportCompleteModel, MonthlyScreeningReportCompleteEffect> {
+) : Init<MonthlyReportCompleteModel, MonthlyReportCompleteEffect> {
   override fun init(
-      model: MonthlyScreeningReportCompleteModel
-  ): First<MonthlyScreeningReportCompleteModel, MonthlyScreeningReportCompleteEffect> {
+      model: MonthlyReportCompleteModel
+  ): First<MonthlyReportCompleteModel, MonthlyReportCompleteEffect> {
     return first(model,
         LoadQuestionnaireResponseEffect(questionnaireResponseId)
     )

@@ -7,7 +7,9 @@ sealed class MonthlyReportListEffect
 
 object LoadCurrentFacility : MonthlyReportListEffect()
 
-object LoadMonthlyReportListEffect : MonthlyReportListEffect()
+data class LoadMonthlyReportListEffect(
+    val questionnaireType: QuestionnaireType
+) : MonthlyReportListEffect()
 
 sealed class MonthlyReportListViewEffect : MonthlyReportListEffect()
 

@@ -14,13 +14,13 @@ import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.sharedTestCode.TestData
 import java.util.UUID
 
-class MonthlyScreeningReportCompleteEffectHandlerTest {
+class MonthlyReportCompleteEffectHandlerTest {
 
-  private val ui = mock<MonthlyScreeningReportCompleteUi>()
+  private val ui = mock<MonthlyReportCompleteUi>()
   private val questionnaireResponseRepository = mock<QuestionnaireResponseRepository>()
-  private val viewEffectHandler = MonthlyScreeningReportCompleteViewEffectHandler(ui)
+  private val viewEffectHandler = MonthlyReportCompleteViewEffectHandler(ui)
 
-  private val effectHandler = MonthlyScreeningReportCompleteEffectHandler(
+  private val effectHandler = MonthlyReportCompleteEffectHandler(
       questionnaireResponseRepository = questionnaireResponseRepository,
       schedulersProvider = TestSchedulersProvider.trampoline(),
       viewEffectsConsumer = viewEffectHandler::handle
@@ -53,12 +53,12 @@ class MonthlyScreeningReportCompleteEffectHandlerTest {
   @Test
   fun `when go to monthly screening report list effect is received, then go to the same`() {
     // when
-    testCase.dispatch(GoToMonthlyScreeningReportListScreen)
+    testCase.dispatch(GoToMonthlyReportListScreen)
 
     // then
     testCase.assertNoOutgoingEvents()
 
-    verify(ui).goToMonthlyScreeningReportListScreen()
+    verify(ui).goToMonthlyReportListScreen()
     verifyNoMoreInteractions(ui)
   }
 }

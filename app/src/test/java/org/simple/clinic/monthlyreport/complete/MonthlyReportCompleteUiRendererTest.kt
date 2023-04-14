@@ -7,12 +7,12 @@ import org.junit.Test
 import org.simple.sharedTestCode.TestData
 import java.util.UUID
 
-class MonthlyScreeningReportCompleteUiRendererTest {
+class MonthlyReportCompleteUiRendererTest {
 
-  private val ui = mock<MonthlyScreeningReportCompleteUi>()
-  private val uiRenderer = MonthlyScreeningReportCompleteUiRenderer(ui)
+  private val ui = mock<MonthlyReportCompleteUi>()
+  private val uiRenderer = MonthlyReportCompleteUiRenderer(ui)
 
-  private val defaultModel = MonthlyScreeningReportCompleteModel.default()
+  private val defaultModel = MonthlyReportCompleteModel.default()
 
   @Test
   fun `when questionnaire response is loaded, then render questionnaire response`() {

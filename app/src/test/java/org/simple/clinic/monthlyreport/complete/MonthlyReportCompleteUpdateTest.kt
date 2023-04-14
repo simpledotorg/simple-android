@@ -5,11 +5,11 @@ import com.spotify.mobius.test.UpdateSpec
 import org.junit.Test
 import org.simple.sharedTestCode.TestData
 
-class MonthlyScreeningReportCompleteUpdateTest {
+class MonthlyReportCompleteUpdateTest {
 
-  private val defaultModel = MonthlyScreeningReportCompleteModel.default()
+  private val defaultModel = MonthlyReportCompleteModel.default()
 
-  private val update = MonthlyScreeningReportCompleteUpdate()
+  private val update = MonthlyReportCompleteUpdate()
 
   private val spec = UpdateSpec(update)
 
@@ -27,13 +27,13 @@ class MonthlyScreeningReportCompleteUpdateTest {
   }
 
   @Test
-  fun `when done btn is clicked, then go to monthly screening report list screen`() {
+  fun `when done btn is clicked, then go to monthly report list screen`() {
     spec
         .given(defaultModel)
         .whenEvent(DoneButtonClicked)
         .then(UpdateSpec.assertThatNext(
             NextMatchers.hasNoModel(),
-            NextMatchers.hasEffects(GoToMonthlyScreeningReportListScreen)
+            NextMatchers.hasEffects(GoToMonthlyReportListScreen)
         ))
   }
 }

@@ -78,7 +78,7 @@ class MonthlyReportListScreen : BaseScreen<
 
   override fun defaultModel() = MonthlyReportListModel.default()
 
-  override fun createInit() = MonthlyReportListInit()
+  override fun createInit() = MonthlyReportListInit(screenKey.questionnaireType)
 
   override fun createUpdate() = MonthlyReportListUpdate()
 
@@ -123,12 +123,15 @@ class MonthlyReportListScreen : BaseScreen<
       is MonthlyScreeningReports -> requireContext().resources.getString(
           R.string.monthly_screening_reports,
       )
+
       is MonthlySuppliesReports -> requireContext().resources.getString(
           R.string.monthly_supplies_reports,
       )
+
       is MonthlyDrugReports -> requireContext().resources.getString(
           R.string.monthly_drug_stock_reports,
       )
+
       else -> {
         requireContext().resources.getString(
             R.string.monthly_screening_reports,

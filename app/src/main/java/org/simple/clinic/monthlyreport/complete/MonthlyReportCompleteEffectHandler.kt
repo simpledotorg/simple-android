@@ -10,28 +10,28 @@ import io.reactivex.Scheduler
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponseRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
-class MonthlyScreeningReportCompleteEffectHandler @AssistedInject constructor(
+class MonthlyReportCompleteEffectHandler @AssistedInject constructor(
     private val questionnaireResponseRepository: QuestionnaireResponseRepository,
     private val schedulersProvider: SchedulersProvider,
-    @Assisted private val viewEffectsConsumer: Consumer<MonthlyScreeningReportCompleteViewEffect>
+    @Assisted private val viewEffectsConsumer: Consumer<MonthlyReportCompleteViewEffect>
 ) {
   @AssistedFactory
   interface Factory {
     fun create(
-        viewEffectsConsumer: Consumer<MonthlyScreeningReportCompleteViewEffect>
-    ): MonthlyScreeningReportCompleteEffectHandler
+        viewEffectsConsumer: Consumer<MonthlyReportCompleteViewEffect>
+    ): MonthlyReportCompleteEffectHandler
   }
 
-  fun build(): ObservableTransformer<MonthlyScreeningReportCompleteEffect, MonthlyScreeningReportCompleteEvent> {
+  fun build(): ObservableTransformer<MonthlyReportCompleteEffect, MonthlyReportCompleteEvent> {
     return RxMobius
-        .subtypeEffectHandler<MonthlyScreeningReportCompleteEffect, MonthlyScreeningReportCompleteEvent>()
+        .subtypeEffectHandler<MonthlyReportCompleteEffect, MonthlyReportCompleteEvent>()
         .addTransformer(LoadQuestionnaireResponseEffect::class.java, loadQuestionnaireResponse(schedulersProvider.io()))
-        .addConsumer(MonthlyScreeningReportCompleteViewEffect::class.java, viewEffectsConsumer::accept)
+        .addConsumer(MonthlyReportCompleteViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 
   private fun loadQuestionnaireResponse(scheduler: Scheduler):
-      ObservableTransformer<LoadQuestionnaireResponseEffect, MonthlyScreeningReportCompleteEvent> {
+      ObservableTransformer<LoadQuestionnaireResponseEffect, MonthlyReportCompleteEvent> {
     return ObservableTransformer { loadQuestionnaireResponse ->
       loadQuestionnaireResponse
           .observeOn(scheduler)

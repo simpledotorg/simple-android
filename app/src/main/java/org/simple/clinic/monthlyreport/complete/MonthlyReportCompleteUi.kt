@@ -2,7 +2,7 @@ package org.simple.clinic.monthlyreport.complete
 
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 
-interface MonthlyScreeningReportCompleteUi {
+interface MonthlyReportCompleteUi {
   fun showFormSubmissionMonthAndYearTextView(response: QuestionnaireResponse)
-  fun goToMonthlyScreeningReportListScreen()
+  fun goToMonthlyReportListScreen()
 }

@@ -5,18 +5,18 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 
 @Parcelize
-data class MonthlyScreeningReportCompleteModel(
+data class MonthlyReportCompleteModel(
     val questionnaireResponse: QuestionnaireResponse?
 ) : Parcelable {
   companion object {
-    fun default() = MonthlyScreeningReportCompleteModel(
+    fun default() = MonthlyReportCompleteModel(
         questionnaireResponse = null
     )
   }
 
   fun questionnaireResponseLoaded(
       questionnaireResponse: QuestionnaireResponse?
-  ): MonthlyScreeningReportCompleteModel {
+  ): MonthlyReportCompleteModel {
     return copy(questionnaireResponse = questionnaireResponse)
   }
 }

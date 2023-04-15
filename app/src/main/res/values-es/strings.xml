@@ -19,7 +19,7 @@
   <string name="country_bangladesh">Bangladesh</string>
   <string name="country_ethiopia">Etiopía</string>
   <string name="country_sri_lanka">Sri Lanka</string>
-  <string name="country_demo">País de demostración</string>
+  <string name="country_demo">País de Prueba</string>
 
   <!-- Home -->
   <string name="home_help">Ayuda</string>
@@ -27,18 +27,18 @@
 
   <!--Business id Identifier -->
   <string name="identifiertype_bp_passport">BP Passport</string>
-  <string name="identifiertype_bangladesh_national_id">Documento de Identidad Oficial</string>
+  <string name="identifiertype_bangladesh_national_id">ID Nacional</string>
   <string name="identifiertype_ethiopia_medical_record_number">Número de Historia Clínica</string>
-  <string name="identifiertype_unknown">Identificación</string>
-  <string name="identifiertype_india_national_health_id">Identificación Nacional de Salud</string>
-  <string name="identifiertype_sri_lanka_national_id">Documento de Identidad Oficial</string>
+  <string name="identifiertype_unknown">ID</string>
+  <string name="identifiertype_india_national_health_id">ID Nacional de Salud</string>
+  <string name="identifiertype_sri_lanka_national_id">ID Nacional</string>
   <string name="identifiertype_sri_lanka_personal_health_number">Número Personal de Salud</string>
 
   <!-- Patient search -->
-  <string name="instantsearch_hint">Nombre, número telefónico o ID</string>
+  <string name="instantsearch_hint">Nombre, telefónico o ID</string>
   <!-- Patient search results -->
   <string name="patientsearchresults_register_patient_rationale">¿No encuentra al paciente en esta lista?</string>
-  <string name="patientsearchresults_register_patient">Ingresar como nuevo paciente</string>
+  <string name="patientsearchresults_register_patient">+ Nuevo paciente</string>
   <string name="patientsearchresults_item_phone_number">Teléfono</string>
   <string name="patientsearchresults_item_birthdate">Fecha de nacimiento</string>
 
@@ -46,7 +46,7 @@
   <string name="patiententry_contentdescription_up_button">Volver a la búsqueda</string>
   <string name="patiententry_full_name">Nombre del paciente</string>
   <string name="patiententry_phone_number">Teléfono</string>
-  <string name="patiententry_bangladesh_national_id">Número de Documento Oficial</string>
+  <string name="patiententry_bangladesh_national_id">Número de ID Nacional</string>
   <string name="patiententry_ethiopia_medical_record_number">Número de Historia Clínica</string>
   <string name="patiententry_sri_lanka_personal_health_number">Número Personal de Salud</string>
   <string name="patiententry_date_of_birth_unfocused">Fecha de nacimiento</string>
@@ -65,7 +65,7 @@
   <string name="patiententry_state">Estado</string>
   <string name="patiententry_region">Región</string>
   <string name="patiententry_doornumber_streetname">Número de casa, Nombre de calle</string>
-  <string name="patiententry_division_area">Provincia y área</string>
+  <string name="patiententry_division_area">Provincia y area</string>
   <string name="patiententry_save_patient">Siguiente</string>
   <string name="patiententry_error_empty_fullname">Ingrese el nombre completo del paciente</string>
   <string name="patiententry_error_empty_gender">Elija el género del paciente</string>
@@ -75,26 +75,26 @@
   <string name="patiententry_error_both_dateofbirth_and_age_empty">Ingrese la edad del paciente</string>
   <string name="patiententry_error_invalid_dateofbirth">Ingrese la fecha de nacimiento del paciente en DD/MM/AAAA</string>
   <string name="patiententry_error_dateofbirth_is_in_future">Corrija la fecha de nacimiento del paciente</string>
-  <string name="patiententry_error_phonenumber_blank">El número telefónico no puede ir vacío</string>
+  <string name="patiententry_error_phonenumber_blank">Debe ingresar un número de teléfono</string>
   <string name="patiententry_error_phonenumber_length_less">El número telefónico no puede tener menos de %1$s dígitos</string>
   <string name="patiententry_identifier_bp_passport">BP Passport</string>
   <string name="patiententry_consent_header">Consentimiento:\u0020</string>
-  <string name="patiententry_consent_first_para">Al pulsar el siguiente botón, confirma que toda la información de pacientes que ingrese aquí ha sido obtenida mediante consentimiento informado. Esto significa que el paciente, o su guardián legal, sabe que usted está ingresando su información personal en la aplicación, comprende qué información se está recabando, y sabe que puede ser contactado vía SMS, WhatsApp u otros métodos usando el número telefónico provisto.</string>
-  <string name="patiententry_consent_second_para">Cualquier persona autorizada por usted, o por el proveedor de servicios de salud para quien usted trabaja, tendrá acceso a la información del paciente que ingresa aquí. Al usar esta aplicación usted confirma que el paciente o su guardián legal entienden quién tendrá acceso a la información obtenida a través de esta aplicación, y consiente a ese acceso.</string>
+  <string name="patiententry_consent_first_para">Al pulsar el siguiente botón, confirma que todos los datos del paciente que ingrese aquí han sido obtenidos mediante consentimiento informado. Esto significa que el paciente, o su guardián legal, sabe que usted está ingresando su información personal en la aplicación, comprende qué información se está recabando, y sabe que puede ser contactado vía SMS, WhatsApp u otros métodos usando el número telefónico provisto.</string>
+  <string name="patiententry_consent_second_para">Cualquier persona autorizada por usted, o por el proveedor de servicios de salud para quien usted trabaja, tendrá acceso a la información del paciente que ingrese aquí. Al usar esta aplicación usted confirma que el paciente o su guardián legal entienden quién tendrá acceso a la información obtenida a través de esta aplicación, y consiente a ese acceso.</string>
   <string name="patiententry_consent_whatsapp_sms_reminders">Recordatorios vía Whatsapp / SMS</string>
   <string name="patiententry_consent_sms_reminders">Recordatorios por SMS</string>
   <string name="patiententry_age_exceeds_max_limit_error">La edad no puede ser más de 120</string>
   <string name="patiententry_age_exceeds_min_limit_error">La edad no puede ser 0</string>
-  <string name="patiententry_town_area">Pueblo / Área</string>
+  <string name="patiententry_town_area">Pueblo / Area</string>
   <string name="patiententry_province">Provincia</string>
 
   <string name="patientedit_save_patient">Guardar</string>
-  <string name="patientedit_bp_passports_label">BP Passport</string>
+  <string name="patientedit_bp_passports_label">BP Passports</string>
   <string name="patientedit_confirm_discard_title">¿Descartar cambios?</string>
   <string name="patientedit_confirm_discard_ok">Descartar</string>
   <string name="patientedit_confirm_discard_cancel">Cancelar</string>
   <string name="patientedit_delete_patient">Eliminar</string>
-  <string name="patientedit_add_button">Añadir</string>
+  <string name="patientedit_add_button">AGREGAR</string>
 
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
@@ -118,7 +118,7 @@
   <string name="patients_loggedoutalert_title">Usted sólo puede estar conectado en un dispositivo a la vez</string>
   <string name="patients_loggedoutalert_message">Usted ha sido desconectado de su dispositivo anterior.</string>
   <string name="patients_loggedoutalert_dismiss">Entendido</string>
-  <string name="patients_scan_simple_card">Escanear Documento</string>
+  <string name="patients_scan_simple_card">Escanear ID</string>
   <string name="patients_recentpatients_title">Reciente</string>
   <string name="patients_recentpatients_no_recent_patients">Sin pacientes recientes</string>
   <string name="patients_recentpatients_see_all">Ver todos</string>
@@ -135,7 +135,7 @@
   <string name="bloodpressureentry_day">Día</string>
   <string name="bloodpressureentry_month">Mes</string>
   <string name="bloodpressureentry_year">Año</string>
-  <string name="bloodpressureentry_error_systolic_more">Sistólica debe ser mayor a diastólica</string>
+  <string name="bloodpressureentry_error_systolic_more">La sistólica debe ser mayor que la diastólica</string>
   <string name="bloodpressureentry_error_systolic_70">Sistólica no puede ser menor a 70</string>
   <string name="bloodpressureentry_error_systolic_300">Sistólica no puede ser mayor a 300</string>
   <string name="bloodpressureentry_error_diastolic_40">Diastólica no puede ser menor a 40</string>
@@ -145,7 +145,7 @@
   <string name="bloodpressureentry_error_date_invalid_pattern">Ingrese una fecha válida en DD/MM/AAAA</string>
   <string name="bloodpressureentry_error_date_is_in_future">La fecha no puede ser en el futuro</string>
   <string name="bloodpressureentry_remove_bp_title">Eliminar PA</string>
-  <string name="bloodpressureentry_remove_bp_message">¿Está seguro de querer eliminar este registro de presión arterial?</string>
+  <string name="bloodpressureentry_remove_bp_message">¿Quiere eliminar este registro de presión arterial?</string>
   <string name="bloodpressureentry_remove_bp_confirm">Eliminar</string>
   <string name="bloodpressureentry_remove_bp_cancel">Cancelar</string>
   <string name="bloodpressureentry_date_change">Cambiar</string>
@@ -161,7 +161,7 @@
   <string name="patientsummary_edit">Editar</string>
 
   <string name="patientsummary_updatephone_dialog_title">Actualizar número telefónico</string>
-  <string name="patientsummary_updatephone_dialog_message">El número telefónico del paciente fue previamente marcado como inorrecto</string>
+  <string name="patientsummary_updatephone_dialog_message">El número telefónico del paciente fue previamente marcado como incorrecto</string>
   <string name="patientsummary_updatephone_phone_hint">Teléfono</string>
   <string name="patientsummary_updatephone_save">Guardar</string>
   <string name="patientsummary_updatephone_cancel">Saltar</string>
@@ -202,7 +202,7 @@
   <string name="loginpin_go_back">Volver a la pantalla de número telefónico</string>
 
   <!-- App lock -->
-  <string name="applock_logout">¿No eres tú?</string>
+  <string name="applock_logout">¿No es usted?</string>
   <string name="applock_reset_pin_alert_title">¿Reestablecer NIP de seguridad?</string>
   <string name="applock_reset_pin_alert_message">¿Está seguro de querer reestablecer su NIP de seguridad?</string>
   <string name="applock_reset_pin_alert_confirm">Reestablecer</string>
@@ -262,6 +262,7 @@
   <string name="overdue_list_item_name_age">%s, %s</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s día de atraso</item>
+    <item quantity="many">%s días de atraso</item>
     <item quantity="other">%s días de atraso</item>
   </plurals>
   <string name="overdue_list_item_village">Ciudad</string>
@@ -281,10 +282,10 @@
 
   <!-- Enter OTP -->
   <string name="enterotp_check_sms_sent_to">Revisar SMS enviado a</string>
-  <string name="enterotp_enter_verification_code">Ingresar código de verificació</string>
+  <string name="enterotp_enter_verification_code">Ingresar código de verificación</string>
   <string name="enterotp_incorrect_code">Código incorrecto, por favor intente de nuevo</string>
   <string name="enterotp_resend_sms">Reenviar SMS</string>
-  <string name="enterotp_sms_sent">Se envió un nuevo SMS de verificació</string>
+  <string name="enterotp_sms_sent">Se envió un nuevo SMS de verificación</string>
   <string name="enterotp_try_again_after">Vuelva a intentarlo más tarde</string>
   <string name="otpentry_error_incorrect_otp_attempts_limit_reached" tools:ignore="PluralsCandidate">Ha hecho %s intentos incorrectos</string>
   <string name="otpentry_error_incorrect_otp_attempts_remaining">Código incorrecto, quedan %s intentos</string>
@@ -297,14 +298,17 @@
   <string name="scheduleappointment_next">Siguiente</string>
   <plurals name="scheduleappointment_appointment_in_days">
     <item quantity="one">%s día</item>
+    <item quantity="many">%s </item>
     <item quantity="other">%s días</item>
   </plurals>
   <plurals name="scheduleappointment_appointment_in_weeks">
     <item quantity="one">%s semana</item>
+    <item quantity="many">%s semanas</item>
     <item quantity="other">%s semanas</item>
   </plurals>
   <plurals name="scheduleappointment_appointment_in_months">
     <item quantity="one">%s mes</item>
+    <item quantity="many">%s meses</item>
     <item quantity="other">%s meses</item>
   </plurals>
 
@@ -345,14 +349,14 @@
   <string name="prescribed_drug_with_dosages_sheet_drug_name">%s dosis</string>
 
   <!--Scan Simple ID-->
-  <string name="scansimpleid_title">BP Passport o número de identidad nacional</string>
-  <string name="scansimpleid_enteredcode_error_empty">Ingrese su número de BP Passport o número de identidad nacional</string>
-  <string name="scansimpleid_enteredcode_error_not_required_length">Ingrese un número válido de BP Passport o de identidad nacional</string>
+  <string name="scansimpleid_title">BP Passport o número de ID Nacional</string>
+  <string name="scansimpleid_enteredcode_error_empty">Ingrese su número de BP Passport o ID de Salud Nacional</string>
+  <string name="scansimpleid_enteredcode_error_not_required_length">Ingrese un número válido de BP Passport o de su ID de Salud Nacional</string>
   <string name="scansimpleid_type_number">o escriba el número</string>
   <string name="scansimpleid_invalid_qr_code">Escanee una identificación de salud válida</string>
   <string name="scansimpleid_error_state_snackbar_ok">OK</string>
   <string name="scansimpleid_identfier_already_exists">Este número ya ha sido asignado a otro paciente.\nEscanée un nuevo número de identificación de salud.</string>
-  <string name="scansimpleid_bp_passport_or_national_health_id">BP Passport o número de identidad nacional</string>
+  <string name="scansimpleid_bp_passport_or_national_health_id">BP Passport o número de ID Nacional de Salud</string>
   <string name="scansimpleid_bp_passport_title">BP Passport</string>
   <string name="scansimpleid_national_id_title">Documento de Identidad Oficial</string>
 
@@ -429,12 +433,12 @@
   <string name="changelanguage_done">Listo</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">Por favor espere…</string>
+  <string name="placeholder_loading_title">Por favor espere...</string>
   <string name="placeholder_loading_message">Mantenimiento de base de datos en progreso. Esto sólo tomará un minuto.</string>
 
   <!-- Select Country Screen -->
   <string name="selectcountry_logo_contentdescription">Logo de Simple</string>
-  <string name="selectcountry_title">Selecciona tu país</string>
+  <string name="selectcountry_title">Seleccione su país</string>
   <string name="selectcountry_networkerror">¡No hay conexión a internet!</string>
   <string name="selectcountry_servererror">¡Error de servidor! Por favor inténtelo más tarde.</string>
   <string name="selectcountry_genericerror">Algo salió mal. Por favor inténtelo más tarde.</string>
@@ -520,8 +524,8 @@
 
   <!-- Contact patient -->
   <string name="contactpatient_agreed_to_visit">Marcar paciente como \"accedió a visitar\"</string>
-  <string name="contactpatient_remind_call_later">Recordar llamar después…</string>
-  <string name="contactpatient_remove_from_list">Eliminar de lista de atrasados…</string>
+  <string name="contactpatient_remind_call_later">Recordar llamar después...</string>
+  <string name="contactpatient_remove_from_list">Eliminar de lista de atrasados...</string>
   <string name="contactpatient_result_of_call">Resultado de la llamada</string>
   <string name="contactpatient_call">Llamada</string>
   <string name="contactpatient_call_normal">Normal</string>
@@ -534,14 +538,17 @@
   <string name="contactpatient_result">Resultado</string>
   <plurals name="contactpatient_days">
     <item quantity="one">%s día</item>
+    <item quantity="many">%s </item>
     <item quantity="other">%s días</item>
   </plurals>
   <plurals name="contactpatient_weeks">
     <item quantity="one">%s semana</item>
+    <item quantity="many">%s semanas</item>
     <item quantity="other">%s semanas</item>
   </plurals>
   <plurals name="contactpatient_months">
     <item quantity="one">%s mes</item>
+    <item quantity="many">%s meses</item>
     <item quantity="other">%s meses</item>
   </plurals>
   <string name="contactpatient_select_a_reason">Seleccione una razón</string>
@@ -652,6 +659,7 @@
   <string name="view_teleconsult_medicines_required_error">Agregue por lo menos un medicamento</string>
   <plurals name="list_item_teleconsult_medicine_duration">
     <item quantity="one">%1$s día</item>
+    <item quantity="many">%1$s días</item>
     <item quantity="other">%1$s días</item>
   </plurals>
 
@@ -693,7 +701,7 @@
   <string name="sheet_bp_passport_register_new_patient">Registrar paciente nuevo</string>
   <string name="sheet_bp_passport_add_to_existing_patient">Añadir a paciente existente</string>
   <string name="sheet_bp_passport_number">BP Passport %1$s</string>
-  <string name="sheet_national_health_id">Identidad nacional de salud %1$s</string>
+  <string name="sheet_national_health_id">ID de Salud Nacional %1$s</string>
 
   <!-- Instant search -->
   <string name="patientinstantsearch_assigned_facility_header">Asignado a %1$s</string>
@@ -712,7 +720,7 @@
   <string name="sheet_text_input_date_picker_date_cannot_be_after_one_year">La fecha no puede ser después de un año</string>
 
   <!-- National Health Id -->
-  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">No se puede asignar una identidad nacional de salud a un paciente que ya tenga una registrada</string>
+  <string name="nhid_error_cannot_assign_to_patient_with_existing_id_message">No se puede asignar una ID Nacional de Salud a un paciente con una ID Nacional de Salud que está asignada a otro paciente</string>
   <string name="nhid_error_cannot_assign_to_patient_with_existing_ok">OK</string>
 
   <!-- Select ongoing hypertension treatment dialog -->
@@ -795,10 +803,12 @@
   <string name="next_appointment_today">Hoy</string>
   <plurals name="next_appointment_plurals">
     <item quantity="one">%d día</item>
+    <item quantity="many">%d días</item>
     <item quantity="other">%d días</item>
   </plurals>
   <plurals name="next_appointment_overdue_plurals">
     <item quantity="one">%d día de atraso</item>
+    <item quantity="many">%d días de atraso</item>
     <item quantity="other">%d días de atraso</item>
   </plurals>
 
@@ -825,7 +835,7 @@
   <string name="drug_stock_reminder_notification">Complete su reporte pendiente de existencias de medicamentos para %1$s</string>
   <string name="drug_stock_reminder_card_title">Existencias de medicamento</string>
   <string name="drug_stock_reminder_card_content">Complete su reporte pendiente de existencias de medicamentos para %1$s</string>
-  <string name="drug_stock_reminder_button_text">Ingrese existencias de medicamento</string>
+  <string name="drug_stock_reminder_button_text">+ Medicamentos</string>
 
   <!-- Drug stock reminder no active network connection dialog -->
   <string name="drug_stock_reminder_no_active_network_connection_dialog_title">No hay conexión a internet</string>

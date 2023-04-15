@@ -433,7 +433,7 @@
   <string name="changelanguage_done">Listo</string>
 
   <!-- Placeholder -->
-  <string name="placeholder_loading_title">Por favor espere...</string>
+  <string name="placeholder_loading_title">Por favor espere…</string>
   <string name="placeholder_loading_message">Mantenimiento de base de datos en progreso. Esto sólo tomará un minuto.</string>
 
   <!-- Select Country Screen -->
@@ -524,8 +524,8 @@
 
   <!-- Contact patient -->
   <string name="contactpatient_agreed_to_visit">Marcar paciente como \"accedió a visitar\"</string>
-  <string name="contactpatient_remind_call_later">Recordar llamar después...</string>
-  <string name="contactpatient_remove_from_list">Eliminar de lista de atrasados...</string>
+  <string name="contactpatient_remind_call_later">Recordar llamar después…</string>
+  <string name="contactpatient_remove_from_list">Eliminar de lista de atrasados…</string>
   <string name="contactpatient_result_of_call">Resultado de la llamada</string>
   <string name="contactpatient_call">Llamada</string>
   <string name="contactpatient_call_normal">Normal</string>

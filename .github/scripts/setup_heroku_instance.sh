@@ -38,6 +38,8 @@ fi
 
 echo "Starting the Simple server on Heroku"
 herokuGitUrl="https://heroku:${herokuApiKey}@git.heroku.com/${herokuAppName}.git"
+echo $herokuGitUrl
+echo $simpleServerBranch
 (cd $serverAppDirectory && git push $herokuGitUrl ${simpleServerBranch})
 resultOfServerPush=$?
 

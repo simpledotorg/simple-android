@@ -6,9 +6,11 @@ echo "GitHub reference: ${1}"
 if [[ ${1} == *"/release/"* ]]; then
   herokuAppName="simple-mob-rel-$(date +"%H%M")"
 else
-  herokuAppName="simple-mob-pr-$(cut -d"/" -f3 <<< ${1})"
+  name=$(cut -d"/" -f3 <<< ${1})
+  herokuAppNameFull="simple-mob-pr-$name"
+  herokuAppName=${herokuAppNameFull:0:30}
 fi
 
 echo "Heroku app name: ${herokuAppName}"
 
-echo "heroku_app_name=$herokuAppName" >> $GITHUB_OUTPUT
+# echo "heroku_app_name=$herokuAppName" >> $GITHUB_OUTPUT

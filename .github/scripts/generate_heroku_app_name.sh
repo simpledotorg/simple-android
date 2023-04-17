@@ -8,9 +8,9 @@ if [[ ${1} == *"/release/"* ]]; then
 else
   name=$(cut -d"/" -f3 <<< ${1})
   herokuAppNameFull="simple-mob-pr-$name"
-  herokuAppName=${herokuAppNameFull:0:30}
+  herokuAppName=${herokuAppNameFull:0:29}
 fi
 
 echo "Heroku app name: ${herokuAppName}"
 
-# echo "heroku_app_name=$herokuAppName" >> $GITHUB_OUTPUT
+echo "heroku_app_name=$herokuAppName" >> $GITHUB_OUTPUT

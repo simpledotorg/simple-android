@@ -123,6 +123,7 @@
   <string name="patients_recentpatients_no_recent_patients">ਹਾਲ ਹੀ ਦੇ ਕੋਈ ਮਰੀਜ਼ ਨਹੀਂ</string>
   <string name="patients_recentpatients_see_all">ਸਭ ਦੇਖੋ</string>
   <string name="patients_recentpatients_nameage">%1$s, %2$s</string>
+  <string name="patients_links_title">ਲਿੰਕ</string>
 
   <!-- Blood pressure entry -->
   <string name="bloodpressureentry_sheet_title_enter_blood_pressure">ਬਲੱਡ ਪ੍ਰੈਸ਼ਰ</string>
@@ -878,20 +879,30 @@
 
   <!--reports-->
   <string name="reports_report">%1$s ਦੀ ਰਿਪੋਰਟ</string><!--Oct 2023 report-->
-  <string name="reports_submit_report">ਰਿਪੋਰਟ ਸਬਮਿਟ ਕਰੋ</string>
-  <string name="reports_submitted">ਸਬਮਿਟ ਕੀਤਾ ਗਿਆ</string>
-  <string name="reports_submitted_with_date_and_time">%1$s ਨੂੰ ਸਬਮਿਟ ਕੀਤਾ ਗਿਆ</string><!--Submitted Nov 27, 06:24pm-->
   <string name="reports_submit_btn_text">ਸਬਮਿਟ ਕਰੋ</string>
   <string name="reports_complete">ਮੁਕੰਮਲ!</string>
-  <string name="reports_submitted_with_date">%1$s ਦੀ ਰਿਪੋਰਟ ਸਬਮਿਟ ਕੀਤੀ ਗਈ</string><!--October 2022 report submitted-->
   <string name="reports_done">ਹੋ ਗਿਆ</string>
+  <string name="reports_submitted_with_date_and_time">%1$s ਨੂੰ ਸਬਮਿਟ ਕੀਤਾ ਗਿਆ</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="reports_submit_report">ਰਿਪੋਰਟ ਸਬਮਿਟ ਕਰੋ</string>
+  <string name="reports_submitted">ਸਬਮਿਟ ਕੀਤਾ ਗਿਆ</string>
+  <string name="reports_submitted_with_date">%1$s ਦੀ ਰਿਪੋਰਟ ਸਬਮਿਟ ਕੀਤੀ ਗਈ</string><!--October 2022 report submitted-->
   <string name="reports_unsaved_changes_title">ਅਣ-ਸੁਰੱਖਿਅਤ ਬਦਲਾਵ</string>
   <string name="reports_unsaved_changes_text">ਅਣ-ਸੁਰੱਖਿਅਤ ਬਦਲਾਵ ਗੁੰਮ ਹੋ ਜਾਣਗੇ।\nਕੀ ਤੁਸੀਂ ਯਕੀਨਨ ਛੱਡਣਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
   <string name="reports_stay_title">ਇਸ ਪੰਨੇ ਤੇ ਬਣੇ ਰਹੋ</string>
   <string name="reports_leave_page_title">ਇਹ ਪੰਨਾ ਛੱਡੋ</string>
 
   <!--Monthly screen reports-->
+  <string name="monthly_screening_report">ਮਹੀਨਾਵਾਰ ਸਕ੍ਰੀਨਿੰਗ ਰਿਪੋਰਟ</string>
   <string name="monthly_screening_reports">ਮਹੀਨਾਵਾਰ ਸਕ੍ਰੀਨਿੰਗ ਰਿਪੋਰਟਾਂ</string>
   <string name="monthly_screening_reports_screening_report">%1$s ਦੀ ਸਕ੍ਰੀਨਿੰਗ ਰਿਪੋਰਟ</string><!--Oct 2022 screening report-->
 
+  <!--Monthly drug stock reports-->
+  <string name="monthly_drug_stock_report">ਮਹੀਨਾਵਾਰ ਡਰੱਗ ਸਟਾਕ ਰਿਪੋਰਟ</string>
+  <string name="monthly_drug_stock_reports">ਮਹੀਨਾਵਾਰ ਡਰੱਗ ਸਟਾਕ ਰਿਪੋਰਟਾਂ</string>
+  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s ਡਰੱਗ ਸਟਾਕ ਰਿਪੋਰਟ</string><!--Oct 2022 drug stock report-->
+
+  <!--Monthly supplies reports-->
+  <string name="monthly_supplies_report">ਮਹੀਨਾਵਾਰ ਸਪਲਾਈ ਦੀ ਰਿਪੋਰਟ</string>
+  <string name="monthly_supplies_reports">ਮਹੀਨਾਵਾਰ ਸਪਲਾਈ ਦੀਆਂ ਰਿਪੋਰਟਾਂ</string>
+  <string name="monthly_supplies_report_supplies_report">%1$s ਸਪਲਾਈ ਦੀ ਰਿਪੋਰਟ</string><!--Oct 2022 supplies report-->
 </resources>

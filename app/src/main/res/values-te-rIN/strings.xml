@@ -123,6 +123,7 @@
   <string name="patients_recentpatients_no_recent_patients">ఇటీవలి రోగులు లేరు</string>
   <string name="patients_recentpatients_see_all">మొత్తం చూడండి</string>
   <string name="patients_recentpatients_nameage">%1$s, %2$s</string>
+  <string name="patients_links_title">లింక్‌లు</string>
 
   <!-- Blood pressure entry -->
   <string name="bloodpressureentry_sheet_title_enter_blood_pressure">రక్తపోటు</string>
@@ -878,20 +879,30 @@
 
   <!--reports-->
   <string name="reports_report">%1$s రిపోర్ట్</string><!--Oct 2023 report-->
-  <string name="reports_submit_report">రిపోర్ట్‌ని సమర్పించండి</string>
-  <string name="reports_submitted">సమర్పించబడింది</string>
-  <string name="reports_submitted_with_date_and_time">%1$s సమర్పించబడింది</string><!--Submitted Nov 27, 06:24pm-->
   <string name="reports_submit_btn_text">సమర్పించు</string>
   <string name="reports_complete">పూర్తి చేయి!</string>
-  <string name="reports_submitted_with_date">%1$s రిపోర్ట్ సమర్పించబడింది</string><!--October 2022 report submitted-->
   <string name="reports_done">పూర్తయింది</string>
+  <string name="reports_submitted_with_date_and_time">%1$s సమర్పించబడింది</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="reports_submit_report">రిపోర్ట్‌ని సమర్పించండి</string>
+  <string name="reports_submitted">సమర్పించబడింది</string>
+  <string name="reports_submitted_with_date">%1$s రిపోర్ట్ సమర్పించబడింది</string><!--October 2022 report submitted-->
   <string name="reports_unsaved_changes_title">సేవ్ చేయని మార్పులు</string>
   <string name="reports_unsaved_changes_text">సేవ్ చేసని మార్పులు కోల్పోవచ్చు.\nమీరు ఖచ్చితంగా నిష్క్రమించాలనుకుంటున్నారా?</string>
   <string name="reports_stay_title">ఈ పేజీపై ఉండాలా</string>
   <string name="reports_leave_page_title">ఈ పేజీ నుండి నిష్క్రమించు</string>
 
   <!--Monthly screen reports-->
+  <string name="monthly_screening_report">నెలవారీ స్క్రీనింగ్ రిపోర్టు</string>
   <string name="monthly_screening_reports">నెలవారీ స్క్రీనింగ్ రిపోర్ట్‌లు</string>
   <string name="monthly_screening_reports_screening_report">%1$s స్క్రీనింగ్ రిపోర్ట్</string><!--Oct 2022 screening report-->
 
+  <!--Monthly drug stock reports-->
+  <string name="monthly_drug_stock_report">నెలవారీ ఔషధాల స్టాక్ రిపోర్టు</string>
+  <string name="monthly_drug_stock_reports">నెలవారీ ఔషధాల స్టాక్ రిపోర్టులు</string>
+  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s ఔషధాల స్టాక్ రిపోర్టు</string><!--Oct 2022 drug stock report-->
+
+  <!--Monthly supplies reports-->
+  <string name="monthly_supplies_report">నెలవారీ సరఫరాల రిపోర్టు</string>
+  <string name="monthly_supplies_reports">నెలవారీ సరఫరాల రిపోర్టులు</string>
+  <string name="monthly_supplies_report_supplies_report">%1$s సరఫరాల రిపోర్టు</string><!--Oct 2022 supplies report-->
 </resources>

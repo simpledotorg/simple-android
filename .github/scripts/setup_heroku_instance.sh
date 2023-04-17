@@ -3,9 +3,10 @@
 herokuTeamName="resolvetosavelives"
 herokuAppName=${1}
 herokuApiKey=${2}
-serverAppDirectory=${3}
-androidAppDirectory=${4}
-encodedHerokuEnvProperties=${5}
+simpleServerBranch=${3}
+serverAppDirectory=${4}
+androidAppDirectory=${5}
+encodedHerokuEnvProperties=${6}
 decodedHerokuEnvProperties=$(echo $encodedHerokuEnvProperties | base64 --decode)
 
 echo "Checking if ${herokuAppName} exists in team ${herokuTeamName}"
@@ -37,7 +38,7 @@ fi
 
 echo "Starting the Simple server on Heroku"
 herokuGitUrl="https://heroku:${herokuApiKey}@git.heroku.com/${herokuAppName}.git"
-(cd $serverAppDirectory && git push $herokuGitUrl master)
+(cd $serverAppDirectory && git push $herokuGitUrl ${simpleServerBranch})
 resultOfServerPush=$?
 
 resultOfSeedDataSetup=0

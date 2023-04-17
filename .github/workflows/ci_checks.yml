@@ -102,6 +102,7 @@ jobs:
         run: |
           android-app/.github/scripts/setup_heroku_instance.sh \
           ${{ steps.generate-server-app-name.outputs.heroku_app_name }} \
+          ${{ inputs.simple-server-branch }} \
           ${{ env.HEROKU_API_KEY }} \
           server-app \
           android-app \

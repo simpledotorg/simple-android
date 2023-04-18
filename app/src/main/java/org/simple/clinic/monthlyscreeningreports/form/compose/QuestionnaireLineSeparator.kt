@@ -17,7 +17,8 @@ fun LineSeparator() {
       color = colorResource(id = R.color.color_on_surface_11),
       modifier = Modifier
           .padding(
-              vertical = dimensionResource(id = R.dimen.spacing_64)
+              top = dimensionResource(id = R.dimen.spacing_64),
+              bottom = dimensionResource(id = R.dimen.spacing_40)
           )
           .fillMaxWidth()
           .height(1.dp)

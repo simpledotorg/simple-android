@@ -123,6 +123,7 @@
   <string name="patients_recentpatients_no_recent_patients">මෑත රෝගීන් නොමැත</string>
   <string name="patients_recentpatients_see_all">සියල්ල බලන්න</string>
   <string name="patients_recentpatients_nameage">%1$s, %2$s</string>
+  <string name="patients_links_title">සබැඳි</string>
 
   <!-- Blood pressure entry -->
   <string name="bloodpressureentry_sheet_title_enter_blood_pressure">රුධිර පීඩනය</string>
@@ -878,20 +879,30 @@
 
   <!--reports-->
   <string name="reports_report">%1$s වාර්තාව</string><!--Oct 2023 report-->
-  <string name="reports_submit_report">වාර්තාව භාර දෙන්න</string>
-  <string name="reports_submitted">භාර දෙනු ලැබිණි</string>
-  <string name="reports_submitted_with_date_and_time">භාර දෙනු ලැබිණි %1$s</string><!--Submitted Nov 27, 06:24pm-->
   <string name="reports_submit_btn_text">භාර දෙන්න</string>
   <string name="reports_complete">සම්පූර්ණයි!</string>
-  <string name="reports_submitted_with_date">%1$s වාර්තාව භාර දෙනු ලැබිණි</string><!--October 2022 report submitted-->
   <string name="reports_done">අවසන්</string>
+  <string name="reports_submitted_with_date_and_time">භාර දෙනු ලැබිණි %1$s</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="reports_submit_report">වාර්තාව භාර දෙන්න</string>
+  <string name="reports_submitted">භාර දෙනු ලැබිණි</string>
+  <string name="reports_submitted_with_date">%1$s වාර්තාව භාර දෙනු ලැබිණි</string><!--October 2022 report submitted-->
   <string name="reports_unsaved_changes_title">සුරැකුම් නොකළ වෙනස්කම්</string>
   <string name="reports_unsaved_changes_text">සුරැකුම් නොකළ වෙනස්කම් අහිමි වෙනු ඇත.\nඔබට පිට වීමට අවශ්‍ය බව විශ්වාසද?</string>
   <string name="reports_stay_title">මෙම පිටුවේ රැඳී සිටින්න</string>
   <string name="reports_leave_page_title">මෙම පිටුවෙන් පිටවන්න</string>
 
-  !--Monthly screen reports--&gt;
+  <!--Monthly screen reports-->
+  <string name="monthly_screening_report">මාසික පරීක්ෂණ වාර්තා</string>
   <string name="monthly_screening_reports">මාසික පරීක්ෂණ වාර්තා</string>
   <string name="monthly_screening_reports_screening_report">%1$s පරීක්ෂණ වාර්තාව</string><!--Oct 2022 screening report-->
 
+  <!--Monthly drug stock reports-->
+  <string name="monthly_drug_stock_report">මාසික ඖෂධ තොග වාර්තාව</string>
+  <string name="monthly_drug_stock_reports">මාසික ඖෂධ තොග වාර්තා</string>
+  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s ඖෂධ තොග වාර්තාවක්</string><!--Oct 2022 drug stock report-->
+
+  <!--Monthly supplies reports-->
+  <string name="monthly_supplies_report">මාසික සැපයුම් වාර්තාව</string>
+  <string name="monthly_supplies_reports">මාසික සැපයුම් වාර්තා</string>
+  <string name="monthly_supplies_report_supplies_report">%1$s සැපයුම් වාර්තාවක්</string><!--Oct 2022 supplies report-->
 </resources>

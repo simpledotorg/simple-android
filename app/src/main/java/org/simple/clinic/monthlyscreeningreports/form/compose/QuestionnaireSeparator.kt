@@ -13,7 +13,7 @@ fun Separator() {
   Spacer(
       Modifier.size(
           width = 0.dp,
-          height = dimensionResource(id = R.dimen.spacing_64)
+          height = dimensionResource(id = R.dimen.spacing_40)
       )
   )
 }

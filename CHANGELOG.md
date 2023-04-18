@@ -4,6 +4,11 @@
 
 ### Internal
 
+### Changes
+
+- New supported language: Español [`es`]
+- Updated the order of supported languages: `om-ET`, `am-ET`, `bn-BD`, `bn-IN`, `en-IN`, `es`, `hi-IN`, `kn-IN`, `mr-IN`, `pa-IN`, `so-ET`, `sid-ET`, `si-LK`, `te-IN`, `ti-ET`, `ta-IN`, `ta-LK`
+
 ## 2023-03-30-8663
 
 ### Changes

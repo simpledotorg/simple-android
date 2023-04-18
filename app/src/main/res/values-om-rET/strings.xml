@@ -123,6 +123,7 @@
   <string name="patients_recentpatients_no_recent_patients">Shukkubsattootni dhihoo hin jiran</string>
   <string name="patients_recentpatients_see_all">Hundaa ilaali</string>
   <string name="patients_recentpatients_nameage">%1$s, %2$s</string>
+  <string name="patients_links_title">Geessituuwwan</string>
 
   <!-- Blood pressure entry -->
   <string name="bloodpressureentry_sheet_title_enter_blood_pressure">Dhiibbaa dhiigaa</string>
@@ -880,20 +881,30 @@ Appilikeeshinii Simple keessan Google PlayStore irraa haaromsadhaa.</string>
 
   <!--reports-->
   <string name="reports_report">Gabaasa %1$s</string><!--Oct 2023 report-->
-  <string name="reports_submit_report">Gabaasa galchaa</string>
-  <string name="reports_submitted">Galfameera</string>
-  <string name="reports_submitted_with_date_and_time">%1$s galfameera</string><!--Submitted Nov 27, 06:24pm-->
   <string name="reports_submit_btn_text">Galchaa</string>
   <string name="reports_complete">Guutuudha!</string>
-  <string name="reports_submitted_with_date">Gabaasni %1$s galfameera</string><!--October 2022 report submitted-->
   <string name="reports_done">Taasifameera</string>
+  <string name="reports_submitted_with_date_and_time">%1$s galfameera</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="reports_submit_report">Gabaasa galchaa</string>
+  <string name="reports_submitted">Galfameera</string>
+  <string name="reports_submitted_with_date">Gabaasni %1$s galfameera</string><!--October 2022 report submitted-->
   <string name="reports_unsaved_changes_title">Jijjiiramoota ol hin kaa\'amin</string>
   <string name="reports_unsaved_changes_text">Jijjiiramootni ol hin kaa\'amin ni badu.\nDhugamatti bahuu barbaadduu?</string>
   <string name="reports_stay_title">FUULA KANARRA TURAA</string>
   <string name="reports_leave_page_title">FUULA KANARRRAA BAHAA</string>
 
   <!--Monthly screen reports-->
+  <string name="monthly_screening_report">Gabaasa calallii ji’aa</string>
   <string name="monthly_screening_reports">Gabaasaalee qorannoo ji\'aa</string>
   <string name="monthly_screening_reports_screening_report">Gabaasa qorannoo %1$s</string><!--Oct 2022 screening report-->
 
+  <!--Monthly drug stock reports-->
+  <string name="monthly_drug_stock_report">Gabaasa kuusaa qorichaa kan ji’aa</string>
+  <string name="monthly_drug_stock_reports">Gabaasa kuusaa qorichaa kan ji’aa</string>
+  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s gabaasa kuusaa qorichaa kan ji’aa</string><!--Oct 2022 drug stock report-->
+
+  <!--Monthly supplies reports-->
+  <string name="monthly_supplies_report">Gabaasa dhiheessiiwwan ji’aa</string>
+  <string name="monthly_supplies_reports">Gabaasa dhiheessiiwwan ji’aa</string>
+  <string name="monthly_supplies_report_supplies_report">%1$s Gabaasa dhiheessiiwwan ji’aa</string><!--Oct 2022 supplies report-->
 </resources>

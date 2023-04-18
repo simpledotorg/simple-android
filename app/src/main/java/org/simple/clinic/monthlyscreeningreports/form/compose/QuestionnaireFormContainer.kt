@@ -23,6 +23,7 @@ fun QuestionnaireFormContainer(
           .padding(
               start = dimensionResource(id = R.dimen.spacing_16),
               end = dimensionResource(id = R.dimen.spacing_16),
+              top = dimensionResource(id = R.dimen.spacing_16),
               bottom = dimensionResource(id = R.dimen.spacing_24)
           )
   ) {

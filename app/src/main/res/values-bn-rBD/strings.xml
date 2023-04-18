@@ -123,6 +123,7 @@
   <string name="patients_recentpatients_no_recent_patients">কোন সাম্প্রতিক রোগী নেই</string>
   <string name="patients_recentpatients_see_all">সবাইকে দেখুন</string>
   <string name="patients_recentpatients_nameage">%1$s, %2$s</string>
+  <string name="patients_links_title">লিংকস</string>
 
   <!-- Blood pressure entry -->
   <string name="bloodpressureentry_sheet_title_enter_blood_pressure">রক্তচাপ</string>
@@ -878,20 +879,30 @@
 
   <!--reports-->
   <string name="reports_report">%1$s রিপোর্ট</string><!--Oct 2023 report-->
-  <string name="reports_submit_report">রিপোর্ট জমা দিন</string>
-  <string name="reports_submitted">জমা দেওয়া হয়েছে</string>
-  <string name="reports_submitted_with_date_and_time">%1$s জমা দেওয়া হয়েছে</string><!--Submitted Nov 27, 06:24pm-->
   <string name="reports_submit_btn_text">জমা দিন</string>
   <string name="reports_complete">সম্পন্ন করুন!</string>
-  <string name="reports_submitted_with_date">%1$s রিপোর্ট জমা দেওয়া হয়েছে</string><!--October 2022 report submitted-->
   <string name="reports_done">সম্পন্ন</string>
+  <string name="reports_submitted_with_date_and_time">%1$s জমা দেওয়া হয়েছে</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="reports_submit_report">রিপোর্ট জমা দিন</string>
+  <string name="reports_submitted">জমা দেওয়া হয়েছে</string>
+  <string name="reports_submitted_with_date">%1$s রিপোর্ট জমা দেওয়া হয়েছে</string><!--October 2022 report submitted-->
   <string name="reports_unsaved_changes_title">অসংরক্ষিত পরিবর্তন</string>
   <string name="reports_unsaved_changes_text">অসংরক্ষিত পরিবর্তন পরবর্তিতে থাকবে না।\nআপনি কি নিশ্চিত আপনি বের হয়ে যেতে চান?</string>
   <string name="reports_stay_title">এই পেজে থাকুন</string>
   <string name="reports_leave_page_title">এই পেজ থেকে চলে যান</string>
 
   <!--Monthly screen reports-->
+  <string name="monthly_screening_report">মাসিক স্ক্রিনিং রিপোর্ট</string>
   <string name="monthly_screening_reports">মাসিক স্ক্রিনিং রিপোর্ট</string>
   <string name="monthly_screening_reports_screening_report">%1$s স্ক্রিনিং রিপোর্ট</string><!--Oct 2022 screening report-->
 
+  <!--Monthly drug stock reports-->
+  <string name="monthly_drug_stock_report">মাসিক ড্রাগ স্টক রিপোর্ট</string>
+  <string name="monthly_drug_stock_reports">মাসিক ড্রাগ স্টক রিপোর্টসমূহ</string>
+  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s ড্রাগ স্টক রিপোর্ট</string><!--Oct 2022 drug stock report-->
+
+  <!--Monthly supplies reports-->
+  <string name="monthly_supplies_report">মাসিক সাপ্লাইয়ের রিপোর্ট</string>
+  <string name="monthly_supplies_reports">মাসিক সাপ্লাইয়ের রিপোর্টসমূহ</string>
+  <string name="monthly_supplies_report_supplies_report">%1$s সাপ্লাইয়ের রিপোর্ট</string><!--Oct 2022 supplies report-->
 </resources>

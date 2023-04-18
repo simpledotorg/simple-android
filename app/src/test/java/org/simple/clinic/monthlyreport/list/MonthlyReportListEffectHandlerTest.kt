@@ -45,7 +45,7 @@ class MonthlyReportListEffectHandlerTest {
     whenever(questionnaireResponseRepository.questionnaireResponsesFilteredBy(MonthlyScreeningReports, facility.uuid)) doReturn Observable.just(listOf(questionnaireResponse))
 
     //when
-    testCase.dispatch(LoadMonthlyReportListEffect)
+    testCase.dispatch(LoadMonthlyReportListEffect(MonthlyScreeningReports))
 
     //then
     testCase.assertOutgoingEvents(MonthlyReportListFetched(listOf(questionnaireResponse)))

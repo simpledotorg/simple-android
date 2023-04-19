@@ -36,7 +36,7 @@ androidx-compose-bom = "2023.01.00"
 
 [libraries]
 android-gradle-plugin = "com.android.tools.build:gradle:7.3.1"
-android-desugaring = "com.android.tools:desugar_jdk_libs:1.2.2"
+android-desugaring = "com.android.tools:desugar_jdk_libs:1.2.3"
 
 androidx-annotation-annotation = "androidx.annotation:annotation:1.5.0"
 

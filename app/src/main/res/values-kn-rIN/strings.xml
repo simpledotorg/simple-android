@@ -123,6 +123,7 @@
   <string name="patients_recentpatients_no_recent_patients">ಯಾವುದೇ ಇತ್ತೀಚಿನ ರೋಗಿಗಳಿಲ್ಲ</string>
   <string name="patients_recentpatients_see_all">ಎಲ್ಲವನ್ನು ವೀಕ್ಷಿಸಿ</string>
   <string name="patients_recentpatients_nameage">%1$s, %2$s</string>
+  <string name="patients_links_title">ಲಿಂಕ್‌ಗಳು</string>
 
   <!-- Blood pressure entry -->
   <string name="bloodpressureentry_sheet_title_enter_blood_pressure">ರಕ್ತದೊತ್ತಡ</string>
@@ -878,20 +879,30 @@
 
   <!--reports-->
   <string name="reports_report">%1$s ವರದಿ</string><!--Oct 2023 report-->
-  <string name="reports_submit_report">ವರದಿ ಸಲ್ಲಿಸಿ</string>
-  <string name="reports_submitted">ಸಲ್ಲಿಸಲಾಗಿದೆ</string>
-  <string name="reports_submitted_with_date_and_time">%1$s ಸಲ್ಲಿಸಲಾಗಿದೆ</string><!--Submitted Nov 27, 06:24pm-->
   <string name="reports_submit_btn_text">ಸಲ್ಲಿಸಿ</string>
   <string name="reports_complete">ಪೂರ್ಣಗೊಂಡಿದೆ!</string>
-  <string name="reports_submitted_with_date">%1$s ವರದಿ ಸಲ್ಲಿಸಲಾಗಿದೆ</string><!--October 2022 report submitted-->
   <string name="reports_done">ಪೂರ್ಣಗೊಳಿಸಲಾಗಿದೆ</string>
+  <string name="reports_submitted_with_date_and_time">%1$s ಸಲ್ಲಿಸಲಾಗಿದೆ</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="reports_submit_report">ವರದಿ ಸಲ್ಲಿಸಿ</string>
+  <string name="reports_submitted">ಸಲ್ಲಿಸಲಾಗಿದೆ</string>
+  <string name="reports_submitted_with_date">%1$s ವರದಿ ಸಲ್ಲಿಸಲಾಗಿದೆ</string><!--October 2022 report submitted-->
   <string name="reports_unsaved_changes_title">ಉಳಿಸದ ಬದಲಾವಣೆಗಳು</string>
   <string name="reports_unsaved_changes_text">ಉಳಿಸದ ಬದಲಾವಣೆಗಳು ಕಳೆದು ಹೋಗುತ್ತವೆ.\nನೀವು ತೊರೆಯಲು ಖಚಿತವಾಗಿ ಬಯಸುವಿರಾ?</string>
   <string name="reports_stay_title">ಈ ಪುಟದಲ್ಲಿಯೇ ಇರಿ</string>
   <string name="reports_leave_page_title">ಈ ಪುಟ ತೊರೆಯಿರಿ</string>
 
   <!--Monthly screen reports-->
+  <string name="monthly_screening_report">ಮಾಸಿಕ ತಪಾಸಣೆ ವರದಿ</string>
   <string name="monthly_screening_reports">ಮಾಸಿಕ ಸ್ಕ್ರೀನಿಂಗ್ ವರದಿಗಳು</string>
   <string name="monthly_screening_reports_screening_report">%1$s ಸ್ಕ್ರೀನಿಂಗ್ ವರದಿ</string><!--Oct 2022 screening report-->
 
+  <!--Monthly drug stock reports-->
+  <string name="monthly_drug_stock_report">ಮಾಸಿಕ ಔಷಧ ದಾಸ್ತಾನು ವರದಿ</string>
+  <string name="monthly_drug_stock_reports">ಮಾಸಿಕ ಔಷಧ ದಾಸ್ತಾನು ವರದಿಗಳು</string>
+  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s ಔಷಧ ದಾಸ್ತಾನು ವರದಿ</string><!--Oct 2022 drug stock report-->
+
+  <!--Monthly supplies reports-->
+  <string name="monthly_supplies_report">ಮಾಸಿಕ ಪೂರೈಕೆಗಳ ವರದಿ</string>
+  <string name="monthly_supplies_reports">ಮಾಸಿಕ ಪೂರೈಕೆಗಳ ವರದಿಗಳು</string>
+  <string name="monthly_supplies_report_supplies_report">%1$s ಪೂರೈಕೆಗಳ ವರದಿ</string><!--Oct 2022 supplies report-->
 </resources>

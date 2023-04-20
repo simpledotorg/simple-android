@@ -15,7 +15,7 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.MonthlyReportListItemViewBinding
-import org.simple.clinic.databinding.ScreenMonthlyReportListBinding
+import org.simple.clinic.databinding.ScreenMonthlyReportsBinding
 import org.simple.clinic.di.DateFormatter
 import org.simple.clinic.di.DateFormatter.Type.MonthAndYear
 import org.simple.clinic.di.injector
@@ -34,13 +34,13 @@ import org.simple.clinic.widgets.UiEvent
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
-class MonthlyReportListScreen : BaseScreen<
-    MonthlyReportListScreen.Key,
-    ScreenMonthlyReportListBinding,
-    MonthlyReportListModel,
-    MonthlyReportListEvent,
-    MonthlyReportListEffect,
-    MonthlyReportListViewEffect>(), MonthlyReportListUi {
+class MonthlyReportsScreen : BaseScreen<
+    MonthlyReportsScreen.Key,
+    ScreenMonthlyReportsBinding,
+    MonthlyReportsModel,
+    MonthlyReportsEvent,
+    MonthlyReportsEffect,
+    MonthlyReportsViewEffect>(), MonthlyReportsUi {
 
   @Inject
   lateinit var router: Router
@@ -53,7 +53,7 @@ class MonthlyReportListScreen : BaseScreen<
   lateinit var monthAndYearDateFormatter: DateTimeFormatter
 
   @Inject
-  lateinit var effectHandlerFactory: MonthlyReportListEffectHandler.Factory
+  lateinit var effectHandlerFactory: MonthlyReportsEffectHandler.Factory
 
   private val backButton
     get() = binding.backButton
@@ -64,8 +64,8 @@ class MonthlyReportListScreen : BaseScreen<
   private val facilityTextView
     get() = binding.facilityTextView
 
-  private val monthlyReportRecyclerView
-    get() = binding.monthlyReportRecyclerView
+  private val monthlyReportsRecyclerView
+    get() = binding.monthlyReportsRecyclerView
 
   private val monthlyReportItemAdapter = ItemAdapter(
       diffCallback = MonthlyReportItem.DiffCallback(),
@@ -76,18 +76,18 @@ class MonthlyReportListScreen : BaseScreen<
       )
   )
 
-  override fun defaultModel() = MonthlyReportListModel.default()
+  override fun defaultModel() = MonthlyReportsModel.default()
 
-  override fun createInit() = MonthlyReportListInit(screenKey.questionnaireType)
+  override fun createInit() = MonthlyReportsInit(screenKey.questionnaireType)
 
-  override fun createUpdate() = MonthlyReportListUpdate()
+  override fun createUpdate() = MonthlyReportsUpdate()
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<MonthlyReportListViewEffect>) =
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<MonthlyReportsViewEffect>) =
       effectHandlerFactory.create(viewEffectsConsumer = viewEffectsConsumer).build()
 
-  override fun viewEffectHandler() = MonthlyReportListViewEffectHandler(this)
+  override fun viewEffectHandler() = MonthlyReportsViewEffectHandler(this)
 
-  override fun events(): Observable<MonthlyReportListEvent> {
+  override fun events(): Observable<MonthlyReportsEvent> {
     return Observable
         .mergeArray(
             backClicks(),
@@ -97,12 +97,12 @@ class MonthlyReportListScreen : BaseScreen<
         .cast()
   }
 
-  override fun uiRenderer() = MonthlyReportListUiRenderer(this)
+  override fun uiRenderer() = MonthlyReportsUiRenderer(this)
 
   override fun bindView(
       layoutInflater: LayoutInflater,
       container: ViewGroup?
-  ) = ScreenMonthlyReportListBinding.inflate(layoutInflater, container, false)
+  ) = ScreenMonthlyReportsBinding.inflate(layoutInflater, container, false)
 
   override fun onAttach(context: Context) {
     super.onAttach(context)
@@ -111,7 +111,7 @@ class MonthlyReportListScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    monthlyReportRecyclerView.apply {
+    monthlyReportsRecyclerView.apply {
       layoutManager = LinearLayoutManager(context)
       adapter = monthlyReportItemAdapter
     }
@@ -143,7 +143,7 @@ class MonthlyReportListScreen : BaseScreen<
         }
   }
 
-  private fun reportSelection(): Observable<MonthlyReportListEvent> {
+  private fun reportSelection(): Observable<MonthlyReportsEvent> {
     return monthlyReportItemAdapter
         .itemEvents
         .ofType<MonthlyReportItem.Event.ListItemClicked>()
@@ -159,22 +159,16 @@ class MonthlyReportListScreen : BaseScreen<
       override val analyticsName: String = "$questionnaireType List Screen"
   ) : ScreenKey() {
 
-    override fun instantiateFragment() = MonthlyReportListScreen()
+    override fun instantiateFragment() = MonthlyReportsScreen()
   }
 
   override fun setFacility(facilityName: String) {
     facilityTextView.text = facilityName
   }
 
-  override fun displayMonthlyReportList(responseList: List<QuestionnaireResponse>) {
-    val reportList = MonthlyReportItem.from(responseList, monthAndYearDateFormatter)
+  override fun displayMonthlyReports(monthlyReports: List<QuestionnaireResponse>) {
+    val reportList = MonthlyReportItem.from(monthlyReports, monthAndYearDateFormatter)
     monthlyReportItemAdapter.submitList(reportList)
-  }
-
-  override fun showProgress() {
-  }
-
-  override fun hideProgress() {
   }
 
   override fun openMonthlyReportForm(questionnaireType: QuestionnaireType, questionnaireResponse: QuestionnaireResponse) {
@@ -191,11 +185,11 @@ class MonthlyReportListScreen : BaseScreen<
   }
 
   override fun onDestroyView() {
-    monthlyReportRecyclerView.adapter = null
+    monthlyReportsRecyclerView.adapter = null
     super.onDestroyView()
   }
 
   interface Injector {
-    fun inject(target: MonthlyReportListScreen)
+    fun inject(target: MonthlyReportsScreen)
   }
 }

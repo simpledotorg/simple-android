@@ -6,12 +6,12 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 
 @Parcelize
-data class MonthlyReportListModel(
+data class MonthlyReportsModel(
     val facility: Facility?,
     val questionnaireResponses: List<QuestionnaireResponse>?
 ) : Parcelable {
   companion object {
-    fun default() = MonthlyReportListModel(
+    fun default() = MonthlyReportsModel(
         facility = null,
         questionnaireResponses = null,
     )
@@ -20,11 +20,11 @@ data class MonthlyReportListModel(
   val hasFacility: Boolean
     get() = facility != null
 
-  fun currentFacilityLoaded(facility: Facility): MonthlyReportListModel {
+  fun currentFacilityLoaded(facility: Facility): MonthlyReportsModel {
     return copy(facility = facility)
   }
 
-  fun responseListLoaded(questionnaireResponses: List<QuestionnaireResponse>): MonthlyReportListModel {
+  fun monthlyReportsLoaded(questionnaireResponses: List<QuestionnaireResponse>): MonthlyReportsModel {
     return copy(questionnaireResponses = questionnaireResponses)
   }
 }

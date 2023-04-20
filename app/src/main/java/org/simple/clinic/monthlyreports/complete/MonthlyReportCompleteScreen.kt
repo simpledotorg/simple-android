@@ -15,7 +15,7 @@ import org.simple.clinic.databinding.ScreenMonthlyReportCompleteBinding
 import org.simple.clinic.di.DateFormatter
 import org.simple.clinic.di.DateFormatter.Type.FullMonthAndYear
 import org.simple.clinic.di.injector
-import org.simple.clinic.monthlyreports.list.MonthlyReportListScreen
+import org.simple.clinic.monthlyreports.list.MonthlyReportsScreen
 import org.simple.clinic.monthlyreports.util.parseMonthlyReportMonthStringToLocalDate
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
@@ -123,7 +123,7 @@ class MonthlyReportCompleteScreen : BaseScreen<
   }
 
   override fun goToMonthlyReportListScreen() {
-    router.popUntil(MonthlyReportListScreen.Key(screenKey.questionnaireType))
+    router.popUntil(MonthlyReportsScreen.Key(screenKey.questionnaireType))
   }
 
   override fun onBackPressed(): Boolean {

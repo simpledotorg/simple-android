@@ -5,13 +5,13 @@ import com.spotify.mobius.test.InitSpec
 import org.junit.Test
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
 
-class MonthlyReportListInitTest {
+class MonthlyReportsInitTest {
   private val questionnaireType = MonthlyScreeningReports
-  private val spec = InitSpec(MonthlyReportListInit(questionnaireType))
+  private val spec = InitSpec(MonthlyReportsInit(questionnaireType))
 
   @Test
   fun `when screen is created, then load initial data`() {
-    val defaultModel = MonthlyReportListModel.default()
+    val defaultModel = MonthlyReportsModel.default()
 
     spec
         .whenInit(defaultModel)
@@ -19,7 +19,7 @@ class MonthlyReportListInitTest {
             FirstMatchers.hasModel(defaultModel),
             FirstMatchers.hasEffects(
                 LoadCurrentFacility,
-                LoadMonthlyReportListEffect(questionnaireType),
+                LoadMonthlyReportsEffect(questionnaireType),
             )
         ))
   }

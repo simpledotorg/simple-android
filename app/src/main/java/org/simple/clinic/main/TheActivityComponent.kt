@@ -48,7 +48,7 @@ import org.simple.clinic.login.applock.ConfirmResetPinDialog
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen
 import org.simple.clinic.monthlyreports.complete.MonthlyReportCompleteScreen
 import org.simple.clinic.monthlyreports.form.QuestionnaireEntryScreen
-import org.simple.clinic.monthlyreports.list.MonthlyReportListScreen
+import org.simple.clinic.monthlyreports.list.MonthlyReportsScreen
 import org.simple.clinic.navigation.di.FragmentScreenKeyModule
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenResultBus
@@ -164,7 +164,7 @@ interface TheActivityComponent :
     SelectLineListFormatDialog.Injector,
     QuestionnaireEntryScreen.Injector,
     PatientsTabLinkView.Injector,
-    MonthlyReportListScreen.Injector,
+    MonthlyReportsScreen.Injector,
     MonthlyReportCompleteScreen.Injector {
   fun inject(target: TheActivity)
 

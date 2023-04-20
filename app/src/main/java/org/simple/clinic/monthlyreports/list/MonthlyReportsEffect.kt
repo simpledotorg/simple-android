@@ -3,21 +3,21 @@ package org.simple.clinic.monthlyreports.list
 import org.simple.clinic.questionnaire.QuestionnaireType
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 
-sealed class MonthlyReportListEffect
+sealed class MonthlyReportsEffect
 
-object LoadCurrentFacility : MonthlyReportListEffect()
+object LoadCurrentFacility : MonthlyReportsEffect()
 
-data class LoadMonthlyReportListEffect(
+data class LoadMonthlyReportsEffect(
     val questionnaireType: QuestionnaireType
-) : MonthlyReportListEffect()
+) : MonthlyReportsEffect()
 
-sealed class MonthlyReportListViewEffect : MonthlyReportListEffect()
+sealed class MonthlyReportsViewEffect : MonthlyReportsEffect()
 
-object GoBack : MonthlyReportListViewEffect()
+object GoBack : MonthlyReportsViewEffect()
 
 data class OpenMonthlyReportForm(
     val questionnaireType: QuestionnaireType,
     val questionnaireResponse: QuestionnaireResponse
-) : MonthlyReportListViewEffect()
+) : MonthlyReportsViewEffect()
 
 

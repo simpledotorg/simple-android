@@ -14,11 +14,11 @@ import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.sharedTestCode.TestData
 import java.util.UUID
 
-class MonthlyReportListEffectHandlerTest {
+class MonthlyReportsEffectHandlerTest {
 
-  private val ui = mock<MonthlyReportListUi>()
+  private val ui = mock<MonthlyReportsUi>()
   private val questionnaireResponseRepository = mock<QuestionnaireResponseRepository>()
-  private val viewEffectHandler = MonthlyReportListViewEffectHandler(ui)
+  private val viewEffectHandler = MonthlyReportsViewEffectHandler(ui)
   private val questionnaireResponse = TestData.questionnaireResponse(uuid = UUID.fromString("674517cf-8dfa-466f-b65e-76fffb40c230"))
 
   private val facility = TestData.facility(
@@ -26,7 +26,7 @@ class MonthlyReportListEffectHandlerTest {
       name = "PHC Simple"
   )
 
-  private val effectHandler = MonthlyReportListEffectHandler(
+  private val effectHandler = MonthlyReportsEffectHandler(
       questionnaireResponseRepository = questionnaireResponseRepository,
       schedulersProvider = TestSchedulersProvider.trampoline(),
       viewEffectsConsumer = viewEffectHandler::handle,
@@ -45,10 +45,10 @@ class MonthlyReportListEffectHandlerTest {
     whenever(questionnaireResponseRepository.questionnaireResponsesFilteredBy(MonthlyScreeningReports, facility.uuid)) doReturn Observable.just(listOf(questionnaireResponse))
 
     //when
-    testCase.dispatch(LoadMonthlyReportListEffect(MonthlyScreeningReports))
+    testCase.dispatch(LoadMonthlyReportsEffect(MonthlyScreeningReports))
 
     //then
-    testCase.assertOutgoingEvents(MonthlyReportListFetched(listOf(questionnaireResponse)))
+    testCase.assertOutgoingEvents(MonthlyReportsFetched(listOf(questionnaireResponse)))
     verifyZeroInteractions(ui)
   }
 

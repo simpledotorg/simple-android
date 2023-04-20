@@ -12,30 +12,30 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponseRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
-class MonthlyReportListEffectHandler @AssistedInject constructor(
+class MonthlyReportsEffectHandler @AssistedInject constructor(
     private val currentFacility: Lazy<Facility>,
     private val questionnaireResponseRepository: QuestionnaireResponseRepository,
     private val schedulersProvider: SchedulersProvider,
-    @Assisted private val viewEffectsConsumer: Consumer<MonthlyReportListViewEffect>
+    @Assisted private val viewEffectsConsumer: Consumer<MonthlyReportsViewEffect>
 ) {
   @AssistedFactory
   interface Factory {
     fun create(
-        viewEffectsConsumer: Consumer<MonthlyReportListViewEffect>
-    ): MonthlyReportListEffectHandler
+        viewEffectsConsumer: Consumer<MonthlyReportsViewEffect>
+    ): MonthlyReportsEffectHandler
   }
 
-  fun build(): ObservableTransformer<MonthlyReportListEffect, MonthlyReportListEvent> {
+  fun build(): ObservableTransformer<MonthlyReportsEffect, MonthlyReportsEvent> {
     return RxMobius
-        .subtypeEffectHandler<MonthlyReportListEffect, MonthlyReportListEvent>()
+        .subtypeEffectHandler<MonthlyReportsEffect, MonthlyReportsEvent>()
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility(schedulersProvider.io()))
-        .addTransformer(LoadMonthlyReportListEffect::class.java, loadQuestionnaireResponseList(schedulersProvider.io()))
-        .addConsumer(MonthlyReportListViewEffect::class.java, viewEffectsConsumer::accept)
+        .addTransformer(LoadMonthlyReportsEffect::class.java, loadMonthlyReports(schedulersProvider.io()))
+        .addConsumer(MonthlyReportsViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 
   private fun loadCurrentFacility(scheduler: Scheduler):
-      ObservableTransformer<LoadCurrentFacility, MonthlyReportListEvent> {
+      ObservableTransformer<LoadCurrentFacility, MonthlyReportsEvent> {
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
@@ -44,13 +44,15 @@ class MonthlyReportListEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun loadQuestionnaireResponseList(scheduler: Scheduler):
-      ObservableTransformer<LoadMonthlyReportListEffect, MonthlyReportListEvent> {
+  private fun loadMonthlyReports(scheduler: Scheduler):
+      ObservableTransformer<LoadMonthlyReportsEffect, MonthlyReportsEvent> {
     return ObservableTransformer { loadQuestionnaireResponseList ->
       loadQuestionnaireResponseList
           .observeOn(scheduler)
-          .switchMap { questionnaireResponseRepository.questionnaireResponsesFilteredBy(it.questionnaireType, currentFacility.get().uuid) }
-          .map { MonthlyReportListFetched(it) }
+          .switchMap {
+            questionnaireResponseRepository.questionnaireResponsesFilteredBy(it.questionnaireType, currentFacility.get().uuid)
+          }
+          .map { MonthlyReportsFetched(it) }
     }
   }
 }

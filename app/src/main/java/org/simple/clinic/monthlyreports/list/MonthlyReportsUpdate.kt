@@ -4,14 +4,14 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import org.simple.clinic.mobius.dispatch
 
-class MonthlyReportListUpdate :
-    Update<MonthlyReportListModel, MonthlyReportListEvent, MonthlyReportListEffect> {
-  override fun update(model: MonthlyReportListModel, event: MonthlyReportListEvent):
-      Next<MonthlyReportListModel, MonthlyReportListEffect> {
+class MonthlyReportsUpdate :
+    Update<MonthlyReportsModel, MonthlyReportsEvent, MonthlyReportsEffect> {
+  override fun update(model: MonthlyReportsModel, event: MonthlyReportsEvent):
+      Next<MonthlyReportsModel, MonthlyReportsEffect> {
     return when (event) {
       is BackButtonClicked -> Next.dispatch(setOf(GoBack))
       is CurrentFacilityLoaded -> Next.next(model.currentFacilityLoaded(event.facility))
-      is MonthlyReportListFetched -> Next.next(model.responseListLoaded(event.responseList))
+      is MonthlyReportsFetched -> Next.next(model.monthlyReportsLoaded(event.responseList))
       is MonthlyReportItemClicked -> dispatch(OpenMonthlyReportForm(event.questionnaireType, event.questionnaireResponse))
     }
   }

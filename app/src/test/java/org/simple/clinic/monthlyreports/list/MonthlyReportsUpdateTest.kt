@@ -7,11 +7,11 @@ import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.sharedTestCode.TestData
 import java.util.UUID
 
-class MonthlyReportListUpdateTest {
+class MonthlyReportsUpdateTest {
 
-  private val defaultModel = MonthlyReportListModel.default()
+  private val defaultModel = MonthlyReportsModel.default()
 
-  private val update = MonthlyReportListUpdate()
+  private val update = MonthlyReportsUpdate()
 
   private val spec = UpdateSpec(update)
 
@@ -21,9 +21,9 @@ class MonthlyReportListUpdateTest {
 
     spec
         .given(defaultModel)
-        .whenEvent(MonthlyReportListFetched(listOf(responseList)))
+        .whenEvent(MonthlyReportsFetched(listOf(responseList)))
         .then(UpdateSpec.assertThatNext(
-            NextMatchers.hasModel(defaultModel.responseListLoaded(listOf(responseList))),
+            NextMatchers.hasModel(defaultModel.monthlyReportsLoaded(listOf(responseList))),
             NextMatchers.hasNoEffects()
         ))
   }

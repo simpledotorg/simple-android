@@ -6,7 +6,7 @@
   android:layout_height="match_parent">
 
   <LinearLayout
-    android:id="@+id/monthlyReportListHeader"
+    android:id="@+id/monthlyReportsHeader"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/colorToolbarPrimary"
@@ -61,13 +61,13 @@
   </LinearLayout>
 
   <androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/monthlyReportRecyclerView"
+    android:id="@+id/monthlyReportsRecyclerView"
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"
     android:clipToPadding="false"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/monthlyReportListHeader" />
+    app:layout_constraintTop_toBottomOf="@id/monthlyReportsHeader" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

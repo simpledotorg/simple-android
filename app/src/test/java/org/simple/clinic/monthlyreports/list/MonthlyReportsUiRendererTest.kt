@@ -7,12 +7,12 @@ import org.junit.Test
 import org.simple.sharedTestCode.TestData
 import java.util.UUID
 
-class MonthlyReportListUiRendererTest {
+class MonthlyReportsUiRendererTest {
 
-  private val ui = mock<MonthlyReportListUi>()
-  private val uiRenderer = MonthlyReportListUiRenderer(ui)
+  private val ui = mock<MonthlyReportsUi>()
+  private val uiRenderer = MonthlyReportsUiRenderer(ui)
 
-  private val defaultModel = MonthlyReportListModel.default()
+  private val defaultModel = MonthlyReportsModel.default()
 
   @Test
   fun `when questionnaire response list loaded, then render ui`() {
@@ -22,13 +22,13 @@ class MonthlyReportListUiRendererTest {
     )
 
     val model = defaultModel
-        .responseListLoaded(listOf(questionnaireResponse))
+        .monthlyReportsLoaded(listOf(questionnaireResponse))
 
     // when
     uiRenderer.render(model)
 
     // then
-    verify(ui).displayMonthlyReportList(listOf(questionnaireResponse))
+    verify(ui).displayMonthlyReports(listOf(questionnaireResponse))
     verifyNoMoreInteractions(ui)
   }
 

@@ -27,6 +27,10 @@ object MonthlyScreeningReportsClicked : PatientsTabLinkEvent() {
   override val analyticsName = "Link: Monthly Screening Report clicked"
 }
 
+object MonthlySuppliesReportsClicked : PatientsTabLinkEvent() {
+  override val analyticsName = "Link: Monthly Supplies Report clicked"
+}
+
 data class DownloadPatientLineListClicked(
     override var permission: Optional<RuntimePermissionResult> = Optional.empty(),
     override val permissionString: String = Manifest.permission.WRITE_EXTERNAL_STORAGE,

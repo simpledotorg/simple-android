@@ -17,6 +17,7 @@ class PatientsTabLinkUpdate :
         Next.next(model.monthlyScreeningReportFormLoaded(event.questionnaire))
       }
       is MonthlyScreeningReportsClicked -> dispatch(OpenMonthlyScreeningReportsListScreen)
+      is MonthlySuppliesReportsClicked -> dispatch(OpenMonthlySuppliesReportsListScreen)
       is DownloadPatientLineListClicked -> dispatch(OpenPatientLineListDownloadDialog)
     }
   }

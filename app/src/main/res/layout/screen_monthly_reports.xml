@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <LinearLayout
+    android:id="@+id/monthlyReportsHeader"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/colorToolbarPrimary"
+    android:elevation="@dimen/elevation_toolbar"
+    android:orientation="horizontal"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:ignore="UnusedAttribute">
+
+    <ImageButton
+      android:id="@+id/backButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="?selectableItemBackgroundBorderless"
+      android:contentDescription="@string/patientsummary_contentdescription_up_button"
+      android:padding="@dimen/spacing_12"
+      app:srcCompat="@drawable/ic_arrow_back_24dp"
+      app:tint="?attr/colorOnToolbarPrimary" />
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:paddingBottom="@dimen/spacing_16">
+
+      <TextView
+        android:id="@+id/toolbarTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:maxLines="1"
+        android:paddingStart="@dimen/spacing_8"
+        android:paddingEnd="@dimen/spacing_16"
+        android:textAppearance="?attr/textAppearanceHeadline6"
+        android:textColor="?attr/colorOnToolbarPrimary" />
+
+      <TextView
+        android:id="@+id/facilityTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_4"
+        android:drawablePadding="@dimen/spacing_8"
+        android:paddingStart="@dimen/spacing_8"
+        android:paddingEnd="@dimen/spacing_16"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:textColor="@color/color_on_toolbar_primary_72"
+        app:drawableStartCompat="@drawable/ic_location_16dp"
+        app:drawableTint="@color/color_on_toolbar_primary_72"
+        tools:text="DH Arigar Anna" />
+
+    </LinearLayout>
+  </LinearLayout>
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/monthlyReportsRecyclerView"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1"
+    android:clipToPadding="false"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/monthlyReportsHeader" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

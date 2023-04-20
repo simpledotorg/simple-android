@@ -4,6 +4,8 @@
 
 ### Internal
 
+- Refactored Monthly reports code
+
 ## 2023-04-17-8683
 
 ### Changes

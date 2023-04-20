@@ -16,9 +16,11 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.monthlyscreeningreports.list.MonthlyScreeningReportListScreen
+import org.simple.clinic.monthlyreports.list.MonthlyReportsScreen
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.patient.download.formatdialog.SelectLineListFormatDialog
+import org.simple.clinic.questionnaire.MonthlyScreeningReports
+import org.simple.clinic.questionnaire.MonthlySuppliesReports
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
@@ -48,6 +50,7 @@ class PatientsTabLinkView(
     Observable
         .merge(
             monthlyScreeningReportContainerClick(),
+            monthlySuppliesReportsContainerClick(),
             downloadPatientLineListContainerClick()
         )
         .compose(ReportAnalyticsEvents())
@@ -82,6 +85,9 @@ class PatientsTabLinkView(
   private val monthlyScreeningReportContainer
     get() = binding.monthlyScreeningReportContainer
 
+  private val monthlySuppliesReportsContainer
+    get() = binding.monthlySuppliesReportsContainer
+
   private val downloadPatientLineListContainer
     get() = binding.downloadPatientLineListContainer
 
@@ -89,6 +95,13 @@ class PatientsTabLinkView(
     return monthlyScreeningReportContainer.clicks()
         .map {
           MonthlyScreeningReportsClicked
+        }
+  }
+
+  private fun monthlySuppliesReportsContainerClick(): Observable<UiEvent> {
+    return monthlySuppliesReportsContainer.clicks()
+        .map {
+          MonthlySuppliesReportsClicked
         }
   }
 
@@ -143,7 +156,11 @@ class PatientsTabLinkView(
   }
 
   override fun openMonthlyScreeningReports() {
-    router.push(MonthlyScreeningReportListScreen.Key())
+    router.push(MonthlyReportsScreen.Key(MonthlyScreeningReports))
+  }
+
+  override fun openMonthlySuppliesReports() {
+    router.push(MonthlyReportsScreen.Key(MonthlySuppliesReports))
   }
 
   override fun openPatientLineListDownloadDialog() {

@@ -13,6 +13,8 @@ sealed class QuestionnaireType : Parcelable {
   object TypeAdapter : SafeEnumTypeAdapter<QuestionnaireType>(
       knownMappings = mapOf(
           MonthlyScreeningReports to "monthly_screening_reports",
+          MonthlySuppliesReports to "monthly_supplies_reports",
+          MonthlyDrugReports to "monthly_drug_reports",
       ),
       unknownStringToEnumConverter = ::Unknown,
       unknownEnumToStringConverter = { (it as Unknown).actualValue }
@@ -44,6 +46,12 @@ sealed class QuestionnaireType : Parcelable {
 
 @Parcelize
 object MonthlyScreeningReports : QuestionnaireType()
+
+@Parcelize
+object MonthlySuppliesReports : QuestionnaireType()
+
+@Parcelize
+object MonthlyDrugReports : QuestionnaireType()
 
 @Parcelize
 data class Unknown(val actualValue: String) : QuestionnaireType()

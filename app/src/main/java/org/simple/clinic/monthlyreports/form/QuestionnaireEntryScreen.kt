@@ -152,16 +152,31 @@ class QuestionnaireEntryScreen : BaseScreen<
   }
 
   private fun setToolbarMonth(response: QuestionnaireResponse) {
-    val stringResource = when (screenKey.questionnaireType) {
-      is MonthlyScreeningReports -> R.string.monthly_screening_reports_screening_report
-      is MonthlySuppliesReports -> R.string.monthly_supplies_report_supplies_report
-      is MonthlyDrugReports -> R.string.monthly_drug_stock_reports_drug_stock_reports
-      else -> R.string.monthly_screening_reports_screening_report
+    val formatter = getMonthlyReportFormattedMonthString(response.content, monthAndYearDateFormatter)
+    monthTextView.text = when (screenKey.questionnaireType) {
+      is MonthlyScreeningReports -> {
+        context?.resources?.getString(
+            R.string.monthly_screening_reports_screening_report,
+            formatter
+        )
+      }
+
+      is MonthlySuppliesReports -> {
+        context?.resources?.getString(
+            R.string.monthly_supplies_report_supplies_report,
+            formatter
+        )
+      }
+
+      is MonthlyDrugReports -> {
+        context?.resources?.getString(
+            R.string.monthly_drug_stock_reports_drug_stock_reports,
+            formatter
+        )
+      }
+
+      else -> ""
     }
-    monthTextView.text = context?.resources?.getString(
-        stringResource,
-        getMonthlyReportFormattedMonthString(response.content, monthAndYearDateFormatter)
-    )
   }
 
   private fun setSubmittedView(response: QuestionnaireResponse) {

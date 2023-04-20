@@ -4,5 +4,5 @@ import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 
 interface MonthlyReportCompleteUi {
   fun showFormSubmissionMonthAndYearTextView(response: QuestionnaireResponse)
-  fun goToMonthlyReportListScreen()
+  fun goToMonthlyReportsScreen()
 }

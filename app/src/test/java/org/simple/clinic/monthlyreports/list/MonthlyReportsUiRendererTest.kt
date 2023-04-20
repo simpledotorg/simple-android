@@ -15,7 +15,7 @@ class MonthlyReportsUiRendererTest {
   private val defaultModel = MonthlyReportsModel.default()
 
   @Test
-  fun `when questionnaire response list loaded, then render ui`() {
+  fun `when monthly reports is loaded, then render ui`() {
     // given
     val questionnaireResponse = TestData.questionnaireResponse(
         uuid = UUID.fromString("43d8c0b3-3341-4147-9a08-aac27e7f721f")

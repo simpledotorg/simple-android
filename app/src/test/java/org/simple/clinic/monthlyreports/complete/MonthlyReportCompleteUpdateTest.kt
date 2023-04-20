@@ -33,7 +33,7 @@ class MonthlyReportCompleteUpdateTest {
         .whenEvent(DoneButtonClicked)
         .then(UpdateSpec.assertThatNext(
             NextMatchers.hasNoModel(),
-            NextMatchers.hasEffects(GoToMonthlyReportListScreen)
+            NextMatchers.hasEffects(GoToMonthlyReportsScreen)
         ))
   }
 }

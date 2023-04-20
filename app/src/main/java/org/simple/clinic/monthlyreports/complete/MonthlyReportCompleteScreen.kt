@@ -122,7 +122,7 @@ class MonthlyReportCompleteScreen : BaseScreen<
         )
   }
 
-  override fun goToMonthlyReportListScreen() {
+  override fun goToMonthlyReportsScreen() {
     router.popUntil(MonthlyReportsScreen.Key(screenKey.questionnaireType))
   }
 

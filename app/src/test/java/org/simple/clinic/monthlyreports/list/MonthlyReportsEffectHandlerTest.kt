@@ -41,7 +41,7 @@ class MonthlyReportsEffectHandlerTest {
   }
 
   @Test
-  fun `when load questionnaire response list effect is received then questionnaire response list should be fetched`() {
+  fun `when load monthly reports effect is received then questionnaire response list should be fetched`() {
     whenever(questionnaireResponseRepository.questionnaireResponsesFilteredBy(MonthlyScreeningReports, facility.uuid)) doReturn Observable.just(listOf(questionnaireResponse))
 
     //when

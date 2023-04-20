@@ -16,7 +16,7 @@ class MonthlyReportsUpdateTest {
   private val spec = UpdateSpec(update)
 
   @Test
-  fun `when questionnaire response list is fetched, then update the model`() {
+  fun `when monthly reports is fetched, then update the model`() {
     val responseList = TestData.questionnaireResponse()
 
     spec

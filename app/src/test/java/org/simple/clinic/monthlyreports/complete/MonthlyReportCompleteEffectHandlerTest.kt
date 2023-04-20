@@ -51,14 +51,14 @@ class MonthlyReportCompleteEffectHandlerTest {
   }
 
   @Test
-  fun `when go to monthly screening report list effect is received, then go to the same`() {
+  fun `when go to monthly screening reports effect is received, then go to the same`() {
     // when
-    testCase.dispatch(GoToMonthlyReportListScreen)
+    testCase.dispatch(GoToMonthlyReportsScreen)
 
     // then
     testCase.assertNoOutgoingEvents()
 
-    verify(ui).goToMonthlyReportListScreen()
+    verify(ui).goToMonthlyReportsScreen()
     verifyNoMoreInteractions(ui)
   }
 }

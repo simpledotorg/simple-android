@@ -25,8 +25,8 @@ import org.simple.clinic.drugstockreminders.DrugStockReminderApiIntegrationTest
 import org.simple.clinic.facility.FacilityRepositoryAndroidTest
 import org.simple.clinic.login.LoginUserWithOtpServerIntegrationTest
 import org.simple.clinic.medicalhistory.MedicalHistoryRepositoryAndroidTest
-import org.simple.clinic.monthlyscreeningreports.form.QuestionnaireRepositoryAndroidTest
-import org.simple.clinic.monthlyscreeningreports.form.QuestionnaireResponseRepositoryAndroidTest
+import org.simple.clinic.monthlyreports.form.QuestionnaireRepositoryAndroidTest
+import org.simple.clinic.monthlyreports.form.QuestionnaireResponseRepositoryAndroidTest
 import org.simple.clinic.overdue.AppointmentRepositoryAndroidTest
 import org.simple.clinic.overdue.OverdueListDownloadApiIntegrationTest
 import org.simple.clinic.overdue.callresult.CallResultRepositoryAndroidTest

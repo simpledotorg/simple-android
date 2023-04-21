@@ -123,6 +123,7 @@
   <string name="patients_recentpatients_no_recent_patients">हाल फिलहाल का कोई रोगी नहीं</string>
   <string name="patients_recentpatients_see_all">सभी देखें</string>
   <string name="patients_recentpatients_nameage">%1$s, %2$s</string>
+  <string name="patients_links_title">लिंक्‍स</string>
 
   <!-- Blood pressure entry -->
   <string name="bloodpressureentry_sheet_title_enter_blood_pressure">रक्तचाप</string>
@@ -878,20 +879,30 @@
 
   <!--reports-->
   <string name="reports_report">%1$s रिपोर्ट</string><!--Oct 2023 report-->
-  <string name="reports_submit_report">रिपोर्ट सबमिट करें</string>
-  <string name="reports_submitted">सबमिट की गई</string>
-  <string name="reports_submitted_with_date_and_time">सबमिट की गई %1$s</string><!--Submitted Nov 27, 06:24pm-->
   <string name="reports_submit_btn_text">सबमिट करें</string>
   <string name="reports_complete">पूरा करें!</string>
-  <string name="reports_submitted_with_date">%1$s रिपोर्ट सबमिट की गई</string><!--October 2022 report submitted-->
   <string name="reports_done">पूरा हुआ</string>
+  <string name="reports_submitted_with_date_and_time">सबमिट की गई %1$s</string><!--Submitted Nov 27, 06:24pm-->
+  <string name="reports_submit_report">रिपोर्ट सबमिट करें</string>
+  <string name="reports_submitted">सबमिट की गई</string>
+  <string name="reports_submitted_with_date">%1$s रिपोर्ट सबमिट की गई</string><!--October 2022 report submitted-->
   <string name="reports_unsaved_changes_title">नहीं सहेजे गए बदलाव</string>
   <string name="reports_unsaved_changes_text">नहीं सहेजे गए बदलाव खो जाएंगे।\nक्या आप वाकई छोड़ना चाहते हैं?</string>
   <string name="reports_stay_title">इसी पेज पर रहें</string>
   <string name="reports_leave_page_title">इस पेज को छोड़ें</string>
 
   <!--Monthly screen reports-->
+  <string name="monthly_screening_report">मासिक स्क्रीनिंग रिपोर्ट</string>
   <string name="monthly_screening_reports">मासिक स्क्रीनिंग रिपोर्ट</string>
   <string name="monthly_screening_reports_screening_report">%1$s स्क्रीनिंग रिपोर्ट</string><!--Oct 2022 screening report-->
 
+  <!--Monthly drug stock reports-->
+  <string name="monthly_drug_stock_report">मासिक ड्रग स्‍टॉक रिपोर्ट</string>
+  <string name="monthly_drug_stock_reports">मासिक ड्रग स्‍टॉक रिपोर्ट</string>
+  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s ड्रग स्‍टॉक रिपोर्ट</string><!--Oct 2022 drug stock report-->
+
+  <!--Monthly supplies reports-->
+  <string name="monthly_supplies_report">मासिक आपूर्ति रिपोर्ट</string>
+  <string name="monthly_supplies_reports">मासिक आपूर्ति रिपोर्ट</string>
+  <string name="monthly_supplies_report_supplies_report">%1$s आपूर्ति रिपोर्ट</string><!--Oct 2022 supplies report-->
 </resources>

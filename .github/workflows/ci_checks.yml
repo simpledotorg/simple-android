@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       simple-server-branch:
-        required: false
+        required: true
         type: string
         default: master
   workflow_call:

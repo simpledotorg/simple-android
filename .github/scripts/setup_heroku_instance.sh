@@ -24,7 +24,7 @@ if [ $serverAppAlreadyExists = false ]; then
   (cd $serverAppDirectory && heroku apps:create --team $herokuTeamName $herokuAppName)
   heroku pipelines:add --app=$herokuAppName --stage=staging simple-android-review
 
-  pip3 install requests
+  pip3 install requests==2.28.2
   $androidAppDirectory/.github/scripts/server_heroku_env_setup.py $serverAppDirectory/app.json $herokuAppName $herokuApiKey "$decodedHerokuEnvProperties"
 
   heroku stack:set --app=$herokuAppName heroku-20

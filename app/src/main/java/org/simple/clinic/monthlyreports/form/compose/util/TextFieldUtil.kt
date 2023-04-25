@@ -10,7 +10,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import org.simple.clinic.R
 import org.simple.clinic.questionnaire.component.properties.InputFieldType
-import org.simple.clinic.questionnaire.component.properties.Integer
+import org.simple.clinic.questionnaire.component.properties.IntegerType
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
@@ -28,8 +28,13 @@ fun getTextFieldColors(): TextFieldColors {
 @Composable
 fun getKeyBoardType(inputType: InputFieldType): KeyboardOptions {
   return KeyboardOptions(
-      keyboardType = if (inputType == Integer)
+      keyboardType = if (inputType == IntegerType)
         KeyboardType.Number else KeyboardType.Text,
       imeAction = ImeAction.Next
   )
+}
+
+@Composable
+fun getTextFieldMaxLines(inputType: InputFieldType): Int {
+  return if (inputType == IntegerType) 1 else 4
 }

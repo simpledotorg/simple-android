@@ -16,8 +16,10 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import org.simple.clinic.monthlyreports.form.compose.util.getKeyBoardType
 import org.simple.clinic.monthlyreports.form.compose.util.getTextFieldColors
+import org.simple.clinic.monthlyreports.form.compose.util.getTextFieldMaxLines
 import org.simple.clinic.questionnaire.component.InputFieldComponentData
-import org.simple.clinic.questionnaire.component.properties.Integer
+import org.simple.clinic.questionnaire.component.properties.IntegerType
+import org.simple.clinic.questionnaire.component.properties.StringType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,13 +38,16 @@ fun InputField(
   TextField(
       value = text,
       onValueChange = {
-        if (it.text.isEmpty() || it.text.matches(pattern)) {
+        if (it.text.isEmpty() ||
+            it.text.matches(pattern) ||
+            inputFieldComponentData.type == StringType
+        ) {
           text = it
           setContentValue(it.text, inputFieldComponentData, content)
         }
       },
+      maxLines = getTextFieldMaxLines(inputFieldComponentData.type),
       label = { Text(text = inputFieldComponentData.text) },
-      singleLine = true,
       shape = RoundedCornerShape(0.dp),
       colors = getTextFieldColors(),
       keyboardOptions = getKeyBoardType(inputType = inputFieldComponentData.type),
@@ -58,13 +63,14 @@ private fun getContentValueAsString(
 ): String {
   return if (content.containsKey(inputFieldComponentData.linkId)) {
     when (inputFieldComponentData.type) {
-      is Integer -> {
+      is IntegerType -> {
         try {
           (content[inputFieldComponentData.linkId] as Number).toInt().toString()
         } catch (ex: Exception) {
           ""
         }
       }
+
       else -> content[inputFieldComponentData.linkId].toString()
     }
   } else ""
@@ -76,9 +82,10 @@ private fun setContentValue(
     content: MutableMap<String, Any?>
 ) {
   when (inputFieldComponentData.type) {
-    is Integer -> {
+    is IntegerType -> {
       setIntegerContentValue(value, inputFieldComponentData, content)
     }
+
     else -> content[inputFieldComponentData.linkId] = value
   }
 }

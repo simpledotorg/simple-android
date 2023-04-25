@@ -12,7 +12,8 @@ sealed class InputFieldType : Parcelable {
 
   object TypeAdapter : SafeEnumTypeAdapter<InputFieldType>(
       knownMappings = mapOf(
-          Integer to "integer"
+          IntegerType to "integer",
+          StringType to "string",
       ),
       unknownStringToEnumConverter = ::UnknownType,
       unknownEnumToStringConverter = { (it as UnknownType).actualValue }
@@ -43,7 +44,10 @@ sealed class InputFieldType : Parcelable {
 }
 
 @Parcelize
-object Integer : InputFieldType()
+object IntegerType : InputFieldType()
+
+@Parcelize
+object StringType : InputFieldType()
 
 @Parcelize
 data class UnknownType(val actualValue: String) : InputFieldType()

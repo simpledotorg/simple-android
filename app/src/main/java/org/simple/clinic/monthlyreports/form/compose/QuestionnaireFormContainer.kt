@@ -9,8 +9,11 @@ import org.simple.clinic.R
 import org.simple.clinic.questionnaire.component.HeaderComponentData
 import org.simple.clinic.questionnaire.component.InputViewGroupComponentData
 import org.simple.clinic.questionnaire.component.LineSeparatorComponentData
+import org.simple.clinic.questionnaire.component.ParagraphComponentData
+import org.simple.clinic.questionnaire.component.RadioViewGroupComponentData
 import org.simple.clinic.questionnaire.component.SeparatorComponentData
 import org.simple.clinic.questionnaire.component.SubHeaderComponentData
+import org.simple.clinic.questionnaire.component.UnorderedListComponentData
 import org.simple.clinic.questionnaire.component.ViewGroupComponentData
 
 @Composable
@@ -32,17 +35,33 @@ fun QuestionnaireFormContainer(
         is HeaderComponentData -> {
           Header(it)
         }
+
         is SubHeaderComponentData -> {
           SubHeader(it)
         }
+
         is InputViewGroupComponentData -> {
           InputGroup(it, content)
         }
+
         is SeparatorComponentData -> {
           Separator()
         }
+
         is LineSeparatorComponentData -> {
           LineSeparator()
+        }
+
+        is ParagraphComponentData -> {
+          Paragraph(it)
+        }
+
+        is UnorderedListComponentData -> {
+          UnorderedList(it)
+        }
+
+        is RadioViewGroupComponentData -> {
+          RadioViewGroup(it, content)
         }
       }
     }

@@ -45,7 +45,6 @@ import org.simple.clinic.questionnaire.component.SeparatorComponentData
 import org.simple.clinic.questionnaire.component.SubHeaderComponentData
 import org.simple.clinic.questionnaire.component.ViewGroupComponentData
 import org.simple.clinic.questionnaire.component.properties.InputFieldValidations
-import org.simple.clinic.questionnaire.component.properties.Integer
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentPayload
@@ -81,6 +80,7 @@ import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.protocol.sync.ProtocolDrugPayload
 import org.simple.clinic.protocol.sync.ProtocolPayload
+import org.simple.clinic.questionnaire.component.properties.IntegerType
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.scanid.IndiaNHIDGender
 import org.simple.clinic.scanid.IndiaNHIDInfoPayload
@@ -1496,7 +1496,7 @@ object TestData {
                       id = "outpatient_department_visits",
                       linkId = "monthly_screening_reports.outpatient_department_visits",
                       text = "Outpatient department visits",
-                      type = Integer,
+                      type = IntegerType,
                       validations = InputFieldValidations(min = 0, max = 1000000)
                   )
               )
@@ -1519,13 +1519,13 @@ object TestData {
                       id = "blood_pressure_checks_male",
                       linkId = "monthly_screening_reports.blood_pressure_checks_male",
                       text = "Male",
-                      type = Integer,
+                      type = IntegerType,
                       validations = InputFieldValidations(min = 0, max = 1000000)),
                   InputFieldComponentData(
                       id = "blood_pressure_checks_female",
                       linkId = "monthly_screening_reports.blood_pressure_checks_female",
                       text = "Female",
-                      type = Integer,
+                      type = IntegerType,
                       validations = InputFieldValidations(min = 0, max = 1000000))
               )
           ),

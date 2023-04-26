@@ -69,7 +69,7 @@ jobs:
           repository: simpledotorg/simple-server
           fetch-depth: 0 # Full clone needed for Heroku deploys (https://devcenter.heroku.com/changelog-items/775)
           path: server-app
-          ref: ${{ "master" }}
+          ref: ${{ inputs.simple-server-branch }}
 
       - name: Create node dependency hash
         id: create_node_modules_hash
@@ -103,7 +103,7 @@ jobs:
           android-app/.github/scripts/setup_heroku_instance.sh \
           ${{ steps.generate-server-app-name.outputs.heroku_app_name }} \
           ${{ env.HEROKU_API_KEY }} \
-          ${{ "master" }} \
+          ${{ inputs.simple-server-branch }} \
           server-app \
           android-app \
           ${{ secrets.HEROKU_SECRET_PROPERTIES }}

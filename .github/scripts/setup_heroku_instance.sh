@@ -3,9 +3,10 @@
 herokuTeamName="resolvetosavelives"
 herokuAppName=${1}
 herokuApiKey=${2}
-serverAppDirectory=${3}
-androidAppDirectory=${4}
-encodedHerokuEnvProperties=${5}
+simpleServerBranch=${3}
+serverAppDirectory=${4}
+androidAppDirectory=${5}
+encodedHerokuEnvProperties=${6}
 decodedHerokuEnvProperties=$(echo $encodedHerokuEnvProperties | base64 --decode)
 
 echo "Checking if ${herokuAppName} exists in team ${herokuTeamName}"
@@ -27,6 +28,7 @@ if [ $serverAppAlreadyExists = false ]; then
   pip3 install requests
   $androidAppDirectory/.github/scripts/server_heroku_env_setup.py $serverAppDirectory/app.json $herokuAppName $herokuApiKey "$decodedHerokuEnvProperties"
 
+  heroku labs:enable user-env-compile
   heroku stack:set --app=$herokuAppName heroku-20
   heroku addons:create --app=$herokuAppName --wait --name="${herokuAppName}-redis" heroku-redis:mini
   heroku addons:create --app=$herokuAppName --wait --name="${herokuAppName}-postgres" heroku-postgresql:mini
@@ -37,7 +39,7 @@ fi
 
 echo "Starting the Simple server on Heroku"
 herokuGitUrl="https://heroku:${herokuApiKey}@git.heroku.com/${herokuAppName}.git"
-(cd $serverAppDirectory && git push $herokuGitUrl master)
+(cd $serverAppDirectory && git push $herokuGitUrl ${simpleServerBranch}:master)
 resultOfServerPush=$?
 
 resultOfSeedDataSetup=0

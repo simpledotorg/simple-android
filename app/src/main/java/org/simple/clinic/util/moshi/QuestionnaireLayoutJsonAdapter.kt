@@ -10,7 +10,7 @@ import org.simple.clinic.questionnaire.component.RadioViewGroupComponentData
 import org.simple.clinic.questionnaire.component.SeparatorComponentData
 import org.simple.clinic.questionnaire.component.SubHeaderComponentData
 import org.simple.clinic.questionnaire.component.UnknownComponent
-import org.simple.clinic.questionnaire.component.UnorderedListComponentData
+import org.simple.clinic.questionnaire.component.UnorderedListViewGroupComponentData
 import org.simple.clinic.questionnaire.component.ViewGroupComponentData
 
 class QuestionnaireLayoutJsonAdapter {
@@ -24,7 +24,7 @@ class QuestionnaireLayoutJsonAdapter {
         .withSubtype(HeaderComponentData::class.java, "header")
         .withSubtype(LineSeparatorComponentData::class.java, "line_separator")
         .withSubtype(ParagraphComponentData::class.java, "paragraph")
-        .withSubtype(UnorderedListComponentData::class.java, "unordered_list_view_group")
+        .withSubtype(UnorderedListViewGroupComponentData::class.java, "unordered_list_view_group")
         .withSubtype(RadioViewGroupComponentData::class.java, "radio_view_group")
         .withDefaultValue(UnknownComponent())
   }

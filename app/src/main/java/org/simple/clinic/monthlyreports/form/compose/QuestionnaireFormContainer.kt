@@ -13,7 +13,7 @@ import org.simple.clinic.questionnaire.component.ParagraphComponentData
 import org.simple.clinic.questionnaire.component.RadioViewGroupComponentData
 import org.simple.clinic.questionnaire.component.SeparatorComponentData
 import org.simple.clinic.questionnaire.component.SubHeaderComponentData
-import org.simple.clinic.questionnaire.component.UnorderedListComponentData
+import org.simple.clinic.questionnaire.component.UnorderedListViewGroupComponentData
 import org.simple.clinic.questionnaire.component.ViewGroupComponentData
 
 @Composable
@@ -56,8 +56,8 @@ fun QuestionnaireFormContainer(
           Paragraph(it)
         }
 
-        is UnorderedListComponentData -> {
-          UnorderedList(it)
+        is UnorderedListViewGroupComponentData -> {
+          UnorderedListViewGroup(it)
         }
 
         is RadioViewGroupComponentData -> {

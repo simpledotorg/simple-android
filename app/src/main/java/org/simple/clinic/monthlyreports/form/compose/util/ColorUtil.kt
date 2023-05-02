@@ -8,7 +8,7 @@ import org.simple.clinic.R
 @Composable
 fun getColor(colorString: String): Color {
   return try {
-    Color(android.graphics.Color.parseColor("#$colorString"))
+    Color(android.graphics.Color.parseColor(colorString))
   } catch (_: Throwable) {
     colorResource(id = R.color.simple_dark_grey)
   }

@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 
 @JsonClass(generateAdapter = true)
 @Parcelize
-data class UnorderedListComponentData(
+data class UnorderedListViewGroupComponentData(
     @Json(name = "id")
     val id: String,
 

@@ -18,6 +18,7 @@ import org.simple.clinic.monthlyreports.form.compose.util.getKeyBoardType
 import org.simple.clinic.monthlyreports.form.compose.util.getTextFieldColors
 import org.simple.clinic.monthlyreports.form.compose.util.getTextFieldMaxLines
 import org.simple.clinic.questionnaire.component.InputFieldComponentData
+import org.simple.clinic.questionnaire.component.properties.InputFieldType
 import org.simple.clinic.questionnaire.component.properties.IntegerType
 import org.simple.clinic.questionnaire.component.properties.StringType
 
@@ -34,20 +35,16 @@ fun InputField(
         selection = TextRange(initValue.length)
     ))
   }
-  val pattern = remember { Regex("^\\d+\$") }
   TextField(
       value = text,
       onValueChange = {
-        if (it.text.isEmpty() ||
-            it.text.matches(pattern) ||
-            inputFieldComponentData.type == StringType
-        ) {
+        if (allowUserInput(inputType = inputFieldComponentData.type, text = it.text)) {
           text = it
           setContentValue(it.text, inputFieldComponentData, content)
         }
       },
-      maxLines = getTextFieldMaxLines(inputFieldComponentData.type),
       label = { Text(text = inputFieldComponentData.text) },
+      singleLine = true,
       shape = RoundedCornerShape(0.dp),
       colors = getTextFieldColors(),
       keyboardOptions = getKeyBoardType(inputType = inputFieldComponentData.type),
@@ -55,6 +52,16 @@ fun InputField(
           fontFamily = FontFamily.SansSerif
       ),
   )
+}
+
+private fun allowUserInput(inputType: InputFieldType, text: String): Boolean {
+  val numericalPattern = Regex("^\\d+\$")
+
+  return when (inputType) {
+    is IntegerType -> text.isEmpty() || text.matches(numericalPattern)
+    is StringType -> true
+    else -> false
+  }
 }
 
 private fun getContentValueAsString(

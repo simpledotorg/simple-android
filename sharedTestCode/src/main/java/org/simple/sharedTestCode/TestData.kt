@@ -86,6 +86,7 @@ import org.simple.clinic.questionnaire.component.RadioViewGroupComponentData
 import org.simple.clinic.questionnaire.component.UnorderedListItemComponentData
 import org.simple.clinic.questionnaire.component.UnorderedListViewGroupComponentData
 import org.simple.clinic.questionnaire.component.properties.IntegerType
+import org.simple.clinic.questionnaire.component.properties.StringType
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.scanid.IndiaNHIDGender
 import org.simple.clinic.scanid.IndiaNHIDInfoPayload
@@ -1582,6 +1583,18 @@ object TestData {
                       type = "radio",
                       text = "No"
                   )
+              )
+          ),
+          InputViewGroupComponentData(
+              type = "display",
+              id = UUID.fromString("09836226-a57b-4da6-a0db-7015a4697248").toString(),
+              children = listOf(
+                  InputFieldComponentData(
+                      id = UUID.fromString("9f8b8cf4-006f-4c72-9a99-ab3e2f5c881e").toString(),
+                      linkId = "monthly_supplies_report.comments",
+                      text = "",
+                      type = StringType,
+                      validations = InputFieldValidations(min = 0, max = 1000)),
               )
           ),
       )

@@ -33,8 +33,3 @@ fun getKeyBoardType(inputType: InputFieldType): KeyboardOptions {
       imeAction = ImeAction.Next
   )
 }
-
-@Composable
-fun getTextFieldMaxLines(inputType: InputFieldType): Int {
-  return if (inputType == IntegerType) 1 else 4
-}

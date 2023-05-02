@@ -16,7 +16,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import org.simple.clinic.monthlyreports.form.compose.util.getKeyBoardType
 import org.simple.clinic.monthlyreports.form.compose.util.getTextFieldColors
-import org.simple.clinic.monthlyreports.form.compose.util.getTextFieldMaxLines
 import org.simple.clinic.questionnaire.component.InputFieldComponentData
 import org.simple.clinic.questionnaire.component.properties.InputFieldType
 import org.simple.clinic.questionnaire.component.properties.IntegerType
@@ -38,7 +37,7 @@ fun InputField(
   TextField(
       value = text,
       onValueChange = {
-        if (allowUserInput(inputType = inputFieldComponentData.type, text = it.text)) {
+        if (it.text.allowUserInput(inputFieldComponentData.type)) {
           text = it
           setContentValue(it.text, inputFieldComponentData, content)
         }
@@ -54,11 +53,11 @@ fun InputField(
   )
 }
 
-private fun allowUserInput(inputType: InputFieldType, text: String): Boolean {
+private fun String.allowUserInput(inputType: InputFieldType): Boolean {
   val numericalPattern = Regex("^\\d+\$")
 
   return when (inputType) {
-    is IntegerType -> text.isEmpty() || text.matches(numericalPattern)
+    is IntegerType -> isEmpty() || matches(numericalPattern)
     is StringType -> true
     else -> false
   }

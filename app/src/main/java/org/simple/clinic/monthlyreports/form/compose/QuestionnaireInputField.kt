@@ -37,7 +37,7 @@ fun InputField(
   TextField(
       value = text,
       onValueChange = {
-        if (it.text.allowUserInput(inputFieldComponentData.type)) {
+        if (allowUserInput(it.text, inputFieldComponentData.type)) {
           text = it
           setContentValue(it.text, inputFieldComponentData, content)
         }
@@ -53,11 +53,11 @@ fun InputField(
   )
 }
 
-private fun String.allowUserInput(inputType: InputFieldType): Boolean {
+private fun allowUserInput(text: String, inputType: InputFieldType): Boolean {
   val numericalPattern = Regex("^\\d+\$")
 
   return when (inputType) {
-    is IntegerType -> isEmpty() || matches(numericalPattern)
+    is IntegerType -> text.isEmpty() || text.matches(numericalPattern)
     is StringType -> true
     else -> false
   }

@@ -69,9 +69,7 @@ class PatientsTabLinkView(
         defaultModel = PatientsTabLinkModel.default(),
         update = PatientsTabLinkUpdate(),
         effectHandler = effectHandlerFactory.create(this).build(),
-        init = PatientsTabLinkInit(
-            isMonthlyScreeningReportsEnabled = features.isEnabled(Feature.MonthlyScreeningReportsEnabled)
-        ),
+        init = PatientsTabLinkInit(),
         modelUpdateListener = uiRenderer::render
     )
   }

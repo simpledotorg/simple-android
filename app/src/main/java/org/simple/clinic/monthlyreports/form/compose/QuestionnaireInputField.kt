@@ -17,7 +17,9 @@ import androidx.compose.ui.unit.dp
 import org.simple.clinic.monthlyreports.form.compose.util.getKeyBoardType
 import org.simple.clinic.monthlyreports.form.compose.util.getTextFieldColors
 import org.simple.clinic.questionnaire.component.InputFieldComponentData
-import org.simple.clinic.questionnaire.component.properties.Integer
+import org.simple.clinic.questionnaire.component.properties.InputFieldType
+import org.simple.clinic.questionnaire.component.properties.IntegerType
+import org.simple.clinic.questionnaire.component.properties.StringType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,11 +34,10 @@ fun InputField(
         selection = TextRange(initValue.length)
     ))
   }
-  val pattern = remember { Regex("^\\d+\$") }
   TextField(
       value = text,
       onValueChange = {
-        if (it.text.isEmpty() || it.text.matches(pattern)) {
+        if (allowUserInput(it.text, inputFieldComponentData.type)) {
           text = it
           setContentValue(it.text, inputFieldComponentData, content)
         }
@@ -52,19 +53,30 @@ fun InputField(
   )
 }
 
+private fun allowUserInput(text: String, inputType: InputFieldType): Boolean {
+  val numericalPattern = Regex("^\\d+\$")
+
+  return when (inputType) {
+    is IntegerType -> text.isEmpty() || text.matches(numericalPattern)
+    is StringType -> true
+    else -> false
+  }
+}
+
 private fun getContentValueAsString(
     inputFieldComponentData: InputFieldComponentData,
     content: Map<String, Any?>
 ): String {
   return if (content.containsKey(inputFieldComponentData.linkId)) {
     when (inputFieldComponentData.type) {
-      is Integer -> {
+      is IntegerType -> {
         try {
           (content[inputFieldComponentData.linkId] as Number).toInt().toString()
         } catch (ex: Exception) {
           ""
         }
       }
+
       else -> content[inputFieldComponentData.linkId].toString()
     }
   } else ""
@@ -76,9 +88,10 @@ private fun setContentValue(
     content: MutableMap<String, Any?>
 ) {
   when (inputFieldComponentData.type) {
-    is Integer -> {
+    is IntegerType -> {
       setIntegerContentValue(value, inputFieldComponentData, content)
     }
+
     else -> content[inputFieldComponentData.linkId] = value
   }
 }

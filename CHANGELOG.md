@@ -16,7 +16,8 @@
 
 - Refactored Monthly reports code
 - Rename `enable_monthly_screening_reports` Feature flag to `questionnaires_enabled`
-- Added support for Questionnaire Form DSL Version 2.
+- Added support for Questionnaire Form DSL Version 2
+- Update `QuestionnaireSyncApi` to request DSL Version 2
 
 ## 2023-04-17-8683
 

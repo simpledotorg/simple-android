@@ -128,6 +128,7 @@ jobs:
           android-app/.github/scripts/setup_heroku_instance.sh \
           ${{ steps.generate-server-app-name.outputs.heroku_app_name }} \
           ${{ env.HEROKU_API_KEY }} \
+          master \
           server-app \
           android-app \
           ${{ secrets.HEROKU_SECRET_PROPERTIES }}

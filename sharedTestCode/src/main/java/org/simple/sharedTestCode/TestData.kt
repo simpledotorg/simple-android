@@ -45,7 +45,6 @@ import org.simple.clinic.questionnaire.component.SeparatorComponentData
 import org.simple.clinic.questionnaire.component.SubHeaderComponentData
 import org.simple.clinic.questionnaire.component.ViewGroupComponentData
 import org.simple.clinic.questionnaire.component.properties.InputFieldValidations
-import org.simple.clinic.questionnaire.component.properties.Integer
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentPayload
@@ -81,6 +80,13 @@ import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.protocol.sync.ProtocolDrugPayload
 import org.simple.clinic.protocol.sync.ProtocolPayload
+import org.simple.clinic.questionnaire.component.ParagraphComponentData
+import org.simple.clinic.questionnaire.component.RadioButtonComponentData
+import org.simple.clinic.questionnaire.component.RadioViewGroupComponentData
+import org.simple.clinic.questionnaire.component.UnorderedListItemComponentData
+import org.simple.clinic.questionnaire.component.UnorderedListViewGroupComponentData
+import org.simple.clinic.questionnaire.component.properties.IntegerType
+import org.simple.clinic.questionnaire.component.properties.StringType
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.scanid.IndiaNHIDGender
 import org.simple.clinic.scanid.IndiaNHIDInfoPayload
@@ -1496,7 +1502,7 @@ object TestData {
                       id = "outpatient_department_visits",
                       linkId = "monthly_screening_reports.outpatient_department_visits",
                       text = "Outpatient department visits",
-                      type = Integer,
+                      type = IntegerType,
                       validations = InputFieldValidations(min = 0, max = 1000000)
                   )
               )
@@ -1519,13 +1525,13 @@ object TestData {
                       id = "blood_pressure_checks_male",
                       linkId = "monthly_screening_reports.blood_pressure_checks_male",
                       text = "Male",
-                      type = Integer,
+                      type = IntegerType,
                       validations = InputFieldValidations(min = 0, max = 1000000)),
                   InputFieldComponentData(
                       id = "blood_pressure_checks_female",
                       linkId = "monthly_screening_reports.blood_pressure_checks_female",
                       text = "Female",
-                      type = Integer,
+                      type = IntegerType,
                       validations = InputFieldValidations(min = 0, max = 1000000))
               )
           ),
@@ -1536,6 +1542,60 @@ object TestData {
           LineSeparatorComponentData(
               id = UUID.fromString("154b6890-52c3-410d-8dd0-4eb11ec1a680").toString(),
               type = "display"
+          ),
+          ParagraphComponentData(
+              id = UUID.fromString("6b9e32a6-700b-4baf-9b9a-7a42c7e43e30").toString(),
+              type = "display",
+              text = "Enter the supplies left in stock at the end of every month"
+          ),
+          UnorderedListViewGroupComponentData(
+              id = UUID.fromString("07aa1114-d633-48af-8bd9-290da5c83f77").toString(),
+              type = "group",
+              children = listOf(
+                  UnorderedListItemComponentData(
+                      id = UUID.fromString("194d1ccd-73ac-455f-a616-edffc74c8705").toString(),
+                      type = "display",
+                      icon = "check",
+                      iconColor = "#00FF00",
+                      text = "Leave blank if you don't know an amount"
+                  ),
+                  UnorderedListItemComponentData(
+                      id = UUID.fromString("10d9b118-e8f3-4b71-bf89-9cb20af50616").toString(),
+                      type = "display",
+                      icon = "close",
+                      iconColor = "#FF0000",
+                      text = "Enter 0 if stock is out"
+                  )
+              )
+          ),
+          RadioViewGroupComponentData(
+              id = UUID.fromString("3399a261-a8f0-45ac-adee-6e024531350d").toString(),
+              type = "group",
+              linkId = "monthly_supplies_report.wifi_available",
+              children = listOf(
+                  RadioButtonComponentData(
+                      id = UUID.fromString("f616c4e0-d261-4fcc-ba65-7d6b60b10241").toString(),
+                      type = "radio",
+                      text = "Yes"
+                  ),
+                  RadioButtonComponentData(
+                      id = UUID.fromString("918fa950-5928-4bac-b586-8da196169063").toString(),
+                      type = "radio",
+                      text = "No"
+                  )
+              )
+          ),
+          InputViewGroupComponentData(
+              type = "display",
+              id = UUID.fromString("09836226-a57b-4da6-a0db-7015a4697248").toString(),
+              children = listOf(
+                  InputFieldComponentData(
+                      id = UUID.fromString("9f8b8cf4-006f-4c72-9a99-ab3e2f5c881e").toString(),
+                      linkId = "monthly_supplies_report.comments",
+                      text = "",
+                      type = StringType,
+                      validations = InputFieldValidations(min = 0, max = 1000)),
+              )
           ),
       )
   )

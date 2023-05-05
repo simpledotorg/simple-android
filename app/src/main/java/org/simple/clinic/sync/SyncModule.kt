@@ -93,7 +93,7 @@ class SyncModule {
       questionnaireResponseSync: QuestionnaireResponseSync,
   ): List<ModelSync> {
     val optionalSyncs = if (features.isEnabled(Feature.CallResultSyncEnabled)) listOf(callResultSync) else emptyList()
-    val questionnaireSyncs = if (features.isEnabled(Feature.MonthlyScreeningReportsEnabled))
+    val questionnaireSyncs = if (features.isEnabled(Feature.QuestionnairesEnabled))
       listOf(questionnaireSync, questionnaireResponseSync) else emptyList()
 
     return listOf(facilitySync) + questionnaireSyncs + listOf(

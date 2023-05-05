@@ -18,6 +18,7 @@
 - Rename `enable_monthly_screening_reports` Feature flag to `questionnaires_enabled`
 - Added support for Questionnaire Form DSL Version 2
 - Update `QuestionnaireSyncApi` to request DSL Version 2
+- Add Monthly supplies report link to home screen
 
 ## 2023-04-17-8683
 

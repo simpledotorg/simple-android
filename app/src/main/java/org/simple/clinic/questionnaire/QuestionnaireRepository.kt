@@ -52,6 +52,10 @@ class QuestionnaireRepository @Inject constructor(
     return dao.getAll().toObservable()
   }
 
+  fun questionnairesImmediate(): List<Questionnaire> {
+    return dao.getAllImmediate()
+  }
+
   fun questionnaireByType(type: QuestionnaireType): Questionnaire {
     return dao.getByQuestionnaireType(type)
   }

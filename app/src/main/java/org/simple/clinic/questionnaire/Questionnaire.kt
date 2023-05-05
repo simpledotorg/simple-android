@@ -35,6 +35,9 @@ data class Questionnaire(
     @Query("SELECT * FROM Questionnaire WHERE deletedAt IS NULL")
     fun getAll(): Flowable<List<Questionnaire>>
 
+    @Query("SELECT * FROM Questionnaire WHERE deletedAt IS NULL")
+    fun getAllImmediate(): List<Questionnaire>
+
     @Query("SELECT * FROM Questionnaire WHERE questionnaire_type == :type AND deletedAt IS NULL LIMIT 1")
     fun getByQuestionnaireType(type: QuestionnaireType): Questionnaire
 

@@ -35,6 +35,14 @@ class QuestionnaireResponseRepository @Inject constructor(
         .toObservable()
   }
 
+  fun questionnaireResponsesInFacility(
+      currentFacilityId: UUID
+  ): Observable<List<QuestionnaireResponse>> {
+    return dao
+        .getInFacility(currentFacilityId)
+        .toObservable()
+  }
+
   fun questionnaireResponse(uuid: UUID): QuestionnaireResponse? {
     return dao.getOne(uuid)
   }

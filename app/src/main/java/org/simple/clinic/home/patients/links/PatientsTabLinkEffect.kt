@@ -4,9 +4,9 @@ sealed class PatientsTabLinkEffect
 
 object LoadCurrentFacility : PatientsTabLinkEffect()
 
-object LoadMonthlyScreeningReportResponseList : PatientsTabLinkEffect()
+object LoadQuestionnaires : PatientsTabLinkEffect()
 
-object LoadMonthlyScreeningReportForm : PatientsTabLinkEffect()
+object LoadQuestionnairesResponses : PatientsTabLinkEffect()
 
 object OpenMonthlyScreeningReportsListScreen : PatientsTabLinkEffect()
 

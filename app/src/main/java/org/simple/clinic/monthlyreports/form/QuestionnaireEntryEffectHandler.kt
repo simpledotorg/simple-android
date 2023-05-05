@@ -54,7 +54,7 @@ class QuestionnaireEntryEffectHandler @AssistedInject constructor(
     return ObservableTransformer { loadQuestionnaireForm ->
       loadQuestionnaireForm
           .observeOn(scheduler)
-          .map { questionnaireRepository.questionnairesByTypeImmediate(it.questionnaireType) }
+          .map { questionnaireRepository.questionnaireByType(it.questionnaireType) }
           .map { QuestionnaireFormFetched(it) }
     }
   }

@@ -4,8 +4,8 @@ import android.Manifest
 import org.simple.clinic.activity.permissions.RequiresPermission
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.platform.util.RuntimePermissionResult
-import org.simple.clinic.questionnaire.Questionnaire
-import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
+import org.simple.clinic.questionnaire.QuestionnaireResponseSections
+import org.simple.clinic.questionnaire.QuestionnaireSections
 import org.simple.clinic.widgets.UiEvent
 import java.util.Optional
 
@@ -15,12 +15,12 @@ data class CurrentFacilityLoaded(
     val facility: Facility
 ) : PatientsTabLinkEvent()
 
-data class MonthlyScreeningReportResponseListLoaded(
-    val questionnaireResponseList: List<QuestionnaireResponse>
+data class QuestionnairesLoaded(
+    val questionnaireSections: QuestionnaireSections
 ) : PatientsTabLinkEvent()
 
-data class MonthlyScreeningReportFormLoaded(
-    val questionnaire: Questionnaire
+data class QuestionnairesResponsesLoaded(
+    val questionnaireResponseSections: QuestionnaireResponseSections
 ) : PatientsTabLinkEvent()
 
 object MonthlyScreeningReportsClicked : PatientsTabLinkEvent() {

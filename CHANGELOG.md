@@ -4,6 +4,8 @@
 
 ### Internal
 
+- Enable `Monthly Supplies Reports` Link.
+
 ## 2023-05-15-8714
 
 ### Changes

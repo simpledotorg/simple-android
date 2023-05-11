@@ -37,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_8"
-        android:maxLines="1"
+        android:maxLines="2"
         android:paddingStart="@dimen/spacing_8"
         android:paddingEnd="@dimen/spacing_16"
         android:textAppearance="?attr/textAppearanceHeadline6"

@@ -893,8 +893,8 @@
   <string name="reports_leave_page_title">ከዚህ ገጽ ይውጡ</string>
 
   <!--Monthly screen reports-->
-  <string name="monthly_screening_report">ወርሃዊ የማጣሪያ ሪፖርቶች</string>
-  <string name="monthly_screening_reports">ወርሃዊ የማጣሪያ ሪፖርቶች</string>
+  <string name="monthly_screening_report">ወርሃዊ ተላላፊ ያልሆኑ በሽታዎች የተጋላጭነት ልየታ ሪፖርት</string>
+  <string name="monthly_screening_reports">ወርሃዊ ተላላፊ ያልሆኑ በሽታዎች የተጋላጭነት ልየታ ሪፖርቶች</string>
   <string name="monthly_screening_reports_screening_report">%1$s የማጣሪያ ሪፖርቶች</string><!--Oct 2022 screening report-->
 
   <!--Monthly drug stock reports-->

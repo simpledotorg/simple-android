@@ -29,7 +29,8 @@ data class PatientsTabLinkModel(
         questionnaires?.screeningQuestionnaire != null
 
   val showMonthlySuppliesLink: Boolean
-    get() = questionnaireResponseSections?.suppliesQuestionnaireResponseList?.isNotEmpty() == true &&
+    get() = facility?.config?.monthlySuppliesReportsEnabled == true &&
+        questionnaireResponseSections?.suppliesQuestionnaireResponseList?.isNotEmpty() == true &&
         questionnaires?.suppliesQuestionnaire != null
 
   fun currentFacilityLoaded(facility: Facility): PatientsTabLinkModel {

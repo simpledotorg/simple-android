@@ -19,7 +19,9 @@ class HomeScreenEffectHandlerTest {
       name = "PHC Obvious",
       facilityConfig = FacilityConfig(
           diabetesManagementEnabled = true,
-          teleconsultationEnabled = false
+          teleconsultationEnabled = false,
+          monthlyScreeningReportsEnabled = false,
+          monthlySuppliesReportsEnabled = false
       )
   )
   private val patientRepository = mock<PatientRepository>()

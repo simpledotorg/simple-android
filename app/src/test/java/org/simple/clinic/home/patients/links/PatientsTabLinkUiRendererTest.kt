@@ -187,8 +187,8 @@ class PatientsTabLinkUiRendererTest {
     val facility = TestData.facility(facilityConfig = FacilityConfig(
         diabetesManagementEnabled = false,
         teleconsultationEnabled = false,
-        monthlyScreeningReportsEnabled = true,
-        monthlySuppliesReportsEnabled = false
+        monthlyScreeningReportsEnabled = false,
+        monthlySuppliesReportsEnabled = true
 
     ))
 

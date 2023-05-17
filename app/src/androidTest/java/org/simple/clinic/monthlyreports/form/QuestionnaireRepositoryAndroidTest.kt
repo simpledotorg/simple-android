@@ -47,7 +47,7 @@ class QuestionnaireRepositoryAndroidTest {
     questionnaireRepository.save(questionnaires)
 
     // then
-    val savedQuestionnaires = questionnaireRepository.questionnaires()
+    val savedQuestionnaires = questionnaireRepository.questionnairesImmediate()
 
     assertThat(savedQuestionnaires).isEqualTo(questionnaires)
   }

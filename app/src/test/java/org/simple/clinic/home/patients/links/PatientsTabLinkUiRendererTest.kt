@@ -54,7 +54,7 @@ class PatientsTabLinkUiRendererTest {
         defaultModel
             .currentFacilityLoaded(facility)
             .questionnairesLoaded(questionnaireSections)
-            .questionnairesResponsesLoaded(questionnaireResponsesSections)
+            .questionnaireResponsesLoaded(questionnaireResponsesSections)
     )
 
     // then
@@ -100,7 +100,7 @@ class PatientsTabLinkUiRendererTest {
         defaultModel
             .currentFacilityLoaded(facility)
             .questionnairesLoaded(questionnaireSections)
-            .questionnairesResponsesLoaded(questionnaireResponsesSections)
+            .questionnaireResponsesLoaded(questionnaireResponsesSections)
     )
 
     // then
@@ -144,7 +144,7 @@ class PatientsTabLinkUiRendererTest {
         defaultModel
             .currentFacilityLoaded(facility)
             .questionnairesLoaded(questionnaireSections)
-            .questionnairesResponsesLoaded(questionnaireResponsesSections)
+            .questionnaireResponsesLoaded(questionnaireResponsesSections)
     )
 
     // then
@@ -219,7 +219,7 @@ class PatientsTabLinkUiRendererTest {
         defaultModel
             .currentFacilityLoaded(facility)
             .questionnairesLoaded(questionnaireSections)
-            .questionnairesResponsesLoaded(questionnaireResponsesSections)
+            .questionnaireResponsesLoaded(questionnaireResponsesSections)
     )
 
     // then
@@ -265,7 +265,7 @@ class PatientsTabLinkUiRendererTest {
         defaultModel
             .currentFacilityLoaded(facility)
             .questionnairesLoaded(questionnaireSections)
-            .questionnairesResponsesLoaded(questionnaireResponsesSections)
+            .questionnaireResponsesLoaded(questionnaireResponsesSections)
     )
 
     // then
@@ -309,7 +309,7 @@ class PatientsTabLinkUiRendererTest {
         defaultModel
             .currentFacilityLoaded(facility)
             .questionnairesLoaded(questionnaireSections)
-            .questionnairesResponsesLoaded(questionnaireResponsesSections)
+            .questionnaireResponsesLoaded(questionnaireResponsesSections)
     )
 
     // then

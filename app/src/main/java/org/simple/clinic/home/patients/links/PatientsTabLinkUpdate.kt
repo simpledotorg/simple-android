@@ -16,7 +16,7 @@ class PatientsTabLinkUpdate :
       }
 
       is QuestionnaireResponsesLoaded -> {
-        Next.next(model.questionnairesResponsesLoaded(event.questionnaireResponseSections))
+        Next.next(model.questionnaireResponsesLoaded(event.questionnaireResponseSections))
       }
 
       is MonthlyScreeningReportsClicked -> dispatch(OpenMonthlyScreeningReportsListScreen)

@@ -49,7 +49,7 @@ class PatientsTabLinkUpdateTest {
         .given(defaultModel)
         .whenEvent(QuestionnaireResponsesLoaded(questionnaireResponsesSections))
         .then(UpdateSpec.assertThatNext(
-            NextMatchers.hasModel(defaultModel.questionnairesResponsesLoaded(questionnaireResponsesSections)),
+            NextMatchers.hasModel(defaultModel.questionnaireResponsesLoaded(questionnaireResponsesSections)),
             NextMatchers.hasNoEffects()
         ))
   }

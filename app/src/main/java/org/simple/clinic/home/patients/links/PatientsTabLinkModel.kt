@@ -43,7 +43,7 @@ data class PatientsTabLinkModel(
     return copy(questionnaires = questionnaires)
   }
 
-  fun questionnairesResponsesLoaded(
+  fun questionnaireResponsesLoaded(
       questionnaireResponseSections: QuestionnaireResponseSections
   ): PatientsTabLinkModel {
     return copy(questionnaireResponses = questionnaireResponseSections)

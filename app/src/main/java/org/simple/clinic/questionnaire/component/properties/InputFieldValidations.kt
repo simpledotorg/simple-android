@@ -9,8 +9,11 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class InputFieldValidations(
     @Json(name = "min")
-    val min: Int,
+    val min: Int?,
 
     @Json(name = "max")
-    val max: Int
+    val max: Int?,
+
+    @Json(name = "max_char")
+    val maxChar: Int?,
 ) : Parcelable

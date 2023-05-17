@@ -4,6 +4,12 @@
 
 ### Internal
 
+## 2023-05-15-8714
+
+### Changes
+
+- Update `Monthly screening report` and `Monthly screening reports` translations for `am-ET` language.
+
 ## 2023-05-08-8706
 
 ### Internal

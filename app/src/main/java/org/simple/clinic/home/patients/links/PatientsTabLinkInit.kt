@@ -9,7 +9,7 @@ class PatientsTabLinkInit : Init<PatientsTabLinkModel, PatientsTabLinkEffect> {
     return First.first(model, mutableSetOf(
         LoadCurrentFacility,
         LoadQuestionnaires,
-        LoadQuestionnairesResponses
+        LoadQuestionnaireResponses
     ))
   }
 }

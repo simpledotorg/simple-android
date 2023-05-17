@@ -13,24 +13,24 @@ data class PatientsTabLinkModel(
     @IgnoredOnParcel
     val questionnaires: QuestionnaireSections? = null,
     @IgnoredOnParcel
-    val questionnaireResponseSections: QuestionnaireResponseSections? = null,
+    val questionnaireResponses: QuestionnaireResponseSections? = null,
 ) : Parcelable {
   companion object {
     fun default() = PatientsTabLinkModel(
         facility = null,
         questionnaires = null,
-        questionnaireResponseSections = null
+        questionnaireResponses = null
     )
   }
 
   val showMonthlyScreeningLink: Boolean
     get() = facility?.config?.monthlyScreeningReportsEnabled == true &&
-        questionnaireResponseSections?.screeningQuestionnaireResponseList?.isNotEmpty() == true &&
+        questionnaireResponses?.screeningQuestionnaireResponseList?.isNotEmpty() == true &&
         questionnaires?.screeningQuestionnaire != null
 
   val showMonthlySuppliesLink: Boolean
     get() = facility?.config?.monthlySuppliesReportsEnabled == true &&
-        questionnaireResponseSections?.suppliesQuestionnaireResponseList?.isNotEmpty() == true &&
+        questionnaireResponses?.suppliesQuestionnaireResponseList?.isNotEmpty() == true &&
         questionnaires?.suppliesQuestionnaire != null
 
   fun currentFacilityLoaded(facility: Facility): PatientsTabLinkModel {
@@ -46,7 +46,7 @@ data class PatientsTabLinkModel(
   fun questionnairesResponsesLoaded(
       questionnaireResponseSections: QuestionnaireResponseSections
   ): PatientsTabLinkModel {
-    return copy(questionnaireResponseSections = questionnaireResponseSections)
+    return copy(questionnaireResponses = questionnaireResponseSections)
   }
 }
 

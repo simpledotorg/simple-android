@@ -33,7 +33,7 @@ class PatientsTabLinkEffectHandler @AssistedInject constructor(
         .subtypeEffectHandler<PatientsTabLinkEffect, PatientsTabLinkEvent>()
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility(schedulersProvider.io()))
         .addTransformer(LoadQuestionnaires::class.java, loadQuestionnaires(schedulersProvider.io()))
-        .addTransformer(LoadQuestionnairesResponses::class.java, loadQuestionnairesResponses(schedulersProvider.io()))
+        .addTransformer(LoadQuestionnaireResponses::class.java, loadQuestionnaireResponses(schedulersProvider.io()))
         .addAction(OpenMonthlyScreeningReportsListScreen::class.java, { uiActions.openMonthlyScreeningReports() }, schedulersProvider.ui())
         .addAction(OpenMonthlySuppliesReportsListScreen::class.java, { uiActions.openMonthlySuppliesReports() }, schedulersProvider.ui())
         .addAction(OpenPatientLineListDownloadDialog::class.java, { uiActions.openPatientLineListDownloadDialog() }, schedulersProvider.ui())
@@ -67,8 +67,8 @@ class PatientsTabLinkEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun loadQuestionnairesResponses(scheduler: Scheduler):
-      ObservableTransformer<LoadQuestionnairesResponses, PatientsTabLinkEvent> {
+  private fun loadQuestionnaireResponses(scheduler: Scheduler):
+      ObservableTransformer<LoadQuestionnaireResponses, PatientsTabLinkEvent> {
 
     return ObservableTransformer { effects ->
       effects
@@ -86,7 +86,7 @@ class PatientsTabLinkEffectHandler @AssistedInject constructor(
                   it.questionnaireType == MonthlySuppliesReports
                 },
             )
-            QuestionnairesResponsesLoaded(questionnaireResponseSections)
+            QuestionnaireResponsesLoaded(questionnaireResponseSections)
           }
     }
   }

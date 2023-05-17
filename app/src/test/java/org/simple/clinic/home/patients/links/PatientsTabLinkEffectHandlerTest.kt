@@ -91,10 +91,10 @@ class PatientsTabLinkEffectHandlerTest {
     whenever(responseRepository.questionnaireResponsesInFacility(facility.uuid)) doReturn Observable.just(listOf(screeningResponse, suppliesResponse))
 
     // when
-    effectHandlerTestCase.dispatch(LoadQuestionnairesResponses)
+    effectHandlerTestCase.dispatch(LoadQuestionnaireResponses)
 
     // then
-    effectHandlerTestCase.assertOutgoingEvents(QuestionnairesResponsesLoaded(QuestionnaireResponseSections(listOf(screeningResponse), listOf(suppliesResponse))))
+    effectHandlerTestCase.assertOutgoingEvents(QuestionnaireResponsesLoaded(QuestionnaireResponseSections(listOf(screeningResponse), listOf(suppliesResponse))))
     verifyNoMoreInteractions(uiActions)
   }
 

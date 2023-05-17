@@ -55,7 +55,9 @@ class OverdueUpdateTest {
         uuid = UUID.fromString("6d66fda7-7ca6-4431-ac3b-b570f1123624"),
         facilityConfig = FacilityConfig(
             diabetesManagementEnabled = true,
-            teleconsultationEnabled = false
+            teleconsultationEnabled = false,
+            monthlyScreeningReportsEnabled = false,
+            monthlySuppliesReportsEnabled = false
         )
     )
     val facilityLoadedModel = defaultModel
@@ -76,7 +78,9 @@ class OverdueUpdateTest {
         uuid = UUID.fromString("6d66fda7-7ca6-4431-ac3b-b570f1123624"),
         facilityConfig = FacilityConfig(
             diabetesManagementEnabled = true,
-            teleconsultationEnabled = false
+            teleconsultationEnabled = false,
+            monthlyScreeningReportsEnabled = false,
+            monthlySuppliesReportsEnabled = false
         )
     )
 
@@ -95,7 +99,9 @@ class OverdueUpdateTest {
         uuid = UUID.fromString("6d66fda7-7ca6-4431-ac3b-b570f1123624"),
         facilityConfig = FacilityConfig(
             diabetesManagementEnabled = true,
-            teleconsultationEnabled = false
+            teleconsultationEnabled = false,
+            monthlyScreeningReportsEnabled = false,
+            monthlySuppliesReportsEnabled = false
         )
     )
 

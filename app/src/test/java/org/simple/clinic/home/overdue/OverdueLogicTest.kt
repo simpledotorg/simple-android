@@ -45,7 +45,9 @@ class OverdueLogicTest {
       uuid = UUID.fromString("f4430584-eeaf-4352-b1f5-c21cc96faa6c"),
       facilityConfig = FacilityConfig(
           diabetesManagementEnabled = true,
-          teleconsultationEnabled = false
+          teleconsultationEnabled = false,
+          monthlyScreeningReportsEnabled = false,
+          monthlySuppliesReportsEnabled = false
       )
   )
   private val dateOnClock = LocalDate.parse("2018-01-01")

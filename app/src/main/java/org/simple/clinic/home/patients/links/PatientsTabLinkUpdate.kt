@@ -15,7 +15,7 @@ class PatientsTabLinkUpdate :
         Next.next(model.questionnairesLoaded(event.questionnaireSections))
       }
 
-      is QuestionnairesResponsesLoaded -> {
+      is QuestionnaireResponsesLoaded -> {
         Next.next(model.questionnairesResponsesLoaded(event.questionnaireResponseSections))
       }
 

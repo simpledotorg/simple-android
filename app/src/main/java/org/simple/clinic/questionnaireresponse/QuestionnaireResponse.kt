@@ -62,7 +62,7 @@ data class QuestionnaireResponse(
     fun getOne(uuid: UUID): QuestionnaireResponse?
 
     @Query("SELECT * FROM QuestionnaireResponse WHERE questionnaireType = :type AND facilityId = :currentFacilityId AND deletedAt IS NULL")
-    fun getFilteredBy(type: QuestionnaireType?, currentFacilityId: UUID): Flowable<List<QuestionnaireResponse>>
+    fun getFilteredBy(type: QuestionnaireType, currentFacilityId: UUID): Flowable<List<QuestionnaireResponse>>
 
     @Query("SELECT * FROM QuestionnaireResponse WHERE facilityId = :currentFacilityId AND deletedAt IS NULL")
     fun getInFacility(currentFacilityId: UUID): Flowable<List<QuestionnaireResponse>>

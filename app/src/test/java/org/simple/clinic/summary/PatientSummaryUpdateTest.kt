@@ -49,17 +49,32 @@ class PatientSummaryUpdateTest {
 
   private val facilityWithDiabetesManagementEnabled = TestData.facility(
       uuid = UUID.fromString("abe86f8e-1828-48fe-afb5-d697b3ce36bb"),
-      facilityConfig = FacilityConfig(diabetesManagementEnabled = true)
+      facilityConfig = FacilityConfig(
+          diabetesManagementEnabled = true,
+          teleconsultationEnabled = false,
+          monthlyScreeningReportsEnabled = false,
+          monthlySuppliesReportsEnabled = false
+      )
   )
 
   private val facilityWithDiabetesManagementDisabled = TestData.facility(
       uuid = UUID.fromString("abe86f8e-1828-48fe-afb5-d697b3ce36bb"),
-      facilityConfig = FacilityConfig(diabetesManagementEnabled = false)
+      facilityConfig = FacilityConfig(
+          diabetesManagementEnabled = false,
+          teleconsultationEnabled = false,
+          monthlyScreeningReportsEnabled = false,
+          monthlySuppliesReportsEnabled = false
+      )
   )
 
   private val facilityWithTeleconsultationEnabled = TestData.facility(
       uuid = UUID.fromString("e3582a1a-baed-4e1c-95e0-d8f0ad7a05a2"),
-      facilityConfig = FacilityConfig(diabetesManagementEnabled = true, teleconsultationEnabled = true)
+      facilityConfig = FacilityConfig(
+          diabetesManagementEnabled = true,
+          teleconsultationEnabled = true,
+          monthlyScreeningReportsEnabled = false,
+          monthlySuppliesReportsEnabled = false
+      )
   )
 
   private val updateSpec = UpdateSpec(PatientSummaryUpdate())

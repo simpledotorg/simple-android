@@ -94,7 +94,12 @@ class BloodPressureSummaryViewUiRendererTest {
     val bloodPressuresCount = bloodPressures.size
     val facility = TestData.facility(
         uuid = UUID.fromString("44058e8e-c308-4ada-8302-b0516f7f71b0"),
-        facilityConfig = FacilityConfig(diabetesManagementEnabled = true)
+        facilityConfig = FacilityConfig(
+            diabetesManagementEnabled = true,
+            teleconsultationEnabled = false,
+            monthlyScreeningReportsEnabled = false,
+            monthlySuppliesReportsEnabled = false
+        )
     )
 
     // when
@@ -164,7 +169,12 @@ class BloodPressureSummaryViewUiRendererTest {
     val bloodPressuresCount = bloodPressures.size
     val facility = TestData.facility(
         uuid = UUID.fromString("44058e8e-c308-4ada-8302-b0516f7f71b0"),
-        facilityConfig = FacilityConfig(diabetesManagementEnabled = false)
+        facilityConfig = FacilityConfig(
+            diabetesManagementEnabled = false,
+            teleconsultationEnabled = false,
+            monthlyScreeningReportsEnabled = false,
+            monthlySuppliesReportsEnabled = false
+        )
     )
 
     // when

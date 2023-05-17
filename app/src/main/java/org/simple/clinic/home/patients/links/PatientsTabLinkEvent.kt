@@ -19,7 +19,7 @@ data class QuestionnairesLoaded(
     val questionnaireSections: QuestionnaireSections
 ) : PatientsTabLinkEvent()
 
-data class QuestionnairesResponsesLoaded(
+data class QuestionnaireResponsesLoaded(
     val questionnaireResponseSections: QuestionnaireResponseSections
 ) : PatientsTabLinkEvent()
 

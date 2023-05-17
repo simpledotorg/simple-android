@@ -20,7 +20,7 @@ class PatientsTabLinkInitTest {
             FirstMatchers.hasEffects(
                 LoadCurrentFacility,
                 LoadQuestionnaires,
-                LoadQuestionnairesResponses
+                LoadQuestionnaireResponses
             )
         ))
   }

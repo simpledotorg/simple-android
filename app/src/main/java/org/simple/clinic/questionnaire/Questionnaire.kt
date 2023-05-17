@@ -33,13 +33,13 @@ data class Questionnaire(
     fun save(questionnaires: List<Questionnaire>)
 
     @Query("SELECT * FROM Questionnaire WHERE deletedAt IS NULL")
-    fun getAll(): List<Questionnaire>
+    fun getAll(): Flowable<List<Questionnaire>>
+
+    @Query("SELECT * FROM Questionnaire WHERE deletedAt IS NULL")
+    fun getAllImmediate(): List<Questionnaire>
 
     @Query("SELECT * FROM Questionnaire WHERE questionnaire_type == :type AND deletedAt IS NULL LIMIT 1")
-    fun getByQuestionnaireType(type: QuestionnaireType): Flowable<Questionnaire>
-
-    @Query("SELECT * FROM Questionnaire WHERE questionnaire_type == :type AND deletedAt IS NULL LIMIT 1")
-    fun getByQuestionnaireTypeImmediate(type: QuestionnaireType): Questionnaire
+    fun getByQuestionnaireType(type: QuestionnaireType): Questionnaire
 
     @Query("SELECT COUNT(questionnaire_type) FROM questionnaire")
     fun count(): Observable<Int>

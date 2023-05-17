@@ -4,6 +4,10 @@
 
 ### Internal
 
+- Refactored Monthly reports code
+- Update `QuestionnaireSyncApi` to request DSL Version 1.1
+- Add Monthly supplies report link to home screen
+
 ## 2023-05-15-8714
 
 ### Changes
@@ -14,9 +18,8 @@
 
 ### Internal
 
-- Refactored Monthly reports code
 - Rename `enable_monthly_screening_reports` Feature flag to `questionnaires_enabled`
-- Added support for Questionnaire Form DSL Version 2.
+- Added support for Questionnaire Form DSL Version 1.1
 
 ## 2023-04-17-8683
 

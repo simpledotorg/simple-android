@@ -36,7 +36,12 @@ class BloodPressureSummaryViewInitTest {
     val bloodSugarsCount = 10
     val facility = TestData.facility(
         uuid = UUID.fromString("2b4d19e0-5291-4dc3-b7c9-704ebc1cfcd7"),
-        facilityConfig = FacilityConfig(diabetesManagementEnabled = true)
+        facilityConfig = FacilityConfig(
+            diabetesManagementEnabled = true,
+            teleconsultationEnabled = false,
+            monthlyScreeningReportsEnabled = false,
+            monthlySuppliesReportsEnabled = false
+        )
     )
 
     val model = defaultModel
@@ -59,7 +64,12 @@ class BloodPressureSummaryViewInitTest {
     val bloodSugarsCount = 10
     val facility = TestData.facility(
         uuid = UUID.fromString("e67dd86c-5311-437d-b86d-ad6d2dd75c7e"),
-        facilityConfig = FacilityConfig(diabetesManagementEnabled = false)
+        facilityConfig = FacilityConfig(
+            diabetesManagementEnabled = false,
+            teleconsultationEnabled = false,
+            monthlyScreeningReportsEnabled = false,
+            monthlySuppliesReportsEnabled = false
+        )
     )
 
     val model = defaultModel

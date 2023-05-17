@@ -53,7 +53,12 @@ class BloodPressureSummaryViewUpdateTest {
   fun `when diabetes management is enabled, then load fewer number of blood pressures`() {
     val facility = TestData.facility(
         uuid = UUID.fromString("0729cf58-73b8-4be9-b9d7-87cbb6ee0f6b"),
-        facilityConfig = FacilityConfig(diabetesManagementEnabled = true)
+        facilityConfig = FacilityConfig(
+            diabetesManagementEnabled = true,
+            teleconsultationEnabled = false,
+            monthlyScreeningReportsEnabled = false,
+            monthlySuppliesReportsEnabled = false
+        )
     )
 
     updateSpec
@@ -69,7 +74,12 @@ class BloodPressureSummaryViewUpdateTest {
   fun `when diabetes management is disabled, then load larger number of blood pressures`() {
     val facility = TestData.facility(
         uuid = UUID.fromString("924d5e18-039e-4e83-9f36-5a0974d8a299"),
-        facilityConfig = FacilityConfig(diabetesManagementEnabled = false)
+        facilityConfig = FacilityConfig(
+            diabetesManagementEnabled = false,
+            teleconsultationEnabled = false,
+            monthlyScreeningReportsEnabled = false,
+            monthlySuppliesReportsEnabled = false
+        )
     )
 
     updateSpec

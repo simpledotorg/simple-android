@@ -88,7 +88,7 @@ class QuestionnaireSyncIntegrationTest {
     sync.pull()
 
     // then
-    val pulledRecords = repository.questionnaires()
+    val pulledRecords = repository.questionnairesImmediate()
 
     Truth.assertThat(pulledRecords).isNotEmpty()
   }

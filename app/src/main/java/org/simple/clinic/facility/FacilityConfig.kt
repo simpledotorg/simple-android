@@ -22,4 +22,8 @@ data class FacilityConfig(
     @ColumnInfo(name = "monthlyScreeningReportsEnabled")
     @Json(name = "enable_monthly_screening_reports")
     val monthlyScreeningReportsEnabled: Boolean? = false,
+
+    @ColumnInfo(name = "monthlySuppliesReportsEnabled")
+    @Json(name = "enable_monthly_supplies_reports")
+    val monthlySuppliesReportsEnabled: Boolean,
 ) : Parcelable

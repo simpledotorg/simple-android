@@ -4,6 +4,9 @@ import com.spotify.mobius.test.NextMatchers
 import com.spotify.mobius.test.UpdateSpec
 import org.junit.Test
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
+import org.simple.clinic.questionnaire.MonthlySuppliesReports
+import org.simple.clinic.questionnaire.QuestionnaireResponseSections
+import org.simple.clinic.questionnaire.QuestionnaireSections
 import org.simple.sharedTestCode.TestData
 import java.util.UUID
 
@@ -27,35 +30,48 @@ class PatientsTabLinkUpdateTest {
   }
 
   @Test
-  fun `when monthly screening report response list is loaded, then update the model`() {
-    val questionnaireResponse = listOf(
-        TestData.questionnaireResponse(
-            uuid = UUID.fromString("d8173ed8-fca2-4455-984a-e5b5e9d81412"),
-            questionnaireType = MonthlyScreeningReports
-        )
+  fun `when questionnaire responses are loaded, then update the model`() {
+    val questionnaireResponsesSections = QuestionnaireResponseSections(
+        screeningQuestionnaireResponseList = listOf(
+            TestData.questionnaireResponse(
+                uuid = UUID.fromString("e5ba4172-6c1c-41b5-a38a-51ed9dfbf34e"),
+                questionnaireType = MonthlyScreeningReports
+            )),
+        suppliesQuestionnaireResponseList = listOf(
+            TestData.questionnaireResponse(
+                uuid = UUID.fromString("ffb6d991-b979-4416-9a0c-41957ae8fcf6"),
+                questionnaireType = MonthlySuppliesReports
+            )
+        ),
     )
 
     updateSpec
         .given(defaultModel)
-        .whenEvent(MonthlyScreeningReportResponseListLoaded(questionnaireResponse))
+        .whenEvent(QuestionnaireResponsesLoaded(questionnaireResponsesSections))
         .then(UpdateSpec.assertThatNext(
-            NextMatchers.hasModel(defaultModel.monthlyScreeningReportResponseListLoaded(questionnaireResponse)),
+            NextMatchers.hasModel(defaultModel.questionnaireResponsesLoaded(questionnaireResponsesSections)),
             NextMatchers.hasNoEffects()
         ))
   }
 
   @Test
   fun `when monthly screening report form is loaded, then update the model`() {
-    val questionnaire = TestData.questionnaire(
-        uuid = UUID.fromString("3185486d-15b7-429c-a472-260aeca2a49a"),
-        questionnaireType = MonthlyScreeningReports
+    val questionnaireSections = QuestionnaireSections(
+        screeningQuestionnaire = TestData.questionnaire(
+            uuid = UUID.fromString("1f7ba287-2dfa-4c10-9547-bc7f4d9b3cf6"),
+            questionnaireType = MonthlyScreeningReports
+        ),
+        suppliesQuestionnaire = TestData.questionnaire(
+            uuid = UUID.fromString("bb2ecd58-2a1d-4951-9af6-c470dfca45b1"),
+            questionnaireType = MonthlySuppliesReports
+        )
     )
 
     updateSpec
         .given(defaultModel)
-        .whenEvent(MonthlyScreeningReportFormLoaded(questionnaire))
+        .whenEvent(QuestionnairesLoaded(questionnaireSections))
         .then(UpdateSpec.assertThatNext(
-            NextMatchers.hasModel(defaultModel.monthlyScreeningReportFormLoaded(questionnaire)),
+            NextMatchers.hasModel(defaultModel.questionnairesLoaded(questionnaireSections)),
             NextMatchers.hasNoEffects()
         ))
   }

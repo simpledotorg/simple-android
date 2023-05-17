@@ -10,7 +10,10 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
+import org.simple.clinic.questionnaire.MonthlySuppliesReports
 import org.simple.clinic.questionnaire.QuestionnaireRepository
+import org.simple.clinic.questionnaire.QuestionnaireResponseSections
+import org.simple.clinic.questionnaire.QuestionnaireSections
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponseRepository
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.sharedTestCode.TestData
@@ -26,14 +29,24 @@ class PatientsTabLinkEffectHandlerTest {
       name = "PHC Simple"
   )
 
-  private val questionnaireResponse = TestData.questionnaireResponse(
-      uuid = UUID.fromString("2d180e91-332e-45cf-8817-931176e2c52d"),
+  private val screeningForm = TestData.questionnaire(
+      uuid = UUID.fromString("890aeeb5-d6c5-4a28-ab3c-fca0e193aa6f"),
       questionnaireType = MonthlyScreeningReports
   )
 
-  private val questionnaire = TestData.questionnaire(
-      uuid = UUID.fromString("890aeeb5-d6c5-4a28-ab3c-fca0e193aa6f"),
+  private val suppliesForm = TestData.questionnaire(
+      uuid = UUID.fromString("e51994cd-e4ae-41b3-872e-4c9a3d109d73"),
+      questionnaireType = MonthlySuppliesReports
+  )
+
+  private val screeningResponse = TestData.questionnaireResponse(
+      uuid = UUID.fromString("b461a17a-17f6-4749-93f7-fb90f4a254fa"),
       questionnaireType = MonthlyScreeningReports
+  )
+
+  private val suppliesResponse = TestData.questionnaireResponse(
+      uuid = UUID.fromString("9f61d80d-530b-478c-bffd-c0db914d2321"),
+      questionnaireType = MonthlySuppliesReports
   )
 
   private val effectHandler = PatientsTabLinkEffectHandler(
@@ -62,26 +75,26 @@ class PatientsTabLinkEffectHandlerTest {
   }
 
   @Test
-  fun `when load monthly report response list effect is received, then load monthly report response list`() {
-    whenever(responseRepository.questionnaireResponsesFilteredBy(MonthlyScreeningReports, facility.uuid)) doReturn Observable.just(listOf(questionnaireResponse))
+  fun `when load questionnaires effect is received, then load questionnaires`() {
+    whenever(formRepository.questionnaires()) doReturn Observable.just(listOf(screeningForm, suppliesForm))
 
     // when
-    effectHandlerTestCase.dispatch(LoadMonthlyScreeningReportResponseList)
+    effectHandlerTestCase.dispatch(LoadQuestionnaires)
 
     // then
-    effectHandlerTestCase.assertOutgoingEvents(MonthlyScreeningReportResponseListLoaded(listOf(questionnaireResponse)))
+    effectHandlerTestCase.assertOutgoingEvents(QuestionnairesLoaded(QuestionnaireSections(screeningForm, suppliesForm)))
     verifyNoMoreInteractions(uiActions)
   }
 
   @Test
-  fun `when load monthly report form effect is received, then load monthly report form`() {
-    whenever(formRepository.questionnairesByType(MonthlyScreeningReports)) doReturn Observable.just(questionnaire)
+  fun `when load questionnaires responses effect is received, then load questionnaires responses`() {
+    whenever(responseRepository.questionnaireResponsesInFacility(facility.uuid)) doReturn Observable.just(listOf(screeningResponse, suppliesResponse))
 
     // when
-    effectHandlerTestCase.dispatch(LoadMonthlyScreeningReportForm)
+    effectHandlerTestCase.dispatch(LoadQuestionnaireResponses)
 
     // then
-    effectHandlerTestCase.assertOutgoingEvents(MonthlyScreeningReportFormLoaded(questionnaire))
+    effectHandlerTestCase.assertOutgoingEvents(QuestionnaireResponsesLoaded(QuestionnaireResponseSections(listOf(screeningResponse), listOf(suppliesResponse))))
     verifyNoMoreInteractions(uiActions)
   }
 

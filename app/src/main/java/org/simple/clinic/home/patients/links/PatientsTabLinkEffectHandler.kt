@@ -9,7 +9,10 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
+import org.simple.clinic.questionnaire.MonthlySuppliesReports
 import org.simple.clinic.questionnaire.QuestionnaireRepository
+import org.simple.clinic.questionnaire.QuestionnaireResponseSections
+import org.simple.clinic.questionnaire.QuestionnaireSections
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponseRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
@@ -29,8 +32,8 @@ class PatientsTabLinkEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<PatientsTabLinkEffect, PatientsTabLinkEvent>()
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility(schedulersProvider.io()))
-        .addTransformer(LoadMonthlyScreeningReportResponseList::class.java, loadMonthlyScreeningReportResponseList(schedulersProvider.io()))
-        .addTransformer(LoadMonthlyScreeningReportForm::class.java, loadMonthlyScreeningReportForm(schedulersProvider.io()))
+        .addTransformer(LoadQuestionnaires::class.java, loadQuestionnaires(schedulersProvider.io()))
+        .addTransformer(LoadQuestionnaireResponses::class.java, loadQuestionnaireResponses(schedulersProvider.io()))
         .addAction(OpenMonthlyScreeningReportsListScreen::class.java, { uiActions.openMonthlyScreeningReports() }, schedulersProvider.ui())
         .addAction(OpenMonthlySuppliesReportsListScreen::class.java, { uiActions.openMonthlySuppliesReports() }, schedulersProvider.ui())
         .addAction(OpenPatientLineListDownloadDialog::class.java, { uiActions.openPatientLineListDownloadDialog() }, schedulersProvider.ui())
@@ -47,26 +50,44 @@ class PatientsTabLinkEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun loadMonthlyScreeningReportResponseList(scheduler: Scheduler):
-      ObservableTransformer<LoadMonthlyScreeningReportResponseList, PatientsTabLinkEvent> {
+  private fun loadQuestionnaires(scheduler: Scheduler):
+      ObservableTransformer<LoadQuestionnaires, PatientsTabLinkEvent> {
+
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(scheduler)
+          .switchMap { questionnaireRepository.questionnaires() }
+          .map { questionnaires ->
+            val questionnaireSections = QuestionnaireSections(
+                screeningQuestionnaire = questionnaires.firstOrNull { it.questionnaire_type == MonthlyScreeningReports },
+                suppliesQuestionnaire = questionnaires.firstOrNull { it.questionnaire_type == MonthlySuppliesReports }
+            )
+            QuestionnairesLoaded(questionnaireSections = questionnaireSections)
+          }
+    }
+  }
+
+  private fun loadQuestionnaireResponses(scheduler: Scheduler):
+      ObservableTransformer<LoadQuestionnaireResponses, PatientsTabLinkEvent> {
+
     return ObservableTransformer { effects ->
       effects
           .observeOn(scheduler)
           .switchMap { currentFacility }
           .switchMap { facility ->
-            questionnaireResponseRepository.questionnaireResponsesFilteredBy(MonthlyScreeningReports, facility.uuid)
+            questionnaireResponseRepository.questionnaireResponsesInFacility(facility.uuid)
           }
-          .map(::MonthlyScreeningReportResponseListLoaded)
-    }
-  }
-
-  private fun loadMonthlyScreeningReportForm(scheduler: Scheduler):
-      ObservableTransformer<LoadMonthlyScreeningReportForm, PatientsTabLinkEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(scheduler)
-          .switchMap { questionnaireRepository.questionnairesByType(MonthlyScreeningReports) }
-          .map(::MonthlyScreeningReportFormLoaded)
+          .map { questionnaireResponseList ->
+            val questionnaireResponseSections = QuestionnaireResponseSections(
+                screeningQuestionnaireResponseList = questionnaireResponseList.filter {
+                  it.questionnaireType == MonthlyScreeningReports
+                },
+                suppliesQuestionnaireResponseList = questionnaireResponseList.filter {
+                  it.questionnaireType == MonthlySuppliesReports
+                },
+            )
+            QuestionnaireResponsesLoaded(questionnaireResponseSections)
+          }
     }
   }
 }

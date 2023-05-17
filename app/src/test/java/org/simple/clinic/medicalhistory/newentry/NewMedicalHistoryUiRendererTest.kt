@@ -22,13 +22,23 @@ class NewMedicalHistoryUiRendererTest {
   private val facilityWithDiabetesManagementEnabled = TestData
       .facility(
           uuid = UUID.fromString("fb08c52e-24ac-4fa8-8573-13edd2f06232"),
-          facilityConfig = FacilityConfig(diabetesManagementEnabled = true)
+          facilityConfig = FacilityConfig(
+              diabetesManagementEnabled = true,
+              teleconsultationEnabled = false,
+              monthlyScreeningReportsEnabled = false,
+              monthlySuppliesReportsEnabled = false
+          )
       )
 
   private val facilityWithDiabetesManagementDisabled = TestData
       .facility(
           uuid = UUID.fromString("66a52e56-b773-4692-b19c-a58636c6d85a"),
-          facilityConfig = FacilityConfig(diabetesManagementEnabled = false)
+          facilityConfig = FacilityConfig(
+              diabetesManagementEnabled = false,
+              teleconsultationEnabled = false,
+              monthlyScreeningReportsEnabled = false,
+              monthlySuppliesReportsEnabled = false
+          )
       )
 
   private val country = TestData.country(isoCountryCode = Country.INDIA)

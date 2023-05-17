@@ -428,7 +428,12 @@ object TestData {
       updatedAt: Instant = Instant.now(),
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       deletedAt: Instant? = null,
-      facilityConfig: FacilityConfig = FacilityConfig(diabetesManagementEnabled = false, teleconsultationEnabled = false, monthlyScreeningReportsEnabled = false),
+      facilityConfig: FacilityConfig = FacilityConfig(
+          diabetesManagementEnabled = false,
+          teleconsultationEnabled = false,
+          monthlyScreeningReportsEnabled = false,
+          monthlySuppliesReportsEnabled = false,
+      ),
       syncGroup: String = ""
   ): Facility {
     return Facility(
@@ -470,7 +475,12 @@ object TestData {
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
-      facilityConfig: FacilityConfig = FacilityConfig(diabetesManagementEnabled = false, teleconsultationEnabled = false, monthlyScreeningReportsEnabled = false),
+      facilityConfig: FacilityConfig = FacilityConfig(
+          diabetesManagementEnabled = false,
+          teleconsultationEnabled = false,
+          monthlyScreeningReportsEnabled = false,
+          monthlySuppliesReportsEnabled = false,
+      ),
       syncGroup: String? = null
   ): FacilityPayload {
     return FacilityPayload(

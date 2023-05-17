@@ -149,6 +149,10 @@ class PatientsTabLinkView(
     monthlyScreeningReportContainer.visibleOrGone(isVisible)
   }
 
+  override fun showOrHideMonthlySuppliesReportsView(isVisible: Boolean) {
+    monthlySuppliesReportsContainer.visibleOrGone(isVisible)
+  }
+
   override fun showOrHidePatientLineListDownload(isVisible: Boolean) {
     downloadPatientLineListContainer.visibleOrGone(isVisible)
   }

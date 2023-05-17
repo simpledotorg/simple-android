@@ -19,22 +19,42 @@ class PatientSummaryViewRendererTest {
 
   private val facilityWithDiabetesManagementEnabled = TestData.facility(
       uuid = UUID.fromString("9eb182ee-1ec8-4d19-89b8-abe66ed993d9"),
-      facilityConfig = FacilityConfig(diabetesManagementEnabled = true)
+      facilityConfig = FacilityConfig(
+          diabetesManagementEnabled = true,
+          teleconsultationEnabled = false,
+          monthlyScreeningReportsEnabled = false,
+          monthlySuppliesReportsEnabled = false
+      )
   )
 
   private val facilityWithDiabetesManagementDisabled = TestData.facility(
       uuid = UUID.fromString("9eb182ee-1ec8-4d19-89b8-abe66ed993d9"),
-      facilityConfig = FacilityConfig(diabetesManagementEnabled = false)
+      facilityConfig = FacilityConfig(
+          diabetesManagementEnabled = false,
+          teleconsultationEnabled = false,
+          monthlyScreeningReportsEnabled = false,
+          monthlySuppliesReportsEnabled = false
+      )
   )
 
   private val facilityWithTeleconsultationEnabled = TestData.facility(
       uuid = UUID.fromString("138ad942-0b8d-4aff-868d-96e98b15dcc3"),
-      facilityConfig = FacilityConfig(diabetesManagementEnabled = true, teleconsultationEnabled = true)
+      facilityConfig = FacilityConfig(
+          diabetesManagementEnabled = true,
+          teleconsultationEnabled = true,
+          monthlyScreeningReportsEnabled = false,
+          monthlySuppliesReportsEnabled = false
+      )
   )
 
   private val facilityWithTeleconsultationDisabled = TestData.facility(
       uuid = UUID.fromString("138ad942-0b8d-4aff-868d-96e98b15dcc3"),
-      facilityConfig = FacilityConfig(diabetesManagementEnabled = true, teleconsultationEnabled = false)
+      facilityConfig = FacilityConfig(
+          diabetesManagementEnabled = true,
+          teleconsultationEnabled = false,
+          monthlyScreeningReportsEnabled = false,
+          monthlySuppliesReportsEnabled = false
+      )
   )
 
   private val defaultModel = PatientSummaryModel.from(ViewExistingPatient, UUID.fromString("6fdf088e-f6aa-40e9-9cc2-22e197b83470"))

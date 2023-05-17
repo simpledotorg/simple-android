@@ -35,11 +35,12 @@ val DEMO_FACILITY = Facility(
     config = FacilityConfig(
         diabetesManagementEnabled = true,
         teleconsultationEnabled = false,
-        monthlyScreeningReportsEnabled = false
+        monthlyScreeningReportsEnabled = false,
+        monthlySuppliesReportsEnabled = false
     ),
     syncGroup = ""
 )
-const val CRITICAL_SECURITY_APP_UPDATE_PRIORITY : Int = 5
-const val LIGHT_APP_UPDATE_PRIORITY : Int = 1
+const val CRITICAL_SECURITY_APP_UPDATE_PRIORITY: Int = 5
+const val LIGHT_APP_UPDATE_PRIORITY: Int = 1
 
 const val PLAY_STORE_URL_FOR_SIMPLE = "https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}"

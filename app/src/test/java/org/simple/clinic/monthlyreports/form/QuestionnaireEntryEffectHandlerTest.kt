@@ -59,7 +59,7 @@ class QuestionnaireEntryEffectHandlerTest {
         questionnaireType = questionnaireType
     )
 
-    whenever(questionnaireRepository.questionnairesByTypeImmediate(questionnaireType)) doReturn questionnaire
+    whenever(questionnaireRepository.questionnaireByType(questionnaireType)) doReturn questionnaire
 
     //when
     testCase.dispatch(LoadQuestionnaireFormEffect(questionnaireType))

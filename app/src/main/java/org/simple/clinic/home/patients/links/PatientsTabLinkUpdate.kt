@@ -10,12 +10,15 @@ class PatientsTabLinkUpdate :
       Next<PatientsTabLinkModel, PatientsTabLinkEffect> {
     return when (event) {
       is CurrentFacilityLoaded -> Next.next(model.currentFacilityLoaded(event.facility))
-      is MonthlyScreeningReportResponseListLoaded -> {
-        Next.next(model.monthlyScreeningReportResponseListLoaded(event.questionnaireResponseList))
+
+      is QuestionnairesLoaded -> {
+        Next.next(model.questionnairesLoaded(event.questionnaireSections))
       }
-      is MonthlyScreeningReportFormLoaded -> {
-        Next.next(model.monthlyScreeningReportFormLoaded(event.questionnaire))
+
+      is QuestionnaireResponsesLoaded -> {
+        Next.next(model.questionnaireResponsesLoaded(event.questionnaireResponseSections))
       }
+
       is MonthlyScreeningReportsClicked -> dispatch(OpenMonthlyScreeningReportsListScreen)
       is MonthlySuppliesReportsClicked -> dispatch(OpenMonthlySuppliesReportsListScreen)
       is DownloadPatientLineListClicked -> dispatch(OpenPatientLineListDownloadDialog)

@@ -55,11 +55,21 @@ class MedicalHistorySummaryLogicTest {
   )
   private val facilityWithDiabetesManagementEnabled = TestData.facility(
       uuid = UUID.fromString("90bedaf8-5521-490e-b725-2b41839a83c7"),
-      facilityConfig = FacilityConfig(diabetesManagementEnabled = true)
+      facilityConfig = FacilityConfig(
+          diabetesManagementEnabled = true,
+          teleconsultationEnabled = false,
+          monthlyScreeningReportsEnabled = false,
+          monthlySuppliesReportsEnabled = false
+      )
   )
   private val facilityWithDiabetesManagementDisabled = TestData.facility(
       uuid = UUID.fromString("7c1708a2-585c-4e80-adaa-6544368a46c4"),
-      facilityConfig = FacilityConfig(diabetesManagementEnabled = false)
+      facilityConfig = FacilityConfig(
+          diabetesManagementEnabled = false,
+          teleconsultationEnabled = false,
+          monthlyScreeningReportsEnabled = false,
+          monthlySuppliesReportsEnabled = false
+      )
   )
   private val medicalHistoryUuid = UUID.fromString("5054c068-a4ae-4a1a-a5ff-ae0bf009f3cf")
 

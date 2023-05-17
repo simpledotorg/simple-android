@@ -37,7 +37,9 @@ class OverdueEffectHandlerTest {
       name = "PHC Obvious",
       facilityConfig = FacilityConfig(
           diabetesManagementEnabled = true,
-          teleconsultationEnabled = false
+          teleconsultationEnabled = false,
+          monthlyScreeningReportsEnabled = false,
+          monthlySuppliesReportsEnabled = false
       )
   )
   private val uiActions = mock<OverdueUiActions>()

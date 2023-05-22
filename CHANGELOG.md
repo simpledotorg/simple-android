@@ -8,6 +8,10 @@
 - Update `QuestionnaireSyncApi` to request DSL Version 1.1
 - Add Monthly supplies report link to home screen
 
+### Changes
+
+- Enable `Clinical Decision Support` for all facilities in Ethiopia.
+
 ## 2023-05-15-8714
 
 ### Changes

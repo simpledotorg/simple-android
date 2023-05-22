@@ -96,7 +96,9 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .observeOn(schedulersProvider.io())
           .map {
             val currentFacilityId = currentFacility.get().uuid
-            CDSSPilotStatusChecked(isPilotEnabledForFacility = cdssPilotFacilities.get().contains(currentFacilityId))
+            CDSSPilotStatusChecked(isPilotEnabledForFacility =
+            country.isoCountryCode == Country.ETHIOPIA || cdssPilotFacilities.get().contains(currentFacilityId)
+            )
           }
     }
   }

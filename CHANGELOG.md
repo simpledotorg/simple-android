@@ -4,6 +4,10 @@
 
 ### Internal
 
+### Changes
+
+- Enable `Clinical Decision Support` for all facilities in Ethiopia.
+
 ## 2023-05-22-8722
 
 ### Internal

@@ -14,7 +14,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import org.simple.clinic.R
 
@@ -47,10 +46,9 @@ fun QuestionnaireRadioButton(
             start = dimensionResource(id = R.dimen.spacing_14)),
         text = text,
         style = TextStyle(
-            color = colorResource(id = R.color.color_on_surface_67),
+            color = colorResource(id = if (isSelected) R.color.simple_dark_grey else R.color.color_on_surface_67),
             fontSize = 14.sp,
             fontFamily = FontFamily.SansSerif,
-            fontWeight = FontWeight(700),
             lineHeight = 20.sp,
         )
     )

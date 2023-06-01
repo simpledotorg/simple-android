@@ -87,3 +87,15 @@
 
 # iText7
 -keepclassmembers enum com.itextpdf.** { *; }
+
+# Generated Missing Rules
+-dontwarn java.lang.management.ManagementFactory
+-dontwarn javax.management.InstanceNotFoundException
+-dontwarn javax.management.MBeanRegistrationException
+-dontwarn javax.management.MBeanServer
+-dontwarn javax.management.MalformedObjectNameException
+-dontwarn javax.management.ObjectInstance
+-dontwarn javax.management.ObjectName
+-dontwarn org.codehaus.commons.compiler.CompileException
+-dontwarn org.codehaus.janino.ClassBodyEvaluator
+-dontwarn sun.reflect.Reflection

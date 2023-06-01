@@ -35,6 +35,10 @@ android {
 
     isCoreLibraryDesugaringEnabled = true
   }
+
+  kotlin {
+    jvmToolchain(17)
+  }
 }
 
 dependencies {

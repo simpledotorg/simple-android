@@ -242,6 +242,10 @@ android {
     isCoreLibraryDesugaringEnabled = true
   }
 
+  kotlin {
+    jvmToolchain(17)
+  }
+
   kotlinOptions {
     freeCompilerArgs = freeCompilerArgs + listOf("-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi")
   }

@@ -1,6 +1,9 @@
 package org.simple.clinic.lint
 
-import com.android.SdkConstants.CARD_VIEW
+import com.android.SdkConstants.ANDROIDX_CARD_VIEW_PKG
+import com.android.SdkConstants.ANDROID_SUPPORT_V7_PKG
+import com.android.SdkConstants.CARD_VIEW_LIB_ARTIFACT
+import com.android.support.AndroidxName
 import com.android.tools.lint.detector.api.Category
 import com.android.tools.lint.detector.api.Implementation
 import com.android.tools.lint.detector.api.Issue
@@ -10,7 +13,6 @@ import com.android.tools.lint.detector.api.Severity
 import com.android.tools.lint.detector.api.XmlContext
 import org.w3c.dom.Element
 
-@Suppress("UnstableApiUsage")
 class CardViewDetector : ResourceXmlDetector() {
 
   companion object {
@@ -30,7 +32,10 @@ class CardViewDetector : ResourceXmlDetector() {
     )
   }
 
-  override fun getApplicableElements() = listOf(CARD_VIEW.newName(), CARD_VIEW.oldName())
+  override fun getApplicableElements() = listOf(
+      "android.support.v7.widget.CardView",
+      "androidx.cardview.widget.CardView"
+  )
 
   override fun visitElement(context: XmlContext, element: Element) {
     reportCardViewIssue(context, element)

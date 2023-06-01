@@ -236,11 +236,13 @@ android {
   }
 
   compileOptions {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+
     isCoreLibraryDesugaringEnabled = true
   }
 
   kotlinOptions {
-    jvmTarget = "1.8"
     freeCompilerArgs = freeCompilerArgs + listOf("-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi")
   }
 

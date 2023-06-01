@@ -1,8 +1,8 @@
 package org.simple.clinic.teleconsultlog.prescription.patientinfo
 
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.junit.After
 import org.junit.Test
 import org.simple.sharedTestCode.TestData

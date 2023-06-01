@@ -1,7 +1,7 @@
 package org.simple.clinic.registration.register
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verifyNoInteractions
 import org.junit.After
 import org.junit.Test
 import org.simple.sharedTestCode.TestData
@@ -73,6 +73,6 @@ class RegistrationLoadingEffectHandlerTest {
         capabilities = null
     )
     testCase.assertOutgoingEvents(ConvertedRegistrationEntryToUserDetails(expectedUser))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 }

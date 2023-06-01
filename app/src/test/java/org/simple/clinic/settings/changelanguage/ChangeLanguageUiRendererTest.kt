@@ -1,9 +1,9 @@
 package org.simple.clinic.settings.changelanguage
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
 import org.junit.Test
 import org.simple.clinic.settings.ProvidedLanguage
 import org.simple.clinic.settings.SystemDefaultLanguage
@@ -25,7 +25,7 @@ class ChangeLanguageUiRendererTest {
     renderer.render(defaultModel)
 
     // then
-    verifyZeroInteractions(ui)
+    verifyNoInteractions(ui)
   }
 
   @Test
@@ -38,7 +38,7 @@ class ChangeLanguageUiRendererTest {
     renderer.render(model)
 
     // then
-    verifyZeroInteractions(ui)
+    verifyNoInteractions(ui)
   }
 
   @Test
@@ -51,7 +51,7 @@ class ChangeLanguageUiRendererTest {
     renderer.render(model)
 
     // then
-    verifyZeroInteractions(ui)
+    verifyNoInteractions(ui)
   }
 
   @Test

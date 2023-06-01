@@ -1,11 +1,11 @@
 package org.simple.clinic.settings
 
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.junit.After
@@ -117,7 +117,7 @@ class SettingsEffectHandlerTest {
     testCase.dispatch(LoadAppVersionEffect)
 
     // then
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
     testCase.assertOutgoingEvents(AppVersionLoaded(versionName))
   }
 
@@ -131,7 +131,7 @@ class SettingsEffectHandlerTest {
     testCase.dispatch(CheckAppUpdateAvailable)
 
     // then
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
     testCase.assertOutgoingEvents(AppUpdateAvailabilityChecked(true))
   }
 

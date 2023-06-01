@@ -1,11 +1,11 @@
 package org.simple.clinic.newentry
 
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
@@ -117,7 +117,6 @@ class PatientEntryEffectHandlerTest {
     testCase.assertNoOutgoingEvents()
     verify(uiActions).setupUi(inputFields)
     verifyNoMoreInteractions(uiActions)
-    verifyZeroInteractions(uiActions)
   }
 
   @Test
@@ -131,7 +130,7 @@ class PatientEntryEffectHandlerTest {
 
     //then
     testCase.assertOutgoingEvents(ColonyOrVillagesFetched(colonyOrVillages))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -155,7 +154,7 @@ class PatientEntryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(OngoingEntryFetched(ongoingNewPatientEntry.withDistrict(facility.district).withState(facility.state)))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -166,7 +165,7 @@ class PatientEntryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(OngoingEntryFetched(entry))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -190,7 +189,7 @@ class PatientEntryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(OngoingEntryFetched(ongoingNewPatientEntry.withDistrict(facility.district).withState(facility.state)))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   private fun setupTestCase() {

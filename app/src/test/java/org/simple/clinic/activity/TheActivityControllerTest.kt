@@ -1,13 +1,13 @@
 package org.simple.clinic.activity
 
 import com.google.common.truth.Truth.assertThat
-import com.nhaarman.mockitokotlin2.clearInvocations
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.clearInvocations
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -285,13 +285,13 @@ class TheActivityControllerTest {
     userUnauthorizedSubject.onNext(true)
 
     // then
-    verifyZeroInteractions(ui)
+    verifyNoInteractions(ui)
 
     // when
     userUnauthorizedSubject.onNext(false)
 
     // then
-    verifyZeroInteractions(ui)
+    verifyNoInteractions(ui)
 
     // when
     userUnauthorizedSubject.onNext(true)

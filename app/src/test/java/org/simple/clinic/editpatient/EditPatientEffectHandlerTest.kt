@@ -1,13 +1,13 @@
 package org.simple.clinic.editpatient
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -155,7 +155,7 @@ class EditPatientEffectHandlerTest {
     verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any())
     verifyNoMoreInteractions(patientRepository)
     testCase.assertOutgoingEvents(PatientSaved)
-    verifyZeroInteractions(ui)
+    verifyNoInteractions(ui)
   }
 
   @Test
@@ -178,7 +178,7 @@ class EditPatientEffectHandlerTest {
     verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any())
     verifyNoMoreInteractions(patientRepository)
     testCase.assertOutgoingEvents(PatientSaved)
-    verifyZeroInteractions(ui)
+    verifyNoInteractions(ui)
   }
 
   @Test
@@ -204,7 +204,7 @@ class EditPatientEffectHandlerTest {
     verify(patientRepository, never()).addIdentifierToPatient(any(), any(), any(), any())
     verifyNoMoreInteractions(patientRepository)
     testCase.assertOutgoingEvents(PatientSaved)
-    verifyZeroInteractions(ui)
+    verifyNoInteractions(ui)
   }
 
   @Test
@@ -266,7 +266,7 @@ class EditPatientEffectHandlerTest {
     verify(patientRepository, never()).saveBusinessId(any())
     verifyNoMoreInteractions(patientRepository)
     testCase.assertOutgoingEvents(PatientSaved)
-    verifyZeroInteractions(ui)
+    verifyNoInteractions(ui)
   }
 
   @Test
@@ -303,7 +303,7 @@ class EditPatientEffectHandlerTest {
 
     //then
     testCase.assertOutgoingEvents(BpPassportsFetched(listOf(bpPassport1, bpPassport2)))
-    verifyZeroInteractions(ui)
+    verifyNoInteractions(ui)
   }
 
   @Test
@@ -316,7 +316,7 @@ class EditPatientEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(InputFieldsLoaded(InputFields(inputFields.fields)))
-    verifyZeroInteractions(ui)
+    verifyNoInteractions(ui)
   }
 
   @Test
@@ -329,7 +329,7 @@ class EditPatientEffectHandlerTest {
 
     //then
     testCase.assertOutgoingEvents(ColonyOrVillagesFetched(colonyOrVillages))
-    verifyZeroInteractions(ui)
+    verifyNoInteractions(ui)
   }
 
   @Test
@@ -369,7 +369,7 @@ class EditPatientEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(PatientSaved)
-    verifyZeroInteractions(ui)
+    verifyNoInteractions(ui)
     verify(patientRepository).updatePatient(patientProfile.patient)
     verify(patientRepository).updateAddressForPatient(patientProfile.patientUuid, patientProfile.address)
     verifyNoMoreInteractions(patientRepository)
@@ -421,7 +421,7 @@ class EditPatientEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(PatientSaved)
-    verifyZeroInteractions(ui)
+    verifyNoInteractions(ui)
     verify(patientRepository).updatePatient(expectedPatientToBeSaved)
     verify(patientRepository).updateAddressForPatient(patientProfile.patientUuid, patientProfile.address)
     verifyNoMoreInteractions(patientRepository)
@@ -513,6 +513,6 @@ class EditPatientEffectHandlerTest {
     )
     verifyNoMoreInteractions(patientRepository)
     testCase.assertOutgoingEvents(PatientSaved)
-    verifyZeroInteractions(ui)
+    verifyNoInteractions(ui)
   }
 }

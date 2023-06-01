@@ -1,14 +1,14 @@
 package org.simple.clinic.enterotp
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
@@ -141,7 +141,7 @@ class EnterOtpLogicTest {
     uiEvents.onNext(EnterOtpSubmitted("11111"))
 
     // then
-    verifyZeroInteractions(loginUserWithOtp)
+    verifyNoInteractions(loginUserWithOtp)
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showIncorrectOtpError()
     verify(uiActions).clearPin()
@@ -184,7 +184,7 @@ class EnterOtpLogicTest {
     uiEvents.onNext(EnterOtpSubmitted("11111"))
 
     // then
-    verifyZeroInteractions(loginUserWithOtp)
+    verifyNoInteractions(loginUserWithOtp)
     verify(loginUserWithOtp, never()).loginWithOtp(phoneNumber, pin, otp)
     verify(ui).showUserPhoneNumber(phoneNumber)
     verify(ui).showIncorrectOtpError()

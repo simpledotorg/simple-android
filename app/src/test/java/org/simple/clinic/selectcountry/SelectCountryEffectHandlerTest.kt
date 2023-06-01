@@ -1,11 +1,11 @@
 package org.simple.clinic.selectcountry
 
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
@@ -56,7 +56,7 @@ class SelectCountryEffectHandlerTest {
     verify(repository).fetchAppManifest()
     verifyNoMoreInteractions(repository)
     testCase.assertNoOutgoingEvents()
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -70,7 +70,7 @@ class SelectCountryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(ManifestFetched(countries))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -84,7 +84,7 @@ class SelectCountryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(ManifestFetchFailed(NetworkError))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -96,7 +96,7 @@ class SelectCountryEffectHandlerTest {
     verify(repository).saveCurrentCountry(india)
     verifyNoMoreInteractions(repository)
     testCase.assertOutgoingEvents(CountrySaved)
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -105,7 +105,7 @@ class SelectCountryEffectHandlerTest {
     testCase.dispatch(GoToStateSelectionScreen)
 
     // then
-    verifyZeroInteractions(repository)
+    verifyNoInteractions(repository)
     testCase.assertNoOutgoingEvents()
     verify(uiActions).goToStateSelectionScreen()
     verifyNoMoreInteractions(uiActions)

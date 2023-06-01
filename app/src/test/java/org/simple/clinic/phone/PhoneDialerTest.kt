@@ -1,8 +1,8 @@
 package org.simple.clinic.phone
 
 import androidx.appcompat.app.AppCompatActivity
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

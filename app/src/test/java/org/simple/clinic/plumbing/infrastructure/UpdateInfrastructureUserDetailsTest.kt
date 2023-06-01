@@ -1,10 +1,10 @@
 package org.simple.clinic.plumbing.infrastructure
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import io.reactivex.subjects.PublishSubject
 import org.junit.Test
 import org.simple.sharedTestCode.TestData
@@ -51,19 +51,19 @@ class UpdateInfrastructureUserDetailsTest {
     updateInfrastructureUserDetails.track()
 
     // then
-    verifyZeroInteractions(firstInfrastructure, secondInfrastructure)
+    verifyNoInteractions(firstInfrastructure, secondInfrastructure)
 
     // when
     userSubject.onNext(Optional.of(user))
 
     // then
-    verifyZeroInteractions(firstInfrastructure, secondInfrastructure)
+    verifyNoInteractions(firstInfrastructure, secondInfrastructure)
 
     // when
     countrySubject.onNext(Optional.of(country))
 
     // then
-    verifyZeroInteractions(firstInfrastructure, secondInfrastructure)
+    verifyNoInteractions(firstInfrastructure, secondInfrastructure)
 
     // when
     deploymentSubject.onNext(Optional.of(deployment))

@@ -1,12 +1,12 @@
 package org.simple.clinic.setup
 
 import com.f2prateek.rx.preferences2.Preference
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
@@ -91,7 +91,7 @@ class SetupActivityEffectHandlerTest {
         userSelectedCountryV1 = Optional.of(v1Country),
         currentDeployment = Optional.of(currentDeployment)
     ))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -126,7 +126,7 @@ class SetupActivityEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(DatabaseInitialized)
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -149,7 +149,7 @@ class SetupActivityEffectHandlerTest {
     verify(appDatabase).prune(Instant.now(userClock))
     verify(databaseMaintenanceRunAtPreference).set(Optional.of(Instant.now(clock)))
     testCase.assertOutgoingEvents(DatabaseMaintenanceCompleted)
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -163,7 +163,7 @@ class SetupActivityEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(DatabaseMaintenanceLastRunAtTimeLoaded(databaseMaintenanceLastRunAt))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -191,7 +191,7 @@ class SetupActivityEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(AppAllowedToRunCheckCompleted(allowedToRun))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -210,7 +210,7 @@ class SetupActivityEffectHandlerTest {
 
     testCase.assertOutgoingEvents(CountryAndDeploymentSaved)
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -224,6 +224,6 @@ class SetupActivityEffectHandlerTest {
 
     testCase.assertOutgoingEvents(StoredCountryV1Deleted)
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 }

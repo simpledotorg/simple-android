@@ -1,16 +1,16 @@
 package org.simple.clinic.scheduleappointment
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.inOrder
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.reset
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.inOrder
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.reset
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -208,7 +208,7 @@ class ScheduleAppointmentLogicTest {
     verify(ui, times(4)).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -239,7 +239,7 @@ class ScheduleAppointmentLogicTest {
     verify(ui, times(4)).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -276,7 +276,7 @@ class ScheduleAppointmentLogicTest {
     // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-08"), Days(7))
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -313,7 +313,7 @@ class ScheduleAppointmentLogicTest {
     // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -376,7 +376,7 @@ class ScheduleAppointmentLogicTest {
     verify(ui).hideNextButtonProgress()
     verifyNoMoreInteractions(ui)
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -487,7 +487,7 @@ class ScheduleAppointmentLogicTest {
     // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-02"), Days(1))
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -549,7 +549,7 @@ class ScheduleAppointmentLogicTest {
     // then
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-01-02"), Days(1))
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -644,7 +644,7 @@ class ScheduleAppointmentLogicTest {
     verify(ui).updateScheduledAppointment(LocalDate.parse("2019-03-01"), Months(2))
     reset(ui)
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -721,7 +721,7 @@ class ScheduleAppointmentLogicTest {
     inOrder.verify(ui).showPatientFacility(facility.name)
     inOrder.verify(ui).showPatientFacility(updatedFacility.name)
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   private fun sheetCreated(

@@ -1,9 +1,9 @@
 package org.simple.clinic.monthlyreports.list
 
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
@@ -49,7 +49,7 @@ class MonthlyReportsEffectHandlerTest {
 
     //then
     testCase.assertOutgoingEvents(MonthlyReportsFetched(listOf(questionnaireResponse)))
-    verifyZeroInteractions(ui)
+    verifyNoInteractions(ui)
   }
 
   @Test
@@ -59,6 +59,6 @@ class MonthlyReportsEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(CurrentFacilityLoaded(facility))
-    verifyZeroInteractions(ui)
+    verifyNoInteractions(ui)
   }
 }

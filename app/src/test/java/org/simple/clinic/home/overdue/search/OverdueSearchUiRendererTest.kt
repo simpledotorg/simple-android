@@ -1,9 +1,9 @@
 package org.simple.clinic.home.overdue.search
 
 import androidx.paging.PagingData
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.home.overdue.search.OverdueSearchProgressState.DONE

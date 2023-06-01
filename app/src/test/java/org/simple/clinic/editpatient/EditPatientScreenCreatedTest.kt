@@ -1,9 +1,9 @@
 package org.simple.clinic.editpatient
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.verify
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Rule

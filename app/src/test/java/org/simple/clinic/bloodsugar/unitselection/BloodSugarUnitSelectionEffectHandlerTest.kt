@@ -1,10 +1,10 @@
 package org.simple.clinic.bloodsugar.unitselection
 
 import com.f2prateek.rx.preferences2.Preference
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
@@ -39,7 +39,7 @@ class BloodSugarUnitSelectionEffectHandlerTest {
     // then
     verify(bloodSugarUnitPreference).set(bloodSugarUnitPreferenceValue)
     effectHandlerTestCase.assertOutgoingEvents(BloodSugarUnitSelectionUpdated)
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test

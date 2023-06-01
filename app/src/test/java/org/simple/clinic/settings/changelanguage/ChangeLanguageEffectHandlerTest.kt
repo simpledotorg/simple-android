@@ -1,11 +1,11 @@
 package org.simple.clinic.settings.changelanguage
 
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.junit.After
@@ -110,7 +110,7 @@ class ChangeLanguageEffectHandlerTest {
     // then
     testCase.assertNoOutgoingEvents()
     verify(dataSync).fireAndForgetSync()
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
 }

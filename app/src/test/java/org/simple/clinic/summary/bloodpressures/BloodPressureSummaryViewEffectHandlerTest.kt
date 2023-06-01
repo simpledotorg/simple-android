@@ -1,11 +1,11 @@
 package org.simple.clinic.summary.bloodpressures
 
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import dagger.Lazy
 import io.reactivex.Observable
 import org.junit.After
@@ -52,7 +52,7 @@ class BloodPressureSummaryViewEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(BloodPressuresLoaded(bloodPressures))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -66,7 +66,7 @@ class BloodPressureSummaryViewEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(BloodPressuresCountLoaded(bloodPressuresCount))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -76,7 +76,7 @@ class BloodPressureSummaryViewEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(CurrentFacilityLoaded(currentFacility))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
 

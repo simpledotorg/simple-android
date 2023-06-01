@@ -1,11 +1,11 @@
 package org.simple.clinic.editpatient.deletepatient
 
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import org.junit.After
 import org.junit.Test
 import org.simple.sharedTestCode.TestData
@@ -84,7 +84,7 @@ class DeletePatientEffectHandlerTest {
     )
     verifyNoMoreInteractions(patientRepository)
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -101,7 +101,7 @@ class DeletePatientEffectHandlerTest {
     verify(patientRepository).updatePatientStatusToDead(patientUuid)
     verifyNoMoreInteractions(patientRepository)
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -112,7 +112,7 @@ class DeletePatientEffectHandlerTest {
     // then
     testCase.assertNoOutgoingEvents()
 
-    verifyZeroInteractions(patientRepository)
+    verifyNoInteractions(patientRepository)
 
     verify(uiActions).showHomeScreen()
     verifyNoMoreInteractions(uiActions)
@@ -137,6 +137,6 @@ class DeletePatientEffectHandlerTest {
     verify(patientRepository).patientImmediate(patientUuid)
     verifyNoMoreInteractions(patientRepository)
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 }

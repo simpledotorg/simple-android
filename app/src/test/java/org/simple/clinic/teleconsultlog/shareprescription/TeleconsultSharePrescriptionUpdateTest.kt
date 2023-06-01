@@ -2,7 +2,7 @@ package org.simple.clinic.teleconsultlog.shareprescription
 
 import android.graphics.Bitmap
 import android.net.Uri
-import com.nhaarman.mockitokotlin2.mock
+import org.mockito.kotlin.mock
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects

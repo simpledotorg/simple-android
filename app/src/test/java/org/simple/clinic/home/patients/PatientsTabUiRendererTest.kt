@@ -1,9 +1,9 @@
 package org.simple.clinic.home.patients
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
 import org.junit.Test
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.MEDIUM
 import java.time.LocalDate
@@ -102,6 +102,6 @@ class PatientsTabUiRendererTest {
 
     // then
     verify(ui).showIllustration()
-    verifyZeroInteractions(ui)
+    verifyNoMoreInteractions(ui)
   }
 }

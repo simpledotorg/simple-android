@@ -2,9 +2,9 @@ package org.simple.clinic.sync
 
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

@@ -1,11 +1,11 @@
 package org.simple.clinic.enterotp
 
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
@@ -47,7 +47,7 @@ class EnterOtpEffectHandlerTest {
     // then
     verify(bruteForceOtpEntryProtection).incrementFailedOtpAttempt()
     verifyNoMoreInteractions(bruteForceOtpEntryProtection)
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
 
@@ -82,7 +82,7 @@ class EnterOtpEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(OtpEntryProtectedStateChanged(allowed))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -92,6 +92,6 @@ class EnterOtpEffectHandlerTest {
 
     // then
     testCase.assertNoOutgoingEvents()
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 }

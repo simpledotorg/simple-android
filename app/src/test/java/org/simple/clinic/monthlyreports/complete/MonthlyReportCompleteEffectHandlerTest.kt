@@ -1,11 +1,11 @@
 package org.simple.clinic.monthlyreports.complete
 
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.mobius.EffectHandlerTestCase
@@ -47,7 +47,7 @@ class MonthlyReportCompleteEffectHandlerTest {
 
     //then
     testCase.assertOutgoingEvents(QuestionnaireResponseFetched(questionnaireResponse))
-    verifyZeroInteractions(ui)
+    verifyNoInteractions(ui)
   }
 
   @Test

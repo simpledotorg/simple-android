@@ -1,9 +1,9 @@
 package org.simple.clinic.appupdate
 
 import com.google.android.play.core.install.model.UpdateAvailability
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import io.reactivex.Observable
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters

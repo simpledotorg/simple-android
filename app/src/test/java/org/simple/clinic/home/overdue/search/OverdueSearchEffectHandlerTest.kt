@@ -1,14 +1,14 @@
 package org.simple.clinic.home.overdue.search
 
 import androidx.paging.PagingData
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import io.reactivex.Observable
 import kotlinx.coroutines.test.TestScope
 import org.junit.After
@@ -120,7 +120,7 @@ class OverdueSearchEffectHandlerTest {
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(OverdueSearchResultsLoaded(expectedPagingData))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -137,7 +137,7 @@ class OverdueSearchEffectHandlerTest {
     verify(overdueAppointmentSelector).toggleSelection(appointmentId)
     verifyNoMoreInteractions(overdueAppointmentSelector)
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -156,7 +156,7 @@ class OverdueSearchEffectHandlerTest {
     // then
     effectHandlerTestCase.assertOutgoingEvents(SelectedOverdueAppointmentsLoaded(selectedAppointmentIds))
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -170,7 +170,7 @@ class OverdueSearchEffectHandlerTest {
     verify(overdueAppointmentSelector).clearSelection()
     verifyNoMoreInteractions(overdueAppointmentSelector)
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -185,7 +185,7 @@ class OverdueSearchEffectHandlerTest {
     effectHandlerTestCase.dispatch(ReplaceSelectedAppointmentIds(appointmentIds, DOWNLOAD))
 
     // then
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
     verify(overdueAppointmentSelector).replaceSelectedIds(appointmentIds)
     verifyNoMoreInteractions(overdueAppointmentSelector)
     effectHandlerTestCase.assertOutgoingEvents(SelectedAppointmentIdsReplaced(DOWNLOAD))
@@ -200,7 +200,7 @@ class OverdueSearchEffectHandlerTest {
     verify(overdueDownloadScheduler).schedule(CSV)
     verifyNoMoreInteractions(overdueDownloadScheduler)
     effectHandlerTestCase.assertNoOutgoingEvents()
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -257,7 +257,7 @@ class OverdueSearchEffectHandlerTest {
     effectHandlerTestCase.dispatch(SelectAllAppointmentIds(allAppointmentIds))
 
     // then
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
     verify(overdueAppointmentSelector).addSelectedIds(allAppointmentIds)
     verifyNoMoreInteractions(overdueAppointmentSelector)
     effectHandlerTestCase.assertNoOutgoingEvents()
@@ -283,7 +283,7 @@ class OverdueSearchEffectHandlerTest {
     ))
 
     // then
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
     effectHandlerTestCase.assertOutgoingEvents(SearchResultsAppointmentIdsLoaded(DOWNLOAD, setOf(appointmentUuid)))
   }
 
@@ -299,6 +299,6 @@ class OverdueSearchEffectHandlerTest {
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(VillagesAndPatientNamesLoaded(villagesAndPatientNames))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 }

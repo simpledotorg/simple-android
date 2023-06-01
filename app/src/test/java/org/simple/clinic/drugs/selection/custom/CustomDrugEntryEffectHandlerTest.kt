@@ -1,10 +1,10 @@
 package org.simple.clinic.drugs.selection.custom
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import io.reactivex.Completable
 import org.junit.After
 import org.junit.Test
@@ -125,7 +125,7 @@ class CustomDrugEntryEffectHandlerTest {
         facility)
     verifyNoMoreInteractions(prescriptionRepository)
     testCase.assertOutgoingEvents(CustomDrugSaved)
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -163,7 +163,7 @@ class CustomDrugEntryEffectHandlerTest {
         facility = facility)
     testCase.assertOutgoingEvents(CustomDrugSaved)
     verifyNoMoreInteractions(prescriptionRepository)
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -190,7 +190,7 @@ class CustomDrugEntryEffectHandlerTest {
     // then
     verify(prescriptionRepository).prescriptionImmediate(prescriptionUuid)
     testCase.assertOutgoingEvents(PrescribedDrugFetched(prescribedDrug))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -205,7 +205,7 @@ class CustomDrugEntryEffectHandlerTest {
     verify(prescriptionRepository).softDeletePrescription(customDrugUUID)
     verifyNoMoreInteractions(prescriptionRepository)
     testCase.assertOutgoingEvents(ExistingDrugRemoved)
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -221,7 +221,7 @@ class CustomDrugEntryEffectHandlerTest {
     verify(drugRepository).drugImmediate(customDrugUUID)
     verifyNoMoreInteractions(drugRepository)
     testCase.assertOutgoingEvents(DrugFetched(drug))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -231,7 +231,7 @@ class CustomDrugEntryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(DrugFrequencyChoiceItemsLoaded(drugFrequencyToLabelMap))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test

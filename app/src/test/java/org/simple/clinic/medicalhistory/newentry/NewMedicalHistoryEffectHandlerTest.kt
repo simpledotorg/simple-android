@@ -1,9 +1,9 @@
 package org.simple.clinic.medicalhistory.newentry
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
 import dagger.Lazy
 import org.junit.After
 import org.junit.Test
@@ -53,7 +53,7 @@ class NewMedicalHistoryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(CurrentFacilityLoaded(facility))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -66,7 +66,7 @@ class NewMedicalHistoryEffectHandlerTest {
     verify(dataSync).fireAndForgetSync()
     verifyNoMoreInteractions(dataSync)
     testCase.assertOutgoingEvents(SyncTriggered(patientUuid))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test

@@ -1,8 +1,8 @@
 package org.simple.clinic.facility.change
 
 import com.google.common.truth.Truth.assertThat
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import org.junit.Rule
 import org.junit.Test
 import org.simple.sharedTestCode.TestData

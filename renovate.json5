@@ -12,5 +12,12 @@
     // We only use this to turn off logs related to Mobius#ControllerStateBase in release app
     "ch.qos.logback:logback-classic"
   ],
-  "prConcurrentLimit": 5
+  "automergeType": "branch",
+  "packageRules": [
+    {
+      "description": "Automerge minor updates",
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    }
+  ]
 }

@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - release/*
+      - renovate/**
   pull_request:
   workflow_dispatch:
     inputs:

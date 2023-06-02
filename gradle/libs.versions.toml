@@ -127,7 +127,7 @@ material = "com.google.android.material:material:1.7.0"
 
 mixpanel-android = "com.mixpanel.android:mixpanel-android:7.2.1"
 
-mockito-kotlin = "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
+mockito-kotlin = "org.mockito.kotlin:mockito-kotlin:4.1.0"
 
 mobius-android = { module = "com.spotify.mobius:mobius-android", version.ref = "mobius" }
 mobius-core = { module = "com.spotify.mobius:mobius-core", version.ref = "mobius" }

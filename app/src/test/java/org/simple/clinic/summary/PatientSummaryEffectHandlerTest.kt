@@ -1,11 +1,11 @@
 package org.simple.clinic.summary
 
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -92,7 +92,7 @@ class PatientSummaryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(CurrentUserAndFacilityLoaded(user, facility))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -258,7 +258,7 @@ class PatientSummaryEffectHandlerTest {
             medicalHistory = medicalHistory
         )
     )
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -290,7 +290,7 @@ class PatientSummaryEffectHandlerTest {
             medicalHistory = medicalHistory
         )
     )
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -302,7 +302,7 @@ class PatientSummaryEffectHandlerTest {
     verify(dataSync).fireAndForgetSync()
     verifyNoMoreInteractions(dataSync)
     testCase.assertOutgoingEvents(SyncTriggered(BACK_CLICK))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -325,7 +325,7 @@ class PatientSummaryEffectHandlerTest {
     testCase.dispatch(FetchHasShownMissingPhoneReminder(patientUuid))
 
     // then
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
     testCase.assertOutgoingEvents(FetchedHasShownMissingPhoneReminder(true))
   }
 
@@ -350,7 +350,7 @@ class PatientSummaryEffectHandlerTest {
 
     // then
     testCase.assertNoOutgoingEvents()
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
     verify(missingPhoneReminderRepository).markReminderAsShownFor(patientUuid)
   }
 
@@ -399,7 +399,7 @@ class PatientSummaryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(MedicalOfficersLoaded(medicalOfficers))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -515,7 +515,7 @@ class PatientSummaryEffectHandlerTest {
         countOfRecordedBloodSugars = 0
     ))
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -547,7 +547,7 @@ class PatientSummaryEffectHandlerTest {
             isNewestBpEntryHigh = true,
             hasPrescribedDrugsChangedToday = true
         ))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -583,7 +583,7 @@ class PatientSummaryEffectHandlerTest {
     testCase.dispatch(CheckIfCDSSPilotIsEnabled)
 
     // then
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
 
     testCase.assertOutgoingEvents(CDSSPilotStatusChecked(isPilotEnabledForFacility = true))
     testCase.dispose()
@@ -607,6 +607,6 @@ class PatientSummaryEffectHandlerTest {
     // then
     testCase.assertOutgoingEvents(LatestScheduledAppointmentLoaded(appointment))
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 }

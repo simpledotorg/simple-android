@@ -1,12 +1,12 @@
 package org.simple.clinic.login.pin
 
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -70,7 +70,7 @@ class LoginPinScreenLogicTest {
     verify(ongoingLoginEntryRepository).entryImmediate()
     verifyNoMoreInteractions(ongoingLoginEntryRepository)
 
-    verifyZeroInteractions(userSession)
+    verifyNoInteractions(userSession)
 
     verify(ui).showPhoneNumber(phoneNumber)
     verifyNoMoreInteractions(ui, uiActions)
@@ -90,7 +90,7 @@ class LoginPinScreenLogicTest {
     verify(ongoingLoginEntryRepository).clearLoginEntry()
     verifyNoMoreInteractions(ongoingLoginEntryRepository)
 
-    verifyZeroInteractions(userSession)
+    verifyNoInteractions(userSession)
 
     verify(ui).showPhoneNumber(phoneNumber)
     verify(uiActions).goBackToRegistrationScreen()

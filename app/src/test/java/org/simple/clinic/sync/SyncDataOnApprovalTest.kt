@@ -1,11 +1,11 @@
 package org.simple.clinic.sync
 
-import com.nhaarman.mockitokotlin2.clearInvocations
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.clearInvocations
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -47,7 +47,7 @@ class SyncDataOnApprovalTest {
 
     // then
     userSubject.onNext(user.toOptional())
-    verifyZeroInteractions(dataSync)
+    verifyNoInteractions(dataSync)
 
     userSubject.onNext(user.withStatus(ApprovedForSyncing, clock).toOptional())
     verify(dataSync).fireAndForgetSync()
@@ -55,10 +55,10 @@ class SyncDataOnApprovalTest {
     clearInvocations(dataSync)
 
     userSubject.onNext(user.withStatus(ApprovedForSyncing, clock).toOptional())
-    verifyZeroInteractions(dataSync)
+    verifyNoInteractions(dataSync)
 
     userSubject.onNext(user.withStatus(previousUserStatus, clock).toOptional())
-    verifyZeroInteractions(dataSync)
+    verifyNoInteractions(dataSync)
 
     userSubject.onNext(user.withStatus(ApprovedForSyncing, clock).toOptional())
     verify(dataSync).fireAndForgetSync()

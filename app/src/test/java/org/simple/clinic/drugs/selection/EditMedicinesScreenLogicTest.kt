@@ -1,9 +1,9 @@
 package org.simple.clinic.drugs.selection
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever
 import dagger.Lazy
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType

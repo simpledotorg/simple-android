@@ -2,11 +2,11 @@ package org.simple.clinic.login
 
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import com.squareup.moshi.Moshi
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -129,9 +129,9 @@ class LoginUserWithOtpTest {
     val loginResult = loginUserWithOtp.loginWithOtp(phoneNumber = phoneNumber, pin = pin, otp = otp).blockingGet()
 
     // then
-    verifyZeroInteractions(accessTokenPref)
-    verifyZeroInteractions(userDao)
-    verifyZeroInteractions(facilityRepository)
+    verifyNoInteractions(accessTokenPref)
+    verifyNoInteractions(userDao)
+    verifyNoInteractions(facilityRepository)
     assertThat(analyticsReporter.user).isNull()
     assertThat(loginResult).isEqualTo(NetworkError)
   }
@@ -155,9 +155,9 @@ class LoginUserWithOtpTest {
     val loginResult = loginUserWithOtp.loginWithOtp(phoneNumber = phoneNumber, pin = pin, otp = otp).blockingGet()
 
     // then
-    verifyZeroInteractions(accessTokenPref)
-    verifyZeroInteractions(userDao)
-    verifyZeroInteractions(facilityRepository)
+    verifyNoInteractions(accessTokenPref)
+    verifyNoInteractions(userDao)
+    verifyNoInteractions(facilityRepository)
     assertThat(analyticsReporter.user).isNull()
     assertThat(loginResult).isEqualTo(ServerError(errorReason))
   }
@@ -171,9 +171,9 @@ class LoginUserWithOtpTest {
     val loginResult = loginUserWithOtp.loginWithOtp(phoneNumber = phoneNumber, pin = pin, otp = otp).blockingGet()
 
     // then
-    verifyZeroInteractions(accessTokenPref)
-    verifyZeroInteractions(userDao)
-    verifyZeroInteractions(facilityRepository)
+    verifyNoInteractions(accessTokenPref)
+    verifyNoInteractions(userDao)
+    verifyNoInteractions(facilityRepository)
     assertThat(analyticsReporter.user).isNull()
     assertThat(loginResult).isEqualTo(UnexpectedError)
   }

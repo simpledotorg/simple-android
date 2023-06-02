@@ -1,7 +1,7 @@
 package org.simple.clinic.selectcountry.adapter
 
 import com.google.common.truth.Truth.assertThat
-import com.nhaarman.mockitokotlin2.mock
+import org.mockito.kotlin.mock
 import org.junit.Test
 import org.simple.sharedTestCode.TestData
 import org.simple.clinic.appconfig.displayname.CountryDisplayNameFetcher

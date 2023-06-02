@@ -1,13 +1,13 @@
 package org.simple.clinic.sync.indicator
 
 import com.f2prateek.rx.preferences2.Preference
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
@@ -183,7 +183,7 @@ class SyncIndicatorLogicTest {
 
     //then
     verify(indicator).updateState(Syncing)
-    verifyZeroInteractions(dataSync)
+    verifyNoInteractions(dataSync)
     verifyNoMoreInteractions(indicator)
   }
 

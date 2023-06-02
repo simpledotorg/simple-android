@@ -1,11 +1,11 @@
 package org.simple.clinic.appupdate.criticalupdatedialog
 
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
@@ -45,7 +45,7 @@ class CriticalAppUpdateEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(AppUpdateHelpContactLoaded(appUpdateHelpContact))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -86,6 +86,6 @@ class CriticalAppUpdateEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(AppStalenessLoaded(appStaleness))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 }

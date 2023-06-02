@@ -1,14 +1,14 @@
 package org.simple.clinic.home.overdue
 
 import androidx.paging.PagingData
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
@@ -92,7 +92,7 @@ class OverdueEffectHandlerTest {
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(CurrentFacilityLoaded(facility))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -137,7 +137,7 @@ class OverdueEffectHandlerTest {
     effectHandlerTestCase.dispatch(LoadOverdueAppointments_old(overdueSince = LocalDate.parse("2018-01-01"), facility = facility))
 
     // then
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
 
     effectHandlerTestCase.assertOutgoingEvents(OverdueAppointmentsLoaded_Old(overdueAppointments))
   }
@@ -182,7 +182,7 @@ class OverdueEffectHandlerTest {
 
     // given
     effectHandlerTestCase.assertNoOutgoingEvents()
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
 
     verify(overdueDownloadScheduler).schedule(
         fileFormat = CSV
@@ -311,7 +311,7 @@ class OverdueEffectHandlerTest {
     ))
     effectHandlerTestCase.dispose()
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -340,7 +340,7 @@ class OverdueEffectHandlerTest {
     verify(overdueAppointmentSelector).toggleSelection(appointmentId)
     verifyNoMoreInteractions(overdueAppointmentSelector)
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -359,7 +359,7 @@ class OverdueEffectHandlerTest {
     // then
     effectHandlerTestCase.assertOutgoingEvents(SelectedOverdueAppointmentsLoaded(selectedAppointmentIds))
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -373,6 +373,6 @@ class OverdueEffectHandlerTest {
     verify(overdueAppointmentSelector).clearSelection()
     verifyNoMoreInteractions(overdueAppointmentSelector)
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 }

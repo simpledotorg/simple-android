@@ -1,13 +1,13 @@
 package org.simple.clinic.drugs.selection
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.any
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -92,7 +92,7 @@ class DosagePickerSheetLogicTest {
         DosageListItem.WithoutDosage(hasExistingPrescription = false)
     ))
     verifyNoMoreInteractions(ui)
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -116,7 +116,7 @@ class DosagePickerSheetLogicTest {
     verify(prescriptionRepository, never()).softDeletePrescription(any())
     verify(uiActions).close()
     verifyNoMoreInteractions(uiActions)
-    verifyZeroInteractions(ui)
+    verifyNoInteractions(ui)
   }
 
   @Test
@@ -142,7 +142,7 @@ class DosagePickerSheetLogicTest {
     verify(prescriptionRepository, times(1)).savePrescription(prescribedDrugUuid, patientUuid, dosageSelected, currentFacility)
     verify(uiActions).close()
     verifyNoMoreInteractions(uiActions)
-    verifyZeroInteractions(ui)
+    verifyNoInteractions(ui)
   }
 
   @Test
@@ -161,7 +161,7 @@ class DosagePickerSheetLogicTest {
     verify(prescriptionRepository, never()).savePrescription(any(), any(), any(), any())
     verify(uiActions).close()
     verifyNoMoreInteractions(uiActions)
-    verifyZeroInteractions(ui)
+    verifyNoInteractions(ui)
   }
 
   private fun setupController(

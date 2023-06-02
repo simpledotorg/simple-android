@@ -1,15 +1,15 @@
 package org.simple.clinic.forgotpin.confirmpin
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.clearInvocations
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.any
+import org.mockito.kotlin.clearInvocations
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.never
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -79,10 +79,10 @@ class ForgotPinConfirmPinScreenLogicTest {
     verify(ui).showFacility("PHC Obvious")
     verifyNoMoreInteractions(ui, uiActions)
 
-    verifyZeroInteractions(userSession)
+    verifyNoInteractions(userSession)
 
-    verifyZeroInteractions(syncAndClearPatientData)
-    verifyZeroInteractions(resetUserPin)
+    verifyNoInteractions(syncAndClearPatientData)
+    verifyNoInteractions(resetUserPin)
   }
 
   @Test
@@ -97,8 +97,8 @@ class ForgotPinConfirmPinScreenLogicTest {
 
     verifyNoMoreInteractions(userSession)
 
-    verifyZeroInteractions(syncAndClearPatientData)
-    verifyZeroInteractions(resetUserPin)
+    verifyNoInteractions(syncAndClearPatientData)
+    verifyNoInteractions(resetUserPin)
   }
 
   @Test
@@ -141,10 +141,10 @@ class ForgotPinConfirmPinScreenLogicTest {
     verify(uiActions, times(3)).hideError()
     verifyNoMoreInteractions(ui, uiActions)
 
-    verifyZeroInteractions(userSession)
+    verifyNoInteractions(userSession)
 
-    verifyZeroInteractions(resetUserPin)
-    verifyZeroInteractions(syncAndClearPatientData)
+    verifyNoInteractions(resetUserPin)
+    verifyNoInteractions(syncAndClearPatientData)
   }
 
   @Test
@@ -171,7 +171,7 @@ class ForgotPinConfirmPinScreenLogicTest {
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
     verifyNoMoreInteractions(userSession)
 
-    verifyZeroInteractions(resetUserPin)
+    verifyNoInteractions(resetUserPin)
   }
 
   @Test
@@ -192,8 +192,8 @@ class ForgotPinConfirmPinScreenLogicTest {
     verify(uiActions).showUnexpectedError()
     verifyNoMoreInteractions(ui, uiActions)
 
-    verifyZeroInteractions(userSession)
-    verifyZeroInteractions(resetUserPin)
+    verifyNoInteractions(userSession)
+    verifyNoInteractions(resetUserPin)
 
     verify(syncAndClearPatientData).run()
     verifyNoMoreInteractions(syncAndClearPatientData)
@@ -248,7 +248,7 @@ class ForgotPinConfirmPinScreenLogicTest {
     verify(syncAndClearPatientData, never()).run()
     verifyNoMoreInteractions(syncAndClearPatientData)
 
-    verifyZeroInteractions(userSession)
+    verifyNoInteractions(userSession)
   }
 
   @Test
@@ -271,7 +271,7 @@ class ForgotPinConfirmPinScreenLogicTest {
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
     verifyNoMoreInteractions(userSession)
 
-    verifyZeroInteractions(resetUserPin)
+    verifyNoInteractions(resetUserPin)
 
     verify(syncAndClearPatientData).run()
     verifyNoMoreInteractions(syncAndClearPatientData)
@@ -332,7 +332,7 @@ class ForgotPinConfirmPinScreenLogicTest {
     verify(syncAndClearPatientData).run()
     verifyNoMoreInteractions(syncAndClearPatientData)
 
-    verifyZeroInteractions(resetUserPin)
+    verifyNoInteractions(resetUserPin)
   }
 
   @Test
@@ -357,7 +357,7 @@ class ForgotPinConfirmPinScreenLogicTest {
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
     verifyNoMoreInteractions(userSession)
 
-    verifyZeroInteractions(resetUserPin)
+    verifyNoInteractions(resetUserPin)
 
     verify(syncAndClearPatientData).run()
     verifyNoMoreInteractions(syncAndClearPatientData)
@@ -413,7 +413,7 @@ class ForgotPinConfirmPinScreenLogicTest {
     verify(userSession).updateLoggedInStatusForUser(loggedInUser.uuid, RESETTING_PIN)
     verifyNoMoreInteractions(userSession)
 
-    verifyZeroInteractions(resetUserPin)
+    verifyNoInteractions(resetUserPin)
 
     verify(syncAndClearPatientData).run()
     verifyNoMoreInteractions(syncAndClearPatientData)

@@ -1,8 +1,8 @@
 package org.simple.clinic.home
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
 import io.reactivex.Observable
 import org.junit.Test
 import org.simple.clinic.facility.FacilityConfig

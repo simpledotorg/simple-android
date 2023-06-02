@@ -1,11 +1,11 @@
 package org.simple.clinic.location
 
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.any
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.schedulers.TestScheduler
 import io.reactivex.subjects.PublishSubject
@@ -49,7 +49,7 @@ class ScreenLocationUpdatesTest {
         .assertNoErrors()
         .dispose()
 
-    verifyZeroInteractions(repository)
+    verifyNoInteractions(repository)
   }
 
   @Test

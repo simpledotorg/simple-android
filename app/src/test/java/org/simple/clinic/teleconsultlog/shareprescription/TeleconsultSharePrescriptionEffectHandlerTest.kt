@@ -3,12 +3,12 @@ package org.simple.clinic.teleconsultlog.shareprescription
 import android.graphics.Bitmap
 import android.net.Uri
 import com.f2prateek.rx.preferences2.Preference
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import org.junit.After
 import org.junit.Test
 import org.simple.sharedTestCode.TestData
@@ -73,7 +73,7 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(PatientMedicinesLoaded(medicines))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -87,7 +87,7 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(SignatureLoaded(bitmap = signatureBitmap))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -114,7 +114,7 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(MedicalRegistrationIdLoaded(medicalRegistrationId))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -154,7 +154,7 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(PatientProfileLoaded(patientProfile))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -167,7 +167,7 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(PrescriptionImageSaved)
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -180,7 +180,7 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(PrescriptionSavedForSharing(fileName))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -193,7 +193,7 @@ class TeleconsultSharePrescriptionEffectHandlerTest {
 
     // then
     effectHandlerTestCase.assertOutgoingEvents(SharePrescriptionUri(imageUri))
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test

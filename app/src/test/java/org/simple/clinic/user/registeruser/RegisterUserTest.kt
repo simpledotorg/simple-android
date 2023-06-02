@@ -2,9 +2,9 @@ package org.simple.clinic.user.registeruser
 
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Test

@@ -1,12 +1,12 @@
 package org.simple.clinic.home.patients
 
 import com.f2prateek.rx.preferences2.Preference
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
@@ -90,7 +90,7 @@ class PatientsEffectHandlerTest {
     verify(appUpdateNotificationScheduler).schedule()
     verifyNoMoreInteractions(appUpdateNotificationScheduler)
     effectHandlerTestCase.assertNoOutgoingEvents()
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -140,7 +140,7 @@ class PatientsEffectHandlerTest {
     // then
     effectHandlerTestCase.assertOutgoingEvents(DrugStockReportLoaded(result = NotFound))
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
 
     verify(drugStockReminder).reminderForDrugStock(date = "2022-03-02")
     verifyNoMoreInteractions(drugStockReminder)
@@ -162,7 +162,7 @@ class PatientsEffectHandlerTest {
         isDrugStockReportFilled = Optional.of(true)
     ))
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -173,7 +173,7 @@ class PatientsEffectHandlerTest {
     // then
     effectHandlerTestCase.assertNoOutgoingEvents()
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
 
     verify(drugStockReportLastCheckedAt).set(Instant.parse("2018-01-01T00:00:00Z"))
     verifyNoMoreInteractions(drugStockReportLastCheckedAt)
@@ -187,7 +187,7 @@ class PatientsEffectHandlerTest {
     // then
     effectHandlerTestCase.assertNoOutgoingEvents()
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
 
     verify(isDrugStockReportFilled).set(Optional.of(true))
     verifyNoMoreInteractions(drugStockReportLastCheckedAt)

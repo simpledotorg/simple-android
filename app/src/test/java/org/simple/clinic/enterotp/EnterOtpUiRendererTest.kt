@@ -1,9 +1,9 @@
 package org.simple.clinic.enterotp
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState.Allowed
 import org.simple.clinic.enterotp.BruteForceOtpEntryProtection.ProtectedState.Blocked

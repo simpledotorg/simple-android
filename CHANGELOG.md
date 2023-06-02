@@ -4,6 +4,8 @@
 
 ### Internal
 
+- Migrate Mockito Kotlin to its new artifact
+
 ### Changes
 
 - Enable `Clinical Decision Support` for all facilities in Ethiopia.

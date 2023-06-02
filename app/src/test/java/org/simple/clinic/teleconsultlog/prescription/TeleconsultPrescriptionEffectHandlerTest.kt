@@ -2,12 +2,12 @@ package org.simple.clinic.teleconsultlog.prescription
 
 import android.graphics.Bitmap
 import com.f2prateek.rx.preferences2.Preference
-import com.nhaarman.mockitokotlin2.doReturn
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import org.junit.After
 import org.junit.Test
 import org.simple.sharedTestCode.TestData
@@ -66,7 +66,7 @@ class TeleconsultPrescriptionEffectHandlerTest {
     // then
     effectHandlerTestCase.assertOutgoingEvents(PatientDetailsLoaded(patient))
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -120,7 +120,7 @@ class TeleconsultPrescriptionEffectHandlerTest {
         hasMedicines = true
     ))
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -150,7 +150,7 @@ class TeleconsultPrescriptionEffectHandlerTest {
     verify(prescriptionRepository).addTeleconsultationIdToDrugs(listOf(prescribedDrug1), teleconsultRecordId)
     verifyNoMoreInteractions(prescriptionRepository)
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -165,7 +165,7 @@ class TeleconsultPrescriptionEffectHandlerTest {
     verify(medicalRegistrationIdPreference).set(Optional.of(medicalRegistrationId))
     verifyNoMoreInteractions(medicalRegistrationIdPreference)
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -181,7 +181,7 @@ class TeleconsultPrescriptionEffectHandlerTest {
     verify(teleconsultRecordRepository).updateMedicalRegistrationId(teleconsultRecordId, medicalRegistrationId)
     verifyNoMoreInteractions(teleconsultRecordRepository)
 
-    verifyZeroInteractions(uiActions)
+    verifyNoInteractions(uiActions)
   }
 
   @Test

@@ -1,7 +1,7 @@
 package org.simple.clinic.teleconsultlog.medicinefrequency
 
-import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.junit.After
 import org.junit.Test
 import org.mockito.Mockito.verifyNoMoreInteractions

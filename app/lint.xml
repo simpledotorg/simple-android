@@ -78,6 +78,9 @@
   <!-- No plans to utilize autofill services currently -->
   <issue id="Autofill" severity="informational" />
 
+  <!-- Ignore Monochrome icon introduced in Android 12 -->
+  <issue id="MonochromeLauncherIcon" severity="informational" />
+
   <!--
   Lint complains that the tag is not supported for generated images < api 24.
 

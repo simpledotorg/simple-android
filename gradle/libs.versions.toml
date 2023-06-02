@@ -14,7 +14,7 @@ kotlin = "1.8.0"
 
 ktlint = "0.36.0"
 
-lint = "30.3.1"
+lint = "31.0.2"
 
 mobius = "1.5.9"
 
@@ -35,7 +35,7 @@ compose-compiler = "1.4.0"
 androidx-compose-bom = "2023.01.00"
 
 [libraries]
-android-gradle-plugin = "com.android.tools.build:gradle:7.3.1"
+android-gradle-plugin = "com.android.tools.build:gradle:8.0.2"
 android-desugaring = "com.android.tools:desugar_jdk_libs:1.2.2"
 
 androidx-annotation-annotation = "androidx.annotation:annotation:1.5.0"

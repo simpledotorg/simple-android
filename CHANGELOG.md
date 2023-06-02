@@ -5,6 +5,7 @@
 ### Internal
 
 - Migrate Mockito Kotlin to its new artifact
+- Bump AGP to v8.0.2
 
 ### Changes
 

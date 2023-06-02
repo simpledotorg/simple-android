@@ -6,23 +6,23 @@ An Android app for recording blood pressure measurements.
 
 ## Pre-requisites
 
-The application currently requires JDK 11 to build. If you already have JDK 11 installed, skip this step.
+The application currently requires JDK 17 to build. If you already have JDK 17 installed, skip this step.
 
 **Check if the right JDK is already available**
 
 Run the command `java -version`. If you have the right version of the JDK installed, you should see something like:
 
 ```sh
-openjdk version "11.0.10" 2021-01-19
-OpenJDK Runtime Environment AdoptOpenJDK (build 11.0.10+9)
-OpenJDK 64-Bit Server VM AdoptOpenJDK (build 11.0.10+9, mixed mode)
+openjdk 17.0.7 2023-04-18 LTS
+OpenJDK Runtime Environment Zulu17.42+19-CA (build 17.0.7+7-LTS)
+OpenJDK 64-Bit Server VM Zulu17.42+19-CA (build 17.0.7+7-LTS, mixed mode, sharing)
 ```
 
 If this command has an error, or shows a different version, you can follow the instructions below to install the JDK.
 
 **Install the JDK**
 
-We recommend using [jEnv](https://www.jenv.be/) to manage your JDK installations. Here are instructions to setup a working JDK 1.8 installation (macOS
+We recommend using [jEnv](https://www.jenv.be/) to manage your JDK installations. Here are instructions to setup a working JDK 17 installation (macOS
 only):
 
 1. Setup up [Homebrew](https://brew.sh/).
@@ -49,24 +49,23 @@ source <path to shell configuration file>
 5. Install the JDK using Homebrew.
 
 ```sh
-brew tap AdoptOpenJDK/openjdk
-brew install adoptopenjdk11
+brew tap mdogan/zulu
+brew install zulu-jdk17
 ```
 
 6. Add the installed JDK to `jEnv`
 
 ```sh
-jenv add /Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home
+jenv add /Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home/
 ```
 
 7. Run the command `jenv versions`. You should see something like:
 
 ```sh
   system
-  11
-* 11.0
-  11.0.10
-  openjdk64-11.0.10
+* 17.0
+  17.0.7
+  zulu64-17.0.7
 ```
 
 ## How to build

@@ -3,6 +3,10 @@ plugins {
   id("com.android.lint")
 }
 
+kotlin {
+  jvmToolchain(17)
+}
+
 dependencies {
   compileOnly(libs.kotlin.stdlib)
 

@@ -5,7 +5,7 @@ plugins {
 
 android {
   namespace = "org.simple.sharedTestCode"
-  
+
   val compileSdkVersion: Int by rootProject.extra
   val minSdkVersion: Int by rootProject.extra
   val targetSdkVersion: Int by rootProject.extra
@@ -29,14 +29,14 @@ android {
     }
   }
   compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-  }
-  kotlinOptions {
-    jvmTarget = "1.8"
-  }
-  compileOptions {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+
     isCoreLibraryDesugaringEnabled = true
+  }
+
+  kotlin {
+    jvmToolchain(17)
   }
 }
 

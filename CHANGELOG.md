@@ -10,6 +10,7 @@
 - Use `kotlinOptions#jvmTarget` instead of `kotlin#jvmToolchain` in build files
 - Fix `Monthly supplies report` icon
 - Update Questionnaire form radio button styling
+- Remove firebase remote config `questionnaires_enabled` logic for loading questionnaire's api.
 
 ### Changes
 

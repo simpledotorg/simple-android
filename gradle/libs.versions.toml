@@ -32,7 +32,7 @@ coroutines = "1.6.4"
 
 compose-compiler = "1.4.0"
 
-androidx-compose-bom = "2023.01.00"
+androidx-compose-bom = "2023.05.01"
 
 [libraries]
 android-gradle-plugin = "com.android.tools.build:gradle:8.0.2"

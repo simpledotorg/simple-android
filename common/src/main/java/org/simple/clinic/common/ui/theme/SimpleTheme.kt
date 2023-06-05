@@ -34,7 +34,7 @@ fun SimpleInverseTheme(content: @Composable () -> Unit) {
           )
       )
 
-    SimpleTheme(colors = colors, typography = SimpleTheme.typography, content = content)
+    BaseSimpleTheme(colors = colors, typography = SimpleTheme.typography, content = content)
   }
 }
 
@@ -50,7 +50,7 @@ fun SimpleGreenTheme(content: @Composable () -> Unit) {
           )
       )
 
-    SimpleTheme(colors = colors, typography = SimpleTheme.typography, content = content)
+    BaseSimpleTheme(colors = colors, typography = SimpleTheme.typography, content = content)
   }
 }
 
@@ -66,7 +66,7 @@ fun SimpleRedTheme(content: @Composable () -> Unit) {
           )
       )
 
-    SimpleTheme(colors = colors, typography = SimpleTheme.typography, content = content)
+    BaseSimpleTheme(colors = colors, typography = SimpleTheme.typography, content = content)
   }
 }
 
@@ -82,7 +82,7 @@ fun SimpleRedInverseTheme(content: @Composable () -> Unit) {
           )
       )
 
-    SimpleTheme(colors = colors, typography = SimpleTheme.typography, content = content)
+    BaseSimpleTheme(colors = colors, typography = SimpleTheme.typography, content = content)
   }
 }
 
@@ -201,7 +201,7 @@ private fun SimpleThemeAdapter(content: @Composable () -> Unit) {
       SimpleThemeParameters(colors = colors, typography = typography)
     }
 
-  SimpleTheme(
+  BaseSimpleTheme(
     content = content,
     colors = simpleThemeParameters.colors,
     typography = simpleThemeParameters.typography
@@ -209,7 +209,7 @@ private fun SimpleThemeAdapter(content: @Composable () -> Unit) {
 }
 
 @Composable
-private fun SimpleTheme(
+private fun BaseSimpleTheme(
   content: @Composable () -> Unit,
   colors: SimpleColors,
   typography: SimpleTypography

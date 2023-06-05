@@ -39,5 +39,4 @@ enum class Feature(
   OverdueInstantSearch(false, "overdue_instant_search_v2"),
   OverdueSelectAndDownload(false, "overdue_select_and_download_v2"),
   PatientLineListDownload(false, "patient_line_list_download_v2"),
-  QuestionnairesEnabled(false, "questionnaires_enabled"),
 }

@@ -420,6 +420,7 @@ dependencies {
   implementation(projects.mobiusBase)
   implementation(projects.simplePlatform)
   implementation(projects.simpleVisuals)
+  implementation(projects.common)
 
   val composeBom = platform(libs.androidx.compose.bom)
   implementation(composeBom)

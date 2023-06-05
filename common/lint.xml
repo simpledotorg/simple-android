@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<lint>
+  <issue id="UnusedResources">
+    <ignore regexp="thanks_green_500" />
+    <ignore regexp="thanks_green_600" />
+    <ignore regexp="thanks_teal_500" />
+  </issue>
+</lint>

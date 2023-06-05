@@ -31,10 +31,27 @@ android {
   kotlinOptions {
     jvmTarget = JavaVersion.VERSION_17.toString()
   }
+
+  buildFeatures {
+    compose = true
+  }
+
+  composeOptions {
+    kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
+  }
 }
 
 dependencies {
   implementation(libs.androidx.core.ktx)
   implementation(libs.androidx.appcompat)
   implementation(libs.material)
+
+  val composeBom = platform(libs.androidx.compose.bom)
+  implementation(composeBom)
+  implementation(libs.androidx.compose.material)
+  implementation(libs.androidx.compose.material.iconsExtended)
+  implementation(libs.composeThemeAdapter)
+  implementation(libs.composeThemeAdapterCore)
+  implementation(libs.androidx.compose.ui.tooling.preview)
+  debugImplementation(libs.androidx.compose.ui.tooling)
 }

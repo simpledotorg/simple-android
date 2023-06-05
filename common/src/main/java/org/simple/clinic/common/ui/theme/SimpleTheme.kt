@@ -23,6 +23,70 @@ fun SimpleTheme(content: @Composable () -> Unit) {
 }
 
 @Composable
+fun SimpleInverseTheme(content: @Composable () -> Unit) {
+  SimpleThemeAdapter {
+    val colors =
+      SimpleTheme.colors.copy(
+        material =
+          SimpleTheme.colors.material.copy(
+            primary = colorResource(id = R.color.simple_light_blue_100),
+            onPrimary = colorResource(id = R.color.simple_light_blue_500)
+          )
+      )
+
+    SimpleTheme(colors = colors, typography = SimpleTheme.typography, content = content)
+  }
+}
+
+@Composable
+fun SimpleGreenTheme(content: @Composable () -> Unit) {
+  SimpleThemeAdapter {
+    val colors =
+      SimpleTheme.colors.copy(
+        material =
+          SimpleTheme.colors.material.copy(
+            primary = colorResource(id = R.color.simple_green_500),
+            onPrimary = colorResource(id = R.color.white)
+          )
+      )
+
+    SimpleTheme(colors = colors, typography = SimpleTheme.typography, content = content)
+  }
+}
+
+@Composable
+fun SimpleRedTheme(content: @Composable () -> Unit) {
+  SimpleThemeAdapter {
+    val colors =
+      SimpleTheme.colors.copy(
+        material =
+          SimpleTheme.colors.material.copy(
+            primary = colorResource(id = R.color.simple_red_500),
+            onPrimary = colorResource(id = R.color.white)
+          )
+      )
+
+    SimpleTheme(colors = colors, typography = SimpleTheme.typography, content = content)
+  }
+}
+
+@Composable
+fun SimpleRedInverseTheme(content: @Composable () -> Unit) {
+  SimpleThemeAdapter {
+    val colors =
+      SimpleTheme.colors.copy(
+        material =
+          SimpleTheme.colors.material.copy(
+            primary = colorResource(id = R.color.simple_red_100),
+            onPrimary = colorResource(id = R.color.simple_red_500)
+          )
+      )
+
+    SimpleTheme(colors = colors, typography = SimpleTheme.typography, content = content)
+  }
+}
+
+@Composable
 private fun SimpleThemeAdapter(content: @Composable () -> Unit) {
   val context = LocalContext.current
   val layoutDirection = LocalLayoutDirection.current

@@ -8,6 +8,8 @@
 - Bump AGP to v8.0.2
 - Enable auto merging branches for minor renovate dependency updates
 - Use `kotlinOptions#jvmTarget` instead of `kotlin#jvmToolchain` in build files
+- Fix `Monthly supplies report` icon
+- Update Questionnaire form radio button styling
 
 ### Changes
 

@@ -35,8 +35,8 @@ android {
     isCoreLibraryDesugaringEnabled = true
   }
 
-  kotlin {
-    jvmToolchain(17)
+  kotlinOptions {
+    jvmTarget = JavaVersion.VERSION_17.toString()
   }
 }
 

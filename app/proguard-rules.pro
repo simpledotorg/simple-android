@@ -111,3 +111,9 @@
 -keepattributes Signature
 -keep class com.google.gson.reflect.TypeToken { *; }
 -keep class * extends com.google.gson.reflect.TypeToken
+
+# Sqlite
+-keep class io.requery.android.database.sqlite.SQLiteConnection {
+  native <methods>;
+  public <init>(...);
+}

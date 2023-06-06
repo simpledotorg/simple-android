@@ -99,3 +99,15 @@
 -dontwarn org.codehaus.commons.compiler.CompileException
 -dontwarn org.codehaus.janino.ClassBodyEvaluator
 -dontwarn sun.reflect.Reflection
+
+# R8 full mode strips generic signatures from return types if not kept.
+# This fix is not available in a Retrofit release yet. Once Retrofit is updated
+# we can remove this
+# https://github.com/square/retrofit/pull/3886
+-if interface * { @retrofit2.http.* public *** *(...); }
+-keep,allowoptimization,allowshrinking,allowobfuscation class <3>
+
+# GSON
+-keepattributes Signature
+-keep class com.google.gson.reflect.TypeToken { *; }
+-keep class * extends com.google.gson.reflect.TypeToken

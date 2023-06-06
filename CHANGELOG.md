@@ -13,6 +13,7 @@
 - Remove firebase remote config `questionnaires_enabled` logic for loading questionnaire's api.
 - Add rules to prevent Retrofit & GSON types being stripped in R8 full mode
 - Remove DPH/TamilNadu build variant
+- Disable R8 full mode
 
 ### Changes
 

@@ -53,7 +53,7 @@
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
     android:supportsRtl="true"
-    android:theme="${appTheme}"
+    android:theme="@style/Theme.Simple"
     tools:ignore="AllowBackup,DataExtractionRules,GoogleAppIndexingWarning,LockedOrientationActivity"
     tools:replace="android:allowBackup">
 

@@ -141,8 +141,6 @@ android {
     buildConfigField("String", "DATADOG_APPLICATION_ID", "\"$datadogApplicationId\"")
     buildConfigField("String", "DATADOG_CLIENT_TOKEN", "\"$datadogClientToken\"")
     buildConfigField("String", "DATADOG_ENVIRONMENT", "\"$datadogEnvironment\"")
-
-    manifestPlaceholders["appTheme"] = "@style/Theme.Simple"
   }
 
   buildTypes {
@@ -204,12 +202,6 @@ android {
     create("production") {
       dimension = "track"
     }
-
-    create("tamilNadu") {
-      dimension = "track"
-      applicationIdSuffix = ".tamilnadu"
-      manifestPlaceholders["appTheme"] = "@style/Theme.Thanks"
-    }
   }
 
   androidComponents {
@@ -218,8 +210,7 @@ android {
         "stagingDebug",
         "sandboxDebug",
         "productionDebug",
-        "securityDebug",
-        "tamilNaduDebug"
+        "securityDebug"
     )
 
     beforeVariants { variant ->
@@ -288,8 +279,7 @@ android {
         "assembleStagingRelease",
         "assembleSandboxRelease",
         "assembleProductionRelease",
-        "assembleSecurityRelease",
-        "assembleTamilNaduRelease"
+        "assembleSecurityRelease"
     )
 
     assembleReleaseTasks.forEach { buildType ->
@@ -301,8 +291,7 @@ android {
         "kaptSandboxReleaseKotlin" to "sandboxRelease",
         "kaptStagingReleaseKotlin" to "stagingRelease",
         "kaptSecurityReleaseKotlin" to "securityRelease",
-        "kaptProductionReleaseKotlin" to "productionRelease",
-        "kaptTamilNaduReleaseKotlin" to "tamilNaduRelease"
+        "kaptProductionReleaseKotlin" to "productionRelease"
     )
 
     kaptTasks.forEach { (buildType, sourceSetName) ->

@@ -99,6 +99,7 @@
 -dontwarn org.codehaus.commons.compiler.CompileException
 -dontwarn org.codehaus.janino.ClassBodyEvaluator
 -dontwarn sun.reflect.Reflection
+-dontwarn org.codehaus.janino.ScriptEvaluator
 
 # R8 full mode strips generic signatures from return types if not kept.
 # This fix is not available in a Retrofit release yet. Once Retrofit is updated
@@ -111,3 +112,9 @@
 -keepattributes Signature
 -keep class com.google.gson.reflect.TypeToken { *; }
 -keep class * extends com.google.gson.reflect.TypeToken
+
+# Sqlite
+-keep class io.requery.android.database.sqlite.SQLiteConnection {
+  native <methods>;
+  public <init>(...);
+}

@@ -4,16 +4,26 @@
 
 ### Internal
 
-- Migrate Mockito Kotlin to its new artifact
-- Bump AGP to v8.0.2
-- Enable auto merging branches for minor renovate dependency updates
-- Use `kotlinOptions#jvmTarget` instead of `kotlin#jvmToolchain` in build files
 - Fix `Monthly supplies report` icon
 - Update Questionnaire form radio button styling
 - Remove firebase remote config `questionnaires_enabled` logic for loading questionnaire's api.
-- Add rules to prevent Retrofit & GSON types being stripped in R8 full mode
 - Remove DPH/TamilNadu build variant
+
+## 2023-06-08-8751
+
+### Internal
+
+- Use `kotlinOptions#jvmTarget` instead of `kotlin#jvmToolchain` in build files
+- Add rules to prevent Retrofit & GSON types being stripped in R8 full mode
 - Add rule to prevent `SQLiteConnection` type being stripped in R8 full mode
+
+## 2023-06-05-8742
+
+### Internal
+
+- Migrate Mockito Kotlin to its new artifact
+- Bump AGP to v8.0.2
+- Enable auto merging branches for minor renovate dependency updates
 
 ### Changes
 

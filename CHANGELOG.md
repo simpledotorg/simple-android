@@ -8,6 +8,7 @@
 - Update Questionnaire form radio button styling
 - Remove firebase remote config `questionnaires_enabled` logic for loading questionnaire's api.
 - Remove DPH/TamilNadu build variant
+- Add Simple Compose theme in `common-ui` module
 
 ### Fixes
 

@@ -19,5 +19,5 @@ include(
     ":simple-visuals",
     ":lint",
     ":sharedTestCode",
-    ":common"
+    ":common-ui"
 )

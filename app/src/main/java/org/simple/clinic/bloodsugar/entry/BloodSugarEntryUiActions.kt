@@ -2,6 +2,7 @@ package org.simple.clinic.bloodsugar.entry
 
 import org.simple.clinic.bloodsugar.BloodSugarMeasurementType
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
+import java.time.LocalDate
 import java.util.UUID
 
 interface BloodSugarEntryUiActions {
@@ -24,4 +25,6 @@ interface BloodSugarEntryUiActions {
   )
   fun showInvalidDateError()
   fun showDateIsInFutureError()
+  fun showBloodSugarEntryScreen()
+  fun showBloodSugarDate(date: LocalDate)
 }

@@ -6,7 +6,6 @@ import java.time.LocalDate
 import java.util.UUID
 
 interface BloodSugarEntryUi {
-  fun showBloodSugarEntryScreen()
   fun setDateOnInputFields(date: LocalDate)
   fun showBloodSugarDate(date: LocalDate)
   fun showRemoveButton()

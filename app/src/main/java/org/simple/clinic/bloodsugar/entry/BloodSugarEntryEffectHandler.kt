@@ -60,7 +60,6 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<BloodSugarEntryEffect, BloodSugarEntryEvent> {
     return RxMobius
         .subtypeEffectHandler<BloodSugarEntryEffect, BloodSugarEntryEvent>()
-        .addConsumer(ShowBloodSugarEntryScreen::class.java, { showBloodSugarEntryScreen(it.date) }, schedulersProvider.ui())
         .addTransformer(PrefillDate::class.java, prefillDate(schedulersProvider.ui()))
         .addTransformer(CreateNewBloodSugarEntry::class.java, createNewBloodSugarEntryTransformer())
         .addTransformer(FetchBloodSugarMeasurement::class.java, fetchBloodSugarMeasurement(schedulersProvider.io()))
@@ -92,13 +91,6 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
 
   private fun getExistingBloodSugarMeasurement(bloodSugarMeasurementUuid: UUID): BloodSugarMeasurement? =
       bloodSugarRepository.measurement(bloodSugarMeasurementUuid)
-
-  private fun showBloodSugarEntryScreen(date: LocalDate) {
-    with(ui) {
-      showBloodSugarEntryScreen()
-      showBloodSugarDate(date)
-    }
-  }
 
   private fun prefillDate(scheduler: Scheduler): ObservableTransformer<PrefillDate, BloodSugarEntryEvent> {
     return ObservableTransformer { prefillDates ->

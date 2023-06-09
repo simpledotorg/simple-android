@@ -11,6 +11,7 @@ class BloodSugarEntryViewEffectHandler(
       is SetBloodSugarReading -> uiActions.setBloodSugarReading(viewEffect.bloodSugarReading)
       is HideBloodSugarErrorMessage -> uiActions.hideBloodSugarErrorMessage()
       is HideDateErrorMessage -> uiActions.hideDateErrorMessage()
+      is Dismiss -> uiActions.dismiss()
     }
   }
 }

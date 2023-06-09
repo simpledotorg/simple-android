@@ -105,8 +105,8 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.dispatch(Dismiss)
 
     // then
-    verify(ui).dismiss()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).dismiss()
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test

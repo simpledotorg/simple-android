@@ -4,4 +4,5 @@ interface BloodSugarEntryUiActions {
   fun setBloodSugarReading(bloodSugarReading: String)
   fun hideBloodSugarErrorMessage()
   fun hideDateErrorMessage()
+  fun dismiss()
 }

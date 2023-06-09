@@ -26,7 +26,6 @@ interface BloodSugarEntryUi {
   fun showBloodSugarDate(date: LocalDate)
   fun showRemoveButton()
   fun hideRemoveButton()
-  fun dismiss()
   fun showConfirmRemoveBloodSugarDialog(bloodSugarMeasurementUuid: UUID)
   fun showEntryTitle(measurementType: BloodSugarMeasurementType)
   fun showEditTitle(measurementType: BloodSugarMeasurementType)

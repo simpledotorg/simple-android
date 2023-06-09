@@ -9,6 +9,10 @@
 - Remove firebase remote config `questionnaires_enabled` logic for loading questionnaire's api.
 - Remove DPH/TamilNadu build variant
 
+### Fixes
+
+- Fix blood sugar saving twice when blood sugar measurement unit is changed
+
 ## 2023-06-08-8751
 
 ### Internal

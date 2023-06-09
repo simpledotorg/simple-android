@@ -73,3 +73,5 @@ data class ShowConfirmRemoveBloodSugarDialog(val bloodSugarMeasurementUuid: UUID
 object LoadBloodSugarUnitPreference : BloodSugarEntryEffect()
 
 data class ShowBloodSugarUnitSelectionDialog(val bloodSugarUnitPreference: BloodSugarUnitPreference) : BloodSugarEntryEffect()
+
+sealed class BloodSugarEntryViewEffect : BloodSugarEntryEffect()

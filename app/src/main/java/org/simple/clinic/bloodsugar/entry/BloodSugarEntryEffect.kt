@@ -25,8 +25,6 @@ sealed class PrefillDate : BloodSugarEntryEffect() {
   data class PrefillSpecificDate(val date: Instant) : PrefillDate()
 }
 
-object HideDateErrorMessage : BloodSugarEntryEffect()
-
 object Dismiss : BloodSugarEntryEffect()
 
 object ShowDateEntryScreen : BloodSugarEntryEffect()
@@ -75,3 +73,5 @@ sealed class BloodSugarEntryViewEffect : BloodSugarEntryEffect()
 data class SetBloodSugarReading(val bloodSugarReading: String) : BloodSugarEntryViewEffect()
 
 object HideBloodSugarErrorMessage : BloodSugarEntryViewEffect()
+
+object HideDateErrorMessage : BloodSugarEntryViewEffect()

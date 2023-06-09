@@ -95,8 +95,8 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.dispatch(HideDateErrorMessage)
 
     // then
-    verify(ui).hideDateErrorMessage()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).hideDateErrorMessage()
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test

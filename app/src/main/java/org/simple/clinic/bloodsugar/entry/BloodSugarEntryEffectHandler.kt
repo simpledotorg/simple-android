@@ -60,7 +60,6 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<BloodSugarEntryEffect, BloodSugarEntryEvent> {
     return RxMobius
         .subtypeEffectHandler<BloodSugarEntryEffect, BloodSugarEntryEvent>()
-        .addConsumer(ShowBloodSugarValidationError::class.java, { showBloodSugarValidationError(it.result, it.unitPreference) }, schedulersProvider.ui())
         .addConsumer(ShowBloodSugarEntryScreen::class.java, { showBloodSugarEntryScreen(it.date) }, schedulersProvider.ui())
         .addTransformer(PrefillDate::class.java, prefillDate(schedulersProvider.ui()))
         .addConsumer(ShowDateValidationError::class.java, { showDateValidationError(it.result) }, schedulersProvider.ui())
@@ -94,20 +93,6 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
 
   private fun getExistingBloodSugarMeasurement(bloodSugarMeasurementUuid: UUID): BloodSugarMeasurement? =
       bloodSugarRepository.measurement(bloodSugarMeasurementUuid)
-
-  private fun showBloodSugarValidationError(
-      result: ValidationResult,
-      unitPreference: BloodSugarUnitPreference
-  ) {
-    when (result) {
-      ErrorBloodSugarEmpty -> ui.showBloodSugarEmptyError()
-      is ErrorBloodSugarTooHigh -> ui.showBloodSugarHighError(result.measurementType, unitPreference)
-      is ErrorBloodSugarTooLow -> ui.showBloodSugarLowError(result.measurementType, unitPreference)
-      is ValidationResult.Valid -> {
-        /* no-op */
-      }
-    }
-  }
 
   private fun showBloodSugarEntryScreen(date: LocalDate) {
     with(ui) {

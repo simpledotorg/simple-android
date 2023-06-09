@@ -6,17 +6,6 @@ import java.time.LocalDate
 import java.util.UUID
 
 interface BloodSugarEntryUi {
-  fun showBloodSugarEmptyError()
-  fun showBloodSugarHighError(
-      measurementType: BloodSugarMeasurementType,
-      unitPreference: BloodSugarUnitPreference
-  )
-
-  fun showBloodSugarLowError(
-      measurementType: BloodSugarMeasurementType,
-      unitPreference: BloodSugarUnitPreference
-  )
-
   fun showBloodSugarEntryScreen()
   fun showInvalidDateError()
   fun showDateIsInFutureError()

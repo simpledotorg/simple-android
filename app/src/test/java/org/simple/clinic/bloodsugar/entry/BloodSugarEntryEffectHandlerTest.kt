@@ -125,8 +125,8 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.dispatch(ShowBloodSugarValidationError(ErrorBloodSugarEmpty, BloodSugarUnitPreference.Mg))
 
     // then
-    verify(ui).showBloodSugarEmptyError()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showBloodSugarEmptyError()
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -138,8 +138,8 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.dispatch(ShowBloodSugarValidationError(ErrorBloodSugarTooHigh(measurementType), BloodSugarUnitPreference.Mg))
 
     // then
-    verify(ui).showBloodSugarHighError(measurementType, BloodSugarUnitPreference.Mg)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showBloodSugarHighError(measurementType, BloodSugarUnitPreference.Mg)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -151,8 +151,8 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.dispatch(ShowBloodSugarValidationError(ErrorBloodSugarTooLow(measurementType), BloodSugarUnitPreference.Mg))
 
     // then
-    verify(ui).showBloodSugarLowError(measurementType, BloodSugarUnitPreference.Mg)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showBloodSugarLowError(measurementType, BloodSugarUnitPreference.Mg)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test

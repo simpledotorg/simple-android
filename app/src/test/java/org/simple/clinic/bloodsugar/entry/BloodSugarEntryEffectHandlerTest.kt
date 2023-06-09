@@ -39,7 +39,6 @@ import java.util.UUID
 
 class BloodSugarEntryEffectHandlerTest {
 
-  private val ui = mock<BloodSugarEntryUi>()
   private val uiActions = mock<BloodSugarEntryUiActions>()
   private val userClock = TestUserClock()
 
@@ -55,7 +54,6 @@ class BloodSugarEntryEffectHandlerTest {
 
   private val viewEffectHandler = BloodSugarEntryViewEffectHandler(uiActions)
   private val effectHandler = BloodSugarEntryEffectHandler(
-      ui = ui,
       bloodSugarRepository = bloodSugarRepository,
       patientRepository = patientRepository,
       appointmentsRepository = appointmentRepository,
@@ -275,7 +273,7 @@ class BloodSugarEntryEffectHandlerTest {
     verify(appointmentRepository).markAppointmentsCreatedBeforeTodayAsVisited(bloodSugar.patientUuid)
     verify(patientRepository).compareAndUpdateRecordedAt(bloodSugar.patientUuid, date.toUtcInstant(userClock))
     testCase.assertOutgoingEvents(BloodSugarSaved(createNewBloodSugarEntry.wasDateChanged))
-    verifyNoInteractions(ui)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -307,7 +305,7 @@ class BloodSugarEntryEffectHandlerTest {
     verify(appointmentRepository).markAppointmentsCreatedBeforeTodayAsVisited(bloodSugar.patientUuid)
     verify(patientRepository).compareAndUpdateRecordedAt(bloodSugar.patientUuid, date.toUtcInstant(userClock))
     testCase.assertOutgoingEvents(BloodSugarSaved(createNewBloodSugarEntry.wasDateChanged))
-    verifyNoInteractions(ui)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -321,7 +319,7 @@ class BloodSugarEntryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(BloodSugarMeasurementFetched(bloodSugarMeasurement))
-    verifyNoInteractions(ui)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -364,7 +362,7 @@ class BloodSugarEntryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(BloodSugarSaved(updateBloodSugarEntry.wasDateChanged))
-    verifyNoInteractions(ui)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -407,7 +405,7 @@ class BloodSugarEntryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(BloodSugarSaved(updateBloodSugarEntry.wasDateChanged))
-    verifyNoInteractions(ui)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -434,7 +432,7 @@ class BloodSugarEntryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(BloodSugarUnitPreferenceLoaded(bloodSugarUnitPreferenceSelection))
-    verifyNoInteractions(ui)
+    verifyNoInteractions(uiActions)
   }
 
   @Test

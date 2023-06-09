@@ -16,29 +16,20 @@ import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.bloodsugar.entry.PrefillDate.PrefillSpecificDate
-import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarEmpty
-import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooHigh
-import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooLow
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.toUtcInstant
 import org.simple.clinic.uuid.UuidGenerator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
 
 class BloodSugarEntryEffectHandler @AssistedInject constructor(
-    @Assisted private val ui: BloodSugarEntryUi,
     private val bloodSugarRepository: BloodSugarRepository,
     private val patientRepository: PatientRepository,
     private val appointmentsRepository: AppointmentRepository,
@@ -52,7 +43,7 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
 ) {
   @AssistedFactory
   interface Factory {
-    fun create(ui: BloodSugarEntryUi, viewEffectsConsumer: Consumer<BloodSugarEntryViewEffect>): BloodSugarEntryEffectHandler
+    fun create(viewEffectsConsumer: Consumer<BloodSugarEntryViewEffect>): BloodSugarEntryEffectHandler
   }
 
   private val reportAnalyticsEvents = ReportAnalyticsEvents()

@@ -199,7 +199,7 @@ class BloodSugarEntrySheet : BaseBottomSheet<
       .create(LocalDate.now(userTimeZone))
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<BloodSugarEntryViewEffect>) = bloodSugarEntryEffectHandler
-      .create(ui = this, viewEffectsConsumer = viewEffectsConsumer)
+      .create(viewEffectsConsumer = viewEffectsConsumer)
       .build()
 
   override fun viewEffectsHandler() = BloodSugarEntryViewEffectHandler(this)

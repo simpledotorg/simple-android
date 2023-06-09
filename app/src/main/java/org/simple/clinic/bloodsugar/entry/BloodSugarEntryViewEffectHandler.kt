@@ -15,6 +15,7 @@ class BloodSugarEntryViewEffectHandler(
       is ShowDateEntryScreen -> uiActions.showDateEntryScreen()
       is SetBloodSugarSavedResultAndFinish -> uiActions.setBloodSugarSavedResultAndFinish()
       is ShowConfirmRemoveBloodSugarDialog -> uiActions.showConfirmRemoveBloodSugarDialog(viewEffect.bloodSugarMeasurementUuid)
+      is ShowBloodSugarUnitSelectionDialog -> uiActions.showBloodSugarUnitSelectionDialog(viewEffect.bloodSugarUnitPreference)
     }
   }
 }

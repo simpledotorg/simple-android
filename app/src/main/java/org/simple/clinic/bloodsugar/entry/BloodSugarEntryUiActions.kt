@@ -1,5 +1,6 @@
 package org.simple.clinic.bloodsugar.entry
 
+import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import java.util.UUID
 
 interface BloodSugarEntryUiActions {
@@ -10,4 +11,5 @@ interface BloodSugarEntryUiActions {
   fun showDateEntryScreen()
   fun setBloodSugarSavedResultAndFinish()
   fun showConfirmRemoveBloodSugarDialog(bloodSugarMeasurementUuid: UUID)
+  fun showBloodSugarUnitSelectionDialog(bloodSugarUnitPreference: BloodSugarUnitPreference)
 }

@@ -58,8 +58,6 @@ data class FetchBloodSugarMeasurement(val bloodSugarMeasurementUuid: UUID) : Blo
 
 object LoadBloodSugarUnitPreference : BloodSugarEntryEffect()
 
-data class ShowBloodSugarUnitSelectionDialog(val bloodSugarUnitPreference: BloodSugarUnitPreference) : BloodSugarEntryEffect()
-
 sealed class BloodSugarEntryViewEffect : BloodSugarEntryEffect()
 
 data class SetBloodSugarReading(val bloodSugarReading: String) : BloodSugarEntryViewEffect()
@@ -75,3 +73,5 @@ object ShowDateEntryScreen : BloodSugarEntryViewEffect()
 object SetBloodSugarSavedResultAndFinish : BloodSugarEntryViewEffect()
 
 data class ShowConfirmRemoveBloodSugarDialog(val bloodSugarMeasurementUuid: UUID) : BloodSugarEntryViewEffect()
+
+data class ShowBloodSugarUnitSelectionDialog(val bloodSugarUnitPreference: BloodSugarUnitPreference) : BloodSugarEntryViewEffect()

@@ -444,7 +444,7 @@ class BloodSugarEntryEffectHandlerTest {
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(ui).showBloodSugarUnitSelectionDialog(bloodSugarUnitPreferenceSelection)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showBloodSugarUnitSelectionDialog(bloodSugarUnitPreferenceSelection)
+    verifyNoMoreInteractions(uiActions)
   }
 }

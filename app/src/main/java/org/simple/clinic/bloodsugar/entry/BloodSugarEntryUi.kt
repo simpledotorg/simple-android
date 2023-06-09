@@ -6,7 +6,6 @@ import java.time.LocalDate
 import java.util.UUID
 
 interface BloodSugarEntryUi {
-  fun setBloodSugarSavedResultAndFinish()
   fun showBloodSugarEmptyError()
   fun showBloodSugarHighError(
       measurementType: BloodSugarMeasurementType,

@@ -54,8 +54,6 @@ data class UpdateBloodSugarEntry(
     get() = userEnteredDate != prefilledDate
 }
 
-object SetBloodSugarSavedResultAndFinish : BloodSugarEntryEffect()
-
 data class FetchBloodSugarMeasurement(val bloodSugarMeasurementUuid: UUID) : BloodSugarEntryEffect()
 
 data class ShowConfirmRemoveBloodSugarDialog(val bloodSugarMeasurementUuid: UUID) : BloodSugarEntryEffect()
@@ -75,3 +73,5 @@ object HideDateErrorMessage : BloodSugarEntryViewEffect()
 object Dismiss : BloodSugarEntryViewEffect()
 
 object ShowDateEntryScreen : BloodSugarEntryViewEffect()
+
+object SetBloodSugarSavedResultAndFinish : BloodSugarEntryViewEffect()

@@ -64,7 +64,6 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
         .addConsumer(ShowBloodSugarEntryScreen::class.java, { showBloodSugarEntryScreen(it.date) }, schedulersProvider.ui())
         .addTransformer(PrefillDate::class.java, prefillDate(schedulersProvider.ui()))
         .addConsumer(ShowDateValidationError::class.java, { showDateValidationError(it.result) }, schedulersProvider.ui())
-        .addAction(SetBloodSugarSavedResultAndFinish::class.java, ui::setBloodSugarSavedResultAndFinish, schedulersProvider.ui())
         .addTransformer(CreateNewBloodSugarEntry::class.java, createNewBloodSugarEntryTransformer())
         .addTransformer(FetchBloodSugarMeasurement::class.java, fetchBloodSugarMeasurement(schedulersProvider.io()))
         .addTransformer(UpdateBloodSugarEntry::class.java, updateBloodSugarEntryTransformer(schedulersProvider.io()))

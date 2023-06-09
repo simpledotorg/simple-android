@@ -242,8 +242,8 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.dispatch(SetBloodSugarSavedResultAndFinish)
 
     // then
-    verify(ui).setBloodSugarSavedResultAndFinish()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).setBloodSugarSavedResultAndFinish()
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test

@@ -1,6 +1,7 @@
 package org.simple.clinic.bloodsugar.unitselection
 
 import android.app.Dialog
+import android.app.Dialog.BUTTON_POSITIVE
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -97,18 +98,25 @@ class BloodSugarUnitSelectionDialog : BaseDialog<
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    val radioIdToBloodSugarUnits = mapOf(
-        R.id.bloodSugarUnitMg to BloodSugarUnitPreference.Mg,
-        R.id.bloodSugarUnitMmol to BloodSugarUnitPreference.Mmol
-    )
-
     return MaterialAlertDialogBuilder(requireContext())
         .setTitle(R.string.blood_sugar_unit_selection_choose)
-        .setPositiveButton(R.string.blood_sugar_unit_selection_done) { _, _ ->
-          val bloodSugarUnitSelectionValue = radioIdToBloodSugarUnits.getValue(bloodSugarUnitGroup.checkedRadioButtonId)
-          hotEvents.onNext(DoneClicked(bloodSugarUnitSelectionValue))
-        }
+        .setPositiveButton(R.string.blood_sugar_unit_selection_done, null)
         .create()
+  }
+
+  override fun onResume() {
+    super.onResume()
+    if (dialog != null) {
+      val radioIdToBloodSugarUnits = mapOf(
+          R.id.bloodSugarUnitMg to BloodSugarUnitPreference.Mg,
+          R.id.bloodSugarUnitMmol to BloodSugarUnitPreference.Mmol
+      )
+      val alertDialog = (dialog as AlertDialog)
+      alertDialog.getButton(BUTTON_POSITIVE).setOnClickListener {
+        val bloodSugarUnitSelectionValue = radioIdToBloodSugarUnits.getValue(bloodSugarUnitGroup.checkedRadioButtonId)
+        hotEvents.onNext(DoneClicked(bloodSugarUnitSelectionValue))
+      }
+    }
   }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

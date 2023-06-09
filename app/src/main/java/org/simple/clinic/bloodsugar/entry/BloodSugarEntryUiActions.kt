@@ -1,3 +1,5 @@
 package org.simple.clinic.bloodsugar.entry
 
-interface BloodSugarEntryUiActions {}
+interface BloodSugarEntryUiActions {
+  fun setBloodSugarReading(bloodSugarReading: String)
+}

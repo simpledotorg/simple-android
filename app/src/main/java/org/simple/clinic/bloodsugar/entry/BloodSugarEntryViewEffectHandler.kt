@@ -7,6 +7,8 @@ class BloodSugarEntryViewEffectHandler(
 ) : ViewEffectsHandler<BloodSugarEntryViewEffect> {
 
   override fun handle(viewEffect: BloodSugarEntryViewEffect) {
-    // no-op
+    when (viewEffect) {
+      is SetBloodSugarReading -> uiActions.setBloodSugarReading(viewEffect.bloodSugarReading)
+    }
   }
 }

@@ -85,8 +85,8 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.dispatch(HideBloodSugarErrorMessage)
 
     // then
-    verify(ui).hideBloodSugarErrorMessage()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).hideBloodSugarErrorMessage()
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test

@@ -7,7 +7,6 @@ import java.util.UUID
 
 interface BloodSugarEntryUi {
   fun setBloodSugarSavedResultAndFinish()
-  fun hideBloodSugarErrorMessage()
   fun showBloodSugarEmptyError()
   fun showBloodSugarHighError(
       measurementType: BloodSugarMeasurementType,

@@ -9,6 +9,7 @@ class BloodSugarEntryViewEffectHandler(
   override fun handle(viewEffect: BloodSugarEntryViewEffect) {
     when (viewEffect) {
       is SetBloodSugarReading -> uiActions.setBloodSugarReading(viewEffect.bloodSugarReading)
+      is HideBloodSugarErrorMessage -> uiActions.hideBloodSugarErrorMessage()
     }
   }
 }

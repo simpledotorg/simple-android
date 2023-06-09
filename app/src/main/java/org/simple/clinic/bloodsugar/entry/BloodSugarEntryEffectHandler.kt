@@ -67,7 +67,6 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
         .addTransformer(CreateNewBloodSugarEntry::class.java, createNewBloodSugarEntryTransformer())
         .addTransformer(FetchBloodSugarMeasurement::class.java, fetchBloodSugarMeasurement(schedulersProvider.io()))
         .addTransformer(UpdateBloodSugarEntry::class.java, updateBloodSugarEntryTransformer(schedulersProvider.io()))
-        .addConsumer(ShowConfirmRemoveBloodSugarDialog::class.java, { ui.showConfirmRemoveBloodSugarDialog(it.bloodSugarMeasurementUuid) }, schedulersProvider.ui())
         .addTransformer(LoadBloodSugarUnitPreference::class.java, loadBloodSugarUnitPreference())
         .addConsumer(ShowBloodSugarUnitSelectionDialog::class.java, { ui.showBloodSugarUnitSelectionDialog(it.bloodSugarUnitPreference) }, schedulersProvider.ui())
         .addConsumer(BloodSugarEntryViewEffect::class.java, viewEffectsConsumer::accept)

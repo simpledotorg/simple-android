@@ -56,8 +56,6 @@ data class UpdateBloodSugarEntry(
 
 data class FetchBloodSugarMeasurement(val bloodSugarMeasurementUuid: UUID) : BloodSugarEntryEffect()
 
-data class ShowConfirmRemoveBloodSugarDialog(val bloodSugarMeasurementUuid: UUID) : BloodSugarEntryEffect()
-
 object LoadBloodSugarUnitPreference : BloodSugarEntryEffect()
 
 data class ShowBloodSugarUnitSelectionDialog(val bloodSugarUnitPreference: BloodSugarUnitPreference) : BloodSugarEntryEffect()
@@ -75,3 +73,5 @@ object Dismiss : BloodSugarEntryViewEffect()
 object ShowDateEntryScreen : BloodSugarEntryViewEffect()
 
 object SetBloodSugarSavedResultAndFinish : BloodSugarEntryViewEffect()
+
+data class ShowConfirmRemoveBloodSugarDialog(val bloodSugarMeasurementUuid: UUID) : BloodSugarEntryViewEffect()

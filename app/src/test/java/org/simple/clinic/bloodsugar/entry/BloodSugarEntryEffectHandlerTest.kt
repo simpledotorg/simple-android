@@ -420,8 +420,8 @@ class BloodSugarEntryEffectHandlerTest {
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(ui).showConfirmRemoveBloodSugarDialog(bloodSugarMeasurementUuid)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showConfirmRemoveBloodSugarDialog(bloodSugarMeasurementUuid)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test

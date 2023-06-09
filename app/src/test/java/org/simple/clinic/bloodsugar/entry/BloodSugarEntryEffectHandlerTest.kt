@@ -115,8 +115,8 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.dispatch(ShowDateEntryScreen)
 
     // then
-    verify(ui).showDateEntryScreen()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showDateEntryScreen()
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test

@@ -5,4 +5,5 @@ interface BloodSugarEntryUiActions {
   fun hideBloodSugarErrorMessage()
   fun hideDateErrorMessage()
   fun dismiss()
+  fun showDateEntryScreen()
 }

@@ -7,8 +7,6 @@ import java.util.UUID
 
 interface BloodSugarEntryUi {
   fun showBloodSugarEntryScreen()
-  fun showInvalidDateError()
-  fun showDateIsInFutureError()
   fun setDateOnInputFields(date: LocalDate)
   fun showBloodSugarDate(date: LocalDate)
   fun showRemoveButton()

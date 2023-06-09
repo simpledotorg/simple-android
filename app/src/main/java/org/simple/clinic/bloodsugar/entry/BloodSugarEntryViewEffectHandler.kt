@@ -2,6 +2,8 @@ package org.simple.clinic.bloodsugar.entry
 
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.mobius.ViewEffectsHandler
+import org.simple.clinic.util.exhaustive
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 
 class BloodSugarEntryViewEffectHandler(
     private val uiActions: BloodSugarEntryUiActions
@@ -18,6 +20,7 @@ class BloodSugarEntryViewEffectHandler(
       is ShowConfirmRemoveBloodSugarDialog -> uiActions.showConfirmRemoveBloodSugarDialog(viewEffect.bloodSugarMeasurementUuid)
       is ShowBloodSugarUnitSelectionDialog -> uiActions.showBloodSugarUnitSelectionDialog(viewEffect.bloodSugarUnitPreference)
       is ShowBloodSugarValidationError -> showBloodSugarValidationError(viewEffect.result, viewEffect.unitPreference)
+      is ShowDateValidationError -> showDateValidationError(viewEffect.result)
     }
   }
 
@@ -33,5 +36,13 @@ class BloodSugarEntryViewEffectHandler(
         /* no-op */
       }
     }
+  }
+
+  private fun showDateValidationError(result: UserInputDateValidator.Result) {
+    when (result) {
+      UserInputDateValidator.Result.Invalid.InvalidPattern -> uiActions.showInvalidDateError()
+      UserInputDateValidator.Result.Invalid.DateIsInFuture -> uiActions.showDateIsInFutureError()
+      is UserInputDateValidator.Result.Valid -> throw IllegalStateException("Date validation error cannot be $result")
+    }.exhaustive()
   }
 }

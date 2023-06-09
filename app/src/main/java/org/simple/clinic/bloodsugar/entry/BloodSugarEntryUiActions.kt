@@ -22,4 +22,6 @@ interface BloodSugarEntryUiActions {
       measurementType: BloodSugarMeasurementType,
       unitPreference: BloodSugarUnitPreference
   )
+  fun showInvalidDateError()
+  fun showDateIsInFutureError()
 }

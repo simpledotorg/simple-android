@@ -222,8 +222,8 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.dispatch(ShowDateValidationError(InvalidPattern))
 
     // then
-    verify(ui).showInvalidDateError()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showInvalidDateError()
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -232,8 +232,8 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.dispatch(ShowDateValidationError(DateIsInFuture))
 
     // then
-    verify(ui).showDateIsInFutureError()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showDateIsInFutureError()
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test

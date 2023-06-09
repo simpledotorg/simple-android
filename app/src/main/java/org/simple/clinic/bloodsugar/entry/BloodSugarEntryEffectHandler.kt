@@ -1,6 +1,7 @@
 package org.simple.clinic.bloodsugar.entry
 
 import com.f2prateek.rx.preferences2.Preference
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -46,11 +47,12 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
     private val currentUser: Lazy<User>,
     private val currentFacility: Lazy<Facility>,
     private val uuidGenerator: UuidGenerator,
-    private val bloodSugarUnitPreference: Preference<BloodSugarUnitPreference>
+    private val bloodSugarUnitPreference: Preference<BloodSugarUnitPreference>,
+    @Assisted private val viewEffectsConsumer: Consumer<BloodSugarEntryViewEffect>
 ) {
   @AssistedFactory
   interface Factory {
-    fun create(ui: BloodSugarEntryUi): BloodSugarEntryEffectHandler
+    fun create(ui: BloodSugarEntryUi, viewEffectsConsumer: Consumer<BloodSugarEntryViewEffect>): BloodSugarEntryEffectHandler
   }
 
   private val reportAnalyticsEvents = ReportAnalyticsEvents()

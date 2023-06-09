@@ -42,7 +42,6 @@ import org.simple.clinic.di.DateFormatter.Type.FullYear
 import org.simple.clinic.di.DateFormatter.Type.Month
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Features
-import org.simple.clinic.mobius.ViewEffectsHandler
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.Succeeded
@@ -200,7 +199,7 @@ class BloodSugarEntrySheet : BaseBottomSheet<
       .create(LocalDate.now(userTimeZone))
 
   override fun createEffectHandler(viewEffectsConsumer: Consumer<BloodSugarEntryViewEffect>) = bloodSugarEntryEffectHandler
-      .create(this)
+      .create(ui = this, viewEffectsConsumer = viewEffectsConsumer)
       .build()
 
   override fun viewEffectsHandler() = BloodSugarEntryViewEffectHandler(this)

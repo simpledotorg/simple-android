@@ -40,6 +40,7 @@ import java.util.UUID
 class BloodSugarEntryEffectHandlerTest {
 
   private val ui = mock<BloodSugarEntryUi>()
+  private val uiActions = mock<BloodSugarEntryUiActions>()
   private val userClock = TestUserClock()
 
   private val appointmentRepository = mock<AppointmentRepository>()
@@ -52,6 +53,7 @@ class BloodSugarEntryEffectHandlerTest {
   private val bloodSugarUnitPreference = mock<Preference<BloodSugarUnitPreference>>()
   private val bloodSugarUnitPreferenceSelection = BloodSugarUnitPreference.Mg
 
+  private val viewEffectHandler = BloodSugarEntryViewEffectHandler(uiActions)
   private val effectHandler = BloodSugarEntryEffectHandler(
       ui = ui,
       bloodSugarRepository = bloodSugarRepository,
@@ -62,7 +64,8 @@ class BloodSugarEntryEffectHandlerTest {
       currentUser = { user },
       currentFacility = { facility },
       uuidGenerator = FakeUuidGenerator.fixed(measurementUuid),
-      bloodSugarUnitPreference = bloodSugarUnitPreference
+      bloodSugarUnitPreference = bloodSugarUnitPreference,
+      viewEffectsConsumer = viewEffectHandler::handle
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 

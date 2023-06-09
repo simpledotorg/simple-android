@@ -97,8 +97,7 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
       prefillDates
           .map(::convertToLocalDate)
           .observeOn(scheduler)
-          .doOnNext(ui::setDateOnInputFields)
-          .doOnNext(ui::showBloodSugarDate)
+          .doOnNext { viewEffectsConsumer.accept(PrefillDates(it)) }
           .map { DatePrefilled(it) }
     }
   }

@@ -27,4 +27,5 @@ interface BloodSugarEntryUiActions {
   fun showDateIsInFutureError()
   fun showBloodSugarEntryScreen()
   fun showBloodSugarDate(date: LocalDate)
+  fun setDateOnInputFields(date: LocalDate)
 }

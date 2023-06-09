@@ -75,3 +75,5 @@ data class ShowBloodSugarValidationError(
 data class ShowDateValidationError(val result: UserInputDateValidator.Result) : BloodSugarEntryViewEffect()
 
 data class ShowBloodSugarEntryScreen(val date: LocalDate) : BloodSugarEntryViewEffect()
+
+data class PrefillDates(val date: LocalDate) : BloodSugarEntryViewEffect()

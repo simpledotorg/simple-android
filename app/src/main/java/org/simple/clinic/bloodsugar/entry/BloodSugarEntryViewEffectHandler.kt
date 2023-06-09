@@ -23,6 +23,14 @@ class BloodSugarEntryViewEffectHandler(
       is ShowBloodSugarValidationError -> showBloodSugarValidationError(viewEffect.result, viewEffect.unitPreference)
       is ShowDateValidationError -> showDateValidationError(viewEffect.result)
       is ShowBloodSugarEntryScreen -> showBloodSugarEntryScreen(viewEffect.date)
+      is PrefillDates -> prefillDates(viewEffect.date)
+    }
+  }
+
+  private fun prefillDates(date: LocalDate) {
+    with(uiActions) {
+      showBloodSugarDate(date)
+      setDateOnInputFields(date)
     }
   }
 

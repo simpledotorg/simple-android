@@ -19,6 +19,7 @@ import org.simple.clinic.R
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.databinding.DialogBloodsugarSelectionunitBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.mobius.ViewEffectsHandler
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseDialog
@@ -85,6 +86,8 @@ class BloodSugarUnitSelectionDialog : BaseDialog<
   override fun createEffectHandler(viewEffectsConsumer: Consumer<BloodSugarUnitSelectionViewEffect>) = effectHandlerFactory.create(
       viewEffectsConsumer = viewEffectsConsumer
   ).build()
+
+  override fun viewEffectHandler() = BloodSugarUnitSelectionViewEffectHandler(this)
 
   override fun events(): Observable<BloodSugarUnitSelectionEvent> = hotEvents.cast()
 

@@ -32,7 +32,9 @@ coroutines = "1.6.4"
 
 compose-compiler = "1.4.0"
 
-androidx-compose-bom = "2023.01.00"
+androidx-compose-bom = "2023.05.01"
+
+composeThemeAdapter = "0.31.3-beta"
 
 [libraries]
 android-gradle-plugin = "com.android.tools.build:gradle:8.0.2"
@@ -123,7 +125,7 @@ logback-classic = "ch.qos.logback:logback-classic:1.2.11"
 
 lottie = "com.airbnb.android:lottie:5.2.0"
 
-material = "com.google.android.material:material:1.7.0"
+material = "com.google.android.material:material:1.9.0"
 
 mixpanel-android = "com.mixpanel.android:mixpanel-android:7.2.1"
 
@@ -202,6 +204,8 @@ androidx-compose-material = { module = "androidx.compose.material:material" }
 androidx-compose-material-iconsExtended = { module = "androidx.compose.material:material-icons-extended" }
 androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
 androidx-compose-materialWindow = { module = "androidx.compose.material3:material3-window-size-class" }
+composeThemeAdapter = { module = "com.google.accompanist:accompanist-themeadapter-material", version.ref = "composeThemeAdapter" }
+composeThemeAdapterCore = { module = "com.google.accompanist:accompanist-themeadapter-core", version.ref = "composeThemeAdapter" }
 
 [bundles]
 androidx-camera = ["androidx-camera-core", "androidx-camera-camera2", "androidx-camera-view", "androidx-camera-lifecycle"]

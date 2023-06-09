@@ -67,7 +67,7 @@ class BloodSugarEntrySheet : BaseBottomSheet<
     BloodSugarEntryModel,
     BloodSugarEntryEvent,
     BloodSugarEntryEffect,
-    BloodSugarEntryViewEffect>(), BloodSugarEntryUi {
+    BloodSugarEntryViewEffect>(), BloodSugarEntryUi, BloodSugarEntryUiActions {
 
   enum class ScreenType {
     BLOOD_SUGAR_ENTRY,

@@ -4,15 +4,20 @@
 
 ### Internal
 
+- Bump sentry to v6.22.0
+- Bump Sentry Gradle Plugin to v3.10.0
+- Enable Configuration cache
+- Migrate `BloodSugarEntryEffectHandler` to use view effect
+
+## 2023-06-12-8756
+
+### Internal
+
 - Fix `Monthly supplies report` icon
 - Update Questionnaire form radio button styling
 - Remove firebase remote config `questionnaires_enabled` logic for loading questionnaire's api.
 - Remove DPH/TamilNadu build variant
 - Add Simple Compose theme in `common-ui` module
-- Bump sentry to v6.22.0
-- Bump Sentry Gradle Plugin to v3.10.0
-- Enable Configuration cache
-- Migrate `BloodSugarEntryEffectHandler` to use view effect
 
 ### Fixes
 

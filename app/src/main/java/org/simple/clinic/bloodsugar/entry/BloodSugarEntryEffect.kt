@@ -25,23 +25,6 @@ sealed class PrefillDate : BloodSugarEntryEffect() {
   data class PrefillSpecificDate(val date: Instant) : PrefillDate()
 }
 
-object HideBloodSugarErrorMessage : BloodSugarEntryEffect()
-
-object HideDateErrorMessage : BloodSugarEntryEffect()
-
-object Dismiss : BloodSugarEntryEffect()
-
-object ShowDateEntryScreen : BloodSugarEntryEffect()
-
-data class ShowBloodSugarValidationError(
-    val result: ValidationResult,
-    val unitPreference: BloodSugarUnitPreference
-) : BloodSugarEntryEffect()
-
-data class ShowBloodSugarEntryScreen(val date: LocalDate) : BloodSugarEntryEffect()
-
-data class ShowDateValidationError(val result: UserInputDateValidator.Result) : BloodSugarEntryEffect()
-
 data class CreateNewBloodSugarEntry(
     val patientUuid: UUID,
     val userEnteredDate: LocalDate,
@@ -62,14 +45,35 @@ data class UpdateBloodSugarEntry(
     get() = userEnteredDate != prefilledDate
 }
 
-object SetBloodSugarSavedResultAndFinish : BloodSugarEntryEffect()
-
 data class FetchBloodSugarMeasurement(val bloodSugarMeasurementUuid: UUID) : BloodSugarEntryEffect()
-
-data class SetBloodSugarReading(val bloodSugarReading: String) : BloodSugarEntryEffect()
-
-data class ShowConfirmRemoveBloodSugarDialog(val bloodSugarMeasurementUuid: UUID) : BloodSugarEntryEffect()
 
 object LoadBloodSugarUnitPreference : BloodSugarEntryEffect()
 
-data class ShowBloodSugarUnitSelectionDialog(val bloodSugarUnitPreference: BloodSugarUnitPreference) : BloodSugarEntryEffect()
+sealed class BloodSugarEntryViewEffect : BloodSugarEntryEffect()
+
+data class SetBloodSugarReading(val bloodSugarReading: String) : BloodSugarEntryViewEffect()
+
+object HideBloodSugarErrorMessage : BloodSugarEntryViewEffect()
+
+object HideDateErrorMessage : BloodSugarEntryViewEffect()
+
+object Dismiss : BloodSugarEntryViewEffect()
+
+object ShowDateEntryScreen : BloodSugarEntryViewEffect()
+
+object SetBloodSugarSavedResultAndFinish : BloodSugarEntryViewEffect()
+
+data class ShowConfirmRemoveBloodSugarDialog(val bloodSugarMeasurementUuid: UUID) : BloodSugarEntryViewEffect()
+
+data class ShowBloodSugarUnitSelectionDialog(val bloodSugarUnitPreference: BloodSugarUnitPreference) : BloodSugarEntryViewEffect()
+
+data class ShowBloodSugarValidationError(
+    val result: ValidationResult,
+    val unitPreference: BloodSugarUnitPreference
+) : BloodSugarEntryViewEffect()
+
+data class ShowDateValidationError(val result: UserInputDateValidator.Result) : BloodSugarEntryViewEffect()
+
+data class ShowBloodSugarEntryScreen(val date: LocalDate) : BloodSugarEntryViewEffect()
+
+data class PrefillDates(val date: LocalDate) : BloodSugarEntryViewEffect()

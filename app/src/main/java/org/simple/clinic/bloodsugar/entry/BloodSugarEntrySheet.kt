@@ -67,7 +67,7 @@ class BloodSugarEntrySheet : BaseBottomSheet<
     BloodSugarEntryModel,
     BloodSugarEntryEvent,
     BloodSugarEntryEffect,
-    Nothing>(), BloodSugarEntryUi {
+    BloodSugarEntryViewEffect>(), BloodSugarEntryUi, BloodSugarEntryUiActions {
 
   enum class ScreenType {
     BLOOD_SUGAR_ENTRY,
@@ -198,9 +198,11 @@ class BloodSugarEntrySheet : BaseBottomSheet<
   override fun createUpdate() = bloodSugarEntryUpdate
       .create(LocalDate.now(userTimeZone))
 
-  override fun createEffectHandler(viewEffectsConsumer: Consumer<Nothing>) = bloodSugarEntryEffectHandler
-      .create(this)
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<BloodSugarEntryViewEffect>) = bloodSugarEntryEffectHandler
+      .create(viewEffectsConsumer = viewEffectsConsumer)
       .build()
+
+  override fun viewEffectsHandler() = BloodSugarEntryViewEffectHandler(this)
 
   override fun onAttach(context: Context) {
     super.onAttach(context)

@@ -1,18 +1,17 @@
 package org.simple.clinic.bloodsugar.entry
 
 import com.f2prateek.rx.preferences2.Preference
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.whenever
 import org.simple.clinic.bloodsugar.BloodSugarReading
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
@@ -27,19 +26,20 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.storage.Timestamps
-import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.toUtcInstant
-import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
+import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.TestUserClock
+import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
 
 class BloodSugarEntryEffectHandlerTest {
 
-  private val ui = mock<BloodSugarEntryUi>()
+  private val uiActions = mock<BloodSugarEntryUiActions>()
   private val userClock = TestUserClock()
 
   private val appointmentRepository = mock<AppointmentRepository>()
@@ -52,8 +52,8 @@ class BloodSugarEntryEffectHandlerTest {
   private val bloodSugarUnitPreference = mock<Preference<BloodSugarUnitPreference>>()
   private val bloodSugarUnitPreferenceSelection = BloodSugarUnitPreference.Mg
 
+  private val viewEffectHandler = BloodSugarEntryViewEffectHandler(uiActions)
   private val effectHandler = BloodSugarEntryEffectHandler(
-      ui = ui,
       bloodSugarRepository = bloodSugarRepository,
       patientRepository = patientRepository,
       appointmentsRepository = appointmentRepository,
@@ -62,7 +62,8 @@ class BloodSugarEntryEffectHandlerTest {
       currentUser = { user },
       currentFacility = { facility },
       uuidGenerator = FakeUuidGenerator.fixed(measurementUuid),
-      bloodSugarUnitPreference = bloodSugarUnitPreference
+      bloodSugarUnitPreference = bloodSugarUnitPreference,
+      viewEffectsConsumer = viewEffectHandler::handle
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
 
@@ -82,8 +83,8 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.dispatch(HideBloodSugarErrorMessage)
 
     // then
-    verify(ui).hideBloodSugarErrorMessage()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).hideBloodSugarErrorMessage()
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -92,8 +93,8 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.dispatch(HideDateErrorMessage)
 
     // then
-    verify(ui).hideDateErrorMessage()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).hideDateErrorMessage()
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -102,8 +103,8 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.dispatch(Dismiss)
 
     // then
-    verify(ui).dismiss()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).dismiss()
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -112,8 +113,8 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.dispatch(ShowDateEntryScreen)
 
     // then
-    verify(ui).showDateEntryScreen()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showDateEntryScreen()
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -122,8 +123,8 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.dispatch(ShowBloodSugarValidationError(ErrorBloodSugarEmpty, BloodSugarUnitPreference.Mg))
 
     // then
-    verify(ui).showBloodSugarEmptyError()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showBloodSugarEmptyError()
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -135,8 +136,8 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.dispatch(ShowBloodSugarValidationError(ErrorBloodSugarTooHigh(measurementType), BloodSugarUnitPreference.Mg))
 
     // then
-    verify(ui).showBloodSugarHighError(measurementType, BloodSugarUnitPreference.Mg)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showBloodSugarHighError(measurementType, BloodSugarUnitPreference.Mg)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -148,8 +149,8 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.dispatch(ShowBloodSugarValidationError(ErrorBloodSugarTooLow(measurementType), BloodSugarUnitPreference.Mg))
 
     // then
-    verify(ui).showBloodSugarLowError(measurementType, BloodSugarUnitPreference.Mg)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showBloodSugarLowError(measurementType, BloodSugarUnitPreference.Mg)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -161,9 +162,9 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.dispatch(ShowBloodSugarEntryScreen(bloodSugarDate))
 
     // then
-    verify(ui).showBloodSugarEntryScreen()
-    verify(ui).showBloodSugarDate(bloodSugarDate)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showBloodSugarEntryScreen()
+    verify(uiActions).showBloodSugarDate(bloodSugarDate)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -177,9 +178,9 @@ class BloodSugarEntryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(DatePrefilled(entryDate))
-    verify(ui).setDateOnInputFields(entryDate)
-    verify(ui).showBloodSugarDate(entryDate)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).setDateOnInputFields(entryDate)
+    verify(uiActions).showBloodSugarDate(entryDate)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -193,9 +194,9 @@ class BloodSugarEntryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(DatePrefilled(entryDate))
-    verify(ui).setDateOnInputFields(entryDate)
-    verify(ui).showBloodSugarDate(entryDate)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).setDateOnInputFields(entryDate)
+    verify(uiActions).showBloodSugarDate(entryDate)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -208,8 +209,8 @@ class BloodSugarEntryEffectHandlerTest {
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(ui).setBloodSugarReading(bloodSugarReading)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).setBloodSugarReading(bloodSugarReading)
+    verifyNoMoreInteractions(uiActions)
   }
 
 
@@ -219,8 +220,8 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.dispatch(ShowDateValidationError(InvalidPattern))
 
     // then
-    verify(ui).showInvalidDateError()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showInvalidDateError()
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -229,8 +230,8 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.dispatch(ShowDateValidationError(DateIsInFuture))
 
     // then
-    verify(ui).showDateIsInFutureError()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showDateIsInFutureError()
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -239,8 +240,8 @@ class BloodSugarEntryEffectHandlerTest {
     testCase.dispatch(SetBloodSugarSavedResultAndFinish)
 
     // then
-    verify(ui).setBloodSugarSavedResultAndFinish()
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).setBloodSugarSavedResultAndFinish()
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -272,7 +273,7 @@ class BloodSugarEntryEffectHandlerTest {
     verify(appointmentRepository).markAppointmentsCreatedBeforeTodayAsVisited(bloodSugar.patientUuid)
     verify(patientRepository).compareAndUpdateRecordedAt(bloodSugar.patientUuid, date.toUtcInstant(userClock))
     testCase.assertOutgoingEvents(BloodSugarSaved(createNewBloodSugarEntry.wasDateChanged))
-    verifyNoInteractions(ui)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -304,7 +305,7 @@ class BloodSugarEntryEffectHandlerTest {
     verify(appointmentRepository).markAppointmentsCreatedBeforeTodayAsVisited(bloodSugar.patientUuid)
     verify(patientRepository).compareAndUpdateRecordedAt(bloodSugar.patientUuid, date.toUtcInstant(userClock))
     testCase.assertOutgoingEvents(BloodSugarSaved(createNewBloodSugarEntry.wasDateChanged))
-    verifyNoInteractions(ui)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -318,7 +319,7 @@ class BloodSugarEntryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(BloodSugarMeasurementFetched(bloodSugarMeasurement))
-    verifyNoInteractions(ui)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -361,7 +362,7 @@ class BloodSugarEntryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(BloodSugarSaved(updateBloodSugarEntry.wasDateChanged))
-    verifyNoInteractions(ui)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -404,7 +405,7 @@ class BloodSugarEntryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(BloodSugarSaved(updateBloodSugarEntry.wasDateChanged))
-    verifyNoInteractions(ui)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -417,8 +418,8 @@ class BloodSugarEntryEffectHandlerTest {
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(ui).showConfirmRemoveBloodSugarDialog(bloodSugarMeasurementUuid)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showConfirmRemoveBloodSugarDialog(bloodSugarMeasurementUuid)
+    verifyNoMoreInteractions(uiActions)
   }
 
   @Test
@@ -431,7 +432,7 @@ class BloodSugarEntryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(BloodSugarUnitPreferenceLoaded(bloodSugarUnitPreferenceSelection))
-    verifyNoInteractions(ui)
+    verifyNoInteractions(uiActions)
   }
 
   @Test
@@ -441,7 +442,7 @@ class BloodSugarEntryEffectHandlerTest {
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(ui).showBloodSugarUnitSelectionDialog(bloodSugarUnitPreferenceSelection)
-    verifyNoMoreInteractions(ui)
+    verify(uiActions).showBloodSugarUnitSelectionDialog(bloodSugarUnitPreferenceSelection)
+    verifyNoMoreInteractions(uiActions)
   }
 }

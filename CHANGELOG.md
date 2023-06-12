@@ -12,6 +12,7 @@
 - Bump sentry to v6.22.0
 - Bump Sentry Gradle Plugin to v3.10.0
 - Enable Configuration cache
+- Migrate `BloodSugarEntryEffectHandler` to use view effect
 
 ### Fixes
 

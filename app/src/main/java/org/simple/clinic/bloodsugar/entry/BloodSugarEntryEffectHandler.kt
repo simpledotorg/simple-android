@@ -1,6 +1,7 @@
 package org.simple.clinic.bloodsugar.entry
 
 import com.f2prateek.rx.preferences2.Preference
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import dagger.Lazy
 import dagger.assisted.Assisted
@@ -15,29 +16,20 @@ import org.simple.clinic.bloodsugar.BloodSugarMeasurement
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bloodsugar.BloodSugarUnitPreference
 import org.simple.clinic.bloodsugar.entry.PrefillDate.PrefillSpecificDate
-import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarEmpty
-import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooHigh
-import org.simple.clinic.bloodsugar.entry.ValidationResult.ErrorBloodSugarTooLow
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.toUtcInstant
 import org.simple.clinic.uuid.UuidGenerator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
 import java.time.Instant
 import java.time.LocalDate
 import java.util.UUID
 
 class BloodSugarEntryEffectHandler @AssistedInject constructor(
-    @Assisted private val ui: BloodSugarEntryUi,
     private val bloodSugarRepository: BloodSugarRepository,
     private val patientRepository: PatientRepository,
     private val appointmentsRepository: AppointmentRepository,
@@ -46,11 +38,12 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
     private val currentUser: Lazy<User>,
     private val currentFacility: Lazy<Facility>,
     private val uuidGenerator: UuidGenerator,
-    private val bloodSugarUnitPreference: Preference<BloodSugarUnitPreference>
+    private val bloodSugarUnitPreference: Preference<BloodSugarUnitPreference>,
+    @Assisted private val viewEffectsConsumer: Consumer<BloodSugarEntryViewEffect>
 ) {
   @AssistedFactory
   interface Factory {
-    fun create(ui: BloodSugarEntryUi): BloodSugarEntryEffectHandler
+    fun create(viewEffectsConsumer: Consumer<BloodSugarEntryViewEffect>): BloodSugarEntryEffectHandler
   }
 
   private val reportAnalyticsEvents = ReportAnalyticsEvents()
@@ -58,22 +51,12 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<BloodSugarEntryEffect, BloodSugarEntryEvent> {
     return RxMobius
         .subtypeEffectHandler<BloodSugarEntryEffect, BloodSugarEntryEvent>()
-        .addAction(HideBloodSugarErrorMessage::class.java, ui::hideBloodSugarErrorMessage, schedulersProvider.ui())
-        .addAction(HideDateErrorMessage::class.java, ui::hideDateErrorMessage, schedulersProvider.ui())
-        .addAction(Dismiss::class.java, ui::dismiss, schedulersProvider.ui())
-        .addAction(ShowDateEntryScreen::class.java, ui::showDateEntryScreen, schedulersProvider.ui())
-        .addConsumer(ShowBloodSugarValidationError::class.java, { showBloodSugarValidationError(it.result, it.unitPreference) }, schedulersProvider.ui())
-        .addConsumer(ShowBloodSugarEntryScreen::class.java, { showBloodSugarEntryScreen(it.date) }, schedulersProvider.ui())
         .addTransformer(PrefillDate::class.java, prefillDate(schedulersProvider.ui()))
-        .addConsumer(ShowDateValidationError::class.java, { showDateValidationError(it.result) }, schedulersProvider.ui())
-        .addAction(SetBloodSugarSavedResultAndFinish::class.java, ui::setBloodSugarSavedResultAndFinish, schedulersProvider.ui())
         .addTransformer(CreateNewBloodSugarEntry::class.java, createNewBloodSugarEntryTransformer())
         .addTransformer(FetchBloodSugarMeasurement::class.java, fetchBloodSugarMeasurement(schedulersProvider.io()))
-        .addConsumer(SetBloodSugarReading::class.java, { ui.setBloodSugarReading(it.bloodSugarReading) }, schedulersProvider.ui())
         .addTransformer(UpdateBloodSugarEntry::class.java, updateBloodSugarEntryTransformer(schedulersProvider.io()))
-        .addConsumer(ShowConfirmRemoveBloodSugarDialog::class.java, { ui.showConfirmRemoveBloodSugarDialog(it.bloodSugarMeasurementUuid) }, schedulersProvider.ui())
         .addTransformer(LoadBloodSugarUnitPreference::class.java, loadBloodSugarUnitPreference())
-        .addConsumer(ShowBloodSugarUnitSelectionDialog::class.java, { ui.showBloodSugarUnitSelectionDialog(it.bloodSugarUnitPreference) }, schedulersProvider.ui())
+        .addConsumer(BloodSugarEntryViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
   }
 
@@ -100,34 +83,12 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
   private fun getExistingBloodSugarMeasurement(bloodSugarMeasurementUuid: UUID): BloodSugarMeasurement? =
       bloodSugarRepository.measurement(bloodSugarMeasurementUuid)
 
-  private fun showBloodSugarValidationError(
-      result: ValidationResult,
-      unitPreference: BloodSugarUnitPreference
-  ) {
-    when (result) {
-      ErrorBloodSugarEmpty -> ui.showBloodSugarEmptyError()
-      is ErrorBloodSugarTooHigh -> ui.showBloodSugarHighError(result.measurementType, unitPreference)
-      is ErrorBloodSugarTooLow -> ui.showBloodSugarLowError(result.measurementType, unitPreference)
-      is ValidationResult.Valid -> {
-        /* no-op */
-      }
-    }
-  }
-
-  private fun showBloodSugarEntryScreen(date: LocalDate) {
-    with(ui) {
-      showBloodSugarEntryScreen()
-      showBloodSugarDate(date)
-    }
-  }
-
   private fun prefillDate(scheduler: Scheduler): ObservableTransformer<PrefillDate, BloodSugarEntryEvent> {
     return ObservableTransformer { prefillDates ->
       prefillDates
           .map(::convertToLocalDate)
           .observeOn(scheduler)
-          .doOnNext(ui::setDateOnInputFields)
-          .doOnNext(ui::showBloodSugarDate)
+          .doOnNext { viewEffectsConsumer.accept(PrefillDates(it)) }
           .map { DatePrefilled(it) }
     }
   }
@@ -135,14 +96,6 @@ class BloodSugarEntryEffectHandler @AssistedInject constructor(
   private fun convertToLocalDate(prefillDate: PrefillDate): LocalDate {
     val instant = if (prefillDate is PrefillSpecificDate) prefillDate.date else Instant.now(userClock)
     return instant.toLocalDateAtZone(userClock.zone)
-  }
-
-  private fun showDateValidationError(result: UserInputDateValidator.Result) {
-    when (result) {
-      InvalidPattern -> ui.showInvalidDateError()
-      DateIsInFuture -> ui.showDateIsInFutureError()
-      is Valid -> throw IllegalStateException("Date validation error cannot be $result")
-    }.exhaustive()
   }
 
   private fun createNewBloodSugarEntryTransformer(): ObservableTransformer<CreateNewBloodSugarEntry, BloodSugarEntryEvent> {

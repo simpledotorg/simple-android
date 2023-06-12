@@ -9,6 +9,9 @@
 - Remove firebase remote config `questionnaires_enabled` logic for loading questionnaire's api.
 - Remove DPH/TamilNadu build variant
 - Add Simple Compose theme in `common-ui` module
+- Bump sentry to v6.22.0
+- Bump Sentry Gradle Plugin to v3.10.0
+- Enable Configuration cache
 
 ### Fixes
 

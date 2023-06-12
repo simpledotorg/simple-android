@@ -504,16 +504,18 @@ apply(plugin = "com.google.gms.google-services")
 
 abstract class TransformGeneratedRoomDaoTask : DefaultTask() {
 
+  private val projectDir = project.projectDir.absolutePath
+
   @get:Input
   abstract val sourceSet: Property<String>
 
   @get:Input
   abstract val reporterClassName: Property<String>
 
+
   @TaskAction
   fun run() {
     val rmg = RoomMetadataGenerator()
-
-    rmg.run(project.projectDir.absolutePath, sourceSet.get(), reporterClassName.get())
+    rmg.run(projectDir, sourceSet.get(), reporterClassName.get())
   }
 }

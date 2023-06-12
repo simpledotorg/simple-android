@@ -301,6 +301,7 @@ android {
 
       val taskName = "transform${taskQualifier}GeneratedRoomDao"
       val transformRoomDaoTask = tasks.create<TransformGeneratedRoomDaoTask>(taskName) {
+        projectDirAbsolutePath.set(project.projectDir.absolutePath)
         sourceSet.set(sourceSetName)
         reporterClassName.set("org.simple.clinic.storage.monitoring.SqlPerformanceReporter")
       }
@@ -505,6 +506,9 @@ apply(plugin = "com.google.gms.google-services")
 abstract class TransformGeneratedRoomDaoTask : DefaultTask() {
 
   @get:Input
+  abstract val projectDirAbsolutePath: Property<String>
+
+  @get:Input
   abstract val sourceSet: Property<String>
 
   @get:Input
@@ -513,7 +517,6 @@ abstract class TransformGeneratedRoomDaoTask : DefaultTask() {
   @TaskAction
   fun run() {
     val rmg = RoomMetadataGenerator()
-
-    rmg.run(project.projectDir.absolutePath, sourceSet.get(), reporterClassName.get())
+    rmg.run(projectDirAbsolutePath.get(), sourceSet.get(), reporterClassName.get())
   }
 }

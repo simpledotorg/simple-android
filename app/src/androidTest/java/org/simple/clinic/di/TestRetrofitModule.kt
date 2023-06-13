@@ -56,7 +56,11 @@ class TestRetrofitModule {
   fun retrofit(
       retrofitBuilder: Retrofit.Builder
   ): Retrofit {
-    val baseUrl = BuildConfig.MANIFEST_ENDPOINT
+    val baseUrl = if (BuildConfig.DEBUG) {
+      "https://api-qa.simple.org/api/"
+    } else {
+      BuildConfig.MANIFEST_ENDPOINT
+    }
 
     return retrofitBuilder
         .baseUrl("$baseUrl/")

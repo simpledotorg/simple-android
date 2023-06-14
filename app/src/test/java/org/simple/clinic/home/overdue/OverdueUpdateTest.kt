@@ -27,9 +27,10 @@ import java.util.UUID
 class OverdueUpdateTest {
 
   private val dateOnClock = LocalDate.parse("2018-01-01")
-  private val updateSpec = UpdateSpec(OverdueUpdate(date = dateOnClock,
-      canGeneratePdf = true,
-      isOverdueSectionsFeatureEnabled = false))
+  private val updateSpec = UpdateSpec(OverdueUpdate(
+    date = dateOnClock,
+    canGeneratePdf = true
+  ))
   private val defaultModel = OverdueModel.create()
 
   @Test
@@ -106,9 +107,8 @@ class OverdueUpdateTest {
     )
 
     val updateSpec = UpdateSpec(OverdueUpdate(
-        date = dateOnClock,
-        canGeneratePdf = true,
-        isOverdueSectionsFeatureEnabled = true
+      date = dateOnClock,
+      canGeneratePdf = true
     ))
 
     updateSpec
@@ -144,7 +144,7 @@ class OverdueUpdateTest {
 
   @Test
   fun `when download overdue list button is clicked, network is connected and pdf can not be generated, then schedule download`() {
-    val updateSpec = UpdateSpec(OverdueUpdate(date = dateOnClock, canGeneratePdf = false, isOverdueSectionsFeatureEnabled = false))
+    val updateSpec = UpdateSpec(OverdueUpdate(date = dateOnClock, canGeneratePdf = false))
 
     updateSpec
         .given(defaultModel)
@@ -179,7 +179,7 @@ class OverdueUpdateTest {
 
   @Test
   fun `when share overdue list button is clicked, network is connected but pdf can not be generated, then open progress for share dialog`() {
-    val updateSpec = UpdateSpec(OverdueUpdate(date = dateOnClock, canGeneratePdf = false, isOverdueSectionsFeatureEnabled = false))
+    val updateSpec = UpdateSpec(OverdueUpdate(date = dateOnClock, canGeneratePdf = false))
 
     updateSpec
         .given(defaultModel)

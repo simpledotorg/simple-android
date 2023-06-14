@@ -3,15 +3,10 @@ package org.simple.clinic.home.overdue
 import org.simple.clinic.mobius.ViewRenderer
 import java.util.UUID
 
-class OverdueUiRenderer(
-    private val ui: OverdueUi,
-    private val isOverdueSectionsFeatureEnabled: Boolean
-) : ViewRenderer<OverdueModel> {
+class OverdueUiRenderer(private val ui: OverdueUi) : ViewRenderer<OverdueModel> {
 
   override fun render(model: OverdueModel) {
-    if (isOverdueSectionsFeatureEnabled) {
-      loadOverdueSections(model)
-    }
+    loadOverdueSections(model)
   }
 
   private fun loadOverdueSections(model: OverdueModel) {

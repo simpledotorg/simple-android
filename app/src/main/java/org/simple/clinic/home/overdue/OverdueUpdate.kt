@@ -16,8 +16,7 @@ import java.time.LocalDate
 
 class OverdueUpdate(
     private val date: LocalDate,
-    private val canGeneratePdf: Boolean,
-    private val isOverdueSectionsFeatureEnabled: Boolean
+    private val canGeneratePdf: Boolean
 ) : Update<OverdueModel, OverdueEvent, OverdueEffect> {
 
   override fun update(model: OverdueModel, event: OverdueEvent): Next<OverdueModel, OverdueEffect> {
@@ -25,7 +24,6 @@ class OverdueUpdate(
       is CurrentFacilityLoaded -> currentFacilityLoaded(model, event)
       is CallPatientClicked -> dispatch(OpenContactPatientScreen(event.patientUuid))
       is OverduePatientClicked -> dispatch(OpenPatientSummary(event.patientUuid))
-      is OverdueAppointmentsLoaded_Old -> dispatch(ShowOverdueAppointments(event.overdueAppointmentsOld, model.isDiabetesManagementEnabled))
       is DownloadOverdueListClicked -> downloadOverdueListClicked(event)
       is ShareOverdueListClicked -> shareOverdueListClicked(event)
       is OverdueAppointmentsLoaded -> overdueAppointmentsLoaded(event, model)
@@ -43,15 +41,19 @@ class OverdueUpdate(
       PENDING_TO_CALL -> {
         pendingChevronStateIsChanged(model)
       }
+
       AGREED_TO_VISIT -> {
         agreedToVisitChevronStateIsChanged(model)
       }
+
       REMIND_TO_CALL -> {
         remindToCallChevronStateIsChanged(model)
       }
+
       REMOVED_FROM_OVERDUE -> {
         removedFromOverdueChevronStateIsChanged(model)
       }
+
       MORE_THAN_A_YEAR_OVERDUE -> {
         moreThanAYearChevronStateIsChanged(model)
       }
@@ -110,11 +112,7 @@ class OverdueUpdate(
 
   private fun currentFacilityLoaded(model: OverdueModel, event: CurrentFacilityLoaded): Next<OverdueModel, OverdueEffect> {
     val facilityLoadedModel = model.currentFacilityLoaded(event.facility)
-    return if (isOverdueSectionsFeatureEnabled) {
-      next(facilityLoadedModel, LoadOverdueAppointments(date, event.facility))
-    } else {
-      next(facilityLoadedModel, LoadOverdueAppointments_old(date, event.facility))
-    }
+    return next(facilityLoadedModel, LoadOverdueAppointments(date, event.facility))
   }
 
   private fun overdueAppointmentsLoaded(

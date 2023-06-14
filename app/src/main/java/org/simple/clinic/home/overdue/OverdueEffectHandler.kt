@@ -17,7 +17,6 @@ import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
-import java.util.concurrent.TimeUnit
 
 class OverdueEffectHandler @AssistedInject constructor(
     private val schedulers: SchedulersProvider,
@@ -42,7 +41,6 @@ class OverdueEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<OverdueEffect, OverdueEvent>()
         .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
-        .addTransformer(LoadOverdueAppointments_old::class.java, loadOverdueAppointmentsOld())
         .addConsumer(ScheduleDownload::class.java, ::scheduleDownload, schedulers.io())
         .addConsumer(OverdueViewEffect::class.java, viewEffectsConsumer::accept)
         .addTransformer(LoadOverdueAppointments::class.java, loadOverdueAppointments())
@@ -116,26 +114,6 @@ class OverdueEffectHandler @AssistedInject constructor(
           .observeOn(schedulers.io())
           .switchMap { currentFacilityStream }
           .map(::CurrentFacilityLoaded)
-    }
-  }
-
-  private fun loadOverdueAppointmentsOld(): ObservableTransformer<LoadOverdueAppointments_old, OverdueEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulers.io())
-          .switchMap { (overdueSince, facility) ->
-            pagerFactory.createPager(
-                sourceFactory = {
-                  appointmentRepository.overdueAppointmentsInFacility(
-                      since = overdueSince,
-                      facilityId = facility.uuid
-                  )
-                },
-                pageSize = overdueAppointmentsConfig.overdueAppointmentsLoadSize,
-                enablePlaceholders = true
-            ).debounce(1, TimeUnit.SECONDS)
-          }
-          .map(::OverdueAppointmentsLoaded_Old)
     }
   }
 }

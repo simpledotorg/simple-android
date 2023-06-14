@@ -118,9 +118,8 @@ class OverdueLogicTest {
         events = uiEvents.ofType(),
         defaultModel = OverdueModel.create(),
         update = OverdueUpdate(
-            date = dateOnClock,
-            canGeneratePdf = true,
-            isOverdueSectionsFeatureEnabled = false
+          date = dateOnClock,
+          canGeneratePdf = true
         ),
         effectHandler = effectHandler.build(),
         modelUpdateListener = { /* Nothing to do here */ },

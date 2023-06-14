@@ -36,7 +36,7 @@ jobs:
           disk-size: 8G
           script: |
             adb root
-            ./gradlew -PmanifestEndpoint=https://api-sandbox.simple.org/api/ installQaDebug installQaDebugAndroidTest lockClocks
+            ./gradlew --no-configuration-cache -PmanifestEndpoint=https://api-sandbox.simple.org/api/ installQaDebug installQaDebugAndroidTest lockClocks
             adb shell am instrument -w -e filter org.simple.clinic.benchmark.SelectBenchmarkTests -e benchmark_app_performance true -e dd_client_token ${{ secrets.DD_PERF_CLIENT_TOKEN }} -e dd_application_id ${{ secrets.DD_PERF_APPLICATION_ID }} org.simple.clinic.qa.debug.test/org.simple.clinic.AndroidTestJUnitRunner
             adb uninstall org.simple.clinic.qa.debug
             adb uninstall org.simple.clinic.qa.debug.test

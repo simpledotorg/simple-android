@@ -112,7 +112,7 @@ class OverdueScreen : BaseScreen<
   lateinit var pendingAppointmentsConfig: PendingAppointmentsConfig
 
   private val overdueListAdapter = ItemAdapter(
-      diffCallback = OverdueAppointmentListItemNew.DiffCallback(),
+      diffCallback = OverdueAppointmentListItem.DiffCallback(),
       bindings = mapOf(
           R.layout.list_item_overdue_patient to { layoutInflater, parent ->
             ListItemOverduePatientBinding.inflate(layoutInflater, parent, false)
@@ -259,7 +259,7 @@ class OverdueScreen : BaseScreen<
       selectedOverdueAppointments: Set<UUID>,
       overdueListSectionStates: OverdueListSectionStates
   ) {
-    overdueListAdapter.submitList(OverdueAppointmentListItemNew.from(
+    overdueListAdapter.submitList(OverdueAppointmentListItem.from(
         overdueAppointmentSections = overdueAppointmentSections,
         clock = userClock,
         pendingListDefaultStateSize = pendingAppointmentsConfig.pendingListDefaultStateSize,

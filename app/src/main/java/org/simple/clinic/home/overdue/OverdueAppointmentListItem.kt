@@ -32,7 +32,7 @@ import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import java.util.UUID
 
-sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
+sealed class OverdueAppointmentListItem : ItemAdapter.Item<UiEvent> {
 
   companion object {
 
@@ -44,7 +44,7 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
         isOverdueInstantSearchEnabled: Boolean,
         isOverdueSelectAndDownloadEnabled: Boolean,
         selectedOverdueAppointments: Set<UUID>
-    ): List<OverdueAppointmentListItemNew> {
+    ): List<OverdueAppointmentListItem> {
       val searchOverduePatientsButtonListItem = searchOverduePatientItem(isOverdueInstantSearchEnabled)
 
       val pendingToCallListItem = pendingToCallItem(
@@ -102,7 +102,7 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
         overdueListSectionStates: OverdueListSectionStates,
         isOverdueSelectAndDownloadEnabled: Boolean,
         selectedOverdueAppointments: Set<UUID>
-    ): List<OverdueAppointmentListItemNew> {
+    ): List<OverdueAppointmentListItem> {
       val moreThanAnOneYearOverdueHeader = listOf(
           OverdueSectionHeader(R.string.overdue_no_visit_in_one_year_call_header,
               overdueAppointmentSections.moreThanAnYearOverdueAppointments.size,
@@ -126,7 +126,7 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
         overdueListSectionStates: OverdueListSectionStates,
         isOverdueSelectAndDownloadEnabled: Boolean,
         selectedOverdueAppointments: Set<UUID>
-    ): List<OverdueAppointmentListItemNew> {
+    ): List<OverdueAppointmentListItem> {
       val removedFromOverdueListHeader = listOf(
           OverdueSectionHeader(R.string.overdue_removed_from_list_call_header,
               overdueAppointmentSections.removedFromOverdueAppointments.size,
@@ -150,7 +150,7 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
         overdueListSectionStates: OverdueListSectionStates,
         isOverdueSelectAndDownloadEnabled: Boolean,
         selectedOverdueAppointments: Set<UUID>
-    ): List<OverdueAppointmentListItemNew> {
+    ): List<OverdueAppointmentListItem> {
       val remindToCallHeader = listOf(
           OverdueSectionHeader(R.string.overdue_remind_to_call_header,
               overdueAppointmentSections.remindToCallLaterAppointments.size,
@@ -174,7 +174,7 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
         overdueListSectionStates: OverdueListSectionStates,
         isOverdueSelectAndDownloadEnabled: Boolean,
         selectedOverdueAppointments: Set<UUID>
-    ): List<OverdueAppointmentListItemNew> {
+    ): List<OverdueAppointmentListItem> {
       val agreedToVisitHeader = listOf(
           OverdueSectionHeader(R.string.overdue_agreed_to_visit_call_header,
               overdueAppointmentSections.agreedToVisitAppointments.size,
@@ -199,7 +199,7 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
         overdueListSectionStates: OverdueListSectionStates,
         isOverdueSelectAndDownloadEnabled: Boolean,
         selectedOverdueAppointments: Set<UUID>
-    ): List<OverdueAppointmentListItemNew> {
+    ): List<OverdueAppointmentListItem> {
       val pendingAppointments = overdueAppointmentSections.pendingAppointments
       val pendingToCallHeader = listOf(
           OverdueSectionHeader(R.string.overdue_pending_to_call_header,
@@ -229,7 +229,7 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
         overdueListSectionStates: OverdueListSectionStates,
         isOverdueSelectAndDownloadEnabled: Boolean,
         selectedOverdueAppointments: Set<UUID>
-    ): List<OverdueAppointmentListItemNew> {
+    ): List<OverdueAppointmentListItem> {
       val pendingAppointmentsList = when (overdueListSectionStates.pendingListState) {
         SEE_LESS -> overdueAppointmentSections.pendingAppointments.take(pendingListDefaultStateSize)
         SEE_ALL -> overdueAppointmentSections.pendingAppointments
@@ -255,7 +255,7 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
         clock: UserClock,
         isOverdueSelectAndDownloadEnabled: Boolean,
         selectedOverdueAppointments: Set<UUID>
-    ): List<OverdueAppointmentListItemNew> {
+    ): List<OverdueAppointmentListItem> {
       return if (isListExpanded) {
         overdueAppointment.map {
           val isAppointmentSelected = selectedOverdueAppointments.contains(it.appointment.uuid)
@@ -271,7 +271,7 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
         clock: UserClock,
         isOverdueSelectAndDownloadEnabled: Boolean,
         isAppointmentSelected: Boolean
-    ): OverdueAppointmentListItemNew {
+    ): OverdueAppointmentListItem {
       return OverdueAppointmentRow(
           appointmentUuid = overdueAppointment.appointment.uuid,
           patientUuid = overdueAppointment.appointment.patientUuid,
@@ -305,7 +305,7 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
       val villageName: String?,
       val isOverdueSelectAndDownloadEnabled: Boolean,
       val isAppointmentSelected: Boolean
-  ) : OverdueAppointmentListItemNew() {
+  ) : OverdueAppointmentListItem() {
 
     override fun layoutResId(): Int = R.layout.list_item_overdue_patient
 
@@ -391,7 +391,7 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
       val count: Int,
       val isOverdueSectionHeaderExpanded: Boolean,
       val overdueAppointmentSectionTitle: OverdueAppointmentSectionTitle
-  ) : OverdueAppointmentListItemNew() {
+  ) : OverdueAppointmentListItem() {
     override fun layoutResId(): Int = R.layout.list_item_overdue_list_section_header
 
     override fun render(holder: BindingViewHolder, subject: Subject<UiEvent>) {
@@ -411,7 +411,7 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
     }
   }
 
-  data class PendingListFooter(val pendingListState: PendingListState) : OverdueAppointmentListItemNew() {
+  data class PendingListFooter(val pendingListState: PendingListState) : OverdueAppointmentListItem() {
     override fun layoutResId(): Int = R.layout.list_item_overdue_pending_list_footer
 
     override fun render(holder: BindingViewHolder, subject: Subject<UiEvent>) {
@@ -430,7 +430,7 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
     }
   }
 
-  object NoPendingPatients : OverdueAppointmentListItemNew() {
+  object NoPendingPatients : OverdueAppointmentListItem() {
 
     override fun layoutResId(): Int = R.layout.list_item_no_pending_patients
 
@@ -439,7 +439,7 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
     }
   }
 
-  object SearchOverduePatientsButtonItem : OverdueAppointmentListItemNew() {
+  object SearchOverduePatientsButtonItem : OverdueAppointmentListItem() {
 
     override fun layoutResId(): Int = R.layout.list_item_search_overdue_patient_button
 
@@ -451,7 +451,7 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
     }
   }
 
-  object Divider : OverdueAppointmentListItemNew() {
+  object Divider : OverdueAppointmentListItem() {
 
     override fun layoutResId(): Int = R.layout.list_item_divider
 
@@ -460,11 +460,11 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
     }
   }
 
-  class DiffCallback : DiffUtil.ItemCallback<OverdueAppointmentListItemNew>() {
+  class DiffCallback : DiffUtil.ItemCallback<OverdueAppointmentListItem>() {
 
     override fun areItemsTheSame(
-        oldItem: OverdueAppointmentListItemNew,
-        newItem: OverdueAppointmentListItemNew
+        oldItem: OverdueAppointmentListItem,
+        newItem: OverdueAppointmentListItem
     ): Boolean {
       return when {
         oldItem is OverdueAppointmentRow && newItem is OverdueAppointmentRow -> oldItem.patientUuid == newItem.patientUuid
@@ -478,8 +478,8 @@ sealed class OverdueAppointmentListItemNew : ItemAdapter.Item<UiEvent> {
     }
 
     override fun areContentsTheSame(
-        oldItem: OverdueAppointmentListItemNew,
-        newItem: OverdueAppointmentListItemNew
+        oldItem: OverdueAppointmentListItem,
+        newItem: OverdueAppointmentListItem
     ): Boolean {
       return oldItem == newItem
     }

@@ -14,14 +14,8 @@ import org.simple.clinic.drugs.search.DrugCategory
 import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
-import org.simple.clinic.home.overdue.OverdueAppointment_Old
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
-import org.simple.clinic.questionnaire.Questionnaire
-import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
-import org.simple.clinic.questionnaire.QuestionnaireType
-import org.simple.clinic.questionnaire.component.BaseComponentData
-import org.simple.clinic.questionnaire.component.properties.InputFieldType
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.callresult.CallResult
@@ -50,6 +44,11 @@ import org.simple.clinic.platform.analytics.DatabaseOptimizationEvent.Optimizati
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
+import org.simple.clinic.questionnaire.Questionnaire
+import org.simple.clinic.questionnaire.QuestionnaireType
+import org.simple.clinic.questionnaire.component.BaseComponentData
+import org.simple.clinic.questionnaire.component.properties.InputFieldType
+import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.storage.text.TextRecord
 import org.simple.clinic.summary.addphone.MissingPhoneReminder
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
@@ -161,8 +160,6 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun userDao(): User.RoomDao
 
   abstract fun appointmentDao(): Appointment.RoomDao
-
-  abstract fun overdueAppointmentDao(): OverdueAppointment_Old.RoomDao
 
   abstract fun overdueAppointmentNewDao(): OverdueAppointment.RoomDao
 

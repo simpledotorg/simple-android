@@ -6,7 +6,6 @@ import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.home.overdue.OverdueAppointment
-import org.simple.clinic.home.overdue.OverdueAppointment_Old
 import org.simple.clinic.overdue.TimeToAppointment.Days
 import org.simple.clinic.overdue.TimeToAppointment.Months
 import org.simple.clinic.overdue.TimeToAppointment.Weeks
@@ -35,11 +34,6 @@ class AppointmentModule {
   @Provides
   fun dao(appDatabase: AppDatabase): Appointment.RoomDao {
     return appDatabase.appointmentDao()
-  }
-
-  @Provides
-  fun overdueAppointmentDao(appDatabase: AppDatabase): OverdueAppointment_Old.RoomDao {
-    return appDatabase.overdueAppointmentDao()
   }
 
   @Provides

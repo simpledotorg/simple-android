@@ -72,7 +72,7 @@ class OverdueEffectHandler @AssistedInject constructor(
       effects
           .observeOn(schedulers.io())
           .switchMap { (overdueSince, facility) ->
-            appointmentRepository.overdueAppointmentsInFacilityNew(
+            appointmentRepository.overdueAppointmentsInFacility(
                 since = overdueSince,
                 facilityId = facility.uuid
             )

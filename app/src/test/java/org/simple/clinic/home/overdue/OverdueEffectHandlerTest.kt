@@ -237,7 +237,7 @@ class OverdueEffectHandlerTest {
         moreThanAnYearAppointment
     )
 
-    whenever(appointmentRepository.overdueAppointmentsInFacilityNew(
+    whenever(appointmentRepository.overdueAppointmentsInFacility(
         since = LocalDate.parse("2018-04-03"),
         facilityId = facility.uuid
     )) doReturn Observable.just(overdueAppointments)

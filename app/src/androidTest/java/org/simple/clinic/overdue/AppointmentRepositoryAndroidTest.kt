@@ -448,7 +448,7 @@ class AppointmentRepositoryAndroidTest {
     )
 
     // when
-    val overdueAppointments = appointmentRepository.overdueAppointmentsInFacilityNew(since = LocalDate.now(clock),
+    val overdueAppointments = appointmentRepository.overdueAppointmentsInFacility(since = LocalDate.now(clock),
         facilityId = facility.uuid
     ).blockingFirst()
 
@@ -552,7 +552,7 @@ class AppointmentRepositoryAndroidTest {
     )
 
     //when
-    val overdueAppointments = appointmentRepository.overdueAppointmentsInFacilityNew(
+    val overdueAppointments = appointmentRepository.overdueAppointmentsInFacility(
         since = now,
         facilityId = facility2.uuid
     ).blockingFirst().map { it.appointment.uuid }
@@ -609,7 +609,7 @@ class AppointmentRepositoryAndroidTest {
     )
 
     // when
-    val overdueAppointments = appointmentRepository.overdueAppointmentsInFacilityNew(
+    val overdueAppointments = appointmentRepository.overdueAppointmentsInFacility(
         since = LocalDate.now(clock),
         facilityId = facility.uuid
     ).blockingFirst()
@@ -693,7 +693,7 @@ class AppointmentRepositoryAndroidTest {
         .forEach { it.save(patientRepository, bpRepository, bloodSugarRepository, appointmentRepository) }
 
     // when
-    val overdueAppointments = appointmentRepository.overdueAppointmentsInFacilityNew(
+    val overdueAppointments = appointmentRepository.overdueAppointmentsInFacility(
         since = currentDate,
         facilityId = facility.uuid
     ).blockingFirst()
@@ -1243,7 +1243,7 @@ class AppointmentRepositoryAndroidTest {
     )
 
     //when
-    val overdueAppointments = appointmentRepository.overdueAppointmentsInFacilityNew(
+    val overdueAppointments = appointmentRepository.overdueAppointmentsInFacility(
         since = now,
         facilityId = facility1Uuid
     ).blockingFirst().map { it.appointment.patientUuid }
@@ -1389,7 +1389,7 @@ class AppointmentRepositoryAndroidTest {
     )
 
     //when
-    val overdueAppointments = appointmentRepository.overdueAppointmentsInFacilityNew(
+    val overdueAppointments = appointmentRepository.overdueAppointmentsInFacility(
         since = now,
         facilityId = facilityUuid
     ).blockingFirst().map { it.appointment.patientUuid }

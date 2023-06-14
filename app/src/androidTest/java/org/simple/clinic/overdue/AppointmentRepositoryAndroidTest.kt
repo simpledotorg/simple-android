@@ -19,7 +19,6 @@ import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.home.overdue.OverdueAppointment
-import org.simple.clinic.home.overdue.OverdueAppointment_Old
 import org.simple.clinic.home.overdue.OverduePatientAddress
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
@@ -621,7 +620,7 @@ class AppointmentRepositoryAndroidTest {
   }
 
   @Test
-  fun patients_without_phone_number_should_be_shown_when_fetching_overdue_appointments() {
+  fun patients_without_phone_number_should_be_present_when_fetching_overdue_appointments() {
 
     val currentDate = LocalDate.parse("2018-01-05")
 
@@ -659,7 +658,13 @@ class AppointmentRepositoryAndroidTest {
           agreedToVisit = null
       )
 
-      return RecordAppointment(patientProfile, bloodPressureMeasurement, null, appointment)
+      return RecordAppointment(
+          patientProfile = patientProfile,
+          bloodPressureMeasurement = bloodPressureMeasurement,
+          bloodSugarMeasurement = null,
+          appointment = appointment,
+          callResult = null
+      )
     }
 
     // given
@@ -688,17 +693,17 @@ class AppointmentRepositoryAndroidTest {
         .forEach { it.save(patientRepository, bpRepository, bloodSugarRepository, appointmentRepository) }
 
     // when
-    val overdueAppointments = PagingTestCase(pagingSource = appointmentRepository.overdueAppointmentsInFacility(since = currentDate,
-        facilityId = facility.uuid),
-        loadSize = 10)
-        .loadPage()
-        .data
+    val overdueAppointments = appointmentRepository.overdueAppointmentsInFacilityNew(
+        since = currentDate,
+        facilityId = facility.uuid
+    ).blockingFirst()
 
     // then
-    val expectedAppointments = listOf(withPhoneNumber, withoutPhoneNumber).map { it.toOverdueAppointment(appointmentFacilityName = facility.name, registeredFacilityName = facility.name) }
+    val expectedAppointments = listOf(withPhoneNumber, withoutPhoneNumber, withDeletedPhoneNumber).map { it.toOverdueAppointment() }
 
     assertThat(overdueAppointments).containsExactlyElementsIn(expectedAppointments)
   }
+
 
   @Suppress("LocalVariableName")
   @Test
@@ -1636,7 +1641,8 @@ class AppointmentRepositoryAndroidTest {
       val patientProfile: PatientProfile,
       val bloodPressureMeasurement: BloodPressureMeasurement?,
       val bloodSugarMeasurement: BloodSugarMeasurement?,
-      val appointment: Appointment
+      val appointment: Appointment,
+      val callResult: CallResult?
   ) {
     fun save(
         patientRepository: PatientRepository,
@@ -1650,29 +1656,25 @@ class AppointmentRepositoryAndroidTest {
       appointmentRepository.save(listOf(appointment))
     }
 
-    fun toOverdueAppointment(appointmentFacilityName: String?, registeredFacilityName: String?): OverdueAppointment_Old {
+    fun toOverdueAppointment(): OverdueAppointment {
       if (bloodPressureMeasurement == null && bloodSugarMeasurement == null) {
         throw AssertionError("Need a Blood Pressure Measurement or Blood Sugar Measurement to create an Overdue Appointment")
       } else {
-        val patientLastSeen = when {
-          bloodPressureMeasurement == null -> bloodSugarMeasurement!!.recordedAt
-          bloodSugarMeasurement == null -> bloodPressureMeasurement.recordedAt
-          else -> maxOf(bloodPressureMeasurement.recordedAt, bloodSugarMeasurement.recordedAt)
-        }
         val overduePatientAddress = OverduePatientAddress(
             streetAddress = patientProfile.address.streetAddress,
             colonyOrVillage = patientProfile.address.colonyOrVillage,
             district = patientProfile.address.district,
             state = patientProfile.address.state
         )
-        return OverdueAppointment_Old(
+        return OverdueAppointment(
             fullName = patientProfile.patient.fullName,
             gender = patientProfile.patient.gender,
             ageDetails = patientProfile.patient.ageDetails,
             appointment = appointment,
             phoneNumber = patientProfile.phoneNumbers.firstOrNull(),
             patientAddress = overduePatientAddress,
-            patientAssignedFacilityUuid = patientProfile.patient.assignedFacilityId
+            patientAssignedFacilityUuid = patientProfile.patient.assignedFacilityId,
+            callResult = callResult
         )
       }
     }

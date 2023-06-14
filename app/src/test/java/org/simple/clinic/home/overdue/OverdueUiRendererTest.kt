@@ -12,8 +12,7 @@ class OverdueUiRendererTest {
 
   private val ui = mock<OverdueUi>()
   private val uiRenderer = OverdueUiRenderer(
-      ui = ui,
-      isOverdueSectionsFeatureEnabled = true
+    ui = ui
   )
   private val defaultModel = OverdueModel.create()
 

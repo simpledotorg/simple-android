@@ -7,8 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.paging.LoadState
-import androidx.paging.PagingData
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.f2prateek.rx.preferences2.Preference
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -17,11 +15,8 @@ import com.spotify.mobius.Update
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
-import kotlinx.coroutines.rx2.asObservable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -34,14 +29,11 @@ import org.simple.clinic.databinding.ListItemNoPendingPatientsBinding
 import org.simple.clinic.databinding.ListItemOverdueListSectionHeaderBinding
 import org.simple.clinic.databinding.ListItemOverduePatientBinding
 import org.simple.clinic.databinding.ListItemOverduePendingListFooterBinding
-import org.simple.clinic.databinding.ListItemOverduePlaceholderBinding
 import org.simple.clinic.databinding.ListItemSearchOverduePatientButtonBinding
 import org.simple.clinic.databinding.ScreenOverdueBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Feature.OverdueInstantSearch
 import org.simple.clinic.feature.Feature.OverdueListDownloadAndShare
-import org.simple.clinic.feature.Feature.OverdueSections
 import org.simple.clinic.feature.Feature.OverdueSelectAndDownload
 import org.simple.clinic.feature.Features
 import org.simple.clinic.home.HomeScreen
@@ -58,12 +50,10 @@ import org.simple.clinic.overdue.download.formatdialog.SharingInProgress
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.sync.LastSyncedState
-import org.simple.clinic.sync.SyncProgress
 import org.simple.clinic.util.RuntimeNetworkStatus
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ItemAdapter
-import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.Instant
@@ -121,20 +111,8 @@ class OverdueScreen : BaseScreen<
   @Inject
   lateinit var pendingAppointmentsConfig: PendingAppointmentsConfig
 
-  private val overdueListAdapter_Old = PagingItemAdapter(
-      diffCallback = OverdueAppointmentListItem.DiffCallback(),
-      bindings = mapOf(
-          R.layout.list_item_overdue_patient to { layoutInflater, parent ->
-            ListItemOverduePatientBinding.inflate(layoutInflater, parent, false)
-          }
-      ),
-      placeHolderBinding = R.layout.list_item_overdue_placeholder to { layoutInflater, parent ->
-        ListItemOverduePlaceholderBinding.inflate(layoutInflater, parent, false)
-      }
-  )
-
   private val overdueListAdapter = ItemAdapter(
-      diffCallback = OverdueAppointmentListItemNew.DiffCallback(),
+      diffCallback = OverdueAppointmentListItem.DiffCallback(),
       bindings = mapOf(
           R.layout.list_item_overdue_patient to { layoutInflater, parent ->
             ListItemOverduePatientBinding.inflate(layoutInflater, parent, false)
@@ -191,13 +169,9 @@ class OverdueScreen : BaseScreen<
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenOverdueBinding.inflate(layoutInflater, container, false)
 
-  override fun uiRenderer() = OverdueUiRenderer(
-      ui = this,
-      isOverdueSectionsFeatureEnabled = features.isEnabled(Feature.OverdueSections)
-  )
+  override fun uiRenderer() = OverdueUiRenderer(ui = this)
 
   override fun events() = Observable.mergeArray(
-      overdueListAdapter_Old.itemEvents,
       overdueListAdapter.itemEvents,
       downloadOverdueListClicks(),
       shareOverdueListClicks(),
@@ -214,8 +188,7 @@ class OverdueScreen : BaseScreen<
     val canGeneratePdf = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
     return OverdueUpdate(
         date = date,
-        canGeneratePdf = canGeneratePdf,
-        isOverdueSectionsFeatureEnabled = features.isEnabled(OverdueSections)
+        canGeneratePdf = canGeneratePdf
     )
   }
 
@@ -234,17 +207,11 @@ class OverdueScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    overdueRecyclerView.adapter = if (features.isEnabled(OverdueSections)) {
-      overdueListAdapter
-    } else {
-      overdueListAdapter_Old
-    }
+    overdueRecyclerView.adapter = overdueListAdapter
     overdueRecyclerView.layoutManager = LinearLayoutManager(context)
 
     val isOverdueListDownloadAndShareEnabled = features.isEnabled(OverdueListDownloadAndShare) && country.isoCountryCode == Country.INDIA
     buttonsFrame.visibleOrGone(isVisible = isOverdueListDownloadAndShareEnabled)
-
-    disposable.add(overdueListLoadStateListener())
   }
 
   override fun onDestroyView() {
@@ -255,16 +222,6 @@ class OverdueScreen : BaseScreen<
 
   override fun openPhoneMaskBottomSheet(patientUuid: UUID) {
     router.push(ContactPatientBottomSheet.Key(patientUuid))
-  }
-
-  override fun showOverdueAppointments(
-      overdueAppointmentsOld: PagingData<OverdueAppointment_Old>,
-      isDiabetesManagementEnabled: Boolean
-  ) {
-    overdueListAdapter_Old.submitData(lifecycle, OverdueAppointmentListItem.from(
-        appointments = overdueAppointmentsOld,
-        clock = userClock
-    ))
   }
 
   override fun showNoActiveNetworkConnectionDialog() {
@@ -302,7 +259,7 @@ class OverdueScreen : BaseScreen<
       selectedOverdueAppointments: Set<UUID>,
       overdueListSectionStates: OverdueListSectionStates
   ) {
-    overdueListAdapter.submitList(OverdueAppointmentListItemNew.from(
+    overdueListAdapter.submitList(OverdueAppointmentListItem.from(
         overdueAppointmentSections = overdueAppointmentSections,
         clock = userClock,
         pendingListDefaultStateSize = pendingAppointmentsConfig.pendingListDefaultStateSize,
@@ -364,43 +321,6 @@ class OverdueScreen : BaseScreen<
     return shareOverdueListButton
         .clicks()
         .map { ShareOverdueListClicked() }
-  }
-
-  private fun overdueListLoadStateListener(): Disposable {
-    return Observables
-        .combineLatest(
-            lastSyncedState.asObservable(),
-            overdueListAdapter_Old.loadStateFlow.asObservable()
-        )
-        .subscribe { (syncState, loadStates) ->
-          val isSyncingPatientData = syncState.lastSyncProgress == SyncProgress.SYNCING
-          val isLoadingInitialData = loadStates.refresh is LoadState.Loading
-          val isOverdueListLoading = isSyncingPatientData || isLoadingInitialData
-          val hasNoAdapterItems = overdueListAdapter_Old.itemCount == 0
-
-          when {
-            isOverdueListLoading && hasNoAdapterItems -> loadingOverdueList()
-            else -> {
-              val shouldShowEmptyView = loadStates.append.endOfPaginationReached && hasNoAdapterItems
-
-              overdueListLoaded(shouldShowEmptyView)
-            }
-          }
-        }
-  }
-
-  private fun overdueListLoaded(shouldShowEmptyView: Boolean) {
-    overdueProgressBar.visibility = View.GONE
-    viewForEmptyList.visibleOrGone(isVisible = shouldShowEmptyView)
-    overdueRecyclerView.visibleOrGone(isVisible = !shouldShowEmptyView)
-
-    showOverdueCount(overdueListAdapter_Old.itemCount)
-  }
-
-  private fun loadingOverdueList() {
-    overdueProgressBar.visibility = View.VISIBLE
-    viewForEmptyList.visibility = View.GONE
-    overdueRecyclerView.visibility = View.GONE
   }
 
   private fun clearSelectedOverdueAppointmentClicks() = clearSelectedOverdueAppointmentsButton

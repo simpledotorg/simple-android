@@ -1,7 +1,6 @@
 package org.simple.clinic.home.overdue
 
 import android.Manifest
-import androidx.paging.PagingData
 import org.simple.clinic.activity.permissions.RequiresPermission
 import org.simple.clinic.analytics.NetworkConnectivityStatus
 import org.simple.clinic.facility.Facility
@@ -22,10 +21,6 @@ data class CallPatientClicked(val patientUuid: UUID) : OverdueEvent() {
 data class OverduePatientClicked(val patientUuid: UUID) : OverdueEvent() {
   override val analyticsName = "Overdue Screen:Patient name clicked"
 }
-
-data class OverdueAppointmentsLoaded_Old(
-    val overdueAppointmentsOld: PagingData<OverdueAppointment_Old>
-) : OverdueEvent()
 
 data class OverdueAppointmentsLoaded(
     val overdueAppointmentSections: OverdueAppointmentSections

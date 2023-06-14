@@ -8,6 +8,7 @@
 - Bump Sentry Gradle Plugin to v3.10.0
 - Enable Configuration cache
 - Migrate `BloodSugarEntryEffectHandler` to use view effect
+- Remove old overdue appointments view
 
 ## 2023-06-12-8756
 

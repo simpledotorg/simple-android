@@ -1,6 +1,5 @@
 package org.simple.clinic.home.overdue
 
-import androidx.paging.PagingData
 import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
@@ -27,9 +26,10 @@ import java.util.UUID
 class OverdueUpdateTest {
 
   private val dateOnClock = LocalDate.parse("2018-01-01")
-  private val updateSpec = UpdateSpec(OverdueUpdate(date = dateOnClock,
-      canGeneratePdf = true,
-      isOverdueSectionsFeatureEnabled = false))
+  private val updateSpec = UpdateSpec(OverdueUpdate(
+      date = dateOnClock,
+      canGeneratePdf = true
+  ))
   private val defaultModel = OverdueModel.create()
 
   @Test
@@ -42,54 +42,6 @@ class OverdueUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenPatientSummary(patientUuid))
-        ))
-  }
-
-  @Test
-  fun `when overdue appointments are loaded, then show overdue appointments`() {
-    val overdueAppointments = PagingData.from(listOf(
-        TestData.overdueAppointment_Old(appointmentUuid = UUID.fromString("4e4baeba-3a8e-4453-ace1-d3149088aefc")),
-        TestData.overdueAppointment_Old(appointmentUuid = UUID.fromString("79c4bda9-50cf-4484-8a2a-c5336ce8af84"))
-    ))
-    val facility = TestData.facility(
-        uuid = UUID.fromString("6d66fda7-7ca6-4431-ac3b-b570f1123624"),
-        facilityConfig = FacilityConfig(
-            diabetesManagementEnabled = true,
-            teleconsultationEnabled = false,
-            monthlyScreeningReportsEnabled = false,
-            monthlySuppliesReportsEnabled = false
-        )
-    )
-    val facilityLoadedModel = defaultModel
-        .currentFacilityLoaded(facility)
-
-    updateSpec
-        .given(facilityLoadedModel)
-        .whenEvent(OverdueAppointmentsLoaded_Old(overdueAppointments))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(ShowOverdueAppointments(overdueAppointments, isDiabetesManagementEnabled = true))
-        ))
-  }
-
-  @Test
-  fun `when current facility is loaded and overdue sections feature is disabled, then load pending overdue appointments`() {
-    val facility = TestData.facility(
-        uuid = UUID.fromString("6d66fda7-7ca6-4431-ac3b-b570f1123624"),
-        facilityConfig = FacilityConfig(
-            diabetesManagementEnabled = true,
-            teleconsultationEnabled = false,
-            monthlyScreeningReportsEnabled = false,
-            monthlySuppliesReportsEnabled = false
-        )
-    )
-
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(CurrentFacilityLoaded(facility))
-        .then(assertThatNext(
-            hasModel(defaultModel.currentFacilityLoaded(facility)),
-            hasEffects(LoadOverdueAppointments_old(dateOnClock, facility))
         ))
   }
 
@@ -107,8 +59,7 @@ class OverdueUpdateTest {
 
     val updateSpec = UpdateSpec(OverdueUpdate(
         date = dateOnClock,
-        canGeneratePdf = true,
-        isOverdueSectionsFeatureEnabled = true
+        canGeneratePdf = true
     ))
 
     updateSpec
@@ -144,7 +95,7 @@ class OverdueUpdateTest {
 
   @Test
   fun `when download overdue list button is clicked, network is connected and pdf can not be generated, then schedule download`() {
-    val updateSpec = UpdateSpec(OverdueUpdate(date = dateOnClock, canGeneratePdf = false, isOverdueSectionsFeatureEnabled = false))
+    val updateSpec = UpdateSpec(OverdueUpdate(date = dateOnClock, canGeneratePdf = false))
 
     updateSpec
         .given(defaultModel)
@@ -179,7 +130,7 @@ class OverdueUpdateTest {
 
   @Test
   fun `when share overdue list button is clicked, network is connected but pdf can not be generated, then open progress for share dialog`() {
-    val updateSpec = UpdateSpec(OverdueUpdate(date = dateOnClock, canGeneratePdf = false, isOverdueSectionsFeatureEnabled = false))
+    val updateSpec = UpdateSpec(OverdueUpdate(date = dateOnClock, canGeneratePdf = false))
 
     updateSpec
         .given(defaultModel)

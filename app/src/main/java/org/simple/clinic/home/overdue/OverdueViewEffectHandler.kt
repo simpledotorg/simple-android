@@ -11,7 +11,6 @@ class OverdueViewEffectHandler(
     when (viewEffect) {
       is OpenContactPatientScreen -> uiActions.openPhoneMaskBottomSheet(viewEffect.patientUuid)
       is OpenPatientSummary -> uiActions.openPatientSummary(viewEffect.patientUuid)
-      is ShowOverdueAppointments -> uiActions.showOverdueAppointments(viewEffect.overdueAppointmentsOld, viewEffect.isDiabetesManagementEnabled)
       ShowNoActiveNetworkConnectionDialog -> uiActions.showNoActiveNetworkConnectionDialog()
       is OpenSelectDownloadFormatDialog -> uiActions.openSelectDownloadFormatDialog()
       is OpenSelectShareFormatDialog -> uiActions.openSelectShareFormatDialog()

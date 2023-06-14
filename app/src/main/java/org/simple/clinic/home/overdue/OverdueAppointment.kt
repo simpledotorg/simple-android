@@ -80,10 +80,7 @@ data class OverdueAppointment(
         GROUP BY patientUuid HAVING MAX(createdAt)
       ) A ON A.patientUuid = P.uuid
 
-      LEFT JOIN (
-        SELECT * FROM PatientPhoneNumber
-        WHERE deletedAt IS NULL 
-      ) PPN ON PPN.patientUuid = P.uuid
+      LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid = P.uuid
 
       LEFT JOIN PatientAddress PA ON PA.uuid = P.addressUuid
       

@@ -1,17 +1,14 @@
 package org.simple.clinic.home.overdue
 
-import androidx.paging.PagingData
-import org.mockito.kotlin.any
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.whenever
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.whenever
 import org.simple.clinic.analytics.NetworkCapabilitiesProvider
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.mobius.EffectHandlerTestCase
@@ -22,7 +19,6 @@ import org.simple.clinic.overdue.callresult.Outcome
 import org.simple.clinic.overdue.download.OverdueDownloadScheduler
 import org.simple.clinic.overdue.download.OverdueListFileFormat.CSV
 import org.simple.clinic.util.PagerFactory
-import org.simple.clinic.util.PagingSourceFactory
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.sharedTestCode.TestData
 import org.simple.sharedTestCode.util.TestUserClock
@@ -93,53 +89,6 @@ class OverdueEffectHandlerTest {
     // then
     effectHandlerTestCase.assertOutgoingEvents(CurrentFacilityLoaded(facility))
     verifyNoInteractions(uiActions)
-  }
-
-  @Test
-  fun `when show overdue appointments effect is received, then show overdue appointments`() {
-    // given
-    val overdueAppointments = listOf(
-        TestData.overdueAppointment_Old(
-            appointmentUuid = UUID.fromString("e960f0dd-e575-4a1d-b8c1-6676097b4b54")
-        ),
-        TestData.overdueAppointment_Old(
-            appointmentUuid = UUID.fromString("65c380ad-d2e4-49f5-a348-07e8d489dab1")
-        )
-    )
-    val pagingData = PagingData.from(overdueAppointments)
-
-    // when
-    effectHandlerTestCase.dispatch(ShowOverdueAppointments(overdueAppointmentsOld = pagingData,
-        isDiabetesManagementEnabled = true))
-
-    // then
-    verify(uiActions).showOverdueAppointments(overdueAppointmentsOld = pagingData,
-        isDiabetesManagementEnabled = true)
-  }
-
-  @Test
-  fun `when load overdue appointments effect is received, then load overdue appointments with patients with no phone numbers`() {
-    // given
-    val overdueAppointments = PagingData.from(listOf(
-        TestData.overdueAppointment_Old(appointmentUuid = UUID.fromString("94295f1e-9087-427e-be9d-552ab0581443")),
-        TestData.overdueAppointment_Old(appointmentUuid = UUID.fromString("3379cdf4-9693-4ad8-b0d6-1006f6dd48ff"))
-    ))
-
-    whenever(pagerFactory.createPager(
-        sourceFactory = any<PagingSourceFactory<Int, OverdueAppointment_Old>>(),
-        pageSize = eq(overdueAppointmentsConfig.overdueAppointmentsLoadSize),
-        enablePlaceholders = eq(true),
-        initialKey = eq(null),
-        cacheScope = eq(null)
-    )) doReturn Observable.just(overdueAppointments)
-
-    // when
-    effectHandlerTestCase.dispatch(LoadOverdueAppointments_old(overdueSince = LocalDate.parse("2018-01-01"), facility = facility))
-
-    // then
-    verifyNoInteractions(uiActions)
-
-    effectHandlerTestCase.assertOutgoingEvents(OverdueAppointmentsLoaded_Old(overdueAppointments))
   }
 
   @Test
@@ -288,7 +237,7 @@ class OverdueEffectHandlerTest {
         moreThanAnYearAppointment
     )
 
-    whenever(appointmentRepository.overdueAppointmentsInFacilityNew(
+    whenever(appointmentRepository.overdueAppointmentsInFacility(
         since = LocalDate.parse("2018-04-03"),
         facilityId = facility.uuid
     )) doReturn Observable.just(overdueAppointments)

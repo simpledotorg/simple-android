@@ -27,24 +27,11 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.facility.FacilityPayload
 import org.simple.clinic.home.overdue.OverdueAppointment
-import org.simple.clinic.home.overdue.OverdueAppointment_Old
 import org.simple.clinic.home.overdue.OverduePatientAddress
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
-import org.simple.clinic.questionnaire.MonthlyScreeningReports
-import org.simple.clinic.questionnaire.Questionnaire
-import org.simple.clinic.questionnaire.QuestionnaireType
-import org.simple.clinic.questionnaire.component.BaseComponentData
-import org.simple.clinic.questionnaire.component.HeaderComponentData
-import org.simple.clinic.questionnaire.component.InputFieldComponentData
-import org.simple.clinic.questionnaire.component.InputViewGroupComponentData
-import org.simple.clinic.questionnaire.component.LineSeparatorComponentData
-import org.simple.clinic.questionnaire.component.SeparatorComponentData
-import org.simple.clinic.questionnaire.component.SubHeaderComponentData
-import org.simple.clinic.questionnaire.component.ViewGroupComponentData
-import org.simple.clinic.questionnaire.component.properties.InputFieldValidations
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentPayload
@@ -80,11 +67,23 @@ import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.protocol.sync.ProtocolDrugPayload
 import org.simple.clinic.protocol.sync.ProtocolPayload
+import org.simple.clinic.questionnaire.MonthlyScreeningReports
+import org.simple.clinic.questionnaire.Questionnaire
+import org.simple.clinic.questionnaire.QuestionnaireType
+import org.simple.clinic.questionnaire.component.BaseComponentData
+import org.simple.clinic.questionnaire.component.HeaderComponentData
+import org.simple.clinic.questionnaire.component.InputFieldComponentData
+import org.simple.clinic.questionnaire.component.InputViewGroupComponentData
+import org.simple.clinic.questionnaire.component.LineSeparatorComponentData
 import org.simple.clinic.questionnaire.component.ParagraphComponentData
 import org.simple.clinic.questionnaire.component.RadioButtonComponentData
 import org.simple.clinic.questionnaire.component.RadioViewGroupComponentData
+import org.simple.clinic.questionnaire.component.SeparatorComponentData
+import org.simple.clinic.questionnaire.component.SubHeaderComponentData
 import org.simple.clinic.questionnaire.component.UnorderedListItemComponentData
 import org.simple.clinic.questionnaire.component.UnorderedListViewGroupComponentData
+import org.simple.clinic.questionnaire.component.ViewGroupComponentData
+import org.simple.clinic.questionnaire.component.properties.InputFieldValidations
 import org.simple.clinic.questionnaire.component.properties.IntegerType
 import org.simple.clinic.questionnaire.component.properties.StringType
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
@@ -1024,34 +1023,6 @@ object TestData {
       district = district,
       state = state
   )
-
-  fun overdueAppointment_Old(
-      facilityUuid: UUID = UUID.randomUUID(),
-      patientUuid: UUID = UUID.randomUUID(),
-      phoneNumberUuid: UUID = UUID.randomUUID(),
-      appointmentUuid: UUID = UUID.randomUUID(),
-      name: String = "somebody",
-      gender: Gender = Gender.Transgender,
-      phoneNumber: PatientPhoneNumber? = patientPhoneNumber(uuid = phoneNumberUuid, patientUuid = patientUuid),
-      appointment: Appointment = appointment(uuid = appointmentUuid, patientUuid = patientUuid, facilityUuid = facilityUuid),
-      patientAddress: OverduePatientAddress = overduePatientAddress(),
-      patientAssignedFacilityId: UUID? = null,
-      patientAgeDetails: PatientAgeDetails = PatientAgeDetails(
-          ageValue = null,
-          ageUpdatedAt = null,
-          dateOfBirth = LocalDate.now(UTC).minusYears(30)
-      )
-  ): OverdueAppointment_Old {
-    return OverdueAppointment_Old(
-        fullName = name,
-        gender = gender,
-        ageDetails = patientAgeDetails,
-        appointment = appointment,
-        phoneNumber = phoneNumber,
-        patientAddress = patientAddress,
-        patientAssignedFacilityUuid = patientAssignedFacilityId
-    )
-  }
 
   fun overdueAppointment(
       facilityUuid: UUID = UUID.randomUUID(),

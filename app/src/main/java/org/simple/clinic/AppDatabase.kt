@@ -161,7 +161,7 @@ abstract class AppDatabase : RoomDatabase() {
 
   abstract fun appointmentDao(): Appointment.RoomDao
 
-  abstract fun overdueAppointmentNewDao(): OverdueAppointment.RoomDao
+  abstract fun overdueAppointmentDao(): OverdueAppointment.RoomDao
 
   abstract fun medicalHistoryDao(): MedicalHistory.RoomDao
 

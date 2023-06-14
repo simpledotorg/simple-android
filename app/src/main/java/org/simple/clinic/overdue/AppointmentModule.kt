@@ -37,8 +37,8 @@ class AppointmentModule {
   }
 
   @Provides
-  fun overdueAppointmentDaoNew(appDatabase: AppDatabase): OverdueAppointment.RoomDao {
-    return appDatabase.overdueAppointmentNewDao()
+  fun overdueAppointmentDao(appDatabase: AppDatabase): OverdueAppointment.RoomDao {
+    return appDatabase.overdueAppointmentDao()
   }
 
   @Provides

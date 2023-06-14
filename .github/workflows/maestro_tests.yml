@@ -70,6 +70,7 @@ jobs:
             -PsentryDsn=""
             -PsentryEnvironment=""
             -PmanifestEndpoint=${{ secrets.MANIFEST_ENDPOINT }}
+            -PmanifestPath=${{ secrets.MANIFEST_PATH }}
             :app:installStagingRelease
             
             # When installing Maestro manually, it doesn't get discovered in the path.

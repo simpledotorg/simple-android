@@ -234,11 +234,7 @@ class OverdueScreen : BaseScreen<
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    overdueRecyclerView.adapter = if (features.isEnabled(OverdueSections)) {
-      overdueListAdapter
-    } else {
-      overdueListAdapter_Old
-    }
+    overdueRecyclerView.adapter = overdueListAdapter
     overdueRecyclerView.layoutManager = LinearLayoutManager(context)
 
     val isOverdueListDownloadAndShareEnabled = features.isEnabled(OverdueListDownloadAndShare) && country.isoCountryCode == Country.INDIA

@@ -126,6 +126,14 @@ class AppointmentRepositoryAndroidTest {
     userClock.setDate(LocalDate.parse("2018-01-01"))
   }
 
+  private fun markAppointmentSyncStatusAsDone(vararg appointmentUuids: UUID) {
+    appointmentRepository.setSyncStatus(appointmentUuids.toList(), DONE)
+  }
+
+  private fun getAppointmentByUuid(appointmentUuid: UUID): Appointment {
+    return database.appointmentDao().getOne(appointmentUuid)!!
+  }
+
   @Test
   fun when_creating_new_appointment_then_the_appointment_should_be_saved() {
     // given
@@ -1812,57 +1820,6 @@ class AppointmentRepositoryAndroidTest {
     ))
   }
 
-  private fun markAppointmentSyncStatusAsDone(vararg appointmentUuids: UUID) {
-    appointmentRepository.setSyncStatus(appointmentUuids.toList(), DONE)
-  }
-
-  private fun getAppointmentByUuid(appointmentUuid: UUID): Appointment {
-    return database.appointmentDao().getOne(appointmentUuid)!!
-  }
-
-  data class RecordAppointment(
-      val patientProfile: PatientProfile,
-      val bloodPressureMeasurement: BloodPressureMeasurement?,
-      val bloodSugarMeasurement: BloodSugarMeasurement?,
-      val appointment: Appointment,
-      val callResult: CallResult?
-  ) {
-    fun save(
-        patientRepository: PatientRepository,
-        bloodPressureRepository: BloodPressureRepository,
-        bloodSugarRepository: BloodSugarRepository,
-        appointmentRepository: AppointmentRepository
-    ) {
-      patientRepository.save(listOf(patientProfile))
-      bloodPressureRepository.save(listOfNotNull(bloodPressureMeasurement))
-      bloodSugarRepository.save(listOfNotNull(bloodSugarMeasurement))
-      appointmentRepository.save(listOf(appointment))
-    }
-
-    fun toOverdueAppointment(): OverdueAppointment {
-      if (bloodPressureMeasurement == null && bloodSugarMeasurement == null) {
-        throw AssertionError("Need a Blood Pressure Measurement or Blood Sugar Measurement to create an Overdue Appointment")
-      } else {
-        val overduePatientAddress = OverduePatientAddress(
-            streetAddress = patientProfile.address.streetAddress,
-            colonyOrVillage = patientProfile.address.colonyOrVillage,
-            district = patientProfile.address.district,
-            state = patientProfile.address.state
-        )
-        return OverdueAppointment(
-            fullName = patientProfile.patient.fullName,
-            gender = patientProfile.patient.gender,
-            ageDetails = patientProfile.patient.ageDetails,
-            appointment = appointment,
-            phoneNumber = patientProfile.phoneNumbers.firstOrNull(),
-            patientAddress = overduePatientAddress,
-            patientAssignedFacilityUuid = patientProfile.patient.assignedFacilityId,
-            callResult = callResult
-        )
-      }
-    }
-  }
-
   @Test
   fun searching_for_overdue_appointments_should_work_correctly() {
     fun createOverdueAppointment(
@@ -2068,6 +2025,49 @@ class AppointmentRepositoryAndroidTest {
     assertThat(overduePatientUuids).doesNotContain(
         patientWithNothingMatching
     )
+  }
+}
+
+private data class RecordAppointment(
+    val patientProfile: PatientProfile,
+    val bloodPressureMeasurement: BloodPressureMeasurement?,
+    val bloodSugarMeasurement: BloodSugarMeasurement?,
+    val appointment: Appointment,
+    val callResult: CallResult?
+) {
+  fun save(
+      patientRepository: PatientRepository,
+      bloodPressureRepository: BloodPressureRepository,
+      bloodSugarRepository: BloodSugarRepository,
+      appointmentRepository: AppointmentRepository
+  ) {
+    patientRepository.save(listOf(patientProfile))
+    bloodPressureRepository.save(listOfNotNull(bloodPressureMeasurement))
+    bloodSugarRepository.save(listOfNotNull(bloodSugarMeasurement))
+    appointmentRepository.save(listOf(appointment))
+  }
+
+  fun toOverdueAppointment(): OverdueAppointment {
+    if (bloodPressureMeasurement == null && bloodSugarMeasurement == null) {
+      throw AssertionError("Need a Blood Pressure Measurement or Blood Sugar Measurement to create an Overdue Appointment")
+    } else {
+      val overduePatientAddress = OverduePatientAddress(
+          streetAddress = patientProfile.address.streetAddress,
+          colonyOrVillage = patientProfile.address.colonyOrVillage,
+          district = patientProfile.address.district,
+          state = patientProfile.address.state
+      )
+      return OverdueAppointment(
+          fullName = patientProfile.patient.fullName,
+          gender = patientProfile.patient.gender,
+          ageDetails = patientProfile.patient.ageDetails,
+          appointment = appointment,
+          phoneNumber = patientProfile.phoneNumbers.firstOrNull(),
+          patientAddress = overduePatientAddress,
+          patientAssignedFacilityUuid = patientProfile.patient.assignedFacilityId,
+          callResult = callResult
+      )
+    }
   }
 }
 

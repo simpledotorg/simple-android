@@ -128,7 +128,7 @@ data class OverdueAppointment(
       WHERE
         IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid AND
         appt_scheduledDate > date(:scheduledBefore, '-1 year') AND
-        appt_status != "visited" AND
+        appt_status == "cancelled" AND
         call_result_outcome == "removed_from_overdue_list"
       GROUP BY appt_patientUuid
       ORDER BY 

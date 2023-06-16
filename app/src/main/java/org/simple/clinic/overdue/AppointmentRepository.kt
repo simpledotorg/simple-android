@@ -154,6 +154,16 @@ class AppointmentRepository @Inject constructor(
     )
   }
 
+  fun agreedToVisitOverdueAppointments(
+      since: LocalDate,
+      facilityId: UUID
+  ): Observable<List<OverdueAppointment>> {
+    return overdueDao.agreedToVisitOverdueAppointments(
+        facilityUuid = facilityId,
+        scheduledBefore = since
+    )
+  }
+
   fun searchOverduePatient(
       searchInputs: List<String>,
       since: LocalDate,

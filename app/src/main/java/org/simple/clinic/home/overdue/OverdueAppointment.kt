@@ -124,6 +124,20 @@ data class OverdueAppointment(
 
     @Transaction
     @Query("""
+      $OVERDUE_APPOINTMENTS_QUERY 
+      WHERE
+        IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid AND
+        appt_scheduledDate > date(:scheduledBefore, '-1 year') AND
+        call_result_outcome == "removed_from_overdue_list"
+      GROUP BY appt_patientUuid
+      ORDER BY 
+        appt_scheduledDate DESC, 
+        appt_updatedAt ASC
+    """)
+    fun removedOverdueAppointments(facilityUuid: UUID, scheduledBefore: LocalDate): Observable<List<OverdueAppointment>>
+
+    @Transaction
+    @Query("""
       $OVERDUE_APPOINTMENTS_QUERY
       WHERE
         (

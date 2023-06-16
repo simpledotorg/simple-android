@@ -103,7 +103,7 @@ data class OverdueAppointment(
         appt_scheduledDate DESC, 
         appt_updatedAt ASC
     """)
-    fun overdueAppointmentsInFacility(
+    fun overdueAppointmentsInFacility_Old(
         facilityUuid: UUID,
         scheduledBefore: LocalDate
     ): Observable<List<OverdueAppointment>>

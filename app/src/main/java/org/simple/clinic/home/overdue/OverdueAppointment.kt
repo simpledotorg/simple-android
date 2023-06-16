@@ -146,66 +146,6 @@ data class OverdueAppointment(
 
     @Transaction
     @Query("""
-      $OVERDUE_APPOINTMENTS_QUERY 
-      WHERE
-        IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid AND
-        appt_scheduledDate > date(:scheduledBefore, '-1 year') AND
-        appt_status == "cancelled" AND
-        call_result_outcome == "removed_from_overdue_list"
-      GROUP BY appt_patientUuid
-      ORDER BY 
-        appt_scheduledDate DESC, 
-        appt_updatedAt ASC
-    """)
-    fun removedOverdueAppointments(facilityUuid: UUID, scheduledBefore: LocalDate): Observable<List<OverdueAppointment>>
-
-    @Transaction
-    @Query("""
-      $OVERDUE_APPOINTMENTS_QUERY 
-      WHERE
-        IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid AND
-        appt_scheduledDate > date(:scheduledBefore, '-1 year') AND
-        appt_status == "scheduled" AND
-        call_result_outcome == "remind_to_call_later"
-      GROUP BY appt_patientUuid
-      ORDER BY 
-        appt_scheduledDate DESC, 
-        appt_updatedAt ASC
-    """)
-    fun remindToCallLaterOverdueAppointments(facilityUuid: UUID, scheduledBefore: LocalDate): Observable<List<OverdueAppointment>>
-
-    @Transaction
-    @Query("""
-      $OVERDUE_APPOINTMENTS_QUERY 
-      WHERE
-        IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid AND
-        appt_scheduledDate > date(:scheduledBefore, '-1 year') AND
-        appt_status == "scheduled" AND
-        call_result_outcome == "agreed_to_visit"
-      GROUP BY appt_patientUuid
-      ORDER BY 
-        appt_scheduledDate DESC, 
-        appt_updatedAt ASC
-    """)
-    fun agreedToVisitOverdueAppointments(facilityUuid: UUID, scheduledBefore: LocalDate): Observable<List<OverdueAppointment>>
-
-    @Transaction
-    @Query("""
-      $OVERDUE_APPOINTMENTS_QUERY 
-      WHERE
-        IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid AND
-        appt_scheduledDate > date(:scheduledBefore, '-1 year') AND
-        appt_status == "scheduled" AND
-        call_result_outcome IS NULL
-      GROUP BY appt_patientUuid
-      ORDER BY 
-        appt_scheduledDate DESC, 
-        appt_updatedAt ASC
-    """)
-    fun pendingOverdueAppointments(facilityUuid: UUID, scheduledBefore: LocalDate): Observable<List<OverdueAppointment>>
-
-    @Transaction
-    @Query("""
       $OVERDUE_APPOINTMENTS_QUERY
       WHERE
         (

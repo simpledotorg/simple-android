@@ -11,6 +11,7 @@ import kotlinx.parcelize.Parcelize
 import org.intellij.lang.annotations.Language
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.callresult.CallResult
+import org.simple.clinic.overdue.callresult.Outcome
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientPhoneNumber
@@ -106,6 +107,27 @@ data class OverdueAppointment(
     fun overdueAppointmentsInFacility_Old(
         facilityUuid: UUID,
         scheduledBefore: LocalDate
+    ): Observable<List<OverdueAppointment>>
+
+    @Transaction
+    @Query(""" 
+      $OVERDUE_APPOINTMENTS_QUERY 
+      WHERE
+        IFNULL(patientAssignedFacilityUuid, appt_facilityUuid) = :facilityUuid AND
+        appt_scheduledDate < :scheduledBefore AND
+        appt_scheduledDate > date(:scheduledBefore, '-1 year') AND
+        appt_status == :appointmentStatus AND
+        (call_result_outcome = :callResultOutcome OR (:callResultOutcome IS NULL AND call_result_outcome IS NULL))
+      GROUP BY appt_patientUuid
+      ORDER BY 
+        appt_scheduledDate DESC, 
+        appt_updatedAt ASC
+    """)
+    fun overdueAppointmentsInFacility(
+        facilityUuid: UUID,
+        scheduledBefore: LocalDate,
+        appointmentStatus: Appointment.Status,
+        callResultOutcome: Outcome?
     ): Observable<List<OverdueAppointment>>
 
     @Transaction

@@ -9,6 +9,9 @@ import org.simple.clinic.overdue.Appointment.AppointmentType
 import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.Appointment.Status.Visited
+import org.simple.clinic.overdue.callresult.Outcome.AgreedToVisit
+import org.simple.clinic.overdue.callresult.Outcome.RemindToCallLater
+import org.simple.clinic.overdue.callresult.Outcome.RemovedFromOverdueList
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.summary.nextappointment.NextAppointmentPatientProfile
@@ -128,9 +131,47 @@ class AppointmentRepository @Inject constructor(
       since: LocalDate,
       facilityId: UUID
   ): Observable<List<OverdueAppointment>> {
-    return overdueDao.pendingOverdueAppointments(
+    return overdueDao.overdueAppointmentsInFacility(
         facilityUuid = facilityId,
-        scheduledBefore = since
+        scheduledBefore = since,
+        appointmentStatus = Scheduled,
+        callResultOutcome = null
+    )
+  }
+
+  fun agreedToVisitOverdueAppointments(
+      since: LocalDate,
+      facilityId: UUID
+  ): Observable<List<OverdueAppointment>> {
+    return overdueDao.overdueAppointmentsInFacility(
+        facilityUuid = facilityId,
+        scheduledBefore = since,
+        appointmentStatus = Scheduled,
+        callResultOutcome = AgreedToVisit
+    )
+  }
+
+  fun remindToCallLaterOverdueAppointments(
+      since: LocalDate,
+      facilityId: UUID
+  ): Observable<List<OverdueAppointment>> {
+    return overdueDao.overdueAppointmentsInFacility(
+        facilityUuid = facilityId,
+        scheduledBefore = since,
+        appointmentStatus = Scheduled,
+        callResultOutcome = RemindToCallLater
+    )
+  }
+
+  fun removedOverdueAppointments(
+      since: LocalDate,
+      facilityId: UUID
+  ): Observable<List<OverdueAppointment>> {
+    return overdueDao.overdueAppointmentsInFacility(
+        facilityUuid = facilityId,
+        scheduledBefore = since,
+        appointmentStatus = Cancelled,
+        callResultOutcome = RemovedFromOverdueList
     )
   }
 
@@ -139,36 +180,6 @@ class AppointmentRepository @Inject constructor(
       facilityId: UUID
   ): Observable<List<OverdueAppointment>> {
     return overdueDao.moreThanAnYearOverdueAppointments(
-        facilityUuid = facilityId,
-        scheduledBefore = since
-    )
-  }
-
-  fun removedOverdueAppointments(
-      since: LocalDate,
-      facilityId: UUID
-  ): Observable<List<OverdueAppointment>> {
-    return overdueDao.removedOverdueAppointments(
-        facilityUuid = facilityId,
-        scheduledBefore = since
-    )
-  }
-
-  fun remindToCallLaterOverdueAppointments(
-      since: LocalDate,
-      facilityId: UUID
-  ): Observable<List<OverdueAppointment>> {
-    return overdueDao.remindToCallLaterOverdueAppointments(
-        facilityUuid = facilityId,
-        scheduledBefore = since
-    )
-  }
-
-  fun agreedToVisitOverdueAppointments(
-      since: LocalDate,
-      facilityId: UUID
-  ): Observable<List<OverdueAppointment>> {
-    return overdueDao.agreedToVisitOverdueAppointments(
         facilityUuid = facilityId,
         scheduledBefore = since
     )

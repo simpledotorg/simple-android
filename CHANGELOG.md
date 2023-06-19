@@ -9,6 +9,7 @@
 - Enable Configuration cache
 - Migrate `BloodSugarEntryEffectHandler` to use view effect
 - Remove old overdue appointments view
+- Add individual paginated queries for overdue sections 
 
 ## 2023-06-12-8756
 

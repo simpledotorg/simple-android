@@ -130,7 +130,7 @@ class AppointmentRepository @Inject constructor(
   fun pendingOverdueAppointments(
       since: LocalDate,
       facilityId: UUID
-  ): Observable<List<OverdueAppointment>> {
+  ): PagingSource<Int, OverdueAppointment> {
     return overdueDao.overdueAppointmentsInFacility(
         facilityUuid = facilityId,
         scheduledBefore = since,
@@ -142,7 +142,7 @@ class AppointmentRepository @Inject constructor(
   fun agreedToVisitOverdueAppointments(
       since: LocalDate,
       facilityId: UUID
-  ): Observable<List<OverdueAppointment>> {
+  ): PagingSource<Int, OverdueAppointment> {
     return overdueDao.overdueAppointmentsInFacility(
         facilityUuid = facilityId,
         scheduledBefore = since,
@@ -154,7 +154,7 @@ class AppointmentRepository @Inject constructor(
   fun remindToCallLaterOverdueAppointments(
       since: LocalDate,
       facilityId: UUID
-  ): Observable<List<OverdueAppointment>> {
+  ): PagingSource<Int, OverdueAppointment> {
     return overdueDao.overdueAppointmentsInFacility(
         facilityUuid = facilityId,
         scheduledBefore = since,
@@ -166,7 +166,7 @@ class AppointmentRepository @Inject constructor(
   fun removedOverdueAppointments(
       since: LocalDate,
       facilityId: UUID
-  ): Observable<List<OverdueAppointment>> {
+  ): PagingSource<Int, OverdueAppointment> {
     return overdueDao.overdueAppointmentsInFacility(
         facilityUuid = facilityId,
         scheduledBefore = since,
@@ -178,7 +178,7 @@ class AppointmentRepository @Inject constructor(
   fun moreThanAnYearOverdueAppointments(
       since: LocalDate,
       facilityId: UUID
-  ): Observable<List<OverdueAppointment>> {
+  ): PagingSource<Int, OverdueAppointment> {
     return overdueDao.moreThanAnYearOverdueAppointments(
         facilityUuid = facilityId,
         scheduledBefore = since

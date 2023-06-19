@@ -128,7 +128,7 @@ data class OverdueAppointment(
         scheduledBefore: LocalDate,
         appointmentStatus: Appointment.Status,
         callResultOutcome: Outcome?
-    ): Observable<List<OverdueAppointment>>
+    ): PagingSource<Int, OverdueAppointment>
 
     @Transaction
     @Query("""
@@ -142,7 +142,7 @@ data class OverdueAppointment(
         appt_scheduledDate DESC, 
         appt_updatedAt ASC
     """)
-    fun moreThanAnYearOverdueAppointments(facilityUuid: UUID, scheduledBefore: LocalDate): Observable<List<OverdueAppointment>>
+    fun moreThanAnYearOverdueAppointments(facilityUuid: UUID, scheduledBefore: LocalDate): PagingSource<Int, OverdueAppointment>
 
     @Transaction
     @Query("""

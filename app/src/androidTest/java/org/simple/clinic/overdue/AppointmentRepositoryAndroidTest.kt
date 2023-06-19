@@ -1808,10 +1808,13 @@ class AppointmentRepositoryAndroidTest {
     )
 
     //when
-    val overdueAppointments = appointmentRepository.moreThanAnYearOverdueAppointments(
-        since = now,
-        facilityId = facility1Uuid
-    ).blockingFirst().map { it.appointment.patientUuid }
+    val overdueAppointments = PagingTestCase(
+        pagingSource = appointmentRepository.moreThanAnYearOverdueAppointments(
+            since = now,
+            facilityId = facility1Uuid
+        ),
+        loadSize = 10
+    ).loadPage().data.map { it.appointment.patientUuid }
 
     //then
     assertThat(overdueAppointments).isEqualTo(listOf(
@@ -2156,10 +2159,13 @@ class AppointmentRepositoryAndroidTest {
     )
 
     //when
-    val overdueAppointments = appointmentRepository.removedOverdueAppointments(
-        since = now,
-        facilityId = facility1Uuid
-    ).blockingFirst().map { it.appointment.patientUuid }
+    val overdueAppointments = PagingTestCase(
+        pagingSource = appointmentRepository.removedOverdueAppointments(
+            since = now,
+            facilityId = facility1Uuid
+        ),
+        loadSize = 10
+    ).loadPage().data.map { it.appointment.patientUuid }
 
     //then
     assertThat(overdueAppointments).isEqualTo(listOf(patientWithCancelledAppointment))
@@ -2293,10 +2299,13 @@ class AppointmentRepositoryAndroidTest {
     )
 
     //when
-    val overdueAppointments = appointmentRepository.remindToCallLaterOverdueAppointments(
-        since = now,
-        facilityId = facility1Uuid
-    ).blockingFirst().map { it.appointment.patientUuid }
+    val overdueAppointments = PagingTestCase(
+        pagingSource = appointmentRepository.remindToCallLaterOverdueAppointments(
+            since = now,
+            facilityId = facility1Uuid
+        ),
+        loadSize = 10
+    ).loadPage().data.map { it.appointment.patientUuid }
 
     //then
     assertThat(overdueAppointments).isEqualTo(listOf(patientWithAppointmentRemindedInFiveDaysSinceOverdue))
@@ -2429,10 +2438,13 @@ class AppointmentRepositoryAndroidTest {
     )
 
     //when
-    val overdueAppointments = appointmentRepository.agreedToVisitOverdueAppointments(
-        since = now,
-        facilityId = facility1Uuid
-    ).blockingFirst().map { it.appointment.patientUuid }
+    val overdueAppointments = PagingTestCase(
+        pagingSource = appointmentRepository.agreedToVisitOverdueAppointments(
+            since = now,
+            facilityId = facility1Uuid
+        ),
+        loadSize = 10
+    ).loadPage().data.map { it.appointment.patientUuid }
 
     //then
     assertThat(overdueAppointments).isEqualTo(listOf(patientAgreedToVisit))
@@ -2623,10 +2635,13 @@ class AppointmentRepositoryAndroidTest {
     )
 
     //when
-    val overdueAppointments = appointmentRepository.pendingOverdueAppointments(
-        since = now,
-        facilityId = facility1Uuid
-    ).blockingFirst().map { it.appointment.patientUuid }
+    val overdueAppointments = PagingTestCase(
+        pagingSource = appointmentRepository.pendingOverdueAppointments(
+            since = now,
+            facilityId = facility1Uuid
+        ),
+        loadSize = 10
+    ).loadPage().data.map { it.appointment.patientUuid }
 
     //then
     assertThat(overdueAppointments).isEqualTo(listOf(

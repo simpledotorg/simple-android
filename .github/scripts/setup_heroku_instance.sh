@@ -9,6 +9,8 @@ androidAppDirectory=${5}
 encodedHerokuEnvProperties=${6}
 decodedHerokuEnvProperties=$(echo $encodedHerokuEnvProperties | base64 --decode)
 
+echo "App URL: $(heroku apps:info --app "${herokuAppName}" --json | jq -r '.app.web_url')"
+
 echo "Checking if ${herokuAppName} exists in team ${herokuTeamName}"
 
 existingAppName=$(heroku apps --team=${herokuTeamName} | grep "$herokuAppName")
@@ -49,6 +51,7 @@ if [ $serverAppAlreadyExists = false ]; then
   resultOfSeedDataSetup=$?
 fi
 
+echo "App URL: $(heroku apps:info --app "${herokuAppName}" --json | jq -r '.app.web_url')"
 echo "heroku_app_url=$(heroku apps:info --app "${herokuAppName}" --json | jq -r '.app.web_url')" >> "$GITHUB_OUTPUT"
 
 echo "Result of starting server: ${resultOfServerPush}, seed data push ${resultOfSeedDataSetup}"

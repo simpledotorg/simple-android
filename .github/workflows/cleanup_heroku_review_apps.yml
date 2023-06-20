@@ -11,7 +11,7 @@ on:
 
 jobs:
   teardown_heroku_instance:
-    runs-on: [ ubuntu-22.04 ]
+    runs-on: [ ubuntu-latest ]
     env:
       HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
     steps:

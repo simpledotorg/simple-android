@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   maestro-tests:
-    runs-on: [ macos-11 ]
+    runs-on: [ macos-latest ]
     steps:
       - name: Checkout Android source
         uses: actions/checkout@v3
@@ -28,9 +28,8 @@ jobs:
 
       - name: Install Maestro
         run: |
-          export MAESTRO_VERSION="1.23.0"
-          export MAESTRO_DIR="$HOME/.maestro"
           curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
       - name: Cache AVD
         uses: actions/cache@v3
@@ -71,11 +70,9 @@ jobs:
             -PsentryEnvironment=""
             -PmanifestEndpoint=${{ secrets.MANIFEST_ENDPOINT }}
             :app:installStagingRelease
-            
-            # When installing Maestro manually, it doesn't get discovered in the path.
-            # Hence, providing absolute path to binary.
-            $HOME/.maestro/bin/maestro test --format junit --output maestro-test-report.xml maestroUiFlows
-            
+
+            maestro test --format junit --output maestro-test-report.xml maestroUiFlows
+
             adb uninstall org.simple.clinic.staging
 
       - name: Upload test report

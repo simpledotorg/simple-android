@@ -10,6 +10,7 @@
 - Migrate `BloodSugarEntryEffectHandler` to use view effect
 - Remove old overdue appointments view
 - Use heroku generated app url for manifest endpoint in CI
+- Add index for `appointmentId` in `CallResult` table
 
 ## 2023-06-12-8756
 

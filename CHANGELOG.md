@@ -4,6 +4,10 @@
 
 ### Internal
 
+## 2023-06-20-8765
+
+### Internal
+
 - Bump sentry to v6.22.0
 - Bump Sentry Gradle Plugin to v3.10.0
 - Enable Configuration cache

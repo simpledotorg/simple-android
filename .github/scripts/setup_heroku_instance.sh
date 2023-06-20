@@ -49,6 +49,8 @@ if [ $serverAppAlreadyExists = false ]; then
   resultOfSeedDataSetup=$?
 fi
 
+echo "heroku_app_url=$(heroku apps:info --app "${herokuAppName}" --json | jq -r '.app.web_url')" >> "$GITHUB_OUTPUT"
+
 echo "Result of starting server: ${resultOfServerPush}, seed data push ${resultOfSeedDataSetup}"
 
 finalExitCode=$((resultOfServerPush | resultOfSeedDataSetup))

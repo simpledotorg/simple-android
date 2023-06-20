@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
@@ -20,7 +21,12 @@ import java.util.Optional
 import java.util.UUID
 
 @Parcelize
-@Entity(tableName = "CallResult")
+@Entity(
+    tableName = "CallResult",
+    indices = [
+      Index("appointmentId")
+    ]
+)
 data class CallResult(
 
     @PrimaryKey

@@ -21,7 +21,8 @@ import org.simple.clinic.util.ThreadPools
   RoomMigrationsModule::class,
   SharedPreferencesModule::class,
   TextStoreModule::class,
-  SqliteModule::class
+  SqliteModule::class,
+  EncryptionModule::class
 ])
 class StorageModule {
 

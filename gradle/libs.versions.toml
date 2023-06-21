@@ -5,6 +5,7 @@ androidx-cameraView = "1.1.0"
 androidx-paging = "3.1.1"
 androidx-room = "2.4.3"
 androidx-work = "2.7.1"
+androidx-security-crypto = "1.1.0-alpha06"
 
 dagger = "2.44.2"
 
@@ -79,6 +80,8 @@ androidx-test-rules = "androidx.test:rules:1.5.0"
 androidx-work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
 androidx-work-rxjava = { module = "androidx.work:work-rxjava2", version.ref = "androidx-work" }
 androidx-work-gcm = { module = "androidx.work:work-gcm", version.ref = "androidx-work" }
+
+androidx-security-crypto = { module = "androidx.security:security-crypto-ktx", version.ref = "androidx-security-crypto" }
 
 asm = "org.ow2.asm:asm:9.4"
 

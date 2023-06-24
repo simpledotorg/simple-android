@@ -251,6 +251,19 @@
         app:layout_constraintTop_toTopOf="@id/currentLanguageDivider"
         tools:visibility="visible" />
 
+      <com.google.android.material.button.MaterialButton
+        android:id="@+id/logoutButton"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:layout_marginBottom="@dimen/spacing_16"
+        android:text="@string/settings_logout"
+        android:theme="@style/ThemeOverlay.Simple.Red1Primary"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/appVersionDivider"
+        tools:visibility="visible" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
   </ScrollView>

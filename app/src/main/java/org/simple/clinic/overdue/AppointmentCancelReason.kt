@@ -13,6 +13,7 @@ import org.simple.clinic.overdue.AppointmentCancelReason.MovedToPrivatePractitio
 import org.simple.clinic.overdue.AppointmentCancelReason.Other
 import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
 import org.simple.clinic.overdue.AppointmentCancelReason.TransferredToAnotherPublicHospital
+import org.simple.clinic.overdue.AppointmentCancelReason.RefusedToComeBack
 import org.simple.clinic.overdue.AppointmentCancelReason.Unknown
 import org.simple.clinic.util.room.SafeEnumTypeAdapter
 
@@ -47,6 +48,11 @@ sealed class AppointmentCancelReason : Parcelable {
   }
 
   @Parcelize
+  object RefusedToComeBack : AppointmentCancelReason() {
+    override fun toString() = "RefusedToComeBack"
+  }
+
+  @Parcelize
   object Dead : AppointmentCancelReason() {
     override fun toString() = "Dead"
   }
@@ -67,6 +73,7 @@ sealed class AppointmentCancelReason : Parcelable {
           InvalidPhoneNumber to "invalid_phone_number",
           TransferredToAnotherPublicHospital to "public_hospital_transfer",
           MovedToPrivatePractitioner to "moved_to_private",
+          RefusedToComeBack to "refused_to_come_back",
           Dead to "dead",
           Other to "other"
       ),
@@ -108,5 +115,6 @@ val AppointmentCancelReason.displayTextRes: Int
     Other -> R.string.contactpatient_other_reason
     PatientNotResponding -> R.string.contactpatient_patient_is_not_responding
     TransferredToAnotherPublicHospital -> R.string.contactpatient_public_hospital_transfer
+    RefusedToComeBack -> R.string.contactpatient_refused_to_come_back
     is Unknown -> R.string.contactpatient_unknown
   }

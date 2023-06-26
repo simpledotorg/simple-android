@@ -630,6 +630,7 @@
   <string name="contactpatient_invalid_phone_number">Phone number does not work</string>
   <string name="contactpatient_public_hospital_transfer">Transferred to another public health facility</string>
   <string name="contactpatient_moved_to_private">Moved to private practitioner</string>
+  <string name="contactpatient_refused_to_come_back">Refused to come back</string>
   <string name="contactpatient_patient_died">Died</string>
   <string name="contactpatient_other_reason">Other reason</string>
   <string name="contactpatient_unknown">Unknown</string>

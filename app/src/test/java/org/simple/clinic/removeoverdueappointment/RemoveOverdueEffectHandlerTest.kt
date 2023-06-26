@@ -175,4 +175,21 @@ class RemoveOverdueEffectHandlerTest {
     verify(uiActions).goBackAfterAppointmentRemoval()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when mark patient as refused to come back then update the patient status`() {
+    // given
+    val patientId = UUID.fromString("cee7568e-7a82-46cc-afdc-310fc8552615")
+
+    // when
+    testCase.dispatch(MarkPatientAsRefusedToComeBack(patientId))
+
+    // then
+    verify(patientRepository).updatePatientStatusToMigrated(patientId)
+    verifyNoMoreInteractions(patientRepository)
+
+    verifyNoInteractions(uiActions)
+
+    testCase.assertOutgoingEvents(PatientMarkedAsMigrated(AppointmentCancelReason.RefusedToComeBack))
+  }
 }

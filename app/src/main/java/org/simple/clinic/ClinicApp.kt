@@ -21,6 +21,8 @@ import org.simple.clinic.analytics.UpdateAnalyticsUserId
 import org.simple.clinic.crash.CrashBreadcrumbsTimberTree
 import org.simple.clinic.crash.SentryCrashReporterSink
 import org.simple.clinic.di.AppComponent
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsReporter
 import org.simple.clinic.platform.crash.CrashReporter
@@ -64,6 +66,9 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
   @Inject
   lateinit var schedulersProvider: SchedulersProvider
 
+  @Inject
+  lateinit var features: Features
+
   protected open val analyticsReporters = emptyList<AnalyticsReporter>()
 
   protected open val crashReporterSinks = emptyList<CrashReporter.Sink>()
@@ -75,15 +80,21 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
     appComponent = buildDaggerGraph()
     appComponent.inject(this)
 
-    databaseEncryptor
-        .isDatabaseEncrypted
-        .filterTrue()
-        .subscribeOn(schedulersProvider.ui())
-        .subscribe {
-          updateInfrastructureUserDetails.track()
-          updateAnalyticsUserId.listen()
-          closeActivitiesWhenUserIsUnauthorized.listen()
-        }
+    if (features.isEnabled(Feature.DatabaseEncryption)) {
+      databaseEncryptor
+          .isDatabaseEncrypted
+          .filterTrue()
+          .subscribeOn(schedulersProvider.ui())
+          .subscribe {
+            updateInfrastructureUserDetails.track()
+            updateAnalyticsUserId.listen()
+            closeActivitiesWhenUserIsUnauthorized.listen()
+          }
+    } else {
+      updateInfrastructureUserDetails.track()
+      updateAnalyticsUserId.listen()
+      closeActivitiesWhenUserIsUnauthorized.listen()
+    }
 
     crashReporterSinks.forEach(CrashReporter::addSink)
 

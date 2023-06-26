@@ -16,6 +16,7 @@ import org.simple.clinic.activity.permissions.ActivityPermissionResult
 import org.simple.clinic.activity.placeholder.PlaceholderScreen
 import org.simple.clinic.databinding.ActivitySetupBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
+import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
@@ -70,7 +71,7 @@ class SetupActivity : AppCompatActivity(), UiActions {
         defaultModel = SetupActivityModel.create(clock),
         update = SetupActivityUpdate(config),
         effectHandler = effectHandlerFactory.create(this).build(),
-        init = SetupActivityInit(),
+        init = SetupActivityInit(isDatabaseEncryptionEnabled = features.isEnabled(Feature.DatabaseEncryption)),
         modelUpdateListener = { /* Nothing to do here */ }
     )
   }

@@ -19,6 +19,7 @@ class SettingsUpdate : Update<SettingsModel, SettingsEvent, SettingsEffect> {
       is AppVersionLoaded -> next(model.appVersionLoaded(appVersion = event.appVersion))
       is AppUpdateAvailabilityChecked -> next(model.checkedAppUpdate(isUpdateAvailable = event.isUpdateAvailable))
       is UserLogoutResult -> noChange()
+      LogoutButtonClicked -> dispatch(ShowConfirmLogoutDialog)
     }
   }
 }

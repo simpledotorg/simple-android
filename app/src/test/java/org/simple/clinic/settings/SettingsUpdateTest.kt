@@ -80,4 +80,15 @@ class SettingsUpdateTest {
             hasModel(defaultModel.checkedAppUpdate(isUpdateAvailable))
         ))
   }
+
+  @Test
+  fun `when logout button is clicked, then show confirm logout dialog`() {
+    spec
+        .given(defaultModel)
+        .whenEvent(LogoutButtonClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowConfirmLogoutDialog)
+        ))
+  }
 }

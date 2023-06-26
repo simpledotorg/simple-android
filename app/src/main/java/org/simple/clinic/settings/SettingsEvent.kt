@@ -18,3 +18,7 @@ data class AppVersionLoaded(val appVersion: String) : SettingsEvent()
 data class AppUpdateAvailabilityChecked(val isUpdateAvailable: Boolean) : SettingsEvent()
 
 data class UserLogoutResult(val result: UserSession.LogoutResult) : SettingsEvent()
+
+object LogoutButtonClicked : SettingsEvent() {
+  override val analyticsName: String = "Settings:Logout Button Clicked"
+}

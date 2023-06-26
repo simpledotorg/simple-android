@@ -102,6 +102,7 @@ class SettingsScreen : BaseScreen<
   override fun events() = Observable
       .mergeArray(
           changeLanguageButtonClicks(),
+          logoutButtonClicks(),
           hotEvents
       )
       .compose(ReportAnalyticsEvents())
@@ -130,6 +131,10 @@ class SettingsScreen : BaseScreen<
 
   private fun changeLanguageButtonClicks(): Observable<SettingsEvent> {
     return changeLanguageButton.clicks().map { ChangeLanguage }
+  }
+
+  private fun logoutButtonClicks(): Observable<SettingsEvent> {
+    return logoutButton.clicks().map { LogoutButtonClicked }
   }
 
   private fun toggleChangeLanguageFeature() {

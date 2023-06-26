@@ -30,6 +30,7 @@ import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.settings.changelanguage.ChangeLanguageScreen
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 
 class SettingsScreen : BaseScreen<
@@ -73,7 +74,13 @@ class SettingsScreen : BaseScreen<
   private val changeLanguageWidgetGroup
     get() = binding.changeLanguageWidgetGroup
 
+  private val logoutButton
+    get() = binding.logoutButton
+
   private val isChangeLanguageFeatureEnabled by unsafeLazy { features.isEnabled(Feature.ChangeLanguage) }
+  private val isLogoutUserFeatureEnabled by unsafeLazy {
+    features.isEnabled(Feature.LogoutUser)
+  }
   private val hotEvents = PublishSubject.create<UiEvent>()
 
   override fun defaultModel() = SettingsModel.default()
@@ -117,6 +124,8 @@ class SettingsScreen : BaseScreen<
     updateAppVersionButton.setOnClickListener {
       launchPlayStoreForUpdate()
     }
+
+    logoutButton.visibleOrGone(isLogoutUserFeatureEnabled)
   }
 
   private fun changeLanguageButtonClicks(): Observable<SettingsEvent> {

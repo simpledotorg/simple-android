@@ -9,17 +9,15 @@ import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import net.sqlcipher.database.SQLiteDatabase
 import net.sqlcipher.database.SQLiteStatement
-import org.simple.clinic.storage.DatabaseEncryption.State.ENCRYPTED
+import org.simple.clinic.storage.DatabaseEncryptor.State.ENCRYPTED
 import org.simple.clinic.storage.SharedPreferencesMode.Mode.Encrypted
-import org.simple.clinic.util.scheduler.SchedulersProvider
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 import javax.crypto.KeyGenerator
 import javax.inject.Inject
 
-
-class DatabaseEncryption @Inject constructor(
+class DatabaseEncryptor @Inject constructor(
     private val appContext: Application,
     @SharedPreferencesMode(Encrypted) private val sharedPreferences: SharedPreferences
 ) {

@@ -17,7 +17,7 @@ import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.setup.runcheck.AllowApplicationToRun
 import org.simple.clinic.setup.runcheck.Allowed
 import org.simple.clinic.setup.runcheck.Disallowed.Reason
-import org.simple.clinic.storage.DatabaseEncryption
+import org.simple.clinic.storage.DatabaseEncryptor
 import org.simple.clinic.user.User
 import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.sharedTestCode.util.TestUtcClock
@@ -38,7 +38,7 @@ class SetupActivityEffectHandlerTest {
   private val userClock = TestUserClock(Instant.parse("2021-07-11T00:00:00Z"))
   private val allowApplicationToRun = mock<AllowApplicationToRun>()
   private val loadV1Country = mock<LoadV1Country>()
-  private val databaseEncryption = mock<DatabaseEncryption>()
+  private val databaseEncryptor = mock<DatabaseEncryptor>()
 
   private val effectHandler = SetupActivityEffectHandler(
       uiActions = uiActions,
@@ -52,7 +52,7 @@ class SetupActivityEffectHandlerTest {
       databaseMaintenanceRunAt = databaseMaintenanceRunAtPreference,
       userClock = userClock,
       loadV1Country = loadV1Country,
-      databaseEncryption = databaseEncryption
+      databaseEncryptor = databaseEncryptor
   ).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -237,8 +237,8 @@ class SetupActivityEffectHandlerTest {
     testCase.dispatch(ExecuteDatabaseEncryption)
 
     // then
-    verify(databaseEncryption).execute(DATABASE_NAME)
-    verifyNoMoreInteractions(databaseEncryption)
+    verify(databaseEncryptor).execute(DATABASE_NAME)
+    verifyNoMoreInteractions(databaseEncryptor)
 
     testCase.assertOutgoingEvents(DatabaseEncryptionFinished)
 

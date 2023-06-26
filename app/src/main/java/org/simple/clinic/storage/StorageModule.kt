@@ -33,7 +33,7 @@ class StorageModule {
       appContext: Application,
       migrations: List<@JvmSuppressWildcards Migration>,
       moshi: Moshi,
-      databaseEncryption: DatabaseEncryption
+      databaseEncryptor: DatabaseEncryptor
   ): AppDatabase {
     // Don't occupy all connections with Room threads since there are
     // non-Room accesses of the database which SQLite itself might do
@@ -44,7 +44,7 @@ class StorageModule {
         maxPoolSize = sqliteThreadPoolCount,
         threadPrefix = "room-query"
     )
-    val passphrase = databaseEncryption.passphrase
+    val passphrase = databaseEncryptor.passphrase
 
     return Room.databaseBuilder(appContext, AppDatabase::class.java, DATABASE_NAME)
         .openHelperFactory(SupportFactory(passphrase))

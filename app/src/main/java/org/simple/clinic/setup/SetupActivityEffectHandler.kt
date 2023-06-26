@@ -16,7 +16,7 @@ import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.DatabaseMaintenanceRunAt
 import org.simple.clinic.main.TypedPreference.Type.OnboardingComplete
 import org.simple.clinic.setup.runcheck.AllowApplicationToRun
-import org.simple.clinic.storage.DatabaseEncryption
+import org.simple.clinic.storage.DatabaseEncryptor
 import org.simple.clinic.user.User
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
@@ -37,7 +37,7 @@ class SetupActivityEffectHandler @AssistedInject constructor(
     @TypedPreference(DatabaseMaintenanceRunAt) private val databaseMaintenanceRunAt: Preference<Optional<Instant>>,
     private val userClock: UserClock,
     private val loadV1Country: LoadV1Country,
-    private val databaseEncryption: DatabaseEncryption
+    private val databaseEncryptor: DatabaseEncryptor
 ) {
 
   @AssistedFactory
@@ -78,7 +78,7 @@ class SetupActivityEffectHandler @AssistedInject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulersProvider.io())
-          .doOnNext { databaseEncryption.execute(DATABASE_NAME) }
+          .doOnNext { databaseEncryptor.execute(DATABASE_NAME) }
           .map { DatabaseEncryptionFinished }
     }
   }

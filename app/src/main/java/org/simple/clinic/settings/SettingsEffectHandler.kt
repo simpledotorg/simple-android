@@ -9,6 +9,7 @@ import io.reactivex.ObservableTransformer
 import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.user.UserSession.LogoutResult.Success
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
@@ -35,7 +36,17 @@ class SettingsEffectHandler @AssistedInject constructor(
       .addTransformer(LoadAppVersionEffect::class.java, loadAppVersion())
       .addTransformer(CheckAppUpdateAvailable::class.java, checkAppUpdateAvailability())
       .addConsumer(SettingsViewEffect::class.java, viewEffectsConsumer::accept)
+      .addTransformer(LogoutUser::class.java, logoutUser())
       .build()
+
+  private fun logoutUser(): ObservableTransformer<LogoutUser, SettingsEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .flatMapSingle { userSession.logout() }
+          .map(::UserLogoutResult)
+    }
+  }
 
   private fun loadUserDetails(): ObservableTransformer<LoadUserDetailsEffect, SettingsEvent> {
     return ObservableTransformer { effectStream ->

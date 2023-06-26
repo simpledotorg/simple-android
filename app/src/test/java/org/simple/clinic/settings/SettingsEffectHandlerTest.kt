@@ -17,6 +17,7 @@ import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.user.UserSession.LogoutResult
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
 import java.util.Optional
@@ -135,4 +136,20 @@ class SettingsEffectHandlerTest {
     testCase.assertOutgoingEvents(AppUpdateAvailabilityChecked(true))
   }
 
+  @Test
+  fun `when logout effect is received, then logout the user`() {
+    // given
+    whenever(userSession.logout()) doReturn Single.just(LogoutResult.Success)
+
+    // when
+    testCase.dispatch(LogoutUser)
+
+    // then
+    verify(userSession).logout()
+    verifyNoMoreInteractions(userSession)
+
+    verifyNoInteractions(uiActions)
+
+    testCase.assertOutgoingEvents(UserLogoutResult(LogoutResult.Success))
+  }
 }

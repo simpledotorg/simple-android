@@ -1,5 +1,6 @@
 package org.simple.clinic.settings
 
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 
 sealed class SettingsEvent : UiEvent
@@ -15,3 +16,5 @@ object ChangeLanguage : SettingsEvent() {
 data class AppVersionLoaded(val appVersion: String) : SettingsEvent()
 
 data class AppUpdateAvailabilityChecked(val isUpdateAvailable: Boolean) : SettingsEvent()
+
+data class UserLogoutResult(val result: UserSession.LogoutResult) : SettingsEvent()

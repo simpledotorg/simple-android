@@ -4,4 +4,5 @@ interface UiActions {
 
   fun openLanguageSelectionScreen()
   fun showConfirmLogoutDialog()
+  fun restartApp()
 }

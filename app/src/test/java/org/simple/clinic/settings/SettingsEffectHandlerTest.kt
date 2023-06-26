@@ -166,4 +166,18 @@ class SettingsEffectHandlerTest {
 
     testCase.assertNoOutgoingEvents()
   }
+
+  @Test
+  fun `when restart app effect is received, then restart the app`() {
+    // when
+    testCase.dispatch(RestartApp)
+
+    // then
+    verifyNoInteractions(userSession)
+
+    verify(uiActions).restartApp()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
 }

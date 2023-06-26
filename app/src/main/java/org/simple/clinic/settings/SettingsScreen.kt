@@ -183,6 +183,10 @@ class SettingsScreen : BaseScreen<
         .show()
   }
 
+  override fun restartApp() {
+    // TODO: Use process phoenix to restart the app process
+  }
+
   private fun launchPlayStoreForUpdate() {
     val intent = Intent(Intent.ACTION_VIEW).apply {
       data = Uri.parse(PLAY_STORE_URL_FOR_SIMPLE)

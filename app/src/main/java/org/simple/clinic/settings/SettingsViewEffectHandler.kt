@@ -11,6 +11,7 @@ class SettingsViewEffectHandler(
     when (viewEffect) {
       OpenLanguageSelectionScreenEffect -> uiActions.openLanguageSelectionScreen()
       ShowConfirmLogoutDialog -> uiActions.showConfirmLogoutDialog()
+      RestartApp -> uiActions.restartApp()
     }.exhaustive()
   }
 }

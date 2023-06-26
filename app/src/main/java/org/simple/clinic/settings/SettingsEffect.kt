@@ -17,3 +17,5 @@ object LogoutUser : SettingsEffect()
 object OpenLanguageSelectionScreenEffect : SettingsViewEffect()
 
 object ShowConfirmLogoutDialog : SettingsViewEffect()
+
+object RestartApp : SettingsViewEffect()

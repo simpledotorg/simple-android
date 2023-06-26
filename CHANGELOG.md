@@ -4,6 +4,10 @@
 
 ### Internal
 
+## 2023-06-26-8772
+
+### Internal
+
 - Use heroku generated app url for manifest endpoint in CI
 - Add index for `appointmentId` in `CallResult` table
 - Remove pinned versions from CI workflows

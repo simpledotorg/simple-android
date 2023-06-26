@@ -5,6 +5,7 @@
 ### Internal
 
 - Add missing SQLCipher proguard rules for R8
+- Add feature flag for enabling database encryption
 
 ### Changes
 

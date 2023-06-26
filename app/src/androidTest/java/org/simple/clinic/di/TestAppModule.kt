@@ -14,6 +14,7 @@ import org.simple.clinic.home.overdue.search.OverdueSearchModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.onboarding.OnboardingModule
+import org.simple.clinic.plumbing.infrastructure.InfrastructureModule
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.sync.SyncModule
@@ -40,7 +41,8 @@ import java.util.Locale
   UuidGeneratorModule::class,
   TestSyncConfigModule::class,
   DrugStockReminderApiModule::class,
-  OverdueSearchModule::class
+  OverdueSearchModule::class,
+  InfrastructureModule::class
 ])
 class TestAppModule(private val application: Application) {
 

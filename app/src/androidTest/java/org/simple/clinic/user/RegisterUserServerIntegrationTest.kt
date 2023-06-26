@@ -16,6 +16,8 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySyncApi
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.security.PasswordHasher
+import org.simple.clinic.storage.SharedPreferencesMode
+import org.simple.clinic.storage.SharedPreferencesMode.Mode.Default
 import org.simple.clinic.user.registeruser.RegisterUser
 import org.simple.clinic.user.registeruser.RegistrationResult
 import org.simple.sharedTestCode.util.Rules
@@ -42,6 +44,7 @@ class RegisterUserServerIntegrationTest {
   lateinit var registerUser: RegisterUser
 
   @Inject
+  @SharedPreferencesMode(Default)
   lateinit var sharedPreferences: SharedPreferences
 
   @Inject

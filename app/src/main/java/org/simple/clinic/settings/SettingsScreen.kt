@@ -15,6 +15,7 @@ import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.PLAY_STORE_URL_FOR_SIMPLE
 import org.simple.clinic.R
@@ -28,6 +29,7 @@ import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.settings.changelanguage.ChangeLanguageScreen
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
 class SettingsScreen : BaseScreen<
@@ -72,6 +74,7 @@ class SettingsScreen : BaseScreen<
     get() = binding.changeLanguageWidgetGroup
 
   private val isChangeLanguageFeatureEnabled by unsafeLazy { features.isEnabled(Feature.ChangeLanguage) }
+  private val hotEvents = PublishSubject.create<UiEvent>()
 
   override fun defaultModel() = SettingsModel.default()
 
@@ -89,7 +92,11 @@ class SettingsScreen : BaseScreen<
 
   override fun createUpdate() = SettingsUpdate()
 
-  override fun events() = changeLanguageButtonClicks()
+  override fun events() = Observable
+      .mergeArray(
+          changeLanguageButtonClicks(),
+          hotEvents
+      )
       .compose(ReportAnalyticsEvents())
       .cast<SettingsEvent>()
 
@@ -156,7 +163,7 @@ class SettingsScreen : BaseScreen<
         .setTitle(R.string.settings_logout_dialog_title)
         .setMessage(R.string.settings_logout_dialog_desc)
         .setPositiveButton(R.string.settings_logout_dialog_positive_action) { _, _ ->
-          // Handle logout confirm button click
+          hotEvents.onNext(ConfirmLogoutButtonClicked)
         }
         .setNegativeButton(R.string.settings_logout_dialog_negative_action, null)
         .show()

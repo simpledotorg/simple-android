@@ -22,3 +22,7 @@ data class UserLogoutResult(val result: UserSession.LogoutResult) : SettingsEven
 object LogoutButtonClicked : SettingsEvent() {
   override val analyticsName: String = "Settings:Logout Button Clicked"
 }
+
+object ConfirmLogoutButtonClicked : SettingsEvent() {
+  override val analyticsName: String = "Settings:Confirm Logout Button Clicked"
+}

@@ -91,4 +91,15 @@ class SettingsUpdateTest {
             hasEffects(ShowConfirmLogoutDialog)
         ))
   }
+
+  @Test
+  fun `when confirm logout button is clicked, then logout user`() {
+    spec
+        .given(defaultModel)
+        .whenEvent(ConfirmLogoutButtonClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(LogoutUser)
+        ))
+  }
 }

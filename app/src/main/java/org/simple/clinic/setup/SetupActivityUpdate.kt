@@ -31,7 +31,7 @@ class SetupActivityUpdate(
       is AppAllowedToRunCheckCompleted -> initializeDatabase(event)
       is CountryAndDeploymentSaved -> dispatch(DeleteStoredCountryV1)
       is StoredCountryV1Deleted -> dispatch(GoToMainActivity)
-      DatabaseEncryptionFinished -> noChange()
+      DatabaseEncryptionFinished -> dispatch(CheckIfAppCanRun)
     }
   }
 

@@ -7,6 +7,9 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.user.UserSession
+import org.simple.clinic.user.UserSession.LogoutResult.Failure
+import org.simple.clinic.user.UserSession.LogoutResult.Success
 
 class SettingsUpdateTest {
 
@@ -100,6 +103,28 @@ class SettingsUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(LogoutUser)
+        ))
+  }
+
+  @Test
+  fun `when user is logged out successfully, then restart the app process`() {
+    spec
+        .given(defaultModel)
+        .whenEvent(UserLogoutResult(Success))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(RestartApp)
+        ))
+  }
+
+  @Test
+  fun `when user is not logged out successfully, then do nothing`() {
+    spec
+        .given(defaultModel)
+        .whenEvent(UserLogoutResult(Failure(IllegalArgumentException())))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasNoEffects()
         ))
   }
 }

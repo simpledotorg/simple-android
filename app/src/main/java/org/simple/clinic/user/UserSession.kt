@@ -14,6 +14,8 @@ import org.simple.clinic.di.AppScope
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.OnboardingComplete
 import org.simple.clinic.platform.analytics.Analytics
+import org.simple.clinic.plumbing.infrastructure.Infrastructure
+import org.simple.clinic.plumbing.infrastructure.UpdateInfrastructureUserDetails
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.storage.SharedPreferencesMode
 import org.simple.clinic.storage.SharedPreferencesMode.Mode.Default
@@ -36,7 +38,8 @@ class UserSession @Inject constructor(
     private val reportPendingRecords: ReportPendingRecordsToAnalytics,
     private val selectedCountryPreference: Preference<Optional<Country>>,
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>,
-    @TypedPreference(OnboardingComplete) private val onboardingComplete: Preference<Boolean>
+    @TypedPreference(OnboardingComplete) private val onboardingComplete: Preference<Boolean>,
+    private val infrastructures: List<@JvmSuppressWildcards Infrastructure>
 ) {
 
   @Deprecated(message = "Use OngoingLoginEntryRepository directly.")
@@ -108,7 +111,10 @@ class UserSession @Inject constructor(
         )
         .toSingleDefault(LogoutResult.Success as LogoutResult)
         .onErrorReturn { cause -> LogoutResult.Failure(cause) }
-        .doOnSuccess { Analytics.clearUser() }
+        .doOnSuccess {
+          Analytics.clearUser()
+          infrastructures.forEach { infrastructure -> infrastructure.clear() }
+        }
   }
 
   private fun clearLocalDatabase(): Completable {

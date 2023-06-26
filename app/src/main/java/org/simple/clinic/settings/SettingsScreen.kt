@@ -10,12 +10,12 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.parcelize.Parcelize
-import org.simple.clinic.BuildConfig
 import org.simple.clinic.PLAY_STORE_URL_FOR_SIMPLE
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -149,6 +149,17 @@ class SettingsScreen : BaseScreen<
 
   override fun hideAppUpdateButton() {
     updateAppVersionButton.visibility = GONE
+  }
+
+  override fun showConfirmLogoutDialog() {
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(R.string.settings_logout_dialog_title)
+        .setMessage(R.string.settings_logout_dialog_desc)
+        .setPositiveButton(R.string.settings_logout_dialog_positive_action) { _, _ ->
+          // Handle logout confirm button click
+        }
+        .setNegativeButton(R.string.settings_logout_dialog_negative_action, null)
+        .show()
   }
 
   private fun launchPlayStoreForUpdate() {

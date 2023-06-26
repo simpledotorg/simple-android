@@ -10,6 +10,7 @@ class SettingsViewEffectHandler(
   override fun handle(viewEffect: SettingsViewEffect) {
     when (viewEffect) {
       OpenLanguageSelectionScreenEffect -> uiActions.openLanguageSelectionScreen()
+      ShowConfirmLogoutDialog -> uiActions.showConfirmLogoutDialog()
     }.exhaustive()
   }
 }

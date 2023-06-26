@@ -152,4 +152,18 @@ class SettingsEffectHandlerTest {
 
     testCase.assertOutgoingEvents(UserLogoutResult(LogoutResult.Success))
   }
+
+  @Test
+  fun `when show logout confirmation dialog effect is received, then show logout confirmation dialog`() {
+    // when
+    testCase.dispatch(ShowConfirmLogoutDialog)
+
+    // then
+    verifyNoInteractions(userSession)
+
+    verify(uiActions).showConfirmLogoutDialog()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
 }

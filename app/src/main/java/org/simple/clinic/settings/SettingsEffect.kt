@@ -15,3 +15,5 @@ sealed class SettingsViewEffect : SettingsEffect()
 object LogoutUser : SettingsEffect()
 
 object OpenLanguageSelectionScreenEffect : SettingsViewEffect()
+
+object ShowConfirmLogoutDialog : SettingsViewEffect()

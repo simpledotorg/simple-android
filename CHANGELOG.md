@@ -8,6 +8,10 @@
 - Add index for `appointmentId` in `CallResult` table
 - Remove pinned versions from CI workflows
 
+### Changes
+
+- Add support for database encryption
+
 ## 2023-06-20-8765
 
 ### Internal

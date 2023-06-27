@@ -3,13 +3,13 @@
 ## Next Release
 
 ### Internal
-- Include New result of call option- `Refused to come back`
 
 - Add missing SQLCipher proguard rules for R8
 
 ### Changes
 
 - Add support for database encryption
+- Add new call result option - `Refused to come back`
 
 ## 2023-06-26-8772
 

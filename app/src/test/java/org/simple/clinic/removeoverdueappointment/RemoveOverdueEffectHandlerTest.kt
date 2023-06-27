@@ -177,7 +177,7 @@ class RemoveOverdueEffectHandlerTest {
   }
 
   @Test
-  fun `when mark patient as refused to come back then update the patient status`() {
+  fun `when mark patient as refused to come back effect is received, then update the patient status`() {
     // given
     val patientId = UUID.fromString("cee7568e-7a82-46cc-afdc-310fc8552615")
 

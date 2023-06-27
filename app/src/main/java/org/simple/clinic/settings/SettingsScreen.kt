@@ -28,6 +28,7 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.settings.changelanguage.ChangeLanguageScreen
+import org.simple.clinic.setup.SetupActivity
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
@@ -184,7 +185,10 @@ class SettingsScreen : BaseScreen<
   }
 
   override fun restartApp() {
-    // TODO: Use process phoenix to restart the app process
+    val intent = Intent(requireContext(), SetupActivity::class.java).apply {
+      flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+    }
+    startActivity(intent)
   }
 
   private fun launchPlayStoreForUpdate() {

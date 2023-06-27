@@ -11,4 +11,6 @@ interface Infrastructure {
       country: Country,
       deployment: Deployment
   )
+
+  fun clear()
 }

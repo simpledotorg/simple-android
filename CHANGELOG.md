@@ -2,6 +2,10 @@
 
 ## Next Release
 
+### Features
+
+- Add option to logout of the app in settings
+
 ### Internal
 
 - Add missing SQLCipher proguard rules for R8

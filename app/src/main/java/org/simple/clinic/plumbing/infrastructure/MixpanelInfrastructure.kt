@@ -12,9 +12,9 @@ class MixpanelInfrastructure @Inject constructor(
     private val application: Application
 ) : Infrastructure {
 
-  override fun addDetails(user: User, country: Country, deployment: Deployment) {
-    val mixpanel = MixpanelAPI.getInstance(application, BuildConfig.MIXPANEL_TOKEN, true)
+  private val mixpanel = MixpanelAPI.getInstance(application, BuildConfig.MIXPANEL_TOKEN, true)
 
+  override fun addDetails(user: User, country: Country, deployment: Deployment) {
     // We are deliberately not registering the user ID here because Mixpanel has a slightly tricky
     // flow for user identification where we need to track new registrations and logins differently.
     // This is being taken care of elsewhere, in the `Analytics#setLoggedInUser` class.
@@ -23,5 +23,9 @@ class MixpanelInfrastructure @Inject constructor(
         "countryCode" to country.isoCountryCode,
         "deployment" to deployment.endPoint.toString()
     ))
+  }
+
+  override fun clear() {
+    mixpanel.clearSuperProperties()
   }
 }

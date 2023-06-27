@@ -27,6 +27,8 @@ import org.simple.clinic.appconfig.Country
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.platform.analytics.AnalyticsUser
+import org.simple.clinic.plumbing.infrastructure.FakeInfrastructure
+import org.simple.clinic.plumbing.infrastructure.UpdateInfrastructureUserDetails
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
@@ -57,6 +59,8 @@ class UserSessionTest {
   private val reportPendingRecords = mock<ReportPendingRecordsToAnalytics>()
   private val onboardingCompletePreference = mock<Preference<Boolean>>()
   private val selectedCountryPreference = mock<Preference<Optional<Country>>>()
+  private val infrastructure = FakeInfrastructure()
+
   private val userUuid: UUID = UUID.fromString("866bccab-0117-4471-9d5d-cf6f2f1a64c1")
 
   private val userSession = UserSession(
@@ -67,7 +71,8 @@ class UserSessionTest {
       reportPendingRecords = reportPendingRecords,
       selectedCountryPreference = selectedCountryPreference,
       accessTokenPreference = accessTokenPref,
-      onboardingComplete = onboardingCompletePreference
+      onboardingComplete = onboardingCompletePreference,
+      infrastructures = listOf(infrastructure)
   )
 
   @Before
@@ -291,5 +296,25 @@ class UserSessionTest {
 
     // then
     assertThat(reporter.user).isNull()
+  }
+
+  @Test
+  fun `when user logout happens, reset the user details from infrastructure`() {
+    // given
+    whenever(reportPendingRecords.report()).thenReturn(Completable.complete())
+
+    val user = TestData.loggedInUser(uuid = userUuid)
+    val country = TestData.country()
+    val deployment = TestData.deployment()
+
+    infrastructure.addDetails(user, country, deployment)
+
+    // when
+    userSession.logout().blockingGet()
+
+    // then
+    assertThat(infrastructure.user).isNull()
+    assertThat(infrastructure.country).isNull()
+    assertThat(infrastructure.deployment).isNull()
   }
 }

@@ -17,6 +17,7 @@ import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.user.UserSession.LogoutResult
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.util.toOptional
 import java.util.Optional
@@ -135,4 +136,48 @@ class SettingsEffectHandlerTest {
     testCase.assertOutgoingEvents(AppUpdateAvailabilityChecked(true))
   }
 
+  @Test
+  fun `when logout effect is received, then logout the user`() {
+    // given
+    whenever(userSession.logout()) doReturn Single.just(LogoutResult.Success)
+
+    // when
+    testCase.dispatch(LogoutUser)
+
+    // then
+    verify(userSession).logout()
+    verifyNoMoreInteractions(userSession)
+
+    verifyNoInteractions(uiActions)
+
+    testCase.assertOutgoingEvents(UserLogoutResult(LogoutResult.Success))
+  }
+
+  @Test
+  fun `when show logout confirmation dialog effect is received, then show logout confirmation dialog`() {
+    // when
+    testCase.dispatch(ShowConfirmLogoutDialog)
+
+    // then
+    verifyNoInteractions(userSession)
+
+    verify(uiActions).showConfirmLogoutDialog()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when restart app effect is received, then restart the app`() {
+    // when
+    testCase.dispatch(RestartApp)
+
+    // then
+    verifyNoInteractions(userSession)
+
+    verify(uiActions).restartApp()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
 }

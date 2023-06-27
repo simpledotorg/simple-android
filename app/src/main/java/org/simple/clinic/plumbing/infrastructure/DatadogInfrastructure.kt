@@ -18,4 +18,8 @@ class DatadogInfrastructure @Inject constructor() : Infrastructure {
         )
     )
   }
+
+  override fun clear() {
+    Datadog.setUserInfo(id = null, extraInfo = emptyMap())
+  }
 }

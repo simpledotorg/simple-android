@@ -1,6 +1,8 @@
 package org.simple.clinic.plumbing.infrastructure
 
 import android.annotation.SuppressLint
+import android.util.Log
+import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.appconfig.Country
@@ -18,25 +20,21 @@ class UpdateInfrastructureUserDetails @Inject constructor(
     private val schedulers: SchedulersProvider
 ) {
 
-  @SuppressLint("CheckResult")
+  @SuppressLint("CheckResult", "LogNotTimber")
   fun track() {
-    val currentUser = userSession
-        .loggedInUser()
-        .extractIfPresent()
+    val currentUser = userSession.loggedInUser()
 
-    val currentCountry = appConfigRepository
-        .currentCountryObservable()
+    currentUser
         .extractIfPresent()
-
-    val currentDeployment = appConfigRepository
-        .currentDeploymentObservable()
-        .extractIfPresent()
-
-    Observables
-        .combineLatest(currentUser, currentCountry, currentDeployment)
         .subscribeOn(schedulers.io())
-        .take(1)
-        .subscribe { (user, country, deployment) -> updateInfrastructures(user, country, deployment) }
+        .subscribe { user ->
+          val country = appConfigRepository.currentCountry()
+          val deployment = appConfigRepository.currentDeployment()
+
+          if (country != null && deployment != null) {
+            updateInfrastructures(user, country, deployment)
+          }
+        }
   }
 
   private fun updateInfrastructures(

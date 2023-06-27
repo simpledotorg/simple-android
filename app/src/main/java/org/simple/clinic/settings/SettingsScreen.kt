@@ -10,12 +10,13 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
+import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
-import org.simple.clinic.BuildConfig
 import org.simple.clinic.PLAY_STORE_URL_FOR_SIMPLE
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
@@ -27,7 +28,10 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.settings.changelanguage.ChangeLanguageScreen
+import org.simple.clinic.setup.SetupActivity
 import org.simple.clinic.util.unsafeLazy
+import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 
 class SettingsScreen : BaseScreen<
@@ -71,7 +75,14 @@ class SettingsScreen : BaseScreen<
   private val changeLanguageWidgetGroup
     get() = binding.changeLanguageWidgetGroup
 
+  private val logoutButton
+    get() = binding.logoutButton
+
   private val isChangeLanguageFeatureEnabled by unsafeLazy { features.isEnabled(Feature.ChangeLanguage) }
+  private val isLogoutUserFeatureEnabled by unsafeLazy {
+    features.isEnabled(Feature.LogoutUser)
+  }
+  private val hotEvents = PublishSubject.create<UiEvent>()
 
   override fun defaultModel() = SettingsModel.default()
 
@@ -89,7 +100,12 @@ class SettingsScreen : BaseScreen<
 
   override fun createUpdate() = SettingsUpdate()
 
-  override fun events() = changeLanguageButtonClicks()
+  override fun events() = Observable
+      .mergeArray(
+          changeLanguageButtonClicks(),
+          logoutButtonClicks(),
+          hotEvents
+      )
       .compose(ReportAnalyticsEvents())
       .cast<SettingsEvent>()
 
@@ -110,10 +126,16 @@ class SettingsScreen : BaseScreen<
     updateAppVersionButton.setOnClickListener {
       launchPlayStoreForUpdate()
     }
+
+    logoutButton.visibleOrGone(isLogoutUserFeatureEnabled)
   }
 
   private fun changeLanguageButtonClicks(): Observable<SettingsEvent> {
     return changeLanguageButton.clicks().map { ChangeLanguage }
+  }
+
+  private fun logoutButtonClicks(): Observable<SettingsEvent> {
+    return logoutButton.clicks().map { LogoutButtonClicked }
   }
 
   private fun toggleChangeLanguageFeature() {
@@ -149,6 +171,24 @@ class SettingsScreen : BaseScreen<
 
   override fun hideAppUpdateButton() {
     updateAppVersionButton.visibility = GONE
+  }
+
+  override fun showConfirmLogoutDialog() {
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(R.string.settings_logout_dialog_title)
+        .setMessage(R.string.settings_logout_dialog_desc)
+        .setPositiveButton(R.string.settings_logout_dialog_positive_action) { _, _ ->
+          hotEvents.onNext(ConfirmLogoutButtonClicked)
+        }
+        .setNegativeButton(R.string.settings_logout_dialog_negative_action, null)
+        .show()
+  }
+
+  override fun restartApp() {
+    val intent = Intent(requireContext(), SetupActivity::class.java).apply {
+      flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+    }
+    startActivity(intent)
   }
 
   private fun launchPlayStoreForUpdate() {

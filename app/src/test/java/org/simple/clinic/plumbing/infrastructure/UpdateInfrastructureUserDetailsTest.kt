@@ -32,11 +32,7 @@ class UpdateInfrastructureUserDetailsTest {
 
     val country = TestData.country()
     val deployment = country.deployments.first()
-    val countrySubject = PublishSubject.create<Optional<Country>>()
-    val deploymentSubject = PublishSubject.create<Optional<Deployment>>()
     val appConfigRepository = mock<AppConfigRepository>()
-    whenever(appConfigRepository.currentCountryObservable()).thenReturn(countrySubject)
-    whenever(appConfigRepository.currentDeploymentObservable()).thenReturn(deploymentSubject)
 
     val firstInfrastructure = mock<Infrastructure>()
     val secondInfrastructure = mock<Infrastructure>()
@@ -47,6 +43,9 @@ class UpdateInfrastructureUserDetailsTest {
         schedulers = TestSchedulersProvider.trampoline()
     )
 
+    whenever(appConfigRepository.currentCountry()).thenReturn(country)
+    whenever(appConfigRepository.currentDeployment()).thenReturn(deployment)
+
     // when
     updateInfrastructureUserDetails.track()
 
@@ -55,18 +54,6 @@ class UpdateInfrastructureUserDetailsTest {
 
     // when
     userSubject.onNext(Optional.of(user))
-
-    // then
-    verifyNoInteractions(firstInfrastructure, secondInfrastructure)
-
-    // when
-    countrySubject.onNext(Optional.of(country))
-
-    // then
-    verifyNoInteractions(firstInfrastructure, secondInfrastructure)
-
-    // when
-    deploymentSubject.onNext(Optional.of(deployment))
 
     // then
     verify(firstInfrastructure).addDetails(user, country, deployment)

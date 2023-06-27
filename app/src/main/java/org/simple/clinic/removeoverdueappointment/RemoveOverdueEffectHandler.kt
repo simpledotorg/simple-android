@@ -31,6 +31,7 @@ class RemoveOverdueEffectHandler @AssistedInject constructor(
       .addTransformer(CancelAppointment::class.java, cancelAppointment())
       .addTransformer(MarkPatientAsMovedToPrivate::class.java, markPatientAsMovedToPrivate())
       .addTransformer(MarkPatientAsTransferredToAnotherFacility::class.java, markPatientAsMovedToAnotherFacility())
+      .addTransformer(MarkPatientAsRefusedToComeBack::class.java, markPatientAsRefusedToComeBack())
       .addConsumer(RemoveOverdueViewEffect::class.java, viewEffectsConsumer::accept)
       .build()
 
@@ -50,6 +51,16 @@ class RemoveOverdueEffectHandler @AssistedInject constructor(
           .observeOn(schedulersProvider.io())
           .doOnNext { patientRepository.updatePatientStatusToMigrated(it.patientId) }
           .map { AppointmentCancelReason.MovedToPrivatePractitioner }
+          .map(::PatientMarkedAsMigrated)
+    }
+  }
+
+  private fun markPatientAsRefusedToComeBack(): ObservableTransformer<MarkPatientAsRefusedToComeBack, RemoveOverdueEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .doOnNext { patientRepository.updatePatientStatusToMigrated(it.patientId) }
+          .map { AppointmentCancelReason.RefusedToComeBack }
           .map(::PatientMarkedAsMigrated)
     }
   }

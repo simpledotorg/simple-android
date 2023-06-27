@@ -9,6 +9,7 @@
 ### Changes
 
 - Add support for database encryption
+- Add new call result option - `Refused to come back`
 
 ## 2023-06-26-8772
 

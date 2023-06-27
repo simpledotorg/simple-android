@@ -19,6 +19,8 @@ data class MarkPatientAsMovedToPrivate(val patientId: UUID) : RemoveOverdueEffec
 
 data class MarkPatientAsTransferredToAnotherFacility(val patientId: UUID) : RemoveOverdueEffect()
 
+data class MarkPatientAsRefusedToComeBack(val patientId: UUID) : RemoveOverdueEffect()
+
 object GoBack : RemoveOverdueEffect()
 
 sealed class RemoveOverdueViewEffect : RemoveOverdueEffect()

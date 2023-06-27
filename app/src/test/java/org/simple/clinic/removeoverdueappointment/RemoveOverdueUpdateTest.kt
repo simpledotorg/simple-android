@@ -141,6 +141,19 @@ class RemoveOverdueUpdateTest {
   }
 
   @Test
+  fun `when the appointment is removed because the patient refused to come back, the appointment must be cancelled`() {
+    val cancelReason = AppointmentCancelReason.RefusedToComeBack
+
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(PatientMarkedAsMigrated(cancelReason))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CancelAppointment(appointment, cancelReason))
+        ))
+  }
+
+  @Test
   fun `when the appointment is removed for any other reason, the appointment must be cancelled`() {
     val model = defaultModel
         .removeAppointmentReasonSelected(RemoveAppointmentReason.OtherReason)

@@ -34,6 +34,7 @@ class RemoveOverdueUpdate : Update<RemoveOverdueModel, RemoveOverdueEvent, Remov
       RemoveAppointmentReason.TransferredToAnotherFacility -> MarkPatientAsTransferredToAnotherFacility(patientId = model.appointment.patientUuid)
       RemoveAppointmentReason.MovedToPrivatePractitioner -> MarkPatientAsMovedToPrivate(patientId = model.appointment.patientUuid)
       RemoveAppointmentReason.OtherReason -> CancelAppointment(model.appointment, reason = AppointmentCancelReason.Other)
+      RemoveAppointmentReason.RefusedToComeBack -> MarkPatientAsRefusedToComeBack(patientId = model.appointment.patientUuid)
     }
 
     return dispatch(effect)

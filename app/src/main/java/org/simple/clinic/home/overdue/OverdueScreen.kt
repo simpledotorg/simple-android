@@ -298,6 +298,7 @@ class OverdueScreen : BaseScreen<
 
   override fun showNoOverduePatientsView() {
     viewForEmptyList.visibility = View.VISIBLE
+    if (isOverdueListDownloadAndShareEnabled) { buttonsFrame.visibility = View.GONE }
   }
 
   override fun hideNoOverduePatientsView() {

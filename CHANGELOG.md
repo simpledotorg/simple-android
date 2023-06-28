@@ -14,6 +14,7 @@
 
 - Add support for database encryption
 - Add new call result option - `Refused to come back`
+- Hide overdue download/share actions when there are no overdue patients
 
 ## 2023-06-26-8772
 

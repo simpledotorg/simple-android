@@ -53,6 +53,7 @@ import org.simple.clinic.sync.LastSyncedState
 import org.simple.clinic.util.RuntimeNetworkStatus
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
@@ -164,6 +165,10 @@ class OverdueScreen : BaseScreen<
   private val clearSelectedOverdueAppointmentsButton
     get() = binding.clearSelectedOverdueAppointmentsButton
 
+  private val isOverdueListDownloadAndShareEnabled by unsafeLazy {
+    features.isEnabled(OverdueListDownloadAndShare) && country.isoCountryCode == Country.INDIA
+  }
+
   override fun defaultModel() = OverdueModel.create()
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
@@ -209,9 +214,6 @@ class OverdueScreen : BaseScreen<
     super.onViewCreated(view, savedInstanceState)
     overdueRecyclerView.adapter = overdueListAdapter
     overdueRecyclerView.layoutManager = LinearLayoutManager(context)
-
-    val isOverdueListDownloadAndShareEnabled = features.isEnabled(OverdueListDownloadAndShare) && country.isoCountryCode == Country.INDIA
-    buttonsFrame.visibleOrGone(isVisible = isOverdueListDownloadAndShareEnabled)
   }
 
   override fun onDestroyView() {
@@ -268,6 +270,7 @@ class OverdueScreen : BaseScreen<
         isOverdueSelectAndDownloadEnabled = features.isEnabled(OverdueSelectAndDownload) && country.isoCountryCode == Country.INDIA,
         selectedOverdueAppointments = selectedOverdueAppointments
     ))
+    if (isOverdueListDownloadAndShareEnabled) { buttonsFrame.visibility = View.VISIBLE }
   }
 
   override fun showOverdueCount(count: Int) {
@@ -293,6 +296,7 @@ class OverdueScreen : BaseScreen<
 
   override fun showNoOverduePatientsView() {
     viewForEmptyList.visibility = View.VISIBLE
+    if (isOverdueListDownloadAndShareEnabled) { buttonsFrame.visibility = View.GONE }
   }
 
   override fun hideNoOverduePatientsView() {

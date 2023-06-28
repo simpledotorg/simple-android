@@ -272,6 +272,7 @@ class OverdueScreen : BaseScreen<
         isOverdueSelectAndDownloadEnabled = features.isEnabled(OverdueSelectAndDownload) && country.isoCountryCode == Country.INDIA,
         selectedOverdueAppointments = selectedOverdueAppointments
     ))
+    if (isOverdueListDownloadAndShareEnabled) { buttonsFrame.visibility = View.VISIBLE }
   }
 
   override fun showOverdueCount(count: Int) {

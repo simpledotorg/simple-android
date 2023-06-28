@@ -214,8 +214,6 @@ class OverdueScreen : BaseScreen<
     super.onViewCreated(view, savedInstanceState)
     overdueRecyclerView.adapter = overdueListAdapter
     overdueRecyclerView.layoutManager = LinearLayoutManager(context)
-
-    buttonsFrame.visibleOrGone(isVisible = isOverdueListDownloadAndShareEnabled)
   }
 
   override fun onDestroyView() {

@@ -107,12 +107,12 @@ class SettingsUpdateTest {
   }
 
   @Test
-  fun `when user is logged out successfully, then restart the app process`() {
+  fun `when user is logged out successfully, then update the model and restart the app process`() {
     spec
         .given(defaultModel)
         .whenEvent(UserLogoutResult(Success))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(defaultModel.userLoggedOut()),
             hasEffects(RestartApp)
         ))
   }

@@ -20,6 +20,7 @@ class SettingsUiRendererTest {
 
     // then
     verify(ui).hideAppUpdateButton()
+    verify(ui).hideLoggingOutProgressIndicator()
     verifyNoMoreInteractions(ui)
   }
 
@@ -36,6 +37,7 @@ class SettingsUiRendererTest {
     // then
     verify(ui).displayUserDetails(name, phoneNumber)
     verify(ui).hideAppUpdateButton()
+    verify(ui).hideLoggingOutProgressIndicator()
     verifyNoMoreInteractions(ui)
   }
 
@@ -51,6 +53,7 @@ class SettingsUiRendererTest {
     verify(ui, never()).displayCurrentLanguage(any())
     verify(ui).setChangeLanguageButtonVisible()
     verify(ui).hideAppUpdateButton()
+    verify(ui).hideLoggingOutProgressIndicator()
     verifyNoMoreInteractions(ui)
   }
 
@@ -67,6 +70,7 @@ class SettingsUiRendererTest {
     verify(ui).displayCurrentLanguage(language.displayName)
     verify(ui).setChangeLanguageButtonVisible()
     verify(ui).hideAppUpdateButton()
+    verify(ui).hideLoggingOutProgressIndicator()
     verifyNoMoreInteractions(ui)
   }
 
@@ -82,6 +86,7 @@ class SettingsUiRendererTest {
     // then
     verify(ui).displayAppVersion(appVersion)
     verify(ui).hideAppUpdateButton()
+    verify(ui).hideLoggingOutProgressIndicator()
     verifyNoMoreInteractions(ui)
   }
 
@@ -95,6 +100,7 @@ class SettingsUiRendererTest {
 
     // then
     verify(ui).showAppUpdateButton()
+    verify(ui).hideLoggingOutProgressIndicator()
     verifyNoMoreInteractions(ui)
   }
 
@@ -108,6 +114,7 @@ class SettingsUiRendererTest {
 
     // then
     verify(ui).hideAppUpdateButton()
+    verify(ui).hideLoggingOutProgressIndicator()
     verifyNoMoreInteractions(ui)
   }
 
@@ -121,6 +128,20 @@ class SettingsUiRendererTest {
 
     // then
     verify(ui).showLoggingOutProgressIndicator()
+    verify(ui).hideAppUpdateButton()
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when user logging out is finished, then hide the progress indicator`() {
+    // given
+    val model = defaultModel.userLoggedOut()
+
+    // when
+    renderer.render(model)
+
+    // then
+    verify(ui).hideLoggingOutProgressIndicator()
     verify(ui).hideAppUpdateButton()
     verifyNoMoreInteractions(ui)
   }

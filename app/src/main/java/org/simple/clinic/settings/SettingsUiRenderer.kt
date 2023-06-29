@@ -14,6 +14,8 @@ class SettingsUiRenderer(private val ui: SettingsUi) : ViewRenderer<SettingsMode
   private fun renderLoggingOutProgress(userLoggingOut: Boolean?) {
     if (userLoggingOut == true) {
       ui.showLoggingOutProgressIndicator()
+    } else {
+      ui.hideLoggingOutProgressIndicator()
     }
   }
 

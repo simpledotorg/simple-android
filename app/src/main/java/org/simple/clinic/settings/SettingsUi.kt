@@ -15,4 +15,6 @@ interface SettingsUi {
   fun hideAppUpdateButton()
 
   fun showLoggingOutProgressIndicator()
+
+  fun hideLoggingOutProgressIndicator()
 }

@@ -203,6 +203,11 @@ class SettingsScreen : BaseScreen<
     )
   }
 
+  override fun hideLoggingOutProgressIndicator() {
+    logoutProgressIndicator.visibility = View.GONE
+    requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+  }
+
   private fun launchPlayStoreForUpdate() {
     val intent = Intent(Intent.ACTION_VIEW).apply {
       data = Uri.parse(PLAY_STORE_URL_FOR_SIMPLE)

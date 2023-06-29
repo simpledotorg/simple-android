@@ -423,8 +423,6 @@
   <string name="settings_software">সফটওয়্যার</string>
   <string name="settings_update">আপডেট করুন</string>
   <string name="settings_software_version">সংস্করণ %1$s</string>
-  <string name="settings_logout_dialog_positive_action">হ্যাঁ</string>
-  <string name="settings_logout_dialog_negative_action">না</string>
 
   <!-- Change language screen -->
   <string name="changelanguage_title">আপনার ভাষা নির্বাচন করুন</string>
@@ -552,7 +550,6 @@
   <string name="contactpatient_invalid_phone_number">ফোন নম্বর কাজ করে নি</string>
   <string name="contactpatient_public_hospital_transfer">অন্য জনস্বাস্থ্য সুবিধাতে স্থানান্তরিত করা হয়েছে</string>
   <string name="contactpatient_moved_to_private">প্রাইভেট প্র্যাকটিশনারের কাছে চলে গেছে</string>
-  <string name="contactpatient_refused_to_come_back">ফিরে আসতে অস্বীকৃতি জানিয়েছে</string>
   <string name="contactpatient_patient_died">মারা গেছে</string>
   <string name="contactpatient_other_reason">অন্য কারণ</string>
   <string name="contactpatient_unknown">অজানা</string>
@@ -907,5 +904,5 @@
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">মাসিক সাপ্লাইয়ের রিপোর্ট</string>
   <string name="monthly_supplies_reports">মাসিক সাপ্লাইয়ের রিপোর্টসমূহ</string>
-  <string name="monthly_supplies_report_supplies_report">%1$s সাপ্লাইয়ের রিপোর্ট</string>
+  <string name="monthly_supplies_report_supplies_report">%1$s সাপ্লাইয়ের রিপোর্ট</string><!--Oct 2022 supplies report-->
 </resources>

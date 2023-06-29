@@ -22,6 +22,15 @@ class SettingsUpdate : Update<SettingsModel, SettingsEvent, SettingsEffect> {
       is UserLogoutResult -> userLogoutResult(model, event)
       LogoutButtonClicked -> dispatch(ShowConfirmLogoutDialog)
       ConfirmLogoutButtonClicked -> next(model.userLoggingOut(), LogoutUser)
+      BackClicked -> backClicked(model, event)
+    }
+  }
+
+  private fun backClicked(model: SettingsModel, event: SettingsEvent): Next<SettingsModel, SettingsEffect> {
+    return if (model.isUserLoggingOut != true) {
+      dispatch(GoBack)
+    } else {
+      noChange()
     }
   }
 

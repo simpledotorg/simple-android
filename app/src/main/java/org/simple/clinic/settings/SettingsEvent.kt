@@ -26,3 +26,7 @@ object LogoutButtonClicked : SettingsEvent() {
 object ConfirmLogoutButtonClicked : SettingsEvent() {
   override val analyticsName: String = "Settings:Confirm Logout Button Clicked"
 }
+
+object BackClicked : SettingsEvent() {
+  override val analyticsName: String = "Settings:Back Clicked"
+}

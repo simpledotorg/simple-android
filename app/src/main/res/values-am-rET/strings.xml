@@ -423,8 +423,6 @@
   <string name="settings_software">ሶፍትዌር</string>
   <string name="settings_update">አዘምን ወይም አድስ</string>
   <string name="settings_software_version">ስሪት %1$s</string>
-  <string name="settings_logout_dialog_positive_action">አዎ</string>
-  <string name="settings_logout_dialog_negative_action">አይ</string>
 
   <!-- Change language screen -->
   <string name="changelanguage_title">ቋንቋዎን ይምረጡ</string>
@@ -552,7 +550,6 @@
   <string name="contactpatient_invalid_phone_number">ስልክ ቁጥር አይሰራም</string>
   <string name="contactpatient_public_hospital_transfer">ወደ ሌላ የህዝብ ጤና ተቋም ተዛወረ</string>
   <string name="contactpatient_moved_to_private">ወደ የግል ጤና ባለሙያው ወይም ተቋም ተዛውሯል</string>
-  <string name="contactpatient_refused_to_come_back">ተመልሰው ለመምጣት ያልተስማሙ</string>
   <string name="contactpatient_patient_died">በህይወት የለም</string>
   <string name="contactpatient_other_reason">ሌላ ምክንያት</string>
   <string name="contactpatient_unknown">የማይታወቅ</string>
@@ -896,8 +893,8 @@
   <string name="reports_leave_page_title">ከዚህ ገጽ ይውጡ</string>
 
   <!--Monthly screen reports-->
-  <string name="monthly_screening_report">ወርሃዊ የማጣሪያ ሪፖርቶች</string>
-  <string name="monthly_screening_reports">ወርሃዊ የማጣሪያ ሪፖርቶች</string>
+  <string name="monthly_screening_report">ወርሃዊ ተላላፊ ያልሆኑ በሽታዎች የተጋላጭነት ልየታ ሪፖርት</string>
+  <string name="monthly_screening_reports">ወርሃዊ ተላላፊ ያልሆኑ በሽታዎች የተጋላጭነት ልየታ ሪፖርቶች</string>
   <string name="monthly_screening_reports_screening_report">%1$s የማጣሪያ ሪፖርቶች</string><!--Oct 2022 screening report-->
 
   <!--Monthly drug stock reports-->
@@ -908,5 +905,5 @@
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">ወርሃዊ የአቅርቦቶች ሪፖርት</string>
   <string name="monthly_supplies_reports">ወርሃዊ የአቅርቦቶች ሪፖርቶች</string>
-  <string name="monthly_supplies_report_supplies_report">%1$s የአቅርቦቶች ሪፖርት</string>
+  <string name="monthly_supplies_report_supplies_report">%1$s የአቅርቦቶች ሪፖርት</string><!--Oct 2022 supplies report-->
 </resources>

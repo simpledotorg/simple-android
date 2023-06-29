@@ -423,6 +423,8 @@
   <string name="settings_software">Cusboonaysii</string>
   <string name="settings_update">Cusboonaysii</string>
   <string name="settings_software_version">Nooca %1$s</string>
+  <string name="settings_logout_dialog_positive_action">Haa</string>
+  <string name="settings_logout_dialog_negative_action">Maya</string>
 
   <!-- Change language screen -->
   <string name="changelanguage_title">Xullo luuqadaada</string>
@@ -551,6 +553,7 @@
   <string name="contactpatient_invalid_phone_number">Lambarka taleefanka ma shaqaynayo</string>
   <string name="contactpatient_public_hospital_transfer">Waxaa loo wareejiyay xarun caafimaad dadwayne oo kale</string>
   <string name="contactpatient_moved_to_private">U wareegay dhakhtar gaar ah</string>
+  <string name="contactpatient_refused_to_come_back">diiday inuu so noqdo</string>
   <string name="contactpatient_patient_died">Dhintay</string>
   <string name="contactpatient_other_reason">Sabab kale</string>
   <string name="contactpatient_unknown">Lama garanayo</string>
@@ -905,5 +908,5 @@
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">Warbixinta saadka bilaha ah</string>
   <string name="monthly_supplies_reports">Warbixinaha saadka bilaha ah</string>
-  <string name="monthly_supplies_report_supplies_report">%1$s warbixinta saadka</string><!--Oct 2022 supplies report-->
+  <string name="monthly_supplies_report_supplies_report">%1$s warbixinta saadka</string>
 </resources>

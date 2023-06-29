@@ -423,8 +423,6 @@
   <string name="settings_software">மென்பொருள்</string>
   <string name="settings_update">புதுப்பிக்கவும்</string>
   <string name="settings_software_version">பதிப்பு %1$s</string>
-  <string name="settings_logout_dialog_positive_action">ஆம்</string>
-  <string name="settings_logout_dialog_negative_action">இல்லை</string>
 
   <!-- Change language screen -->
   <string name="changelanguage_title">உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்</string>
@@ -906,5 +904,5 @@
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">மாதாந்திரப் பொருட்கள் அறிக்கை</string>
   <string name="monthly_supplies_reports">மாதாந்திரப் பொருட்கள் அறிக்கைகள்</string>
-  <string name="monthly_supplies_report_supplies_report">%1$s பொருட்கள் அறிக்கை</string>
+  <string name="monthly_supplies_report_supplies_report">%1$s பொருட்கள் அறிக்கை</string><!--Oct 2022 supplies report-->
 </resources>

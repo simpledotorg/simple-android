@@ -180,4 +180,18 @@ class SettingsEffectHandlerTest {
 
     testCase.assertNoOutgoingEvents()
   }
+
+  @Test
+  fun `when back is clicked, then go back to previous screen`() {
+    // when
+    testCase.dispatch(GoBack)
+
+    // then
+    verifyNoInteractions(userSession)
+
+    verify(uiActions).goBack()
+    verifyNoMoreInteractions(uiActions)
+
+    testCase.assertNoOutgoingEvents()
+  }
 }

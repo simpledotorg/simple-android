@@ -7,7 +7,6 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserSession.LogoutResult.Failure
 import org.simple.clinic.user.UserSession.LogoutResult.Success
 
@@ -96,32 +95,54 @@ class SettingsUpdateTest {
   }
 
   @Test
-  fun `when confirm logout button is clicked, then logout user`() {
+  fun `when confirm logout button is clicked, then update model and logout user`() {
     spec
         .given(defaultModel)
         .whenEvent(ConfirmLogoutButtonClicked)
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(defaultModel.userLoggingOut()),
             hasEffects(LogoutUser)
         ))
   }
 
   @Test
-  fun `when user is logged out successfully, then restart the app process`() {
+  fun `when user is logged out successfully, then update the model and restart the app process`() {
     spec
         .given(defaultModel)
         .whenEvent(UserLogoutResult(Success))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(defaultModel.userLoggedOut()),
             hasEffects(RestartApp)
         ))
   }
 
   @Test
-  fun `when user is not logged out successfully, then do nothing`() {
+  fun `when user is not logged out successfully, then update the model`() {
     spec
         .given(defaultModel)
         .whenEvent(UserLogoutResult(Failure(IllegalArgumentException())))
+        .then(assertThatNext(
+            hasModel(defaultModel.userLogoutFailed()),
+            hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when back is clicked and user is not in the process of logging out, then go back`() {
+    spec
+        .given(defaultModel.userLoggedOut())
+        .whenEvent(BackClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoBack)
+        ))
+  }
+
+  @Test
+  fun `when back is clicked and user is in the process of logging out, then do nothing`() {
+    spec
+        .given(defaultModel.userLoggingOut())
+        .whenEvent(BackClicked)
         .then(assertThatNext(
             hasNoModel(),
             hasNoEffects()

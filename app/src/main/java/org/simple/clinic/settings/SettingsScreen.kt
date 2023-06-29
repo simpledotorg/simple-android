@@ -9,6 +9,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
@@ -24,6 +25,7 @@ import org.simple.clinic.databinding.ScreenSettingsBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
+import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -40,7 +42,7 @@ class SettingsScreen : BaseScreen<
     SettingsModel,
     SettingsEvent,
     SettingsEffect,
-    SettingsViewEffect>(), SettingsUi, UiActions {
+    SettingsViewEffect>(), SettingsUi, UiActions, HandlesBack {
 
   @Inject
   lateinit var router: Router
@@ -77,6 +79,9 @@ class SettingsScreen : BaseScreen<
 
   private val logoutButton
     get() = binding.logoutButton
+
+  private val logoutProgressIndicator
+    get() = binding.logoutProgressIndicator
 
   private val isChangeLanguageFeatureEnabled by unsafeLazy { features.isEnabled(Feature.ChangeLanguage) }
   private val isLogoutUserFeatureEnabled by unsafeLazy {
@@ -121,7 +126,7 @@ class SettingsScreen : BaseScreen<
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     toggleChangeLanguageFeature()
-    toolbar.setNavigationOnClickListener { router.pop() }
+    toolbar.setNavigationOnClickListener { onBackPressed() }
 
     updateAppVersionButton.setOnClickListener {
       launchPlayStoreForUpdate()
@@ -189,6 +194,28 @@ class SettingsScreen : BaseScreen<
       flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
     }
     startActivity(intent)
+  }
+
+  override fun showLoggingOutProgressIndicator() {
+    logoutProgressIndicator.visibility = View.VISIBLE
+    requireActivity().window.setFlags(
+        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+    )
+  }
+
+  override fun hideLoggingOutProgressIndicator() {
+    logoutProgressIndicator.visibility = View.GONE
+    requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+  }
+
+  override fun goBack() {
+    router.pop()
+  }
+
+  override fun onBackPressed(): Boolean {
+    hotEvents.onNext(BackClicked)
+    return true
   }
 
   private fun launchPlayStoreForUpdate() {

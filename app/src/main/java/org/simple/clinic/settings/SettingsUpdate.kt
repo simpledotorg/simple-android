@@ -19,17 +19,26 @@ class SettingsUpdate : Update<SettingsModel, SettingsEvent, SettingsEffect> {
       is ChangeLanguage -> dispatch(OpenLanguageSelectionScreenEffect)
       is AppVersionLoaded -> next(model.appVersionLoaded(appVersion = event.appVersion))
       is AppUpdateAvailabilityChecked -> next(model.checkedAppUpdate(isUpdateAvailable = event.isUpdateAvailable))
-      is UserLogoutResult -> userLogoutResult(event)
+      is UserLogoutResult -> userLogoutResult(model, event)
       LogoutButtonClicked -> dispatch(ShowConfirmLogoutDialog)
-      ConfirmLogoutButtonClicked -> dispatch(LogoutUser)
+      ConfirmLogoutButtonClicked -> next(model.userLoggingOut(), LogoutUser)
+      BackClicked -> backClicked(model, event)
     }
   }
 
-  private fun userLogoutResult(event: UserLogoutResult): Next<SettingsModel, SettingsEffect> {
-    return if (event.result == UserSession.LogoutResult.Success) {
-      dispatch(RestartApp)
+  private fun backClicked(model: SettingsModel, event: SettingsEvent): Next<SettingsModel, SettingsEffect> {
+    return if (model.isUserLoggingOut != true) {
+      dispatch(GoBack)
     } else {
       noChange()
+    }
+  }
+
+  private fun userLogoutResult(model: SettingsModel, event: UserLogoutResult): Next<SettingsModel, SettingsEffect> {
+    return if (event.result == UserSession.LogoutResult.Success) {
+      next(model.userLoggedOut(), RestartApp)
+    } else {
+      next(model.userLogoutFailed())
     }
   }
 }

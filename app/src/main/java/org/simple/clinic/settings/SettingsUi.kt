@@ -13,4 +13,8 @@ interface SettingsUi {
   fun showAppUpdateButton()
 
   fun hideAppUpdateButton()
+
+  fun showLoggingOutProgressIndicator()
+
+  fun hideLoggingOutProgressIndicator()
 }

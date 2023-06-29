@@ -9,6 +9,7 @@
 ### Internal
 
 - Add missing SQLCipher proguard rules for R8
+- Show progress indicator when logging out
 
 ### Changes
 

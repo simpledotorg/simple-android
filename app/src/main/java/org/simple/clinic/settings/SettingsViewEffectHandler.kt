@@ -12,6 +12,7 @@ class SettingsViewEffectHandler(
       OpenLanguageSelectionScreenEffect -> uiActions.openLanguageSelectionScreen()
       ShowConfirmLogoutDialog -> uiActions.showConfirmLogoutDialog()
       RestartApp -> uiActions.restartApp()
+      GoBack -> uiActions.goBack()
     }.exhaustive()
   }
 }

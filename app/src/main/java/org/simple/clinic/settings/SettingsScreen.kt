@@ -208,6 +208,10 @@ class SettingsScreen : BaseScreen<
     requireActivity().window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
   }
 
+  override fun goBack() {
+    router.pop()
+  }
+
   private fun launchPlayStoreForUpdate() {
     val intent = Intent(Intent.ACTION_VIEW).apply {
       data = Uri.parse(PLAY_STORE_URL_FOR_SIMPLE)

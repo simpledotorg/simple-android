@@ -96,12 +96,12 @@ class SettingsUpdateTest {
   }
 
   @Test
-  fun `when confirm logout button is clicked, then logout user`() {
+  fun `when confirm logout button is clicked, then update model and logout user`() {
     spec
         .given(defaultModel)
         .whenEvent(ConfirmLogoutButtonClicked)
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(defaultModel.userLoggingOut()),
             hasEffects(LogoutUser)
         ))
   }

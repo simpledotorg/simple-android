@@ -29,7 +29,7 @@ class SettingsUpdate : Update<SettingsModel, SettingsEvent, SettingsEffect> {
     return if (event.result == UserSession.LogoutResult.Success) {
       next(model.userLoggedOut(), RestartApp)
     } else {
-      noChange()
+      next(model.userLogoutFailed())
     }
   }
 }

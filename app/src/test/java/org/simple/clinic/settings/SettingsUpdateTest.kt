@@ -118,12 +118,12 @@ class SettingsUpdateTest {
   }
 
   @Test
-  fun `when user is not logged out successfully, then do nothing`() {
+  fun `when user is not logged out successfully, then update the model`() {
     spec
         .given(defaultModel)
         .whenEvent(UserLogoutResult(Failure(IllegalArgumentException())))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(defaultModel.userLogoutFailed()),
             hasNoEffects()
         ))
   }

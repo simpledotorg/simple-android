@@ -56,4 +56,8 @@ data class SettingsModel(
   fun userLoggedOut(): SettingsModel {
     return copy(isUserLoggingOut = false)
   }
+
+  fun userLogoutFailed(): SettingsModel {
+    return copy(isUserLoggingOut = false)
+  }
 }

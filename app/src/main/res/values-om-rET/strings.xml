@@ -424,8 +424,6 @@
   <string name="settings_software">Mosajjii/sooftweerii</string>
   <string name="settings_update">Haaromsa</string>
   <string name="settings_software_version">Gulantaa %1$s</string>
-  <string name="settings_logout_dialog_positive_action">Eeyyee</string>
-  <string name="settings_logout_dialog_negative_action">Lakki</string>
 
   <!-- Change language screen -->
   <string name="changelanguage_title">Afaan kee filadhu</string>
@@ -553,7 +551,6 @@
   <string name="contactpatient_invalid_phone_number">Lakoofsi bilbilaa hin hojjatu</string>
   <string name="contactpatient_public_hospital_transfer">Gara buufata fayyaa biraatti dabarfameera</string>
   <string name="contactpatient_moved_to_private">Eeggumsa dhuunfaatti sochoofameera</string>
-  <string name="contactpatient_refused_to_come_back">Deebu\"uuf fedhii hinqabu</string>
   <string name="contactpatient_patient_died">Boqateera</string>
   <string name="contactpatient_other_reason">Sababa biraa</string>
   <string name="contactpatient_unknown">Kan hin beekamne</string>
@@ -909,5 +906,5 @@ Appilikeeshinii Simple keessan Google PlayStore irraa haaromsadhaa.</string>
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">Gabaasa dhiheessiiwwan ji’aa</string>
   <string name="monthly_supplies_reports">Gabaasa dhiheessiiwwan ji’aa</string>
-  <string name="monthly_supplies_report_supplies_report">%1$s Gabaasa dhiheessiiwwan ji’aa</string>
+  <string name="monthly_supplies_report_supplies_report">%1$s Gabaasa dhiheessiiwwan ji’aa</string><!--Oct 2022 supplies report-->
 </resources>

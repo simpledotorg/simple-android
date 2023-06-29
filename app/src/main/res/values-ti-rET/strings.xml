@@ -423,8 +423,6 @@
   <string name="settings_software">ሶፍትዌር</string>
   <string name="settings_update">ኣሐድስ</string>
   <string name="settings_software_version">ስርሒት %1$s</string>
-  <string name="settings_logout_dialog_positive_action">እወ</string>
-  <string name="settings_logout_dialog_negative_action">ኣይፋሉን</string>
 
   <!-- Change language screen -->
   <string name="changelanguage_title">ቋንቋኻ/ኺ ምረፅ/ፂ</string>
@@ -552,7 +550,6 @@
   <string name="contactpatient_invalid_phone_number">ስልኪ ቁፅሪ ኣይሰርሕን ኣሎ</string>
   <string name="contactpatient_public_hospital_transfer">ናብ ካልእ ትካል ህዝባዊ ጥዕና ተሰጋጊሩ/ራ</string>
   <string name="contactpatient_moved_to_private">ናብ ውልቀ በዓል ሞያ ተዛዊሩ</string>
-  <string name="contactpatient_refused_to_come_back">ምምላስ ኣብዩ</string>
   <string name="contactpatient_patient_died">ሞይቱ/ታ</string>
   <string name="contactpatient_other_reason">ካልእ ምኽንያት</string>
   <string name="contactpatient_unknown">ዘይተፈለጠ</string>
@@ -907,5 +904,5 @@
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">ወርሓዊ ጸብጻብ ቀረባት</string>
   <string name="monthly_supplies_reports">ወርሓዊ ጸብጻባት ቀረባት</string>
-  <string name="monthly_supplies_report_supplies_report">%1$sታት ጸብጻብ ቀረባት </string>
+  <string name="monthly_supplies_report_supplies_report">%1$sታት ጸብጻብ ቀረባት </string><!--Oct 2022 supplies report-->
 </resources>

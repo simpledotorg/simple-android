@@ -1,5 +1,3 @@
-![Build Status](https://github.com/simpledotorg/simple-android/workflows/CI/badge.svg)
-
 # Simple
 
 An Android app for recording blood pressure measurements.

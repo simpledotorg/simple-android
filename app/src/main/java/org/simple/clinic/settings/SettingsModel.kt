@@ -9,7 +9,8 @@ data class SettingsModel(
     val phoneNumber: String?,
     val currentLanguage: Language?,
     val appVersion: String?,
-    val isUpdateAvailable: Boolean?
+    val isUpdateAvailable: Boolean?,
+    val isUserLoggingOut: Boolean?
 ) : Parcelable {
 
   companion object {
@@ -18,7 +19,8 @@ data class SettingsModel(
         phoneNumber = null,
         currentLanguage = null,
         appVersion = null,
-        isUpdateAvailable = null
+        isUpdateAvailable = null,
+        isUserLoggingOut = null
     )
   }
 
@@ -45,5 +47,9 @@ data class SettingsModel(
 
   fun checkedAppUpdate(isUpdateAvailable: Boolean): SettingsModel {
     return copy(isUpdateAvailable = isUpdateAvailable)
+  }
+
+  fun userLoggingOut(): SettingsModel {
+    return copy(isUserLoggingOut = true)
   }
 }

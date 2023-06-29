@@ -110,4 +110,18 @@ class SettingsUiRendererTest {
     verify(ui).hideAppUpdateButton()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when the user is logging out, then show the progress indicator`() {
+    // given
+    val model = defaultModel.userLoggingOut()
+
+    // when
+    renderer.render(model)
+
+    // then
+    verify(ui).showLoggingOutProgressIndicator()
+    verify(ui).hideAppUpdateButton()
+    verifyNoMoreInteractions(ui)
+  }
 }

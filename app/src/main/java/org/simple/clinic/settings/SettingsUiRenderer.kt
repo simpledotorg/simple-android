@@ -8,6 +8,13 @@ class SettingsUiRenderer(private val ui: SettingsUi) : ViewRenderer<SettingsMode
     renderUserDetails(model)
     renderCurrentLanguage(model)
     renderAppVersion(model)
+    renderLoggingOutProgress(model.isUserLoggingOut)
+  }
+
+  private fun renderLoggingOutProgress(userLoggingOut: Boolean?) {
+    if (userLoggingOut == true) {
+      ui.showLoggingOutProgressIndicator()
+    }
   }
 
   private fun renderUserDetails(model: SettingsModel) {

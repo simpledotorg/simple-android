@@ -9,6 +9,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
@@ -77,6 +78,9 @@ class SettingsScreen : BaseScreen<
 
   private val logoutButton
     get() = binding.logoutButton
+
+  private val logoutProgressIndicator
+    get() = binding.logoutProgressIndicator
 
   private val isChangeLanguageFeatureEnabled by unsafeLazy { features.isEnabled(Feature.ChangeLanguage) }
   private val isLogoutUserFeatureEnabled by unsafeLazy {
@@ -189,6 +193,14 @@ class SettingsScreen : BaseScreen<
       flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
     }
     startActivity(intent)
+  }
+
+  override fun showLoggingOutProgressIndicator() {
+    logoutProgressIndicator.visibility = View.VISIBLE
+    requireActivity().window.setFlags(
+        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+    )
   }
 
   private fun launchPlayStoreForUpdate() {

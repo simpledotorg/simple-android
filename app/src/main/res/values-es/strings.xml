@@ -65,7 +65,7 @@
   <string name="patiententry_state">Estado</string>
   <string name="patiententry_region">Región</string>
   <string name="patiententry_doornumber_streetname">Número de casa, Nombre de calle</string>
-  <string name="patiententry_division_area">Provincia y area</string>
+  <string name="patiententry_division_area">Provincia y área</string>
   <string name="patiententry_save_patient">Siguiente</string>
   <string name="patiententry_error_empty_fullname">Ingrese el nombre completo del paciente</string>
   <string name="patiententry_error_empty_gender">Elija el género del paciente</string>
@@ -85,7 +85,7 @@
   <string name="patiententry_consent_sms_reminders">Recordatorios por SMS</string>
   <string name="patiententry_age_exceeds_max_limit_error">La edad no puede ser más de 120</string>
   <string name="patiententry_age_exceeds_min_limit_error">La edad no puede ser 0</string>
-  <string name="patiententry_town_area">Pueblo / Area</string>
+  <string name="patiententry_town_area">Pueblo / Área</string>
   <string name="patiententry_province">Provincia</string>
 
   <string name="patientedit_save_patient">Guardar</string>
@@ -262,7 +262,6 @@
   <string name="overdue_list_item_name_age">%s, %s</string>
   <plurals name="overdue_list_item_appointment_overdue_days">
     <item quantity="one">%s día de atraso</item>
-    <item quantity="many">%s días de atraso</item>
     <item quantity="other">%s días de atraso</item>
   </plurals>
   <string name="overdue_list_item_village">Ciudad</string>
@@ -298,17 +297,14 @@
   <string name="scheduleappointment_next">Siguiente</string>
   <plurals name="scheduleappointment_appointment_in_days">
     <item quantity="one">%s día</item>
-    <item quantity="many">%s </item>
     <item quantity="other">%s días</item>
   </plurals>
   <plurals name="scheduleappointment_appointment_in_weeks">
     <item quantity="one">%s semana</item>
-    <item quantity="many">%s semanas</item>
     <item quantity="other">%s semanas</item>
   </plurals>
   <plurals name="scheduleappointment_appointment_in_months">
     <item quantity="one">%s mes</item>
-    <item quantity="many">%s meses</item>
     <item quantity="other">%s meses</item>
   </plurals>
 
@@ -427,8 +423,6 @@
   <string name="settings_software">Programa</string>
   <string name="settings_update">Actualizar</string>
   <string name="settings_software_version">Versión %1$s</string>
-  <string name="settings_logout_dialog_positive_action">Sí</string>
-  <string name="settings_logout_dialog_negative_action">No</string>
 
   <!-- Change language screen -->
   <string name="changelanguage_title">Seleccione su idioma</string>
@@ -540,17 +534,14 @@
   <string name="contactpatient_result">Resultado</string>
   <plurals name="contactpatient_days">
     <item quantity="one">%s día</item>
-    <item quantity="many">%s </item>
     <item quantity="other">%s días</item>
   </plurals>
   <plurals name="contactpatient_weeks">
     <item quantity="one">%s semana</item>
-    <item quantity="many">%s semanas</item>
     <item quantity="other">%s semanas</item>
   </plurals>
   <plurals name="contactpatient_months">
     <item quantity="one">%s mes</item>
-    <item quantity="many">%s meses</item>
     <item quantity="other">%s meses</item>
   </plurals>
   <string name="contactpatient_select_a_reason">Seleccione una razón</string>
@@ -559,7 +550,6 @@
   <string name="contactpatient_invalid_phone_number">El número telefónico no funciona</string>
   <string name="contactpatient_public_hospital_transfer">Transferido a otra unidad de salud pública</string>
   <string name="contactpatient_moved_to_private">Cambiado a un profesional privado</string>
-  <string name="contactpatient_refused_to_come_back">Rechazó volver</string>
   <string name="contactpatient_patient_died">Fallecido</string>
   <string name="contactpatient_other_reason">Otra razón</string>
   <string name="contactpatient_unknown">Desconocido</string>
@@ -662,7 +652,6 @@
   <string name="view_teleconsult_medicines_required_error">Agregue por lo menos un medicamento</string>
   <plurals name="list_item_teleconsult_medicine_duration">
     <item quantity="one">%1$s día</item>
-    <item quantity="many">%1$s días</item>
     <item quantity="other">%1$s días</item>
   </plurals>
 
@@ -806,12 +795,10 @@
   <string name="next_appointment_today">Hoy</string>
   <plurals name="next_appointment_plurals">
     <item quantity="one">%d día</item>
-    <item quantity="many">%d días</item>
     <item quantity="other">%d días</item>
   </plurals>
   <plurals name="next_appointment_overdue_plurals">
     <item quantity="one">%d día de atraso</item>
-    <item quantity="many">%d días de atraso</item>
     <item quantity="other">%d días de atraso</item>
   </plurals>
 
@@ -917,5 +904,5 @@
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">Reporte mensual de suministros</string>
   <string name="monthly_supplies_reports">Reportes mensuales de suministros</string>
-  <string name="monthly_supplies_report_supplies_report">Reporte %1$s de suministros</string>
+  <string name="monthly_supplies_report_supplies_report">Reporte %1$s de suministros</string><!--Oct 2022 supplies report-->
 </resources>

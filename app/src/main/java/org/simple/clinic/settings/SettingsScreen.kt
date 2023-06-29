@@ -25,6 +25,7 @@ import org.simple.clinic.databinding.ScreenSettingsBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature
 import org.simple.clinic.feature.Features
+import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
@@ -41,7 +42,7 @@ class SettingsScreen : BaseScreen<
     SettingsModel,
     SettingsEvent,
     SettingsEffect,
-    SettingsViewEffect>(), SettingsUi, UiActions {
+    SettingsViewEffect>(), SettingsUi, UiActions, HandlesBack {
 
   @Inject
   lateinit var router: Router
@@ -125,7 +126,7 @@ class SettingsScreen : BaseScreen<
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     toggleChangeLanguageFeature()
-    toolbar.setNavigationOnClickListener { router.pop() }
+    toolbar.setNavigationOnClickListener { onBackPressed() }
 
     updateAppVersionButton.setOnClickListener {
       launchPlayStoreForUpdate()
@@ -210,6 +211,11 @@ class SettingsScreen : BaseScreen<
 
   override fun goBack() {
     router.pop()
+  }
+
+  override fun onBackPressed(): Boolean {
+    hotEvents.onNext(BackClicked)
+    return true
   }
 
   private fun launchPlayStoreForUpdate() {

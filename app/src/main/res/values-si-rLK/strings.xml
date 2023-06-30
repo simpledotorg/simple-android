@@ -423,6 +423,8 @@
   <string name="settings_software">මෘදුකාංගය</string>
   <string name="settings_update">යාවත්කාලීන කරන්න</string>
   <string name="settings_software_version">%1$s අනුවාදය</string>
+  <string name="settings_logout_dialog_positive_action">ඔව්</string>
+  <string name="settings_logout_dialog_negative_action">නැත</string>
 
   <!-- Change language screen -->
   <string name="changelanguage_title">ඔබගේ භාෂාව තෝරාගන්න</string>
@@ -550,6 +552,7 @@
   <string name="contactpatient_invalid_phone_number">දුරකතන අංකය ක්‍රියා නොකරයි</string>
   <string name="contactpatient_public_hospital_transfer">වෙනත් රජයේ සෞඛ්‍ය ආයතනයකට මාරු කර ඇත</string>
   <string name="contactpatient_moved_to_private">පුද්ගලික වෛද්‍යවරයෙකු වෙත යවා ඇත</string>
+  <string name="contactpatient_refused_to_come_back">නැවත පැමිණීම ප්‍රතික්ෂප කරන ලදී</string>
   <string name="contactpatient_patient_died">මරණය සිදු විය</string>
   <string name="contactpatient_other_reason">වෙනත් හේතුවක්</string>
   <string name="contactpatient_unknown">නොදනී</string>
@@ -904,5 +907,5 @@
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">මාසික සැපයුම් වාර්තාව</string>
   <string name="monthly_supplies_reports">මාසික සැපයුම් වාර්තා</string>
-  <string name="monthly_supplies_report_supplies_report">%1$s සැපයුම් වාර්තාවක්</string><!--Oct 2022 supplies report-->
+  <string name="monthly_supplies_report_supplies_report">%1$s සැපයුම් වාර්තාවක්</string>
 </resources>

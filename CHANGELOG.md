@@ -16,7 +16,7 @@
 - Add support for database encryption
 - Add new call result option - `Refused to come back`
 - Hide overdue download/share actions when there are no overdue patients
-- Updated translations: `om-ET`, `si-LK`, `sid-ET`, `ta-IN`, `te-IN`, `bn-BD`, `am-ET`, `bn-IN`
+- Updated translations: `om-ET`, `si-LK`, `sid-ET`, `ta-IN`, `te-IN`, `bn-BD`, `am-ET`, `bn-IN`, `so-ET`
 
 ## 2023-06-26-8772
 

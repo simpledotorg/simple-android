@@ -260,9 +260,8 @@
   <string name="overdue_no_patients">No hay pacientes atrasados</string>
   <string name="overdue_empty_desc">Podrá llamar a los pacientes que no acudan a sus visitas programadas para seguimiento de lectura de presión arterial</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
-  <plurals name="overdue_list_item_appointment_overdue_days">
+  <plurals name="overdue_list_item_appointment_overdue_days" tools:ignore="MissingQuantity">
     <item quantity="one">%s día de atraso</item>
-    <item quantity="many">%s días de atraso</item>
     <item quantity="other">%s días de atraso</item>
   </plurals>
   <string name="overdue_list_item_village">Ciudad</string>
@@ -296,19 +295,16 @@
   <string name="scheduleappointment_not_now">No ahora</string>
   <string name="scheduleappointment_done">listo</string>
   <string name="scheduleappointment_next">Siguiente</string>
-  <plurals name="scheduleappointment_appointment_in_days">
+  <plurals name="scheduleappointment_appointment_in_days" tools:ignore="MissingQuantity">
     <item quantity="one">%s día</item>
-    <item quantity="many">%s </item>
     <item quantity="other">%s días</item>
   </plurals>
-  <plurals name="scheduleappointment_appointment_in_weeks">
+  <plurals name="scheduleappointment_appointment_in_weeks" tools:ignore="MissingQuantity">
     <item quantity="one">%s semana</item>
-    <item quantity="many">%s semanas</item>
     <item quantity="other">%s semanas</item>
   </plurals>
-  <plurals name="scheduleappointment_appointment_in_months">
+  <plurals name="scheduleappointment_appointment_in_months" tools:ignore="MissingQuantity">
     <item quantity="one">%s mes</item>
-    <item quantity="many">%s meses</item>
     <item quantity="other">%s meses</item>
   </plurals>
 
@@ -538,19 +534,16 @@
   <string name="contactpatient_change">Cambiar</string>
   <string name="contactpatient_done">Listo</string>
   <string name="contactpatient_result">Resultado</string>
-  <plurals name="contactpatient_days">
+  <plurals name="contactpatient_days" tools:ignore="MissingQuantity">
     <item quantity="one">%s día</item>
-    <item quantity="many">%s </item>
     <item quantity="other">%s días</item>
   </plurals>
-  <plurals name="contactpatient_weeks">
+  <plurals name="contactpatient_weeks" tools:ignore="MissingQuantity">
     <item quantity="one">%s semana</item>
-    <item quantity="many">%s semanas</item>
     <item quantity="other">%s semanas</item>
   </plurals>
-  <plurals name="contactpatient_months">
+  <plurals name="contactpatient_months" tools:ignore="MissingQuantity">
     <item quantity="one">%s mes</item>
-    <item quantity="many">%s meses</item>
     <item quantity="other">%s meses</item>
   </plurals>
   <string name="contactpatient_select_a_reason">Seleccione una razón</string>
@@ -660,9 +653,8 @@
   <string name="view_teleconsult_medicines_add">Agregar</string>
   <string name="view_teleconsult_medicines_edit">Editar</string>
   <string name="view_teleconsult_medicines_required_error">Agregue por lo menos un medicamento</string>
-  <plurals name="list_item_teleconsult_medicine_duration">
+  <plurals name="list_item_teleconsult_medicine_duration" tools:ignore="MissingQuantity">
     <item quantity="one">%1$s día</item>
-    <item quantity="many">%1$s días</item>
     <item quantity="other">%1$s días</item>
   </plurals>
 
@@ -804,14 +796,12 @@
   <string name="next_appointment_none">Ninguno</string>
   <string name="next_appointment_appointment_at_facility">en %s</string>
   <string name="next_appointment_today">Hoy</string>
-  <plurals name="next_appointment_plurals">
+  <plurals name="next_appointment_plurals" tools:ignore="MissingQuantity">
     <item quantity="one">%d día</item>
-    <item quantity="many">%d días</item>
     <item quantity="other">%d días</item>
   </plurals>
-  <plurals name="next_appointment_overdue_plurals">
+  <plurals name="next_appointment_overdue_plurals" tools:ignore="MissingQuantity">
     <item quantity="one">%d día de atraso</item>
-    <item quantity="many">%d días de atraso</item>
     <item quantity="other">%d días de atraso</item>
   </plurals>
 

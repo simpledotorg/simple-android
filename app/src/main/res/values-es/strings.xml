@@ -260,7 +260,7 @@
   <string name="overdue_no_patients">No hay pacientes atrasados</string>
   <string name="overdue_empty_desc">Podrá llamar a los pacientes que no acudan a sus visitas programadas para seguimiento de lectura de presión arterial</string>
   <string name="overdue_list_item_name_age">%s, %s</string>
-  <plurals name="overdue_list_item_appointment_overdue_days">
+  <plurals name="overdue_list_item_appointment_overdue_days" tools:ignore="MissingQuantity">
     <item quantity="one">%s día de atraso</item>
     <item quantity="other">%s días de atraso</item>
   </plurals>
@@ -295,15 +295,15 @@
   <string name="scheduleappointment_not_now">No ahora</string>
   <string name="scheduleappointment_done">listo</string>
   <string name="scheduleappointment_next">Siguiente</string>
-  <plurals name="scheduleappointment_appointment_in_days">
+  <plurals name="scheduleappointment_appointment_in_days" tools:ignore="MissingQuantity">
     <item quantity="one">%s día</item>
     <item quantity="other">%s días</item>
   </plurals>
-  <plurals name="scheduleappointment_appointment_in_weeks">
+  <plurals name="scheduleappointment_appointment_in_weeks" tools:ignore="MissingQuantity">
     <item quantity="one">%s semana</item>
     <item quantity="other">%s semanas</item>
   </plurals>
-  <plurals name="scheduleappointment_appointment_in_months">
+  <plurals name="scheduleappointment_appointment_in_months" tools:ignore="MissingQuantity">
     <item quantity="one">%s mes</item>
     <item quantity="other">%s meses</item>
   </plurals>
@@ -423,6 +423,8 @@
   <string name="settings_software">Programa</string>
   <string name="settings_update">Actualizar</string>
   <string name="settings_software_version">Versión %1$s</string>
+  <string name="settings_logout_dialog_positive_action">Sí</string>
+  <string name="settings_logout_dialog_negative_action">No</string>
 
   <!-- Change language screen -->
   <string name="changelanguage_title">Seleccione su idioma</string>
@@ -532,15 +534,15 @@
   <string name="contactpatient_change">Cambiar</string>
   <string name="contactpatient_done">Listo</string>
   <string name="contactpatient_result">Resultado</string>
-  <plurals name="contactpatient_days">
+  <plurals name="contactpatient_days" tools:ignore="MissingQuantity">
     <item quantity="one">%s día</item>
     <item quantity="other">%s días</item>
   </plurals>
-  <plurals name="contactpatient_weeks">
+  <plurals name="contactpatient_weeks" tools:ignore="MissingQuantity">
     <item quantity="one">%s semana</item>
     <item quantity="other">%s semanas</item>
   </plurals>
-  <plurals name="contactpatient_months">
+  <plurals name="contactpatient_months" tools:ignore="MissingQuantity">
     <item quantity="one">%s mes</item>
     <item quantity="other">%s meses</item>
   </plurals>
@@ -550,6 +552,7 @@
   <string name="contactpatient_invalid_phone_number">El número telefónico no funciona</string>
   <string name="contactpatient_public_hospital_transfer">Transferido a otra unidad de salud pública</string>
   <string name="contactpatient_moved_to_private">Cambiado a un profesional privado</string>
+  <string name="contactpatient_refused_to_come_back">Rechazó volver</string>
   <string name="contactpatient_patient_died">Fallecido</string>
   <string name="contactpatient_other_reason">Otra razón</string>
   <string name="contactpatient_unknown">Desconocido</string>
@@ -650,7 +653,7 @@
   <string name="view_teleconsult_medicines_add">Agregar</string>
   <string name="view_teleconsult_medicines_edit">Editar</string>
   <string name="view_teleconsult_medicines_required_error">Agregue por lo menos un medicamento</string>
-  <plurals name="list_item_teleconsult_medicine_duration">
+  <plurals name="list_item_teleconsult_medicine_duration" tools:ignore="MissingQuantity">
     <item quantity="one">%1$s día</item>
     <item quantity="other">%1$s días</item>
   </plurals>
@@ -793,11 +796,11 @@
   <string name="next_appointment_none">Ninguno</string>
   <string name="next_appointment_appointment_at_facility">en %s</string>
   <string name="next_appointment_today">Hoy</string>
-  <plurals name="next_appointment_plurals">
+  <plurals name="next_appointment_plurals" tools:ignore="MissingQuantity">
     <item quantity="one">%d día</item>
     <item quantity="other">%d días</item>
   </plurals>
-  <plurals name="next_appointment_overdue_plurals">
+  <plurals name="next_appointment_overdue_plurals" tools:ignore="MissingQuantity">
     <item quantity="one">%d día de atraso</item>
     <item quantity="other">%d días de atraso</item>
   </plurals>
@@ -904,5 +907,5 @@
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">Reporte mensual de suministros</string>
   <string name="monthly_supplies_reports">Reportes mensuales de suministros</string>
-  <string name="monthly_supplies_report_supplies_report">Reporte %1$s de suministros</string><!--Oct 2022 supplies report-->
+  <string name="monthly_supplies_report_supplies_report">Reporte %1$s de suministros</string>
 </resources>

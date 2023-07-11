@@ -65,7 +65,7 @@
   <string name="patiententry_state">Estado</string>
   <string name="patiententry_region">Región</string>
   <string name="patiententry_doornumber_streetname">Número de casa, Nombre de calle</string>
-  <string name="patiententry_division_area">Provincia y area</string>
+  <string name="patiententry_division_area">Provincia y área</string>
   <string name="patiententry_save_patient">Siguiente</string>
   <string name="patiententry_error_empty_fullname">Ingrese el nombre completo del paciente</string>
   <string name="patiententry_error_empty_gender">Elija el género del paciente</string>
@@ -85,7 +85,7 @@
   <string name="patiententry_consent_sms_reminders">Recordatorios por SMS</string>
   <string name="patiententry_age_exceeds_max_limit_error">La edad no puede ser más de 120</string>
   <string name="patiententry_age_exceeds_min_limit_error">La edad no puede ser 0</string>
-  <string name="patiententry_town_area">Pueblo / Area</string>
+  <string name="patiententry_town_area">Pueblo / Área</string>
   <string name="patiententry_province">Provincia</string>
 
   <string name="patientedit_save_patient">Guardar</string>

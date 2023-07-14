@@ -44,6 +44,10 @@ class SettingsUiRenderer(private val ui: SettingsUi) : ViewRenderer<SettingsMode
       ui.displayAppVersion(model.appVersion!!)
     }
 
+    if (model.isDatabaseEncrypted == true) {
+      ui.displayAppSecureIcon()
+    }
+
     if (model.isUpdateAvailable == true) {
       ui.showAppUpdateButton()
     } else {

@@ -23,7 +23,9 @@ class SettingsUpdate : Update<SettingsModel, SettingsEvent, SettingsEffect> {
       LogoutButtonClicked -> dispatch(ShowConfirmLogoutDialog)
       ConfirmLogoutButtonClicked -> next(model.userLoggingOut(), LogoutUser)
       BackClicked -> backClicked(model, event)
-      is DatabaseEncryptionStatusLoaded -> noChange()
+      is DatabaseEncryptionStatusLoaded -> next(
+          model.databaseEncryptionStatusLoaded(isDatabaseEncrypted = event.isDatabaseEncrypted)
+      )
     }
   }
 

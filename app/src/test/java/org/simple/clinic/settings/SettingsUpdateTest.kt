@@ -148,4 +148,15 @@ class SettingsUpdateTest {
             hasNoEffects()
         ))
   }
+
+  @Test
+  fun `when database encryption status is loaded, then update ui`() {
+    spec
+        .given(defaultModel)
+        .whenEvent(DatabaseEncryptionStatusLoaded(isDatabaseEncrypted = true))
+        .then(assertThatNext(
+            hasModel(defaultModel.databaseEncryptionStatusLoaded(isDatabaseEncrypted = true)),
+            hasNoEffects()
+        ))
+  }
 }

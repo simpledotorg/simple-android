@@ -15,6 +15,7 @@ import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.storage.DatabaseEncryptor
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserSession.LogoutResult
@@ -30,6 +31,7 @@ class SettingsEffectHandlerTest {
   private val uiActions = mock<UiActions>()
   private val appVersionFetcher = mock<AppVersionFetcher>()
   private val checkAppUpdateAvailability = mock<CheckAppUpdateAvailability>()
+  private val databaseEncryptor = mock<DatabaseEncryptor>()
 
   private val effectHandler = SettingsEffectHandler(
       userSession = userSession,
@@ -37,6 +39,7 @@ class SettingsEffectHandlerTest {
       schedulersProvider = TrampolineSchedulersProvider(),
       appVersionFetcher = appVersionFetcher,
       appUpdateAvailability = checkAppUpdateAvailability,
+      databaseEncryptor = databaseEncryptor,
       viewEffectsConsumer = SettingsViewEffectHandler(uiActions)::handle
   ).build()
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -193,5 +196,20 @@ class SettingsEffectHandlerTest {
     verifyNoMoreInteractions(uiActions)
 
     testCase.assertNoOutgoingEvents()
+  }
+
+  @Test
+  fun `when load database encryption status effect is received, then load the database encryption status`() {
+    // given
+    whenever(databaseEncryptor.isDatabaseEncrypted).doReturn(Observable.just(true))
+
+    // when
+    testCase.dispatch(LoadDatabaseEncryptionStatus)
+
+    // then
+    verifyNoInteractions(uiActions)
+    verifyNoInteractions(userSession)
+
+    testCase.assertOutgoingEvents(DatabaseEncryptionStatusLoaded(isDatabaseEncrypted = true))
   }
 }

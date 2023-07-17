@@ -145,4 +145,23 @@ class SettingsUiRendererTest {
     verify(ui).hideAppUpdateButton()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when database is encrypted and app version is loaded, then show the status icon`() {
+    // given
+    val appVersion = "1.0.0"
+    val model = defaultModel
+        .databaseEncryptionStatusLoaded(isDatabaseEncrypted = true)
+        .appVersionLoaded(appVersion)
+
+    // when
+    renderer.render(model)
+
+    // then
+    verify(ui).displayAppVersion(appVersion)
+    verify(ui).hideAppUpdateButton()
+    verify(ui).hideLoggingOutProgressIndicator()
+    verify(ui).displayAppSecureIcon()
+    verifyNoMoreInteractions(ui)
+  }
 }

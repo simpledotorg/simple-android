@@ -83,6 +83,9 @@ class SettingsScreen : BaseScreen<
   private val logoutProgressIndicator
     get() = binding.logoutProgressIndicator
 
+  private val appSecureIcon
+    get() = binding.appSecureIcon
+
   private val isChangeLanguageFeatureEnabled by unsafeLazy { features.isEnabled(Feature.ChangeLanguage) }
   private val isLogoutUserFeatureEnabled by unsafeLazy {
     features.isEnabled(Feature.LogoutUser)
@@ -216,6 +219,10 @@ class SettingsScreen : BaseScreen<
   override fun onBackPressed(): Boolean {
     hotEvents.onNext(BackClicked)
     return true
+  }
+
+  override fun displayAppSecureIcon() {
+    appSecureIcon.visibility = View.VISIBLE
   }
 
   private fun launchPlayStoreForUpdate() {

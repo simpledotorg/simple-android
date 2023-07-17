@@ -18,6 +18,7 @@
 - Hide overdue download/share actions when there are no overdue patients
 - Updated translations: `om-ET`, `si-LK`, `sid-ET`, `ta-IN`, `te-IN`, `bn-BD`, `am-ET`, `bn-IN`, `so-ET`, `mr-IN`, `ti-ET`,
   `es`, `hi-IN`, `kn_IN`
+- Display icon to indicate app database encryption status in settings
 
 ## 2023-06-26-8772
 

@@ -22,22 +22,20 @@ fun InputGroup(
     inputViewGroupComponentData: InputViewGroupComponentData,
     content: MutableMap<String, Any?>
 ) {
-  val inputFields = inputViewGroupComponentData.children
-  if (!inputFields.isNullOrEmpty()) {
-    LazyVerticalGrid(
-        modifier = Modifier
-            .padding(top = dimensionResource(id = R.dimen.spacing_8))
-            .height(68.dp),
-        columns = GridCells.Fixed(
-            if (inputFields.count() > 1) 2 else 1
-        ),
-        horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.spacing_8))
-    ) {
-      items(inputFields) { inputFieldComponentData ->
-        when (inputFieldComponentData.type) {
-          IntegerType, StringType, is UnknownType -> InputField(inputFieldComponentData, content)
-          DateType -> DateInputField(inputFieldComponentData, content)
-        }
+  val inputFields = inputViewGroupComponentData.children.orEmpty()
+  LazyVerticalGrid(
+      modifier = Modifier
+          .padding(top = dimensionResource(id = R.dimen.spacing_8))
+          .height(68.dp),
+      columns = GridCells.Fixed(
+          if (inputFields.size > 1) 2 else 1
+      ),
+      horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.spacing_8))
+  ) {
+    items(inputFields) { inputFieldComponentData ->
+      when (inputFieldComponentData.type) {
+        IntegerType, StringType, is UnknownType -> InputField(inputFieldComponentData, content)
+        DateType -> DateInputField(inputFieldComponentData, content)
       }
     }
   }

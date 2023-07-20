@@ -1484,7 +1484,9 @@ object TestData {
                       linkId = "monthly_screening_reports.outpatient_department_visits",
                       text = "Outpatient department visits",
                       type = IntegerType,
-                      validations = InputFieldValidations(min = 0, max = 1000000)
+                      validations = InputFieldValidations(min = 0, max = 1000000),
+                      viewType = null,
+                      viewFormat = null
                   )
               )
           ),
@@ -1507,13 +1509,19 @@ object TestData {
                       linkId = "monthly_screening_reports.blood_pressure_checks_male",
                       text = "Male",
                       type = IntegerType,
-                      validations = InputFieldValidations(min = 0, max = 1000000)),
+                      validations = InputFieldValidations(min = 0, max = 1000000),
+                      viewType = null,
+                      viewFormat = null
+                  ),
                   InputFieldComponentData(
                       id = "blood_pressure_checks_female",
                       linkId = "monthly_screening_reports.blood_pressure_checks_female",
                       text = "Female",
                       type = IntegerType,
-                      validations = InputFieldValidations(min = 0, max = 1000000))
+                      validations = InputFieldValidations(min = 0, max = 1000000),
+                      viewType = null,
+                      viewFormat = null
+                  )
               )
           ),
           SeparatorComponentData(
@@ -1575,7 +1583,10 @@ object TestData {
                       linkId = "monthly_supplies_report.comments",
                       text = "",
                       type = StringType,
-                      validations = InputFieldValidations(min = 0, max = 1000)),
+                      validations = InputFieldValidations(min = 0, max = 1000),
+                      viewType = null,
+                      viewFormat = null
+                  ),
               )
           ),
       )

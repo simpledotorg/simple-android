@@ -1054,5 +1054,5 @@
   <string name="monthly_supplies_report_supplies_report">%1$s supplies report</string>
 
   <!-- Drug Stock Expiry Form -->
-  <string name="month_date_picker_invalid_date">Please select a date within the range %1$s - %2$s</string>
+  <string name="month_date_picker_invalid_date">Invalid date, date must be within the range %1$s - %2$s</string>
 </resources>

@@ -14,6 +14,7 @@ sealed class InputFieldType : Parcelable {
       knownMappings = mapOf(
           IntegerType to "integer",
           StringType to "string",
+          DateType to "date",
       ),
       unknownStringToEnumConverter = ::UnknownType,
       unknownEnumToStringConverter = { (it as UnknownType).actualValue }
@@ -48,6 +49,9 @@ object IntegerType : InputFieldType()
 
 @Parcelize
 object StringType : InputFieldType()
+
+@Parcelize
+object DateType : InputFieldType()
 
 @Parcelize
 data class UnknownType(val actualValue: String) : InputFieldType()

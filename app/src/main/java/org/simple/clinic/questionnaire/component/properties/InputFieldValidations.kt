@@ -16,4 +16,10 @@ data class InputFieldValidations(
 
     @Json(name = "max_char")
     val maxChar: Int? = null,
+
+    @Json(name = "allowed_days_in_past")
+    val allowedDaysInPast: Int? = null,
+
+    @Json(name = "allowed_days_in_future")
+    val allowedDaysInFuture: Int? = null
 ) : Parcelable

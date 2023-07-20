@@ -17,9 +17,11 @@ import androidx.compose.ui.unit.dp
 import org.simple.clinic.monthlyreports.form.compose.util.keyboardType
 import org.simple.clinic.monthlyreports.form.compose.util.textFieldColors
 import org.simple.clinic.questionnaire.component.InputFieldComponentData
+import org.simple.clinic.questionnaire.component.properties.DateType
 import org.simple.clinic.questionnaire.component.properties.InputFieldType
 import org.simple.clinic.questionnaire.component.properties.IntegerType
 import org.simple.clinic.questionnaire.component.properties.StringType
+import org.simple.clinic.questionnaire.component.properties.UnknownType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,7 +61,7 @@ private fun allowUserInput(text: String, inputType: InputFieldType): Boolean {
   return when (inputType) {
     is IntegerType -> text.isEmpty() || text.matches(numericalPattern)
     is StringType -> true
-    else -> false
+    DateType, is UnknownType -> false
   }
 }
 

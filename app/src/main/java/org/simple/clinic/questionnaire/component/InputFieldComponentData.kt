@@ -25,6 +25,9 @@ data class InputFieldComponentData(
     @Json(name = "view_type")
     val viewType: InputFieldViewType?,
 
+    @Json(name = "view_format")
+    val viewFormat: String?,
+
     @Json(name = "validations")
     val validations: InputFieldValidations
 ) : BaseComponentData()

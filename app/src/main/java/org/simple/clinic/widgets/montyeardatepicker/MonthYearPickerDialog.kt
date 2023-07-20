@@ -53,9 +53,9 @@ import java.time.Month as JavaMonth
 @Composable
 fun MonthYearPickerDialog(
     onDismissRequest: () -> Unit,
+    daysRange: IntRange,
     modifier: Modifier = Modifier,
     selectedDate: LocalDate? = null,
-    daysRange: IntRange = IntRange(0, 3650), // now to 10 years in future
     onDateSelected: (LocalDate) -> Unit
 ) {
   val dateFormatter = remember {

@@ -12,6 +12,10 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import org.simple.clinic.R
 import org.simple.clinic.questionnaire.component.InputViewGroupComponentData
+import org.simple.clinic.questionnaire.component.properties.DateType
+import org.simple.clinic.questionnaire.component.properties.IntegerType
+import org.simple.clinic.questionnaire.component.properties.StringType
+import org.simple.clinic.questionnaire.component.properties.UnknownType
 
 @Composable
 fun InputGroup(
@@ -30,7 +34,10 @@ fun InputGroup(
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.spacing_8))
     ) {
       items(inputFields) { inputFieldComponentData ->
-        InputField(inputFieldComponentData, content)
+        when (inputFieldComponentData.type) {
+          IntegerType, StringType, is UnknownType -> InputField(inputFieldComponentData, content)
+          DateType -> DateInputField(inputFieldComponentData, content)
+        }
       }
     }
   }

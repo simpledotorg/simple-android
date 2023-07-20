@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.jakewharton.rxbinding3.view.clicks
@@ -17,16 +18,13 @@ import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenQuestionnaireEntryFormBinding
 import org.simple.clinic.di.DateFormatter
-import org.simple.clinic.di.DateFormatter.Type.MonthAndYear
 import org.simple.clinic.di.DateFormatter.Type.FormSubmissionDateTime
+import org.simple.clinic.di.DateFormatter.Type.MonthAndYear
 import org.simple.clinic.di.injector
 import org.simple.clinic.monthlyreports.complete.MonthlyReportCompleteScreen
 import org.simple.clinic.monthlyreports.form.compose.QuestionnaireFormContainer
 import org.simple.clinic.monthlyreports.util.getMonthlyReportFormattedMonthString
 import org.simple.clinic.monthlyreports.util.getMonthlyReportSubmitStatus
-import org.simple.clinic.questionnaire.QuestionnaireType
-import org.simple.clinic.questionnaire.component.BaseComponentData
-import org.simple.clinic.questionnaire.component.ViewGroupComponentData
 import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -34,12 +32,16 @@ import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.questionnaire.MonthlyDrugReports
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.clinic.questionnaire.MonthlySuppliesReports
+import org.simple.clinic.questionnaire.QuestionnaireType
+import org.simple.clinic.questionnaire.component.BaseComponentData
+import org.simple.clinic.questionnaire.component.ViewGroupComponentData
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toLocalDateTimeAtZone
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
+import org.simple.clinic.widgets.montyeardatepicker.LocalUserClock
 import org.simple.clinic.widgets.visibleOrGone
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -198,10 +200,12 @@ class QuestionnaireEntryScreen : BaseScreen<
       binding.composeView.apply {
         setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
         setContent {
-          QuestionnaireFormContainer(
-              viewGroupComponentData = layout,
-              content = content
-          )
+          CompositionLocalProvider(LocalUserClock provides userClock) {
+            QuestionnaireFormContainer(
+                viewGroupComponentData = layout,
+                content = content
+            )
+          }
         }
       }
     }

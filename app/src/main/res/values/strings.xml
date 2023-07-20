@@ -1052,4 +1052,7 @@
   <string name="monthly_supplies_report">Monthly supplies report</string>
   <string name="monthly_supplies_reports">Monthly supplies reports</string>
   <string name="monthly_supplies_report_supplies_report">%1$s supplies report</string>
+
+  <!-- Drug Stock Expiry Form -->
+  <string name="month_date_picker_invalid_date">Invalid date, date must be within the range %1$s - %2$s</string>
 </resources>

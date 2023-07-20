@@ -10,6 +10,7 @@
 
 - Add missing SQLCipher proguard rules for R8
 - Show progress indicator when logging out
+- Bump to latest alpha/beta version of Compose libraries
 
 ### Changes
 

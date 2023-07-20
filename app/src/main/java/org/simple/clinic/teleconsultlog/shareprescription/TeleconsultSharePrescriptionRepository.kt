@@ -37,9 +37,9 @@ class TeleconsultSharePrescriptionRepository @Inject constructor(
       getFileOutputStream(fileName)
     }
 
-    imageOutputStream.use { outputStream ->
-      bitmap?.compress(Bitmap.CompressFormat.PNG, 100, imageOutputStream)
-      outputStream?.flush()
+    imageOutputStream?.use { outputStream ->
+      bitmap?.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+      outputStream.flush()
     }
     return fileName
   }

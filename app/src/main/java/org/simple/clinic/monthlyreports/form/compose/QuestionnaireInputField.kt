@@ -14,7 +14,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import org.simple.clinic.monthlyreports.form.compose.util.getKeyBoardType
+import org.simple.clinic.monthlyreports.form.compose.util.keyboardType
 import org.simple.clinic.monthlyreports.form.compose.util.textFieldColors
 import org.simple.clinic.questionnaire.component.InputFieldComponentData
 import org.simple.clinic.questionnaire.component.properties.InputFieldType
@@ -46,7 +46,7 @@ fun InputField(
       singleLine = true,
       shape = RoundedCornerShape(0.dp),
       colors = textFieldColors(),
-      keyboardOptions = getKeyBoardType(inputType = inputFieldComponentData.type),
+      keyboardOptions = keyboardType(inputType = inputFieldComponentData.type),
       textStyle = TextStyle(
           fontFamily = FontFamily.SansSerif
       ),

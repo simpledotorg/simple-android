@@ -34,7 +34,7 @@ fun textFieldColors(
 }
 
 @Composable
-fun getKeyBoardType(inputType: InputFieldType): KeyboardOptions {
+fun keyboardType(inputType: InputFieldType): KeyboardOptions {
   return KeyboardOptions(
       keyboardType = if (inputType == IntegerType)
         KeyboardType.Number else KeyboardType.Text,

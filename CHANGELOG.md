@@ -13,6 +13,7 @@
 - Bump to latest alpha/beta version of Compose libraries
 - Add month and year picker dialog for Compose forms
 - Add support for date input field for Compose forms
+- Update drug stock report link icon in patients screen
 
 ### Changes
 

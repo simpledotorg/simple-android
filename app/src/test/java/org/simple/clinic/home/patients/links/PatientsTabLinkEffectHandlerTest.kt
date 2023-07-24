@@ -119,4 +119,15 @@ class PatientsTabLinkEffectHandlerTest {
     verify(uiActions).openPatientLineListDownloadDialog()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when open drug stock reports is clicked, then open the drug stock reports screen`() {
+    // when
+    effectHandlerTestCase.dispatch(OpenDrugStockReportsScreen)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+    verify(uiActions).openDrugStockReports()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

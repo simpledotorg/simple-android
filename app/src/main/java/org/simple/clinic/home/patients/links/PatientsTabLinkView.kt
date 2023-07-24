@@ -19,6 +19,7 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.monthlyreports.list.MonthlyReportsScreen
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.patient.download.formatdialog.SelectLineListFormatDialog
+import org.simple.clinic.questionnaire.MonthlyDrugReports
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.clinic.questionnaire.MonthlySuppliesReports
 import org.simple.clinic.util.unsafeLazy
@@ -167,5 +168,9 @@ class PatientsTabLinkView(
 
   override fun openPatientLineListDownloadDialog() {
     router.push(SelectLineListFormatDialog.Key())
+  }
+
+  override fun openDrugStockReports() {
+    router.push(MonthlyReportsScreen.Key(MonthlyDrugReports))
   }
 }

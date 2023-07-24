@@ -37,6 +37,7 @@ class PatientsTabLinkEffectHandler @AssistedInject constructor(
         .addAction(OpenMonthlyScreeningReportsListScreen::class.java, { uiActions.openMonthlyScreeningReports() }, schedulersProvider.ui())
         .addAction(OpenMonthlySuppliesReportsListScreen::class.java, { uiActions.openMonthlySuppliesReports() }, schedulersProvider.ui())
         .addAction(OpenPatientLineListDownloadDialog::class.java, { uiActions.openPatientLineListDownloadDialog() }, schedulersProvider.ui())
+        .addAction(OpenDrugStockReportsScreen::class.java, { uiActions.openDrugStockReports() }, schedulersProvider.ui())
         .build()
   }
 

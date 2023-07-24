@@ -4,4 +4,5 @@ interface PatientsTabLinkUiActions {
   fun openMonthlyScreeningReports()
   fun openMonthlySuppliesReports()
   fun openPatientLineListDownloadDialog()
+  fun openDrugStockReports()
 }

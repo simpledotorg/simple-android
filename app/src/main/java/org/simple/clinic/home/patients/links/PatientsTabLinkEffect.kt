@@ -14,3 +14,4 @@ object OpenMonthlySuppliesReportsListScreen : PatientsTabLinkEffect()
 
 object OpenPatientLineListDownloadDialog : PatientsTabLinkEffect()
 
+object OpenDrugStockReportsScreen : PatientsTabLinkEffect()

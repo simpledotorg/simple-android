@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
+import io.reactivex.ObservableSource
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReportAnalyticsEvents
@@ -52,7 +53,8 @@ class PatientsTabLinkView(
         .merge(
             monthlyScreeningReportContainerClick(),
             monthlySuppliesReportsContainerClick(),
-            downloadPatientLineListContainerClick()
+            downloadPatientLineListContainerClick(),
+            monthlyDrugStockReportsContainerClicks()
         )
         .compose(ReportAnalyticsEvents())
         .cast()
@@ -87,29 +89,11 @@ class PatientsTabLinkView(
   private val monthlySuppliesReportsContainer
     get() = binding.monthlySuppliesReportsContainer
 
+  private val monthlyDrugStockReportsContainer
+    get() = binding.monthlyDrugStockReportsContainer
+
   private val downloadPatientLineListContainer
     get() = binding.downloadPatientLineListContainer
-
-  private fun monthlyScreeningReportContainerClick(): Observable<UiEvent> {
-    return monthlyScreeningReportContainer.clicks()
-        .map {
-          MonthlyScreeningReportsClicked
-        }
-  }
-
-  private fun monthlySuppliesReportsContainerClick(): Observable<UiEvent> {
-    return monthlySuppliesReportsContainer.clicks()
-        .map {
-          MonthlySuppliesReportsClicked
-        }
-  }
-
-  private fun downloadPatientLineListContainerClick(): Observable<UiEvent> {
-    return downloadPatientLineListContainer.clicks()
-        .map {
-          DownloadPatientLineListClicked()
-        }
-  }
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -172,5 +156,30 @@ class PatientsTabLinkView(
 
   override fun openDrugStockReports() {
     router.push(MonthlyReportsScreen.Key(MonthlyDrugReports))
+  }
+
+  private fun monthlyScreeningReportContainerClick(): Observable<UiEvent> {
+    return monthlyScreeningReportContainer.clicks()
+        .map {
+          MonthlyScreeningReportsClicked
+        }
+  }
+
+  private fun monthlySuppliesReportsContainerClick(): Observable<UiEvent> {
+    return monthlySuppliesReportsContainer.clicks()
+        .map {
+          MonthlySuppliesReportsClicked
+        }
+  }
+
+  private fun monthlyDrugStockReportsContainerClicks(): ObservableSource<out UiEvent>? {
+    return monthlyDrugStockReportsContainer.clicks().map { MonthlyDrugStockReportsClicked }
+  }
+
+  private fun downloadPatientLineListContainerClick(): Observable<UiEvent> {
+    return downloadPatientLineListContainer.clicks()
+        .map {
+          DownloadPatientLineListClicked()
+        }
   }
 }

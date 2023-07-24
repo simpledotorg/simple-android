@@ -22,6 +22,7 @@ class PatientsTabLinkUpdate :
       is MonthlyScreeningReportsClicked -> dispatch(OpenMonthlyScreeningReportsListScreen)
       is MonthlySuppliesReportsClicked -> dispatch(OpenMonthlySuppliesReportsListScreen)
       is DownloadPatientLineListClicked -> dispatch(OpenPatientLineListDownloadDialog)
+      MonthlyDrugStockReportsClicked -> dispatch(OpenDrugStockReportsScreen)
     }
   }
 }

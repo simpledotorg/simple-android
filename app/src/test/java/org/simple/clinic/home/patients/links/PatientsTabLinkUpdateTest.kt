@@ -97,4 +97,15 @@ class PatientsTabLinkUpdateTest {
             NextMatchers.hasEffects(OpenPatientLineListDownloadDialog)
         ))
   }
+
+  @Test
+  fun `when drug stock reports button is clicked, then open drug stock reports screen`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(MonthlyDrugStockReportsClicked)
+        .then(UpdateSpec.assertThatNext(
+            NextMatchers.hasNoModel(),
+            NextMatchers.hasEffects(OpenDrugStockReportsScreen)
+        ))
+  }
 }

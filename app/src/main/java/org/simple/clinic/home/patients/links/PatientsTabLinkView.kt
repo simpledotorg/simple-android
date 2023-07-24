@@ -142,6 +142,10 @@ class PatientsTabLinkView(
     downloadPatientLineListContainer.visibleOrGone(isVisible)
   }
 
+  override fun showOrHideDrugStockReportsButton(isVisible: Boolean) {
+    monthlyDrugStockReportsContainer.visibleOrGone(isVisible)
+  }
+
   override fun openMonthlyScreeningReports() {
     router.push(MonthlyReportsScreen.Key(MonthlyScreeningReports))
   }

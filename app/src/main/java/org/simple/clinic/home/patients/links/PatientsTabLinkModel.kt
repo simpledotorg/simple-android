@@ -33,6 +33,10 @@ data class PatientsTabLinkModel(
         questionnaireResponses?.suppliesQuestionnaireResponseList?.isNotEmpty() == true &&
         questionnaires?.suppliesQuestionnaire != null
 
+  val hasDrugStockReportContent: Boolean
+    get() = !questionnaireResponses?.drugStockReportsResponseList.isNullOrEmpty() &&
+        questionnaires?.drugStockReportsQuestionnaire != null
+
   fun currentFacilityLoaded(facility: Facility): PatientsTabLinkModel {
     return copy(facility = facility)
   }

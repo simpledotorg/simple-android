@@ -27,5 +27,6 @@ class PatientsTabLinkUiRenderer @AssistedInject constructor(
             model.showMonthlyScreeningLink ||
             model.showMonthlySuppliesLink
     )
+    ui.showOrHideDrugStockReportsButton(model.hasDrugStockReportContent)
   }
 }

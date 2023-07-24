@@ -5,6 +5,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.facility.FacilityConfig
+import org.simple.clinic.questionnaire.DrugStockReports
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.clinic.questionnaire.MonthlySuppliesReports
 import org.simple.clinic.questionnaire.QuestionnaireResponseSections
@@ -32,7 +33,8 @@ class PatientsTabLinkUiRendererTest {
             uuid = UUID.fromString("1f7ba287-2dfa-4c10-9547-bc7f4d9b3cf6"),
             questionnaireType = MonthlyScreeningReports
         ),
-        suppliesQuestionnaire = null
+        suppliesQuestionnaire = null,
+        drugStockReportsQuestionnaire = null
     )
 
     val questionnaireResponsesSections = QuestionnaireResponseSections(
@@ -42,6 +44,7 @@ class PatientsTabLinkUiRendererTest {
                 questionnaireType = MonthlyScreeningReports
             )),
         suppliesQuestionnaireResponseList = listOf(),
+        drugStockReportsResponseList = emptyList()
     )
 
     val uiRenderer = PatientsTabLinkUiRenderer(
@@ -77,7 +80,8 @@ class PatientsTabLinkUiRendererTest {
 
     val questionnaireSections = QuestionnaireSections(
         screeningQuestionnaire = null,
-        suppliesQuestionnaire = null
+        suppliesQuestionnaire = null,
+        drugStockReportsQuestionnaire = null
     )
 
     val questionnaireResponsesSections = QuestionnaireResponseSections(
@@ -87,6 +91,7 @@ class PatientsTabLinkUiRendererTest {
                 questionnaireType = MonthlyScreeningReports
             )),
         suppliesQuestionnaireResponseList = listOf(),
+        drugStockReportsResponseList = emptyList()
     )
 
     val uiRenderer = PatientsTabLinkUiRenderer(
@@ -126,12 +131,14 @@ class PatientsTabLinkUiRendererTest {
             uuid = UUID.fromString("1f7ba287-2dfa-4c10-9547-bc7f4d9b3cf6"),
             questionnaireType = MonthlyScreeningReports
         ),
-        suppliesQuestionnaire = null
+        suppliesQuestionnaire = null,
+        drugStockReportsQuestionnaire = null
     )
 
     val questionnaireResponsesSections = QuestionnaireResponseSections(
         screeningQuestionnaireResponseList = listOf(),
         suppliesQuestionnaireResponseList = listOf(),
+        drugStockReportsResponseList = emptyList()
     )
 
     val uiRenderer = PatientsTabLinkUiRenderer(
@@ -197,7 +204,8 @@ class PatientsTabLinkUiRendererTest {
         suppliesQuestionnaire = TestData.questionnaire(
             uuid = UUID.fromString("1f7ba287-2dfa-4c10-9547-bc7f4d9b3cf6"),
             questionnaireType = MonthlySuppliesReports
-        )
+        ),
+        drugStockReportsQuestionnaire = null
     )
 
     val questionnaireResponsesSections = QuestionnaireResponseSections(
@@ -207,6 +215,7 @@ class PatientsTabLinkUiRendererTest {
                 uuid = UUID.fromString("e5ba4172-6c1c-41b5-a38a-51ed9dfbf34e"),
                 questionnaireType = MonthlySuppliesReports
             )),
+        drugStockReportsResponseList = emptyList()
     )
 
     val uiRenderer = PatientsTabLinkUiRenderer(
@@ -242,7 +251,8 @@ class PatientsTabLinkUiRendererTest {
 
     val questionnaireSections = QuestionnaireSections(
         screeningQuestionnaire = null,
-        suppliesQuestionnaire = null
+        suppliesQuestionnaire = null,
+        drugStockReportsQuestionnaire = null
     )
 
     val questionnaireResponsesSections = QuestionnaireResponseSections(
@@ -252,6 +262,7 @@ class PatientsTabLinkUiRendererTest {
                 uuid = UUID.fromString("e5ba4172-6c1c-41b5-a38a-51ed9dfbf34e"),
                 questionnaireType = MonthlySuppliesReports
             )),
+        drugStockReportsResponseList = emptyList()
     )
 
     val uiRenderer = PatientsTabLinkUiRenderer(
@@ -291,12 +302,14 @@ class PatientsTabLinkUiRendererTest {
         suppliesQuestionnaire = TestData.questionnaire(
             uuid = UUID.fromString("1f7ba287-2dfa-4c10-9547-bc7f4d9b3cf6"),
             questionnaireType = MonthlySuppliesReports
-        )
+        ),
+        drugStockReportsQuestionnaire = null
     )
 
     val questionnaireResponsesSections = QuestionnaireResponseSections(
         screeningQuestionnaireResponseList = listOf(),
         suppliesQuestionnaireResponseList = listOf(),
+        drugStockReportsResponseList = emptyList()
     )
 
     val uiRenderer = PatientsTabLinkUiRenderer(

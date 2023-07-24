@@ -8,6 +8,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.questionnaire.DrugStockReports
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.clinic.questionnaire.MonthlySuppliesReports
 import org.simple.clinic.questionnaire.QuestionnaireRepository
@@ -61,7 +62,8 @@ class PatientsTabLinkEffectHandler @AssistedInject constructor(
           .map { questionnaires ->
             val questionnaireSections = QuestionnaireSections(
                 screeningQuestionnaire = questionnaires.firstOrNull { it.questionnaire_type == MonthlyScreeningReports },
-                suppliesQuestionnaire = questionnaires.firstOrNull { it.questionnaire_type == MonthlySuppliesReports }
+                suppliesQuestionnaire = questionnaires.firstOrNull { it.questionnaire_type == MonthlySuppliesReports },
+                drugStockReportsQuestionnaire = questionnaires.firstOrNull { it.questionnaire_type == DrugStockReports }
             )
             QuestionnairesLoaded(questionnaireSections = questionnaireSections)
           }
@@ -86,6 +88,9 @@ class PatientsTabLinkEffectHandler @AssistedInject constructor(
                 suppliesQuestionnaireResponseList = questionnaireResponseList.filter {
                   it.questionnaireType == MonthlySuppliesReports
                 },
+                drugStockReportsResponseList = questionnaireResponseList.filter {
+                  it.questionnaireType == DrugStockReports
+                }
             )
             QuestionnaireResponsesLoaded(questionnaireResponseSections)
           }

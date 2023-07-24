@@ -7,4 +7,5 @@ import kotlinx.parcelize.Parcelize
 data class QuestionnaireSections(
     val screeningQuestionnaire: Questionnaire?,
     val suppliesQuestionnaire: Questionnaire?,
+    val drugStockReportsQuestionnaire: Questionnaire?,
 ) : Parcelable

@@ -20,7 +20,7 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.monthlyreports.list.MonthlyReportsScreen
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.patient.download.formatdialog.SelectLineListFormatDialog
-import org.simple.clinic.questionnaire.MonthlyDrugReports
+import org.simple.clinic.questionnaire.DrugStockReports
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.clinic.questionnaire.MonthlySuppliesReports
 import org.simple.clinic.util.unsafeLazy
@@ -155,7 +155,7 @@ class PatientsTabLinkView(
   }
 
   override fun openDrugStockReports() {
-    router.push(MonthlyReportsScreen.Key(MonthlyDrugReports))
+    router.push(MonthlyReportsScreen.Key(DrugStockReports))
   }
 
   private fun monthlyScreeningReportContainerClick(): Observable<UiEvent> {

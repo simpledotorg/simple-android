@@ -1044,9 +1044,9 @@
   <string name="monthly_screening_reports_screening_report">%1$s screening report</string><!--Oct 2022 screening report-->
 
   <!--Monthly drug stock reports-->
-  <string name="monthly_drug_stock_report">Monthly drug stock report</string>
-  <string name="monthly_drug_stock_reports">Monthly drug stock reports</string>
-  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s drug stock report</string><!--Oct 2022 drug stock report-->
+  <string name="monthly_drug_stock_report">Drug stock report</string>
+  <string name="monthly_drug_stock_reports">Drug stock reports</string>
+  <string name="monthly_drug_stock_reports_drug_stock_reports">%1$s drug stock report</string>
 
   <!--Monthly supplies reports-->
   <string name="monthly_supplies_report">Monthly supplies report</string>

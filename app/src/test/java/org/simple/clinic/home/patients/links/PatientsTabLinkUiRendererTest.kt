@@ -5,6 +5,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.junit.Test
 import org.simple.clinic.facility.FacilityConfig
+import org.simple.clinic.questionnaire.DrugStockReports
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.clinic.questionnaire.MonthlySuppliesReports
 import org.simple.clinic.questionnaire.QuestionnaireResponseSections
@@ -32,7 +33,8 @@ class PatientsTabLinkUiRendererTest {
             uuid = UUID.fromString("1f7ba287-2dfa-4c10-9547-bc7f4d9b3cf6"),
             questionnaireType = MonthlyScreeningReports
         ),
-        suppliesQuestionnaire = null
+        suppliesQuestionnaire = null,
+        drugStockReportsQuestionnaire = null
     )
 
     val questionnaireResponsesSections = QuestionnaireResponseSections(
@@ -42,6 +44,7 @@ class PatientsTabLinkUiRendererTest {
                 questionnaireType = MonthlyScreeningReports
             )),
         suppliesQuestionnaireResponseList = listOf(),
+        drugStockReportsResponseList = emptyList()
     )
 
     val uiRenderer = PatientsTabLinkUiRenderer(
@@ -62,6 +65,7 @@ class PatientsTabLinkUiRendererTest {
     verify(ui).showOrHideMonthlyScreeningReportsView(true)
     verify(ui).showOrHideMonthlySuppliesReportsView(false)
     verify(ui).showOrHidePatientLineListDownload(false)
+    verify(ui).showOrHideDrugStockReportsButton(false)
     verifyNoMoreInteractions(ui)
   }
 
@@ -77,7 +81,8 @@ class PatientsTabLinkUiRendererTest {
 
     val questionnaireSections = QuestionnaireSections(
         screeningQuestionnaire = null,
-        suppliesQuestionnaire = null
+        suppliesQuestionnaire = null,
+        drugStockReportsQuestionnaire = null
     )
 
     val questionnaireResponsesSections = QuestionnaireResponseSections(
@@ -87,6 +92,7 @@ class PatientsTabLinkUiRendererTest {
                 questionnaireType = MonthlyScreeningReports
             )),
         suppliesQuestionnaireResponseList = listOf(),
+        drugStockReportsResponseList = emptyList()
     )
 
     val uiRenderer = PatientsTabLinkUiRenderer(
@@ -108,6 +114,7 @@ class PatientsTabLinkUiRendererTest {
     verify(ui).showOrHideMonthlyScreeningReportsView(false)
     verify(ui).showOrHideMonthlySuppliesReportsView(false)
     verify(ui).showOrHidePatientLineListDownload(false)
+    verify(ui).showOrHideDrugStockReportsButton(false)
     verifyNoMoreInteractions(ui)
   }
 
@@ -126,12 +133,14 @@ class PatientsTabLinkUiRendererTest {
             uuid = UUID.fromString("1f7ba287-2dfa-4c10-9547-bc7f4d9b3cf6"),
             questionnaireType = MonthlyScreeningReports
         ),
-        suppliesQuestionnaire = null
+        suppliesQuestionnaire = null,
+        drugStockReportsQuestionnaire = null
     )
 
     val questionnaireResponsesSections = QuestionnaireResponseSections(
         screeningQuestionnaireResponseList = listOf(),
         suppliesQuestionnaireResponseList = listOf(),
+        drugStockReportsResponseList = emptyList()
     )
 
     val uiRenderer = PatientsTabLinkUiRenderer(
@@ -152,6 +161,7 @@ class PatientsTabLinkUiRendererTest {
     verify(ui).showOrHideMonthlyScreeningReportsView(false)
     verify(ui).showOrHideMonthlySuppliesReportsView(false)
     verify(ui).showOrHidePatientLineListDownload(false)
+    verify(ui).showOrHideDrugStockReportsButton(false)
     verifyNoMoreInteractions(ui)
   }
 
@@ -178,6 +188,7 @@ class PatientsTabLinkUiRendererTest {
     verify(ui).showOrHideMonthlyScreeningReportsView(false)
     verify(ui).showOrHideMonthlySuppliesReportsView(false)
     verify(ui).showOrHidePatientLineListDownload(true)
+    verify(ui).showOrHideDrugStockReportsButton(false)
     verifyNoMoreInteractions(ui)
   }
 
@@ -197,7 +208,8 @@ class PatientsTabLinkUiRendererTest {
         suppliesQuestionnaire = TestData.questionnaire(
             uuid = UUID.fromString("1f7ba287-2dfa-4c10-9547-bc7f4d9b3cf6"),
             questionnaireType = MonthlySuppliesReports
-        )
+        ),
+        drugStockReportsQuestionnaire = null
     )
 
     val questionnaireResponsesSections = QuestionnaireResponseSections(
@@ -207,6 +219,7 @@ class PatientsTabLinkUiRendererTest {
                 uuid = UUID.fromString("e5ba4172-6c1c-41b5-a38a-51ed9dfbf34e"),
                 questionnaireType = MonthlySuppliesReports
             )),
+        drugStockReportsResponseList = emptyList()
     )
 
     val uiRenderer = PatientsTabLinkUiRenderer(
@@ -227,6 +240,7 @@ class PatientsTabLinkUiRendererTest {
     verify(ui).showOrHideMonthlyScreeningReportsView(false)
     verify(ui).showOrHideMonthlySuppliesReportsView(true)
     verify(ui).showOrHidePatientLineListDownload(false)
+    verify(ui).showOrHideDrugStockReportsButton(false)
     verifyNoMoreInteractions(ui)
   }
 
@@ -242,7 +256,8 @@ class PatientsTabLinkUiRendererTest {
 
     val questionnaireSections = QuestionnaireSections(
         screeningQuestionnaire = null,
-        suppliesQuestionnaire = null
+        suppliesQuestionnaire = null,
+        drugStockReportsQuestionnaire = null
     )
 
     val questionnaireResponsesSections = QuestionnaireResponseSections(
@@ -252,6 +267,7 @@ class PatientsTabLinkUiRendererTest {
                 uuid = UUID.fromString("e5ba4172-6c1c-41b5-a38a-51ed9dfbf34e"),
                 questionnaireType = MonthlySuppliesReports
             )),
+        drugStockReportsResponseList = emptyList()
     )
 
     val uiRenderer = PatientsTabLinkUiRenderer(
@@ -273,6 +289,7 @@ class PatientsTabLinkUiRendererTest {
     verify(ui).showOrHideMonthlyScreeningReportsView(false)
     verify(ui).showOrHideMonthlySuppliesReportsView(false)
     verify(ui).showOrHidePatientLineListDownload(false)
+    verify(ui).showOrHideDrugStockReportsButton(false)
     verifyNoMoreInteractions(ui)
   }
 
@@ -291,12 +308,14 @@ class PatientsTabLinkUiRendererTest {
         suppliesQuestionnaire = TestData.questionnaire(
             uuid = UUID.fromString("1f7ba287-2dfa-4c10-9547-bc7f4d9b3cf6"),
             questionnaireType = MonthlySuppliesReports
-        )
+        ),
+        drugStockReportsQuestionnaire = null
     )
 
     val questionnaireResponsesSections = QuestionnaireResponseSections(
         screeningQuestionnaireResponseList = listOf(),
         suppliesQuestionnaireResponseList = listOf(),
+        drugStockReportsResponseList = emptyList()
     )
 
     val uiRenderer = PatientsTabLinkUiRenderer(
@@ -317,6 +336,7 @@ class PatientsTabLinkUiRendererTest {
     verify(ui).showOrHideMonthlyScreeningReportsView(false)
     verify(ui).showOrHideMonthlySuppliesReportsView(false)
     verify(ui).showOrHidePatientLineListDownload(false)
+    verify(ui).showOrHideDrugStockReportsButton(false)
     verifyNoMoreInteractions(ui)
   }
 
@@ -342,6 +362,7 @@ class PatientsTabLinkUiRendererTest {
     verify(ui).showOrHideMonthlyScreeningReportsView(false)
     verify(ui).showOrHideMonthlySuppliesReportsView(false)
     verify(ui).showOrHidePatientLineListDownload(true)
+    verify(ui).showOrHideDrugStockReportsButton(false)
     verifyNoMoreInteractions(ui)
   }
 
@@ -367,6 +388,7 @@ class PatientsTabLinkUiRendererTest {
     verify(ui).showOrHideMonthlyScreeningReportsView(false)
     verify(ui).showOrHideMonthlySuppliesReportsView(false)
     verify(ui).showOrHidePatientLineListDownload(false)
+    verify(ui).showOrHideDrugStockReportsButton(false)
     verifyNoMoreInteractions(ui)
   }
 
@@ -386,6 +408,7 @@ class PatientsTabLinkUiRendererTest {
     verify(ui).showOrHidePatientLineListDownload(true)
     verify(ui).showOrHideMonthlyScreeningReportsView(false)
     verify(ui).showOrHideMonthlySuppliesReportsView(false)
+    verify(ui).showOrHideDrugStockReportsButton(false)
     verifyNoMoreInteractions(ui)
   }
 
@@ -405,6 +428,156 @@ class PatientsTabLinkUiRendererTest {
     verify(ui).showOrHidePatientLineListDownload(false)
     verify(ui).showOrHideMonthlyScreeningReportsView(false)
     verify(ui).showOrHideMonthlySuppliesReportsView(false)
+    verify(ui).showOrHideDrugStockReportsButton(false)
+    verifyNoMoreInteractions(ui)
+  }
+
+
+  @Test
+  fun `when drug stock reports form is not loaded, then hide the drug stock reports link`() {
+    // given
+    val facility = TestData.facility(facilityConfig = FacilityConfig(
+        diabetesManagementEnabled = false,
+        teleconsultationEnabled = false,
+        monthlyScreeningReportsEnabled = true,
+        monthlySuppliesReportsEnabled = true
+    ))
+
+    val questionnaireSections = QuestionnaireSections(
+        screeningQuestionnaire = null,
+        suppliesQuestionnaire = null,
+        drugStockReportsQuestionnaire = null
+    )
+
+    val questionnaireResponsesSections = QuestionnaireResponseSections(
+        screeningQuestionnaireResponseList = emptyList(),
+        suppliesQuestionnaireResponseList = emptyList(),
+        drugStockReportsResponseList = listOf(
+            TestData.questionnaireResponse(
+                uuid = UUID.fromString("074a40d4-51f1-49d0-bc51-6c4fa800c8ec"),
+                questionnaireType = DrugStockReports
+            ))
+    )
+
+    val uiRenderer = PatientsTabLinkUiRenderer(
+        ui = ui,
+        isPatientLineListEnabled = false
+    )
+
+
+    // when
+    uiRenderer.render(
+        defaultModel
+            .currentFacilityLoaded(facility)
+            .questionnairesLoaded(questionnaireSections)
+            .questionnaireResponsesLoaded(questionnaireResponsesSections)
+    )
+
+    // then
+    verify(ui).showOrHideLinkView(false)
+    verify(ui).showOrHideMonthlyScreeningReportsView(false)
+    verify(ui).showOrHideMonthlySuppliesReportsView(false)
+    verify(ui).showOrHidePatientLineListDownload(false)
+    verify(ui).showOrHideDrugStockReportsButton(false)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when drug stock reports list is not loaded, then hide the drug stock reports link`() {
+    // given
+    val facility = TestData.facility(facilityConfig = FacilityConfig(
+        diabetesManagementEnabled = false,
+        teleconsultationEnabled = false,
+        monthlyScreeningReportsEnabled = true,
+        monthlySuppliesReportsEnabled = true
+    ))
+
+    val questionnaireSections = QuestionnaireSections(
+        screeningQuestionnaire = null,
+        suppliesQuestionnaire = null,
+        drugStockReportsQuestionnaire = TestData.questionnaire(
+            uuid = UUID.fromString("222895d8-b655-4811-9b00-d7b361c213ab"),
+            questionnaireType = DrugStockReports
+        )
+    )
+
+    val questionnaireResponsesSections = QuestionnaireResponseSections(
+        screeningQuestionnaireResponseList = emptyList(),
+        suppliesQuestionnaireResponseList = emptyList(),
+        drugStockReportsResponseList = emptyList()
+    )
+
+    val uiRenderer = PatientsTabLinkUiRenderer(
+        ui = ui,
+        isPatientLineListEnabled = false
+    )
+
+    // when
+    uiRenderer.render(
+        defaultModel
+            .currentFacilityLoaded(facility)
+            .questionnairesLoaded(questionnaireSections)
+            .questionnaireResponsesLoaded(questionnaireResponsesSections)
+    )
+
+    // then
+    verify(ui).showOrHideLinkView(false)
+    verify(ui).showOrHideMonthlyScreeningReportsView(false)
+    verify(ui).showOrHideMonthlySuppliesReportsView(false)
+    verify(ui).showOrHidePatientLineListDownload(false)
+    verify(ui).showOrHideDrugStockReportsButton(false)
+    verifyNoMoreInteractions(ui)
+  }
+
+  @Test
+  fun `when drug stock reports is loaded, then show the drug stock reports link`() {
+    // given
+    val facility = TestData.facility(facilityConfig = FacilityConfig(
+        diabetesManagementEnabled = false,
+        teleconsultationEnabled = false,
+        monthlyScreeningReportsEnabled = true,
+        monthlySuppliesReportsEnabled = true
+    ))
+
+    val questionnaireSections = QuestionnaireSections(
+        screeningQuestionnaire = null,
+        suppliesQuestionnaire = null,
+        drugStockReportsQuestionnaire = TestData.questionnaire(
+            uuid = UUID.fromString("222895d8-b655-4811-9b00-d7b361c213ab"),
+            questionnaireType = DrugStockReports
+        )
+    )
+
+    val questionnaireResponsesSections = QuestionnaireResponseSections(
+        screeningQuestionnaireResponseList = emptyList(),
+        suppliesQuestionnaireResponseList = emptyList(),
+        drugStockReportsResponseList = listOf(
+            TestData.questionnaireResponse(
+                uuid = UUID.fromString("5dc10d8d-8038-4485-9848-3b803b78ad60"),
+                questionnaireType = DrugStockReports
+            )
+        )
+    )
+
+    val uiRenderer = PatientsTabLinkUiRenderer(
+        ui = ui,
+        isPatientLineListEnabled = false
+    )
+
+    // when
+    uiRenderer.render(
+        defaultModel
+            .currentFacilityLoaded(facility)
+            .questionnairesLoaded(questionnaireSections)
+            .questionnaireResponsesLoaded(questionnaireResponsesSections)
+    )
+
+    // then
+    verify(ui).showOrHideLinkView(false)
+    verify(ui).showOrHideMonthlyScreeningReportsView(false)
+    verify(ui).showOrHideMonthlySuppliesReportsView(false)
+    verify(ui).showOrHidePatientLineListDownload(false)
+    verify(ui).showOrHideDrugStockReportsButton(true)
     verifyNoMoreInteractions(ui)
   }
 }

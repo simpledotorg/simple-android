@@ -3,6 +3,7 @@ package org.simple.clinic.home.patients.links
 import com.spotify.mobius.test.NextMatchers
 import com.spotify.mobius.test.UpdateSpec
 import org.junit.Test
+import org.simple.clinic.questionnaire.DrugStockReports
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.clinic.questionnaire.MonthlySuppliesReports
 import org.simple.clinic.questionnaire.QuestionnaireResponseSections
@@ -43,6 +44,12 @@ class PatientsTabLinkUpdateTest {
                 questionnaireType = MonthlySuppliesReports
             )
         ),
+        drugStockReportsResponseList = listOf(
+            TestData.questionnaireResponse(
+                uuid = UUID.fromString("cc3e02e8-955d-4f38-9706-be4235c6d9ef"),
+                questionnaireType = DrugStockReports
+            )
+        )
     )
 
     updateSpec
@@ -64,6 +71,10 @@ class PatientsTabLinkUpdateTest {
         suppliesQuestionnaire = TestData.questionnaire(
             uuid = UUID.fromString("bb2ecd58-2a1d-4951-9af6-c470dfca45b1"),
             questionnaireType = MonthlySuppliesReports
+        ),
+        drugStockReportsQuestionnaire = TestData.questionnaire(
+            uuid = UUID.fromString("79e52052-c069-4c96-aa3a-8c229ace4a72"),
+            questionnaireType = DrugStockReports
         )
     )
 
@@ -95,6 +106,17 @@ class PatientsTabLinkUpdateTest {
         .then(UpdateSpec.assertThatNext(
             NextMatchers.hasNoModel(),
             NextMatchers.hasEffects(OpenPatientLineListDownloadDialog)
+        ))
+  }
+
+  @Test
+  fun `when drug stock reports button is clicked, then open drug stock reports screen`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(MonthlyDrugStockReportsClicked)
+        .then(UpdateSpec.assertThatNext(
+            NextMatchers.hasNoModel(),
+            NextMatchers.hasEffects(OpenDrugStockReportsScreen)
         ))
   }
 }

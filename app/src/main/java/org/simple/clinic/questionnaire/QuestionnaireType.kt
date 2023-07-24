@@ -14,7 +14,7 @@ sealed class QuestionnaireType : Parcelable {
       knownMappings = mapOf(
           MonthlyScreeningReports to "monthly_screening_reports",
           MonthlySuppliesReports to "monthly_supplies_reports",
-          MonthlyDrugReports to "monthly_drug_reports",
+          DrugStockReports to "drug_stock_reports",
       ),
       unknownStringToEnumConverter = ::Unknown,
       unknownEnumToStringConverter = { (it as Unknown).actualValue }
@@ -51,7 +51,7 @@ object MonthlyScreeningReports : QuestionnaireType()
 object MonthlySuppliesReports : QuestionnaireType()
 
 @Parcelize
-object MonthlyDrugReports : QuestionnaireType()
+object DrugStockReports : QuestionnaireType()
 
 @Parcelize
 data class Unknown(val actualValue: String) : QuestionnaireType()

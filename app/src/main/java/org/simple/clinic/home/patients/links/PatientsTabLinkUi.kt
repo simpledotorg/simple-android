@@ -5,4 +5,5 @@ interface PatientsTabLinkUi {
   fun showOrHideMonthlySuppliesReportsView(isVisible: Boolean)
   fun showOrHideLinkView(isVisible: Boolean)
   fun showOrHidePatientLineListDownload(isVisible: Boolean)
+  fun showOrHideDrugStockReportsButton(isVisible: Boolean)
 }

@@ -8,11 +8,14 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.questionnaire.DrugStockReports
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.clinic.questionnaire.MonthlySuppliesReports
+import org.simple.clinic.questionnaire.Questionnaire
 import org.simple.clinic.questionnaire.QuestionnaireRepository
 import org.simple.clinic.questionnaire.QuestionnaireResponseSections
 import org.simple.clinic.questionnaire.QuestionnaireSections
+import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 import org.simple.clinic.questionnaireresponse.QuestionnaireResponseRepository
 import org.simple.clinic.util.scheduler.SchedulersProvider
 
@@ -37,6 +40,7 @@ class PatientsTabLinkEffectHandler @AssistedInject constructor(
         .addAction(OpenMonthlyScreeningReportsListScreen::class.java, { uiActions.openMonthlyScreeningReports() }, schedulersProvider.ui())
         .addAction(OpenMonthlySuppliesReportsListScreen::class.java, { uiActions.openMonthlySuppliesReports() }, schedulersProvider.ui())
         .addAction(OpenPatientLineListDownloadDialog::class.java, { uiActions.openPatientLineListDownloadDialog() }, schedulersProvider.ui())
+        .addAction(OpenDrugStockReportsScreen::class.java, { uiActions.openDrugStockReports() }, schedulersProvider.ui())
         .build()
   }
 
@@ -58,14 +62,16 @@ class PatientsTabLinkEffectHandler @AssistedInject constructor(
           .observeOn(scheduler)
           .switchMap { questionnaireRepository.questionnaires() }
           .map { questionnaires ->
-            val questionnaireSections = QuestionnaireSections(
-                screeningQuestionnaire = questionnaires.firstOrNull { it.questionnaire_type == MonthlyScreeningReports },
-                suppliesQuestionnaire = questionnaires.firstOrNull { it.questionnaire_type == MonthlySuppliesReports }
-            )
-            QuestionnairesLoaded(questionnaireSections = questionnaireSections)
+            QuestionnairesLoaded(questionnaireSections = mapToQuestionnaireSections(questionnaires))
           }
     }
   }
+
+  private fun mapToQuestionnaireSections(questionnaires: List<Questionnaire>) = QuestionnaireSections(
+      screeningQuestionnaire = questionnaires.firstOrNull { it.questionnaire_type == MonthlyScreeningReports },
+      suppliesQuestionnaire = questionnaires.firstOrNull { it.questionnaire_type == MonthlySuppliesReports },
+      drugStockReportsQuestionnaire = questionnaires.firstOrNull { it.questionnaire_type == DrugStockReports }
+  )
 
   private fun loadQuestionnaireResponses(scheduler: Scheduler):
       ObservableTransformer<LoadQuestionnaireResponses, PatientsTabLinkEvent> {
@@ -78,16 +84,21 @@ class PatientsTabLinkEffectHandler @AssistedInject constructor(
             questionnaireResponseRepository.questionnaireResponsesInFacility(facility.uuid)
           }
           .map { questionnaireResponseList ->
-            val questionnaireResponseSections = QuestionnaireResponseSections(
-                screeningQuestionnaireResponseList = questionnaireResponseList.filter {
-                  it.questionnaireType == MonthlyScreeningReports
-                },
-                suppliesQuestionnaireResponseList = questionnaireResponseList.filter {
-                  it.questionnaireType == MonthlySuppliesReports
-                },
-            )
-            QuestionnaireResponsesLoaded(questionnaireResponseSections)
+            QuestionnaireResponsesLoaded(mapToQuestionnaireResponse(questionnaireResponseList))
           }
     }
   }
+
+  private fun mapToQuestionnaireResponse(questionnaireResponseList: List<QuestionnaireResponse>) =
+      QuestionnaireResponseSections(
+          screeningQuestionnaireResponseList = questionnaireResponseList.filter {
+            it.questionnaireType == MonthlyScreeningReports
+          },
+          suppliesQuestionnaireResponseList = questionnaireResponseList.filter {
+            it.questionnaireType == MonthlySuppliesReports
+          },
+          drugStockReportsResponseList = questionnaireResponseList.filter {
+            it.questionnaireType == DrugStockReports
+          }
+      )
 }

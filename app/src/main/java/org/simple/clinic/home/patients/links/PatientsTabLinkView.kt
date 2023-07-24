@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.widget.FrameLayout
 import com.jakewharton.rxbinding3.view.clicks
 import io.reactivex.Observable
+import io.reactivex.ObservableSource
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReportAnalyticsEvents
@@ -19,6 +20,7 @@ import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.monthlyreports.list.MonthlyReportsScreen
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.patient.download.formatdialog.SelectLineListFormatDialog
+import org.simple.clinic.questionnaire.DrugStockReports
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.clinic.questionnaire.MonthlySuppliesReports
 import org.simple.clinic.util.unsafeLazy
@@ -51,7 +53,8 @@ class PatientsTabLinkView(
         .merge(
             monthlyScreeningReportContainerClick(),
             monthlySuppliesReportsContainerClick(),
-            downloadPatientLineListContainerClick()
+            downloadPatientLineListContainerClick(),
+            monthlyDrugStockReportsContainerClicks()
         )
         .compose(ReportAnalyticsEvents())
         .cast()
@@ -86,29 +89,11 @@ class PatientsTabLinkView(
   private val monthlySuppliesReportsContainer
     get() = binding.monthlySuppliesReportsContainer
 
+  private val monthlyDrugStockReportsContainer
+    get() = binding.monthlyDrugStockReportsContainer
+
   private val downloadPatientLineListContainer
     get() = binding.downloadPatientLineListContainer
-
-  private fun monthlyScreeningReportContainerClick(): Observable<UiEvent> {
-    return monthlyScreeningReportContainer.clicks()
-        .map {
-          MonthlyScreeningReportsClicked
-        }
-  }
-
-  private fun monthlySuppliesReportsContainerClick(): Observable<UiEvent> {
-    return monthlySuppliesReportsContainer.clicks()
-        .map {
-          MonthlySuppliesReportsClicked
-        }
-  }
-
-  private fun downloadPatientLineListContainerClick(): Observable<UiEvent> {
-    return downloadPatientLineListContainer.clicks()
-        .map {
-          DownloadPatientLineListClicked()
-        }
-  }
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -157,6 +142,10 @@ class PatientsTabLinkView(
     downloadPatientLineListContainer.visibleOrGone(isVisible)
   }
 
+  override fun showOrHideDrugStockReportsButton(isVisible: Boolean) {
+    monthlyDrugStockReportsContainer.visibleOrGone(isVisible)
+  }
+
   override fun openMonthlyScreeningReports() {
     router.push(MonthlyReportsScreen.Key(MonthlyScreeningReports))
   }
@@ -167,5 +156,34 @@ class PatientsTabLinkView(
 
   override fun openPatientLineListDownloadDialog() {
     router.push(SelectLineListFormatDialog.Key())
+  }
+
+  override fun openDrugStockReports() {
+    router.push(MonthlyReportsScreen.Key(DrugStockReports))
+  }
+
+  private fun monthlyScreeningReportContainerClick(): Observable<UiEvent> {
+    return monthlyScreeningReportContainer.clicks()
+        .map {
+          MonthlyScreeningReportsClicked
+        }
+  }
+
+  private fun monthlySuppliesReportsContainerClick(): Observable<UiEvent> {
+    return monthlySuppliesReportsContainer.clicks()
+        .map {
+          MonthlySuppliesReportsClicked
+        }
+  }
+
+  private fun monthlyDrugStockReportsContainerClicks(): ObservableSource<out UiEvent>? {
+    return monthlyDrugStockReportsContainer.clicks().map { MonthlyDrugStockReportsClicked }
+  }
+
+  private fun downloadPatientLineListContainerClick(): Observable<UiEvent> {
+    return downloadPatientLineListContainer.clicks()
+        .map {
+          DownloadPatientLineListClicked()
+        }
   }
 }

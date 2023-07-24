@@ -8,4 +8,5 @@ import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 data class QuestionnaireResponseSections(
     val screeningQuestionnaireResponseList: List<QuestionnaireResponse>,
     val suppliesQuestionnaireResponseList: List<QuestionnaireResponse>,
+    val drugStockReportsResponseList: List<QuestionnaireResponse>
 ) : Parcelable

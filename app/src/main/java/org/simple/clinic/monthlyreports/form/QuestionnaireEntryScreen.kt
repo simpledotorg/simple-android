@@ -29,7 +29,7 @@ import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.questionnaire.MonthlyDrugReports
+import org.simple.clinic.questionnaire.DrugStockReports
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.clinic.questionnaire.MonthlySuppliesReports
 import org.simple.clinic.questionnaire.QuestionnaireType
@@ -170,7 +170,7 @@ class QuestionnaireEntryScreen : BaseScreen<
         )
       }
 
-      is MonthlyDrugReports -> {
+      is DrugStockReports -> {
         context?.resources?.getString(
             R.string.monthly_drug_stock_reports_drug_stock_reports,
             formatter

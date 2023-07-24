@@ -23,7 +23,7 @@ import org.simple.clinic.monthlyreports.form.QuestionnaireEntryScreen
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.questionnaire.MonthlyDrugReports
+import org.simple.clinic.questionnaire.DrugStockReports
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.clinic.questionnaire.MonthlySuppliesReports
 import org.simple.clinic.questionnaire.QuestionnaireType
@@ -128,7 +128,7 @@ class MonthlyReportsScreen : BaseScreen<
           R.string.monthly_supplies_reports,
       )
 
-      is MonthlyDrugReports -> requireContext().resources.getString(
+      is DrugStockReports -> requireContext().resources.getString(
           R.string.monthly_drug_stock_reports,
       )
 

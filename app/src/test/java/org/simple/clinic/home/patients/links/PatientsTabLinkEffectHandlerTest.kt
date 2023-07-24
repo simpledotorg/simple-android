@@ -9,6 +9,7 @@ import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.mobius.EffectHandlerTestCase
+import org.simple.clinic.questionnaire.DrugStockReports
 import org.simple.clinic.questionnaire.MonthlyScreeningReports
 import org.simple.clinic.questionnaire.MonthlySuppliesReports
 import org.simple.clinic.questionnaire.QuestionnaireRepository
@@ -39,6 +40,11 @@ class PatientsTabLinkEffectHandlerTest {
       questionnaireType = MonthlySuppliesReports
   )
 
+  private val drugStockReportsForm = TestData.questionnaire(
+      uuid = UUID.fromString("bfc7c50a-dd2a-4b7a-8093-0ed91633d0ec"),
+      questionnaireType = DrugStockReports
+  )
+
   private val screeningResponse = TestData.questionnaireResponse(
       uuid = UUID.fromString("b461a17a-17f6-4749-93f7-fb90f4a254fa"),
       questionnaireType = MonthlyScreeningReports
@@ -47,6 +53,11 @@ class PatientsTabLinkEffectHandlerTest {
   private val suppliesResponse = TestData.questionnaireResponse(
       uuid = UUID.fromString("9f61d80d-530b-478c-bffd-c0db914d2321"),
       questionnaireType = MonthlySuppliesReports
+  )
+
+  private val drugStockResponse = TestData.questionnaireResponse(
+      uuid = UUID.fromString("01068b0c-f940-4873-8b73-c077a576c522"),
+      questionnaireType = DrugStockReports
   )
 
   private val effectHandler = PatientsTabLinkEffectHandler(
@@ -76,25 +87,25 @@ class PatientsTabLinkEffectHandlerTest {
 
   @Test
   fun `when load questionnaires effect is received, then load questionnaires`() {
-    whenever(formRepository.questionnaires()) doReturn Observable.just(listOf(screeningForm, suppliesForm))
+    whenever(formRepository.questionnaires()) doReturn Observable.just(listOf(screeningForm, suppliesForm, drugStockReportsForm))
 
     // when
     effectHandlerTestCase.dispatch(LoadQuestionnaires)
 
     // then
-    effectHandlerTestCase.assertOutgoingEvents(QuestionnairesLoaded(QuestionnaireSections(screeningForm, suppliesForm)))
+    effectHandlerTestCase.assertOutgoingEvents(QuestionnairesLoaded(QuestionnaireSections(screeningForm, suppliesForm, drugStockReportsForm)))
     verifyNoMoreInteractions(uiActions)
   }
 
   @Test
   fun `when load questionnaires responses effect is received, then load questionnaires responses`() {
-    whenever(responseRepository.questionnaireResponsesInFacility(facility.uuid)) doReturn Observable.just(listOf(screeningResponse, suppliesResponse))
+    whenever(responseRepository.questionnaireResponsesInFacility(facility.uuid)) doReturn Observable.just(listOf(screeningResponse, suppliesResponse, drugStockResponse))
 
     // when
     effectHandlerTestCase.dispatch(LoadQuestionnaireResponses)
 
     // then
-    effectHandlerTestCase.assertOutgoingEvents(QuestionnaireResponsesLoaded(QuestionnaireResponseSections(listOf(screeningResponse), listOf(suppliesResponse))))
+    effectHandlerTestCase.assertOutgoingEvents(QuestionnaireResponsesLoaded(QuestionnaireResponseSections(listOf(screeningResponse), listOf(suppliesResponse), listOf(drugStockResponse))))
     verifyNoMoreInteractions(uiActions)
   }
 
@@ -117,6 +128,17 @@ class PatientsTabLinkEffectHandlerTest {
     // then
     effectHandlerTestCase.assertNoOutgoingEvents()
     verify(uiActions).openPatientLineListDownloadDialog()
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when open drug stock reports is clicked, then open the drug stock reports screen`() {
+    // when
+    effectHandlerTestCase.dispatch(OpenDrugStockReportsScreen)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+    verify(uiActions).openDrugStockReports()
     verifyNoMoreInteractions(uiActions)
   }
 }

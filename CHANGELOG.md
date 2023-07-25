@@ -14,6 +14,7 @@
 - Add month and year picker dialog for Compose forms
 - Add support for date input field for Compose forms
 - Update drug stock report link icon in patients screen
+- Prefill text in date input field if date exists
 
 ### Changes
 

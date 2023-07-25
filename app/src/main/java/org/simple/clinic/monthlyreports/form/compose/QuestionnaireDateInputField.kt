@@ -52,6 +52,14 @@ fun DateInputField(
   val interactionSource = remember { MutableInteractionSource() }
 
   LaunchedEffect(Unit) {
+
+    val inputDate = content.getOrDefault(inputFieldComponentData.linkId, null)?.toString()
+    selectedDate = if (inputDate != null) {
+      LocalDate.parse(inputDate)
+    } else {
+      null
+    }
+
     interactionSource.interactions.collectLatest { interaction ->
       when (interaction) {
         is PressInteraction.Release -> {

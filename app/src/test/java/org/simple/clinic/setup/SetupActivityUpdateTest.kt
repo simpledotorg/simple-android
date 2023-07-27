@@ -1,17 +1,18 @@
 package org.simple.clinic.setup
 
 import com.spotify.mobius.test.NextMatchers.hasEffects
+import com.spotify.mobius.test.NextMatchers.hasNoEffects
 import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appconfig.Deployment
 import org.simple.clinic.setup.runcheck.Allowed
 import org.simple.clinic.setup.runcheck.Disallowed
 import org.simple.clinic.setup.runcheck.Disallowed.Reason.Rooted
 import org.simple.clinic.user.User
+import org.simple.sharedTestCode.TestData
 import org.simple.sharedTestCode.util.TestUtcClock
 import java.net.URI
 import java.time.Duration
@@ -250,6 +251,28 @@ class SetupActivityUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(CheckIfAppCanRun)
+        ))
+  }
+
+  @Test
+  fun `when device has minimum required memory, then encrypt the existing database`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(MinimumMemoryChecked(hasMinimumMemory = true))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ExecuteDatabaseEncryption)
+        ))
+  }
+
+  @Test
+  fun `when device doesn't have minimum required memory, then do nothing`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(MinimumMemoryChecked(hasMinimumMemory = false))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasNoEffects()
         ))
   }
 

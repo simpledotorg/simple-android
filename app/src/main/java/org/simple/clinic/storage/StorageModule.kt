@@ -3,6 +3,7 @@ package org.simple.clinic.storage
 import android.app.Application
 import androidx.room.Room
 import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteOpenHelper
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -16,6 +17,7 @@ import org.simple.clinic.storage.migrations.RoomMigrationsModule
 import org.simple.clinic.storage.text.TextRecord
 import org.simple.clinic.storage.text.TextStoreModule
 import org.simple.clinic.user.User
+import org.simple.clinic.util.MinimumMemoryChecker
 import org.simple.clinic.util.ThreadPools
 
 @Module(includes = [
@@ -33,7 +35,9 @@ class StorageModule {
       appContext: Application,
       migrations: List<@JvmSuppressWildcards Migration>,
       moshi: Moshi,
-      databaseEncryptor: DatabaseEncryptor
+      databaseEncryptor: DatabaseEncryptor,
+      minimumMemoryChecker: MinimumMemoryChecker,
+      factory: SupportSQLiteOpenHelper.Factory
   ): AppDatabase {
     // Don't occupy all connections with Room threads since there are
     // non-Room accesses of the database which SQLite itself might do
@@ -44,10 +48,16 @@ class StorageModule {
         maxPoolSize = sqliteThreadPoolCount,
         threadPrefix = "room-query"
     )
-    val passphrase = databaseEncryptor.passphrase
+
+    val helperFactory = if (minimumMemoryChecker.hasMinimumRequiredMemory()) {
+      val passphrase = databaseEncryptor.passphrase
+      SupportFactory(passphrase)
+    } else {
+      factory
+    }
 
     return Room.databaseBuilder(appContext, AppDatabase::class.java, DATABASE_NAME)
-        .openHelperFactory(SupportFactory(passphrase))
+        .openHelperFactory(helperFactory)
         .addMigrations(*migrations.toTypedArray())
         .addTypeConverter(BaseComponentData.RoomTypeConverter(moshi))
         .setQueryExecutor(queryExecutor)

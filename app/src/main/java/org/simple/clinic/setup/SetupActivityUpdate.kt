@@ -32,6 +32,7 @@ class SetupActivityUpdate(
       is CountryAndDeploymentSaved -> dispatch(DeleteStoredCountryV1)
       is StoredCountryV1Deleted -> dispatch(GoToMainActivity)
       DatabaseEncryptionFinished -> dispatch(CheckIfAppCanRun)
+      is MinimumMemoryChecked -> noChange()
     }
   }
 

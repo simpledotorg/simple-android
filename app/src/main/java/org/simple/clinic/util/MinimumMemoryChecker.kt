@@ -21,6 +21,6 @@ class RealMinimumMemoryChecker(
     activityManager.getMemoryInfo(memoryInfo)
 
     val totalMemoryInGb = memoryInfo.totalMem / 1024.0 / 1024.0 / 1024.0
-    return totalMemoryInGb >= configReader.double("minimum_required_memory_in_gb", 3.0)
+    return totalMemoryInGb >= configReader.double("minimum_required_memory_in_gb", 3.5)
   }
 }

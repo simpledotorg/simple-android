@@ -18,6 +18,7 @@ import org.simple.clinic.main.TypedPreference.Type.OnboardingComplete
 import org.simple.clinic.setup.runcheck.AllowApplicationToRun
 import org.simple.clinic.storage.DatabaseEncryptor
 import org.simple.clinic.user.User
+import org.simple.clinic.util.MinimumMemoryChecker
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -37,7 +38,8 @@ class SetupActivityEffectHandler @AssistedInject constructor(
     @TypedPreference(DatabaseMaintenanceRunAt) private val databaseMaintenanceRunAt: Preference<Optional<Instant>>,
     private val userClock: UserClock,
     private val loadV1Country: LoadV1Country,
-    private val databaseEncryptor: DatabaseEncryptor
+    private val databaseEncryptor: DatabaseEncryptor,
+    private val minimumMemoryChecker: MinimumMemoryChecker
 ) {
 
   @AssistedFactory
@@ -71,7 +73,17 @@ class SetupActivityEffectHandler @AssistedInject constructor(
         .addTransformer(SaveCountryAndDeployment::class.java, saveCountryAndDeployment())
         .addTransformer(DeleteStoredCountryV1::class.java, deleteStoredCountryV1())
         .addTransformer(ExecuteDatabaseEncryption::class.java, executeDatabaseEncryption())
+        .addTransformer(CheckMinimumMemory::class.java, checkMinimumMemory())
         .build()
+  }
+
+  private fun checkMinimumMemory(): ObservableTransformer<CheckMinimumMemory, SetupActivityEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { minimumMemoryChecker.hasMinimumRequiredMemory() }
+          .map { MinimumMemoryChecked(it) }
+    }
   }
 
   private fun executeDatabaseEncryption(): ObservableTransformer<ExecuteDatabaseEncryption, SetupActivityEvent> {

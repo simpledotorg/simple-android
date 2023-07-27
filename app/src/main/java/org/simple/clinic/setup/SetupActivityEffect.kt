@@ -32,3 +32,5 @@ data class SaveCountryAndDeployment(
 object DeleteStoredCountryV1 : SetupActivityEffect()
 
 object ExecuteDatabaseEncryption : SetupActivityEffect()
+
+object CheckMinimumMemory : SetupActivityEffect()

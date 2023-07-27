@@ -22,6 +22,7 @@ import org.simple.clinic.user.User
 import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.sharedTestCode.util.TestUtcClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
+import org.simple.sharedTestCode.util.TestMinimumMemoryChecker
 import java.time.Instant
 import java.util.Optional
 import java.util.UUID
@@ -39,6 +40,7 @@ class SetupActivityEffectHandlerTest {
   private val allowApplicationToRun = mock<AllowApplicationToRun>()
   private val loadV1Country = mock<LoadV1Country>()
   private val databaseEncryptor = mock<DatabaseEncryptor>()
+  private val minimumMemoryChecker = TestMinimumMemoryChecker()
 
   private val effectHandler = SetupActivityEffectHandler(
       uiActions = uiActions,
@@ -52,7 +54,8 @@ class SetupActivityEffectHandlerTest {
       databaseMaintenanceRunAt = databaseMaintenanceRunAtPreference,
       userClock = userClock,
       loadV1Country = loadV1Country,
-      databaseEncryptor = databaseEncryptor
+      databaseEncryptor = databaseEncryptor,
+      minimumMemoryChecker = minimumMemoryChecker
   ).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -241,6 +244,20 @@ class SetupActivityEffectHandlerTest {
     verifyNoMoreInteractions(databaseEncryptor)
 
     testCase.assertOutgoingEvents(DatabaseEncryptionFinished)
+
+    verifyNoInteractions(uiActions)
+  }
+
+  @Test
+  fun `when check minimum memory effect is received, then check minimum memory`() {
+    // given
+    minimumMemoryChecker.update(hasMinimumMemory = true)
+
+    // when
+    testCase.dispatch(CheckMinimumMemory)
+
+    // then
+    testCase.assertOutgoingEvents(MinimumMemoryChecked(hasMinimumMemory = true))
 
     verifyNoInteractions(uiActions)
   }

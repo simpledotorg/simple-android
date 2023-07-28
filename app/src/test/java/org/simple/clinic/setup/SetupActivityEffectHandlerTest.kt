@@ -10,14 +10,12 @@ import org.mockito.kotlin.whenever
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.DATABASE_NAME
 import org.simple.sharedTestCode.TestData
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.setup.runcheck.AllowApplicationToRun
 import org.simple.clinic.setup.runcheck.Allowed
 import org.simple.clinic.setup.runcheck.Disallowed.Reason
-import org.simple.clinic.storage.DatabaseEncryptor
 import org.simple.clinic.user.User
 import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.sharedTestCode.util.TestUtcClock
@@ -38,7 +36,6 @@ class SetupActivityEffectHandlerTest {
   private val userClock = TestUserClock(Instant.parse("2021-07-11T00:00:00Z"))
   private val allowApplicationToRun = mock<AllowApplicationToRun>()
   private val loadV1Country = mock<LoadV1Country>()
-  private val databaseEncryptor = mock<DatabaseEncryptor>()
 
   private val effectHandler = SetupActivityEffectHandler(
       uiActions = uiActions,
@@ -51,8 +48,7 @@ class SetupActivityEffectHandlerTest {
       onboardingCompletePreference = onboardingCompletePreference,
       databaseMaintenanceRunAt = databaseMaintenanceRunAtPreference,
       userClock = userClock,
-      loadV1Country = loadV1Country,
-      databaseEncryptor = databaseEncryptor
+      loadV1Country = loadV1Country
   ).build()
 
   private val testCase = EffectHandlerTestCase(effectHandler)
@@ -227,20 +223,6 @@ class SetupActivityEffectHandlerTest {
     verifyNoMoreInteractions(appConfigRepository)
 
     testCase.assertOutgoingEvents(StoredCountryV1Deleted)
-
-    verifyNoInteractions(uiActions)
-  }
-
-  @Test
-  fun `when execute database encryption effect is received, then execute database encryption`() {
-    // when
-    testCase.dispatch(ExecuteDatabaseEncryption)
-
-    // then
-    verify(databaseEncryptor).execute(DATABASE_NAME)
-    verifyNoMoreInteractions(databaseEncryptor)
-
-    testCase.assertOutgoingEvents(DatabaseEncryptionFinished)
 
     verifyNoInteractions(uiActions)
   }

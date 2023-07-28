@@ -17,8 +17,6 @@ import org.simple.clinic.login.UserPayload
 import org.simple.clinic.login.UsersApi
 import org.simple.clinic.login.activateuser.ActivateUserRequest
 import org.simple.clinic.security.PasswordHasher
-import org.simple.clinic.storage.SharedPreferencesMode
-import org.simple.clinic.storage.SharedPreferencesMode.Mode.Default
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
@@ -54,7 +52,6 @@ class ServerAuthenticationRule : TestRule {
   lateinit var appDatabase: AppDatabase
 
   @Inject
-  @SharedPreferencesMode(Default)
   lateinit var sharedPreferences: SharedPreferences
 
   @Inject

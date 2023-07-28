@@ -9,14 +9,12 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
 import io.reactivex.Single
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.DATABASE_NAME
 import org.simple.clinic.appconfig.AppConfigRepository
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.main.TypedPreference
 import org.simple.clinic.main.TypedPreference.Type.DatabaseMaintenanceRunAt
 import org.simple.clinic.main.TypedPreference.Type.OnboardingComplete
 import org.simple.clinic.setup.runcheck.AllowApplicationToRun
-import org.simple.clinic.storage.DatabaseEncryptor
 import org.simple.clinic.user.User
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
@@ -36,8 +34,7 @@ class SetupActivityEffectHandler @AssistedInject constructor(
     @TypedPreference(OnboardingComplete) private val onboardingCompletePreference: Preference<Boolean>,
     @TypedPreference(DatabaseMaintenanceRunAt) private val databaseMaintenanceRunAt: Preference<Optional<Instant>>,
     private val userClock: UserClock,
-    private val loadV1Country: LoadV1Country,
-    private val databaseEncryptor: DatabaseEncryptor
+    private val loadV1Country: LoadV1Country
 ) {
 
   @AssistedFactory
@@ -70,17 +67,7 @@ class SetupActivityEffectHandler @AssistedInject constructor(
         .addTransformer(CheckIfAppCanRun::class.java, checkApplicationAllowedToRun())
         .addTransformer(SaveCountryAndDeployment::class.java, saveCountryAndDeployment())
         .addTransformer(DeleteStoredCountryV1::class.java, deleteStoredCountryV1())
-        .addTransformer(ExecuteDatabaseEncryption::class.java, executeDatabaseEncryption())
         .build()
-  }
-
-  private fun executeDatabaseEncryption(): ObservableTransformer<ExecuteDatabaseEncryption, SetupActivityEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulersProvider.io())
-          .doOnNext { databaseEncryptor.execute(DATABASE_NAME) }
-          .map { DatabaseEncryptionFinished }
-    }
   }
 
   private fun deleteStoredCountryV1(): ObservableTransformer<DeleteStoredCountryV1, SetupActivityEvent> {

@@ -28,5 +28,3 @@ data class AppAllowedToRunCheckCompleted(val allowedToRun: AllowedToRun) : Setup
 object CountryAndDeploymentSaved: SetupActivityEvent()
 
 object StoredCountryV1Deleted: SetupActivityEvent()
-
-object DatabaseEncryptionFinished : SetupActivityEvent()

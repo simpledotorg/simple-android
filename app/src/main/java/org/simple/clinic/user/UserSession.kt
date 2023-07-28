@@ -17,8 +17,6 @@ import org.simple.clinic.platform.analytics.Analytics
 import org.simple.clinic.plumbing.infrastructure.Infrastructure
 import org.simple.clinic.plumbing.infrastructure.UpdateInfrastructureUserDetails
 import org.simple.clinic.security.PasswordHasher
-import org.simple.clinic.storage.SharedPreferencesMode
-import org.simple.clinic.storage.SharedPreferencesMode.Mode.Default
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.util.extractIfPresent
@@ -31,7 +29,7 @@ import javax.inject.Named
 
 @AppScope
 class UserSession @Inject constructor(
-    @SharedPreferencesMode(Default) private val sharedPreferences: SharedPreferences,
+    private val sharedPreferences: SharedPreferences,
     private val appDatabase: AppDatabase,
     private val passwordHasher: PasswordHasher,
     private val ongoingLoginEntryRepository: OngoingLoginEntryRepository,

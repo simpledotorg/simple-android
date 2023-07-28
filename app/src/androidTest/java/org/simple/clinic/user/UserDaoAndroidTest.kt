@@ -9,8 +9,6 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.storage.SharedPreferencesMode
-import org.simple.clinic.storage.SharedPreferencesMode.Mode.Default
 import org.simple.sharedTestCode.TestData
 import org.simple.sharedTestCode.util.Rules
 import java.util.UUID
@@ -20,7 +18,6 @@ import javax.inject.Inject
 class UserDaoAndroidTest {
 
   @Inject
-  @SharedPreferencesMode(Default)
   lateinit var sharedPrefs: SharedPreferences
 
   @Inject

@@ -10,11 +10,9 @@ object LoadAppVersionEffect : SettingsEffect()
 
 object CheckAppUpdateAvailable : SettingsEffect()
 
-object LogoutUser : SettingsEffect()
-
-object LoadDatabaseEncryptionStatus : SettingsEffect()
-
 sealed class SettingsViewEffect : SettingsEffect()
+
+object LogoutUser : SettingsEffect()
 
 object OpenLanguageSelectionScreenEffect : SettingsViewEffect()
 

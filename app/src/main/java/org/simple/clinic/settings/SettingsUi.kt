@@ -17,6 +17,4 @@ interface SettingsUi {
   fun showLoggingOutProgressIndicator()
 
   fun hideLoggingOutProgressIndicator()
-
-  fun displayAppSecureIcon()
 }

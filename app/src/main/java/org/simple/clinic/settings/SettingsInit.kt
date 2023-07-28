@@ -17,10 +17,6 @@ class SettingsInit : Init<SettingsModel, SettingsEffect> {
       effects.add(LoadAppVersionEffect)
     }
 
-    if (model.isDatabaseEncrypted == null) {
-      effects.add(LoadDatabaseEncryptionStatus)
-    }
-
     return first(model, effects)
   }
 }

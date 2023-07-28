@@ -8,7 +8,6 @@ import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.appupdate.AppUpdateState
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
-import org.simple.clinic.storage.DatabaseEncryptor
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -19,7 +18,6 @@ class SettingsEffectHandler @AssistedInject constructor(
     private val schedulersProvider: SchedulersProvider,
     private val appVersionFetcher: AppVersionFetcher,
     private val appUpdateAvailability: CheckAppUpdateAvailability,
-    private val databaseEncryptor: DatabaseEncryptor,
     @Assisted private val viewEffectsConsumer: Consumer<SettingsViewEffect>
 ) {
 
@@ -38,17 +36,7 @@ class SettingsEffectHandler @AssistedInject constructor(
       .addTransformer(CheckAppUpdateAvailable::class.java, checkAppUpdateAvailability())
       .addConsumer(SettingsViewEffect::class.java, viewEffectsConsumer::accept)
       .addTransformer(LogoutUser::class.java, logoutUser())
-      .addTransformer(LoadDatabaseEncryptionStatus::class.java, loadDatabaseEncryptionStatus())
       .build()
-
-  private fun loadDatabaseEncryptionStatus(): ObservableTransformer<LoadDatabaseEncryptionStatus, SettingsEvent> {
-    return ObservableTransformer { effects ->
-      effects
-          .observeOn(schedulersProvider.io())
-          .flatMap { databaseEncryptor.isDatabaseEncrypted }
-          .map(::DatabaseEncryptionStatusLoaded)
-    }
-  }
 
   private fun logoutUser(): ObservableTransformer<LogoutUser, SettingsEvent> {
     return ObservableTransformer { effects ->

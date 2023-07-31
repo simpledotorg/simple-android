@@ -57,14 +57,6 @@
     tools:ignore="AllowBackup,DataExtractionRules,GoogleAppIndexingWarning,LockedOrientationActivity"
     tools:replace="android:allowBackup">
 
-    <!-- Mixpanel is causing error logs to be written needlessly because of a problem with their
-    A/B testing framework. Since we don't use it, we can disable it.
-    https://github.com/mixpanel/mixpanel-android/issues/253
-    -->
-    <meta-data
-      android:name="com.mixpanel.android.MPConfig.DisableViewCrawler"
-      android:value="true" />
-
     <meta-data
       android:name="com.google.mlkit.vision.DEPENDENCIES"
       android:value="barcode" />
@@ -80,10 +72,6 @@
     <meta-data
       android:name="io.sentry.sample-rate"
       android:value="0.75" />
-
-    <meta-data
-      android:name="com.mixpanel.android.MPConfig.UseIpAddressForGeolocation"
-      android:value="false" />
 
     <activity
       android:name=".setup.SetupActivity"

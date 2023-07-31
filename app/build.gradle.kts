@@ -119,7 +119,6 @@ android {
 
     val sentryDsn: String by project
     val sentryEnvironment: String by project
-    val mixpanelToken: String by project
     val manifestEndpoint: String by project
     val disableScreenshot: String by project
     val allowRootedDevice: String by project
@@ -132,8 +131,6 @@ android {
         "sentryDsn" to sentryDsn,
         "sentryEnvironment" to sentryEnvironment
     ))
-
-    buildConfigField("String", "MIXPANEL_TOKEN", "\"$mixpanelToken\"")
     buildConfigField("String", "MANIFEST_ENDPOINT", "\"$manifestEndpoint\"")
     buildConfigField("boolean", "DISABLE_SCREENSHOT", disableScreenshot)
     buildConfigField("boolean", "ALLOW_ROOTED_DEVICE", allowRootedDevice)
@@ -377,8 +374,6 @@ dependencies {
   implementation(libs.lottie)
 
   implementation(libs.material)
-
-  implementation(libs.mixpanel.android)
 
   implementation(libs.okhttp.interceptor.logging)
 

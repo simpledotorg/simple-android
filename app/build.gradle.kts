@@ -360,6 +360,7 @@ dependencies {
   implementation(libs.edittext.pinentry)
 
   implementation(libs.firebase.config)
+  implementation(libs.firebase.analytics)
 
   implementation(libs.itemanimators)
 

@@ -10,6 +10,7 @@ class InfrastructureModule {
   fun provideInfrastructure(
       sentryInfrastructure: SentryInfrastructure,
       datadogInfrastructure: DatadogInfrastructure,
-      mixpanelInfrastructure: MixpanelInfrastructure
-  ) = listOf(sentryInfrastructure, datadogInfrastructure, mixpanelInfrastructure)
+      mixpanelInfrastructure: MixpanelInfrastructure,
+      firebaseAnalyticsInfrastructure: FirebaseAnalyticsInfrastructure
+  ) = listOf(sentryInfrastructure, datadogInfrastructure, mixpanelInfrastructure, firebaseAnalyticsInfrastructure)
 }

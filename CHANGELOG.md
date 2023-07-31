@@ -14,6 +14,7 @@
 - Add support for date input field for Compose forms
 - Update drug stock report link icon in patients screen
 - Prefill text in date input field if date exists
+- Replace Mixpanel with Firebase Analytics
 
 ### Changes
 

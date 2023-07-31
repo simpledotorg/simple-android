@@ -5,7 +5,6 @@ androidx-cameraView = "1.1.0"
 androidx-paging = "3.1.1"
 androidx-room = "2.4.3"
 androidx-work = "2.7.1"
-androidx-security-crypto = "1.1.0-alpha06"
 
 dagger = "2.44.2"
 
@@ -36,8 +35,6 @@ compose-compiler = "1.4.0"
 androidx-compose-bom = "2023.07.00-alpha01"
 
 composeThemeAdapter = "0.31.3-beta"
-
-sqlCipher = "4.5.4"
 
 [libraries]
 android-gradle-plugin = "com.android.tools.build:gradle:8.0.2"
@@ -80,8 +77,6 @@ androidx-test-rules = "androidx.test:rules:1.5.0"
 androidx-work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
 androidx-work-rxjava = { module = "androidx.work:work-rxjava2", version.ref = "androidx-work" }
 androidx-work-gcm = { module = "androidx.work:work-gcm", version.ref = "androidx-work" }
-
-androidx-security-crypto = { module = "androidx.security:security-crypto-ktx", version.ref = "androidx-security-crypto" }
 
 asm = "org.ow2.asm:asm:9.4"
 
@@ -211,8 +206,6 @@ androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
 androidx-compose-materialWindow = { module = "androidx.compose.material3:material3-window-size-class" }
 composeThemeAdapter = { module = "com.google.accompanist:accompanist-themeadapter-material", version.ref = "composeThemeAdapter" }
 composeThemeAdapterCore = { module = "com.google.accompanist:accompanist-themeadapter-core", version.ref = "composeThemeAdapter" }
-
-sqlCipher = { module = "net.zetetic:android-database-sqlcipher", version.ref = "sqlCipher" }
 
 [bundles]
 androidx-camera = ["androidx-camera-core", "androidx-camera-camera2", "androidx-camera-view", "androidx-camera-lifecycle"]

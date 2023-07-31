@@ -30,5 +30,3 @@ data class SaveCountryAndDeployment(
 ): SetupActivityEffect()
 
 object DeleteStoredCountryV1 : SetupActivityEffect()
-
-object ExecuteDatabaseEncryption : SetupActivityEffect()

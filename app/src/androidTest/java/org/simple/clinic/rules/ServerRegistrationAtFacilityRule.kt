@@ -14,8 +14,6 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityPullResult
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.security.PasswordHasher
-import org.simple.clinic.storage.SharedPreferencesMode
-import org.simple.clinic.storage.SharedPreferencesMode.Mode.Default
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
@@ -50,7 +48,6 @@ class ServerRegistrationAtFacilityRule(
   lateinit var appDatabase: AppDatabase
 
   @Inject
-  @SharedPreferencesMode(Default)
   lateinit var sharedPreferences: SharedPreferences
 
   @Inject

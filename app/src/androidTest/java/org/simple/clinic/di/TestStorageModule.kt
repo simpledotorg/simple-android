@@ -7,11 +7,10 @@ import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.questionnaire.component.BaseComponentData
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.patient.PatientSearchResult
-import org.simple.clinic.questionnaire.component.BaseComponentData
-import org.simple.clinic.storage.EncryptionModule
 import org.simple.clinic.storage.SharedPreferencesModule
 import org.simple.clinic.storage.migrations.RoomMigrationsModule
 import org.simple.clinic.storage.text.TextRecord
@@ -24,8 +23,7 @@ import org.simple.clinic.user.User
   SharedPreferencesModule::class,
   PatientModule::class,
   PatientSummaryModule::class,
-  TextStoreModule::class,
-  EncryptionModule::class
+  TextStoreModule::class
 ])
 class TestStorageModule {
 

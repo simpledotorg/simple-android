@@ -242,17 +242,6 @@ class SetupActivityUpdateTest {
         ))
   }
 
-  @Test
-  fun `when database encryption is finished, then check if app can run`() {
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(DatabaseEncryptionFinished)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(CheckIfAppCanRun)
-        ))
-  }
-
   private fun previouslyLoggedInUserFetched(user: User): UserDetailsFetched {
     return UserDetailsFetched(
         hasUserCompletedOnboarding = true,

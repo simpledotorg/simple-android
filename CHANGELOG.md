@@ -8,7 +8,6 @@
 
 ### Internal
 
-- Add missing SQLCipher proguard rules for R8
 - Show progress indicator when logging out
 - Bump to latest alpha/beta version of Compose libraries
 - Add month and year picker dialog for Compose forms
@@ -18,12 +17,10 @@
 
 ### Changes
 
-- Add support for database encryption
 - Add new call result option - `Refused to come back`
 - Hide overdue download/share actions when there are no overdue patients
 - Updated translations: `om-ET`, `si-LK`, `sid-ET`, `ta-IN`, `te-IN`, `bn-BD`, `am-ET`, `bn-IN`, `so-ET`, `mr-IN`, `ti-ET`,
   `es`, `hi-IN`, `kn_IN`, `ta_LK`, `pa-IN`
-- Display icon to indicate app database encryption status in settings
 - Add link to report drug stock in patients tab screen
 
 ## 2023-06-26-8772

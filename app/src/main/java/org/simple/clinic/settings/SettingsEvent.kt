@@ -30,5 +30,3 @@ object ConfirmLogoutButtonClicked : SettingsEvent() {
 object BackClicked : SettingsEvent() {
   override val analyticsName: String = "Settings:Back Clicked"
 }
-
-data class DatabaseEncryptionStatusLoaded(val isDatabaseEncrypted: Boolean) : SettingsEvent()

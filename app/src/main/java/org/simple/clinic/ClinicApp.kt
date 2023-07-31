@@ -26,12 +26,9 @@ import org.simple.clinic.platform.analytics.AnalyticsReporter
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.plumbing.infrastructure.UpdateInfrastructureUserDetails
 import org.simple.clinic.remoteconfig.ConfigReader
-import org.simple.clinic.storage.DatabaseEncryptor
 import org.simple.clinic.storage.monitoring.DatadogSqlPerformanceReportingSink
 import org.simple.clinic.storage.monitoring.SqlPerformanceReporter
 import org.simple.clinic.util.clamp
-import org.simple.clinic.util.filterTrue
-import org.simple.clinic.util.scheduler.SchedulersProvider
 import timber.log.Timber
 import java.io.IOException
 import java.net.SocketException
@@ -58,32 +55,17 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
   @Inject
   lateinit var updateInfrastructureUserDetails: UpdateInfrastructureUserDetails
 
-  @Inject
-  lateinit var databaseEncryptor: DatabaseEncryptor
-
-  @Inject
-  lateinit var schedulersProvider: SchedulersProvider
-
   protected open val analyticsReporters = emptyList<AnalyticsReporter>()
 
   protected open val crashReporterSinks = emptyList<CrashReporter.Sink>()
 
-  @SuppressLint("RestrictedApi", "CheckResult")
+  @SuppressLint("RestrictedApi")
   override fun onCreate() {
     super.onCreate()
 
     appComponent = buildDaggerGraph()
     appComponent.inject(this)
-
-    databaseEncryptor
-        .isDatabaseEncrypted
-        .filterTrue()
-        .subscribeOn(schedulersProvider.ui())
-        .subscribe {
-          updateInfrastructureUserDetails.track()
-          updateAnalyticsUserId.listen()
-          closeActivitiesWhenUserIsUnauthorized.listen()
-        }
+    updateInfrastructureUserDetails.track()
 
     crashReporterSinks.forEach(CrashReporter::addSink)
 
@@ -102,7 +84,10 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
     }
     SqlPerformanceReporter.addSink(DatadogSqlPerformanceReportingSink())
 
+    updateAnalyticsUserId.listen()
+
     registerActivityLifecycleCallbacks(closeActivitiesWhenUserIsUnauthorized)
+    closeActivitiesWhenUserIsUnauthorized.listen()
   }
 
   private fun setupApplicationPerformanceMonitoring() {

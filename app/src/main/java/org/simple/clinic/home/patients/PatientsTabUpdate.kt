@@ -4,6 +4,7 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL_SECURITY
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.LIGHT
@@ -17,7 +18,10 @@ import org.simple.clinic.user.User
 import java.time.Duration
 import java.util.Optional
 
-class PatientsTabUpdate(private val isNotifyAppUpdateAvailableV2Enabled: Boolean) : Update<PatientsTabModel, PatientsTabEvent, PatientsTabEffect> {
+class PatientsTabUpdate(
+    private val isNotifyAppUpdateAvailableV2Enabled: Boolean,
+    private val country: Country
+) : Update<PatientsTabModel, PatientsTabEvent, PatientsTabEffect> {
 
   override fun update(
       model: PatientsTabModel,
@@ -43,12 +47,18 @@ class PatientsTabUpdate(private val isNotifyAppUpdateAvailableV2Enabled: Boolean
       event: EnterDrugStockButtonClicked
   ): Next<PatientsTabModel, PatientsTabEffect> {
     val effect = if (event.hasNetworkConnection) {
-      OpenEnterDrugStockScreen
+      openDrugStockScreen()
     } else {
       ShowNoActiveNetworkConnectionDialog
     }
 
     return dispatch(effect)
+  }
+
+  private fun openDrugStockScreen() = if (country.isoCountryCode != Country.ETHIOPIA) {
+    OpenEnterDrugStockScreen
+  } else {
+    OpenDrugStockReportsForm
   }
 
   private fun drugStockReportLoaded(

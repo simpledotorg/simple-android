@@ -42,12 +42,14 @@ import org.simple.clinic.feature.Feature.NotifyAppUpdateAvailableV2
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchScreenKey
 import org.simple.clinic.mobius.DeferredEventSource
+import org.simple.clinic.monthlyreports.list.MonthlyReportsScreen
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.platform.crash.CrashReporter
+import org.simple.clinic.questionnaire.DrugStockReports
 import org.simple.clinic.scanid.OpenedFrom
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.summary.OpenIntention
@@ -191,7 +193,7 @@ class PatientsTabScreen : BaseScreen<
       .compose(ReportAnalyticsEvents())
       .cast<PatientsTabEvent>()
 
-  override fun createUpdate() = PatientsTabUpdate(features.isEnabled(NotifyAppUpdateAvailableV2))
+  override fun createUpdate() = PatientsTabUpdate(features.isEnabled(NotifyAppUpdateAvailableV2), country)
 
   override fun createInit() = PatientsInit(
       isNotifyAppUpdateAvailableV2Enabled = features.isEnabled(NotifyAppUpdateAvailableV2),
@@ -355,6 +357,10 @@ class PatientsTabScreen : BaseScreen<
         .setMessage(R.string.drug_stock_reminder__no_active_network_connection_dialog_message)
         .setPositiveButton(R.string.drug_stock_reminder__no_active_network_connection_dialog_positive_button, null)
         .show()
+  }
+
+  override fun openDrugStockReportsForm() {
+    router.push(MonthlyReportsScreen.Key(DrugStockReports))
   }
 
   private fun showHomeScreenBackground(@IdRes viewId: Int) {

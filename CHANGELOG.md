@@ -15,6 +15,7 @@
 - Update drug stock report link icon in patients screen
 - Prefill text in date input field if date exists
 - Replace Mixpanel with Firebase Analytics
+- Open drug stock reports form in Ethiopia on drug stock reminder click
 
 ### Changes
 

@@ -110,7 +110,7 @@ class PatientsLogicTest {
             isNotifyAppUpdateAvailableV2Enabled = false,
             isMonthlyDrugStockReportReminderEnabledInIndia = true,
         ),
-        update = PatientsTabUpdate(isNotifyAppUpdateAvailableV2Enabled = false),
+        update = PatientsTabUpdate(isNotifyAppUpdateAvailableV2Enabled = false, country = TestData.country()),
         effectHandler = patientsEffectHandler.build(),
         modelUpdateListener = uiRenderer::render
     )

@@ -2,6 +2,12 @@
 
 ## Next Release
 
+### Fixes
+
+- Fix icon not showing on questionnaire form screen.
+
+## 2023-08-01-8815
+
 ### Features
 
 - Add option to logout of the app in settings
@@ -24,10 +30,6 @@
 - Updated translations: `om-ET`, `si-LK`, `sid-ET`, `ta-IN`, `te-IN`, `bn-BD`, `am-ET`, `bn-IN`, `so-ET`, `mr-IN`, `ti-ET`,
   `es`, `hi-IN`, `kn_IN`, `ta_LK`, `pa-IN`
 - Add link to report drug stock in patients tab screen
-
-### Fixes
-
-- Fix icon not showing on questionnaire form screen.
 
 ## 2023-06-26-8772
 

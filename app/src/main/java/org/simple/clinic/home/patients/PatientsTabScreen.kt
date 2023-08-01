@@ -193,7 +193,7 @@ class PatientsTabScreen : BaseScreen<
       .compose(ReportAnalyticsEvents())
       .cast<PatientsTabEvent>()
 
-  override fun createUpdate() = PatientsTabUpdate(features.isEnabled(NotifyAppUpdateAvailableV2))
+  override fun createUpdate() = PatientsTabUpdate(features.isEnabled(NotifyAppUpdateAvailableV2), country)
 
   override fun createInit() = PatientsInit(
       isNotifyAppUpdateAvailableV2Enabled = features.isEnabled(NotifyAppUpdateAvailableV2),

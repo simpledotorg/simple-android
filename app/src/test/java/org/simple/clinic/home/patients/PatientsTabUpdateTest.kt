@@ -9,15 +9,20 @@ import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.analytics.NetworkConnectivityStatus.ACTIVE
 import org.simple.clinic.analytics.NetworkConnectivityStatus.INACTIVE
+import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.CRITICAL
 import org.simple.clinic.appupdate.AppUpdateNudgePriority.LIGHT
 import org.simple.clinic.drugstockreminders.DrugStockReminder
+import org.simple.sharedTestCode.TestData
 import java.time.LocalDate
 import java.util.Optional
 
 class PatientsTabUpdateTest {
   private val defaultModel = PatientsTabModel.create()
-  private val updateSpec = UpdateSpec(PatientsTabUpdate(isNotifyAppUpdateAvailableV2Enabled = false))
+  private val updateSpec = UpdateSpec(PatientsTabUpdate(
+      isNotifyAppUpdateAvailableV2Enabled = false,
+      country = TestData.country(isoCountryCode = Country.INDIA)
+  ))
 
   @Test
   fun `when update now button is clicked, then open Simple on play store`() {
@@ -66,7 +71,10 @@ class PatientsTabUpdateTest {
 
   @Test
   fun `when app update nudge priority is light and feature flag is enabled, then show app update dialog, touch app update shown time preference and update the model`() {
-    val updateSpec = UpdateSpec(PatientsTabUpdate(isNotifyAppUpdateAvailableV2Enabled = true))
+    val updateSpec = UpdateSpec(PatientsTabUpdate(
+        isNotifyAppUpdateAvailableV2Enabled = true,
+        country = TestData.country(isoCountryCode = Country.INDIA)
+    ))
     val appUpdateNudgePriority = LIGHT
 
     updateSpec
@@ -85,7 +93,10 @@ class PatientsTabUpdateTest {
 
   @Test
   fun `when app update nudge priority is critical and feature flag is enabled, then show critical app update dialog and update the model`() {
-    val updateSpec = UpdateSpec(PatientsTabUpdate(isNotifyAppUpdateAvailableV2Enabled = true))
+    val updateSpec = UpdateSpec(PatientsTabUpdate(
+        isNotifyAppUpdateAvailableV2Enabled = true,
+        country = TestData.country(isoCountryCode = Country.INDIA)
+    ))
     val appUpdateNudgePriority = CRITICAL
 
     updateSpec
@@ -162,13 +173,28 @@ class PatientsTabUpdateTest {
   }
 
   @Test
-  fun `when enter drug stock button is clicked and the network is connected, then enter drug stock screen`() {
+  fun `when enter drug stock button is clicked and the network is connected and country is not ethiopia, then enter drug stock screen`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(EnterDrugStockButtonClicked(networkStatus = Optional.of(ACTIVE)))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(OpenEnterDrugStockScreen)
+        ))
+  }
+
+  @Test
+  fun `when enter drug stock button is clicked and the network is connected and country is ethiopia, then open drug stock reports form`() {
+    val updateSpec = UpdateSpec(PatientsTabUpdate(
+        isNotifyAppUpdateAvailableV2Enabled = false,
+        country = TestData.country(isoCountryCode = Country.ETHIOPIA)
+    ))
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(EnterDrugStockButtonClicked(networkStatus = Optional.of(ACTIVE)))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenDrugStockReportsForm)
         ))
   }
 }

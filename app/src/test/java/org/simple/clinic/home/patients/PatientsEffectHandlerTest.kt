@@ -214,4 +214,15 @@ class PatientsEffectHandlerTest {
     verify(uiActions).showNoActiveNetworkConnectionDialog()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when open drug stock reports form effect is received, then open drug stock reports form screen`() {
+    // when
+    effectHandlerTestCase.dispatch(OpenDrugStockReportsForm)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+    verify(uiActions).openDrugStockReportsForm()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

@@ -118,3 +118,6 @@
   native <methods>;
   public <init>(...);
 }
+
+## Compose icon with reflection
+-keep class androidx.compose.material.icons.filled.** { *; }

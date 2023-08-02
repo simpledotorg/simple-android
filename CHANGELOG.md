@@ -25,6 +25,10 @@
   `es`, `hi-IN`, `kn_IN`, `ta_LK`, `pa-IN`
 - Add link to report drug stock in patients tab screen
 
+### Fixes
+
+- Fix icon not showing on questionnaire form screen.
+
 ## 2023-06-26-8772
 
 ### Internal

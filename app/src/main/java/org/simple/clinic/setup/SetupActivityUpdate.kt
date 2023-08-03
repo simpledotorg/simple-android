@@ -1,6 +1,7 @@
 package org.simple.clinic.setup
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.appconfig.Deployment
@@ -30,6 +31,7 @@ class SetupActivityUpdate(
       is AppAllowedToRunCheckCompleted -> initializeDatabase(event)
       is CountryAndDeploymentSaved -> dispatch(DeleteStoredCountryV1)
       is StoredCountryV1Deleted -> dispatch(GoToMainActivity)
+      DatabaseEncryptionFinished -> dispatch(CheckIfAppCanRun)
     }
   }
 
@@ -88,11 +90,13 @@ class SetupActivityUpdate(
 
         SaveCountryAndDeployment(country, deployment)
       }
+
       deploymentIsAbsent -> {
         val deployment = selectedCountry.get().deployments.first()
 
         SaveCountryAndDeployment(selectedCountry.get(), deployment)
       }
+
       else -> throw RuntimeException("This should never happen!")
     }
   }

@@ -121,3 +121,7 @@
 
 ## Compose icon with reflection
 -keep class androidx.compose.material.icons.filled.** { *; }
+
+# SQLCipher
+-keep,includedescriptorclasses class net.sqlcipher.** { *; }
+-keep,includedescriptorclasses interface net.sqlcipher.** { *; }

@@ -330,6 +330,7 @@ dependencies {
   implementation(libs.androidx.preference)
   implementation(libs.androidx.recyclerview)
   implementation(libs.androidx.viewpager2)
+  implementation(libs.androidx.security.crypto)
 
   implementation(libs.bundles.androidx.camera)
 
@@ -424,6 +425,9 @@ dependencies {
   implementation(libs.androidx.compose.material.iconsExtended)
   implementation(libs.androidx.compose.ui.tooling.preview)
   debugImplementation(libs.androidx.compose.ui.tooling)
+
+  implementation(libs.sqlCipher)
+
   /**
    * Unit test dependencies
    */

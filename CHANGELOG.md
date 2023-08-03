@@ -6,6 +6,12 @@
 
 - Bump AGP to v8.1.0
 - Stop clearing view binding reference when a custom view is detached
+- Add missing SQLCipher proguard rules for R8
+
+### Changes
+
+- Add support for database encryption
+- Display icon to indicate app database encryption status in settings
 
 ### Fixes
 

@@ -25,14 +25,6 @@ sentry {
   }
 }
 
-kapt {
-  arguments {
-    arg("room.schemaLocation", "$projectDir/schemas")
-    arg("room.incremental", true)
-    arg("room.expandProjection", true)
-  }
-}
-
 tasks.withType<Test> {
   testLogging {
     // set options for log level LIFECYCLE
@@ -139,6 +131,12 @@ android {
     buildConfigField("String", "DATADOG_APPLICATION_ID", "\"$datadogApplicationId\"")
     buildConfigField("String", "DATADOG_CLIENT_TOKEN", "\"$datadogClientToken\"")
     buildConfigField("String", "DATADOG_ENVIRONMENT", "\"$datadogEnvironment\"")
+
+    ksp {
+      arg("room.schemaLocation", "$projectDir/schemas")
+      arg("room.incremental", "true")
+      arg("room.expandProjection", "true")
+    }
   }
 
   buildTypes {
@@ -338,7 +336,7 @@ dependencies {
   implementation(libs.bundles.androidx.paging)
 
   implementation(libs.bundles.androidx.room)
-  kapt(libs.androidx.room.compiler)
+  ksp(libs.androidx.room.compiler)
 
   implementation(libs.bundles.androidx.work)
 

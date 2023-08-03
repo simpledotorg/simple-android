@@ -2,6 +2,10 @@
 
 ## Next Release
 
+### Internal
+
+- Bump AGP to v8.1.0
+
 ### Fixes
 
 - Fix icon not showing on questionnaire form screen.

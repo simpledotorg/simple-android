@@ -95,7 +95,6 @@ class AssignedFacilityView(
 
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
-    binding = null
     delegate.stop()
   }
 

@@ -129,7 +129,6 @@ class NextAppointmentCardView(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
-    binding = null
     super.onDetachedFromWindow()
   }
 

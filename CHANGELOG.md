@@ -5,10 +5,11 @@
 ### Internal
 
 - Bump AGP to v8.1.0
+- Stop clearing view binding reference when a custom view is detached
 
 ### Fixes
 
-- Fix icon not showing on questionnaire form screen.
+- Fix icon not showing on questionnaire form screen
 
 ## 2023-08-01-8815
 

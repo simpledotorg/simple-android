@@ -66,7 +66,6 @@ class ChipInputAutoCompleteTextView(
   }
 
   override fun onDetachedFromWindow() {
-    binding = null
     disposable.clear()
     super.onDetachedFromWindow()
   }

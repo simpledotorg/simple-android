@@ -105,11 +105,6 @@ class SetAppointmentReminderView(
     nextDateStepper.isEnabled = true
   }
 
-  override fun onDetachedFromWindow() {
-    super.onDetachedFromWindow()
-    binding = null
-  }
-
   interface Injector {
     fun inject(target: SetAppointmentReminderView)
   }

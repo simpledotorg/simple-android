@@ -195,11 +195,6 @@ class CallPatientView(
     secureCallButton.setOnClickListener { secureCallButtonClicked?.invoke() }
   }
 
-  override fun onDetachedFromWindow() {
-    binding = null
-    super.onDetachedFromWindow()
-  }
-
   fun renderPatientDetails(
       patientDetails: PatientDetails,
       dateTimeFormatter: DateTimeFormatter,

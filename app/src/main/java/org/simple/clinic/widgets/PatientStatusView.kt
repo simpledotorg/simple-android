@@ -36,9 +36,4 @@ class PatientStatusView(context: Context, attrs: AttributeSet) : MaterialCardVie
       TextViewCompat.setTextAppearance(statusTextView, statusTextAppearance)
     }
   }
-
-  override fun onDetachedFromWindow() {
-    binding = null
-    super.onDetachedFromWindow()
-  }
 }

@@ -341,7 +341,7 @@ dependencies {
   implementation(libs.bundles.androidx.work)
 
   implementation(libs.bundles.moshi)
-  kapt(libs.moshi.codegen)
+  ksp(libs.moshi.codegen)
 
   implementation(libs.bundles.okhttp)
 

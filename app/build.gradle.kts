@@ -11,6 +11,7 @@ plugins {
   id("plugins.git.install-hooks")
   id("com.datadoghq.dd-sdk-android-gradle-plugin")
   id("androidx.benchmark")
+  id("com.google.devtools.ksp").version(libs.versions.ksp)
 }
 
 sentry {

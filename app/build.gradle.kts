@@ -11,6 +11,7 @@ plugins {
   id("plugins.git.install-hooks")
   id("com.datadoghq.dd-sdk-android-gradle-plugin")
   id("androidx.benchmark")
+  id("com.google.devtools.ksp").version(libs.versions.ksp)
 }
 
 sentry {
@@ -21,14 +22,6 @@ sentry {
   // Look at [ADR 013: SQL Performance Profiling (v2)]
   tracingInstrumentation {
     enabled.set(false)
-  }
-}
-
-kapt {
-  arguments {
-    arg("room.schemaLocation", "$projectDir/schemas")
-    arg("room.incremental", true)
-    arg("room.expandProjection", true)
   }
 }
 
@@ -138,6 +131,12 @@ android {
     buildConfigField("String", "DATADOG_APPLICATION_ID", "\"$datadogApplicationId\"")
     buildConfigField("String", "DATADOG_CLIENT_TOKEN", "\"$datadogClientToken\"")
     buildConfigField("String", "DATADOG_ENVIRONMENT", "\"$datadogEnvironment\"")
+
+    ksp {
+      arg("room.schemaLocation", "$projectDir/schemas")
+      arg("room.incremental", "true")
+      arg("room.expandProjection", "true")
+    }
   }
 
   buildTypes {
@@ -337,12 +336,12 @@ dependencies {
   implementation(libs.bundles.androidx.paging)
 
   implementation(libs.bundles.androidx.room)
-  kapt(libs.androidx.room.compiler)
+  ksp(libs.androidx.room.compiler)
 
   implementation(libs.bundles.androidx.work)
 
   implementation(libs.bundles.moshi)
-  kapt(libs.moshi.codegen)
+  ksp(libs.moshi.codegen)
 
   implementation(libs.bundles.okhttp)
 

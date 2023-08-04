@@ -37,9 +37,4 @@ class DrugSummaryItemView constructor(
     prescribedDrugName.text = drugWithDosageAndFrequency
     prescribedDrugDate.text = drugDate
   }
-
-  override fun onDetachedFromWindow() {
-    super.onDetachedFromWindow()
-    binding = null
-  }
 }

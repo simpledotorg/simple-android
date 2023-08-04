@@ -94,9 +94,4 @@ class BloodPressureItemView(context: Context, attrs: AttributeSet) : FrameLayout
 
     dateTimeTextView.text = dateTimeFormattedString
   }
-
-  override fun onDetachedFromWindow() {
-    super.onDetachedFromWindow()
-    binding = null
-  }
 }

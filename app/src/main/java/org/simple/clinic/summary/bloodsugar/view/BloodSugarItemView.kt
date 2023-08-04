@@ -116,9 +116,4 @@ class BloodSugarItemView(
       }
     }
   }
-
-  override fun onDetachedFromWindow() {
-    super.onDetachedFromWindow()
-    binding = null
-  }
 }

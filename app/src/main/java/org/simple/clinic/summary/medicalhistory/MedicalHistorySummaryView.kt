@@ -120,7 +120,6 @@ class MedicalHistorySummaryView(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
-    binding = null
     super.onDetachedFromWindow()
   }
 

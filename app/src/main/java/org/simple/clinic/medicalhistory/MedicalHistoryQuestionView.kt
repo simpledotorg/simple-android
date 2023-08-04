@@ -83,9 +83,4 @@ class MedicalHistoryQuestionView(
       answerChangeListener.invoke(question, newAnswer)
     }
   }
-
-  override fun onDetachedFromWindow() {
-    super.onDetachedFromWindow()
-    binding = null
-  }
 }

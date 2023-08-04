@@ -148,7 +148,6 @@ class PinEntryCardView(
   override fun onDetachedFromWindow() {
     pinEntryLockedCountdown?.cancel()
     delegate.stop()
-    binding = null
     super.onDetachedFromWindow()
   }
 

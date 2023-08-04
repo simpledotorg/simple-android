@@ -100,7 +100,6 @@ class TeleconsultDoctorInfoView(
 
   override fun onDetachedFromWindow() {
     delegate.stop()
-    binding = null
     super.onDetachedFromWindow()
   }
 

@@ -7,6 +7,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.storage.SharedPreferencesMode
+import org.simple.clinic.storage.SharedPreferencesMode.Mode.Default
 import org.simple.sharedTestCode.TestData
 import org.simple.sharedTestCode.util.Rules
 import java.util.Optional
@@ -19,6 +21,7 @@ class SelectedCountryPersistenceAndroidTest {
   val rules = Rules.global()
 
   @Inject
+  @SharedPreferencesMode(Default)
   lateinit var preferences: SharedPreferences
 
   @Inject

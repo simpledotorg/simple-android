@@ -10,7 +10,8 @@ data class SettingsModel(
     val currentLanguage: Language?,
     val appVersion: String?,
     val isUpdateAvailable: Boolean?,
-    val isUserLoggingOut: Boolean?
+    val isUserLoggingOut: Boolean?,
+    val isDatabaseEncrypted: Boolean?
 ) : Parcelable {
 
   companion object {
@@ -20,7 +21,8 @@ data class SettingsModel(
         currentLanguage = null,
         appVersion = null,
         isUpdateAvailable = null,
-        isUserLoggingOut = null
+        isUserLoggingOut = null,
+        isDatabaseEncrypted = null
     )
   }
 
@@ -59,5 +61,9 @@ data class SettingsModel(
 
   fun userLogoutFailed(): SettingsModel {
     return copy(isUserLoggingOut = false)
+  }
+
+  fun databaseEncryptionStatusLoaded(isDatabaseEncrypted: Boolean): SettingsModel {
+    return copy(isDatabaseEncrypted = isDatabaseEncrypted)
   }
 }

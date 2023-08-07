@@ -13,6 +13,8 @@
 - Add support for database encryption
 - Display icon to indicate app database encryption status in settings
 
+## 2023-08-03-8822
+
 ### Fixes
 
 - Fix icon not showing on questionnaire form screen

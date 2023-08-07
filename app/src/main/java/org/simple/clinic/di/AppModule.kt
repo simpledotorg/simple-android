@@ -31,6 +31,7 @@ import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.plumbing.infrastructure.InfrastructureModule
 import org.simple.clinic.registration.RegistrationModule
+import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.remoteconfig.RemoteConfigModule
 import org.simple.clinic.remoteconfig.firebase.FirebaseRemoteConfigModule
 import org.simple.clinic.security.di.PinVerificationModule
@@ -47,6 +48,8 @@ import org.simple.clinic.teleconsultlog.prescription.TeleconsultPrescriptionModu
 import org.simple.clinic.user.SessionModule
 import org.simple.clinic.user.clearpatientdata.ClearPatientDataModule
 import org.simple.clinic.util.ElapsedRealtimeClock
+import org.simple.clinic.util.MinimumMemoryChecker
+import org.simple.clinic.util.RealMinimumMemoryChecker
 import org.simple.clinic.util.RealUserClock
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
@@ -150,4 +153,11 @@ class AppModule(private val appContext: Application) {
 
   @Provides
   fun providesGoogleApiAvailability() = GoogleApiAvailability.getInstance()
+
+  @Provides
+  @AppScope
+  fun providesMinimumMemoryChecker(
+      appContext: Application,
+      configReader: ConfigReader
+  ): MinimumMemoryChecker = RealMinimumMemoryChecker(appContext)
 }

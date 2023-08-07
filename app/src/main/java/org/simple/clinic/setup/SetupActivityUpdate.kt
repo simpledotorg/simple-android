@@ -40,7 +40,7 @@ class SetupActivityUpdate(
     return if (event.hasMinimumMemory) {
       dispatch(ExecuteDatabaseEncryption)
     } else {
-      noChange()
+      dispatch(CheckIfAppCanRun)
     }
   }
 

@@ -266,13 +266,13 @@ class SetupActivityUpdateTest {
   }
 
   @Test
-  fun `when device doesn't have minimum required memory, then do nothing`() {
+  fun `when device doesn't have minimum required memory, then check if app can run`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(MinimumMemoryChecked(hasMinimumMemory = false))
         .then(assertThatNext(
             hasNoModel(),
-            hasNoEffects()
+            hasEffects(CheckIfAppCanRun)
         ))
   }
 

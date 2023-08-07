@@ -30,3 +30,5 @@ object CountryAndDeploymentSaved: SetupActivityEvent()
 object StoredCountryV1Deleted: SetupActivityEvent()
 
 object DatabaseEncryptionFinished : SetupActivityEvent()
+
+data class MinimumMemoryChecked(val hasMinimumMemory: Boolean) : SetupActivityEvent()

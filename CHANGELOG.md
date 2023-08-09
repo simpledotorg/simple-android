@@ -4,8 +4,6 @@
 
 ### Internal
 
-- Bump AGP to v8.1.0
-- Stop clearing view binding reference when a custom view is detached
 - Add missing SQLCipher proguard rules for R8
 - Add minimum memory checker to run database encryption
 
@@ -13,6 +11,13 @@
 
 - Add support for database encryption
 - Display icon to indicate app database encryption status in settings
+
+## 2023-08-07-8827
+
+### Internal
+
+- Bump AGP to v8.1.0
+- Stop clearing view binding reference when a custom view is detached
 
 ## 2023-08-03-8822
 

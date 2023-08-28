@@ -10,7 +10,7 @@ interface MinimumMemoryChecker {
 class RealMinimumMemoryChecker(context: Context) : MinimumMemoryChecker {
 
   companion object {
-    private const val MIN_REQUIRED_MEMORY = 3.5 // GB
+    private const val MIN_REQUIRED_MEMORY = 5.5 // GB
   }
 
   private val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager

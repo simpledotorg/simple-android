@@ -6,6 +6,8 @@
 
 - Add missing SQLCipher proguard rules for R8
 - Add minimum memory checker to run database encryption
+- Bump AGP to v8.1.1
+- Increase minimum required memory for encryption to 5.5GB
 
 ### Changes
 

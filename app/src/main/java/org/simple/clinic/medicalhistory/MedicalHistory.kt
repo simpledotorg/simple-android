@@ -9,6 +9,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.RawQuery
+import androidx.sqlite.db.SimpleSQLiteQuery
 import io.reactivex.Flowable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.medicalhistory.Answer.Unanswered
@@ -95,8 +97,14 @@ data class MedicalHistory(
     @Query("UPDATE MedicalHistory SET syncStatus = :to WHERE syncStatus = :from")
     fun updateSyncStatus(from: SyncStatus, to: SyncStatus)
 
-    @Query("UPDATE MedicalHistory SET syncStatus = :to WHERE uuid IN (:ids)")
-    fun updateSyncStatusForIds(ids: List<UUID>, to: SyncStatus)
+    @RawQuery
+    fun updateSyncStatusForIdsRaw(query: SimpleSQLiteQuery): Int
+
+    fun updateSyncStatusForIds(ids: List<UUID>, to: SyncStatus) {
+      updateSyncStatusForIdsRaw(SimpleSQLiteQuery(
+          "UPDATE MedicalHistory SET syncStatus = '$to' WHERE uuid IN (${ids.joinToString(prefix = "'", postfix = "'", separator = "','")})"
+      ))
+    }
 
     @Query("SELECT * FROM MedicalHistory WHERE uuid = :id LIMIT 1")
     fun getOne(id: UUID): MedicalHistory?

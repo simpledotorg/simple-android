@@ -10,6 +10,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.RawQuery
+import androidx.sqlite.db.SimpleSQLiteQuery
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
@@ -117,8 +119,14 @@ data class BloodSugarMeasurement(
     @Query("UPDATE BloodSugarMeasurements SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")
     fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
 
-    @Query("UPDATE BloodSugarMeasurements SET syncStatus = :newStatus WHERE uuid IN (:uuids)")
-    fun updateSyncStatusForIds(uuids: List<UUID>, newStatus: SyncStatus)
+    @RawQuery
+    fun updateSyncStatusForIdsRaw(query: SimpleSQLiteQuery): Int
+
+    fun updateSyncStatusForIds(uuids: List<UUID>, newStatus: SyncStatus) {
+      updateSyncStatusForIdsRaw(SimpleSQLiteQuery(
+          "UPDATE BloodSugarMeasurements SET syncStatus = '$newStatus' WHERE uuid IN (${uuids.joinToString(prefix = "'", postfix = "'", separator = "','")})"
+      ))
+    }
 
     @Query("SELECT * FROM BloodSugarMeasurements WHERE uuid = :uuid LIMIT 1")
     fun getOne(uuid: UUID): BloodSugarMeasurement?

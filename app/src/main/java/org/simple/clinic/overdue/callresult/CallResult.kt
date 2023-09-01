@@ -9,6 +9,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.RawQuery
+import androidx.sqlite.db.SimpleSQLiteQuery
 import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.overdue.Appointment
@@ -123,15 +125,14 @@ data class CallResult(
         newStatus: SyncStatus
     )
 
-    @Query("""
-      UPDATE CallResult
-      SET syncStatus = :newStatus
-      WHERE id IN (:callResultIds)
-    """)
-    fun updateSyncStatusForIds(
-        callResultIds: List<UUID>,
-        newStatus: SyncStatus
-    )
+    @RawQuery
+    fun updateSyncStatusForIdsRaw(query: SimpleSQLiteQuery): Int
+
+    fun updateSyncStatusForIds(callResultIds: List<UUID>, newStatus: SyncStatus) {
+      updateSyncStatusForIdsRaw(SimpleSQLiteQuery(
+          "UPDATE CallResult SET syncStatus = '$newStatus' WHERE id IN (${callResultIds.joinToString(prefix = "'", postfix = "'", separator = "','")})"
+      ))
+    }
 
     @Query("""
       SELECT COUNT(id)

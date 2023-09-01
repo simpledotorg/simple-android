@@ -6,6 +6,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.RawQuery
+import androidx.sqlite.db.SimpleSQLiteQuery
 import org.simple.clinic.patient.SyncStatus
 import java.time.Instant
 import java.util.UUID
@@ -61,8 +63,14 @@ data class TeleconsultationFacilityInfo(
     @Query("UPDATE TeleconsultationFacilityInfo SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")
     fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
 
-    @Query("UPDATE TeleconsultationFacilityInfo SET syncStatus = :newStatus WHERE teleconsultationFacilityId IN (:uuids)")
-    fun updateSyncStatusForIds(uuids: List<UUID>, newStatus: SyncStatus)
+    @RawQuery
+    fun updateSyncStatusForIdsRaw(query: SimpleSQLiteQuery): Int
+
+    fun updateSyncStatusForIds(uuids: List<UUID>, newStatus: SyncStatus) {
+      updateSyncStatusForIdsRaw(SimpleSQLiteQuery(
+          "UPDATE TeleconsultationFacilityInfo SET syncStatus = '$newStatus' WHERE teleconsultationFacilityId IN (${uuids.joinToString(prefix = "'", postfix = "'", separator = "','")})"
+      ))
+    }
 
     @Query("SELECT * FROM TeleconsultationFacilityInfo WHERE syncStatus = :syncStatus")
     fun recordsWithSyncStatus(syncStatus: SyncStatus): List<TeleconsultationFacilityInfo>

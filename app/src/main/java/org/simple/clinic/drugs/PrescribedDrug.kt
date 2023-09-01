@@ -9,7 +9,9 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.RawQuery
 import androidx.room.Transaction
+import androidx.sqlite.db.SimpleSQLiteQuery
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
@@ -147,8 +149,14 @@ data class PrescribedDrug(
     @Query("UPDATE prescribeddrug SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")
     abstract fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
 
-    @Query("UPDATE prescribeddrug SET syncStatus = :newStatus WHERE uuid IN (:uuids)")
-    abstract fun updateSyncStatusForIds(uuids: List<UUID>, newStatus: SyncStatus)
+    @RawQuery
+    abstract fun updateSyncStatusForIdsRaw(query: SimpleSQLiteQuery): Int
+
+    fun updateSyncStatusForIds(uuids: List<UUID>, newStatus: SyncStatus) {
+      updateSyncStatusForIdsRaw(SimpleSQLiteQuery(
+          "UPDATE prescribeddrug SET syncStatus = '$newStatus' WHERE uuid IN (${uuids.joinToString(prefix = "'", postfix = "'", separator = "','")})"
+      ))
+    }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun save(newDrugs: List<PrescribedDrug>)
@@ -248,24 +256,36 @@ data class PrescribedDrug(
         syncStatus: SyncStatus
     )
 
-    @Query("UPDATE PrescribedDrug SET teleconsultationId = :teleconsultationId, updatedAt = :updatedAt, syncStatus = :syncStatus WHERE uuid IN (:drugUuids)")
-    abstract fun addTeleconsultationIdToDrugs(
+    @RawQuery
+    abstract fun addTeleconsultationIdToDrugsRaw(query: SimpleSQLiteQuery): Int
+
+    fun addTeleconsultationIdToDrugs(
         drugUuids: List<UUID>,
         teleconsultationId: UUID,
         updatedAt: Instant,
         syncStatus: SyncStatus
-    )
+    ) {
+      addTeleconsultationIdToDrugsRaw(SimpleSQLiteQuery(
+          "UPDATE PrescribedDrug SET teleconsultationId = '$teleconsultationId', updatedAt = '$updatedAt', syncStatus = '$syncStatus' WHERE uuid IN (${drugUuids.joinToString(prefix = "'", postfix = "'", separator = "','")})"
+      ))
+    }
 
     /**
      * [deleted] exists only to trigger Room's Boolean type converter.
      * */
-    @Query("UPDATE PrescribedDrug SET isDeleted = :deleted, updatedAt = :updatedAt, syncStatus = :syncStatus WHERE uuid IN (:prescriptionIds)")
-    abstract fun softDeleteIds(
+    @RawQuery
+    abstract fun softDeleteIdsRaw(query: SimpleSQLiteQuery): Int
+
+    fun softDeleteIds(
         prescriptionIds: List<UUID>,
         deleted: Boolean,
         updatedAt: Instant,
         syncStatus: SyncStatus
-    )
+    ) {
+      softDeleteIdsRaw(SimpleSQLiteQuery(
+          "UPDATE PrescribedDrug SET isDeleted = '${if (deleted) 1 else 0}', updatedAt = '$updatedAt', syncStatus = '$syncStatus' WHERE uuid IN (${prescriptionIds.joinToString(prefix = "'", postfix = "'", separator = "','")})"
+      ))
+    }
 
     @Query(""" SELECT * FROM PrescribedDrug """)
     abstract fun getAllPrescribedDrugs(): List<PrescribedDrug>

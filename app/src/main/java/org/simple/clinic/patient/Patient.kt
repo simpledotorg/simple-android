@@ -9,7 +9,9 @@ import androidx.room.Fts4
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.RawQuery
 import androidx.room.Transaction
+import androidx.sqlite.db.SimpleSQLiteQuery
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
@@ -174,8 +176,14 @@ data class Patient(
     @Query("UPDATE patient SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")
     abstract fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
 
-    @Query("UPDATE patient SET syncStatus = :newStatus WHERE uuid IN (:uuids)")
-    abstract fun updateSyncStatusForIds(uuids: List<UUID>, newStatus: SyncStatus)
+    @RawQuery
+    abstract fun updateSyncStatusForIdsRaw(query: SimpleSQLiteQuery): Int
+
+    fun updateSyncStatusForIds(uuids: List<UUID>, newStatus: SyncStatus) {
+      updateSyncStatusForIdsRaw(SimpleSQLiteQuery(
+          "UPDATE patient SET syncStatus = '$newStatus' WHERE uuid IN (${uuids.joinToString(prefix = "'", postfix = "'", separator = "','")})"
+      ))
+    }
 
     @Query("SELECT COUNT(uuid) FROM patient")
     abstract fun patientCount(): Flowable<Int>
@@ -401,22 +409,27 @@ data class Patient(
 
     // This depends on the foreign key references between address, patient
     // phone numbers, and business IDs to cascade the deletes.
-    @Query("""
-      DELETE FROM PatientAddress
-      WHERE uuid NOT IN (
-        SELECT DISTINCT P.addressUuid FROM Patient P
-        LEFT JOIN Appointment A ON A.patientUuid == P.uuid
-        WHERE (
-            P.registeredFacilityId IN (:facilityIds) OR
-            P.assignedFacilityId IN (:facilityIds) OR
+    @RawQuery
+    abstract fun deletePatientsNotInFacilitiesRaw(query: SimpleSQLiteQuery): Int
+
+    fun deletePatientsNotInFacilities(facilityIds: List<UUID>) {
+      val facilityIdsString = facilityIds.joinToString(prefix = "'", postfix = "'", separator = "','")
+      deletePatientsNotInFacilitiesRaw(SimpleSQLiteQuery("""
+        DELETE FROM PatientAddress
+        WHERE uuid NOT IN (
+          SELECT DISTINCT P.addressUuid FROM Patient P
+          LEFT JOIN Appointment A ON A.patientUuid == P.uuid
+          WHERE (
+            P.registeredFacilityId IN ($facilityIdsString) OR
+            P.assignedFacilityId IN ($facilityIdsString) OR
             P.syncStatus == 'PENDING'
-        ) OR (
-            A.facilityUuid IN (:facilityIds) AND
+          ) OR (
+            A.facilityUuid IN ($facilityIdsString) AND
             A.status = 'scheduled'
+          )
         )
-      )
-    """)
-    abstract fun deletePatientsNotInFacilities(facilityIds: List<UUID>)
+      """))
+    }
 
     @Query("""
         DELETE FROM Patient

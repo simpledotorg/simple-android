@@ -8,7 +8,9 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.RawQuery
 import androidx.room.Update
+import androidx.sqlite.db.SimpleSQLiteQuery
 import io.reactivex.Flowable
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.RawValue
@@ -87,8 +89,14 @@ data class QuestionnaireResponse(
     @Query("UPDATE QuestionnaireResponse SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")
     fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
 
-    @Query("UPDATE QuestionnaireResponse SET syncStatus = :newStatus WHERE uuid IN (:uuids)")
-    fun updateSyncStatusForIds(uuids: List<UUID>, newStatus: SyncStatus)
+    @RawQuery
+    fun updateSyncStatusForIdsRaw(query: SimpleSQLiteQuery): Int
+
+    fun updateSyncStatusForIds(uuids: List<UUID>, newStatus: SyncStatus) {
+      updateSyncStatusForIdsRaw(SimpleSQLiteQuery(
+          "UPDATE QuestionnaireResponse SET syncStatus = '$newStatus' WHERE uuid IN (${uuids.joinToString(prefix = "'", postfix = "'", separator = "','")})"
+      ))
+    }
 
     @Query("SELECT uuid FROM QuestionnaireResponse WHERE syncStatus = :syncStatus")
     fun recordIdsWithSyncStatus(syncStatus: SyncStatus): List<UUID>

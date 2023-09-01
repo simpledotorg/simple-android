@@ -8,6 +8,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.RawQuery
+import androidx.sqlite.db.SimpleSQLiteQuery
 import io.reactivex.Flowable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.patient.SyncStatus
@@ -80,8 +82,14 @@ data class TeleconsultRecord(
     @Query("UPDATE TeleconsultRecord SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")
     fun updateSyncStates(oldStatus: SyncStatus, newStatus: SyncStatus)
 
-    @Query("UPDATE TeleconsultRecord SET syncStatus = :newStatus WHERE id in (:uuids) ")
-    fun updateSyncStatus(uuids: List<UUID>, newStatus: SyncStatus)
+    @RawQuery
+    fun updateSyncStatusRaw(query: SimpleSQLiteQuery): Int
+
+    fun updateSyncStatus(uuids: List<UUID>, newStatus: SyncStatus) {
+      updateSyncStatusRaw(SimpleSQLiteQuery(
+          "UPDATE TeleconsultRecord SET syncStatus = '$newStatus' WHERE id IN (${uuids.joinToString(prefix = "'", postfix = "'", separator = "','")})"
+      ))
+    }
 
     @Query("SELECT COUNT(id) FROM TeleconsultRecord WHERE syncStatus = :syncStatus")
     fun countWithStatus(syncStatus: SyncStatus): Flowable<Int>

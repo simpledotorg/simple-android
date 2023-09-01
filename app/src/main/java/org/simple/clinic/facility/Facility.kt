@@ -8,6 +8,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.RawQuery
+import androidx.sqlite.db.SimpleSQLiteQuery
 import io.reactivex.Flowable
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.location.Coordinates
@@ -72,8 +74,14 @@ data class Facility(
     @Query("UPDATE facility SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")
     fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
 
-    @Query("UPDATE facility SET syncStatus = :newStatus WHERE uuid IN (:uuids)")
-    fun updateSyncStatusForIds(uuids: List<UUID>, newStatus: SyncStatus)
+    @RawQuery
+    abstract fun updateSyncStatusForIdsRaw(query: SimpleSQLiteQuery): Int
+
+    fun updateSyncStatusForIds(uuids: List<UUID>, newStatus: SyncStatus) {
+      updateSyncStatusForIdsRaw(SimpleSQLiteQuery(
+          "UPDATE facility SET syncStatus = '$newStatus' WHERE uuid IN (${uuids.joinToString(prefix = "'", postfix = "'", separator = "','")})"
+      ))
+    }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(newFacilities: List<Facility>)

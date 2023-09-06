@@ -106,7 +106,10 @@ jobs:
 
   start-simple-server:
     needs: [generate-server-app-name]
-    runs-on: [ macos-latest ]
+    runs-on: ${{ needs.generate-server-app-name.outputs.runner }}
+    strategy:
+      matrix:
+        runner: ${{ needs.generate-server-app-name.outputs.runner }}
     env:
       HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
     steps:

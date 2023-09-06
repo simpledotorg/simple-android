@@ -1,28 +1,16 @@
 #!/bin/bash
 
-herokuTeamName="resolvetosavelives"
 herokuAppName=${1}
 herokuApiKey=${2}
 simpleServerBranch=${3}
 serverAppDirectory=${4}
 androidAppDirectory=${5}
 encodedHerokuEnvProperties=${6}
+serverAppAlreadyExists=${7}
 decodedHerokuEnvProperties=$(echo $encodedHerokuEnvProperties | base64 --decode)
-
-echo "Checking if ${herokuAppName} exists in team ${herokuTeamName}"
-
-existingAppName=$(heroku apps --team=${herokuTeamName} | grep "$herokuAppName")
-
-serverAppAlreadyExists=false
-
-if [ -n "${existingAppName}" ]; then
-  echo "Found existing app: ${herokuAppName}"
-  serverAppAlreadyExists=true
-fi
 
 if [ $serverAppAlreadyExists = false ]; then
   echo "Setting up server app [$herokuAppName]"
-  (cd $serverAppDirectory && heroku apps:create --team $herokuTeamName $herokuAppName)
   heroku pipelines:add --app=$herokuAppName --stage=staging simple-android-review
 
   pip3 install requests
@@ -48,8 +36,6 @@ if [ $serverAppAlreadyExists = false ]; then
   (cd $serverAppDirectory && heroku run rails db:structure:load:with_data db:seed)
   resultOfSeedDataSetup=$?
 fi
-
-echo "heroku_app_url=$(heroku apps:info --app "${herokuAppName}" --json | jq -r '.app.web_url')" >> "$GITHUB_OUTPUT"
 
 echo "Result of starting server: ${resultOfServerPush}, seed data push ${resultOfSeedDataSetup}"
 

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+herokuTeamName="resolvetosavelives"
+serverAppDirectory=${2}
+
 # Extract the PR number from the GitHub ref ("refs/pull/<pr number>/merge"|"refs/heads/release/2021-08-20")
 echo "GitHub reference: ${1}"
 
@@ -14,3 +17,22 @@ fi
 echo "Heroku app name: ${herokuAppName}"
 
 echo "heroku_app_name=$herokuAppName" >> $GITHUB_OUTPUT
+
+echo "Checking if ${herokuAppName} exists in team ${herokuTeamName}"
+
+existingAppName=$(heroku apps --team=${herokuTeamName} | grep "$herokuAppName")
+
+serverAppAlreadyExists=false
+
+if [ -n "${existingAppName}" ]; then
+  echo "Found existing app: ${herokuAppName}"
+  serverAppAlreadyExists=true
+fi
+
+if [ $serverAppAlreadyExists = false ]; then
+  (cd $serverAppDirectory && heroku apps:create --team $herokuTeamName $herokuAppName)
+fi
+
+echo "server_app_already_exists=$serverAppAlreadyExists" >> "$GITHUB_OUTPUT"
+
+echo "heroku_app_url=$(heroku apps:info --app "${herokuAppName}" --json | jq -r '.app.web_url')" >> "$GITHUB_OUTPUT"

@@ -49,15 +49,8 @@ jobs:
       - name: QA Unit Tests
         run: ./gradlew --build-cache --no-daemon testQaDebugUnitTest
 
-  # reactivecircus/android-emulator-runner@v2 requires MacOS to run on
-  # https://github.com/ReactiveCircus/android-emulator-runner
-  qa_android_tests:
-    runs-on: [ macos-latest ]
-    timeout-minutes: 60
-    env:
-      AVD_API_LEVEL: 30
-      AVD_ARCH: x86_64
-      HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
+  generate-server-app-name:
+    runs-on: [ ubuntu-latest ]
     steps:
       - name: Checkout Android source
         uses: actions/checkout@v3
@@ -101,20 +94,63 @@ jobs:
       - name: Generate server app name
         id: generate-server-app-name
         run: android-app/.github/scripts/generate_heroku_app_name.sh \
-             ${{ github.ref }} \
-             server-app
+          ${{ github.ref }} \
+          server-app
+    outputs:
+      heroku_app_name: ${{ steps.generate-server-app-name.outputs.heroku_app_name }}
+      server_app_already_exists: ${{ steps.spin_up.outputs.server_app_already_exists }}
+      heroku_app_url: ${{ steps.spin_up.outputs.heroku_app_url }}
+
+  start-simple-server:
+    needs: [generate-server-app-name]
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - name: Checkout Android source
+        uses: actions/checkout@v3
+        with:
+          path: android-app
+
+      - name: Checkout server app source
+        uses: actions/checkout@v3
+        with:
+          repository: simpledotorg/simple-server
+          fetch-depth: 0 # Full clone needed for Heroku deploys (https://devcenter.heroku.com/changelog-items/775)
+          path: server-app
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.simple_server_branch || 'master' }}
 
       - name: Deploy the server on Heroku
         id: start-simple-server
         run: |
           android-app/.github/scripts/setup_heroku_instance.sh \
-          ${{ steps.generate-server-app-name.outputs.heroku_app_name }} \
+          ${{ needs.generate-server-app-name.outputs.heroku_app_name }} \
           ${{ env.HEROKU_API_KEY }} \
           ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.simple_server_branch || 'master' }} \
           server-app \
           android-app \
           ${{ secrets.HEROKU_SECRET_PROPERTIES }} \
-          ${{ steps.generate-server-app-name.outputs.server_app_already_exists}}
+          ${{ needs.generate-server-app-name.outputs.server_app_already_exists}}
+
+      - name: Teardown Heroku instance
+        if: always() && (steps.start-simple-server.outcome != 'success' || contains(github.ref, '/release/'))
+        run: |
+          heroku apps:destroy \
+          --app=${{ needs.generate-server-app-name.outputs.heroku_app_name }} \
+          --confirm=${{ needs.generate-server-app-name.outputs.heroku_app_name }}
+
+  # reactivecircus/android-emulator-runner@v2 requires MacOS to run on
+  # https://github.com/ReactiveCircus/android-emulator-runner
+  qa_android_tests:
+    needs: [generate-server-app-name]
+    runs-on: [ macos-latest ]
+    timeout-minutes: 60
+    env:
+      AVD_API_LEVEL: 30
+      AVD_ARCH: x86_64
+    steps:
+      - name: Checkout Android source
+        uses: actions/checkout@v3
+        with:
+          path: android-app
 
       - name: Cache AVD
         uses: actions/cache@v3
@@ -157,7 +193,7 @@ jobs:
           script: |
             adb root
             mkdir -p android-app/app/build/outputs/test-artifacts
-            android-app/gradlew -p android-app --build-cache --no-daemon -PmanifestEndpoint=${{ steps.generate-server-app-name.outputs.heroku_app_url }}api/ installQaDebug installQaDebugAndroidTest
+            android-app/gradlew -p android-app --build-cache --no-daemon -PmanifestEndpoint=${{ needs.generate-server-app-name.outputs.heroku_app_url }}api/ installQaDebug installQaDebugAndroidTest
             adb shell am instrument -w -e filter org.simple.clinic.benchmark.SelectBenchmarkTests -e benchmark_app_performance false  org.simple.clinic.qa.debug.test/org.simple.clinic.AndroidTestJUnitRunner >android-app/app/build/outputs/test-artifacts/logs.txt 2>android-app/app/build/outputs/test-artifacts/logs.txt
             cat android-app/app/build/outputs/test-artifacts/logs.txt
             adb pull /storage/emulated/0/Android/data/org.simple.clinic.qa.debug/ android-app/app/build/outputs/test-artifacts/ || true
@@ -171,13 +207,6 @@ jobs:
         with:
           name: test-artifacts
           path: android-app/app/build/outputs/test-artifacts
-
-      - name: Teardown Heroku instance
-        if: always() && (steps.start-simple-server.outcome != 'success' || contains(github.ref, '/release/'))
-        run: |
-          heroku apps:destroy \
-          --app=${{ steps.generate-server-app-name.outputs.heroku_app_name }} \
-          --confirm=${{ steps.generate-server-app-name.outputs.heroku_app_name }}
 
   mobius_migration_tests:
     runs-on: [ ubuntu-latest ]

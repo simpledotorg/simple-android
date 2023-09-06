@@ -51,6 +51,8 @@ jobs:
 
   generate-server-app-name:
     runs-on: [ macos-latest ]
+    env:
+      HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
     steps:
       - name: Checkout Android source
         uses: actions/checkout@v3
@@ -96,6 +98,7 @@ jobs:
         run: android-app/.github/scripts/generate_heroku_app_name.sh \
           ${{ github.ref }} \
           server-app
+
     outputs:
       heroku_app_name: ${{ steps.generate-server-app-name.outputs.heroku_app_name }}
       server_app_already_exists: ${{ steps.spin_up.outputs.server_app_already_exists }}
@@ -104,6 +107,8 @@ jobs:
   start-simple-server:
     needs: [generate-server-app-name]
     runs-on: [ macos-latest ]
+    env:
+      HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
     steps:
       - name: Checkout Android source
         uses: actions/checkout@v3

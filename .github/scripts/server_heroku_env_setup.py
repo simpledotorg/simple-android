@@ -30,7 +30,7 @@ server_vars_map.update(additional_properties_map)
 heroku_app_name = sys.argv[2]
 heroku_api_token = sys.argv[3]
 
-print('Heroku app url with uid: {heroku_app_name}')
+print('Heroku app url with uid: {app_name}'.format(app_name = heroku_app_name)
 
 server_vars_map['SIMPLE_SERVER_HOST'] = '{app_name}.herokuapp.com'.format(app_name = heroku_app_name)
 server_vars_map['SIMPLE_SERVER_ENV'] = 'android_review'

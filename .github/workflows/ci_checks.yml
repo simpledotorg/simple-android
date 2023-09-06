@@ -141,9 +141,6 @@ jobs:
           java-version: 17
           cache: 'gradle'
 
-      - name: Setup and execute Gradle 'test' task
-        uses: gradle/gradle-build-action@v2
-
       - name: QA Android Tests
         id: run-instrumented-tests
         uses: reactivecircus/android-emulator-runner@v2

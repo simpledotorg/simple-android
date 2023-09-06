@@ -113,7 +113,7 @@ jobs:
           ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.simple_server_branch || 'master' }} \
           server-app \
           android-app \
-          ${{ secrets.HEROKU_SECRET_PROPERTIES }}
+          ${{ secrets.HEROKU_SECRET_PROPERTIES }} \
           ${{ steps.generate-server-app-name.outputs.server_app_already_exists}}
 
       - name: Cache AVD

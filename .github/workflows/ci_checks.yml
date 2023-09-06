@@ -50,7 +50,7 @@ jobs:
         run: ./gradlew --build-cache --no-daemon testQaDebugUnitTest
 
   generate-server-app-name:
-    runs-on: [ ubuntu-latest ]
+    runs-on: [ macos-latest ]
     steps:
       - name: Checkout Android source
         uses: actions/checkout@v3
@@ -103,7 +103,7 @@ jobs:
 
   start-simple-server:
     needs: [generate-server-app-name]
-    runs-on: [ ubuntu-latest ]
+    runs-on: [ macos-latest ]
     steps:
       - name: Checkout Android source
         uses: actions/checkout@v3

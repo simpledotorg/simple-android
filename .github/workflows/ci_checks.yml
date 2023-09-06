@@ -101,8 +101,8 @@ jobs:
 
     outputs:
       heroku_app_name: ${{ steps.generate-server-app-name.outputs.heroku_app_name }}
-      server_app_already_exists: ${{ steps.spin_up.outputs.server_app_already_exists }}
-      heroku_app_url: ${{ steps.spin_up.outputs.heroku_app_url }}
+      heroku_app_url: ${{ steps.generate-server-app-name.outputs.heroku_app_url }}
+      server_app_already_exists: ${{ steps.generate-server-app-name.outputs.server_app_already_exists }}
 
   start-simple-server:
     needs: [generate-server-app-name]

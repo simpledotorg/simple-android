@@ -143,7 +143,6 @@ jobs:
           --confirm=${{ needs.generate-server-app-name.outputs.heroku_app_name }}
 
   generate_android_apk:
-    needs: [generate-server-app-name]
     runs-on: [ macos-latest ]
     timeout-minutes: 60
     env:
@@ -164,18 +163,18 @@ jobs:
 
       - name: Build Android APK
         run: |
-          android-app/gradlew -p android-app --build-cache --no-daemon -PmanifestEndpoint=${{ needs.generate-server-app-name.outputs.heroku_app_url }}api/ assembleQaDebug assembleQaDebugAndroidTest
+          android-app/gradlew -p android-app --build-cache --no-daemon assembleQaDebug
 
       - name: Upload APK Artifacts
         uses: actions/upload-artifact@v2
         with:
           name: apk-artifacts
-          path: android-app/app/build/outputs/apk/
+          path: android-app/app/build/outputs/apk/qa/debug/app-qa-debug.apk
 
   # reactivecircus/android-emulator-runner@v2 requires MacOS to run on
   # https://github.com/ReactiveCircus/android-emulator-runner
   qa_android_tests:
-    needs: [generate-server-app-name, generate_android_apk]
+    needs: [generate_android_apk]
     runs-on: [ macos-latest ]
     timeout-minutes: 60
     env:
@@ -233,7 +232,7 @@ jobs:
           script: |
             adb root
             mkdir -p android-app/app/build/outputs/test-artifacts
-            android-app/gradlew -p android-app --build-cache --no-daemon -PmanifestEndpoint=${{ needs.generate-server-app-name.outputs.heroku_app_url }}api/ installQaDebug installQaDebugAndroidTest
+            adb install android-app/app/build/outputs/apk/qa/debug/app-qa-debug.apk
             adb shell am instrument -w -e filter org.simple.clinic.benchmark.SelectBenchmarkTests -e benchmark_app_performance false  org.simple.clinic.qa.debug.test/org.simple.clinic.AndroidTestJUnitRunner >android-app/app/build/outputs/test-artifacts/logs.txt 2>android-app/app/build/outputs/test-artifacts/logs.txt
             cat android-app/app/build/outputs/test-artifacts/logs.txt
             adb pull /storage/emulated/0/Android/data/org.simple.clinic.qa.debug/ android-app/app/build/outputs/test-artifacts/ || true

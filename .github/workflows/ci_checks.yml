@@ -162,14 +162,7 @@ jobs:
           cache: 'gradle'
 
       - name: Build Android APK
-        run: |
-          android-app/gradlew -p android-app --build-cache --no-daemon assembleQaDebug assembleQaDebugAndroidTest
-
-      - name: Upload APK Artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: apk-artifacts
-          path: android-app/app/build/outputs/apk/
+        run: android-app/gradlew -p android-app --build-cache --no-daemon assembleQaDebug assembleQaDebugAndroidTest
 
   # reactivecircus/android-emulator-runner@v2 requires MacOS to run on
   # https://github.com/ReactiveCircus/android-emulator-runner
@@ -185,12 +178,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: android-app
-
-      - name: Download Artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: apk-artifacts
-          path: android-app/app/build/outputs/apk/
 
       - name: Cache AVD
         uses: actions/cache@v3

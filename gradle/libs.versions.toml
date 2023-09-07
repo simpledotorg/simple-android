@@ -25,7 +25,7 @@ okhttp = "4.10.0"
 
 retrofit = "2.9.0"
 
-room-metadataGenerator = "2.0.0"
+room-metadataGenerator = "2.0.1"
 
 rx-binding = "3.1.0"
 

@@ -103,9 +103,9 @@ jobs:
           ${{ github.ref }} \
           server-app
     outputs:
-      heroku_app_name: ${{ steps.setup_heroku_server.outputs.heroku_app_name }}
-      server_app_already_exists: ${{ steps.setup_heroku_server.outputs.server_app_already_exists }}
-      heroku_app_url: ${{ steps.setup_heroku_server.outputs.heroku_app_url }}
+      heroku_app_name: ${{ steps.generate-server-app-name.outputs.heroku_app_name }}
+      server_app_already_exists: ${{ steps.generate-server-app-name.outputs.server_app_already_exists }}
+      heroku_app_url: ${{ steps.generate-server-app-name.outputs.heroku_app_url }}
 
   deploy_heroku_server:
     needs: [ setup_heroku_server ]

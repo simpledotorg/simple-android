@@ -153,31 +153,24 @@ jobs:
       - name: Install heroku buildpacks plugin
         run: heroku plugins:install buildpacks
 
-      - name: Generate server app name
-        id: generate-server-app-name
-        run: |
-          android-app/.github/scripts/generate_heroku_app_name.sh \
-          ${{ github.ref }} \
-          server-app
-
       - name: Deploy the server on Heroku
         id: start-simple-server
         run: |
           android-app/.github/scripts/setup_heroku_instance.sh \
-          ${{ steps.generate-server-app-name.outputs.heroku_app_name }} \
+          ${{ needs.setup_heroku_server.outputs.heroku_app_name }} \
           ${{ env.HEROKU_API_KEY }} \
           ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.simple_server_branch || 'master' }} \
           server-app \
           android-app \
           ${{ secrets.HEROKU_SECRET_PROPERTIES }} \
-          ${{ steps.generate-server-app-name.outputs.server_app_already_exists}}
+          ${{ needs.setup_heroku_server.outputs.server_app_already_exists}}
 
       - name: Teardown Heroku instance
         if: always() && (steps.start-simple-server.outcome != 'success' || contains(github.ref, '/release/'))
         run: |
           heroku apps:destroy \
-          --app=${{ steps.generate-server-app-name.outputs.heroku_app_name }} \
-          --confirm=${{ steps.generate-server-app-name.outputs.heroku_app_name }}   
+          --app=${{ needs.setup_heroku_server.outputs.heroku_app_name }} \
+          --confirm=${{ needs.setup_heroku_server.outputs.heroku_app_name }}   
 
   setup_qa_android_tests:
     needs: [ setup_heroku_server ]

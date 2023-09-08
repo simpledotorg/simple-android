@@ -17,7 +17,7 @@ echo "Heroku app name: ${herokuAppName}"
 
 echo "heroku_app_name=$herokuAppName" >> $GITHUB_OUTPUT
 
-cho "Checking if ${herokuAppName} exists in team ${herokuTeamName}"
+echo "Checking if ${herokuAppName} exists in team ${herokuTeamName}"
 
 existingAppName=$(heroku apps --team=${herokuTeamName} | grep "$herokuAppName")
 

@@ -51,7 +51,8 @@ jobs:
 
   # reactivecircus/android-emulator-runner@v2 requires MacOS to run on
   # https://github.com/ReactiveCircus/android-emulator-runner
-  setup_heroku_server:
+
+  install_heroku_dependencies:
     runs-on: [ macos-latest ]
     timeout-minutes: 60
     env:
@@ -85,7 +86,7 @@ jobs:
 
       - name: Install Heroku CLI
         if: steps.node-dependency-cache.outputs.cache-hit != 'true'
-        run: npm install heroku
+        run: npm install -g heroku
 
       - name: Link Heroku CLI globally
         run: npm link heroku
@@ -96,6 +97,13 @@ jobs:
       - name: Install heroku buildpacks plugin
         run: heroku plugins:install buildpacks
 
+  setup_heroku_server:
+    needs: [ install_heroku_dependencies ]
+    runs-on: [ macos-latest ]
+    timeout-minutes: 60
+    env:
+      HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
+    steps:
       - name: Generate server app name
         id: generate-server-app-name
         run: |
@@ -108,51 +116,12 @@ jobs:
       heroku_app_url: ${{ steps.generate-server-app-name.outputs.heroku_app_url }}
 
   deploy_heroku_server:
-    needs: [ setup_heroku_server ]
+    needs: [ setup_heroku_server, install_heroku_dependencies ]
     runs-on: [ macos-latest ]
     timeout-minutes: 60
     env:
       HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
     steps:
-      - name: Checkout Android source
-        uses: actions/checkout@v3
-        with:
-          path: android-app
-
-      - name: Checkout server app source
-        uses: actions/checkout@v3
-        with:
-          repository: simpledotorg/simple-server
-          fetch-depth: 0 # Full clone needed for Heroku deploys (https://devcenter.heroku.com/changelog-items/775)
-          path: server-app
-          ref: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.simple_server_branch || 'master' }}
-
-      - name: Create node dependency hash
-        id: create_node_modules_hash
-        run: android-app/.github/scripts/compute_node_dependency_hash.sh
-
-      - name: Cache node modules
-        id: node-dependency-cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            node_modules
-            package-lock.json
-          key: ${{ runner.os }}-npm-${{ steps.create_node_modules_hash.outputs.node_dep_hash }}
-
-      - name: Install Heroku CLI
-        if: steps.node-dependency-cache.outputs.cache-hit != 'true'
-        run: npm install heroku
-
-      - name: Link Heroku CLI globally
-        run: npm link heroku
-
-      - name: Install Heroku Buildpacks registry
-        run: heroku plugins:install buildpack-registry
-
-      - name: Install heroku buildpacks plugin
-        run: heroku plugins:install buildpacks
-
       - name: Deploy the server on Heroku
         id: start-simple-server
         run: |

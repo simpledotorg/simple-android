@@ -22,7 +22,6 @@ If this command has an error, or shows a different version, you can follow the i
 
 We recommend using [jEnv](https://www.jenv.be/) to manage your JDK installations. Here are instructions to setup a working JDK 17 installation (macOS
 only):
-
 1. Setup up [Homebrew](https://brew.sh/).
 
 2. Install `jEnv` using Homebrew.

@@ -8,7 +8,6 @@ import java.util.Locale
 plugins {
   id("com.android.application")
   kotlin("android")
-  kotlin("kapt")
   id("kotlin-parcelize")
   id("io.sentry.android.gradle")
   id("plugins.git.install-hooks")

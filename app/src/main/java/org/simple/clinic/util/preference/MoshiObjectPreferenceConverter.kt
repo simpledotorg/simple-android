@@ -10,11 +10,11 @@ class MoshiObjectPreferenceConverter<T>(
 
   private val adapter = moshi.adapter(clazz)
 
-  override fun deserialize(serialized: String): T {
+  override fun deserialize(serialized: String): T & Any {
     return adapter.fromJson(serialized)!!
   }
 
-  override fun serialize(value: T): String {
+  override fun serialize(value: T & Any): String {
     return adapter.toJson(value)
   }
 }

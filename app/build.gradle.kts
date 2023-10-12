@@ -1,11 +1,13 @@
+import com.android.build.gradle.internal.tasks.databinding.DataBindingGenBaseClassesTask
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
+import org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompileTool
 import org.simple.rmg.RoomMetadataGenerator
+import java.util.Locale
 
 plugins {
   id("com.android.application")
   kotlin("android")
-  kotlin("kapt")
   id("kotlin-parcelize")
   id("io.sentry.android.gradle")
   id("plugins.git.install-hooks")
@@ -210,7 +212,20 @@ android {
     )
 
     beforeVariants { variant ->
-      variant.enabled = variant.name !in filteredVariants
+      variant.enable = variant.name !in filteredVariants
+    }
+
+    onVariants(selector().all()) { variant ->
+      afterEvaluate {
+        // This is a workaround for https://issuetracker.google.com/301245705 which depends on internal
+        // implementations of the android gradle plugin and the ksp gradle plugin which might change in the future
+        // in an unpredictable way.
+        val variantName = variant.name.replaceFirstChar { it.titlecase() }
+        project.tasks.getByName("ksp" + variantName + "Kotlin") {
+          val dataBindingTask =  project.tasks.getByName ("dataBindingGenBaseClasses$variantName") as DataBindingGenBaseClassesTask
+          (this as AbstractKotlinCompileTool<*>).setSource(dataBindingTask.sourceOutFolder)
+        }
+      }
     }
   }
 
@@ -282,17 +297,17 @@ android {
       tasks.findByName(buildType)?.finalizedBy(deleteProguardMappings)
     }
 
-    val kaptTasks = mapOf(
-        "kaptQaDebugKotlin" to "qaDebug",
-        "kaptSandboxReleaseKotlin" to "sandboxRelease",
-        "kaptStagingReleaseKotlin" to "stagingRelease",
-        "kaptSecurityReleaseKotlin" to "securityRelease",
-        "kaptProductionReleaseKotlin" to "productionRelease"
+    val kspTasks = mapOf(
+        "kspQaDebugKotlin" to "qaDebug",
+        "kspSandboxReleaseKotlin" to "sandboxRelease",
+        "kspStagingReleaseKotlin" to "stagingRelease",
+        "kspSecurityReleaseKotlin" to "securityRelease",
+        "kspProductionReleaseKotlin" to "productionRelease"
     )
 
-    kaptTasks.forEach { (buildType, sourceSetName) ->
+    kspTasks.forEach { (buildType, sourceSetName) ->
       val taskQualifier = buildType
-          .replace("kapt", "")
+          .replace("ksp", "")
           .replace("Kotlin", "")
 
       val taskName = "transform${taskQualifier}GeneratedRoomDao"
@@ -351,7 +366,7 @@ dependencies {
   implementation(libs.bundles.rx.binding)
 
   implementation(libs.dagger.dagger)
-  kapt(libs.dagger.compiler)
+  ksp(libs.dagger.compiler)
 
   implementation(libs.edittext.masked)
   implementation(libs.edittext.pinentry)
@@ -479,7 +494,7 @@ dependencies {
 
   androidTestImplementation(libs.truth)
 
-  kaptAndroidTest(libs.dagger.compiler)
+  kspAndroidTest(libs.dagger.compiler)
 
   androidTestImplementation(projects.sharedTestCode)
 

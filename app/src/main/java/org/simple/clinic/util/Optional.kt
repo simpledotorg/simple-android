@@ -16,7 +16,7 @@ import java.util.Optional
  * This is the preferred method of obtaining an instance of [Optional] in Kotlin. In Java, prefer
  * using the static [Optional.ofNullable] method.
  */
-fun <T> T?.toOptional(): Optional<T> = Optional.ofNullable(this)
+fun <T> T?.toOptional(): Optional<T> = Optional.ofNullable(this) as Optional<T>
 
 /**
  * Converts [Optional] to either its non-null value if it's non-empty or `null` if it's empty.

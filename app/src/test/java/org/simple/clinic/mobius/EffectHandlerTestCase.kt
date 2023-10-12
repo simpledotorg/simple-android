@@ -3,7 +3,7 @@ package org.simple.clinic.mobius
 import io.reactivex.ObservableTransformer
 import io.reactivex.subjects.PublishSubject
 
-class EffectHandlerTestCase<F, E>(effectHandler: ObservableTransformer<F, E>) {
+class EffectHandlerTestCase<F : Any, E>(effectHandler: ObservableTransformer<F, E>) {
 
   private val incomingEffectsSubject = PublishSubject.create<F>()
   private val effectHandlerObservable = incomingEffectsSubject.compose(effectHandler)

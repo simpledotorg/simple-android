@@ -4,6 +4,15 @@
 
 ### Internal
 
+- Update Compose BOM to v2023.07.00-alpha02
+- Update Dagger to v2.48.1
+- Migrate Dagger from KAPT to KSP
+- Bump AndroidX Preferences to v1.2.1
+
+## 2023-09-07-8861
+
+### Internal
+
 - Bump Room metadata generator to v2.0.1
 
 ## 2023-09-01-8855

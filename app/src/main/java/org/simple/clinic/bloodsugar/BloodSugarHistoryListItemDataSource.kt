@@ -36,7 +36,7 @@ class BloodSugarHistoryListItemDataSource(
 ) : PositionalDataSource<BloodSugarHistoryListItem>() {
 
   private val invalidationTracker = object : InvalidationTracker.Observer(arrayOf("BloodSugarMeasurements")) {
-    override fun onInvalidated(tables: MutableSet<String>) {
+    override fun onInvalidated(tables: Set<String>) {
       invalidate()
     }
   }

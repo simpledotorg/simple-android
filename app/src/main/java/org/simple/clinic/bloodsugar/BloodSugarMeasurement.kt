@@ -7,7 +7,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy.REPLACE
+import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.RawQuery
@@ -71,7 +71,7 @@ data class BloodSugarMeasurement(
   @Dao
   interface RoomDao {
 
-    @Insert(onConflict = REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(bloodSugars: List<BloodSugarMeasurement>)
 
     @Query("""

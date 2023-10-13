@@ -34,7 +34,7 @@ class BloodPressureHistoryListItemDataSource(
 ) : PositionalDataSource<BloodPressureHistoryListItem>() {
 
   private val invalidationTracker = object : InvalidationTracker.Observer(arrayOf("bloodpressuremeasurement")) {
-    override fun onInvalidated(tables: MutableSet<String>) {
+    override fun onInvalidated(tables: Set<String>) {
       invalidate()
     }
   }

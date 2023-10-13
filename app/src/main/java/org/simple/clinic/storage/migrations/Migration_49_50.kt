@@ -38,9 +38,9 @@ class Migration_49_50 @Inject constructor(
                       .use { cursor ->
 
                         generateSequence { cursor.takeIf { it.moveToNext() } }
-                            .map { it.string("uuid") to it }
+                            .map { it.string("uuid")!! to it }
                             .forEach { (uuid, cursorRow) ->
-                              val patientUuid = cursor.string("patientUuid")
+                              val patientUuid = cursor.string("patientUuid")!!
 
                               val bpRecordedAt = instantConverter.toInstant(cursorRow.string("recordedAt"))!!
                               val encounteredOn = bpRecordedAt.toLocalDateAtZone(userClock.zone)
@@ -62,9 +62,9 @@ class Migration_49_50 @Inject constructor(
                                 with(insertIntoEncounter) {
                                   bindString(1, encounterId)
                                   bindString(2, patientUuid)
-                                  bindString(3, localDateConverter.fromLocalDate(encounteredOn))
-                                  bindString(4, cursorRow.string("createdAt"))
-                                  bindString(5, cursorRow.string("updatedAt"))
+                                  bindString(3, localDateConverter.fromLocalDate(encounteredOn)!!)
+                                  bindString(4, cursorRow.string("createdAt")!!)
+                                  bindString(5, cursorRow.string("updatedAt")!!)
 
                                   executeInsert()
                                 }

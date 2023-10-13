@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy.REPLACE
+import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.RawQuery
@@ -42,7 +42,7 @@ data class TeleconsultRecord(
   @Dao
   interface RoomDao {
 
-    @Insert(onConflict = REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(teleconsultRecords: List<TeleconsultRecord>)
 
     @Query("DELETE FROM TeleconsultRecord")

@@ -3,7 +3,7 @@ package org.simple.clinic.summary.teleconsultation.sync
 import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy.REPLACE
+import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.RawQuery
@@ -42,7 +42,7 @@ data class TeleconsultationFacilityInfo(
   @Dao
   interface RoomDao {
 
-    @Insert(onConflict = REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(teleconsultationFacilityInfo: List<TeleconsultationFacilityInfo>)
 
     @Query("DELETE FROM TeleconsultationFacilityInfo")

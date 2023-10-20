@@ -9,6 +9,10 @@
 - Migrate Dagger from KAPT to KSP
 - Bump AndroidX Preferences to v1.2.1
 
+### Changes
+
+- Enable Clinical Decision Support for all facilities in SriLanka.
+
 ## 2023-09-07-8861
 
 ### Internal

@@ -11,7 +11,7 @@
 
 ### Changes
 
-- Enable `Clinical Decision Support` for all facilities in SriLanka.
+- Enable Clinical Decision Support for all facilities in SriLanka.
 
 ## 2023-09-07-8861
 

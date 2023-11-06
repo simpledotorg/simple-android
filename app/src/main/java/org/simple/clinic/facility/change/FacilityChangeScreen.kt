@@ -77,10 +77,8 @@ class FacilityChangeScreen :
     context.injector<Injector>().inject(this)
   }
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    setupUiComponents()
-
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
     setFragmentResultListener(ConfirmFacility) { _, result ->
       if (result is Succeeded) {
         val facilityChangeConfirmed = ConfirmFacilityChangeSheet.wasFacilityChanged(result)
@@ -88,6 +86,11 @@ class FacilityChangeScreen :
         handleFacilityChangeConfirmed(facilityChangeConfirmed)
       }
     }
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    setupUiComponents()
   }
 
   private fun handleFacilityChangeConfirmed(facilityChangeConfirmed: Boolean) {

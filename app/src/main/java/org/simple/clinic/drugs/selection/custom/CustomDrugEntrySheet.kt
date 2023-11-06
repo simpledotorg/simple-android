@@ -151,13 +151,17 @@ class CustomDrugEntrySheet : BaseBottomSheet<
           .clicks()
           .map { RemoveDrugButtonClicked }
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
 
     setFragmentResultListener(SelectDrugFrequency) { _, result ->
       if (result is Succeeded)
         hotEvents.onNext(FrequencyEdited(SelectDrugFrequencyDialog.readDrugFrequency(result)))
     }
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
 
     drugDosageEditText.imeOptions = EditorInfo.IME_ACTION_DONE
   }

@@ -185,6 +185,16 @@ class InstantSearchScreen :
     context.injector<Injector>().inject(this)
   }
 
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setFragmentResultListener(BlankScannedQrCode) { _, result ->
+      if (result is Succeeded) {
+        val scannedQrCodeResult = ScannedQrCodeSheet.blankScannedQrCodeResult(result)
+        blankScannedQrCodeResults.onNext(BlankScannedQrCodeResultReceived(scannedQrCodeResult))
+      }
+    }
+  }
+
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
@@ -201,13 +211,6 @@ class InstantSearchScreen :
 
     searchResultsView.adapter = searchResultsAdapter
     searchResultsAdapter.addLoadStateListener(::searchResultsAdapterLoadStateListener)
-
-    setFragmentResultListener(BlankScannedQrCode) { _, result ->
-      if (result is Succeeded) {
-        val scannedQrCodeResult = ScannedQrCodeSheet.blankScannedQrCodeResult(result)
-        blankScannedQrCodeResults.onNext(BlankScannedQrCodeResultReceived(scannedQrCodeResult))
-      }
-    }
   }
 
   override fun onStart() {

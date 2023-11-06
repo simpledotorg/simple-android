@@ -169,16 +169,19 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
     context.injector<Injector>().inject(this)
   }
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-    changeFacilityButton.setOnClickListener {
-      openFacilitySelection()
-    }
-
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
     setFragmentResultListener(Request.PickAppointmentDate, Request.SelectFacility) { requestKey, result ->
       if (result is Succeeded) {
         handleSuccessfulScreenResult(requestKey, result)
       }
+    }
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    changeFacilityButton.setOnClickListener {
+      openFacilitySelection()
     }
   }
 

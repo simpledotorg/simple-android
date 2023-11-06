@@ -164,9 +164,8 @@ class ContactPatientBottomSheet : BaseBottomSheet<
     }
   }
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
-
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
     setFragmentResultListener(DatePickerResult, RemoveOverdueAppointmentResult) { requestKey, result ->
       if (result !is Succeeded) return@setFragmentResultListener
 

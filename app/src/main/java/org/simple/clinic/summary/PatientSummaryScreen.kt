@@ -274,6 +274,15 @@ class PatientSummaryScreen :
     subscriptions.clear()
   }
 
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setFragmentResultListener(ScreenRequest.ScheduleAppointmentSheet, ScreenRequest.SelectFacility) { requestKey, result ->
+      if (result is Succeeded) {
+        handleScreenResult(requestKey, result)
+      }
+    }
+  }
+
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
@@ -281,12 +290,6 @@ class PatientSummaryScreen :
     rootLayout.hideKeyboard()
 
     subscriptions.add(setupChildViewVisibility())
-
-    setFragmentResultListener(ScreenRequest.ScheduleAppointmentSheet, ScreenRequest.SelectFacility) { requestKey, result ->
-      if (result is Succeeded) {
-        handleScreenResult(requestKey, result)
-      }
-    }
   }
 
   private fun handleScreenResult(requestKey: Parcelable, result: Succeeded) {

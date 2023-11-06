@@ -378,13 +378,16 @@ class EditPatientScreen : BaseScreen<
     context.injector<Injector>().inject(this)
   }
 
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    handleScanIdentifierResult()
+  }
+
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     setAdapterWhenVillageTypeAheadIsEnabled()
 
     deletePatient.setOnClickListener { router.push(DeletePatientScreen.Key(screenKey.patient.uuid)) }
-
-    handleScanIdentifierResult()
   }
 
   private fun setAdapterWhenVillageTypeAheadIsEnabled() {

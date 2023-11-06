@@ -92,6 +92,13 @@ class AlertFacilityChangeSheet :
     context.injector<Injector>().inject(this)
   }
 
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setFragmentResultListener(ChangeCurrentFacility) { _, result ->
+      if (result is Succeeded) proceedToNextScreen()
+    }
+  }
+
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     return super.onCreateDialog(savedInstanceState).apply {
       window!!.setDimAmount(0F)
@@ -114,10 +121,6 @@ class AlertFacilityChangeSheet :
       changeButton.setOnClickListener {
         openFacilityChangeScreen()
       }
-    }
-
-    setFragmentResultListener(ChangeCurrentFacility) { _, result ->
-      if (result is Succeeded) proceedToNextScreen()
     }
   }
 
@@ -170,12 +173,10 @@ class AlertFacilityChangeSheet :
   @Parcelize
   data class Key(
       val currentFacilityName: String,
-      val continuation: Continuation
+      val continuation: Continuation,
+      override val analyticsName: String = "Alert Facility Change",
+      override val type: ScreenType = ScreenType.Modal
   ) : ScreenKey() {
-
-    override val analyticsName = "Alert Facility Change"
-
-    override val type = ScreenType.Modal
 
     override fun instantiateFragment() = AlertFacilityChangeSheet()
   }

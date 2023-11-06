@@ -209,8 +209,8 @@ class BloodSugarEntrySheet : BaseBottomSheet<
     context.injector<Injector>().inject(this)
   }
 
-  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-    super.onViewCreated(view, savedInstanceState)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
     setFragmentResultListener(RemoveBloodSugar) { _, result ->
       if (result is Succeeded) {
         onBloodSugarRemoved()

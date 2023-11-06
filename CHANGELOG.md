@@ -8,6 +8,7 @@
 - Update Dagger to v2.48.1
 - Migrate Dagger from KAPT to KSP
 - Bump AndroidX Preferences to v1.2.1
+- Setup fragment result listener in `onCreate` instead of `onViewCreated`
 
 ### Changes
 

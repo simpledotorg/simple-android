@@ -81,6 +81,9 @@
   <!-- Ignore Monochrome icon introduced in Android 12 -->
   <issue id="MonochromeLauncherIcon" severity="informational" />
 
+  <!-- Ignore using Material with Material3 Library -->
+  <issue id="UsingMaterialAndMaterial3Libraries" severity="ignore" />
+
   <!--
   Lint complains that the tag is not supported for generated images < api 24.
 

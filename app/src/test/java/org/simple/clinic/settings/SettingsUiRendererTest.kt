@@ -11,7 +11,10 @@ class SettingsUiRendererTest {
 
   private val ui = mock<SettingsUi>()
   private val renderer = SettingsUiRenderer(ui)
-  private val defaultModel = SettingsModel.default()
+  private val defaultModel = SettingsModel.default(
+      isChangeLanguageFeatureEnabled = true,
+      isLogoutUserFeatureEnabled = true
+  )
 
   @Test
   fun `when the user details are being fetched, do nothing`() {

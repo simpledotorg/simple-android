@@ -11,18 +11,22 @@ data class SettingsModel(
     val appVersion: String?,
     val isUpdateAvailable: Boolean?,
     val isUserLoggingOut: Boolean?,
-    val isDatabaseEncrypted: Boolean?
+    val isDatabaseEncrypted: Boolean?,
+    val isChangeLanguageFeatureEnabled: Boolean,
+    val isLogoutUserFeatureEnabled: Boolean,
 ) : Parcelable {
 
   companion object {
-    fun default() = SettingsModel(
+    fun default(isChangeLanguageFeatureEnabled: Boolean, isLogoutUserFeatureEnabled: Boolean) = SettingsModel(
         name = null,
         phoneNumber = null,
         currentLanguage = null,
         appVersion = null,
         isUpdateAvailable = null,
         isUserLoggingOut = null,
-        isDatabaseEncrypted = null
+        isDatabaseEncrypted = null,
+        isChangeLanguageFeatureEnabled = isChangeLanguageFeatureEnabled,
+        isLogoutUserFeatureEnabled = isLogoutUserFeatureEnabled
     )
   }
 

@@ -8,7 +8,10 @@ import org.junit.Test
 
 class SettingsInitTest {
 
-  private val defaultModel = SettingsModel.default()
+  private val defaultModel = SettingsModel.default(
+      isChangeLanguageFeatureEnabled = true,
+      isLogoutUserFeatureEnabled = true
+  )
 
   private val spec = InitSpec(SettingsInit())
 

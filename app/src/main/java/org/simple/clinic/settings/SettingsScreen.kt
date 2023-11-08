@@ -51,6 +51,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -123,6 +124,7 @@ class SettingsScreen : Fragment(), UiActions, HandlesBack {
         )
         settingsModel?.let {
           SettingsScreenContent(
+              modifier = Modifier.testTag("SETTING_SCREEN_CONTENT"),
               model = it,
               navigationIconClick = { onBackPressed() },
               changeLanguageButtonClick = { viewModel.dispatchEvent(ChangeLanguage) },
@@ -223,6 +225,7 @@ fun SettingsScreenContent(
       // Scrim
       Box(
           modifier = Modifier
+              .testTag("SETTINGS_LOGGING_OUT_PROGRESS")
               .fillMaxSize()
               .background(Color.Black.copy(alpha = 0.32f))
               .pointerInput(Unit) { },
@@ -276,6 +279,7 @@ private fun SettingsList(
           title = stringResource(id = R.string.settings_name),
           content = {
             Text(
+                modifier = Modifier.testTag("SETTINGS_USER_NAME"),
                 text = model.name.orEmpty(),
                 style = SimpleTheme.typography.material.body1,
                 color = SimpleTheme.colors.material.onBackground
@@ -297,6 +301,7 @@ private fun SettingsList(
           title = stringResource(id = R.string.settings_number),
           content = {
             Text(
+                modifier = Modifier.testTag("SETTINGS_USER_PHONE_NUMBER"),
                 text = model.phoneNumber.orEmpty(),
                 style = SimpleTheme.typography.material.body1,
                 color = SimpleTheme.colors.material.onBackground
@@ -321,9 +326,11 @@ private fun SettingsList(
         }
 
         SettingItem(
+            modifier = Modifier.testTag("SETTINGS_ITEM_CHANGE_LANGUAGE"),
             title = stringResource(id = R.string.settings_language),
             content = {
               Text(
+                  modifier = Modifier.testTag("SETTINGS_LANGUAGE_CONTENT"),
                   text = languageContent,
                   style = SimpleTheme.typography.material.body1,
                   color = SimpleTheme.colors.material.onBackground
@@ -349,7 +356,10 @@ private fun SettingsList(
     item {
       val updateActionButton: (@Composable () -> Unit)? = if (model.isUpdateAvailable == true) {
         {
-          TextButton(onClick = updateButtonClick) {
+          TextButton(
+              modifier = Modifier.testTag("SETTINGS_APP_UPDATE_BUTTON"),
+              onClick = updateButtonClick
+          ) {
             Text(text = stringResource(id = R.string.settings_update).uppercase())
           }
         }
@@ -372,13 +382,16 @@ private fun SettingsList(
                   color = SimpleTheme.colors.material.onBackground
               )
 
-              Spacer(modifier = Modifier.requiredWidth(8.dp))
+              if (model.isDatabaseEncrypted == true) {
+                Spacer(modifier = Modifier.requiredWidth(8.dp))
 
-              Icon(
-                  imageVector = Icons.Filled.Lock,
-                  contentDescription = null,
-                  modifier = Modifier.requiredSize(16.dp)
-              )
+                Icon(
+                    imageVector = Icons.Filled.Lock,
+                    contentDescription = null,
+                    modifier = Modifier.requiredSize(16.dp)
+                        .testTag("SETTINGS_APP_SECURE")
+                )
+              }
             }
           },
           canShowDivider = false,
@@ -396,7 +409,8 @@ private fun SettingsList(
     if (model.isLogoutUserFeatureEnabled) {
       item {
         LogoutButton(
-            modifier = Modifier.padding(top = 16.dp),
+            modifier = Modifier.padding(top = 16.dp)
+                .testTag("SETTINGS_LOGOUT_BUTTON"),
             logout = logoutButtonClick
         )
       }
@@ -408,12 +422,13 @@ private fun SettingsList(
 private fun SettingItem(
     title: String,
     content: @Composable () -> Unit,
-    canShowDivider: Boolean = true,
     leading: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    canShowDivider: Boolean = true,
     action: (@Composable () -> Unit)? = null
 ) {
   Box(
-      modifier = Modifier
+      modifier = modifier
           .fillMaxWidth()
           .requiredHeightIn(min = 80.dp),
       contentAlignment = Alignment.Center

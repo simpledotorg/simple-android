@@ -207,7 +207,18 @@ fun SettingsScreenContent(
         modifier = modifier.fillMaxWidth(),
         backgroundColor = SimpleTheme.colors.material.surface,
         topBar = {
-          SettingsAppBar(navigationIconClick)
+          TopAppBar(
+              navigationIcon = {
+                IconButton(onClick = navigationIconClick) {
+                  Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
+                }
+              },
+              title = {
+                Text(
+                    text = stringResource(id = R.string.settings_title),
+                )
+              },
+          )
         }
     ) { paddingValues ->
       SettingsList(
@@ -233,22 +244,6 @@ fun SettingsScreenContent(
       }
     }
   }
-}
-
-@Composable
-private fun SettingsAppBar(goBack: () -> Unit) {
-  TopAppBar(
-      navigationIcon = {
-        IconButton(onClick = goBack) {
-          Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
-        }
-      },
-      title = {
-        Text(
-            text = stringResource(id = R.string.settings_title),
-        )
-      },
-  )
 }
 
 @Composable

@@ -26,7 +26,7 @@ class SettingsScreenTest {
     // given
     var state by mutableStateOf(defaultSettingsModel)
     composeRule.setContent {
-      SettingsScreenContent(
+      SettingsScreen(
           model = state,
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },
@@ -54,7 +54,7 @@ class SettingsScreenTest {
 
     val updatedModel = defaultSettingsModel.currentLanguageFetched(SystemDefaultLanguage)
     composeRule.setContent {
-      SettingsScreenContent(
+      SettingsScreen(
           model = updatedModel,
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },
@@ -74,7 +74,7 @@ class SettingsScreenTest {
     val language = ProvidedLanguage(displayName = "English", languageCode = "en-IN")
     val updatedModel = defaultSettingsModel.currentLanguageFetched(language)
     composeRule.setContent {
-      SettingsScreenContent(
+      SettingsScreen(
           model = updatedModel,
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },
@@ -93,7 +93,7 @@ class SettingsScreenTest {
     // given
     val updatedModel = defaultSettingsModel.checkedAppUpdate(isUpdateAvailable = true)
     composeRule.setContent {
-      SettingsScreenContent(
+      SettingsScreen(
           model = updatedModel,
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },
@@ -111,7 +111,7 @@ class SettingsScreenTest {
     // given
     val updatedModel = defaultSettingsModel.checkedAppUpdate(isUpdateAvailable = false)
     composeRule.setContent {
-      SettingsScreenContent(
+      SettingsScreen(
           model = updatedModel,
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },
@@ -129,7 +129,7 @@ class SettingsScreenTest {
     // given
     val updatedModel = defaultSettingsModel.userLoggingOut()
     composeRule.setContent {
-      SettingsScreenContent(
+      SettingsScreen(
           model = updatedModel,
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },
@@ -146,7 +146,7 @@ class SettingsScreenTest {
   fun whenUserIsNotLoggingOutThenShowProgressIndicator() {
     // given
     composeRule.setContent {
-      SettingsScreenContent(
+      SettingsScreen(
           model = defaultSettingsModel,
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },
@@ -164,7 +164,7 @@ class SettingsScreenTest {
     // given
     val updatedModel = defaultSettingsModel.databaseEncryptionStatusLoaded(isDatabaseEncrypted = true)
     composeRule.setContent {
-      SettingsScreenContent(
+      SettingsScreen(
           model = updatedModel,
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },
@@ -182,7 +182,7 @@ class SettingsScreenTest {
     // given
     val updatedModel = defaultSettingsModel.databaseEncryptionStatusLoaded(isDatabaseEncrypted = false)
     composeRule.setContent {
-      SettingsScreenContent(
+      SettingsScreen(
           model = updatedModel,
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },
@@ -202,7 +202,7 @@ class SettingsScreenTest {
         isLogoutUserFeatureEnabled = true
     )
     composeRule.setContent {
-      SettingsScreenContent(
+      SettingsScreen(
           model = model,
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },
@@ -222,7 +222,7 @@ class SettingsScreenTest {
         isLogoutUserFeatureEnabled = true
     )
     composeRule.setContent {
-      SettingsScreenContent(
+      SettingsScreen(
           model = model,
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },
@@ -242,7 +242,7 @@ class SettingsScreenTest {
         isLogoutUserFeatureEnabled = false
     )
     composeRule.setContent {
-      SettingsScreenContent(
+      SettingsScreen(
           model = model,
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },
@@ -262,7 +262,7 @@ class SettingsScreenTest {
         isLogoutUserFeatureEnabled = true
     )
     composeRule.setContent {
-      SettingsScreenContent(
+      SettingsScreen(
           model = model,
           navigationIconClick = { /*no-op*/ },
           changeLanguageButtonClick = { /*no-op*/ },

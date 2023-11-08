@@ -45,4 +45,6 @@ dependencies {
   implementation(libs.kotlin.stdlib)
 
   implementation(projects.simplePlatform)
+  implementation(libs.androidx.viewmodel)
+  implementation(libs.androidx.viewmodel.savedstate)
 }

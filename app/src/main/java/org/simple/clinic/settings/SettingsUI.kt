@@ -116,14 +116,6 @@ private fun SettingsList(
     item {
       SettingItem(
           title = stringResource(id = R.string.settings_name),
-          content = {
-            Text(
-                modifier = Modifier.testTag("SETTINGS_USER_NAME"),
-                text = model.name.orEmpty(),
-                style = SimpleTheme.typography.material.body1,
-                color = SimpleTheme.colors.material.onBackground
-            )
-          },
           canShowDivider = true,
           leading = {
             Icon(
@@ -131,21 +123,20 @@ private fun SettingsList(
                 contentDescription = null
             )
           }
-      )
+      ) {
+        Text(
+            modifier = Modifier.testTag("SETTINGS_USER_NAME"),
+            text = model.name.orEmpty(),
+            style = SimpleTheme.typography.material.body1,
+            color = SimpleTheme.colors.material.onBackground
+        )
+      }
     }
 
     // Phone Number
     item {
       SettingItem(
           title = stringResource(id = R.string.settings_number),
-          content = {
-            Text(
-                modifier = Modifier.testTag("SETTINGS_USER_PHONE_NUMBER"),
-                text = model.phoneNumber.orEmpty(),
-                style = SimpleTheme.typography.material.body1,
-                color = SimpleTheme.colors.material.onBackground
-            )
-          },
           canShowDivider = true,
           leading = {
             Icon(
@@ -153,7 +144,14 @@ private fun SettingsList(
                 contentDescription = null
             )
           }
-      )
+      ) {
+        Text(
+            modifier = Modifier.testTag("SETTINGS_USER_PHONE_NUMBER"),
+            text = model.phoneNumber.orEmpty(),
+            style = SimpleTheme.typography.material.body1,
+            color = SimpleTheme.colors.material.onBackground
+        )
+      }
     }
 
     // Language
@@ -168,14 +166,6 @@ private fun SettingsList(
             modifier = Modifier.testTag("SETTINGS_ITEM_CHANGE_LANGUAGE"),
             title = stringResource(id = R.string.settings_language),
             contentPadding = PaddingValues(start = 16.dp),
-            content = {
-              Text(
-                  modifier = Modifier.testTag("SETTINGS_LANGUAGE_CONTENT"),
-                  text = languageContent,
-                  style = SimpleTheme.typography.material.body1,
-                  color = SimpleTheme.colors.material.onBackground
-              )
-            },
             canShowDivider = true,
             leading = {
               Icon(
@@ -191,7 +181,14 @@ private fun SettingsList(
                 Text(text = stringResource(id = R.string.settings_change).uppercase())
               }
             }
-        )
+        ) {
+          Text(
+              modifier = Modifier.testTag("SETTINGS_LANGUAGE_CONTENT"),
+              text = languageContent,
+              style = SimpleTheme.typography.material.body1,
+              color = SimpleTheme.colors.material.onBackground
+          )
+        }
       }
     }
 
@@ -215,32 +212,6 @@ private fun SettingsList(
       SettingItem(
           title = stringResource(id = R.string.settings_software),
           contentPadding = PaddingValues(start = 16.dp),
-          content = {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-              Text(
-                  text = stringResource(
-                      id = R.string.settings_software_version,
-                      model.appVersion.orEmpty()
-                  ),
-                  style = SimpleTheme.typography.material.body1,
-                  color = SimpleTheme.colors.material.onBackground
-              )
-
-              if (model.isDatabaseEncrypted == true) {
-                Spacer(modifier = Modifier.requiredWidth(8.dp))
-
-                Icon(
-                    imageVector = Icons.Filled.Lock,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .requiredSize(16.dp)
-                        .testTag("SETTINGS_APP_SECURE")
-                )
-              }
-            }
-          },
           canShowDivider = false,
           leading = {
             Icon(
@@ -249,7 +220,32 @@ private fun SettingsList(
             )
           },
           action = updateActionButton
-      )
+      ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+          Text(
+              text = stringResource(
+                  id = R.string.settings_software_version,
+                  model.appVersion.orEmpty()
+              ),
+              style = SimpleTheme.typography.material.body1,
+              color = SimpleTheme.colors.material.onBackground
+          )
+
+          if (model.isDatabaseEncrypted == true) {
+            Spacer(modifier = Modifier.requiredWidth(8.dp))
+
+            Icon(
+                imageVector = Icons.Filled.Lock,
+                contentDescription = null,
+                modifier = Modifier
+                    .requiredSize(16.dp)
+                    .testTag("SETTINGS_APP_SECURE")
+            )
+          }
+        }
+      }
     }
 
     // Logout
@@ -269,12 +265,12 @@ private fun SettingsList(
 @Composable
 private fun SettingItem(
     title: String,
-    content: @Composable () -> Unit,
     leading: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     canShowDivider: Boolean = true,
     action: (@Composable () -> Unit)? = null,
-    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp)
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp),
+    content: @Composable () -> Unit,
 ) {
   Box(
       modifier = modifier
@@ -361,18 +357,17 @@ private fun SettingItemPreview() {
   SimpleTheme {
     SettingItem(
         title = stringResource(id = R.string.settings_name),
-        content = {
-          Text(
-              text = previewSettingsModel.name.orEmpty(),
-              style = SimpleTheme.typography.material.body1,
-              color = SimpleTheme.colors.material.onBackground
-          )
-        },
         canShowDivider = true,
         leading = {
           Icon(imageVector = Icons.Filled.AccountCircle, contentDescription = null)
         }
-    )
+    ) {
+      Text(
+          text = previewSettingsModel.name.orEmpty(),
+          style = SimpleTheme.typography.material.body1,
+          color = SimpleTheme.colors.material.onBackground
+      )
+    }
   }
 }
 

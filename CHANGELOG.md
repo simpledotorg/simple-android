@@ -9,6 +9,7 @@
 - Migrate Dagger from KAPT to KSP
 - Bump AndroidX Preferences to v1.2.1
 - Setup fragment result listener in `onCreate` instead of `onViewCreated`
+- Report last key name when removing last key fails in `History`
 
 ### Changes
 

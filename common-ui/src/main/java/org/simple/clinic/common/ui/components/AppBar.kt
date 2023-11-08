@@ -70,7 +70,7 @@ private fun TopAppBarPreview() {
   SimpleTheme {
     TopAppBar(
         navigationIcon = {
-          IconButton(onClick = { /*TODO*/ }) {
+          IconButton(onClick = { /*no-op*/ }) {
             Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
           }
         },
@@ -87,7 +87,7 @@ private fun TopAppBarWithActionsPreview() {
   SimpleTheme {
     TopAppBar(
         navigationIcon = {
-          IconButton(onClick = { /*TODO*/ }) {
+          IconButton(onClick = { /*no-op*/ }) {
             Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
           }
         },
@@ -95,10 +95,10 @@ private fun TopAppBarWithActionsPreview() {
           Text(text = "Title")
         },
         actions = {
-          IconButton(onClick = { /*TODO*/ }) {
+          IconButton(onClick = { /*no-op*/ }) {
             Icon(imageVector = Icons.Filled.Search, contentDescription = null)
           }
-          IconButton(onClick = { /*TODO*/ }) {
+          IconButton(onClick = { /*no-op*/ }) {
             Icon(imageVector = Icons.Filled.MoreVert, contentDescription = null)
           }
         }

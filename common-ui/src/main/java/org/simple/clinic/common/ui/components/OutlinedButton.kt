@@ -67,7 +67,7 @@ private fun OutlinedButtonPreview() {
   SimpleTheme {
     OutlinedButton(
         modifier = Modifier.fillMaxWidth(),
-        onClick = { /*TODO*/ }
+        onClick = { /*no-op*/ }
     ) {
       Text(text = "BUTTON")
     }
@@ -81,7 +81,7 @@ private fun OutlinedButtonBigPreview() {
     OutlinedButton(
         modifier = Modifier.fillMaxWidth(),
         buttonSize = ButtonSize.Big,
-        onClick = { /*TODO*/ }
+        onClick = { /*no-op*/ }
     ) {
       Text(text = "BUTTON")
     }
@@ -94,7 +94,7 @@ private fun OutlinedButtonWithDifferentThemePreview() {
   SimpleRedTheme {
     OutlinedButton(
         modifier = Modifier.fillMaxWidth(),
-        onClick = { /*TODO*/ }
+        onClick = { /*no-op*/ }
     ) {
       Text(text = "BUTTON")
     }
@@ -110,7 +110,7 @@ private fun OutlinedButtonWithIconPreview() {
         icon = {
           Icon(imageVector = Icons.Filled.Add, contentDescription = null)
         },
-        onClick = { /*TODO*/ }
+        onClick = { /*no-op*/ }
     ) {
       Text(text = "BUTTON")
     }

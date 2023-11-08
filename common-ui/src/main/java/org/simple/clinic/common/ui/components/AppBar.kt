@@ -44,7 +44,7 @@ fun TopAppBar(
           verticalAlignment = Alignment.CenterVertically
       ) {
         navigationIcon()
-        Spacer(modifier = Modifier.requiredWidth(16.dp))
+        Spacer(modifier = Modifier.requiredWidth(4.dp))
         Box(modifier = Modifier.weight(1f)) {
           ProvideTextStyle(value = SimpleTheme.typography.material.h6) {
             title()

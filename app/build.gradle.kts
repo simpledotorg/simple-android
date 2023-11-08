@@ -499,6 +499,9 @@ dependencies {
 
   androidTestImplementation(projects.sharedTestCode)
 
+  androidTestImplementation(libs.androidx.compose.test.junit)
+  debugImplementation(libs.androidx.compose.test.manifest)
+
   /**
    * Misc
    */

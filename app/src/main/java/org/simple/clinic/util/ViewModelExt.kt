@@ -12,7 +12,6 @@ import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.mobius.MobiusBaseViewModel
-import timber.log.Timber
 
 fun <M : Parcelable, E, F, V> Fragment.mobiusViewModels(
     defaultModel: () -> M,

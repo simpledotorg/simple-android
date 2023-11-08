@@ -36,7 +36,6 @@ class MobiusBaseViewModel<M : Parcelable, E, F, V>(
   private val modelsObserver = Observer<M> {
     val currentSavedModel = savedStateHandle.get<M>(modelKey)
     if (currentSavedModel != it) {
-      Timber.d("Updating state: $it")
       savedStateHandle[modelKey] = it
     }
   }

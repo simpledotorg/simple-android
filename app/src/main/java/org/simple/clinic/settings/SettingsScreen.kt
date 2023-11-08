@@ -33,7 +33,6 @@ import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
@@ -60,6 +59,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.PLAY_STORE_URL_FOR_SIMPLE
 import org.simple.clinic.R
+import org.simple.clinic.common.ui.components.TopAppBar
 import org.simple.clinic.common.ui.theme.SimpleRedTheme
 import org.simple.clinic.common.ui.theme.SimpleTheme
 import org.simple.clinic.di.injector
@@ -240,24 +240,17 @@ fun SettingsScreenContent(
 @Composable
 private fun SettingsAppBar(goBack: () -> Unit) {
   TopAppBar(
-      backgroundColor = SimpleTheme.colors.toolbarPrimary,
-      contentColor = SimpleTheme.colors.onToolbarPrimary
-  ) {
-    CompositionLocalProvider(LocalContentAlpha provides 1.0f) {
-      Row(
-          verticalAlignment = Alignment.CenterVertically
-      ) {
+      navigationIcon = {
         IconButton(onClick = goBack) {
           Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
         }
-        Spacer(modifier = Modifier.requiredWidth(16.dp))
+      },
+      title = {
         Text(
             text = stringResource(id = R.string.settings_title),
-            style = SimpleTheme.typography.material.h6
         )
-      }
-    }
-  }
+      },
+  )
 }
 
 @Composable
@@ -388,7 +381,8 @@ private fun SettingsList(
                 Icon(
                     imageVector = Icons.Filled.Lock,
                     contentDescription = null,
-                    modifier = Modifier.requiredSize(16.dp)
+                    modifier = Modifier
+                        .requiredSize(16.dp)
                         .testTag("SETTINGS_APP_SECURE")
                 )
               }
@@ -409,7 +403,8 @@ private fun SettingsList(
     if (model.isLogoutUserFeatureEnabled) {
       item {
         LogoutButton(
-            modifier = Modifier.padding(top = 16.dp)
+            modifier = Modifier
+                .padding(top = 16.dp)
                 .testTag("SETTINGS_LOGOUT_BUTTON"),
             logout = logoutButtonClick
         )

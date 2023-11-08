@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,7 +17,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.requiredHeightIn
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.requiredWidth
@@ -29,7 +27,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.LocalContentColor
-import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -59,6 +56,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.PLAY_STORE_URL_FOR_SIMPLE
 import org.simple.clinic.R
+import org.simple.clinic.common.ui.components.OutlinedButton
 import org.simple.clinic.common.ui.components.TopAppBar
 import org.simple.clinic.common.ui.theme.SimpleRedTheme
 import org.simple.clinic.common.ui.theme.SimpleTheme
@@ -481,12 +479,7 @@ private fun LogoutButton(
           onClick = logout,
           modifier = Modifier
               .fillMaxWidth()
-              .requiredHeight(48.dp)
               .padding(horizontal = 16.dp),
-          border = BorderStroke(
-              width = 1.dp,
-              color = SimpleTheme.colors.material.primary
-          )
       ) {
         Text(text = stringResource(id = R.string.settings_logout).uppercase())
       }

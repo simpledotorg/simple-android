@@ -411,10 +411,6 @@
 
   <!-- Settings -->
   <string name="settings_title">ಸೆಟ್ಟಿಂಗ್‌ಗಳು</string>
-  <string name="settings_user_name_icon_content">ಬಳಕೆದಾರರ ಹೆಸರಿನ ಐಕಾನ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು</string>
-  <string name="settings_user_phone_icon_content">ಬಳಕೆದಾರರ ಫೋನ್ ನಂಬರ್ ಐಕಾನ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು</string>
-  <string name="settings_current_language_icon_content">ಪ್ರಸ್ತುತ ಭಾಷೆಯ ಐಕಾನ್ ಸೆಟ್ಟಿಂಗ್‌ಗಳು</string>
-  <string name="settings_app_version_icon_content">ಸೆಟ್ಟಿಂಗ್‌ಗಳ ಆ್ಯಪ್ ಆವೃತ್ತಿ ಐಕಾನ್</string>
   <string name="settings_name">ಹೆಸರು</string>
   <string name="settings_number">ಫೋನ್ ಸಂಖ್ಯೆ</string>
   <string name="settings_language">ಭಾಷೆ</string>

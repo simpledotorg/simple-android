@@ -411,10 +411,6 @@
 
   <!-- Settings -->
   <string name="settings_title">Setinka</string>
-  <string name="settings_user_name_icon_content">Magaca Astaanta adeesadaha  setinka</string>
-  <string name="settings_user_phone_icon_content">Lambarka telefoonka Astaanta adeesadaha setinka</string>
-  <string name="settings_current_language_icon_content">Luuqada astaanta setinka ee hadda</string>
-  <string name="settings_app_version_icon_content">Nooca astaanta setinka app ka</string>
   <string name="settings_name">Magaca</string>
   <string name="settings_number">Lambarka telefoonka</string>
   <string name="settings_language">Luuqada</string>

@@ -31,10 +31,6 @@
 
   <dimen name="registrationfacilities_header_top_spacing_with_previous_section">0dp</dimen>
 
-  <dimen name="settings_section_top_margin">19dp</dimen>
-  <dimen name="settings_content_top_margin">3dp</dimen>
-  <dimen name="settings_divider_top_margin">18dp</dimen>
-
   <dimen name="patientsummary_bp_summary_item_container_bottom_padding_24">24dp</dimen>
   <dimen name="patientsummary_bp_summary_item_container_bottom_padding_8">8dp</dimen>
 

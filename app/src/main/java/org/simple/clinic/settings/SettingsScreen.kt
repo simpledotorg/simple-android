@@ -319,6 +319,7 @@ private fun SettingsList(
         SettingItem(
             modifier = Modifier.testTag("SETTINGS_ITEM_CHANGE_LANGUAGE"),
             title = stringResource(id = R.string.settings_language),
+            contentPadding = PaddingValues(start = 16.dp),
             content = {
               Text(
                   modifier = Modifier.testTag("SETTINGS_LANGUAGE_CONTENT"),
@@ -335,7 +336,10 @@ private fun SettingsList(
               )
             },
             action = {
-              TextButton(onClick = changeLanguageButtonClick) {
+              TextButton(
+                  modifier = Modifier.padding(end = 8.dp),
+                  onClick = changeLanguageButtonClick
+              ) {
                 Text(text = stringResource(id = R.string.settings_change).uppercase())
               }
             }
@@ -348,7 +352,9 @@ private fun SettingsList(
       val updateActionButton: (@Composable () -> Unit)? = if (model.isUpdateAvailable == true) {
         {
           TextButton(
-              modifier = Modifier.testTag("SETTINGS_APP_UPDATE_BUTTON"),
+              modifier = Modifier
+                  .testTag("SETTINGS_APP_UPDATE_BUTTON")
+                  .padding(end = 8.dp),
               onClick = updateButtonClick
           ) {
             Text(text = stringResource(id = R.string.settings_update).uppercase())
@@ -360,6 +366,7 @@ private fun SettingsList(
 
       SettingItem(
           title = stringResource(id = R.string.settings_software),
+          contentPadding = PaddingValues(start = 16.dp),
           content = {
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -418,7 +425,8 @@ private fun SettingItem(
     leading: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     canShowDivider: Boolean = true,
-    action: (@Composable () -> Unit)? = null
+    action: (@Composable () -> Unit)? = null,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp)
 ) {
   Box(
       modifier = modifier
@@ -429,7 +437,7 @@ private fun SettingItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .padding(contentPadding),
         verticalAlignment = Alignment.CenterVertically
     ) {
       CompositionLocalProvider(

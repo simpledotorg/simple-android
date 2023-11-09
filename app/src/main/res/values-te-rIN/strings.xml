@@ -411,10 +411,6 @@
 
   <!-- Settings -->
   <string name="settings_title">సెట్టింగ్‌లు</string>
-  <string name="settings_user_name_icon_content">వినియోగదారు పేరు చిహ్నం సెట్ చేస్తోంది</string>
-  <string name="settings_user_phone_icon_content">వినియోగదారు ఫోన్ నంబర్ చిహ్నం సెట్ చేస్తోంది</string>
-  <string name="settings_current_language_icon_content">ప్రస్తుత భాష చిహ్నం సెట్ చేస్తోంది</string>
-  <string name="settings_app_version_icon_content">సెట్టింగ్‌ల అప్లికేషన్ వెర్షన్ చిహ్నం</string>
   <string name="settings_name">పేరు</string>
   <string name="settings_number">ఫోన్ నంబర్</string>
   <string name="settings_language">భాష</string>

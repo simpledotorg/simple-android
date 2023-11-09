@@ -412,10 +412,6 @@
 
   <!-- Settings -->
   <string name="settings_title">Teessuma</string>
-  <string name="settings_user_name_icon_content">Ayikoonii teessoowwan maqaa fayyadamaa</string>
-  <string name="settings_user_phone_icon_content">Ayikoonii teessoowwan lakkoofsa bilbilaa fayyadamaa</string>
-  <string name="settings_current_language_icon_content">Ayikoonii teessoowwan afaan ammaa</string>
-  <string name="settings_app_version_icon_content">Sajoo fayyadama fooyya’aa qindeessituu</string>
   <string name="settings_name">Maqaa</string>
   <string name="settings_number">Lakkoofsa bilbilaa</string>
   <string name="settings_language">Afaan</string>

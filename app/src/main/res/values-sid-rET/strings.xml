@@ -411,10 +411,6 @@
 
   <!-- Settings -->
   <string name="settings_title">Qinessa</string>
-  <string name="settings_user_name_icon_content">Tene Qinessa horosirano  manichi su’mi</string>
-  <string name="settings_user_phone_icon_content">Tene Qinessa horosirano  manichi bilibilu kiro</string>
-  <string name="settings_current_language_icon_content">Xaa s Qinessa horonisirate ana noo qaali</string>
-  <string name="settings_app_version_icon_content">Qinessate horonisani horonisiranicho woyesi</string>
   <string name="settings_name">Su’ma</string>
   <string name="settings_number">Bilibilu kiro</string>
   <string name="settings_language">Qaale</string>

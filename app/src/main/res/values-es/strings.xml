@@ -411,10 +411,6 @@
 
   <!-- Settings -->
   <string name="settings_title">Ajustes</string>
-  <string name="settings_user_name_icon_content">Icono de nombre de usuario en ajustes</string>
-  <string name="settings_user_phone_icon_content">Icono de número telefónico de usuario en ajustes</string>
-  <string name="settings_current_language_icon_content">Icono de idioma elegido en ajustes</string>
-  <string name="settings_app_version_icon_content">Icono de versión de aplicación en ajustes</string>
   <string name="settings_name">Nombre</string>
   <string name="settings_number">Teléfono</string>
   <string name="settings_language">Idioma</string>

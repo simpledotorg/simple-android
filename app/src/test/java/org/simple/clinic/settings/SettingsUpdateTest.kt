@@ -12,7 +12,10 @@ import org.simple.clinic.user.UserSession.LogoutResult.Success
 
 class SettingsUpdateTest {
 
-  private val defaultModel = SettingsModel.default()
+  private val defaultModel = SettingsModel.default(
+      isChangeLanguageFeatureEnabled = true,
+      isLogoutUserFeatureEnabled = true
+  )
 
   private val spec = UpdateSpec<SettingsModel, SettingsEvent, SettingsEffect>(SettingsUpdate())
 

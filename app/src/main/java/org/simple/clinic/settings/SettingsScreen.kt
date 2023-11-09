@@ -70,12 +70,7 @@ class SettingsScreen : Fragment(), UiActions, HandlesBack {
     return ComposeView(requireContext()).apply {
       setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
       setContent {
-        val settingsModel by viewModel.models.observeAsState(
-            initial = SettingsModel.default(
-                isChangeLanguageFeatureEnabled = isChangeLanguageFeatureEnabled,
-                isLogoutUserFeatureEnabled = isLogoutUserFeatureEnabled
-            )
-        )
+        val settingsModel by viewModel.models.observeAsState()
         settingsModel?.let {
           SettingsScreen(
               model = it,

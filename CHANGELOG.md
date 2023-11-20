@@ -10,8 +10,8 @@
 - Bump AndroidX Preferences to v1.2.1
 - Setup fragment result listener in `onCreate` instead of `onViewCreated`
 - Report last key name when removing last key fails in `History`
-- Bump AGP to v8.1.3
 - Migrate settings screen to use Compose UI
+- Bump AGP to v8.1.4
 
 ### Changes
 

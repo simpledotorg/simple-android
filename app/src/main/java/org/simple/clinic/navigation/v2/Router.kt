@@ -90,9 +90,14 @@ class Router(
   }
 
   fun replaceTop(screenKey: ScreenKey, transactionOptions: TransactionOptions? = null) {
+    val navRequest = Normal(screenKey)
+    if (history.matchesTop(navRequest)) {
+      return
+    }
+
     val newHistory = history
         .removeLast()
-        .add(Normal(screenKey))
+        .add(navRequest)
 
     executeStateChange(newHistory, Direction.Replace, null, transactionOptions)
   }
@@ -102,9 +107,14 @@ class Router(
       screenKey: ScreenKey,
       transactionOptions: TransactionOptions? = null
   ) {
+    val navRequest = ExpectingResult(requestType, screenKey)
+    if (history.matchesTop(navRequest)) {
+      return
+    }
+
     val newHistory = history
         .removeLast()
-        .add(ExpectingResult(requestType, screenKey))
+        .add(navRequest)
 
     executeStateChange(newHistory, Direction.Forward, null, transactionOptions)
   }

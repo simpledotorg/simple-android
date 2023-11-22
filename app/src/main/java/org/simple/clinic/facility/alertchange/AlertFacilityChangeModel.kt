@@ -4,4 +4,18 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-class AlertFacilityChangeModel : Parcelable
+data class AlertFacilityChangeModel(
+    val isFacilityChanged: Boolean
+) : Parcelable {
+
+  companion object {
+
+    fun default() = AlertFacilityChangeModel(
+        isFacilityChanged = false
+    )
+  }
+
+  fun updateIsFacilityChanged(isFacilityChanged: Boolean) = copy(
+      isFacilityChanged = isFacilityChanged
+  )
+}

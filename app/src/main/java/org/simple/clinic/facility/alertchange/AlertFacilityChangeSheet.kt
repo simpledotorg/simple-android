@@ -53,7 +53,7 @@ class AlertFacilityChangeSheet :
   @Inject
   lateinit var router: Router
 
-  override fun defaultModel() = AlertFacilityChangeModel()
+  override fun defaultModel() = AlertFacilityChangeModel.default()
 
   override fun uiRenderer(): ViewRenderer<AlertFacilityChangeModel> {
     return object : ViewRenderer<AlertFacilityChangeModel> {

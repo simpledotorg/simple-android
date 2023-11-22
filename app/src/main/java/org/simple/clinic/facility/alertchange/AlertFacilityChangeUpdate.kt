@@ -4,6 +4,7 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Update
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeEffect.MarkFacilityChangedAsFalse
+import org.simple.clinic.facility.alertchange.AlertFacilityChangeEvent.FacilityChanged
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeEvent.FacilityChangedMarkedAsFalse
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeEvent.IsFacilityChangedStatusLoaded
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeEvent.YesButtonClicked
@@ -17,6 +18,7 @@ class AlertFacilityChangeUpdate : Update<AlertFacilityChangeModel, AlertFacility
       is IsFacilityChangedStatusLoaded -> isFacilityChangeStatusLoaded(event, model)
       FacilityChangedMarkedAsFalse -> dispatch(CloseSheetWithContinuation)
       YesButtonClicked -> dispatch(MarkFacilityChangedAsFalse)
+      FacilityChanged -> dispatch(MarkFacilityChangedAsFalse)
     }
   }
 

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Next Release
+
+### Fixes
+
+- Fix app crashing when trying to replacing the last screen during navigation
+
 ## 2023-11-20-8926
 
 ### Internal

@@ -2,7 +2,9 @@ package org.simple.clinic.facility.alertchange
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.facility.alertchange.AlertFacilityChangeEvent.FacilityChangedMarkedAsFalse
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeEvent.IsFacilityChangedStatusLoaded
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeViewEffect.CloseSheetWithContinuation
 
@@ -11,6 +13,7 @@ class AlertFacilityChangeUpdate : Update<AlertFacilityChangeModel, AlertFacility
   override fun update(model: AlertFacilityChangeModel, event: AlertFacilityChangeEvent): Next<AlertFacilityChangeModel, AlertFacilityChangeEffect> {
     return when (event) {
       is IsFacilityChangedStatusLoaded -> isFacilityChangeStatusLoaded(event, model)
+      FacilityChangedMarkedAsFalse -> noChange()
     }
   }
 

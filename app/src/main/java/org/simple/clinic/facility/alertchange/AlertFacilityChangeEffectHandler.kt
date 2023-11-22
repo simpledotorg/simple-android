@@ -8,6 +8,8 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeEffect.LoadIsFacilityChangedStatus
+import org.simple.clinic.facility.alertchange.AlertFacilityChangeEffect.MarkFacilityChangedAsFalse
+import org.simple.clinic.facility.alertchange.AlertFacilityChangeEvent.FacilityChangedMarkedAsFalse
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeEvent.IsFacilityChangedStatusLoaded
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import javax.inject.Named
@@ -28,8 +30,18 @@ class AlertFacilityChangeEffectHandler @AssistedInject constructor(
     return RxMobius
         .subtypeEffectHandler<AlertFacilityChangeEffect, AlertFacilityChangeEvent>()
         .addTransformer(LoadIsFacilityChangedStatus::class.java, loadFacilityChangedStatus())
+        .addTransformer(MarkFacilityChangedAsFalse::class.java, markFacilityChangedAsFalse())
         .addConsumer(AlertFacilityChangeViewEffect::class.java, viewEffectsConsumer::accept)
         .build()
+  }
+
+  private fun markFacilityChangedAsFalse(): ObservableTransformer<MarkFacilityChangedAsFalse, AlertFacilityChangeEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { isFacilitySwitchedPreference.set(false) }
+          .map { FacilityChangedMarkedAsFalse }
+    }
   }
 
   private fun loadFacilityChangedStatus(): ObservableTransformer<LoadIsFacilityChangedStatus, AlertFacilityChangeEvent> {

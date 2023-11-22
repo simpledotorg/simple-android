@@ -35,7 +35,7 @@ class AlertFacilityChangeSheet :
         AlertFacilityChangeModel,
         AlertFacilityChangeEvent,
         AlertFacilityChangeEffect,
-        Unit>() {
+        AlertFacilityChangeViewEffect>() {
 
   @Inject
   lateinit var locale: Locale

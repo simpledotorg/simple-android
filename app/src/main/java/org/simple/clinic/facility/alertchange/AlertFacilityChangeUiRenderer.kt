@@ -9,6 +9,8 @@ class AlertFacilityChangeUiRenderer(
   override fun render(model: AlertFacilityChangeModel) {
     if (model.isFacilityChanged) {
       ui.showFacilityChangeAlert()
+    } else {
+      ui.hideFacilityChangeAlert()
     }
   }
 }

@@ -22,4 +22,18 @@ class AlertFacilityChangeUiRendererTest {
     // then
     verify(ui).showFacilityChangeAlert()
   }
+
+  @Test
+  fun `when facility is not changed, then hide facility change alert`() {
+    // given
+    val model = AlertFacilityChangeModel
+        .default()
+        .updateIsFacilityChanged(isFacilityChanged = false)
+
+    // when
+    uiRenderer.render(model)
+
+    // then
+    verify(ui).hideFacilityChangeAlert()
+  }
 }

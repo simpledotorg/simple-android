@@ -7,20 +7,23 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.facility.alertchange.AlertFacilityChangeEffect.MarkFacilityChangedAsFalse
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeEvent.IsFacilityChangedStatusLoaded
+import org.simple.clinic.facility.alertchange.AlertFacilityChangeEvent.YesButtonClicked
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeViewEffect.CloseSheetWithContinuation
 
 class AlertFacilityChangeUpdateTest {
 
+  private val defaultModel = AlertFacilityChangeModel.default()
+  private val updateSpec = UpdateSpec(AlertFacilityChangeUpdate())
+
   @Test
   fun `when facility changed status is loaded and facility is changed, then update model`() {
-    val model = AlertFacilityChangeModel.default()
-
-    UpdateSpec(AlertFacilityChangeUpdate())
-        .given(model)
+    updateSpec
+        .given(defaultModel)
         .whenEvent(IsFacilityChangedStatusLoaded(isFacilityChanged = true))
         .then(assertThatNext(
-            hasModel(model.copy(isFacilityChanged = true)),
+            hasModel(defaultModel.copy(isFacilityChanged = true)),
             hasNoEffects()
         ))
   }
@@ -29,12 +32,25 @@ class AlertFacilityChangeUpdateTest {
   fun `when facility changed status is loaded and facility is not changed, then update model and close sheet`() {
     val model = AlertFacilityChangeModel.default()
 
-    UpdateSpec(AlertFacilityChangeUpdate())
-        .given(model)
+    updateSpec
+        .given(defaultModel)
         .whenEvent(IsFacilityChangedStatusLoaded(isFacilityChanged = false))
         .then(assertThatNext(
-            hasModel(model.copy(isFacilityChanged = false)),
+            hasModel(defaultModel.copy(isFacilityChanged = false)),
             hasEffects(CloseSheetWithContinuation)
+        ))
+  }
+
+  @Test
+  fun `when yes button is clicked, then mark facility changed as false`() {
+    val model = defaultModel.updateIsFacilityChanged(isFacilityChanged = true)
+
+    updateSpec
+        .given(model)
+        .whenEvent(YesButtonClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(MarkFacilityChangedAsFalse)
         ))
   }
 }

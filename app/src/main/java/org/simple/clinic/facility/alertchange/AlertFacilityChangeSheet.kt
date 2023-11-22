@@ -14,7 +14,6 @@ import org.simple.clinic.R
 import org.simple.clinic.databinding.SheetAlertFacilityChangeBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
-import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen_Old
 import org.simple.clinic.facility.change.FacilityChangeScreen
 import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.ViewRenderer
@@ -22,8 +21,6 @@ import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.Succeeded
-import org.simple.clinic.navigation.v2.compat.FullScreenKey
-import org.simple.clinic.navigation.v2.compat.wrap
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
 import org.simple.clinic.util.resolveFloat
 import org.simple.clinic.util.setFragmentResultListener
@@ -142,10 +139,6 @@ class AlertFacilityChangeSheet :
 
   private fun closeSheetWithContinuation() {
     when (continuation) {
-      is ContinueToScreen_Old -> {
-        val screenKey = (continuation as ContinueToScreen_Old).screenKey
-        router.replaceTop(screenKey.wrap())
-      }
       is ContinueToActivity -> {
         val (intent, requestCode) = (continuation as ContinueToActivity).run {
           intent to requestCode
@@ -190,9 +183,6 @@ class AlertFacilityChangeSheet :
 }
 
 sealed class Continuation : Parcelable {
-
-  @Parcelize
-  data class ContinueToScreen_Old(val screenKey: FullScreenKey) : Continuation()
 
   @Parcelize
   data class ContinueToScreen(val screenKey: ScreenKey) : Continuation()

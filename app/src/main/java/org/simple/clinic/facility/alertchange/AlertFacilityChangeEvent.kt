@@ -1,3 +1,5 @@
 package org.simple.clinic.facility.alertchange
 
-sealed class AlertFacilityChangeEvent
+sealed interface AlertFacilityChangeEvent {
+  data class IsFacilityChangedStatusLoaded(val isFacilityChanged: Boolean) : AlertFacilityChangeEvent
+}

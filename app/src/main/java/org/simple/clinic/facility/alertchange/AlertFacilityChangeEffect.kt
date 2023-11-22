@@ -1,3 +1,5 @@
 package org.simple.clinic.facility.alertchange
 
-sealed class AlertFacilityChangeEffect
+sealed interface AlertFacilityChangeEffect {
+  data object LoadIsFacilityChangedStatus : AlertFacilityChangeEffect
+}

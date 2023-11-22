@@ -8,6 +8,7 @@ import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeEffect.MarkFacilityChangedAsFalse
+import org.simple.clinic.facility.alertchange.AlertFacilityChangeEvent.FacilityChangedMarkedAsFalse
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeEvent.IsFacilityChangedStatusLoaded
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeEvent.YesButtonClicked
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeViewEffect.CloseSheetWithContinuation
@@ -51,6 +52,19 @@ class AlertFacilityChangeUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(MarkFacilityChangedAsFalse)
+        ))
+  }
+
+  @Test
+  fun `when facility changed status is marked as false, then close sheet`() {
+    val model = defaultModel.updateIsFacilityChanged(isFacilityChanged = true)
+
+    updateSpec
+        .given(model)
+        .whenEvent(FacilityChangedMarkedAsFalse)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CloseSheetWithContinuation)
         ))
   }
 }

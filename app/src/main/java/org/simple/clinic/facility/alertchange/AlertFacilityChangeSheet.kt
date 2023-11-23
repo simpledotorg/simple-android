@@ -8,15 +8,21 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.f2prateek.rx.preferences2.Preference
+import com.jakewharton.rxbinding3.view.clicks
+import com.spotify.mobius.functions.Consumer
+import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
+import io.reactivex.subjects.PublishSubject
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetAlertFacilityChangeBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.facility.alertchange.AlertFacilityChangeEvent.FacilityChanged
+import org.simple.clinic.facility.alertchange.AlertFacilityChangeEvent.YesButtonClicked
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
 import org.simple.clinic.facility.change.FacilityChangeScreen
 import org.simple.clinic.feature.Features
-import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.ScreenResultBus
@@ -26,23 +32,17 @@ import org.simple.clinic.util.resolveFloat
 import org.simple.clinic.util.setFragmentResultListener
 import java.util.Locale
 import javax.inject.Inject
-import javax.inject.Named
 
-class AlertFacilityChangeSheet :
-    BaseBottomSheet<
-        AlertFacilityChangeSheet.Key,
-        SheetAlertFacilityChangeBinding,
-        AlertFacilityChangeModel,
-        AlertFacilityChangeEvent,
-        AlertFacilityChangeEffect,
-        Unit>() {
+class AlertFacilityChangeSheet : BaseBottomSheet<
+    AlertFacilityChangeSheet.Key,
+    SheetAlertFacilityChangeBinding,
+    AlertFacilityChangeModel,
+    AlertFacilityChangeEvent,
+    AlertFacilityChangeEffect,
+    AlertFacilityChangeViewEffect>(), AlertFacilityChangeUi, UiActions {
 
   @Inject
   lateinit var locale: Locale
-
-  @Inject
-  @Named("is_facility_switched")
-  lateinit var isFacilitySwitchedPreference: Preference<Boolean>
 
   @Inject
   lateinit var features: Features
@@ -53,24 +53,11 @@ class AlertFacilityChangeSheet :
   @Inject
   lateinit var router: Router
 
-  override fun defaultModel() = AlertFacilityChangeModel()
-
-  override fun uiRenderer(): ViewRenderer<AlertFacilityChangeModel> {
-    return object : ViewRenderer<AlertFacilityChangeModel> {
-      override fun render(model: AlertFacilityChangeModel) {
-        // Nothing to render here
-      }
-    }
-  }
-
-  override fun bindView(inflater: LayoutInflater, container: ViewGroup?) =
-      SheetAlertFacilityChangeBinding.inflate(inflater, container, false)
+  @Inject
+  lateinit var effectHandlerFactory: AlertFacilityChangeEffectHandler.Factory
 
   private val currentFacilityName
     get() = screenKey.currentFacilityName
-
-  private val continuation
-    get() = screenKey.continuation
 
   private val rootView
     get() = binding.root
@@ -84,6 +71,32 @@ class AlertFacilityChangeSheet :
   private val changeButton
     get() = binding.changeButton
 
+  private val hotEvents = PublishSubject.create<AlertFacilityChangeEvent>()
+
+  override fun defaultModel() = AlertFacilityChangeModel.default()
+
+  override fun events(): Observable<AlertFacilityChangeEvent> = Observable.mergeArray(
+      yesButtonClicks(),
+      hotEvents
+  )
+      .compose(ReportAnalyticsEvents())
+      .cast()
+
+  override fun createInit() = AlertFacilityChangeInit()
+
+  override fun createUpdate() = AlertFacilityChangeUpdate()
+
+  override fun uiRenderer() = AlertFacilityChangeUiRenderer(this)
+
+  override fun createEffectHandler(viewEffectsConsumer: Consumer<AlertFacilityChangeViewEffect>) = effectHandlerFactory
+      .create(viewEffectsConsumer)
+      .build()
+
+  override fun viewEffectsHandler() = AlertFacilityChangeViewEffectHandler(this)
+
+  override fun bindView(inflater: LayoutInflater, container: ViewGroup?) =
+      SheetAlertFacilityChangeBinding.inflate(inflater, container, false)
+
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)
@@ -92,7 +105,7 @@ class AlertFacilityChangeSheet :
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setFragmentResultListener(ChangeCurrentFacility) { _, result ->
-      if (result is Succeeded) proceedToNextScreen()
+      if (result is Succeeded) hotEvents.onNext(FacilityChanged)
     }
   }
 
@@ -104,60 +117,49 @@ class AlertFacilityChangeSheet :
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+    facilityName.text = getString(R.string.alertfacilitychange_facility_name, currentFacilityName)
 
-    if (isFacilitySwitchedPreference.get().not()) {
-      rootView.postDelayed(::closeSheetWithContinuation, 100)
-    } else {
-      showDialogUi()
-
-      facilityName.text = getString(R.string.alertfacilitychange_facility_name, currentFacilityName)
-      yesButton.setOnClickListener {
-        proceedToNextScreen()
-      }
-
-      changeButton.setOnClickListener {
-        openFacilityChangeScreen()
-      }
+    changeButton.setOnClickListener {
+      openFacilityChangeScreen()
     }
   }
 
-  override fun onDestroyView() {
-    rootView.removeCallbacks(::closeSheetWithContinuation)
-    super.onDestroyView()
-  }
-
-  private fun showDialogUi() {
+  override fun showFacilityChangeAlert() {
     val backgroundDimAmount = requireContext().resolveFloat(android.R.attr.backgroundDimAmount)
     requireDialog().window!!.setDimAmount(backgroundDimAmount)
-    binding.root.visibility = View.VISIBLE
+    rootView.visibility = View.VISIBLE
   }
 
-  private fun proceedToNextScreen() {
-    isFacilitySwitchedPreference.set(false)
-    closeSheetWithContinuation()
+  override fun hideFacilityChangeAlert() {
+    rootView.visibility = View.GONE
   }
 
-  private fun closeSheetWithContinuation() {
-    when (continuation) {
+  override fun closeSheetWithContinuation() {
+    when (val continuation = screenKey.continuation) {
       is ContinueToActivity -> {
-        val (intent, requestCode) = (continuation as ContinueToActivity).run {
+        val (intent, requestCode) = continuation.run {
           intent to requestCode
         }
         requireActivity().startActivityForResult(intent, requestCode)
         router.pop()
       }
+
       is Continuation.ContinueToScreen -> {
-        val screenKey = (continuation as Continuation.ContinueToScreen).screenKey
-        router.replaceTop(screenKey)
+        router.replaceTop(continuation.screenKey)
       }
+
       is Continuation.ContinueToScreenExpectingResult -> {
-        val screenKey = (continuation as Continuation.ContinueToScreenExpectingResult).screenKey
-        val requestType = (continuation as Continuation.ContinueToScreenExpectingResult).requestType
+        val screenKey = continuation.screenKey
+        val requestType = continuation.requestType
 
         router.replaceTopExpectingResult(requestType, screenKey)
       }
     }
   }
+
+  private fun yesButtonClicks() = yesButton
+      .clicks()
+      .map { YesButtonClicked }
 
   private fun openFacilityChangeScreen() {
     router.pushExpectingResult(ChangeCurrentFacility, FacilityChangeScreen.Key())

@@ -2,6 +2,10 @@
 
 ## Next Release
 
+### Internal
+
+- Migrate alert facility change sheet to use Mobius loop
+
 ### Fixes
 
 - Fix app crashing when trying to replacing the last screen during navigation

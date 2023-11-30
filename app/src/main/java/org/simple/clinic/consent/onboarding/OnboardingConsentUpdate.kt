@@ -3,6 +3,7 @@ package org.simple.clinic.consent.onboarding
 import com.spotify.mobius.Next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.consent.onboarding.OnboardingConsentEffect.CompleteOnboardingEffect
 import org.simple.clinic.consent.onboarding.OnboardingConsentEffect.MarkDataProtectionConsent
 import org.simple.clinic.consent.onboarding.OnboardingConsentEvent.AgreeButtonClicked
 import org.simple.clinic.consent.onboarding.OnboardingConsentEvent.FinishedMarkingDataProtectionConsent
@@ -14,7 +15,7 @@ class OnboardingConsentUpdate : Update<OnboardingConsentModel, OnboardingConsent
 
   override fun update(model: OnboardingConsentModel, event: OnboardingConsentEvent): Next<OnboardingConsentModel, OnboardingConsentEffect> {
     return when (event) {
-      FinishedMarkingDataProtectionConsent -> dispatch(MoveToRegistrationActivity)
+      FinishedMarkingDataProtectionConsent -> dispatch(CompleteOnboardingEffect)
       AgreeButtonClicked -> dispatch(MarkDataProtectionConsent)
       OnboardingCompleted -> noChange()
     }

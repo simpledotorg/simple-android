@@ -56,12 +56,46 @@ fun OutlinedButton(
   }
 }
 
+
+@Composable
+fun FilledButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    icon: (@Composable () -> Unit)? = null,
+    enabled: Boolean = true,
+    buttonSize: ButtonSize = ButtonSize.Default,
+    content: @Composable RowScope.() -> Unit
+) {
+  val minHeight = when (buttonSize) {
+    ButtonSize.Big -> 56.dp
+    ButtonSize.Default -> 48.dp
+  }
+
+  androidx.compose.material.Button(
+      modifier = modifier.defaultMinSize(
+          minWidth = 64.dp,
+          minHeight = minHeight
+      ),
+      onClick = onClick,
+      enabled = enabled,
+      border = null
+  ) {
+    icon?.let {
+      it()
+      Spacer(modifier = Modifier.requiredWidth(8.dp))
+    }
+    ProvideTextStyle(value = SimpleTheme.typography.buttonBig) {
+      content()
+    }
+  }
+}
+
 sealed interface ButtonSize {
   data object Default : ButtonSize
   data object Big : ButtonSize
 }
 
-@Preview
+@Preview(group = "OutlinedButton")
 @Composable
 private fun OutlinedButtonPreview() {
   SimpleTheme {
@@ -74,7 +108,7 @@ private fun OutlinedButtonPreview() {
   }
 }
 
-@Preview
+@Preview(group = "OutlinedButton")
 @Composable
 private fun OutlinedButtonBigPreview() {
   SimpleTheme {
@@ -88,7 +122,7 @@ private fun OutlinedButtonBigPreview() {
   }
 }
 
-@Preview
+@Preview(group = "OutlinedButton")
 @Composable
 private fun OutlinedButtonWithDifferentThemePreview() {
   SimpleRedTheme {
@@ -101,11 +135,67 @@ private fun OutlinedButtonWithDifferentThemePreview() {
   }
 }
 
-@Preview
+@Preview(group = "OutlinedButton")
 @Composable
 private fun OutlinedButtonWithIconPreview() {
   SimpleTheme {
     OutlinedButton(
+        modifier = Modifier.fillMaxWidth(),
+        icon = {
+          Icon(imageVector = Icons.Filled.Add, contentDescription = null)
+        },
+        onClick = { /*no-op*/ }
+    ) {
+      Text(text = "BUTTON")
+    }
+  }
+}
+
+@Preview(group = "FilledButton")
+@Composable
+private fun FilledButtonPreview() {
+  SimpleTheme {
+    FilledButton(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = { /*no-op*/ }
+    ) {
+      Text(text = "BUTTON")
+    }
+  }
+}
+
+@Preview(group = "FilledButton")
+@Composable
+private fun FilledButtonBigPreview() {
+  SimpleTheme {
+    FilledButton(
+        modifier = Modifier.fillMaxWidth(),
+        buttonSize = ButtonSize.Big,
+        onClick = { /*no-op*/ }
+    ) {
+      Text(text = "BUTTON")
+    }
+  }
+}
+
+@Preview(group = "FilledButton")
+@Composable
+private fun FilledButtonWithDifferentThemePreview() {
+  SimpleRedTheme {
+    FilledButton(
+        modifier = Modifier.fillMaxWidth(),
+        onClick = { /*no-op*/ }
+    ) {
+      Text(text = "BUTTON")
+    }
+  }
+}
+
+@Preview(group = "FilledButton")
+@Composable
+private fun FilledButtonWithIconPreview() {
+  SimpleTheme {
+    FilledButton(
         modifier = Modifier.fillMaxWidth(),
         icon = {
           Icon(imageVector = Icons.Filled.Add, contentDescription = null)

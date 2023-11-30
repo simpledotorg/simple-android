@@ -35,6 +35,7 @@ proguard/
 .idea/*.xml
 .idea/codeStyles
 .idea/gradle.properties
+.idea/inspectionProfiles/Project_Default.xml
 .navigation/
 captures/
 *.iml

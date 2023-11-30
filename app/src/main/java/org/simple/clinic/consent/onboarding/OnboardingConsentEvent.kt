@@ -9,4 +9,6 @@ sealed interface OnboardingConsentEvent : UiEvent {
   data object AgreeButtonClicked : OnboardingConsentEvent {
     override val analyticsName: String = "Onboarding Consent Screen:Agree Button Clicked"
   }
+
+  data object OnboardingCompleted : OnboardingConsentEvent
 }

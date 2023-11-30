@@ -7,5 +7,5 @@ sealed interface OnboardingConsentEffect {
 
 sealed interface OnboardingConsentViewEffect : OnboardingConsentEffect {
 
-  data object OpenCountrySelectionScreen : OnboardingConsentViewEffect
+  data object MoveToRegistrationActivity : OnboardingConsentViewEffect
 }

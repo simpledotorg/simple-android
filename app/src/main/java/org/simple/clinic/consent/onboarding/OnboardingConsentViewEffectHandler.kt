@@ -8,8 +8,8 @@ class OnboardingConsentViewEffectHandler(
 
   override fun handle(viewEffect: OnboardingConsentViewEffect) {
     when (viewEffect) {
-      is OnboardingConsentViewEffect.OpenCountrySelectionScreen -> {
-        uiActions.openCountrySelectionScreen()
+      is OnboardingConsentViewEffect.MoveToRegistrationActivity -> {
+        uiActions.moveToRegistrationActivity()
       }
     }
   }

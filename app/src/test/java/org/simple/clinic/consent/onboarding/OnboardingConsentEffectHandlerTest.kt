@@ -7,7 +7,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.simple.clinic.consent.onboarding.OnboardingConsentEffect.MarkDataProtectionConsent
 import org.simple.clinic.consent.onboarding.OnboardingConsentEvent.FinishedMarkingDataProtectionConsent
-import org.simple.clinic.consent.onboarding.OnboardingConsentViewEffect.OpenCountrySelectionScreen
+import org.simple.clinic.consent.onboarding.OnboardingConsentViewEffect.MoveToRegistrationActivity
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 
@@ -37,14 +37,14 @@ class OnboardingConsentEffectHandlerTest {
   }
 
   @Test
-  fun `when open select country screen effect is received, then open select country screen`() {
+  fun `when move to registration activity view effect is received, then move to registration activity`() {
     // when
-    effectHandlerTestCase.dispatch(OpenCountrySelectionScreen)
+    effectHandlerTestCase.dispatch(MoveToRegistrationActivity)
 
     // then
     effectHandlerTestCase.assertNoOutgoingEvents()
 
-    verify(uiActions).openCountrySelectionScreen()
+    verify(uiActions).moveToRegistrationActivity()
     verifyNoMoreInteractions(uiActions)
   }
 }

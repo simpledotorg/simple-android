@@ -8,20 +8,20 @@ import org.junit.Test
 import org.simple.clinic.consent.onboarding.OnboardingConsentEffect.MarkDataProtectionConsent
 import org.simple.clinic.consent.onboarding.OnboardingConsentEvent.AgreeButtonClicked
 import org.simple.clinic.consent.onboarding.OnboardingConsentEvent.FinishedMarkingDataProtectionConsent
-import org.simple.clinic.consent.onboarding.OnboardingConsentViewEffect.OpenCountrySelectionScreen
+import org.simple.clinic.consent.onboarding.OnboardingConsentViewEffect.MoveToRegistrationActivity
 
 class OnboardingConsentUpdateTest {
 
   private val updateSpec = UpdateSpec(OnboardingConsentUpdate())
 
   @Test
-  fun `when data protection consent is marked, then open country selection screen`() {
+  fun `when data protection consent is marked, then move to registration activity`() {
     updateSpec
         .given(OnboardingConsentModel)
         .whenEvent(FinishedMarkingDataProtectionConsent)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(OpenCountrySelectionScreen)
+            hasEffects(MoveToRegistrationActivity)
         ))
   }
 

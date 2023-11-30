@@ -4,3 +4,8 @@ sealed interface OnboardingConsentEffect {
 
   data object MarkDataProtectionConsent : OnboardingConsentEffect
 }
+
+sealed interface OnboardingConsentViewEffect : OnboardingConsentEffect {
+
+  data object OpenCountrySelectionScreen : OnboardingConsentViewEffect
+}

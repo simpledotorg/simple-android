@@ -9,6 +9,8 @@ import org.simple.clinic.consent.onboarding.OnboardingConsentEffect.CompleteOnbo
 import org.simple.clinic.consent.onboarding.OnboardingConsentEffect.MarkDataProtectionConsent
 import org.simple.clinic.consent.onboarding.OnboardingConsentEvent.AgreeButtonClicked
 import org.simple.clinic.consent.onboarding.OnboardingConsentEvent.FinishedMarkingDataProtectionConsent
+import org.simple.clinic.consent.onboarding.OnboardingConsentEvent.OnboardingCompleted
+import org.simple.clinic.consent.onboarding.OnboardingConsentViewEffect.MoveToRegistrationActivity
 
 class OnboardingConsentUpdateTest {
 
@@ -33,6 +35,17 @@ class OnboardingConsentUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(MarkDataProtectionConsent)
+        ))
+  }
+
+  @Test
+  fun `when onboarding is completed, then move to registration activity`() {
+    updateSpec
+        .given(OnboardingConsentModel)
+        .whenEvent(OnboardingCompleted)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(MoveToRegistrationActivity)
         ))
   }
 }

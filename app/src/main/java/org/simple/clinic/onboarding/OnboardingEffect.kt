@@ -6,4 +6,4 @@ object CompleteOnboardingEffect : OnboardingEffect()
 
 sealed class OnboardingViewEffect : OnboardingEffect()
 
-object MoveToRegistrationEffect : OnboardingViewEffect()
+data object OpenOnboardingConsentScreen : OnboardingViewEffect()

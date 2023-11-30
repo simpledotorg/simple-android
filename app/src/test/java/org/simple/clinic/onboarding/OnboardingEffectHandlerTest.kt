@@ -36,12 +36,12 @@ class OnboardingEffectHandlerTest {
   }
 
   @Test
-  fun `when move to registration effect is received, then move to registration screen`() {
+  fun `when open onboarding consent screen effect is received, then open onboarding consent screen`() {
     // when
-    testCase.dispatch(MoveToRegistrationEffect)
+    testCase.dispatch(OpenOnboardingConsentScreen)
 
     // then
-    verify(uiActions).moveToRegistrationScreen()
+    verify(uiActions).openOnboardingConsentScreen()
     verifyNoMoreInteractions(uiActions)
 
     testCase.assertNoOutgoingEvents()

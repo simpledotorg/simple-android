@@ -9,7 +9,7 @@ class OnboardingViewEffectHandler(
 
   override fun handle(viewEffect: OnboardingViewEffect) {
     when (viewEffect) {
-      MoveToRegistrationEffect -> uiActions.moveToRegistrationScreen()
+      OpenOnboardingConsentScreen -> uiActions.openOnboardingConsentScreen()
     }.exhaustive()
   }
 }

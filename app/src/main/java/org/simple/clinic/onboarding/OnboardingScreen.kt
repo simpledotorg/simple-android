@@ -17,13 +17,12 @@ import io.reactivex.rxkotlin.cast
 import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.consent.onboarding.OnboardingConsentScreenFragment
 import org.simple.clinic.databinding.ScreenOnboardingBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.registerorlogin.AuthenticationActivity
-import org.simple.clinic.util.disableAnimations
-import org.simple.clinic.util.finishWithoutAnimations
 import org.simple.clinic.util.resolveColor
 import javax.inject.Inject
 
@@ -39,7 +38,7 @@ class OnboardingScreen : BaseScreen<
   lateinit var onboardingEffectHandler: OnboardingEffectHandler.Factory
 
   @Inject
-  lateinit var activity: AppCompatActivity
+  lateinit var router: Router
 
   private val getStartedButton
     get() = binding.getStartedButton
@@ -86,17 +85,8 @@ class OnboardingScreen : BaseScreen<
     return getStartedButton.clicks().map { GetStartedClicked }
   }
 
-  override fun moveToRegistrationScreen() {
-    // This navigation should not be done here, we need a way to publish
-    // an event to the parent activity (maybe via the screen router's
-    // event bus?) and handle the navigation there.
-    // TODO(vs): 2019-11-07 Move this to an event that is subscribed in the parent activity
-    val intent = AuthenticationActivity
-        .forNewLogin(activity)
-        .disableAnimations()
-
-    activity.startActivity(intent)
-    activity.finishWithoutAnimations()
+  override fun openOnboardingConsentScreen() {
+    router.clearHistoryAndPush(OnboardingConsentScreenFragment.Key())
   }
 
   private fun setIntroOneTextView() {

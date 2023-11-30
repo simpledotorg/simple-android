@@ -1054,6 +1054,6 @@
 
   <!-- Onboarding Consent Screen -->
   <string name="screen_onboarding_consent_title">Protect patient data</string>
-  <string name="screen_onboarding_consent_subtitle">Before using Simple, you must read and agree by clicking "AGREE AND CONTINUE" below. Do not share patient information or use the app for unauthorized purposes. Please keep data confidential and secure by not sharing it with others. The app\'s security code must remain private. By clicking below, you agree to exclusively use the Simple app for patient care purposes within your healthcare facility. Unauthorized sharing of patient information is prohibited. You are expected to perform periodic syncing of data, and capturing mandatory records at the appropriate time.</string>
+  <string name="screen_onboarding_consent_subtitle">Before using Simple, you must read and agree by clicking \"AGREE AND CONTINUE\" below. Do not share patient information or use the app for unauthorized purposes. Please keep data confidential and secure by not sharing it with others. The app\'s security code must remain private. By clicking below, you agree to exclusively use the Simple app for patient care purposes within your healthcare facility. Unauthorized sharing of patient information is prohibited. You are expected to perform periodic syncing of data, and capturing mandatory records at the appropriate time.</string>
   <string name="screen_onboarding_concent_accept_button">AGREE AND CONTINUE</string>
 </resources>

@@ -21,15 +21,4 @@ class OnboardingUpdateTest {
             hasEffects(OpenOnboardingConsentScreen)
         ))
   }
-
-  @Test
-  fun `when onboarding is completed, then open onboarding consent screen`() {
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(OnboardingCompleted)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(OpenOnboardingConsentScreen)
-        ))
-  }
 }

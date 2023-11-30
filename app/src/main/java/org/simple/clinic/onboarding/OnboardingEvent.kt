@@ -7,7 +7,3 @@ sealed class OnboardingEvent : UiEvent
 object GetStartedClicked : OnboardingEvent() {
   override val analyticsName = "Onboarding:Get Started Clicked"
 }
-
-object OnboardingCompleted : OnboardingEvent() {
-  override val analyticsName = "Onboarding:Onboarding Completed"
-}

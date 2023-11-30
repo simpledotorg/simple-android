@@ -121,7 +121,7 @@ private fun OnboardingConsentScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(SimpleTheme.colors.material.primaryVariant)
-                .padding(dimensionResource(id = R.dimen.spacing_8))
+                .padding(dimensionResource(id = R.dimen.spacing_12))
         ) {
           FilledButton(
               onClick = onAccept,

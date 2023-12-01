@@ -1053,7 +1053,15 @@
   <string name="month_date_picker_invalid_date">Invalid date, date must be within the range %1$s - %2$s</string>
 
   <!-- Onboarding Consent Screen -->
-  <string name="screen_onboarding_consent_title">Protect patient data</string>
-  <string name="screen_onboarding_consent_subtitle">Before using Simple, you must read and agree by clicking \"AGREE AND CONTINUE\" below. Do not share patient information or use the app for unauthorized purposes. Please keep data confidential and secure by not sharing it with others. The app\'s security code must remain private. By clicking below, you agree to exclusively use the Simple app for patient care purposes within your healthcare facility. Unauthorized sharing of patient information is prohibited. You are expected to perform periodic syncing of data, and capturing mandatory records at the appropriate time.</string>
+  <string name="screen_onboarding_consent_title">Terms of Use</string>
+  <string name="screen_onboarding_consent_subtitle">Before using the Simple app, you must read and agree to the following terms by clicking <b>“AGREE AND CONTINUE”</b> below.\n\n
+The Simple app contains private health information of patients (“Data”).\n\n
+&#8226; You may only access Data as necessary to perform your job duties related to patient care within the healthcare facility in which you work. Accessing or viewing Data for any other purpose is prohibited.\n\n
+&#8226; You must keep Data confidential. Sharing Data with others is prohibited.\n\n
+&#8226; You must keep the security code you use to access the Simple app private.\n\n
+&#8226; You must promptly log out of the Simple app when not in use. Allowing others to use your login credentials to access the Simple app or Data is prohibited.\n\n
+&#8226; You must perform periodic syncing of data, capturing of mandatory records, and other maintenance as required.\n\n
+&#8226; You understand that the Simple app automatically creates a record of your access to Data. Unauthorized access or other violations of the Terms of Use may result in your access to the Simple app being revoked or other disciplinary measures.\n\n
+  </string>
   <string name="screen_onboarding_concent_accept_button">AGREE AND CONTINUE</string>
 </resources>

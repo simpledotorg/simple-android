@@ -28,7 +28,6 @@ sealed class Gender : Parcelable {
   @Parcelize
   data class Unknown(val actualValue: String) : Gender()
 
-  @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
   object TypeAdapter : SafeEnumTypeAdapter<Gender>(
       knownMappings = mapOf(
           Male to "male",

@@ -19,9 +19,8 @@ data class CurrentFacilityLoaded(val facility: Facility) : HomeScreenEvent()
 
 data class OverdueAppointmentCountUpdated(val overdueAppointmentCount: Int) : HomeScreenEvent()
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 data class RequestNotificationPermission(
     override var permission: Optional<RuntimePermissionResult> = Optional.empty(),
-    override val permissionString: String = Manifest.permission.POST_NOTIFICATIONS,
+    override val permissionString: String,
     override val permissionRequestCode: Int = 1
 ) : HomeScreenEvent(), RequiresPermission

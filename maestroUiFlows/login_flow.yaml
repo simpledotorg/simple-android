@@ -4,6 +4,7 @@ appId: org.simple.clinic.staging
 - launchApp
 - tapOn: "Next"
 - tapOn: "Get started"
+- tapOn: "AGREE AND CONTINUE"
 - tapOn:
     below:
       id: "select_country_title"

@@ -5,6 +5,7 @@
 ### Internal
 
 - Migrate alert facility change sheet to use Mobius loop
+- Bump AGP to v8.2.0
 
 ### Fixes
 

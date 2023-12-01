@@ -1,5 +1,6 @@
 package org.simple.clinic.home
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -149,7 +150,9 @@ class HomeScreen :
     setupHelpClicks()
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-      hotEvents.onNext(RequestNotificationPermission())
+      hotEvents.onNext(RequestNotificationPermission(
+          permissionString = Manifest.permission.POST_NOTIFICATIONS
+      ))
     }
 
     // Keyboard stays open after login finishes, not sure why.

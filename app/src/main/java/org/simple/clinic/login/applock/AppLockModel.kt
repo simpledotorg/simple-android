@@ -8,13 +8,15 @@ import org.simple.clinic.user.User
 @Parcelize
 data class AppLockModel(
     val user: User?,
-    val facility: Facility?
+    val facility: Facility?,
+    val hasUserConsentedToDataProtection: Boolean?,
 ) : Parcelable {
 
   companion object {
     fun create() = AppLockModel(
         user = null,
-        facility = null
+        facility = null,
+        hasUserConsentedToDataProtection = null
     )
   }
 
@@ -30,5 +32,9 @@ data class AppLockModel(
 
   fun facilityLoaded(facility: Facility): AppLockModel {
     return copy(facility = facility)
+  }
+
+  fun dataProtectionConsentLoaded(hasUserConsentedToDataProtection: Boolean): AppLockModel {
+    return copy(hasUserConsentedToDataProtection = hasUserConsentedToDataProtection)
   }
 }

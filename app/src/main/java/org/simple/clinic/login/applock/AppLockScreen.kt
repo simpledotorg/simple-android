@@ -142,9 +142,9 @@ class AppLockScreen : BaseScreen<
 
   override fun showDataProtectionConsentDialog() {
     MaterialAlertDialogBuilder(requireContext())
-        .setTitle(R.string.screen_onboarding_consent_title)
-        .setMessage(R.string.screen_onboarding_consent_subtitle)
-        .setPositiveButton(R.string.screen_onboarding_concent_accept_button) { _, _ ->
+        .setTitle(R.string.data_protection_consent_title)
+        .setMessage(R.string.data_protection_consent_subtitle)
+        .setPositiveButton(R.string.data_protection_consent_accept_button) { _, _ ->
           hotEvents.onNext(AcceptDataProtectionConsentClicked)
         }.setCancelable(false)
         .show()

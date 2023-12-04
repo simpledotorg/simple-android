@@ -44,4 +44,15 @@ class AppLockUpdateTest {
             hasEffects(ShowDataProtectionConsentDialog)
         ))
   }
+
+  @Test
+  fun `when data protection consent accept button is clicked, then mark data protection consent`() {
+    updateSpec
+        .given(defaultModel.copy(hasUserConsentedToDataProtection = false))
+        .whenEvent(AcceptDataProtectionConsentClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(MarkDataProtectionConsent)
+        ))
+  }
 }

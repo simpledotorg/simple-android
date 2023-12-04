@@ -17,6 +17,7 @@ class AppLockUpdate : Update<AppLockModel, AppLockEvent, AppLockEffect> {
       is CurrentFacilityLoaded -> next(model.facilityLoaded(event.facility))
       is DataProtectionConsentLoaded -> dataProtectionConsentLoaded(event.hasUserConsentedToDataProtection, model)
       FinishedMarkingDataProtectionConsent -> Next.noChange()
+      AcceptDataProtectionConsentClicked -> dispatch(MarkDataProtectionConsent)
     }
   }
 

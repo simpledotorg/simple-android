@@ -33,4 +33,15 @@ class AppLockUpdateTest {
             hasEffects(UnlockOnAuthentication)
         ))
   }
+
+  @Test
+  fun `when data protection consent is loaded and consent is not provided, then update model and show data protection consent dialog`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DataProtectionConsentLoaded(hasUserConsentedToDataProtection = false))
+        .then(assertThatNext(
+            hasModel(defaultModel.copy(hasUserConsentedToDataProtection = false)),
+            hasEffects(ShowDataProtectionConsentDialog)
+        ))
+  }
 }

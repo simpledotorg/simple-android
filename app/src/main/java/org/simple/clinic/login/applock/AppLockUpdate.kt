@@ -20,12 +20,12 @@ class AppLockUpdate : Update<AppLockModel, AppLockEvent, AppLockEffect> {
   }
 
   private fun dataProtectionConsentLoaded(hasUserConsentedToDataProtection: Boolean, model: AppLockModel): Next<AppLockModel, AppLockEffect> {
-    val effects = if (hasUserConsentedToDataProtection) {
-      setOf(UnlockOnAuthentication)
+    val effect = if (hasUserConsentedToDataProtection) {
+      UnlockOnAuthentication
     } else {
-      emptySet()
+      ShowDataProtectionConsentDialog
     }
 
-    return Next.next(model.dataProtectionConsentLoaded(hasUserConsentedToDataProtection), effects)
+    return next(model.dataProtectionConsentLoaded(hasUserConsentedToDataProtection), effect)
   }
 }

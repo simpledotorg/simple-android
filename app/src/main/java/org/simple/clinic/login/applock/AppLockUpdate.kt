@@ -13,7 +13,7 @@ class AppLockUpdate : Update<AppLockModel, AppLockEvent, AppLockEffect> {
       AppLockBackClicked -> dispatch(ExitApp)
       AppLockForgotPinClicked -> dispatch(ShowConfirmResetPinDialog)
       UnlockApp -> dispatch(RestorePreviousScreen)
-      AppLockPinAuthenticated -> dispatch(UnlockOnAuthentication)
+      AppLockPinAuthenticated -> dispatch(LoadDataProtectionConsent)
       is LoggedInUserLoaded -> next(model.userLoaded(event.user))
       is CurrentFacilityLoaded -> next(model.facilityLoaded(event.facility))
       is DataProtectionConsentLoaded -> noChange()

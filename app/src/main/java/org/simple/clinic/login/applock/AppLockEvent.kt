@@ -27,3 +27,5 @@ data class LoggedInUserLoaded(val user: User) : AppLockEvent()
 data class CurrentFacilityLoaded(val facility: Facility) : AppLockEvent()
 
 data class DataProtectionConsentLoaded(val hasUserConsentedToDataProtection: Boolean) : AppLockEvent()
+
+object FinishedMarkingDataProtectionConsent : AppLockEvent()

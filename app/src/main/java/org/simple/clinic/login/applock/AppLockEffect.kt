@@ -12,6 +12,8 @@ object LoadDataProtectionConsent : AppLockEffect()
 
 sealed class AppLockViewEffect : AppLockEffect()
 
+object MarkDataProtectionConsent : AppLockEffect()
+
 object ExitApp : AppLockViewEffect()
 
 object ShowConfirmResetPinDialog : AppLockViewEffect()

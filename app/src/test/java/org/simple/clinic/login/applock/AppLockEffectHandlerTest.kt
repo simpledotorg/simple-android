@@ -6,6 +6,7 @@ import org.junit.Test
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.simple.clinic.mobius.EffectHandlerTestCase
@@ -80,5 +81,16 @@ class AppLockEffectHandlerTest {
 
     verify(uiActions).showDataProtectionConsentDialog()
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when mark data protection consent effect is received, then mark data protection consent`() {
+    // when
+    testCase.dispatch(MarkDataProtectionConsent)
+
+    // then
+    testCase.assertOutgoingEvents(FinishedMarkingDataProtectionConsent)
+
+    verifyNoInteractions(uiActions)
   }
 }

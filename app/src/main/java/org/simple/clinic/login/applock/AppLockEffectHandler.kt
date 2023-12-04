@@ -38,7 +38,17 @@ class AppLockEffectHandler @AssistedInject constructor(
       .addTransformer(LoadCurrentFacility::class.java, loadCurrentFacility())
       .addConsumer(AppLockViewEffect::class.java, viewEffectsConsumer::accept)
       .addTransformer(LoadDataProtectionConsent::class.java, loadDataProtectionConsent())
+      .addTransformer(MarkDataProtectionConsent::class.java, markDataProtectionConsent())
       .build()
+
+  private fun markDataProtectionConsent(): ObservableTransformer<MarkDataProtectionConsent, AppLockEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .doOnNext { hasUserConsentedToDataProtectionPreference.set(true) }
+          .map { FinishedMarkingDataProtectionConsent }
+    }
+  }
 
   private fun loadDataProtectionConsent(): ObservableTransformer<LoadDataProtectionConsent, AppLockEvent> {
     return ObservableTransformer { effects ->

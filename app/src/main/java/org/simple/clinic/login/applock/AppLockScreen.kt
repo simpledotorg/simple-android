@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
@@ -61,7 +60,7 @@ class AppLockScreen : BaseScreen<
   private val facilityTextView
     get() = binding.facilityTextView
 
-  private val backClicks = PublishSubject.create<AppLockBackClicked>()
+  private val hotEvents = PublishSubject.create<AppLockEvent>()
 
   override fun defaultModel() = AppLockModel.create()
 
@@ -74,7 +73,7 @@ class AppLockScreen : BaseScreen<
 
   override fun events() = Observable
       .merge(
-          backClicks,
+          hotEvents,
           forgotPinClicks(),
           pinAuthentications()
       )
@@ -106,7 +105,7 @@ class AppLockScreen : BaseScreen<
   }
 
   override fun onBackPressed(): Boolean {
-    backClicks.onNext(AppLockBackClicked)
+    hotEvents.onNext(AppLockBackClicked)
     return true
   }
 
@@ -142,7 +141,13 @@ class AppLockScreen : BaseScreen<
   }
 
   override fun showDataProtectionConsentDialog() {
-    // TODO: Add dialog
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(R.string.screen_onboarding_consent_title)
+        .setMessage(R.string.screen_onboarding_consent_subtitle)
+        .setPositiveButton(R.string.screen_onboarding_concent_accept_button) { _, _ ->
+          hotEvents.onNext(AcceptDataProtectionConsentClicked)
+        }.setCancelable(false)
+        .show()
   }
 
   interface Injector {

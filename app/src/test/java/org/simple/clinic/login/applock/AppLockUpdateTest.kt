@@ -55,4 +55,15 @@ class AppLockUpdateTest {
             hasEffects(MarkDataProtectionConsent)
         ))
   }
+  
+  @Test
+  fun `when marking data protection consent is finished, then unlock the app`() {
+    updateSpec
+        .given(defaultModel.copy(hasUserConsentedToDataProtection = true))
+        .whenEvent(FinishedMarkingDataProtectionConsent)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(UnlockOnAuthentication)
+        ))
+  }
 }

@@ -109,6 +109,7 @@ class AppLockScreenLogicTest {
     val effectHandler = AppLockEffectHandler(
         currentUser = { loggedInUser },
         currentFacility = { facility },
+        hasUserConsentedToDataProtectionPreference = mock(),
         schedulersProvider = TestSchedulersProvider.trampoline(),
         lockAfterTimestampValue = lockAfterTimestampValue,
         viewEffectsConsumer = AppLockViewEffectHandler(uiActions)::handle

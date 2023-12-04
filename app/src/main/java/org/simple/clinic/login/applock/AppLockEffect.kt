@@ -8,6 +8,8 @@ object LoadLoggedInUser : AppLockEffect()
 
 object LoadCurrentFacility : AppLockEffect()
 
+object LoadDataProtectionConsent : AppLockEffect()
+
 sealed class AppLockViewEffect : AppLockEffect()
 
 object ExitApp : AppLockViewEffect()

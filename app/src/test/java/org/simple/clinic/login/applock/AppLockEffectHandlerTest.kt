@@ -1,14 +1,17 @@
 package org.simple.clinic.login.applock
 
+import com.f2prateek.rx.preferences2.Preference
+import org.junit.After
+import org.junit.Test
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
-import org.junit.After
-import org.junit.Test
-import org.simple.sharedTestCode.TestData
+import org.mockito.kotlin.whenever
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.storage.MemoryValue
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
+import org.simple.sharedTestCode.TestData
 import java.time.Instant
 import java.util.Optional
 import java.util.UUID
@@ -26,10 +29,12 @@ class AppLockEffectHandlerTest {
       uuid = UUID.fromString("33459993-53d0-4484-b8a9-66c8b065f07d"),
       name = "PHC Obvious"
   )
+  private val hasUserConsentedToDataProtectionPreference = mock<Preference<Boolean>>()
 
   private val effectHandler = AppLockEffectHandler(
       currentUser = { loggedInUser },
       currentFacility = { facility },
+      hasUserConsentedToDataProtectionPreference = hasUserConsentedToDataProtectionPreference,
       schedulersProvider = TestSchedulersProvider.trampoline(),
       lockAfterTimestampValue = lockAfterTimestampValue,
       viewEffectsConsumer = AppLockViewEffectHandler(uiActions)::handle
@@ -51,5 +56,17 @@ class AppLockEffectHandlerTest {
 
     verify(uiActions).exitApp()
     verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when load data protection consent effect is received, then load the data protection consent`() {
+    // given
+    whenever(hasUserConsentedToDataProtectionPreference.get()) doReturn true
+
+    // when
+    testCase.dispatch(LoadDataProtectionConsent)
+
+    // then
+    testCase.assertOutgoingEvents(DataProtectionConsentLoaded(hasUserConsentedToDataProtection = true))
   }
 }

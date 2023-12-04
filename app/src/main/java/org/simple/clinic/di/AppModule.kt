@@ -7,6 +7,7 @@ import android.content.res.Resources
 import android.os.Vibrator
 import androidx.work.WorkManager
 import com.f2prateek.rx.preferences2.Preference
+import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.google.android.gms.common.GoogleApiAvailability
 import dagger.Module
 import dagger.Provides
@@ -27,6 +28,8 @@ import org.simple.clinic.home.overdue.search.OverdueSearchModule
 import org.simple.clinic.instantsearch.InstantSearchConfigModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.LoginOtpSmsListenerModule
+import org.simple.clinic.main.TypedPreference
+import org.simple.clinic.main.TypedPreference.Type.DataProtectionConsent
 import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.plumbing.infrastructure.InfrastructureModule
@@ -160,4 +163,9 @@ class AppModule(private val appContext: Application) {
       appContext: Application,
       configReader: ConfigReader
   ): MinimumMemoryChecker = RealMinimumMemoryChecker(appContext)
+
+  @Provides
+  @TypedPreference(DataProtectionConsent)
+  fun hasUserConsentedToDataProtection(rxSharedPreferences: RxSharedPreferences): Preference<Boolean> =
+      rxSharedPreferences.getBoolean("data_protection_consent")
 }

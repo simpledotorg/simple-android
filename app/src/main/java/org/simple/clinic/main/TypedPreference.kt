@@ -21,6 +21,7 @@ annotation class TypedPreference(val value: Type) {
     OverdueSearchHistory,
     LastCallResultPullToken,
     LastQuestionnairePullToken,
-    LastQuestionnaireResponsePullToken
+    LastQuestionnaireResponsePullToken,
+    DataProtectionConsent,
   }
 }

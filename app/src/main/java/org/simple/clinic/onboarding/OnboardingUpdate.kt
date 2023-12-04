@@ -10,8 +10,7 @@ class OnboardingUpdate : Update<OnboardingModel, OnboardingEvent, OnboardingEffe
       event: OnboardingEvent
   ): Next<OnboardingModel, OnboardingEffect> {
     return when (event) {
-      GetStartedClicked -> dispatch(CompleteOnboardingEffect)
-      OnboardingCompleted -> dispatch(MoveToRegistrationEffect)
+      GetStartedClicked -> dispatch(OpenOnboardingConsentScreen)
     }
   }
 }

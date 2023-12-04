@@ -12,24 +12,13 @@ class OnboardingUpdateTest {
   private val defaultModel = OnboardingModel
 
   @Test
-  fun `when get started button is clicked, then set onboarding as completed`() {
+  fun `when get started button is clicked, then open onboarding consent screen`() {
     updateSpec
         .given(defaultModel)
         .whenEvent(GetStartedClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(CompleteOnboardingEffect)
-        ))
-  }
-
-  @Test
-  fun `when onboarding is completed, then move to registration screen`() {
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(OnboardingCompleted)
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(MoveToRegistrationEffect)
+            hasEffects(OpenOnboardingConsentScreen)
         ))
   }
 }

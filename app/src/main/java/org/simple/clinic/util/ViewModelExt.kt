@@ -12,12 +12,13 @@ import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.mobius.MobiusBaseViewModel
+import org.simple.clinic.mobius.first
 
 fun <M : Parcelable, E, F, V> Fragment.mobiusViewModels(
     defaultModel: () -> M,
-    init: () -> Init<M, F>,
     update: () -> Update<M, E, F>,
-    effectHandler: (viewEffectsConsumer: Consumer<V>) -> ObservableTransformer<F, E>
+    effectHandler: (viewEffectsConsumer: Consumer<V>) -> ObservableTransformer<F, E>,
+    init: () -> Init<M, F> = { Init { model -> first(model) } },
 ) = viewModels<MobiusBaseViewModel<M, E, F, V>> {
   viewModelFactory {
     fun loop(viewEffectsConsumer: Consumer<V>) = RxMobius

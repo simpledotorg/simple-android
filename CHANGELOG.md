@@ -2,6 +2,10 @@
 
 ## Next Release
 
+### Features
+
+- Show data protection consent screen during onboarding
+
 ### Internal
 
 - Migrate alert facility change sheet to use Mobius loop

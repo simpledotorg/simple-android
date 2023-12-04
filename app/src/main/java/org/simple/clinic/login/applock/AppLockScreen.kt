@@ -7,12 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
+import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.ScreenAppLockBinding
 import org.simple.clinic.di.injector
@@ -136,6 +139,10 @@ class AppLockScreen : BaseScreen<
 
   override fun showConfirmResetPinDialog() {
     ConfirmResetPinDialog.show(activity.supportFragmentManager)
+  }
+
+  override fun showDataProtectionConsentDialog() {
+    // TODO: Add dialog
   }
 
   interface Injector {

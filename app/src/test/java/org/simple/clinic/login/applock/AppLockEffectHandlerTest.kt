@@ -69,4 +69,16 @@ class AppLockEffectHandlerTest {
     // then
     testCase.assertOutgoingEvents(DataProtectionConsentLoaded(hasUserConsentedToDataProtection = true))
   }
+
+  @Test
+  fun `when show data protection consent effect is received, then show the data protection dialog`() {
+    // when
+    testCase.dispatch(ShowDataProtectionConsentDialog)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).showDataProtectionConsentDialog()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

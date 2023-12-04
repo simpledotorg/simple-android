@@ -17,3 +17,5 @@ object ExitApp : AppLockViewEffect()
 object ShowConfirmResetPinDialog : AppLockViewEffect()
 
 object RestorePreviousScreen : AppLockViewEffect()
+
+object ShowDataProtectionConsentDialog : AppLockViewEffect()

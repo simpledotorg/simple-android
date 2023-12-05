@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clipScrollableContainer
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -169,28 +171,33 @@ private fun OnboardingConsentScreen(
 private fun ConsentCard(modifier: Modifier = Modifier) {
   val spacing24 = dimensionResource(id = R.dimen.spacing_24)
 
-  Card(
-      modifier = modifier
-          .fillMaxWidth()
-          .padding(horizontal = spacing24),
+  Column(
+      modifier = Modifier
+          .verticalScroll(rememberScrollState())
+          .clipScrollableContainer(Orientation.Vertical)
   ) {
-    Column(
-        modifier = Modifier
-            .verticalScroll(rememberScrollState())
-            .padding(spacing24),
-        horizontalAlignment = Alignment.CenterHorizontally
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = spacing24)
+            .padding(bottom = dimensionResource(id = R.dimen.spacing_16)),
     ) {
-      Text(
-          text = stringResource(id = R.string.screen_onboarding_consent_title),
-          style = SimpleTheme.typography.material.h6
-      )
+      Column(
+          modifier = Modifier.padding(spacing24),
+          horizontalAlignment = Alignment.CenterHorizontally
+      ) {
+        Text(
+            text = stringResource(id = R.string.screen_onboarding_consent_title),
+            style = SimpleTheme.typography.material.h6
+        )
 
-      Spacer(modifier = Modifier.requiredHeight(spacing24))
+        Spacer(modifier = Modifier.requiredHeight(spacing24))
 
-      Text(
-          text = stringResource(id = R.string.screen_onboarding_consent_subtitle),
-          style = SimpleTheme.typography.material.body1
-      )
+        Text(
+            text = stringResource(id = R.string.screen_onboarding_consent_subtitle),
+            style = SimpleTheme.typography.material.body1
+        )
+      }
     }
   }
 }

@@ -12,6 +12,7 @@ class AppLockViewEffectHandler(
       ExitApp -> uiActions.exitApp()
       ShowConfirmResetPinDialog -> uiActions.showConfirmResetPinDialog()
       RestorePreviousScreen -> uiActions.restorePreviousScreen()
+      ShowDataProtectionConsentDialog -> uiActions.showDataProtectionConsentDialog()
     }.exhaustive()
   }
 }

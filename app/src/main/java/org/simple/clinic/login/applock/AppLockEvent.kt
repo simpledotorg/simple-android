@@ -25,3 +25,11 @@ object AppLockPinAuthenticated : AppLockEvent() {
 data class LoggedInUserLoaded(val user: User) : AppLockEvent()
 
 data class CurrentFacilityLoaded(val facility: Facility) : AppLockEvent()
+
+data class DataProtectionConsentLoaded(val hasUserConsentedToDataProtection: Boolean) : AppLockEvent()
+
+object FinishedMarkingDataProtectionConsent : AppLockEvent()
+
+object AcceptDataProtectionConsentClicked : AppLockEvent() {
+  override val analyticsName: String = "App Lock:Accept Data Protection Consent Clicked"
+}

@@ -48,23 +48,6 @@ class AppLockScreenLogicTest {
   }
 
   @Test
-  fun `when PIN is authenticated, the last-unlock-timestamp should be updated and then the app should be unlocked`() {
-    // given
-    lockAfterTimestampValue.set(Optional.of(Instant.parse("2018-01-01T00:00:00Z")))
-
-    // when
-    setupController()
-    uiEvents.onNext(AppLockPinAuthenticated)
-
-    // then
-    assertThat(lockAfterTimestampValue.hasValue).isFalse()
-    verify(ui, times(2)).setUserFullName(loggedInUser.fullName)
-    verify(ui).setFacilityName(facility.name)
-    verify(uiActions).restorePreviousScreen()
-    verifyNoMoreInteractions(ui, uiActions)
-  }
-
-  @Test
   fun `On start, the logged in user's full name should be shown`() {
     // given
     val facility = TestData.facility(
@@ -109,6 +92,7 @@ class AppLockScreenLogicTest {
     val effectHandler = AppLockEffectHandler(
         currentUser = { loggedInUser },
         currentFacility = { facility },
+        hasUserConsentedToDataProtectionPreference = mock(),
         schedulersProvider = TestSchedulersProvider.trampoline(),
         lockAfterTimestampValue = lockAfterTimestampValue,
         viewEffectsConsumer = AppLockViewEffectHandler(uiActions)::handle

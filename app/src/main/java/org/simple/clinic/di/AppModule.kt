@@ -167,5 +167,5 @@ class AppModule(private val appContext: Application) {
   @Provides
   @TypedPreference(DataProtectionConsent)
   fun hasUserConsentedToDataProtection(rxSharedPreferences: RxSharedPreferences): Preference<Boolean> =
-      rxSharedPreferences.getBoolean("data_protection_consent")
+      rxSharedPreferences.getBoolean("data_protection_consent", false)
 }

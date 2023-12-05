@@ -129,7 +129,7 @@ private fun OnboardingConsentScreen(
               onClick = onAccept,
               modifier = Modifier.fillMaxWidth()
           ) {
-            Text(text = stringResource(id = R.string.screen_onboarding_concent_accept_button))
+            Text(text = stringResource(id = R.string.data_protection_consent_accept_button))
           }
         }
       }
@@ -187,14 +187,14 @@ private fun ConsentCard(modifier: Modifier = Modifier) {
           horizontalAlignment = Alignment.CenterHorizontally
       ) {
         Text(
-            text = stringResource(id = R.string.screen_onboarding_consent_title),
+            text = stringResource(id = R.string.data_protection_consent_title),
             style = SimpleTheme.typography.material.h6
         )
 
         Spacer(modifier = Modifier.requiredHeight(spacing24))
 
         Text(
-            text = stringResource(id = R.string.screen_onboarding_consent_subtitle),
+            text = stringResource(id = R.string.data_protection_consent_subtitle),
             style = SimpleTheme.typography.material.body1
         )
       }

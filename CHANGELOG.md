@@ -12,6 +12,7 @@
 - Bump AGP to v8.2.0
 - Make entire card scrollable in `OnboardingConsentScreen`
 - Show data protection consent dialog after entering app lock pin for existing users
+- Add translations for data consent strings
 
 ### Fixes
 

@@ -32,7 +32,7 @@ rx-binding = "3.1.0"
 
 coroutines = "1.6.4"
 
-compose-compiler = "1.5.3"
+compose-compiler = "1.5.7"
 
 androidx-compose-bom = "2023.07.00-alpha02"
 

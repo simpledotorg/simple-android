@@ -1,6 +1,7 @@
 package org.simple.clinic.sync.indicator
 
 import com.f2prateek.rx.preferences2.Preference
+import io.reactivex.annotations.CheckReturnValue
 import io.reactivex.disposables.Disposable
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.sync.DataSync
@@ -11,7 +12,6 @@ import org.simple.clinic.sync.SyncProgress.SUCCESS
 import org.simple.clinic.sync.SyncProgress.SYNCING
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.scheduler.SchedulersProvider
-import javax.annotation.CheckReturnValue
 import javax.inject.Inject
 
 @AppScope

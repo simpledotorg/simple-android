@@ -1,9 +1,9 @@
 package org.simple.clinic.sync
 
+import io.reactivex.annotations.CheckReturnValue
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import org.simple.clinic.sync.indicator.SyncIndicatorStatusCalculator
-import javax.annotation.CheckReturnValue
 import javax.inject.Inject
 
 class SyncSetup @Inject constructor(

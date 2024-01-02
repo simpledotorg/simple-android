@@ -1,7 +1,7 @@
 package org.simple.clinic.sync
 
+import io.reactivex.annotations.CheckReturnValue
 import io.reactivex.disposables.Disposable
-import javax.annotation.CheckReturnValue
 
 interface IDataSyncOnApproval {
   @CheckReturnValue

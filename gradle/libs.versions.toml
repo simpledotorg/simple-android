@@ -7,6 +7,7 @@ androidx-room = "2.5.2"
 androidx-work = "2.7.1"
 androidx-security-crypto = "1.1.0-alpha06"
 androidx-viewmodel = "2.6.2"
+androidx-lifecycle = "2.6.2"
 
 dagger = "2.48.1"
 
@@ -88,6 +89,8 @@ androidx-security-crypto = { module = "androidx.security:security-crypto-ktx", v
 
 androidx-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-viewmodel" }
 androidx-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "androidx-viewmodel" }
+
+androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "androidx-lifecycle" }
 
 asm = "org.ow2.asm:asm:9.4"
 

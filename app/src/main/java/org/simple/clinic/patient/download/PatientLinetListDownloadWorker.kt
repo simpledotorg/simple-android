@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
@@ -146,7 +147,15 @@ class PatientLinetListDownloadWorker(
         .addAction(android.R.drawable.ic_delete, context.getString(R.string.patient_line_list_download_notification_cancel), cancelPendingIntent)
         .build()
 
-    return ForegroundInfo(DOWNLOAD_IN_PROGRESS_NOTIFICATION_ID, notification)
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+      ForegroundInfo(
+          DOWNLOAD_IN_PROGRESS_NOTIFICATION_ID,
+          notification,
+          ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+      )
+    } else {
+      ForegroundInfo(DOWNLOAD_IN_PROGRESS_NOTIFICATION_ID, notification)
+    }
   }
 
   private fun downloadFailedNotification(): Notification {

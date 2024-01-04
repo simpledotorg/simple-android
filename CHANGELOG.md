@@ -19,6 +19,7 @@
 ### Fixes
 
 - Fix app crashing when trying to replacing the last screen during navigation
+- Fix app crashing on Android 14+ devices when downloading overdue or patient line list
 
 ## 2023-11-20-8926
 

@@ -27,6 +27,8 @@
     android:name="android.permission.WRITE_EXTERNAL_STORAGE"
     tools:ignore="ScopedStorage" />
   <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
   <queries>
     <intent>
@@ -72,6 +74,11 @@
     <meta-data
       android:name="io.sentry.sample-rate"
       android:value="0.75" />
+
+    <service
+      android:name="androidx.work.impl.foreground.SystemForegroundService"
+      android:foregroundServiceType="dataSync"
+      tools:node="merge" />
 
     <activity
       android:name=".setup.SetupActivity"

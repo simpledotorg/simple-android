@@ -2,6 +2,17 @@
 
 ## Next Release
 
+### Internal
+
+- Bump Mobius to v1.5.14
+- Add AndroidX lifecycle livedata ktx dependency
+
+### Fixes
+
+- Fix app crashing on Android 14+ devices when downloading overdue or patient line list
+
+## 2023-12-11-8960
+
 ### Features
 
 - Show data protection consent screen during onboarding
@@ -13,13 +24,10 @@
 - Make entire card scrollable in `OnboardingConsentScreen`
 - Show data protection consent dialog after entering app lock pin for existing users
 - Add translations for data consent strings
-- Bump Mobius to v1.5.14
-- Add AndroidX lifecycle livedata ktx dependency
 
 ### Fixes
 
 - Fix app crashing when trying to replacing the last screen during navigation
-- Fix app crashing on Android 14+ devices when downloading overdue or patient line list
 
 ## 2023-11-20-8926
 

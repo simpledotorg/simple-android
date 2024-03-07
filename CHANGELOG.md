@@ -7,6 +7,10 @@
 - Bump AGP to v8.3.1
 - Bump desugar JDK library to v2.0.4
 
+### Fixes
+
+- Fix app crash on searching overdue patient with special characters
+
 ## 2024-01-08-8979
 
 ### Internal

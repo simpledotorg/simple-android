@@ -2,6 +2,10 @@
 
 ## Next Release
 
+### Internal
+
+- Bump AGP to v8.3.0
+
 ## 2024-01-08-8979
 
 ### Internal

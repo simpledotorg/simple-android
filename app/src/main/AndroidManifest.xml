@@ -84,7 +84,8 @@
       android:name=".setup.SetupActivity"
       android:exported="true"
       android:launchMode="singleTask"
-      android:screenOrientation="portrait">
+      android:screenOrientation="portrait"
+      tools:ignore="DiscouragedApi">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
@@ -94,7 +95,8 @@
     <activity
       android:name=".main.TheActivity"
       android:screenOrientation="portrait"
-      android:windowSoftInputMode="adjustResize" />
+      android:windowSoftInputMode="adjustResize"
+      tools:ignore="DiscouragedApi" />
 
     <activity
       android:name=".bp.entry.BloodPressureEntrySheet"
@@ -130,7 +132,8 @@
       android:name=".deeplink.DeepLinkActivity"
       android:exported="true"
       android:screenOrientation="portrait"
-      android:windowSoftInputMode="adjustResize">
+      android:windowSoftInputMode="adjustResize"
+      tools:ignore="DiscouragedApi">
       <intent-filter>
         <action android:name="android.intent.action.VIEW" />
 
@@ -162,7 +165,8 @@
     <activity
       android:name=".registerorlogin.AuthenticationActivity"
       android:screenOrientation="portrait"
-      android:windowSoftInputMode="adjustResize" />
+      android:windowSoftInputMode="adjustResize"
+      tools:ignore="DiscouragedApi" />
 
     <receiver
       android:name=".login.OtpSmsReceiver"

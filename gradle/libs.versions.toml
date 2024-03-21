@@ -44,8 +44,8 @@ ksp = "1.9.10-1.0.13"
 sqlCipher = "4.5.4"
 
 [libraries]
-android-desugaring = "com.android.tools:desugar_jdk_libs:1.2.3"
 android-gradle-plugin = "com.android.tools.build:gradle:8.3.1"
+android-desugaring = "com.android.tools:desugar_jdk_libs:2.0.4"
 
 androidx-annotation-annotation = "androidx.annotation:annotation:1.5.0"
 

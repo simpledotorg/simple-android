@@ -4,7 +4,7 @@
 
 ### Internal
 
-- Bump AGP to v8.3.0
+- Bump AGP to v8.3.1
 
 ## 2024-01-08-8979
 

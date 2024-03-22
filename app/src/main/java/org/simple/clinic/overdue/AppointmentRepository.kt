@@ -152,8 +152,16 @@ class AppointmentRepository @Inject constructor(
     )
   }
 
-  private fun transformSearchInputsIntoQuery(searchInputs: List<String>) = searchInputs
-      .joinToString(separator = " OR ") { "*$it*" }
+  private fun transformSearchInputsIntoQuery(searchInputs: List<String>): String {
+    return searchInputs.joinToString(separator = " OR ") {
+      sanitizeSearchQuery(it)
+    }
+  }
+
+  private fun sanitizeSearchQuery(query: String): String {
+    val escapedQuery = query.replace(Regex.fromLiteral("\""), "\"\"")
+    return "\"*$escapedQuery*\""
+  }
 
   fun lastCreatedAppointmentForPatient(patientUuid: UUID): Optional<Appointment> {
     return appointmentDao.lastCreatedAppointmentForPatient(patientUuid).toOptional()

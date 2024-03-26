@@ -2,17 +2,12 @@
   "extends": [
     "config:base"
   ],
-  "schedule": [
-    "after 12am and before 2am on the first day of the month"
-  ],
-  "timezone": "Asia/Kolkata",
   "ignoreDeps": [
     // Ignoring zxing update. Since update requires Java 8+ runtime.
     "com.google.zxing:core",
     // We only use this to turn off logs related to Mobius#ControllerStateBase in release app
     "ch.qos.logback:logback-classic"
   ],
-  "automergeType": "branch",
   "packageRules": [
     {
       "groupName": "Kotlin, KSP and Compose Compiler",
@@ -22,11 +17,6 @@
         "androidx.compose.compiler",
         "org.jetbrains.kotlin"
       ]
-    },
-    {
-      "description": "Automerge minor updates",
-      "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true
     }
   ]
 }

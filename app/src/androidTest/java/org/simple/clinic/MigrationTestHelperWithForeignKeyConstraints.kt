@@ -3,15 +3,16 @@ package org.simple.clinic
 import androidx.room.migration.Migration
 import androidx.room.testing.MigrationTestHelper
 import androidx.sqlite.db.SupportSQLiteDatabase
-import androidx.test.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry
 import org.simple.clinic.di.AppSqliteOpenHelperFactory
 
 private const val TEST_DB_NAME = "migration-test"
 
 class MigrationTestHelperWithForeignKeyConstraints : MigrationTestHelper(
-    InstrumentationRegistry.getInstrumentation(),
-    AppDatabase::class.java.canonicalName,
-    AppSqliteOpenHelperFactory()
+    instrumentation = InstrumentationRegistry.getInstrumentation(),
+    databaseClass = AppDatabase::class.java,
+    specs = emptyList(),
+    openFactory = AppSqliteOpenHelperFactory()
 ) {
 
   lateinit var migrations: List<Migration>
@@ -36,10 +37,10 @@ class MigrationTestHelperWithForeignKeyConstraints : MigrationTestHelper(
 
   @Deprecated(message = "Use migrateTo() instead", replaceWith = ReplaceWith("helper.migrateTo(version, *migrations)"))
   override fun runMigrationsAndValidate(
-      name: String?,
+      name: String,
       version: Int,
       validateDroppedTables: Boolean,
-      vararg migrations: Migration?
+      vararg migrations: Migration
   ): SupportSQLiteDatabase {
     return super.runMigrationsAndValidate(name, version, validateDroppedTables, *migrations)
   }

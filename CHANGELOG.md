@@ -8,6 +8,7 @@
 - Bump desugar JDK library to v2.0.4
 - Remove schedule and auto merge from renovate
 - Stop running CI checks for pushes on renovate branches
+- Bump paging to v3.2.1
 
 ### Fixes
 

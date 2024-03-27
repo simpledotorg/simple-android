@@ -23,7 +23,9 @@ class OverdueSearchUiRendererTest {
   @Test
   fun `when progress state is in progress, then show progress`() {
     // given
+    val emptyPagingData = PagingData.empty<OverdueAppointment>()
     val model = defaultModel
+        .overdueSearchResultsLoaded(emptyPagingData)
         .overdueSearchInputsChanged(searchInputs = listOf("Ani"))
         .loadStateChanged(IN_PROGRESS)
 
@@ -32,7 +34,7 @@ class OverdueSearchUiRendererTest {
 
     // then
     verify(ui).setOverdueSearchResultsPagingData(
-        overdueSearchResults = PagingData.empty(),
+        overdueSearchResults = emptyPagingData,
         selectedAppointments = emptySet()
     )
     verify(ui).hideProgress()

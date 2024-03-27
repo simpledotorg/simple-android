@@ -9,6 +9,7 @@
 - Remove schedule and auto merge from renovate
 - Stop running CI checks for pushes on renovate branches
 - Bump paging to v3.2.1
+- Bump Room to v2.6.1
 
 ### Fixes
 

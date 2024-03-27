@@ -7,6 +7,7 @@
 - Bump AGP to v8.3.1
 - Bump desugar JDK library to v2.0.4
 - Remove schedule and auto merge from renovate
+- Stop running CI checks for pushes on renovate branches
 
 ### Fixes
 

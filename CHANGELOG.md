@@ -11,6 +11,7 @@
 - Bump paging to v3.2.1
 - Bump Room to v2.6.1
 - Bump AndroidX ViewModel v2.7.0
+- Bump AndroidX Work to v2.9.0
 
 ### Fixes
 

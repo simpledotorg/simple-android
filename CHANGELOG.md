@@ -10,6 +10,7 @@
 - Stop running CI checks for pushes on renovate branches
 - Bump paging to v3.2.1
 - Bump Room to v2.6.1
+- Bump AndroidX ViewModel v2.7.0
 
 ### Fixes
 

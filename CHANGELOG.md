@@ -12,6 +12,7 @@
 - Bump Room to v2.6.1
 - Bump AndroidX ViewModel v2.7.0
 - Bump AndroidX Work to v2.9.0
+- Bump Compose theme adapter to v0.34.0
 
 ### Fixes
 

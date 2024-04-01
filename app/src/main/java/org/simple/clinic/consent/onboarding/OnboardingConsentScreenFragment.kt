@@ -23,13 +23,17 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
 import kotlinx.parcelize.Parcelize
@@ -111,6 +115,7 @@ class OnboardingConsentScreenFragment : Fragment(), UiActions {
   }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun OnboardingConsentScreen(
     modifier: Modifier = Modifier,
@@ -127,7 +132,9 @@ private fun OnboardingConsentScreen(
         ) {
           FilledButton(
               onClick = onAccept,
-              modifier = Modifier.fillMaxWidth()
+              modifier = Modifier
+                  .fillMaxWidth()
+                  .semantics { testTagsAsResourceId = true }.testTag("agreeAndContinue")
           ) {
             Text(text = stringResource(id = R.string.data_protection_consent_accept_button))
           }

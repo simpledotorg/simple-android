@@ -21,10 +21,10 @@ jobs:
   qa_lint:
     runs-on: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: 17
@@ -36,10 +36,10 @@ jobs:
   qa_unit_tests:
     runs-on: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: 17
@@ -54,7 +54,7 @@ jobs:
       heroku_app_name: ${{ steps.generate-server-app-name.outputs.heroku_app_name }}
     steps:
       - name: Checkout Android source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Generate server app name
         id: generate-server-app-name
@@ -71,12 +71,12 @@ jobs:
       HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
     steps:
       - name: Checkout Android source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: android-app
 
       - name: Checkout Server source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: simpledotorg/simple-server
           fetch-depth: 0 # Full clone needed for Heroku deploys (https://devcenter.heroku.com/changelog-items/775)
@@ -107,12 +107,12 @@ jobs:
       HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
     steps:
       - name: Checkout Android source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: android-app
 
       - name: Checkout server app source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: simpledotorg/simple-server
           fetch-depth: 0 # Full clone needed for Heroku deploys (https://devcenter.heroku.com/changelog-items/775)
@@ -164,10 +164,10 @@ jobs:
     timeout-minutes: 60
     steps:
       - name: Checkout Android source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: 17
@@ -201,7 +201,7 @@ jobs:
           sudo udevadm trigger --name-match=kvm
 
       - name: Checkout Android source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Cache AVD
         uses: actions/cache@v3
@@ -225,7 +225,7 @@ jobs:
           script: echo "Generated AVD snapshot for caching."
 
       - name: set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: 17
@@ -279,10 +279,10 @@ jobs:
   mobius_migration_tests:
     runs-on: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: 17
@@ -297,10 +297,10 @@ jobs:
       matrix:
         buildType: [ 'Production' ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: 17
@@ -317,13 +317,13 @@ jobs:
     runs-on: [ ubuntu-latest ]
     steps:
       - name: Checkout master
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: master
           path: master
 
       - name: Checkout current
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: current
 
@@ -334,7 +334,7 @@ jobs:
     runs-on: [ ubuntu-latest ]
     if: github.event_name == 'pull_request'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Verify PR description
         run: kotlinc -script ".github/scripts/PrCommentCheck.main.kts" "${{ github.event.pull_request.body }}"
 
@@ -343,13 +343,13 @@ jobs:
     if: github.event_name == 'pull_request'
     steps:
       - name: Checkout master
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: master
           path: master
 
       - name: Checkout current
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: current
 
@@ -360,7 +360,7 @@ jobs:
     runs-on: [ ubuntu-latest ]
     if: github.event_name == 'pull_request'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{github.event.pull_request.head.ref}}
           fetch-depth: 0

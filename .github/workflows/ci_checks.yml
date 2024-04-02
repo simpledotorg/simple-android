@@ -21,10 +21,10 @@ jobs:
   qa_lint:
     runs-on: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: 17
@@ -36,10 +36,10 @@ jobs:
   qa_unit_tests:
     runs-on: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: 17
@@ -48,27 +48,71 @@ jobs:
       - name: QA Unit Tests
         run: ./gradlew --build-cache --no-daemon testQaDebugUnitTest
 
-  qa_android_tests:
+  generate_server_app_name:
     runs-on: [ ubuntu-latest ]
-    timeout-minutes: 60
+    outputs:
+      heroku_app_name: ${{ steps.generate-server-app-name.outputs.heroku_app_name }}
+    steps:
+      - name: Checkout Android source
+        uses: actions/checkout@v4
+
+      - name: Generate server app name
+        id: generate-server-app-name
+        run: .github/scripts/generate_heroku_app_name.sh ${{ github.ref }}
+
+  create_server_on_heroku:
+    needs: generate_server_app_name
+    runs-on: [ ubuntu-latest ]
+    outputs:
+      heroku_app_name: ${{ steps.create-server-on-heroku.outputs.heroku_app_name }}
+      heroku_app_url: ${{ steps.create-server-on-heroku.outputs.heroku_app_url }}
+      heroku_app_exists: ${{ steps.create-server-on-heroku.outputs.heroku_app_exists }}
     env:
-      AVD_API_LEVEL: 30
-      AVD_ARCH: x86_64
       HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
     steps:
-      - name: Enable KVM group perms
-        run: |
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-          sudo udevadm control --reload-rules
-          sudo udevadm trigger --name-match=kvm
-
       - name: Checkout Android source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          path: android-app
+
+      - name: Checkout Server source
+        uses: actions/checkout@v4
+        with:
+          repository: simpledotorg/simple-server
+          fetch-depth: 0 # Full clone needed for Heroku deploys (https://devcenter.heroku.com/changelog-items/775)
+          path: server-app
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.simple_server_branch || 'master' }}
+
+      - name: Install Heroku CLI
+        if: steps.node-dependency-cache.outputs.cache-hit != 'true'
+        run: npm install heroku
+
+      - name: Link Heroku CLI globally
+        run: npm link heroku
+
+      - name: Create server on Heroku
+        id: create-server-on-heroku
+        run: |
+          android-app/.github/scripts/create_heroku_app.sh \
+          ${{ needs.generate_server_app_name.outputs.heroku_app_name }} \
+          server-app
+
+  deploy_server_on_heroku:
+    needs: [create_server_on_heroku]
+    runs-on: [ ubuntu-latest ]
+    timeout-minutes: 60
+    outputs:
+      heroku_app_name: ${{ steps.start-simple-server.outputs.heroku_app_name }}
+    env:
+      HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
+    steps:
+      - name: Checkout Android source
+        uses: actions/checkout@v4
         with:
           path: android-app
 
       - name: Checkout server app source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: simpledotorg/simple-server
           fetch-depth: 0 # Full clone needed for Heroku deploys (https://devcenter.heroku.com/changelog-items/775)
@@ -81,7 +125,7 @@ jobs:
 
       - name: Cache node modules
         id: node-dependency-cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             node_modules
@@ -101,23 +145,66 @@ jobs:
       - name: Install heroku buildpacks plugin
         run: heroku plugins:install buildpacks
 
-      - name: Generate server app name
-        id: generate-server-app-name
-        run: android-app/.github/scripts/generate_heroku_app_name.sh ${{ github.ref }}
-
       - name: Deploy the server on Heroku
         id: start-simple-server
         run: |
           android-app/.github/scripts/setup_heroku_instance.sh \
-          ${{ steps.generate-server-app-name.outputs.heroku_app_name }} \
+          ${{ needs.create_server_on_heroku.outputs.heroku_app_name }} \
           ${{ env.HEROKU_API_KEY }} \
           ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.simple_server_branch || 'master' }} \
           server-app \
           android-app \
+          ${{ needs.create_server_on_heroku.outputs.heroku_app_exists }} \
           ${{ secrets.HEROKU_SECRET_PROPERTIES }}
 
+
+  build_qa_android_tests_apk:
+    needs: create_server_on_heroku
+    runs-on: [ ubuntu-latest ]
+    timeout-minutes: 60
+    steps:
+      - name: Checkout Android source
+        uses: actions/checkout@v4
+
+      - name: set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 17
+          cache: 'gradle'
+
+      - name: Build QA Test Artifacts
+        id: build-instrumented-tests
+        run: |
+          ./gradlew --build-cache --no-daemon -PmanifestEndpoint=${{ needs.create_server_on_heroku.outputs.heroku_app_url }}api/ assembleQaDebug assembleQaDebugAndroidTest
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-artifacts
+          path: app/build/outputs/apk
+
+  # reactivecircus/android-emulator-runner@v2 requires MacOS to run on
+  # https://github.com/ReactiveCircus/android-emulator-runner
+  qa_android_tests:
+    needs: [ deploy_server_on_heroku, build_qa_android_tests_apk ]
+    runs-on: [ ubuntu-latest ]
+    timeout-minutes: 60
+    env:
+      AVD_API_LEVEL: 34
+      AVD_ARCH: x86_64
+    steps:
+      - name: Enable KVM group perms
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Checkout Android source
+        uses: actions/checkout@v4
+
       - name: Cache AVD
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: avd-cache
         with:
           path: |
@@ -138,11 +225,20 @@ jobs:
           script: echo "Generated AVD snapshot for caching."
 
       - name: set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: 17
           cache: 'gradle'
+
+      - name: Create build directory
+        run: mkdir app/build
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: test-artifacts
+          path: app/build/outputs/apk
 
       - name: QA Android Tests
         id: run-instrumented-tests
@@ -156,36 +252,37 @@ jobs:
           disk-size: 8G
           script: |
             adb root
-            mkdir -p android-app/app/build/outputs/test-artifacts
-            android-app/gradlew -p android-app --build-cache --no-daemon -PmanifestEndpoint=${{ steps.start-simple-server.outputs.heroku_app_url }}api/ installQaDebug installQaDebugAndroidTest
-            adb shell am instrument -w -e filter org.simple.clinic.benchmark.SelectBenchmarkTests -e benchmark_app_performance false  org.simple.clinic.qa.debug.test/org.simple.clinic.AndroidTestJUnitRunner >android-app/app/build/outputs/test-artifacts/logs.txt 2>android-app/app/build/outputs/test-artifacts/logs.txt
-            cat android-app/app/build/outputs/test-artifacts/logs.txt
-            adb pull /storage/emulated/0/Android/data/org.simple.clinic.qa.debug/ android-app/app/build/outputs/test-artifacts/ || true
+            mkdir -p app/build/outputs/test-artifacts
+            adb install app/build/outputs/apk/qa/debug/app-qa-debug.apk 
+            adb install app/build/outputs/apk/androidTest/qa/debug/app-qa-debug-androidTest.apk
+            adb shell am instrument -w -e filter org.simple.clinic.benchmark.SelectBenchmarkTests -e benchmark_app_performance false  org.simple.clinic.qa.debug.test/org.simple.clinic.AndroidTestJUnitRunner >app/build/outputs/test-artifacts/logs.txt 2>app/build/outputs/test-artifacts/logs.txt
+            cat app/build/outputs/test-artifacts/logs.txt
+            adb pull /storage/emulated/0/Android/data/org.simple.clinic.qa.debug/ app/build/outputs/test-artifacts/ || true
             adb uninstall org.simple.clinic.qa.debug
             adb uninstall org.simple.clinic.qa.debug.test
-            ! grep -q "FAILURES\!\!\!" android-app/app/build/outputs/test-artifacts/logs.txt
+            ! grep -q "FAILURES\!\!\!" app/build/outputs/test-artifacts/logs.txt
 
       - name: Upload failed test artifacts
         if: always() && steps.run-instrumented-tests.outcome != 'success'
         uses: actions/upload-artifact@v3
         with:
-          name: test-artifacts
-          path: android-app/app/build/outputs/test-artifacts
+          name: failed-test-artifacts
+          path: app/build/outputs/test-artifacts
 
       - name: Teardown Heroku instance
         if: always() && (steps.start-simple-server.outcome != 'success' || contains(github.ref, '/release/'))
         run: |
           heroku apps:destroy \
-          --app=${{ steps.generate-server-app-name.outputs.heroku_app_name }} \
-          --confirm=${{ steps.generate-server-app-name.outputs.heroku_app_name }}
+          --app=${{ needs.deploy_server_on_heroku.outputs.heroku_app_name }} \
+          --confirm=${{ needs.deploy_server_on_heroku.outputs.heroku_app_name }}
 
   mobius_migration_tests:
     runs-on: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: 17
@@ -200,10 +297,10 @@ jobs:
       matrix:
         buildType: [ 'Production' ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: 17
@@ -220,13 +317,13 @@ jobs:
     runs-on: [ ubuntu-latest ]
     steps:
       - name: Checkout master
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: master
           path: master
 
       - name: Checkout current
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: current
 
@@ -237,7 +334,7 @@ jobs:
     runs-on: [ ubuntu-latest ]
     if: github.event_name == 'pull_request'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Verify PR description
         run: kotlinc -script ".github/scripts/PrCommentCheck.main.kts" "${{ github.event.pull_request.body }}"
 
@@ -246,13 +343,13 @@ jobs:
     if: github.event_name == 'pull_request'
     steps:
       - name: Checkout master
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: master
           path: master
 
       - name: Checkout current
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: current
 
@@ -263,7 +360,7 @@ jobs:
     runs-on: [ ubuntu-latest ]
     if: github.event_name == 'pull_request'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{github.event.pull_request.head.ref}}
           fetch-depth: 0

@@ -9,7 +9,7 @@ androidx-security-crypto = "1.1.0-alpha06"
 androidx-viewmodel = "2.7.0"
 androidx-lifecycle = "2.6.2"
 
-dagger = "2.48.1"
+dagger = "2.51.1"
 
 flipper = "0.176.0"
 

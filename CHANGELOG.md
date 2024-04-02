@@ -14,6 +14,7 @@
 - Bump AndroidX Work to v2.9.0
 - Use ubuntu machine for running integration/ui tests on CI
 - Bump Compose theme adapter to v0.34.0
+- Bump Coroutines to v1.8.0
 
 ### Fixes
 

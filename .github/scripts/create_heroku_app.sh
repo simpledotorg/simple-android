@@ -18,6 +18,7 @@ fi
 if [ $serverAppAlreadyExists = false ]; then
   echo "Setting up server app [$herokuAppName]"
   (cd $serverAppDirectory && heroku apps:create --team $herokuTeamName $herokuAppName)
+  heroku pipelines:add --app=$herokuAppName --stage=staging simple-android-review
 fi
 
 echo "heroku_app_name=${herokuAppName}" >> "$GITHUB_OUTPUT"

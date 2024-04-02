@@ -12,10 +12,6 @@ decodedHerokuEnvProperties=$(echo $encodedHerokuEnvProperties | base64 --decode)
 if [ ${serverAppAlreadyExists} = false ]; then
   echo "Deploying server"
 
-  heroku apps
-
-  heroku pipelines:add --app=$herokuAppName --stage=staging simple-android-review
-
   pip3 install requests
   $androidAppDirectory/.github/scripts/server_heroku_env_setup.py $serverAppDirectory/app.json $herokuAppName $herokuApiKey "$decodedHerokuEnvProperties"
 

@@ -23,7 +23,7 @@ mobius = "1.5.14"
 
 moshi = "1.14.0"
 
-okhttp = "4.10.0"
+okhttp = "4.12.0"
 
 retrofit = "2.9.0"
 

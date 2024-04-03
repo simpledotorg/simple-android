@@ -19,6 +19,7 @@
 ### Fixes
 
 - Fix app crash on searching overdue patient with special characters
+- Fix consent text getting cropped and hidden on patient registration screen
 
 ## 2024-01-08-8979
 

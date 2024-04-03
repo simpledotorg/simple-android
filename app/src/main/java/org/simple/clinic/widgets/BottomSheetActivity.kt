@@ -80,7 +80,9 @@ abstract class BottomSheetActivity : AppCompatActivity() {
     onBackPressed()
   }
 
+  @Deprecated("Deprecated in Java")
   override fun onBackPressed() {
+    super.onBackPressed()
     // Routing to finish() just so that the exit animation can be played.
     finish()
   }

@@ -140,7 +140,7 @@ logback-classic = "ch.qos.logback:logback-classic:1.2.11"
 
 lottie = "com.airbnb.android:lottie:5.2.0"
 
-material = "com.google.android.material:material:1.9.0"
+material = "com.google.android.material:material:1.11.0"
 
 mockito-kotlin = "org.mockito.kotlin:mockito-kotlin:4.1.0"
 

@@ -92,7 +92,7 @@ androidx-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmod
 
 androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "androidx-lifecycle" }
 
-asm = "org.ow2.asm:asm:9.4"
+asm = "org.ow2.asm:asm:9.6"
 
 dagger-dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }

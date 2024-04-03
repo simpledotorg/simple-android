@@ -13,7 +13,7 @@ dagger = "2.51.1"
 
 flipper = "0.176.0"
 
-kotlin = "1.9.10"
+kotlin = "1.9.23"
 
 ktlint = "0.36.0"
 
@@ -33,13 +33,13 @@ rx-binding = "3.1.0"
 
 coroutines = "1.8.0"
 
-compose-compiler = "1.5.3"
+compose-compiler = "1.5.11"
 
 androidx-compose-bom = "2023.07.00-alpha02"
 
 composeThemeAdapter = "0.34.0"
 
-ksp = "1.9.10-1.0.13"
+ksp = "1.9.23-1.0.19"
 
 sqlCipher = "4.5.4"
 

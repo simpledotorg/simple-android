@@ -53,7 +53,7 @@ androidx-annotation-annotation = "androidx.annotation:annotation:1.7.1"
 # can be enabled again.
 androidx-appcompat = "androidx.appcompat:appcompat:1.6.1"
 
-androidx-archCoreTesting = "androidx.arch.core:core-testing:2.1.0"
+androidx-archCoreTesting = "androidx.arch.core:core-testing:2.2.0"
 androidx-cardview = "androidx.cardview:cardview:1.0.0"
 androidx-constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.4"
 androidx-core-ktx = "androidx.core:core-ktx:1.9.0"

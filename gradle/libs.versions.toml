@@ -136,6 +136,7 @@ lint-checks = { module = "com.android.tools.lint:lint-checks", version.ref = "li
 lint-lint = { module = "com.android.tools.lint:lint", version.ref = "lint" }
 lint-tests = { module = "com.android.tools.lint:lint-tests", version.ref = "lint" }
 
+#noinspection GradleDependency
 logback-classic = "ch.qos.logback:logback-classic:1.2.11"
 
 lottie = "com.airbnb.android:lottie:6.1.0"

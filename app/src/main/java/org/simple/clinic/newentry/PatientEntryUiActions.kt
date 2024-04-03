@@ -9,7 +9,6 @@ interface PatientEntryUiActions {
   fun scrollFormOnGenderSelection()
   fun setShowDatePatternInDateOfBirthLabel(showPattern: Boolean)
   fun openMedicalHistoryEntryScreen()
-  fun setupUi(inputFields: InputFields)
   fun showEmptyFullNameError(show: Boolean)
   fun showLengthTooShortPhoneNumberError(show: Boolean, requiredNumberLength: Int)
   fun showMissingGenderError(show: Boolean)

@@ -1,16 +1,15 @@
 package org.simple.clinic.newentry
 
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.whenever
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.whenever
 import org.simple.clinic.R
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.newentry.Field.PhoneNumber
@@ -31,8 +30,9 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
-import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.TestUserClock
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -105,18 +105,6 @@ class PatientEntryEffectHandlerTest {
 
     // then
     testCase.assertOutgoingEvents(InputFieldsLoaded(inputFields))
-  }
-
-  @Test
-  fun `when the setup UI effect is received, the UI must be setup with the input fields`() {
-    // when
-    setupTestCase()
-    testCase.dispatch(SetupUi(inputFields))
-
-    // then
-    testCase.assertNoOutgoingEvents()
-    verify(uiActions).setupUi(inputFields)
-    verifyNoMoreInteractions(uiActions)
   }
 
   @Test

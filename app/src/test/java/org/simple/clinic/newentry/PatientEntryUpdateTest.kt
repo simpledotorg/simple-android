@@ -394,15 +394,15 @@ class PatientEntryUpdateTest {
   }
 
   @Test
-  fun `when the input fields are loaded, the UI muse be initialized`() {
+  fun `when the input fields are loaded, then update the model`() {
     val inputFields = InputFields(inputFieldsFactory.provideFields())
 
     updateSpec
         .given(defaultModel)
         .whenEvent(InputFieldsLoaded(inputFields))
         .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(SetupUi(inputFields) as PatientEntryEffect)
+            hasModel(defaultModel.inputFieldsLoaded(inputFields)),
+            hasNoEffects()
         ))
   }
 

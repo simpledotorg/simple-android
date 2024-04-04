@@ -2,6 +2,7 @@ package org.simple.clinic.newentry
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.ReminderConsent
@@ -14,7 +15,8 @@ data class PatientEntryModel(
     val patientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry(),
     val isSelectingGenderForTheFirstTime: Boolean = true,
     val nextButtonState: ButtonState? = null,
-    val colonyOrVillagesList: List<String>? = null
+    val colonyOrVillagesList: List<String>? = null,
+    val inputFields: InputFields? = null,
 ) : Parcelable {
   companion object {
     val DEFAULT = PatientEntryModel()
@@ -22,6 +24,9 @@ data class PatientEntryModel(
 
   val hasColonyOrVillagesList: Boolean
     get() = !colonyOrVillagesList.isNullOrEmpty()
+
+  val hasInputFields: Boolean
+    get() = inputFields != null
 
   fun patientEntryFetched(patientEntry: OngoingNewPatientEntry): PatientEntryModel =
       copy(patientEntry = patientEntry)
@@ -73,4 +78,7 @@ data class PatientEntryModel(
 
   fun colonyOrVillageListUpdated(colonyOrVillages: List<String>?): PatientEntryModel =
       copy(colonyOrVillagesList = colonyOrVillages)
+
+  fun inputFieldsLoaded(inputFields: InputFields?): PatientEntryModel =
+      copy(inputFields = inputFields)
 }

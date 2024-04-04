@@ -356,6 +356,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_24"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <com.google.android.material.switchmaterial.SwitchMaterial

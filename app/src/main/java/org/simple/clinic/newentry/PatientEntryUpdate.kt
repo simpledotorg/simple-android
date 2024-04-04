@@ -48,7 +48,7 @@ class PatientEntryUpdate(
       is ReminderConsentChanged -> next(model.reminderConsentChanged(event.reminderConsent))
       is SaveClicked -> onSaveClicked(model)
       is PatientEntrySaved -> next(model.buttonStateChanged(ButtonState.SAVED), OpenMedicalHistoryEntryScreen)
-      is InputFieldsLoaded -> dispatch(SetupUi(event.inputFields))
+      is InputFieldsLoaded -> next(model.inputFieldsLoaded(event.inputFields))
       is ColonyOrVillagesFetched -> next(model.colonyOrVillageListUpdated(event.colonyOrVillages))
     }
   }

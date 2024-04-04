@@ -1,6 +1,5 @@
 package org.simple.clinic.newentry
 
-import org.simple.clinic.newentry.country.InputFields
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientEntryValidationError
 
@@ -23,8 +22,6 @@ object ScrollFormOnGenderSelection : PatientEntryViewEffect()
 data class ShowDatePatternInDateOfBirthLabel(val show: Boolean) : PatientEntryViewEffect()
 
 object OpenMedicalHistoryEntryScreen : PatientEntryViewEffect()
-
-data class SetupUi(val inputFields: InputFields) : PatientEntryViewEffect()
 
 data class HideValidationError(val field: Field) : PatientEntryViewEffect()
 

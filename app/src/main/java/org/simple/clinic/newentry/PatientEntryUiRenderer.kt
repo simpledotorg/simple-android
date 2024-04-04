@@ -23,6 +23,10 @@ class PatientEntryUiRenderer(val ui: PatientEntryUi) : ViewRenderer<PatientEntry
       ui.setColonyOrVillagesAutoComplete(model.colonyOrVillagesList!!)
     }
 
+    if (model.hasInputFields) {
+      ui.setupUi(model.inputFields!!)
+    }
+
     val personalDetails = patientEntry.personalDetails ?: return
     changeDateOfBirthAndAgeVisibility(personalDetails)
 

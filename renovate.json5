@@ -7,7 +7,9 @@
     "com.google.zxing:core",
     // We only use this to turn off logs related to Mobius#ControllerStateBase in release app
     "ch.qos.logback:logback-classic",
-    "com.itextpdf:itext7-core"
+    "com.itextpdf:itext7-core",
+    // Newer updates have API breaking changes, so won't be updating unless required
+    "io.github.inflationx:viewpump"
   ],
   "packageRules": [
     {

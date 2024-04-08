@@ -199,6 +199,7 @@ truth = "com.google.truth:truth:1.4.2"
 
 uuid-generator = "com.fasterxml.uuid:java-uuid-generator:5.0.0"
 
+#noinspection GradleDependency
 viewpump = "io.github.inflationx:viewpump:2.0.3"
 
 datadog-sdk = "com.datadoghq:dd-sdk-android:1.15.0"

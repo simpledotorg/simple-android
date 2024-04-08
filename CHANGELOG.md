@@ -4,17 +4,51 @@
 
 ### Internal
 
-- Bump AGP to v8.3.1
-- Bump desugar JDK library to v2.0.4
 - Remove schedule and auto merge from renovate
 - Stop running CI checks for pushes on renovate branches
-- Bump paging to v3.2.1
-- Bump Room to v2.6.1
-- Bump AndroidX ViewModel v2.7.0
-- Bump AndroidX Work to v2.9.0
 - Use ubuntu machine for running integration/ui tests on CI
+- Bump AGP to v8.3.1
+- Bump desugar JDK library to v2.0.4
 - Bump Compose theme adapter to v0.34.0
 - Bump Coroutines to v1.8.0
+- Bump Dagger to v2.51.1
+- Bump AndroidX Paging to v3.2.1
+- Bump AndroidX Room to v2.6.1
+- Bump AndroidX ViewModel v2.7.0
+- Bump AndroidX Work to v2.9.0
+- Bump AndroidX Annotation to v1.7.1
+- Bump AndroidX AppCompat to v1.6.1
+- Bump AndroidX Core Testing to v2.2.0
+- Bump AndroidX Camera to v1.3.2
+- Bump AndroidX Camera View to v1.3.2
+- Bump AndroidX Core KTX to v1.12.0
+- Bump AndroidX Lifecycle to v2.7.0
+- Bump AndroidX Fragment to v1.6.2
+- Bump AndroidX RecyclerView to v1.3.2
+- Bump Firebase dependencies
+- Bump Material Components to v1.11.0
+- Bump Google Play Services dependencies
+- Bump SQLite to v3.45.0
+- Bump Mockito Kotlin to v5.2.1
+- Bump Lottie to v6.4.0
+- Bump ASM to v9.7
+- Bump OkHttp to v4.12.0
+- Bump Moshi to v1.15.0
+- Bump Lint to v31.3.1
+- Bump Kotlin, KSP and Compose dependencies
+- Bump Google Truth to v1.4.2
+- Bump Flipper to v0.250.0
+- Bump Retrofit to v2.11.0
+- Bump UUID generator to v5.0.0
+- Bump Faker to v2.0.4
+- Bump Mobius to v2.0.0
+- Bump Sentry dependencies
+- Bump Open CSV to v5.9
+- Bump LeakCanary to v2.13
+- Bump Datadog dependencies
+- Bump SoLoader to v0.11.0
+- Bump Gradle to v8.7
+- Bump Jackson Core to v2.17.0
 
 ### Fixes
 

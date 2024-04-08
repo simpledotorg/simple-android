@@ -70,7 +70,7 @@ jobs:
 
       - name: Cache node modules
         id: node-dependency-cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             node_modules
@@ -91,7 +91,7 @@ jobs:
         run: heroku plugins:install buildpacks
 
       - name: Cache AVD
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: avd-cache
         with:
           path: |

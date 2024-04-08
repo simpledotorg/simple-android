@@ -100,7 +100,7 @@ dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = 
 edittext-masked = "com.github.egslava:edittext-mask:1.0.7"
 edittext-pinentry = "com.alimuzaffar.lib:pinentryedittext:2.0.6"
 
-faker = "com.github.blocoio:faker:1.2.9"
+faker = "com.github.blocoio:faker:2.0.4"
 
 firebase-config = "com.google.firebase:firebase-config:21.6.3"
 firebase-analytics = "com.google.firebase:firebase-analytics-ktx:21.6.1"

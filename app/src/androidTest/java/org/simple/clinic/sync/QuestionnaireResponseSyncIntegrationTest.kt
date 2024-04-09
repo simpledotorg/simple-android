@@ -26,7 +26,7 @@ import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
 
-@Ignore("the review env doesn't contain any data")
+//@Ignore("the review env doesn't contain any data")
 class QuestionnaireResponseSyncIntegrationTest {
 
   @Inject

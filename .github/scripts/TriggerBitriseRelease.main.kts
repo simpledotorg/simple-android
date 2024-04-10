@@ -1,7 +1,7 @@
 #!/usr/bin/env kscript
 
 @file:Repository("https://repo1.maven.org/maven2/")
-@file:DependsOn("com.squareup.okhttp3:okhttp:4.10.0")
+@file:DependsOn("com.squareup.okhttp3:okhttp:4.12.0")
 @file:CompilerOptions("-jvm-target", "1.8")
 
 import okhttp3.MediaType.Companion.toMediaType

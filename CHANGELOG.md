@@ -29,7 +29,7 @@
 - Bump Material Components to v1.11.0
 - Bump Google Play Services dependencies
 - Bump SQLite to v3.45.0
-- Bump Mockito Kotlin to v5.2.1
+- Bump Mockito Kotlin to v5.3.1
 - Bump Lottie to v6.4.0
 - Bump ASM to v9.7
 - Bump OkHttp to v4.12.0

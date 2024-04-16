@@ -241,7 +241,8 @@ class PatientRepository @Inject constructor(
           deletedReason = null,
           registeredFacilityId = facility.uuid,
           assignedFacilityId = facility.uuid,
-          retainUntil = null
+          retainUntil = null,
+          isEligibleForReassignment = false,
       )
 
       val address = PatientAddress(

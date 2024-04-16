@@ -226,7 +226,8 @@ object TestData {
         deletedReason = deletedReason,
         registeredFacilityId = registeredFacilityId,
         assignedFacilityId = assignedFacilityId,
-        retainUntil = retainUntil
+        retainUntil = retainUntil,
+        isEligibleForReassignment = false,
     )
   }
 

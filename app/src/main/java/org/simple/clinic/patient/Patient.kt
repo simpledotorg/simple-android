@@ -71,7 +71,9 @@ data class Patient(
 
     val assignedFacilityId: UUID?,
 
-    val retainUntil: Instant?
+    val retainUntil: Instant?,
+
+    val isEligibleForReassignment: Boolean,
 ) : Parcelable {
 
   fun withNameAndGender(fullName: String, gender: Gender): Patient =

@@ -98,7 +98,8 @@ data class PatientPayload(
         deletedReason = deletedReason,
         registeredFacilityId = registeredFacilityId,
         assignedFacilityId = assignedFacilityId,
-        retainUntil = null
+        retainUntil = null,
+        isEligibleForReassignment = false,
     )
   }
 }

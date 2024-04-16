@@ -113,7 +113,8 @@ class LookupPatientOnline @Inject constructor(
             deletedReason = response.deletedReason,
             registeredFacilityId = response.registeredFacilityId,
             assignedFacilityId = response.assignedFacilityId,
-            retainUntil = retainUntil
+            retainUntil = retainUntil,
+            isEligibleForReassignment = false,
         ),
         address = response.address.toDatabaseModel(),
         phoneNumbers = phoneNumbers,

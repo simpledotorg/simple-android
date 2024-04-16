@@ -49,6 +49,7 @@
 - Bump SoLoader to v0.11.0
 - Bump Gradle to v8.7
 - Bump Jackson Core to v2.17.0
+- Add `isPatientEligibleForReassignment` to `Patient` model 
 
 ### Fixes
 

@@ -44,7 +44,7 @@
 - Bump Mobius to v2.0.0
 - Bump Sentry dependencies
 - Bump Open CSV to v5.9
-- Bump LeakCanary to v2.13
+- Bump LeakCanary to v2.14
 - Bump Datadog dependencies
 - Bump SoLoader to v0.11.0
 - Bump Gradle to v8.7

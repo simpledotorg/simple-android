@@ -10,6 +10,7 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.contactpatient.ContactPatientProfile
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.patient.PatientSearchCriteria.Name
@@ -27,8 +28,10 @@ import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.User
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.toOptional
+import org.simple.clinic.util.toUtcInstant
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -42,6 +45,7 @@ typealias PatientUuid = UUID
 class PatientRepository @Inject constructor(
     private val database: AppDatabase,
     private val utcClock: UtcClock,
+    private val userClock: UserClock,
     private val reportsRepository: ReportsRepository,
     private val businessIdMetaDataMoshiAdapter: JsonAdapter<BusinessIdMetaData>
 ) : SynceableRepository<PatientProfile, PatientPayload> {
@@ -777,6 +781,50 @@ class PatientRepository @Inject constructor(
         bpCreatedAfter = bpCreatedAfter,
         bpCreateBefore = bpCreatedBefore
     )
+  }
+
+  fun isPatientEligibleForReassignment(patientUuid: UUID): Boolean {
+    val patient = database.patientDao().patientImmediate(patientUuid)
+
+    val facility = if (patient?.assignedFacilityId != null) {
+      database.facilityDao().getOne(patient.assignedFacilityId)
+    } else {
+      null
+    }
+    // This is for Bangladesh UHCs, if we need to use this same reassignment logic
+    // for other countries, we need to check for another facility type along
+    // with this
+    if (facility?.facilityType != "UHC") return false
+
+    val isPatientSoftDeleted = patient?.deletedAt != null
+    if (isPatientSoftDeleted) return false
+
+    val hasPatientDied = patient?.status == PatientStatus.Dead
+    if (hasPatientDied) return false
+
+    val hasHypertension = database
+        .medicalHistoryDao()
+        .historyForPatientImmediate(patientUuid)
+        ?.diagnosedWithHypertension == Answer.Yes
+    if (hasHypertension) return false
+
+    val hasRequiredPrescribedDrugs = database.prescriptionDao()
+        .forPatientImmediate(patientUuid)
+        .filterNot { it.name == "Amlodipine" || it.name == "Losartan" }
+        .isEmpty()
+    if (!hasRequiredPrescribedDrugs) return false
+
+    val bloodPressuresSince = LocalDate.now(utcClock).minusMonths(6)
+        .toUtcInstant(userClock)
+    val bloodPressures = database
+        .bloodPressureDao()
+        .allBloodPressuresRecordedSinceImmediate(patientUuid, bloodPressuresSince)
+
+    if (bloodPressures.size < 3) return false
+
+    return bloodPressures
+        .take(3)
+        .all { it.reading.systolic < 140 && it.reading.diastolic < 90 }
   }
 
   private data class BusinessIdMetaAndVersion(

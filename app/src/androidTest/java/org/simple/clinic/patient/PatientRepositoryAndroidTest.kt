@@ -3665,4 +3665,556 @@ class PatientRepositoryAndroidTest {
         )
     )
   }
+
+  @Test
+  fun check_if_patient_is_eligible_for_reassignment_should_work_correctly() {
+    val facilityId = UUID.fromString("86eaca30-5d6f-4f59-a354-512da0e0d7e7")
+
+    val facility = TestData.facility(
+        uuid = facilityId,
+        name = "PHC RTSL",
+        facilityType = "UHC"
+    )
+
+    val patientId = UUID.fromString("ca3a49f2-ee52-4e8a-80c0-29423a5d082e")
+    val patientAddressId = UUID.fromString("c3b2dfce-981b-4052-a224-3f23542f6358")
+
+    val patientProfile = TestData.patientProfile(
+        patientName = "Ramesh Prasad",
+        patientUuid = patientId,
+        patientAddressUuid = patientAddressId,
+        generatePhoneNumber = false,
+        patientPhoneNumber = "1111111111",
+        generateBusinessId = false,
+        patientAddressStreet = "45 Marigold Lane",
+        patientAddressColonyOrVillage = "Carroll Gardens",
+        gender = Gender.Male,
+        generateDateOfBirth = false,
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = 65,
+            ageUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+            dateOfBirth = null
+        ),
+        patientRegisteredFacilityId = facilityId,
+        patientAssignedFacilityId = facilityId,
+        patientStatus = Active,
+        patientCreatedAt = Instant.parse("2017-01-01T00:00:00Z"),
+        patientUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        patientDeletedAt = null
+    )
+
+    val patientMedicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("9cf07c54-e1a6-4c5f-ad99-523cea21f376"),
+        patientUuid = patientId,
+        diagnosedWithHypertension = No,
+        hasDiabetes = No
+    )
+
+    val patientBp1 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("0dbf2474-a990-4b03-a976-99d3b5429e47"),
+        patientUuid = patientId,
+        facilityUuid = facilityId,
+        systolic = 120,
+        diastolic = 80,
+        createdAt = Instant.parse("2017-12-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-12-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-12-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    val patientBp2 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("5c2721ca-5414-4f91-b9a2-f13331eeccf3"),
+        patientUuid = patientId,
+        facilityUuid = facilityId,
+        systolic = 120,
+        diastolic = 80,
+        createdAt = Instant.parse("2017-11-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-11-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-11-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    val patientBp3 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("fa7b53eb-d05f-48a2-8e61-cf07944625ac"),
+        patientUuid = patientId,
+        facilityUuid = facilityId,
+        systolic = 120,
+        diastolic = 80,
+        createdAt = Instant.parse("2017-10-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-10-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-10-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    facilityRepository.save(listOf(facility))
+    patientRepository.save(listOf(patientProfile))
+    medicalHistoryRepository.save(listOf(patientMedicalHistory))
+    bloodPressureRepository.save(listOf(patientBp1, patientBp2, patientBp3))
+
+    // when
+    val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(patientId)
+
+    // then
+    assertThat(isPatientEligibleForReassignment).isTrue()
+  }
+
+  @Test
+  fun if_assigned_facility_is_not_a_UHC_patient_should_not_be_eligible_for_reassignment() {
+    val facilityId = UUID.fromString("25496886-452c-4a92-84b8-d37b1097260c")
+
+    val facility = TestData.facility(
+        uuid = facilityId,
+        name = "PHC RTSL",
+        facilityType = "Village"
+    )
+
+    val patientId = UUID.fromString("49fed4ab-7a0f-4c7e-bfe6-c34502aa0ec0")
+    val patientAddressId = UUID.fromString("c1b22eb1-9831-4c80-b5ec-eb9682d21939")
+
+    val patientProfile = TestData.patientProfile(
+        patientName = "Ramesh Prasad",
+        patientUuid = patientId,
+        patientAddressUuid = patientAddressId,
+        generatePhoneNumber = false,
+        patientPhoneNumber = "1111111111",
+        generateBusinessId = false,
+        patientAddressStreet = "45 Marigold Lane",
+        patientAddressColonyOrVillage = "Carroll Gardens",
+        gender = Gender.Male,
+        generateDateOfBirth = false,
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = 65,
+            ageUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+            dateOfBirth = null
+        ),
+        patientRegisteredFacilityId = facilityId,
+        patientAssignedFacilityId = facilityId,
+        patientStatus = Active,
+        patientCreatedAt = Instant.parse("2017-01-01T00:00:00Z"),
+        patientUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        patientDeletedAt = null
+    )
+
+    val patientMedicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("960baec5-7225-4f4f-9c14-15e38c96d13f"),
+        patientUuid = patientId,
+        diagnosedWithHypertension = No,
+        hasDiabetes = No
+    )
+
+    val patientBp1 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("35787fd2-c531-45b5-a9e7-8162770376e2"),
+        patientUuid = patientId,
+        facilityUuid = facilityId,
+        systolic = 120,
+        diastolic = 80,
+        createdAt = Instant.parse("2017-12-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-12-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-12-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    val patientBp2 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("b4252a42-0abc-42bf-8fbf-8ef666dedbad"),
+        patientUuid = patientId,
+        facilityUuid = facilityId,
+        systolic = 120,
+        diastolic = 80,
+        createdAt = Instant.parse("2017-11-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-11-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-11-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    val patientBp3 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("765f7a84-7e1f-4581-a169-b2f2787f823e"),
+        patientUuid = patientId,
+        facilityUuid = facilityId,
+        systolic = 120,
+        diastolic = 80,
+        createdAt = Instant.parse("2017-10-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-10-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-10-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    facilityRepository.save(listOf(facility))
+    patientRepository.save(listOf(patientProfile))
+    medicalHistoryRepository.save(listOf(patientMedicalHistory))
+    bloodPressureRepository.save(listOf(patientBp1, patientBp2, patientBp3))
+
+    // when
+    val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(patientId)
+
+    // then
+    assertThat(isPatientEligibleForReassignment).isFalse()
+  }
+
+  @Test
+  fun if_patient_is_soft_deleted_they_should_not_be_eligible_for_reassignment() {
+    val facilityId = UUID.fromString("1508884c-a4fd-45c8-b956-5990eca11f22")
+
+    val facility = TestData.facility(
+        uuid = facilityId,
+        name = "PHC RTSL",
+        facilityType = "UHC"
+    )
+
+    val patientId = UUID.fromString("c7fc577d-2076-4799-a139-96040dc8e801")
+    val patientAddressId = UUID.fromString("4e8ba171-0c0a-488e-936b-6792d9d5cb75")
+
+    val patientProfile = TestData.patientProfile(
+        patientName = "Ramesh Prasad",
+        patientUuid = patientId,
+        patientAddressUuid = patientAddressId,
+        generatePhoneNumber = false,
+        patientPhoneNumber = "1111111111",
+        generateBusinessId = false,
+        patientAddressStreet = "45 Marigold Lane",
+        patientAddressColonyOrVillage = "Carroll Gardens",
+        gender = Gender.Male,
+        generateDateOfBirth = false,
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = 65,
+            ageUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+            dateOfBirth = null
+        ),
+        patientRegisteredFacilityId = facilityId,
+        patientAssignedFacilityId = facilityId,
+        patientStatus = Active,
+        patientCreatedAt = Instant.parse("2017-01-01T00:00:00Z"),
+        patientUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        patientDeletedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+
+    val patientMedicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("a7ce2c64-0c42-4919-b4fa-113eb90fd651"),
+        patientUuid = patientId,
+        diagnosedWithHypertension = No,
+        hasDiabetes = No
+    )
+
+    val patientBp1 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("543036e0-8d85-4e4c-8cd0-dd2be8b45ed0"),
+        patientUuid = patientId,
+        facilityUuid = facilityId,
+        systolic = 120,
+        diastolic = 80,
+        createdAt = Instant.parse("2017-12-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-12-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-12-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    val patientBp2 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("0969a4d6-962b-4ec3-92e3-bcd450da6698"),
+        patientUuid = patientId,
+        facilityUuid = facilityId,
+        systolic = 120,
+        diastolic = 80,
+        createdAt = Instant.parse("2017-11-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-11-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-11-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    val patientBp3 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("f3a63d58-e63c-42d0-a0e1-9ee4f8a1c540"),
+        patientUuid = patientId,
+        facilityUuid = facilityId,
+        systolic = 120,
+        diastolic = 80,
+        createdAt = Instant.parse("2017-10-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-10-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-10-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    facilityRepository.save(listOf(facility))
+    patientRepository.save(listOf(patientProfile))
+    medicalHistoryRepository.save(listOf(patientMedicalHistory))
+    bloodPressureRepository.save(listOf(patientBp1, patientBp2, patientBp3))
+
+    // when
+    val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(patientId)
+
+    // then
+    assertThat(isPatientEligibleForReassignment).isFalse()
+  }
+
+  @Test
+  fun if_patient_has_died_they_should_not_be_eligible_for_reassignment() {
+    val facilityId = UUID.fromString("2b74c78d-06be-458a-a55b-6f7b2eb3c1ea")
+
+    val facility = TestData.facility(
+        uuid = facilityId,
+        name = "PHC RTSL",
+        facilityType = "UHC"
+    )
+
+    val patientId = UUID.fromString("5a3ab10b-3ce8-43c6-a4bc-d071c0684742")
+    val patientAddressId = UUID.fromString("d21b385d-7d9e-4063-9adf-5eeb12ab8fee")
+
+    val patientProfile = TestData.patientProfile(
+        patientName = "Ramesh Prasad",
+        patientUuid = patientId,
+        patientAddressUuid = patientAddressId,
+        generatePhoneNumber = false,
+        patientPhoneNumber = "1111111111",
+        generateBusinessId = false,
+        patientAddressStreet = "45 Marigold Lane",
+        patientAddressColonyOrVillage = "Carroll Gardens",
+        gender = Gender.Male,
+        generateDateOfBirth = false,
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = 65,
+            ageUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+            dateOfBirth = null
+        ),
+        patientRegisteredFacilityId = facilityId,
+        patientAssignedFacilityId = facilityId,
+        patientStatus = Dead,
+        patientCreatedAt = Instant.parse("2017-01-01T00:00:00Z"),
+        patientUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        patientDeletedAt = null
+    )
+
+    val patientMedicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("bffe49f3-9d86-43f9-a733-5f69ff645446"),
+        patientUuid = patientId,
+        diagnosedWithHypertension = No,
+        hasDiabetes = No
+    )
+
+    val patientBp1 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("335ca45f-ef9c-4823-bd7a-b512115905da"),
+        patientUuid = patientId,
+        facilityUuid = facilityId,
+        systolic = 120,
+        diastolic = 80,
+        createdAt = Instant.parse("2017-12-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-12-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-12-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    val patientBp2 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("49187cba-52df-4775-93ea-d83e148ce9f4"),
+        patientUuid = patientId,
+        facilityUuid = facilityId,
+        systolic = 120,
+        diastolic = 80,
+        createdAt = Instant.parse("2017-11-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-11-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-11-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    val patientBp3 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("80212b4e-d5e3-4d19-a9e0-2c592c956739"),
+        patientUuid = patientId,
+        facilityUuid = facilityId,
+        systolic = 120,
+        diastolic = 80,
+        createdAt = Instant.parse("2017-10-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-10-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-10-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    facilityRepository.save(listOf(facility))
+    patientRepository.save(listOf(patientProfile))
+    medicalHistoryRepository.save(listOf(patientMedicalHistory))
+    bloodPressureRepository.save(listOf(patientBp1, patientBp2, patientBp3))
+
+    // when
+    val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(patientId)
+
+    // then
+    assertThat(isPatientEligibleForReassignment).isFalse()
+  }
+
+  @Test
+  fun if_patient_has_been_diagnosed_with_htn_they_should_not_be_eligible_for_reassignment() {
+    val facilityId = UUID.fromString("270b8eff-e365-4732-b102-60806ee9f597")
+
+    val facility = TestData.facility(
+        uuid = facilityId,
+        name = "PHC RTSL",
+        facilityType = "UHC"
+    )
+
+    val patientId = UUID.fromString("fd4aba58-259e-43e9-a11d-3466dde66322")
+    val patientAddressId = UUID.fromString("26599334-3958-45e6-818c-3aed73aa1141")
+
+    val patientProfile = TestData.patientProfile(
+        patientName = "Ramesh Prasad",
+        patientUuid = patientId,
+        patientAddressUuid = patientAddressId,
+        generatePhoneNumber = false,
+        patientPhoneNumber = "1111111111",
+        generateBusinessId = false,
+        patientAddressStreet = "45 Marigold Lane",
+        patientAddressColonyOrVillage = "Carroll Gardens",
+        gender = Gender.Male,
+        generateDateOfBirth = false,
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = 65,
+            ageUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+            dateOfBirth = null
+        ),
+        patientRegisteredFacilityId = facilityId,
+        patientAssignedFacilityId = facilityId,
+        patientStatus = Active,
+        patientCreatedAt = Instant.parse("2017-01-01T00:00:00Z"),
+        patientUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        patientDeletedAt = null
+    )
+
+    val patientMedicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("acfdfc7f-14d4-447d-9cf5-de90313c3b44"),
+        patientUuid = patientId,
+        diagnosedWithHypertension = Yes,
+        hasDiabetes = No
+    )
+
+    val patientBp1 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("3bbc5e68-f159-471b-82d3-e24f8f1f3768"),
+        patientUuid = patientId,
+        facilityUuid = facilityId,
+        systolic = 120,
+        diastolic = 80,
+        createdAt = Instant.parse("2017-12-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-12-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-12-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    val patientBp2 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("429cb7c7-aa09-4d41-bf0b-60a73ac7bd94"),
+        patientUuid = patientId,
+        facilityUuid = facilityId,
+        systolic = 120,
+        diastolic = 80,
+        createdAt = Instant.parse("2017-11-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-11-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-11-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    val patientBp3 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("7f6e57a5-3dc3-4a72-af05-8c41a4a96078"),
+        patientUuid = patientId,
+        facilityUuid = facilityId,
+        systolic = 120,
+        diastolic = 80,
+        createdAt = Instant.parse("2017-10-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-10-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-10-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    facilityRepository.save(listOf(facility))
+    patientRepository.save(listOf(patientProfile))
+    medicalHistoryRepository.save(listOf(patientMedicalHistory))
+    bloodPressureRepository.save(listOf(patientBp1, patientBp2, patientBp3))
+
+    // when
+    val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(patientId)
+
+    // then
+    assertThat(isPatientEligibleForReassignment).isFalse()
+  }
+
+  @Test
+  fun if_patient_has_high_bp_they_should_not_be_eligible_for_reassignment() {
+    val facilityId = UUID.fromString("270b8eff-e365-4732-b102-60806ee9f597")
+
+    val facility = TestData.facility(
+        uuid = facilityId,
+        name = "PHC RTSL",
+        facilityType = "UHC"
+    )
+
+    val patientId = UUID.fromString("fd4aba58-259e-43e9-a11d-3466dde66322")
+    val patientAddressId = UUID.fromString("26599334-3958-45e6-818c-3aed73aa1141")
+
+    val patientProfile = TestData.patientProfile(
+        patientName = "Ramesh Prasad",
+        patientUuid = patientId,
+        patientAddressUuid = patientAddressId,
+        generatePhoneNumber = false,
+        patientPhoneNumber = "1111111111",
+        generateBusinessId = false,
+        patientAddressStreet = "45 Marigold Lane",
+        patientAddressColonyOrVillage = "Carroll Gardens",
+        gender = Gender.Male,
+        generateDateOfBirth = false,
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = 65,
+            ageUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+            dateOfBirth = null
+        ),
+        patientRegisteredFacilityId = facilityId,
+        patientAssignedFacilityId = facilityId,
+        patientStatus = Active,
+        patientCreatedAt = Instant.parse("2017-01-01T00:00:00Z"),
+        patientUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        patientDeletedAt = null
+    )
+
+    val patientMedicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("acfdfc7f-14d4-447d-9cf5-de90313c3b44"),
+        patientUuid = patientId,
+        diagnosedWithHypertension = No,
+        hasDiabetes = No
+    )
+
+    val patientBp1 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("3bbc5e68-f159-471b-82d3-e24f8f1f3768"),
+        patientUuid = patientId,
+        facilityUuid = facilityId,
+        systolic = 120,
+        diastolic = 80,
+        createdAt = Instant.parse("2017-12-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-12-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-12-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    val patientBp2 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("429cb7c7-aa09-4d41-bf0b-60a73ac7bd94"),
+        patientUuid = patientId,
+        facilityUuid = facilityId,
+        systolic = 140,
+        diastolic = 80,
+        createdAt = Instant.parse("2017-11-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-11-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-11-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    val patientBp3 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("7f6e57a5-3dc3-4a72-af05-8c41a4a96078"),
+        patientUuid = patientId,
+        facilityUuid = facilityId,
+        systolic = 120,
+        diastolic = 80,
+        createdAt = Instant.parse("2017-10-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-10-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-10-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    facilityRepository.save(listOf(facility))
+    patientRepository.save(listOf(patientProfile))
+    medicalHistoryRepository.save(listOf(patientMedicalHistory))
+    bloodPressureRepository.save(listOf(patientBp1, patientBp2, patientBp3))
+
+    // when
+    val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(patientId)
+
+    // then
+    assertThat(isPatientEligibleForReassignment).isFalse()
+  }
 }

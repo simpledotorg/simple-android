@@ -136,6 +136,10 @@ class BloodPressureRepository @Inject constructor(
     return dao.allBloodPressures(patientUuid)
   }
 
+  fun allBloodPressuresRecordedSinceImmediate(patientUuid: UUID, since: Instant): List<BloodPressureMeasurement> {
+    return dao.allBloodPressuresRecordedSinceImmediate(patientUuid = patientUuid, since = since)
+  }
+
   fun allBloodPressuresDataSource(patientUuid: UUID): DataSource.Factory<Int, BloodPressureMeasurement> {
     return dao.allBloodPressuresDataSource(patientUuid)
   }

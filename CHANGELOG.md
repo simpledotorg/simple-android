@@ -50,6 +50,7 @@
 - Bump Gradle to v8.7
 - Bump Jackson Core to v2.17.0
 - Add `isPatientEligibleForReassignment` to `Patient` model 
+- Add function in `PatientRepository` to check if patient is eligible for reassignment
 
 ### Fixes
 

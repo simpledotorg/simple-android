@@ -6,7 +6,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.TestClinicApp
-import org.simple.sharedTestCode.TestData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientStatus
@@ -14,13 +13,18 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.rules.SaveDatabaseRule
 import org.simple.clinic.user.User
+import org.simple.clinic.util.toUtcInstant
+import org.simple.sharedTestCode.TestData
 import org.simple.sharedTestCode.util.Rules
+import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.sharedTestCode.util.TestUtcClock
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDate
 import java.time.Month
 import java.time.temporal.ChronoUnit.DAYS
+import java.time.temporal.ChronoUnit.MONTHS
+import java.time.temporal.ChronoUnit.YEARS
 import java.util.UUID
 import javax.inject.Inject
 
@@ -29,6 +33,9 @@ class BloodPressureRepositoryAndroidTest {
 
   @Inject
   lateinit var clock: TestUtcClock
+
+  @Inject
+  lateinit var userClock: TestUserClock
 
   @Inject
   lateinit var appDatabase: org.simple.clinic.AppDatabase
@@ -267,6 +274,72 @@ class BloodPressureRepositoryAndroidTest {
             bpRecordADayInFuture,
             bpRecordRightNow,
             bpRecordADayInPast
+        ))
+  }
+
+  @Test
+  fun fetching_blood_pressures_since_should_work_correctly() {
+    // given
+    val patientUuid = UUID.fromString("608c3085-a1f8-4e83-8d13-c41a3c2c6c5a")
+    val since = LocalDate.now(clock)
+        .minus(6, MONTHS)
+        .toUtcInstant(userClock)
+
+    val bpRecordRightNow = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        recordedAt = Instant.now(clock)
+    )
+
+    val bpRecorded1MonthAgo = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        recordedAt = LocalDate.now(clock).minus(1, MONTHS)
+            .toUtcInstant(userClock)
+    )
+
+    val bpRecorded3MonthsAgo = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        recordedAt = LocalDate.now(clock).minus(3, MONTHS)
+            .toUtcInstant(userClock)
+    )
+
+    val bpRecorded5MonthsAgo = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        recordedAt = LocalDate.now(clock).minus(5, MONTHS)
+            .toUtcInstant(userClock)
+    )
+
+    val bpRecorded7MonthsAgo = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        recordedAt = LocalDate.now(clock).minus(7, MONTHS)
+            .toUtcInstant(userClock)
+    )
+
+    val bpRecorded1YearAgo = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        recordedAt = LocalDate.now(clock).minus(1, YEARS)
+            .toUtcInstant(userClock)
+    )
+
+    appDatabase.bloodPressureDao().save(listOf(
+        bpRecordRightNow,
+        bpRecorded1MonthAgo,
+        bpRecorded3MonthsAgo,
+        bpRecorded5MonthsAgo,
+        bpRecorded7MonthsAgo,
+        bpRecorded1YearAgo
+    ))
+
+    // when
+    val bpMeasurements = repository
+        .allBloodPressuresRecordedSinceImmediate(patientUuid, since)
+
+    // then
+    assertThat(bpMeasurements)
+        .isEqualTo(listOf(
+            bpRecordRightNow,
+            bpRecorded1MonthAgo,
+            bpRecorded3MonthsAgo,
+            bpRecorded5MonthsAgo,
         ))
   }
 

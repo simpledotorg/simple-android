@@ -19,8 +19,8 @@
 - Bump AndroidX Annotation to v1.7.1
 - Bump AndroidX AppCompat to v1.6.1
 - Bump AndroidX Core Testing to v2.2.0
-- Bump AndroidX Camera to v1.3.2
 - Bump AndroidX Camera View to v1.3.3
+- Bump AndroidX Camera to v1.3.3
 - Bump AndroidX Core KTX to v1.12.0
 - Bump AndroidX Lifecycle to v2.7.0
 - Bump AndroidX Fragment to v1.6.2

@@ -1126,14 +1126,16 @@ object TestData {
           ageValue = null,
           ageUpdatedAt = null,
           dateOfBirth = null
-      )
+      ),
+      isEligibleForReassignment: Boolean = false,
   ) = RecentPatient(
       uuid = uuid,
       fullName = fullName,
       gender = gender,
       ageDetails = patientAgeDetails,
       patientRecordedAt = patientRecordedAt,
-      updatedAt = updatedAt
+      updatedAt = updatedAt,
+      isEligibleForReassignment = isEligibleForReassignment,
   )
 
   fun ongoingLoginEntry(

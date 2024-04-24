@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:theme="@style/ThemeOverlay.Simple.Green1Primary"
+  android:orientation="horizontal"
+  android:gravity="center_vertical"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  tools:ignore="UseCompoundDrawables">
+
+  <ImageView
+    android:id="@+id/facilityReassignmentImageView"
+    android:layout_width="@dimen/spacing_16"
+    android:layout_height="@dimen/spacing_16"
+    tools:ignore="ContentDescription"
+    app:srcCompat="@drawable/ic_facility_reassignment"
+    app:tint="?attr/colorPrimary" />
+
+  <TextView
+    android:id="@+id/facilityReassignmentTextView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/spacing_4"
+    android:text="@string/patient_facility_reassignment"
+    android:textAppearance="?attr/textAppearanceBody2"
+    android:textColor="?attr/colorPrimary"
+    tools:ignore="RtlSymmetry"/>
+
+</LinearLayout>
+

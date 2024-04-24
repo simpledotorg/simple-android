@@ -39,7 +39,9 @@ data class OverdueAppointment(
     @Embedded(prefix = "call_result_")
     val callResult: CallResult?,
 
-    val patientAssignedFacilityUuid: UUID?
+    val patientAssignedFacilityUuid: UUID?,
+
+    val isEligibleForReassignment: Boolean,
 ) : Parcelable {
 
   @Dao
@@ -50,7 +52,7 @@ data class OverdueAppointment(
       @Language("RoomSql")
       private const val OVERDUE_APPOINTMENTS_QUERY = """
       SELECT 
-        P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.assignedFacilityId patientAssignedFacilityUuid,
+        P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.assignedFacilityId patientAssignedFacilityUuid, P.isEligibleForReassignment,
         
         A.uuid appt_uuid, A.patientUuid appt_patientUuid, A.facilityUuid appt_facilityUuid, A.scheduledDate appt_scheduledDate, A.status appt_status,
         A.cancelReason appt_cancelReason, A.remindOn appt_remindOn, A.agreedToVisit appt_agreedToVisit, A.appointmentType appt_appointmentType,

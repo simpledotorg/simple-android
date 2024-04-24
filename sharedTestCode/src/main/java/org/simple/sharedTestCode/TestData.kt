@@ -1041,7 +1041,8 @@ object TestData {
           ageUpdatedAt = null,
           dateOfBirth = LocalDate.now(UTC).minusYears(30)
       ),
-      callResult: CallResult? = null
+      callResult: CallResult? = null,
+      isEligibleForReassignment: Boolean = false,
   ): OverdueAppointment {
     return OverdueAppointment(
         fullName = name,
@@ -1051,7 +1052,8 @@ object TestData {
         patientAddress = patientAddress,
         appointment = appointment,
         callResult = callResult,
-        patientAssignedFacilityUuid = patientAssignedFacilityId
+        patientAssignedFacilityUuid = patientAssignedFacilityId,
+        isEligibleForReassignment = isEligibleForReassignment,
     )
   }
 

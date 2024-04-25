@@ -223,8 +223,8 @@ class BloodPressureSummaryView(
     ))
   }
 
-  override fun openBloodPressureUpdateSheet(bpUuid: UUID) {
-    val intent = BloodPressureEntrySheet.intentForUpdateBp(context, bpUuid)
+  override fun openBloodPressureUpdateSheet(bpUuid: UUID, patientUuid: UUID) {
+    val intent = BloodPressureEntrySheet.intentForUpdateBp(context, bpUuid, patientUuid)
     activity.startActivity(intent)
   }
 

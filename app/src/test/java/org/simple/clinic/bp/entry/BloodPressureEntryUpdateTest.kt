@@ -10,6 +10,7 @@ import org.junit.Test
 import org.simple.clinic.bp.BloodPressureReading
 import org.simple.clinic.bp.ValidationResult.ErrorDiastolicEmpty
 import org.simple.clinic.bp.ValidationResult.ErrorSystolicEmpty
+import org.simple.clinic.bp.entry.BloodPressureSaveState.NOT_SAVING_BLOOD_PRESSURE
 import org.simple.clinic.bp.entry.BloodPressureSaveState.SAVING_BLOOD_PRESSURE
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -176,14 +177,16 @@ class BloodPressureEntryUpdateTest {
   }
 
   @Test
-  fun `when the patient reassignment status is updated then do nothing`() {
+  fun `when the patient reassignment status is updated then set BP saved result and finish`() {
+    val model = defaultModel.bloodPressureStateChanged(SAVING_BLOOD_PRESSURE)
+    
     spec
-        .given(defaultModel)
+        .given(model)
         .whenEvents(PatientReassignmentEligibilityStatusUpdated)
         .then(
             assertThatNext(
-                hasNoModel(),
-                hasNoEffects()
+                hasModel(model.bloodPressureStateChanged(NOT_SAVING_BLOOD_PRESSURE)),
+                hasEffects(SetBpSavedResultAndFinish)
             )
         )
   }

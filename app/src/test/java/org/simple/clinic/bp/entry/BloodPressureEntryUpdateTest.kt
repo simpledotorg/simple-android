@@ -123,14 +123,14 @@ class BloodPressureEntryUpdateTest {
   }
 
   @Test
-  fun `when blood pressure is saved, then close the sheet`() {
+  fun `when blood pressure is saved, then check and update the patient reassignment status`() {
     spec
         .given(defaultModel)
         .whenEvents(BloodPressureSaved(wasDateChanged = false))
         .then(
             assertThatNext(
-                hasModel(defaultModel.bloodPressureStateChanged(BloodPressureSaveState.NOT_SAVING_BLOOD_PRESSURE)),
-                hasEffects(SetBpSavedResultAndFinish as BloodPressureEntryEffect)
+                hasNoModel(),
+                hasEffects(CheckAndUpdatePatientReassignmentEligibilityStatus(defaultModel.openAs.patientUuid))
             )
         )
   }

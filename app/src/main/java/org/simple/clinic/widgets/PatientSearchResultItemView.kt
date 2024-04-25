@@ -70,6 +70,9 @@ class PatientSearchResultItemView(
   private val identifierTextView
     get() = binding.identifierTextView
 
+  private val patientFacilityReassignmentStatusView
+    get() = binding.facilityReassignmentView.root
+
   private val patientDiedStatusView
     get() = binding.patientDiedStatusView
 
@@ -103,10 +106,15 @@ class PatientSearchResultItemView(
     )
     renderIdentifier(model.identifier, searchQuery)
     renderPatientStatus(model.status)
+    renderPatientReassignmentStatus(model.isEligibleForReassignment)
   }
 
   private fun renderPatientStatus(status: PatientStatus) {
     patientDiedStatusView.visibleOrGone(isVisible = status == Dead)
+  }
+
+  private fun renderPatientReassignmentStatus(isEligibleForReassignment: Boolean) {
+    patientFacilityReassignmentStatusView.visibleOrGone(isEligibleForReassignment)
   }
 
   private fun getId(identifier: Identifier, searchQuery: String): Id {
@@ -263,7 +271,8 @@ class PatientSearchResultItemView(
       val identifier: Identifier?,
       val assignedFacilityId: UUID?,
       val assignedFacilityName: String?,
-      val status: PatientStatus
+      val status: PatientStatus,
+      val isEligibleForReassignment: Boolean,
   )
 
   sealed class Name(open val patientName: String) {

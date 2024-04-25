@@ -11,10 +11,10 @@ import org.simple.clinic.bp.BloodPressureReading
 import org.simple.clinic.bp.ValidationResult.ErrorDiastolicEmpty
 import org.simple.clinic.bp.ValidationResult.ErrorSystolicEmpty
 import org.simple.clinic.bp.entry.BloodPressureSaveState.SAVING_BLOOD_PRESSURE
-import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid
+import org.simple.sharedTestCode.util.TestUserClock
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -171,6 +171,19 @@ class BloodPressureEntryUpdateTest {
                     CreateNewBpEntry(patientUuid = patientUuid, reading = reading, userEnteredDate = entryDate, prefilledDate = entryDate)
                         as BloodPressureEntryEffect
                 )
+            )
+        )
+  }
+
+  @Test
+  fun `when the patient reassignment status is updated then do nothing`() {
+    spec
+        .given(defaultModel)
+        .whenEvents(PatientReassignmentEligibilityStatusUpdated)
+        .then(
+            assertThatNext(
+                hasNoModel(),
+                hasNoEffects()
             )
         )
   }

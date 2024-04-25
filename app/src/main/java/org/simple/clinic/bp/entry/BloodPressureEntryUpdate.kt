@@ -41,6 +41,7 @@ class BloodPressureEntryUpdate(
       is ShowBpClicked -> showBpClicked(model)
       is BloodPressureSaved -> next(model.bloodPressureStateChanged(NOT_SAVING_BLOOD_PRESSURE), SetBpSavedResultAndFinish)
       is DatePrefilled -> next(model.datePrefilled(event.prefilledDate))
+      is PatientReassignmentEligibilityStatusUpdated -> noChange()
     }
   }
 

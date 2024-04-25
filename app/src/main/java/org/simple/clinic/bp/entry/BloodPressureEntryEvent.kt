@@ -59,3 +59,7 @@ data class BloodPressureMeasurementFetched(
 ) : BloodPressureEntryEvent()
 
 data class DatePrefilled(val prefilledDate: LocalDate) : BloodPressureEntryEvent()
+
+object PatientReassignmentEligibilityStatusUpdated : BloodPressureEntryEvent() {
+  override val analyticsName = "Blood Pressure Entry:Patient Reassignment eligibility status updated"
+}

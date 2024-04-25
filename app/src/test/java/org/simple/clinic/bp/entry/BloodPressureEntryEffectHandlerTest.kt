@@ -1,13 +1,14 @@
 package org.simple.clinic.bp.entry
 
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
 import org.junit.After
 import org.junit.Test
-import org.simple.sharedTestCode.TestData
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
 import org.simple.clinic.mobius.EffectHandlerTestCase
-import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
+import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.TestUserClock
 import java.time.LocalDate
 import java.time.ZoneOffset.UTC
 import java.util.UUID
@@ -23,6 +24,8 @@ class BloodPressureEntryEffectHandlerTest {
       registrationFacilityUuid = facility.uuid,
       currentFacilityUuid = facility.uuid
   )
+
+  private val patientUuid = UUID.fromString("b02d2c99-0572-4318-9e4b-127f14ea5316")
 
   private val effectHandler = BloodPressureEntryEffectHandler(
       ui = ui,
@@ -54,5 +57,15 @@ class BloodPressureEntryEffectHandlerTest {
     verify(ui).setDateOnInputFields(entryDate)
     verify(ui).showBpDate(entryDate)
     testCase.assertOutgoingEvents(DatePrefilled(entryDate))
+  }
+
+  @Test
+  fun `when patient update reassignment eligibility status effect is received then status should be updated`() {
+    //when
+    testCase.dispatch(CheckAndUpdatePatientReassignmentEligibilityStatus(patientUuid))
+
+    //then
+    testCase.assertOutgoingEvents(PatientReassignmentEligibilityStatusUpdated)
+    verifyNoInteractions(ui)
   }
 }

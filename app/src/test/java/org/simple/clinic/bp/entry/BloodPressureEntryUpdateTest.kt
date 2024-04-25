@@ -10,11 +10,12 @@ import org.junit.Test
 import org.simple.clinic.bp.BloodPressureReading
 import org.simple.clinic.bp.ValidationResult.ErrorDiastolicEmpty
 import org.simple.clinic.bp.ValidationResult.ErrorSystolicEmpty
+import org.simple.clinic.bp.entry.BloodPressureSaveState.NOT_SAVING_BLOOD_PRESSURE
 import org.simple.clinic.bp.entry.BloodPressureSaveState.SAVING_BLOOD_PRESSURE
-import org.simple.sharedTestCode.util.TestUserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid
+import org.simple.sharedTestCode.util.TestUserClock
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -122,14 +123,14 @@ class BloodPressureEntryUpdateTest {
   }
 
   @Test
-  fun `when blood pressure is saved, then close the sheet`() {
+  fun `when blood pressure is saved, then check and update the patient reassignment status`() {
     spec
         .given(defaultModel)
         .whenEvents(BloodPressureSaved(wasDateChanged = false))
         .then(
             assertThatNext(
-                hasModel(defaultModel.bloodPressureStateChanged(BloodPressureSaveState.NOT_SAVING_BLOOD_PRESSURE)),
-                hasEffects(SetBpSavedResultAndFinish as BloodPressureEntryEffect)
+                hasNoModel(),
+                hasEffects(CheckAndUpdatePatientReassignmentEligibilityStatus(defaultModel.openAs.patientUuid))
             )
         )
   }
@@ -171,6 +172,21 @@ class BloodPressureEntryUpdateTest {
                     CreateNewBpEntry(patientUuid = patientUuid, reading = reading, userEnteredDate = entryDate, prefilledDate = entryDate)
                         as BloodPressureEntryEffect
                 )
+            )
+        )
+  }
+
+  @Test
+  fun `when the patient reassignment status is updated then set BP saved result and finish`() {
+    val model = defaultModel.bloodPressureStateChanged(SAVING_BLOOD_PRESSURE)
+    
+    spec
+        .given(model)
+        .whenEvents(PatientReassignmentEligibilityStatusUpdated)
+        .then(
+            assertThatNext(
+                hasModel(model.bloodPressureStateChanged(NOT_SAVING_BLOOD_PRESSURE)),
+                hasEffects(SetBpSavedResultAndFinish)
             )
         )
   }

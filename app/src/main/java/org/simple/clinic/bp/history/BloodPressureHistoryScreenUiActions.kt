@@ -5,6 +5,6 @@ import java.util.UUID
 
 interface BloodPressureHistoryScreenUiActions {
   fun openBloodPressureEntrySheet(patientUuid: UUID)
-  fun openBloodPressureUpdateSheet(bpUuid: UUID)
+  fun openBloodPressureUpdateSheet(bpUuid: UUID, patientUuid: UUID)
   fun showBloodPressures(dataSourceFactory: BloodPressureHistoryListItemDataSourceFactory)
 }

@@ -176,8 +176,8 @@ class BloodPressureHistoryScreen : BaseScreen<
     requireContext().startActivity(intent)
   }
 
-  override fun openBloodPressureUpdateSheet(bpUuid: UUID) {
-    val intent = BloodPressureEntrySheet.intentForUpdateBp(requireContext(), bpUuid)
+  override fun openBloodPressureUpdateSheet(bpUuid: UUID, patientUuid: UUID) {
+    val intent = BloodPressureEntrySheet.intentForUpdateBp(requireContext(), bpUuid, patientUuid)
     requireContext().startActivity(intent)
   }
 

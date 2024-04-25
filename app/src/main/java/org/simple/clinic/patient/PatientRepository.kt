@@ -783,6 +783,16 @@ class PatientRepository @Inject constructor(
     )
   }
 
+  fun updatePatientReassignmentEligibilityStatus(
+      patientUuid: UUID,
+      isEligibleForReassignment: Boolean,
+  ) {
+    database.patientDao().updatePatientReassignmentEligibilityStatus(
+        patientUuid = patientUuid,
+        isEligibleForReassignment = isEligibleForReassignment
+    )
+  }
+
   fun isPatientEligibleForReassignment(patientUuid: UUID): Boolean {
     val patient = database.patientDao().patientImmediate(patientUuid)
 

@@ -84,9 +84,9 @@ class BloodPressureEntrySheet : BottomSheetActivity(), BloodPressureEntryUi, Rem
           .putExtra(KEY_OPEN_AS, New(patientUuid))
     }
 
-    fun intentForUpdateBp(context: Context, bloodPressureMeasurementUuid: UUID): Intent {
+    fun intentForUpdateBp(context: Context, bloodPressureMeasurementUuid: UUID, patientUuid: UUID): Intent {
       return Intent(context, BloodPressureEntrySheet::class.java)
-          .putExtra(KEY_OPEN_AS, Update(bloodPressureMeasurementUuid))
+          .putExtra(KEY_OPEN_AS, Update(bloodPressureMeasurementUuid, patientUuid))
     }
 
     fun wasBloodPressureSaved(data: Intent): Boolean {

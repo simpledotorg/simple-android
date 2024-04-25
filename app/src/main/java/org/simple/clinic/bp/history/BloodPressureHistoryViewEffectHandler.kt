@@ -10,7 +10,10 @@ class BloodPressureHistoryViewEffectHandler(
   override fun handle(viewEffect: BloodPressureHistoryViewEffect) {
     when (viewEffect) {
       is OpenBloodPressureEntrySheet -> uiActions.openBloodPressureEntrySheet(viewEffect.patientUuid)
-      is OpenBloodPressureUpdateSheet -> uiActions.openBloodPressureUpdateSheet(viewEffect.bloodPressureMeasurement.uuid)
+      is OpenBloodPressureUpdateSheet -> uiActions.openBloodPressureUpdateSheet(
+          viewEffect.bloodPressureMeasurement.uuid,
+          viewEffect.bloodPressureMeasurement.patientUuid,
+      )
       is ShowBloodPressures -> uiActions.showBloodPressures(viewEffect.bloodPressureHistoryDataSourceFactory)
     }.exhaustive()
   }

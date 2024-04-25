@@ -132,13 +132,13 @@ class BloodPressureValidationTest {
         ValidationErrorsAndDoNotGoToDateEntryParams(New(patientUuid), "120", "0"),
         ValidationErrorsAndDoNotGoToDateEntryParams(New(patientUuid), "120", "140"),
 
-        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "", "80"),
-        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "120", ""),
-        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "999", "80"),
-        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "0", "80"),
-        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "120", "999"),
-        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "120", "0"),
-        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid), "120", "140"))
+        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid, patientUuid), "", "80"),
+        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid, patientUuid), "120", ""),
+        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid, patientUuid), "999", "80"),
+        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid, patientUuid), "0", "80"),
+        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid, patientUuid), "120", "999"),
+        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid, patientUuid), "120", "0"),
+        ValidationErrorsAndDoNotGoToDateEntryParams(Update(bpUuid, patientUuid), "120", "140"))
   }
 
   data class ValidationErrorsAndDoNotGoToDateEntryParams(
@@ -152,15 +152,15 @@ class BloodPressureValidationTest {
     instantiateFixture(openAsNew)
   }
 
-  private fun sheetCreatedForUpdate(existingBpUuid: UUID) {
-    val openAsUpdate = Update(existingBpUuid)
+  private fun sheetCreatedForUpdate(existingBpUuid: UUID, patientUuid: UUID) {
+    val openAsUpdate = Update(existingBpUuid, patientUuid)
     instantiateFixture(openAsUpdate)
   }
 
   private fun sheetCreated(openAs: OpenAs) {
     when (openAs) {
       is New -> sheetCreatedForNew(openAs.patientUuid)
-      is Update -> sheetCreatedForUpdate(openAs.bpUuid)
+      is Update -> sheetCreatedForUpdate(openAs.bpUuid, openAs.patientUuid)
       else -> throw IllegalStateException("Unknown `openAs`: $openAs")
     }
   }

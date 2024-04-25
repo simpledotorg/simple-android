@@ -12,7 +12,8 @@ import org.simple.clinic.util.Unicode
 import java.util.UUID
 
 @DatabaseView("""
-  SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.assignedFacilityId, P.status,
+  SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt,
+  P.assignedFacilityId, P.status, P.isEligibleForReassignment,
   PA.uuid addr_uuid, PA.streetAddress addr_streetAddress, PA.colonyOrVillage addr_colonyOrVillage, PA.zone addr_zone, PA.district addr_district,
   PA.state addr_state, PA.country addr_country,
   PA.createdAt addr_createdAt, PA.updatedAt addr_updatedAt, PA.deletedAt addr_deletedAt,
@@ -51,7 +52,9 @@ data class PatientSearchResult(
     @Embedded(prefix = "id_")
     val identifier: Identifier?,
 
-    val identifierSearchHelp: String?
+    val identifierSearchHelp: String?,
+
+    val isEligibleForReassignment: Boolean,
 ) : Parcelable {
 
   override fun toString(): String {

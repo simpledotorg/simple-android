@@ -1101,7 +1101,8 @@ object TestData {
           ageValue = 45,
           ageUpdatedAt = Instant.now(),
           dateOfBirth = null
-      )
+      ),
+      isEligibleForReassignment: Boolean = false,
   ): PatientSearchResult {
     return PatientSearchResult(
         uuid = uuid,
@@ -1114,7 +1115,8 @@ object TestData {
         address = address,
         phoneNumber = phoneNumber,
         identifier = identifier,
-        identifierSearchHelp = identifierSearchHelp
+        identifierSearchHelp = identifierSearchHelp,
+        isEligibleForReassignment = isEligibleForReassignment,
     )
   }
 

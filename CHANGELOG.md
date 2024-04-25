@@ -51,6 +51,7 @@
 - Bump Jackson Core to v2.17.0
 - Add `isPatientEligibleForReassignment` to `Patient` model 
 - Add function in `PatientRepository` to check if patient is eligible for reassignment
+- Update `isPatientEligibleForReassignment` when BP is saved.
 
 ### Fixes
 

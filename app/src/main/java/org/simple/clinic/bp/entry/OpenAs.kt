@@ -4,11 +4,13 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import java.util.UUID
 
-sealed class OpenAs : Parcelable {
+sealed interface OpenAs : Parcelable {
+
+  val patientUuid: UUID
 
   @Parcelize
-  data class New(val patientUuid: UUID) : OpenAs()
+  data class New(override val patientUuid: UUID) : OpenAs
 
   @Parcelize
-  data class Update(val bpUuid: UUID, val patientUuid: UUID) : OpenAs()
+  data class Update(val bpUuid: UUID, override val patientUuid: UUID) : OpenAs
 }

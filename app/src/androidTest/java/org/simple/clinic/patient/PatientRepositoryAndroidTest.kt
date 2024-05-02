@@ -4217,4 +4217,56 @@ class PatientRepositoryAndroidTest {
     // then
     assertThat(isPatientEligibleForReassignment).isFalse()
   }
+
+  @Test
+  fun updating_patient_reassignment_status_should_work_correctly() {
+    // given
+    val facilityId = UUID.fromString("77c9ae7d-5be9-49c1-a7b7-495591b13ae2")
+
+    val facility = TestData.facility(
+        uuid = facilityId,
+        name = "PHC RTSL",
+        facilityType = "UHC"
+    )
+
+    val patientId = UUID.fromString("824a15e8-59eb-4425-9a6c-6055a8609911")
+    val patientAddressId = UUID.fromString("962f2012-0ce3-4d0d-85b6-c8c6f3f0b55e")
+
+    val patientProfile = TestData.patientProfile(
+        patientName = "Ramesh Prasad",
+        patientUuid = patientId,
+        patientAddressUuid = patientAddressId,
+        generatePhoneNumber = false,
+        patientPhoneNumber = "1111111111",
+        generateBusinessId = false,
+        patientAddressStreet = "45 Marigold Lane",
+        patientAddressColonyOrVillage = "Carroll Gardens",
+        gender = Gender.Male,
+        generateDateOfBirth = false,
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = 65,
+            ageUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+            dateOfBirth = null
+        ),
+        patientRegisteredFacilityId = facilityId,
+        patientAssignedFacilityId = facilityId,
+        patientStatus = Active,
+        patientCreatedAt = Instant.parse("2017-01-01T00:00:00Z"),
+        patientUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        patientDeletedAt = null
+    )
+
+    facilityRepository.save(listOf(facility))
+    patientRepository.save(listOf(patientProfile))
+
+    // when
+    patientRepository.updatePatientReassignmentEligibilityStatus(
+        patientUuid = patientId,
+        isEligibleForReassignment = true
+    )
+
+    // then
+    val isPatientEligibleForReassignment = patientRepository.patientImmediate(patientId)?.isEligibleForReassignment ?: false
+    assertThat(isPatientEligibleForReassignment).isTrue()
+  }
 }

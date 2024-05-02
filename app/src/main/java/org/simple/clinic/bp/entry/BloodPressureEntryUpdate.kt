@@ -39,9 +39,8 @@ class BloodPressureEntryUpdate(
       is ChangeDateClicked -> changeDateClicked(model)
       is SaveClicked -> onSaveClicked(model)
       is ShowBpClicked -> showBpClicked(model)
-      is BloodPressureSaved -> dispatch(CheckAndUpdatePatientReassignmentEligibilityStatus(model.openAs.patientUuid))
+      is BloodPressureSaved -> next(model.bloodPressureStateChanged(NOT_SAVING_BLOOD_PRESSURE), SetBpSavedResultAndFinish)
       is DatePrefilled -> next(model.datePrefilled(event.prefilledDate))
-      is PatientReassignmentEligibilityStatusUpdated -> next(model.bloodPressureStateChanged(NOT_SAVING_BLOOD_PRESSURE), SetBpSavedResultAndFinish)
     }
   }
 

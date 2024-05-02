@@ -74,7 +74,3 @@ data class UpdateBpEntry(
   val wasDateChanged: Boolean
     get() = userEnteredDate != prefilledDate
 }
-
-data class CheckAndUpdatePatientReassignmentEligibilityStatus(
-    val patientUuid: UUID,
-) : BloodPressureEntryEffect()

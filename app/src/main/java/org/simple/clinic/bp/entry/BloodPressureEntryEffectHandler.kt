@@ -74,7 +74,6 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
         .addConsumer(ShowBpEntryScreen::class.java, { showBpEntryScreen(it.date) }, schedulersProvider.ui())
         .addConsumer(ShowDateValidationError::class.java, { showDateValidationError(it.result) }, schedulersProvider.ui())
         .addTransformer(CreateNewBpEntry::class.java, createNewBpEntryTransformer())
-        .addTransformer(CheckAndUpdatePatientReassignmentEligibilityStatus::class.java, checkAndUpdatePatientReassignmentEligibilityStatusTransformer())
         .addAction(SetBpSavedResultAndFinish::class.java, ui::setBpSavedResultAndFinish, schedulersProvider.ui())
         .addTransformer(UpdateBpEntry::class.java, updateBpEntryTransformer())
         .build()
@@ -249,19 +248,4 @@ class BloodPressureEntryEffectHandler @AssistedInject constructor(
   }
 
   private fun getExistingBloodPressureMeasurement(bpUuid: UUID) = bloodPressureRepository.measurementImmediate(bpUuid)
-
-  private fun checkAndUpdatePatientReassignmentEligibilityStatusTransformer()
-      : ObservableTransformer<CheckAndUpdatePatientReassignmentEligibilityStatus, BloodPressureEntryEvent> {
-    return ObservableTransformer { updateStatus ->
-      updateStatus
-          .observeOn(schedulersProvider.io())
-          .map {
-            val isEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(it.patientUuid)
-            patientRepository.updatePatientReassignmentEligibilityStatus(it.patientUuid, isEligibleForReassignment)
-          }
-          .map { PatientReassignmentEligibilityStatusUpdated }
-          .compose(reportAnalyticsEvents)
-          .cast()
-    }
-  }
 }

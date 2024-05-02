@@ -113,7 +113,7 @@ class BloodPressureValidationMockDateValidatorTest {
           verify(ui).showDateIsInFutureError()
         },
 
-        InvalidDateTestParams(Update(existingBpUuid, patientUuid), "01", "01", "2099", DateIsInFuture) { ui: Ui ->
+        InvalidDateTestParams(Update(existingBpUuid), "01", "01", "2099", DateIsInFuture) { ui: Ui ->
           verify(ui).showDateIsInFutureError()
         }
     )
@@ -154,7 +154,7 @@ class BloodPressureValidationMockDateValidatorTest {
   private fun `params for checking valid date input`(): List<DoNotSaveBpWithInvalidDateTestParams> {
     return listOf(
         DoNotSaveBpWithInvalidDateTestParams(New(patientUuid), DateIsInFuture),
-        DoNotSaveBpWithInvalidDateTestParams(Update(existingBpUuid, patientUuid), DateIsInFuture))
+        DoNotSaveBpWithInvalidDateTestParams(Update(existingBpUuid), DateIsInFuture))
   }
 
   data class DoNotSaveBpWithInvalidDateTestParams(
@@ -167,15 +167,15 @@ class BloodPressureValidationMockDateValidatorTest {
     instantiateFixture(openAsNew)
   }
 
-  private fun sheetCreatedForUpdate(existingBpUuid: UUID, patientUuid: UUID) {
-    val openAsUpdate = Update(existingBpUuid, patientUuid)
+  private fun sheetCreatedForUpdate(existingBpUuid: UUID) {
+    val openAsUpdate = Update(existingBpUuid)
     instantiateFixture(openAsUpdate)
   }
 
   private fun sheetCreated(openAs: OpenAs) {
     when (openAs) {
       is New -> sheetCreatedForNew(openAs.patientUuid)
-      is Update -> sheetCreatedForUpdate(openAs.bpUuid, openAs.patientUuid)
+      is Update -> sheetCreatedForUpdate(openAs.bpUuid)
       else -> throw IllegalStateException("Unknown `openAs`: $openAs")
     }
   }

@@ -7,7 +7,7 @@
 - Remove schedule and auto merge from renovate
 - Stop running CI checks for pushes on renovate branches
 - Use ubuntu machine for running integration/ui tests on CI
-- Bump AGP to v8.3.2
+- Bump AGP to v8.4.0
 - Bump desugar JDK library to v2.0.4
 - Bump Compose theme adapter to v0.34.0
 - Bump Coroutines to v1.8.0

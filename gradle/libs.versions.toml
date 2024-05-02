@@ -203,7 +203,7 @@ uuid-generator = "com.fasterxml.uuid:java-uuid-generator:5.0.0"
 viewpump = "io.github.inflationx:viewpump:2.0.3"
 
 datadog-sdk = "com.datadoghq:dd-sdk-android:1.19.3"
-datadog-gradle-plugin = "com.datadoghq:dd-sdk-android-gradle-plugin:1.12.0"
+datadog-gradle-plugin = "com.datadoghq:dd-sdk-android-gradle-plugin:1.13.1"
 
 #noinspection GradleDependency
 zxing = "com.google.zxing:core:3.3.3"

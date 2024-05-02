@@ -156,7 +156,7 @@ jobs:
 
       - name: Upload failed test artifacts
         if: always() && steps.run-instrumented-tests.outcome != 'success'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-artifacts
           path: android-app/app/build/outputs/test-artifacts

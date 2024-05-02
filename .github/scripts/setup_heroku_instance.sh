@@ -31,6 +31,9 @@ resultOfServerPush=$?
 
 resultOfSeedDataSetup=0
 if [ ${serverAppAlreadyExists} = false ]; then
+  echo "Resizing dyno..."
+  heroku ps:resize worker=standard-2x --app=$herokuAppName
+
   echo "Setting up initial seed data"
   (cd $serverAppDirectory && heroku run --exit-code rails db:structure:load:with_data db:seed --app=$herokuAppName)
   resultOfSeedDataSetup=$?

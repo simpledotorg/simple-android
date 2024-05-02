@@ -52,6 +52,7 @@
 - Add `isPatientEligibleForReassignment` to `Patient` model 
 - Add function in `PatientRepository` to check if patient is eligible for reassignment
 - Update `isPatientEligibleForReassignment` when BP is saved.
+- Bump eclipse jgit to v6.9.0.202403050737-r
 
 ### Fixes
 

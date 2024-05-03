@@ -181,7 +181,7 @@ rx-kotlin = "io.reactivex.rxjava2:rxkotlin:2.4.0"
 rx-preferences = "com.f2prateek.rx.preferences2:rx-preferences:2.0.1"
 
 sentry-android = "io.sentry:sentry-android:7.8.0"
-sentry-gradle-plugin = "io.sentry:sentry-android-gradle-plugin:4.4.0"
+sentry-gradle-plugin = "io.sentry:sentry-android-gradle-plugin:4.5.1"
 
 signaturepad = "com.github.gcacace:signature-pad:1.3.1"
 

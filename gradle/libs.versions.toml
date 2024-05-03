@@ -210,7 +210,7 @@ zxing = "com.google.zxing:core:3.3.3"
 
 apache-commons-math = "org.apache.commons:commons-math3:3.6.1"
 
-benchmark-gradle-plugin = "androidx.benchmark:benchmark-gradle-plugin:1.1.1"
+benchmark-gradle-plugin = "androidx.benchmark:benchmark-gradle-plugin:1.2.4"
 
 androidx-compose-bom = { module = "dev.chrisbanes.compose:compose-bom", version.ref = "androidx-compose-bom" }
 androidx-compose-ui = { module = "androidx.compose.ui:ui" }

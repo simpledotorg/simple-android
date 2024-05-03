@@ -55,6 +55,7 @@
 - Update GH Actions `checkout` to v4
 - Add DB query to update patient reassignment status
 - Add `isPatientEligibleForReassignment` to `PatientSearchResult` database view and `OverdueAppointment` model
+- Bump Compose Compiler to v1.5.13
 
 ### Fixes
 

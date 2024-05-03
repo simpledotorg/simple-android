@@ -86,7 +86,7 @@ class BloodPressureHistoryScreenEffectHandlerTest {
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(uiActions).openBloodPressureUpdateSheet(bloodPressureMeasurement.uuid, bloodPressureMeasurement.patientUuid)
+    verify(uiActions).openBloodPressureUpdateSheet(bloodPressureMeasurement.uuid)
     verifyNoMoreInteractions(uiActions)
   }
 

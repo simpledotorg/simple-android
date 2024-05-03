@@ -1,19 +1,19 @@
 package org.simple.clinic.summary.bloodpressures
 
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.whenever
 import dagger.Lazy
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.whenever
+import org.simple.sharedTestCode.TestData
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
-import org.simple.sharedTestCode.TestData
 import java.util.UUID
 
 class BloodPressureSummaryViewEffectHandlerTest {
@@ -104,7 +104,7 @@ class BloodPressureSummaryViewEffectHandlerTest {
 
     // then
     testCase.assertNoOutgoingEvents()
-    verify(uiActions).openBloodPressureUpdateSheet(bloodPressure.uuid, bloodPressure.patientUuid)
+    verify(uiActions).openBloodPressureUpdateSheet(bloodPressure.uuid)
     verifyNoMoreInteractions(uiActions)
   }
 

@@ -282,7 +282,8 @@ sealed class OverdueAppointmentListItem : ItemAdapter.Item<UiEvent> {
           overdueDays = daysBetweenNowAndDate(overdueAppointment.appointment.scheduledDate, clock),
           villageName = overdueAppointment.patientAddress.colonyOrVillage,
           isOverdueSelectAndDownloadEnabled = isOverdueSelectAndDownloadEnabled,
-          isAppointmentSelected = isAppointmentSelected
+          isAppointmentSelected = isAppointmentSelected,
+          isEligibleForReassignment = overdueAppointment.isEligibleForReassignment,
       )
     }
 
@@ -304,7 +305,8 @@ sealed class OverdueAppointmentListItem : ItemAdapter.Item<UiEvent> {
       val overdueDays: Int,
       val villageName: String?,
       val isOverdueSelectAndDownloadEnabled: Boolean,
-      val isAppointmentSelected: Boolean
+      val isAppointmentSelected: Boolean,
+      val isEligibleForReassignment: Boolean,
   ) : OverdueAppointmentListItem() {
 
     override fun layoutResId(): Int = R.layout.list_item_overdue_patient
@@ -359,6 +361,7 @@ sealed class OverdueAppointmentListItem : ItemAdapter.Item<UiEvent> {
 
       binding.checkbox.visibleOrGone(isOverdueSelectAndDownloadEnabled)
       binding.patientGenderIcon.visibleOrGone(!isOverdueSelectAndDownloadEnabled)
+      binding.facilityReassignmentView.root.visibleOrGone(isEligibleForReassignment)
     }
 
     private fun increaseCallButtonTapArea(callButton: View) {

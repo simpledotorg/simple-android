@@ -1041,7 +1041,8 @@ object TestData {
           ageUpdatedAt = null,
           dateOfBirth = LocalDate.now(UTC).minusYears(30)
       ),
-      callResult: CallResult? = null
+      callResult: CallResult? = null,
+      isEligibleForReassignment: Boolean = false,
   ): OverdueAppointment {
     return OverdueAppointment(
         fullName = name,
@@ -1051,7 +1052,8 @@ object TestData {
         patientAddress = patientAddress,
         appointment = appointment,
         callResult = callResult,
-        patientAssignedFacilityUuid = patientAssignedFacilityId
+        patientAssignedFacilityUuid = patientAssignedFacilityId,
+        isEligibleForReassignment = isEligibleForReassignment,
     )
   }
 
@@ -1099,7 +1101,8 @@ object TestData {
           ageValue = 45,
           ageUpdatedAt = Instant.now(),
           dateOfBirth = null
-      )
+      ),
+      isEligibleForReassignment: Boolean = false,
   ): PatientSearchResult {
     return PatientSearchResult(
         uuid = uuid,
@@ -1112,7 +1115,8 @@ object TestData {
         address = address,
         phoneNumber = phoneNumber,
         identifier = identifier,
-        identifierSearchHelp = identifierSearchHelp
+        identifierSearchHelp = identifierSearchHelp,
+        isEligibleForReassignment = isEligibleForReassignment,
     )
   }
 
@@ -1126,14 +1130,16 @@ object TestData {
           ageValue = null,
           ageUpdatedAt = null,
           dateOfBirth = null
-      )
+      ),
+      isEligibleForReassignment: Boolean = false,
   ) = RecentPatient(
       uuid = uuid,
       fullName = fullName,
       gender = gender,
       ageDetails = patientAgeDetails,
       patientRecordedAt = patientRecordedAt,
-      updatedAt = updatedAt
+      updatedAt = updatedAt,
+      isEligibleForReassignment = isEligibleForReassignment,
   )
 
   fun ongoingLoginEntry(

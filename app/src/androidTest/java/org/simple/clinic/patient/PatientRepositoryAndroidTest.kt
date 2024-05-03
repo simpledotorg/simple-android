@@ -919,7 +919,8 @@ class PatientRepositoryAndroidTest {
       gender = gender,
       ageDetails = ageDetails,
       patientRecordedAt = this.recordedAt,
-      updatedAt = recordedAt
+      updatedAt = recordedAt,
+      isEligibleForReassignment = isEligibleForReassignment,
   )
 
   private fun verifyRecentPatientOrder(
@@ -973,7 +974,8 @@ class PatientRepositoryAndroidTest {
           gender = gender,
           ageDetails = ageDetails,
           patientRecordedAt = this.recordedAt,
-          updatedAt = updatedAt
+          updatedAt = updatedAt,
+          isEligibleForReassignment = isEligibleForReassignment,
       )
     }
   }
@@ -1114,7 +1116,8 @@ class PatientRepositoryAndroidTest {
           gender = gender,
           ageDetails = ageDetails,
           patientRecordedAt = this.recordedAt,
-          updatedAt = createdAt
+          updatedAt = createdAt,
+          isEligibleForReassignment = isEligibleForReassignment,
       )
     }
   }

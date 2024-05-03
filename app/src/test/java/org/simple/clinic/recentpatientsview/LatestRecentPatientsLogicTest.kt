@@ -112,7 +112,8 @@ class LatestRecentPatientsLogicTest {
             updatedAt = Instant.parse("2020-01-01T00:00:00Z"),
             dateFormatter = dateFormatter,
             clock = userClock,
-            isNewRegistration = true
+            isNewRegistration = true,
+            isEligibleForReassignment = false,
         ),
         RecentPatientItem(
             uuid = patientUuid2,
@@ -122,7 +123,8 @@ class LatestRecentPatientsLogicTest {
             updatedAt = Instant.parse("2019-12-31T00:00:00Z"),
             dateFormatter = dateFormatter,
             clock = userClock,
-            isNewRegistration = false
+            isNewRegistration = false,
+            isEligibleForReassignment = false,
         ),
         RecentPatientItem(
             uuid = patientUuid3,
@@ -132,7 +134,8 @@ class LatestRecentPatientsLogicTest {
             updatedAt = Instant.parse("2019-12-29T00:00:00Z"),
             dateFormatter = dateFormatter,
             clock = userClock,
-            isNewRegistration = false
+            isNewRegistration = false,
+            isEligibleForReassignment = false,
         )
     ))
     verify(ui).showOrHideRecentPatients(isVisible = true)
@@ -205,7 +208,8 @@ class LatestRecentPatientsLogicTest {
             updatedAt = Instant.parse("2020-01-01T00:00:00Z"),
             dateFormatter = dateFormatter,
             clock = userClock,
-            isNewRegistration = true
+            isNewRegistration = true,
+            isEligibleForReassignment = false,
         ),
         RecentPatientItem(
             uuid = patientUuid2,
@@ -215,7 +219,8 @@ class LatestRecentPatientsLogicTest {
             updatedAt = Instant.parse("2019-12-31T00:00:00Z"),
             dateFormatter = dateFormatter,
             clock = userClock,
-            isNewRegistration = false
+            isNewRegistration = false,
+            isEligibleForReassignment = false,
         ),
         RecentPatientItem(
             uuid = patientUuid3,
@@ -225,7 +230,8 @@ class LatestRecentPatientsLogicTest {
             updatedAt = Instant.parse("2019-12-28T00:00:00Z"),
             dateFormatter = dateFormatter,
             clock = userClock,
-            isNewRegistration = false
+            isNewRegistration = false,
+            isEligibleForReassignment = false,
         ),
         SeeAllItem
     ))
@@ -267,7 +273,8 @@ class LatestRecentPatientsLogicTest {
             updatedAt = Instant.parse("2018-01-01T00:00:00Z"),
             dateFormatter = dateFormatter,
             clock = userClock,
-            isNewRegistration = false
+            isNewRegistration = false,
+            isEligibleForReassignment = false,
         )
     ))
     verify(ui).showOrHideRecentPatients(true)

@@ -120,7 +120,8 @@ sealed class InstantSearchResultsItemType : PagingItemAdapter.Item<InstantSearch
             identifier = searchResult.identifier,
             assignedFacilityId = searchResult.assignedFacilityId,
             assignedFacilityName = searchResult.assignedFacilityName,
-            status = searchResult.status
+            status = searchResult.status,
+            isEligibleForReassignment = searchResult.isEligibleForReassignment,
         )
       }
     }

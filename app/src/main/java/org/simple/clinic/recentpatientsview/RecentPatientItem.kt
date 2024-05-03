@@ -50,7 +50,8 @@ sealed class RecentPatientItemType : ItemAdapter.Item<UiEvent> {
           updatedAt = recentPatient.updatedAt,
           dateFormatter = dateFormatter,
           clock = userClock,
-          isNewRegistration = isNewRegistration
+          isNewRegistration = isNewRegistration,
+          isEligibleForReassignment = recentPatient.isEligibleForReassignment
       )
     }
   }
@@ -64,7 +65,8 @@ data class RecentPatientItem(
     val updatedAt: Instant,
     val dateFormatter: DateTimeFormatter,
     val clock: UserClock,
-    val isNewRegistration: Boolean
+    val isNewRegistration: Boolean,
+    val isEligibleForReassignment: Boolean,
 ) : RecentPatientItemType() {
 
   override fun layoutResId(): Int = R.layout.recent_patient_item_view
@@ -78,6 +80,7 @@ data class RecentPatientItem(
     }
 
     binding.newRegistrationTextView.visibleOrGone(isNewRegistration)
+    binding.facilityReassignmentView.root.visibleOrGone(isEligibleForReassignment)
     binding.patientNameTextView.text = context.resources.getString(R.string.patients_recentpatients_nameage, name, age.toString())
     binding.genderImageView.setImageResource(gender.displayIconRes)
     binding.lastSeenTextView.text = dateFormatter.format(updatedAt.toLocalDateAtZone(clock.zone))

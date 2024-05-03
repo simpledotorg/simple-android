@@ -1064,4 +1064,7 @@ The Simple app contains private health information of patients (“Data”).\n\n
 • You understand that the Simple app automatically creates a record of your access to Data. Unauthorized access or other violations of the Terms of Use may result in your access to the Simple app being revoked or other disciplinary measures.\n\n
   </string>
   <string name="data_protection_consent_accept_button">AGREE AND CONTINUE</string>
+
+  <!-- Clinical Decision Support Alerts -->
+  <string name="patient_facility_reassignment">Eligible for CC refilling</string>
 </resources>

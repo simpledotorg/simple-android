@@ -54,11 +54,16 @@
 - Bump eclipse jgit to v6.9.0.202403050737-r
 - Update GH Actions `checkout` to v4
 - Add DB query to update patient reassignment status
+- Add `isPatientEligibleForReassignment` to `PatientSearchResult` database view and `OverdueAppointment` model
 
 ### Fixes
 
 - Fix app crash on searching overdue patient with special characters
 - Fix consent text getting cropped and hidden on patient registration screen
+
+### Changes
+
+- Add facility reassignment view to `RecentPatientsItem`, `OverduePatientItem` and `PatientSearchResultItem`
 
 ## 2024-01-08-8979
 

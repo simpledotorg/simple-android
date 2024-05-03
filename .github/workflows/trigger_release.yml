@@ -13,7 +13,7 @@ jobs:
     runs-on: [ ubuntu-latest ]
     if: ${{ contains(github.ref, 'refs/heads/release/') }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: set up JDK
         uses: actions/setup-java@v4
@@ -29,7 +29,7 @@ jobs:
     runs-on: [ ubuntu-latest ]
     if: ${{ contains(github.ref, 'refs/heads/release/') }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: set up JDK
         uses: actions/setup-java@v4
@@ -53,12 +53,12 @@ jobs:
       HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
     steps:
       - name: Checkout Android source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: android-app
 
       - name: Checkout server app source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: simpledotorg/simple-server
           fetch-depth: 0 # Full clone needed for Heroku deploys (https://devcenter.heroku.com/changelog-items/775)
@@ -175,7 +175,7 @@ jobs:
       matrix:
         buildType: [ 'Production' ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: set up JDK
         uses: actions/setup-java@v4
@@ -196,13 +196,13 @@ jobs:
     if: ${{ contains(github.ref, 'refs/heads/release/') }}
     steps:
       - name: Checkout master
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: master
           path: master
 
       - name: Checkout current
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: current
 
@@ -213,7 +213,7 @@ jobs:
     needs: [ qa_lint, qa_unit_tests, qa_android_tests, verify_release_bundles, verify_room_schemas ]
     runs-on: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{github.ref}}
 
@@ -224,7 +224,7 @@ jobs:
     needs: [ qa_lint, qa_unit_tests, qa_android_tests, verify_release_bundles, verify_room_schemas ]
     runs-on: [ ubuntu-latest ]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{github.ref}}
 

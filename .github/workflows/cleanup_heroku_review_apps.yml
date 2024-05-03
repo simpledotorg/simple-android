@@ -16,7 +16,7 @@ jobs:
       HEROKU_API_KEY: ${{ secrets.SERVICES_HEROKU_API_KEY }}
     steps:
       - name: Checkout Android app source
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Teardown dangling Heroku instances
         run: .github/scripts/teardown_heroku_instances.py

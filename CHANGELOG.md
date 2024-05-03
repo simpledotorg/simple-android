@@ -26,7 +26,7 @@
 - Bump AndroidX Fragment to v1.6.2
 - Bump AndroidX RecyclerView to v1.3.2
 - Bump Firebase dependencies
-- Bump Material Components to v1.11.0
+- Bump Material Components to v1.12.0
 - Bump Google Play Services dependencies
 - Bump SQLite to v3.45.0
 - Bump Mockito Kotlin to v5.3.1

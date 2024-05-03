@@ -493,6 +493,16 @@ data class Patient(
         bpCreatedAfter: LocalDate,
         bpCreateBefore: LocalDate
     ): Int
+
+    @Query("""
+      UPDATE Patient
+      SET isEligibleForReassignment = :isEligibleForReassignment
+      WHERE uuid = :patientUuid
+    """)
+    abstract fun updatePatientReassignmentEligibilityStatus(
+        patientUuid: UUID,
+        isEligibleForReassignment: Boolean,
+    )
   }
 }
 

@@ -827,6 +827,16 @@ class PatientRepository @Inject constructor(
         .all { it.reading.systolic < 140 && it.reading.diastolic < 90 }
   }
 
+  fun updatePatientReassignmentEligibilityStatus(
+      patientUuid: UUID,
+      isEligibleForReassignment: Boolean,
+  ) {
+    database.patientDao().updatePatientReassignmentEligibilityStatus(
+        patientUuid = patientUuid,
+        isEligibleForReassignment = isEligibleForReassignment
+    )
+  }
+
   private data class BusinessIdMetaAndVersion(
       val metaData: String,
       val metaDataVersion: MetaDataVersion

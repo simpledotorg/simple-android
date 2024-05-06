@@ -22,7 +22,8 @@ data class LoadDataForBackClick(
 
 data class LoadDataForDoneClick(
     val patientUuid: UUID,
-    val screenCreatedTimestamp: Instant
+    val screenCreatedTimestamp: Instant,
+    val patientEligibleForReassignment: Boolean
 ) : PatientSummaryEffect()
 
 data class TriggerSync(val sheetOpenedFrom: AppointmentSheetOpenedFrom) : PatientSummaryEffect()

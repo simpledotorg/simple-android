@@ -83,8 +83,15 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       event: PatientReassignmentStatusLoaded
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val effect: PatientSummaryEffect = when (event.clickAction) {
-      DONE -> LoadDataForDoneClick(patientUuid = model.patientUuid, screenCreatedTimestamp = event.screenCreatedTimestamp)
-      BACK -> LoadDataForBackClick(patientUuid = model.patientUuid, screenCreatedTimestamp = event.screenCreatedTimestamp)
+      DONE -> LoadDataForDoneClick(
+          patientUuid = model.patientUuid,
+          screenCreatedTimestamp = event.screenCreatedTimestamp,
+          patientEligibleForReassignment = event.isPatientEligibleForReassignment
+      )
+      BACK -> LoadDataForBackClick(
+          patientUuid = model.patientUuid,
+          screenCreatedTimestamp = event.screenCreatedTimestamp
+      )
     }
 
     return dispatch(
@@ -147,7 +154,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     val effect = if (model.hasPatientDied)
       GoToHomeScreen
     else
-      LoadDataForDoneClick(event.patientUuid, event.screenCreatedTimestamp)
+      LoadDataForDoneClick(event.patientUuid, event.screenCreatedTimestamp, false)
 
     return dispatch(effect)
   }

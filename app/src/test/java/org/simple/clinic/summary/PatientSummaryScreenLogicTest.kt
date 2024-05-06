@@ -208,7 +208,7 @@ class PatientSummaryScreenLogicTest {
         events = uiEvents.ofType(),
         defaultModel = PatientSummaryModel.from(openIntention, patientUuid),
         init = PatientSummaryInit(),
-        update = PatientSummaryUpdate(),
+        update = PatientSummaryUpdate(false),
         effectHandler = effectHandler.build(),
         modelUpdateListener = viewRenderer::render
     )

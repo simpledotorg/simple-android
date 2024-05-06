@@ -77,7 +77,7 @@ class PatientSummaryUpdateTest {
       )
   )
 
-  private val updateSpec = UpdateSpec(PatientSummaryUpdate())
+  private val updateSpec = UpdateSpec(PatientSummaryUpdate(true))
 
   @Test
   fun `when the current facility is loaded, update the UI`() {
@@ -1572,6 +1572,33 @@ class PatientSummaryUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(ShowReassignPatientSheet(patientUuid))
+        ))
+  }
+
+  @Test
+  fun `when patient reassignment feature is disabled, and patient is not dead, and done is clicked, then load data for done click`() {
+    val updateSpec = UpdateSpec(PatientSummaryUpdate(
+        isPatientReassignmentFeatureEnabled = false
+    ))
+    val model = defaultModel
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientSummaryDoneClicked(
+            patientUuid = patientUuid,
+            screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(
+                LoadDataForDoneClick(
+                    patientUuid = patientUuid,
+                    screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+                    patientEligibleForReassignment = false
+                )
+            )
         ))
   }
 

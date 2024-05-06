@@ -1,7 +1,6 @@
 package org.simple.clinic.summary
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.dispatch
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
@@ -20,7 +19,9 @@ import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import java.time.Instant
 import java.util.UUID
 
-class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> {
+class PatientSummaryUpdate(
+    private val isPatientReassignmentFeatureEnabled: Boolean
+) : Update<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> {
 
   override fun update(
       model: PatientSummaryModel,
@@ -160,14 +161,19 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
   }
 
   private fun doneClicked(model: PatientSummaryModel, event: PatientSummaryDoneClicked): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val effect = if (model.hasPatientDied)
-      GoToHomeScreen
-    else
-      CheckPatientReassignmentStatus(
+    val effect = when {
+      model.hasPatientDied -> GoToHomeScreen
+      !isPatientReassignmentFeatureEnabled -> LoadDataForDoneClick(
+          patientUuid = model.patientUuid,
+          screenCreatedTimestamp = event.screenCreatedTimestamp,
+          patientEligibleForReassignment = false
+      )
+      else -> CheckPatientReassignmentStatus(
           patientUuid = model.patientUuid,
           clickAction = DONE,
           screenCreatedTimestamp = event.screenCreatedTimestamp
       )
+    }
 
     return dispatch(effect)
   }

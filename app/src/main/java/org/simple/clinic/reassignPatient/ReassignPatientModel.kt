@@ -14,4 +14,8 @@ data class ReassignPatientModel(
         assignedFacility = null,
     )
   }
+
+  fun assignedFacilityUpdated(facility: Facility?): ReassignPatientModel {
+    return copy(assignedFacility = facility)
+  }
 }

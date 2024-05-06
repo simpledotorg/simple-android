@@ -1,6 +1,9 @@
 package org.simple.clinic.reassignPatient
 
+import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.facility.Facility
@@ -14,11 +17,20 @@ class ReassignPatientEffectHandler @AssistedInject constructor(
     private val patientRepository: PatientRepository,
     private val facilityRepository: FacilityRepository,
     private val schedulersProvider: SchedulersProvider,
+    @Assisted private val viewEffectsConsumer: Consumer<ReassignPatientViewEffect>
 ) {
+
+  @AssistedFactory
+  interface Factory {
+    fun create(
+        viewEffectsConsumer: Consumer<ReassignPatientViewEffect>
+    ): ReassignPatientEffectHandler
+  }
 
   fun build(): ObservableTransformer<ReassignPatientEffect, ReassignPatientEvent> = RxMobius
       .subtypeEffectHandler<ReassignPatientEffect, ReassignPatientEvent>()
       .addTransformer(LoadAssignedFacility::class.java, loadAssignedFacility())
+      .addConsumer(ReassignPatientViewEffect::class.java, viewEffectsConsumer::accept)
       .build()
 
   private fun loadAssignedFacility(): ObservableTransformer<LoadAssignedFacility, ReassignPatientEvent> {

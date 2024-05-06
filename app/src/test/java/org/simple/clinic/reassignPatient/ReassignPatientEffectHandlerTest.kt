@@ -4,12 +4,13 @@ import org.junit.After
 import org.junit.Test
 import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.setup.UiActions
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.sharedTestCode.TestData
 import java.util.Optional
@@ -19,7 +20,8 @@ class ReassignPatientEffectHandlerTest {
 
   private val patientRepository = mock<PatientRepository>()
   private val facilityRepository = mock<FacilityRepository>()
-  private val uiActions = mock<UiActions>()
+  private val uiActions = mock<ReassignPatientUiActions>()
+  private val viewEffectHandler = ReassignPatientViewEffectHandler(uiActions)
 
   val patientUuid = UUID.fromString("0fa9cac4-2ca0-4d90-8588-e248ee882949")
 
@@ -27,6 +29,7 @@ class ReassignPatientEffectHandlerTest {
       patientRepository = patientRepository,
       facilityRepository = facilityRepository,
       schedulersProvider = TestSchedulersProvider.trampoline(),
+      viewEffectsConsumer = viewEffectHandler::handle
   ).build()
 
   private val effectHandlerTestCase = EffectHandlerTestCase(effectHandler)
@@ -61,5 +64,17 @@ class ReassignPatientEffectHandlerTest {
     effectHandlerTestCase.assertOutgoingEvents(AssignedFacilityLoaded(Optional.of(facility)))
 
     verifyNoInteractions(uiActions)
+  }
+
+  @Test
+  fun `when close sheet effect is received , then close sheet`() {
+    // when
+    effectHandlerTestCase.dispatch(CloseSheet)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).closeSheet()
+    verifyNoMoreInteractions(uiActions)
   }
 }

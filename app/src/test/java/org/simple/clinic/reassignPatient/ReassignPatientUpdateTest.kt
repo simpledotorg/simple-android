@@ -43,4 +43,15 @@ class ReassignPatientUpdateTest {
             hasEffects(CloseSheet)
         ))
   }
+
+  @Test
+  fun `when reassign patient change is clicked, then open select facility sheet`() {
+    updateSpec
+        .given(model)
+        .whenEvent(ChangeClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(OpenSelectFacilitySheet)
+        ))
+  }
 }

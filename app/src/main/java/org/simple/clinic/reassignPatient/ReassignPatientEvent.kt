@@ -11,3 +11,7 @@ data class AssignedFacilityLoaded(val facility: Optional<Facility>) : ReassignPa
 data object NotNowClicked : ReassignPatientEvent() {
   override val analyticsName = "Reassign Patient:Not Now Clicked"
 }
+
+data object ChangeClicked : ReassignPatientEvent() {
+  override val analyticsName = "Reassign Patient:Change Clicked"
+}

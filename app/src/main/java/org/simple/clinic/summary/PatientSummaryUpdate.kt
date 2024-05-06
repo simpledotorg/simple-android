@@ -42,7 +42,8 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
           hasAppointmentChangedSinceScreenCreated = event.hasAppointmentChangeSinceScreenCreated,
           countOfRecordedBloodPressures = event.countOfRecordedBloodPressures,
           countOfRecordedBloodSugars = event.countOfRecordedBloodSugars,
-          medicalHistory = event.medicalHistory
+          medicalHistory = event.medicalHistory,
+          isPatientEligibleForReassignment = event.isPatientEligibleForReassignment
       )
 
       is DataForDoneClickLoaded -> dataForHandlingDoneClickLoaded(
@@ -251,7 +252,8 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       hasAppointmentChangedSinceScreenCreated: Boolean,
       countOfRecordedBloodPressures: Int,
       countOfRecordedBloodSugars: Int,
-      medicalHistory: MedicalHistory
+      medicalHistory: MedicalHistory,
+      isPatientEligibleForReassignment: Boolean,
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val openIntention = model.openIntention
     val canShowAppointmentSheet = hasPatientMeasurementDataChangedSinceScreenCreated && !hasAppointmentChangedSinceScreenCreated
@@ -269,6 +271,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     return when {
       shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
       measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))
+      isPatientEligibleForReassignment -> dispatch(ShowReassignPatientSheet(model.patientUuid))
       canShowAppointmentSheet -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, BACK_CLICK, model.currentFacility!!))
       shouldGoToPreviousScreen -> dispatch(GoBackToPreviousScreen)
       shouldGoToHomeScreen -> dispatch(GoToHomeScreen)

@@ -56,7 +56,8 @@ data class DataForBackClickLoaded(
     val hasAppointmentChangeSinceScreenCreated: Boolean,
     val countOfRecordedBloodPressures: Int,
     val countOfRecordedBloodSugars: Int,
-    val medicalHistory: MedicalHistory
+    val medicalHistory: MedicalHistory,
+    val isPatientEligibleForReassignment: Boolean
 ) : PatientSummaryEvent()
 
 data class DataForDoneClickLoaded(

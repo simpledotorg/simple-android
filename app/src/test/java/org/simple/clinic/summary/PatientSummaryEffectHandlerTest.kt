@@ -255,7 +255,8 @@ class PatientSummaryEffectHandlerTest {
             hasAppointmentChangeSinceScreenCreated = false,
             countOfRecordedBloodPressures = 3,
             countOfRecordedBloodSugars = 2,
-            medicalHistory = medicalHistory
+            medicalHistory = medicalHistory,
+            isPatientEligibleForReassignment = false,
         )
     )
     verifyNoInteractions(uiActions)

@@ -77,4 +77,16 @@ class ReassignPatientEffectHandlerTest {
     verify(uiActions).closeSheet()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when select facility sheet effect is received , then open select facility sheet`() {
+    // when
+    effectHandlerTestCase.dispatch(OpenSelectFacilitySheet)
+
+    // then
+    effectHandlerTestCase.assertNoOutgoingEvents()
+
+    verify(uiActions).openSelectFacilitySheet()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

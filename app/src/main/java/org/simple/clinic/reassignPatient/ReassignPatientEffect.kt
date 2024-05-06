@@ -9,3 +9,5 @@ data class LoadAssignedFacility(val patientUuid: UUID) : ReassignPatientEffect()
 sealed class ReassignPatientViewEffect : ReassignPatientEffect()
 
 data object CloseSheet : ReassignPatientViewEffect()
+
+data object OpenSelectFacilitySheet : ReassignPatientViewEffect()

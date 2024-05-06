@@ -65,7 +65,8 @@ data class DataForDoneClickLoaded(
     val hasAppointmentChangeSinceScreenCreated: Boolean,
     val countOfRecordedBloodPressures: Int,
     val countOfRecordedBloodSugars: Int,
-    val medicalHistory: MedicalHistory
+    val medicalHistory: MedicalHistory,
+    val isPatientEligibleForReassignment: Boolean
 ) : PatientSummaryEvent()
 
 data class SyncTriggered(val sheetOpenedFrom: AppointmentSheetOpenedFrom) : PatientSummaryEvent()

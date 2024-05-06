@@ -17,7 +17,8 @@ data class MarkReminderAsShown(val patientUuid: UUID) : PatientSummaryEffect()
 
 data class LoadDataForBackClick(
     val patientUuid: UUID,
-    val screenCreatedTimestamp: Instant
+    val screenCreatedTimestamp: Instant,
+    val patientEligibleForReassignment: Boolean
 ) : PatientSummaryEffect()
 
 data class LoadDataForDoneClick(

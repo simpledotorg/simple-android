@@ -246,7 +246,7 @@ class PatientSummaryEffectHandlerTest {
     whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
 
     // when
-    testCase.dispatch(LoadDataForBackClick(patientUuid, screenCreatedTimestamp))
+    testCase.dispatch(LoadDataForBackClick(patientUuid, screenCreatedTimestamp, false))
 
     // then
     testCase.assertOutgoingEvents(

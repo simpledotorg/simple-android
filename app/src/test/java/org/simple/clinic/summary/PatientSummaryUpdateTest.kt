@@ -1058,7 +1058,7 @@ class PatientSummaryUpdateTest {
         .whenEvent(PatientSummaryBackClicked(patientUuid, Instant.parse("2018-01-01T00:00:00Z")))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(LoadDataForBackClick(patientUuid, Instant.parse("2018-01-01T00:00:00Z")))
+            hasEffects(LoadDataForBackClick(patientUuid, Instant.parse("2018-01-01T00:00:00Z"), false))
         ))
   }
 
@@ -1438,7 +1438,8 @@ class PatientSummaryUpdateTest {
             hasNoModel(),
             hasEffects(LoadDataForBackClick(
                 patientUuid = patientUuid,
-                screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+                screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+                patientEligibleForReassignment = false
             ))
         ))
   }
@@ -1488,7 +1489,8 @@ class PatientSummaryUpdateTest {
                 UpdatePatientReassignmentStatus(patientUuid, status = true),
                 LoadDataForBackClick(
                     patientUuid = patientUuid,
-                    screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+                    screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+                    patientEligibleForReassignment = true
                 )
             )
         ))

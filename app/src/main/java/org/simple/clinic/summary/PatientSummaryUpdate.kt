@@ -90,7 +90,8 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       )
       BACK -> LoadDataForBackClick(
           patientUuid = model.patientUuid,
-          screenCreatedTimestamp = event.screenCreatedTimestamp
+          screenCreatedTimestamp = event.screenCreatedTimestamp,
+          patientEligibleForReassignment = event.isPatientEligibleForReassignment
       )
     }
 
@@ -110,7 +111,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     val effect = if (model.hasPatientDied)
       GoBackToPreviousScreen
     else
-      LoadDataForBackClick(event.patientUuid, event.screenCreatedTimestamp)
+      LoadDataForBackClick(event.patientUuid, event.screenCreatedTimestamp, false)
 
     return dispatch(effect)
   }
@@ -163,7 +164,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     val effect = if (model.hasPatientDied)
       GoBackToPreviousScreen
     else
-      LoadDataForBackClick(event.patientUuid, event.screenCreatedTimestamp)
+      LoadDataForBackClick(event.patientUuid, event.screenCreatedTimestamp, false)
 
     return dispatch(effect)
   }

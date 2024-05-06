@@ -1455,7 +1455,7 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when measurement warning dialog not now is clicked and patient is not dead, the load data for back click`() {
+  fun `when measurement warning dialog not now is clicked and patient is not dead, the check patient reassignment status`() {
     val model = defaultModel
         .currentFacilityLoaded(facility)
         .patientSummaryProfileLoaded(patientSummaryProfile)
@@ -1465,10 +1465,10 @@ class PatientSummaryUpdateTest {
         .whenEvent(MeasurementWarningNotNowClicked(patientUuid, Instant.parse("2018-01-01T00:00:00Z")))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(LoadDataForBackClick(
+            hasEffects(CheckPatientReassignmentStatus(
                 patientUuid = patientUuid,
+                clickAction = ClickAction.BACK,
                 screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
-                patientEligibleForReassignment = false
             ))
         ))
   }

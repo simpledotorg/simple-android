@@ -16,6 +16,7 @@ import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatientWithTeleconsultLog
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
+import java.time.Instant
 import java.util.UUID
 
 class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> {
@@ -111,7 +112,11 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     val effect = if (model.hasPatientDied)
       GoBackToPreviousScreen
     else
-      LoadDataForBackClick(event.patientUuid, event.screenCreatedTimestamp, false)
+      CheckPatientReassignmentStatus(
+          patientUuid = model.patientUuid,
+          clickAction = BACK,
+          screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+      )
 
     return dispatch(effect)
   }

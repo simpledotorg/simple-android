@@ -179,14 +179,19 @@ class PatientSummaryUpdate(
   }
 
   private fun backClicked(model: PatientSummaryModel, event: PatientSummaryBackClicked): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val effect = if (model.hasPatientDied)
-      GoBackToPreviousScreen
-    else
-      CheckPatientReassignmentStatus(
+    val effect = when {
+      model.hasPatientDied -> GoBackToPreviousScreen
+      !isPatientReassignmentFeatureEnabled -> LoadDataForBackClick(
+          patientUuid = model.patientUuid,
+          screenCreatedTimestamp = event.screenCreatedTimestamp,
+          patientEligibleForReassignment = false
+      )
+      else -> CheckPatientReassignmentStatus(
           patientUuid = model.patientUuid,
           clickAction = BACK,
           screenCreatedTimestamp = event.screenCreatedTimestamp
       )
+    }
 
     return dispatch(effect)
   }

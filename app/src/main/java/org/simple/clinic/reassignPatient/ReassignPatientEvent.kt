@@ -7,3 +7,7 @@ import java.util.Optional
 sealed class ReassignPatientEvent : UiEvent
 
 data class AssignedFacilityLoaded(val facility: Optional<Facility>) : ReassignPatientEvent()
+
+data object NotNowClicked : ReassignPatientEvent() {
+  override val analyticsName = "Reassign Patient:Not Now Clicked"
+}

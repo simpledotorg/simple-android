@@ -1,7 +1,9 @@
 package org.simple.clinic.reassignPatient
 
+import com.spotify.mobius.test.NextMatchers.hasEffects
 import com.spotify.mobius.test.NextMatchers.hasModel
 import com.spotify.mobius.test.NextMatchers.hasNoEffects
+import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
@@ -28,6 +30,17 @@ class ReassignPatientUpdateTest {
         .then(assertThatNext(
             hasModel(model.assignedFacilityUpdated(facility)),
             hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when reassign patient not now is clicked, then close sheet`() {
+    updateSpec
+        .given(model)
+        .whenEvent(NotNowClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CloseSheet)
         ))
   }
 }

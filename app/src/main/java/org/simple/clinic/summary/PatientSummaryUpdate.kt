@@ -168,7 +168,11 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     val effect = if (model.hasPatientDied)
       GoBackToPreviousScreen
     else
-      LoadDataForBackClick(event.patientUuid, event.screenCreatedTimestamp, false)
+      CheckPatientReassignmentStatus(
+          patientUuid = model.patientUuid,
+          clickAction = BACK,
+          screenCreatedTimestamp = event.screenCreatedTimestamp
+      )
 
     return dispatch(effect)
   }

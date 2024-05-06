@@ -123,7 +123,7 @@ class PatientSummaryUpdate(
       else -> CheckPatientReassignmentStatus(
           patientUuid = model.patientUuid,
           clickAction = BACK,
-          screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+          screenCreatedTimestamp = event.screenCreatedTimestamp
       )
     }
 

@@ -3,8 +3,12 @@ package org.simple.clinic.reassignPatient
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
+import io.reactivex.Observable
+import io.reactivex.rxkotlin.cast
 import kotlinx.parcelize.Parcelize
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetReassignPatientBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.navigation.v2.ScreenKey
@@ -28,6 +32,12 @@ class ReassignPatientSheet : BaseBottomSheet<
   private val assignedFacilityName
     get() = binding.assignedFacilityTextView
 
+  private val notNowButton
+    get() = binding.notNowButton
+
+  private val changeButton
+    get() = binding.changeButton
+
   override fun defaultModel() = ReassignPatientModel.create(
       patientUuid = screenKey.patientId,
   )
@@ -43,10 +53,24 @@ class ReassignPatientSheet : BaseBottomSheet<
   override fun createEffectHandler(viewEffectsConsumer: Consumer<ReassignPatientViewEffect>) =
       effectHandlerFactory.create(viewEffectsConsumer = viewEffectsConsumer).build()
 
+  override fun viewEffectsHandler() = ReassignPatientViewEffectHandler(this)
+
+  override fun events() = Observable
+      .mergeArray(
+          notNowClicks(),
+          changeClicks(),
+      )
+      .compose(ReportAnalyticsEvents())
+      .cast<ReassignPatientEvent>()
+
   override fun onAttach(context: Context) {
     super.onAttach(context)
     context.injector<Injector>().inject(this)
   }
+
+  private fun notNowClicks() = notNowButton.clicks().map { NotNowClicked }
+
+  private fun changeClicks() = changeButton.clicks().map { ChangeClicked }
 
   override fun renderAssignedFacilityName(facilityName: String) {
     assignedFacilityName.text = facilityName

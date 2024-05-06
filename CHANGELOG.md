@@ -56,6 +56,7 @@
 - Add DB query to update patient reassignment status
 - Add `isPatientEligibleForReassignment` to `PatientSearchResult` database view and `OverdueAppointment` model
 - Bump Compose Compiler to v1.5.13
+- Bump Jackson Core to v2.17.1
 
 ### Fixes
 

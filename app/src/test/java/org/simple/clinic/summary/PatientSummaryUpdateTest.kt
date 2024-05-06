@@ -1113,7 +1113,7 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when done is clicked and patient is not dead, then load data for done click`() {
+  fun `when done is clicked and patient is not dead, then check patient reassignment status`() {
     val model = defaultModel
         .currentFacilityLoaded(facility)
         .patientSummaryProfileLoaded(patientSummaryProfile)
@@ -1123,10 +1123,10 @@ class PatientSummaryUpdateTest {
         .whenEvent(PatientSummaryDoneClicked(patientUuid, Instant.parse("2018-01-01T00:00:00Z")))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(LoadDataForDoneClick(
+            hasEffects(CheckPatientReassignmentStatus(
                 patientUuid = patientUuid,
-                screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
-                patientEligibleForReassignment = false
+                clickAction = ClickAction.DONE,
+                screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
             ))
         ))
   }

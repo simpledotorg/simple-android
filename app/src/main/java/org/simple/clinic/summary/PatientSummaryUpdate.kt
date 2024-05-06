@@ -155,7 +155,11 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     val effect = if (model.hasPatientDied)
       GoToHomeScreen
     else
-      LoadDataForDoneClick(event.patientUuid, event.screenCreatedTimestamp, false)
+      CheckPatientReassignmentStatus(
+          patientUuid = model.patientUuid,
+          clickAction = DONE,
+          screenCreatedTimestamp = event.screenCreatedTimestamp
+      )
 
     return dispatch(effect)
   }

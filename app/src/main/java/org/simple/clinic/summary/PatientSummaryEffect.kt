@@ -41,7 +41,11 @@ data class LoadLatestScheduledAppointment(val patientUuid: UUID) : PatientSummar
 
 data class UpdatePatientReassignmentStatus(val patientUuid: UUID, val status: Boolean) : PatientSummaryEffect()
 
-data class CheckPatientReassignmentStatus(val patientUuid: UUID, val clickAction: ClickAction) : PatientSummaryEffect()
+data class CheckPatientReassignmentStatus(
+    val patientUuid: UUID,
+    val clickAction: ClickAction,
+    val screenCreatedTimestamp: Instant,
+) : PatientSummaryEffect()
 
 sealed class PatientSummaryViewEffect : PatientSummaryEffect()
 

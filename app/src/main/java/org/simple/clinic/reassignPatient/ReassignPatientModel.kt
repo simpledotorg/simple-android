@@ -15,6 +15,9 @@ data class ReassignPatientModel(
     )
   }
 
+  val hasAssignedFacility: Boolean
+    get() = assignedFacility != null
+
   fun assignedFacilityUpdated(facility: Facility?): ReassignPatientModel {
     return copy(assignedFacility = facility)
   }

@@ -11,8 +11,9 @@ import java.util.UUID
 
 class ReassignPatientUpdateTest {
 
+  private val patientUuid = UUID.fromString("b66a9d8e-fdf1-494f-b9d7-6e7cc5679cbe")
   private val updateSpec = UpdateSpec(ReassignPatientUpdate())
-  private val model = ReassignPatientModel.create()
+  private val model = ReassignPatientModel.create(patientUuid)
 
   @Test
   fun `when assigned facility is loaded, then update the model`() {

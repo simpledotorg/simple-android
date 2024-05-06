@@ -113,14 +113,19 @@ class PatientSummaryUpdate(
       model: PatientSummaryModel,
       event: MeasurementWarningNotNowClicked
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val effect = if (model.hasPatientDied)
-      GoBackToPreviousScreen
-    else
-      CheckPatientReassignmentStatus(
+    val effect = when {
+      model.hasPatientDied -> GoBackToPreviousScreen
+      !isPatientReassignmentFeatureEnabled -> LoadDataForBackClick(
+          patientUuid = model.patientUuid,
+          screenCreatedTimestamp = event.screenCreatedTimestamp,
+          patientEligibleForReassignment = false
+      )
+      else -> CheckPatientReassignmentStatus(
           patientUuid = model.patientUuid,
           clickAction = BACK,
           screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
       )
+    }
 
     return dispatch(effect)
   }

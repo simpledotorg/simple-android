@@ -10,8 +10,8 @@ import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.NEXT_APPOINTMENT_ACTION_CLICK
-import org.simple.clinic.summary.ClickAction.DONE
 import org.simple.clinic.summary.ClickAction.BACK
+import org.simple.clinic.summary.ClickAction.DONE
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatientWithTeleconsultLog
@@ -82,18 +82,15 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       model: PatientSummaryModel,
       event: PatientReassignmentStatusLoaded
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val effect: PatientSummaryEffect? = when (event.clickAction) {
+    val effect: PatientSummaryEffect = when (event.clickAction) {
       DONE -> LoadDataForDoneClick(patientUuid = model.patientUuid, screenCreatedTimestamp = event.screenCreatedTimestamp)
-      BACK -> null
+      BACK -> LoadDataForBackClick(patientUuid = model.patientUuid, screenCreatedTimestamp = event.screenCreatedTimestamp)
     }
-
-    // TODO: Remove once back effect is handled
-    if (effect == null) return noChange()
 
     return dispatch(
         UpdatePatientReassignmentStatus(
-        patientUuid = model.patientUuid,
-        status = event.isPatientEligibleForReassignment
+            patientUuid = model.patientUuid,
+            status = event.isPatientEligibleForReassignment
         ),
         effect
     )

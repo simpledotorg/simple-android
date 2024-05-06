@@ -1464,6 +1464,31 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when patient reassignment status is loaded and click action is back, then update status and load data for back click`() {
+    val model = defaultModel
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientReassignmentStatusLoaded(
+            isPatientEligibleForReassignment = true,
+            clickAction = ClickAction.BACK,
+            screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(
+                UpdatePatientReassignmentStatus(patientUuid, status = true),
+                LoadDataForBackClick(
+                    patientUuid = patientUuid,
+                    screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+                )
+            )
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

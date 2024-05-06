@@ -653,6 +653,10 @@ class PatientSummaryEffectHandlerTest {
     ))
 
     // then
-    testCase.assertOutgoingEvents(PatientReassignmentStatusLoaded(isPatientEligibleForReassignment = true, clickAction = ClickAction.DONE))
+    testCase.assertOutgoingEvents(PatientReassignmentStatusLoaded(
+        isPatientEligibleForReassignment = true,
+        clickAction = ClickAction.DONE,
+        screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+    ))
   }
 }

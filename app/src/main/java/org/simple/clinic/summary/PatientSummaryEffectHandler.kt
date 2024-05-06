@@ -87,7 +87,11 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
           .observeOn(schedulersProvider.io())
           .map {
             val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(it.patientUuid)
-            PatientReassignmentStatusLoaded(isPatientEligibleForReassignment = isPatientEligibleForReassignment, clickAction = it.clickAction)
+            PatientReassignmentStatusLoaded(
+                isPatientEligibleForReassignment = isPatientEligibleForReassignment,
+                clickAction = it.clickAction,
+                screenCreatedTimestamp = it.screenCreatedTimestamp
+            )
           }
     }
   }

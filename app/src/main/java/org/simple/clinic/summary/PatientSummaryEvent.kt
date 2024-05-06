@@ -109,4 +109,8 @@ data class CDSSPilotStatusChecked(val isPilotEnabledForFacility: Boolean) : Pati
 
 data class LatestScheduledAppointmentLoaded(val appointment: Appointment?) : PatientSummaryEvent()
 
-data class PatientReassignmentStatusLoaded(val isPatientEligibleForReassignment: Boolean, val clickAction: ClickAction) : PatientSummaryEvent()
+data class PatientReassignmentStatusLoaded(
+    val isPatientEligibleForReassignment: Boolean,
+    val clickAction: ClickAction,
+    val screenCreatedTimestamp: Instant,
+) : PatientSummaryEvent()

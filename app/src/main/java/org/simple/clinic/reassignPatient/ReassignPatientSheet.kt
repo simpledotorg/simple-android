@@ -25,6 +25,9 @@ class ReassignPatientSheet : BaseBottomSheet<
   @Inject
   lateinit var effectHandlerFactory: ReassignPatientEffectHandler.Factory
 
+  private val assignedFacilityName
+    get() = binding.assignedFacilityTextView
+
   override fun defaultModel() = ReassignPatientModel.create(
       patientUuid = screenKey.patientId,
   )
@@ -45,7 +48,9 @@ class ReassignPatientSheet : BaseBottomSheet<
     context.injector<Injector>().inject(this)
   }
 
-  override fun renderAssignedFacilityName(facilityName: String) {}
+  override fun renderAssignedFacilityName(facilityName: String) {
+    assignedFacilityName.text = facilityName
+  }
 
   override fun closeSheet() {
   }

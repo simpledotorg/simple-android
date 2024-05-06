@@ -609,4 +609,17 @@ class PatientSummaryEffectHandlerTest {
 
     verifyNoInteractions(uiActions)
   }
+
+  @Test
+  fun `when show reassign patient sheet effect is received, then show the sheet`() {
+    // given
+    val patientUuid = UUID.fromString("1234d26f-fa70-44de-a4ee-721378d9fa07")
+
+    // when
+    testCase.dispatch(ShowReassignPatientSheet(patientUuid))
+
+    // then
+    verify(uiActions).showReassignPatientSheet(patientUuid)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

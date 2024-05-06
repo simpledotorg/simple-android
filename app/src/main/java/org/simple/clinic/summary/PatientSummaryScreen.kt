@@ -749,6 +749,10 @@ class PatientSummaryScreen :
     clinicalDecisionSupportAlertView.visibility = GONE
   }
 
+  override fun showReassignPatientSheet(patientUuid: UUID) {
+    // TODO: Show patient reassignment sheet
+  }
+
   interface Injector {
     fun inject(target: PatientSummaryScreen)
   }

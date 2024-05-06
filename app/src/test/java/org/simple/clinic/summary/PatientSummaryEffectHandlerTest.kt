@@ -646,9 +646,9 @@ class PatientSummaryEffectHandlerTest {
     whenever(patientRepository.isPatientEligibleForReassignment(patientUuid)) doReturn true
 
     // when
-    testCase.dispatch(CheckPatientReassignmentStatus(patientUuid))
+    testCase.dispatch(CheckPatientReassignmentStatus(patientUuid, ClickAction.DONE))
 
     // then
-    testCase.assertOutgoingEvents(PatientReassignmentStatusLoaded(true))
+    testCase.assertOutgoingEvents(PatientReassignmentStatusLoaded(isPatientEligibleForReassignment = true, clickAction = ClickAction.DONE))
   }
 }

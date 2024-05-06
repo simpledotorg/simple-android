@@ -76,7 +76,12 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(LoadPatientRegistrationData::class.java, checkPatientRegistrationData())
         .addTransformer(CheckIfCDSSPilotIsEnabled::class.java, checkIfCDSSPilotIsEnabled())
         .addTransformer(LoadLatestScheduledAppointment::class.java, loadLatestScheduledAppointment())
+        .addConsumer(UpdatePatientReassignmentStatus::class.java, { updatePatientReassignmentState(it.patientUuid, it.status) }, schedulersProvider.io())
         .build()
+  }
+
+  private fun updatePatientReassignmentState(patientUuid: UUID, status: Boolean) {
+    patientRepository.updatePatientReassignmentEligibilityStatus(patientUuid, status)
   }
 
   private fun loadLatestScheduledAppointment(): ObservableTransformer<LoadLatestScheduledAppointment, PatientSummaryEvent> {

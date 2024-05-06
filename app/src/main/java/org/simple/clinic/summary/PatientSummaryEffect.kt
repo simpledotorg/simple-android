@@ -39,6 +39,8 @@ object CheckIfCDSSPilotIsEnabled : PatientSummaryEffect()
 
 data class LoadLatestScheduledAppointment(val patientUuid: UUID) : PatientSummaryEffect()
 
+data class UpdatePatientReassignmentStatus(val patientUuid: UUID, val status: Boolean) : PatientSummaryEffect()
+
 sealed class PatientSummaryViewEffect : PatientSummaryEffect()
 
 data class HandleEditClick(

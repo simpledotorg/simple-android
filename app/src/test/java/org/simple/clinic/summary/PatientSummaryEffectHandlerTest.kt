@@ -637,4 +637,18 @@ class PatientSummaryEffectHandlerTest {
 
     verifyNoInteractions(uiActions)
   }
+
+  @Test
+  fun `when check patient reassignment status effect is received, then check patient reassignment status`() {
+    // given
+    val patientUuid = UUID.fromString("eb787ae3-4757-4f3c-a4c1-949d489971a5")
+
+    whenever(patientRepository.isPatientEligibleForReassignment(patientUuid)) doReturn true
+
+    // when
+    testCase.dispatch(CheckPatientReassignmentStatus(patientUuid))
+
+    // then
+    testCase.assertOutgoingEvents(PatientReassignmentStatusLoaded(true))
+  }
 }

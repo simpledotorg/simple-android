@@ -72,6 +72,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is CDSSPilotStatusChecked -> cdssPilotStatusChecked(event, model)
       is LatestScheduledAppointmentLoaded -> next(model.scheduledAppointmentLoaded(event.appointment))
       is MeasurementWarningNotNowClicked -> measurementWarningNotNowClicked(model, event)
+      is PatientReassignmentStatusLoaded -> noChange()
     }
   }
 

@@ -41,6 +41,8 @@ data class LoadLatestScheduledAppointment(val patientUuid: UUID) : PatientSummar
 
 data class UpdatePatientReassignmentStatus(val patientUuid: UUID, val status: Boolean) : PatientSummaryEffect()
 
+data class CheckPatientReassignmentStatus(val patientUuid: UUID) : PatientSummaryEffect()
+
 sealed class PatientSummaryViewEffect : PatientSummaryEffect()
 
 data class HandleEditClick(

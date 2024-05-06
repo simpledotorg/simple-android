@@ -77,7 +77,19 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(CheckIfCDSSPilotIsEnabled::class.java, checkIfCDSSPilotIsEnabled())
         .addTransformer(LoadLatestScheduledAppointment::class.java, loadLatestScheduledAppointment())
         .addConsumer(UpdatePatientReassignmentStatus::class.java, { updatePatientReassignmentState(it.patientUuid, it.status) }, schedulersProvider.io())
+        .addTransformer(CheckPatientReassignmentStatus::class.java, checkPatientReassignmentStatus())
         .build()
+  }
+
+  private fun checkPatientReassignmentStatus(): ObservableTransformer<CheckPatientReassignmentStatus, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map {
+            val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(it.patientUuid)
+            PatientReassignmentStatusLoaded(isPatientEligibleForReassignment = isPatientEligibleForReassignment)
+          }
+    }
   }
 
   private fun updatePatientReassignmentState(patientUuid: UUID, status: Boolean) {

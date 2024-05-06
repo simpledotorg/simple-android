@@ -108,3 +108,5 @@ data class ClinicalDecisionSupportInfoLoaded(val isNewestBpEntryHigh: Boolean, v
 data class CDSSPilotStatusChecked(val isPilotEnabledForFacility: Boolean) : PatientSummaryEvent()
 
 data class LatestScheduledAppointmentLoaded(val appointment: Appointment?) : PatientSummaryEvent()
+
+data class PatientReassignmentStatusLoaded(val isPatientEligibleForReassignment: Boolean) : PatientSummaryEvent()

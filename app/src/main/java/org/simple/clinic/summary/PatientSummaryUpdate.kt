@@ -1,6 +1,7 @@
 package org.simple.clinic.summary
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.dispatch
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
@@ -50,7 +51,8 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
           countOfRecordedBloodSugars = event.countOfRecordedBloodSugars,
           medicalHistory = event.medicalHistory,
           hasPatientMeasurementDataChangedSinceScreenCreated = event.hasPatientMeasurementDataChangedSinceScreenCreated,
-          hasAppointmentChangedSinceScreenCreated = event.hasAppointmentChangeSinceScreenCreated
+          hasAppointmentChangedSinceScreenCreated = event.hasAppointmentChangeSinceScreenCreated,
+          isPatientEligibleForReassignment = event.isPatientEligibleForReassignment
       )
 
       is SyncTriggered -> scheduleAppointmentSheetClosed(model, event.sheetOpenedFrom)
@@ -220,7 +222,8 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       countOfRecordedBloodSugars: Int,
       medicalHistory: MedicalHistory,
       hasPatientMeasurementDataChangedSinceScreenCreated: Boolean,
-      hasAppointmentChangedSinceScreenCreated: Boolean
+      hasAppointmentChangedSinceScreenCreated: Boolean,
+      isPatientEligibleForReassignment: Boolean,
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val canShowAppointmentSheet = hasPatientMeasurementDataChangedSinceScreenCreated && !hasAppointmentChangedSinceScreenCreated
     val hasAtLeastOneMeasurementRecorded = countOfRecordedBloodPressures + countOfRecordedBloodSugars > 0
@@ -236,6 +239,7 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
     return when {
       shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
       measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))
+      isPatientEligibleForReassignment -> dispatch(ShowReassignPatientSheet(model.patientUuid))
       canShowAppointmentSheet -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, DONE_CLICK, model.currentFacility!!))
       else -> dispatch(GoToHomeScreen)
     }

@@ -1525,6 +1525,31 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when viewing existing patient and patient can be reassigned and save is clicked, then show reassign patient sheet`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForDoneClickLoaded(
+            hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = false,
+            countOfRecordedBloodPressures = 1,
+            countOfRecordedBloodSugars = 1,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("94056dc9-85e9-472e-8674-1657bbab56bb"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Yes,
+                hasDiabetes = Yes
+            ),
+            isPatientEligibleForReassignment = true
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowReassignPatientSheet(patientUuid))
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

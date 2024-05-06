@@ -10,6 +10,8 @@ import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.NEXT_APPOINTMENT_ACTION_CLICK
+import org.simple.clinic.summary.ClickAction.DONE
+import org.simple.clinic.summary.ClickAction.BACK
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatientWithTeleconsultLog
@@ -72,8 +74,29 @@ class PatientSummaryUpdate : Update<PatientSummaryModel, PatientSummaryEvent, Pa
       is CDSSPilotStatusChecked -> cdssPilotStatusChecked(event, model)
       is LatestScheduledAppointmentLoaded -> next(model.scheduledAppointmentLoaded(event.appointment))
       is MeasurementWarningNotNowClicked -> measurementWarningNotNowClicked(model, event)
-      is PatientReassignmentStatusLoaded -> noChange()
+      is PatientReassignmentStatusLoaded -> patientReassignmentStatusLoaded(model, event)
     }
+  }
+
+  private fun patientReassignmentStatusLoaded(
+      model: PatientSummaryModel,
+      event: PatientReassignmentStatusLoaded
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    val effect: PatientSummaryEffect? = when (event.clickAction) {
+      DONE -> LoadDataForDoneClick(patientUuid = model.patientUuid, screenCreatedTimestamp = event.screenCreatedTimestamp)
+      BACK -> null
+    }
+
+    // TODO: Remove once back effect is handled
+    if (effect == null) return noChange()
+
+    return dispatch(
+        UpdatePatientReassignmentStatus(
+        patientUuid = model.patientUuid,
+        status = event.isPatientEligibleForReassignment
+        ),
+        effect
+    )
   }
 
   private fun measurementWarningNotNowClicked(

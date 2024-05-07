@@ -15,3 +15,5 @@ data object NotNowClicked : ReassignPatientEvent() {
 data object ChangeClicked : ReassignPatientEvent() {
   override val analyticsName = "Reassign Patient:Change Clicked"
 }
+
+data object AssignedFacilityChanged : ReassignPatientEvent()

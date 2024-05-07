@@ -30,6 +30,7 @@ class ReassignPatientEffectHandler @AssistedInject constructor(
   fun build(): ObservableTransformer<ReassignPatientEffect, ReassignPatientEvent> = RxMobius
       .subtypeEffectHandler<ReassignPatientEffect, ReassignPatientEvent>()
       .addTransformer(LoadAssignedFacility::class.java, loadAssignedFacility())
+      .addTransformer(ChangeAssignedFacility::class.java, changeAssignedFacility())
       .addConsumer(ReassignPatientViewEffect::class.java, viewEffectsConsumer::accept)
       .build()
 
@@ -47,6 +48,17 @@ class ReassignPatientEffectHandler @AssistedInject constructor(
     return Optional
         .ofNullable(patient.assignedFacilityId)
         .flatMap { facilityRepository.facility(it) }
+  }
+
+  private fun changeAssignedFacility(): ObservableTransformer<ChangeAssignedFacility, ReassignPatientEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map { (patientUuid, assignedFacilityId) ->
+            patientRepository.updateAssignedFacilityId(patientUuid, assignedFacilityId)
+          }
+          .map { AssignedFacilityChanged }
+    }
   }
 }
 

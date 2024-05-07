@@ -89,4 +89,23 @@ class ReassignPatientEffectHandlerTest {
     verify(uiActions).openSelectFacilitySheet()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when change assigned facility effect is received, then change the assigned facility`() {
+    // given
+    val patientUuid = UUID.fromString("163d66b6-b7a4-47f3-8aea-257636489956")
+    val updatedAssignedFacilityId = UUID.fromString("bf9ff0b1-c859-4ff9-9dfe-544e5fbc11d3")
+
+    // when
+    effectHandlerTestCase.dispatch(ChangeAssignedFacility(patientUuid, updatedAssignedFacilityId))
+
+    // then
+    verify(patientRepository).updateAssignedFacilityId(
+        patientId = patientUuid,
+        assignedFacilityId = updatedAssignedFacilityId
+    )
+
+    effectHandlerTestCase.assertOutgoingEvents(AssignedFacilityChanged)
+    verifyNoInteractions(uiActions)
+  }
 }

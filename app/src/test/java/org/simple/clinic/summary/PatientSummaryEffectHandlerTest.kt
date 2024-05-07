@@ -246,7 +246,7 @@ class PatientSummaryEffectHandlerTest {
     whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
 
     // when
-    testCase.dispatch(LoadDataForBackClick(patientUuid, screenCreatedTimestamp))
+    testCase.dispatch(LoadDataForBackClick(patientUuid, screenCreatedTimestamp, false))
 
     // then
     testCase.assertOutgoingEvents(
@@ -255,7 +255,8 @@ class PatientSummaryEffectHandlerTest {
             hasAppointmentChangeSinceScreenCreated = false,
             countOfRecordedBloodPressures = 3,
             countOfRecordedBloodSugars = 2,
-            medicalHistory = medicalHistory
+            medicalHistory = medicalHistory,
+            isPatientEligibleForReassignment = false,
         )
     )
     verifyNoInteractions(uiActions)
@@ -278,7 +279,11 @@ class PatientSummaryEffectHandlerTest {
     whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
 
     // when
-    testCase.dispatch(LoadDataForDoneClick(patientUuid, Instant.parse("2018-01-01T00:00:00Z")))
+    testCase.dispatch(LoadDataForDoneClick(
+        patientUuid = patientUuid,
+        screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+        patientEligibleForReassignment = true
+    ))
 
     // then
     testCase.assertOutgoingEvents(
@@ -287,7 +292,8 @@ class PatientSummaryEffectHandlerTest {
             hasAppointmentChangeSinceScreenCreated = false,
             countOfRecordedBloodPressures = 2,
             countOfRecordedBloodSugars = 3,
-            medicalHistory = medicalHistory
+            medicalHistory = medicalHistory,
+            isPatientEligibleForReassignment = true
         )
     )
     verifyNoInteractions(uiActions)
@@ -608,5 +614,55 @@ class PatientSummaryEffectHandlerTest {
     testCase.assertOutgoingEvents(LatestScheduledAppointmentLoaded(appointment))
 
     verifyNoInteractions(uiActions)
+  }
+
+  @Test
+  fun `when show reassign patient sheet effect is received, then show the sheet`() {
+    // given
+    val patientUuid = UUID.fromString("1234d26f-fa70-44de-a4ee-721378d9fa07")
+
+    // when
+    testCase.dispatch(ShowReassignPatientSheet(patientUuid))
+
+    // then
+    verify(uiActions).showReassignPatientSheet(patientUuid)
+    verifyNoMoreInteractions(uiActions)
+  }
+
+  @Test
+  fun `when update patient reassignment status effect is received, then update the status`() {
+    // given
+    val patientUuid = UUID.fromString("938efb41-8117-43f2-ae1a-410d64a0e204")
+
+    // when
+    testCase.dispatch(UpdatePatientReassignmentStatus(patientUuid = patientUuid, status = true))
+
+    // then
+    verify(patientRepository).updatePatientReassignmentEligibilityStatus(patientUuid, true)
+    verifyNoMoreInteractions(patientRepository)
+
+    verifyNoInteractions(uiActions)
+  }
+
+  @Test
+  fun `when check patient reassignment status effect is received, then check patient reassignment status`() {
+    // given
+    val patientUuid = UUID.fromString("eb787ae3-4757-4f3c-a4c1-949d489971a5")
+
+    whenever(patientRepository.isPatientEligibleForReassignment(patientUuid)) doReturn true
+
+    // when
+    testCase.dispatch(CheckPatientReassignmentStatus(
+        patientUuid = patientUuid,
+        clickAction = ClickAction.DONE,
+        screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+    ))
+
+    // then
+    testCase.assertOutgoingEvents(PatientReassignmentStatusLoaded(
+        isPatientEligibleForReassignment = true,
+        clickAction = ClickAction.DONE,
+        screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+    ))
   }
 }

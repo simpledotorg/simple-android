@@ -247,7 +247,9 @@ class PatientSummaryScreen :
   }
 
   override fun createUpdate(): Update<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect> {
-    return PatientSummaryUpdate()
+    return PatientSummaryUpdate(
+        isPatientReassignmentFeatureEnabled = features.isEnabled(Feature.PatientReassignment)
+    )
   }
 
   override fun createInit(): Init<PatientSummaryModel, PatientSummaryEffect> {
@@ -747,6 +749,10 @@ class PatientSummaryScreen :
 
   override fun hideClinicalDecisionSupportAlertWithoutAnimation() {
     clinicalDecisionSupportAlertView.visibility = GONE
+  }
+
+  override fun showReassignPatientSheet(patientUuid: UUID) {
+    // TODO: Show patient reassignment sheet
   }
 
   interface Injector {

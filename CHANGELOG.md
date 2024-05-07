@@ -57,15 +57,13 @@
 - Add `isPatientEligibleForReassignment` to `PatientSearchResult` database view and `OverdueAppointment` model
 - Bump Compose Compiler to v1.5.13
 - Bump Jackson Core to v2.17.1
+- Add facility reassignment view to `RecentPatientsItem`, `OverduePatientItem` and `PatientSearchResultItem`
+- Show patient reassignment sheet when done/back is clicked in `PatientSummary`
 
 ### Fixes
 
 - Fix app crash on searching overdue patient with special characters
 - Fix consent text getting cropped and hidden on patient registration screen
-
-### Changes
-
-- Add facility reassignment view to `RecentPatientsItem`, `OverduePatientItem` and `PatientSearchResultItem`
 
 ## 2024-01-08-8979
 

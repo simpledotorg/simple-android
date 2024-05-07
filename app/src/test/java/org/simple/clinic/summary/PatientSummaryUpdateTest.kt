@@ -77,7 +77,7 @@ class PatientSummaryUpdateTest {
       )
   )
 
-  private val updateSpec = UpdateSpec(PatientSummaryUpdate())
+  private val updateSpec = UpdateSpec(PatientSummaryUpdate(true))
 
   @Test
   fun `when the current facility is loaded, update the UI`() {
@@ -144,7 +144,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = Yes
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -168,7 +169,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = Unanswered,
                 hasDiabetes = Unanswered
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -192,7 +194,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = Unanswered,
                 hasDiabetes = Unanswered
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -217,7 +220,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = Yes
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -242,7 +246,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = Yes
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -267,7 +272,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = Yes
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -291,7 +297,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = Yes
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -316,7 +323,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = Yes
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -340,7 +348,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = No
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -364,7 +373,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = Unanswered,
                 hasDiabetes = Unanswered
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -388,7 +398,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = Unanswered,
                 hasDiabetes = Unanswered
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -413,7 +424,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = No
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -801,7 +813,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = Yes
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
@@ -825,7 +838,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = No
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
@@ -849,7 +863,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = No,
                 hasDiabetes = Yes
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
@@ -873,7 +888,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = No,
                 hasDiabetes = Yes
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -901,7 +917,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = Yes
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
@@ -925,7 +942,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = No
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
@@ -949,7 +967,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = No,
                 hasDiabetes = Yes
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
@@ -973,7 +992,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = No,
                 hasDiabetes = Yes
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1048,7 +1068,7 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when back is clicked and patient is not dead, then load data for back click`() {
+  fun `when back is clicked and patient is not dead, then check patient reassignment status`() {
     val model = defaultModel
         .currentFacilityLoaded(facility)
         .patientSummaryProfileLoaded(patientSummaryProfile)
@@ -1058,7 +1078,11 @@ class PatientSummaryUpdateTest {
         .whenEvent(PatientSummaryBackClicked(patientUuid, Instant.parse("2018-01-01T00:00:00Z")))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(LoadDataForBackClick(patientUuid, Instant.parse("2018-01-01T00:00:00Z")))
+            hasEffects(CheckPatientReassignmentStatus(
+                patientUuid = patientUuid,
+                clickAction = ClickAction.BACK,
+                screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+            ))
         ))
   }
 
@@ -1093,7 +1117,7 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when done is clicked and patient is not dead, then load data for done click`() {
+  fun `when done is clicked and patient is not dead, then check patient reassignment status`() {
     val model = defaultModel
         .currentFacilityLoaded(facility)
         .patientSummaryProfileLoaded(patientSummaryProfile)
@@ -1103,7 +1127,11 @@ class PatientSummaryUpdateTest {
         .whenEvent(PatientSummaryDoneClicked(patientUuid, Instant.parse("2018-01-01T00:00:00Z")))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(LoadDataForDoneClick(patientUuid, Instant.parse("2018-01-01T00:00:00Z")))
+            hasEffects(CheckPatientReassignmentStatus(
+                patientUuid = patientUuid,
+                clickAction = ClickAction.DONE,
+                screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+            ))
         ))
   }
 
@@ -1198,7 +1226,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = No
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1222,7 +1251,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = No
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1251,7 +1281,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = No
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1280,7 +1311,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = No
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1314,7 +1346,8 @@ class PatientSummaryUpdateTest {
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = No
-            )
+            ),
+            isPatientEligibleForReassignment = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1422,7 +1455,7 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when measurement warning dialog not now is clicked and patient is not dead, the load data for back click`() {
+  fun `when measurement warning dialog not now is clicked and patient is not dead, the check patient reassignment status`() {
     val model = defaultModel
         .currentFacilityLoaded(facility)
         .patientSummaryProfileLoaded(patientSummaryProfile)
@@ -1432,10 +1465,194 @@ class PatientSummaryUpdateTest {
         .whenEvent(MeasurementWarningNotNowClicked(patientUuid, Instant.parse("2018-01-01T00:00:00Z")))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(LoadDataForBackClick(
+            hasEffects(CheckPatientReassignmentStatus(
                 patientUuid = patientUuid,
-                screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+                clickAction = ClickAction.BACK,
+                screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
             ))
+        ))
+  }
+
+  @Test
+  fun `when patient reassignment status is loaded and click action is done, then update status and load data for done click`() {
+    val model = defaultModel
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientReassignmentStatusLoaded(
+            isPatientEligibleForReassignment = true,
+            clickAction = ClickAction.DONE,
+            screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(
+                UpdatePatientReassignmentStatus(patientUuid, status = true),
+                LoadDataForDoneClick(
+                    patientUuid = patientUuid,
+                    screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+                    patientEligibleForReassignment = true
+                )
+            )
+        ))
+  }
+
+  @Test
+  fun `when patient reassignment status is loaded and click action is back, then update status and load data for back click`() {
+    val model = defaultModel
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientReassignmentStatusLoaded(
+            isPatientEligibleForReassignment = true,
+            clickAction = ClickAction.BACK,
+            screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(
+                UpdatePatientReassignmentStatus(patientUuid, status = true),
+                LoadDataForBackClick(
+                    patientUuid = patientUuid,
+                    screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+                    patientEligibleForReassignment = true
+                )
+            )
+        ))
+  }
+
+  @Test
+  fun `when viewing existing patient and patient can be reassigned and save is clicked, then show reassign patient sheet`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForDoneClickLoaded(
+            hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = false,
+            countOfRecordedBloodPressures = 1,
+            countOfRecordedBloodSugars = 1,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("94056dc9-85e9-472e-8674-1657bbab56bb"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Yes,
+                hasDiabetes = Yes
+            ),
+            isPatientEligibleForReassignment = true
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowReassignPatientSheet(patientUuid))
+        ))
+  }
+
+  @Test
+  fun `when viewing existing patient and patient can be reassigned and back is clicked, then show reassign patient sheet`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForDoneClickLoaded(
+            hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = false,
+            countOfRecordedBloodPressures = 1,
+            countOfRecordedBloodSugars = 1,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("94056dc9-85e9-472e-8674-1657bbab56bb"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Yes,
+                hasDiabetes = Yes
+            ),
+            isPatientEligibleForReassignment = true
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowReassignPatientSheet(patientUuid))
+        ))
+  }
+
+  @Test
+  fun `when patient reassignment feature is disabled, and patient is not dead, and done is clicked, then load data for done click`() {
+    val updateSpec = UpdateSpec(PatientSummaryUpdate(
+        isPatientReassignmentFeatureEnabled = false
+    ))
+    val model = defaultModel
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientSummaryDoneClicked(
+            patientUuid = patientUuid,
+            screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(
+                LoadDataForDoneClick(
+                    patientUuid = patientUuid,
+                    screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+                    patientEligibleForReassignment = false
+                )
+            )
+        ))
+  }
+
+  @Test
+  fun `when patient reassignment feature is disabled, and patient is not dead, and back is clicked, then load data for back click`() {
+    val updateSpec = UpdateSpec(PatientSummaryUpdate(
+        isPatientReassignmentFeatureEnabled = false
+    ))
+    val model = defaultModel
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(PatientSummaryBackClicked(
+            patientUuid = patientUuid,
+            screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(
+                LoadDataForBackClick(
+                    patientUuid = patientUuid,
+                    screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+                    patientEligibleForReassignment = false
+                )
+            )
+        ))
+  }
+
+  @Test
+  fun `when patient reassignment feature is disabled and measurement warning not now is clicked, then load data for back click`() {
+    val updateSpec = UpdateSpec(PatientSummaryUpdate(
+        isPatientReassignmentFeatureEnabled = false
+    ))
+    val model = defaultModel
+        .currentFacilityLoaded(facility)
+        .patientSummaryProfileLoaded(patientSummaryProfile)
+
+    updateSpec
+        .given(model)
+        .whenEvent(MeasurementWarningNotNowClicked(
+            patientUuid = patientUuid,
+            screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(
+                LoadDataForBackClick(
+                    patientUuid = patientUuid,
+                    screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+                    patientEligibleForReassignment = false
+                )
+            )
         ))
   }
 

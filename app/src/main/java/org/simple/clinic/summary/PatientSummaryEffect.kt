@@ -17,12 +17,14 @@ data class MarkReminderAsShown(val patientUuid: UUID) : PatientSummaryEffect()
 
 data class LoadDataForBackClick(
     val patientUuid: UUID,
-    val screenCreatedTimestamp: Instant
+    val screenCreatedTimestamp: Instant,
+    val patientEligibleForReassignment: Boolean
 ) : PatientSummaryEffect()
 
 data class LoadDataForDoneClick(
     val patientUuid: UUID,
-    val screenCreatedTimestamp: Instant
+    val screenCreatedTimestamp: Instant,
+    val patientEligibleForReassignment: Boolean
 ) : PatientSummaryEffect()
 
 data class TriggerSync(val sheetOpenedFrom: AppointmentSheetOpenedFrom) : PatientSummaryEffect()
@@ -38,6 +40,14 @@ data class LoadClinicalDecisionSupportInfo(val patientUuid: UUID) : PatientSumma
 object CheckIfCDSSPilotIsEnabled : PatientSummaryEffect()
 
 data class LoadLatestScheduledAppointment(val patientUuid: UUID) : PatientSummaryEffect()
+
+data class UpdatePatientReassignmentStatus(val patientUuid: UUID, val status: Boolean) : PatientSummaryEffect()
+
+data class CheckPatientReassignmentStatus(
+    val patientUuid: UUID,
+    val clickAction: ClickAction,
+    val screenCreatedTimestamp: Instant,
+) : PatientSummaryEffect()
 
 sealed class PatientSummaryViewEffect : PatientSummaryEffect()
 
@@ -87,3 +97,5 @@ object OpenSelectFacilitySheet : PatientSummaryViewEffect()
 data class DispatchNewAssignedFacility(val facility: Facility) : PatientSummaryViewEffect()
 
 object RefreshNextAppointment : PatientSummaryViewEffect()
+
+data class ShowReassignPatientSheet(val patientUuid: UUID) : PatientSummaryViewEffect()

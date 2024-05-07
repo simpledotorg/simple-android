@@ -76,7 +76,28 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(LoadPatientRegistrationData::class.java, checkPatientRegistrationData())
         .addTransformer(CheckIfCDSSPilotIsEnabled::class.java, checkIfCDSSPilotIsEnabled())
         .addTransformer(LoadLatestScheduledAppointment::class.java, loadLatestScheduledAppointment())
+        .addConsumer(UpdatePatientReassignmentStatus::class.java, { updatePatientReassignmentState(it.patientUuid, it.status) }, schedulersProvider.io())
+        .addTransformer(CheckPatientReassignmentStatus::class.java, checkPatientReassignmentStatus())
         .build()
+  }
+
+  private fun checkPatientReassignmentStatus(): ObservableTransformer<CheckPatientReassignmentStatus, PatientSummaryEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map {
+            val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(it.patientUuid)
+            PatientReassignmentStatusLoaded(
+                isPatientEligibleForReassignment = isPatientEligibleForReassignment,
+                clickAction = it.clickAction,
+                screenCreatedTimestamp = it.screenCreatedTimestamp
+            )
+          }
+    }
+  }
+
+  private fun updatePatientReassignmentState(patientUuid: UUID, status: Boolean) {
+    patientRepository.updatePatientReassignmentEligibilityStatus(patientUuid, status)
   }
 
   private fun loadLatestScheduledAppointment(): ObservableTransformer<LoadLatestScheduledAppointment, PatientSummaryEvent> {
@@ -256,7 +277,8 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 hasAppointmentChangeSinceScreenCreated = hasAppointmentChanged,
                 countOfRecordedBloodPressures = countOfRecordedBloodPressures,
                 countOfRecordedBloodSugars = countOfRecordedBloodSugars,
-                medicalHistory = medicalHistory
+                medicalHistory = medicalHistory,
+                isPatientEligibleForReassignment = loadDataForBackClick.patientEligibleForReassignment
             )
           }
     }
@@ -290,7 +312,8 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 hasAppointmentChangeSinceScreenCreated = hasAppointmentChanged,
                 countOfRecordedBloodPressures = countOfRecordedBloodPressures,
                 countOfRecordedBloodSugars = countOfRecordedBloodSugars,
-                medicalHistory = medicalHistory
+                medicalHistory = medicalHistory,
+                isPatientEligibleForReassignment = loadDataForDoneClick.patientEligibleForReassignment
             )
           }
     }

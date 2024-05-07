@@ -56,7 +56,8 @@ data class DataForBackClickLoaded(
     val hasAppointmentChangeSinceScreenCreated: Boolean,
     val countOfRecordedBloodPressures: Int,
     val countOfRecordedBloodSugars: Int,
-    val medicalHistory: MedicalHistory
+    val medicalHistory: MedicalHistory,
+    val isPatientEligibleForReassignment: Boolean
 ) : PatientSummaryEvent()
 
 data class DataForDoneClickLoaded(
@@ -64,7 +65,8 @@ data class DataForDoneClickLoaded(
     val hasAppointmentChangeSinceScreenCreated: Boolean,
     val countOfRecordedBloodPressures: Int,
     val countOfRecordedBloodSugars: Int,
-    val medicalHistory: MedicalHistory
+    val medicalHistory: MedicalHistory,
+    val isPatientEligibleForReassignment: Boolean
 ) : PatientSummaryEvent()
 
 data class SyncTriggered(val sheetOpenedFrom: AppointmentSheetOpenedFrom) : PatientSummaryEvent()
@@ -108,3 +110,9 @@ data class ClinicalDecisionSupportInfoLoaded(val isNewestBpEntryHigh: Boolean, v
 data class CDSSPilotStatusChecked(val isPilotEnabledForFacility: Boolean) : PatientSummaryEvent()
 
 data class LatestScheduledAppointmentLoaded(val appointment: Appointment?) : PatientSummaryEvent()
+
+data class PatientReassignmentStatusLoaded(
+    val isPatientEligibleForReassignment: Boolean,
+    val clickAction: ClickAction,
+    val screenCreatedTimestamp: Instant,
+) : PatientSummaryEvent()

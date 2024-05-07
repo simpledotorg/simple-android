@@ -1,6 +1,8 @@
 package org.simple.clinic.reassignPatient
 
 import android.content.Context
+import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.jakewharton.rxbinding3.view.clicks
@@ -11,8 +13,12 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetReassignPatientBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.mobius.DeferredEventSource
 import org.simple.clinic.navigation.v2.ScreenKey
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
+import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionScreen
+import org.simple.clinic.util.setFragmentResultListener
 import java.util.UUID
 import javax.inject.Inject
 
@@ -28,6 +34,9 @@ class ReassignPatientSheet : BaseBottomSheet<
 
   @Inject
   lateinit var effectHandlerFactory: ReassignPatientEffectHandler.Factory
+
+
+  private val additionalEvents = DeferredEventSource<ReassignPatientEvent>()
 
   private val assignedFacilityName
     get() = binding.assignedFacilityTextView
@@ -55,6 +64,10 @@ class ReassignPatientSheet : BaseBottomSheet<
 
   override fun viewEffectsHandler() = ReassignPatientViewEffectHandler(this)
 
+  override fun additionalEventSources() = listOf(
+      additionalEvents
+  )
+  
   override fun events() = Observable
       .mergeArray(
           notNowClicks(),
@@ -62,6 +75,24 @@ class ReassignPatientSheet : BaseBottomSheet<
       )
       .compose(ReportAnalyticsEvents())
       .cast<ReassignPatientEvent>()
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setFragmentResultListener(ScreenRequest.SelectFacility) { requestKey, result ->
+      if (result is Succeeded) {
+        handleScreenResult(requestKey, result)
+      }
+    }
+  }
+
+  private fun handleScreenResult(requestKey: Parcelable, result: Succeeded) {
+    when (requestKey) {
+      is ScreenRequest.SelectFacility -> {
+        val selectedFacility = (result.result as FacilitySelectionScreen.SelectedFacility).facility
+        additionalEvents.notify(NewAssignedFacilitySelected(selectedFacility))
+      }
+    }
+  }
 
   override fun onAttach(context: Context) {
     super.onAttach(context)
@@ -91,6 +122,12 @@ class ReassignPatientSheet : BaseBottomSheet<
     override val type = ScreenType.Modal
 
     override fun instantiateFragment() = ReassignPatientSheet()
+  }
+
+  sealed class ScreenRequest : Parcelable {
+
+    @Parcelize
+    data object SelectFacility : ScreenRequest()
   }
 
   interface Injector {

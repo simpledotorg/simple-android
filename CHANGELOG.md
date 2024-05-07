@@ -41,7 +41,7 @@
 - Bump Retrofit to v2.11.0
 - Bump UUID generator to v5.0.0
 - Bump Faker to v2.0.4
-- Bump Mobius to v2.0.0
+- Bump Mobius to v2.0.2
 - Bump Sentry dependencies
 - Bump Open CSV to v5.9
 - Bump LeakCanary to v2.14

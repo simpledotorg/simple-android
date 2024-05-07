@@ -13,6 +13,6 @@ data class ChangeAssignedFacility(
 
 sealed class ReassignPatientViewEffect : ReassignPatientEffect()
 
-data object CloseSheet : ReassignPatientViewEffect()
+data class CloseSheet(val sheetClosedFrom: ReassignPatientSheetClosedFrom) : ReassignPatientViewEffect()
 
 data object OpenSelectFacilitySheet : ReassignPatientViewEffect()

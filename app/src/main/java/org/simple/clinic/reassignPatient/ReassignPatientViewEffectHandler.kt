@@ -9,7 +9,7 @@ class ReassignPatientViewEffectHandler(
 
   override fun handle(viewEffect: ReassignPatientViewEffect) {
     when (viewEffect) {
-      is CloseSheet -> uiActions.closeSheet()
+      is CloseSheet -> uiActions.closeSheet(viewEffect.sheetClosedFrom)
       OpenSelectFacilitySheet -> uiActions.openSelectFacilitySheet()
     }.exhaustive()
   }

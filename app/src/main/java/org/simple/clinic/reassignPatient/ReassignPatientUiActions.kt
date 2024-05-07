@@ -1,6 +1,6 @@
 package org.simple.clinic.reassignPatient
 
 interface ReassignPatientUiActions {
-  fun closeSheet()
+  fun closeSheet(sheetClosedFrom: ReassignPatientSheetClosedFrom)
   fun openSelectFacilitySheet()
 }

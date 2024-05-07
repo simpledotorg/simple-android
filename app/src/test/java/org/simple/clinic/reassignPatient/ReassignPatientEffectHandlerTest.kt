@@ -69,12 +69,12 @@ class ReassignPatientEffectHandlerTest {
   @Test
   fun `when close sheet effect is received , then close sheet`() {
     // when
-    effectHandlerTestCase.dispatch(CloseSheet)
+    effectHandlerTestCase.dispatch(CloseSheet(ReassignPatientSheetClosedFrom.NOT_NOW))
 
     // then
     effectHandlerTestCase.assertNoOutgoingEvents()
 
-    verify(uiActions).closeSheet()
+    verify(uiActions).closeSheet(ReassignPatientSheetClosedFrom.NOT_NOW)
     verifyNoMoreInteractions(uiActions)
   }
 

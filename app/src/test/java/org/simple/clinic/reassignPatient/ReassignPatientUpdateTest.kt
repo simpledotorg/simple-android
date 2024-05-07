@@ -40,7 +40,7 @@ class ReassignPatientUpdateTest {
         .whenEvent(NotNowClicked)
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(CloseSheet)
+            hasEffects(CloseSheet(ReassignPatientSheetClosedFrom.NOT_NOW))
         ))
   }
 

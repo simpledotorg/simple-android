@@ -110,7 +110,7 @@ class ReassignPatientSheet : BaseBottomSheet<
     assignedFacilityName.text = facilityName
   }
 
-  override fun closeSheet() {
+  override fun closeSheet(sheetClosedFrom: ReassignPatientSheetClosedFrom) {
   }
 
   override fun openSelectFacilitySheet() {

@@ -14,6 +14,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.SheetReassignPatientBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.mobius.DeferredEventSource
+import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseBottomSheet
@@ -35,6 +36,8 @@ class ReassignPatientSheet : BaseBottomSheet<
   @Inject
   lateinit var effectHandlerFactory: ReassignPatientEffectHandler.Factory
 
+  @Inject
+  lateinit var router: Router
 
   private val additionalEvents = DeferredEventSource<ReassignPatientEvent>()
 
@@ -110,7 +113,9 @@ class ReassignPatientSheet : BaseBottomSheet<
   override fun closeSheet() {
   }
 
-  override fun openSelectFacilitySheet() {}
+  override fun openSelectFacilitySheet() {
+    router.pushExpectingResult(ScreenRequest.SelectFacility, FacilitySelectionScreen.Key())
+  }
 
   @Parcelize
   data class Key(

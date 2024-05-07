@@ -16,6 +16,7 @@ class ReassignPatientUpdate : Update<ReassignPatientModel, ReassignPatientEvent,
       is AssignedFacilityLoaded -> next(model.assignedFacilityUpdated(event.facility.toNullable()))
       is NotNowClicked -> dispatch(CloseSheet)
       is ChangeClicked -> dispatch(OpenSelectFacilitySheet)
+      is NewAssignedFacilitySelected -> dispatch(ChangeAssignedFacility(model.patientUuid, event.facility.uuid))
       is AssignedFacilityChanged -> Next.noChange()
     }
   }

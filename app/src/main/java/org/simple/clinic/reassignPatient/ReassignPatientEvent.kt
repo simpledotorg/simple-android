@@ -17,3 +17,5 @@ data object ChangeClicked : ReassignPatientEvent() {
 }
 
 data object AssignedFacilityChanged : ReassignPatientEvent()
+
+data class NewAssignedFacilitySelected(val facility: Facility) : ReassignPatientEvent()

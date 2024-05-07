@@ -54,4 +54,20 @@ class ReassignPatientUpdateTest {
             hasEffects(OpenSelectFacilitySheet)
         ))
   }
+
+  @Test
+  fun `when new assign facility is selected, then change the assigned facility`() {
+    val assignedFacility = TestData.facility(
+        uuid = UUID.fromString("06f5e0af-9464-4636-807a-dbb9984061fd"),
+        name = "UHC Doha"
+    )
+
+    updateSpec
+        .given(model)
+        .whenEvent(NewAssignedFacilitySelected(assignedFacility))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ChangeAssignedFacility(model.patientUuid, assignedFacility.uuid))
+        ))
+  }
 }

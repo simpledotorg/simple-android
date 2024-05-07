@@ -41,6 +41,7 @@ import org.simple.clinic.home.overdue.OverdueScreen
 import org.simple.clinic.home.overdue.search.OverdueSearchScreen
 import org.simple.clinic.home.patients.PatientsModule
 import org.simple.clinic.home.patients.PatientsTabScreen
+import org.simple.clinic.home.patients.links.PatientsTabLinkView
 import org.simple.clinic.home.report.ReportsScreen
 import org.simple.clinic.instantsearch.InstantSearchScreen
 import org.simple.clinic.login.applock.AppLockScreen
@@ -57,7 +58,7 @@ import org.simple.clinic.newentry.country.di.InputFieldsFactoryModule
 import org.simple.clinic.onboarding.OnboardingScreen
 import org.simple.clinic.overdue.download.formatdialog.SelectOverdueDownloadFormatDialog
 import org.simple.clinic.patient.download.formatdialog.SelectLineListFormatDialog
-import org.simple.clinic.home.patients.links.PatientsTabLinkView
+import org.simple.clinic.reassignPatient.ReassignPatientSheet
 import org.simple.clinic.recentpatient.RecentPatientsScreen
 import org.simple.clinic.recentpatientsview.RecentPatientsView
 import org.simple.clinic.removeoverdueappointment.RemoveOverdueAppointmentScreen
@@ -165,7 +166,8 @@ interface TheActivityComponent :
     QuestionnaireEntryScreen.Injector,
     PatientsTabLinkView.Injector,
     MonthlyReportsScreen.Injector,
-    MonthlyReportCompleteScreen.Injector {
+    MonthlyReportCompleteScreen.Injector,
+    ReassignPatientSheet.Injector {
   fun inject(target: TheActivity)
 
   @Subcomponent.Factory

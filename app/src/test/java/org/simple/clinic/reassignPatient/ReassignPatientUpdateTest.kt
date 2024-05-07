@@ -70,4 +70,15 @@ class ReassignPatientUpdateTest {
             hasEffects(ChangeAssignedFacility(model.patientUuid, assignedFacility.uuid))
         ))
   }
+
+  @Test
+  fun `when assigned facility is changed, then close the sheet`() {
+    updateSpec
+        .given(model)
+        .whenEvent(AssignedFacilityChanged)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(CloseSheet(ReassignPatientSheetClosedFrom.CHANGE))
+        ))
+  }
 }

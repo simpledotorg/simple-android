@@ -120,6 +120,7 @@ class ReassignPatientSheet : BaseBottomSheet<
   @Parcelize
   data class Key(
       val patientId: UUID,
+      val sheetOpenedFrom: ReassignPatientSheetOpenedFrom
   ) : ScreenKey() {
 
     override val analyticsName = "Reassign Patient Sheet"

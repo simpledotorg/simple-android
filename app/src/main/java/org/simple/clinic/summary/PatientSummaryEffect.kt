@@ -98,4 +98,7 @@ data class DispatchNewAssignedFacility(val facility: Facility) : PatientSummaryV
 
 object RefreshNextAppointment : PatientSummaryViewEffect()
 
-data class ShowReassignPatientWarningSheet(val patientUuid: UUID) : PatientSummaryViewEffect()
+data class ShowReassignPatientWarningSheet(
+    val patientUuid: UUID,
+    val currentFacility: Facility,
+) : PatientSummaryViewEffect()

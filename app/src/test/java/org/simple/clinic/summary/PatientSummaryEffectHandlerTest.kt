@@ -620,9 +620,13 @@ class PatientSummaryEffectHandlerTest {
   fun `when show reassign patient sheet effect is received, then show the sheet`() {
     // given
     val patientUuid = UUID.fromString("1234d26f-fa70-44de-a4ee-721378d9fa07")
+    val facility = TestData.facility(
+        uuid = UUID.fromString("a8539a86-ba91-427f-b5d6-27dc058fbd4a"),
+        name = "PHC Simple"
+    )
 
     // when
-    testCase.dispatch(ShowReassignPatientWarningSheet(patientUuid))
+    testCase.dispatch(ShowReassignPatientWarningSheet(patientUuid, facility))
 
     // then
     verify(uiActions).showReassignPatientWarningSheet(patientUuid)

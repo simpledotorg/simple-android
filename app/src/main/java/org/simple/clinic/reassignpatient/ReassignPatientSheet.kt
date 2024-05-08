@@ -112,7 +112,7 @@ class ReassignPatientSheet : BaseBottomSheet<
 
   override fun closeSheet(sheetClosedFrom: ReassignPatientSheetClosedFrom) {
     router.popWithResult(
-        Succeeded(SheetOpenedAndClosedFrom(
+        Succeeded(SheetClosed(
             sheetOpenedFrom = screenKey.sheetOpenedFrom,
             sheetClosedFrom = sheetClosedFrom,
         ))
@@ -137,7 +137,7 @@ class ReassignPatientSheet : BaseBottomSheet<
   }
 
   @Parcelize
-  data class SheetOpenedAndClosedFrom(
+  data class SheetClosed(
       val sheetOpenedFrom: ReassignPatientSheetOpenedFrom,
       val sheetClosedFrom: ReassignPatientSheetClosedFrom,
   ) : Parcelable

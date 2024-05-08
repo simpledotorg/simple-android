@@ -13,6 +13,8 @@ import org.simple.clinic.databinding.RecentPatientItemViewBinding
 import org.simple.clinic.databinding.RecentPatientsBinding
 import org.simple.clinic.databinding.SeeAllItemViewBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.feature.Feature
+import org.simple.clinic.feature.Features
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.patient.PatientConfig
@@ -48,6 +50,9 @@ class RecentPatientsView(
   @Inject
   lateinit var config: PatientConfig
 
+  @Inject
+  lateinit var features: Features
+
   private val recentAdapter = ItemAdapter(
       diffCallback = RecentPatientItemTypeDiffCallback(),
       bindings = mapOf(
@@ -67,7 +72,11 @@ class RecentPatientsView(
   }
 
   private val delegate by unsafeLazy {
-    val uiRenderer = uiRendererFactory.create(this, config.recentPatientLimit)
+    val uiRenderer = uiRendererFactory.create(
+        this,
+        config.recentPatientLimit,
+        isPatientReassignmentFeatureEnabled = features.isEnabled(Feature.PatientReassignment)
+    )
 
     MobiusDelegate.forView(
         events = events.ofType(),

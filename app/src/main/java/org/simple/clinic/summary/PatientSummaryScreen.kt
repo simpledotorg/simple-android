@@ -55,8 +55,8 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.displayLetterRes
-import org.simple.clinic.reassignPatient.ReassignPatientSheet
-import org.simple.clinic.reassignPatient.ReassignPatientSheetOpenedFrom
+import org.simple.clinic.reassignpatient.ReassignPatientSheet
+import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
 import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionScreen

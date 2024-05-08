@@ -2,7 +2,7 @@ package org.simple.clinic.summary
 
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.reassignPatient.ReassignPatientSheetOpenedFrom
+import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
 import java.util.UUID
 
 interface PatientSummaryUiActions {

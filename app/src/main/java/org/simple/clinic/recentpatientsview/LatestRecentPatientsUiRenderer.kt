@@ -34,7 +34,12 @@ class LatestRecentPatientsUiRenderer @AssistedInject constructor(
 
   private fun renderRecentPatients(model: LatestRecentPatientsModel) {
     val recentPatientItems = addSeeAllIfListTooLong(
-        recentPatients = RecentPatientItemType.create(model.recentPatients!!, userClock, dateFormatter),
+        recentPatients = RecentPatientItemType.create(
+            model.recentPatients!!,
+            userClock,
+            dateFormatter,
+            isPatientReassignmentFeatureEnabled,
+        ),
         recentPatientLimit = numberOfPatientsToShow
     )
 

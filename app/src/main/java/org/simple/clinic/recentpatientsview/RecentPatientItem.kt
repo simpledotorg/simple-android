@@ -26,7 +26,8 @@ sealed class RecentPatientItemType : ItemAdapter.Item<UiEvent> {
     fun create(
         recentPatients: List<RecentPatient>,
         userClock: UserClock,
-        dateFormatter: DateTimeFormatter
+        dateFormatter: DateTimeFormatter,
+        isPatientReassignmentFeatureEnabled: Boolean,
     ): List<RecentPatientItemType> {
       val today = LocalDate.now(userClock)
 

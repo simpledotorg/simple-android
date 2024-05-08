@@ -1688,6 +1688,28 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when patient reassignment sheet is closed with not now, and sheet is opened by back click, then load back click data`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(PatientReassignmentWarningClosed(
+            patientUuid = patientUuid,
+            screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+            sheetOpenedFrom = ReassignPatientSheetOpenedFrom.BACK_CLICK,
+            sheetClosedFrom = ReassignPatientSheetClosedFrom.NOT_NOW
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(
+                LoadDataForBackClick(
+                    patientUuid = patientUuid,
+                    screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+                    canShowPatientReassignmentWarning = false
+                )
+            )
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

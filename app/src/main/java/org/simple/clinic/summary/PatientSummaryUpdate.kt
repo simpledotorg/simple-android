@@ -8,6 +8,7 @@ import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
+import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom.*
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.NEXT_APPOINTMENT_ACTION_CLICK
@@ -88,11 +89,20 @@ class PatientSummaryUpdate(
       model: PatientSummaryModel,
       event: PatientReassignmentWarningClosed
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
-    return dispatch(LoadDataForDoneClick(
-        patientUuid = model.patientUuid,
-        screenCreatedTimestamp = event.screenCreatedTimestamp,
-        canShowPatientReassignmentWarning = false
-    ))
+    val effect = when(event.sheetOpenedFrom) {
+      ReassignPatientSheetOpenedFrom.DONE_CLICK -> LoadDataForDoneClick(
+          patientUuid = model.patientUuid,
+          screenCreatedTimestamp = event.screenCreatedTimestamp,
+          canShowPatientReassignmentWarning = false
+      )
+      ReassignPatientSheetOpenedFrom.BACK_CLICK -> LoadDataForBackClick(
+          patientUuid = model.patientUuid,
+          screenCreatedTimestamp = event.screenCreatedTimestamp,
+          canShowPatientReassignmentWarning = false
+      )
+    }
+
+    return dispatch(effect)
   }
 
   private fun patientReassignmentStatusLoaded(

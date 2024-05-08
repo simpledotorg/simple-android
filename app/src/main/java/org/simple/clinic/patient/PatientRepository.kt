@@ -808,9 +808,11 @@ class PatientRepository @Inject constructor(
         ?.diagnosedWithHypertension == Answer.Yes
     if (hasHypertension) return false
 
-    val hasRequiredPrescribedDrugs = database.prescriptionDao()
-        .forPatientImmediate(patientUuid)
-        .filterNot { it.name == "Amlodipine" || it.name == "Losartan" }
+    val prescriptions = database.prescriptionDao().forPatientImmediate(patientUuid)
+    if (prescriptions.size != 2) return false
+
+    val hasRequiredPrescribedDrugs = prescriptions
+        .filterNot { it.name.equals("Amlodipine", ignoreCase = true) || it.name.equals("Losartan", ignoreCase = true) }
         .isEmpty()
     if (!hasRequiredPrescribedDrugs) return false
 

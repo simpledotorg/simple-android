@@ -31,14 +31,23 @@ sealed class RecentPatientItemType : ItemAdapter.Item<UiEvent> {
     ): List<RecentPatientItemType> {
       val today = LocalDate.now(userClock)
 
-      return recentPatients.map { recentPatientItem(it, today, userClock, dateFormatter) }
+      return recentPatients.map {
+        recentPatientItem(
+            it,
+            today,
+            userClock,
+            dateFormatter,
+            isPatientReassignmentFeatureEnabled
+        )
+      }
     }
 
     private fun recentPatientItem(
         recentPatient: RecentPatient,
         today: LocalDate,
         userClock: UserClock,
-        dateFormatter: DateTimeFormatter
+        dateFormatter: DateTimeFormatter,
+        isPatientReassignmentFeatureEnabled: Boolean,
     ): RecentPatientItem {
       val patientRegisteredOnDate = recentPatient.patientRecordedAt.toLocalDateAtZone(userClock.zone)
       val isNewRegistration = today == patientRegisteredOnDate
@@ -52,7 +61,8 @@ sealed class RecentPatientItemType : ItemAdapter.Item<UiEvent> {
           dateFormatter = dateFormatter,
           clock = userClock,
           isNewRegistration = isNewRegistration,
-          isEligibleForReassignment = recentPatient.isEligibleForReassignment
+          isEligibleForReassignment = isPatientReassignmentFeatureEnabled &&
+              recentPatient.isEligibleForReassignment
       )
     }
   }

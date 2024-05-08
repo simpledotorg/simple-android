@@ -96,7 +96,7 @@ class PatientSummaryUpdate(
       BACK -> LoadDataForBackClick(
           patientUuid = model.patientUuid,
           screenCreatedTimestamp = event.screenCreatedTimestamp,
-          patientEligibleForReassignment = event.isPatientEligibleForReassignment
+          canShowPatientReassignmentWarning = event.isPatientEligibleForReassignment
       )
     }
 
@@ -118,7 +118,7 @@ class PatientSummaryUpdate(
       !isPatientReassignmentFeatureEnabled -> LoadDataForBackClick(
           patientUuid = model.patientUuid,
           screenCreatedTimestamp = event.screenCreatedTimestamp,
-          patientEligibleForReassignment = false
+          canShowPatientReassignmentWarning = false
       )
       else -> CheckPatientReassignmentStatus(
           patientUuid = model.patientUuid,
@@ -189,7 +189,7 @@ class PatientSummaryUpdate(
       !isPatientReassignmentFeatureEnabled -> LoadDataForBackClick(
           patientUuid = model.patientUuid,
           screenCreatedTimestamp = event.screenCreatedTimestamp,
-          patientEligibleForReassignment = false
+          canShowPatientReassignmentWarning = false
       )
       else -> CheckPatientReassignmentStatus(
           patientUuid = model.patientUuid,

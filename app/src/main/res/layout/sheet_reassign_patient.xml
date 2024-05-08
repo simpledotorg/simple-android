@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:orientation="vertical"
+  tools:background="?attr/colorSurface"
+  android:paddingHorizontal="@dimen/spacing_16"
+  tools:ignore="MissingPrefix">
+
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_32"
+    android:gravity="center"
+    android:text="@string/reassign_patient_title"
+    android:textAppearance="?attr/textAppearanceHeadline6"
+    android:textColor="?attr/colorOnSurface" />
+
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_8"
+    android:gravity="center"
+    android:text="@string/reassign_patient_description"
+    android:textAppearance="?attr/textAppearanceBody1"
+    android:textColor="?attr/colorOnSurface" />
+
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:layout_marginVertical="@dimen/spacing_16"
+    android:background="@drawable/divider" />
+
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:text="@string/assigned_facility_view_title"
+    android:textAppearance="?attr/textAppearanceBody1"
+    android:textColor="@color/color_on_surface_67" />
+
+  <TextView
+    android:id="@+id/assignedFacilityTextView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_4"
+    android:gravity="center"
+    android:textAppearance="?attr/textAppearanceBody0Medium"
+    android:textColor="?attr/colorOnSurface"
+    tools:text="UHC Bandaragama" />
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:gravity="center_vertical"
+    android:paddingTop="@dimen/spacing_24"
+    android:paddingBottom="@dimen/spacing_16">
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/notNowButton"
+      style="?attr/materialButtonOutlinedStyle"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="@dimen/spacing_8"
+      android:layout_weight="1"
+      android:text="@string/scheduleappointment_not_now"
+      tools:ignore="ButtonStyle" />
+
+    <com.google.android.material.button.MaterialButton
+      android:id="@+id/changeButton"
+      style="?attr/materialButtonStyle"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_8"
+      android:layout_weight="1"
+      android:gravity="center"
+      android:text="@string/change_patient_facility"
+      app:buttonState="in-progress"
+      tools:ignore="ButtonStyle" />
+
+  </LinearLayout>
+
+</LinearLayout>

@@ -622,7 +622,7 @@ class PatientSummaryEffectHandlerTest {
     val patientUuid = UUID.fromString("1234d26f-fa70-44de-a4ee-721378d9fa07")
 
     // when
-    testCase.dispatch(ShowReassignPatientSheet(patientUuid))
+    testCase.dispatch(ShowReassignPatientWarningSheet(patientUuid))
 
     // then
     verify(uiActions).showReassignPatientWarningSheet(patientUuid)

@@ -1546,7 +1546,7 @@ class PatientSummaryUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowReassignPatientSheet(patientUuid))
+            hasEffects(ShowReassignPatientWarningSheet(patientUuid))
         ))
   }
 
@@ -1571,7 +1571,7 @@ class PatientSummaryUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowReassignPatientSheet(patientUuid))
+            hasEffects(ShowReassignPatientWarningSheet(patientUuid))
         ))
   }
 

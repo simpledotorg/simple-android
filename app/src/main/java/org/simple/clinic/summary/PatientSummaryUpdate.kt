@@ -16,7 +16,6 @@ import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatientWithTeleconsultLog
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
-import java.time.Instant
 import java.util.UUID
 
 class PatientSummaryUpdate(
@@ -256,7 +255,7 @@ class PatientSummaryUpdate(
     return when {
       shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
       measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))
-      isPatientEligibleForReassignment -> dispatch(ShowReassignPatientSheet(model.patientUuid))
+      isPatientEligibleForReassignment -> dispatch(ShowReassignPatientWarningSheet(model.patientUuid))
       canShowAppointmentSheet -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, DONE_CLICK, model.currentFacility!!))
       else -> dispatch(GoToHomeScreen)
     }
@@ -287,7 +286,7 @@ class PatientSummaryUpdate(
     return when {
       shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
       measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))
-      isPatientEligibleForReassignment -> dispatch(ShowReassignPatientSheet(model.patientUuid))
+      isPatientEligibleForReassignment -> dispatch(ShowReassignPatientWarningSheet(model.patientUuid))
       canShowAppointmentSheet -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, BACK_CLICK, model.currentFacility!!))
       shouldGoToPreviousScreen -> dispatch(GoBackToPreviousScreen)
       shouldGoToHomeScreen -> dispatch(GoToHomeScreen)

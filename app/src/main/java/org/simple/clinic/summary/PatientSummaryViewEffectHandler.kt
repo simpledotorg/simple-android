@@ -28,7 +28,7 @@ class PatientSummaryViewEffectHandler(
       is DispatchNewAssignedFacility -> uiActions.dispatchNewAssignedFacility(viewEffect.facility)
       is ShowUpdatePhonePopup -> uiActions.showUpdatePhoneDialog(viewEffect.patientUuid)
       RefreshNextAppointment -> uiActions.refreshNextAppointment()
-      is ShowReassignPatientSheet -> uiActions.showReassignPatientWarningSheet(viewEffect.patientUuid)
+      is ShowReassignPatientWarningSheet -> uiActions.showReassignPatientWarningSheet(viewEffect.patientUuid)
     }.exhaustive()
   }
 }

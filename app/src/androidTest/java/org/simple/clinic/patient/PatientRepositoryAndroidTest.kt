@@ -3749,10 +3749,23 @@ class PatientRepositoryAndroidTest {
         deletedAt = null
     )
 
+    val amlodipine = TestData.prescription(
+        uuid = UUID.fromString("c93b9eff-95c2-4f85-be24-480b4774ca5d"),
+        patientUuid = patientId,
+        name = "Amlodipine"
+    )
+
+    val losartan = TestData.prescription(
+        uuid = UUID.fromString("6daac5f4-23bc-4842-9ef3-238422995263"),
+        patientUuid = patientId,
+        name = "Losartan"
+    )
+
     facilityRepository.save(listOf(facility))
     patientRepository.save(listOf(patientProfile))
     medicalHistoryRepository.save(listOf(patientMedicalHistory))
     bloodPressureRepository.save(listOf(patientBp1, patientBp2, patientBp3))
+    prescriptionRepository.save(listOf(amlodipine, losartan))
 
     // when
     val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(patientId)
@@ -3841,10 +3854,23 @@ class PatientRepositoryAndroidTest {
         deletedAt = null
     )
 
+    val amlodipine = TestData.prescription(
+        uuid = UUID.fromString("4253e53b-b089-49de-9918-efc59411b74a"),
+        patientUuid = patientId,
+        name = "Amlodipine"
+    )
+
+    val losartan = TestData.prescription(
+        uuid = UUID.fromString("1e6bb10c-ff96-4da8-864d-9a7a5b2c40a2"),
+        patientUuid = patientId,
+        name = "Losartan"
+    )
+
     facilityRepository.save(listOf(facility))
     patientRepository.save(listOf(patientProfile))
     medicalHistoryRepository.save(listOf(patientMedicalHistory))
     bloodPressureRepository.save(listOf(patientBp1, patientBp2, patientBp3))
+    prescriptionRepository.save(listOf(amlodipine, losartan))
 
     // when
     val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(patientId)
@@ -3933,10 +3959,23 @@ class PatientRepositoryAndroidTest {
         deletedAt = null
     )
 
+    val amlodipine = TestData.prescription(
+        uuid = UUID.fromString("f8cda33d-2087-4236-b415-898219c13700"),
+        patientUuid = patientId,
+        name = "Amlodipine"
+    )
+
+    val losartan = TestData.prescription(
+        uuid = UUID.fromString("5f06cfd5-72af-49dd-9fdf-b41ec2cd98fb"),
+        patientUuid = patientId,
+        name = "Losartan"
+    )
+
     facilityRepository.save(listOf(facility))
     patientRepository.save(listOf(patientProfile))
     medicalHistoryRepository.save(listOf(patientMedicalHistory))
     bloodPressureRepository.save(listOf(patientBp1, patientBp2, patientBp3))
+    prescriptionRepository.save(listOf(amlodipine, losartan))
 
     // when
     val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(patientId)
@@ -4025,10 +4064,23 @@ class PatientRepositoryAndroidTest {
         deletedAt = null
     )
 
+    val amlodipine = TestData.prescription(
+        uuid = UUID.fromString("e42fee6d-1c8f-41a4-b52c-184bba2b294a"),
+        patientUuid = patientId,
+        name = "Amlodipine"
+    )
+
+    val losartan = TestData.prescription(
+        uuid = UUID.fromString("c00ccdd4-cd0f-40bf-a64b-51c5bb3ac24d"),
+        patientUuid = patientId,
+        name = "Losartan"
+    )
+
     facilityRepository.save(listOf(facility))
     patientRepository.save(listOf(patientProfile))
     medicalHistoryRepository.save(listOf(patientMedicalHistory))
     bloodPressureRepository.save(listOf(patientBp1, patientBp2, patientBp3))
+    prescriptionRepository.save(listOf(amlodipine, losartan))
 
     // when
     val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(patientId)
@@ -4117,10 +4169,23 @@ class PatientRepositoryAndroidTest {
         deletedAt = null
     )
 
+    val amlodipine = TestData.prescription(
+        uuid = UUID.fromString("11bc4d30-16a0-464b-bc40-80297fff1f6f"),
+        patientUuid = patientId,
+        name = "Amlodipine"
+    )
+
+    val losartan = TestData.prescription(
+        uuid = UUID.fromString("e8fd0066-dba5-4927-af7b-80a873a30dda"),
+        patientUuid = patientId,
+        name = "Losartan"
+    )
+
     facilityRepository.save(listOf(facility))
     patientRepository.save(listOf(patientProfile))
     medicalHistoryRepository.save(listOf(patientMedicalHistory))
     bloodPressureRepository.save(listOf(patientBp1, patientBp2, patientBp3))
+    prescriptionRepository.save(listOf(amlodipine, losartan))
 
     // when
     val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(patientId)
@@ -4209,10 +4274,239 @@ class PatientRepositoryAndroidTest {
         deletedAt = null
     )
 
+    val amlodipine = TestData.prescription(
+        uuid = UUID.fromString("1bd8b073-e1ba-4ad3-8e4d-7564e9a41e10"),
+        patientUuid = patientId,
+        name = "Amlodipine"
+    )
+
+    val losartan = TestData.prescription(
+        uuid = UUID.fromString("455163c5-a0f9-4b4f-b9d1-c6954ee98e0d"),
+        patientUuid = patientId,
+        name = "Losartan"
+    )
+
     facilityRepository.save(listOf(facility))
     patientRepository.save(listOf(patientProfile))
     medicalHistoryRepository.save(listOf(patientMedicalHistory))
     bloodPressureRepository.save(listOf(patientBp1, patientBp2, patientBp3))
+    prescriptionRepository.save(listOf(amlodipine, losartan))
+
+    // when
+    val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(patientId)
+
+    // then
+    assertThat(isPatientEligibleForReassignment).isFalse()
+  }
+
+  @Test
+  fun when_checking_patient_reassignment_eligibility_status_deleted_blood_pressures_should_not_be_considered() {
+    val facilityId = UUID.fromString("a14fa735-279c-41ca-97f0-5e6355fb9585")
+
+    val facility = TestData.facility(
+        uuid = facilityId,
+        name = "PHC RTSL",
+        facilityType = "UHC"
+    )
+
+    val patientId = UUID.fromString("43087d9c-347c-4d5c-8dc8-c959901f7683")
+    val patientAddressId = UUID.fromString("5d2abe22-7dfc-4014-a630-2f6d121901f6")
+
+    val patientProfile = TestData.patientProfile(
+        patientName = "Ramesh Prasad",
+        patientUuid = patientId,
+        patientAddressUuid = patientAddressId,
+        generatePhoneNumber = false,
+        patientPhoneNumber = "1111111111",
+        generateBusinessId = false,
+        patientAddressStreet = "45 Marigold Lane",
+        patientAddressColonyOrVillage = "Carroll Gardens",
+        gender = Gender.Male,
+        generateDateOfBirth = false,
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = 65,
+            ageUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+            dateOfBirth = null
+        ),
+        patientRegisteredFacilityId = facilityId,
+        patientAssignedFacilityId = facilityId,
+        patientStatus = Active,
+        patientCreatedAt = Instant.parse("2017-01-01T00:00:00Z"),
+        patientUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        patientDeletedAt = null
+    )
+
+    val patientMedicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("acfdfc7f-14d4-447d-9cf5-de90313c3b44"),
+        patientUuid = patientId,
+        diagnosedWithHypertension = No,
+        hasDiabetes = No
+    )
+
+    val patientBp1 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("de5d3a4d-0e42-4685-8eff-fa7e69d675ad"),
+        patientUuid = patientId,
+        facilityUuid = facilityId,
+        systolic = 120,
+        diastolic = 80,
+        createdAt = Instant.parse("2017-12-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-12-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-12-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    val patientBp2 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("98e2b560-eb5c-4e2d-9d88-8087877cc9f2"),
+        patientUuid = patientId,
+        facilityUuid = facilityId,
+        systolic = 120,
+        diastolic = 80,
+        createdAt = Instant.parse("2017-11-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-11-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-11-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    val patientBp3 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("1bfe1e61-ff6c-4d46-b34e-5ca9a0009290"),
+        patientUuid = patientId,
+        facilityUuid = facilityId,
+        systolic = 120,
+        diastolic = 80,
+        createdAt = Instant.parse("2017-10-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-10-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-10-01T00:00:00Z"),
+        deletedAt = Instant.parse("2018-01-01T00:00:00Z")
+    )
+
+    val amlodipine = TestData.prescription(
+        uuid = UUID.fromString("908f90da-4591-4f56-84ef-ee621e0ac94a"),
+        patientUuid = patientId,
+        name = "Amlodipine"
+    )
+
+    val losartan = TestData.prescription(
+        uuid = UUID.fromString("16f59d0d-4ca8-49e4-aa7d-ef1b3e8fc888"),
+        patientUuid = patientId,
+        name = "Losartan"
+    )
+
+    facilityRepository.save(listOf(facility))
+    patientRepository.save(listOf(patientProfile))
+    medicalHistoryRepository.save(listOf(patientMedicalHistory))
+    bloodPressureRepository.save(listOf(patientBp1, patientBp2, patientBp3))
+    prescriptionRepository.save(listOf(amlodipine, losartan))
+
+    // when
+    val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(patientId)
+
+    // then
+    assertThat(isPatientEligibleForReassignment).isFalse()
+  }
+
+  @Test
+  fun when_prescriptions_are_not_required_drugs_then_patient_should_not_be_eligible_for_reassignment() {
+    val facilityId = UUID.fromString("86eaca30-5d6f-4f59-a354-512da0e0d7e7")
+
+    val facility = TestData.facility(
+        uuid = facilityId,
+        name = "PHC RTSL",
+        facilityType = "UHC"
+    )
+
+    val patientId = UUID.fromString("ca3a49f2-ee52-4e8a-80c0-29423a5d082e")
+    val patientAddressId = UUID.fromString("c3b2dfce-981b-4052-a224-3f23542f6358")
+
+    val patientProfile = TestData.patientProfile(
+        patientName = "Ramesh Prasad",
+        patientUuid = patientId,
+        patientAddressUuid = patientAddressId,
+        generatePhoneNumber = false,
+        patientPhoneNumber = "1111111111",
+        generateBusinessId = false,
+        patientAddressStreet = "45 Marigold Lane",
+        patientAddressColonyOrVillage = "Carroll Gardens",
+        gender = Gender.Male,
+        generateDateOfBirth = false,
+        patientAgeDetails = PatientAgeDetails(
+            ageValue = 65,
+            ageUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+            dateOfBirth = null
+        ),
+        patientRegisteredFacilityId = facilityId,
+        patientAssignedFacilityId = facilityId,
+        patientStatus = Active,
+        patientCreatedAt = Instant.parse("2017-01-01T00:00:00Z"),
+        patientUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
+        patientDeletedAt = null
+    )
+
+    val patientMedicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("9cf07c54-e1a6-4c5f-ad99-523cea21f376"),
+        patientUuid = patientId,
+        diagnosedWithHypertension = No,
+        hasDiabetes = No
+    )
+
+    val patientBp1 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("0dbf2474-a990-4b03-a976-99d3b5429e47"),
+        patientUuid = patientId,
+        facilityUuid = facilityId,
+        systolic = 120,
+        diastolic = 80,
+        createdAt = Instant.parse("2017-12-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-12-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-12-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    val patientBp2 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("5c2721ca-5414-4f91-b9a2-f13331eeccf3"),
+        patientUuid = patientId,
+        facilityUuid = facilityId,
+        systolic = 120,
+        diastolic = 80,
+        createdAt = Instant.parse("2017-11-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-11-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-11-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    val patientBp3 = TestData.bloodPressureMeasurement(
+        uuid = UUID.fromString("fa7b53eb-d05f-48a2-8e61-cf07944625ac"),
+        patientUuid = patientId,
+        facilityUuid = facilityId,
+        systolic = 120,
+        diastolic = 80,
+        createdAt = Instant.parse("2017-10-01T00:00:00Z"),
+        updatedAt = Instant.parse("2017-10-01T00:00:00Z"),
+        recordedAt = Instant.parse("2017-10-01T00:00:00Z"),
+        deletedAt = null
+    )
+
+    val amlodipine = TestData.prescription(
+        uuid = UUID.fromString("deb6c544-0079-494f-8f12-de3225d71cbe"),
+        patientUuid = patientId,
+        name = "Amlodipine"
+    )
+
+    val losartan = TestData.prescription(
+        uuid = UUID.fromString("28b22ba6-9786-4741-b885-6647970c05cc"),
+        patientUuid = patientId,
+        name = "Losartan"
+    )
+
+    val telmisartan = TestData.prescription(
+        uuid = UUID.fromString("d646251a-4bec-4cbb-aca1-19fa251a0edb"),
+        patientUuid = patientId,
+        name = "Telemisartan"
+    )
+
+    facilityRepository.save(listOf(facility))
+    patientRepository.save(listOf(patientProfile))
+    medicalHistoryRepository.save(listOf(patientMedicalHistory))
+    bloodPressureRepository.save(listOf(patientBp1, patientBp2, patientBp3))
+    prescriptionRepository.save(listOf(amlodipine, losartan, telmisartan))
 
     // when
     val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(patientId)

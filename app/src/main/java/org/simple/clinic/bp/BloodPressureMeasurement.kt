@@ -193,7 +193,7 @@ data class BloodPressureMeasurement(
 
     @Query("""
       SELECT * FROM bloodpressuremeasurement
-      WHERE patientUuid = :patientUuid AND recordedAt >= :since
+      WHERE patientUuid = :patientUuid AND recordedAt >= :since AND deletedAt IS NULL
       ORDER BY recordedAt DESC
     """)
     fun allBloodPressuresRecordedSinceImmediate(patientUuid: UUID, since: Instant): List<BloodPressureMeasurement>

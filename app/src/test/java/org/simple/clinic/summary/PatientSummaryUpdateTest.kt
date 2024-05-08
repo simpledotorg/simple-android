@@ -15,6 +15,8 @@ import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.reassignpatient.ReassignPatientSheetClosedFrom
+import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.NEXT_APPOINTMENT_ACTION_CLICK
@@ -145,7 +147,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = Yes
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -170,7 +172,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Unanswered,
                 hasDiabetes = Unanswered
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -195,7 +197,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Unanswered,
                 hasDiabetes = Unanswered
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -221,7 +223,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = Yes
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -247,7 +249,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = Yes
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -273,7 +275,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = Yes
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -298,7 +300,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = Yes
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -324,7 +326,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = Yes
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -349,7 +351,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = No
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -374,7 +376,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Unanswered,
                 hasDiabetes = Unanswered
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -399,7 +401,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Unanswered,
                 hasDiabetes = Unanswered
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -425,7 +427,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = No
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -814,7 +816,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = Yes
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
@@ -839,7 +841,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = No
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
@@ -864,7 +866,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = No,
                 hasDiabetes = Yes
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
@@ -889,7 +891,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = No,
                 hasDiabetes = Yes
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -918,7 +920,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = Yes
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
@@ -943,7 +945,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = No
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
@@ -968,7 +970,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = No,
                 hasDiabetes = Yes
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
@@ -993,7 +995,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = No,
                 hasDiabetes = Yes
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1227,7 +1229,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = No
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1252,7 +1254,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = No
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1282,7 +1284,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = No
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1312,7 +1314,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = No
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1347,7 +1349,7 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = No
             ),
-            isPatientEligibleForReassignment = false
+            canShowPatientReassignmentWarning = false
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1493,7 +1495,7 @@ class PatientSummaryUpdateTest {
                 LoadDataForDoneClick(
                     patientUuid = patientUuid,
                     screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
-                    patientEligibleForReassignment = true
+                    canShowPatientReassignmentWarning = true
                 )
             )
         ))
@@ -1519,7 +1521,7 @@ class PatientSummaryUpdateTest {
                 LoadDataForBackClick(
                     patientUuid = patientUuid,
                     screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
-                    patientEligibleForReassignment = true
+                    canShowPatientReassignmentWarning = true
                 )
             )
         ))
@@ -1542,11 +1544,15 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = Yes
             ),
-            isPatientEligibleForReassignment = true
+            canShowPatientReassignmentWarning = true
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowReassignPatientSheet(patientUuid))
+            hasEffects(ShowReassignPatientWarningSheet(
+                patientUuid = patientUuid,
+                currentFacility = facilityWithDiabetesManagementEnabled,
+                sheetOpenedFrom = ReassignPatientSheetOpenedFrom.DONE_CLICK
+            ))
         ))
   }
 
@@ -1567,11 +1573,15 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = Yes
             ),
-            isPatientEligibleForReassignment = true
+            canShowPatientReassignmentWarning = true
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowReassignPatientSheet(patientUuid))
+            hasEffects(ShowReassignPatientWarningSheet(
+                patientUuid = patientUuid,
+                currentFacility = facilityWithDiabetesManagementEnabled,
+                sheetOpenedFrom = ReassignPatientSheetOpenedFrom.DONE_CLICK
+            ))
         ))
   }
 
@@ -1596,7 +1606,7 @@ class PatientSummaryUpdateTest {
                 LoadDataForDoneClick(
                     patientUuid = patientUuid,
                     screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
-                    patientEligibleForReassignment = false
+                    canShowPatientReassignmentWarning = false
                 )
             )
         ))
@@ -1623,7 +1633,7 @@ class PatientSummaryUpdateTest {
                 LoadDataForBackClick(
                     patientUuid = patientUuid,
                     screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
-                    patientEligibleForReassignment = false
+                    canShowPatientReassignmentWarning = false
                 )
             )
         ))
@@ -1650,7 +1660,95 @@ class PatientSummaryUpdateTest {
                 LoadDataForBackClick(
                     patientUuid = patientUuid,
                     screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
-                    patientEligibleForReassignment = false
+                    canShowPatientReassignmentWarning = false
+                )
+            )
+        ))
+  }
+
+  @Test
+  fun `when patient reassignment sheet is closed with not now, and sheet is opened by done click, then load done click data`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(PatientReassignmentWarningClosed(
+            patientUuid = patientUuid,
+            screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+            sheetOpenedFrom = ReassignPatientSheetOpenedFrom.DONE_CLICK,
+            sheetClosedFrom = ReassignPatientSheetClosedFrom.NOT_NOW
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(
+                LoadDataForDoneClick(
+                    patientUuid = patientUuid,
+                    screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+                    canShowPatientReassignmentWarning = false
+                )
+            )
+        ))
+  }
+
+  @Test
+  fun `when patient reassignment sheet is closed with not now, and sheet is opened by back click, then load back click data`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(PatientReassignmentWarningClosed(
+            patientUuid = patientUuid,
+            screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+            sheetOpenedFrom = ReassignPatientSheetOpenedFrom.BACK_CLICK,
+            sheetClosedFrom = ReassignPatientSheetClosedFrom.NOT_NOW
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(
+                LoadDataForBackClick(
+                    patientUuid = patientUuid,
+                    screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+                    canShowPatientReassignmentWarning = false
+                )
+            )
+        ))
+  }
+
+  @Test
+  fun `when patient reassignment sheet is closed with change, and sheet is opened by done click, then check patient reassignment status`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(PatientReassignmentWarningClosed(
+            patientUuid = patientUuid,
+            screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+            sheetOpenedFrom = ReassignPatientSheetOpenedFrom.DONE_CLICK,
+            sheetClosedFrom = ReassignPatientSheetClosedFrom.CHANGE
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(
+                CheckPatientReassignmentStatus(
+                    patientUuid = patientUuid,
+                    screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+                    clickAction = ClickAction.DONE
+                )
+            )
+        ))
+  }
+
+  @Test
+  fun `when patient reassignment sheet is closed with change, and sheet is opened by back click, then check patient reassignment status`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(PatientReassignmentWarningClosed(
+            patientUuid = patientUuid,
+            screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+            sheetOpenedFrom = ReassignPatientSheetOpenedFrom.BACK_CLICK,
+            sheetClosedFrom = ReassignPatientSheetClosedFrom.CHANGE
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(
+                CheckPatientReassignmentStatus(
+                    patientUuid = patientUuid,
+                    screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+                    clickAction = ClickAction.BACK
                 )
             )
         ))

@@ -7,6 +7,9 @@ import com.spotify.mobius.Update
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.mobius.dispatch
+import org.simple.clinic.reassignpatient.ReassignPatientSheetClosedFrom
+import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
+import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom.*
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.NEXT_APPOINTMENT_ACTION_CLICK
@@ -16,7 +19,6 @@ import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatientWithTeleconsultLog
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
-import java.time.Instant
 import java.util.UUID
 
 class PatientSummaryUpdate(
@@ -44,7 +46,7 @@ class PatientSummaryUpdate(
           countOfRecordedBloodPressures = event.countOfRecordedBloodPressures,
           countOfRecordedBloodSugars = event.countOfRecordedBloodSugars,
           medicalHistory = event.medicalHistory,
-          isPatientEligibleForReassignment = event.isPatientEligibleForReassignment
+          isPatientEligibleForReassignment = event.canShowPatientReassignmentWarning
       )
 
       is DataForDoneClickLoaded -> dataForHandlingDoneClickLoaded(
@@ -54,7 +56,7 @@ class PatientSummaryUpdate(
           medicalHistory = event.medicalHistory,
           hasPatientMeasurementDataChangedSinceScreenCreated = event.hasPatientMeasurementDataChangedSinceScreenCreated,
           hasAppointmentChangedSinceScreenCreated = event.hasAppointmentChangeSinceScreenCreated,
-          isPatientEligibleForReassignment = event.isPatientEligibleForReassignment
+          isPatientEligibleForReassignment = event.canShowPatientReassignmentWarning
       )
 
       is SyncTriggered -> scheduleAppointmentSheetClosed(model, event.sheetOpenedFrom)
@@ -80,6 +82,42 @@ class PatientSummaryUpdate(
       is LatestScheduledAppointmentLoaded -> next(model.scheduledAppointmentLoaded(event.appointment))
       is MeasurementWarningNotNowClicked -> measurementWarningNotNowClicked(model, event)
       is PatientReassignmentStatusLoaded -> patientReassignmentStatusLoaded(model, event)
+      is PatientReassignmentWarningClosed -> patientReassignmentWarningClosed(model, event)
+    }
+  }
+
+  private fun patientReassignmentWarningClosed(
+      model: PatientSummaryModel,
+      event: PatientReassignmentWarningClosed
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    if (event.sheetClosedFrom == ReassignPatientSheetClosedFrom.CHANGE) {
+      return dispatch(CheckPatientReassignmentStatus(
+          patientUuid = event.patientUuid,
+          clickAction = clickActionFromReassignPatientSheetOpenedFrom(event.sheetOpenedFrom),
+          screenCreatedTimestamp = event.screenCreatedTimestamp
+      ))
+    }
+
+    val effect = when(event.sheetOpenedFrom) {
+      ReassignPatientSheetOpenedFrom.DONE_CLICK -> LoadDataForDoneClick(
+          patientUuid = model.patientUuid,
+          screenCreatedTimestamp = event.screenCreatedTimestamp,
+          canShowPatientReassignmentWarning = false
+      )
+      ReassignPatientSheetOpenedFrom.BACK_CLICK -> LoadDataForBackClick(
+          patientUuid = model.patientUuid,
+          screenCreatedTimestamp = event.screenCreatedTimestamp,
+          canShowPatientReassignmentWarning = false
+      )
+    }
+
+    return dispatch(effect)
+  }
+
+  private fun clickActionFromReassignPatientSheetOpenedFrom(sheetOpenedFrom: ReassignPatientSheetOpenedFrom): ClickAction {
+    return when (sheetOpenedFrom) {
+      ReassignPatientSheetOpenedFrom.BACK_CLICK -> BACK
+      ReassignPatientSheetOpenedFrom.DONE_CLICK -> DONE
     }
   }
 
@@ -91,12 +129,12 @@ class PatientSummaryUpdate(
       DONE -> LoadDataForDoneClick(
           patientUuid = model.patientUuid,
           screenCreatedTimestamp = event.screenCreatedTimestamp,
-          patientEligibleForReassignment = event.isPatientEligibleForReassignment
+          canShowPatientReassignmentWarning = event.isPatientEligibleForReassignment
       )
       BACK -> LoadDataForBackClick(
           patientUuid = model.patientUuid,
           screenCreatedTimestamp = event.screenCreatedTimestamp,
-          patientEligibleForReassignment = event.isPatientEligibleForReassignment
+          canShowPatientReassignmentWarning = event.isPatientEligibleForReassignment
       )
     }
 
@@ -118,7 +156,7 @@ class PatientSummaryUpdate(
       !isPatientReassignmentFeatureEnabled -> LoadDataForBackClick(
           patientUuid = model.patientUuid,
           screenCreatedTimestamp = event.screenCreatedTimestamp,
-          patientEligibleForReassignment = false
+          canShowPatientReassignmentWarning = false
       )
       else -> CheckPatientReassignmentStatus(
           patientUuid = model.patientUuid,
@@ -171,7 +209,7 @@ class PatientSummaryUpdate(
       !isPatientReassignmentFeatureEnabled -> LoadDataForDoneClick(
           patientUuid = model.patientUuid,
           screenCreatedTimestamp = event.screenCreatedTimestamp,
-          patientEligibleForReassignment = false
+          canShowPatientReassignmentWarning = false
       )
       else -> CheckPatientReassignmentStatus(
           patientUuid = model.patientUuid,
@@ -189,7 +227,7 @@ class PatientSummaryUpdate(
       !isPatientReassignmentFeatureEnabled -> LoadDataForBackClick(
           patientUuid = model.patientUuid,
           screenCreatedTimestamp = event.screenCreatedTimestamp,
-          patientEligibleForReassignment = false
+          canShowPatientReassignmentWarning = false
       )
       else -> CheckPatientReassignmentStatus(
           patientUuid = model.patientUuid,
@@ -256,7 +294,7 @@ class PatientSummaryUpdate(
     return when {
       shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
       measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))
-      isPatientEligibleForReassignment -> dispatch(ShowReassignPatientSheet(model.patientUuid))
+      isPatientEligibleForReassignment -> dispatch(ShowReassignPatientWarningSheet(model.patientUuid, model.currentFacility!!, ReassignPatientSheetOpenedFrom.DONE_CLICK))
       canShowAppointmentSheet -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, DONE_CLICK, model.currentFacility!!))
       else -> dispatch(GoToHomeScreen)
     }
@@ -287,7 +325,7 @@ class PatientSummaryUpdate(
     return when {
       shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
       measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))
-      isPatientEligibleForReassignment -> dispatch(ShowReassignPatientSheet(model.patientUuid))
+      isPatientEligibleForReassignment -> dispatch(ShowReassignPatientWarningSheet(model.patientUuid, model.currentFacility!!, ReassignPatientSheetOpenedFrom.BACK_CLICK))
       canShowAppointmentSheet -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, BACK_CLICK, model.currentFacility!!))
       shouldGoToPreviousScreen -> dispatch(GoBackToPreviousScreen)
       shouldGoToHomeScreen -> dispatch(GoToHomeScreen)

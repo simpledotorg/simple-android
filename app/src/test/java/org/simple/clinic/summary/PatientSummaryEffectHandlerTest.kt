@@ -1,16 +1,16 @@
 package org.simple.clinic.summary
 
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.whenever
 import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.whenever
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
@@ -26,6 +26,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityRepository
@@ -256,7 +257,7 @@ class PatientSummaryEffectHandlerTest {
             countOfRecordedBloodPressures = 3,
             countOfRecordedBloodSugars = 2,
             medicalHistory = medicalHistory,
-            isPatientEligibleForReassignment = false,
+            canShowPatientReassignmentWarning = false,
         )
     )
     verifyNoInteractions(uiActions)
@@ -282,7 +283,7 @@ class PatientSummaryEffectHandlerTest {
     testCase.dispatch(LoadDataForDoneClick(
         patientUuid = patientUuid,
         screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
-        patientEligibleForReassignment = true
+        canShowPatientReassignmentWarning = true
     ))
 
     // then
@@ -293,7 +294,7 @@ class PatientSummaryEffectHandlerTest {
             countOfRecordedBloodPressures = 2,
             countOfRecordedBloodSugars = 3,
             medicalHistory = medicalHistory,
-            isPatientEligibleForReassignment = true
+            canShowPatientReassignmentWarning = true
         )
     )
     verifyNoInteractions(uiActions)
@@ -620,12 +621,20 @@ class PatientSummaryEffectHandlerTest {
   fun `when show reassign patient sheet effect is received, then show the sheet`() {
     // given
     val patientUuid = UUID.fromString("1234d26f-fa70-44de-a4ee-721378d9fa07")
+    val facility = TestData.facility(
+        uuid = UUID.fromString("a8539a86-ba91-427f-b5d6-27dc058fbd4a"),
+        name = "PHC Simple"
+    )
 
     // when
-    testCase.dispatch(ShowReassignPatientSheet(patientUuid))
+    testCase.dispatch(ShowReassignPatientWarningSheet(
+        patientUuid = patientUuid,
+        currentFacility = facility,
+        sheetOpenedFrom = ReassignPatientSheetOpenedFrom.DONE_CLICK
+    ))
 
     // then
-    verify(uiActions).showReassignPatientSheet(patientUuid)
+    verify(uiActions).showReassignPatientWarningSheet(patientUuid, facility, ReassignPatientSheetOpenedFrom.DONE_CLICK)
     verifyNoMoreInteractions(uiActions)
   }
 

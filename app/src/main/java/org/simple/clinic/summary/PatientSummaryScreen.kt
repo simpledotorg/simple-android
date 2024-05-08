@@ -55,6 +55,8 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.displayLetterRes
+import org.simple.clinic.reassignpatient.ReassignPatientSheet
+import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
 import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionScreen
@@ -278,7 +280,7 @@ class PatientSummaryScreen :
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setFragmentResultListener(ScreenRequest.ScheduleAppointmentSheet, ScreenRequest.SelectFacility) { requestKey, result ->
+    setFragmentResultListener(ScreenRequest.ScheduleAppointmentSheet, ScreenRequest.SelectFacility, ScreenRequest.ReassignPatientWarningSheet) { requestKey, result ->
       if (result is Succeeded) {
         handleScreenResult(requestKey, result)
       }
@@ -300,9 +302,20 @@ class PatientSummaryScreen :
         val sheetOpenedFrom = ScheduleAppointmentSheet.sheetOpenedFrom(result)
         additionalEvents.notify(ScheduledAppointment(sheetOpenedFrom))
       }
+
       is ScreenRequest.SelectFacility -> {
         val selectedFacility = (result.result as FacilitySelectionScreen.SelectedFacility).facility
         additionalEvents.notify(NewAssignedFacilitySelected(selectedFacility))
+      }
+
+      is ScreenRequest.ReassignPatientWarningSheet -> {
+        val sheetClosed = (result.result as ReassignPatientSheet.SheetClosed)
+        additionalEvents.notify(PatientReassignmentWarningClosed(
+            patientUuid = screenKey.patientUuid,
+            screenCreatedTimestamp = screenKey.screenCreatedTimestamp,
+            sheetOpenedFrom = sheetClosed.sheetOpenedFrom,
+            sheetClosedFrom = sheetClosed.sheetClosedFrom
+        ))
       }
     }
   }
@@ -751,8 +764,18 @@ class PatientSummaryScreen :
     clinicalDecisionSupportAlertView.visibility = GONE
   }
 
-  override fun showReassignPatientSheet(patientUuid: UUID) {
-    // TODO: Show patient reassignment sheet
+  override fun showReassignPatientWarningSheet(
+      patientUuid: UUID,
+      currentFacility: Facility,
+      sheetOpenedFrom: ReassignPatientSheetOpenedFrom
+  ) {
+    router.push(AlertFacilityChangeSheet.Key(
+        currentFacilityName = currentFacility.name,
+        continuation = ContinueToScreenExpectingResult(
+            requestType = ScreenRequest.ReassignPatientWarningSheet,
+            screenKey = ReassignPatientSheet.Key(patientUuid, sheetOpenedFrom)
+        )
+    ))
   }
 
   interface Injector {
@@ -762,9 +785,12 @@ class PatientSummaryScreen :
   sealed class ScreenRequest : Parcelable {
 
     @Parcelize
-    object ScheduleAppointmentSheet : ScreenRequest()
+    data object ScheduleAppointmentSheet : ScreenRequest()
 
     @Parcelize
-    object SelectFacility : ScreenRequest()
+    data object SelectFacility : ScreenRequest()
+
+    @Parcelize
+    data object ReassignPatientWarningSheet : ScreenRequest()
   }
 }

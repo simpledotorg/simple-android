@@ -2,6 +2,7 @@ package org.simple.clinic.summary
 
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
 import java.time.Instant
 import java.util.UUID
 
@@ -18,13 +19,13 @@ data class MarkReminderAsShown(val patientUuid: UUID) : PatientSummaryEffect()
 data class LoadDataForBackClick(
     val patientUuid: UUID,
     val screenCreatedTimestamp: Instant,
-    val patientEligibleForReassignment: Boolean
+    val canShowPatientReassignmentWarning: Boolean
 ) : PatientSummaryEffect()
 
 data class LoadDataForDoneClick(
     val patientUuid: UUID,
     val screenCreatedTimestamp: Instant,
-    val patientEligibleForReassignment: Boolean
+    val canShowPatientReassignmentWarning: Boolean
 ) : PatientSummaryEffect()
 
 data class TriggerSync(val sheetOpenedFrom: AppointmentSheetOpenedFrom) : PatientSummaryEffect()
@@ -98,4 +99,8 @@ data class DispatchNewAssignedFacility(val facility: Facility) : PatientSummaryV
 
 object RefreshNextAppointment : PatientSummaryViewEffect()
 
-data class ShowReassignPatientSheet(val patientUuid: UUID) : PatientSummaryViewEffect()
+data class ShowReassignPatientWarningSheet(
+    val patientUuid: UUID,
+    val currentFacility: Facility,
+    val sheetOpenedFrom: ReassignPatientSheetOpenedFrom,
+) : PatientSummaryViewEffect()

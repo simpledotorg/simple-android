@@ -35,6 +35,7 @@ import org.simple.clinic.di.injector
 import org.simple.clinic.feature.Feature.OverdueInstantSearch
 import org.simple.clinic.feature.Feature.OverdueListDownloadAndShare
 import org.simple.clinic.feature.Feature.OverdueSelectAndDownload
+import org.simple.clinic.feature.Feature.PatientReassignment
 import org.simple.clinic.feature.Features
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.home.overdue.search.OverdueSearchScreen
@@ -56,7 +57,6 @@ import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.visibleOrGone
 import java.time.Instant
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -268,7 +268,8 @@ class OverdueScreen : BaseScreen<
         overdueListSectionStates = overdueListSectionStates,
         isOverdueInstantSearchEnabled = features.isEnabled(OverdueInstantSearch),
         isOverdueSelectAndDownloadEnabled = features.isEnabled(OverdueSelectAndDownload) && country.isoCountryCode == Country.INDIA,
-        selectedOverdueAppointments = selectedOverdueAppointments
+        selectedOverdueAppointments = selectedOverdueAppointments,
+        isPatientReassignmentFeatureEnabled = features.isEnabled(PatientReassignment),
     ))
     if (isOverdueListDownloadAndShareEnabled) { buttonsFrame.visibility = View.VISIBLE }
   }

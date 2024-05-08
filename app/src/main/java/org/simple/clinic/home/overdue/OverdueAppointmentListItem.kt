@@ -43,7 +43,8 @@ sealed class OverdueAppointmentListItem : ItemAdapter.Item<UiEvent> {
         overdueListSectionStates: OverdueListSectionStates,
         isOverdueInstantSearchEnabled: Boolean,
         isOverdueSelectAndDownloadEnabled: Boolean,
-        selectedOverdueAppointments: Set<UUID>
+        selectedOverdueAppointments: Set<UUID>,
+        isPatientReassignmentFeatureEnabled: Boolean,
     ): List<OverdueAppointmentListItem> {
       val searchOverduePatientsButtonListItem = searchOverduePatientItem(isOverdueInstantSearchEnabled)
 

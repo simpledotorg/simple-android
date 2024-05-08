@@ -625,7 +625,7 @@ class PatientSummaryEffectHandlerTest {
     testCase.dispatch(ShowReassignPatientSheet(patientUuid))
 
     // then
-    verify(uiActions).showReassignPatientSheet(patientUuid)
+    verify(uiActions).showReassignPatientWarningSheet(patientUuid)
     verifyNoMoreInteractions(uiActions)
   }
 

@@ -751,7 +751,7 @@ class PatientSummaryScreen :
     clinicalDecisionSupportAlertView.visibility = GONE
   }
 
-  override fun showReassignPatientSheet(patientUuid: UUID) {
+  override fun showReassignPatientWarningSheet(patientUuid: UUID) {
     // TODO: Show patient reassignment sheet
   }
 

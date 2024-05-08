@@ -1494,7 +1494,7 @@ class PatientSummaryUpdateTest {
                 LoadDataForDoneClick(
                     patientUuid = patientUuid,
                     screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
-                    patientEligibleForReassignment = true
+                    canShowPatientReassignmentWarning = true
                 )
             )
         ))
@@ -1605,7 +1605,7 @@ class PatientSummaryUpdateTest {
                 LoadDataForDoneClick(
                     patientUuid = patientUuid,
                     screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
-                    patientEligibleForReassignment = false
+                    canShowPatientReassignmentWarning = false
                 )
             )
         ))

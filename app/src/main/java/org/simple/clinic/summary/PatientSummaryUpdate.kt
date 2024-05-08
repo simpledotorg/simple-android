@@ -54,7 +54,7 @@ class PatientSummaryUpdate(
           medicalHistory = event.medicalHistory,
           hasPatientMeasurementDataChangedSinceScreenCreated = event.hasPatientMeasurementDataChangedSinceScreenCreated,
           hasAppointmentChangedSinceScreenCreated = event.hasAppointmentChangeSinceScreenCreated,
-          isPatientEligibleForReassignment = event.isPatientEligibleForReassignment
+          isPatientEligibleForReassignment = event.canShowPatientReassignmentWarning
       )
 
       is SyncTriggered -> scheduleAppointmentSheetClosed(model, event.sheetOpenedFrom)

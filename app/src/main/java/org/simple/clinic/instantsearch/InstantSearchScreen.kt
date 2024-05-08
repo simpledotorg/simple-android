@@ -36,6 +36,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation
 import org.simple.clinic.feature.Feature.InstantSearchQrCode
+import org.simple.clinic.feature.Feature.PatientReassignment
 import org.simple.clinic.feature.Features
 import org.simple.clinic.instantsearch.InstantSearchProgressState.DONE
 import org.simple.clinic.instantsearch.InstantSearchProgressState.IN_PROGRESS
@@ -228,7 +229,8 @@ class InstantSearchScreen :
     searchResultsAdapter.submitData(lifecycle, InstantSearchResultsItemType.from(
         patientSearchResults = patients,
         currentFacility = facility,
-        searchQuery = null
+        searchQuery = null,
+        isPatientReassignmentFeatureEnabled = features.isEnabled(PatientReassignment),
     ))
   }
 
@@ -240,7 +242,8 @@ class InstantSearchScreen :
     searchResultsAdapter.submitData(lifecycle, InstantSearchResultsItemType.from(
         patientSearchResults = patients,
         currentFacility = facility,
-        searchQuery = searchQuery
+        searchQuery = searchQuery,
+        isPatientReassignmentFeatureEnabled = features.isEnabled(PatientReassignment),
     ))
   }
 

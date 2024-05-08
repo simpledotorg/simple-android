@@ -25,7 +25,8 @@ sealed class InstantSearchResultsItemType : PagingItemAdapter.Item<InstantSearch
     fun from(
         patientSearchResults: PagingData<PatientSearchResult>,
         currentFacility: Facility,
-        searchQuery: String?
+        searchQuery: String?,
+        isPatientReassignmentFeatureEnabled: Boolean,
     ): PagingData<InstantSearchResultsItemType> {
       return patientSearchResults
           .map { SearchResult.forSearchResult(it, currentFacility.uuid, searchQuery) }

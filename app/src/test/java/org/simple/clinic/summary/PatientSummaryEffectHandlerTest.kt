@@ -634,7 +634,7 @@ class PatientSummaryEffectHandlerTest {
     ))
 
     // then
-    verify(uiActions).showReassignPatientWarningSheet(patientUuid)
+    verify(uiActions).showReassignPatientWarningSheet(patientUuid, facility)
     verifyNoMoreInteractions(uiActions)
   }
 

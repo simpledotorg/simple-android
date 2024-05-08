@@ -31,5 +31,5 @@ interface PatientSummaryUiActions {
   fun openSelectFacilitySheet()
   fun dispatchNewAssignedFacility(facility: Facility)
   fun refreshNextAppointment()
-  fun showReassignPatientWarningSheet(patientUuid: UUID)
+  fun showReassignPatientWarningSheet(patientUuid: UUID, currentFacility: Facility)
 }

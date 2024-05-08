@@ -14,9 +14,12 @@ class PatientSummaryViewEffectHandler(
       GoToHomeScreen -> uiActions.goToHomeScreen()
       is ShowAddPhonePopup -> uiActions.showAddPhoneDialog(viewEffect.patientUuid)
       is ShowLinkIdWithPatientView -> uiActions.showLinkIdWithPatientView(viewEffect.patientUuid, viewEffect.identifier)
-      is ShowScheduleAppointmentSheet -> uiActions.showScheduleAppointmentSheet(viewEffect.patientUuid,
-          viewEffect.sheetOpenedFrom,
-          viewEffect.currentFacility)
+      is ShowScheduleAppointmentSheet -> uiActions.showScheduleAppointmentSheet(
+          patientUuid = viewEffect.patientUuid,
+          sheetOpenedFrom = viewEffect.sheetOpenedFrom,
+          currentFacility = viewEffect.currentFacility
+      )
+
       ShowDiagnosisError -> uiActions.showDiagnosisError()
       is OpenContactPatientScreen -> uiActions.openPatientContactSheet(viewEffect.patientUuid)
       is NavigateToTeleconsultRecordScreen -> uiActions.navigateToTeleconsultRecordScreen(viewEffect.patientUuid, viewEffect.teleconsultRecordId)
@@ -28,7 +31,10 @@ class PatientSummaryViewEffectHandler(
       is DispatchNewAssignedFacility -> uiActions.dispatchNewAssignedFacility(viewEffect.facility)
       is ShowUpdatePhonePopup -> uiActions.showUpdatePhoneDialog(viewEffect.patientUuid)
       RefreshNextAppointment -> uiActions.refreshNextAppointment()
-      is ShowReassignPatientWarningSheet -> uiActions.showReassignPatientWarningSheet(viewEffect.patientUuid)
+      is ShowReassignPatientWarningSheet -> uiActions.showReassignPatientWarningSheet(
+          patientUuid = viewEffect.patientUuid,
+          currentFacility = viewEffect.currentFacility
+      )
     }.exhaustive()
   }
 }

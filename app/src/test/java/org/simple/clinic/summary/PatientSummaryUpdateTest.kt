@@ -15,6 +15,7 @@ import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.reassignPatient.ReassignPatientSheetOpenedFrom
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.NEXT_APPOINTMENT_ACTION_CLICK
@@ -1546,7 +1547,11 @@ class PatientSummaryUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowReassignPatientWarningSheet(patientUuid, facilityWithDiabetesManagementEnabled))
+            hasEffects(ShowReassignPatientWarningSheet(
+                patientUuid = patientUuid,
+                currentFacility = facilityWithDiabetesManagementEnabled,
+                sheetOpenedFrom = ReassignPatientSheetOpenedFrom.DONE_CLICK
+            ))
         ))
   }
 
@@ -1571,7 +1576,11 @@ class PatientSummaryUpdateTest {
         ))
         .then(assertThatNext(
             hasNoModel(),
-            hasEffects(ShowReassignPatientWarningSheet(patientUuid, facilityWithDiabetesManagementEnabled))
+            hasEffects(ShowReassignPatientWarningSheet(
+                patientUuid = patientUuid,
+                currentFacility = facilityWithDiabetesManagementEnabled,
+                sheetOpenedFrom = ReassignPatientSheetOpenedFrom.DONE_CLICK
+            ))
         ))
   }
 

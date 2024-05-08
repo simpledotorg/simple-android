@@ -1,16 +1,16 @@
 package org.simple.clinic.summary
 
-import org.mockito.kotlin.doReturn
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoMoreInteractions
-import org.mockito.kotlin.verifyNoInteractions
-import org.mockito.kotlin.whenever
 import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Test
+import org.mockito.kotlin.doReturn
+import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.verifyNoInteractions
+import org.mockito.kotlin.verifyNoMoreInteractions
+import org.mockito.kotlin.whenever
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
@@ -26,6 +26,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.reassignPatient.ReassignPatientSheetOpenedFrom
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityRepository
@@ -626,7 +627,11 @@ class PatientSummaryEffectHandlerTest {
     )
 
     // when
-    testCase.dispatch(ShowReassignPatientWarningSheet(patientUuid, facility))
+    testCase.dispatch(ShowReassignPatientWarningSheet(
+        patientUuid = patientUuid,
+        currentFacility = facility,
+        sheetOpenedFrom = ReassignPatientSheetOpenedFrom.DONE_CLICK
+    ))
 
     // then
     verify(uiActions).showReassignPatientWarningSheet(patientUuid)

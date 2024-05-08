@@ -2,6 +2,7 @@ package org.simple.clinic.summary
 
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.reassignPatient.ReassignPatientSheetOpenedFrom
 import java.time.Instant
 import java.util.UUID
 
@@ -101,4 +102,5 @@ object RefreshNextAppointment : PatientSummaryViewEffect()
 data class ShowReassignPatientWarningSheet(
     val patientUuid: UUID,
     val currentFacility: Facility,
+    val sheetOpenedFrom: ReassignPatientSheetOpenedFrom,
 ) : PatientSummaryViewEffect()

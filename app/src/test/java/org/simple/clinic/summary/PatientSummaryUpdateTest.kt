@@ -15,6 +15,7 @@ import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.reassignpatient.ReassignPatientSheetClosedFrom
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.DONE_CLICK
@@ -1657,6 +1658,28 @@ class PatientSummaryUpdateTest {
             hasNoModel(),
             hasEffects(
                 LoadDataForBackClick(
+                    patientUuid = patientUuid,
+                    screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+                    canShowPatientReassignmentWarning = false
+                )
+            )
+        ))
+  }
+
+  @Test
+  fun `when patient reassignment sheet is closed with not now, and sheet is opened by done click, then load done click data`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(PatientReassignmentWarningClosed(
+            patientUuid = patientUuid,
+            screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+            sheetOpenedFrom = ReassignPatientSheetOpenedFrom.DONE_CLICK,
+            sheetClosedFrom = ReassignPatientSheetClosedFrom.NOT_NOW
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(
+                LoadDataForDoneClick(
                     patientUuid = patientUuid,
                     screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
                     canShowPatientReassignmentWarning = false

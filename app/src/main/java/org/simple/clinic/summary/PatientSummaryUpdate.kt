@@ -80,7 +80,19 @@ class PatientSummaryUpdate(
       is LatestScheduledAppointmentLoaded -> next(model.scheduledAppointmentLoaded(event.appointment))
       is MeasurementWarningNotNowClicked -> measurementWarningNotNowClicked(model, event)
       is PatientReassignmentStatusLoaded -> patientReassignmentStatusLoaded(model, event)
+      is PatientReassignmentWarningClosed -> patientReassignmentWarningClosed(model, event)
     }
+  }
+
+  private fun patientReassignmentWarningClosed(
+      model: PatientSummaryModel,
+      event: PatientReassignmentWarningClosed
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    return dispatch(LoadDataForDoneClick(
+        patientUuid = model.patientUuid,
+        screenCreatedTimestamp = event.screenCreatedTimestamp,
+        canShowPatientReassignmentWarning = false
+    ))
   }
 
   private fun patientReassignmentStatusLoaded(

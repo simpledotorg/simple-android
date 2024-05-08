@@ -3,6 +3,8 @@ package org.simple.clinic.summary
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.reassignpatient.ReassignPatientSheetClosedFrom
+import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
 import org.simple.clinic.summary.teleconsultation.sync.MedicalOfficer
 import org.simple.clinic.user.User
 import org.simple.clinic.widgets.UiEvent
@@ -115,4 +117,11 @@ data class PatientReassignmentStatusLoaded(
     val isPatientEligibleForReassignment: Boolean,
     val clickAction: ClickAction,
     val screenCreatedTimestamp: Instant,
+) : PatientSummaryEvent()
+
+data class PatientReassignmentWarningClosed(
+    val patientUuid: UUID,
+    val screenCreatedTimestamp: Instant,
+    val sheetOpenedFrom: ReassignPatientSheetOpenedFrom,
+    val sheetClosedFrom: ReassignPatientSheetClosedFrom,
 ) : PatientSummaryEvent()

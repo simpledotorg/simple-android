@@ -278,7 +278,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 countOfRecordedBloodPressures = countOfRecordedBloodPressures,
                 countOfRecordedBloodSugars = countOfRecordedBloodSugars,
                 medicalHistory = medicalHistory,
-                isPatientEligibleForReassignment = loadDataForBackClick.canShowPatientReassignmentWarning
+                canShowPatientReassignmentWarning = loadDataForBackClick.canShowPatientReassignmentWarning
             )
           }
     }

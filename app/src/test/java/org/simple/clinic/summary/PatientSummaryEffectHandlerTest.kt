@@ -257,7 +257,7 @@ class PatientSummaryEffectHandlerTest {
             countOfRecordedBloodPressures = 3,
             countOfRecordedBloodSugars = 2,
             medicalHistory = medicalHistory,
-            isPatientEligibleForReassignment = false,
+            canShowPatientReassignmentWarning = false,
         )
     )
     verifyNoInteractions(uiActions)

@@ -44,7 +44,7 @@ class PatientSummaryUpdate(
           countOfRecordedBloodPressures = event.countOfRecordedBloodPressures,
           countOfRecordedBloodSugars = event.countOfRecordedBloodSugars,
           medicalHistory = event.medicalHistory,
-          isPatientEligibleForReassignment = event.isPatientEligibleForReassignment
+          isPatientEligibleForReassignment = event.canShowPatientReassignmentWarning
       )
 
       is DataForDoneClickLoaded -> dataForHandlingDoneClickLoaded(

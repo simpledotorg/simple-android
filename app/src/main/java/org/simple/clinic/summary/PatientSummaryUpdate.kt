@@ -115,7 +115,10 @@ class PatientSummaryUpdate(
   }
 
   private fun clickActionFromReassignPatientSheetOpenedFrom(sheetOpenedFrom: ReassignPatientSheetOpenedFrom): ClickAction {
-    return DONE
+    return when (sheetOpenedFrom) {
+      ReassignPatientSheetOpenedFrom.BACK_CLICK -> BACK
+      ReassignPatientSheetOpenedFrom.DONE_CLICK -> DONE
+    }
   }
 
   private fun patientReassignmentStatusLoaded(

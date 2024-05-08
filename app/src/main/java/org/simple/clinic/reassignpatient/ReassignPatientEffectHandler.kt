@@ -1,4 +1,4 @@
-package org.simple.clinic.reassignPatient
+package org.simple.clinic.reassignpatient
 
 import com.spotify.mobius.functions.Consumer
 import com.spotify.mobius.rx2.RxMobius

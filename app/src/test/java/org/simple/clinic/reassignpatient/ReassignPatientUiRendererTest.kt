@@ -1,4 +1,4 @@
-package org.simple.clinic.reassignPatient
+package org.simple.clinic.reassignpatient
 
 import org.junit.Test
 import org.mockito.kotlin.mock

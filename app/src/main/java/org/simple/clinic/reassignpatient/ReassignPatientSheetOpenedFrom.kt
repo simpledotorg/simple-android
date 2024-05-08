@@ -1,4 +1,4 @@
-package org.simple.clinic.reassignPatient
+package org.simple.clinic.reassignpatient
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

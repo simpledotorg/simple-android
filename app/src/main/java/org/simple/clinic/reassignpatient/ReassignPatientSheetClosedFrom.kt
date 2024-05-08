@@ -1,4 +1,4 @@
-package org.simple.clinic.reassignPatient
+package org.simple.clinic.reassignpatient
 
 enum class ReassignPatientSheetClosedFrom {
   NOT_NOW,

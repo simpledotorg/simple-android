@@ -1,4 +1,4 @@
-package org.simple.clinic.reassignPatient
+package org.simple.clinic.reassignpatient
 
 import org.simple.clinic.mobius.ViewEffectsHandler
 import org.simple.clinic.util.exhaustive

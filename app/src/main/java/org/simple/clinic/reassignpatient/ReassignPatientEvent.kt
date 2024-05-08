@@ -1,4 +1,4 @@
-package org.simple.clinic.reassignPatient
+package org.simple.clinic.reassignpatient
 
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.widgets.UiEvent

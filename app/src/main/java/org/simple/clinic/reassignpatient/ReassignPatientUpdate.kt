@@ -1,4 +1,4 @@
-package org.simple.clinic.reassignPatient
+package org.simple.clinic.reassignpatient
 
 import com.spotify.mobius.Next
 import com.spotify.mobius.Update

@@ -1,4 +1,4 @@
-package org.simple.clinic.reassignPatient
+package org.simple.clinic.reassignpatient
 
 import com.spotify.mobius.test.FirstMatchers
 import com.spotify.mobius.test.InitSpec

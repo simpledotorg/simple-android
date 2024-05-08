@@ -55,6 +55,7 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.displayLetterRes
+import org.simple.clinic.reassignPatient.ReassignPatientSheet
 import org.simple.clinic.reassignPatient.ReassignPatientSheetOpenedFrom
 import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
@@ -301,6 +302,7 @@ class PatientSummaryScreen :
         val sheetOpenedFrom = ScheduleAppointmentSheet.sheetOpenedFrom(result)
         additionalEvents.notify(ScheduledAppointment(sheetOpenedFrom))
       }
+
       is ScreenRequest.SelectFacility -> {
         val selectedFacility = (result.result as FacilitySelectionScreen.SelectedFacility).facility
         additionalEvents.notify(NewAssignedFacilitySelected(selectedFacility))
@@ -757,7 +759,13 @@ class PatientSummaryScreen :
       currentFacility: Facility,
       sheetOpenedFrom: ReassignPatientSheetOpenedFrom
   ) {
-    // TODO: Show patient reassignment sheet
+    router.push(AlertFacilityChangeSheet.Key(
+        currentFacilityName = currentFacility.name,
+        continuation = ContinueToScreenExpectingResult(
+            requestType = ScreenRequest.ReassignPatientWarningSheet,
+            screenKey = ReassignPatientSheet.Key(patientUuid, sheetOpenedFrom)
+        )
+    ))
   }
 
   interface Injector {
@@ -767,9 +775,12 @@ class PatientSummaryScreen :
   sealed class ScreenRequest : Parcelable {
 
     @Parcelize
-    object ScheduleAppointmentSheet : ScreenRequest()
+    data object ScheduleAppointmentSheet : ScreenRequest()
 
     @Parcelize
-    object SelectFacility : ScreenRequest()
+    data object SelectFacility : ScreenRequest()
+
+    @Parcelize
+    data object ReassignPatientWarningSheet : ScreenRequest()
   }
 }

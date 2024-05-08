@@ -55,6 +55,7 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.displayLetterRes
+import org.simple.clinic.reassignPatient.ReassignPatientSheetOpenedFrom
 import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionScreen
@@ -751,7 +752,11 @@ class PatientSummaryScreen :
     clinicalDecisionSupportAlertView.visibility = GONE
   }
 
-  override fun showReassignPatientWarningSheet(patientUuid: UUID, currentFacility: Facility) {
+  override fun showReassignPatientWarningSheet(
+      patientUuid: UUID,
+      currentFacility: Facility,
+      sheetOpenedFrom: ReassignPatientSheetOpenedFrom
+  ) {
     // TODO: Show patient reassignment sheet
   }
 

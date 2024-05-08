@@ -33,7 +33,8 @@ class PatientSummaryViewEffectHandler(
       RefreshNextAppointment -> uiActions.refreshNextAppointment()
       is ShowReassignPatientWarningSheet -> uiActions.showReassignPatientWarningSheet(
           patientUuid = viewEffect.patientUuid,
-          currentFacility = viewEffect.currentFacility
+          currentFacility = viewEffect.currentFacility,
+          sheetOpenedFrom = viewEffect.sheetOpenedFrom
       )
     }.exhaustive()
   }

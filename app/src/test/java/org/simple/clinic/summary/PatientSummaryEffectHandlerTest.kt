@@ -634,7 +634,7 @@ class PatientSummaryEffectHandlerTest {
     ))
 
     // then
-    verify(uiActions).showReassignPatientWarningSheet(patientUuid, facility)
+    verify(uiActions).showReassignPatientWarningSheet(patientUuid, facility, ReassignPatientSheetOpenedFrom.DONE_CLICK)
     verifyNoMoreInteractions(uiActions)
   }
 

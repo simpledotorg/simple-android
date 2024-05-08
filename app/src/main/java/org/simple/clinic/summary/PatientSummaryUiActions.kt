@@ -2,6 +2,7 @@ package org.simple.clinic.summary
 
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.reassignPatient.ReassignPatientSheetOpenedFrom
 import java.util.UUID
 
 interface PatientSummaryUiActions {
@@ -31,5 +32,9 @@ interface PatientSummaryUiActions {
   fun openSelectFacilitySheet()
   fun dispatchNewAssignedFacility(facility: Facility)
   fun refreshNextAppointment()
-  fun showReassignPatientWarningSheet(patientUuid: UUID, currentFacility: Facility)
+  fun showReassignPatientWarningSheet(
+      patientUuid: UUID,
+      currentFacility: Facility,
+      sheetOpenedFrom: ReassignPatientSheetOpenedFrom
+  )
 }

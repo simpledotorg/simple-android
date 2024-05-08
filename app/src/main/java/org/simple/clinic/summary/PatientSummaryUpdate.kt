@@ -7,6 +7,7 @@ import com.spotify.mobius.Update
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.mobius.dispatch
+import org.simple.clinic.reassignpatient.ReassignPatientSheetClosedFrom
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom.*
 import org.simple.clinic.summary.AppointmentSheetOpenedFrom.BACK_CLICK
@@ -89,6 +90,14 @@ class PatientSummaryUpdate(
       model: PatientSummaryModel,
       event: PatientReassignmentWarningClosed
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    if (event.sheetClosedFrom == ReassignPatientSheetClosedFrom.CHANGE) {
+      return dispatch(CheckPatientReassignmentStatus(
+          patientUuid = event.patientUuid,
+          clickAction = clickActionFromReassignPatientSheetOpenedFrom(event.sheetOpenedFrom),
+          screenCreatedTimestamp = event.screenCreatedTimestamp
+      ))
+    }
+
     val effect = when(event.sheetOpenedFrom) {
       ReassignPatientSheetOpenedFrom.DONE_CLICK -> LoadDataForDoneClick(
           patientUuid = model.patientUuid,
@@ -103,6 +112,10 @@ class PatientSummaryUpdate(
     }
 
     return dispatch(effect)
+  }
+
+  private fun clickActionFromReassignPatientSheetOpenedFrom(sheetOpenedFrom: ReassignPatientSheetOpenedFrom): ClickAction {
+    return DONE
   }
 
   private fun patientReassignmentStatusLoaded(

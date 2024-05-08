@@ -1710,6 +1710,28 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when patient reassignment sheet is closed with change, and sheet is opened by done click, then load done click data`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(PatientReassignmentWarningClosed(
+            patientUuid = patientUuid,
+            screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+            sheetOpenedFrom = ReassignPatientSheetOpenedFrom.DONE_CLICK,
+            sheetClosedFrom = ReassignPatientSheetClosedFrom.CHANGE
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(
+                CheckPatientReassignmentStatus(
+                    patientUuid = patientUuid,
+                    screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
+                    clickAction = ClickAction.DONE
+                )
+            )
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

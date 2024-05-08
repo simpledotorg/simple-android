@@ -280,7 +280,7 @@ class PatientSummaryScreen :
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setFragmentResultListener(ScreenRequest.ScheduleAppointmentSheet, ScreenRequest.SelectFacility) { requestKey, result ->
+    setFragmentResultListener(ScreenRequest.ScheduleAppointmentSheet, ScreenRequest.SelectFacility, ScreenRequest.ReassignPatientWarningSheet) { requestKey, result ->
       if (result is Succeeded) {
         handleScreenResult(requestKey, result)
       }
@@ -306,6 +306,16 @@ class PatientSummaryScreen :
       is ScreenRequest.SelectFacility -> {
         val selectedFacility = (result.result as FacilitySelectionScreen.SelectedFacility).facility
         additionalEvents.notify(NewAssignedFacilitySelected(selectedFacility))
+      }
+
+      is ScreenRequest.ReassignPatientWarningSheet -> {
+        val sheetClosed = (result.result as ReassignPatientSheet.SheetClosed)
+        additionalEvents.notify(PatientReassignmentWarningClosed(
+            patientUuid = screenKey.patientUuid,
+            screenCreatedTimestamp = screenKey.screenCreatedTimestamp,
+            sheetOpenedFrom = sheetClosed.sheetOpenedFrom,
+            sheetClosedFrom = sheetClosed.sheetClosedFrom
+        ))
       }
     }
   }

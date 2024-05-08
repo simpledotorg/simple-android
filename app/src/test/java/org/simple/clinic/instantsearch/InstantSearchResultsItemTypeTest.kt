@@ -26,7 +26,8 @@ class InstantSearchResultsItemTypeTest {
             assignedFacilityId = currentFacility.uuid
         ),
         currentFacilityId = currentFacility.uuid,
-        searchQuery = null
+        searchQuery = null,
+        isPatientReassignmentFeatureEnabled = false,
     )
 
     // when
@@ -49,7 +50,8 @@ class InstantSearchResultsItemTypeTest {
             assignedFacilityId = otherFacility.uuid
         ),
         currentFacilityId = currentFacility.uuid,
-        searchQuery = null
+        searchQuery = null,
+        isPatientReassignmentFeatureEnabled = false,
     )
 
     // when
@@ -72,7 +74,8 @@ class InstantSearchResultsItemTypeTest {
             assignedFacilityId = currentFacility.uuid
         ),
         currentFacilityId = currentFacility.uuid,
-        searchQuery = null
+        searchQuery = null,
+        isPatientReassignmentFeatureEnabled = false,
     )
 
     val patientInOtherFacility = SearchResult.forSearchResult(
@@ -81,7 +84,8 @@ class InstantSearchResultsItemTypeTest {
             assignedFacilityId = otherFacility.uuid
         ),
         currentFacilityId = currentFacility.uuid,
-        searchQuery = null
+        searchQuery = null,
+        isPatientReassignmentFeatureEnabled = false,
     )
 
     // when
@@ -104,7 +108,8 @@ class InstantSearchResultsItemTypeTest {
             assignedFacilityId = currentFacility.uuid
         ),
         currentFacilityId = currentFacility.uuid,
-        searchQuery = null
+        searchQuery = null,
+        isPatientReassignmentFeatureEnabled = false,
     )
 
     val patient2InCurrentFacility = SearchResult.forSearchResult(
@@ -113,7 +118,8 @@ class InstantSearchResultsItemTypeTest {
             assignedFacilityId = currentFacility.uuid
         ),
         currentFacilityId = currentFacility.uuid,
-        searchQuery = null
+        searchQuery = null,
+        isPatientReassignmentFeatureEnabled = false,
     )
 
     // when
@@ -136,7 +142,8 @@ class InstantSearchResultsItemTypeTest {
             assignedFacilityId = otherFacility.uuid
         ),
         currentFacilityId = currentFacility.uuid,
-        searchQuery = null
+        searchQuery = null,
+        isPatientReassignmentFeatureEnabled = false,
     )
 
     val patient2InOtherFacility = SearchResult.forSearchResult(
@@ -145,7 +152,8 @@ class InstantSearchResultsItemTypeTest {
             assignedFacilityId = otherFacility.uuid
         ),
         currentFacilityId = currentFacility.uuid,
-        searchQuery = null
+        searchQuery = null,
+        isPatientReassignmentFeatureEnabled = false,
     )
 
     // when

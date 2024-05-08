@@ -29,7 +29,7 @@ sealed class InstantSearchResultsItemType : PagingItemAdapter.Item<InstantSearch
         isPatientReassignmentFeatureEnabled: Boolean,
     ): PagingData<InstantSearchResultsItemType> {
       return patientSearchResults
-          .map { SearchResult.forSearchResult(it, currentFacility.uuid, searchQuery) }
+          .map { SearchResult.forSearchResult(it, currentFacility.uuid, searchQuery, isPatientReassignmentFeatureEnabled) }
           .insertSeparators(SOURCE_COMPLETE) { before, after -> insertHeaders(before, after, currentFacility) }
     }
 
@@ -101,16 +101,20 @@ sealed class InstantSearchResultsItemType : PagingItemAdapter.Item<InstantSearch
       fun forSearchResult(
           searchResult: PatientSearchResult,
           currentFacilityId: UUID,
-          searchQuery: String?
+          searchQuery: String?,
+          isPatientReassignmentFeatureEnabled: Boolean,
       ): SearchResult {
         return SearchResult(
-            searchResultViewModel = mapPatientSearchResultToViewModel(searchResult),
+            searchResultViewModel = mapPatientSearchResultToViewModel(searchResult, isPatientReassignmentFeatureEnabled),
             currentFacilityId = currentFacilityId,
             searchQuery = searchQuery
         )
       }
 
-      private fun mapPatientSearchResultToViewModel(searchResult: PatientSearchResult): PatientSearchResultViewModel {
+      private fun mapPatientSearchResultToViewModel(
+          searchResult: PatientSearchResult,
+          isPatientReassignmentFeatureEnabled: Boolean,
+      ): PatientSearchResultViewModel {
         return PatientSearchResultViewModel(
             uuid = searchResult.uuid,
             fullName = searchResult.fullName,
@@ -122,7 +126,7 @@ sealed class InstantSearchResultsItemType : PagingItemAdapter.Item<InstantSearch
             assignedFacilityId = searchResult.assignedFacilityId,
             assignedFacilityName = searchResult.assignedFacilityName,
             status = searchResult.status,
-            isEligibleForReassignment = searchResult.isEligibleForReassignment,
+            isEligibleForReassignment = searchResult.isEligibleForReassignment && isPatientReassignmentFeatureEnabled,
         )
       }
     }

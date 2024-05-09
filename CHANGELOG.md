@@ -60,6 +60,7 @@
 - Bump Jackson Core to v2.17.1
 - Add facility reassignment view to `RecentPatientsItem`, `OverduePatientItem` and `PatientSearchResultItem`
 - Show patient reassignment sheet when done/back is clicked in `PatientSummary`
+- Fix incorrect checks in patient reassignment eligibility check
 
 ### Fixes
 

@@ -806,7 +806,8 @@ class PatientRepository @Inject constructor(
         .medicalHistoryDao()
         .historyForPatientImmediate(patientUuid)
         ?.diagnosedWithHypertension == Answer.Yes
-    if (hasHypertension) return false
+
+    if (!hasHypertension) return false
 
     val prescriptions = database.prescriptionDao().forPatientImmediate(patientUuid)
     if (prescriptions.size != 2) return false

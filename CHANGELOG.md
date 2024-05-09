@@ -42,7 +42,8 @@
 - Bump UUID generator to v5.0.0
 - Bump Faker to v2.0.4
 - Bump Mobius to v2.0.2
-- Bump Sentry dependencies
+- Bump sentry to v7.9.0
+- Bump Sentry Gradle Plugin to v4.5.1
 - Bump Open CSV to v5.9
 - Bump LeakCanary to v2.14
 - Bump Datadog dependencies

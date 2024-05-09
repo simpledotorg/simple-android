@@ -321,7 +321,8 @@ class LatestRecentPatientsLogicTest {
         userClock = userClock,
         dateFormatter = dateFormatter,
         ui = ui,
-        numberOfPatientsToShow = recentPatientLimit
+        numberOfPatientsToShow = recentPatientLimit,
+        isPatientReassignmentFeatureEnabled = false,
     )
 
     testFixture = MobiusTestFixture(

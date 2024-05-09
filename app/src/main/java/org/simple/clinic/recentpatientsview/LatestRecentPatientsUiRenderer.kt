@@ -12,14 +12,16 @@ class LatestRecentPatientsUiRenderer @AssistedInject constructor(
     private val userClock: UserClock,
     @Named("full_date") private val dateFormatter: DateTimeFormatter,
     @Assisted private val ui: LatestRecentPatientsUi,
-    @Assisted private val numberOfPatientsToShow: Int
+    @Assisted private val numberOfPatientsToShow: Int,
+    @Assisted private val isPatientReassignmentFeatureEnabled: Boolean,
 ) : ViewRenderer<LatestRecentPatientsModel> {
 
   @AssistedFactory
   interface Factory {
     fun create(
         ui: LatestRecentPatientsUi,
-        numberOfPatientsToShow: Int
+        numberOfPatientsToShow: Int,
+        isPatientReassignmentFeatureEnabled: Boolean
     ): LatestRecentPatientsUiRenderer
   }
 
@@ -32,7 +34,12 @@ class LatestRecentPatientsUiRenderer @AssistedInject constructor(
 
   private fun renderRecentPatients(model: LatestRecentPatientsModel) {
     val recentPatientItems = addSeeAllIfListTooLong(
-        recentPatients = RecentPatientItemType.create(model.recentPatients!!, userClock, dateFormatter),
+        recentPatients = RecentPatientItemType.create(
+            model.recentPatients!!,
+            userClock,
+            dateFormatter,
+            isPatientReassignmentFeatureEnabled,
+        ),
         recentPatientLimit = numberOfPatientsToShow
     )
 

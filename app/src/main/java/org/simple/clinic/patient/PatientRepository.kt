@@ -810,7 +810,7 @@ class PatientRepository @Inject constructor(
     if (!hasHypertension) return false
 
     val prescriptions = database.prescriptionDao().forPatientImmediate(patientUuid)
-    if (prescriptions.size != 2) return false
+    if (prescriptions.isEmpty()) return false
 
     val hasRequiredPrescribedDrugs = prescriptions
         .filterNot { it.name.equals("Amlodipine", ignoreCase = true) || it.name.equals("Losartan", ignoreCase = true) }

@@ -3709,7 +3709,7 @@ class PatientRepositoryAndroidTest {
     val patientMedicalHistory = TestData.medicalHistory(
         uuid = UUID.fromString("9cf07c54-e1a6-4c5f-ad99-523cea21f376"),
         patientUuid = patientId,
-        diagnosedWithHypertension = No,
+        diagnosedWithHypertension = Yes,
         hasDiabetes = No
     )
 
@@ -4090,7 +4090,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun if_patient_has_been_diagnosed_with_htn_they_should_not_be_eligible_for_reassignment() {
+  fun if_patient_has_been_not_diagnosed_with_htn_they_should_not_be_eligible_for_reassignment() {
     val facilityId = UUID.fromString("270b8eff-e365-4732-b102-60806ee9f597")
 
     val facility = TestData.facility(
@@ -4129,7 +4129,7 @@ class PatientRepositoryAndroidTest {
     val patientMedicalHistory = TestData.medicalHistory(
         uuid = UUID.fromString("acfdfc7f-14d4-447d-9cf5-de90313c3b44"),
         patientUuid = patientId,
-        diagnosedWithHypertension = Yes,
+        diagnosedWithHypertension = No,
         hasDiabetes = No
     )
 

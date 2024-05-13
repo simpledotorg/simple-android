@@ -174,9 +174,15 @@ android {
 
   productFlavors {
     create("qa") {
+      val qaOrganization: String by project
+      val qaPhoneNumber: String by project
+
       dimension = "track"
       applicationIdSuffix = ".qa"
       versionNameSuffix = "-qa"
+
+      buildConfigField("String", "QA_ORGANIZATION", "\"$qaOrganization\"")
+      buildConfigField("String", "QA_PHONE_NUMBER", "\"$qaPhoneNumber\"")
     }
 
     create("staging") {

@@ -61,6 +61,7 @@
 - Add facility reassignment view to `RecentPatientsItem`, `OverduePatientItem` and `PatientSearchResultItem`
 - Show patient reassignment sheet when done/back is clicked in `PatientSummary`
 - Fix incorrect checks in patient reassignment eligibility check
+- Update `Patient trasfer to CC` translations for `bn-BD` language.
 
 ### Fixes
 

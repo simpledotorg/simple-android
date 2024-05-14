@@ -1065,7 +1065,7 @@ The Simple app contains private health information of patients (“Data”).\n\n
   </string>
   <string name="data_protection_consent_accept_button">AGREE AND CONTINUE</string>
 
-  <!-- Clinical Decision Support Alerts -->
+  <!-- Patient transfer to CC -->
   <string name="patient_facility_reassignment">Eligible for CC refilling</string>
   <string name="reassign_patient_title">Eligible for refills at CC. Transfer patient?</string>
   <string name="reassign_patient_description">Assign to preferred community clinic for future visits.</string>

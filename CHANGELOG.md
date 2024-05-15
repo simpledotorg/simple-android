@@ -62,6 +62,7 @@
 - Show patient reassignment sheet when done/back is clicked in `PatientSummary`
 - Fix incorrect checks in patient reassignment eligibility check
 - Update `Patient trasfer to CC` translations for `bn-BD` language.
+- Bump AndroidX ViewPager2 to v1.1.0
 
 ### Fixes
 

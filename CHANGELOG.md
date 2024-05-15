@@ -14,7 +14,7 @@
 - Bump Dagger to v2.51.1
 - Bump AndroidX Paging to v3.2.1
 - Bump AndroidX Room to v2.6.1
-- Bump AndroidX ViewModel v2.7.0
+- Bump AndroidX ViewModel v2.8.0
 - Bump AndroidX Work to v2.9.0
 - Bump AndroidX Annotation to v1.7.1
 - Bump AndroidX AppCompat to v1.6.1

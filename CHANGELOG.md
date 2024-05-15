@@ -16,7 +16,7 @@
 - Bump AndroidX Room to v2.6.1
 - Bump AndroidX ViewModel v2.8.0
 - Bump AndroidX Work to v2.9.0
-- Bump AndroidX Annotation to v1.7.1
+- Bump AndroidX Annotation to v1.8.0
 - Bump AndroidX AppCompat to v1.6.1
 - Bump AndroidX Core Testing to v2.2.0
 - Bump AndroidX Camera View to v1.3.3

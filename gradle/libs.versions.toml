@@ -7,7 +7,7 @@ androidx-room = "2.6.1"
 androidx-work = "2.9.0"
 androidx-security-crypto = "1.1.0-alpha06"
 androidx-viewmodel = "2.8.0"
-androidx-lifecycle = "2.7.0"
+androidx-lifecycle = "2.8.0"
 
 dagger = "2.51.1"
 

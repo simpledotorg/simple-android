@@ -23,7 +23,7 @@
 - Bump AndroidX Camera to v1.3.3
 - Bump AndroidX Core KTX to v1.13.1
 - Bump AndroidX Lifecycle to v2.7.0
-- Bump AndroidX Fragment to v1.6.2
+- Bump AndroidX Fragment to v1.7.1
 - Bump AndroidX RecyclerView to v1.3.2
 - Bump Firebase dependencies
 - Bump Material Components to v1.12.0

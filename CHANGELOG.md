@@ -10,7 +10,7 @@
 - Bump AGP to v8.4.0
 - Bump desugar JDK library to v2.0.4
 - Bump Compose theme adapter to v0.34.0
-- Bump Coroutines to v1.8.0
+- Bump Coroutines to v1.8.1
 - Bump Dagger to v2.51.1
 - Bump AndroidX Paging to v3.2.1
 - Bump AndroidX Room to v2.6.1

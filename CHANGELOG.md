@@ -63,6 +63,7 @@
 - Fix incorrect checks in patient reassignment eligibility check
 - Update `Patient trasfer to CC` translations for `bn-BD` language.
 - Bump AndroidX ViewPager2 to v1.1.0
+- Bump Google Gson to v2.11.0
 
 ### Fixes
 

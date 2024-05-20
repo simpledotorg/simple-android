@@ -2,6 +2,12 @@
 
 ## Next Release
 
+### Features
+
+- Add warning to show patients eligible for refills at CC
+
+## 2024-05-20-9099
+
 ### Internal
 
 - Remove schedule and auto merge from renovate
@@ -69,10 +75,6 @@
 
 - Fix app crash on searching overdue patient with special characters
 - Fix consent text getting cropped and hidden on patient registration screen
-
-### Features
-
-- Add warning to show patients eligible for refills at CC
 
 ## 2024-01-08-8979
 

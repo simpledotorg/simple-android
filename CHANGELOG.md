@@ -43,7 +43,7 @@
 - Bump Faker to v2.0.4
 - Bump Mobius to v2.0.2
 - Bump sentry to v7.9.0
-- Bump Sentry Gradle Plugin to v4.5.1
+- Bump Sentry Gradle Plugin to v4.6.0
 - Bump Open CSV to v5.9
 - Bump LeakCanary to v2.14
 - Bump Datadog dependencies

@@ -25,6 +25,9 @@ import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.Disposable
+import io.sentry.ISpan
+import io.sentry.Sentry
+import io.sentry.TransactionOptions
 import org.simple.clinic.mobius.ViewEffectsHandler
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.mobius.eventSources
@@ -40,6 +43,7 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
 
   private lateinit var viewModel: MobiusLoopViewModel<M, E, F, V>
   private lateinit var eventsDisposable: Disposable
+  private lateinit var span: ISpan
 
   protected val screenKey by unsafeLazy { ScreenKey.key<K>(this) }
 
@@ -88,6 +92,9 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
       container: ViewGroup?,
       savedInstanceState: Bundle?
   ): View? {
+    span = Sentry.startTransaction(screenName, "ui.load", TransactionOptions().apply {
+      isBindToScope = true
+    })
     _binding = bindView(inflater, container)
 
     return _binding?.root
@@ -142,6 +149,7 @@ abstract class BaseBottomSheet<K : ScreenKey, B : ViewBinding, M : Parcelable, E
 
   override fun onDestroyView() {
     super.onDestroyView()
+    span.finish()
     eventsDisposable.dispose()
     _binding = null
     behavior?.removeBottomSheetCallback(bottomSheetCallback)

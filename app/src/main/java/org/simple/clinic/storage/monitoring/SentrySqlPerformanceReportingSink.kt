@@ -1,11 +1,12 @@
 package org.simple.clinic.storage.monitoring
 
-import io.opentracing.Span
-import io.opentracing.util.GlobalTracer
+import io.sentry.ISpan
+import io.sentry.Sentry
+import io.sentry.TransactionOptions
 import org.simple.clinic.storage.monitoring.SqlPerformanceReporter.ReportSink
 import org.simple.clinic.storage.monitoring.SqlPerformanceReporter.SqlOperation
 
-class DatadogSqlPerformanceReportingSink : ReportSink {
+class SentrySqlPerformanceReportingSink : ReportSink {
 
   /**
    * Maintains the list of running spans for every DB call.
@@ -16,17 +17,25 @@ class DatadogSqlPerformanceReportingSink : ReportSink {
    *
    * Something to investigate at a later date.
    **/
-  private var runningSpans = emptyMap<SqlOperation, Span>()
+  private var runningSpans = emptyMap<SqlOperation, ISpan>()
 
   override fun begin(operation: SqlOperation) {
-    val tracer = GlobalTracer.get()
-    val span = tracer
-        .buildSpan("room.query")
-        .withTag("dao", operation.daoName)
-        .withTag("method", operation.methodName)
-        .start()
+    if (operation.daoName != "AppDatabase_Impl") {
+      var span = Sentry.getSpan()
+      span = span?.startChild(
+          "db.sql.query",
+          "${operation.daoName}#${operation.methodName}"
+      ) ?: Sentry.startTransaction(
+          "sql_performance_monitoring",
+          "db.sql.query",
+          "${operation.daoName}#${operation.methodName}",
+          TransactionOptions().apply {
+            isBindToScope = true
+          }
+      )
 
-    runningSpans = runningSpans + (operation to span)
+      runningSpans = runningSpans + (operation to span)
+    }
   }
 
   override fun end(operation: SqlOperation) {

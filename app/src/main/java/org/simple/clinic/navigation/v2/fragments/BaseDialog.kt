@@ -21,6 +21,9 @@ import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.CompositeDisposable
+import io.sentry.ISpan
+import io.sentry.Sentry
+import io.sentry.TransactionOptions
 import org.simple.clinic.mobius.ViewEffectsHandler
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.mobius.eventSources
@@ -35,6 +38,7 @@ abstract class BaseDialog<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, 
   }
 
   private lateinit var viewModel: MobiusLoopViewModel<M, E, F, V>
+  private lateinit var span: ISpan
 
   private val eventsDisposable = CompositeDisposable()
   protected val screenKey by unsafeLazy { ScreenKey.key<K>(this) }
@@ -67,6 +71,10 @@ abstract class BaseDialog<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, 
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    span = Sentry.startTransaction(screenName, "ui.load", TransactionOptions().apply {
+      isBindToScope = true
+    })
+
     val startModel = savedInstanceState?.getParcelable(KEY_MODEL) ?: defaultModel()
 
     viewModel = ViewModelProvider(this, object : ViewModelProvider.Factory {
@@ -114,6 +122,7 @@ abstract class BaseDialog<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, 
 
   override fun onDestroyView() {
     super.onDestroyView()
+    span.finish()
     eventsDisposable.dispose()
   }
 

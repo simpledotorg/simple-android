@@ -15,6 +15,8 @@ import com.datadog.android.tracing.AndroidTracer
 import io.opentracing.util.GlobalTracer
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
+import io.sentry.android.core.SentryAndroid
+import io.sentry.android.fragment.FragmentLifecycleIntegration
 import org.simple.clinic.activity.CloseActivitiesWhenUserIsUnauthorized
 import org.simple.clinic.analytics.ResolveScreenNamesForDatadog
 import org.simple.clinic.analytics.UpdateAnalyticsUserId
@@ -27,7 +29,7 @@ import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.plumbing.infrastructure.UpdateInfrastructureUserDetails
 import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.storage.DatabaseEncryptor
-import org.simple.clinic.storage.monitoring.DatadogSqlPerformanceReportingSink
+import org.simple.clinic.storage.monitoring.SentrySqlPerformanceReportingSink
 import org.simple.clinic.storage.monitoring.SqlPerformanceReporter
 import org.simple.clinic.util.clamp
 import org.simple.clinic.util.filterTrue
@@ -75,6 +77,8 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
     appComponent = buildDaggerGraph()
     appComponent.inject(this)
 
+    setupSentry()
+
     databaseEncryptor
         .isDatabaseEncrypted
         .filterTrue()
@@ -87,7 +91,7 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
 
     crashReporterSinks.forEach(CrashReporter::addSink)
 
-    setupApplicationPerformanceMonitoring()
+//    setupApplicationPerformanceMonitoring()
 
     Timber.plant(CrashBreadcrumbsTimberTree())
     RxJavaPlugins.setErrorHandler { error ->
@@ -100,9 +104,32 @@ abstract class ClinicApp : Application(), CameraXConfig.Provider {
     analyticsReporters.forEach { reporter ->
       Analytics.addReporter(reporter)
     }
-    SqlPerformanceReporter.addSink(DatadogSqlPerformanceReportingSink())
+    SqlPerformanceReporter.addSink(SentrySqlPerformanceReportingSink())
 
     registerActivityLifecycleCallbacks(closeActivitiesWhenUserIsUnauthorized)
+  }
+
+  private fun setupSentry() {
+    SentryAndroid.init(this) { options ->
+      val errorSampleRate = remoteConfig
+          .double("sentry_error_sample_rate", 1.0)
+          .coerceIn(0.0, 1.0)
+
+      val traceSampleRate = remoteConfig
+          .double("sentry_trace_sample_rate", 1.0)
+          .coerceIn(0.0, 1.0)
+
+      val profileSampleRate = remoteConfig
+          .double("sentry_profile_sample_rate", 1.0)
+          .coerceIn(0.0, 1.0)
+
+      options.dsn = BuildConfig.SENTRY_DSN
+      options.environment = BuildConfig.SENTRY_ENVIRONMENT
+
+      options.sampleRate = errorSampleRate
+      options.tracesSampleRate = traceSampleRate
+      options.profilesSampleRate = profileSampleRate
+    }
   }
 
   private fun setupApplicationPerformanceMonitoring() {

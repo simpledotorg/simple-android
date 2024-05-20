@@ -1,4 +1,5 @@
 import com.android.build.gradle.internal.tasks.databinding.DataBindingGenBaseClassesTask
+import io.sentry.android.gradle.extensions.InstrumentationFeature
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompileTool
@@ -23,7 +24,8 @@ sentry {
   // We are using our own instrumentation tooling for Room queries
   // Look at [ADR 013: SQL Performance Profiling (v2)]
   tracingInstrumentation {
-    enabled.set(false)
+    enabled.set(true)
+    features = InstrumentationFeature.values().filterNot { it == InstrumentationFeature.DATABASE }
   }
 }
 
@@ -88,6 +90,8 @@ android {
     buildConfigField("String", "DATADOG_APPLICATION_ID", "\"$datadogApplicationId\"")
     buildConfigField("String", "DATADOG_CLIENT_TOKEN", "\"$datadogClientToken\"")
     buildConfigField("String", "DATADOG_ENVIRONMENT", "\"$datadogEnvironment\"")
+    buildConfigField("String", "SENTRY_DSN", "\"$sentryDsn\"")
+    buildConfigField("String", "SENTRY_ENVIRONMENT", "\"$sentryEnvironment\"")
 
     ksp {
       arg("room.schemaLocation", "$projectDir/schemas")

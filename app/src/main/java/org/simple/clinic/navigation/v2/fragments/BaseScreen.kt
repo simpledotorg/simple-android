@@ -20,6 +20,9 @@ import com.spotify.mobius.rx2.RxMobius
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.Disposable
+import io.sentry.ISpan
+import io.sentry.Sentry
+import io.sentry.TransactionOptions
 import org.simple.clinic.mobius.ViewEffectsHandler
 import org.simple.clinic.mobius.ViewRenderer
 import org.simple.clinic.mobius.eventSources
@@ -46,6 +49,7 @@ abstract class BaseScreen<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, 
     get() = _binding!!
 
   private lateinit var eventsDisposable: Disposable
+  private lateinit var span: ISpan
 
   abstract fun defaultModel(): M
 
@@ -70,6 +74,9 @@ abstract class BaseScreen<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, 
       container: ViewGroup?,
       savedInstanceState: Bundle?
   ): View? {
+    span = Sentry.startTransaction(screenName, "ui.load", TransactionOptions().apply {
+      isBindToScope = true
+    })
     _binding = bindView(inflater, container)
 
     return _binding?.root
@@ -112,6 +119,7 @@ abstract class BaseScreen<K : ScreenKey, B : ViewBinding, M : Parcelable, E, F, 
 
   override fun onDestroyView() {
     super.onDestroyView()
+    span.finish()
     eventsDisposable.dispose()
     _binding = null
   }

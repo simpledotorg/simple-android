@@ -67,7 +67,7 @@
 - Add facility reassignment view to `RecentPatientsItem`, `OverduePatientItem` and `PatientSearchResultItem`
 - Show patient reassignment sheet when done/back is clicked in `PatientSummary`
 - Fix incorrect checks in patient reassignment eligibility check
-- Update `Patient trasfer to CC` translations for `bn-BD` language.
+- Update `Patient transfer to CC` translations for `bn-BD` language.
 - Bump AndroidX ViewPager2 to v1.1.0
 - Bump Google Gson to v2.11.0
 

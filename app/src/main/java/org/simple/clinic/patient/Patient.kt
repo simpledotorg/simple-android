@@ -340,8 +340,8 @@ data class Patient(
                 OR (BloodSugar.type = "random" AND BloodSugar.value >= 300)
                 OR (BloodSugar.type = "fasting" AND BloodSugar.value >= 200)
                 OR (BloodSugar.type = "hba1c" AND BloodSugar.value >= 9)
-                OR MH.hasHadHeartAttack = :yesAnswer
-                OR MH.hasHadStroke = :yesAnswer
+                OR MH.hasHadHeartAttack = "yes"
+                OR MH.hasHadStroke = "yes"
                 OR PD.uuid IS NOT NULL)
                 AND A.uuid IS NULL
                 THEN 1
@@ -353,14 +353,10 @@ data class Patient(
           LEFT JOIN (SELECT BloodSugar.reading_value value, BloodSugar.reading_type type FROM BloodSugarMeasurements BloodSugar WHERE BloodSugar.deletedAt IS NULL AND BloodSugar.patientUuid = :patientUuid ORDER BY BloodSugar.recordedAt DESC LIMIT 1) BloodSugar
           LEFT JOIN (SELECT MH.hasHadHeartAttack, MH.hasHadStroke, MH.hasDiabetes, MH.hasHadKidneyDisease FROM MedicalHistory MH WHERE MH.deletedAt IS NULL AND MH.patientUuid = :patientUuid ORDER BY MH.updatedAt DESC LIMIT 1) MH
           LEFT JOIN (SELECT PD.uuid FROM PrescribedDrug PD WHERE PD.deletedAt IS NULL AND PD.patientUuid = :patientUuid ORDER BY PD.updatedAt DESC LIMIT 1) PD
-          LEFT JOIN Appointment A ON(A.patientUuid = P.uuid AND A.deletedAt IS NULL AND A.status = :scheduled)
+          LEFT JOIN Appointment A ON(A.patientUuid = P.uuid AND A.deletedAt IS NULL AND A.status = "scheduled")
           WHERE P.uuid = :patientUuid AND P.deletedAt IS NULL
     """)
-    abstract fun isPatientDefaulter(
-        patientUuid: UUID,
-        yesAnswer: Answer = Answer.Yes,
-        scheduled: Appointment.Status = Appointment.Status.Scheduled
-    ): Boolean
+    abstract fun isPatientDefaulter(patientUuid: UUID): Boolean
 
     @Query("""
         SELECT (

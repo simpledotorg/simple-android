@@ -2,6 +2,10 @@
 
 ## Next Release
 
+### Internal
+
+- Bump AGP to v8.4.1
+
 ### Features
 
 - Add warning to show patients eligible for refills at CC

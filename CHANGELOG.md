@@ -5,6 +5,7 @@
 ### Internal
 
 - Bump AGP to v8.4.1
+- Bump lint to v31.4.1
 
 ### Features
 

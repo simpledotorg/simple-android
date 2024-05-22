@@ -8,6 +8,7 @@
 - Bump lint to v31.4.1
 - Bump Kotlin to v2.0.0
 - Bump KSP to v2.0.0-1.0.21
+- Check if patient is only prescribed amlodipine in `isPatientEligibleForReassignment`
 
 ### Features
 

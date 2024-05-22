@@ -107,7 +107,7 @@ class OverdueListDownloader @Inject constructor(
       fileFormat: OverdueListFileFormat,
       ids: List<UUID>
   ): Single<OverdueListDownloadResult> {
-    return Single.create {
+    return Single.create<Uri> {
       try {
         val csvOutputStream = csvGenerator.generate(ids)
         val csvInputStream = ByteArrayInputStream(csvOutputStream.toByteArray())
@@ -117,8 +117,8 @@ class OverdueListDownloader @Inject constructor(
       } catch (e: Throwable) {
         it.onError(e)
       }
-    }.map { uri ->
-      DownloadSuccessful(uri) as OverdueListDownloadResult
+    }.map<OverdueListDownloadResult> { uri ->
+      DownloadSuccessful(uri)
     }.onErrorReturn { _ -> DownloadFailed }
   }
 
@@ -146,7 +146,7 @@ class OverdueListDownloader @Inject constructor(
   private fun saveFileToAppData(
       fileFormat: OverdueListFileFormat,
       inputStream: InputStream
-  ): Uri? {
+  ): Uri {
     appContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
     val fileName = generateFileName(fileFormat)
     val file = File(
@@ -163,7 +163,7 @@ class OverdueListDownloader @Inject constructor(
   private fun scanFile(
       path: String,
       fileFormat: OverdueListFileFormat
-  ) = Single.create<Uri> { emitter ->
+  ) = Single.create { emitter ->
     MediaScannerConnection.scanFile(appContext, arrayOf(path), arrayOf(fileFormat.mimeType)) { _, uri ->
       emitter.onSuccess(uri)
     }

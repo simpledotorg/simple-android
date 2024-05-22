@@ -1675,7 +1675,7 @@ class AppointmentRepositoryAndroidTest {
             patientAddress = overduePatientAddress,
             patientAssignedFacilityUuid = patientProfile.patient.assignedFacilityId,
             callResult = callResult,
-            isEligibleForReassignment = patientProfile.patient.isEligibleForReassignment,
+            isEligibleForReassignment = patientProfile.patient.eligibleForReassignment,
         )
       }
     }

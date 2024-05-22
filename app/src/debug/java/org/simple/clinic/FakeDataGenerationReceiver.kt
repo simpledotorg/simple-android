@@ -230,7 +230,7 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
         registeredFacilityId = null,
         assignedFacilityId = null,
         retainUntil = null,
-        isEligibleForReassignment = false,
+        eligibleForReassignment = false,
     )
   }
 

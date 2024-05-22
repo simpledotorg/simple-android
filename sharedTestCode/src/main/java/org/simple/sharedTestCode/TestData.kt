@@ -227,7 +227,7 @@ object TestData {
         registeredFacilityId = registeredFacilityId,
         assignedFacilityId = assignedFacilityId,
         retainUntil = retainUntil,
-        isEligibleForReassignment = false,
+        eligibleForReassignment = false,
     )
   }
 

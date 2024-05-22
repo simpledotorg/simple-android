@@ -114,7 +114,7 @@ class LookupPatientOnline @Inject constructor(
             registeredFacilityId = response.registeredFacilityId,
             assignedFacilityId = response.assignedFacilityId,
             retainUntil = retainUntil,
-            isEligibleForReassignment = false,
+            eligibleForReassignment = false,
         ),
         address = response.address.toDatabaseModel(),
         phoneNumbers = phoneNumbers,

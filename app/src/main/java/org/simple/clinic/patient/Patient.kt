@@ -17,8 +17,6 @@ import io.reactivex.Observable
 import kotlinx.parcelize.Parcelize
 import org.intellij.lang.annotations.Language
 import org.simple.clinic.contactpatient.ContactPatientProfile
-import org.simple.clinic.medicalhistory.Answer
-import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.storage.DaoWithUpsert
 import java.time.Instant
 import java.time.LocalDate
@@ -73,7 +71,7 @@ data class Patient(
 
     val retainUntil: Instant?,
 
-    val isEligibleForReassignment: Boolean,
+    val eligibleForReassignment: Boolean,
 ) : Parcelable {
 
   fun withNameAndGender(fullName: String, gender: Gender): Patient =
@@ -492,7 +490,7 @@ data class Patient(
 
     @Query("""
       UPDATE Patient
-      SET isEligibleForReassignment = :isEligibleForReassignment
+      SET eligibleForReassignment = :isEligibleForReassignment
       WHERE uuid = :patientUuid
     """)
     abstract fun updatePatientReassignmentEligibilityStatus(

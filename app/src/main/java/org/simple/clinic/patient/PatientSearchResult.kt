@@ -11,9 +11,10 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.util.Unicode
 import java.util.UUID
 
-@DatabaseView("""
+@DatabaseView(
+  """
   SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt,
-  P.assignedFacilityId, P.status, P.isEligibleForReassignment,
+  P.assignedFacilityId, P.status, P.eligibleForReassignment,
   PA.uuid addr_uuid, PA.streetAddress addr_streetAddress, PA.colonyOrVillage addr_colonyOrVillage, PA.zone addr_zone, PA.district addr_district,
   PA.state addr_state, PA.country addr_country,
   PA.createdAt addr_createdAt, PA.updatedAt addr_updatedAt, PA.deletedAt addr_deletedAt,
@@ -25,7 +26,8 @@ import java.util.UUID
   LEFT JOIN Facility AF ON AF.uuid = P.assignedFacilityId
   LEFT JOIN BusinessId B ON B.patientUuid = P.uuid
   WHERE P.deletedAt IS NULL
-""")
+"""
+)
 @Parcelize
 data class PatientSearchResult(
 

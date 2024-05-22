@@ -920,7 +920,7 @@ class PatientRepositoryAndroidTest {
       ageDetails = ageDetails,
       patientRecordedAt = this.recordedAt,
       updatedAt = recordedAt,
-      isEligibleForReassignment = isEligibleForReassignment,
+      isEligibleForReassignment = eligibleForReassignment,
   )
 
   private fun verifyRecentPatientOrder(
@@ -975,7 +975,7 @@ class PatientRepositoryAndroidTest {
           ageDetails = ageDetails,
           patientRecordedAt = this.recordedAt,
           updatedAt = updatedAt,
-          isEligibleForReassignment = isEligibleForReassignment,
+          isEligibleForReassignment = eligibleForReassignment,
       )
     }
   }
@@ -1117,7 +1117,7 @@ class PatientRepositoryAndroidTest {
           ageDetails = ageDetails,
           patientRecordedAt = this.recordedAt,
           updatedAt = createdAt,
-          isEligibleForReassignment = isEligibleForReassignment,
+          isEligibleForReassignment = eligibleForReassignment,
       )
     }
   }
@@ -4515,7 +4515,7 @@ class PatientRepositoryAndroidTest {
     )
 
     // then
-    val isPatientEligibleForReassignment = patientRepository.patientImmediate(patientId)?.isEligibleForReassignment ?: false
+    val isPatientEligibleForReassignment = patientRepository.patientImmediate(patientId)?.eligibleForReassignment ?: false
     assertThat(isPatientEligibleForReassignment).isTrue()
   }
 }

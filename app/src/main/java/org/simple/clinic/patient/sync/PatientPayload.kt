@@ -99,7 +99,7 @@ data class PatientPayload(
         registeredFacilityId = registeredFacilityId,
         assignedFacilityId = assignedFacilityId,
         retainUntil = null,
-        isEligibleForReassignment = false,
+        eligibleForReassignment = false,
     )
   }
 }

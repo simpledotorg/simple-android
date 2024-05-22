@@ -813,8 +813,8 @@ class PatientRepository @Inject constructor(
     if (prescriptions.isEmpty()) return false
 
     val hasRequiredPrescribedDrugs = prescriptions
-        .filterNot { it.name.equals("Amlodipine", ignoreCase = true) || it.name.equals("Losartan", ignoreCase = true) }
-        .isEmpty()
+        .all { it.name.equals("Amlodipine", ignoreCase = true) }
+
     if (!hasRequiredPrescribedDrugs) return false
 
     val bloodPressuresSince = LocalDate.now(utcClock).minusMonths(6)

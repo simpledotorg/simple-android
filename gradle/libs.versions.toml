@@ -13,7 +13,7 @@ dagger = "2.51.1"
 
 flipper = "0.250.0"
 
-kotlin = "1.9.23"
+kotlin = "2.0.0"
 
 ktlint = "0.36.0"
 
@@ -39,7 +39,7 @@ androidx-compose-bom = "2023.07.00-alpha02"
 
 composeThemeAdapter = "0.34.0"
 
-ksp = "1.9.23-1.0.19"
+ksp = "2.0.0-1.0.21"
 
 sqlCipher = "4.5.4"
 
@@ -128,6 +128,7 @@ kotlin-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-te
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk7", version.ref = "kotlin" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+compose-compiler = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
 
 leakcanary = "com.squareup.leakcanary:leakcanary-android:2.14"
 
@@ -220,7 +221,6 @@ androidx-compose-material = { module = "androidx.compose.material:material" }
 androidx-compose-material-iconsExtended = { module = "androidx.compose.material:material-icons-extended" }
 androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
 androidx-compose-materialWindow = { module = "androidx.compose.material3:material3-window-size-class" }
-androidx-compose-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "compose-compiler" }
 composeThemeAdapter = { module = "com.google.accompanist:accompanist-themeadapter-material", version.ref = "composeThemeAdapter" }
 composeThemeAdapterCore = { module = "com.google.accompanist:accompanist-themeadapter-core", version.ref = "composeThemeAdapter" }
 androidx-compose-livedata = { module = "androidx.compose.runtime:runtime-livedata" }

@@ -72,6 +72,7 @@ import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
+import org.simple.clinic.patient.Answer as PatientAnswer
 
 class PatientRepositoryAndroidTest {
 
@@ -4502,20 +4503,24 @@ class PatientRepositoryAndroidTest {
         patientStatus = Active,
         patientCreatedAt = Instant.parse("2017-01-01T00:00:00Z"),
         patientUpdatedAt = Instant.parse("2018-01-01T00:00:00Z"),
-        patientDeletedAt = null
+        patientDeletedAt = null,
+        eligibleForReassignment = PatientAnswer.Unanswered,
     )
 
     facilityRepository.save(listOf(facility))
     patientRepository.save(listOf(patientProfile))
 
+    val patientEligibleForReassignmentBeforeUpdate = patientRepository.patientImmediate(patientId)?.eligibleForReassignment ?: false
+    assertThat(patientEligibleForReassignmentBeforeUpdate).isEqualTo(PatientAnswer.Unanswered)
+
     // when
     patientRepository.updatePatientReassignmentEligibilityStatus(
         patientUuid = patientId,
-        isEligibleForReassignment = true
+        eligibleForReassignment = PatientAnswer.Yes
     )
 
     // then
-    val isPatientEligibleForReassignment = patientRepository.patientImmediate(patientId)?.eligibleForReassignment ?: false
-    assertThat(isPatientEligibleForReassignment).isTrue()
+    val patientEligibleForReassignmentAfterUpdate = patientRepository.patientImmediate(patientId)?.eligibleForReassignment ?: false
+    assertThat(patientEligibleForReassignmentAfterUpdate).isEqualTo(PatientAnswer.Yes)
   }
 }

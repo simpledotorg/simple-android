@@ -39,6 +39,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
+import org.simple.clinic.patient.Answer as PatientAnswer
 
 typealias PatientUuid = UUID
 
@@ -833,11 +834,11 @@ class PatientRepository @Inject constructor(
 
   fun updatePatientReassignmentEligibilityStatus(
       patientUuid: UUID,
-      isEligibleForReassignment: Boolean,
+      eligibleForReassignment: PatientAnswer,
   ) {
     database.patientDao().updatePatientReassignmentEligibilityStatus(
         patientUuid = patientUuid,
-        isEligibleForReassignment = isEligibleForReassignment
+        eligibleForReassignment = eligibleForReassignment
     )
   }
 

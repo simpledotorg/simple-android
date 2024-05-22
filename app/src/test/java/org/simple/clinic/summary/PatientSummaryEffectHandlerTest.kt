@@ -21,6 +21,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.Appointment.Status
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.patient.Answer
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
@@ -647,7 +648,7 @@ class PatientSummaryEffectHandlerTest {
     testCase.dispatch(UpdatePatientReassignmentStatus(patientUuid = patientUuid, status = true))
 
     // then
-    verify(patientRepository).updatePatientReassignmentEligibilityStatus(patientUuid, true)
+    verify(patientRepository).updatePatientReassignmentEligibilityStatus(patientUuid, Answer.Yes)
     verifyNoMoreInteractions(patientRepository)
 
     verifyNoInteractions(uiActions)

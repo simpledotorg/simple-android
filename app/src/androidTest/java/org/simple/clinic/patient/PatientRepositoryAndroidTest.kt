@@ -920,7 +920,7 @@ class PatientRepositoryAndroidTest {
       ageDetails = ageDetails,
       patientRecordedAt = this.recordedAt,
       updatedAt = recordedAt,
-      isEligibleForReassignment = eligibleForReassignment,
+      eligibleForReassignment = eligibleForReassignment,
   )
 
   private fun verifyRecentPatientOrder(
@@ -975,7 +975,7 @@ class PatientRepositoryAndroidTest {
           ageDetails = ageDetails,
           patientRecordedAt = this.recordedAt,
           updatedAt = updatedAt,
-          isEligibleForReassignment = eligibleForReassignment,
+          eligibleForReassignment = eligibleForReassignment,
       )
     }
   }
@@ -1117,7 +1117,7 @@ class PatientRepositoryAndroidTest {
           ageDetails = ageDetails,
           patientRecordedAt = this.recordedAt,
           updatedAt = createdAt,
-          isEligibleForReassignment = eligibleForReassignment,
+          eligibleForReassignment = eligibleForReassignment,
       )
     }
   }

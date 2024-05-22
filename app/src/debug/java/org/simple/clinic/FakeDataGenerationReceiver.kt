@@ -13,6 +13,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.patient.Answer
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -230,7 +231,7 @@ class FakeDataGenerationReceiver : BroadcastReceiver() {
         registeredFacilityId = null,
         assignedFacilityId = null,
         retainUntil = null,
-        eligibleForReassignment = false,
+        eligibleForReassignment = Answer.Yes,
     )
   }
 

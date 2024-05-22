@@ -56,7 +56,7 @@ data class PatientSearchResult(
 
     val identifierSearchHelp: String?,
 
-    val isEligibleForReassignment: Boolean,
+    val eligibleForReassignment: Answer,
 ) : Parcelable {
 
   override fun toString(): String {

@@ -18,6 +18,7 @@ import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.REMIND_TO_C
 import org.simple.clinic.home.overdue.OverdueAppointmentSectionTitle.REMOVED_FROM_OVERDUE
 import org.simple.clinic.home.overdue.PendingListState.SEE_ALL
 import org.simple.clinic.home.overdue.PendingListState.SEE_LESS
+import org.simple.clinic.patient.Answer
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.util.UserClock
@@ -313,7 +314,7 @@ sealed class OverdueAppointmentListItem : ItemAdapter.Item<UiEvent> {
           villageName = overdueAppointment.patientAddress.colonyOrVillage,
           isOverdueSelectAndDownloadEnabled = isOverdueSelectAndDownloadEnabled,
           isAppointmentSelected = isAppointmentSelected,
-          isEligibleForReassignment = overdueAppointment.isEligibleForReassignment && isPatientReassignmentFeatureEnabled,
+          isEligibleForReassignment = overdueAppointment.eligibleForReassignment == Answer.Yes && isPatientReassignmentFeatureEnabled,
       )
     }
 

@@ -71,7 +71,7 @@ data class Patient(
 
     val retainUntil: Instant?,
 
-    val eligibleForReassignment: Boolean,
+    val eligibleForReassignment: Answer,
 ) : Parcelable {
 
   fun withNameAndGender(fullName: String, gender: Gender): Patient =

@@ -5,6 +5,7 @@ import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 import org.simple.clinic.databinding.RecentPatientItemViewBinding
 import org.simple.clinic.databinding.SeeAllItemViewBinding
+import org.simple.clinic.patient.Answer
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.RecentPatient
 import org.simple.clinic.patient.displayIconRes
@@ -62,7 +63,7 @@ sealed class RecentPatientItemType : ItemAdapter.Item<UiEvent> {
           clock = userClock,
           isNewRegistration = isNewRegistration,
           isEligibleForReassignment = isPatientReassignmentFeatureEnabled &&
-              recentPatient.isEligibleForReassignment
+              recentPatient.eligibleForReassignment == Answer.Yes
       )
     }
   }

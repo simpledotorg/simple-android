@@ -13,6 +13,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
+import org.simple.clinic.patient.Answer.*
 import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchCriteria.NumericCriteria
 import org.simple.clinic.patient.SyncStatus.DONE
@@ -246,7 +247,7 @@ class PatientRepository @Inject constructor(
           registeredFacilityId = facility.uuid,
           assignedFacilityId = facility.uuid,
           retainUntil = null,
-          eligibleForReassignment = false,
+          eligibleForReassignment = Unanswered,
       )
 
       val address = PatientAddress(

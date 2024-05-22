@@ -53,3 +53,6 @@ output.json
 
 # Keystore files
 *.jks
+
+# Kotlin files
+.kotlin

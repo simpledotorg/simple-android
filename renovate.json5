@@ -17,7 +17,7 @@
       "groupSlug": "kotlin",
       "matchPackageNames": [
         "com.google.devtools.ksp",
-        "androidx.compose.compiler",
+        "org.jetbrains.kotlin:compose-compiler-gradle-plugin",
         "org.jetbrains.kotlin"
       ]
     }

@@ -14,6 +14,7 @@ plugins {
   id("com.datadoghq.dd-sdk-android-gradle-plugin")
   id("androidx.benchmark")
   id("com.google.devtools.ksp").version(libs.versions.ksp)
+  id("org.jetbrains.kotlin.plugin.compose")
 }
 
 sentry {
@@ -164,10 +165,6 @@ android {
   buildFeatures {
     viewBinding = true
     compose = true
-  }
-
-  composeOptions {
-    kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
   }
 
   flavorDimensions.add("track")

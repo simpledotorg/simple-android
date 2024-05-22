@@ -97,14 +97,8 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun updatePatientReassignmentState(patientUuid: UUID, status: Boolean) {
-    // TODO: Move to update function
-    val answer = if (status) {
-      Answer.Yes
-    } else {
-      Answer.No
-    }
-    patientRepository.updatePatientReassignmentEligibilityStatus(patientUuid, answer)
+  private fun updatePatientReassignmentState(patientUuid: UUID, status: Answer) {
+    patientRepository.updatePatientReassignmentEligibilityStatus(patientUuid, status)
   }
 
   private fun loadLatestScheduledAppointment(): ObservableTransformer<LoadLatestScheduledAppointment, PatientSummaryEvent> {

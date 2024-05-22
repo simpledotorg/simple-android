@@ -11,6 +11,7 @@ import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.Answer.Yes
+import org.simple.clinic.patient.Answer
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BangladeshNationalId
@@ -1491,7 +1492,7 @@ class PatientSummaryUpdateTest {
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(
-                UpdatePatientReassignmentStatus(patientUuid, status = true),
+                UpdatePatientReassignmentStatus(patientUuid, status = Answer.Yes),
                 LoadDataForDoneClick(
                     patientUuid = patientUuid,
                     screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
@@ -1510,18 +1511,18 @@ class PatientSummaryUpdateTest {
     updateSpec
         .given(model)
         .whenEvent(PatientReassignmentStatusLoaded(
-            isPatientEligibleForReassignment = true,
+            isPatientEligibleForReassignment = false,
             clickAction = ClickAction.BACK,
             screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
         ))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(
-                UpdatePatientReassignmentStatus(patientUuid, status = true),
+                UpdatePatientReassignmentStatus(patientUuid, status = Answer.No),
                 LoadDataForBackClick(
                     patientUuid = patientUuid,
                     screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z"),
-                    canShowPatientReassignmentWarning = true
+                    canShowPatientReassignmentWarning = false
                 )
             )
         ))

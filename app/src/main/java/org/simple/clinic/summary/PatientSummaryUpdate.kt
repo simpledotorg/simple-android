@@ -7,6 +7,7 @@ import com.spotify.mobius.Update
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.mobius.dispatch
+import org.simple.clinic.patient.Answer
 import org.simple.clinic.reassignpatient.ReassignPatientSheetClosedFrom
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom.*
@@ -138,11 +139,14 @@ class PatientSummaryUpdate(
       )
     }
 
+    val status = if (event.isPatientEligibleForReassignment) {
+      Answer.Yes
+    } else {
+      Answer.No
+    }
+
     return dispatch(
-        UpdatePatientReassignmentStatus(
-            patientUuid = model.patientUuid,
-            status = event.isPatientEligibleForReassignment
-        ),
+        UpdatePatientReassignmentStatus(patientUuid = model.patientUuid, status = status),
         effect
     )
   }

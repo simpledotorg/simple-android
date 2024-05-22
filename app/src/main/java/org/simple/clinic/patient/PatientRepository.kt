@@ -813,7 +813,7 @@ class PatientRepository @Inject constructor(
     if (prescriptions.isEmpty()) return false
 
     val hasRequiredPrescribedDrugs = prescriptions
-        .all { it.name.equals("Amlodipine", ignoreCase = true) }
+        .all { it.name.contains("Amlodipine", ignoreCase = true) }
 
     if (!hasRequiredPrescribedDrugs) return false
 

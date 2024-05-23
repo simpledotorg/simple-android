@@ -3755,17 +3755,11 @@ class PatientRepositoryAndroidTest {
         name = "Amlodipine"
     )
 
-    val losartan = TestData.prescription(
-        uuid = UUID.fromString("6daac5f4-23bc-4842-9ef3-238422995263"),
-        patientUuid = patientId,
-        name = "Losartan"
-    )
-
     facilityRepository.save(listOf(facility))
     patientRepository.save(listOf(patientProfile))
     medicalHistoryRepository.save(listOf(patientMedicalHistory))
     bloodPressureRepository.save(listOf(patientBp1, patientBp2, patientBp3))
-    prescriptionRepository.save(listOf(amlodipine, losartan))
+    prescriptionRepository.save(listOf(amlodipine))
 
     // when
     val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(patientId)
@@ -3860,17 +3854,11 @@ class PatientRepositoryAndroidTest {
         name = "Amlodipine"
     )
 
-    val losartan = TestData.prescription(
-        uuid = UUID.fromString("1e6bb10c-ff96-4da8-864d-9a7a5b2c40a2"),
-        patientUuid = patientId,
-        name = "Losartan"
-    )
-
     facilityRepository.save(listOf(facility))
     patientRepository.save(listOf(patientProfile))
     medicalHistoryRepository.save(listOf(patientMedicalHistory))
     bloodPressureRepository.save(listOf(patientBp1, patientBp2, patientBp3))
-    prescriptionRepository.save(listOf(amlodipine, losartan))
+    prescriptionRepository.save(listOf(amlodipine))
 
     // when
     val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(patientId)
@@ -3965,17 +3953,11 @@ class PatientRepositoryAndroidTest {
         name = "Amlodipine"
     )
 
-    val losartan = TestData.prescription(
-        uuid = UUID.fromString("5f06cfd5-72af-49dd-9fdf-b41ec2cd98fb"),
-        patientUuid = patientId,
-        name = "Losartan"
-    )
-
     facilityRepository.save(listOf(facility))
     patientRepository.save(listOf(patientProfile))
     medicalHistoryRepository.save(listOf(patientMedicalHistory))
     bloodPressureRepository.save(listOf(patientBp1, patientBp2, patientBp3))
-    prescriptionRepository.save(listOf(amlodipine, losartan))
+    prescriptionRepository.save(listOf(amlodipine))
 
     // when
     val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(patientId)
@@ -4070,17 +4052,11 @@ class PatientRepositoryAndroidTest {
         name = "Amlodipine"
     )
 
-    val losartan = TestData.prescription(
-        uuid = UUID.fromString("c00ccdd4-cd0f-40bf-a64b-51c5bb3ac24d"),
-        patientUuid = patientId,
-        name = "Losartan"
-    )
-
     facilityRepository.save(listOf(facility))
     patientRepository.save(listOf(patientProfile))
     medicalHistoryRepository.save(listOf(patientMedicalHistory))
     bloodPressureRepository.save(listOf(patientBp1, patientBp2, patientBp3))
-    prescriptionRepository.save(listOf(amlodipine, losartan))
+    prescriptionRepository.save(listOf(amlodipine))
 
     // when
     val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(patientId)
@@ -4175,17 +4151,11 @@ class PatientRepositoryAndroidTest {
         name = "Amlodipine"
     )
 
-    val losartan = TestData.prescription(
-        uuid = UUID.fromString("e8fd0066-dba5-4927-af7b-80a873a30dda"),
-        patientUuid = patientId,
-        name = "Losartan"
-    )
-
     facilityRepository.save(listOf(facility))
     patientRepository.save(listOf(patientProfile))
     medicalHistoryRepository.save(listOf(patientMedicalHistory))
     bloodPressureRepository.save(listOf(patientBp1, patientBp2, patientBp3))
-    prescriptionRepository.save(listOf(amlodipine, losartan))
+    prescriptionRepository.save(listOf(amlodipine))
 
     // when
     val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(patientId)
@@ -4280,17 +4250,11 @@ class PatientRepositoryAndroidTest {
         name = "Amlodipine"
     )
 
-    val losartan = TestData.prescription(
-        uuid = UUID.fromString("455163c5-a0f9-4b4f-b9d1-c6954ee98e0d"),
-        patientUuid = patientId,
-        name = "Losartan"
-    )
-
     facilityRepository.save(listOf(facility))
     patientRepository.save(listOf(patientProfile))
     medicalHistoryRepository.save(listOf(patientMedicalHistory))
     bloodPressureRepository.save(listOf(patientBp1, patientBp2, patientBp3))
-    prescriptionRepository.save(listOf(amlodipine, losartan))
+    prescriptionRepository.save(listOf(amlodipine))
 
     // when
     val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(patientId)
@@ -4385,17 +4349,11 @@ class PatientRepositoryAndroidTest {
         name = "Amlodipine"
     )
 
-    val losartan = TestData.prescription(
-        uuid = UUID.fromString("16f59d0d-4ca8-49e4-aa7d-ef1b3e8fc888"),
-        patientUuid = patientId,
-        name = "Losartan"
-    )
-
     facilityRepository.save(listOf(facility))
     patientRepository.save(listOf(patientProfile))
     medicalHistoryRepository.save(listOf(patientMedicalHistory))
     bloodPressureRepository.save(listOf(patientBp1, patientBp2, patientBp3))
-    prescriptionRepository.save(listOf(amlodipine, losartan))
+    prescriptionRepository.save(listOf(amlodipine))
 
     // when
     val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(patientId)
@@ -4496,17 +4454,11 @@ class PatientRepositoryAndroidTest {
         name = "Losartan"
     )
 
-    val telmisartan = TestData.prescription(
-        uuid = UUID.fromString("d646251a-4bec-4cbb-aca1-19fa251a0edb"),
-        patientUuid = patientId,
-        name = "Telemisartan"
-    )
-
     facilityRepository.save(listOf(facility))
     patientRepository.save(listOf(patientProfile))
     medicalHistoryRepository.save(listOf(patientMedicalHistory))
     bloodPressureRepository.save(listOf(patientBp1, patientBp2, patientBp3))
-    prescriptionRepository.save(listOf(amlodipine, losartan, telmisartan))
+    prescriptionRepository.save(listOf(amlodipine, losartan))
 
     // when
     val isPatientEligibleForReassignment = patientRepository.isPatientEligibleForReassignment(patientId)

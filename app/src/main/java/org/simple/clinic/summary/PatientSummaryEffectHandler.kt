@@ -17,6 +17,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.patient.Answer
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
@@ -96,7 +97,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     }
   }
 
-  private fun updatePatientReassignmentState(patientUuid: UUID, status: Boolean) {
+  private fun updatePatientReassignmentState(patientUuid: UUID, status: Answer) {
     patientRepository.updatePatientReassignmentEligibilityStatus(patientUuid, status)
   }
 

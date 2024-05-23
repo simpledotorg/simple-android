@@ -12,6 +12,7 @@ import org.simple.clinic.R
 import org.simple.clinic.databinding.ListPatientSearchBinding
 import org.simple.clinic.databinding.ListPatientSearchHeaderBinding
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.patient.Answer
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.widgets.PagingItemAdapter
 import org.simple.clinic.widgets.PatientSearchResultItemView.PatientSearchResultViewModel
@@ -126,7 +127,7 @@ sealed class InstantSearchResultsItemType : PagingItemAdapter.Item<InstantSearch
             assignedFacilityId = searchResult.assignedFacilityId,
             assignedFacilityName = searchResult.assignedFacilityName,
             status = searchResult.status,
-            isEligibleForReassignment = searchResult.isEligibleForReassignment && isPatientReassignmentFeatureEnabled,
+            isEligibleForReassignment = searchResult.eligibleForReassignment == Answer.Yes && isPatientReassignmentFeatureEnabled,
         )
       }
     }

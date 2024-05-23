@@ -46,6 +46,7 @@ import org.simple.clinic.util.moshi.URIMoshiAdapter
 import org.simple.clinic.util.moshi.UuidMoshiAdapter
 import java.util.concurrent.TimeUnit
 import org.simple.clinic.drugs.search.Answer as DrugAnswer
+import org.simple.clinic.patient.Answer as PatientAnswer
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer as TeleconsultAnswer
 
 @Module
@@ -92,6 +93,7 @@ class NetworkModule {
         .add(InputFieldType.MoshiTypeAdapter())
         .add(MapWithAnyValueTypeMoshiAdapter())
         .add(InputFieldViewType.MoshiTypeAdapter())
+        .add(PatientAnswer.MoshiTypeAdapter())
         .build()
 
     val patientPayloadNullSerializingAdapter = moshi.adapter(PatientPayload::class.java).serializeNulls()

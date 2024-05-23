@@ -11,6 +11,7 @@ import kotlinx.parcelize.Parcelize
 import org.intellij.lang.annotations.Language
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.callresult.CallResult
+import org.simple.clinic.patient.Answer
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAgeDetails
 import org.simple.clinic.patient.PatientPhoneNumber
@@ -41,7 +42,7 @@ data class OverdueAppointment(
 
     val patientAssignedFacilityUuid: UUID?,
 
-    val isEligibleForReassignment: Boolean,
+    val eligibleForReassignment: Answer,
 ) : Parcelable {
 
   @Dao
@@ -52,7 +53,7 @@ data class OverdueAppointment(
       @Language("RoomSql")
       private const val OVERDUE_APPOINTMENTS_QUERY = """
       SELECT 
-        P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.assignedFacilityId patientAssignedFacilityUuid, P.isEligibleForReassignment,
+        P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.assignedFacilityId patientAssignedFacilityUuid, P.eligibleForReassignment,
         
         A.uuid appt_uuid, A.patientUuid appt_patientUuid, A.facilityUuid appt_facilityUuid, A.scheduledDate appt_scheduledDate, A.status appt_status,
         A.cancelReason appt_cancelReason, A.remindOn appt_remindOn, A.agreedToVisit appt_agreedToVisit, A.appointmentType appt_appointmentType,

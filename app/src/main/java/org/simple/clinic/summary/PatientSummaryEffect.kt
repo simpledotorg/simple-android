@@ -1,6 +1,7 @@
 package org.simple.clinic.summary
 
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.patient.Answer
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
 import java.time.Instant
@@ -42,7 +43,7 @@ object CheckIfCDSSPilotIsEnabled : PatientSummaryEffect()
 
 data class LoadLatestScheduledAppointment(val patientUuid: UUID) : PatientSummaryEffect()
 
-data class UpdatePatientReassignmentStatus(val patientUuid: UUID, val status: Boolean) : PatientSummaryEffect()
+data class UpdatePatientReassignmentStatus(val patientUuid: UUID, val status: Answer) : PatientSummaryEffect()
 
 data class CheckPatientReassignmentStatus(
     val patientUuid: UUID,

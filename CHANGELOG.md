@@ -9,6 +9,7 @@
 - Bump Kotlin to v2.0.0
 - Bump KSP to v2.0.0-1.0.21
 - Check if patient is only prescribed amlodipine in `isPatientEligibleForReassignment`
+- Change `isEligibleForReassignment` type to `Answer` in `Patient` table
 
 ### Features
 

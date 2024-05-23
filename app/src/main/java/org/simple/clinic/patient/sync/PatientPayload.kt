@@ -2,6 +2,7 @@ package org.simple.clinic.patient.sync
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import org.simple.clinic.patient.Answer
 import org.simple.clinic.patient.DeletedReason
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
@@ -99,7 +100,7 @@ data class PatientPayload(
         registeredFacilityId = registeredFacilityId,
         assignedFacilityId = assignedFacilityId,
         retainUntil = null,
-        isEligibleForReassignment = false,
+        eligibleForReassignment = Answer.Unanswered,
     )
   }
 }

@@ -21,6 +21,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.Appointment.Status
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.patient.Answer
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
@@ -644,10 +645,10 @@ class PatientSummaryEffectHandlerTest {
     val patientUuid = UUID.fromString("938efb41-8117-43f2-ae1a-410d64a0e204")
 
     // when
-    testCase.dispatch(UpdatePatientReassignmentStatus(patientUuid = patientUuid, status = true))
+    testCase.dispatch(UpdatePatientReassignmentStatus(patientUuid = patientUuid, status = Answer.Yes))
 
     // then
-    verify(patientRepository).updatePatientReassignmentEligibilityStatus(patientUuid, true)
+    verify(patientRepository).updatePatientReassignmentEligibilityStatus(patientUuid, Answer.Yes)
     verifyNoMoreInteractions(patientRepository)
 
     verifyNoInteractions(uiActions)

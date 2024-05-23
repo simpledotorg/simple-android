@@ -13,6 +13,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
+import org.simple.clinic.patient.Answer.*
 import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchCriteria.NumericCriteria
 import org.simple.clinic.patient.SyncStatus.DONE
@@ -38,6 +39,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Optional
 import java.util.UUID
 import javax.inject.Inject
+import org.simple.clinic.patient.Answer as PatientAnswer
 
 typealias PatientUuid = UUID
 
@@ -246,7 +248,7 @@ class PatientRepository @Inject constructor(
           registeredFacilityId = facility.uuid,
           assignedFacilityId = facility.uuid,
           retainUntil = null,
-          isEligibleForReassignment = false,
+          eligibleForReassignment = Unanswered,
       )
 
       val address = PatientAddress(
@@ -832,11 +834,11 @@ class PatientRepository @Inject constructor(
 
   fun updatePatientReassignmentEligibilityStatus(
       patientUuid: UUID,
-      isEligibleForReassignment: Boolean,
+      eligibleForReassignment: PatientAnswer,
   ) {
     database.patientDao().updatePatientReassignmentEligibilityStatus(
         patientUuid = patientUuid,
-        isEligibleForReassignment = isEligibleForReassignment
+        eligibleForReassignment = eligibleForReassignment
     )
   }
 

@@ -69,6 +69,7 @@ import org.simple.clinic.util.room.MapRoomTypeConverter
 import org.simple.clinic.util.room.UuidRoomTypeConverter
 import java.time.Instant
 import org.simple.clinic.drugs.search.Answer as DrugAnswer
+import org.simple.clinic.patient.Answer as PatientAnswer
 
 @Database(
     entities = [
@@ -104,7 +105,7 @@ import org.simple.clinic.drugs.search.Answer as DrugAnswer
     views = [
       PatientSearchResult::class
     ],
-    version = 114,
+    version = 115,
     exportSchema = true
 )
 @TypeConverters(
@@ -139,7 +140,8 @@ import org.simple.clinic.drugs.search.Answer as DrugAnswer
     QuestionnaireType.RoomTypeConverter::class,
     BaseComponentData.RoomTypeConverter::class,
     InputFieldType.RoomTypeConverter::class,
-    MapRoomTypeConverter::class
+    MapRoomTypeConverter::class,
+    PatientAnswer.RoomTypeConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
 

@@ -29,7 +29,7 @@ data class RecentPatient(
 
     val updatedAt: Instant,
 
-    val isEligibleForReassignment: Boolean,
+    val eligibleForReassignment: Answer,
 ) : Parcelable {
 
   override fun toString(): String {
@@ -43,7 +43,7 @@ data class RecentPatient(
 
       const val RECENT_PATIENT_QUERY = """
         SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.age_value,
-        P.age_updatedAt, P.recordedAt patientRecordedAt, P.isEligibleForReassignment,
+        P.age_updatedAt, P.recordedAt patientRecordedAt, P.eligibleForReassignment,
         MAX(
             IFNULL(BP.latestRecordedAt, '0'),
             IFNULL(PD.latestUpdatedAt, '0'),

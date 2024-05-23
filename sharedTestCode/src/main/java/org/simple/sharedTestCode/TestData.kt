@@ -120,6 +120,7 @@ import java.time.LocalDate
 import java.time.ZoneOffset.UTC
 import java.util.UUID
 import org.simple.clinic.drugs.search.Answer as DrugAnswer
+import org.simple.clinic.patient.Answer as PatientAnswer
 import org.simple.clinic.teleconsultlog.teleconsultrecord.Answer as TeleconsultRecordAnswer
 
 object TestData {
@@ -153,7 +154,8 @@ object TestData {
           dateOfBirth = if (generateDateOfBirth) LocalDate.parse("1980-01-01") else null
       ),
       patientAddressStreet: String = faker.address.streetName(),
-      patientAddressColonyOrVillage: String = faker.address.streetAddress()
+      patientAddressColonyOrVillage: String = faker.address.streetAddress(),
+      eligibleForReassignment: PatientAnswer = PatientAnswer.Unanswered,
   ): PatientProfile {
     val phoneNumbers = if (!patientPhoneNumber.isNullOrBlank()) {
       listOf(patientPhoneNumber(patientUuid = patientUuid, number = patientPhoneNumber, phoneType = PatientPhoneNumberType.Mobile))
@@ -177,7 +179,8 @@ object TestData {
             registeredFacilityId = patientRegisteredFacilityId,
             assignedFacilityId = patientAssignedFacilityId,
             retainUntil = retainUntil,
-            patientAgeDetails = patientAgeDetails
+            patientAgeDetails = patientAgeDetails,
+            eligibleForReassignment = eligibleForReassignment
         ),
         address = patientAddress(
             uuid = patientAddressUuid,
@@ -208,7 +211,8 @@ object TestData {
           ageValue = Math.random().times(100).toInt(),
           ageUpdatedAt = Instant.now(),
           dateOfBirth = null
-      )
+      ),
+      eligibleForReassignment: PatientAnswer = PatientAnswer.Unanswered,
   ): Patient {
     return Patient(
         uuid = uuid,
@@ -227,7 +231,7 @@ object TestData {
         registeredFacilityId = registeredFacilityId,
         assignedFacilityId = assignedFacilityId,
         retainUntil = retainUntil,
-        isEligibleForReassignment = false,
+        eligibleForReassignment = eligibleForReassignment,
     )
   }
 
@@ -1042,7 +1046,7 @@ object TestData {
           dateOfBirth = LocalDate.now(UTC).minusYears(30)
       ),
       callResult: CallResult? = null,
-      isEligibleForReassignment: Boolean = false,
+      eligibleForReassignment: PatientAnswer = PatientAnswer.Unanswered,
   ): OverdueAppointment {
     return OverdueAppointment(
         fullName = name,
@@ -1053,7 +1057,7 @@ object TestData {
         appointment = appointment,
         callResult = callResult,
         patientAssignedFacilityUuid = patientAssignedFacilityId,
-        isEligibleForReassignment = isEligibleForReassignment,
+        eligibleForReassignment = eligibleForReassignment,
     )
   }
 
@@ -1102,7 +1106,7 @@ object TestData {
           ageUpdatedAt = Instant.now(),
           dateOfBirth = null
       ),
-      isEligibleForReassignment: Boolean = false,
+      eligibleForReassignment: PatientAnswer = PatientAnswer.Unanswered,
   ): PatientSearchResult {
     return PatientSearchResult(
         uuid = uuid,
@@ -1116,7 +1120,7 @@ object TestData {
         phoneNumber = phoneNumber,
         identifier = identifier,
         identifierSearchHelp = identifierSearchHelp,
-        isEligibleForReassignment = isEligibleForReassignment,
+        eligibleForReassignment = eligibleForReassignment,
     )
   }
 
@@ -1131,7 +1135,7 @@ object TestData {
           ageUpdatedAt = null,
           dateOfBirth = null
       ),
-      isEligibleForReassignment: Boolean = false,
+      eligibleForReassignment: PatientAnswer = PatientAnswer.Unanswered,
   ) = RecentPatient(
       uuid = uuid,
       fullName = fullName,
@@ -1139,7 +1143,7 @@ object TestData {
       ageDetails = patientAgeDetails,
       patientRecordedAt = patientRecordedAt,
       updatedAt = updatedAt,
-      isEligibleForReassignment = isEligibleForReassignment,
+      eligibleForReassignment = eligibleForReassignment,
   )
 
   fun ongoingLoginEntry(

@@ -490,12 +490,13 @@ data class Patient(
 
     @Query("""
       UPDATE Patient
-      SET eligibleForReassignment = :eligibleForReassignment
+      SET eligibleForReassignment = :eligibleForReassignment, syncStatus = :syncStatus
       WHERE uuid = :patientUuid
     """)
     abstract fun updatePatientReassignmentEligibilityStatus(
         patientUuid: UUID,
         eligibleForReassignment: Answer,
+        syncStatus: SyncStatus,
     )
   }
 }

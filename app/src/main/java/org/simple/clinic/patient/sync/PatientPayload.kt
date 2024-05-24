@@ -75,7 +75,10 @@ data class PatientPayload(
     val registeredFacilityId: UUID?,
 
     @Json(name = "assigned_facility_id")
-    val assignedFacilityId: UUID?
+    val assignedFacilityId: UUID?,
+
+    @Json(name = "eligible_for_reassignment")
+    val eligibleForReassignment: Answer,
 ) {
 
   fun toDatabaseModel(newStatus: SyncStatus): Patient {
@@ -100,7 +103,7 @@ data class PatientPayload(
         registeredFacilityId = registeredFacilityId,
         assignedFacilityId = assignedFacilityId,
         retainUntil = null,
-        eligibleForReassignment = Answer.Unanswered,
+        eligibleForReassignment = eligibleForReassignment,
     )
   }
 }

@@ -839,7 +839,8 @@ class PatientRepository @Inject constructor(
     database.patientDao().updatePatientReassignmentEligibilityStatus(
         patientUuid = patientUuid,
         eligibleForReassignment = eligibleForReassignment,
-        syncStatus = PENDING
+        syncStatus = PENDING,
+        updatedAt = Instant.now(utcClock),
     )
   }
 

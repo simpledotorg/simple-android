@@ -14,6 +14,7 @@
 - Bump Lottie to v6.4.1
 - Add `eligibleForReassignment` to `PatientPayload`
 - Bump AndroidX ViewModel to v2.8.1
+- Revert AndroidX Paging to v3.2.1
 
 ### Features
 

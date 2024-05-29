@@ -12,6 +12,7 @@
 - Check if patient is only prescribed amlodipine in `isPatientEligibleForReassignment`
 - Change `isEligibleForReassignment` type to `Answer` in `Patient` table
 - Bump Lottie to v6.4.1
+- Add `eligibleForReassignment` to `PatientPayload`
 
 ### Features
 

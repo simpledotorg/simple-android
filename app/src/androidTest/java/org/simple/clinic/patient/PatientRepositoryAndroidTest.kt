@@ -4520,7 +4520,10 @@ class PatientRepositoryAndroidTest {
     )
 
     // then
-    val patientEligibleForReassignmentAfterUpdate = patientRepository.patientImmediate(patientId)?.eligibleForReassignment ?: false
+    val patient = patientRepository.patientImmediate(patientId)
+    val patientEligibleForReassignmentAfterUpdate = patient?.eligibleForReassignment ?: false
+
     assertThat(patientEligibleForReassignmentAfterUpdate).isEqualTo(PatientAnswer.Yes)
+    assertThat(patient?.syncStatus).isEqualTo(PENDING)
   }
 }

@@ -318,7 +318,8 @@ object TestData {
       businessIds: List<BusinessIdPayload> = listOf(businessIdPayload()),
       deletedReason: DeletedReason? = randomDeletedReason(),
       registeredFacilityId: UUID? = null,
-      assignedFacilityId: UUID? = null
+      assignedFacilityId: UUID? = null,
+      eligibleForReassignment: PatientAnswer = PatientAnswer.Yes
   ): PatientPayload {
     return PatientPayload(
         uuid = uuid,
@@ -338,7 +339,8 @@ object TestData {
         reminderConsent = Granted,
         deletedReason = deletedReason,
         registeredFacilityId = registeredFacilityId,
-        assignedFacilityId = assignedFacilityId
+        assignedFacilityId = assignedFacilityId,
+        eligibleForReassignment = eligibleForReassignment
     )
   }
 

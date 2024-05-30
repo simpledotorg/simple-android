@@ -15,6 +15,7 @@
 - Add `eligibleForReassignment` to `PatientPayload`
 - Bump AndroidX ViewModel to v2.8.1
 - Revert AndroidX Paging to v3.2.1
+- Bump AndroidX AppCompat to v1.7.0
 
 ### Features
 

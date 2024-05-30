@@ -13,6 +13,7 @@
 - Change `isEligibleForReassignment` type to `Answer` in `Patient` table
 - Bump Lottie to v6.4.1
 - Add `eligibleForReassignment` to `PatientPayload`
+- Bump AndroidX ViewModel to v2.8.1
 
 ### Features
 

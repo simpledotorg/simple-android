@@ -18,6 +18,7 @@
 - Bump AndroidX AppCompat to v1.7.0
 - Bump AndroidX Lifecycle to v2.8.1
 - Bump Play Services Location to v21.3.0
+- Bump Firebase Analytics to v22.0.1
 
 ### Features
 

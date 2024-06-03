@@ -200,7 +200,7 @@ traceur = "com.github.qoqa:Traceur:2.2.12"
 
 truth = "com.google.truth:truth:1.4.2"
 
-uuid-generator = "com.fasterxml.uuid:java-uuid-generator:5.0.0"
+uuid-generator = "com.fasterxml.uuid:java-uuid-generator:5.1.0"
 
 #noinspection GradleDependency
 viewpump = "io.github.inflationx:viewpump:2.0.3"

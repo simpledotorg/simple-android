@@ -21,6 +21,7 @@
 - Bump Firebase Analytics to v22.0.1
 - Bump Datadog Gradle Plugin to v1.14.0
 - Bump UUID generator to v5.1.0
+- Move install git hook task to app build gradle file
 
 ### Features
 

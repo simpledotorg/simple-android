@@ -20,6 +20,7 @@
 - Bump Play Services Location to v21.3.0
 - Bump Firebase Analytics to v22.0.1
 - Bump Datadog Gradle Plugin to v1.14.0
+- Bump UUID generator to v5.1.0
 
 ### Features
 

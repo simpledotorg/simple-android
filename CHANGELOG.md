@@ -2,6 +2,10 @@
 
 ## Next Release
 
+### Internal
+
+- Bump Gradle to v8.8
+
 ## 2024-06-03-9116
 
 ### Internal

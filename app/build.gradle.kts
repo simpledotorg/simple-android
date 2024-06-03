@@ -10,7 +10,6 @@ plugins {
   kotlin("android")
   id("kotlin-parcelize")
   id("io.sentry.android.gradle")
-  id("plugins.git.install-hooks")
   id("com.datadoghq.dd-sdk-android-gradle-plugin")
   id("androidx.benchmark")
   id("com.google.devtools.ksp").version(libs.versions.ksp)
@@ -25,51 +24,6 @@ sentry {
   // Look at [ADR 013: SQL Performance Profiling (v2)]
   tracingInstrumentation {
     enabled.set(false)
-  }
-}
-
-tasks.withType<Test> {
-  testLogging {
-    // set options for log level LIFECYCLE
-    events = setOf(
-        TestLogEvent.PASSED,
-        TestLogEvent.SKIPPED,
-        TestLogEvent.FAILED,
-        TestLogEvent.STANDARD_OUT
-    )
-    showExceptions = true
-    exceptionFormat = TestExceptionFormat.FULL
-    showCauses = true
-    showStackTraces = true
-
-    // set options for log level DEBUG and INFO
-    debug {
-      events = setOf(
-          TestLogEvent.STARTED,
-          TestLogEvent.PASSED,
-          TestLogEvent.SKIPPED,
-          TestLogEvent.FAILED,
-          TestLogEvent.STANDARD_OUT,
-          TestLogEvent.STANDARD_ERROR
-      )
-    }
-    info.events = debug.events
-
-    addTestListener(object : TestListener {
-      override fun beforeSuite(descriptor: TestDescriptor?) {}
-      override fun afterSuite(descriptor: TestDescriptor?, result: TestResult?) {
-        if (descriptor?.parent != null && result != null) { // will match the outermost suite
-          val output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
-          val startItem = "|  "
-          val endItem = "  |"
-          val repeatLength = startItem.length + output.length + endItem.length
-          println("\n" + ("-".repeat(repeatLength)) + "\n" + startItem + output + endItem + "\n" + ("-".repeat(repeatLength)))
-        }
-      }
-
-      override fun beforeTest(descriptor: TestDescriptor?) {}
-      override fun afterTest(descriptor: TestDescriptor?, result: TestResult?) {}
-    })
   }
 }
 
@@ -513,9 +467,71 @@ dependencies {
   androidTestImplementation(libs.apache.commons.math)
 }
 
-// This must always be present at the bottom of this file, as per:
-// https://console.firebase.google.com/u/2/project/simple-org/settings/general/
-apply(plugin = "com.google.gms.google-services")
+tasks.withType<Test> {
+  testLogging {
+    // set options for log level LIFECYCLE
+    events = setOf(
+        TestLogEvent.PASSED,
+        TestLogEvent.SKIPPED,
+        TestLogEvent.FAILED,
+        TestLogEvent.STANDARD_OUT
+    )
+    showExceptions = true
+    exceptionFormat = TestExceptionFormat.FULL
+    showCauses = true
+    showStackTraces = true
+
+    // set options for log level DEBUG and INFO
+    debug {
+      events = setOf(
+          TestLogEvent.STARTED,
+          TestLogEvent.PASSED,
+          TestLogEvent.SKIPPED,
+          TestLogEvent.FAILED,
+          TestLogEvent.STANDARD_OUT,
+          TestLogEvent.STANDARD_ERROR
+      )
+    }
+    info.events = debug.events
+
+    addTestListener(object : TestListener {
+      override fun beforeSuite(descriptor: TestDescriptor?) {}
+      override fun afterSuite(descriptor: TestDescriptor?, result: TestResult?) {
+        if (descriptor?.parent != null && result != null) { // will match the outermost suite
+          val output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+          val startItem = "|  "
+          val endItem = "  |"
+          val repeatLength = startItem.length + output.length + endItem.length
+          println("\n" + ("-".repeat(repeatLength)) + "\n" + startItem + output + endItem + "\n" + ("-".repeat(repeatLength)))
+        }
+      }
+
+      override fun beforeTest(descriptor: TestDescriptor?) {}
+      override fun afterTest(descriptor: TestDescriptor?, result: TestResult?) {}
+    })
+  }
+}
+
+// Git hooks have to be manually copied and made executable. This task automates that.
+val gitExecutableHooks: Task = tasks.create("gitExecutableHooks") {
+  doLast {
+    Runtime.getRuntime().exec("chmod -R +x .git/hooks/")
+  }
+}
+
+val installGitHooks = tasks.create<Copy>("installGitHooks") {
+  from(File("${rootProject.rootDir}/quality", "pre-push"))
+  into(File(rootProject.rootDir, ".git/hooks"))
+}
+
+tasks.named("preBuild") {
+  finalizedBy(installGitHooks)
+}
+
+gitExecutableHooks.dependsOn(installGitHooks)
+tasks.named("clean") {
+  dependsOn(gitExecutableHooks)
+}
 
 abstract class TransformGeneratedRoomDaoTask : DefaultTask() {
 
@@ -534,3 +550,7 @@ abstract class TransformGeneratedRoomDaoTask : DefaultTask() {
     rmg.run(projectDir, sourceSet.get(), reporterClassName.get())
   }
 }
+
+// This must always be present at the bottom of this file, as per:
+// https://console.firebase.google.com/u/2/project/simple-org/settings/general/
+apply(plugin = "com.google.gms.google-services")

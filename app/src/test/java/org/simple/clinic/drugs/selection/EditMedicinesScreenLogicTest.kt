@@ -96,6 +96,7 @@ class EditMedicinesScreenLogicTest {
         facility = Lazy { facility },
         uuidGenerator = uuidGenerator,
         appointmentsRepository = appointmentRepository,
+        medicalHistoryRepository = mock(),
         drugFrequencyToLabelMap = drugFrequencyToLabelMap,
         viewEffectsConsumer = viewEffectsConsumer
     )

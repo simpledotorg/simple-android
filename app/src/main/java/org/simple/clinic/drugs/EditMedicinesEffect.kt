@@ -10,6 +10,8 @@ data class RefillMedicines(val patientUuid: UUID) : EditMedicinesEffect()
 
 object LoadDrugFrequencyChoiceItems : EditMedicinesEffect()
 
+data class LoadDataOnExiting(val patientUuid: UUID) : EditMedicinesEffect()
+
 sealed class EditMedicinesViewEffect : EditMedicinesEffect()
 
 data class ShowNewPrescriptionEntrySheet(val patientUuid: UUID) : EditMedicinesViewEffect()

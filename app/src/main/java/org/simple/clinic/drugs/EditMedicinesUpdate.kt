@@ -1,6 +1,7 @@
 package org.simple.clinic.drugs
 
 import com.spotify.mobius.Next
+import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.drugs.EditMedicineButtonState.REFILL_MEDICINE
 import org.simple.clinic.drugs.EditMedicineButtonState.SAVE_MEDICINE
@@ -29,6 +30,7 @@ class EditMedicinesUpdate(
       is DrugsListFetched -> drugsListAndButtonStateFetched(event, model)
       PrescribedMedicinesRefilled -> dispatch(GoBackToPatientSummary)
       is DrugFrequencyChoiceItemsLoaded -> drugFrequencyChoiceItemsLoaded(model, event)
+      is DataOnExitLoaded -> noChange()
     }
   }
 

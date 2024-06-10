@@ -33,8 +33,8 @@ class MedicalHistorySummaryEffectHandler @Inject constructor(
     return ObservableTransformer { effects ->
       effects
           .observeOn(schedulers.io())
-          .map {
-            medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+          .flatMap {
+            medicalHistoryRepository.historyForPatientOrDefault(
                 defaultHistoryUuid = uuidGenerator.v4(),
                 patientUuid = it.patientUUID
             )

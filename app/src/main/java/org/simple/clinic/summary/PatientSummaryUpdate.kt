@@ -85,7 +85,12 @@ class PatientSummaryUpdate(
       is PatientReassignmentStatusLoaded -> patientReassignmentStatusLoaded(model, event)
       is PatientReassignmentWarningClosed -> patientReassignmentWarningClosed(model, event)
       HasDiabetesClicked -> dispatch(MarkDiabetesDiagnosis(model.patientUuid))
+      is DiagnosisWarningResultReceived -> diagnosisWarningResultReceived(event.diagnosisWarningResult)
     }
+  }
+
+  private fun diagnosisWarningResultReceived(diagnosisWarningResult: DiagnosisWarningResult): Next<PatientSummaryModel, PatientSummaryEffect> {
+    return dispatch(ShowDiabetesDiagnosisWarning)
   }
 
   private fun patientReassignmentWarningClosed(

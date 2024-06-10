@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.card.MaterialCardView
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
+import kotlinx.parcelize.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.databinding.DrugsSummaryViewBinding
@@ -16,13 +17,16 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
+import org.simple.clinic.facility.alertchange.Continuation
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreen
+import org.simple.clinic.facility.alertchange.Continuation.ContinueToScreenExpectingResult
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.summary.PatientSummaryChildView
 import org.simple.clinic.summary.PatientSummaryModelUpdateCallback
+import org.simple.clinic.summary.PatientSummaryScreen.ScreenRequest
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.RelativeTimestampGenerator
 import org.simple.clinic.util.UserClock
@@ -149,7 +153,10 @@ class DrugSummaryView(
   override fun showUpdatePrescribedDrugsScreen(patientUuid: UUID, currentFacility: Facility) {
     router.push(AlertFacilityChangeSheet.Key(
         currentFacilityName = currentFacility.name,
-        continuation = ContinueToScreen(PrescribedDrugsScreenKey(patientUuid))
+        continuation = ContinueToScreenExpectingResult(
+            requestType = PrescriptionsRequest,
+            screenKey = PrescribedDrugsScreenKey(patientUuid)
+        )
     ))
   }
 
@@ -211,4 +218,7 @@ class DrugSummaryView(
     }
     updateButton.setIconResource(drawableRes)
   }
+
+  @Parcelize
+  data object PrescriptionsRequest : Parcelable
 }

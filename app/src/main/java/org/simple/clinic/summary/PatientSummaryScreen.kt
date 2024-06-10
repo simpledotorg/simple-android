@@ -35,6 +35,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.contactpatient.ContactPatientBottomSheet
 import org.simple.clinic.databinding.ScreenPatientSummaryBinding
 import org.simple.clinic.di.injector
+import org.simple.clinic.drugs.selection.EditMedicinesScreen
 import org.simple.clinic.editpatient.EditPatientScreen
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
@@ -62,6 +63,7 @@ import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.scheduleappointment.facilityselection.FacilitySelectionScreen
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet.LinkIdWithPatientSheetKey
+import org.simple.clinic.summary.prescribeddrugs.DrugSummaryView
 import org.simple.clinic.summary.teleconsultation.contactdoctor.ContactDoctorSheet
 import org.simple.clinic.summary.teleconsultation.messagebuilder.LongTeleconsultMessageBuilder_Old
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
@@ -280,7 +282,12 @@ class PatientSummaryScreen :
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setFragmentResultListener(ScreenRequest.ScheduleAppointmentSheet, ScreenRequest.SelectFacility, ScreenRequest.ReassignPatientWarningSheet) { requestKey, result ->
+    setFragmentResultListener(
+        ScreenRequest.ScheduleAppointmentSheet,
+        ScreenRequest.SelectFacility,
+        ScreenRequest.ReassignPatientWarningSheet,
+        DrugSummaryView.PrescriptionsRequest
+    ) { requestKey, result ->
       if (result is Succeeded) {
         handleScreenResult(requestKey, result)
       }
@@ -316,6 +323,11 @@ class PatientSummaryScreen :
             sheetOpenedFrom = sheetClosed.sheetOpenedFrom,
             sheetClosedFrom = sheetClosed.sheetClosedFrom
         ))
+      }
+
+      is DrugSummaryView.PrescriptionsRequest -> {
+        val diagnosisWarningResult = (result.result as DiagnosisWarningResult)
+        additionalEvents.notify(DiagnosisWarningResultReceived(diagnosisWarningResult))
       }
     }
   }

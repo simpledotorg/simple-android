@@ -1,8 +1,11 @@
 package org.simple.clinic.drugs
 
+import android.os.Parcelable
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 @JsonClass(generateAdapter = true)
 data class DiagnosisWarningPrescriptions(
 
@@ -11,7 +14,7 @@ data class DiagnosisWarningPrescriptions(
 
     @Json(name = "diabetes_prescriptions")
     val diabetesPrescriptions: List<String>
-) {
+) : Parcelable {
 
   companion object {
 

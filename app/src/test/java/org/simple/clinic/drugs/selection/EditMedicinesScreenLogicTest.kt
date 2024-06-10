@@ -17,6 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.drugs.AddNewPrescriptionClicked
 import org.simple.clinic.drugs.CustomPrescriptionClicked
+import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.EditMedicinesEffect
 import org.simple.clinic.drugs.EditMedicinesEffectHandler
 import org.simple.clinic.drugs.EditMedicinesEvent
@@ -103,7 +104,7 @@ class EditMedicinesScreenLogicTest {
 
     fixture = MobiusTestFixture(
         uiEvents.ofType(),
-        EditMedicinesModel.create(patientUuid).medicineFrequencyToLabelMapLoaded(medicineFrequencyToLabelMap),
+        EditMedicinesModel.create(patientUuid, DiagnosisWarningPrescriptions.empty()).medicineFrequencyToLabelMapLoaded(medicineFrequencyToLabelMap),
         EditMedicinesInit(),
         EditMedicinesUpdate(LocalDate.of(2020, 11, 12), ZoneOffset.UTC),
         effectHandler.build(),

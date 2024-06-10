@@ -28,7 +28,7 @@ class EditMedicineUpdateTest {
   @Test
   fun `when prescribed drugs refill done is clicked, then refill medicines`() {
     val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.of(2020, 11, 18), ZoneOffset.UTC))
-    val model = EditMedicinesModel.create(patientUuid)
+    val model = EditMedicinesModel.create(patientUuid, DiagnosisWarningPrescriptions.empty())
     val prescribedDrugRecords = listOf(
         TestData.prescription(uuid = UUID.fromString("4aec376e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine1"),
         TestData.prescription(uuid = UUID.fromString("537a119e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine2"),
@@ -48,7 +48,7 @@ class EditMedicineUpdateTest {
 
   @Test
   fun `when the prescription has been updated on the current date, then the save medicine button must be shown`() {
-    val model = EditMedicinesModel.create(patientUuid)
+    val model = EditMedicinesModel.create(patientUuid, DiagnosisWarningPrescriptions.empty())
     val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.parse("2018-01-01"), ZoneOffset.UTC))
     val prescribedDrugRecords = listOf(
         TestData.prescription(uuid = UUID.fromString("4aec376e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine1", createdAt = Instant.parse("2018-01-01T00:00:00Z"), updatedAt = Instant.parse("2018-01-01T00:00:00Z")),
@@ -74,7 +74,7 @@ class EditMedicineUpdateTest {
 
   @Test
   fun `when prescription is empty and it has not been updated on the current day, then the save medicine button must be shown`() {
-    val model = EditMedicinesModel.create(patientUuid)
+    val model = EditMedicinesModel.create(patientUuid, DiagnosisWarningPrescriptions.empty())
     val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.of(2020, 11, 18), ZoneOffset.UTC))
     val prescribedDrugRecords = listOf<PrescribedDrug>()
 
@@ -94,7 +94,7 @@ class EditMedicineUpdateTest {
 
   @Test
   fun `when the prescription has not been updated on the current day, then the refill medicine button must be shown`() {
-    val model = EditMedicinesModel.create(patientUuid)
+    val model = EditMedicinesModel.create(patientUuid, DiagnosisWarningPrescriptions.empty())
     val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.of(2020, 11, 18), ZoneOffset.UTC))
     val prescribedDrugRecords = listOf(
         TestData.prescription(uuid = UUID.fromString("4aec376e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine1", createdAt = Instant.parse("2012-12-12T00:00:00Z"), updatedAt = Instant.parse("2012-12-12T00:00:00Z")),
@@ -120,7 +120,7 @@ class EditMedicineUpdateTest {
 
   @Test
   fun `when filled prescribed drugs are fetched and some of the drugs are deleted, then set edit medicine button state to save button`() {
-    val model = EditMedicinesModel.create(patientUuid)
+    val model = EditMedicinesModel.create(patientUuid, DiagnosisWarningPrescriptions.empty())
     val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.of(2020, 11, 18), ZoneOffset.UTC))
     val prescribedDrugRecords = listOf(
         TestData.prescription(uuid = UUID.fromString("4aec376e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine1", createdAt = Instant.parse("2020-11-18T00:00:00Z"), updatedAt = Instant.parse("2020-11-18T00:00:00Z")),
@@ -146,7 +146,7 @@ class EditMedicineUpdateTest {
 
   @Test
   fun `when drug frequency choice items are loaded, then update the model with a map of medicine frequency to frequency choice items`() {
-    val model = EditMedicinesModel.create(patientUuid)
+    val model = EditMedicinesModel.create(patientUuid, DiagnosisWarningPrescriptions.empty())
     val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.of(2020, 11, 18), ZoneOffset.UTC))
     val drugFrequencyToLabelMap = mapOf(
         null to DrugFrequencyLabel(label = "None"),

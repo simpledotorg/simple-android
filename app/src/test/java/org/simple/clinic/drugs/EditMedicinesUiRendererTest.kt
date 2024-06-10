@@ -25,7 +25,7 @@ class EditMedicinesUiRendererTest {
   private val uiRenderer = EditMedicinesUiRenderer(ui)
 
   private val patientUuid = UUID.fromString("00f6ad74-703a-4176-acaa-fc6b57b4fa3c")
-  private val defaultModel = EditMedicinesModel.create(patientUuid)
+  private val defaultModel = EditMedicinesModel.create(patientUuid, DiagnosisWarningPrescriptions.empty())
   private val medicineFrequencyToLabelMap = mapOf(
       null to DrugFrequencyLabel(label = "None"),
       OD to DrugFrequencyLabel(label = "OD"),

@@ -27,6 +27,7 @@ import org.simple.clinic.databinding.ScreenPatientPrescribedDrugsEntryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.AddNewPrescriptionClicked
 import org.simple.clinic.drugs.CustomPrescriptionClicked
+import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.EditMedicinesEffect
 import org.simple.clinic.drugs.EditMedicinesEffectHandler
 import org.simple.clinic.drugs.EditMedicinesEvent
@@ -83,6 +84,9 @@ class EditMedicinesScreen :
   @Inject
   lateinit var features: Features
 
+  @Inject
+  lateinit var diagnosisWarningPrescriptions: DiagnosisWarningPrescriptions
+
   private val toolbar
     get() = binding.prescribeddrugsToolbar
 
@@ -121,7 +125,10 @@ class EditMedicinesScreen :
     screenKey.patientUuid
   }
 
-  override fun defaultModel() = EditMedicinesModel.create(patientUuid = patientUuid)
+  override fun defaultModel() = EditMedicinesModel.create(
+      patientUuid = patientUuid,
+      diagnosisWarningPrescriptions = diagnosisWarningPrescriptions
+  )
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenPatientPrescribedDrugsEntryBinding.inflate(layoutInflater, container, false)

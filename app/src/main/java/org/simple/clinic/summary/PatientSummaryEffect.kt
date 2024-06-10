@@ -107,3 +107,5 @@ data class ShowReassignPatientWarningSheet(
     val currentFacility: Facility,
     val sheetOpenedFrom: ReassignPatientSheetOpenedFrom,
 ) : PatientSummaryViewEffect()
+
+data object ShowDiabetesDiagnosisWarning : PatientSummaryViewEffect()

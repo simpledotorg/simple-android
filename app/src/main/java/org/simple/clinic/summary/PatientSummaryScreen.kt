@@ -666,6 +666,10 @@ class PatientSummaryScreen :
         .show()
   }
 
+  override fun showDiabetesDiagnosisWarning() {
+    // TODO
+  }
+
   override fun openSelectFacilitySheet() {
     router.pushExpectingResult(ScreenRequest.SelectFacility, FacilitySelectionScreen.Key())
   }

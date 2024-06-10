@@ -704,4 +704,16 @@ class PatientSummaryEffectHandlerTest {
     val updatedMedicalHistory = medicalHistory.copy(diagnosedWithDiabetes = Yes)
     verify(medicalHistoryRepository).save(updatedMedicalHistory, Instant.now(clock))
   }
+
+  @Test
+  fun `when show diabetes diagnosis warning view effect is received, then show the warning dialog`() {
+    // when
+    testCase.dispatch(ShowDiabetesDiagnosisWarning)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).showDiabetesDiagnosisWarning()
+    verifyNoMoreInteractions(uiActions)
+  }
 }

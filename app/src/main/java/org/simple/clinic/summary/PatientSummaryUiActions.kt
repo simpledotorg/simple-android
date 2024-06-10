@@ -37,4 +37,5 @@ interface PatientSummaryUiActions {
       currentFacility: Facility,
       sheetOpenedFrom: ReassignPatientSheetOpenedFrom
   )
+  fun showDiabetesDiagnosisWarning()
 }

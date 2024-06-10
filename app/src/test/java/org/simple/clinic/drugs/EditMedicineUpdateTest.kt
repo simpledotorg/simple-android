@@ -288,4 +288,21 @@ class EditMedicineUpdateTest {
             hasEffects(LoadDataOnExiting(patientUuid))
         ))
   }
+
+  @Test
+  fun `when back is clicked, then load data on exiting`() {
+    val model = EditMedicinesModel.create(
+        patientUuid = patientUuid,
+        diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+    )
+    val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.of(2020, 11, 18), ZoneOffset.UTC))
+
+    updateSpec
+        .given(model)
+        .whenEvent(BackClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(LoadDataOnExiting(patientUuid))
+        ))
+  }
 }

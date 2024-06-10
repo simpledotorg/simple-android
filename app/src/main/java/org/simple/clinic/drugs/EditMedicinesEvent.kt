@@ -41,3 +41,5 @@ data class DrugFrequencyChoiceItemsLoaded(
 ) : EditMedicinesEvent()
 
 data class DataOnExitLoaded(val medicalHistory: MedicalHistory) : EditMedicinesEvent()
+
+data object BackClicked : EditMedicinesEvent()

@@ -37,6 +37,7 @@ class EditMedicinesUpdate(
           model.diagnosisWarningPrescriptions,
           model.prescribedDrugs.orEmpty()
       )
+      BackClicked -> dispatch(LoadDataOnExiting(model.patientUuid))
     }
   }
 

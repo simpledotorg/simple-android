@@ -667,7 +667,14 @@ class PatientSummaryScreen :
   }
 
   override fun showDiabetesDiagnosisWarning() {
-    // TODO
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(R.string.diabetes_warning_dialog_title)
+        .setMessage(R.string.diabetes_warning_dialog_desc)
+        .setPositiveButton(R.string.diabetes_warning_dialog_positive_button) { _, _ ->
+          hotEvents.onNext(HasDiabetesClicked)
+        }
+        .setNegativeButton(R.string.diabetes_warning_dialog_negative_button, null)
+        .show()
   }
 
   override fun openSelectFacilitySheet() {

@@ -1070,4 +1070,10 @@ The Simple app contains private health information of patients (“Data”).\n\n
   <string name="reassign_patient_title">Eligible for refills at CC. Transfer patient?</string>
   <string name="reassign_patient_description">Assign to preferred community clinic for future visits.</string>
   <string name="change_patient_facility">Change</string>
+  
+  <!-- Diabetes Diagnosis Warning Dialog -->
+  <string name="diabetes_warning_dialog_title">Add Diabetes diagnosis?</string>
+  <string name="diabetes_warning_dialog_desc">This patient is on diabetes medication.</string>
+  <string name="diabetes_warning_dialog_positive_button">Yes, has DIABETES</string>
+  <string name="diabetes_warning_dialog_negative_button">Not now</string>
 </resources>

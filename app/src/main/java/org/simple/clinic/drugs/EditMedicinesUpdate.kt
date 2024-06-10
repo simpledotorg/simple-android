@@ -27,10 +27,10 @@ class EditMedicinesUpdate(
       AddNewPrescriptionClicked -> dispatch(ShowNewPrescriptionEntrySheet(model.patientUuid))
       is ProtocolDrugClicked -> dispatch(OpenDosagePickerSheet(event.drugName, model.patientUuid, event.prescription?.uuid))
       is CustomPrescriptionClicked -> dispatch(ShowUpdateCustomPrescriptionSheet(event.prescribedDrug))
-      PrescribedDrugsDoneClicked -> dispatch(GoBackToPatientSummary)
+      PrescribedDrugsDoneClicked -> dispatch(LoadDataOnExiting(model.patientUuid))
       PresribedDrugsRefillClicked -> dispatch(RefillMedicines(model.patientUuid))
       is DrugsListFetched -> drugsListAndButtonStateFetched(event, model)
-      PrescribedMedicinesRefilled -> dispatch(GoBackToPatientSummary)
+      PrescribedMedicinesRefilled -> dispatch(LoadDataOnExiting(model.patientUuid))
       is DrugFrequencyChoiceItemsLoaded -> drugFrequencyChoiceItemsLoaded(model, event)
       is DataOnExitLoaded -> dataOnExitLoaded(
           event.medicalHistory,

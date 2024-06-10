@@ -254,4 +254,38 @@ class EditMedicineUpdateTest {
             hasEffects(GoBackToPatientSummary)
         ))
   }
+
+  @Test
+  fun `when done is clicked, then load data on exiting`() {
+    val model = EditMedicinesModel.create(
+        patientUuid = patientUuid,
+        diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+    )
+    val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.of(2020, 11, 18), ZoneOffset.UTC))
+
+    updateSpec
+        .given(model)
+        .whenEvent(PrescribedDrugsDoneClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(LoadDataOnExiting(patientUuid))
+        ))
+  }
+
+  @Test
+  fun `when prescribed drugs are refilled, then load data on exiting`() {
+    val model = EditMedicinesModel.create(
+        patientUuid = patientUuid,
+        diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+    )
+    val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.of(2020, 11, 18), ZoneOffset.UTC))
+
+    updateSpec
+        .given(model)
+        .whenEvent(PrescribedMedicinesRefilled)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(LoadDataOnExiting(patientUuid))
+        ))
+  }
 }

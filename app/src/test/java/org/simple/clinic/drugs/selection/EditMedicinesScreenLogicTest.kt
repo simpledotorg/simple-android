@@ -250,20 +250,6 @@ class EditMedicinesScreenLogicTest {
     verify(uiActions).showUpdateCustomPrescriptionSheet(prescribedDrug)
   }
 
-  @Test
-  fun `when done click event is received then go back to patient summary`() {
-    //given
-    whenever(protocolRepository.drugsForProtocolOrDefault(protocolUuid)).thenReturn(emptyList())
-    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.empty())
-
-    //when
-    setupController()
-    uiEvents.onNext(PrescribedDrugsDoneClicked)
-
-    //then
-    verify(uiActions).goBackToPatientSummary()
-  }
-
   private fun setupController() {
     fixture.start()
 

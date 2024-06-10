@@ -47,7 +47,7 @@ class EditMedicinesUpdate(
       prescribedDrugs: List<PrescribedDrug>,
   ): Next<EditMedicinesModel, EditMedicinesEffect> {
     val canShowDiabetesDiagnosisWarning = medicalHistory.diagnosedWithDiabetes != Answer.Yes &&
-        prescribedDrugs.any { prescription -> diagnosisWarningPrescriptions.diabetesPrescriptions.contains(prescription.name) }
+        prescribedDrugs.any { prescription -> diagnosisWarningPrescriptions.diabetesPrescriptions.contains(prescription.name.lowercase()) }
 
     val effect = when {
       canShowDiabetesDiagnosisWarning -> {

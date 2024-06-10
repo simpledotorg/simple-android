@@ -1,12 +1,14 @@
 package org.simple.clinic.drugs
 
 import com.spotify.mobius.Next
-import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
 import org.simple.clinic.drugs.EditMedicineButtonState.REFILL_MEDICINE
 import org.simple.clinic.drugs.EditMedicineButtonState.SAVE_MEDICINE
+import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
+import org.simple.clinic.summary.DiagnosisWarningResult
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.util.toLocalDateAtZone
 import java.time.LocalDate
@@ -30,8 +32,31 @@ class EditMedicinesUpdate(
       is DrugsListFetched -> drugsListAndButtonStateFetched(event, model)
       PrescribedMedicinesRefilled -> dispatch(GoBackToPatientSummary)
       is DrugFrequencyChoiceItemsLoaded -> drugFrequencyChoiceItemsLoaded(model, event)
-      is DataOnExitLoaded -> noChange()
+      is DataOnExitLoaded -> dataOnExitLoaded(
+          event.medicalHistory,
+          model.diagnosisWarningPrescriptions,
+          model.prescribedDrugs.orEmpty()
+      )
     }
+  }
+
+  private fun dataOnExitLoaded(
+      medicalHistory: MedicalHistory,
+      diagnosisWarningPrescriptions: DiagnosisWarningPrescriptions,
+      prescribedDrugs: List<PrescribedDrug>,
+  ): Next<EditMedicinesModel, EditMedicinesEffect> {
+    val canShowDiabetesDiagnosisWarning = medicalHistory.diagnosedWithDiabetes != Answer.Yes &&
+        prescribedDrugs.any { prescription -> diagnosisWarningPrescriptions.diabetesPrescriptions.contains(prescription.name) }
+
+    val effect = when {
+      canShowDiabetesDiagnosisWarning -> {
+        GoBackToPatientSummaryWithWarningResult(DiagnosisWarningResult.DiabetesWarning)
+      }
+
+      else -> GoBackToPatientSummary
+    }
+
+    return dispatch(effect)
   }
 
   private fun drugFrequencyChoiceItemsLoaded(

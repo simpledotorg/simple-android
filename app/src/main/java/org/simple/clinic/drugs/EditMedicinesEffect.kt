@@ -1,5 +1,6 @@
 package org.simple.clinic.drugs
 
+import org.simple.clinic.summary.DiagnosisWarningResult
 import java.util.UUID
 
 sealed class EditMedicinesEffect
@@ -24,4 +25,6 @@ data class OpenDosagePickerSheet(
 
 data class ShowUpdateCustomPrescriptionSheet(val prescribedDrug: PrescribedDrug) : EditMedicinesViewEffect()
 
-object GoBackToPatientSummary : EditMedicinesViewEffect()
+data object GoBackToPatientSummary : EditMedicinesViewEffect()
+
+data class GoBackToPatientSummaryWithWarningResult(val diagnosisWarningResult: DiagnosisWarningResult) : EditMedicinesViewEffect()

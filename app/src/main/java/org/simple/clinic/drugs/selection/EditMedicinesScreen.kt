@@ -47,7 +47,9 @@ import org.simple.clinic.drugs.selection.custom.OpenAs
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
 import org.simple.clinic.feature.Features
 import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
+import org.simple.clinic.summary.DiagnosisWarningResult
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
@@ -215,6 +217,10 @@ class EditMedicinesScreen :
 
   override fun goBackToPatientSummary() {
     router.pop()
+  }
+
+  override fun goBackToPatientSummary(diagnosisWarningResult: DiagnosisWarningResult) {
+    router.popWithResult(Succeeded(diagnosisWarningResult))
   }
 
   override fun showDosageSelectionSheet(

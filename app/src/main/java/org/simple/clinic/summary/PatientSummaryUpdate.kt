@@ -84,6 +84,7 @@ class PatientSummaryUpdate(
       is MeasurementWarningNotNowClicked -> measurementWarningNotNowClicked(model, event)
       is PatientReassignmentStatusLoaded -> patientReassignmentStatusLoaded(model, event)
       is PatientReassignmentWarningClosed -> patientReassignmentWarningClosed(model, event)
+      HasDiabetesClicked -> dispatch(MarkDiabetesDiagnosis(model.patientUuid))
     }
   }
 

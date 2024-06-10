@@ -1755,6 +1755,17 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when has diabetes is clicked, then mark the diabetes diagnosis`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(HasDiabetesClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(MarkDiabetesDiagnosis(patientUuid))
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

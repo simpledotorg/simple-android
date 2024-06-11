@@ -1799,6 +1799,28 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when hypertension diagnosis not now is clicked and also have diabetes warning, then show diabetes diagnosis warning`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(HypertensionNotNowClicked(continueToDiabetesDiagnosisWarning = true))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowDiabetesDiagnosisWarning)
+        ))
+  }
+
+  @Test
+  fun `when hypertension diagnosis not now is clicked and doesn't have diabetes warning, then do nothing`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(HypertensionNotNowClicked(continueToDiabetesDiagnosisWarning = false))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasNoEffects()
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

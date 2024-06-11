@@ -87,6 +87,15 @@ class PatientSummaryUpdate(
       HasDiabetesClicked -> dispatch(MarkDiabetesDiagnosis(model.patientUuid))
       is DiagnosisWarningResultReceived -> diagnosisWarningResultReceived(event.diagnosisWarningResult)
       is HasHypertensionClicked -> hasHypertensionClicked(event.continueToDiabetesDiagnosisWarning, model.patientUuid)
+      is HypertensionNotNowClicked -> hypertensionNotNowClicked(event.continueToDiabetesDiagnosisWarning)
+    }
+  }
+
+  private fun hypertensionNotNowClicked(continueToDiabetesDiagnosisWarning: Boolean): Next<PatientSummaryModel, PatientSummaryEffect> {
+    return if (continueToDiabetesDiagnosisWarning) {
+      dispatch(ShowDiabetesDiagnosisWarning)
+    } else {
+      noChange()
     }
   }
 

@@ -22,7 +22,7 @@
 ### Internal
 
 - Bump AGP to v8.4.1
-- Bump lint to v31.4.1
+- Bump lint to v31.4.2
 - Bump Kotlin to v2.0.0
 - Bump KSP to v2.0.0-1.0.21
 - Bump Play Services Auth to v21.2.0

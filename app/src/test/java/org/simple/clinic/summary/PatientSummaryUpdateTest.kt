@@ -1755,6 +1755,28 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when has diabetes is clicked, then mark the diabetes diagnosis`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(HasDiabetesClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(MarkDiabetesDiagnosis(patientUuid))
+        ))
+  }
+
+  @Test
+  fun `when diagnosis warning result is diabetes warning, show diabetes warning dialog`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(DiagnosisWarningResultReceived(DiagnosisWarningResult.DiabetesWarning))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowDiabetesDiagnosisWarning)
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

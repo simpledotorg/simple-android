@@ -125,3 +125,7 @@ data class PatientReassignmentWarningClosed(
     val sheetOpenedFrom: ReassignPatientSheetOpenedFrom,
     val sheetClosedFrom: ReassignPatientSheetClosedFrom,
 ) : PatientSummaryEvent()
+
+data object HasDiabetesClicked : PatientSummaryEvent()
+
+data class DiagnosisWarningResultReceived(val diagnosisWarningResult: DiagnosisWarningResult) : PatientSummaryEvent()

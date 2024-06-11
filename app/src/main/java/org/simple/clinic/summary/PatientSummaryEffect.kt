@@ -51,6 +51,8 @@ data class CheckPatientReassignmentStatus(
     val screenCreatedTimestamp: Instant,
 ) : PatientSummaryEffect()
 
+data class MarkDiabetesDiagnosis(val patientUuid: UUID) : PatientSummaryEffect()
+
 sealed class PatientSummaryViewEffect : PatientSummaryEffect()
 
 data class HandleEditClick(
@@ -105,3 +107,5 @@ data class ShowReassignPatientWarningSheet(
     val currentFacility: Facility,
     val sheetOpenedFrom: ReassignPatientSheetOpenedFrom,
 ) : PatientSummaryViewEffect()
+
+data object ShowDiabetesDiagnosisWarning : PatientSummaryViewEffect()

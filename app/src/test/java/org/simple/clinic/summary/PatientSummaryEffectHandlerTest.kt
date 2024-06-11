@@ -17,6 +17,7 @@ import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Yes
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.Appointment.Status
@@ -35,6 +36,7 @@ import org.simple.clinic.sync.DataSync
 import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.sharedTestCode.TestData
+import org.simple.sharedTestCode.util.TestUtcClock
 import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import java.time.Instant
 import java.util.Optional
@@ -61,7 +63,9 @@ class PatientSummaryEffectHandlerTest {
   private val medicalHistoryUuid = UUID.fromString("78336f4d-071e-47a6-9423-7ab1f57a907e")
   private val uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid)
 
+  private val clock = TestUtcClock()
   private val effectHandler = PatientSummaryEffectHandler(
+      clock = clock,
       schedulersProvider = TrampolineSchedulersProvider(),
       patientRepository = patientRepository,
       bloodPressureRepository = bloodPressureRepository,
@@ -102,6 +106,7 @@ class PatientSummaryEffectHandlerTest {
     // given
     val bangladesh = TestData.country(isoCountryCode = "BD")
     val effectHandler = PatientSummaryEffectHandler(
+        clock = clock,
         schedulersProvider = TrampolineSchedulersProvider(),
         patientRepository = patientRepository,
         bloodPressureRepository = bloodPressureRepository,
@@ -159,6 +164,7 @@ class PatientSummaryEffectHandlerTest {
     // given
     val bangladesh = TestData.country(isoCountryCode = "BD")
     val effectHandler = PatientSummaryEffectHandler(
+        clock = clock,
         schedulersProvider = TrampolineSchedulersProvider(),
         patientRepository = patientRepository,
         bloodPressureRepository = bloodPressureRepository,
@@ -567,6 +573,7 @@ class PatientSummaryEffectHandlerTest {
         name = "CHC Obvious"
     )
     val effectHandler = PatientSummaryEffectHandler(
+        clock = clock,
         schedulersProvider = TestSchedulersProvider.trampoline(),
         patientRepository = patientRepository,
         bloodPressureRepository = bloodPressureRepository,
@@ -674,5 +681,39 @@ class PatientSummaryEffectHandlerTest {
         clickAction = ClickAction.DONE,
         screenCreatedTimestamp = Instant.parse("2018-01-01T00:00:00Z")
     ))
+  }
+
+  @Test
+  fun `when mark diabetes diagnosis effect is received, then update the diabetes diagnosis status`() {
+    // given
+    val patientUuid = UUID.fromString("522a2e9f-46d2-4181-bfcc-8a9891cd49b5")
+    val medicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("17e50ff6-6ba9-4d7a-b3c9-8966114fac1b"),
+        hasDiabetes = No
+    )
+
+    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+        patientUuid = patientUuid,
+        defaultHistoryUuid = uuidGenerator.v4()
+    )) doReturn medicalHistory
+
+    // when
+    testCase.dispatch(MarkDiabetesDiagnosis(patientUuid))
+
+    // then
+    val updatedMedicalHistory = medicalHistory.copy(diagnosedWithDiabetes = Yes)
+    verify(medicalHistoryRepository).save(updatedMedicalHistory, Instant.now(clock))
+  }
+
+  @Test
+  fun `when show diabetes diagnosis warning view effect is received, then show the warning dialog`() {
+    // when
+    testCase.dispatch(ShowDiabetesDiagnosisWarning)
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).showDiabetesDiagnosisWarning()
+    verifyNoMoreInteractions(uiActions)
   }
 }

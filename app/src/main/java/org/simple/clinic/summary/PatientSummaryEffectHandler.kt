@@ -15,6 +15,7 @@ import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.Answer
@@ -25,15 +26,20 @@ import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.summary.teleconsultation.sync.TeleconsultationFacilityRepository
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toNullable
 import org.simple.clinic.uuid.UuidGenerator
+import java.time.Clock
+import java.time.Instant
 import java.util.Optional
 import java.util.UUID
 import java.util.function.Function
+import org.simple.clinic.medicalhistory.Answer as MedicalhistoryAnswer
 
 class PatientSummaryEffectHandler @AssistedInject constructor(
+    private val clock: UtcClock,
     private val schedulersProvider: SchedulersProvider,
     private val patientRepository: PatientRepository,
     private val bloodPressureRepository: BloodPressureRepository,
@@ -79,7 +85,21 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addTransformer(LoadLatestScheduledAppointment::class.java, loadLatestScheduledAppointment())
         .addConsumer(UpdatePatientReassignmentStatus::class.java, { updatePatientReassignmentState(it.patientUuid, it.status) }, schedulersProvider.io())
         .addTransformer(CheckPatientReassignmentStatus::class.java, checkPatientReassignmentStatus())
+        .addConsumer(MarkDiabetesDiagnosis::class.java, { markDiabetesDiagnosis(it.patientUuid) }, schedulersProvider.io())
         .build()
+  }
+
+  private fun markDiabetesDiagnosis(patientUuid: UUID) {
+    val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+        patientUuid = patientUuid,
+        defaultHistoryUuid = uuidGenerator.v4()
+    )
+    val updatedMedicalHistory = medicalHistory.answered(
+        question = MedicalHistoryQuestion.DiagnosedWithDiabetes,
+        answer = MedicalhistoryAnswer.Yes
+    )
+
+    medicalHistoryRepository.save(updatedMedicalHistory, Instant.now(clock))
   }
 
   private fun checkPatientReassignmentStatus(): ObservableTransformer<CheckPatientReassignmentStatus, PatientSummaryEvent> {

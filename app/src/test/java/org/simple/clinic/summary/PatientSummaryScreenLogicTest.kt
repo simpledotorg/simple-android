@@ -38,6 +38,7 @@ import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.sharedTestCode.uuid.FakeUuidGenerator
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
+import org.simple.sharedTestCode.util.TestUtcClock
 import java.time.Duration
 import java.time.LocalDate
 import java.util.Optional
@@ -185,6 +186,7 @@ class PatientSummaryScreenLogicTest {
   private fun startMobiusLoop(openIntention: OpenIntention) {
     val viewEffectHandler = PatientSummaryViewEffectHandler(uiActions)
     val effectHandler = PatientSummaryEffectHandler(
+        clock = TestUtcClock(),
         schedulersProvider = TrampolineSchedulersProvider(),
         patientRepository = patientRepository,
         bloodPressureRepository = bpRepository,

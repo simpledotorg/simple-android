@@ -37,6 +37,7 @@ class PatientSummaryViewEffectHandler(
           sheetOpenedFrom = viewEffect.sheetOpenedFrom
       )
       ShowDiabetesDiagnosisWarning -> uiActions.showDiabetesDiagnosisWarning()
+      is ShowHypertensionDiagnosisWarning -> uiActions.showHypertensionDiagnosisWarning(viewEffect.continueToDiabetesDiagnosisWarning)
     }.exhaustive()
   }
 }

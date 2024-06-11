@@ -111,3 +111,5 @@ data class ShowReassignPatientWarningSheet(
 ) : PatientSummaryViewEffect()
 
 data object ShowDiabetesDiagnosisWarning : PatientSummaryViewEffect()
+
+data class ShowHypertensionDiagnosisWarning(val continueToDiabetesDiagnosisWarning: Boolean) : PatientSummaryViewEffect()

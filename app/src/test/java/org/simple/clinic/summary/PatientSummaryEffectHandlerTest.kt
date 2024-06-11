@@ -738,4 +738,16 @@ class PatientSummaryEffectHandlerTest {
     val updatedMedicalHistory = medicalHistory.copy(diagnosedWithHypertension = Yes)
     verify(medicalHistoryRepository).save(updatedMedicalHistory, Instant.now(clock))
   }
+
+  @Test
+  fun `when show htn diagnosis warning view effect is received, then show the warning dialog`() {
+    // when
+    testCase.dispatch(ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = false))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).showHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = false)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

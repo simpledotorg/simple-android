@@ -111,7 +111,13 @@ class PatientSummaryUpdate(
   }
 
   private fun diagnosisWarningResultReceived(diagnosisWarningResult: DiagnosisWarningResult): Next<PatientSummaryModel, PatientSummaryEffect> {
-    return dispatch(ShowDiabetesDiagnosisWarning)
+    val effect = when (diagnosisWarningResult) {
+      DiagnosisWarningResult.DiabetesWarning -> ShowDiabetesDiagnosisWarning
+      DiagnosisWarningResult.HypertensionWarning -> ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = false)
+      DiagnosisWarningResult.BothDiagnosisWarning -> ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = true)
+    }
+
+    return dispatch(effect)
   }
 
   private fun patientReassignmentWarningClosed(

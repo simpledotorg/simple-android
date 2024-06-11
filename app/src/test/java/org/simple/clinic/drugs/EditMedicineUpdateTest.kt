@@ -13,8 +13,10 @@ import org.simple.clinic.drugs.search.DrugFrequency.OD
 import org.simple.clinic.drugs.search.DrugFrequency.QDS
 import org.simple.clinic.drugs.search.DrugFrequency.TDS
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
+import org.simple.clinic.summary.DiagnosisWarningResult
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import java.time.Instant
 import java.time.LocalDate
@@ -28,7 +30,7 @@ class EditMedicineUpdateTest {
   @Test
   fun `when prescribed drugs refill done is clicked, then refill medicines`() {
     val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.of(2020, 11, 18), ZoneOffset.UTC))
-    val model = EditMedicinesModel.create(patientUuid)
+    val model = EditMedicinesModel.create(patientUuid, DiagnosisWarningPrescriptions.empty())
     val prescribedDrugRecords = listOf(
         TestData.prescription(uuid = UUID.fromString("4aec376e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine1"),
         TestData.prescription(uuid = UUID.fromString("537a119e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine2"),
@@ -48,7 +50,7 @@ class EditMedicineUpdateTest {
 
   @Test
   fun `when the prescription has been updated on the current date, then the save medicine button must be shown`() {
-    val model = EditMedicinesModel.create(patientUuid)
+    val model = EditMedicinesModel.create(patientUuid, DiagnosisWarningPrescriptions.empty())
     val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.parse("2018-01-01"), ZoneOffset.UTC))
     val prescribedDrugRecords = listOf(
         TestData.prescription(uuid = UUID.fromString("4aec376e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine1", createdAt = Instant.parse("2018-01-01T00:00:00Z"), updatedAt = Instant.parse("2018-01-01T00:00:00Z")),
@@ -74,7 +76,7 @@ class EditMedicineUpdateTest {
 
   @Test
   fun `when prescription is empty and it has not been updated on the current day, then the save medicine button must be shown`() {
-    val model = EditMedicinesModel.create(patientUuid)
+    val model = EditMedicinesModel.create(patientUuid, DiagnosisWarningPrescriptions.empty())
     val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.of(2020, 11, 18), ZoneOffset.UTC))
     val prescribedDrugRecords = listOf<PrescribedDrug>()
 
@@ -94,7 +96,7 @@ class EditMedicineUpdateTest {
 
   @Test
   fun `when the prescription has not been updated on the current day, then the refill medicine button must be shown`() {
-    val model = EditMedicinesModel.create(patientUuid)
+    val model = EditMedicinesModel.create(patientUuid, DiagnosisWarningPrescriptions.empty())
     val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.of(2020, 11, 18), ZoneOffset.UTC))
     val prescribedDrugRecords = listOf(
         TestData.prescription(uuid = UUID.fromString("4aec376e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine1", createdAt = Instant.parse("2012-12-12T00:00:00Z"), updatedAt = Instant.parse("2012-12-12T00:00:00Z")),
@@ -120,7 +122,7 @@ class EditMedicineUpdateTest {
 
   @Test
   fun `when filled prescribed drugs are fetched and some of the drugs are deleted, then set edit medicine button state to save button`() {
-    val model = EditMedicinesModel.create(patientUuid)
+    val model = EditMedicinesModel.create(patientUuid, DiagnosisWarningPrescriptions.empty())
     val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.of(2020, 11, 18), ZoneOffset.UTC))
     val prescribedDrugRecords = listOf(
         TestData.prescription(uuid = UUID.fromString("4aec376e-1a8f-11eb-adc1-0242ac120002"), name = "Amlodipine1", createdAt = Instant.parse("2020-11-18T00:00:00Z"), updatedAt = Instant.parse("2020-11-18T00:00:00Z")),
@@ -146,7 +148,7 @@ class EditMedicineUpdateTest {
 
   @Test
   fun `when drug frequency choice items are loaded, then update the model with a map of medicine frequency to frequency choice items`() {
-    val model = EditMedicinesModel.create(patientUuid)
+    val model = EditMedicinesModel.create(patientUuid, DiagnosisWarningPrescriptions.empty())
     val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.of(2020, 11, 18), ZoneOffset.UTC))
     val drugFrequencyToLabelMap = mapOf(
         null to DrugFrequencyLabel(label = "None"),
@@ -170,6 +172,137 @@ class EditMedicineUpdateTest {
         .then(assertThatNext(
             hasModel(model.medicineFrequencyToLabelMapLoaded(medicineFrequencyToLabelMap)),
             hasNoEffects()
+        ))
+  }
+
+  @Test
+  fun `when data on exit is loaded and patient is not diagnosed as diabetic and has prescriptions for diabetes, then go back to patient summary and display diabetes diagnosis warning`() {
+    val model = EditMedicinesModel.create(
+        patientUuid = patientUuid,
+        diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions(
+            htnPrescriptions = emptyList(),
+            diabetesPrescriptions = listOf(
+                "metformin",
+                "gliclazide",
+                "prazosin",
+                "insulin"
+            )
+        )
+    ).prescribedDrugsFetched(listOf(
+        TestData.prescription(
+            uuid = UUID.fromString("7f762f22-e796-4aa4-94d1-f52ad0b16066"),
+            name = "metformin"
+        ),
+        TestData.prescription(
+            uuid = UUID.fromString("ae8fddc2-0e32-4f6a-8e7e-3b03dc50b25b"),
+            name = "chlorthalidone"
+        )
+    ))
+    val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.of(2020, 11, 18), ZoneOffset.UTC))
+    val medicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("f255513f-6d61-46fd-90c6-4e0f60d70d67"),
+        patientUuid = patientUuid,
+        diagnosedWithHypertension = Answer.Yes,
+        hasDiabetes = Answer.No
+    )
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataOnExitLoaded(medicalHistory))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoBackToPatientSummaryWithWarningResult(DiagnosisWarningResult.DiabetesWarning))
+        ))
+  }
+
+  @Test
+  fun `when data on exit is loaded and patient is diagnosed as diabetic and has prescriptions for diabetes, then go back to patient summary screen without warning result`() {
+    val model = EditMedicinesModel.create(
+        patientUuid = patientUuid,
+        diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions(
+            htnPrescriptions = emptyList(),
+            diabetesPrescriptions = listOf(
+                "metformin",
+                "gliclazide",
+                "prazosin",
+                "insulin"
+            )
+        )
+    ).prescribedDrugsFetched(listOf(
+        TestData.prescription(
+            uuid = UUID.fromString("7f762f22-e796-4aa4-94d1-f52ad0b16066"),
+            name = "metformin"
+        ),
+        TestData.prescription(
+            uuid = UUID.fromString("ae8fddc2-0e32-4f6a-8e7e-3b03dc50b25b"),
+            name = "chlorthalidone"
+        )
+    ))
+    val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.of(2020, 11, 18), ZoneOffset.UTC))
+    val medicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("f255513f-6d61-46fd-90c6-4e0f60d70d67"),
+        patientUuid = patientUuid,
+        diagnosedWithHypertension = Answer.Yes,
+        hasDiabetes = Answer.Yes
+    )
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataOnExitLoaded(medicalHistory))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(GoBackToPatientSummary)
+        ))
+  }
+
+  @Test
+  fun `when done is clicked, then load data on exiting`() {
+    val model = EditMedicinesModel.create(
+        patientUuid = patientUuid,
+        diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+    )
+    val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.of(2020, 11, 18), ZoneOffset.UTC))
+
+    updateSpec
+        .given(model)
+        .whenEvent(PrescribedDrugsDoneClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(LoadDataOnExiting(patientUuid))
+        ))
+  }
+
+  @Test
+  fun `when prescribed drugs are refilled, then load data on exiting`() {
+    val model = EditMedicinesModel.create(
+        patientUuid = patientUuid,
+        diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+    )
+    val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.of(2020, 11, 18), ZoneOffset.UTC))
+
+    updateSpec
+        .given(model)
+        .whenEvent(PrescribedMedicinesRefilled)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(LoadDataOnExiting(patientUuid))
+        ))
+  }
+
+  @Test
+  fun `when back is clicked, then load data on exiting`() {
+    val model = EditMedicinesModel.create(
+        patientUuid = patientUuid,
+        diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
+    )
+    val updateSpec = UpdateSpec(EditMedicinesUpdate(LocalDate.of(2020, 11, 18), ZoneOffset.UTC))
+
+    updateSpec
+        .given(model)
+        .whenEvent(BackClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(LoadDataOnExiting(patientUuid))
         ))
   }
 }

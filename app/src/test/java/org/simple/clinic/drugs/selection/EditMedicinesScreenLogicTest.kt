@@ -17,6 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.drugs.AddNewPrescriptionClicked
 import org.simple.clinic.drugs.CustomPrescriptionClicked
+import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.EditMedicinesEffect
 import org.simple.clinic.drugs.EditMedicinesEffectHandler
 import org.simple.clinic.drugs.EditMedicinesEvent
@@ -96,13 +97,14 @@ class EditMedicinesScreenLogicTest {
         facility = Lazy { facility },
         uuidGenerator = uuidGenerator,
         appointmentsRepository = appointmentRepository,
+        medicalHistoryRepository = mock(),
         drugFrequencyToLabelMap = drugFrequencyToLabelMap,
         viewEffectsConsumer = viewEffectsConsumer
     )
 
     fixture = MobiusTestFixture(
         uiEvents.ofType(),
-        EditMedicinesModel.create(patientUuid).medicineFrequencyToLabelMapLoaded(medicineFrequencyToLabelMap),
+        EditMedicinesModel.create(patientUuid, DiagnosisWarningPrescriptions.empty()).medicineFrequencyToLabelMapLoaded(medicineFrequencyToLabelMap),
         EditMedicinesInit(),
         EditMedicinesUpdate(LocalDate.of(2020, 11, 12), ZoneOffset.UTC),
         effectHandler.build(),
@@ -246,20 +248,6 @@ class EditMedicinesScreenLogicTest {
 
     //then
     verify(uiActions).showUpdateCustomPrescriptionSheet(prescribedDrug)
-  }
-
-  @Test
-  fun `when done click event is received then go back to patient summary`() {
-    //given
-    whenever(protocolRepository.drugsForProtocolOrDefault(protocolUuid)).thenReturn(emptyList())
-    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.empty())
-
-    //when
-    setupController()
-    uiEvents.onNext(PrescribedDrugsDoneClicked)
-
-    //then
-    verify(uiActions).goBackToPatientSummary()
   }
 
   private fun setupController() {

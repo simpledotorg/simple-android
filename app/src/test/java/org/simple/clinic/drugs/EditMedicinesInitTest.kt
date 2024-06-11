@@ -11,7 +11,7 @@ class EditMedicinesInitTest {
   @Test
   fun `when sheet is created, then fetch prescribed and protocol drugs and load drug frequency choice items`() {
     val patientUuid = UUID.fromString("bcdd3e43-4404-49b5-90dc-f58d3a31e431")
-    val model = EditMedicinesModel.create(patientUuid)
+    val model = EditMedicinesModel.create(patientUuid, DiagnosisWarningPrescriptions.empty())
     val initSpec = InitSpec(EditMedicinesInit())
 
     initSpec

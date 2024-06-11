@@ -12,6 +12,7 @@ import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.protocol.ProtocolRepository
@@ -26,6 +27,7 @@ class EditMedicinesEffectHandler @AssistedInject constructor(
     private val facility: Lazy<Facility>,
     private val uuidGenerator: UuidGenerator,
     private val appointmentsRepository: AppointmentRepository,
+    private val medicalHistoryRepository: MedicalHistoryRepository,
     private val drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>,
     @Assisted private val viewEffectsConsumer: Consumer<EditMedicinesViewEffect>
 ) {
@@ -42,7 +44,23 @@ class EditMedicinesEffectHandler @AssistedInject constructor(
         .addTransformer(RefillMedicines::class.java, refillMedicines())
         .addTransformer(LoadDrugFrequencyChoiceItems::class.java, loadFrequencyChoiceItems())
         .addConsumer(EditMedicinesViewEffect::class.java, viewEffectsConsumer::accept)
+        .addTransformer(LoadDataOnExiting::class.java, loadDataOnExiting())
         .build()
+  }
+
+  private fun loadDataOnExiting(): ObservableTransformer<LoadDataOnExiting, EditMedicinesEvent> {
+    return ObservableTransformer { effects ->
+      effects
+          .observeOn(schedulersProvider.io())
+          .map {
+            val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+                patientUuid = it.patientUuid,
+                defaultHistoryUuid = uuidGenerator.v4()
+            )
+
+            DataOnExitLoaded(medicalHistory)
+          }
+    }
   }
 
   private fun loadFrequencyChoiceItems(): ObservableTransformer<LoadDrugFrequencyChoiceItems, EditMedicinesEvent> {

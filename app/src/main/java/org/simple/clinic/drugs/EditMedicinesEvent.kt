@@ -2,6 +2,7 @@ package org.simple.clinic.drugs
 
 import org.simple.clinic.drugs.search.DrugFrequency
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
+import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import org.simple.clinic.widgets.UiEvent
 
@@ -38,3 +39,7 @@ object PrescribedMedicinesRefilled : EditMedicinesEvent()
 data class DrugFrequencyChoiceItemsLoaded(
     val drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>
 ) : EditMedicinesEvent()
+
+data class DataOnExitLoaded(val medicalHistory: MedicalHistory) : EditMedicinesEvent()
+
+data object BackClicked : EditMedicinesEvent()

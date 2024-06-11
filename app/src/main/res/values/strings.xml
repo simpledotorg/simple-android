@@ -1074,12 +1074,12 @@ The Simple app contains private health information of patients (“Data”).\n\n
   <!-- Diabetes Diagnosis Warning Dialog -->
   <string name="diabetes_warning_dialog_title">Add Diabetes diagnosis?</string>
   <string name="diabetes_warning_dialog_desc">This patient is on diabetes medication.</string>
-  <string name="diabetes_warning_dialog_positive_button">Yes, has DIABETES</string>
+  <string name="diabetes_warning_dialog_positive_button">Yes, has diabetes</string>
   <string name="diabetes_warning_dialog_negative_button">Not now</string>
 
   <!-- HTN Diagnosis Warning Dialog -->
   <string name="htn_warning_dialog_title">Add Hypertension diagnosis?</string>
   <string name="htn_warning_dialog_desc">This patient is on hypertension medication.</string>
-  <string name="htn_warning_dialog_positive_button">Yes, has HYPERTENSION</string>
+  <string name="htn_warning_dialog_positive_button">Yes, has hypertension</string>
   <string name="htn_warning_dialog_negative_button">Not now</string>
 </resources>

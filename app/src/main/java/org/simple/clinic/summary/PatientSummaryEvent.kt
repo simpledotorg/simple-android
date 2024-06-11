@@ -129,3 +129,5 @@ data class PatientReassignmentWarningClosed(
 data object HasDiabetesClicked : PatientSummaryEvent()
 
 data class DiagnosisWarningResultReceived(val diagnosisWarningResult: DiagnosisWarningResult) : PatientSummaryEvent()
+
+data object HasHypertensionClicked : PatientSummaryEvent()

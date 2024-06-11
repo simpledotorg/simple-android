@@ -1777,6 +1777,17 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when has hypertension is clicked and doesn't have diabetes warning, then mark the hypertension diagnosis`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(HasHypertensionClicked)
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(MarkHypertensionDiagnosis(patientUuid))
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

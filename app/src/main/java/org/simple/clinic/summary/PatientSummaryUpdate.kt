@@ -86,6 +86,7 @@ class PatientSummaryUpdate(
       is PatientReassignmentWarningClosed -> patientReassignmentWarningClosed(model, event)
       HasDiabetesClicked -> dispatch(MarkDiabetesDiagnosis(model.patientUuid))
       is DiagnosisWarningResultReceived -> diagnosisWarningResultReceived(event.diagnosisWarningResult)
+      is HasHypertensionClicked -> dispatch(MarkHypertensionDiagnosis(model.patientUuid))
     }
   }
 

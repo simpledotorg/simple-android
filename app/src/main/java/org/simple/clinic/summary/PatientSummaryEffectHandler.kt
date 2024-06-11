@@ -86,7 +86,21 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
         .addConsumer(UpdatePatientReassignmentStatus::class.java, { updatePatientReassignmentState(it.patientUuid, it.status) }, schedulersProvider.io())
         .addTransformer(CheckPatientReassignmentStatus::class.java, checkPatientReassignmentStatus())
         .addConsumer(MarkDiabetesDiagnosis::class.java, { markDiabetesDiagnosis(it.patientUuid) }, schedulersProvider.io())
+        .addConsumer(MarkHypertensionDiagnosis::class.java, { markHypertension(it.patientUuid) }, schedulersProvider.io())
         .build()
+  }
+
+  private fun markHypertension(patientUuid: UUID) {
+    val medicalHistory = medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+        patientUuid = patientUuid,
+        defaultHistoryUuid = uuidGenerator.v4()
+    )
+    val updatedMedicalHistory = medicalHistory.answered(
+        question = MedicalHistoryQuestion.DiagnosedWithHypertension,
+        answer = MedicalhistoryAnswer.Yes
+    )
+
+    medicalHistoryRepository.save(updatedMedicalHistory, Instant.now(clock))
   }
 
   private fun markDiabetesDiagnosis(patientUuid: UUID) {

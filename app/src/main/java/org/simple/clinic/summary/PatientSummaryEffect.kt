@@ -53,6 +53,8 @@ data class CheckPatientReassignmentStatus(
 
 data class MarkDiabetesDiagnosis(val patientUuid: UUID) : PatientSummaryEffect()
 
+data class MarkHypertensionDiagnosis(val patientUuid: UUID) : PatientSummaryEffect()
+
 sealed class PatientSummaryViewEffect : PatientSummaryEffect()
 
 data class HandleEditClick(

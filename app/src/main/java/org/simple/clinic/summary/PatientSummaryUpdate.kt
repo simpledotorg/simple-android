@@ -86,7 +86,18 @@ class PatientSummaryUpdate(
       is PatientReassignmentWarningClosed -> patientReassignmentWarningClosed(model, event)
       HasDiabetesClicked -> dispatch(MarkDiabetesDiagnosis(model.patientUuid))
       is DiagnosisWarningResultReceived -> diagnosisWarningResultReceived(event.diagnosisWarningResult)
-      is HasHypertensionClicked -> dispatch(MarkHypertensionDiagnosis(model.patientUuid))
+      is HasHypertensionClicked -> hasHypertensionClicked(event.continueToDiabetesDiagnosisWarning, model.patientUuid)
+    }
+  }
+
+  private fun hasHypertensionClicked(
+      continueToDiabetesDiagnosisWarning: Boolean,
+      patientUuid: UUID
+  ): Next<PatientSummaryModel, PatientSummaryEffect> {
+    return if (continueToDiabetesDiagnosisWarning) {
+      dispatch(MarkHypertensionDiagnosis(patientUuid), ShowDiabetesDiagnosisWarning)
+    } else {
+      dispatch(MarkHypertensionDiagnosis(patientUuid))
     }
   }
 

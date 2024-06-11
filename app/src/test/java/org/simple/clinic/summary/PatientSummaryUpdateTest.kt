@@ -1781,10 +1781,21 @@ class PatientSummaryUpdateTest {
   fun `when has hypertension is clicked and doesn't have diabetes warning, then mark the hypertension diagnosis`() {
     updateSpec
         .given(defaultModel)
-        .whenEvent(HasHypertensionClicked)
+        .whenEvent(HasHypertensionClicked(continueToDiabetesDiagnosisWarning = false))
         .then(assertThatNext(
             hasNoModel(),
             hasEffects(MarkHypertensionDiagnosis(patientUuid))
+        ))
+  }
+
+  @Test
+  fun `when has hypertension is clicked and also have diabetes warning, then mark the hypertension diagnosis and show diabetes diagnosis warning`() {
+    updateSpec
+        .given(defaultModel)
+        .whenEvent(HasHypertensionClicked(continueToDiabetesDiagnosisWarning = true))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(MarkHypertensionDiagnosis(patientUuid), ShowDiabetesDiagnosisWarning)
         ))
   }
 

@@ -38,4 +38,5 @@ interface PatientSummaryUiActions {
       sheetOpenedFrom: ReassignPatientSheetOpenedFrom
   )
   fun showDiabetesDiagnosisWarning()
+  fun showHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning: Boolean)
 }

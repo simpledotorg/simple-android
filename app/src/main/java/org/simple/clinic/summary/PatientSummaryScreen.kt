@@ -689,6 +689,19 @@ class PatientSummaryScreen :
         .show()
   }
 
+  override fun showHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning: Boolean) {
+    MaterialAlertDialogBuilder(requireContext())
+        .setTitle(R.string.htn_warning_dialog_title)
+        .setMessage(R.string.htn_warning_dialog_desc)
+        .setPositiveButton(R.string.htn_warning_dialog_positive_button) { _, _ ->
+          hotEvents.onNext(HasHypertensionClicked(continueToDiabetesDiagnosisWarning))
+        }
+        .setNegativeButton(R.string.htn_warning_dialog_negative_button) { _, _ ->
+          hotEvents.onNext(HypertensionNotNowClicked(continueToDiabetesDiagnosisWarning))
+        }
+        .show()
+  }
+
   override fun openSelectFacilitySheet() {
     router.pushExpectingResult(ScreenRequest.SelectFacility, FacilitySelectionScreen.Key())
   }

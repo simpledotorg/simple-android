@@ -10,6 +10,10 @@
 - Bump sentry to v7.10.0
 - Bump AGP to v8.4.2
 
+### Features
+
+- Show diagnosis warning if required when prescriptions are modified
+
 ## 2024-06-03-9116
 
 ### Internal

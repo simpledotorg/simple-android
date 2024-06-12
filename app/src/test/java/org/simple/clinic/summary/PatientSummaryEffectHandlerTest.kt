@@ -716,4 +716,38 @@ class PatientSummaryEffectHandlerTest {
     verify(uiActions).showDiabetesDiagnosisWarning()
     verifyNoMoreInteractions(uiActions)
   }
+
+  @Test
+  fun `when mark htn diagnosis effect is received, then update the htn diagnosis status`() {
+    // given
+    val patientUuid = UUID.fromString("f17655ec-3f67-4946-895a-fce42b5de71d")
+    val medicalHistory = TestData.medicalHistory(
+        uuid = UUID.fromString("f921c665-0f96-436b-bfdc-f3562abe43a5"),
+        diagnosedWithHypertension = No
+    )
+
+    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(
+        patientUuid = patientUuid,
+        defaultHistoryUuid = uuidGenerator.v4()
+    )) doReturn medicalHistory
+
+    // when
+    testCase.dispatch(MarkHypertensionDiagnosis(patientUuid))
+
+    // then
+    val updatedMedicalHistory = medicalHistory.copy(diagnosedWithHypertension = Yes)
+    verify(medicalHistoryRepository).save(updatedMedicalHistory, Instant.now(clock))
+  }
+
+  @Test
+  fun `when show htn diagnosis warning view effect is received, then show the warning dialog`() {
+    // when
+    testCase.dispatch(ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = false))
+
+    // then
+    testCase.assertNoOutgoingEvents()
+
+    verify(uiActions).showHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = false)
+    verifyNoMoreInteractions(uiActions)
+  }
 }

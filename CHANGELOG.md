@@ -10,6 +10,7 @@
 - Bump sentry to v7.10.0
 - Bump AGP to v8.4.2
 - Bump AndroidX Camera View to v1.3.4
+- Bump AndroidX Camera to v1.3.4
 
 ### Features
 

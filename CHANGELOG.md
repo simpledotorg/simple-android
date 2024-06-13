@@ -11,6 +11,7 @@
 - Bump AGP to v8.4.2
 - Bump AndroidX Camera View to v1.3.4
 - Bump AndroidX Camera to v1.3.4
+- Bump AndroidX Fragment KTX to v1.8.0
 
 ### Features
 

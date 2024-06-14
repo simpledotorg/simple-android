@@ -14,6 +14,7 @@
 - Bump AndroidX Fragment KTX to v1.8.0
 - Listen to observable medical history field in medical history summary view
 - Fix diagnosis warning dialog showing multiple times on save/back click in summary screen
+- Bump lint to v31.5.0
 
 ### Features
 

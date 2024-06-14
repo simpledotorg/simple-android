@@ -15,6 +15,7 @@
 - Listen to observable medical history field in medical history summary view
 - Fix diagnosis warning dialog showing multiple times on save/back click in summary screen
 - Bump lint to v31.5.0
+- Bump eclipse jgit to v6.10.0.202406032230-r
 
 ### Features
 
@@ -97,7 +98,7 @@
 - Bump SoLoader to v0.11.0
 - Bump Gradle to v8.7
 - Bump Jackson Core to v2.17.0
-- Add `isPatientEligibleForReassignment` to `Patient` model 
+- Add `isPatientEligibleForReassignment` to `Patient` model
 - Add function in `PatientRepository` to check if patient is eligible for reassignment
 - Bump eclipse jgit to v6.9.0.202403050737-r
 - Update GH Actions `checkout` to v4

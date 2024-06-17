@@ -8,7 +8,7 @@
 - Bump Google Service to v4.4.2
 - Bump Sentry Gradle plugin to v4.7.1
 - Bump sentry to v7.10.0
-- Bump AGP to v8.4.2
+- Bump AGP to v8.5.0
 - Bump AndroidX Camera View to v1.3.4
 - Bump AndroidX Camera to v1.3.4
 - Bump AndroidX Fragment KTX to v1.8.0

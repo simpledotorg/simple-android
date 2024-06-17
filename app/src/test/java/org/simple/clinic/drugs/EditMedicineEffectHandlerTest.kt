@@ -17,8 +17,6 @@ import org.simple.clinic.drugs.search.DrugFrequency.QDS
 import org.simple.clinic.drugs.search.DrugFrequency.TDS
 import org.simple.clinic.drugs.selection.EditMedicinesUiActions
 import org.simple.clinic.drugs.selection.custom.drugfrequency.country.DrugFrequencyLabel
-import org.simple.clinic.medicalhistory.Answer
-import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.SyncStatus
@@ -37,7 +35,6 @@ class EditMedicineEffectHandlerTest {
   private val facility = TestData.facility(uuid = UUID.fromString("94db5d90-d483-4755-892a-97fde5a870fe"))
   private val uuidGenerator = mock<UuidGenerator>()
   private val appointmentRepository = mock<AppointmentRepository>()
-  private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
 
   private val drugFrequencyToLabelMap = mapOf(
       null to DrugFrequencyLabel(label = "None"),
@@ -56,7 +53,6 @@ class EditMedicineEffectHandlerTest {
       facility = Lazy { facility },
       uuidGenerator = uuidGenerator,
       appointmentsRepository = appointmentRepository,
-      medicalHistoryRepository = medicalHistoryRepository,
       drugFrequencyToLabelMap = drugFrequencyToLabelMap,
       viewEffectsConsumer = viewEffectsConsumer
   )
@@ -136,28 +132,5 @@ class EditMedicineEffectHandlerTest {
     // then
     testCase.assertOutgoingEvents(DrugFrequencyChoiceItemsLoaded(drugFrequencyToLabelMap))
     verifyNoInteractions(uiActions)
-  }
-
-  @Test
-  fun `when load data on exiting effect is received, then load data`() {
-    // given
-    val patientUuid = UUID.fromString("16288d04-8b87-40bb-b5b4-bb77b8c47040")
-    val medicalHistory = TestData.medicalHistory(
-        uuid = UUID.fromString("95b5a878-4bfa-43ce-8908-08d2ab28d71c"),
-        patientUuid = patientUuid,
-        diagnosedWithHypertension = Answer.No,
-        hasDiabetes = Answer.Yes
-    )
-
-    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(
-        patientUuid = patientUuid,
-        defaultHistoryUuid = uuidGenerator.v4()
-    )) doReturn medicalHistory
-
-    // when
-    testCase.dispatch(LoadDataOnExiting(patientUuid))
-
-    // then
-    testCase.assertOutgoingEvents(DataOnExitLoaded(medicalHistory))
   }
 }

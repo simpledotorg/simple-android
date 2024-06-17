@@ -16,7 +16,6 @@ class EditMedicinesViewEffectHandler(
       )
       is ShowUpdateCustomPrescriptionSheet -> uiActions.showUpdateCustomPrescriptionSheet(viewEffect.prescribedDrug)
       GoBackToPatientSummary -> uiActions.goBackToPatientSummary()
-      is GoBackToPatientSummaryWithWarningResult -> uiActions.goBackToPatientSummary(viewEffect.diagnosisWarningResult)
     }
   }
 }

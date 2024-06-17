@@ -13,20 +13,12 @@ data class EditMedicinesModel(
     val prescribedDrugs: List<PrescribedDrug>?,
     val protocolDrugs: List<ProtocolDrugAndDosages>?,
     val editMedicineButtonState: EditMedicineButtonState?,
-    val medicineFrequencyToLabelMap: Map<MedicineFrequency?, DrugFrequencyLabel>?,
-    val diagnosisWarningPrescriptions: DiagnosisWarningPrescriptions,
+    val medicineFrequencyToLabelMap: Map<MedicineFrequency?, DrugFrequencyLabel>?
 ) : Parcelable {
 
   companion object {
-    fun create(patientUuid: UUID, diagnosisWarningPrescriptions: DiagnosisWarningPrescriptions): EditMedicinesModel {
-      return EditMedicinesModel(
-          patientUuid = patientUuid,
-          prescribedDrugs = null,
-          protocolDrugs = null,
-          editMedicineButtonState = null,
-          medicineFrequencyToLabelMap = null,
-          diagnosisWarningPrescriptions = diagnosisWarningPrescriptions
-      )
+    fun create(patientUuid: UUID): EditMedicinesModel {
+      return EditMedicinesModel(patientUuid, null, null, null, null)
     }
   }
 

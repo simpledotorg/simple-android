@@ -26,9 +26,7 @@ import org.simple.clinic.databinding.ListPrescribeddrugsProtocolDrugBinding
 import org.simple.clinic.databinding.ScreenPatientPrescribedDrugsEntryBinding
 import org.simple.clinic.di.injector
 import org.simple.clinic.drugs.AddNewPrescriptionClicked
-import org.simple.clinic.drugs.BackClicked
 import org.simple.clinic.drugs.CustomPrescriptionClicked
-import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.EditMedicinesEffect
 import org.simple.clinic.drugs.EditMedicinesEffectHandler
 import org.simple.clinic.drugs.EditMedicinesEvent
@@ -47,12 +45,8 @@ import org.simple.clinic.drugs.selection.custom.CustomDrugEntrySheet
 import org.simple.clinic.drugs.selection.custom.OpenAs
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
 import org.simple.clinic.feature.Features
-import org.simple.clinic.mobius.DeferredEventSource
-import org.simple.clinic.navigation.v2.HandlesBack
 import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.Succeeded
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
-import org.simple.clinic.summary.DiagnosisWarningResult
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unsafeLazy
@@ -69,7 +63,7 @@ class EditMedicinesScreen :
         EditMedicinesModel,
         EditMedicinesEvent,
         EditMedicinesEffect,
-        EditMedicinesViewEffect>(), EditMedicinesUi, EditMedicinesUiActions, HandlesBack {
+        EditMedicinesViewEffect>(), EditMedicinesUi, EditMedicinesUiActions {
 
   @Inject
   lateinit var router: Router
@@ -88,9 +82,6 @@ class EditMedicinesScreen :
 
   @Inject
   lateinit var features: Features
-
-  @Inject
-  lateinit var diagnosisWarningPrescriptions: DiagnosisWarningPrescriptions
 
   private val toolbar
     get() = binding.prescribeddrugsToolbar
@@ -130,12 +121,7 @@ class EditMedicinesScreen :
     screenKey.patientUuid
   }
 
-  private val additionalEvents = DeferredEventSource<EditMedicinesEvent>()
-
-  override fun defaultModel() = EditMedicinesModel.create(
-      patientUuid = patientUuid,
-      diagnosisWarningPrescriptions = diagnosisWarningPrescriptions
-  )
+  override fun defaultModel() = EditMedicinesModel.create(patientUuid = patientUuid)
 
   override fun bindView(layoutInflater: LayoutInflater, container: ViewGroup?) =
       ScreenPatientPrescribedDrugsEntryBinding.inflate(layoutInflater, container, false)
@@ -152,8 +138,6 @@ class EditMedicinesScreen :
       .compose(ReportAnalyticsEvents())
       .cast<EditMedicinesEvent>()
 
-  override fun additionalEventSources() = listOf(additionalEvents)
-
   override fun createUpdate() = EditMedicinesUpdate(LocalDate.now(userClock), userClock.zone)
 
   override fun createInit() = EditMedicinesInit()
@@ -169,7 +153,7 @@ class EditMedicinesScreen :
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    toolbar.setNavigationOnClickListener { additionalEvents.notify(BackClicked) }
+    toolbar.setNavigationOnClickListener { router.pop() }
     recyclerView.setHasFixedSize(false)
     recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -179,11 +163,6 @@ class EditMedicinesScreen :
     val fadeAnimator = DefaultItemAnimator()
     fadeAnimator.supportsChangeAnimations = false
     recyclerView.itemAnimator = fadeAnimator
-  }
-
-  override fun onBackPressed(): Boolean {
-    additionalEvents.notify(BackClicked)
-    return true
   }
 
   private fun doneClicks() = doneButton.clicks().map { PrescribedDrugsDoneClicked }
@@ -229,10 +208,6 @@ class EditMedicinesScreen :
 
   override fun goBackToPatientSummary() {
     router.pop()
-  }
-
-  override fun goBackToPatientSummary(diagnosisWarningResult: DiagnosisWarningResult) {
-    router.popWithResult(Succeeded(diagnosisWarningResult))
   }
 
   override fun showDosageSelectionSheet(

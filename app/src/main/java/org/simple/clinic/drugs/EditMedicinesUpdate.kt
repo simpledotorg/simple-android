@@ -4,11 +4,8 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Update
 import org.simple.clinic.drugs.EditMedicineButtonState.REFILL_MEDICINE
 import org.simple.clinic.drugs.EditMedicineButtonState.SAVE_MEDICINE
-import org.simple.clinic.medicalhistory.Answer
-import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.mobius.dispatch
 import org.simple.clinic.mobius.next
-import org.simple.clinic.summary.DiagnosisWarningResult
 import org.simple.clinic.teleconsultlog.medicinefrequency.MedicineFrequency
 import org.simple.clinic.util.toLocalDateAtZone
 import java.time.LocalDate
@@ -27,47 +24,12 @@ class EditMedicinesUpdate(
       AddNewPrescriptionClicked -> dispatch(ShowNewPrescriptionEntrySheet(model.patientUuid))
       is ProtocolDrugClicked -> dispatch(OpenDosagePickerSheet(event.drugName, model.patientUuid, event.prescription?.uuid))
       is CustomPrescriptionClicked -> dispatch(ShowUpdateCustomPrescriptionSheet(event.prescribedDrug))
-      PrescribedDrugsDoneClicked -> dispatch(LoadDataOnExiting(model.patientUuid))
+      PrescribedDrugsDoneClicked -> dispatch(GoBackToPatientSummary)
       PresribedDrugsRefillClicked -> dispatch(RefillMedicines(model.patientUuid))
       is DrugsListFetched -> drugsListAndButtonStateFetched(event, model)
-      PrescribedMedicinesRefilled -> dispatch(LoadDataOnExiting(model.patientUuid))
+      PrescribedMedicinesRefilled -> dispatch(GoBackToPatientSummary)
       is DrugFrequencyChoiceItemsLoaded -> drugFrequencyChoiceItemsLoaded(model, event)
-      is DataOnExitLoaded -> dataOnExitLoaded(
-          event.medicalHistory,
-          model.diagnosisWarningPrescriptions,
-          model.prescribedDrugs.orEmpty()
-      )
-      BackClicked -> dispatch(LoadDataOnExiting(model.patientUuid))
     }
-  }
-
-  private fun dataOnExitLoaded(
-      medicalHistory: MedicalHistory,
-      diagnosisWarningPrescriptions: DiagnosisWarningPrescriptions,
-      prescribedDrugs: List<PrescribedDrug>,
-  ): Next<EditMedicinesModel, EditMedicinesEffect> {
-    val canShowDiabetesDiagnosisWarning = medicalHistory.diagnosedWithDiabetes != Answer.Yes &&
-        prescribedDrugs.any { prescription -> diagnosisWarningPrescriptions.diabetesPrescriptions.contains(prescription.name.lowercase()) }
-    val canShowHTNDiagnosisWarning = medicalHistory.diagnosedWithHypertension != Answer.Yes &&
-        prescribedDrugs.any { prescription -> diagnosisWarningPrescriptions.htnPrescriptions.contains(prescription.name.lowercase()) }
-
-    val effect = when {
-      canShowHTNDiagnosisWarning && canShowDiabetesDiagnosisWarning -> {
-        GoBackToPatientSummaryWithWarningResult(DiagnosisWarningResult.BothDiagnosisWarning)
-      }
-
-      canShowHTNDiagnosisWarning -> {
-        GoBackToPatientSummaryWithWarningResult(DiagnosisWarningResult.HypertensionWarning)
-      }
-
-      canShowDiabetesDiagnosisWarning -> {
-        GoBackToPatientSummaryWithWarningResult(DiagnosisWarningResult.DiabetesWarning)
-      }
-
-      else -> GoBackToPatientSummary
-    }
-
-    return dispatch(effect)
   }
 
   private fun drugFrequencyChoiceItemsLoaded(

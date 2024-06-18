@@ -19,6 +19,7 @@ import org.junit.runner.RunWith
 import org.simple.sharedTestCode.TestData
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.Appointment.Status.Cancelled
@@ -75,6 +76,10 @@ class PatientSummaryScreenLogicTest {
       modelUpdateCallback = { /* no-op */ },
       userClock = TestUserClock(LocalDate.parse("2018-01-01")),
       cdssOverdueLimit = 2
+  )
+  private val diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions(
+      htnPrescriptions = listOf("amlodipine"),
+      diabetesPrescriptions = listOf("metformin")
   )
 
   private lateinit var testFixture: MobiusTestFixture<PatientSummaryModel, PatientSummaryEvent, PatientSummaryEffect>
@@ -203,6 +208,7 @@ class PatientSummaryScreenLogicTest {
         teleconsultationFacilityRepository = mock(),
         prescriptionRepository = mock(),
         cdssPilotFacilities = { emptyList() },
+        diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
         viewEffectsConsumer = viewEffectHandler::handle
     )
 

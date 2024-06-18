@@ -12,6 +12,7 @@ import io.reactivex.Scheduler
 import org.simple.clinic.appconfig.Country
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
@@ -31,11 +32,11 @@ import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toNullable
 import org.simple.clinic.uuid.UuidGenerator
-import java.time.Clock
 import java.time.Instant
 import java.util.Optional
 import java.util.UUID
 import java.util.function.Function
+import javax.inject.Provider
 import org.simple.clinic.medicalhistory.Answer as MedicalhistoryAnswer
 
 class PatientSummaryEffectHandler @AssistedInject constructor(
@@ -56,6 +57,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
     private val teleconsultationFacilityRepository: TeleconsultationFacilityRepository,
     private val prescriptionRepository: PrescriptionRepository,
     private val cdssPilotFacilities: Lazy<List<UUID>>,
+    private val diagnosisWarningPrescriptions: Provider<DiagnosisWarningPrescriptions>,
     @Assisted private val viewEffectsConsumer: Consumer<PatientSummaryViewEffect>
 ) {
 
@@ -306,6 +308,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 patientUuid = patientUuid,
                 timestamp = loadDataForBackClick.screenCreatedTimestamp
             )
+            val prescribedDrugs = prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)
 
             DataForBackClickLoaded(
                 hasPatientMeasurementDataChangedSinceScreenCreated = hasPatientMeasurementDataChanged,
@@ -313,7 +316,9 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 countOfRecordedBloodPressures = countOfRecordedBloodPressures,
                 countOfRecordedBloodSugars = countOfRecordedBloodSugars,
                 medicalHistory = medicalHistory,
-                canShowPatientReassignmentWarning = loadDataForBackClick.canShowPatientReassignmentWarning
+                canShowPatientReassignmentWarning = loadDataForBackClick.canShowPatientReassignmentWarning,
+                prescribedDrugs = prescribedDrugs,
+                diagnosisWarningPrescriptions = diagnosisWarningPrescriptions.get()
             )
           }
     }
@@ -341,6 +346,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 patientUuid = patientUuid,
                 timestamp = loadDataForDoneClick.screenCreatedTimestamp
             )
+            val prescribedDrugs = prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)
 
             DataForDoneClickLoaded(
                 hasPatientMeasurementDataChangedSinceScreenCreated = hasPatientMeasurementDataChanged,
@@ -348,7 +354,9 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 countOfRecordedBloodPressures = countOfRecordedBloodPressures,
                 countOfRecordedBloodSugars = countOfRecordedBloodSugars,
                 medicalHistory = medicalHistory,
-                canShowPatientReassignmentWarning = loadDataForDoneClick.canShowPatientReassignmentWarning
+                canShowPatientReassignmentWarning = loadDataForDoneClick.canShowPatientReassignmentWarning,
+                prescribedDrugs = prescribedDrugs,
+                diagnosisWarningPrescriptions = diagnosisWarningPrescriptions.get()
             )
           }
     }

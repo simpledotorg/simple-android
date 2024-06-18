@@ -1,5 +1,7 @@
 package org.simple.clinic.summary
 
+import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
+import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
@@ -59,7 +61,9 @@ data class DataForBackClickLoaded(
     val countOfRecordedBloodPressures: Int,
     val countOfRecordedBloodSugars: Int,
     val medicalHistory: MedicalHistory,
-    val canShowPatientReassignmentWarning: Boolean
+    val canShowPatientReassignmentWarning: Boolean,
+    val prescribedDrugs: List<PrescribedDrug>,
+    val diagnosisWarningPrescriptions: DiagnosisWarningPrescriptions
 ) : PatientSummaryEvent()
 
 data class DataForDoneClickLoaded(
@@ -68,7 +72,9 @@ data class DataForDoneClickLoaded(
     val countOfRecordedBloodPressures: Int,
     val countOfRecordedBloodSugars: Int,
     val medicalHistory: MedicalHistory,
-    val canShowPatientReassignmentWarning: Boolean
+    val canShowPatientReassignmentWarning: Boolean,
+    val prescribedDrugs: List<PrescribedDrug>,
+    val diagnosisWarningPrescriptions: DiagnosisWarningPrescriptions,
 ) : PatientSummaryEvent()
 
 data class SyncTriggered(val sheetOpenedFrom: AppointmentSheetOpenedFrom) : PatientSummaryEvent()
@@ -127,8 +133,6 @@ data class PatientReassignmentWarningClosed(
 ) : PatientSummaryEvent()
 
 data object HasDiabetesClicked : PatientSummaryEvent()
-
-data class DiagnosisWarningResultReceived(val diagnosisWarningResult: DiagnosisWarningResult) : PatientSummaryEvent()
 
 data class HasHypertensionClicked(val continueToDiabetesDiagnosisWarning: Boolean) : PatientSummaryEvent()
 

@@ -13,11 +13,11 @@ import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.simple.clinic.bloodsugar.BloodSugarRepository
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Yes
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.Appointment.Status
@@ -64,6 +64,10 @@ class PatientSummaryEffectHandlerTest {
   private val uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid)
 
   private val clock = TestUtcClock()
+  private val diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions(
+      htnPrescriptions = listOf("amlodipine"),
+      diabetesPrescriptions = listOf("metformin")
+  )
   private val effectHandler = PatientSummaryEffectHandler(
       clock = clock,
       schedulersProvider = TrampolineSchedulersProvider(),
@@ -82,6 +86,7 @@ class PatientSummaryEffectHandlerTest {
       teleconsultationFacilityRepository = teleconsultFacilityRepository,
       prescriptionRepository = prescriptionRepository,
       cdssPilotFacilities = { emptyList() },
+      diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
       viewEffectsConsumer = viewEffectHandler::handle
   )
   private val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -123,7 +128,8 @@ class PatientSummaryEffectHandlerTest {
         teleconsultationFacilityRepository = teleconsultFacilityRepository,
         prescriptionRepository = prescriptionRepository,
         cdssPilotFacilities = { emptyList() },
-        viewEffectsConsumer = viewEffectHandler::handle
+        viewEffectsConsumer = viewEffectHandler::handle,
+        diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
     val registeredFacilityUuid = UUID.fromString("1b359ec9-02e2-4f50-bebd-6001f96df57f")
@@ -181,6 +187,7 @@ class PatientSummaryEffectHandlerTest {
         teleconsultationFacilityRepository = teleconsultFacilityRepository,
         prescriptionRepository = prescriptionRepository,
         cdssPilotFacilities = { emptyList() },
+        diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
         viewEffectsConsumer = viewEffectHandler::handle
     )
     val testCase = EffectHandlerTestCase(effectHandler.build())
@@ -246,12 +253,19 @@ class PatientSummaryEffectHandlerTest {
         uuid = UUID.fromString("47a70ee3-0d33-4404-9668-59af72390bfd"),
         patientUuid = patientUuid
     )
+    val prescribedDrugs = listOf(
+        TestData.prescription(
+            uuid = UUID.fromString("48e8750b-0aca-4da9-81e0-4fb24b3b18f8"),
+            name = "Amlodipine"
+        )
+    )
 
     whenever(patientRepository.hasPatientMeasurementDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
     whenever(appointmentRepository.hasAppointmentForPatientChangedSince(patientUuid, screenCreatedTimestamp)) doReturn false
     whenever(bloodPressureRepository.bloodPressureCountImmediate(patientUuid)) doReturn 3
     whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)) doReturn 2
     whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
+    whenever(prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)) doReturn prescribedDrugs
 
     // when
     testCase.dispatch(LoadDataForBackClick(patientUuid, screenCreatedTimestamp, false))
@@ -265,6 +279,8 @@ class PatientSummaryEffectHandlerTest {
             countOfRecordedBloodSugars = 2,
             medicalHistory = medicalHistory,
             canShowPatientReassignmentWarning = false,
+            prescribedDrugs = prescribedDrugs,
+            diagnosisWarningPrescriptions = diagnosisWarningPrescriptions
         )
     )
     verifyNoInteractions(uiActions)
@@ -279,12 +295,19 @@ class PatientSummaryEffectHandlerTest {
         diagnosedWithHypertension = Yes,
         hasDiabetes = No
     )
+    val prescribedDrugs = listOf(
+        TestData.prescription(
+            uuid = UUID.fromString("48e8750b-0aca-4da9-81e0-4fb24b3b18f8"),
+            name = "Amlodipine"
+        )
+    )
 
     whenever(patientRepository.hasPatientMeasurementDataChangedSince(patientUuid, Instant.parse("2018-01-01T00:00:00Z"))) doReturn true
     whenever(appointmentRepository.hasAppointmentForPatientChangedSince(patientUuid, Instant.parse("2018-01-01T00:00:00Z"))) doReturn false
     whenever(bloodPressureRepository.bloodPressureCountImmediate(patientUuid)) doReturn 2
     whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)) doReturn 3
     whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
+    whenever(prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)) doReturn prescribedDrugs
 
     // when
     testCase.dispatch(LoadDataForDoneClick(
@@ -301,7 +324,9 @@ class PatientSummaryEffectHandlerTest {
             countOfRecordedBloodPressures = 2,
             countOfRecordedBloodSugars = 3,
             medicalHistory = medicalHistory,
-            canShowPatientReassignmentWarning = true
+            canShowPatientReassignmentWarning = true,
+            prescribedDrugs = prescribedDrugs,
+            diagnosisWarningPrescriptions = diagnosisWarningPrescriptions
         )
     )
     verifyNoInteractions(uiActions)
@@ -590,6 +615,7 @@ class PatientSummaryEffectHandlerTest {
         teleconsultationFacilityRepository = teleconsultFacilityRepository,
         prescriptionRepository = prescriptionRepository,
         cdssPilotFacilities = { cdssPilotFacilities },
+        diagnosisWarningPrescriptions = { diagnosisWarningPrescriptions },
         viewEffectsConsumer = viewEffectHandler::handle
     )
     val testCase = EffectHandlerTestCase(effectHandler = effectHandler.build())

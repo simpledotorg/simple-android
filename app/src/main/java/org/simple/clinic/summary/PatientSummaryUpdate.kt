@@ -385,7 +385,7 @@ class PatientSummaryUpdate(
 
     return when {
       shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
-      canShowHTNDiagnosisWarning -> dispatch(ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = false))
+      canShowHTNDiagnosisWarning -> dispatch(ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = canShowDiabetesDiagnosisWarning))
       canShowDiabetesDiagnosisWarning -> dispatch(ShowDiabetesDiagnosisWarning)
       measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))
       isPatientEligibleForReassignment -> dispatch(ShowReassignPatientWarningSheet(model.patientUuid, model.currentFacility!!, ReassignPatientSheetOpenedFrom.BACK_CLICK))

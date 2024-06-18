@@ -1,5 +1,7 @@
 package org.simple.clinic.summary
 
+import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
+import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
@@ -68,7 +70,9 @@ data class DataForDoneClickLoaded(
     val countOfRecordedBloodPressures: Int,
     val countOfRecordedBloodSugars: Int,
     val medicalHistory: MedicalHistory,
-    val canShowPatientReassignmentWarning: Boolean
+    val canShowPatientReassignmentWarning: Boolean,
+    val prescribedDrugs: List<PrescribedDrug>,
+    val diagnosisWarningPrescriptions: DiagnosisWarningPrescriptions,
 ) : PatientSummaryEvent()
 
 data class SyncTriggered(val sheetOpenedFrom: AppointmentSheetOpenedFrom) : PatientSummaryEvent()

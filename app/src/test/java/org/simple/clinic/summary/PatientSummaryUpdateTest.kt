@@ -7,6 +7,7 @@ import com.spotify.mobius.test.NextMatchers.hasNoModel
 import com.spotify.mobius.test.UpdateSpec
 import com.spotify.mobius.test.UpdateSpec.assertThatNext
 import org.junit.Test
+import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.facility.FacilityConfig
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Unanswered
@@ -352,7 +353,9 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = No
             ),
-            canShowPatientReassignmentWarning = false
+            canShowPatientReassignmentWarning = false,
+            prescribedDrugs = emptyList(),
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -377,7 +380,9 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Unanswered,
                 hasDiabetes = Unanswered
             ),
-            canShowPatientReassignmentWarning = false
+            canShowPatientReassignmentWarning = false,
+            prescribedDrugs = emptyList(),
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -402,7 +407,9 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Unanswered,
                 hasDiabetes = Unanswered
             ),
-            canShowPatientReassignmentWarning = false
+            canShowPatientReassignmentWarning = false,
+            prescribedDrugs = emptyList(),
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -428,7 +435,9 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = No
             ),
-            canShowPatientReassignmentWarning = false
+            canShowPatientReassignmentWarning = false,
+            prescribedDrugs = emptyList(),
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -817,7 +826,9 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = Yes
             ),
-            canShowPatientReassignmentWarning = false
+            canShowPatientReassignmentWarning = false,
+            prescribedDrugs = emptyList(),
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
         ))
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
@@ -842,7 +853,9 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = No
             ),
-            canShowPatientReassignmentWarning = false
+            canShowPatientReassignmentWarning = false,
+            prescribedDrugs = emptyList(),
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
         ))
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
@@ -867,7 +880,9 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = No,
                 hasDiabetes = Yes
             ),
-            canShowPatientReassignmentWarning = false
+            canShowPatientReassignmentWarning = false,
+            prescribedDrugs = emptyList(),
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
         ))
         .then(assertThatNext(
             hasModel(model.shownMeasurementsWarningDialog()),
@@ -892,7 +907,9 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = No,
                 hasDiabetes = Yes
             ),
-            canShowPatientReassignmentWarning = false
+            canShowPatientReassignmentWarning = false,
+            prescribedDrugs = emptyList(),
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1230,7 +1247,9 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = No
             ),
-            canShowPatientReassignmentWarning = false
+            canShowPatientReassignmentWarning = false,
+            prescribedDrugs = emptyList(),
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1255,7 +1274,9 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = No
             ),
-            canShowPatientReassignmentWarning = false
+            canShowPatientReassignmentWarning = false,
+            prescribedDrugs = emptyList(),
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1545,7 +1566,9 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = Yes
             ),
-            canShowPatientReassignmentWarning = true
+            canShowPatientReassignmentWarning = true,
+            prescribedDrugs = emptyList(),
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
         ))
         .then(assertThatNext(
             hasNoModel(),
@@ -1574,7 +1597,9 @@ class PatientSummaryUpdateTest {
                 diagnosedWithHypertension = Yes,
                 hasDiabetes = Yes
             ),
-            canShowPatientReassignmentWarning = true
+            canShowPatientReassignmentWarning = true,
+            prescribedDrugs = emptyList(),
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions.empty()
         ))
         .then(assertThatNext(
             hasNoModel(),

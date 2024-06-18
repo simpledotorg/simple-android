@@ -2,9 +2,11 @@ package org.simple.clinic.summary
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import com.squareup.moshi.adapter
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
 import org.simple.clinic.platform.crash.CrashReporter
 import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.summary.bloodpressures.BloodPressureSummaryViewConfig
@@ -55,6 +57,20 @@ class PatientSummaryModule {
     } catch (e: Exception) {
       CrashReporter.report(e)
       emptyList()
+    }
+  }
+
+  @Provides
+  @OptIn(ExperimentalStdlibApi::class)
+  fun diagnosisWarningPrescriptions(moshi: Moshi, configReader: ConfigReader): DiagnosisWarningPrescriptions {
+    val adapter = moshi.adapter<DiagnosisWarningPrescriptions>()
+    val json = configReader.string("diagnosis_warning_prescriptions_v0", "{}")
+
+    return try {
+      adapter.fromJson(json)!!
+    } catch (e: Throwable) {
+      CrashReporter.report(e)
+      DiagnosisWarningPrescriptions.empty()
     }
   }
 }

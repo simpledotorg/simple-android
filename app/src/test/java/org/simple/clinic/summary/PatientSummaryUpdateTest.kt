@@ -2042,6 +2042,41 @@ class PatientSummaryUpdateTest {
         ))
   }
 
+  @Test
+  fun `when data for back click is loaded and can show diabetes diagnosis warning dialog, then show diabetes diagnosis warning dialog`() {
+    val model = defaultModel.currentFacilityLoaded(facilityWithDiabetesManagementEnabled)
+
+    updateSpec
+        .given(model)
+        .whenEvent(DataForBackClickLoaded(
+            hasPatientMeasurementDataChangedSinceScreenCreated = true,
+            hasAppointmentChangeSinceScreenCreated = false,
+            countOfRecordedBloodPressures = 1,
+            countOfRecordedBloodSugars = 1,
+            medicalHistory = TestData.medicalHistory(
+                uuid = UUID.fromString("94056dc9-85e9-472e-8674-1657bbab56bb"),
+                patientUuid = patientUuid,
+                diagnosedWithHypertension = Yes,
+                hasDiabetes = No
+            ),
+            canShowPatientReassignmentWarning = true,
+            prescribedDrugs = listOf(
+                TestData.prescription(
+                    uuid = UUID.fromString("d688f42f-17fd-4792-8e04-95681edd481d"),
+                    name = "Metformin"
+                )
+            ),
+            diagnosisWarningPrescriptions = DiagnosisWarningPrescriptions(
+                htnPrescriptions = emptyList(),
+                diabetesPrescriptions = listOf("metformin")
+            )
+        ))
+        .then(assertThatNext(
+            hasNoModel(),
+            hasEffects(ShowDiabetesDiagnosisWarning)
+        ))
+  }
+
   private fun PatientSummaryModel.forExistingPatient(): PatientSummaryModel {
     return copy(openIntention = ViewExistingPatient)
   }

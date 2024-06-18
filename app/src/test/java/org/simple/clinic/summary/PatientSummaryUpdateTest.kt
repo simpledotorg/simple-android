@@ -1822,39 +1822,6 @@ class PatientSummaryUpdateTest {
   }
 
   @Test
-  fun `when diagnosis warning result is diabetes warning, show diabetes warning dialog`() {
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(DiagnosisWarningResultReceived(DiagnosisWarningResult.DiabetesWarning))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(ShowDiabetesDiagnosisWarning)
-        ))
-  }
-
-  @Test
-  fun `when diagnosis warning result is htn warning, show htn warning dialog`() {
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(DiagnosisWarningResultReceived(DiagnosisWarningResult.HypertensionWarning))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = false))
-        ))
-  }
-
-  @Test
-  fun `when diagnosis warning result is both warnings, show htn warning dialog with continue to diabetes warning`() {
-    updateSpec
-        .given(defaultModel)
-        .whenEvent(DiagnosisWarningResultReceived(DiagnosisWarningResult.BothDiagnosisWarning))
-        .then(assertThatNext(
-            hasNoModel(),
-            hasEffects(ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = true))
-        ))
-  }
-
-  @Test
   fun `when has hypertension is clicked and doesn't have diabetes warning, then mark the hypertension diagnosis`() {
     updateSpec
         .given(defaultModel)

@@ -90,7 +90,6 @@ class PatientSummaryUpdate(
       is PatientReassignmentStatusLoaded -> patientReassignmentStatusLoaded(model, event)
       is PatientReassignmentWarningClosed -> patientReassignmentWarningClosed(model, event)
       HasDiabetesClicked -> dispatch(MarkDiabetesDiagnosis(model.patientUuid))
-      is DiagnosisWarningResultReceived -> diagnosisWarningResultReceived(event.diagnosisWarningResult)
       is HasHypertensionClicked -> hasHypertensionClicked(event.continueToDiabetesDiagnosisWarning, model.patientUuid)
       is HypertensionNotNowClicked -> hypertensionNotNowClicked(event.continueToDiabetesDiagnosisWarning)
     }
@@ -113,16 +112,6 @@ class PatientSummaryUpdate(
     } else {
       dispatch(MarkHypertensionDiagnosis(patientUuid))
     }
-  }
-
-  private fun diagnosisWarningResultReceived(diagnosisWarningResult: DiagnosisWarningResult): Next<PatientSummaryModel, PatientSummaryEffect> {
-    val effect = when (diagnosisWarningResult) {
-      DiagnosisWarningResult.DiabetesWarning -> ShowDiabetesDiagnosisWarning
-      DiagnosisWarningResult.HypertensionWarning -> ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = false)
-      DiagnosisWarningResult.BothDiagnosisWarning -> ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = true)
-    }
-
-    return dispatch(effect)
   }
 
   private fun patientReassignmentWarningClosed(

@@ -335,10 +335,13 @@ class PatientSummaryUpdate(
     )
     val canShowHTNDiagnosisWarning = medicalHistory.diagnosedWithHypertension != Yes &&
         prescribedDrugs.any { prescription -> diagnosisWarningPrescriptions.htnPrescriptions.contains(prescription.name.lowercase()) }
+    val canShowDiabetesDiagnosisWarning = medicalHistory.diagnosedWithDiabetes != Yes &&
+        prescribedDrugs.any { prescription -> diagnosisWarningPrescriptions.diabetesPrescriptions.contains(prescription.name.lowercase()) }
 
     return when {
       shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
       canShowHTNDiagnosisWarning -> dispatch(ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = false))
+      canShowDiabetesDiagnosisWarning -> dispatch(ShowDiabetesDiagnosisWarning)
       measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))
       isPatientEligibleForReassignment -> dispatch(ShowReassignPatientWarningSheet(model.patientUuid, model.currentFacility!!, ReassignPatientSheetOpenedFrom.DONE_CLICK))
       canShowAppointmentSheet -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, DONE_CLICK, model.currentFacility!!))

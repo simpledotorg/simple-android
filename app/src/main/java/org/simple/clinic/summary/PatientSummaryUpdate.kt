@@ -4,6 +4,8 @@ import com.spotify.mobius.Next
 import com.spotify.mobius.Next.next
 import com.spotify.mobius.Next.noChange
 import com.spotify.mobius.Update
+import org.simple.clinic.drugs.DiagnosisWarningPrescriptions
+import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.mobius.dispatch
@@ -57,7 +59,9 @@ class PatientSummaryUpdate(
           medicalHistory = event.medicalHistory,
           hasPatientMeasurementDataChangedSinceScreenCreated = event.hasPatientMeasurementDataChangedSinceScreenCreated,
           hasAppointmentChangedSinceScreenCreated = event.hasAppointmentChangeSinceScreenCreated,
-          isPatientEligibleForReassignment = event.canShowPatientReassignmentWarning
+          isPatientEligibleForReassignment = event.canShowPatientReassignmentWarning,
+          prescribedDrugs = event.prescribedDrugs,
+          diagnosisWarningPrescriptions = event.diagnosisWarningPrescriptions
       )
 
       is SyncTriggered -> scheduleAppointmentSheetClosed(model, event.sheetOpenedFrom)
@@ -316,6 +320,8 @@ class PatientSummaryUpdate(
       hasPatientMeasurementDataChangedSinceScreenCreated: Boolean,
       hasAppointmentChangedSinceScreenCreated: Boolean,
       isPatientEligibleForReassignment: Boolean,
+      prescribedDrugs: List<PrescribedDrug>,
+      diagnosisWarningPrescriptions: DiagnosisWarningPrescriptions,
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val canShowAppointmentSheet = hasPatientMeasurementDataChangedSinceScreenCreated && !hasAppointmentChangedSinceScreenCreated
     val hasAtLeastOneMeasurementRecorded = countOfRecordedBloodPressures + countOfRecordedBloodSugars > 0
@@ -327,9 +333,12 @@ class PatientSummaryUpdate(
         medicalHistory = medicalHistory,
         hasShownMeasurementsWarningDialog = model.hasShownMeasurementsWarningDialog
     )
+    val canShowHTNDiagnosisWarning = medicalHistory.diagnosedWithHypertension != Yes &&
+        prescribedDrugs.any { prescription -> diagnosisWarningPrescriptions.htnPrescriptions.contains(prescription.name.lowercase()) }
 
     return when {
       shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
+      canShowHTNDiagnosisWarning -> dispatch(ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = false))
       measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))
       isPatientEligibleForReassignment -> dispatch(ShowReassignPatientWarningSheet(model.patientUuid, model.currentFacility!!, ReassignPatientSheetOpenedFrom.DONE_CLICK))
       canShowAppointmentSheet -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, DONE_CLICK, model.currentFacility!!))

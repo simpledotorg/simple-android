@@ -61,7 +61,9 @@ data class DataForBackClickLoaded(
     val countOfRecordedBloodPressures: Int,
     val countOfRecordedBloodSugars: Int,
     val medicalHistory: MedicalHistory,
-    val canShowPatientReassignmentWarning: Boolean
+    val canShowPatientReassignmentWarning: Boolean,
+    val prescribedDrugs: List<PrescribedDrug>,
+    val diagnosisWarningPrescriptions: DiagnosisWarningPrescriptions
 ) : PatientSummaryEvent()
 
 data class DataForDoneClickLoaded(

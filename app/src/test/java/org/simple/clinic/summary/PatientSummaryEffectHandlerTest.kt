@@ -18,7 +18,6 @@ import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Yes
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.mobius.EffectHandlerTestCase
 import org.simple.clinic.overdue.Appointment.Status
@@ -254,12 +253,19 @@ class PatientSummaryEffectHandlerTest {
         uuid = UUID.fromString("47a70ee3-0d33-4404-9668-59af72390bfd"),
         patientUuid = patientUuid
     )
+    val prescribedDrugs = listOf(
+        TestData.prescription(
+            uuid = UUID.fromString("48e8750b-0aca-4da9-81e0-4fb24b3b18f8"),
+            name = "Amlodipine"
+        )
+    )
 
     whenever(patientRepository.hasPatientMeasurementDataChangedSince(patientUuid, screenCreatedTimestamp)) doReturn true
     whenever(appointmentRepository.hasAppointmentForPatientChangedSince(patientUuid, screenCreatedTimestamp)) doReturn false
     whenever(bloodPressureRepository.bloodPressureCountImmediate(patientUuid)) doReturn 3
     whenever(bloodSugarRepository.bloodSugarCountImmediate(patientUuid)) doReturn 2
     whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
+    whenever(prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)) doReturn prescribedDrugs
 
     // when
     testCase.dispatch(LoadDataForBackClick(patientUuid, screenCreatedTimestamp, false))
@@ -273,6 +279,8 @@ class PatientSummaryEffectHandlerTest {
             countOfRecordedBloodSugars = 2,
             medicalHistory = medicalHistory,
             canShowPatientReassignmentWarning = false,
+            prescribedDrugs = prescribedDrugs,
+            diagnosisWarningPrescriptions = diagnosisWarningPrescriptions
         )
     )
     verifyNoInteractions(uiActions)

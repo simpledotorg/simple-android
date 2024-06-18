@@ -32,7 +32,6 @@ import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toNullable
 import org.simple.clinic.uuid.UuidGenerator
-import java.time.Clock
 import java.time.Instant
 import java.util.Optional
 import java.util.UUID
@@ -309,6 +308,7 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 patientUuid = patientUuid,
                 timestamp = loadDataForBackClick.screenCreatedTimestamp
             )
+            val prescribedDrugs = prescriptionRepository.newestPrescriptionsForPatientImmediate(patientUuid)
 
             DataForBackClickLoaded(
                 hasPatientMeasurementDataChangedSinceScreenCreated = hasPatientMeasurementDataChanged,
@@ -316,7 +316,9 @@ class PatientSummaryEffectHandler @AssistedInject constructor(
                 countOfRecordedBloodPressures = countOfRecordedBloodPressures,
                 countOfRecordedBloodSugars = countOfRecordedBloodSugars,
                 medicalHistory = medicalHistory,
-                canShowPatientReassignmentWarning = loadDataForBackClick.canShowPatientReassignmentWarning
+                canShowPatientReassignmentWarning = loadDataForBackClick.canShowPatientReassignmentWarning,
+                prescribedDrugs = prescribedDrugs,
+                diagnosisWarningPrescriptions = diagnosisWarningPrescriptions.get()
             )
           }
     }

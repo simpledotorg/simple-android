@@ -49,7 +49,9 @@ class PatientSummaryUpdate(
           countOfRecordedBloodPressures = event.countOfRecordedBloodPressures,
           countOfRecordedBloodSugars = event.countOfRecordedBloodSugars,
           medicalHistory = event.medicalHistory,
-          isPatientEligibleForReassignment = event.canShowPatientReassignmentWarning
+          isPatientEligibleForReassignment = event.canShowPatientReassignmentWarning,
+          prescribedDrugs = event.prescribedDrugs,
+          diagnosisWarningPrescriptions = event.diagnosisWarningPrescriptions
       )
 
       is DataForDoneClickLoaded -> dataForHandlingDoneClickLoaded(
@@ -357,6 +359,8 @@ class PatientSummaryUpdate(
       countOfRecordedBloodSugars: Int,
       medicalHistory: MedicalHistory,
       isPatientEligibleForReassignment: Boolean,
+      prescribedDrugs: List<PrescribedDrug>,
+      diagnosisWarningPrescriptions: DiagnosisWarningPrescriptions,
   ): Next<PatientSummaryModel, PatientSummaryEffect> {
     val openIntention = model.openIntention
     val canShowAppointmentSheet = hasPatientMeasurementDataChangedSinceScreenCreated && !hasAppointmentChangedSinceScreenCreated
@@ -370,9 +374,12 @@ class PatientSummaryUpdate(
         countOfRecordedBloodPressures = countOfRecordedBloodPressures,
         medicalHistory = medicalHistory,
         hasShownMeasurementsWarningDialog = model.hasShownMeasurementsWarningDialog)
+    val canShowHTNDiagnosisWarning = medicalHistory.diagnosedWithHypertension != Yes &&
+        prescribedDrugs.any { prescription -> diagnosisWarningPrescriptions.htnPrescriptions.contains(prescription.name.lowercase()) }
 
     return when {
       shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
+      canShowHTNDiagnosisWarning -> dispatch(ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = false))
       measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))
       isPatientEligibleForReassignment -> dispatch(ShowReassignPatientWarningSheet(model.patientUuid, model.currentFacility!!, ReassignPatientSheetOpenedFrom.BACK_CLICK))
       canShowAppointmentSheet -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, BACK_CLICK, model.currentFacility!!))

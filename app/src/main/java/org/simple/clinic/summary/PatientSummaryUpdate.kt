@@ -9,6 +9,7 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.mobius.dispatch
+import org.simple.clinic.mobius.next
 import org.simple.clinic.patient.Answer
 import org.simple.clinic.reassignpatient.ReassignPatientSheetClosedFrom
 import org.simple.clinic.reassignpatient.ReassignPatientSheetOpenedFrom
@@ -335,8 +336,8 @@ class PatientSummaryUpdate(
 
     return when {
       shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
-      canShowHTNDiagnosisWarning -> dispatch(ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = canShowDiabetesDiagnosisWarning))
-      canShowDiabetesDiagnosisWarning -> dispatch(ShowDiabetesDiagnosisWarning)
+      !model.hasShownDiagnosisWarningDialog && canShowHTNDiagnosisWarning -> next(model.shownDiagnosisWarningDialog(), ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = canShowDiabetesDiagnosisWarning))
+      !model.hasShownDiagnosisWarningDialog && canShowDiabetesDiagnosisWarning -> next(model.shownDiagnosisWarningDialog(), ShowDiabetesDiagnosisWarning)
       measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))
       isPatientEligibleForReassignment -> dispatch(ShowReassignPatientWarningSheet(model.patientUuid, model.currentFacility!!, ReassignPatientSheetOpenedFrom.DONE_CLICK))
       canShowAppointmentSheet -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, DONE_CLICK, model.currentFacility!!))
@@ -374,8 +375,8 @@ class PatientSummaryUpdate(
 
     return when {
       shouldShowDiagnosisError -> dispatch(ShowDiagnosisError)
-      canShowHTNDiagnosisWarning -> dispatch(ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = canShowDiabetesDiagnosisWarning))
-      canShowDiabetesDiagnosisWarning -> dispatch(ShowDiabetesDiagnosisWarning)
+      !model.hasShownDiagnosisWarningDialog && canShowHTNDiagnosisWarning -> next(model.shownDiagnosisWarningDialog(), ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = canShowDiabetesDiagnosisWarning))
+      !model.hasShownDiagnosisWarningDialog && canShowDiabetesDiagnosisWarning -> next(model.shownDiagnosisWarningDialog(), ShowDiabetesDiagnosisWarning)
       measurementWarningEffect != null -> next(model.shownMeasurementsWarningDialog(), setOf(measurementWarningEffect))
       isPatientEligibleForReassignment -> dispatch(ShowReassignPatientWarningSheet(model.patientUuid, model.currentFacility!!, ReassignPatientSheetOpenedFrom.BACK_CLICK))
       canShowAppointmentSheet -> dispatch(ShowScheduleAppointmentSheet(model.patientUuid, BACK_CLICK, model.currentFacility!!))

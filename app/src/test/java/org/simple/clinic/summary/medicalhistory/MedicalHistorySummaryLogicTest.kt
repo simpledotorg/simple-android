@@ -6,6 +6,7 @@ import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import dagger.Lazy
+import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -29,6 +30,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HasHadAStroke
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnDiabetesTreatment
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IsOnHypertensionTreatment
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.UiEvent
 import org.simple.mobius.migration.MobiusTestFixture
@@ -89,7 +91,7 @@ class MedicalHistorySummaryLogicTest {
   @Test
   fun `patient's medical history should be populated`() {
     // given
-    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
 
     // when
     setupController()
@@ -119,7 +121,7 @@ class MedicalHistorySummaryLogicTest {
     val updatedMedicalHistory = medicalHistory.answered(question, newAnswer)
     val now = Instant.now(clock)
 
-    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
 
     // when
     setupController()
@@ -132,7 +134,7 @@ class MedicalHistorySummaryLogicTest {
   @Test
   fun `when the current facility supports diabetes management, show the diagnosis view and hide the diabetes history question`() {
     // given
-    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
 
     // when
     setupController(facility = facilityWithDiabetesManagementEnabled)
@@ -147,7 +149,7 @@ class MedicalHistorySummaryLogicTest {
   @Test
   fun `when the current facility does not support diabetes management, hide the diagnosis view and show the diabetes history question`() {
     // given
-    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
 
     // when
     setupController()
@@ -164,7 +166,7 @@ class MedicalHistorySummaryLogicTest {
     // given
     val updatedMedicalHistory = medicalHistory.answered(DiagnosedWithHypertension, Yes)
 
-    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
 
     // when
     setupController(facility = facilityWithDiabetesManagementEnabled)
@@ -183,7 +185,7 @@ class MedicalHistorySummaryLogicTest {
     // given
     val updatedMedicalHistory = medicalHistory.answered(DiagnosedWithDiabetes, No)
 
-    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
 
     // when
     setupController(facility = facilityWithDiabetesManagementEnabled)
@@ -202,7 +204,7 @@ class MedicalHistorySummaryLogicTest {
     // given
     val updatedMedicalHistory = medicalHistory.answered(HasHadAKidneyDisease, Yes)
 
-    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
 
     // when
     setupController(facility = facilityWithDiabetesManagementEnabled)
@@ -221,7 +223,7 @@ class MedicalHistorySummaryLogicTest {
     // given
     val updatedMedicalHistory = medicalHistory.answered(HasHadAHeartAttack, No)
 
-    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
 
     // when
     setupController(facility = facilityWithDiabetesManagementEnabled)
@@ -240,7 +242,7 @@ class MedicalHistorySummaryLogicTest {
     // given
     val updatedMedicalHistory = medicalHistory.answered(HasHadAStroke, Yes)
 
-    whenever(medicalHistoryRepository.historyForPatientOrDefaultImmediate(medicalHistoryUuid, patientUuid)) doReturn medicalHistory
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(medicalHistoryUuid, patientUuid)) doReturn Observable.just(medicalHistory)
 
     // when
     setupController(facility = facilityWithDiabetesManagementEnabled)
@@ -272,10 +274,10 @@ class MedicalHistorySummaryLogicTest {
 
   private fun setupController(facility: Facility = facilityWithDiabetesManagementDisabled) {
     val effectHandler = MedicalHistorySummaryEffectHandler(
-        schedulers = TrampolineSchedulersProvider(),
+        schedulers = TestSchedulersProvider.trampoline(),
         medicalHistoryRepository = medicalHistoryRepository,
         clock = clock,
-        currentFacility = Lazy { facility },
+        currentFacility = { facility },
         uuidGenerator = FakeUuidGenerator.fixed(medicalHistoryUuid)
     )
 

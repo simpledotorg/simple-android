@@ -1,39 +1,26 @@
 {
   "project_info": {
-    "project_number": "235314010044",
-    "firebase_url": "https://simple-org.firebaseio.com",
-    "project_id": "simple-org",
-    "storage_bucket": "simple-org.appspot.com"
+    "project_number": "591122937412",
+    "project_id": "simple-qa-e7810",
+    "storage_bucket": "simple-qa-e7810.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:235314010044:android:26e63edde5002dd6",
+        "mobilesdk_app_id": "1:591122937412:android:1ca1165b5676e92b236e11",
         "android_client_info": {
           "package_name": "org.simple.clinic.qa.debug"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "235314010044-5cs4deattnhsdcs4ooljphm0fla9vjvh.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDtpDbqQ-TXRED-gdOhbRbgQIOicyGAiaM"
+          "current_key": "AIzaSyDXuNaHquD_Bb6q5pZQCl_0v0NUdtH8Fgs"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
           "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }

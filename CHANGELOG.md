@@ -17,6 +17,7 @@
 - Bump lint to v31.5.0
 - Bump eclipse jgit to v6.10.0.202406032230-r
 - Update debug Google services JSON file
+- Bump Firebase Analytics to v22.0.2
 
 ### Features
 

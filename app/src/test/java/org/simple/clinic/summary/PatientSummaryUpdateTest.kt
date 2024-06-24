@@ -1895,7 +1895,7 @@ class PatientSummaryUpdateTest {
             )
         ))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(model.shownDiagnosisWarningDialog()),
             hasEffects(ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = false))
         ))
   }
@@ -1930,7 +1930,7 @@ class PatientSummaryUpdateTest {
             )
         ))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(model.shownDiagnosisWarningDialog()),
             hasEffects(ShowDiabetesDiagnosisWarning)
         ))
   }
@@ -1969,7 +1969,7 @@ class PatientSummaryUpdateTest {
             )
         ))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(model.shownDiagnosisWarningDialog()),
             hasEffects(ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = true))
         ))
   }
@@ -2004,7 +2004,7 @@ class PatientSummaryUpdateTest {
             )
         ))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(model.shownDiagnosisWarningDialog()),
             hasEffects(ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = false))
         ))
   }
@@ -2039,7 +2039,7 @@ class PatientSummaryUpdateTest {
             )
         ))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(model.shownDiagnosisWarningDialog()),
             hasEffects(ShowDiabetesDiagnosisWarning)
         ))
   }
@@ -2078,7 +2078,7 @@ class PatientSummaryUpdateTest {
             )
         ))
         .then(assertThatNext(
-            hasNoModel(),
+            hasModel(model.shownDiagnosisWarningDialog()),
             hasEffects(ShowHypertensionDiagnosisWarning(continueToDiabetesDiagnosisWarning = true))
         ))
   }

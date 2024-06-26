@@ -18,6 +18,7 @@
 - Bump eclipse jgit to v6.10.0.202406032230-r
 - Update debug Google services JSON file
 - Bump Firebase Analytics to v22.0.2
+- Migrate from Play Core to Play App Update dependency
 
 ### Features
 

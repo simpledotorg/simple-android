@@ -20,6 +20,7 @@
 - Bump Firebase Analytics to v22.0.2
 - Migrate from Play Core to Play App Update dependency
 - Bump AndroidX test rules to v1.6.0
+- Bump AndroidX JUnit to v1.2.0
 
 ### Features
 

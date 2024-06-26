@@ -21,6 +21,7 @@
 - Migrate from Play Core to Play App Update dependency
 - Bump AndroidX test rules to v1.6.0
 - Bump AndroidX JUnit to v1.2.0
+- Bump androidx-test-runner to v1.6.0
 
 ### Features
 

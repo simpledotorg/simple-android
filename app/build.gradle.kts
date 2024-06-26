@@ -347,7 +347,7 @@ dependencies {
     exclude(module = "commons-logging")
   }
 
-  implementation(libs.play.core)
+  implementation(libs.play.app.update)
   implementation(libs.play.services.auth)
   implementation(libs.play.services.location)
   implementation(libs.play.services.mlkit.barcode)

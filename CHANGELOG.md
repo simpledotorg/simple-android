@@ -4,6 +4,12 @@
 
 ### Internal
 
+- Bump androidx-test-runner to v1.6.0
+
+## 2024-06-27-9140
+
+### Internal
+
 - Bump Gradle to v8.8
 - Bump Google Service to v4.4.2
 - Bump Sentry Gradle plugin to v4.7.1
@@ -21,7 +27,6 @@
 - Migrate from Play Core to Play App Update dependency
 - Bump AndroidX test rules to v1.6.0
 - Bump AndroidX JUnit to v1.2.0
-- Bump androidx-test-runner to v1.6.0
 
 ### Features
 

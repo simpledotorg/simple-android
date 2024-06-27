@@ -4,7 +4,7 @@
 
 ### Internal
 
-- Bump androidx-test-runner to v1.6.0
+- Bump androidx-test-runner to v1.6.1
 
 ## 2024-06-27-9140
 

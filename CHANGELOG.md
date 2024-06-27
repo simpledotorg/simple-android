@@ -5,6 +5,7 @@
 ### Internal
 
 - Bump androidx-test-runner to v1.6.1
+- Bump AndroidX JUnit to v1.2.1
 
 ## 2024-06-27-9140
 

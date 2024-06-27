@@ -81,7 +81,7 @@ androidx-room-paging = { module = "androidx.room:room-paging", version.ref = "an
 
 androidx-test-junit = "androidx.test.ext:junit:1.2.0"
 androidx-test-rules = "androidx.test:rules:1.6.0"
-androidx-test-runner = "androidx.test:runner:1.6.0"
+androidx-test-runner = "androidx.test:runner:1.6.1"
 
 androidx-work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
 androidx-work-rxjava = { module = "androidx.work:work-rxjava2", version.ref = "androidx-work" }

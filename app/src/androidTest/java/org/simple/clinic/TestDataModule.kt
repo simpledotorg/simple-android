@@ -26,7 +26,7 @@ class TestDataModule {
 
   @Provides
   @Named("user_phone_number")
-  fun provideTestUserPhoneNumber(): String = "6664266642"
+  fun provideTestUserPhoneNumber(): String = BuildConfig.QA_PHONE_NUMBER
 
   @Provides
   fun provideTestFacility(

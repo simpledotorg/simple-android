@@ -8,7 +8,7 @@ androidx-paging = "3.2.1"
 androidx-room = "2.6.1"
 androidx-work = "2.9.0"
 androidx-security-crypto = "1.1.0-alpha06"
-androidx-viewmodel = "2.8.2"
+androidx-viewmodel = "2.8.3"
 androidx-lifecycle = "2.8.2"
 
 dagger = "2.51.1"

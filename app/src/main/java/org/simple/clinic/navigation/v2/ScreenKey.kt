@@ -3,7 +3,11 @@ package org.simple.clinic.navigation.v2
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavType
+import kotlinx.serialization.Serializable
+import kotlin.reflect.typeOf
 
+@Serializable
 abstract class ScreenKey : Parcelable {
 
   companion object {
@@ -40,6 +44,10 @@ abstract class ScreenKey : Parcelable {
 
   enum class ScreenType {
     FullScreen,
-    Modal
+    Modal;
+
+    companion object {
+      val typeMap = mapOf(typeOf<ScreenType>() to NavType.EnumType(ScreenType::class.java))
+    }
   }
 }

@@ -7,19 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 import org.simple.clinic.databinding.ScreenSplashBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.onboarding.OnboardingScreen
-import javax.inject.Inject
 
 @SuppressLint("CustomSplashScreen")
 class SplashScreen : Fragment() {
-
-  @Inject
-  lateinit var router: Router
 
   private var binding: ScreenSplashBinding? = null
 
@@ -39,7 +36,9 @@ class SplashScreen : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     nextButton.setOnClickListener {
-      router.clearHistoryAndPush(OnboardingScreen.Key())
+      findNavController().navigate(OnboardingScreen.Key()) {
+        popUpTo<Key> { inclusive = true }
+      }
     }
   }
 
@@ -53,6 +52,7 @@ class SplashScreen : Fragment() {
   }
 
   @Parcelize
+  @Serializable
   data class Key(
       override val analyticsName: String = "Splash Screen"
   ) : ScreenKey() {

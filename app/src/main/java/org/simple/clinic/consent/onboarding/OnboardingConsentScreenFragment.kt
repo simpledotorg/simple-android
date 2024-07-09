@@ -37,6 +37,7 @@ import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 import org.simple.clinic.R
 import org.simple.clinic.common.ui.components.FilledButton
 import org.simple.clinic.common.ui.theme.SimpleTheme
@@ -107,6 +108,7 @@ class OnboardingConsentScreenFragment : Fragment(), UiActions {
   }
 
   @Parcelize
+  @Serializable
   data class Key(
       override val analyticsName: String = "Onboarding Consent Screen"
   ) : ScreenKey() {

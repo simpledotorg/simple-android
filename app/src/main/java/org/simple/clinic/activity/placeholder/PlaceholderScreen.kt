@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 import org.simple.clinic.await.Await
 import org.simple.clinic.await.Checkpoint
 import org.simple.clinic.databinding.ScreenPlaceholderBinding
@@ -56,6 +57,7 @@ class PlaceholderScreen : Fragment() {
     loadingProgressBar.visibility = VISIBLE
   }
 
+  @Serializable
   @Parcelize
   data class Key(
       override val analyticsName: String = "Placeholder Screen"

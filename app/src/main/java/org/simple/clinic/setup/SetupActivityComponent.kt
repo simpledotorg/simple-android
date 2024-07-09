@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import dagger.BindsInstance
 import dagger.Subcomponent
 import org.simple.clinic.consent.onboarding.OnboardingConsentScreenFragment
-import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.onboarding.OnboardingScreen
 import org.simple.clinic.splash.SplashScreen
 
@@ -17,7 +16,6 @@ interface SetupActivityComponent : OnboardingScreen.Injector, SplashScreen.Injec
   interface Factory {
     fun create(
         @BindsInstance activity: AppCompatActivity,
-        @BindsInstance router: Router
     ): SetupActivityComponent
   }
 }

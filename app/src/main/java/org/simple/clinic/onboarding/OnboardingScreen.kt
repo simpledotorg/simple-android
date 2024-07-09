@@ -7,20 +7,20 @@ import android.text.style.TextAppearanceSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.buildSpannedString
 import androidx.core.text.inSpans
+import androidx.navigation.fragment.findNavController
 import com.jakewharton.rxbinding3.view.clicks
 import com.spotify.mobius.functions.Consumer
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.cast
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 import org.simple.clinic.R
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.consent.onboarding.OnboardingConsentScreenFragment
 import org.simple.clinic.databinding.ScreenOnboardingBinding
 import org.simple.clinic.di.injector
-import org.simple.clinic.navigation.v2.Router
 import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.fragments.BaseScreen
 import org.simple.clinic.util.resolveColor
@@ -36,9 +36,6 @@ class OnboardingScreen : BaseScreen<
 
   @Inject
   lateinit var onboardingEffectHandler: OnboardingEffectHandler.Factory
-
-  @Inject
-  lateinit var router: Router
 
   private val getStartedButton
     get() = binding.getStartedButton
@@ -86,7 +83,9 @@ class OnboardingScreen : BaseScreen<
   }
 
   override fun openOnboardingConsentScreen() {
-    router.clearHistoryAndPush(OnboardingConsentScreenFragment.Key())
+    findNavController().navigate(OnboardingConsentScreenFragment.Key()) {
+      popUpTo<Key> { inclusive = true }
+    }
   }
 
   private fun setIntroOneTextView() {
@@ -146,6 +145,7 @@ class OnboardingScreen : BaseScreen<
   }
 
   @Parcelize
+  @Serializable
   data class Key(
       override val analyticsName: String = "Onboarding Screen"
   ) : ScreenKey() {

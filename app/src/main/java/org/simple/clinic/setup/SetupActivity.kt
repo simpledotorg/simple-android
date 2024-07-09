@@ -6,6 +6,10 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.NavController
+import androidx.navigation.createGraph
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.fragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
@@ -14,14 +18,16 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.activity.permissions.ActivityPermissionResult
 import org.simple.clinic.activity.placeholder.PlaceholderScreen
+import org.simple.clinic.consent.onboarding.OnboardingConsentScreenFragment
 import org.simple.clinic.databinding.ActivitySetupBinding
 import org.simple.clinic.di.InjectorProviderContextWrapper
 import org.simple.clinic.feature.Features
 import org.simple.clinic.main.TheActivity
 import org.simple.clinic.mobius.MobiusDelegate
 import org.simple.clinic.navigation.v2.ActivityResult
-import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenKey
 import org.simple.clinic.navigation.v2.ScreenResultBus
+import org.simple.clinic.onboarding.OnboardingScreen
 import org.simple.clinic.registerorlogin.AuthenticationActivity
 import org.simple.clinic.setup.runcheck.Disallowed
 import org.simple.clinic.splash.SplashScreen
@@ -56,14 +62,6 @@ class SetupActivity : AppCompatActivity(), UiActions {
 
   private val screenResults = ScreenResultBus()
 
-  private val router by unsafeLazy {
-    Router(
-        initialScreenKey = PlaceholderScreen.Key(),
-        fragmentManager = supportFragmentManager,
-        containerId = R.id.screen_host_view
-    )
-  }
-
   private val delegate by unsafeLazy {
     MobiusDelegate.forActivity(
         events = Observable.never(),
@@ -76,10 +74,10 @@ class SetupActivity : AppCompatActivity(), UiActions {
   }
 
   private lateinit var binding: ActivitySetupBinding
+  private lateinit var navController: NavController
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    @Suppress("ConstantConditionIf")
     if (BuildConfig.DISABLE_SCREENSHOT) {
       window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
     }
@@ -87,8 +85,26 @@ class SetupActivity : AppCompatActivity(), UiActions {
     binding = ActivitySetupBinding.inflate(layoutInflater)
     setContentView(binding.root)
 
-    router.onReady(savedInstanceState)
     delegate.onRestoreInstanceState(savedInstanceState)
+
+    val navHostFragment = supportFragmentManager.findFragmentById(R.id.screen_host_view) as NavHostFragment
+    navController = navHostFragment.navController
+    navController.graph = navController.createGraph(
+        startDestination = PlaceholderScreen.Key(),
+    ) {
+      fragment<PlaceholderScreen, PlaceholderScreen.Key>(
+          typeMap = ScreenKey.ScreenType.typeMap
+      )
+      fragment<SplashScreen, SplashScreen.Key>(
+          typeMap = ScreenKey.ScreenType.typeMap
+      )
+      fragment<OnboardingScreen, OnboardingScreen.Key>(
+          typeMap = ScreenKey.ScreenType.typeMap
+      )
+      fragment<OnboardingConsentScreenFragment, OnboardingConsentScreenFragment.Key>(
+          typeMap = ScreenKey.ScreenType.typeMap
+      )
+    }
   }
 
   override fun onStart() {
@@ -102,15 +118,8 @@ class SetupActivity : AppCompatActivity(), UiActions {
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
-    router.onSaveInstanceState(outState)
     delegate.onSaveInstanceState(outState)
     super.onSaveInstanceState(outState)
-  }
-
-  override fun onBackPressed() {
-    if (!router.onBackPressed()) {
-      super.onBackPressed()
-    }
   }
 
   override fun attachBaseContext(baseContext: Context) {
@@ -157,7 +166,9 @@ class SetupActivity : AppCompatActivity(), UiActions {
   }
 
   private fun navigateToSplashScreen() {
-    router.clearHistoryAndPush(SplashScreen.Key())
+    navController.navigate(SplashScreen.Key()) {
+      popUpTo<PlaceholderScreen.Key> { inclusive = true }
+    }
   }
 
   override fun showCountrySelectionScreen() {
@@ -182,10 +193,7 @@ class SetupActivity : AppCompatActivity(), UiActions {
   private fun setupDiGraph() {
     component = ClinicApp.appComponent
         .setupActivityComponent()
-        .create(
-            activity = this,
-            router = router
-        )
+        .create(activity = this)
 
     component.inject(this)
   }

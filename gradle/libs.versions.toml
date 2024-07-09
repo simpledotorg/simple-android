@@ -146,7 +146,7 @@ lottie = "com.airbnb.android:lottie:6.4.1"
 
 material = "com.google.android.material:material:1.12.0"
 
-mockito-kotlin = "org.mockito.kotlin:mockito-kotlin:5.3.1"
+mockito-kotlin = "org.mockito.kotlin:mockito-kotlin:5.4.0"
 
 mobius-android = { module = "com.spotify.mobius:mobius-android", version.ref = "mobius" }
 mobius-core = { module = "com.spotify.mobius:mobius-core", version.ref = "mobius" }

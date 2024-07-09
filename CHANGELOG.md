@@ -14,6 +14,7 @@
 - Bump AndroidX Lifecycle to v2.8.3
 - Bump Google Truth to v1.4.3
 - Bump Sentry to v7.11.0
+- Bump Mockito Kotlin to v5.4.0
 
 ## 2024-06-27-9140
 

@@ -22,5 +22,6 @@ buildscript {
     classpath(libs.datadog.gradle.plugin)
     classpath(libs.benchmark.gradle.plugin)
     classpath(libs.compose.compiler)
+    classpath(libs.kotlin.serialization)
   }
 }

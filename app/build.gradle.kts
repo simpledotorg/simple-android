@@ -14,6 +14,7 @@ plugins {
   id("androidx.benchmark")
   id("com.google.devtools.ksp").version(libs.versions.ksp)
   id("org.jetbrains.kotlin.plugin.compose")
+  id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 sentry {
@@ -335,6 +336,7 @@ dependencies {
   implementation(libs.kotlin.coroutines)
   implementation(libs.kotlin.coroutines.test)
   implementation(libs.kotlin.stdlib)
+  implementation(libs.kotlinx.serialization.json)
 
   implementation(libs.logback.classic)
 

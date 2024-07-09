@@ -46,6 +46,8 @@ ksp = "2.0.0-1.0.21"
 
 sqlCipher = "4.5.4"
 
+serializationJson = "1.6.3"
+
 [libraries]
 android-gradle-plugin = "com.android.tools.build:gradle:8.5.0"
 android-desugaring = "com.android.tools:desugar_jdk_libs:2.0.4"
@@ -134,6 +136,8 @@ kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", v
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk7", version.ref = "kotlin" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 compose-compiler = { module = "org.jetbrains.kotlin:compose-compiler-gradle-plugin", version.ref = "kotlin" }
+kotlin-serialization = { module = "org.jetbrains.kotlin:kotlin-serialization", version.ref = "kotlin" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serializationJson" }
 
 leakcanary = "com.squareup.leakcanary:leakcanary-android:2.14"
 

@@ -297,6 +297,7 @@ dependencies {
   implementation(libs.androidx.recyclerview)
   implementation(libs.androidx.viewpager2)
   implementation(libs.androidx.security.crypto)
+  implementation(libs.androidx.navigation)
 
   implementation(libs.bundles.androidx.camera)
 

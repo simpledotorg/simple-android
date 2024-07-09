@@ -10,6 +10,7 @@ androidx-work = "2.9.0"
 androidx-security-crypto = "1.1.0-alpha06"
 androidx-viewmodel = "2.8.3"
 androidx-lifecycle = "2.8.2"
+androidx-navigation = "2.8.0-beta04"
 
 dagger = "2.51.1"
 
@@ -93,6 +94,8 @@ androidx-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", ve
 androidx-viewmodel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "androidx-viewmodel" }
 
 androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "androidx-lifecycle" }
+
+androidx-navigation = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "androidx-navigation" }
 
 asm = "org.ow2.asm:asm:9.7"
 

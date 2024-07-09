@@ -12,6 +12,7 @@
 - Bump Jackson Core to v2.17.2
 - Bump Sentry Gradle plugin to v4.9.0
 - Bump AndroidX Lifecycle to v2.8.3
+- Bump Google Truth to v1.4.3
 
 ## 2024-06-27-9140
 

@@ -10,6 +10,7 @@
 - Bump AndroidX Test Rules to v1.6.1
 - Bump Fragment KTX to v1.8.1
 - Bump Jackson Core to v2.17.2
+- Bump Sentry Gradle plugin to v4.9.0
 
 ## 2024-06-27-9140
 

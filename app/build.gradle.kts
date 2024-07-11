@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import com.android.build.gradle.internal.tasks.databinding.DataBindingGenBaseClassesTask
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
@@ -204,15 +206,17 @@ android {
     }
 
     getByName("main") {
-      assets.srcDirs("${project.buildDir}/generated/assets/room_dao_metadata/")
+      assets.srcDirs("${project.layout.buildDirectory}/generated/assets/room_dao_metadata/")
     }
   }
 
-  packagingOptions {
-    // Deprecated ABIs. See https://developer.android.com/ndk/guides/abis
-    jniLibs.excludes.add("lib/mips/libsqlite3x.so")
-    jniLibs.excludes.add("lib/mips64/libsqlite3x.so")
-    jniLibs.excludes.add("lib/armeabi/libsqlite3x.so")
+  packaging {
+    jniLibs {
+      // Deprecated ABIs. See https://developer.android.com/ndk/guides/abis
+      jniLibs.excludes.add("lib/mips/libsqlite3x.so")
+      jniLibs.excludes.add("lib/mips64/libsqlite3x.so")
+      jniLibs.excludes.add("lib/armeabi/libsqlite3x.so")
+    }
   }
 
   bundle {
@@ -229,7 +233,7 @@ android {
   // an empty mappings.txt file. This caused an issue where the CI deploy to play store task tries
   // to upload the empty mapping file, which causes the Play Store api to complain.
   val deleteProguardMappings = tasks.create<Delete>("deleteProguardMappings") {
-    delete(fileTree(buildDir).matching {
+    delete(fileTree(layout.buildDirectory).matching {
       include("outputs/mapping/**/mapping.txt")
     })
   }

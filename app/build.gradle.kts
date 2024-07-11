@@ -3,17 +3,15 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompileTool
 import org.simple.rmg.RoomMetadataGenerator
-import java.util.Locale
 
 plugins {
-  id("com.android.application")
-  kotlin("android")
-  id("kotlin-parcelize")
-  id("io.sentry.android.gradle")
-  id("com.datadoghq.dd-sdk-android-gradle-plugin")
-  id("androidx.benchmark")
-  id("com.google.devtools.ksp").version(libs.versions.ksp)
-  id("org.jetbrains.kotlin.plugin.compose")
+  alias(libs.plugins.android.application)
+  alias(libs.plugins.kotlin.android)
+  alias(libs.plugins.kotlin.parcelize)
+  alias(libs.plugins.sentry)
+  alias(libs.plugins.datadog)
+  alias(libs.plugins.ksp)
+  alias(libs.plugins.kotlin.compose.compiler)
 }
 
 sentry {
@@ -173,7 +171,7 @@ android {
         // in an unpredictable way.
         val variantName = variant.name.replaceFirstChar { it.titlecase() }
         project.tasks.getByName("ksp" + variantName + "Kotlin") {
-          val dataBindingTask =  project.tasks.getByName ("dataBindingGenBaseClasses$variantName") as DataBindingGenBaseClassesTask
+          val dataBindingTask = project.tasks.getByName("dataBindingGenBaseClasses$variantName") as DataBindingGenBaseClassesTask
           (this as AbstractKotlinCompileTool<*>).setSource(dataBindingTask.sourceOutFolder)
         }
       }
@@ -550,7 +548,3 @@ abstract class TransformGeneratedRoomDaoTask : DefaultTask() {
     rmg.run(projectDir, sourceSet.get(), reporterClassName.get())
   }
 }
-
-// This must always be present at the bottom of this file, as per:
-// https://console.firebase.google.com/u/2/project/simple-org/settings/general/
-apply(plugin = "com.google.gms.google-services")

@@ -119,6 +119,7 @@ android {
   buildFeatures {
     viewBinding = true
     compose = true
+    buildConfig = true
   }
 
   flavorDimensions.add("track")

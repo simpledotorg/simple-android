@@ -17,6 +17,7 @@
 - Bump Mockito Kotlin to v5.4.0
 - Bump AGP to v8.5.1
 - Bump Lint to v31.5.1
+- Remove Maestro tests from CI
 
 ## 2024-06-27-9140
 

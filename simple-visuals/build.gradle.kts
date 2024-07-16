@@ -1,6 +1,6 @@
 plugins {
-  id("com.android.library")
-  kotlin("android")
+  alias(libs.plugins.android.library)
+  alias(libs.plugins.kotlin.android)
 }
 
 android {
@@ -8,13 +8,11 @@ android {
 
   val compileSdkVersion: Int by rootProject.extra
   val minSdkVersion: Int by rootProject.extra
-  val targetSdkVersion: Int by rootProject.extra
 
   compileSdk = compileSdkVersion
 
   defaultConfig {
     minSdk = minSdkVersion
-    targetSdk = targetSdkVersion
 
     consumerProguardFiles("consumer-rules.pro")
   }

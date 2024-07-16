@@ -1,19 +1,19 @@
+@file:Suppress("UnstableApiUsage")
+
 import com.android.build.gradle.internal.tasks.databinding.DataBindingGenBaseClassesTask
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.AbstractKotlinCompileTool
 import org.simple.rmg.RoomMetadataGenerator
-import java.util.Locale
 
 plugins {
-  id("com.android.application")
-  kotlin("android")
-  id("kotlin-parcelize")
-  id("io.sentry.android.gradle")
-  id("com.datadoghq.dd-sdk-android-gradle-plugin")
-  id("androidx.benchmark")
-  id("com.google.devtools.ksp").version(libs.versions.ksp)
-  id("org.jetbrains.kotlin.plugin.compose")
+  alias(libs.plugins.android.application)
+  alias(libs.plugins.kotlin.android)
+  alias(libs.plugins.kotlin.parcelize)
+  alias(libs.plugins.sentry)
+  alias(libs.plugins.datadog)
+  alias(libs.plugins.ksp)
+  alias(libs.plugins.kotlin.compose.compiler)
 }
 
 sentry {
@@ -119,6 +119,7 @@ android {
   buildFeatures {
     viewBinding = true
     compose = true
+    buildConfig = true
   }
 
   flavorDimensions.add("track")
@@ -173,7 +174,7 @@ android {
         // in an unpredictable way.
         val variantName = variant.name.replaceFirstChar { it.titlecase() }
         project.tasks.getByName("ksp" + variantName + "Kotlin") {
-          val dataBindingTask =  project.tasks.getByName ("dataBindingGenBaseClasses$variantName") as DataBindingGenBaseClassesTask
+          val dataBindingTask = project.tasks.getByName("dataBindingGenBaseClasses$variantName") as DataBindingGenBaseClassesTask
           (this as AbstractKotlinCompileTool<*>).setSource(dataBindingTask.sourceOutFolder)
         }
       }
@@ -206,15 +207,17 @@ android {
     }
 
     getByName("main") {
-      assets.srcDirs("${project.buildDir}/generated/assets/room_dao_metadata/")
+      assets.srcDirs("${project.layout.buildDirectory}/generated/assets/room_dao_metadata/")
     }
   }
 
-  packagingOptions {
-    // Deprecated ABIs. See https://developer.android.com/ndk/guides/abis
-    jniLibs.excludes.add("lib/mips/libsqlite3x.so")
-    jniLibs.excludes.add("lib/mips64/libsqlite3x.so")
-    jniLibs.excludes.add("lib/armeabi/libsqlite3x.so")
+  packaging {
+    jniLibs {
+      // Deprecated ABIs. See https://developer.android.com/ndk/guides/abis
+      jniLibs.excludes.add("lib/mips/libsqlite3x.so")
+      jniLibs.excludes.add("lib/mips64/libsqlite3x.so")
+      jniLibs.excludes.add("lib/armeabi/libsqlite3x.so")
+    }
   }
 
   bundle {
@@ -231,7 +234,7 @@ android {
   // an empty mappings.txt file. This caused an issue where the CI deploy to play store task tries
   // to upload the empty mapping file, which causes the Play Store api to complain.
   val deleteProguardMappings = tasks.create<Delete>("deleteProguardMappings") {
-    delete(fileTree(buildDir).matching {
+    delete(fileTree(layout.buildDirectory).matching {
       include("outputs/mapping/**/mapping.txt")
     })
   }
@@ -550,7 +553,3 @@ abstract class TransformGeneratedRoomDaoTask : DefaultTask() {
     rmg.run(projectDir, sourceSet.get(), reporterClassName.get())
   }
 }
-
-// This must always be present at the bottom of this file, as per:
-// https://console.firebase.google.com/u/2/project/simple-org/settings/general/
-apply(plugin = "com.google.gms.google-services")

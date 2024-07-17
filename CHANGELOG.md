@@ -18,6 +18,7 @@
 - Bump AGP to v8.5.1
 - Bump Lint to v31.5.1
 - Remove Maestro tests from CI
+- Bump Flipper to v0.258.0
 
 ## 2024-06-27-9140
 

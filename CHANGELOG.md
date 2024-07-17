@@ -19,6 +19,7 @@
 - Bump Lint to v31.5.1
 - Remove Maestro tests from CI
 - Bump Flipper to v0.258.0
+- Add Google services plugin to app module Gradle file
 
 ## 2024-06-27-9140
 

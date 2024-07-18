@@ -18,8 +18,8 @@ class UserInputDateValidator @Inject constructor(
   sealed class Result {
     data class Valid(val parsedDate: LocalDate) : Result()
     sealed class Invalid : Result() {
-      object InvalidPattern : Invalid()
-      object DateIsInFuture : Invalid()
+      data object InvalidPattern : Invalid()
+      data object DateIsInFuture : Invalid()
     }
   }
 

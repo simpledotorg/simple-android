@@ -11,10 +11,10 @@ import org.simple.clinic.util.room.SafeEnumTypeAdapter
 sealed class DeletedReason : Parcelable {
 
   @Parcelize
-  object Duplicate : DeletedReason()
+  data object Duplicate : DeletedReason()
 
   @Parcelize
-  object AccidentalRegistration : DeletedReason()
+  data object AccidentalRegistration : DeletedReason()
 
   @Parcelize
   data class Unknown(val actualValue: String) : DeletedReason()

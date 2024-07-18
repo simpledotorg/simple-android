@@ -20,7 +20,7 @@ sealed class PrefillDate : BloodSugarEntryEffect() {
     }
   }
 
-  object PrefillCurrentDate : PrefillDate()
+  data object PrefillCurrentDate : PrefillDate()
 
   data class PrefillSpecificDate(val date: Instant) : PrefillDate()
 }
@@ -47,21 +47,21 @@ data class UpdateBloodSugarEntry(
 
 data class FetchBloodSugarMeasurement(val bloodSugarMeasurementUuid: UUID) : BloodSugarEntryEffect()
 
-object LoadBloodSugarUnitPreference : BloodSugarEntryEffect()
+data object LoadBloodSugarUnitPreference : BloodSugarEntryEffect()
 
 sealed class BloodSugarEntryViewEffect : BloodSugarEntryEffect()
 
 data class SetBloodSugarReading(val bloodSugarReading: String) : BloodSugarEntryViewEffect()
 
-object HideBloodSugarErrorMessage : BloodSugarEntryViewEffect()
+data object HideBloodSugarErrorMessage : BloodSugarEntryViewEffect()
 
-object HideDateErrorMessage : BloodSugarEntryViewEffect()
+data object HideDateErrorMessage : BloodSugarEntryViewEffect()
 
-object Dismiss : BloodSugarEntryViewEffect()
+data object Dismiss : BloodSugarEntryViewEffect()
 
-object ShowDateEntryScreen : BloodSugarEntryViewEffect()
+data object ShowDateEntryScreen : BloodSugarEntryViewEffect()
 
-object SetBloodSugarSavedResultAndFinish : BloodSugarEntryViewEffect()
+data object SetBloodSugarSavedResultAndFinish : BloodSugarEntryViewEffect()
 
 data class ShowConfirmRemoveBloodSugarDialog(val bloodSugarMeasurementUuid: UUID) : BloodSugarEntryViewEffect()
 

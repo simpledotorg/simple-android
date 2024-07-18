@@ -99,7 +99,7 @@ data class RecentPatientItem(
   }
 }
 
-object SeeAllItem : RecentPatientItemType() {
+data object SeeAllItem : RecentPatientItemType() {
   override fun layoutResId(): Int = R.layout.see_all_item_view
 
   override fun render(holder: BindingViewHolder, subject: Subject<UiEvent>) {

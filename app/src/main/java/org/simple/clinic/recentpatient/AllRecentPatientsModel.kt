@@ -4,4 +4,4 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-object AllRecentPatientsModel : Parcelable
+data object AllRecentPatientsModel : Parcelable

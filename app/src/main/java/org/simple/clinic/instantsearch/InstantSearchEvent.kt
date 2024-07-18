@@ -28,9 +28,9 @@ data class SearchResultClicked(val patientId: UUID) : InstantSearchEvent() {
 
 data class SearchQueryChanged(val searchQuery: String) : InstantSearchEvent()
 
-object SavedNewOngoingPatientEntry : InstantSearchEvent()
+data object SavedNewOngoingPatientEntry : InstantSearchEvent()
 
-object RegisterNewPatientClicked : InstantSearchEvent() {
+data object RegisterNewPatientClicked : InstantSearchEvent() {
 
   override val analyticsName: String = "Instant Search: Register New Patient"
 }
@@ -48,10 +48,10 @@ data class OpenQrCodeScannerClicked(
   override val analyticsName = "Instant Search Screen:Open QR code scanner"
 }
 
-object PatientAlreadyHasAnExistingNHID : InstantSearchEvent()
+data object PatientAlreadyHasAnExistingNHID : InstantSearchEvent()
 
 data class PatientDoesNotHaveAnExistingNHID(val patientId: UUID) : InstantSearchEvent()
 
 data class SearchResultsLoadStateChanged(val instantSearchProgressState: InstantSearchProgressState) : InstantSearchEvent()
 
-object InstantSearchScreenShown : InstantSearchEvent()
+data object InstantSearchScreenShown : InstantSearchEvent()

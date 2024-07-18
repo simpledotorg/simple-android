@@ -10,9 +10,9 @@ interface PinVerificationMethod {
 
     data class Incorrect(val data: Any? = null) : VerificationResult()
 
-    object NetworkError : VerificationResult()
+    data object NetworkError : VerificationResult()
 
-    object ServerError : VerificationResult()
+    data object ServerError : VerificationResult()
 
     data class OtherError(val cause: Throwable) : VerificationResult()
   }

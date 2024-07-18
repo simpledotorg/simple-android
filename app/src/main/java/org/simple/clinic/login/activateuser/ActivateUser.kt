@@ -43,9 +43,9 @@ class ActivateUser @Inject constructor(
 
     data class Success(val userPayload: LoggedInUserPayload) : Result()
 
-    object NetworkError : Result()
+    data object NetworkError : Result()
 
-    object IncorrectPin : Result()
+    data object IncorrectPin : Result()
 
     data class ServerError(val responseCode: Int) : Result()
 

@@ -45,7 +45,7 @@ data class CurrentUserAndFacilityLoaded(
     val facility: Facility
 ) : PatientSummaryEvent()
 
-object PatientSummaryEditClicked : PatientSummaryEvent()
+data object PatientSummaryEditClicked : PatientSummaryEvent()
 
 data class ScheduledAppointment(val sheetOpenedFrom: AppointmentSheetOpenedFrom) : PatientSummaryEvent() {
   override val analyticsName = "Patient Summary:Schedule Appointment Sheet Closed"
@@ -53,7 +53,7 @@ data class ScheduledAppointment(val sheetOpenedFrom: AppointmentSheetOpenedFrom)
 
 data class CompletedCheckForInvalidPhone(val isPhoneInvalid: Boolean) : PatientSummaryEvent()
 
-object PatientSummaryBloodPressureSaved : PatientSummaryEvent()
+data object PatientSummaryBloodPressureSaved : PatientSummaryEvent()
 
 data class DataForBackClickLoaded(
     val hasPatientMeasurementDataChangedSinceScreenCreated: Boolean,
@@ -81,19 +81,19 @@ data class SyncTriggered(val sheetOpenedFrom: AppointmentSheetOpenedFrom) : Pati
 
 data class FetchedHasShownMissingPhoneReminder(val hasShownReminder: Boolean) : PatientSummaryEvent()
 
-object ContactPatientClicked : PatientSummaryEvent() {
+data object ContactPatientClicked : PatientSummaryEvent() {
   override val analyticsName: String = "Patient Summary:Phone Number Clicked"
 }
 
-object ContactDoctorClicked : PatientSummaryEvent() {
+data object ContactDoctorClicked : PatientSummaryEvent() {
   override val analyticsName: String = "Patient Summary:Contact Doctor Clicked"
 }
 
-object LogTeleconsultClicked : PatientSummaryEvent()
+data object LogTeleconsultClicked : PatientSummaryEvent()
 
 data class MedicalOfficersLoaded(val medicalOfficers: List<MedicalOfficer>) : PatientSummaryEvent()
 
-object ChangeAssignedFacilityClicked : PatientSummaryEvent() {
+data object ChangeAssignedFacilityClicked : PatientSummaryEvent() {
   override val analyticsName: String = "Assigned Facility:Change Facility"
 }
 
@@ -107,11 +107,11 @@ data class PatientRegistrationDataLoaded(
     val countOfRecordedBloodSugars: Int
 ) : PatientSummaryEvent()
 
-object NextAppointmentActionClicked : PatientSummaryEvent() {
+data object NextAppointmentActionClicked : PatientSummaryEvent() {
   override val analyticsName: String = "Next Appointment Card:Action Button Clicked"
 }
 
-object AssignedFacilityChanged : PatientSummaryEvent()
+data object AssignedFacilityChanged : PatientSummaryEvent()
 
 data class ClinicalDecisionSupportInfoLoaded(val isNewestBpEntryHigh: Boolean, val hasPrescribedDrugsChangedToday: Boolean) : PatientSummaryEvent()
 

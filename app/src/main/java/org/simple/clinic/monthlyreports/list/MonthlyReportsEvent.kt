@@ -12,7 +12,7 @@ data class CurrentFacilityLoaded(val facility: Facility) : MonthlyReportsEvent()
 
 data class MonthlyReportsFetched(val responseList: List<QuestionnaireResponse>) : MonthlyReportsEvent()
 
-object BackButtonClicked : MonthlyReportsEvent() {
+data object BackButtonClicked : MonthlyReportsEvent() {
   override val analyticsName = "Monthly Reports List:Back Clicked"
 }
 

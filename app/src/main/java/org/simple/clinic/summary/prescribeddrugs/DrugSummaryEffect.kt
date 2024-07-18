@@ -7,7 +7,7 @@ sealed class DrugSummaryEffect
 
 data class LoadPrescribedDrugs(val patientUuid: UUID) : DrugSummaryEffect()
 
-object LoadCurrentFacility : DrugSummaryEffect()
+data object LoadCurrentFacility : DrugSummaryEffect()
 
 data class OpenUpdatePrescribedDrugScreen(
     val patientUuid: UUID,

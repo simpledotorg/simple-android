@@ -27,9 +27,9 @@ data class DownloadClicked(
   override val analyticsName: String = "Share Prescription Screen:Download Clicked"
 }
 
-object PrescriptionImageSaved : TeleconsultSharePrescriptionEvent()
+data object PrescriptionImageSaved : TeleconsultSharePrescriptionEvent()
 
-object DoneClicked : TeleconsultSharePrescriptionEvent() {
+data object DoneClicked : TeleconsultSharePrescriptionEvent() {
   override val analyticsName: String = "Share Prescription Screen:Done Clicked"
 }
 
@@ -48,8 +48,8 @@ data class PrescriptionSavedForSharing(val fileName: String) : TeleconsultShareP
 
 data class SharePrescriptionUri(val imageUri: Uri) : TeleconsultSharePrescriptionEvent()
 
-object BackClicked : TeleconsultSharePrescriptionEvent() {
+data object BackClicked : TeleconsultSharePrescriptionEvent() {
   override val analyticsName: String = "Share Prescription Screen:Back Clicked"
 }
 
-object ImageSavedMessageShown : TeleconsultSharePrescriptionEvent()
+data object ImageSavedMessageShown : TeleconsultSharePrescriptionEvent()

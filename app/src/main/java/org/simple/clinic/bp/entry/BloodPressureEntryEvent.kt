@@ -15,15 +15,15 @@ data class DiastolicChanged(val diastolic: String) : BloodPressureEntryEvent() {
   override val analyticsName = "Blood Pressure Entry:Diastolic Text Changed"
 }
 
-object SaveClicked : BloodPressureEntryEvent() {
+data object SaveClicked : BloodPressureEntryEvent() {
   override val analyticsName = "Blood Pressure Entry:Save Clicked"
 }
 
-object RemoveBloodPressureClicked : BloodPressureEntryEvent() {
+data object RemoveBloodPressureClicked : BloodPressureEntryEvent() {
   override val analyticsName = "Blood Pressure Entry:Remove Clicked"
 }
 
-object DiastolicBackspaceClicked : BloodPressureEntryEvent()
+data object DiastolicBackspaceClicked : BloodPressureEntryEvent()
 
 data class ScreenChanged(val type: ScreenType) : BloodPressureEntryEvent()
 
@@ -40,15 +40,15 @@ data class BloodPressureSaved(val wasDateChanged: Boolean) : BloodPressureEntryE
   }
 }
 
-object ChangeDateClicked : BloodPressureEntryEvent() {
+data object ChangeDateClicked : BloodPressureEntryEvent() {
   override val analyticsName = "Blood Pressure Entry:Next Arrow Clicked"
 }
 
-object ShowBpClicked : BloodPressureEntryEvent() {
+data object ShowBpClicked : BloodPressureEntryEvent() {
   override val analyticsName = "Blood Pressure Entry:Previous Arrow Clicked"
 }
 
-object BackPressed : BloodPressureEntryEvent() {
+data object BackPressed : BloodPressureEntryEvent() {
   override val analyticsName = "Blood Pressure Entry:Hardware Back Pressed"
 }
 

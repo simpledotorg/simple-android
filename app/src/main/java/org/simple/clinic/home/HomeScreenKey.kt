@@ -5,7 +5,7 @@ import kotlinx.parcelize.Parcelize
 import org.simple.clinic.navigation.v2.ScreenKey
 
 @Parcelize
-object HomeScreenKey : ScreenKey() {
+data object HomeScreenKey : ScreenKey() {
 
   @IgnoredOnParcel
   override val analyticsName = "Home"

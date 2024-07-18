@@ -28,37 +28,37 @@ sealed class AppointmentCancelReason : Parcelable {
   abstract override fun toString(): String
 
   @Parcelize
-  object PatientNotResponding : AppointmentCancelReason() {
+  data object PatientNotResponding : AppointmentCancelReason() {
     override fun toString() = "PatientNotResponding"
   }
 
   @Parcelize
-  object InvalidPhoneNumber : AppointmentCancelReason() {
+  data object InvalidPhoneNumber : AppointmentCancelReason() {
     override fun toString() = "InvalidPhoneNumber"
   }
 
   @Parcelize
-  object TransferredToAnotherPublicHospital : AppointmentCancelReason() {
+  data object TransferredToAnotherPublicHospital : AppointmentCancelReason() {
     override fun toString() = "TransferredToAnotherPublicHospital"
   }
 
   @Parcelize
-  object MovedToPrivatePractitioner : AppointmentCancelReason() {
+  data object MovedToPrivatePractitioner : AppointmentCancelReason() {
     override fun toString() = "MovedToPrivatePractitioner"
   }
 
   @Parcelize
-  object RefusedToComeBack : AppointmentCancelReason() {
+  data object RefusedToComeBack : AppointmentCancelReason() {
     override fun toString() = "RefusedToComeBack"
   }
 
   @Parcelize
-  object Dead : AppointmentCancelReason() {
+  data object Dead : AppointmentCancelReason() {
     override fun toString() = "Dead"
   }
 
   @Parcelize
-  object Other : AppointmentCancelReason() {
+  data object Other : AppointmentCancelReason() {
     override fun toString() = "Other"
   }
 

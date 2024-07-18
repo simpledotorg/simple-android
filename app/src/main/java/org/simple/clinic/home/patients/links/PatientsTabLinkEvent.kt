@@ -23,15 +23,15 @@ data class QuestionnaireResponsesLoaded(
     val questionnaireResponseSections: QuestionnaireResponseSections
 ) : PatientsTabLinkEvent()
 
-object MonthlyScreeningReportsClicked : PatientsTabLinkEvent() {
+data object MonthlyScreeningReportsClicked : PatientsTabLinkEvent() {
   override val analyticsName = "Link: Monthly Screening Report clicked"
 }
 
-object MonthlySuppliesReportsClicked : PatientsTabLinkEvent() {
+data object MonthlySuppliesReportsClicked : PatientsTabLinkEvent() {
   override val analyticsName = "Link: Monthly Supplies Report clicked"
 }
 
-object MonthlyDrugStockReportsClicked : PatientsTabLinkEvent() {
+data object MonthlyDrugStockReportsClicked : PatientsTabLinkEvent() {
   override val analyticsName = "Patient Tab Links:Monthly Drug Stock Report Clicked"
 }
 

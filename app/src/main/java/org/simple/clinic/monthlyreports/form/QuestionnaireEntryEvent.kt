@@ -10,13 +10,13 @@ data class CurrentFacilityLoaded(val facility: Facility) : QuestionnaireEntryEve
 
 data class QuestionnaireFormFetched(val questionnaire: Questionnaire) : QuestionnaireEntryEvent()
 
-object QuestionnaireResponseSaved : QuestionnaireEntryEvent()
+data object QuestionnaireResponseSaved : QuestionnaireEntryEvent()
 
-object QuestionnaireEntryBackClicked : QuestionnaireEntryEvent() {
+data object QuestionnaireEntryBackClicked : QuestionnaireEntryEvent() {
   override val analyticsName = "Monthly Report Form:Back Clicked"
 }
 
-object UnsavedChangesWarningLeavePageClicked : QuestionnaireEntryEvent() {
+data object UnsavedChangesWarningLeavePageClicked : QuestionnaireEntryEvent() {
   override val analyticsName = "Monthly Report Form:Unsaved Changes Warning Leave Page Clicked"
 }
 

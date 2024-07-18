@@ -19,9 +19,9 @@ data class SavePatientEffect(
     val saveAlternativeId: BusinessId?
 ) : EditPatientEffect()
 
-object LoadInputFields : EditPatientEffect()
+data object LoadInputFields : EditPatientEffect()
 
-object FetchColonyOrVillagesEffect : EditPatientEffect()
+data object FetchColonyOrVillagesEffect : EditPatientEffect()
 
 sealed class EditPatientViewEffect : EditPatientEffect()
 
@@ -33,12 +33,12 @@ data class ShowValidationErrorsEffect(
     val validationErrors: Set<EditPatientValidationError>
 ) : EditPatientViewEffect()
 
-object ShowDatePatternInDateOfBirthLabelEffect : EditPatientViewEffect()
+data object ShowDatePatternInDateOfBirthLabelEffect : EditPatientViewEffect()
 
-object HideDatePatternInDateOfBirthLabelEffect : EditPatientViewEffect()
+data object HideDatePatternInDateOfBirthLabelEffect : EditPatientViewEffect()
 
-object GoBackEffect : EditPatientViewEffect()
+data object GoBackEffect : EditPatientViewEffect()
 
-object ShowDiscardChangesAlertEffect : EditPatientViewEffect()
+data object ShowDiscardChangesAlertEffect : EditPatientViewEffect()
 
 data class OpenSimpleScanIdScreen(val openedFrom: OpenedFrom) : EditPatientViewEffect()

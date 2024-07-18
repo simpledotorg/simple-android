@@ -58,15 +58,15 @@ data class StreetAddressChanged(val streetAddress: String) : EditPatientEvent() 
   override val analyticsName = "Edit Patient Entry:Street Address Text Changed"
 }
 
-object SaveClicked : EditPatientEvent() {
+data object SaveClicked : EditPatientEvent() {
   override val analyticsName = "Edit Patient Entry:Save Clicked"
 }
 
-object PatientSaved : EditPatientEvent() {
+data object PatientSaved : EditPatientEvent() {
   override val analyticsName = "Edit Patient Entry:Patient Saved"
 }
 
-object BackClicked : EditPatientEvent() {
+data object BackClicked : EditPatientEvent() {
   override val analyticsName = "Edit Patient Entry:Back Clicked"
 }
 

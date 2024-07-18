@@ -81,7 +81,7 @@ data class Identifier(
   sealed class IdentifierType : Parcelable {
 
     @Parcelize
-    object BpPassport : IdentifierType() {
+    data object BpPassport : IdentifierType() {
 
       @IgnoredOnParcel
       const val SHORT_CODE_LENGTH = 7
@@ -96,19 +96,19 @@ data class Identifier(
     }
 
     @Parcelize
-    object BangladeshNationalId : IdentifierType()
+    data object BangladeshNationalId : IdentifierType()
 
     @Parcelize
-    object EthiopiaMedicalRecordNumber : IdentifierType()
+    data object EthiopiaMedicalRecordNumber : IdentifierType()
 
     @Parcelize
-    object IndiaNationalHealthId : IdentifierType()
+    data object IndiaNationalHealthId : IdentifierType()
 
     @Parcelize
-    object SriLankaNationalId : IdentifierType()
+    data object SriLankaNationalId : IdentifierType()
 
     @Parcelize
-    object SriLankaPersonalHealthNumber : IdentifierType()
+    data object SriLankaPersonalHealthNumber : IdentifierType()
 
     @Parcelize
     data class Unknown(val actual: String) : IdentifierType()

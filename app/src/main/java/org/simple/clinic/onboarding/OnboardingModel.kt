@@ -4,4 +4,4 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-object OnboardingModel : Parcelable
+data object OnboardingModel : Parcelable

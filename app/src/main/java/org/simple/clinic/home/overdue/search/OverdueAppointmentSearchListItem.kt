@@ -197,7 +197,7 @@ sealed class OverdueAppointmentSearchListItem : PagingItemAdapter.Item<UiEvent> 
     }
   }
 
-  object SelectAllOverdueAppointmentButton : OverdueAppointmentSearchListItem() {
+  data object SelectAllOverdueAppointmentButton : OverdueAppointmentSearchListItem() {
 
     override fun layoutResId(): Int = R.layout.list_item_search_overdue_select_all_button
 

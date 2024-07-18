@@ -17,13 +17,13 @@ import org.simple.clinic.util.room.SafeEnumTypeAdapter
 sealed class Gender : Parcelable {
 
   @Parcelize
-  object Male : Gender()
+  data object Male : Gender()
 
   @Parcelize
-  object Female : Gender()
+  data object Female : Gender()
 
   @Parcelize
-  object Transgender : Gender()
+  data object Transgender : Gender()
 
   @Parcelize
   data class Unknown(val actualValue: String) : Gender()

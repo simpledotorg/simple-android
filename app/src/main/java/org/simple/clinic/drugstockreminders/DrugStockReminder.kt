@@ -65,7 +65,7 @@ class DrugStockReminder @Inject constructor(
 
   sealed class Result {
     data class Found(val drugStockReminderResponse: DrugStockReminderResponsePayload) : Result()
-    object NotFound : Result()
-    object OtherError : Result()
+    data object NotFound : Result()
+    data object OtherError : Result()
   }
 }

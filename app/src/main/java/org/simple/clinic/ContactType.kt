@@ -9,10 +9,10 @@ import org.simple.clinic.util.room.SafeEnumTypeAdapter
 sealed class ContactType : Parcelable {
 
   @Parcelize
-  object WhatsApp : ContactType()
+  data object WhatsApp : ContactType()
 
   @Parcelize
-  object Telegram : ContactType()
+  data object Telegram : ContactType()
 
   @Parcelize
   data class Unknown(val actualValue: String) : ContactType()

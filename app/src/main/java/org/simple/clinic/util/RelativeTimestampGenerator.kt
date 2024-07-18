@@ -46,9 +46,9 @@ sealed class RelativeTimestamp {
     }
   }
 
-  object Today : RelativeTimestamp()
+  data object Today : RelativeTimestamp()
 
-  object Yesterday : RelativeTimestamp()
+  data object Yesterday : RelativeTimestamp()
 
   data class WithinSixMonths(val daysBetween: Int) : RelativeTimestamp()
 

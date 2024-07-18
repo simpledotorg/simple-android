@@ -17,18 +17,18 @@ data class UserDetailsFetched(
     val currentDeployment: Optional<Deployment>
 ) : SetupActivityEvent()
 
-object DatabaseInitialized : SetupActivityEvent()
+data object DatabaseInitialized : SetupActivityEvent()
 
-object DatabaseMaintenanceCompleted : SetupActivityEvent()
+data object DatabaseMaintenanceCompleted : SetupActivityEvent()
 
 data class DatabaseMaintenanceLastRunAtTimeLoaded(val runAt: Optional<Instant>) : SetupActivityEvent()
 
 data class AppAllowedToRunCheckCompleted(val allowedToRun: AllowedToRun) : SetupActivityEvent()
 
-object CountryAndDeploymentSaved: SetupActivityEvent()
+data object CountryAndDeploymentSaved : SetupActivityEvent()
 
-object StoredCountryV1Deleted: SetupActivityEvent()
+data object StoredCountryV1Deleted : SetupActivityEvent()
 
-object DatabaseEncryptionFinished : SetupActivityEvent()
+data object DatabaseEncryptionFinished : SetupActivityEvent()
 
 data class MinimumMemoryChecked(val hasMinimumMemory: Boolean) : SetupActivityEvent()

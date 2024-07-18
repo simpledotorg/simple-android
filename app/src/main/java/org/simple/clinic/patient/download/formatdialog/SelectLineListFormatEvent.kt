@@ -5,11 +5,11 @@ import org.simple.clinic.widgets.UiEvent
 
 sealed class SelectLineListFormatEvent : UiEvent
 
-object DownloadButtonClicked : SelectLineListFormatEvent() {
+data object DownloadButtonClicked : SelectLineListFormatEvent() {
 
   override val analyticsName = "Select Patient Line List Download Format:Download Button Clicked"
 }
 
 data class DownloadFileFormatChanged(val fileFormat: PatientLineListFileFormat) : SelectLineListFormatEvent()
 
-object CancelButtonClicked : SelectLineListFormatEvent()
+data object CancelButtonClicked : SelectLineListFormatEvent()

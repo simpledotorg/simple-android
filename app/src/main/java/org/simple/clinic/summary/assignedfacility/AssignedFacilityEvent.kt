@@ -14,4 +14,4 @@ data class AssignedFacilitySelected(val facility: Facility) : AssignedFacilityEv
   override val analyticsName: String = "Assigned Facility:Facility Selected"
 }
 
-object AssignedFacilityChanged : AssignedFacilityEvent()
+data object AssignedFacilityChanged : AssignedFacilityEvent()

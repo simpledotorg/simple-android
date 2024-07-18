@@ -10,14 +10,14 @@ data class DownloadForShare(val fileFormat: OverdueListFileFormat, val selectedA
 
 data class ScheduleDownload(val fileFormat: OverdueListFileFormat) : SelectOverdueDownloadFormatEffect()
 
-object LoadSelectedOverdueAppointmentIds : SelectOverdueDownloadFormatEffect()
+data object LoadSelectedOverdueAppointmentIds : SelectOverdueDownloadFormatEffect()
 
 sealed class SelectOverdueDownloadFormatViewEffect : SelectOverdueDownloadFormatEffect()
 
 data class ShareDownloadedFile(val uri: Uri, val mimeType: String) : SelectOverdueDownloadFormatViewEffect()
 
-object Dismiss : SelectOverdueDownloadFormatViewEffect()
+data object Dismiss : SelectOverdueDownloadFormatViewEffect()
 
-object OpenNotEnoughStorageErrorDialog : SelectOverdueDownloadFormatViewEffect()
+data object OpenNotEnoughStorageErrorDialog : SelectOverdueDownloadFormatViewEffect()
 
-object OpenDownloadFailedErrorDialog : SelectOverdueDownloadFormatViewEffect()
+data object OpenDownloadFailedErrorDialog : SelectOverdueDownloadFormatViewEffect()

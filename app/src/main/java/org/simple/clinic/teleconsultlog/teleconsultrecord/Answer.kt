@@ -10,10 +10,10 @@ import org.simple.clinic.util.room.SafeEnumTypeAdapter
 sealed class Answer : Parcelable {
 
   @Parcelize
-  object Yes : Answer()
+  data object Yes : Answer()
 
   @Parcelize
-  object No : Answer()
+  data object No : Answer()
 
   @Parcelize
   data class Unknown(val actualValue: String) : Answer()

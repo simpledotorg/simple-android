@@ -16,7 +16,7 @@ data class EnterOtpSubmitted(val otp: String) : EnterOtpEvent() {
 
 data class LoginUserCompleted(val result: LoginResult) : EnterOtpEvent()
 
-object UserVerifiedInBackground : EnterOtpEvent()
+data object UserVerifiedInBackground : EnterOtpEvent()
 
 data class RequestLoginOtpCompleted(val result: ActivateUser.Result) : EnterOtpEvent()
 

@@ -7,6 +7,6 @@ sealed class MedicalHistorySummaryEffect
 
 data class LoadMedicalHistory(val patientUUID: UUID) : MedicalHistorySummaryEffect()
 
-object LoadCurrentFacility : MedicalHistorySummaryEffect()
+data object LoadCurrentFacility : MedicalHistorySummaryEffect()
 
 data class SaveUpdatedMedicalHistory(val medicalHistory: MedicalHistory) : MedicalHistorySummaryEffect()

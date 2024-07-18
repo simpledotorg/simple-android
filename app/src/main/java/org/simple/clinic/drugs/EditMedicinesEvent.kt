@@ -7,7 +7,7 @@ import org.simple.clinic.widgets.UiEvent
 
 sealed class EditMedicinesEvent : UiEvent
 
-object AddNewPrescriptionClicked : EditMedicinesEvent() {
+data object AddNewPrescriptionClicked : EditMedicinesEvent() {
   override val analyticsName = "Drugs:Protocol:Add Custom Clicked"
 }
 
@@ -22,18 +22,18 @@ data class CustomPrescriptionClicked(val prescribedDrug: PrescribedDrug) : EditM
   override val analyticsName = "Drugs:Protocol:Edit CustomPrescription Clicked"
 }
 
-object PrescribedDrugsDoneClicked : EditMedicinesEvent() {
+data object PrescribedDrugsDoneClicked : EditMedicinesEvent() {
   override val analyticsName = "Drugs:Protocol:Save Clicked"
 }
 
-object PresribedDrugsRefillClicked : EditMedicinesEvent()
+data object PresribedDrugsRefillClicked : EditMedicinesEvent()
 
 data class DrugsListFetched(
     val protocolDrugs: List<ProtocolDrugAndDosages>,
     val prescribedDrugs: List<PrescribedDrug>
 ) : EditMedicinesEvent()
 
-object PrescribedMedicinesRefilled : EditMedicinesEvent()
+data object PrescribedMedicinesRefilled : EditMedicinesEvent()
 
 data class DrugFrequencyChoiceItemsLoaded(
     val drugFrequencyToLabelMap: Map<DrugFrequency?, DrugFrequencyLabel>

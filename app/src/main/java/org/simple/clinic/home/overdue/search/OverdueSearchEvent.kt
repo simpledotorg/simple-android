@@ -23,7 +23,7 @@ data class OverdueSearchLoadStateChanged(val overdueSearchProgressState: Overdue
 
 data class OverdueAppointmentCheckBoxClicked(val appointmentId: UUID) : OverdueSearchEvent()
 
-object ClearSelectedOverdueAppointmentsClicked : OverdueSearchEvent()
+data object ClearSelectedOverdueAppointmentsClicked : OverdueSearchEvent()
 
 data class SelectedOverdueAppointmentsLoaded(val selectedAppointmentIds: Set<UUID>) : OverdueSearchEvent()
 
@@ -49,7 +49,7 @@ data class ShareButtonClicked(
   override val analyticsName = "Overdue Search Screen:Share Clicked"
 }
 
-object SelectAllButtonClicked : OverdueSearchEvent() {
+data object SelectAllButtonClicked : OverdueSearchEvent() {
   override val analyticsName = "Overdue Search Screen:Select All Clicked"
 }
 

@@ -71,9 +71,9 @@ throws an error if an `enum class` is involved both in a Retrofit and a Room int
 ```kotlin
 sealed class AppointmentType {
 
-  object Manual : AppointmentType() // 1. Each subclass represents an enumerated value
+  data object Manual : AppointmentType() // 1. Each subclass represents an enumerated value
 
-  object Automatic : AppointmentType()
+  data object Automatic : AppointmentType()
 
   data class Unknown(val actual: String) : AppointmentType() // 2. Defined to deal with forward-compatibility
 

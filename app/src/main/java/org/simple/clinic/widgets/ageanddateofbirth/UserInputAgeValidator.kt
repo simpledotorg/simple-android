@@ -16,10 +16,10 @@ class UserInputAgeValidator @Inject constructor(
     @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter
 ) {
   sealed class Result {
-    object Valid : Result()
+    data object Valid : Result()
     sealed class Invalid : Result() {
-      object ExceedsMaxAgeLimit : Invalid()
-      object ExceedsMinAgeLimit : Invalid()
+      data object ExceedsMaxAgeLimit : Invalid()
+      data object ExceedsMinAgeLimit : Invalid()
     }
   }
 

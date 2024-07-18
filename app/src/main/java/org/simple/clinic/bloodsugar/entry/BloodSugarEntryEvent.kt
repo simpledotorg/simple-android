@@ -37,22 +37,22 @@ data class BloodSugarSaved(val wasDateChanged: Boolean) : BloodSugarEntryEvent()
 
 data class DatePrefilled(val prefilledDate: LocalDate) : BloodSugarEntryEvent()
 
-object BackPressed : BloodSugarEntryEvent()
+data object BackPressed : BloodSugarEntryEvent()
 
-object ChangeDateClicked : BloodSugarEntryEvent()
+data object ChangeDateClicked : BloodSugarEntryEvent()
 
-object ShowBloodSugarEntryClicked : BloodSugarEntryEvent()
+data object ShowBloodSugarEntryClicked : BloodSugarEntryEvent()
 
-object SaveClicked : BloodSugarEntryEvent() {
+data object SaveClicked : BloodSugarEntryEvent() {
   override val analyticsName: String = "Blood Sugar Entry:Save Clicked"
 }
 
 data class BloodSugarMeasurementFetched(val bloodSugarMeasurement: BloodSugarMeasurement) : BloodSugarEntryEvent()
 
-object RemoveBloodSugarClicked : BloodSugarEntryEvent() {
+data object RemoveBloodSugarClicked : BloodSugarEntryEvent() {
   override val analyticsName: String = "Blood Sugar Entry: Remove clicked"
 }
 
 data class BloodSugarUnitPreferenceLoaded(val bloodSugarUnitPreference: BloodSugarUnitPreference) : BloodSugarEntryEvent()
 
-object BloodSugarReadingUnitButtonClicked : BloodSugarEntryEvent()
+data object BloodSugarReadingUnitButtonClicked : BloodSugarEntryEvent()

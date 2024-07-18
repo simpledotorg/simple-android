@@ -7,7 +7,7 @@ import java.util.UUID
 
 sealed class OverdueEffect
 
-object LoadCurrentFacility : OverdueEffect()
+data object LoadCurrentFacility : OverdueEffect()
 
 data class LoadOverdueAppointments(
     val overdueSince: LocalDate,
@@ -18,9 +18,9 @@ data class ScheduleDownload(val fileFormat: OverdueListFileFormat) : OverdueEffe
 
 data class ToggleOverdueAppointmentSelection(val appointmentId: UUID) : OverdueEffect()
 
-object LoadSelectedOverdueAppointmentIds : OverdueEffect()
+data object LoadSelectedOverdueAppointmentIds : OverdueEffect()
 
-object ClearSelectedOverdueAppointments : OverdueEffect()
+data object ClearSelectedOverdueAppointments : OverdueEffect()
 
 sealed class OverdueViewEffect : OverdueEffect()
 
@@ -28,12 +28,12 @@ data class OpenContactPatientScreen(val patientUuid: UUID) : OverdueViewEffect()
 
 data class OpenPatientSummary(val patientUuid: UUID) : OverdueViewEffect()
 
-object ShowNoActiveNetworkConnectionDialog : OverdueViewEffect()
+data object ShowNoActiveNetworkConnectionDialog : OverdueViewEffect()
 
-object OpenSelectDownloadFormatDialog : OverdueViewEffect()
+data object OpenSelectDownloadFormatDialog : OverdueViewEffect()
 
-object OpenSelectShareFormatDialog : OverdueViewEffect()
+data object OpenSelectShareFormatDialog : OverdueViewEffect()
 
-object OpenSharingInProgressDialog : OverdueViewEffect()
+data object OpenSharingInProgressDialog : OverdueViewEffect()
 
-object OpenOverdueSearch : OverdueViewEffect()
+data object OpenOverdueSearch : OverdueViewEffect()

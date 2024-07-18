@@ -10,17 +10,17 @@ import org.simple.clinic.util.room.SafeEnumTypeAdapter
 sealed class TeleconsultStatus : Parcelable {
 
   @Parcelize
-  object Yes : TeleconsultStatus() {
+  data object Yes : TeleconsultStatus() {
     override fun toString(): String = "Yes"
   }
 
   @Parcelize
-  object No : TeleconsultStatus() {
+  data object No : TeleconsultStatus() {
     override fun toString(): String = "No"
   }
 
   @Parcelize
-  object StillWaiting : TeleconsultStatus() {
+  data object StillWaiting : TeleconsultStatus() {
     override fun toString(): String = "waiting"
   }
 

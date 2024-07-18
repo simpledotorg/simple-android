@@ -7,7 +7,7 @@ sealed class ReportsEvent : UiEvent
 
 data class ReportsLoaded(val reportsContent: Optional<String>) : ReportsEvent()
 
-object WebBackClicked : ReportsEvent() {
+data object WebBackClicked : ReportsEvent() {
 
   override val analyticsName = "Reports Screen:Back clicked"
 }

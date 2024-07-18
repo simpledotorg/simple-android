@@ -7,7 +7,7 @@ import java.util.UUID
 
 sealed class ScheduleAppointmentEffect
 
-object LoadDefaultAppointmentDate : ScheduleAppointmentEffect()
+data object LoadDefaultAppointmentDate : ScheduleAppointmentEffect()
 
 data class LoadAppointmentFacilities(val patientUuid: UUID) : ScheduleAppointmentEffect()
 
@@ -33,8 +33,8 @@ sealed class ScheduleAppointmentViewEffect : ScheduleAppointmentEffect()
 
 data class ShowDatePicker(val selectedDate: LocalDate) : ScheduleAppointmentViewEffect()
 
-object CloseSheet : ScheduleAppointmentViewEffect()
+data object CloseSheet : ScheduleAppointmentViewEffect()
 
 data class GoToTeleconsultStatusSheet(val teleconsultRecordUuid: UUID) : ScheduleAppointmentViewEffect()
 
-object CloseSheetWithoutResult : ScheduleAppointmentViewEffect()
+data object CloseSheetWithoutResult : ScheduleAppointmentViewEffect()

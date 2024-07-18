@@ -9,8 +9,8 @@ data class TeleconsultStatusChanged(val teleconsultStatus: TeleconsultStatus) : 
   override val analyticsName: String = "Teleconsult Status Sheet:Status changed to $teleconsultStatus"
 }
 
-object TeleconsultStatusUpdated : TeleconsultStatusEvent()
+data object TeleconsultStatusUpdated : TeleconsultStatusEvent()
 
-object DoneClicked : TeleconsultStatusEvent() {
+data object DoneClicked : TeleconsultStatusEvent() {
   override val analyticsName: String = "Teleconsult Status Sheet:Done Clicked"
 }

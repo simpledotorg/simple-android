@@ -340,10 +340,10 @@ class ScheduleAppointmentSheet : BaseBottomSheet<
   sealed class Request : Parcelable {
 
     @Parcelize
-    object SelectFacility : Request()
+    data object SelectFacility : Request()
 
     @Parcelize
-    object PickAppointmentDate : Request()
+    data object PickAppointmentDate : Request()
   }
 
   interface Injector {

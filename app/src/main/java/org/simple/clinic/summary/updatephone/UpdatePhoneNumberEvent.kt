@@ -12,14 +12,14 @@ data class PhoneNumberValidated(
     val result: PhoneNumberValidator.Result
 ) : UpdatePhoneNumberEvent()
 
-object NewPhoneNumberSaved : UpdatePhoneNumberEvent()
+data object NewPhoneNumberSaved : UpdatePhoneNumberEvent()
 
 data class UpdatePhoneNumberSaveClicked(val number: String) : UpdatePhoneNumberEvent() {
   override val analyticsName = "Patient Summary:Update Phone Number:Save Clicked"
 }
 
-object ExistingPhoneNumberSaved : UpdatePhoneNumberEvent()
+data object ExistingPhoneNumberSaved : UpdatePhoneNumberEvent()
 
-object UpdatePhoneNumberCancelClicked : UpdatePhoneNumberEvent() {
+data object UpdatePhoneNumberCancelClicked : UpdatePhoneNumberEvent() {
   override val analyticsName = "Patient Summary:Update Phone Number:Cancel Clicked"
 }

@@ -6,7 +6,7 @@ sealed class OverdueListDownloadResult {
 
   data class DownloadSuccessful(val uri: Uri) : OverdueListDownloadResult()
 
-  object NotEnoughStorage : OverdueListDownloadResult()
+  data object NotEnoughStorage : OverdueListDownloadResult()
 
-  object DownloadFailed : OverdueListDownloadResult()
+  data object DownloadFailed : OverdueListDownloadResult()
 }

@@ -7,10 +7,10 @@ sealed class TeleConsultSuccessEvent : UiEvent
 
 data class PatientDetailsLoaded(val patient: Patient) : TeleConsultSuccessEvent()
 
-object NoPrescriptionClicked : TeleConsultSuccessEvent() {
+data object NoPrescriptionClicked : TeleConsultSuccessEvent() {
   override val analyticsName: String = "Teleconsult Log:No Prescription Clicked"
 }
 
-object YesPrescriptionClicked : TeleConsultSuccessEvent() {
+data object YesPrescriptionClicked : TeleConsultSuccessEvent() {
   override val analyticsName: String = "Teleconsult Log:Yes Prescription Clicked"
 }

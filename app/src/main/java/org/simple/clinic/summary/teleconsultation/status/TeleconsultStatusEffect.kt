@@ -10,4 +10,4 @@ data class UpdateTeleconsultStatus(
     val teleconsultStatus: TeleconsultStatus
 ) : TeleconsultStatusEffect()
 
-object CloseSheet : TeleconsultStatusEffect()
+data object CloseSheet : TeleconsultStatusEffect()

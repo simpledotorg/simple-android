@@ -8,7 +8,7 @@ import java.time.Duration
 sealed class LocationUpdate : Parcelable {
 
   @Parcelize
-  object Unavailable : LocationUpdate()
+  data object Unavailable : LocationUpdate()
 
   @Parcelize
   data class Available(

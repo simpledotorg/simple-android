@@ -151,7 +151,7 @@ class RequestPermissionsTest {
 
   sealed class Event {
 
-    object FirstEvent : Event()
+    data object FirstEvent : Event()
 
     data class SecondEvent(
         override var permission: Optional<RuntimePermissionResult> = Optional.empty(),
@@ -159,7 +159,7 @@ class RequestPermissionsTest {
         override val permissionString: String = "permission_1"
     ) : Event(), RequiresPermission
 
-    object ThirdEvent : Event()
+    data object ThirdEvent : Event()
 
     data class FourthEvent(
         override var permission: Optional<RuntimePermissionResult> = Optional.empty(),

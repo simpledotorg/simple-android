@@ -7,11 +7,11 @@ sealed class BloodSugarSummaryViewEvent : UiEvent
 
 data class BloodSugarSummaryFetched(val measurements: List<BloodSugarMeasurement>) : BloodSugarSummaryViewEvent()
 
-object NewBloodSugarClicked : BloodSugarSummaryViewEvent()
+data object NewBloodSugarClicked : BloodSugarSummaryViewEvent()
 
 data class BloodSugarCountFetched(val count: Int) : BloodSugarSummaryViewEvent()
 
-object SeeAllClicked : BloodSugarSummaryViewEvent() {
+data object SeeAllClicked : BloodSugarSummaryViewEvent() {
   override val analyticsName: String = "Patient Summary:Blood Sugar See All Clicked"
 }
 

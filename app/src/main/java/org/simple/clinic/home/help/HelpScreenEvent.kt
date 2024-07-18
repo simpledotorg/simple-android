@@ -6,7 +6,7 @@ import java.util.Optional
 
 sealed class HelpScreenEvent : UiEvent
 
-object HelpScreenTryAgainClicked : HelpScreenEvent() {
+data object HelpScreenTryAgainClicked : HelpScreenEvent() {
   override val analyticsName: String = "Help Screen:Try Again Clicked"
 }
 

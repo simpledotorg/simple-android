@@ -21,10 +21,10 @@ sealed class ManifestFetchError : Parcelable {
 }
 
 @Parcelize
-object NetworkError : ManifestFetchError()
+data object NetworkError : ManifestFetchError()
 
 @Parcelize
-object ServerError : ManifestFetchError()
+data object ServerError : ManifestFetchError()
 
 @Parcelize
-object UnexpectedError : ManifestFetchError()
+data object UnexpectedError : ManifestFetchError()

@@ -12,6 +12,6 @@ data class RecentPatientItemClicked(val patientUuid: UUID) : LatestRecentPatient
   override val analyticsName = "Recent Patients: Item clicked"
 }
 
-object SeeAllItemClicked : LatestRecentPatientsEvent() {
+data object SeeAllItemClicked : LatestRecentPatientsEvent() {
   override val analyticsName = "Recent Patients: See all clicked"
 }

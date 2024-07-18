@@ -9,7 +9,7 @@ import java.util.UUID
 
 sealed class TeleconsultRecordEvent : UiEvent
 
-object BackClicked : TeleconsultRecordEvent() {
+data object BackClicked : TeleconsultRecordEvent() {
   override val analyticsName: String = "Teleconsult Record:Back Clicked"
 }
 
@@ -35,4 +35,4 @@ data class TeleconsultRecordValidated(
   override val analyticsName: String = "Teleconsult Record:Validated"
 }
 
-object PatientPrescriptionsCloned : TeleconsultRecordEvent()
+data object PatientPrescriptionsCloned : TeleconsultRecordEvent()

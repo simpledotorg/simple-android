@@ -5,23 +5,23 @@ import org.simple.clinic.patient.PatientEntryValidationError
 
 sealed class PatientEntryEffect
 
-object FetchPatientEntry : PatientEntryEffect()
+data object FetchPatientEntry : PatientEntryEffect()
 
 data class SavePatient(val entry: OngoingNewPatientEntry) : PatientEntryEffect()
 
-object LoadInputFields : PatientEntryEffect()
+data object LoadInputFields : PatientEntryEffect()
 
-object FetchColonyOrVillagesEffect : PatientEntryEffect()
+data object FetchColonyOrVillagesEffect : PatientEntryEffect()
 
 sealed class PatientEntryViewEffect : PatientEntryEffect()
 
 data class PrefillFields(val patientEntry: OngoingNewPatientEntry) : PatientEntryViewEffect()
 
-object ScrollFormOnGenderSelection : PatientEntryViewEffect()
+data object ScrollFormOnGenderSelection : PatientEntryViewEffect()
 
 data class ShowDatePatternInDateOfBirthLabel(val show: Boolean) : PatientEntryViewEffect()
 
-object OpenMedicalHistoryEntryScreen : PatientEntryViewEffect()
+data object OpenMedicalHistoryEntryScreen : PatientEntryViewEffect()
 
 data class HideValidationError(val field: Field) : PatientEntryViewEffect()
 

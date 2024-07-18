@@ -28,10 +28,10 @@ sealed class AsyncOpError : Parcelable {
 }
 
 @Parcelize
-object NetworkError : AsyncOpError()
+data object NetworkError : AsyncOpError()
 
 @Parcelize
 data class ServerError(val errorMessage: String) : AsyncOpError()
 
 @Parcelize
-object OtherError : AsyncOpError()
+data object OtherError : AsyncOpError()

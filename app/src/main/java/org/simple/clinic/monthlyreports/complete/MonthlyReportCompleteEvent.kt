@@ -9,7 +9,7 @@ data class QuestionnaireResponseFetched(
     val questionnaireResponse: QuestionnaireResponse
 ) : MonthlyReportCompleteEvent()
 
-object DoneButtonClicked : MonthlyReportCompleteEvent() {
+data object DoneButtonClicked : MonthlyReportCompleteEvent() {
   override val analyticsName = "Monthly Screening Reports Complete:Done Clicked"
 }
 

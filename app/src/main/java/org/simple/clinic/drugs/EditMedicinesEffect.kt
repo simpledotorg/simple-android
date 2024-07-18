@@ -8,7 +8,7 @@ data class FetchPrescribedAndProtocolDrugs(val patientUuid: UUID) : EditMedicine
 
 data class RefillMedicines(val patientUuid: UUID) : EditMedicinesEffect()
 
-object LoadDrugFrequencyChoiceItems : EditMedicinesEffect()
+data object LoadDrugFrequencyChoiceItems : EditMedicinesEffect()
 
 sealed class EditMedicinesViewEffect : EditMedicinesEffect()
 
@@ -22,4 +22,4 @@ data class OpenDosagePickerSheet(
 
 data class ShowUpdateCustomPrescriptionSheet(val prescribedDrug: PrescribedDrug) : EditMedicinesViewEffect()
 
-object GoBackToPatientSummary : EditMedicinesViewEffect()
+data object GoBackToPatientSummary : EditMedicinesViewEffect()

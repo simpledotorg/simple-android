@@ -5,7 +5,7 @@ import org.simple.clinic.widgets.UiEvent
 
 sealed class AddPhoneNumberEvent : UiEvent
 
-object PhoneNumberAdded : AddPhoneNumberEvent()
+data object PhoneNumberAdded : AddPhoneNumberEvent()
 
 data class PhoneNumberValidated(
     val newNumber: String,

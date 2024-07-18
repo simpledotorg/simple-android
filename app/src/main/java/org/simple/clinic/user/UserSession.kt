@@ -220,7 +220,7 @@ class UserSession @Inject constructor(
   sealed class LogoutResult : Parcelable {
 
     @Parcelize
-    object Success : LogoutResult()
+    data object Success : LogoutResult()
 
     @Parcelize
     data class Failure(val cause: Throwable) : LogoutResult()

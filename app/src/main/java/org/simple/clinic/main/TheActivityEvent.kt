@@ -15,10 +15,10 @@ data class InitialScreenInfoLoaded(
     val currentHistory: History
 ) : TheActivityEvent()
 
-object UserWasJustVerified : TheActivityEvent()
+data object UserWasJustVerified : TheActivityEvent()
 
-object UserWasUnauthorized : TheActivityEvent()
+data object UserWasUnauthorized : TheActivityEvent()
 
-object UserWasDisapproved : TheActivityEvent()
+data object UserWasDisapproved : TheActivityEvent()
 
-object PatientDataCleared : TheActivityEvent()
+data object PatientDataCleared : TheActivityEvent()

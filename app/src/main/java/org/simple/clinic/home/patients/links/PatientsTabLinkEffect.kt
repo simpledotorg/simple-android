@@ -2,16 +2,16 @@ package org.simple.clinic.home.patients.links
 
 sealed class PatientsTabLinkEffect
 
-object LoadCurrentFacility : PatientsTabLinkEffect()
+data object LoadCurrentFacility : PatientsTabLinkEffect()
 
-object LoadQuestionnaires : PatientsTabLinkEffect()
+data object LoadQuestionnaires : PatientsTabLinkEffect()
 
-object LoadQuestionnaireResponses : PatientsTabLinkEffect()
+data object LoadQuestionnaireResponses : PatientsTabLinkEffect()
 
-object OpenMonthlyScreeningReportsListScreen : PatientsTabLinkEffect()
+data object OpenMonthlyScreeningReportsListScreen : PatientsTabLinkEffect()
 
-object OpenMonthlySuppliesReportsListScreen : PatientsTabLinkEffect()
+data object OpenMonthlySuppliesReportsListScreen : PatientsTabLinkEffect()
 
-object OpenPatientLineListDownloadDialog : PatientsTabLinkEffect()
+data object OpenPatientLineListDownloadDialog : PatientsTabLinkEffect()
 
-object OpenDrugStockReportsScreen : PatientsTabLinkEffect()
+data object OpenDrugStockReportsScreen : PatientsTabLinkEffect()

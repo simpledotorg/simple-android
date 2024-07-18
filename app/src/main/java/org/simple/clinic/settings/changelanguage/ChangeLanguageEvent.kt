@@ -19,9 +19,9 @@ data class SelectLanguageEvent(val newLanguage: Language) : ChangeLanguageEvent(
     }
 }
 
-object CurrentLanguageChangedEvent : ChangeLanguageEvent()
+data object CurrentLanguageChangedEvent : ChangeLanguageEvent()
 
-object SaveCurrentLanguageEvent : ChangeLanguageEvent() {
+data object SaveCurrentLanguageEvent : ChangeLanguageEvent() {
   override val analyticsName: String
     get() = "Change Language:Done Clicked"
 }

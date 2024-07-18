@@ -5,7 +5,7 @@ import org.simple.clinic.questionnaireresponse.QuestionnaireResponse
 
 sealed class QuestionnaireEntryEffect
 
-object LoadCurrentFacility : QuestionnaireEntryEffect()
+data object LoadCurrentFacility : QuestionnaireEntryEffect()
 
 data class LoadQuestionnaireFormEffect(val questionnaireType: QuestionnaireType) : QuestionnaireEntryEffect()
 
@@ -13,8 +13,8 @@ data class SaveQuestionnaireResponseEffect(val questionnaireResponse: Questionna
 
 sealed class QuestionnaireEntryViewEffect : QuestionnaireEntryEffect()
 
-object GoBack : QuestionnaireEntryViewEffect()
+data object GoBack : QuestionnaireEntryViewEffect()
 
-object ShowUnsavedChangesWarningDialog : QuestionnaireEntryViewEffect()
+data object ShowUnsavedChangesWarningDialog : QuestionnaireEntryViewEffect()
 
-object GoToMonthlyReportsCompleteScreen : QuestionnaireEntryViewEffect()
+data object GoToMonthlyReportsCompleteScreen : QuestionnaireEntryViewEffect()

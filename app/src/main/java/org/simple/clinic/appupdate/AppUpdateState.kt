@@ -15,5 +15,5 @@ sealed class AppUpdateState : Parcelable {
   data class AppUpdateStateError(val exception: Throwable) : AppUpdateState()
 
   @Parcelize
-  object DontShowAppUpdate : AppUpdateState()
+  data object DontShowAppUpdate : AppUpdateState()
 }

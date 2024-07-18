@@ -5,9 +5,9 @@ import java.time.LocalDate
 
 sealed class TextInputDatePickerEffect {
 
-  object DismissSheet : TextInputDatePickerEffect()
+  data object DismissSheet : TextInputDatePickerEffect()
 
-  object HideDateErrorMessage : TextInputDatePickerEffect()
+  data object HideDateErrorMessage : TextInputDatePickerEffect()
 
   data class ShowDateValidationError(val dateValidation: Result) : TextInputDatePickerEffect()
 

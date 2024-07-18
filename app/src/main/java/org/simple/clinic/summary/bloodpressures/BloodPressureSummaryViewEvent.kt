@@ -12,7 +12,7 @@ data class BloodPressuresCountLoaded(val count: Int) : BloodPressureSummaryViewE
 
 data class CurrentFacilityLoaded(val facility: Facility) : BloodPressureSummaryViewEvent()
 
-object AddNewBloodPressureClicked : BloodPressureSummaryViewEvent() {
+data object AddNewBloodPressureClicked : BloodPressureSummaryViewEvent() {
   override val analyticsName = "Patient Summary:Add New BP Clicked"
 }
 
@@ -20,6 +20,6 @@ data class BloodPressureClicked(val measurement: BloodPressureMeasurement) : Blo
   override val analyticsName = "Patient Summary:BP Clicked for editing"
 }
 
-object SeeAllClicked : BloodPressureSummaryViewEvent() {
+data object SeeAllClicked : BloodPressureSummaryViewEvent() {
   override val analyticsName = "Patient Summary:See All Clicked"
 }

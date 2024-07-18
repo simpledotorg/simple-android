@@ -10,7 +10,7 @@ import java.util.UUID
 
 sealed class InstantSearchEffect
 
-object LoadCurrentFacility : InstantSearchEffect()
+data object LoadCurrentFacility : InstantSearchEffect()
 
 data class LoadAllPatients(val facility: Facility) : InstantSearchEffect()
 
@@ -49,10 +49,10 @@ data class OpenScannedQrCodeSheet(val identifier: Identifier) : InstantSearchVie
 
 data class OpenPatientEntryScreen(val facility: Facility) : InstantSearchViewEffect()
 
-object ShowKeyboard : InstantSearchViewEffect()
+data object ShowKeyboard : InstantSearchViewEffect()
 
-object OpenQrCodeScanner : InstantSearchViewEffect()
+data object OpenQrCodeScanner : InstantSearchViewEffect()
 
-object ShowNHIDErrorDialog : InstantSearchViewEffect()
+data object ShowNHIDErrorDialog : InstantSearchViewEffect()
 
 data class PrefillSearchQuery(val searchQuery: String) : InstantSearchViewEffect()

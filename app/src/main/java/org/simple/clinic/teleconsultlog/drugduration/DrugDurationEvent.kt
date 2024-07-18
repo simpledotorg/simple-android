@@ -8,6 +8,6 @@ data class DurationChanged(val duration: String) : DrugDurationEvent() {
   override val analyticsName: String = "Drug Duration:Duration Changed"
 }
 
-object DrugDurationSaveClicked : DrugDurationEvent() {
+data object DrugDurationSaveClicked : DrugDurationEvent() {
   override val analyticsName: String = "Drug Duration Sheet:Save Clicked"
 }

@@ -330,6 +330,6 @@ class HomeScreen :
   sealed class ScreenRequest : Parcelable {
 
     @Parcelize
-    object ChangeCurrentFacility : ScreenRequest()
+    data object ChangeCurrentFacility : ScreenRequest()
   }
 }

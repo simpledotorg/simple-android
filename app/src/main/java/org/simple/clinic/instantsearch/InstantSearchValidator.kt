@@ -10,9 +10,9 @@ class InstantSearchValidator @Inject constructor() {
   sealed class Result {
     data class Valid(val searchQuery: String) : Result()
 
-    object LengthTooShort : Result()
+    data object LengthTooShort : Result()
 
-    object Empty : Result()
+    data object Empty : Result()
   }
 
   fun validate(searchQuery: String, minLengthForSearchQuery: Int): Result {

@@ -4,13 +4,13 @@ import org.simple.clinic.widgets.UiEvent
 
 sealed class LinkIdWithPatientEvent : UiEvent
 
-object LinkIdWithPatientCancelClicked : LinkIdWithPatientEvent() {
+data object LinkIdWithPatientCancelClicked : LinkIdWithPatientEvent() {
   override val analyticsName = "LinkIdWithPatient:Cancel Clicked"
 }
 
-object IdentifierAddedToPatient : LinkIdWithPatientEvent()
+data object IdentifierAddedToPatient : LinkIdWithPatientEvent()
 
-object LinkIdWithPatientAddClicked : LinkIdWithPatientEvent() {
+data object LinkIdWithPatientAddClicked : LinkIdWithPatientEvent() {
   override val analyticsName = "LinkIdWithPatient:Add Clicked"
 }
 

@@ -10,7 +10,7 @@ sealed class TeleconsultMedicinesEvent : UiEvent
 
 data class PatientMedicinesLoaded(val medicines: List<PrescribedDrug>) : TeleconsultMedicinesEvent()
 
-object EditMedicinesClicked : TeleconsultMedicinesEvent() {
+data object EditMedicinesClicked : TeleconsultMedicinesEvent() {
   override val analyticsName: String = "Teleconsult Medicines:Edit Clicked"
 }
 

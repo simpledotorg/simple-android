@@ -42,17 +42,17 @@ data class SecureCallClicked(
   override val analyticsName: String = "Contact Patient:Secure Call Clicked"
 }
 
-object PatientMarkedAsAgreedToVisit : ContactPatientEvent()
+data object PatientMarkedAsAgreedToVisit : ContactPatientEvent()
 
-object PatientAgreedToVisitClicked : ContactPatientEvent() {
+data object PatientAgreedToVisitClicked : ContactPatientEvent() {
   override val analyticsName: String = "Contact Patient:Agreed to visit clicked"
 }
 
-object NextReminderDateClicked : ContactPatientEvent() {
+data object NextReminderDateClicked : ContactPatientEvent() {
   override val analyticsName: String = "Contact Patient:Next appointment date clicked"
 }
 
-object PreviousReminderDateClicked : ContactPatientEvent() {
+data object PreviousReminderDateClicked : ContactPatientEvent() {
   override val analyticsName: String = "Contact Patient:Previous appointment date clicked"
 }
 
@@ -63,22 +63,22 @@ data class ManualDateSelected(
   override val analyticsName: String = "Contact Patient:Manual date selected"
 }
 
-object AppointmentDateClicked : ContactPatientEvent() {
+data object AppointmentDateClicked : ContactPatientEvent() {
   override val analyticsName: String = "Contact Patient:Appointment date clicked"
 }
 
-object ReminderSetForAppointment : ContactPatientEvent()
+data object ReminderSetForAppointment : ContactPatientEvent()
 
-object SaveAppointmentReminderClicked : ContactPatientEvent() {
+data object SaveAppointmentReminderClicked : ContactPatientEvent() {
   override val analyticsName: String = "Contact Patient:Save appointment reminder clicked"
 }
 
-object RemindToCallLaterClicked : ContactPatientEvent() {
+data object RemindToCallLaterClicked : ContactPatientEvent() {
   override val analyticsName: String = "Contact Patient:Remind to call later clicked"
 }
 
-object BackClicked : ContactPatientEvent()
+data object BackClicked : ContactPatientEvent()
 
-object RemoveFromOverdueListClicked : ContactPatientEvent()
+data object RemoveFromOverdueListClicked : ContactPatientEvent()
 
 data class CallResultForAppointmentLoaded(val callResult: Optional<CallResult>) : ContactPatientEvent()

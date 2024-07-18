@@ -4,9 +4,9 @@ import java.time.Instant
 
 sealed class PinEntryEffect
 
-object LoadPinEntryProtectedStates : PinEntryEffect()
+data object LoadPinEntryProtectedStates : PinEntryEffect()
 
-object HideError : PinEntryEffect()
+data object HideError : PinEntryEffect()
 
 data class ShowIncorrectPinError(
     val attemptsMade: Int,
@@ -15,26 +15,26 @@ data class ShowIncorrectPinError(
 
 data class ShowIncorrectPinLimitReachedError(val attemptsMade: Int) : PinEntryEffect()
 
-object AllowPinEntry : PinEntryEffect()
+data object AllowPinEntry : PinEntryEffect()
 
 data class BlockPinEntryUntil(val blockTill: Instant) : PinEntryEffect()
 
-object RecordSuccessfulAttempt : PinEntryEffect()
+data object RecordSuccessfulAttempt : PinEntryEffect()
 
-object RecordFailedAttempt : PinEntryEffect()
+data object RecordFailedAttempt : PinEntryEffect()
 
-object ShowProgress : PinEntryEffect()
+data object ShowProgress : PinEntryEffect()
 
-object ClearPin : PinEntryEffect()
+data object ClearPin : PinEntryEffect()
 
 data class VerifyPin(val pin: String) : PinEntryEffect()
 
 data class CorrectPinEntered(val pinVerifiedData: Any?) : PinEntryEffect()
 
-object ShowNetworkError : PinEntryEffect()
+data object ShowNetworkError : PinEntryEffect()
 
-object ShowServerError : PinEntryEffect()
+data object ShowServerError : PinEntryEffect()
 
-object ShowUnexpectedError : PinEntryEffect()
+data object ShowUnexpectedError : PinEntryEffect()
 
 data class SaveDemoFacility(val data: Any?) : PinEntryEffect()

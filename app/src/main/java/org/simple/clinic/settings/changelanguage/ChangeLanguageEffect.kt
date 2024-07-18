@@ -4,14 +4,14 @@ import org.simple.clinic.settings.Language
 
 sealed class ChangeLanguageEffect
 
-object LoadCurrentLanguageEffect : ChangeLanguageEffect()
+data object LoadCurrentLanguageEffect : ChangeLanguageEffect()
 
-object LoadSupportedLanguagesEffect : ChangeLanguageEffect()
+data object LoadSupportedLanguagesEffect : ChangeLanguageEffect()
 
 data class UpdateCurrentLanguageEffect(val newLanguage: Language) : ChangeLanguageEffect()
 
-object GoBack : ChangeLanguageEffect()
+data object GoBack : ChangeLanguageEffect()
 
-object RestartActivity : ChangeLanguageEffect()
+data object RestartActivity : ChangeLanguageEffect()
 
-object TriggerSync : ChangeLanguageEffect()
+data object TriggerSync : ChangeLanguageEffect()

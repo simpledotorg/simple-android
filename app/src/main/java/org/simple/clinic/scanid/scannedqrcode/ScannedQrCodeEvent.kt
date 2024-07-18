@@ -4,12 +4,12 @@ import org.simple.clinic.widgets.UiEvent
 
 sealed class ScannedQrCodeEvent : UiEvent
 
-object NewOngoingPatientEntrySaved : ScannedQrCodeEvent()
+data object NewOngoingPatientEntrySaved : ScannedQrCodeEvent()
 
-object RegisterNewPatientClicked : ScannedQrCodeEvent() {
+data object RegisterNewPatientClicked : ScannedQrCodeEvent() {
   override val analyticsName = "Blank BP passport sheet:Register new patient"
 }
 
-object AddToExistingPatientClicked : ScannedQrCodeEvent() {
+data object AddToExistingPatientClicked : ScannedQrCodeEvent() {
   override val analyticsName = "Blank BP passport sheet:Add to existing patient"
 }

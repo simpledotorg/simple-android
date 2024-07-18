@@ -54,7 +54,7 @@ class DatePickerKeyFactory @Inject constructor(
 }
 
 @Parcelize
-object DatePickerResult : Parcelable
+data object DatePickerResult : Parcelable
 
 @Parcelize
 data class SelectedDate(val date: LocalDate) : Parcelable

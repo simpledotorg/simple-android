@@ -6,17 +6,17 @@ import kotlinx.parcelize.Parcelize
 sealed class OpenedFrom : Parcelable {
 
   @Parcelize
-  object PatientsTabScreen : OpenedFrom()
+  data object PatientsTabScreen : OpenedFrom()
 
   @Parcelize
-  object InstantSearchScreen : OpenedFrom()
+  data object InstantSearchScreen : OpenedFrom()
 
   sealed class EditPatientScreen : OpenedFrom() {
 
     @Parcelize
-    object ToAddNHID : EditPatientScreen()
+    data object ToAddNHID : EditPatientScreen()
 
     @Parcelize
-    object ToAddBpPassport : EditPatientScreen()
+    data object ToAddBpPassport : EditPatientScreen()
   }
 }

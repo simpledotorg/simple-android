@@ -6,9 +6,9 @@ import org.simple.clinic.widgets.UiEvent
 
 sealed class DeletePatientEvent : UiEvent
 
-object PatientDeleted : DeletePatientEvent()
+data object PatientDeleted : DeletePatientEvent()
 
-object PatientMarkedAsDead : DeletePatientEvent()
+data object PatientMarkedAsDead : DeletePatientEvent()
 
 data class PatientDeleteReasonClicked(val patientDeleteReason: PatientDeleteReason) : DeletePatientEvent()
 
@@ -16,4 +16,4 @@ data class PatientLoaded(val patient: Patient) : DeletePatientEvent()
 
 data class ConfirmPatientDeleteClicked(val deletedReason: DeletedReason) : DeletePatientEvent()
 
-object ConfirmPatientDiedClicked : DeletePatientEvent()
+data object ConfirmPatientDiedClicked : DeletePatientEvent()

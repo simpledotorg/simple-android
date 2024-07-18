@@ -9,14 +9,14 @@ sealed class SelectOverdueDownloadFormatEvent : UiEvent
 
 data class FileDownloadedForSharing(val result: OverdueListDownloadResult) : SelectOverdueDownloadFormatEvent()
 
-object DownloadOrShareClicked : SelectOverdueDownloadFormatEvent() {
+data object DownloadOrShareClicked : SelectOverdueDownloadFormatEvent() {
 
   override val analyticsName = "Select Overdue Download Format : Download or share clicked"
 }
 
-object OverdueDownloadScheduled : SelectOverdueDownloadFormatEvent()
+data object OverdueDownloadScheduled : SelectOverdueDownloadFormatEvent()
 
-object CancelClicked : SelectOverdueDownloadFormatEvent() {
+data object CancelClicked : SelectOverdueDownloadFormatEvent() {
 
   override val analyticsName = "Select Overdue Download Format : Cancel clicked"
 }

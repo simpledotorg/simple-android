@@ -6,7 +6,7 @@ sealed class PatientLineListDownloadResult {
 
   data class DownloadSuccessful(val uri: Uri) : PatientLineListDownloadResult()
 
-  object NotEnoughStorage : PatientLineListDownloadResult()
+  data object NotEnoughStorage : PatientLineListDownloadResult()
 
-  object DownloadFailed : PatientLineListDownloadResult()
+  data object DownloadFailed : PatientLineListDownloadResult()
 }

@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 sealed class BlankScannedQRCodeResult : Parcelable
 
 @Parcelize
-object AddToExistingPatient : BlankScannedQRCodeResult()
+data object AddToExistingPatient : BlankScannedQRCodeResult()
 
 @Parcelize
-object RegisterNewPatient : BlankScannedQRCodeResult()
+data object RegisterNewPatient : BlankScannedQRCodeResult()

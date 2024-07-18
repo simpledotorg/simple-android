@@ -4,16 +4,16 @@ import android.graphics.Bitmap
 
 sealed class TeleconsultDoctorInfoEffect
 
-object LoadMedicalRegistrationId : TeleconsultDoctorInfoEffect()
+data object LoadMedicalRegistrationId : TeleconsultDoctorInfoEffect()
 
 data class SetMedicalRegistrationId(val medicalRegistrationId: String) : TeleconsultDoctorInfoEffect()
 
-object LoadSignatureBitmap : TeleconsultDoctorInfoEffect()
+data object LoadSignatureBitmap : TeleconsultDoctorInfoEffect()
 
 data class SetSignatureBitmap(val bitmap: Bitmap) : TeleconsultDoctorInfoEffect()
 
-object LoadCurrentUser : TeleconsultDoctorInfoEffect()
+data object LoadCurrentUser : TeleconsultDoctorInfoEffect()
 
-object ShowAddSignatureDialog : TeleconsultDoctorInfoEffect()
+data object ShowAddSignatureDialog : TeleconsultDoctorInfoEffect()
 
-object ShowAddSignatureButton : TeleconsultDoctorInfoEffect()
+data object ShowAddSignatureButton : TeleconsultDoctorInfoEffect()

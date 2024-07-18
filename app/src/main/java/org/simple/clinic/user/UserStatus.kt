@@ -11,13 +11,13 @@ import org.simple.clinic.util.room.SafeEnumTypeAdapter
 sealed class UserStatus : Parcelable {
 
   @Parcelize
-  object WaitingForApproval : UserStatus()
+  data object WaitingForApproval : UserStatus()
 
   @Parcelize
-  object ApprovedForSyncing : UserStatus()
+  data object ApprovedForSyncing : UserStatus()
 
   @Parcelize
-  object DisapprovedForSyncing : UserStatus()
+  data object DisapprovedForSyncing : UserStatus()
 
   @Parcelize
   data class Unknown(val actualValue: String) : UserStatus()

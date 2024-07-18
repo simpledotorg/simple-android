@@ -8,5 +8,5 @@ data class LoadQuestionnaireResponseEffect(val questionnaireId: UUID) : MonthlyR
 
 sealed class MonthlyReportCompleteViewEffect : MonthlyReportCompleteEffect()
 
-object GoToMonthlyReportsScreen : MonthlyReportCompleteViewEffect()
+data object GoToMonthlyReportsScreen : MonthlyReportCompleteViewEffect()
 

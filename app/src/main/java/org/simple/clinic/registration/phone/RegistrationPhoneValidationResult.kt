@@ -6,14 +6,14 @@ import kotlinx.parcelize.Parcelize
 sealed class RegistrationPhoneValidationResult : Parcelable {
 
   @Parcelize
-  object Valid : RegistrationPhoneValidationResult()
+  data object Valid : RegistrationPhoneValidationResult()
 
   sealed class Invalid : RegistrationPhoneValidationResult() {
 
     @Parcelize
-    object TooShort : Invalid()
+    data object TooShort : Invalid()
 
     @Parcelize
-    object Blank : Invalid()
+    data object Blank : Invalid()
   }
 }

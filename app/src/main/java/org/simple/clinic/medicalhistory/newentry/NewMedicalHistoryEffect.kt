@@ -7,9 +7,9 @@ sealed class NewMedicalHistoryEffect
 
 data class RegisterPatient(val ongoingMedicalHistoryEntry: OngoingMedicalHistoryEntry) : NewMedicalHistoryEffect()
 
-object LoadOngoingPatientEntry : NewMedicalHistoryEffect()
+data object LoadOngoingPatientEntry : NewMedicalHistoryEffect()
 
-object LoadCurrentFacility : NewMedicalHistoryEffect()
+data object LoadCurrentFacility : NewMedicalHistoryEffect()
 
 data class TriggerSync(val registeredPatientUuid: UUID) : NewMedicalHistoryEffect()
 
@@ -17,12 +17,12 @@ sealed class NewMedicalHistoryViewEffect : NewMedicalHistoryEffect()
 
 data class OpenPatientSummaryScreen(val patientUuid: UUID) : NewMedicalHistoryViewEffect()
 
-object ShowOngoingHypertensionTreatmentError : NewMedicalHistoryViewEffect()
+data object ShowOngoingHypertensionTreatmentError : NewMedicalHistoryViewEffect()
 
-object ShowDiagnosisRequiredError : NewMedicalHistoryViewEffect()
+data object ShowDiagnosisRequiredError : NewMedicalHistoryViewEffect()
 
-object ShowHypertensionDiagnosisRequiredError : NewMedicalHistoryViewEffect()
+data object ShowHypertensionDiagnosisRequiredError : NewMedicalHistoryViewEffect()
 
-object ShowChangeDiagnosisErrorDialog : NewMedicalHistoryViewEffect()
+data object ShowChangeDiagnosisErrorDialog : NewMedicalHistoryViewEffect()
 
-object ShowOngoingDiabetesTreatmentErrorDialog : NewMedicalHistoryViewEffect()
+data object ShowOngoingDiabetesTreatmentErrorDialog : NewMedicalHistoryViewEffect()

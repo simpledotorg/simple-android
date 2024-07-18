@@ -10,10 +10,10 @@ import org.simple.clinic.util.room.SafeEnumTypeAdapter
 sealed class ReminderConsent : Parcelable {
 
   @Parcelize
-  object Granted : ReminderConsent()
+  data object Granted : ReminderConsent()
 
   @Parcelize
-  object Denied : ReminderConsent()
+  data object Denied : ReminderConsent()
 
   @Parcelize
   data class Unknown(val actualValue: String) : ReminderConsent()

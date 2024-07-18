@@ -10,12 +10,12 @@ sealed class OpenIntention : Parcelable {
   abstract fun analyticsName(): String
 
   @Parcelize
-  object ViewExistingPatient : OpenIntention() {
+  data object ViewExistingPatient : OpenIntention() {
     override fun analyticsName() = "SEARCH"
   }
 
   @Parcelize
-  object ViewNewPatient : OpenIntention() {
+  data object ViewNewPatient : OpenIntention() {
     override fun analyticsName() = "NEW_PATIENT"
   }
 

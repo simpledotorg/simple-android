@@ -46,11 +46,11 @@ data class FacilitiesSynced(val result: Result) : RegistrationPhoneEvent() {
 
   sealed class Result {
 
-    object Synced : Result()
+    data object Synced : Result()
 
-    object NetworkError : Result()
+    data object NetworkError : Result()
 
-    object OtherError : Result()
+    data object OtherError : Result()
   }
 }
 
@@ -73,11 +73,11 @@ data class SearchForExistingUserCompleted(val result: Result) : RegistrationPhon
 
     data class Found(val uuid: UUID, val status: UserStatus) : Result()
 
-    object NotFound : Result()
+    data object NotFound : Result()
 
-    object NetworkError : Result()
+    data object NetworkError : Result()
 
-    object OtherError : Result()
+    data object OtherError : Result()
   }
 }
 
@@ -85,6 +85,6 @@ class RegistrationPhoneDoneClicked : RegistrationPhoneEvent() {
   override val analyticsName = "Registration:Phone Entry:Done Clicked"
 }
 
-object UserCreatedLocally : RegistrationPhoneEvent()
+data object UserCreatedLocally : RegistrationPhoneEvent()
 
 data class CurrentUserUnauthorizedStatusLoaded(val isUserUnauthorized: Boolean) : RegistrationPhoneEvent()

@@ -16,9 +16,9 @@ class TextInputDatePickerValidator @Inject constructor(
   sealed class Result {
     data class Valid(val parsedDate: LocalDate) : Result()
     sealed class NotValid : Result() {
-      object InvalidPattern : NotValid()
-      object DateIsInPast : NotValid()
-      object MaximumAllowedDateRange : NotValid()
+      data object InvalidPattern : NotValid()
+      data object DateIsInPast : NotValid()
+      data object MaximumAllowedDateRange : NotValid()
     }
   }
 

@@ -10,4 +10,4 @@ data class SchedulePatientLineListDownload(
 
 sealed class SelectLineListFormatViewEffect : SelectLineListFormatEffect()
 
-object Dismiss : SelectLineListFormatViewEffect()
+data object Dismiss : SelectLineListFormatViewEffect()

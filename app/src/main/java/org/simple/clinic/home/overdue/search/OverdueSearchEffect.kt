@@ -7,13 +7,13 @@ sealed class OverdueSearchEffect
 
 data class ToggleOverdueAppointmentSelection(val appointmentId: UUID) : OverdueSearchEffect()
 
-object LoadSelectedOverdueAppointmentIds : OverdueSearchEffect()
+data object LoadSelectedOverdueAppointmentIds : OverdueSearchEffect()
 
-object ClearSelectedOverdueAppointments : OverdueSearchEffect()
+data object ClearSelectedOverdueAppointments : OverdueSearchEffect()
 
 data class ReplaceSelectedAppointmentIds(val appointmentIds: Set<UUID>, val type: OverdueButtonType) : OverdueSearchEffect()
 
-object ScheduleDownload : OverdueSearchEffect()
+data object ScheduleDownload : OverdueSearchEffect()
 
 data class SelectAllAppointmentIds(val appointmentIds: Set<UUID>) : OverdueSearchEffect()
 
@@ -23,7 +23,7 @@ data class LoadSearchResultsAppointmentIds(
     val since: LocalDate
 ) : OverdueSearchEffect()
 
-object LoadVillageAndPatientNames : OverdueSearchEffect()
+data object LoadVillageAndPatientNames : OverdueSearchEffect()
 
 data class SearchOverduePatients(
     val searchInputs: List<String>,
@@ -36,10 +36,10 @@ data class OpenPatientSummary(val patientUuid: UUID) : OverdueSearchViewEffect()
 
 data class OpenContactPatientSheet(val patientUuid: UUID) : OverdueSearchViewEffect()
 
-object OpenSelectDownloadFormatDialog : OverdueSearchViewEffect()
+data object OpenSelectDownloadFormatDialog : OverdueSearchViewEffect()
 
-object OpenSelectShareFormatDialog : OverdueSearchViewEffect()
+data object OpenSelectShareFormatDialog : OverdueSearchViewEffect()
 
-object OpenShareInProgressDialog : OverdueSearchViewEffect()
+data object OpenShareInProgressDialog : OverdueSearchViewEffect()
 
-object ShowNoInternetConnectionDialog : OverdueSearchViewEffect()
+data object ShowNoInternetConnectionDialog : OverdueSearchViewEffect()

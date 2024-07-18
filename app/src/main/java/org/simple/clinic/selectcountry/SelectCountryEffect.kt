@@ -4,10 +4,10 @@ import org.simple.clinic.appconfig.Country
 
 sealed class SelectCountryEffect
 
-object FetchManifest : SelectCountryEffect()
+data object FetchManifest : SelectCountryEffect()
 
 data class SaveCountryEffect(val country: Country) : SelectCountryEffect()
 
 sealed class SelectCountryViewEffect : SelectCountryEffect()
 
-object GoToStateSelectionScreen : SelectCountryViewEffect()
+data object GoToStateSelectionScreen : SelectCountryViewEffect()

@@ -4,8 +4,8 @@ import org.simple.clinic.facility.Facility
 
 sealed class FacilityChangeEffect
 
-object LoadCurrentFacility : FacilityChangeEffect()
+data object LoadCurrentFacility : FacilityChangeEffect()
 
 data class OpenConfirmFacilityChangeSheet(val facility: Facility) : FacilityChangeEffect()
 
-object GoBack : FacilityChangeEffect()
+data object GoBack : FacilityChangeEffect()

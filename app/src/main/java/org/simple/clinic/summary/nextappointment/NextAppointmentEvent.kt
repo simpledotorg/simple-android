@@ -8,4 +8,4 @@ data class NextAppointmentPatientProfileLoaded(
     val nextAppointmentPatientProfile: NextAppointmentPatientProfile?
 ) : NextAppointmentEvent()
 
-object RefreshAppointment : NextAppointmentEvent()
+data object RefreshAppointment : NextAppointmentEvent()

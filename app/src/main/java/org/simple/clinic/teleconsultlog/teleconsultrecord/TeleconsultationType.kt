@@ -10,21 +10,21 @@ import org.simple.clinic.util.room.SafeEnumTypeAdapter
 sealed class TeleconsultationType : Parcelable {
 
   @Parcelize
-  object Audio : TeleconsultationType() {
+  data object Audio : TeleconsultationType() {
     override fun toString(): String {
       return "Audio"
     }
   }
 
   @Parcelize
-  object Video : TeleconsultationType() {
+  data object Video : TeleconsultationType() {
     override fun toString(): String {
       return "Video"
     }
   }
 
   @Parcelize
-  object Message : TeleconsultationType() {
+  data object Message : TeleconsultationType() {
     override fun toString(): String {
       return "Message"
     }

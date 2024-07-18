@@ -10,10 +10,10 @@ sealed class DeepLinkResult : Parcelable
 data class OpenPatientSummary(val patientUuid: UUID) : DeepLinkResult()
 
 @Parcelize
-object ShowPatientNotFound : DeepLinkResult()
+data object ShowPatientNotFound : DeepLinkResult()
 
 @Parcelize
-object ShowNoPatientUuid : DeepLinkResult()
+data object ShowNoPatientUuid : DeepLinkResult()
 
 @Parcelize
 data class OpenPatientSummaryWithTeleconsultLog(
@@ -22,4 +22,4 @@ data class OpenPatientSummaryWithTeleconsultLog(
 ) : DeepLinkResult()
 
 @Parcelize
-object ShowTeleconsultNotAllowed : DeepLinkResult()
+data object ShowTeleconsultNotAllowed : DeepLinkResult()

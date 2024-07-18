@@ -7,7 +7,7 @@ sealed class RegistrationLoadingEvent : UiEvent
 
 data class UserRegistrationCompleted(val result: RegisterUserResult) : RegistrationLoadingEvent()
 
-object RegisterErrorRetryClicked : RegistrationLoadingEvent() {
+data object RegisterErrorRetryClicked : RegistrationLoadingEvent() {
   override val analyticsName: String = "Registration:Loading:Retry Clicked"
 }
 

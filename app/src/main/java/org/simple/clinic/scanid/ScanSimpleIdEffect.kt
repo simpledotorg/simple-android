@@ -21,11 +21,11 @@ data class SaveCompleteMedicalRecords(
 
 sealed class ScanSimpleIdViewEffect : ScanSimpleIdEffect()
 
-object ShowQrCodeScannerView : ScanSimpleIdViewEffect()
+data object ShowQrCodeScannerView : ScanSimpleIdViewEffect()
 
-object HideQrCodeScannerView : ScanSimpleIdViewEffect()
+data object HideQrCodeScannerView : ScanSimpleIdViewEffect()
 
-object HideEnteredCodeValidationError : ScanSimpleIdViewEffect()
+data object HideEnteredCodeValidationError : ScanSimpleIdViewEffect()
 
 data class ShowEnteredCodeValidationError(val failure: EnteredCodeValidationResult) : ScanSimpleIdViewEffect()
 

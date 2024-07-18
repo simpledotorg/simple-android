@@ -17,11 +17,11 @@ sealed class StatesFetchError : Parcelable {
   }
 
   @Parcelize
-  object NetworkError : StatesFetchError()
+  data object NetworkError : StatesFetchError()
 
   @Parcelize
-  object ServerError : StatesFetchError()
+  data object ServerError : StatesFetchError()
 
   @Parcelize
-  object UnexpectedError : StatesFetchError()
+  data object UnexpectedError : StatesFetchError()
 }

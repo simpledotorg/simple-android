@@ -6,8 +6,8 @@ import kotlinx.parcelize.Parcelize
 sealed class ScanErrorState : Parcelable {
 
   @Parcelize
-  object InvalidQrCode : ScanErrorState()
+  data object InvalidQrCode : ScanErrorState()
 
   @Parcelize
-  object IdentifierAlreadyExists : ScanErrorState()
+  data object IdentifierAlreadyExists : ScanErrorState()
 }

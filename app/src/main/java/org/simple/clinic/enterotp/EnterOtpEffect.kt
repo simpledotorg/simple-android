@@ -4,32 +4,32 @@ import org.simple.clinic.login.LoginResult
 
 sealed class EnterOtpEffect
 
-object LoadUser : EnterOtpEffect()
+data object LoadUser : EnterOtpEffect()
 
-object TriggerSync : EnterOtpEffect()
+data object TriggerSync : EnterOtpEffect()
 
-object ClearLoginEntry : EnterOtpEffect()
+data object ClearLoginEntry : EnterOtpEffect()
 
 data class LoginUser(val otp: String) : EnterOtpEffect()
 
-object ListenForUserBackgroundVerification : EnterOtpEffect()
+data object ListenForUserBackgroundVerification : EnterOtpEffect()
 
-object RequestLoginOtp : EnterOtpEffect()
+data object RequestLoginOtp : EnterOtpEffect()
 
 data class FailedLoginOtpAttempt(val result: LoginResult) : EnterOtpEffect()
 
-object LoadOtpEntryProtectedStates : EnterOtpEffect()
+data object LoadOtpEntryProtectedStates : EnterOtpEffect()
 
-object ResetOtpAttemptLimit : EnterOtpEffect()
+data object ResetOtpAttemptLimit : EnterOtpEffect()
 
 sealed class EnterOtpViewEffect : EnterOtpEffect()
 
-object ClearPin : EnterOtpViewEffect()
+data object ClearPin : EnterOtpViewEffect()
 
-object GoBack : EnterOtpViewEffect()
+data object GoBack : EnterOtpViewEffect()
 
-object ShowSmsSentMessage : EnterOtpViewEffect()
+data object ShowSmsSentMessage : EnterOtpViewEffect()
 
-object ShowNetworkError : EnterOtpViewEffect()
+data object ShowNetworkError : EnterOtpViewEffect()
 
-object ShowUnexpectedError : EnterOtpViewEffect()
+data object ShowUnexpectedError : EnterOtpViewEffect()

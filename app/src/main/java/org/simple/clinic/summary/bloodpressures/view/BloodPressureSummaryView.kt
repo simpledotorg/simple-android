@@ -25,10 +25,10 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.alertchange.AlertFacilityChangeSheet
 import org.simple.clinic.facility.alertchange.Continuation.ContinueToActivity
 import org.simple.clinic.mobius.MobiusDelegate
-import org.simple.clinic.navigation.v2.Router
-import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
-import org.simple.clinic.navigation.v2.ScreenResultBus
 import org.simple.clinic.navigation.v2.ActivityResult
+import org.simple.clinic.navigation.v2.Router
+import org.simple.clinic.navigation.v2.ScreenResultBus
+import org.simple.clinic.navigation.v2.keyprovider.ScreenKeyProvider
 import org.simple.clinic.summary.PatientSummaryChildView
 import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.summary.PatientSummaryModelUpdateCallback
@@ -165,7 +165,7 @@ class BloodPressureSummaryView(
     }
     context.injector<BloodPressureSummaryViewInjector>().inject(this)
 
-    val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
+    val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed }
 
     setupBpRecordedEvents(screenDestroys)
   }

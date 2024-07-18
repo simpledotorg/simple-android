@@ -131,7 +131,7 @@ class MedicalHistorySummaryView(
     super.onRestoreInstanceState(delegate.onRestoreInstanceState(state))
   }
 
-  private fun screenCreates(): Observable<UiEvent> = Observable.just(ScreenCreated())
+  private fun screenCreates(): Observable<UiEvent> = Observable.just(ScreenCreated)
 
   override fun populateMedicalHistory(medicalHistory: MedicalHistory) {
     renderMedicalHistory(medicalHistory)

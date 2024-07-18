@@ -145,7 +145,7 @@ class DosagePickerSheet : BottomSheetActivity(), DosagePickerUi, DosagePickerUiA
   }
 
   private fun sheetCreates(): Observable<UiEvent> {
-    return Observable.just(ScreenCreated())
+    return Observable.just(ScreenCreated)
   }
 
   private fun noneClicks(): Observable<DosagePickerEvent> {

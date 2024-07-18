@@ -181,7 +181,7 @@ class BloodSugarSummaryView(
     }
     context.injector<BloodSugarSummaryViewInjector>().inject(this)
 
-    val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed() }
+    val screenDestroys: Observable<ScreenDestroyed> = detaches().map { ScreenDestroyed }
     openEntrySheetAfterTypeIsSelected(screenDestroys)
   }
 
